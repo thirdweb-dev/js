@@ -1,15 +1,1 @@
-[
-  {
-    "inputs": [],
-    "name": "nextTokenIdToMint",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  }
-]
+["function nextTokenIdToMint() view returns (uint256)"]

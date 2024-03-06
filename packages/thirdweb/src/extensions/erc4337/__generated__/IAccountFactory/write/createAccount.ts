@@ -6,16 +6,8 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "createAccount" function.
  */
 export type CreateAccountParams = {
-  admin: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "admin";
-    type: "address";
-  }>;
-  data: AbiParameterToPrimitiveType<{
-    internalType: "bytes";
-    name: "_data";
-    type: "bytes";
-  }>;
+  admin: AbiParameterToPrimitiveType<{ type: "address"; name: "admin" }>;
+  data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "_data" }>;
 };
 
 /**
@@ -46,21 +38,18 @@ export function createAccount(
       "0xd8fd8f44",
       [
         {
-          internalType: "address",
-          name: "admin",
           type: "address",
+          name: "admin",
         },
         {
-          internalType: "bytes",
-          name: "_data",
           type: "bytes",
+          name: "_data",
         },
       ],
       [
         {
-          internalType: "address",
-          name: "account",
           type: "address",
+          name: "account",
         },
       ],
     ],

@@ -7,9 +7,8 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type GetPastTotalSupplyParams = {
   blockNumber: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "blockNumber";
     type: "uint256";
+    name: "blockNumber";
   }>;
 };
 
@@ -37,15 +36,12 @@ export async function getPastTotalSupply(
       "0x8e539e8c",
       [
         {
-          internalType: "uint256",
-          name: "blockNumber",
           type: "uint256",
+          name: "blockNumber",
         },
       ],
       [
         {
-          internalType: "uint256",
-          name: "",
           type: "uint256",
         },
       ],

@@ -6,16 +6,8 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "isApprovedForAll" function.
  */
 export type IsApprovedForAllParams = {
-  owner: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "_owner";
-    type: "address";
-  }>;
-  operator: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "_operator";
-    type: "address";
-  }>;
+  owner: AbiParameterToPrimitiveType<{ type: "address"; name: "_owner" }>;
+  operator: AbiParameterToPrimitiveType<{ type: "address"; name: "_operator" }>;
 };
 
 /**
@@ -43,20 +35,16 @@ export async function isApprovedForAll(
       "0xe985e9c5",
       [
         {
-          internalType: "address",
-          name: "_owner",
           type: "address",
+          name: "_owner",
         },
         {
-          internalType: "address",
-          name: "_operator",
           type: "address",
+          name: "_operator",
         },
       ],
       [
         {
-          internalType: "bool",
-          name: "",
           type: "bool",
         },
       ],

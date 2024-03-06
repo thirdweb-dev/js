@@ -6,21 +6,12 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "remove" function.
  */
 export type RemoveParams = {
-  deployer: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "_deployer";
-    type: "address";
-  }>;
+  deployer: AbiParameterToPrimitiveType<{ type: "address"; name: "_deployer" }>;
   deployment: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "_deployment";
     type: "address";
+    name: "_deployment";
   }>;
-  chainId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_chainId";
-    type: "uint256";
-  }>;
+  chainId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_chainId" }>;
 };
 
 /**
@@ -50,19 +41,16 @@ export function remove(options: BaseTransactionOptions<RemoveParams>) {
       "0x59e5fd04",
       [
         {
-          internalType: "address",
+          type: "address",
           name: "_deployer",
-          type: "address",
         },
         {
-          internalType: "address",
+          type: "address",
           name: "_deployment",
-          type: "address",
         },
         {
-          internalType: "uint256",
-          name: "_chainId",
           type: "uint256",
+          name: "_chainId",
         },
       ],
       [],

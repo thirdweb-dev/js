@@ -6,21 +6,9 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "burn" function.
  */
 export type BurnParams = {
-  account: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "account";
-    type: "address";
-  }>;
-  id: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "id";
-    type: "uint256";
-  }>;
-  value: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "value";
-    type: "uint256";
-  }>;
+  account: AbiParameterToPrimitiveType<{ type: "address"; name: "account" }>;
+  id: AbiParameterToPrimitiveType<{ type: "uint256"; name: "id" }>;
+  value: AbiParameterToPrimitiveType<{ type: "uint256"; name: "value" }>;
 };
 
 /**
@@ -50,19 +38,16 @@ export function burn(options: BaseTransactionOptions<BurnParams>) {
       "0xf5298aca",
       [
         {
-          internalType: "address",
-          name: "account",
           type: "address",
+          name: "account",
         },
         {
-          internalType: "uint256",
+          type: "uint256",
           name: "id",
-          type: "uint256",
         },
         {
-          internalType: "uint256",
-          name: "value",
           type: "uint256",
+          name: "value",
         },
       ],
       [],

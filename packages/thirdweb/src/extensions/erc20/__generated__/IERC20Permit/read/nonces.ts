@@ -6,11 +6,7 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "nonces" function.
  */
 export type NoncesParams = {
-  owner: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "owner";
-    type: "address";
-  }>;
+  owner: AbiParameterToPrimitiveType<{ type: "address"; name: "owner" }>;
 };
 
 /**
@@ -35,15 +31,12 @@ export async function nonces(options: BaseTransactionOptions<NoncesParams>) {
       "0x7ecebe00",
       [
         {
-          internalType: "address",
-          name: "owner",
           type: "address",
+          name: "owner",
         },
       ],
       [
         {
-          internalType: "uint256",
-          name: "",
           type: "uint256",
         },
       ],

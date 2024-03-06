@@ -7,9 +7,8 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type DelegateParams = {
   delegatee: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "delegatee";
     type: "address";
+    name: "delegatee";
   }>;
 };
 
@@ -38,9 +37,8 @@ export function delegate(options: BaseTransactionOptions<DelegateParams>) {
       "0x5c19a95c",
       [
         {
-          internalType: "address",
-          name: "delegatee",
           type: "address",
+          name: "delegatee",
         },
       ],
       [],

@@ -7,17 +7,16 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type MakeOfferParams = {
   params: AbiParameterToPrimitiveType<{
-    components: [
-      { internalType: "address"; name: "assetContract"; type: "address" },
-      { internalType: "uint256"; name: "tokenId"; type: "uint256" },
-      { internalType: "uint256"; name: "quantity"; type: "uint256" },
-      { internalType: "address"; name: "currency"; type: "address" },
-      { internalType: "uint256"; name: "totalPrice"; type: "uint256" },
-      { internalType: "uint256"; name: "expirationTimestamp"; type: "uint256" },
-    ];
-    internalType: "struct IOffers.OfferParams";
-    name: "_params";
     type: "tuple";
+    name: "_params";
+    components: [
+      { type: "address"; name: "assetContract" },
+      { type: "uint256"; name: "tokenId" },
+      { type: "uint256"; name: "quantity" },
+      { type: "address"; name: "currency" },
+      { type: "uint256"; name: "totalPrice" },
+      { type: "uint256"; name: "expirationTimestamp" },
+    ];
   }>;
 };
 
@@ -46,48 +45,40 @@ export function makeOffer(options: BaseTransactionOptions<MakeOfferParams>) {
       "0x016767fa",
       [
         {
+          type: "tuple",
+          name: "_params",
           components: [
             {
-              internalType: "address",
+              type: "address",
               name: "assetContract",
-              type: "address",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "tokenId",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "quantity",
-              type: "uint256",
             },
             {
-              internalType: "address",
-              name: "currency",
               type: "address",
+              name: "currency",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "totalPrice",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
-              name: "expirationTimestamp",
               type: "uint256",
+              name: "expirationTimestamp",
             },
           ],
-          internalType: "struct IOffers.OfferParams",
-          name: "_params",
-          type: "tuple",
         },
       ],
       [
         {
-          internalType: "uint256",
-          name: "offerId",
           type: "uint256",
+          name: "offerId",
         },
       ],
     ],

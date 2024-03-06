@@ -6,10 +6,9 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type RuleCreatedEventFilters = Partial<{
   ruleId: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "bytes32";
-    name: "ruleId";
     type: "bytes32";
+    name: "ruleId";
+    indexed: true;
   }>;
 }>;
 

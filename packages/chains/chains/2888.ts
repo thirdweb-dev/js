@@ -10,6 +10,7 @@ export default {
     }
   ],
   "faucets": [],
+  "features": [],
   "infoURL": "https://boba.network",
   "name": "Boba Network Goerli Testnet",
   "nativeCurrency": {
@@ -27,6 +28,7 @@ export default {
       }
     ]
   },
+  "redFlags": [],
   "rpc": [
     "https://2888.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://goerli.boba.network/",
@@ -35,5 +37,6 @@ export default {
   "shortName": "BobaGoerli",
   "slip44": 1,
   "slug": "boba-network-goerli-testnet",
+  "status": "deprecated",
   "testnet": true
 } as const satisfies Chain;

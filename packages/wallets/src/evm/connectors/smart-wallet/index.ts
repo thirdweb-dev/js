@@ -75,6 +75,8 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       accountInfo: config.accountInfo || this.defaultAccountInfo(),
       clientId: config.clientId,
       secretKey: config.secretKey,
+      erc20PaymasterAddress: config.erc20PaymasterAddress,
+      erc20TokenAddress: config.erc20TokenAddress,
     };
     this.personalWallet = params.personalWallet;
     const accountApi = new AccountAPI(providerConfig, originalProvider);
@@ -581,6 +583,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       this.getProvider(),
       this.isDeployed(),
     ]);
+
     if (!isDeployed) {
       deployGasLimit = await this.estimateDeploymentGasLimit();
     }

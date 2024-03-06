@@ -6,11 +6,7 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "getApproved" function.
  */
 export type GetApprovedParams = {
-  tokenId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "tokenId";
-    type: "uint256";
-  }>;
+  tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
 };
 
 /**
@@ -37,15 +33,12 @@ export async function getApproved(
       "0x081812fc",
       [
         {
-          internalType: "uint256",
-          name: "tokenId",
           type: "uint256",
+          name: "tokenId",
         },
       ],
       [
         {
-          internalType: "address",
-          name: "",
           type: "address",
         },
       ],

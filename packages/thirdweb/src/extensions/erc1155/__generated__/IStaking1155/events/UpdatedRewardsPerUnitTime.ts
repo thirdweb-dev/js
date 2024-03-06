@@ -6,10 +6,9 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type UpdatedRewardsPerUnitTimeEventFilters = Partial<{
   _tokenId: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "uint256";
-    name: "_tokenId";
     type: "uint256";
+    name: "_tokenId";
+    indexed: true;
   }>;
 }>;
 

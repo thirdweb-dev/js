@@ -6,11 +6,7 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "acceptOffer" function.
  */
 export type AcceptOfferParams = {
-  offerId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_offerId";
-    type: "uint256";
-  }>;
+  offerId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_offerId" }>;
 };
 
 /**
@@ -40,9 +36,8 @@ export function acceptOffer(
       "0xc815729d",
       [
         {
-          internalType: "uint256",
-          name: "_offerId",
           type: "uint256",
+          name: "_offerId",
         },
       ],
       [],

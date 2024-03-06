@@ -6,16 +6,8 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "getNonce" function.
  */
 export type GetNonceParams = {
-  sender: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "sender";
-    type: "address";
-  }>;
-  key: AbiParameterToPrimitiveType<{
-    internalType: "uint192";
-    name: "key";
-    type: "uint192";
-  }>;
+  sender: AbiParameterToPrimitiveType<{ type: "address"; name: "sender" }>;
+  key: AbiParameterToPrimitiveType<{ type: "uint192"; name: "key" }>;
 };
 
 /**
@@ -43,21 +35,18 @@ export async function getNonce(
       "0x35567e1a",
       [
         {
-          internalType: "address",
-          name: "sender",
           type: "address",
+          name: "sender",
         },
         {
-          internalType: "uint192",
-          name: "key",
           type: "uint192",
+          name: "key",
         },
       ],
       [
         {
-          internalType: "uint256",
-          name: "nonce",
           type: "uint256",
+          name: "nonce",
         },
       ],
     ],

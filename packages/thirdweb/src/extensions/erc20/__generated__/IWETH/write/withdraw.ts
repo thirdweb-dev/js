@@ -6,11 +6,7 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "withdraw" function.
  */
 export type WithdrawParams = {
-  amount: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "amount";
-    type: "uint256";
-  }>;
+  amount: AbiParameterToPrimitiveType<{ type: "uint256"; name: "amount" }>;
 };
 
 /**
@@ -38,9 +34,8 @@ export function withdraw(options: BaseTransactionOptions<WithdrawParams>) {
       "0x2e1a7d4d",
       [
         {
-          internalType: "uint256",
-          name: "amount",
           type: "uint256",
+          name: "amount",
         },
       ],
       [],

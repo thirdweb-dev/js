@@ -6,11 +6,7 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "canClaimRewards" function.
  */
 export type CanClaimRewardsParams = {
-  opener: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "_opener";
-    type: "address";
-  }>;
+  opener: AbiParameterToPrimitiveType<{ type: "address"; name: "_opener" }>;
 };
 
 /**
@@ -37,15 +33,12 @@ export async function canClaimRewards(
       "0xa9b47a66",
       [
         {
-          internalType: "address",
-          name: "_opener",
           type: "address",
+          name: "_opener",
         },
       ],
       [
         {
-          internalType: "bool",
-          name: "",
           type: "bool",
         },
       ],

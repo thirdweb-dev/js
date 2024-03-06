@@ -6,11 +6,7 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "deleteRule" function.
  */
 export type DeleteRuleParams = {
-  ruleId: AbiParameterToPrimitiveType<{
-    internalType: "bytes32";
-    name: "ruleId";
-    type: "bytes32";
-  }>;
+  ruleId: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "ruleId" }>;
 };
 
 /**
@@ -38,9 +34,8 @@ export function deleteRule(options: BaseTransactionOptions<DeleteRuleParams>) {
       "0x9d907761",
       [
         {
-          internalType: "bytes32",
-          name: "ruleId",
           type: "bytes32",
+          name: "ruleId",
         },
       ],
       [],

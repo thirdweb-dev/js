@@ -7,15 +7,10 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type CloseAuctionParams = {
   listingId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_listingId";
     type: "uint256";
+    name: "_listingId";
   }>;
-  closeFor: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "_closeFor";
-    type: "address";
-  }>;
+  closeFor: AbiParameterToPrimitiveType<{ type: "address"; name: "_closeFor" }>;
 };
 
 /**
@@ -46,14 +41,12 @@ export function closeAuction(
       "0x6bab66ae",
       [
         {
-          internalType: "uint256",
-          name: "_listingId",
           type: "uint256",
+          name: "_listingId",
         },
         {
-          internalType: "address",
-          name: "_closeFor",
           type: "address",
+          name: "_closeFor",
         },
       ],
       [],

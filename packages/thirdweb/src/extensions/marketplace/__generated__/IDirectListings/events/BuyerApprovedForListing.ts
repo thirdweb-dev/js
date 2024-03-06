@@ -6,16 +6,14 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type BuyerApprovedForListingEventFilters = Partial<{
   listingId: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "uint256";
-    name: "listingId";
     type: "uint256";
+    name: "listingId";
+    indexed: true;
   }>;
   buyer: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "buyer";
     type: "address";
+    name: "buyer";
+    indexed: true;
   }>;
 }>;
 

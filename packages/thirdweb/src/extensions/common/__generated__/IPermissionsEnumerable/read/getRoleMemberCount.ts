@@ -6,11 +6,7 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "getRoleMemberCount" function.
  */
 export type GetRoleMemberCountParams = {
-  role: AbiParameterToPrimitiveType<{
-    internalType: "bytes32";
-    name: "role";
-    type: "bytes32";
-  }>;
+  role: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "role" }>;
 };
 
 /**
@@ -37,15 +33,12 @@ export async function getRoleMemberCount(
       "0xca15c873",
       [
         {
-          internalType: "bytes32",
-          name: "role",
           type: "bytes32",
+          name: "role",
         },
       ],
       [
         {
-          internalType: "uint256",
-          name: "",
           type: "uint256",
         },
       ],

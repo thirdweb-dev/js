@@ -6,15 +6,10 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "getMetadataUri" function.
  */
 export type GetMetadataUriParams = {
-  chainId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_chainId";
-    type: "uint256";
-  }>;
+  chainId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_chainId" }>;
   deployment: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "_deployment";
     type: "address";
+    name: "_deployment";
   }>;
 };
 
@@ -43,21 +38,18 @@ export async function getMetadataUri(
       "0xf4c2012d",
       [
         {
-          internalType: "uint256",
-          name: "_chainId",
           type: "uint256",
+          name: "_chainId",
         },
         {
-          internalType: "address",
-          name: "_deployment",
           type: "address",
+          name: "_deployment",
         },
       ],
       [
         {
-          internalType: "string",
-          name: "metadataUri",
           type: "string",
+          name: "metadataUri",
         },
       ],
     ],

@@ -7,23 +7,20 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type AirdropERC20Params = {
   tokenAddress: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "tokenAddress";
     type: "address";
+    name: "tokenAddress";
   }>;
   tokenOwner: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "tokenOwner";
     type: "address";
+    name: "tokenOwner";
   }>;
   contents: AbiParameterToPrimitiveType<{
-    components: [
-      { internalType: "address"; name: "recipient"; type: "address" },
-      { internalType: "uint256"; name: "amount"; type: "uint256" },
-    ];
-    internalType: "struct IAirdropERC20.AirdropContent[]";
-    name: "contents";
     type: "tuple[]";
+    name: "contents";
+    components: [
+      { type: "address"; name: "recipient" },
+      { type: "uint256"; name: "amount" },
+    ];
   }>;
 };
 
@@ -56,31 +53,26 @@ export function airdropERC20(
       "0x0670b2b3",
       [
         {
-          internalType: "address",
+          type: "address",
           name: "tokenAddress",
-          type: "address",
         },
         {
-          internalType: "address",
+          type: "address",
           name: "tokenOwner",
-          type: "address",
         },
         {
+          type: "tuple[]",
+          name: "contents",
           components: [
             {
-              internalType: "address",
-              name: "recipient",
               type: "address",
+              name: "recipient",
             },
             {
-              internalType: "uint256",
-              name: "amount",
               type: "uint256",
+              name: "amount",
             },
           ],
-          internalType: "struct IAirdropERC20.AirdropContent[]",
-          name: "contents",
-          type: "tuple[]",
         },
       ],
       [],

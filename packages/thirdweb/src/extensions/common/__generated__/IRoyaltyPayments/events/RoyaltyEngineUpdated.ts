@@ -6,16 +6,14 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type RoyaltyEngineUpdatedEventFilters = Partial<{
   previousAddress: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "previousAddress";
     type: "address";
+    name: "previousAddress";
+    indexed: true;
   }>;
   newAddress: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "newAddress";
     type: "address";
+    name: "newAddress";
+    indexed: true;
   }>;
 }>;
 

@@ -1,5 +1,6 @@
 import type { ThirdwebClient } from "../client/client.js";
 import { version } from "../version.js";
+import { LruMap } from "./caching/lru.js";
 import {
   detectOS,
   detectPlatform,
@@ -21,6 +22,7 @@ export function getClientFetch(client: ThirdwebClient) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return FETCH_CACHE.get(client)!;
   }
+
   /**
    * @internal
    */
@@ -31,23 +33,31 @@ export function getClientFetch(client: ThirdwebClient) {
     const { requestTimeoutMs = DEFAULT_REQUEST_TIMEOUT, ...restInit } =
       init || {};
 
-    const headers = new Headers(restInit?.headers);
+    let headers = restInit.headers ? new Headers(restInit.headers) : undefined;
+
     // check if we are making a request to a thirdweb service (we don't want to send any headers to non-thirdweb services)
     if (isThirdwebUrl(url)) {
+      if (!headers) {
+        headers = new Headers();
+      }
       if (client.secretKey) {
         headers.set("x-secret-key", client.secretKey);
       } else if (client.clientId) {
         headers.set("x-client-id", client.clientId);
       }
+      // this already internally caches
       getPlatformHeaders().forEach(([key, value]) => {
-        headers.set(key, value);
+        (headers as Headers).set(key, value);
       });
     }
 
-    const controller = new AbortController();
+    let controller: AbortController | undefined;
     let abortTimeout: ReturnType<typeof setTimeout> | undefined;
     if (requestTimeoutMs) {
-      abortTimeout = setTimeout(() => controller.abort(), requestTimeoutMs);
+      controller = new AbortController();
+      abortTimeout = setTimeout(() => {
+        controller?.abort();
+      }, requestTimeoutMs);
     }
 
     return fetch(url, {
@@ -55,7 +65,9 @@ export function getClientFetch(client: ThirdwebClient) {
       headers,
       signal: controller?.signal,
     }).finally(() => {
-      clearTimeout(abortTimeout);
+      if (abortTimeout) {
+        clearTimeout(abortTimeout);
+      }
     });
   }
   FETCH_CACHE.set(client, fetchWithHeaders);
@@ -71,14 +83,23 @@ const THIRDWEB_DOMAINS = [
   ".thirdweb-dev.com",
 ] as const;
 
+const IS_THIRDWEB_URL_CACHE = new LruMap<boolean>(4096);
+
 /**
  * @internal
  */
-export function isThirdwebUrl(url: string) {
+export function isThirdwebUrl(url: string): boolean {
+  if (IS_THIRDWEB_URL_CACHE.has(url)) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return IS_THIRDWEB_URL_CACHE.get(url)!;
+  }
   try {
     const { hostname } = new URL(url);
-    return THIRDWEB_DOMAINS.some((domain) => hostname.endsWith(domain));
+    const is = THIRDWEB_DOMAINS.some((domain) => hostname.endsWith(domain));
+    IS_THIRDWEB_URL_CACHE.set(url, is);
+    return is;
   } catch {
+    IS_THIRDWEB_URL_CACHE.set(url, false);
     return false;
   }
 }

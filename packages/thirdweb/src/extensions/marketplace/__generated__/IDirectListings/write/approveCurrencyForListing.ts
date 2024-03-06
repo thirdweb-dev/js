@@ -7,19 +7,13 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type ApproveCurrencyForListingParams = {
   listingId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
+    type: "uint256";
     name: "_listingId";
-    type: "uint256";
   }>;
-  currency: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "_currency";
-    type: "address";
-  }>;
+  currency: AbiParameterToPrimitiveType<{ type: "address"; name: "_currency" }>;
   pricePerTokenInCurrency: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_pricePerTokenInCurrency";
     type: "uint256";
+    name: "_pricePerTokenInCurrency";
   }>;
 };
 
@@ -52,19 +46,16 @@ export function approveCurrencyForListing(
       "0xea8f9a3c",
       [
         {
-          internalType: "uint256",
+          type: "uint256",
           name: "_listingId",
-          type: "uint256",
         },
         {
-          internalType: "address",
-          name: "_currency",
           type: "address",
+          name: "_currency",
         },
         {
-          internalType: "uint256",
-          name: "_pricePerTokenInCurrency",
           type: "uint256",
+          name: "_pricePerTokenInCurrency",
         },
       ],
       [],

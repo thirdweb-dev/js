@@ -57,6 +57,7 @@ export default {
   "shortName": "gor",
   "slip44": 1,
   "slug": "goerli",
+  "status": "deprecated",
   "testnet": true,
   "title": "Ethereum Testnet Goerli"
 } as const satisfies Chain;

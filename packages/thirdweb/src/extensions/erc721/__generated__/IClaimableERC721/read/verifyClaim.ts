@@ -6,16 +6,8 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "verifyClaim" function.
  */
 export type VerifyClaimParams = {
-  claimer: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "_claimer";
-    type: "address";
-  }>;
-  quantity: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_quantity";
-    type: "uint256";
-  }>;
+  claimer: AbiParameterToPrimitiveType<{ type: "address"; name: "_claimer" }>;
+  quantity: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_quantity" }>;
 };
 
 /**
@@ -43,14 +35,12 @@ export async function verifyClaim(
       "0x2f92023a",
       [
         {
-          internalType: "address",
-          name: "_claimer",
           type: "address",
+          name: "_claimer",
         },
         {
-          internalType: "uint256",
-          name: "_quantity",
           type: "uint256",
+          name: "_quantity",
         },
       ],
       [],

@@ -22,50 +22,42 @@ export async function getAllExtensions(options: BaseTransactionOptions) {
       [],
       [
         {
+          type: "tuple[]",
+          name: "allExtensions",
           components: [
             {
+              type: "tuple",
+              name: "metadata",
               components: [
                 {
-                  internalType: "string",
+                  type: "string",
                   name: "name",
-                  type: "string",
                 },
                 {
-                  internalType: "string",
+                  type: "string",
                   name: "metadataURI",
-                  type: "string",
                 },
                 {
-                  internalType: "address",
-                  name: "implementation",
                   type: "address",
+                  name: "implementation",
                 },
               ],
-              internalType: "struct IExtension.ExtensionMetadata",
-              name: "metadata",
-              type: "tuple",
             },
             {
+              type: "tuple[]",
+              name: "functions",
               components: [
                 {
-                  internalType: "bytes4",
-                  name: "functionSelector",
                   type: "bytes4",
+                  name: "functionSelector",
                 },
                 {
-                  internalType: "string",
-                  name: "functionSignature",
                   type: "string",
+                  name: "functionSignature",
                 },
               ],
-              internalType: "struct IExtension.ExtensionFunction[]",
-              name: "functions",
-              type: "tuple[]",
             },
           ],
-          internalType: "struct IExtension.Extension[]",
-          name: "allExtensions",
-          type: "tuple[]",
         },
       ],
     ],

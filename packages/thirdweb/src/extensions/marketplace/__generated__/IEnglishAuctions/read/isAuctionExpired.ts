@@ -7,9 +7,8 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type IsAuctionExpiredParams = {
   auctionId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_auctionId";
     type: "uint256";
+    name: "_auctionId";
   }>;
 };
 
@@ -37,15 +36,12 @@ export async function isAuctionExpired(
       "0x1389b117",
       [
         {
-          internalType: "uint256",
-          name: "_auctionId",
           type: "uint256",
+          name: "_auctionId",
         },
       ],
       [
         {
-          internalType: "bool",
-          name: "",
           type: "bool",
         },
       ],

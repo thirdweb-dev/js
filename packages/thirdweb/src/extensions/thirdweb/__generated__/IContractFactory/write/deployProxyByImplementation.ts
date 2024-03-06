@@ -7,20 +7,11 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type DeployProxyByImplementationParams = {
   implementation: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "implementation";
     type: "address";
+    name: "implementation";
   }>;
-  data: AbiParameterToPrimitiveType<{
-    internalType: "bytes";
-    name: "data";
-    type: "bytes";
-  }>;
-  salt: AbiParameterToPrimitiveType<{
-    internalType: "bytes32";
-    name: "salt";
-    type: "bytes32";
-  }>;
+  data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "data" }>;
+  salt: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "salt" }>;
 };
 
 /**
@@ -52,25 +43,20 @@ export function deployProxyByImplementation(
       "0x11b804ab",
       [
         {
-          internalType: "address",
-          name: "implementation",
           type: "address",
+          name: "implementation",
         },
         {
-          internalType: "bytes",
-          name: "data",
           type: "bytes",
+          name: "data",
         },
         {
-          internalType: "bytes32",
-          name: "salt",
           type: "bytes32",
+          name: "salt",
         },
       ],
       [
         {
-          internalType: "address",
-          name: "",
           type: "address",
         },
       ],

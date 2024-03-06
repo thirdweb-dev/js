@@ -7,19 +7,14 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type CreateRuleMultiplicativeParams = {
   rule: AbiParameterToPrimitiveType<{
-    components: [
-      { internalType: "address"; name: "token"; type: "address" },
-      {
-        internalType: "enum IRulesEngine.TokenType";
-        name: "tokenType";
-        type: "uint8";
-      },
-      { internalType: "uint256"; name: "tokenId"; type: "uint256" },
-      { internalType: "uint256"; name: "scorePerOwnedToken"; type: "uint256" },
-    ];
-    internalType: "struct IRulesEngine.RuleTypeMultiplicative";
-    name: "rule";
     type: "tuple";
+    name: "rule";
+    components: [
+      { type: "address"; name: "token" },
+      { type: "uint8"; name: "tokenType" },
+      { type: "uint256"; name: "tokenId" },
+      { type: "uint256"; name: "scorePerOwnedToken" },
+    ];
   }>;
 };
 
@@ -50,38 +45,32 @@ export function createRuleMultiplicative(
       "0x1e2e9cb5",
       [
         {
+          type: "tuple",
+          name: "rule",
           components: [
             {
-              internalType: "address",
-              name: "token",
               type: "address",
+              name: "token",
             },
             {
-              internalType: "enum IRulesEngine.TokenType",
-              name: "tokenType",
               type: "uint8",
+              name: "tokenType",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "tokenId",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
-              name: "scorePerOwnedToken",
               type: "uint256",
+              name: "scorePerOwnedToken",
             },
           ],
-          internalType: "struct IRulesEngine.RuleTypeMultiplicative",
-          name: "rule",
-          type: "tuple",
         },
       ],
       [
         {
-          internalType: "bytes32",
-          name: "ruleId",
           type: "bytes32",
+          name: "ruleId",
         },
       ],
     ],

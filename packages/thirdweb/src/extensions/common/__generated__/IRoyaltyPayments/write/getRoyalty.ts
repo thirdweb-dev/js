@@ -7,20 +7,11 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type GetRoyaltyParams = {
   tokenAddress: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "tokenAddress";
     type: "address";
+    name: "tokenAddress";
   }>;
-  tokenId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "tokenId";
-    type: "uint256";
-  }>;
-  value: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "value";
-    type: "uint256";
-  }>;
+  tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
+  value: AbiParameterToPrimitiveType<{ type: "uint256"; name: "value" }>;
 };
 
 /**
@@ -50,31 +41,26 @@ export function getRoyalty(options: BaseTransactionOptions<GetRoyaltyParams>) {
       "0xf533b802",
       [
         {
-          internalType: "address",
-          name: "tokenAddress",
           type: "address",
+          name: "tokenAddress",
         },
         {
-          internalType: "uint256",
+          type: "uint256",
           name: "tokenId",
-          type: "uint256",
         },
         {
-          internalType: "uint256",
-          name: "value",
           type: "uint256",
+          name: "value",
         },
       ],
       [
         {
-          internalType: "address payable[]",
-          name: "recipients",
           type: "address[]",
+          name: "recipients",
         },
         {
-          internalType: "uint256[]",
-          name: "amounts",
           type: "uint256[]",
+          name: "amounts",
         },
       ],
     ],

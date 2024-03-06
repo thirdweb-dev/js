@@ -22,9 +22,8 @@ export async function getAllAdmins(options: BaseTransactionOptions) {
       [],
       [
         {
-          internalType: "address[]",
-          name: "admins",
           type: "address[]",
+          name: "admins",
         },
       ],
     ],

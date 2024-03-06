@@ -7,15 +7,10 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type SetPublisherProfileUriParams = {
   publisher: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "publisher";
     type: "address";
+    name: "publisher";
   }>;
-  uri: AbiParameterToPrimitiveType<{
-    internalType: "string";
-    name: "uri";
-    type: "string";
-  }>;
+  uri: AbiParameterToPrimitiveType<{ type: "string"; name: "uri" }>;
 };
 
 /**
@@ -46,14 +41,12 @@ export function setPublisherProfileUri(
       "0x6e578e54",
       [
         {
-          internalType: "address",
-          name: "publisher",
           type: "address",
+          name: "publisher",
         },
         {
-          internalType: "string",
-          name: "uri",
           type: "string",
+          name: "uri",
         },
       ],
       [],

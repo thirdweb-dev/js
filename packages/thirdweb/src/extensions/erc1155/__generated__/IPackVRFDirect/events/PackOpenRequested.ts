@@ -6,16 +6,14 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type PackOpenRequestedEventFilters = Partial<{
   opener: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "opener";
     type: "address";
+    name: "opener";
+    indexed: true;
   }>;
   packId: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "uint256";
-    name: "packId";
     type: "uint256";
+    name: "packId";
+    indexed: true;
   }>;
 }>;
 

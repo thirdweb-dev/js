@@ -6,10 +6,9 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type TokensLazyMintedEventFilters = Partial<{
   startTokenId: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "uint256";
-    name: "startTokenId";
     type: "uint256";
+    name: "startTokenId";
+    indexed: true;
   }>;
 }>;
 

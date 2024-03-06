@@ -7,24 +7,14 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type AcceptOfferParams = {
   listingId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
+    type: "uint256";
     name: "_listingId";
-    type: "uint256";
   }>;
-  offeror: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "_offeror";
-    type: "address";
-  }>;
-  currency: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "_currency";
-    type: "address";
-  }>;
+  offeror: AbiParameterToPrimitiveType<{ type: "address"; name: "_offeror" }>;
+  currency: AbiParameterToPrimitiveType<{ type: "address"; name: "_currency" }>;
   totalPrice: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_totalPrice";
     type: "uint256";
+    name: "_totalPrice";
   }>;
 };
 
@@ -58,24 +48,20 @@ export function acceptOffer(
       "0xb13c0e63",
       [
         {
-          internalType: "uint256",
+          type: "uint256",
           name: "_listingId",
-          type: "uint256",
         },
         {
-          internalType: "address",
+          type: "address",
           name: "_offeror",
-          type: "address",
         },
         {
-          internalType: "address",
+          type: "address",
           name: "_currency",
-          type: "address",
         },
         {
-          internalType: "uint256",
-          name: "_totalPrice",
           type: "uint256",
+          name: "_totalPrice",
         },
       ],
       [],

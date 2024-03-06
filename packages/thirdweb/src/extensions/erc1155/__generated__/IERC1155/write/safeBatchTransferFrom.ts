@@ -6,31 +6,11 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "safeBatchTransferFrom" function.
  */
 export type SafeBatchTransferFromParams = {
-  from: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "_from";
-    type: "address";
-  }>;
-  to: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "_to";
-    type: "address";
-  }>;
-  ids: AbiParameterToPrimitiveType<{
-    internalType: "uint256[]";
-    name: "_ids";
-    type: "uint256[]";
-  }>;
-  values: AbiParameterToPrimitiveType<{
-    internalType: "uint256[]";
-    name: "_values";
-    type: "uint256[]";
-  }>;
-  data: AbiParameterToPrimitiveType<{
-    internalType: "bytes";
-    name: "_data";
-    type: "bytes";
-  }>;
+  from: AbiParameterToPrimitiveType<{ type: "address"; name: "_from" }>;
+  to: AbiParameterToPrimitiveType<{ type: "address"; name: "_to" }>;
+  ids: AbiParameterToPrimitiveType<{ type: "uint256[]"; name: "_ids" }>;
+  values: AbiParameterToPrimitiveType<{ type: "uint256[]"; name: "_values" }>;
+  data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "_data" }>;
 };
 
 /**
@@ -64,29 +44,24 @@ export function safeBatchTransferFrom(
       "0x2eb2c2d6",
       [
         {
-          internalType: "address",
+          type: "address",
           name: "_from",
-          type: "address",
         },
         {
-          internalType: "address",
+          type: "address",
           name: "_to",
-          type: "address",
         },
         {
-          internalType: "uint256[]",
+          type: "uint256[]",
           name: "_ids",
-          type: "uint256[]",
         },
         {
-          internalType: "uint256[]",
+          type: "uint256[]",
           name: "_values",
-          type: "uint256[]",
         },
         {
-          internalType: "bytes",
-          name: "_data",
           type: "bytes",
+          name: "_data",
         },
       ],
       [],

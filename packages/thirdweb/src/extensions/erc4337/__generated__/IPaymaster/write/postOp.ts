@@ -6,20 +6,11 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "postOp" function.
  */
 export type PostOpParams = {
-  mode: AbiParameterToPrimitiveType<{
-    internalType: "enum IPaymaster.PostOpMode";
-    name: "mode";
-    type: "uint8";
-  }>;
-  context: AbiParameterToPrimitiveType<{
-    internalType: "bytes";
-    name: "context";
-    type: "bytes";
-  }>;
+  mode: AbiParameterToPrimitiveType<{ type: "uint8"; name: "mode" }>;
+  context: AbiParameterToPrimitiveType<{ type: "bytes"; name: "context" }>;
   actualGasCost: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "actualGasCost";
     type: "uint256";
+    name: "actualGasCost";
   }>;
 };
 
@@ -50,19 +41,16 @@ export function postOp(options: BaseTransactionOptions<PostOpParams>) {
       "0xa9a23409",
       [
         {
-          internalType: "enum IPaymaster.PostOpMode",
-          name: "mode",
           type: "uint8",
+          name: "mode",
         },
         {
-          internalType: "bytes",
-          name: "context",
           type: "bytes",
+          name: "context",
         },
         {
-          internalType: "uint256",
-          name: "actualGasCost",
           type: "uint256",
+          name: "actualGasCost",
         },
       ],
       [],

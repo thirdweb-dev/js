@@ -7,14 +7,12 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type IsNewWinningBidParams = {
   auctionId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_auctionId";
     type: "uint256";
+    name: "_auctionId";
   }>;
   bidAmount: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_bidAmount";
     type: "uint256";
+    name: "_bidAmount";
   }>;
 };
 
@@ -43,20 +41,16 @@ export async function isNewWinningBid(
       "0x2eb566bd",
       [
         {
-          internalType: "uint256",
-          name: "_auctionId",
           type: "uint256",
+          name: "_auctionId",
         },
         {
-          internalType: "uint256",
-          name: "_bidAmount",
           type: "uint256",
+          name: "_bidAmount",
         },
       ],
       [
         {
-          internalType: "bool",
-          name: "",
           type: "bool",
         },
       ],

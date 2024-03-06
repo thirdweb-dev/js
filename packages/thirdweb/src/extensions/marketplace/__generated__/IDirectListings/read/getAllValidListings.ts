@@ -6,16 +6,8 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "getAllValidListings" function.
  */
 export type GetAllValidListingsParams = {
-  startId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_startId";
-    type: "uint256";
-  }>;
-  endId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_endId";
-    type: "uint256";
-  }>;
+  startId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_startId" }>;
+  endId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_endId" }>;
 };
 
 /**
@@ -43,83 +35,68 @@ export async function getAllValidListings(
       "0x31654b4d",
       [
         {
-          internalType: "uint256",
-          name: "_startId",
           type: "uint256",
+          name: "_startId",
         },
         {
-          internalType: "uint256",
-          name: "_endId",
           type: "uint256",
+          name: "_endId",
         },
       ],
       [
         {
+          type: "tuple[]",
+          name: "listings",
           components: [
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "listingId",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "tokenId",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "quantity",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "pricePerToken",
-              type: "uint256",
             },
             {
-              internalType: "uint128",
+              type: "uint128",
               name: "startTimestamp",
-              type: "uint128",
             },
             {
-              internalType: "uint128",
+              type: "uint128",
               name: "endTimestamp",
-              type: "uint128",
             },
             {
-              internalType: "address",
+              type: "address",
               name: "listingCreator",
-              type: "address",
             },
             {
-              internalType: "address",
+              type: "address",
               name: "assetContract",
-              type: "address",
             },
             {
-              internalType: "address",
+              type: "address",
               name: "currency",
-              type: "address",
             },
             {
-              internalType: "enum IDirectListings.TokenType",
+              type: "uint8",
               name: "tokenType",
-              type: "uint8",
             },
             {
-              internalType: "enum IDirectListings.Status",
+              type: "uint8",
               name: "status",
-              type: "uint8",
             },
             {
-              internalType: "bool",
-              name: "reserved",
               type: "bool",
+              name: "reserved",
             },
           ],
-          internalType: "struct IDirectListings.Listing[]",
-          name: "listings",
-          type: "tuple[]",
         },
       ],
     ],

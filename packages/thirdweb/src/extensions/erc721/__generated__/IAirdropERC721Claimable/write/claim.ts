@@ -6,25 +6,12 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "claim" function.
  */
 export type ClaimParams = {
-  receiver: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "receiver";
-    type: "address";
-  }>;
-  quantity: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "quantity";
-    type: "uint256";
-  }>;
-  proofs: AbiParameterToPrimitiveType<{
-    internalType: "bytes32[]";
-    name: "proofs";
-    type: "bytes32[]";
-  }>;
+  receiver: AbiParameterToPrimitiveType<{ type: "address"; name: "receiver" }>;
+  quantity: AbiParameterToPrimitiveType<{ type: "uint256"; name: "quantity" }>;
+  proofs: AbiParameterToPrimitiveType<{ type: "bytes32[]"; name: "proofs" }>;
   proofMaxQuantityForWallet: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "proofMaxQuantityForWallet";
     type: "uint256";
+    name: "proofMaxQuantityForWallet";
   }>;
 };
 
@@ -56,24 +43,20 @@ export function claim(options: BaseTransactionOptions<ClaimParams>) {
       "0x3b4b57b0",
       [
         {
-          internalType: "address",
-          name: "receiver",
           type: "address",
+          name: "receiver",
         },
         {
-          internalType: "uint256",
+          type: "uint256",
           name: "quantity",
-          type: "uint256",
         },
         {
-          internalType: "bytes32[]",
-          name: "proofs",
           type: "bytes32[]",
+          name: "proofs",
         },
         {
-          internalType: "uint256",
-          name: "proofMaxQuantityForWallet",
           type: "uint256",
+          name: "proofMaxQuantityForWallet",
         },
       ],
       [],

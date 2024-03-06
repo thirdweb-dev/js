@@ -23,11 +23,11 @@ export {
    */
   uri as tokenUri,
   type UriParams,
-} from "../../extensions/erc1155/__generated__/IERC1155Metadata/read/uri.js";
+} from "../../extensions/erc1155/__generated__/IERC1155/read/uri.js";
 export {
   totalSupply,
   type TotalSupplyParams,
-} from "../../extensions/erc1155/__generated__/IERC1155Supply/read/totalSupply.js";
+} from "../../extensions/erc1155/__generated__/IERC1155/read/totalSupply.js";
 export {
   balanceOf,
   type BalanceOfParams,

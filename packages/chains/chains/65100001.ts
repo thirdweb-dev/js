@@ -24,13 +24,10 @@ export default {
     "decimals": 18
   },
   "networkId": 65100001,
-  "rpc": [
-    "https://65100001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc1.piccadilly.autonity.org/",
-    "wss://rpc1.piccadilly.autonity.org/ws/"
-  ],
+  "rpc": [],
   "shortName": "piccadilly-01",
   "slip44": 1,
   "slug": "autonity-piccadilly-barada-testnet",
+  "status": "deprecated",
   "testnet": true
 } as const satisfies Chain;

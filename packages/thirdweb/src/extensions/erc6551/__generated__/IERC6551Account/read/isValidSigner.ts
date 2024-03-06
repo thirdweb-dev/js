@@ -6,16 +6,8 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "isValidSigner" function.
  */
 export type IsValidSignerParams = {
-  signer: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "signer";
-    type: "address";
-  }>;
-  context: AbiParameterToPrimitiveType<{
-    internalType: "bytes";
-    name: "context";
-    type: "bytes";
-  }>;
+  signer: AbiParameterToPrimitiveType<{ type: "address"; name: "signer" }>;
+  context: AbiParameterToPrimitiveType<{ type: "bytes"; name: "context" }>;
 };
 
 /**
@@ -43,21 +35,18 @@ export async function isValidSigner(
       "0x523e3260",
       [
         {
-          internalType: "address",
-          name: "signer",
           type: "address",
+          name: "signer",
         },
         {
-          internalType: "bytes",
-          name: "context",
           type: "bytes",
+          name: "context",
         },
       ],
       [
         {
-          internalType: "bytes4",
-          name: "magicValue",
           type: "bytes4",
+          name: "magicValue",
         },
       ],
     ],

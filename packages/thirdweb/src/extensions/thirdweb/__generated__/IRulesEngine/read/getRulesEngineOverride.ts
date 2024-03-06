@@ -22,9 +22,8 @@ export async function getRulesEngineOverride(options: BaseTransactionOptions) {
       [],
       [
         {
-          internalType: "address",
-          name: "rulesEngineAddress",
           type: "address",
+          name: "rulesEngineAddress",
         },
       ],
     ],

@@ -6,11 +6,7 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "multicall" function.
  */
 export type MulticallParams = {
-  data: AbiParameterToPrimitiveType<{
-    internalType: "bytes[]";
-    name: "data";
-    type: "bytes[]";
-  }>;
+  data: AbiParameterToPrimitiveType<{ type: "bytes[]"; name: "data" }>;
 };
 
 /**
@@ -38,16 +34,14 @@ export function multicall(options: BaseTransactionOptions<MulticallParams>) {
       "0xac9650d8",
       [
         {
-          internalType: "bytes[]",
-          name: "data",
           type: "bytes[]",
+          name: "data",
         },
       ],
       [
         {
-          internalType: "bytes[]",
-          name: "results",
           type: "bytes[]",
+          name: "results",
         },
       ],
     ],

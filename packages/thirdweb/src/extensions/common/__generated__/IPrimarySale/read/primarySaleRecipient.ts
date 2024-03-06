@@ -22,8 +22,6 @@ export async function primarySaleRecipient(options: BaseTransactionOptions) {
       [],
       [
         {
-          internalType: "address",
-          name: "",
           type: "address",
         },
       ],

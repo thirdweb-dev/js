@@ -7,14 +7,12 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type GetPublishedContractParams = {
   publisher: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "publisher";
     type: "address";
+    name: "publisher";
   }>;
   contractId: AbiParameterToPrimitiveType<{
-    internalType: "string";
-    name: "contractId";
     type: "string";
+    name: "contractId";
   }>;
 };
 
@@ -43,48 +41,40 @@ export async function getPublishedContract(
       "0x7ec047fa",
       [
         {
-          internalType: "address",
-          name: "publisher",
           type: "address",
+          name: "publisher",
         },
         {
-          internalType: "string",
-          name: "contractId",
           type: "string",
+          name: "contractId",
         },
       ],
       [
         {
+          type: "tuple",
+          name: "published",
           components: [
             {
-              internalType: "string",
+              type: "string",
               name: "contractId",
-              type: "string",
             },
             {
-              internalType: "uint256",
-              name: "publishTimestamp",
               type: "uint256",
+              name: "publishTimestamp",
             },
             {
-              internalType: "string",
-              name: "publishMetadataUri",
               type: "string",
+              name: "publishMetadataUri",
             },
             {
-              internalType: "bytes32",
-              name: "bytecodeHash",
               type: "bytes32",
+              name: "bytecodeHash",
             },
             {
-              internalType: "address",
-              name: "implementation",
               type: "address",
+              name: "implementation",
             },
           ],
-          internalType: "struct IContractPublisher.CustomContractInstance",
-          name: "published",
-          type: "tuple",
         },
       ],
     ],

@@ -7,9 +7,8 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type CollectAuctionPayoutParams = {
   auctionId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_auctionId";
     type: "uint256";
+    name: "_auctionId";
   }>;
 };
 
@@ -40,9 +39,8 @@ export function collectAuctionPayout(
       "0xebf05a62",
       [
         {
-          internalType: "uint256",
-          name: "_auctionId",
           type: "uint256",
+          name: "_auctionId",
         },
       ],
       [],

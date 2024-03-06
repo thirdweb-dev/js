@@ -22,13 +22,9 @@ export async function getPlatformFeeInfo(options: BaseTransactionOptions) {
       [],
       [
         {
-          internalType: "address",
-          name: "",
           type: "address",
         },
         {
-          internalType: "uint16",
-          name: "",
           type: "uint16",
         },
       ],

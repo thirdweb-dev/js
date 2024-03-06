@@ -22,43 +22,36 @@ export async function getAllSharedMetadata(options: BaseTransactionOptions) {
       [],
       [
         {
+          type: "tuple[]",
+          name: "metadata",
           components: [
             {
-              internalType: "bytes32",
-              name: "id",
               type: "bytes32",
+              name: "id",
             },
             {
+              type: "tuple",
+              name: "metadata",
               components: [
                 {
-                  internalType: "string",
+                  type: "string",
                   name: "name",
-                  type: "string",
                 },
                 {
-                  internalType: "string",
+                  type: "string",
                   name: "description",
-                  type: "string",
                 },
                 {
-                  internalType: "string",
+                  type: "string",
                   name: "imageURI",
-                  type: "string",
                 },
                 {
-                  internalType: "string",
-                  name: "animationURI",
                   type: "string",
+                  name: "animationURI",
                 },
               ],
-              internalType: "struct ISharedMetadataBatch.SharedMetadataInfo",
-              name: "metadata",
-              type: "tuple",
             },
           ],
-          internalType: "struct ISharedMetadataBatch.SharedMetadataWithId[]",
-          name: "metadata",
-          type: "tuple[]",
         },
       ],
     ],

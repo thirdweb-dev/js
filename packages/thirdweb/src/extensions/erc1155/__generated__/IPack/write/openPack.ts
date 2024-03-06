@@ -6,15 +6,10 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "openPack" function.
  */
 export type OpenPackParams = {
-  packId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "packId";
-    type: "uint256";
-  }>;
+  packId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "packId" }>;
   amountToOpen: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "amountToOpen";
     type: "uint256";
+    name: "amountToOpen";
   }>;
 };
 
@@ -44,43 +39,35 @@ export function openPack(options: BaseTransactionOptions<OpenPackParams>) {
       "0x914e126a",
       [
         {
-          internalType: "uint256",
-          name: "packId",
           type: "uint256",
+          name: "packId",
         },
         {
-          internalType: "uint256",
-          name: "amountToOpen",
           type: "uint256",
+          name: "amountToOpen",
         },
       ],
       [
         {
+          type: "tuple[]",
           components: [
             {
-              internalType: "address",
-              name: "assetContract",
               type: "address",
+              name: "assetContract",
             },
             {
-              internalType: "enum ITokenBundle.TokenType",
-              name: "tokenType",
               type: "uint8",
+              name: "tokenType",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "tokenId",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
-              name: "totalAmount",
               type: "uint256",
+              name: "totalAmount",
             },
           ],
-          internalType: "struct ITokenBundle.Token[]",
-          name: "",
-          type: "tuple[]",
         },
       ],
     ],

@@ -34,14 +34,8 @@ describe("eth_blockNumber", () => {
     // should only have been called once
     expect(fetchSpy).toHaveBeenCalledTimes(1);
     // check the exact payload, we should not have more than one ethBlockNumber request in the body!
-    expect(fetchSpy).toHaveBeenCalledWith(
-      "http://localhost:8555",
-      expect.objectContaining({
-        method: "POST",
-        body: JSON.stringify([
-          { method: "eth_blockNumber", id: 0, jsonrpc: "2.0" },
-        ]),
-      }),
+    expect(fetchSpy.mock.lastCall?.[1]?.body).toMatchInlineSnapshot(
+      `"[{"method":"eth_blockNumber","id":0,"jsonrpc":"2.0"}]"`,
     );
   });
 });

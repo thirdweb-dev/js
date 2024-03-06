@@ -22,8 +22,6 @@ export async function appURI(options: BaseTransactionOptions) {
       [],
       [
         {
-          internalType: "string",
-          name: "",
           type: "string",
         },
       ],

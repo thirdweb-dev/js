@@ -7,15 +7,14 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type SetSharedMetadataParams = {
   metadata: AbiParameterToPrimitiveType<{
-    components: [
-      { internalType: "string"; name: "name"; type: "string" },
-      { internalType: "string"; name: "description"; type: "string" },
-      { internalType: "string"; name: "imageURI"; type: "string" },
-      { internalType: "string"; name: "animationURI"; type: "string" },
-    ];
-    internalType: "struct ISharedMetadata.SharedMetadataInfo";
-    name: "_metadata";
     type: "tuple";
+    name: "_metadata";
+    components: [
+      { type: "string"; name: "name" },
+      { type: "string"; name: "description" },
+      { type: "string"; name: "imageURI" },
+      { type: "string"; name: "animationURI" },
+    ];
   }>;
 };
 
@@ -46,31 +45,26 @@ export function setSharedMetadata(
       "0xa7d27d9d",
       [
         {
+          type: "tuple",
+          name: "_metadata",
           components: [
             {
-              internalType: "string",
+              type: "string",
               name: "name",
-              type: "string",
             },
             {
-              internalType: "string",
+              type: "string",
               name: "description",
-              type: "string",
             },
             {
-              internalType: "string",
+              type: "string",
               name: "imageURI",
-              type: "string",
             },
             {
-              internalType: "string",
-              name: "animationURI",
               type: "string",
+              name: "animationURI",
             },
           ],
-          internalType: "struct ISharedMetadata.SharedMetadataInfo",
-          name: "_metadata",
-          type: "tuple",
         },
       ],
       [],

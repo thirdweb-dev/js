@@ -7,40 +7,26 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type SimulateHandleOpParams = {
   op: AbiParameterToPrimitiveType<{
-    components: [
-      { internalType: "address"; name: "sender"; type: "address" },
-      { internalType: "uint256"; name: "nonce"; type: "uint256" },
-      { internalType: "bytes"; name: "initCode"; type: "bytes" },
-      { internalType: "bytes"; name: "callData"; type: "bytes" },
-      { internalType: "uint256"; name: "callGasLimit"; type: "uint256" },
-      {
-        internalType: "uint256";
-        name: "verificationGasLimit";
-        type: "uint256";
-      },
-      { internalType: "uint256"; name: "preVerificationGas"; type: "uint256" },
-      { internalType: "uint256"; name: "maxFeePerGas"; type: "uint256" },
-      {
-        internalType: "uint256";
-        name: "maxPriorityFeePerGas";
-        type: "uint256";
-      },
-      { internalType: "bytes"; name: "paymasterAndData"; type: "bytes" },
-      { internalType: "bytes"; name: "signature"; type: "bytes" },
-    ];
-    internalType: "struct UserOperation";
-    name: "op";
     type: "tuple";
+    name: "op";
+    components: [
+      { type: "address"; name: "sender" },
+      { type: "uint256"; name: "nonce" },
+      { type: "bytes"; name: "initCode" },
+      { type: "bytes"; name: "callData" },
+      { type: "uint256"; name: "callGasLimit" },
+      { type: "uint256"; name: "verificationGasLimit" },
+      { type: "uint256"; name: "preVerificationGas" },
+      { type: "uint256"; name: "maxFeePerGas" },
+      { type: "uint256"; name: "maxPriorityFeePerGas" },
+      { type: "bytes"; name: "paymasterAndData" },
+      { type: "bytes"; name: "signature" },
+    ];
   }>;
-  target: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "target";
-    type: "address";
-  }>;
+  target: AbiParameterToPrimitiveType<{ type: "address"; name: "target" }>;
   targetCallData: AbiParameterToPrimitiveType<{
-    internalType: "bytes";
-    name: "targetCallData";
     type: "bytes";
+    name: "targetCallData";
   }>;
 };
 
@@ -73,76 +59,62 @@ export function simulateHandleOp(
       "0xd6383f94",
       [
         {
+          type: "tuple",
+          name: "op",
           components: [
             {
-              internalType: "address",
-              name: "sender",
               type: "address",
+              name: "sender",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "nonce",
-              type: "uint256",
             },
             {
-              internalType: "bytes",
+              type: "bytes",
               name: "initCode",
-              type: "bytes",
             },
             {
-              internalType: "bytes",
+              type: "bytes",
               name: "callData",
-              type: "bytes",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "callGasLimit",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "verificationGasLimit",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "preVerificationGas",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "maxFeePerGas",
-              type: "uint256",
             },
             {
-              internalType: "uint256",
+              type: "uint256",
               name: "maxPriorityFeePerGas",
-              type: "uint256",
             },
             {
-              internalType: "bytes",
+              type: "bytes",
               name: "paymasterAndData",
-              type: "bytes",
             },
             {
-              internalType: "bytes",
-              name: "signature",
               type: "bytes",
+              name: "signature",
             },
           ],
-          internalType: "struct UserOperation",
-          name: "op",
-          type: "tuple",
         },
         {
-          internalType: "address",
-          name: "target",
           type: "address",
+          name: "target",
         },
         {
-          internalType: "bytes",
-          name: "targetCallData",
           type: "bytes",
+          name: "targetCallData",
         },
       ],
       [],

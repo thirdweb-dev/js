@@ -7,9 +7,8 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type IsTrustedForwarderParams = {
   forwarder: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "forwarder";
     type: "address";
+    name: "forwarder";
   }>;
 };
 
@@ -37,15 +36,12 @@ export async function isTrustedForwarder(
       "0x572b6c05",
       [
         {
-          internalType: "address",
-          name: "forwarder",
           type: "address",
+          name: "forwarder",
         },
       ],
       [
         {
-          internalType: "bool",
-          name: "",
           type: "bool",
         },
       ],

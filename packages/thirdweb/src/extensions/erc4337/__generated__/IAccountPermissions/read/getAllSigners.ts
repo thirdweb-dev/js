@@ -22,36 +22,30 @@ export async function getAllSigners(options: BaseTransactionOptions) {
       [],
       [
         {
+          type: "tuple[]",
+          name: "signers",
           components: [
             {
-              internalType: "address",
-              name: "signer",
               type: "address",
+              name: "signer",
             },
             {
-              internalType: "address[]",
-              name: "approvedTargets",
               type: "address[]",
+              name: "approvedTargets",
             },
             {
-              internalType: "uint256",
-              name: "nativeTokenLimitPerTransaction",
               type: "uint256",
+              name: "nativeTokenLimitPerTransaction",
             },
             {
-              internalType: "uint128",
+              type: "uint128",
               name: "startTimestamp",
-              type: "uint128",
             },
             {
-              internalType: "uint128",
-              name: "endTimestamp",
               type: "uint128",
+              name: "endTimestamp",
             },
           ],
-          internalType: "struct IAccountPermissions.SignerPermissions[]",
-          name: "signers",
-          type: "tuple[]",
         },
       ],
     ],

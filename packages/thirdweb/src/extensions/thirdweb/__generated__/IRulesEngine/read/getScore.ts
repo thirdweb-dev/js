@@ -7,9 +7,8 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type GetScoreParams = {
   tokenOwner: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "_tokenOwner";
     type: "address";
+    name: "_tokenOwner";
   }>;
 };
 
@@ -37,16 +36,14 @@ export async function getScore(
       "0xd47875d0",
       [
         {
-          internalType: "address",
-          name: "_tokenOwner",
           type: "address",
+          name: "_tokenOwner",
         },
       ],
       [
         {
-          internalType: "uint256",
-          name: "score",
           type: "uint256",
+          name: "score",
         },
       ],
     ],

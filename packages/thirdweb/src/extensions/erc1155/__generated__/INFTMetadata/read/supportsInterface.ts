@@ -7,9 +7,8 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type SupportsInterfaceParams = {
   interfaceId: AbiParameterToPrimitiveType<{
-    internalType: "bytes4";
-    name: "interfaceId";
     type: "bytes4";
+    name: "interfaceId";
   }>;
 };
 
@@ -37,15 +36,12 @@ export async function supportsInterface(
       "0x01ffc9a7",
       [
         {
-          internalType: "bytes4",
-          name: "interfaceId",
           type: "bytes4",
+          name: "interfaceId",
         },
       ],
       [
         {
-          internalType: "bool",
-          name: "",
           type: "bool",
         },
       ],

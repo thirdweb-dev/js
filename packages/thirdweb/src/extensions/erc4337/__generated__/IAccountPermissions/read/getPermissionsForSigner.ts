@@ -6,11 +6,7 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "getPermissionsForSigner" function.
  */
 export type GetPermissionsForSignerParams = {
-  signer: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "signer";
-    type: "address";
-  }>;
+  signer: AbiParameterToPrimitiveType<{ type: "address"; name: "signer" }>;
 };
 
 /**
@@ -37,43 +33,36 @@ export async function getPermissionsForSigner(
       "0xf15d424e",
       [
         {
-          internalType: "address",
-          name: "signer",
           type: "address",
+          name: "signer",
         },
       ],
       [
         {
+          type: "tuple",
+          name: "permissions",
           components: [
             {
-              internalType: "address",
-              name: "signer",
               type: "address",
+              name: "signer",
             },
             {
-              internalType: "address[]",
-              name: "approvedTargets",
               type: "address[]",
+              name: "approvedTargets",
             },
             {
-              internalType: "uint256",
-              name: "nativeTokenLimitPerTransaction",
               type: "uint256",
+              name: "nativeTokenLimitPerTransaction",
             },
             {
-              internalType: "uint128",
+              type: "uint128",
               name: "startTimestamp",
-              type: "uint128",
             },
             {
-              internalType: "uint128",
-              name: "endTimestamp",
               type: "uint128",
+              name: "endTimestamp",
             },
           ],
-          internalType: "struct IAccountPermissions.SignerPermissions",
-          name: "permissions",
-          type: "tuple",
         },
       ],
     ],

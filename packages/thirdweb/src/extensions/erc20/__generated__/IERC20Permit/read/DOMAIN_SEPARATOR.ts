@@ -22,8 +22,6 @@ export async function DOMAIN_SEPARATOR(options: BaseTransactionOptions) {
       [],
       [
         {
-          internalType: "bytes32",
-          name: "",
           type: "bytes32",
         },
       ],

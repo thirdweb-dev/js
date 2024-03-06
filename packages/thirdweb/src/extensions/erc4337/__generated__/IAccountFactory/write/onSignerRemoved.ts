@@ -6,21 +6,12 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "onSignerRemoved" function.
  */
 export type OnSignerRemovedParams = {
-  signer: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "signer";
-    type: "address";
-  }>;
+  signer: AbiParameterToPrimitiveType<{ type: "address"; name: "signer" }>;
   creatorAdmin: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "creatorAdmin";
     type: "address";
+    name: "creatorAdmin";
   }>;
-  data: AbiParameterToPrimitiveType<{
-    internalType: "bytes";
-    name: "data";
-    type: "bytes";
-  }>;
+  data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "data" }>;
 };
 
 /**
@@ -52,19 +43,16 @@ export function onSignerRemoved(
       "0x0db33003",
       [
         {
-          internalType: "address",
+          type: "address",
           name: "signer",
-          type: "address",
         },
         {
-          internalType: "address",
+          type: "address",
           name: "creatorAdmin",
-          type: "address",
         },
         {
-          internalType: "bytes",
-          name: "data",
           type: "bytes",
+          name: "data",
         },
       ],
       [],

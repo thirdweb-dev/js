@@ -6,11 +6,7 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "setContractURI" function.
  */
 export type SetContractURIParams = {
-  uri: AbiParameterToPrimitiveType<{
-    internalType: "string";
-    name: "_uri";
-    type: "string";
-  }>;
+  uri: AbiParameterToPrimitiveType<{ type: "string"; name: "_uri" }>;
 };
 
 /**
@@ -40,9 +36,8 @@ export function setContractURI(
       "0x938e3d7b",
       [
         {
-          internalType: "string",
-          name: "_uri",
           type: "string",
+          name: "_uri",
         },
       ],
       [],

@@ -6,16 +6,8 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "revokeRole" function.
  */
 export type RevokeRoleParams = {
-  role: AbiParameterToPrimitiveType<{
-    internalType: "bytes32";
-    name: "role";
-    type: "bytes32";
-  }>;
-  account: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "account";
-    type: "address";
-  }>;
+  role: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "role" }>;
+  account: AbiParameterToPrimitiveType<{ type: "address"; name: "account" }>;
 };
 
 /**
@@ -44,14 +36,12 @@ export function revokeRole(options: BaseTransactionOptions<RevokeRoleParams>) {
       "0xd547741f",
       [
         {
-          internalType: "bytes32",
-          name: "role",
           type: "bytes32",
+          name: "role",
         },
         {
-          internalType: "address",
-          name: "account",
           type: "address",
+          name: "account",
         },
       ],
       [],

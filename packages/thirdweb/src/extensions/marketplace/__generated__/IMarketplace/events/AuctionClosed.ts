@@ -6,22 +6,19 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type AuctionClosedEventFilters = Partial<{
   listingId: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "uint256";
-    name: "listingId";
     type: "uint256";
+    name: "listingId";
+    indexed: true;
   }>;
   closer: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "closer";
     type: "address";
+    name: "closer";
+    indexed: true;
   }>;
   cancelled: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "bool";
-    name: "cancelled";
     type: "bool";
+    name: "cancelled";
+    indexed: true;
   }>;
 }>;
 

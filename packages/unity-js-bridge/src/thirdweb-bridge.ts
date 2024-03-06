@@ -144,7 +144,7 @@ class ThirdwebBridge implements TWBridge {
       }
       (globalThis as any).X_SDK_NAME = "UnitySDK_WebGL";
       (globalThis as any).X_SDK_PLATFORM = "unity";
-      (globalThis as any).X_SDK_VERSION = "4.7.4";
+      (globalThis as any).X_SDK_VERSION = "4.7.5";
       (globalThis as any).X_SDK_OS = browser?.os ?? "unknown";
     }
     this.initializedChain = chain;
@@ -244,6 +244,9 @@ class ThirdwebBridge implements TWBridge {
             paymasterUrl: sdkOptions.smartWalletConfig?.paymasterUrl,
             // paymasterAPI: sdkOptions.smartWalletConfig?.paymasterAPI,
             entryPointAddress: sdkOptions.smartWalletConfig?.entryPointAddress,
+            erc20PaymasterAddress:
+              sdkOptions.smartWalletConfig?.erc20PaymasterAddress,
+            erc20TokenAddress: sdkOptions.smartWalletConfig?.erc20TokenAddress,
           };
           walletInstance = new SmartWallet(config);
           break;

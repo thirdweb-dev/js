@@ -7,39 +7,32 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type UpdateListingParams = {
   listingId: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_listingId";
     type: "uint256";
+    name: "_listingId";
   }>;
   quantityToList: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_quantityToList";
     type: "uint256";
+    name: "_quantityToList";
   }>;
   reservePricePerToken: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_reservePricePerToken";
     type: "uint256";
+    name: "_reservePricePerToken";
   }>;
   buyoutPricePerToken: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_buyoutPricePerToken";
     type: "uint256";
+    name: "_buyoutPricePerToken";
   }>;
   currencyToAccept: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "_currencyToAccept";
     type: "address";
+    name: "_currencyToAccept";
   }>;
   startTime: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_startTime";
     type: "uint256";
+    name: "_startTime";
   }>;
   secondsUntilEndTime: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "_secondsUntilEndTime";
     type: "uint256";
+    name: "_secondsUntilEndTime";
   }>;
 };
 
@@ -76,39 +69,32 @@ export function updateListing(
       "0xc4b5b15f",
       [
         {
-          internalType: "uint256",
+          type: "uint256",
           name: "_listingId",
-          type: "uint256",
         },
         {
-          internalType: "uint256",
+          type: "uint256",
           name: "_quantityToList",
-          type: "uint256",
         },
         {
-          internalType: "uint256",
+          type: "uint256",
           name: "_reservePricePerToken",
-          type: "uint256",
         },
         {
-          internalType: "uint256",
+          type: "uint256",
           name: "_buyoutPricePerToken",
-          type: "uint256",
         },
         {
-          internalType: "address",
-          name: "_currencyToAccept",
           type: "address",
+          name: "_currencyToAccept",
         },
         {
-          internalType: "uint256",
+          type: "uint256",
           name: "_startTime",
-          type: "uint256",
         },
         {
-          internalType: "uint256",
-          name: "_secondsUntilEndTime",
           type: "uint256",
+          name: "_secondsUntilEndTime",
         },
       ],
       [],

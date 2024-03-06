@@ -22,8 +22,6 @@ export async function contractURI(options: BaseTransactionOptions) {
       [],
       [
         {
-          internalType: "string",
-          name: "",
           type: "string",
         },
       ],

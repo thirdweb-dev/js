@@ -1,11 +1,8 @@
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { fetchTokenMetadata } from "../../../utils/nft/fetchTokenMetadata.js";
 import { parseNFT, type NFT } from "../../../utils/nft/parseNft.js";
-import {
-  uri,
-  type UriParams,
-} from "../__generated__/IERC1155Metadata/read/uri.js";
-import { totalSupply } from "../__generated__/IERC1155Supply/read/totalSupply.js";
+import { uri, type UriParams } from "../__generated__/IERC1155/read/uri.js";
+import { totalSupply } from "../__generated__/IERC1155/read/totalSupply.js";
 
 /**
  * Parameters for getting an NFT.

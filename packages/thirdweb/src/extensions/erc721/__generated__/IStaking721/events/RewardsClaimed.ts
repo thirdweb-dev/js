@@ -6,10 +6,9 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type RewardsClaimedEventFilters = Partial<{
   staker: AbiParameterToPrimitiveType<{
-    indexed: true;
-    internalType: "address";
-    name: "staker";
     type: "address";
+    name: "staker";
+    indexed: true;
   }>;
 }>;
 
