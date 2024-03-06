@@ -1,43 +1,43 @@
-import { Spacer } from "../../../components/Spacer.js";
-import { Container, ModalHeader } from "../../../components/basic.js";
-import { useTWLocale } from "../../../../providers/locale-provider.js";
-import { Button } from "../../../components/buttons.js";
-import { StyledDiv } from "../../../design-system/elements.js";
-import { useCustomTheme } from "../../../design-system/CustomThemeProvider.js";
-import { iconSize, spacing } from "../../../design-system/index.js";
-import { Text } from "../../../components/text.js";
-import { useDeferredValue, useMemo, useState } from "react";
 import { CheckCircledIcon, CrossCircledIcon } from "@radix-ui/react-icons";
-import { TokenSelector } from "../TokenSelector.js";
-import type { SupportedTokens, TokenInfo } from "../../defaultTokens.js";
+import { useDeferredValue, useMemo, useState } from "react";
+import { ethereum } from "../../../../../chains/chain-definitions/ethereum.js";
 import type { Chain } from "../../../../../chains/types.js";
+import { defineChain } from "../../../../../chains/utils.js";
+import { NATIVE_TOKEN_ADDRESS } from "../../../../../constants/addresses.js";
+import type { SwapTransaction } from "../../../../../pay/swap/actions/getStatus.js";
+import type { GetSwapQuoteParams } from "../../../../../pay/swap/actions/getSwap.js";
+import type { SwapSupportedChainId } from "../../../../../pay/swap/supportedChains.js";
+import { swapSupportedChains } from "../../../../../pay/swap/supportedChains.js";
+import type { Account } from "../../../../../wallets/interfaces/wallet.js";
+import { useThirdwebProviderProps } from "../../../../hooks/others/useThirdwebProviderProps.js";
+import { useWalletBalance } from "../../../../hooks/others/useWalletBalance.js";
+import { useSendSwapTransaction } from "../../../../hooks/pay/useSendSwapTransaction.js";
+import { useSwapQuote } from "../../../../hooks/pay/useSwapQuote.js";
+import { useSwapStatus } from "../../../../hooks/pay/useSwapStatus.js";
+import { useTWLocale } from "../../../../providers/locale-provider.js";
 import {
   useActiveAccount,
   useActiveWalletChain,
 } from "../../../../providers/wallet-provider.js";
-import { useThirdwebProviderProps } from "../../../../hooks/others/useThirdwebProviderProps.js";
-import type { GetSwapQuoteParams } from "../../../../../pay/swap/actions/getSwap.js";
-import type { Account } from "../../../../../wallets/interfaces/wallet.js";
-import { ChainButton, NetworkSelectorContent } from "../../NetworkSelector.js";
-import { defineChain } from "../../../../../chains/utils.js";
-import { NATIVE_TOKEN_ADDRESS } from "../../../../../constants/addresses.js";
-import { ethereum } from "../../../../../chains/chain-definitions/ethereum.js";
-import { useSendSwapTransaction } from "../../../../hooks/pay/useSendSwapTransaction.js";
+import { Spacer } from "../../../components/Spacer.js";
 import { Spinner } from "../../../components/Spinner.js";
+import { Container, ModalHeader } from "../../../components/basic.js";
+import { Button } from "../../../components/buttons.js";
+import { Text } from "../../../components/text.js";
+import { useCustomTheme } from "../../../design-system/CustomThemeProvider.js";
+import { StyledDiv } from "../../../design-system/elements.js";
+import { iconSize, spacing } from "../../../design-system/index.js";
+import { ChainButton, NetworkSelectorContent } from "../../NetworkSelector.js";
+import type { SupportedTokens, TokenInfo } from "../../defaultTokens.js";
 import { ArrowTopBottom } from "../../icons/ArrowTopBottom.js";
-import { useSwapStatus } from "../../../../hooks/pay/useSwapStatus.js";
-import { SwapInput } from "./swap/SwapInput.js";
+import { WalletIcon } from "../../icons/WalletIcon.js";
+import { TokenSelector } from "../TokenSelector.js";
 import {
   NATIVE_TOKEN,
   isNativeToken,
   type NativeToken,
 } from "../nativeToken.js";
-import { useWalletBalance } from "../../../../hooks/others/useWalletBalance.js";
-import { WalletIcon } from "../../icons/WalletIcon.js";
-import { swapSupportedChains } from "../../../../../pay/swap/supportedChains.js";
-import type { SwapTransaction } from "../../../../../pay/swap/actions/getStatus.js";
-import type { SwapSupportedChainId } from "../../../../../pay/swap/supportedChains.js";
-import { useSwapQuote } from "../../../../hooks/pay/useSwapQuote.js";
+import { SwapInput } from "./swap/SwapInput.js";
 
 const supportedChainsObj = /* @__PURE__ */ (() =>
   swapSupportedChains.map(defineChain))();
@@ -121,6 +121,13 @@ export function SwapScreenContent(props: {
 
   const { client } = useThirdwebProviderProps();
 
+  const amounts =
+    tokenAmount.type === "source"
+      ? { fromAmount: deferredTokenAmount.value, toAmount: undefined }
+      : {
+          fromAmount: undefined,
+          toAmount: deferredTokenAmount.value,
+        };
   const swapParams: GetSwapQuoteParams | undefined =
     deferredTokenAmount.value &&
     !(fromChain === toChain && fromToken === toToken)
@@ -134,18 +141,11 @@ export function SwapScreenContent(props: {
             ? NATIVE_TOKEN_ADDRESS
             : fromToken.address,
           toChainId: toChain.id as SwapSupportedChainId,
-          fromAmount:
-            tokenAmount.type === "source"
-              ? deferredTokenAmount.value
-              : undefined,
           // to
           toTokenAddress: isNativeToken(toToken)
             ? NATIVE_TOKEN_ADDRESS
             : toToken.address,
-          toAmount:
-            tokenAmount.type === "destination"
-              ? deferredTokenAmount.value
-              : undefined,
+          ...amounts,
         }
       : undefined;
 
@@ -328,7 +328,9 @@ export function SwapScreenContent(props: {
             <Spacer y="xs" />
             <Fees
               label="Processing Fees"
-              amount={`${swapQuoteQuery.data.swapDetails.estimated.feesUSDCents / 100}`}
+              amount={`${
+                swapQuoteQuery.data.swapDetails.estimated.feesUSDCents / 100
+              }`}
             />
           </div>
         )}
