@@ -69,7 +69,7 @@ export class HttpRpcClient {
       setAnalyticsHeaders(headers);
     }
 
-    this.userOpJsonRpcProvider = new providers.JsonRpcProvider(
+    this.userOpJsonRpcProvider = new providers.StaticJsonRpcProvider(
       {
         url: this.bundlerUrl,
         headers,
