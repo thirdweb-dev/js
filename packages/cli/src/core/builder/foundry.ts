@@ -1,4 +1,5 @@
 import { findFiles } from "../../common/file-helper";
+import { Link, linkLibrary } from "../../common/link-lib-helper";
 import { hasForge } from "../../create/helpers/has-forge";
 import { execute } from "../helpers/exec";
 import { logger } from "../helpers/logger";
@@ -43,6 +44,24 @@ export class FoundryBuilder extends BaseBuilder {
     const files: string[] = [];
     findFiles(outPath, /^.*(?<!metadata)\.json$/, files);
 
+    const libraries: { [key: string]: string } = {};
+    if (Array.isArray(options.linkLib) && options.linkLib.length > 0) {
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const contractName = basename(file, ".json");
+        const contractJsonFile = readFileSync(file, "utf-8");
+        const contractInfo = JSON.parse(contractJsonFile);
+
+        options.linkLib.forEach((link: Link) => {
+          if (contractName === link.library) {
+            const key = `${contractInfo.ast.absolutePath}:${link.library}`;
+            libraries[key] = link.address;
+          }
+        });
+      }
+      logger.debug(`Found libraries to link: ${JSON.stringify(libraries)}`);
+    }
+
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       const contractName = basename(file, ".json");
@@ -76,8 +95,13 @@ export class FoundryBuilder extends BaseBuilder {
         continue;
       }
 
-      const bytecode = contractInfo.bytecode.object;
-      const deployedBytecode = contractInfo.deployedBytecode.object;
+      let bytecode = contractInfo.bytecode.object;
+      let deployedBytecode = contractInfo.deployedBytecode.object;
+
+      // link external libraries if any
+      bytecode = linkLibrary(bytecode, libraries);
+      deployedBytecode = linkLibrary(deployedBytecode, libraries);
+
       const parsedMetadata = contractInfo.metadata;
       const metadata =
         contractInfo.rawMetadata ||

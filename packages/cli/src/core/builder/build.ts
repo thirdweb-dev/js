@@ -41,5 +41,6 @@ export default async function build(
     projectPath: path,
     clean: options.clean,
     zksync: options.zksync,
+    linkLib: options.linkLib,
   });
 }
