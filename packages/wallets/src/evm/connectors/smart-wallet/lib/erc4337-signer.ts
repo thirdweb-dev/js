@@ -103,7 +103,7 @@ export class ERC4337EthersSigner extends Signer {
           errorIn.reason;
 
         if (failedOpMessage?.includes("FailedOp")) {
-          let paymasterInfo: string = "";
+          let paymasterInfo = "";
           // TODO: better error extraction methods will be needed
           const matched = failedOpMessage.match(/FailedOp\((.*)\)/);
 
@@ -181,7 +181,12 @@ Code: ${errorCode}`;
 
     try {
       const provider = new providers.JsonRpcProvider(
-        chainIdToThirdwebRpc(chainId, this.config.clientId),
+        {
+          url: chainIdToThirdwebRpc(chainId, this.config.clientId),
+          headers: this.config.secretKey
+            ? { "x-secret-key": this.config.secretKey }
+            : {},
+        },
         chainId,
       );
       const walletContract = new Contract(
