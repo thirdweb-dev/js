@@ -116,6 +116,9 @@ export class SolcBuilder extends BaseBuilder {
       const parsedMetadata = JSON.parse(metadata);
       const abi = parsedMetadata.output.abi;
 
+      const evmVersion = parsedMetadata.settings?.evmVersion || "";
+      const compilerVersion = parsedMetadata.compiler?.version || "";
+
       const target = parsedMetadata.settings.compilationTarget;
       if (
         Object.keys(target).length === 0 ||
@@ -156,6 +159,8 @@ export class SolcBuilder extends BaseBuilder {
           name: contractName,
           fileName,
           sources: _sources,
+          compilerVersion,
+          evmVersion,
         });
       }
     }

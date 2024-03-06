@@ -5,6 +5,7 @@ import { FoundryBuilder } from "./foundry";
 import { HardhatBuilder } from "./hardhat";
 import { SolcBuilder } from "./solc";
 import { TruffleBuilder } from "./truffle";
+import { ZKHardhatBuilder } from "./zkHardhat";
 
 export default async function build(
   path: string,
@@ -17,6 +18,10 @@ export default async function build(
   switch (projectType) {
     case "hardhat": {
       builder = new HardhatBuilder();
+      break;
+    }
+    case "zk-hardhat": {
+      builder = new ZKHardhatBuilder();
       break;
     }
     case "foundry": {

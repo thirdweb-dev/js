@@ -370,6 +370,7 @@ const main = async () => {
     .option("--dry-run", "dry run (skip actually publishing)")
     .option("-d, --debug", "show debug logs")
     .option("--ci", "Continuous Integration mode")
+    .option("--zksync", "Publish with ZKSync settings")
     .option("-k, --key <key>", "API secret key to authorize usage")
     .action(async (options) => {
       let secretKey = "";

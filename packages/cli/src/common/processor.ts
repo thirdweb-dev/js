@@ -61,9 +61,7 @@ export async function processProject(
 
   logger.debug("Processing project at path " + projectPath);
 
-  const projectType = options.zksync
-    ? "hardhat"
-    : await detect(projectPath, options);
+  const projectType = await detect(projectPath, options);
 
   if (projectType === "none") {
     if (command === "deploy") {
@@ -106,9 +104,25 @@ export async function processProject(
   }
 
   let compiledResult: { contracts: ContractPayload[] };
+  let zkCompiledResult: { contracts: ContractPayload[] };
   const compileLoader = spinner("Compiling project...");
   try {
     compiledResult = await build(projectPath, projectType, options);
+
+    if (options.zksync) {
+      zkCompiledResult = await build(projectPath, "zk-hardhat", options);
+
+      if (
+        compiledResult.contracts.length !== zkCompiledResult.contracts.length
+      ) {
+        logger.error(
+          "Length mismatch: zksolc and solc compiled contracts differ.",
+        );
+        process.exit(1);
+      }
+    } else {
+      zkCompiledResult = { contracts: [] };
+    }
   } catch (e) {
     compileLoader.fail("Compilation failed");
     logger.error(e);
@@ -223,6 +237,23 @@ export async function processProject(
     process.exit(1);
   }
 
+  let zkSelectedContracts: ContractPayload[] = [];
+  if (options.zksync) {
+    const fileNames = selectedContracts.map((selected) => selected.fileName);
+    zkSelectedContracts = zkCompiledResult.contracts.filter((contract) => {
+      const index = fileNames.indexOf(contract.fileName);
+
+      return index !== -1;
+    });
+
+    if (zkSelectedContracts.length !== selectedContracts.length) {
+      info(
+        "Selected contract not present in zksolc compiled contracts. Aborting.",
+      );
+      process.exit(1);
+    }
+  }
+
   if (options.dryRun) {
     info("Dry run, skipping deployment");
     process.exit(0);
@@ -332,6 +363,81 @@ export async function processProject(
           metadataUri: metadataURIs[i],
           bytecodeUri: bytecodeURIs[i],
           analytics,
+          compilers: {
+            solc: [
+              {
+                compilerVersion: compiledResult.contracts[0].compilerVersion,
+                evmVersion: compiledResult.contracts[0].evmVersion,
+                metadataUri: metadataURIs[i],
+                bytecodeUri: bytecodeURIs[i],
+              },
+            ],
+          },
+        };
+      });
+    }
+
+    // upload zk-contracts if present
+    if (zkSelectedContracts.length > 0) {
+      for (let i = 0; i < zkSelectedContracts.length; i++) {
+        const contract = zkSelectedContracts[i];
+        if (contract.sources) {
+          // upload sources in batches to avoid getting rate limited (needs to be single uploads)
+          const batchSize = 3;
+          for (let j = 0; j < contract.sources.length; j = j + batchSize) {
+            const batch = contract.sources.slice(j, j + batchSize);
+            logger.debug(`Uploading Sources:\n${batch.join("\n")}\n`);
+            await Promise.all(
+              batch.map(async (c) => {
+                const file = readFileSync(c, "utf-8");
+                if (file.includes(soliditySDKPackage)) {
+                  usesSoliditySDK = true;
+                }
+                return await storage.upload(file, {
+                  uploadWithoutDirectory: true,
+                });
+              }),
+            );
+          }
+        }
+      }
+
+      // Upload build output metadatas (need to be single uploads)
+      const zkMetadataURIs = await Promise.all(
+        zkSelectedContracts.map(async (c) => {
+          logger.debug(`Uploading ${c.name}...`);
+
+          return await storage.upload(JSON.parse(JSON.stringify(c.metadata)), {
+            uploadWithoutDirectory: true,
+          });
+        }),
+      );
+
+      // Upload batch all bytecodes
+      const zkBytecodes = zkSelectedContracts.map((c) => c.bytecode);
+      const zkBytecodeURIs = await storage.uploadBatch(zkBytecodes);
+
+      combinedContents = combinedContents.map((c, i) => {
+        return {
+          ...c,
+          compilers: {
+            zksolc: [
+              {
+                compilerVersion: zkCompiledResult.contracts[0].compilerVersion,
+                evmVersion: zkCompiledResult.contracts[0].evmVersion,
+                metadataUri: zkMetadataURIs[i],
+                bytecodeUri: zkBytecodeURIs[i],
+              },
+            ],
+            solc: [
+              {
+                compilerVersion: compiledResult.contracts[0].compilerVersion,
+                evmVersion: compiledResult.contracts[0].evmVersion,
+                metadataUri: metadataURIs[i],
+                bytecodeUri: bytecodeURIs[i],
+              },
+            ],
+          },
         };
       });
     }
@@ -362,8 +468,8 @@ export function getUrl(hashes: string[], command: string) {
   if (hashes.length === 1) {
     url = new URL(
       THIRDWEB_URL +
-      `/contracts/${command}/` +
-      encodeURIComponent(hashes[0].replace("ipfs://", "")),
+        `/contracts/${command}/` +
+        encodeURIComponent(hashes[0].replace("ipfs://", "")),
     );
   } else {
     url = new URL(THIRDWEB_URL + "/contracts/" + command);

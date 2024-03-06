@@ -82,6 +82,8 @@ export class FoundryBuilder extends BaseBuilder {
       const metadata =
         contractInfo.rawMetadata ||
         this.sanitizeParsedMetadata(parsedMetadata, contractInfo.abi);
+      const evmVersion = metadata.settings?.evmVersion || "";
+      const compilerVersion = metadata.compiler?.version || "";
 
       const sources = Object.keys(parsedMetadata.sources)
         .map((path) => {
@@ -122,6 +124,8 @@ export class FoundryBuilder extends BaseBuilder {
           bytecode,
           fileName,
           sources,
+          compilerVersion,
+          evmVersion,
         });
       }
     }

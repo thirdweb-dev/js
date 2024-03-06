@@ -56,6 +56,8 @@ export class BrownieBuilder extends BaseBuilder {
             sources: [], // TODO
             fileName: "", // TODO
             name: contractName,
+            compilerVersion: "",
+            evmVersion: "",
           });
           break;
         }
