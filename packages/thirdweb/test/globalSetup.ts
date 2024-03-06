@@ -1,5 +1,5 @@
 import { sha256 } from "@noble/hashes/sha256";
-import { createAnvil } from "@viem/anvil";
+import { startProxy } from "@viem/anvil";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require("dotenv-mono").load();
@@ -12,20 +12,21 @@ const clientId = SECRET_KEY
   : "";
 
 export default async function globalSetup() {
-  const anvil = createAnvil({
-    chainId: 1,
-    forkUrl: `https://1.rpc.thirdweb.com/${clientId}`,
-    // TODO: add the secret key headers here once we have the ability to pass headers
-    // see: https://github.com/wevm/anvil.js/pull/44
-    forkChainId: 1,
-    forkBlockNumber: 19139495n,
-    port: 8555,
-    noMining: true,
+  const shutdown = await startProxy({
+    port: 8545,
+    options: {
+      chainId: 1,
+      forkUrl: `https://1.rpc.thirdweb.com/${clientId}`,
+      // TODO: add the secret key headers here once we have the ability to pass headers
+      // see: https://github.com/wevm/anvil.js/pull/44
+      forkChainId: 1,
+      forkBlockNumber: 19139495n,
+      noMining: true,
+      startTimeout: 20000,
+    },
   });
 
-  await anvil.start();
-
-  return async () => {
-    await anvil.stop();
+  return () => {
+    shutdown();
   };
 }

@@ -1,8 +1,8 @@
 /**
  * @internal
  */
-export const stringify: typeof JSON.stringify = (value, replacer, space) =>
-  JSON.stringify(
+export const stringify: typeof JSON.stringify = (value, replacer, space) => {
+  const res = JSON.stringify(
     value,
     (key, value_) => {
       const value__ = typeof value_ === "bigint" ? value_.toString() : value_;
@@ -10,3 +10,5 @@ export const stringify: typeof JSON.stringify = (value, replacer, space) =>
     },
     space,
   );
+  return res;
+};

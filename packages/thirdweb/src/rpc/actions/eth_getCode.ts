@@ -1,10 +1,5 @@
-import type {
-  EIP1193RequestFn,
-  EIP1474Methods,
-  Address,
-  Hex,
-  BlockTag,
-} from "viem";
+import type { Address } from "abitype";
+import type { EIP1193RequestFn, EIP1474Methods, Hex, BlockTag } from "viem";
 
 type GetCodeParams = {
   address: Address;
