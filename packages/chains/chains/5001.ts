@@ -21,7 +21,6 @@ export default {
   },
   "networkId": 5001,
   "rpc": [
-    "https://mantle-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://5001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.testnet.mantle.xyz"
   ],

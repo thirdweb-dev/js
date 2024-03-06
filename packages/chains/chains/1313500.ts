@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 1313500,
   "rpc": [
-    "https://xerom.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1313500.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.xerom.org"
   ],

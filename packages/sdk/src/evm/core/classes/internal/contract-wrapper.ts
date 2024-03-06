@@ -44,6 +44,7 @@ import {
 } from "../../types";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
 import { isBrowser } from "../../../common/utils";
+import { detectFeatures } from "../../../common/feature-detection/detectFeatures";
 
 /**
  * @internal
@@ -61,6 +62,8 @@ export class ContractWrapper<
   public readContract;
   public abi;
   public address;
+  public functions;
+  public extensions;
 
   constructor(
     network: NetworkInput,
@@ -70,7 +73,7 @@ export class ContractWrapper<
     storage: ThirdwebStorage,
   ) {
     super(network, options);
-    this.abi = contractAbi;
+    this.abi = AbiSchema.parse(contractAbi);
     this.address = contractAddress;
     // set up the contract
     this.writeContract = new Contract(
@@ -83,6 +86,8 @@ export class ContractWrapper<
       this.getProvider(),
     ) as TContract;
     this.storage = storage;
+    this.functions = extractFunctionsFromAbi(this.abi);
+    this.extensions = detectFeatures(this.abi);
   }
 
   public override updateSignerOrProvider(network: NetworkInput): void {
@@ -112,6 +117,8 @@ export class ContractWrapper<
     ) as TContract;
 
     this.abi = AbiSchema.parse(updatedAbi);
+    this.functions = extractFunctionsFromAbi(this.abi);
+    this.extensions = detectFeatures(this.abi);
   }
 
   /**
@@ -215,10 +222,7 @@ export class ContractWrapper<
       ? Awaited<ReturnType<OverrideContract["functions"][FnName]>>[0]
       : Awaited<ReturnType<OverrideContract["functions"][FnName]>>
   > {
-    const functions = extractFunctionsFromAbi(AbiSchema.parse(this.abi)).filter(
-      (f) => f.name === functionName,
-    );
-
+    const functions = this.functions.filter((f) => f.name === functionName);
     if (!functions.length) {
       throw new Error(
         `Function "${functionName.toString()}" not found in contract. Check your dashboard for the list of functions available`,
@@ -689,6 +693,11 @@ export class ContractWrapper<
   }
 
   private async enginePrepareRequest(transaction: GaslessTransaction) {
+    invariant(
+      this.options.gasless && "engine" in this.options.gasless,
+      "calling engine gasless transaction without openzeppelin config in the SDK options",
+    );
+
     const signer = this.getSigner();
     const provider = this.getProvider();
     const storage = this.storage;
@@ -793,6 +802,7 @@ export class ContractWrapper<
       };
     } else {
       const forwarderAddress =
+        this.options.gasless.engine.relayerForwarderAddress ||
         CONTRACT_ADDRESSES[
           transaction.chainId as keyof typeof CONTRACT_ADDRESSES
         ]?.openzeppelinForwarder ||
@@ -806,24 +816,51 @@ export class ContractWrapper<
         transaction.from,
       ]);
 
-      const domain = {
-        name: "GSNv2 Forwarder",
-        version: "0.0.1",
-        chainId: transaction.chainId,
-        verifyingContract: forwarderAddress,
-      };
-      const types = {
-        ForwardRequest,
-      };
+      let domain;
+      let types;
+      let message: ForwardRequestMessage;
 
-      const message = {
-        from: transaction.from,
-        to: transaction.to,
-        value: BigNumber.from(0).toString(),
-        gas: BigNumber.from(transaction.gasLimit).toString(),
-        nonce: BigNumber.from(nonce).toString(),
-        data: transaction.data,
-      };
+      if (this.options.gasless.experimentalChainlessSupport) {
+        domain = {
+          name: "GSNv2 Forwarder",
+          version: "0.0.1",
+          verifyingContract: forwarderAddress,
+        };
+
+        types = {
+          ForwardRequest: ChainAwareForwardRequest,
+        };
+
+        message = {
+          from: transaction.from,
+          to: transaction.to,
+          value: BigNumber.from(0).toString(),
+          gas: BigNumber.from(transaction.gasLimit).toString(),
+          nonce: BigNumber.from(nonce).toString(),
+          data: transaction.data,
+          chainid: BigNumber.from(transaction.chainId).toString(),
+        };
+      } else {
+        domain = {
+          name: this.options.gasless.engine.domainName,
+          version: this.options.gasless.engine.domainVersion,
+          chainId: transaction.chainId,
+          verifyingContract: forwarderAddress,
+        };
+
+        types = {
+          ForwardRequest,
+        };
+
+        message = {
+          from: transaction.from,
+          to: transaction.to,
+          value: BigNumber.from(0).toString(),
+          gas: BigNumber.from(transaction.gasLimit).toString(),
+          nonce: BigNumber.from(nonce).toString(),
+          data: transaction.data,
+        };
+      }
 
       const { signature: sig } = await signTypedDataInternal(
         signer,

@@ -16,8 +16,8 @@ export type SignerWalletConnectorOptions = {
 
 export class SignerConnector extends Connector<LocalWalletConnectionArgs> {
   options: SignerWalletConnectorOptions;
-  #provider?: providers.Provider;
-  #signer?: Signer;
+  private _provider?: providers.Provider;
+  private _signer?: Signer;
 
   constructor(options: SignerWalletConnectorOptions) {
     super();
@@ -34,8 +34,8 @@ export class SignerConnector extends Connector<LocalWalletConnectionArgs> {
   }
 
   async disconnect() {
-    this.#provider = undefined;
-    this.#signer = undefined;
+    this._provider = undefined;
+    this._signer = undefined;
   }
 
   async getAddress(): Promise<string> {
@@ -56,21 +56,21 @@ export class SignerConnector extends Connector<LocalWalletConnectionArgs> {
   }
 
   async getProvider() {
-    if (!this.#provider) {
-      this.#provider = getChainProvider(this.options.chain, {
+    if (!this._provider) {
+      this._provider = getChainProvider(this.options.chain, {
         clientId: this.options.clientId,
         secretKey: this.options.secretKey,
       });
     }
-    return this.#provider;
+    return this._provider;
   }
 
   async getSigner() {
-    if (!this.#signer) {
+    if (!this._signer) {
       const provider = await this.getProvider();
-      this.#signer = getUpdatedSigner(this.options.signer, provider);
+      this._signer = getUpdatedSigner(this.options.signer, provider);
     }
-    return this.#signer;
+    return this._signer;
   }
 
   async switchChain(chainId: number): Promise<void> {
@@ -82,12 +82,12 @@ export class SignerConnector extends Connector<LocalWalletConnectionArgs> {
       );
     }
 
-    this.#provider = getChainProvider(chain, {
+    this._provider = getChainProvider(chain, {
       clientId: this.options.clientId,
       secretKey: this.options.secretKey,
     });
 
-    this.#signer = getUpdatedSigner(this.options.signer, this.#provider);
+    this._signer = getUpdatedSigner(this.options.signer, this._provider);
 
     this.onChainChanged(chainId);
   }

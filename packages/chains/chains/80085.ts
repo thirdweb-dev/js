@@ -35,7 +35,6 @@ export default {
   "networkId": 80085,
   "redFlags": [],
   "rpc": [
-    "https://berachain-artio.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://80085.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://artio.rpc.berachain.com",
     "https://rpc.ankr.com/berachain_testnet"

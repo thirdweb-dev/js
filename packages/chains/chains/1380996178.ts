@@ -36,7 +36,6 @@ export default {
   },
   "networkId": 1380996178,
   "rpc": [
-    "https://raptorchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1380996178.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.raptorchain.io/web3"
   ],

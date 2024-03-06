@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 62621,
   "rpc": [
-    "https://multivac.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://62621.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.mtv.ac",
     "https://rpc-eu.mtv.ac"

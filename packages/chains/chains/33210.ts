@@ -24,7 +24,6 @@ export default {
   },
   "networkId": 33210,
   "rpc": [
-    "https://cloudverse-subnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://33210.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/cloudverse/mainnet/rpc"
   ],

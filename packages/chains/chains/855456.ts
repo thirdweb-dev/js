@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 855456,
   "rpc": [
-    "https://dodao.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://855456.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network",
     "wss://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network"

@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 2569,
   "rpc": [
-    "https://techpay.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2569.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.techpay.io/"
   ],

@@ -84,6 +84,7 @@ import { Transaction } from "./transactions";
  * const contract = await sdk.getContract("{{contract_address}}");
  * await contract.erc721.transfer(walletAddress, tokenId);
  * ```
+ * @erc721
  * @public
  */
 export class Erc721<
@@ -748,7 +749,7 @@ export class Erc721<
    * ```
    * @twfeature ERC721UpdatableMetadata
    */
-  update = /* @__PURE__ */ buildTransactionFunction(
+  updateMetadata = /* @__PURE__ */ buildTransactionFunction(
     async (tokenId: BigNumberish, metadata: NFTMetadataOrUri) => {
       return assertEnabled(
         this.updatableMetadata,
@@ -756,6 +757,11 @@ export class Erc721<
       ).update.prepare(tokenId, metadata);
     },
   );
+
+  // alias for backwards compat
+  async update(tokenId: BigNumberish, metadata: NFTMetadataOrUri) {
+    return this.updateMetadata(tokenId, metadata);
+  }
 
   ////// ERC721 Claimable Extension //////
 

@@ -21,7 +21,6 @@ export default {
   },
   "networkId": 877,
   "rpc": [
-    "https://dexit-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://877.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://dxt.dexit.network"
   ],

@@ -30,7 +30,6 @@ export default {
   },
   "networkId": 224422,
   "rpc": [
-    "https://conet-sebolia-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://224422.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc1.conet.network"
   ],

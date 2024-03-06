@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 4281033,
   "rpc": [
-    "https://worlds-caldera.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://4281033.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://worlds-test.calderachain.xyz/http"
   ],

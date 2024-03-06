@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 846000,
   "rpc": [
-    "https://4goodnetwork.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://846000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://chain.deptofgood.com"
   ],

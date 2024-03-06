@@ -27,7 +27,6 @@ export default {
   "networkId": 220,
   "redFlags": [],
   "rpc": [
-    "https://flag.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://220.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.flagscan.io/"
   ],

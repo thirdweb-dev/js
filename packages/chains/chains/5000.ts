@@ -34,11 +34,10 @@ export default {
     ]
   },
   "rpc": [
-    "https://mantle.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://5000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.mantle.xyz",
-    "https://mantle.publicnode.com",
-    "wss://mantle.publicnode.com"
+    "https://mantle-rpc.publicnode.com",
+    "wss://mantle-rpc.publicnode.com"
   ],
   "shortName": "mantle",
   "slug": "mantle",

@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 2611,
   "rpc": [
-    "https://redlight-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2611.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://dataseed2.redlightscan.finance"
   ],

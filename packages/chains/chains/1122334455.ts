@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 1122334455,
   "rpc": [
-    "https://ipos-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1122334455.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.iposlab.com",
     "https://rpc2.iposlab.com"

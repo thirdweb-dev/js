@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 5177,
   "rpc": [
-    "https://tlchain-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://5177.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.tlxscan.com/"
   ],

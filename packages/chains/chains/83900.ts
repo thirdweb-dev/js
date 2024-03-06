@@ -21,7 +21,6 @@ export default {
   "networkId": 83900,
   "redFlags": [],
   "rpc": [
-    "https://qi0122i1-testnet-qi0122i1 testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://83900.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avacloud-test.io/a5f62fea-1375-4ddd-b88f-72b56b435259"
   ],

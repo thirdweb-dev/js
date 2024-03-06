@@ -7,13 +7,12 @@ export default {
   "infoURL": "https://tanssi.network",
   "name": "Tanssi EVM ContainerChain",
   "nativeCurrency": {
-    "name": "Unit",
-    "symbol": "Unit",
+    "name": "TANGO",
+    "symbol": "TANGO",
     "decimals": 18
   },
   "networkId": 5678,
   "rpc": [
-    "https://tanssi-evm-containerchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://5678.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://fraa-dancebox-3001-rpc.a.dancebox.tanssi.network",
     "wss://fraa-dancebox-3001-rpc.a.dancebox.tanssi.network"

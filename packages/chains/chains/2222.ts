@@ -16,6 +16,7 @@ export default {
     }
   ],
   "faucets": [],
+  "features": [],
   "icon": {
     "url": "ipfs://QmdpRTk6oL1HRW9xC6cAc4Rnf9gs6zgdAcr4Z3HcLztusm",
     "width": 1186,
@@ -30,17 +31,17 @@ export default {
     "decimals": 18
   },
   "networkId": 2222,
+  "redFlags": [],
   "rpc": [
-    "https://kava.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2222.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://kava-evm-rpc.publicnode.com",
+    "wss://kava-evm-rpc.publicnode.com",
     "https://evm.kava.io",
-    "https://kava-rpc.gateway.pokt.network",
     "wss://wevm.kava.io",
-    "https://kava-evm.publicnode.com",
-    "wss://kava-evm.publicnode.com",
+    "https://kava-rpc.gateway.pokt.network",
     "https://evm.kava-rpc.com",
-    "https://rpc.ankr.com/kava_evm",
-    "wss://wevm.kava-rpc.com"
+    "wss://wevm.kava-rpc.com",
+    "https://rpc.ankr.com/kava_evm"
   ],
   "shortName": "kava",
   "slug": "kava",

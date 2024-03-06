@@ -41,7 +41,6 @@ export default {
   },
   "networkId": 810,
   "rpc": [
-    "https://haven1-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://810.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.haven1.org"
   ],

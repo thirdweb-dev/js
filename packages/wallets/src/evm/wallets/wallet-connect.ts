@@ -51,8 +51,8 @@ export type WalletConnectOptions = {
  * @wallet
  */
 export class WalletConnect extends AbstractClientWallet<WalletConnectOptions> {
-  #walletConnectConnector?: WalletConnectConnector;
-  #provider?: WalletConnectProvider;
+  private _walletConnectConnector?: WalletConnectConnector;
+  private _provider?: WalletConnectProvider;
 
   connector?: Connector;
 
@@ -140,7 +140,7 @@ export class WalletConnect extends AbstractClientWallet<WalletConnectOptions> {
         "../connectors/wallet-connect"
       );
 
-      this.#walletConnectConnector = new WalletConnectConnector({
+      this._walletConnectConnector = new WalletConnectConnector({
         chains: this.chains,
         options: {
           qrcode: this.qrcode,
@@ -150,31 +150,31 @@ export class WalletConnect extends AbstractClientWallet<WalletConnectOptions> {
           qrModalOptions: this.options?.qrModalOptions,
         },
       });
-      this.connector = new WagmiAdapter(this.#walletConnectConnector);
-      this.#provider = await this.#walletConnectConnector.getProvider();
-      this.#setupListeners();
+      this.connector = new WagmiAdapter(this._walletConnectConnector);
+      this._provider = await this._walletConnectConnector.getProvider();
+      this._setupListeners();
     }
     return this.connector;
   }
 
-  #maybeThrowError = (error: any) => {
+  private _maybeThrowError = (error: any) => {
     if (error) {
       throw error;
     }
   };
 
-  #onConnect = (data: WagmiConnectorData<WalletConnectProvider>) => {
-    this.#provider = data.provider;
-    if (!this.#provider) {
+  private _onConnect = (data: WagmiConnectorData<WalletConnectProvider>) => {
+    this._provider = data.provider;
+    if (!this._provider) {
       throw new Error("WalletConnect provider not found after connecting.");
     }
   };
 
-  #onDisconnect = () => {
-    this.#removeListeners();
+  private _onDisconnect = () => {
+    this._removeListeners();
   };
 
-  #onChange = async (payload: any) => {
+  private _onChange = async (payload: any) => {
     if (payload.chain) {
       // chain changed
     } else if (payload.account) {
@@ -182,7 +182,7 @@ export class WalletConnect extends AbstractClientWallet<WalletConnectOptions> {
     }
   };
 
-  #onMessage = (payload: any) => {
+  private _onMessage = (payload: any) => {
     switch (payload.type) {
       case "display_uri":
         this.emit("display_uri", payload.data);
@@ -190,39 +190,39 @@ export class WalletConnect extends AbstractClientWallet<WalletConnectOptions> {
     }
   };
 
-  #onSessionRequestSent = () => {
+  private _onSessionRequestSent = () => {
     this.emit("wc_session_request_sent");
   };
 
-  #setupListeners() {
-    if (!this.#walletConnectConnector) {
+  private _setupListeners() {
+    if (!this._walletConnectConnector) {
       return;
     }
-    this.#removeListeners();
-    this.#walletConnectConnector.on("connect", this.#onConnect);
-    this.#walletConnectConnector.on("disconnect", this.#onDisconnect);
-    this.#walletConnectConnector.on("change", this.#onChange);
-    this.#walletConnectConnector.on("message", this.#onMessage);
-    this.#provider?.signer.client.on(
+    this._removeListeners();
+    this._walletConnectConnector.on("connect", this._onConnect);
+    this._walletConnectConnector.on("disconnect", this._onDisconnect);
+    this._walletConnectConnector.on("change", this._onChange);
+    this._walletConnectConnector.on("message", this._onMessage);
+    this._provider?.signer.client.on(
       "session_request_sent",
-      this.#onSessionRequestSent,
+      this._onSessionRequestSent,
     );
   }
 
-  #removeListeners() {
-    if (!this.#walletConnectConnector) {
+  private _removeListeners() {
+    if (!this._walletConnectConnector) {
       return;
     }
-    this.#walletConnectConnector.removeListener("connect", this.#onConnect);
-    this.#walletConnectConnector.removeListener(
+    this._walletConnectConnector.removeListener("connect", this._onConnect);
+    this._walletConnectConnector.removeListener(
       "disconnect",
-      this.#onDisconnect,
+      this._onDisconnect,
     );
-    this.#walletConnectConnector.removeListener("change", this.#onChange);
-    this.#walletConnectConnector.removeListener("message", this.#onMessage);
-    this.#provider?.signer.client.removeListener(
+    this._walletConnectConnector.removeListener("change", this._onChange);
+    this._walletConnectConnector.removeListener("message", this._onMessage);
+    this._provider?.signer.client.removeListener(
       "session_request_sent",
-      this.#onSessionRequestSent,
+      this._onSessionRequestSent,
     );
   }
 
@@ -257,7 +257,7 @@ export class WalletConnect extends AbstractClientWallet<WalletConnectOptions> {
    */
   async connectWithQrCode(options: ConnectWithQrCodeArgs) {
     await this.getConnector();
-    const wcConnector = this.#walletConnectConnector;
+    const wcConnector = this._walletConnectConnector;
 
     if (!wcConnector) {
       throw new Error("WalletConnect connector not found");
@@ -280,7 +280,7 @@ export class WalletConnect extends AbstractClientWallet<WalletConnectOptions> {
    */
   async connectWithModal(options?: { chainId?: number }) {
     await this.getConnector();
-    const wcConnector = this.#walletConnectConnector;
+    const wcConnector = this._walletConnectConnector;
 
     if (!wcConnector) {
       throw new Error("WalletConnect connector not found");

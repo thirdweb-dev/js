@@ -42,7 +42,6 @@ export default {
   },
   "networkId": 336,
   "rpc": [
-    "https://shiden.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://336.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://shiden.api.onfinality.io/public",
     "https://shiden-rpc.dwellir.com",

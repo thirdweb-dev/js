@@ -19,12 +19,11 @@ export default {
   },
   "networkId": 1284,
   "rpc": [
-    "https://moonbeam.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1284.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.api.moonbeam.network",
     "wss://wss.api.moonbeam.network",
-    "https://moonbeam.publicnode.com",
-    "wss://moonbeam.publicnode.com"
+    "https://moonbeam-rpc.publicnode.com",
+    "wss://moonbeam-rpc.publicnode.com"
   ],
   "shortName": "mbeam",
   "slug": "moonbeam",

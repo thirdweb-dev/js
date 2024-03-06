@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 1000,
   "rpc": [
-    "https://camino-c-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://500.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.camino.network/ext/bc/C/rpc"
   ],

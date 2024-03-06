@@ -1,5 +1,42 @@
 # @thirdweb-dev/auth
 
+## 4.1.35
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/wallets@2.4.13
+
+## 4.1.34
+
+### Patch Changes
+
+- Updated dependencies [[`73e34c0`](https://github.com/thirdweb-dev/js/commit/73e34c083cd9c0d634e39657a4fad0f49f6fec89), [`e7528af`](https://github.com/thirdweb-dev/js/commit/e7528af48ff2dda622ed47074611499cfd66f819), [`10b71dd`](https://github.com/thirdweb-dev/js/commit/10b71dd7a0c6e91bb1ebe8250ca7fac7bac76635), [`bc198e2`](https://github.com/thirdweb-dev/js/commit/bc198e215e57094aac525b262fe91add4786df92)]:
+  - @thirdweb-dev/wallets@2.4.12
+
+## 4.1.33
+
+### Patch Changes
+
+- Updated dependencies [[`23820b2`](https://github.com/thirdweb-dev/js/commit/23820b277118ae0845d4f0189ac58ef4e75896ba), [`73a374a`](https://github.com/thirdweb-dev/js/commit/73a374aac25c2396dd2a895629737c6e8d024f45)]:
+  - @thirdweb-dev/wallets@2.4.11
+
+## 4.1.32
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/wallets@2.4.10
+
+## 4.1.31
+
+### Patch Changes
+
+- [#2278](https://github.com/thirdweb-dev/js/pull/2278) [`0092e2a3`](https://github.com/thirdweb-dev/js/commit/0092e2a3177364ad26af15ecafb4381591dc9be1) Thanks [@hsynlms](https://github.com/hsynlms)! - fix(auth): Next.js App Router handler return type
+
+- Updated dependencies []:
+  - @thirdweb-dev/wallets@2.4.9
+
 ## 4.1.30
 
 ### Patch Changes

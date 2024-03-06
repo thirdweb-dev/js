@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 7668,
   "rpc": [
-    "https://the-root-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://7668.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://root.rootnet.live/archive",
     "wss://root.rootnet.live/archive/ws"

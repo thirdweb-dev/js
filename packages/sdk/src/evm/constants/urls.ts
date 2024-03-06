@@ -297,6 +297,7 @@ export function getProviderFromRpcUrl(
                   skipFetchSetup: _skipFetchSetup,
                 },
                 chainId,
+                sdkOptions?.rpcBatchSettings,
               )
             : // Otherwise fall back to the built in json rpc batch provider
               new providers.JsonRpcBatchProvider({

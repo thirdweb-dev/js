@@ -11,3 +11,9 @@ Short description of the bug fixed or feature added
 
 - [ ] Automated tests: link to unit test file
 - [ ] Manual tests: step by step instructions on how to test
+
+## Contributor NFT
+
+Paste in your wallet address below and we will airdrop you a special NFT when your pull request is merged. 
+
+```Address: ```

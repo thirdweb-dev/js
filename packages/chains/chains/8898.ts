@@ -33,7 +33,6 @@ export default {
   },
   "networkId": 8898,
   "rpc": [
-    "https://mammoth.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://8898.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://dataseed.mmtscan.io",
     "https://dataseed1.mmtscan.io",

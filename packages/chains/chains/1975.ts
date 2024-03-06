@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 1975,
   "rpc": [
-    "https://onus-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1975.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.onuschain.io",
     "wss://ws.onuschain.io"

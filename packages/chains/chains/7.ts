@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 7,
   "rpc": [
-    "https://thaichain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://7.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.dome.cloud",
     "https://rpc.thaichain.org"

@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 4001,
   "rpc": [
-    "https://peperium-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://4001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.peperium.io"
   ],

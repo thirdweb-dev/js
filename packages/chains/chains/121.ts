@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 121,
   "rpc": [
-    "https://realchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://121.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rcl-dataseed1.rclsidechain.com",
     "https://rcl-dataseed2.rclsidechain.com",

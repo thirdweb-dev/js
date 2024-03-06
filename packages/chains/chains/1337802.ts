@@ -20,6 +20,7 @@ export default {
     "https://kiln-faucet.pk910.de",
     "https://kilnfaucet.com"
   ],
+  "features": [],
   "icon": {
     "url": "ipfs://QmdwQDr6vmBtXmK2TmknkEuZNoaDqTasFdZdu3DRw8b2wt",
     "width": 1000,
@@ -34,12 +35,13 @@ export default {
     "decimals": 18
   },
   "networkId": 1337802,
+  "redFlags": [],
   "rpc": [
-    "https://kiln.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1337802.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.kiln.themerge.dev"
   ],
   "shortName": "kiln",
   "slug": "kiln",
-  "testnet": true
+  "status": "deprecated",
+  "testnet": false
 } as const satisfies Chain;

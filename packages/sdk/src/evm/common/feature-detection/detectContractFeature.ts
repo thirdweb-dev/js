@@ -1,6 +1,6 @@
 import { FeatureName } from "../../constants/contract-features";
 import { ContractWrapper } from "../../core/classes/internal/contract-wrapper";
-import { AbiSchema } from "../../schema/contracts/custom";
+import { AbiInput } from "../../schema/contracts/custom";
 import { BaseContract } from "ethers";
 import { isExtensionEnabled } from "./isFeatureEnabled";
 
@@ -14,5 +14,10 @@ export function detectContractFeature<T extends BaseContract>(
   contractWrapper: ContractWrapper<BaseContract>,
   featureName: FeatureName,
 ): contractWrapper is ContractWrapper<T> {
-  return isExtensionEnabled(AbiSchema.parse(contractWrapper.abi), featureName);
+  const b = isExtensionEnabled(
+    contractWrapper.abi as AbiInput,
+    featureName,
+    contractWrapper.extensions,
+  );
+  return b;
 }

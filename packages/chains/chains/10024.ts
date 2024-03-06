@@ -24,7 +24,6 @@ export default {
   },
   "networkId": 10024,
   "rpc": [
-    "https://gon-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://10024.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node1.testnet.gaiaopen.network",
     "https://node1.mainnet.gon.network",

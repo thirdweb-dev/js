@@ -21,7 +21,6 @@ export default {
   },
   "networkId": 57,
   "rpc": [
-    "https://syscoin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://57.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.syscoin.org",
     "https://rpc.ankr.com/syscoin/${ANKR_API_KEY}",

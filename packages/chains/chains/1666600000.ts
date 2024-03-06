@@ -22,7 +22,6 @@ export default {
   },
   "networkId": 1666600000,
   "rpc": [
-    "https://harmony-shard-0.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1666600000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.harmony.one",
     "https://a.api.s0.t.hmny.io",

@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 198,
   "rpc": [
-    "https://bitchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://198.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.bitchain.biz/"
   ],

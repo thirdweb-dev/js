@@ -15,7 +15,6 @@ export default {
   },
   "networkId": 170,
   "rpc": [
-    "https://hoo-smart-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://170.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://http-testnet.hoosmartchain.com"
   ],

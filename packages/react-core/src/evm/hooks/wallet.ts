@@ -10,7 +10,10 @@ import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { useContext, useMemo } from "react";
 import { useSDK } from "./useSDK";
-import { useWalletContext } from "../../core/providers/thirdweb-wallet-provider";
+import {
+  ThirdwebWalletContext,
+  useWalletContext,
+} from "../../core/providers/thirdweb-wallet-provider";
 import { BigNumber } from "ethers";
 
 /**
@@ -151,6 +154,14 @@ export function useConnectedWallet() {
  */
 export function useAddress(): string | undefined {
   const context = useContext(ThirdwebConnectedWalletContext);
+  const walletCtx = useContext(ThirdwebWalletContext);
+
+  // if ThirdwebWalletContext is present, use the address from there because address from ThirdwebConnectedWalletContext also uses that address but it lags behind
+  // walletCtx is undefined if only ThirdwebSDKProvider is used
+  if (walletCtx) {
+    return walletCtx.address;
+  }
+
   invariant(
     context,
     "useAddress() hook must be used within a <ThirdwebProvider/>",
@@ -185,9 +196,17 @@ export function useAddress(): string | undefined {
  */
 export function useChainId(): number | undefined {
   const context = useContext(ThirdwebConnectedWalletContext);
+  const walletCtx = useContext(ThirdwebWalletContext);
+
+  // if ThirdwebWalletContext is present, use the chainId from there because chainId from ThirdwebConnectedWalletContext also uses that chainId but it lags behind
+  // walletCtx is undefined if only ThirdwebSDKProvider is used
+  if (walletCtx) {
+    return walletCtx.chainId;
+  }
+
   invariant(
     context,
-    "useChainId() hook must be used within a <ThirdwebProvider/>",
+    "useChainId() hook must be used within a <ThirdwebProvider/> or <ThirdwebSDKProvider/> component",
   );
   return context.chainId;
 }

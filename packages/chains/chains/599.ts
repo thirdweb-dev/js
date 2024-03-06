@@ -38,12 +38,12 @@ export default {
   },
   "redFlags": [],
   "rpc": [
-    "https://metis-goerli-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://599.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://goerli.gateway.metisdevops.link"
   ],
   "shortName": "metis-goerli",
   "slip44": 1,
   "slug": "metis-goerli-testnet",
+  "status": "deprecated",
   "testnet": true
 } as const satisfies Chain;

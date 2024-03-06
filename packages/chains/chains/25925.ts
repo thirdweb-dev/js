@@ -33,7 +33,6 @@ export default {
   },
   "networkId": 25925,
   "rpc": [
-    "https://bitkub-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://25925.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.bitkubchain.io",
     "wss://wss-testnet.bitkubchain.io"

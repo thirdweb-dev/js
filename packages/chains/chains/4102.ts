@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 4102,
   "rpc": [
-    "https://aioz-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://4102.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://eth-ds.testnet.aioz.network"
   ],

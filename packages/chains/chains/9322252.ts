@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 9322252,
   "rpc": [
-    "https://xcap.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://9322252.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://xcap-mainnet.relay.xcap.network/znzvh2ueyvm2yts5fv5gnul395jbkfb2/rpc1"
   ],

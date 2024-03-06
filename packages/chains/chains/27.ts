@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 27,
   "rpc": [
-    "https://shibachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://27.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.shibchain.org"
   ],

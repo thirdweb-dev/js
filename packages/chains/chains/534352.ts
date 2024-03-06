@@ -33,7 +33,6 @@ export default {
     ]
   },
   "rpc": [
-    "https://scroll.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://534352.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.scroll.io",
     "https://rpc-scroll.icecreamswap.com",

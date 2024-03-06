@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 224168,
   "rpc": [
-    "https://taf-eco-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://224168.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.tafchain.com/v1"
   ],

@@ -15,7 +15,6 @@ export default {
   },
   "networkId": 43110,
   "rpc": [
-    "https://athereum.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://43110.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://ava.network:21015/ext/evm/rpc"
   ],

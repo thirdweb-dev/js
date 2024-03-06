@@ -53,6 +53,7 @@ import { ClaimEligibility } from "../../enums/ClaimEligibility";
 
 /**
  * Manages claim conditions for Edition Drop contracts
+ * @erc1155
  * @public
  */
 export class DropErc1155ClaimConditions<
@@ -764,9 +765,8 @@ export class DropErc1155ClaimConditions<
           merkle: merkleInfo,
         });
         // using internal method to just upload, avoids one contract call
-        const contractURI = await this.metadata._parseAndUploadMetadata(
-          mergedMetadata,
-        );
+        const contractURI =
+          await this.metadata._parseAndUploadMetadata(mergedMetadata);
 
         if (
           hasFunction<ContractMetadataContract>(

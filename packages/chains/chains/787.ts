@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 787,
   "rpc": [
-    "https://acala-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://787.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://eth-rpc-acala.aca-api.network",
     "wss://eth-rpc-acala.aca-api.network"

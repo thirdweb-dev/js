@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 99099,
   "rpc": [
-    "https://eliberty-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://99099.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.eliberty.ngo"
   ],

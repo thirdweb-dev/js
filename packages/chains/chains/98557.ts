@@ -21,7 +21,6 @@ export default {
   "networkId": 98557,
   "redFlags": [],
   "rpc": [
-    "https://qr0201i1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://98557.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/qr0201i1/testnet/rpc"
   ],

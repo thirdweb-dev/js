@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 8086,
   "rpc": [
-    "https://bitcoin-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://8086.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.biteth.org"
   ],

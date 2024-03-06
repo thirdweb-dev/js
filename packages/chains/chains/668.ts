@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 668,
   "rpc": [
-    "https://juncachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://668.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.juncachain.com"
   ],

@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 9339,
   "rpc": [
-    "https://dogcoin-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://9339.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.dogcoin.me"
   ],

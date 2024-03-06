@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 14000,
   "rpc": [
-    "https://sps-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://14000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://www.3sps.net"
   ],

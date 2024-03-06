@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 8192,
   "rpc": [
-    "https://torus.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://8192.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.toruschain.com"
   ],

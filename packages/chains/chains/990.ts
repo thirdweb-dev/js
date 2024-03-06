@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 990,
   "rpc": [
-    "https://eliberty.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://990.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.eliberty.ngo"
   ],

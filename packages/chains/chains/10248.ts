@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 10248,
   "rpc": [
-    "https://0xtade.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://10248.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node.0xtchain.com"
   ],

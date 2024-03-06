@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 2048,
   "rpc": [
-    "https://world-trade-technical-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1202.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.cadaut.com",
     "wss://rpc.cadaut.com/ws"

@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 1,
   "rpc": [
-    "https://kekchain-kektest.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://420666.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.kekchain.com"
   ],

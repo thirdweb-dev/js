@@ -39,7 +39,6 @@ export default {
   },
   "networkId": 52014,
   "rpc": [
-    "https://electroneum.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://52014.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.electroneum.com"
   ],

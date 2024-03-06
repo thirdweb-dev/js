@@ -24,7 +24,6 @@ export default {
   },
   "networkId": 17172,
   "rpc": [
-    "https://eclipse-subnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://17172.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/eclipse/testnet/rpc"
   ],

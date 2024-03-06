@@ -21,7 +21,6 @@ export default {
   "networkId": 88883,
   "redFlags": [],
   "rpc": [
-    "https://proj-orc-testnet-alpha.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://88883.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/projorctes/testnet/rpc"
   ],

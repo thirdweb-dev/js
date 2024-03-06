@@ -24,7 +24,6 @@ export default {
   },
   "networkId": 612,
   "rpc": [
-    "https://eiob.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://612.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.eiob.xyz"
   ],

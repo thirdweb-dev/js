@@ -34,7 +34,6 @@ export default {
   "networkId": 11155111,
   "redFlags": [],
   "rpc": [
-    "https://sepolia.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://11155111.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://sepolia.infura.io/v3/${INFURA_API_KEY}",
     "wss://sepolia.infura.io/v3/${INFURA_API_KEY}",
@@ -44,8 +43,8 @@ export default {
     "https://rpc.sepolia.ethpandaops.io",
     "https://sepolia.gateway.tenderly.co",
     "wss://sepolia.gateway.tenderly.co",
-    "https://ethereum-sepolia.publicnode.com",
-    "wss://ethereum-sepolia.publicnode.com"
+    "https://ethereum-sepolia-rpc.publicnode.com",
+    "wss://ethereum-sepolia-rpc.publicnode.com"
   ],
   "shortName": "sep",
   "slip44": 1,

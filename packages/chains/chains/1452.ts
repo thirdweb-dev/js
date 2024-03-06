@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 1452,
   "rpc": [
-    "https://gil-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1452.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.giltestnet.com"
   ],

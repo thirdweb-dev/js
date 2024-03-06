@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 6999,
   "rpc": [
-    "https://polysmartchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://6999.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://seed0.polysmartchain.com/",
     "https://seed1.polysmartchain.com/",

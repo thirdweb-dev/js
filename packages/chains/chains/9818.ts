@@ -33,7 +33,6 @@ export default {
   },
   "networkId": 9818,
   "rpc": [
-    "https://imperium-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://9818.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://data-aws-testnet.imperiumchain.com",
     "https://data-aws2-testnet.imperiumchain.com"

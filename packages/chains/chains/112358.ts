@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 112358,
   "rpc": [
-    "https://metachain-one.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://112358.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.metachain.one",
     "https://rpc2.metachain.one"

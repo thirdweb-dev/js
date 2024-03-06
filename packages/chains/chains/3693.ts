@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 3693,
   "rpc": [
-    "https://empire-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://3693.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.empirenetwork.io"
   ],

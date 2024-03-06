@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 1313114,
   "rpc": [
-    "https://etho-protocol.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1313114.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.ethoprotocol.com"
   ],

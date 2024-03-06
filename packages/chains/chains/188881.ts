@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 188881,
   "rpc": [
-    "https://condor-test-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://188881.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.condor.systems/rpc"
   ],

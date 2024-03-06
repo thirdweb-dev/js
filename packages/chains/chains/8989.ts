@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 8989,
   "rpc": [
-    "https://giant-mammoth.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://8989.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-asia.gmmtchain.io"
   ],

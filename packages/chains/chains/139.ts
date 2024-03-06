@@ -33,7 +33,6 @@ export default {
   },
   "networkId": 139,
   "rpc": [
-    "https://woopchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://139.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.woop.ai/rpc"
   ],

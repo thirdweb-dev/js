@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 35855456,
   "rpc": [
-    "https://joys-digital.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://35855456.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node.joys.digital"
   ],

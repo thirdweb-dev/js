@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 246529,
   "rpc": [
-    "https://artis-sigma1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://246529.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.sigma1.artis.network"
   ],

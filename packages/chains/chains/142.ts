@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 142,
   "rpc": [
-    "https://dax-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://142.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.prodax.io"
   ],

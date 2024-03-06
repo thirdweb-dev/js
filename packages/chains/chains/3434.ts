@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 3434,
   "rpc": [
-    "https://securechain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://3434.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.securechain.ai"
   ],

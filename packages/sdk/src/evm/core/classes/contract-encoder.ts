@@ -3,6 +3,7 @@ import { BaseContract, utils } from "ethers";
 
 /**
  * Encodes and decodes Contract functions
+ * @contract
  * @public
  */
 export class ContractEncoder<TContract extends BaseContract> {

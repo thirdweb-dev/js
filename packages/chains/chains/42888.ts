@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 42888,
   "rpc": [
-    "https://kinto-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://42888.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://35.215.120.180:8545"
   ],

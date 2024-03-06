@@ -4,9 +4,9 @@ export default {
   "chainId": 128123,
   "explorers": [
     {
-      "name": "Explorer",
-      "url": "https://testnet-explorer.etherlink.com/",
-      "standard": "EIP1559"
+      "name": "Etherlink Testnet Explorer",
+      "url": "https://testnet-explorer.etherlink.com",
+      "standard": "EIP3091"
     }
   ],
   "faucets": [
@@ -38,7 +38,6 @@ export default {
   },
   "redFlags": [],
   "rpc": [
-    "https://etherlink-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://128123.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node.ghostnet.etherlink.com"
   ],

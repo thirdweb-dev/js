@@ -5,7 +5,7 @@ import { isContractDeployed } from "./isContractDeployed";
 import { predictThirdwebContractAddress } from "./predictThirdwebContractAddress";
 
 /**
- *
+ * @deploy
  * @public
  * @param contractName - The name of the contract to predict the address for
  * @param chainId - The chain id to use

@@ -33,7 +33,6 @@ export default {
   },
   "networkId": 2484,
   "rpc": [
-    "https://unicorn-ultra-nebulas-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2484.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-nebulas-testnet.uniultra.xyz"
   ],

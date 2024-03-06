@@ -70,7 +70,7 @@ export abstract class AbstractClientWallet<
   protected chains;
   protected dappMetadata: DAppMetaData;
   protected options?: WalletOptions<TAdditionalOpts>;
-  #connectParams: ConnectParams<TConnectParams> | undefined;
+  private _connectParams: ConnectParams<TConnectParams> | undefined;
 
   /**
    * @internal
@@ -118,7 +118,7 @@ export abstract class AbstractClientWallet<
     const options = connectOptions
       ? { ...connectOptions, chainId: undefined }
       : undefined;
-    return this.#connect(true, options);
+    return this._connect(true, options);
   }
 
   /**
@@ -129,8 +129,8 @@ export abstract class AbstractClientWallet<
   async connect(
     connectOptions?: ConnectParams<TConnectParams>,
   ): Promise<string> {
-    this.#connectParams = connectOptions;
-    const address = await this.#connect(false, connectOptions);
+    this._connectParams = connectOptions;
+    const address = await this._connect(false, connectOptions);
     if (!address) {
       throw new Error("Failed to connect to the wallet.");
     }
@@ -143,7 +143,7 @@ export abstract class AbstractClientWallet<
    * @returns
    */
   getConnectParams() {
-    return this.#connectParams;
+    return this._connectParams;
   }
 
   /**
@@ -154,13 +154,13 @@ export abstract class AbstractClientWallet<
     return this.options;
   }
 
-  async #connect(
+  protected async _connect(
     isAutoConnect: boolean,
     connectOptions?: ConnectParams<TConnectParams>,
   ) {
     const connector = await this.getConnector();
 
-    this.#subscribeToEvents(connector);
+    this._subscribeToEvents(connector);
 
     const isConnected = await connector.isConnected();
 
@@ -179,7 +179,7 @@ export abstract class AbstractClientWallet<
         chainId: await this.getChainId(),
       });
 
-      this.#trackConnection(address);
+      this._trackConnection(address);
       return address;
     }
 
@@ -189,14 +189,14 @@ export abstract class AbstractClientWallet<
 
     try {
       const address = await connector.connect(connectOptions);
-      this.#trackConnection(address);
+      this._trackConnection(address);
       return address;
     } catch (error) {
       throw new Error((error as Error).message);
     }
   }
 
-  #trackConnection(address: string) {
+  private _trackConnection(address: string) {
     track({
       clientId: this.options?.clientId || "",
       source: "connectWallet",
@@ -206,7 +206,7 @@ export abstract class AbstractClientWallet<
     });
   }
 
-  async #subscribeToEvents(connector: Connector) {
+  private async _subscribeToEvents(connector: Connector) {
     // subscribe to connector for events
     connector.on("connect", (data) => {
       this.emit("connect", {

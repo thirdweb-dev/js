@@ -33,7 +33,6 @@ export default {
   },
   "networkId": 1038,
   "rpc": [
-    "https://bronos-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1038.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm-testnet.bronos.org"
   ],

@@ -33,7 +33,6 @@ export default {
   "networkId": 53935,
   "redFlags": [],
   "rpc": [
-    "https://dfk-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://53935.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/defi-kingdoms/dfk-chain/rpc",
     "https://avax-pokt.nodies.app/ext/bc/q2aTwKuyzgs8pynF7UXBZCU7DejbZbZ6EUyHr3JQzYgwNPUPi/rpc"

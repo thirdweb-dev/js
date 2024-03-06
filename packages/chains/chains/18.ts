@@ -21,7 +21,6 @@ export default {
   },
   "networkId": 18,
   "rpc": [
-    "https://thundercore-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://18.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.thundercore.com"
   ],

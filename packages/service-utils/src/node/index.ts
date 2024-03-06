@@ -183,11 +183,13 @@ export function logHttpRequest({
   res,
   isAuthed,
   statusMessage,
+  latencyMs,
 }: AuthInput & {
   source: string;
   res: ServerResponse;
   isAuthed?: boolean;
   statusMessage?: Error | string;
+  latencyMs?: number;
 }) {
   try {
     const authorizationData = extractAuthorizationData({ req, clientId });
@@ -208,6 +210,8 @@ export function logHttpRequest({
         sdkName: headers["x-sdk-name"] ?? "unknown",
         sdkVersion: headers["x-sdk-version"] ?? "unknown",
         platform: headers["x-sdk-platform"] ?? "unknown",
+        os: headers["x-sdk-os"] ?? "unknown",
+        latencyMs: latencyMs ?? null,
       }),
     );
     console.log(`statusMessage=${_statusMessage}`);

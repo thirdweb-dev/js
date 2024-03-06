@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 8080808,
   "rpc": [
-    "https://hokum.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://8080808.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.hokum.gg"
   ],

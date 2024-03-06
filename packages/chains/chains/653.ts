@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 653,
   "rpc": [
-    "https://kalichain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://653.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.kalichain.com"
   ],

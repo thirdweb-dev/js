@@ -22,7 +22,6 @@ export default {
   },
   "networkId": 1337702,
   "rpc": [
-    "https://kintsugi.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1337702.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.kintsugi.themerge.dev"
   ],

@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 22222,
   "rpc": [
-    "https://nautilus.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://22222.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.nautilus.nautchain.xyz"
   ],

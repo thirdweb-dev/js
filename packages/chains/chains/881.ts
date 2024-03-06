@@ -26,7 +26,6 @@ export default {
   },
   "redFlags": [],
   "rpc": [
-    "https://hypr.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://881.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.hypr.network"
   ],

@@ -28,7 +28,6 @@ export default {
     ]
   },
   "rpc": [
-    "https://metis-stardust-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://588.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://stardust.metis.io/?owner=588"
   ],

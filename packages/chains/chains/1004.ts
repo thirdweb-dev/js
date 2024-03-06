@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 1004,
   "rpc": [
-    "https://t-ekta.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1004.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://test.ekta.io:8545"
   ],

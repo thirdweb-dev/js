@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 7171,
   "rpc": [
-    "https://bitrock.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://7171.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://connect.bit-rock.io",
     "https://brockrpc.io"

@@ -15,7 +15,6 @@ export default {
   },
   "networkId": 8995,
   "rpc": [
-    "https://bloxberg.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://8995.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://core.bloxberg.org"
   ],

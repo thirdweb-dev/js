@@ -40,7 +40,6 @@ export default {
     ]
   },
   "rpc": [
-    "https://polygon-zkevm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1101.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://zkevm-rpc.com"
   ],

@@ -2,7 +2,13 @@ import type { Chain } from "../src/types";
 export default {
   "chain": "FIRE",
   "chainId": 917,
-  "explorers": [],
+  "explorers": [
+    {
+      "name": "FireScan",
+      "url": "https://rinia.firescan.io",
+      "standard": "EIP3091"
+    }
+  ],
   "faucets": [
     "https://faucet.thefirechain.com"
   ],
@@ -21,13 +27,11 @@ export default {
   },
   "networkId": 917,
   "rpc": [
-    "https://rinia-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://917.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rinia.rpc1.thefirechain.com"
+    "https://rinia-rpc1.thefirechain.com"
   ],
   "shortName": "tfire",
   "slip44": 1,
   "slug": "rinia-testnet",
-  "status": "incubating",
   "testnet": true
 } as const satisfies Chain;

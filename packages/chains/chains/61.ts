@@ -55,7 +55,6 @@ export default {
   },
   "networkId": 1,
   "rpc": [
-    "https://ethereum-classic.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://61.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://etc.rivet.link",
     "https://besu-at.etc-network.info",

@@ -30,7 +30,6 @@ export default {
     "reusedChainId"
   ],
   "rpc": [
-    "https://shardeum-liberty-1-x.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://8080.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://liberty10.shardeum.org/"
   ],

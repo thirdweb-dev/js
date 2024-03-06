@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 59,
   "rpc": [
-    "https://eos-evm-legacy.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://59.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.eosargentina.io"
   ],

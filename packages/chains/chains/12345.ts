@@ -37,7 +37,6 @@ export default {
     "chain": "eip155-43113"
   },
   "rpc": [
-    "https://step-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://12345.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.testnet.step.network"
   ],

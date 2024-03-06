@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 214,
   "rpc": [
-    "https://shinarium.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://214.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.shinarium.org"
   ],

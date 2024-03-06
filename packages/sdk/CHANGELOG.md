@@ -1,5 +1,67 @@
 # @thirdweb-dev/sdk
 
+## 4.0.38
+
+### Patch Changes
+
+- Updated dependencies [[`e87292a`](https://github.com/thirdweb-dev/js/commit/e87292ab604897ddfc337d24d2d1fe0f3560baae)]:
+  - @thirdweb-dev/chains@0.1.75
+
+## 4.0.37
+
+### Patch Changes
+
+- [#2343](https://github.com/thirdweb-dev/js/pull/2343) [`a00917c`](https://github.com/thirdweb-dev/js/commit/a00917cca451e64d7ea8dc8553c1c32540edaafa) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose contract.erc1155.updateMetadata()
+
+- [#2359](https://github.com/thirdweb-dev/js/pull/2359) [`bac0c9b`](https://github.com/thirdweb-dev/js/commit/bac0c9b4a1da26bbc7b1550c4b6f5e335b80c82b) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Fix joinABI filtering
+
+- [#2362](https://github.com/thirdweb-dev/js/pull/2362) [`7d74d30`](https://github.com/thirdweb-dev/js/commit/7d74d30b9fe2d2d2798a3c5efb1d71cd73841e53) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Resolve EIP7511 minimal proxy with Push0 opcode
+
+- [#2369](https://github.com/thirdweb-dev/js/pull/2369) [`8d2811d`](https://github.com/thirdweb-dev/js/commit/8d2811dd131d6c8eb8ce79278f0a8ebe1883265d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle updateMetadata for TokenERC1155 contracts
+
+- [#2374](https://github.com/thirdweb-dev/js/pull/2374) [`bc198e2`](https://github.com/thirdweb-dev/js/commit/bc198e215e57094aac525b262fe91add4786df92) Thanks [@MananTank](https://github.com/MananTank)! - Use `private foo` instead of `#foo` for making the members private in classes
+
+- Updated dependencies [[`abc0a53`](https://github.com/thirdweb-dev/js/commit/abc0a53dc398264f205d194e3f87a79f74e91eb1), [`bc198e2`](https://github.com/thirdweb-dev/js/commit/bc198e215e57094aac525b262fe91add4786df92)]:
+  - @thirdweb-dev/chains@0.1.74
+  - @thirdweb-dev/crypto@0.2.1
+  - @thirdweb-dev/merkletree@0.2.1
+  - @thirdweb-dev/storage@2.0.10
+
+## 4.0.36
+
+### Patch Changes
+
+- [#2294](https://github.com/thirdweb-dev/js/pull/2294) [`3137e45`](https://github.com/thirdweb-dev/js/commit/3137e45bb884525ba45fb389138d5360cd7333d1) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose rpcBatchSettings in SDKOptions
+
+- [#2292](https://github.com/thirdweb-dev/js/pull/2292) [`0f9a7b2`](https://github.com/thirdweb-dev/js/commit/0f9a7b2571daf6fd9bbd8d9223e0c5e865b82668) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Reduce batch RPC size for performance
+
+- [#1529](https://github.com/thirdweb-dev/js/pull/1529) [`2348417`](https://github.com/thirdweb-dev/js/commit/23484171148cbd6c42ec92aace2e30bbcd7d5073) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Custom gas-price for Xpla create2 factory deployment
+
+- [#2300](https://github.com/thirdweb-dev/js/pull/2300) [`94a699c`](https://github.com/thirdweb-dev/js/commit/94a699caaecee2247ccd7493c4cb04c6cc8b2e74) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Minimal proxy pattern update
+
+- Updated dependencies [[`ca70cd3`](https://github.com/thirdweb-dev/js/commit/ca70cd3882b39ffd56275d267e6af9c04fae179b)]:
+  - @thirdweb-dev/chains@0.1.73
+
+## 4.0.35
+
+### Patch Changes
+
+- [#2286](https://github.com/thirdweb-dev/js/pull/2286) [`09de55f1`](https://github.com/thirdweb-dev/js/commit/09de55f13cbd29b4e0eb57808e0d30f9c1b3ba94) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose utilities for creating merkle trees
+
+- [#2291](https://github.com/thirdweb-dev/js/pull/2291) [`53786fc3`](https://github.com/thirdweb-dev/js/commit/53786fc3068568758f033a1c63975c94a8e407f5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Perfomance improvements by memoizing extensions
+
+- [#2233](https://github.com/thirdweb-dev/js/pull/2233) [`a86478bf`](https://github.com/thirdweb-dev/js/commit/a86478bf248786423d03f4a20d9dc7c02270c371) Thanks [@IDubuque](https://github.com/IDubuque)! - Added support for engine relayer with custom forwarder
+
+- Updated dependencies [[`23d0e553`](https://github.com/thirdweb-dev/js/commit/23d0e553088321edfe3971950c2e7f27209d9aaf)]:
+  - @thirdweb-dev/chains@0.1.72
+
+## 4.0.34
+
+### Patch Changes
+
+- Updated dependencies [[`357886e3`](https://github.com/thirdweb-dev/js/commit/357886e31b37aad950731ce8f013a101190ebd07)]:
+  - @thirdweb-dev/chains@0.1.71
+
 ## 4.0.33
 
 ### Patch Changes

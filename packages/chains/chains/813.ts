@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 813,
   "rpc": [
-    "https://qitmeer.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://813.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm-dataseed1.meerscan.io",
     "https://evm-dataseed2.meerscan.io",

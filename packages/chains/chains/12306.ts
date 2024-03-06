@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 1230,
   "rpc": [
-    "https://fibonacci.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://12306.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node1.fibo-api.asia",
     "https://node2.fibo-api.asia",

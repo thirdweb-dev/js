@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 1821,
   "rpc": [
-    "https://ruby-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1821.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-data.rubychain.io/",
     "https://mainnet.rubychain.io/"

@@ -21,7 +21,6 @@ export default {
   "networkId": 23812,
   "redFlags": [],
   "rpc": [
-    "https://kjcohan-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://23812.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avacloud-dev.io/d2b6bd35-89f7-4019-bc88-643c31221e5c"
   ],

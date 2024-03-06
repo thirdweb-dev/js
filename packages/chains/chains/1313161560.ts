@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 1313161560,
   "rpc": [
-    "https://powergold.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1313161560.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://powergold.aurora.dev"
   ],

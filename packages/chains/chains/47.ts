@@ -31,7 +31,6 @@ export default {
     "reusedChainId"
   ],
   "rpc": [
-    "https://xpla-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://47.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://cube-evm-rpc.xpla.dev"
   ],

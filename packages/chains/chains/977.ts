@@ -15,7 +15,6 @@ export default {
   },
   "networkId": 977,
   "rpc": [
-    "https://nepal-blockchain-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://977.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.nepalblockchain.dev",
     "https://api.nepalblockchain.network"

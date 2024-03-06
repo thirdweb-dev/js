@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 5167003,
   "rpc": [
-    "https://mxc-wannsee-zkevm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://5167003.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://wannsee-rpc.mxc.com"
   ],

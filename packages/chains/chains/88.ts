@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 88,
   "rpc": [
-    "https://tomochain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://88.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.tomochain.com"
   ],

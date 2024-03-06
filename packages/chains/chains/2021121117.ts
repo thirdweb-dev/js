@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 2021121117,
   "rpc": [
-    "https://datahopper.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2021121117.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://23.92.21.121:8545"
   ],

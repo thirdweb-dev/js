@@ -16,9 +16,9 @@ export type FundWalletOptions = {
 };
 
 export class CoinbasePayIntegration {
-  #appId: string;
+  private _appId: string;
   constructor(options: CoinbasePayOptions) {
-    this.#appId = options.appId;
+    this._appId = options.appId;
   }
 
   async fundWallet(opts: FundWalletOptions): Promise<void> {
@@ -27,7 +27,7 @@ export class CoinbasePayIntegration {
     return new Promise((res, rej) => {
       initOnRamp(
         {
-          appId: this.#appId,
+          appId: this._appId,
           widgetParameters: {
             destinationWallets: [
               {

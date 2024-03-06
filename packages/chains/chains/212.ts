@@ -21,7 +21,6 @@ export default {
   },
   "networkId": 212,
   "rpc": [
-    "https://mapo-makalu.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://212.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.maplabs.io"
   ],

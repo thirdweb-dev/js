@@ -19,7 +19,7 @@ import { ethers } from "ethers";
  * @wallet
  */
 export class EthersWallet extends AbstractWallet {
-  #signer: ethers.Signer;
+  private _signer: ethers.Signer;
 
   /**
    * Create instance of `EthersWallet`
@@ -27,13 +27,13 @@ export class EthersWallet extends AbstractWallet {
    */
   constructor(signer: ethers.Signer) {
     super();
-    this.#signer = signer;
+    this._signer = signer;
   }
 
   /**
    * Returns [ethers signer](https://docs.ethers.org/v5/api/signer/) object used by the wallet
    */
   async getSigner(): Promise<ethers.Signer> {
-    return this.#signer;
+    return this._signer;
   }
 }

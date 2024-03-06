@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 9977,
   "rpc": [
-    "https://mind-smart-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://9977.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-msc.mindchain.info/",
     "wss://testnet-msc.mindchain.info/ws"

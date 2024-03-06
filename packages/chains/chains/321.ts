@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 321,
   "rpc": [
-    "https://kcc.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://321.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-mainnet.kcc.network",
     "https://kcc.mytokenpocket.vip",

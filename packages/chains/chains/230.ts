@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 230,
   "rpc": [
-    "https://swapdex.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://230.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.swapdex.network",
     "wss://ss.swapdex.network"

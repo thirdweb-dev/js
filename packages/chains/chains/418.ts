@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 418,
   "rpc": [
-    "https://latestnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://418.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.testnet.lachain.network",
     "https://lachain-testnet.rpc-nodes.cedalio.dev"

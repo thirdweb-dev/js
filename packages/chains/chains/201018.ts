@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 1,
   "rpc": [
-    "https://alaya.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://201018.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://openapi.alaya.network/rpc",
     "wss://openapi.alaya.network/ws"

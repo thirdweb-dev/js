@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 11,
   "rpc": [
-    "https://metadium.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://11.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.metadium.com/prod"
   ],

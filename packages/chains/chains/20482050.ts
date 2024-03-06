@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 20482050,
   "rpc": [
-    "https://hokum-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://20482050.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.hokum.gg"
   ],

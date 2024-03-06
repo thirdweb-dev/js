@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 1,
   "rpc": [
-    "https://platon.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://210425.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://openapi2.platon.network/rpc",
     "wss://openapi2.platon.network/ws"

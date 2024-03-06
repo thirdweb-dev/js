@@ -33,7 +33,6 @@ export default {
   },
   "networkId": 330844,
   "rpc": [
-    "https://ttcoin-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://330844.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.tscscan.com"
   ],

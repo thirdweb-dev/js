@@ -27,6 +27,11 @@ export { localWallet } from "./wallet/wallets/localWallet/localWallet";
 export type { LocalWalletConfigOptions } from "./wallet/wallets/localWallet/types";
 
 export {
+  magicEdenWallet,
+  type MagicEdenWalletConfigOptions,
+} from "./wallet/wallets/magicEden/magicEdenWallet";
+
+export {
   magicLink,
   type MagicWalletConfigOptions,
 } from "./wallet/wallets/magic/magicLink";

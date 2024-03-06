@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 119,
   "rpc": [
-    "https://enuls.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://119.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evmapi.nuls.io",
     "https://evmapi2.nuls.io"

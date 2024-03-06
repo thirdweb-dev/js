@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 1986,
   "rpc": [
-    "https://satoshie-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1986.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://testnet.satosh.ie"
   ],

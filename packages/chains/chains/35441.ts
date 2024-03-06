@@ -25,13 +25,12 @@ export default {
   "infoURL": "https://q.org",
   "name": "Q Mainnet",
   "nativeCurrency": {
-    "name": "Q token",
-    "symbol": "Q",
+    "name": "QGOV",
+    "symbol": "QGOV",
     "decimals": 18
   },
   "networkId": 35441,
   "rpc": [
-    "https://q.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://35441.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.q.org"
   ],

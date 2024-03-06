@@ -28,7 +28,6 @@ export default {
     ]
   },
   "rpc": [
-    "https://boba-bnb.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://56288.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://bnb.boba.network",
     "https://boba-bnb.gateway.tenderly.co/",

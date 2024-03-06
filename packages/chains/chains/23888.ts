@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 23888,
   "rpc": [
-    "https://blast-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://23888.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://testnet-rpc.blastblockchain.com"
   ],

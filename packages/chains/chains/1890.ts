@@ -36,7 +36,6 @@ export default {
   },
   "networkId": 1890,
   "rpc": [
-    "https://lightlink-phoenix.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1890.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://replicator.phoenix.lightlink.io/rpc/v1"
   ],

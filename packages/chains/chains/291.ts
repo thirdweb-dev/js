@@ -30,7 +30,6 @@ export default {
   },
   "networkId": 291,
   "rpc": [
-    "https://orderly.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://291.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.orderly.network",
     "https://l2-orderly-mainnet-0.t.conduit.xyz"

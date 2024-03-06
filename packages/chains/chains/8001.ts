@@ -44,7 +44,6 @@ export default {
   },
   "networkId": 8001,
   "rpc": [
-    "https://teleport-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://8001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm-rpc.testnet.teleport.network"
   ],

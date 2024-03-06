@@ -61,6 +61,10 @@ export function getInjectedMetamaskProvider(): Ethereum | undefined {
       return;
     }
 
+    if (ethereum.isRabbyWallet) {
+      return;
+    }
+
     return ethereum;
   }
 

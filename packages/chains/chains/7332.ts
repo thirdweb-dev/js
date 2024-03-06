@@ -39,7 +39,6 @@ export default {
   },
   "networkId": 7332,
   "rpc": [
-    "https://horizen-eon.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://7332.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://eon-rpc.horizenlabs.io/ethv1",
     "https://rpc.ankr.com/horizen_eon"

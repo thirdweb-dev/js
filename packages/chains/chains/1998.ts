@@ -26,7 +26,6 @@ export default {
   },
   "networkId": 1998,
   "rpc": [
-    "https://kyoto-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1998.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.testnet.kyotoprotocol.io:8545"
   ],

@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 2044,
   "rpc": [
-    "https://shrapnel-subnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2044.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/shrapnel/mainnet/rpc"
   ],

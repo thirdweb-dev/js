@@ -32,7 +32,6 @@ export default {
   },
   "networkId": 61803,
   "rpc": [
-    "https://etica.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://61803.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://eticamainnet.eticascan.org",
     "https://eticamainnet.eticaprotocol.org"

@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 36,
   "rpc": [
-    "https://dxchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://36.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.dxchain.com"
   ],

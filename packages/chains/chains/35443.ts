@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 35443,
   "rpc": [
-    "https://q-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://35443.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.qtestnet.org"
   ],

@@ -32,8 +32,9 @@ export default {
   },
   "networkId": 4337,
   "rpc": [
-    "https://beam.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://4337.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://build.onbeam.com/rpc",
+    "wss://build.onbeam.com/ws",
     "https://subnets.avax.network/beam/mainnet/rpc",
     "wss://subnets.avax.network/beam/mainnet/ws"
   ],

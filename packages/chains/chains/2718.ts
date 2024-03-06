@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 2718,
   "rpc": [
-    "https://k-laos.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2718.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.klaos.laosfoundation.io",
     "wss://rpc.klaos.laosfoundation.io"

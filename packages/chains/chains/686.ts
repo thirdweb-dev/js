@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 686,
   "rpc": [
-    "https://karura-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://686.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://eth-rpc-karura.aca-api.network",
     "wss://eth-rpc-karura.aca-api.network"

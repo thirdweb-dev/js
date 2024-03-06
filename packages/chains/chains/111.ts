@@ -21,7 +21,6 @@ export default {
   },
   "networkId": 111,
   "rpc": [
-    "https://etherlite-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://111.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.etherlite.org"
   ],

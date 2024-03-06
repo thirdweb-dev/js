@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 204005,
   "rpc": [
-    "https://x1-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://204005.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://x1-testnet.xen.network"
   ],

@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 512,
   "rpc": [
-    "https://double-a-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://512.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.acuteangle.com"
   ],

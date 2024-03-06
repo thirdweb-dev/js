@@ -39,7 +39,6 @@ export default {
   },
   "networkId": 4777,
   "rpc": [
-    "https://blackfort-exchange-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://4777.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.blackfort.network/rpc"
   ],

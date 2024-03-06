@@ -33,7 +33,6 @@ export default {
   },
   "networkId": 120,
   "rpc": [
-    "https://enuls-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://120.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://beta.evmapi.nuls.io",
     "https://beta.evmapi2.nuls.io"

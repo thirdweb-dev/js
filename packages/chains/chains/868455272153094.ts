@@ -21,7 +21,6 @@ export default {
   },
   "networkId": 868455272153094,
   "rpc": [
-    "https://godwoken-testnet-v1-gw-testnet-v1-deprecated.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://868455272153094.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://godwoken-testnet-web3-v1-rpc.ckbapp.dev"
   ],

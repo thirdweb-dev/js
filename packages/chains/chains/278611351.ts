@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 278611351,
   "rpc": [
-    "https://razor-skale-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://278611351.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.skalenodes.com/v1/turbulent-unique-scheat"
   ],

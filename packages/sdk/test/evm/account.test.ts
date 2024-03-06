@@ -143,9 +143,8 @@ describe("Accounts with account factory", function () {
         "Correct admin for account.",
       );
 
-      const associatedAccounts = await accountFactory.getAssociatedAccounts(
-        admin,
-      );
+      const associatedAccounts =
+        await accountFactory.getAssociatedAccounts(admin);
 
       assert.isTrue(
         associatedAccounts.length === 1,
@@ -361,24 +360,38 @@ describe("Accounts with account factory", function () {
       );
     });
 
-    it("Should not be able to grant restricted access to a signer who already has access.", async () => {
+    it("Should be able to update permissions by granting restricted access to a signer who already has access.", async () => {
       // Grant access to signer1
       await account.grantPermissions(signer1Wallet.address, {
         nativeTokenLimitPerTransaction: "1",
         approvedCallTargets: [adminWallet.address],
       });
 
+      // Store permissions
+      const signersWithRestrictions = await account.getAllSigners();
+      const restrictions = signersWithRestrictions.find(
+        (result) =>
+          utils.getAddress(result.signer) ===
+          utils.getAddress(signer1Wallet.address),
+      )?.permissions as SignerPermissions;
+
       // Try granting access to signer1 again
-      try {
-        await account.grantPermissions(signer1Wallet.address, {
-          approvedCallTargets: [adminWallet.address],
-        });
-        expect.fail();
-      } catch (err: any) {
-        expect(err.message).to.equal(
-          "Signer already has permissions. Cannot grant permissions to an existing signer. You can update permissions using `updatePermissions`.",
-        );
-      }
+      await account.grantPermissions(signer1Wallet.address, {
+        approvedCallTargets: [adminWallet.address, signer2Wallet.address],
+      });
+
+      const newSignersWithRestrictions = await account.getAllSigners();
+      const newRestrictions = newSignersWithRestrictions.find(
+        (result) =>
+          utils.getAddress(result.signer) ===
+          utils.getAddress(signer1Wallet.address),
+      )?.permissions as SignerPermissions;
+
+      assert.strictEqual(
+        newRestrictions.approvedCallTargets.length,
+        2,
+        "New signer1 should have two approved call targets.",
+      );
     });
 
     it("Should be able to revoke restricted access from an authorized signer.", async () => {
@@ -418,7 +431,7 @@ describe("Accounts with account factory", function () {
       );
     });
 
-    it("Should not be able to revoke restricted access from a signer who doesn't have access.", async () => {
+    it("Should be able to revoke restricted access from a signer who doesn't have access with no effect.", async () => {
       const signersWithRestrictions = await account.getAllSigners();
       assert.isFalse(
         signersWithRestrictions
@@ -428,14 +441,15 @@ describe("Accounts with account factory", function () {
       );
 
       // Try revoking access from signer1
-      try {
-        await account.revokeAccess(signer1Wallet.address);
-        expect.fail();
-      } catch (err: any) {
-        expect(err.message).to.equal(
-          "Signer does not already have permissions. You can grant permissions using `grantPermissions`.",
-        );
-      }
+      await account.revokeAccess(signer1Wallet.address);
+
+      const newSignersWithRestrictions = await account.getAllSigners();
+      assert.isFalse(
+        newSignersWithRestrictions
+          .map((result) => utils.getAddress(result.signer))
+          .includes(signer1Wallet.address),
+        "New signer should not have access to the account.",
+      );
     });
 
     it("Should be able to update access of an authorized signer.", async () => {

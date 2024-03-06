@@ -15,7 +15,6 @@ export default {
   },
   "networkId": 172,
   "rpc": [
-    "https://latam-blockchain-resil-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://172.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.latam-blockchain.com",
     "wss://ws.latam-blockchain.com"

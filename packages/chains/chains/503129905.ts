@@ -19,7 +19,7 @@ export default {
     "format": "png"
   },
   "infoURL": "https://nebulachain.io/",
-  "name": "SKALE Nebula Hub Testnet",
+  "name": "Deprecated SKALE Nebula Hub Testnet",
   "nativeCurrency": {
     "name": "sFUEL",
     "symbol": "sFUEL",
@@ -27,13 +27,13 @@ export default {
   },
   "networkId": 503129905,
   "rpc": [
-    "https://skale-nebula-hub-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://503129905.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://staging-v3.skalenodes.com/v1/staging-faint-slimy-achird",
     "wss://staging-v3.skalenodes.com/v1/ws/staging-faint-slimy-achird"
   ],
-  "shortName": "nebula-testnet",
+  "shortName": "deprecated-nebula-testnet",
   "slip44": 1,
-  "slug": "skale-nebula-hub-testnet",
+  "slug": "deprecated-skale-nebula-hub-testnet",
+  "status": "deprecated",
   "testnet": true
 } as const satisfies Chain;

@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 10000,
   "rpc": [
-    "https://smart-bitcoin-cash.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://10000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://smartbch.greyh.at",
     "https://rpc-mainnet.smartbch.org",

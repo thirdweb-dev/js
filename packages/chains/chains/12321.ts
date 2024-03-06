@@ -21,7 +21,6 @@ export default {
   },
   "networkId": 12321,
   "rpc": [
-    "https://blg-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://12321.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.blgchain.com"
   ],

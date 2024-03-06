@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 31224,
   "rpc": [
-    "https://cloudtx-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://31224.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.cloudtx.finance"
   ],

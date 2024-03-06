@@ -33,7 +33,6 @@ export default {
   },
   "networkId": 13473,
   "rpc": [
-    "https://immutable-zkevm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://13473.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.testnet.immutable.com"
   ],

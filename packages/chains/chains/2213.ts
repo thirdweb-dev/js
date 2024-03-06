@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 2213,
   "rpc": [
-    "https://evanesco.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2213.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://seed4.evanesco.org:8546"
   ],

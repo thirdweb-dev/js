@@ -35,7 +35,6 @@ export default {
   },
   "networkId": 1320,
   "rpc": [
-    "https://aia-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1320.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://aia-dataseed1-testnet.aiachain.org"
   ],

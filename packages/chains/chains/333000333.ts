@@ -43,7 +43,6 @@ export default {
   },
   "networkId": 333000333,
   "rpc": [
-    "https://meld.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://333000333.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-1.meld.com"
   ],

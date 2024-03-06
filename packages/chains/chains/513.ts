@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 513,
   "rpc": [
-    "https://double-a-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://513.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.acuteangle.com"
   ],

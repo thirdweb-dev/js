@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 4181,
   "rpc": [
-    "https://phi-network-v1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://4181.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc1.phi.network",
     "https://rpc2.phi.network"

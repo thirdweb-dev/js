@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 1909,
   "rpc": [
-    "https://merkle-scan.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1909.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://marklechain-rpc.merklescan.com"
   ],

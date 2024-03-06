@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 1559,
   "rpc": [
-    "https://tenet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1559.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.tenet.org",
     "https://tenet-evm.publicnode.com",

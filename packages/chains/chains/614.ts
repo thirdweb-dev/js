@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 614,
   "rpc": [
-    "https://graphlinq-blockchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://614.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://glq-dataseed.graphlinq.io"
   ],

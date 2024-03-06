@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 16507,
   "rpc": [
-    "https://genesys.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://16507.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.genesys.network"
   ],

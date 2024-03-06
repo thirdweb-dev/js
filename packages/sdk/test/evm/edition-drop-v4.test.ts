@@ -46,9 +46,11 @@ describe("Edition Drop Contract (V4)", async () => {
         platform_fee_basis_points: 10,
         platform_fee_recipient: adminWallet.address,
       },
-      await sdk.deployer.getLatestBuiltInContractVersion(
-        EditionDropInitializer.contractType,
-      ),
+      (
+        await sdk.deployer.getLatestBuiltInContractVersion(
+          EditionDropInitializer.contractType,
+        )
+      ).toString(),
     );
     bdContract = await sdk.getEditionDrop(address);
   });
@@ -250,6 +252,77 @@ describe("Edition Drop Contract (V4)", async () => {
       );
       assert.isDefined(found);
     }
+  });
+
+  it("should update metadata", async () => {
+    const tokens = [
+      {
+        name: "test 0",
+      },
+      {
+        name: "test 1",
+      },
+      {
+        name: "test 2",
+      },
+      {
+        name: "test 3",
+      },
+      {
+        name: "test 4",
+      },
+    ];
+    const result = await bdContract.createBatch(tokens);
+    assert.lengthOf(result, tokens.length);
+    for (const token of tokens) {
+      const found = result.find(
+        async (t) => (await t.data()).name === token.name,
+      );
+      assert.isDefined(found);
+    }
+
+    const token = await bdContract.get(1);
+    expect(token.metadata.name).to.eq("test 1");
+    await bdContract.erc1155.updateMetadata(1, {
+      name: "test 123",
+    });
+    const token2 = await bdContract.get(1);
+    expect(token2.metadata.name).to.eq("test 123");
+  });
+
+  it("should update metadata from diff batch", async () => {
+    const tokens = [
+      {
+        name: "test 0",
+      },
+      {
+        name: "test 1",
+      },
+      {
+        name: "test 2",
+      },
+    ];
+    const result = await bdContract.createBatch(tokens);
+    assert.lengthOf(result, tokens.length);
+
+    const tokens2 = [
+      {
+        name: "test 3",
+      },
+      {
+        name: "test 4",
+      },
+    ];
+    const result2 = await bdContract.createBatch(tokens2);
+    assert.lengthOf(result2, tokens2.length);
+
+    let token = await bdContract.get("3");
+    expect(token.metadata.name).to.eq("test 3");
+    await bdContract.erc1155.updateMetadata(3, {
+      name: "test 123",
+    });
+    token = await bdContract.get("3");
+    expect(token.metadata.name).to.eq("test 123");
   });
 
   it("should allow setting max claims per wallet", async () => {

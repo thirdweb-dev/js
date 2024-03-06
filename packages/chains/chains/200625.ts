@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 200625,
   "rpc": [
-    "https://akroma.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://200625.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://remote.akroma.io"
   ],

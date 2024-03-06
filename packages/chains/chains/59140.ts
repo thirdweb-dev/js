@@ -53,7 +53,6 @@ export default {
     ]
   },
   "rpc": [
-    "https://linea-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://59140.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.goerli.linea.build",
     "wss://rpc.goerli.linea.build",

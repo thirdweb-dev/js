@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 6066,
   "rpc": [
-    "https://tres.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://6066.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.tresleches.finance/",
     "https://rpc.treschain.io/"

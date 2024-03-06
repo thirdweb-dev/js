@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 22052002,
   "rpc": [
-    "https://excelon.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://22052002.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://edgewallet1.xlon.org/"
   ],

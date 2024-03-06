@@ -431,7 +431,7 @@ describe("IPFS", async () => {
         getGatewayUrlForCid(
           authorizedUrls["ipfs://"][0],
           // CID changes based on file contents (prod gateway vs staging gateway since they get written)
-          `bafybeicn4fmtzb7kcg5idlzoo7ahomt5khqyz7lrpv2r5zz5n7sb4s2uvm/0`,
+          `bafybeianhuee7lsl5yuga42ewup4bg4uccilo2qpjiqlf5jcxj6bra32yu/0`,
         ),
       );
     },

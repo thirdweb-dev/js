@@ -38,12 +38,11 @@ export default {
   },
   "networkId": 943,
   "rpc": [
-    "https://pulsechain-testnet-v4.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://943.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.v4.testnet.pulsechain.com",
     "wss://rpc.v4.testnet.pulsechain.com",
-    "https://pulsechain-testnet.publicnode.com",
-    "wss://pulsechain-testnet.publicnode.com",
+    "https://pulsechain-testnet-rpc.publicnode.com",
+    "wss://pulsechain-testnet-rpc.publicnode.com",
     "https://rpc-testnet-pulsechain.g4mm4.io",
     "wss://rpc-testnet-pulsechain.g4mm4.io"
   ],

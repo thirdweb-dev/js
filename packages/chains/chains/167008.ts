@@ -27,9 +27,9 @@ export default {
   "networkId": 167008,
   "redFlags": [],
   "rpc": [
-    "https://taiko-katla-l2.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://167008.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.katla.taiko.xyz"
+    "https://rpc.katla.taiko.xyz",
+    "wss://rpc.katla.taiko.xyz"
   ],
   "shortName": "tko-katla",
   "slug": "taiko-katla-l2",

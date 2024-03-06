@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 761412,
   "rpc": [
-    "https://miexs-smartchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://761412.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.miexs.com"
   ],

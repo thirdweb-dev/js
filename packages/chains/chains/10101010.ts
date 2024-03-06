@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 10101010,
   "rpc": [
-    "https://soverun.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://10101010.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.soverun.com"
   ],

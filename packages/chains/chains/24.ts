@@ -22,7 +22,6 @@ export default {
     "reusedChainId"
   ],
   "rpc": [
-    "https://kardiachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://24.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.kardiachain.io"
   ],

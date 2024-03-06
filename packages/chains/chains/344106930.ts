@@ -19,7 +19,7 @@ export default {
     "format": "png"
   },
   "infoURL": "https://calypsohub.network/",
-  "name": "SKALE Calypso Hub Testnet",
+  "name": "Deprecated SKALE Calypso Hub Testnet",
   "nativeCurrency": {
     "name": "sFUEL",
     "symbol": "sFUEL",
@@ -27,13 +27,13 @@ export default {
   },
   "networkId": 344106930,
   "rpc": [
-    "https://skale-calypso-hub-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://344106930.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://staging-v3.skalenodes.com/v1/staging-utter-unripe-menkar"
   ],
-  "shortName": "calypso-testnet",
+  "shortName": "deprected-calypso-testnet",
   "slip44": 1,
-  "slug": "skale-calypso-hub-testnet",
+  "slug": "deprecated-skale-calypso-hub-testnet",
+  "status": "deprecated",
   "testnet": true,
-  "title": "Calypso NFT Hub Testnet"
+  "title": "Deprecated Calypso NFT Hub Testnet"
 } as const satisfies Chain;

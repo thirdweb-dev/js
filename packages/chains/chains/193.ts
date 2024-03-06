@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 193,
   "rpc": [
-    "https://crypto-emergency.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://193.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://cemchain.com"
   ],

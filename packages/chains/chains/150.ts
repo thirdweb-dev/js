@@ -33,7 +33,6 @@ export default {
   },
   "networkId": 150,
   "rpc": [
-    "https://six-protocol-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://150.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-evm.fivenet.sixprotocol.net"
   ],

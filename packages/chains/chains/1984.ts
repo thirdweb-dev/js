@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 1984,
   "rpc": [
-    "https://eurus-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1984.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.eurus.network"
   ],

@@ -21,7 +21,6 @@ export default {
   },
   "networkId": 22324,
   "rpc": [
-    "https://goldxchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://22324.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.goldxchain.io"
   ],

@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 2043,
   "rpc": [
-    "https://origintrail-parachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2043.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://astrosat.origintrail.network",
     "wss://parachain-rpc.origin-trail.network"

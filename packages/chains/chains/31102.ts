@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 1,
   "rpc": [
-    "https://ethersocial-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://31102.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.esn.gonspool.com"
   ],

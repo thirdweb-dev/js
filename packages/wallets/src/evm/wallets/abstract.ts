@@ -15,7 +15,7 @@ import {
 import { createErc20 } from "../utils/currency";
 
 // TODO improve this
-function chainIdToThirdwebRpc(chainId: number, clientId?: string) {
+export function chainIdToThirdwebRpc(chainId: number, clientId?: string) {
   return `https://${chainId}.rpc.thirdweb.com${clientId ? `/${clientId}` : ""}${
     typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
       ? `?bundleId=${(globalThis as any).APP_BUNDLE_ID as string}`
@@ -66,9 +66,11 @@ export async function checkContractWalletSignature(
     skipFetchSetup: _skipFetchSetup,
   });
   const walletContract = new Contract(address, EIP1271_ABI, provider);
-  const _hashMessage = utils.hashMessage(message);
   try {
-    const res = await walletContract.isValidSignature(_hashMessage, signature);
+    const res = await walletContract.isValidSignature(
+      utils.hashMessage(message),
+      signature,
+    );
     return res === EIP1271_MAGICVALUE;
   } catch {
     return false;

@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 13381,
   "rpc": [
-    "https://phoenix.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://13381.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.phoenixplorer.com/"
   ],

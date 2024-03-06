@@ -6,6 +6,7 @@ import { ContractWrapper } from "./internal/contract-wrapper";
 
 /**
  * Listen to Contract events in real time
+ * @contract
  * @public
  */
 export class ContractEvents<TContract extends BaseContract> {

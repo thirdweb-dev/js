@@ -28,7 +28,6 @@ export default {
   },
   "networkId": 77777,
   "rpc": [
-    "https://toronet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://77777.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://toronet.org/rpc"
   ],

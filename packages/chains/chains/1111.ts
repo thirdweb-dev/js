@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 1111,
   "rpc": [
-    "https://wemix3-0.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1111.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.wemix.com",
     "wss://ws.wemix.com"

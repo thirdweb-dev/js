@@ -59,6 +59,7 @@ import { ClaimEligibility } from "../../enums/ClaimEligibility";
 
 /**
  * Manages claim conditions for NFT Drop contracts
+ * @erc721
  * @public
  */
 export class DropClaimConditions<
@@ -717,9 +718,8 @@ export class DropClaimConditions<
           merkle: merkleInfo,
         });
         // using internal method to just upload, avoids one contract call
-        const contractURI = await this.metadata._parseAndUploadMetadata(
-          mergedMetadata,
-        );
+        const contractURI =
+          await this.metadata._parseAndUploadMetadata(mergedMetadata);
 
         // TODO (cc) we could write the merkle tree info on the claim condition metadata instead
         // TODO (cc) but we still need to maintain the behavior here for older contracts

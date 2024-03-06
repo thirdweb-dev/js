@@ -21,7 +21,6 @@ export default {
   },
   "networkId": 197,
   "rpc": [
-    "https://neutrinos-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://197.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.neutrinoschain.com"
   ],

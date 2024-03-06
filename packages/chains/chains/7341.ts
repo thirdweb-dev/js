@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 7341,
   "rpc": [
-    "https://shyft.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://7341.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.shyft.network/"
   ],

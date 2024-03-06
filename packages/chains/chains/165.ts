@@ -24,7 +24,6 @@ export default {
   },
   "networkId": 165,
   "rpc": [
-    "https://omni-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://165.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.omni.network"
   ],

@@ -33,7 +33,6 @@ export default {
   },
   "networkId": 7895,
   "rpc": [
-    "https://ardenium-athena.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://7895.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-athena.ardescan.com/"
   ],

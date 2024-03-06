@@ -21,7 +21,6 @@ export default {
   "networkId": 57522,
   "redFlags": [],
   "rpc": [
-    "https://cohan-test.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://57522.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avacloud-dev.io/fc395ee3-9e2d-45ea-951a-233b4f3e367d"
   ],

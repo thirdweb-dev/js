@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 266256,
   "rpc": [
-    "https://gear-zero-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://266256.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://gzn-test.linksme.info"
   ],

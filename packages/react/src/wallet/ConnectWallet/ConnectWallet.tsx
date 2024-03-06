@@ -1,6 +1,7 @@
 import { Theme, iconSize } from "../../design-system";
 import { ConnectedWalletDetails } from "./Details";
 import {
+  WalletInstance,
   useAddress,
   useConnectionStatus,
   useLogout,
@@ -165,6 +166,30 @@ export type ConnectWalletProps = {
   hideTestnetFaucet?: boolean;
 
   /**
+   * Hide the "Send" button in the ConnectWallet Details Modal
+   *
+   * By default it is `false` - Send button is shown
+   *
+   * @example
+   * ```tsx
+   * <ConnectWallet hideSendButton={true} />
+   * ```
+   */
+  hideSendButton?: boolean;
+
+  /**
+   * Hide the "Receive" button in the ConnectWallet Details Modal
+   *
+   * By default it is `false` - Receive button is shown
+   *
+   * @example
+   * ```tsx
+   * <ConnectWallet hideReceiveButton={true} />
+   * ```
+   */
+  hideReceiveButton?: boolean;
+
+  /**
    * Whether to show "Switch Network" button if the wallet is connected,
    * but it is not connected to the `activeChain` provided in [`ThirdwebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider)
    *
@@ -313,12 +338,12 @@ export type ConnectWalletProps = {
   hideDisconnect?: boolean;
 
   /**
-   * Callback to be called on successful connection of wallet
+   * Callback to be called on successful connection of wallet. The connected wallet instance is passed as an argument to the callback
    *
    * ```tsx
    * <ConnectWallet
-   *  onConnect={() => {
-   *    console.log("wallet connected")
+   *  onConnect={(wallet) => {
+   *    console.log("connected to", wallet)
    *  }}
    * />
    * ```
@@ -336,7 +361,7 @@ export type ConnectWalletProps = {
    * ```
    *
    */
-  onConnect?: () => void;
+  onConnect?: (wallet: WalletInstance) => void;
 
   /**
    * Render custom UI at the bottom of the ConnectWallet Details Modal
@@ -352,6 +377,18 @@ export type ConnectWalletProps = {
    * ```
    */
   detailsModalFooter?: (props: { close: () => void }) => JSX.Element;
+
+  /**
+   * By default ConnectWallet shows "Powered by Thirdweb" branding at the bottom of the ConnectWallet Modal.
+   *
+   * If you want to hide the branding, set this prop to `false`
+   *
+   * @example
+   * ```tsx
+   * <ConnectWallet showThirdwebBranding={false} />
+   *```
+   */
+  showThirdwebBranding?: boolean;
 };
 
 const TW_CONNECT_WALLET = "tw-connect-wallet";
@@ -588,6 +625,30 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  *  })
  * />
  * ```
+ *
+ *
+ * ### showThirdwebBranding
+ * By default ConnectWallet shows "Powered by Thirdweb" branding at the bottom of the ConnectWallet Modal.
+ *
+ * If you want to hide the branding, set this prop to `false`
+ *
+ * ```tsx
+ * <ConnectWallet showThirdwebBranding={false} />
+ * ```
+ *
+ * ### hideSendButton
+ * Hide the "Send" button in the ConnectWallet Details Modal. By default it is `false` - Send button is shown
+ *
+ * ```tsx
+ * <ConnectWallet hideSendButton={true} />
+ * ```
+ *
+ * ### hideReceiveButton
+ * Hide the "Receive" button in the ConnectWallet Details Modal. By default it is `false` - Receive button is shown
+ *
+ * ```tsx
+ * <ConnectWallet hideReceiveButton={true} />
+ * ```
  */
 export function ConnectWallet(props: ConnectWalletProps) {
   const activeWallet = useWallet();
@@ -707,6 +768,7 @@ export function ConnectWallet(props: ConnectWalletProps) {
                   titleIconUrl: props.modalTitleIconUrl,
                   auth: props.auth,
                   onConnect: props.onConnect,
+                  showThirdwebBranding: props.showThirdwebBranding,
                 });
                 setIsWalletModalOpen(true);
               }}
@@ -784,6 +846,8 @@ export function ConnectWallet(props: ConnectWalletProps) {
             hideSwitchToPersonalWallet={props.hideSwitchToPersonalWallet}
             hideDisconnect={props.hideDisconnect}
             detailsModalFooter={props.detailsModalFooter}
+            hideSendButton={props.hideSendButton}
+            hideReceiveButton={props.hideReceiveButton}
           />
         );
       })()}

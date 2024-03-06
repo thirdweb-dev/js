@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 10507,
   "rpc": [
-    "https://numbers.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://10507.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnetrpc.num.network"
   ],

@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 776877,
   "rpc": [
-    "https://modularium.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://776877.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://fraa-dancebox-3035-rpc.a.dancebox.tanssi.network"
   ],

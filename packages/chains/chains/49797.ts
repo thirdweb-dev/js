@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 49797,
   "rpc": [
-    "https://energi-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://49797.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://nodeapi.test.energi.network"
   ],

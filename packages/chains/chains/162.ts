@@ -15,7 +15,6 @@ export default {
   },
   "networkId": 162,
   "rpc": [
-    "https://lightstreams-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://162.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node.sirius.lightstreams.io"
   ],

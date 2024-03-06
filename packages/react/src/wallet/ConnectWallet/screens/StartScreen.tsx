@@ -10,12 +10,15 @@ import { Img } from "../../../components/Img";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
 import { StyledDiv } from "../../../design-system/elements";
 import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
+import { PoweredByThirdweb } from "../PoweredByTW";
+import { spacing } from "../../../design-system";
 
 export function StartScreen() {
   const {
     termsOfServiceUrl,
     privacyPolicyUrl,
     welcomeScreen: WelcomeScreen,
+    showThirdwebBranding,
   } = useContext(ModalConfigCtx);
   const locale = useTWLocale().connectWallet;
 
@@ -80,9 +83,9 @@ export function StartScreen() {
         >
           {subtitle}
         </Text>
-      </Container>
 
-      <Container py="lg" flex="column" gap="lg">
+        <Spacer y="lg" />
+
         <Link
           target="_blank"
           center
@@ -90,13 +93,27 @@ export function StartScreen() {
         >
           {locale.newToWallets}
         </Link>
+      </Container>
 
-        {showTOS && (
-          <TOS
-            termsOfServiceUrl={termsOfServiceUrl}
-            privacyPolicyUrl={privacyPolicyUrl}
-          />
-        )}
+      <Container py="lg" flex="column" gap="lg">
+        <div>
+          {showTOS && (
+            <TOS
+              termsOfServiceUrl={termsOfServiceUrl}
+              privacyPolicyUrl={privacyPolicyUrl}
+            />
+          )}
+
+          {showThirdwebBranding !== false && (
+            <Container
+              style={{
+                paddingTop: spacing.xl,
+              }}
+            >
+              <PoweredByThirdweb />
+            </Container>
+          )}
+        </div>
       </Container>
     </Container>
   );

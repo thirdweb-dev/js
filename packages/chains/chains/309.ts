@@ -36,7 +36,6 @@ export default {
   },
   "networkId": 309,
   "rpc": [
-    "https://wyzth-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://309.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet3.wyzthchain.org/"
   ],

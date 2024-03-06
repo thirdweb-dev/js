@@ -38,7 +38,6 @@ export default {
     "reusedChainId"
   ],
   "rpc": [
-    "https://synapse-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://444.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://sepolia.synapseprotocol.com"
   ],

@@ -21,7 +21,6 @@ export default {
   },
   "networkId": 5700,
   "rpc": [
-    "https://syscoin-tanenbaum-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://5700.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.tanenbaum.io",
     "wss://rpc.tanenbaum.io/wss",

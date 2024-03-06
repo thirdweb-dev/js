@@ -50,7 +50,6 @@ export default {
     ]
   },
   "rpc": [
-    "https://cybria-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://6666.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://l2-rpc.cybascan.io"
   ],

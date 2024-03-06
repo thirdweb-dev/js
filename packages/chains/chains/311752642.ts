@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 311752642,
   "rpc": [
-    "https://oneledger.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://311752642.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.oneledger.network"
   ],

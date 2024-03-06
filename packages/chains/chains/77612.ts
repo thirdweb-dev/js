@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 77612,
   "rpc": [
-    "https://vention-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://77612.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.vention.network"
   ],

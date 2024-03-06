@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 63000,
   "rpc": [
-    "https://ecredits.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://63000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.ecredits.com"
   ],

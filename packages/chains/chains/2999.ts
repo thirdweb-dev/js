@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 2999,
   "rpc": [
-    "https://bityuan.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2999.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.bityuan.com/eth"
   ],

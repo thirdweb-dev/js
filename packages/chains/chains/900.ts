@@ -33,7 +33,6 @@ export default {
   },
   "networkId": 900,
   "rpc": [
-    "https://garizon-testnet-stage0.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://900.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://s0-testnet.garizon.net/rpc"
   ],

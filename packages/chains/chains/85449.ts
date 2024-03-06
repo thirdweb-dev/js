@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 48501,
   "rpc": [
-    "https://cybertrust.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://85449.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://testnet.cybertrust.space:48501"
   ],

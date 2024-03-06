@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 3306,
   "rpc": [
-    "https://debounce-subnet-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://3306.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://dev-rpc.debounce.network"
   ],

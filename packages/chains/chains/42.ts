@@ -36,7 +36,6 @@ export default {
     "reusedChainId"
   ],
   "rpc": [
-    "https://lukso.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://42.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.mainnet.lukso.network",
     "wss://ws-rpc.mainnet.lukso.network"

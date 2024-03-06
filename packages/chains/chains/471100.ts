@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 471100,
   "rpc": [
-    "https://patex-sepolia-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://471100.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://test-rpc.patex.io/"
   ],

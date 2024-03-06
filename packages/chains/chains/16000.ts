@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 16000,
   "rpc": [
-    "https://metadot.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://16000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.metadot.network"
   ],

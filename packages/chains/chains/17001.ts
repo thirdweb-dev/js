@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 17001,
   "rpc": [
-    "https://redstone-holesky-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://17001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.holesky.redstone.xyz"
   ],

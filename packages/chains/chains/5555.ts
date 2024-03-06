@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 5555,
   "rpc": [
-    "https://chain-verse.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://5555.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.chainverse.info"
   ],

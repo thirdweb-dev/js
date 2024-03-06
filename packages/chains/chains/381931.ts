@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 381931,
   "rpc": [
-    "https://metal-c-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://381931.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.metalblockchain.org/ext/bc/C/rpc"
   ],

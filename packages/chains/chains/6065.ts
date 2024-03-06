@@ -33,7 +33,6 @@ export default {
   },
   "networkId": 6065,
   "rpc": [
-    "https://tres-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://6065.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-test.tresleches.finance/"
   ],

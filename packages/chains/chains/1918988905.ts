@@ -15,7 +15,6 @@ export default {
   "networkId": 1918988905,
   "redFlags": [],
   "rpc": [
-    "https://rarichain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1918988905.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.rpc.rarichain.org/http"
   ],

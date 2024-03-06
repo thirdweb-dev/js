@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 7672,
   "rpc": [
-    "https://the-root-network-porcini-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://7672.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://porcini.rootnet.app/archive",
     "wss://porcini.rootnet.app/archive/ws"

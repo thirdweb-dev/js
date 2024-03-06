@@ -35,7 +35,6 @@ export default {
   },
   "networkId": 297,
   "rpc": [
-    "https://hedera-previewnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://297.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://previewnet.hashio.io/api"
   ],

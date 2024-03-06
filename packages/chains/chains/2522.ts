@@ -2,7 +2,13 @@ import type { Chain } from "../src/types";
 export default {
   "chain": "FRAX",
   "chainId": 2522,
-  "explorers": [],
+  "explorers": [
+    {
+      "name": "fraxscan",
+      "url": "https://holesky.fraxscan.com",
+      "standard": "EIP3091"
+    }
+  ],
   "faucets": [],
   "features": [],
   "icon": {
@@ -21,7 +27,6 @@ export default {
   "networkId": 2522,
   "redFlags": [],
   "rpc": [
-    "https://fraxtal-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2522.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.testnet.frax.com"
   ],

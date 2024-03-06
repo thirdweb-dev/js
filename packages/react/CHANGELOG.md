@@ -1,5 +1,134 @@
 # @thirdweb-dev/react
 
+## 4.4.11
+
+### Patch Changes
+
+- [#2376](https://github.com/thirdweb-dev/js/pull/2376) [`d5d7d54`](https://github.com/thirdweb-dev/js/commit/d5d7d542ceb76ae40529ba1418c2a78af126c222) Thanks [@MananTank](https://github.com/MananTank)! - Make OTPInput used in EmbeddedWallet numeric
+
+- Updated dependencies [[`e87292a`](https://github.com/thirdweb-dev/js/commit/e87292ab604897ddfc337d24d2d1fe0f3560baae)]:
+  - @thirdweb-dev/chains@0.1.75
+  - @thirdweb-dev/react-core@4.4.11
+  - @thirdweb-dev/sdk@4.0.38
+  - @thirdweb-dev/wallets@2.4.13
+
+## 4.4.10
+
+### Patch Changes
+
+- [#2354](https://github.com/thirdweb-dev/js/pull/2354) [`cff6ef2`](https://github.com/thirdweb-dev/js/commit/cff6ef2c973cd8a8c20db1a0f3b3c0f19c61ecf8) Thanks [@MananTank](https://github.com/MananTank)! - Remove const enums to object to fix issues with Next.js <13.5
+
+- [#2348](https://github.com/thirdweb-dev/js/pull/2348) [`a50d3b0`](https://github.com/thirdweb-dev/js/commit/a50d3b04f6aa7244027c0597c096efcedf4e71f6) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Update code snippet for XDEFI wallet
+
+- [#2347](https://github.com/thirdweb-dev/js/pull/2347) [`73e34c0`](https://github.com/thirdweb-dev/js/commit/73e34c083cd9c0d634e39657a4fad0f49f6fec89) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add Magic Eden wallet
+
+- [#2375](https://github.com/thirdweb-dev/js/pull/2375) [`553f7fd`](https://github.com/thirdweb-dev/js/commit/553f7fda4739b440fc62c3f34f2dad14a022371c) Thanks [@MananTank](https://github.com/MananTank)! - Remove unnecessary ConnectModal auto opening.
+
+  This also fixes the issue where Connect Modal opens on page load when `ThirdwebProvider` is dynamically imported and rendered in the app.
+
+- Updated dependencies [[`a00917c`](https://github.com/thirdweb-dev/js/commit/a00917cca451e64d7ea8dc8553c1c32540edaafa), [`73e34c0`](https://github.com/thirdweb-dev/js/commit/73e34c083cd9c0d634e39657a4fad0f49f6fec89), [`e7528af`](https://github.com/thirdweb-dev/js/commit/e7528af48ff2dda622ed47074611499cfd66f819), [`bac0c9b`](https://github.com/thirdweb-dev/js/commit/bac0c9b4a1da26bbc7b1550c4b6f5e335b80c82b), [`7d74d30`](https://github.com/thirdweb-dev/js/commit/7d74d30b9fe2d2d2798a3c5efb1d71cd73841e53), [`8d2811d`](https://github.com/thirdweb-dev/js/commit/8d2811dd131d6c8eb8ce79278f0a8ebe1883265d), [`abc0a53`](https://github.com/thirdweb-dev/js/commit/abc0a53dc398264f205d194e3f87a79f74e91eb1), [`10b71dd`](https://github.com/thirdweb-dev/js/commit/10b71dd7a0c6e91bb1ebe8250ca7fac7bac76635), [`bc198e2`](https://github.com/thirdweb-dev/js/commit/bc198e215e57094aac525b262fe91add4786df92)]:
+  - @thirdweb-dev/sdk@4.0.37
+  - @thirdweb-dev/react-core@4.4.10
+  - @thirdweb-dev/wallets@2.4.12
+  - @thirdweb-dev/chains@0.1.74
+
+## 4.4.9
+
+### Patch Changes
+
+- [#2303](https://github.com/thirdweb-dev/js/pull/2303) [`9e6b3e5`](https://github.com/thirdweb-dev/js/commit/9e6b3e576427fb74519a111080220d1a351531be) Thanks [@MananTank](https://github.com/MananTank)! - - Fix the closing of ConnectWallet after the wallet connection instead of showing the "Sign In" screen when Auth is enabled
+
+  - Call the `onConnect` prop on `ConnectWallet` and `ConnectEmbed` component with the connected wallet instance
+
+  ```tsx
+  <ConnectWallet
+    onConnect={(wallet) => {
+      console.log("Connected to:", wallet);
+    }}
+  />
+  ```
+
+  ```tsx
+  <ConnectEmbed
+    onConnect={(wallet) => {
+      console.log("Connected to:", wallet);
+    }}
+  />
+  ```
+
+  - Improved Sign in Screen UI for Embedded Wallet and Local Wallet with Retry and Disconnect buttons after failed sign in
+
+- [#2309](https://github.com/thirdweb-dev/js/pull/2309) [`23820b2`](https://github.com/thirdweb-dev/js/commit/23820b277118ae0845d4f0189ac58ef4e75896ba) Thanks [@MananTank](https://github.com/MananTank)! - Update Supported Networks for Safe wallet
+
+  - Remove Goerli, Base Goerli
+  - Add Sepolia, Base Mainnet, Polygon zkEVM, ZkSync Mainnet
+
+- [#2299](https://github.com/thirdweb-dev/js/pull/2299) [`ecd82b4`](https://github.com/thirdweb-dev/js/commit/ecd82b46192d278be26f58d9ca287e97b4ba25f8) Thanks [@MananTank](https://github.com/MananTank)! - Fix usage of dashed props instead of camel case on SVG
+
+- [#2331](https://github.com/thirdweb-dev/js/pull/2331) [`b5337bc`](https://github.com/thirdweb-dev/js/commit/b5337bcfc34664c3b87521a38d85372fc6ab9fdd) Thanks [@MananTank](https://github.com/MananTank)! - Add `hideSendButton` and `hideReceiveButton` props to `ConnectWallet` component to hide the send and receive buttons in ConnectWallet's Details Modal
+
+  ```tsx
+  // hide both buttons
+  <ConnectWallet hideSendButton={true} hideReceiveButton={true} />
+  ```
+
+  ```tsx
+  // hide only send button
+  <ConnectWallet hideSendButton={true} />
+  ```
+
+  ```tsx
+  // hide only receive button
+  <ConnectWallet hideReceiveButton={true} />
+  ```
+
+- Updated dependencies [[`e6a2407`](https://github.com/thirdweb-dev/js/commit/e6a2407ee56f13f93d7efe025ba027d3c9b03616), [`3137e45`](https://github.com/thirdweb-dev/js/commit/3137e45bb884525ba45fb389138d5360cd7333d1), [`0f9a7b2`](https://github.com/thirdweb-dev/js/commit/0f9a7b2571daf6fd9bbd8d9223e0c5e865b82668), [`2348417`](https://github.com/thirdweb-dev/js/commit/23484171148cbd6c42ec92aace2e30bbcd7d5073), [`23820b2`](https://github.com/thirdweb-dev/js/commit/23820b277118ae0845d4f0189ac58ef4e75896ba), [`94a699c`](https://github.com/thirdweb-dev/js/commit/94a699caaecee2247ccd7493c4cb04c6cc8b2e74), [`73a374a`](https://github.com/thirdweb-dev/js/commit/73a374aac25c2396dd2a895629737c6e8d024f45), [`ca70cd3`](https://github.com/thirdweb-dev/js/commit/ca70cd3882b39ffd56275d267e6af9c04fae179b)]:
+  - @thirdweb-dev/react-core@4.4.9
+  - @thirdweb-dev/sdk@4.0.36
+  - @thirdweb-dev/wallets@2.4.11
+  - @thirdweb-dev/chains@0.1.73
+
+## 4.4.8
+
+### Patch Changes
+
+- [#2289](https://github.com/thirdweb-dev/js/pull/2289) [`0155adce`](https://github.com/thirdweb-dev/js/commit/0155adcea4b5379be552962f219853c0a2b1c050) Thanks [@MananTank](https://github.com/MananTank)! - - Show EmbeddedWallet UI instead of the default welcomeScreen in the ConnectWallet wide modal. If a custom welcomeScreen is provided, it will be shown instead of the EmbeddedWallet UI. Same Is done for the deprecated PaperWallet as well
+
+  - Stop treating Magic Link as a Social Login and remove the custom Select UI for it
+  - highlight the wallet for which the Connect UI is shown in the ConnectWallet wide modal
+  -
+
+- [#2290](https://github.com/thirdweb-dev/js/pull/2290) [`f85806c0`](https://github.com/thirdweb-dev/js/commit/f85806c0674921adc7007eec9f061070eefe1d84) Thanks [@MananTank](https://github.com/MananTank)! - Update EmbeddedWallet name in ConnectWallet UI
+
+- [#2288](https://github.com/thirdweb-dev/js/pull/2288) [`74d76ff5`](https://github.com/thirdweb-dev/js/commit/74d76ff580d78a5b98a2d7180a58457231c1b95a) Thanks [@MananTank](https://github.com/MananTank)! - Add "Powered By Thirdweb" Branding at the bottom of `ConnectEmbed` and `ConnectWallet` Modal
+
+  A new prop `showThirdwebBranding` has been added to both `ConnectEmbed` and `ConnectWallet` components to hide this branding.
+
+- Updated dependencies [[`09de55f1`](https://github.com/thirdweb-dev/js/commit/09de55f13cbd29b4e0eb57808e0d30f9c1b3ba94), [`53786fc3`](https://github.com/thirdweb-dev/js/commit/53786fc3068568758f033a1c63975c94a8e407f5), [`a86478bf`](https://github.com/thirdweb-dev/js/commit/a86478bf248786423d03f4a20d9dc7c02270c371), [`23d0e553`](https://github.com/thirdweb-dev/js/commit/23d0e553088321edfe3971950c2e7f27209d9aaf)]:
+  - @thirdweb-dev/sdk@4.0.35
+  - @thirdweb-dev/chains@0.1.72
+  - @thirdweb-dev/react-core@4.4.8
+  - @thirdweb-dev/wallets@2.4.10
+
+## 4.4.7
+
+### Patch Changes
+
+- Updated dependencies [[`357886e3`](https://github.com/thirdweb-dev/js/commit/357886e31b37aad950731ce8f013a101190ebd07)]:
+  - @thirdweb-dev/chains@0.1.71
+  - @thirdweb-dev/react-core@4.4.7
+  - @thirdweb-dev/sdk@4.0.34
+  - @thirdweb-dev/wallets@2.4.9
+
+## 4.4.6
+
+### Patch Changes
+
+- [#2260](https://github.com/thirdweb-dev/js/pull/2260) [`6a3cacb6`](https://github.com/thirdweb-dev/js/commit/6a3cacb62257c1774b5bac739b89e17495f42655) Thanks [@MananTank](https://github.com/MananTank)! - Enforce compact modal size in ConnectWallet based on available space instead of just on mobile device
+
+- Updated dependencies [[`433d49e3`](https://github.com/thirdweb-dev/js/commit/433d49e3aba03df33678f429f19f426fd107b7eb)]:
+  - @thirdweb-dev/react-core@4.4.6
+
 ## 4.4.5
 
 ### Patch Changes

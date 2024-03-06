@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 5169,
   "rpc": [
-    "https://smart-layer-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://5169.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.main.smartlayer.network"
   ],

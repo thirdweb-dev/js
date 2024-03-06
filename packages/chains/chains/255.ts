@@ -42,7 +42,6 @@ export default {
   },
   "redFlags": [],
   "rpc": [
-    "https://kroma.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://255.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.kroma.network",
     "https://1rpc.io/kroma"
