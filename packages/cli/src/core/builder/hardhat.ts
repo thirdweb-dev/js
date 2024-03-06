@@ -86,13 +86,13 @@ export class HardhatBuilder extends BaseBuilder {
 
       const contractBuildOutputs = buildJson.output.contracts;
 
-      let libraries: any = {};
+      const libraries: any = {};
       if (Array.isArray(options.linkLib) && options.linkLib.length > 0) {
         for (const [contractPath, contractInfos] of Object.entries(
           contractBuildOutputs,
         )) {
           const contractNames = Object.keys(contractInfos as any);
-          const lib = options.linkLib.forEach((link: Link) => {
+          options.linkLib.forEach((link: Link) => {
             if (contractNames.includes(link.library)) {
               const key = `${contractPath}:${link.library}`;
               libraries[key] = link.address;
