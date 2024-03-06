@@ -6,6 +6,7 @@ import { ThirdwebSDK, SmartContract } from "@thirdweb-dev/sdk";
 import { BigNumber, ethers } from "ethers";
 
 require("dotenv-mono").load();
+
 jest.setTimeout(240_000);
 
 let smartWallet: SmartWallet;
@@ -33,7 +34,9 @@ beforeAll(async () => {
     erc20TokenAddress: erc20TokenAddress,
   });
   smartWalletAddress = await smartWallet.connect({ personalWallet });
-  sdk = await ThirdwebSDK.fromWallet(smartWallet, chain);
+  sdk = await ThirdwebSDK.fromWallet(smartWallet, chain, {
+    secretKey: process.env.TW_SECRET_KEY,
+  });
   contract = await sdk.getContract(
     "0xF7235993A1BB401620e7c384D541e78D18081090", // using same token for payment and claim
   );
