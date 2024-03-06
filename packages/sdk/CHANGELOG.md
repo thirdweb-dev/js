@@ -1,5 +1,18 @@
 # @thirdweb-dev/sdk
 
+## 4.0.39
+
+### Patch Changes
+
+- [#2379](https://github.com/thirdweb-dev/js/pull/2379) [`ab44b8f`](https://github.com/thirdweb-dev/js/commit/ab44b8f0ae760065f400f76d69703e26bcbcc022) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [Smart Wallet] Do not deploy to sign typed data, allow presigned deploy+session key
+
+- [#2404](https://github.com/thirdweb-dev/js/pull/2404) [`9c7fbc1`](https://github.com/thirdweb-dev/js/commit/9c7fbc1603a7265209b6f56c2284fdb0e6b33a1d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Updateable metadata for DropERC721 contracts
+
+- [#2382](https://github.com/thirdweb-dev/js/pull/2382) [`7d8697e`](https://github.com/thirdweb-dev/js/commit/7d8697ec3ff72f33dda151e7eb82f5ff19c1f825) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Added useUpdateNFTMetadata hook
+
+- Updated dependencies [[`5f243bb`](https://github.com/thirdweb-dev/js/commit/5f243bba0ded5dace9344c79e8904a4a342d16af)]:
+  - @thirdweb-dev/chains@0.1.76
+
 ## 4.0.38
 
 ### Patch Changes
