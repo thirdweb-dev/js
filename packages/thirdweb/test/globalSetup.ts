@@ -17,8 +17,7 @@ export default async function globalSetup() {
     options: {
       chainId: 1,
       forkUrl: `https://1.rpc.thirdweb.com/${clientId}`,
-      // TODO: add the secret key headers here once we have the ability to pass headers
-      // see: https://github.com/wevm/anvil.js/pull/44
+      forkHeader: { "x-secret-key": SECRET_KEY },
       forkChainId: 1,
       forkBlockNumber: 19139495n,
       noMining: true,
