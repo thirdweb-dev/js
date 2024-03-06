@@ -339,7 +339,6 @@ const main = async () => {
       [],
     )
     .option("-k, --key <key>", "API secret key to authorize usage")
-    .parse(process.argv)
     .action(async (options) => {
       let secretKey = "";
       // If no key is passed in, prompt the user to login. If it is passed in, use it.
@@ -385,7 +384,6 @@ const main = async () => {
       [],
     )
     .option("-k, --key <key>", "API secret key to authorize usage")
-    .parse(process.argv)
     .action(async (options) => {
       let secretKey = "";
       // If no key is passed in, prompt the user to login. If it is passed in, use it.
