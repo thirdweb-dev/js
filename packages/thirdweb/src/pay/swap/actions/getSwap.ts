@@ -1,11 +1,11 @@
-import { getClientFetch } from "../../../utils/fetch.js";
-import type { ThirdwebClient } from "../../../client/client.js";
-import { THIRDWEB_PAY_SWAP_ROUTE_ENDPOINT } from "../utils/definitions.js";
-import type { BaseTransactionOptions } from "../../../transaction/types.js";
-import type { ApproveParams } from "../../../extensions/erc20/write/approve.js";
-import { getContract } from "../../../contract/contract.js";
 import { defineChain } from "../../../chains/utils.js";
+import type { ThirdwebClient } from "../../../client/client.js";
+import { getContract } from "../../../contract/contract.js";
+import type { ApproveParams } from "../../../extensions/erc20/write/approve.js";
+import type { BaseTransactionOptions } from "../../../transaction/types.js";
+import { getClientFetch } from "../../../utils/fetch.js";
 import type { SwapSupportedChainId } from "../supportedChains.js";
+import { THIRDWEB_PAY_SWAP_ROUTE_ENDPOINT } from "../utils/definitions.js";
 
 // TODO: add JSDoc description for all properties
 
@@ -46,14 +46,6 @@ export type GetSwapQuoteParams = {
    */
   fromTokenAddress: string;
 
-  /**
-   * The amount of source token to be swapped. This is useful if you want to swap a certain amount of source token
-   *
-   * If you want a certain amount of destination token, you can provide `toAmount` instead of `fromAmount`.
-   *
-   * Either `fromAmount` or `toAmount` must be provided and not both.
-   */
-  fromAmount?: string;
   // to
 
   /**
@@ -67,20 +59,31 @@ export type GetSwapQuoteParams = {
   toTokenAddress: string;
 
   /**
-   * The amount of destination token to be received in wei.
-   * This is useful if you want to get a certain amount of destination token.
-   *
-   * If you want to swap a certain amount of source token, you can provide `fromAmount` instead of `toAmount`.
-   * Either `fromAmount` or `toAmount`  must be provided to get a swap quote and not both.
-   */
-  toAmount?: string;
-
-  /**
    * The maximum slippage in basis points (bps) allowed for the swap.
    * For example, if you want to allow a maximum slippage of 0.5%, you should specify `50` bps.
    */
   maxSlippageBPS?: number;
-};
+} & (
+  | {
+      /**
+       * The amount of source token to be swapped. This is useful if you want to swap a certain amount of source token
+       *
+       * If you want a certain amount of destination token, you can provide `toAmount` instead of `fromAmount`.
+       */
+      fromAmount: string;
+      toAmount?: never;
+    }
+  | {
+      /**
+       * The amount of destination token to be received in wei.
+       * This is useful if you want to get a certain amount of destination token.
+       *
+       * If you want to swap a certain amount of source token, you can provide `fromAmount` instead of `toAmount`.
+       */
+      toAmount: string;
+      fromAmount?: never;
+    }
+);
 
 export type SwapTokenInfo = {
   chainId: SwapSupportedChainId;
@@ -208,11 +211,11 @@ export async function getSwapQuote(
       toTokenAddress: params.toTokenAddress,
     };
 
-    if (params.fromAmount) {
+    if ("fromAmount" in params && params.fromAmount) {
       urlParamsObj.fromAmount = params.fromAmount;
     }
 
-    if (params.toAmount) {
+    if ("toAmount" in params && params.toAmount) {
       urlParamsObj.toAmount = params.toAmount;
     }
 
