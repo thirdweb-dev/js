@@ -25,6 +25,7 @@ import type { BaseDelayedRevealERC721 } from "../../../../types/eips";
 import { DelayedReveal } from "../../delayed-reveal";
 import type { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/LazyMint";
 import type { Erc721 } from "../../erc-721";
+import type { DropERC721 } from "@thirdweb-dev/contracts-js";
 
 /**
  * Lazily mint and claim ERC721 NFTs
