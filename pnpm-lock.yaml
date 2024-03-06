@@ -115,7 +115,7 @@ importers:
         specifier: 5.0.1
         version: 5.0.1(@types/node@18.19.20)(typescript@5.3.3)
       mitata:
-        specifier: ^0.1.11
+        specifier: 0.1.11
         version: 0.1.11
       react:
         specifier: 18.2.0
