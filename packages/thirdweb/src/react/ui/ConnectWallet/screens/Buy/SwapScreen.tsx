@@ -115,7 +115,9 @@ export function SwapScreenContent(props: {
 
   // selected tokens
   const [fromToken, setFromToken] = useState<SelectedToken>(NATIVE_TOKEN);
-  const [toToken, setToToken] = useState<SelectedToken>(NATIVE_TOKEN);
+  const [toToken, setToToken] = useState<SelectedToken>(
+    props.supportedTokens[toChain.id]?.[0] || NATIVE_TOKEN,
+  );
 
   const { client } = useThirdwebProviderProps();
 
