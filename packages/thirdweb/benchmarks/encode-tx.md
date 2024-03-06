@@ -41,3 +41,8 @@ cd packages/thirdweb
 # run the benchmark
 pnpm run bench:compare
 ```
+
+**Prerequisites:**
+
+- `bun` installed (https://bun.sh)
+- `anvil` installed (https://book.getfoundry.sh/getting-started/installation)
