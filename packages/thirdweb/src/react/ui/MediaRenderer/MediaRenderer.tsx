@@ -204,10 +204,8 @@ const PlayButton: React.FC<PlayButtonProps> = ({ onClick, isPlaying }) => {
         bottom: 0,
         right: 0,
         transform: "translate(-25%, -25%)",
-        maxWidth: "32px",
-        width: "8%",
-        minWidth: "24px",
-        aspectRatio: "1",
+        width: "32px",
+        height: "32px",
         zIndex: 3,
         backgroundColor: "#fff",
         color: "rgb(138, 147, 155)",
@@ -216,6 +214,7 @@ const PlayButton: React.FC<PlayButtonProps> = ({ onClick, isPlaying }) => {
         borderRadius: "50%",
         border: "1px solid rgb(229, 232, 235)",
         cursor: "pointer",
+        padding: 0,
         ...(isHovering
           ? {
               color: "rgb(53, 56, 64)",
@@ -229,11 +228,7 @@ const PlayButton: React.FC<PlayButtonProps> = ({ onClick, isPlaying }) => {
       onMouseDown={onMouseDown}
       onMouseUp={onMouseUp}
     >
-      {!isPlaying ? (
-        <CarbonPlayFilledAlt style={{ width: "66%", height: "66%" }} />
-      ) : (
-        <CarbonPauseFilled style={{ width: "66%", height: "66%" }} />
-      )}
+      {!isPlaying ? <CarbonPlayFilledAlt /> : <CarbonPauseFilled />}
     </button>
   );
 };

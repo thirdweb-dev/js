@@ -8,7 +8,7 @@ export const CarbonDocumentUnknown: React.FC<SVGProps<SVGSVGElement>> = (
   props,
 ) => {
   return (
-    <svg width="1em" height="1em" viewBox="0 0 32 32" {...props}>
+    <svg width="16" height="16" viewBox="0 0 32 32" {...props}>
       <circle cx="9" cy="28.5" r="1.5" fill="currentColor"></circle>
       <path
         fill="currentColor"
@@ -29,7 +29,7 @@ export const CarbonDocumentAudio: React.FC<SVGProps<SVGSVGElement>> = (
   props,
 ) => {
   return (
-    <svg width="1em" height="1em" viewBox="0 0 32 32" {...props}>
+    <svg width="16" height="16" viewBox="0 0 32 32" {...props}>
       <path
         fill="currentColor"
         d="M29 31a.999.999 0 0 1-.625-.22L23.65 27H20a1 1 0 0 1-1-1v-5a1 1 0 0 1 1-1h3.65l4.726-3.78A1 1 0 0 1 30 17v13a1 1 0 0 1-1 1Zm-8-6h3a1 1 0 0 1 .625.22L28 27.92v-8.84l-3.376 2.7A1 1 0 0 1 24 22h-3Z"
@@ -47,7 +47,7 @@ export const CarbonDocumentAudio: React.FC<SVGProps<SVGSVGElement>> = (
  */
 export const CarbonPauseFilled: React.FC<SVGProps<SVGSVGElement>> = (props) => {
   return (
-    <svg width="1em" height="1em" viewBox="0 0 32 32" {...props}>
+    <svg width="16" height="16" viewBox="0 0 32 32" {...props}>
       <path
         fill="currentColor"
         d="M12 6h-2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zm10 0h-2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2z"
@@ -63,7 +63,7 @@ export const CarbonPlayFilledAlt: React.FC<SVGProps<SVGSVGElement>> = (
   props,
 ) => {
   return (
-    <svg width="1em" height="1em" viewBox="0 0 32 32" {...props}>
+    <svg width="16" height="16" viewBox="0 0 32 32" {...props}>
       <path
         fill="currentColor"
         d="M7 28a1 1 0 0 1-1-1V5a1 1 0 0 1 1.482-.876l20 11a1 1 0 0 1 0 1.752l-20 11A1 1 0 0 1 7 28Z"
