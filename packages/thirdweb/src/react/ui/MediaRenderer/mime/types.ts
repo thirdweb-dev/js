@@ -137,4 +137,5 @@ export const extensionsToMimeType: Record<string, string> = {
   qt: "video/quicktime",
   mov: "video/quicktime",
   webm: "video/webm",
+  mkv: "video/x-matroska",
 };

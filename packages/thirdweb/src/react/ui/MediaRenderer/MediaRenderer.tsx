@@ -332,7 +332,17 @@ const VideoPlayer = /* @__PURE__ */ (() =>
 
 const AudioPlayer = /* @__PURE__ */ (() =>
   React.forwardRef<HTMLAudioElement, MediaRendererProps>(function Audio_Player(
-    { src, alt, poster, style, height, width, ...restProps },
+    {
+      src,
+      alt,
+      poster,
+      style,
+      height,
+      width,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      requireInteraction,
+      ...restProps
+    },
     ref,
   ) {
     const audioRef = useRef<HTMLAudioElement>(null);
@@ -428,6 +438,7 @@ const IframePlayer = /* @__PURE__ */ (() =>
               width: "100%",
               transition: "opacity .5s",
               opacity: !poster ? 1 : playing ? 1 : 0,
+              border: "none",
             }}
             sandbox="allow-scripts"
             allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
