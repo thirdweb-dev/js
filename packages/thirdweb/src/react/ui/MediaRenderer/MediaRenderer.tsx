@@ -154,11 +154,11 @@ export const MediaRenderer = /* @__PURE__ */ (() =>
         // image
         else if (mediaInfo.mimeType.startsWith("image/")) {
           return (
-            <img
+            <ImageRenderer
               style={mergedStyle}
               src={mediaInfo.url}
               alt={alt}
-              ref={ref as unknown as React.LegacyRef<HTMLImageElement>}
+              ref={ref as unknown as React.ForwardedRef<HTMLImageElement>}
               {...restProps}
             />
           );
@@ -231,6 +231,39 @@ const PlayButton: React.FC<PlayButtonProps> = ({ onClick, isPlaying }) => {
     </button>
   );
 };
+
+const ImageRenderer = /* @__PURE__ */ (() =>
+  React.forwardRef<HTMLImageElement, MediaRendererProps>(
+    function Image_Renderer(props, ref) {
+      const { style, src, alt, ...restProps } = props;
+      const [error, setError] = useState(false);
+
+      if (error) {
+        return (
+          <LinkPlayer
+            style={style}
+            src={src}
+            alt={alt}
+            ref={ref as unknown as React.Ref<HTMLAnchorElement>}
+            {...restProps}
+          />
+        );
+      }
+
+      return (
+        <img
+          style={style}
+          src={src as any}
+          alt={alt}
+          ref={ref}
+          {...restProps}
+          onError={() => {
+            setError(true);
+          }}
+        />
+      );
+    },
+  ))();
 
 const VideoPlayer = /* @__PURE__ */ (() =>
   React.forwardRef<HTMLVideoElement, MediaRendererProps>(function Video_Player(
