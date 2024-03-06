@@ -664,7 +664,6 @@ class ThirdwebBridge implements TWBridge {
     personalWallet: AbstractClientWallet,
     accountAddress?: string,
   ) {
-    const personalWalletAddress = await personalWallet.getAddress();
     await sw.connect({
       personalWallet,
       accountAddress: accountAddress,
