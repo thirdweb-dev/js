@@ -6,12 +6,12 @@ We aim to compare real-world use-cases of the thirdweb library with other popula
 
 Imported bundle size to make a basic RPC call:
 
-- thirdweb: 6.1 KB gzipped
-    - `import { createThirdwebClient, getRpcClient, defineChain }`
+- thirdweb: 4.63 KB gzipped
+  - `import { createThirdwebClient, getRpcClient, defineChain }`
 - viem: 3.78 KB gzipped
-    - `import { createClient, http }`
+  - `import { createClient, http }`
 - ethers: 88 KB gzipped
-    - `import { getJsonRPCProvider }`
+  - `import { getJsonRPCProvider }`
 
 ## Benchmarks
 
