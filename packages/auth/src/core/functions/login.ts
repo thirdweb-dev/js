@@ -209,8 +209,8 @@ export async function verifyLoginPayload({
     payload.signature,
     payload.payload.address,
     chainId,
-    clientOptions.clientId,
-    clientOptions.secretKey,
+    clientOptions?.clientId,
+    clientOptions?.secretKey,
   );
 
   if (!verified) {
