@@ -1,8 +1,8 @@
 import { fetchContractMetadata } from "../../../utils/contract/fetchContractMetadata.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { contractURI } from "../__generated__/IContractMetadata/read/contractURI.js";
-import { name } from "../__generated__/IContractMetadata/read/name.js";
-import { symbol } from "../__generated__/IContractMetadata/read/symbol.js";
+import { name } from "./name.js";
+import { symbol } from "./symbol.js";
 
 /**
  * Retrieves the contract metadata including name and symbol.
@@ -15,7 +15,13 @@ import { symbol } from "../__generated__/IContractMetadata/read/symbol.js";
  * const metadata = await getContractMetadata({ contract });
  * ```
  */
-export async function getContractMetadata(options: BaseTransactionOptions) {
+export async function getContractMetadata(
+  options: BaseTransactionOptions,
+): Promise<{
+  name: string;
+  symbol: string;
+  [key: string]: any;
+}> {
   const [resolvedMetadata, resolvedName, resolvedSymbol] = await Promise.all([
     contractURI(options)
       .then((uri) => {
@@ -35,7 +41,7 @@ export async function getContractMetadata(options: BaseTransactionOptions) {
   // TODO: basic parsing?
   return {
     ...resolvedMetadata,
-    name: resolvedName,
-    symbol: resolvedSymbol,
+    name: resolvedMetadata?.name ?? resolvedName,
+    symbol: resolvedMetadata?.symbol ?? resolvedSymbol,
   };
 }
