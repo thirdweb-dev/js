@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { loadStripe } from "@stripe/stripe-js/pure";
 import { Elements } from "@stripe/react-stripe-js";
 import { OnboardingPaymentForm } from "./PaymentForm";
-import { Flex, useColorMode } from "@chakra-ui/react";
+import { Flex, FocusLock, useColorMode } from "@chakra-ui/react";
 import { OnboardingTitle } from "./Title";
 import { Stripe } from "@stripe/stripe-js";
 import { useUpdateAccount } from "@3rdweb-sdk/react/hooks/useApi";
@@ -68,32 +68,34 @@ export const OnboardingBilling: React.FC<OnboardingBillingProps> = ({
   }, []);
 
   return (
-    <Flex flexDir="column" gap={8}>
-      <OnboardingTitle
-        heading="Add a payment method"
-        description="thirdweb is free to get started with monthly usage credits. Add a payment method to ensure you experience no interruptions after exceeding credits."
-      />
+    <FocusLock>
       <Flex flexDir="column" gap={8}>
-        {stripePromise && (
-          <Elements
-            stripe={stripePromise}
-            options={{
-              mode: "setup",
-              paymentMethodCreation: "manual",
-              currency: "usd",
-              paymentMethodConfiguration:
-                process.env.NEXT_PUBLIC_STRIPE_PAYMENT_METHOD_CFG_ID,
-              appearance: {
-                theme: colorMode === "dark" ? "night" : "stripe",
-                ...appearance,
-              },
-            }}
-          >
-            <OnboardingPaymentForm onSave={onSave} onCancel={handleCancel} />
-          </Elements>
-        )}
+        <OnboardingTitle
+          heading="Add a payment method"
+          description="thirdweb is free to get started with monthly usage credits. Add a payment method to ensure you experience no interruptions after exceeding credits."
+        />
+        <Flex flexDir="column" gap={8}>
+          {stripePromise && (
+            <Elements
+              stripe={stripePromise}
+              options={{
+                mode: "setup",
+                paymentMethodCreation: "manual",
+                currency: "usd",
+                paymentMethodConfiguration:
+                  process.env.NEXT_PUBLIC_STRIPE_PAYMENT_METHOD_CFG_ID,
+                appearance: {
+                  theme: colorMode === "dark" ? "night" : "stripe",
+                  ...appearance,
+                },
+              }}
+            >
+              <OnboardingPaymentForm onSave={onSave} onCancel={handleCancel} />
+            </Elements>
+          )}
+        </Flex>
       </Flex>
-    </Flex>
+    </FocusLock>
   );
 };
 
