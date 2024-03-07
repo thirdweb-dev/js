@@ -6,6 +6,7 @@ import { getTotalClaimedSupply } from "./getTotalClaimedSupply.js";
  * Retrieves the total unclaimed supply of ERC721 tokens.
  * @param options - The base transaction options.
  * @returns A promise that resolves to the total unclaimed supply as a bigint.
+ * @extension ERC721
  * @example
  *
  * ```ts

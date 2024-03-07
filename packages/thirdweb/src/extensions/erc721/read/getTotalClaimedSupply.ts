@@ -7,6 +7,7 @@ import { totalMinted } from "../__generated__/ISignatureDropERC721/read/totalMin
  * @param options - The base transaction options.
  * @returns A promise that resolves to the total claimed supply as a bigint.
  * @throws An error if the total claimed supply cannot be retrieved.
+ * @extension ERC721
  * @example
  *
  * ```ts

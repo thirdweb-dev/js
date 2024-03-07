@@ -42,6 +42,14 @@ export {
 } from "../../extensions/erc721/__generated__/IERC721A/read/isApprovedForAll.js";
 export { getTotalUnclaimedSupply } from "../../extensions/erc721/read/getTotalUnclaimedSupply.js";
 export { getTotalClaimedSupply } from "../../extensions/erc721/read/getTotalClaimedSupply.js";
+export {
+  getOwnedTokenIds,
+  type GetOwnedTokenIdsParams,
+} from "../../extensions/erc721/read/getOwnedTokenIds.js";
+export {
+  getOwnedNFTs,
+  type GetOwnedNFTsParams,
+} from "../../extensions/erc721/read/getOwnedNFTs.js";
 /**
  * WRITE extension for ERC721
  */
