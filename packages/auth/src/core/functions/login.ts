@@ -1,4 +1,3 @@
-import { utils } from "ethers";
 import {
   BuildLoginPayloadParams,
   SignLoginPayloadParams,
@@ -11,7 +10,7 @@ import {
   LoginPayloadDataSchema,
 } from "../schema/login";
 import { VerifyOptionsSchema } from "../schema/verify";
-import { checkContractWalletSignature } from "@thirdweb-dev/wallets";
+import { verifySignature } from "./verify-signature";
 
 /**
  * Create an EIP-4361 & CAIP-122 compliant message to sign based on the login payload
@@ -220,36 +219,4 @@ export async function verifyLoginPayload({
   }
 
   return payload.payload.address;
-}
-
-async function verifySignature(
-  message: string,
-  signature: string,
-  address: string,
-  chainId?: number,
-  clientId?: string,
-  secretKey?: string,
-): Promise<boolean> {
-  try {
-    const messageHash = utils.hashMessage(message);
-    const messageHashBytes = utils.arrayify(messageHash);
-    const recoveredAddress = utils.recoverAddress(messageHashBytes, signature);
-
-    if (recoveredAddress === address) {
-      return true;
-    }
-  } catch {
-    // no-op
-  }
-  if (!chainId) {
-    return false;
-  }
-  return checkContractWalletSignature(
-    message,
-    signature,
-    address,
-    chainId,
-    clientId,
-    secretKey,
-  );
 }

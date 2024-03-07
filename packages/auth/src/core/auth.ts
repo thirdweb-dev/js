@@ -87,6 +87,7 @@ export class ThirdwebAuth {
       wallet: this.wallet,
       payload,
       options: this.formatOptions(options),
+      clientOptions: this.options,
     });
   }
 
@@ -106,6 +107,7 @@ export class ThirdwebAuth {
       wallet: this.wallet,
       jwt,
       options: this.formatOptions(options),
+      clientOptions: this.options,
     });
   }
 

@@ -34,6 +34,7 @@ export type GenerateJwtParams = {
   wallet: GenericAuthWallet;
   payload: LoginPayload;
   options: GenerateOptions;
+  clientOptions: ThirdwebAuthOptions;
 };
 
 export type RefreshJwtParams = {
@@ -46,4 +47,5 @@ export type AuthenticateJwtParams = {
   wallet: GenericAuthWallet;
   jwt: string;
   options: AuthenticateOptions;
+  clientOptions: ThirdwebAuthOptions;
 };
