@@ -1,6 +1,6 @@
 import type { Chain } from "../src/types";
 export default {
-  "chain": "64165",
+  "chain": "FTM",
   "chainId": 64165,
   "ens": {
     "registry": "standard"
@@ -28,6 +28,7 @@ export default {
     "height": 512,
     "format": "png"
   },
+  "infoURL": "https://sonicscan.io/",
   "name": "Fantom Sonic Builders Testnet",
   "nativeCurrency": {
     "name": "Fantom",
