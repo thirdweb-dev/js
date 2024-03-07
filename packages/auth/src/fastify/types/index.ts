@@ -9,6 +9,7 @@ import {
 import { z } from "zod";
 import { IncomingMessage, ServerResponse } from "http";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
+import { ThirdwebAuthOptions } from "../../core/types";
 
 export const PayloadBodySchema = z.object({
   address: z.string(),
@@ -76,6 +77,7 @@ export type ThirdwebAuthConfig<
       | ((user: User, req: FastifyRequest) => void)
       | ((user: User, req: FastifyRequest) => Promise<void>);
   };
+  thirdwebAuthOptions?: ThirdwebAuthOptions;
 };
 
 export type ThirdwebAuthContext<

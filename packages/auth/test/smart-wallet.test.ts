@@ -1,3 +1,4 @@
+import { LocalWallet, SmartWallet } from "@thirdweb-dev/wallets";
 import { ThirdwebAuth } from "../src/core";
 import { EthersWallet } from "@thirdweb-dev/wallets/evm/wallets/ethers";
 import { expect } from "chai";
@@ -5,20 +6,26 @@ import { Wallet } from "ethers";
 
 require("dotenv-mono").load();
 
-describe("Wallet Authentication - EVM", async () => {
+describe("Wallet Authentication - EVM - Smart Wallet", async () => {
   let adminWallet: any, signerWallet: any, attackerWallet: any;
   let auth: ThirdwebAuth;
 
   before(async () => {
-    const [adminSigner, signerSigner, attackerSigner] = [
-      Wallet.createRandom(),
-      Wallet.createRandom(),
-      Wallet.createRandom(),
-    ];
+    const factoryAddress = "0x13947435c2fe6BE51ED82F6f59C38617a323dB9B";
+    const chain = 80001;
+    const localWallet = new LocalWallet();
+    await localWallet.generate();
+    const smartWallet = new SmartWallet({
+      chain: chain,
+      factoryAddress: factoryAddress,
+      gasless: true,
+      secretKey: process.env.TW_SECRET_KEY,
+    });
+    await smartWallet.connect({ personalWallet: localWallet });
 
-    adminWallet = new EthersWallet(adminSigner);
-    signerWallet = new EthersWallet(signerSigner);
-    attackerWallet = new EthersWallet(attackerSigner);
+    adminWallet = new EthersWallet(Wallet.createRandom());
+    signerWallet = smartWallet;
+    attackerWallet = new EthersWallet(Wallet.createRandom());
 
     auth = new ThirdwebAuth(signerWallet, "thirdweb.com", {
       secretKey: process.env.TW_SECRET_KEY,
@@ -41,12 +48,12 @@ describe("Wallet Authentication - EVM", async () => {
   it("Should verify logged in wallet with chain ID and expiration", async () => {
     const payload = await auth.login({
       expirationTime: new Date(Date.now() + 1000 * 60 * 5),
-      chainId: "137",
+      chainId: "80001",
     });
 
     auth.updateWallet(adminWallet);
     const address = await auth.verify(payload, {
-      chainId: "137",
+      chainId: "80001",
     });
 
     expect(address).to.equal(await signerWallet.getAddress());
