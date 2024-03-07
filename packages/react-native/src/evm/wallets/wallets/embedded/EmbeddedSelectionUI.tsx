@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { EmbeddedWallet } from "./EmbeddedWallet";
 import { ActivityIndicator, Keyboard } from "react-native";
 import {
+  ButtonRSD,
   SelectUIProps,
   useCreateWalletInstance,
   useWallets,
@@ -99,6 +100,7 @@ export const EmailSelectionUI: React.FC<
 
   return (
     <Box paddingHorizontal="xl" mt="lg">
+      <ButtonRSD />
       {isSocialLoginsEnabled ? (
         <Box justifyContent="center">
           <Box justifyContent="center" flexDirection="row">

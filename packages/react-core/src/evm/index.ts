@@ -7,6 +7,8 @@ export type { ThirdwebProviderCoreProps } from "../core/providers/thirdweb-provi
 // constants
 export { __DEV__ } from "../core/constants/runtime";
 
+export { ButtonRSD } from "../core/button";
+
 // wallet hooks
 export {
   type WalletIdToWalletTypeMap,

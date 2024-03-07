@@ -1,5 +1,9 @@
 import styled from "@emotion/styled";
-import { ConnectUIProps, WalletConfig } from "@thirdweb-dev/react-core";
+import {
+  ButtonRSD,
+  ConnectUIProps,
+  WalletConfig,
+} from "@thirdweb-dev/react-core";
 import {
   EmbeddedWallet,
   EmbeddedWalletOauthStrategy,
@@ -84,6 +88,7 @@ export const EmbeddedWalletFormUI = (props: {
 
   return (
     <Container flex="column" gap="lg">
+      <ButtonRSD />
       {/* Social Login */}
       {hasSocialLogins && (
         <Container
