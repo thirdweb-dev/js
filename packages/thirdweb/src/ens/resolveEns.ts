@@ -1,8 +1,9 @@
+import { ethereum } from "../chains/chain-definitions/ethereum.js";
 import type { ThirdwebClient } from "../client/client.js";
 import { getContract } from "../contract/contract.js";
-import { ethereum } from "../exports/chains.js";
 import { resolve } from "../extensions/ens/__generated__/UniversalResolver/read/resolve.js";
 import { toHex } from "../utils/encoding/hex.js";
+import { packetToBytes } from "../utils/ens/packetToBytes.js";
 
 export type ResolveAddressOptions = {
   client: ThirdwebClient;
@@ -25,11 +26,12 @@ export async function resolveAddress(options: ResolveAddressOptions) {
     chain: ethereum,
     address: UNIVERSAL_RESOLVER_ADDRESS,
   });
-  resolve({
+  const result = await resolve({
     contract,
     name: toHex(packetToBytes(ens)),
     data: "0x",
   });
+  return result[1];
 }
 /**
  *  ensRegistry: {

@@ -1,19 +1,4 @@
 [
-  {
-    "name": "addr",
-    "type": "function",
-    "stateMutability": "view",
-    "inputs": [{ "name": "name", "type": "bytes32" }],
-    "outputs": [{ "name": "", "type": "address" }]
-  },
-  {
-    "name": "addr",
-    "type": "function",
-    "stateMutability": "view",
-    "inputs": [
-      { "name": "name", "type": "bytes32" },
-      { "name": "coinType", "type": "uint256" }
-    ],
-    "outputs": [{ "name": "", "type": "bytes" }]
-  }
+  "function addr(bytes32 name) external view returns (address)",
+  "function addr(bytes32 name, uint256 coinType) external view returns (bytes memory)"
 ]
