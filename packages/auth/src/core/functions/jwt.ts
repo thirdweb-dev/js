@@ -14,6 +14,7 @@ import {
 import { GenerateOptionsSchema } from "../schema/generate";
 import { RefreshOptionsSchema } from "../schema/refresh";
 import { verifyLoginPayload } from "./login";
+import { verifySignature } from "./verify-signature";
 
 function isBrowser() {
   return typeof window !== "undefined";
@@ -71,15 +72,16 @@ export async function generateJWT({
   wallet,
   payload,
   options,
+  clientOptions,
 }: GenerateJwtParams): Promise<string> {
   const parsedOptions = GenerateOptionsSchema.parse(options);
   const userAddress = await verifyLoginPayload({
-    wallet,
     payload,
     options: {
       domain: parsedOptions.domain,
       ...parsedOptions.verifyOptions,
     },
+    clientOptions,
   });
 
   let session: Json | undefined = undefined;
@@ -156,6 +158,7 @@ export async function authenticateJWT<TSession extends Json = Json>({
   wallet,
   jwt,
   options,
+  clientOptions,
 }: AuthenticateJwtParams): Promise<User<TSession>> {
   const parsedOptions = AuthenticateOptionsSchema.parse(options);
   const { payload, signature } = parseJWT(jwt);
@@ -210,11 +213,13 @@ export async function authenticateJWT<TSession extends Json = Json>({
     }
   }
 
-  const verified = await wallet.verifySignature(
+  const verified = await verifySignature(
     JSON.stringify(payload),
     signature,
     issuerAddress,
     chainId,
+    clientOptions.clientId,
+    clientOptions.secretKey,
   );
   if (!verified) {
     throw new Error(

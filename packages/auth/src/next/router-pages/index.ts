@@ -52,7 +52,7 @@ export function ThirdwebAuth<
 >(cfg: ThirdwebAuthConfig<TData, TSession>) {
   const ctx = {
     ...cfg,
-    auth: new ThirdwebAuthSDK(cfg.wallet, cfg.domain),
+    auth: new ThirdwebAuthSDK(cfg.wallet, cfg.domain, cfg.thirdwebAuthOptions),
   };
 
   function ThirdwebAuthHandler(
