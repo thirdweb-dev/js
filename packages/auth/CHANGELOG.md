@@ -1,5 +1,14 @@
 # @thirdweb-dev/auth
 
+## 4.1.38
+
+### Patch Changes
+
+- [#2417](https://github.com/thirdweb-dev/js/pull/2417) [`862905e`](https://github.com/thirdweb-dev/js/commit/862905e161a091c15eb9b054cfcca0e5d2879fd6) Thanks [@jnsdls](https://github.com/jnsdls)! - make verify login payload be self-sufficient
+
+- Updated dependencies [[`862905e`](https://github.com/thirdweb-dev/js/commit/862905e161a091c15eb9b054cfcca0e5d2879fd6)]:
+  - @thirdweb-dev/wallets@2.4.16
+
 ## 4.1.37
 
 ### Patch Changes
