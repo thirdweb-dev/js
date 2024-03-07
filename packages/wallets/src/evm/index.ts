@@ -32,6 +32,7 @@ export * from "./wallets/coinbase-wallet";
 export * from "./wallets/embedded-wallet";
 export * from "./wallets/ethers";
 export * from "./wallets/frame";
+export * from "./wallets/imtoken";
 export * from "./wallets/injected";
 export * from "./wallets/local-wallet";
 export * from "./wallets/signer";

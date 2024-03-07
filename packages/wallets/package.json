@@ -161,6 +161,13 @@
       },
       "default": "./evm/wallets/abstract/dist/thirdweb-dev-wallets-evm-wallets-abstract.cjs.js"
     },
+    "./evm/wallets/imtoken": {
+      "module": {
+        "browser": "./evm/wallets/imtoken/dist/thirdweb-dev-wallets-evm-wallets-imtoken.browser.esm.js",
+        "default": "./evm/wallets/imtoken/dist/thirdweb-dev-wallets-evm-wallets-imtoken.esm.js"
+      },
+      "default": "./evm/wallets/imtoken/dist/thirdweb-dev-wallets-evm-wallets-imtoken.cjs.js"
+    },
     "./evm/wallets/injected": {
       "module": {
         "browser": "./evm/wallets/injected/dist/thirdweb-dev-wallets-evm-wallets-injected.browser.esm.js",
@@ -349,6 +356,13 @@
         "default": "./evm/connectors/rainbow/dist/thirdweb-dev-wallets-evm-connectors-rainbow.esm.js"
       },
       "default": "./evm/connectors/rainbow/dist/thirdweb-dev-wallets-evm-connectors-rainbow.cjs.js"
+    },
+     "./evm/connectors/imtoken": {
+      "module": {
+        "browser": "./evm/connectors/imtoken/dist/thirdweb-dev-wallets-evm-connectors-imtoken.browser.esm.js",
+        "default": "./evm/connectors/imtoken/dist/thirdweb-dev-wallets-evm-connectors-imtoken.esm.js"
+      },
+      "default": "./evm/connectors/imtoken/dist/thirdweb-dev-wallets-evm-connectors-imtoken.cjs.js"
     },
     "./evm/connectors/injected": {
       "module": {

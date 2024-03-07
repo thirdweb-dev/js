@@ -176,6 +176,7 @@ export function tlDefault(): ThirdwebLocale {
       xdefiWallet: extensionAndQRScanScreens("XDEFI"),
       rainbowWallet: extensionAndQRScanScreens("Rainbow"),
       trustWallet: extensionAndQRScanScreens("Trust"),
+      imtokenWallet: extensionAndQRScanScreens("imToken"),
       zerionWallet: extensionAndQRScanScreens("Zerion"),
       coreWallet: extensionAndQRScanScreens("Core"),
       oneKeyWallet: extensionAndQRScanScreens("OneKey"),

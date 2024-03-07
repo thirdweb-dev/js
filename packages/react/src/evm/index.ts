@@ -111,4 +111,5 @@ export {
   CryptoDefiWallet,
   RabbyWallet,
   Coin98Wallet,
+  ImTokenWallet,
 } from "@thirdweb-dev/wallets";

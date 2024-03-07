@@ -183,6 +183,7 @@ export type ThirdwebLocale = {
       getStartedScreen: { instruction: string };
       scanScreen: { instruction: string };
     };
+    trustWallet: ExtensionAndQRScreensLocale;
     localWallet: {
       confirmPasswordLabel: string;
       createScreen: {
