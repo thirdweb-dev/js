@@ -41,7 +41,7 @@ export function ThirdwebAuth<
 ): ThirdwebAuthReturnType<TData, TSession> {
   const ctx = {
     ...cfg,
-    auth: new ThirdwebAuthSDK(cfg.wallet, cfg.domain),
+    auth: new ThirdwebAuthSDK(cfg.wallet, cfg.domain, cfg.thirdwebAuthOptions),
   };
 
   const router = express.Router();

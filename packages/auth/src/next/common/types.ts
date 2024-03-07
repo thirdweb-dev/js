@@ -2,6 +2,7 @@ import type { GenericAuthWallet } from "@thirdweb-dev/wallets";
 import { z } from "zod";
 
 import { Json, LoginPayloadOutputSchema, User } from "../../core";
+import { ThirdwebAuthOptions } from "../../core/types";
 
 export const PayloadBodySchema = z.object({
   address: z.string(),
@@ -55,8 +56,9 @@ export type ThirdwebAuthConfigShared = {
     sameSite?: "lax" | "strict" | "none";
     secure?: boolean;
   };
+  thirdwebAuthOptions?: ThirdwebAuthOptions;
 };
 
 export type ThirdwebNextContext = {
-  params?: Record<string, string | string[]>
+  params?: Record<string, string | string[]>;
 };
