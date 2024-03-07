@@ -24,9 +24,7 @@ function isFileInstance(data: any): data is File {
 /**
  * @internal
  */
-function isBufferOrStringWithName(
-  data: any,
-): data is BufferOrStringWithName {
+function isBufferOrStringWithName(data: any): data is BufferOrStringWithName {
   return !!(
     data &&
     data.name &&
