@@ -36,6 +36,12 @@ export {
   getAllOwners,
   type GetAllOwnersParams,
 } from "../../extensions/erc721/read/getAllOwners.js";
+export {
+  isApprovedForAll,
+  type IsApprovedForAllParams,
+} from "../../extensions/erc721/__generated__/IERC721A/read/isApprovedForAll.js";
+export { getTotalUnclaimedSupply } from "../../extensions/erc721/read/getTotalUnclaimedSupply.js";
+export { getTotalClaimedSupply } from "../../extensions/erc721/read/getTotalClaimedSupply.js";
 /**
  * WRITE extension for ERC721
  */
@@ -51,6 +57,14 @@ export {
   burn,
   type BurnParams,
 } from "../../extensions/erc721/__generated__/IBurnableERC721/write/burn.js";
+export {
+  setApprovalForAll,
+  type SetApprovalForAllParams,
+} from "../../extensions/erc721/__generated__/IERC721A/write/setApprovalForAll.js";
+export {
+  approve,
+  type ApproveParams,
+} from "../../extensions/erc721/__generated__/IERC721A/write/approve.js";
 
 /**
  * EVENTS extension for ERC721
