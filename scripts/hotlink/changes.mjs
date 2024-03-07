@@ -61,7 +61,7 @@ export const changes = [
   // thirdweb v5 sdk
   {
     path: "./packages/thirdweb/package.json",
-    entry: "./src/index.ts",
+    entry: "./src/exports/thirdweb.ts",
     exports: {
       ".": "./src/exports/thirdweb.ts",
       "./chains": "./src/exports/chains.ts",

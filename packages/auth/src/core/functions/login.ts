@@ -10,6 +10,7 @@ import {
   LoginPayloadDataSchema,
 } from "../schema/login";
 import { VerifyOptionsSchema } from "../schema/verify";
+import { verifySignature } from "./verify-signature";
 
 /**
  * Create an EIP-4361 & CAIP-122 compliant message to sign based on the login payload
@@ -113,17 +114,11 @@ export async function buildAndSignLoginPayload({
 }
 
 export async function verifyLoginPayload({
-  wallet,
   payload,
   options,
+  clientOptions,
 }: VerifyLoginPayloadParams): Promise<string> {
   const parsedOptions = VerifyOptionsSchema.parse(options);
-
-  if (payload.payload.type !== wallet.type) {
-    throw new Error(
-      `Expected chain type '${wallet.type}' does not match chain type on payload '${payload.payload.type}'`,
-    );
-  }
 
   // Check that the intended domain matches the domain of the payload
   if (payload.payload.domain !== parsedOptions.domain) {
@@ -204,16 +199,19 @@ export async function verifyLoginPayload({
 
   // Check that the signing address is the claimed wallet address
   const message = createLoginMessage(payload.payload);
-  const chainId =
-    wallet.type === "evm" && payload.payload.chain_id
-      ? parseInt(payload.payload.chain_id)
-      : undefined;
-  const verified = await wallet.verifySignature(
+  const chainId = payload.payload.chain_id
+    ? parseInt(payload.payload.chain_id)
+    : undefined;
+
+  const verified = await verifySignature(
     message,
     payload.signature,
     payload.payload.address,
     chainId,
+    clientOptions?.clientId,
+    clientOptions?.secretKey,
   );
+
   if (!verified) {
     throw new Error(
       `Signer address does not match payload address '${payload.payload.address.toLowerCase()}'`,

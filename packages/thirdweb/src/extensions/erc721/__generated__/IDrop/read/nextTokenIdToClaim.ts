@@ -2,27 +2,27 @@ import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 
 /**
- * Calls the "name" function on the contract.
- * @param options - The options for the name function.
+ * Calls the "nextTokenIdToClaim" function on the contract.
+ * @param options - The options for the nextTokenIdToClaim function.
  * @returns The parsed result of the function call.
- * @extension ERC20
+ * @extension ERC721
  * @example
  * ```
- * import { name } from "thirdweb/extensions/erc20";
+ * import { nextTokenIdToClaim } from "thirdweb/extensions/erc721";
  *
- * const result = await name();
+ * const result = await nextTokenIdToClaim();
  *
  * ```
  */
-export async function name(options: BaseTransactionOptions) {
+export async function nextTokenIdToClaim(options: BaseTransactionOptions) {
   return readContract({
     contract: options.contract,
     method: [
-      "0x06fdde03",
+      "0xacd083f8",
       [],
       [
         {
-          type: "string",
+          type: "uint256",
         },
       ],
     ],

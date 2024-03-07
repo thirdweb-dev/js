@@ -14,14 +14,17 @@ const DEFAULT_QUERY_ALL_COUNT = 100n;
 export type GetNFTsParams = {
   /**
    * Which tokenId to start at.
+   * @default 0
    */
   start?: number;
   /**
    * The number of NFTs to retrieve.
+   * @default 100
    */
   count?: number;
   /**
    * Whether to include the owner of each NFT.
+   * @default false
    */
   includeOwners?: boolean;
 };

@@ -2,27 +2,27 @@ import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 
 /**
- * Calls the "symbol" function on the contract.
- * @param options - The options for the symbol function.
+ * Calls the "totalMinted" function on the contract.
+ * @param options - The options for the totalMinted function.
  * @returns The parsed result of the function call.
- * @extension ERC20
+ * @extension ERC721
  * @example
  * ```
- * import { symbol } from "thirdweb/extensions/erc20";
+ * import { totalMinted } from "thirdweb/extensions/erc721";
  *
- * const result = await symbol();
+ * const result = await totalMinted();
  *
  * ```
  */
-export async function symbol(options: BaseTransactionOptions) {
+export async function totalMinted(options: BaseTransactionOptions) {
   return readContract({
     contract: options.contract,
     method: [
-      "0x95d89b41",
+      "0xa2309ff8",
       [],
       [
         {
-          type: "string",
+          type: "uint256",
         },
       ],
     ],

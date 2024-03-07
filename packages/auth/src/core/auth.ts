@@ -23,14 +23,21 @@ import {
   AuthenticateOptionsWithOptionalDomain,
   AuthenticationPayload,
 } from "./schema/authenticate";
+import { ThirdwebAuthOptions } from "./types";
 
 export class ThirdwebAuth {
   private domain: string;
   private wallet: GenericAuthWallet;
+  private options: ThirdwebAuthOptions;
 
-  constructor(wallet: GenericAuthWallet, domain: string) {
+  constructor(
+    wallet: GenericAuthWallet,
+    domain: string,
+    options: ThirdwebAuthOptions = {},
+  ) {
     this.wallet = wallet;
     this.domain = domain;
+    this.options = options;
   }
 
   public updateWallet(wallet: GenericAuthWallet) {
@@ -66,9 +73,9 @@ export class ThirdwebAuth {
     options?: VerifyOptionsWithOptionalDomain,
   ): Promise<string> {
     return verifyLoginPayload({
-      wallet: this.wallet,
       payload,
       options: this.formatOptions(options),
+      clientOptions: this.options,
     });
   }
 
@@ -80,6 +87,7 @@ export class ThirdwebAuth {
       wallet: this.wallet,
       payload,
       options: this.formatOptions(options),
+      clientOptions: this.options,
     });
   }
 
@@ -99,6 +107,7 @@ export class ThirdwebAuth {
       wallet: this.wallet,
       jwt,
       options: this.formatOptions(options),
+      clientOptions: this.options,
     });
   }
 
