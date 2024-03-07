@@ -1,5 +1,15 @@
 # @thirdweb-dev/wallets
 
+## 2.4.16
+
+### Patch Changes
+
+- [#2417](https://github.com/thirdweb-dev/js/pull/2417) [`862905e`](https://github.com/thirdweb-dev/js/commit/862905e161a091c15eb9b054cfcca0e5d2879fd6) Thanks [@jnsdls](https://github.com/jnsdls)! - fix signature verification via smart-wallet
+
+- Updated dependencies [[`588897d`](https://github.com/thirdweb-dev/js/commit/588897d1b04e6c63da13639aeb47ca701308e1b2)]:
+  - @thirdweb-dev/chains@0.1.78
+  - @thirdweb-dev/sdk@4.0.41
+
 ## 2.4.15
 
 ### Patch Changes
