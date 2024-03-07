@@ -1,3 +1,4 @@
+import { utils } from "ethers";
 import {
   BuildLoginPayloadParams,
   SignLoginPayloadParams,
@@ -10,6 +11,7 @@ import {
   LoginPayloadDataSchema,
 } from "../schema/login";
 import { VerifyOptionsSchema } from "../schema/verify";
+import { checkContractWalletSignature } from "@thirdweb-dev/wallets";
 
 /**
  * Create an EIP-4361 & CAIP-122 compliant message to sign based on the login payload
@@ -113,17 +115,11 @@ export async function buildAndSignLoginPayload({
 }
 
 export async function verifyLoginPayload({
-  wallet,
   payload,
   options,
+  clientOptions,
 }: VerifyLoginPayloadParams): Promise<string> {
   const parsedOptions = VerifyOptionsSchema.parse(options);
-
-  if (payload.payload.type !== wallet.type) {
-    throw new Error(
-      `Expected chain type '${wallet.type}' does not match chain type on payload '${payload.payload.type}'`,
-    );
-  }
 
   // Check that the intended domain matches the domain of the payload
   if (payload.payload.domain !== parsedOptions.domain) {
@@ -204,16 +200,19 @@ export async function verifyLoginPayload({
 
   // Check that the signing address is the claimed wallet address
   const message = createLoginMessage(payload.payload);
-  const chainId =
-    wallet.type === "evm" && payload.payload.chain_id
-      ? parseInt(payload.payload.chain_id)
-      : undefined;
-  const verified = await wallet.verifySignature(
+  const chainId = payload.payload.chain_id
+    ? parseInt(payload.payload.chain_id)
+    : undefined;
+
+  const verified = await verifySignature(
     message,
     payload.signature,
     payload.payload.address,
     chainId,
+    clientOptions.clientId,
+    clientOptions.secretKey,
   );
+
   if (!verified) {
     throw new Error(
       `Signer address does not match payload address '${payload.payload.address.toLowerCase()}'`,
@@ -221,4 +220,36 @@ export async function verifyLoginPayload({
   }
 
   return payload.payload.address;
+}
+
+async function verifySignature(
+  message: string,
+  signature: string,
+  address: string,
+  chainId?: number,
+  clientId?: string,
+  secretKey?: string,
+): Promise<boolean> {
+  try {
+    const messageHash = utils.hashMessage(message);
+    const messageHashBytes = utils.arrayify(messageHash);
+    const recoveredAddress = utils.recoverAddress(messageHashBytes, signature);
+
+    if (recoveredAddress === address) {
+      return true;
+    }
+  } catch {
+    // no-op
+  }
+  if (!chainId) {
+    return false;
+  }
+  return checkContractWalletSignature(
+    message,
+    signature,
+    address,
+    chainId,
+    clientId,
+    secretKey,
+  );
 }

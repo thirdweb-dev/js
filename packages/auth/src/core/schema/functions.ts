@@ -7,6 +7,7 @@ import {
 } from "./authenticate";
 import { RefreshOptions } from "./refresh";
 import { GenerateOptions } from "./generate";
+import { ThirdwebAuthOptions } from "../types";
 
 export type BuildLoginPayloadParams = {
   wallet: GenericAuthWallet;
@@ -19,9 +20,9 @@ export type SignLoginPayloadParams = {
 };
 
 export type VerifyLoginPayloadParams = {
-  wallet: GenericAuthWallet;
   payload: LoginPayload;
   options: VerifyOptions;
+  clientOptions: ThirdwebAuthOptions;
 };
 
 export type BuildJwtParams = {
