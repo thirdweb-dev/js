@@ -2,23 +2,23 @@ import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 
 /**
- * Calls the "name" function on the contract.
- * @param options - The options for the name function.
+ * Calls the "symbol" function on the contract.
+ * @param options - The options for the symbol function.
  * @returns The parsed result of the function call.
- * @extension ERC20
+ * @extension COMMON
  * @example
  * ```
- * import { name } from "thirdweb/extensions/erc20";
+ * import { symbol } from "thirdweb/extensions/common";
  *
- * const result = await name();
+ * const result = await symbol();
  *
  * ```
  */
-export async function name(options: BaseTransactionOptions) {
+export async function symbol(options: BaseTransactionOptions) {
   return readContract({
     contract: options.contract,
     method: [
-      "0x06fdde03",
+      "0x95d89b41",
       [],
       [
         {
