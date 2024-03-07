@@ -3,5 +3,11 @@
     "@babel/preset-typescript",
     ["@babel/preset-react", { "runtime": "automatic" }],
     ["@babel/preset-env", { "targets": "defaults, not ie 11" }]
+  ],
+  "plugins": [
+    [
+      "@stylexjs/babel-plugin",
+      { "importSources": [{ "from": "react-strict-dom", "as": "css " }] }
+    ]
   ]
 }
