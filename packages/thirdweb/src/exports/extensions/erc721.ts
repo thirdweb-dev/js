@@ -73,7 +73,10 @@ export {
   approve,
   type ApproveParams,
 } from "../../extensions/erc721/__generated__/IERC721A/write/approve.js";
-
+export {
+  setTokenURI,
+  type SetTokenURIParams,
+} from "../../extensions/erc721/__generated__/INFTMetadata/write/setTokenURI.js";
 /**
  * EVENTS extension for ERC721
  */
