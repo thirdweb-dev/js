@@ -1479,8 +1479,8 @@ importers:
         specifier: 11.11.0
         version: 11.11.0(@emotion/react@11.11.4)(@types/react@18.2.17)(react@18.2.0)
       '@google/model-viewer':
-        specifier: ^2.1.1
-        version: 2.1.1
+        specifier: 3.4.0
+        version: 3.4.0(three@0.160.1)
       '@noble/hashes':
         specifier: 1.3.3
         version: 1.3.3
@@ -1504,7 +1504,7 @@ importers:
         version: 2.11.2(@types/react@18.2.17)(react@18.2.0)
       abitype:
         specifier: 1.0.0
-        version: 1.0.0(zod@3.22.4)
+        version: 1.0.0(typescript@5.3.3)(zod@3.22.4)
       ethers:
         specifier: ^5 || ^6
         version: 5.7.2
@@ -1513,7 +1513,7 @@ importers:
         version: 7.0.0
       mipd:
         specifier: 0.0.5
-        version: 0.0.5(zod@3.22.4)
+        version: 0.0.5(typescript@5.3.3)(zod@3.22.4)
       react:
         specifier: '>=18'
         version: 18.2.0
@@ -1525,7 +1525,7 @@ importers:
         version: 0.1.2
       viem:
         specifier: 2.7.19
-        version: 2.7.19(zod@3.22.4)
+        version: 2.7.19(typescript@5.3.3)(zod@3.22.4)
 
   packages/tw-tsconfig: {}
 
@@ -8483,6 +8483,17 @@ packages:
       three: 0.146.0
     dev: false
 
+  /@google/model-viewer@3.4.0(three@0.160.1):
+    resolution: {integrity: sha512-ZGZktE+uy7CiNOSrFdR1bTZDe9nfel2h8gWiRY6D5Eit77RAzIRYnPlkdQBoLSo8nnYS0faL/Z1tKP7nntvoGg==}
+    engines: {node: '>=6.0.0'}
+    peerDependencies:
+      three: ^0.160.0
+    dependencies:
+      '@monogrid/gainmap-js': 3.0.3(three@0.160.1)
+      lit: 2.8.0
+      three: 0.160.1
+    dev: false
+
   /@graphql-typed-document-node/core@3.1.2(graphql@15.8.0):
     resolution: {integrity: sha512-9anpBMM9mEgZN4wr2v8wHJI2/u5TnnggewRN6OlvXTTnuVyoY19X6rOv9XTqKRw6dcGKwZsBi8n0kDE2I5i4VA==}
     peerDependencies:
@@ -9203,6 +9214,15 @@ packages:
       got: 11.8.5
       os-filter-obj: 2.0.0
     dev: true
+
+  /@monogrid/gainmap-js@3.0.3(three@0.160.1):
+    resolution: {integrity: sha512-gku5jyAorfEhyBF804/xDqtex4kfGQNxNtvX62NenIEdNi5Wi94OUKG6A1GmQFBWmZbj5+FjDO2qnUcJhLAl9w==}
+    peerDependencies:
+      three: '>= 0.159.0'
+    dependencies:
+      promise-worker-transferable: 1.0.4
+      three: 0.160.1
+    dev: false
 
   /@morgan-stanley/ts-mocking-bird@0.6.4(typescript@5.3.3):
     resolution: {integrity: sha512-57VJIflP8eR2xXa9cD1LUawh+Gh+BVQfVu0n6GALyg/AqV/Nz25kDRvws3i9kIe1PTrbsZZOYpsYp6bXPd6nVA==}
@@ -14725,7 +14745,7 @@ packages:
       typescript: 5.3.3
       zod: 3.22.4
 
-  /abitype@1.0.0(zod@3.22.4):
+  /abitype@1.0.0(typescript@5.3.3)(zod@3.22.4):
     resolution: {integrity: sha512-NMeMah//6bJ56H5XRj8QCV4AwuW6hB6zqz2LnhhLdcWVQOsXki6/Pn3APeqxCma62nXIcmZWdu1DlHWS74umVQ==}
     peerDependencies:
       typescript: '>=5.0.4'
@@ -14736,6 +14756,7 @@ packages:
       zod:
         optional: true
     dependencies:
+      typescript: 5.3.3
       zod: 3.22.4
     dev: false
 
@@ -21590,6 +21611,10 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
+  /is-promise@2.2.2:
+    resolution: {integrity: sha512-+lP4/6lKUBfQjZ2pdxThZvLUAafmZb8OAxFb8XXtiQmS35INgr85hdOGoEs124ez1FCnZJt6jau/T+alh58QFQ==}
+    dev: false
+
   /is-reference@1.2.1:
     resolution: {integrity: sha512-U82MsXXiFIrjCK4otLT+o2NA2Cd2g5MLoOVXUZjIOhLurrRxpEXzI8O0KZHr3IjLvlAH1kTPYSuqer5T9ZVBKQ==}
     dependencies:
@@ -24142,7 +24167,7 @@ packages:
       yallist: 4.0.0
     dev: false
 
-  /mipd@0.0.5(zod@3.22.4):
+  /mipd@0.0.5(typescript@5.3.3)(zod@3.22.4):
     resolution: {integrity: sha512-gbKA784D2WKb5H/GtqEv+Ofd1S9Zj+Z/PGDIl1u1QAbswkxD28BQ5bSXQxkeBzPBABg1iDSbiwGG1XqlOxRspA==}
     peerDependencies:
       typescript: '>=5.0.4'
@@ -24150,6 +24175,7 @@ packages:
       typescript:
         optional: true
     dependencies:
+      typescript: 5.3.3
       viem: 1.19.1(typescript@5.3.3)(zod@3.22.4)
     transitivePeerDependencies:
       - bufferutil
@@ -25900,6 +25926,13 @@ packages:
       err-code: 2.0.3
       retry: 0.12.0
     dev: true
+
+  /promise-worker-transferable@1.0.4:
+    resolution: {integrity: sha512-bN+0ehEnrXfxV2ZQvU2PetO0n4gqBD4ulq3MI1WOPLgr7/Mg9yRQkX5+0v1vagr74ZTsl7XtzlaYDo2EuCeYJw==}
+    dependencies:
+      is-promise: 2.2.2
+      lie: 3.1.1
+    dev: false
 
   /promise@7.3.1:
     resolution: {integrity: sha512-nolQXZ/4L+bP/UGlkfaIujX9BKxGwmQ9OT4mOt5yvy8iK1h3wqTEJCijzGANTCCl9nWjY41juyAn2K3Q1hLLTg==}
@@ -28342,6 +28375,10 @@ packages:
     resolution: {integrity: sha512-1lvNfLezN6OJ9NaFAhfX4sm5e9YCzHtaRgZ1+B4C+Hv6TibRMsuBAM5/wVKzxjpYIlMymvgsHEFrrigEfXnb2A==}
     dev: false
 
+  /three@0.160.1:
+    resolution: {integrity: sha512-Bgl2wPJypDOZ1stAxwfWAcJ0WQf7QzlptsxkjYiURPz+n5k4RBDLsq+6f9Y75TYxn6aHLcWz+JNmwTOXWrQTBQ==}
+    dev: false
+
   /throat@5.0.0:
     resolution: {integrity: sha512-fcwX4mndzpLQKBS1DVYhGAcYaYt7vsHNIvQV+WXMvnow5cgjPphq5CaayLaGsjRdSCKZFNGt7/GYAuXaNOiYCA==}
 
@@ -29552,7 +29589,7 @@ packages:
       - utf-8-validate
       - zod
 
-  /viem@2.7.19(zod@3.22.4):
+  /viem@2.7.19(typescript@5.3.3)(zod@3.22.4):
     resolution: {integrity: sha512-UOMeqy+8p2709ra2j9HEOL1NfjsXZzlJ8gwR6YO/zXH8KIZvyzW07t4iQARF5+ShVZ/7+/1ec8oPjVi1M//33A==}
     peerDependencies:
       typescript: '>=5.0.4'
@@ -29565,8 +29602,9 @@ packages:
       '@noble/hashes': 1.3.2
       '@scure/bip32': 1.3.2
       '@scure/bip39': 1.2.1
-      abitype: 1.0.0(zod@3.22.4)
+      abitype: 1.0.0(typescript@5.3.3)(zod@3.22.4)
       isows: 1.0.3(ws@8.13.0)
+      typescript: 5.3.3
       ws: 8.13.0
     transitivePeerDependencies:
       - bufferutil
