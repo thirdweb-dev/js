@@ -6,6 +6,11 @@ declare module "abitype" {
 }
 
 /**
+ * CONSTANTS
+ */
+export { NATIVE_TOKEN_ADDRESS, ADDRESS_ZERO } from "../constants/addresses.js";
+
+/**
  * CLIENT
  */
 export {

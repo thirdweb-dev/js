@@ -24,7 +24,18 @@ export {
   balanceOf,
   type BalanceOfParams,
 } from "../../extensions/erc721/__generated__/IERC721A/read/balanceOf.js";
-
+export {
+  tokenOfOwnerByIndex,
+  type TokenOfOwnerByIndexParams,
+} from "../../extensions/erc721/__generated__/IERC721Enumerable/read/tokenOfOwnerByIndex.js";
+export {
+  tokensOfOwner,
+  type TokensOfOwnerParams,
+} from "../../extensions/erc721/__generated__/IERC721AQueryable/read/tokensOfOwner.js";
+export {
+  getAllOwners,
+  type GetAllOwnersParams,
+} from "../../extensions/erc721/read/getAllOwners.js";
 /**
  * WRITE extension for ERC721
  */
