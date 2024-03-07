@@ -20,8 +20,8 @@ export type {
   AbstractWallet,
   WalletData,
   WalletEvents,
-  checkContractWalletSignature,
 } from "./wallets/abstract";
+export { checkContractWalletSignature } from "./connectors/smart-wallet/lib/check-contract-wwallet-signature";
 
 export * from "./wallets/paper-wallet";
 // just the types
