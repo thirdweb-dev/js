@@ -21,7 +21,7 @@ export type {
   WalletData,
   WalletEvents,
 } from "./wallets/abstract";
-export { checkContractWalletSignature } from "./connectors/smart-wallet/lib/check-contract-wwallet-signature";
+export { checkContractWalletSignature } from "./connectors/smart-wallet/lib/check-contract-wallet-signature";
 
 export * from "./wallets/paper-wallet";
 // just the types

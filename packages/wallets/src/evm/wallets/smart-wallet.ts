@@ -16,7 +16,7 @@ import {
 import { walletIds } from "../constants/walletIds";
 import { getValidChainRPCs } from "@thirdweb-dev/chains";
 import { providers, utils } from "ethers";
-import { checkContractWalletSignature } from "../connectors/smart-wallet/lib/check-contract-wwallet-signature";
+import { checkContractWalletSignature } from "../connectors/smart-wallet/lib/check-contract-wallet-signature";
 
 // export types and utils for convenience
 export type * from "../connectors/smart-wallet/types";

@@ -3,7 +3,7 @@ import { SmartWallet } from "../src/evm/wallets/smart-wallet";
 import { LocalWallet } from "../src/evm/wallets/local-wallet";
 import { Mumbai } from "@thirdweb-dev/chains";
 import { ThirdwebSDK, SmartContract } from "@thirdweb-dev/sdk";
-import { checkContractWalletSignature } from "../src/evm/connectors/smart-wallet/lib/check-contract-wwallet-signature";
+import { checkContractWalletSignature } from "../src/evm/connectors/smart-wallet/lib/check-contract-wallet-signature";
 
 require("dotenv-mono").load();
 

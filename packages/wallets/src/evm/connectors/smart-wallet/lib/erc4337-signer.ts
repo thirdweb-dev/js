@@ -9,7 +9,7 @@ import { signTypedDataInternal } from "@thirdweb-dev/sdk";
 import { chainIdToThirdwebRpc } from "../../../wallets/abstract";
 import { setAnalyticsHeaders } from "../../../utils/headers";
 import { isTwUrl } from "../../../utils/url";
-import { checkContractWalletSignature } from "./check-contract-wwallet-signature";
+import { checkContractWalletSignature } from "./check-contract-wallet-signature";
 
 export class ERC4337EthersSigner extends Signer {
   config: ProviderConfig;
