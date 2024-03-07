@@ -76,17 +76,19 @@ export async function estimateGas(
     }
 
     // load up encode function if we need it
-    const { encode } = await import("./encode.js");
+    const [{ getRpcClient }, { eth_estimateGas }, { encode }] =
+      await Promise.all([
+        import("../../rpc/rpc.js"),
+        import("../../rpc/actions/eth_estimateGas.js"),
+        import("./encode.js"),
+      ]);
+
     const [encodedData, toAddress] = await Promise.all([
       encode(options.transaction),
       resolvePromisedValue(options.transaction.to),
     ]);
 
     // load up the rpc client and the estimateGas function if we need it
-    const [{ getRpcClient }, { eth_estimateGas }] = await Promise.all([
-      import("../../rpc/rpc.js"),
-      import("../../rpc/actions/eth_estimateGas.js"),
-    ]);
 
     const rpcRequest = getRpcClient(options.transaction);
     // from is:
