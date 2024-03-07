@@ -1,4 +1,5 @@
 import { ThirdwebAuth } from "../../core";
+import { ThirdwebAuthOptions } from "../../core/types";
 import { Json, LoginPayloadOutputSchema, User } from "../../core";
 import type { GenericAuthWallet } from "@thirdweb-dev/wallets";
 import { Request } from "express";
@@ -68,6 +69,7 @@ export type ThirdwebAuthConfig<
       | ((user: User, req: Request) => void)
       | ((user: User, req: Request) => Promise<void>);
   };
+  thirdwebAuthOptions?: ThirdwebAuthOptions;
 };
 
 export type ThirdwebAuthContext<

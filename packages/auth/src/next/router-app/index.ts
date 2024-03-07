@@ -8,19 +8,10 @@ import loginHandler from "./routes/login";
 import logoutHandler from "./routes/logout";
 import userHandler from "./routes/user";
 import switchAccountHandler from "./routes/switch-account";
-import type {
-  ThirdwebAuthConfig,
-  ThirdwebAuthContext,
-} from "./types";
-import type {
-  ThirdwebAuthRoute,
-  ThirdwebNextContext,
-} from "../common/types";
+import type { ThirdwebAuthConfig, ThirdwebAuthContext } from "./types";
+import type { ThirdwebAuthRoute, ThirdwebNextContext } from "../common/types";
 
-export type {
-  ThirdwebAuthConfig,
-  ThirdwebAuthContext,
-} from "./types";
+export type { ThirdwebAuthConfig, ThirdwebAuthContext } from "./types";
 
 export async function ThirdwebAuthRouter(
   req: NextRequest,
@@ -44,7 +35,7 @@ export async function ThirdwebAuthRouter(
     default:
       return Response.json(
         { message: "Invalid route for authentication." },
-        { status: 400},
+        { status: 400 },
       );
   }
 }
@@ -55,10 +46,13 @@ export function ThirdwebAuth<
 >(cfg: ThirdwebAuthConfig<TData, TSession>) {
   const authCtx = {
     ...cfg,
-    auth: new ThirdwebAuthSDK(cfg.wallet, cfg.domain),
+    auth: new ThirdwebAuthSDK(cfg.wallet, cfg.domain, cfg.thirdwebAuthOptions),
   };
 
-  async function ThirdwebAuthHandler(req: NextRequest, ctx: ThirdwebNextContext) {
+  async function ThirdwebAuthHandler(
+    req: NextRequest,
+    ctx: ThirdwebNextContext,
+  ) {
     return await ThirdwebAuthRouter(req, ctx, authCtx as ThirdwebAuthContext);
   }
 
