@@ -8,8 +8,8 @@ Imported bundle size to make a basic RPC call:
 
 - thirdweb: 6.1 KB gzipped
     - `import { createThirdwebClient, getRpcClient, defineChain }`
-- viem: 35 KB gzipped
-    - `import { createPublicClient, http }`
+- viem: 3.78 KB gzipped
+    - `import { createClient, http }`
 - ethers: 88 KB gzipped
     - `import { getJsonRPCProvider }`
 
