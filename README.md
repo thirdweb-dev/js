@@ -29,6 +29,16 @@
 - High level contract extensions for interacting with common standards
 - Automatic ABI resolution
 
+## Unified SDK (Beta)
+
+We now have a new version of the SDK available in beta:
+
+Please refer to the following resources to get started:
+
+- [GitHub Branch](https://github.com/thirdweb-dev/js/tree/beta)
+- [Engineering Blog](https://blog.thirdweb.com/changelog/introducing-the-unified-thirdweb-sdk/)
+- [Documentation](https://portal.thirdweb.com/typescript/v5)
+
 ## Library Comparison 
 
 |                                           | thirdweb | Wagmi              | Viem               | Ethers@6 |
