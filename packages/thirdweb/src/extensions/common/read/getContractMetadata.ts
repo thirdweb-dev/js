@@ -34,8 +34,8 @@ export async function getContractMetadata(
         return null;
       })
       .catch(() => null),
-    name(options),
-    symbol(options),
+    name(options).catch(() => null),
+    symbol(options).catch(() => null),
   ]);
 
   // TODO: basic parsing?
