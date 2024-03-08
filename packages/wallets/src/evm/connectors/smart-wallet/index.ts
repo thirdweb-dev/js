@@ -514,8 +514,6 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
         await this.getAddress(),
         this.config.accountInfo.abi,
       );
-    } else if (await this.isDeployed()) {
-      return sdk.getContract(await this.getAddress());
     } else {
       return sdk.getContract(await this.getAddress(), ACCOUNT_CORE_ABI);
     }
