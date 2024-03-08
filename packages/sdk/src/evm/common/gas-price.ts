@@ -110,7 +110,7 @@ export async function getGasPrice(
   return txGasPrice;
 }
 
-export async function estimateTxCost(
+export async function estimateTransactionCost(
   provider: providers.Provider,
   tx: providers.TransactionRequest,
 ) {

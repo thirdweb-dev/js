@@ -1,6 +1,6 @@
 import { TransactionError, parseRevertReason } from "../../common/error";
 import {
-  estimateTxCost,
+  estimateTransactionCost,
   getDefaultGasOverrides,
   getGasPrice,
 } from "../../common/gas-price";
@@ -423,7 +423,7 @@ export class Transaction<
    * Estimate the total gas cost of this transaction (in both ether and wei)
    */
   public async estimateGasCost() {
-    const gasCost = await estimateTxCost(
+    const gasCost = await estimateTransactionCost(
       this.provider,
       await this.populateTransaction(),
     );
@@ -768,7 +768,7 @@ export class DeployTransaction extends TransactionContext {
       ...this.args,
       overrides,
     );
-    const gasCost = await estimateTxCost(this.provider, populatedTx);
+    const gasCost = await estimateTransactionCost(this.provider, populatedTx);
     return {
       ether: utils.formatEther(gasCost),
       wei: gasCost,
