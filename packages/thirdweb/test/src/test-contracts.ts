@@ -5,7 +5,8 @@ import { getContract } from "../../src/contract/contract.js";
 
 // ERC20
 
-const USDC_CONTRACT_ADDRESS = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48";
+export const USDC_CONTRACT_ADDRESS =
+  "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48";
 
 export const USDC_CONTRACT = getContract({
   client: TEST_CLIENT,
@@ -53,5 +54,18 @@ const AURA_ADDRESS = "0x42d3641255C946CC451474295d29D3505173F22A";
 export const DROP1155_CONTRACT = getContract({
   client: TEST_CLIENT,
   address: AURA_ADDRESS,
+  chain: FORKED_ETHEREUM_CHAIN,
+});
+
+// Uniswap
+
+const UNISWAPV3_FACTORY_ADDRESS = "0x1F98431c8aD98523631AE4a59f267346ea31F984";
+
+export const DAI_CONTRACT_ADDRESS =
+  "0x6B175474E89094C44Da98b954EedeAC495271d0F";
+
+export const UNISWAPV3_FACTORY_CONTRACT = getContract({
+  client: TEST_CLIENT,
+  address: UNISWAPV3_FACTORY_ADDRESS,
   chain: FORKED_ETHEREUM_CHAIN,
 });
