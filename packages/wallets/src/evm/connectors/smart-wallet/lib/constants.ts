@@ -3,235 +3,10 @@ export const ERC6551_REGISTRY = "0x02101dfB77FDE026414827Fdc604ddAF224F0921";
 
 export const ACCOUNT_CORE_ABI = [
   {
-    type: "constructor",
-    name: "",
-    inputs: [
-      {
-        type: "address",
-        name: "_entrypoint",
-        internalType: "contract IEntryPoint",
-      },
-      {
-        type: "address",
-        name: "_factory",
-        internalType: "address",
-      },
-    ],
-    outputs: [],
-    stateMutability: "nonpayable",
-  },
-  {
-    type: "event",
-    name: "AdminUpdated",
-    inputs: [
-      {
-        type: "address",
-        name: "signer",
-        indexed: true,
-        internalType: "address",
-      },
-      {
-        type: "bool",
-        name: "isAdmin",
-        indexed: false,
-        internalType: "bool",
-      },
-    ],
-    outputs: [],
-    anonymous: false,
-  },
-  {
-    type: "event",
-    name: "ContractURIUpdated",
-    inputs: [
-      {
-        type: "string",
-        name: "prevURI",
-        indexed: false,
-        internalType: "string",
-      },
-      {
-        type: "string",
-        name: "newURI",
-        indexed: false,
-        internalType: "string",
-      },
-    ],
-    outputs: [],
-    anonymous: false,
-  },
-  {
-    type: "event",
-    name: "Initialized",
-    inputs: [
-      {
-        type: "uint8",
-        name: "version",
-        indexed: false,
-        internalType: "uint8",
-      },
-    ],
-    outputs: [],
-    anonymous: false,
-  },
-  {
-    type: "event",
-    name: "SignerPermissionsUpdated",
-    inputs: [
-      {
-        type: "address",
-        name: "authorizingSigner",
-        indexed: true,
-        internalType: "address",
-      },
-      {
-        type: "address",
-        name: "targetSigner",
-        indexed: true,
-        internalType: "address",
-      },
-      {
-        type: "tuple",
-        name: "permissions",
-        components: [
-          {
-            type: "address",
-            name: "signer",
-            internalType: "address",
-          },
-          {
-            type: "address[]",
-            name: "approvedTargets",
-            internalType: "address[]",
-          },
-          {
-            type: "uint256",
-            name: "nativeTokenLimitPerTransaction",
-            internalType: "uint256",
-          },
-          {
-            type: "uint128",
-            name: "permissionStartTimestamp",
-            internalType: "uint128",
-          },
-          {
-            type: "uint128",
-            name: "permissionEndTimestamp",
-            internalType: "uint128",
-          },
-          {
-            type: "uint128",
-            name: "reqValidityStartTimestamp",
-            internalType: "uint128",
-          },
-          {
-            type: "uint128",
-            name: "reqValidityEndTimestamp",
-            internalType: "uint128",
-          },
-          {
-            type: "bytes32",
-            name: "uid",
-            internalType: "bytes32",
-          },
-        ],
-        indexed: false,
-        internalType: "struct IAccountPermissions.SignerPermissionRequest",
-      },
-    ],
-    outputs: [],
-    anonymous: false,
-  },
-  {
-    type: "function",
-    name: "addDeposit",
-    inputs: [],
-    outputs: [],
-    stateMutability: "payable",
-  },
-  {
-    type: "function",
-    name: "contractURI",
-    inputs: [],
-    outputs: [
-      {
-        type: "string",
-        name: "",
-        internalType: "string",
-      },
-    ],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
-    name: "entryPoint",
-    inputs: [],
-    outputs: [
-      {
-        type: "address",
-        name: "",
-        internalType: "contract IEntryPoint",
-      },
-    ],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
-    name: "execute",
-    inputs: [
-      {
-        type: "address",
-        name: "_target",
-        internalType: "address",
-      },
-      {
-        type: "uint256",
-        name: "_value",
-        internalType: "uint256",
-      },
-      {
-        type: "bytes",
-        name: "_calldata",
-        internalType: "bytes",
-      },
-    ],
-    outputs: [],
-    stateMutability: "nonpayable",
-  },
-  {
-    type: "function",
-    name: "executeBatch",
-    inputs: [
-      {
-        type: "address[]",
-        name: "_target",
-        internalType: "address[]",
-      },
-      {
-        type: "uint256[]",
-        name: "_value",
-        internalType: "uint256[]",
-      },
-      {
-        type: "bytes[]",
-        name: "_calldata",
-        internalType: "bytes[]",
-      },
-    ],
-    outputs: [],
-    stateMutability: "nonpayable",
-  },
-  {
     type: "function",
     name: "factory",
     inputs: [],
-    outputs: [
-      {
-        type: "address",
-        name: "",
-        internalType: "address",
-      },
-    ],
+    outputs: [{ name: "", type: "address", internalType: "address" }],
     stateMutability: "view",
   },
   {
@@ -240,36 +15,24 @@ export const ACCOUNT_CORE_ABI = [
     inputs: [],
     outputs: [
       {
-        type: "tuple[]",
         name: "signers",
+        type: "tuple[]",
+        internalType: "struct IAccountPermissions.SignerPermissions[]",
         components: [
+          { name: "signer", type: "address", internalType: "address" },
           {
-            type: "address",
-            name: "signer",
-            internalType: "address",
-          },
-          {
-            type: "address[]",
             name: "approvedTargets",
+            type: "address[]",
             internalType: "address[]",
           },
           {
-            type: "uint256",
             name: "nativeTokenLimitPerTransaction",
+            type: "uint256",
             internalType: "uint256",
           },
-          {
-            type: "uint128",
-            name: "startTimestamp",
-            internalType: "uint128",
-          },
-          {
-            type: "uint128",
-            name: "endTimestamp",
-            internalType: "uint128",
-          },
+          { name: "startTimestamp", type: "uint128", internalType: "uint128" },
+          { name: "endTimestamp", type: "uint128", internalType: "uint128" },
         ],
-        internalType: "struct IAccountPermissions.SignerPermissions[]",
       },
     ],
     stateMutability: "view",
@@ -278,13 +41,7 @@ export const ACCOUNT_CORE_ABI = [
     type: "function",
     name: "getAllAdmins",
     inputs: [],
-    outputs: [
-      {
-        type: "address[]",
-        name: "",
-        internalType: "address[]",
-      },
-    ],
+    outputs: [{ name: "admins", type: "address[]", internalType: "address[]" }],
     stateMutability: "view",
   },
   {
@@ -293,62 +50,24 @@ export const ACCOUNT_CORE_ABI = [
     inputs: [],
     outputs: [
       {
-        type: "tuple[]",
         name: "signers",
+        type: "tuple[]",
+        internalType: "struct IAccountPermissions.SignerPermissions[]",
         components: [
+          { name: "signer", type: "address", internalType: "address" },
           {
-            type: "address",
-            name: "signer",
-            internalType: "address",
-          },
-          {
-            type: "address[]",
             name: "approvedTargets",
+            type: "address[]",
             internalType: "address[]",
           },
           {
-            type: "uint256",
             name: "nativeTokenLimitPerTransaction",
+            type: "uint256",
             internalType: "uint256",
           },
-          {
-            type: "uint128",
-            name: "startTimestamp",
-            internalType: "uint128",
-          },
-          {
-            type: "uint128",
-            name: "endTimestamp",
-            internalType: "uint128",
-          },
+          { name: "startTimestamp", type: "uint128", internalType: "uint128" },
+          { name: "endTimestamp", type: "uint128", internalType: "uint128" },
         ],
-        internalType: "struct IAccountPermissions.SignerPermissions[]",
-      },
-    ],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
-    name: "getDeposit",
-    inputs: [],
-    outputs: [
-      {
-        type: "uint256",
-        name: "",
-        internalType: "uint256",
-      },
-    ],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
-    name: "getNonce",
-    inputs: [],
-    outputs: [
-      {
-        type: "uint256",
-        name: "",
-        internalType: "uint256",
       },
     ],
     stateMutability: "view",
@@ -356,370 +75,50 @@ export const ACCOUNT_CORE_ABI = [
   {
     type: "function",
     name: "getPermissionsForSigner",
-    inputs: [
-      {
-        type: "address",
-        name: "signer",
-        internalType: "address",
-      },
-    ],
+    inputs: [{ name: "signer", type: "address", internalType: "address" }],
     outputs: [
       {
+        name: "permissions",
         type: "tuple",
-        name: "",
+        internalType: "struct IAccountPermissions.SignerPermissions",
         components: [
+          { name: "signer", type: "address", internalType: "address" },
           {
-            type: "address",
-            name: "signer",
-            internalType: "address",
-          },
-          {
-            type: "address[]",
             name: "approvedTargets",
+            type: "address[]",
             internalType: "address[]",
           },
           {
-            type: "uint256",
             name: "nativeTokenLimitPerTransaction",
+            type: "uint256",
             internalType: "uint256",
           },
-          {
-            type: "uint128",
-            name: "startTimestamp",
-            internalType: "uint128",
-          },
-          {
-            type: "uint128",
-            name: "endTimestamp",
-            internalType: "uint128",
-          },
+          { name: "startTimestamp", type: "uint128", internalType: "uint128" },
+          { name: "endTimestamp", type: "uint128", internalType: "uint128" },
         ],
-        internalType: "struct IAccountPermissions.SignerPermissions",
       },
     ],
     stateMutability: "view",
   },
   {
     type: "function",
-    name: "initialize",
-    inputs: [
-      {
-        type: "address",
-        name: "_defaultAdmin",
-        internalType: "address",
-      },
-      {
-        type: "bytes",
-        name: "",
-        internalType: "bytes",
-      },
-    ],
-    outputs: [],
-    stateMutability: "nonpayable",
-  },
-  {
-    type: "function",
     name: "isActiveSigner",
-    inputs: [
-      {
-        type: "address",
-        name: "signer",
-        internalType: "address",
-      },
-    ],
-    outputs: [
-      {
-        type: "bool",
-        name: "",
-        internalType: "bool",
-      },
-    ],
+    inputs: [{ name: "signer", type: "address", internalType: "address" }],
+    outputs: [{ name: "", type: "bool", internalType: "bool" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "isAdmin",
-    inputs: [
-      {
-        type: "address",
-        name: "_account",
-        internalType: "address",
-      },
-    ],
-    outputs: [
-      {
-        type: "bool",
-        name: "",
-        internalType: "bool",
-      },
-    ],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
-    name: "isValidSignature",
-    inputs: [
-      {
-        type: "bytes32",
-        name: "_hash",
-        internalType: "bytes32",
-      },
-      {
-        type: "bytes",
-        name: "_signature",
-        internalType: "bytes",
-      },
-    ],
-    outputs: [
-      {
-        type: "bytes4",
-        name: "magicValue",
-        internalType: "bytes4",
-      },
-    ],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
-    name: "isValidSigner",
-    inputs: [
-      {
-        type: "address",
-        name: "_signer",
-        internalType: "address",
-      },
-      {
-        type: "tuple",
-        name: "_userOp",
-        components: [
-          {
-            type: "address",
-            name: "sender",
-            internalType: "address",
-          },
-          {
-            type: "uint256",
-            name: "nonce",
-            internalType: "uint256",
-          },
-          {
-            type: "bytes",
-            name: "initCode",
-            internalType: "bytes",
-          },
-          {
-            type: "bytes",
-            name: "callData",
-            internalType: "bytes",
-          },
-          {
-            type: "uint256",
-            name: "callGasLimit",
-            internalType: "uint256",
-          },
-          {
-            type: "uint256",
-            name: "verificationGasLimit",
-            internalType: "uint256",
-          },
-          {
-            type: "uint256",
-            name: "preVerificationGas",
-            internalType: "uint256",
-          },
-          {
-            type: "uint256",
-            name: "maxFeePerGas",
-            internalType: "uint256",
-          },
-          {
-            type: "uint256",
-            name: "maxPriorityFeePerGas",
-            internalType: "uint256",
-          },
-          {
-            type: "bytes",
-            name: "paymasterAndData",
-            internalType: "bytes",
-          },
-          {
-            type: "bytes",
-            name: "signature",
-            internalType: "bytes",
-          },
-        ],
-        internalType: "struct UserOperation",
-      },
-    ],
-    outputs: [
-      {
-        type: "bool",
-        name: "",
-        internalType: "bool",
-      },
-    ],
+    inputs: [{ name: "signer", type: "address", internalType: "address" }],
+    outputs: [{ name: "", type: "bool", internalType: "bool" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "multicall",
-    inputs: [
-      {
-        type: "bytes[]",
-        name: "data",
-        internalType: "bytes[]",
-      },
-    ],
-    outputs: [
-      {
-        type: "bytes[]",
-        name: "results",
-        internalType: "bytes[]",
-      },
-    ],
-    stateMutability: "nonpayable",
-  },
-  {
-    type: "function",
-    name: "onERC1155BatchReceived",
-    inputs: [
-      {
-        type: "address",
-        name: "",
-        internalType: "address",
-      },
-      {
-        type: "address",
-        name: "",
-        internalType: "address",
-      },
-      {
-        type: "uint256[]",
-        name: "",
-        internalType: "uint256[]",
-      },
-      {
-        type: "uint256[]",
-        name: "",
-        internalType: "uint256[]",
-      },
-      {
-        type: "bytes",
-        name: "",
-        internalType: "bytes",
-      },
-    ],
-    outputs: [
-      {
-        type: "bytes4",
-        name: "",
-        internalType: "bytes4",
-      },
-    ],
-    stateMutability: "nonpayable",
-  },
-  {
-    type: "function",
-    name: "onERC1155Received",
-    inputs: [
-      {
-        type: "address",
-        name: "",
-        internalType: "address",
-      },
-      {
-        type: "address",
-        name: "",
-        internalType: "address",
-      },
-      {
-        type: "uint256",
-        name: "",
-        internalType: "uint256",
-      },
-      {
-        type: "uint256",
-        name: "",
-        internalType: "uint256",
-      },
-      {
-        type: "bytes",
-        name: "",
-        internalType: "bytes",
-      },
-    ],
-    outputs: [
-      {
-        type: "bytes4",
-        name: "",
-        internalType: "bytes4",
-      },
-    ],
-    stateMutability: "nonpayable",
-  },
-  {
-    type: "function",
-    name: "onERC721Received",
-    inputs: [
-      {
-        type: "address",
-        name: "",
-        internalType: "address",
-      },
-      {
-        type: "address",
-        name: "",
-        internalType: "address",
-      },
-      {
-        type: "uint256",
-        name: "",
-        internalType: "uint256",
-      },
-      {
-        type: "bytes",
-        name: "",
-        internalType: "bytes",
-      },
-    ],
-    outputs: [
-      {
-        type: "bytes4",
-        name: "",
-        internalType: "bytes4",
-      },
-    ],
-    stateMutability: "nonpayable",
-  },
-  {
-    type: "function",
-    name: "setAdmin",
-    inputs: [
-      {
-        type: "address",
-        name: "_account",
-        internalType: "address",
-      },
-      {
-        type: "bool",
-        name: "_isAdmin",
-        internalType: "bool",
-      },
-    ],
-    outputs: [],
-    stateMutability: "nonpayable",
-  },
-  {
-    type: "function",
-    name: "setContractURI",
-    inputs: [
-      {
-        type: "string",
-        name: "_uri",
-        internalType: "string",
-      },
-    ],
-    outputs: [],
+    inputs: [{ name: "data", type: "bytes[]", internalType: "bytes[]" }],
+    outputs: [{ name: "results", type: "bytes[]", internalType: "bytes[]" }],
     stateMutability: "nonpayable",
   },
   {
@@ -727,163 +126,89 @@ export const ACCOUNT_CORE_ABI = [
     name: "setPermissionsForSigner",
     inputs: [
       {
+        name: "req",
         type: "tuple",
-        name: "_req",
+        internalType: "struct IAccountPermissions.SignerPermissionRequest",
         components: [
+          { name: "signer", type: "address", internalType: "address" },
+          { name: "isAdmin", type: "uint8", internalType: "uint8" },
           {
-            type: "address",
-            name: "signer",
-            internalType: "address",
-          },
-          {
-            type: "address[]",
             name: "approvedTargets",
+            type: "address[]",
             internalType: "address[]",
           },
           {
-            type: "uint256",
             name: "nativeTokenLimitPerTransaction",
+            type: "uint256",
             internalType: "uint256",
           },
           {
-            type: "uint128",
             name: "permissionStartTimestamp",
+            type: "uint128",
             internalType: "uint128",
           },
           {
-            type: "uint128",
             name: "permissionEndTimestamp",
+            type: "uint128",
             internalType: "uint128",
           },
           {
-            type: "uint128",
             name: "reqValidityStartTimestamp",
-            internalType: "uint128",
-          },
-          {
             type: "uint128",
-            name: "reqValidityEndTimestamp",
             internalType: "uint128",
           },
           {
-            type: "bytes32",
-            name: "uid",
-            internalType: "bytes32",
+            name: "reqValidityEndTimestamp",
+            type: "uint128",
+            internalType: "uint128",
           },
+          { name: "uid", type: "bytes32", internalType: "bytes32" },
         ],
-        internalType: "struct IAccountPermissions.SignerPermissionRequest",
       },
-      {
-        type: "bytes",
-        name: "_signature",
-        internalType: "bytes",
-      },
+      { name: "signature", type: "bytes", internalType: "bytes" },
     ],
     outputs: [],
     stateMutability: "nonpayable",
   },
   {
     type: "function",
-    name: "supportsInterface",
-    inputs: [
-      {
-        type: "bytes4",
-        name: "interfaceId",
-        internalType: "bytes4",
-      },
-    ],
-    outputs: [
-      {
-        type: "bool",
-        name: "",
-        internalType: "bool",
-      },
-    ],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
     name: "validateUserOp",
     inputs: [
       {
-        type: "tuple",
         name: "userOp",
-        components: [
-          {
-            type: "address",
-            name: "sender",
-            internalType: "address",
-          },
-          {
-            type: "uint256",
-            name: "nonce",
-            internalType: "uint256",
-          },
-          {
-            type: "bytes",
-            name: "initCode",
-            internalType: "bytes",
-          },
-          {
-            type: "bytes",
-            name: "callData",
-            internalType: "bytes",
-          },
-          {
-            type: "uint256",
-            name: "callGasLimit",
-            internalType: "uint256",
-          },
-          {
-            type: "uint256",
-            name: "verificationGasLimit",
-            internalType: "uint256",
-          },
-          {
-            type: "uint256",
-            name: "preVerificationGas",
-            internalType: "uint256",
-          },
-          {
-            type: "uint256",
-            name: "maxFeePerGas",
-            internalType: "uint256",
-          },
-          {
-            type: "uint256",
-            name: "maxPriorityFeePerGas",
-            internalType: "uint256",
-          },
-          {
-            type: "bytes",
-            name: "paymasterAndData",
-            internalType: "bytes",
-          },
-          {
-            type: "bytes",
-            name: "signature",
-            internalType: "bytes",
-          },
-        ],
+        type: "tuple",
         internalType: "struct UserOperation",
+        components: [
+          { name: "sender", type: "address", internalType: "address" },
+          { name: "nonce", type: "uint256", internalType: "uint256" },
+          { name: "initCode", type: "bytes", internalType: "bytes" },
+          { name: "callData", type: "bytes", internalType: "bytes" },
+          { name: "callGasLimit", type: "uint256", internalType: "uint256" },
+          {
+            name: "verificationGasLimit",
+            type: "uint256",
+            internalType: "uint256",
+          },
+          {
+            name: "preVerificationGas",
+            type: "uint256",
+            internalType: "uint256",
+          },
+          { name: "maxFeePerGas", type: "uint256", internalType: "uint256" },
+          {
+            name: "maxPriorityFeePerGas",
+            type: "uint256",
+            internalType: "uint256",
+          },
+          { name: "paymasterAndData", type: "bytes", internalType: "bytes" },
+          { name: "signature", type: "bytes", internalType: "bytes" },
+        ],
       },
-      {
-        type: "bytes32",
-        name: "userOpHash",
-        internalType: "bytes32",
-      },
-      {
-        type: "uint256",
-        name: "missingAccountFunds",
-        internalType: "uint256",
-      },
+      { name: "userOpHash", type: "bytes32", internalType: "bytes32" },
+      { name: "missingAccountFunds", type: "uint256", internalType: "uint256" },
     ],
     outputs: [
-      {
-        type: "uint256",
-        name: "validationData",
-        internalType: "uint256",
-      },
+      { name: "validationData", type: "uint256", internalType: "uint256" },
     ],
     stateMutability: "nonpayable",
   },
@@ -892,95 +217,125 @@ export const ACCOUNT_CORE_ABI = [
     name: "verifySignerPermissionRequest",
     inputs: [
       {
-        type: "tuple",
         name: "req",
+        type: "tuple",
+        internalType: "struct IAccountPermissions.SignerPermissionRequest",
         components: [
+          { name: "signer", type: "address", internalType: "address" },
+          { name: "isAdmin", type: "uint8", internalType: "uint8" },
           {
-            type: "address",
-            name: "signer",
-            internalType: "address",
-          },
-          {
-            type: "address[]",
             name: "approvedTargets",
+            type: "address[]",
             internalType: "address[]",
           },
           {
-            type: "uint256",
             name: "nativeTokenLimitPerTransaction",
+            type: "uint256",
             internalType: "uint256",
           },
           {
-            type: "uint128",
             name: "permissionStartTimestamp",
+            type: "uint128",
             internalType: "uint128",
           },
           {
-            type: "uint128",
             name: "permissionEndTimestamp",
+            type: "uint128",
             internalType: "uint128",
           },
           {
-            type: "uint128",
             name: "reqValidityStartTimestamp",
-            internalType: "uint128",
-          },
-          {
             type: "uint128",
-            name: "reqValidityEndTimestamp",
             internalType: "uint128",
           },
           {
-            type: "bytes32",
-            name: "uid",
-            internalType: "bytes32",
+            name: "reqValidityEndTimestamp",
+            type: "uint128",
+            internalType: "uint128",
           },
+          { name: "uid", type: "bytes32", internalType: "bytes32" },
         ],
-        internalType: "struct IAccountPermissions.SignerPermissionRequest",
       },
-      {
-        type: "bytes",
-        name: "signature",
-        internalType: "bytes",
-      },
+      { name: "signature", type: "bytes", internalType: "bytes" },
     ],
     outputs: [
-      {
-        type: "bool",
-        name: "success",
-        internalType: "bool",
-      },
-      {
-        type: "address",
-        name: "signer",
-        internalType: "address",
-      },
+      { name: "success", type: "bool", internalType: "bool" },
+      { name: "signer", type: "address", internalType: "address" },
     ],
     stateMutability: "view",
   },
   {
-    type: "function",
-    name: "withdrawDepositTo",
+    type: "event",
+    name: "AdminUpdated",
     inputs: [
       {
+        name: "signer",
         type: "address",
-        name: "withdrawAddress",
-        internalType: "address payable",
+        indexed: true,
+        internalType: "address",
       },
-      {
-        type: "uint256",
-        name: "amount",
-        internalType: "uint256",
-      },
+      { name: "isAdmin", type: "bool", indexed: false, internalType: "bool" },
     ],
-    outputs: [],
-    stateMutability: "nonpayable",
+    anonymous: false,
   },
   {
-    type: "receive",
-    name: "",
-    inputs: [],
-    outputs: [],
-    stateMutability: "payable",
+    type: "event",
+    name: "SignerPermissionsUpdated",
+    inputs: [
+      {
+        name: "authorizingSigner",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+      {
+        name: "targetSigner",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+      {
+        name: "permissions",
+        type: "tuple",
+        indexed: false,
+        internalType: "struct IAccountPermissions.SignerPermissionRequest",
+        components: [
+          { name: "signer", type: "address", internalType: "address" },
+          { name: "isAdmin", type: "uint8", internalType: "uint8" },
+          {
+            name: "approvedTargets",
+            type: "address[]",
+            internalType: "address[]",
+          },
+          {
+            name: "nativeTokenLimitPerTransaction",
+            type: "uint256",
+            internalType: "uint256",
+          },
+          {
+            name: "permissionStartTimestamp",
+            type: "uint128",
+            internalType: "uint128",
+          },
+          {
+            name: "permissionEndTimestamp",
+            type: "uint128",
+            internalType: "uint128",
+          },
+          {
+            name: "reqValidityStartTimestamp",
+            type: "uint128",
+            internalType: "uint128",
+          },
+          {
+            name: "reqValidityEndTimestamp",
+            type: "uint128",
+            internalType: "uint128",
+          },
+          { name: "uid", type: "bytes32", internalType: "bytes32" },
+        ],
+      },
+    ],
+    anonymous: false,
   },
 ];
