@@ -98,6 +98,8 @@ export type SwapTokenInfo = {
 type SwapPaymentToken = {
   token: SwapTokenInfo;
   amountWei: string;
+  amount: string;
+  amountUSDCents: number;
 };
 
 type SwapTransactionRequest = {
@@ -111,7 +113,6 @@ type SwapTransactionRequest = {
 };
 
 type SwapRouteResponse = {
-  transactionId: string;
   transactionRequest: SwapTransactionRequest;
   approval?: {
     chainId: SwapSupportedChainId;
@@ -122,40 +123,52 @@ type SwapRouteResponse = {
 
   fromAddress: string;
   toAddress: string;
+
   fromToken: SwapTokenInfo;
   toToken: SwapTokenInfo;
-  fromAmount: string;
+
   fromAmountWei: string;
+  fromAmount: string;
+
   toAmountMinWei: string;
-  toAmount: string;
+  toAmountMin: string;
   toAmountWei: string;
-  paymentTokens?: SwapPaymentToken[];
+  toAmount: string;
+
+  paymentTokens: SwapPaymentToken[];
+  swapFees: SwapPaymentToken[];
 
   estimated: {
     fromAmountUSDCents: number;
     toAmountMinUSDCents: number;
     toAmountUSDCents: number;
+    slippageBPS: number;
     feesUSDCents: number;
-    gasCostUSDCents: number;
+    gasCostUSDCents?: number;
     durationSeconds?: number;
   };
+
+  maxSlippageBPS: number;
 };
 
 export type SwapApprovalParams = BaseTransactionOptions<ApproveParams>;
 
 export type SwapQuote = {
-  transactionId: string;
   transactionRequest: SwapTransactionRequest;
   approval?: SwapApprovalParams;
 
   swapDetails: {
     fromAddress: string;
     toAddress: string;
+
     fromToken: SwapTokenInfo;
     toToken: SwapTokenInfo;
+
     fromAmount: string;
     fromAmountWei: string;
+
     toAmountMinWei: string;
+    toAmountMin: string;
     toAmount: string;
     toAmountWei: string;
 
@@ -163,13 +176,17 @@ export type SwapQuote = {
       fromAmountUSDCents: number;
       toAmountMinUSDCents: number;
       toAmountUSDCents: number;
+      slippageBPS: number;
       feesUSDCents: number;
-      gasCostUSDCents: number;
+      gasCostUSDCents?: number;
       durationSeconds?: number;
     };
+
+    maxSlippageBPS: number;
   };
 
-  paymentTokens?: SwapPaymentToken[];
+  paymentTokens: SwapPaymentToken[];
+  swapFees: SwapPaymentToken[];
   client: ThirdwebClient;
 };
 
@@ -244,7 +261,6 @@ export async function getSwapQuote(
     const data: SwapRouteResponse = (await response.json())["result"];
 
     const swapRoute: SwapQuote = {
-      transactionId: data.transactionId,
       transactionRequest: data.transactionRequest,
       approval: data.approval
         ? {
@@ -260,17 +276,25 @@ export async function getSwapQuote(
       swapDetails: {
         fromAddress: data.fromAddress,
         toAddress: data.toAddress,
+
         fromToken: data.fromToken,
         toToken: data.toToken,
+
         fromAmount: data.fromAmount,
-        toAmountMinWei: data.toAmountMinWei,
-        toAmount: data.toAmount,
         fromAmountWei: data.fromAmountWei,
+
+        toAmountMinWei: data.toAmountMinWei,
+        toAmountMin: data.toAmountMin,
+
         toAmountWei: data.toAmountWei,
+        toAmount: data.toAmount,
         estimated: data.estimated,
+
+        maxSlippageBPS: data.maxSlippageBPS
       },
 
       paymentTokens: data.paymentTokens,
+      swapFees: data.swapFees,
       client: params.client,
     };
 
