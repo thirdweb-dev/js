@@ -5,7 +5,7 @@ import {
   EnterIcon,
   PaperPlaneIcon,
   PinBottomIcon,
-  UpdateIcon,
+  PlusIcon,
 } from "@radix-ui/react-icons";
 import styled from "@emotion/styled";
 import { useState, useEffect } from "react";
@@ -67,6 +67,7 @@ import type { EmbeddedWallet } from "../../../wallets/embedded/core/wallet/index
 import { localWalletMetadata } from "../../../wallets/local/index.js";
 import { ExportLocalWallet } from "./screens/ExportLocalWallet.js";
 import { SwapScreen } from "./screens/Buy/SwapScreen.js";
+import { ArrowTopBottom } from "./icons/ArrowTopBottom.js";
 
 const TW_CONNECTED_WALLET = "tw-connected-wallet";
 
@@ -77,7 +78,7 @@ type WalletDetailsModalScreen =
   | "export"
   | "send"
   | "receive"
-  | "swap"
+  | "buy"
   | "network-switcher";
 
 /**
@@ -419,13 +420,13 @@ export const ConnectedWalletDetails: React.FC<{
               padding: spacing.sm,
             }}
             onClick={() => {
-              setScreen("swap");
+              setScreen("buy");
             }}
           >
             <Container color="secondaryText" flex="row" center="both">
-              <UpdateIcon width={iconSize.sm} height={iconSize.sm} />
+              <PlusIcon width={iconSize.sm} height={iconSize.sm} />
             </Container>
-            {locale.swap}{" "}
+            Buy
           </Button>
         </Container>
       </Container>
@@ -649,7 +650,7 @@ export const ConnectedWalletDetails: React.FC<{
   }
 
   // swap tokens
-  else if (screen === "swap") {
+  else if (screen === "buy") {
     content = (
       <SwapScreen
         onBack={() => setScreen("main")}

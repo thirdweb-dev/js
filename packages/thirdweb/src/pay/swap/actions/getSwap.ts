@@ -209,9 +209,9 @@ export async function getSwapQuote(
     const urlParamsObj: Record<string, string> = {
       fromAddress: params.fromAddress,
       fromChainId: params.fromChainId.toString(),
-      fromTokenAddress: params.fromTokenAddress,
+      fromTokenAddress: params.fromTokenAddress.toLowerCase(),
       toChainId: params.toChainId.toString(),
-      toTokenAddress: params.toTokenAddress,
+      toTokenAddress: params.toTokenAddress.toLowerCase(),
     };
 
     if ("fromAmount" in params && params.fromAmount) {

@@ -5,9 +5,7 @@ import {
   prepareTransaction,
   type PrepareTransactionOptions,
 } from "../../../transaction/prepare-transaction.js";
-import { waitForReceipt } from "../../../transaction/actions/wait-for-tx-receipt.js";
 import type { Wallet } from "../../../wallets/interfaces/wallet.js";
-import { approve } from "../../../extensions/erc20/write/approve.js";
 import type { Address } from "viem";
 import { defineChain } from "../../../chains/utils.js";
 import type { Hex } from "../../../utils/encoding/hex.js";
@@ -47,17 +45,6 @@ export async function sendSwapTransaction(
   wallet: Wallet,
   quote: SwapQuote,
 ): Promise<SwapTransaction> {
-  if (quote.approval) {
-    /* approve the erc20 */
-    const approvalTransaction = approve(quote.approval);
-
-    const waitForReceiptOptions = await sendTransaction({
-      transaction: approvalTransaction,
-      wallet,
-    });
-
-    await waitForReceipt(waitForReceiptOptions);
-  }
   const txData = {
     to: quote.transactionRequest.to as Address,
     data: quote.transactionRequest.data as Hex,
