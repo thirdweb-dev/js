@@ -12,3 +12,5 @@ export function isNativeToken(
 ): token is NativeToken {
   return "nativeToken" in token;
 }
+
+export type ERC20OrNativeToken = TokenInfo | NativeToken;
