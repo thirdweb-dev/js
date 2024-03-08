@@ -8,12 +8,16 @@ export {
   balanceOf,
   type BalanceOfParams,
 } from "../../extensions/erc20/__generated__/IERC20/read/balanceOf.js";
-export { decimals } from "../../extensions/erc20/__generated__/IERC20/read/decimals.js";
+export { decimals } from "../../extensions/erc20/read/decimals.js";
 export { totalSupply } from "../../extensions/erc20/__generated__/IERC20/read/totalSupply.js";
 export {
   allowance,
   type AllowanceParams,
 } from "../../extensions/erc20/__generated__/IERC20/read/allowance.js";
+export {
+  getCurrencyMetadata,
+  type GetCurrencyMetadataResult,
+} from "../../extensions/erc20/read/getCurrencyMetadata.js";
 
 // write
 export {
