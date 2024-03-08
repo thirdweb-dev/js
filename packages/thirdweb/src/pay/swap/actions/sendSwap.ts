@@ -66,7 +66,6 @@ export async function sendSwapTransaction(
 
   return {
     transactionHash: waitForReceiptOptions.transactionHash as string,
-    transactionId: quote.transactionId,
     client: quote.client,
   };
 }

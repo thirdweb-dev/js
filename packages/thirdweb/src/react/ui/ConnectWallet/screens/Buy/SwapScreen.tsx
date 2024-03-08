@@ -21,7 +21,6 @@ import { useWalletBalance } from "../../../../hooks/others/useWalletBalance.js";
 import { useSendSwapTransaction } from "../../../../hooks/pay/useSendSwapTransaction.js";
 import { useSwapQuote } from "../../../../hooks/pay/useSwapQuote.js";
 import { useSwapStatus } from "../../../../hooks/pay/useSwapStatus.js";
-import { useTWLocale } from "../../../../providers/locale-provider.js";
 import {
   useActiveAccount,
   useActiveWalletChain,
@@ -31,7 +30,7 @@ import { Spinner } from "../../../components/Spinner.js";
 import { Container, ModalHeader } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
-import { iconSize } from "../../../design-system/index.js";
+import { iconSize, radius, spacing } from "../../../design-system/index.js";
 import { ChainButton, NetworkSelectorContent } from "../../NetworkSelector.js";
 import type { SupportedTokens, TokenInfo } from "../../defaultTokens.js";
 import { TokenSelector } from "../TokenSelector.js";
@@ -41,11 +40,18 @@ import {
   type NativeToken,
 } from "../nativeToken.js";
 import { SwapInput } from "./swap/SwapInput.js";
-import { useChainsQuery } from "../../../../hooks/others/useChainQuery.js";
+import {
+  useChainQuery,
+  useChainsQuery,
+} from "../../../../hooks/others/useChainQuery.js";
 import { BuyHeader } from "./BuyHeader.js";
 import { DynamicHeight } from "../../../components/DynamicHeight.js";
 import { WalletIcon } from "../../icons/WalletIcon.js";
 import { useSendSwapApproval } from "../../../../hooks/pay/useSendSwapApproval.js";
+import { StyledDiv } from "../../../design-system/elements.js";
+import { useCustomTheme } from "../../../design-system/CustomThemeProvider.js";
+import { ChainIcon } from "../../../components/ChainIcon.js";
+import { shortenString } from "../../../../utils/addresses.js";
 
 const supportedChainsObj = /* @__PURE__ */ (() =>
   swapSupportedChains.map(defineChain))();
@@ -199,15 +205,6 @@ export function SwapScreenContent(props: {
     );
   }
 
-  if (screen === "confirmation" && swapQuoteQuery.data) {
-    return (
-      <ConfirmationScreen
-        onBack={() => setScreen("main")}
-        swapQuote={swapQuoteQuery.data}
-      />
-    );
-  }
-
   if (screen === "select-from-token") {
     return (
       <TokenSelector
@@ -303,6 +300,22 @@ export function SwapScreenContent(props: {
     destinationTokenAmount = swapQuote.swapDetails.toAmount;
   }
 
+  if (screen === "confirmation" && swapQuoteQuery.data) {
+    return (
+      <ConfirmationScreen
+        onBack={() => setScreen("main")}
+        swapQuote={swapQuoteQuery.data}
+        fromAmount={sourceTokenAmount}
+        toAmount={destinationTokenAmount}
+        fromChain={fromChain}
+        toChain={toChain}
+        account={account}
+        fromToken={fromToken}
+        toToken={toToken}
+      />
+    );
+  }
+
   const isNotEnoughBalance =
     !!sourceTokenAmount &&
     !!fromTokenBalanceQuery.data &&
@@ -346,15 +359,7 @@ export function SwapScreenContent(props: {
           onChainClick={() => setScreen("select-to-chain")}
         />
 
-        {swapQuote && (
-          <Fees
-            amount={
-              swapQuote
-                ? `$${swapQuote.swapDetails.estimated.feesUSDCents / 100}`
-                : "---"
-            }
-          />
-        )}
+        {swapQuote && <Fees quote={swapQuote} />}
 
         {isSwapQuoteError && (
           <div>
@@ -403,6 +408,13 @@ export function SwapScreenContent(props: {
 function ConfirmationScreen(props: {
   onBack: () => void;
   swapQuote: SwapQuote;
+  fromAmount: string;
+  toAmount: string;
+  fromChain: Chain;
+  toChain: Chain;
+  account: Account;
+  fromToken: SelectedToken;
+  toToken: SelectedToken;
   // onCompleted: () => void;
 }) {
   const sendSwapMutation = useSendSwapTransaction();
@@ -414,6 +426,16 @@ function ConfirmationScreen(props: {
   const [status, setStatus] = useState<
     "pending" | "success" | "error" | "idle"
   >("idle");
+
+  const fromChain = useChainQuery(props.fromChain);
+  const toChain = useChainQuery(props.toChain);
+
+  const fromTokenSymbol = isNativeToken(props.fromToken)
+    ? fromChain.data?.nativeCurrency?.symbol
+    : props.fromToken?.symbol;
+  const toTokenSymbol = isNativeToken(props.toToken)
+    ? toChain.data?.nativeCurrency?.symbol
+    : props.toToken?.symbol;
 
   if (swapTx) {
     return (
@@ -428,13 +450,53 @@ function ConfirmationScreen(props: {
 
   return (
     <Container p="lg">
-      <ModalHeader title="Buy" onBack={props.onBack} />
+      <ModalHeader title="Confirm Buy" onBack={props.onBack} />
       <Spacer y="lg" />
-      Confirmation screen
+
+      {/* You Pay */}
+      <TokenSelection
+        label="You Pay"
+        chain={props.fromChain}
+        amount={Number(props.fromAmount).toFixed(3)}
+        symbol={fromTokenSymbol || ""}
+      />
       <Spacer y="lg" />
-      <Text>
-        {step} -{status}
+
+      <TokenSelection
+        label="You receive"
+        chain={props.toChain}
+        amount={Number(props.toAmount).toFixed(3)}
+        symbol={toTokenSymbol || ""}
+      />
+
+      <Spacer y="lg" />
+      <Text size="sm" color="secondaryText">
+        Recipient Address
       </Text>
+      <Spacer y="xs" />
+      <BorderBox>
+        <Text color="primaryText" size="md" weight={500}>
+          {shortenString(props.account.address)}
+        </Text>
+      </BorderBox>
+
+      <Fees quote={props.swapQuote} />
+
+      <Spacer y="lg" />
+
+      {status === "error" && (
+        <>
+          <Container flex="row" gap="xs" center="y" color="danger">
+            <CrossCircledIcon width={iconSize.sm} height={iconSize.sm} />
+            <Text color="danger" size="sm">
+              {step === "approval" ? "Approval Rejected" : "Swap Rejected"}
+            </Text>
+          </Container>
+
+          <Spacer y="lg" />
+        </>
+      )}
+
       <Button
         variant="accent"
         fullWidth
@@ -464,16 +526,48 @@ function ConfirmationScreen(props: {
             }
           }
         }}
-        gap="sm"
+        gap="xs"
       >
         {step === "approval" ? "Approve" : "Swap"}
+        {status === "pending" && <Spinner size="sm" color="accentButtonText" />}
       </Button>
     </Container>
   );
 }
 
-function Fees(props: { amount: string }) {
+function TokenSelection(props: {
+  label: string;
+  chain: Chain;
+  amount: string;
+  symbol: string;
+}) {
+  const chainQuery = useChainQuery(props.chain);
+  return (
+    <div>
+      <Text size="sm" color="secondaryText">
+        {props.label}
+      </Text>
+      <Spacer y="xs" />
+      <BorderBox>
+        <Container flex="row" gap="sm" center="y">
+          <Text color="primaryText" size="xl" weight={500}>
+            {props.amount}
+          </Text>
+          <Container flex="row" center="y" gap="xs">
+            <ChainIcon size={iconSize.md} chain={chainQuery.data} />
+            <Text color="primaryText" size="sm" weight={500}>
+              {props.symbol}
+            </Text>
+          </Container>
+        </Container>
+      </BorderBox>
+    </div>
+  );
+}
+
+function Fees(props: { quote: SwapQuote }) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const amount = `$${props.quote.swapDetails.estimated.feesUSDCents / 100}`;
   return (
     <div>
       <Spacer y="lg" />
@@ -518,7 +612,7 @@ function Fees(props: { amount: string }) {
                 </Text>
               </Container>
               <Text color="primaryText" size="sm">
-                {props.amount}
+                {amount}
               </Text>
             </Container>
             <Spacer y="sm" />
@@ -533,26 +627,21 @@ function WaitingForConfirmation(props: {
   onBack: () => void;
   swapTx: SwapTransaction;
 }) {
-  const locale = useTWLocale();
-  const screenLocale = locale.connectWallet.swapScreen;
   const swapStatus = useSwapStatus(props.swapTx);
-
   const isSuccess = swapStatus.data?.status === "DONE";
   const isFailed = swapStatus.data?.status === "FAILED";
+  const isPending = !isSuccess && !isFailed;
 
   return (
     <Container animate="fadein">
       <Container p="lg">
-        <ModalHeader title={screenLocale.title} onBack={props.onBack} />
-        <Spacer y="xl" />
+        <ModalHeader title="Buy" onBack={props.onBack} />
+        <Spacer y="xxl" />
+        <Spacer y="xxl" />
         <Container
           flex="column"
-          gap="lg"
           animate="fadein"
           center="both"
-          style={{
-            minHeight: "240px",
-          }}
           color={isSuccess ? "success" : isFailed ? "danger" : "accentText"}
         >
           {isSuccess ? (
@@ -563,20 +652,48 @@ function WaitingForConfirmation(props: {
             <Spinner size="xl" color="accentText" />
           )}
 
+          <Spacer y="xxl" />
+          <Spacer y="xxl" />
+
           <Text
             color={isSuccess ? "success" : isFailed ? "danger" : "primaryText"}
+            size="lg"
           >
             {" "}
             {isSuccess
-              ? "Swapped Successfully"
+              ? "Buy Success"
               : isFailed
-                ? "Swap Failed"
-                : "Waiting for confirmation"}{" "}
+                ? "Buy Failed"
+                : "Buy Pending"}{" "}
           </Text>
+
+          {isPending && (
+            <>
+              <Spacer y="md" />
+              <Text size="sm">Your transaction is currently pending</Text>
+            </>
+          )}
         </Container>
 
-        <Spacer y="lg" />
+        <Spacer y="xl" />
+
+        <Button variant="accent" fullWidth>
+          Continue Buying
+        </Button>
+        <Spacer y="sm" />
+        <Button variant="outline" fullWidth>
+          Close
+        </Button>
       </Container>
     </Container>
   );
 }
+
+const BorderBox = /* @__PURE__ */ StyledDiv(() => {
+  const theme = useCustomTheme();
+  return {
+    padding: spacing.sm,
+    borderRadius: radius.md,
+    border: `1px solid ${theme.colors.borderColor}`,
+  };
+});

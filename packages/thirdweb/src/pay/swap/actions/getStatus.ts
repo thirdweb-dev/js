@@ -16,7 +16,6 @@ export type SwapTransactionDetails = {
 
 export type SwapTransaction = {
   client: ThirdwebClient;
-  transactionId: string;
   transactionHash: string;
 };
 
@@ -65,7 +64,6 @@ export async function getSwapStatus(
 ): Promise<SwapStatus> {
   try {
     const queryString = new URLSearchParams({
-      transactionId: swapTransaction.transactionId,
       transactionHash: swapTransaction.transactionHash,
     }).toString();
 

@@ -67,7 +67,6 @@ import type { EmbeddedWallet } from "../../../wallets/embedded/core/wallet/index
 import { localWalletMetadata } from "../../../wallets/local/index.js";
 import { ExportLocalWallet } from "./screens/ExportLocalWallet.js";
 import { SwapScreen } from "./screens/Buy/SwapScreen.js";
-import { ArrowTopBottom } from "./icons/ArrowTopBottom.js";
 
 const TW_CONNECTED_WALLET = "tw-connected-wallet";
 

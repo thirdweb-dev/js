@@ -52,11 +52,7 @@ export function useSwapStatus(swapStatusParams: SwapTransaction | undefined) {
 
   return useQuery<SwapStatus, Error>({
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
-    queryKey: [
-      "swapStatus",
-      swapStatusParams?.transactionId,
-      swapStatusParams?.transactionHash,
-    ] as const,
+    queryKey: ["swapStatus", swapStatusParams?.transactionHash] as const,
     queryFn: async () => {
       if (!swapStatusParams) {
         throw new Error("Missing swap status params");
