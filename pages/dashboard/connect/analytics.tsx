@@ -388,7 +388,7 @@ const DashboardConnectAnalytics: ThirdwebNextPage = () => {
               </Text>
               <LinkButton
                 variant="solid"
-                href={"/dashboard/settings"}
+                href={"/dashboard/settings/api-keys"}
                 maxW={"sm"}
               >
                 Create API Key

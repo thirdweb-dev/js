@@ -97,14 +97,8 @@ function redirects() {
       destination: "/explore",
       permanent: false,
     },
-    // temp until we have settings overview
     {
       source: "/settings",
-      destination: "/dashboard/settings",
-      permanent: false,
-    },
-    {
-      source: "/dashboard/settings",
       destination: "/dashboard/settings/api-keys",
       permanent: false,
     },
@@ -137,7 +131,7 @@ function redirects() {
     },
     {
       source: "/dashboard/wallet",
-      destination: "/dashboard/connect",
+      destination: "/dashboard/connect/playground",
       permanent: false,
     },
     {
@@ -178,11 +172,6 @@ function redirects() {
     {
       source: "/dashboard/wallets/smart-wallet",
       destination: "/dashboard/connect/account-abstraction",
-      permanent: false,
-    },
-    {
-      source: "/dashboard/connect",
-      destination: "/dashboard/connect/playground",
       permanent: false,
     },
     {
