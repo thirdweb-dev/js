@@ -1,6 +1,7 @@
 import type { Address } from "abitype";
 import { UniswapFee } from "../types.js";
 import type { BaseTransactionOptions } from "src/transaction/types.js";
+import { ADDRESS_ZERO } from "../../../constants/addresses.js";
 
 /**
  * Represents the parameters for the `findUniswapV3Pool` function.
@@ -40,20 +41,23 @@ export async function getUniswapV3Pool(
   let poolFee: UniswapFee | undefined;
   let pool: Address | undefined;
 
-  for (const fee in UniswapFee) {
+  for (const fee of Object.values(UniswapFee).filter(
+    (value) => typeof value === "number",
+  )) {
     pool = await getPool({
       contract: options.contract,
       tokenA: options.tokenA,
       tokenB: options.tokenB,
       fee: Number(fee),
     });
-    if (pool) {
+
+    if (pool !== ADDRESS_ZERO) {
       poolFee = Number(fee);
       break;
     }
   }
 
-  if (!pool) {
+  if (!pool || pool === ADDRESS_ZERO) {
     throw new Error("No pool exists for this token pair.");
   }
 
