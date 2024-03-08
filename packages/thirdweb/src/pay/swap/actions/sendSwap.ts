@@ -26,10 +26,15 @@ import type { Hex } from "../../../utils/encoding/hex.js";
  * @example
  *
  * ```ts
- * import { sendSwapTransaction, getSwapQuote } from "thirdweb/pay";
+ * import { sendSwapTransaction, getSwapQuote, sendSwapApproval } from "thirdweb/pay";
  *
  * // get a quote for a swapping tokens
  * const quote = await getSwapQuote(quoteParams);
+ *
+ * // if approval is required, send the approval transaction
+ * if (quote.approval) {
+ *  await sendSwapApproval(wallet, quote.approval);
+ * }
  *
  * // send the swap transaction
  * const swapTransaction = await sendSwapTransaction(wallet, quote);

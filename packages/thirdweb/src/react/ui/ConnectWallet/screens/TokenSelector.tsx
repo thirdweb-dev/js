@@ -230,11 +230,17 @@ const SelectTokenBtn = /* @__PURE__ */ styled(Button)(() => {
  * @param balanceData
  * @returns
  */
-export function formatTokenBalance(balanceData: {
-  symbol: string;
-  name: string;
-  decimals: number;
-  displayValue: string;
-}) {
-  return Number(balanceData.displayValue).toFixed(3) + " " + balanceData.symbol;
+export function formatTokenBalance(
+  balanceData: {
+    symbol: string;
+    name: string;
+    decimals: number;
+    displayValue: string;
+  },
+  showSymbol = true,
+) {
+  return (
+    Number(balanceData.displayValue).toFixed(3) +
+    (showSymbol ? " " + balanceData.symbol : "")
+  );
 }

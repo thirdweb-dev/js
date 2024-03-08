@@ -42,16 +42,20 @@ export type SwapStatus = {
  * @example
  *
  * ```ts
- * import { getSwapStatus } from "thirdweb/pay";
+ * import { sendSwapTransaction, getSwapQuote, sendSwapApproval } from "thirdweb/pay";
  *
- * // get a quote for a token swap
- * const quote = await getTokenSwapQuote()
+ * // get a quote for a swapping tokens
+ * const quote = await getSwapQuote(quoteParams);
+ *
+ * // if approval is required, send the approval transaction
+ * if (quote.approval) {
+ *  await sendSwapApproval(wallet, quote.approval);
+ * }
  *
  * // send the swap transaction
- * const swapTransaction = await sendTokenSwapTransaction(quote);
+ * const swapTransaction = await sendSwapTransaction(wallet, quote);
  *
- * // get the status of the swap transaction
- * // you should poll this function at some intervals until the status shows that the transaction was successful or failed
+ * // keep polling the status of the swap transaction until it returns a success or failure status
  * const status = await getSwapStatus(swapTransaction);
  * ```
  * @returns Object of type [`TokenSwapStatus`](https://portal.thirdweb.com/references/typescript/v5/TokenSwapStatus)

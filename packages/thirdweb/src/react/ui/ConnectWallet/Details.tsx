@@ -40,7 +40,10 @@ import { Link, Text } from "../components/text.js";
 import { CopyIcon } from "../components/CopyIcon.js";
 import { shortenString } from "../../utils/addresses.js";
 import { Img } from "../components/Img.js";
-import { useChainQuery } from "../../hooks/others/useChainQuery.js";
+import {
+  useChainQuery,
+  useChainsQuery,
+} from "../../hooks/others/useChainQuery.js";
 import { ChainIcon } from "../components/ChainIcon.js";
 import { useWalletBalance } from "../../hooks/others/useWalletBalance.js";
 import { FundsIcon } from "./icons/FundsIcon.js";
@@ -94,6 +97,9 @@ export const ConnectedWalletDetails: React.FC<{
   const walletChain = useActiveWalletChain();
   const chainQuery = useChainQuery(walletChain);
   const { disconnect } = useDisconnect();
+
+  // prefetch chains metadata with low concurrency
+  useChainsQuery(props.chains, 5);
 
   const tokenAddress =
     walletChain && props.detailsButton?.displayBalanceToken

@@ -1,11 +1,18 @@
-import { CheckCircledIcon, CrossCircledIcon } from "@radix-ui/react-icons";
+import {
+  CheckCircledIcon,
+  ChevronDownIcon,
+  CrossCircledIcon,
+} from "@radix-ui/react-icons";
 import { useDeferredValue, useMemo, useState } from "react";
 import { ethereum } from "../../../../../chains/chain-definitions/ethereum.js";
 import type { Chain } from "../../../../../chains/types.js";
 import { defineChain } from "../../../../../chains/utils.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../constants/addresses.js";
 import type { SwapTransaction } from "../../../../../pay/swap/actions/getStatus.js";
-import type { GetSwapQuoteParams } from "../../../../../pay/swap/actions/getSwap.js";
+import type {
+  GetSwapQuoteParams,
+  SwapQuote,
+} from "../../../../../pay/swap/actions/getSwap.js";
 import type { SwapSupportedChainId } from "../../../../../pay/swap/supportedChains.js";
 import { swapSupportedChains } from "../../../../../pay/swap/supportedChains.js";
 import type { Account } from "../../../../../wallets/interfaces/wallet.js";
@@ -24,13 +31,9 @@ import { Spinner } from "../../../components/Spinner.js";
 import { Container, ModalHeader } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
-import { useCustomTheme } from "../../../design-system/CustomThemeProvider.js";
-import { StyledDiv } from "../../../design-system/elements.js";
-import { iconSize, spacing } from "../../../design-system/index.js";
+import { iconSize } from "../../../design-system/index.js";
 import { ChainButton, NetworkSelectorContent } from "../../NetworkSelector.js";
 import type { SupportedTokens, TokenInfo } from "../../defaultTokens.js";
-import { ArrowTopBottom } from "../../icons/ArrowTopBottom.js";
-import { WalletIcon } from "../../icons/WalletIcon.js";
 import { TokenSelector } from "../TokenSelector.js";
 import {
   NATIVE_TOKEN,
@@ -38,6 +41,11 @@ import {
   type NativeToken,
 } from "../nativeToken.js";
 import { SwapInput } from "./swap/SwapInput.js";
+import { useChainsQuery } from "../../../../hooks/others/useChainQuery.js";
+import { BuyHeader } from "./BuyHeader.js";
+import { DynamicHeight } from "../../../components/DynamicHeight.js";
+import { WalletIcon } from "../../icons/WalletIcon.js";
+import { useSendSwapApproval } from "../../../../hooks/pay/useSendSwapApproval.js";
 
 const supportedChainsObj = /* @__PURE__ */ (() =>
   swapSupportedChains.map(defineChain))();
@@ -68,6 +76,15 @@ type TokenAmountState = {
 
 type SelectedToken = TokenInfo | NativeToken;
 
+type Screen =
+  | "main"
+  | "select-from-token"
+  | "select-to-token"
+  | "select-from-chain"
+  | "select-to-chain"
+  | "confirmation"
+  | "error";
+
 /**
  *
  * @internal
@@ -79,29 +96,18 @@ export function SwapScreenContent(props: {
   account: Account;
 }) {
   const { activeChain, account } = props;
-  const locale = useTWLocale();
-  const screenLocale = locale.connectWallet.swapScreen;
-  const sendSwapMutation = useSendSwapTransaction();
-  const [swapTx, setswapTx] = useState<SwapTransaction | undefined>();
+
+  // prefetch chains metadata
+  useChainsQuery(supportedChainsObj, 50);
 
   // screens
-  const [screen, setScreen] = useState<
-    | "main"
-    | "select-from-token"
-    | "select-to-token"
-    | "select-from-chain"
-    | "select-to-chain"
-  >("main");
-
-  // inputs ---
+  const [screen, setScreen] = useState<Screen>("main");
 
   // token amount
   const [tokenAmount, setTokenAmount] = useState<TokenAmountState>({
     value: "",
     type: "source",
   });
-
-  const deferredTokenAmount = useDeferredValue(tokenAmount);
 
   const isChainSupported = useMemo(
     () => swapSupportedChains.includes(activeChain.id as any),
@@ -119,7 +125,14 @@ export function SwapScreenContent(props: {
     props.supportedTokens[toChain.id]?.[0] || NATIVE_TOKEN,
   );
 
+  const deferredTokenAmount = useDeferredValue(tokenAmount);
   const { client } = useThirdwebProviderProps();
+
+  const fromTokenBalanceQuery = useWalletBalance({
+    account: account,
+    chain: fromChain,
+    tokenAddress: isNativeToken(fromToken) ? undefined : fromToken.address,
+  });
 
   const amounts =
     tokenAmount.type === "source"
@@ -128,6 +141,7 @@ export function SwapScreenContent(props: {
           fromAmount: undefined,
           toAmount: deferredTokenAmount.value,
         };
+
   const swapParams: GetSwapQuoteParams | undefined =
     deferredTokenAmount.value &&
     !(fromChain === toChain && fromToken === toToken)
@@ -149,22 +163,47 @@ export function SwapScreenContent(props: {
         }
       : undefined;
 
-  const swapQuoteQuery = useSwapQuote(swapParams);
-
-  const fromTokenBalanceQuery = useWalletBalance({
-    account: account,
-    chain: fromChain,
-    tokenAddress: isNativeToken(fromToken) ? undefined : fromToken.address,
+  const swapQuoteQuery = useSwapQuote(swapParams, {
+    // refetch every 30 seconds
+    staleTime: 30 * 1000,
+    refetchInterval: 30 * 1000,
+    gcTime: 30 * 1000,
   });
 
-  if (swapTx) {
+  if (screen === "error") {
     return (
-      <WaitingForConfirmation
-        onBack={() => {
-          setswapTx(undefined);
-          setScreen("main");
-        }}
-        swapTx={swapTx}
+      <Container animate="fadein">
+        <Container p="lg">
+          <ModalHeader
+            title="Buy"
+            onBack={() => {
+              setScreen("main");
+            }}
+          />
+          <Spacer y="lg" />
+          <Container
+            flex="column"
+            gap="lg"
+            animate="fadein"
+            center="both"
+            style={{
+              minHeight: "240px",
+            }}
+            color={"danger"}
+          >
+            <CrossCircledIcon width={iconSize.xl} height={iconSize.xl} />
+            <Text color={"danger"}>Failed to swap</Text>
+          </Container>
+        </Container>
+      </Container>
+    );
+  }
+
+  if (screen === "confirmation" && swapQuoteQuery.data) {
+    return (
+      <ConfirmationScreen
+        onBack={() => setScreen("main")}
+        swapQuote={swapQuoteQuery.data}
       />
     );
   }
@@ -236,6 +275,11 @@ export function SwapScreenContent(props: {
     );
   }
 
+  const swapQuote = swapQuoteQuery.data;
+  const isSwapQuoteLoading = swapQuoteQuery.isLoading;
+  const isSwapQuoteError = swapQuoteQuery.isError;
+  const isSwapQuoteFetching = swapQuoteQuery.isFetching;
+
   // SOURCE TOKEN ----
 
   // if the token amount was entered by user - show that
@@ -245,9 +289,9 @@ export function SwapScreenContent(props: {
     tokenAmount.type === "source" ? tokenAmount.value : "";
 
   // if quote is loaded and
-  if (swapQuoteQuery.data && !sourceTokenAmount) {
+  if (swapQuote && !sourceTokenAmount) {
     // amount in # of tokens
-    sourceTokenAmount = swapQuoteQuery.data.swapDetails.fromAmount;
+    sourceTokenAmount = swapQuote.swapDetails.fromAmount;
   }
 
   // DESTINATION TOKEN ----
@@ -255,8 +299,8 @@ export function SwapScreenContent(props: {
   let destinationTokenAmount =
     tokenAmount.type === "destination" ? tokenAmount.value : "";
 
-  if (swapQuoteQuery.data && !destinationTokenAmount) {
-    destinationTokenAmount = swapQuoteQuery.data.swapDetails.toAmount;
+  if (swapQuote && !destinationTokenAmount) {
+    destinationTokenAmount = swapQuote.swapDetails.toAmount;
   }
 
   const isNotEnoughBalance =
@@ -267,8 +311,7 @@ export function SwapScreenContent(props: {
   return (
     <Container animate="fadein">
       <Container p="lg">
-        <ModalHeader title={screenLocale.title} onBack={props.onBack} />
-
+        <BuyHeader onBack={props.onBack} />
         <Spacer y="lg" />
 
         {/* From */}
@@ -278,31 +321,15 @@ export function SwapScreenContent(props: {
             setTokenAmount({ value, type: "source" });
           }}
           label="From"
-          valueIsLoading={swapQuoteQuery.isLoading && !sourceTokenAmount}
+          valueIsLoading={isSwapQuoteLoading && !sourceTokenAmount}
           onTokenClick={() => setScreen("select-from-token")}
           chain={fromChain}
           token={fromToken}
-          estimatedValue={
-            swapQuoteQuery.data?.swapDetails.estimated.fromAmountUSDCents
-          }
+          estimatedValue={swapQuote?.swapDetails.estimated.fromAmountUSDCents}
           onChainClick={() => setScreen("select-from-chain")}
         />
 
-        <ToggleButton
-          onClick={() => {
-            // toggle amounts
-            setTokenAmount({
-              type: tokenAmount.type === "source" ? "destination" : "source",
-              value: tokenAmount.value,
-            });
-            // toggle tokens
-            setFromChain(toChain);
-            setToChain(fromChain);
-            // toggle chains
-            setFromToken(toToken);
-            setToToken(fromToken);
-          }}
-        />
+        <Spacer y="lg" />
 
         {/* To */}
         <SwapInput
@@ -311,47 +338,41 @@ export function SwapScreenContent(props: {
             setTokenAmount({ value, type: "destination" });
           }}
           label="To"
-          valueIsLoading={swapQuoteQuery.isLoading && !destinationTokenAmount}
+          valueIsLoading={isSwapQuoteLoading && !destinationTokenAmount}
           onTokenClick={() => setScreen("select-to-token")}
           chain={toChain}
           token={toToken}
-          estimatedValue={
-            swapQuoteQuery.data?.swapDetails.estimated.toAmountMinUSDCents
-          }
+          estimatedValue={swapQuote?.swapDetails.estimated.toAmountMinUSDCents}
           onChainClick={() => setScreen("select-to-chain")}
         />
 
-        {swapQuoteQuery.data && (
-          <div>
-            <Spacer y="lg" />
-            <Text color="primaryText">Fee Breakdown</Text>
-            <Spacer y="xs" />
-            <Fees
-              label="Processing Fees"
-              amount={`${
-                swapQuoteQuery.data.swapDetails.estimated.feesUSDCents / 100
-              }`}
-            />
-          </div>
+        {swapQuote && (
+          <Fees
+            amount={
+              swapQuote
+                ? `$${swapQuote.swapDetails.estimated.feesUSDCents / 100}`
+                : "---"
+            }
+          />
         )}
 
-        {swapQuoteQuery.isError && (
+        {isSwapQuoteError && (
           <div>
-            <Spacer y="lg" />
+            <Spacer y="md" />
             <Container flex="row" gap="xs" center="y" color="danger">
               <CrossCircledIcon width={iconSize.sm} height={iconSize.sm} />
               <Text color="danger" size="sm">
-                Can not swap given tokens
+                Can not swap given tokens at the moment
               </Text>
             </Container>
           </div>
         )}
 
-        {isNotEnoughBalance && (
+        {!isSwapQuoteError && isNotEnoughBalance && (
           <div>
-            <Spacer y="lg" />
+            <Spacer y="md" />
             <Container flex="row" gap="xs" center="y" color="danger">
-              <WalletIcon size={iconSize.sm} />
+              <WalletIcon size={iconSize.xs} />
               <Text color="danger" size="sm">
                 Exceeds balance
               </Text>
@@ -364,105 +385,149 @@ export function SwapScreenContent(props: {
         <Button
           variant="accent"
           fullWidth
-          disabled={
-            (!swapQuoteQuery.isFetching && !swapQuoteQuery.data) ||
-            isNotEnoughBalance
-          }
+          disabled={(!isSwapQuoteFetching && !swapQuote) || isNotEnoughBalance}
           onClick={async () => {
-            if (swapQuoteQuery.data) {
-              const res = await sendSwapMutation.mutateAsync(
-                swapQuoteQuery.data,
-              );
-              setswapTx(res);
+            if (swapQuote) {
+              setScreen("confirmation");
             }
           }}
           gap="sm"
         >
-          {sendSwapMutation.isPending ? (
-            <>
-              Awaiting confirmation
-              <Spinner color="accentButtonText" size="sm" />
-            </>
-          ) : (
-            "Purchase"
-          )}
+          Purchase
         </Button>
       </Container>
     </Container>
   );
 }
 
-function Fees(props: { label: string; amount: string }) {
+function ConfirmationScreen(props: {
+  onBack: () => void;
+  swapQuote: SwapQuote;
+  // onCompleted: () => void;
+}) {
+  const sendSwapMutation = useSendSwapTransaction();
+  const sendSwapApprovalMutation = useSendSwapApproval();
+  const [swapTx, setSwapTx] = useState<SwapTransaction | undefined>();
+  const [step, setStep] = useState<"approval" | "swap">(
+    props.swapQuote.approval ? "approval" : "swap",
+  );
+  const [status, setStatus] = useState<
+    "pending" | "success" | "error" | "idle"
+  >("idle");
+
+  if (swapTx) {
+    return (
+      <WaitingForConfirmation
+        onBack={() => {
+          props.onBack();
+        }}
+        swapTx={swapTx}
+      />
+    );
+  }
+
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-      }}
-    >
-      <Container color="secondaryText" flex="row" center="y" gap="xxs">
-        <Text color="secondaryText" size="sm">
-          {props.label}
-        </Text>
-      </Container>
-      <Text color="secondaryText" size="sm">
-        ${props.amount}
+    <Container p="lg">
+      <ModalHeader title="Buy" onBack={props.onBack} />
+      <Spacer y="lg" />
+      Confirmation screen
+      <Spacer y="lg" />
+      <Text>
+        {step} -{status}
       </Text>
+      <Button
+        variant="accent"
+        fullWidth
+        onClick={async () => {
+          if (step === "approval" && props.swapQuote.approval) {
+            try {
+              setStatus("pending");
+              await sendSwapApprovalMutation.mutateAsync(
+                props.swapQuote.approval,
+              );
+              setStep("swap");
+              setStatus("idle");
+            } catch {
+              setStatus("error");
+            }
+          }
+
+          if (step === "swap") {
+            setStatus("pending");
+            try {
+              const _swapTx = await sendSwapMutation.mutateAsync(
+                props.swapQuote,
+              );
+              setSwapTx(_swapTx);
+            } catch {
+              setStatus("error");
+            }
+          }
+        }}
+        gap="sm"
+      >
+        {step === "approval" ? "Approve" : "Swap"}
+      </Button>
+    </Container>
+  );
+}
+
+function Fees(props: { amount: string }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  return (
+    <div>
+      <Spacer y="lg" />
+      <Button
+        variant="outline"
+        gap="xs"
+        fullWidth
+        onClick={() => setIsExpanded(!isExpanded)}
+        style={{
+          border: "none",
+          justifyContent: "space-between",
+          padding: 0,
+        }}
+      >
+        Breakdown
+        <Container color="secondaryText" flex="row" center="both">
+          <ChevronDownIcon
+            width={iconSize.sm}
+            height={iconSize.sm}
+            style={{
+              transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)",
+              transition: "transform 0.2s ease",
+            }}
+          />
+        </Container>
+      </Button>
+
+      <DynamicHeight>
+        {isExpanded && (
+          <div>
+            <Spacer y="sm" />
+            <Container
+              animate="fadein"
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              <Container color="secondaryText" flex="row" center="y" gap="xxs">
+                <Text color="secondaryText" size="sm">
+                  Processing Fees
+                </Text>
+              </Container>
+              <Text color="primaryText" size="sm">
+                {props.amount}
+              </Text>
+            </Container>
+            <Spacer y="sm" />
+          </div>
+        )}
+      </DynamicHeight>
     </div>
   );
 }
-
-function ToggleButton(props: { onClick: () => void }) {
-  const [animate, setAnimate] = useState(false);
-  return (
-    <ToggleButtonContainer>
-      <Button
-        variant="outline"
-        data-animate={animate}
-        style={{
-          borderRadius: "50%",
-          padding: spacing.xs,
-        }}
-        onClick={() => {
-          props.onClick();
-          setAnimate(true);
-          setTimeout(() => {
-            setAnimate(false);
-          }, 400);
-        }}
-      >
-        <Container color="secondaryText" flex="row" center="both">
-          <ArrowTopBottom size={iconSize.sm} />
-        </Container>
-      </Button>
-    </ToggleButtonContainer>
-  );
-}
-
-const ToggleButtonContainer = /* @__PURE__ */ StyledDiv(() => {
-  const theme = useCustomTheme();
-  return {
-    margin: "-9px 0",
-    display: "flex",
-    justifyContent: "center",
-    button: {
-      transition: "transform 0.3s, color 0.3s",
-      backgroundColor: theme.colors.modalBg,
-    },
-    "button:hover": {
-      transform: `scale(1.15)`,
-      backgroundColor: theme.colors.primaryButtonBg,
-      borderColor: theme.colors.primaryButtonBg,
-      svg: {
-        color: theme.colors.primaryButtonText,
-      },
-    },
-    "button[data-animate='true'] svg": {
-      transition: "transform 0.3s",
-      transform: `rotate(180deg)`,
-    },
-  };
-});
 
 function WaitingForConfirmation(props: {
   onBack: () => void;

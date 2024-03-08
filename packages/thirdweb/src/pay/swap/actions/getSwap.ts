@@ -129,7 +129,7 @@ type SwapRouteResponse = {
   toAmountMinWei: string;
   toAmount: string;
   toAmountWei: string;
-  requiredTokens: SwapPaymentToken[];
+  paymentTokens?: SwapPaymentToken[];
 
   estimated: {
     fromAmountUSDCents: number;
@@ -141,10 +141,12 @@ type SwapRouteResponse = {
   };
 };
 
+export type SwapApprovalParams = BaseTransactionOptions<ApproveParams>;
+
 export type SwapQuote = {
   transactionId: string;
   transactionRequest: SwapTransactionRequest;
-  approval?: BaseTransactionOptions<ApproveParams>;
+  approval?: SwapApprovalParams;
 
   swapDetails: {
     fromAddress: string;
@@ -167,7 +169,7 @@ export type SwapQuote = {
     };
   };
 
-  paymentTokens: SwapPaymentToken[];
+  paymentTokens?: SwapPaymentToken[];
   client: ThirdwebClient;
 };
 
@@ -252,7 +254,7 @@ export async function getSwapQuote(
               chain: defineChain(data.approval.chainId),
             }),
             spender: data.approval?.spenderAddress,
-            amount: data.approval?.amountWei,
+            amountWei: BigInt(data.approval.amountWei),
           }
         : undefined,
       swapDetails: {
@@ -268,7 +270,7 @@ export async function getSwapQuote(
         estimated: data.estimated,
       },
 
-      paymentTokens: data.requiredTokens,
+      paymentTokens: data.paymentTokens,
       client: params.client,
     };
 

@@ -15,18 +15,24 @@ const DEFAULT_POLL_INTERVAL = 5000;
  * @returns A react query object which contains the data of type [`SwapStatus`](https://portal.thirdweb.com/references/typescript/v5/SwapStatus)
  * @example
  * ```tsx
- * import { useSendSwapTransaction, useSwapStatus, useSwapQuote } from "thirdweb/react";
+ * import { useSendSwapTransaction, useSwapStatus, useSwapQuote, useSendSwapApproval } from "thirdweb/react";
  * import type { SwapTransaction } from "thirdweb";
  *
  * function Component() {
  *  const swapQuoteQuery = useSwapQuote(swapParams);
- *
+ *  const sendApproval = useSendSwapApproval();
  *  const sendSwap = useSendSwapTransaction();
  *
  *  const [swapTx, setSwapTx] = useState<SwapTransaction | undefined>();
  *  const swapStatusQuery = useSwapStatus(swapTx);
  *
  *  async function handleSwap() {
+ *
+ *    // if approval is required
+ *    if (swapQuote.data.approval) {
+ *      await sendApproval.mutateAsync(swapQuote.data.approval);
+ *    }
+ *
  *    // send the swap transaction
  *    // this promise is resolved when user confirms the transaction in the wallet and the transaction is sent to the blockchain
  *    const swapTransaction = await sendSwap.mutateAsync(swapQuote.data);

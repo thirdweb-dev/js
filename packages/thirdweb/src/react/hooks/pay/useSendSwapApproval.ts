@@ -1,15 +1,15 @@
 import { useMutation } from "@tanstack/react-query";
 import { useActiveWallet } from "../../providers/wallet-provider.js";
-import type { SwapQuote } from "../../../pay/swap/actions/getSwap.js";
-import { sendSwapTransaction } from "../../../pay/swap/actions/sendSwap.js";
-import type { SwapTransaction } from "../../../pay/swap/actions/getStatus.js";
+import type { SwapApprovalParams } from "../../../pay/swap/actions/getSwap.js";
+import type { TransactionReceipt } from "viem";
+import { sendSwapApproval } from "../../../pay/swap/actions/sendSwapApproval.js";
 
 /**
- * A hook to send a swap transaction using active wallet.
+ * Send a Swap Approval request using the connected wallet to approve the tokens for swapping.
  *
- * This hook is a wrapper of the [`sendSwapTransaction`](https://portal.thirdweb.com/references/typescript/v5/sendSwapTransaction) function. You can also use that function directly to send a swap transaction.
+ * This hook is a wrapper of the [`sendSwapApproval`](https://portal.thirdweb.com/references/typescript/v5/sendSwapApproval) function. You can also use that function directly to send a swap approval request.
  * @returns a mutation function to send a swap transaction.
- * This mutation function returns a promise that resolves to object of type [`SwapTransaction`](https://portal.thirdweb.com/references/typescript/v5/SwapTransaction)
+ * This mutation function returns a promise that resolves to object of type [`TransactionReceipt`](https://portal.thirdweb.com/references/typescript/v5/TransactionReceipt)
  * @example
  * ```tsx
  * import { useSendSwapTransaction, useSwapStatus, useSwapQuote, useSendSwapApproval } from "thirdweb/react";
@@ -42,16 +42,16 @@ import type { SwapTransaction } from "../../../pay/swap/actions/getStatus.js";
  * }
  * ```
  */
-export function useSendSwapTransaction() {
+export function useSendSwapApproval() {
   const wallet = useActiveWallet();
 
-  return useMutation<SwapTransaction, Error, SwapQuote>({
-    mutationFn: async (swapRoute: SwapQuote) => {
+  return useMutation<TransactionReceipt, Error, SwapApprovalParams>({
+    mutationFn: async (params: SwapApprovalParams) => {
       if (!wallet) {
         throw new Error("Wallet not connected");
       }
 
-      return sendSwapTransaction(wallet, swapRoute);
+      return sendSwapApproval(wallet, params);
     },
   });
 }
