@@ -62,7 +62,6 @@ export function useNFTDrawerTabs({
   const isERC721 = detectFeatures(oldContract, ["ERC721"]);
 
   const { data: nft } = useReadContract(
-    // @ts-expect-error types are not up to date
     isERC721 ? getErc721NFT : getErc1155NFT,
     {
       contract,

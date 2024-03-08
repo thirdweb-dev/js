@@ -166,7 +166,7 @@ const ContractPage: ThirdwebNextPage = () => {
     });
   }, [contractAddress, chain?.chainId]);
 
-  const routes = useContractRouteConfig(contractAddress, contract);
+  const routes = useContractRouteConfig(contractAddress);
 
   const activeRoute = useMemo(
     () => routes.find((route) => route.path === activeTab),
