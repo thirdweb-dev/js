@@ -192,6 +192,17 @@ export class ContractWrapper<
     return this.writeContract.estimateGas[fn as string](...args);
   }
 
+  public async populateTx(
+    fn: keyof TContract["functions"],
+    args: any[],
+    overrides?: CallOverrides,
+  ): Promise<providers.TransactionRequest> {
+    return this.writeContract.populateTransaction[fn as string](
+      ...args,
+      overrides,
+    );
+  }
+
   /**
    * @internal
    */

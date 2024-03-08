@@ -1,5 +1,9 @@
 import { TransactionError, parseRevertReason } from "../../common/error";
-import { getDefaultGasOverrides, getGasPrice } from "../../common/gas-price";
+import {
+  estimateTxCost,
+  getDefaultGasOverrides,
+  getGasPrice,
+} from "../../common/gas-price";
 import {
   fetchContractMetadataFromAddress,
   getContractMetadataFromCache,
@@ -165,6 +169,10 @@ abstract class TransactionContext {
   }
 
   public abstract estimateGasLimit(): Promise<BigNumber>;
+  public abstract estimateGasCost(): Promise<{
+    ether: string;
+    wei: BigNumber;
+  }>;
 
   /**
    * Set a multiple to multiply the gas limit by
@@ -185,22 +193,6 @@ abstract class TransactionContext {
       // Otherwise, set a gas multiple to use later
       this.gasMultiple = factor;
     }
-  }
-
-  /**
-   * Estimate the total gas cost of this transaction (in both ether and wei)
-   */
-  public async estimateGasCost() {
-    const [gasLimit, gasPrice] = await Promise.all([
-      this.estimateGasLimit(),
-      this.getGasPrice(),
-    ]);
-    const gasCost = gasLimit.mul(gasPrice);
-
-    return {
-      ether: utils.formatEther(gasCost),
-      wei: gasCost,
-    };
   }
 
   /**
@@ -425,6 +417,20 @@ export class Transaction<
       // If transaction simulation (static call) doesn't throw, then throw a generic error
       throw await this.transactionError(err);
     }
+  }
+
+  /**
+   * Estimate the total gas cost of this transaction (in both ether and wei)
+   */
+  public async estimateGasCost() {
+    const gasCost = await estimateTxCost(
+      this.provider,
+      await this.populateTransaction(),
+    );
+    return {
+      ether: utils.formatEther(gasCost),
+      wei: gasCost,
+    };
   }
 
   /**
@@ -753,6 +759,20 @@ export class DeployTransaction extends TransactionContext {
       // No need to do simulation here, since there can't be revert errors
       throw await this.deployError(err);
     }
+  }
+
+  async estimateGasCost() {
+    const gasOverrides = await this.getGasOverrides();
+    const overrides: CallOverrides = { ...gasOverrides, ...this.overrides };
+    const populatedTx = this.factory.getDeployTransaction(
+      ...this.args,
+      overrides,
+    );
+    const gasCost = await estimateTxCost(this.provider, populatedTx);
+    return {
+      ether: utils.formatEther(gasCost),
+      wei: gasCost,
+    };
   }
 
   async send(): Promise<ContractTransaction> {
