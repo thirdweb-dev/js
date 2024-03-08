@@ -54,11 +54,14 @@ export type ContractInfoInput = {
 };
 
 export type ContractInfo = {
-  factoryInfo: FactoryContractInfo;
-  accountInfo: AccountContractInfo;
+  factoryInfo: FactoryContractInfoInternal;
+  accountInfo: AccountContractInfoInternal;
 };
 
-export type AccountContractInfo = {
+/**
+ * @internal
+ */
+export type AccountContractInfoInternal = {
   abi?: ContractInterface;
   getNonce: (account: SmartContract) => Promise<BigNumber>;
   execute: (
@@ -69,13 +72,39 @@ export type AccountContractInfo = {
   ) => Promise<Transaction>;
 };
 
-export type FactoryContractInfo = {
+/**
+ * @internal
+ */
+export type FactoryContractInfoInternal = {
   abi?: ContractInterface;
   createAccount: (
     factory: SmartContract,
     owner: string,
   ) => Promise<Transaction>;
   getAccountAddress: (factory: SmartContract, owner: string) => Promise<string>;
+};
+
+export type AccountContractInfo = {
+  abi?: ContractInterface;
+  getNonce?: (account: SmartContract) => Promise<BigNumber>;
+  execute?: (
+    account: SmartContract,
+    target: string,
+    value: BigNumberish,
+    data: string,
+  ) => Promise<Transaction>;
+};
+
+export type FactoryContractInfo = {
+  abi?: ContractInterface;
+  createAccount?: (
+    factory: SmartContract,
+    owner: string,
+  ) => Promise<Transaction>;
+  getAccountAddress?: (
+    factory: SmartContract,
+    owner: string,
+  ) => Promise<string>;
 };
 
 export type PaymasterResult = {

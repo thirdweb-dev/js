@@ -5,7 +5,9 @@ import { getVerifyingPaymaster } from "./lib/paymaster";
 import { create4337Provider } from "./lib/provider-utils";
 import {
   AccountContractInfo,
+  AccountContractInfoInternal,
   FactoryContractInfo,
+  FactoryContractInfoInternal,
   ProviderConfig,
   SmartWalletConfig,
   SmartWalletConnectionArgs,
@@ -71,8 +73,22 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       gasless: config.gasless,
       factoryAddress: config.factoryAddress,
       accountAddress: params.accountAddress,
-      factoryInfo: config.factoryInfo || this.defaultFactoryInfo(),
-      accountInfo: config.accountInfo || this.defaultAccountInfo(),
+      factoryInfo: {
+        createAccount:
+          config.factoryInfo?.createAccount ||
+          this.defaultFactoryInfo().createAccount,
+        getAccountAddress:
+          config.factoryInfo?.getAccountAddress ||
+          this.defaultFactoryInfo().getAccountAddress,
+        abi: config.factoryInfo?.abi,
+      },
+      accountInfo: {
+        execute:
+          config.accountInfo?.execute || this.defaultAccountInfo().execute,
+        getNonce:
+          config.accountInfo?.getNonce || this.defaultAccountInfo().getNonce,
+        abi: config.accountInfo?.abi,
+      },
       clientId: config.clientId,
       secretKey: config.secretKey,
       erc20PaymasterAddress: config.erc20PaymasterAddress,
@@ -541,7 +557,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     return sdk.getContract(this.config.factoryAddress);
   }
 
-  protected defaultFactoryInfo(): FactoryContractInfo {
+  protected defaultFactoryInfo(): FactoryContractInfoInternal {
     return {
       createAccount: async (factory, owner) => {
         return factory.prepare("createAccount", [
@@ -558,7 +574,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     };
   }
 
-  protected defaultAccountInfo(): AccountContractInfo {
+  protected defaultAccountInfo(): AccountContractInfoInternal {
     return {
       execute: async (account, target, value, data) => {
         return account.prepare("execute", [target, value, data]);
