@@ -1,4 +1,4 @@
-import { ContractWithMetadata, useSupportedChains } from "@thirdweb-dev/react";
+import { useSupportedChains } from "@thirdweb-dev/react";
 import { Polygon } from "@thirdweb-dev/chains";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { getDashboardChainRpc } from "lib/rpc";
@@ -9,6 +9,7 @@ import { Flex, Spinner } from "@chakra-ui/react";
 import { Heading, TrackedLinkButton, Text } from "tw-components";
 import { FiPlus } from "react-icons/fi";
 import { FactoryContracts } from "./factory-contracts";
+import { BasicContract } from "contract-ui/types/types";
 
 const useFactories = () => {
   const { user, isLoggedIn } = useLoggedInUser();
@@ -88,7 +89,7 @@ export const AccountFactories: React.FC<AccountFactoriesProps> = ({
         <Spinner />
       ) : (
         <FactoryContracts
-          contracts={(factories.data || []) as ContractWithMetadata[]}
+          contracts={(factories.data || []) as BasicContract[]}
           isLoading={factories.isLoading}
           isFetched={factories.isFetched}
         />

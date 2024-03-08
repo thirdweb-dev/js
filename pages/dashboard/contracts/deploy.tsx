@@ -1,4 +1,4 @@
-import { useAllContractList } from "@3rdweb-sdk/react";
+import { useAllContractList } from "@3rdweb-sdk/react/hooks/useRegistry";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import {
   Box,
@@ -184,8 +184,8 @@ const Contracts: ThirdwebNextPage = () => {
   const deployedContracts = useAllContractList(address);
 
   const hasContracts = useMemo(
-    () => deployedContracts.data?.length > 0,
-    [deployedContracts.data?.length],
+    () => deployedContracts.data && deployedContracts.data?.length > 0,
+    [deployedContracts.data],
   );
 
   const steps = useMemo(

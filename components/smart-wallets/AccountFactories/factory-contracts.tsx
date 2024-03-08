@@ -1,4 +1,3 @@
-import { ContractWithMetadata } from "@thirdweb-dev/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { getChainByChainId } from "@thirdweb-dev/chains";
 import { TWTable } from "components/shared/TWTable";
@@ -6,17 +5,18 @@ import { Text } from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
 import { AsyncFactoryAccountCell } from "components/smart-wallets/AccountFactories/account-cell";
 import { AsyncContractNameCell } from "components/contract-components/tables/cells";
+import { BasicContract } from "contract-ui/types/types";
 
 interface FactoryContractsProps {
-  contracts: ContractWithMetadata[];
+  contracts: BasicContract[];
   isLoading: boolean;
   isFetched: boolean;
 }
 
-const columnHelper = createColumnHelper<ContractWithMetadata>();
+const columnHelper = createColumnHelper<BasicContract>();
 
 const columns = [
-  columnHelper.accessor((row) => row.metadata, {
+  columnHelper.accessor((row) => row.address, {
     header: "Name",
     cell: (cell) => <AsyncContractNameCell cell={cell.row.original} />,
   }),

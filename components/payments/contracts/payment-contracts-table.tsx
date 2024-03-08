@@ -2,7 +2,6 @@ import { Flex } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { createColumnHelper } from "@tanstack/react-table";
 import { Chain } from "@thirdweb-dev/chains";
-import { ContractWithMetadata } from "@thirdweb-dev/sdk";
 import {
   AsyncContractNameCell,
   AsyncContractTypeCell,
@@ -17,9 +16,10 @@ import {
   usePaymentsSellerById,
   validPaymentsChainIdsMainnets,
 } from "@3rdweb-sdk/react/hooks/usePayments";
+import { BasicContract } from "contract-ui/types/types";
 
 interface PaymentContractsTableProps {
-  paymentContracts: ContractWithMetadata[];
+  paymentContracts: BasicContract[];
   paymentsSellerId: string;
   isLoading: boolean;
   isFetched: boolean;
@@ -29,7 +29,7 @@ function cleanChainName(chainName: string) {
   return chainName.replace("Mainnet", "");
 }
 
-const columnHelper = createColumnHelper<ContractWithMetadata>();
+const columnHelper = createColumnHelper<BasicContract>();
 
 export const PaymentContractsTable: React.FC<PaymentContractsTableProps> = ({
   paymentContracts,

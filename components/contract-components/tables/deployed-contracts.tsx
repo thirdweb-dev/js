@@ -1,7 +1,9 @@
 import { ImportModal } from "../import-contract/modal";
 import { ShowMoreButton } from "./show-more-button";
-import { useAllContractList } from "@3rdweb-sdk/react";
-import { useRemoveContractMutation } from "@3rdweb-sdk/react/hooks/useRegistry";
+import {
+  useRemoveContractMutation,
+  useAllContractList,
+} from "@3rdweb-sdk/react/hooks/useRegistry";
 import {
   Box,
   ButtonGroup,
@@ -20,18 +22,10 @@ import {
   Tr,
   useDisclosure,
 } from "@chakra-ui/react";
-import {
-  ChainId,
-  CommonContractOutputSchema,
-  ContractType,
-  ContractWithMetadata,
-} from "@thirdweb-dev/sdk";
-import { MismatchButton } from "components/buttons/MismatchButton";
 import { GettingStartedBox } from "components/getting-started/box";
 import { GettingStartedCard } from "components/getting-started/card";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { NetworkSelectDropdown } from "components/selects/NetworkSelectDropdown";
-import { CustomSDKContext } from "contexts/custom-sdk-context";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useChainSlug } from "hooks/chains/chainSlug";
 import { useSupportedChainsRecord } from "hooks/chains/configureChains";
@@ -65,8 +59,8 @@ import {
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { TableContainer } from "tw-components/table-container";
 import { ComponentWithChildren } from "types/component-with-children";
-import { z } from "zod";
 import { AsyncContractNameCell, AsyncContractTypeCell } from "./cells";
+import { BasicContract } from "contract-ui/types/types";
 
 interface DeployedContractsProps {
   noHeader?: boolean;
@@ -224,46 +218,19 @@ export const DeployedContracts: React.FC<DeployedContractsProps> = ({
 type RemoveFromDashboardButtonProps = {
   chainId: number;
   contractAddress: string;
-  registry: "old" | "new";
 };
 
 const RemoveFromDashboardButton: React.FC<RemoveFromDashboardButtonProps> = ({
   chainId,
   contractAddress,
-  registry,
 }) => {
   const mutation = useRemoveContractMutation();
 
-  if (registry === "old") {
-    return (
-      <CustomSDKContext desiredChainId={chainId}>
-        <MismatchButton
-          borderWidth={0}
-          onClick={(e) => {
-            e.stopPropagation();
-            mutation.mutate({ chainId, contractAddress, registry });
-          }}
-          isDisabled={mutation.isLoading}
-        >
-          <Flex align="center" gap={2} w="full">
-            {mutation.isLoading ? (
-              <Spinner size="sm" />
-            ) : (
-              <Icon as={FiX} color="red.500" />
-            )}
-            <Heading as="span" size="label.md">
-              Remove from dashboard
-            </Heading>
-          </Flex>
-        </MismatchButton>
-      </CustomSDKContext>
-    );
-  }
   return (
     <MenuItem
       onClick={(e) => {
         e.stopPropagation();
-        mutation.mutate({ chainId, contractAddress, registry });
+        mutation.mutate({ chainId, contractAddress });
       }}
       isDisabled={mutation.isLoading}
       closeOnSelect={false}
@@ -281,13 +248,7 @@ const RemoveFromDashboardButton: React.FC<RemoveFromDashboardButtonProps> = ({
 };
 
 type SelectNetworkFilterProps = {
-  column: ColumnInstance<{
-    chainId: number;
-    address: string;
-    contractType: () => Promise<ContractType>;
-    metadata: () => Promise<z.output<typeof CommonContractOutputSchema>>;
-    extensions: () => Promise<string[]>;
-  }>;
+  column: ColumnInstance<BasicContract>;
   chainIdsWithDeployments: number[];
 };
 
@@ -311,13 +272,7 @@ function SelectNetworkFilter({
 }
 
 interface ContractTableProps {
-  combinedList: {
-    chainId: ChainId;
-    address: string;
-    contractType: () => Promise<ContractType>;
-    metadata: () => Promise<z.output<typeof CommonContractOutputSchema>>;
-    extensions: () => Promise<string[]>;
-  }[];
+  combinedList: BasicContract[];
   isFetching?: boolean;
   limit: number;
   chainIdsWithDeployments: number[];
@@ -337,14 +292,14 @@ const ContractTable: ComponentWithChildren<ContractTableProps> = ({
     () => [
       {
         Header: "Name",
-        accessor: (row) => row.metadata,
+        accessor: (row) => row.address,
         Cell: (cell: any) => {
           return <AsyncContractNameCell cell={cell.row.original} />;
         },
       },
       {
         Header: "Type",
-        accessor: (row) => row.extensions,
+        accessor: (row) => row.address,
         Cell: (cell: any) => <AsyncContractTypeCell cell={cell.row.original} />,
       },
       {
@@ -401,9 +356,6 @@ const ContractTable: ComponentWithChildren<ContractTableProps> = ({
                 <RemoveFromDashboardButton
                   contractAddress={cell.cell.row.original.address}
                   chainId={cell.cell.row.original.chainId}
-                  registry={
-                    cell.cell.row.original._isMultiChain ? "new" : "old"
-                  }
                 />
               </MenuList>
             </Menu>
@@ -505,7 +457,7 @@ const ContractTable: ComponentWithChildren<ContractTableProps> = ({
   );
 };
 
-const ContractTableRow = memo(({ row }: { row: Row<ContractWithMetadata> }) => {
+const ContractTableRow = memo(({ row }: { row: Row<BasicContract> }) => {
   const chainSlug = useChainSlug(row.original.chainId);
   const router = useRouter();
 

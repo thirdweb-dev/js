@@ -1,44 +1,35 @@
-import {
-  ContractType,
-  PrebuiltContractType,
-  SchemaForPrebuiltContractType,
-} from "@thirdweb-dev/sdk";
-
 import { Skeleton } from "@chakra-ui/react";
-
-import React, { memo } from "react";
-
+import { memo } from "react";
 import { ChakraNextLink, Text } from "tw-components";
-
-import { useContractMetadataWithAddress } from "@3rdweb-sdk/react";
-
 import { useChainSlug } from "hooks/chains/chainSlug";
-
-import { z } from "zod";
 import { shortenIfAddress } from "utils/usedapp-external";
 import { usePublishedContractsFromDeploy } from "../hooks";
+import { getContract } from "thirdweb";
+import { defineDashboardChain, thirdwebClient } from "lib/thirdweb-client";
+import { BasicContract } from "contract-ui/types/types";
+import { getContractMetadata } from "thirdweb/extensions/common";
+import { useReadContract } from "thirdweb/react";
 
 interface AsyncContractNameCellProps {
-  cell: {
-    address: string;
-    chainId: number;
-    metadata: () => Promise<
-      z.infer<SchemaForPrebuiltContractType<PrebuiltContractType>["output"]>
-    >;
-  };
+  cell: BasicContract;
 }
 
 export const AsyncContractNameCell = memo(
   ({ cell }: AsyncContractNameCellProps) => {
     const chainSlug = useChainSlug(cell.chainId);
-    const metadataQuery = useContractMetadataWithAddress(
-      cell.address,
-      cell.metadata,
-      cell.chainId,
-    );
+
+    const contract = getContract({
+      client: thirdwebClient,
+      address: cell.address,
+      chain: defineDashboardChain(cell.chainId),
+    });
+
+    const contractMetadata = useReadContract(getContractMetadata, {
+      contract,
+    });
 
     return (
-      <Skeleton isLoaded={!metadataQuery.isLoading}>
+      <Skeleton isLoaded={!contractMetadata.isFetching}>
         <ChakraNextLink href={`/${chainSlug}/${cell.address}`} passHref>
           <Text
             color="blue.500"
@@ -46,7 +37,7 @@ export const AsyncContractNameCell = memo(
             size="label.md"
             _groupHover={{ textDecor: "underline" }}
           >
-            {metadataQuery.data?.name || shortenIfAddress(cell.address)}
+            {contractMetadata.data?.name || shortenIfAddress(cell.address)}
           </Text>
         </ChakraNextLink>
       </Skeleton>
@@ -57,15 +48,7 @@ export const AsyncContractNameCell = memo(
 AsyncContractNameCell.displayName = "AsyncContractNameCell";
 
 interface AsyncContractTypeCellProps {
-  cell: {
-    address: string;
-    chainId: number;
-    contractType: (() => Promise<ContractType>) | undefined;
-    metadata: () => Promise<
-      z.infer<SchemaForPrebuiltContractType<PrebuiltContractType>["output"]>
-    >;
-    extensions: () => Promise<string[]>;
-  };
+  cell: BasicContract;
 }
 
 export const AsyncContractTypeCell = memo(

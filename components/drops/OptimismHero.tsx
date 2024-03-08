@@ -1,4 +1,4 @@
-import { useContractList } from "@3rdweb-sdk/react";
+import { useAllContractList } from "@3rdweb-sdk/react/hooks/useRegistry";
 import { Box, Flex } from "@chakra-ui/react";
 import { OptimismGoerli } from "@thirdweb-dev/chains";
 import {
@@ -10,12 +10,11 @@ import {
 import { StepsCard } from "components/dashboard/StepsCard";
 import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
 import { BigNumber } from "ethers";
-import { getDashboardChainRpc } from "lib/rpc";
 import { LinkButton, Heading } from "tw-components";
 import { DropsOptimismSDK } from "pages/drops/optimism";
 import { ClaimNFT } from "./ClaimNFT";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { DeployContractCheck } from "./DeployContractCheck";
 
 export const OptimismHero = () => {
@@ -26,10 +25,14 @@ export const OptimismHero = () => {
 
   const chainId = useChainId();
 
-  const optimismGoerliQuery = useContractList(
-    OptimismGoerli.chainId,
-    getDashboardChainRpc(OptimismGoerli),
-    address,
+  const allContractListQuery = useAllContractList(address);
+
+  const optimismGoerliContracts = useMemo(
+    () =>
+      (allContractListQuery.data || []).filter(
+        (contract) => contract.chainId === OptimismGoerli.chainId,
+      ),
+    [allContractListQuery.data],
   );
 
   const step2Completed =
@@ -37,10 +40,10 @@ export const OptimismHero = () => {
     BigNumber.from(balance.data?.value || 0).gt(0);
 
   useEffect(() => {
-    if ((optimismGoerliQuery?.data || [])?.length > 0) {
+    if (optimismGoerliContracts?.length > 0) {
       setHasDeployed(true);
     }
-  }, [optimismGoerliQuery.data]);
+  }, [optimismGoerliContracts]);
 
   useEffect(() => {
     if (address) {

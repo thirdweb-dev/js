@@ -1,4 +1,4 @@
-import { useAllContractList } from "@3rdweb-sdk/react";
+import { useAllContractList } from "@3rdweb-sdk/react/hooks/useRegistry";
 import { Flex } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
 import { PaymentContractsTable } from "./payment-contracts-table";

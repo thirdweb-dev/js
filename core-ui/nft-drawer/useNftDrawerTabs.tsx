@@ -54,14 +54,15 @@ export function useNFTDrawerTabs({
 
   const balanceOfQuery = useReadContract(balanceOf, {
     contract,
-    address: address || "",
-    tokenId: BigInt(tokenId || 0),
+    owner: address || "",
+    id: BigInt(tokenId || 0),
   });
 
   const isERC1155 = detectFeatures(oldContract, ["ERC1155"]);
   const isERC721 = detectFeatures(oldContract, ["ERC721"]);
 
   const { data: nft } = useReadContract(
+    // @ts-expect-error types are not up to date
     isERC721 ? getErc721NFT : getErc1155NFT,
     {
       contract,

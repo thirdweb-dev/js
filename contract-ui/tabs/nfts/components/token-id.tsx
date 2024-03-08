@@ -71,6 +71,7 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
   });
 
   const { data: nft } = useReadContract(
+    // @ts-expect-error types are not up to date
     isErc721 ? getErc721NFT : getErc1155NFT,
     {
       contract,
@@ -235,7 +236,7 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
               <Card as={Flex} flexDir="column" gap={4}>
                 <Heading size="label.md">Properties</Heading>
                 {Array.isArray(properties) &&
-                String(properties[0]?.value) !== "undefined" ? (
+                  String(properties[0]?.value) !== "undefined" ? (
                   <SimpleGrid columns={{ base: 2, md: 4 }} gap={2}>
                     {properties.map((property: any, idx) => (
                       <NftProperty key={idx} property={property} />

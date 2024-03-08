@@ -42,8 +42,8 @@ import { THIRDWEB_DOMAIN } from "constants/urls";
 import { getAddress, isAddress } from "ethers/lib/utils";
 import { DeprecatedAlert } from "components/shared/DeprecatedAlert";
 import { Chain } from "@thirdweb-dev/chains";
-import { defineChain, getContract } from "thirdweb";
-import { thirdwebClient } from "lib/thirdweb-client";
+import { getContract } from "thirdweb";
+import { defineDashboardChain, thirdwebClient } from "lib/thirdweb-client";
 
 type EVMContractProps = {
   contractInfo?: EVMContractInfo;
@@ -162,7 +162,7 @@ const ContractPage: ThirdwebNextPage = () => {
     return getContract({
       address: contractAddress,
       client: thirdwebClient,
-      chain: defineChain(chain?.chainId),
+      chain: defineDashboardChain(chain?.chainId),
     });
   }, [contractAddress, chain?.chainId]);
 

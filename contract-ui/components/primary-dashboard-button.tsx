@@ -1,17 +1,14 @@
 import { BuildAppsButton } from "./build-apps-button";
 import { useEVMContractInfo } from "@3rdweb-sdk/react/hooks/useActiveChainId";
-import { useAddContractMutation } from "@3rdweb-sdk/react/hooks/useRegistry";
 import {
-  useContractList,
-  useMultiChainRegContractList,
-} from "@3rdweb-sdk/react/hooks/useSDK";
+  useAddContractMutation,
+  useAllContractList,
+} from "@3rdweb-sdk/react/hooks/useRegistry";
 import { Icon } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react/evm";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { getDashboardChainRpc } from "lib/rpc";
 import { useRouter } from "next/router";
-import { useMemo, useState } from "react";
 import { FiPlus } from "react-icons/fi";
 import { Button } from "tw-components";
 
@@ -30,68 +27,21 @@ export const PrimaryDashboardButton: React.FC<AddToDashboardCardProps> = ({
   const walletAddress = useAddress();
   const router = useRouter();
 
-  const oldRegistryContractList = useContractList(
-    chain?.chainId || 0,
-    chain ? getDashboardChainRpc(chain) : "",
-    walletAddress,
-  );
-
-  const newRegistryContractList = useMultiChainRegContractList(walletAddress);
-
-  const [addedState, setAddedState] = useState<"added" | "removed" | "none">(
-    "none",
-  );
+  const registry = useAllContractList(walletAddress);
 
   const { onSuccess: onAddSuccess, onError: onAddError } = useTxNotifications(
     "Successfully imported",
     "Failed to import",
   );
 
-  const onOldRegistry = useMemo(() => {
-    return (
-      oldRegistryContractList.isFetched &&
-      oldRegistryContractList.data?.find(
-        (c) => c.address === contractAddress,
-      ) &&
-      oldRegistryContractList.isSuccess &&
-      // contract can only be on the old registry if we haven't f'd with it
-      addedState === "none"
-    );
-  }, [
-    addedState,
-    contractAddress,
-    oldRegistryContractList.data,
-    oldRegistryContractList.isFetched,
-    oldRegistryContractList.isSuccess,
-  ]);
-
-  const onNewRegistry = useMemo(() => {
-    return (
-      (newRegistryContractList.isFetched &&
-        newRegistryContractList.data?.find(
-          (c) => c.address === contractAddress,
-        ) &&
-        newRegistryContractList.isSuccess) ||
-      // if we added it is on the new registry for sure
-      addedState === "added"
-    );
-  }, [
-    addedState,
-    contractAddress,
-    newRegistryContractList.data,
-    newRegistryContractList.isFetched,
-    newRegistryContractList.isSuccess,
-  ]);
-
-  const isAlreadyOnDashboard = useMemo(() => {
-    return (onOldRegistry || onNewRegistry) && addedState !== "removed";
-  }, [addedState, onNewRegistry, onOldRegistry]);
-
-  const statusUnknown = useMemo(() => {
-    return (
-      !oldRegistryContractList.isFetched || !newRegistryContractList.isFetched
-    );
-  }, [newRegistryContractList.isFetched, oldRegistryContractList.isFetched]);
+  const isInRegistry =
+    registry.isFetched &&
+    registry.data?.find(
+      (c) =>
+        contractAddress &&
+        c.address.toLowerCase() === contractAddress.toLowerCase(),
+    ) &&
+    registry.isSuccess;
 
   if (
     !walletAddress ||
@@ -102,7 +52,7 @@ export const PrimaryDashboardButton: React.FC<AddToDashboardCardProps> = ({
     return null;
   }
 
-  return isAlreadyOnDashboard ? (
+  return isInRegistry ? (
     <BuildAppsButton>Code Snippets</BuildAppsButton>
   ) : (
     <Button
@@ -117,8 +67,8 @@ export const PrimaryDashboardButton: React.FC<AddToDashboardCardProps> = ({
         opacity: 0.75,
       }}
       leftIcon={<Icon as={FiPlus} />}
-      isLoading={addContract.isLoading || statusUnknown}
-      isDisabled={!chain?.chainId || isAlreadyOnDashboard}
+      isLoading={addContract.isLoading}
+      isDisabled={!chain?.chainId}
       onClick={() => {
         if (!chain) {
           return;
@@ -143,7 +93,6 @@ export const PrimaryDashboardButton: React.FC<AddToDashboardCardProps> = ({
                 label: "success",
                 contractAddress,
               });
-              setAddedState("added");
             },
             onError: (err) => {
               onAddError(err);

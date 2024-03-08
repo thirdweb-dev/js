@@ -1,18 +1,95 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { useAddress, useSDK, useSigner } from "@thirdweb-dev/react";
 import {
   addContractToMultiChainRegistry,
   getGaslessPolygonSDK,
 } from "components/contract-components/utils";
 import { useAllChainsData } from "hooks/chains/allChains";
-import { getDashboardChainRpc } from "lib/rpc";
-import { getThirdwebSDK } from "lib/sdk";
 import invariant from "tiny-invariant";
+import { useSupportedChainsRecord } from "hooks/chains/configureChains";
+import { useMemo } from "react";
+import { getAllMultichainRegistry } from "dashboard-extensions/common/read/getAllMultichainRegistry";
+import { polygon } from "thirdweb/chains";
+import { getContract } from "thirdweb";
+import { defineDashboardChain, thirdwebClient } from "lib/thirdweb-client";
+import { BasicContract } from "contract-ui/types/types";
+
+export const MULTICHAIN_REGISTRY_ADDRESS =
+  "0xcdAD8FA86e18538aC207872E8ff3536501431B73";
+
+const registryContract = getContract({
+  client: thirdwebClient,
+  address: MULTICHAIN_REGISTRY_ADDRESS,
+  chain: defineDashboardChain(polygon.id),
+});
+
+export function useMultiChainRegContractList(walletAddress?: string) {
+  return useQuery(
+    ["dashboard-registry", walletAddress, "multichain-contract-list"],
+    async () => {
+      invariant(walletAddress, "walletAddress is required");
+      const contracts = await getAllMultichainRegistry({
+        contract: registryContract,
+        address: walletAddress,
+      });
+
+      return contracts;
+    },
+    {
+      enabled: !!walletAddress,
+    },
+  );
+}
+
+interface Options {
+  onlyMainnet?: boolean;
+}
+
+export const useAllContractList = (
+  walletAddress: string | undefined,
+  { onlyMainnet }: Options = { onlyMainnet: false },
+) => {
+  const multiChainQuery = useMultiChainRegContractList(walletAddress);
+
+  const configuredChainsRecord = useSupportedChainsRecord();
+  const contractList = useMemo(() => {
+    const data = multiChainQuery.data || [];
+
+    const mainnets: BasicContract[] = [];
+    const testnets: BasicContract[] = [];
+
+    data.forEach((net) => {
+      if (net.chainId in configuredChainsRecord) {
+        const chainRecord = configuredChainsRecord[net.chainId];
+        if (chainRecord.status !== "deprecated") {
+          if (chainRecord.testnet) {
+            testnets.push(net);
+          } else {
+            mainnets.push(net);
+          }
+        }
+      }
+    });
+
+    mainnets.sort((a, b) => a.chainId - b.chainId);
+
+    if (onlyMainnet) {
+      return mainnets;
+    }
+
+    testnets.sort((a, b) => a.chainId - b.chainId);
+    return mainnets.concat(testnets);
+  }, [multiChainQuery.data, onlyMainnet, configuredChainsRecord]);
+
+  return {
+    ...multiChainQuery,
+    data: contractList,
+  };
+};
 
 type RemoveContractParams = {
   contractAddress: string;
   chainId: number;
-  registry: "old" | "new";
 };
 
 export function useRemoveContractMutation() {
@@ -32,34 +109,13 @@ export function useRemoveContractMutation() {
       invariant(signer, "no wallet connected");
       invariant(data.chainId, "chainId not provided");
 
-      const { contractAddress, chainId, registry } = data;
+      const { contractAddress, chainId } = data;
 
-      // remove from old registry
-      if (registry === "old") {
-        const chain = chainIdToChainRecord[chainId];
-        if (!chain) {
-          throw new Error("chain not found");
-        }
-
-        const sdk = getThirdwebSDK(
-          chainId,
-          getDashboardChainRpc(chain),
-          undefined,
-          signer,
-        );
-
-        const oldRegistry = await sdk?.deployer.getRegistry();
-        return await oldRegistry?.removeContract(contractAddress);
-      }
-
-      // remove from new multichain registry
-      else {
-        const gaslessPolygonSDK = getGaslessPolygonSDK(signer);
-        return await gaslessPolygonSDK.multiChainRegistry?.removeContract({
-          address: contractAddress,
-          chainId: data.chainId,
-        });
-      }
+      const gaslessPolygonSDK = getGaslessPolygonSDK(signer);
+      return await gaslessPolygonSDK.multiChainRegistry?.removeContract({
+        address: contractAddress,
+        chainId,
+      });
     },
     {
       onSettled: () => {
@@ -86,7 +142,6 @@ export function useAddContractMutation() {
       invariant(walletAddress, "cannot add a contract without an address");
       invariant(sdk, "sdk not provided");
 
-      // add to new multichain registry
       return await addContractToMultiChainRegistry(
         {
           address: data.contractAddress,

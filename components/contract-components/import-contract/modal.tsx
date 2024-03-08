@@ -1,5 +1,7 @@
-import { useMultiChainRegContractList } from "@3rdweb-sdk/react";
-import { useAddContractMutation } from "@3rdweb-sdk/react/hooks/useRegistry";
+import {
+  useAddContractMutation,
+  useAllContractList,
+} from "@3rdweb-sdk/react/hooks/useRegistry";
 import {
   Flex,
   FormControl,
@@ -29,7 +31,7 @@ const defaultValues = {
 export const ImportModal: React.FC<ImportModalProps> = (props) => {
   const addToDashboard = useAddContractMutation();
   const address = useAddress();
-  const registry = useMultiChainRegContractList(address);
+  const registry = useAllContractList(address);
   const form = useForm({
     defaultValues,
   });
@@ -77,7 +79,7 @@ export const ImportModal: React.FC<ImportModalProps> = (props) => {
               return;
             }
 
-            const isOnRegistry =
+            const isInRegistry =
               registry.isFetched &&
               registry.data?.find(
                 (c) =>
@@ -86,7 +88,7 @@ export const ImportModal: React.FC<ImportModalProps> = (props) => {
               ) &&
               registry.isSuccess;
 
-            if (isOnRegistry) {
+            if (isInRegistry) {
               router.push(`/${chainSlug}/${data.contractAddress}`);
               setIsRedirecting(true);
               return;
