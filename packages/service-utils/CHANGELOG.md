@@ -1,8 +1,8 @@
 # @thirdweb-dev/service-utils
 
-## 0.5.0
+## 0.4.19
 
-### Minor Changes
+### Patch Changes
 
 - [#2431](https://github.com/thirdweb-dev/js/pull/2431) [`6cf298a`](https://github.com/thirdweb-dev/js/commit/6cf298a29a29e37cecb88953aab195db8934a740) Thanks [@edwardysun](https://github.com/edwardysun)! - Add pay to Services list
 
