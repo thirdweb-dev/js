@@ -16,7 +16,7 @@ import {
   useActiveWalletChain,
 } from "../../../../providers/wallet-provider.js";
 import { Spacer } from "../../../components/Spacer.js";
-import { Container, ModalHeader } from "../../../components/basic.js";
+import { Container } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
 import { iconSize } from "../../../design-system/index.js";
@@ -68,8 +68,7 @@ type Screen =
   | "select-to-token"
   | "select-from-chain"
   | "select-to-chain"
-  | "confirmation"
-  | "error";
+  | "confirmation";
 
 /**
  *
@@ -155,35 +154,6 @@ export function SwapScreenContent(props: {
     refetchInterval: 30 * 1000,
     gcTime: 30 * 1000,
   });
-
-  if (screen === "error") {
-    return (
-      <Container animate="fadein">
-        <Container p="lg">
-          <ModalHeader
-            title="Buy"
-            onBack={() => {
-              setScreen("main");
-            }}
-          />
-          <Spacer y="lg" />
-          <Container
-            flex="column"
-            gap="lg"
-            animate="fadein"
-            center="both"
-            style={{
-              minHeight: "240px",
-            }}
-            color={"danger"}
-          >
-            <CrossCircledIcon width={iconSize.xl} height={iconSize.xl} />
-            <Text color={"danger"}>Failed to swap</Text>
-          </Container>
-        </Container>
-      </Container>
-    );
-  }
 
   if (screen === "select-from-token") {
     return (
@@ -305,7 +275,7 @@ export function SwapScreenContent(props: {
     <Container animate="fadein">
       <Container p="lg">
         <BuyHeader onBack={props.onBack} />
-        <Spacer y="lg" />
+        <Spacer y="xl" />
 
         {/* From */}
         <SwapInput
@@ -322,7 +292,7 @@ export function SwapScreenContent(props: {
           onChainClick={() => setScreen("select-from-chain")}
         />
 
-        <Spacer y="lg" />
+        <Spacer y="md" />
 
         {/* To */}
         <SwapInput
