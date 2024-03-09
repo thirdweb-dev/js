@@ -1,7 +1,7 @@
 import { TokenBoundSmartWalletConfig } from "./types";
 import { ethers } from "ethers";
 import { SmartWalletConnector } from "../smart-wallet";
-import { FactoryContractInfo } from "../smart-wallet/types";
+import { FactoryContractInfoInternal } from "../smart-wallet/types";
 import { ERC6551_REGISTRY } from "../smart-wallet/lib/constants";
 
 export class TokenBoundSmartWalletConnector extends SmartWalletConnector {
@@ -16,7 +16,7 @@ export class TokenBoundSmartWalletConnector extends SmartWalletConnector {
     // TODO default account implementation address
   }
 
-  protected defaultFactoryInfo(): FactoryContractInfo {
+  protected defaultFactoryInfo(): FactoryContractInfoInternal {
     return {
       createAccount: async (factory) => {
         return factory.prepare("createAccount", [
