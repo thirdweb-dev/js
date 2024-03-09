@@ -1,5 +1,16 @@
 # @thirdweb-dev/wallets
 
+## 2.4.17
+
+### Patch Changes
+
+- [#2440](https://github.com/thirdweb-dev/js/pull/2440) [`c894270`](https://github.com/thirdweb-dev/js/commit/c894270401850575d1a4df73e16198177b46477a) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [Smart Wallet] Update Account Core ABI
+
+- [#2439](https://github.com/thirdweb-dev/js/pull/2439) [`332a145`](https://github.com/thirdweb-dev/js/commit/332a14552bf95e13e5220b1bd73414f000088568) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Make accountInfo/factoryInfo internal props optional in SmartWalletConfig
+
+- Updated dependencies [[`c6b025e`](https://github.com/thirdweb-dev/js/commit/c6b025e84451341f6f48c0a7c4b5f06b8e49d792)]:
+  - @thirdweb-dev/sdk@4.0.42
+
 ## 2.4.16
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @thirdweb-dev/sdk
 
+## 4.0.42
+
+### Patch Changes
+
+- [#2441](https://github.com/thirdweb-dev/js/pull/2441) [`c6b025e`](https://github.com/thirdweb-dev/js/commit/c6b025e84451341f6f48c0a7c4b5f06b8e49d792) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle L1 fees for OP chains in `estimateGasCost()`
+
 ## 4.0.41
 
 ### Patch Changes
