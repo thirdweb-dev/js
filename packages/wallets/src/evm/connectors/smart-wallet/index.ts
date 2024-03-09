@@ -4,9 +4,7 @@ import { ERC4337EthersProvider } from "./lib/erc4337-provider";
 import { getVerifyingPaymaster } from "./lib/paymaster";
 import { create4337Provider } from "./lib/provider-utils";
 import {
-  AccountContractInfo,
   AccountContractInfoInternal,
-  FactoryContractInfo,
   FactoryContractInfoInternal,
   ProviderConfig,
   SmartWalletConfig,
