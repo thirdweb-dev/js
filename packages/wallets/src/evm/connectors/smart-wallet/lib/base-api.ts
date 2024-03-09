@@ -360,7 +360,7 @@ export abstract class BaseAccountAPI {
         await httpRpcClient.getUserOperationReceipt(userOpHash);
       if (userOpReceipt) {
         // avoid desync with current provider state
-        return await this.provider.getTransactionReceipt(
+        return await this.provider.waitForTransaction(
           userOpReceipt.receipt.transactionHash,
         );
       }
