@@ -61,7 +61,7 @@ export {
 } from "../../extensions/uniswap/__generated__/IUniswapV3Factory/write/setOwner.js";
 
 export {
-  getUniswapV3Pool,
-  type GetUniswapV3PoolParams,
-  type GetUniswapV3PoolResult,
-} from "../../extensions/uniswap/read/getUniswapV3Pool.js";
+  getUniswapV3Pools as getUniswapV3Pool,
+  type GetUniswapV3PoolsParams as GetUniswapV3PoolParams,
+  type GetUniswapV3PoolsResult as GetUniswapV3PoolResult,
+} from "../../extensions/uniswap/read/getUniswapV3Pools.js";
