@@ -359,7 +359,10 @@ export abstract class BaseAccountAPI {
       const userOpReceipt =
         await httpRpcClient.getUserOperationReceipt(userOpHash);
       if (userOpReceipt) {
-        return userOpReceipt.receipt as providers.TransactionReceipt;
+        // avoid desync with current provider state
+        return await this.provider.getTransactionReceipt(
+          userOpReceipt.receipt.transactionHash,
+        );
       }
       await new Promise((resolve) => setTimeout(resolve, interval));
     }
