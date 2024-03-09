@@ -342,28 +342,28 @@ export abstract class BaseAccountAPI {
   }
 
   /**
-   * get the transaction that has this userOpHash mined, or null if not found
+   * get the transaction that has this userOpHash mined, or throws if not found
    * @param userOpHash - returned by sendUserOpToBundler (or by getUserOpHash..)
    * @param timeout - stop waiting after this timeout
    * @param interval - time to wait between polls.
-   * @returns The transactionHash this userOp was mined, or null if not found.
+   * @returns The transaction receipt, or an error if timed out.
    */
   async getUserOpReceipt(
+    httpRpcClient: HttpRpcClient,
     userOpHash: string,
-    timeout = 30000,
-    interval = 2000,
-  ): Promise<string | null> {
+    timeout = 120000,
+    interval = 1000,
+  ): Promise<providers.TransactionReceipt> {
     const endtime = Date.now() + timeout;
     while (Date.now() < endtime) {
-      const events = await this.entryPointView.queryFilter(
-        this.entryPointView.filters.UserOperationEvent(userOpHash),
-      );
-      if (events[0]) {
-        return events[0].transactionHash;
+      const userOpReceipt =
+        await httpRpcClient.getUserOperationReceipt(userOpHash);
+      if (userOpReceipt) {
+        return userOpReceipt.receipt as providers.TransactionReceipt;
       }
       await new Promise((resolve) => setTimeout(resolve, interval));
     }
-    return null;
+    throw new Error("Timeout waiting for userOp to be mined");
   }
 
   private unwrapBundlerError(error: any) {
