@@ -5,7 +5,6 @@ import { expect } from "chai";
 import { Wallet } from "ethers";
 
 require("dotenv-mono").load();
-jest.setTimeout(240_000);
 
 describe("Wallet Authentication - EVM - Smart Wallet", async () => {
   let adminWallet: any, signerWallet: any, attackerWallet: any;

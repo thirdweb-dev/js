@@ -132,9 +132,6 @@ importers:
       '@types/express':
         specifier: ^4.17.13
         version: 4.17.17
-      '@types/jest':
-        specifier: ^29.5.3
-        version: 29.5.3
       '@types/mocha':
         specifier: ^10.0.0
         version: 10.0.1
@@ -183,9 +180,6 @@ importers:
       fastify:
         specifier: ^4.25.2
         version: 4.25.2
-      jest:
-        specifier: ^29.6.2
-        version: 29.6.2(@types/node@18.17.1)(ts-node@10.9.1)
       mocha:
         specifier: ^10.2.0
         version: 10.2.0
