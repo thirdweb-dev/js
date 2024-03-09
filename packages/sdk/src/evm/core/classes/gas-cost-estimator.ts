@@ -36,11 +36,10 @@ export class GasCostEstimator<TContract extends BaseContract> {
     // eslint-disable-next-line @typescript-eslint/ban-types
     fn: keyof TContract["functions"] | (string & {}),
     args: Parameters<TContract["functions"][typeof fn]> | any[],
-    overrides?: CallOverrides,
   ): Promise<string> {
     const gasCost = await estimateTransactionCost(
       this.contractWrapper.getProvider(),
-      await this.contractWrapper.populateTx(fn, args, overrides),
+      await this.contractWrapper.populateTransaction(fn, args),
     );
     return toEther(gasCost);
   }
