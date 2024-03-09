@@ -1,7 +1,7 @@
 import { toEther } from "../../common/currency/toEther";
 import { estimateTransactionCost } from "../../common/gas-price";
 import { ContractWrapper } from "./internal/contract-wrapper";
-import { BaseContract, BigNumber, CallOverrides, utils } from "ethers";
+import { BaseContract, BigNumber, utils } from "ethers";
 
 /**
  * Estimates the gas cost of Contract calls
