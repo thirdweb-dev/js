@@ -1,6 +1,17 @@
 import { ChainId } from "../constants/chains/ChainId";
 import { BigNumber, utils, providers } from "ethers";
-import { Mumbai, Polygon, Flag, FlagTestnet } from "@thirdweb-dev/chains";
+import {
+  Mumbai,
+  Polygon,
+  Flag,
+  FlagTestnet,
+  Optimism,
+  OpSepoliaTestnet,
+  Base,
+  BaseSepoliaTestnet,
+  Zora,
+  ZoraSepoliaTestnet,
+} from "@thirdweb-dev/chains";
 
 type FeeData = {
   maxFeePerGas: null | BigNumber;
@@ -97,6 +108,35 @@ export async function getGasPrice(
   }
 
   return txGasPrice;
+}
+
+export async function estimateTransactionCost(
+  provider: providers.Provider,
+  tx: providers.TransactionRequest,
+) {
+  const chainId = (await provider.getNetwork()).chainId;
+  if (isOpStackChain(chainId)) {
+    const { asL2Provider } = await import("@eth-optimism/sdk");
+    const l2RpcProvider = asL2Provider(provider);
+    const l2GasCost = await l2RpcProvider.estimateTotalGasCost(tx);
+    return l2GasCost;
+  } else {
+    const gasLimit = tx.gasLimit || (await provider.estimateGas(tx));
+    const gasPrice = await getGasPrice(provider);
+    const gasCost = BigNumber.from(gasLimit).mul(gasPrice);
+    return gasCost;
+  }
+}
+
+function isOpStackChain(chainId: number) {
+  return (
+    chainId === Optimism.chainId ||
+    chainId === OpSepoliaTestnet.chainId ||
+    chainId === Base.chainId ||
+    chainId === BaseSepoliaTestnet.chainId ||
+    chainId === Zora.chainId ||
+    chainId === ZoraSepoliaTestnet.chainId
+  );
 }
 
 /**
