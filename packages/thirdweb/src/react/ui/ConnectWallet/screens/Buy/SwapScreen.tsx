@@ -16,7 +16,7 @@ import {
   useActiveWalletChain,
 } from "../../../../providers/wallet-provider.js";
 import { Spacer } from "../../../components/Spacer.js";
-import { Container, ModalHeader } from "../../../components/basic.js";
+import { Container, Line, ModalHeader } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
 import { iconSize } from "../../../design-system/index.js";
@@ -288,8 +288,10 @@ export function SwapScreenContent(props: {
           onChainClick={() => setScreen("select-to-chain")}
           onTokenClick={() => setScreen("select-to-token")}
         />
+      </Container>
+      <Line />
 
-        <Spacer y="lg" />
+      <Container p="lg">
         <PaymentSelection />
         <Spacer y="lg" />
 

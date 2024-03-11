@@ -19,6 +19,7 @@ import type { Chain } from "../../../../../../chains/types.js";
 import { Text } from "../../../../components/text.js";
 import type { NativeToken } from "../../nativeToken.js";
 import { TokenSelectorButton } from "./TokenSelector.js";
+import { ChainIcon } from "../../../../components/ChainIcon.js";
 
 /**
  * Shows an amount "value" and renders the selected token and chain
@@ -117,9 +118,9 @@ export function PayWithCrypto(props: {
             flex: 1,
           }}
         >
-          <Text size="sm">Balance:</Text>
+          <Text size="xs">Balance:</Text>
           {balanceQuery.data ? (
-            <Text size="sm" color="secondaryText">
+            <Text size="xs" color="secondaryText">
               {formatTokenBalance(balanceQuery.data, false)}
             </Text>
           ) : (
@@ -138,6 +139,7 @@ export function PayWithCrypto(props: {
           gap="xxs"
           onClick={props.onChainClick}
         >
+          <ChainIcon chain={chainQuery.data} size={iconSize.sm} />
           {chainQuery.data?.name || (
             <Skeleton width="90px" height={fontSize.xs} />
           )}
