@@ -21,7 +21,7 @@ const client = createThirdwebClient({
   config: { rpc: { maxBatchSize: 1 } },
 });
 
-const NEW_CONTRACT = getContract({
+const USDC_CONTRACT = getContract({
   chain: defineChain({
     id: 1,
     rpc: LOCAL_RPC,
@@ -75,7 +75,7 @@ const viemContract = viem.getContract({
 group("read contract (warm cache)", () => {
   bench("thirdweb", async () => {
     const bOf = await balanceOf({
-      contract: NEW_CONTRACT,
+      contract: USDC_CONTRACT,
       address: VITALIK_WALLET,
     });
     assert(bOf === 81831338n, "balanceOf should be 81831338");
