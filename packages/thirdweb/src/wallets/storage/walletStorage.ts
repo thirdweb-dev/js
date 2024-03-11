@@ -2,13 +2,20 @@ import type { AsyncStorage } from "./AsyncStorage.js";
 
 export const walletStorage: AsyncStorage = {
   async getItem(key: string) {
-    return localStorage.getItem(key);
+    if (typeof window !== "undefined" && window.localStorage) {
+      return localStorage.getItem(key);
+    }
+    return null;
   },
   async setItem(key: string, value: string) {
-    localStorage.setItem(key, value);
+    if (typeof window !== "undefined" && window.localStorage) {
+      localStorage.setItem(key, value);
+    }
   },
   async removeItem(key: string) {
-    localStorage.removeItem(key);
+    if (typeof window !== "undefined" && window.localStorage) {
+      localStorage.removeItem(key);
+    }
   },
 };
 

@@ -22,6 +22,14 @@ import {
 } from "../storage/walletStorage.js";
 import type { Chain } from "../../chains/types.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
+import { isContractDeployed } from "../../exports/utils.js";
+import {
+  prepareTransaction,
+  sendTransaction,
+  waitForReceipt,
+} from "../../exports/thirdweb.js";
+import type { SignableMessage } from "viem";
+import type { TransactionReceipt } from "../../transaction/types.js";
 
 /**
  * `smartWallet` allows you to connect to a [smart wallet](https://portal.thirdweb.com/glossary/smart-wallet) using a personal wallet (acting as the key to the smart wallet)
@@ -83,6 +91,8 @@ export class SmartWallet implements WalletWithPersonalWallet {
   personalWallet: Wallet | undefined;
   metadata: Wallet["metadata"];
   isSmartWallet: true;
+  factoryContract: ThirdwebContract;
+  accountContract?: ThirdwebContract | undefined;
 
   /**
    * Create an instance of the SmartWallet.
@@ -97,6 +107,11 @@ export class SmartWallet implements WalletWithPersonalWallet {
     this.metadata = options.metadata || smartWalletMetadata;
     this.isSmartWallet = true;
     this.chain = options.chain;
+    this.factoryContract = getContract({
+      client: options.client,
+      address: options.factoryAddress,
+      chain: options.chain,
+    });
   }
 
   /**
@@ -161,10 +176,21 @@ export class SmartWallet implements WalletWithPersonalWallet {
     saveConnectParamsToStorage(this.metadata.id, paramsToSave);
 
     // TODO: listen for chainChanged event on the personal wallet and emit the disconnect event on the smart wallet
+    const accountAddress = await predictAddress(this.factoryContract, {
+      personalAccount,
+      ...this.options,
+    });
+    this.accountContract = getContract({
+      client: this.options.client,
+      address: accountAddress,
+      chain: this.options.chain,
+    });
 
-    const account = await smartAccount({
+    const account = await createSmartAccount({
       ...this.options,
       personalAccount: personalAccount,
+      accountContract: this.accountContract,
+      factoryContract: this.factoryContract,
     });
 
     personalWalletToSmartAccountMap.set(connectionOptions.personalWallet, this);
@@ -213,25 +239,29 @@ export class SmartWallet implements WalletWithPersonalWallet {
     // estimation is done in createUnsignedUserOp
     return 0n;
   }
+
+  async deploy(): Promise<TransactionReceipt> {
+    if (!this.account || !this.accountContract) {
+      throw new Error("Not connected to a personal wallet");
+    }
+    return _deployAccount({
+      options: this.options,
+      account: this.account,
+      accountContract: this.accountContract,
+    });
+  }
 }
 
-async function smartAccount(
-  options: SmartWalletOptions & { personalAccount: Account },
+async function createSmartAccount(
+  options: SmartWalletOptions & {
+    personalAccount: Account;
+    factoryContract: ThirdwebContract;
+    accountContract: ThirdwebContract;
+  },
 ): Promise<Account> {
-  const factoryContract = getContract({
-    client: options.client,
-    address: options.factoryAddress,
-    chain: options.chain,
-  });
-  const accountAddress = await predictAddress(factoryContract, options);
-  const accountContract = getContract({
-    client: options.client,
-    address: accountAddress,
-    chain: options.chain,
-  });
-
-  return {
-    address: accountAddress,
+  const { accountContract, factoryContract } = options;
+  const account = {
+    address: accountContract.address,
     async sendTransaction(transaction: SendTransactionOption) {
       const executeTx = prepareExecute({
         accountContract,
@@ -258,14 +288,45 @@ async function smartAccount(
         options,
       });
     },
-    async signMessage({ message }) {
+    async signMessage({ message }: { message: SignableMessage }) {
       // TODO EIP712 domain separator
+      const isDeployed = await isContractDeployed(accountContract);
+      if (!isDeployed) {
+        console.log(
+          "Account contract not deployed yet. Deploying account before signing message",
+        );
+        await _deployAccount({
+          options,
+          account,
+          accountContract,
+        });
+      }
       return options.personalAccount.signMessage({ message });
     },
-    async signTypedData(typedData) {
+    async signTypedData(typedData: any) {
       return options.personalAccount.signTypedData(typedData);
     },
   };
+  return account;
+}
+
+async function _deployAccount(args: {
+  options: SmartWalletOptions;
+  account: Account;
+  accountContract: ThirdwebContract;
+}) {
+  const { options, account, accountContract } = args;
+  const dummyTx = prepareTransaction({
+    client: options.client,
+    chain: options.chain,
+    to: accountContract.address,
+    value: 0n,
+  });
+  const deployResult = await sendTransaction({
+    transaction: dummyTx,
+    account,
+  });
+  return waitForReceipt(deployResult);
 }
 
 async function _sendUserOp(args: {
