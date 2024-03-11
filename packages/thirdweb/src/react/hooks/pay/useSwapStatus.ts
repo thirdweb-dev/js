@@ -59,7 +59,10 @@ export function useSwapStatus(swapStatusParams: SwapTransaction | undefined) {
       }
 
       const swapStatus_ = await getSwapStatus(swapStatusParams);
-      if (swapStatus_.status === "DONE" || swapStatus_.status === "FAILED") {
+      if (
+        swapStatus_.status === "COMPLETED" ||
+        swapStatus_.status === "FAILED"
+      ) {
         setRefetchInterval(0);
       }
       return swapStatus_;
