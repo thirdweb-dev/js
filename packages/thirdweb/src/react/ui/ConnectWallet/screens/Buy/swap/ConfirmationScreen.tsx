@@ -99,6 +99,7 @@ export function ConfirmationScreen(props: {
         </Text>
       </BorderBox>
 
+      <Spacer y="lg" />
       <SwapFees quote={props.swapQuote} />
 
       <Spacer y="lg" />

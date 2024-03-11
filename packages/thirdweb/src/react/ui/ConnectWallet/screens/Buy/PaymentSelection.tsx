@@ -1,5 +1,5 @@
 import { Spacer } from "../../../components/Spacer.js";
-import { Container, ModalHeader } from "../../../components/basic.js";
+import { Container } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
 import { useCustomTheme } from "../../../design-system/CustomThemeProvider.js";
@@ -17,13 +17,11 @@ import styled from "@emotion/styled";
 /**
  * @internal
  */
-export function BuyHeader(props: { onBack?: () => void }) {
+export function PaymentSelection() {
   return (
     <div>
-      <ModalHeader title="Buy" onBack={props.onBack} />
-      <Spacer y="lg" />
       <Text size="sm">Pay with </Text>
-      <Spacer y="sm" />
+      <Spacer y="xs" />
       <Container
         style={{
           display: "grid",
@@ -71,6 +69,7 @@ const CheckButton = /* @__PURE__ */ styled(Button)((props: {
       : theme.colors.borderColor,
     gap: spacing.xs,
     paddingInline: spacing.xxs,
+    paddingBlock: spacing.sm,
     width: "100%",
   };
 });

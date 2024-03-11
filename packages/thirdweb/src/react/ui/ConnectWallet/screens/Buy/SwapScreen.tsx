@@ -16,7 +16,7 @@ import {
   useActiveWalletChain,
 } from "../../../../providers/wallet-provider.js";
 import { Spacer } from "../../../components/Spacer.js";
-import { Container } from "../../../components/basic.js";
+import { Container, ModalHeader } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
 import { iconSize } from "../../../design-system/index.js";
@@ -28,12 +28,13 @@ import {
   isNativeToken,
   type ERC20OrNativeToken,
 } from "../nativeToken.js";
-import { SwapInput } from "./swap/SwapInput.js";
+import { PayWithCrypto } from "./swap/PayWithCrypto.js";
 import { useChainsQuery } from "../../../../hooks/others/useChainQuery.js";
-import { BuyHeader } from "./BuyHeader.js";
+import { PaymentSelection } from "./PaymentSelection.js";
 import { WalletIcon } from "../../icons/WalletIcon.js";
 import { SwapFees } from "./swap/SwapFees.js";
 import { ConfirmationScreen } from "./swap/ConfirmationScreen.js";
+import { BuyTokenInput } from "./swap/BuyTokenInput.js";
 
 const supportedChainsObj = /* @__PURE__ */ (() =>
   swapSupportedChains.map(defineChain))();
@@ -223,7 +224,6 @@ export function SwapScreenContent(props: {
   }
 
   const swapQuote = swapQuoteQuery.data;
-  const isSwapQuoteLoading = swapQuoteQuery.isLoading;
   const isSwapQuoteError = swapQuoteQuery.isError;
   const isSwapQuoteFetching = swapQuoteQuery.isFetching;
 
@@ -274,46 +274,45 @@ export function SwapScreenContent(props: {
   return (
     <Container animate="fadein">
       <Container p="lg">
-        <BuyHeader onBack={props.onBack} />
-        <Spacer y="xl" />
+        <ModalHeader title="Buy" onBack={props.onBack} />
+        <Spacer y="lg" />
+
+        {/* To */}
+        <BuyTokenInput
+          value={destinationTokenAmount}
+          onChange={async (value) => {
+            setTokenAmount({ value, type: "destination" });
+          }}
+          token={toToken}
+          chain={toChain}
+          onChainClick={() => setScreen("select-to-chain")}
+          onTokenClick={() => setScreen("select-to-token")}
+        />
+
+        <Spacer y="lg" />
+        <PaymentSelection />
+        <Spacer y="lg" />
 
         {/* From */}
-        <SwapInput
+        <PayWithCrypto
           value={sourceTokenAmount}
-          onChange={async (value) => {
-            setTokenAmount({ value, type: "source" });
-          }}
-          label="From"
-          valueIsLoading={isSwapQuoteLoading && !sourceTokenAmount}
           onTokenClick={() => setScreen("select-from-token")}
           chain={fromChain}
           token={fromToken}
-          estimatedValue={swapQuote?.swapDetails.estimated.fromAmountUSDCents}
+          isLoading={swapQuoteQuery.isLoading && !sourceTokenAmount}
           onChainClick={() => setScreen("select-from-chain")}
         />
 
-        <Spacer y="md" />
-
-        {/* To */}
-        <SwapInput
-          value={destinationTokenAmount}
-          onChange={(value) => {
-            setTokenAmount({ value, type: "destination" });
-          }}
-          label="To"
-          valueIsLoading={isSwapQuoteLoading && !destinationTokenAmount}
-          onTokenClick={() => setScreen("select-to-token")}
-          chain={toChain}
-          token={toToken}
-          estimatedValue={swapQuote?.swapDetails.estimated.toAmountMinUSDCents}
-          onChainClick={() => setScreen("select-to-chain")}
-        />
-
-        {swapQuote && <SwapFees quote={swapQuote} />}
+        {swapQuoteQuery.data && (
+          <>
+            <Spacer y="lg" />
+            <SwapFees quote={swapQuoteQuery.data} />
+          </>
+        )}
 
         {isSwapQuoteError && (
           <div>
-            <Spacer y="md" />
+            <Spacer y="lg" />
             <Container flex="row" gap="xs" center="y" color="danger">
               <CrossCircledIcon width={iconSize.sm} height={iconSize.sm} />
               <Text color="danger" size="sm">
@@ -325,11 +324,11 @@ export function SwapScreenContent(props: {
 
         {!isSwapQuoteError && isNotEnoughBalance && (
           <div>
-            <Spacer y="md" />
+            <Spacer y="lg" />
             <Container flex="row" gap="xs" center="y" color="danger">
               <WalletIcon size={iconSize.xs} />
               <Text color="danger" size="sm">
-                Exceeds balance
+                Not enough balance
               </Text>
             </Container>
           </div>
