@@ -188,8 +188,8 @@ export async function getPolygonGasPriorityFee(
       const fixedFee = parseFloat(priorityFee).toFixed(9);
       return utils.parseUnits(fixedFee, "gwei");
     }
-  } catch (e) {
-    console.error("failed to fetch gas", e);
+  } catch {
+    // if the gas station is down, return the default gas fee
   }
   return getDefaultGasFee(chainId);
 }
