@@ -6,7 +6,7 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "addr" function.
  */
 export type AddrParams = {
-  name: AbiParameterToPrimitiveType<{ name: "name"; type: "bytes32" }>;
+  name: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "name" }>;
 };
 
 /**
@@ -31,13 +31,12 @@ export async function addr(options: BaseTransactionOptions<AddrParams>) {
       "0x3b3b57de",
       [
         {
-          name: "name",
           type: "bytes32",
+          name: "name",
         },
       ],
       [
         {
-          name: "",
           type: "address",
         },
       ],

@@ -6,8 +6,8 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "resolve" function.
  */
 export type ResolveParams = {
-  name: AbiParameterToPrimitiveType<{ name: "name"; type: "bytes" }>;
-  data: AbiParameterToPrimitiveType<{ name: "data"; type: "bytes" }>;
+  name: AbiParameterToPrimitiveType<{ type: "bytes"; name: "name" }>;
+  data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "data" }>;
 };
 
 /**
@@ -33,21 +33,19 @@ export async function resolve(options: BaseTransactionOptions<ResolveParams>) {
       "0x9061b923",
       [
         {
-          name: "name",
           type: "bytes",
+          name: "name",
         },
         {
-          name: "data",
           type: "bytes",
+          name: "data",
         },
       ],
       [
         {
-          name: "",
           type: "bytes",
         },
         {
-          name: "address",
           type: "address",
         },
       ],

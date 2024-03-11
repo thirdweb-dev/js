@@ -22,12 +22,6 @@ import {
 } from "../storage/walletStorage.js";
 import type { Chain } from "../../chains/types.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
-import { isContractDeployed } from "../../exports/utils.js";
-import {
-  prepareTransaction,
-  sendTransaction,
-  waitForReceipt,
-} from "../../exports/thirdweb.js";
 import type { SignableMessage } from "viem";
 import type { TransactionReceipt } from "../../transaction/types.js";
 
@@ -87,12 +81,12 @@ export class SmartWallet implements WalletWithPersonalWallet {
   private options: SmartWalletOptions;
   private chain?: Chain | undefined;
   private account?: Account | undefined;
+  private factoryContract: ThirdwebContract;
+  private accountContract?: ThirdwebContract | undefined;
 
   personalWallet: Wallet | undefined;
   metadata: Wallet["metadata"];
   isSmartWallet: true;
-  factoryContract: ThirdwebContract;
-  accountContract?: ThirdwebContract | undefined;
 
   /**
    * Create an instance of the SmartWallet.
@@ -177,7 +171,7 @@ export class SmartWallet implements WalletWithPersonalWallet {
 
     // TODO: listen for chainChanged event on the personal wallet and emit the disconnect event on the smart wallet
     const accountAddress = await predictAddress(this.factoryContract, {
-      personalAccount,
+      personalAccountAddress: personalAccount.address,
       ...this.options,
     });
     this.accountContract = getContract({
@@ -240,6 +234,14 @@ export class SmartWallet implements WalletWithPersonalWallet {
     return 0n;
   }
 
+  /**
+   * Force deploy the smart account onchain.
+   * @example
+   * ```ts
+   * const receipt = await wallet.deploy()
+   * ```
+   * @returns The transaction receipt.
+   */
   async deploy(): Promise<TransactionReceipt> {
     if (!this.account || !this.accountContract) {
       throw new Error("Not connected to a personal wallet");
@@ -249,6 +251,49 @@ export class SmartWallet implements WalletWithPersonalWallet {
       account: this.account,
       accountContract: this.accountContract,
     });
+  }
+
+  /**
+   * Check if the smart account is deployed onchain.
+   * @example
+   *  ```ts
+   * const isDeployed = await wallet.isDeployed()
+   * ```
+   * @returns A boolean indicating if the smart account is deployed.
+   * @throws Throws an error if not connected to a personal wallet.
+   */
+  async isDeployed(): Promise<boolean> {
+    if (!this.accountContract) {
+      throw new Error("Not connected to a personal wallet");
+    }
+    const { isContractDeployed } = await import(
+      "../../utils/bytecode/is-contract-deployed.js"
+    );
+    return isContractDeployed(this.accountContract);
+  }
+
+  /**
+   * Get the account contract.
+   * @example
+   * ```ts
+   * const accountContract = wallet.getAccountContract();
+   * ```
+   * @returns The account contract or undefined if not connected to a personal wallet.
+   */
+  getAccountContract(): ThirdwebContract | undefined {
+    return this.accountContract;
+  }
+
+  /**
+   * Get the factory contract.
+   * @example
+   * ```ts
+   * const factoryContract = wallet.getFactoryContract();
+   * ```
+   * @returns The factory contract.
+   */
+  getFactoryContract(): ThirdwebContract {
+    return this.factoryContract;
   }
 }
 
@@ -289,7 +334,19 @@ async function createSmartAccount(
       });
     },
     async signMessage({ message }: { message: SignableMessage }) {
-      // TODO EIP712 domain separator
+      const [
+        { isContractDeployed },
+        { readContract },
+        { encodeAbiParameters },
+        { hashMessage },
+        { checkContractWalletSignature },
+      ] = await Promise.all([
+        import("../../utils/bytecode/is-contract-deployed.js"),
+        import("../../transaction/read-contract.js"),
+        import("../../utils/abi/encodeAbiParameters.js"),
+        import("../../utils/hashing/hashMessage.js"),
+        import("../../extensions/erc1271/checkContractWalletSignature.js"),
+      ]);
       const isDeployed = await isContractDeployed(accountContract);
       if (!isDeployed) {
         console.log(
@@ -301,7 +358,57 @@ async function createSmartAccount(
           accountContract,
         });
       }
-      return options.personalAccount.signMessage({ message });
+
+      const originalMsgHash = hashMessage(message);
+      // check if the account contract supports EIP721 domain separator based signing
+      let factorySupports712 = false;
+      try {
+        // this will throw if the contract does not support it (old factories)
+        await readContract({
+          contract: accountContract,
+          method:
+            "function getMessageHash(bytes32 _hash) public view returns (bytes32)",
+          params: [originalMsgHash],
+        });
+        factorySupports712 = true;
+      } catch (e) {
+        // ignore
+      }
+
+      let sig: `0x${string}`;
+      if (factorySupports712) {
+        const wrappedMessageHash = encodeAbiParameters(
+          [{ type: "bytes32" }],
+          [originalMsgHash],
+        );
+        sig = await options.personalAccount.signTypedData({
+          domain: {
+            name: "Account",
+            version: "1",
+            chainId: options.chain.id,
+            verifyingContract: accountContract.address,
+          },
+          primaryType: "AccountMessage",
+          types: { AccountMessage: [{ name: "message", type: "bytes" }] },
+          message: { message: wrappedMessageHash },
+        });
+      } else {
+        sig = await options.personalAccount.signMessage({ message });
+      }
+
+      const isValid = await checkContractWalletSignature({
+        contract: accountContract,
+        message,
+        signature: sig,
+      });
+
+      if (isValid) {
+        return sig;
+      } else {
+        throw new Error(
+          "Unable to verify signature on smart account, please make sure the smart account is deployed and the signature is valid.",
+        );
+      }
     },
     async signTypedData(typedData: any) {
       return options.personalAccount.signTypedData(typedData);
@@ -316,6 +423,12 @@ async function _deployAccount(args: {
   accountContract: ThirdwebContract;
 }) {
   const { options, account, accountContract } = args;
+  const [{ sendTransaction }, { waitForReceipt }, { prepareTransaction }] =
+    await Promise.all([
+      import("../../transaction/actions/send-transaction.js"),
+      import("../../transaction/actions/wait-for-tx-receipt.js"),
+      import("../../transaction/prepare-transaction.js"),
+    ]);
   const dummyTx = prepareTransaction({
     client: options.client,
     chain: options.chain,
