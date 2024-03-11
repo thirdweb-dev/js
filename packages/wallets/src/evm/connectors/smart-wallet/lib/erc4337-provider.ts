@@ -123,13 +123,7 @@ export class ERC4337EthersProvider extends providers.BaseProvider {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         confirmations?: number,
       ): Promise<providers.TransactionReceipt> => {
-        const transactionReceipt =
-          await new Promise<providers.TransactionReceipt>((resolve, reject) => {
-            this.smartAccountAPI
-              .getUserOpReceipt(this.httpRpcClient, userOpHash)
-              .then(resolve)
-              .catch(reject);
-          });
+        const transactionReceipt = await this.smartAccountAPI.getUserOpReceipt(this.httpRpcClient, userOpHash)
         if (userOp.initCode.length !== 0) {
           // checking if the wallet has been deployed by the transaction; it must be if we are here
           await this.smartAccountAPI.checkAccountPhantom();
