@@ -235,13 +235,17 @@ export class LocalWallet implements Wallet {
    * ```
    * @param options - Options object of type `LocalWalletLoadOrCreateOptions`.
    * Refer to [`LocalWalletLoadOrCreateOptions`](https://portal.thirdweb.com/references/typescript/v5/LocalWalletLoadOrCreateOptions) for more details.
+   * @returns The `LocalWallet` instance
    */
-  async loadOrCreate(options: LocalWalletLoadOrCreateOptions) {
+  async loadOrCreate(
+    options: LocalWalletLoadOrCreateOptions,
+  ): Promise<LocalWallet> {
     if (await LocalWallet.getSavedData(options.storage)) {
       await this.load(options);
     } else {
       await this.generate();
     }
+    return this;
   }
 
   /**
@@ -255,8 +259,9 @@ export class LocalWallet implements Wallet {
    * await wallet.generate();
    * const account = await wallet.connect();
    * ```
+   * @returns The `LocalWallet` instance
    */
-  async generate() {
+  async generate(): Promise<LocalWallet> {
     if (this.account) {
       throw new Error("Account is already initialized");
     }
@@ -274,6 +279,7 @@ export class LocalWallet implements Wallet {
     this.mnemonic = mnemonic;
 
     this.account = viemToThirdwebAccount(hdAccount, this.options.client);
+    return this;
   }
 
   /**
@@ -287,8 +293,9 @@ export class LocalWallet implements Wallet {
    * ```
    * @param options - The `options` object must be of type `LocalWalletImportOptions`
    * Refer to [`LocalWalletImportOptions`](https://portal.thirdweb.com/references/typescript/v5/LocalWalletImportOptions) for more details.
+   * @returns The `LocalWallet` instance
    */
-  async import(options: LocalWalletImportOptions): Promise<void> {
+  async import(options: LocalWalletImportOptions): Promise<LocalWallet> {
     if (this.account) {
       throw new Error("wallet is already initialized");
     }
@@ -336,6 +343,7 @@ export class LocalWallet implements Wallet {
     } else {
       throw new Error("invalid import strategy");
     }
+    return this;
   }
 
   /**
@@ -351,8 +359,9 @@ export class LocalWallet implements Wallet {
    *  }
    * });
    * ```
+   * @returns The `LocalWallet` instance
    */
-  async load(options: LocalWalletLoadOptions): Promise<void> {
+  async load(options: LocalWalletLoadOptions): Promise<LocalWallet> {
     if (this.account) {
       throw new Error("wallet is already initialized");
     }
@@ -396,6 +405,7 @@ export class LocalWallet implements Wallet {
     } else {
       throw new Error("invalid load strategy");
     }
+    return this;
   }
 
   /**

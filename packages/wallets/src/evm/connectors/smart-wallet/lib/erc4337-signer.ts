@@ -1,5 +1,4 @@
 import { Contract, ethers, providers, utils } from "ethers";
-
 import { Bytes, Signer } from "ethers";
 import { BaseAccountAPI } from "./base-api";
 import type { ERC4337EthersProvider } from "./erc4337-provider";
@@ -7,12 +6,10 @@ import { HttpRpcClient } from "./http-rpc-client";
 import { hexlifyUserOp, randomNonce } from "./utils";
 import { ProviderConfig, UserOpOptions } from "../types";
 import { signTypedDataInternal } from "@thirdweb-dev/sdk";
-import {
-  checkContractWalletSignature,
-  chainIdToThirdwebRpc,
-} from "../../../wallets/abstract";
+import { chainIdToThirdwebRpc } from "../../../wallets/abstract";
 import { setAnalyticsHeaders } from "../../../utils/headers";
 import { isTwUrl } from "../../../utils/url";
+import { checkContractWalletSignature } from "./check-contract-wallet-signature";
 
 export class ERC4337EthersSigner extends Signer {
   config: ProviderConfig;

@@ -1,9 +1,9 @@
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { toTokens } from "../../../utils/units.js";
+import { symbol } from "../../common/read/symbol.js";
+import { name } from "../../common/read/name.js";
 import { balanceOf } from "../__generated__/IERC20/read/balanceOf.js";
-import { decimals } from "../__generated__/IERC20/read/decimals.js";
-import { name } from "../__generated__/IERC20/read/name.js";
-import { symbol } from "../__generated__/IERC20/read/symbol.js";
+import { decimals } from "./decimals.js";
 /**
  * Represents the parameters for retrieving the balance of an address.
  */

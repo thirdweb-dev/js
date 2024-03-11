@@ -77,6 +77,10 @@ export {
   setTokenURI,
   type SetTokenURIParams,
 } from "../../extensions/erc721/__generated__/INFTMetadata/write/setTokenURI.js";
+export {
+  lazyMint,
+  type LazyMintParams,
+} from "../../extensions/erc721/write/lazyMint.js";
 /**
  * EVENTS extension for ERC721
  */
