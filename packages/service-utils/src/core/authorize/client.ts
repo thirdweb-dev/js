@@ -52,7 +52,9 @@ export function authorizeClient(
   if (origin) {
     if (
       // find matching domain, or if all domains allowed
-      domains.find((d) => {
+      // embedded-wallet.thirdweb.com is automatically allowed
+      // because the rpc is passed from user's doamin to embedded-wallet.thirdweb.com iframe for use.
+      [...domains, "embedded-wallet.thirdweb.com"].find((d) => {
         // if any domain is allowed, we'll return true
         if (d === "*") {
           return true;
