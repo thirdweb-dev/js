@@ -58,7 +58,6 @@ const ConnectLanding: ThirdwebNextPage = () => {
     >
       <Container
         maxW="container.page"
-        as={Flex}
         flexDir="column"
         gap={{ base: "80px", md: "120px" }}
       >
