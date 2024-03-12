@@ -5,7 +5,7 @@ import { Heading, TrackedLink } from "tw-components";
 
 export const AnnouncementBanner = () => {
   const [hasDismissedAnnouncement, setHasDismissedAnnouncement] =
-    useLocalStorage("dismissed-free-trial", false, true);
+    useLocalStorage("dismissed-op-superchain", false, true);
 
   if (hasDismissedAnnouncement) {
     return null;
@@ -27,9 +27,9 @@ export const AnnouncementBanner = () => {
       >
         <Box display={{ base: "none", md: "block" }} />
         <TrackedLink
-          href="/dashboard/settings/billing?claimGrowth"
+          href="/grant/superchain"
           category="announcement"
-          label="growthTrialBanner"
+          label="op-superchain-banner"
         >
           <Container maxW="container.page" display="flex" px={0}>
             <Flex
@@ -46,7 +46,8 @@ export const AnnouncementBanner = () => {
                 color="white"
                 fontWeight={500}
               >
-                1-month free trial on our Growth plan
+                Introducing the Superchain App Accelerator — a $3M fund for
+                Superchain apps. Apply for credits.
               </Heading>
               <Icon display={{ base: "none", md: "block" }} as={FiArrowRight} />
             </Flex>
