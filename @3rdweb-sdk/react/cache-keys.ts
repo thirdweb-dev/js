@@ -70,6 +70,9 @@ export const engineKeys = {
     ["backendWallet", address, chainId] as const,
   backendWalletBalance: (address: string, chainId: number) =>
     [...engineKeys.backendWallet(address, chainId), "balance"] as const,
+  currentVersion: (instance: string) =>
+    [...engineKeys.all, instance, "version"] as const,
+  latestVersion: () => [...engineKeys.all, "latestVersion"] as const,
 };
 
 export const paymentsKeys = {

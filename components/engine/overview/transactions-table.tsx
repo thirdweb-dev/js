@@ -1,29 +1,14 @@
-import { useApiAuthToken } from "@3rdweb-sdk/react/hooks/useApi";
 import { Transaction } from "@3rdweb-sdk/react/hooks/useEngine";
 import {
+  Collapse,
+  Divider,
+  DrawerHeader,
   Flex,
   FormControl,
-  IconButton,
-  DrawerHeader,
   Stack,
   Tooltip,
   UseDisclosureReturn,
   useDisclosure,
-  Divider,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  Stepper,
-  Step,
-  StepIndicator,
-  StepStatus,
-  StepIcon,
-  StepNumber,
-  StepSeparator,
-  Collapse,
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { Chain } from "@thirdweb-dev/chains";
@@ -32,20 +17,20 @@ import { TWTable } from "components/shared/TWTable";
 import { format } from "date-fns/format";
 import { formatDistanceToNowStrict } from "date-fns/formatDistanceToNowStrict";
 import { useAllChainsData } from "hooks/chains/allChains";
-import { useTxNotifications } from "hooks/useTxNotifications";
-import { useRef, useState } from "react";
-import { FiArrowLeft, FiArrowRight, FiInfo, FiTrash } from "react-icons/fi";
+import { useState } from "react";
+import { FiArrowLeft, FiArrowRight, FiInfo } from "react-icons/fi";
 import {
-  Card,
+  Badge,
   Button,
+  Card,
   Drawer,
   FormLabel,
+  Heading,
   LinkButton,
   Text,
-  Badge,
-  Heading,
 } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
+import { TransactionTimeline } from "./transaction-timeline";
 
 interface TransactionsTableProps {
   transactions: Transaction[];
@@ -162,12 +147,6 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
           return null;
         }
 
-        const showCancelTransactionButton = [
-          "processed",
-          "queued",
-          "sent",
-        ].includes(status);
-
         const tooltip =
           status === "errored"
             ? errorMessage
@@ -204,12 +183,6 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
                 </Flex>
               </Badge>
             </Tooltip>
-            {showCancelTransactionButton && (
-              <CancelTransactionButton
-                transaction={transaction}
-                instanceUrl={instanceUrl}
-              />
-            )}
           </Flex>
         );
       },
@@ -220,12 +193,6 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
         return <AddressCopyButton size="xs" address={cell.getValue() ?? ""} />;
       },
     }),
-    // columnHelper.accessor("toAddress", {
-    //   header: "To",
-    //   cell: (cell) => {
-    //     return <AddressCopyButton size="xs" address={cell.getValue() ?? ""} />;
-    //   },
-    // }),
     columnHelper.accessor("transactionHash", {
       header: "Tx Hash",
       cell: (cell) => {
@@ -303,6 +270,7 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
       {transactionDisclosure.isOpen && selectedTransaction && (
         <TransactionDetailsDrawer
           transaction={selectedTransaction}
+          instanceUrl={instanceUrl}
           disclosure={transactionDisclosure}
           onClickPrevious={
             idx > 0
@@ -320,138 +288,15 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
   );
 };
 
-const CancelTransactionButton = ({
-  transaction,
-  instanceUrl,
-}: {
-  transaction: Transaction;
-  instanceUrl: string;
-}) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const auth = useApiAuthToken();
-  const { onSuccess, onError } = useTxNotifications(
-    "Successfully sent a request to cancel the transaction",
-    "Failed to cancel transaction",
-  );
-  const closeButtonRef = useRef<HTMLButtonElement>(null);
-
-  const onClickContinue = async () => {
-    try {
-      const resp = await fetch(`${instanceUrl}transaction/cancel`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${auth.token}`,
-          "x-backend-wallet-address": transaction.fromAddress ?? "",
-        },
-        body: JSON.stringify({ queueId: transaction.queueId }),
-      });
-      if (!resp.ok) {
-        const json = await resp.json();
-        throw json.error?.message;
-      }
-      onSuccess();
-    } catch (e) {
-      console.error("Cancelling transaction:", e);
-      onError(e);
-    }
-
-    onClose();
-  };
-
-  return (
-    <>
-      <Modal isOpen={isOpen} onClose={onClose} initialFocusRef={closeButtonRef}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Cancel Transaction</ModalHeader>
-          <ModalBody>
-            <Stack gap={4}>
-              <Text>Are you sure you want to cancel this transaction?</Text>
-              <FormControl>
-                <FormLabel>Queue ID</FormLabel>
-                <Text fontFamily="mono">{transaction.queueId}</Text>
-              </FormControl>
-              <FormControl>
-                <FormLabel>Submitted at</FormLabel>
-                <Text>
-                  {format(new Date(transaction.queuedAt ?? ""), "PP pp z")}
-                </Text>
-              </FormControl>
-              <FormControl>
-                <FormLabel>From</FormLabel>
-                <AddressCopyButton
-                  address={transaction.fromAddress ?? ""}
-                  size="xs"
-                  shortenAddress={false}
-                />
-              </FormControl>
-              <FormControl>
-                <FormLabel>To</FormLabel>
-                <AddressCopyButton
-                  address={transaction.toAddress ?? ""}
-                  size="xs"
-                  shortenAddress={false}
-                />
-              </FormControl>
-              <FormControl>
-                <FormLabel>Function</FormLabel>
-                <Text fontFamily="mono">{transaction.functionName}</Text>
-              </FormControl>
-
-              <Text>
-                If this transaction is already submitted, it may complete before
-                the cancellation is submitted.
-              </Text>
-            </Stack>
-          </ModalBody>
-
-          <ModalFooter as={Flex} gap={3}>
-            <Button
-              ref={closeButtonRef}
-              type="button"
-              onClick={onClose}
-              variant="ghost"
-            >
-              Close
-            </Button>
-            <Button type="submit" colorScheme="red" onClick={onClickContinue}>
-              Cancel transaction
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-
-      <Tooltip
-        borderRadius="md"
-        bg="transparent"
-        boxShadow="none"
-        label={
-          <Card bgColor="backgroundHighlight">
-            <Text>Cancel transaction</Text>
-          </Card>
-        }
-      >
-        <IconButton
-          aria-label="Cancel transaction"
-          icon={<FiTrash />}
-          colorScheme="red"
-          variant="ghost"
-          size="xs"
-          onClick={onOpen}
-        />
-      </Tooltip>
-    </>
-  );
-};
-
 const TransactionDetailsDrawer = ({
   transaction,
+  instanceUrl,
   disclosure,
   onClickPrevious,
   onClickNext,
 }: {
   transaction: Transaction;
+  instanceUrl: string;
   disclosure: UseDisclosureReturn;
   onClickPrevious?: () => void;
   onClickNext?: () => void;
@@ -473,51 +318,6 @@ const TransactionDetailsDrawer = ({
     transaction.extension && transaction.extension !== "none"
       ? `${transaction.extension} ${transaction.functionName}`
       : transaction.functionName ?? null;
-
-  const prettyPrintTimestamp = (t: string, showDate = false) => {
-    const date = new Date(t);
-    return showDate
-      ? date.toLocaleString(undefined, { timeZoneName: "short" })
-      : date.toLocaleTimeString(undefined, { timeZoneName: "short" });
-  };
-
-  // Build the timeline which should be one of:
-  // - Queued                   - queued
-  // - Queued, Sent             - submitted to mempool
-  // - Queued, Sent, Mined      - mined successfully
-  // - Queued, Sent, Canceled   - canceled
-  // - Queued, Errored          - errored before mempool
-  // - Queued, Sent, Errored    - errored after sending to mempool
-  const timeline = [
-    {
-      title: "Queued",
-      description: transaction.queuedAt
-        ? prettyPrintTimestamp(transaction.queuedAt, true)
-        : undefined,
-    },
-  ];
-  if (transaction.sentAt) {
-    timeline.push({
-      title: "Sent",
-      description: prettyPrintTimestamp(transaction.sentAt),
-    });
-  }
-  if (transaction.minedAt) {
-    timeline.push({
-      title: "Mined",
-      description: prettyPrintTimestamp(transaction.minedAt),
-    });
-  } else if (transaction.cancelledAt) {
-    timeline.push({
-      title: "Canceled",
-      description: prettyPrintTimestamp(transaction.cancelledAt),
-    });
-  } else if (transaction.errorMessage) {
-    timeline.push({
-      title: "Errored",
-      description: undefined,
-    });
-  }
 
   let txFeeDisplay = "N/A";
   if (transaction.gasLimit && transaction.gasPrice) {
@@ -646,34 +446,10 @@ const TransactionDetailsDrawer = ({
 
         <Divider />
 
-        <Stepper
-          index={timeline.length + 1}
-          orientation="vertical"
-          height="120px"
-          gap="0"
-          size="xs"
-        >
-          {timeline.map((step, index) => (
-            <Step key={index} as={Flex} w="full">
-              <StepIndicator>
-                <StepStatus
-                  complete={<StepIcon />}
-                  incomplete={<StepNumber />}
-                  active={<StepNumber />}
-                />
-              </StepIndicator>
-
-              <Flex justify="space-between" w="full">
-                <FormLabel m={0}>{step.title}</FormLabel>
-                <Text fontSize="small" mt={-1}>
-                  {step.description}
-                </Text>
-              </Flex>
-
-              <StepSeparator />
-            </Step>
-          ))}
-        </Stepper>
+        <TransactionTimeline
+          transaction={transaction}
+          instanceUrl={instanceUrl}
+        />
 
         <Divider />
 

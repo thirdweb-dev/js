@@ -1,20 +1,21 @@
+import { EngineInstance } from "@3rdweb-sdk/react/hooks/useEngine";
 import {
-  Flex,
+  Box,
   ButtonGroup,
   Divider,
-  Tooltip,
-  Box,
+  Flex,
   Stack,
+  Tooltip,
 } from "@chakra-ui/react";
+import { useTrack } from "hooks/analytics/useTrack";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { Card, Button, Text, Heading } from "tw-components";
+import { FiArrowLeft } from "react-icons/fi";
+import { Button, Card, Heading, Text } from "tw-components";
+import { EngineVersionBadge } from "./badges/version";
 import { EngineConfiguration } from "./configuration/engine-configuration";
 import { EngineExplorer } from "./explorer/engine-explorer";
 import { EngineOverview } from "./overview/engine-overview";
 import { EnginePermissions } from "./permissions/engine-permissions";
-import { useTrack } from "hooks/analytics/useTrack";
-import { EngineInstance } from "@3rdweb-sdk/react/hooks/useEngine";
-import { FiArrowLeft } from "react-icons/fi";
 import { EngineRelayer } from "./relayer/engine-relayer";
 
 interface EngineNavigationProps {
@@ -93,9 +94,12 @@ export const EngineNavigation: React.FC<EngineNavigationProps> = ({
           {instance.name}
         </Heading>
 
-        {!instance.name.startsWith("https://") && (
-          <Text color="gray.600">{instance.url}</Text>
-        )}
+        <Flex gap={3} alignItems="center">
+          {!instance.name.startsWith("https://") && (
+            <Text color="gray.600">{instance.url}</Text>
+          )}
+          <EngineVersionBadge instance={instance} />
+        </Flex>
       </Stack>
 
       <Flex flexDir="column" gap={{ base: 0, md: 4 }} mb={4} mt={4}>

@@ -89,6 +89,61 @@ export function useEngineBackendWallets(instance: string) {
   );
 }
 
+export function useEngineCurrentVersion(instance: string) {
+  return useQuery(
+    engineKeys.currentVersion(instance),
+    async () => {
+      const res = await fetch(`${instance}system/health`);
+      if (!res.ok) {
+        throw new Error(`Unexpected status ${res.status}`);
+      }
+      const json = await res.json();
+      return json.engineVersion as string;
+    },
+    { enabled: !!instance },
+  );
+}
+
+export function useEngineLatestVersion() {
+  return useQuery(engineKeys.latestVersion(), async () => {
+    const res = await fetch(`${THIRDWEB_API_HOST}/v1/engine/latest-version`, {
+      method: "GET",
+      credentials: "include",
+    });
+    if (!res.ok) {
+      throw new Error(`Unexpected status ${res.status}`);
+    }
+    const json = await res.json();
+    return json.data.version as string;
+  });
+}
+
+export interface UpdateVersionInput {
+  engineId: string;
+}
+
+export function useEngineUpdateVersion() {
+  return useMutation(async (input: UpdateVersionInput) => {
+    invariant(input.engineId, "engineId is required");
+
+    const res = await fetch(`${THIRDWEB_API_HOST}/v1/engine/update-version`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        engineId: input.engineId,
+      }),
+    });
+    if (!res.ok) {
+      throw new Error(`Unexpected status ${res.status}`);
+    }
+    // The response body is unused if 2xx.
+    res.body?.cancel();
+  });
+}
+
 export type Transaction = {
   queueId?: string | null;
   chainId?: string | null;

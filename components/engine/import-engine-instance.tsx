@@ -10,11 +10,13 @@ import {
   ModalHeader,
   ModalOverlay,
   Stack,
+  UseDisclosureReturn,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import { THIRDWEB_API_HOST } from "constants/urls";
 import { useTrack } from "hooks/analytics/useTrack";
+import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useForm } from "react-hook-form";
 import { Button, FormLabel, Text, TrackedLink } from "tw-components";
 
@@ -25,7 +27,11 @@ interface ImportEngineInstanceButtonProps {
 export const ImportEngineInstanceButton = ({
   refetch,
 }: ImportEngineInstanceButtonProps) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const hasImportUrl = !!useSingleQueryParam("importUrl");
+
+  const disclosure = useDisclosure({
+    defaultIsOpen: !!hasImportUrl,
+  });
   const trackEvent = useTrack();
 
   return (
@@ -37,26 +43,19 @@ export const ImportEngineInstanceButton = ({
             action: "import",
             label: "open-modal",
           });
-          onOpen();
+          disclosure.onOpen();
         }}
         variant="outline"
       >
         Import
       </Button>
 
-      <Modal isOpen={isOpen} onClose={onClose} isCentered size="lg">
-        <ModalOverlay />
-        <ModalContent>
-          <ModalCloseButton />
-          <ModalImportEngine
-            onClose={onClose}
-            onSuccess={() => {
-              onClose();
-              refetch();
-            }}
-          />
-        </ModalContent>
-      </Modal>
+      {disclosure.isOpen && (
+        <ModalImportEngine
+          disclosure={disclosure}
+          onSuccess={() => refetch()}
+        />
+      )}
     </>
   );
 };
@@ -67,17 +66,19 @@ interface ImportEngineInput {
 }
 
 const ModalImportEngine = ({
-  onClose,
+  disclosure,
   onSuccess,
 }: {
-  onClose: () => void;
+  disclosure: UseDisclosureReturn;
   onSuccess: () => void;
 }) => {
   const toast = useToast();
+  const defaultUrl = useSingleQueryParam("importUrl");
 
   const form = useForm<ImportEngineInput>({
     defaultValues: {
       name: "My Engine Instance",
+      url: defaultUrl ? decodeURIComponent(defaultUrl) : undefined,
     },
   });
 
@@ -101,6 +102,7 @@ const ModalImportEngine = ({
         throw new Error(`Unexpected status ${res.status}`);
       }
 
+      disclosure.onClose();
       onSuccess();
     } catch (e) {
       toast({
@@ -112,52 +114,63 @@ const ModalImportEngine = ({
   };
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)}>
-      <ModalHeader>Import Engine Instance</ModalHeader>
+    <Modal
+      isOpen={disclosure.isOpen}
+      onClose={disclosure.onClose}
+      isCentered
+      size="lg"
+    >
+      <ModalOverlay />
+      <ModalContent>
+        <ModalCloseButton />
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <ModalHeader>Import Engine Instance</ModalHeader>
 
-      <ModalBody>
-        <Stack spacing={4}>
-          <Text>
-            Import an Engine instance hosted on your infrastructure.
-            <br />
-            <TrackedLink
-              href="https://portal.thirdweb.com/infrastructure/engine/get-started"
-              isExternal
-              category="engine"
-              label="clicked-self-host-instructions"
-              color="blue.500"
-            >
-              Get help setting up Engine for free.
-            </TrackedLink>
-          </Text>
-          <FormControl>
-            <FormLabel>Name</FormLabel>
-            <Input
-              type="text"
-              placeholder="Enter a descriptive label"
-              autoFocus
-              {...form.register("name")}
-            />
-          </FormControl>
-          <FormControl isRequired>
-            <FormLabel>URL</FormLabel>
-            <Input
-              type="url"
-              placeholder="Enter your Engine URL"
-              {...form.register("url")}
-            />
-          </FormControl>
-        </Stack>
-      </ModalBody>
+          <ModalBody>
+            <Stack spacing={4}>
+              <Text>
+                Import an Engine instance hosted on your infrastructure.
+                <br />
+                <TrackedLink
+                  href="https://portal.thirdweb.com/infrastructure/engine/get-started"
+                  isExternal
+                  category="engine"
+                  label="clicked-self-host-instructions"
+                  color="blue.500"
+                >
+                  Get help setting up Engine for free.
+                </TrackedLink>
+              </Text>
+              <FormControl>
+                <FormLabel>Name</FormLabel>
+                <Input
+                  type="text"
+                  placeholder="Enter a descriptive label"
+                  autoFocus
+                  {...form.register("name")}
+                />
+              </FormControl>
+              <FormControl isRequired>
+                <FormLabel>URL</FormLabel>
+                <Input
+                  type="url"
+                  placeholder="Enter your Engine URL"
+                  {...form.register("url")}
+                />
+              </FormControl>
+            </Stack>
+          </ModalBody>
 
-      <ModalFooter as={Flex} gap={3}>
-        <Button onClick={onClose} variant="ghost">
-          Cancel
-        </Button>
-        <Button type="submit" colorScheme="primary">
-          Import
-        </Button>
-      </ModalFooter>
-    </form>
+          <ModalFooter as={Flex} gap={3}>
+            <Button onClick={disclosure.onClose} variant="ghost">
+              Cancel
+            </Button>
+            <Button type="submit" colorScheme="primary">
+              Import
+            </Button>
+          </ModalFooter>
+        </form>
+      </ModalContent>
+    </Modal>
   );
 };

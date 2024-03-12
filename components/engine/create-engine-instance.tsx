@@ -18,6 +18,7 @@ import { OnboardingBilling } from "components/onboarding/Billing";
 import { OnboardingModal } from "components/onboarding/Modal";
 import { THIRDWEB_API_HOST } from "constants/urls";
 import { useTrack } from "hooks/analytics/useTrack";
+import { useSingleQueryParam } from "hooks/useQueryParam";
 import { FiPlus } from "react-icons/fi";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import { Button, Card, Heading, Text } from "tw-components";
@@ -29,12 +30,9 @@ interface CreateEngineInstanceButtonProps {
 export const CreateEngineInstanceButton = ({
   refetch,
 }: CreateEngineInstanceButtonProps) => {
-  const showModalOnLoad =
-    window &&
-    new URLSearchParams(window.location.search).has("requestCloudHosted");
-
-  const cloudHostedModalDisclosure = useDisclosure({
-    defaultIsOpen: showModalOnLoad,
+  const showModalOnLoad = useSingleQueryParam("requestCloudHosted");
+  const disclosure = useDisclosure({
+    defaultIsOpen: showModalOnLoad !== undefined,
   });
   const paymentDisclosure = useDisclosure();
   const trackEvent = useTrack();
@@ -93,7 +91,7 @@ export const CreateEngineInstanceButton = ({
             action: "click",
             label: "add-engine-instance",
           });
-          cloudHostedModalDisclosure.onOpen();
+          disclosure.onOpen();
         }}
         colorScheme="blue"
         leftIcon={<Icon as={FiPlus} boxSize={4} />}
@@ -101,15 +99,15 @@ export const CreateEngineInstanceButton = ({
         Create instance
       </Button>
 
-      {cloudHostedModalDisclosure.isOpen && (
+      {disclosure.isOpen && (
         <RequestCloudHostedEngineModal
           hasValidPayment={
             accountQuery.data?.status === AccountStatus.ValidPayment
           }
-          disclosure={cloudHostedModalDisclosure}
+          disclosure={disclosure}
           onConfirm={async () => {
             await requestCloudHostedEngine();
-            cloudHostedModalDisclosure.onClose();
+            disclosure.onClose();
           }}
           onAddPaymentMethod={() => {
             trackEvent({
@@ -119,7 +117,7 @@ export const CreateEngineInstanceButton = ({
             });
 
             // Switch the Cloud-hosted Engine modal with the Add Payment modal.
-            cloudHostedModalDisclosure.onClose();
+            disclosure.onClose();
             paymentDisclosure.onOpen();
           }}
         />
@@ -228,7 +226,7 @@ const RequestCloudHostedEngineModal = ({
               </Button>
               <Text size="body.sm" textAlign="center">
                 We will reach out within 1 business day. You won&apos;t be
-                charged until your Engine instance is active.
+                charged until your Engine instance is deployed.
               </Text>
             </VStack>
           </Card>
