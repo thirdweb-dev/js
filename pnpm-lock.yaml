@@ -377,8 +377,8 @@ importers:
   packages/contracts-js:
     dependencies:
       '@thirdweb-dev/contracts':
-        specifier: 3.11.1
-        version: 3.11.1(ethers@5.7.2)
+        specifier: 3.11.2
+        version: 3.11.2(ethers@5.7.2)
     devDependencies:
       '@babel/preset-env':
         specifier: ^7.23.8
@@ -12323,8 +12323,8 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  /@thirdweb-dev/contracts@3.11.1(ethers@5.7.2):
-    resolution: {integrity: sha512-tcOlL52QNZQrHZJgU6yygDQxOLlS+Mq3UNDxlalQ0rDm1iIKs31fdUqqkYFtF52Qek3b0JXRKf9/dTYldcGZhg==}
+  /@thirdweb-dev/contracts@3.11.2(ethers@5.7.2):
+    resolution: {integrity: sha512-rwPFko1BJ1w4sZ6DxULCFqAaR1HObj3xEhUoQErLuhdTw+77g8Ymg4ZNVuzaSDfQZzqecLiF/YL7h/9z/zEfCQ==}
     engines: {node: '>=18.0.0'}
     dependencies:
       '@chainlink/contracts': 0.6.1(ethers@5.7.2)
@@ -18277,7 +18277,7 @@ packages:
       minimatch: 3.1.2
       object.values: 1.1.6
       resolve: 1.22.1
-      semver: 7.6.0
+      semver: 7.5.4
       tsconfig-paths: 3.14.2
     transitivePeerDependencies:
       - eslint-import-resolver-typescript

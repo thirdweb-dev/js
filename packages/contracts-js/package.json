@@ -353,7 +353,6 @@
     "./dist/abis/IPlatformFee.json": "./dist/abis/IPlatformFee.json",
     "./dist/abis/Base64.json": "./dist/abis/Base64.json",
     "./dist/abis/ProxyForUpgradeable.json": "./dist/abis/ProxyForUpgradeable.json",
-    "./dist/abis/Helpers.json": "./dist/abis/Helpers.json",
     "./dist/abis/StringSet.json": "./dist/abis/StringSet.json",
     "./dist/abis/VRFV2WrapperConsumerBase.json": "./dist/abis/VRFV2WrapperConsumerBase.json",
     "./dist/abis/ITokenERC1155.json": "./dist/abis/ITokenERC1155.json",
@@ -423,7 +422,7 @@
   "license": "Apache-2.0",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/contracts-js",
   "dependencies": {
-    "@thirdweb-dev/contracts": "3.11.1"
+    "@thirdweb-dev/contracts": "3.11.2"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.23.8",
