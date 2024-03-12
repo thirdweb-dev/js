@@ -11,7 +11,6 @@ import { Button } from "../../../../components/buttons.js";
 import { TokenSelectorButton } from "./TokenSelector.js";
 import { useChainQuery } from "../../../../../hooks/others/useChainQuery.js";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
-import { ChainIcon } from "../../../../components/ChainIcon.js";
 import { isMobile } from "../../../../../utils/isMobile.js";
 
 /**
@@ -98,7 +97,6 @@ export function BuyTokenInput(props: {
           gap="xxs"
           onClick={props.onChainClick}
         >
-          <ChainIcon chain={chainQuery.data} size={iconSize.sm} />
           {chainQuery.data?.name ? (
             <div>{chainQuery.data.name}</div>
           ) : (
