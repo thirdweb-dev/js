@@ -36,6 +36,43 @@ export interface TemplateCardProps {
 
 export const templates: TemplateCardProps[] = [
   {
+    id: "unity-pioneer",
+    title: "Pioneer",
+    homepage: "https://thirdweb-example.github.io/unity-take-flight/",
+    repo: "https://github.com/thirdweb-example/unity-take-flight",
+    description: "Unity template with seamless onboarding experience",
+    img: "/assets/templates/unity-pioneer.png",
+    hoverBorderColor: "hsl(248deg 89% 79% / 15%)",
+    tags: ["Unity"],
+    authorENS: "thirdweb.eth",
+    authorIcon: "/assets/templates/thirdweb-eth.png",
+  },
+  {
+    id: "unity-take-flight",
+    title: "Take Flight",
+    homepage: "https://thirdweb-example.github.io/unity-pioneer/",
+    repo: "https://github.com/thirdweb-example/unity-pioneer",
+    description:
+      "Unity template featuring Smart Wallets, Session Keys, and Storage",
+    img: "/assets/templates/unity-take-flight.png",
+    hoverBorderColor: "hsl(248deg 89% 79% / 15%)",
+    tags: ["Unity"],
+    authorENS: "thirdweb.eth",
+    authorIcon: "/assets/templates/thirdweb-eth.png",
+  },
+  {
+    id: "unity-blockventure",
+    title: "Blockventure",
+    homepage: "https://github.com/thirdweb-example/unity-blockventure",
+    repo: "https://github.com/thirdweb-example/unity-blockventure",
+    description: "Lite RPG Gathering, Shopping and Trading Systems.",
+    img: "/assets/templates/unity-blockventure.png",
+    hoverBorderColor: "hsl(248deg 89% 79% / 15%)",
+    tags: ["Unity"],
+    authorENS: "thirdweb.eth",
+    authorIcon: "/assets/templates/thirdweb-eth.png",
+  },
+  {
     id: "unity-iap-client",
     title: "Unity IAP Client",
     homepage:
@@ -43,6 +80,20 @@ export const templates: TemplateCardProps[] = [
     repo: "https://github.com/thirdweb-example/unity-iap-client/",
     description:
       "Blockchain integration with Unity IAP and server side validation.",
+    img: "/assets/templates/unity-iap.png",
+    hoverBorderColor: "hsl(248deg 89% 79% / 15%)",
+    tags: ["Engine", "Unity"],
+    authorENS: "thirdweb.eth",
+    authorIcon: "/assets/templates/thirdweb-eth.png",
+  },
+  {
+    id: "unity-iap-server",
+    title: "Unity IAP Server",
+    homepage:
+      "https://blog.thirdweb.com/guides/enhancing-unity-iap-with-blockchain-interactions/",
+    repo: "https://github.com/thirdweb-example/unity-iap-server/",
+    description:
+      "Server implementation compatible with Unity IAP Apple and Google receipts",
     img: "/assets/templates/unity-iap.png",
     hoverBorderColor: "hsl(248deg 89% 79% / 15%)",
     tags: ["Engine", "Unity"],
