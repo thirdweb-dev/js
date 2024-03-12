@@ -92,7 +92,7 @@ export function ConfirmationScreen(props: {
       <TokenSelection
         label="You Pay"
         chain={props.fromChain}
-        amount={Number(props.fromAmount).toFixed(3)}
+        amount={Number(props.fromAmount).toFixed(6)}
         symbol={fromTokenSymbol || ""}
       />
       <Spacer y="lg" />
@@ -100,7 +100,7 @@ export function ConfirmationScreen(props: {
       <TokenSelection
         label="You receive"
         chain={props.toChain}
-        amount={Number(props.toAmount).toFixed(3)}
+        amount={Number(props.toAmount).toFixed(6)}
         symbol={toTokenSymbol || ""}
       />
 
