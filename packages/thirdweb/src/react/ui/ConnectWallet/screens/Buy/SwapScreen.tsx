@@ -1,6 +1,5 @@
 import { CrossCircledIcon } from "@radix-ui/react-icons";
 import { useDeferredValue, useMemo, useState } from "react";
-import { ethereum } from "../../../../../chains/chain-definitions/ethereum.js";
 import type { Chain } from "../../../../../chains/types.js";
 import { defineChain } from "../../../../../chains/utils.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../constants/addresses.js";
