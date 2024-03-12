@@ -35,6 +35,7 @@ import { WalletIcon } from "../../icons/WalletIcon.js";
 import { SwapFees } from "./swap/SwapFees.js";
 import { ConfirmationScreen } from "./swap/ConfirmationScreen.js";
 import { BuyTokenInput } from "./swap/BuyTokenInput.js";
+import { polygon } from "../../../../../chains/chain-definitions/polygon.js";
 
 const supportedChainsObj = /* @__PURE__ */ (() =>
   swapSupportedChains.map(defineChain))();
@@ -101,7 +102,7 @@ export function SwapScreenContent(props: {
   );
 
   // selected chain
-  const defaultChain = isChainSupported ? activeChain : ethereum;
+  const defaultChain = isChainSupported ? activeChain : polygon;
   const [fromChain, setFromChain] = useState<Chain>(defaultChain);
   const [toChain, setToChain] = useState<Chain>(defaultChain);
 
