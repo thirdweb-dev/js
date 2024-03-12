@@ -35,7 +35,7 @@ describe("uniswap.getUniswapV3Pool", () => {
     `);
   });
 
-  it("should throw an error when no pool exists for the pair", async () => {
+  it("should return an empty array when no pool exists for the pair", async () => {
     const pools = await getUniswapV3Pools({
       contract: UNISWAPV3_FACTORY_CONTRACT,
       tokenA: MOG_CONTRACT_ADDRESS,
