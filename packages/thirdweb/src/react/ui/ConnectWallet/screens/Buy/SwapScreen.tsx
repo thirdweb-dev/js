@@ -65,11 +65,6 @@ export function SwapScreen(props: {
   );
 }
 
-type TokenAmountState = {
-  value: string;
-  type: "source" | "destination";
-};
-
 type Screen =
   | "main"
   | "select-from-token"
@@ -112,10 +107,7 @@ export function SwapScreenContent(props: {
   const [screen, setScreen] = useState<Screen>("main");
 
   // token amount
-  const [tokenAmount, setTokenAmount] = useState<TokenAmountState>({
-    value: "",
-    type: "source",
-  });
+  const [tokenAmount, setTokenAmount] = useState<string>("");
 
   const isChainSupported = useMemo(
     () => supportedChains.includes(activeChain.id as any),
@@ -141,17 +133,8 @@ export function SwapScreenContent(props: {
     tokenAddress: isNativeToken(fromToken) ? undefined : fromToken.address,
   });
 
-  const amounts =
-    tokenAmount.type === "source"
-      ? { fromAmount: deferredTokenAmount.value, toAmount: undefined }
-      : {
-          fromAmount: undefined,
-          toAmount: deferredTokenAmount.value,
-        };
-
   const swapParams: GetSwapQuoteParams | undefined =
-    deferredTokenAmount.value &&
-    !(fromChain === toChain && fromToken === toToken)
+    deferredTokenAmount && !(fromChain === toChain && fromToken === toToken)
       ? {
           client: client,
           // wallet
@@ -166,7 +149,7 @@ export function SwapScreenContent(props: {
           toTokenAddress: isNativeToken(toToken)
             ? NATIVE_TOKEN_ADDRESS
             : toToken.address,
-          ...amounts,
+          toAmount: deferredTokenAmount,
         }
       : undefined;
 
@@ -248,25 +231,6 @@ export function SwapScreenContent(props: {
   const isSwapQuoteError = swapQuoteQuery.isError;
   const isSwapQuoteFetching = swapQuoteQuery.isFetching;
 
-  // SOURCE TOKEN ----
-
-  // if the token amount was entered by user - show that
-  // else - show the loading status until the quote is loaded
-  // once the quote is loaded, show the value calculated from the quote
-  let sourceTokenAmount =
-    tokenAmount.type === "source" ? tokenAmount.value : "";
-
-  // if quote is loaded and
-  if (swapQuote && !sourceTokenAmount) {
-    // amount in # of tokens
-    sourceTokenAmount = swapQuote.swapDetails.fromAmount;
-  }
-
-  // DESTINATION TOKEN ----
-
-  const destinationTokenAmount =
-    tokenAmount.type === "destination" ? tokenAmount.value : "";
-
   // const testQuote: SwapQuote = {
   //   client,
   //   paymentTokens: [],
@@ -317,6 +281,8 @@ export function SwapScreenContent(props: {
   //   approval: undefined,
   // };
 
+  const sourceTokenAmount = swapQuote?.swapDetails.fromAmount || "";
+
   // screen === "confirmation"
   if (screen === "confirmation" && swapQuoteQuery.data) {
     return (
@@ -324,7 +290,7 @@ export function SwapScreenContent(props: {
         onBack={() => setScreen("main")}
         swapQuote={swapQuoteQuery.data}
         fromAmount={sourceTokenAmount}
-        toAmount={destinationTokenAmount}
+        toAmount={tokenAmount}
         fromChain={fromChain}
         toChain={toChain}
         account={account}
@@ -351,9 +317,9 @@ export function SwapScreenContent(props: {
 
         {/* To */}
         <BuyTokenInput
-          value={destinationTokenAmount}
+          value={tokenAmount}
           onChange={async (value) => {
-            setTokenAmount({ value, type: "destination" });
+            setTokenAmount(value);
           }}
           token={toToken}
           chain={toChain}
