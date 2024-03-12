@@ -3,6 +3,7 @@ import {
   localWalletMetadata,
 } from "../../../wallets/local/index.js";
 import type { WalletConfig } from "../../types/wallets.js";
+import { asyncLocalStorage } from "../../utils/asyncLocalStorage.js";
 import { LocalWalletConnectUI } from "./LocalWalletConnectUI.js";
 
 export type LocalWalletConfigOptions = {
@@ -47,6 +48,7 @@ export const localWalletConfig = (
     create(createOptions) {
       return localWallet({
         client: createOptions.client,
+        storage: asyncLocalStorage,
       });
     },
     connectUI(props) {

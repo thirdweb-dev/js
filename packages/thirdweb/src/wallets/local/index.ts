@@ -3,10 +3,7 @@ import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
 import { privateKeyAccount, viemToThirdwebAccount } from "../private-key.js";
-import {
-  saveConnectParamsToStorage,
-  walletStorage,
-} from "../storage/walletStorage.js";
+import { saveConnectParamsToStorage } from "../storage/walletStorage.js";
 import type { WalletMetadata } from "../types.js";
 import type { AsyncStorage } from "../storage/AsyncStorage.js";
 import type {
@@ -28,6 +25,11 @@ import { toHex } from "../../utils/encoding/hex.js";
 
 export type LocalWalletCreationOptions = {
   client: ThirdwebClient;
+  /**
+   * Storage interface of type [`AsyncStorage`](https://portal.thirdweb.com/references/typescript/v5/AsyncStorage) to save connected wallet data to the storage for auto-connect.
+   * If not provided, no wallet data will be saved to the storage by thirdweb SDK
+   */
+  storage?: AsyncStorage;
 };
 
 export type LocalWalletConnectionOptions = {
@@ -185,7 +187,13 @@ export class LocalWallet implements Wallet {
     const params: SavedConnectParams = {
       chain: options?.chain,
     };
-    saveConnectParamsToStorage(this.metadata.id, params);
+    if (this.options.storage) {
+      saveConnectParamsToStorage(
+        this.options.storage,
+        this.metadata.id,
+        params,
+      );
+    }
     return this.account;
   }
 
@@ -240,7 +248,12 @@ export class LocalWallet implements Wallet {
   async loadOrCreate(
     options: LocalWalletLoadOrCreateOptions,
   ): Promise<LocalWallet> {
-    if (await LocalWallet.getSavedData(options.storage)) {
+    const storage = options.storage || this.options.storage;
+    if (!storage) {
+      throw new Error("Storage is not provided");
+    }
+
+    if (await LocalWallet.getSavedData(storage)) {
       await this.load(options);
     } else {
       await this.generate();
@@ -366,7 +379,13 @@ export class LocalWallet implements Wallet {
       throw new Error("wallet is already initialized");
     }
 
-    const walletData = await LocalWallet.getSavedData();
+    const _storage = options.storage || this.options.storage;
+
+    if (!_storage) {
+      throw new Error("Storage is not provided");
+    }
+
+    const walletData = await LocalWallet.getSavedData(_storage);
 
     if (!walletData) {
       throw new Error("No Saved wallet found in storage");
@@ -476,19 +495,25 @@ export class LocalWallet implements Wallet {
 
   /**
    * Check if the current initialized wallet's data is saved in storage.
+   * @param storage - storage interface of type [`AsyncStorage`](https://portal.thirdweb.com/references/typescript/v5/AsyncStorage) to check if the wallet data is saved in
    * @returns `true` if initialized wallet's data is saved in storage
    * @example
    * ```ts
    * const isSaved = await wallet.isSaved();
    * ```
    */
-  async isSaved() {
+  async isSaved(storage?: AsyncStorage) {
     if (!this.account) {
       throw new Error("Wallet is not initialized");
     }
 
+    const _storage = storage || this.options.storage;
+    if (!_storage) {
+      throw new Error("Storage is not provided");
+    }
+
     try {
-      const data = await LocalWallet.getSavedData();
+      const data = await LocalWallet.getSavedData(_storage);
       if (data?.address === this.account.address) {
         return true;
       }
@@ -508,8 +533,10 @@ export class LocalWallet implements Wallet {
    * ```
    */
   async deleteSaved(storage?: AsyncStorage) {
-    const _storage = storage || walletStorage;
-    await _storage.removeItem(STORAGE_KEY_WALLET_DATA);
+    const _storage = storage || this.options.storage;
+    if (_storage) {
+      await _storage.removeItem(STORAGE_KEY_WALLET_DATA);
+    }
   }
 
   /**
@@ -564,12 +591,10 @@ export class LocalWallet implements Wallet {
    * Refer to [`LocalWalletStorageData`](https://portal.thirdweb.com/references/typescript/v5/LocalWalletStorageData) for more details.
    */
   static async getSavedData(
-    storage?: AsyncStorage,
+    storage: AsyncStorage,
   ): Promise<LocalWalletStorageData | null> {
     try {
-      const savedDataStr = await (storage || walletStorage).getItem(
-        STORAGE_KEY_WALLET_DATA,
-      );
+      const savedDataStr = await storage.getItem(STORAGE_KEY_WALLET_DATA);
       if (!savedDataStr) {
         return null;
       }
@@ -595,7 +620,10 @@ export class LocalWallet implements Wallet {
    * ```
    */
   private async saveData(data: LocalWalletStorageData, storage?: AsyncStorage) {
-    const _storage = storage || walletStorage;
+    const _storage = storage || this.options.storage;
+    if (!_storage) {
+      throw new Error("Storage is not provided");
+    }
     await _storage.setItem(STORAGE_KEY_WALLET_DATA, JSON.stringify(data));
   }
 

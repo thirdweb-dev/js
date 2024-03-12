@@ -3,11 +3,12 @@ import type { SmartWalletOptions } from "../../../wallets/smart/types.js";
 import { useThirdwebProviderProps } from "../../hooks/others/useThirdwebProviderProps.js";
 import type { SelectUIProps, WalletConfig } from "../../types/wallets.js";
 import { WalletEntryButton } from "../../ui/ConnectWallet/WalletSelector.js";
+import { asyncLocalStorage } from "../../utils/asyncLocalStorage.js";
 import { SmartConnectUI } from "./SmartWalletConnectUI.js";
 
 export type SmartWalletConfigOptions = Omit<
   SmartWalletOptions,
-  "personalAccount" | "client"
+  "personalAccount" | "client" | "storage" | "metadata"
 >;
 
 /**
@@ -63,6 +64,7 @@ export const smartWalletConfig = (
         ...options,
         client: createOptions.client,
         metadata,
+        storage: asyncLocalStorage,
       });
     },
     selectUI: walletConfig.selectUI

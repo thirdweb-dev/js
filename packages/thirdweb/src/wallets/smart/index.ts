@@ -167,7 +167,13 @@ export class SmartWallet implements WalletWithPersonalWallet {
       personalWalletId: personalWallet.metadata.id,
     };
 
-    saveConnectParamsToStorage(this.metadata.id, paramsToSave);
+    if (this.options.storage) {
+      saveConnectParamsToStorage(
+        this.options.storage,
+        this.metadata.id,
+        paramsToSave,
+      );
+    }
 
     // TODO: listen for chainChanged event on the personal wallet and emit the disconnect event on the smart wallet
     const accountAddress = await predictAddress(this.factoryContract, {
