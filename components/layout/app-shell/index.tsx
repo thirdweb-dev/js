@@ -1,6 +1,5 @@
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import {
-  Box,
   ButtonGroup,
   Container,
   Flex,
@@ -12,6 +11,7 @@ import { CmdKSearch } from "components/cmd-k-search";
 import { ColorModeToggle } from "components/color-mode/color-mode-toggle";
 import { Logo } from "components/logo";
 import { BillingAlert } from "components/settings/Account/Billing/Alert";
+import { CreditsButton } from "components/settings/Account/Billing/CreditsButton";
 import { UpgradeButton } from "components/settings/Account/Billing/UpgradeButton";
 import { SIDEBAR_TUNNEL_ID, SIDEBAR_WIDTH } from "core-ui/sidebar/tunnel";
 import { useRouter } from "next/router";
@@ -113,9 +113,10 @@ const AppHeader: React.FC = () => {
           <CmdKSearch />
         </Flex>
         <Flex align="center" gap={4} marginLeft="auto">
-          <Box display={{ base: "none", md: "block" }}>
+          <Flex display={{ base: "none", md: "flex" }} gap={2}>
+            <CreditsButton />
             <UpgradeButton />
-          </Box>
+          </Flex>
           <Button
             as={TrackedLink}
             variant="link"

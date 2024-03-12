@@ -6,6 +6,7 @@ import {
   useSetEditChain,
   useSetIsNetworkConfigModalOpen,
 } from "hooks/networkConfigModal";
+import { OPSponsoredChains } from "pages/chainlist";
 import { RxGear } from "react-icons/rx";
 import { Heading, Text } from "tw-components";
 
@@ -21,6 +22,7 @@ export const CustomChainRenderer: NetworkSelectorProps["renderChain"] = ({
   const setEditChain = useSetEditChain();
 
   const isDeprecated = chain.status === "deprecated";
+  const isSponsored = OPSponsoredChains.includes(chain?.chainId);
 
   return (
     <Flex
@@ -49,7 +51,7 @@ export const CustomChainRenderer: NetworkSelectorProps["renderChain"] = ({
           <ChainIcon ipfsSrc={chain.icon?.url} size={32} />
           <Flex gap={1} flexDir="column" alignItems="start">
             <Flex gap={2}>
-              <Text fontWeight={500} color={isDeprecated ? "faded" : "inherit"}>
+              <Text fontWeight={500} color={isDeprecated ? "faded" : "bgBlack"}>
                 {chain.name}
               </Text>
               {isDeprecated && (
@@ -70,6 +72,22 @@ export const CustomChainRenderer: NetworkSelectorProps["renderChain"] = ({
                       Deprecated
                     </Heading>
                   </Flex>
+                </Flex>
+              )}
+              {isSponsored && (
+                <Flex
+                  borderRadius="full"
+                  align="center"
+                  overflow="hidden"
+                  flexShrink={0}
+                  py={{ base: 1.5, md: 1 }}
+                  px={{ base: 1.5, md: 2 }}
+                  gap={3}
+                  bgGradient="linear(to-r, #701953, #5454B2)"
+                >
+                  <Heading size="label.sm" as="label" color="#fff">
+                    Sponsored
+                  </Heading>
                 </Flex>
               )}
             </Flex>

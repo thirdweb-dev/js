@@ -166,9 +166,6 @@ dependencies:
   react-dropzone:
     specifier: ^14.2.3
     version: 14.2.3(react@18.2.0)
-  react-focus-lock:
-    specifier: ^2.11.2
-    version: 2.11.2(@types/react@18.2.63)(react@18.2.0)
   react-hook-form:
     specifier: ^7.50.1
     version: 7.50.1(react@18.2.0)

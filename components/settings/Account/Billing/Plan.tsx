@@ -31,7 +31,7 @@ export const BillingPlan: React.FC<BillingPlanProps> = ({
           px={3}
           py={1.5}
         >
-          {(PLANS as any)[account.plan].title}
+          {PLANS[account.plan as keyof typeof PLANS].title}
         </Badge>
       </HStack>
 

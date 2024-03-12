@@ -5,7 +5,7 @@ import { OnboardingPaymentForm } from "./PaymentForm";
 import { Flex, FocusLock, useColorMode } from "@chakra-ui/react";
 import { OnboardingTitle } from "./Title";
 import { Stripe } from "@stripe/stripe-js";
-import { useUpdateAccount } from "@3rdweb-sdk/react/hooks/useApi";
+import { useAccount, useUpdateAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { useTrack } from "hooks/analytics/useTrack";
 
 interface OnboardingBillingProps {
@@ -22,6 +22,7 @@ export const OnboardingBilling: React.FC<OnboardingBillingProps> = ({
     Promise<Stripe | null> | undefined
   >();
   const trackEvent = useTrack();
+  const accountQuery = useAccount();
 
   const mutation = useUpdateAccount();
 
@@ -90,7 +91,13 @@ export const OnboardingBilling: React.FC<OnboardingBillingProps> = ({
                 },
               }}
             >
-              <OnboardingPaymentForm onSave={onSave} onCancel={handleCancel} />
+              <OnboardingPaymentForm
+                onSave={() => {
+                  accountQuery.refetch();
+                  onSave();
+                }}
+                onCancel={handleCancel}
+              />
             </Elements>
           )}
         </Flex>

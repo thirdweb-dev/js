@@ -17,6 +17,8 @@ export const accountKeys = {
     [...accountKeys.wallet(walletAddress), "usage"] as const,
   walletStats: (walletAddress: string, clientId: string) =>
     [...accountKeys.wallet(walletAddress), "wallets", clientId] as const,
+  credits: (walletAddress: string) =>
+    [...accountKeys.wallet(walletAddress), "credits"] as const,
 };
 
 export const apiKeys = {
