@@ -184,6 +184,7 @@ export function ConfirmationScreen(props: {
 
               // these will be defined by this time
               if (fromTokenSymbol && toTokenSymbol && fromChain.data) {
+                const explorer = fromChain.data.explorers?.[0]?.url;
                 addPendingSwapTransaction(client, {
                   from: {
                     symbol: fromTokenSymbol,
@@ -195,7 +196,9 @@ export function ConfirmationScreen(props: {
                   },
                   status: "PENDING",
                   transactionHash: _swapTx.transactionHash,
-                  txExplorerLink: fromChain.data.explorers?.[0]?.url || "",
+                  txExplorerLink: explorer
+                    ? `${explorer}/tx/${_swapTx.transactionHash}`
+                    : "",
                 });
               }
 

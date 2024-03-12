@@ -9,6 +9,7 @@ import { useCustomTheme } from "../../design-system/CustomThemeProvider.js";
 import { Text } from "../../components/text.js";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { fadeInAnimation } from "../../design-system/animations.js";
+import { Spinner } from "../../components/Spinner.js";
 
 /**
  * @internal
@@ -18,6 +19,8 @@ export function SwapTransactionsScreen(props: { onBack: () => void }) {
     swapTransactionsStore.subscribe,
     swapTransactionsStore.getValue,
   );
+
+  const reversedTxs = [...swapTxs].reverse();
   return (
     <Container
       p="lg"
@@ -29,7 +32,7 @@ export function SwapTransactionsScreen(props: { onBack: () => void }) {
       <Spacer y="xl" />
 
       <Container flex="column" gap="md">
-        {swapTxs.map((txInfo, i) => {
+        {reversedTxs.map((txInfo, i) => {
           return (
             <TxHashLink key={i} href={txInfo.txExplorerLink} target="_blank">
               <Container flex="row" center="y" gap="sm">
@@ -56,13 +59,18 @@ export function SwapTransactionsScreen(props: { onBack: () => void }) {
                           ? "Pending"
                           : "Failed"}
                     </Text>
+
+                    {txInfo.status === "PENDING" && (
+                      <Spinner size="xs" color="accentText" />
+                    )}
                   </Container>
 
                   <Spacer y="xs" />
 
                   <Container flex="row" center="y" gap="xxs">
                     <Text size="sm">
-                      {txInfo.from.value} {txInfo.from.symbol}
+                      {Number(txInfo.from.value).toFixed(3)}{" "}
+                      {txInfo.from.symbol}
                     </Text>{" "}
                     <Container color="primaryText" flex="row" center="both">
                       <ArrowRightIcon
@@ -71,7 +79,7 @@ export function SwapTransactionsScreen(props: { onBack: () => void }) {
                       />
                     </Container>{" "}
                     <Text size="sm">
-                      {txInfo.to.value} {txInfo.to.symbol}
+                      {Number(txInfo.to.value).toFixed(3)} {txInfo.to.symbol}
                     </Text>
                   </Container>
                 </div>
