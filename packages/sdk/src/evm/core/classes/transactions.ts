@@ -8,8 +8,6 @@ import {
   fetchContractMetadataFromAddress,
   getContractMetadataFromCache,
 } from "../../common/metadata-resolver";
-import { fetchSourceFilesFromMetadata } from "../../common/fetchSourceFilesFromMetadata";
-import { ContractSource } from "../../schema/contracts/custom";
 import { SDKOptionsOutput } from "../../schema/sdk-options";
 import type {
   DeployTransactionOptions,
