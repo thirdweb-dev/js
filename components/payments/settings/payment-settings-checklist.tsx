@@ -1,8 +1,6 @@
-import { StepsCard } from "components/dashboard/StepsCard";
-import { PaymentsSettingsKyc } from "./payment-settings-kyc";
-import { PaymentsSettingsKyb } from "./payment-settings-kyb";
 import { usePaymentsSellerById } from "@3rdweb-sdk/react/hooks/usePayments";
-import { Flex } from "@chakra-ui/react";
+import { Alert, AlertDescription, AlertIcon, Flex } from "@chakra-ui/react";
+import { Text, Heading } from "tw-components";
 
 interface PaymentsSettingsChecklistProps {
   paymentsSellerId: string;
@@ -13,37 +11,29 @@ export const PaymentsSettingsChecklist: React.FC<
 > = ({ paymentsSellerId }) => {
   const { data: sellerData } = usePaymentsSellerById(paymentsSellerId);
 
-  const kycIsInTheFuture = sellerData?.date_personal_documents_verified
-    ? new Date(sellerData.date_personal_documents_verified) > new Date()
-    : false;
-
-  const steps = [
-    {
-      title: "Personal Identity Verification",
-      description: "",
-      completed: !!sellerData?.date_personal_documents_verified,
-      children: sellerData && <PaymentsSettingsKyc sellerId={sellerData.id} />,
-    },
-    {
-      title: "Business Information",
-      description: "",
-      completed:
-        !!sellerData?.date_business_documents_verified && !kycIsInTheFuture,
-      children: <PaymentsSettingsKyb />,
-    },
-  ];
-
   if (!sellerData?.id || sellerData?.has_production_access) {
     return null;
   }
 
   return (
-    <Flex w={{ base: "full", xl: "70%" }}>
-      <StepsCard
-        title="Complete and verify your seller profile"
-        steps={steps}
-        delay={0}
-      />
-    </Flex>
+    <Alert
+      status="error"
+      borderRadius="lg"
+      backgroundColor="backgroundCardHighlight"
+      borderLeftColor="red.500"
+      borderLeftWidth={4}
+      as={Flex}
+      gap={1}
+    >
+      <AlertIcon />
+      <Flex flexDir="column">
+        <AlertDescription as={Flex} flexDir="column" gap={4}>
+          <Heading size="title.xs">
+            Currently not accepting new seller profiles.
+          </Heading>
+          <Text>New seller profiles will not be verified.</Text>
+        </AlertDescription>
+      </Flex>
+    </Alert>
   );
 };
