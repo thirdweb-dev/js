@@ -28,12 +28,6 @@ export type GetSwapQuoteParams = {
    */
   fromAddress: string;
 
-  /**
-   * The address of the wallet other than sender to which the tokens will be sent.
-   * This is optional and should only be used if you want to send the tokens to a different address than the sender's address.
-   */
-  toAddress?: string;
-
   // source token
 
   /**
@@ -243,10 +237,6 @@ export async function getSwapQuote(
       urlParamsObj.maxSlippageBPS = params.maxSlippageBPS.toString();
     }
 
-    if (params.toAddress) {
-      urlParamsObj.toAddress = params.toAddress;
-    }
-
     const queryString = new URLSearchParams(urlParamsObj).toString();
     const url = `${THIRDWEB_PAY_SWAP_ROUTE_ENDPOINT}?${queryString}`;
 
@@ -290,7 +280,7 @@ export async function getSwapQuote(
         toAmount: data.toAmount,
         estimated: data.estimated,
 
-        maxSlippageBPS: data.maxSlippageBPS
+        maxSlippageBPS: data.maxSlippageBPS,
       },
 
       paymentTokens: data.paymentTokens,
