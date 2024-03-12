@@ -97,7 +97,7 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
   }, [chainId]);
 
   const currentStep = useMemo(() => {
-    if (onlyOptimism) {
+    if (onlyOptimism || !hasAppliedForOpGrant) {
       return Step.OptimismCredits;
     }
 

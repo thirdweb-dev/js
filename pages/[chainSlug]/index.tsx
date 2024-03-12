@@ -12,8 +12,8 @@ import {
   SimpleGrid,
 } from "@chakra-ui/react";
 import { QueryClient, dehydrate, useQuery } from "@tanstack/react-query";
-import { type Chain } from "@thirdweb-dev/chains";
-import { useAddress } from "@thirdweb-dev/react";
+import { type Chain, getChainBySlug } from "@thirdweb-dev/chains";
+import { useAddress, useChainId, useSwitchChain } from "@thirdweb-dev/react";
 import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { AppLayout } from "components/app-layouts/app";
 import { ContractCard } from "components/explore/contract-card";
@@ -26,8 +26,10 @@ import { getDashboardChainRpc } from "lib/rpc";
 import { getAbsoluteUrl } from "lib/vercel-utils";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { NextSeo } from "next-seo";
+import { useRouter } from "next/router";
 import { PageId } from "page-id";
 import { OPSponsoredChains } from "pages/chainlist";
+import { useEffect } from "react";
 import { BsArrowRight } from "react-icons/bs";
 import {
   FiAlertCircle,
@@ -124,6 +126,24 @@ const ChainPage: ThirdwebNextPage = ({
 
   const isDeprecated = chain?.status === "deprecated";
   const isSponsored = OPSponsoredChains.includes(chain?.chainId);
+
+  const switchChain = useSwitchChain();
+
+  const chainByChainSlug = getChainBySlug(chain.slug);
+  const chainId = useChainId();
+  const router = useRouter();
+  const { switch: switchQuery } = router.query;
+
+  useEffect(() => {
+    if (
+      chainByChainSlug?.chainId &&
+      address &&
+      chainId !== chainByChainSlug.chainId &&
+      switchQuery !== undefined
+    ) {
+      switchChain(chainByChainSlug.chainId);
+    }
+  }, [chainByChainSlug.chainId, address, chainId, switchChain, switchQuery]);
 
   return (
     <>

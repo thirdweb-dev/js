@@ -40,6 +40,7 @@ import { ComponentWithChildren } from "types/component-with-children";
 import { THIRDWEB_API_HOST, THIRDWEB_DOMAIN } from "../../constants/urls";
 import { ThirdwebProvider } from "thirdweb/react";
 import { thirdwebClient } from "../../lib/thirdweb-client";
+import { useRouter } from "next/router";
 
 export interface DashboardThirdwebProviderProps {
   contractInfo?: EVMContractInfo;
@@ -103,6 +104,14 @@ export const DashboardThirdwebProvider: ComponentWithChildren<
     };
   }, [chain]);
 
+  const router = useRouter();
+
+  const isChainSlugPage = router.pathname === "/[chainSlug]";
+
+  const chainByChainSlug = supportedChains.find(
+    (supportedChain) => supportedChain.slug === router.asPath.split("/")[1],
+  );
+
   return (
     <ThirdwebProvider client={thirdwebClient}>
       <ThirdwebProviderOld
@@ -113,7 +122,13 @@ export const DashboardThirdwebProvider: ComponentWithChildren<
           isDarkMode: false,
           url: "https://thirdweb.com",
         }}
-        activeChain={chain === null ? undefined : chain}
+        activeChain={
+          chain === null
+            ? undefined
+            : isChainSlugPage
+              ? chainByChainSlug
+              : chain
+        }
         supportedChains={supportedChains}
         sdkOptions={{
           gasSettings: { maxPriceInGwei: 650 },
