@@ -4,8 +4,7 @@ import type { Chain } from "../../../../../chains/types.js";
 import { defineChain } from "../../../../../chains/utils.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../constants/addresses.js";
 import type { GetSwapQuoteParams } from "../../../../../pay/swap/actions/getSwap.js";
-import type { SwapSupportedChainId } from "../../../../../pay/swap/supportedChains.js";
-import { swapSupportedChains } from "../../../../../pay/swap/supportedChains.js";
+import { fallbackSwapSupportedChainIds } from "../../../../../pay/swap/supportedChains.js";
 import type { Account } from "../../../../../wallets/interfaces/wallet.js";
 import { useThirdwebProviderProps } from "../../../../hooks/others/useThirdwebProviderProps.js";
 import { useWalletBalance } from "../../../../hooks/others/useWalletBalance.js";
@@ -35,9 +34,11 @@ import { SwapFees } from "./swap/SwapFees.js";
 import { ConfirmationScreen } from "./swap/ConfirmationScreen.js";
 import { BuyTokenInput } from "./swap/BuyTokenInput.js";
 import { polygon } from "../../../../../chains/chain-definitions/polygon.js";
+import { useQuery } from "@tanstack/react-query";
+import { getClientFetch } from "../../../../../utils/fetch.js";
 
-const supportedChainsObj = /* @__PURE__ */ (() =>
-  swapSupportedChains.map(defineChain))();
+const fallbackSupportedChains = /* @__PURE__ */ (() =>
+  fallbackSwapSupportedChainIds.map(defineChain))();
 
 /**
  * @internal
@@ -82,9 +83,23 @@ export function SwapScreenContent(props: {
   account: Account;
 }) {
   const { activeChain, account } = props;
+  const { client } = useThirdwebProviderProps();
+  const supportedChainsQuery = useQuery({
+    queryKey: ["swapSupportedChains", client],
+    queryFn: async () => {
+      const fetchWithHeaders = getClientFetch(client);
+      const res = await fetchWithHeaders("https://pay.thirdweb-dev.com/chains");
+      const data = await res.json();
+      const chainIds = data.result.chainIds as number[];
+      return chainIds.map(defineChain);
+    },
+    initialData: fallbackSupportedChains,
+  });
+
+  const supportedChains = supportedChainsQuery.data;
 
   // prefetch chains metadata
-  useChainsQuery(supportedChainsObj, 50);
+  useChainsQuery(supportedChains, 50);
 
   // screens
   const [screen, setScreen] = useState<Screen>("main");
@@ -96,8 +111,8 @@ export function SwapScreenContent(props: {
   });
 
   const isChainSupported = useMemo(
-    () => swapSupportedChains.includes(activeChain.id as any),
-    [activeChain.id],
+    () => supportedChains.includes(activeChain.id as any),
+    [activeChain.id, supportedChains],
   );
 
   // selected chain
@@ -112,7 +127,6 @@ export function SwapScreenContent(props: {
   );
 
   const deferredTokenAmount = useDeferredValue(tokenAmount);
-  const { client } = useThirdwebProviderProps();
 
   const fromTokenBalanceQuery = useWalletBalance({
     account: account,
@@ -136,11 +150,11 @@ export function SwapScreenContent(props: {
           // wallet
           fromAddress: account.address,
           // from token
-          fromChainId: fromChain.id as SwapSupportedChainId,
+          fromChainId: fromChain.id,
           fromTokenAddress: isNativeToken(fromToken)
             ? NATIVE_TOKEN_ADDRESS
             : fromToken.address,
-          toChainId: toChain.id as SwapSupportedChainId,
+          toChainId: toChain.id,
           // to
           toTokenAddress: isNativeToken(toToken)
             ? NATIVE_TOKEN_ADDRESS
@@ -195,7 +209,7 @@ export function SwapScreenContent(props: {
         showTabs={false}
         onBack={() => setScreen("main")}
         // pass swap supported chains
-        chains={supportedChainsObj}
+        chains={supportedChains}
         closeModal={() => setScreen("main")}
         networkSelector={{
           renderChain(renderChainProps) {

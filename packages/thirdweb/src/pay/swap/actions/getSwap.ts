@@ -4,7 +4,6 @@ import { getContract } from "../../../contract/contract.js";
 import type { ApproveParams } from "../../../extensions/erc20/write/approve.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { getClientFetch } from "../../../utils/fetch.js";
-import type { SwapSupportedChainId } from "../supportedChains.js";
 import { THIRDWEB_PAY_SWAP_ROUTE_ENDPOINT } from "../utils/definitions.js";
 
 // TODO: add JSDoc description for all properties
@@ -33,7 +32,7 @@ export type GetSwapQuoteParams = {
   /**
    * The chain id of the source token.
    */
-  fromChainId: SwapSupportedChainId;
+  fromChainId: number;
 
   /**
    * The token address of the source token.
@@ -45,7 +44,7 @@ export type GetSwapQuoteParams = {
   /**
    * The chain id of the destination token.
    */
-  toChainId: SwapSupportedChainId;
+  toChainId: number;
 
   /**
    * The token address of the destination token.
@@ -81,7 +80,7 @@ export type GetSwapQuoteParams = {
 );
 
 export type SwapTokenInfo = {
-  chainId: SwapSupportedChainId;
+  chainId: number;
   tokenAddress: string;
   decimals: number;
   priceUSDCents: number;
@@ -101,7 +100,7 @@ type SwapTransactionRequest = {
   to: string;
   value: string;
   from: string;
-  chainId: SwapSupportedChainId;
+  chainId: number;
   gasPrice: string;
   gasLimit: string;
 };
@@ -109,7 +108,7 @@ type SwapTransactionRequest = {
 type SwapRouteResponse = {
   transactionRequest: SwapTransactionRequest;
   approval?: {
-    chainId: SwapSupportedChainId;
+    chainId: number;
     tokenAddress: string;
     spenderAddress: string;
     amountWei: string;
@@ -190,8 +189,6 @@ export type SwapQuote = {
  *
  * Once you have the quote, you can use the [`sendSwapTransaction`](https://portal.thirdweb.com/references/typescript/v5/sendSwapTransaction)
  * function to execute the swap transaction.
- *
- * You can see the list of supported chains on [`SwapSupportedChainId`](https://portal.thirdweb.com/references/typescript/v5/SwapSupportedChainId)
  * @param params - object of type [`GetSwapQuoteParams`](https://portal.thirdweb.com/references/typescript/v5/GetSwapQuoteParams)
  * @returns Object of type [`SwapQuote`](https://portal.thirdweb.com/references/typescript/v5/SwapQuote) which contains the information about the swap such as processing fees, estimated time, converted token amounts, etc.
  * @example
