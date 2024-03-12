@@ -1,5 +1,14 @@
 # @thirdweb-dev/wallets
 
+## 2.4.18
+
+### Patch Changes
+
+- [#2443](https://github.com/thirdweb-dev/js/pull/2443) [`cabfc29`](https://github.com/thirdweb-dev/js/commit/cabfc29119f25a78010f59f766bdcb8c392afa2d) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [Smart Wallet] Use bundler eth_getUserOperationReceipt instead of rpc eth_getLogs, remove polygon gas station error logs
+
+- Updated dependencies [[`cabfc29`](https://github.com/thirdweb-dev/js/commit/cabfc29119f25a78010f59f766bdcb8c392afa2d), [`173777a`](https://github.com/thirdweb-dev/js/commit/173777ade4ea59cde1c6f25a4654d48b277be9ad)]:
+  - @thirdweb-dev/sdk@4.0.43
+
 ## 2.4.17
 
 ### Patch Changes
