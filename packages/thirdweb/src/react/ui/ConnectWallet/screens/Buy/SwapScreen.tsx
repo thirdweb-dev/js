@@ -275,7 +275,7 @@ export function SwapScreenContent(props: {
     <Container animate="fadein">
       <Container p="lg">
         <ModalHeader title="Buy" onBack={props.onBack} />
-        <Spacer y="lg" />
+        <Spacer y="xl" />
 
         {/* To */}
         <BuyTokenInput

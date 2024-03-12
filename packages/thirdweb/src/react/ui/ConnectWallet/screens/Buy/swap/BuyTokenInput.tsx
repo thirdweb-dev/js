@@ -5,12 +5,7 @@ import { Input } from "../../../../components/formElements.js";
 import type { Chain } from "../../../../../../chains/types.js";
 import type { ERC20OrNativeToken } from "../../nativeToken.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
-import {
-  fontSize,
-  iconSize,
-  spacing,
-} from "../../../../design-system/index.js";
-import { Text } from "../../../../components/text.js";
+import { fontSize, iconSize } from "../../../../design-system/index.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Button } from "../../../../components/buttons.js";
 import { TokenSelectorButton } from "./TokenSelector.js";
@@ -74,72 +69,38 @@ export function BuyTokenInput(props: {
         }}
       />
 
-      <Spacer y="xxs" />
+      <Spacer y="md" />
 
       <Container flex="row" center="x">
-        {tokenSymbol ? (
-          <Text size="sm">{tokenSymbol}</Text>
-        ) : (
-          <Skeleton width="70px" height={fontSize.sm} />
-        )}
-      </Container>
-
-      <Spacer y="lg" />
-
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gridGap: spacing.sm,
-        }}
-      >
-        <Text size="sm"> Buying </Text>
-        <Text size="sm"> Network </Text>
-      </div>
-
-      <Spacer y="xs" />
-
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gridGap: spacing.sm,
-        }}
-      >
         <TokenSelectorButton
           onClick={props.onTokenClick}
           token={props.token}
           tokenIcon={tokenIcon}
           tokenSymbol={tokenSymbol}
           style={{
-            padding: spacing.sm,
+            padding: 0,
             fontSize: fontSize.sm,
+            border: "none",
           }}
         />
+      </Container>
 
+      <Spacer y="sm" />
+
+      <Container flex="row" center="x">
         <Button
           variant="outline"
           style={{
             fontSize: fontSize.sm,
-            padding: spacing.sm,
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
+            padding: 0,
+            border: "none",
           }}
           gap="xxs"
           onClick={props.onChainClick}
         >
           <ChainIcon chain={chainQuery.data} size={iconSize.sm} />
           {chainQuery.data?.name ? (
-            <div
-              style={{
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {chainQuery.data.name}
-            </div>
+            <div>{chainQuery.data.name}</div>
           ) : (
             <Skeleton width="90px" height={fontSize.xs} />
           )}
@@ -147,7 +108,7 @@ export function BuyTokenInput(props: {
             <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
           </Container>
         </Button>
-      </div>
+      </Container>
     </Container>
   );
 }
