@@ -16,12 +16,13 @@ import {
 } from "@chakra-ui/react";
 import { Button, Card, Heading, Text, Badge } from "tw-components";
 import { useAccount, AccountPlan } from "@3rdweb-sdk/react/hooks/useApi";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { OnboardingBilling } from "./Billing";
 import { OnboardingModal } from "./Modal";
 import { PlanCard } from "./PlanCard";
 import { ApplyForOpCreditsForm } from "./ApplyForOpCreditsForm";
 import { useLocalStorage } from "hooks/useLocalStorage";
+import { useTrack } from "hooks/analytics/useTrack";
 
 export type CreditsRecord = {
   title: string;
@@ -93,6 +94,15 @@ export const ApplyForOpCreditsModal: React.FC<ApplyForOpCreditsModalProps> = ({
     `appliedForOpGrant-${(account?.data && account.data.id) || ""}`,
     false,
   );
+  const trackEvent = useTrack();
+
+  useEffect(() => {
+    trackEvent({
+      category: "op-sponsorship",
+      action: "modal",
+      label: "view-modal",
+    });
+  }, [trackEvent]);
 
   const hasValidPayment = account.data?.status === "validPayment";
 
@@ -170,7 +180,14 @@ export const ApplyForOpCreditsModal: React.FC<ApplyForOpCreditsModalProps> = ({
                           charged.{" "}
                           <Text
                             as="span"
-                            onClick={onPaymentMethodOpen}
+                            onClick={() => {
+                              onPaymentMethodOpen();
+                              trackEvent({
+                                category: "op-sponsorship",
+                                action: "add-payment-method",
+                                label: "open",
+                              });
+                            }}
                             color="blue.500"
                             cursor="pointer"
                           >
@@ -241,8 +258,22 @@ export const ApplyForOpCreditsModal: React.FC<ApplyForOpCreditsModalProps> = ({
         onClose={onPaymentMethodClose}
       >
         <OnboardingBilling
-          onSave={onPaymentMethodClose}
-          onCancel={onPaymentMethodClose}
+          onSave={() => {
+            onPaymentMethodClose();
+            trackEvent({
+              category: "op-sponsorship",
+              action: "add-payment-method",
+              label: "success",
+            });
+          }}
+          onCancel={() => {
+            onPaymentMethodClose();
+            trackEvent({
+              category: "op-sponsorship",
+              action: "add-payment-method",
+              label: "cancel",
+            });
+          }}
         />
       </OnboardingModal>
     </>
