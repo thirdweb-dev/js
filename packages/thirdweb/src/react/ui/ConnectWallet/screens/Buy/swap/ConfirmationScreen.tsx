@@ -190,7 +190,7 @@ function WaitingForConfirmation(props: {
   swapTx: SwapTransaction;
 }) {
   const swapStatus = useSwapStatus(props.swapTx);
-  const isSuccess = swapStatus.data?.status === "DONE";
+  const isSuccess = swapStatus.data?.status === "COMPLETED";
   const isFailed = swapStatus.data?.status === "FAILED";
   const isPending = !isSuccess && !isFailed;
 
