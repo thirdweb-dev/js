@@ -8,7 +8,6 @@ import {
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   ModalOverlay,
   Spinner,
@@ -18,11 +17,10 @@ import { useContract } from "@thirdweb-dev/react";
 import { Abi } from "@thirdweb-dev/sdk";
 import { SourcesPanel } from "components/contract-components/shared/sources-panel";
 import { useContractSources } from "contract-ui/hooks/useContractSources";
-import { useSupportedChain } from "hooks/chains/configureChains";
-import { VerificationStatus, blockExplorerMap } from "pages/api/verify";
+import { useState } from "react";
 import { useMemo } from "react";
 import { FiCheckCircle, FiXCircle } from "react-icons/fi";
-import { Badge, Button, Card, Heading, LinkButton } from "tw-components";
+import { Badge, Button, Card, Heading } from "tw-components";
 
 interface ContractSourcesPageProps {
   contractAddress?: string;
@@ -33,69 +31,48 @@ type VerifyContractParams = {
   chainId: number;
 };
 
-async function verifyContract({
+export interface VerificationResult {
+  explorerUrl: string;
+  success: boolean;
+  alreadyVerified: boolean;
+  error?: string;
+}
+
+export async function verifyContract({
   contractAddress,
   chainId,
 }: VerifyContractParams) {
-  const response = await fetch("/api/verify", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
+  const response = await fetch(
+    "https://contract.thirdweb.com/verify/contract",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        contractAddress,
+        chainId,
+      }),
     },
-    body: JSON.stringify({
-      contractAddress,
-      chainId,
-    }),
-  });
+  );
   return response.json();
 }
 
-function useVerifyCall(shouldFetch: boolean, contractAddress = "") {
+function useVerifyCall(
+  shouldFetch: boolean,
+  contractAddress = "",
+  resetSignal: number,
+) {
   const chainId = useDashboardEVMChainId();
+  const queryKey = useMemo(
+    () => ["verify", contractAddress, resetSignal],
+    [contractAddress, resetSignal],
+  );
   return useQueryWithNetwork(
-    ["verify", contractAddress],
+    queryKey,
     () => (chainId ? verifyContract({ contractAddress, chainId }) : null),
     {
       enabled: !!contractAddress && !!chainId && shouldFetch,
-    },
-  );
-}
-
-function useIsVerifiedOnEtherscan(contractAddress = "") {
-  const chainId = useDashboardEVMChainId();
-  return useQueryWithNetwork(
-    ["etherscan-fetch", contractAddress, chainId],
-    async () => {
-      const response = await fetch(
-        `/api/etherscan-fetch?contractAddress=${contractAddress}&chainId=${chainId}`,
-      );
-      // if the contract is verified, we'll get a 200 response
-      return response.status === 200;
-    },
-    {
-      enabled: !!contractAddress && !!chainId,
-    },
-  );
-}
-
-function useCheckVerificationStatus(guid?: string) {
-  const chainId = useDashboardEVMChainId();
-  return useQueryWithNetwork(
-    ["verifycheck", guid],
-    async () => {
-      const response = await fetch(
-        `/api/check-verification-status?guid=${guid}&chainId=${chainId}`,
-      );
-      return response.json();
-    },
-    {
-      enabled: !!guid && !!chainId,
-      refetchInterval: (data) => {
-        if (data?.result === VerificationStatus.PENDING) {
-          return 3000;
-        }
-        return 0;
-      },
     },
   );
 }
@@ -106,34 +83,14 @@ interface ConnectorModalProps {
   contractAddress: string;
 }
 
-const VerifyContractModal: React.FC<ConnectorModalProps> = ({
-  isOpen,
-  onClose,
-  contractAddress,
-}) => {
+const VerifyContractModal: React.FC<
+  ConnectorModalProps & { resetSignal: number }
+> = ({ isOpen, onClose, contractAddress, resetSignal }) => {
   const { data: verifyResult, isLoading: verifying } = useVerifyCall(
     isOpen,
     contractAddress,
+    resetSignal,
   );
-  const { data: verificationStatus } = useCheckVerificationStatus(
-    verifyResult?.guid,
-  );
-  const showLinkButton =
-    verifyResult?.error === VerificationStatus.ALREADY_VERIFIED ||
-    verificationStatus?.result === VerificationStatus.SUCCESS;
-  const chainId = useDashboardEVMChainId();
-
-  const chainInfo = useSupportedChain(chainId || -1);
-
-  const blockExplorerName =
-    getBlockExplorerName(chainId) ||
-    (chainInfo && chainInfo.explorers?.[0]?.name) ||
-    "";
-
-  const blockExplorerUrl =
-    getBlockExplorerUrl(chainId, contractAddress) ||
-    (chainInfo && chainInfo.explorers?.[0]?.url) ||
-    "";
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
@@ -141,7 +98,7 @@ const VerifyContractModal: React.FC<ConnectorModalProps> = ({
       <ModalContent pb={2} mx={{ base: 4, md: 0 }}>
         <ModalHeader>
           <Flex gap={2} align="center">
-            <Heading size="subtitle.md">Etherscan Verification</Heading>
+            <Heading size="subtitle.md">Contract Verification</Heading>
             <Badge variant="outline" colorScheme="purple" rounded="md" px={2}>
               beta
             </Badge>
@@ -159,46 +116,48 @@ const VerifyContractModal: React.FC<ConnectorModalProps> = ({
             )}
             {verifyResult?.error ? (
               <Flex gap={2} align="center">
-                {verifyResult?.error === VerificationStatus.ALREADY_VERIFIED ? (
-                  <Icon as={FiCheckCircle} color="green.600" />
-                ) : (
-                  <Icon as={FiXCircle} color="red.600" />
-                )}
+                <Icon as={FiXCircle} color="red.600" />
+
                 <Heading size="label.md">
                   {verifyResult?.error.toString()}
                 </Heading>
               </Flex>
             ) : null}
-            {verificationStatus?.result ? (
-              <Flex gap={2} align="center">
-                {verificationStatus?.result === VerificationStatus.PENDING && (
-                  <Spinner color="purple.500" size="sm" />
-                )}
-                {verificationStatus?.result === VerificationStatus.SUCCESS && (
-                  <Icon as={FiCheckCircle} color="green.600" />
-                )}
-                {verificationStatus?.result === VerificationStatus.FAILED && (
-                  <Icon as={FiXCircle} color="red.600" />
-                )}
-                <Heading size="label.md">
-                  {verificationStatus.result.toString()}
-                </Heading>
-              </Flex>
-            ) : null}
+
+            {verifyResult?.results
+              ? verifyResult?.results.map(
+                  (result: VerificationResult, index: number) => (
+                    <Flex key={index} gap={2} align="center" mb={4}>
+                      {result.success && (
+                        <>
+                          <Icon as={FiCheckCircle} color="green.600" />
+                          {result.alreadyVerified && (
+                            <Heading size="label.md">
+                              {" "}
+                              {result.explorerUrl}: Already verified
+                            </Heading>
+                          )}
+                          {!result.alreadyVerified && (
+                            <Heading size="label.md">
+                              {result.explorerUrl}: Verification successful
+                            </Heading>
+                          )}
+                        </>
+                      )}
+                      {!result.success && (
+                        <>
+                          <Icon as={FiXCircle} color="red.600" />
+                          <Heading size="label.md">
+                            {`${result.explorerUrl}: ${result.error?.toString()}`}
+                          </Heading>
+                        </>
+                      )}
+                    </Flex>
+                  ),
+                )
+              : null}
           </Flex>
         </ModalBody>
-        <ModalFooter>
-          {showLinkButton && blockExplorerUrl && (
-            <LinkButton
-              variant="outline"
-              size="sm"
-              href={blockExplorerUrl}
-              isExternal
-            >
-              View on {blockExplorerName}
-            </LinkButton>
-          )}
-        </ModalFooter>
       </ModalContent>
     </Modal>
   );
@@ -207,11 +166,14 @@ const VerifyContractModal: React.FC<ConnectorModalProps> = ({
 export const ContractSourcesPage: React.FC<ContractSourcesPageProps> = ({
   contractAddress,
 }) => {
+  const [resetSignal, setResetSignal] = useState(0);
+  const handleClose = () => {
+    onClose();
+    setResetSignal((prev: number) => prev + 1); // Increment to reset the query in the child component
+  };
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const contractSourcesQuery = useContractSources(contractAddress);
-  const chainId = useDashboardEVMChainId();
-  const { data: isVerifiedOnEtherscan, isLoading: isVerifiedLoading } =
-    useIsVerifiedOnEtherscan(contractAddress);
 
   const { contract } = useContract(contractAddress);
 
@@ -246,15 +208,13 @@ export const ContractSourcesPage: React.FC<ContractSourcesPageProps> = ({
     );
   }
 
-  const blockExplorerUrl = getBlockExplorerUrl(chainId, contractAddress);
-  const blockExplorerName = getBlockExplorerName(chainId);
-
   return (
     <>
       <VerifyContractModal
         isOpen={isOpen}
-        onClose={onClose}
+        onClose={handleClose}
         contractAddress={contractAddress}
+        resetSignal={resetSignal}
       />
       <Flex direction="column" gap={8}>
         <Flex direction="row" alignItems="center" gap={2}>
@@ -262,32 +222,9 @@ export const ContractSourcesPage: React.FC<ContractSourcesPageProps> = ({
             Sources
           </Heading>
 
-          {blockExplorerUrl && (
-            <>
-              {isVerifiedOnEtherscan ? (
-                <LinkButton
-                  variant="ghost"
-                  colorScheme="green"
-                  isExternal
-                  size="sm"
-                  noIcon
-                  href={blockExplorerUrl}
-                  leftIcon={<Icon as={FiCheckCircle} />}
-                >
-                  Verified on {blockExplorerName}
-                </LinkButton>
-              ) : (
-                <Button
-                  variant="solid"
-                  colorScheme="purple"
-                  onClick={onOpen}
-                  isLoading={isVerifiedLoading}
-                >
-                  Verify on {blockExplorerName}
-                </Button>
-              )}
-            </>
-          )}
+          <Button variant="solid" colorScheme="purple" onClick={onOpen}>
+            Verify contract
+          </Button>
         </Flex>
         <Card p={0}>
           <SourcesPanel sources={sources} abi={abi} />
@@ -296,33 +233,3 @@ export const ContractSourcesPage: React.FC<ContractSourcesPageProps> = ({
     </>
   );
 };
-
-function getBlockExplorerUrl(
-  chainId: number | undefined,
-  contractAddress: string,
-): string {
-  if (!chainId) {
-    return "";
-  }
-
-  if (chainId in blockExplorerMap) {
-    const { url } = blockExplorerMap[chainId];
-
-    if (url) {
-      return `${url}address/${contractAddress}#code`;
-    }
-  }
-
-  return "";
-}
-
-function getBlockExplorerName(chainId: number | undefined): string {
-  if (!chainId) {
-    return "";
-  }
-  if (chainId in blockExplorerMap) {
-    const { name } = blockExplorerMap[chainId];
-    return name;
-  }
-  return "";
-}

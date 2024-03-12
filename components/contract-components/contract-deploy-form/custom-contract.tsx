@@ -53,6 +53,7 @@ import { TrustedForwardersFieldset } from "./trusted-forwarders-fieldset";
 import { DeprecatedAlert } from "components/shared/DeprecatedAlert";
 import { Chain } from "@thirdweb-dev/chains";
 import { useMemo } from "react";
+import { verifyContract } from "contract-ui/tabs/sources/page";
 
 interface CustomContractFormProps {
   ipfsHash: string;
@@ -314,6 +315,16 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
                   chainId: selectedChain,
                   address: deployedContractAddress,
                 });
+
+                try {
+                  // we don't await this, just kick it off and be done with it
+                  verifyContract({
+                    contractAddress: deployedContractAddress,
+                    chainId: selectedChain,
+                  });
+                } catch (e) {
+                  // ignore
+                }
 
                 trackEvent({
                   category: "custom-contract",
