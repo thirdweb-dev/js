@@ -264,12 +264,8 @@ export function SwapScreenContent(props: {
 
   // DESTINATION TOKEN ----
 
-  let destinationTokenAmount =
+  const destinationTokenAmount =
     tokenAmount.type === "destination" ? tokenAmount.value : "";
-
-  if (swapQuote && !destinationTokenAmount) {
-    destinationTokenAmount = swapQuote.swapDetails.toAmount;
-  }
 
   // const testQuote: SwapQuote = {
   //   client,
