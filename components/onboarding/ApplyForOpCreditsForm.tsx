@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { Button, FormLabel } from "tw-components";
 import { PlanToCreditsRecord } from "./ApplyForOpCreditsModal";
@@ -70,6 +70,14 @@ export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
     "We have received your application and will notify you if you are selected.",
     "Something went wrong, please try again.",
   );
+
+  useEffect(() => {
+    trackEvent({
+      category: "op-sponsorship",
+      action: "modal",
+      label: "view-form",
+    });
+  }, [trackEvent]);
 
   return (
     <ModalContent

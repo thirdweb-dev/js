@@ -13,6 +13,7 @@ import { formatDistance } from "date-fns";
 import { Text, Button } from "tw-components";
 import { formatToDollars } from "./CreditsButton";
 import { useLocalStorage } from "hooks/useLocalStorage";
+import { useTrack } from "hooks/analytics/useTrack";
 
 interface CreditsItemProps {
   credit?: BillingCredit;
@@ -28,6 +29,7 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
     onOpen: onMoreCreditsOpen,
     onClose: onMoreCreditsClose,
   } = useDisclosure();
+  const trackEvent = useTrack();
 
   const account = useAccount();
 
@@ -43,7 +45,18 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
           <ChainIcon ipfsSrc={Optimism.icon.url} size={24} />
           <Text color="bgBlack">Sponsorship credit balance</Text>{" "}
           {!hasAppliedForOpGrant && (
-            <Button size="xs" variant="outline" onClick={onMoreCreditsOpen}>
+            <Button
+              size="xs"
+              variant="outline"
+              onClick={() => {
+                onMoreCreditsOpen();
+                trackEvent({
+                  category: "op-sponsorship",
+                  action: "click",
+                  label: "apply-now",
+                });
+              }}
+            >
               Apply now
             </Button>
           )}

@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { Button, Card, Text } from "tw-components";
 import { CreditsItem } from "./CreditsItem";
+import { useTrack } from "hooks/analytics/useTrack";
 
 export const formatToDollars = (cents: number) => {
   const dollars = cents / 100;
@@ -24,6 +25,7 @@ export const formatToDollars = (cents: number) => {
 
 export const CreditsButton = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const trackEvent = useTrack();
 
   const { isLoggedIn } = useLoggedInUser();
   const { data: credits } = useAccountCredits();
@@ -41,7 +43,19 @@ export const CreditsButton = () => {
 
   return (
     <>
-      <Button onClick={onOpen} variant="outline" colorScheme="blue" size="sm">
+      <Button
+        onClick={() => {
+          trackEvent({
+            category: "credits",
+            action: "button",
+            label: "view-credits",
+          });
+          onOpen();
+        }}
+        variant="outline"
+        colorScheme="blue"
+        size="sm"
+      >
         <Text color="bgBlack" fontWeight="bold">
           Credits: {formatToDollars(totalCreditBalance || 0)}
         </Text>

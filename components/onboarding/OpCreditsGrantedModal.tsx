@@ -16,10 +16,21 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
+import { useTrack } from "hooks/analytics/useTrack";
+import { useEffect } from "react";
 import { Text, Card, Heading } from "tw-components";
 
 export const OpCreditsGrantedModal = () => {
   const { isOpen, onClose } = useDisclosure();
+  const trackEvent = useTrack();
+
+  useEffect(() => {
+    trackEvent({
+      category: "op-sponsorship",
+      action: "modal",
+      label: "view-modal",
+    });
+  }, [trackEvent]);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>

@@ -15,7 +15,7 @@ import {
 import { useTrack } from "hooks/analytics/useTrack";
 import { useLocalStorage } from "hooks/useLocalStorage";
 import { useRouter } from "next/router";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Button, Card, Heading, LinkButton, Text, Link } from "tw-components";
 import { ApplyForOpCreditsModal } from "./ApplyForOpCreditsModal";
 import { StaticImageData } from "next/image";
@@ -173,6 +173,16 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
       data: { step, href },
     });
   };
+
+  useEffect(() => {
+    if (currentStep) {
+      trackEvent({
+        category: "onboardingChecklist",
+        action: "viewed",
+        data: { step: currentStep },
+      });
+    }
+  }, [currentStep, trackEvent]);
 
   const STEPS: StepData[] = useMemo(
     () => [
