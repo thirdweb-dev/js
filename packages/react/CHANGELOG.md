@@ -1,5 +1,16 @@
 # @thirdweb-dev/react
 
+## 4.4.16
+
+### Patch Changes
+
+- [#2447](https://github.com/thirdweb-dev/js/pull/2447) [`8382330`](https://github.com/thirdweb-dev/js/commit/838233075a4d0897f57570f0f5eb041464838973) Thanks [@MananTank](https://github.com/MananTank)! - Fix multiple renders of EmbeddedWallet social Login screen after connection
+
+- Updated dependencies [[`cabfc29`](https://github.com/thirdweb-dev/js/commit/cabfc29119f25a78010f59f766bdcb8c392afa2d), [`173777a`](https://github.com/thirdweb-dev/js/commit/173777ade4ea59cde1c6f25a4654d48b277be9ad)]:
+  - @thirdweb-dev/wallets@2.4.18
+  - @thirdweb-dev/sdk@4.0.43
+  - @thirdweb-dev/react-core@4.4.16
+
 ## 4.4.15
 
 ### Patch Changes
