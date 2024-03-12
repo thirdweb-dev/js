@@ -344,6 +344,9 @@ export function SwapScreenContent(props: {
     !!fromTokenBalanceQuery.data &&
     Number(fromTokenBalanceQuery.data.displayValue) < Number(sourceTokenAmount);
 
+  const disableContinue =
+    !swapQuote || isNotEnoughBalance || !!isSwapQuoteFetching;
+
   return (
     <Container animate="fadein">
       <Container p="lg">
@@ -412,11 +415,11 @@ export function SwapScreenContent(props: {
         <Spacer y="lg" />
 
         <Button
-          variant="accent"
+          variant={"accent"}
           fullWidth
-          disabled={(!isSwapQuoteFetching && !swapQuote) || isNotEnoughBalance}
+          disabled={disableContinue}
           onClick={async () => {
-            if (swapQuote) {
+            if (!disableContinue) {
               setScreen("confirmation");
             }
           }}
