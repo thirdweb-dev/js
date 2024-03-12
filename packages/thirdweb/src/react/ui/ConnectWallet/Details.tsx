@@ -6,9 +6,10 @@ import {
   PaperPlaneIcon,
   PinBottomIcon,
   PlusIcon,
+  InfoCircledIcon,
 } from "@radix-ui/react-icons";
 import styled from "@emotion/styled";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useSyncExternalStore } from "react";
 import {
   useActiveAccount,
   useActiveWallet,
@@ -67,6 +68,8 @@ import type { EmbeddedWallet } from "../../../wallets/embedded/core/wallet/index
 import { localWalletMetadata } from "../../../wallets/local/index.js";
 import { ExportLocalWallet } from "./screens/ExportLocalWallet.js";
 import { SwapScreen } from "./screens/Buy/SwapScreen.js";
+import { swapTransactionsStore } from "./screens/Buy/swap/pendingSwapTx.js";
+import { SwapTransactionsScreen } from "./screens/SwapTransactionsScreen.js";
 
 const TW_CONNECTED_WALLET = "tw-connected-wallet";
 
@@ -78,7 +81,8 @@ type WalletDetailsModalScreen =
   | "send"
   | "receive"
   | "buy"
-  | "network-switcher";
+  | "network-switcher"
+  | "pending-tx";
 
 /**
  * @internal
@@ -97,6 +101,11 @@ export const ConnectedWalletDetails: React.FC<{
   const walletChain = useActiveWalletChain();
   const chainQuery = useChainQuery(walletChain);
   const { disconnect } = useDisconnect();
+  const swapTxs = useSyncExternalStore(
+    swapTransactionsStore.subscribe,
+    swapTransactionsStore.getValue,
+  );
+  const pendingSwapTxs = swapTxs.filter((tx) => tx.status === "PENDING");
 
   // prefetch chains metadata with low concurrency
   useChainsQuery(props.chains, 5);
@@ -139,35 +148,6 @@ export const ConnectedWalletDetails: React.FC<{
     : "";
 
   const addressOrENS = shortAddress;
-  // const avatarUrl = undefined;
-  // const addressOrENS = ensQuery.data?.ens || shortAddress;
-  // const avatarUrl = ensQuery.data?.avatarUrl;
-
-  // useEffect(() => {
-  //   if (activeWallet) {
-  //     if (activeWallet.walletId === walletIds.embeddedWallet) {
-  //       (activeWallet as EmbeddedWallet)
-  //         .getLastUsedAuthStrategy()
-  //         .then((auth) => {
-  //           if (auth === "apple") {
-  //             setOverrideWalletIconUrl(appleIconUri);
-  //           } else if (auth === "google") {
-  //             setOverrideWalletIconUrl(googleIconUri);
-  //           } else if (auth === "facebook") {
-  //             setOverrideWalletIconUrl(facebookIconUri);
-  //           } else {
-  //             setOverrideWalletIconUrl(undefined);
-  //           }
-  //         });
-  //     } else if (activeWallet.walletId === walletIds.smartWallet) {
-  //       setOverrideWalletIconUrl(smartWalletIcon);
-  //     } else {
-  //       setOverrideWalletIconUrl(undefined);
-  //     }
-  //   } else {
-  //     setOverrideWalletIconUrl(undefined);
-  //   }
-  // }, [activeWallet]);
 
   useEffect(() => {
     if (!isOpen) {
@@ -177,9 +157,6 @@ export const ConnectedWalletDetails: React.FC<{
     }
   }, [isOpen]);
 
-  // const walletIconUrl =
-  //   overrideWalletIconUrl || activeWalletConfig?.meta.iconURL || "";
-  // const avatarOrWalletIconUrl = avatarUrl || walletIconUrl;
   let avatarOrWalletIconUrl = activeWallet?.metadata.iconUrl || "";
 
   if (activeWallet && "isSmartWallet" in activeWallet) {
@@ -442,6 +419,24 @@ export const ConnectedWalletDetails: React.FC<{
         >
           {networkSwitcherButton}
 
+          {/* pending Swap transactions link */}
+          {pendingSwapTxs.length > 0 && (
+            <MenuButton
+              onClick={() => {
+                setScreen("pending-tx");
+              }}
+              style={{
+                fontSize: fontSize.sm,
+              }}
+            >
+              <InfoCircledIcon width={iconSize.md} height={iconSize.md} />
+              <Container flex="row" gap="xs" center="y">
+                <Text color="primaryText">Pending Transactions</Text>
+                <BadgeCount>{pendingSwapTxs.length}</BadgeCount>
+              </Container>
+            </MenuButton>
+          )}
+
           {/* Switch to Personal Wallet  */}
           {personalWallet &&
             !props.detailsModal?.hideSwitchToPersonalWallet && (
@@ -589,6 +584,10 @@ export const ConnectedWalletDetails: React.FC<{
     </div>
   );
 
+  if (screen === "pending-tx") {
+    content = <SwapTransactionsScreen onBack={() => setScreen("main")} />;
+  }
+
   if (screen === "network-switcher") {
     content = (
       <NetworkSelectorContent
@@ -654,6 +653,7 @@ export const ConnectedWalletDetails: React.FC<{
       <SwapScreen
         onBack={() => setScreen("main")}
         supportedTokens={props.supportedTokens}
+        onViewPendingTx={() => setScreen("pending-tx")}
       />
     );
   }
@@ -740,6 +740,22 @@ const MenuButton = /* @__PURE__ */ StyledButton(() => {
     "&[data-variant='primary']:hover svg": {
       color: theme.colors.primaryText + "!important",
     },
+  };
+});
+
+const BadgeCount = /* @__PURE__ */ StyledDiv(() => {
+  const theme = useCustomTheme();
+  return {
+    background: theme.colors.primaryButtonBg,
+    color: theme.colors.primaryButtonText,
+    fontSize: fontSize.sm,
+    fontWeight: 500,
+    borderRadius: "50%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    minWidth: "22px",
+    minHeight: "22px",
   };
 });
 

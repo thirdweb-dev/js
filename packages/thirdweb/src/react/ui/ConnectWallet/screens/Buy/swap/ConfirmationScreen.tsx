@@ -1,4 +1,8 @@
-import { CheckCircledIcon, CrossCircledIcon } from "@radix-ui/react-icons";
+import {
+  CheckCircledIcon,
+  CheckIcon,
+  CrossCircledIcon,
+} from "@radix-ui/react-icons";
 import { useState } from "react";
 import type { Chain } from "../../../../../../chains/types.js";
 import type { SwapTransaction } from "../../../../../../pay/swap/actions/getStatus.js";
@@ -20,6 +24,8 @@ import { useCustomTheme } from "../../../../design-system/CustomThemeProvider.js
 import { ChainIcon } from "../../../../components/ChainIcon.js";
 import { shortenString } from "../../../../../utils/addresses.js";
 import { SwapFees } from "./SwapFees.js";
+import { useThirdwebProviderProps } from "../../../../../hooks/others/useThirdwebProviderProps.js";
+import { addPendingSwapTransaction } from "./pendingSwapTx.js";
 
 /**
  * @internal
@@ -34,13 +40,22 @@ export function ConfirmationScreen(props: {
   account: Account;
   fromToken: ERC20OrNativeToken;
   toToken: ERC20OrNativeToken;
-  // onCompleted: () => void;
+  onViewPendingTx: () => void;
 }) {
   const sendSwapMutation = useSendSwapTransaction();
   const sendSwapApprovalMutation = useSendSwapApproval();
+  const { client } = useThirdwebProviderProps();
+  // TODO: remove after testing
+  // const test = {
+  //   client,
+  //   transactionHash:
+  //     "0x5242005d31ce3c77b3cd72e1a403c413226d08f3071a2c82b3cc4f0071519547",
+  // };
   const [swapTx, setSwapTx] = useState<SwapTransaction | undefined>();
+  const isApprovalRequired = props.swapQuote.approval !== undefined;
+
   const [step, setStep] = useState<"approval" | "swap">(
-    props.swapQuote.approval ? "approval" : "swap",
+    isApprovalRequired ? "approval" : "swap",
   );
   const [status, setStatus] = useState<
     "pending" | "success" | "error" | "idle"
@@ -62,6 +77,7 @@ export function ConfirmationScreen(props: {
         onBack={() => {
           props.onBack();
         }}
+        onViewPendingTx={props.onViewPendingTx}
         swapTx={swapTx}
       />
     );
@@ -117,6 +133,31 @@ export function ConfirmationScreen(props: {
         </>
       )}
 
+      {/* Show 2 steps  */}
+      {isApprovalRequired && (
+        <>
+          <Spacer y="sm" />
+          <Container
+            gap="sm"
+            flex="row"
+            style={{
+              justifyContent: "space-between",
+            }}
+            center="y"
+            color="accentText"
+          >
+            <Step
+              isDone={step === "swap"}
+              isActive={step === "approval"}
+              label={step === "approval" ? "Approve" : "Approved"}
+            />
+            <ConnectorLine />
+            <Step isDone={false} label="Swap" isActive={step === "swap"} />
+          </Container>
+          <Spacer y="lg" />
+        </>
+      )}
+
       <Button
         variant="accent"
         fullWidth
@@ -140,6 +181,24 @@ export function ConfirmationScreen(props: {
               const _swapTx = await sendSwapMutation.mutateAsync(
                 props.swapQuote,
               );
+
+              // these will be defined by this time
+              if (fromTokenSymbol && toTokenSymbol && fromChain.data) {
+                addPendingSwapTransaction(client, {
+                  from: {
+                    symbol: fromTokenSymbol,
+                    value: props.fromAmount,
+                  },
+                  to: {
+                    symbol: toTokenSymbol,
+                    value: props.toAmount,
+                  },
+                  status: "PENDING",
+                  transactionHash: _swapTx.transactionHash,
+                  txExplorerLink: fromChain.data.explorers?.[0]?.url || "",
+                });
+              }
+
               setSwapTx(_swapTx);
             } catch {
               setStatus("error");
@@ -154,6 +213,54 @@ export function ConfirmationScreen(props: {
     </Container>
   );
 }
+
+const ConnectorLine = /* @__PURE__ */ StyledDiv(() => {
+  const theme = useCustomTheme();
+  return {
+    height: "1.5px",
+    background: theme.colors.accentText,
+    flex: 1,
+  };
+});
+
+function Step(props: { isDone: boolean; label: string; isActive: boolean }) {
+  return (
+    <Container
+      flex="row"
+      center="y"
+      gap="xs"
+      color={props.isActive ? "primaryText" : "accentText"}
+    >
+      <Circle>
+        {props.isDone ? (
+          <CheckIcon width={iconSize.sm} height={iconSize.sm} />
+        ) : (
+          <div
+            style={{
+              background: "currentColor",
+              width: "7px",
+              height: "7px",
+              borderRadius: "50%",
+            }}
+          />
+        )}
+      </Circle>
+      {props.label}
+    </Container>
+  );
+}
+
+const Circle = /* @__PURE__ */ StyledDiv(() => {
+  return {
+    border: `1px solid currentColor`,
+    width: iconSize.md + "px",
+    height: iconSize.md + "px",
+    borderRadius: "50%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  };
+});
 
 function TokenSelection(props: {
   label: string;
@@ -175,7 +282,7 @@ function TokenSelection(props: {
           </Text>
           <Container flex="row" center="y" gap="xs">
             <ChainIcon size={iconSize.md} chain={chainQuery.data} />
-            <Text color="primaryText" size="xs" weight={500}>
+            <Text color="primaryText" size="sm" weight={500}>
               {props.symbol}
             </Text>
           </Container>
@@ -187,6 +294,7 @@ function TokenSelection(props: {
 
 function WaitingForConfirmation(props: {
   onBack: () => void;
+  onViewPendingTx: () => void;
   swapTx: SwapTransaction;
 }) {
   const swapStatus = useSwapStatus(props.swapTx);
@@ -236,8 +344,8 @@ function WaitingForConfirmation(props: {
 
         <Spacer y="xl" />
 
-        <Button variant="accent" fullWidth onClick={props.onBack}>
-          Continue Buying
+        <Button variant="accent" fullWidth onClick={props.onViewPendingTx}>
+          View Pending Transactions
         </Button>
       </Container>
     </Container>

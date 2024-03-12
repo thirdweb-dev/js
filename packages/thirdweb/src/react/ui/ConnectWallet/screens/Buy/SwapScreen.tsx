@@ -46,6 +46,7 @@ const fallbackSupportedChains = /* @__PURE__ */ (() =>
 export function SwapScreen(props: {
   onBack: () => void;
   supportedTokens: SupportedTokens;
+  onViewPendingTx: () => void;
 }) {
   const activeChain = useActiveWalletChain();
   const account = useActiveAccount();
@@ -55,7 +56,12 @@ export function SwapScreen(props: {
   }
 
   return (
-    <SwapScreenContent {...props} activeChain={activeChain} account={account} />
+    <SwapScreenContent
+      {...props}
+      activeChain={activeChain}
+      account={account}
+      onViewPendingTx={props.onViewPendingTx}
+    />
   );
 }
 
@@ -81,6 +87,7 @@ export function SwapScreenContent(props: {
   supportedTokens: SupportedTokens;
   activeChain: Chain;
   account: Account;
+  onViewPendingTx: () => void;
 }) {
   const { activeChain, account } = props;
   const { client } = useThirdwebProviderProps();
@@ -264,6 +271,57 @@ export function SwapScreenContent(props: {
     destinationTokenAmount = swapQuote.swapDetails.toAmount;
   }
 
+  // const testQuote: SwapQuote = {
+  //   client,
+  //   paymentTokens: [],
+  //   swapDetails: {
+  //     fromAddress: account.address,
+  //     toAddress: account.address,
+
+  //     fromToken: {
+  //       chainId: fromChain.id,
+  //       tokenAddress: NATIVE_TOKEN_ADDRESS,
+  //       decimals: 18,
+  //       priceUSDCents: 100,
+  //     },
+  //     toToken: {
+  //       chainId: fromChain.id,
+  //       tokenAddress: NATIVE_TOKEN_ADDRESS,
+  //       decimals: 18,
+  //       priceUSDCents: 100,
+  //     },
+
+  //     fromAmount: "1000",
+  //     fromAmountWei: "1000000000",
+
+  //     toAmountMinWei: "1000000000",
+  //     toAmountMin: "1000",
+  //     toAmount: "1000",
+  //     toAmountWei: "1000000000",
+
+  //     estimated: {
+  //       fromAmountUSDCents: 100,
+  //       toAmountMinUSDCents: 100,
+  //       toAmountUSDCents: 100,
+  //       slippageBPS: 50,
+  //       feesUSDCents: 100,
+  //     },
+  //     maxSlippageBPS: 50,
+  //   },
+  //   swapFees: [],
+  //   transactionRequest: {
+  //     data: "0x...",
+  //     to: account.address,
+  //     value: "1000",
+  //     from: account.address,
+  //     chainId: fromChain.id,
+  //     gasPrice: "1000",
+  //     gasLimit: "10000",
+  //   },
+  //   approval: undefined,
+  // };
+
+  // screen === "confirmation"
   if (screen === "confirmation" && swapQuoteQuery.data) {
     return (
       <ConfirmationScreen
@@ -276,6 +334,7 @@ export function SwapScreenContent(props: {
         account={account}
         fromToken={fromToken}
         toToken={toToken}
+        onViewPendingTx={props.onViewPendingTx}
       />
     );
   }
@@ -363,7 +422,7 @@ export function SwapScreenContent(props: {
           }}
           gap="sm"
         >
-          Purchase
+          Continue
         </Button>
       </Container>
     </Container>
