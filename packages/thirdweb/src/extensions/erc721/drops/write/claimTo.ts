@@ -31,63 +31,63 @@ export function claimTo(options: BaseTransactionOptions<ClaimToParams>) {
   return prepareContractCall({
     contract: options.contract,
     method: [
-  "0x84bb1e42",
-  [
-    {
-      "internalType": "address",
-      "name": "receiver",
-      "type": "address"
-    },
-    {
-      "internalType": "uint256",
-      "name": "quantity",
-      "type": "uint256"
-    },
-    {
-      "internalType": "address",
-      "name": "currency",
-      "type": "address"
-    },
-    {
-      "internalType": "uint256",
-      "name": "pricePerToken",
-      "type": "uint256"
-    },
-    {
-      "components": [
+      "0x84bb1e42",
+      [
         {
-          "internalType": "bytes32[]",
-          "name": "proof",
-          "type": "bytes32[]"
+          internalType: "address",
+          name: "receiver",
+          type: "address",
         },
         {
-          "internalType": "uint256",
-          "name": "quantityLimitPerWallet",
-          "type": "uint256"
+          internalType: "uint256",
+          name: "quantity",
+          type: "uint256",
         },
         {
-          "internalType": "uint256",
-          "name": "pricePerToken",
-          "type": "uint256"
+          internalType: "address",
+          name: "currency",
+          type: "address",
         },
         {
-          "internalType": "address",
-          "name": "currency",
-          "type": "address"
-        }
+          internalType: "uint256",
+          name: "pricePerToken",
+          type: "uint256",
+        },
+        {
+          components: [
+            {
+              internalType: "bytes32[]",
+              name: "proof",
+              type: "bytes32[]",
+            },
+            {
+              internalType: "uint256",
+              name: "quantityLimitPerWallet",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "pricePerToken",
+              type: "uint256",
+            },
+            {
+              internalType: "address",
+              name: "currency",
+              type: "address",
+            },
+          ],
+          internalType: "struct IDrop.AllowlistProof",
+          name: "allowlistProof",
+          type: "tuple",
+        },
+        {
+          internalType: "bytes",
+          name: "data",
+          type: "bytes",
+        },
       ],
-      "internalType": "struct IDrop.AllowlistProof",
-      "name": "allowlistProof",
-      "type": "tuple"
-    },
-    {
-      "internalType": "bytes",
-      "name": "data",
-      "type": "bytes"
-    }
-  ],
-  []
-],
+      [],
+    ],
     params: async () => {
       const cc = await getActiveClaimCondition({
         contract: options.contract,
@@ -111,6 +111,13 @@ export function claimTo(options: BaseTransactionOptions<ClaimToParams>) {
         // end proof
         "0x", //data
       ] as const;
+    },
+    value: async () => {
+      // TODO this should not be refetched
+      const cc = await getActiveClaimCondition({
+        contract: options.contract,
+      });
+      return cc.pricePerToken * BigInt(options.quantity);
     },
   });
 }

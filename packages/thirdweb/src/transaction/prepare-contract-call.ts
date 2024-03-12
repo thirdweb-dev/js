@@ -39,7 +39,7 @@ export type PrepareContractCallOptions<
     ParseMethod<TAbi, TMethod>
   > = PreparedMethod<ParseMethod<TAbi, TMethod>>,
 > = BaseTransactionOptions<
-  Omit<TransactionRequest, "from" | "to" | "data"> & {
+  Omit<TransactionRequest, "from" | "to" | "data" | "value"> & {
     contract: ThirdwebContract<TAbi>;
     method: TMethod | TPreparedMethod;
   } & ParamsOption<TPreparedMethod[1]> &
