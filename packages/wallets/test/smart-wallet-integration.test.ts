@@ -56,7 +56,7 @@ describeIf(!!SECRET_KEY)("SmartWallet core tests", () => {
   it("can estimate a tx", async () => {
     const preparedTx = await contract.erc1155.claim.prepare(0, 1);
     const estimates = await smartWallet.estimate(preparedTx);
-    expect(estimates.wei.toNumber()).toBeGreaterThan(0);
+    expect(estimates.wei.toString()).not.toBe("0");
   });
 
   it("can execute a tx", async () => {

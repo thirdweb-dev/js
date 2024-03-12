@@ -134,6 +134,14 @@ export class HttpRpcClient {
     );
   }
 
+  async getUserOperationReceipt(userOpHash: string): Promise<any> {
+    await this.initializing;
+    return await this.userOpJsonRpcProvider.send(
+      "eth_getUserOperationReceipt",
+      [userOpHash],
+    );
+  }
+
   private async printUserOperation(
     method: string,
     [userOp1, entryPointAddress]: [UserOperationStruct, string],
