@@ -10,7 +10,7 @@ import { ethers } from "ethers6";
 // eslint-disable-next-line no-restricted-imports
 import * as viem from "viem";
 
-const LOCAL_RPC = "http://localhost:8555";
+const LOCAL_RPC = "http://localhost:8545";
 const USDC_CONTRACT_ADDRESS = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48";
 const VITALIK_WALLET = "0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B";
 
@@ -18,7 +18,7 @@ const client = createThirdwebClient({
   clientId: "BENCH",
 });
 
-const NEW_CONTRACT = getContract({
+const USDC_CONTRACT = getContract({
   chain: defineChain({
     id: 1,
     rpc: LOCAL_RPC,
@@ -67,7 +67,7 @@ function randomBigint() {
 group("encode transfer (warm cache)", () => {
   bench("thirdweb", async () => {
     const tx = transfer({
-      contract: NEW_CONTRACT,
+      contract: USDC_CONTRACT,
       to: VITALIK_WALLET,
       value: randomBigint(),
     });

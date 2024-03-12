@@ -14,13 +14,18 @@ import { stringToHex } from "../../../utils/encoding/hex.js";
  */
 export async function predictAddress(
   factoryContract: ThirdwebContract,
-  options: SmartWalletOptions & { personalAccount: Account },
+  options: SmartWalletOptions & { personalAccountAddress?: string },
 ): Promise<string> {
   if (options.overrides?.predictAddress) {
     return options.overrides.predictAddress(factoryContract);
   }
   const accountAddress =
-    options.overrides?.accountAddress || options.personalAccount.address;
+    options.overrides?.accountAddress || options.personalAccountAddress;
+  if (!accountAddress) {
+    throw new Error(
+      "Account address is required to predict the smart wallet address.",
+    );
+  }
   const extraData = stringToHex(options.overrides?.accountSalt ?? "");
   return readContract({
     contract: factoryContract,

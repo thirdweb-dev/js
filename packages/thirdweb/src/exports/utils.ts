@@ -102,6 +102,9 @@ export { keccak256 } from "../utils/hashing/keccak256.js";
 // sha256
 export { sha256 } from "../utils/hashing/sha256.js";
 
+// Ethereum Signed Message hashing
+export { hashMessage } from "../utils/hashing/hashMessage.js";
+
 // ------------------------------------------------
 // address
 // ------------------------------------------------

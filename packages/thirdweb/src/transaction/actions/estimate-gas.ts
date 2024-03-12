@@ -77,9 +77,10 @@ export async function estimateGas(
 
     // load up encode function if we need it
     const { encode } = await import("./encode.js");
-    const [encodedData, toAddress] = await Promise.all([
+    const [encodedData, toAddress, value] = await Promise.all([
       encode(options.transaction),
       resolvePromisedValue(options.transaction.to),
+      resolvePromisedValue(options.transaction.value),
     ]);
 
     // load up the rpc client and the estimateGas function if we need it
@@ -105,6 +106,7 @@ export async function estimateGas(
           to: toAddress,
           data: encodedData,
           from,
+          value,
         }),
       );
       if (options.transaction.chain.experimental?.increaseZeroByteCount) {
