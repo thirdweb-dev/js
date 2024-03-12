@@ -19,7 +19,7 @@ const ACTIVE_WALLET_ID = "thirdweb:active-wallet-id";
 
 /**
  * Create a connection manager for Wallet connections
- * @param storage - An instance of type `AsyncStorage`
+ * @param storage - An instance of type [`AsyncStorage`](https://portal.thirdweb.com/references/typescript/v5/AsyncStorage)
  * @example
  * ```ts
  * const manager = createConnectionManager();
