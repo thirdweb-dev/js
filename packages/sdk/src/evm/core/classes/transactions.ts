@@ -666,7 +666,6 @@ export class Transaction<
     const reason = parseRevertReason(error);
 
     // Get contract sources for stack trace
-    let sources: ContractSource[] | undefined = undefined;
     let contractName: string | undefined = undefined;
     try {
       const chainId = (await provider.getNetwork()).chainId;
@@ -677,10 +676,6 @@ export class Transaction<
 
       if (metadata?.name) {
         contractName = metadata.name;
-      }
-
-      if (metadata?.metadata.sources) {
-        sources = await fetchSourceFilesFromMetadata(metadata, this.storage);
       }
     } catch (err) {
       // no-op
@@ -698,7 +693,6 @@ export class Transaction<
         value,
         hash,
         contractName,
-        sources,
       },
       error,
     );
