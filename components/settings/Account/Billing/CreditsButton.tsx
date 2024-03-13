@@ -39,7 +39,7 @@ export const CreditsButton = () => {
     return null;
   }
 
-  const credit = credits?.find((crd) => crd.name.includes("OP "));
+  const credit = credits?.find((crd) => crd.name.startsWith("OP -"));
 
   return (
     <>

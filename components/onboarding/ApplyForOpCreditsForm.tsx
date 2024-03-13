@@ -14,7 +14,7 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
-import { Button, FormLabel } from "tw-components";
+import { Button, FormHelperText, FormLabel } from "tw-components";
 import { PlanToCreditsRecord } from "./ApplyForOpCreditsModal";
 import { ChakraNextImage } from "components/Image";
 import { useLocalStorage } from "hooks/useLocalStorage";
@@ -27,6 +27,8 @@ interface FormSchema {
   plan_type: string;
   email: string;
   "0-2/name": string;
+  "0-2/website": string;
+  "0-2/social-account": string;
   "0-2/superchain_verticals": string;
   "0-2/superchain_chain": string;
   what_would_you_like_to_meet_about_: string;
@@ -52,6 +54,8 @@ export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
       plan_type: PlanToCreditsRecord[account?.plan || AccountPlan.Free].title,
       email: account?.email || "",
       "0-2/name": "",
+      "0-2/website": "",
+      "0-2/social-account": "",
       "0-2/superchain_verticals": "",
       "0-2/superchain_chain": "",
       what_would_you_like_to_meet_about_: "",
@@ -161,6 +165,22 @@ export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
           <Input {...form.register("0-2/name", { required: true })} />
         </FormControl>
         <FormControl gap={6} isRequired>
+          <FormLabel>Company Website</FormLabel>
+          <Input
+            type="url"
+            {...form.register("0-2/website", { required: true })}
+          />
+          <FormHelperText>URL should start with https://</FormHelperText>
+        </FormControl>
+        <FormControl gap={6} isRequired>
+          <FormLabel>Company Social Account</FormLabel>
+          <Input
+            type="url"
+            {...form.register("0-2/social-account", { required: true })}
+          />
+          <FormHelperText>URL should start with https://</FormHelperText>
+        </FormControl>
+        <FormControl gap={6} isRequired>
           <FormLabel>Industry</FormLabel>
           <ChakraSelect
             options={[
@@ -179,7 +199,7 @@ export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
               value:
                 vertical === "Payments & Finance (DeFi)" ? "DeFi" : vertical,
             }))}
-            placeholder="Select vertical"
+            placeholder="Select industry"
             isRequired
             onChange={(value) => {
               if (value?.value) {
@@ -211,7 +231,11 @@ export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
         </FormControl>
         <FormControl gap={6}>
           <FormLabel>Tell us more about your project</FormLabel>
-          <Textarea {...form.register("what_would_you_like_to_meet_about_")} />
+          <Textarea
+            {...form.register("what_would_you_like_to_meet_about_")}
+            placeholder="Tell us more about your project -- the more you share, the easier you make the approval process."
+          />
+          <FormHelperText>Minimum 150 characters recommended.</FormHelperText>
         </FormControl>
       </ModalBody>
       <ModalFooter>

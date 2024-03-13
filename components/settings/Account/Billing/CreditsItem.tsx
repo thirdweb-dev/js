@@ -85,7 +85,7 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
             </Text>
           </Flex>
         </Flex>
-        {hasAppliedForOpGrant && (
+        {hasAppliedForOpGrant && !credit && (
           <Alert
             status="info"
             borderRadius="lg"
