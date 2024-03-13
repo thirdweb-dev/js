@@ -7,7 +7,7 @@ import { iconSize, radius, spacing } from "../../design-system/index.js";
 import { StyledAnchor, StyledDiv } from "../../design-system/elements.js";
 import { useCustomTheme } from "../../design-system/CustomThemeProvider.js";
 import { Text } from "../../components/text.js";
-import { ArrowRightIcon, TextAlignJustifyIcon } from "@radix-ui/react-icons";
+import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { fadeInAnimation } from "../../design-system/animations.js";
 import { Spinner } from "../../components/Spinner.js";
 import { formatNumber } from "../../../utils/formatNumber.js";
