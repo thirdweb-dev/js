@@ -19,7 +19,7 @@ export { getKeylessTransaction } from "../utils/any-evm/keyless-transaction.js";
 export {
   getCreate2FactoryAddress,
   deployCreate2Factory,
-} from "../utils/any-evm/create-2-factory.js";
+} from "../contract/deployment/utils/create-2-factory.js";
 
 //signatures
 export {
