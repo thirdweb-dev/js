@@ -27,7 +27,6 @@ export {
 } from "../transaction/actions/estimate-gas.js";
 export {
   estimateGasCost,
-  type EstimateGasCostOptions,
   type EstimateGasCostResult,
 } from "../transaction/actions/estimate-gas-cost.js";
 export { waitForReceipt } from "../transaction/actions/wait-for-tx-receipt.js";
