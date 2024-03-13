@@ -39,6 +39,7 @@ export const NFTClaimForm: React.FC<NFTClaimFormProps> = ({ contract }) => {
   const { onSuccess, onError } = useTxNotifications(
     "Successfully claimed NFTs",
     "Failed to claim NFT",
+    contract,
   );
 
   return (

@@ -54,6 +54,7 @@ export const SettingsPrimarySale = <
   const { onSuccess, onError } = useTxNotifications(
     "Primary sale address updated",
     "Error updating primary sale address",
+    contract,
   );
 
   return (

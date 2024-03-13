@@ -66,6 +66,7 @@ export const BatchLazyMintButton: React.FC<BatchLazyMintButtonProps> = ({
   const txNotifications = useTxNotifications(
     "Batch uploaded successfully",
     "Error uploading batch",
+    contractQuery.contract,
   );
 
   if (detectedState !== "enabled") {

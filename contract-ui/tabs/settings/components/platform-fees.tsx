@@ -50,6 +50,7 @@ export const SettingsPlatformFees = <
   const { onSuccess, onError } = useTxNotifications(
     "Platform fee settings updated",
     "Error updating platform fee settings",
+    contract,
   );
 
   return (

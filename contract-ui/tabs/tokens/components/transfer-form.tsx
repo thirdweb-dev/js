@@ -41,6 +41,7 @@ export const TokenTransferForm: React.FC<TokenTransferFormProps> = ({
   const { onSuccess, onError } = useTxNotifications(
     "Successfully transferred tokens",
     "Failed to transfer tokens",
+    contract,
   );
 
   const decimals = useTokenDecimals(contract);

@@ -19,7 +19,7 @@ const MintSupplyTab: React.FC<MintSupplyTabProps> = ({ contract, tokenId }) => {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<{ to: string; amount: string }>({
+  } = useForm<{ to: string; amount: string; }>({
     defaultValues: { amount: "1" },
   });
 
@@ -29,6 +29,7 @@ const MintSupplyTab: React.FC<MintSupplyTabProps> = ({ contract, tokenId }) => {
   const { onSuccess, onError } = useTxNotifications(
     "Mint successful",
     "Error minting additional supply",
+    contract,
   );
 
   return (

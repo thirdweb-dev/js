@@ -5,6 +5,7 @@ import { detectFeatures } from "components/contract-components/utils";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
+import { useInvalidateContractQuery } from "thirdweb/react";
 import {
   FormErrorMessage,
   FormHelperText,
@@ -25,9 +26,10 @@ const BurnTab: React.FC<BurnTabProps> = ({ contract, tokenId }) => {
     watch,
     formState: { errors },
     reset,
-  } = useForm<{ to: string; amount: string }>({
+  } = useForm<{ to: string; amount: string; }>({
     defaultValues: { amount: "1" },
   });
+  const invalidateContractQuery = useInvalidateContractQuery();
 
   const burn = useBurnNFT(contract);
 
@@ -61,6 +63,12 @@ const BurnTab: React.FC<BurnTabProps> = ({ contract, tokenId }) => {
                   label: "success",
                 });
                 onSuccess();
+                if (contract) {
+                  invalidateContractQuery({
+                    chainId: contract.chainId,
+                    contractAddress: contract.getAddress(),
+                  });
+                };
                 reset();
               },
               onError: (error) => {

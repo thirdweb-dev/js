@@ -153,6 +153,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
       : updateMetadataMutation
         ? "Failed to update NFT Metadata"
         : "Failed to mint NFT",
+    contract,
   );
 
   const setFile = (file: File) => {

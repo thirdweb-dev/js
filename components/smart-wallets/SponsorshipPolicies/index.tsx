@@ -159,7 +159,7 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
   });
 
   const { onSuccess, onError } = useTxNotifications(
-    "Sponsoship rules updated",
+    "Sponsorship rules updated",
     "Failed to update sponsorship rules",
   );
 

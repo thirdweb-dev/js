@@ -35,12 +35,13 @@ export const NFTRevealForm: React.FC<NFTRevealFormProps> = ({ contract }) => {
     register,
     handleSubmit,
     formState: { errors, isDirty },
-  } = useForm<{ batchId: string; password: string }>();
+  } = useForm<{ batchId: string; password: string; }>();
   const modalContext = useModalContext();
 
   const { onSuccess, onError } = useTxNotifications(
     "Batch revealed successfully",
     "Error revealing batch upload",
+    contract,
   );
 
   return (

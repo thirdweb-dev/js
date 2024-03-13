@@ -45,6 +45,7 @@ export const TokenBurnForm: React.FC<TokenBurnFormProps> = ({ contract }) => {
   const { onSuccess, onError } = useTxNotifications(
     "Tokens burned successfully",
     "Failed to burn tokens",
+    contract,
   );
 
   const decimals = useTokenDecimals(contract);

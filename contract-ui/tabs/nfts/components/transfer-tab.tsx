@@ -16,7 +16,7 @@ interface TransferTabProps {
 
 const TransferTab: React.FC<TransferTabProps> = ({ contract, tokenId }) => {
   const trackEvent = useTrack();
-  const form = useForm<{ to: string; amount: string }>({
+  const form = useForm<{ to: string; amount: string; }>({
     defaultValues: { to: "", amount: "1" },
   });
 
@@ -25,6 +25,7 @@ const TransferTab: React.FC<TransferTabProps> = ({ contract, tokenId }) => {
   const { onSuccess, onError } = useTxNotifications(
     "Transfer successful",
     "Error transferring",
+    contract,
   );
 
   const isErc1155 = detectFeatures(contract, ["ERC1155"]);

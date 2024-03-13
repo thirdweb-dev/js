@@ -24,6 +24,7 @@ const ClaimTab: React.FC<ClaimTabProps> = ({ contract, tokenId }) => {
   const { onSuccess, onError } = useTxNotifications(
     "Claimed successfully",
     "Failed to claim",
+    contract,
   );
 
   return (

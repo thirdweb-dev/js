@@ -50,6 +50,7 @@ export const TokenAirdropForm: React.FC<TokenAirdropFormProps> = ({
   const { onSuccess, onError } = useTxNotifications(
     "Airdrop successful",
     "Error transferring",
+    contract,
   );
 
   const addresses = watch("addresses");

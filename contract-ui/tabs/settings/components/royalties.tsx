@@ -48,6 +48,7 @@ export const SettingsRoyalties = <
   const { onSuccess, onError } = useTxNotifications(
     "Royalty settings updated",
     "Error updating royalty settings",
+    contract,
   );
 
   return (

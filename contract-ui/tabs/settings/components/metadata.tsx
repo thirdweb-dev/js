@@ -107,6 +107,7 @@ export const SettingsMetadata = <
   const { onSuccess, onError } = useTxNotifications(
     "Successfully updated metadata",
     "Error updating metadata",
+    contract,
   );
 
   return (
@@ -120,9 +121,9 @@ export const SettingsMetadata = <
           const socialUrlsArray =
             Object.keys(dashboard_social_urls || {}).length > 0
               ? (dashboard_social_urls as unknown as {
-                  key: string;
-                  value: string;
-                }[])
+                key: string;
+                value: string;
+              }[])
               : [];
 
           const socialUrlsObj = socialUrlsArray.reduce<Record<string, string>>(
