@@ -91,9 +91,9 @@ export async function getProofsForAllowListEntry(
   tokenDecimals: number = 18,
   version: SnapshotFormatVersion = SnapshotFormatVersion.V1,
 ) {
-  return merkleTree.getProof(
-    hashAllowListEntry(snapshotEntry, tokenDecimals, version),
-  );
+  return merkleTree
+    .getProof(hashAllowListEntry(snapshotEntry, tokenDecimals, version))
+    .map((value) => "0x" + value.data.toString("hex"));
 }
 
 /**
