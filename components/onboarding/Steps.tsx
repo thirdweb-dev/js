@@ -1,6 +1,7 @@
 import {
   AccountStatus,
   useAccount,
+  useAccountCredits,
   useApiKeys,
 } from "@3rdweb-sdk/react/hooks/useApi";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
@@ -63,6 +64,8 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
     onClose: onClaimCreditsClose,
   } = useDisclosure();
   const { colorMode } = useColorMode();
+  const { data: credits } = useAccountCredits();
+  const opCredit = credits?.find((crd) => crd.name.startsWith("OP -"));
   const [onboardingPaymentMethod, setOnboardingPaymentMethod] = useLocalStorage(
     `onboardingPaymentMethod-${meQuery?.data?.id}`,
     false,
@@ -97,7 +100,7 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
   }, [chainId]);
 
   const currentStep = useMemo(() => {
-    if (onlyOptimism || !hasAppliedForOpGrant) {
+    if (onlyOptimism || !hasAppliedForOpGrant || !opCredit) {
       return Step.OptimismCredits;
     }
 
@@ -105,7 +108,7 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
       return null;
     }
 
-    if (!hasAppliedForOpGrant && isSponsoredChain) {
+    if (!hasAppliedForOpGrant && isSponsoredChain && !opCredit) {
       return Step.OptimismCredits;
     } else if (!onboardingKeys && !hasApiKeys) {
       return Step.Keys;
@@ -126,6 +129,7 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
     hasAppliedForOpGrant,
     onlyOptimism,
     isSponsoredChain,
+    opCredit,
   ]);
 
   const handleStep = ({

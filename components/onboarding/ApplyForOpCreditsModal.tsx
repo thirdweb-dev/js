@@ -15,8 +15,12 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { Button, Card, Heading, Text, Badge } from "tw-components";
-import { useAccount, AccountPlan } from "@3rdweb-sdk/react/hooks/useApi";
-import { useEffect, useState } from "react";
+import {
+  useAccount,
+  AccountPlan,
+  AccountStatus,
+} from "@3rdweb-sdk/react/hooks/useApi";
+import { useEffect, useMemo, useState } from "react";
 import { OnboardingBilling } from "./Billing";
 import { OnboardingModal } from "./Modal";
 import { PlanCard } from "./PlanCard";
@@ -89,6 +93,7 @@ export const ApplyForOpCreditsModal: React.FC<ApplyForOpCreditsModalProps> = ({
     onClose: onPaymentMethodClose,
   } = useDisclosure();
   const [page, setPage] = useState<"eligible" | "form">("eligible");
+  const [hasAddedPaymentMethod, setHasAddedPaymentMethod] = useState(false);
   const account = useAccount();
   const [hasAppliedForOpGrant] = useLocalStorage(
     `appliedForOpGrant-${(account?.data && account.data.id) || ""}`,
@@ -104,7 +109,12 @@ export const ApplyForOpCreditsModal: React.FC<ApplyForOpCreditsModalProps> = ({
     });
   }, [trackEvent]);
 
-  const hasValidPayment = account.data?.status === "validPayment";
+  const hasValidPayment = useMemo(() => {
+    return (
+      !!(account?.data?.status === AccountStatus.ValidPayment) ||
+      hasAddedPaymentMethod
+    );
+  }, [account?.data?.status, hasAddedPaymentMethod]);
 
   const isFreePlan = account.data?.plan === AccountPlan.Free;
   const isProPlan = account.data?.plan === AccountPlan.Pro;
@@ -259,6 +269,7 @@ export const ApplyForOpCreditsModal: React.FC<ApplyForOpCreditsModalProps> = ({
       >
         <OnboardingBilling
           onSave={() => {
+            setHasAddedPaymentMethod(true);
             onPaymentMethodClose();
             trackEvent({
               category: "op-sponsorship",
