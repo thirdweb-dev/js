@@ -17,8 +17,6 @@ import { getRpcUrlForChain } from "../chains/utils.js";
 import type { Account, Wallet } from "../wallets/interfaces/wallet.js";
 import type { Prettify } from "../utils/type-utils.js";
 import { getRpcClient } from "../rpc/rpc.js";
-import { waitForReceipt } from "../exports/thirdweb.js";
-import { getUserOpEventFromEntrypoint } from "../wallets/smart/lib/receipts.js";
 
 export const viemAdapter = {
   contract: {
