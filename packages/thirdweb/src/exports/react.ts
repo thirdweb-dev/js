@@ -1,27 +1,3 @@
-export { darkTheme, lightTheme } from "../react/ui/design-system/index.js";
-export type { Theme, ThemeOverrides } from "../react/ui/design-system/index.js";
-
-export { ConnectButton } from "../react/ui/ConnectWallet/ConnectWallet.js";
-export {
-  ConnectEmbed,
-  type ConnectEmbedProps,
-} from "../react/ui/ConnectWallet/Modal/ConnectEmbed.js";
-
-export type {
-  ConnectButtonProps,
-  ConnectButton_connectButtonOptions,
-  ConnectButton_connectModalOptions,
-  ConnectButton_detailsButtonOptions,
-  ConnectButton_detailsModalOptions,
-} from "../react/ui/ConnectWallet/ConnectWalletProps.js";
-export type { WelcomeScreen } from "../react/ui/ConnectWallet/screens/types.js";
-export type { NetworkSelectorProps } from "../react/ui/ConnectWallet/NetworkSelector.js";
-
-export {
-  TransactionButton,
-  type TransactionButtonProps,
-} from "../react/ui/TransactionButton/index.js";
-
 export {
   ThirdwebProvider,
   type ThirdwebProviderProps,
@@ -39,7 +15,7 @@ export {
   useActiveWalletConnectionStatus,
   useSetActiveWalletConnectionStatus,
   useIsAutoConnecting,
-} from "../react/providers/wallet-provider.js";
+} from "../react/hooks/wallets/wallet-hooks.js";
 
 // contract related
 export { useReadContract } from "../react/hooks/contract/useRead.js";
@@ -58,50 +34,8 @@ export {
 export { createContractQuery } from "../react/utils/createQuery.js";
 export { useInvalidateContractQuery } from "../react/hooks/others/useInvalidateQueries.js";
 
-// wallets
-export {
-  metamaskConfig,
-  type MetamaskConfigOptions,
-} from "../react/wallets/metamask/metamaskConfig.js";
-
-export {
-  coinbaseConfig,
-  type CoinbaseConfigOptions,
-} from "../react/wallets/coinbase/coinbaseConfig.js";
-
-export {
-  rainbowConfig,
-  type RainbowConfigOptions,
-} from "../react/wallets/rainbow/rainbowConfig.js";
-
-export {
-  walletConnectConfig,
-  type WalletConnectConfigOptions,
-} from "../react/wallets/walletConnect/walletConnectConfig.js";
-
-export {
-  zerionConfig,
-  type ZerionConfigOptions,
-} from "../react/wallets/zerion/zerionConfig.js";
-
-export {
-  smartWalletConfig,
-  type SmartWalletConfigOptions,
-} from "../react/wallets/smartWallet/smartWalletConfig.js";
-
-export {
-  embeddedWalletConfig,
-  type EmbeddedWalletConfigOptions,
-} from "../react/wallets/embedded/embeddedWalletConfig.js";
-export type { EmbeddedWalletAuth } from "../react/wallets/embedded/types.js";
-
-export {
-  type LocalWalletConfigOptions,
-  localWalletConfig,
-} from "../react/wallets/local/localWalletConfig.js";
-
-export type { SupportedTokens } from "../react/ui/ConnectWallet/defaultTokens.js";
-export { defaultTokens } from "../react/ui/ConnectWallet/defaultTokens.js";
+export type { SupportedTokens } from "../react-ui/ui/ConnectWallet/defaultTokens.js";
+export { defaultTokens } from "../react-ui/ui/ConnectWallet/defaultTokens.js";
 
 export { useSendSwap } from "../react/hooks/pay/useSendSwap.js";
 
@@ -117,13 +51,10 @@ export {
   type SwapStatusParams,
 } from "../react/hooks/pay/useSwapStatus.js";
 
-export { defaultWallets } from "../react/wallets/defaultWallets.js";
+export { defaultWallets } from "../react-ui/wallets/defaultWallets.js";
 
-export { en } from "../react/ui/locales/en.js";
-export { es } from "../react/ui/locales/es.js";
-export { ja } from "../react/ui/locales/ja.js";
-export { tl } from "../react/ui/locales/tl.js";
-export type { ThirdwebLocale } from "../react/ui/locales/types.js";
-
-export { MediaRenderer } from "../react/ui/MediaRenderer/MediaRenderer.js";
-export type { MediaRendererProps } from "../react/ui/MediaRenderer/types.js";
+export { en } from "../react-ui/ui/locales/en.js";
+export { es } from "../react-ui/ui/locales/es.js";
+export { ja } from "../react-ui/ui/locales/ja.js";
+export { tl } from "../react-ui/ui/locales/tl.js";
+export type { ThirdwebLocale } from "../react-ui/ui/locales/types.js";

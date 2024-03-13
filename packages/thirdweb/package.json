@@ -60,6 +60,11 @@
       "import": "./dist/esm/exports/react.js",
       "default": "./dist/cjs/exports/react.js"
     },
+    "./react-ui": {
+      "types": "./dist/types/exports/react-ui.d.ts",
+      "import": "./dist/esm/exports/react-ui.js",
+      "default": "./dist/cjs/exports/react-ui.js"
+    },
     "./rpc": {
       "types": "./dist/types/exports/rpc.d.ts",
       "import": "./dist/esm/exports/rpc.js",
@@ -114,6 +119,9 @@
       ],
       "react": [
         "./dist/types/exports/react.d.ts"
+      ],
+      "react-ui": [
+        "./dist/types/exports/react-ui.d.ts"
       ],
       "rpc": [
         "./dist/types/exports/rpc.d.ts"

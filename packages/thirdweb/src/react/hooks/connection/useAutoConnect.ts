@@ -5,7 +5,7 @@ import type { WalletConfig } from "../../types/wallets.js";
 import {
   useConnect,
   useSetActiveWalletConnectionStatus,
-} from "../../providers/wallet-provider.js";
+} from "../wallets/wallet-hooks.js";
 import {
   getStoredActiveWalletId,
   getStoredConnectedWalletIds,

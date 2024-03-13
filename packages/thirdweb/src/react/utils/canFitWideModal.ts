@@ -1,4 +1,4 @@
-import { wideModalScreenThreshold } from "../ui/ConnectWallet/constants.js";
+import { wideModalScreenThreshold } from "../../react-ui/ui/ConnectWallet/constants.js";
 
 /**
  * Return true if the current screen size can fit the the wide connect modal
