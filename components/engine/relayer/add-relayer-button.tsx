@@ -85,7 +85,7 @@ const AddModal = ({
 
   const form = useForm<AddModalInput>({
     defaultValues: {
-      chainId: slugToChainRecord["mumbai"].chainId,
+      chainId: slugToChainRecord["sepolia"].chainId,
     },
   });
 

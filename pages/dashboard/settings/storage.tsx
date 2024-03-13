@@ -214,13 +214,13 @@ function Provider() {
   return (
     <ThirdwebProvider
       clientId="YOUR_CLIENT_ID" // You can get a client id from dashboard settings
-      activeChain="goerli"
+      activeChain="sepolia"
       >
       ...
     </ThirdwebProvider>
   );
 }
-  
+
 // Upload files to IPFS
 import { useStorageUpload } from "@thirdweb-dev/react";
 
@@ -267,7 +267,7 @@ console.info(url);
 const data = await storage.downloadJSON(uri);`,
   python: `from thirdweb import ThirdwebSDK
 
-sdk = ThirdwebSDK("goerli")
+sdk = ThirdwebSDK("sepolia")
 metadata = {
   "name": "NFT",
   "image": "ipfs://..."
@@ -281,7 +281,7 @@ import (
 )
 
 func main() {
-    sdk, _ := thirdweb.NewThirdwebSDK("goerli", nil)
+    sdk, _ := thirdweb.NewThirdwebSDK("sepolia", nil)
 
     metadata := map[string]interface{}{
       "name": "NFT",

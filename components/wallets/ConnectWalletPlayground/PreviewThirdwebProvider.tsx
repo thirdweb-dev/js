@@ -26,7 +26,7 @@ export function PreviewThirdwebProvider(props: {
   return (
     <ThirdwebProvider
       locale={props.locale ? localeIdToObj[props.locale] : undefined}
-      activeChain="goerli"
+      activeChain="sepolia"
       supportedWallets={
         props.supportedWallets.length > 0 ? props.supportedWallets : undefined
       }

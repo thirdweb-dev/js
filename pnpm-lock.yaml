@@ -62,8 +62,8 @@ dependencies:
     specifier: ^8.12.0
     version: 8.12.0(react-dom@18.2.0)(react@18.2.0)
   '@thirdweb-dev/chains':
-    specifier: 0.1.78-nightly-c3967b798-20240307212559
-    version: 0.1.78-nightly-c3967b798-20240307212559
+    specifier: 0.1.79-nightly-83526c519-20240313202839
+    version: 0.1.79-nightly-83526c519-20240313202839
   '@thirdweb-dev/react':
     specifier: 4.4.17
     version: 4.4.17(@babel/core@7.23.9)(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(@thirdweb-dev/sdk@4.0.44)(@types/react-dom@18.2.19)(@types/react@18.2.63)(ethers@5.7.2)(fastify@4.26.1)(localforage@1.10.0)(next@14.1.2)(react-dom@18.2.0)(react@18.2.0)(typescript@5.3.3)(zksync-web3@0.14.4)
@@ -6367,8 +6367,8 @@ packages:
     engines: {node: '>=18'}
     dev: false
 
-  /@thirdweb-dev/chains@0.1.78-nightly-c3967b798-20240307212559:
-    resolution: {integrity: sha512-XHlRXbBpx+H9UYNCHIvwxZWUpK/uVyJ5eKYSf8bPDwW6sE9qZasc2liEPJmVePpVJJjAB5YUTMl4Uk5D3KugSw==}
+  /@thirdweb-dev/chains@0.1.79-nightly-83526c519-20240313202839:
+    resolution: {integrity: sha512-2bACD0j6salvTLzDxswRonRLv2zsNwCVvyDUVh3Hc9q/CIDFsj1711IyFshxHHB6yqIlUMzbI7CQZloqSPGMqA==}
     engines: {node: '>=18'}
     dev: false
 

@@ -13,7 +13,7 @@ export const landingSnippets = {
   javascript: `import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
 // initialize the SDK
-const sdk = new ThirdwebSDK("mumbai");
+const sdk = new ThirdwebSDK("sepolia");
 
 // connect to your smart contract
 const contract = await sdk.getContract("0xe68904F3018fF980b6b64D06d7f7fBCeFF4cB06c");
@@ -53,7 +53,7 @@ export default function App() {
   python: `from thirdweb import ThirdwebSDK
 from pprint import pprint
 
-sdk = ThirdwebSDK("mumbai")
+sdk = ThirdwebSDK("sepolia")
 
 nftCollection = sdk.get_nft_drop("0xe68904F3018fF980b6b64D06d7f7fBCeFF4cB06c")
 
@@ -69,7 +69,7 @@ import (
 )
 
 func main() {
-  sdk, _ := thirdweb.NewThirdwebSDK("mumbai", nil)
+  sdk, _ := thirdweb.NewThirdwebSDK("sepolia", nil)
 
   // Add your NFT Drop contract address here
   address := "0xe68904F3018fF980b6b64D06d7f7fBCeFF4cB06c"
@@ -96,7 +96,7 @@ List<NFT> nfts = await contract.ERC721.GetAll()`,
 const authSnippets = {
   javascript: `import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
-const sdk = new ThirdwebSDK("goerli");
+const sdk = new ThirdwebSDK("sepolia");
 
 // Login with a single line of code
 const payload = await sdk.auth.login();
@@ -119,7 +119,7 @@ export default function App() {
   "react-native": "",
   python: `from thirdweb import ThirdwebSDK
 
-sdk = ThirdwebSDK("goerli")
+sdk = ThirdwebSDK("sepolia")
 
 # Login with a single line of code
 payload = sdk.auth.login();
@@ -129,7 +129,7 @@ address = sdk.auth.verify(payload);`,
   go: `import "github.com/thirdweb-dev/go-sdk/thirdweb"
 
 func main() {
-  sdk, err := thirdweb.NewThirdwebSDK("goerli", nil)
+  sdk, err := thirdweb.NewThirdwebSDK("sepolia", nil)
 
   // Login with a single line of code
   payload, err := sdk.Auth.Login()

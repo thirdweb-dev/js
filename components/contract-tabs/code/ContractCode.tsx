@@ -28,7 +28,7 @@ function replaceVariablesInCodeSnippet(
       snippet[env] = snippet[env]
         ?.replace(/{{contract_address}}/gm, contractAddress)
         ?.replace(/{{program_address}}/gm, contractAddress)
-        ?.replace(/{{chainName}}/gm, chainName || "goerli")
+        ?.replace(/{{chainName}}/gm, chainName || "sepolia")
         .replace(/<YOUR-CONTRACT-ADDRESS>/gm, contractAddress);
     }
 

@@ -14,7 +14,7 @@ type AuthOption = "google" | "email" | "facebook" | "apple";
 
 export function usePlaygroundWallets(defaultWalletSelection: WalletSelection) {
   const [smartWalletOptions, setSmartWalletOptions] = useState({
-    factoryAddress: "0x2e9f5A20c8A7270085F4ed716d58e72dFF8D098f",
+    factoryAddress: "0xa033aa4a35b9aa70fd3bbae95744110cee12d545",
     enabled: false,
     gasless: true,
   });
@@ -57,12 +57,12 @@ export function usePlaygroundWallets(defaultWalletSelection: WalletSelection) {
             factoryAddress: smartWalletOptions.factoryAddress,
             gasless: smartWalletOptions.gasless,
             bundlerUrl: isProd
-              ? "https://goerli.bundler.thirdweb.com"
-              : "https://goerli.bundler.thirdweb-dev.com",
+              ? "https://11155111.bundler.thirdweb.com"
+              : "https://11155111.bundler.thirdweb-dev.com",
             // eslint-disable-next-line inclusive-language/use-inclusive-words
             paymasterUrl: isProd
-              ? "https://goerli.bundler.thirdweb.com"
-              : "https://goerli.bundler.thirdweb-dev.com",
+              ? "https://11155111.bundler.thirdweb.com"
+              : "https://11155111.bundler.thirdweb-dev.com",
           })
         : walletConfig;
     },
