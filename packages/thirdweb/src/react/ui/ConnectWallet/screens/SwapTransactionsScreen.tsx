@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from "react";
-import { Container, ModalHeader } from "../../components/basic.js";
+import { Container, Line, ModalHeader } from "../../components/basic.js";
 import { swapTransactionsStore } from "./Buy/swap/pendingSwapTx.js";
 import { Spacer } from "../../components/Spacer.js";
 import { ArrowTopBottom } from "../icons/ArrowTopBottom.js";
@@ -7,10 +7,16 @@ import { iconSize, radius, spacing } from "../../design-system/index.js";
 import { StyledAnchor, StyledDiv } from "../../design-system/elements.js";
 import { useCustomTheme } from "../../design-system/CustomThemeProvider.js";
 import { Text } from "../../components/text.js";
-import { ArrowRightIcon } from "@radix-ui/react-icons";
+import { ArrowRightIcon, TextAlignJustifyIcon } from "@radix-ui/react-icons";
 import { fadeInAnimation } from "../../design-system/animations.js";
 import { Spinner } from "../../components/Spinner.js";
 import { formatNumber } from "../../../utils/formatNumber.js";
+import { Button } from "../../components/buttons.js";
+import { useChainQuery } from "../../../hooks/others/useChainQuery.js";
+import {
+  useActiveAccount,
+  useActiveWalletChain,
+} from "../../../providers/wallet-provider.js";
 
 /**
  * @internal
@@ -22,20 +28,25 @@ export function SwapTransactionsScreen(props: { onBack: () => void }) {
   );
 
   const reversedTxs = [...swapTxs].reverse();
+  const activeChain = useActiveWalletChain();
+  const chainQuery = useChainQuery(activeChain);
+  const activeAccount = useActiveAccount();
   return (
-    <Container
-      style={{
-        minHeight: "350px",
-      }}
-      animate="fadein"
-    >
+    <Container animate="fadein">
       <Container p="lg">
         <ModalHeader title="Transactions" onBack={props.onBack} />
       </Container>
 
       <Spacer y="xs" />
 
-      <Container flex="column" gap="md" px="md">
+      <Container
+        flex="column"
+        gap="md"
+        px="md"
+        style={{
+          minHeight: "200px",
+        }}
+      >
         {reversedTxs.map((txInfo, i) => {
           return (
             <TxHashLink key={i} href={txInfo.txExplorerLink} target="_blank">
@@ -93,9 +104,32 @@ export function SwapTransactionsScreen(props: { onBack: () => void }) {
           );
         })}
       </Container>
+
+      <Line />
+      <Container p="lg">
+        <ButtonLink
+          fullWidth
+          variant="accent"
+          href={
+            chainQuery.data?.explorers?.[0]?.url +
+            "/address/" +
+            activeAccount?.address
+          }
+          target="_blank"
+          as="a"
+          style={{
+            textDecoration: "none",
+            color: "inherit",
+          }}
+        >
+          View on Explorer
+        </ButtonLink>
+      </Container>
     </Container>
   );
 }
+
+const ButtonLink = /* @__PURE__ */ (() => Button.withComponent("a"))();
 
 const IconBox = /* @__PURE__ */ StyledDiv(() => {
   const theme = useCustomTheme();

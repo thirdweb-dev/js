@@ -6,7 +6,6 @@ import {
   PaperPlaneIcon,
   PinBottomIcon,
   PlusIcon,
-  InfoCircledIcon,
 } from "@radix-ui/react-icons";
 import styled from "@emotion/styled";
 import { useState, useEffect, useSyncExternalStore } from "react";
@@ -419,23 +418,23 @@ export const ConnectedWalletDetails: React.FC<{
         >
           {networkSwitcherButton}
 
-          {/* pending Swap transactions link */}
-          {pendingSwapTxs.length > 0 && (
-            <MenuButton
-              onClick={() => {
-                setScreen("pending-tx");
-              }}
-              style={{
-                fontSize: fontSize.sm,
-              }}
-            >
-              <InfoCircledIcon width={iconSize.md} height={iconSize.md} />
-              <Container flex="row" gap="xs" center="y">
-                <Text color="primaryText">Pending Transactions</Text>
+          {/* Transactions */}
+          <MenuButton
+            onClick={() => {
+              setScreen("pending-tx");
+            }}
+            style={{
+              fontSize: fontSize.sm,
+            }}
+          >
+            <TextAlignJustifyIcon width={iconSize.md} height={iconSize.md} />
+            <Container flex="row" gap="xs" center="y">
+              <Text color="primaryText">Transactions</Text>
+              {pendingSwapTxs.length > 0 && (
                 <BadgeCount>{pendingSwapTxs.length}</BadgeCount>
-              </Container>
-            </MenuButton>
-          )}
+              )}
+            </Container>
+          </MenuButton>
 
           {/* Switch to Personal Wallet  */}
           {personalWallet &&
@@ -498,31 +497,6 @@ export const ConnectedWalletDetails: React.FC<{
                 {locale.requestTestnetFunds}
               </MenuLink>
             )}
-
-          {/* Explorer link */}
-          {chainQuery.data?.explorers && chainQuery.data?.explorers[0]?.url && (
-            <MenuLink
-              href={
-                chainQuery.data.explorers[0].url +
-                "/address/" +
-                activeAccount?.address
-              }
-              target="_blank"
-              as="a"
-              style={{
-                textDecoration: "none",
-                color: "inherit",
-              }}
-            >
-              <Container flex="row" center="y" color="secondaryText">
-                <TextAlignJustifyIcon
-                  width={iconSize.md}
-                  height={iconSize.md}
-                />
-              </Container>
-              {locale.transactionHistory}
-            </MenuLink>
-          )}
 
           {/* Export  Wallet */}
           {activeWallet?.metadata.id === localWalletMetadata.id && (

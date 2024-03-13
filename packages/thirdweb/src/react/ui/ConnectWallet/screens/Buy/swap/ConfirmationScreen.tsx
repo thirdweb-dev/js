@@ -391,7 +391,7 @@ function WaitingForConfirmation(props: {
         <Spacer y="xl" />
 
         <Button variant="accent" fullWidth onClick={props.onViewPendingTx}>
-          View Pending Transactions
+          View Transactions
         </Button>
       </Container>
     </Container>
