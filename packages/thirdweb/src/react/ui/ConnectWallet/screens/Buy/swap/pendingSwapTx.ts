@@ -55,7 +55,7 @@ export const addPendingSwapTransaction = (
   swapTransactionsStore.setValue([...currentValue, txInfo]);
 
   // poll for it's status and update the store when we know it's status
-  const maxRetries = 12;
+  const maxRetries = 50;
   let retryCount = 0;
 
   async function tryToGetStatus() {

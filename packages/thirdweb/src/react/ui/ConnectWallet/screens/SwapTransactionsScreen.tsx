@@ -24,15 +24,18 @@ export function SwapTransactionsScreen(props: { onBack: () => void }) {
   const reversedTxs = [...swapTxs].reverse();
   return (
     <Container
-      p="lg"
       style={{
         minHeight: "350px",
       }}
+      animate="fadein"
     >
-      <ModalHeader title="Transactions" onBack={props.onBack} />
-      <Spacer y="xl" />
+      <Container p="lg">
+        <ModalHeader title="Transactions" onBack={props.onBack} />
+      </Container>
 
-      <Container flex="column" gap="md">
+      <Spacer y="xs" />
+
+      <Container flex="column" gap="md" px="md">
         {reversedTxs.map((txInfo, i) => {
           return (
             <TxHashLink key={i} href={txInfo.txExplorerLink} target="_blank">

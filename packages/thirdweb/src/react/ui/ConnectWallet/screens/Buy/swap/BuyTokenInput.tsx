@@ -13,6 +13,7 @@ import { useChainQuery } from "../../../../../hooks/others/useChainQuery.js";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { isMobile } from "../../../../../utils/isMobile.js";
 import { ChainIcon } from "../../../../components/ChainIcon.js";
+import { Text } from "../../../../components/text.js";
 
 /**
  * @internal
@@ -65,6 +66,7 @@ export function BuyTokenInput(props: {
           fontSize: isMobile() ? "40px" : "50px",
           boxShadow: "none",
           padding: "0",
+          fontWeight: 600,
           textAlign: "center",
         }}
       />
@@ -100,7 +102,7 @@ export function BuyTokenInput(props: {
         >
           <ChainIcon chain={chainQuery.data} size={iconSize.sm} />
           {chainQuery.data?.name ? (
-            <div>{chainQuery.data.name}</div>
+            <Text size="sm">{chainQuery.data.name}</Text>
           ) : (
             <Skeleton width="90px" height={fontSize.xs} />
           )}

@@ -138,23 +138,10 @@ export function ConfirmationScreen(props: {
         </Container>
       </TokenInfoContainer>
 
-      <Spacer y="lg" />
+      <Spacer y="xl" />
       <SwapFees quote={props.swapQuote} />
 
-      <Spacer y="xl" />
-
-      {status === "error" && (
-        <>
-          <Container flex="row" gap="xs" center="y" color="danger">
-            <CrossCircledIcon width={iconSize.sm} height={iconSize.sm} />
-            <Text color="danger" size="sm">
-              {step === "approval" ? "Approval Rejected" : "Swap Rejected"}
-            </Text>
-          </Container>
-
-          <Spacer y="lg" />
-        </>
-      )}
+      <Spacer y="lg" />
 
       {/* Show 2 steps  */}
       {isApprovalRequired && (
@@ -178,6 +165,19 @@ export function ConfirmationScreen(props: {
             <Step isDone={false} label="Swap" isActive={step === "swap"} />
           </Container>
           <Spacer y="lg" />
+        </>
+      )}
+
+      {status === "error" && (
+        <>
+          <Container flex="row" gap="xs" center="y" color="danger">
+            <CrossCircledIcon width={iconSize.sm} height={iconSize.sm} />
+            <Text color="danger" size="sm">
+              {step === "approval" ? "Failed to Approve" : "Failed to Swap"}
+            </Text>
+          </Container>
+
+          <Spacer y="md" />
         </>
       )}
 
@@ -244,7 +244,7 @@ const ConnectorLine = /* @__PURE__ */ StyledDiv(() => {
   const theme = useCustomTheme();
   return {
     height: "1.5px",
-    background: theme.colors.accentText,
+    background: theme.colors.secondaryText,
     flex: 1,
   };
 });
@@ -255,7 +255,16 @@ function Step(props: { isDone: boolean; label: string; isActive: boolean }) {
       flex="row"
       center="y"
       gap="xs"
-      color={props.isActive ? "primaryText" : "accentText"}
+      style={{
+        fontSize: fontSize.sm,
+      }}
+      color={
+        props.isDone
+          ? "success"
+          : props.isActive
+            ? "primaryText"
+            : "secondaryText"
+      }
     >
       <Circle>
         {props.isDone ? (

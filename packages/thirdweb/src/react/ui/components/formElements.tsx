@@ -35,6 +35,7 @@ export const Input = /* @__PURE__ */ StyledInput((props: InputProps) => {
   const theme = useCustomTheme();
   return {
     fontSize: fontSize.md,
+    fontFamily: "inherit",
     display: "block",
     padding: props.sm ? spacing.sm : fontSize.sm,
     boxSizing: "border-box",

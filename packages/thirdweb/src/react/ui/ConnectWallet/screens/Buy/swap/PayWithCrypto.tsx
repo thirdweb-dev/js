@@ -19,7 +19,6 @@ import type { Chain } from "../../../../../../chains/types.js";
 import { Text } from "../../../../components/text.js";
 import type { NativeToken } from "../../nativeToken.js";
 import { TokenSelectorButton } from "./TokenSelector.js";
-import { Spacer } from "../../../../components/Spacer.js";
 import { ChainIcon } from "../../../../components/ChainIcon.js";
 import { WalletIcon } from "../../../icons/WalletIcon.js";
 
@@ -36,7 +35,6 @@ export function PayWithCrypto(props: {
   chain: Chain;
   token?: TokenInfo | NativeToken;
   isLoading: boolean;
-  isNotEnoughBalance: boolean;
 }) {
   const chainQuery = useChainQuery(props.chain);
   const activeAccount = useActiveAccount();
@@ -57,32 +55,6 @@ export function PayWithCrypto(props: {
     <div>
       <BorderBox>
         {/* Row 1 */}
-        <Container flex="row" px="sm" center="y">
-          {/* right */}
-          <Button
-            variant="outline"
-            style={{
-              fontSize: fontSize.sm,
-              border: "none",
-              paddingInline: 0,
-              paddingBlock: spacing.sm,
-            }}
-            gap="xs"
-            onClick={props.onChainClick}
-          >
-            <ChainIcon chain={chainQuery.data} size={iconSize.sm} />
-            {chainQuery.data?.name || (
-              <Skeleton width="90px" height={fontSize.xs} />
-            )}
-            <Container color="secondaryText">
-              <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
-            </Container>
-          </Button>
-        </Container>
-
-        <Line />
-
-        {/* Row 2 */}
         <Container
           flex="row"
           style={{
@@ -130,34 +102,57 @@ export function PayWithCrypto(props: {
             )}
           </div>
         </Container>
-      </BorderBox>
 
-      <Spacer y="md" />
+        <Line />
 
-      {/* left */}
-      <Container
-        flex="row"
-        style={{
-          justifyContent: "space-between",
-        }}
-      >
-        <Container flex="row" gap="xxs" center="y" color="secondaryText">
-          <WalletIcon size={iconSize.xs} />
-          {balanceQuery.data ? (
-            <Text size="sm" color="secondaryText">
-              {formatTokenBalance(balanceQuery.data, true)}
-            </Text>
-          ) : (
-            <Skeleton width="70px" height={fontSize.sm} />
-          )}
+        {/* Row 2 */}
+        <Container flex="row" px="sm" center="y">
+          {/* right */}
+          <Container
+            flex="row"
+            style={{
+              flexGrow: 1,
+              flexWrap: "nowrap",
+            }}
+          >
+            <Button
+              variant="outline"
+              style={{
+                fontSize: fontSize.sm,
+                border: "none",
+                paddingInline: 0,
+                paddingBlock: spacing.sm,
+              }}
+              gap="xs"
+              onClick={props.onChainClick}
+            >
+              <ChainIcon chain={chainQuery.data} size={iconSize.sm} />
+              {chainQuery.data?.name ? (
+                <Text color="secondaryText" size="sm">
+                  {chainQuery.data.name}
+                </Text>
+              ) : (
+                <Skeleton width="90px" height={fontSize.xs} />
+              )}
+
+              <Container color="secondaryText">
+                <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
+              </Container>
+            </Button>
+          </Container>
+
+          <Container flex="row" gap="xxs" center="y" color="secondaryText">
+            <WalletIcon size={iconSize.xs} />
+            {balanceQuery.data ? (
+              <Text size="xs" color="secondaryText">
+                {formatTokenBalance(balanceQuery.data, true)}
+              </Text>
+            ) : (
+              <Skeleton width="70px" height={fontSize.xs} />
+            )}
+          </Container>
         </Container>
-
-        {props.isNotEnoughBalance && (
-          <Text color="danger" size="sm">
-            Not Enough Balance
-          </Text>
-        )}
-      </Container>
+      </BorderBox>
     </div>
   );
 }

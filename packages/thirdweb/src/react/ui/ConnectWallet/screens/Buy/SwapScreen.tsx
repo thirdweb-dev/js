@@ -34,6 +34,7 @@ import { BuyTokenInput } from "./swap/BuyTokenInput.js";
 import { polygon } from "../../../../../chains/chain-definitions/polygon.js";
 import { useQuery } from "@tanstack/react-query";
 import { getClientFetch } from "../../../../../utils/fetch.js";
+import { SwapFees } from "./swap/SwapFees.js";
 
 const fallbackSupportedChains = /* @__PURE__ */ (() =>
   fallbackSwapSupportedChainIds.map(defineChain))();
@@ -345,7 +346,6 @@ export function SwapScreenContent(props: {
               token={fromToken}
               isLoading={swapQuoteQuery.isLoading && !sourceTokenAmount}
               onChainClick={() => setScreen("select-from-chain")}
-              isNotEnoughBalance={isNotEnoughBalance}
             />
 
             {isSwapQuoteError && (
@@ -358,6 +358,31 @@ export function SwapScreenContent(props: {
                   </Text>
                 </Container>
               </div>
+            )}
+
+            {!isSwapQuoteError && isNotEnoughBalance && (
+              <>
+                <Spacer y="md" />
+
+                {/* left */}
+                <Container
+                  flex="row"
+                  style={{
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text color="danger" size="sm">
+                    Not Enough Balance
+                  </Text>
+                </Container>
+              </>
+            )}
+
+            {swapQuoteQuery.data && (
+              <>
+                <Spacer y="lg" />
+                <SwapFees quote={swapQuoteQuery.data} />
+              </>
             )}
 
             <Spacer y="lg" />
