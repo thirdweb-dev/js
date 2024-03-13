@@ -177,6 +177,7 @@ export function enDefault(): ThirdwebLocale {
       cryptoDefiWallet: extensionAndQRScanScreens("Crypto Defi"),
       rabbyWallet: extensionAndQRScanScreens("Rabby"),
       coin98Wallet: extensionAndQRScanScreens("Coin98"),
+      binanceWallet: extensionAndQRScanScreens("Binance"),
       paperWallet: {
         signIn: "Sign in",
         signInWithGoogle: "Sign in with Google",

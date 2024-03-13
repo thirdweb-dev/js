@@ -107,6 +107,11 @@ export {
   type Coin98WalletConfigOptions,
 } from "./wallet/wallets/coin98/coin98Wallet";
 
+export {
+  binanceWallet,
+  type BinanceWalletConfigOptions,
+} from "./wallet/wallets/binanceWallet/binanceWallet";
+
 // theming
 export { darkTheme, lightTheme } from "./design-system/index";
 export type { Theme, ThemeOverrides } from "./design-system/index";

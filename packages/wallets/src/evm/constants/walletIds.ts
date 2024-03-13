@@ -1,4 +1,5 @@
 export const walletIds = {
+  binance: "binance",
   blocto: "blocto",
   coin98: "coin98",
   coinbase: "coinbase",

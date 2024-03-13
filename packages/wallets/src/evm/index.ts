@@ -90,6 +90,9 @@ export { getInjectedCoin98Provider } from "./connectors/coin98/getInjectedCoin98
 export * from "./wallets/magic-eden";
 export { getInjectedMagicEdenProvider } from "./connectors/magic-eden/getInjectedMagicEdenProvider";
 
+export * from "./wallets/binance-wallet";
+export { getInjectedBinanceProvider } from "./connectors/binance-wallet/getInjectedBinanceProvider";
+
 export type { Chain } from "@thirdweb-dev/chains";
 
 // export the window ethereum util

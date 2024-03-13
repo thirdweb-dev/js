@@ -1,6 +1,7 @@
 import { useWalletContext } from "../providers/thirdweb-wallet-provider";
 import invariant from "tiny-invariant";
 import type {
+  BinanceWallet,
   BloctoWallet,
   Coin98Wallet,
   CoinbaseWallet,
@@ -57,7 +58,8 @@ export type WalletIdToWalletTypeMap = {
   cryptoDefiWallet: CryptoDefiWallet;
   rabby: RabbyWallet;
   xdefi: XDEFIWallet;
-  magicEden: MagicEdenWallet
+  binance: BinanceWallet;
+  magicEden: MagicEdenWallet;
 };
 
 /**

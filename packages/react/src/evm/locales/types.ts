@@ -305,5 +305,6 @@ export type ThirdwebLocale = {
     trustWallet: ExtensionAndQRScreensLocale;
     walletConnect: { scanInstruction: string };
     zerionWallet: ExtensionAndQRScreensLocale;
+    binanceWallet: ExtensionAndQRScreensLocale;
   };
 };

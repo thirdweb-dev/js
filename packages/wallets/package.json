@@ -273,6 +273,13 @@
       },
       "default": "./evm/connectors/xdefi/dist/thirdweb-dev-wallets-evm-connectors-xdefi.cjs.js"
     },
+    "./evm/wallets/binance-wallet": {
+      "module": {
+        "browser": "./evm/wallets/binance-wallet/dist/thirdweb-dev-wallets-evm-wallets-binance-wallet.browser.esm.js",
+        "default": "./evm/wallets/binance-wallet/dist/thirdweb-dev-wallets-evm-wallets-binance-wallet.esm.js"
+      },
+      "default": "./evm/wallets/binance-wallet/dist/thirdweb-dev-wallets-evm-wallets-binance-wallet.cjs.js"
+    },
     "./evm/wallets/rainbow-wallet": {
       "module": {
         "browser": "./evm/wallets/rainbow-wallet/dist/thirdweb-dev-wallets-evm-wallets-rainbow-wallet.browser.esm.js",
@@ -419,6 +426,13 @@
         "default": "./evm/connectors/smart-wallet/dist/thirdweb-dev-wallets-evm-connectors-smart-wallet.esm.js"
       },
       "default": "./evm/connectors/smart-wallet/dist/thirdweb-dev-wallets-evm-connectors-smart-wallet.cjs.js"
+    },
+    "./evm/connectors/binance-wallet": {
+      "module": {
+        "browser": "./evm/connectors/binance-wallet/dist/thirdweb-dev-wallets-evm-connectors-binance-wallet.browser.esm.js",
+        "default": "./evm/connectors/binance-wallet/dist/thirdweb-dev-wallets-evm-connectors-binance-wallet.esm.js"
+      },
+      "default": "./evm/connectors/binance-wallet/dist/thirdweb-dev-wallets-evm-connectors-binance-wallet.cjs.js"
     },
     "./evm/connectors/wallet-connect": {
       "module": {

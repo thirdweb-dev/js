@@ -180,6 +180,7 @@ export function jaDefault(): ThirdwebLocale {
       oneKeyWallet: extensionAndQRScanScreens("OneKey"),
       cryptoDefiWallet: extensionAndQRScanScreens("Crypto Defi"),
       rabbyWallet: extensionAndQRScanScreens("Rabby"),
+      binanceWallet: extensionAndQRScanScreens("Binance"),
       paperWallet: {
         signIn: "サインイン",
         signInWithGoogle: "Googleでサインイン",

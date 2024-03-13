@@ -182,6 +182,7 @@ export function tlDefault(): ThirdwebLocale {
       cryptoDefiWallet: extensionAndQRScanScreens("Crypto Defi"),
       rabbyWallet: extensionAndQRScanScreens("Rabby"),
       coin98Wallet: extensionAndQRScanScreens("Coin98"),
+      binanceWallet: extensionAndQRScanScreens("Binance"),
       paperWallet: {
         signIn: "Mag-sign in",
         signInWithGoogle: "Mag-sign in gamit ang Google",

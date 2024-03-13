@@ -180,6 +180,7 @@ export function esDefault(): ThirdwebLocale {
       oneKeyWallet: extensionAndQRScanScreens("OneKey"),
       cryptoDefiWallet: extensionAndQRScanScreens("Crypto Defi"),
       rabbyWallet: extensionAndQRScanScreens("Rabby"),
+      binanceWallet: extensionAndQRScanScreens("Binance"),
       paperWallet: {
         signIn: "Iniciar sesión",
         signInWithGoogle: "Iniciar sesión con Google",
