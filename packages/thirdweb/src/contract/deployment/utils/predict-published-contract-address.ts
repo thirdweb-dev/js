@@ -4,9 +4,9 @@ import { getInitBytecodeWithSalt } from "../../../utils/any-evm/get-init-bytecod
 import { fetchDeployMetadata } from "./deploy-metadata.js";
 import { fetchPublishedContract } from "./fetch-published-contract.js";
 import { computeDeploymentAddress } from "../../../utils/any-evm/compute-deployment-address.js";
-import { getCreate2FactoryAddress } from "../../../utils/any-evm/create-2-factory.js";
 import type { Chain } from "../../../chains/types.js";
 import { encodeAbiParameters } from "../../../utils/abi/encodeAbiParameters.js";
+import { getCreate2FactoryAddress } from "../../../utils/any-evm/create-2-factory.js";
 
 /**
  * Predicts the implementation address of any published contract
@@ -49,6 +49,11 @@ export async function predictPublishedContractAddress(args: {
       chain,
     }),
   ]);
+  if (!create2FactoryAddress) {
+    throw new Error(
+      `Create2Factory not found for chain ${chain.id} - please deploy it first`,
+    );
+  }
   const bytecode = compilerMetadata.bytecode;
   const constructorAbi =
     (compilerMetadata.abi.find(
