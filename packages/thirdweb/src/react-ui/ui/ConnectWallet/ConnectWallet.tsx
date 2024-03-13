@@ -22,7 +22,7 @@ import {
   SetModalConfigCtx,
 } from "../../providers/wallet-ui-states-provider.js";
 import type { ConnectButtonProps } from "./ConnectWalletProps.js";
-import { canFitWideModal } from "../../../react/utils/canFitWideModal.js";
+import { canFitWideModal } from "../../utils/canFitWideModal.js";
 import type { Chain } from "../../../chains/types.js";
 
 const TW_CONNECT_WALLET = "tw-connect-wallet";

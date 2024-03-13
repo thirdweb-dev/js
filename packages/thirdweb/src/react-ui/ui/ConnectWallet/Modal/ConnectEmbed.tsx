@@ -25,7 +25,7 @@ import {
   useIsAutoConnecting,
 } from "../../../../react/hooks/wallets/wallet-hooks.js";
 import { ConnectModalContent } from "./ConnectModalContent.js";
-import { canFitWideModal } from "../../../../react/utils/canFitWideModal.js";
+import { canFitWideModal } from "../../../utils/canFitWideModal.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { Chain } from "viem";
 

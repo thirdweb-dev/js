@@ -24,7 +24,7 @@ import { useSetupScreen } from "./screen.js";
 import { useThirdwebProviderProps } from "../../../../react/hooks/others/useThirdwebProviderProps.js";
 import { WalletUIStatesProvider } from "../../../providers/wallet-ui-states-provider.js";
 import { ConnectModalContent } from "./ConnectModalContent.js";
-import { canFitWideModal } from "../../../../react/utils/canFitWideModal.js";
+import { canFitWideModal } from "../../../utils/canFitWideModal.js";
 
 /**
  * @internal

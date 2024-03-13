@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { resolveScheme } from "../../../utils/ipfs.js";
 import { useThirdwebProviderProps } from "../../../react/hooks/others/useThirdwebProviderProps.js";
-import { resolveMimeType } from "../../../react/utils/resolveMimeType.js";
+import { resolveMimeType } from "../../utils/resolveMimeType.js";
 
 /**
  * @internal

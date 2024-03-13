@@ -1,4 +1,4 @@
-import { getMimeTypeFromUrl } from "../../react-ui/ui/MediaRenderer/mime/mime.js";
+import { getMimeTypeFromUrl } from "../ui/MediaRenderer/mime/mime.js";
 
 /**
  * @internal
