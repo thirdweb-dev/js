@@ -15,6 +15,8 @@ import type {
 
 export type UploadOptions = InternalUploadOptions & {
   client: ThirdwebClient;
+  uploadWithPinata?: boolean;
+  pinataJwt?: string;
 };
 
 /**
@@ -83,6 +85,13 @@ export async function upload(options: UploadOptions) {
   if (isBrowser()) {
     const { uploadBatchBrowser } = await import("./upload/browser.js");
     return await uploadBatchBrowser(options.client, form, fileNames, options);
+  }
+
+  if (options.uploadWithPinata && options.pinataJwt) {
+    const { uploadBatchNodeWithPinata } = await import(
+      "./upload/node_pinata.js"
+    );
+    return await uploadBatchNodeWithPinata(options);
   }
   const { uploadBatchNode } = await import("./upload/node.js");
   return uploadBatchNode(options.client, form, fileNames, options);
