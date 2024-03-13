@@ -5,6 +5,13 @@ import { isContractDeployed } from "../bytecode/is-contract-deployed.js";
 import { isEIP155Enforced } from "./is-eip155-enforced.js";
 import { getKeylessTransaction } from "./keyless-transaction.js";
 import type { Chain } from "../../chains/types.js";
+import { eth_sendRawTransaction } from "../../rpc/actions/eth_sendRawTransaction.js";
+import { getRpcClient } from "../../rpc/rpc.js";
+import type { Account } from "../../wallets/interfaces/wallet.js";
+import { eth_getBalance } from "../../rpc/actions/eth_getBalance.js";
+import { prepareTransaction } from "../../transaction/prepare-transaction.js";
+import { sendTransaction } from "../../transaction/actions/send-transaction.js";
+import { waitForReceipt } from "../../transaction/actions/wait-for-tx-receipt.js";
 
 const COMMON_FACTORY_ADDRESS = "0x4e59b44847b379578588920cA78FbF26c0B4956C"; // for pre-eip-155 supporting chains
 
@@ -28,14 +35,10 @@ type GetCreate2FactoryAddressOptions = {
 };
 
 /**
- * Retrieves the address of the Create2 factory contract.
- * If the common factory is already deployed, it returns the address.
- * Otherwise, it calculates the deployment info based on the chain options and returns the deployment address.
- *
+ * Computes the address of the Create2 factory contract and checks if it is deployed.
  * @param options - The options for retrieving the Create2 factory address.
- * @returns The address of the Create2 factory contract.
+ * @returns whether the Create2 factory is deployed.
  * @internal
- *
  */
 export async function getCreate2FactoryAddress(
   options: GetCreate2FactoryAddressOptions,
@@ -55,13 +58,67 @@ export async function getCreate2FactoryAddress(
   const eipChain = enforceEip155 ? chainId : 0;
 
   const deploymentInfo = custom
-    ? getCreate2FactoryDeploymentInfo(eipChain, {
+    ? await _getCreate2FactoryDeploymentInfo(eipChain, {
         gasPrice: custom.gasPrice,
         gasLimit: custom.gasLimit,
       })
-    : getCreate2FactoryDeploymentInfo(eipChain, {});
+    : await _getCreate2FactoryDeploymentInfo(eipChain, {});
 
-  return (await deploymentInfo).deployment;
+  const chainFactory = getContract({
+    ...options,
+    address: deploymentInfo.predictedAddress,
+  });
+  if (await isContractDeployed(chainFactory)) {
+    return deploymentInfo.predictedAddress;
+  } else {
+    return null;
+  }
+}
+
+/**
+ * Deploys the Create2 factory contract using a keyless transaction.
+ * @internal
+ */
+export async function deployCreate2Factory(
+  options: GetCreate2FactoryAddressOptions & { account: Account },
+) {
+  const { client, chain, account } = options;
+  const enforceEip155 = await isEIP155Enforced(options);
+  const chainId = options.chain.id;
+  const custom = CUSTOM_GAS_FOR_CHAIN[chainId.toString()];
+  const eipChain = enforceEip155 ? chainId : 0;
+
+  const deploymentInfo = custom
+    ? await _getCreate2FactoryDeploymentInfo(eipChain, {
+        gasPrice: custom.gasPrice,
+        gasLimit: custom.gasLimit,
+      })
+    : await _getCreate2FactoryDeploymentInfo(eipChain, {});
+  const rpcRequest = getRpcClient({
+    client: client,
+    chain,
+  });
+
+  const balance = await eth_getBalance(rpcRequest, {
+    address: deploymentInfo.signerAddress,
+  });
+  if (balance < deploymentInfo.valueToSend) {
+    const transaction = prepareTransaction({
+      chain,
+      client,
+      to: deploymentInfo.signerAddress,
+      value: deploymentInfo.valueToSend,
+    });
+    const res = await sendTransaction({ transaction, account });
+    await waitForReceipt(res);
+  }
+  const transactionHash = await eth_sendRawTransaction(
+    rpcRequest,
+    deploymentInfo.transaction,
+  );
+  return {
+    transactionHash,
+  };
 }
 
 /**
@@ -71,14 +128,16 @@ export async function getCreate2FactoryAddress(
  * @returns The deployment information, including the deployment transaction and the create2 factory address.
  * @internal
  */
-export async function getCreate2FactoryDeploymentInfo(
+async function _getCreate2FactoryDeploymentInfo(
   chainId: number,
   gasOptions: { gasPrice?: bigint; gasLimit?: bigint },
 ) {
+  const gasPrice = gasOptions.gasPrice ? gasOptions.gasPrice : 100n * 10n ** 9n;
+  const gas = gasOptions.gasLimit ? gasOptions.gasLimit : 100000n;
   const deploymentTransaction = await getKeylessTransaction({
     transaction: {
-      gasPrice: gasOptions.gasPrice ? gasOptions.gasPrice : 100n * 10n ** 9n,
-      gas: gasOptions.gasLimit ? gasOptions.gasLimit : 100000n,
+      gasPrice,
+      gas,
       nonce: 0,
       data: CREATE2_FACTORY_BYTECODE,
       chainId: Number(chainId),
@@ -86,13 +145,14 @@ export async function getCreate2FactoryDeploymentInfo(
     signature: SIGNATURE,
   });
   const create2FactoryAddress = getContractAddress({
-    from: deploymentTransaction.address,
+    from: deploymentTransaction.signerAddress,
     nonce: 0n,
   });
 
   return {
     ...deploymentTransaction,
-    deployment: create2FactoryAddress,
+    valueToSend: gasPrice * gas,
+    predictedAddress: create2FactoryAddress,
   };
 }
 

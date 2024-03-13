@@ -110,17 +110,6 @@ export class ERC4337EthersProvider extends providers.BaseProvider {
   ): Promise<providers.TransactionResponse> {
     const userOp = await utils.resolveProperties(userOp1);
     const userOpHash = await this.smartAccountAPI.getUserOpHash(userOp);
-    const waitForUserOp = async (): Promise<providers.TransactionReceipt> =>
-      await new Promise((resolve, reject) => {
-        new UserOperationEventListener(
-          resolve,
-          reject,
-          this.entryPoint,
-          userOp.sender,
-          userOpHash,
-          userOp.nonce,
-        ).start();
-      });
     return {
       hash: userOpHash,
       confirmations: 0,
@@ -134,7 +123,7 @@ export class ERC4337EthersProvider extends providers.BaseProvider {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         confirmations?: number,
       ): Promise<providers.TransactionReceipt> => {
-        const transactionReceipt = await waitForUserOp();
+        const transactionReceipt = await this.smartAccountAPI.getUserOpReceipt(this.httpRpcClient, userOpHash)
         if (userOp.initCode.length !== 0) {
           // checking if the wallet has been deployed by the transaction; it must be if we are here
           await this.smartAccountAPI.checkAccountPhantom();

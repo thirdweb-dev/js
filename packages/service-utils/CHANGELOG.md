@@ -1,5 +1,17 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.20
+
+### Patch Changes
+
+- [#2453](https://github.com/thirdweb-dev/js/pull/2453) [`eee200f`](https://github.com/thirdweb-dev/js/commit/eee200f8d4c4d4cb954b4a8dfcd5ac433f7d2988) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - chore: allow embedded-wallet.thirdweb.com to use a given client ID for rpc request
+
+## 0.4.19
+
+### Patch Changes
+
+- [#2431](https://github.com/thirdweb-dev/js/pull/2431) [`6cf298a`](https://github.com/thirdweb-dev/js/commit/6cf298a29a29e37cecb88953aab195db8934a740) Thanks [@edwardysun](https://github.com/edwardysun)! - Add pay to Services list
+
 ## 0.4.18
 
 ### Patch Changes

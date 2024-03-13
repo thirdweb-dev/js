@@ -18,7 +18,7 @@ export { isEIP155Enforced } from "../utils/any-evm/is-eip155-enforced.js";
 export { getKeylessTransaction } from "../utils/any-evm/keyless-transaction.js";
 export {
   getCreate2FactoryAddress,
-  getCreate2FactoryDeploymentInfo,
+  deployCreate2Factory,
 } from "../utils/any-evm/create-2-factory.js";
 
 //signatures
