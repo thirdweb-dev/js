@@ -15,17 +15,25 @@ import { Spinner } from "../../../../components/Spinner.js";
 import { Container, ModalHeader } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
-import { iconSize, radius, spacing } from "../../../../design-system/index.js";
+import {
+  fontSize,
+  iconSize,
+  radius,
+  spacing,
+} from "../../../../design-system/index.js";
 import { isNativeToken, type ERC20OrNativeToken } from "../../nativeToken.js";
 import { useChainQuery } from "../../../../../hooks/others/useChainQuery.js";
 import { useSendSwapApproval } from "../../../../../hooks/pay/useSendSwapApproval.js";
 import { StyledDiv } from "../../../../design-system/elements.js";
 import { useCustomTheme } from "../../../../design-system/CustomThemeProvider.js";
-import { ChainIcon } from "../../../../components/ChainIcon.js";
 import { shortenString } from "../../../../../utils/addresses.js";
 import { SwapFees } from "./SwapFees.js";
 import { useThirdwebProviderProps } from "../../../../../hooks/others/useThirdwebProviderProps.js";
 import { addPendingSwapTransaction } from "./pendingSwapTx.js";
+import { Img } from "../../../../components/Img.js";
+import { Skeleton } from "../../../../components/Skeleton.js";
+import { useActiveWallet } from "../../../../../providers/wallet-provider.js";
+import { formatNumber } from "../../../../../utils/formatNumber.js";
 
 /**
  * @internal
@@ -45,6 +53,8 @@ export function ConfirmationScreen(props: {
   const sendSwapMutation = useSendSwapTransaction();
   const sendSwapApprovalMutation = useSendSwapApproval();
   const { client } = useThirdwebProviderProps();
+  const activeWallet = useActiveWallet();
+
   // TODO: remove after testing
   // const test = {
   //   client,
@@ -88,37 +98,50 @@ export function ConfirmationScreen(props: {
       <ModalHeader title="Confirm Buy" onBack={props.onBack} />
       <Spacer y="lg" />
 
+      <TokenSelection
+        label="You Receive"
+        chain={props.toChain}
+        amount={String(formatNumber(Number(props.toAmount), 6))}
+        symbol={toTokenSymbol || ""}
+        token={props.toToken}
+      />
+
+      <Spacer y="lg" />
+
       {/* You Pay */}
       <TokenSelection
         label="You Pay"
         chain={props.fromChain}
-        amount={Number(props.fromAmount).toFixed(6)}
+        amount={String(formatNumber(Number(props.fromAmount), 6))}
         symbol={fromTokenSymbol || ""}
-      />
-      <Spacer y="lg" />
-
-      <TokenSelection
-        label="You receive"
-        chain={props.toChain}
-        amount={Number(props.toAmount).toFixed(6)}
-        symbol={toTokenSymbol || ""}
+        token={props.fromToken}
       />
 
       <Spacer y="lg" />
+
       <Text size="sm" color="secondaryText">
         Recipient Address
       </Text>
+
       <Spacer y="xs" />
-      <BorderBox>
-        <Text color="primaryText" size="md" weight={500}>
-          {shortenString(props.account.address)}
-        </Text>
-      </BorderBox>
+
+      <TokenInfoContainer>
+        <Container flex="row" gap="md" center="y">
+          <Img
+            width={iconSize.lg}
+            height={iconSize.lg}
+            src={activeWallet?.metadata.iconUrl || ""}
+          />
+          <Text color="primaryText" size="sm">
+            {shortenString(props.account.address, false)}
+          </Text>
+        </Container>
+      </TokenInfoContainer>
 
       <Spacer y="lg" />
       <SwapFees quote={props.swapQuote} />
 
-      <Spacer y="lg" />
+      <Spacer y="xl" />
 
       {status === "error" && (
         <>
@@ -268,29 +291,40 @@ const Circle = /* @__PURE__ */ StyledDiv(() => {
 function TokenSelection(props: {
   label: string;
   chain: Chain;
+  token: ERC20OrNativeToken;
   amount: string;
   symbol: string;
 }) {
   const chainQuery = useChainQuery(props.chain);
+  const tokenIcon = isNativeToken(props.token)
+    ? chainQuery.data?.icon?.url
+    : props.token.icon;
   return (
     <div>
       <Text size="sm" color="secondaryText">
         {props.label}
       </Text>
       <Spacer y="xs" />
-      <BorderBox>
-        <Container flex="row" gap="sm" center="y">
-          <Text color="primaryText" size="lg" weight={500}>
-            {props.amount}
-          </Text>
-          <Container flex="row" center="y" gap="xs">
-            <ChainIcon size={iconSize.md} chain={chainQuery.data} />
-            <Text color="primaryText" size="sm" weight={500}>
-              {props.symbol}
+      <TokenInfoContainer>
+        <Container flex="row" gap="md" center="y">
+          {tokenIcon ? (
+            <Img width={iconSize.lg} height={iconSize.lg} src={tokenIcon} />
+          ) : (
+            <Skeleton width={iconSize.lg} height={iconSize.lg} />
+          )}
+
+          <Container flex="column" gap="xxs">
+            <Text color="primaryText" size="sm">
+              {props.amount} {props.symbol}
             </Text>
+            {chainQuery.data ? (
+              <Text size="sm">{chainQuery.data.name}</Text>
+            ) : (
+              <Skeleton width={"100px"} height={fontSize.md} />
+            )}
           </Container>
         </Container>
-      </BorderBox>
+      </TokenInfoContainer>
     </div>
   );
 }
@@ -355,13 +389,12 @@ function WaitingForConfirmation(props: {
   );
 }
 
-const BorderBox = /* @__PURE__ */ StyledDiv(() => {
+const TokenInfoContainer = /* @__PURE__ */ StyledDiv(() => {
   const theme = useCustomTheme();
   return {
     padding: spacing.sm,
     borderRadius: radius.md,
-    border: `1px solid ${theme.colors.borderColor}`,
-    height: "51px",
+    background: theme.colors.walletSelectorButtonHoverBg,
     display: "flex",
     alignItems: "center",
   };

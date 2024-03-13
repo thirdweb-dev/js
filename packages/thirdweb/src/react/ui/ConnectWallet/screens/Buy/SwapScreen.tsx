@@ -29,8 +29,6 @@ import {
 import { PayWithCrypto } from "./swap/PayWithCrypto.js";
 import { useChainsQuery } from "../../../../hooks/others/useChainQuery.js";
 import { PaymentSelection } from "./PaymentSelection.js";
-import { WalletIcon } from "../../icons/WalletIcon.js";
-import { SwapFees } from "./swap/SwapFees.js";
 import { ConfirmationScreen } from "./swap/ConfirmationScreen.js";
 import { BuyTokenInput } from "./swap/BuyTokenInput.js";
 import { polygon } from "../../../../../chains/chain-definitions/polygon.js";
@@ -108,6 +106,7 @@ export function SwapScreenContent(props: {
 
   // token amount
   const [tokenAmount, setTokenAmount] = useState<string>("");
+  const [hasEditedAmount, setHasEditedAmount] = useState(false);
 
   const isChainSupported = useMemo(
     () => supportedChains.includes(activeChain.id as any),
@@ -319,6 +318,7 @@ export function SwapScreenContent(props: {
         <BuyTokenInput
           value={tokenAmount}
           onChange={async (value) => {
+            setHasEditedAmount(true);
             setTokenAmount(value);
           }}
           token={toToken}
@@ -327,54 +327,42 @@ export function SwapScreenContent(props: {
           onTokenClick={() => setScreen("select-to-token")}
         />
       </Container>
+
+      {!hasEditedAmount && <Spacer y="lg" />}
       <Line />
 
       <Container p="lg">
-        <PaymentSelection />
-        <Spacer y="lg" />
-
-        {/* From */}
-        <PayWithCrypto
-          value={sourceTokenAmount}
-          onTokenClick={() => setScreen("select-from-token")}
-          chain={fromChain}
-          token={fromToken}
-          isLoading={swapQuoteQuery.isLoading && !sourceTokenAmount}
-          onChainClick={() => setScreen("select-from-chain")}
-        />
-
-        {swapQuoteQuery.data && (
-          <>
-            <Spacer y="lg" />
-            <SwapFees quote={swapQuoteQuery.data} />
-          </>
-        )}
-
-        {isSwapQuoteError && (
+        {hasEditedAmount && (
           <div>
+            <PaymentSelection />
             <Spacer y="lg" />
-            <Container flex="row" gap="xs" center="y" color="danger">
-              <CrossCircledIcon width={iconSize.sm} height={iconSize.sm} />
-              <Text color="danger" size="sm">
-                Can not swap given tokens at the moment
-              </Text>
-            </Container>
+
+            {/* From */}
+            <PayWithCrypto
+              value={sourceTokenAmount}
+              onTokenClick={() => setScreen("select-from-token")}
+              chain={fromChain}
+              token={fromToken}
+              isLoading={swapQuoteQuery.isLoading && !sourceTokenAmount}
+              onChainClick={() => setScreen("select-from-chain")}
+              isNotEnoughBalance={isNotEnoughBalance}
+            />
+
+            {isSwapQuoteError && (
+              <div>
+                <Spacer y="lg" />
+                <Container flex="row" gap="xs" center="y" color="danger">
+                  <CrossCircledIcon width={iconSize.sm} height={iconSize.sm} />
+                  <Text color="danger" size="sm">
+                    Can not swap given tokens at the moment
+                  </Text>
+                </Container>
+              </div>
+            )}
+
+            <Spacer y="lg" />
           </div>
         )}
-
-        {!isSwapQuoteError && isNotEnoughBalance && (
-          <div>
-            <Spacer y="lg" />
-            <Container flex="row" gap="xs" center="y" color="danger">
-              <WalletIcon size={iconSize.xs} />
-              <Text color="danger" size="sm">
-                Not enough balance
-              </Text>
-            </Container>
-          </div>
-        )}
-
-        <Spacer y="lg" />
 
         <Button
           variant={"accent"}

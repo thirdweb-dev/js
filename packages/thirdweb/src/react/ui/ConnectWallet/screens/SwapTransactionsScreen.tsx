@@ -10,6 +10,7 @@ import { Text } from "../../components/text.js";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { fadeInAnimation } from "../../design-system/animations.js";
 import { Spinner } from "../../components/Spinner.js";
+import { formatNumber } from "../../../utils/formatNumber.js";
 
 /**
  * @internal
@@ -79,7 +80,8 @@ export function SwapTransactionsScreen(props: { onBack: () => void }) {
                       />
                     </Container>{" "}
                     <Text size="sm">
-                      {Number(txInfo.to.value).toFixed(3)} {txInfo.to.symbol}
+                      {formatNumber(Number(txInfo.to.value), 6)}{" "}
+                      {txInfo.to.symbol}
                     </Text>
                   </Container>
                 </div>

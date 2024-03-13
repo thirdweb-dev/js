@@ -7,7 +7,7 @@ import { getRpcClient } from "../../rpc/rpc.js";
 import { watchBlockNumber } from "../../rpc/watchBlockNumber.js";
 import { eth_getTransactionReceipt } from "../../rpc/actions/eth_getTransactionReceipt.js";
 
-const MAX_BLOCKS_WAIT_TIME = 10;
+const MAX_BLOCKS_WAIT_TIME = 30; // TODO: instead of changing it here, make it configurable
 
 const map = new Map<string, Promise<TransactionReceipt>>();
 

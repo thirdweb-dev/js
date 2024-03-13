@@ -19,6 +19,9 @@ import type { Chain } from "../../../../../../chains/types.js";
 import { Text } from "../../../../components/text.js";
 import type { NativeToken } from "../../nativeToken.js";
 import { TokenSelectorButton } from "./TokenSelector.js";
+import { Spacer } from "../../../../components/Spacer.js";
+import { ChainIcon } from "../../../../components/ChainIcon.js";
+import { WalletIcon } from "../../../icons/WalletIcon.js";
 
 /**
  * Shows an amount "value" and renders the selected token and chain
@@ -33,6 +36,7 @@ export function PayWithCrypto(props: {
   chain: Chain;
   token?: TokenInfo | NativeToken;
   isLoading: boolean;
+  isNotEnoughBalance: boolean;
 }) {
   const chainQuery = useChainQuery(props.chain);
   const activeAccount = useActiveAccount();
@@ -50,103 +54,111 @@ export function PayWithCrypto(props: {
   const tokenSymbol = token?.symbol || balanceQuery.data?.symbol;
 
   return (
-    <BorderBox>
-      {/* Row 1 */}
-      <Container
-        flex="row"
-        style={{
-          flexWrap: "nowrap",
-          justifyContent: "space-between",
-        }}
-      >
-        {/* Left */}
-        <div
-          style={{
-            flexGrow: 1,
-            flexShrink: 1,
-            display: "flex",
-            alignItems: "center",
-            padding: spacing.sm,
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-          }}
-        >
-          {props.isLoading ? (
-            <Skeleton width="120px" height={fontSize.md} />
-          ) : (
-            <Text
-              size="lg"
-              color={props.value ? "primaryText" : "secondaryText"}
-              style={{}}
-            >
-              {props.value || "--"}
-            </Text>
-          )}
-        </div>
+    <div>
+      <BorderBox>
+        {/* Row 1 */}
+        <Container flex="row" px="sm" center="y">
+          {/* right */}
+          <Button
+            variant="outline"
+            style={{
+              fontSize: fontSize.sm,
+              border: "none",
+              paddingInline: 0,
+              paddingBlock: spacing.sm,
+            }}
+            gap="xs"
+            onClick={props.onChainClick}
+          >
+            <ChainIcon chain={chainQuery.data} size={iconSize.sm} />
+            {chainQuery.data?.name || (
+              <Skeleton width="90px" height={fontSize.xs} />
+            )}
+            <Container color="secondaryText">
+              <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
+            </Container>
+          </Button>
+        </Container>
 
-        {/* Right */}
-        <TokenSelectorButton
-          onClick={props.onTokenClick}
-          style={{
-            border: "none",
-          }}
-          token={props.token}
-          tokenIcon={tokenIcon}
-          tokenSymbol={tokenSymbol}
-        />
-      </Container>
+        <Line />
 
-      <Line />
-
-      {/* Row 2 */}
-      <Container
-        flex="row"
-        px="sm"
-        center="y"
-        style={{
-          justifyContent: "space-between",
-        }}
-      >
-        {/* left */}
+        {/* Row 2 */}
         <Container
           flex="row"
-          gap="xxs"
-          color="secondaryText"
           style={{
-            flex: 1,
+            flexWrap: "nowrap",
+            justifyContent: "space-between",
           }}
         >
-          <Text size="xs">Balance:</Text>
+          {/* Left */}
+
+          <TokenSelectorButton
+            onClick={props.onTokenClick}
+            style={{
+              border: "none",
+            }}
+            token={props.token}
+            tokenIcon={tokenIcon}
+            tokenSymbol={tokenSymbol}
+          />
+
+          {/* Right */}
+
+          <div
+            style={{
+              flexGrow: 1,
+              flexShrink: 1,
+              display: "flex",
+              alignItems: "center",
+              padding: spacing.sm,
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+              justifyContent: "flex-end",
+            }}
+          >
+            {props.isLoading ? (
+              <Skeleton width="120px" height={fontSize.md} />
+            ) : (
+              <Text
+                size="lg"
+                color={props.value ? "primaryText" : "secondaryText"}
+                style={{}}
+              >
+                {props.value || "--"}
+              </Text>
+            )}
+          </div>
+        </Container>
+      </BorderBox>
+
+      <Spacer y="md" />
+
+      {/* left */}
+      <Container
+        flex="row"
+        style={{
+          justifyContent: "space-between",
+        }}
+      >
+        <Container flex="row" gap="xxs" center="y" color="secondaryText">
+          <WalletIcon size={iconSize.xs} />
           {balanceQuery.data ? (
-            <Text size="xs" color="secondaryText">
-              {formatTokenBalance(balanceQuery.data, false)}
+            <Text size="sm" color="secondaryText">
+              {formatTokenBalance(balanceQuery.data, true)}
             </Text>
           ) : (
             <Skeleton width="70px" height={fontSize.sm} />
           )}
         </Container>
 
-        {/* right */}
-        <Button
-          variant="outline"
-          style={{
-            fontSize: fontSize.sm,
-            border: "none",
-            paddingInline: 0,
-          }}
-          gap="xxs"
-          onClick={props.onChainClick}
-        >
-          {chainQuery.data?.name || (
-            <Skeleton width="90px" height={fontSize.xs} />
-          )}
-          <Container color="secondaryText">
-            <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
-          </Container>
-        </Button>
+        {props.isNotEnoughBalance && (
+          <Text color="danger" size="sm">
+            Not Enough Balance
+          </Text>
+        )}
       </Container>
-    </BorderBox>
+    </div>
   );
 }
 

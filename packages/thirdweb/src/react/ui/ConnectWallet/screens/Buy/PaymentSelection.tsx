@@ -4,14 +4,7 @@ import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
 import { useCustomTheme } from "../../../design-system/CustomThemeProvider.js";
 import { StyledDiv } from "../../../design-system/elements.js";
-import {
-  fontSize,
-  iconSize,
-  radius,
-  spacing,
-} from "../../../design-system/index.js";
-import { CreditCardIcon } from "../../icons/CreditCardIcon.js";
-import { CryptoIcon } from "../../icons/CryptoIcon.js";
+import { fontSize, radius, spacing } from "../../../design-system/index.js";
 import styled from "@emotion/styled";
 
 /**
@@ -31,7 +24,6 @@ export function PaymentSelection() {
       >
         <CheckButton isChecked={true} variant="outline">
           <Container gap="xxs" flex="row" center="y">
-            <CryptoIcon size={iconSize.sm} />
             Crypto
           </Container>
         </CheckButton>
@@ -48,7 +40,6 @@ export function PaymentSelection() {
             }}
             disabled
           >
-            <CreditCardIcon size={iconSize.sm} />
             Credit Card
           </CheckButton>
           <FloatingBadge> Coming Soon </FloatingBadge>

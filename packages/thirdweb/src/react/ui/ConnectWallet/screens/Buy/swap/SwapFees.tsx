@@ -1,4 +1,5 @@
 import type { SwapQuote } from "../../../../../../pay/swap/actions/getSwap.js";
+import { formatNumber } from "../../../../../utils/formatNumber.js";
 import { Container } from "../../../../components/basic.js";
 import { Text } from "../../../../components/text.js";
 
@@ -29,10 +30,10 @@ export function SwapFees(props: { quote: SwapQuote }) {
         {props.quote.swapFees.map((fee) => {
           return (
             <Container key={fee.token.symbol} flex="row" center="y" gap="xxs">
-              <Text color="primaryText" size="xs">
-                {Number(fee.amount).toFixed(3)} {fee.token.symbol}
+              <Text color="primaryText" size="sm">
+                {formatNumber(Number(fee.amount), 6)} {fee.token.symbol}
               </Text>
-              <Text color="secondaryText" size="xs">
+              <Text color="secondaryText" size="sm">
                 (${fee.amountUSDCents / 100})
               </Text>
             </Container>
