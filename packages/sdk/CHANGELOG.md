@@ -1,5 +1,11 @@
 # @thirdweb-dev/sdk
 
+## 4.0.45
+
+### Patch Changes
+
+- [#2469](https://github.com/thirdweb-dev/js/pull/2469) [`a2002d1`](https://github.com/thirdweb-dev/js/commit/a2002d16376c41fffa59daccfd98856aba90a627) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Better return type for getProofsForAllowListEntry
+
 ## 4.0.44
 
 ### Patch Changes
