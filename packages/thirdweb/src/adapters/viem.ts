@@ -187,7 +187,6 @@ function toViemWalletClient(options: ToViemWalletClientOptions): WalletClient {
   const rpcClient = getRpcClient({ client, chain });
   const transport = custom({
     request: async (request) => {
-      console.log("request", request);
       if (request.method === "eth_sendTransaction") {
         const result = await account.sendTransaction(request.params[0]);
         if (result.userOpHash) {
