@@ -115,17 +115,16 @@ export async function estimateTransactionCost(
   tx: providers.TransactionRequest,
 ) {
   const chainId = (await provider.getNetwork()).chainId;
+  let l1GasCost = BigNumber.from(0);
   if (isOpStackChain(chainId)) {
     const { asL2Provider } = await import("@eth-optimism/sdk");
     const l2RpcProvider = asL2Provider(provider);
-    const l2GasCost = await l2RpcProvider.estimateTotalGasCost(tx);
-    return l2GasCost;
-  } else {
-    const gasLimit = tx.gasLimit || (await provider.estimateGas(tx));
-    const gasPrice = await getGasPrice(provider);
-    const gasCost = BigNumber.from(gasLimit).mul(gasPrice);
-    return gasCost;
+    l1GasCost = await l2RpcProvider.estimateL1GasCost(tx);
   }
+  const gasLimit = tx.gasLimit || (await provider.estimateGas(tx));
+  const gasPrice = await getGasPrice(provider);
+  const gasCost = BigNumber.from(gasLimit).mul(gasPrice);
+  return gasCost.add(l1GasCost);
 }
 
 function isOpStackChain(chainId: number) {

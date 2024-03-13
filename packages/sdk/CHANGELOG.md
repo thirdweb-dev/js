@@ -1,5 +1,11 @@
 # @thirdweb-dev/sdk
 
+## 4.0.44
+
+### Patch Changes
+
+- [#2457](https://github.com/thirdweb-dev/js/pull/2457) [`b2be63a`](https://github.com/thirdweb-dev/js/commit/b2be63ada466ea1784d680ae6244ac047a190103) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle l2 gas estimations when forcing gasLimit
+
 ## 4.0.43
 
 ### Patch Changes
