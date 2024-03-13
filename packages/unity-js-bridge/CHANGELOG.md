@@ -1,5 +1,16 @@
 # @thirdweb-dev/unity-js-bridge
 
+## 0.4.8
+
+### Patch Changes
+
+- [#2466](https://github.com/thirdweb-dev/js/pull/2466) [`607ab7e`](https://github.com/thirdweb-dev/js/commit/607ab7e8600f7637f7e74f0990ddd2f4fb9a2730) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [unity] expose sw isdeployed
+
+- Updated dependencies [[`a2002d1`](https://github.com/thirdweb-dev/js/commit/a2002d16376c41fffa59daccfd98856aba90a627)]:
+  - @thirdweb-dev/sdk@4.0.45
+  - @thirdweb-dev/wallets@2.4.20
+  - @thirdweb-dev/auth@4.1.42
+
 ## 0.4.7
 
 ### Patch Changes
