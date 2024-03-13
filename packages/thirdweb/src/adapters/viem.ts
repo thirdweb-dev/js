@@ -16,7 +16,7 @@ import { resolveContractAbi } from "../contract/actions/resolve-abi.js";
 import { getRpcUrlForChain } from "../chains/utils.js";
 import type { Account, Wallet } from "../wallets/interfaces/wallet.js";
 import type { Prettify } from "../utils/type-utils.js";
-import { toAccount } from "viem/accounts";
+import { getRpcClient } from "../rpc/rpc.js";
 
 export const viemAdapter = {
   contract: {
@@ -165,8 +165,6 @@ type ToViemWalletClientOptions = Prettify<
 
 function toViemWalletClient(options: ToViemWalletClientOptions): WalletClient {
   const account = options.account || options.wallet.getAccount();
-  // this *may* exist as a private function on the wallet
-  const provider = (options.wallet as any)?.provider;
   if (!account) {
     throw new Error("Wallet not connected.");
   }
@@ -186,29 +184,39 @@ function toViemWalletClient(options: ToViemWalletClientOptions): WalletClient {
     },
   };
 
-  const transport = provider
-    ? custom(provider)
-    : http(rpcUrl, {
-        fetchOptions: options.client.secretKey
-          ? { headers: { "x-secret-key": options.client.secretKey } }
-          : undefined,
-      });
+  const rpcClient = getRpcClient({ client, chain });
+  const transport = custom({
+    request: async (request) => {
+      console.log("request", request);
+      if (request.method === "eth_sendTransaction") {
+        const result = await account.sendTransaction(request.params[0]);
+        if (result.userOpHash) {
+          return result.transactionHash;
+        }
+        return result.transactionHash;
+      }
+      if (request.method === "eth_estimateGas") {
+        if (options.wallet?.estimateGas) {
+          return options.wallet.estimateGas(request.params[0]);
+        }
+      }
+      if (request.method === "personal_sign") {
+        return account.signMessage({
+          message: {
+            raw: request.params[0],
+          },
+        });
+      }
+      if (request.method === "eth_signTypedData_v4") {
+        return account.signTypedData(JSON.parse(request.params[1]));
+      }
+      return rpcClient(request);
+    },
+  });
 
   return createWalletClient({
     transport,
-    account: account.signTransaction
-      ? toAccount({
-          address: account.address,
-          signMessage: account.signMessage,
-          signTransaction: (tx) => {
-            if (!account.signTransaction) {
-              throw new Error("signTransaction not supported");
-            }
-            return account.signTransaction(tx);
-          },
-          signTypedData: account.signTypedData,
-        })
-      : account.address,
+    account: account.address,
     chain: viemChain,
     key: "thirdweb-wallet",
   });
