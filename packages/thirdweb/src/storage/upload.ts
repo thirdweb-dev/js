@@ -36,12 +36,20 @@ export type UploadOptions = InternalUploadOptions & {
  * ```
  */
 export async function upload(options: UploadOptions) {
-  // deal with the differnt file types
+  // deal with the different file types
 
   // if there are no files, return an empty array immediately
   if (!options.files.length) {
     return [];
   }
+
+  if (options.uploadWithPinata && options.pinataJwt) {
+    const { uploadBatchNodeWithPinata } = await import(
+      "./upload/node_pinata.js"
+    );
+    return await uploadBatchNodeWithPinata(options);
+  }
+  
   // handle file arrays
   const isFileArray = options.files
     .map((item) => isFileOrUint8Array(item) || typeof item === "string")
@@ -77,7 +85,7 @@ export async function upload(options: UploadOptions) {
     });
   }
 
-  // end deal with the differnt file types
+  // end deal with the different file types
   const form_ = new FormData();
 
   const { fileNames, form } = buildFormData(form_, uris, options);
@@ -87,12 +95,6 @@ export async function upload(options: UploadOptions) {
     return await uploadBatchBrowser(options.client, form, fileNames, options);
   }
 
-  if (options.uploadWithPinata && options.pinataJwt) {
-    const { uploadBatchNodeWithPinata } = await import(
-      "./upload/node_pinata.js"
-    );
-    return await uploadBatchNodeWithPinata(options);
-  }
   const { uploadBatchNode } = await import("./upload/node.js");
   return uploadBatchNode(options.client, form, fileNames, options);
 }
