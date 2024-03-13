@@ -119,7 +119,7 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
         <Flex flexDir="column" gap={2}>
           <Heading size="title.lg">{nft.metadata.name}</Heading>
           {nft.metadata?.description && (
-            <Text size="label.md" noOfLines={6}>
+            <Text size="label.md" noOfLines={50} whiteSpace="pre-wrap">
               {nft.metadata.description}
             </Text>
           )}
