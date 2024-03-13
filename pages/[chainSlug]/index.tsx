@@ -12,7 +12,7 @@ import {
   SimpleGrid,
 } from "@chakra-ui/react";
 import { QueryClient, dehydrate, useQuery } from "@tanstack/react-query";
-import { type Chain, getChainBySlug } from "@thirdweb-dev/chains";
+import { type Chain } from "@thirdweb-dev/chains";
 import { useAddress, useChainId, useSwitchChain } from "@thirdweb-dev/react";
 import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { AppLayout } from "components/app-layouts/app";
@@ -129,21 +129,20 @@ const ChainPage: ThirdwebNextPage = ({
 
   const switchChain = useSwitchChain();
 
-  const chainByChainSlug = getChainBySlug(chain.slug);
   const chainId = useChainId();
   const router = useRouter();
   const { switch: switchQuery } = router.query;
 
   useEffect(() => {
     if (
-      chainByChainSlug?.chainId &&
+      chain.chainId &&
       address &&
-      chainId !== chainByChainSlug.chainId &&
+      chainId !== chain.chainId &&
       switchQuery !== undefined
     ) {
-      switchChain(chainByChainSlug.chainId);
+      switchChain(chain.chainId);
     }
-  }, [chainByChainSlug.chainId, address, chainId, switchChain, switchQuery]);
+  }, [address, chain.chainId, chainId, switchChain, switchQuery]);
 
   return (
     <>
