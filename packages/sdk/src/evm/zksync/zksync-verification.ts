@@ -1,5 +1,5 @@
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { providers, ethers } from "ethers";
+import { providers, utils } from "ethers";
 import invariant from "tiny-invariant";
 import { extractConstructorParamsFromAbi } from "../common/feature-detection/extractConstructorParamsFromAbi";
 import { getChainProvider } from "../constants/urls";
@@ -92,7 +92,6 @@ export async function zkVerify(
           contractAddress,
           compilerMetadata.abi,
           provider,
-          storage,
         );
 
     const requestBody: Record<string, string> = {
@@ -140,7 +139,6 @@ async function zkFetchConstructorParams(
   contractAddress: string,
   abi: Abi,
   provider: providers.Provider,
-  storage: ThirdwebStorage,
 ): Promise<string> {
   const constructorParamTypes = extractConstructorParamsFromAbi(abi);
   if (constructorParamTypes.length === 0) {
@@ -160,9 +158,9 @@ async function zkFetchConstructorParams(
     const txHash = creationTx.result[0].txHash;
     const transaction = await provider.getTransaction(txHash);
     if (transaction.to === "0x0000000000000000000000000000000000008006") {
-      const decoded = ethers.utils.defaultAbiCoder.decode(
+      const decoded = utils.defaultAbiCoder.decode(
         ["bytes32", "bytes32", "bytes"],
-        ethers.utils.hexDataSlice(transaction.data, 4),
+        utils.hexDataSlice(transaction.data, 4),
       );
 
       return decoded[2];
