@@ -1,7 +1,7 @@
 import { CrossCircledIcon, CheckCircledIcon } from "@radix-ui/react-icons";
 import { useState, useMemo } from "react";
 import { useTWLocale } from "../../../providers/locale-provider.js";
-import { ChainIcon } from "../../components/ChainIcon.js";
+import { ChainIcon, fallbackChainIcon } from "../../components/ChainIcon.js";
 import { Img } from "../../components/Img.js";
 import { Skeleton } from "../../components/Skeleton.js";
 import { Spacer } from "../../components/Spacer.js";
@@ -256,6 +256,7 @@ function SendFundsForm(props: {
               src={props.token.icon}
               width={iconSize.lg}
               height={iconSize.lg}
+              fallbackImage={fallbackChainIcon}
             />
           ) : !chainQuery.data ? (
             <Skeleton height={iconSize.lg} width={iconSize.lg} />

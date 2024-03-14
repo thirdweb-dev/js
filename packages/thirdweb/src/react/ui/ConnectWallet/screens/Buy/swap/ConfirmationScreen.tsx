@@ -35,6 +35,7 @@ import { useTrack } from "../../../../hooks/useTrack.js";
 import { isNativeToken, type ERC20OrNativeToken } from "../../nativeToken.js";
 import { SwapFees } from "./SwapFees.js";
 import { addPendingSwapTransaction } from "./pendingSwapTx.js";
+import { fallbackChainIcon } from "../../../../components/ChainIcon.js";
 
 /**
  * @internal
@@ -348,7 +349,12 @@ function TokenSelection(props: {
       <TokenInfoContainer>
         <Container flex="row" gap="md" center="y">
           {tokenIcon ? (
-            <Img width={iconSize.lg} height={iconSize.lg} src={tokenIcon} />
+            <Img
+              width={iconSize.lg}
+              height={iconSize.lg}
+              src={tokenIcon}
+              fallbackImage={fallbackChainIcon}
+            />
           ) : (
             <Skeleton width={iconSize.lg} height={iconSize.lg} />
           )}
