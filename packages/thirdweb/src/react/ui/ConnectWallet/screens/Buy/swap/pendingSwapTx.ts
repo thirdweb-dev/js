@@ -74,7 +74,10 @@ export const addPendingSwapTransaction = (
       if (res.status === "COMPLETED" || res.status === "FAILED") {
         track(client.clientId, {
           source: "ConnectButton",
-          action: res.status === "COMPLETED" ? "swap.success" : "swap.failed",
+          action:
+            res.status === "COMPLETED"
+              ? "swapStatus.success"
+              : "swapStatus.failed",
           quote: quote,
           tx: {
             hash: txInfo.transactionHash,
@@ -104,7 +107,7 @@ export const addPendingSwapTransaction = (
     } else {
       track(client.clientId, {
         source: "ConnectButton",
-        action: "swap.statusTimeout",
+        action: "swapStatus.timeout",
         quote: quote,
         tx: {
           hash: txInfo.transactionHash,
