@@ -303,10 +303,10 @@ export function SwapScreenContent(props: {
 
             <Container flex="column" gap="md">
               {swapQuoteQuery.data && (
-                <>
+                <div>
                   <SwapFees quote={swapQuoteQuery.data} />
                   <Spacer y="lg" />
-                </>
+                </div>
               )}
 
               {isSwapQuoteError && (
@@ -317,7 +317,7 @@ export function SwapScreenContent(props: {
                       height={iconSize.sm}
                     />
                     <Text color="danger" size="sm">
-                      Enable to get price quote
+                      Unable to get price quote
                     </Text>
                   </Container>
                   <Spacer y="lg" />
