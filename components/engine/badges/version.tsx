@@ -7,6 +7,7 @@ import {
 import {
   Flex,
   Modal,
+  ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalFooter,
@@ -20,7 +21,7 @@ import {
 } from "@chakra-ui/react";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { FaArrowCircleUp } from "react-icons/fa";
-import { Button } from "tw-components";
+import { Button, Text, TrackedLink } from "tw-components";
 
 export const EngineVersionBadge = ({
   instance,
@@ -63,7 +64,7 @@ export const EngineVersionBadge = ({
         <UpdateVersionModal
           disclosure={disclosure}
           latest={latest ?? ""}
-          engineId={instance.id}
+          instance={instance}
         />
       )}
     </>
@@ -73,11 +74,11 @@ export const EngineVersionBadge = ({
 const UpdateVersionModal = ({
   disclosure,
   latest,
-  engineId,
+  instance,
 }: {
   disclosure: UseDisclosureReturn;
   latest: string;
-  engineId: string;
+  instance: EngineInstance;
 }) => {
   const { mutate } = useEngineUpdateVersion();
   const { onSuccess, onError } = useTxNotifications(
@@ -85,9 +86,42 @@ const UpdateVersionModal = ({
     "Unexpected error updating your Engine instance.",
   );
 
+  if (!instance.cloudDeployedAt) {
+    // For self-hosted, show a prompt to the Github release page.
+    return (
+      <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose}>
+        <ModalContent>
+          <ModalCloseButton />
+
+          <ModalHeader>Update your self-hosted Engine to {latest}</ModalHeader>
+          <ModalBody>
+            <Text>
+              View the changelog in the{" "}
+              <TrackedLink
+                href="https://github.com/thirdweb-dev/engine/releases"
+                category="engine"
+                label="clicked-engine-releases"
+                isExternal
+                color="blue.500"
+              >
+                Engine Github repository
+              </TrackedLink>
+              .
+            </Text>
+          </ModalBody>
+          <ModalFooter as={Flex} gap={3}>
+            <Button type="button" onClick={disclosure.onClose} variant="ghost">
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    );
+  }
+
   const onClick = () => {
     try {
-      mutate({ engineId });
+      mutate({ engineId: instance.id });
       onSuccess();
     } catch (e) {
       onError(e);
