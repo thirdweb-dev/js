@@ -7,8 +7,8 @@ import {
 } from "../../../transaction/prepare-transaction.js";
 import type { Hex } from "../../../utils/encoding/hex.js";
 import type { Wallet } from "../../../wallets/interfaces/wallet.js";
-import type { SwapTransaction } from "./getStatus.js";
-import type { SwapQuote } from "./getSwap.js";
+import type { SwapQuote } from "./getQuote.js";
+import type { QuoteTransaction } from "./getStatus.js";
 
 // TODO: Support User Op Hash
 
@@ -41,10 +41,10 @@ import type { SwapQuote } from "./getSwap.js";
  * const status = await getSwapStatus(swapTransaction);
  * ```
  */
-export async function sendSwapTransaction(
+export async function sendQuoteTransaction(
   wallet: Wallet,
   quote: SwapQuote,
-): Promise<SwapTransaction> {
+): Promise<QuoteTransaction> {
   const txData = {
     to: quote.transactionRequest.to as Address,
     data: quote.transactionRequest.data as Hex,

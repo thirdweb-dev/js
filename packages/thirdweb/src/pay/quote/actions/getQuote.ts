@@ -79,7 +79,7 @@ export type GetSwapQuoteParams = {
     }
 );
 
-export type SwapTokenInfo = {
+export type QuoteTokenInfo = {
   chainId: number;
   tokenAddress: string;
   decimals: number;
@@ -88,14 +88,14 @@ export type SwapTokenInfo = {
   symbol?: string;
 };
 
-type SwapPaymentToken = {
-  token: SwapTokenInfo;
+type QuotePaymentToken = {
+  token: QuoteTokenInfo;
   amountWei: string;
   amount: string;
   amountUSDCents: number;
 };
 
-type SwapTransactionRequest = {
+type QuoteTransactionRequest = {
   data: string;
   to: string;
   value: string;
@@ -105,8 +105,8 @@ type SwapTransactionRequest = {
   gasLimit: string;
 };
 
-type SwapRouteResponse = {
-  transactionRequest: SwapTransactionRequest;
+type QuoteRouteResponse = {
+  transactionRequest: QuoteTransactionRequest;
   approval?: {
     chainId: number;
     tokenAddress: string;
@@ -117,8 +117,8 @@ type SwapRouteResponse = {
   fromAddress: string;
   toAddress: string;
 
-  fromToken: SwapTokenInfo;
-  toToken: SwapTokenInfo;
+  fromToken: QuoteTokenInfo;
+  toToken: QuoteTokenInfo;
 
   fromAmountWei: string;
   fromAmount: string;
@@ -128,8 +128,8 @@ type SwapRouteResponse = {
   toAmountWei: string;
   toAmount: string;
 
-  paymentTokens: SwapPaymentToken[];
-  swapFees: SwapPaymentToken[];
+  paymentTokens: QuotePaymentToken[];
+  swapFees: QuotePaymentToken[];
 
   estimated: {
     fromAmountUSDCents: number;
@@ -144,18 +144,18 @@ type SwapRouteResponse = {
   maxSlippageBPS: number;
 };
 
-export type SwapApprovalParams = BaseTransactionOptions<ApproveParams>;
+export type QuoteApprovalParams = BaseTransactionOptions<ApproveParams>;
 
 export type SwapQuote = {
-  transactionRequest: SwapTransactionRequest;
-  approval?: SwapApprovalParams;
+  transactionRequest: QuoteTransactionRequest;
+  approval?: QuoteApprovalParams;
 
   swapDetails: {
     fromAddress: string;
     toAddress: string;
 
-    fromToken: SwapTokenInfo;
-    toToken: SwapTokenInfo;
+    fromToken: QuoteTokenInfo;
+    toToken: QuoteTokenInfo;
 
     fromAmount: string;
     fromAmountWei: string;
@@ -178,8 +178,8 @@ export type SwapQuote = {
     maxSlippageBPS: number;
   };
 
-  paymentTokens: SwapPaymentToken[];
-  swapFees: SwapPaymentToken[];
+  paymentTokens: QuotePaymentToken[];
+  swapFees: QuotePaymentToken[];
   client: ThirdwebClient;
 };
 
@@ -187,10 +187,10 @@ export type SwapQuote = {
  * Get a quote of type [`SwapQuote`](https://portal.thirdweb.com/references/typescript/v5/SwapQuote) for performing a token swap.
  * This quote contains the information about the swap such as token amounts, processing fees, estimated time etc.
  *
- * Once you have the quote, you can use the [`sendSwapTransaction`](https://portal.thirdweb.com/references/typescript/v5/sendSwapTransaction)
- * function to execute the swap transaction.
+ * Once you have the quote, you can use the [`sendQuoteTransaction`](https://portal.thirdweb.com/references/typescript/v5/sendQuoteTransaction)
+ * function to execute the quoted transaction.
  * @param params - object of type [`GetSwapQuoteParams`](https://portal.thirdweb.com/references/typescript/v5/GetSwapQuoteParams)
- * @returns Object of type [`SwapQuote`](https://portal.thirdweb.com/references/typescript/v5/SwapQuote) which contains the information about the swap such as processing fees, estimated time, converted token amounts, etc.
+ * @returns Object of type [`SwapQuote`](https://portal.thirdweb.com/references/typescript/v5/SwapQuote) which contains the information about the quote such as processing fees, estimated time, converted token amounts, etc.
  * @example
  *
  * ```ts
@@ -245,7 +245,7 @@ export async function getSwapQuote(
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data: SwapRouteResponse = (await response.json())["result"];
+    const data: QuoteRouteResponse = (await response.json())["result"];
 
     const swapRoute: SwapQuote = {
       transactionRequest: data.transactionRequest,

@@ -1,11 +1,15 @@
 import { CrossCircledIcon } from "@radix-ui/react-icons";
+import { useQuery } from "@tanstack/react-query";
 import { useDeferredValue, useMemo, useState } from "react";
+import { polygon } from "../../../../../chains/chain-definitions/polygon.js";
 import type { Chain } from "../../../../../chains/types.js";
 import { defineChain } from "../../../../../chains/utils.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../constants/addresses.js";
-import type { GetSwapQuoteParams } from "../../../../../pay/swap/actions/getSwap.js";
-import { fallbackSwapSupportedChainIds } from "../../../../../pay/swap/supportedChains.js";
+import type { GetSwapQuoteParams } from "../../../../../pay/quote/actions/getQuote.js";
+import { fallbackSwapSupportedChainIds } from "../../../../../pay/quote/supportedChains.js";
+import { getClientFetch } from "../../../../../utils/fetch.js";
 import type { Account } from "../../../../../wallets/interfaces/wallet.js";
+import { useChainsQuery } from "../../../../hooks/others/useChainQuery.js";
 import { useThirdwebProviderProps } from "../../../../hooks/others/useThirdwebProviderProps.js";
 import { useWalletBalance } from "../../../../hooks/others/useWalletBalance.js";
 import { useSwapQuote } from "../../../../hooks/pay/useSwapQuote.js";
@@ -18,6 +22,7 @@ import { Container, Line, ModalHeader } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
 import { iconSize } from "../../../design-system/index.js";
+import { useTrack } from "../../../hooks/useTrack.js";
 import { ChainButton, NetworkSelectorContent } from "../../NetworkSelector.js";
 import type { SupportedTokens } from "../../defaultTokens.js";
 import { TokenSelector } from "../TokenSelector.js";
@@ -26,16 +31,11 @@ import {
   isNativeToken,
   type ERC20OrNativeToken,
 } from "../nativeToken.js";
-import { PayWithCrypto } from "./swap/PayWithCrypto.js";
-import { useChainsQuery } from "../../../../hooks/others/useChainQuery.js";
 import { PaymentSelection } from "./PaymentSelection.js";
-import { ConfirmationScreen } from "./swap/ConfirmationScreen.js";
 import { BuyTokenInput } from "./swap/BuyTokenInput.js";
-import { polygon } from "../../../../../chains/chain-definitions/polygon.js";
-import { useQuery } from "@tanstack/react-query";
-import { getClientFetch } from "../../../../../utils/fetch.js";
+import { ConfirmationScreen } from "./swap/ConfirmationScreen.js";
+import { PayWithCrypto } from "./swap/PayWithCrypto.js";
 import { SwapFees } from "./swap/SwapFees.js";
-import { useTrack } from "../../../hooks/useTrack.js";
 
 const fallbackSupportedChains = /* @__PURE__ */ (() =>
   fallbackSwapSupportedChainIds.map(defineChain))();

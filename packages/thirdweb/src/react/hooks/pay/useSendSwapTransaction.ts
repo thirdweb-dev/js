@@ -1,8 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
+import type { SwapQuote } from "../../../pay/quote/actions/getQuote.js";
+import type { QuoteTransaction } from "../../../pay/quote/actions/getStatus.js";
+import { sendQuoteTransaction } from "../../../pay/quote/actions/sendQuote.js";
 import { useActiveWallet } from "../../providers/wallet-provider.js";
-import type { SwapQuote } from "../../../pay/swap/actions/getSwap.js";
-import { sendSwapTransaction } from "../../../pay/swap/actions/sendSwap.js";
-import type { SwapTransaction } from "../../../pay/swap/actions/getStatus.js";
 
 /**
  * A hook to send a swap transaction using active wallet.
@@ -45,13 +45,13 @@ import type { SwapTransaction } from "../../../pay/swap/actions/getStatus.js";
 export function useSendSwapTransaction() {
   const wallet = useActiveWallet();
 
-  return useMutation<SwapTransaction, Error, SwapQuote>({
+  return useMutation<QuoteTransaction, Error, SwapQuote>({
     mutationFn: async (swapRoute: SwapQuote) => {
       if (!wallet) {
         throw new Error("Wallet not connected");
       }
 
-      return sendSwapTransaction(wallet, swapRoute);
+      return sendQuoteTransaction(wallet, swapRoute);
     },
   });
 }

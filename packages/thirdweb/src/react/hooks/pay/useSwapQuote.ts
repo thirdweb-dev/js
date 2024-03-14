@@ -7,7 +7,7 @@ import {
   getSwapQuote,
   type GetSwapQuoteParams,
   type SwapQuote,
-} from "../../../pay/swap/actions/getSwap.js";
+} from "../../../pay/quote/actions/getQuote.js";
 
 type SwapQuoteQueryOptions = Omit<
   UseQueryOptions<SwapQuote>,

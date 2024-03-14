@@ -1,4 +1,4 @@
-import type { SwapQuote } from "../../../../../../pay/swap/actions/getSwap.js";
+import type { SwapQuote } from "../../../../../../pay/quote/actions/getQuote.js";
 import { formatNumber } from "../../../../../utils/formatNumber.js";
 import { Container } from "../../../../components/basic.js";
 import { Text } from "../../../../components/text.js";

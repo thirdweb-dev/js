@@ -1,8 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
-import { useActiveWallet } from "../../providers/wallet-provider.js";
-import type { SwapApprovalParams } from "../../../pay/swap/actions/getSwap.js";
 import type { TransactionReceipt } from "viem";
-import { sendSwapApproval } from "../../../pay/swap/actions/sendSwapApproval.js";
+import type { QuoteApprovalParams } from "../../../pay/quote/actions/getQuote.js";
+import { sendQuoteApproval } from "../../../pay/quote/actions/sendQuoteApproval.js";
+import { useActiveWallet } from "../../providers/wallet-provider.js";
 
 /**
  * Send a Swap Approval request using the connected wallet to approve the tokens for swapping.
@@ -45,13 +45,13 @@ import { sendSwapApproval } from "../../../pay/swap/actions/sendSwapApproval.js"
 export function useSendSwapApproval() {
   const wallet = useActiveWallet();
 
-  return useMutation<TransactionReceipt, Error, SwapApprovalParams>({
-    mutationFn: async (params: SwapApprovalParams) => {
+  return useMutation<TransactionReceipt, Error, QuoteApprovalParams>({
+    mutationFn: async (params: QuoteApprovalParams) => {
       if (!wallet) {
         throw new Error("Wallet not connected");
       }
 
-      return sendSwapApproval(wallet, params);
+      return sendQuoteApproval(wallet, params);
     },
   });
 }

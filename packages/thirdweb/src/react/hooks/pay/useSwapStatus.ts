@@ -1,10 +1,10 @@
-import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import {
-  type SwapStatus,
-  type SwapTransaction,
-  getSwapStatus,
-} from "../../../pay/swap/actions/getStatus.js";
+  getQuoteStatus,
+  type QuoteStatus,
+  type QuoteTransaction,
+} from "../../../pay/quote/actions/getStatus.js";
 
 // TODO: use the estimate to vary the polling interval
 const DEFAULT_POLL_INTERVAL = 5000;
@@ -45,12 +45,12 @@ const DEFAULT_POLL_INTERVAL = 5000;
  * }
  * ```
  */
-export function useSwapStatus(swapStatusParams: SwapTransaction | undefined) {
+export function useSwapStatus(swapStatusParams: QuoteTransaction | undefined) {
   const [refetchInterval, setRefetchInterval] = useState<number>(
     DEFAULT_POLL_INTERVAL,
   );
 
-  return useQuery<SwapStatus, Error>({
+  return useQuery<QuoteStatus, Error>({
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: ["swapStatus", swapStatusParams?.transactionHash] as const,
     queryFn: async () => {
@@ -58,7 +58,7 @@ export function useSwapStatus(swapStatusParams: SwapTransaction | undefined) {
         throw new Error("Missing swap status params");
       }
 
-      const swapStatus_ = await getSwapStatus(swapStatusParams);
+      const swapStatus_ = await getQuoteStatus(swapStatusParams);
       if (
         swapStatus_.status === "COMPLETED" ||
         swapStatus_.status === "FAILED"

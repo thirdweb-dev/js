@@ -5,36 +5,36 @@ import {
 } from "@radix-ui/react-icons";
 import { useState } from "react";
 import type { Chain } from "../../../../../../chains/types.js";
-import type { SwapTransaction } from "../../../../../../pay/swap/actions/getStatus.js";
-import type { SwapQuote } from "../../../../../../pay/swap/actions/getSwap.js";
+import type { SwapQuote } from "../../../../../../pay/quote/actions/getQuote.js";
+import type { QuoteTransaction } from "../../../../../../pay/quote/actions/getStatus.js";
 import type { Account } from "../../../../../../wallets/interfaces/wallet.js";
+import { useChainQuery } from "../../../../../hooks/others/useChainQuery.js";
+import { useThirdwebProviderProps } from "../../../../../hooks/others/useThirdwebProviderProps.js";
+import { useSendSwapApproval } from "../../../../../hooks/pay/useSendSwapApproval.js";
 import { useSendSwapTransaction } from "../../../../../hooks/pay/useSendSwapTransaction.js";
 import { useSwapStatus } from "../../../../../hooks/pay/useSwapStatus.js";
+import { useActiveWallet } from "../../../../../providers/wallet-provider.js";
+import { shortenString } from "../../../../../utils/addresses.js";
+import { formatNumber } from "../../../../../utils/formatNumber.js";
+import { Img } from "../../../../components/Img.js";
+import { Skeleton } from "../../../../components/Skeleton.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
 import { Container, ModalHeader } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
+import { useCustomTheme } from "../../../../design-system/CustomThemeProvider.js";
+import { StyledDiv } from "../../../../design-system/elements.js";
 import {
   fontSize,
   iconSize,
   radius,
   spacing,
 } from "../../../../design-system/index.js";
-import { isNativeToken, type ERC20OrNativeToken } from "../../nativeToken.js";
-import { useChainQuery } from "../../../../../hooks/others/useChainQuery.js";
-import { useSendSwapApproval } from "../../../../../hooks/pay/useSendSwapApproval.js";
-import { StyledDiv } from "../../../../design-system/elements.js";
-import { useCustomTheme } from "../../../../design-system/CustomThemeProvider.js";
-import { shortenString } from "../../../../../utils/addresses.js";
-import { SwapFees } from "./SwapFees.js";
-import { useThirdwebProviderProps } from "../../../../../hooks/others/useThirdwebProviderProps.js";
-import { addPendingSwapTransaction } from "./pendingSwapTx.js";
-import { Img } from "../../../../components/Img.js";
-import { Skeleton } from "../../../../components/Skeleton.js";
-import { useActiveWallet } from "../../../../../providers/wallet-provider.js";
-import { formatNumber } from "../../../../../utils/formatNumber.js";
 import { useTrack } from "../../../../hooks/useTrack.js";
+import { isNativeToken, type ERC20OrNativeToken } from "../../nativeToken.js";
+import { SwapFees } from "./SwapFees.js";
+import { addPendingSwapTransaction } from "./pendingSwapTx.js";
 
 /**
  * @internal
@@ -57,7 +57,7 @@ export function ConfirmationScreen(props: {
   const activeWallet = useActiveWallet();
   const track = useTrack();
 
-  const [swapTx, setSwapTx] = useState<SwapTransaction | undefined>();
+  const [swapTx, setSwapTx] = useState<QuoteTransaction | undefined>();
   const isApprovalRequired = props.swapQuote.approval !== undefined;
 
   const [step, setStep] = useState<"approval" | "swap">(
@@ -372,7 +372,7 @@ function TokenSelection(props: {
 function WaitingForConfirmation(props: {
   onBack: () => void;
   onViewPendingTx: () => void;
-  swapTx: SwapTransaction;
+  swapTx: QuoteTransaction;
 }) {
   const swapStatus = useSwapStatus(props.swapTx);
   const isSuccess = swapStatus.data?.status === "COMPLETED";

@@ -1,7 +1,7 @@
 import { track } from "../../../../../../analytics/track.js";
 import type { ThirdwebClient } from "../../../../../../client/client.js";
-import type { SwapQuote } from "../../../../../../pay/swap/actions/getSwap.js";
-import { getSwapStatus } from "../../../../../../pay/swap/actions/getStatus.js";
+import type { SwapQuote } from "../../../../../../pay/quote/actions/getQuote.js";
+import { getQuoteStatus } from "../../../../../../pay/quote/actions/getStatus.js";
 import { createStore } from "../../../../../../reactive/store.js";
 import { wait } from "../../../../../../utils/promise/wait.js";
 
@@ -47,7 +47,7 @@ export const addPendingSwapTransaction = (
     await wait(5000);
     try {
       retryCount++;
-      const res = await getSwapStatus({
+      const res = await getQuoteStatus({
         client: client,
         transactionHash: txInfo.transactionHash,
       });
