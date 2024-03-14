@@ -21,18 +21,29 @@ type DomainOverrides = {
   storage?: string;
 };
 
-let domains: DomainOverrides | undefined;
+let domains: { [k in keyof DomainOverrides]-?: string };
+
+export const DEFAULT_RPC_URL = "rpc.thirdweb.com";
+const DEFAULT_EMBEDDED_WALLET_URL = "embedded-wallet.thirdweb.com";
+const DEFAULT_PAY_URL = "interstate.thirdweb.com";
+const DEFAULT_STORAGE_URL = "storage.thirdweb.com";
 
 /**
  * @internal
  */
-export const setThirdwebDomainOverride = (DomainOverrides: DomainOverrides) => {
-  domains = DomainOverrides;
+export const setThirdwebDomains = (DomainOverrides: DomainOverrides) => {
+  domains = {
+    rpc: DomainOverrides.rpc ?? DEFAULT_RPC_URL,
+    embeddedWallet:
+      DomainOverrides.embeddedWallet ?? DEFAULT_EMBEDDED_WALLET_URL,
+    pay: DomainOverrides.pay ?? DEFAULT_PAY_URL,
+    storage: DomainOverrides.storage ?? DEFAULT_STORAGE_URL,
+  };
 };
 
 /**
  * @internal
  */
-export const getThirdwebDomainOverrides = () => {
+export const getThirdwebDomains = () => {
   return domains;
 };

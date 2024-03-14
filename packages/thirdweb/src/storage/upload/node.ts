@@ -1,8 +1,8 @@
 /* eslint-disable jsdoc/require-jsdoc */
 
+import { getThirdwebDomains } from "src/utils/domains.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { getClientFetch } from "../../utils/fetch.js";
-import { getUploadServerUrl } from "./constants.js";
 import type { UploadOptions } from "./types.js";
 
 export async function uploadBatchNode(
@@ -52,7 +52,7 @@ export async function uploadBatchNode(
   }
 
   const res = await getClientFetch(client)(
-    `https://${getUploadServerUrl()}/ipfs/upload`,
+    `https://${getThirdwebDomains().storage}/ipfs/upload`,
     {
       method: "POST",
       headers: {
