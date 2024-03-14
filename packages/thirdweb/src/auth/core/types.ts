@@ -2,9 +2,9 @@ import type { ThirdwebClient } from "../../client/client.js";
 
 export type AuthOptions = {
   domain: string;
-  client: ThirdwebClient;
+  client?: ThirdwebClient;
   login?: {
-    payloadExpirationTime?: number;
+    payloadExpirationTimeSeconds?: number;
     statement?: string;
     version?: string;
     nonce?: {

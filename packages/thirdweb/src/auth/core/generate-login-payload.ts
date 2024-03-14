@@ -5,7 +5,7 @@ import {
 } from "./constants.js";
 import type { AuthOptions, LoginPayload } from "./types.js";
 
-export type LoginPayloadParams = {
+export type GenerateLoginPayloadParams = {
   address: string;
   chainId?: number;
 };
@@ -20,10 +20,11 @@ export function generateLoginPayload(options: AuthOptions) {
   return async function ({
     address,
     chainId,
-  }: LoginPayloadParams): Promise<LoginPayload> {
+  }: GenerateLoginPayloadParams): Promise<LoginPayload> {
     const now = Date.now();
     const expirationTime =
-      options.login?.payloadExpirationTime || DEFAULT_LOGIN_PAYLOAD_EXPIRATION;
+      (options.login?.payloadExpirationTimeSeconds ||
+        DEFAULT_LOGIN_PAYLOAD_EXPIRATION) * 1000;
     return {
       address,
       chain_id: chainId ? chainId.toString() : undefined,

@@ -96,7 +96,7 @@ ${exports.join("\n")}
 export * from "./types";
 export * from "./utils";
 export * from "./async";
-export const defaultChains = [c1, c5, c8453, c84531, c137, c80001, c42161, c421613, c10, c420, c56, c97, c250, c4002, c43114, c43113, c1337];
+export const defaultChains = [c1, c11155111, c8453, c84532, c137, c80001, c42161, c421614, c10, c11155420, c56, c97, c250, c4002, c43114, c43113, c1337];
 
 \/**
  * @deprecated use \`fetchChains()\` instead

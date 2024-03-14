@@ -9,42 +9,58 @@ export type VerifyLoginPayloadParams = {
   signature: string;
 };
 
+export type VerifyLoginPayloadResult =
+  | {
+      valid: true;
+      verifiedAddress: string;
+    }
+  | {
+      valid: false;
+      error: string;
+    };
+
 /**
  * Verifies the login payload by checking various properties and signatures.
  * @param options - The authentication options.
  * @returns A function that accepts the login payload and signature, and performs the verification.
- * @throws Throws an error if the verification fails.
  * @example TODO
  */
 export function verifyLoginPayload(options: AuthOptions) {
-  return async function ({ payload, signature }: VerifyLoginPayloadParams) {
+  return async function ({
+    payload,
+    signature,
+  }: VerifyLoginPayloadParams): Promise<VerifyLoginPayloadResult> {
     // check that the intended domain matches the domain of the payload
     if (payload.domain !== options.domain) {
-      throw new Error(
-        `Expected domain '${options.domain}' does not match domain on payload '${payload.domain}'`,
-      );
+      return {
+        valid: false,
+        error: `Expected domain '${options.domain}' does not match domain on payload '${payload.domain}'`,
+      };
     }
 
     const statement = options.login?.statement || DEFAULT_LOGIN_STATEMENT;
     // check that the payload statement matches the expected statement
     if (statement !== payload.statement) {
-      throw new Error(
-        `Expected statement '${statement}' does not match statement on payload '${payload.statement}'`,
-      );
+      return {
+        valid: false,
+        error: `Expected statement '${statement}' does not match statement on payload '${payload.statement}'`,
+      };
     }
 
     // compare uri if it is defined
     if (options.login?.uri && options.login.uri !== payload.uri) {
-      throw new Error(
-        `Expected uri '${options.login.uri}' does not match uri on payload '${payload.uri}'`,
-      );
+      return {
+        valid: false,
+        error: `Expected uri '${options.login.uri}' does not match uri on payload '${payload.uri}'`,
+      };
     }
 
     const version = options.login?.version || DEFAULT_LOGIN_VERSION;
     if (version !== payload.version) {
-      throw new Error(
-        `Expected version '${version}' does not match version on payload '${payload.version}'`,
-      );
+      return {
+        valid: false,
+        error: `Expected version '${version}' does not match version on payload '${payload.version}'`,
+      };
     }
 
     // check that the payload nonce is valid if a nonce validator is provided
@@ -52,21 +68,33 @@ export function verifyLoginPayload(options: AuthOptions) {
       try {
         const isValid = await options.login.nonce.validate(payload.nonce);
         if (!isValid) {
-          throw new Error(`Invalid nonce '${payload.nonce}'`);
+          return {
+            valid: false,
+            error: `Invalid nonce '${payload.nonce}'`,
+          };
         }
       } catch {
-        throw new Error(`Invalid nonce '${payload.nonce}'`);
+        return {
+          valid: false,
+          error: `Vailed to validate nonce '${payload.nonce}'`,
+        };
       }
     }
 
     const currentDate = new Date();
 
     if (currentDate < new Date(payload.invalid_before)) {
-      throw new Error(`Payload is not yet valid`);
+      return {
+        valid: false,
+        error: `Payload is not yet valid`,
+      };
     }
 
     if (currentDate > new Date(payload.expiration_time)) {
-      throw new Error(`Payload has expired`);
+      return {
+        valid: false,
+        error: `Payload has expired`,
+      };
     }
 
     if (options.login?.resources?.length) {
@@ -74,11 +102,12 @@ export function verifyLoginPayload(options: AuthOptions) {
         (resource) => !payload.resources?.includes(resource),
       );
       if (missingResources.length > 0) {
-        throw new Error(
-          `Login request is missing required resources: ${missingResources.join(
+        return {
+          valid: false,
+          error: `Login request is missing required resources: ${missingResources.join(
             ", ",
           )}`,
-        );
+        };
       }
     }
 
@@ -98,6 +127,7 @@ export function verifyLoginPayload(options: AuthOptions) {
     if (!signatureIsValid) {
       return {
         valid: false,
+        error: `Invalid signature`,
       };
     }
 

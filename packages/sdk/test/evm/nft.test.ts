@@ -368,4 +368,27 @@ describe("NFT Contract", async () => {
     });
     expect(nfts).to.be.an("array").length(_tokenIds.length);
   });
+
+  it("allows overriding the default admin", async () => {
+    const address = await sdk.deployer.deployBuiltInContract(
+      NFTCollectionInitializer.contractType,
+      {
+        name: "NFT Contract",
+        description: "Test NFT contract from tests",
+        image:
+          "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
+        primary_sale_recipient: adminWallet.address,
+        seller_fee_basis_points: 1000,
+        fee_recipient: AddressZero,
+        platform_fee_basis_points: 10,
+        platform_fee_recipient: AddressZero,
+        defaultAdmin: samWallet.address,
+      },
+    );
+
+    const contract = await sdk.getNFTCollection(address);
+
+    const admins = await contract.roles.get("admin");
+    expect(admins[0]).to.eq(samWallet.address);
+  });
 });
