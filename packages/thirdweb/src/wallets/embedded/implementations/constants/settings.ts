@@ -7,23 +7,12 @@ export const EMBEDDED_WALLET_PATH = "/sdk/2022-08-12/embedded-wallet";
  * @internal
  */
 export const HEADLESS_GOOGLE_OAUTH_ROUTE = `/auth/headless-google-login-managed`;
+
 /**
  * @internal
  */
-export const GET_IFRAME_BASE_URL = () => {
-  if (
-    !!(
-      typeof window !== "undefined" &&
-      localStorage.getItem("IS_THIRDWEB_DEV") === "true"
-    )
-  ) {
-    return (
-      window.localStorage.getItem("THIRDWEB_DEV_URL") ?? "http://localhost:3000"
-    );
-  }
+export const BASE_EMBEDDED_WALLET_URL = "embedded-wallet.thirdweb.com";
 
-  return `https://embedded-wallet.thirdweb.com`;
-};
 /**
  * @internal
  */

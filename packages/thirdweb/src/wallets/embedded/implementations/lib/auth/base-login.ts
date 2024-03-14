@@ -1,4 +1,3 @@
-import { GET_IFRAME_BASE_URL } from "../../constants/settings.js";
 import {
   AuthProvider,
   type AuthAndWalletRpcReturnType,
@@ -136,7 +135,7 @@ export class BaseLogin extends AbstractLogin<
             error?: string;
           }>,
         ) => {
-          if (event.origin !== GET_IFRAME_BASE_URL()) {
+          if (event.origin !== this.baseUrl) {
             return;
           }
           if (typeof event.data !== "object") {
@@ -176,7 +175,7 @@ export class BaseLogin extends AbstractLogin<
                   developerClientId: this.client.clientId,
                   authOption: args.oauthProvider,
                 },
-                GET_IFRAME_BASE_URL(),
+                this.baseUrl,
               );
               break;
             }

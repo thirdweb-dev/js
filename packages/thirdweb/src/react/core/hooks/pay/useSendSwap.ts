@@ -1,11 +1,11 @@
-import { useState } from "react";
-import { useSwapStatus, type SwapStatusParams } from "./useSwapStatus.js";
 import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
 import type { SwapRoute } from "../../../../pay/swap/actions/getSwap.js";
 import { sendSwap } from "../../../../pay/swap/actions/sendSwap.js";
 import { useActiveWallet } from "../wallets/wallet-hooks.js";
+import { useSwapStatus, type SwapStatusParams } from "./useSwapStatus.js";
 
-export type { SwapStatusParams, SwapStatus } from "./useSwapStatus.js";
+export type { SwapStatus, SwapStatusParams } from "./useSwapStatus.js";
 
 export type { SwapRoute } from "./useSwapRoute.js";
 
