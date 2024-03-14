@@ -1,4 +1,5 @@
 import type { AsyncStorage } from "../../wallets/storage/AsyncStorage.js";
+import { asyncLocalStorage } from "./utils/asyncLocalStorage.js";
 
 let storage: AsyncStorage;
 
@@ -10,11 +11,12 @@ let storage: AsyncStorage;
  * ```
  * @returns The storage to use
  */
-export function getStorage() {
+export function getStorage(): AsyncStorage {
   if (storage) {
     return storage;
   }
-  return localStorage;
+  // default to localStorage
+  return asyncLocalStorage;
 }
 
 /**
