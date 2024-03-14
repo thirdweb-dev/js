@@ -88,9 +88,8 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
       onExecute?: () => void,
     ): Promise<Transaction<Address>> => {
       const contract = PREBUILT_CONTRACTS_MAP[contractType];
-      const metadata = await contract.schema.deploy.parseAsync(
-        contractMetadata,
-      );
+      const metadata =
+        await contract.schema.deploy.parseAsync(contractMetadata);
 
       // TODO: is there any special pre-processing we need to do before uploading?
       const contractURI = await this.storage.upload(metadata);
@@ -119,7 +118,6 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
         metadata,
         contractURI,
         signer,
-        this.storage,
       );
 
       const encodedFunc = Contract.getInterface(ABI).encodeFunctionData(
@@ -311,9 +309,8 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
         ];
       case TokenDropInitializer.contractType:
       case TokenInitializer.contractType:
-        const erc20metadata = await TokenInitializer.schema.deploy.parseAsync(
-          metadata,
-        );
+        const erc20metadata =
+          await TokenInitializer.schema.deploy.parseAsync(metadata);
         return [
           signerAddress,
           erc20metadata.name,
@@ -331,9 +328,8 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           erc20metadata.platform_fee_basis_points,
         ];
       case VoteInitializer.contractType:
-        const voteMetadata = await VoteInitializer.schema.deploy.parseAsync(
-          metadata,
-        );
+        const voteMetadata =
+          await VoteInitializer.schema.deploy.parseAsync(metadata);
         return [
           voteMetadata.name,
           contractURI,
@@ -345,9 +341,8 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           voteMetadata.voting_quorum_fraction,
         ];
       case SplitInitializer.contractType:
-        const splitsMetadata = await SplitInitializer.schema.deploy.parseAsync(
-          metadata,
-        );
+        const splitsMetadata =
+          await SplitInitializer.schema.deploy.parseAsync(metadata);
         return [
           signerAddress,
           contractURI,
@@ -382,9 +377,8 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           marketplaceV3Metadata.platform_fee_basis_points,
         ];
       case PackInitializer.contractType:
-        const packsMetadata = await PackInitializer.schema.deploy.parseAsync(
-          metadata,
-        );
+        const packsMetadata =
+          await PackInitializer.schema.deploy.parseAsync(metadata);
         return [
           signerAddress,
           packsMetadata.name,
