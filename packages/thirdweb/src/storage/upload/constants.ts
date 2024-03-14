@@ -1,1 +1,4 @@
-export const UPLOAD_SERVER_URL = "https://storage.thirdweb.com";
+import type { ThirdwebClient } from "../../client/client.js";
+
+export const getUploadServerUrl = (client: ThirdwebClient) =>
+  client.config?.baseUrls?.storage ?? "storage.thirdweb.com";

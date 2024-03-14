@@ -1,4 +1,20 @@
-const THIRDWEB_PAY_BASE_URL = "https://interstate.thirdweb-dev.com";
+import type { ThirdwebClient } from "../../../client/client.js";
 
-export const THIRDWEB_PAY_SWAP_STATUS_ENDPOINT = `${THIRDWEB_PAY_BASE_URL}/swap/status`;
-export const THIRDWEB_PAY_SWAP_ROUTE_ENDPOINT = `${THIRDWEB_PAY_BASE_URL}/swap`;
+const THIRDWEB_PAY_BASE_URL = "interstate.thirdweb.com";
+
+/**
+ * Constructs the endpoint to get the status of a quote.
+ * @param client - The Thirdweb client containing the baseUrl config
+ * @internal
+ */
+export const getPayQuoteStatusUrl = (client: ThirdwebClient) =>
+  `https://${
+    client.config?.baseUrls?.pay ?? THIRDWEB_PAY_BASE_URL
+  }/quote/status`;
+/**
+ * Constructs the endpoint to get a pay quote.
+ * @param client - The Thirdweb client containing the baseUrl config
+ * @internal
+ */
+export const getPayQuoteEndpoint = (client: ThirdwebClient) =>
+  `https://${client.config?.baseUrls?.pay ?? THIRDWEB_PAY_BASE_URL}/quote`;

@@ -47,22 +47,26 @@ export abstract class AbstractLogin<
     authResults: AuthAndWalletRpcReturnType,
   ) => Promise<AuthLoginReturnType>;
   protected client: ThirdwebClient;
+  protected baseUrl: string;
   /**
    * Used to manage the user's auth states. This should not be instantiated directly.
    * Call {@link EmbeddedWalletSdk.auth} instead.
    * @internal
    */
   constructor({
+    baseUrl,
     querier,
     preLogin,
     postLogin,
     client,
   }: ClientIdWithQuerierType & {
+    baseUrl: string;
     preLogin: () => Promise<void>;
     postLogin: (
       authDetails: AuthAndWalletRpcReturnType,
     ) => Promise<AuthLoginReturnType>;
   }) {
+    this.baseUrl = baseUrl;
     this.LoginQuerier = querier;
     this.preLogin = preLogin;
     this.postLogin = postLogin;

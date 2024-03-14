@@ -1,6 +1,6 @@
-import { getClientFetch } from "../../../utils/fetch.js";
 import type { ThirdwebClient } from "../../../client/client.js";
-import { THIRDWEB_PAY_SWAP_STATUS_ENDPOINT } from "../utils/definitions.js";
+import { getClientFetch } from "../../../utils/fetch.js";
+import { getPayQuoteStatusUrl } from "../utils/definitions.js";
 import type { SwapToken } from "./getSwap.js";
 
 type TransactionDetails = {
@@ -55,7 +55,7 @@ export async function getSwapStatus(
       transactionId: params.transactionId,
       transactionHash: params.transactionHash,
     }).toString();
-    const url = `${THIRDWEB_PAY_SWAP_STATUS_ENDPOINT}?${queryString}`;
+    const url = `${getPayQuoteStatusUrl(params.client)}?${queryString}`;
 
     const response = await getClientFetch(params.client)(url);
 
