@@ -34,15 +34,15 @@ const NFTS = {
   description:
     "NFT Collections, Editions, Drops and everything else NFT-related.",
   contracts: [
-    "thirdweb.eth/LoyaltyCard",
-    "doubledev.eth/ERC4907",
+    "thirdweb.eth/DropERC721",
+    "thirdweb.eth/OpenEditionERC721",
     "thirdweb.eth/TokenERC721",
+    "thirdweb.eth/DropERC1155",
     "thirdweb.eth/TokenERC1155",
     "thirdweb.eth/Pack",
-    "thirdweb.eth/OpenEditionERC721",
     "flairsdk.eth/ERC721CommunityStream",
-    "thirdweb.eth/DropERC721",
-    "thirdweb.eth/DropERC1155",
+    "thirdweb.eth/LoyaltyCard",
+    "doubledev.eth/ERC4907",
     "thirdweb.eth/Multiwrap",
     "kronickatz.eth/ERC721NESDrop",
   ],
@@ -197,9 +197,7 @@ export function getCategory(id: string): ExploreCategory | null {
 
 type ExploreCategoryName = keyof typeof CATEGORIES;
 
-function isExploreCategory(
-  category: string,
-): category is ExploreCategoryName {
+function isExploreCategory(category: string): category is ExploreCategoryName {
   return category in CATEGORIES;
 }
 
