@@ -10,7 +10,10 @@ export function useTrack() {
 
   return useCallback(
     (data: object) => {
-      return track(client, data);
+      // never be blocked by tracking - error or otherwise
+      setTimeout(() => {
+        track(client, data);
+      });
     },
     [client],
   );

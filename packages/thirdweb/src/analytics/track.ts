@@ -11,6 +11,11 @@ export function track(client: ThirdwebClient, data: object) {
 
   fetch(ANALYTICS_ENDPOINT, {
     method: "POST",
-    body: JSON.stringify(data),
+    body: JSON.stringify(data, (_key, value) => {
+      if (typeof value === "bigint") {
+        return value.toString();
+      }
+      return value;
+    }),
   });
 }

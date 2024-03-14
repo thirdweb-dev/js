@@ -94,7 +94,7 @@ export function SwapTransactionsScreen(props: { onBack: () => void }) {
                       />
                     </Container>{" "}
                     <Text size="sm">
-                      {formatNumber(Number(txInfo.to.value), 6)}{" "}
+                      {formatNumber(Number(txInfo.to.value), 4)}{" "}
                       {txInfo.to.symbol}
                     </Text>
                   </Container>

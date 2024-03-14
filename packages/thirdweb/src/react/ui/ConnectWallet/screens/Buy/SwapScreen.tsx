@@ -350,6 +350,13 @@ export function SwapScreenContent(props: {
               onChainClick={() => setScreen("select-from-chain")}
             />
 
+            {swapQuoteQuery.data && (
+              <>
+                <Spacer y="lg" />
+                <SwapFees quote={swapQuoteQuery.data} />
+              </>
+            )}
+
             {isSwapQuoteError && (
               <div>
                 <Spacer y="lg" />
@@ -365,7 +372,6 @@ export function SwapScreenContent(props: {
             {!isSwapQuoteError && isNotEnoughBalance && (
               <>
                 <Spacer y="md" />
-
                 {/* left */}
                 <Container
                   flex="row"
@@ -377,13 +383,6 @@ export function SwapScreenContent(props: {
                     Not Enough Balance
                   </Text>
                 </Container>
-              </>
-            )}
-
-            {swapQuoteQuery.data && (
-              <>
-                <Spacer y="lg" />
-                <SwapFees quote={swapQuoteQuery.data} />
               </>
             )}
 

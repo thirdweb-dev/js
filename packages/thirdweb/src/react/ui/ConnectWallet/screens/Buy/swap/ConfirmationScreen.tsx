@@ -103,7 +103,7 @@ export function ConfirmationScreen(props: {
       <TokenSelection
         label="You Receive"
         chain={props.toChain}
-        amount={String(formatNumber(Number(props.toAmount), 6))}
+        amount={String(formatNumber(Number(props.toAmount), 4))}
         symbol={toTokenSymbol || ""}
         token={props.toToken}
       />
@@ -114,7 +114,7 @@ export function ConfirmationScreen(props: {
       <TokenSelection
         label="You Pay"
         chain={props.fromChain}
-        amount={String(formatNumber(Number(props.fromAmount), 6))}
+        amount={String(formatNumber(Number(props.fromAmount), 4))}
         symbol={fromTokenSymbol || ""}
         token={props.fromToken}
       />

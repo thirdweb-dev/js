@@ -31,7 +31,7 @@ export function SwapFees(props: { quote: SwapQuote }) {
           return (
             <Container key={fee.token.symbol} flex="row" center="y" gap="xxs">
               <Text color="primaryText" size="sm">
-                {formatNumber(Number(fee.amount), 6)} {fee.token.symbol}
+                {formatNumber(Number(fee.amount), 4)} {fee.token.symbol}
               </Text>
               <Text color="secondaryText" size="sm">
                 (${fee.amountUSDCents / 100})

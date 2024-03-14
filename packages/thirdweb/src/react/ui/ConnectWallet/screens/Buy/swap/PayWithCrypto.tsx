@@ -21,6 +21,7 @@ import type { NativeToken } from "../../nativeToken.js";
 import { TokenSelectorButton } from "./TokenSelector.js";
 import { ChainIcon } from "../../../../components/ChainIcon.js";
 import { WalletIcon } from "../../../icons/WalletIcon.js";
+import { formatNumber } from "../../../../../utils/formatNumber.js";
 
 /**
  * Shows an amount "value" and renders the selected token and chain
@@ -97,7 +98,7 @@ export function PayWithCrypto(props: {
                 color={props.value ? "primaryText" : "secondaryText"}
                 style={{}}
               >
-                {props.value || "--"}
+                {formatNumber(Number(props.value), 4) || "--"}
               </Text>
             )}
           </div>
