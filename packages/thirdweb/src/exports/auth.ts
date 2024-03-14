@@ -10,7 +10,10 @@ export {
 export { verifyJWT, type VerifyJWTParams } from "../auth/verifyJWT.js";
 
 export { createAuth } from "../auth/auth.js";
-export type { VerifyLoginPayloadParams } from "../auth/core/verify-login-payload.js";
+export type {
+  VerifyLoginPayloadParams,
+  VerifyLoginPayloadResult,
+} from "../auth/core/verify-login-payload.js";
 export type { GenerateLoginPayloadParams } from "../auth/core/generate-login-payload.js";
 export type { AuthOptions, LoginPayload } from "../auth/core/types.js";
 
