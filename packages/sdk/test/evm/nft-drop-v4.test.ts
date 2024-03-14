@@ -68,7 +68,7 @@ describe("NFT Drop Contract (v4)", async () => {
       await dropContract.claim(2);
       expect.fail("should not be able to claim 2 - maxSupply");
     } catch (e) {
-      expectError(e, "!MaxSupply");
+      expectError(e, "DropClaimExceedMaxSupply");
     }
     await dropContract.claim(1);
     // claiming with max per wallet
@@ -84,7 +84,7 @@ describe("NFT Drop Contract (v4)", async () => {
       await dropContract.claim(2);
       expect.fail("should not be able to claim 2 - maxClaimablePerWallet");
     } catch (e) {
-      expectError(e, "!Qty");
+      expectError(e, "DropClaimExceedLimit");
     }
     await dropContract.claim(1);
     expect((await dropContract.totalClaimedSupply()).toString()).eq("3");
@@ -127,7 +127,7 @@ describe("NFT Drop Contract (v4)", async () => {
       await dropContract.claim(1);
       expect.fail("should not be able to claim - not in allowlist");
     } catch (e) {
-      expectError(e, "!Qty");
+      expectError(e, "DropClaimExceedLimit");
     }
     sdk.updateSignerOrProvider(adminWallet);
     await dropContract.claim(1);
@@ -144,7 +144,7 @@ describe("NFT Drop Contract (v4)", async () => {
       await dropContract.claim(2);
       expect.fail("should not be able to claim - maxClaimableSupply");
     } catch (e) {
-      expectError(e, "!MaxSupply");
+      expectError(e, "DropClaimExceedMaxSupply");
     }
     await dropContract.claim(1);
     // claiming with max per wallet
@@ -161,7 +161,7 @@ describe("NFT Drop Contract (v4)", async () => {
       await dropContract.claim(2);
       expect.fail("should not be able to claim - maxClaimablePerWallet");
     } catch (e) {
-      expectError(e, "!Qty");
+      expectError(e, "DropClaimExceedLimit");
     }
     await dropContract.claim(1);
     // claiming with max per wallet in snapshot
@@ -178,14 +178,14 @@ describe("NFT Drop Contract (v4)", async () => {
       await dropContract.claim(2);
       expect.fail("should not be able to claim - proof maxClaimable");
     } catch (e) {
-      expectError(e, "!Qty");
+      expectError(e, "DropClaimExceedLimit");
     }
     await dropContract.claim(1);
     try {
       await dropContract.claim(1);
       expect.fail("should not be able to claim - proof used");
     } catch (e) {
-      expectError(e, "!Qty");
+      expectError(e, "DropClaimExceedLimit");
     }
   });
 
@@ -235,7 +235,7 @@ describe("NFT Drop Contract (v4)", async () => {
       await dropContract.claim(1);
       assert.fail("Should have thrown");
     } catch (e) {
-      expectError(e, "!Qty");
+      expectError(e, "DropClaimExceedLimit");
     }
   });
 
@@ -538,7 +538,7 @@ describe("NFT Drop Contract (v4)", async () => {
       await dropContract.claim(1);
       assert.fail("should have thrown");
     } catch (err: any) {
-      expectError(err, "!Qty");
+      expectError(err, "DropClaimExceedLimit");
     }
   });
 
@@ -590,7 +590,7 @@ describe("NFT Drop Contract (v4)", async () => {
       await sdk.updateSignerOrProvider(w2);
       await dropContract.claim(2);
     } catch (e) {
-      expectError(e, "!Qty");
+      expectError(e, "DropClaimExceedLimit");
     }
   });
 
@@ -758,6 +758,7 @@ describe("NFT Drop Contract (v4)", async () => {
 
       expect(reasons).to.include(ClaimEligibility.NoClaimConditionSet);
       assert.lengthOf(reasons, 1);
+      console.log(reasons);
       const canClaim = await dropContract.claimConditions.canClaim(
         1,
         w1.address,

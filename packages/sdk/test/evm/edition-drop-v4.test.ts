@@ -344,7 +344,7 @@ describe("Edition Drop Contract (V4)", async () => {
       await sdk.updateSignerOrProvider(w2);
       await bdContract.claim(0, 2);
     } catch (e) {
-      expectError(e, "!Qty");
+      expectError(e, "DropClaimExceedLimit");
     }
   });
 
@@ -695,7 +695,7 @@ describe("Edition Drop Contract (V4)", async () => {
     try {
       await bdContract.claim("1", 2);
     } catch (e) {
-      expectError(e, "!MaxSupply");
+      expectError(e, "DropClaimExceedMaxSupply");
     }
   });
 
