@@ -8,7 +8,10 @@ import type { AbiParameterToPrimitiveType } from "abitype";
 export type SafeBatchTransferFromParams = {
   from: AbiParameterToPrimitiveType<{ type: "address"; name: "_from" }>;
   to: AbiParameterToPrimitiveType<{ type: "address"; name: "_to" }>;
-  ids: AbiParameterToPrimitiveType<{ type: "uint256[]"; name: "_ids" }>;
+  tokenIds: AbiParameterToPrimitiveType<{
+    type: "uint256[]";
+    name: "tokenIds";
+  }>;
   values: AbiParameterToPrimitiveType<{ type: "uint256[]"; name: "_values" }>;
   data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "_data" }>;
 };
@@ -25,7 +28,7 @@ export type SafeBatchTransferFromParams = {
  * const transaction = safeBatchTransferFrom({
  *  from: ...,
  *  to: ...,
- *  ids: ...,
+ *  tokenIds: ...,
  *  values: ...,
  *  data: ...,
  * });
@@ -53,7 +56,7 @@ export function safeBatchTransferFrom(
         },
         {
           type: "uint256[]",
-          name: "_ids",
+          name: "tokenIds",
         },
         {
           type: "uint256[]",
@@ -69,7 +72,7 @@ export function safeBatchTransferFrom(
     params: [
       options.from,
       options.to,
-      options.ids,
+      options.tokenIds,
       options.values,
       options.data,
     ],
