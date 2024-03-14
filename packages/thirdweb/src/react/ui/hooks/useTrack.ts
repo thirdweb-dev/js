@@ -10,8 +10,8 @@ export function useTrack() {
 
   return useCallback(
     (data: object) => {
-      track(client.clientId, data);
+      return track(client, data);
     },
-    [client.clientId],
+    [client],
   );
 }
