@@ -25,6 +25,12 @@ export const CONTRACT_ADDRESSES: Record<
   },
 };
 
+export const blockExplorerApiMap: Record<number, string> = {
+  [324]: "https://block-explorer-api.mainnet.zksync.io/api",
+  [280]: "https://block-explorer-api.testnets.zksync.dev/api",
+  [300]: "https://block-explorer-api.sepolia.zksync.dev/api",
+};
+
 export const IMPLEMENTATIONS: Record<number, Record<string, string>> = {
   // ZKSync Era Goerli Testnet (Deprecated)
   [280]: {
