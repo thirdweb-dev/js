@@ -31,7 +31,7 @@ export async function getNFT(
   const [tokenUri, supply] = await Promise.all([
     uri({
       contract: options.contract,
-      id: options.tokenId,
+      tokenId: options.tokenId,
     }),
     totalSupply({
       contract: options.contract,

@@ -5,9 +5,9 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the filters for the "URI" event.
  */
 export type URIEventFilters = Partial<{
-  _id: AbiParameterToPrimitiveType<{
+  tokenId: AbiParameterToPrimitiveType<{
     type: "uint256";
-    name: "_id";
+    name: "tokenId";
     indexed: true;
   }>;
 }>;
@@ -26,7 +26,7 @@ export type URIEventFilters = Partial<{
  * contract,
  * events: [
  *  uRIEvent({
- *  _id: ...,
+ *  tokenId: ...,
  * })
  * ],
  * });
@@ -34,7 +34,7 @@ export type URIEventFilters = Partial<{
  */
 export function uRIEvent(filters: URIEventFilters = {}) {
   return prepareEvent({
-    signature: "event URI(string _value, uint256 indexed _id)",
+    signature: "event URI(string _value, uint256 indexed tokenId)",
     filters,
   });
 }

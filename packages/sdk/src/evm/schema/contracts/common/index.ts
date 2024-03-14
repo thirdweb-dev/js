@@ -18,6 +18,7 @@ export const CommonContractSchema = /* @__PURE__ */ (() =>
       external_link: z.string().optional(),
       app_uri: z.string().optional(),
       social_urls: z.record(z.string()).optional(),
+      defaultAdmin: AddressOrEnsSchema.optional(),
     })
     .catchall(z.unknown()))();
 

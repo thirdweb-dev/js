@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.21
+
+### Patch Changes
+
+- [#2465](https://github.com/thirdweb-dev/js/pull/2465) [`e024d78`](https://github.com/thirdweb-dev/js/commit/e024d78ed03fb2f2a618908e87af80799cb79298) Thanks [@edwardysun](https://github.com/edwardysun)! - Add pay to usageEventSchema
+
 ## 0.4.20
 
 ### Patch Changes

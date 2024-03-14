@@ -8,7 +8,7 @@ import type { AbiParameterToPrimitiveType } from "abitype";
 export type SafeTransferFromParams = {
   from: AbiParameterToPrimitiveType<{ type: "address"; name: "_from" }>;
   to: AbiParameterToPrimitiveType<{ type: "address"; name: "_to" }>;
-  id: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_id" }>;
+  tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
   value: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_value" }>;
   data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "_data" }>;
 };
@@ -25,7 +25,7 @@ export type SafeTransferFromParams = {
  * const transaction = safeTransferFrom({
  *  from: ...,
  *  to: ...,
- *  id: ...,
+ *  tokenId: ...,
  *  value: ...,
  *  data: ...,
  * });
@@ -53,7 +53,7 @@ export function safeTransferFrom(
         },
         {
           type: "uint256",
-          name: "_id",
+          name: "tokenId",
         },
         {
           type: "uint256",
@@ -66,6 +66,12 @@ export function safeTransferFrom(
       ],
       [],
     ],
-    params: [options.from, options.to, options.id, options.value, options.data],
+    params: [
+      options.from,
+      options.to,
+      options.tokenId,
+      options.value,
+      options.data,
+    ],
   });
 }

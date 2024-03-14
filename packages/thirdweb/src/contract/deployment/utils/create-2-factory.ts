@@ -1,17 +1,17 @@
 import { getContractAddress } from "viem";
-import type { ThirdwebClient } from "../../client/client.js";
-import { getContract } from "../../contract/contract.js";
-import { isContractDeployed } from "../bytecode/is-contract-deployed.js";
-import { isEIP155Enforced } from "./is-eip155-enforced.js";
-import { getKeylessTransaction } from "./keyless-transaction.js";
-import type { Chain } from "../../chains/types.js";
-import { eth_sendRawTransaction } from "../../rpc/actions/eth_sendRawTransaction.js";
-import { getRpcClient } from "../../rpc/rpc.js";
-import type { Account } from "../../wallets/interfaces/wallet.js";
-import { eth_getBalance } from "../../rpc/actions/eth_getBalance.js";
-import { prepareTransaction } from "../../transaction/prepare-transaction.js";
-import { sendTransaction } from "../../transaction/actions/send-transaction.js";
-import { waitForReceipt } from "../../transaction/actions/wait-for-tx-receipt.js";
+import type { ThirdwebClient } from "../../../client/client.js";
+import { getContract } from "../../contract.js";
+import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed.js";
+import { isEIP155Enforced } from "../../../utils/any-evm/is-eip155-enforced.js";
+import { getKeylessTransaction } from "../../../utils/any-evm/keyless-transaction.js";
+import type { Chain } from "../../../chains/types.js";
+import { eth_sendRawTransaction } from "../../../rpc/actions/eth_sendRawTransaction.js";
+import { getRpcClient } from "../../../rpc/rpc.js";
+import type { Account } from "../../../wallets/interfaces/wallet.js";
+import { eth_getBalance } from "../../../rpc/actions/eth_getBalance.js";
+import { prepareTransaction } from "../../../transaction/prepare-transaction.js";
+import { sendTransaction } from "../../../transaction/actions/send-transaction.js";
+import { waitForReceipt } from "../../../transaction/actions/wait-for-tx-receipt.js";
 
 const COMMON_FACTORY_ADDRESS = "0x4e59b44847b379578588920cA78FbF26c0B4956C"; // for pre-eip-155 supporting chains
 
@@ -43,6 +43,7 @@ type GetCreate2FactoryAddressOptions = {
 export async function getCreate2FactoryAddress(
   options: GetCreate2FactoryAddressOptions,
 ) {
+  // TODO add LRU cache
   const commonFactory = getContract({
     ...options,
     address: COMMON_FACTORY_ADDRESS,
@@ -73,6 +74,22 @@ export async function getCreate2FactoryAddress(
   } else {
     return null;
   }
+}
+
+/**
+ * @internal
+ */
+export async function getCreate2Factory(
+  options: GetCreate2FactoryAddressOptions,
+) {
+  const address = await getCreate2FactoryAddress(options);
+  if (!address) {
+    return null;
+  }
+  return getContract({
+    ...options,
+    address,
+  });
 }
 
 /**

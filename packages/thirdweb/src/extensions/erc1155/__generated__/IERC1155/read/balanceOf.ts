@@ -7,7 +7,7 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type BalanceOfParams = {
   owner: AbiParameterToPrimitiveType<{ type: "address"; name: "_owner" }>;
-  id: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_id" }>;
+  tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
 };
 
 /**
@@ -21,7 +21,7 @@ export type BalanceOfParams = {
  *
  * const result = await balanceOf({
  *  owner: ...,
- *  id: ...,
+ *  tokenId: ...,
  * });
  *
  * ```
@@ -40,7 +40,7 @@ export async function balanceOf(
         },
         {
           type: "uint256",
-          name: "_id",
+          name: "tokenId",
         },
       ],
       [
@@ -49,6 +49,6 @@ export async function balanceOf(
         },
       ],
     ],
-    params: [options.owner, options.id],
+    params: [options.owner, options.tokenId],
   });
 }

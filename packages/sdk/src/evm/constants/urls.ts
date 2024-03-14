@@ -257,7 +257,7 @@ export function getProviderFromRpcUrl(
         typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
           ? ((globalThis as any).APP_BUNDLE_ID as string)
           : undefined;
-      if (!rpcUrl.includes("bundleId")) {
+      if (!rpcUrl.includes("bundleId") && bundleId) {
         rpcUrl = rpcUrl + (bundleId ? `?bundleId=${bundleId}` : "");
       }
     }
