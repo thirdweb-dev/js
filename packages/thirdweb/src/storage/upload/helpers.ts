@@ -1,5 +1,4 @@
 /* eslint-disable jsdoc/require-jsdoc */
-import type { Platform } from "../../utils/detect-platform.js";
 import { areUint8ArraysEqual, isUint8Array } from "../../utils/uint8-array.js";
 import type {
   BufferOrStringWithName,
@@ -12,7 +11,10 @@ import type {
  * @internal
  */
 function isFileInstance(data: any): data is File {
-  return globalThis.File && data instanceof File;
+  return (
+    (globalThis.File && data instanceof File) ||
+    ("uri" in data[0] && "type" in data[0] && "name" in data[0])
+  );
 }
 
 /**
@@ -64,7 +66,6 @@ export function isFileBufferOrStringEqual(input1: any, input2: any): boolean {
 export function buildFormData(
   form: FormData,
   files: FileOrBufferOrString[],
-  platform: Platform,
   options?: BuildFormDataOptions,
 ) {
   const fileNameToFileMap = new Map<string, FileOrBufferOrString>();
@@ -128,13 +129,7 @@ export function buildFormData(
     fileNameToFileMap.set(fileName, file);
     // add it to the filenames array so that we can return the correct number of urls
     fileNames.push(fileName);
-    if (platform === "mobile") {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore - ReactNative does not support Blob and takes any here.
-      form.append("file", file);
-    } else {
-      form.append("file", new Blob([fileData as any]), filepath);
-    }
+    form.append("file", new Blob([fileData as any]), filepath);
   }
 
   const metadata = {
@@ -151,6 +146,8 @@ export function buildFormData(
       }),
     );
   }
+
+  console.log("form", { form });
 
   return {
     form,

@@ -27,3 +27,9 @@ export type BuildFormDataOptions = {
 export type UploadOptions = {
   files: (FileOrBufferOrString | Record<string, unknown>)[];
 } & BuildFormDataOptions;
+
+export type UploadFile = { name?: string; type?: string; uri: string };
+
+export type InternalUploadMobileOptions = {
+  files: (UploadFile | Record<string, unknown>)[];
+} & BuildFormDataOptions;

@@ -78,16 +78,18 @@ export async function upload(options: UploadOptions) {
   // end deal with the differnt file types
   const form_ = new FormData();
 
+  const { fileNames, form } = buildFormData(form_, uris, options);
+
   const platform = detectPlatform();
-
-  const { fileNames, form } = buildFormData(form_, uris, platform, options);
-
-  if (platform === "node") {
+  if (platform === "browser") {
+    const { uploadBatchBrowser } = await import("./upload/browser.js");
+    return await uploadBatchBrowser(options.client, form, fileNames, options);
+  } else if (platform === "node") {
     const { uploadBatchNode } = await import("./upload/node.js");
     return uploadBatchNode(options.client, form, fileNames, options);
+  } else {
+    throw new Error(
+      `Please, use the uploadMobile function in mobile environments.`,
+    );
   }
-
-  // browser or mobile
-  const { uploadBatchBrowser } = await import("./upload/browser.js");
-  return await uploadBatchBrowser(options.client, form, fileNames, options);
 }
