@@ -17,6 +17,7 @@ import { prepareMethod } from "../../../utils/abi/prepare-method.js";
 import { mkdir, writeFile } from "node:fs/promises";
 import { packageDirectory } from "./utils.js";
 import { join } from "node:path";
+import { existsSync } from "node:fs";
 
 const client = createThirdwebClient({ clientId: "test" });
 
@@ -43,8 +44,12 @@ export async function generate(input: ChainIdAndContract) {
   if (!root) {
     throw new Error("No root found");
   }
-  // crate the chain directory
-  const chainDirPath = join(root, "src/thirdweb", chainId);
+  // create the chain directory
+  const hasSource = existsSync(join(root, "src"));
+
+  const path = hasSource ? `src/thirdweb` : `thirdweb`;
+
+  const chainDirPath = join(root, path, chainId);
 
   mkdir(chainDirPath, { recursive: true });
 
