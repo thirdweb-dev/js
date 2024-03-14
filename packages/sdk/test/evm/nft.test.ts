@@ -368,4 +368,18 @@ describe("NFT Contract", async () => {
     });
     expect(nfts).to.be.an("array").length(_tokenIds.length);
   });
+
+  it("allows overriding the default admin", async () => {
+    const address = await sdk.deployer.deployBuiltInContract(
+      NFTCollectionInitializer.contractType,
+      {
+        defaultAdmin: samWallet.address,
+      },
+    );
+
+    const contract = await sdk.getNFTCollection(address);
+
+    const admins = await contract.roles.get("admin");
+    expect(admins[0]).to.eq(samWallet.address);
+  });
 });
