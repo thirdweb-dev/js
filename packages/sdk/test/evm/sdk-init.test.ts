@@ -1,5 +1,5 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { Fncy, Goerli } from "@thirdweb-dev/chains";
+import { Fncy, Goerli, Sepolia } from "@thirdweb-dev/chains";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { expect } from "chai";
 import { Signer, ethers } from "ethers";
@@ -26,25 +26,27 @@ describe("SDK Initialization", async () => {
   });
 
   it("should be able to be initialized with a chainId", async () => {
-    const sdk = new ThirdwebSDK(5, { secretKey: process.env.TW_SECRET_KEY });
+    const sdk = new ThirdwebSDK(11155111, {
+      secretKey: process.env.TW_SECRET_KEY,
+    });
     const network = await sdk.getProvider().getNetwork();
-    expect(network.chainId).to.equal(5);
+    expect(network.chainId).to.equal(11155111);
   });
 
   it("should be able to be initialized with a chain name", async () => {
-    const sdk = new ThirdwebSDK("goerli", {
+    const sdk = new ThirdwebSDK("sepolia", {
       secretKey: process.env.TW_SECRET_KEY,
     });
     const network = await sdk.getProvider().getNetwork();
-    expect(network.chainId).to.equal(5);
+    expect(network.chainId).to.equal(11155111);
   });
 
   it("should be able to be initialized with a default chain", async () => {
-    const sdk = new ThirdwebSDK(Goerli, {
+    const sdk = new ThirdwebSDK(Sepolia, {
       secretKey: process.env.TW_SECRET_KEY,
     });
     const network = await sdk.getProvider().getNetwork();
-    expect(network.chainId).to.equal(5);
+    expect(network.chainId).to.equal(11155111);
   });
 
   it("should be able to be initialized with a custom chain", async () => {
@@ -81,30 +83,30 @@ describe("SDK Initialization", async () => {
 
   it("Should be able to be initialized with a private key", async () => {
     const privateKey = ethers.Wallet.createRandom().privateKey;
-    const sdk = ThirdwebSDK.fromPrivateKey(privateKey, "goerli", {
+    const sdk = ThirdwebSDK.fromPrivateKey(privateKey, "sepolia", {
       secretKey: process.env.TW_SECRET_KEY,
     });
     const network = await sdk.getProvider().getNetwork();
-    expect(network.chainId).to.equal(5);
+    expect(network.chainId).to.equal(11155111);
   });
 
   it("Should be able to be initialized with a signer", async () => {
     const emptySigner = ethers.Wallet.createRandom();
-    const sdk = ThirdwebSDK.fromSigner(emptySigner, "goerli", {
+    const sdk = ThirdwebSDK.fromSigner(emptySigner, "sepolia", {
       secretKey: process.env.TW_SECRET_KEY,
     });
     const network = await sdk.getProvider().getNetwork();
-    expect(network.chainId).to.equal(5);
+    expect(network.chainId).to.equal(11155111);
   });
 
   it("Should be able to be initialized with a wallet", async () => {
     const emptySigner = ethers.Wallet.createRandom();
     const wallet = new EthersWallet(emptySigner);
-    const sdk = await ThirdwebSDK.fromWallet(wallet, "goerli", {
+    const sdk = await ThirdwebSDK.fromWallet(wallet, "sepolia", {
       secretKey: process.env.TW_SECRET_KEY,
     });
     const network = await sdk.getProvider().getNetwork();
-    expect(network.chainId).to.equal(5);
+    expect(network.chainId).to.equal(11155111);
   });
 
   it("Should be able to connect directly via http RPC URL", async () => {
