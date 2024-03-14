@@ -8,7 +8,7 @@ import { isValidSignature } from "../extensions/erc1271/__generated__/isValidSig
 
 export type VerifyEOASignatureParams = {
   message: string;
-  singature: string;
+  signature: string;
   address: string;
 };
 
@@ -31,13 +31,13 @@ export type VerifyEOASignatureParams = {
 export async function verifyEOASignature(options: VerifyEOASignatureParams) {
   const messageHash = hashMessage(options.message);
 
-  if (!isHex(options.singature)) {
-    throw new Error("Invalid signature");
+  if (!isHex(options.signature)) {
+    return false;
   }
 
   const recoveredAddress = await recoverAddress({
     hash: messageHash,
-    signature: options.singature,
+    signature: options.signature,
   });
 
   if (recoveredAddress.toLowerCase() === options.address.toLowerCase()) {
@@ -74,7 +74,7 @@ const EIP1271_MAGICVALUE = "0x1626ba7e";
 export async function verifyContractWalletSignature(
   options: VerifyContractWalletSignatureParams,
 ) {
-  if (!isHex(options.singature)) {
+  if (!isHex(options.signature)) {
     throw new Error("Invalid signature");
   }
 
@@ -89,7 +89,7 @@ export async function verifyContractWalletSignature(
   const result = await isValidSignature({
     contract,
     hash: messageHash,
-    signature: options.singature,
+    signature: options.signature,
   });
 
   return result === EIP1271_MAGICVALUE;

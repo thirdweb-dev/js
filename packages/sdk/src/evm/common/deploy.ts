@@ -33,8 +33,6 @@ import { overrideRecipientAddress } from "./override-recipient-address";
  * @returns
  * @internal
  */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-// TODO: Update function interface: Remove unused param
 export async function getDeployArguments<
   TContractType extends PrebuiltContractType,
 >(
@@ -42,9 +40,8 @@ export async function getDeployArguments<
   metadata: z.input<DeploySchemaForPrebuiltContractType<TContractType>>,
   contractURI: string,
   signer: Signer,
-  storage: ThirdwebStorage,
 ): Promise<any[]> {
-  const signerAddress = await signer.getAddress();
+  const signerAddress = metadata.defaultAdmin || (await signer.getAddress());
   const trustedForwarders: string[] = [];
 
   // add any custom forwarders passed in
