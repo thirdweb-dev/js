@@ -1,5 +1,5 @@
 import { stringify } from "../../utils/json.js";
-import { type UploadOptions } from "../upload.js";
+import type { UploadOptions } from "../upload.js";
 import {
   buildFormData,
   extractObjectFiles,
@@ -22,8 +22,12 @@ type PinataUploadResponse = {
 
 /**
  * A drop-in replacement for thirdweb/storage/upload.js
- * @param options
- * @returns
+ * @param options Options
+ * @returns something
+ * @example
+ * ```ts
+ * let test = true;
+ * ```
  */
 export async function uploadBatchNodeWithPinata(
   options: PinataUploadOptions,
