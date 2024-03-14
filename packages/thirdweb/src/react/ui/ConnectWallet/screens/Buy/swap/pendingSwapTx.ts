@@ -19,25 +19,6 @@ type SwapTxInfo = {
   };
 };
 
-// todo: remove after testing
-// const test = {
-//   transactionHash:
-//     "0x5242005d31ce3c77b3cd72e1a403c413226d08f3071a2c82b3cc4f0071519547",
-//   txExplorerLink:
-//     "https://example.com/tx/0x5242005d31ce3c77b3cd72e1a403c413226d08f3071a2c82b3cc4f0071519547",
-//   status: "PENDING",
-//   from: {
-//     symbol: "ETH",
-//     value: "1",
-//     icon: "https://example.com/icon.png",
-//   },
-//   to: {
-//     symbol: "BTC",
-//     value: "0.1",
-//     icon: "https://example.com/icon.png",
-//   },
-// } as const;
-
 // array of transaction hashes
 export const swapTransactionsStore = /* @__PURE__ */ createStore<SwapTxInfo[]>(
   [],

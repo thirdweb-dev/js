@@ -57,12 +57,6 @@ export function ConfirmationScreen(props: {
   const activeWallet = useActiveWallet();
   const track = useTrack();
 
-  // TODO: remove after testing
-  // const test = {
-  //   client,
-  //   transactionHash:
-  //     "0x5242005d31ce3c77b3cd72e1a403c413226d08f3071a2c82b3cc4f0071519547",
-  // };
   const [swapTx, setSwapTx] = useState<SwapTransaction | undefined>();
   const isApprovalRequired = props.swapQuote.approval !== undefined;
 
