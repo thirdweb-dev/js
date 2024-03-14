@@ -1,4 +1,5 @@
 /* eslint-disable jsdoc/require-jsdoc */
+import type { Platform } from "../../utils/detect-platform.js";
 import { areUint8ArraysEqual, isUint8Array } from "../../utils/uint8-array.js";
 import type {
   BufferOrStringWithName,
@@ -6,13 +7,6 @@ import type {
   FileOrBuffer,
   FileOrBufferOrString,
 } from "./types.js";
-
-/**
- * @internal
- */
-export function isBrowser() {
-  return typeof window !== "undefined";
-}
 
 /**
  * @internal
@@ -34,7 +28,7 @@ function isBufferOrStringWithName(data: any): data is BufferOrStringWithName {
   );
 }
 
-function isFileBufferOrStringEqual(input1: any, input2: any): boolean {
+export function isFileBufferOrStringEqual(input1: any, input2: any): boolean {
   if (isFileInstance(input1) && isFileInstance(input2)) {
     // if both are File types, compare the name, size, and last modified date (best guess that these are the same files)
     if (
@@ -70,6 +64,7 @@ function isFileBufferOrStringEqual(input1: any, input2: any): boolean {
 export function buildFormData(
   form: FormData,
   files: FileOrBufferOrString[],
+  platform: Platform,
   options?: BuildFormDataOptions,
 ) {
   const fileNameToFileMap = new Map<string, FileOrBufferOrString>();
@@ -133,7 +128,13 @@ export function buildFormData(
     fileNameToFileMap.set(fileName, file);
     // add it to the filenames array so that we can return the correct number of urls
     fileNames.push(fileName);
-    form.append("file", new Blob([fileData as any]), filepath);
+    if (platform === "mobile") {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore - ReactNative does not support Blob and takes any here.
+      form.append("file", file);
+    } else {
+      form.append("file", new Blob([fileData as any]), filepath);
+    }
   }
 
   const metadata = {

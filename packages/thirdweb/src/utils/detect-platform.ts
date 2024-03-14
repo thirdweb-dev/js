@@ -59,6 +59,8 @@ const operatingSystemRules: OperatingSystemRule[] = [
   ["OS/2", /OS\/2/],
 ];
 
+export type Platform = "mobile" | "browser" | "node";
+
 export function detectPlatform() {
   if (
     typeof document === "undefined" &&
