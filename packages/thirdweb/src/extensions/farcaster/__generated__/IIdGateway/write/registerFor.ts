@@ -10,6 +10,10 @@ export type RegisterForParams = {
   recovery: AbiParameterToPrimitiveType<{ type: "address"; name: "recovery" }>;
   deadline: AbiParameterToPrimitiveType<{ type: "uint256"; name: "deadline" }>;
   sig: AbiParameterToPrimitiveType<{ type: "bytes"; name: "sig" }>;
+  extraStorage: AbiParameterToPrimitiveType<{
+    type: "uint256";
+    name: "extraStorage";
+  }>;
 };
 
 /**
@@ -26,6 +30,7 @@ export type RegisterForParams = {
  *  recovery: ...,
  *  deadline: ...,
  *  sig: ...,
+ *  extraStorage: ...,
  * });
  *
  * // Send the transaction
@@ -39,7 +44,7 @@ export function registerFor(
   return prepareContractCall({
     contract: options.contract,
     method: [
-      "0x3efa0b02",
+      "0xa0c7529c",
       [
         {
           type: "address",
@@ -57,6 +62,10 @@ export function registerFor(
           type: "bytes",
           name: "sig",
         },
+        {
+          type: "uint256",
+          name: "extraStorage",
+        },
       ],
       [
         {
@@ -69,6 +78,12 @@ export function registerFor(
         },
       ],
     ],
-    params: [options.to, options.recovery, options.deadline, options.sig],
+    params: [
+      options.to,
+      options.recovery,
+      options.deadline,
+      options.sig,
+      options.extraStorage,
+    ],
   });
 }

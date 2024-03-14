@@ -7,6 +7,10 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type RegisterParams = {
   recovery: AbiParameterToPrimitiveType<{ type: "address"; name: "recovery" }>;
+  extraStorage: AbiParameterToPrimitiveType<{
+    type: "uint256";
+    name: "extraStorage";
+  }>;
 };
 
 /**
@@ -20,6 +24,7 @@ export type RegisterParams = {
  *
  * const transaction = register({
  *  recovery: ...,
+ *  extraStorage: ...,
  * });
  *
  * // Send the transaction
@@ -31,11 +36,15 @@ export function register(options: BaseTransactionOptions<RegisterParams>) {
   return prepareContractCall({
     contract: options.contract,
     method: [
-      "0x4420e486",
+      "0x6d705ebb",
       [
         {
           type: "address",
           name: "recovery",
+        },
+        {
+          type: "uint256",
+          name: "extraStorage",
         },
       ],
       [
@@ -49,6 +58,6 @@ export function register(options: BaseTransactionOptions<RegisterParams>) {
         },
       ],
     ],
-    params: [options.recovery],
+    params: [options.recovery, options.extraStorage],
   });
 }

@@ -6,10 +6,7 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "price" function.
  */
 export type PriceParams = {
-  extraStorage: AbiParameterToPrimitiveType<{
-    type: "uint256";
-    name: "extraStorage";
-  }>;
+  units: AbiParameterToPrimitiveType<{ type: "uint256"; name: "units" }>;
 };
 
 /**
@@ -22,7 +19,7 @@ export type PriceParams = {
  * import { price } from "thirdweb/extensions/farcaster";
  *
  * const result = await price({
- *  extraStorage: ...,
+ *  units: ...,
  * });
  *
  * ```
@@ -35,7 +32,7 @@ export async function price(options: BaseTransactionOptions<PriceParams>) {
       [
         {
           type: "uint256",
-          name: "extraStorage",
+          name: "units",
         },
       ],
       [
@@ -44,6 +41,6 @@ export async function price(options: BaseTransactionOptions<PriceParams>) {
         },
       ],
     ],
-    params: [options.extraStorage],
+    params: [options.units],
   });
 }
