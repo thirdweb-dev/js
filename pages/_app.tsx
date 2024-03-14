@@ -19,6 +19,7 @@ import { generateBreakpointTypographyCssVars } from "tw-components/utils/typogra
 import type { ThirdwebNextPage } from "utils/types";
 import "../css/swagger-ui.css";
 import { AnnouncementBanner } from "components/notices/AnnouncementBanner";
+import { useBuildId } from "hooks/useBuildId";
 
 const inter = interConstructor({
   subsets: ["latin"],
@@ -55,6 +56,21 @@ const ConsoleAppWrapper: React.FC<AppPropsWithLayout> = ({
   pageProps,
 }) => {
   const router = useRouter();
+  const { shouldReload } = useBuildId();
+
+  useEffect(() => {
+    const handleRouteChange = async () => {
+      if (shouldReload()) {
+        router.reload();
+      }
+    };
+
+    router.events.on("routeChangeComplete", handleRouteChange);
+
+    return () => {
+      router.events.off("routeChangeComplete", handleRouteChange);
+    };
+  }, [router, shouldReload]);
 
   useEffect(() => {
     // Taken from StackOverflow. Trying to detect both Safari desktop and mobile.
