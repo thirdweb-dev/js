@@ -100,7 +100,7 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
   }, [chainId]);
 
   const currentStep = useMemo(() => {
-    if (onlyOptimism || !hasAppliedForOpGrant || !opCredit) {
+    if (onlyOptimism && (!hasAppliedForOpGrant || !!opCredit)) {
       return Step.OptimismCredits;
     }
 
@@ -108,7 +108,7 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
       return null;
     }
 
-    if (!hasAppliedForOpGrant && isSponsoredChain && !opCredit) {
+    if (isSponsoredChain && (!hasAppliedForOpGrant || !!opCredit)) {
       return Step.OptimismCredits;
     } else if (!onboardingKeys && !hasApiKeys) {
       return Step.Keys;
@@ -317,10 +317,10 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
         </HStack>
       </VStack>
       {rightImageDark && !isMobile && colorMode === "dark" && (
-        <ChakraNextImage src={rightImageDark} alt={""} w="50%" />
+        <ChakraNextImage src={rightImageDark} alt={""} w="50%" priority />
       )}
       {rightImageLight && !isMobile && colorMode === "light" && (
-        <ChakraNextImage src={rightImageLight} alt={""} w="50%" />
+        <ChakraNextImage src={rightImageLight} alt={""} w="50%" priority />
       )}
       <ApplyForOpCreditsModal
         isOpen={isClaimCreditsOpen}
