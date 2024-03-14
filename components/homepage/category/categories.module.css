@@ -1,21 +1,21 @@
 .connect {
   position: absolute;
-  top: 60px;
-  left: 60px;
+  top: 12%;
+  left: 12%;
   transition: 250ms ease;
 }
 
 .backend {
   position: absolute;
-  top: 130px;
-  right: 40px;
+  top: 26%;
+  right: 8%;
   transition: 250ms ease;
 }
 
 .onchain {
   position: absolute;
-  top: 400px;
-  left: 160px;
+  bottom: 0%;
+  left: 30%;
   transition: 250ms ease;
 }
 

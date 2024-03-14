@@ -20,14 +20,14 @@ export const HeroSection = ({ TRACKING_CATEGORY }: HeroSectionProps) => {
       />
 
       <SimpleGrid
-        columns={{ base: 1, xl: 2 }}
-        gap={{ base: 12, xl: 8 }}
-        mt={{ base: 4, xl: 20 }}
+        columns={{ base: 1, md: 2 }}
+        gap={{ base: 12, md: 8 }}
+        mt={{ base: 4, md: 20 }}
         placeItems="center"
       >
         <Flex flexDir="column" gap={{ base: 6, md: 8 }}>
           <Flex flexDir="column" gap={4}>
-            <Heading as="h1" size="display.sm" px={{ base: 2, md: 0 }} mr={6}>
+            <Heading as="h1" size="display.sm" px={{ base: 2, md: 0 }}>
               Full-Stack Web3 Development Platform
             </Heading>
           </Flex>
@@ -45,6 +45,7 @@ export const HeroSection = ({ TRACKING_CATEGORY }: HeroSectionProps) => {
           />
         </Flex>
         <Flex
+          minW={{ base: "auto", md: "420px" }}
           maxW={{ base: "280px", sm: "400px", md: "500px" }}
           position="relative"
           className={styles.heroContainer}
