@@ -69,6 +69,7 @@ export class EmbeddedWallet implements Wallet {
   client: ThirdwebClient;
   isEmbeddedWallet: true;
 
+  private options: EmbeddedWalletCreationOptions;
   private account?: Account;
   private chain: Chain | undefined;
   private user: InitializedUser | undefined;
@@ -90,6 +91,7 @@ export class EmbeddedWallet implements Wallet {
     this.client = options.client;
     this.metadata = embeddedWalletMetadata;
     this.isEmbeddedWallet = true;
+    this.options = options;
   }
 
   /**
@@ -135,7 +137,13 @@ export class EmbeddedWallet implements Wallet {
     const params: SavedConnectParams = {
       chain: this.chain,
     };
-    saveConnectParamsToStorage(this.metadata.id, params);
+    if (this.options.storage) {
+      saveConnectParamsToStorage(
+        this.options.storage,
+        this.metadata.id,
+        params,
+      );
+    }
 
     return authAccount;
   }
@@ -155,8 +163,12 @@ export class EmbeddedWallet implements Wallet {
       throw new Error("not authenticated");
     }
 
-    const savedParams: SavedConnectParams | null =
-      await getSavedConnectParamsFromStorage(this.metadata.id);
+    const savedParams: SavedConnectParams | null = this.options.storage
+      ? await getSavedConnectParamsFromStorage(
+          this.options.storage,
+          this.metadata.id,
+        )
+      : null;
 
     const authAccount = await user.wallet.getAccount();
 
@@ -217,17 +229,22 @@ export class EmbeddedWallet implements Wallet {
    * ```
    */
   async switchChain(chain: Chain) {
-    saveConnectParamsToStorage(this.metadata.id, { chain });
+    if (this.options.storage) {
+      saveConnectParamsToStorage(this.options.storage, this.metadata.id, {
+        chain,
+      });
+    }
     this.chain = chain;
   }
 
   /**
-   * Get the Embedded Wallet user information. It returns an `AuthenticatedUser` object if wallet is connected. Otherwise, it returns `undefined`.
+   * Get the Embedded Wallet user information. It returns an object of type
+   * [`AuthenticatedUser`](https://portal.thirdweb.com/references/typescript/v5/AuthenticatedUser) if wallet is connected. Otherwise, it returns `undefined`.
    * @example
    * ```ts
    * const user = wallet.getUser();
    * ```
-   * @returns The `AuthenticatedUser` object associated with the wallet
+   * @returns Object of type [`AuthenticatedUser`](https://portal.thirdweb.com/references/typescript/v5/AuthenticatedUser) if wallet is connected, else `undefined`.
    */
   getUser(): AuthenticatedUser | undefined {
     if (!this.user) {
