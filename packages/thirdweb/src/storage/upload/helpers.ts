@@ -11,10 +11,7 @@ import type {
  * @internal
  */
 function isFileInstance(data: any): data is File {
-  return (
-    (globalThis.File && data instanceof File) ||
-    ("uri" in data[0] && "type" in data[0] && "name" in data[0])
-  );
+  return globalThis.File && data instanceof File;
 }
 
 /**
@@ -146,8 +143,6 @@ export function buildFormData(
       }),
     );
   }
-
-  console.log("form", { form });
 
   return {
     form,

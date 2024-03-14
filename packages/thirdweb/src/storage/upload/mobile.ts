@@ -17,7 +17,12 @@ export function uploadBatchMobile(
     throw new Error("[UPLOAD_BATCH_ERROR] No files or objects to upload.");
   }
 
-  if ("uri" in data[0] && "type" in data[0] && "name" in data[0]) {
+  if (
+    typeof data[0] === "object" &&
+    "uri" in data[0] &&
+    "type" in data[0] &&
+    "name" in data[0]
+  ) {
     // then it's an array of files
     return new Promise(async (resolve, reject) => {
       const formData = new FormData();
@@ -115,7 +120,7 @@ export function uploadBatchMobile(
         return reject(new Error("Unknown upload error occured"));
       });
 
-      xhr.open("POST", `${getUploadServerUrl()}/ipfs/upload`);
+      xhr.open("POST", `https://${getUploadServerUrl()}/ipfs/upload`);
       if (client.clientId) {
         xhr.setRequestHeader("x-client-id", client.clientId);
       }
@@ -140,15 +145,18 @@ export function uploadBatchMobile(
       });
 
       try {
-        const res = await fetch(`${getUploadServerUrl()}/ipfs/batch-pin-json`, {
-          method: "POST",
-          headers: {
-            ...(client.clientId ? { "x-client-id": client.clientId } : {}),
-            "Content-Type": "application/json",
-            ...getPlatformHeaders(),
+        const res = await fetch(
+          `https://${getUploadServerUrl()}/ipfs/batch-pin-json`,
+          {
+            method: "POST",
+            headers: {
+              ...(client.clientId ? { "x-client-id": client.clientId } : {}),
+              "Content-Type": "application/json",
+              ...getPlatformHeaders(),
+            },
+            body: fetchBody,
           },
-          body: fetchBody,
-        });
+        );
 
         if (res.ok) {
           const ipfsResults = await res.json();
@@ -164,6 +172,7 @@ export function uploadBatchMobile(
           return resolve(results);
         }
       } catch (error) {
+        console.error("[IPFS] Error uploading JSON to IPFS", error);
         reject(error);
       }
     });

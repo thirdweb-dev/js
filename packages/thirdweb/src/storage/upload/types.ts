@@ -31,5 +31,5 @@ export type UploadOptions = {
 export type UploadFile = { name?: string; type?: string; uri: string };
 
 export type InternalUploadMobileOptions = {
-  files: (UploadFile | Record<string, unknown>)[];
+  files: (UploadFile | any)[];
 } & BuildFormDataOptions;
