@@ -56,6 +56,7 @@ export {
 
 // utils
 export { createContractQuery } from "../react/utils/createQuery.js";
+export { useInvalidateContractQuery } from "../react/hooks/others/useInvalidateQueries.js";
 
 // wallets
 export {
@@ -123,3 +124,6 @@ export { es } from "../react/ui/locales/es.js";
 export { ja } from "../react/ui/locales/ja.js";
 export { tl } from "../react/ui/locales/tl.js";
 export type { ThirdwebLocale } from "../react/ui/locales/types.js";
+
+export { MediaRenderer } from "../react/ui/MediaRenderer/MediaRenderer.js";
+export type { MediaRendererProps } from "../react/ui/MediaRenderer/types.js";

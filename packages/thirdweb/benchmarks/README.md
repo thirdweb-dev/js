@@ -2,6 +2,17 @@
 
 We aim to compare real-world use-cases of the thirdweb library with other popular libraries in the Ethereum ecosystem.
 
+## Bundle size
+
+Imported bundle size to make a basic RPC call:
+
+- thirdweb: 4.63 KB gzipped
+  - `import { createThirdwebClient, getRpcClient, defineChain }`
+- viem: 3.78 KB gzipped
+  - `import { createClient, http }`
+- ethers: 88 KB gzipped
+  - `import { getJsonRPCProvider }`
+
 ## Benchmarks
 
 _Latest results are from the `beta` branch on March 6th, 2024._

@@ -3,7 +3,7 @@ import { SmartWallet } from "../src/evm/wallets/smart-wallet";
 import { LocalWallet } from "../src/evm/wallets/local-wallet";
 import { Mumbai } from "@thirdweb-dev/chains";
 import { ThirdwebSDK, SmartContract } from "@thirdweb-dev/sdk";
-import { checkContractWalletSignature } from "../src/evm/wallets/abstract";
+import { checkContractWalletSignature } from "../src/evm/connectors/smart-wallet/lib/check-contract-wallet-signature";
 
 require("dotenv-mono").load();
 
@@ -56,7 +56,7 @@ describeIf(!!SECRET_KEY)("SmartWallet core tests", () => {
   it("can estimate a tx", async () => {
     const preparedTx = await contract.erc1155.claim.prepare(0, 1);
     const estimates = await smartWallet.estimate(preparedTx);
-    expect(estimates.wei.toNumber()).toBeGreaterThan(0);
+    expect(estimates.wei.toString()).not.toBe("0");
   });
 
   it("can execute a tx", async () => {
@@ -111,8 +111,6 @@ describeIf(!!SECRET_KEY)("SmartWallet core tests", () => {
       sig,
       smartWalletAddress,
       chain.chainId,
-      undefined,
-      SECRET_KEY,
     );
     expect(isValidV1).toEqual(true);
     const isValidV2 = await checkContractWalletSignature(
@@ -141,8 +139,6 @@ describeIf(!!SECRET_KEY)("SmartWallet core tests", () => {
       sig,
       smartWalletAddress,
       chain.chainId,
-      undefined,
-      SECRET_KEY,
     );
     expect(isValidV1).toEqual(true);
     const isValidV2 = await checkContractWalletSignature(

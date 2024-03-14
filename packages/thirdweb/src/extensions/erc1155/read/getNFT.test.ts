@@ -12,7 +12,7 @@ describe("erc1155.getNFT", () => {
   it.runIf(process.env.TW_SECRET_KEY)("without owner", async () => {
     const nft = await getNFT({
       contract: DROP1155_CONTRACT,
-      id: 2n,
+      tokenId: 2n,
     });
     expect(nft).toMatchInlineSnapshot(`
       {

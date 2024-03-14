@@ -14,7 +14,7 @@
     "name": "thirdweb (minimal + tree-shaking)",
     "path": "./dist/esm/exports/thirdweb.js",
     "limit": "5 kB",
-    "import": "{ createThirdwebClient, getContract, prepareTransaction }"
+    "import": "{ createThirdwebClient, getRpcClient, defineChain }"
   },
   {
     "name": "thirdweb/chains (tree-shaking)",

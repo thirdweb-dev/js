@@ -1,5 +1,49 @@
 # @thirdweb-dev/auth
 
+## 4.1.42
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/wallets@2.4.20
+
+## 4.1.41
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/wallets@2.4.19
+
+## 4.1.40
+
+### Patch Changes
+
+- Updated dependencies [[`cabfc29`](https://github.com/thirdweb-dev/js/commit/cabfc29119f25a78010f59f766bdcb8c392afa2d)]:
+  - @thirdweb-dev/wallets@2.4.18
+
+## 4.1.39
+
+### Patch Changes
+
+- Updated dependencies [[`c894270`](https://github.com/thirdweb-dev/js/commit/c894270401850575d1a4df73e16198177b46477a), [`332a145`](https://github.com/thirdweb-dev/js/commit/332a14552bf95e13e5220b1bd73414f000088568)]:
+  - @thirdweb-dev/wallets@2.4.17
+
+## 4.1.38
+
+### Patch Changes
+
+- [#2417](https://github.com/thirdweb-dev/js/pull/2417) [`862905e`](https://github.com/thirdweb-dev/js/commit/862905e161a091c15eb9b054cfcca0e5d2879fd6) Thanks [@jnsdls](https://github.com/jnsdls)! - make verify login payload be self-sufficient
+
+- Updated dependencies [[`862905e`](https://github.com/thirdweb-dev/js/commit/862905e161a091c15eb9b054cfcca0e5d2879fd6)]:
+  - @thirdweb-dev/wallets@2.4.16
+
+## 4.1.37
+
+### Patch Changes
+
+- Updated dependencies [[`74a92dc`](https://github.com/thirdweb-dev/js/commit/74a92dcb7dc4be7d03bcb8b7211e87016f52a81f)]:
+  - @thirdweb-dev/wallets@2.4.15
+
 ## 4.1.36
 
 ### Patch Changes

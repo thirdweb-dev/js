@@ -76,7 +76,9 @@ export async function getOwnedNFTs(
   }
 
   const nfts = await Promise.all(
-    ownedBalances.map((ob) => getNFT({ ...options, id: BigInt(ob.tokenId) })),
+    ownedBalances.map((ob) =>
+      getNFT({ ...options, tokenId: BigInt(ob.tokenId) }),
+    ),
   );
 
   return nfts.map((nft, index) => ({

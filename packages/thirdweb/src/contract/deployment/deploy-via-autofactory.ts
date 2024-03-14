@@ -1,5 +1,5 @@
 import type { SharedDeployOptions } from "./types.js";
-import type { FullPublishMetadata } from "./utils/deploy-metadata.js";
+import type { FullPublishMetadata } from "../../utils/any-evm/deploy-metadata.js";
 
 /**
  * @internal

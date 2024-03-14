@@ -15,6 +15,9 @@ export function setAnalyticsHeaders(headers: Record<string, string>) {
   headers["x-sdk-name"] = globals.x_sdk_name;
   headers["x-sdk-platform"] = globals.x_sdk_platform;
   headers["x-sdk-os"] = globals.x_sdk_os;
+  if (globals.app_bundle_id) {
+    headers["x-bundle-id"] = globals.app_bundle_id;
+  }
 }
 
 export function setAnalyticsHeadersForXhr(xhr: XMLHttpRequest) {
@@ -24,7 +27,9 @@ export function setAnalyticsHeadersForXhr(xhr: XMLHttpRequest) {
   xhr.setRequestHeader("x-sdk-os", globals.x_sdk_os);
   xhr.setRequestHeader("x-sdk-name", globals.x_sdk_name);
   xhr.setRequestHeader("x-sdk-platform", globals.x_sdk_platform);
-  xhr.setRequestHeader("x-bundle-id", globals.app_bundle_id);
+  if (globals.app_bundle_id) {
+    xhr.setRequestHeader("x-bundle-id", globals.app_bundle_id);
+  }
 }
 
 export function getAnalyticsHeaders() {
@@ -34,7 +39,7 @@ export function getAnalyticsHeaders() {
     "x-sdk-os": globals.x_sdk_os,
     "x-sdk-name": globals.x_sdk_name,
     "x-sdk-platform": globals.x_sdk_platform,
-    "x-bundle-id": globals.app_bundle_id,
+    ...(globals.app_bundle_id ? { "x-bundle-id": globals.app_bundle_id } : {}),
   };
 }
 

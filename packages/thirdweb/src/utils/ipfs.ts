@@ -1,5 +1,7 @@
 import type { ThirdwebClient } from "../client/client.js";
 
+import type { FileOrBufferOrString } from "../storage/upload/types.js";
+
 export type ResolveSchemeOptions = {
   client: ThirdwebClient;
   uri: string;
@@ -43,4 +45,76 @@ export function resolveScheme(options: ResolveSchemeOptions) {
     throw new Error(`Invalid URI scheme, expected "ipfs://" or "http(s)://"`);
   }
   return url;
+}
+
+/**
+ * Uploads or extracts URIs from the given files.
+ * @template T - The type of the files (File, Buffer, String).
+ * @param files - The files to upload or extract URIs from.
+ * @param client - The Thirdweb client.
+ * @param [startNumber] - The starting number for rewriting file names.
+ * @returns - A promise that resolves to an array of URIs.
+ * @throws {Error} - If the files are not all of the same type (all URI or all FileOrBufferOrString).
+ * @internal
+ *
+ */
+export async function uploadOrExtractURIs<
+  T extends FileOrBufferOrString | Record<string, unknown>,
+>(files: T[], client: ThirdwebClient, startNumber?: number): Promise<string[]> {
+  if (isUriList(files)) {
+    return files;
+  } else if (isMetadataList(files)) {
+    const { upload } = await import("../storage/upload.js");
+    const uris = await upload({
+      client,
+      files,
+      rewriteFileNames: {
+        fileStartNumber: startNumber || 0,
+      },
+    });
+    return uris;
+  } else {
+    throw new Error(
+      "Files must all be of the same type (all URI or all FileOrBufferOrString)",
+    );
+  }
+}
+
+/**
+ * Retrieves the base URI from a batch of URIs.
+ *
+ * @param uris - An array of URIs.
+ * @returns The base URI shared by all URIs in the batch.
+ * @throws If the batch contains URIs with different base URIs or if no base URI is found.
+ * @internal
+ */
+export function getBaseUriFromBatch(uris: string[]): string {
+  const baseUri = uris[0]?.substring(0, uris[0].lastIndexOf("/"));
+  for (let i = 0; i < uris.length; i++) {
+    const uri = uris[i]?.substring(0, uris[i]?.lastIndexOf("/"));
+    if (baseUri !== uri) {
+      throw new Error(
+        `Can only create batches with the same base URI for every entry in the batch. Expected '${baseUri}' but got '${uri}'`,
+      );
+    }
+  }
+
+  if (!baseUri) {
+    throw new Error("No base URI found in the batch");
+  }
+
+  // Ensure that baseUri ends with trailing slash
+  return baseUri.replace(/\/$/, "") + "/";
+}
+
+function isUriList<T extends FileOrBufferOrString | Record<string, unknown>>(
+  metadatas: (string | T)[],
+): metadatas is string[] {
+  return metadatas.every((m) => typeof m === "string");
+}
+
+function isMetadataList<
+  T extends FileOrBufferOrString | Record<string, unknown>,
+>(metadatas: (string | T)[]): metadatas is T[] {
+  return metadatas.every((m) => typeof m !== "string");
 }

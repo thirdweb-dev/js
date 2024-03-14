@@ -39,7 +39,7 @@ export async function getKeylessTransaction(
   );
 
   return {
-    address,
+    signerAddress: address,
     transaction,
   };
 }

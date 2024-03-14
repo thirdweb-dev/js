@@ -49,7 +49,7 @@ export async function getNFTs(
     promises.push(
       getNFT({
         ...options,
-        id: i,
+        tokenId: i,
       }),
     );
   }

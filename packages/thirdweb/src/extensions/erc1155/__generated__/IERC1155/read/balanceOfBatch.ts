@@ -7,7 +7,10 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type BalanceOfBatchParams = {
   owners: AbiParameterToPrimitiveType<{ type: "address[]"; name: "_owners" }>;
-  ids: AbiParameterToPrimitiveType<{ type: "uint256[]"; name: "_ids" }>;
+  tokenIds: AbiParameterToPrimitiveType<{
+    type: "uint256[]";
+    name: "tokenIds";
+  }>;
 };
 
 /**
@@ -21,7 +24,7 @@ export type BalanceOfBatchParams = {
  *
  * const result = await balanceOfBatch({
  *  owners: ...,
- *  ids: ...,
+ *  tokenIds: ...,
  * });
  *
  * ```
@@ -40,7 +43,7 @@ export async function balanceOfBatch(
         },
         {
           type: "uint256[]",
-          name: "_ids",
+          name: "tokenIds",
         },
       ],
       [
@@ -49,6 +52,6 @@ export async function balanceOfBatch(
         },
       ],
     ],
-    params: [options.owners, options.ids],
+    params: [options.owners, options.tokenIds],
   });
 }

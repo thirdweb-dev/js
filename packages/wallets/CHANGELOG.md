@@ -1,5 +1,59 @@
 # @thirdweb-dev/wallets
 
+## 2.4.20
+
+### Patch Changes
+
+- Updated dependencies [[`a2002d1`](https://github.com/thirdweb-dev/js/commit/a2002d16376c41fffa59daccfd98856aba90a627)]:
+  - @thirdweb-dev/sdk@4.0.45
+
+## 2.4.19
+
+### Patch Changes
+
+- Updated dependencies [[`b2be63a`](https://github.com/thirdweb-dev/js/commit/b2be63ada466ea1784d680ae6244ac047a190103)]:
+  - @thirdweb-dev/sdk@4.0.44
+
+## 2.4.18
+
+### Patch Changes
+
+- [#2443](https://github.com/thirdweb-dev/js/pull/2443) [`cabfc29`](https://github.com/thirdweb-dev/js/commit/cabfc29119f25a78010f59f766bdcb8c392afa2d) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [Smart Wallet] Use bundler eth_getUserOperationReceipt instead of rpc eth_getLogs, remove polygon gas station error logs
+
+- Updated dependencies [[`cabfc29`](https://github.com/thirdweb-dev/js/commit/cabfc29119f25a78010f59f766bdcb8c392afa2d), [`173777a`](https://github.com/thirdweb-dev/js/commit/173777ade4ea59cde1c6f25a4654d48b277be9ad)]:
+  - @thirdweb-dev/sdk@4.0.43
+
+## 2.4.17
+
+### Patch Changes
+
+- [#2440](https://github.com/thirdweb-dev/js/pull/2440) [`c894270`](https://github.com/thirdweb-dev/js/commit/c894270401850575d1a4df73e16198177b46477a) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [Smart Wallet] Update Account Core ABI
+
+- [#2439](https://github.com/thirdweb-dev/js/pull/2439) [`332a145`](https://github.com/thirdweb-dev/js/commit/332a14552bf95e13e5220b1bd73414f000088568) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Make accountInfo/factoryInfo internal props optional in SmartWalletConfig
+
+- Updated dependencies [[`c6b025e`](https://github.com/thirdweb-dev/js/commit/c6b025e84451341f6f48c0a7c4b5f06b8e49d792)]:
+  - @thirdweb-dev/sdk@4.0.42
+
+## 2.4.16
+
+### Patch Changes
+
+- [#2417](https://github.com/thirdweb-dev/js/pull/2417) [`862905e`](https://github.com/thirdweb-dev/js/commit/862905e161a091c15eb9b054cfcca0e5d2879fd6) Thanks [@jnsdls](https://github.com/jnsdls)! - fix signature verification via smart-wallet
+
+- Updated dependencies [[`588897d`](https://github.com/thirdweb-dev/js/commit/588897d1b04e6c63da13639aeb47ca701308e1b2)]:
+  - @thirdweb-dev/chains@0.1.78
+  - @thirdweb-dev/sdk@4.0.41
+
+## 2.4.15
+
+### Patch Changes
+
+- [#2414](https://github.com/thirdweb-dev/js/pull/2414) [`74a92dc`](https://github.com/thirdweb-dev/js/commit/74a92dcb7dc4be7d03bcb8b7211e87016f52a81f) Thanks [@jnsdls](https://github.com/jnsdls)! - properly pass through clientId and secretKey variables to verifySignature functions
+
+- Updated dependencies [[`047fbe2`](https://github.com/thirdweb-dev/js/commit/047fbe2918808cbc8fded90104458b6e38d1207d)]:
+  - @thirdweb-dev/chains@0.1.77
+  - @thirdweb-dev/sdk@4.0.40
+
 ## 2.4.14
 
 ### Patch Changes

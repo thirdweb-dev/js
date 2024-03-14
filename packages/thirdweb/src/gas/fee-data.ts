@@ -7,7 +7,7 @@ import type { Chain } from "../chains/types.js";
 import { getRpcClient } from "../rpc/rpc.js";
 import { eth_getBlockByNumber } from "../rpc/actions/eth_getBlockByNumber.js";
 import { eth_maxPriorityFeePerGas } from "../rpc/actions/eth_maxPriorityFeePerGas.js";
-import { eth_gasPrice } from "../rpc/actions/eth_gasPrice.js";
+import { getGasPrice } from "./get-gas-price.js";
 
 type FeeData = {
   maxFeePerGas: null | bigint;
@@ -105,7 +105,7 @@ export async function getDefaultGasOverrides(
     };
   } else {
     return {
-      gasPrice: await getGasPrice(client, chain),
+      gasPrice: await getGasPrice({ client, chain, percentMultiplier: 10 }),
     };
   }
 }
@@ -186,30 +186,6 @@ function getPreferredPriorityFee(
     (defaultPriorityFeePerGas / BigInt(100)) * BigInt(percentMultiplier);
   const totalPriorityFee = defaultPriorityFeePerGas + extraTip;
   return totalPriorityFee;
-}
-
-/**
- * Retrieves the gas price for a transaction on a specific chain.
- * @param client - The Thirdweb client.
- * @param chain - The ID of the chain.
- * @returns A promise that resolves to the gas price as a bigint.
- * @internal
- */
-async function getGasPrice(
-  client: ThirdwebClient,
-  chain: Chain,
-): Promise<bigint> {
-  const rpcClient = getRpcClient({ client, chain });
-  const gasPrice_ = await eth_gasPrice(rpcClient);
-  const maxGasPrice = 300n; // 300 gwei
-  const extraTip = (gasPrice_ / BigInt(100)) * BigInt(10);
-  const txGasPrice = gasPrice_ + extraTip;
-
-  if (txGasPrice > maxGasPrice) {
-    return maxGasPrice;
-  }
-
-  return txGasPrice;
 }
 
 /**

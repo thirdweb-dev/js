@@ -13,7 +13,9 @@ type FetchContractMetadata = {
  * @returns The token metadata.
  * @internal
  */
-export async function fetchContractMetadata(options: FetchContractMetadata) {
+export async function fetchContractMetadata(
+  options: FetchContractMetadata,
+): Promise<{ [key: string]: any } | undefined> {
   const { client, uri } = options;
 
   // handle case where the URI is a base64 encoded JSON

@@ -1,0 +1,4 @@
+[
+  "function resolve(bytes name, bytes data) external view returns (bytes, address)",
+  "function resolve(bytes name, bytes data, string[] gateways) external view returns (bytes, address)"
+]

@@ -1,5 +1,63 @@
 # thirdweb
 
+## 0.13.50
+
+### Patch Changes
+
+- Updated dependencies [[`a2002d1`](https://github.com/thirdweb-dev/js/commit/a2002d16376c41fffa59daccfd98856aba90a627)]:
+  - @thirdweb-dev/sdk@4.0.45
+  - @thirdweb-dev/wallets@2.4.20
+  - @thirdweb-dev/auth@4.1.42
+
+## 0.13.49
+
+### Patch Changes
+
+- Updated dependencies [[`b2be63a`](https://github.com/thirdweb-dev/js/commit/b2be63ada466ea1784d680ae6244ac047a190103)]:
+  - @thirdweb-dev/sdk@4.0.44
+  - @thirdweb-dev/wallets@2.4.19
+  - @thirdweb-dev/auth@4.1.41
+
+## 0.13.48
+
+### Patch Changes
+
+- Updated dependencies [[`cabfc29`](https://github.com/thirdweb-dev/js/commit/cabfc29119f25a78010f59f766bdcb8c392afa2d), [`173777a`](https://github.com/thirdweb-dev/js/commit/173777ade4ea59cde1c6f25a4654d48b277be9ad)]:
+  - @thirdweb-dev/wallets@2.4.18
+  - @thirdweb-dev/sdk@4.0.43
+  - @thirdweb-dev/auth@4.1.40
+
+## 0.13.47
+
+### Patch Changes
+
+- Updated dependencies [[`c894270`](https://github.com/thirdweb-dev/js/commit/c894270401850575d1a4df73e16198177b46477a), [`332a145`](https://github.com/thirdweb-dev/js/commit/332a14552bf95e13e5220b1bd73414f000088568), [`c6b025e`](https://github.com/thirdweb-dev/js/commit/c6b025e84451341f6f48c0a7c4b5f06b8e49d792)]:
+  - @thirdweb-dev/wallets@2.4.17
+  - @thirdweb-dev/sdk@4.0.42
+  - @thirdweb-dev/auth@4.1.39
+
+## 0.13.46
+
+### Patch Changes
+
+- Updated dependencies [[`862905e`](https://github.com/thirdweb-dev/js/commit/862905e161a091c15eb9b054cfcca0e5d2879fd6), [`588897d`](https://github.com/thirdweb-dev/js/commit/588897d1b04e6c63da13639aeb47ca701308e1b2), [`862905e`](https://github.com/thirdweb-dev/js/commit/862905e161a091c15eb9b054cfcca0e5d2879fd6)]:
+  - @thirdweb-dev/auth@4.1.38
+  - @thirdweb-dev/chains@0.1.78
+  - @thirdweb-dev/wallets@2.4.16
+  - @thirdweb-dev/sdk@4.0.41
+
+## 0.13.45
+
+### Patch Changes
+
+- [#2400](https://github.com/thirdweb-dev/js/pull/2400) [`ef76a96`](https://github.com/thirdweb-dev/js/commit/ef76a96c2dda21e28195371fd48e57350721b717) Thanks [@kumaryash90](https://github.com/kumaryash90)! - "Option to link external libraries"
+
+- Updated dependencies [[`74a92dc`](https://github.com/thirdweb-dev/js/commit/74a92dcb7dc4be7d03bcb8b7211e87016f52a81f), [`047fbe2`](https://github.com/thirdweb-dev/js/commit/047fbe2918808cbc8fded90104458b6e38d1207d)]:
+  - @thirdweb-dev/wallets@2.4.15
+  - @thirdweb-dev/chains@0.1.77
+  - @thirdweb-dev/auth@4.1.37
+  - @thirdweb-dev/sdk@4.0.40
+
 ## 0.13.44
 
 ### Patch Changes

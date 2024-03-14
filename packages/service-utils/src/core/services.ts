@@ -47,10 +47,17 @@ export const SERVICE_DEFINITIONS = {
   checkout: {
     name: "checkout",
     title: "Checkouts",
-    description: "Payments for easy web3 onboarding",
+    description: "NFT Checkouts for easy web3 onboarding",
     // all actions allowed
     actions: [],
   },
+  pay: {
+    name: "pay",
+    title: "Pay",
+    description: "Pay for a blockchain transaction with any currency",
+    // all actions allowed
+    actions: [],
+  }
 } as const;
 
 export const SERVICE_NAMES = Object.keys(
