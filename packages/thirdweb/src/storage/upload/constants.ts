@@ -1,1 +1,8 @@
-export const UPLOAD_SERVER_URL = "https://storage.thirdweb.com";
+import { getThirdwebDomainOverrides } from "../../utils/domains.js";
+
+/**
+ * Constructs the endpoint to upload a file to ipfs
+ * @internal
+ */
+export const getUploadServerUrl = () =>
+  getThirdwebDomainOverrides()?.storage ?? "storage.thirdweb.com";

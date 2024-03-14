@@ -1,7 +1,7 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import type { ThirdwebClient } from "../../client/client.js";
 import { getPlatformHeaders } from "../../utils/fetch.js";
-import { UPLOAD_SERVER_URL } from "./constants.js";
+import { getUploadServerUrl } from "./constants.js";
 import type { UploadOptions } from "./types.js";
 
 export async function uploadBatchBrowser(
@@ -96,7 +96,7 @@ export async function uploadBatchBrowser(
       return reject(new Error("Unknown upload error occured"));
     });
 
-    xhr.open("POST", `${UPLOAD_SERVER_URL}/ipfs/upload`);
+    xhr.open("POST", `https://${getUploadServerUrl()}/ipfs/upload`);
 
     if (client.secretKey) {
       xhr.setRequestHeader("x-secret-key", client.secretKey);

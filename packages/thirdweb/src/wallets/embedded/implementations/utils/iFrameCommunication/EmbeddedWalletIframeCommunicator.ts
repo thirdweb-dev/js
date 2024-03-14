@@ -1,7 +1,4 @@
-import {
-  EMBEDDED_WALLET_PATH,
-  GET_IFRAME_BASE_URL,
-} from "../../constants/settings.js";
+import { EMBEDDED_WALLET_PATH } from "../../constants/settings.js";
 import { LocalStorage } from "../Storage/LocalStorage.js";
 import { IframeCommunicator } from "./IframeCommunicator.js";
 
@@ -15,13 +12,15 @@ export class EmbeddedWalletIframeCommunicator<
   /**
    * @internal
    */
-  constructor({ clientId }: { clientId: string }) {
+  constructor({ clientId, baseUrl }: { clientId: string; baseUrl: string }) {
     super({
       iframeId: EMBEDDED_WALLET_IFRAME_ID,
       link: createEmbeddedWalletIframeLink({
         clientId,
         path: EMBEDDED_WALLET_PATH,
+        baseUrl,
       }).href,
+      baseUrl,
       container: document.body,
     });
     this.clientId = clientId;
@@ -50,14 +49,16 @@ export class EmbeddedWalletIframeCommunicator<
  */
 export function createEmbeddedWalletIframeLink({
   clientId,
+  baseUrl,
   path,
   queryParams,
 }: {
   clientId: string;
+  baseUrl: string;
   path: string;
   queryParams?: { [key: string]: string | number };
 }) {
-  const embeddedWalletUrl = new URL(`${path}`, GET_IFRAME_BASE_URL());
+  const embeddedWalletUrl = new URL(`${path}`, baseUrl);
   if (queryParams) {
     for (const queryKey of Object.keys(queryParams)) {
       embeddedWalletUrl.searchParams.set(

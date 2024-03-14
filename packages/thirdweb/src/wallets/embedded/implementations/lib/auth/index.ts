@@ -43,7 +43,9 @@ export class Auth {
     client,
     querier,
     onAuthSuccess,
+    baseUrl,
   }: ClientIdWithQuerierType & {
+    baseUrl: string;
     onAuthSuccess: (
       authDetails: AuthAndWalletRpcReturnType,
     ) => Promise<AuthLoginReturnType>;
@@ -62,6 +64,7 @@ export class Auth {
       },
       querier: querier,
       client,
+      baseUrl,
     });
   }
 
