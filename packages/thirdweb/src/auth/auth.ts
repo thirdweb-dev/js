@@ -10,7 +10,17 @@ import { verifyLoginPayload } from "./core/verify-login-payload.js";
  * ```ts
  * import { createAuth } from 'thirdweb/auth';
  *
- * const auth = createAuth({});
+ * const auth = createAuth({...});
+ *
+ * // 1. genererate a login payload for a client on the server side
+ * const loginPayload = await auth.generatePayload({ address: '0x123...' });
+ *
+ * // 2. send the login payload to the client
+ *
+ * // 3. verify the login payload that the client sends back later
+ * await auth.verifyPayload({ payload: loginPayload, signature: '0x123...' });
+ *
+ * ```
  */
 export function createAuth(options: AuthOptions) {
   return {
