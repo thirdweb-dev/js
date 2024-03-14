@@ -27,7 +27,7 @@ import {
 import { ConnectModalContent } from "./ConnectModalContent.js";
 import { canFitWideModal } from "../../../utils/canFitWideModal.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
-import type { Chain } from "viem";
+import type { Chain } from "../../../../chains/types.js";
 
 export type ConnectEmbedProps = {
   /**
