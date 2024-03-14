@@ -231,61 +231,9 @@ export function SwapScreenContent(props: {
 
   const swapQuote = swapQuoteQuery.data;
   const isSwapQuoteError = swapQuoteQuery.isError;
-  const isSwapQuoteFetching = swapQuoteQuery.isFetching;
-
-  // const testQuote: SwapQuote = {
-  //   client,
-  //   paymentTokens: [],
-  //   swapDetails: {
-  //     fromAddress: account.address,
-  //     toAddress: account.address,
-
-  //     fromToken: {
-  //       chainId: fromChain.id,
-  //       tokenAddress: NATIVE_TOKEN_ADDRESS,
-  //       decimals: 18,
-  //       priceUSDCents: 100,
-  //     },
-  //     toToken: {
-  //       chainId: fromChain.id,
-  //       tokenAddress: NATIVE_TOKEN_ADDRESS,
-  //       decimals: 18,
-  //       priceUSDCents: 100,
-  //     },
-
-  //     fromAmount: "1000",
-  //     fromAmountWei: "1000000000",
-
-  //     toAmountMinWei: "1000000000",
-  //     toAmountMin: "1000",
-  //     toAmount: "1000",
-  //     toAmountWei: "1000000000",
-
-  //     estimated: {
-  //       fromAmountUSDCents: 100,
-  //       toAmountMinUSDCents: 100,
-  //       toAmountUSDCents: 100,
-  //       slippageBPS: 50,
-  //       feesUSDCents: 100,
-  //     },
-  //     maxSlippageBPS: 50,
-  //   },
-  //   swapFees: [],
-  //   transactionRequest: {
-  //     data: "0x...",
-  //     to: account.address,
-  //     value: "1000",
-  //     from: account.address,
-  //     chainId: fromChain.id,
-  //     gasPrice: "1000",
-  //     gasLimit: "10000",
-  //   },
-  //   approval: undefined,
-  // };
 
   const sourceTokenAmount = swapQuote?.swapDetails.fromAmount || "";
 
-  // screen === "confirmation"
   if (screen === "confirmation" && swapQuoteQuery.data) {
     return (
       <ConfirmationScreen
@@ -308,14 +256,15 @@ export function SwapScreenContent(props: {
     !!fromTokenBalanceQuery.data &&
     Number(fromTokenBalanceQuery.data.displayValue) < Number(sourceTokenAmount);
 
-  const disableContinue =
-    !swapQuote || isNotEnoughBalance || !!isSwapQuoteFetching;
+  const disableContinue = !swapQuote || isNotEnoughBalance;
 
   return (
     <Container animate="fadein">
       <Container p="lg">
         <ModalHeader title="Buy" onBack={props.onBack} />
         <Spacer y="xl" />
+
+        {!hasEditedAmount && <Spacer y="xl" />}
 
         {/* To */}
         <BuyTokenInput
@@ -331,7 +280,7 @@ export function SwapScreenContent(props: {
         />
       </Container>
 
-      {!hasEditedAmount && <Spacer y="lg" />}
+      {!hasEditedAmount && <Spacer y="xxl" />}
       <Line />
 
       <Container p="lg">
@@ -350,49 +299,38 @@ export function SwapScreenContent(props: {
               onChainClick={() => setScreen("select-from-chain")}
             />
 
-            {swapQuoteQuery.data && (
-              <>
-                <Spacer y="lg" />
-                <SwapFees quote={swapQuoteQuery.data} />
-              </>
-            )}
-
-            {isSwapQuoteError && (
-              <div>
-                <Spacer y="lg" />
-                <Container flex="row" gap="xs" center="y" color="danger">
-                  <CrossCircledIcon width={iconSize.sm} height={iconSize.sm} />
-                  <Text color="danger" size="sm">
-                    Can not swap given tokens at the moment
-                  </Text>
-                </Container>
-              </div>
-            )}
-
-            {!isSwapQuoteError && isNotEnoughBalance && (
-              <>
-                <Spacer y="md" />
-                {/* left */}
-                <Container
-                  flex="row"
-                  style={{
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Text color="danger" size="sm">
-                    Not Enough Balance
-                  </Text>
-                </Container>
-              </>
-            )}
-
             <Spacer y="lg" />
+
+            <Container flex="column" gap="md">
+              {swapQuoteQuery.data && (
+                <>
+                  <SwapFees quote={swapQuoteQuery.data} />
+                  <Spacer y="lg" />
+                </>
+              )}
+
+              {isSwapQuoteError && (
+                <div>
+                  <Container flex="row" gap="xs" center="y" color="danger">
+                    <CrossCircledIcon
+                      width={iconSize.sm}
+                      height={iconSize.sm}
+                    />
+                    <Text color="danger" size="sm">
+                      Enable to get price quote
+                    </Text>
+                  </Container>
+                  <Spacer y="lg" />
+                </div>
+              )}
+            </Container>
           </div>
         )}
 
         <Button
-          variant={"accent"}
+          variant={disableContinue ? "outline" : "accent"}
           fullWidth
+          data-disabled={disableContinue}
           disabled={disableContinue}
           onClick={async () => {
             if (!disableContinue) {
@@ -406,7 +344,7 @@ export function SwapScreenContent(props: {
           }}
           gap="sm"
         >
-          Continue
+          {isNotEnoughBalance ? "Not Enough Balance" : "Continue"}
         </Button>
       </Container>
     </Container>

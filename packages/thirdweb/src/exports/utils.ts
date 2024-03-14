@@ -120,3 +120,5 @@ export {
 // abi
 // ------------------------------------------------
 export { encodeAbiParameters } from "../utils/abi/encodeAbiParameters.js";
+
+export { setThirdwebDomainOverrides } from "../utils/domains.js";

@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { CrossCircledIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import {
   useState,
   useDeferredValue,
@@ -506,6 +506,12 @@ const NetworkTabContent = (props: {
   const locale = useTWLocale().connectWallet.networkSelector.categoryLabel;
 
   const { recentChainIds, popularChainIds, allChainIds } = props;
+
+  const noChainsToShow =
+    recentChainIds?.length === 0 &&
+    popularChainIds?.length === 0 &&
+    allChainIds.length === 0;
+
   return (
     <Container
       scrollY
@@ -558,6 +564,14 @@ const NetworkTabContent = (props: {
         renderChain={props.renderChain}
         close={props.close}
       />
+
+      {noChainsToShow && (
+        <Container flex="column" gap="md" center="both" color="secondaryText">
+          <Spacer y="xl" />
+          <CrossCircledIcon width={iconSize.xl} height={iconSize.xl} />
+          <Text> No Results </Text>
+        </Container>
+      )}
     </Container>
   );
 };

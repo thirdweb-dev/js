@@ -344,7 +344,7 @@ function TokenSelection(props: {
       <Text size="sm" color="secondaryText">
         {props.label}
       </Text>
-      <Spacer y="xs" />
+      <Spacer y="xxs" />
       <TokenInfoContainer>
         <Container flex="row" gap="md" center="y">
           {tokenIcon ? (
@@ -358,9 +358,9 @@ function TokenSelection(props: {
               {props.amount} {props.symbol}
             </Text>
             {chainQuery.data ? (
-              <Text size="sm">{chainQuery.data.name}</Text>
+              <Text size="xs">{chainQuery.data.name}</Text>
             ) : (
-              <Skeleton width={"100px"} height={fontSize.md} />
+              <Skeleton width={"100px"} height={fontSize.xs} />
             )}
           </Container>
         </Container>

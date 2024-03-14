@@ -7,7 +7,7 @@ import { iconSize, radius, spacing } from "../../design-system/index.js";
 import { StyledAnchor, StyledDiv } from "../../design-system/elements.js";
 import { useCustomTheme } from "../../design-system/CustomThemeProvider.js";
 import { Text } from "../../components/text.js";
-import { ArrowRightIcon } from "@radix-ui/react-icons";
+import { ArrowRightIcon, CrossCircledIcon } from "@radix-ui/react-icons";
 import { fadeInAnimation } from "../../design-system/animations.js";
 import { Spinner } from "../../components/Spinner.js";
 import { formatNumber } from "../../../utils/formatNumber.js";
@@ -47,6 +47,14 @@ export function SwapTransactionsScreen(props: { onBack: () => void }) {
           minHeight: "200px",
         }}
       >
+        {reversedTxs.length === 0 && (
+          <Container flex="column" gap="md" center="both" color="secondaryText">
+            <Spacer y="xl" />
+            <CrossCircledIcon width={iconSize.xl} height={iconSize.xl} />
+            <Text> No Transactions </Text>
+          </Container>
+        )}
+
         {reversedTxs.map((txInfo, i) => {
           return (
             <TxHashLink key={i} href={txInfo.txExplorerLink} target="_blank">

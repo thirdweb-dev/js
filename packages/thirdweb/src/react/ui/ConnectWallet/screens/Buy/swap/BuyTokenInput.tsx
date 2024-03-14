@@ -49,17 +49,25 @@ export function BuyTokenInput(props: {
         inputMode="decimal"
         placeholder="0"
         type="text"
-        value={props.value}
+        data-placeholder={props.value === ""}
+        value={props.value || "0"}
         onChange={(e) => {
           let value = e.target.value;
+
           if (value.startsWith(".")) {
             value = "0" + value;
           }
-          const isNum = Number(value);
-          if (isNaN(isNum)) {
+
+          const numValue = Number(value);
+          if (isNaN(numValue)) {
             return;
           }
-          props.onChange(value);
+
+          if (value.startsWith("0") && !value.startsWith("0.")) {
+            props.onChange(value.slice(1));
+          } else {
+            props.onChange(value);
+          }
         }}
         style={{
           border: "none",
@@ -87,7 +95,7 @@ export function BuyTokenInput(props: {
         />
       </Container>
 
-      <Spacer y="sm" />
+      <Spacer y="md" />
 
       <Container flex="row" center="x">
         <Button

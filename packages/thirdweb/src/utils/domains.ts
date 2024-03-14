@@ -26,7 +26,9 @@ let domains: DomainOverrides | undefined;
 /**
  * @internal
  */
-export const setThirdwebDomainOverride = (DomainOverrides: DomainOverrides) => {
+export const setThirdwebDomainOverrides = (
+  DomainOverrides: DomainOverrides,
+) => {
   domains = DomainOverrides;
 };
 

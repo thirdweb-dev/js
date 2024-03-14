@@ -63,6 +63,9 @@ export const Input = /* @__PURE__ */ StyledInput((props: InputProps) => {
       WebkitBoxShadow: `0 0 0px 1000px ${theme.colors.inputAutofillBg} inset, 0 0 0 2px ${theme.colors.accentText} !important`,
       boxShadow: `0 0 0px 1000px ${theme.colors.inputAutofillBg} inset, 0 0 0 2px ${theme.colors.accentText} !important`,
     },
+    "&[data-placeholder='true']": {
+      color: theme.colors.secondaryText,
+    },
     "&:focus": {
       boxShadow: `0 0 0 2px ${theme.colors.accentText}`,
     },
