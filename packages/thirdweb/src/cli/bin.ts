@@ -15,6 +15,6 @@ try {
 }
 const runner = bunAvailable ? "bunx" : "npx";
 // eslint-disable-next-line better-tree-shaking/no-top-level-side-effects
-spawn(runner, ["--yes", "@thirdweb-dev/cli@alpha", ...rest], {
+spawn(runner, ["--yes", "@thirdweb-dev/cli@beta", ...rest], {
   stdio: "inherit",
 });
