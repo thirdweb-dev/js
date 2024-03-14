@@ -3,7 +3,6 @@ import type { ThirdwebProviderProps as ThirdwebProviderPropsReact } from "../../
 import { ThirdwebProvider as ThirdwebProviderReact } from "../../react/providers/thirdweb-provider.js";
 import type { ThirdwebLocale } from "../ui/locales/types.js";
 import type { WalletConfig } from "../../react/types/wallets.js";
-import { WalletUIStatesProvider } from "./wallet-ui-states-provider.js";
 import { ThirdwebLocaleContext } from "./locale-provider.js";
 import { defaultWallets } from "../wallets/defaultWallets.js";
 
@@ -36,11 +35,9 @@ import { defaultWallets } from "../wallets/defaultWallets.js";
 export function ThirdwebProvider(props: ThirdwebProviderProps) {
   return (
     <ThirdwebProviderReact wallets={props.wallets || defaultWallets} {...props}>
-      <WalletUIStatesProvider theme="dark">
-        <ThirdwebLocaleContext.Provider value={props.locale || en()}>
-          {props.children}
-        </ThirdwebLocaleContext.Provider>
-      </WalletUIStatesProvider>
+      <ThirdwebLocaleContext.Provider value={props.locale || en()}>
+        {props.children}
+      </ThirdwebLocaleContext.Provider>
     </ThirdwebProviderReact>
   );
 }

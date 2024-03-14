@@ -60,6 +60,11 @@
       "import": "./dist/esm/exports/react.js",
       "default": "./dist/cjs/exports/react.js"
     },
+    "./react-native": {
+      "types": "./dist/types/exports/react-native.d.ts",
+      "import": "./dist/esm/exports/react-native.js",
+      "default": "./dist/cjs/exports/react-native.js"
+    },
     "./react-ui": {
       "types": "./dist/types/exports/react-ui.d.ts",
       "import": "./dist/esm/exports/react-ui.js",
@@ -119,6 +124,9 @@
       ],
       "react": [
         "./dist/types/exports/react.d.ts"
+      ],
+      "react-native": [
+        "./dist/types/exports/react-native.d.ts"
       ],
       "react-ui": [
         "./dist/types/exports/react-ui.d.ts"

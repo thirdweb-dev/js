@@ -1,3 +1,8 @@
+export {
+  ThirdwebProvider,
+  type ThirdwebProviderProps,
+} from "../react/providers/thirdweb-provider.js";
+
 export { darkTheme, lightTheme } from "../react-ui/ui/design-system/index.js";
 export type {
   Theme,
