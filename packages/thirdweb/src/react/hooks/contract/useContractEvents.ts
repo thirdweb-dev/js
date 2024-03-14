@@ -13,11 +13,12 @@ import { getContractEvents } from "../../../event/actions/get-events.js";
 import type { ParseEventLogsResult } from "../../../event/actions/parse-logs.js";
 import { getRpcClient } from "../../../rpc/rpc.js";
 import { eth_blockNumber } from "../../../rpc/actions/eth_blockNumber.js";
+import type { PreparedEvent } from "../../../event/prepare-event.js";
 
 type UseContractEventsOptions<
   abi extends Abi,
-  abiEvent extends AbiEvent,
-> = Omit<WatchContractEventsOptions<abi, abiEvent, true>, "onEvents"> & {
+  abiEvents extends PreparedEvent<AbiEvent>[],
+> = Omit<WatchContractEventsOptions<abi, abiEvents, true>, "onEvents"> & {
   blockRange?: number;
   enabled?: boolean;
   watch?: boolean;
@@ -35,10 +36,10 @@ type UseContractEventsOptions<
  */
 export function useContractEvents<
   const abi extends Abi,
-  const abiEvent extends AbiEvent,
+  const abiEvents extends PreparedEvent<AbiEvent>[],
 >(
-  options: UseContractEventsOptions<abi, abiEvent>,
-): UseQueryResult<ParseEventLogsResult<abiEvent, true>, Error> {
+  options: UseContractEventsOptions<abi, abiEvents>,
+): UseQueryResult<ParseEventLogsResult<abiEvents, true>, Error> {
   const {
     contract,
     events,
@@ -85,7 +86,7 @@ export function useContractEvents<
       return;
     }
     // the return is important here because it will unwatch the events
-    return watchContractEvents<abi, abiEvent>({
+    return watchContractEvents<abi, abiEvents>({
       contract,
       onEvents: (newEvents) => {
         queryClient.setQueryData(queryKey, (oldEvents: any = []) => {
