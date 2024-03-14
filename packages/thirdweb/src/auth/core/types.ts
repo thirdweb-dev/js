@@ -4,7 +4,7 @@ export type AuthOptions = {
   domain: string;
   client?: ThirdwebClient;
   login?: {
-    payloadExpirationTime?: number;
+    payloadExpirationTimeSeconds?: number;
     statement?: string;
     version?: string;
     nonce?: {

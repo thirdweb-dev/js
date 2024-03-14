@@ -21,6 +21,7 @@ import { Text } from "../../ui/components/text.js";
 import { isMobile } from "../../../core/utils/isMobile.js";
 import { HeadlessConnectUI } from "../headlessConnectUI.js";
 import type { WalletConnectConnectionOptions } from "../../../../wallets/wallet-connect/types.js";
+import { asyncLocalStorage } from "../../../core/utils/asyncLocalStorage.js";
 
 export type WalletConnectConfigOptions = {
   /**
@@ -72,6 +73,7 @@ export const walletConnectConfig = (
       return walletConnect({
         client: createOptions.client,
         dappMetadata: createOptions.dappMetadata,
+        storage: asyncLocalStorage,
       });
     },
     connectUI(props) {

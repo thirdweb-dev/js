@@ -12,6 +12,7 @@ import type {
   ConnectUIProps,
   WalletConfig,
 } from "../../../core/types/wallets.js";
+import { asyncLocalStorage } from "../../../core/utils/asyncLocalStorage.js";
 import { GetStartedScreen } from "../shared/GetStartedScreen.js";
 import { InjectedConnectUI } from "../shared/InjectedConnectUI.js";
 import { ScanScreen } from "../shared/ScanScreen.js";
@@ -59,6 +60,7 @@ export const coinbaseConfig = (
         return coinbaseSDKWallet({
           appName: createOptions.dappMetadata.name,
           appLogoUrl: createOptions.dappMetadata.logoUrl,
+          storage: asyncLocalStorage,
         });
       }
     },

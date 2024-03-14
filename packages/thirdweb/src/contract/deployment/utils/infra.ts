@@ -2,29 +2,30 @@ import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed.js";
 import { getContract, type ThirdwebContract } from "../../contract.js";
-import { computePublishedContractAddress } from "../../../utils/any-evm/compute-published-contract-address.js";
-import { computePublishedContractDeploymentInfo } from "../../../utils/any-evm/compute-published-contract-deploy-info.js";
+import { computeDeploymentInfoFromContractId } from "../../../utils/any-evm/compute-published-contract-deploy-info.js";
 import { prepareTransaction } from "../../../transaction/prepare-transaction.js";
-import { getInitBytecodeWithSalt } from "../../../utils/any-evm/get-init-bytecode-with-salt.js";
+import { computeAddressFromContractId } from "../../../utils/any-evm/compute-published-contract-address.js";
 
-export const INFRA_CONTRACTS = [
-  { contractId: "TWCloneFactory", constructorParams: [] },
-];
+export type InfraContractId =
+  | "WETH9"
+  | "Forwarder"
+  | "ForwarderEOAOnly"
+  | "TWCloneFactory";
 
-export type GetCloneFactoryParams = {
+export type GetDeployedInfraParams = {
   client: ThirdwebClient;
   chain: Chain;
-  contractId: string;
+  contractId: InfraContractId;
   constructorParams: unknown[];
 };
 
 /**
  * @internal
  */
-export async function getDeployedPublishedContract(
-  options: GetCloneFactoryParams,
+export async function getDeployedInfraContract(
+  options: GetDeployedInfraParams,
 ): Promise<ThirdwebContract | null> {
-  const address = await computePublishedContractAddress({
+  const address = await computeAddressFromContractId({
     ...options,
   });
   const factory = getContract({
@@ -41,20 +42,15 @@ export async function getDeployedPublishedContract(
 /**
  * @internal
  */
-export async function preparePublishedContractDeployTransaction(
-  options: GetCloneFactoryParams,
+export async function prepareInfraContractDeployTransaction(
+  options: GetDeployedInfraParams,
 ) {
-  const cloneFactoryInfo = await computePublishedContractDeploymentInfo({
+  const cloneFactoryInfo = await computeDeploymentInfoFromContractId({
     ...options,
-  });
-  const initBytecodeWithSalt = getInitBytecodeWithSalt({
-    bytecode: cloneFactoryInfo.bytecode,
-    encodedArgs: cloneFactoryInfo.encodedArgs,
-    salt: cloneFactoryInfo.salt,
   });
   return prepareTransaction({
     ...options,
     to: cloneFactoryInfo.create2FactoryAddress,
-    data: initBytecodeWithSalt,
+    data: cloneFactoryInfo.initBytecodeWithsalt,
   });
 }

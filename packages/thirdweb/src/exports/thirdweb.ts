@@ -241,3 +241,6 @@ export {
   type Address,
   type AddressInput,
 } from "../utils/address.js";
+
+// re-exports of types
+export type { AbiParameterToPrimitiveType } from "abitype";

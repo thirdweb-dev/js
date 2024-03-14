@@ -191,7 +191,7 @@ export async function fetchPublishedContract(
   const contractPublisher = getContract({
     client: options.client,
     chain: polygon,
-    address: options.publisherAddress,
+    address: CONTRACT_PUBLISHER_ADDRESS,
   });
   if (!options.version || options.version === "latest") {
     return await readContract({

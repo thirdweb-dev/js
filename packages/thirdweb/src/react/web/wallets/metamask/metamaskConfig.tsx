@@ -5,6 +5,7 @@ import {
 } from "../../../../wallets/injected/wallets/metamask.js";
 import { walletConnect } from "../../../../wallets/wallet-connect/index.js";
 import type { WalletConfig } from "../../../core/types/wallets.js";
+import { asyncLocalStorage } from "../../../core/utils/asyncLocalStorage.js";
 import { InjectedAndWCConnectUI } from "../shared/InjectedAndWCConnectUI.js";
 
 export type MetamaskConfigOptions = {
@@ -60,6 +61,7 @@ export const metamaskConfig = (
         client: createOptions.client,
         dappMetadata: createOptions.dappMetadata,
         metadata: metamaskMetadata,
+        storage: asyncLocalStorage,
       });
     },
     connectUI(props) {

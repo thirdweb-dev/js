@@ -5,10 +5,12 @@ import type { AbiConstructor } from "abitype";
 import { prepareDirectDeployTransaction } from "./deploy-with-abi.js";
 import { ensureBytecodePrefix } from "../../utils/bytecode/prefix.js";
 import { isHex } from "../../utils/encoding/hex.js";
+import { prepareDeployTransactionViaAutoFactory } from "./deploy-via-autofactory.js";
 
 export type PrepareDeployTransactionFromUriOptions = Prettify<
   {
     uri: string;
+    constructorParams: unknown[];
   } & SharedDeployOptions
 >;
 
@@ -32,10 +34,11 @@ export type PrepareDeployTransactionFromUriOptions = Prettify<
 export async function prepareDeployTransactionFromUri(
   options: PrepareDeployTransactionFromUriOptions,
 ) {
-  const { compilerMetadata, extendedMetadata } = await fetchDeployMetadata({
+  const metadata = await fetchDeployMetadata({
     client: options.client,
     uri: options.uri,
   });
+  const { compilerMetadata, extendedMetadata } = metadata;
 
   const forceDirectDeploy = options.forceDirectDeploy ?? false;
   const chainId = options.chain.id;
@@ -64,6 +67,14 @@ export async function prepareDeployTransactionFromUri(
         extendedMetadata.deployType !== "standard")) &&
     !forceDirectDeploy
   ) {
+    if (extendedMetadata.deployType === "autoFactory") {
+      return prepareDeployTransactionViaAutoFactory({
+        chain: options.chain,
+        client: options.client,
+        metadata,
+        initializerArgs: options.constructorParams,
+      });
+    }
     // TODO: support factory and proxy deployments
     throw new Error(
       "Contract is not deployable directly. Use a factory or proxy deployment.",

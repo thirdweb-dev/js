@@ -4,8 +4,8 @@ import { computedStore } from "../../reactive/computedStore.js";
 import { effect } from "../../reactive/effect.js";
 import { createStore } from "../../reactive/store.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
+import type { AsyncStorage } from "../storage/AsyncStorage.js";
 import { normalizeChainId } from "../utils/normalizeChainId.js";
-import { walletStorage } from "../storage/walletStorage.js";
 
 type WalletIdToConnectedWalletMap = Map<string, Wallet>;
 export type ConnectionStatus =
@@ -21,13 +21,14 @@ export type ConnectionManager = ReturnType<typeof createConnectionManager>;
 
 /**
  * Create a connection manager for Wallet connections
+ * @param storage - An instance of type [`AsyncStorage`](https://portal.thirdweb.com/references/typescript/v5/AsyncStorage)
  * @example
  * ```ts
  * const manager = createConnectionManager();
  * ```
  * @returns A connection manager object
  */
-export function createConnectionManager() {
+export function createConnectionManager(storage: AsyncStorage) {
   // stores
 
   // active wallet/account
@@ -152,7 +153,7 @@ export function createConnectionManager() {
         .map((acc) => acc?.metadata.id)
         .filter((c) => !!c) as string[];
 
-      walletStorage.setItem(CONNECTED_WALLET_IDS, JSON.stringify(ids));
+      storage.setItem(CONNECTED_WALLET_IDS, JSON.stringify(ids));
     },
     [connectedWallets],
     false,
@@ -163,9 +164,9 @@ export function createConnectionManager() {
     () => {
       const value = activeWalletStore.getValue()?.metadata.id;
       if (value) {
-        walletStorage.setItem(ACTIVE_WALLET_ID, value);
+        storage.setItem(ACTIVE_WALLET_ID, value);
       } else {
-        walletStorage.removeItem(ACTIVE_WALLET_ID);
+        storage.removeItem(ACTIVE_WALLET_ID);
       }
     },
     [activeWalletStore],
@@ -207,9 +208,11 @@ export function createConnectionManager() {
  *
  * @internal
  */
-export async function getStoredConnectedWalletIds(): Promise<string[] | null> {
+export async function getStoredConnectedWalletIds(
+  storage: AsyncStorage,
+): Promise<string[] | null> {
   try {
-    const value = await walletStorage.getItem(CONNECTED_WALLET_IDS);
+    const value = await storage.getItem(CONNECTED_WALLET_IDS);
     if (value) {
       return JSON.parse(value) as string[];
     }
@@ -222,9 +225,11 @@ export async function getStoredConnectedWalletIds(): Promise<string[] | null> {
 /**
  * @internal
  */
-export async function getStoredActiveWalletId(): Promise<string | null> {
+export async function getStoredActiveWalletId(
+  storage: AsyncStorage,
+): Promise<string | null> {
   try {
-    const value = await walletStorage.getItem(ACTIVE_WALLET_ID);
+    const value = await storage.getItem(ACTIVE_WALLET_ID);
     if (value) {
       return value;
     }

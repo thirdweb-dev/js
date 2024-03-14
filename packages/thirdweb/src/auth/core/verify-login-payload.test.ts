@@ -24,7 +24,7 @@ describe("verifyLoginPayload", () => {
       client: TEST_CLIENT,
       domain: "example.com",
       login: {
-        payloadExpirationTime: 3600000,
+        payloadExpirationTimeSeconds: 3600,
         statement: "This is a statement",
         version: "1.0",
         resources: ["resource1", "resource2"],
@@ -57,7 +57,9 @@ describe("verifyLoginPayload", () => {
     const verificationResult = await verifyPayload(signatureResult);
 
     expect(verificationResult.valid).toBe(true);
-    expect(verificationResult.verifiedAddress).toBe(TEST_ACCOUNT_A.address);
+    if (verificationResult.valid) {
+      expect(verificationResult.verifiedAddress).toBe(TEST_ACCOUNT_A.address);
+    }
   });
 
   test("should fail with an invalid signature", async () => {

@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { LocalWallet } from "../../../../../wallets/local/index.js";
+import { asyncLocalStorage } from "../../../../core/utils/asyncLocalStorage.js";
 
 /**
  * Fetch the saved local wallet data from localStorage.
@@ -9,7 +10,7 @@ export function useSavedLocalWalletDataQuery() {
   return useQuery({
     queryKey: ["localWalletData"],
     queryFn: async () => {
-      const data = await LocalWallet.getSavedData();
+      const data = await LocalWallet.getSavedData(asyncLocalStorage);
       if (data?.isEncrypted && data.type === "privateKey") {
         return data;
       }

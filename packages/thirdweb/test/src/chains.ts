@@ -11,3 +11,5 @@ export const FORKED_ETHEREUM_CHAIN = defineChain({
   // override the rpc url
   rpc: FORKED_ETHEREUM_RPC,
 });
+
+export const FORK_BLOCK_NUMBER = 19139495n;

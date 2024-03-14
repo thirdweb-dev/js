@@ -72,14 +72,6 @@ export type {
   SmartWalletConnectionOptions,
 } from "../wallets/smart/types.js";
 
-// storage
-export {
-  getSavedConnectParamsFromStorage,
-  saveConnectParamsToStorage,
-  deleteConnectParamsFromStorage,
-} from "../wallets/storage/walletStorage.js";
-export type { WithPersonalWalletConnectionOptions } from "../wallets/storage/walletStorage.js";
-
 export {
   getStoredActiveWalletId,
   getStoredConnectedWalletIds,

@@ -5,6 +5,7 @@ import {
 } from "../../../../wallets/injected/wallets/rainbow.js";
 import { walletConnect } from "../../../../wallets/wallet-connect/index.js";
 import type { WalletConfig } from "../../../core/types/wallets.js";
+import { asyncLocalStorage } from "../../../core/utils/asyncLocalStorage.js";
 import { InjectedAndWCConnectUI } from "../shared/InjectedAndWCConnectUI.js";
 
 export type RainbowConfigOptions = {
@@ -57,6 +58,7 @@ export const rainbowConfig = (options?: RainbowConfigOptions): WalletConfig => {
         client: createOptions.client,
         dappMetadata: createOptions.dappMetadata,
         metadata: rainbowWalletMetadata,
+        storage: asyncLocalStorage,
       });
     },
     metadata: rainbowWalletMetadata,

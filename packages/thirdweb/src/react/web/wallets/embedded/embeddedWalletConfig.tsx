@@ -10,6 +10,7 @@ import type {
 import { useScreenContext } from "../../ui/ConnectWallet/Modal/screen.js";
 import { WalletEntryButton } from "../../ui/ConnectWallet/WalletSelector.js";
 import { reservedScreens } from "../../ui/ConnectWallet/constants.js";
+import { asyncLocalStorage } from "../../../core/utils/asyncLocalStorage.js";
 import {
   EmbeddedWalletFormUI,
   EmbeddedWalletFormUIScreen,
@@ -98,6 +99,7 @@ export const embeddedWalletConfig = (
     create(createOptions) {
       return embeddedWallet({
         client: createOptions.client,
+        storage: asyncLocalStorage,
       });
     },
     selectUI(props) {
