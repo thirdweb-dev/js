@@ -1,9 +1,9 @@
 /* eslint-disable jsdoc/require-jsdoc */
 
-import type { UploadOptions } from "./types.js";
-import { UPLOAD_SERVER_URL } from "./constants.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { getClientFetch } from "../../utils/fetch.js";
+import { getUploadServerUrl } from "./constants.js";
+import type { UploadOptions } from "./types.js";
 
 export async function uploadBatchNode(
   client: ThirdwebClient,
@@ -51,14 +51,17 @@ export async function uploadBatchNode(
     headers["x-authorize-wallet"] = "true";
   }
 
-  const res = await getClientFetch(client)(`${UPLOAD_SERVER_URL}/ipfs/upload`, {
-    method: "POST",
-    headers: {
-      ...headers,
-      // ...form.getHeaders(),
+  const res = await getClientFetch(client)(
+    `https://${getUploadServerUrl()}/ipfs/upload`,
+    {
+      method: "POST",
+      headers: {
+        ...headers,
+        // ...form.getHeaders(),
+      },
+      body: form,
     },
-    body: form,
-  });
+  );
 
   if (!res.ok) {
     res.body?.cancel();

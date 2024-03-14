@@ -4,7 +4,7 @@ import { getContract } from "../../../contract/contract.js";
 import type { ApproveParams } from "../../../extensions/erc20/write/approve.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { getClientFetch } from "../../../utils/fetch.js";
-import { THIRDWEB_PAY_SWAP_ROUTE_ENDPOINT } from "../utils/definitions.js";
+import { getPayQuoteEndpoint } from "../utils/definitions.js";
 
 // TODO: add JSDoc description for all properties
 
@@ -235,7 +235,7 @@ export async function getSwapQuote(
     }
 
     const queryString = new URLSearchParams(urlParamsObj).toString();
-    const url = `${THIRDWEB_PAY_SWAP_ROUTE_ENDPOINT}?${queryString}`;
+    const url = `${getPayQuoteEndpoint()}?${queryString}`;
 
     const response = await getClientFetch(params.client)(url);
 

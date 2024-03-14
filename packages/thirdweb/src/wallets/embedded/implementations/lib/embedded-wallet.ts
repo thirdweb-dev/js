@@ -1,4 +1,6 @@
 import type { ThirdwebClient } from "../../../../client/client.js";
+import { getThirdwebDomainOverrides } from "../../../../utils/domains.js";
+import { BASE_EMBEDDED_WALLET_URL } from "../constants/settings.js";
 import {
   UserWalletStatus,
   type EmbeddedWalletConstructorType,
@@ -40,9 +42,13 @@ export class EmbeddedWalletSdk {
         "You are using a legacy clientId. Please use the clientId found on the thirdweb dashboard settings page",
       );
     }
+    const baseUrl = `https://${
+      getThirdwebDomainOverrides()?.embeddedWallet ?? BASE_EMBEDDED_WALLET_URL
+    }`;
     this.client = client;
     this.querier = new EmbeddedWalletIframeCommunicator({
       clientId: client.clientId,
+      baseUrl,
     });
     this.wallet = new EmbeddedWallet({
       client,
@@ -52,6 +58,7 @@ export class EmbeddedWalletSdk {
     this.auth = new Auth({
       client,
       querier: this.querier,
+      baseUrl,
       onAuthSuccess: async (authResult) => {
         onAuthSuccess?.(authResult);
         await this.wallet.postWalletSetUp({

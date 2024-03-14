@@ -1,7 +1,6 @@
-import { GET_IFRAME_BASE_URL } from "../../constants/settings.js";
-
 type IFrameCommunicatorProps = {
   link: string;
+  baseUrl: string;
   iframeId: string;
   container?: HTMLElement;
   onIframeInitialize?: () => void;
@@ -42,11 +41,12 @@ export class IframeCommunicator<T extends { [key: string]: any }> {
    */
   constructor({
     link,
+    baseUrl,
     iframeId,
     container = document.body,
     onIframeInitialize,
   }: IFrameCommunicatorProps) {
-    this.iframeBaseUrl = GET_IFRAME_BASE_URL();
+    this.iframeBaseUrl = baseUrl;
 
     // Creating the IFrame element for communication
     let iframe = document.getElementById(iframeId) as HTMLIFrameElement | null;

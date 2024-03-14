@@ -1,6 +1,6 @@
-import { getClientFetch } from "../../../utils/fetch.js";
+import { getClientFetch } from "src/utils/fetch.js";
 import type { ThirdwebClient } from "../../../client/client.js";
-import { THIRDWEB_PAY_SWAP_STATUS_ENDPOINT } from "../utils/definitions.js";
+import { getPayQuoteStatusUrl } from "../utils/definitions.js";
 import type { SwapTokenInfo } from "./getSwap.js";
 
 // TODO: add JSDoc description for all properties
@@ -66,8 +66,7 @@ export async function getSwapStatus(
     const queryString = new URLSearchParams({
       transactionHash: swapTransaction.transactionHash,
     }).toString();
-
-    const url = `${THIRDWEB_PAY_SWAP_STATUS_ENDPOINT}?${queryString}`;
+    const url = `${getPayQuoteStatusUrl()}?${queryString}`;
 
     const response = await getClientFetch(swapTransaction.client)(url);
 

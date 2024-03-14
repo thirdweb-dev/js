@@ -165,8 +165,8 @@ function generateWriteFunction(f: AbiFunction): string {
 export type ${uppercaseFirstLetter(f.name)}Params = {
   ${f.inputs
     .map(
-      (x) =>
-        `${removeLeadingUnderscore(x.name)}: AbiParameterToPrimitiveType<${JSON.stringify(x)}>`,
+      (x, i) =>
+        `${removeLeadingUnderscore(x.name || `arg_${i}`)}: AbiParameterToPrimitiveType<${JSON.stringify(x)}>`,
     )
     .join("\n")}
 };`
@@ -184,7 +184,9 @@ export type ${uppercaseFirstLetter(f.name)}Params = {
  * const transaction = ${f.name}(${
    f.inputs.length > 0
      ? `{\n * ${f.inputs
-         .map((x) => ` ${removeLeadingUnderscore(x.name)}: ...,`)
+         .map(
+           (x, i) => ` ${removeLeadingUnderscore(x.name || `arg_${i}`)}: ...,`,
+         )
          .join("\n * ")}\n * }`
      : ""
  });
@@ -203,7 +205,7 @@ export function ${f.name}(
     contract: options.contract,
     method: ${JSON.stringify(prepareMethod(f), null, 2)},
     params: [${f.inputs
-      .map((x) => `options.${removeLeadingUnderscore(x.name)}`)
+      .map((x, i) => `options.${removeLeadingUnderscore(x.name || `arg_${i}`)}`)
       .join(", ")}]
   });
 };
@@ -219,9 +221,9 @@ function generateReadFunction(f: AbiFunction): string {
 export type ${uppercaseFirstLetter(f.name)}Params = {
   ${f.inputs
     .map(
-      (x) =>
+      (x, i) =>
         `${removeLeadingUnderscore(
-          x.name,
+          x.name || `arg_${i}`,
         )}: AbiParameterToPrimitiveType<${JSON.stringify(x)}>`,
     )
     .join("\n")}
@@ -240,7 +242,9 @@ export type ${uppercaseFirstLetter(f.name)}Params = {
  * const result = await ${f.name}(${
    f.inputs.length > 0
      ? `{\n * ${f.inputs
-         .map((x) => ` ${removeLeadingUnderscore(x.name)}: ...,`)
+         .map(
+           (x, i) => ` ${removeLeadingUnderscore(x.name || `arg_${i}`)}: ...,`,
+         )
          .join("\n * ")}\n * }`
      : ""
  });
@@ -256,7 +260,7 @@ export async function ${f.name}(
     contract: options.contract,
     method: ${JSON.stringify(prepareMethod(f), null, 2)},
     params: [${f.inputs
-      .map((x) => `options.${removeLeadingUnderscore(x.name)}`)
+      .map((x, i) => `options.${removeLeadingUnderscore(x.name || `arg_${i}`)}`)
       .join(", ")}]
   });
 };
