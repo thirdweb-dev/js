@@ -52,7 +52,7 @@ export async function uploadBatchNode(
   }
 
   const res = await getClientFetch(client)(
-    `https://${getUploadServerUrl(client)}/ipfs/upload`,
+    `https://${getUploadServerUrl()}/ipfs/upload`,
     {
       method: "POST",
       headers: {

@@ -96,7 +96,7 @@ export async function uploadBatchBrowser(
       return reject(new Error("Unknown upload error occured"));
     });
 
-    xhr.open("POST", `https://${getUploadServerUrl(client)}/ipfs/upload`);
+    xhr.open("POST", `https://${getUploadServerUrl()}/ipfs/upload`);
 
     if (client.secretKey) {
       xhr.setRequestHeader("x-secret-key", client.secretKey);

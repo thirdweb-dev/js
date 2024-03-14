@@ -1,8 +1,8 @@
-import type { ThirdwebClient } from "../../client/client.js";
+import { getThirdwebDomainOverrides } from "../../utils/domains.js";
 
 /**
  * Constructs the endpoint to upload a file to ipfs
  * @internal
  */
-export const getUploadServerUrl = (client: ThirdwebClient) =>
-  client.config?.baseUrls?.storage ?? "storage.thirdweb.com";
+export const getUploadServerUrl = () =>
+  getThirdwebDomainOverrides()?.storage ?? "storage.thirdweb.com";

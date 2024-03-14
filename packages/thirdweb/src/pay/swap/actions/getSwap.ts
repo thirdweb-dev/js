@@ -130,7 +130,7 @@ export async function getSwapRoute(
 ): Promise<SwapRoute> {
   try {
     const queryString = new URLSearchParams(params as any).toString();
-    const url = `${getPayQuoteEndpoint(params.client)}?${queryString}`;
+    const url = `${getPayQuoteEndpoint()}?${queryString}`;
 
     const response = await getClientFetch(params.client)(url);
 

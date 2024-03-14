@@ -1,5 +1,6 @@
 import type { Chain as ViemChain } from "viem";
 import type { ThirdwebClient } from "../client/client.js";
+import { getThirdwebDomainOverrides } from "../utils/domains.js";
 import { isThirdwebUrl } from "../utils/fetch.js";
 import { withCache } from "../utils/promise/withCache.js";
 import type {
@@ -115,7 +116,7 @@ type GetRpcUrlForChainOptions = {
  */
 export function getRpcUrlForChain(options: GetRpcUrlForChainOptions): string {
   const defaultBaseRpcUrl = "rpc.thirdweb.com";
-  const baseRpcUrlOverride = options.client.config?.baseUrls?.rpc;
+  const baseRpcUrlOverride = getThirdwebDomainOverrides()?.rpc;
 
   // if the chain is just a number, construct the RPC URL using the chain ID and client ID
   if (typeof options.chain === "number") {

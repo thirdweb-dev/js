@@ -1,4 +1,5 @@
 import type { ThirdwebClient } from "../../../../client/client.js";
+import { getThirdwebDomainOverrides } from "../../../../utils/domains.js";
 import { BASE_EMBEDDED_WALLET_URL } from "../constants/settings.js";
 import {
   UserWalletStatus,
@@ -42,7 +43,7 @@ export class EmbeddedWalletSdk {
       );
     }
     const baseUrl = `https://${
-      client.config?.baseUrls?.embeddedWallet ?? BASE_EMBEDDED_WALLET_URL
+      getThirdwebDomainOverrides()?.embeddedWallet ?? BASE_EMBEDDED_WALLET_URL
     }`;
     this.client = client;
     this.querier = new EmbeddedWalletIframeCommunicator({

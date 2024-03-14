@@ -55,7 +55,7 @@ export async function getSwapStatus(
       transactionId: params.transactionId,
       transactionHash: params.transactionHash,
     }).toString();
-    const url = `${getPayQuoteStatusUrl(params.client)}?${queryString}`;
+    const url = `${getPayQuoteStatusUrl()}?${queryString}`;
 
     const response = await getClientFetch(params.client)(url);
 
