@@ -23,7 +23,8 @@ export function generateLoginPayload(options: AuthOptions) {
   }: GenerateLoginPayloadParams): Promise<LoginPayload> {
     const now = Date.now();
     const expirationTime =
-      options.login?.payloadExpirationTime || DEFAULT_LOGIN_PAYLOAD_EXPIRATION;
+      (options.login?.payloadExpirationTimeSeconds ||
+        DEFAULT_LOGIN_PAYLOAD_EXPIRATION) * 1000;
     return {
       address,
       chain_id: chainId ? chainId.toString() : undefined,
