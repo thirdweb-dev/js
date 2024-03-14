@@ -51,7 +51,7 @@ export async function generate(input: ChainIdAndContract) {
 
   const chainDirPath = join(root, path, chainId);
 
-  mkdir(chainDirPath, { recursive: true });
+  await mkdir(chainDirPath, { recursive: true });
 
   await writeFile(
     join(chainDirPath, `${contractAddress.toLowerCase()}.ts`),
