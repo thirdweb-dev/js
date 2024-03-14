@@ -26,11 +26,11 @@ interface FormSchema {
   thirdweb_account_id: string;
   plan_type: string;
   email: string;
-  "0-2/name": string;
-  "0-2/website": string;
-  "0-2/social-account": string;
-  "0-2/superchain_verticals": string;
-  "0-2/superchain_chain": string;
+  company: string;
+  website: string;
+  twitterhandle: string;
+  superchain_verticals: string;
+  superchain_chain: string;
   what_would_you_like_to_meet_about_: string;
 }
 
@@ -53,11 +53,11 @@ export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
       thirdweb_account_id: account?.id || "",
       plan_type: PlanToCreditsRecord[account?.plan || AccountPlan.Free].title,
       email: account?.email || "",
-      "0-2/name": "",
-      "0-2/website": "",
-      "0-2/social-account": "",
-      "0-2/superchain_verticals": "",
-      "0-2/superchain_chain": "",
+      company: "",
+      website: "",
+      twitterhandle: "",
+      superchain_verticals: "",
+      superchain_chain: "",
       what_would_you_like_to_meet_about_: "",
     }),
     [account],
@@ -162,21 +162,18 @@ export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
         </Flex>
         <FormControl gap={6} isRequired>
           <FormLabel>Company Name</FormLabel>
-          <Input {...form.register("0-2/name", { required: true })} />
+          <Input {...form.register("company", { required: true })} />
         </FormControl>
         <FormControl gap={6} isRequired>
           <FormLabel>Company Website</FormLabel>
-          <Input
-            type="url"
-            {...form.register("0-2/website", { required: true })}
-          />
+          <Input type="url" {...form.register("website", { required: true })} />
           <FormHelperText>URL should start with https://</FormHelperText>
         </FormControl>
         <FormControl gap={6} isRequired>
           <FormLabel>Company Social Account</FormLabel>
           <Input
             type="url"
-            {...form.register("0-2/social-account", { required: true })}
+            {...form.register("twitterhandle", { required: true })}
           />
           <FormHelperText>URL should start with https://</FormHelperText>
         </FormControl>
@@ -203,7 +200,7 @@ export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
             isRequired
             onChange={(value) => {
               if (value?.value) {
-                form.setValue("0-2/superchain_verticals", value.value);
+                form.setValue("superchain_verticals", value.value);
               }
             }}
           />
@@ -219,7 +216,7 @@ export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
             )}
             onChange={(values) => {
               form.setValue(
-                "0-2/superchain_chain",
+                "superchain_chain",
                 values.map(({ value }) => value).join(";"),
               );
             }}
