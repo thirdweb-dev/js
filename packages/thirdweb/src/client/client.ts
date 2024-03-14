@@ -117,6 +117,7 @@ export function createThirdwebClient(
   // otherwise if clientId is provided, use it
   if (clientId) {
     return {
+      ...rest,
       clientId: options.clientId,
       secretKey: undefined,
     } as const;
