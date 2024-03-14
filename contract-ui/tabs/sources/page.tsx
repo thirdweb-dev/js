@@ -148,7 +148,7 @@ const VerifyContractModal: React.FC<
                         <>
                           <Icon as={FiXCircle} color="red.600" />
                           <Heading size="label.md">
-                            {`${result.explorerUrl}: ${result.error?.toString()}`}
+                            {`${result.explorerUrl}: Verification failed`}
                           </Heading>
                         </>
                       )}
