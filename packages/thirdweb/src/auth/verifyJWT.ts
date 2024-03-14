@@ -77,6 +77,6 @@ export async function verifyJWT(options: VerifyJWTParams) {
   return verifyEOASignature({
     address: options.issuerAddress,
     message: JSON.stringify(payload),
-    singature: signature,
+    signature: signature,
   });
 }
