@@ -17,7 +17,7 @@ describe("generateLoginPayload", () => {
       client: TEST_CLIENT,
       domain: "example.com",
       login: {
-        payloadExpirationTime: 3600000,
+        payloadExpirationTimeSeconds: 3600,
         statement: "This is a statement",
         version: "1.0",
         resources: ["resource1", "resource2"],
