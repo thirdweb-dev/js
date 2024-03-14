@@ -1,7 +1,7 @@
-import { polygon } from "../../../chains/chain-definitions/polygon.js";
-import type { ThirdwebClient } from "../../../client/client.js";
-import { readContract } from "../../../transaction/read-contract.js";
-import { getContract } from "../../contract.js";
+import { polygon } from "../../chains/chain-definitions/polygon.js";
+import type { ThirdwebClient } from "../../client/client.js";
+import { readContract } from "../../transaction/read-contract.js";
+import { getContract } from "../../contract/contract.js";
 
 const ContractPublisherAddress = "0xf5b896Ddb5146D5dA77efF4efBb3Eae36E300808"; // Polygon only
 export const THIRDWEB_DEPLOYER = "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024";

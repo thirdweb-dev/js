@@ -15,6 +15,7 @@ import {
   type WithPersonalWalletConnectionOptions,
 } from "../../../wallets/storage/walletStorage.js";
 import type { WalletWithPersonalWallet } from "../../../wallets/interfaces/wallet.js";
+import { asyncLocalStorage } from "../../utils/asyncLocalStorage.js";
 
 let autoConnectAttempted = false;
 
@@ -38,8 +39,8 @@ export function AutoConnect() {
 
     const fn = async () => {
       const [lastConnectedWalletIds, lastActiveWalletId] = await Promise.all([
-        getStoredConnectedWalletIds(),
-        getStoredActiveWalletId(),
+        getStoredConnectedWalletIds(asyncLocalStorage),
+        getStoredActiveWalletId(asyncLocalStorage),
       ]);
 
       // if no wallets were last connected
@@ -53,6 +54,7 @@ export function AutoConnect() {
         if (walletConfig.personalWalletConfigs) {
           // get saved connection params for this wallet
           const savedParams = await getSavedConnectParamsFromStorage(
+            asyncLocalStorage,
             walletConfig.metadata.id,
           );
 

@@ -101,6 +101,7 @@ interface TWBridge {
   getBlockWithTransactions: (blockNumber: string) => Promise<string>;
   getEmail: () => Promise<string>;
   getSignerAddress: () => Promise<string>;
+  smartWalletIsDeployed: () => Promise<string>;
 }
 
 const w = window;
@@ -144,7 +145,7 @@ class ThirdwebBridge implements TWBridge {
       }
       (globalThis as any).X_SDK_NAME = "UnitySDK_WebGL";
       (globalThis as any).X_SDK_PLATFORM = "unity";
-      (globalThis as any).X_SDK_VERSION = "4.7.6";
+      (globalThis as any).X_SDK_VERSION = "4.7.8";
       (globalThis as any).X_SDK_OS = browser?.os ?? "unknown";
     }
     this.initializedChain = chain;
@@ -815,6 +816,15 @@ class ThirdwebBridge implements TWBridge {
       const res = await signer.getAddress();
       return JSON.stringify({ result: res }, bigNumberReplacer);
     }
+  }
+
+  public async smartWalletIsDeployed() {
+    if (!this.activeWallet) {
+      throw new Error("No wallet connected");
+    }
+    const smartWallet = this.activeWallet as SmartWallet;
+    const res = await smartWallet.isDeployed();
+    return JSON.stringify({ result: res }, bigNumberReplacer);
   }
 
   public openPopupWindow() {

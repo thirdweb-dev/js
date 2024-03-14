@@ -8,6 +8,7 @@ export type PrepareDeployTransactionForPublishedContractOptions = Prettify<
   SharedDeployOptions & {
     publisher: Address;
     contractName: string;
+    constructorParams: unknown[];
     version?: string;
   }
 >;

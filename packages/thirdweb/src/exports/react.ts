@@ -56,6 +56,7 @@ export {
 
 // utils
 export { createContractQuery } from "../react/utils/createQuery.js";
+export { useInvalidateContractQuery } from "../react/hooks/others/useInvalidateQueries.js";
 
 // wallets
 export {

@@ -5,6 +5,7 @@ import {
 } from "../../../wallets/injected/wallets/zerion.js";
 import { walletConnect } from "../../../wallets/wallet-connect/index.js";
 import type { WalletConfig } from "../../types/wallets.js";
+import { asyncLocalStorage } from "../../utils/asyncLocalStorage.js";
 import { InjectedAndWCConnectUI } from "../shared/InjectedAndWCConnectUI.js";
 
 export type ZerionConfigOptions = {
@@ -57,6 +58,7 @@ export const zerionConfig = (options?: ZerionConfigOptions): WalletConfig => {
         client: createOptions.client,
         dappMetadata: createOptions.dappMetadata,
         metadata: zerionWalletMetadata,
+        storage: asyncLocalStorage,
       });
     },
     metadata: zerionWalletMetadata,

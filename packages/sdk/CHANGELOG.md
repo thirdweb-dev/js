@@ -1,5 +1,38 @@
 # @thirdweb-dev/sdk
 
+## 4.0.45
+
+### Patch Changes
+
+- [#2469](https://github.com/thirdweb-dev/js/pull/2469) [`a2002d1`](https://github.com/thirdweb-dev/js/commit/a2002d16376c41fffa59daccfd98856aba90a627) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Better return type for getProofsForAllowListEntry
+
+## 4.0.44
+
+### Patch Changes
+
+- [#2457](https://github.com/thirdweb-dev/js/pull/2457) [`b2be63a`](https://github.com/thirdweb-dev/js/commit/b2be63ada466ea1784d680ae6244ac047a190103) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle l2 gas estimations when forcing gasLimit
+
+## 4.0.43
+
+### Patch Changes
+
+- [#2443](https://github.com/thirdweb-dev/js/pull/2443) [`cabfc29`](https://github.com/thirdweb-dev/js/commit/cabfc29119f25a78010f59f766bdcb8c392afa2d) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [Smart Wallet] Use bundler eth_getUserOperationReceipt instead of rpc eth_getLogs, remove polygon gas station error logs
+
+- [#2455](https://github.com/thirdweb-dev/js/pull/2455) [`173777a`](https://github.com/thirdweb-dev/js/commit/173777ade4ea59cde1c6f25a4654d48b277be9ad) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update optimism SDK to fix the pnpm preinstall issue
+
+## 4.0.42
+
+### Patch Changes
+
+- [#2441](https://github.com/thirdweb-dev/js/pull/2441) [`c6b025e`](https://github.com/thirdweb-dev/js/commit/c6b025e84451341f6f48c0a7c4b5f06b8e49d792) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle L1 fees for OP chains in `estimateGasCost()`
+
+## 4.0.41
+
+### Patch Changes
+
+- Updated dependencies [[`588897d`](https://github.com/thirdweb-dev/js/commit/588897d1b04e6c63da13639aeb47ca701308e1b2)]:
+  - @thirdweb-dev/chains@0.1.78
+
 ## 4.0.40
 
 ### Patch Changes

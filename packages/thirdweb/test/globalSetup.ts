@@ -1,5 +1,6 @@
 import { sha256 } from "@noble/hashes/sha256";
 import { startProxy } from "@viem/anvil";
+import { FORK_BLOCK_NUMBER } from "./src/chains.js";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require("dotenv-mono").load();
@@ -19,7 +20,7 @@ export default async function globalSetup() {
       forkUrl: `https://1.rpc.thirdweb.com/${clientId}`,
       forkHeader: { "x-secret-key": SECRET_KEY },
       forkChainId: 1,
-      forkBlockNumber: 19139495n,
+      forkBlockNumber: FORK_BLOCK_NUMBER,
       noMining: true,
       startTimeout: 20000,
     },

@@ -6,5 +6,4 @@ export type SharedDeployOptions = {
   client: ThirdwebClient;
   forceDirectDeploy?: boolean;
   saltForProxyDeploy?: string;
-  constructorParams: readonly unknown[];
 };

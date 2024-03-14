@@ -27,7 +27,7 @@ export function getAnalyticsHeaders() {
     "x-sdk-os": globals.x_sdk_os,
     "x-sdk-name": globals.x_sdk_name,
     "x-sdk-platform": globals.x_sdk_platform,
-    "x-bundle-id": globals.app_bundle_id,
+    ...(globals.app_bundle_id ? { "x-bundle-id": globals.app_bundle_id } : {}),
   };
 }
 

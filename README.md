@@ -5,7 +5,7 @@
     <br />
 </p>
 
-<h1 align="center"><a href='https://thirdweb.com/'>thirdweb</a> JavaScript/TypeScript SDK</h1>
+<h1 align="center"><a href='https://thirdweb.com/'>thirdweb</a> TypeScript SDK</h1>
 
 <p align="center">
     <a href="https://github.com/thirdweb-dev/js/actions/workflows/build-test-lint.yml">
@@ -18,6 +18,9 @@
 
 <p align="center"><strong>All-in-one web3 SDK for Browser, Node and Mobile apps</strong></p>
 
+> [!IMPORTANT]  
+> We rewrote the thirdweb SDK from scratch for performance! Head over to the [Beta version unified SDK](https://github.com/thirdweb-dev/js/tree/beta/packages/thirdweb).
+
 ## Features
 
 - Support for React & React-Native
@@ -28,16 +31,6 @@
 - UI Components for connection, transactions, nft rendering
 - High level contract extensions for interacting with common standards
 - Automatic ABI resolution
-
-## Unified SDK (Beta)
-
-We now have a new version of the SDK available in beta:
-
-Please refer to the following resources to get started:
-
-- [GitHub Branch](https://github.com/thirdweb-dev/js/tree/beta)
-- [Engineering Blog](https://blog.thirdweb.com/changelog/introducing-the-unified-thirdweb-sdk/)
-- [Documentation](https://portal.thirdweb.com/typescript/v5)
 
 ## Library Comparison 
 

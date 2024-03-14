@@ -9,6 +9,7 @@ import {
 } from "../../../wallets/injected/wallets/coinbase.js";
 import { useTWLocale } from "../../providers/locale-provider.js";
 import type { ConnectUIProps, WalletConfig } from "../../types/wallets.js";
+import { asyncLocalStorage } from "../../utils/asyncLocalStorage.js";
 import { GetStartedScreen } from "../shared/GetStartedScreen.js";
 import { InjectedConnectUI } from "../shared/InjectedConnectUI.js";
 import { ScanScreen } from "../shared/ScanScreen.js";
@@ -56,6 +57,7 @@ export const coinbaseConfig = (
         return coinbaseSDKWallet({
           appName: createOptions.dappMetadata.name,
           appLogoUrl: createOptions.dappMetadata.logoUrl,
+          storage: asyncLocalStorage,
         });
       }
     },

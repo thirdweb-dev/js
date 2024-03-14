@@ -6,7 +6,7 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  * Represents the parameters for the "uri" function.
  */
 export type UriParams = {
-  id: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_id" }>;
+  tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
 };
 
 /**
@@ -19,7 +19,7 @@ export type UriParams = {
  * import { uri } from "thirdweb/extensions/erc1155";
  *
  * const result = await uri({
- *  id: ...,
+ *  tokenId: ...,
  * });
  *
  * ```
@@ -32,7 +32,7 @@ export async function uri(options: BaseTransactionOptions<UriParams>) {
       [
         {
           type: "uint256",
-          name: "_id",
+          name: "tokenId",
         },
       ],
       [
@@ -41,6 +41,6 @@ export async function uri(options: BaseTransactionOptions<UriParams>) {
         },
       ],
     ],
-    params: [options.id],
+    params: [options.tokenId],
   });
 }

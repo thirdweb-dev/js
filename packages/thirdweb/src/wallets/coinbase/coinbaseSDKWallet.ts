@@ -28,6 +28,7 @@ import {
   uint8ArrayToHex,
 } from "../../utils/encoding/hex.js";
 import { getAddress } from "../../utils/address.js";
+import type { AsyncStorage } from "../storage/AsyncStorage.js";
 
 type SavedConnectParams = {
   chain?: Chain;
@@ -112,6 +113,12 @@ export type CoinbaseSDKWalletOptions = {
    * URL to your application's logo. This will be displayed in the Coinbase Wallet app/extension when connecting to your app.
    */
   appLogoUrl?: string | null;
+
+  /**
+   * Storage interface of type [`AsyncStorage`](https://portal.thirdweb.com/references/typescript/v5/AsyncStorage) to save connected wallet data to the storage for auto-connect.
+   * If not provided, no wallet data will be saved to the storage by thirdweb SDK
+   */
+  storage?: AsyncStorage;
 };
 
 /**
@@ -257,12 +264,16 @@ export class CoinbaseSDKWallet implements Wallet {
       this.chain = options.chain;
     }
 
-    if (options?.chain) {
+    if (options?.chain && this.options.storage) {
       const saveParams: SavedConnectParams = {
         chain: options?.chain,
       };
 
-      saveConnectParamsToStorage(this.metadata.id, saveParams);
+      saveConnectParamsToStorage(
+        this.options.storage,
+        this.metadata.id,
+        saveParams,
+      );
     }
 
     return this.onConnect(address);
@@ -362,8 +373,12 @@ export class CoinbaseSDKWallet implements Wallet {
    * @returns A Promise that resolves to the connected `Account`
    */
   async autoConnect() {
-    const savedParams: SavedConnectParams | null =
-      await getSavedConnectParamsFromStorage(this.metadata.id);
+    const savedParams: SavedConnectParams | null = this.options.storage
+      ? await getSavedConnectParamsFromStorage(
+          this.options.storage,
+          this.metadata.id,
+        )
+      : null;
 
     const provider = await this.initProvider({
       chain: savedParams?.chain,

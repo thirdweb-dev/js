@@ -57,7 +57,7 @@ export async function getOwnedNFTs(
   const balances = await balanceOfBatch({
     ...options,
     owners,
-    ids: tokenIds,
+    tokenIds,
   });
 
   let ownedBalances = balances
