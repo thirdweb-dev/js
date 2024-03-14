@@ -1,8 +1,8 @@
 import { en } from "../ui/locales/en.js";
-import type { ThirdwebProviderProps as ThirdwebProviderPropsReact } from "../../react/providers/thirdweb-provider.js";
-import { ThirdwebProvider as ThirdwebProviderReact } from "../../react/providers/thirdweb-provider.js";
+import type { ThirdwebProviderProps as ThirdwebProviderPropsReact } from "../../react-core/providers/thirdweb-provider.js";
+import { ThirdwebProvider as ThirdwebProviderReact } from "../../react-core/providers/thirdweb-provider.js";
 import type { ThirdwebLocale } from "../ui/locales/types.js";
-import type { WalletConfig } from "../../react/types/wallets.js";
+import type { WalletConfig } from "../../react-core/types/wallets.js";
 import { ThirdwebLocaleContext } from "./locale-provider.js";
 import { defaultWallets } from "../wallets/defaultWallets.js";
 

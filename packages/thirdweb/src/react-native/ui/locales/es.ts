@@ -1,7 +1,7 @@
 import {
   type DeepPartial,
   immutableOverride,
-} from "../../../react/utils/applyOverrides.js";
+} from "../../../react-core/utils/applyOverrides.js";
 import type { ThirdwebLocale } from "./types.js";
 
 /**

@@ -1,4 +1,4 @@
-import type { WalletConfig } from "../../react/types/wallets.js";
+import type { WalletConfig } from "../../react-core/types/wallets.js";
 
 export const defaultWallets: WalletConfig[] = [
   //   /* @__PURE__ */ embeddedWalletConfig(),
