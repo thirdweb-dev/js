@@ -34,6 +34,7 @@ import { Img } from "../../../../components/Img.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
 import { useActiveWallet } from "../../../../../providers/wallet-provider.js";
 import { formatNumber } from "../../../../../utils/formatNumber.js";
+import { useTrack } from "../../../../hooks/useTrack.js";
 
 /**
  * @internal
@@ -54,6 +55,7 @@ export function ConfirmationScreen(props: {
   const sendSwapApprovalMutation = useSendSwapApproval();
   const { client } = useThirdwebProviderProps();
   const activeWallet = useActiveWallet();
+  const track = useTrack();
 
   // TODO: remove after testing
   // const test = {
@@ -188,12 +190,27 @@ export function ConfirmationScreen(props: {
           if (step === "approval" && props.swapQuote.approval) {
             try {
               setStatus("pending");
+              track({
+                source: "ConnectButton",
+                action: "approve.initiated",
+                quote: props.swapQuote,
+              });
               await sendSwapApprovalMutation.mutateAsync(
                 props.swapQuote.approval,
               );
+              track({
+                source: "ConnectButton",
+                action: "approve.success",
+                quote: props.swapQuote,
+              });
               setStep("swap");
               setStatus("idle");
             } catch {
+              track({
+                source: "ConnectButton",
+                action: "approve.failed",
+                quote: props.swapQuote,
+              });
               setStatus("error");
             }
           }
@@ -201,32 +218,52 @@ export function ConfirmationScreen(props: {
           if (step === "swap") {
             setStatus("pending");
             try {
+              track({
+                source: "ConnectButton",
+                action: "swap.initiated",
+                quote: props.swapQuote,
+              });
               const _swapTx = await sendSwapMutation.mutateAsync(
                 props.swapQuote,
               );
 
+              track({
+                source: "ConnectButton",
+                action: "swap.sent",
+                quote: props.swapQuote,
+              });
+
               // these will be defined by this time
               if (fromTokenSymbol && toTokenSymbol && fromChain.data) {
                 const explorer = fromChain.data.explorers?.[0]?.url;
-                addPendingSwapTransaction(client, {
-                  from: {
-                    symbol: fromTokenSymbol,
-                    value: props.fromAmount,
+                addPendingSwapTransaction(
+                  client,
+                  {
+                    from: {
+                      symbol: fromTokenSymbol,
+                      value: props.fromAmount,
+                    },
+                    to: {
+                      symbol: toTokenSymbol,
+                      value: props.toAmount,
+                    },
+                    status: "PENDING",
+                    transactionHash: _swapTx.transactionHash,
+                    txExplorerLink: explorer
+                      ? `${explorer}/tx/${_swapTx.transactionHash}`
+                      : "",
                   },
-                  to: {
-                    symbol: toTokenSymbol,
-                    value: props.toAmount,
-                  },
-                  status: "PENDING",
-                  transactionHash: _swapTx.transactionHash,
-                  txExplorerLink: explorer
-                    ? `${explorer}/tx/${_swapTx.transactionHash}`
-                    : "",
-                });
+                  props.swapQuote,
+                );
               }
 
               setSwapTx(_swapTx);
             } catch {
+              track({
+                source: "ConnectButton",
+                action: "swap.failedToSend",
+                quote: props.swapQuote,
+              });
               setStatus("error");
             }
           }

@@ -1,4 +1,6 @@
+import { track } from "../../../../../../analytics/track.js";
 import type { ThirdwebClient } from "../../../../../../client/client.js";
+import type { SwapQuote } from "../../../../../../pay/swap/actions/getSwap.js";
 import { getSwapStatus } from "../../../../../../pay/swap/actions/getStatus.js";
 import { createStore } from "../../../../../../reactive/store.js";
 import { wait } from "../../../../../../utils/promise/wait.js";
@@ -47,6 +49,7 @@ export const swapTransactionsStore = /* @__PURE__ */ createStore<SwapTxInfo[]>(
 export const addPendingSwapTransaction = (
   client: ThirdwebClient,
   txInfo: SwapTxInfo,
+  quote: SwapQuote,
 ) => {
   const currentValue = swapTransactionsStore.getValue();
   const indexAdded = currentValue.length;
@@ -69,6 +72,15 @@ export const addPendingSwapTransaction = (
       });
 
       if (res.status === "COMPLETED" || res.status === "FAILED") {
+        track(client.clientId, {
+          source: "ConnectButton",
+          action: res.status === "COMPLETED" ? "swap.success" : "swap.failed",
+          quote: quote,
+          tx: {
+            hash: txInfo.transactionHash,
+          },
+        });
+
         const value = swapTransactionsStore.getValue();
         const updatedValue = [...value];
         const oldValue = value[indexAdded];
@@ -89,6 +101,15 @@ export const addPendingSwapTransaction = (
 
     if (retryCount < maxRetries) {
       await tryToGetStatus();
+    } else {
+      track(client.clientId, {
+        source: "ConnectButton",
+        action: "swap.statusTimeout",
+        quote: quote,
+        tx: {
+          hash: txInfo.transactionHash,
+        },
+      });
     }
   }
 

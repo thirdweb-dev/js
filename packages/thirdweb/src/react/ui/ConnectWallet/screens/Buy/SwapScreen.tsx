@@ -35,6 +35,7 @@ import { polygon } from "../../../../../chains/chain-definitions/polygon.js";
 import { useQuery } from "@tanstack/react-query";
 import { getClientFetch } from "../../../../../utils/fetch.js";
 import { SwapFees } from "./swap/SwapFees.js";
+import { useTrack } from "../../../hooks/useTrack.js";
 
 const fallbackSupportedChains = /* @__PURE__ */ (() =>
   fallbackSwapSupportedChainIds.map(defineChain))();
@@ -83,6 +84,7 @@ export function SwapScreenContent(props: {
   account: Account;
   onViewPendingTx: () => void;
 }) {
+  const track = useTrack();
   const { activeChain, account } = props;
   const { client } = useThirdwebProviderProps();
   const supportedChainsQuery = useQuery({
@@ -395,6 +397,11 @@ export function SwapScreenContent(props: {
           disabled={disableContinue}
           onClick={async () => {
             if (!disableContinue) {
+              track({
+                source: "ConnectButton",
+                action: "continue.click",
+                quote: swapQuoteQuery.data,
+              });
               setScreen("confirmation");
             }
           }}
