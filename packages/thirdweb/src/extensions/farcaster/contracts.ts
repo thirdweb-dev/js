@@ -2,6 +2,7 @@ import { getContract, type ThirdwebContract } from "../../contract/contract.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { optimism } from "../../chains/chain-definitions/optimism.js";
 import {
+  BUNDLER_ADDRESS,
   ID_GATEWAY_ADDRESS,
   KEY_GATEWAY_ADDRESS,
   STORAGE_REGISTRY_ADDRESS,
@@ -42,6 +43,17 @@ export function getStorageRegistry({
   return getContract({
     client,
     address: STORAGE_REGISTRY_ADDRESS,
+    chain: chain ?? optimism,
+  });
+}
+
+export function getBundler({
+  client,
+  chain,
+}: FarcasterContractOptions): ThirdwebContract {
+  return getContract({
+    client,
+    address: BUNDLER_ADDRESS,
     chain: chain ?? optimism,
   });
 }

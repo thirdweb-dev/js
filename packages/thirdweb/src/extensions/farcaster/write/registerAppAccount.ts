@@ -1,11 +1,11 @@
 import type { Address } from "abitype";
 import { toBigInt } from "../../../utils/bigint.js";
-import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { prepareContractCall } from "../../../transaction/prepare-contract-call.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
 import type { Ed25519Keypair } from "../signers.js";
 import type { Chain } from "../../../chains/types.js";
+import { getBundler } from "../contracts.js";
 
 /**
  * Represents the parameters for the `registerAppAccount` function.
@@ -35,9 +35,7 @@ export type RegisterAppAccountParams = {
  * });
  * ```
  */
-export function registerAppAccount(
-  options: BaseTransactionOptions<RegisterAppAccountParams>,
-) {
+export function registerAppAccount(options: RegisterAppAccountParams) {
   const extraStorage = toBigInt(options.extraStorage ?? 0);
   if (extraStorage < 0n)
     throw new Error(
@@ -45,7 +43,10 @@ export function registerAppAccount(
     );
 
   return prepareContractCall({
-    ...options,
+    contract: getBundler({
+      client: options.client,
+      chain: options.chain,
+    }),
     method: [
       "0xa44c9ce7",
       [
