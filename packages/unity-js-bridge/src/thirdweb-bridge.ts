@@ -1,7 +1,11 @@
 /// --- Thirdweb Brige ---
 import { ThirdwebAuth } from "@thirdweb-dev/auth";
 import { CoinbasePayIntegration, FundWalletOptions } from "@thirdweb-dev/pay";
-import { ThirdwebSDK, ChainIdOrName } from "@thirdweb-dev/sdk";
+import {
+  ThirdwebSDK,
+  ChainIdOrName,
+  getChainProvider,
+} from "@thirdweb-dev/sdk";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
   DAppMetaData,
@@ -102,6 +106,8 @@ interface TWBridge {
   getEmail: () => Promise<string>;
   getSignerAddress: () => Promise<string>;
   smartWalletIsDeployed: () => Promise<string>;
+  resolveENSFromAddress: (address: string) => Promise<string>;
+  resolveAddressFromENS: (ens: string) => Promise<string>;
 }
 
 const w = window;
@@ -145,7 +151,7 @@ class ThirdwebBridge implements TWBridge {
       }
       (globalThis as any).X_SDK_NAME = "UnitySDK_WebGL";
       (globalThis as any).X_SDK_PLATFORM = "unity";
-      (globalThis as any).X_SDK_VERSION = "4.7.8";
+      (globalThis as any).X_SDK_VERSION = "4.7.9";
       (globalThis as any).X_SDK_OS = browser?.os ?? "unknown";
     }
     this.initializedChain = chain;
@@ -825,6 +831,48 @@ class ThirdwebBridge implements TWBridge {
     const smartWallet = this.activeWallet as SmartWallet;
     const res = await smartWallet.isDeployed();
     return JSON.stringify({ result: res }, bigNumberReplacer);
+  }
+
+  public async resolveENSFromAddress(address: string) {
+    if (!this.activeSDK) {
+      throw new Error("SDK not initialized");
+    }
+
+    const provider = getChainProvider(1, {
+      clientId: this.activeSDK.options.clientId,
+      supportedChains: [
+        {
+          chainId: 1,
+          rpc: ["https://1.rpc.thirdweb.com"],
+          nativeCurrency: Ethereum.nativeCurrency,
+          slug: Ethereum.slug,
+        },
+      ],
+    });
+
+    const res = await provider.lookupAddress(address);
+    return JSON.stringify({ result: res });
+  }
+
+  public async resolveAddressFromENS(ens: string) {
+    if (!this.activeSDK) {
+      throw new Error("SDK not initialized");
+    }
+
+    const provider = getChainProvider(1, {
+      clientId: this.activeSDK.options.clientId,
+      supportedChains: [
+        {
+          chainId: 1,
+          rpc: ["https://1.rpc.thirdweb.com"],
+          nativeCurrency: Ethereum.nativeCurrency,
+          slug: Ethereum.slug,
+        },
+      ],
+    });
+
+    const res = await provider.resolveName(ens);
+    return JSON.stringify({ result: res });
   }
 
   public openPopupWindow() {
