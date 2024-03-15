@@ -10,13 +10,6 @@ import type {
 /**
  * @internal
  */
-export function isBrowser() {
-  return typeof window !== "undefined";
-}
-
-/**
- * @internal
- */
 function isFileInstance(data: any): data is File {
   return globalThis.File && data instanceof File;
 }
@@ -34,7 +27,7 @@ function isBufferOrStringWithName(data: any): data is BufferOrStringWithName {
   );
 }
 
-function isFileBufferOrStringEqual(input1: any, input2: any): boolean {
+export function isFileBufferOrStringEqual(input1: any, input2: any): boolean {
   if (isFileInstance(input1) && isFileInstance(input2)) {
     // if both are File types, compare the name, size, and last modified date (best guess that these are the same files)
     if (
