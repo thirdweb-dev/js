@@ -1,6 +1,4 @@
-import { getThirdwebDomainOverrides } from "../../../utils/domains.js";
-
-const THIRDWEB_PAY_BASE_URL = "interstate.thirdweb.com";
+import { getThirdwebDomains } from "../../../utils/domains.js";
 
 /**
  * Constructs the endpoint to get the status of a quote.
@@ -8,13 +6,12 @@ const THIRDWEB_PAY_BASE_URL = "interstate.thirdweb.com";
  * @internal
  */
 export const getPayQuoteStatusUrl = () =>
-  `https://${
-    getThirdwebDomainOverrides()?.pay ?? THIRDWEB_PAY_BASE_URL
-  }/quote/status`;
+  `https://${getThirdwebDomains().pay}/quote/status`;
+
 /**
  * Constructs the endpoint to get a pay quote.
  * @param client - The Thirdweb client containing the baseUrl config
  * @internal
  */
 export const getPayQuoteEndpoint = () =>
-  `https://${getThirdwebDomainOverrides()?.pay ?? THIRDWEB_PAY_BASE_URL}/quote`;
+  `https://${getThirdwebDomains().pay}/quote`;

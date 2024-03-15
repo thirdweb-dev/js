@@ -1,10 +1,10 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import type { ThirdwebClient } from "../../client/client.js";
-import type { UploadFile } from "./types.js";
-import { isFileBufferOrStringEqual } from "./helpers.js";
-import { getUploadServerUrl } from "./constants.js";
+import { getThirdwebDomains } from "../../utils/domains.js";
 import { getPlatformHeaders } from "../../utils/fetch.js";
 import type { UploadMobileOptions } from "../uploadMobile.js";
+import { isFileBufferOrStringEqual } from "./helpers.js";
+import type { UploadFile } from "./types.js";
 
 const METADATA_NAME = "Storage React Native SDK";
 
@@ -120,7 +120,7 @@ export function uploadBatchMobile(
         return reject(new Error("Unknown upload error occured"));
       });
 
-      xhr.open("POST", `https://${getUploadServerUrl()}/ipfs/upload`);
+      xhr.open("POST", `https://${getThirdwebDomains().storage}/ipfs/upload`);
       if (client.clientId) {
         xhr.setRequestHeader("x-client-id", client.clientId);
       }
@@ -146,7 +146,7 @@ export function uploadBatchMobile(
 
       try {
         const res = await fetch(
-          `https://${getUploadServerUrl()}/ipfs/batch-pin-json`,
+          `https://${getThirdwebDomains().storage}/ipfs/batch-pin-json`,
           {
             method: "POST",
             headers: {
