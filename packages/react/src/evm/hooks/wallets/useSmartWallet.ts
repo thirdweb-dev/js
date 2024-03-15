@@ -204,10 +204,10 @@ import type { BytesLike } from "ethers";
  * The entrypoint contract address. Uses v0.6 by default.
  *
  * Must be a `string`.
- * 
+ *
  * #### deployOnSign
  * Whether to deploy the smart wallet when the user signs a message. Defaults to true.
- * 
+ *
  * Must be a `boolean`.
  *
  * @walletConnection
@@ -223,7 +223,7 @@ export function useSmartWallet<W extends WalletInstance>(
   const supportedWallets = useWallets();
 
   const predictAddress = useCallback(
-    async (args: { personalWalletAddress: string; data?: BytesLike; }) => {
+    async (args: { personalWalletAddress: string; data?: BytesLike }) => {
       return getSmartWalletAddress(
         context.activeChain,
         options.factoryAddress,
