@@ -107,14 +107,6 @@ export async function uploadBatchBrowser(
       xhr.setRequestHeader(key, value);
     });
 
-    const bundleId =
-      typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
-        ? ((globalThis as any).APP_BUNDLE_ID as string)
-        : undefined;
-    if (bundleId) {
-      xhr.setRequestHeader("x-bundle-id", bundleId);
-    }
-
     // TODO bring back tracking
     // xhr.setRequestHeader("x-sdk-version", pkg.version);
     // xhr.setRequestHeader("x-sdk-name", pkg.name);

@@ -1,9 +1,9 @@
 import type { ThirdwebClient } from "../client/client.js";
+import { detectPlatform } from "../utils/detect-platform.js";
 import { stringify } from "../utils/json.js";
 import {
   buildFormData,
   extractObjectFiles,
-  isBrowser,
   isFileOrUint8Array,
   replaceObjectFilesWithUris,
   replaceObjectGatewayUrlsWithSchemes,
@@ -80,10 +80,16 @@ export async function upload(options: UploadOptions) {
 
   const { fileNames, form } = buildFormData(form_, uris, options);
 
-  if (isBrowser()) {
+  const platform = detectPlatform();
+  if (platform === "browser") {
     const { uploadBatchBrowser } = await import("./upload/browser.js");
     return await uploadBatchBrowser(options.client, form, fileNames, options);
+  } else if (platform === "node") {
+    const { uploadBatchNode } = await import("./upload/node.js");
+    return uploadBatchNode(options.client, form, fileNames, options);
+  } else {
+    throw new Error(
+      `Please, use the uploadMobile function in mobile environments.`,
+    );
   }
-  const { uploadBatchNode } = await import("./upload/node.js");
-  return uploadBatchNode(options.client, form, fileNames, options);
 }

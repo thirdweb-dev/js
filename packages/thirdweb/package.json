@@ -65,10 +65,20 @@
       "import": "./dist/esm/exports/react.js",
       "default": "./dist/cjs/exports/react.js"
     },
+    "./react-native": {
+      "types": "./dist/types/exports/react-native.d.ts",
+      "import": "./dist/esm/exports/react-native.js",
+      "default": "./dist/cjs/exports/react-native.js"
+    },
     "./rpc": {
       "types": "./dist/types/exports/rpc.d.ts",
       "import": "./dist/esm/exports/rpc.js",
       "default": "./dist/cjs/exports/rpc.js"
+    },
+    "./shims": {
+      "types": "./dist/types/exports/shims.d.ts",
+      "import": "./dist/esm/exports/shims.js",
+      "default": "./dist/cjs/exports/shims.js"
     },
     "./storage": {
       "types": "./dist/types/exports/storage.d.ts",
@@ -123,8 +133,14 @@
       "react": [
         "./dist/types/exports/react.d.ts"
       ],
+      "react-native": [
+        "./dist/types/exports/react-native.d.ts"
+      ],
       "rpc": [
         "./dist/types/exports/rpc.d.ts"
+      ],
+      "shims": [
+        "./dist/types/exports/shims.d.ts"
       ],
       "storage": [
         "./dist/types/exports/storage.d.ts"
@@ -169,6 +185,7 @@
     "@tanstack/react-query": "5.25.0",
     "@walletconnect/ethereum-provider": "2.11.2",
     "abitype": "1.0.0",
+    "fast-text-encoding": "^1.0.6",
     "fuse.js": "7.0.0",
     "mipd": "0.0.5",
     "uqr": "0.1.2",
@@ -214,5 +231,8 @@
   },
   "engines": {
     "node": ">=18"
+  },
+  "resolutions": {
+    "isows": "0.0.0-main.20240314T203659"
   }
 }

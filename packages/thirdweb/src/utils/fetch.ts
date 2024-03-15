@@ -5,7 +5,7 @@ import {
   detectOS,
   detectPlatform,
   type OperatingSystem,
-} from "./detect-browser.js";
+} from "./detect-platform.js";
 
 const DEFAULT_REQUEST_TIMEOUT = 60000;
 
@@ -120,11 +120,17 @@ export function getPlatformHeaders() {
     os = detectOS(navigator.userAgent);
   }
 
+  const bundleId =
+    typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
+      ? ((globalThis as any).APP_BUNDLE_ID as string)
+      : undefined;
+
   previousPlatform = Object.entries({
     "x-sdk-platform": detectPlatform(),
     "x-sdk-version": version,
     "x-sdk-os": os ? parseOs(os) : "unknown",
     "x-sdk-name": SDK_NAME,
+    ...(bundleId ? { "x-bundle-id": bundleId } : {}),
   });
 
   return previousPlatform;
