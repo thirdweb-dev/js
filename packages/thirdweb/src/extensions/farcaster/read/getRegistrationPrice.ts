@@ -1,4 +1,5 @@
 import type { ThirdwebClient } from "../../../client/client.js";
+import { toBigInt } from "../../../utils/bigint.js";
 import { withCache } from "../../../utils/promise/withCache.js";
 
 export type GetRegistrationPriceOptions = {
@@ -21,23 +22,27 @@ export type GetRegistrationPriceOptions = {
  * });
  * ```
  */
-export async function getRegistrationPrice({
-  client,
-  extraStorage = 0n,
-  disableCache = false, // allow disabling the cache if necessary
-}: GetRegistrationPriceOptions): Promise<bigint> {
+export async function getRegistrationPrice(
+  options: GetRegistrationPriceOptions,
+): Promise<bigint> {
+  const extraStorage = toBigInt(options.extraStorage ?? 0);
+  if (extraStorage < 0n)
+    throw new Error(
+      `Expected extraStorage to be greater than or equal to 0, got ${options.extraStorage}`,
+    );
+
   const fetch = async () => {
     const { getIdGateway } = await import("../contracts.js");
     const { price } = await import("../__generated__/IIdGateway/read/price.js");
 
-    const contract = getIdGateway({ client });
-    return price({ contract, extraStorage: BigInt(extraStorage) });
+    const contract = getIdGateway({ client: options.client });
+    return price({ contract, extraStorage: toBigInt(extraStorage) });
   };
 
-  if (disableCache) return fetch();
+  if (options.disableCache) return fetch();
 
   return withCache(fetch, {
-    cacheKey: `${BigInt(extraStorage)}:getFidPrice`,
+    cacheKey: `${toBigInt(extraStorage)}:getFidPrice`,
     cacheTime: 5 * 60 * 1000, // 5 minutes
   });
 }
