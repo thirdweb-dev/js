@@ -1,5 +1,11 @@
 # @thirdweb-dev/chains
 
+## 0.1.80
+
+### Patch Changes
+
+- [#2484](https://github.com/thirdweb-dev/js/pull/2484) [`c494db8`](https://github.com/thirdweb-dev/js/commit/c494db87cbfa4b6fc4013abb01936e86a4350ea8) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update chains
+
 ## 0.1.79
 
 ### Patch Changes
