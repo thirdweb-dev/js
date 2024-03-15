@@ -11,3 +11,7 @@ export {
   type GetRegistrationPriceOptions,
   getRegistrationPrice,
 } from "../../../extensions/farcaster/read/getRegistrationPrice.js";
+export {
+  type RegisterAccountParams,
+  registerAccount,
+} from "../../../extensions/farcaster/write/registerAccount.js";

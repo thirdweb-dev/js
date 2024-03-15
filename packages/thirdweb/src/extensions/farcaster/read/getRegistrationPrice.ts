@@ -1,10 +1,10 @@
-import type { ThirdwebClient } from "src/client/client.js";
+import type { ThirdwebClient } from "../../../client/client.js";
 import { withCache } from "../../../utils/promise/withCache.js";
 
 export type GetRegistrationPriceOptions = {
   client: ThirdwebClient;
   extraStorage?: bigint | number | string;
-  useCache?: boolean;
+  disableCache?: boolean;
 };
 
 /**
@@ -16,13 +16,15 @@ export type GetRegistrationPriceOptions = {
  * ```ts
  * import { getRegistrationPrice } from "thirdweb/extensions/farcaster";
  *
- * const price = await getRegistrationPrice();
+ * const price = await getRegistrationPrice({
+ *  client,
+ * });
  * ```
  */
 export async function getRegistrationPrice({
   client,
   extraStorage = 0n,
-  useCache = true, // allow disabling the cache if necessary
+  disableCache = false, // allow disabling the cache if necessary
 }: GetRegistrationPriceOptions): Promise<bigint> {
   const fetch = async () => {
     const { getIdGateway } = await import("../contracts.js");
@@ -32,7 +34,7 @@ export async function getRegistrationPrice({
     return price({ contract, extraStorage: BigInt(extraStorage) });
   };
 
-  if (!useCache) return fetch();
+  if (disableCache) return fetch();
 
   return withCache(fetch, {
     cacheKey: `${BigInt(extraStorage)}:getFidPrice`,
