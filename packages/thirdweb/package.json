@@ -231,8 +231,5 @@
   },
   "engines": {
     "node": ">=18"
-  },
-  "resolutions": {
-    "isows": "0.0.0-main.20240314T203659"
   }
 }
