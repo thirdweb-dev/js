@@ -8,6 +8,7 @@ import { twProxyArtifactZK } from "./temp-artifact/TWProxy";
 import { fetchSourceFilesFromMetadata } from "../common/fetchSourceFilesFromMetadata";
 import { fetchRawPredeployMetadata } from "../common/feature-detection/fetchRawPredeployMetadata";
 import { fetchContractMetadata } from "../common/fetchContractMetadata";
+import { checkVerificationStatus } from "../common/verification";
 
 const RequestStatus = {
   OK: "1",
@@ -28,7 +29,7 @@ export async function zkVerify(
   storage: ThirdwebStorage,
   contractUri?: string,
   encodedConstructorArgs?: string,
-): Promise<string | string[]> {
+) {
   try {
     const provider = getChainProvider(chainId, {});
     const contractBytecode = await provider.getCode(contractAddress);
@@ -77,7 +78,7 @@ export async function zkVerify(
 
     const compilerInput: any = {
       language: "Solidity",
-      settings: compilerMetadata.metadata.settings,
+      settings: compilerMetadata.metadata.settings.optimizer,
       sources: sourcesWithContents,
     };
 
@@ -120,7 +121,13 @@ export async function zkVerify(
 
     const data = await result.json();
     if (data.status === RequestStatus.OK) {
-      return data.result;
+      console.info("Checking verification status...");
+      const verificationStatus = await checkVerificationStatus(
+        explorerAPIUrl,
+        explorerAPIKey,
+        data.result,
+      );
+      console.info(verificationStatus);
     } else {
       throw new Error(`${data.result}`);
     }
