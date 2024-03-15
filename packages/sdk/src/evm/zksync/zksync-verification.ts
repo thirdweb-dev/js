@@ -36,6 +36,7 @@ export async function zkVerify(
     if (contractBytecode === twProxyArtifactZK.bytecode) {
       compilerMetadata = {
         name: twProxyArtifactZK.contractName,
+        abi: twProxyArtifactZK.abi,
         metadata: JSON.parse(twProxyArtifactZK.metadata.solc_metadata),
         zk_version: twProxyArtifactZK.metadata.zk_version,
       };
@@ -50,6 +51,7 @@ export async function zkVerify(
 
       compilerMetadata = {
         name: rawMeta.name,
+        abi: parsedMetadata.abi,
         metadata: parsedMetadata,
         zk_version: rawMeta.zk_version,
       };
