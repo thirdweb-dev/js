@@ -2,6 +2,7 @@
 export {
   ID_GATEWAY_ADDRESS,
   KEY_GATEWAY_ADDRESS,
+  STORAGE_REGISTRY_ADDRESS,
   SIGNED_KEY_REQUEST_VALIDATOR_ADDRESS,
 } from "../../../extensions/farcaster/constants.js";
 
@@ -15,6 +16,10 @@ export {
   type GetRegistrationPriceOptions,
   getRegistrationPrice,
 } from "../../../extensions/farcaster/read/getRegistrationPrice.js";
+export {
+  type GetUsdRegistrationPriceOptions,
+  getUsdRegistrationPrice,
+} from "../../../extensions/farcaster/read/getUsdRegistrationPrice.js";
 export {
   type RegisterAccountParams,
   registerAccount,

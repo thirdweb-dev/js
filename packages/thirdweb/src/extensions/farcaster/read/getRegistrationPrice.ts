@@ -9,7 +9,7 @@ export type GetRegistrationPriceOptions = {
 };
 
 /**
- * Retrieves the current cost to register a Farcaster fid.
+ * Retrieves the current cost to register a Farcaster fid in wei.
  * @param options - An object containing a client to use to fetch the price and the amount of extra storage to include in the returned price.
  * @returns A promise that resolves to the current cost of a Farcaster fid in wei.
  * @extension FARCASTER
@@ -42,7 +42,7 @@ export async function getRegistrationPrice(
   if (options.disableCache) return fetch();
 
   return withCache(fetch, {
-    cacheKey: `${toBigInt(extraStorage)}:getFidPrice`,
+    cacheKey: `${toBigInt(extraStorage)}:getRegistrationPrice`,
     cacheTime: 5 * 60 * 1000, // 5 minutes
   });
 }

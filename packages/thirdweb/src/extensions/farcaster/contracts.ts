@@ -1,7 +1,11 @@
 import { getContract, type ThirdwebContract } from "../../contract/contract.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { optimism } from "../../chains/chain-definitions/optimism.js";
-import { ID_GATEWAY_ADDRESS, KEY_GATEWAY_ADDRESS } from "./constants.js";
+import {
+  ID_GATEWAY_ADDRESS,
+  KEY_GATEWAY_ADDRESS,
+  STORAGE_REGISTRY_ADDRESS,
+} from "./constants.js";
 
 export type FarcasterContractOptions = {
   client: ThirdwebClient;
@@ -23,6 +27,16 @@ export function getKeyGateway({
   return getContract({
     client,
     address: KEY_GATEWAY_ADDRESS,
+    chain: optimism,
+  });
+}
+
+export function getStorageRegistry({
+  client,
+}: FarcasterContractOptions): ThirdwebContract {
+  return getContract({
+    client,
+    address: STORAGE_REGISTRY_ADDRESS,
     chain: optimism,
   });
 }
