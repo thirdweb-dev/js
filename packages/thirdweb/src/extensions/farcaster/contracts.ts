@@ -1,7 +1,7 @@
-import { getContract, type ThirdwebContract } from "src/contract/contract.js";
+import { getContract, type ThirdwebContract } from "../../contract/contract.js";
+import type { ThirdwebClient } from "../../client/client.js";
+import { optimism } from "../../chains/chain-definitions/optimism.js";
 import { ID_GATEWAY_ADDRESS, KEY_GATEWAY_ADDRESS } from "./constants.js";
-import type { ThirdwebClient } from "src/client/client.js";
-import { optimism } from "src/exports/chains.js";
 
 export type FarcasterContractOptions = {
   client: ThirdwebClient;
