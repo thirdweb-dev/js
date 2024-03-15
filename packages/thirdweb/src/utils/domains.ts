@@ -21,12 +21,17 @@ type DomainOverrides = {
   storage?: string;
 };
 
-let domains: { [k in keyof DomainOverrides]-?: string };
-
 export const DEFAULT_RPC_URL = "rpc.thirdweb.com";
 const DEFAULT_EMBEDDED_WALLET_URL = "embedded-wallet.thirdweb.com";
 const DEFAULT_PAY_URL = "interstate.thirdweb.com";
 const DEFAULT_STORAGE_URL = "storage.thirdweb.com";
+
+let domains: { [k in keyof DomainOverrides]-?: string } = {
+  rpc: DEFAULT_RPC_URL,
+  embeddedWallet: DEFAULT_EMBEDDED_WALLET_URL,
+  pay: DEFAULT_PAY_URL,
+  storage: DEFAULT_STORAGE_URL,
+};
 
 /**
  * @internal
