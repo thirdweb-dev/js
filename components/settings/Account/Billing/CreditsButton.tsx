@@ -30,10 +30,9 @@ export const CreditsButton = () => {
   const { isLoggedIn } = useLoggedInUser();
   const { data: credits } = useAccountCredits();
   const meQuery = useAccount();
-  const totalCreditBalance = credits?.reduce(
-    (acc, crd) => acc + crd.remainingValueUsdCents,
-    0,
-  );
+  const totalCreditBalance =
+    credits?.find((crd) => crd.name.startsWith("OP -"))
+      ?.remainingValueUsdCents || 0;
 
   if (!isLoggedIn || meQuery.isLoading || !meQuery.data) {
     return null;

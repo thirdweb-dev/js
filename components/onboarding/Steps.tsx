@@ -100,7 +100,7 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
   }, [chainId]);
 
   const currentStep = useMemo(() => {
-    if (onlyOptimism && (!hasAppliedForOpGrant || !!opCredit)) {
+    if (onlyOptimism && (!hasAppliedForOpGrant || !opCredit)) {
       return Step.OptimismCredits;
     }
 
@@ -108,7 +108,7 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
       return null;
     }
 
-    if (isSponsoredChain && (!hasAppliedForOpGrant || !!opCredit)) {
+    if (isSponsoredChain && (!hasAppliedForOpGrant || !opCredit)) {
       return Step.OptimismCredits;
     } else if (!onboardingKeys && !hasApiKeys) {
       return Step.Keys;
