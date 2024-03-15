@@ -9,11 +9,8 @@ export type UploadMobileOptions = InternalUploadMobileOptions & {
 /**
  * Batch upload arbitrary file or JSON data using the configured decentralized storage system.
  * Automatically uploads any file data within JSON objects and replaces them with hashes.
- *
- * @param data - Array of arbitrary file or JSON data to upload
  * @param options - Options to pass through to the storage uploader class
  * @returns  The URIs of the uploaded data
- *
  * @example
  * ```jsx
  * // Upload an image
