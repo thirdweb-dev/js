@@ -223,7 +223,7 @@ export function useSmartWallet<W extends WalletInstance>(
   const supportedWallets = useWallets();
 
   const predictAddress = useCallback(
-    async (args: { personalWalletAddress: string; data?: BytesLike }) => {
+    async (args: { personalWalletAddress: string; data?: BytesLike; }) => {
       return getSmartWalletAddress(
         context.activeChain,
         options.factoryAddress,

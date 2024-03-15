@@ -314,7 +314,7 @@ export type ConnectWalletProps = {
   displayBalanceToken?: Record<number, string>;
 
   /**
-   * Hide the "Switch to Personal wallet" option in the wallet modal which is shown when wallet is connected to either Smart Wallet or Safe.
+   * Hide the "Switch to Personal wallet" option in the wallet modal which is shown when wallet is connected to either Smart Account or Safe.
    *
    * By default it is `false`
    *
@@ -376,7 +376,7 @@ export type ConnectWalletProps = {
    * />
    * ```
    */
-  detailsModalFooter?: (props: { close: () => void }) => JSX.Element;
+  detailsModalFooter?: (props: { close: () => void; }) => JSX.Element;
 
   /**
    * By default ConnectWallet shows "Powered by Thirdweb" branding at the bottom of the ConnectWallet Modal.
@@ -595,7 +595,7 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  * ```
  *
  * ### hideSwitchToPersonalWallet
- * Hide the "Switch to Personal wallet" option in the wallet modal which is shown when wallet is connected to either Smart Wallet or Safe.
+ * Hide the "Switch to Personal wallet" option in the wallet modal which is shown when wallet is connected to either Smart Account or Safe.
  *
  * By default it is `false`
  *
@@ -809,9 +809,8 @@ export function ConnectWallet(props: ConnectWalletProps) {
                 }
               }}
               data-theme={theme}
-              className={`${TW_CONNECT_WALLET}--sign-in ${
-                props.className || ""
-              }`}
+              className={`${TW_CONNECT_WALLET}--sign-in ${props.className || ""
+                }`}
               style={{
                 minWidth: "140px",
                 ...props.style,
@@ -870,9 +869,8 @@ function SwitchNetworkButton(props: {
 
   return (
     <AnimatedButton
-      className={`${TW_CONNECT_WALLET}--switch-network ${
-        props.className || ""
-      }`}
+      className={`${TW_CONNECT_WALLET}--switch-network ${props.className || ""
+        }`}
       variant="primary"
       type="button"
       data-is-loading={switching}
