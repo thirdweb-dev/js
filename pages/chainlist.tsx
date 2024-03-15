@@ -1,5 +1,6 @@
 import { fetchChainsFromApi } from "@3rdweb-sdk/react/hooks/useApi";
 import {
+  Box,
   Flex,
   GridItem,
   Icon,
@@ -21,7 +22,7 @@ import Fuse from "fuse.js";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { NextSeo } from "next-seo";
 import { PageId } from "page-id";
-import { memo, useDeferredValue, useMemo, useState } from "react";
+import { Suspense, memo, useDeferredValue, useMemo, useState } from "react";
 import { FiSearch } from "react-icons/fi";
 import {
   Card,
@@ -137,7 +138,9 @@ export const ChainsLanding: ThirdwebNextPage = (
         </Card>
       </Flex>
 
-      <SearchResults chains={filteredChains} />
+      <Suspense fallback={<Box h="100vh" />}>
+        <SearchResults chains={filteredChains} />
+      </Suspense>
     </Flex>
   );
 };
