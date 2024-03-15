@@ -75,10 +75,10 @@
       "import": "./dist/esm/exports/rpc.js",
       "default": "./dist/cjs/exports/rpc.js"
     },
-    "./shims": {
-      "types": "./dist/types/exports/shims.d.ts",
-      "import": "./dist/esm/exports/shims.js",
-      "default": "./dist/cjs/exports/shims.js"
+    "./react-native-shims": {
+      "types": "./dist/types/exports/react-native-shims.d.ts",
+      "import": "./dist/esm/exports/react-native-shims.js",
+      "default": "./dist/cjs/exports/react-native-shims.js"
     },
     "./storage": {
       "types": "./dist/types/exports/storage.d.ts",
@@ -139,8 +139,8 @@
       "rpc": [
         "./dist/types/exports/rpc.d.ts"
       ],
-      "shims": [
-        "./dist/types/exports/shims.d.ts"
+      "react-native-shims": [
+        "./dist/types/exports/react-native-shims.d.ts"
       ],
       "storage": [
         "./dist/types/exports/storage.d.ts"
