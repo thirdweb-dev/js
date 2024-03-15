@@ -5,7 +5,7 @@ export type TokenInfo = {
   icon: string;
 };
 
-const wrappedEthIcon =
+export const genericTokenIcon =
   "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNTAwIiBoZWlnaHQ9IjI1MDAiIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48Y2lyY2xlIGN4PSIxNiIgY3k9IjE2IiByPSIxNiIgZmlsbD0iIzYyN0VFQSIvPjxnIGZpbGw9IiNGRkYiIGZpbGwtcnVsZT0ibm9uemVybyI+PHBhdGggZmlsbC1vcGFjaXR5PSIuNjAyIiBkPSJNMTYuNDk4IDR2OC44N2w3LjQ5NyAzLjM1eiIvPjxwYXRoIGQ9Ik0xNi40OTggNEw5IDE2LjIybDcuNDk4LTMuMzV6Ii8+PHBhdGggZmlsbC1vcGFjaXR5PSIuNjAyIiBkPSJNMTYuNDk4IDIxLjk2OHY2LjAyN0wyNCAxNy42MTZ6Ii8+PHBhdGggZD0iTTE2LjQ5OCAyNy45OTV2LTYuMDI4TDkgMTcuNjE2eiIvPjxwYXRoIGZpbGwtb3BhY2l0eT0iLjIiIGQ9Ik0xNi40OTggMjAuNTczbDcuNDk3LTQuMzUzLTcuNDk3LTMuMzQ4eiIvPjxwYXRoIGZpbGwtb3BhY2l0eT0iLjYwMiIgZD0iTTkgMTYuMjJsNy40OTggNC4zNTN2LTcuNzAxeiIvPjwvZz48L2c+PC9zdmc+";
 
 const tetherUsdIcon =
@@ -61,7 +61,7 @@ export const defaultTokens: SupportedTokens = {
       address: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
       name: "Wrapped Ether",
       symbol: "WETH",
-      icon: wrappedEthIcon,
+      icon: genericTokenIcon,
     },
     {
       address: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
@@ -93,7 +93,7 @@ export const defaultTokens: SupportedTokens = {
       address: "0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6",
       name: "Wrapped Ether",
       symbol: "WETH",
-      icon: wrappedEthIcon,
+      icon: genericTokenIcon,
     },
     {
       address: "0x07865c6E87B9F70255377e024ace6630C1Eaa37F",
@@ -107,7 +107,7 @@ export const defaultTokens: SupportedTokens = {
       address: "0x4200000000000000000000000000000000000006",
       name: "Wrapped Ether",
       symbol: "WETH",
-      icon: wrappedEthIcon,
+      icon: genericTokenIcon,
     },
     {
       address: "0x0b2c639c533813f4aa9d7837caf62653d097ff85",
@@ -167,7 +167,7 @@ export const defaultTokens: SupportedTokens = {
       address: "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
       name: "Wrapped Ether",
       symbol: "WETH",
-      icon: wrappedEthIcon,
+      icon: genericTokenIcon,
     },
     {
       address: "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
@@ -193,7 +193,7 @@ export const defaultTokens: SupportedTokens = {
       name: "Wrapped Ether",
       address: "0x74b23882a30290451A17c44f4F05243b6b58C76d",
       symbol: "WETH",
-      icon: wrappedEthIcon,
+      icon: genericTokenIcon,
     },
     {
       name: "USD Coin",
@@ -213,7 +213,7 @@ export const defaultTokens: SupportedTokens = {
       address: "0x4200000000000000000000000000000000000006",
       name: "Wrapped Ether",
       symbol: "WETH",
-      icon: wrappedEthIcon,
+      icon: genericTokenIcon,
     },
   ],
   "4002": [
@@ -229,7 +229,7 @@ export const defaultTokens: SupportedTokens = {
       address: "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
       name: "Wrapped Ether",
       symbol: "WETH",
-      icon: wrappedEthIcon,
+      icon: genericTokenIcon,
     },
     {
       address: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
@@ -263,7 +263,7 @@ export const defaultTokens: SupportedTokens = {
       address: "0x49D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB",
       name: "Wrapped Ether",
       symbol: "WETH",
-      icon: wrappedEthIcon,
+      icon: genericTokenIcon,
     },
     {
       address: "0x9702230a8ea53601f5cd2dc00fdbc13d4df4a8c7",
@@ -295,7 +295,7 @@ export const defaultTokens: SupportedTokens = {
       name: "Wrapped Ether",
       address: "0xa6fa4fb5f76172d178d61b04b0ecd319c5d1c0aa",
       symbol: "WETH",
-      icon: wrappedEthIcon,
+      icon: genericTokenIcon,
     },
     {
       address: "0x0FA8781a83E46826621b3BC094Ea2A0212e71B23",
@@ -315,7 +315,7 @@ export const defaultTokens: SupportedTokens = {
       address: "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
       name: "Wrapped Ether",
       symbol: "WETH",
-      icon: wrappedEthIcon,
+      icon: genericTokenIcon,
     },
     {
       address: "0xfd064A18f3BF249cf1f87FC203E90D8f650f2d63",

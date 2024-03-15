@@ -49,7 +49,6 @@ export function PayWithCrypto(props: {
     tokenAddress: token?.address,
   });
 
-  const tokenIcon = token?.icon || chainQuery.data?.icon?.url;
   const tokenSymbol = token?.symbol || balanceQuery.data?.symbol;
 
   return (
@@ -71,7 +70,7 @@ export function PayWithCrypto(props: {
               border: "none",
             }}
             token={props.token}
-            tokenIcon={tokenIcon}
+            tokenIcon={token?.icon}
             tokenSymbol={tokenSymbol}
           />
 

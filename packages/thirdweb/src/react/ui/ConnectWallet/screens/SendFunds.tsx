@@ -1,7 +1,6 @@
 import { CrossCircledIcon, CheckCircledIcon } from "@radix-ui/react-icons";
 import { useState, useMemo } from "react";
 import { useTWLocale } from "../../../providers/locale-provider.js";
-import { ChainIcon, fallbackChainIcon } from "../../components/ChainIcon.js";
 import { Img } from "../../components/Img.js";
 import { Skeleton } from "../../components/Skeleton.js";
 import { Spacer } from "../../components/Spacer.js";
@@ -15,6 +14,7 @@ import {
   type SupportedTokens,
   defaultTokens,
   type TokenInfo,
+  genericTokenIcon,
 } from "../defaultTokens.js";
 import {
   useActiveAccount,
@@ -22,11 +22,10 @@ import {
 } from "../../../providers/wallet-provider.js";
 import { useWalletBalance } from "../../../hooks/others/useWalletBalance.js";
 import { Text } from "../../components/text.js";
-import { useChainQuery } from "../../../hooks/others/useChainQuery.js";
 import { useSendToken } from "../../hooks/useSendToken.js";
 import { isAddress } from "../../../../utils/address.js";
 import { TokenSelector, formatTokenBalance } from "./TokenSelector.js";
-import type { NativeToken } from "./nativeToken.js";
+import { isNativeToken, type NativeToken } from "./nativeToken.js";
 
 type TXError = Error & { data?: { message?: string } };
 
@@ -123,8 +122,6 @@ function SendFundsForm(props: {
     tokenAddress: tokenAddress,
     account: activeAccount,
   });
-
-  const chainQuery = useChainQuery(chain);
 
   const { receiverAddress, setReceiverAddress, amount, setAmount } = props;
 
@@ -251,18 +248,18 @@ function SendFundsForm(props: {
           }}
           onClick={props.onTokenSelect}
         >
-          {props.token && "icon" in props.token ? (
-            <Img
-              src={props.token.icon}
-              width={iconSize.lg}
-              height={iconSize.lg}
-              fallbackImage={fallbackChainIcon}
-            />
-          ) : !chainQuery.data ? (
-            <Skeleton height={iconSize.lg} width={iconSize.lg} />
-          ) : (
-            <ChainIcon chain={chainQuery.data} size={iconSize.lg} />
-          )}
+          <Img
+            src={
+              props.token
+                ? isNativeToken(props.token)
+                  ? genericTokenIcon
+                  : props.token.icon
+                : genericTokenIcon
+            }
+            width={iconSize.lg}
+            height={iconSize.lg}
+            fallbackImage={genericTokenIcon}
+          />
 
           <Container flex="column" gap="xs">
             {tokenName ? (
