@@ -1,9 +1,11 @@
 import type { ThirdwebClient } from "../../../client/client.js";
 import { toBigInt } from "../../../utils/bigint.js";
 import { withCache } from "../../../utils/promise/withCache.js";
+import type { Chain } from "../../../chains/types.js";
 
 export type GetRegistrationPriceOptions = {
   client: ThirdwebClient;
+  chain?: Chain;
   extraStorage?: bigint | number | string;
   disableCache?: boolean;
 };
@@ -35,7 +37,10 @@ export async function getRegistrationPrice(
     const { getIdGateway } = await import("../contracts.js");
     const { price } = await import("../__generated__/IIdGateway/read/price.js");
 
-    const contract = getIdGateway({ client: options.client });
+    const contract = getIdGateway({
+      client: options.client,
+      chain: options.chain,
+    });
     return price({ contract, extraStorage: toBigInt(extraStorage) });
   };
 

@@ -12,6 +12,7 @@ export {
   getIdGateway,
 } from "../../../extensions/farcaster/contracts.js";
 
+// Helper Functions
 export {
   type GetRegistrationPriceOptions,
   getRegistrationPrice,

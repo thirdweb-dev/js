@@ -1,14 +1,16 @@
 import type { Address } from "abitype";
-import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { prepareContractCall } from "../../../transaction/prepare-contract-call.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import { toBigInt } from "../../../utils/bigint.js";
+import { getIdGateway } from "../contracts.js";
+import type { Chain } from "../../../chains/types.js";
 /**
  * Represents the parameters for the `registerAccount` function.
  */
 export type RegisterAccountParams = {
   client: ThirdwebClient;
   recoveryAddress: Address;
+  chain?: Chain;
   extraStorage?: bigint | string | number;
   disableCache?: boolean;
 };
@@ -27,17 +29,20 @@ export type RegisterAccountParams = {
  * });
  * ```
  */
-export function registerAccount(
-  options: BaseTransactionOptions<RegisterAccountParams>,
-) {
+export function registerAccount(options: RegisterAccountParams) {
   const extraStorage = toBigInt(options.extraStorage ?? 0);
   if (extraStorage < 0n)
     throw new Error(
       `Expected extraStorage to be greater than or equal to 0, got ${extraStorage}`,
     );
 
+  // TODO: Check if the wallet already owns an fid
+
   return prepareContractCall({
-    ...options,
+    contract: getIdGateway({
+      client: options.client,
+      chain: options.chain,
+    }),
     method: [
       "0x6d705ebb",
       [
@@ -67,6 +72,7 @@ export function registerAccount(
       );
       return await getRegistrationPrice({
         client: options.client,
+        chain: options.chain,
         extraStorage: extraStorage,
         disableCache: options.disableCache,
       });

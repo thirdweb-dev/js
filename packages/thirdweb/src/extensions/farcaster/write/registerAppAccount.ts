@@ -5,6 +5,7 @@ import { prepareContractCall } from "../../../transaction/prepare-contract-call.
 import type { ThirdwebClient } from "../../../client/client.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
 import type { Ed25519Keypair } from "../signers.js";
+import type { Chain } from "../../../chains/types.js";
 
 /**
  * Represents the parameters for the `registerAppAccount` function.
@@ -15,6 +16,7 @@ export type RegisterAppAccountParams = {
   appFid: number;
   recoveryAddress: Address;
   signer: Ed25519Keypair;
+  chain?: Chain;
   extraStorage?: bigint | number;
   disableCache?: boolean;
 };
@@ -117,13 +119,17 @@ export function registerAppAccount(
       );
       return await getRegistrationPrice({
         client: options.client,
+        chain: options.chain,
         extraStorage: extraStorage,
         disableCache: options.disableCache,
       });
     },
     params: async () => {
       const { getKeyGateway } = await import("../contracts.js");
-      const keyGateway = getKeyGateway({ client: options.client });
+      const keyGateway = getKeyGateway({
+        client: options.client,
+        chain: options.chain,
+      });
 
       const { nonces } = await import(
         "../__generated__/IKeyGateway/read/nonces.js"

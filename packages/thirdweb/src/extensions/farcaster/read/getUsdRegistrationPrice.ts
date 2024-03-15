@@ -2,9 +2,11 @@ import type { ThirdwebClient } from "../../../client/client.js";
 import { toBigInt } from "../../../utils/bigint.js";
 import { toTokens } from "../../../utils/units.js";
 import { withCache } from "../../../utils/promise/withCache.js";
+import type { Chain } from "../../../chains/types.js";
 
 export type GetUsdRegistrationPriceOptions = {
   client: ThirdwebClient;
+  chain?: Chain;
   extraStorage?: bigint | number | string;
   disableCache?: boolean;
 };
@@ -38,7 +40,10 @@ export async function getUsdRegistrationPrice(
       "../__generated__/IStorageRegistry/read/usdUnitPrice.js"
     );
 
-    const contract = getStorageRegistry({ client: options.client });
+    const contract = getStorageRegistry({
+      client: options.client,
+      chain: options.chain,
+    });
     const bigNumberValue =
       (await usdUnitPrice({ contract })) * (extraStorage + 1n);
     return Number(toTokens(bigNumberValue, 8)); // storage registry uses 8 decimal places
