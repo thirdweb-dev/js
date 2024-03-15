@@ -314,7 +314,7 @@ export type ConnectWalletProps = {
   displayBalanceToken?: Record<number, string>;
 
   /**
-   * Hide the "Switch to Personal wallet" option in the wallet modal which is shown when wallet is connected to either Smart Wallet or Safe.
+   * Hide the "Switch to Personal wallet" option in the wallet modal which is shown when wallet is connected to either Smart Account or Safe.
    *
    * By default it is `false`
    *
@@ -595,7 +595,7 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  * ```
  *
  * ### hideSwitchToPersonalWallet
- * Hide the "Switch to Personal wallet" option in the wallet modal which is shown when wallet is connected to either Smart Wallet or Safe.
+ * Hide the "Switch to Personal wallet" option in the wallet modal which is shown when wallet is connected to either Smart Account or Safe.
  *
  * By default it is `false`
  *

@@ -27,7 +27,7 @@ yarn add @thirdweb-dev/storage
 
 ## Quick Start
 
-Once you have the Thirdweb Storage SDK installed, you can use it to easily upload and download files and other data using decentralized storage systems.
+Once you have the thirdweb Storage SDK installed, you can use it to easily upload and download files and other data using decentralized storage systems.
 
 Here's a simple example using the SDK to upload and download a file from IPFS:
 

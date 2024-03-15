@@ -27,7 +27,7 @@ await wallet.connect();
 - Metamask
 - Coinbase Wallet
 - Wallet Connect v1 and v2
-- Smart Wallet (ERC-4337)
+- Smart Account (ERC-4337)
 - Local Wallet
 - Paper Wallet
 - Magic.link
