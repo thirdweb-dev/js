@@ -23,7 +23,7 @@ const WrappedThirdwebSDKProvider = <TChains extends Chain[]>({
   clientId,
   secretKey,
 }: React.PropsWithChildren<
-  { supportedChains: Readonly<TChains>; } & Omit<
+  { supportedChains: Readonly<TChains> } & Omit<
     ThirdwebSDKProviderProps<TChains>,
     "authConfig" | "supportedChains"
   >
@@ -77,7 +77,7 @@ const WrappedThirdwebSDKProvider = <TChains extends Chain[]>({
     type ForcedChainType = {
       rpc: string[];
       chainId: number;
-      nativeCurrency: { symbol: string; name: string; decimals: number; };
+      nativeCurrency: { symbol: string; name: string; decimals: number };
       slug: string;
     };
 
