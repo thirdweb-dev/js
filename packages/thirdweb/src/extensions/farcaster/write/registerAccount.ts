@@ -58,6 +58,7 @@ export function registerAccount(
     value: async () => {
       const price = await getRegistrationPrice({
         client: options.client,
+        disableCache: options.disableCache,
       });
       return price;
     },
