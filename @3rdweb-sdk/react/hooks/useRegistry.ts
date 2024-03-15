@@ -14,7 +14,7 @@ import { getContract } from "thirdweb";
 import { defineDashboardChain, thirdwebClient } from "lib/thirdweb-client";
 import { BasicContract } from "contract-ui/types/types";
 
-export const MULTICHAIN_REGISTRY_ADDRESS =
+const MULTICHAIN_REGISTRY_ADDRESS =
   "0xcdAD8FA86e18538aC207872E8ff3536501431B73";
 
 const registryContract = getContract({
@@ -23,7 +23,7 @@ const registryContract = getContract({
   chain: defineDashboardChain(polygon.id),
 });
 
-export function useMultiChainRegContractList(walletAddress?: string) {
+function useMultiChainRegContractList(walletAddress?: string) {
   return useQuery(
     ["dashboard-registry", walletAddress, "multichain-contract-list"],
     async () => {

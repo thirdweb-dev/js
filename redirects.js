@@ -224,6 +224,16 @@ function redirects() {
       destination: "/hackathon/consumer-crypto",
       permanent: false,
     },
+    {
+      source: "/bear-market-airdrop",
+      destination: "/",
+      permanent: false,
+    },
+    {
+      source: "/drops/optimism",
+      destination: "/optimism",
+      permanent: false,
+    },
   ];
 }
 

@@ -1,6 +1,4 @@
 import { useToast } from "@chakra-ui/react";
-import { useContract } from "@thirdweb-dev/react";
-import { SmartContract } from "@thirdweb-dev/sdk";
 import { useErrorHandler } from "contexts/error-handler";
 import { useCallback } from "react";
 import { useInvalidateContractQuery } from "thirdweb/react";

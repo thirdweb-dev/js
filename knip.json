@@ -1,7 +1,7 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
   "next": true,
-  "ignore": ["graphql/"],
+  "ignore": ["graphql/", "theme/*"],
   "project": [
     "@3rdweb-sdk/**/*.{ts,tsx}",
     "classes/**/*.{ts,tsx}",

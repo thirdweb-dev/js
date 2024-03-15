@@ -486,52 +486,6 @@ export function usePaymentsRemoveCheckout(contractAddress: string) {
   );
 }
 
-export function usePaymentsUploadKybFiles() {
-  const { token } = useApiAuthToken();
-  const fetchFromPaymentsAPI = usePaymentsApi();
-  const queryClient = useQueryClient();
-  const address = useAddress();
-
-  return useMutationWithInvalidate(
-    async (input: { files: File[] }) => {
-      invariant(token, "No token found");
-      invariant(address, "No wallet address found");
-      invariant(input.files.length > 0, "No files found");
-
-      for (const file of input.files) {
-        const url = await fetchFromPaymentsAPI(
-          token,
-          "POST",
-          "storage/generate-signed-url",
-          { fileName: file.name, fileType: file.type },
-          { isGenerateSignedUrl: true },
-        );
-
-        if (!url) {
-          throw new Error("Unable to generate presigned URL");
-        }
-
-        const res = await fetch(url, {
-          method: "PUT",
-          headers: { "Content-Type": file.type },
-          body: file,
-        });
-
-        if (res.status !== 200) {
-          throw new Error(`Unexpected status ${res.status}`);
-        }
-      }
-    },
-    {
-      onSuccess: () => {
-        return queryClient.invalidateQueries(
-          paymentsKeys.kybStatus(address as string),
-        );
-      },
-    },
-  );
-}
-
 const getBlobFromBase64Image = async (strBase64: string): Promise<Blob> => {
   if (!strBase64.startsWith("data:image/")) {
     return Promise.reject("Invalid base64 image format");
@@ -655,76 +609,6 @@ export function usePaymentsUpdateSellerById(id: string) {
         return queryClient.invalidateQueries(paymentsKeys.settings(id));
       },
     },
-  );
-}
-
-export function usePaymentsKybStatus() {
-  const { token } = useApiAuthToken();
-  const fetchFromPaymentsAPI = usePaymentsApi();
-  const address = useAddress();
-
-  return useQuery(
-    paymentsKeys.kybStatus(address as string),
-    async () => {
-      invariant(token, "No token found");
-      invariant(address, "No wallet address found");
-      return fetchFromPaymentsAPI(
-        token,
-        "GET",
-        "seller-verification/seller-document-count",
-        undefined,
-        { isSellerDocumentCount: true },
-      );
-    },
-    { enabled: !!address && !!token },
-  );
-}
-
-export function usePaymentsGetVerificationSession(sellerId: string) {
-  const { token } = useApiAuthToken();
-  const fetchFromPaymentsAPI = usePaymentsApi();
-  const address = useAddress();
-
-  return useQuery(
-    paymentsKeys.verificationSession(address as string),
-    async () => {
-      invariant(token, "No token found");
-      invariant(address, "No wallet address found");
-      invariant(sellerId, "No sellerId found");
-      return fetchFromPaymentsAPI(
-        token,
-        "POST",
-        "seller-verification/create-verification-session",
-        { sellerId },
-        { isCreateVerificationSession: true },
-      );
-    },
-    { enabled: !!address && !!sellerId && !!token },
-  );
-}
-
-export function usePaymentsKycStatus(sessionId: string) {
-  const { token } = useApiAuthToken();
-  const fetchFromPaymentsAPI = usePaymentsApi();
-  const address = useAddress();
-
-  return useQuery(
-    paymentsKeys.kycStatus(address as string),
-    async () => {
-      invariant(token, "No token found");
-      invariant(address, "No wallet address found");
-      invariant(sessionId, "No sessionId found");
-      return fetchFromPaymentsAPI(
-        token,
-        "POST",
-        "seller-verification/status",
-        {
-          verificationSessionId: sessionId,
-        },
-        { isSellerVerificationStatus: true },
-      );
-    },
-    { enabled: !!address && !!token },
   );
 }
 

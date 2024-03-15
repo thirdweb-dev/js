@@ -31,7 +31,7 @@ type VerifyContractParams = {
   chainId: number;
 };
 
-export interface VerificationResult {
+interface VerificationResult {
   explorerUrl: string;
   success: boolean;
   alreadyVerified: boolean;

@@ -52,8 +52,8 @@ const HomePage: ThirdwebNextPage = () => {
             title="Onboard everyone to web3, instantly"
             description="The complete web3 wallet stack — with a customizable Connect Wallet modal, embedded wallets for flexible sign-in options, and account abstraction for the smoothest user experiences."
             introductionTitle="WALLET PRODUCTS"
-            image={require("public/assets/bear-market-airdrop/desktop-wallets.png")}
-            mobileImage={require("public/assets/bear-market-airdrop/mobile-wallets.png")}
+            image={require("public/assets/homepage/desktop-wallets.png")}
+            mobileImage={require("public/assets/homepage/mobile-wallets.png")}
             products={filterProducts("connect")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}
           />
@@ -61,8 +61,8 @@ const HomePage: ThirdwebNextPage = () => {
             title="Build smart contracts, deploy on any EVM"
             description="The smart contract development toolkit — with a powerful Solidity SDK to build custom contracts, a library of pre-built & audited contracts, and a 1-click deployment flow to any EVM-compatible blockchains."
             introductionTitle="CONTRACT PRODUCTS"
-            image={require("public/assets/bear-market-airdrop/desktop-contracts.png")}
-            mobileImage={require("public/assets/bear-market-airdrop/mobile-contracts.png")}
+            image={require("public/assets/homepage/desktop-contracts.png")}
+            mobileImage={require("public/assets/homepage/mobile-contracts.png")}
             products={filterProducts("contracts")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}
           />
@@ -70,8 +70,8 @@ const HomePage: ThirdwebNextPage = () => {
             title="Scale with enterprise-grade infrastructure"
             description="The production-grade server for scalable web3 apps — with backend wallet creation, nonce management, smart contract interactions, account abstraction support, gasless transactions, and managed infrastructure."
             introductionTitle="INFRASTRUCTURE PRODUCT"
-            image={require("public/assets/bear-market-airdrop/desktop-engine.png")}
-            mobileImage={require("public/assets/bear-market-airdrop/mobile-engine.png")}
+            image={require("public/assets/homepage/desktop-engine.png")}
+            mobileImage={require("public/assets/homepage/mobile-engine.png")}
             products={filterProducts("infrastructure")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}
           />
@@ -79,8 +79,8 @@ const HomePage: ThirdwebNextPage = () => {
             title="Simplify NFT purchases with fiat checkouts"
             description="The most powerful NFT checkout — with worldwide availability, support for major payment methods, and full compliance for enterprise-grade apps. Built to onboard everyone, even if they've never created a web3 wallet or bought crypto."
             introductionTitle="CHECKOUT PRODUCT"
-            image={require("public/assets/bear-market-airdrop/desktop-checkout.png")}
-            mobileImage={require("public/assets/bear-market-airdrop/mobile-checkout.png")}
+            image={require("public/assets/homepage/desktop-checkout.png")}
+            mobileImage={require("public/assets/homepage/mobile-checkout.png")}
             products={filterProducts("payments")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}
           />

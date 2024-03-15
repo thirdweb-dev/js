@@ -178,6 +178,11 @@ const ContractPage: ThirdwebNextPage = () => {
     Sentry.captureException(
       new Error("Contract info not found in EVMContractInfoProvider"),
     );
+    return (
+      <Flex h="100%" justifyContent="center" alignItems="center">
+        <Spinner size="xl" />
+      </Flex>
+    );
   }
 
   if (chainNotFound) {

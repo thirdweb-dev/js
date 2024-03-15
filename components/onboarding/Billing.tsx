@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
-import { loadStripe } from "@stripe/stripe-js/pure";
 import { Elements } from "@stripe/react-stripe-js";
 import { OnboardingPaymentForm } from "./PaymentForm";
 import { Flex, FocusLock, useColorMode } from "@chakra-ui/react";
 import { OnboardingTitle } from "./Title";
-import { Stripe } from "@stripe/stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 import { useAccount, useUpdateAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { useTrack } from "hooks/analytics/useTrack";
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY ?? "");
 
 interface OnboardingBillingProps {
   onSave: () => void;
@@ -18,9 +18,6 @@ export const OnboardingBilling: React.FC<OnboardingBillingProps> = ({
   onCancel,
 }) => {
   const { colorMode } = useColorMode();
-  const [stripePromise, setStripePromise] = useState<
-    Promise<Stripe | null> | undefined
-  >();
   const trackEvent = useTrack();
   const accountQuery = useAccount();
 
@@ -58,15 +55,6 @@ export const OnboardingBilling: React.FC<OnboardingBillingProps> = ({
 
     onCancel();
   };
-
-  useEffect(() => {
-    if (process.env.NEXT_PUBLIC_STRIPE_KEY) {
-      const init = async () => {
-        setStripePromise(loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY ?? ""));
-      };
-      init();
-    }
-  }, []);
 
   return (
     <FocusLock>
@@ -117,9 +105,7 @@ const appearance = {
   rules: {
     ".Input": {
       boxShadow: "none",
-      background: "transparent",
       backgroundColor: "transparent",
-      height: "40px",
     },
     ".Input:hover": {
       borderColor: "rgb(51, 133, 255)",

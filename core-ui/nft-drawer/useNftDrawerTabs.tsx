@@ -37,8 +37,10 @@ const BurnTab = dynamic(
 const MintSupplyTab = dynamic(
   () => import("contract-ui/tabs/nfts/components/mint-supply-tab"),
 );
-const ClaimConditionTab = dynamic(
-  () => import("contract-ui/tabs/claim-conditions/components/claim-conditions"),
+const ClaimConditionTab = dynamic(() =>
+  import("contract-ui/tabs/claim-conditions/components/claim-conditions").then(
+    ({ ClaimConditions }) => ClaimConditions,
+  ),
 );
 const ClaimTab = dynamic(
   () => import("contract-ui/tabs/nfts/components/claim-tab"),

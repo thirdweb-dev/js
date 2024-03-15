@@ -232,7 +232,7 @@ interface WalletStats {
   }[];
 }
 
-export interface BillingProduct {
+interface BillingProduct {
   name: string;
   id: string;
 }
@@ -386,41 +386,6 @@ export function useUpdateAccount() {
       onSuccess: () => {
         return queryClient.invalidateQueries(
           accountKeys.me(user?.address as string),
-        );
-      },
-    },
-  );
-}
-
-export function useGrantCredits() {
-  const { user } = useLoggedInUser();
-  const queryClient = useQueryClient();
-
-  return useMutationWithInvalidate(
-    async (input: { customPromoType: string }) => {
-      invariant(user?.address, "walletAddress is required");
-
-      const res = await fetch(`${THIRDWEB_API_HOST}/v1/account/grantCredits`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(input),
-      });
-
-      const json = await res.json();
-
-      if (json.error) {
-        throw new Error(json.error.message);
-      }
-
-      return json.data.credits as BillingCredit[];
-    },
-    {
-      onSuccess: () => {
-        return queryClient.invalidateQueries(
-          accountKeys.credits(user?.address as string),
         );
       },
     },

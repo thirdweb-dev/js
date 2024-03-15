@@ -118,7 +118,7 @@ export function useEngineLatestVersion() {
   });
 }
 
-export interface UpdateVersionInput {
+interface UpdateVersionInput {
   engineId: string;
 }
 

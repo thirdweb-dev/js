@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/forbid-dom-props */
+/* eslint-disable react/no-unknown-property */
 import { ImageResponse } from "@vercel/og";
 import { NextRequest } from "next/server";
 import { PublishedContractOG } from "og-lib/url-utils";

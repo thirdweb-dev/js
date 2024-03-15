@@ -100,10 +100,6 @@ export enum PageId {
   HackathonEarnLanding = "earn-thirdweb-hacakthon",
   // thirdweb.com/grant/superchain
   GrantSuperChain = "grant-superchain",
-  // thirdweb.com/bear-market-airdrop
-  BearMarketAirdrop = "bear-market-airdrop",
-  // drops
-  DropsOptimism = "drops-optimism",
   // thirdweb.com/hackathon
   HackathonLanding = "base-thirdweb-hacakthon",
   ReadyPlayer3Landing = "readyplayer3",

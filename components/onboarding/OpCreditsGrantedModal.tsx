@@ -35,7 +35,7 @@ export const OpCreditsGrantedModal = () => {
         <ModalBody>
           <Flex flexDir="column" gap={4} position="relative">
             <ChakraNextImage
-              src={require("public/assets/bear-market-airdrop/unboxedGif.gif")}
+              src={require("public/assets/dashboard/confetti.gif")}
               alt="confetti1"
               position="absolute"
               top={{
@@ -48,7 +48,7 @@ export const OpCreditsGrantedModal = () => {
               }}
             />
             <ChakraNextImage
-              src={require("public/assets/bear-market-airdrop/unboxedGif.gif")}
+              src={require("public/assets/dashboard/confetti.gif")}
               alt="confetti1"
               position="absolute"
               top={{

@@ -70,5 +70,3 @@ export const ClaimConditions: React.FC<ClaimConditionsProps> = ({
     </Stack>
   );
 };
-
-export default ClaimConditions;

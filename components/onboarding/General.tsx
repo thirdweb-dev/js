@@ -1,7 +1,7 @@
 import { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { AccountForm } from "components/settings/Account/AccountForm";
 import { OnboardingTitle } from "./Title";
-import { Flex, VStack } from "@chakra-ui/react";
+import { Flex, FocusLock, VStack } from "@chakra-ui/react";
 import { Button } from "tw-components";
 import { useDisconnect, useLogout } from "@thirdweb-dev/react";
 import { useState } from "react";
@@ -27,7 +27,7 @@ export const OnboardingGeneral: React.FC<OnboardingGeneralProps> = ({
   };
 
   return (
-    <>
+    <FocusLock>
       <OnboardingTitle
         heading={
           !existing
@@ -90,6 +90,6 @@ export const OnboardingGeneral: React.FC<OnboardingGeneralProps> = ({
           )}
         </VStack>
       </Flex>
-    </>
+    </FocusLock>
   );
 };

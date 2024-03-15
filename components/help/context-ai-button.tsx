@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unknown-property */
 import { Icon, Input, InputGroup, InputLeftElement } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import Script from "next/script";
