@@ -1,7 +1,7 @@
 /* eslint-disable jsdoc/require-jsdoc */
 
-import { getThirdwebDomains } from "src/utils/domains.js";
 import type { ThirdwebClient } from "../../client/client.js";
+import { getThirdwebDomains } from "../../utils/domains.js";
 import { getClientFetch } from "../../utils/fetch.js";
 import type { UploadOptions } from "./types.js";
 
