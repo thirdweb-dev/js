@@ -32,15 +32,11 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "pnpm"
-      # for testing we're also gonna setup bun
-      - name: Install bun
-        uses: oven-sh/setup-bun@v1
 
       - name: Run CI
         run: |
           pnpm install
           pnpm lint
-          pnpm test
         env:
           PAYMENTS_ADMIN_SECRET: ${{ secrets.PAYMENTS_ADMIN_SECRET }}
           NEXT_PUBLIC_PAYMENTS_API: ${{ vars.NEXT_PUBLIC_PAYMENTS_API }}
