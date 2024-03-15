@@ -33,8 +33,8 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
 
     const defaultWCReceiverConfig = {
       walletConnectWalletMetadata: {
-        name: "Thirdweb Smart Account",
-        description: "Thirdweb Smart Account",
+        name: "thirdweb Smart Account",
+        description: "thirdweb Smart Account",
         url: "https://thirdweb.com",
         icons: ["https://thirdweb.com/favicon.ico"],
       },

@@ -23,7 +23,7 @@ const WrappedThirdwebSDKProvider = <TChains extends Chain[]>({
   clientId,
   secretKey,
 }: React.PropsWithChildren<
-  { supportedChains: Readonly<TChains> } & Omit<
+  { supportedChains: Readonly<TChains>; } & Omit<
     ThirdwebSDKProviderProps<TChains>,
     "authConfig" | "supportedChains"
   >
@@ -77,7 +77,7 @@ const WrappedThirdwebSDKProvider = <TChains extends Chain[]>({
     type ForcedChainType = {
       rpc: string[];
       chainId: number;
-      nativeCurrency: { symbol: string; name: string; decimals: number };
+      nativeCurrency: { symbol: string; name: string; decimals: number; };
       slug: string;
     };
 
@@ -155,7 +155,7 @@ const WrappedThirdwebSDKProvider = <TChains extends Chain[]>({
  * The `ThirdwebSDKProvider` is used when you want to provide your own wallet connection logic and just use the thirdweb SDK to interact with smart contracts and the blockchain.
  * This means you can use everything in the SDK except for wallet connection-related components and hooks. if you need those please use the `ThirdwebProvider` instead.
  *
- * `ThirdwebSDKProvider` allows you to set a provider & signer to the Thirdweb SDK.
+ * `ThirdwebSDKProvider` allows you to set a provider & signer to the thirdweb SDK.
  *
  * @example
  * Wrap your app in the ThirdwebSDKProvider to access the SDK’s functionality from anywhere in your app.
