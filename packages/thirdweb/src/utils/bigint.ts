@@ -28,7 +28,7 @@ export function max(a: bigint, b: bigint) {
 
 /**
  * Provides error checking on string or number bigint inputs.
- * @param value - An possibly integer-like string, number, or bigint.
+ * @param value - A possibly integer-like string, number, or bigint.
  * @returns The bigint representation of the input.
  * @example
  * ```ts
