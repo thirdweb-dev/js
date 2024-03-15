@@ -50,9 +50,9 @@ export async function zkVerify(
       const parsedMetadata = await fetchContractMetadata(metadataUri, storage);
 
       compilerMetadata = {
-        name: rawMeta.name,
+        name: parsedMetadata.name,
         abi: parsedMetadata.abi,
-        metadata: parsedMetadata,
+        metadata: parsedMetadata.metadata,
         zk_version: rawMeta.zk_version,
       };
     }
