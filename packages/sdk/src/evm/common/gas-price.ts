@@ -79,12 +79,6 @@ export async function getDynamicFeeData(
 
   // add 10% tip to maxPriorityFeePerGas for faster processing
   maxPriorityFeePerGas = getPreferredPriorityFee(maxPriorityFeePerGas);
-
-  // ensure maxPriorityFeePerGas is at least 0.001 gwei
-  // the value seems to be rejected by some nodes otherwise
-  if (maxPriorityFeePerGas.lt(1000000)) {
-    maxPriorityFeePerGas = BigNumber.from(1000000);
-  }
   // eip-1559 formula, doubling the base fee ensures that the tx can be included in the next 6 blocks no matter how busy the network is
   // good article on the subject: https://www.blocknative.com/blog/eip-1559-fees
   maxFeePerGas = baseBlockFee.mul(2).add(maxPriorityFeePerGas);
