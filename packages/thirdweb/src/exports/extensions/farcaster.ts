@@ -42,3 +42,7 @@ export {
   type AddSignerParams,
   addSigner,
 } from "../../extensions/farcaster/write/addSigner.js";
+export {
+  type AddSignerForParams,
+  addSignerFor,
+} from "../../extensions/farcaster/write/addSignerFor.js";
