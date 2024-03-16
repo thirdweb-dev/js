@@ -4,6 +4,7 @@ import { optimism } from "../../chains/chain-definitions/optimism.js";
 import {
   BUNDLER_ADDRESS,
   ID_GATEWAY_ADDRESS,
+  ID_REGISTRY_ADDRESS,
   KEY_GATEWAY_ADDRESS,
   STORAGE_REGISTRY_ADDRESS,
 } from "./constants.js";
@@ -21,6 +22,17 @@ export function getIdGateway({
   return getContract({
     client,
     address: ID_GATEWAY_ADDRESS,
+    chain: chain ?? optimism,
+  });
+}
+
+export function getIdRegistry({
+  client,
+  chain,
+}: FarcasterContractOptions): ThirdwebContract {
+  return getContract({
+    client,
+    address: ID_REGISTRY_ADDRESS,
     chain: chain ?? optimism,
   });
 }

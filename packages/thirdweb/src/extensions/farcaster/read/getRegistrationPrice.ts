@@ -3,7 +3,7 @@ import { toBigInt } from "../../../utils/bigint.js";
 import { withCache } from "../../../utils/promise/withCache.js";
 import type { Chain } from "../../../chains/types.js";
 
-export type GetRegistrationPriceOptions = {
+export type GetRegistrationPriceParams = {
   client: ThirdwebClient;
   chain?: Chain;
   extraStorage?: bigint | number | string;
@@ -25,7 +25,7 @@ export type GetRegistrationPriceOptions = {
  * ```
  */
 export async function getRegistrationPrice(
-  options: GetRegistrationPriceOptions,
+  options: GetRegistrationPriceParams,
 ): Promise<bigint> {
   const extraStorage = toBigInt(options.extraStorage ?? 0);
   if (extraStorage < 0n)

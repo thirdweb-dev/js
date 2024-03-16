@@ -4,7 +4,7 @@ import { toTokens } from "../../../utils/units.js";
 import { withCache } from "../../../utils/promise/withCache.js";
 import type { Chain } from "../../../chains/types.js";
 
-export type GetUsdRegistrationPriceOptions = {
+export type GetUsdRegistrationPriceParams = {
   client: ThirdwebClient;
   chain?: Chain;
   extraStorage?: bigint | number | string;
@@ -26,7 +26,7 @@ export type GetUsdRegistrationPriceOptions = {
  * ```
  */
 export async function getUsdRegistrationPrice(
-  options: GetUsdRegistrationPriceOptions,
+  options: GetUsdRegistrationPriceParams,
 ): Promise<number> {
   const extraStorage = toBigInt(options.extraStorage ?? 0);
   if (extraStorage < 0n)
