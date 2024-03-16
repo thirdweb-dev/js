@@ -1,6 +1,5 @@
 import type { ThirdwebClient } from "../../../client/client.js";
 import { toBigInt } from "../../../utils/bigint.js";
-import { toTokens } from "../../../utils/units.js";
 import { withCache } from "../../../utils/promise/withCache.js";
 import type { Chain } from "../../../chains/types.js";
 

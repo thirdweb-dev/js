@@ -76,3 +76,7 @@ export {
   type AddSignerForParams,
   addSignerFor,
 } from "../../extensions/farcaster/write/addSignerFor.js";
+export {
+  type RentStorageParams,
+  rentStorage,
+} from "../../extensions/farcaster/write/rentStorage.js";
