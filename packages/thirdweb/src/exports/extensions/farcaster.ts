@@ -38,3 +38,7 @@ export {
   type Ed25519Keypair as Signer,
   createEd25519Keypair as createSigner,
 } from "../../extensions/farcaster/signers.js";
+export {
+  type AddSignerParams,
+  addSigner,
+} from "../../extensions/farcaster/write/addSigner.js";

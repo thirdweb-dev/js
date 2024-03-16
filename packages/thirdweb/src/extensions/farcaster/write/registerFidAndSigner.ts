@@ -31,7 +31,10 @@ export type RegisterFidAndSignerParams = {
  * import { registerFidAndSigner } from "thirdweb/extensions/farcaster";
  * const tx = await registerFidAndSigner({
  *  client,
- * 	recoveryAddress
+ *  userAccount,
+ *  appAccount,
+ * 	recoveryAddress,
+ *  signerPublicKey
  * });
  * ```
  */
@@ -132,6 +135,7 @@ export function registerFidAndSigner(options: RegisterFidAndSignerParams) {
         client: options.client,
         chain: options.chain,
         address: options.userAccount.address,
+        disableCache: options.disableCache,
       });
       if (existingFid !== 0n)
         throw new Error(
@@ -147,7 +151,7 @@ export function registerFidAndSigner(options: RegisterFidAndSignerParams) {
       const { nonces } = await import(
         "../__generated__/IKeyGateway/read/nonces.js"
       );
-      let nonce = await nonces({
+      const nonce = await nonces({
         account: options.userAccount.address,
         contract: keyGateway,
       });
@@ -168,6 +172,7 @@ export function registerFidAndSigner(options: RegisterFidAndSignerParams) {
         client: options.client,
         chain: options.chain,
         address: options.appAccount.address,
+        disableCache: options.disableCache,
       });
 
       const signedKeyRequestMetadata = await getSignedKeyRequestMetadata({
@@ -179,10 +184,6 @@ export function registerFidAndSigner(options: RegisterFidAndSignerParams) {
         },
       });
 
-      nonce = await nonces({
-        account: options.userAccount.address,
-        contract: keyGateway,
-      });
       const addSignature = await signAdd({
         account: options.userAccount,
         message: {
