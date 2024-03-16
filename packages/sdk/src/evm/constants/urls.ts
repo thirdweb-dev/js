@@ -17,7 +17,10 @@ import { setAnalyticsHeaders } from "../../core/utils/headers";
 function buildDefaultMap(options: SDKOptionsOutput) {
   return options.supportedChains.reduce(
     (previousValue, currentValue) => {
-      previousValue[currentValue.chainId] = currentValue;
+      // don't overwrite existing chains!
+      if (!previousValue[currentValue.chainId]) {
+        previousValue[currentValue.chainId] = currentValue;
+      }
       return previousValue;
     },
     {} as Record<number, ChainInfo>,
