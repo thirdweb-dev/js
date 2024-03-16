@@ -11,6 +11,10 @@ export {
 export {
   type FarcasterContractOptions,
   getIdGateway,
+  getKeyGateway,
+  getBundler,
+  getIdRegistry,
+  getStorageRegistry,
 } from "../../extensions/farcaster/contracts.js";
 
 // EIP712 Signatures
