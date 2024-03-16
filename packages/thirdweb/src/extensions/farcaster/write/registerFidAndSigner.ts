@@ -8,9 +8,9 @@ import { getBundler } from "../contracts.js";
 import type { Hex } from "../../../utils/encoding/hex.js";
 
 /**
- * Represents the parameters for the `registerAppAccount` function.
+ * Represents the parameters for the `registerFidAndSigner` function.
  */
-export type RegisterAppAccountParams = {
+export type RegisterFidAndSignerParams = {
   client: ThirdwebClient;
   userAccount: Account;
   appAccount: Account;
@@ -22,20 +22,20 @@ export type RegisterAppAccountParams = {
 };
 
 /**
- * Registers a Farcaster fid for the given wallet using the provided app account.
+ * Registers a Farcaster fid and signer for the given wallet using the provided app account.
  * @param options - The options for registering an account.
  * @returns A prepared transaction object to register the account.
  * @extension FARCASTER
  * @example
  * ```ts
- * import { registerAccount } from "thirdweb/extensions/farcaster";
- * const tx = await registerAccount({
+ * import { registerFidAndSigner } from "thirdweb/extensions/farcaster";
+ * const tx = await registerFidAndSigner({
  *  client,
  * 	recoveryAddress
  * });
  * ```
  */
-export function registerAppAccount(options: RegisterAppAccountParams) {
+export function registerFidAndSigner(options: RegisterFidAndSignerParams) {
   const extraStorage = toBigInt(options.extraStorage ?? 0);
   if (extraStorage < 0n)
     throw new Error(

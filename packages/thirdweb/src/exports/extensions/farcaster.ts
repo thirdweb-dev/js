@@ -27,13 +27,13 @@ export {
   getUsdRegistrationPrice,
 } from "../../extensions/farcaster/read/getUsdRegistrationPrice.js";
 export {
-  type RegisterAccountParams,
-  registerAccount,
-} from "../../extensions/farcaster/write/registerAccount.js";
+  type RegisterFidParams,
+  registerFid,
+} from "../../extensions/farcaster/write/registerFid.js";
 export {
-  type RegisterAppAccountParams,
-  registerAppAccount,
-} from "../../extensions/farcaster/write/registerAppAccount.js";
+  type RegisterFidAndSignerParams,
+  registerFidAndSigner,
+} from "../../extensions/farcaster/write/registerFidAndSigner.js";
 export {
   type Ed25519Keypair as Signer,
   createEd25519Keypair as createSigner,

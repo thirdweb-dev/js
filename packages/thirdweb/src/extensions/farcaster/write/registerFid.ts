@@ -5,9 +5,9 @@ import { toBigInt } from "../../../utils/bigint.js";
 import { getIdGateway } from "../contracts.js";
 import type { Chain } from "../../../chains/types.js";
 /**
- * Represents the parameters for the `registerAccount` function.
+ * Represents the parameters for the `registerFid` function.
  */
-export type RegisterAccountParams = {
+export type RegisterFidParams = {
   client: ThirdwebClient;
   recoveryAddress: Address;
   chain?: Chain;
@@ -22,14 +22,14 @@ export type RegisterAccountParams = {
  * @extension FARCASTER
  * @example
  * ```ts
- * import { registerAccount } from "thirdweb/extensions/farcaster";
- * const tx = await registerAccount({
+ * import { registerFid } from "thirdweb/extensions/farcaster";
+ * const tx = await registerFid({
  *  client,
  * 	recoveryAddress
  * });
  * ```
  */
-export function registerAccount(options: RegisterAccountParams) {
+export function registerFid(options: RegisterFidParams) {
   const extraStorage = toBigInt(options.extraStorage ?? 0);
   if (extraStorage < 0n)
     throw new Error(
