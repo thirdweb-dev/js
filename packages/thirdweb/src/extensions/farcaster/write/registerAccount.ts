@@ -36,8 +36,6 @@ export function registerAccount(options: RegisterAccountParams) {
       `Expected extraStorage to be greater than or equal to 0, got ${extraStorage}`,
     );
 
-  // TODO: Check if the wallet already owns an fid
-
   return prepareContractCall({
     contract: getIdGateway({
       client: options.client,

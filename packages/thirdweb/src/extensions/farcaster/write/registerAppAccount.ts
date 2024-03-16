@@ -3,9 +3,9 @@ import { toBigInt } from "../../../utils/bigint.js";
 import { prepareContractCall } from "../../../transaction/prepare-contract-call.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
-import type { Ed25519Keypair } from "../signers.js";
 import type { Chain } from "../../../chains/types.js";
 import { getBundler } from "../contracts.js";
+import type { Hex } from "../../../utils/encoding/hex.js";
 
 /**
  * Represents the parameters for the `registerAppAccount` function.
@@ -13,9 +13,9 @@ import { getBundler } from "../contracts.js";
 export type RegisterAppAccountParams = {
   client: ThirdwebClient;
   userAccount: Account;
-  appFid: number;
+  appAccount: Account;
   recoveryAddress: Address;
-  signer: Ed25519Keypair;
+  signerPublicKey: Hex;
   chain?: Chain;
   extraStorage?: bigint | number;
   disableCache?: boolean;
@@ -126,6 +126,18 @@ export function registerAppAccount(options: RegisterAppAccountParams) {
       });
     },
     params: async () => {
+      const deadline = BigInt(Math.floor(Date.now() / 1000) + 3600); // signatures last for 1 hour
+      const { getFid } = await import("../read/getFid.js");
+      const existingFid = await getFid({
+        client: options.client,
+        chain: options.chain,
+        address: options.userAccount.address,
+      });
+      if (existingFid !== 0n)
+        throw new Error(
+          `User already has an fid registered, found fid ${existingFid}`,
+        );
+
       const { getKeyGateway } = await import("../contracts.js");
       const keyGateway = getKeyGateway({
         client: options.client,
@@ -148,16 +160,22 @@ export function registerAppAccount(options: RegisterAppAccountParams) {
           nonce,
           to: options.userAccount.address,
           recovery: options.recoveryAddress,
-          deadline: BigInt(Math.floor(Date.now() / 1000) + 3600), // signature lasts for 1 hour
+          deadline,
         },
       });
 
+      const appFid = await getFid({
+        client: options.client,
+        chain: options.chain,
+        address: options.appAccount.address,
+      });
+
       const signedKeyRequestMetadata = await getSignedKeyRequestMetadata({
-        account: options.userAccount,
+        account: options.appAccount,
         message: {
-          requestFid: BigInt(options.appFid),
-          key: options.signer.publicKey,
-          deadline: BigInt(Math.floor(Date.now() / 1000) + 3600), // signature lasts for 1 hour
+          requestFid: toBigInt(appFid),
+          key: options.signerPublicKey,
+          deadline,
         },
       });
 
@@ -170,11 +188,11 @@ export function registerAppAccount(options: RegisterAppAccountParams) {
         message: {
           owner: options.userAccount.address,
           keyType: 1,
-          key: options.signer.publicKey,
+          key: options.signerPublicKey,
           metadataType: 1,
           metadata: signedKeyRequestMetadata,
           nonce,
-          deadline: BigInt(Math.floor(Date.now() / 1000) + 3600), // signature lasts for 1 hour
+          deadline,
         },
       });
 
@@ -182,16 +200,16 @@ export function registerAppAccount(options: RegisterAppAccountParams) {
         {
           to: options.userAccount.address,
           recovery: options.recoveryAddress,
-          deadline: BigInt(Math.floor(Date.now() / 1000) + 3600),
+          deadline,
           sig: registerSignature,
         },
         [
           {
             keyType: 1,
-            key: options.signer.publicKey,
+            key: options.signerPublicKey,
             metadataType: 1,
             metadata: signedKeyRequestMetadata,
-            deadline: BigInt(Math.floor(Date.now() / 1000) + 3600),
+            deadline,
             sig: addSignature,
           },
         ],
