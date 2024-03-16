@@ -49,6 +49,10 @@ export {
   getUsdRegistrationPrice,
 } from "../../extensions/farcaster/read/getUsdRegistrationPrice.js";
 export {
+  type GetStoragePriceParams,
+  getStoragePrice,
+} from "../../extensions/farcaster/read/getStoragePrice.js";
+export {
   type RegisterFidParams,
   registerFid,
 } from "../../extensions/farcaster/write/registerFid.js";
