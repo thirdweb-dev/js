@@ -5,17 +5,29 @@ import type { Account } from "../../../wallets/interfaces/wallet.js";
 import type { Chain } from "../../../chains/types.js";
 import { getKeyGateway } from "../contracts.js";
 import type { Hex } from "../../../utils/encoding/hex.js";
+import type { Prettify } from "../../../utils/type-utils.js";
+import type { Address } from "abitype";
 
 /**
  * Represents the parameters for the `addSigner` function.
  */
-export type AddSignerParams = {
-  client: ThirdwebClient;
-  appAccount: Account;
-  signerPublicKey: Hex;
-  chain?: Chain;
-  disableCache?: boolean;
-};
+export type AddSignerParams = Prettify<
+  {
+    client: ThirdwebClient;
+    signerPublicKey: Hex;
+    chain?: Chain;
+    disableCache?: boolean;
+  } & (
+    | {
+        appAccount: Account;
+      }
+    | {
+        signedKeyRequestMetadata: Hex;
+        appAccountAddress: Address;
+        deadline: bigint;
+      }
+  )
+>;
 
 /**
  * Adds farcaster signer for the given account.
@@ -61,13 +73,19 @@ export function addSigner(options: AddSignerParams) {
       [],
     ],
     params: async () => {
-      const deadline = BigInt(Math.floor(Date.now() / 1000) + 3600); // signatures last for 1 hour
+      const deadline =
+        "deadline" in options
+          ? options.deadline
+          : BigInt(Math.floor(Date.now() / 1000) + 3600); // default signatures last for 1 hour
 
       const { getFid } = await import("../read/getFid.js");
       const appFid = await getFid({
         client: options.client,
         chain: options.chain,
-        address: options.appAccount.address,
+        address:
+          "appAccount" in options
+            ? options.appAccount.address
+            : options.appAccountAddress,
         disableCache: options.disableCache,
       });
 
@@ -75,14 +93,17 @@ export function addSigner(options: AddSignerParams) {
         "../eip712signatures.js"
       );
 
-      const signedKeyRequestMetadata = await getSignedKeyRequestMetadata({
-        account: options.appAccount,
-        message: {
-          requestFid: toBigInt(appFid),
-          key: options.signerPublicKey,
-          deadline,
-        },
-      });
+      let signedKeyRequestMetadata;
+      if ("appAccount" in options) {
+        signedKeyRequestMetadata = await getSignedKeyRequestMetadata({
+          account: options.appAccount,
+          message: {
+            requestFid: toBigInt(appFid),
+            key: options.signerPublicKey,
+            deadline,
+          },
+        });
+      } else signedKeyRequestMetadata = options.signedKeyRequestMetadata;
 
       return [1, options.signerPublicKey, 1, signedKeyRequestMetadata] as const;
     },

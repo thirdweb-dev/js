@@ -9,6 +9,7 @@ import {
   KEY_GATEWAY_ADDRESS,
   SIGNED_KEY_REQUEST_VALIDATOR_ADDRESS,
 } from "./constants.js";
+import type { Prettify } from "../../utils/type-utils.js";
 
 ///////////////
 /** Register */
@@ -33,7 +34,7 @@ export const ID_GATEWAY_EIP_712_TYPES = {
   types: { Register: ID_GATEWAY_REGISTER_TYPE },
 } as const;
 
-export type IdGatewayRegisterMessage = {
+export type RegisterMessage = {
   /** FID custody address */
   to: Address;
   /** FID recovery address */
@@ -46,18 +47,23 @@ export type IdGatewayRegisterMessage = {
 
 export type SignRegisterOptions = {
   account: Account;
-  message: IdGatewayRegisterMessage;
+  message: RegisterMessage;
 };
+
+export function getRegisterData(message: RegisterMessage) {
+  return {
+    ...ID_GATEWAY_EIP_712_TYPES,
+    primaryType: "Register" as const,
+    message,
+  };
+}
 
 export async function signRegister({
   account,
   message,
 }: SignRegisterOptions): Promise<Hex> {
-  return account.signTypedData({
-    ...ID_GATEWAY_EIP_712_TYPES,
-    primaryType: "Register",
-    message,
-  });
+  const data = getRegisterData(message);
+  return account.signTypedData(data);
 }
 
 //////////////////
@@ -121,33 +127,67 @@ export type SignKeyRequestOptions = {
   message: SignedKeyRequestMessage;
 };
 
+export function getKeyRequestData(message: SignedKeyRequestMessage) {
+  return {
+    ...SIGNED_KEY_REQUEST_VALIDATOR_EIP_712_TYPES,
+    primaryType: "SignedKeyRequest" as const,
+    message,
+  };
+}
+
 export async function signKeyRequest({
   account,
   message,
 }: SignKeyRequestOptions): Promise<Hex> {
-  return account.signTypedData({
-    ...SIGNED_KEY_REQUEST_VALIDATOR_EIP_712_TYPES,
-    primaryType: "SignedKeyRequest",
-    message,
-  });
+  const data = getKeyRequestData(message);
+  return account.signTypedData(data);
 }
 
-export type SignedKeyRequestMetadataOptions = {
-  account: Account;
-  message: SignedKeyRequestMessage;
-};
+export type SignedKeyRequestMetadataOptions = Prettify<
+  {
+    message: SignedKeyRequestMessage;
+  } & (
+    | {
+        account: Account;
+      }
+    | { keyRequestSignature: Hex; accountAddress: Address }
+  )
+>;
 
-export async function getSignedKeyRequestMetadata({
-  account,
-  message,
-}: SignedKeyRequestMetadataOptions): Promise<Hex> {
-  const signature = await signKeyRequest({ account, message });
+export function encodeSignedKeyRequestMetadata(options: {
+  requestSigner: Address;
+  keyRequestSignature: Hex;
+  requestFid: bigint;
+  deadline: bigint;
+}): Hex {
   return encodeAbiParameters(SIGNED_KEY_REQUEST_METADATA_ABI, [
     {
-      requestFid: message.requestFid,
-      requestSigner: account.address,
-      signature: signature,
-      deadline: message.deadline,
+      requestFid: options.requestFid,
+      requestSigner: options.requestSigner,
+      signature: options.keyRequestSignature,
+      deadline: options.deadline,
+    },
+  ]);
+}
+
+export async function getSignedKeyRequestMetadata(
+  options: SignedKeyRequestMetadataOptions,
+): Promise<Hex> {
+  let signature;
+  if ("account" in options) {
+    signature = await signKeyRequest({
+      account: options.account,
+      message: options.message,
+    });
+  } else signature = options.keyRequestSignature;
+
+  return encodeAbiParameters(SIGNED_KEY_REQUEST_METADATA_ABI, [
+    {
+      requestFid: options.message.requestFid,
+      requestSigner:
+        "account" in options ? options.account.address : options.accountAddress,
+      signature,
+      deadline: options.message.deadline,
     },
   ]);
 }
@@ -178,7 +218,7 @@ export const KEY_GATEWAY_EIP_712_TYPES = {
   types: { Add: KEY_GATEWAY_ADD_TYPE },
 } as const;
 
-export type KeyGatewayAddMessage = {
+export type AddMessage = {
   /** FID owner address */
   owner: Address;
   /** Key type. The only currently supported key type is 1, for EdDSA signers. */
@@ -197,16 +237,21 @@ export type KeyGatewayAddMessage = {
 
 export type SignAddOptions = {
   account: Account;
-  message: KeyGatewayAddMessage;
+  message: AddMessage;
 };
+
+export function getAddData(message: AddMessage) {
+  return {
+    ...KEY_GATEWAY_EIP_712_TYPES,
+    primaryType: "Add" as const,
+    message,
+  };
+}
 
 export async function signAdd({
   account,
   message,
 }: SignAddOptions): Promise<Hex> {
-  return account.signTypedData({
-    ...KEY_GATEWAY_EIP_712_TYPES,
-    primaryType: "Add",
-    message: message,
-  });
+  const data = getAddData(message);
+  return account.signTypedData(data);
 }

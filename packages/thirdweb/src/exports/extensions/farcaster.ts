@@ -23,6 +23,7 @@ export {
   type SignedKeyRequestMessage,
   signKeyRequest,
   getKeyRequestData,
+  encodeSignedKeyRequestMetadata,
   getSignedKeyRequestMetadata,
   // add
   type AddMessage,

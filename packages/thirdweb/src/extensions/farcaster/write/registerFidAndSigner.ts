@@ -6,20 +6,41 @@ import type { Account } from "../../../wallets/interfaces/wallet.js";
 import type { Chain } from "../../../chains/types.js";
 import { getBundler } from "../contracts.js";
 import type { Hex } from "../../../utils/encoding/hex.js";
+import type { Prettify } from "../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the `registerFidAndSigner` function.
  */
-export type RegisterFidAndSignerParams = {
-  client: ThirdwebClient;
-  userAccount: Account;
-  appAccount: Account;
-  recoveryAddress: Address;
-  signerPublicKey: Hex;
-  chain?: Chain;
-  extraStorage?: bigint | number;
-  disableCache?: boolean;
-};
+export type RegisterFidAndSignerParams = Prettify<
+  {
+    client: ThirdwebClient;
+    recoveryAddress: Address;
+    signerPublicKey: Hex;
+    chain?: Chain;
+    extraStorage?: bigint | number;
+    disableCache?: boolean;
+  } & (
+    | {
+        userAccount: Account;
+      }
+    | {
+        registerSignature: Hex;
+        addSignature: Hex;
+        userAddress: Address;
+        deadline: bigint;
+      }
+  ) &
+    (
+      | {
+          appAccount: Account;
+        }
+      | {
+          signedKeyRequestMetadata: Hex;
+          appAccountAddress: Address;
+          deadline: bigint;
+        }
+    )
+>;
 
 /**
  * Registers a Farcaster fid and signer for the given wallet using the provided app account.
@@ -129,12 +150,19 @@ export function registerFidAndSigner(options: RegisterFidAndSignerParams) {
       });
     },
     params: async () => {
-      const deadline = BigInt(Math.floor(Date.now() / 1000) + 3600); // signatures last for 1 hour
+      const deadline =
+        "deadline" in options
+          ? options.deadline
+          : BigInt(Math.floor(Date.now() / 1000) + 3600); // default signatures last for 1 hour
+
       const { getFid } = await import("../read/getFid.js");
       const existingFid = await getFid({
         client: options.client,
         chain: options.chain,
-        address: options.userAccount.address,
+        address:
+          "userAccount" in options
+            ? options.userAccount.address
+            : options.userAddress,
         disableCache: options.disableCache,
       });
       if (existingFid !== 0n)
@@ -152,54 +180,75 @@ export function registerFidAndSigner(options: RegisterFidAndSignerParams) {
         "../__generated__/IKeyGateway/read/nonces.js"
       );
       const nonce = await nonces({
-        account: options.userAccount.address,
+        account:
+          "userAccount" in options
+            ? options.userAccount.address
+            : options.userAddress,
         contract: keyGateway,
       });
 
       const { signRegister, signAdd, getSignedKeyRequestMetadata } =
         await import("../eip712signatures.js");
-      const registerSignature = await signRegister({
-        account: options.userAccount,
-        message: {
-          nonce,
-          to: options.userAccount.address,
-          recovery: options.recoveryAddress,
-          deadline,
-        },
-      });
+
+      let registerSignature;
+      if ("userAccount" in options) {
+        registerSignature = await signRegister({
+          account: options.userAccount,
+          message: {
+            nonce,
+            to: options.userAccount.address,
+            recovery: options.recoveryAddress,
+            deadline,
+          },
+        });
+      } else registerSignature = options.registerSignature;
 
       const appFid = await getFid({
         client: options.client,
         chain: options.chain,
-        address: options.appAccount.address,
+        address:
+          "appAccount" in options
+            ? options.appAccount.address
+            : options.appAccountAddress,
         disableCache: options.disableCache,
       });
 
-      const signedKeyRequestMetadata = await getSignedKeyRequestMetadata({
-        account: options.appAccount,
-        message: {
-          requestFid: toBigInt(appFid),
-          key: options.signerPublicKey,
-          deadline,
-        },
-      });
+      let signedKeyRequestMetadata;
+      if ("appAccount" in options) {
+        signedKeyRequestMetadata = await getSignedKeyRequestMetadata({
+          account: options.appAccount,
+          message: {
+            requestFid: toBigInt(appFid),
+            key: options.signerPublicKey,
+            deadline,
+          },
+        });
+      } else signedKeyRequestMetadata = options.signedKeyRequestMetadata;
 
-      const addSignature = await signAdd({
-        account: options.userAccount,
-        message: {
-          owner: options.userAccount.address,
-          keyType: 1,
-          key: options.signerPublicKey,
-          metadataType: 1,
-          metadata: signedKeyRequestMetadata,
-          nonce,
-          deadline,
-        },
-      });
+      let addSignature;
+      if ("userAccount" in options) {
+        addSignature = await signAdd({
+          account: options.userAccount,
+          message: {
+            owner: options.userAccount.address,
+            keyType: 1,
+            key: options.signerPublicKey,
+            metadataType: 1,
+            metadata: signedKeyRequestMetadata,
+            nonce,
+            deadline,
+          },
+        });
+      } else {
+        addSignature = options.addSignature;
+      }
 
       return [
         {
-          to: options.userAccount.address,
+          to:
+            "userAccount" in options
+              ? options.userAccount.address
+              : options.userAddress,
           recovery: options.recoveryAddress,
           deadline,
           sig: registerSignature,

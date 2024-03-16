@@ -6,18 +6,39 @@ import type { Chain } from "../../../chains/types.js";
 import { getKeyGateway } from "../contracts.js";
 import type { Hex } from "../../../utils/encoding/hex.js";
 import { signAdd } from "../eip712signatures.js";
+import type { Prettify } from "../../../utils/type-utils.js";
+import type { Address } from "abitype";
 
 /**
  * Represents the parameters for the `addSignerFor` function.
  */
-export type AddSignerForParams = {
-  client: ThirdwebClient;
-  appAccount: Account;
-  userAccount: Account;
-  signerPublicKey: Hex;
-  chain?: Chain;
-  disableCache?: boolean;
-};
+export type AddSignerForParams = Prettify<
+  {
+    client: ThirdwebClient;
+    signerPublicKey: Hex;
+    chain?: Chain;
+    disableCache?: boolean;
+  } & (
+    | {
+        appAccount: Account;
+      }
+    | {
+        signedKeyRequestMetadata: Hex;
+        appAccountAddress: Address;
+        deadline: bigint;
+      }
+  ) &
+    (
+      | {
+          userAccount: Account;
+        }
+      | {
+          addSignature: Hex;
+          userAddress: Address;
+          deadline: bigint;
+        }
+    )
+>;
 
 /**
  * Adds farcaster signer for a given user. Helpful if you want to cover the gas fee for a user.
@@ -77,13 +98,19 @@ export function addSignerFor(options: AddSignerForParams) {
       [],
     ],
     params: async () => {
-      const deadline = BigInt(Math.floor(Date.now() / 1000) + 3600); // signatures last for 1 hour
+      const deadline =
+        "deadline" in options
+          ? options.deadline
+          : BigInt(Math.floor(Date.now() / 1000) + 3600); // default signatures last for 1 hour
 
       const { getFid } = await import("../read/getFid.js");
       const appFid = await getFid({
         client: options.client,
         chain: options.chain,
-        address: options.appAccount.address,
+        address:
+          "appAccount" in options
+            ? options.appAccount.address
+            : options.appAccountAddress,
         disableCache: options.disableCache,
       });
 
@@ -91,38 +118,49 @@ export function addSignerFor(options: AddSignerForParams) {
         "../eip712signatures.js"
       );
 
-      const signedKeyRequestMetadata = await getSignedKeyRequestMetadata({
-        account: options.appAccount,
-        message: {
-          requestFid: toBigInt(appFid),
-          key: options.signerPublicKey,
-          deadline,
-        },
-      });
+      let signedKeyRequestMetadata;
+      if ("appAccount" in options) {
+        signedKeyRequestMetadata = await getSignedKeyRequestMetadata({
+          account: options.appAccount,
+          message: {
+            requestFid: toBigInt(appFid),
+            key: options.signerPublicKey,
+            deadline,
+          },
+        });
+      } else signedKeyRequestMetadata = options.signedKeyRequestMetadata;
 
       const { nonces } = await import(
         "../__generated__/IKeyGateway/read/nonces.js"
       );
       const nonce = await nonces({
-        account: options.userAccount.address,
+        account:
+          "userAccount" in options
+            ? options.userAccount.address
+            : options.userAddress,
         contract: keyGateway,
       });
 
-      const addSignature = await signAdd({
-        account: options.userAccount,
-        message: {
-          owner: options.userAccount.address,
-          keyType: 1,
-          key: options.signerPublicKey,
-          metadataType: 1,
-          metadata: signedKeyRequestMetadata,
-          nonce,
-          deadline,
-        },
-      });
+      let addSignature;
+      if ("userAccount" in options) {
+        addSignature = await signAdd({
+          account: options.userAccount,
+          message: {
+            owner: options.userAccount.address,
+            keyType: 1,
+            key: options.signerPublicKey,
+            metadataType: 1,
+            metadata: signedKeyRequestMetadata,
+            nonce,
+            deadline,
+          },
+        });
+      } else addSignature = options.addSignature;
 
       return [
-        options.userAccount.address,
+        "userAccount" in options
+          ? options.userAccount.address
+          : options.userAddress,
         1,
         options.signerPublicKey,
         1,
