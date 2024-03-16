@@ -416,7 +416,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
                 maxContainerWidth={"200px"}
                 value={mediaFileUrl}
                 showUploadButton
-                showPreview={!!mediaFileUrl}
+                showPreview={nft?.metadata ? !!mediaFileUrl : true}
                 setValue={setFile}
                 border="1px solid"
                 borderColor="gray.200"
