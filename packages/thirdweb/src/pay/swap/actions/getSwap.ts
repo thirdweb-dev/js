@@ -1,10 +1,10 @@
-import { getClientFetch } from "../../../utils/fetch.js";
-import type { ThirdwebClient } from "../../../client/client.js";
-import { THIRDWEB_PAY_SWAP_ROUTE_ENDPOINT } from "../utils/definitions.js";
-import type { BaseTransactionOptions } from "../../../transaction/types.js";
-import type { ApproveParams } from "../../../extensions/erc20/write/approve.js";
-import { getContract } from "../../../contract/contract.js";
 import { defineChain } from "../../../chains/utils.js";
+import type { ThirdwebClient } from "../../../client/client.js";
+import { getContract } from "../../../contract/contract.js";
+import type { ApproveParams } from "../../../extensions/erc20/write/approve.js";
+import type { BaseTransactionOptions } from "../../../transaction/types.js";
+import { getClientFetch } from "../../../utils/fetch.js";
+import { getPayQuoteEndpoint } from "../utils/definitions.js";
 
 export type SwapRouteParams = {
   client: ThirdwebClient;
@@ -130,7 +130,7 @@ export async function getSwapRoute(
 ): Promise<SwapRoute> {
   try {
     const queryString = new URLSearchParams(params as any).toString();
-    const url = `${THIRDWEB_PAY_SWAP_ROUTE_ENDPOINT}?${queryString}`;
+    const url = `${getPayQuoteEndpoint()}?${queryString}`;
 
     const response = await getClientFetch(params.client)(url);
 

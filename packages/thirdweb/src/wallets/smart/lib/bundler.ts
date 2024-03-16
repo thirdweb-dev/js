@@ -52,6 +52,10 @@ async function sendBundlerRequest(args: {
 }) {
   const { userOp, options, operation } = args;
 
+  if (DEBUG) {
+    console.debug(`sending ${operation} with payload:`, userOp);
+  }
+
   const bundlerUrl =
     options.overrides?.bundlerUrl ?? getDefaultBundlerUrl(options.chain);
   const fetchWithHeaders = getClientFetch(options.client);

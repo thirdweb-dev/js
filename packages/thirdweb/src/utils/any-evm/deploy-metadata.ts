@@ -4,12 +4,12 @@ import type { Prettify } from "../type-utils.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import type { Hex } from "../encoding/hex.js";
 
-type FetchDeployMetadataOptions = {
+export type FetchDeployMetadataOptions = {
   uri: string;
   client: ThirdwebClient;
 };
 
-type FetchDeployMetadataResult = {
+export type FetchDeployMetadataResult = {
   compilerMetadata: PreDeployMetadata;
   extendedMetadata: FullPublishMetadata | undefined;
 };

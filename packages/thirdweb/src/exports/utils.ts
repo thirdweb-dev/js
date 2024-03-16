@@ -1,25 +1,25 @@
 // bytecode
-export { extractIPFSUri } from "../utils/bytecode/extractIPFS.js";
 export { detectMethod } from "../utils/bytecode/detectExtension.js";
+export { extractIPFSUri } from "../utils/bytecode/extractIPFS.js";
 export { extractMinimalProxyImplementationAddress } from "../utils/bytecode/extractMnimalProxyImplementationAddress.js";
-export { resolveImplementation } from "../utils/bytecode/resolveImplementation.js";
-export { ensureBytecodePrefix } from "../utils/bytecode/prefix.js";
 export { isContractDeployed } from "../utils/bytecode/is-contract-deployed.js";
+export { ensureBytecodePrefix } from "../utils/bytecode/prefix.js";
+export { resolveImplementation } from "../utils/bytecode/resolveImplementation.js";
 
 // units
 export { toEther, toTokens, toUnits, toWei } from "../utils/units.js";
 
 // any-evm utils
+export {
+  deployCreate2Factory,
+  getCreate2FactoryAddress,
+} from "../contract/deployment/utils/create-2-factory.js";
+export { computeDeploymentAddress } from "../utils/any-evm/compute-deployment-address.js";
 export { getInitBytecodeWithSalt } from "../utils/any-evm/get-init-bytecode-with-salt.js";
 export { getSaltHash } from "../utils/any-evm/get-salt-hash.js";
-export { computeDeploymentAddress } from "../utils/any-evm/compute-deployment-address.js";
-export { keccakId } from "../utils/any-evm/keccak-id.js";
 export { isEIP155Enforced } from "../utils/any-evm/is-eip155-enforced.js";
+export { keccakId } from "../utils/any-evm/keccak-id.js";
 export { getKeylessTransaction } from "../utils/any-evm/keyless-transaction.js";
-export {
-  getCreate2FactoryAddress,
-  deployCreate2Factory,
-} from "../contract/deployment/utils/create-2-factory.js";
 
 //signatures
 export {
@@ -33,63 +33,63 @@ export {
 
 // hex
 export {
+  boolToHex,
   // from
   fromHex,
-  type FromHexParameters,
-  type FromHexReturnType,
-  hexToBool,
-  type HexToBoolOpts,
-  hexToNumber,
-  type HexToNumberOpts,
   hexToBigInt,
-  type HexToBigIntOpts,
+  hexToBool,
+  hexToNumber,
   hexToString,
-  type HexToStringOpts,
   hexToUint8Array,
-  type HexToUint8ArrayOpts,
-  // to
-  toHex,
-  type ToHexParameters,
-  numberToHex,
-  type NumberToHexOpts,
-  stringToHex,
-  type StringToHexOpts,
-  uint8ArrayToHex,
-  type Uint8ArrayToHexOpts,
-  boolToHex,
-  type BoolToHexOpts,
   // util
   isHex,
-  type IsHexOptions,
+  numberToHex,
   padHex,
+  stringToHex,
+  // to
+  toHex,
+  uint8ArrayToHex,
+  type BoolToHexOpts,
+  type FromHexParameters,
+  type FromHexReturnType,
+  type HexToBigIntOpts,
+  type HexToBoolOpts,
+  type HexToNumberOpts,
+  type HexToStringOpts,
+  type HexToUint8ArrayOpts,
+  type IsHexOptions,
+  type NumberToHexOpts,
+  type StringToHexOpts,
+  type ToHexParameters,
+  type Uint8ArrayToHexOpts,
 } from "../utils/encoding/hex.js";
 
 // bytes
 // to
 export {
-  toBytes,
-  type ToBytesParameters,
   boolToBytes,
-  type BoolToBytesOpts,
   hexToBytes,
-  type HexToBytesOpts,
   numberToBytes,
   stringToBytes,
+  toBytes,
+  type BoolToBytesOpts,
+  type HexToBytesOpts,
   type StringToBytesOpts,
+  type ToBytesParameters,
 } from "../utils/encoding/to-bytes.js";
 // from
 export {
+  bytesToBigInt,
+  bytesToBool,
+  bytesToNumber,
+  bytesToString,
   fromBytes,
+  type BytesToBigIntOpts,
+  type BytesToBoolOpts,
+  type BytesToNumberOpts,
+  type BytesToStringOpts,
   type FromBytesParameters,
   type FromBytesReturnType,
-  bytesToBigInt,
-  type BytesToBigIntOpts,
-  bytesToNumber,
-  type BytesToNumberOpts,
-  bytesToString,
-  type BytesToStringOpts,
-  bytesToBool,
-  type BytesToBoolOpts,
 } from "../utils/encoding/from-bytes.js";
 
 // ------------------------------------------------
@@ -109,9 +109,9 @@ export { hashMessage } from "../utils/hashing/hashMessage.js";
 // address
 // ------------------------------------------------
 export {
+  checksumAddress,
   getAddress,
   isAddress,
-  checksumAddress,
   type Address,
   type AddressInput,
 } from "../utils/address.js";
@@ -120,3 +120,5 @@ export {
 // abi
 // ------------------------------------------------
 export { encodeAbiParameters } from "../utils/abi/encodeAbiParameters.js";
+
+export { setThirdwebDomains } from "../utils/domains.js";

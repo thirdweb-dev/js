@@ -5,7 +5,12 @@
  * 4. blockTime + contract + events -> logs with types and parsing (filtered by contract address +  event topics)
  */
 
-import type { Abi, AbiEvent, ExtractAbiEvents } from "abitype";
+import type {
+  Abi,
+  AbiEvent,
+  ExtractAbiEvent,
+  ExtractAbiEventNames,
+} from "abitype";
 import { prepareEvent, type PreparedEvent } from "../prepare-event.js";
 import {
   eth_getLogs,
@@ -21,26 +26,26 @@ import { resolveContractAbi } from "../../contract/actions/resolve-abi.js";
 
 export type GetContractEventsOptionsDirect<
   abi extends Abi,
-  abiEvent extends AbiEvent,
+  abiEvents extends PreparedEvent<AbiEvent>[],
   TStrict extends boolean,
 > = {
   contract: ThirdwebContract<abi>;
-  events?: PreparedEvent<abiEvent>[];
+  events?: abiEvents;
   strict?: TStrict;
 };
 
 export type GetContractEventsOptions<
   abi extends Abi,
-  abiEvent extends AbiEvent,
+  abiEvents extends PreparedEvent<AbiEvent>[],
   TStrict extends boolean,
 > = Prettify<
-  GetContractEventsOptionsDirect<abi, abiEvent, TStrict> & GetLogsBlockParams
+  GetContractEventsOptionsDirect<abi, abiEvents, TStrict> & GetLogsBlockParams
 >;
 
 export type GetContractEventsResult<
-  abiEvent extends AbiEvent,
+  abiEvents extends PreparedEvent<AbiEvent>[],
   TStrict extends boolean,
-> = ParseEventLogsResult<abiEvent, TStrict>;
+> = ParseEventLogsResult<abiEvents, TStrict>;
 
 /**
  * Retrieves events from a contract based on the provided options.
@@ -59,11 +64,13 @@ export type GetContractEventsResult<
  */
 export async function getContractEvents<
   const abi extends Abi,
-  const abiEvent extends AbiEvent = ExtractAbiEvents<abi>,
+  const abiEvents extends PreparedEvent<AbiEvent>[] = PreparedEvent<
+    ExtractAbiEvent<abi, ExtractAbiEventNames<abi>>
+  >[],
   const TStrict extends boolean = true,
 >(
-  options: GetContractEventsOptions<abi, abiEvent, TStrict>,
-): Promise<GetContractEventsResult<abiEvent, TStrict>> {
+  options: GetContractEventsOptions<abi, abiEvents, TStrict>,
+): Promise<GetContractEventsResult<abiEvents, TStrict>> {
   const { contract, events, ...restParams } = options;
 
   let resolvedEvents = events ?? [];
@@ -100,8 +107,11 @@ export async function getContractEvents<
   const logs = await Promise.all(
     logsParams.map((ethLogParams) => eth_getLogs(rpcRequest, ethLogParams)),
   );
+  const flattenLogs = logs
+    .flatMap((log) => log)
+    .sort((a, b) => Number((a.blockNumber ?? 0n) - (b.blockNumber ?? 0n)));
   return parseEventLogs({
-    logs: logs.flatMap((log) => log),
+    logs: flattenLogs,
     events: resolvedEvents,
   });
 }

@@ -336,8 +336,13 @@ export type LocalWalletExportOptions = {
  *  encryption: false
  * });
  * ```
+ *
+ * ### storage (optional)
+ * Storage interface of type [`AsyncStorage`](https://portal.thirdweb.com/references/typescript/v5/AsyncStorage) to save connected wallet data to the storage for auto-connect.
+ * If not provided, no wallet data will be saved to the storage by thirdweb SDK
  */
 export type LocalWalletLoadOptions = {
   strategy: "privateKey" | "mnemonic";
   encryption: LocalWalletDecryptOptions | false;
+  storage?: AsyncStorage;
 };

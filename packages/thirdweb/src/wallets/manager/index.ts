@@ -4,8 +4,8 @@ import { computedStore } from "../../reactive/computedStore.js";
 import { effect } from "../../reactive/effect.js";
 import { createStore } from "../../reactive/store.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
+import type { AsyncStorage } from "../storage/AsyncStorage.js";
 import { normalizeChainId } from "../utils/normalizeChainId.js";
-import { walletStorage } from "../storage/walletStorage.js";
 
 type WalletIdToConnectedWalletMap = Map<string, Wallet>;
 export type ConnectionStatus =
@@ -17,22 +17,26 @@ export type ConnectionStatus =
 const CONNECTED_WALLET_IDS = "thirdweb:connected-wallet-ids";
 const ACTIVE_WALLET_ID = "thirdweb:active-wallet-id";
 
+export type ConnectionManager = ReturnType<typeof createConnectionManager>;
+
 /**
  * Create a connection manager for Wallet connections
+ * @param storage - An instance of type [`AsyncStorage`](https://portal.thirdweb.com/references/typescript/v5/AsyncStorage)
  * @example
  * ```ts
  * const manager = createConnectionManager();
  * ```
  * @returns A connection manager object
  */
-export function createConnectionManager() {
+export function createConnectionManager(storage: AsyncStorage) {
   // stores
 
   // active wallet/account
-  const activeWallet = createStore<Wallet | undefined>(undefined);
-  const activeAccount = createStore<Account | undefined>(undefined);
-  const activeWalletChain = createStore<Chain | undefined>(undefined);
-  const activeWalletConnectionStatus = createStore<ConnectionStatus>("unknown");
+  const activeWalletStore = createStore<Wallet | undefined>(undefined);
+  const activeAccountStore = createStore<Account | undefined>(undefined);
+  const activeWalletChainStore = createStore<Chain | undefined>(undefined);
+  const activeWalletConnectionStatusStore =
+    createStore<ConnectionStatus>("unknown");
 
   // other connected accounts
   const walletIdToConnectedWalletMap =
@@ -67,11 +71,11 @@ export function createConnectionManager() {
     walletIdToConnectedWalletMap.setValue(newMap);
 
     // if disconnecting the active wallet
-    if (activeWallet.getValue() === wallet) {
-      activeWallet.setValue(undefined);
-      activeAccount.setValue(undefined);
-      activeWalletChain.setValue(undefined);
-      activeWalletConnectionStatus.setValue("disconnected");
+    if (activeWalletStore.getValue() === wallet) {
+      activeWalletStore.setValue(undefined);
+      activeAccountStore.setValue(undefined);
+      activeWalletChainStore.setValue(undefined);
+      activeWalletConnectionStatusStore.setValue("disconnected");
     }
   };
 
@@ -93,10 +97,10 @@ export function createConnectionManager() {
     }
 
     // update active states
-    activeWallet.setValue(wallet);
-    activeAccount.setValue(account);
-    activeWalletChain.setValue(wallet.getChain());
-    activeWalletConnectionStatus.setValue("connected");
+    activeWalletStore.setValue(wallet);
+    activeAccountStore.setValue(account);
+    activeWalletChainStore.setValue(wallet.getChain());
+    activeWalletConnectionStatusStore.setValue("connected");
 
     // setup listeners
     if (wallet.events) {
@@ -113,13 +117,13 @@ export function createConnectionManager() {
             address: newAddress,
           };
 
-          activeAccount.setValue(newAccount);
+          activeAccountStore.setValue(newAccount);
         }
       };
 
       const onChainChanged = (newChainId: string) => {
         const chainId = normalizeChainId(newChainId);
-        activeWalletChain.setValue(defineChain(chainId));
+        activeWalletChainStore.setValue(defineChain(chainId));
       };
 
       const handleDisconnect = () => {
@@ -149,7 +153,7 @@ export function createConnectionManager() {
         .map((acc) => acc?.metadata.id)
         .filter((c) => !!c) as string[];
 
-      walletStorage.setItem(CONNECTED_WALLET_IDS, JSON.stringify(ids));
+      storage.setItem(CONNECTED_WALLET_IDS, JSON.stringify(ids));
     },
     [connectedWallets],
     false,
@@ -158,19 +162,19 @@ export function createConnectionManager() {
   // save active wallet id to storage
   effect(
     () => {
-      const value = activeWallet.getValue()?.metadata.id;
+      const value = activeWalletStore.getValue()?.metadata.id;
       if (value) {
-        walletStorage.setItem(ACTIVE_WALLET_ID, value);
+        storage.setItem(ACTIVE_WALLET_ID, value);
       } else {
-        walletStorage.removeItem(ACTIVE_WALLET_ID);
+        storage.removeItem(ACTIVE_WALLET_ID);
       }
     },
-    [activeWallet],
+    [activeWalletStore],
     false,
   );
 
   const switchActiveWalletChain = async (chain: Chain) => {
-    const wallet = activeWallet.getValue();
+    const wallet = activeWalletStore.getValue();
     if (!wallet) {
       throw new Error("no wallet found");
     }
@@ -181,20 +185,20 @@ export function createConnectionManager() {
 
     await wallet.switchChain(chain);
     // for wallets that dont implement events, just set it manually
-    activeWalletChain.setValue(wallet.getChain());
+    activeWalletChainStore.setValue(wallet.getChain());
   };
 
   return {
     // account
-    activeWallet,
-    activeAccount,
+    activeWalletStore: activeWalletStore,
+    activeAccountStore: activeAccountStore,
     connectedWallets,
     addConnectedWallet,
     disconnectWallet,
     setActiveWallet,
-    activeWalletChain,
+    activeWalletChainStore: activeWalletChainStore,
     switchActiveWalletChain,
-    activeWalletConnectionStatus,
+    activeWalletConnectionStatusStore: activeWalletConnectionStatusStore,
     isAutoConnecting,
     removeConnectedWallet,
   };
@@ -204,9 +208,11 @@ export function createConnectionManager() {
  *
  * @internal
  */
-export async function getStoredConnectedWalletIds(): Promise<string[] | null> {
+export async function getStoredConnectedWalletIds(
+  storage: AsyncStorage,
+): Promise<string[] | null> {
   try {
-    const value = await walletStorage.getItem(CONNECTED_WALLET_IDS);
+    const value = await storage.getItem(CONNECTED_WALLET_IDS);
     if (value) {
       return JSON.parse(value) as string[];
     }
@@ -219,9 +225,11 @@ export async function getStoredConnectedWalletIds(): Promise<string[] | null> {
 /**
  * @internal
  */
-export async function getStoredActiveWalletId(): Promise<string | null> {
+export async function getStoredActiveWalletId(
+  storage: AsyncStorage,
+): Promise<string | null> {
   try {
-    const value = await walletStorage.getItem(ACTIVE_WALLET_ID);
+    const value = await storage.getItem(ACTIVE_WALLET_ID);
     if (value) {
       return value;
     }

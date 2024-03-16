@@ -1,7 +1,11 @@
 import type { ThirdwebClient } from "../../client/client.js";
 import { computeDeploymentAddress } from "./compute-deployment-address.js";
 import type { Chain } from "../../chains/types.js";
-import { computePublishedContractDeploymentInfo } from "./compute-published-contract-deploy-info.js";
+import {
+  computeDeploymentInfoFromContractId,
+  computeDeploymentInfoFromMetadata,
+} from "./compute-published-contract-deploy-info.js";
+import type { PreDeployMetadata } from "./deploy-metadata.js";
 
 /**
  * Predicts the implementation address of any published contract
@@ -14,7 +18,7 @@ import { computePublishedContractDeploymentInfo } from "./compute-published-cont
  * ```ts
  * import { computePublishedContractAddress } from "thirdweb/contract";
  *
- * const address = await computePublishedContractAddress({
+ * const address = await computeAddressFromContractId({
  *   client,
  *   chain,
  *   contractId,
@@ -23,12 +27,25 @@ import { computePublishedContractDeploymentInfo } from "./compute-published-cont
  * ```
  * @returns A promise that resolves to the predicted address of the contract.
  */
-export async function computePublishedContractAddress(args: {
+export async function computeAddressFromContractId(args: {
   client: ThirdwebClient;
   chain: Chain;
   contractId: string;
-  constructorParams: unknown[]; // TODO automate contract params from known inputs
+  constructorParams: unknown[];
 }): Promise<string> {
-  const info = await computePublishedContractDeploymentInfo(args);
+  const info = await computeDeploymentInfoFromContractId(args);
+  return computeDeploymentAddress(info);
+}
+
+/**
+ * @internal
+ */
+export async function computeAddressFromMetadata(args: {
+  client: ThirdwebClient;
+  chain: Chain;
+  compilerMetadata: PreDeployMetadata;
+  constructorParams: unknown[];
+}): Promise<string> {
+  const info = await computeDeploymentInfoFromMetadata(args);
   return computeDeploymentAddress(info);
 }

@@ -1,13 +1,14 @@
+import type { Chain as ViemChain } from "viem";
 import type { ThirdwebClient } from "../client/client.js";
+import { DEFAULT_RPC_URL, getThirdwebDomains } from "../utils/domains.js";
 import { isThirdwebUrl } from "../utils/fetch.js";
 import { withCache } from "../utils/promise/withCache.js";
 import type {
-  ChainMetadata,
   Chain,
+  ChainMetadata,
   ChainOptions,
   LegacyChain,
 } from "./types.js";
-import type { Chain as ViemChain } from "viem";
 
 /**
  * Defines a chain with the given options.
@@ -114,15 +115,19 @@ type GetRpcUrlForChainOptions = {
  * @internal
  */
 export function getRpcUrlForChain(options: GetRpcUrlForChainOptions): string {
+  const baseRpcUrl = getThirdwebDomains().rpc;
+
   // if the chain is just a number, construct the RPC URL using the chain ID and client ID
   if (typeof options.chain === "number") {
-    return `https://${options.chain}.rpc.thirdweb.com/${options.client.clientId}`;
+    return `https://${options.chain}.${baseRpcUrl}/${options.client.clientId}`;
   }
   const { rpc } = options.chain;
 
   // add on the client ID to the RPC URL if it's a thirdweb URL
   if (isThirdwebUrl(rpc)) {
-    const rpcUrl = new URL(options.chain.rpc);
+    const rpcUrl = new URL(
+      options.chain.rpc.replace(DEFAULT_RPC_URL, baseRpcUrl),
+    );
     rpcUrl.pathname = `/${options.client.clientId}`;
     return rpcUrl.toString();
   }

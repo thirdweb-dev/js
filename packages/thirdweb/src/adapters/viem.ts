@@ -207,7 +207,12 @@ function toViemWalletClient(options: ToViemWalletClientOptions): WalletClient {
         });
       }
       if (request.method === "eth_signTypedData_v4") {
-        return account.signTypedData(JSON.parse(request.params[1]));
+        const data = JSON.parse(request.params[1]);
+        // deleting EIP712 Domain as it results in ambiguous primary type on some cases
+        // according to the spec this should be built in
+        // TODO figure out if it actually causes problems
+        delete data.types.EIP712Domain;
+        return account.signTypedData(data);
       }
       return rpcClient(request);
     },
