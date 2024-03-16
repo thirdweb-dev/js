@@ -11,6 +11,15 @@ import type { Address } from "abitype";
 
 /**
  * Represents the parameters for the `addSignerFor` function.
+ *
+ * @remarks
+ *
+ * This function can be used wither be provided pre-generated signatures or the wallet accounts directly.
+ * This is done so the helpers can be used when there's no direct access to the account, but signatures can be generated (e.g. engine)
+ *
+ * If the `userAccount` is provided, the `addSignature`, `userAddress`, and `deadline` must be provided.
+ * If the `appAccount` is provided, the `signedKeyRequestMetadata`, `appAccountAddress` and `deadline` must be provided.
+ * `deadline` must match the one used to generate the signatures.
  */
 export type AddSignerForParams = Prettify<
   {
@@ -103,14 +112,21 @@ export function addSignerFor(options: AddSignerForParams) {
           ? options.deadline
           : BigInt(Math.floor(Date.now() / 1000) + 3600); // default signatures last for 1 hour
 
+      const appAccountAddress =
+        "appAccount" in options
+          ? options.appAccount.address
+          : options.appAccountAddress;
+      const userAddress =
+        "userAccount" in options
+          ? options.userAccount.address
+          : options.userAddress;
+
+      // Fetch the app's FID
       const { getFid } = await import("../read/getFid.js");
       const appFid = await getFid({
         client: options.client,
         chain: options.chain,
-        address:
-          "appAccount" in options
-            ? options.appAccount.address
-            : options.appAccountAddress,
+        address: appAccountAddress,
         disableCache: options.disableCache,
       });
 
@@ -118,6 +134,7 @@ export function addSignerFor(options: AddSignerForParams) {
         "../eip712signatures.js"
       );
 
+      // Generate the signedKeyRequestMetadata signature if appAccount is provided
       let signedKeyRequestMetadata;
       if ("appAccount" in options) {
         signedKeyRequestMetadata = await getSignedKeyRequestMetadata({
@@ -130,23 +147,22 @@ export function addSignerFor(options: AddSignerForParams) {
         });
       } else signedKeyRequestMetadata = options.signedKeyRequestMetadata;
 
+      // Fetch the user's current key gateway nonce
       const { nonces } = await import(
         "../__generated__/IKeyGateway/read/nonces.js"
       );
       const nonce = await nonces({
-        account:
-          "userAccount" in options
-            ? options.userAccount.address
-            : options.userAddress,
+        account: userAddress,
         contract: keyGateway,
       });
 
+      // Generate the add signature if userAccount was provided
       let addSignature;
       if ("userAccount" in options) {
         addSignature = await signAdd({
           account: options.userAccount,
           message: {
-            owner: options.userAccount.address,
+            owner: userAddress,
             keyType: 1,
             key: options.signerPublicKey,
             metadataType: 1,
@@ -158,9 +174,7 @@ export function addSignerFor(options: AddSignerForParams) {
       } else addSignature = options.addSignature;
 
       return [
-        "userAccount" in options
-          ? options.userAccount.address
-          : options.userAddress,
+        userAddress,
         1,
         options.signerPublicKey,
         1,

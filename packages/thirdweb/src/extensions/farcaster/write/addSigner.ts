@@ -10,6 +10,14 @@ import type { Address } from "abitype";
 
 /**
  * Represents the parameters for the `addSigner` function.
+ *
+ * @remarks
+ *
+ * This function can be used wither be provided pre-generated signatures or the wallet accounts directly.
+ * This is done so the helpers can be used when there's no direct access to the account, but signatures can be generated (e.g. engine)
+ *
+ * If the `appAccount` is provided, the `signedKeyRequestMetadata`, `appAccountAddress` and `deadline` must be provided.
+ * `deadline` must match the one used to generate the signature.
  */
 export type AddSignerParams = Prettify<
   {
