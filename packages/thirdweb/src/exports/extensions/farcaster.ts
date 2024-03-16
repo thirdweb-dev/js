@@ -13,11 +13,32 @@ export {
   getIdGateway,
 } from "../../extensions/farcaster/contracts.js";
 
+// EIP712 Signatures
+export {
+  // register
+  type RegisterMessage,
+  signRegister,
+  getRegisterData,
+  // key request
+  type SignedKeyRequestMessage,
+  signKeyRequest,
+  getKeyRequestData,
+  getSignedKeyRequestMetadata,
+  // add
+  type AddMessage,
+  signAdd,
+  getAddData,
+} from "../../extensions/farcaster/eip712signatures.js";
+
 // Helper Functions
 export {
   type GetFidParams,
   getFid,
 } from "../../extensions/farcaster/read/getFid.js";
+export {
+  type GetNonceParams,
+  getNonce,
+} from "../../extensions/farcaster/read/getNonce.js";
 export {
   type GetRegistrationPriceParams,
   getRegistrationPrice,
