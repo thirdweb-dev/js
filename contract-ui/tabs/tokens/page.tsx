@@ -1,5 +1,6 @@
 import { TokenAirdropButton } from "./components/airdrop-button";
 import { TokenBurnButton } from "./components/burn-button";
+import { TokenClaimButton } from "./components/claim-button";
 import { TokenMintButton } from "./components/mint-button";
 import { TokenSupply } from "./components/supply";
 import { TokenTransferButton } from "./components/transfer-button";
@@ -52,6 +53,7 @@ export const ContractTokensPage: React.FC<ContractTokenPageProps> = ({
           gap={2}
           w="inherit"
         >
+          <TokenClaimButton contractQuery={contractQuery} />
           <TokenBurnButton contractQuery={contractQuery} />
           <TokenAirdropButton contractQuery={contractQuery} />
           <TokenTransferButton contractQuery={contractQuery} />
