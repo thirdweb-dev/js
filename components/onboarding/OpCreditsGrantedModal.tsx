@@ -6,32 +6,59 @@ import {
   AccordionPanel,
   Box,
   Flex,
-  Link,
+  Icon,
   Modal,
   ModalBody,
-  ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalHeader,
-  useDisclosure,
+  ModalOverlay,
+  SimpleGrid,
 } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
-import { Text, Card, Heading } from "tw-components";
+import { formatToDollars } from "components/settings/Account/Billing/CreditsButton";
+import { useMemo } from "react";
+import { FaXTwitter } from "react-icons/fa6";
+import { SiOpensea } from "react-icons/si";
+import { Text, Card, Heading, TrackedLinkButton } from "tw-components";
 
-export const OpCreditsGrantedModal = () => {
-  const { isOpen, onClose } = useDisclosure();
+interface OpCreditsGrantedModalProps {
+  setSawYouGotCredits: (value: boolean) => void;
+  creditValue: number;
+}
+
+export const OpCreditsGrantedModal: React.FC<OpCreditsGrantedModalProps> = ({
+  setSawYouGotCredits,
+  creditValue,
+}) => {
+  const creditValueInDollars = useMemo(
+    () => formatToDollars(creditValue),
+    [creditValue],
+  );
+
+  const twitterIntentUrl = useMemo(() => {
+    const url = new URL("https://twitter.com/intent/tweet");
+    url.searchParams.append(
+      "text",
+      `Just got a Superchain Sponsorship from @thirdweb and @Optimism ${creditValueInDollars && `valued at ${creditValueInDollars} `}and an NFT minted on OP Mainnet!
+
+Apply for sponsorship here:`,
+    );
+    url.searchParams.append("url", "https://thirdweb.com/grant/superchain");
+    return url.href;
+  }, [creditValueInDollars]);
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal
+      isOpen={true}
+      onClose={() => null}
+      isCentered
+      closeOnOverlayClick={false}
+      closeOnEsc={false}
+    >
+      <ModalOverlay />
       <ModalContent>
-        <ModalHeader>
-          Congratulations, you&apos;ve received OP Credits
-        </ModalHeader>
-        <ModalCloseButton
-          onClick={() => {
-            onClose();
-          }}
-        />
+        <ModalHeader textAlign="center">Congratulations!</ModalHeader>
         <ModalBody>
           <Flex flexDir="column" gap={4} position="relative">
             <ChakraNextImage
@@ -61,17 +88,63 @@ export const OpCreditsGrantedModal = () => {
               }}
             />
             <Card as={Flex} alignItems="center" gap={2} flexDir="column">
+              <Text letterSpacing="wider" fontWeight="bold">
+                You have received
+              </Text>
               <Heading color="bgBlack" size="title.2xl" fontWeight="extrabold">
-                $250
+                {creditValueInDollars}
               </Heading>
               <Text letterSpacing="wider" fontWeight="bold">
                 GAS CREDITS
               </Text>
               <Text textAlign="center" color="faded">
-                Claimed credits will expire in 90 days.
+                Claimed credits will expire in 6 months.
               </Text>
             </Card>
-            <Accordion mt={8} allowMultiple rounded="xl">
+            <Card as={Flex} flexDir="column" p={0}>
+              <Flex p={4} mx="auto">
+                <Text
+                  letterSpacing="wider"
+                  fontWeight="bold"
+                  textAlign="center"
+                >
+                  You have received an NFT on OP Mainnet
+                </Text>
+              </Flex>
+              <Box position="relative">
+                <ChakraNextImage
+                  src={require("public/assets/dashboard/op-sponsorship-nft.png")}
+                  alt=""
+                  w="full"
+                  priority
+                />
+              </Box>
+              <SimpleGrid columns={{ base: 1, md: 2 }} gap={4} p={4}>
+                <TrackedLinkButton
+                  isExternal
+                  href={twitterIntentUrl}
+                  noIcon
+                  variant="outline"
+                  category="op-sponsorship"
+                  label="share-on-x"
+                >
+                  <Icon as={FaXTwitter} boxSize={6} mr={2} />
+                  Post
+                </TrackedLinkButton>
+                <TrackedLinkButton
+                  isExternal
+                  href="https://opensea.io/collection/superchain-builder"
+                  noIcon
+                  variant="outline"
+                  category="op-sponsorship"
+                  label="view-nft"
+                >
+                  <Icon as={SiOpensea} boxSize={6} mr={2} />
+                  View NFT
+                </TrackedLinkButton>
+              </SimpleGrid>
+            </Card>
+            <Accordion allowMultiple rounded="xl">
               <AccordionItem borderColor="borderColor">
                 <Text fontSize="1rem">
                   <AccordionButton p={4} fontWeight="medium">
@@ -89,34 +162,29 @@ export const OpCreditsGrantedModal = () => {
                     </Text>
                     <Text color="faded">
                       Credits apply across all API keys. You can see how many
-                      credits you have left at the top of the dashboard and{" "}
-                      <Link href="/dashboard/settings/billing" color="blue.500">
-                        billing page
-                      </Link>
-                      .
+                      credits you have left at the top of the dashboard and in
+                      the billing page.
                     </Text>
-                  </Flex>
-                </AccordionPanel>
-              </AccordionItem>
-              <AccordionItem borderColor="borderColor">
-                <Text fontSize="1rem">
-                  <AccordionButton p={4} fontWeight="medium">
-                    <Box as="span" flex="1" textAlign="left">
-                      Eligible chains
-                    </Box>
-                    <AccordionIcon />
-                  </AccordionButton>
-                </Text>
-                <AccordionPanel pb={6}>
-                  <Flex direction="column" gap={4}>
-                    <Text color="faded">Optimism, Base, Zora, Mode.</Text>
                   </Flex>
                 </AccordionPanel>
               </AccordionItem>
             </Accordion>
           </Flex>
         </ModalBody>
-        <ModalFooter />
+        <ModalFooter>
+          <TrackedLinkButton
+            href="/dashboard/connect/account-abstraction?fromOpCredits"
+            category="op-sponsorship"
+            label="start-using-credits"
+            onClick={() => {
+              setSawYouGotCredits(true);
+            }}
+            w="full"
+            colorScheme="blue"
+          >
+            Start using gas credits
+          </TrackedLinkButton>
+        </ModalFooter>
       </ModalContent>
     </Modal>
   );

@@ -34,6 +34,7 @@ import { bigNumberReplacer } from "utils/bignumber";
 import { isBrowser } from "utils/isBrowser";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import { isProd } from "constants/rpc";
+import { OpCreditsGrantedModalWrapper } from "components/onboarding/OpCreditsGrantedModalWrapper";
 
 const apolloClient = new ApolloClient({
   uri: process.env.NEXT_PUBLIC_PAYMENTS_API,
@@ -156,6 +157,7 @@ export const AppLayout: ComponentWithChildren<AppLayoutProps> = (props) => {
                         <ConfigModal />
 
                         <OnboardingModal />
+                        <OpCreditsGrantedModalWrapper />
 
                         <AppShell {...props} />
                       </SanctionedAddressesChecker>
