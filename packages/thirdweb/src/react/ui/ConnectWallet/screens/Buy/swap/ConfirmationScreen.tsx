@@ -35,7 +35,7 @@ import { useTrack } from "../../../../hooks/useTrack.js";
 import { isNativeToken, type ERC20OrNativeToken } from "../../nativeToken.js";
 import { SwapFees } from "./SwapFees.js";
 import { addPendingSwapTransaction } from "./pendingSwapTx.js";
-import { fallbackChainIcon } from "../../../../components/ChainIcon.js";
+import { genericTokenIcon } from "../../../defaultTokens.js";
 
 /**
  * @internal
@@ -74,6 +74,7 @@ export function ConfirmationScreen(props: {
   const fromTokenSymbol = isNativeToken(props.fromToken)
     ? fromChain.data?.nativeCurrency?.symbol
     : props.fromToken?.symbol;
+
   const toTokenSymbol = isNativeToken(props.toToken)
     ? toChain.data?.nativeCurrency?.symbol
     : props.toToken?.symbol;
@@ -337,9 +338,7 @@ function TokenSelection(props: {
   symbol: string;
 }) {
   const chainQuery = useChainQuery(props.chain);
-  const tokenIcon = isNativeToken(props.token)
-    ? chainQuery.data?.icon?.url
-    : props.token.icon;
+  const tokenIcon = isNativeToken(props.token) ? undefined : props.token.icon;
   return (
     <div>
       <Text size="sm" color="secondaryText">
@@ -348,16 +347,12 @@ function TokenSelection(props: {
       <Spacer y="xxs" />
       <TokenInfoContainer>
         <Container flex="row" gap="md" center="y">
-          {tokenIcon ? (
-            <Img
-              width={iconSize.lg}
-              height={iconSize.lg}
-              src={tokenIcon}
-              fallbackImage={fallbackChainIcon}
-            />
-          ) : (
-            <Skeleton width={iconSize.lg} height={iconSize.lg} />
-          )}
+          <Img
+            width={iconSize.lg}
+            height={iconSize.lg}
+            src={tokenIcon || genericTokenIcon}
+            fallbackImage={genericTokenIcon}
+          />
 
           <Container flex="column" gap="xxs">
             <Text color="primaryText" size="sm">

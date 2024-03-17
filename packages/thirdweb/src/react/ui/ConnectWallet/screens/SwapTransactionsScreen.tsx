@@ -43,8 +43,10 @@ export function SwapTransactionsScreen(props: { onBack: () => void }) {
         flex="column"
         gap="md"
         px="md"
+        scrollY
         style={{
           minHeight: "200px",
+          maxHeight: "350px",
         }}
       >
         {reversedTxs.length === 0 && (

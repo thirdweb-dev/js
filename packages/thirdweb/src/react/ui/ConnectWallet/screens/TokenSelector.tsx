@@ -1,10 +1,9 @@
 import { CrossCircledIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
-import { useChainQuery } from "../../../hooks/others/useChainQuery.js";
 import { useWalletBalance } from "../../../hooks/others/useWalletBalance.js";
 import { useTWLocale } from "../../../providers/locale-provider.js";
 import { useActiveAccount } from "../../../providers/wallet-provider.js";
-import { ChainIcon, fallbackChainIcon } from "../../components/ChainIcon.js";
+import { fallbackChainIcon } from "../../components/ChainIcon.js";
 import { Img } from "../../components/Img.js";
 import { Skeleton } from "../../components/Skeleton.js";
 import { Spacer } from "../../components/Spacer.js";
@@ -14,7 +13,7 @@ import { Button } from "../../components/buttons.js";
 import { Input } from "../../components/formElements.js";
 import { useCustomTheme } from "../../design-system/CustomThemeProvider.js";
 import { spacing, iconSize, fontSize } from "../../design-system/index.js";
-import type { TokenInfo } from "../defaultTokens.js";
+import { genericTokenIcon, type TokenInfo } from "../defaultTokens.js";
 import { Text } from "../../components/text.js";
 import styled from "@emotion/styled";
 import type { Chain } from "../../../../chains/types.js";
@@ -43,7 +42,6 @@ export function TokenSelector(props: {
   });
 
   const locale = useTWLocale().connectWallet.sendFundsScreen;
-  const chainQuery = useChainQuery(chain);
 
   let tokenList = props.tokenList;
 
@@ -51,7 +49,7 @@ export function TokenSelector(props: {
     tokenList = [
       {
         ...tokenQuery.data,
-        icon: chainQuery.data?.icon?.url || "",
+        icon: "",
         address: input,
       },
       ...tokenList,
@@ -111,7 +109,9 @@ export function TokenSelector(props: {
             return (
               <SelectTokenButton
                 onClick={() => props.onTokenSelect(token)}
-                token={token}
+                tokenAddress={token.address}
+                tokenIcon={token.icon}
+                tokenName={token.name}
                 key={token.address}
                 chain={props.chain}
               />
@@ -160,36 +160,30 @@ export function TokenSelector(props: {
 }
 
 function SelectTokenButton(props: {
-  token?: TokenInfo;
+  // token?: TokenInfo;
+  tokenAddress?: string; // if no address is given - we assume it's the native token
+  tokenName?: string;
+  tokenIcon?: string;
   chain: Chain;
   onClick: () => void;
 }) {
   const account = useActiveAccount();
-  const balanceQuery = useWalletBalance({
+  const tokenBalanceQuery = useWalletBalance({
     account,
     chain: props.chain,
-    tokenAddress: props.token?.address,
+    tokenAddress: props.tokenAddress,
   });
 
-  const chainQuery = useChainQuery(props.chain);
-
-  const tokenName = props.token?.name || balanceQuery.data?.name;
+  const tokenName = props.tokenName || tokenBalanceQuery.data?.name;
 
   return (
     <SelectTokenBtn fullWidth variant="secondary" onClick={props.onClick}>
-      {/* icon */}
-      {props.token?.icon ? (
-        <Img
-          width={iconSize.lg}
-          height={iconSize.lg}
-          src={props.token.icon}
-          fallbackImage={fallbackChainIcon}
-        />
-      ) : chainQuery.data ? (
-        <ChainIcon chain={chainQuery.data} size={iconSize.lg} />
-      ) : (
-        <Skeleton height={iconSize.lg} width={iconSize.lg} />
-      )}
+      <Img
+        width={iconSize.lg}
+        height={iconSize.lg}
+        src={props.tokenIcon || genericTokenIcon}
+        fallbackImage={fallbackChainIcon}
+      />
 
       <Container flex="column" gap="xs">
         {tokenName ? (
@@ -200,8 +194,8 @@ function SelectTokenButton(props: {
           <Skeleton height={fontSize.md} width="150px" />
         )}
 
-        {balanceQuery.data ? (
-          <Text size="xs"> {formatTokenBalance(balanceQuery.data)}</Text>
+        {tokenBalanceQuery.data ? (
+          <Text size="xs"> {formatTokenBalance(tokenBalanceQuery.data)}</Text>
         ) : (
           <Skeleton height={fontSize.xs} width="100px" />
         )}

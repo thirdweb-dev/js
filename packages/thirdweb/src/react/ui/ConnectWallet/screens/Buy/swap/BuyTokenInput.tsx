@@ -39,7 +39,6 @@ export function BuyTokenInput(props: {
   });
 
   const tokenSymbol = token?.symbol || balanceQuery.data?.symbol;
-  const tokenIcon = token?.icon || chainQuery.data?.icon?.url;
 
   return (
     <Container>
@@ -85,7 +84,7 @@ export function BuyTokenInput(props: {
         <TokenSelectorButton
           onClick={props.onTokenClick}
           token={props.token}
-          tokenIcon={tokenIcon}
+          tokenIcon={token?.icon}
           tokenSymbol={tokenSymbol}
           style={{
             padding: 0,
