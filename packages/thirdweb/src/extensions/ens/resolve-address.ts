@@ -7,9 +7,11 @@ import { prepareContractCall } from "../../transaction/prepare-contract-call.js"
 import { toHex } from "../../utils/encoding/hex.js";
 import { namehash } from "../../utils/ens/namehash.js";
 import { packetToBytes } from "../../utils/ens/packetToBytes.js";
-import { isAddress } from "../../utils/address.js";
+import { getAddress, isAddress } from "../../utils/address.js";
 import { LruMap } from "../../utils/caching/lru.js";
 import type { Chain } from "../../chains/types.js";
+import { decodeFunctionResult } from "../../abi/decode.js";
+import { prepareMethod } from "../../utils/abi/prepare-method.js";
 
 export type ResolveAddressOptions = {
   client: ThirdwebClient;
@@ -38,10 +40,10 @@ const UNIVERSAL_RESOLVER_ADDRESS = "0xce01f8eee7E479C928F8919abD53E553a36CeF67";
 export async function resolveAddress(options: ResolveAddressOptions) {
   const { client, name, resolverAddress, resolverChain } = options;
   if (isAddress(name)) {
-    return name;
+    return getAddress(name);
   }
   if (ENS_ADDRESS_CACHE.has(name)) {
-    return ENS_ADDRESS_CACHE.get(name);
+    return ENS_ADDRESS_CACHE.get(name) as string;
   }
   const contract = getContract({
     client,
@@ -54,8 +56,9 @@ export async function resolveAddress(options: ResolveAddressOptions) {
     name: toHex(packetToBytes(name)),
     data,
   });
-  ENS_ADDRESS_CACHE.set(name, result[1]);
-  return result[1];
+  const resolvedAddress = getAddress(`0x${result[0].slice(-40)}`);
+  ENS_ADDRESS_CACHE.set(name, resolvedAddress);
+  return resolvedAddress;
 }
 
 async function encodeAddrCall(options: {
