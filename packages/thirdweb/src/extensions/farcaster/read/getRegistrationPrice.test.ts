@@ -2,6 +2,7 @@ import { describe, it, expect, vi, afterEach } from "vitest";
 
 import { getRegistrationPrice } from "./getRegistrationPrice.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
+import { FORKED_OPTIMISM_CHAIN } from "~test/chains.js";
 
 const fetchSpy = vi.spyOn(globalThis, "fetch");
 
@@ -13,17 +14,19 @@ describe("farcaster.getRegistrationPrice", () => {
   it("should return the price to register a new fid", async () => {
     const price = await getRegistrationPrice({
       client: TEST_CLIENT,
+      chain: FORKED_OPTIMISM_CHAIN,
     });
-    expect(price).toBe(814540083517510n);
+    expect(price).toBe(824603002115370n);
     expect(fetchSpy).toHaveBeenCalledTimes(1);
   });
 
   it("should return the price to register a new fid with extra storage", async () => {
     const price = await getRegistrationPrice({
       client: TEST_CLIENT,
+      chain: FORKED_OPTIMISM_CHAIN,
       extraStorage: 3,
     });
-    expect(price).toBe(814540083517510n * 4n);
+    expect(price).toBe(3298412008461477n);
     expect(fetchSpy).toHaveBeenCalledTimes(1);
   });
 });

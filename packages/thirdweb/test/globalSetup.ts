@@ -1,6 +1,6 @@
 import { sha256 } from "@noble/hashes/sha256";
 import { startProxy } from "@viem/anvil";
-import { FORK_BLOCK_NUMBER } from "./src/chains.js";
+import { FORK_BLOCK_NUMBER, OPTIMISM_FORK_BLOCK_NUMBER } from "./src/chains.js";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require("dotenv-mono").load();
@@ -26,7 +26,21 @@ export default async function globalSetup() {
     },
   });
 
+  const shutdownOptimism = await startProxy({
+    port: 8546,
+    options: {
+      chainId: 10,
+      forkUrl: `https://10.rpc.thirdweb.com/${clientId}`,
+      forkHeader: { "x-secret-key": SECRET_KEY },
+      forkChainId: 10,
+      forkBlockNumber: OPTIMISM_FORK_BLOCK_NUMBER,
+      noMining: true,
+      startTimeout: 20000,
+    },
+  });
+
   return () => {
     shutdown();
+    shutdownOptimism();
   };
 }
