@@ -69,8 +69,8 @@ export {
   registerFidAndSigner,
 } from "../../extensions/farcaster/write/registerFidAndSigner.js";
 export {
-  type Ed25519Keypair as Signer,
-  createEd25519Keypair as createSigner,
+  type Ed25519Keypair,
+  createSigner,
 } from "../../extensions/farcaster/signers.js";
 export {
   type AddSignerParams,
