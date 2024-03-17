@@ -30,9 +30,9 @@ export async function getUsdRegistrationPrice(
 ): Promise<number> {
   const extraStorage = toBigInt(options.extraStorage ?? 0);
   if (extraStorage < 0n)
-    throw new Error(
+    {throw new Error(
       `Expected extraStorage to be greater than or equal to 0, got ${options.extraStorage}`,
-    );
+    );}
 
   const fetch = async () => {
     const { getStorageRegistry } = await import("../contracts.js");
@@ -49,7 +49,7 @@ export async function getUsdRegistrationPrice(
     return Number(toTokens(bigNumberValue, 8)); // storage registry uses 8 decimal places
   };
 
-  if (options.disableCache) return fetch();
+  if (options.disableCache) {return fetch();}
 
   return withCache(fetch, {
     cacheKey: `${toBigInt(extraStorage)}:getUsdRegistrationPrice`,

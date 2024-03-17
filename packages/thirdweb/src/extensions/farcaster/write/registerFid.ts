@@ -32,9 +32,9 @@ export type RegisterFidParams = {
 export function registerFid(options: RegisterFidParams) {
   const extraStorage = toBigInt(options.extraStorage ?? 0);
   if (extraStorage < 0n)
-    throw new Error(
+    {throw new Error(
       `Expected extraStorage to be greater than or equal to 0, got ${extraStorage}`,
-    );
+    );}
 
   return prepareContractCall({
     contract: getIdGateway({

@@ -33,9 +33,9 @@ export type RentStorageParams = {
 export function rentStorage(options: RentStorageParams) {
   const units = toBigInt(options.units ?? 1);
   if (units < 1n)
-    throw new Error(
+    {throw new Error(
       `Expected units to be greater than or equal to 1, got ${options.units}`,
-    );
+    );}
 
   const fid = toBigInt(options.fid ?? 1);
 

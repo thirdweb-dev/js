@@ -37,7 +37,7 @@ export async function getFid(options: GetFidParams): Promise<bigint> {
     return idOf({ contract, owner: options.address });
   };
 
-  if (options.disableCache) return fetch();
+  if (options.disableCache) {return fetch();}
 
   return withCache(fetch, {
     cacheKey: `${options.address}:getFid`,

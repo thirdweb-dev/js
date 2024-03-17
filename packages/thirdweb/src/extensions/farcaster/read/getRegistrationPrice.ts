@@ -29,9 +29,9 @@ export async function getRegistrationPrice(
 ): Promise<bigint> {
   const extraStorage = toBigInt(options.extraStorage ?? 0);
   if (extraStorage < 0n)
-    throw new Error(
+    {throw new Error(
       `Expected extraStorage to be greater than or equal to 0, got ${options.extraStorage}`,
-    );
+    );}
 
   const fetch = async () => {
     const { getIdGateway } = await import("../contracts.js");
@@ -44,7 +44,7 @@ export async function getRegistrationPrice(
     return price({ contract, extraStorage: toBigInt(extraStorage) });
   };
 
-  if (options.disableCache) return fetch();
+  if (options.disableCache) {return fetch();}
 
   return withCache(fetch, {
     cacheKey: `${toBigInt(extraStorage)}:getRegistrationPrice`,

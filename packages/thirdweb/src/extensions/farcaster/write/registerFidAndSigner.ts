@@ -10,14 +10,12 @@ import type { Prettify } from "../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the `registerFidAndSigner` function.
- *
- * @remarks
- *
+ * @description
  * This function can be used wither be provided pre-generated signatures or the wallet accounts directly.
  * This is done so the helpers can be used when there's no direct access to the account, but signatures can be generated (e.g. engine)
  *
- * If the `userAccount` is provided, the `registerSignature`, `addSignature`, `userAddress`, and `deadline` must be provided.
- * If the `appAccount` is provided, the `signedKeyRequestMetadata`, `appAccountAddress`, and `deadline` must be provided.
+ * If the `userAccount` is not provided, the `registerSignature`, `addSignature`, `userAddress`, and `deadline` must be provided.
+ * If the `appAccount` is not provided, the `signedKeyRequestMetadata`, `appAccountAddress`, and `deadline` must be provided.
  * `deadline` must match the one used to generate the signatures.
  */
 export type RegisterFidAndSignerParams = Prettify<
@@ -70,10 +68,11 @@ export type RegisterFidAndSignerParams = Prettify<
  */
 export function registerFidAndSigner(options: RegisterFidAndSignerParams) {
   const extraStorage = toBigInt(options.extraStorage ?? 0);
-  if (extraStorage < 0n)
+  if (extraStorage < 0n) {
     throw new Error(
       `Expected extraStorage to be greater than or equal to 0, got ${options.extraStorage}`,
     );
+  }
 
   return prepareContractCall({
     contract: getBundler({
@@ -182,10 +181,11 @@ export function registerFidAndSigner(options: RegisterFidAndSignerParams) {
         disableCache: options.disableCache,
       });
       // If a fid is already registered for the user, throw an error
-      if (existingFid !== 0n)
+      if (existingFid !== 0n) {
         throw new Error(
           `User already has an fid registered, found fid ${existingFid}`,
         );
+      }
 
       const { getKeyGateway } = await import("../contracts.js");
       const keyGateway = getKeyGateway({
@@ -217,7 +217,9 @@ export function registerFidAndSigner(options: RegisterFidAndSignerParams) {
             deadline,
           },
         });
-      } else registerSignature = options.registerSignature; // Use provided signature if no userAccount
+      } else {
+        registerSignature = options.registerSignature;
+      } // Use provided signature if no userAccount
 
       // Get the fid for the app account
       const appFid = await getFid({
@@ -226,8 +228,9 @@ export function registerFidAndSigner(options: RegisterFidAndSignerParams) {
         address: appAccountAddress,
         disableCache: options.disableCache,
       });
-      if (appFid === 0n)
+      if (appFid === 0n) {
         throw new Error(`No fid found for app account: ${appAccountAddress}`);
+      }
 
       // Sign the key request metadata, if an appAccount is provided
       let signedKeyRequestMetadata;
@@ -240,7 +243,9 @@ export function registerFidAndSigner(options: RegisterFidAndSignerParams) {
             deadline,
           },
         });
-      } else signedKeyRequestMetadata = options.signedKeyRequestMetadata; // Use provided metadata if no appAccount
+      } else {
+        signedKeyRequestMetadata = options.signedKeyRequestMetadata;
+      } // Use provided metadata if no appAccount
 
       // Sign the add operation, if a userAccount is provided
       let addSignature;

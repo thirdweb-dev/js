@@ -11,14 +11,12 @@ import type { Address } from "abitype";
 
 /**
  * Represents the parameters for the `addSignerFor` function.
- *
- * @remarks
- *
+ * @description
  * This function can be used wither be provided pre-generated signatures or the wallet accounts directly.
  * This is done so the helpers can be used when there's no direct access to the account, but signatures can be generated (e.g. engine)
  *
- * If the `userAccount` is provided, the `addSignature`, `userAddress`, and `deadline` must be provided.
- * If the `appAccount` is provided, the `signedKeyRequestMetadata`, `appAccountAddress` and `deadline` must be provided.
+ * If the `userAccount` is not provided, the `addSignature`, `userAddress`, and `deadline` must be provided.
+ * If the `appAccount` is not provided, the `signedKeyRequestMetadata`, `appAccountAddress` and `deadline` must be provided.
  * `deadline` must match the one used to generate the signatures.
  */
 export type AddSignerForParams = Prettify<
@@ -145,7 +143,9 @@ export function addSignerFor(options: AddSignerForParams) {
             deadline,
           },
         });
-      } else signedKeyRequestMetadata = options.signedKeyRequestMetadata;
+      } else {
+        signedKeyRequestMetadata = options.signedKeyRequestMetadata;
+      }
 
       // Fetch the user's current key gateway nonce
       const { nonces } = await import(
@@ -171,7 +171,9 @@ export function addSignerFor(options: AddSignerForParams) {
             deadline,
           },
         });
-      } else addSignature = options.addSignature;
+      } else {
+        addSignature = options.addSignature;
+      }
 
       return [
         userAddress,

@@ -29,9 +29,9 @@ export async function getStoragePrice(
 ): Promise<bigint> {
   const units = toBigInt(options.units ?? 1);
   if (units < 1n)
-    throw new Error(
+    {throw new Error(
       `Expected units to be greater than or equal to 1, got ${options.units}`,
-    );
+    );}
 
   const fetch = async () => {
     const { getStorageRegistry } = await import("../contracts.js");
@@ -46,7 +46,7 @@ export async function getStoragePrice(
     return (await unitPrice({ contract })) * units;
   };
 
-  if (options.disableCache) return fetch();
+  if (options.disableCache) {return fetch();}
 
   return withCache(fetch, {
     cacheKey: `${toBigInt(units)}:getStoragePrice`,
