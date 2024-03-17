@@ -17,6 +17,7 @@ import { getRpcUrlForChain } from "../chains/utils.js";
 import type { Account, Wallet } from "../wallets/interfaces/wallet.js";
 import type { Prettify } from "../utils/type-utils.js";
 import { getRpcClient } from "../rpc/rpc.js";
+import { waitForReceipt } from "../exports/thirdweb.js";
 
 export const viemAdapter = {
   contract: {
@@ -190,7 +191,14 @@ function toViemWalletClient(options: ToViemWalletClientOptions): WalletClient {
       if (request.method === "eth_sendTransaction") {
         const result = await account.sendTransaction(request.params[0]);
         if (result.userOpHash) {
-          return result.userOpHash; // TODO this should return the tx hash instead to ensure compatibility with other libs
+          const receipt = await waitForReceipt({
+            userOpHash: result.userOpHash,
+            transaction: {
+              chain,
+              client,
+            },
+          });
+          return receipt.transactionHash;
         }
         return result.transactionHash;
       }
