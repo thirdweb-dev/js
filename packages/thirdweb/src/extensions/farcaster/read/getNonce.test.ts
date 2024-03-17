@@ -11,11 +11,11 @@ describe("farcaster.getNonce", () => {
   });
 
   it("should return the address's current nonce", async () => {
-    const fid = await getNonce({
+    const nonce = await getNonce({
       client: TEST_CLIENT,
       address: "0x6443ed8a3ffb006e3bb5a866bae6edfb93f8ff3e",
     });
-    expect(fid).toBe(12n);
+    expect(nonce).toBe(12n);
     expect(fetchSpy).toHaveBeenCalledTimes(1);
   });
 });
