@@ -1,23 +1,19 @@
-import { getThirdwebDomainOverrides } from "../../../utils/domains.js";
+import { getThirdwebDomains } from "../../../utils/domains.js";
 
-const THIRDWEB_PAY_BASE_URL = "interstate.thirdweb.com";
-// const THIRDWEB_PAY_BASE_URL = "localhost:3008";
 /**
  * Constructs the endpoint to get the status of a quote.
  * @param client - The Thirdweb client containing the baseUrl config
  * @internal
  */
 export const getPayQuoteStatusUrl = () =>
-  `http://${
-    getThirdwebDomainOverrides()?.pay ?? THIRDWEB_PAY_BASE_URL
-  }/buy-with-crypto/status`;
+  `https://${getThirdwebDomains().pay}/buy-with-crypto/status`;
 /**
  * Constructs the endpoint to get a pay quote.
  * @param client - The Thirdweb client containing the baseUrl config
  * @internal
  */
 export const getPayQuoteEndpoint = () =>
-  `http://${getThirdwebDomainOverrides()?.pay ?? THIRDWEB_PAY_BASE_URL}/buy-with-crypto/quote`;
+  `https://${getThirdwebDomains().pay}/buy-with-crypto/quote`;
 
 /**
  * Constructs the endpoint to get a wallet address swap history.
@@ -25,5 +21,5 @@ export const getPayQuoteEndpoint = () =>
  * @internal
  */
 export const getPaySwapHistoryEndpoint = () =>
-  `http://${getThirdwebDomainOverrides()?.pay ?? THIRDWEB_PAY_BASE_URL}/buy-with-crypto/history
+  `https://${getThirdwebDomains().pay}/buy-with-crypto/history
   `;

@@ -1,5 +1,5 @@
 import type { ThirdwebClient } from "../client/client.js";
-import { toWei } from "../utils/units.js";
+import { toUnits } from "../utils/units.js";
 import type { PreparedTransaction } from "../transaction/prepare-transaction.js";
 import { resolvePromisedValue } from "../utils/promise/resolve-promised-value.js";
 import { roundUpGas } from "./op-gas-fee-reducer.js";
@@ -229,7 +229,7 @@ async function getPolygonGasPriorityFee(chainId: 137 | 80001): Promise<bigint> {
     const priorityFee = data["fast"]["maxPriorityFee"];
     if (priorityFee > 0) {
       const fixedFee = parseFloat(priorityFee).toFixed(9);
-      return toWei(fixedFee);
+      return toUnits(fixedFee, 9);
     }
   } catch (e) {
     console.error("failed to fetch gas", e);

@@ -7,14 +7,15 @@ import {
 import type { Prettify } from "../../utils/type-utils.js";
 import type { ParseEventLogsResult } from "./parse-logs.js";
 import { watchBlockNumber } from "../../rpc/watchBlockNumber.js";
+import type { PreparedEvent } from "../prepare-event.js";
 
 export type WatchContractEventsOptions<
   abi extends Abi,
-  abiEvent extends AbiEvent,
+  abiEvents extends PreparedEvent<AbiEvent>[],
   TStrict extends boolean,
 > = Prettify<
-  GetContractEventsOptionsDirect<abi, abiEvent, TStrict> & {
-    onEvents: (events: ParseEventLogsResult<abiEvent, TStrict>) => void;
+  GetContractEventsOptionsDirect<abi, abiEvents, TStrict> & {
+    onEvents: (events: ParseEventLogsResult<abiEvents, TStrict>) => void;
   }
 >;
 
@@ -51,9 +52,9 @@ export type WatchContractEventsOptions<
  */
 export function watchContractEvents<
   const abi extends Abi,
-  const abiEvent extends AbiEvent,
+  const abiEvents extends PreparedEvent<AbiEvent>[],
   const TStrict extends boolean = true,
->(options: WatchContractEventsOptions<abi, abiEvent, TStrict>) {
+>(options: WatchContractEventsOptions<abi, abiEvents, TStrict>) {
   // returning this returns the underlying "unwatch" function
   return watchBlockNumber({
     ...options.contract,

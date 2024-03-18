@@ -65,6 +65,11 @@
       "import": "./dist/esm/exports/react.js",
       "default": "./dist/cjs/exports/react.js"
     },
+    "./react-native": {
+      "types": "./dist/types/exports/react-native.d.ts",
+      "import": "./dist/esm/exports/react-native.js",
+      "default": "./dist/cjs/exports/react-native.js"
+    },
     "./rpc": {
       "types": "./dist/types/exports/rpc.d.ts",
       "import": "./dist/esm/exports/rpc.js",
@@ -123,6 +128,9 @@
       "react": [
         "./dist/types/exports/react.d.ts"
       ],
+      "react-native": [
+        "./dist/types/exports/react-native.d.ts"
+      ],
       "rpc": [
         "./dist/types/exports/rpc.d.ts"
       ],
@@ -169,8 +177,10 @@
     "@tanstack/react-query": "5.25.0",
     "@walletconnect/ethereum-provider": "2.11.2",
     "abitype": "1.0.0",
+    "fast-text-encoding": "^1.0.6",
     "fuse.js": "7.0.0",
     "mipd": "0.0.5",
+    "node-libs-browser": "2.2.1",
     "uqr": "0.1.2",
     "viem": "2.7.19"
   },

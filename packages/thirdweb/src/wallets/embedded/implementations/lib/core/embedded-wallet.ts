@@ -248,6 +248,12 @@ export class EmbeddedWallet {
         return signedMessage as Hex;
       },
       async signTypedData(_typedData) {
+        // deleting EIP712 Domain as it results in ambiguous primary type on some cases
+        // this happens when going from viem to ethers via the iframe
+        if (_typedData.types && _typedData.types.EIP712Domain) {
+          delete _typedData.types.EIP712Domain;
+        }
+        const chainId = Number(_typedData.domain?.chainId || 1);
         const { signedTypedData } =
           await querier.call<SignedTypedDataReturnType>({
             procedureName: "signTypedDataV4",
@@ -257,7 +263,8 @@ export class EmbeddedWallet {
                 _typedData.types as SignerProcedureTypes["signTypedDataV4"]["types"],
               message:
                 _typedData.message as SignerProcedureTypes["signTypedDataV4"]["message"],
-              chainId: 1, // TODO check if we need this
+              chainId,
+              rpcEndpoint: `https://${chainId}.rpc.thirdweb.com`, // TODO (ew) shouldnt be needed
             },
           });
         return signedTypedData as Hex;

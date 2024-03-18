@@ -12,7 +12,7 @@ const MAX_BLOCKS_WAIT_TIME = 30; // TODO: instead of changing it here, make it c
 const map = new Map<string, Promise<TransactionReceipt>>();
 
 export type WaitForReceiptOptions = TransactionOrUserOpHash & {
-  transaction: PreparedTransaction;
+  transaction: Pick<PreparedTransaction, "client" | "chain">;
 };
 
 /**

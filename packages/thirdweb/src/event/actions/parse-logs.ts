@@ -7,17 +7,18 @@ import {
 import type { PreparedEvent } from "../prepare-event.js";
 
 export type ParseEventLogsOptions<
-  abiEvent extends AbiEvent,
+  abiEvents extends PreparedEvent<AbiEvent>[],
   TStrict extends boolean,
 > = {
   logs: (Log | RpcLog)[];
-  events: PreparedEvent<abiEvent>[];
+  events: abiEvents;
   strict?: TStrict;
 };
 
 export type ParseEventLogsResult<
-  abiEvent extends AbiEvent,
+  abiEvents extends PreparedEvent<AbiEvent>[],
   TStrict extends boolean,
+  abiEvent extends AbiEvent = abiEvents[number]["abiEvent"],
 > = Array<Log<bigint, number, false, undefined, TStrict, abiEvent[]>>;
 
 /**
@@ -34,15 +35,15 @@ export type ParseEventLogsResult<
  * ```
  */
 export function parseEventLogs<
-  const abiEvent extends AbiEvent,
+  const abiEvents extends PreparedEvent<AbiEvent>[],
   const TStrict extends boolean = true,
 >(
-  options: ParseEventLogsOptions<abiEvent, TStrict>,
-): ParseEventLogsResult<abiEvent, TStrict> {
+  options: ParseEventLogsOptions<abiEvents, TStrict>,
+): ParseEventLogsResult<abiEvents, TStrict> {
   const { logs, events, strict } = options;
   return viem_parseEventLogs({
     logs,
     abi: events.map((e) => e.abiEvent),
     strict,
-  });
+  }) as unknown as ParseEventLogsResult<abiEvents, TStrict>;
 }

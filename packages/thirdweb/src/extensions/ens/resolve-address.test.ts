@@ -9,6 +9,6 @@ describe("ENS", () => {
       client: TEST_CLIENT,
       name,
     });
-    expect(address).toMatchObject("0x4976fb03C32e5B8cfe2b6cCB31c09Ba78EBaBa41");
+    expect(address).toMatchObject("0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045");
   });
 });

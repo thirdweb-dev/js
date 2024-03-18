@@ -1,7 +1,7 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import type { ThirdwebClient } from "../../client/client.js";
+import { getThirdwebDomains } from "../../utils/domains.js";
 import { getPlatformHeaders } from "../../utils/fetch.js";
-import { getUploadServerUrl } from "./constants.js";
 import type { UploadOptions } from "./types.js";
 
 export async function uploadBatchBrowser(
@@ -96,7 +96,7 @@ export async function uploadBatchBrowser(
       return reject(new Error("Unknown upload error occured"));
     });
 
-    xhr.open("POST", `https://${getUploadServerUrl()}/ipfs/upload`);
+    xhr.open("POST", `https://${getThirdwebDomains().storage}/ipfs/upload`);
 
     if (client.secretKey) {
       xhr.setRequestHeader("x-secret-key", client.secretKey);
@@ -106,14 +106,6 @@ export async function uploadBatchBrowser(
     getPlatformHeaders().forEach(([key, value]) => {
       xhr.setRequestHeader(key, value);
     });
-
-    const bundleId =
-      typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
-        ? ((globalThis as any).APP_BUNDLE_ID as string)
-        : undefined;
-    if (bundleId) {
-      xhr.setRequestHeader("x-bundle-id", bundleId);
-    }
 
     // TODO bring back tracking
     // xhr.setRequestHeader("x-sdk-version", pkg.version);
