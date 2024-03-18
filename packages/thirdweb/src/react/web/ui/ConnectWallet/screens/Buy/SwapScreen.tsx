@@ -233,6 +233,21 @@ export function SwapScreenContent(props: {
   const swapQuote = buyWithCryptoQuoteQuery.data;
   const isSwapQuoteError = buyWithCryptoQuoteQuery.isError;
 
+  const getErrorMessage = () => {
+    const defaultMessage = "Unable to get price quote";
+    try {
+      if (buyWithCryptoQuoteQuery.error instanceof Error) {
+        if (buyWithCryptoQuoteQuery.error.message.includes("Minimum")) {
+          const msg = buyWithCryptoQuoteQuery.error.message;
+          return msg.replace("Fetch failed: Error: ", "");
+        }
+      }
+      return defaultMessage;
+    } catch {
+      return defaultMessage;
+    }
+  };
+
   const sourceTokenAmount = swapQuote?.swapDetails.fromAmount || "";
 
   if (screen === "confirmation" && buyWithCryptoQuoteQuery.data) {
@@ -320,7 +335,7 @@ export function SwapScreenContent(props: {
                       height={iconSize.sm}
                     />
                     <Text color="danger" size="sm">
-                      Unable to get price quote
+                      {getErrorMessage()}
                     </Text>
                   </Container>
                   <Spacer y="lg" />
