@@ -13,7 +13,6 @@ import { Text } from "../../components/text.js";
 import { ArrowRightIcon, CrossCircledIcon } from "@radix-ui/react-icons";
 import { fadeInAnimation } from "../../design-system/animations.js";
 import { Spinner } from "../../components/Spinner.js";
-// import { formatNumber } from "../../../../core/utils/formatNumber.js";
 import { Button } from "../../components/buttons.js";
 import { useChainQuery } from "../../../../core/hooks/others/useChainQuery.js";
 import {
@@ -50,11 +49,22 @@ export function SwapTransactionsScreen(props: { onBack: () => void }) {
     swapTransactionsStore.getValue,
   );
 
-  const _pendingSwapTxs = swapTxs.filter((tx) => tx.status === "PENDING");
+  const inMemoryPendingTxs = swapTxs.filter((tx) => tx.status === "PENDING");
 
   const txInfosToShow: TxStatusInfo[] = [];
 
-  _pendingSwapTxs.forEach((tx) => {
+  const txHashSet = new Set<string>();
+  _historyQuery.data?.page.forEach((tx) => {
+    txHashSet.add(tx.source.transactionHash);
+  });
+
+  // add in-memory pending transactions
+  inMemoryPendingTxs.forEach((tx) => {
+    // if tx is already in history endpoint, don't add it
+    if (txHashSet.has(tx.transactionHash)) {
+      return;
+    }
+
     txInfosToShow.push({
       fromChainId: tx.from.chainId,
       transactionHash: tx.transactionHash,
@@ -64,6 +74,7 @@ export function SwapTransactionsScreen(props: { onBack: () => void }) {
     });
   });
 
+  // Add data from endpoint
   _historyQuery.data?.page.forEach((tx) => {
     txInfosToShow.push({
       fromChainId: tx.source.token.chainId,
@@ -116,11 +127,15 @@ export function SwapTransactionsScreen(props: { onBack: () => void }) {
         )}
 
         {noTransactions && _historyQuery.isLoading && (
-          <>
-            <TxHashLinkSkeleton />
-            <TxHashLinkSkeleton />
-            <TxHashLinkSkeleton />
-          </>
+          <Container
+            flex="row"
+            center="both"
+            style={{
+              minHeight: "250px",
+            }}
+          >
+            <Spinner size="xl" color="accentText" />
+          </Container>
         )}
 
         {txInfosToShow.map((txInfo, i) => {
@@ -289,23 +304,25 @@ function TransactionInfo(props: { txInfo: TxStatusInfo }) {
             }}
           >
             {/* Status */}
-            <Text
-              size="sm"
-              color={
-                status === "PENDING"
-                  ? "accentText"
-                  : status === "COMPLETED"
-                    ? "success"
-                    : "danger"
-              }
-            >
-              {status === "COMPLETED"
-                ? "Completed"
-                : status === "PENDING"
-                  ? "Pending"
-                  : "Failed"}
-            </Text>
-            {status === "PENDING" && <Spinner size="xs" color="accentText" />}
+            <Container flex="row" gap="xxs" center="y">
+              <Text
+                size="sm"
+                color={
+                  status === "PENDING"
+                    ? "accentText"
+                    : status === "COMPLETED"
+                      ? "success"
+                      : "danger"
+                }
+              >
+                {status === "COMPLETED"
+                  ? "Completed"
+                  : status === "PENDING"
+                    ? "Pending"
+                    : "Failed"}
+              </Text>
+              {status === "PENDING" && <Spinner size="xs" color="accentText" />}
+            </Container>
 
             {/* Network */}
             {chainQuery.data?.name ? (
@@ -351,7 +368,3 @@ const TxHashLink = /* @__PURE__ */ StyledAnchor(() => {
     height: "68px",
   };
 });
-
-function TxHashLinkSkeleton() {
-  return <Skeleton width="100%" height="68px" />;
-}
