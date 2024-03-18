@@ -4,7 +4,7 @@ import {
   type EstimateGasResult,
 } from "../../../../transaction/actions/estimate-gas.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
-import { useActiveWallet } from "../wallets/wallet-hooks.js";
+import { useActiveAccount } from "../wallets/wallet-hooks.js";
 
 /**
  * A hook to estimate the gas for a given transaction.
@@ -23,9 +23,9 @@ export function useEstimateGas(): UseMutationResult<
   Error,
   PreparedTransaction
 > {
-  const wallet = useActiveWallet();
+  const account = useActiveAccount();
 
   return useMutation({
-    mutationFn: (transaction) => estimateGas({ transaction, wallet }),
+    mutationFn: (transaction) => estimateGas({ transaction, account }),
   });
 }
