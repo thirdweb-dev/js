@@ -52,6 +52,7 @@ export async function estimateGas(
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return cache.get(options.transaction)!;
   }
+  const account = options.account ?? options.wallet?.getAccount();
   const promise = (async () => {
     const predefinedGas = await resolvePromisedValue(options.transaction.gas);
     // if we have a predefined gas value in the TX -> always use that
@@ -60,9 +61,9 @@ export async function estimateGas(
     }
 
     // if the wallet itself overrides the estimateGas function, use that
-    if (options.wallet && options.wallet.estimateGas) {
+    if (account?.estimateGas) {
       try {
-        let gas = await options.wallet.estimateGas(options.transaction);
+        let gas = await account.estimateGas(options.transaction);
         if (options.transaction.chain.experimental?.increaseZeroByteCount) {
           gas = roundUpGas(gas);
         }

@@ -203,8 +203,8 @@ function toViemWalletClient(options: ToViemWalletClientOptions): WalletClient {
         return result.transactionHash;
       }
       if (request.method === "eth_estimateGas") {
-        if (options.wallet?.estimateGas) {
-          return options.wallet.estimateGas(request.params[0]);
+        if (account.estimateGas) {
+          return account.estimateGas(request.params[0]);
         }
       }
       if (request.method === "personal_sign") {
