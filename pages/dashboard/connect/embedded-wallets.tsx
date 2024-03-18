@@ -271,7 +271,7 @@ function Templates() {
           href="https://github.com/thirdweb-example/embedded-smart-wallet"
           label="embedded-smart-wallet"
         >
-          Embedded Wallet + Smart Wallet Starter Kit
+          Embedded Wallet + Account Abstraction Starter Kit
         </GuideLink>
 
         <GuideLink

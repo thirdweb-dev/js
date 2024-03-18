@@ -26,7 +26,7 @@ const GUIDES = [
     link: "https://catattack.thirdweb.com",
   },
   {
-    title: "Quick-Start Template: Embedded + Smart Wallets",
+    title: "Quick-Start Template: Embedded Wallet + Account Abstraction",
     image: require("/public/assets/product-pages/smart-wallet/get-started.png"),
     link: "https://github.com/thirdweb-example/embedded-smart-wallet",
   },

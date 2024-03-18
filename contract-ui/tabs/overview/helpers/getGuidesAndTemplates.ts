@@ -120,12 +120,12 @@ const ALL_GUIDES: Record<string, Item> = {
     url: "https://blog.thirdweb.com/guides/build-treasury-and-governance-for-your-dao/",
   },
   deploySmartWallet: {
-    title: "How to Deploy a Smart Wallet (ERC-4337)",
+    title: "How to Deploy a Smart Account (ERC-4337)",
     url: "https://blog.thirdweb.com/guides/how-to-use-erc4337-smart-wallets/",
   },
   customSmartWallet: {
     title:
-      "How to Extend the Base Smart Wallet Contracts Using the Solidity SDK",
+      "How to Extend the Base Account Abstraction Contracts Using the Solidity SDK",
     url: "https://blog.thirdweb.com/guides/custom-smart-wallet-contracts/",
   },
 };
@@ -330,11 +330,11 @@ const ALL_TEMPLATES: Record<string, Item> = {
     url: "https://github.com/thirdweb-example/multiwrap",
   },
   smartWalletScript: {
-    title: "Smart Wallet Demo Script",
+    title: "Account Abstraction Demo Script",
     url: "https://github.com/thirdweb-example/smart-wallet-script",
   },
   smartWalletReact: {
-    title: "Smart Wallet React Demo",
+    title: "Account Abstraction React Demo",
     url: "https://github.com/thirdweb-example/smart-wallet-react",
   },
 };

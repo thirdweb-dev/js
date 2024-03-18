@@ -66,7 +66,7 @@ const SELECTOR_ITEMS = [
       "Give a unified interface to users to login across your gaming ecosystem with the flexibility to import/export their digital assets",
     steps: [
       "User logs in using existing game login",
-      "Game links User's gaming wallet to game issued Smart Wallet",
+      "Game links User's gaming wallet to game issued account",
       "User selects assets they want to import and gives game scoped access to use assets for duration of game play",
     ],
     products: ["auth", "smart-wallet", "engine"],
@@ -373,7 +373,7 @@ const SolutionsGaming: ThirdwebNextPage = () => {
           >
             <LandingIconSectionItem
               icon={require("public/assets/solutions-pages/icons/icon-verified.svg")}
-              title="Smart Wallet"
+              title="Account Abstraction"
               description="Transform your app's user experience with signless transactions, multi-signature security, account recovery and more."
             />
           </SolutionsGamingCard>

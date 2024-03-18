@@ -140,8 +140,8 @@ const ExploreLanding: ThirdwebNextPage = () => {
           <Card p={8}>
             <LandingIconSectionItem
               icon={require("public/assets/product-pages-icons/contracts/icon-smart-wallet.svg")}
-              title="Smart Wallets"
-              description="Deploy smart wallet factories for your app — using account abstraction to give your users powerful features such as wallet recovery, multi-signature security, & batch transactions."
+              title="Account Abstraction"
+              description="Deploy account factories for your app — using account abstraction to give your users powerful features such as wallet recovery, multi-signature security, & batch transactions."
             />
           </Card>
         </LandingGridSection>

@@ -196,7 +196,7 @@ const ConnectLanding: ThirdwebNextPage = () => {
           <LandingGridSection desktopColumns={4}>
             <LandingCardWithImage
               title="Reliable connectors"
-              description="Integrate 170+ web3 wallets — including self-custodial, email, local, & smart wallets."
+              description="Integrate 170+ web3 wallets — including self-custodial, email, local, & account abstraction."
               image={require("public/assets/product-pages/connect/desktop-reliable-connectors.png")}
               mobileImage={require("public/assets/product-pages/connect/mobile-reliable-connectors.png")}
               TRACKING_CATEGORY={TRACKING_CATEGORY}
@@ -224,7 +224,7 @@ const ConnectLanding: ThirdwebNextPage = () => {
             />
             <LandingCardWithImage
               title="Account abstraction, made simple"
-              description="First-class support for account abstraction — with native smart wallet experiences that anyone can use."
+              description="First-class support for account abstraction — with native Account Abstraction experiences that anyone can use."
               image={require("public/assets/product-pages/connect/desktop-account-abstraction.png")}
               mobileImage={require("public/assets/product-pages/connect/mobile-account-abstraction.png")}
               TRACKING_CATEGORY={TRACKING_CATEGORY}

@@ -173,8 +173,8 @@ export const Usage: React.FC<UsageProps> = ({
             >
               <UsageCard
                 {...bundlerMetrics}
-                name="Smart Wallets"
-                tooltip="Smart Wallets (Gasless, Paymaster, Bundler) usage is calculated by sponsored network fees."
+                name="Account Abstraction"
+                tooltip="(Gasless, Paymaster, Bundler) usage is calculated by sponsored network fees."
               />
             </SimpleGrid>
           </VStack>

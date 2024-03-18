@@ -53,7 +53,7 @@ export const templates: TemplateCardProps[] = [
     homepage: "https://thirdweb-example.github.io/unity-pioneer/",
     repo: "https://github.com/thirdweb-example/unity-pioneer",
     description:
-      "Unity template featuring Smart Wallets, Session Keys, and Storage",
+      "Unity template featuring Account Abstraction, Session Keys, and Storage",
     img: "/assets/templates/unity-take-flight.png",
     hoverBorderColor: "hsl(248deg 89% 79% / 15%)",
     tags: ["Unity"],

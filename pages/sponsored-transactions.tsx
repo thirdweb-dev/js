@@ -103,7 +103,7 @@ const SponsoredTransactionsLanding: ThirdwebNextPage = () => {
             <LandingIconSectionItem
               icon={require("public/assets/product-pages-icons/payments/icon-private.svg")}
               title="Paymaster"
-              description="thirdweb Smart Wallet paymaster allows gasless transactions to happen in a non-custodial way."
+              description="thirdweb Account Abstraction paymaster allows gasless transactions to happen in a non-custodial way."
             />
           </Card>
         </LandingGridSection>
@@ -120,7 +120,7 @@ const SponsoredTransactionsLanding: ThirdwebNextPage = () => {
             <LandingIconSectionItem
               icon={require("public/assets/product-pages-icons/payments/icon-email-signin.svg")}
               title="Web2 user login flows"
-              description="Onboard anyone in an instant with an embedded & smart wallet combo — enabling signless transactions and covering gas fees so that users can start using your dApp in seconds & get the smoothest experience without needing to bridge or swap funds."
+              description="Onboard anyone in an instant with an embedded & Account Abstraction combo — enabling signless transactions and covering gas fees so that users can start using your dApp in seconds & get the smoothest experience without needing to bridge or swap funds."
             />
           </Card>
           <Card p={8}>
@@ -134,7 +134,7 @@ const SponsoredTransactionsLanding: ThirdwebNextPage = () => {
             <LandingIconSectionItem
               icon={require("public/assets/product-pages-icons/payments/icon-smart-wallet.svg")}
               title="Custom in-app experiences"
-              description="Pair gasless transactions with smart wallets to enable anyone to use your app or game without getting transaction popups, signature requests, or switching back & forth with their wallet apps."
+              description="Pair gasless transactions with account abstraction to enable anyone to use your app or game without getting transaction popups, signature requests, or switching back & forth with their wallet apps."
             />
           </Card>
         </LandingGridSection>

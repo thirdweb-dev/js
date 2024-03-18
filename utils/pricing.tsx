@@ -94,7 +94,7 @@ export const PRICING_SECTIONS: PricingSection[] = [
         pro: "Custom",
       },
       {
-        title: "Smart wallet infrastructure",
+        title: "Account Abstraction infrastructure",
         hint: "Premium on top of gas sent through relayer and paymaster.",
         starter: "10%",
         growth: "10%",

@@ -49,7 +49,7 @@ export function usePlaygroundWallets(defaultWalletSelection: WalletSelection) {
       walletInfoRecord[walletId].component.recommended =
         walletSelection[walletId] === "recommended";
 
-      // wrap with smart wallet
+      // wrap with account abstraction
       const walletConfig = walletInfoRecord[walletId].component;
 
       return smartWalletOptions.enabled

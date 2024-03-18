@@ -23,7 +23,7 @@ const helpProducts = [
     viewAllUrl: "https://support.thirdweb.com/wallets/dwWCB7ZD5sNcHEAj4rFFui",
     helpArticles: [
       {
-        title: "Smart Wallet FAQ",
+        title: "Account Abstraction FAQ",
         url: "https://support.thirdweb.com/wallets/dwWCB7ZD5sNcHEAj4rFFui/smart-wallet-faqs/64y68nzTQkUZw6r6FryFgK",
       },
       {

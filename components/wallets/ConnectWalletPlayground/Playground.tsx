@@ -11,6 +11,10 @@ import {
   Icon,
   Select,
   FormControl,
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
 } from "@chakra-ui/react";
 import { ConnectWallet } from "@thirdweb-dev/react";
 import React, { useEffect, useState } from "react";
@@ -21,6 +25,7 @@ import {
   FormLabel,
   CodeBlock,
   TrackedLink,
+  Link,
 } from "tw-components";
 import { ChakraNextImage } from "components/Image";
 import { format } from "prettier/standalone";
@@ -770,10 +775,10 @@ export const ConnectWalletPlayground: React.FC<{
       <Box borderTop="1px solid" borderColor="borderColor" />
       <Spacer height={5} />
 
-      {/* Smart wallet */}
+      {/* Account Abstraction */}
       <SwitchFormItem
-        label="Smart Wallets"
-        description="Use ERC-4337 (Account Abstraction) compatible smart wallets. Enabling this will connect user to the associated smart wallet"
+        label="Sponsor gas fees with Account Abstraction"
+        description="Abstract away gas fees for users of your app. Uses ERC-4337 (Account Abstraction) compatible smart accounts"
         onCheck={(_isChecked) => {
           if (_isChecked) {
             trackCustomize("smart-wallet");
@@ -785,6 +790,33 @@ export const ConnectWalletPlayground: React.FC<{
         }}
         isChecked={enabledWallets.length > 0 && smartWalletOptions.enabled}
       />
+      <Alert
+        status="info"
+        borderRadius="lg"
+        backgroundColor="backgroundCardHighlight"
+        borderLeftColor="blue.500"
+        borderLeftWidth={4}
+        as={Flex}
+        gap={1}
+        mt={4}
+      >
+        <AlertIcon />
+        <Flex flexDir="column">
+          <AlertTitle>
+            We highly recommend setting sponsorship rules to prevent abuse
+          </AlertTitle>
+          <AlertDescription as={Text}>
+            You can set rules in the{" "}
+            <Link
+              href={`/dashboard/connect/account-abstraction?tab=1`}
+              color="blue.500"
+            >
+              configuration page
+            </Link>
+            .
+          </AlertDescription>
+        </Flex>
+      </Alert>
 
       {enabledWallets.length === 0 && (
         <>
@@ -792,7 +824,7 @@ export const ConnectWalletPlayground: React.FC<{
           <Flex alignItems="center" gap={2}>
             <Icon as={AiOutlineWarning} color="orange.500" />
             <Text color="orange.500">
-              Enable at least one wallet to use smart wallet
+              Enable at least one wallet to use account abstraction
             </Text>
           </Flex>
         </>

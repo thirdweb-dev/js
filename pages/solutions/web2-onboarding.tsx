@@ -45,7 +45,7 @@ const SELECTOR_ITEMS = [
     description:
       "Give any user the keys to web3 with familiar web2 login flows. Choose from non-custodial or custodial solutions & enable users to sign in with an email, phone number, or social account (without having to see or deal with complex key management).",
     steps: [
-      "Dev uses the SDK to enable email and social based authentication in their web3 apps using Embedded or Smart Wallets.",
+      "Dev uses the SDK to enable email and social based authentication in their web3 apps using Embedded Wallets or Account Abstraction.",
       "User authenticates using just their email address and one-time passcode, or their Google account.",
       "A wallet is created on the user behalf without the user having to see or deal with complex key management.",
     ],
@@ -67,7 +67,7 @@ const SELECTOR_ITEMS = [
       "Transaction signing with your own custom messaging or remove entirely.",
     steps: [
       "Dev deploys either an NFT contract for primary sales or Marketplace contract for secondary sales.",
-      "Implement Smart Wallets, setting your app's backend wallet as an Admin.",
+      "Implement Account Abstraction, setting your app's backend wallet as an Admin.",
       "When a transaction occurs, the signing occurs with the backend Admin wallet, so you can choose to surface any of the transaction's details to the end user.",
     ],
     products: ["smart-wallet"],

@@ -27,7 +27,7 @@ export const AccountPermissionsPage: React.FC<AccountPermissionsPageProps> = ({
       <Card as={Flex} flexDir="column" gap={3}>
         {/* TODO  extract this out into it's own component and make it better */}
         <Heading size="subtitle.md">No Account extension enabled</Heading>
-        <Text>This contract is not an smart wallet.</Text>
+        <Text>This contract is not a smart account.</Text>
         <Box>
           <LinkButton
             isExternal

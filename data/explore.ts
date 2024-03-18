@@ -161,10 +161,10 @@ const STAKING = {
 
 const SMART_WALLET = {
   id: "smart-wallet",
-  name: "Smart Wallet",
-  displayName: "Smart Wallet",
+  name: "Account Abstraction",
+  displayName: "Account Abstraction",
   description:
-    "Smart wallet factories that let you spin up Account Abstraction (ERC-4337) wallets for your users. Not sure which factory is right for you?",
+    "Account factories that let you spin up Account Abstraction (ERC-4337) wallets for your users. Not sure which factory is right for you?",
   learnMore:
     "https://portal.thirdweb.com/wallets/smart-wallet/get-started#1-deploy-a-smart-wallet-factory-contract",
   contracts: [

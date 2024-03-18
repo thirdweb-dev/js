@@ -195,7 +195,7 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
         as="form"
         onSubmit={form.handleSubmit((values) => {
           if (!bundlerServiceId) {
-            onError("No smart wallet service found for this API key");
+            onError("No account abstraction service found for this API key");
             return;
           }
           const limits: ApiKeyServicePolicyLimits | null = values.globalLimit

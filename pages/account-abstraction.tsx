@@ -20,12 +20,12 @@ const GUIDES = [
     link: "https://portal.thirdweb.com/wallets/smart-wallet/get-started",
   },
   {
-    title: "Choosing Between Simple, Managed, & Dynamic Smart Wallets",
+    title: "Choosing Between Simple, Managed, & Dynamic Smart Accounts",
     image: require("/public/assets/product-pages/smart-wallet/which-contract.png"),
     link: "https://blog.thirdweb.com/smart-contract-deep-dive-building-smart-wallets-for-individuals-and-teams/",
   },
   {
-    title: "How to Enable Batch Transactions in Smart Wallets",
+    title: "How to Enable Batch Transactions with Account Abstraction",
     image: require("/public/assets/product-pages/smart-wallet/batch-txns.png"),
     link: "https://blog.thirdweb.com/guides/how-to-batch-transactions-with-the-thirdweb-sdk/",
   },
@@ -38,7 +38,7 @@ const SmartWallet: ThirdwebNextPage = () => {
       seo={{
         title: "The Complete Account Abstraction Toolkit",
         description:
-          "Add smart wallets to your web3 app & unlock powerful features for seamless onboarding, customizable transactions, & maximum security. Learn more.",
+          "Add account abstraction to your web3 app & unlock powerful features for seamless onboarding, customizable transactions, & maximum security. Learn more.",
         openGraph: {
           images: [
             {
@@ -71,7 +71,7 @@ const SmartWallet: ThirdwebNextPage = () => {
           miniImage={require("public/assets/product-icons/smart-wallet.png")}
         />
         <LandingDynamicSelector
-          title="What can you build with smart wallets?"
+          title="What can you build with account abstraction?"
           blackToWhiteTitle=""
           TRACKING_CATEGORY={TRACKING_CATEGORY}
           items={[
@@ -130,13 +130,14 @@ const SmartWallet: ThirdwebNextPage = () => {
             size="body.xl"
             w={{ base: "100%", md: "60%" }}
           >
-            Implement smart wallets into any web3 app — with a best-in-class
-            SDK, full wallet customizability, and managed infrastructure.
+            Implement account abstraction into any web3 app — with a
+            best-in-class SDK, full wallet customizability, and managed
+            infrastructure.
           </Text>
         </Flex>
         <LandingShowcaseImage
           miniTitle="Smart Contracts"
-          titleWithGradient="Fast smart wallet"
+          titleWithGradient="Fast Account Abstraction"
           title="factory deployment."
           gradient="linear(to-r, #3385FF, #7BB0FF)"
           description="Pre-built, audited, & customizable factory contracts with options for simple, managed, or dynamic permissions — deployable to any EVM network."
@@ -144,10 +145,10 @@ const SmartWallet: ThirdwebNextPage = () => {
         />
         <LandingShowcaseImage
           miniTitle="SDK"
-          titleWithGradient="Integrate smart wallets"
+          titleWithGradient="Integrate account abstraction"
           title="into your web3 apps."
           gradient="linear(to-r, #3385FF, #7BB0FF)"
-          description="A best-in-class SDK with everything you need to build apps powered by account abstraction & generate smart wallets for your users — with full ERC-4337 compatibility."
+          description="A best-in-class SDK with everything you need to build apps powered by account abstraction & generate accounts for your users — with full ERC-4337 compatibility."
           image={require("public/assets/product-pages/smart-wallet/account-abstraction.png")}
           imagePosition="left"
         />
@@ -156,7 +157,7 @@ const SmartWallet: ThirdwebNextPage = () => {
           titleWithGradient="Drag and drop"
           title="UI Components."
           gradient="linear(to-r, #3385FF, #7BB0FF)"
-          description="The easiest way to give smart wallets to your users — with UI components that are purpose-built for account abstraction & compatible with any existing ERC-4337 smart wallet, out of the box."
+          description="The easiest way to give accounts to your users with account abstraction — with UI components that are purpose-built for account abstraction & compatible with any existing ERC-4337 account, out of the box."
           image={require("public/assets/product-pages/smart-wallet/ui-components.png")}
         />
         <LandingShowcaseImage
@@ -170,22 +171,22 @@ const SmartWallet: ThirdwebNextPage = () => {
         />
         <LandingShowcaseImage
           miniTitle="Dashboard & Analytics"
-          titleWithGradient="Manage smart wallets"
+          titleWithGradient="Manage accouunts"
           title="& view onchain analytics."
           gradient="linear(to-r, #3385FF, #7BB0FF)"
-          description="A single source of truth to view smart wallets, manage signers, and view balances for your web3 app — complete with onchain analytics."
+          description="A single source of truth to view accounts, manage signers, and view balances for your web3 app — complete with onchain analytics."
           image={require("public/assets/product-pages/smart-wallet/dashboard.png")}
         />
         <LandingGuidesShowcase
           title="Get started with Account Abstraction"
           category={TRACKING_CATEGORY}
-          description="See our quick-start guides to implement smart wallets into your web3 app"
-          solution="Smart Wallet"
+          description="See our quick-start guides to implement account abstraction into your web3 app"
+          solution="Account Abstraction"
           guides={GUIDES}
         />
 
         <LandingEndCTA
-          title="Add smart wallets"
+          title="Add account abstraction"
           titleWithGradient="to your web3 app."
           trackingCategory={TRACKING_CATEGORY}
           ctaLink="/dashboard/connect/account-abstraction"

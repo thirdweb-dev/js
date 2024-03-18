@@ -180,7 +180,7 @@ export const slides: Slide[] = [
       <Text size="body.lg">
         <UnorderedList>
           <ListItem>Reliably send blockchain transactions.</ListItem>
-          <ListItem>Manage smart wallets.</ListItem>
+          <ListItem>Account Abstraction.</ListItem>
           <ListItem>Enable gasless transactions.</ListItem>
         </UnorderedList>
       </Text>
