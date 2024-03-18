@@ -369,7 +369,7 @@ export function SwapScreenContent(props: {
             {hasEditedAmount ? (
               <>
                 {isSwitching && <Spinner size="sm" color="accentButtonText" />}
-                {isSwitching ? "Switching" : "Switch Chain"}
+                {isSwitching ? "Switching" : "Switch Network"}
               </>
             ) : (
               "Continue"

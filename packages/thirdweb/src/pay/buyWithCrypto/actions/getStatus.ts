@@ -9,6 +9,7 @@ export type BuyWithCryptoTransactionDetails = {
   transactionHash: string;
   token: QuoteTokenInfo;
   amountWei: string;
+  amount: string;
   amountUSDCents: number;
   completedAt?: number;
   explorerLink?: string;

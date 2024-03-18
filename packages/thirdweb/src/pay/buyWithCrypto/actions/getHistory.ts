@@ -23,11 +23,11 @@ export type WalletSwapHistoryParams = {
   /**
    * The number of results to return in a single page. The default value is 10.
    */
-  pageSize?: number;
+  count: number;
   /**
    * The cursor for the page of results to return. The default value is `undefined`.
    */
-  cursor?: string;
+  start: number;
 };
 
 /**
@@ -36,7 +36,7 @@ export type WalletSwapHistoryParams = {
  */
 export type WalletSwapHistoryData = {
   page: BuyWithCryptoStatus[];
-  nextCursor?: string; // if more data available
+  hasNextPage: boolean;
 };
 
 /**
@@ -65,13 +65,8 @@ export async function getBuyWithCryptoHistory(
 ): Promise<WalletSwapHistoryData> {
   try {
     const queryParams: any = { walletAddress: params.walletAddress };
-    if (params.cursor) {
-      queryParams["cursor"] = params.cursor;
-    }
-
-    if (params.pageSize) {
-      queryParams["pageSize"] = params.pageSize;
-    }
+    queryParams["start"] = params.start;
+    queryParams["count"] = params.count;
 
     const queryString = new URLSearchParams(queryParams).toString();
     const url = `${getPaySwapHistoryEndpoint()}?${queryString}`;
