@@ -21,5 +21,4 @@ export const getPayQuoteEndpoint = () =>
  * @internal
  */
 export const getPaySwapHistoryEndpoint = () =>
-  `https://${getThirdwebDomains().pay}/buy-with-crypto/history
-  `;
+  `https://${getThirdwebDomains().pay}/buy-with-crypto/history`;
