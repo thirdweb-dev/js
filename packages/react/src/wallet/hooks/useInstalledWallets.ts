@@ -14,7 +14,6 @@ export function useInstalledWallets() {
   let isTrustWalletInstalled = false;
   let isImTokenInstalled = false;
 
-
   const window_: Window | undefined = globalThis?.window;
   if (assertWindowEthereum(window_)) {
     isMetamaskInstalled = !!getInjectedMetamaskProvider();

@@ -109,7 +109,7 @@ export {
 
 export {
   imTokenWallet,
-  type Coin98WalletConfigOptions,
+  type ImTokenWalletConfigOptions,
 } from "./wallet/wallets/imtoken/imTokenWallet";
 
 // theming
