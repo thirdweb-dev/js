@@ -40,7 +40,7 @@ export type WalletSwapHistoryData = {
 };
 
 /**
- * Gets the status of a quoted transaction
+ * Gets the History of purchases for a given wallet address
  * @param params Object of type [`WalletSwapHistoryParams`](https://portal.thirdweb.com/references/typescript/v5/WalletSwapHistoryParams)
  * @example
  *
@@ -55,7 +55,7 @@ export type WalletSwapHistoryData = {
  *  walletAddress,
  * };
  *
- * // grabs the history of completed transactions for the wallet address
+ * // grabs the history of purchase transactions for the wallet address
  * const status = await WalletSwapHistoryData(params)
  * ```
  * @returns Object of type [`WalletSwapHistoryData`](https://portal.thirdweb.com/references/typescript/v5/WalletSwapHistoryData)

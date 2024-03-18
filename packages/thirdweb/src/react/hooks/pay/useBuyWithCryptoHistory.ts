@@ -21,14 +21,10 @@ export type BuyWithCryptoQuoteQueryOptions = Omit<
 >;
 
 /**
- * Hook to get a quote of type [`SwapQuote`](https://portal.thirdweb.com/references/typescript/v5/SwapQuote) for performing a token swap.
- * This quote contains the information about the swap such as token amounts, processing fees, estimated time etc.
+ * Hook to get the history of purchases a given wallet has performed.
  *
- * This hook is a React Query wrapper of the [`getSwapQuote`](https://portal.thirdweb.com/references/typescript/v5/getSwapQuote) function.
+ * This hook is a React Query wrapper of the [`getBuyWithCryptoHistory`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoHistory) function.
  * You can also use that function directly
- *
- * Once you have the quote, you can use the [`useSendSwapTransaction`](https://portal.thirdweb.com/references/typescript/v5/useSendSwapTransaction)
- * function to send the swap transaction and [`useSwapStatus`](https://portal.thirdweb.com/references/typescript/v5/useSwapStatus) function to get the status of the swap transaction.
  * @param buyWithCryptoHistoryParams - object of type [`WalletSwapHistoryParams`](https://portal.thirdweb.com/references/typescript/v5/WalletSwapHistoryParams)
  * @param queryParams - options to configure the react query
  * @returns A React Query object which contains the data of type [`WalletSwapHistoryData`](https://portal.thirdweb.com/references/typescript/v5/WalletSwapHistoryData)

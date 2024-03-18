@@ -17,34 +17,37 @@ export type BuyWithCryptoStatusQueryParams = Omit<
 
 /**
  * A hook to get a status of swap transaction.
+ *
+ * This hook is a React Query wrapper of the [`getBuyWithCryptoStatus`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoStatus) function.
+ * You can also use that function directly.
  * @param buyWithCryptoStatusParams - object of type [`BuyWithCryptoTransaction`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoTransaction)
  * @returns A react query object which contains the data of type [`BuyWithCryptoStatus`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoStatus)
  * @example
  * ```tsx
- * import { useBuyWithCryptoStatus, useBuyWithCryptoQuote } from "thirdweb/react";
+ * import { useSendTransaction, useBuyWithCryptoQuote, useBuyWithCryptoStatus, type BuyWithCryptoStatusQueryParams } from "thirdweb/react";
  *
  * function Component() {
- *  const swapQuoteQuery = useBuyWithCryptoQuote(swapParams);
- *
- *  const [buyWithCryptoTx, setBuyWithCryptoTx] = useState< uyuWithCryptoTransaction | undefined>();
+ *  const buyWithCryptoQuoteQuery = useBuyWithCryptoQuote(swapParams);
+ *  const sendTransactionMutation = useSendTransaction();
+ *  const [buyWithCryptoTx, setBuyWithCryptoTx] = useState<BuyWithCryptoStatusQueryParams | undefined>();
  *  const buyWithCryptoStatusQuery = useBuyWithCryptoStatus(buyWithCryptoTx);
  *
- *  async function handleSwap() {
+ *  async function handleBuyWithCrypto() {
  *
  *    // if approval is required
- *    if (swapQuote.data.approval) {
- *      await sendApproval.mutateAsync(swapQuote.data.approval);
+ *    if (buyWithCryptoQuoteQuery.data.approval) {
+ *      await sendTransactionMutation.mutateAsync(swapQuote.data.approval);
  *    }
  *
- *    // send the swap transaction
+ *    // send the transaction to buy crypto
  *    // this promise is resolved when user confirms the transaction in the wallet and the transaction is sent to the blockchain
- *    const swapTransaction = await sendSwap.mutateAsync(swapQuote.data);
+ *    const buyWithCryptoTxn = await sendTransactionMutation.mutateAsync(swapQuote.data.transactionRequest);
  *
  *    // set buyWithCryptoTx to poll the status of the swap transaction
- *    setBuyWithCryptoTx(swapTransaction);
+ *    setBuyWithCryptoTx({transactionHash: buyWithCryptoTxn.transactionHash ?? buyWithCryptoTxn.userOpHash});
  *  }
  *
- *  return <button onClick={handleSwap}>Swap</button>
+ *  return <button onClick={handleBuyWithCrypto}>Swap</button>
  * }
  * ```
  */

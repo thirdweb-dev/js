@@ -20,46 +20,43 @@ export type BuyWithCryptoQuoteQueryParams = Omit<
   "client"
 >;
 /**
- * Hook to get a quote of type [`SwapQuote`](https://portal.thirdweb.com/references/typescript/v5/SwapQuote) for performing a token swap.
- * This quote contains the information about the swap such as token amounts, processing fees, estimated time etc.
+ * Hook to get a quote of type [`BuyWithCryptoQuote`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoQuote) for buying tokens with crypto.
+ * This quote contains the information about the purchase such as token amounts, processing fees, estimated time etc.
  *
- * This hook is a React Query wrapper of the [`getSwapQuote`](https://portal.thirdweb.com/references/typescript/v5/getSwapQuote) function.
+ * This hook is a React Query wrapper of the [`getBuyWithCryptoQuote`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoQuote) function.
  * You can also use that function directly
  *
- * Once you have the quote, you can use the [`useSendSwapTransaction`](https://portal.thirdweb.com/references/typescript/v5/useSendSwapTransaction)
- * function to send the swap transaction and [`useSwapStatus`](https://portal.thirdweb.com/references/typescript/v5/useSwapStatus) function to get the status of the swap transaction.
- * @param buyWithCryptoParams - object of type [`GetSwapQuoteParams`](https://portal.thirdweb.com/references/typescript/v5/GetSwapQuoteParams)
+ * Once you have the quote, you can use the [`useSendTransaction`](https://portal.thirdweb.com/references/typescript/v5/useSendTransaction) function to send the purchase
+ * and [`useBuyWithCryptoStatus`](https://portal.thirdweb.com/references/typescript/v5/useBuyWithCryptoStatus) function to get the status of the swap transaction.
+ * @param buyWithCryptoParams - object of type [`BuyWithCryptoQuoteQueryParams`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoQuoteQueryParams)
  * @param queryParams - options to configure the react query
- * @returns A React Query object which contains the data of type [`SwapQuote`](https://portal.thirdweb.com/references/typescript/v5/SwapQuote)
+ * @returns A React Query object which contains the data of type [`BuyWithCryptoQuote`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoQuote)
  * @example
  * ```tsx
- * import { useSendSwapTransaction, useSwapStatus, useBuyWithCryptoQuote, useSendSwapApproval } from "thirdweb/react";
- * import type { SwapTransaction } from "thirdweb";
+ * import { useSendTransaction, useBuyWithCryptoQuote, useBuyWithCryptoStatus, type BuyWithCryptoStatusQueryParams } from "thirdweb/react";
  *
  * function Component() {
- *  const swapQuoteQuery = useBuyWithCryptoQuote(swapParams);
- *  const sendApproval = useSendSwapApproval();
- *  const sendSwap = useSendSwapTransaction();
+ *  const buyWithCryptoQuoteQuery = useBuyWithCryptoQuote(swapParams);
+ *  const sendTransactionMutation = useSendTransaction();
+ *  const [buyWithCryptoTx, setBuyWithCryptoTx] = useState<BuyWithCryptoStatusQueryParams | undefined>();
+ *  const buyWithCryptoStatusQuery = useBuyWithCryptoStatus(buyWithCryptoTx);
  *
- *  const [swapTx, setSwapTx] = useState<SwapTransaction | undefined>();
- *  const swapStatusQuery = useSwapStatus(swapTx);
- *
- *  async function handleSwap() {
+ *  async function handleBuyWithCrypto() {
  *
  *    // if approval is required
- *    if (swapQuote.data.approval) {
- *      await sendApproval.mutateAsync(swapQuote.data.approval);
+ *    if (buyWithCryptoQuoteQuery.data.approval) {
+ *      await sendTransactionMutation.mutateAsync(swapQuote.data.approval);
  *    }
  *
- *    // send the swap transaction
+ *    // send the transaction to buy crypto
  *    // this promise is resolved when user confirms the transaction in the wallet and the transaction is sent to the blockchain
- *    const swapTransaction = await sendSwap.mutateAsync(swapQuote.data);
+ *    const buyWithCryptoTxn = await sendTransactionMutation.mutateAsync(swapQuote.data.transactionRequest);
  *
- *    // set swapTx to poll the status of the swap transaction
- *    setSwapTx(swapTransaction);
+ *    // set buyWithCryptoTx to poll the status of the swap transaction
+ *    setBuyWithCryptoTx({transactionHash: buyWithCryptoTxn.transactionHash ?? buyWithCryptoTxn.userOpHash});
  *  }
  *
- *  return <button onClick={handleSwap}>Swap</button>
+ *  return <button onClick={handleBuyWithCrypto}>Swap</button>
  * }
  * ```
  */
