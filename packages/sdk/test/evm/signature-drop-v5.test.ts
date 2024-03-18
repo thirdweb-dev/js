@@ -527,8 +527,8 @@ describe("Signature drop tests (v5)", async () => {
           i % 3 === 0
             ? w.address.toLowerCase()
             : i % 3 === 1
-            ? w.address.toUpperCase().replace("0X", "0x")
-            : w.address,
+              ? w.address.toUpperCase().replace("0X", "0x")
+              : w.address,
         )
         .map((a) => ({
           address: a,
@@ -597,7 +597,7 @@ describe("Signature drop tests (v5)", async () => {
         await signatureDropContract.claim(1);
       } catch (e) {
         // expected
-        expectError(e, "!Qty");
+        expectError(e, "DropClaimExceedLimit");
       }
     });
 
@@ -693,7 +693,7 @@ describe("Signature drop tests (v5)", async () => {
       try {
         await signatureDropContract.claim(1);
       } catch (err: any) {
-        expectError(err, "!Qty");
+        expectError(err, "DropClaimExceedLimit");
       }
     });
 
@@ -728,7 +728,7 @@ describe("Signature drop tests (v5)", async () => {
         await sdk.updateSignerOrProvider(w2);
         await signatureDropContract.claim(2);
       } catch (e) {
-        expectError(e, "!Qty");
+        expectError(e, "DropClaimExceedLimit");
       }
     });
 

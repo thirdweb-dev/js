@@ -17,6 +17,7 @@ import { getRpcUrlForChain } from "../chains/utils.js";
 import type { Account, Wallet } from "../wallets/interfaces/wallet.js";
 import type { Prettify } from "../utils/type-utils.js";
 import { getRpcClient } from "../rpc/rpc.js";
+import { waitForReceipt } from "../exports/thirdweb.js";
 
 export const viemAdapter = {
   contract: {
@@ -190,7 +191,14 @@ function toViemWalletClient(options: ToViemWalletClientOptions): WalletClient {
       if (request.method === "eth_sendTransaction") {
         const result = await account.sendTransaction(request.params[0]);
         if (result.userOpHash) {
-          return result.userOpHash; // TODO this should return the tx hash instead to ensure compatibility with other libs
+          const receipt = await waitForReceipt({
+            userOpHash: result.userOpHash,
+            transaction: {
+              chain,
+              client,
+            },
+          });
+          return receipt.transactionHash;
         }
         return result.transactionHash;
       }
@@ -208,10 +216,6 @@ function toViemWalletClient(options: ToViemWalletClientOptions): WalletClient {
       }
       if (request.method === "eth_signTypedData_v4") {
         const data = JSON.parse(request.params[1]);
-        // deleting EIP712 Domain as it results in ambiguous primary type on some cases
-        // according to the spec this should be built in
-        // TODO figure out if it actually causes problems
-        delete data.types.EIP712Domain;
         return account.signTypedData(data);
       }
       return rpcClient(request);

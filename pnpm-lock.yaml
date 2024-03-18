@@ -444,8 +444,8 @@ importers:
   packages/contracts-js:
     dependencies:
       '@thirdweb-dev/contracts':
-        specifier: 3.10.3
-        version: 3.10.3(ethers@5.7.2)
+        specifier: 3.11.2
+        version: 3.11.2(ethers@5.7.2)
     devDependencies:
       '@babel/preset-env':
         specifier: ^7.23.8
@@ -1007,7 +1007,7 @@ importers:
     optionalDependencies:
       amazon-cognito-identity-js:
         specifier: ^6.3.3
-        version: 6.3.7
+        version: 6.3.6
       react-native-aes-gcm-crypto:
         specifier: ^0.2.2
         version: 0.2.2(react-native@0.71.11)(react@18.2.0)
@@ -8354,7 +8354,7 @@ packages:
     resolution: {integrity: sha512-tOZfTiIFA5KmMpdW9KF7bc6CFiGjb0xnbieJhTGlHrLL+ps2G0OkqmuZ3pFEXBOMnJYUVpnSy++52LFxvpa5ZQ==}
     dependencies:
       '@babel/code-frame': 7.10.4
-      json5: 2.2.3
+      json5: 1.0.2
       write-file-atomic: 2.4.3
     dev: false
 
@@ -12806,8 +12806,8 @@ packages:
       react: 18.2.0
     dev: false
 
-  /@thirdweb-dev/contracts@3.10.3(ethers@5.7.2):
-    resolution: {integrity: sha512-wSVNaEoosn0AgUtnxlvv7rgK+3EUMzJm2ZasofPgJgqGS3gYH5nDBmK29VMquA2BLc38OAPyYMWc/iQCiCikMg==}
+  /@thirdweb-dev/contracts@3.11.2(ethers@5.7.2):
+    resolution: {integrity: sha512-rwPFko1BJ1w4sZ6DxULCFqAaR1HObj3xEhUoQErLuhdTw+77g8Ymg4ZNVuzaSDfQZzqecLiF/YL7h/9z/zEfCQ==}
     engines: {node: '>=18.0.0'}
     dependencies:
       '@chainlink/contracts': 0.6.1(ethers@5.7.2)
@@ -14916,18 +14916,6 @@ packages:
 
   /amazon-cognito-identity-js@6.3.6:
     resolution: {integrity: sha512-kBq+GE6OkLrxtFj3ZduIOlKBFYeOqZK3EhxbDBkv476UTvy+uwfR0tlriTq2QzNdnvlQAjBIXnXuOM7DwR1UEQ==}
-    dependencies:
-      '@aws-crypto/sha256-js': 1.2.2
-      buffer: 4.9.2
-      fast-base64-decode: 1.0.0
-      isomorphic-unfetch: 3.1.0
-      js-cookie: 2.2.1
-    transitivePeerDependencies:
-      - encoding
-    dev: false
-
-  /amazon-cognito-identity-js@6.3.7:
-    resolution: {integrity: sha512-tSjnM7KyAeOZ7UMah+oOZ6cW4Gf64FFcc7BE2l7MTcp7ekAPrXaCbpcW2xEpH1EiDS4cPcAouHzmCuc2tr72vQ==}
     requiresBuild: true
     dependencies:
       '@aws-crypto/sha256-js': 1.2.2
@@ -14938,7 +14926,6 @@ packages:
     transitivePeerDependencies:
       - encoding
     dev: false
-    optional: true
 
   /anser@1.4.10:
     resolution: {integrity: sha512-hCv9AqTQ8ycjpSd3upOJd7vFwW1JaoYQ7tpham03GJ1ca8/65rqn0RpaWpItOAd6ylW9wAw6luXYPJIyPFVOww==}
@@ -19086,6 +19073,7 @@ packages:
     dependencies:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
+    bundledDependencies: false
 
   /event-target-shim@5.0.1:
     resolution: {integrity: sha512-i/2XbnSz/uxRCU6+NdVJgKWDTM427+MqYbkQzD321DuCQJUqOuJKIA0IM2+W2xtYHdKOmZ4dR6fExsd4SXL+WQ==}
