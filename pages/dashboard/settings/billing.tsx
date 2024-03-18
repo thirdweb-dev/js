@@ -13,7 +13,14 @@ import { useLocalStorage } from "hooks/useLocalStorage";
 
 const SettingsBillingPage: ThirdwebNextPage = () => {
   const { isLoggedIn, isLoading } = useLoggedInUser();
-  const meQuery = useAccount();
+  const meQuery = useAccount({
+    refetchInterval: (account) =>
+      account?.status !== AccountStatus.ValidPayment &&
+      account?.status !== AccountStatus.InvalidPayment
+        ? 1000
+        : false,
+  });
+
   const router = useRouter();
   const { data: account } = meQuery;
   const { claimGrowth: claimGrowthQuery } = router.query;
@@ -22,29 +29,6 @@ const SettingsBillingPage: ThirdwebNextPage = () => {
     false,
     true,
   );
-
-  useEffect(() => {
-    let refetchInterval: ReturnType<typeof setInterval> | undefined;
-
-    if (
-      [AccountStatus.NoPayment, AccountStatus.PaymentVerification].includes(
-        account?.status as AccountStatus,
-      )
-    ) {
-      refetchInterval = setInterval(() => {
-        meQuery.refetch();
-      }, 3000);
-    } else if (refetchInterval) {
-      clearTimeout(refetchInterval);
-    }
-
-    return () => {
-      if (refetchInterval) {
-        clearTimeout(refetchInterval);
-      }
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [account]);
 
   useEffect(() => {
     if (claimGrowthQuery !== undefined && !account?.trialPeriodEndedAt) {

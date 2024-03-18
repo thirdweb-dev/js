@@ -1,4 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  Query,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { THIRDWEB_API_HOST } from "../../../constants/urls";
 import { accountKeys, apiKeys, authorizedWallets } from "../cache-keys";
@@ -248,7 +253,21 @@ export interface BillingCredit {
   redeemedAt: string;
 }
 
-export function useAccount() {
+export interface UseAccountInput {
+  refetchInterval?:
+    | number
+    | ((
+        data: Account | undefined,
+        query: Query<
+          Account,
+          unknown,
+          Account,
+          readonly ["account", string, "me"]
+        >,
+      ) => number | false);
+}
+
+export function useAccount({ refetchInterval }: UseAccountInput = {}) {
   const { user, isLoggedIn } = useLoggedInUser();
 
   return useQuery(
@@ -269,7 +288,10 @@ export function useAccount() {
 
       return json.data as Account;
     },
-    { enabled: !!user?.address && isLoggedIn },
+    {
+      enabled: !!user?.address && isLoggedIn,
+      refetchInterval: refetchInterval ?? false,
+    },
   );
 }
 

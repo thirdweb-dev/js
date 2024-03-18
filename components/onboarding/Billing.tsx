@@ -3,8 +3,11 @@ import { OnboardingPaymentForm } from "./PaymentForm";
 import { Flex, FocusLock, useColorMode } from "@chakra-ui/react";
 import { OnboardingTitle } from "./Title";
 import { loadStripe } from "@stripe/stripe-js";
-import { useAccount, useUpdateAccount } from "@3rdweb-sdk/react/hooks/useApi";
+import { useUpdateAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { useTrack } from "hooks/analytics/useTrack";
+import { useQueryClient } from "@tanstack/react-query";
+import { accountKeys } from "@3rdweb-sdk/react/cache-keys";
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY ?? "");
 
@@ -19,7 +22,8 @@ export const OnboardingBilling: React.FC<OnboardingBillingProps> = ({
 }) => {
   const { colorMode } = useColorMode();
   const trackEvent = useTrack();
-  const accountQuery = useAccount();
+  const queryClient = useQueryClient();
+  const { user } = useLoggedInUser();
 
   const mutation = useUpdateAccount();
 
@@ -81,7 +85,9 @@ export const OnboardingBilling: React.FC<OnboardingBillingProps> = ({
             >
               <OnboardingPaymentForm
                 onSave={() => {
-                  accountQuery.refetch();
+                  queryClient.invalidateQueries(
+                    accountKeys.me(user?.address as string),
+                  );
                   onSave();
                 }}
                 onCancel={handleCancel}
