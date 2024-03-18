@@ -194,13 +194,17 @@ export async function getSignedKeyRequestMetadata(
   options: SignedKeyRequestMetadataOptions,
 ): Promise<Hex> {
   let signature;
-  if ("account" in options) {
+  if ("keyRequestSignature" in options) {
+    signature = options.keyRequestSignature;
+  } else if ("account" in options) {
     signature = await signKeyRequest({
       account: options.account,
       message: options.message,
     });
   } else {
-    signature = options.keyRequestSignature;
+    throw new Error(
+      "Invalid options, expected an account or key request signature to be provided",
+    );
   }
 
   return encodeSignedKeyRequestMetadata({
