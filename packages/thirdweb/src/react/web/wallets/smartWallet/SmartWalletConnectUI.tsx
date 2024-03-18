@@ -103,6 +103,10 @@ const SmartWalletConnecting = (props: {
 
   const handleConnect = useCallback(async () => {
     if (!personalWallet) {
+      throw new Error("No personal wallet");
+    }
+    const personalAccount = personalWallet.getAccount();
+    if (!personalAccount) {
       throw new Error("No personal account");
     }
 
@@ -111,7 +115,7 @@ const SmartWalletConnecting = (props: {
     try {
       const smartWallet = createSmartWalletInstance() as SmartWallet; // TODO: fix this type
       await smartWallet.connect({
-        personalWallet,
+        personalAccount,
       });
 
       done(smartWallet);

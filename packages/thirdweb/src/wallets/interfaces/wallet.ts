@@ -33,9 +33,9 @@ export type Wallet = {
   switchChain?: (newChain: Chain) => Promise<void>;
 };
 
-export interface WalletWithPersonalWallet extends Wallet {
-  autoConnect: (options: { personalWallet: Wallet }) => Promise<Account>;
-  personalWallet?: Wallet;
+export interface WalletWithPersonalAccount extends Wallet {
+  autoConnect: (options: { personalAccount: Account }) => Promise<Account>;
+  personalAccount?: Account;
 }
 
 export type Account = {

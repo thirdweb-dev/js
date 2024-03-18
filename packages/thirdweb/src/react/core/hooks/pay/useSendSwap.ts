@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import type { SwapRoute } from "../../../../pay/swap/actions/getSwap.js";
 import { sendSwap } from "../../../../pay/swap/actions/sendSwap.js";
-import { useActiveWallet } from "../wallets/wallet-hooks.js";
+import { useActiveAccount } from "../wallets/wallet-hooks.js";
 import { useSwapStatus, type SwapStatusParams } from "./useSwapStatus.js";
 
 export type { SwapStatus, SwapStatusParams } from "./useSwapStatus.js";
@@ -24,7 +24,7 @@ export type { SwapRoute } from "./useSwapRoute.js";
  * ```
  */
 export function useSendSwap() {
-  const wallet = useActiveWallet();
+  const account = useActiveAccount();
   const [swapStatusParams, setSwapStatusParams] = useState<
     SwapStatusParams | undefined
   >(undefined);
@@ -42,10 +42,10 @@ export function useSendSwap() {
     error: sendError,
   } = useMutation<SwapStatusParams, Error, SwapRoute>({
     mutationFn: async (swapRoute: SwapRoute) => {
-      if (!wallet) {
-        throw new Error("Wallet not found");
+      if (!account) {
+        throw new Error("Account not found");
       }
-      const swapStatusParams_ = await sendSwap(wallet, swapRoute);
+      const swapStatusParams_ = await sendSwap(account, swapRoute);
 
       setSwapStatusParams(swapStatusParams_);
       return swapStatusParams_;

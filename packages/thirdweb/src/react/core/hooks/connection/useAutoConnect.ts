@@ -14,7 +14,7 @@ import {
   getSavedConnectParamsFromStorage,
   type WithPersonalWalletConnectionOptions,
 } from "../../../../wallets/storage/walletStorage.js";
-import type { WalletWithPersonalWallet } from "../../../../wallets/interfaces/wallet.js";
+import type { WalletWithPersonalAccount } from "../../../../wallets/interfaces/wallet.js";
 import { asyncLocalStorage } from "../../utils/asyncLocalStorage.js";
 
 let autoConnectAttempted = false;
@@ -78,17 +78,17 @@ export function AutoConnect() {
             dappMetadata,
           });
 
-          await personalWallet.autoConnect();
+          const account = await personalWallet.autoConnect();
 
           // create wallet
           const wallet = walletConfig.create({
             client,
             dappMetadata,
-          }) as WalletWithPersonalWallet;
+          }) as WalletWithPersonalAccount;
 
           // auto connect the wallet using the personal account
           await wallet.autoConnect({
-            personalWallet,
+            personalAccount: account,
           });
 
           return wallet;

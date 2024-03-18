@@ -2,54 +2,49 @@ import type { WaitForReceiptOptions } from "./wait-for-tx-receipt.js";
 import type {
   Account,
   SendTransactionOption,
-  Wallet,
 } from "../../wallets/interfaces/wallet.js";
 import type { PreparedTransaction } from "../prepare-transaction.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import { encode } from "./encode.js";
-import type { Prettify } from "../../utils/type-utils.js";
 
-export type SendBatchTransactionOptions = Prettify<
-  {
-    transactions: PreparedTransaction[];
-  } & (
-    | { account?: never; wallet: Wallet }
-    | { account: Account; wallet?: never }
-  )
->;
+export type SendBatchTransactionOptions = {
+  transactions: PreparedTransaction[];
+  account: Account;
+};
 
 /**
- * Sends a transaction using the provided wallet.
- * @param options - The options for sending the transaction.
- * @returns A promise that resolves to the transaction hash.
- * @throws An error if the wallet is not connected.
+ * Sends a batch transaction using the provided options.
+ * @param options - The options for sending the batch transaction.
+ * @returns A promise that resolves to the options for waiting for the receipt of the first transaction in the batch.
+ * @throws An error if the account is not connected, there are no transactions to send, or the account does not implement sendBatchTransaction.
  * @transaction
  * @example
  * ```ts
- * import { sendTransaction } from "thirdweb";
- * const transactionHash = await sendTransaction({
+ * import { sendBatchTransaction } from "thirdweb";
+ *
+ * const waitForReceiptOptions = await sendBatchTransaction({
  *  account,
- *  transaction
+ *  transactions
  * });
  * ```
  */
 export async function sendBatchTransaction(
   options: SendBatchTransactionOptions,
 ): Promise<WaitForReceiptOptions> {
-  const account = options.account ?? options.wallet.getAccount();
+  const { account, transactions } = options;
   if (!account) {
     throw new Error("not connected");
   }
-  if (options.transactions.length === 0) {
+  if (transactions.length === 0) {
     throw new Error("No transactions to send");
   }
-  const firstTx = options.transactions[0];
+  const firstTx = transactions[0];
   if (!firstTx) {
     throw new Error("No transactions to send");
   }
   if (account.sendBatchTransaction) {
     const serializedTxs: SendTransactionOption[] = await Promise.all(
-      options.transactions.map(async (tx) => {
+      transactions.map(async (tx) => {
         // no need to estimate gas for these, gas will be estimated on the entire batch
         const [data, to, accessList, value] = await Promise.all([
           encode(tx),
