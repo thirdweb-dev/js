@@ -147,6 +147,7 @@ type BuyWithCryptoQuoteRouteResponse = {
   };
 
   maxSlippageBPS: number;
+  bridge?: string;
 };
 
 export type QuoteApprovalParams = BaseTransactionOptions<ApproveParams>;
