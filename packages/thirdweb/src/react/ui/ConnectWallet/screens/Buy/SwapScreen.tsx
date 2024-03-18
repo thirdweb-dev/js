@@ -5,14 +5,16 @@ import { polygon } from "../../../../../chains/chain-definitions/polygon.js";
 import type { Chain } from "../../../../../chains/types.js";
 import { defineChain } from "../../../../../chains/utils.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../constants/addresses.js";
-import type { GetSwapQuoteParams } from "../../../../../pay/quote/actions/getQuote.js";
-import { fallbackSwapSupportedChainIds } from "../../../../../pay/quote/supportedChains.js";
+import { fallbackSwapSupportedChainIds } from "../../../../../pay/buyWithCrypto/supportedChains.js";
 import { getClientFetch } from "../../../../../utils/fetch.js";
 import type { Account } from "../../../../../wallets/interfaces/wallet.js";
 import { useChainsQuery } from "../../../../hooks/others/useChainQuery.js";
 import { useThirdwebProviderProps } from "../../../../hooks/others/useThirdwebProviderProps.js";
 import { useWalletBalance } from "../../../../hooks/others/useWalletBalance.js";
-import { useSwapQuote } from "../../../../hooks/pay/useBuyWithCryptoQuote.js";
+import {
+  useBuyWithCryptoQuote,
+  type BuyWithCryptoQuoteQueryParams,
+} from "../../../../hooks/pay/useBuyWithCryptoQuote.js";
 import {
   useActiveAccount,
   useActiveWalletChain,
@@ -135,10 +137,9 @@ export function SwapScreenContent(props: {
     tokenAddress: isNativeToken(fromToken) ? undefined : fromToken.address,
   });
 
-  const swapParams: GetSwapQuoteParams | undefined =
+  const buyWithCryptoParams: BuyWithCryptoQuoteQueryParams | undefined =
     deferredTokenAmount && !(fromChain === toChain && fromToken === toToken)
       ? {
-          client: client,
           // wallet
           fromAddress: account.address,
           // from token
@@ -155,7 +156,7 @@ export function SwapScreenContent(props: {
         }
       : undefined;
 
-  const swapQuoteQuery = useSwapQuote(swapParams, {
+  const buyWithCryptoQuoteQuery = useBuyWithCryptoQuote(buyWithCryptoParams, {
     // refetch every 30 seconds
     staleTime: 30 * 1000,
     refetchInterval: 30 * 1000,
@@ -229,16 +230,16 @@ export function SwapScreenContent(props: {
     );
   }
 
-  const swapQuote = swapQuoteQuery.data;
-  const isSwapQuoteError = swapQuoteQuery.isError;
+  const swapQuote = buyWithCryptoQuoteQuery.data;
+  const isSwapQuoteError = buyWithCryptoQuoteQuery.isError;
 
   const sourceTokenAmount = swapQuote?.swapDetails.fromAmount || "";
 
-  if (screen === "confirmation" && swapQuoteQuery.data) {
+  if (screen === "confirmation" && buyWithCryptoQuoteQuery.data) {
     return (
       <ConfirmationScreen
         onBack={() => setScreen("main")}
-        swapQuote={swapQuoteQuery.data}
+        buyWithCryptoQuote={buyWithCryptoQuoteQuery.data}
         fromAmount={sourceTokenAmount}
         toAmount={tokenAmount}
         fromChain={fromChain}
@@ -295,16 +296,18 @@ export function SwapScreenContent(props: {
               onTokenClick={() => setScreen("select-from-token")}
               chain={fromChain}
               token={fromToken}
-              isLoading={swapQuoteQuery.isLoading && !sourceTokenAmount}
+              isLoading={
+                buyWithCryptoQuoteQuery.isLoading && !sourceTokenAmount
+              }
               onChainClick={() => setScreen("select-from-chain")}
             />
 
             <Spacer y="lg" />
 
             <Container flex="column" gap="md">
-              {swapQuoteQuery.data && (
+              {buyWithCryptoQuoteQuery.data && (
                 <div>
-                  <SwapFees quote={swapQuoteQuery.data} />
+                  <SwapFees quote={buyWithCryptoQuoteQuery.data} />
                   <Spacer y="lg" />
                 </div>
               )}
@@ -337,7 +340,7 @@ export function SwapScreenContent(props: {
               track({
                 source: "ConnectButton",
                 action: "continue.click",
-                quote: swapQuoteQuery.data,
+                quote: buyWithCryptoQuoteQuery.data,
               });
               setScreen("confirmation");
             }

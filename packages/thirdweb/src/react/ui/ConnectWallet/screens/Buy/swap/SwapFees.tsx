@@ -1,4 +1,4 @@
-import type { SwapQuote } from "../../../../../../pay/quote/actions/getQuote.js";
+import type { BuyWithCryptoQuote } from "../../../../../../pay/buyWithCrypto/actions/getQuote.js";
 import { formatNumber } from "../../../../../utils/formatNumber.js";
 import { Container } from "../../../../components/basic.js";
 import { Text } from "../../../../components/text.js";
@@ -9,7 +9,7 @@ import { radius, spacing } from "../../../../design-system/index.js";
 /**
  * @internal
  */
-export function SwapFees(props: { quote: SwapQuote }) {
+export function SwapFees(props: { quote: BuyWithCryptoQuote }) {
   return (
     <Container animate="fadein">
       <FeesContainer>
@@ -23,7 +23,7 @@ export function SwapFees(props: { quote: SwapQuote }) {
             alignItems: "flex-end",
           }}
         >
-          {props.quote.swapFees.map((fee) => {
+          {props.quote.processingFees.map((fee) => {
             return (
               <Container key={fee.token.symbol} flex="row" gap="xxs">
                 <Text color="primaryText" size="xs">

@@ -10,7 +10,10 @@ import { ThirdwebProviderContext } from "../../providers/thirdweb-provider-ctx.j
 // TODO: use the estimate to vary the polling interval
 const DEFAULT_POLL_INTERVAL = 5000;
 
-type BuyWithCryptoStatusParams = Omit<BuyWithCryptoTransaction, "client">;
+export type BuyWithCryptoStatusQueryParams = Omit<
+  BuyWithCryptoTransaction,
+  "client"
+>;
 
 /**
  * A hook to get a status of swap transaction.
@@ -46,7 +49,7 @@ type BuyWithCryptoStatusParams = Omit<BuyWithCryptoTransaction, "client">;
  * ```
  */
 export function useBuyWithCryptoStatus(
-  buyWithCryptoStatusParams?: BuyWithCryptoStatusParams,
+  buyWithCryptoStatusParams?: BuyWithCryptoStatusQueryParams,
 ) {
   const [refetchInterval, setRefetchInterval] = useState<number>(
     DEFAULT_POLL_INTERVAL,
@@ -57,7 +60,7 @@ export function useBuyWithCryptoStatus(
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: [
       "swapStatus",
-      buyWithCryptoStatusParams?.transactionResult.transactionHash,
+      buyWithCryptoStatusParams?.transactionHash,
     ] as const,
     queryFn: async () => {
       if (!context?.client) {

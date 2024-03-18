@@ -11,7 +11,11 @@ import {
 } from "../../../pay/buyWithCrypto/actions/getHistory.js";
 import { ThirdwebProviderContext } from "../../providers/thirdweb-provider-ctx.js";
 
-type BuyWithCryptoQuoteQueryOptions = Omit<
+export type BuyWithCryptoHistoryQueryParams = Omit<
+  WalletSwapHistoryParams,
+  "client"
+>;
+export type BuyWithCryptoQuoteQueryOptions = Omit<
   UseQueryOptions<WalletSwapHistoryData>,
   "queryFn" | "queryKey" | "enabled"
 >;
@@ -39,7 +43,7 @@ type BuyWithCryptoQuoteQueryOptions = Omit<
  * ```
  */
 export function useBuyWithCryptoHistory(
-  buyWithCryptoHistoryParams?: Omit<WalletSwapHistoryParams, "client">,
+  buyWithCryptoHistoryParams?: BuyWithCryptoHistoryQueryParams,
   queryParams?: BuyWithCryptoQuoteQueryOptions,
 ): UseQueryResult<WalletSwapHistoryData> {
   const context = useContext(ThirdwebProviderContext);

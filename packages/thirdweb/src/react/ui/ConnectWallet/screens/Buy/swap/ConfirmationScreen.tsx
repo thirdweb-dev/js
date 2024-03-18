@@ -5,14 +5,15 @@ import {
 } from "@radix-ui/react-icons";
 import { useState } from "react";
 import type { Chain } from "../../../../../../chains/types.js";
-import type { SwapQuote } from "../../../../../../pay/quote/actions/getQuote.js";
-import type { QuoteTransaction } from "../../../../../../pay/quote/actions/getStatus.js";
+import type { BuyWithCryptoQuote } from "../../../../../../pay/buyWithCrypto/actions/getQuote.js";
 import type { Account } from "../../../../../../wallets/interfaces/wallet.js";
+import { useSendTransaction } from "../../../../../hooks/contract/useSend.js";
 import { useChainQuery } from "../../../../../hooks/others/useChainQuery.js";
 import { useThirdwebProviderProps } from "../../../../../hooks/others/useThirdwebProviderProps.js";
-import { useSwapStatus } from "../../../../../hooks/pay/useBuyWithCryptoStatus.js";
-import { useSendSwapApproval } from "../../../../../hooks/pay/useSendSwapApproval.js";
-import { useSendSwapTransaction } from "../../../../../hooks/pay/useSendSwapTransaction.js";
+import {
+  useBuyWithCryptoStatus,
+  type BuyWithCryptoStatusQueryParams,
+} from "../../../../../hooks/pay/useBuyWithCryptoStatus.js";
 import { useActiveWallet } from "../../../../../providers/wallet-provider.js";
 import { shortenString } from "../../../../../utils/addresses.js";
 import { formatNumber } from "../../../../../utils/formatNumber.js";
@@ -42,7 +43,7 @@ import { addPendingSwapTransaction } from "./pendingSwapTx.js";
  */
 export function ConfirmationScreen(props: {
   onBack: () => void;
-  swapQuote: SwapQuote;
+  buyWithCryptoQuote: BuyWithCryptoQuote;
   fromAmount: string;
   toAmount: string;
   fromChain: Chain;
@@ -52,14 +53,15 @@ export function ConfirmationScreen(props: {
   toToken: ERC20OrNativeToken;
   onViewPendingTx: () => void;
 }) {
-  const sendSwapMutation = useSendSwapTransaction();
-  const sendSwapApprovalMutation = useSendSwapApproval();
   const { client } = useThirdwebProviderProps();
   const activeWallet = useActiveWallet();
+  const sendTransactionMutation = useSendTransaction();
   const track = useTrack();
 
-  const [swapTx, setSwapTx] = useState<QuoteTransaction | undefined>();
-  const isApprovalRequired = props.swapQuote.approval !== undefined;
+  const [swapTx, setSwapTx] = useState<
+    BuyWithCryptoStatusQueryParams | undefined
+  >();
+  const isApprovalRequired = props.buyWithCryptoQuote.approval !== undefined;
 
   const [step, setStep] = useState<"approval" | "swap">(
     isApprovalRequired ? "approval" : "swap",
@@ -137,7 +139,7 @@ export function ConfirmationScreen(props: {
       </TokenInfoContainer>
 
       <Spacer y="xl" />
-      <SwapFees quote={props.swapQuote} />
+      <SwapFees quote={props.buyWithCryptoQuote} />
 
       <Spacer y="lg" />
 
@@ -183,21 +185,21 @@ export function ConfirmationScreen(props: {
         variant="accent"
         fullWidth
         onClick={async () => {
-          if (step === "approval" && props.swapQuote.approval) {
+          if (step === "approval" && props.buyWithCryptoQuote.approval) {
             try {
               setStatus("pending");
               track({
                 source: "ConnectButton",
                 action: "approve.initiated",
-                quote: props.swapQuote,
+                quote: props.buyWithCryptoQuote,
               });
-              await sendSwapApprovalMutation.mutateAsync(
-                props.swapQuote.approval,
+              await sendTransactionMutation.mutateAsync(
+                props.buyWithCryptoQuote.approval,
               );
               track({
                 source: "ConnectButton",
                 action: "approve.success",
-                quote: props.swapQuote,
+                quote: props.buyWithCryptoQuote,
               });
               setStep("swap");
               setStatus("idle");
@@ -205,7 +207,7 @@ export function ConfirmationScreen(props: {
               track({
                 source: "ConnectButton",
                 action: "approve.failed",
-                quote: props.swapQuote,
+                quote: props.buyWithCryptoQuote,
               });
               setStatus("error");
             }
@@ -217,16 +219,16 @@ export function ConfirmationScreen(props: {
               track({
                 source: "ConnectButton",
                 action: "swap.initiated",
-                quote: props.swapQuote,
+                quote: props.buyWithCryptoQuote,
               });
-              const _swapTx = await sendSwapMutation.mutateAsync(
-                props.swapQuote,
+              const _swapTx = await sendTransactionMutation.mutateAsync(
+                props.buyWithCryptoQuote.transactionRequest,
               );
 
               track({
                 source: "ConnectButton",
                 action: "swap.sent",
-                quote: props.swapQuote,
+                quote: props.buyWithCryptoQuote,
               });
 
               // these will be defined by this time
@@ -244,21 +246,24 @@ export function ConfirmationScreen(props: {
                       value: props.toAmount,
                     },
                     status: "PENDING",
-                    transactionHash: _swapTx.transactionHash,
+                    transactionHash:
+                      _swapTx.transactionHash ?? _swapTx.userOpHash,
                     txExplorerLink: explorer
                       ? `${explorer}/tx/${_swapTx.transactionHash}`
                       : "",
                   },
-                  props.swapQuote,
+                  props.buyWithCryptoQuote,
                 );
               }
 
-              setSwapTx(_swapTx);
+              setSwapTx({
+                transactionHash: _swapTx.transactionHash ?? _swapTx.userOpHash,
+              });
             } catch {
               track({
                 source: "ConnectButton",
                 action: "swap.failedToSend",
-                quote: props.swapQuote,
+                quote: props.buyWithCryptoQuote,
               });
               setStatus("error");
             }
@@ -373,9 +378,9 @@ function TokenSelection(props: {
 function WaitingForConfirmation(props: {
   onBack: () => void;
   onViewPendingTx: () => void;
-  swapTx: QuoteTransaction;
+  swapTx: BuyWithCryptoStatusQueryParams;
 }) {
-  const swapStatus = useSwapStatus(props.swapTx);
+  const swapStatus = useBuyWithCryptoStatus(props.swapTx);
   const isSuccess = swapStatus.data?.status === "COMPLETED";
   const isFailed = swapStatus.data?.status === "FAILED";
   const isPending = !isSuccess && !isFailed;

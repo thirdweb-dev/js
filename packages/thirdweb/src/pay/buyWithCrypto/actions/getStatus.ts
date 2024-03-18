@@ -1,12 +1,11 @@
 import type { ThirdwebClient } from "../../../client/client.js";
-import type { WaitForReceiptOptions } from "../../../transaction/actions/wait-for-tx-receipt.js";
 import { getClientFetch } from "../../../utils/fetch.js";
 import { getPayQuoteStatusUrl } from "../utils/definitions.js";
 import type { QuoteTokenInfo } from "./getQuote.js";
 
 // TODO: add JSDoc description for all properties
 
-export type QuoteTransactionDetails = {
+export type BuyWithCryptoTransactionDetails = {
   transactionHash: string;
   token: QuoteTokenInfo;
   amountWei: string;
@@ -17,7 +16,7 @@ export type QuoteTransactionDetails = {
 
 export type BuyWithCryptoTransaction = {
   client: ThirdwebClient;
-  transactionResult: WaitForReceiptOptions;
+  transactionHash: string;
 };
 
 /**
@@ -26,8 +25,8 @@ export type BuyWithCryptoTransaction = {
 export type BuyWithCryptoStatus = {
   transactionId: string;
   transactionType: string;
-  source: QuoteTransactionDetails;
-  destination?: QuoteTransactionDetails;
+  source: BuyWithCryptoTransactionDetails;
+  destination?: BuyWithCryptoTransactionDetails;
   status: "COMPLETED" | "FAILED" | "PENDING";
   subStatus: number;
   fromAddress: string;
@@ -66,7 +65,7 @@ export type BuyWithCryptoStatus = {
  * // keep polling the status of the quoted transaction until it returns a success or failure status
  * const status = await getBuyWithCryptoStatus({
  *    client,
- *    transactionResult,
+ *    transactionHash: transactionResult.transactionHash,
  * }});
  * ```
  * @returns Object of type [`BuyWithCryptoStatus`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoStatus)
@@ -75,12 +74,11 @@ export async function getBuyWithCryptoStatus(
   buyWithCryptoTransaction: BuyWithCryptoTransaction,
 ): Promise<BuyWithCryptoStatus> {
   try {
-    if (!buyWithCryptoTransaction.transactionResult.transactionHash) {
+    if (!buyWithCryptoTransaction.transactionHash) {
       throw new Error("Transaction hash is required");
     }
     const queryString = new URLSearchParams({
-      transactionHash:
-        buyWithCryptoTransaction.transactionResult.transactionHash,
+      transactionHash: buyWithCryptoTransaction.transactionHash,
     }).toString();
     const url = `${getPayQuoteStatusUrl()}?${queryString}`;
 

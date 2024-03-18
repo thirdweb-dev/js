@@ -1,7 +1,12 @@
+import type { Hash } from "viem";
 import { defineChain } from "../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import { getContract } from "../../../contract/contract.js";
-import type { ApproveParams } from "../../../extensions/erc20/write/approve.js";
+import {
+  approve,
+  type ApproveParams,
+} from "../../../extensions/erc20/write/approve.js";
+import type { PrepareTransactionOptions } from "../../../transaction/prepare-transaction.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { getClientFetch } from "../../../utils/fetch.js";
 import { getPayQuoteEndpoint } from "../utils/definitions.js";
@@ -147,8 +152,8 @@ type BuyWithCryptoQuoteRouteResponse = {
 export type QuoteApprovalParams = BaseTransactionOptions<ApproveParams>;
 
 export type BuyWithCryptoQuote = {
-  transactionRequest: QuoteTransactionRequest;
-  approval?: QuoteApprovalParams;
+  transactionRequest: PrepareTransactionOptions;
+  approval?: PrepareTransactionOptions;
 
   swapDetails: {
     fromAddress: string;
@@ -249,9 +254,16 @@ export async function getBuyWithCryptoQuote(
     ];
 
     const swapRoute: BuyWithCryptoQuote = {
-      transactionRequest: data.transactionRequest,
+      transactionRequest: {
+        chain: defineChain(data.transactionRequest.chainId),
+        client: params.client,
+        data: data.transactionRequest.data as Hash,
+        to: data.transactionRequest.to,
+        value: BigInt(data.transactionRequest.value),
+        gasPrice: BigInt(data.transactionRequest.gasPrice),
+      },
       approval: data.approval
-        ? {
+        ? approve({
             contract: getContract({
               client: params.client,
               address: data.approval.tokenAddress,
@@ -259,7 +271,7 @@ export async function getBuyWithCryptoQuote(
             }),
             spender: data.approval?.spenderAddress,
             amountWei: BigInt(data.approval.amountWei),
-          }
+          })
         : undefined,
       swapDetails: {
         fromAddress: data.fromAddress,

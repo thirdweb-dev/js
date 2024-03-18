@@ -11,11 +11,14 @@ import {
 } from "../../../pay/buyWithCrypto/actions/getQuote.js";
 import { ThirdwebProviderContext } from "../../providers/thirdweb-provider-ctx.js";
 
-type BuyWithCryptoQuoteQueryOptions = Omit<
+export type BuyWithCryptoQuoteQueryOptions = Omit<
   UseQueryOptions<BuyWithCryptoQuote>,
   "queryFn" | "queryKey" | "enabled"
 >;
-type BuyWithCryptoQuoteParams = Omit<getBuyWithCryptoQuoteParams, "client">;
+export type BuyWithCryptoQuoteQueryParams = Omit<
+  getBuyWithCryptoQuoteParams,
+  "client"
+>;
 /**
  * Hook to get a quote of type [`SwapQuote`](https://portal.thirdweb.com/references/typescript/v5/SwapQuote) for performing a token swap.
  * This quote contains the information about the swap such as token amounts, processing fees, estimated time etc.
@@ -61,7 +64,7 @@ type BuyWithCryptoQuoteParams = Omit<getBuyWithCryptoQuoteParams, "client">;
  * ```
  */
 export function useBuyWithCryptoQuote(
-  buyWithCryptoParams?: BuyWithCryptoQuoteParams,
+  buyWithCryptoParams?: BuyWithCryptoQuoteQueryParams,
   queryParams?: BuyWithCryptoQuoteQueryOptions,
 ): UseQueryResult<BuyWithCryptoQuote> {
   const context = useContext(ThirdwebProviderContext);

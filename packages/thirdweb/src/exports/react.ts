@@ -103,9 +103,18 @@ export {
 export { defaultTokens } from "../react/ui/ConnectWallet/defaultTokens.js";
 export type { SupportedTokens } from "../react/ui/ConnectWallet/defaultTokens.js";
 
-export { useSwapQuote } from "../react/hooks/pay/useBuyWithCryptoQuote.js";
-export { useSwapStatus } from "../react/hooks/pay/useBuyWithCryptoStatus.js";
-export { useSendSwapTransaction } from "../react/hooks/pay/useSendSwapTransaction.js";
+export {
+  useBuyWithCryptoHistory,
+  type BuyWithCryptoHistoryQueryParams,
+} from "../react/hooks/pay/useBuyWithCryptoHistory.js";
+export {
+  useBuyWithCryptoQuote,
+  type BuyWithCryptoQuoteQueryParams,
+} from "../react/hooks/pay/useBuyWithCryptoQuote.js";
+export {
+  useBuyWithCryptoStatus,
+  type BuyWithCryptoStatusQueryParams,
+} from "../react/hooks/pay/useBuyWithCryptoStatus.js";
 
 export { defaultWallets } from "../react/wallets/defaultWallets.js";
 

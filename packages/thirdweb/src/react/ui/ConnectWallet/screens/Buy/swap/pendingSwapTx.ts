@@ -1,7 +1,7 @@
 import { track } from "../../../../../../analytics/track.js";
 import type { ThirdwebClient } from "../../../../../../client/client.js";
-import type { SwapQuote } from "../../../../../../pay/quote/actions/getQuote.js";
-import { getQuoteStatus } from "../../../../../../pay/quote/actions/getStatus.js";
+import type { BuyWithCryptoQuote } from "../../../../../../pay/buyWithCrypto/actions/getQuote.js";
+import { getBuyWithCryptoStatus } from "../../../../../../pay/buyWithCrypto/actions/getStatus.js";
 import { createStore } from "../../../../../../reactive/store.js";
 import { wait } from "../../../../../../utils/promise/wait.js";
 
@@ -30,7 +30,7 @@ export const swapTransactionsStore = /* @__PURE__ */ createStore<SwapTxInfo[]>(
 export const addPendingSwapTransaction = (
   client: ThirdwebClient,
   txInfo: SwapTxInfo,
-  quote: SwapQuote,
+  quote: BuyWithCryptoQuote,
 ) => {
   const currentValue = swapTransactionsStore.getValue();
   const indexAdded = currentValue.length;
@@ -47,7 +47,7 @@ export const addPendingSwapTransaction = (
     await wait(5000);
     try {
       retryCount++;
-      const res = await getQuoteStatus({
+      const res = await getBuyWithCryptoStatus({
         client: client,
         transactionHash: txInfo.transactionHash,
       });
