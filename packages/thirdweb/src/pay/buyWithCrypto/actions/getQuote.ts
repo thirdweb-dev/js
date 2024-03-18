@@ -9,10 +9,10 @@ import { getPayQuoteEndpoint } from "../utils/definitions.js";
 // TODO: add JSDoc description for all properties
 
 /**
- * The parameters for [`getSwapQuote`](https://portal.thirdweb.com/references/typescript/v5/getSwapQuote) function
+ * The parameters for [`getBuyWithCryptoQuote`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoQuote) function
  * It includes information about which tokens to swap, the amount of tokens to swap, slippage, etc.
  */
-export type GetSwapQuoteParams = {
+export type getBuyWithCryptoQuoteParams = {
   /**
    * A client is the entry point to the thirdweb SDK. It is required for all other actions.
    *
@@ -105,7 +105,7 @@ type QuoteTransactionRequest = {
   gasLimit: string;
 };
 
-type QuoteRouteResponse = {
+type BuyWithCryptoQuoteRouteResponse = {
   transactionRequest: QuoteTransactionRequest;
   approval?: {
     chainId: number;
@@ -129,7 +129,7 @@ type QuoteRouteResponse = {
   toAmount: string;
 
   paymentTokens: QuotePaymentToken[];
-  swapFees: QuotePaymentToken[];
+  processingFees: QuotePaymentToken[];
 
   estimated: {
     fromAmountUSDCents: number;
@@ -146,7 +146,7 @@ type QuoteRouteResponse = {
 
 export type QuoteApprovalParams = BaseTransactionOptions<ApproveParams>;
 
-export type SwapQuote = {
+export type BuyWithCryptoQuote = {
   transactionRequest: QuoteTransactionRequest;
   approval?: QuoteApprovalParams;
 
@@ -179,24 +179,23 @@ export type SwapQuote = {
   };
 
   paymentTokens: QuotePaymentToken[];
-  swapFees: QuotePaymentToken[];
+  processingFees: QuotePaymentToken[];
   client: ThirdwebClient;
 };
 
 /**
- * Get a quote of type [`SwapQuote`](https://portal.thirdweb.com/references/typescript/v5/SwapQuote) for performing a token swap.
+ * Get a quote of type [`BuyWithCryptoQuote`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoQuote) to buy any given token with crypto.
  * This quote contains the information about the swap such as token amounts, processing fees, estimated time etc.
  *
- * Once you have the quote, you can use the [`sendQuoteTransaction`](https://portal.thirdweb.com/references/typescript/v5/sendQuoteTransaction)
- * function to execute the quoted transaction.
- * @param params - object of type [`GetSwapQuoteParams`](https://portal.thirdweb.com/references/typescript/v5/GetSwapQuoteParams)
- * @returns Object of type [`SwapQuote`](https://portal.thirdweb.com/references/typescript/v5/SwapQuote) which contains the information about the quote such as processing fees, estimated time, converted token amounts, etc.
+ * Once you have the quote, you can use `prepareTransaction` and prepare the transaction for submission.
+ * @param params - object of type [`GetBuyWithCryptoQuoteParams`](https://portal.thirdweb.com/references/typescript/v5/GetBuyWithCryptoQuoteParams)
+ * @returns Object of type [`BuyWithCryptoQuote`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoQuote) which contains the information about the quote such as processing fees, estimated time, converted token amounts, etc.
  * @example
  *
  * ```ts
- * import { getSwapQuote } from "thirdweb/pay";
+ * import { getBuyWithCryptoQuote } from "thirdweb/pay";
  *
- * const quote = await getSwapQuote({
+ * const quote = await getBuyWithCryptoQuote({
  *  client,
  *  fromAddress: "0x...", // wallet address
  *  fromChainId: 137, // chain id of the source token
@@ -210,9 +209,9 @@ export type SwapQuote = {
  * });
  * ```
  */
-export async function getSwapQuote(
-  params: GetSwapQuoteParams,
-): Promise<SwapQuote> {
+export async function getBuyWithCryptoQuote(
+  params: getBuyWithCryptoQuoteParams,
+): Promise<BuyWithCryptoQuote> {
   try {
     const urlParamsObj: Record<string, string> = {
       fromAddress: params.fromAddress,
@@ -245,9 +244,11 @@ export async function getSwapQuote(
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data: QuoteRouteResponse = (await response.json())["result"];
+    const data: BuyWithCryptoQuoteRouteResponse = (await response.json())[
+      "result"
+    ];
 
-    const swapRoute: SwapQuote = {
+    const swapRoute: BuyWithCryptoQuote = {
       transactionRequest: data.transactionRequest,
       approval: data.approval
         ? {
@@ -281,7 +282,7 @@ export async function getSwapQuote(
       },
 
       paymentTokens: data.paymentTokens,
-      swapFees: data.swapFees,
+      processingFees: data.processingFees,
       client: params.client,
     };
 

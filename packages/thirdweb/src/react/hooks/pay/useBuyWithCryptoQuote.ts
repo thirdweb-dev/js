@@ -3,17 +3,19 @@ import {
   type UseQueryOptions,
   type UseQueryResult,
 } from "@tanstack/react-query";
+import { useContext } from "react";
 import {
-  getSwapQuote,
-  type GetSwapQuoteParams,
-  type SwapQuote,
-} from "../../../pay/quote/actions/getQuote.js";
+  getBuyWithCryptoQuote,
+  type BuyWithCryptoQuote,
+  type getBuyWithCryptoQuoteParams,
+} from "../../../pay/buyWithCrypto/actions/getQuote.js";
+import { ThirdwebProviderContext } from "../../providers/thirdweb-provider-ctx.js";
 
-type SwapQuoteQueryOptions = Omit<
-  UseQueryOptions<SwapQuote>,
+type BuyWithCryptoQuoteQueryOptions = Omit<
+  UseQueryOptions<BuyWithCryptoQuote>,
   "queryFn" | "queryKey" | "enabled"
 >;
-
+type BuyWithCryptoQuoteParams = Omit<getBuyWithCryptoQuoteParams, "client">;
 /**
  * Hook to get a quote of type [`SwapQuote`](https://portal.thirdweb.com/references/typescript/v5/SwapQuote) for performing a token swap.
  * This quote contains the information about the swap such as token amounts, processing fees, estimated time etc.
@@ -23,16 +25,16 @@ type SwapQuoteQueryOptions = Omit<
  *
  * Once you have the quote, you can use the [`useSendSwapTransaction`](https://portal.thirdweb.com/references/typescript/v5/useSendSwapTransaction)
  * function to send the swap transaction and [`useSwapStatus`](https://portal.thirdweb.com/references/typescript/v5/useSwapStatus) function to get the status of the swap transaction.
- * @param swapParams - object of type [`GetSwapQuoteParams`](https://portal.thirdweb.com/references/typescript/v5/GetSwapQuoteParams)
+ * @param buyWithCryptoParams - object of type [`GetSwapQuoteParams`](https://portal.thirdweb.com/references/typescript/v5/GetSwapQuoteParams)
  * @param queryParams - options to configure the react query
  * @returns A React Query object which contains the data of type [`SwapQuote`](https://portal.thirdweb.com/references/typescript/v5/SwapQuote)
  * @example
  * ```tsx
- * import { useSendSwapTransaction, useSwapStatus, useSwapQuote, useSendSwapApproval } from "thirdweb/react";
+ * import { useSendSwapTransaction, useSwapStatus, useBuyWithCryptoQuote, useSendSwapApproval } from "thirdweb/react";
  * import type { SwapTransaction } from "thirdweb";
  *
  * function Component() {
- *  const swapQuoteQuery = useSwapQuote(swapParams);
+ *  const swapQuoteQuery = useBuyWithCryptoQuote(swapParams);
  *  const sendApproval = useSendSwapApproval();
  *  const sendSwap = useSendSwapTransaction();
  *
@@ -58,19 +60,29 @@ type SwapQuoteQueryOptions = Omit<
  * }
  * ```
  */
-export function useSwapQuote(
-  swapParams?: GetSwapQuoteParams,
-  queryParams?: SwapQuoteQueryOptions,
-): UseQueryResult<SwapQuote> {
+export function useBuyWithCryptoQuote(
+  buyWithCryptoParams?: BuyWithCryptoQuoteParams,
+  queryParams?: BuyWithCryptoQuoteQueryOptions,
+): UseQueryResult<BuyWithCryptoQuote> {
+  const context = useContext(ThirdwebProviderContext);
+
   return useQuery({
     ...queryParams,
-    queryKey: ["swapQuote", swapParams],
+    // eslint-disable-next-line @tanstack/query/exhaustive-deps
+    queryKey: ["buyWithCryptoQuote", buyWithCryptoParams],
     queryFn: () => {
-      if (!swapParams) {
+      if (!buyWithCryptoParams) {
         throw new Error("Swap params are required");
       }
-      return getSwapQuote(swapParams);
+      if (!context?.client) {
+        throw new Error("Please wrap the component in a ThirdwebProvider!");
+      }
+      return getBuyWithCryptoQuote({
+        // typescript limitation with discriminated unions are collapsed
+        ...(buyWithCryptoParams as getBuyWithCryptoQuoteParams),
+        client: context.client,
+      });
     },
-    enabled: !!swapParams,
+    enabled: !!buyWithCryptoParams,
   });
 }

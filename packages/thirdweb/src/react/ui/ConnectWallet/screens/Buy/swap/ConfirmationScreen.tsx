@@ -10,9 +10,9 @@ import type { QuoteTransaction } from "../../../../../../pay/quote/actions/getSt
 import type { Account } from "../../../../../../wallets/interfaces/wallet.js";
 import { useChainQuery } from "../../../../../hooks/others/useChainQuery.js";
 import { useThirdwebProviderProps } from "../../../../../hooks/others/useThirdwebProviderProps.js";
+import { useSwapStatus } from "../../../../../hooks/pay/useBuyWithCryptoStatus.js";
 import { useSendSwapApproval } from "../../../../../hooks/pay/useSendSwapApproval.js";
 import { useSendSwapTransaction } from "../../../../../hooks/pay/useSendSwapTransaction.js";
-import { useSwapStatus } from "../../../../../hooks/pay/useSwapStatus.js";
 import { useActiveWallet } from "../../../../../providers/wallet-provider.js";
 import { shortenString } from "../../../../../utils/addresses.js";
 import { formatNumber } from "../../../../../utils/formatNumber.js";
@@ -32,10 +32,10 @@ import {
   spacing,
 } from "../../../../design-system/index.js";
 import { useTrack } from "../../../../hooks/useTrack.js";
+import { genericTokenIcon } from "../../../defaultTokens.js";
 import { isNativeToken, type ERC20OrNativeToken } from "../../nativeToken.js";
 import { SwapFees } from "./SwapFees.js";
 import { addPendingSwapTransaction } from "./pendingSwapTx.js";
-import { genericTokenIcon } from "../../../defaultTokens.js";
 
 /**
  * @internal

@@ -12,7 +12,7 @@ import type { Account } from "../../../../../wallets/interfaces/wallet.js";
 import { useChainsQuery } from "../../../../hooks/others/useChainQuery.js";
 import { useThirdwebProviderProps } from "../../../../hooks/others/useThirdwebProviderProps.js";
 import { useWalletBalance } from "../../../../hooks/others/useWalletBalance.js";
-import { useSwapQuote } from "../../../../hooks/pay/useSwapQuote.js";
+import { useSwapQuote } from "../../../../hooks/pay/useBuyWithCryptoQuote.js";
 import {
   useActiveAccount,
   useActiveWalletChain,
