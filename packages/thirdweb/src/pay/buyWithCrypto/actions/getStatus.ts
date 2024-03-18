@@ -15,25 +15,80 @@ export type BuyWithCryptoTransactionDetails = {
   explorerLink?: string;
 };
 
+export type BuyWithCryptoQuoteSummary = {
+  fromToken: QuoteTokenInfo;
+  toToken: QuoteTokenInfo;
+
+  fromAmountWei: string;
+  fromAmount: string;
+
+  toAmountWei: string;
+  toAmount: string;
+
+  toAmountMin: string;
+  toAmountMinWei: string;
+
+  estimated: {
+    fromAmountUSDCents: number;
+    toAmountMinUSDCents: number;
+    toAmountUSDCents: number;
+    slippageBPS: number;
+    feesUSDCents: number;
+    gasCostUSDCents?: number;
+    durationSeconds?: number;
+  }; // SAME AS QUOTE
+
+  createdAt: string; // ISO DATE
+};
+
 export type BuyWithCryptoTransaction = {
   client: ThirdwebClient;
   transactionHash: string;
 };
 
+export const BuyWithCryptoStatuses = {
+  NOT_FOUND: "NOT_FOUND",
+  NONE: "NONE",
+  PENDING: "PENDING",
+  FAILED: "FAILED",
+  COMPLETED: "COMPLETED",
+} as const;
+
+export type BuyWithCryptoStatuses =
+  (typeof BuyWithCryptoStatuses)[keyof typeof BuyWithCryptoStatuses];
+
+export const BuyWithCryptoSubStatuses = {
+  NONE: "NONE",
+  WAITING_BRIDGE: "WAITING_BRIDGE",
+  REVERTED_ON_CHAIN: "REVERTED_ON_CHAIN",
+  SUCCESS: "SUCCESS",
+  PARTIAL_SUCCESS: "PARTIAL_SUCCESS",
+  UNKNOWN_ERROR: "UNKNOWN_ERROR",
+} as const;
+export type BuyWithCryptoSubStatuses =
+  (typeof BuyWithCryptoSubStatuses)[keyof typeof BuyWithCryptoSubStatuses];
+
+export const SwapType = {
+  SAME_CHAIN: "SAME_CHAIN",
+  CROSS_CHAIN: "CROSS_CHAIN",
+};
+
+export type SwapType = (typeof SwapType)[keyof typeof SwapType];
+
 /**
  * The object returned by the [`getQuoteStatus`](https://portal.thirdweb.com/references/typescript/v5/getQuoteStatus) function to represent the status of a quoted transaction
  */
 export type BuyWithCryptoStatus = {
-  transactionId: string;
-  transactionType: string;
+  quote: BuyWithCryptoQuoteSummary;
+  swapType: SwapType;
   source: BuyWithCryptoTransactionDetails;
   destination?: BuyWithCryptoTransactionDetails;
-  status: "COMPLETED" | "FAILED" | "PENDING";
-  subStatus: number;
+  status: BuyWithCryptoStatuses;
+  subStatus: BuyWithCryptoSubStatuses;
   fromAddress: string;
   toAddress: string;
   failureMessage?: string;
-  bridgeUsed?: string;
+  bridge?: string;
 };
 
 /**
