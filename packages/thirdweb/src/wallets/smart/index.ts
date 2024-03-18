@@ -231,16 +231,6 @@ export class SmartWallet implements WalletWithPersonalWallet {
   }
 
   /**
-   * Estimate the gas for a transaction.
-   * This always returns `0n` as the estimation is done in `createUnsignedUserOp`.
-   * @internal
-   */
-  async estimateGas(): Promise<bigint> {
-    // estimation is done in createUnsignedUserOp
-    return 0n;
-  }
-
-  /**
    * Force deploy the smart account onchain.
    * @example
    * ```ts
@@ -418,6 +408,9 @@ async function createSmartAccount(
     },
     async signTypedData(typedData: any) {
       return options.personalAccount.signTypedData(typedData);
+    },
+    async estimateGas(): Promise<bigint> {
+      return 0n;
     },
   };
   return account;
