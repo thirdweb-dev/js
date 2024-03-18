@@ -1,9 +1,10 @@
 import { toBigInt } from "../../../utils/bigint.js";
 import { prepareContractCall } from "../../../transaction/prepare-contract-call.js";
+import { getKeyGateway } from "../contracts/getKeyGateway.js";
+import { getFid } from "../read/getFid.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
 import type { Chain } from "../../../chains/types.js";
-import { getKeyGateway } from "../contracts.js";
 import type { Hex } from "../../../utils/encoding/hex.js";
 import type { Prettify } from "../../../utils/type-utils.js";
 import type { Address } from "abitype";
@@ -84,7 +85,6 @@ export function addSigner(options: AddSignerParams) {
           ? options.deadline
           : BigInt(Math.floor(Date.now() / 1000) + 3600); // default signatures last for 1 hour
 
-      const { getFid } = await import("../read/getFid.js");
       const appFid = await getFid({
         client: options.client,
         chain: options.chain,
@@ -95,12 +95,14 @@ export function addSigner(options: AddSignerParams) {
         disableCache: options.disableCache,
       });
 
-      const { getSignedKeyRequestMetadata } = await import(
-        "../eip712signatures.js"
-      );
-
+      // Set the signedKeyRequestMetadata if provided, otherwise generate using the app account
       let signedKeyRequestMetadata;
-      if ("appAccount" in options) {
+      if ("signedKeyRequestMetadata" in options) {
+        signedKeyRequestMetadata = options.signedKeyRequestMetadata;
+      } else if ("appAccount" in options) {
+        const { getSignedKeyRequestMetadata } = await import(
+          "../eip712Signatures/keyRequestSignature.js"
+        );
         signedKeyRequestMetadata = await getSignedKeyRequestMetadata({
           account: options.appAccount,
           message: {
@@ -110,7 +112,9 @@ export function addSigner(options: AddSignerParams) {
           },
         });
       } else {
-        signedKeyRequestMetadata = options.signedKeyRequestMetadata;
+        throw new Error(
+          "Invalid options, expected signedKeyRequestMetadata or appAccount to be provided",
+        );
       }
 
       return [1, options.signerPublicKey, 1, signedKeyRequestMetadata] as const;

@@ -8,32 +8,31 @@ export {
 } from "../../extensions/farcaster/constants.js";
 
 // Contracts
-export {
-  type FarcasterContractOptions,
-  getIdGateway,
-  getKeyGateway,
-  getBundler,
-  getIdRegistry,
-  getStorageRegistry,
-} from "../../extensions/farcaster/contracts.js";
+export type { FarcasterContractOptions } from "../../extensions/farcaster/contracts/contractOptions.js";
+export { getIdGateway } from "../../extensions/farcaster/contracts/getIdGateway.js";
+export { getKeyGateway } from "../../extensions/farcaster/contracts/getKeyGateway.js";
+export { getBundler } from "../../extensions/farcaster/contracts/getBundler.js";
+export { getIdRegistry } from "../../extensions/farcaster/contracts/getIdRegistry.js";
+export { getStorageRegistry } from "../../extensions/farcaster/contracts/getStorageRegistry.js";
 
 // EIP712 Signatures
 export {
-  // register
   type RegisterMessage,
   signRegister,
   getRegisterData,
-  // key request
+} from "../../extensions/farcaster/eip712Signatures/registerSignature.js";
+export {
   type SignedKeyRequestMessage,
   signKeyRequest,
   getKeyRequestData,
   encodeSignedKeyRequestMetadata,
   getSignedKeyRequestMetadata,
-  // add
+} from "../../extensions/farcaster/eip712Signatures/keyRequestSignature.js";
+export {
   type AddMessage,
   signAdd,
   getAddData,
-} from "../../extensions/farcaster/eip712signatures.js";
+} from "../../extensions/farcaster/eip712Signatures/addSignature.js";
 
 // Helper Functions
 export {

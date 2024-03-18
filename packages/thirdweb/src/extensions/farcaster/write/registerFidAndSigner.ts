@@ -4,9 +4,11 @@ import { prepareContractCall } from "../../../transaction/prepare-contract-call.
 import type { ThirdwebClient } from "../../../client/client.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
 import type { Chain } from "../../../chains/types.js";
-import { getBundler } from "../contracts.js";
+import { getBundler } from "../contracts/getBundler.js";
 import type { Hex } from "../../../utils/encoding/hex.js";
 import type { Prettify } from "../../../utils/type-utils.js";
+import { getFid } from "../read/getFid.js";
+import { getKeyGateway } from "../contracts/getKeyGateway.js";
 
 /**
  * Represents the parameters for the `registerFidAndSigner` function.
@@ -173,7 +175,6 @@ export function registerFidAndSigner(options: RegisterFidAndSignerParams) {
           : options.userAddress;
 
       // Check if the user already has a registered fid
-      const { getFid } = await import("../read/getFid.js");
       const existingFid = await getFid({
         client: options.client,
         chain: options.chain,
@@ -187,7 +188,6 @@ export function registerFidAndSigner(options: RegisterFidAndSignerParams) {
         );
       }
 
-      const { getKeyGateway } = await import("../contracts.js");
       const keyGateway = getKeyGateway({
         client: options.client,
         chain: options.chain,
@@ -202,12 +202,14 @@ export function registerFidAndSigner(options: RegisterFidAndSignerParams) {
         contract: keyGateway,
       });
 
-      const { signRegister, signAdd, getSignedKeyRequestMetadata } =
-        await import("../eip712signatures.js");
-
-      // Sign the register operation, if a userAccount is provided
+      // Set the registerSignature if provided, otherwise sign the register operation using the userAccount
       let registerSignature;
-      if ("userAccount" in options) {
+      if ("registerSignature" in options) {
+        registerSignature = options.registerSignature;
+      } else if ("userAccount" in options) {
+        const { signRegister } = await import(
+          "../eip712Signatures/registerSignature.js"
+        );
         registerSignature = await signRegister({
           account: options.userAccount,
           message: {
@@ -218,8 +220,10 @@ export function registerFidAndSigner(options: RegisterFidAndSignerParams) {
           },
         });
       } else {
-        registerSignature = options.registerSignature;
-      } // Use provided signature if no userAccount
+        throw new Error(
+          "Invalid options, expected a userAccount or registerSignature to be provided",
+        );
+      }
 
       // Get the fid for the app account
       const appFid = await getFid({
@@ -232,9 +236,14 @@ export function registerFidAndSigner(options: RegisterFidAndSignerParams) {
         throw new Error(`No fid found for app account: ${appAccountAddress}`);
       }
 
-      // Sign the key request metadata, if an appAccount is provided
+      // Set the signedKeyRequestMetadata if provided, otherwise use the app account to generate one
       let signedKeyRequestMetadata;
-      if ("appAccount" in options) {
+      if ("signedKeyRequestMetadata" in options) {
+        signedKeyRequestMetadata = options.signedKeyRequestMetadata;
+      } else if ("appAccount" in options) {
+        const { getSignedKeyRequestMetadata } = await import(
+          "../eip712Signatures/keyRequestSignature.js"
+        );
         signedKeyRequestMetadata = await getSignedKeyRequestMetadata({
           account: options.appAccount,
           message: {
@@ -244,12 +253,17 @@ export function registerFidAndSigner(options: RegisterFidAndSignerParams) {
           },
         });
       } else {
-        signedKeyRequestMetadata = options.signedKeyRequestMetadata;
-      } // Use provided metadata if no appAccount
+        throw new Error(
+          "Invalid options, expected an appAccount or signedKeyRequestMetadata to be provided",
+        );
+      }
 
-      // Sign the add operation, if a userAccount is provided
+      // Set the addSignature if provided, otherwise sign the add operation using the userAccount
       let addSignature;
-      if ("userAccount" in options) {
+      if ("addSignature" in options) {
+        addSignature = options.addSignature;
+      } else if ("userAccount" in options) {
+        const { signAdd } = await import("../eip712Signatures/addSignature.js");
         addSignature = await signAdd({
           account: options.userAccount,
           message: {
@@ -263,7 +277,9 @@ export function registerFidAndSigner(options: RegisterFidAndSignerParams) {
           },
         });
       } else {
-        addSignature = options.addSignature; // Use provided signature if no userAccount
+        throw new Error(
+          "Invalid options, expected an addSignature or a userAccount to be provided",
+        );
       }
 
       return [

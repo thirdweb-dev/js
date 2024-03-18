@@ -2,6 +2,8 @@ import type { ThirdwebClient } from "../../../client/client.js";
 import { toBigInt } from "../../../utils/bigint.js";
 import { withCache } from "../../../utils/promise/withCache.js";
 import type { Chain } from "../../../chains/types.js";
+import { getIdGateway } from "../contracts/getIdGateway.js";
+import { price } from "../__generated__/IIdGateway/read/price.js";
 
 export type GetRegistrationPriceParams = {
   client: ThirdwebClient;
@@ -28,15 +30,13 @@ export async function getRegistrationPrice(
   options: GetRegistrationPriceParams,
 ): Promise<bigint> {
   const extraStorage = toBigInt(options.extraStorage ?? 0);
-  if (extraStorage < 0n)
-    {throw new Error(
+  if (extraStorage < 0n) {
+    throw new Error(
       `Expected extraStorage to be greater than or equal to 0, got ${options.extraStorage}`,
-    );}
+    );
+  }
 
-  const fetch = async () => {
-    const { getIdGateway } = await import("../contracts.js");
-    const { price } = await import("../__generated__/IIdGateway/read/price.js");
-
+  const fetch = () => {
     const contract = getIdGateway({
       client: options.client,
       chain: options.chain,
@@ -44,7 +44,9 @@ export async function getRegistrationPrice(
     return price({ contract, extraStorage: toBigInt(extraStorage) });
   };
 
-  if (options.disableCache) {return fetch();}
+  if (options.disableCache) {
+    return fetch();
+  }
 
   return withCache(fetch, {
     cacheKey: `${toBigInt(extraStorage)}:getRegistrationPrice`,

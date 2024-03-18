@@ -1,99 +1,9 @@
-/** The following is adapted from the Hubble monorepo */
-
 import type { Address } from "abitype";
-import { encodeAbiParameters } from "../../utils/abi/encodeAbiParameters.js";
-import type { Hex } from "../../utils/encoding/hex.js";
-import type { Account } from "../../wallets/interfaces/wallet.js";
-import {
-  ID_GATEWAY_ADDRESS,
-  KEY_GATEWAY_ADDRESS,
-  SIGNED_KEY_REQUEST_VALIDATOR_ADDRESS,
-} from "./constants.js";
-import type { Prettify } from "../../utils/type-utils.js";
-
-///////////////
-/** Register */
-///////////////
-
-export const ID_GATEWAY_EIP_712_DOMAIN = {
-  name: "Farcaster IdGateway",
-  version: "1",
-  chainId: 10,
-  verifyingContract: ID_GATEWAY_ADDRESS,
-} as const;
-
-export const ID_GATEWAY_REGISTER_TYPE = [
-  { name: "to", type: "address" },
-  { name: "recovery", type: "address" },
-  { name: "nonce", type: "uint256" },
-  { name: "deadline", type: "uint256" },
-] as const;
-
-export const ID_GATEWAY_EIP_712_TYPES = {
-  domain: ID_GATEWAY_EIP_712_DOMAIN,
-  types: { Register: ID_GATEWAY_REGISTER_TYPE },
-} as const;
-
-export type RegisterMessage = {
-  /** FID custody address */
-  to: Address;
-  /** FID recovery address */
-  recovery: Address;
-  /** IdGateway nonce for signer address */
-  nonce: bigint;
-  /** Unix timestamp when this message expires */
-  deadline: bigint;
-};
-
-export type SignRegisterOptions = {
-  account: Account;
-  message: RegisterMessage;
-};
-
-/**
- * Constructs the data required for signing a register message in the Farcaster ID Gateway.
- * This includes the EIP-712 domain, types, and the message to be signed.
- * @param message - The register message containing the necessary information for the signature.
- * @returns An object containing the EIP-712 domain, types, and the message, ready to be signed.
- * @extension FARCASTER
- * @example
- * ```ts
- * import { getRegisterData } from "thirdweb/extensions/farcaster";
- *
- * const data = getRegisterData(message);
- * ```
- */
-export function getRegisterData(message: RegisterMessage) {
-  return {
-    ...ID_GATEWAY_EIP_712_TYPES,
-    primaryType: "Register" as const,
-    message,
-  };
-}
-
-/**
- * Signs the register message for Farcaster ID Gateway.
- * @param options - The signing options.
- * @param options.account - The account to sign the message with.
- * @param options.message - The message to be signed.
- * @returns A promise that resolves to the signature.
- * @extension FARCASTER
- * @example
- * ```ts
- * const signature = await signRegister({ account, message });
- * ```
- */
-export async function signRegister({
-  account,
-  message,
-}: SignRegisterOptions): Promise<Hex> {
-  const data = getRegisterData(message);
-  return account.signTypedData(data);
-}
-
-//////////////////
-/** Key Request */
-//////////////////
+import { encodeAbiParameters } from "../../../utils/abi/encodeAbiParameters.js";
+import type { Hex } from "../../../utils/encoding/hex.js";
+import type { Account } from "../../../wallets/interfaces/wallet.js";
+import { SIGNED_KEY_REQUEST_VALIDATOR_ADDRESS } from "../constants.js";
+import type { Prettify } from "../../../utils/type-utils.js";
 
 const SIGNED_KEY_REQUEST_VALIDATOR_EIP_712_DOMAIN = {
   name: "Farcaster SignedKeyRequestValidator", // EIP-712 domain data for the SignedKeyRequestValidator.
@@ -293,107 +203,11 @@ export async function getSignedKeyRequestMetadata(
     signature = options.keyRequestSignature;
   }
 
-  return encodeAbiParameters(SIGNED_KEY_REQUEST_METADATA_ABI, [
-    {
-      requestFid: options.message.requestFid,
-      requestSigner:
-        "account" in options ? options.account.address : options.accountAddress,
-      signature,
-      deadline: options.message.deadline,
-    },
-  ]);
-}
-
-//////////
-/** Add */
-//////////
-
-export const KEY_GATEWAY_EIP_712_DOMAIN = {
-  name: "Farcaster KeyGateway",
-  version: "1",
-  chainId: 10,
-  verifyingContract: KEY_GATEWAY_ADDRESS,
-} as const;
-
-export const KEY_GATEWAY_ADD_TYPE = [
-  { name: "owner", type: "address" },
-  { name: "keyType", type: "uint32" },
-  { name: "key", type: "bytes" },
-  { name: "metadataType", type: "uint8" },
-  { name: "metadata", type: "bytes" },
-  { name: "nonce", type: "uint256" },
-  { name: "deadline", type: "uint256" },
-] as const;
-
-export const KEY_GATEWAY_EIP_712_TYPES = {
-  domain: KEY_GATEWAY_EIP_712_DOMAIN,
-  types: { Add: KEY_GATEWAY_ADD_TYPE },
-} as const;
-
-export type AddMessage = {
-  /** FID owner address */
-  owner: Address;
-  /** Key type. The only currently supported key type is 1, for EdDSA signers. */
-  keyType: number;
-  /** Public key to register onchain */
-  key: Hex;
-  /** Metadata type. The only currently supported metadata type is 1. */
-  metadataType: number;
-  /** ABI-encoded SignedKeyRequestMetadata struct */
-  metadata: Hex;
-  /** KeyGateway nonce for signer address */
-  nonce: bigint;
-  /** Unix timestamp when this message expires */
-  deadline: bigint;
-};
-
-export type SignAddOptions = {
-  account: Account;
-  message: AddMessage;
-};
-
-/**
- * Prepares the data required for signing an Add message according to EIP-712.
- * @param message - The AddMessage object containing the message to be signed.
- * @returns The data object structured according to EIP-712, ready for signing.
- * @extension FARCASTER
- * @example
- * ```typescript
- * const message: AddMessage = {
- *   owner: "0xYourAddress",
- *   keyType: 1,
- *   key: "0xYourPublicKey",
- *   metadataType: 1,
- *   metadata: "0xYourMetadata",
- *   nonce: BigInt("YourNonce"),
- *   deadline: BigInt("YourDeadline"),
- * };
- *
- * const data = getAddData(message);
- * ```
- */
-export function getAddData(message: AddMessage) {
-  return {
-    ...KEY_GATEWAY_EIP_712_TYPES,
-    primaryType: "Add" as const,
-    message,
-  };
-}
-
-/**
- * Signs an Add message using the account's signTypedData method.
- * @param options - The options for signing the Add message.
- * @returns A promise that resolves to the signature of the Add message.
- * @extension FARCASTER
- * @example
- * ```typescript
- * const signedMessage = await signAdd({
- *   account: yourAccount,
- *   message: yourAddMessage,
- * });
- * ```
- */
-export async function signAdd(options: SignAddOptions): Promise<Hex> {
-  const data = getAddData(options.message);
-  return options.account.signTypedData(data);
+  return encodeSignedKeyRequestMetadata({
+    requestSigner:
+      "account" in options ? options.account.address : options.accountAddress,
+    keyRequestSignature: signature,
+    requestFid: options.message.requestFid,
+    deadline: options.message.deadline,
+  });
 }

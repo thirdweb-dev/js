@@ -1,6 +1,8 @@
 import type { ThirdwebClient } from "../../../client/client.js";
 import { withCache } from "../../../utils/promise/withCache.js";
 import type { Chain } from "../../../chains/types.js";
+import { getIdRegistry } from "../contracts/getIdRegistry.js";
+import { idOf } from "../__generated__/IIdRegistry/read/idOf.js";
 import type { Address } from "abitype";
 
 export type GetFidParams = {
@@ -26,10 +28,7 @@ export type GetFidParams = {
  * ```
  */
 export async function getFid(options: GetFidParams): Promise<bigint> {
-  const fetch = async () => {
-    const { getIdRegistry } = await import("../contracts.js");
-    const { idOf } = await import("../__generated__/IIdRegistry/read/idOf.js");
-
+  const fetch = () => {
     const contract = getIdRegistry({
       client: options.client,
       chain: options.chain,
@@ -37,7 +36,9 @@ export async function getFid(options: GetFidParams): Promise<bigint> {
     return idOf({ contract, owner: options.address });
   };
 
-  if (options.disableCache) {return fetch();}
+  if (options.disableCache) {
+    return fetch();
+  }
 
   return withCache(fetch, {
     cacheKey: `${options.address}:getFid`,

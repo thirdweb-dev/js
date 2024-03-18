@@ -2,8 +2,9 @@ import type { Address } from "abitype";
 import { prepareContractCall } from "../../../transaction/prepare-contract-call.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import { toBigInt } from "../../../utils/bigint.js";
-import { getIdGateway } from "../contracts.js";
+import { getIdGateway } from "../contracts/getIdGateway.js";
 import type { Chain } from "../../../chains/types.js";
+import { getRegistrationPrice } from "../read/getRegistrationPrice.js";
 /**
  * Represents the parameters for the `registerFid` function.
  */
@@ -31,10 +32,11 @@ export type RegisterFidParams = {
  */
 export function registerFid(options: RegisterFidParams) {
   const extraStorage = toBigInt(options.extraStorage ?? 0);
-  if (extraStorage < 0n)
-    {throw new Error(
+  if (extraStorage < 0n) {
+    throw new Error(
       `Expected extraStorage to be greater than or equal to 0, got ${extraStorage}`,
-    );}
+    );
+  }
 
   return prepareContractCall({
     contract: getIdGateway({
@@ -65,9 +67,6 @@ export function registerFid(options: RegisterFidParams) {
       ],
     ],
     value: async () => {
-      const { getRegistrationPrice } = await import(
-        "../read/getRegistrationPrice.js"
-      );
       return await getRegistrationPrice({
         client: options.client,
         chain: options.chain,

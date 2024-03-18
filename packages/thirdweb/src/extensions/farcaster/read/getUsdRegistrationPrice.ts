@@ -3,6 +3,8 @@ import { toBigInt } from "../../../utils/bigint.js";
 import { toTokens } from "../../../utils/units.js";
 import { withCache } from "../../../utils/promise/withCache.js";
 import type { Chain } from "../../../chains/types.js";
+import { getStorageRegistry } from "../contracts/getStorageRegistry.js";
+import { usdUnitPrice } from "../__generated__/IStorageRegistry/read/usdUnitPrice.js";
 
 export type GetUsdRegistrationPriceParams = {
   client: ThirdwebClient;
@@ -29,17 +31,13 @@ export async function getUsdRegistrationPrice(
   options: GetUsdRegistrationPriceParams,
 ): Promise<number> {
   const extraStorage = toBigInt(options.extraStorage ?? 0);
-  if (extraStorage < 0n)
-    {throw new Error(
+  if (extraStorage < 0n) {
+    throw new Error(
       `Expected extraStorage to be greater than or equal to 0, got ${options.extraStorage}`,
-    );}
+    );
+  }
 
   const fetch = async () => {
-    const { getStorageRegistry } = await import("../contracts.js");
-    const { usdUnitPrice } = await import(
-      "../__generated__/IStorageRegistry/read/usdUnitPrice.js"
-    );
-
     const contract = getStorageRegistry({
       client: options.client,
       chain: options.chain,
@@ -49,7 +47,9 @@ export async function getUsdRegistrationPrice(
     return Number(toTokens(bigNumberValue, 8)); // storage registry uses 8 decimal places
   };
 
-  if (options.disableCache) {return fetch();}
+  if (options.disableCache) {
+    return fetch();
+  }
 
   return withCache(fetch, {
     cacheKey: `${toBigInt(extraStorage)}:getUsdRegistrationPrice`,

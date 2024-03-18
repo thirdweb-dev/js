@@ -1,6 +1,8 @@
 import type { ThirdwebClient } from "../../../client/client.js";
 import { withCache } from "../../../utils/promise/withCache.js";
 import type { Chain } from "../../../chains/types.js";
+import { getKeyGateway } from "../contracts/getKeyGateway.js";
+import { nonces } from "../__generated__/IKeyGateway/read/nonces.js";
 import type { Address } from "abitype";
 
 export type GetNonceParams = {
@@ -26,12 +28,7 @@ export type GetNonceParams = {
  * ```
  */
 export async function getNonce(options: GetNonceParams): Promise<bigint> {
-  const fetch = async () => {
-    const { getKeyGateway } = await import("../contracts.js");
-    const { nonces } = await import(
-      "../__generated__/IKeyGateway/read/nonces.js"
-    );
-
+  const fetch = () => {
     const contract = getKeyGateway({
       client: options.client,
       chain: options.chain,
@@ -39,7 +36,9 @@ export async function getNonce(options: GetNonceParams): Promise<bigint> {
     return nonces({ contract, account: options.address });
   };
 
-  if (options.disableCache) {return fetch();}
+  if (options.disableCache) {
+    return fetch();
+  }
 
   return withCache(fetch, {
     cacheKey: `${options.address}:getNonce`,

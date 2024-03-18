@@ -3,10 +3,11 @@ import { prepareContractCall } from "../../../transaction/prepare-contract-call.
 import type { ThirdwebClient } from "../../../client/client.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
 import type { Chain } from "../../../chains/types.js";
-import { getKeyGateway } from "../contracts.js";
+import { getKeyGateway } from "../contracts/getKeyGateway.js";
 import type { Hex } from "../../../utils/encoding/hex.js";
-import { signAdd } from "../eip712signatures.js";
 import type { Prettify } from "../../../utils/type-utils.js";
+import { getFid } from "../read/getFid.js";
+import { nonces } from "../__generated__/IKeyGateway/read/nonces.js";
 import type { Address } from "abitype";
 
 /**
@@ -120,21 +121,24 @@ export function addSignerFor(options: AddSignerForParams) {
           : options.userAddress;
 
       // Fetch the app's FID
-      const { getFid } = await import("../read/getFid.js");
       const appFid = await getFid({
         client: options.client,
         chain: options.chain,
         address: appAccountAddress,
         disableCache: options.disableCache,
       });
+      if (appFid === 0n) {
+        throw new Error(`No fid found for app account: ${appAccountAddress}`);
+      }
 
-      const { getSignedKeyRequestMetadata } = await import(
-        "../eip712signatures.js"
-      );
-
-      // Generate the signedKeyRequestMetadata signature if appAccount is provided
+      // Set the signedKeyRequestMetadata if provided, otherwise generate using the app account
       let signedKeyRequestMetadata;
-      if ("appAccount" in options) {
+      if ("signedKeyRequestMetadata" in options) {
+        signedKeyRequestMetadata = options.signedKeyRequestMetadata;
+      } else if ("appAccount" in options) {
+        const { getSignedKeyRequestMetadata } = await import(
+          "../eip712Signatures/keyRequestSignature.js"
+        );
         signedKeyRequestMetadata = await getSignedKeyRequestMetadata({
           account: options.appAccount,
           message: {
@@ -144,21 +148,23 @@ export function addSignerFor(options: AddSignerForParams) {
           },
         });
       } else {
-        signedKeyRequestMetadata = options.signedKeyRequestMetadata;
+        throw new Error(
+          "Invalid options, expected signedKeyRequestMetadata or appAccount to be provided",
+        );
       }
 
       // Fetch the user's current key gateway nonce
-      const { nonces } = await import(
-        "../__generated__/IKeyGateway/read/nonces.js"
-      );
       const nonce = await nonces({
         account: userAddress,
         contract: keyGateway,
       });
 
-      // Generate the add signature if userAccount was provided
+      // Set the addSignature if provided, otherwise generate one using the user account
       let addSignature;
-      if ("userAccount" in options) {
+      if ("addSignature" in options) {
+        addSignature = options.addSignature;
+      } else if ("userAccount" in options) {
+        const { signAdd } = await import("../eip712Signatures/addSignature.js");
         addSignature = await signAdd({
           account: options.userAccount,
           message: {
@@ -172,7 +178,9 @@ export function addSignerFor(options: AddSignerForParams) {
           },
         });
       } else {
-        addSignature = options.addSignature;
+        throw new Error(
+          "Invalid options, expected addSignature or userAccount to be provided",
+        );
       }
 
       return [
