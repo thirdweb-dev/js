@@ -18,6 +18,7 @@ import {
 import {
   useActiveAccount,
   useActiveWalletChain,
+  useSwitchActiveWalletChain,
 } from "../../../../../core/hooks/wallets/wallet-hooks.js";
 import { Spacer } from "../../../components/Spacer.js";
 import { Container, Line, ModalHeader } from "../../../components/basic.js";
@@ -38,6 +39,7 @@ import { BuyTokenInput } from "./swap/BuyTokenInput.js";
 import { ConfirmationScreen } from "./swap/ConfirmationScreen.js";
 import { PayWithCrypto } from "./swap/PayWithCrypto.js";
 import { SwapFees } from "./swap/SwapFees.js";
+import { Spinner } from "../../../components/Spinner.js";
 
 const fallbackSupportedChains = /* @__PURE__ */ (() =>
   fallbackSwapSupportedChainIds.map(defineChain))();
@@ -88,6 +90,8 @@ export function SwapScreenContent(props: {
 }) {
   const track = useTrack();
   const { activeChain, account } = props;
+  const [isSwitching, setIsSwitching] = useState(false);
+  const switchActiveWalletChain = useSwitchActiveWalletChain();
   const { client } = useThirdwebProviderProps();
   const supportedChainsQuery = useQuery({
     queryKey: ["swapSupportedChains", client],
@@ -274,6 +278,8 @@ export function SwapScreenContent(props: {
 
   const disableContinue = !swapQuote || isNotEnoughBalance;
 
+  const switchChainRequired = props.activeChain.id !== fromChain.id;
+
   return (
     <Container animate="fadein">
       <Container p="lg">
@@ -345,25 +351,53 @@ export function SwapScreenContent(props: {
           </div>
         )}
 
-        <Button
-          variant={disableContinue ? "outline" : "accent"}
-          fullWidth
-          data-disabled={disableContinue}
-          disabled={disableContinue}
-          onClick={async () => {
-            if (!disableContinue) {
-              track({
-                source: "ConnectButton",
-                action: "continue.click",
-                quote: buyWithCryptoQuoteQuery.data,
-              });
-              setScreen("confirmation");
-            }
-          }}
-          gap="sm"
-        >
-          {isNotEnoughBalance ? "Not Enough Balance" : "Continue"}
-        </Button>
+        {switchChainRequired && (
+          <Button
+            fullWidth
+            variant="accent"
+            disabled={!hasEditedAmount}
+            data-disabled={!hasEditedAmount}
+            gap="sm"
+            onClick={async () => {
+              setIsSwitching(true);
+              try {
+                await switchActiveWalletChain(fromChain);
+              } catch {}
+              setIsSwitching(false);
+            }}
+          >
+            {hasEditedAmount ? (
+              <>
+                {isSwitching && <Spinner size="sm" color="accentButtonText" />}
+                {isSwitching ? "Switching" : "Switch Chain"}
+              </>
+            ) : (
+              "Continue"
+            )}
+          </Button>
+        )}
+
+        {!switchChainRequired && (
+          <Button
+            variant={disableContinue ? "outline" : "accent"}
+            fullWidth
+            data-disabled={disableContinue}
+            disabled={disableContinue}
+            onClick={async () => {
+              if (!disableContinue) {
+                track({
+                  source: "ConnectButton",
+                  action: "continue.click",
+                  quote: buyWithCryptoQuoteQuery.data,
+                });
+                setScreen("confirmation");
+              }
+            }}
+            gap="sm"
+          >
+            {isNotEnoughBalance ? "Not Enough Balance" : "Continue"}
+          </Button>
+        )}
       </Container>
     </Container>
   );
