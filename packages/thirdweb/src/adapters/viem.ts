@@ -14,10 +14,9 @@ import type { Chain } from "../chains/types.js";
 import type { ThirdwebClient } from "../client/client.js";
 import { resolveContractAbi } from "../contract/actions/resolve-abi.js";
 import { getRpcUrlForChain } from "../chains/utils.js";
-import type { Account, Wallet } from "../wallets/interfaces/wallet.js";
-import type { Prettify } from "../utils/type-utils.js";
+import type { Account } from "../wallets/interfaces/wallet.js";
 import { getRpcClient } from "../rpc/rpc.js";
-import { waitForReceipt } from "../exports/thirdweb.js";
+import { waitForReceipt } from "../transaction/actions/wait-for-tx-receipt.js";
 
 export const viemAdapter = {
   contract: {
@@ -148,29 +147,18 @@ function toViemPublicClient(options: ToViemPublicClientOptions): PublicClient {
   });
 }
 
-type ToViemWalletClientOptions = Prettify<
-  (
-    | {
-        wallet: Wallet;
-        account?: never;
-      }
-    | {
-        wallet?: never;
-        account: Account;
-      }
-  ) & {
-    client: ThirdwebClient;
-    chain: Chain;
-  }
->;
+type ToViemWalletClientOptions = {
+  account: Account;
+  client: ThirdwebClient;
+  chain: Chain;
+};
 
 function toViemWalletClient(options: ToViemWalletClientOptions): WalletClient {
-  const account = options.account || options.wallet.getAccount();
+  const { account, chain, client } = options;
   if (!account) {
     throw new Error("Wallet not connected.");
   }
 
-  const { chain, client } = options;
   const rpcUrl = getRpcUrlForChain({ chain, client });
   const viemChain: ViemChain = {
     id: chain.id,
