@@ -12,6 +12,7 @@ type SwapTxInfo = {
   from: {
     symbol: string;
     value: string;
+    chainId: number;
   };
   to: {
     symbol: string;

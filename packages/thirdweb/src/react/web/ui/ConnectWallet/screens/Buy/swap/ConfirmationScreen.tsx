@@ -9,7 +9,6 @@ import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/
 import type { Account } from "../../../../../../../wallets/interfaces/wallet.js";
 import { useSendTransaction } from "../../../../../../core/hooks/contract/useSend.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
-import { useThirdwebProviderProps } from "../../../../../../core/hooks/others/useThirdwebProviderProps.js";
 import {
   useBuyWithCryptoStatus,
   type BuyWithCryptoStatusQueryParams,
@@ -37,6 +36,7 @@ import { genericTokenIcon } from "../../../defaultTokens.js";
 import { isNativeToken, type ERC20OrNativeToken } from "../../nativeToken.js";
 import { SwapFees } from "./SwapFees.js";
 import { addPendingSwapTransaction } from "./pendingSwapTx.js";
+import { useThirdwebProviderProps } from "../../../../../../core/hooks/others/useThirdwebProviderProps.js";
 
 /**
  * @internal
@@ -196,6 +196,7 @@ export function ConfirmationScreen(props: {
               await sendTransactionMutation.mutateAsync(
                 props.buyWithCryptoQuote.approval,
               );
+
               track({
                 source: "ConnectButton",
                 action: "approve.success",
@@ -225,12 +226,6 @@ export function ConfirmationScreen(props: {
                 props.buyWithCryptoQuote.transactionRequest,
               );
 
-              track({
-                source: "ConnectButton",
-                action: "swap.sent",
-                quote: props.buyWithCryptoQuote,
-              });
-
               // these will be defined by this time
               if (fromTokenSymbol && toTokenSymbol && fromChain.data) {
                 const explorer = fromChain.data.explorers?.[0]?.url;
@@ -240,6 +235,7 @@ export function ConfirmationScreen(props: {
                     from: {
                       symbol: fromTokenSymbol,
                       value: props.fromAmount,
+                      chainId: props.fromChain.id,
                     },
                     to: {
                       symbol: toTokenSymbol,
@@ -255,6 +251,12 @@ export function ConfirmationScreen(props: {
                   props.buyWithCryptoQuote,
                 );
               }
+
+              track({
+                source: "ConnectButton",
+                action: "swap.sent",
+                quote: props.buyWithCryptoQuote,
+              });
 
               setSwapTx({
                 transactionHash: _swapTx.transactionHash ?? _swapTx.userOpHash,

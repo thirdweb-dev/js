@@ -436,7 +436,7 @@ export const ConnectedWalletDetails: React.FC<{
             <TextAlignJustifyIcon width={iconSize.md} height={iconSize.md} />
             <Container flex="row" gap="xs" center="y">
               <Text color="primaryText">Transactions</Text>
-              {pendingSwapTxs.length > 0 && (
+              {pendingSwapTxs && pendingSwapTxs.length > 0 && (
                 <BadgeCount>{pendingSwapTxs.length}</BadgeCount>
               )}
             </Container>
