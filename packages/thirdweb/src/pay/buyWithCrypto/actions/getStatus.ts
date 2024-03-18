@@ -11,7 +11,7 @@ export type BuyWithCryptoTransactionDetails = {
   amountWei: string;
   amount: string;
   amountUSDCents: number;
-  completedAt?: number;
+  completedAt?: string; // ISO DATE
   explorerLink?: string;
 };
 
