@@ -10,8 +10,6 @@ import { packetToBytes } from "../../utils/ens/packetToBytes.js";
 import { getAddress, isAddress } from "../../utils/address.js";
 import { LruMap } from "../../utils/caching/lru.js";
 import type { Chain } from "../../chains/types.js";
-import { decodeFunctionResult } from "../../abi/decode.js";
-import { prepareMethod } from "../../utils/abi/prepare-method.js";
 
 export type ResolveAddressOptions = {
   client: ThirdwebClient;

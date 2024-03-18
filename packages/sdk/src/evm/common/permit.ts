@@ -130,6 +130,7 @@ export async function signDAIPermit(
   allowed = true,
   deadline?: BigNumberish,
   nonce?: BigNumberish,
+  domainSeparatorVersion?: string,
 ) {
   const [name, chainId, signerNonce] = await Promise.all([
     getTokenName(signer, currencyAddress),
@@ -138,7 +139,7 @@ export async function signDAIPermit(
   ]);
   const domain = await getChainDomainSeperator(signer, {
     name,
-    version: "1",
+    version: domainSeparatorVersion || "1",
     chainId,
     verifyingContract: currencyAddress,
   });
@@ -190,6 +191,7 @@ export async function signEIP2612Permit(
   value: BigNumberish,
   deadline?: BigNumberish,
   nonce?: BigNumberish,
+  domainSeparatorVersion?: string,
 ) {
   const [name, chainId, signerNonce] = await Promise.all([
     getTokenName(signer, currencyAddress),
@@ -198,7 +200,7 @@ export async function signEIP2612Permit(
   ]);
   const domain = await getChainDomainSeperator(signer, {
     name,
-    version: "1",
+    version: domainSeparatorVersion || "1",
     chainId,
     verifyingContract: currencyAddress,
   });

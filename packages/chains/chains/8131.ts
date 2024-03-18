@@ -5,8 +5,8 @@ export default {
   "explorers": [
     {
       "name": "meerscan testnet",
-      "url": "https://qng-testnet.meerscan.io",
-      "standard": "none",
+      "url": "https://testnet-qng.qitmeer.io",
+      "standard": "EIP3091",
       "icon": {
         "url": "ipfs://QmWSbMuCwQzhBB6GRLYqZ87n5cnpzpYCehCAMMQmUXj4mm",
         "width": 512,
