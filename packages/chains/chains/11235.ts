@@ -22,7 +22,9 @@ export default {
     "https://11235.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.eth.haqq.network",
     "https://haqq-evm-rpc.publicnode.com",
-    "wss://haqq-evm-rpc.publicnode.com"
+    "wss://haqq-evm-rpc.publicnode.com",
+    "https://haqq.drpc.org",
+    "wss://haqq.drpc.org"
   ],
   "shortName": "ISLM",
   "slug": "haqq-network",

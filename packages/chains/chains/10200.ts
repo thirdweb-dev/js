@@ -38,7 +38,9 @@ export default {
     "https://rpc.chiado.gnosis.gateway.fm",
     "wss://rpc.chiadochain.net/wss",
     "https://gnosis-chiado-rpc.publicnode.com",
-    "wss://gnosis-chiado-rpc.publicnode.com"
+    "wss://gnosis-chiado-rpc.publicnode.com",
+    "https://gnosis-chiado.drpc.org",
+    "wss://gnosis-chiado.drpc.org"
   ],
   "shortName": "chi",
   "slip44": 1,

@@ -28,7 +28,9 @@ export default {
     "https://api.s0.t.hmny.io",
     "https://rpc.ankr.com/harmony",
     "https://harmony.api.onfinality.io/public",
-    "https://1rpc.io/one"
+    "https://1rpc.io/one",
+    "https://harmony-0.drpc.org",
+    "wss://harmony-0.drpc.org"
   ],
   "shortName": "hmy-s0",
   "slip44": 1023,

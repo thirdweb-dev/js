@@ -37,7 +37,9 @@ export default {
   "redFlags": [],
   "rpc": [
     "https://1088.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://andromeda.metis.io/?owner=1088"
+    "https://andromeda.metis.io/?owner=1088",
+    "https://metis.drpc.org",
+    "wss://metis.drpc.org"
   ],
   "shortName": "metis-andromeda",
   "slug": "metis-andromeda",

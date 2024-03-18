@@ -33,6 +33,8 @@ export default {
     "https://rpc-amoy.polygon.technology"
   ],
   "shortName": "polygonamoy",
+  "slip44": 1,
   "slug": "polygon-amoy-testnet",
-  "testnet": true
+  "testnet": true,
+  "title": "Polygon Amoy Testnet"
 } as const satisfies Chain;
