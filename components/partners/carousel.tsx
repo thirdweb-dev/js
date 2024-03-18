@@ -64,17 +64,20 @@ export const PartnerCarousel: React.FC = () => {
         <PartnerLogo partner="polygon" />
         <PartnerLogo partner="aws" />
         <PartnerLogo partner="rarible" />
+        <PartnerLogo partner="treasure" />
         <PartnerLogo partner="pixels" />
         <PartnerLogo partner="shopify" />
         <PartnerLogo partner="avacloud" />
         <PartnerLogo partner="animoca" />
+        <PartnerLogo partner="mcfarlane" />
+        <PartnerLogo partner="coolcats" />
         <PartnerLogo partner="courtyard" />
+        <PartnerLogo partner="aavegotchi" />
         <PartnerLogo partner="infinigods" />
         <PartnerLogo partner="nyfw" />
         <PartnerLogo partner="fractal" />
+        <PartnerLogo partner="ztx" />
         <PartnerLogo partner="torque" />
-        <PartnerLogo partner="revv" />
-        <PartnerLogo partner="buildspace" />
         <PartnerLogo partner="gala_games" />
         <PartnerLogo partner="mirror" />
         <PartnerLogo partner="layer3" />
@@ -86,7 +89,9 @@ export const PartnerCarousel: React.FC = () => {
         <PartnerLogo partner="polygon" />
         <PartnerLogo partner="aws" />
         <PartnerLogo partner="rarible" />
+        <PartnerLogo partner="coolcats" />
         <PartnerLogo partner="courtyard" />
+        <PartnerLogo partner="aavegotchi" />
         <PartnerLogo partner="shopify" />
         <PartnerLogo partner="avacloud" />
         <PartnerLogo partner="infinigods" />
@@ -98,14 +103,15 @@ export const PartnerCarousel: React.FC = () => {
         display={{ base: "flex", lg: "none" }}
       >
         <PartnerLogo partner="animoca" />
+        <PartnerLogo partner="treasure" />
         <PartnerLogo partner="pixels" />
+        <PartnerLogo partner="mcfarlane" />
         <PartnerLogo partner="nyfw" />
         <PartnerLogo partner="gala_games" />
         <PartnerLogo partner="mirror" />
         <PartnerLogo partner="fractal" />
+        <PartnerLogo partner="ztx" />
         <PartnerLogo partner="torque" />
-        <PartnerLogo partner="revv" />
-        <PartnerLogo partner="buildspace" />
         <PartnerLogo partner="layer3" />
       </Marquee>
     </Box>
