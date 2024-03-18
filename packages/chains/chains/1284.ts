@@ -23,7 +23,9 @@ export default {
     "https://rpc.api.moonbeam.network",
     "wss://wss.api.moonbeam.network",
     "https://moonbeam-rpc.publicnode.com",
-    "wss://moonbeam-rpc.publicnode.com"
+    "wss://moonbeam-rpc.publicnode.com",
+    "https://moonbeam.drpc.org",
+    "wss://moonbeam.drpc.org"
   ],
   "shortName": "mbeam",
   "slug": "moonbeam",

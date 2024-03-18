@@ -23,7 +23,9 @@ export default {
     "https://rpc.api.moonriver.moonbeam.network",
     "wss://wss.api.moonriver.moonbeam.network",
     "https://moonriver-rpc.publicnode.com",
-    "wss://moonriver-rpc.publicnode.com"
+    "wss://moonriver-rpc.publicnode.com",
+    "https://moonriver.drpc.org",
+    "wss://moonriver.drpc.org"
   ],
   "shortName": "mriver",
   "slug": "moonriver",

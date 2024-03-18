@@ -34,7 +34,9 @@ export default {
   "redFlags": [],
   "rpc": [
     "https://122.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.fuse.io"
+    "https://rpc.fuse.io",
+    "https://fuse.drpc.org",
+    "wss://fuse.drpc.org"
   ],
   "shortName": "fuse",
   "slug": "fuse",

@@ -41,7 +41,9 @@ export default {
     "https://kava-rpc.gateway.pokt.network",
     "https://evm.kava-rpc.com",
     "wss://wevm.kava-rpc.com",
-    "https://rpc.ankr.com/kava_evm"
+    "https://rpc.ankr.com/kava_evm",
+    "https://kava.drpc.org",
+    "wss://kava.drpc.org"
   ],
   "shortName": "kava",
   "slug": "kava",

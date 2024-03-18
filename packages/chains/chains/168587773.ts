@@ -38,7 +38,9 @@ export default {
   },
   "rpc": [
     "https://168587773.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://sepolia.blast.io"
+    "https://sepolia.blast.io",
+    "https://blast-sepolia.drpc.org",
+    "wss://blast-sepolia.drpc.org"
   ],
   "shortName": "blastsepolia",
   "slug": "blast-sepolia-testnet",

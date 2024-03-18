@@ -22,7 +22,9 @@ export default {
   "networkId": 338,
   "rpc": [
     "https://338.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://evm-t3.cronos.org"
+    "https://evm-t3.cronos.org",
+    "https://cronos-testnet.drpc.org",
+    "wss://cronos-testnet.drpc.org"
   ],
   "shortName": "tcro",
   "slip44": 1,
