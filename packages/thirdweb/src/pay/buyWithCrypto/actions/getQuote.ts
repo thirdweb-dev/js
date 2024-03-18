@@ -263,6 +263,7 @@ export async function getBuyWithCryptoQuote(
         data: data.transactionRequest.data as Hash,
         to: data.transactionRequest.to,
         value: BigInt(data.transactionRequest.value),
+        gas: BigInt(data.transactionRequest.gasLimit),
         gasPrice: BigInt(data.transactionRequest.gasPrice),
       },
       approval: data.approval
