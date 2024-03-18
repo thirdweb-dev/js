@@ -78,7 +78,6 @@ export async function prepareDeployTransactionViaAutoFactory(
     : toHex(blockNumber, {
         size: 32,
       });
-  console.log(blockNumber);
 
   return deployProxyByImplementation({
     ...args,

@@ -196,6 +196,7 @@ export const mochaHooks = {
     )
       .connect(signer)
       .deploy(
+        signer.address,
         trustedForwarderAddress,
         mockPublisher.address,
       )) as ContractPublisher; // TODO needs MockPublisher here
@@ -219,13 +220,11 @@ export const mochaHooks = {
           const addr = getNativeTokenByChainId(ChainId.Hardhat).wrapped.address;
           return await deployContractAndUploadMetadata(abi, bytecode, signer, [
             addr,
-            trustedForwarderAddress,
           ]);
         default:
           return await deployContractAndUploadMetadata(abi, bytecode, signer);
       }
     }
-
     for (const contractType in CONTRACTS_MAP) {
       if (contractType === "custom" || contractType === "marketplace-v3") {
         continue;

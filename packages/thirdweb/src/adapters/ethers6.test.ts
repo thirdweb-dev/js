@@ -3,7 +3,6 @@ import * as ethers6 from "ethers6";
 import { privateKeyAccount } from "../wallets/private-key.js";
 import { TEST_CLIENT } from "../../test/src/test-clients.js";
 import { toEthersSigner } from "./ethers6.js";
-import type { Wallet } from "../wallets/interfaces/wallet.js";
 import { defineChain } from "../chains/utils.js";
 
 const FAKE_PKEY =
@@ -14,20 +13,25 @@ const account = privateKeyAccount({
   client: TEST_CLIENT,
 });
 
-const FAKE_WALLET = {
-  getAccount: () => account,
-  getChain: () => defineChain(31337),
-} as Wallet;
-
 describe("toEthersSigner", () => {
   test("should return an ethers 6 signer", async () => {
-    const signer = await toEthersSigner(ethers6, TEST_CLIENT, FAKE_WALLET);
+    const signer = await toEthersSigner(
+      ethers6,
+      TEST_CLIENT,
+      account,
+      defineChain(31337),
+    );
     expect(signer).toBeDefined();
     expect(signer.signMessage).toBeDefined();
   });
 
   test("should sign typed data", async () => {
-    const signer = await toEthersSigner(ethers6, TEST_CLIENT, FAKE_WALLET);
+    const signer = await toEthersSigner(
+      ethers6,
+      TEST_CLIENT,
+      account,
+      defineChain(31337),
+    );
     expect(signer.signTypedData).toBeDefined();
 
     // All properties on a domain are optional

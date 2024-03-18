@@ -30,13 +30,12 @@ export type Wallet = {
     addListener: WalletEventListener;
     removeListener: WalletEventListener;
   };
-  estimateGas?: (tx: PreparedTransaction) => Promise<bigint>;
   switchChain?: (newChain: Chain) => Promise<void>;
 };
 
-export interface WalletWithPersonalWallet extends Wallet {
-  autoConnect: (options: { personalWallet: Wallet }) => Promise<Account>;
-  personalWallet?: Wallet;
+export interface WalletWithPersonalAccount extends Wallet {
+  autoConnect: (options: { personalAccount: Account }) => Promise<Account>;
+  personalAccount?: Account;
 }
 
 export type Account = {
@@ -54,6 +53,7 @@ export type Account = {
   ) => Promise<Hex>;
 
   // OPTIONAL
+  estimateGas?: (tx: PreparedTransaction) => Promise<bigint>;
   signTransaction?: (tx: TransactionSerializable) => Promise<Hex>;
   sendBatchTransaction?: (
     txs: SendTransactionOption[],

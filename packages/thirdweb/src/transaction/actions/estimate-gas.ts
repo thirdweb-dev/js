@@ -1,5 +1,5 @@
 import { formatTransactionRequest } from "viem";
-import type { Account, Wallet } from "../../wallets/interfaces/wallet.js";
+import type { Account } from "../../wallets/interfaces/wallet.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import type { PreparedTransaction } from "../prepare-transaction.js";
 import { extractError as parseEstimationError } from "../extract-error.js";
@@ -13,17 +13,10 @@ export type EstimateGasOptions = Prettify<
     | {
         account: Account;
         from?: never;
-        wallet?: never;
       }
     | {
         account?: never;
         from?: string;
-        wallet?: never;
-      }
-    | {
-        account?: never;
-        from?: never;
-        wallet?: Wallet;
       }
   )
 >;
@@ -52,6 +45,7 @@ export async function estimateGas(
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return cache.get(options.transaction)!;
   }
+  const { account } = options;
   const promise = (async () => {
     const predefinedGas = await resolvePromisedValue(options.transaction.gas);
     // if we have a predefined gas value in the TX -> always use that
@@ -60,9 +54,9 @@ export async function estimateGas(
     }
 
     // if the wallet itself overrides the estimateGas function, use that
-    if (options.wallet && options.wallet.estimateGas) {
+    if (account?.estimateGas) {
       try {
-        let gas = await options.wallet.estimateGas(options.transaction);
+        let gas = await account.estimateGas(options.transaction);
         if (options.transaction.chain.experimental?.increaseZeroByteCount) {
           gas = roundUpGas(gas);
         }
@@ -94,11 +88,7 @@ export async function estimateGas(
     // 1. the user specified from address
     // 2. the passed in account address
     // 3. the passed in wallet's account address
-    const from =
-      options.from ??
-      options.account?.address ??
-      options.wallet?.getAccount()?.address ??
-      undefined;
+    const from = options.from ?? options.account?.address ?? undefined;
     try {
       let gas = await eth_estimateGas(
         rpcRequest,

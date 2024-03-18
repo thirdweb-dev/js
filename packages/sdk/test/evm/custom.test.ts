@@ -258,7 +258,7 @@ describe("Custom Contracts", async () => {
   it("should not detect feature if missing from ABI", async () => {
     const address = await sdk.deployer.deployVote({
       name: "My Vote",
-      voting_token_address: adminWallet.address,
+      voting_token_address: tokenContractAddress,
     });
     const c = await sdk.getContractFromAbi(address, VoteERC20__factory.abi);
     invariant(c, "Contract undefined");

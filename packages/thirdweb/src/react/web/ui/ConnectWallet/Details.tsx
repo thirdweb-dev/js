@@ -2,7 +2,7 @@ import {
   ExitIcon,
   ChevronRightIcon,
   TextAlignJustifyIcon,
-  EnterIcon,
+  // EnterIcon,
   PaperPlaneIcon,
   PinBottomIcon,
   PlusIcon,
@@ -13,7 +13,7 @@ import {
   useActiveAccount,
   useActiveWallet,
   useActiveWalletChain,
-  useConnect,
+  // useConnect,
   useDisconnect,
 } from "../../../core/hooks/wallets/wallet-hooks.js";
 import { useTWLocale } from "../../providers/locale-provider.js";
@@ -51,25 +51,25 @@ import type {
   ConnectButton_detailsButtonOptions,
   ConnectButton_detailsModalOptions,
 } from "./ConnectWalletProps.js";
-import { connectionManager } from "../../../core/connectionManager.js";
+// import { connectionManager } from "../../../core/connectionManager.js";
 import { SendFunds } from "./screens/SendFunds.js";
 import { ReceiveFunds } from "./screens/ReceiveFunds.js";
 import type { Chain } from "../../../../chains/types.js";
-import type {
-  Wallet,
-  WalletWithPersonalWallet,
-} from "../../../../wallets/interfaces/wallet.js";
+// import type {
+//   Wallet,
+//   WalletWithPersonalAccount,
+// } from "../../../../wallets/interfaces/wallet.js";
 import {
-  personalWalletToSmartAccountMap,
+  // personalAccountToSmartAccountMap,
   smartWalletMetadata,
 } from "../../../../wallets/smart/index.js";
 import type { EmbeddedWallet } from "../../../../wallets/embedded/core/wallet/index.js";
 import { localWalletMetadata } from "../../../../wallets/local/index.js";
 import { ExportLocalWallet } from "./screens/ExportLocalWallet.js";
-import { SwapScreen } from "./screens/Buy/SwapScreen.js";
 import { swapTransactionsStore } from "./screens/Buy/swap/pendingSwapTx.js";
-import { SwapTransactionsScreen } from "./screens/SwapTransactionsScreen.js";
 import { useTrack } from "../hooks/useTrack.js";
+import { SwapScreen } from "./screens/Buy/SwapScreen.js";
+import { SwapTransactionsScreen } from "./screens/SwapTransactionsScreen.js";
 
 const TW_CONNECTED_WALLET = "tw-connected-wallet";
 
@@ -131,12 +131,12 @@ export const ConnectedWalletDetails: React.FC<{
   //   string | undefined
   // >(undefined);
 
-  const personalWallet = (activeWallet as WalletWithPersonalWallet)
-    ?.personalWallet;
+  // const personalAccount = (activeWallet as WalletWithPersonalAccount)
+  //   ?.personalAccount;
 
-  const smartWallet = activeWallet
-    ? personalWalletToSmartAccountMap.get(activeWallet)
-    : undefined;
+  // const smartWallet = activeWallet
+  //   ? personalAccountToSmartAccountMap.get(activeWallet.getAccount())
+  //   : undefined;
 
   const disableSwitchChain = !activeWallet?.switchChain;
 
@@ -443,18 +443,18 @@ export const ConnectedWalletDetails: React.FC<{
           </MenuButton>
 
           {/* Switch to Personal Wallet  */}
-          {personalWallet &&
+          {/* {personalWallet &&
             !props.detailsModal?.hideSwitchToPersonalWallet && (
               <AccountSwitcher
                 wallet={personalWallet}
                 name={locale.personalWallet}
               />
-            )}
+            )} */}
 
           {/* Switch to Smart Wallet */}
-          {smartWallet && (
+          {/* {smartWallet && (
             <AccountSwitcher name={locale.smartWallet} wallet={smartWallet} />
-          )}
+          )} */}
 
           {/* Switch Account for Metamask */}
           {/* {isActuallyMetaMask &&
@@ -750,33 +750,33 @@ const StyledChevronRightIcon = /* @__PURE__ */ styled(
   };
 });
 
-function AccountSwitcher(props: { wallet: Wallet; name: string }) {
-  const { connect } = useConnect();
-  const locale = useTWLocale().connectWallet;
-  const activeWallet = useActiveWallet();
+// function AccountSwitcher(props: { wallet: Wallet; name: string }) {
+//   const { connect } = useConnect();
+//   const locale = useTWLocale().connectWallet;
+//   const activeWallet = useActiveWallet();
 
-  return (
-    <MenuButton
-      type="button"
-      onClick={() => {
-        // remove the current active account as "connected"
-        if (activeWallet) {
-          connectionManager.removeConnectedWallet(activeWallet);
-        }
-        // set as connected and active
-        connect(props.wallet);
-      }}
-      style={{
-        fontSize: fontSize.sm,
-      }}
-    >
-      <EnterIcon width={iconSize.md} height={iconSize.md} />
-      <Text color="primaryText">
-        {locale.switchTo} {props.name}
-      </Text>
-    </MenuButton>
-  );
-}
+//   return (
+//     <MenuButton
+//       type="button"
+//       onClick={() => {
+//         // remove the current active account as "connected"
+//         if (activeWallet) {
+//           connectionManager.removeConnectedWallet(activeWallet);
+//         }
+//         // set as connected and active
+//         connect(props.wallet);
+//       }}
+//       style={{
+//         fontSize: fontSize.sm,
+//       }}
+//     >
+//       <EnterIcon width={iconSize.md} height={iconSize.md} />
+//       <Text color="primaryText">
+//         {locale.switchTo} {props.name}
+//       </Text>
+//     </MenuButton>
+//   );
+// }
 
 const ActiveDot = /* @__PURE__ */ StyledDiv(() => {
   const theme = useCustomTheme();
