@@ -10,7 +10,7 @@ import type { WalletEventListener } from "./listeners.js";
 import type { WalletMetadata } from "../types.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
 import type { Chain } from "../../chains/types.js";
-import type { TransactionHash } from "../../transaction/types.js";
+import type { SendTransactionResult } from "../../transaction/types.js";
 
 export type SendTransactionOption = TransactionSerializable & {
   chainId: number;
@@ -41,7 +41,9 @@ export interface WalletWithPersonalAccount extends Wallet {
 export type Account = {
   // REQUIRED
   address: Address;
-  sendTransaction: (tx: SendTransactionOption) => Promise<TransactionHash>;
+  sendTransaction: (
+    tx: SendTransactionOption,
+  ) => Promise<SendTransactionResult>;
   signMessage: ({ message }: { message: SignableMessage }) => Promise<Hex>;
   signTypedData: <
     const typedData extends TypedData | Record<string, unknown>,
@@ -55,5 +57,5 @@ export type Account = {
   signTransaction?: (tx: TransactionSerializable) => Promise<Hex>;
   sendBatchTransaction?: (
     txs: SendTransactionOption[],
-  ) => Promise<TransactionHash>;
+  ) => Promise<SendTransactionResult>;
 };

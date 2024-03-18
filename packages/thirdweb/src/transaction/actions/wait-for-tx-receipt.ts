@@ -1,18 +1,21 @@
 import type { Hex } from "viem";
-import type { TransactionHash, TransactionReceipt } from "../types.js";
+import type { SendTransactionResult, TransactionReceipt } from "../types.js";
 
 import type { PreparedTransaction } from "../prepare-transaction.js";
 import { getRpcClient } from "../../rpc/rpc.js";
 import { watchBlockNumber } from "../../rpc/watchBlockNumber.js";
 import { eth_getTransactionReceipt } from "../../rpc/actions/eth_getTransactionReceipt.js";
+import type { Prettify } from "../../utils/type-utils.js";
 
 const MAX_BLOCKS_WAIT_TIME = 10;
 
 const map = new Map<string, Promise<TransactionReceipt>>();
 
-export type WaitForReceiptOptions = TransactionHash & {
-  transaction: Pick<PreparedTransaction, "client" | "chain">;
-};
+export type WaitForReceiptOptions = Prettify<
+  SendTransactionResult & {
+    transaction: Pick<PreparedTransaction, "client" | "chain">;
+  }
+>;
 
 /**
  * Waits for the transaction receipt of a given transaction hash on a specific contract.
@@ -23,7 +26,7 @@ export type WaitForReceiptOptions = TransactionHash & {
  * ```ts
  * import { waitForReceipt } from "thirdweb";
  * const receipt = await waitForReceipt({
- *   contract: myContract,
+ *   transaction: myContract,
  *   transactionHash: "0x123...",
  * });
  * ```
