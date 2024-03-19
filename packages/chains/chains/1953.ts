@@ -4,12 +4,6 @@ export default {
   "chainId": 1953,
   "explorers": [],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmbnLDuVc4JReFysyKvmpuqUtj9HCus6qoKD5nQ9QkokzK",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
   "infoURL": "https://selendra.org",
   "name": "Selendra Network Testnet",
   "nativeCurrency": {
