@@ -46,34 +46,22 @@ export type BuyWithCryptoTransaction = {
   transactionHash: string;
 };
 
-export const BuyWithCryptoStatuses = {
-  NOT_FOUND: "NOT_FOUND",
-  NONE: "NONE",
-  PENDING: "PENDING",
-  FAILED: "FAILED",
-  COMPLETED: "COMPLETED",
-} as const;
-
 export type BuyWithCryptoStatuses =
-  (typeof BuyWithCryptoStatuses)[keyof typeof BuyWithCryptoStatuses];
+  | "NOT_FOUND"
+  | "NONE"
+  | "PENDING"
+  | "FAILED"
+  | "COMPLETED";
 
-export const BuyWithCryptoSubStatuses = {
-  NONE: "NONE",
-  WAITING_BRIDGE: "WAITING_BRIDGE",
-  REVERTED_ON_CHAIN: "REVERTED_ON_CHAIN",
-  SUCCESS: "SUCCESS",
-  PARTIAL_SUCCESS: "PARTIAL_SUCCESS",
-  UNKNOWN_ERROR: "UNKNOWN_ERROR",
-} as const;
 export type BuyWithCryptoSubStatuses =
-  (typeof BuyWithCryptoSubStatuses)[keyof typeof BuyWithCryptoSubStatuses];
+  | "NONE"
+  | "WAITING_BRIDGE"
+  | "REVERTED_ON_CHAIN"
+  | "SUCCESS"
+  | "PARTIAL_SUCCESS"
+  | "UNKNOWN_ERROR";
 
-export const SwapType = {
-  SAME_CHAIN: "SAME_CHAIN",
-  CROSS_CHAIN: "CROSS_CHAIN",
-};
-
-export type SwapType = (typeof SwapType)[keyof typeof SwapType];
+export type SwapType = "SAME_CHAIN" | "CROSS_CHAIN";
 
 /**
  * The object returned by the [`getQuoteStatus`](https://portal.thirdweb.com/references/typescript/v5/getQuoteStatus) function to represent the status of a quoted transaction
