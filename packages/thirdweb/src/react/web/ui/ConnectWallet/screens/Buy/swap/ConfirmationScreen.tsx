@@ -37,6 +37,7 @@ import { SwapFees } from "./SwapFees.js";
 import { addPendingSwapTransaction } from "./pendingSwapTx.js";
 import { useThirdwebProviderProps } from "../../../../../../core/hooks/others/useThirdwebProviderProps.js";
 import { TokenIcon } from "../../../../components/TokenIcon.js";
+import { waitForReceipt } from "../../../../../../../transaction/actions/wait-for-tx-receipt.js";
 
 /**
  * @internal
@@ -193,9 +194,11 @@ export function ConfirmationScreen(props: {
                 action: "approve.initiated",
                 quote: props.buyWithCryptoQuote,
               });
-              await sendTransactionMutation.mutateAsync(
+              const tx = await sendTransactionMutation.mutateAsync(
                 props.buyWithCryptoQuote.approval,
               );
+
+              await waitForReceipt(tx);
 
               track({
                 source: "ConnectButton",
@@ -225,6 +228,8 @@ export function ConfirmationScreen(props: {
               const _swapTx = await sendTransactionMutation.mutateAsync(
                 props.buyWithCryptoQuote.transactionRequest,
               );
+
+              await waitForReceipt(_swapTx);
 
               // these will be defined by this time
               if (fromTokenSymbol && toTokenSymbol && fromChain.data) {
