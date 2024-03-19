@@ -6,14 +6,14 @@ import { getThirdwebDomains } from "../../../utils/domains.js";
  * @internal
  */
 export const getPayQuoteStatusUrl = () =>
-  `https://${getThirdwebDomains().pay}/buy-with-crypto/status`;
+  `https://${getThirdwebDomains().pay}/buy-with-crypto/status/v1`;
 /**
  * Constructs the endpoint to get a pay quote.
  * @param client - The Thirdweb client containing the baseUrl config
  * @internal
  */
 export const getPayQuoteEndpoint = () =>
-  `https://${getThirdwebDomains().pay}/buy-with-crypto/quote`;
+  `https://${getThirdwebDomains().pay}/buy-with-crypto/quote/v1`;
 
 /**
  * Constructs the endpoint to get a wallet address swap history.
@@ -21,4 +21,4 @@ export const getPayQuoteEndpoint = () =>
  * @internal
  */
 export const getPaySwapHistoryEndpoint = () =>
-  `https://${getThirdwebDomains().pay}/buy-with-crypto/history`;
+  `https://${getThirdwebDomains().pay}/buy-with-crypto/history/v1`;
