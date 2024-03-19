@@ -162,7 +162,7 @@ export function ConfirmationScreen(props: {
               label={step === "approval" ? "Approve" : "Approved"}
             />
             <ConnectorLine />
-            <Step isDone={false} label="Swap" isActive={step === "swap"} />
+            <Step isDone={false} label="Confirm" isActive={step === "swap"} />
           </Container>
           <Spacer y="lg" />
         </>
@@ -173,7 +173,7 @@ export function ConfirmationScreen(props: {
           <Container flex="row" gap="xs" center="y" color="danger">
             <CrossCircledIcon width={iconSize.sm} height={iconSize.sm} />
             <Text color="danger" size="sm">
-              {step === "approval" ? "Failed to Approve" : "Failed to Swap"}
+              {step === "approval" ? "Failed to Approve" : "Failed to Buy"}
             </Text>
           </Container>
 
@@ -273,7 +273,7 @@ export function ConfirmationScreen(props: {
         }}
         gap="xs"
       >
-        {step === "approval" ? "Approve" : "Swap"}
+        {step === "approval" ? "Approve" : "Confirm"}
         {status === "pending" && <Spinner size="sm" color="accentButtonText" />}
       </Button>
     </Container>

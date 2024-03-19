@@ -50,6 +50,15 @@ export function BuyTokenInput(props: {
         type="text"
         data-placeholder={props.value === ""}
         value={props.value || "0"}
+        onClick={(e) => {
+          // put cursor at the end of the input
+          if (props.value === "") {
+            e.currentTarget.setSelectionRange(
+              e.currentTarget.value.length,
+              e.currentTarget.value.length,
+            );
+          }
+        }}
         onChange={(e) => {
           let value = e.target.value;
 

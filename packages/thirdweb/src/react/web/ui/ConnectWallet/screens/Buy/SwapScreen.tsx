@@ -142,7 +142,8 @@ export function SwapScreenContent(props: {
   });
 
   const buyWithCryptoParams: BuyWithCryptoQuoteQueryParams | undefined =
-    deferredTokenAmount && !(fromChain === toChain && fromToken === toToken)
+    deferredTokenAmount &&
+    !(fromChain.id === toChain.id && fromToken === toToken)
       ? {
           // wallet
           fromAddress: account.address,

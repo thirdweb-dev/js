@@ -24,10 +24,13 @@ export function SwapFees(props: { quote: BuyWithCryptoQuote }) {
           }}
         >
           {props.quote.processingFees.map((fee) => {
+            const feeAmount = formatNumber(Number(fee.amount), 4);
+
             return (
               <Container key={fee.token.symbol} flex="row" gap="xxs">
                 <Text color="primaryText" size="xs">
-                  {formatNumber(Number(fee.amount), 4)} {fee.token.symbol}
+                  {feeAmount === 0 ? "~" : ""}
+                  {feeAmount} {fee.token.symbol}
                 </Text>
                 <Text color="secondaryText" size="xs">
                   (${fee.amountUSDCents / 100})
