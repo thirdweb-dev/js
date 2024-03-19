@@ -44,12 +44,8 @@ export async function getRegistrationPrice(
     return price({ contract, extraStorage: toBigInt(extraStorage) });
   };
 
-  if (options.disableCache) {
-    return fetch();
-  }
-
   return withCache(fetch, {
     cacheKey: `${toBigInt(extraStorage)}:getRegistrationPrice`,
-    cacheTime: 5 * 60 * 1000, // 5 minutes
+    cacheTime: options.disableCache ? 0 : 5 * 60 * 1000, // 5 minutes
   });
 }

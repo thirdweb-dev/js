@@ -47,12 +47,8 @@ export async function getUsdRegistrationPrice(
     return Number(toTokens(bigNumberValue, 8)); // storage registry uses 8 decimal places
   };
 
-  if (options.disableCache) {
-    return fetch();
-  }
-
   return withCache(fetch, {
     cacheKey: `${toBigInt(extraStorage)}:getUsdRegistrationPrice`,
-    cacheTime: 5 * 60 * 1000, // 5 minutes
+    cacheTime: options.disableCache ? 0 : 5 * 60 * 1000, // 5 minutes
   });
 }

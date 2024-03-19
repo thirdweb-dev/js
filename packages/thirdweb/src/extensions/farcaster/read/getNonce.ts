@@ -36,12 +36,8 @@ export async function getNonce(options: GetNonceParams): Promise<bigint> {
     return nonces({ contract, account: options.address });
   };
 
-  if (options.disableCache) {
-    return fetch();
-  }
-
   return withCache(fetch, {
     cacheKey: `${options.address}:getNonce`,
-    cacheTime: 5 * 60 * 1000, // 5 minutes
+    cacheTime: options.disableCache ? 0 : 5 * 60 * 1000, // 5 minutes
   });
 }

@@ -44,12 +44,8 @@ export async function getStoragePrice(
     return (await unitPrice({ contract })) * units;
   };
 
-  if (options.disableCache) {
-    return fetch();
-  }
-
   return withCache(fetch, {
     cacheKey: `${toBigInt(units)}:getStoragePrice`,
-    cacheTime: 5 * 60 * 1000, // 5 minutes
+    cacheTime: options.disableCache ? 0 : 5 * 60 * 1000, // 5 minutes
   });
 }
