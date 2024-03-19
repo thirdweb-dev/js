@@ -106,49 +106,57 @@ export function SwapTransactionsScreen(props: { onBack: () => void }) {
       </Container>
 
       <Container
-        flex="column"
-        gap="sm"
-        px="md"
         scrollY
+        flex="column"
+        fullHeight
         style={{
           minHeight: "250px",
           maxHeight: "370px",
         }}
       >
-        {noTransactions && !_historyQuery.isLoading && (
-          <Container
-            flex="column"
-            gap="md"
-            center="both"
-            color="secondaryText"
-            style={{
-              minHeight: "250px",
-            }}
-          >
-            <CrossCircledIcon width={iconSize.xl} height={iconSize.xl} />
-            <Text> No Transactions </Text>
-          </Container>
-        )}
+        <Container flex="column" gap="sm" px="lg" expand>
+          {noTransactions && !_historyQuery.isLoading && (
+            <Container
+              flex="column"
+              gap="md"
+              center="both"
+              color="secondaryText"
+              style={{
+                minHeight: "250px",
+              }}
+            >
+              <CrossCircledIcon width={iconSize.xl} height={iconSize.xl} />
+              <Text> No Transactions </Text>
+            </Container>
+          )}
 
-        {noTransactions && _historyQuery.isLoading && (
-          <Container
-            flex="row"
-            center="both"
-            style={{
-              minHeight: "250px",
-            }}
-          >
-            <Spinner size="xl" color="accentText" />
-          </Container>
-        )}
+          {noTransactions && _historyQuery.isLoading && (
+            <Container
+              flex="row"
+              center="both"
+              style={{
+                minHeight: "250px",
+              }}
+            >
+              <Spinner size="xl" color="accentText" />
+            </Container>
+          )}
 
-        {txInfosToShow.map((txInfo, i) => {
-          return <TransactionInfo key={i} txInfo={txInfo} />;
-        })}
+          {txInfosToShow.map((txInfo, i) => {
+            return <TransactionInfo key={i} txInfo={txInfo} />;
+          })}
 
-        {_historyQuery.data && !hidePagination && (
-          <>
-            <Spacer y="lg" />
+          {_historyQuery.isLoading && txInfosToShow.length > 1 && (
+            <>
+              <Skeleton width="100%" height="68px" />
+              <Skeleton width="100%" height="68px" />
+              <Skeleton width="100%" height="68px" />
+            </>
+          )}
+        </Container>
+
+        <Container p="lg">
+          {_historyQuery.data && !hidePagination && (
             <div
               style={{
                 display: "grid",
@@ -195,9 +203,8 @@ export function SwapTransactionsScreen(props: { onBack: () => void }) {
                 <ArrowRightIcon width={iconSize.sm} height={iconSize.sm} />
               </Button>
             </div>
-            <Spacer y="xs" />
-          </>
-        )}
+          )}
+        </Container>
       </Container>
 
       <Line />
