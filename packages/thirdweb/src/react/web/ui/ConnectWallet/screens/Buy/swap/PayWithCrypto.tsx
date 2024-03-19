@@ -54,6 +54,7 @@ export function PayWithCrypto(props: {
       <BorderBox>
         {/* Row 1 */}
         <Container
+          px="sm"
           flex="row"
           style={{
             flexWrap: "nowrap",
@@ -66,6 +67,7 @@ export function PayWithCrypto(props: {
             onClick={props.onTokenClick}
             style={{
               border: "none",
+              paddingInline: 0,
             }}
             token={props.token}
             chain={props.chain}
@@ -79,7 +81,6 @@ export function PayWithCrypto(props: {
               flexShrink: 1,
               display: "flex",
               alignItems: "center",
-              padding: spacing.sm,
               overflow: "hidden",
               textOverflow: "ellipsis",
               whiteSpace: "nowrap",
@@ -124,15 +125,15 @@ export function PayWithCrypto(props: {
               onClick={props.onChainClick}
             >
               <ChainIcon chain={chainQuery.data} size={iconSize.sm} />
-              {chainQuery.data?.name ? (
-                <Text color="secondaryText" size="sm">
-                  {chainQuery.data.name}
-                </Text>
-              ) : (
-                <Skeleton width="90px" height={fontSize.xs} />
-              )}
+              <Container color="secondaryText" flex="row" center="y" gap="xxs">
+                {chainQuery.data?.name ? (
+                  <Text color="secondaryText" size="sm">
+                    {chainQuery.data.name}
+                  </Text>
+                ) : (
+                  <Skeleton width="90px" height={fontSize.xs} />
+                )}
 
-              <Container color="secondaryText">
                 <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
               </Container>
             </Button>

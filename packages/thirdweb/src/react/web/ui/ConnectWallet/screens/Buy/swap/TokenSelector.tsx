@@ -30,7 +30,7 @@ export function TokenSelectorButton(props: {
             <TokenIcon token={props.token} chain={props.chain} size="sm" />
             <TokenSymbol token={props.token} chain={props.chain} size="sm" />
           </Container>
-          <Container color="secondaryText">
+          <Container color="secondaryText" flex="row" center="both">
             <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
           </Container>
         </>

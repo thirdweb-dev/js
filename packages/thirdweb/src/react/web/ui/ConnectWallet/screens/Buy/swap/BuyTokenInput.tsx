@@ -106,7 +106,7 @@ export function BuyTokenInput(props: {
           ) : (
             <Skeleton width="90px" height={fontSize.xs} />
           )}
-          <Container color="secondaryText">
+          <Container color="secondaryText" flex="row" center="both">
             <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
           </Container>
         </Button>
