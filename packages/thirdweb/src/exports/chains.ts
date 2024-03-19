@@ -22,6 +22,7 @@ export {
   polygonMumbai,
   mumbai,
 } from "../chains/chain-definitions/polygon-mumbai.js";
+export { polygonAmoy } from "../chains/chain-definitions/polygon-amoy.js";
 export { polygon } from "../chains/chain-definitions/polygon.js";
 export { sepolia } from "../chains/chain-definitions/sepolia.js";
 export { zoraSepolia } from "../chains/chain-definitions/zora-sepolia.js";
