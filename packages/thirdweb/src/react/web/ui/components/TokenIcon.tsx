@@ -46,8 +46,6 @@ function NativeTokenIcon(props: {
 }) {
   const chainQuery = useChainQuery(props.chain);
 
-  console.log("chain query", props.chain);
-
   return (
     <Img
       src={chainQuery.data?.icon?.url}
