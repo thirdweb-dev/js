@@ -30,7 +30,7 @@ import { CellProps, Column, usePagination, useTable } from "react-table";
 import type { NFT, ThirdwebContract } from "thirdweb";
 import {
   getNFTs as getErc721NFTs,
-  totalSupply,
+  totalSupply as erc721TotalSupply,
 } from "thirdweb/extensions/erc721";
 import { getNFTs as getErc1155NFTs } from "thirdweb/extensions/erc1155";
 import { useReadContract } from "thirdweb/react";
@@ -130,10 +130,10 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
     },
   );
 
-  const totalCountQuery = useReadContract(totalSupply, {
+  // TODO: Add support for ERC1155 total circulating supply
+  const totalCountQuery = useReadContract(erc721TotalSupply, {
     contract,
   });
-
   // Anything bigger and the table breaks
   const safeTotalCount = useMemo(
     () =>
@@ -225,7 +225,9 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
                   style={{ cursor: "pointer" }}
                   onClick={() => {
                     const tokenId = row.original.id;
-                    if (!tokenId) return;
+                    if (!tokenId && tokenId !== 0n) {
+                      return;
+                    }
                     router.push(
                       `${router.asPath}/${tokenId.toString()}`,
                       undefined,

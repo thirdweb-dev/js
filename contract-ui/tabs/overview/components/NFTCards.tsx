@@ -75,7 +75,7 @@ export const NFTCards: React.FC<NFTCardsProps> = ({
         const ctrAddress =
           (token as WalletNFT)?.contractAddress || contractAddress;
 
-        if (!tokenId || !isOnlyNumbers(tokenId.toString())) {
+        if (!tokenId && tokenId !== 0n || !isOnlyNumbers(tokenId.toString())) {
           return null;
         }
 
