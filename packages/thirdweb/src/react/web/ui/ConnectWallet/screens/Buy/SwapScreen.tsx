@@ -1,6 +1,6 @@
 import { CrossCircledIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
-import { useDeferredValue, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { polygon } from "../../../../../../chains/chain-definitions/polygon.js";
 import type { Chain } from "../../../../../../chains/types.js";
 import { defineChain } from "../../../../../../chains/utils.js";
@@ -40,6 +40,7 @@ import { ConfirmationScreen } from "./swap/ConfirmationScreen.js";
 import { PayWithCrypto } from "./swap/PayWithCrypto.js";
 import { SwapFees } from "./swap/SwapFees.js";
 import { Spinner } from "../../../components/Spinner.js";
+import { useDebouncedValue } from "../../../hooks/useDebouncedValue.js";
 
 const fallbackSupportedChains = /* @__PURE__ */ (() =>
   fallbackSwapSupportedChainIds.map(defineChain))();
@@ -133,7 +134,7 @@ export function SwapScreenContent(props: {
     props.supportedTokens[toChain.id]?.[0] || NATIVE_TOKEN,
   );
 
-  const deferredTokenAmount = useDeferredValue(tokenAmount);
+  const deferredTokenAmount = useDebouncedValue(tokenAmount, 300);
 
   const fromTokenBalanceQuery = useWalletBalance({
     account: account,

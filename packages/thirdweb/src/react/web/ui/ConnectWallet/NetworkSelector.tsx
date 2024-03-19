@@ -1,13 +1,6 @@
 import styled from "@emotion/styled";
 import { CrossCircledIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import {
-  useState,
-  useDeferredValue,
-  useMemo,
-  useCallback,
-  memo,
-  useEffect,
-} from "react";
+import { useState, useMemo, useCallback, memo, useEffect } from "react";
 import { ChainIcon } from "../components/ChainIcon.js";
 import { Skeleton } from "../components/Skeleton.js";
 import { Spacer } from "../components/Spacer.js";
@@ -39,6 +32,7 @@ import { useTWLocale } from "../../providers/locale-provider.js";
 import type React from "react";
 import type { ChainMetadata, Chain } from "../../../../chains/types.js";
 import { convertApiChainToChain } from "../../../../chains/utils.js";
+import { useDebouncedValue } from "../hooks/useDebouncedValue.js";
 
 type NetworkSelectorChainProps = {
   /**
@@ -251,7 +245,8 @@ function NetworkSelectorContentInner(
   const [selectedTab, setSelectedTab] = useState<"all" | "mainnet" | "testnet">(
     "all",
   );
-  const deferredSearchTerm = useDeferredValue(searchTerm);
+  const deferredSearchTerm = useDebouncedValue(searchTerm, 300);
+
   const { onSwitch, onCustomClick } = props.networkSelector || {};
 
   const allChainsTab = useMemo(() => {
