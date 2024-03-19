@@ -41,7 +41,9 @@ export default {
   },
   "rpc": [
     "https://1101.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://zkevm-rpc.com"
+    "https://zkevm-rpc.com",
+    "https://polygon-zkevm.drpc.org",
+    "wss://polygon-zkevm.drpc.org"
   ],
   "shortName": "zkevm",
   "slug": "polygon-zkevm",

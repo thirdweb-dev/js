@@ -24,7 +24,9 @@ export default {
   "redFlags": [],
   "rpc": [
     "https://1001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://api.baobab.klaytn.net:8651"
+    "https://api.baobab.klaytn.net:8651",
+    "https://klaytn-baobab.drpc.org",
+    "wss://klaytn-baobab.drpc.org"
   ],
   "shortName": "Baobab",
   "slip44": 1,

@@ -52,7 +52,9 @@ export default {
     "https://rpc.ankr.com/filecoin_testnet",
     "https://filecoin-calibration.chainstacklabs.com/rpc/v1",
     "https://filecoin-calibration.chainup.net/rpc/v1",
-    "https://calibration.filfox.info/rpc/v1"
+    "https://calibration.filfox.info/rpc/v1",
+    "https://filecoin-calibration.drpc.org",
+    "wss://filecoin-calibration.drpc.org"
   ],
   "shortName": "filecoin-calibration",
   "slip44": 1,
