@@ -7,7 +7,7 @@ import { watchBlockNumber } from "../../rpc/watchBlockNumber.js";
 import { eth_getTransactionReceipt } from "../../rpc/actions/eth_getTransactionReceipt.js";
 import type { Prettify } from "../../utils/type-utils.js";
 
-const MAX_BLOCKS_WAIT_TIME = 30; // TODO: instead of changing it here, make it configurable
+export const MAX_BLOCKS_WAIT_TIME = 30; // TODO: instead of changing it here, make it configurable
 
 const map = new Map<string, Promise<TransactionReceipt>>();
 
@@ -63,7 +63,11 @@ export function waitForReceipt(
         blocksWaited++;
         if (blocksWaited >= MAX_BLOCKS_WAIT_TIME) {
           unwatch();
-          reject(new Error("Transaction not found after 10 blocks"));
+          reject(
+            new Error(
+              `Transaction not found after ${MAX_BLOCKS_WAIT_TIME} blocks`,
+            ),
+          );
           return;
         }
         try {
