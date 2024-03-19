@@ -1,7 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
   "chain": "Avalanche",
-  "chainId": 91041,
+  "chainId": 53123,
   "explorers": [],
   "faucets": [],
   "features": [],
@@ -12,19 +12,19 @@ export default {
     "format": "svg"
   },
   "infoURL": "https://avacloud.io",
-  "name": "QI0318I1 Testnet",
+  "name": "Metasky",
   "nativeCurrency": {
-    "name": "QI0318I1 Testnet Token",
-    "symbol": "DVN",
+    "name": "Metasky Token",
+    "symbol": "MSK",
     "decimals": 18
   },
-  "networkId": 91041,
+  "networkId": 53123,
   "redFlags": [],
   "rpc": [
-    "https://91041.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://subnets.avax.network/defi-kingdoms/dfk-chain/rpc"
+    "https://53123.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://subnets.avax.network/metasky/testnet/rpc"
   ],
-  "shortName": "QI0318I1 Testnet",
-  "slug": "qi0318i1-testnet-qi0318i1 testnet",
+  "shortName": "Metasky",
+  "slug": "metasky",
   "testnet": true
 } as const satisfies Chain;
