@@ -6,22 +6,10 @@ export default {
     {
       "name": "PAXB Explorer",
       "url": "https://scan.paxb.io",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmSP66CHynXpMYkjV28uLjTR4kjuoJyy92igYYpvLoqHtG",
-        "width": 300,
-        "height": 300,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmSP66CHynXpMYkjV28uLjTR4kjuoJyy92igYYpvLoqHtG",
-    "width": 300,
-    "height": 300,
-    "format": "png"
-  },
   "infoURL": "https://paxb.io/",
   "name": "PAXB Mainnet",
   "nativeCurrency": {
