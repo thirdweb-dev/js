@@ -30,8 +30,8 @@ import { swapTransactionsStore } from "./Buy/swap/pendingSwapTx.js";
 type TxStatusInfo = {
   fromChainId: number;
   transactionHash: string;
-  sourceTokenAmount: string;
-  sourceTokenSymbol: string;
+  boughtTokenAmount: string;
+  boughtTokenSymbol: string;
   status: BuyWithCryptoStatuses;
 };
 
@@ -68,8 +68,8 @@ export function SwapTransactionsScreen(props: { onBack: () => void }) {
     txInfosToShow.push({
       fromChainId: tx.from.chainId,
       transactionHash: tx.transactionHash,
-      sourceTokenAmount: tx.from.value,
-      sourceTokenSymbol: tx.from.symbol,
+      boughtTokenAmount: tx.to.value,
+      boughtTokenSymbol: tx.to.symbol,
       status: "PENDING",
     });
   });
@@ -79,8 +79,8 @@ export function SwapTransactionsScreen(props: { onBack: () => void }) {
     txInfosToShow.push({
       fromChainId: tx.source.token.chainId,
       transactionHash: tx.source.transactionHash,
-      sourceTokenAmount: tx.quote.fromAmount,
-      sourceTokenSymbol: tx.source.token.symbol || "",
+      boughtTokenAmount: tx.quote.toAmount,
+      boughtTokenSymbol: tx.quote.toToken.symbol || "",
       status: tx.status,
     });
   });
@@ -244,8 +244,8 @@ function TransactionInfo(props: { txInfo: TxStatusInfo }) {
   const {
     fromChainId,
     transactionHash,
-    sourceTokenAmount,
-    sourceTokenSymbol,
+    boughtTokenAmount,
+    boughtTokenSymbol,
     status,
   } = props.txInfo;
 
@@ -288,7 +288,7 @@ function TransactionInfo(props: { txInfo: TxStatusInfo }) {
           >
             <Text color="primaryText"> Buy</Text>
             <Text size="sm" color="primaryText">
-              + {Number(sourceTokenAmount).toFixed(3)} {sourceTokenSymbol}
+              + {Number(boughtTokenAmount).toFixed(3)} {boughtTokenSymbol}
             </Text>{" "}
           </Container>
 
