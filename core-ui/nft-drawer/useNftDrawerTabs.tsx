@@ -58,7 +58,7 @@ export function useNFTDrawerTabs({
   const balanceOfQuery = useReadContract(balanceOf, {
     contract,
     owner: address || "",
-    id: BigInt(tokenId || 0),
+    tokenId: BigInt(tokenId || 0),
   });
 
   const isERC1155 = detectFeatures(oldContract, ["ERC1155"]);
@@ -104,7 +104,8 @@ export function useNFTDrawerTabs({
     ]);
 
     const isOwner =
-      (isERC1155 && balanceOfQuery?.data || 0 > 0) ||
+      (isERC1155 && balanceOfQuery?.data) ||
+      0 > 0 ||
       (isERC721 && nft?.owner === address);
 
     const { erc1155 } = getErcs(oldContract);
