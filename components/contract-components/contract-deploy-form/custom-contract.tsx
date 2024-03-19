@@ -5,7 +5,6 @@ import {
   useContractPublishMetadataFromURI,
   useCustomContractDeployMutation,
   useCustomFactoryAbi,
-  useDefaultForwarders,
   useEns,
   useFunctionParamsFromABI,
   useTransactionsForDeploy,
@@ -79,7 +78,6 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
   const trackEvent = useTrack();
 
   const compilerMetadata = useContractPublishMetadataFromURI(ipfsHash);
-  const defaultForwarders = useDefaultForwarders();
   const fullPublishMetadata = useContractFullPublishMetadata(ipfsHash);
   const constructorParams = useConstructorParamsFromABI(
     compilerMetadata.data?.abi,
@@ -234,7 +232,8 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
         (paramKey === "_platformFeeBps" ||
           paramKey === "_platformFeeRecipient")) ||
       paramKey === "_defaultAdmin" ||
-      (isSplit && (paramKey === "_payees" || paramKey === "_shares"))
+      (isSplit && (paramKey === "_payees" || paramKey === "_shares")) ||
+      paramKey === "_trustedForwarders"
     ) {
       return true;
     }
@@ -394,10 +393,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
               {hasPrimarySale && <PrimarySaleFieldset form={form} />}
               {isSplit && <SplitFieldset form={form} />}
               {hasTrustedForwarders && (
-                <TrustedForwardersFieldset
-                  form={form}
-                  forwarders={defaultForwarders}
-                />
+                <TrustedForwardersFieldset form={form} />
               )}
               {Object.keys(formDeployParams).map((paramKey) => {
                 const deployParam = deployParams.find(
@@ -407,11 +403,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
                   fullPublishMetadata.data?.constructorParams || {};
                 const extraMetadataParam = contructorParams[paramKey];
 
-                if (
-                  shouldHide(paramKey) ||
-                  extraMetadataParam?.hidden ||
-                  paramKey === "_trustedForwarders"
-                ) {
+                if (shouldHide(paramKey) || extraMetadataParam?.hidden) {
                   return null;
                 }
 
