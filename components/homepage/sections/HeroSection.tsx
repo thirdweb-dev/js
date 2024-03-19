@@ -88,8 +88,8 @@ export const HeroSection = ({ TRACKING_CATEGORY }: HeroSectionProps) => {
             </Heading>
           </Flex>
           <Text size="body.xl" mr={6}>
-            Frontend, backend, and onchain tools for end-to-end web3 apps — on
-            any EVM chain.
+            Frontend, backend, and onchain tools to build complete web3 apps —
+            on any EVM chain.
           </Text>
 
           <Flex
