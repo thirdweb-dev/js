@@ -58,7 +58,7 @@ describe("verifyLoginPayload", () => {
 
     expect(verificationResult.valid).toBe(true);
     if (verificationResult.valid) {
-      expect(verificationResult.verifiedAddress).toBe(TEST_ACCOUNT_A.address);
+      expect(verificationResult.payload.address).toBe(TEST_ACCOUNT_A.address);
     }
   });
 
