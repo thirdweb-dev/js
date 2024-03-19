@@ -69,7 +69,7 @@ export function metamaskWallet() {
  * ```ts
  * const provider = injectedMetamaskProvider();
  * ```
- * @returns The injected Rainbow wallet provider of type `Ethereum`
+ * @returns The injected Metamask wallet provider of type `Ethereum`
  * @walletUtils
  */
 export function injectedMetamaskProvider() {

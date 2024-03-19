@@ -71,6 +71,11 @@ export {
 } from "../react/web/wallets/zerion/zerionConfig.js";
 
 export {
+  okxConfig,
+  type OkxConfigOptions,
+} from "../react/web/wallets/okx/okxConfig.js";
+
+export {
   smartWalletConfig,
   type SmartWalletConfigOptions,
 } from "../react/web/wallets/smartWallet/smartWalletConfig.js";
