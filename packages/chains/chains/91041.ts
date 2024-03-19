@@ -25,6 +25,6 @@ export default {
     "https://subnets.avax.network/defi-kingdoms/dfk-chain/rpc"
   ],
   "shortName": "QI0318I1 Testnet",
-  "slug": "qi0318i1-testnet",
+  "slug": "qi0318i1-testnet-qi0318i1 testnet",
   "testnet": true
 } as const satisfies Chain;

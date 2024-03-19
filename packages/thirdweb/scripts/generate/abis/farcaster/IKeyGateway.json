@@ -1,0 +1,7 @@
+[
+  "function ADD_TYPEHASH() external view returns (bytes32)",
+  "function keyRegistry() external view returns (address)",
+  "function nonces(address account) external view returns (uint256)",
+  "function add(uint32 keyType, bytes calldata key, uint8 metadataType, bytes calldata metadata) external",
+  "function addFor(address fidOwner, uint32 keyType, bytes calldata key, uint8 metadataType, bytes calldata metadata, uint256 deadline, bytes calldata sig) external"
+]

@@ -54,6 +54,11 @@ export {
   injectedZerionProvider,
 } from "../wallets/injected/wallets/zerion.js";
 
+export {
+  okxWallet,
+  injectedOkxProvider,
+} from "../wallets/injected/wallets/okx.js";
+
 // wallet-connect
 export {
   walletConnect,
