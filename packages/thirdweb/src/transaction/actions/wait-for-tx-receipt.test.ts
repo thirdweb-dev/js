@@ -79,7 +79,7 @@ describe("waitForReceipt", () => {
     const result = waitForReceipt({ transaction: TRANSACTION });
 
     await expect(result).rejects.toThrow(
-      "Transaction has no txHash to wait for, did you execute it?",
+      "Transaction has no transactionHash to wait for, did you execute it?",
     );
     expect(mockEthGetTransactionReceipt).not.toHaveBeenCalled();
   });
