@@ -8,7 +8,8 @@ type ConnectSidebarProps = {
     | "embedded-wallets"
     | "account-abstraction"
     | "payments-contracts"
-    | "payments-settings";
+    | "payments-settings"
+    | "pay-settings";
 };
 
 const links: Route[] = [
@@ -32,15 +33,11 @@ const links: Route[] = [
     title: "Account Abstraction",
     name: "account-abstraction",
   },
+
   {
-    path: "/dashboard/payments/contracts",
-    title: "Payments Contracts",
-    name: "payments-contracts",
-  },
-  {
-    path: "/dashboard/payments/settings",
-    title: "Payments Settings",
-    name: "payments-settings",
+    path: "/dashboard/connect/pay",
+    title: "Pay",
+    name: "pay-settings",
   },
 ];
 

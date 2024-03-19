@@ -56,7 +56,6 @@ export const EditApiKey: React.FC<EditApiKeyProps> = ({ apiKey, onCancel }) => {
     "API Key updated",
     "Failed to update an API Key",
   );
-
   const handleSubmit = form.handleSubmit((values) => {
     const enabledServices = (values.services || []).filter(
       (srv) => !!srv.enabled,

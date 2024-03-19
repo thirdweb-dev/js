@@ -108,6 +108,17 @@ export const EditServices: React.FC<EditServicesProps> = ({ form, apiKey }) => {
                 </HStack>
               )}
 
+              {service.name === "pay" && (
+                <HStack>
+                  <LinkButton
+                    colorScheme="primary"
+                    href={`/dashboard/connect/pay?clientId=${apiKey.key}`}
+                  >
+                    Go to configuration
+                  </LinkButton>
+                </HStack>
+              )}
+
               {service.actions.length > 0 && (
                 <FormControl>
                   <HStack gap={4}>

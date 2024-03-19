@@ -1,16 +1,12 @@
 import { useApiAuthToken } from "@3rdweb-sdk/react/hooks/useApi";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { Flex } from "@chakra-ui/react";
-import { AppLayout } from "components/app-layouts/app";
 import { PaymentsSettingsAccount } from "components/payments/settings/payment-settings-account";
-import { PaymentsWebhooks } from "components/payments/settings/payment-webhooks";
 import { PaymentsSettingsChecklist } from "components/payments/settings/payment-settings-checklist";
+import { PaymentsWebhooks } from "components/payments/settings/payment-webhooks";
 import { NoWalletConnectedPayments } from "contract-ui/tabs/payments/components/no-wallet-connected-payments";
-import { PageId } from "page-id";
-import { ThirdwebNextPage } from "utils/types";
-import { ConnectSidebar } from "core-ui/sidebar/connect";
 
-const PaymentsSettings: ThirdwebNextPage = () => {
+export const OldPaySetting = () => {
   const { paymentsSellerId } = useApiAuthToken();
   const { user } = useLoggedInUser();
 
@@ -30,14 +26,3 @@ const PaymentsSettings: ThirdwebNextPage = () => {
     </Flex>
   );
 };
-
-PaymentsSettings.getLayout = (page, props) => (
-  <AppLayout {...props} hasSidebar={true}>
-    <ConnectSidebar activePage="payments-settings" />
-    {page}
-  </AppLayout>
-);
-
-PaymentsSettings.pageId = PageId.PaymentsSettings;
-
-export default PaymentsSettings;

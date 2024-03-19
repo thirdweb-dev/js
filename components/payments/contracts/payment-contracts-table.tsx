@@ -1,3 +1,7 @@
+import {
+  usePaymentsSellerById,
+  validPaymentsChainIdsMainnets,
+} from "@3rdweb-sdk/react/hooks/usePayments";
 import { Flex } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { createColumnHelper } from "@tanstack/react-table";
@@ -8,15 +12,11 @@ import {
 } from "components/contract-components/tables/cells";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { TWTable } from "components/shared/TWTable";
+import { BasicContract } from "contract-ui/types/types";
+import { LinkButton, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { fetchChain } from "utils/fetchChain";
-import { LinkButton, Text } from "tw-components";
 import { EnablePaymentsButton } from "../enable-payments-button";
-import {
-  usePaymentsSellerById,
-  validPaymentsChainIdsMainnets,
-} from "@3rdweb-sdk/react/hooks/usePayments";
-import { BasicContract } from "contract-ui/types/types";
 
 interface PaymentContractsTableProps {
   paymentContracts: BasicContract[];
@@ -99,7 +99,7 @@ export const PaymentContractsTable: React.FC<PaymentContractsTableProps> = ({
               variant="outline"
               size="sm"
               w="full"
-              href="/dashboard/payments/settings"
+              href="/dashboard/connect/pay?tab=contract-settings"
             >
               Verification Required
             </LinkButton>

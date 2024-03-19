@@ -73,6 +73,14 @@ export const ServicesDetails: React.FC<ServicesDetailsProps> = ({ apiKey }) => {
                     Go to configuration
                   </LinkButton>
                 )}
+                {service.name === "pay" && (
+                  <LinkButton
+                    colorScheme="primary"
+                    href={`/dashboard/connect/pay?clientId=${key}`}
+                  >
+                    Go to configuration
+                  </LinkButton>
+                )}
 
                 {srv.actions.length > 0 && (
                   <HStack>

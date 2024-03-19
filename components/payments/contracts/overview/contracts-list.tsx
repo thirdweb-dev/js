@@ -1,10 +1,10 @@
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { Box, ButtonGroup, Divider, Flex } from "@chakra-ui/react";
-import { PaymentContracts } from "../payment-contracts";
-import { EnabledContracts } from "../enabled-contracts";
+import { NoWalletConnectedPayments } from "contract-ui/tabs/payments/components/no-wallet-connected-payments";
 import { useState } from "react";
 import { Button, Heading, Text } from "tw-components";
-import { NoWalletConnectedPayments } from "contract-ui/tabs/payments/components/no-wallet-connected-payments";
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
+import { EnabledContracts } from "../enabled-contracts";
+import { PaymentContracts } from "../payment-contracts";
 
 export const ContractsList: React.FC = () => {
   const [tab, setTab] = useState<"enabled" | "all">("enabled");
