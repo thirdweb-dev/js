@@ -3,6 +3,7 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { useLocalStorage } from "hooks/useLocalStorage";
 import { useMemo } from "react";
 import { OpCreditsGrantedModal } from "./OpCreditsGrantedModal";
+import { DelayedDisplay } from "components/delayed-display/delayed-display";
 
 export const OpCreditsGrantedModalWrapper = () => {
   const trackEvent = useTrack();
@@ -35,9 +36,11 @@ export const OpCreditsGrantedModalWrapper = () => {
   });
 
   return (
-    <OpCreditsGrantedModal
-      setSawYouGotCredits={setSawYouGotCredits}
-      creditValue={opCredit?.originalGrantUsdCents}
-    />
+    <DelayedDisplay delay={500}>
+      <OpCreditsGrantedModal
+        setSawYouGotCredits={setSawYouGotCredits}
+        creditValue={opCredit?.originalGrantUsdCents}
+      />
+    </DelayedDisplay>
   );
 };
