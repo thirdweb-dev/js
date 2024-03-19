@@ -31,7 +31,6 @@ import {
   radius,
   spacing,
 } from "../../../../design-system/index.js";
-import { useTrack } from "../../../../hooks/useTrack.js";
 import { isNativeToken, type ERC20OrNativeToken } from "../../nativeToken.js";
 import { SwapFees } from "./SwapFees.js";
 import { addPendingSwapTransaction } from "./pendingSwapTx.js";
@@ -58,7 +57,6 @@ export function ConfirmationScreen(props: {
   const { client } = useThirdwebProviderProps();
   const activeWallet = useActiveWallet();
   const sendTransactionMutation = useSendTransaction();
-  const track = useTrack();
 
   const [swapTx, setSwapTx] = useState<
     BuyWithCryptoStatusQueryParams | undefined
@@ -190,30 +188,16 @@ export function ConfirmationScreen(props: {
           if (step === "approval" && props.buyWithCryptoQuote.approval) {
             try {
               setStatus("pending");
-              track({
-                source: "ConnectButton",
-                action: "approve.initiated",
-                quote: props.buyWithCryptoQuote,
-              });
+
               const tx = await sendTransactionMutation.mutateAsync(
                 props.buyWithCryptoQuote.approval,
               );
 
               await waitForReceipt(tx);
 
-              track({
-                source: "ConnectButton",
-                action: "approve.success",
-                quote: props.buyWithCryptoQuote,
-              });
               setStep("swap");
               setStatus("idle");
             } catch {
-              track({
-                source: "ConnectButton",
-                action: "approve.failed",
-                quote: props.buyWithCryptoQuote,
-              });
               setStatus("error");
             }
           }
@@ -221,11 +205,6 @@ export function ConfirmationScreen(props: {
           if (step === "swap") {
             setStatus("pending");
             try {
-              track({
-                source: "ConnectButton",
-                action: "swap.initiated",
-                quote: props.buyWithCryptoQuote,
-              });
               const _swapTx = await sendTransactionMutation.mutateAsync(
                 props.buyWithCryptoQuote.transactionRequest,
               );
@@ -253,21 +232,10 @@ export function ConfirmationScreen(props: {
                 );
               }
 
-              track({
-                source: "ConnectButton",
-                action: "swap.sent",
-                quote: props.buyWithCryptoQuote,
-              });
-
               setSwapTx({
                 transactionHash: _swapTx.transactionHash, // ?? _swapTx.userOpHash,
               });
             } catch {
-              track({
-                source: "ConnectButton",
-                action: "swap.failedToSend",
-                quote: props.buyWithCryptoQuote,
-              });
               setStatus("error");
             }
           }

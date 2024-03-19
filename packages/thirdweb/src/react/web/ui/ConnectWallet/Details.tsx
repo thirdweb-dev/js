@@ -67,7 +67,6 @@ import type { EmbeddedWallet } from "../../../../wallets/embedded/core/wallet/in
 import { localWalletMetadata } from "../../../../wallets/local/index.js";
 import { ExportLocalWallet } from "./screens/ExportLocalWallet.js";
 import { swapTransactionsStore } from "./screens/Buy/swap/pendingSwapTx.js";
-import { useTrack } from "../hooks/useTrack.js";
 import { SwapScreen } from "./screens/Buy/SwapScreen.js";
 import { SwapTransactionsScreen } from "./screens/SwapTransactionsScreen.js";
 
@@ -106,7 +105,6 @@ export const ConnectedWalletDetails: React.FC<{
     swapTransactionsStore.getValue,
   );
   const pendingSwapTxs = swapTxs.filter((tx) => tx.status === "PENDING");
-  const track = useTrack();
 
   // prefetch chains metadata with low concurrency
   useChainsQuery(props.chains, 5);
@@ -397,10 +395,6 @@ export const ConnectedWalletDetails: React.FC<{
               padding: spacing.sm,
             }}
             onClick={() => {
-              track({
-                source: "ConnectButton",
-                action: "buy.click",
-              });
               setScreen("buy");
             }}
           >

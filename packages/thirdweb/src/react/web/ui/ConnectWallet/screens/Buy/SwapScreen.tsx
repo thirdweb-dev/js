@@ -25,7 +25,6 @@ import { Container, Line, ModalHeader } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
 import { iconSize } from "../../../design-system/index.js";
-import { useTrack } from "../../../hooks/useTrack.js";
 import { ChainButton, NetworkSelectorContent } from "../../NetworkSelector.js";
 import type { SupportedTokens } from "../../defaultTokens.js";
 import { TokenSelector } from "../TokenSelector.js";
@@ -89,7 +88,6 @@ export function SwapScreenContent(props: {
   account: Account;
   onViewPendingTx: () => void;
 }) {
-  const track = useTrack();
   const { activeChain, account } = props;
   const [isSwitching, setIsSwitching] = useState(false);
   const switchActiveWalletChain = useSwitchActiveWalletChain();
@@ -387,11 +385,6 @@ export function SwapScreenContent(props: {
             disabled={disableContinue}
             onClick={async () => {
               if (!disableContinue) {
-                track({
-                  source: "ConnectButton",
-                  action: "continue.click",
-                  quote: buyWithCryptoQuoteQuery.data,
-                });
                 setScreen("confirmation");
               }
             }}
