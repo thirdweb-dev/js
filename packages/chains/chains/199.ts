@@ -20,7 +20,9 @@ export default {
   "networkId": 199,
   "rpc": [
     "https://199.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.bt.io"
+    "https://rpc.bt.io",
+    "https://bittorrent.drpc.org",
+    "wss://bittorrent.drpc.org"
   ],
   "shortName": "BTT",
   "slug": "bittorrent-chain",

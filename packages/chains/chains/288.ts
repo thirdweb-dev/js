@@ -39,7 +39,9 @@ export default {
     "https://boba-ethereum.gateway.tenderly.co",
     "https://gateway.tenderly.co/public/boba-ethereum",
     "wss://boba-ethereum.gateway.tenderly.co/",
-    "wss://gateway.tenderly.co/public/boba-ethereum"
+    "wss://gateway.tenderly.co/public/boba-ethereum",
+    "https://boba-eth.drpc.org",
+    "wss://boba-eth.drpc.org"
   ],
   "shortName": "Boba",
   "slug": "boba-network",

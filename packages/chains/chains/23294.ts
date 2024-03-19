@@ -5,7 +5,7 @@ export default {
   "explorers": [
     {
       "name": "Oasis Sapphire Explorer",
-      "url": "https://explorer.sapphire.oasis.io",
+      "url": "https://explorer.oasis.io/mainnet/sapphire",
       "standard": "EIP3091"
     }
   ],

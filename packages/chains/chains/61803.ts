@@ -17,12 +17,6 @@ export default {
   "faucets": [
     "http://faucet.etica-stats.org/"
   ],
-  "icon": {
-    "url": "ipfs://QmYSyhUqm6ArWyALBe3G64823ZpEUmFdkzKZ93hUUhNKgU",
-    "width": 360,
-    "height": 361,
-    "format": "png"
-  },
   "infoURL": "https://eticaprotocol.org",
   "name": "Etica Mainnet",
   "nativeCurrency": {

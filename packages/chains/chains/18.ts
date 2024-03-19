@@ -22,7 +22,9 @@ export default {
   "networkId": 18,
   "rpc": [
     "https://18.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-rpc.thundercore.com"
+    "https://testnet-rpc.thundercore.com",
+    "https://thundercore-testnet.drpc.org",
+    "wss://thundercore-testnet.drpc.org"
   ],
   "shortName": "TST",
   "slip44": 1,
