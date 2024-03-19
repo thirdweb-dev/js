@@ -38,6 +38,7 @@ import { addPendingSwapTransaction } from "./pendingSwapTx.js";
 import { useThirdwebProviderProps } from "../../../../../../core/hooks/others/useThirdwebProviderProps.js";
 import { TokenIcon } from "../../../../components/TokenIcon.js";
 import { waitForReceipt } from "../../../../../../../transaction/actions/wait-for-tx-receipt.js";
+import { AccentFailIcon } from "../../../icons/AccentFailIcon.js";
 
 /**
  * @internal
@@ -393,14 +394,16 @@ function WaitingForConfirmation(props: {
           color={isSuccess ? "success" : isFailed ? "danger" : "accentText"}
         >
           {isSuccess ? (
-            <CheckCircledIcon width={iconSize.xxl} height={iconSize.xxl} />
+            <CheckCircledIcon
+              width={iconSize["3xl"]}
+              height={iconSize["3xl"]}
+            />
           ) : isFailed ? (
-            <CrossCircledIcon width={iconSize.xxl} height={iconSize.xxl} />
+            <AccentFailIcon size={iconSize["3xl"]} />
           ) : (
-            <Spinner size="xxl" color="accentText" />
+            <Spinner size="3xl" color="accentText" />
           )}
 
-          <Spacer y="xxl" />
           <Spacer y="xxl" />
 
           <Text color={"primaryText"} size="lg">
@@ -408,7 +411,7 @@ function WaitingForConfirmation(props: {
             {isSuccess
               ? "Buy Success"
               : isFailed
-                ? "Buy Failed"
+                ? "Transaction Failed"
                 : "Buy Pending"}{" "}
           </Text>
 
@@ -418,13 +421,28 @@ function WaitingForConfirmation(props: {
               <Text size="sm">Your transaction is currently pending</Text>
             </>
           )}
+
+          {isFailed && (
+            <>
+              <Spacer y="md" />
+              <Text size="sm">Your transaction {`couldn't`} be processed</Text>
+            </>
+          )}
         </Container>
 
-        <Spacer y="xl" />
+        <Spacer y="xxl" />
 
-        <Button variant="accent" fullWidth onClick={props.onViewPendingTx}>
-          View Transactions
-        </Button>
+        {!isFailed && (
+          <Button variant="accent" fullWidth onClick={props.onViewPendingTx}>
+            View Transactions
+          </Button>
+        )}
+
+        {isFailed && (
+          <Button variant="accent" fullWidth onClick={props.onBack}>
+            Try Again
+          </Button>
+        )}
       </Container>
     </Container>
   );

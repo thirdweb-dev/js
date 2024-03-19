@@ -193,6 +193,7 @@ export const iconSize = {
   lg: "32",
   xl: "48",
   xxl: "64",
+  "3xl": "96",
 };
 
 // desktop first style media query
