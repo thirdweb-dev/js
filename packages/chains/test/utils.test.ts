@@ -9,20 +9,16 @@ import {
   getValidChainRPCs,
 } from "../src/utils";
 
-const MAINNET_FALLBACK_HTTP_RPCS = [
-  "https://api.mycryptoapi.com/eth",
-  "https://cloudflare-eth.com",
-  "https://ethereum-rpc.publicnode.com",
-  "https://mainnet.gateway.tenderly.co",
-  "https://rpc.blocknative.com/boost",
-  "https://rpc.flashbots.net/fast",
-  "https://rpc.mevblocker.io/fullprivacy",
-];
-
-const MAINNET_FALLBACK_WS_RPCS = [
-  "wss://ethereum-rpc.publicnode.com",
-  "wss://mainnet.gateway.tenderly.co",
-];
+const MAINNET_FALLBACK_HTTP_RPCS = Ethereum.rpc.filter(
+  (rpc) =>
+    rpc.startsWith("http") &&
+    !rpc.includes("infura") &&
+    !rpc.includes("alchemy") &&
+    !rpc.includes("thirdweb"),
+);
+const MAINNET_FALLBACK_WS_RPCS = Ethereum.rpc.filter(
+  (rpc) => rpc.startsWith("wss") && !rpc.includes("infura"),
+);
 
 const CHAIN_RPC_TEST_CASES: [ChainRPCOptions, string[]][] = [
   [
