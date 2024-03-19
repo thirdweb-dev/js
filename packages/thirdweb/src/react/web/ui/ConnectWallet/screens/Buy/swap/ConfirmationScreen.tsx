@@ -241,8 +241,7 @@ export function ConfirmationScreen(props: {
                       value: props.toAmount,
                     },
                     status: "PENDING",
-                    transactionHash:
-                      _swapTx.transactionHash ?? _swapTx.userOpHash,
+                    transactionHash: _swapTx.transactionHash, // ?? _swapTx.userOpHash,
                   },
                   props.buyWithCryptoQuote,
                 );
@@ -255,7 +254,7 @@ export function ConfirmationScreen(props: {
               });
 
               setSwapTx({
-                transactionHash: _swapTx.transactionHash ?? _swapTx.userOpHash,
+                transactionHash: _swapTx.transactionHash, // ?? _swapTx.userOpHash,
               });
             } catch {
               track({

@@ -25,8 +25,6 @@ export function tlDefault(): ThirdwebLocale {
       guest: "Guest",
       send: "Ipadala",
       receive: "Matanggap",
-      // TODO: translate
-      swap: "Swap",
       currentNetwork: "Kasalukuyang network",
       switchAccount: "Palitan ang Account",
       requestTestnetFunds: "Humingi ng Testnet Funds",
@@ -51,10 +49,6 @@ export function tlDefault(): ThirdwebLocale {
       welcomeScreen: {
         defaultTitle: "Ang iyong daan patungo sa decentralized na mundo",
         defaultSubtitle: "Kumonekta ng wallet para magsimula",
-      },
-      // TODO: translate
-      swapScreen: {
-        title: "Swap",
       },
       agreement: {
         prefix: "Sa pamamagitan ng pagkonekta, sumasang-ayon ka sa",

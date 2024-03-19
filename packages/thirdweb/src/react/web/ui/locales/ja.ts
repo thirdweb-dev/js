@@ -25,8 +25,6 @@ export function jaDefault(): ThirdwebLocale {
       guest: "ゲスト",
       send: "送る",
       receive: "受け取る",
-      // TODO: translate
-      swap: "Swap",
       currentNetwork: "現在のネットワーク",
       switchAccount: "アカウントを切り替える",
       requestTestnetFunds: "テストネットの資金をリクエストする",
@@ -57,10 +55,6 @@ export function jaDefault(): ThirdwebLocale {
         termsOfService: "利用規約",
         and: "および",
         privacyPolicy: "プライバシーポリシー",
-      },
-      // TODO: translate
-      swapScreen: {
-        title: "Swap",
       },
       networkSelector: {
         title: "ネットワークの選択",
