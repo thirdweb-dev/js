@@ -8,7 +8,7 @@ import type {
   CryptoDefiWallet,
   EmbeddedWallet,
   FrameWallet,
-  ImTokenWallets
+  ImTokenWallet
   LocalWallet,
   MagicEdenWallet,
   MagicLink,
