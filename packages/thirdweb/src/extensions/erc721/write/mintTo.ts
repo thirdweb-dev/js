@@ -21,6 +21,7 @@ type NFTInput = Prettify<
 export type MintToParams = {
   to: string;
   nft: NFTInput | string;
+  customUploadMethod?: (files: NFTInput[] | string[]) => Promise<string[]>;
 };
 
 /**
@@ -48,17 +49,17 @@ export function mintTo(options: BaseTransactionOptions<MintToParams>) {
   return prepareContractCall({
     contract: options.contract,
     method: [
-  "0x0075a317",
-  [
-    {
-      "type": "address"
-    },
-    {
-      "type": "string"
-    }
-  ],
-  []
-],
+      "0x0075a317",
+      [
+        {
+          type: "address",
+        },
+        {
+          type: "string",
+        },
+      ],
+      [],
+    ],
     params: async () => {
       let tokenUri: string;
 
@@ -69,13 +70,19 @@ export function mintTo(options: BaseTransactionOptions<MintToParams>) {
         // otherwise we need to upload the file to the storage server
 
         // load the upload code if we need it
-        const { upload } = await import("../../../storage/upload.js");
-        tokenUri = (
-          await upload({
-            client: options.contract.client,
-            files: [options.nft],
-          })
-        )[0] as string;
+        if (options.customUploadMethod) {
+          tokenUri = (
+            await options.customUploadMethod([options.nft])
+          )[0] as string;
+        } else {
+          const { upload } = await import("../../../storage/upload.js");
+          tokenUri = (
+            await upload({
+              client: options.contract.client,
+              files: [options.nft],
+            })
+          )[0] as string;
+        }
       }
       return [options.to, tokenUri] as const;
     },
