@@ -17,11 +17,13 @@ const MAINNET_FALLBACK_HTTP_RPCS = [
   "https://rpc.blocknative.com/boost",
   "https://rpc.flashbots.net/fast",
   "https://rpc.mevblocker.io/fullprivacy",
+  "https://eth.drpc.org",
 ];
 
 const MAINNET_FALLBACK_WS_RPCS = [
   "wss://ethereum-rpc.publicnode.com",
   "wss://mainnet.gateway.tenderly.co",
+  "wss://eth.drpc.org",
 ];
 
 const CHAIN_RPC_TEST_CASES: [ChainRPCOptions, string[]][] = [
