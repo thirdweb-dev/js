@@ -1,20 +1,19 @@
 import { ChevronDownIcon } from "@radix-ui/react-icons";
-import { Img } from "../../../../components/Img.js";
-import { Skeleton } from "../../../../components/Skeleton.js";
 import { Container } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
-import { iconSize, fontSize } from "../../../../design-system/index.js";
+import { iconSize } from "../../../../design-system/index.js";
 import type { ERC20OrNativeToken } from "../../nativeToken.js";
 import { Text } from "../../../../components/text.js";
-import { genericTokenIcon } from "../../../defaultTokens.js";
+import { TokenIcon } from "../../../../components/TokenIcon.js";
+import type { Chain } from "../../../../../../../chains/types.js";
+import { TokenSymbol } from "../../../../components/token/TokenSymbol.js";
 
 /**
  * @internal
  */
 export function TokenSelectorButton(props: {
-  tokenIcon?: string;
-  tokenSymbol?: string;
-  token?: ERC20OrNativeToken;
+  token: ERC20OrNativeToken;
+  chain: Chain;
   onClick: () => void;
   style?: React.CSSProperties;
 }) {
@@ -28,22 +27,9 @@ export function TokenSelectorButton(props: {
       {props.token ? (
         <>
           <Container flex="row" center="y" gap="xs">
-            <Img
-              src={props.tokenIcon || genericTokenIcon}
-              width={iconSize.sm}
-              height={iconSize.sm}
-              fallbackImage={genericTokenIcon}
-            />
-
-            {props.tokenSymbol ? (
-              <Text color="primaryText" size="sm">
-                {props.tokenSymbol}
-              </Text>
-            ) : (
-              <Skeleton width="70px" height={fontSize.sm} />
-            )}
+            <TokenIcon token={props.token} chain={props.chain} size="sm" />
+            <TokenSymbol token={props.token} chain={props.chain} size="sm" />
           </Container>
-
           <Container color="secondaryText">
             <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
           </Container>

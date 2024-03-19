@@ -1,5 +1,3 @@
-import { useWalletBalance } from "../../../../../../core/hooks/others/useWalletBalance.js";
-import { useActiveAccount } from "../../../../../../core/hooks/wallets/wallet-hooks.js";
 import { Container } from "../../../../components/basic.js";
 import { Input } from "../../../../components/formElements.js";
 import type { Chain } from "../../../../../../../chains/types.js";
@@ -11,7 +9,6 @@ import { Button } from "../../../../components/buttons.js";
 import { TokenSelectorButton } from "./TokenSelector.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
-import { isMobile } from "../../../../../../core/utils/isMobile.js";
 import { ChainIcon } from "../../../../components/ChainIcon.js";
 import { Text } from "../../../../components/text.js";
 
@@ -26,19 +23,7 @@ export function BuyTokenInput(props: {
   onTokenClick: () => void;
   onChainClick: () => void;
 }) {
-  const activeAccount = useActiveAccount();
   const chainQuery = useChainQuery(props.chain);
-
-  const token =
-    props.token && !("nativeToken" in props.token) ? props.token : undefined;
-
-  const balanceQuery = useWalletBalance({
-    account: activeAccount,
-    chain: props.chain,
-    tokenAddress: token?.address,
-  });
-
-  const tokenSymbol = token?.symbol || balanceQuery.data?.symbol;
 
   return (
     <Container>
@@ -79,7 +64,7 @@ export function BuyTokenInput(props: {
         }}
         style={{
           border: "none",
-          fontSize: isMobile() ? "40px" : "50px",
+          fontSize: "50px",
           boxShadow: "none",
           padding: "0",
           fontWeight: 600,
@@ -93,8 +78,7 @@ export function BuyTokenInput(props: {
         <TokenSelectorButton
           onClick={props.onTokenClick}
           token={props.token}
-          tokenIcon={token?.icon}
-          tokenSymbol={tokenSymbol}
+          chain={props.chain}
           style={{
             padding: 0,
             fontSize: fontSize.sm,

@@ -32,11 +32,11 @@ import {
   spacing,
 } from "../../../../design-system/index.js";
 import { useTrack } from "../../../../hooks/useTrack.js";
-import { genericTokenIcon } from "../../../defaultTokens.js";
 import { isNativeToken, type ERC20OrNativeToken } from "../../nativeToken.js";
 import { SwapFees } from "./SwapFees.js";
 import { addPendingSwapTransaction } from "./pendingSwapTx.js";
 import { useThirdwebProviderProps } from "../../../../../../core/hooks/others/useThirdwebProviderProps.js";
+import { TokenIcon } from "../../../../components/TokenIcon.js";
 
 /**
  * @internal
@@ -345,7 +345,6 @@ function TokenSelection(props: {
   symbol: string;
 }) {
   const chainQuery = useChainQuery(props.chain);
-  const tokenIcon = isNativeToken(props.token) ? undefined : props.token.icon;
   return (
     <div>
       <Text size="sm" color="secondaryText">
@@ -354,13 +353,7 @@ function TokenSelection(props: {
       <Spacer y="xxs" />
       <TokenInfoContainer>
         <Container flex="row" gap="md" center="y">
-          <Img
-            width={iconSize.lg}
-            height={iconSize.lg}
-            src={tokenIcon || genericTokenIcon}
-            fallbackImage={genericTokenIcon}
-          />
-
+          <TokenIcon token={props.token} chain={props.chain} size="lg" />
           <Container flex="column" gap="xxs">
             <Text color="primaryText" size="sm">
               {props.amount} {props.symbol}

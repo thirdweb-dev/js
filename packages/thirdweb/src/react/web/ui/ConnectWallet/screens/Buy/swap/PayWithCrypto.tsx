@@ -34,7 +34,7 @@ export function PayWithCrypto(props: {
   onTokenClick: () => void;
   onChainClick: () => void;
   chain: Chain;
-  token?: TokenInfo | NativeToken;
+  token: TokenInfo | NativeToken;
   isLoading: boolean;
 }) {
   const chainQuery = useChainQuery(props.chain);
@@ -48,8 +48,6 @@ export function PayWithCrypto(props: {
     chain: props.chain,
     tokenAddress: token?.address,
   });
-
-  const tokenSymbol = token?.symbol || balanceQuery.data?.symbol;
 
   return (
     <div>
@@ -70,8 +68,7 @@ export function PayWithCrypto(props: {
               border: "none",
             }}
             token={props.token}
-            tokenIcon={token?.icon}
-            tokenSymbol={tokenSymbol}
+            chain={props.chain}
           />
 
           {/* Right */}

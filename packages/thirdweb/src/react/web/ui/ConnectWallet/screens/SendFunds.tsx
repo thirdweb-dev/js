@@ -1,7 +1,6 @@
 import { CrossCircledIcon, CheckCircledIcon } from "@radix-ui/react-icons";
 import { useState, useMemo } from "react";
 import { useTWLocale } from "../../../providers/locale-provider.js";
-import { Img } from "../../components/Img.js";
 import { Skeleton } from "../../components/Skeleton.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Spinner } from "../../components/Spinner.js";
@@ -10,12 +9,7 @@ import { Button } from "../../components/buttons.js";
 import { Label, Input } from "../../components/formElements.js";
 import { StyledDiv } from "../../design-system/elements.js";
 import { iconSize, spacing, fontSize } from "../../design-system/index.js";
-import {
-  type SupportedTokens,
-  defaultTokens,
-  type TokenInfo,
-  genericTokenIcon,
-} from "../defaultTokens.js";
+import { type SupportedTokens, defaultTokens } from "../defaultTokens.js";
 import {
   useActiveAccount,
   useActiveWalletChain,
@@ -25,7 +19,8 @@ import { Text } from "../../components/text.js";
 import { useSendToken } from "../../hooks/useSendToken.js";
 import { isAddress } from "../../../../../utils/address.js";
 import { TokenSelector, formatTokenBalance } from "./TokenSelector.js";
-import { isNativeToken, type NativeToken } from "./nativeToken.js";
+import { type ERC20OrNativeToken, NATIVE_TOKEN } from "./nativeToken.js";
+import { TokenIcon } from "../../components/TokenIcon.js";
 
 type TXError = Error & { data?: { message?: string } };
 
@@ -40,7 +35,7 @@ export function SendFunds(props: {
   const activeChain = useActiveWalletChain();
   const chainId = activeChain?.id;
 
-  let defaultToken: TokenInfo | undefined = undefined;
+  let defaultToken: ERC20OrNativeToken = NATIVE_TOKEN;
   if (
     // if we know chainId
     chainId &&
@@ -57,9 +52,8 @@ export function SendFunds(props: {
     }
   }
 
-  const [token, setToken] = useState<TokenInfo | undefined | NativeToken>(
-    defaultToken,
-  );
+  const [token, setToken] = useState<ERC20OrNativeToken>(defaultToken);
+
   const [receiverAddress, setReceiverAddress] = useState("");
   const [amount, setAmount] = useState("0");
 
@@ -104,7 +98,7 @@ export function SendFunds(props: {
  */
 function SendFundsForm(props: {
   onTokenSelect: () => void;
-  token?: TokenInfo | NativeToken;
+  token: ERC20OrNativeToken;
   receiverAddress: string;
   setReceiverAddress: (value: string) => void;
   amount: string;
@@ -116,6 +110,7 @@ function SendFundsForm(props: {
     props.token && "address" in props.token ? props.token.address : undefined;
   const chain = useActiveWalletChain();
   const activeAccount = useActiveAccount();
+  const activeChain = useActiveWalletChain();
 
   const balanceQuery = useWalletBalance({
     chain,
@@ -159,6 +154,10 @@ function SendFundsForm(props: {
     }
 
     return locale.transactionFailed;
+  }
+
+  if (!activeChain) {
+    return null; // this should never happen
   }
 
   if (sendTokenMutation.isError) {
@@ -248,18 +247,7 @@ function SendFundsForm(props: {
           }}
           onClick={props.onTokenSelect}
         >
-          <Img
-            src={
-              props.token
-                ? isNativeToken(props.token)
-                  ? genericTokenIcon
-                  : props.token.icon
-                : genericTokenIcon
-            }
-            width={iconSize.lg}
-            height={iconSize.lg}
-            fallbackImage={genericTokenIcon}
-          />
+          <TokenIcon token={props.token} chain={activeChain} size="lg" />
 
           <Container flex="column" gap="xs">
             {tokenName ? (

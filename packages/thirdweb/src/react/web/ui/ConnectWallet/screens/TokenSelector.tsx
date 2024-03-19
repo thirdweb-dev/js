@@ -3,8 +3,6 @@ import { useState } from "react";
 import { useWalletBalance } from "../../../../core/hooks/others/useWalletBalance.js";
 import { useTWLocale } from "../../../providers/locale-provider.js";
 import { useActiveAccount } from "../../../../core/hooks/wallets/wallet-hooks.js";
-import { fallbackChainIcon } from "../../components/ChainIcon.js";
-import { Img } from "../../components/Img.js";
 import { Skeleton } from "../../components/Skeleton.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Spinner } from "../../components/Spinner.js";
@@ -13,18 +11,23 @@ import { Button } from "../../components/buttons.js";
 import { Input } from "../../components/formElements.js";
 import { useCustomTheme } from "../../design-system/CustomThemeProvider.js";
 import { spacing, iconSize, fontSize } from "../../design-system/index.js";
-import { genericTokenIcon, type TokenInfo } from "../defaultTokens.js";
 import { Text } from "../../components/text.js";
 import styled from "@emotion/styled";
 import type { Chain } from "../../../../../chains/types.js";
-import { NATIVE_TOKEN, type NativeToken } from "./nativeToken.js";
+import {
+  NATIVE_TOKEN,
+  type ERC20OrNativeToken,
+  isNativeToken,
+} from "./nativeToken.js";
+import { TokenIcon } from "../../components/TokenIcon.js";
+import type { TokenInfo } from "../defaultTokens.js";
 
 /**
  *
  * @internal
  */
 export function TokenSelector(props: {
-  onTokenSelect: (token: TokenInfo | NativeToken) => void;
+  onTokenSelect: (token: ERC20OrNativeToken) => void;
   onBack: () => void;
   tokenList: TokenInfo[];
   chain: Chain;
@@ -102,6 +105,7 @@ export function TokenSelector(props: {
                 props.onTokenSelect(NATIVE_TOKEN);
               }}
               chain={props.chain}
+              token={NATIVE_TOKEN}
             />
           )}
 
@@ -109,9 +113,7 @@ export function TokenSelector(props: {
             return (
               <SelectTokenButton
                 onClick={() => props.onTokenSelect(token)}
-                tokenAddress={token.address}
-                tokenIcon={token.icon}
-                tokenName={token.name}
+                token={token}
                 key={token.address}
                 chain={props.chain}
               />
@@ -161,9 +163,7 @@ export function TokenSelector(props: {
 
 function SelectTokenButton(props: {
   // token?: TokenInfo;
-  tokenAddress?: string; // if no address is given - we assume it's the native token
-  tokenName?: string;
-  tokenIcon?: string;
+  token: ERC20OrNativeToken;
   chain: Chain;
   onClick: () => void;
 }) {
@@ -171,19 +171,16 @@ function SelectTokenButton(props: {
   const tokenBalanceQuery = useWalletBalance({
     account,
     chain: props.chain,
-    tokenAddress: props.tokenAddress,
+    tokenAddress: isNativeToken(props.token) ? undefined : props.token.address,
   });
 
-  const tokenName = props.tokenName || tokenBalanceQuery.data?.name;
+  const tokenName = isNativeToken(props.token)
+    ? tokenBalanceQuery.data?.name
+    : props.token.name;
 
   return (
     <SelectTokenBtn fullWidth variant="secondary" onClick={props.onClick}>
-      <Img
-        width={iconSize.lg}
-        height={iconSize.lg}
-        src={props.tokenIcon || genericTokenIcon}
-        fallbackImage={fallbackChainIcon}
-      />
+      <TokenIcon token={props.token} chain={props.chain} size="lg" />
 
       <Container flex="column" gap="xs">
         {tokenName ? (
