@@ -70,7 +70,7 @@ export {
 export {
   type Ed25519Keypair,
   createEd25519Keypair,
-} from "../../extensions/farcaster/signers.js";
+} from "../../extensions/farcaster/ed25519.js";
 export {
   type AddSignerParams,
   addSigner,
