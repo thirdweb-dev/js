@@ -11,15 +11,9 @@ import { isObjectWithKeys } from "../utils/type-guards.js";
 import type { Hex } from "../utils/encoding/hex.js";
 import type { TransactionReceipt as ViemTransactionReceipt } from "viem";
 
-export type TransactionOrUserOpHash =
-  | {
-      readonly transactionHash: Hex;
-      readonly userOpHash?: never;
-    }
-  | {
-      readonly transactionHash?: never;
-      readonly userOpHash: Hex;
-    };
+export type SendTransactionResult = {
+  readonly transactionHash: Hex;
+};
 
 export type TransactionReceipt = ViemTransactionReceipt;
 

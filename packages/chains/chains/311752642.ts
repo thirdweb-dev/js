@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmRhqq4Gp8G9w27ND3LeFW49o5PxcxrbJsqHbpBFtzEMfC",
-    "width": 225,
-    "height": 225,
-    "format": "png"
-  },
   "infoURL": "https://oneledger.io",
   "name": "OneLedger Mainnet",
   "nativeCurrency": {

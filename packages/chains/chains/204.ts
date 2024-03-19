@@ -32,7 +32,9 @@ export default {
     "https://opbnb-mainnet.nodereal.io/v1/e9a36765eb8a40b9bd12e680a1fd2bc5",
     "wss://opbnb-mainnet.nodereal.io/ws/v1/e9a36765eb8a40b9bd12e680a1fd2bc5",
     "https://opbnb-rpc.publicnode.com",
-    "wss://opbnb-rpc.publicnode.com"
+    "wss://opbnb-rpc.publicnode.com",
+    "https://opbnb.drpc.org",
+    "wss://opbnb.drpc.org"
   ],
   "shortName": "obnb",
   "slip44": 714,

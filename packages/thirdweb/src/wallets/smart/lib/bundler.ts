@@ -11,6 +11,7 @@ import {
   getDefaultBundlerUrl,
 } from "./constants.js";
 import { hexlifyUserOp } from "./utils.js";
+import type { TransactionReceipt } from "../../../transaction/types.js";
 
 /**
  * @internal
@@ -22,6 +23,10 @@ export async function bundleUserOp(args: {
   return sendBundlerRequest({
     ...args,
     operation: "eth_sendUserOperation",
+    params: [
+      hexlifyUserOp(args.userOp),
+      args.options.overrides?.entrypointAddress ?? ENTRYPOINT_ADDRESS,
+    ],
   });
 }
 
@@ -35,6 +40,10 @@ export async function estimateUserOpGas(args: {
   const res = await sendBundlerRequest({
     ...args,
     operation: "eth_estimateUserOperationGas",
+    params: [
+      hexlifyUserOp(args.userOp),
+      args.options.overrides?.entrypointAddress ?? ENTRYPOINT_ADDRESS,
+    ],
   });
 
   return {
@@ -45,15 +54,34 @@ export async function estimateUserOpGas(args: {
   };
 }
 
-async function sendBundlerRequest(args: {
-  userOp: UserOperation;
+/**
+ * @internal
+ */
+export async function getUserOpReceipt(args: {
+  userOpHash: Hex;
   options: SmartWalletOptions;
-  operation: "eth_estimateUserOperationGas" | "eth_sendUserOperation";
+}): Promise<TransactionReceipt | undefined> {
+  const res = await sendBundlerRequest({
+    ...args,
+    operation: "eth_getUserOperationReceipt",
+    params: [args.userOpHash],
+  });
+  // TODO theres more info in res we could be returning here
+  return res?.receipt;
+}
+
+async function sendBundlerRequest(args: {
+  options: SmartWalletOptions;
+  operation:
+    | "eth_estimateUserOperationGas"
+    | "eth_sendUserOperation"
+    | "eth_getUserOperationReceipt";
+  params: any[];
 }) {
-  const { userOp, options, operation } = args;
+  const { options, operation, params } = args;
 
   if (DEBUG) {
-    console.debug(`sending ${operation} with payload:`, userOp);
+    console.debug(`sending ${operation} with payload:`, params);
   }
 
   const bundlerUrl =
@@ -68,15 +96,12 @@ async function sendBundlerRequest(args: {
       jsonrpc: "2.0",
       id: 1,
       method: operation,
-      params: [
-        hexlifyUserOp(userOp),
-        options.overrides?.entrypointAddress ?? ENTRYPOINT_ADDRESS,
-      ],
+      params,
     }),
   });
   const res = await response.json();
 
-  if (!response.ok || !res.result) {
+  if (!response.ok || res.error) {
     let error = res.error || response.statusText;
     if (typeof error === "object") {
       error = JSON.stringify(error);

@@ -7,8 +7,6 @@ export {
   type VerifyContractWalletSignatureParams,
 } from "../auth/verifySignature.js";
 
-export { verifyJWT, type VerifyJWTParams } from "../auth/verifyJWT.js";
-
 export { createAuth } from "../auth/auth.js";
 export type {
   VerifyLoginPayloadParams,

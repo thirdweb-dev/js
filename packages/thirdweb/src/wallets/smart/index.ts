@@ -9,7 +9,7 @@ import type {
   SmartWalletOptions,
 } from "./types.js";
 import { createUnsignedUserOp, signUserOp } from "./lib/userop.js";
-import { bundleUserOp } from "./lib/bundler.js";
+import { bundleUserOp, getUserOpReceipt } from "./lib/bundler.js";
 import { getContract, type ThirdwebContract } from "../../contract/contract.js";
 import {
   predictAddress,
@@ -21,6 +21,9 @@ import type { Chain } from "../../chains/types.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
 import type { SignableMessage } from "viem";
 import type { TransactionReceipt } from "../../transaction/types.js";
+import { watchBlockNumber } from "../../rpc/watchBlockNumber.js";
+import type { WaitForReceiptOptions } from "../../transaction/actions/wait-for-tx-receipt.js";
+import type { Hex } from "../../utils/encoding/hex.js";
 
 /**
  * `smartWallet` allows you to connect to a [smart wallet](https://portal.thirdweb.com/glossary/smart-wallet) using a personal wallet (acting as the key to the smart wallet)
@@ -385,7 +388,8 @@ async function createSmartAccount(
     async signTypedData(typedData: any) {
       return options.personalAccount.signTypedData(typedData);
     },
-    async estimateGas(): Promise<bigint> {
+    async estimateGas(tx: PreparedTransaction): Promise<bigint> {
+      void tx; // linter
       return 0n;
     },
   };
@@ -422,7 +426,7 @@ async function _sendUserOp(args: {
   accountContract: ThirdwebContract;
   executeTx: PreparedTransaction;
   options: SmartWalletOptions & { personalAccount: Account };
-}) {
+}): Promise<WaitForReceiptOptions> {
   const { factoryContract, accountContract, executeTx, options } = args;
   const unsignedUserOp = await createUnsignedUserOp({
     factoryContract,
@@ -438,7 +442,37 @@ async function _sendUserOp(args: {
     options,
     userOp: signedUserOp,
   });
+  // wait for tx receipt rather than return the userOp hash
+  const maxAttempts = 30;
+  let attempts = 0;
+
+  const promise = new Promise<Hex>((resolve, reject) => {
+    const unwatch = watchBlockNumber({
+      chain: options.chain,
+      client: options.client,
+      onNewBlockNumber: async () => {
+        attempts++;
+        if (attempts >= maxAttempts) {
+          unwatch();
+          reject(
+            "Max attempts reached without finding a receipt for userOp: " +
+              userOpHash,
+          );
+        }
+        const receipt = await getUserOpReceipt({ options, userOpHash });
+        if (receipt) {
+          unwatch();
+          resolve(receipt.transactionHash);
+        }
+      },
+    });
+  });
+
   return {
-    userOpHash,
+    transaction: {
+      client: options.client,
+      chain: options.chain,
+    },
+    transactionHash: await promise,
   };
 }

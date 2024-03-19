@@ -9,10 +9,17 @@ export type VerifyLoginPayloadParams = {
   signature: string;
 };
 
+// we use this symbol to tag the payload as verified so that developers don't accidentally pass an unverified payload to other functions
+const VERIFIED_SYMBOL = /* @__PURE__ */ Symbol("verified_login_payload");
+
+export type VerifiedLoginPayload = LoginPayload & {
+  [VERIFIED_SYMBOL]: true;
+};
+
 export type VerifyLoginPayloadResult =
   | {
       valid: true;
-      verifiedAddress: string;
+      payload: VerifiedLoginPayload;
     }
   | {
       valid: false;
@@ -23,7 +30,7 @@ export type VerifyLoginPayloadResult =
  * Verifies the login payload by checking various properties and signatures.
  * @param options - The authentication options.
  * @returns A function that accepts the login payload and signature, and performs the verification.
- * @example TODO
+ * @internal
  */
 export function verifyLoginPayload(options: AuthOptions) {
   return async function ({
@@ -133,7 +140,7 @@ export function verifyLoginPayload(options: AuthOptions) {
 
     return {
       valid: true,
-      verifiedAddress: payload.address,
+      payload: { ...payload, [VERIFIED_SYMBOL]: true },
     };
   };
 }

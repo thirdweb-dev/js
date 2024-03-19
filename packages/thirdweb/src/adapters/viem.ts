@@ -16,7 +16,6 @@ import { resolveContractAbi } from "../contract/actions/resolve-abi.js";
 import { getRpcUrlForChain } from "../chains/utils.js";
 import type { Account } from "../wallets/interfaces/wallet.js";
 import { getRpcClient } from "../rpc/rpc.js";
-import { waitForReceipt } from "../transaction/actions/wait-for-tx-receipt.js";
 
 export const viemAdapter = {
   contract: {
@@ -178,16 +177,6 @@ function toViemWalletClient(options: ToViemWalletClientOptions): WalletClient {
     request: async (request) => {
       if (request.method === "eth_sendTransaction") {
         const result = await account.sendTransaction(request.params[0]);
-        if (result.userOpHash) {
-          const receipt = await waitForReceipt({
-            userOpHash: result.userOpHash,
-            transaction: {
-              chain,
-              client,
-            },
-          });
-          return receipt.transactionHash;
-        }
         return result.transactionHash;
       }
       if (request.method === "eth_estimateGas") {

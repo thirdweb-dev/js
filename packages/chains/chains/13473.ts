@@ -34,7 +34,9 @@ export default {
   "networkId": 13473,
   "rpc": [
     "https://13473.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.testnet.immutable.com"
+    "https://rpc.testnet.immutable.com",
+    "https://immutable-zkevm-testnet.drpc.org",
+    "wss://immutable-zkevm-testnet.drpc.org"
   ],
   "shortName": "imx-testnet",
   "slip44": 1,

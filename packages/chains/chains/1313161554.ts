@@ -20,7 +20,9 @@ export default {
   "networkId": 1313161554,
   "rpc": [
     "https://1313161554.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet.aurora.dev"
+    "https://mainnet.aurora.dev",
+    "https://aurora.drpc.org",
+    "wss://aurora.drpc.org"
   ],
   "shortName": "aurora",
   "slug": "aurora",

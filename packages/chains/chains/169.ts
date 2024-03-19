@@ -34,7 +34,9 @@ export default {
   "networkId": 169,
   "rpc": [
     "https://169.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://pacific-rpc.manta.network/http"
+    "https://pacific-rpc.manta.network/http",
+    "https://manta-pacific.drpc.org",
+    "wss://manta-pacific.drpc.org"
   ],
   "shortName": "manta",
   "slug": "manta-pacific",
