@@ -19,6 +19,10 @@ interface NftOverviewPageProps {
   contract: ThirdwebContract;
 }
 
+function isOnlyNumbers(str: string) {
+  return /^\d+$/.test(str);
+}
+
 export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
   contractAddress,
   contract,
@@ -44,7 +48,7 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
     "ERC721ClaimCustom",
   ]);
 
-  if (tokenId && tokenId !== "-1") {
+  if (tokenId && isOnlyNumbers(tokenId)) {
     return (
       <TokenIdPage
         contractQueryV4={contractQuery}

@@ -8,7 +8,6 @@ import {
   useAddress,
 } from "@thirdweb-dev/react/evm";
 import { detectFeatures } from "components/contract-components/utils";
-import { BigNumber } from "ethers";
 import dynamic from "next/dynamic";
 import { useMemo } from "react";
 import type { ThirdwebContract } from "thirdweb";
@@ -105,7 +104,7 @@ export function useNFTDrawerTabs({
     ]);
 
     const isOwner =
-      (isERC1155 && BigNumber.from(balanceOfQuery?.data || 0).gt(0)) ||
+      (isERC1155 && balanceOfQuery?.data || 0 > 0) ||
       (isERC721 && nft?.owner === address);
 
     const { erc1155 } = getErcs(oldContract);

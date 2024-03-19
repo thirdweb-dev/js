@@ -123,7 +123,7 @@ const columns = [
       );
     },
   }),
-  columnHelper.accessor((row) => toSize(BigInt(row.fileSizeBytes), "MB"), {
+  columnHelper.accessor((row) => toSize(BigInt(row.fileSizeBytes || 0), "MB"), {
     header: "File Size",
     cell: ({ cell }) => <Text fontFamily="mono">{cell.getValue()}</Text>,
   }),

@@ -80,7 +80,12 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
   );
 
   if (!nft) {
-    return null;
+    return (
+      <Text>
+        No NFT found with token ID {tokenId}. Please check the token ID and try
+        again.
+      </Text>
+    );
   }
 
   // in the case we have an invalid url, we want to remove it

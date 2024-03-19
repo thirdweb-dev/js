@@ -21,12 +21,12 @@ import {
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
 
 const dummyMetadata: (idx: number) => NFT = (idx) => ({
-  id: BigInt(idx),
+  id: BigInt(idx || 0),
   tokenURI: `1-0x123-${idx}`,
   metadata: {
     name: "Loading...",
     description: "lorem ipsum loading sit amet",
-    id: BigInt(idx),
+    id: BigInt(idx || 0),
     uri: `1-0x123-${idx}`,
   },
   owner: `0x_fake_${idx}`,
@@ -65,14 +65,12 @@ export const NFTCards: React.FC<NFTCardsProps> = ({
     >
       {(isLoading ? dummyData : nfts).map((token) => (
         <GridItem
-          key={`${chainId}-${
-            (token as WalletNFT)?.contractAddress || contractAddress
-          }-${(token as WalletNFT).tokenId || token.metadata.id}}`}
+          key={`${chainId}-${(token as WalletNFT)?.contractAddress || contractAddress
+            }-${(token as WalletNFT).tokenId || token.metadata.id}}`}
           as={TrackedLink}
           category={trackingCategory}
-          href={`/${chainId}/${
-            (token as WalletNFT)?.contractAddress || contractAddress
-          }/nfts/${(token as WalletNFT).tokenId || token.metadata.id}`}
+          href={`/${chainId}/${(token as WalletNFT)?.contractAddress || contractAddress
+            }/nfts/${(token as WalletNFT).tokenId || token.metadata.id}`}
           _hover={{ opacity: 0.75, textDecoration: "none" }}
         >
           <Card p={0} h="full">

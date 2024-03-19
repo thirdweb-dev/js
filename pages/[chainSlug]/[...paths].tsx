@@ -44,7 +44,6 @@ import { DeprecatedAlert } from "components/shared/DeprecatedAlert";
 import { Chain } from "@thirdweb-dev/chains";
 import { getContract } from "thirdweb";
 import { defineDashboardChain, thirdwebClient } from "lib/thirdweb-client";
-import * as Sentry from "@sentry/nextjs";
 
 type EVMContractProps = {
   contractInfo?: EVMContractInfo;
@@ -175,9 +174,6 @@ const ContractPage: ThirdwebNextPage = () => {
   );
 
   if (!contractInfo) {
-    Sentry.captureException(
-      new Error("Contract info not found in EVMContractInfoProvider"),
-    );
     return (
       <Flex h="100%" justifyContent="center" alignItems="center">
         <Spinner size="xl" />
