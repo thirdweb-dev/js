@@ -56,7 +56,7 @@ export const zerionConfig = (options?: ZerionConfigOptions): WalletConfig => {
 
       return walletConnect({
         client: createOptions.client,
-        dappMetadata: createOptions.dappMetadata,
+        appMetadata: createOptions.appMetadata,
         metadata: zerionWalletMetadata,
         storage: asyncLocalStorage,
       });

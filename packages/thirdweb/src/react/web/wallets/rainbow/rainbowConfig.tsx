@@ -56,7 +56,7 @@ export const rainbowConfig = (options?: RainbowConfigOptions): WalletConfig => {
 
       return walletConnect({
         client: createOptions.client,
-        dappMetadata: createOptions.dappMetadata,
+        appMetadata: createOptions.appMetadata,
         metadata: rainbowWalletMetadata,
         storage: asyncLocalStorage,
       });

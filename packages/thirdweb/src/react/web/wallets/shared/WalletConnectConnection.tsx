@@ -1,5 +1,3 @@
-import { useThirdwebProviderProps } from "../../../core/hooks/others/useThirdwebProviderProps.js";
-import { useTWLocale } from "../../providers/locale-provider.js";
 import type { ConnectUIProps } from "../../../core/types/wallets.js";
 import { ScanScreen } from "./ScanScreen.js";
 import { useState, useRef, useEffect, useCallback } from "react";
@@ -11,6 +9,8 @@ import {
 import { ConnectingScreen } from "./ConnectingScreen.js";
 import { openWindow } from "../../../core/utils/openWindow.js";
 import { walletConnect } from "../../../../wallets/wallet-connect/index.js";
+import injectedWalletLocaleEn from "../injected/locale/en.js";
+import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 
 /**
  * QR Scan UI for connecting a specific wallet on desktop.
@@ -28,17 +28,15 @@ export const WalletConnectConnection: React.FC<{
     props;
   const { walletConfig } = connectUIProps;
   const { chain, done, chains } = connectUIProps.connection;
-  const locale = useTWLocale().wallets.injectedWallet(
-    walletConfig.metadata.name,
-  );
-  const { client, dappMetadata } = useThirdwebProviderProps();
+  const locale = injectedWalletLocaleEn(walletConfig.metadata.name);
+  const { client, appMetadata } = useWalletConnectionCtx();
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>();
   const [errorConnecting, setErrorConnecting] = useState(false);
 
   const connect = useCallback(() => {
     const wallet = walletConnect({
       client,
-      dappMetadata: dappMetadata,
+      appMetadata: appMetadata,
       metadata: walletConfig.metadata,
       projectId,
     });
@@ -84,7 +82,7 @@ export const WalletConnectConnection: React.FC<{
   }, [
     chain,
     client,
-    dappMetadata,
+    appMetadata,
     done,
     platformUris,
     projectId,

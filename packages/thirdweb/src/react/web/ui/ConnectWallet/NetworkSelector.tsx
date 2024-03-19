@@ -35,10 +35,10 @@ import {
   useChainQuery,
   useChainsQuery,
 } from "../../../core/hooks/others/useChainQuery.js";
-import { useTWLocale } from "../../providers/locale-provider.js";
 import type React from "react";
 import type { ChainMetadata, Chain } from "../../../../chains/types.js";
 import { convertApiChainToChain } from "../../../../chains/utils.js";
+import connectLocaleEn from "./locale/en.js";
 
 type NetworkSelectorChainProps = {
   /**
@@ -245,7 +245,7 @@ function NetworkSelectorContentInner(
     return _chainMap;
   }, [props.chains]);
 
-  const locale = useTWLocale().connectWallet.networkSelector;
+  const locale = connectLocaleEn.networkSelector;
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTab, setSelectedTab] = useState<"all" | "mainnet" | "testnet">(
     "all",
@@ -493,7 +493,7 @@ const NetworkTabContent = (props: {
   renderChain?: React.FC<NetworkSelectorChainProps>;
   close?: () => void;
 }) => {
-  const locale = useTWLocale().connectWallet.networkSelector.categoryLabel;
+  const locale = connectLocaleEn.networkSelector.categoryLabel;
 
   const { recentChainIds, popularChainIds, allChainIds } = props;
   return (
@@ -641,8 +641,7 @@ const ChainButton = /* @__PURE__ */ memo(function ChainButton(props: {
   confirming: boolean;
   switchingFailed: boolean;
 }) {
-  const twLocale = useTWLocale();
-  const locale = twLocale.connectWallet.networkSelector;
+  const locale = connectLocaleEn.networkSelector;
   const { chain, handleSwitch, confirming, switchingFailed } = props;
   const activeChain = useActiveWalletChain();
   const apiChainQuery = useChainQuery(chain);
@@ -683,7 +682,7 @@ const ChainButton = /* @__PURE__ */ memo(function ChainButton(props: {
             {confirming && (
               <>
                 <Text size="xs" color="accentText">
-                  {twLocale.connectWallet.confirmInWallet}
+                  {connectLocaleEn.confirmInWallet}
                 </Text>
                 <Spinner size="xs" color="accentText" />
               </>

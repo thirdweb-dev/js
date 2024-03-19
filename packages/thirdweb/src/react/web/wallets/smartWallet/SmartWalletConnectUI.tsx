@@ -4,9 +4,7 @@ import type {
   WalletConfig,
 } from "../../../core/types/wallets.js";
 import { HeadlessConnectUI } from "../headlessConnectUI.js";
-import { useThirdwebProviderProps } from "../../../core/hooks/others/useThirdwebProviderProps.js";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
-import { useTWLocale } from "../../providers/locale-provider.js";
 import { Spacer } from "../../ui/components/Spacer.js";
 import { Spinner } from "../../ui/components/Spinner.js";
 import { Container, ModalHeader } from "../../ui/components/basic.js";
@@ -17,6 +15,8 @@ import { normalizeChainId } from "../../../../wallets/utils/normalizeChainId.js"
 import type { Chain } from "../../../../chains/types.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { SmartWallet } from "../../../../wallets/smart/index.js";
+import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import smartWalletLocalEn from "./locale/en.js";
 
 /**
  * @internal
@@ -28,7 +28,7 @@ export const SmartConnectUI = (props: {
 }) => {
   const [personalWallet, setPersonalWallet] = useState<Wallet | null>(null);
   const { personalWalletConfig } = props;
-  const { client, dappMetadata } = useThirdwebProviderProps();
+  const { client, appMetadata } = useWalletConnectionCtx();
 
   if (!personalWallet) {
     const _props: ConnectUIProps = {
@@ -38,7 +38,7 @@ export const SmartConnectUI = (props: {
         createInstance() {
           return props.personalWalletConfig.create({
             client: client,
-            dappMetadata: dappMetadata,
+            appMetadata: appMetadata,
           });
         },
         done(wallet) {
@@ -72,7 +72,7 @@ const SmartWalletConnecting = (props: {
   personalWalletConfig: WalletConfig;
   smartWalletChain: Chain;
 }) => {
-  const locale = useTWLocale().wallets.smartWallet;
+  const locale = smartWalletLocalEn;
   const createSmartWalletInstance =
     props.connectUIProps.connection.createInstance;
   const { personalWallet } = props;

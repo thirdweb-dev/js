@@ -2,7 +2,6 @@ import styled from "@emotion/styled";
 import type { ConnectUIProps } from "../../../core/types/wallets.js";
 import { useContext } from "react";
 import type { EmbeddedWallet } from "../../../../wallets/embedded/core/wallet/index.js";
-import { useTWLocale } from "../../providers/locale-provider.js";
 import { ModalConfigCtx } from "../../providers/wallet-ui-states-provider.js";
 import { TOS } from "../../ui/ConnectWallet/Modal/TOS.js";
 import { useScreenContext } from "../../ui/ConnectWallet/Modal/screen.js";
@@ -22,6 +21,7 @@ import type {
 } from "./types.js";
 import { openOauthSignInWindow } from "./openOauthSignInWindow.js";
 import { InputSelectionUI } from "./InputSelectionUI.js";
+import embeddedWalletLocaleEn from "./locale/en.js";
 
 export type EmbeddedWalletFormUIProps = {
   connectUIProps: ConnectUIProps;
@@ -34,8 +34,7 @@ export type EmbeddedWalletFormUIProps = {
  * @internal
  */
 export const EmbeddedWalletFormUI = (props: EmbeddedWalletFormUIProps) => {
-  const twLocale = useTWLocale();
-  const locale = twLocale.wallets.embeddedWallet;
+  const locale = embeddedWalletLocaleEn;
 
   const { screenConfig } = props.connectUIProps;
   const { done, createInstance, chain } = props.connectUIProps.connection;
@@ -133,7 +132,7 @@ export const EmbeddedWalletFormUI = (props: EmbeddedWalletFormUIProps) => {
       )}
 
       {screenConfig.size === "wide" && hasSocialLogins && enableEmailLogin && (
-        <TextDivider text={twLocale.connectWallet.or} />
+        <TextDivider text={embeddedWalletLocaleEn.or} />
       )}
 
       {/* Email Login */}
@@ -171,7 +170,7 @@ export const EmbeddedWalletFormUI = (props: EmbeddedWalletFormUIProps) => {
  * @internal
  */
 export function EmbeddedWalletFormUIScreen(props: EmbeddedWalletFormUIProps) {
-  const locale = useTWLocale().wallets.embeddedWallet.emailLoginScreen;
+  const locale = embeddedWalletLocaleEn.emailLoginScreen;
   const isCompact = props.connectUIProps.screenConfig.size === "compact";
   const { initialScreen, screen } = useScreenContext();
   const modalConfig = useContext(ModalConfigCtx);

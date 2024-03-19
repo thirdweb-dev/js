@@ -4,7 +4,7 @@ export type WalletMetadata = {
   iconUrl: string;
 };
 
-export type DAppMetaData = {
+export type AppMetadata = {
   /**
    * the name of your app
    */

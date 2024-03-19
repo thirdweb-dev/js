@@ -21,10 +21,10 @@ import {
 import type { WelcomeScreen } from "../screens/types.js";
 import { SyncedWalletUIStates } from "./ConnectEmbed.js";
 import { useSetupScreen } from "./screen.js";
-import { useThirdwebProviderProps } from "../../../../core/hooks/others/useThirdwebProviderProps.js";
 import { WalletUIStatesProvider } from "../../../providers/wallet-ui-states-provider.js";
 import { ConnectModalContent } from "./ConnectModalContent.js";
 import { canFitWideModal } from "../../../utils/canFitWideModal.js";
+import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 
 /**
  * @internal
@@ -48,7 +48,7 @@ export type ConnectModalInlineProps = {
  * @internal
  */
 export const ConnectModalInline = (props: ConnectModalInlineProps) => {
-  const walletConfigs = useThirdwebProviderProps().wallets;
+  const walletConfigs = useWalletConnectionCtx().wallets;
   const modalSize =
     !canFitWideModal() || walletConfigs.length === 1
       ? "compact"

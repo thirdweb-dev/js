@@ -1,7 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import type { EmbeddedWallet } from "../../../../wallets/embedded/core/wallet/index.js";
 import type { SendEmailOtpReturnType } from "../../../../wallets/embedded/implementations/index.js";
-import { useTWLocale } from "../../providers/locale-provider.js";
 import type { ConnectUIProps } from "../../../core/types/wallets.js";
 import { FadeIn } from "../../ui/components/FadeIn.js";
 import { OTPInput } from "../../ui/components/OTPInput.js";
@@ -13,6 +12,7 @@ import { useCustomTheme } from "../../ui/design-system/CustomThemeProvider.js";
 import { StyledButton } from "../../ui/design-system/elements.js";
 import { fontSize } from "../../ui/design-system/index.js";
 import { Text } from "../../ui/components/text.js";
+import embeddedWalletLocaleEn from "./locale/en.js";
 
 type VerificationStatus =
   | "verifying"
@@ -35,7 +35,7 @@ export function EmbeddedWalletOTPLoginUI(props: {
 }) {
   const email = props.email;
   const isWideModal = props.connectUIProps.screenConfig.size === "wide";
-  const locale = useTWLocale().wallets.embeddedWallet;
+  const locale = embeddedWalletLocaleEn;
   const [otpInput, setOtpInput] = useState("");
   const { createInstance, done, chain } = props.connectUIProps.connection;
   const { goBack } = props.connectUIProps.screenConfig;

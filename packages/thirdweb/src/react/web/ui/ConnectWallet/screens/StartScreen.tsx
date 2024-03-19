@@ -9,10 +9,10 @@ import { StyledDiv } from "../../design-system/elements.js";
 import { TOS } from "../Modal/TOS.js";
 import { Text } from "../../components/text.js";
 import { GlobeIcon } from "../icons/GlobalIcon.js";
-import { useTWLocale } from "../../../providers/locale-provider.js";
 import { ModalConfigCtx } from "../../../providers/wallet-ui-states-provider.js";
 import { spacing } from "../../design-system/index.js";
 import { PoweredByThirdweb } from "../PoweredByTW.js";
+import connectLocaleEn from "../locale/en.js";
 
 /**
  * @internal
@@ -24,7 +24,7 @@ export function StartScreen() {
     welcomeScreen: WelcomeScreen,
     showThirdwebBranding,
   } = useContext(ModalConfigCtx);
-  const locale = useTWLocale().connectWallet;
+  const locale = connectLocaleEn;
 
   if (WelcomeScreen) {
     if (typeof WelcomeScreen === "function") {

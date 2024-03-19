@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { useThirdwebProviderProps } from "../others/useThirdwebProviderProps.js";
 import { connectionManager } from "../../connectionManager.js";
 import type { WalletConfig } from "../../types/wallets.js";
 import {
@@ -16,17 +15,25 @@ import {
 } from "../../../../wallets/storage/walletStorage.js";
 import type { WalletWithPersonalAccount } from "../../../../wallets/interfaces/wallet.js";
 import { asyncLocalStorage } from "../../utils/asyncLocalStorage.js";
+import type { ThirdwebClient } from "../../../../client/client.js";
+import type { AppMetadata } from "../../../../wallets/types.js";
 
 let autoConnectAttempted = false;
+
+export type AutoConnectProps = {
+  wallets: WalletConfig[];
+  client: ThirdwebClient;
+  appMetadata: AppMetadata;
+};
 
 /**
  * @internal
  */
-export function AutoConnect() {
+export function AutoConnect(props: AutoConnectProps) {
   const setConnectionStatus = useSetActiveWalletConnectionStatus();
   const { connect } = useConnect();
   const { isAutoConnecting } = connectionManager;
-  const { wallets, client, dappMetadata } = useThirdwebProviderProps();
+  const { wallets, client, appMetadata } = props;
   // get the supported wallets from thirdweb provider
   // check the storage for last connected wallets and connect them all
   // check the storage for last active wallet and set it as active
@@ -75,7 +82,7 @@ export function AutoConnect() {
           // create and auto connect the personal wallet to get personal account
           const personalWallet = personalWalletConfig.create({
             client,
-            dappMetadata,
+            appMetadata,
           });
 
           const account = await personalWallet.autoConnect();
@@ -83,7 +90,7 @@ export function AutoConnect() {
           // create wallet
           const wallet = walletConfig.create({
             client,
-            dappMetadata,
+            appMetadata,
           }) as WalletWithPersonalAccount;
 
           // auto connect the wallet using the personal account
@@ -98,7 +105,7 @@ export function AutoConnect() {
         else {
           const wallet = walletConfig.create({
             client,
-            dappMetadata,
+            appMetadata,
           });
           await wallet.autoConnect();
           return wallet;

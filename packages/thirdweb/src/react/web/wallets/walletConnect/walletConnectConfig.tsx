@@ -3,7 +3,6 @@ import {
   type WalletConnect,
   walletConnect,
 } from "../../../../wallets/wallet-connect/index.js";
-import { useTWLocale } from "../../providers/locale-provider.js";
 import type {
   ConnectUIProps,
   WalletConfig,
@@ -22,6 +21,7 @@ import { isMobile } from "../../../core/utils/isMobile.js";
 import { HeadlessConnectUI } from "../headlessConnectUI.js";
 import type { WalletConnectConnectionOptions } from "../../../../wallets/wallet-connect/types.js";
 import { asyncLocalStorage } from "../../../core/utils/asyncLocalStorage.js";
+import walletConnectLocaleEn from "./locale/en.js";
 
 export type WalletConnectConfigOptions = {
   /**
@@ -72,7 +72,7 @@ export const walletConnectConfig = (
     create(createOptions) {
       return walletConnect({
         client: createOptions.client,
-        dappMetadata: createOptions.dappMetadata,
+        appMetadata: createOptions.appMetadata,
         storage: asyncLocalStorage,
       });
     },
@@ -105,7 +105,7 @@ const ConnectUI = (
     };
   },
 ) => {
-  const locale = useTWLocale().wallets.walletConnect;
+  const locale = walletConnectLocaleEn;
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>();
   const { walletConfig } = props;
   const { chain, done, createInstance, chains } = props.connection;

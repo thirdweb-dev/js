@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { resolveScheme } from "../../../../utils/ipfs.js";
-import { useThirdwebProviderProps } from "../../../core/hooks/others/useThirdwebProviderProps.js";
+import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 
 /**
  * @internal
@@ -14,7 +14,7 @@ export const Img: React.FC<{
   className?: string;
   style?: React.CSSProperties;
 }> = (props) => {
-  const { client } = useThirdwebProviderProps();
+  const { client } = useWalletConnectionCtx();
 
   const getSrc = () => {
     try {

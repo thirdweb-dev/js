@@ -1,9 +1,12 @@
 import type { ReactNode } from "react";
+import type { ThirdwebClient } from "../../../../client/client.js";
 
 /**
  * Props taken by the for the [`MediaRenderer`](https://portal.thirdweb.com/references/typescript/v5/MediaRenderer) component
  */
 export type MediaRendererProps = {
+  client: ThirdwebClient;
+
   /**
    * the `src` attribute specifies the URL of the media.
    *

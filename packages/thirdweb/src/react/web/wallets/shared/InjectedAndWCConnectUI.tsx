@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { useTWLocale } from "../../providers/locale-provider.js";
 import type { ConnectUIProps } from "../../../core/types/wallets.js";
 import type { PlatformURIs } from "../../../core/utils/handleWCSessionRequest.js";
 import { GetStartedScreen } from "./GetStartedScreen.js";
 import { InjectedConnectUI } from "./InjectedConnectUI.js";
 import { WalletConnectConnection } from "./WalletConnectConnection.js";
+import injectedWalletLocaleEn from "../injected/locale/en.js";
 
 /**
  *
@@ -23,9 +23,7 @@ export function InjectedAndWCConnectUI(
 ) {
   const [screen, setScreen] = useState<"main" | "get-started">("main");
   const walletConfig = props.walletConfig;
-  const locale = useTWLocale().wallets.injectedWallet(
-    props.walletConfig.metadata.name,
-  );
+  const locale = injectedWalletLocaleEn(props.walletConfig.metadata.name);
 
   if (screen === "get-started") {
     return (

@@ -56,7 +56,7 @@ export const okxConfig = (options?: OkxConfigOptions): WalletConfig => {
 
       return walletConnect({
         client: createOptions.client,
-        dappMetadata: createOptions.dappMetadata,
+        appMetadata: createOptions.appMetadata,
         metadata: okxWalletMetadata,
         storage: asyncLocalStorage,
       });

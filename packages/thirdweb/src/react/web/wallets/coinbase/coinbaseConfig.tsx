@@ -7,12 +7,12 @@ import {
   coinbaseWallet,
   injectedCoinbaseProvider,
 } from "../../../../wallets/injected/wallets/coinbase.js";
-import { useTWLocale } from "../../providers/locale-provider.js";
 import type {
   ConnectUIProps,
   WalletConfig,
 } from "../../../core/types/wallets.js";
 import { asyncLocalStorage } from "../../../core/utils/asyncLocalStorage.js";
+import injectedWalletLocaleEn from "../injected/locale/en.js";
 import { GetStartedScreen } from "../shared/GetStartedScreen.js";
 import { InjectedConnectUI } from "../shared/InjectedConnectUI.js";
 import { ScanScreen } from "../shared/ScanScreen.js";
@@ -58,8 +58,8 @@ export const coinbaseConfig = (
         return coinbaseWallet();
       } else {
         return coinbaseSDKWallet({
-          appName: createOptions.dappMetadata.name,
-          appLogoUrl: createOptions.dappMetadata.logoUrl,
+          appName: createOptions.appMetadata.name,
+          appLogoUrl: createOptions.appMetadata.logoUrl,
           storage: asyncLocalStorage,
         });
       }
@@ -82,9 +82,7 @@ function CoinbaseConnectUI(props: ConnectUIProps) {
   const isInjected = !!injectedCoinbaseProvider();
   const [screen, setScreen] = useState<"main" | "get-started">("main");
   const walletConfig = props.walletConfig;
-  const locale = useTWLocale().wallets.injectedWallet(
-    walletConfig.metadata.name,
-  );
+  const locale = injectedWalletLocaleEn(walletConfig.metadata.name);
 
   if (screen === "get-started") {
     return (
@@ -130,7 +128,7 @@ function CoinbaseSDKWalletConnectUI(props: {
   onGetStarted: () => void;
 }) {
   const { connectUIProps, onGetStarted } = props;
-  const locale = useTWLocale().wallets.injectedWallet(
+  const locale = injectedWalletLocaleEn(
     connectUIProps.walletConfig.metadata.name,
   );
   const { createInstance, done, chain } = connectUIProps.connection;

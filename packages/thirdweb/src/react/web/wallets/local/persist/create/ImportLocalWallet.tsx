@@ -1,7 +1,6 @@
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import type { LocalWallet } from "../../../../../../wallets/local/index.js";
-import { useTWLocale } from "../../../../providers/locale-provider.js";
 import type { ConnectUIProps } from "../../../../../core/types/wallets.js";
 import { Spacer } from "../../../../ui/components/Spacer.js";
 import {
@@ -17,6 +16,7 @@ import {
 import { Text } from "../../../../ui/components/text.js";
 import { usePassword } from "../../utils/usePassword.js";
 import { isValidPrivateKey } from "../../../../../../wallets/local/utils.js";
+import localWalletLocaleEn from "../../locale/en.js";
 
 /**
  * Show UI to initiate the wallet by entering the private key
@@ -27,7 +27,7 @@ export const ImportLocalWallet: React.FC<{
   persist: boolean;
   connectUIProps: ConnectUIProps;
 }> = (props) => {
-  const locale = useTWLocale().wallets.localWallet;
+  const locale = localWalletLocaleEn;
   const { createInstance, chain, done } = props.connectUIProps.connection;
 
   const [privateKeyInput, setPrivateKeyInput] = useState("");

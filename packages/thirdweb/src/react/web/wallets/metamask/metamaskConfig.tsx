@@ -59,7 +59,7 @@ export const metamaskConfig = (
 
       return walletConnect({
         client: createOptions.client,
-        dappMetadata: createOptions.dappMetadata,
+        appMetadata: createOptions.appMetadata,
         metadata: metamaskMetadata,
         storage: asyncLocalStorage,
       });

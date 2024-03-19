@@ -1,7 +1,7 @@
-import { useTWLocale } from "../../../providers/locale-provider.js";
 import { Container } from "../../components/basic.js";
 import { Link } from "../../components/text.js";
 import { Text } from "../../components/text.js";
+import connectLocaleEn from "../locale/en.js";
 
 /**
  * @internal
@@ -11,7 +11,7 @@ export function TOS(props: {
   privacyPolicyUrl?: string;
 }) {
   const { termsOfServiceUrl, privacyPolicyUrl } = props;
-  const locale = useTWLocale().connectWallet.agreement;
+  const locale = connectLocaleEn.agreement;
 
   if (!termsOfServiceUrl && !privacyPolicyUrl) {
     return null;

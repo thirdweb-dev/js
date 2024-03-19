@@ -1,7 +1,7 @@
 import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import type { Wallet } from "../../../wallets/interfaces/wallet.js";
-import type { DAppMetaData } from "../../../wallets/types.js";
+import type { AppMetadata } from "../../../wallets/types.js";
 
 /**
  * @walletConfig
@@ -17,7 +17,7 @@ export type WalletConfig = {
 
   create: (options: {
     client: ThirdwebClient;
-    dappMetadata: DAppMetaData;
+    appMetadata: AppMetadata;
   }) => Wallet;
 
   /**

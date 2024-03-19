@@ -18,7 +18,6 @@ import {
   CustomThemeProvider,
 } from "../../design-system/CustomThemeProvider.js";
 import { DynamicHeight } from "../../components/DynamicHeight.js";
-import { useTWLocale } from "../../../providers/locale-provider.js";
 import {
   useActiveAccount,
   useActiveWalletConnectionStatus,
@@ -28,6 +27,7 @@ import { ConnectModalContent } from "./ConnectModalContent.js";
 import { canFitWideModal } from "../../../utils/canFitWideModal.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import type { Chain } from "../../../../../chains/types.js";
+import connectLocaleEn from "../locale/en.js";
 
 export type ConnectEmbedProps = {
   /**
@@ -392,13 +392,13 @@ export function SyncedWalletUIStates(
   props: ComponentProps<typeof WalletUIStatesProvider>,
 ) {
   const setModalConfig = useContext(SetModalConfigCtx);
-  const locale = useTWLocale();
+  const locale = connectLocaleEn;
 
   // update modalConfig on props change
   useEffect(() => {
     setModalConfig((c) => ({
       ...c,
-      title: props.title || locale.connectWallet.defaultModalTitle,
+      title: props.title || locale.defaultModalTitle,
       theme: props.theme || "dark",
       modalSize: (!canFitWideModal() ? "compact" : props.modalSize) || "wide",
       termsOfServiceUrl: props.termsOfServiceUrl,
@@ -416,7 +416,7 @@ export function SyncedWalletUIStates(
     props.welcomeScreen,
     props.titleIconUrl,
     setModalConfig,
-    locale.connectWallet.defaultModalTitle,
+    locale.defaultModalTitle,
     props.showThirdwebBranding,
   ]);
 

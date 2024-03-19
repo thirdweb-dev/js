@@ -1,6 +1,5 @@
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
-import { useTWLocale } from "../../../../providers/locale-provider.js";
 import type { ConnectUIProps } from "../../../../../core/types/wallets.js";
 import { Spacer } from "../../../../ui/components/Spacer.js";
 import { Spinner } from "../../../../ui/components/Spinner.js";
@@ -15,6 +14,7 @@ import { spacing } from "../../../../ui/design-system/index.js";
 import { Text } from "../../../../ui/components/text.js";
 import { usePassword } from "../../utils/usePassword.js";
 import type { LocalWallet } from "../../../../../../wallets/local/index.js";
+import localWalletLocaleEn from "../../locale/en.js";
 
 /**
  * - Create random local wallet
@@ -28,7 +28,7 @@ export const LocalWallet_Persist_Create: React.FC<{
   onBack?: () => void;
   onShowImportScreen: () => void;
 }> = (props) => {
-  const locale = useTWLocale().wallets.localWallet;
+  const locale = localWalletLocaleEn;
   const [isConnecting, setIsConnecting] = useState(false);
   const { done, createInstance, chain } = props.connectUIProps.connection;
 

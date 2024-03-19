@@ -15,7 +15,6 @@ import {
   // useConnect,
   useDisconnect,
 } from "../../../core/hooks/wallets/wallet-hooks.js";
-import { useTWLocale } from "../../providers/locale-provider.js";
 import { Modal } from "../components/Modal.js";
 import { Skeleton } from "../components/Skeleton.js";
 import { Spacer } from "../components/Spacer.js";
@@ -62,6 +61,7 @@ import {
 import type { EmbeddedWallet } from "../../../../wallets/embedded/core/wallet/index.js";
 import { localWalletMetadata } from "../../../../wallets/local/index.js";
 import { ExportLocalWallet } from "./screens/ExportLocalWallet.js";
+import connectLocaleEn from "./locale/en.js";
 
 const TW_CONNECTED_WALLET = "tw-connected-wallet";
 
@@ -85,7 +85,7 @@ export const ConnectedWalletDetails: React.FC<{
   supportedTokens: SupportedTokens;
   chains: Chain[];
 }> = (props) => {
-  const locale = useTWLocale().connectWallet;
+  const locale = connectLocaleEn;
   const activeWallet = useActiveWallet();
   const activeAccount = useActiveAccount();
   const walletChain = useActiveWalletChain();
@@ -756,7 +756,7 @@ function ConnectedToSmartWallet() {
   const activeAccount = useActiveAccount();
   const activeWallet = useActiveWallet();
   const chain = useActiveWalletChain();
-  const locale = useTWLocale().connectWallet;
+  const locale = connectLocaleEn;
   const isSmartWallet = activeWallet && "isSmartWallet" in activeWallet;
 
   const [isSmartWalletDeployed] = useState(false);

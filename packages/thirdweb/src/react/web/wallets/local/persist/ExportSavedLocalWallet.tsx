@@ -3,7 +3,6 @@ import {
   EyeOpenIcon,
   PinBottomIcon,
 } from "@radix-ui/react-icons";
-import { useTWLocale } from "../../../providers/locale-provider.js";
 import type { ConnectUIProps } from "../../../../core/types/wallets.js";
 import { Spacer } from "../../../ui/components/Spacer.js";
 import {
@@ -22,6 +21,7 @@ import { getDecryptionFunction } from "../../../../../wallets/local/utils.js";
 import type { LocalWalletStorageData } from "../../../../../wallets/local/types.js";
 import { downloadTextFile } from "../utils/downloadTextFile.js";
 import { usePassword } from "../utils/usePassword.js";
+import localWalletLocaleEn from "../locale/en.js";
 
 /**
  * UI for exporting the saved local wallet data
@@ -35,7 +35,7 @@ export const ExportSavedLocalWallet: React.FC<{
   connectUIProps: ConnectUIProps;
   savedData: LocalWalletStorageData;
 }> = (props) => {
-  const locale = useTWLocale().wallets.localWallet;
+  const locale = localWalletLocaleEn;
   const isWideScreen = props.connectUIProps.screenConfig.size === "wide";
 
   // form state

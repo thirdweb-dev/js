@@ -1,19 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { resolveScheme } from "../../../../utils/ipfs.js";
-import { useThirdwebProviderProps } from "../../../core/hooks/others/useThirdwebProviderProps.js";
 import { resolveMimeType } from "../../utils/resolveMimeType.js";
+import type { ThirdwebClient } from "../../../../client/client.js";
 
 /**
  * @internal
  */
 export function useResolvedMediaType(
+  client: ThirdwebClient,
   uri?: string,
   mimeType?: string,
   gatewayUrl?: string,
 ) {
-  const { client } = useThirdwebProviderProps();
-
   const resolvedUrl = useMemo(() => {
     if (!uri) {
       return "";

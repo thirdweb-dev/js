@@ -1,6 +1,5 @@
 import { PinBottomIcon } from "@radix-ui/react-icons";
 import type { LocalWallet } from "../../../../../wallets/local/index.js";
-import { useTWLocale } from "../../../providers/locale-provider.js";
 import {
   useActiveAccount,
   useActiveWallet,
@@ -18,6 +17,7 @@ import { Button } from "../../components/buttons.js";
 import { Label } from "../../components/formElements.js";
 import { spacing, iconSize } from "../../design-system/index.js";
 import { Text } from "../../components/text.js";
+import localWalletLocaleEn from "../../../wallets/local/locale/en.js";
 
 /**
  * Export the private key and download it as a text file for current active local wallet
@@ -27,7 +27,7 @@ export function ExportLocalWallet(props: {
   onExport: () => void;
   onBack: () => void;
 }) {
-  const locale = useTWLocale().wallets.localWallet;
+  const locale = localWalletLocaleEn;
   const isWideScreen = false;
   const wallet = useActiveWallet() as LocalWallet;
   const account = useActiveAccount();

@@ -1,11 +1,11 @@
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
-import { useTWLocale } from "../../../../providers/locale-provider.js";
 import type { ConnectUIProps } from "../../../../../core/types/wallets.js";
 import { Spacer } from "../../../../ui/components/Spacer.js";
 import { Container, ModalHeader } from "../../../../ui/components/basic.js";
 import { Button } from "../../../../ui/components/buttons.js";
 import { iconSize } from "../../../../ui/design-system/index.js";
 import { Text } from "../../../../ui/components/text.js";
+import localWalletLocaleEn from "../../locale/en.js";
 
 /**
  * Shows a warning screen when the user tries to create a new local wallet when one is already saved in local storage
@@ -18,7 +18,7 @@ export const OverrideConfirmation: React.FC<{
   onBack: () => void;
   connectUIProps: ConnectUIProps;
 }> = (props) => {
-  const locale = useTWLocale().wallets.localWallet.warningScreen;
+  const locale = localWalletLocaleEn.warningScreen;
   const isCompact = props.connectUIProps.screenConfig.size === "compact";
   return (
     <Container fullHeight flex="column" animate="fadein">

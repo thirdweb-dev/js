@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useTWLocale } from "../../providers/locale-provider.js";
 import { isMobile } from "../../../core/utils/isMobile.js";
 import { Img } from "../../ui/components/Img.js";
 import { QRCode } from "../../ui/components/QRCode.js";
@@ -13,6 +12,7 @@ import { ChromeIcon } from "../../ui/ConnectWallet/icons/ChromeIcon.js";
 import { PlayStoreIcon } from "../../ui/ConnectWallet/icons/PlayStoreIcon.js";
 import { Text } from "../../ui/components/text.js";
 import { openWindow } from "../../../core/utils/openWindow.js";
+import connectLocaleEn from "../../ui/ConnectWallet/locale/en.js";
 
 /**
  * @internal
@@ -45,7 +45,7 @@ export const GetStartedScreen: React.FC<{
     "base" | "android-scan" | "ios-scan"
   >("base");
 
-  const locale = useTWLocale().connectWallet.download;
+  const locale = connectLocaleEn.download;
 
   const isScanScreen =
     showScreen === "android-scan" || showScreen === "ios-scan";
