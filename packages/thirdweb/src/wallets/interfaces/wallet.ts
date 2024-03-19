@@ -7,10 +7,10 @@ import type {
   TypedDataDefinition,
 } from "viem";
 import type { WalletEventListener } from "./listeners.js";
-import type { TransactionOrUserOpHash } from "../../transaction/types.js";
 import type { WalletMetadata } from "../types.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
 import type { Chain } from "../../chains/types.js";
+import type { SendTransactionResult } from "../../transaction/types.js";
 
 export type SendTransactionOption = TransactionSerializable & {
   chainId: number;
@@ -33,9 +33,9 @@ export type Wallet = {
   switchChain?: (newChain: Chain) => Promise<void>;
 };
 
-export interface WalletWithPersonalWallet extends Wallet {
-  autoConnect: (options: { personalWallet: Wallet }) => Promise<Account>;
-  personalWallet?: Wallet;
+export interface WalletWithPersonalAccount extends Wallet {
+  autoConnect: (options: { personalAccount: Account }) => Promise<Account>;
+  personalAccount?: Account;
 }
 
 export type Account = {
@@ -43,7 +43,7 @@ export type Account = {
   address: Address;
   sendTransaction: (
     tx: SendTransactionOption,
-  ) => Promise<TransactionOrUserOpHash>;
+  ) => Promise<SendTransactionResult>;
   signMessage: ({ message }: { message: SignableMessage }) => Promise<Hex>;
   signTypedData: <
     const typedData extends TypedData | Record<string, unknown>,
@@ -57,5 +57,5 @@ export type Account = {
   signTransaction?: (tx: TransactionSerializable) => Promise<Hex>;
   sendBatchTransaction?: (
     txs: SendTransactionOption[],
-  ) => Promise<TransactionOrUserOpHash>;
+  ) => Promise<SendTransactionResult>;
 };

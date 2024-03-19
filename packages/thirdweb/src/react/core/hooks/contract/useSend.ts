@@ -1,5 +1,5 @@
 import { useMutation, type UseMutationResult } from "@tanstack/react-query";
-import { useActiveWallet } from "../wallets/wallet-hooks.js";
+import { useActiveAccount } from "../wallets/wallet-hooks.js";
 import type { WaitForReceiptOptions } from "../../../../transaction/actions/wait-for-tx-receipt.js";
 import { sendTransaction } from "../../../../transaction/actions/send-transaction.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
@@ -21,16 +21,16 @@ export function useSendTransaction(): UseMutationResult<
   Error,
   PreparedTransaction
 > {
-  const wallet = useActiveWallet();
+  const account = useActiveAccount();
 
   return useMutation({
     mutationFn: async (transaction) => {
-      if (!wallet) {
-        throw new Error("No active wallet");
+      if (!account) {
+        throw new Error("No active account");
       }
       return await sendTransaction({
         transaction,
-        wallet,
+        account,
       });
     },
   });

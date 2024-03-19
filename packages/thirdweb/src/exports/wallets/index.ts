@@ -1,7 +1,7 @@
 export type {
   Wallet,
   Account,
-  WalletWithPersonalWallet,
+  WalletWithPersonalAccount,
 } from "../../wallets/interfaces/wallet.js";
 export type { WalletEventListener } from "../../wallets/interfaces/listeners.js";
 export type { WalletMetadata } from "../../wallets/types.js";

@@ -1,5 +1,5 @@
 import type { ThirdwebClient } from "../../client/client.js";
-import type { SendTransactionOption, Wallet } from "../interfaces/wallet.js";
+import type { Account, SendTransactionOption } from "../interfaces/wallet.js";
 import type { Hex } from "viem";
 import type { WalletMetadata } from "../types.js";
 import type { ThirdwebContract } from "../../contract/contract.js";
@@ -39,7 +39,7 @@ export type SmartWalletOptions = {
 };
 
 export type SmartWalletConnectionOptions = {
-  personalWallet: Wallet;
+  personalAccount: Account;
 };
 
 export type UserOperation = {

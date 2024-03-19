@@ -8,14 +8,14 @@ import {
   type PrepareTransactionOptions,
 } from "../../../transaction/prepare-transaction.js";
 import type { Hex } from "../../../utils/encoding/hex.js";
-import type { Wallet } from "../../../wallets/interfaces/wallet.js";
+import type { Account } from "../../../wallets/interfaces/wallet.js";
 import type { SwapStatusParams } from "./getStatus.js";
 import type { SwapRoute } from "./getSwap.js";
 
 // TODO: Support User Op Hash
 /**
  * Retrieves contract events from the blockchain.
- * @param wallet - the wallet performing the swap
+ * @param account - the account performing the swap
  * @param route - swap route returned from getRoute
  * @returns SwapStatusParams to be used in getSwapStatus
  * @example
@@ -31,7 +31,7 @@ import type { SwapRoute } from "./getSwap.js";
  * ```
  */
 export async function sendSwap(
-  wallet: Wallet,
+  account: Account,
   route: SwapRoute,
 ): Promise<SwapStatusParams> {
   if (route.approval) {
@@ -40,7 +40,7 @@ export async function sendSwap(
 
     const waitForReceiptOptions = await sendTransaction({
       transaction: approvalTransaction,
-      wallet,
+      account,
     });
 
     await waitForReceipt(waitForReceiptOptions);
@@ -61,7 +61,7 @@ export async function sendSwap(
 
   const waitForReceiptOptions = await sendTransaction({
     transaction,
-    wallet,
+    account,
   });
 
   return {

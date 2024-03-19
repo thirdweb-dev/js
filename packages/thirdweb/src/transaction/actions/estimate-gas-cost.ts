@@ -16,11 +16,7 @@ export async function estimateGasCost(
   options: EstimateGasOptions,
 ): Promise<EstimateGasCostResult> {
   const { transaction } = options;
-  const from =
-    options.from ??
-    options.account?.address ??
-    options.wallet?.getAccount()?.address ??
-    undefined;
+  const from = options.from ?? options.account?.address ?? undefined;
   const gasLimit =
     (await resolvePromisedValue(transaction.gas)) ||
     (await estimateGas({ transaction, from }));

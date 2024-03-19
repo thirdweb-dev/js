@@ -1,19 +1,21 @@
 import type { Hex } from "viem";
-import type { TransactionOrUserOpHash, TransactionReceipt } from "../types.js";
+import type { SendTransactionResult, TransactionReceipt } from "../types.js";
 
-import { getUserOpEventFromEntrypoint } from "../../wallets/smart/lib/receipts.js";
 import type { PreparedTransaction } from "../prepare-transaction.js";
 import { getRpcClient } from "../../rpc/rpc.js";
 import { watchBlockNumber } from "../../rpc/watchBlockNumber.js";
 import { eth_getTransactionReceipt } from "../../rpc/actions/eth_getTransactionReceipt.js";
+import type { Prettify } from "../../utils/type-utils.js";
 
 const MAX_BLOCKS_WAIT_TIME = 10;
 
 const map = new Map<string, Promise<TransactionReceipt>>();
 
-export type WaitForReceiptOptions = TransactionOrUserOpHash & {
-  transaction: Pick<PreparedTransaction, "client" | "chain">;
-};
+export type WaitForReceiptOptions = Prettify<
+  SendTransactionResult & {
+    transaction: Pick<PreparedTransaction, "client" | "chain">;
+  }
+>;
 
 /**
  * Waits for the transaction receipt of a given transaction hash on a specific contract.
@@ -24,7 +26,7 @@ export type WaitForReceiptOptions = TransactionOrUserOpHash & {
  * ```ts
  * import { waitForReceipt } from "thirdweb";
  * const receipt = await waitForReceipt({
- *   contract: myContract,
+ *   transaction: myContract,
  *   transactionHash: "0x123...",
  * });
  * ```
@@ -32,20 +34,20 @@ export type WaitForReceiptOptions = TransactionOrUserOpHash & {
 export function waitForReceipt(
   options: WaitForReceiptOptions,
 ): Promise<TransactionReceipt> {
-  const { transactionHash, userOpHash, transaction } = options;
-  const prefix = transactionHash ? "tx_" : "userOp_";
+  const { transactionHash, transaction } = options;
   const chainId = transaction.chain.id;
-  const key = `${chainId}:${prefix}${transactionHash || userOpHash}`;
+  const key = `${chainId}:tx_${transactionHash}`;
 
   if (map.has(key)) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return map.get(key)!;
   }
   const promise = new Promise<TransactionReceipt>((resolve, reject) => {
-    // TODO: handle useropHash
-    if (!transactionHash && !userOpHash) {
+    if (!transactionHash) {
       reject(
-        new Error("Transaction has no txHash to wait for, did you execute it?"),
+        new Error(
+          "Transaction has no transactionHash to wait for, did you execute it?",
+        ),
       );
     }
 
@@ -53,12 +55,11 @@ export function waitForReceipt(
 
     // start at -1 because the first block doesn't count
     let blocksWaited = -1;
-    let lastBlockNumber: bigint | undefined;
 
     const unwatch = watchBlockNumber({
       client: transaction.client,
       chain: transaction.chain,
-      onNewBlockNumber: async (blockNumber) => {
+      onNewBlockNumber: async () => {
         blocksWaited++;
         if (blocksWaited >= MAX_BLOCKS_WAIT_TIME) {
           unwatch();
@@ -66,46 +67,14 @@ export function waitForReceipt(
           return;
         }
         try {
-          if (transactionHash) {
-            const receipt = await eth_getTransactionReceipt(request, {
-              hash: transactionHash as Hex,
-            });
+          const receipt = await eth_getTransactionReceipt(request, {
+            hash: transactionHash as Hex,
+          });
 
-            // stop the polling
-            unwatch();
-            // resolve the top level promise with the receipt
-            resolve(receipt);
-          } else if (userOpHash) {
-            let event;
-            try {
-              event = await getUserOpEventFromEntrypoint({
-                blockNumber: blockNumber,
-                blockRange: lastBlockNumber ? 2n : 2000n, // query backwards further on first tick
-                chain: transaction.chain,
-                client: transaction.client,
-                userOpHash: userOpHash,
-              });
-            } catch (e) {
-              console.error(e);
-              // stop the polling
-              unwatch();
-              // userOp reverted
-              reject(e);
-              return;
-            }
-
-            lastBlockNumber = blockNumber;
-            if (event) {
-              const receipt = await eth_getTransactionReceipt(request, {
-                hash: event.transactionHash,
-              });
-
-              // stop the polling
-              unwatch();
-              // resolve the top level promise with the receipt
-              resolve(receipt);
-            }
-          }
+          // stop the polling
+          unwatch();
+          // resolve the top level promise with the receipt
+          resolve(receipt);
         } catch {
           // noop, we'll try again on the next blocks
         }

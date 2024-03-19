@@ -4,7 +4,7 @@ import * as universalethers from "ethers";
 import type { Abi } from "abitype";
 import type { AccessList, Hex, TransactionSerializable } from "viem";
 import type { ThirdwebClient } from "../client/client.js";
-import type { Account, Wallet } from "../wallets/interfaces/wallet.js";
+import type { Account } from "../wallets/interfaces/wallet.js";
 import { normalizeChainId } from "../wallets/utils/normalizeChainId.js";
 import { resolvePromisedValue } from "../utils/promise/resolve-promised-value.js";
 import { getRpcUrlForChain } from "../chains/utils.js";
@@ -118,7 +118,8 @@ export const ethers6Adapter = /* @__PURE__ */ (() => {
       /**
        * Converts a Thirdweb wallet to an ethers.js signer.
        * @param client - The thirdweb client.
-       * @param wallet - The thirdweb wallet.
+       * @param account - The account.
+       * @param chain - The chain.
        * @returns A promise that resolves to an ethers.js signer.
        * @example
        * ```ts
@@ -126,9 +127,9 @@ export const ethers6Adapter = /* @__PURE__ */ (() => {
        * const signer = await ethers6Adapter.signer.toEthers(client, chain, account);
        * ```
        */
-      toEthers: (client: ThirdwebClient, wallet: Wallet) => {
+      toEthers: (client: ThirdwebClient, account: Account, chain: Chain) => {
         assertEthers6(ethers);
-        return toEthersSigner(ethers, client, wallet);
+        return toEthersSigner(ethers, client, account, chain);
       },
     },
   };
@@ -267,17 +268,9 @@ async function fromEthersSigner(signer: ethers6.Signer): Promise<Account> {
 export async function toEthersSigner(
   ethers: Ethers6,
   client: ThirdwebClient,
-  wallet: Wallet,
+  account: Account,
+  chain: Chain,
 ): Promise<ethers6.Signer> {
-  const account = wallet.getAccount();
-  const chain = wallet.getChain();
-  if (!chain) {
-    throw new Error("Chain not found");
-  }
-  if (!account) {
-    throw new Error("Account not found");
-  }
-
   class ThirdwebAdapterSigner extends ethers.AbstractSigner<ethers6.JsonRpcProvider> {
     private address: string;
     override provider: ethers6.ethers.JsonRpcProvider;

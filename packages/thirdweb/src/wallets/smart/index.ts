@@ -2,28 +2,28 @@ import type {
   Account,
   SendTransactionOption,
   Wallet,
-  WalletWithPersonalWallet,
+  WalletWithPersonalAccount,
 } from "../interfaces/wallet.js";
 import type {
   SmartWalletConnectionOptions,
   SmartWalletOptions,
 } from "./types.js";
 import { createUnsignedUserOp, signUserOp } from "./lib/userop.js";
-import { bundleUserOp } from "./lib/bundler.js";
+import { bundleUserOp, getUserOpReceipt } from "./lib/bundler.js";
 import { getContract, type ThirdwebContract } from "../../contract/contract.js";
 import {
   predictAddress,
   prepareBatchExecute,
   prepareExecute,
 } from "./lib/calls.js";
-import {
-  saveConnectParamsToStorage,
-  type WithPersonalWalletConnectionOptions,
-} from "../storage/walletStorage.js";
+import { saveConnectParamsToStorage } from "../storage/walletStorage.js";
 import type { Chain } from "../../chains/types.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
 import type { SignableMessage } from "viem";
 import type { TransactionReceipt } from "../../transaction/types.js";
+import { watchBlockNumber } from "../../rpc/watchBlockNumber.js";
+import type { WaitForReceiptOptions } from "../../transaction/actions/wait-for-tx-receipt.js";
+import type { Hex } from "../../utils/encoding/hex.js";
 
 /**
  * `smartWallet` allows you to connect to a [smart wallet](https://portal.thirdweb.com/glossary/smart-wallet) using a personal wallet (acting as the key to the smart wallet)
@@ -42,7 +42,7 @@ import type { TransactionReceipt } from "../../transaction/types.js";
  *
  * // connect a personal wallet first - e.g. metamask, coinbase, etc.
  * const metamask = metamaskWallet();
- * await metamask.connect();
+ * const personalAccount = await metamask.connect();
  *
  * const wallet = smartWallet({
  *  client,
@@ -51,7 +51,7 @@ import type { TransactionReceipt } from "../../transaction/types.js";
  * });
  *
  * await wallet.connect({
- *  personalWallet: metamask,
+ *  personalAccount,
  * });
  * ```
  * @returns The [`SmartWallet`](https://portal.thirdweb.com/references/typescript/v5/SmartWallet) instance
@@ -72,19 +72,19 @@ export const smartWalletMetadata = {
  * We can get the personal account for given smart account but not the other way around - this map gives us the reverse lookup
  * @internal
  */
-export const personalWalletToSmartAccountMap = new WeakMap<Wallet, Wallet>();
+export const personalAccountToSmartAccountMap = new WeakMap<Account, Wallet>();
 
 /**
  *
  */
-export class SmartWallet implements WalletWithPersonalWallet {
+export class SmartWallet implements WalletWithPersonalAccount {
   private options: SmartWalletOptions;
   private chain?: Chain | undefined;
   private account?: Account | undefined;
   private factoryContract: ThirdwebContract;
   private accountContract?: ThirdwebContract | undefined;
 
-  personalWallet: Wallet | undefined;
+  personalAccount: Account | undefined;
   metadata: Wallet["metadata"];
   isSmartWallet: true;
 
@@ -146,33 +146,14 @@ export class SmartWallet implements WalletWithPersonalWallet {
   async connect(
     connectionOptions: SmartWalletConnectionOptions,
   ): Promise<Account> {
-    const chainId = this.options.chain.id;
-
-    const { personalWallet } = connectionOptions;
-
-    const personalAccount = personalWallet.getAccount();
+    const { personalAccount } = connectionOptions;
 
     if (!personalAccount) {
       throw new Error("Personal wallet does not have an account");
     }
 
-    // this does not matter if the personal wallet does not implement `getChain()` (private key wallet)
-    if (personalWallet.getChain && personalWallet.getChain()?.id !== chainId) {
-      throw new Error(
-        "Personal account's wallet is on a different chain than the smart wallet.",
-      );
-    }
-
-    const paramsToSave: WithPersonalWalletConnectionOptions = {
-      personalWalletId: personalWallet.metadata.id,
-    };
-
     if (this.options.storage) {
-      saveConnectParamsToStorage(
-        this.options.storage,
-        this.metadata.id,
-        paramsToSave,
-      );
+      saveConnectParamsToStorage(this.options.storage, this.metadata.id, {});
     }
 
     // TODO: listen for chainChanged event on the personal wallet and emit the disconnect event on the smart wallet
@@ -193,8 +174,7 @@ export class SmartWallet implements WalletWithPersonalWallet {
       factoryContract: this.factoryContract,
     });
 
-    personalWalletToSmartAccountMap.set(connectionOptions.personalWallet, this);
-    this.personalWallet = personalWallet;
+    personalAccountToSmartAccountMap.set(personalAccount, this);
     this.account = account;
     return account;
   }
@@ -224,8 +204,7 @@ export class SmartWallet implements WalletWithPersonalWallet {
    * ```
    */
   async disconnect(): Promise<void> {
-    this.personalWallet?.disconnect();
-    this.personalWallet = undefined;
+    this.personalAccount = undefined;
     this.account = undefined;
     this.chain = undefined;
   }
@@ -409,7 +388,8 @@ async function createSmartAccount(
     async signTypedData(typedData: any) {
       return options.personalAccount.signTypedData(typedData);
     },
-    async estimateGas(): Promise<bigint> {
+    async estimateGas(tx: PreparedTransaction): Promise<bigint> {
+      void tx; // linter
       return 0n;
     },
   };
@@ -446,7 +426,7 @@ async function _sendUserOp(args: {
   accountContract: ThirdwebContract;
   executeTx: PreparedTransaction;
   options: SmartWalletOptions & { personalAccount: Account };
-}) {
+}): Promise<WaitForReceiptOptions> {
   const { factoryContract, accountContract, executeTx, options } = args;
   const unsignedUserOp = await createUnsignedUserOp({
     factoryContract,
@@ -462,7 +442,37 @@ async function _sendUserOp(args: {
     options,
     userOp: signedUserOp,
   });
+  // wait for tx receipt rather than return the userOp hash
+  const maxAttempts = 30;
+  let attempts = 0;
+
+  const promise = new Promise<Hex>((resolve, reject) => {
+    const unwatch = watchBlockNumber({
+      chain: options.chain,
+      client: options.client,
+      onNewBlockNumber: async () => {
+        attempts++;
+        if (attempts >= maxAttempts) {
+          unwatch();
+          reject(
+            "Max attempts reached without finding a receipt for userOp: " +
+              userOpHash,
+          );
+        }
+        const receipt = await getUserOpReceipt({ options, userOpHash });
+        if (receipt) {
+          unwatch();
+          resolve(receipt.transactionHash);
+        }
+      },
+    });
+  });
+
   return {
-    userOpHash,
+    transaction: {
+      client: options.client,
+      chain: options.chain,
+    },
+    transactionHash: await promise,
   };
 }

@@ -24,15 +24,15 @@ export function useWaitForReceipt(
       "waitForReceipt",
       // TODO: here chain can be undfined so we go to a `-1` chain but this feels wrong
       options?.transaction.chain.id || -1,
-      options?.transactionHash || options?.userOpHash,
+      options?.transactionHash,
     ] as const,
     queryFn: async () => {
-      if (!options?.transactionHash && !options?.userOpHash) {
+      if (!options?.transactionHash) {
         throw new Error("No transaction hash or user op hash provided");
       }
       return waitForReceipt(options);
     },
-    enabled: !!options?.transactionHash || !!options?.userOpHash,
+    enabled: !!options?.transactionHash,
     retry: false,
   });
 }

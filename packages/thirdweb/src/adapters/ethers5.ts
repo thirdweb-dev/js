@@ -4,7 +4,7 @@ import * as universalethers from "ethers";
 import type { Abi } from "abitype";
 import type { AccessList, Hex, TransactionSerializable } from "viem";
 import type { ThirdwebClient } from "../client/client.js";
-import type { Account, Wallet } from "../wallets/interfaces/wallet.js";
+import type { Account } from "../wallets/interfaces/wallet.js";
 import { defineChain, getRpcUrlForChain } from "../chains/utils.js";
 import type { Chain } from "../chains/types.js";
 import { getContract, type ThirdwebContract } from "../contract/contract.js";
@@ -111,7 +111,7 @@ export const ethers5Adapter = /* @__PURE__ */ (() => {
       /**
        * Converts a Thirdweb wallet to an ethers.js signer.
        * @param client - The thirdweb client.
-       * @param wallet - The thirdweb wallet.
+       * @param account - The account.
        * @returns A promise that resolves to an ethers.js signer.
        * @example
        * ```ts
@@ -119,8 +119,8 @@ export const ethers5Adapter = /* @__PURE__ */ (() => {
        * const signer = await ethers5Adapter.signer.toEthers(client, chain, account);
        * ```
        */
-      toEthers: (client: ThirdwebClient, wallet: Wallet) =>
-        toEthersSigner(ethers, client, wallet),
+      toEthers: (client: ThirdwebClient, account: Account) =>
+        toEthersSigner(ethers, client, account),
     },
   };
 })();
@@ -243,17 +243,8 @@ async function fromEthersSigner(signer: ethers5.Signer): Promise<Account> {
 async function toEthersSigner(
   ethers: Ethers5,
   client: ThirdwebClient,
-  wallet: Wallet,
+  account: Account,
 ) {
-  const account = wallet.getAccount();
-  const chain = wallet.getChain();
-  if (!chain) {
-    throw new Error("Chain not found");
-  }
-  if (!account) {
-    throw new Error("Account not found");
-  }
-
   class ThirdwebAdapterSigner extends ethers.Signer {
     override getAddress(): Promise<string> {
       if (!account) {
