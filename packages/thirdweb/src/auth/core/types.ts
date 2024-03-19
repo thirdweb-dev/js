@@ -1,8 +1,10 @@
 import type { ThirdwebClient } from "../../client/client.js";
+import type { Account } from "../../wallets/interfaces/wallet.js";
 
 export type AuthOptions = {
   domain: string;
   client?: ThirdwebClient;
+  adminAccount?: Account;
   login?: {
     payloadExpirationTimeSeconds?: number;
     statement?: string;
@@ -13,6 +15,13 @@ export type AuthOptions = {
     };
     uri?: string;
     resources?: string[];
+  };
+  jwt?: {
+    expirationTimeSeconds?: number;
+    jwtId?: {
+      generate: () => string | Promise<string>;
+      validate: (jwtId: string) => boolean | Promise<boolean>;
+    };
   };
 };
 

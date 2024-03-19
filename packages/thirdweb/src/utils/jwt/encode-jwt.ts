@@ -16,7 +16,7 @@ export type JWTPayloadInput = {
   ctx?: any;
 };
 
-type BuildJWTParams = { payload: JWTPayloadInput; account: Account };
+type EncodeJWTParams = { payload: JWTPayloadInput; account: Account };
 
 /**
  * Builds a JSON Web Token (JWT) using the provided options.
@@ -44,16 +44,20 @@ type BuildJWTParams = { payload: JWTPayloadInput; account: Account };
  * });
  * ```
  */
-export async function encodeJWT(options: BuildJWTParams) {
-  const payload = ensureJWTPayload(options.payload);
+export async function encodeJWT(options: EncodeJWTParams) {
+  const payload = await ensureJWTPayload(options.payload);
   const message = JSON.stringify(payload);
 
   const signature = await options.account.signMessage({ message });
 
   const encodedData = uint8ArrayToBase64(
     stringToBytes(JSON.stringify(payload)),
+    { urlSafe: true },
   );
-  const encodedSignature = uint8ArrayToBase64(stringToBytes(signature));
+
+  const encodedSignature = uint8ArrayToBase64(stringToBytes(signature), {
+    urlSafe: true,
+  });
 
   // Generate a JWT with base64 encoded header, payload, and signature
   return `${PRECOMPILED_B64_ENCODED_JWT_HEADER}.${encodedData}.${encodedSignature}`;

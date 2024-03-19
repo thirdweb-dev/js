@@ -14,7 +14,7 @@ export type GenerateLoginPayloadParams = {
  * Generates a login payload based on the provided options.
  * @param options - The authentication options.
  * @returns A function that accepts login payload parameters and returns a promise that resolves to a login payload.
- * @example TODO
+ * @internal
  */
 export function generateLoginPayload(options: AuthOptions) {
   return async function ({
