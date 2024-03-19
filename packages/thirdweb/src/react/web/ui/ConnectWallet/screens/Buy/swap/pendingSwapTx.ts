@@ -7,7 +7,6 @@ import { wait } from "../../../../../../../utils/promise/wait.js";
 
 type SwapTxInfo = {
   transactionHash: string;
-  txExplorerLink: string;
   status: "PENDING" | "COMPLETED" | "FAILED";
   from: {
     symbol: string;
