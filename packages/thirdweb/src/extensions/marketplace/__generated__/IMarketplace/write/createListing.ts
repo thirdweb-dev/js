@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "createListing" function.
  */
-export type CreateListingParams = {
+
+type CreateListingParamsInternal = {
   params: AbiParameterToPrimitiveType<{
     type: "tuple";
     name: "_params";
@@ -23,6 +25,12 @@ export type CreateListingParams = {
   }>;
 };
 
+export type CreateListingParams = Prettify<
+  | CreateListingParamsInternal
+  | {
+      asyncParams: () => Promise<CreateListingParamsInternal>;
+    }
+>;
 /**
  * Calls the "createListing" function on the contract.
  * @param options - The options for the "createListing" function.
@@ -94,6 +102,13 @@ export function createListing(
       ],
       [],
     ],
-    params: [options.params],
+    params: async () => {
+      if ("asyncParams" in options) {
+        const resolvedParams = await options.asyncParams();
+        return [resolvedParams.params] as const;
+      }
+
+      return [options.params] as const;
+    },
   });
 }

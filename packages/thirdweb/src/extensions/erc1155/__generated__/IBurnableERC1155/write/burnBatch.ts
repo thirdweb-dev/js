@@ -1,16 +1,24 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "burnBatch" function.
  */
-export type BurnBatchParams = {
+
+type BurnBatchParamsInternal = {
   account: AbiParameterToPrimitiveType<{ type: "address"; name: "account" }>;
   ids: AbiParameterToPrimitiveType<{ type: "uint256[]"; name: "ids" }>;
   values: AbiParameterToPrimitiveType<{ type: "uint256[]"; name: "values" }>;
 };
 
+export type BurnBatchParams = Prettify<
+  | BurnBatchParamsInternal
+  | {
+      asyncParams: () => Promise<BurnBatchParamsInternal>;
+    }
+>;
 /**
  * Calls the "burnBatch" function on the contract.
  * @param options - The options for the "burnBatch" function.
@@ -52,6 +60,17 @@ export function burnBatch(options: BaseTransactionOptions<BurnBatchParams>) {
       ],
       [],
     ],
-    params: [options.account, options.ids, options.values],
+    params: async () => {
+      if ("asyncParams" in options) {
+        const resolvedParams = await options.asyncParams();
+        return [
+          resolvedParams.account,
+          resolvedParams.ids,
+          resolvedParams.values,
+        ] as const;
+      }
+
+      return [options.account, options.ids, options.values] as const;
+    },
   });
 }

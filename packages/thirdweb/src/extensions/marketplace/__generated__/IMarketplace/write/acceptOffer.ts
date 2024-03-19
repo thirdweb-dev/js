@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "acceptOffer" function.
  */
-export type AcceptOfferParams = {
+
+type AcceptOfferParamsInternal = {
   listingId: AbiParameterToPrimitiveType<{
     type: "uint256";
     name: "_listingId";
@@ -18,6 +20,12 @@ export type AcceptOfferParams = {
   }>;
 };
 
+export type AcceptOfferParams = Prettify<
+  | AcceptOfferParamsInternal
+  | {
+      asyncParams: () => Promise<AcceptOfferParamsInternal>;
+    }
+>;
 /**
  * Calls the "acceptOffer" function on the contract.
  * @param options - The options for the "acceptOffer" function.
@@ -66,11 +74,23 @@ export function acceptOffer(
       ],
       [],
     ],
-    params: [
-      options.listingId,
-      options.offeror,
-      options.currency,
-      options.totalPrice,
-    ],
+    params: async () => {
+      if ("asyncParams" in options) {
+        const resolvedParams = await options.asyncParams();
+        return [
+          resolvedParams.listingId,
+          resolvedParams.offeror,
+          resolvedParams.currency,
+          resolvedParams.totalPrice,
+        ] as const;
+      }
+
+      return [
+        options.listingId,
+        options.offeror,
+        options.currency,
+        options.totalPrice,
+      ] as const;
+    },
   });
 }

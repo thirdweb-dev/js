@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "createRuleThreshold" function.
  */
-export type CreateRuleThresholdParams = {
+
+type CreateRuleThresholdParamsInternal = {
   rule: AbiParameterToPrimitiveType<{
     type: "tuple";
     name: "rule";
@@ -19,6 +21,12 @@ export type CreateRuleThresholdParams = {
   }>;
 };
 
+export type CreateRuleThresholdParams = Prettify<
+  | CreateRuleThresholdParamsInternal
+  | {
+      asyncParams: () => Promise<CreateRuleThresholdParamsInternal>;
+    }
+>;
 /**
  * Calls the "createRuleThreshold" function on the contract.
  * @param options - The options for the "createRuleThreshold" function.
@@ -79,6 +87,13 @@ export function createRuleThreshold(
         },
       ],
     ],
-    params: [options.rule],
+    params: async () => {
+      if ("asyncParams" in options) {
+        const resolvedParams = await options.asyncParams();
+        return [resolvedParams.rule] as const;
+      }
+
+      return [options.rule] as const;
+    },
   });
 }

@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "permit" function.
  */
-export type PermitParams = {
+
+type PermitParamsInternal = {
   owner: AbiParameterToPrimitiveType<{ type: "address"; name: "owner" }>;
   spender: AbiParameterToPrimitiveType<{ type: "address"; name: "spender" }>;
   value: AbiParameterToPrimitiveType<{ type: "uint256"; name: "value" }>;
@@ -15,6 +17,12 @@ export type PermitParams = {
   s: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "s" }>;
 };
 
+export type PermitParams = Prettify<
+  | PermitParamsInternal
+  | {
+      asyncParams: () => Promise<PermitParamsInternal>;
+    }
+>;
 /**
  * Calls the "permit" function on the contract.
  * @param options - The options for the "permit" function.
@@ -76,14 +84,29 @@ export function permit(options: BaseTransactionOptions<PermitParams>) {
       ],
       [],
     ],
-    params: [
-      options.owner,
-      options.spender,
-      options.value,
-      options.deadline,
-      options.v,
-      options.r,
-      options.s,
-    ],
+    params: async () => {
+      if ("asyncParams" in options) {
+        const resolvedParams = await options.asyncParams();
+        return [
+          resolvedParams.owner,
+          resolvedParams.spender,
+          resolvedParams.value,
+          resolvedParams.deadline,
+          resolvedParams.v,
+          resolvedParams.r,
+          resolvedParams.s,
+        ] as const;
+      }
+
+      return [
+        options.owner,
+        options.spender,
+        options.value,
+        options.deadline,
+        options.v,
+        options.r,
+        options.s,
+      ] as const;
+    },
   });
 }

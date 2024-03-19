@@ -1,5 +1,4 @@
 import type { FileOrBufferOrString } from "../../../storage/upload/types.js";
-import { prepareContractCall } from "../../../transaction/prepare-contract-call.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import {
   getBaseUriFromBatch,
@@ -7,6 +6,7 @@ import {
 } from "../../../utils/ipfs.js";
 import type { Prettify } from "../../../utils/type-utils.js";
 import { nextTokenIdToMint } from "../__generated__/IERC721Enumerable/read/nextTokenIdToMint.js";
+import { lazyMint as generatedLazyMint } from "../__generated__/ILazyMint/write/lazyMint.js";
 
 /**
  * Represents the input data for creating an NFT (Non-Fungible Token).
@@ -52,32 +52,9 @@ export type LazyMintParams = {
 export async function lazyMint(
   options: BaseTransactionOptions<LazyMintParams>,
 ) {
-  return prepareContractCall({
+  return generatedLazyMint({
     contract: options.contract,
-    method: [
-      "0xd37c353b",
-      [
-        {
-          type: "uint256",
-          name: "amount",
-        },
-        {
-          type: "string",
-          name: "baseURIForTokens",
-        },
-        {
-          type: "bytes",
-          name: "extraData",
-        },
-      ],
-      [
-        {
-          type: "uint256",
-          name: "batchId",
-        },
-      ],
-    ],
-    params: async () => {
+    asyncParams: async () => {
       const startFileNumber = await nextTokenIdToMint({
         contract: options.contract,
       });
@@ -91,12 +68,11 @@ export async function lazyMint(
 
       const baseUri = getBaseUriFromBatch(batchOfUris);
 
-      return [
-        BigInt(batchOfUris.length),
-        baseUri.endsWith("/") ? baseUri : `${baseUri}/`,
-        // extra data: empty
-        "0x",
-      ] as const;
+      return {
+        amount: BigInt(batchOfUris.length),
+        baseURIForTokens: baseUri.endsWith("/") ? baseUri : `${baseUri}/`,
+        extraData: "0x",
+      } as const;
     },
   });
 }

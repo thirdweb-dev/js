@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "deposit" function.
  */
-export type DepositParams = {
+
+type DepositParamsInternal = {
   assets: AbiParameterToPrimitiveType<{
     name: "assets";
     type: "uint256";
@@ -18,6 +20,12 @@ export type DepositParams = {
   }>;
 };
 
+export type DepositParams = Prettify<
+  | DepositParamsInternal
+  | {
+      asyncParams: () => Promise<DepositParamsInternal>;
+    }
+>;
 /**
  * Calls the "deposit" function on the contract.
  * @param options - The options for the "deposit" function.
@@ -62,6 +70,13 @@ export function deposit(options: BaseTransactionOptions<DepositParams>) {
         },
       ],
     ],
-    params: [options.assets, options.receiver],
+    params: async () => {
+      if ("asyncParams" in options) {
+        const resolvedParams = await options.asyncParams();
+        return [resolvedParams.assets, resolvedParams.receiver] as const;
+      }
+
+      return [options.assets, options.receiver] as const;
+    },
   });
 }

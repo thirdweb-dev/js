@@ -1,15 +1,23 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "mintTo" function.
  */
-export type MintToParams = {
+
+type MintToParamsInternal = {
   to: AbiParameterToPrimitiveType<{ type: "address"; name: "to" }>;
   amount: AbiParameterToPrimitiveType<{ type: "uint256"; name: "amount" }>;
 };
 
+export type MintToParams = Prettify<
+  | MintToParamsInternal
+  | {
+      asyncParams: () => Promise<MintToParamsInternal>;
+    }
+>;
 /**
  * Calls the "mintTo" function on the contract.
  * @param options - The options for the "mintTo" function.
@@ -46,6 +54,13 @@ export function mintTo(options: BaseTransactionOptions<MintToParams>) {
       ],
       [],
     ],
-    params: [options.to, options.amount],
+    params: async () => {
+      if ("asyncParams" in options) {
+        const resolvedParams = await options.asyncParams();
+        return [resolvedParams.to, resolvedParams.amount] as const;
+      }
+
+      return [options.to, options.amount] as const;
+    },
   });
 }

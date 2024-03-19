@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "exactInputSingle" function.
  */
-export type ExactInputSingleParams = {
+
+type ExactInputSingleParamsInternal = {
   params: AbiParameterToPrimitiveType<{
     type: "tuple";
     name: "params";
@@ -22,6 +24,12 @@ export type ExactInputSingleParams = {
   }>;
 };
 
+export type ExactInputSingleParams = Prettify<
+  | ExactInputSingleParamsInternal
+  | {
+      asyncParams: () => Promise<ExactInputSingleParamsInternal>;
+    }
+>;
 /**
  * Calls the "exactInputSingle" function on the contract.
  * @param options - The options for the "exactInputSingle" function.
@@ -94,6 +102,13 @@ export function exactInputSingle(
         },
       ],
     ],
-    params: [options.params],
+    params: async () => {
+      if ("asyncParams" in options) {
+        const resolvedParams = await options.asyncParams();
+        return [resolvedParams.params] as const;
+      }
+
+      return [options.params] as const;
+    },
   });
 }

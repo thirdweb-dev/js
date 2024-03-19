@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "delegateBySig" function.
  */
-export type DelegateBySigParams = {
+
+type DelegateBySigParamsInternal = {
   delegatee: AbiParameterToPrimitiveType<{
     type: "address";
     name: "delegatee";
@@ -17,6 +19,12 @@ export type DelegateBySigParams = {
   s: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "s" }>;
 };
 
+export type DelegateBySigParams = Prettify<
+  | DelegateBySigParamsInternal
+  | {
+      asyncParams: () => Promise<DelegateBySigParamsInternal>;
+    }
+>;
 /**
  * Calls the "delegateBySig" function on the contract.
  * @param options - The options for the "delegateBySig" function.
@@ -75,13 +83,27 @@ export function delegateBySig(
       ],
       [],
     ],
-    params: [
-      options.delegatee,
-      options.nonce,
-      options.expiry,
-      options.v,
-      options.r,
-      options.s,
-    ],
+    params: async () => {
+      if ("asyncParams" in options) {
+        const resolvedParams = await options.asyncParams();
+        return [
+          resolvedParams.delegatee,
+          resolvedParams.nonce,
+          resolvedParams.expiry,
+          resolvedParams.v,
+          resolvedParams.r,
+          resolvedParams.s,
+        ] as const;
+      }
+
+      return [
+        options.delegatee,
+        options.nonce,
+        options.expiry,
+        options.v,
+        options.r,
+        options.s,
+      ] as const;
+    },
   });
 }

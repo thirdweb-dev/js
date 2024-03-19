@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "safeBatchTransferFrom" function.
  */
-export type SafeBatchTransferFromParams = {
+
+type SafeBatchTransferFromParamsInternal = {
   from: AbiParameterToPrimitiveType<{ type: "address"; name: "_from" }>;
   to: AbiParameterToPrimitiveType<{ type: "address"; name: "_to" }>;
   tokenIds: AbiParameterToPrimitiveType<{
@@ -16,6 +18,12 @@ export type SafeBatchTransferFromParams = {
   data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "_data" }>;
 };
 
+export type SafeBatchTransferFromParams = Prettify<
+  | SafeBatchTransferFromParamsInternal
+  | {
+      asyncParams: () => Promise<SafeBatchTransferFromParamsInternal>;
+    }
+>;
 /**
  * Calls the "safeBatchTransferFrom" function on the contract.
  * @param options - The options for the "safeBatchTransferFrom" function.
@@ -69,12 +77,25 @@ export function safeBatchTransferFrom(
       ],
       [],
     ],
-    params: [
-      options.from,
-      options.to,
-      options.tokenIds,
-      options.values,
-      options.data,
-    ],
+    params: async () => {
+      if ("asyncParams" in options) {
+        const resolvedParams = await options.asyncParams();
+        return [
+          resolvedParams.from,
+          resolvedParams.to,
+          resolvedParams.tokenIds,
+          resolvedParams.values,
+          resolvedParams.data,
+        ] as const;
+      }
+
+      return [
+        options.from,
+        options.to,
+        options.tokenIds,
+        options.values,
+        options.data,
+      ] as const;
+    },
   });
 }

@@ -1,15 +1,23 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "rent" function.
  */
-export type RentParams = {
+
+type RentParamsInternal = {
   fid: AbiParameterToPrimitiveType<{ type: "uint256"; name: "fid" }>;
   units: AbiParameterToPrimitiveType<{ type: "uint256"; name: "units" }>;
 };
 
+export type RentParams = Prettify<
+  | RentParamsInternal
+  | {
+      asyncParams: () => Promise<RentParamsInternal>;
+    }
+>;
 /**
  * Calls the "rent" function on the contract.
  * @param options - The options for the "rent" function.
@@ -51,6 +59,13 @@ export function rent(options: BaseTransactionOptions<RentParams>) {
         },
       ],
     ],
-    params: [options.fid, options.units],
+    params: async () => {
+      if ("asyncParams" in options) {
+        const resolvedParams = await options.asyncParams();
+        return [resolvedParams.fid, resolvedParams.units] as const;
+      }
+
+      return [options.fid, options.units] as const;
+    },
   });
 }

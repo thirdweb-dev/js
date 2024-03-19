@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "updateListing" function.
  */
-export type UpdateListingParams = {
+
+type UpdateListingParamsInternal = {
   listingId: AbiParameterToPrimitiveType<{
     type: "uint256";
     name: "_listingId";
@@ -26,6 +28,12 @@ export type UpdateListingParams = {
   }>;
 };
 
+export type UpdateListingParams = Prettify<
+  | UpdateListingParamsInternal
+  | {
+      asyncParams: () => Promise<UpdateListingParamsInternal>;
+    }
+>;
 /**
  * Calls the "updateListing" function on the contract.
  * @param options - The options for the "updateListing" function.
@@ -98,6 +106,13 @@ export function updateListing(
       ],
       [],
     ],
-    params: [options.listingId, options.params],
+    params: async () => {
+      if ("asyncParams" in options) {
+        const resolvedParams = await options.asyncParams();
+        return [resolvedParams.listingId, resolvedParams.params] as const;
+      }
+
+      return [options.listingId, options.params] as const;
+    },
   });
 }

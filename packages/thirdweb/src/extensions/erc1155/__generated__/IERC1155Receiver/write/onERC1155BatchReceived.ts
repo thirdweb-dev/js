@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "onERC1155BatchReceived" function.
  */
-export type OnERC1155BatchReceivedParams = {
+
+type OnERC1155BatchReceivedParamsInternal = {
   operator: AbiParameterToPrimitiveType<{ type: "address"; name: "operator" }>;
   from: AbiParameterToPrimitiveType<{ type: "address"; name: "from" }>;
   ids: AbiParameterToPrimitiveType<{ type: "uint256[]"; name: "ids" }>;
@@ -13,6 +15,12 @@ export type OnERC1155BatchReceivedParams = {
   data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "data" }>;
 };
 
+export type OnERC1155BatchReceivedParams = Prettify<
+  | OnERC1155BatchReceivedParamsInternal
+  | {
+      asyncParams: () => Promise<OnERC1155BatchReceivedParamsInternal>;
+    }
+>;
 /**
  * Calls the "onERC1155BatchReceived" function on the contract.
  * @param options - The options for the "onERC1155BatchReceived" function.
@@ -70,12 +78,25 @@ export function onERC1155BatchReceived(
         },
       ],
     ],
-    params: [
-      options.operator,
-      options.from,
-      options.ids,
-      options.values,
-      options.data,
-    ],
+    params: async () => {
+      if ("asyncParams" in options) {
+        const resolvedParams = await options.asyncParams();
+        return [
+          resolvedParams.operator,
+          resolvedParams.from,
+          resolvedParams.ids,
+          resolvedParams.values,
+          resolvedParams.data,
+        ] as const;
+      }
+
+      return [
+        options.operator,
+        options.from,
+        options.ids,
+        options.values,
+        options.data,
+      ] as const;
+    },
   });
 }

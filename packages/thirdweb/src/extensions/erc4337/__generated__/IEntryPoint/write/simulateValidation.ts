@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "simulateValidation" function.
  */
-export type SimulateValidationParams = {
+
+type SimulateValidationParamsInternal = {
   userOp: AbiParameterToPrimitiveType<{
     type: "tuple";
     name: "userOp";
@@ -25,6 +27,12 @@ export type SimulateValidationParams = {
   }>;
 };
 
+export type SimulateValidationParams = Prettify<
+  | SimulateValidationParamsInternal
+  | {
+      asyncParams: () => Promise<SimulateValidationParamsInternal>;
+    }
+>;
 /**
  * Calls the "simulateValidation" function on the contract.
  * @param options - The options for the "simulateValidation" function.
@@ -104,6 +112,13 @@ export function simulateValidation(
       ],
       [],
     ],
-    params: [options.userOp],
+    params: async () => {
+      if ("asyncParams" in options) {
+        const resolvedParams = await options.asyncParams();
+        return [resolvedParams.userOp] as const;
+      }
+
+      return [options.userOp] as const;
+    },
   });
 }

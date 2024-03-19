@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "quoteExactOutput" function.
  */
-export type QuoteExactOutputParams = {
+
+type QuoteExactOutputParamsInternal = {
   path: AbiParameterToPrimitiveType<{ type: "bytes"; name: "path" }>;
   amountOut: AbiParameterToPrimitiveType<{
     type: "uint256";
@@ -13,6 +15,12 @@ export type QuoteExactOutputParams = {
   }>;
 };
 
+export type QuoteExactOutputParams = Prettify<
+  | QuoteExactOutputParamsInternal
+  | {
+      asyncParams: () => Promise<QuoteExactOutputParamsInternal>;
+    }
+>;
 /**
  * Calls the "quoteExactOutput" function on the contract.
  * @param options - The options for the "quoteExactOutput" function.
@@ -56,6 +64,13 @@ export function quoteExactOutput(
         },
       ],
     ],
-    params: [options.path, options.amountOut],
+    params: async () => {
+      if ("asyncParams" in options) {
+        const resolvedParams = await options.asyncParams();
+        return [resolvedParams.path, resolvedParams.amountOut] as const;
+      }
+
+      return [options.path, options.amountOut] as const;
+    },
   });
 }

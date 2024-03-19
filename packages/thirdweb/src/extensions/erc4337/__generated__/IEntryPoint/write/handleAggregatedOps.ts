@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "handleAggregatedOps" function.
  */
-export type HandleAggregatedOpsParams = {
+
+type HandleAggregatedOpsParamsInternal = {
   opsPerAggregator: AbiParameterToPrimitiveType<{
     type: "tuple[]";
     name: "opsPerAggregator";
@@ -37,6 +39,12 @@ export type HandleAggregatedOpsParams = {
   }>;
 };
 
+export type HandleAggregatedOpsParams = Prettify<
+  | HandleAggregatedOpsParamsInternal
+  | {
+      asyncParams: () => Promise<HandleAggregatedOpsParamsInternal>;
+    }
+>;
 /**
  * Calls the "handleAggregatedOps" function on the contract.
  * @param options - The options for the "handleAggregatedOps" function.
@@ -135,6 +143,16 @@ export function handleAggregatedOps(
       ],
       [],
     ],
-    params: [options.opsPerAggregator, options.beneficiary],
+    params: async () => {
+      if ("asyncParams" in options) {
+        const resolvedParams = await options.asyncParams();
+        return [
+          resolvedParams.opsPerAggregator,
+          resolvedParams.beneficiary,
+        ] as const;
+      }
+
+      return [options.opsPerAggregator, options.beneficiary] as const;
+    },
   });
 }
