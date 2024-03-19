@@ -5,6 +5,21 @@ import type { ThirdwebClient } from "../../../../client/client.js";
  * Props taken by the for the [`MediaRenderer`](https://portal.thirdweb.com/references/typescript/v5/MediaRenderer) component
  */
 export type MediaRendererProps = {
+  /**
+   * A client is the entry point to the thirdweb SDK.
+   * It is required for all other actions.
+   * You can create a client using the `createThirdwebClient` function. Refer to the [Creating a Client](https://portal.thirdweb.com/typescript/v5/client) documentation for more information.
+   *
+   * You must provide a `clientId` or `secretKey` in order to initialize a client. Pass `clientId` if you want for client-side usage and `secretKey` for server-side usage.
+   *
+   * ```tsx
+   * import { createThirdwebClient } from "thirdweb";
+   *
+   * const client = createThirdwebClient({
+   *  clientId: "<your_client_id>",
+   * })
+   * ```
+   */
   client: ThirdwebClient;
 
   /**
