@@ -12,12 +12,6 @@ export default {
   "faucets": [
     "https://faucet.antofy.io"
   ],
-  "icon": {
-    "url": "ipfs://QmdTfku81ohnG9ECU1Xswmeumt678cBhwHWuFYZ7i1Qsto",
-    "width": 400,
-    "height": 400,
-    "format": "png"
-  },
   "infoURL": "https://antofy.io",
   "name": "Antofy Mainnet",
   "nativeCurrency": {
