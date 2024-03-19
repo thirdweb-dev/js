@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "remove" function.
  */
-export type RemoveParams = {
+
+type RemoveParamsInternal = {
   deployer: AbiParameterToPrimitiveType<{ type: "address"; name: "_deployer" }>;
   deployment: AbiParameterToPrimitiveType<{
     type: "address";
@@ -14,6 +16,12 @@ export type RemoveParams = {
   chainId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_chainId" }>;
 };
 
+export type RemoveParams = Prettify<
+  | RemoveParamsInternal
+  | {
+      asyncParams: () => Promise<RemoveParamsInternal>;
+    }
+>;
 /**
  * Calls the "remove" function on the contract.
  * @param options - The options for the "remove" function.
@@ -55,6 +63,17 @@ export function remove(options: BaseTransactionOptions<RemoveParams>) {
       ],
       [],
     ],
-    params: [options.deployer, options.deployment, options.chainId],
+    params: async () => {
+      if ("asyncParams" in options) {
+        const resolvedParams = await options.asyncParams();
+        return [
+          resolvedParams.deployer,
+          resolvedParams.deployment,
+          resolvedParams.chainId,
+        ] as const;
+      }
+
+      return [options.deployer, options.deployment, options.chainId] as const;
+    },
   });
 }

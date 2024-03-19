@@ -1,16 +1,24 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "createPool" function.
  */
-export type CreatePoolParams = {
+
+type CreatePoolParamsInternal = {
   tokenA: AbiParameterToPrimitiveType<{ type: "address"; name: "tokenA" }>;
   tokenB: AbiParameterToPrimitiveType<{ type: "address"; name: "tokenB" }>;
   fee: AbiParameterToPrimitiveType<{ type: "uint24"; name: "fee" }>;
 };
 
+export type CreatePoolParams = Prettify<
+  | CreatePoolParamsInternal
+  | {
+      asyncParams: () => Promise<CreatePoolParamsInternal>;
+    }
+>;
 /**
  * Calls the "createPool" function on the contract.
  * @param options - The options for the "createPool" function.
@@ -57,6 +65,17 @@ export function createPool(options: BaseTransactionOptions<CreatePoolParams>) {
         },
       ],
     ],
-    params: [options.tokenA, options.tokenB, options.fee],
+    params: async () => {
+      if ("asyncParams" in options) {
+        const resolvedParams = await options.asyncParams();
+        return [
+          resolvedParams.tokenA,
+          resolvedParams.tokenB,
+          resolvedParams.fee,
+        ] as const;
+      }
+
+      return [options.tokenA, options.tokenB, options.fee] as const;
+    },
   });
 }

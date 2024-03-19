@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "registerFor" function.
  */
-export type RegisterForParams = {
+
+type RegisterForParamsInternal = {
   to: AbiParameterToPrimitiveType<{ type: "address"; name: "to" }>;
   recovery: AbiParameterToPrimitiveType<{ type: "address"; name: "recovery" }>;
   deadline: AbiParameterToPrimitiveType<{ type: "uint256"; name: "deadline" }>;
@@ -16,6 +18,12 @@ export type RegisterForParams = {
   }>;
 };
 
+export type RegisterForParams = Prettify<
+  | RegisterForParamsInternal
+  | {
+      asyncParams: () => Promise<RegisterForParamsInternal>;
+    }
+>;
 /**
  * Calls the "registerFor" function on the contract.
  * @param options - The options for the "registerFor" function.
@@ -78,12 +86,25 @@ export function registerFor(
         },
       ],
     ],
-    params: [
-      options.to,
-      options.recovery,
-      options.deadline,
-      options.sig,
-      options.extraStorage,
-    ],
+    params: async () => {
+      if ("asyncParams" in options) {
+        const resolvedParams = await options.asyncParams();
+        return [
+          resolvedParams.to,
+          resolvedParams.recovery,
+          resolvedParams.deadline,
+          resolvedParams.sig,
+          resolvedParams.extraStorage,
+        ] as const;
+      }
+
+      return [
+        options.to,
+        options.recovery,
+        options.deadline,
+        options.sig,
+        options.extraStorage,
+      ] as const;
+    },
   });
 }

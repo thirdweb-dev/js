@@ -1,17 +1,25 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "setPrimarySaleRecipient" function.
  */
-export type SetPrimarySaleRecipientParams = {
+
+type SetPrimarySaleRecipientParamsInternal = {
   saleRecipient: AbiParameterToPrimitiveType<{
     type: "address";
     name: "_saleRecipient";
   }>;
 };
 
+export type SetPrimarySaleRecipientParams = Prettify<
+  | SetPrimarySaleRecipientParamsInternal
+  | {
+      asyncParams: () => Promise<SetPrimarySaleRecipientParamsInternal>;
+    }
+>;
 /**
  * Calls the "setPrimarySaleRecipient" function on the contract.
  * @param options - The options for the "setPrimarySaleRecipient" function.
@@ -45,6 +53,13 @@ export function setPrimarySaleRecipient(
       ],
       [],
     ],
-    params: [options.saleRecipient],
+    params: async () => {
+      if ("asyncParams" in options) {
+        const resolvedParams = await options.asyncParams();
+        return [resolvedParams.saleRecipient] as const;
+      }
+
+      return [options.saleRecipient] as const;
+    },
   });
 }

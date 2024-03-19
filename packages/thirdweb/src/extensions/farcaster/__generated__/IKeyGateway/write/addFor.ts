@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "addFor" function.
  */
-export type AddForParams = {
+
+type AddForParamsInternal = {
   fidOwner: AbiParameterToPrimitiveType<{ type: "address"; name: "fidOwner" }>;
   keyType: AbiParameterToPrimitiveType<{ type: "uint32"; name: "keyType" }>;
   key: AbiParameterToPrimitiveType<{ type: "bytes"; name: "key" }>;
@@ -18,6 +20,12 @@ export type AddForParams = {
   sig: AbiParameterToPrimitiveType<{ type: "bytes"; name: "sig" }>;
 };
 
+export type AddForParams = Prettify<
+  | AddForParamsInternal
+  | {
+      asyncParams: () => Promise<AddForParamsInternal>;
+    }
+>;
 /**
  * Calls the "addFor" function on the contract.
  * @param options - The options for the "addFor" function.
@@ -79,14 +87,29 @@ export function addFor(options: BaseTransactionOptions<AddForParams>) {
       ],
       [],
     ],
-    params: [
-      options.fidOwner,
-      options.keyType,
-      options.key,
-      options.metadataType,
-      options.metadata,
-      options.deadline,
-      options.sig,
-    ],
+    params: async () => {
+      if ("asyncParams" in options) {
+        const resolvedParams = await options.asyncParams();
+        return [
+          resolvedParams.fidOwner,
+          resolvedParams.keyType,
+          resolvedParams.key,
+          resolvedParams.metadataType,
+          resolvedParams.metadata,
+          resolvedParams.deadline,
+          resolvedParams.sig,
+        ] as const;
+      }
+
+      return [
+        options.fidOwner,
+        options.keyType,
+        options.key,
+        options.metadataType,
+        options.metadata,
+        options.deadline,
+        options.sig,
+      ] as const;
+    },
   });
 }

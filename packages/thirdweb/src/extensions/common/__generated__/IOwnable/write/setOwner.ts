@@ -1,14 +1,22 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "setOwner" function.
  */
-export type SetOwnerParams = {
+
+type SetOwnerParamsInternal = {
   newOwner: AbiParameterToPrimitiveType<{ type: "address"; name: "_newOwner" }>;
 };
 
+export type SetOwnerParams = Prettify<
+  | SetOwnerParamsInternal
+  | {
+      asyncParams: () => Promise<SetOwnerParamsInternal>;
+    }
+>;
 /**
  * Calls the "setOwner" function on the contract.
  * @param options - The options for the "setOwner" function.
@@ -40,6 +48,13 @@ export function setOwner(options: BaseTransactionOptions<SetOwnerParams>) {
       ],
       [],
     ],
-    params: [options.newOwner],
+    params: async () => {
+      if ("asyncParams" in options) {
+        const resolvedParams = await options.asyncParams();
+        return [resolvedParams.newOwner] as const;
+      }
+
+      return [options.newOwner] as const;
+    },
   });
 }

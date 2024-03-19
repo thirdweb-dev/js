@@ -1,17 +1,25 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "transferAndChangeRecovery" function.
  */
-export type TransferAndChangeRecoveryParams = {
+
+type TransferAndChangeRecoveryParamsInternal = {
   to: AbiParameterToPrimitiveType<{ type: "address"; name: "to" }>;
   recovery: AbiParameterToPrimitiveType<{ type: "address"; name: "recovery" }>;
   deadline: AbiParameterToPrimitiveType<{ type: "uint256"; name: "deadline" }>;
   sig: AbiParameterToPrimitiveType<{ type: "bytes"; name: "sig" }>;
 };
 
+export type TransferAndChangeRecoveryParams = Prettify<
+  | TransferAndChangeRecoveryParamsInternal
+  | {
+      asyncParams: () => Promise<TransferAndChangeRecoveryParamsInternal>;
+    }
+>;
 /**
  * Calls the "transferAndChangeRecovery" function on the contract.
  * @param options - The options for the "transferAndChangeRecovery" function.
@@ -60,6 +68,23 @@ export function transferAndChangeRecovery(
       ],
       [],
     ],
-    params: [options.to, options.recovery, options.deadline, options.sig],
+    params: async () => {
+      if ("asyncParams" in options) {
+        const resolvedParams = await options.asyncParams();
+        return [
+          resolvedParams.to,
+          resolvedParams.recovery,
+          resolvedParams.deadline,
+          resolvedParams.sig,
+        ] as const;
+      }
+
+      return [
+        options.to,
+        options.recovery,
+        options.deadline,
+        options.sig,
+      ] as const;
+    },
   });
 }

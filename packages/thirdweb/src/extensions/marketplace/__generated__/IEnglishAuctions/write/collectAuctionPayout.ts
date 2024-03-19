@@ -1,17 +1,25 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "collectAuctionPayout" function.
  */
-export type CollectAuctionPayoutParams = {
+
+type CollectAuctionPayoutParamsInternal = {
   auctionId: AbiParameterToPrimitiveType<{
     type: "uint256";
     name: "_auctionId";
   }>;
 };
 
+export type CollectAuctionPayoutParams = Prettify<
+  | CollectAuctionPayoutParamsInternal
+  | {
+      asyncParams: () => Promise<CollectAuctionPayoutParamsInternal>;
+    }
+>;
 /**
  * Calls the "collectAuctionPayout" function on the contract.
  * @param options - The options for the "collectAuctionPayout" function.
@@ -45,6 +53,13 @@ export function collectAuctionPayout(
       ],
       [],
     ],
-    params: [options.auctionId],
+    params: async () => {
+      if ("asyncParams" in options) {
+        const resolvedParams = await options.asyncParams();
+        return [resolvedParams.auctionId] as const;
+      }
+
+      return [options.auctionId] as const;
+    },
   });
 }

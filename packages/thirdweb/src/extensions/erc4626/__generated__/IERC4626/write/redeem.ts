@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "redeem" function.
  */
-export type RedeemParams = {
+
+type RedeemParamsInternal = {
   shares: AbiParameterToPrimitiveType<{
     name: "shares";
     type: "uint256";
@@ -23,6 +25,12 @@ export type RedeemParams = {
   }>;
 };
 
+export type RedeemParams = Prettify<
+  | RedeemParamsInternal
+  | {
+      asyncParams: () => Promise<RedeemParamsInternal>;
+    }
+>;
 /**
  * Calls the "redeem" function on the contract.
  * @param options - The options for the "redeem" function.
@@ -73,6 +81,17 @@ export function redeem(options: BaseTransactionOptions<RedeemParams>) {
         },
       ],
     ],
-    params: [options.shares, options.receiver, options.owner],
+    params: async () => {
+      if ("asyncParams" in options) {
+        const resolvedParams = await options.asyncParams();
+        return [
+          resolvedParams.shares,
+          resolvedParams.receiver,
+          resolvedParams.owner,
+        ] as const;
+      }
+
+      return [options.shares, options.receiver, options.owner] as const;
+    },
   });
 }

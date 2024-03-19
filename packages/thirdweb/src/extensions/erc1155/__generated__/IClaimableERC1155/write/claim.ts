@@ -1,16 +1,24 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "claim" function.
  */
-export type ClaimParams = {
+
+type ClaimParamsInternal = {
   receiver: AbiParameterToPrimitiveType<{ type: "address"; name: "_receiver" }>;
   tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_tokenId" }>;
   quantity: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_quantity" }>;
 };
 
+export type ClaimParams = Prettify<
+  | ClaimParamsInternal
+  | {
+      asyncParams: () => Promise<ClaimParamsInternal>;
+    }
+>;
 /**
  * Calls the "claim" function on the contract.
  * @param options - The options for the "claim" function.
@@ -52,6 +60,17 @@ export function claim(options: BaseTransactionOptions<ClaimParams>) {
       ],
       [],
     ],
-    params: [options.receiver, options.tokenId, options.quantity],
+    params: async () => {
+      if ("asyncParams" in options) {
+        const resolvedParams = await options.asyncParams();
+        return [
+          resolvedParams.receiver,
+          resolvedParams.tokenId,
+          resolvedParams.quantity,
+        ] as const;
+      }
+
+      return [options.receiver, options.tokenId, options.quantity] as const;
+    },
   });
 }

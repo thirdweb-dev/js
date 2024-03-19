@@ -1,14 +1,22 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "incrementNonce" function.
  */
-export type IncrementNonceParams = {
+
+type IncrementNonceParamsInternal = {
   key: AbiParameterToPrimitiveType<{ type: "uint192"; name: "key" }>;
 };
 
+export type IncrementNonceParams = Prettify<
+  | IncrementNonceParamsInternal
+  | {
+      asyncParams: () => Promise<IncrementNonceParamsInternal>;
+    }
+>;
 /**
  * Calls the "incrementNonce" function on the contract.
  * @param options - The options for the "incrementNonce" function.
@@ -42,6 +50,13 @@ export function incrementNonce(
       ],
       [],
     ],
-    params: [options.key],
+    params: async () => {
+      if ("asyncParams" in options) {
+        const resolvedParams = await options.asyncParams();
+        return [resolvedParams.key] as const;
+      }
+
+      return [options.key] as const;
+    },
   });
 }

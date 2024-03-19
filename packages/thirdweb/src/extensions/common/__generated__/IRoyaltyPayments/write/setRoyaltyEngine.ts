@@ -1,17 +1,25 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "setRoyaltyEngine" function.
  */
-export type SetRoyaltyEngineParams = {
+
+type SetRoyaltyEngineParamsInternal = {
   royaltyEngineAddress: AbiParameterToPrimitiveType<{
     type: "address";
     name: "_royaltyEngineAddress";
   }>;
 };
 
+export type SetRoyaltyEngineParams = Prettify<
+  | SetRoyaltyEngineParamsInternal
+  | {
+      asyncParams: () => Promise<SetRoyaltyEngineParamsInternal>;
+    }
+>;
 /**
  * Calls the "setRoyaltyEngine" function on the contract.
  * @param options - The options for the "setRoyaltyEngine" function.
@@ -45,6 +53,13 @@ export function setRoyaltyEngine(
       ],
       [],
     ],
-    params: [options.royaltyEngineAddress],
+    params: async () => {
+      if ("asyncParams" in options) {
+        const resolvedParams = await options.asyncParams();
+        return [resolvedParams.royaltyEngineAddress] as const;
+      }
+
+      return [options.royaltyEngineAddress] as const;
+    },
   });
 }

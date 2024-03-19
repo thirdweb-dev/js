@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "exactOutput" function.
  */
-export type ExactOutputParams = {
+
+type ExactOutputParamsInternal = {
   params: AbiParameterToPrimitiveType<{
     type: "tuple";
     name: "params";
@@ -19,6 +21,12 @@ export type ExactOutputParams = {
   }>;
 };
 
+export type ExactOutputParams = Prettify<
+  | ExactOutputParamsInternal
+  | {
+      asyncParams: () => Promise<ExactOutputParamsInternal>;
+    }
+>;
 /**
  * Calls the "exactOutput" function on the contract.
  * @param options - The options for the "exactOutput" function.
@@ -79,6 +87,13 @@ export function exactOutput(
         },
       ],
     ],
-    params: [options.params],
+    params: async () => {
+      if ("asyncParams" in options) {
+        const resolvedParams = await options.asyncParams();
+        return [resolvedParams.params] as const;
+      }
+
+      return [options.params] as const;
+    },
   });
 }

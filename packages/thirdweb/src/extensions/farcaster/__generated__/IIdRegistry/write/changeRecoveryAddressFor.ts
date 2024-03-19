@@ -1,17 +1,25 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "changeRecoveryAddressFor" function.
  */
-export type ChangeRecoveryAddressForParams = {
+
+type ChangeRecoveryAddressForParamsInternal = {
   owner: AbiParameterToPrimitiveType<{ type: "address"; name: "owner" }>;
   recovery: AbiParameterToPrimitiveType<{ type: "address"; name: "recovery" }>;
   deadline: AbiParameterToPrimitiveType<{ type: "uint256"; name: "deadline" }>;
   sig: AbiParameterToPrimitiveType<{ type: "bytes"; name: "sig" }>;
 };
 
+export type ChangeRecoveryAddressForParams = Prettify<
+  | ChangeRecoveryAddressForParamsInternal
+  | {
+      asyncParams: () => Promise<ChangeRecoveryAddressForParamsInternal>;
+    }
+>;
 /**
  * Calls the "changeRecoveryAddressFor" function on the contract.
  * @param options - The options for the "changeRecoveryAddressFor" function.
@@ -60,6 +68,23 @@ export function changeRecoveryAddressFor(
       ],
       [],
     ],
-    params: [options.owner, options.recovery, options.deadline, options.sig],
+    params: async () => {
+      if ("asyncParams" in options) {
+        const resolvedParams = await options.asyncParams();
+        return [
+          resolvedParams.owner,
+          resolvedParams.recovery,
+          resolvedParams.deadline,
+          resolvedParams.sig,
+        ] as const;
+      }
+
+      return [
+        options.owner,
+        options.recovery,
+        options.deadline,
+        options.sig,
+      ] as const;
+    },
   });
 }

@@ -21,6 +21,5 @@ export function claimRewards(options: BaseTransactionOptions) {
   return prepareContractCall({
     contract: options.contract,
     method: ["0x372500ab", [], []],
-    params: [],
   });
 }

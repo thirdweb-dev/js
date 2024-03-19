@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "handleOps" function.
  */
-export type HandleOpsParams = {
+
+type HandleOpsParamsInternal = {
   ops: AbiParameterToPrimitiveType<{
     type: "tuple[]";
     name: "ops";
@@ -29,6 +31,12 @@ export type HandleOpsParams = {
   }>;
 };
 
+export type HandleOpsParams = Prettify<
+  | HandleOpsParamsInternal
+  | {
+      asyncParams: () => Promise<HandleOpsParamsInternal>;
+    }
+>;
 /**
  * Calls the "handleOps" function on the contract.
  * @param options - The options for the "handleOps" function.
@@ -111,6 +119,13 @@ export function handleOps(options: BaseTransactionOptions<HandleOpsParams>) {
       ],
       [],
     ],
-    params: [options.ops, options.beneficiary],
+    params: async () => {
+      if ("asyncParams" in options) {
+        const resolvedParams = await options.asyncParams();
+        return [resolvedParams.ops, resolvedParams.beneficiary] as const;
+      }
+
+      return [options.ops, options.beneficiary] as const;
+    },
   });
 }

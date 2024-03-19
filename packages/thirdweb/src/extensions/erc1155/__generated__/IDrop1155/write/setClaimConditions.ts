@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "setClaimConditions" function.
  */
-export type SetClaimConditionsParams = {
+
+type SetClaimConditionsParamsInternal = {
   tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
   phases: AbiParameterToPrimitiveType<{
     type: "tuple[]";
@@ -27,6 +29,12 @@ export type SetClaimConditionsParams = {
   }>;
 };
 
+export type SetClaimConditionsParams = Prettify<
+  | SetClaimConditionsParamsInternal
+  | {
+      asyncParams: () => Promise<SetClaimConditionsParamsInternal>;
+    }
+>;
 /**
  * Calls the "setClaimConditions" function on the contract.
  * @param options - The options for the "setClaimConditions" function.
@@ -104,6 +112,21 @@ export function setClaimConditions(
       ],
       [],
     ],
-    params: [options.tokenId, options.phases, options.resetClaimEligibility],
+    params: async () => {
+      if ("asyncParams" in options) {
+        const resolvedParams = await options.asyncParams();
+        return [
+          resolvedParams.tokenId,
+          resolvedParams.phases,
+          resolvedParams.resetClaimEligibility,
+        ] as const;
+      }
+
+      return [
+        options.tokenId,
+        options.phases,
+        options.resetClaimEligibility,
+      ] as const;
+    },
   });
 }
