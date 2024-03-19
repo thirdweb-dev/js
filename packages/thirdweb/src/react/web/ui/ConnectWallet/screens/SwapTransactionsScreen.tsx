@@ -23,9 +23,13 @@ import { useBuyWithCryptoHistory } from "../../../../core/hooks/pay/useBuyWithCr
 import { BuyIcon } from "../icons/BuyIcon.js";
 import { CryptoIcon } from "../icons/CryptoIcon.js";
 import { Skeleton } from "../../components/Skeleton.js";
-import type { BuyWithCryptoStatuses } from "../../../../../pay/buyWithCrypto/actions/getStatus.js";
+import type {
+  BuyWithCryptoStatuses,
+  BuyWithCryptoSubStatuses,
+} from "../../../../../pay/buyWithCrypto/actions/getStatus.js";
 import { defineChain } from "../../../../../chains/utils.js";
 import { swapTransactionsStore } from "./Buy/swap/pendingSwapTx.js";
+import { formatNumber } from "../../../../core/utils/formatNumber.js";
 
 type TxStatusInfo = {
   fromChainId: number;
@@ -33,6 +37,7 @@ type TxStatusInfo = {
   boughtTokenAmount: string;
   boughtTokenSymbol: string;
   status: BuyWithCryptoStatuses;
+  subStatus?: BuyWithCryptoSubStatuses;
 };
 
 const PAGE_SIZE = 10;
@@ -44,12 +49,10 @@ export function SwapTransactionsScreen(props: { onBack: () => void }) {
   const [pageIndex, setPageIndex] = useState(0);
   const _historyQuery = useSwapTransactions(pageIndex);
 
-  const swapTxs = useSyncExternalStore(
+  const inMemoryPendingTxs = useSyncExternalStore(
     swapTransactionsStore.subscribe,
     swapTransactionsStore.getValue,
   );
-
-  const inMemoryPendingTxs = swapTxs.filter((tx) => tx.status === "PENDING");
 
   const txInfosToShow: TxStatusInfo[] = [];
 
@@ -82,6 +85,7 @@ export function SwapTransactionsScreen(props: { onBack: () => void }) {
       boughtTokenAmount: tx.quote.toAmount,
       boughtTokenSymbol: tx.quote.toToken.symbol || "",
       status: tx.status,
+      subStatus: tx.subStatus,
     });
   });
 
@@ -252,6 +256,7 @@ function TransactionInfo(props: { txInfo: TxStatusInfo }) {
   const fromChain = useMemo(() => defineChain(fromChainId), [fromChainId]);
 
   const chainQuery = useChainQuery(fromChain);
+  const statusMeta = getStatusMeta(status, props.txInfo.subStatus);
 
   return (
     <TxHashLink
@@ -288,7 +293,7 @@ function TransactionInfo(props: { txInfo: TxStatusInfo }) {
           >
             <Text color="primaryText"> Buy</Text>
             <Text size="sm" color="primaryText">
-              + {Number(boughtTokenAmount).toFixed(3)} {boughtTokenSymbol}
+              + {formatNumber(Number(boughtTokenAmount), 4)} {boughtTokenSymbol}
             </Text>{" "}
           </Container>
 
@@ -305,23 +310,10 @@ function TransactionInfo(props: { txInfo: TxStatusInfo }) {
           >
             {/* Status */}
             <Container flex="row" gap="xxs" center="y">
-              <Text
-                size="sm"
-                color={
-                  status === "PENDING"
-                    ? "accentText"
-                    : status === "COMPLETED"
-                      ? "success"
-                      : "danger"
-                }
-              >
-                {status === "COMPLETED"
-                  ? "Completed"
-                  : status === "PENDING"
-                    ? "Pending"
-                    : "Failed"}
+              <Text size="sm" color={statusMeta.color}>
+                {statusMeta.status}
               </Text>
-              {status === "PENDING" && <Spinner size="xs" color="accentText" />}
+              {statusMeta.loading && <Spinner size="xs" color="accentText" />}
             </Container>
 
             {/* Network */}
@@ -368,3 +360,45 @@ const TxHashLink = /* @__PURE__ */ StyledAnchor(() => {
     height: "68px",
   };
 });
+
+function getStatusMeta(
+  status: BuyWithCryptoStatuses,
+  subStatus?: BuyWithCryptoSubStatuses,
+) {
+  if (subStatus === "WAITING_BRIDGE") {
+    return {
+      status: "Bridging",
+      color: "accentText",
+      loading: true,
+    } as const;
+  }
+
+  if (status === "PENDING") {
+    return {
+      status: "Pending",
+      color: "accentText",
+      loading: true,
+    } as const;
+  }
+
+  if (status === "FAILED") {
+    return {
+      status: "Failed",
+      color: "danger",
+      loading: false,
+    } as const;
+  }
+
+  if (status === "COMPLETED") {
+    return {
+      status: "Completed",
+      color: "success",
+      loading: false,
+    } as const;
+  }
+
+  return {
+    status: "Unknown",
+    color: "secondaryText",
+  } as const;
+}

@@ -1,13 +1,18 @@
 import { track } from "../../../../../../../analytics/track.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/actions/getQuote.js";
-import { getBuyWithCryptoStatus } from "../../../../../../../pay/buyWithCrypto/actions/getStatus.js";
+import {
+  getBuyWithCryptoStatus,
+  type BuyWithCryptoStatuses,
+  type BuyWithCryptoSubStatuses,
+} from "../../../../../../../pay/buyWithCrypto/actions/getStatus.js";
 import { createStore } from "../../../../../../../reactive/store.js";
 import { wait } from "../../../../../../../utils/promise/wait.js";
 
 type SwapTxInfo = {
   transactionHash: string;
-  status: "PENDING" | "COMPLETED" | "FAILED";
+  status: BuyWithCryptoStatuses;
+  subStatus?: BuyWithCryptoSubStatuses;
   from: {
     symbol: string;
     value: string;
@@ -72,6 +77,7 @@ export const addPendingSwapTransaction = (
           updatedValue[indexAdded] = {
             ...oldValue,
             status: res.status,
+            subStatus: res.subStatus,
           };
 
           swapTransactionsStore.setValue(updatedValue);

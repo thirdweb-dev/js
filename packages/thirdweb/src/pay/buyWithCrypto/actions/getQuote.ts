@@ -247,7 +247,12 @@ export async function getBuyWithCryptoQuote(
     // Assuming the response directly matches the SwapResponse interface
     if (!response.ok) {
       const errorObj = await response.json();
-      if (errorObj && "error" in errorObj && "message" in errorObj.error) {
+      if (
+        errorObj &&
+        "error" in errorObj &&
+        typeof errorObj.error === "object" &&
+        "message" in errorObj.error
+      ) {
         throw new Error(errorObj.error.message);
       }
       throw new Error(`HTTP error! status: ${response.status}`);
