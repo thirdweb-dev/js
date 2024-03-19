@@ -1,7 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
   "chain": "Avalanche",
-  "chainId": 91041,
+  "chainId": 44850,
   "explorers": [],
   "faucets": [],
   "features": [],
@@ -15,16 +15,16 @@ export default {
   "name": "QI0318I1 Testnet",
   "nativeCurrency": {
     "name": "QI0318I1 Testnet Token",
-    "symbol": "DVN",
+    "symbol": "WJN",
     "decimals": 18
   },
-  "networkId": 91041,
+  "networkId": 44850,
   "redFlags": [],
   "rpc": [
-    "https://91041.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://44850.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/defi-kingdoms/dfk-chain/rpc"
   ],
   "shortName": "QI0318I1 Testnet",
-  "slug": "qi0318i1-testnet-qi0318i1 testnet",
+  "slug": "qi0318i1-testnet",
   "testnet": true
 } as const satisfies Chain;
