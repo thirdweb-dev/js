@@ -1,8 +1,9 @@
 import type { Address } from "abitype";
 import { toUnits } from "../../../utils/units.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
-import { prepareContractCall } from "../../../transaction/prepare-contract-call.js";
+
 import type { Prettify } from "../../../utils/type-utils.js";
+import { transferFrom as generatedTransferFrom } from "../__generated__/IERC20/write/transferFrom.js";
 /**
  * Represents the parameters for the `transferFrom` function.
  */
@@ -37,24 +38,9 @@ export type TransferFromParams = Prettify<
 export function transferFrom(
   options: BaseTransactionOptions<TransferFromParams>,
 ) {
-  return prepareContractCall({
-    ...options,
-    method: [
-      "0x23b872dd",
-      [
-        {
-          type: "address",
-        },
-        {
-          type: "address",
-        },
-        {
-          type: "uint256",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
+  return generatedTransferFrom({
+    contract: options.contract,
+    asyncParams: async () => {
       let amount: bigint;
       if ("amount" in options) {
         // if we need to parse the amount from ether to gwei then we pull in the decimals extension
@@ -66,7 +52,11 @@ export function transferFrom(
       } else {
         amount = options.amountWei;
       }
-      return [options.from, options.to, amount] as const;
+      return {
+        from: options.from,
+        to: options.to,
+        value: amount,
+      } as const;
     },
   });
 }

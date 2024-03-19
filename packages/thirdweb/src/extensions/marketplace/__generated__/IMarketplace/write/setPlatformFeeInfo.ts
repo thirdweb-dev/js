@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "setPlatformFeeInfo" function.
  */
-export type SetPlatformFeeInfoParams = {
+
+type SetPlatformFeeInfoParamsInternal = {
   platformFeeRecipient: AbiParameterToPrimitiveType<{
     type: "address";
     name: "_platformFeeRecipient";
@@ -16,6 +18,12 @@ export type SetPlatformFeeInfoParams = {
   }>;
 };
 
+export type SetPlatformFeeInfoParams = Prettify<
+  | SetPlatformFeeInfoParamsInternal
+  | {
+      asyncParams: () => Promise<SetPlatformFeeInfoParamsInternal>;
+    }
+>;
 /**
  * Calls the "setPlatformFeeInfo" function on the contract.
  * @param options - The options for the "setPlatformFeeInfo" function.
@@ -54,6 +62,16 @@ export function setPlatformFeeInfo(
       ],
       [],
     ],
-    params: [options.platformFeeRecipient, options.platformFeeBps],
+    params: async () => {
+      if ("asyncParams" in options) {
+        const resolvedParams = await options.asyncParams();
+        return [
+          resolvedParams.platformFeeRecipient,
+          resolvedParams.platformFeeBps,
+        ] as const;
+      }
+
+      return [options.platformFeeRecipient, options.platformFeeBps] as const;
+    },
   });
 }

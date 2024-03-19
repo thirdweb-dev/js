@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "enableFeeAmount" function.
  */
-export type EnableFeeAmountParams = {
+
+type EnableFeeAmountParamsInternal = {
   fee: AbiParameterToPrimitiveType<{ type: "uint24"; name: "fee" }>;
   tickSpacing: AbiParameterToPrimitiveType<{
     type: "int24";
@@ -13,6 +15,12 @@ export type EnableFeeAmountParams = {
   }>;
 };
 
+export type EnableFeeAmountParams = Prettify<
+  | EnableFeeAmountParamsInternal
+  | {
+      asyncParams: () => Promise<EnableFeeAmountParamsInternal>;
+    }
+>;
 /**
  * Calls the "enableFeeAmount" function on the contract.
  * @param options - The options for the "enableFeeAmount" function.
@@ -51,6 +59,13 @@ export function enableFeeAmount(
       ],
       [],
     ],
-    params: [options.fee, options.tickSpacing],
+    params: async () => {
+      if ("asyncParams" in options) {
+        const resolvedParams = await options.asyncParams();
+        return [resolvedParams.fee, resolvedParams.tickSpacing] as const;
+      }
+
+      return [options.fee, options.tickSpacing] as const;
+    },
   });
 }

@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "setDefaultRoyaltyInfo" function.
  */
-export type SetDefaultRoyaltyInfoParams = {
+
+type SetDefaultRoyaltyInfoParamsInternal = {
   royaltyRecipient: AbiParameterToPrimitiveType<{
     type: "address";
     name: "_royaltyRecipient";
@@ -16,6 +18,12 @@ export type SetDefaultRoyaltyInfoParams = {
   }>;
 };
 
+export type SetDefaultRoyaltyInfoParams = Prettify<
+  | SetDefaultRoyaltyInfoParamsInternal
+  | {
+      asyncParams: () => Promise<SetDefaultRoyaltyInfoParamsInternal>;
+    }
+>;
 /**
  * Calls the "setDefaultRoyaltyInfo" function on the contract.
  * @param options - The options for the "setDefaultRoyaltyInfo" function.
@@ -54,6 +62,16 @@ export function setDefaultRoyaltyInfo(
       ],
       [],
     ],
-    params: [options.royaltyRecipient, options.royaltyBps],
+    params: async () => {
+      if ("asyncParams" in options) {
+        const resolvedParams = await options.asyncParams();
+        return [
+          resolvedParams.royaltyRecipient,
+          resolvedParams.royaltyBps,
+        ] as const;
+      }
+
+      return [options.royaltyRecipient, options.royaltyBps] as const;
+    },
   });
 }

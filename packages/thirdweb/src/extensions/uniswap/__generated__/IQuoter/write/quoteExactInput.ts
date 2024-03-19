@@ -1,15 +1,23 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "quoteExactInput" function.
  */
-export type QuoteExactInputParams = {
+
+type QuoteExactInputParamsInternal = {
   path: AbiParameterToPrimitiveType<{ type: "bytes"; name: "path" }>;
   amountIn: AbiParameterToPrimitiveType<{ type: "uint256"; name: "amountIn" }>;
 };
 
+export type QuoteExactInputParams = Prettify<
+  | QuoteExactInputParamsInternal
+  | {
+      asyncParams: () => Promise<QuoteExactInputParamsInternal>;
+    }
+>;
 /**
  * Calls the "quoteExactInput" function on the contract.
  * @param options - The options for the "quoteExactInput" function.
@@ -53,6 +61,13 @@ export function quoteExactInput(
         },
       ],
     ],
-    params: [options.path, options.amountIn],
+    params: async () => {
+      if ("asyncParams" in options) {
+        const resolvedParams = await options.asyncParams();
+        return [resolvedParams.path, resolvedParams.amountIn] as const;
+      }
+
+      return [options.path, options.amountIn] as const;
+    },
   });
 }

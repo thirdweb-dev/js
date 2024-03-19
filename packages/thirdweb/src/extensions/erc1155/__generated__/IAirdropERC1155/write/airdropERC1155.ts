@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "airdropERC1155" function.
  */
-export type AirdropERC1155Params = {
+
+type AirdropERC1155ParamsInternal = {
   tokenAddress: AbiParameterToPrimitiveType<{
     type: "address";
     name: "tokenAddress";
@@ -25,6 +27,12 @@ export type AirdropERC1155Params = {
   }>;
 };
 
+export type AirdropERC1155Params = Prettify<
+  | AirdropERC1155ParamsInternal
+  | {
+      asyncParams: () => Promise<AirdropERC1155ParamsInternal>;
+    }
+>;
 /**
  * Calls the "airdropERC1155" function on the contract.
  * @param options - The options for the "airdropERC1155" function.
@@ -82,6 +90,21 @@ export function airdropERC1155(
       ],
       [],
     ],
-    params: [options.tokenAddress, options.tokenOwner, options.contents],
+    params: async () => {
+      if ("asyncParams" in options) {
+        const resolvedParams = await options.asyncParams();
+        return [
+          resolvedParams.tokenAddress,
+          resolvedParams.tokenOwner,
+          resolvedParams.contents,
+        ] as const;
+      }
+
+      return [
+        options.tokenAddress,
+        options.tokenOwner,
+        options.contents,
+      ] as const;
+    },
   });
 }

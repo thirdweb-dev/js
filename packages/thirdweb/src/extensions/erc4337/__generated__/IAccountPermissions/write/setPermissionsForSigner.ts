@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "setPermissionsForSigner" function.
  */
-export type SetPermissionsForSignerParams = {
+
+type SetPermissionsForSignerParamsInternal = {
   req: AbiParameterToPrimitiveType<{
     type: "tuple";
     name: "req";
@@ -24,6 +26,12 @@ export type SetPermissionsForSignerParams = {
   signature: AbiParameterToPrimitiveType<{ type: "bytes"; name: "signature" }>;
 };
 
+export type SetPermissionsForSignerParams = Prettify<
+  | SetPermissionsForSignerParamsInternal
+  | {
+      asyncParams: () => Promise<SetPermissionsForSignerParamsInternal>;
+    }
+>;
 /**
  * Calls the "setPermissionsForSigner" function on the contract.
  * @param options - The options for the "setPermissionsForSigner" function.
@@ -100,6 +108,13 @@ export function setPermissionsForSigner(
       ],
       [],
     ],
-    params: [options.req, options.signature],
+    params: async () => {
+      if ("asyncParams" in options) {
+        const resolvedParams = await options.asyncParams();
+        return [resolvedParams.req, resolvedParams.signature] as const;
+      }
+
+      return [options.req, options.signature] as const;
+    },
   });
 }

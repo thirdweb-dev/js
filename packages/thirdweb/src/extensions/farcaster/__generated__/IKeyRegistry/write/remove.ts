@@ -1,14 +1,22 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "remove" function.
  */
-export type RemoveParams = {
+
+type RemoveParamsInternal = {
   key: AbiParameterToPrimitiveType<{ type: "bytes"; name: "key" }>;
 };
 
+export type RemoveParams = Prettify<
+  | RemoveParamsInternal
+  | {
+      asyncParams: () => Promise<RemoveParamsInternal>;
+    }
+>;
 /**
  * Calls the "remove" function on the contract.
  * @param options - The options for the "remove" function.
@@ -40,6 +48,13 @@ export function remove(options: BaseTransactionOptions<RemoveParams>) {
       ],
       [],
     ],
-    params: [options.key],
+    params: async () => {
+      if ("asyncParams" in options) {
+        const resolvedParams = await options.asyncParams();
+        return [resolvedParams.key] as const;
+      }
+
+      return [options.key] as const;
+    },
   });
 }

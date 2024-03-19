@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "createPack" function.
  */
-export type CreatePackParams = {
+
+type CreatePackParamsInternal = {
   contents: AbiParameterToPrimitiveType<{
     type: "tuple[]";
     name: "contents";
@@ -35,6 +37,12 @@ export type CreatePackParams = {
   }>;
 };
 
+export type CreatePackParams = Prettify<
+  | CreatePackParamsInternal
+  | {
+      asyncParams: () => Promise<CreatePackParamsInternal>;
+    }
+>;
 /**
  * Calls the "createPack" function on the contract.
  * @param options - The options for the "createPack" function.
@@ -118,13 +126,27 @@ export function createPack(options: BaseTransactionOptions<CreatePackParams>) {
         },
       ],
     ],
-    params: [
-      options.contents,
-      options.numOfRewardUnits,
-      options.packUri,
-      options.openStartTimestamp,
-      options.amountDistributedPerOpen,
-      options.recipient,
-    ],
+    params: async () => {
+      if ("asyncParams" in options) {
+        const resolvedParams = await options.asyncParams();
+        return [
+          resolvedParams.contents,
+          resolvedParams.numOfRewardUnits,
+          resolvedParams.packUri,
+          resolvedParams.openStartTimestamp,
+          resolvedParams.amountDistributedPerOpen,
+          resolvedParams.recipient,
+        ] as const;
+      }
+
+      return [
+        options.contents,
+        options.numOfRewardUnits,
+        options.packUri,
+        options.openStartTimestamp,
+        options.amountDistributedPerOpen,
+        options.recipient,
+      ] as const;
+    },
   });
 }

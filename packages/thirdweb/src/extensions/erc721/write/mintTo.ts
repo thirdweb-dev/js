@@ -1,7 +1,7 @@
 import type { FileOrBufferOrString } from "../../../storage/upload/types.js";
-import { prepareContractCall } from "../../../transaction/prepare-contract-call.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import type { Prettify } from "../../../utils/type-utils.js";
+import { mintTo as generatedMintTo } from "../__generated__/IMintableERC721/write/mintTo.js";
 /**
  * Represents the input data for creating an NFT (Non-Fungible Token).
  */
@@ -45,21 +45,9 @@ export type MintToParams = {
  * ```
  */
 export function mintTo(options: BaseTransactionOptions<MintToParams>) {
-  return prepareContractCall({
+  return generatedMintTo({
     contract: options.contract,
-    method: [
-  "0x0075a317",
-  [
-    {
-      "type": "address"
-    },
-    {
-      "type": "string"
-    }
-  ],
-  []
-],
-    params: async () => {
+    asyncParams: async () => {
       let tokenUri: string;
 
       if (typeof options.nft === "string") {
@@ -77,7 +65,10 @@ export function mintTo(options: BaseTransactionOptions<MintToParams>) {
           })
         )[0] as string;
       }
-      return [options.to, tokenUri] as const;
+      return {
+        to: options.to,
+        uri: tokenUri,
+      } as const;
     },
   });
 }
