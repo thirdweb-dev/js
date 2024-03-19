@@ -1,0 +1,21 @@
+[
+  "event Add(uint256 indexed fid, uint32 indexed keyType, bytes indexed key, bytes keyBytes, uint8 metadataType, bytes metadata)",
+  "event Remove(uint256 indexed fid, bytes indexed key, bytes keyBytes)",
+  "event AdminReset(uint256 indexed fid, bytes indexed key, bytes keyBytes)",
+  "event SetValidator(uint32 keyType, uint8 metadataType, address oldValidator, address newValidator)",
+  "event SetIdRegistry(address oldIdRegistry, address newIdRegistry)",
+  "event SetKeyGateway(address oldKeyGateway, address newKeyGateway)",
+  "event SetMaxKeysPerFid(uint256 oldMax, uint256 newMax)",
+  "event FreezeKeyGateway(address keyGateway)",
+  "function REMOVE_TYPEHASH() external view returns (bytes32)",
+  "function idRegistry() external view returns (address)",
+  "function keyGateway() external view returns (address)",
+  "function gatewayFrozen() external view returns (bool)",
+  "function maxKeysPerFid() external view returns (uint256)",
+  "function totalKeys(uint256 fid, uint8 state) external view returns (uint256)",
+  "function keyAt(uint256 fid, uint8 state, uint256 index) external view returns (bytes)",
+  "function keysOf(uint256 fid, uint8 state) external view returns (bytes[])",
+  "function keyDataOf(uint256 fid, bytes calldata key) external view returns (address)",
+  "function remove(bytes calldata key) external",
+  "function removeFor(address fidOwner, bytes calldata key, uint256 deadline, bytes calldata sig) external"
+]

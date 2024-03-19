@@ -1,0 +1,9 @@
+[
+  "event SetStorageRegistry(address oldStorageRegistry, address newStorageRegistry)",
+  "function REGISTER_TYPEHASH() external view returns (bytes32)",
+  "function idRegistry() external view returns (address)",
+  "function storageRegistry() external view returns (address)",
+  "function price(uint256 extraStorage) external view returns (uint256)",
+  "function register(address recovery, uint256 extraStorage) external payable returns (uint256 fid, uint256 overpayment)",
+  "function registerFor(address to, address recovery, uint256 deadline, bytes calldata sig, uint256 extraStorage) external payable returns (uint256 fid, uint256 overpayment)"
+]

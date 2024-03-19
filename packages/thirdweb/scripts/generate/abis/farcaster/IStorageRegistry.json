@@ -1,0 +1,10 @@
+[
+  "function deprecationTimestamp() external view returns (uint256)",
+  "function usdUnitPrice() external view returns (uint256)",
+  "function maxUnits() external view returns (uint256)",
+  "function rentedUnits() external view returns (uint256)",
+  "function rent(uint256 fid, uint256 units) external payable returns (uint256 overpayment)",
+  "function batchRent(uint256[] calldata fids, uint256[] calldata units) external payable",
+  "function unitPrice() external view returns (uint256)",
+  "function price(uint256 units) external view returns (uint256)"
+]

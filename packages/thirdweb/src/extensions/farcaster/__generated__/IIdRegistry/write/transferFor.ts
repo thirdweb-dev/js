@@ -1,0 +1,90 @@
+import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
+import type { AbiParameterToPrimitiveType } from "abitype";
+
+/**
+ * Represents the parameters for the "transferFor" function.
+ */
+export type TransferForParams = {
+  from: AbiParameterToPrimitiveType<{ type: "address"; name: "from" }>;
+  to: AbiParameterToPrimitiveType<{ type: "address"; name: "to" }>;
+  fromDeadline: AbiParameterToPrimitiveType<{
+    type: "uint256";
+    name: "fromDeadline";
+  }>;
+  fromSig: AbiParameterToPrimitiveType<{ type: "bytes"; name: "fromSig" }>;
+  toDeadline: AbiParameterToPrimitiveType<{
+    type: "uint256";
+    name: "toDeadline";
+  }>;
+  toSig: AbiParameterToPrimitiveType<{ type: "bytes"; name: "toSig" }>;
+};
+
+/**
+ * Calls the "transferFor" function on the contract.
+ * @param options - The options for the "transferFor" function.
+ * @returns A prepared transaction object.
+ * @extension FARCASTER
+ * @example
+ * ```
+ * import { transferFor } from "thirdweb/extensions/farcaster";
+ *
+ * const transaction = transferFor({
+ *  from: ...,
+ *  to: ...,
+ *  fromDeadline: ...,
+ *  fromSig: ...,
+ *  toDeadline: ...,
+ *  toSig: ...,
+ * });
+ *
+ * // Send the transaction
+ * ...
+ *
+ * ```
+ */
+export function transferFor(
+  options: BaseTransactionOptions<TransferForParams>,
+) {
+  return prepareContractCall({
+    contract: options.contract,
+    method: [
+      "0x16f72842",
+      [
+        {
+          type: "address",
+          name: "from",
+        },
+        {
+          type: "address",
+          name: "to",
+        },
+        {
+          type: "uint256",
+          name: "fromDeadline",
+        },
+        {
+          type: "bytes",
+          name: "fromSig",
+        },
+        {
+          type: "uint256",
+          name: "toDeadline",
+        },
+        {
+          type: "bytes",
+          name: "toSig",
+        },
+      ],
+      [],
+    ],
+    params: [
+      options.from,
+      options.to,
+      options.fromDeadline,
+      options.fromSig,
+      options.toDeadline,
+      options.toSig,
+    ],
+  });
+}
