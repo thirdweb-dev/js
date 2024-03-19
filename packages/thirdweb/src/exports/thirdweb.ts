@@ -147,8 +147,8 @@ export { toEther, toTokens, toUnits, toWei } from "../utils/units.js";
 export {
   getBuyWithCryptoQuote,
   type BuyWithCryptoQuote,
-  type QuoteApprovalParams as SwapApprovalParams,
-  type QuoteTokenInfo as SwapTokenInfo,
+  type QuoteApprovalParams,
+  type QuoteTokenInfo,
   type getBuyWithCryptoQuoteParams,
 } from "../pay/buyWithCrypto/actions/getQuote.js";
 
