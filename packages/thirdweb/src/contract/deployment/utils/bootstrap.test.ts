@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { bootstrapOnchainInfra } from "./bootstrap.js";
+import { deployCloneFactory } from "./bootstrap.js";
 import { ANVIL_CHAIN } from "../../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../../test/src/test-clients.js";
 import { TEST_ACCOUNT_A } from "../../../../test/src/test-wallets.js";
@@ -9,7 +9,7 @@ import { fail } from "assert";
 
 describe("bootstrap", () => {
   it("should bootstrap onchain infra", async () => {
-    await bootstrapOnchainInfra({
+    await deployCloneFactory({
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
       account: TEST_ACCOUNT_A,

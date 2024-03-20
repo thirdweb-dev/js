@@ -7,10 +7,7 @@ import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import { TEST_ACCOUNT_A } from "../../../test/src/test-wallets.js";
 import { sendTransaction } from "../../transaction/actions/send-transaction.js";
 import { getDeployedCloneFactoryContract } from "./utils/clone-factory.js";
-import {
-  bootstrapImplementation,
-  bootstrapOnchainInfra,
-} from "./utils/bootstrap.js";
+import { deployImplementation, deployCloneFactory } from "./utils/bootstrap.js";
 import { prepareAutoFactoryDeployTransaction } from "./deploy-via-autofactory.js";
 import { initialize } from "../../extensions/prebuilts/__generated__/DropERC721/write/initialize.js";
 import { getDeployedInfraContract } from "./utils/infra.js";
@@ -65,12 +62,12 @@ describe("deployFromMetadata", () => {
 
   it("should deploy published contract with no existing infra", async () => {
     // bootstrap infra and implementation
-    await bootstrapOnchainInfra({
+    await deployCloneFactory({
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
       account: TEST_ACCOUNT_A,
     });
-    await bootstrapImplementation({
+    await deployImplementation({
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
       account: TEST_ACCOUNT_A,

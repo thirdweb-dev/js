@@ -12,8 +12,9 @@ import {
 
 /**
  * @internal
+ * @returns the deployed clone factory contract
  */
-export async function bootstrapOnchainInfra(options: ClientAndChainAndAccount) {
+export async function deployCloneFactory(options: ClientAndChainAndAccount) {
   // create2 factory
   const create2Factory = await getDeployedCreate2Factory(options);
   if (!create2Factory) {
@@ -28,7 +29,7 @@ export async function bootstrapOnchainInfra(options: ClientAndChainAndAccount) {
   });
 
   // clone factory
-  await getOrDeployInfraContract({
+  return getOrDeployInfraContract({
     ...options,
     contractId: "TWCloneFactory",
     constructorParams: [forwarder.address],
@@ -37,8 +38,9 @@ export async function bootstrapOnchainInfra(options: ClientAndChainAndAccount) {
 
 /**
  * @internal
+ * @returns the deployed infra contract
  */
-export async function bootstrapImplementation(
+export async function deployImplementation(
   options: ClientAndChainAndAccount & {
     contractId: string;
     constructorParams?: unknown[];
@@ -46,7 +48,7 @@ export async function bootstrapImplementation(
     version?: string;
   },
 ) {
-  await getOrDeployInfraContract({
+  return getOrDeployInfraContract({
     ...options,
     contractId: options.contractId,
     constructorParams: options.constructorParams || [],
@@ -56,6 +58,7 @@ export async function bootstrapImplementation(
 }
 
 /**
+ * Convenience function to get or deploy an infra contract
  * @internal
  */
 export async function getOrDeployInfraContract(
