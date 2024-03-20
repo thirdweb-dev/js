@@ -1,24 +1,23 @@
 import type { Chain } from "../src/types";
 export default {
-  "chain": "TOMO",
+  "chain": "Viction",
   "chainId": 89,
   "explorers": [],
   "faucets": [],
-  "infoURL": "https://tomochain.com",
-  "name": "TomoChain Testnet",
+  "infoURL": "https://viction.xyz",
+  "name": "Viction Testnet",
   "nativeCurrency": {
-    "name": "TomoChain",
-    "symbol": "TOMO",
+    "name": "Viction",
+    "symbol": "VIC",
     "decimals": 18
   },
   "networkId": 89,
   "rpc": [
-    "https://tomochain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://89.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.testnet.tomochain.com"
+    "https://rpc-testnet.viction.xyz"
   ],
-  "shortName": "tomot",
+  "shortName": "vict",
   "slip44": 1,
-  "slug": "tomochain-testnet",
+  "slug": "viction-testnet",
   "testnet": true
 } as const satisfies Chain;

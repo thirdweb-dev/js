@@ -20,8 +20,8 @@ export type {
   AbstractWallet,
   WalletData,
   WalletEvents,
-  checkContractWalletSignature,
 } from "./wallets/abstract";
+export { checkContractWalletSignature } from "./connectors/smart-wallet/lib/check-contract-wallet-signature";
 
 export * from "./wallets/paper-wallet";
 // just the types
@@ -86,6 +86,9 @@ export {
   type Coin98AdditionalOptions,
 } from "./wallets/coin98";
 export { getInjectedCoin98Provider } from "./connectors/coin98/getInjectedCoin98Provider";
+
+export * from "./wallets/magic-eden";
+export { getInjectedMagicEdenProvider } from "./connectors/magic-eden/getInjectedMagicEdenProvider";
 
 export type { Chain } from "@thirdweb-dev/chains";
 

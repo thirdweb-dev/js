@@ -28,7 +28,6 @@ export default {
     ]
   },
   "rpc": [
-    "https://arbitrum-sepolia.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://421614.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://sepolia-rollup.arbitrum.io/rpc",
     "https://arbitrum-sepolia.infura.io/v3/${INFURA_API_KEY}"

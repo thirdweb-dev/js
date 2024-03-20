@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 2300,
   "rpc": [
-    "https://bomb-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2300.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.bombchain.com"
   ],

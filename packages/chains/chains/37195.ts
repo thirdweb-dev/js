@@ -21,7 +21,6 @@ export default {
   "networkId": 37195,
   "redFlags": [],
   "rpc": [
-    "https://thari.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://37195.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/thari/testnet/rpc"
   ],

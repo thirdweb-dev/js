@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 647,
   "rpc": [
-    "https://sx-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://647.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.toronto.sx.technology"
   ],

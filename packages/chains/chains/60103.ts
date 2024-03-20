@@ -21,7 +21,6 @@ export default {
   },
   "networkId": 60103,
   "rpc": [
-    "https://thinkium-testnet-chain-103.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://60103.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://test103.thinkiumrpc.net/"
   ],

@@ -23,7 +23,6 @@ export default {
     "chain": "eip155-100000"
   },
   "rpc": [
-    "https://quarkchain-shard-4.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://100005.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-s4-ethapi.quarkchain.io",
     "http://eth-jrpc.mainnet.quarkchain.io:39004"

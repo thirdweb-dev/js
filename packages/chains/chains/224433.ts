@@ -30,7 +30,6 @@ export default {
   },
   "networkId": 224433,
   "rpc": [
-    "https://conet-holesky.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://224433.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://holeskyrpc1.conet.network"
   ],

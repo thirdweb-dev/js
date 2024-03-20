@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 79,
   "rpc": [
-    "https://zenith.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://79.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://dataserver-us-1.zenithchain.co/",
     "https://dataserver-asia-3.zenithchain.co/",

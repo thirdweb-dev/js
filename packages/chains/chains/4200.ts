@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 4200,
   "rpc": [
-    "https://merlin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://4200.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.merlinchain.io"
   ],

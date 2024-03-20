@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 530,
   "rpc": [
-    "https://f-x-core-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://530.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://fx-json-web3.functionx.io:8545"
   ],

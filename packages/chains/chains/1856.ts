@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 1,
   "rpc": [
-    "https://teslafunds.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1856.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://tsfapi.europool.me"
   ],

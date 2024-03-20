@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 831,
   "rpc": [
-    "https://checkdot-blockchain-devnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://831.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://devnet.checkdot.io"
   ],

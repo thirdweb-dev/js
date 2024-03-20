@@ -31,10 +31,11 @@ export default {
   },
   "networkId": 1116,
   "rpc": [
-    "https://core-blockchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1116.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.coredao.org/",
-    "https://rpc-core.icecreamswap.com"
+    "https://rpc-core.icecreamswap.com",
+    "https://core.drpc.org",
+    "wss://core.drpc.org"
   ],
   "shortName": "core",
   "slug": "core-blockchain",

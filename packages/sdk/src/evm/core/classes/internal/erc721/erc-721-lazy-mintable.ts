@@ -1,5 +1,6 @@
 import type {
   NFTMetadata,
+  NFTMetadataInput,
   NFTMetadataOrUri,
 } from "../../../../../core/schema/nft";
 import { detectContractFeature } from "../../../../common/feature-detection/detectContractFeature";
@@ -15,7 +16,7 @@ import type { TransactionResultWithId } from "../../../types";
 import type { ContractWrapper } from "../contract-wrapper";
 import { Transaction } from "../../transactions";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { utils } from "ethers";
+import { BigNumber, BigNumberish, utils } from "ethers";
 import {
   getBaseUriFromBatch,
   uploadOrExtractURIs,
@@ -24,6 +25,7 @@ import type { BaseDelayedRevealERC721 } from "../../../../types/eips";
 import { DelayedReveal } from "../../delayed-reveal";
 import type { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/LazyMint";
 import type { Erc721 } from "../../erc-721";
+import type { DropERC721 } from "@thirdweb-dev/contracts-js";
 
 /**
  * Lazily mint and claim ERC721 NFTs
@@ -155,6 +157,74 @@ export class Erc721LazyMintable implements DetectableFeature {
           }
           return results;
         },
+      });
+    },
+  );
+
+  updateMetadata = /* @__PURE__ */ buildTransactionFunction(
+    async (
+      tokenId: BigNumberish,
+      metadata: NFTMetadataInput,
+      options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+      },
+    ) => {
+      const batchCount = await this.contractWrapper.read("getBaseURICount", []);
+      if (batchCount.eq(0)) {
+        throw new Error(
+          "No base URI set. Please set a base URI before updating metadata",
+        );
+      }
+      const targetTokenId = BigNumber.from(tokenId);
+      let startTokenId = BigNumber.from(0);
+      let endTokenId = BigNumber.from(0);
+      let batchIndex = 0;
+      for (let i = 0; i < batchCount.toNumber(); i++) {
+        batchIndex = i;
+        endTokenId = await this.contractWrapper.read("getBatchIdAtIndex", [
+          batchIndex,
+        ]);
+        if (endTokenId.gt(targetTokenId)) {
+          break;
+        }
+        startTokenId = endTokenId;
+      }
+      // for the entire batch,
+      // 1. download all of the metadata as a list of nft metadata
+      const range = Array.from(
+        { length: endTokenId.sub(startTokenId).toNumber() },
+        (v, k) => k + startTokenId.toNumber(),
+      );
+      const metadatas = await Promise.all(
+        range.map((id) => this.erc721.getTokenMetadata(id)),
+      );
+      // 2. replace the metadata of the tokenId desired
+      const newMetadatas = [];
+      for (let i = 0; i < metadatas.length; i++) {
+        const { id, uri, ...rest } = metadatas[i];
+        if (BigNumber.from(targetTokenId).eq(BigNumber.from(id))) {
+          newMetadatas.push(metadata);
+        } else {
+          void uri; // linter
+          newMetadatas.push(rest);
+        }
+      }
+      // 3. re-upload the entire batch with the correct starting number
+      const batch = await uploadOrExtractURIs(
+        newMetadatas,
+        this.storage,
+        startTokenId.toNumber(),
+        options,
+      );
+      const baseUri = batch[0].substring(0, batch[0].lastIndexOf("/"));
+      // 4. update the base uri for the entire batch
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper as ContractWrapper<DropERC721>, // TODO contract detection
+        method: "updateBatchBaseURI",
+        args: [
+          batchIndex,
+          `${baseUri.endsWith("/") ? baseUri : `${baseUri}/`}`,
+        ],
       });
     },
   );

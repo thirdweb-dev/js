@@ -23,6 +23,7 @@ import { Transaction } from "./transactions";
 
 /**
  * Enables generating ERC20 Tokens with rules and an associated signature, which can then be minted by anyone securely
+ * @erc20
  * @public
  */
 // TODO consolidate into a single class

@@ -33,7 +33,6 @@ export default {
   },
   "networkId": 12020,
   "rpc": [
-    "https://aternos.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://12020.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.aternoschain.com"
   ],

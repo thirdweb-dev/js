@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 1008,
   "rpc": [
-    "https://eurus.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1008.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.eurus.network/"
   ],

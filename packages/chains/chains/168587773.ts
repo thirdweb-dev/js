@@ -37,9 +37,10 @@ export default {
     "chain": "eip155-11155111"
   },
   "rpc": [
-    "https://blast-sepolia-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://168587773.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://sepolia.blast.io"
+    "https://sepolia.blast.io",
+    "https://blast-sepolia.drpc.org",
+    "wss://blast-sepolia.drpc.org"
   ],
   "shortName": "blastsepolia",
   "slug": "blast-sepolia-testnet",

@@ -33,7 +33,6 @@ export default {
   },
   "networkId": 1912,
   "rpc": [
-    "https://ruby-smart-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1912.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rchain.rubychain.io/"
   ],

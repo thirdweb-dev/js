@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 827431,
   "rpc": [
-    "https://curve.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://827431.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.curvescan.io"
   ],

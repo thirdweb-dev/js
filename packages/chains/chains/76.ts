@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 76,
   "rpc": [
-    "https://mix.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://76.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc2.mix-blockchain.org:8647"
   ],

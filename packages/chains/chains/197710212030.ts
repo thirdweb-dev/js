@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 197710212030,
   "rpc": [
-    "https://ntity.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://197710212030.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.ntity.io"
   ],

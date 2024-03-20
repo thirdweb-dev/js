@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 534,
   "rpc": [
-    "https://candle.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://534.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://candle-rpc.com/",
     "https://rpc.cndlchain.com"

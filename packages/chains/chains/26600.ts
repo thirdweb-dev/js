@@ -39,7 +39,6 @@ export default {
   },
   "networkId": 26600,
   "rpc": [
-    "https://hertz-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://26600.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.hertzscan.com"
   ],

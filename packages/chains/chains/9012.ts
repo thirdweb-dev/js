@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 9012,
   "rpc": [
-    "https://berylbit.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://9012.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.berylbit.io"
   ],

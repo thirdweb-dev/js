@@ -29,7 +29,7 @@ type MetamaskConnectorConstructorArg = {
 
 export class MetaMaskConnector extends InjectedConnector {
   readonly id = walletIds.metamask;
-  #UNSTABLE_shimOnConnectSelectAccount: MetaMaskConnectorOptions["UNSTABLE_shimOnConnectSelectAccount"];
+  private _UNSTABLE_shimOnConnectSelectAccount: MetaMaskConnectorOptions["UNSTABLE_shimOnConnectSelectAccount"];
 
   constructor(arg: MetamaskConnectorConstructorArg) {
     const defaultOptions = {
@@ -50,7 +50,7 @@ export class MetaMaskConnector extends InjectedConnector {
       connectorStorage: arg.connectorStorage,
     });
 
-    this.#UNSTABLE_shimOnConnectSelectAccount =
+    this._UNSTABLE_shimOnConnectSelectAccount =
       options.UNSTABLE_shimOnConnectSelectAccount;
   }
 
@@ -73,7 +73,7 @@ export class MetaMaskConnector extends InjectedConnector {
       // `shimDisconnect` is active and account is in disconnected state (flag in storage)
       let account: string | null = null;
       if (
-        this.#UNSTABLE_shimOnConnectSelectAccount &&
+        this._UNSTABLE_shimOnConnectSelectAccount &&
         this.options?.shimDisconnect &&
         !Boolean(this.connectorStorage.getItem(this.shimDisconnectKey))
       ) {

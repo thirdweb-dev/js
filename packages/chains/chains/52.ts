@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 52,
   "rpc": [
-    "https://coinex-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://52.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.coinex.net"
   ],

@@ -23,10 +23,10 @@ export default {
   "networkId": 1001,
   "redFlags": [],
   "rpc": [
-    "https://klaytn-testnet-baobab.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://klaytn-baobab.blockpi.network/v1/rpc/public",
-    "https://api.baobab.klaytn.net:8651"
+    "https://api.baobab.klaytn.net:8651",
+    "https://klaytn-baobab.drpc.org",
+    "wss://klaytn-baobab.drpc.org"
   ],
   "shortName": "Baobab",
   "slip44": 1,

@@ -24,11 +24,12 @@ export default {
   },
   "networkId": 25,
   "rpc": [
-    "https://cronos.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://25.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm.cronos.org",
-    "https://cronos-evm.publicnode.com",
-    "wss://cronos-evm.publicnode.com"
+    "https://cronos-evm-rpc.publicnode.com",
+    "wss://cronos-evm-rpc.publicnode.com",
+    "https://cronos.drpc.org",
+    "wss://cronos.drpc.org"
   ],
   "shortName": "cro",
   "slug": "cronos",

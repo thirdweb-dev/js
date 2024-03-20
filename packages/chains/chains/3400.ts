@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 3400,
   "rpc": [
-    "https://paribu-net.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://3400.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.paribu.network"
   ],

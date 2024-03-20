@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 106,
   "rpc": [
-    "https://velas-evm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://106.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evmexplorer.velas.com/rpc",
     "https://explorer.velas.com/rpc"

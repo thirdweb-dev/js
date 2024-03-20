@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 7484,
   "rpc": [
-    "https://raba-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://7484.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.x.raba.app/",
     "wss://rpc.x.raba.app/ws/"

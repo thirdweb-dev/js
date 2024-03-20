@@ -39,7 +39,6 @@ export default {
   },
   "networkId": 9997,
   "rpc": [
-    "https://altlayer-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://9997.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rollup-api.altlayer.io"
   ],

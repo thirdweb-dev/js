@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 12715,
   "rpc": [
-    "https://rikeza-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://12715.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.rikscan.com"
   ],

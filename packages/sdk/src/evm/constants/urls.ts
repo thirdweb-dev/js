@@ -17,7 +17,10 @@ import { setAnalyticsHeaders } from "../../core/utils/headers";
 function buildDefaultMap(options: SDKOptionsOutput) {
   return options.supportedChains.reduce(
     (previousValue, currentValue) => {
-      previousValue[currentValue.chainId] = currentValue;
+      // don't overwrite existing chains!
+      if (!previousValue[currentValue.chainId]) {
+        previousValue[currentValue.chainId] = currentValue;
+      }
       return previousValue;
     },
     {} as Record<number, ChainInfo>,
@@ -257,7 +260,7 @@ export function getProviderFromRpcUrl(
         typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
           ? ((globalThis as any).APP_BUNDLE_ID as string)
           : undefined;
-      if (!rpcUrl.includes("bundleId")) {
+      if (!rpcUrl.includes("bundleId") && bundleId) {
         rpcUrl = rpcUrl + (bundleId ? `?bundleId=${bundleId}` : "");
       }
     }

@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 3797,
   "rpc": [
-    "https://alveychain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://3797.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://elves-core1.alvey.io",
     "https://elves-core2.alvey.io",

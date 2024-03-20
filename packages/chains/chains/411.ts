@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 411,
   "rpc": [
-    "https://pepe-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://411.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.pepe-chain.vip"
   ],

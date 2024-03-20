@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 8883,
   "rpc": [
-    "https://sapphire-by-unique.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://8883.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-sapphire.unique.network",
     "https://us-rpc-sapphire.unique.network",

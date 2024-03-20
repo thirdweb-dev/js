@@ -104,6 +104,7 @@ import { ExtensionManager } from "../core/classes/extension-manager";
  *   });
  * ```
  *
+ * @contract
  * @public
  */
 export class SmartContract<

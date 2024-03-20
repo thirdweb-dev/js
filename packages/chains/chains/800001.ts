@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 800001,
   "rpc": [
-    "https://octaspace.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://800001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.octa.space",
     "wss://rpc.octa.space"

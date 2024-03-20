@@ -21,7 +21,6 @@ export default {
   "networkId": 19683,
   "redFlags": [],
   "rpc": [
-    "https://st-12-07-v1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://19683.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avacloud-test.io/d26b972e-1832-4d3a-bf7b-d0ce1f4331c2"
   ],

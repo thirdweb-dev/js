@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 217,
   "rpc": [
-    "https://siriusnet-v2.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://217.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc2.siriusnet.io"
   ],

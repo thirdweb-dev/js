@@ -21,7 +21,6 @@ export default {
   "networkId": 82807,
   "redFlags": [],
   "rpc": [
-    "https://zfirst-avacloud-subnet-thirdweb.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://82807.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avacloud-dev.io/f2ea180d-0fda-4b06-9b2e-53a65d3fd789"
   ],

@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 8881,
   "rpc": [
-    "https://quartz-by-unique.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://8881.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-quartz.unique.network",
     "https://quartz.api.onfinality.io/public-ws",

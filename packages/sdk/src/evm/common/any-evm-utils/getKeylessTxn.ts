@@ -3,7 +3,7 @@ import { KeylessTransaction } from "../../types/any-evm/deploy-data";
 
 /**
  * Generate a transaction to be sent with a keyless signer.
- *
+ * @deploy
  * @public
  * @param transaction - Unsigned transaction object
  * @param signature - Signature bytes

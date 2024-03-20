@@ -23,7 +23,6 @@ export default {
     "chain": "eip155-110000"
   },
   "rpc": [
-    "https://quarkchain-devnet-shard-5.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://110006.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://devnet-s5-ethapi.quarkchain.io",
     "http://eth-jrpc.devnet.quarkchain.io:39905"

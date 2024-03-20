@@ -39,7 +39,6 @@ export default {
   },
   "networkId": 473861,
   "rpc": [
-    "https://ultra-pro.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://473861.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.ultraproscan.io"
   ],

@@ -39,7 +39,6 @@ export default {
   },
   "networkId": 56797,
   "rpc": [
-    "https://doid-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://56797.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.testnet.doid.tech"
   ],

@@ -52,7 +52,14 @@ export function authorizeClient(
   if (origin) {
     if (
       // find matching domain, or if all domains allowed
-      domains.find((d) => {
+      // embedded-wallet.thirdweb(-dev).com is automatically allowed
+      // because the rpc is passed from user's domain to embedded-wallet.thirdweb.com iframe for use.
+      // Note this doesn't allow embedded-wallets from being used if it's disabled. The service check that runs after enforces that.
+      [
+        ...domains,
+        "embedded-wallet.thirdweb.com",
+        "embedded-wallet.thirdweb-dev.com",
+      ].find((d) => {
         // if any domain is allowed, we'll return true
         if (d === "*") {
           return true;

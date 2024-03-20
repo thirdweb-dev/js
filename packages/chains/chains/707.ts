@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 707,
   "rpc": [
-    "https://blockchain-station.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://707.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-mainnet.bcsdev.io",
     "wss://rpc-ws-mainnet.bcsdev.io"

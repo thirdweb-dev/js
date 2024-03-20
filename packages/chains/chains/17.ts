@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 17,
   "rpc": [
-    "https://thaichain-2-0-thaifi.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://17.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.thaifi.com"
   ],

@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 39815,
   "rpc": [
-    "https://oho.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://39815.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.oho.ai"
   ],

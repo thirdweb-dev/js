@@ -33,7 +33,6 @@ export default {
     ]
   },
   "rpc": [
-    "https://scroll-sepolia-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://534351.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://sepolia-rpc.scroll.io",
     "https://rpc.ankr.com/scroll_sepolia_testnet",

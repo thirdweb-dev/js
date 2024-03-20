@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 91002,
   "rpc": [
-    "https://nautilus-trition-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://91002.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://triton.api.nautchain.xyz"
   ],

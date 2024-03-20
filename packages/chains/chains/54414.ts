@@ -21,7 +21,6 @@ export default {
   "networkId": 54414,
   "redFlags": [],
   "rpc": [
-    "https://innovo-markets-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://54414.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/innovomark/testnet/rpc"
   ],

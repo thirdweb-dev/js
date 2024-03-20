@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 20181205,
   "rpc": [
-    "https://quarkblockchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://20181205.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://hz.rpc.qkiscan.cn",
     "https://jp.rpc.qkiscan.io",

@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 107,
   "rpc": [
-    "https://nebula-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://107.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.rpc.novanetwork.io"
   ],

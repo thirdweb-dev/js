@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 710,
   "rpc": [
-    "https://highbury.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://710.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://highbury.furya.io",
     "https://rest.furya.io"

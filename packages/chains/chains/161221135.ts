@@ -40,7 +40,6 @@ export default {
     ]
   },
   "rpc": [
-    "https://plume-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://161221135.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://plume-testnet.rpc.caldera.xyz/http"
   ],

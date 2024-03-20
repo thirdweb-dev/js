@@ -40,7 +40,6 @@ export default {
     ]
   },
   "rpc": [
-    "https://nahmii-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://5553.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://l2.testnet.nahmii.io"
   ],

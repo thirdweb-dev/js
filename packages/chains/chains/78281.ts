@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 78281,
   "rpc": [
-    "https://dragonfly-hexapod.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://78281.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://dragonfly-rpc.switch.ch",
     "https://dragonfly-rpc.kore-technologies.ch",

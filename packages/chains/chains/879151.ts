@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 879151,
   "rpc": [
-    "https://blocx.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://879151.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.blxscan.com/"
   ],

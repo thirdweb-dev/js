@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 16718,
   "rpc": [
-    "https://airdao.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://16718.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://network.ambrosus.io"
   ],

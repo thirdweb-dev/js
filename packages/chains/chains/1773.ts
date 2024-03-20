@@ -30,7 +30,6 @@ export default {
   },
   "networkId": 1773,
   "rpc": [
-    "https://partychain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1773.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://tea.mining4people.com/rpc",
     "http://172.104.194.36:8545"

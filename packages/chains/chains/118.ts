@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 118,
   "rpc": [
-    "https://arcology-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://118.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.arcology.network/rpc"
   ],

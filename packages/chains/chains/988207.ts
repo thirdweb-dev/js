@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 988207,
   "rpc": [
-    "https://ecrox-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://988207.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.ecroxscan.com/"
   ],

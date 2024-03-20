@@ -29,7 +29,6 @@ export default {
     "chain": "eip155-5"
   },
   "rpc": [
-    "https://karak-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2511.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://goerli.node1.karak.network"
   ],

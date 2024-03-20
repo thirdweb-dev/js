@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 7027,
   "rpc": [
-    "https://ella-the-heart.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://7027.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.ella.network"
   ],

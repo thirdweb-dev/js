@@ -21,7 +21,6 @@ export default {
   "networkId": 63891,
   "redFlags": [],
   "rpc": [
-    "https://tnetv2.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://63891.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/defi-kingdoms/dfk-chain/rpc"
   ],

@@ -29,7 +29,6 @@ export default {
     "chain": "eip155-248"
   },
   "rpc": [
-    "https://bandai-namco-research-verse.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://876.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.main.oasvrs.bnken.net"
   ],

@@ -1,8 +1,12 @@
-import type { DropERC1155_V2 } from "@thirdweb-dev/contracts-js";
+import type { DropERC1155, DropERC1155_V2 } from "@thirdweb-dev/contracts-js";
 import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/LazyMint";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { utils, type providers } from "ethers";
-import { NFTMetadata, NFTMetadataOrUri } from "../../../../../core/schema/nft";
+import { utils, type providers, BigNumber, BigNumberish } from "ethers";
+import {
+  NFTMetadata,
+  NFTMetadataInput,
+  NFTMetadataOrUri,
+} from "../../../../../core/schema/nft";
 import { detectContractFeature } from "../../../../common/feature-detection/detectContractFeature";
 import { getPrebuiltInfo } from "../../../../common/legacy";
 import { uploadOrExtractURIs } from "../../../../common/nft";
@@ -173,6 +177,74 @@ export class Erc1155LazyMintable implements DetectableFeature {
           parse,
         });
       }
+    },
+  );
+
+  updateMetadata = /* @__PURE__ */ buildTransactionFunction(
+    async (
+      tokenId: BigNumberish,
+      metadata: NFTMetadataInput,
+      options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+      },
+    ) => {
+      const batchCount = await this.contractWrapper.read("getBaseURICount", []);
+      if (batchCount.eq(0)) {
+        throw new Error(
+          "No base URI set. Please set a base URI before updating metadata",
+        );
+      }
+      const targetTokenId = BigNumber.from(tokenId);
+      let startTokenId = BigNumber.from(0);
+      let endTokenId = BigNumber.from(0);
+      let batchIndex = 0;
+      for (let i = 0; i < batchCount.toNumber(); i++) {
+        batchIndex = i;
+        endTokenId = await this.contractWrapper.read("getBatchIdAtIndex", [
+          batchIndex,
+        ]);
+        if (endTokenId.gt(targetTokenId)) {
+          break;
+        }
+        startTokenId = endTokenId;
+      }
+      // for the entire batch,
+      // 1. download all of the metadata as a list of nft metadata
+      const range = Array.from(
+        { length: endTokenId.sub(startTokenId).toNumber() },
+        (v, k) => k + startTokenId.toNumber(),
+      );
+      const metadatas = await Promise.all(
+        range.map((id) => this.erc1155.getTokenMetadata(id)),
+      );
+      // 2. replace the metadata of the tokenId desired
+      const newMetadatas = [];
+      for (let i = 0; i < metadatas.length; i++) {
+        const { id, uri, ...rest } = metadatas[i];
+        if (BigNumber.from(targetTokenId).eq(BigNumber.from(id))) {
+          newMetadatas.push(metadata);
+        } else {
+          void uri; // linter
+          newMetadatas.push(rest);
+        }
+      }
+      // 3. re-upload the entire batch with the correct starting number
+      const batch = await uploadOrExtractURIs(
+        newMetadatas,
+        this.storage,
+        startTokenId.toNumber(),
+        options,
+      );
+      const baseUri = batch[0].substring(0, batch[0].lastIndexOf("/"));
+      // 4. update the base uri for the entire batch
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper as ContractWrapper<DropERC1155>, // TODO contract detection
+        method: "updateBatchBaseURI",
+        args: [
+          batchIndex,
+          `${baseUri.endsWith("/") ? baseUri : `${baseUri}/`}`,
+        ],
+      });
     },
   );
 

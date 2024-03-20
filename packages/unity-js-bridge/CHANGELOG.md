@@ -1,5 +1,143 @@
 # @thirdweb-dev/unity-js-bridge
 
+## 0.4.10
+
+### Patch Changes
+
+- Updated dependencies [[`c494db8`](https://github.com/thirdweb-dev/js/commit/c494db87cbfa4b6fc4013abb01936e86a4350ea8), [`f0250a7`](https://github.com/thirdweb-dev/js/commit/f0250a77cdbfa3b72e8dbf0ff345219a032e42b0), [`c67b287`](https://github.com/thirdweb-dev/js/commit/c67b2877643afdfb503b41a2b5d21e18dbff15f2), [`7ac4e6b`](https://github.com/thirdweb-dev/js/commit/7ac4e6ba4ee947c76f35b1b95927d7772edf6454), [`d4be647`](https://github.com/thirdweb-dev/js/commit/d4be6479db3fec6b4891e5ca89487b4e703eb9cf)]:
+  - @thirdweb-dev/chains@0.1.80
+  - @thirdweb-dev/sdk@4.0.47
+  - @thirdweb-dev/wallets@2.4.22
+  - @thirdweb-dev/auth@4.1.44
+
+## 0.4.9
+
+### Patch Changes
+
+- Updated dependencies [[`846a350`](https://github.com/thirdweb-dev/js/commit/846a3503fe4a8d39e92dd318470cefefd3b94c69), [`2e01627`](https://github.com/thirdweb-dev/js/commit/2e01627c998a49a1dd41041f3743a28488c92697)]:
+  - @thirdweb-dev/sdk@4.0.46
+  - @thirdweb-dev/chains@0.1.79
+  - @thirdweb-dev/wallets@2.4.21
+  - @thirdweb-dev/auth@4.1.43
+
+## 0.4.8
+
+### Patch Changes
+
+- [#2466](https://github.com/thirdweb-dev/js/pull/2466) [`607ab7e`](https://github.com/thirdweb-dev/js/commit/607ab7e8600f7637f7e74f0990ddd2f4fb9a2730) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [unity] expose sw isdeployed
+
+- Updated dependencies [[`a2002d1`](https://github.com/thirdweb-dev/js/commit/a2002d16376c41fffa59daccfd98856aba90a627)]:
+  - @thirdweb-dev/sdk@4.0.45
+  - @thirdweb-dev/wallets@2.4.20
+  - @thirdweb-dev/auth@4.1.42
+
+## 0.4.7
+
+### Patch Changes
+
+- Updated dependencies [[`b2be63a`](https://github.com/thirdweb-dev/js/commit/b2be63ada466ea1784d680ae6244ac047a190103)]:
+  - @thirdweb-dev/sdk@4.0.44
+  - @thirdweb-dev/wallets@2.4.19
+  - @thirdweb-dev/auth@4.1.41
+
+## 0.4.6
+
+### Patch Changes
+
+- [#2443](https://github.com/thirdweb-dev/js/pull/2443) [`cabfc29`](https://github.com/thirdweb-dev/js/commit/cabfc29119f25a78010f59f766bdcb8c392afa2d) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [Smart Wallet] Use bundler eth_getUserOperationReceipt instead of rpc eth_getLogs, remove polygon gas station error logs
+
+- Updated dependencies [[`cabfc29`](https://github.com/thirdweb-dev/js/commit/cabfc29119f25a78010f59f766bdcb8c392afa2d), [`173777a`](https://github.com/thirdweb-dev/js/commit/173777ade4ea59cde1c6f25a4654d48b277be9ad)]:
+  - @thirdweb-dev/wallets@2.4.18
+  - @thirdweb-dev/sdk@4.0.43
+  - @thirdweb-dev/auth@4.1.40
+
+## 0.4.5
+
+### Patch Changes
+
+- Updated dependencies [[`c894270`](https://github.com/thirdweb-dev/js/commit/c894270401850575d1a4df73e16198177b46477a), [`332a145`](https://github.com/thirdweb-dev/js/commit/332a14552bf95e13e5220b1bd73414f000088568), [`c6b025e`](https://github.com/thirdweb-dev/js/commit/c6b025e84451341f6f48c0a7c4b5f06b8e49d792)]:
+  - @thirdweb-dev/wallets@2.4.17
+  - @thirdweb-dev/sdk@4.0.42
+  - @thirdweb-dev/auth@4.1.39
+
+## 0.4.4
+
+### Patch Changes
+
+- Updated dependencies [[`862905e`](https://github.com/thirdweb-dev/js/commit/862905e161a091c15eb9b054cfcca0e5d2879fd6), [`588897d`](https://github.com/thirdweb-dev/js/commit/588897d1b04e6c63da13639aeb47ca701308e1b2), [`862905e`](https://github.com/thirdweb-dev/js/commit/862905e161a091c15eb9b054cfcca0e5d2879fd6)]:
+  - @thirdweb-dev/auth@4.1.38
+  - @thirdweb-dev/chains@0.1.78
+  - @thirdweb-dev/wallets@2.4.16
+  - @thirdweb-dev/sdk@4.0.41
+
+## 0.4.3
+
+### Patch Changes
+
+- [#2415](https://github.com/thirdweb-dev/js/pull/2415) [`a3f6878`](https://github.com/thirdweb-dev/js/commit/a3f6878649345ea7b647d085d5d7d536af82948f) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [Unity] Remove unnecessary logs, add getEmail check
+
+- Updated dependencies [[`74a92dc`](https://github.com/thirdweb-dev/js/commit/74a92dcb7dc4be7d03bcb8b7211e87016f52a81f), [`047fbe2`](https://github.com/thirdweb-dev/js/commit/047fbe2918808cbc8fded90104458b6e38d1207d)]:
+  - @thirdweb-dev/wallets@2.4.15
+  - @thirdweb-dev/chains@0.1.77
+  - @thirdweb-dev/auth@4.1.37
+  - @thirdweb-dev/sdk@4.0.40
+
+## 0.4.2
+
+### Patch Changes
+
+- [#2379](https://github.com/thirdweb-dev/js/pull/2379) [`ab44b8f`](https://github.com/thirdweb-dev/js/commit/ab44b8f0ae760065f400f76d69703e26bcbcc022) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [Smart Wallet] Do not deploy to sign typed data, allow presigned deploy+session key
+
+- [#2388](https://github.com/thirdweb-dev/js/pull/2388) [`f80f630`](https://github.com/thirdweb-dev/js/commit/f80f6307a3ebe1adaaf072dd2e02aecf83bfa43f) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [Smart Wallet] ERC20Paymaster Generic Support
+
+- Updated dependencies [[`ab44b8f`](https://github.com/thirdweb-dev/js/commit/ab44b8f0ae760065f400f76d69703e26bcbcc022), [`9c7fbc1`](https://github.com/thirdweb-dev/js/commit/9c7fbc1603a7265209b6f56c2284fdb0e6b33a1d), [`f80f630`](https://github.com/thirdweb-dev/js/commit/f80f6307a3ebe1adaaf072dd2e02aecf83bfa43f), [`5f243bb`](https://github.com/thirdweb-dev/js/commit/5f243bba0ded5dace9344c79e8904a4a342d16af), [`7d8697e`](https://github.com/thirdweb-dev/js/commit/7d8697ec3ff72f33dda151e7eb82f5ff19c1f825)]:
+  - @thirdweb-dev/wallets@2.4.14
+  - @thirdweb-dev/sdk@4.0.39
+  - @thirdweb-dev/chains@0.1.76
+  - @thirdweb-dev/auth@4.1.36
+
+## 0.4.1
+
+### Patch Changes
+
+- Updated dependencies [[`e87292a`](https://github.com/thirdweb-dev/js/commit/e87292ab604897ddfc337d24d2d1fe0f3560baae)]:
+  - @thirdweb-dev/chains@0.1.75
+  - @thirdweb-dev/sdk@4.0.38
+  - @thirdweb-dev/wallets@2.4.13
+  - @thirdweb-dev/auth@4.1.35
+
+## 0.4.0
+
+### Minor Changes
+
+- [#2341](https://github.com/thirdweb-dev/js/pull/2341) [`e7528af`](https://github.com/thirdweb-dev/js/commit/e7528af48ff2dda622ed47074611499cfd66f819) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [Smart Wallet] Always force deploy on sign/auth, use 712 with 1271 where possible
+
+### Patch Changes
+
+- [#2363](https://github.com/thirdweb-dev/js/pull/2363) [`1ac06b9`](https://github.com/thirdweb-dev/js/commit/1ac06b928697c164a45764d07c90e80b3aa36415) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Unity 4.7.1
+
+- Updated dependencies [[`a00917c`](https://github.com/thirdweb-dev/js/commit/a00917cca451e64d7ea8dc8553c1c32540edaafa), [`73e34c0`](https://github.com/thirdweb-dev/js/commit/73e34c083cd9c0d634e39657a4fad0f49f6fec89), [`e7528af`](https://github.com/thirdweb-dev/js/commit/e7528af48ff2dda622ed47074611499cfd66f819), [`bac0c9b`](https://github.com/thirdweb-dev/js/commit/bac0c9b4a1da26bbc7b1550c4b6f5e335b80c82b), [`7d74d30`](https://github.com/thirdweb-dev/js/commit/7d74d30b9fe2d2d2798a3c5efb1d71cd73841e53), [`8d2811d`](https://github.com/thirdweb-dev/js/commit/8d2811dd131d6c8eb8ce79278f0a8ebe1883265d), [`abc0a53`](https://github.com/thirdweb-dev/js/commit/abc0a53dc398264f205d194e3f87a79f74e91eb1), [`10b71dd`](https://github.com/thirdweb-dev/js/commit/10b71dd7a0c6e91bb1ebe8250ca7fac7bac76635), [`bc198e2`](https://github.com/thirdweb-dev/js/commit/bc198e215e57094aac525b262fe91add4786df92)]:
+  - @thirdweb-dev/sdk@4.0.37
+  - @thirdweb-dev/wallets@2.4.12
+  - @thirdweb-dev/chains@0.1.74
+  - @thirdweb-dev/pay@0.1.5
+  - @thirdweb-dev/auth@4.1.34
+  - @thirdweb-dev/storage@2.0.10
+
+## 0.3.17
+
+### Patch Changes
+
+- [#2298](https://github.com/thirdweb-dev/js/pull/2298) [`c44d6f2`](https://github.com/thirdweb-dev/js/commit/c44d6f2f9d45a5ce4a64476cfa11d2a0d7708770) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [Unity] Support Wallet.GetSignerAddress
+
+- [#2307](https://github.com/thirdweb-dev/js/pull/2307) [`b33d131`](https://github.com/thirdweb-dev/js/commit/b33d13161c858e4d546feade8aa5ce90b58ccbf7) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Unity 4.6.4
+
+- Updated dependencies [[`3137e45`](https://github.com/thirdweb-dev/js/commit/3137e45bb884525ba45fb389138d5360cd7333d1), [`0f9a7b2`](https://github.com/thirdweb-dev/js/commit/0f9a7b2571daf6fd9bbd8d9223e0c5e865b82668), [`2348417`](https://github.com/thirdweb-dev/js/commit/23484171148cbd6c42ec92aace2e30bbcd7d5073), [`23820b2`](https://github.com/thirdweb-dev/js/commit/23820b277118ae0845d4f0189ac58ef4e75896ba), [`94a699c`](https://github.com/thirdweb-dev/js/commit/94a699caaecee2247ccd7493c4cb04c6cc8b2e74), [`73a374a`](https://github.com/thirdweb-dev/js/commit/73a374aac25c2396dd2a895629737c6e8d024f45), [`ca70cd3`](https://github.com/thirdweb-dev/js/commit/ca70cd3882b39ffd56275d267e6af9c04fae179b)]:
+  - @thirdweb-dev/sdk@4.0.36
+  - @thirdweb-dev/wallets@2.4.11
+  - @thirdweb-dev/chains@0.1.73
+  - @thirdweb-dev/auth@4.1.33
+
 ## 0.3.16
 
 ### Patch Changes

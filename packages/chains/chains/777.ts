@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 777,
   "rpc": [
-    "https://cheapeth.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://777.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node.cheapeth.org/rpc"
   ],

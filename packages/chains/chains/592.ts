@@ -44,7 +44,6 @@ export default {
   "networkId": 592,
   "redFlags": [],
   "rpc": [
-    "https://astar.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://592.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm.astar.network",
     "https://rpc.astar.network:8545"

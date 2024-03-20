@@ -46,12 +46,12 @@ export function tlDefault(): ThirdwebLocale {
       guestWalletWarning:
         "Ito ay isang pansamantalang guest wallet. I-download mo ang backup para hindi ka mawalan ng access dito.",
       switchTo: "Palitan ang", // Used in "Switch to <Wallet-Name>"
-      connectedToSmartWallet: "Nakakonekta sa Smart Wallet",
+      connectedToSmartWallet: "Nakakonekta sa Smart Account",
       confirmInWallet: "Kumpirmahin sa wallet",
       disconnectWallet: "I-disconnect ang Wallet",
       copyAddress: "Kopyahin ang Address",
       personalWallet: "Personal na Wallet",
-      smartWallet: "Smart Wallet",
+      smartWallet: "Smart Account",
       or: "O",
       goBackButton: "Bumalik",
       download: {
@@ -131,8 +131,8 @@ export function tlDefault(): ThirdwebLocale {
           "I-scan ito gamit ang iyong wallet app para makakonekta",
       },
       smartWallet: {
-        connecting: "Kumokonekta sa Smart Wallet",
-        failedToConnect: "Hindi nagawa ang pagkonekta sa Smart Wallet",
+        connecting: "Kumokonekta sa Smart Account",
+        failedToConnect: "Hindi nagawa ang pagkonekta sa Smart Account",
         wrongNetworkScreen: {
           title: "Maling Network",
           subtitle:
@@ -169,6 +169,7 @@ export function tlDefault(): ThirdwebLocale {
         },
       },
       coinbaseWallet: extensionAndQRScanScreens("Coinbase"),
+      magicEdenWallet: extensionAndQRScanScreens("Magic Eden"),
       metamaskWallet: extensionAndQRScanScreens("MetaMask"),
       okxWallet: extensionAndQRScanScreens("OKX"),
       phantomWallet: extensionAndQRScanScreens("Phantom"),

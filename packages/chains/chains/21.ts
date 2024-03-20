@@ -21,7 +21,6 @@ export default {
   },
   "networkId": 21,
   "rpc": [
-    "https://elastos-smart-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://21.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api-testnet.elastos.io/eth"
   ],

@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 65450,
   "rpc": [
-    "https://scolcoin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://65450.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.scolcoin.com"
   ],

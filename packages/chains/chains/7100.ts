@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 7100,
   "rpc": [
-    "https://nume.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://7100.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.numecrypto.com"
   ],

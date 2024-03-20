@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 3666,
   "rpc": [
-    "https://jouleverse.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://3666.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.jnsdao.com:8503"
   ],

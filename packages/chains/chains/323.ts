@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 323,
   "rpc": [
-    "https://cosvm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://323.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.cosvm.net"
   ],

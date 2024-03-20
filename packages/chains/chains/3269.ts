@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 3269,
   "rpc": [
-    "https://dubxcoin-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://3269.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpcmain.arabianchain.org"
   ],

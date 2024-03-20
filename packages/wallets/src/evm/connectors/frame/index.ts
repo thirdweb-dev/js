@@ -43,7 +43,7 @@ export class FrameConnector extends WagmiConnector<
   readonly ready = true;
   protected shimDisconnectKey = `${this.id}.shimDisconnect`;
 
-  #provider?: Provider | Ethereum;
+  private _provider?: Provider | Ethereum;
   connectorStorage: AsyncStorage;
 
   constructor({
@@ -148,10 +148,10 @@ export class FrameConnector extends WagmiConnector<
   }
 
   async getProvider() {
-    this.#provider = this.isInjected()
+    this._provider = this.isInjected()
       ? this.injectedProvider()
       : await this.createProvider();
-    return this.#provider;
+    return this._provider;
   }
 
   /**

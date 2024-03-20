@@ -5,8 +5,8 @@ export default {
   "explorers": [
     {
       "name": "meerscan testnet",
-      "url": "https://qng-testnet.meerscan.io",
-      "standard": "none",
+      "url": "https://testnet-qng.qitmeer.io",
+      "standard": "EIP3091",
       "icon": {
         "url": "ipfs://QmWSbMuCwQzhBB6GRLYqZ87n5cnpzpYCehCAMMQmUXj4mm",
         "width": 512,
@@ -33,7 +33,6 @@ export default {
   },
   "networkId": 8131,
   "rpc": [
-    "https://qitmeer-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://8131.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-qng.rpc.qitmeer.io",
     "https://testnet.meerlabs.com",

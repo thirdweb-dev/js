@@ -38,7 +38,6 @@ export default {
   "networkId": 137,
   "redFlags": [],
   "rpc": [
-    "https://polygon.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://137.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://polygon-mainnet.infura.io/v3/${INFURA_API_KEY}",
     "https://polygon-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}",
@@ -48,10 +47,12 @@ export default {
     "https://rpc-mainnet.maticvigil.com",
     "https://rpc-mainnet.matic.quiknode.pro",
     "https://matic-mainnet-full-rpc.bwarelabs.com",
-    "https://polygon-bor.publicnode.com",
-    "wss://polygon-bor.publicnode.com",
+    "https://polygon-bor-rpc.publicnode.com",
+    "wss://polygon-bor-rpc.publicnode.com",
     "https://polygon.gateway.tenderly.co",
-    "wss://polygon.gateway.tenderly.co"
+    "wss://polygon.gateway.tenderly.co",
+    "https://polygon.drpc.org",
+    "wss://polygon.drpc.org"
   ],
   "shortName": "matic",
   "slip44": 966,

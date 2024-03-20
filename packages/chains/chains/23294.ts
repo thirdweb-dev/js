@@ -5,7 +5,7 @@ export default {
   "explorers": [
     {
       "name": "Oasis Sapphire Explorer",
-      "url": "https://explorer.sapphire.oasis.io",
+      "url": "https://explorer.oasis.io/mainnet/sapphire",
       "standard": "EIP3091"
     }
   ],
@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 23294,
   "rpc": [
-    "https://oasis-sapphire.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://23294.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://sapphire.oasis.io",
     "wss://sapphire.oasis.io/ws"

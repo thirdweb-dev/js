@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 4003,
   "rpc": [
-    "https://x1-fastnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://4003.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://x1-fastnet.xen.network"
   ],

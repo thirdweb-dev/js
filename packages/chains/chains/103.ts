@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 103,
   "rpc": [
-    "https://worldland.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://103.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://seoul.worldland.foundation"
   ],

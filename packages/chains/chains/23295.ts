@@ -5,7 +5,7 @@ export default {
   "explorers": [
     {
       "name": "Oasis Sapphire Testnet Explorer",
-      "url": "https://testnet.explorer.sapphire.oasis.dev",
+      "url": "https://explorer.oasis.io/testnet/sapphire",
       "standard": "EIP3091"
     }
   ],
@@ -25,10 +25,9 @@ export default {
   },
   "networkId": 23295,
   "rpc": [
-    "https://oasis-sapphire-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://23295.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet.sapphire.oasis.dev",
-    "wss://testnet.sapphire.oasis.dev/ws"
+    "https://testnet.sapphire.oasis.io",
+    "wss://testnet.sapphire.oasis.io/ws"
   ],
   "shortName": "sapphire-testnet",
   "slip44": 1,

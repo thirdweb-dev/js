@@ -21,7 +21,6 @@ export default {
   },
   "networkId": 125,
   "rpc": [
-    "https://oychain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://125.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.testnet.oychain.io"
   ],

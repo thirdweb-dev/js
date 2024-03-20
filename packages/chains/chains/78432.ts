@@ -24,7 +24,6 @@ export default {
   },
   "networkId": 78432,
   "rpc": [
-    "https://conduit-subnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://78432.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/conduit/testnet/rpc"
   ],

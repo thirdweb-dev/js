@@ -69,7 +69,7 @@ export class HttpRpcClient {
       setAnalyticsHeaders(headers);
     }
 
-    this.userOpJsonRpcProvider = new providers.JsonRpcProvider(
+    this.userOpJsonRpcProvider = new providers.StaticJsonRpcProvider(
       {
         url: this.bundlerUrl,
         headers,
@@ -131,6 +131,14 @@ export class HttpRpcClient {
     return await this.userOpJsonRpcProvider.send(
       "eth_estimateUserOperationGas",
       [hexifiedUserOp, this.entryPointAddress],
+    );
+  }
+
+  async getUserOperationReceipt(userOpHash: string): Promise<any> {
+    await this.initializing;
+    return await this.userOpJsonRpcProvider.send(
+      "eth_getUserOperationReceipt",
+      [userOpHash],
     );
   }
 

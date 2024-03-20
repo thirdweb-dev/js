@@ -34,7 +34,6 @@ export default {
   },
   "networkId": 221231,
   "rpc": [
-    "https://reapchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://221231.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://test-eth.reapchain.org"
   ],

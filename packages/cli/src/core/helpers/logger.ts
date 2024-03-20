@@ -12,39 +12,39 @@ function shouldLog(minLevel: LogLevel, currentLevel: LogLevel): boolean {
 }
 
 class BasicLogger {
-  #minLevel: LogLevel = "info";
+  private _minLevel: LogLevel = "info";
   constructor(params?: BasicLoggerConstructorParams) {
     if (params?.minLevel) {
-      this.#minLevel = params.minLevel;
+      this._minLevel = params.minLevel;
     }
   }
 
   setSettings(params: BasicLoggerConstructorParams) {
     if (params.minLevel) {
-      this.#minLevel = params.minLevel;
+      this._minLevel = params.minLevel;
     }
   }
 
   debug(...args: any[]) {
-    if (shouldLog(this.#minLevel, "debug")) {
+    if (shouldLog(this._minLevel, "debug")) {
       console.info(...args);
     }
   }
 
   info(...args: any[]) {
-    if (shouldLog(this.#minLevel, "info")) {
+    if (shouldLog(this._minLevel, "info")) {
       console.info(...args);
     }
   }
 
   warn(...args: any[]) {
-    if (shouldLog(this.#minLevel, "warn")) {
+    if (shouldLog(this._minLevel, "warn")) {
       console.warn(...args);
     }
   }
 
   error(...args: any[]) {
-    if (shouldLog(this.#minLevel, "error")) {
+    if (shouldLog(this._minLevel, "error")) {
       console.error(...args);
     }
   }

@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 2559,
   "rpc": [
-    "https://kortho.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2559.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://www.kortho-chain.com"
   ],

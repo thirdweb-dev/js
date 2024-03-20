@@ -12,6 +12,7 @@ import { getCreate2FactoryDeploymentInfo } from "./getCreate2FactoryDeploymentIn
  * Deployment is keyless. Signer is needed to fund the keyless signer address.
  * Ref: https://github.com/Arachnid/deterministic-deployment-proxy
  *
+ * @deploy
  * @public
  * @param signer - The signer to use
  */

@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 1564830818,
   "rpc": [
-    "https://skale-calypso-hub.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1564830818.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.skalenodes.com/v1/honorable-steel-rasalhague"
   ],

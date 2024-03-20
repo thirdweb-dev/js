@@ -33,7 +33,6 @@ export default {
   },
   "networkId": 963,
   "rpc": [
-    "https://btc20-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://963.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.bitcoincode.technology/"
   ],

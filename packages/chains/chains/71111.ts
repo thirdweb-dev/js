@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 71111,
   "rpc": [
-    "https://guapcoinx.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://71111.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-mainnet.guapcoinx.com/",
     "https://rpc-mainnet-1.guapcoinx.com/",

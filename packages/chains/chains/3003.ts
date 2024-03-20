@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 3003,
   "rpc": [
-    "https://canxium.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://3003.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.canxium.org"
   ],

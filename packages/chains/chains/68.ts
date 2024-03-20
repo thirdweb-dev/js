@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 68,
   "rpc": [
-    "https://soterone.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://68.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.soter.one"
   ],

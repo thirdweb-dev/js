@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 2002,
   "rpc": [
-    "https://milkomeda-a1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2002.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-mainnet-algorand-rollup.a1.milkomeda.com",
     "wss://rpc-mainnet-algorand-rollup.a1.milkomeda.com/ws"

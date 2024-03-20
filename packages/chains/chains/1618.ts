@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 1618,
   "rpc": [
-    "https://catecoin-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1618.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://send.catechain.com"
   ],

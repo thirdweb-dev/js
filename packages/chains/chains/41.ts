@@ -29,9 +29,10 @@ export default {
   "networkId": 41,
   "redFlags": [],
   "rpc": [
-    "https://telos-evm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://41.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet.telos.net/evm"
+    "https://testnet.telos.net/evm",
+    "https://telos-testnet.drpc.org",
+    "wss://telos-testnet.drpc.org"
   ],
   "shortName": "TelosEVMTestnet",
   "slip44": 1,

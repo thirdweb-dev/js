@@ -21,7 +21,6 @@ export default {
   "networkId": 151221,
   "redFlags": [],
   "rpc": [
-    "https://xantus.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://151221.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/xantus/testnet/rpc"
   ],

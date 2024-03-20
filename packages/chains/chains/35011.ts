@@ -33,7 +33,6 @@ export default {
   },
   "networkId": 35011,
   "rpc": [
-    "https://j2o-taro.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://35011.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.j2o.io"
   ],

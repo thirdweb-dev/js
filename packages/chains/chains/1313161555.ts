@@ -19,9 +19,10 @@ export default {
   },
   "networkId": 1313161555,
   "rpc": [
-    "https://aurora-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1313161555.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet.aurora.dev/"
+    "https://testnet.aurora.dev/",
+    "https://aurora-testnet.drpc.org",
+    "wss://aurora-testnet.drpc.org"
   ],
   "shortName": "aurora-testnet",
   "slip44": 1,

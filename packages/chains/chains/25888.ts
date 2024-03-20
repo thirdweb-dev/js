@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 25888,
   "rpc": [
-    "https://hammer-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://25888.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://www.hammerchain.io/rpc"
   ],

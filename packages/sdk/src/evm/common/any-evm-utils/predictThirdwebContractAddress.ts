@@ -11,7 +11,7 @@ import { getDeploymentInfo } from "./getDeploymentInfo";
 import { fetchAndCacheDeployMetadata } from "./fetchAndCacheDeployMetadata";
 
 /**
- *
+ * @deploy
  * @public
  * @param contractName - The name of the contract to predict the address for
  * @param chainId - The chain id to use

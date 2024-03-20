@@ -22,14 +22,15 @@ export default {
   },
   "networkId": 1666600000,
   "rpc": [
-    "https://harmony-shard-0.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1666600000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.harmony.one",
     "https://a.api.s0.t.hmny.io",
     "https://api.s0.t.hmny.io",
     "https://rpc.ankr.com/harmony",
     "https://harmony.api.onfinality.io/public",
-    "https://1rpc.io/one"
+    "https://1rpc.io/one",
+    "https://harmony-0.drpc.org",
+    "wss://harmony-0.drpc.org"
   ],
   "shortName": "hmy-s0",
   "slip44": 1023,

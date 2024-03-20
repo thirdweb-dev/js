@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 1353,
   "rpc": [
-    "https://cic-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1353.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://xapi.cicscan.com"
   ],

@@ -35,9 +35,10 @@ export default {
   "networkId": 11155420,
   "redFlags": [],
   "rpc": [
-    "https://op-sepolia-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://11155420.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://sepolia.optimism.io"
+    "https://sepolia.optimism.io",
+    "https://optimism-sepolia.drpc.org",
+    "wss://optimism-sepolia.drpc.org"
   ],
   "shortName": "opsep",
   "slip44": 1,

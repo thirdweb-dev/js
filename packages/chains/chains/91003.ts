@@ -16,7 +16,6 @@ export default {
   "networkId": 91003,
   "redFlags": [],
   "rpc": [
-    "https://worlds-appchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://91003.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.evm.worlds.dev.eclipsenetwork.xyz/"
   ],

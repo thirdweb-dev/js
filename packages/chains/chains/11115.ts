@@ -44,7 +44,6 @@ export default {
   },
   "networkId": 11115,
   "rpc": [
-    "https://astra-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://11115.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.astranaut.dev"
   ],

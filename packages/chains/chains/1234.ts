@@ -40,7 +40,6 @@ export default {
     ]
   },
   "rpc": [
-    "https://step-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1234.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.step.network"
   ],

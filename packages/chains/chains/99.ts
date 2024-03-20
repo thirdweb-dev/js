@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 99,
   "rpc": [
-    "https://poa-network-core.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://99.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://core.poa.network"
   ],

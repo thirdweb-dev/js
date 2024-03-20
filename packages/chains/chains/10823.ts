@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 10823,
   "rpc": [
-    "https://cryptocoinpay.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://10823.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://node106.cryptocoinpay.info:8545",
     "ws://node106.cryptocoinpay.info:8546"

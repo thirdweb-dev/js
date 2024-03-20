@@ -33,9 +33,10 @@ export default {
   },
   "networkId": 13371,
   "rpc": [
-    "https://immutable-zkevm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://13371.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.immutable.com"
+    "https://rpc.immutable.com",
+    "https://immutable-zkevm.drpc.org",
+    "wss://immutable-zkevm.drpc.org"
   ],
   "shortName": "imx",
   "slug": "immutable-zkevm",

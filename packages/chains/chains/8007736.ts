@@ -23,7 +23,6 @@ export default {
     "chain": "eip155-2099156"
   },
   "rpc": [
-    "https://plian-subchain-1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://8007736.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.plian.io/child_0"
   ],

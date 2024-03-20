@@ -59,6 +59,7 @@ import { ClaimEligibility } from "../../enums/ClaimEligibility";
 
 /**
  * Manages claim conditions for NFT Drop contracts
+ * @erc721
  * @public
  */
 export class DropClaimConditions<
@@ -266,7 +267,8 @@ export class DropClaimConditions<
     } catch (err: any) {
       if (
         includesErrorMessage(err, "!CONDITION") ||
-        includesErrorMessage(err, "no active mint condition")
+        includesErrorMessage(err, "no active mint condition") ||
+        includesErrorMessage(err, "DropNoActiveCondition")
       ) {
         reasons.push(ClaimEligibility.NoClaimConditionSet);
         return reasons;
@@ -385,20 +387,24 @@ export class DropClaimConditions<
         } catch (e: any) {
           console.warn(
             "Merkle proof verification failed:",
-            "reason" in e ? e.reason : e,
+            "reason" in e ? e.reason || e.errorName : e,
           );
-          const reason = (e as any).reason;
+          const reason = (e as any).reason || (e as any).errorName;
           switch (reason) {
             case "!Qty":
+            case "DropClaimExceedLimit":
               reasons.push(ClaimEligibility.OverMaxClaimablePerWallet);
               break;
             case "!PriceOrCurrency":
+            case "DropClaimInvalidTokenPrice":
               reasons.push(ClaimEligibility.WrongPriceOrCurrency);
               break;
             case "!MaxSupply":
+            case "DropClaimExceedMaxSupply":
               reasons.push(ClaimEligibility.NotEnoughSupply);
               break;
             case "cant claim yet":
+            case "DropClaimNotStarted":
               reasons.push(ClaimEligibility.ClaimPhaseNotStarted);
               break;
             default: {
@@ -717,9 +723,8 @@ export class DropClaimConditions<
           merkle: merkleInfo,
         });
         // using internal method to just upload, avoids one contract call
-        const contractURI = await this.metadata._parseAndUploadMetadata(
-          mergedMetadata,
-        );
+        const contractURI =
+          await this.metadata._parseAndUploadMetadata(mergedMetadata);
 
         // TODO (cc) we could write the merkle tree info on the claim condition metadata instead
         // TODO (cc) but we still need to maintain the behavior here for older contracts

@@ -99,7 +99,9 @@ export function getValidChainRPCs(
       if (clientId) {
         processedRPCs.push(
           rpc.replace("${THIRDWEB_API_KEY}", clientId) +
-            (typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
+            (typeof globalThis !== "undefined" &&
+            "APP_BUNDLE_ID" in globalThis &&
+            !!(globalThis as any).APP_BUNDLE_ID
               ? // @ts-ignore
                 `/?bundleId=${globalThis.APP_BUNDLE_ID}`
               : ""),

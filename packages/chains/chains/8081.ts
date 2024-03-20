@@ -12,6 +12,7 @@ export default {
   "faucets": [
     "https://faucet.liberty20.shardeum.org"
   ],
+  "features": [],
   "icon": {
     "url": "ipfs://Qma1bfuubpepKn7DLDy4NPSKDeT3S4VPCNhu6UmdGrb6YD",
     "width": 609,
@@ -30,11 +31,11 @@ export default {
     "reusedChainId"
   ],
   "rpc": [
-    "https://shardeum-liberty-2-x.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://8081.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://liberty20.shardeum.org/"
   ],
   "shortName": "Liberty20",
   "slug": "shardeum-liberty-2-x",
-  "testnet": false
+  "status": "deprecated",
+  "testnet": true
 } as const satisfies Chain;

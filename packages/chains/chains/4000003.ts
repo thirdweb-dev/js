@@ -39,7 +39,6 @@ export default {
   },
   "networkId": 4000003,
   "rpc": [
-    "https://altlayer-zero-gas-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://4000003.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://zero.alt.technology"
   ],

@@ -47,13 +47,14 @@ export default {
   },
   "networkId": 314159,
   "rpc": [
-    "https://filecoin-calibration-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://314159.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.calibration.node.glif.io/rpc/v1",
     "https://rpc.ankr.com/filecoin_testnet",
     "https://filecoin-calibration.chainstacklabs.com/rpc/v1",
     "https://filecoin-calibration.chainup.net/rpc/v1",
-    "https://calibration.filfox.info/rpc/v1"
+    "https://calibration.filfox.info/rpc/v1",
+    "https://filecoin-calibration.drpc.org",
+    "wss://filecoin-calibration.drpc.org"
   ],
   "shortName": "filecoin-calibration",
   "slip44": 1,

@@ -33,7 +33,6 @@ export default {
   },
   "networkId": 3799,
   "rpc": [
-    "https://tangle-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://3799.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.tangle.tools",
     "https://testnet-rpc-archive.tangle.tools",

@@ -23,7 +23,6 @@ export default {
   },
   "networkId": 1127469,
   "rpc": [
-    "https://tiltyard-subnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1127469.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/tiltyard/testnet/rpc"
   ],

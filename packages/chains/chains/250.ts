@@ -44,11 +44,12 @@ export default {
   "networkId": 250,
   "redFlags": [],
   "rpc": [
-    "https://fantom.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://250.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.ftm.tools",
-    "https://fantom.publicnode.com",
-    "wss://fantom.publicnode.com"
+    "https://fantom-rpc.publicnode.com",
+    "wss://fantom-rpc.publicnode.com",
+    "https://fantom.drpc.org",
+    "wss://fantom.drpc.org"
   ],
   "shortName": "ftm",
   "slug": "fantom",

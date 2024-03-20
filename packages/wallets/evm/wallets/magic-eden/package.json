@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-wallets-evm-wallets-magic-eden.cjs.js",
+  "module": "dist/thirdweb-dev-wallets-evm-wallets-magic-eden.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-wallets-evm-wallets-magic-eden.esm.js": "./dist/thirdweb-dev-wallets-evm-wallets-magic-eden.browser.esm.js"
+  }
+}

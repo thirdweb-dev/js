@@ -21,7 +21,6 @@ export default {
   "networkId": 78170,
   "redFlags": [],
   "rpc": [
-    "https://mxs-games-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://78170.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/mxsgameste/testnet/rpc"
   ],

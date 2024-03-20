@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 119139,
   "rpc": [
-    "https://metadap-enterprise-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://119139.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.testnet.chain.metadap.io",
     "wss://rpc-ws.testnet.chain.metadap.io"

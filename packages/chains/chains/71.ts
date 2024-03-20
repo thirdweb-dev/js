@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 71,
   "rpc": [
-    "https://conflux-espace-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://71.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evmtestnet.confluxrpc.com"
   ],

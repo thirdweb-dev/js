@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 43288,
   "rpc": [
-    "https://boba-avax.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://43288.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://avax.boba.network",
     "wss://wss.avax.boba.network",

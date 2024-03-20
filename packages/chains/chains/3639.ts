@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 3639,
   "rpc": [
-    "https://ichain-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://3639.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.ichainscan.com"
   ],

@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 49049,
   "rpc": [
-    "https://wireshape-floripa-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://49049.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-floripa.wireshape.org"
   ],

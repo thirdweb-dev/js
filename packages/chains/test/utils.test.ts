@@ -9,29 +9,21 @@ import {
   getValidChainRPCs,
 } from "../src/utils";
 
-const MAINNET_FALLBACK_HTTP_RPCS = [
-  "https://api.mycryptoapi.com/eth",
-  "https://cloudflare-eth.com",
-  "https://ethereum.publicnode.com",
-  "https://mainnet.gateway.tenderly.co",
-  "https://rpc.blocknative.com/boost",
-  "https://rpc.flashbots.net/fast",
-  "https://rpc.mevblocker.io/fullprivacy",
-];
-
-const MAINNET_FALLBACK_WS_RPCS = [
-  "wss://ethereum.publicnode.com",
-  "wss://mainnet.gateway.tenderly.co",
-];
+const MAINNET_FALLBACK_HTTP_RPCS = Ethereum.rpc.filter(
+  (rpc) =>
+    rpc.startsWith("http") &&
+    !rpc.includes("infura") &&
+    !rpc.includes("alchemy") &&
+    !rpc.includes("thirdweb"),
+);
+const MAINNET_FALLBACK_WS_RPCS = Ethereum.rpc.filter(
+  (rpc) => rpc.startsWith("wss") && !rpc.includes("infura"),
+);
 
 const CHAIN_RPC_TEST_CASES: [ChainRPCOptions, string[]][] = [
   [
     { thirdwebApiKey: "SAMPLE_KEY" },
-    [
-      "https://ethereum.rpc.thirdweb.com/SAMPLE_KEY",
-      "https://1.rpc.thirdweb.com/SAMPLE_KEY",
-      ...MAINNET_FALLBACK_HTTP_RPCS,
-    ],
+    ["https://1.rpc.thirdweb.com/SAMPLE_KEY", ...MAINNET_FALLBACK_HTTP_RPCS],
   ],
   [
     { alchemyApiKey: "SAMPLE_KEY" },
@@ -63,26 +55,17 @@ describe("chains/utils", () => {
     [
       undefined,
       undefined,
-      [
-        "https://ethereum.rpc.thirdweb.com/",
-        "https://1.rpc.thirdweb.com/",
-        ...MAINNET_FALLBACK_HTTP_RPCS,
-      ],
+      ["https://1.rpc.thirdweb.com/", ...MAINNET_FALLBACK_HTTP_RPCS],
     ],
     [
       undefined,
       "http",
-      [
-        "https://ethereum.rpc.thirdweb.com/",
-        "https://1.rpc.thirdweb.com/",
-        ...MAINNET_FALLBACK_HTTP_RPCS,
-      ],
+      ["https://1.rpc.thirdweb.com/", ...MAINNET_FALLBACK_HTTP_RPCS],
     ],
     [
       "SAMPLE_CLIENT_KEY",
       undefined,
       [
-        "https://ethereum.rpc.thirdweb.com/SAMPLE_CLIENT_KEY",
         "https://1.rpc.thirdweb.com/SAMPLE_CLIENT_KEY",
         ...MAINNET_FALLBACK_HTTP_RPCS,
       ],
@@ -91,7 +74,6 @@ describe("chains/utils", () => {
       "SAMPLE_CLIENT_KEY",
       "http",
       [
-        "https://ethereum.rpc.thirdweb.com/SAMPLE_CLIENT_KEY",
         "https://1.rpc.thirdweb.com/SAMPLE_CLIENT_KEY",
         ...MAINNET_FALLBACK_HTTP_RPCS,
       ],
@@ -117,7 +99,7 @@ describe("chains/utils", () => {
         width: 512,
         format: "png",
       },
-      rpc: ["https://ethereum.rpc.thirdweb.com/${THIRDWEB_API_KEY}"],
+      rpc: ["https://1.rpc.thirdweb.com/${THIRDWEB_API_KEY}"],
       nativeCurrency: {
         name: "Ether",
         symbol: "ETH",
@@ -153,11 +135,7 @@ describe("chains/utils", () => {
       undefined,
       {
         ...Ethereum,
-        rpc: [
-          "https://ethereum.rpc.thirdweb.com/",
-          "https://1.rpc.thirdweb.com/",
-          ...MAINNET_FALLBACK_HTTP_RPCS,
-        ],
+        rpc: ["https://1.rpc.thirdweb.com/", ...MAINNET_FALLBACK_HTTP_RPCS],
       },
     ],
     [
@@ -166,7 +144,6 @@ describe("chains/utils", () => {
       {
         ...Ethereum,
         rpc: [
-          "https://ethereum.rpc.thirdweb.com/SAMPLE_CLIENT_KEY",
           "https://1.rpc.thirdweb.com/SAMPLE_CLIENT_KEY",
           ...MAINNET_FALLBACK_HTTP_RPCS,
         ],
@@ -187,26 +164,17 @@ describe("chains/utils with APP_BUNDLE_ID", () => {
     [
       undefined,
       undefined,
-      [
-        "https://ethereum.rpc.thirdweb.com/",
-        "https://1.rpc.thirdweb.com/",
-        ...MAINNET_FALLBACK_HTTP_RPCS,
-      ],
+      ["https://1.rpc.thirdweb.com/", ...MAINNET_FALLBACK_HTTP_RPCS],
     ],
     [
       undefined,
       "http",
-      [
-        "https://ethereum.rpc.thirdweb.com/",
-        "https://1.rpc.thirdweb.com/",
-        ...MAINNET_FALLBACK_HTTP_RPCS,
-      ],
+      ["https://1.rpc.thirdweb.com/", ...MAINNET_FALLBACK_HTTP_RPCS],
     ],
     [
       "SAMPLE_CLIENT_KEY",
       undefined,
       [
-        "https://ethereum.rpc.thirdweb.com/SAMPLE_CLIENT_KEY/?bundleId=com.thirdweb.rpc",
         "https://1.rpc.thirdweb.com/SAMPLE_CLIENT_KEY/?bundleId=com.thirdweb.rpc",
         ...MAINNET_FALLBACK_HTTP_RPCS,
       ],
@@ -215,7 +183,6 @@ describe("chains/utils with APP_BUNDLE_ID", () => {
       "SAMPLE_CLIENT_KEY",
       "http",
       [
-        "https://ethereum.rpc.thirdweb.com/SAMPLE_CLIENT_KEY/?bundleId=com.thirdweb.rpc",
         "https://1.rpc.thirdweb.com/SAMPLE_CLIENT_KEY/?bundleId=com.thirdweb.rpc",
         ...MAINNET_FALLBACK_HTTP_RPCS,
       ],
@@ -230,11 +197,7 @@ describe("chains/utils with APP_BUNDLE_ID", () => {
       undefined,
       {
         ...Ethereum,
-        rpc: [
-          "https://ethereum.rpc.thirdweb.com/",
-          "https://1.rpc.thirdweb.com/",
-          ...MAINNET_FALLBACK_HTTP_RPCS,
-        ],
+        rpc: ["https://1.rpc.thirdweb.com/", ...MAINNET_FALLBACK_HTTP_RPCS],
       },
     ],
     [
@@ -243,7 +206,6 @@ describe("chains/utils with APP_BUNDLE_ID", () => {
       {
         ...Ethereum,
         rpc: [
-          "https://ethereum.rpc.thirdweb.com/SAMPLE_CLIENT_KEY/?bundleId=com.thirdweb.rpc",
           "https://1.rpc.thirdweb.com/SAMPLE_CLIENT_KEY/?bundleId=com.thirdweb.rpc",
           ...MAINNET_FALLBACK_HTTP_RPCS,
         ],

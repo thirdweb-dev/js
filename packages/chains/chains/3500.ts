@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 3500,
   "rpc": [
-    "https://paribu-net-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://3500.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.testnet.paribuscan.com"
   ],

@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 84,
   "rpc": [
-    "https://linqto-devnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://84.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://linqto-dev.com"
   ],

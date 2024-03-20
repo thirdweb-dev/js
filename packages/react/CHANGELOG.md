@@ -1,5 +1,181 @@
 # @thirdweb-dev/react
 
+## 4.4.20
+
+### Patch Changes
+
+- Updated dependencies [[`c494db8`](https://github.com/thirdweb-dev/js/commit/c494db87cbfa4b6fc4013abb01936e86a4350ea8), [`f0250a7`](https://github.com/thirdweb-dev/js/commit/f0250a77cdbfa3b72e8dbf0ff345219a032e42b0), [`c67b287`](https://github.com/thirdweb-dev/js/commit/c67b2877643afdfb503b41a2b5d21e18dbff15f2), [`7ac4e6b`](https://github.com/thirdweb-dev/js/commit/7ac4e6ba4ee947c76f35b1b95927d7772edf6454), [`d4be647`](https://github.com/thirdweb-dev/js/commit/d4be6479db3fec6b4891e5ca89487b4e703eb9cf)]:
+  - @thirdweb-dev/chains@0.1.80
+  - @thirdweb-dev/sdk@4.0.47
+  - @thirdweb-dev/react-core@4.4.20
+  - @thirdweb-dev/wallets@2.4.22
+
+## 4.4.19
+
+### Patch Changes
+
+- Updated dependencies [[`846a350`](https://github.com/thirdweb-dev/js/commit/846a3503fe4a8d39e92dd318470cefefd3b94c69), [`2e01627`](https://github.com/thirdweb-dev/js/commit/2e01627c998a49a1dd41041f3743a28488c92697)]:
+  - @thirdweb-dev/sdk@4.0.46
+  - @thirdweb-dev/chains@0.1.79
+  - @thirdweb-dev/react-core@4.4.19
+  - @thirdweb-dev/wallets@2.4.21
+
+## 4.4.18
+
+### Patch Changes
+
+- Updated dependencies [[`a2002d1`](https://github.com/thirdweb-dev/js/commit/a2002d16376c41fffa59daccfd98856aba90a627)]:
+  - @thirdweb-dev/sdk@4.0.45
+  - @thirdweb-dev/react-core@4.4.18
+  - @thirdweb-dev/wallets@2.4.20
+
+## 4.4.17
+
+### Patch Changes
+
+- Updated dependencies [[`b2be63a`](https://github.com/thirdweb-dev/js/commit/b2be63ada466ea1784d680ae6244ac047a190103)]:
+  - @thirdweb-dev/sdk@4.0.44
+  - @thirdweb-dev/react-core@4.4.17
+  - @thirdweb-dev/wallets@2.4.19
+
+## 4.4.16
+
+### Patch Changes
+
+- [#2447](https://github.com/thirdweb-dev/js/pull/2447) [`8382330`](https://github.com/thirdweb-dev/js/commit/838233075a4d0897f57570f0f5eb041464838973) Thanks [@MananTank](https://github.com/MananTank)! - Fix multiple renders of EmbeddedWallet social Login screen after connection
+
+- Updated dependencies [[`cabfc29`](https://github.com/thirdweb-dev/js/commit/cabfc29119f25a78010f59f766bdcb8c392afa2d), [`173777a`](https://github.com/thirdweb-dev/js/commit/173777ade4ea59cde1c6f25a4654d48b277be9ad)]:
+  - @thirdweb-dev/wallets@2.4.18
+  - @thirdweb-dev/sdk@4.0.43
+  - @thirdweb-dev/react-core@4.4.16
+
+## 4.4.15
+
+### Patch Changes
+
+- Updated dependencies [[`c894270`](https://github.com/thirdweb-dev/js/commit/c894270401850575d1a4df73e16198177b46477a), [`332a145`](https://github.com/thirdweb-dev/js/commit/332a14552bf95e13e5220b1bd73414f000088568), [`c6b025e`](https://github.com/thirdweb-dev/js/commit/c6b025e84451341f6f48c0a7c4b5f06b8e49d792)]:
+  - @thirdweb-dev/wallets@2.4.17
+  - @thirdweb-dev/sdk@4.0.42
+  - @thirdweb-dev/react-core@4.4.15
+
+## 4.4.14
+
+### Patch Changes
+
+- Updated dependencies [[`588897d`](https://github.com/thirdweb-dev/js/commit/588897d1b04e6c63da13639aeb47ca701308e1b2), [`862905e`](https://github.com/thirdweb-dev/js/commit/862905e161a091c15eb9b054cfcca0e5d2879fd6)]:
+  - @thirdweb-dev/chains@0.1.78
+  - @thirdweb-dev/wallets@2.4.16
+  - @thirdweb-dev/react-core@4.4.14
+  - @thirdweb-dev/sdk@4.0.41
+
+## 4.4.13
+
+### Patch Changes
+
+- Updated dependencies [[`74a92dc`](https://github.com/thirdweb-dev/js/commit/74a92dcb7dc4be7d03bcb8b7211e87016f52a81f), [`047fbe2`](https://github.com/thirdweb-dev/js/commit/047fbe2918808cbc8fded90104458b6e38d1207d)]:
+  - @thirdweb-dev/wallets@2.4.15
+  - @thirdweb-dev/chains@0.1.77
+  - @thirdweb-dev/react-core@4.4.13
+  - @thirdweb-dev/sdk@4.0.40
+
+## 4.4.12
+
+### Patch Changes
+
+- Updated dependencies [[`ab44b8f`](https://github.com/thirdweb-dev/js/commit/ab44b8f0ae760065f400f76d69703e26bcbcc022), [`9c7fbc1`](https://github.com/thirdweb-dev/js/commit/9c7fbc1603a7265209b6f56c2284fdb0e6b33a1d), [`f80f630`](https://github.com/thirdweb-dev/js/commit/f80f6307a3ebe1adaaf072dd2e02aecf83bfa43f), [`5f243bb`](https://github.com/thirdweb-dev/js/commit/5f243bba0ded5dace9344c79e8904a4a342d16af), [`7d8697e`](https://github.com/thirdweb-dev/js/commit/7d8697ec3ff72f33dda151e7eb82f5ff19c1f825)]:
+  - @thirdweb-dev/wallets@2.4.14
+  - @thirdweb-dev/sdk@4.0.39
+  - @thirdweb-dev/chains@0.1.76
+  - @thirdweb-dev/react-core@4.4.12
+
+## 4.4.11
+
+### Patch Changes
+
+- [#2376](https://github.com/thirdweb-dev/js/pull/2376) [`d5d7d54`](https://github.com/thirdweb-dev/js/commit/d5d7d542ceb76ae40529ba1418c2a78af126c222) Thanks [@MananTank](https://github.com/MananTank)! - Make OTPInput used in EmbeddedWallet numeric
+
+- Updated dependencies [[`e87292a`](https://github.com/thirdweb-dev/js/commit/e87292ab604897ddfc337d24d2d1fe0f3560baae)]:
+  - @thirdweb-dev/chains@0.1.75
+  - @thirdweb-dev/react-core@4.4.11
+  - @thirdweb-dev/sdk@4.0.38
+  - @thirdweb-dev/wallets@2.4.13
+
+## 4.4.10
+
+### Patch Changes
+
+- [#2354](https://github.com/thirdweb-dev/js/pull/2354) [`cff6ef2`](https://github.com/thirdweb-dev/js/commit/cff6ef2c973cd8a8c20db1a0f3b3c0f19c61ecf8) Thanks [@MananTank](https://github.com/MananTank)! - Remove const enums to object to fix issues with Next.js <13.5
+
+- [#2348](https://github.com/thirdweb-dev/js/pull/2348) [`a50d3b0`](https://github.com/thirdweb-dev/js/commit/a50d3b04f6aa7244027c0597c096efcedf4e71f6) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Update code snippet for XDEFI wallet
+
+- [#2347](https://github.com/thirdweb-dev/js/pull/2347) [`73e34c0`](https://github.com/thirdweb-dev/js/commit/73e34c083cd9c0d634e39657a4fad0f49f6fec89) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add Magic Eden wallet
+
+- [#2375](https://github.com/thirdweb-dev/js/pull/2375) [`553f7fd`](https://github.com/thirdweb-dev/js/commit/553f7fda4739b440fc62c3f34f2dad14a022371c) Thanks [@MananTank](https://github.com/MananTank)! - Remove unnecessary ConnectModal auto opening.
+
+  This also fixes the issue where Connect Modal opens on page load when `ThirdwebProvider` is dynamically imported and rendered in the app.
+
+- Updated dependencies [[`a00917c`](https://github.com/thirdweb-dev/js/commit/a00917cca451e64d7ea8dc8553c1c32540edaafa), [`73e34c0`](https://github.com/thirdweb-dev/js/commit/73e34c083cd9c0d634e39657a4fad0f49f6fec89), [`e7528af`](https://github.com/thirdweb-dev/js/commit/e7528af48ff2dda622ed47074611499cfd66f819), [`bac0c9b`](https://github.com/thirdweb-dev/js/commit/bac0c9b4a1da26bbc7b1550c4b6f5e335b80c82b), [`7d74d30`](https://github.com/thirdweb-dev/js/commit/7d74d30b9fe2d2d2798a3c5efb1d71cd73841e53), [`8d2811d`](https://github.com/thirdweb-dev/js/commit/8d2811dd131d6c8eb8ce79278f0a8ebe1883265d), [`abc0a53`](https://github.com/thirdweb-dev/js/commit/abc0a53dc398264f205d194e3f87a79f74e91eb1), [`10b71dd`](https://github.com/thirdweb-dev/js/commit/10b71dd7a0c6e91bb1ebe8250ca7fac7bac76635), [`bc198e2`](https://github.com/thirdweb-dev/js/commit/bc198e215e57094aac525b262fe91add4786df92)]:
+  - @thirdweb-dev/sdk@4.0.37
+  - @thirdweb-dev/react-core@4.4.10
+  - @thirdweb-dev/wallets@2.4.12
+  - @thirdweb-dev/chains@0.1.74
+
+## 4.4.9
+
+### Patch Changes
+
+- [#2303](https://github.com/thirdweb-dev/js/pull/2303) [`9e6b3e5`](https://github.com/thirdweb-dev/js/commit/9e6b3e576427fb74519a111080220d1a351531be) Thanks [@MananTank](https://github.com/MananTank)! - - Fix the closing of ConnectWallet after the wallet connection instead of showing the "Sign In" screen when Auth is enabled
+
+  - Call the `onConnect` prop on `ConnectWallet` and `ConnectEmbed` component with the connected wallet instance
+
+  ```tsx
+  <ConnectWallet
+    onConnect={(wallet) => {
+      console.log("Connected to:", wallet);
+    }}
+  />
+  ```
+
+  ```tsx
+  <ConnectEmbed
+    onConnect={(wallet) => {
+      console.log("Connected to:", wallet);
+    }}
+  />
+  ```
+
+  - Improved Sign in Screen UI for Embedded Wallet and Local Wallet with Retry and Disconnect buttons after failed sign in
+
+- [#2309](https://github.com/thirdweb-dev/js/pull/2309) [`23820b2`](https://github.com/thirdweb-dev/js/commit/23820b277118ae0845d4f0189ac58ef4e75896ba) Thanks [@MananTank](https://github.com/MananTank)! - Update Supported Networks for Safe wallet
+
+  - Remove Goerli, Base Goerli
+  - Add Sepolia, Base Mainnet, Polygon zkEVM, ZkSync Mainnet
+
+- [#2299](https://github.com/thirdweb-dev/js/pull/2299) [`ecd82b4`](https://github.com/thirdweb-dev/js/commit/ecd82b46192d278be26f58d9ca287e97b4ba25f8) Thanks [@MananTank](https://github.com/MananTank)! - Fix usage of dashed props instead of camel case on SVG
+
+- [#2331](https://github.com/thirdweb-dev/js/pull/2331) [`b5337bc`](https://github.com/thirdweb-dev/js/commit/b5337bcfc34664c3b87521a38d85372fc6ab9fdd) Thanks [@MananTank](https://github.com/MananTank)! - Add `hideSendButton` and `hideReceiveButton` props to `ConnectWallet` component to hide the send and receive buttons in ConnectWallet's Details Modal
+
+  ```tsx
+  // hide both buttons
+  <ConnectWallet hideSendButton={true} hideReceiveButton={true} />
+  ```
+
+  ```tsx
+  // hide only send button
+  <ConnectWallet hideSendButton={true} />
+  ```
+
+  ```tsx
+  // hide only receive button
+  <ConnectWallet hideReceiveButton={true} />
+  ```
+
+- Updated dependencies [[`e6a2407`](https://github.com/thirdweb-dev/js/commit/e6a2407ee56f13f93d7efe025ba027d3c9b03616), [`3137e45`](https://github.com/thirdweb-dev/js/commit/3137e45bb884525ba45fb389138d5360cd7333d1), [`0f9a7b2`](https://github.com/thirdweb-dev/js/commit/0f9a7b2571daf6fd9bbd8d9223e0c5e865b82668), [`2348417`](https://github.com/thirdweb-dev/js/commit/23484171148cbd6c42ec92aace2e30bbcd7d5073), [`23820b2`](https://github.com/thirdweb-dev/js/commit/23820b277118ae0845d4f0189ac58ef4e75896ba), [`94a699c`](https://github.com/thirdweb-dev/js/commit/94a699caaecee2247ccd7493c4cb04c6cc8b2e74), [`73a374a`](https://github.com/thirdweb-dev/js/commit/73a374aac25c2396dd2a895629737c6e8d024f45), [`ca70cd3`](https://github.com/thirdweb-dev/js/commit/ca70cd3882b39ffd56275d267e6af9c04fae179b)]:
+  - @thirdweb-dev/react-core@4.4.9
+  - @thirdweb-dev/sdk@4.0.36
+  - @thirdweb-dev/wallets@2.4.11
+  - @thirdweb-dev/chains@0.1.73
+
 ## 4.4.8
 
 ### Patch Changes

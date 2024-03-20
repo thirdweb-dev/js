@@ -21,7 +21,6 @@ export default {
   "networkId": 18303,
   "redFlags": [],
   "rpc": [
-    "https://zeroone-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://18303.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/zeroonetes/testnet/rpc"
   ],

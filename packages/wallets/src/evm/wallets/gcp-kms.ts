@@ -9,14 +9,14 @@ import {
  * @wallet
  */
 export class GcpKmsWallet extends AbstractWallet {
-  #options: GcpKmsSignerCredentials;
+  private _options: GcpKmsSignerCredentials;
 
   constructor(options: GcpKmsSignerCredentials) {
     super();
-    this.#options = options;
+    this._options = options;
   }
 
   async getSigner(): Promise<Signer> {
-    return new GcpKmsSigner(this.#options);
+    return new GcpKmsSigner(this._options);
   }
 }

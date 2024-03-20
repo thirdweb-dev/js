@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 1392,
   "rpc": [
-    "https://joseon.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1392.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.modchain.net/blockchain.joseon.com/rpc"
   ],

@@ -1,11 +1,15 @@
-import { ethers, providers, utils } from "ethers";
-
+import { Contract, ethers, providers, utils } from "ethers";
 import { Bytes, Signer } from "ethers";
 import { BaseAccountAPI } from "./base-api";
 import type { ERC4337EthersProvider } from "./erc4337-provider";
 import { HttpRpcClient } from "./http-rpc-client";
 import { hexlifyUserOp, randomNonce } from "./utils";
 import { ProviderConfig, UserOpOptions } from "../types";
+import { signTypedDataInternal } from "@thirdweb-dev/sdk";
+import { chainIdToThirdwebRpc } from "../../../wallets/abstract";
+import { setAnalyticsHeaders } from "../../../utils/headers";
+import { isTwUrl } from "../../../utils/url";
+import { checkContractWalletSignature } from "./check-contract-wallet-signature";
 
 export class ERC4337EthersSigner extends Signer {
   config: ProviderConfig;
@@ -13,6 +17,7 @@ export class ERC4337EthersSigner extends Signer {
   erc4337provider: ERC4337EthersProvider;
   httpRpcClient: HttpRpcClient;
   smartAccountAPI: BaseAccountAPI;
+  approving: boolean;
 
   // TODO: we have 'erc4337provider', remove shared dependencies or avoid two-way reference
   constructor(
@@ -29,6 +34,7 @@ export class ERC4337EthersSigner extends Signer {
     this.erc4337provider = erc4337provider;
     this.httpRpcClient = httpRpcClient;
     this.smartAccountAPI = smartAccountAPI;
+    this.approving = false;
   }
 
   address?: string;
@@ -38,6 +44,14 @@ export class ERC4337EthersSigner extends Signer {
     transaction: utils.Deferrable<providers.TransactionRequest>,
     options?: UserOpOptions,
   ): Promise<providers.TransactionResponse> {
+    if (!this.approving) {
+      this.approving = true;
+      const tx = await this.smartAccountAPI.createApproveTx();
+      if (tx) {
+        await (await this.sendTransaction(tx)).wait();
+      }
+      this.approving = false;
+    }
     const tx = await ethers.utils.resolveProperties(transaction);
     await this.verifyAllNecessaryFields(tx);
 
@@ -88,7 +102,7 @@ export class ERC4337EthersSigner extends Signer {
           errorIn.reason;
 
         if (failedOpMessage?.includes("FailedOp")) {
-          let paymasterInfo: string = "";
+          let paymasterInfo = "";
           // TODO: better error extraction methods will be needed
           const matched = failedOpMessage.match(/FailedOp\((.*)\)/);
 
@@ -138,20 +152,135 @@ Code: ${errorCode}`;
     return this.address as string;
   }
 
-  async signMessage(message: Bytes | string): Promise<string> {
-      const isNotDeployed = await this.smartAccountAPI.checkAccountPhantom();
-      if (isNotDeployed && this.config.deployOnSign) {
-        console.log(
-          "Account contract not deployed yet. Deploying account before signing message",
-        );
-        const tx = await this.sendTransaction({
-          to: await this.getAddress(),
-          data: "0x",
-        });
-        await tx.wait();
+  /**
+   * Sign a message and return the signature
+   */
+  public async signMessage(message: Bytes | string): Promise<string> {
+    // Deploy smart wallet if needed
+    const isNotDeployed = await this.smartAccountAPI.checkAccountPhantom();
+    if (isNotDeployed) {
+      console.log(
+        "Account contract not deployed yet. Deploying account before signing message",
+      );
+      const tx = await this.sendTransaction({
+        to: await this.getAddress(),
+        data: "0x",
+      });
+      await tx.wait();
+    }
+
+    const [chainId, address] = await Promise.all([
+      this.getChainId(),
+      this.getAddress(),
+    ]);
+    const originalMsgHash = utils.hashMessage(message);
+
+    let factorySupports712: boolean;
+    let signature: string;
+
+    const rpcUrl = chainIdToThirdwebRpc(chainId, this.config.clientId);
+
+    const headers: Record<string, string> = {};
+
+    if (isTwUrl(rpcUrl)) {
+      const bundleId =
+        typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
+          ? ((globalThis as any).APP_BUNDLE_ID as string)
+          : undefined;
+
+      if (this.config.secretKey) {
+        headers["x-secret-key"] = this.config.secretKey;
+      } else if (this.config.clientId) {
+        headers["x-client-id"] = this.config.clientId;
+
+        if (bundleId) {
+          headers["x-bundle-id"] = bundleId;
+        }
       }
-    
-    return await this.originalSigner.signMessage(message);
+
+      // Dashboard token
+      if (
+        typeof globalThis !== "undefined" &&
+        "TW_AUTH_TOKEN" in globalThis &&
+        typeof (globalThis as any).TW_AUTH_TOKEN === "string"
+      ) {
+        headers["authorization"] = `Bearer ${
+          (globalThis as any).TW_AUTH_TOKEN as string
+        }`;
+      }
+
+      // CLI token
+      if (
+        typeof globalThis !== "undefined" &&
+        "TW_CLI_AUTH_TOKEN" in globalThis &&
+        typeof (globalThis as any).TW_CLI_AUTH_TOKEN === "string"
+      ) {
+        headers["authorization"] = `Bearer ${
+          (globalThis as any).TW_CLI_AUTH_TOKEN as string
+        }`;
+        headers["x-authorize-wallet"] = "true";
+      }
+
+      setAnalyticsHeaders(headers);
+    }
+
+    try {
+      const provider = new providers.StaticJsonRpcProvider(
+        {
+          url: chainIdToThirdwebRpc(chainId, this.config.clientId),
+          headers,
+        },
+        chainId,
+      );
+      const walletContract = new Contract(
+        address,
+        [
+          "function getMessageHash(bytes32 _hash) public view returns (bytes32)",
+        ],
+        provider,
+      );
+      // if this fails it's a pre 712 factory
+      await walletContract.getMessageHash(originalMsgHash);
+      factorySupports712 = true;
+    } catch {
+      factorySupports712 = false;
+    }
+
+    if (factorySupports712) {
+      const result = await signTypedDataInternal(
+        this,
+        {
+          name: "Account",
+          version: "1",
+          chainId,
+          verifyingContract: address,
+        },
+        { AccountMessage: [{ name: "message", type: "bytes" }] },
+        {
+          message: utils.defaultAbiCoder.encode(["bytes32"], [originalMsgHash]),
+        },
+      );
+      signature = result.signature;
+    } else {
+      signature = await this.originalSigner.signMessage(message);
+    }
+
+    const isValid = await checkContractWalletSignature(
+      message as string,
+      signature,
+      address,
+      chainId,
+      this.config.clientId,
+      this.config.secretKey,
+    );
+
+    if (isValid) {
+      return signature;
+    } else {
+      throw new Error(
+        "Unable to verify signature on smart account, please make sure the smart account is deployed and the signature is valid.",
+      );
+    }
   }
 
   async signTransaction(

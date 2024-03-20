@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 2613,
   "rpc": [
-    "https://ezchain-c-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2613.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-api.ezchain.com/ext/bc/C/rpc"
   ],

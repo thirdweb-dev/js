@@ -1,6 +1,6 @@
 import { EVMWallet } from "../interfaces";
 import type { Signer } from "ethers";
-import { providers, Contract, utils, Bytes, BigNumber } from "ethers";
+import { utils, Bytes, BigNumber } from "ethers";
 import EventEmitter from "eventemitter3";
 import { Ecosystem, GenericAuthWallet } from "../../core/interfaces/auth";
 import {
@@ -15,7 +15,7 @@ import {
 import { createErc20 } from "../utils/currency";
 
 // TODO improve this
-function chainIdToThirdwebRpc(chainId: number, clientId?: string) {
+export function chainIdToThirdwebRpc(chainId: number, clientId?: string) {
   return `https://${chainId}.rpc.thirdweb.com${clientId ? `/${clientId}` : ""}${
     typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
       ? `?bundleId=${(globalThis as any).APP_BUNDLE_ID as string}`
@@ -39,41 +39,6 @@ export interface WalletEvents {
   request(): void;
 }
 
-const EIP1271_ABI = [
-  "function isValidSignature(bytes32 _hash, bytes _signature) public view returns (bytes4)",
-];
-const EIP1271_MAGICVALUE = "0x1626ba7e";
-
-export async function checkContractWalletSignature(
-  message: string,
-  signature: string,
-  address: string,
-  chainId: number,
-): Promise<boolean> {
-  // TODO: remove below `skipFetchSetup` logic when ethers.js v6 support arrives
-  let _skipFetchSetup = false;
-  if (
-    typeof globalThis !== "undefined" &&
-    "TW_SKIP_FETCH_SETUP" in globalThis &&
-    typeof (globalThis as any).TW_SKIP_FETCH_SETUP === "boolean"
-  ) {
-    _skipFetchSetup = (globalThis as any).TW_SKIP_FETCH_SETUP as boolean;
-  }
-
-  //TODO: A provider should be passed in instead of creating a new one here.
-  const provider = new providers.JsonRpcProvider({
-    url: chainIdToThirdwebRpc(chainId),
-    skipFetchSetup: _skipFetchSetup,
-  });
-  const walletContract = new Contract(address, EIP1271_ABI, provider);
-  const _hashMessage = utils.hashMessage(message);
-  try {
-    const res = await walletContract.isValidSignature(_hashMessage, signature);
-    return res === EIP1271_MAGICVALUE;
-  } catch {
-    return false;
-  }
-}
 /**
  * The base class for any wallet in the Wallet SDK, including backend wallets. It contains the functionality common to all wallets.
  *
@@ -198,7 +163,8 @@ export abstract class AbstractWallet
     message: string,
     signature: string,
     address: string,
-    chainId?: number,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _chainId?: number,
   ): Promise<boolean> {
     try {
       const messageHash = utils.hashMessage(message);
@@ -213,21 +179,6 @@ export abstract class AbstractWallet
       }
     } catch {
       // no-op
-    }
-
-    // Check if the address is a smart contract wallet
-    if (chainId !== undefined) {
-      try {
-        const isValid = await checkContractWalletSignature(
-          message,
-          signature,
-          address,
-          chainId || 1,
-        );
-        return isValid;
-      } catch {
-        // no-op
-      }
     }
 
     return false;

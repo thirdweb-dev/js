@@ -13,12 +13,11 @@ export default {
   },
   "networkId": 3885,
   "rpc": [
-    "https://firechain-zkevm-ghostrider.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://3885.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.zkevm.ghostrider.thefirechain.com"
+    "https://rpc-zkevm-ghostrider.thefirechain.com"
   ],
-  "shortName": "firechain-zkEVM-ghostrider",
+  "shortName": "firechain-zkEVM-testnet",
   "slug": "firechain-zkevm-ghostrider",
-  "testnet": false,
-  "title": "Firechain zkEVM Ghostrider"
+  "testnet": true,
+  "title": "Firechain zkEVM Testnet"
 } as const satisfies Chain;

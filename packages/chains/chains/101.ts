@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 1,
   "rpc": [
-    "https://etherinc.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://101.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.einc.io/jsonrpc/mainnet"
   ],

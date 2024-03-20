@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 7355310,
   "rpc": [
-    "https://openvessel.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://7355310.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-external.openvessel.io"
   ],

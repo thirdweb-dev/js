@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 8387,
   "rpc": [
-    "https://dracones-financial-services.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://8387.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.dracones.net/"
   ],

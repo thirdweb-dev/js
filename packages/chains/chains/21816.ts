@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 21816,
   "rpc": [
-    "https://omchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://21816.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://seed.omchain.io"
   ],

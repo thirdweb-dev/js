@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 333313,
   "rpc": [
-    "https://bloom-genesis.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://333313.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.bloomgenesis.com"
   ],

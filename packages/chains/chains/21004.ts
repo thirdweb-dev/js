@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 21004,
   "rpc": [
-    "https://c4ei.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://21004.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.c4ei.net"
   ],

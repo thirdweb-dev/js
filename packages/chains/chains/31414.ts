@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 31414,
   "rpc": [
-    "https://evoke-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://31414.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.evokescan.org"
   ],

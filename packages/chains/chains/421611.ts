@@ -37,7 +37,6 @@ export default {
   },
   "redFlags": [],
   "rpc": [
-    "https://arbitrum-rinkeby.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://421611.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rinkeby.arbitrum.io/rpc"
   ],

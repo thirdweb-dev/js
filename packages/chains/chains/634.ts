@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 634,
   "rpc": [
-    "https://avocado.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://634.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.avocado.instadapp.io"
   ],

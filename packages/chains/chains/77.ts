@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 77,
   "rpc": [
-    "https://poa-network-sokol.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://77.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://sokol.poa.network",
     "wss://sokol.poa.network/wss",

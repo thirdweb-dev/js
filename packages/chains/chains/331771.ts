@@ -26,7 +26,6 @@ export default {
   "networkId": 331771,
   "redFlags": [],
   "rpc": [
-    "https://pop.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://331771.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc00.proofofpepe.tech",
     "https://rpc01.proofofpepe.tech",

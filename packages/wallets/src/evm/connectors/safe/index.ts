@@ -9,7 +9,8 @@ import {
   SafeService,
   SafeEthersSigner,
 } from "@safe-global/safe-ethers-adapters";
-import safeCoreSdk, { EthersAdapter } from "@safe-global/protocol-kit";
+import safeCoreSdk from "@safe-global/safe-core-sdk";
+import safeEthersLib from "@safe-global/safe-ethers-lib";
 import { EVMWallet } from "../../interfaces";
 import { CHAIN_ID_TO_GNOSIS_SERVER_URL } from "./constants";
 
@@ -143,7 +144,7 @@ export class SafeConnector extends Connector<SafeConnectionArgs> {
       throw new Error("Chain not supported");
     }
 
-    const ethAdapter = new EthersAdapter({
+    const ethAdapter = new safeEthersLib({
       ethers,
       signerOrProvider: signer,
     });
@@ -197,7 +198,7 @@ export class SafeConnector extends Connector<SafeConnectionArgs> {
       const safeTxHash = await safe.getTransactionHash(safeTx);
       const safeSignature = await safe.signTransactionHash(safeTxHash);
       await service.proposeTx(
-        await safe.getAddress(),
+        safe.getAddress(),
         safeTxHash,
         safeTx,
         safeSignature,

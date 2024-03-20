@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 333,
   "rpc": [
-    "https://web3q.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://333.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.web3q.io:8545"
   ],

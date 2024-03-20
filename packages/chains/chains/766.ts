@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 766,
   "rpc": [
-    "https://ql1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://766.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.qom.one"
   ],

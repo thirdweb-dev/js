@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 38401,
   "rpc": [
-    "https://connectormanager-robin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://38401.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://robin-cm.rangersprotocol.com/api/jsonrpc"
   ],

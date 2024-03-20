@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 99998,
   "rpc": [
-    "https://ub-smart-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://99998.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.rpc.uschain.network"
   ],

@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 9322253,
   "rpc": [
-    "https://milvine.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://9322253.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://xcap-milvine.relay.xcap.network/zj5l55ftsgi027kz4nf14vs8d89inego/rpc1"
   ],

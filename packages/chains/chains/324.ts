@@ -40,9 +40,10 @@ export default {
     ]
   },
   "rpc": [
-    "https://zksync.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://324.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet.era.zksync.io"
+    "https://mainnet.era.zksync.io",
+    "https://zksync.drpc.org",
+    "wss://zksync.drpc.org"
   ],
   "shortName": "zksync",
   "slug": "zksync",

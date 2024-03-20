@@ -11,6 +11,7 @@ export default {
   ],
   "faucets": [],
   "features": [],
+  "infoURL": "https://crossfi.org/",
   "name": "CrossFi Testnet",
   "nativeCurrency": {
     "name": "XFI",
@@ -20,11 +21,11 @@ export default {
   "networkId": 4157,
   "redFlags": [],
   "rpc": [
-    "https://crossfi-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://4157.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.testnet.ms/"
+    "https://rpc.testnet.ms"
   ],
   "shortName": "XFI",
+  "slip44": 1,
   "slug": "crossfi-testnet",
   "testnet": true,
   "title": "https://scan.testnet.ms/"

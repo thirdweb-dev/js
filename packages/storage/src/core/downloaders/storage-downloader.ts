@@ -90,7 +90,7 @@ export class StorageDownloader implements IStorageDownloader {
       if (this.secretKey) {
         headers = { "x-secret-key": this.secretKey };
       } else if (this.clientId) {
-        if (!resolvedUri.includes("bundleId")) {
+        if (!resolvedUri.includes("bundleId") && bundleId) {
           resolvedUri = resolvedUri + (bundleId ? `?bundleId=${bundleId}` : "");
         }
         headers["x-client-Id"] = this.clientId;

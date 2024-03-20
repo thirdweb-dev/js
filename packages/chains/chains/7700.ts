@@ -4,19 +4,14 @@ export default {
   "chainId": 7700,
   "explorers": [
     {
-      "name": "Canto EVM Explorer (Blockscout)",
-      "url": "https://evm.explorer.canto.io",
-      "standard": "none"
-    },
-    {
-      "name": "Canto Cosmos Explorer",
-      "url": "https://cosmos-explorers.neobase.one",
-      "standard": "none"
+      "name": "Canto Explorer (OKLink)",
+      "url": "https://www.oklink.com/canto",
+      "standard": "EIP3091"
     },
     {
       "name": "Canto EVM Explorer (Blockscout)",
       "url": "https://tuber.build",
-      "standard": "none"
+      "standard": "EIP3091"
     },
     {
       "name": "dexguru",
@@ -40,17 +35,11 @@ export default {
   },
   "networkId": 7700,
   "rpc": [
-    "https://canto.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://7700.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://canto.slingshot.finance",
-    "https://canto.neobase.one",
+    "https://canto-rpc.ansybl.io",
     "https://mainnode.plexnode.org:8545",
-    "https://canto.gravitychain.io/",
-    "https://canto.evm.chandrastation.com/",
-    "https://jsonrpc.canto.nodestake.top/",
-    "https://canto.dexvaults.com/",
-    "wss://canto.gravitychain.io:8546",
-    "wss://canto.dexvaults.com/ws"
+    "https://canto.gravitychain.io/"
   ],
   "shortName": "canto",
   "slug": "canto",

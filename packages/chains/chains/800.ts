@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 800,
   "rpc": [
-    "https://lucid-blockchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://800.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.lucidcoin.io"
   ],

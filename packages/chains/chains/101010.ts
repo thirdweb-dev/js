@@ -1,38 +1,37 @@
 import type { Chain } from "../src/types";
 export default {
-  "chain": "SVRN",
+  "chain": "GTN",
   "chainId": 101010,
   "explorers": [
     {
-      "name": "Soverun",
-      "url": "https://testnet.soverun.com",
+      "name": "blockscout",
+      "url": "https://stability.blockscout.com",
       "standard": "EIP3091"
     }
   ],
-  "faucets": [
-    "https://faucet.soverun.com"
-  ],
+  "faucets": [],
   "icon": {
-    "url": "ipfs://QmTYazUzgY9Nn2mCjWwFUSLy3dG6i2PvALpwCNQvx1zXyi",
-    "width": 1154,
-    "height": 1154,
+    "url": "ipfs://bafkreid3wd6ouu53r677q2z24a4eq5un5tlwbc4izfapcvvtrlhkmz43au",
+    "width": 133,
+    "height": 144,
     "format": "png"
   },
-  "infoURL": "https://soverun.com",
-  "name": "Soverun Testnet",
+  "infoURL": "https://stabilityprotocol.com",
+  "name": "Global Trust Network",
   "nativeCurrency": {
-    "name": "Soverun",
-    "symbol": "SVRN",
+    "name": "FREE",
+    "symbol": "FREE",
     "decimals": 18
   },
   "networkId": 101010,
-  "rpc": [
-    "https://soverun-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://101010.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-rpc.soverun.com"
+  "redFlags": [
+    "reusedChainId"
   ],
-  "shortName": "SVRNt",
-  "slip44": 1,
-  "slug": "soverun-testnet",
-  "testnet": true
+  "rpc": [
+    "https://101010.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://gtn.stabilityprotocol.com"
+  ],
+  "shortName": "stabilityprotocol",
+  "slug": "global-trust-network",
+  "testnet": false
 } as const satisfies Chain;

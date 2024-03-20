@@ -45,19 +45,19 @@ export default {
   "networkId": 5,
   "redFlags": [],
   "rpc": [
-    "https://goerli.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://5.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://goerli.infura.io/v3/${INFURA_API_KEY}",
     "wss://goerli.infura.io/v3/${INFURA_API_KEY}",
     "https://rpc.goerli.mudit.blog/",
-    "https://ethereum-goerli.publicnode.com",
-    "wss://ethereum-goerli.publicnode.com",
+    "https://ethereum-goerli-rpc.publicnode.com",
+    "wss://ethereum-goerli-rpc.publicnode.com",
     "https://goerli.gateway.tenderly.co",
     "wss://goerli.gateway.tenderly.co"
   ],
   "shortName": "gor",
   "slip44": 1,
   "slug": "goerli",
+  "status": "deprecated",
   "testnet": true,
   "title": "Ethereum Testnet Goerli"
 } as const satisfies Chain;

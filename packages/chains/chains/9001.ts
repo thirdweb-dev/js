@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 9001,
   "rpc": [
-    "https://evmos.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://9001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evmos.lava.build",
     "wss://evmos.lava.build/websocket",

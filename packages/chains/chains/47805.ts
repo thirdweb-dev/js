@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 47805,
   "rpc": [
-    "https://rei-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://47805.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.rei.network",
     "wss://rpc.rei.network"

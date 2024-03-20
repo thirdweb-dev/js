@@ -1,5 +1,4 @@
 import { AbstractClientWallet, WalletOptions } from "./base";
-import { checkContractWalletSignature } from "./abstract";
 import type { ConnectParams } from "../interfaces/connector";
 import type {
   SmartWalletConfig,
@@ -16,8 +15,8 @@ import {
 } from "@thirdweb-dev/sdk";
 import { walletIds } from "../constants/walletIds";
 import { getValidChainRPCs } from "@thirdweb-dev/chains";
-import { providers, utils, Bytes, Signer } from "ethers";
-import { signTypedDataInternal } from "@thirdweb-dev/sdk";
+import { providers, utils } from "ethers";
+import { checkContractWalletSignature } from "../connectors/smart-wallet/lib/check-contract-wallet-signature";
 
 // export types and utils for convenience
 export type * from "../connectors/smart-wallet/types";
@@ -246,10 +245,10 @@ export class SmartWallet extends AbstractClientWallet<
    * The entrypoint contract address. Uses v0.6 by default.
    *
    * Must be a `string`.
-   * 
+   *
    * #### deployOnSign
    * Whether to deploy the smart wallet when the user signs a message. Defaults to true.
-   * 
+   *
    * Must be a `boolean`.
    *
    * #### chains
@@ -314,68 +313,6 @@ export class SmartWallet extends AbstractClientWallet<
    */
   getPersonalWallet() {
     return this.connector?.personalWallet;
-  }
-
-  /**
-   * Sign a message and return the signature
-   */
-  public async signMessage(message: Bytes | string): Promise<string> {
-    // Deploy smart wallet if needed
-    const connector = await this.getConnector();
-    await connector.deployIfNeeded();
-
-    const erc4337Signer = await this.getSigner();
-    const chainId = await erc4337Signer.getChainId();
-    const address = await connector.getAddress();
-
-    /**
-     * We first try to sign the EIP-712 typed data i.e. the message mixed with the smart wallet's domain separator.
-     * If this fails, we fallback to the legacy signing method.
-     */
-    try {
-      const result = await signTypedDataInternal(
-        erc4337Signer,
-        {
-          name: "Account",
-          version: "1",
-          chainId,
-          verifyingContract: address,
-        },
-        { AccountMessage: [{ name: "message", type: "bytes" }] },
-        {
-          message: utils.defaultAbiCoder.encode(
-            ["bytes32"],
-            [utils.hashMessage(message)],
-          ),
-        },
-      );
-
-      const isValid = await checkContractWalletSignature(
-        message as string,
-        result.signature,
-        address,
-        chainId,
-      );
-
-      if (!isValid) {
-        throw new Error("Invalid signature");
-      }
-
-      return result.signature;
-    } catch {
-      return await this.signMessageLegacy(erc4337Signer, message);
-    }
-  }
-
-  /**
-   * This is only for for legacy EIP-1271 signature verification
-   * Sign a message and return the signature
-   */
-  private async signMessageLegacy(
-    signer: Signer,
-    message: Bytes | string,
-  ): Promise<string> {
-    return await signer.signMessage(message);
   }
 
   /**
@@ -725,6 +662,44 @@ export class SmartWallet extends AbstractClientWallet<
   async getFactoryContract(): Promise<SmartContract> {
     const connector = await this.getConnector();
     return connector.getFactoryContract();
+  }
+
+  override async verifySignature(
+    message: string,
+    signature: string,
+    address: string,
+    chainId: number,
+  ): Promise<boolean> {
+    try {
+      const messageHash = utils.hashMessage(message);
+      const messageHashBytes = utils.arrayify(messageHash);
+      const recoveredAddress = utils.recoverAddress(
+        messageHashBytes,
+        signature,
+      );
+
+      if (recoveredAddress === address) {
+        return true;
+      }
+    } catch {
+      // no-op
+    }
+    // Check if the address is a smart contract wallet
+    if (chainId !== undefined) {
+      try {
+        return await checkContractWalletSignature(
+          message,
+          signature,
+          address,
+          chainId || 1,
+          this.options?.clientId,
+          this.options?.secretKey,
+        );
+      } catch {
+        // no-op
+      }
+    }
+    return false;
   }
 
   autoConnect(params: ConnectParams<SmartWalletConnectionArgs>) {

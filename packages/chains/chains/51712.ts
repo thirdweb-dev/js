@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 51712,
   "rpc": [
-    "https://sardis.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://51712.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.sardisnetwork.com"
   ],

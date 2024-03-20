@@ -1,3 +1,4 @@
+import { Link } from "../../common/link-lib-helper";
 import { ContractPayload } from "./ContractPayload";
 
 export type CompileOptions = {
@@ -5,6 +6,7 @@ export type CompileOptions = {
   projectPath: string;
   name: string;
   zksync?: boolean;
+  linkLib?: Link[];
 };
 
 export interface IBuilder {

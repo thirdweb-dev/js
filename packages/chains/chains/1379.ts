@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 1379,
   "rpc": [
-    "https://kalar-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1379.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-api.kalarchain.tech"
   ],

@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 2099156,
   "rpc": [
-    "https://plian-main.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2099156.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.plian.io/pchain"
   ],

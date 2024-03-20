@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 1024,
   "rpc": [
-    "https://clv-parachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1024.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api-para.clover.finance"
   ],

@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 18686,
   "rpc": [
-    "https://mxc-zkevm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://18686.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.mxc.com"
   ],

@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 6502,
   "rpc": [
-    "https://peerpay.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://6502.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://peerpay.su.gy/p2p"
   ],

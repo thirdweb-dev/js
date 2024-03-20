@@ -32,7 +32,6 @@ export default {
   "networkId": 8217,
   "redFlags": [],
   "rpc": [
-    "https://klaytn-cypress.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://8217.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://public-en-cypress.klaytn.net",
     "https://klaytn-mainnet-rpc.allthatnode.com:8551",

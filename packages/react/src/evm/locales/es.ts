@@ -132,8 +132,8 @@ export function esDefault(): ThirdwebLocale {
           "Escanea esto con tu aplicación de cartera para conectar",
       },
       smartWallet: {
-        connecting: "Conectando a Smart Wallet",
-        failedToConnect: "Error al conectar con Smart Wallet",
+        connecting: "Conectando a Smart Account",
+        failedToConnect: "Error al conectar con Smart Account",
         wrongNetworkScreen: {
           title: "Red incorrecta",
           subtitle: "Tu cartera no está conectada a la red requerida",
@@ -167,6 +167,7 @@ export function esDefault(): ThirdwebLocale {
         },
       },
       coinbaseWallet: extensionAndQRScanScreens("Coinbase"),
+      magicEdenWallet: extensionAndQRScanScreens("Magic Eden"),
       metamaskWallet: extensionAndQRScanScreens("MetaMask"),
       okxWallet: extensionAndQRScanScreens("OKX"),
       coreWallet: extensionAndQRScanScreens("Core"),

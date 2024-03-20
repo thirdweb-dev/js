@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 2020,
   "rpc": [
-    "https://publicmint.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2020.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.publicmint.io:8545"
   ],

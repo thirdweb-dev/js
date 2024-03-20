@@ -30,7 +30,6 @@ export default {
   },
   "networkId": 11297108099,
   "rpc": [
-    "https://palm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://11297108099.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://palm-testnet.infura.io/v3/${INFURA_API_KEY}",
     "https://palm-testnet.public.blastapi.io"

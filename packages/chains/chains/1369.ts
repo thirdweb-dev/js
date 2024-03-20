@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 1369,
   "rpc": [
-    "https://zafirium.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1369.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.zakumi.io"
   ],

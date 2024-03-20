@@ -33,7 +33,6 @@ export default {
   },
   "networkId": 2199,
   "rpc": [
-    "https://moonsama-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2199.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.moonsama.com",
     "wss://rpc.moonsama.com/ws"

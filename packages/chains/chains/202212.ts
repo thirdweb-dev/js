@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 202212,
   "rpc": [
-    "https://x1-devnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://202212.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://x1-devnet.xen.network"
   ],

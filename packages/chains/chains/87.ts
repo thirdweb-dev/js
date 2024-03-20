@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 87,
   "rpc": [
-    "https://nova-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://87.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://connect.novanetwork.io",
     "https://0x57.redjackstudio.com",

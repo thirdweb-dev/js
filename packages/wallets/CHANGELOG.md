@@ -1,5 +1,128 @@
 # @thirdweb-dev/wallets
 
+## 2.4.22
+
+### Patch Changes
+
+- Updated dependencies [[`c494db8`](https://github.com/thirdweb-dev/js/commit/c494db87cbfa4b6fc4013abb01936e86a4350ea8), [`f0250a7`](https://github.com/thirdweb-dev/js/commit/f0250a77cdbfa3b72e8dbf0ff345219a032e42b0), [`c67b287`](https://github.com/thirdweb-dev/js/commit/c67b2877643afdfb503b41a2b5d21e18dbff15f2), [`7ac4e6b`](https://github.com/thirdweb-dev/js/commit/7ac4e6ba4ee947c76f35b1b95927d7772edf6454), [`d4be647`](https://github.com/thirdweb-dev/js/commit/d4be6479db3fec6b4891e5ca89487b4e703eb9cf)]:
+  - @thirdweb-dev/chains@0.1.80
+  - @thirdweb-dev/sdk@4.0.47
+  - @thirdweb-dev/contracts-js@1.3.17
+
+## 2.4.21
+
+### Patch Changes
+
+- Updated dependencies [[`846a350`](https://github.com/thirdweb-dev/js/commit/846a3503fe4a8d39e92dd318470cefefd3b94c69), [`2e01627`](https://github.com/thirdweb-dev/js/commit/2e01627c998a49a1dd41041f3743a28488c92697)]:
+  - @thirdweb-dev/sdk@4.0.46
+  - @thirdweb-dev/chains@0.1.79
+
+## 2.4.20
+
+### Patch Changes
+
+- Updated dependencies [[`a2002d1`](https://github.com/thirdweb-dev/js/commit/a2002d16376c41fffa59daccfd98856aba90a627)]:
+  - @thirdweb-dev/sdk@4.0.45
+
+## 2.4.19
+
+### Patch Changes
+
+- Updated dependencies [[`b2be63a`](https://github.com/thirdweb-dev/js/commit/b2be63ada466ea1784d680ae6244ac047a190103)]:
+  - @thirdweb-dev/sdk@4.0.44
+
+## 2.4.18
+
+### Patch Changes
+
+- [#2443](https://github.com/thirdweb-dev/js/pull/2443) [`cabfc29`](https://github.com/thirdweb-dev/js/commit/cabfc29119f25a78010f59f766bdcb8c392afa2d) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [Smart Wallet] Use bundler eth_getUserOperationReceipt instead of rpc eth_getLogs, remove polygon gas station error logs
+
+- Updated dependencies [[`cabfc29`](https://github.com/thirdweb-dev/js/commit/cabfc29119f25a78010f59f766bdcb8c392afa2d), [`173777a`](https://github.com/thirdweb-dev/js/commit/173777ade4ea59cde1c6f25a4654d48b277be9ad)]:
+  - @thirdweb-dev/sdk@4.0.43
+
+## 2.4.17
+
+### Patch Changes
+
+- [#2440](https://github.com/thirdweb-dev/js/pull/2440) [`c894270`](https://github.com/thirdweb-dev/js/commit/c894270401850575d1a4df73e16198177b46477a) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [Smart Wallet] Update Account Core ABI
+
+- [#2439](https://github.com/thirdweb-dev/js/pull/2439) [`332a145`](https://github.com/thirdweb-dev/js/commit/332a14552bf95e13e5220b1bd73414f000088568) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Make accountInfo/factoryInfo internal props optional in SmartWalletConfig
+
+- Updated dependencies [[`c6b025e`](https://github.com/thirdweb-dev/js/commit/c6b025e84451341f6f48c0a7c4b5f06b8e49d792)]:
+  - @thirdweb-dev/sdk@4.0.42
+
+## 2.4.16
+
+### Patch Changes
+
+- [#2417](https://github.com/thirdweb-dev/js/pull/2417) [`862905e`](https://github.com/thirdweb-dev/js/commit/862905e161a091c15eb9b054cfcca0e5d2879fd6) Thanks [@jnsdls](https://github.com/jnsdls)! - fix signature verification via smart-wallet
+
+- Updated dependencies [[`588897d`](https://github.com/thirdweb-dev/js/commit/588897d1b04e6c63da13639aeb47ca701308e1b2)]:
+  - @thirdweb-dev/chains@0.1.78
+  - @thirdweb-dev/sdk@4.0.41
+
+## 2.4.15
+
+### Patch Changes
+
+- [#2414](https://github.com/thirdweb-dev/js/pull/2414) [`74a92dc`](https://github.com/thirdweb-dev/js/commit/74a92dcb7dc4be7d03bcb8b7211e87016f52a81f) Thanks [@jnsdls](https://github.com/jnsdls)! - properly pass through clientId and secretKey variables to verifySignature functions
+
+- Updated dependencies [[`047fbe2`](https://github.com/thirdweb-dev/js/commit/047fbe2918808cbc8fded90104458b6e38d1207d)]:
+  - @thirdweb-dev/chains@0.1.77
+  - @thirdweb-dev/sdk@4.0.40
+
+## 2.4.14
+
+### Patch Changes
+
+- [#2379](https://github.com/thirdweb-dev/js/pull/2379) [`ab44b8f`](https://github.com/thirdweb-dev/js/commit/ab44b8f0ae760065f400f76d69703e26bcbcc022) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [Smart Wallet] Do not deploy to sign typed data, allow presigned deploy+session key
+
+- [#2388](https://github.com/thirdweb-dev/js/pull/2388) [`f80f630`](https://github.com/thirdweb-dev/js/commit/f80f6307a3ebe1adaaf072dd2e02aecf83bfa43f) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [Smart Wallet] ERC20Paymaster Generic Support
+
+- Updated dependencies [[`ab44b8f`](https://github.com/thirdweb-dev/js/commit/ab44b8f0ae760065f400f76d69703e26bcbcc022), [`9c7fbc1`](https://github.com/thirdweb-dev/js/commit/9c7fbc1603a7265209b6f56c2284fdb0e6b33a1d), [`5f243bb`](https://github.com/thirdweb-dev/js/commit/5f243bba0ded5dace9344c79e8904a4a342d16af), [`7d8697e`](https://github.com/thirdweb-dev/js/commit/7d8697ec3ff72f33dda151e7eb82f5ff19c1f825)]:
+  - @thirdweb-dev/sdk@4.0.39
+  - @thirdweb-dev/chains@0.1.76
+
+## 2.4.13
+
+### Patch Changes
+
+- Updated dependencies [[`e87292a`](https://github.com/thirdweb-dev/js/commit/e87292ab604897ddfc337d24d2d1fe0f3560baae)]:
+  - @thirdweb-dev/chains@0.1.75
+  - @thirdweb-dev/sdk@4.0.38
+
+## 2.4.12
+
+### Patch Changes
+
+- [#2347](https://github.com/thirdweb-dev/js/pull/2347) [`73e34c0`](https://github.com/thirdweb-dev/js/commit/73e34c083cd9c0d634e39657a4fad0f49f6fec89) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add Magic Eden wallet
+
+- [#2341](https://github.com/thirdweb-dev/js/pull/2341) [`e7528af`](https://github.com/thirdweb-dev/js/commit/e7528af48ff2dda622ed47074611499cfd66f819) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [Smart Wallet] Always force deploy on sign/auth, use 712 with 1271 where possible
+
+- [#2364](https://github.com/thirdweb-dev/js/pull/2364) [`10b71dd`](https://github.com/thirdweb-dev/js/commit/10b71dd7a0c6e91bb1ebe8250ca7fac7bac76635) Thanks [@jnsdls](https://github.com/jnsdls)! - revert prior `Safe` wallet library changes
+
+- [#2374](https://github.com/thirdweb-dev/js/pull/2374) [`bc198e2`](https://github.com/thirdweb-dev/js/commit/bc198e215e57094aac525b262fe91add4786df92) Thanks [@MananTank](https://github.com/MananTank)! - Use `private foo` instead of `#foo` for making the members private in classes
+
+- Updated dependencies [[`a00917c`](https://github.com/thirdweb-dev/js/commit/a00917cca451e64d7ea8dc8553c1c32540edaafa), [`bac0c9b`](https://github.com/thirdweb-dev/js/commit/bac0c9b4a1da26bbc7b1550c4b6f5e335b80c82b), [`7d74d30`](https://github.com/thirdweb-dev/js/commit/7d74d30b9fe2d2d2798a3c5efb1d71cd73841e53), [`8d2811d`](https://github.com/thirdweb-dev/js/commit/8d2811dd131d6c8eb8ce79278f0a8ebe1883265d), [`abc0a53`](https://github.com/thirdweb-dev/js/commit/abc0a53dc398264f205d194e3f87a79f74e91eb1), [`bc198e2`](https://github.com/thirdweb-dev/js/commit/bc198e215e57094aac525b262fe91add4786df92)]:
+  - @thirdweb-dev/sdk@4.0.37
+  - @thirdweb-dev/chains@0.1.74
+  - @thirdweb-dev/crypto@0.2.1
+
+## 2.4.11
+
+### Patch Changes
+
+- [#2309](https://github.com/thirdweb-dev/js/pull/2309) [`23820b2`](https://github.com/thirdweb-dev/js/commit/23820b277118ae0845d4f0189ac58ef4e75896ba) Thanks [@MananTank](https://github.com/MananTank)! - Update Supported Networks for Safe wallet
+
+  - Remove Goerli, Base Goerli
+  - Add Sepolia, Base Mainnet, Polygon zkEVM, ZkSync Mainnet
+
+- [#2316](https://github.com/thirdweb-dev/js/pull/2316) [`73a374a`](https://github.com/thirdweb-dev/js/commit/73a374aac25c2396dd2a895629737c6e8d024f45) Thanks [@MananTank](https://github.com/MananTank)! - Ignore Rabby wallet extension in MetaMask injected provider detection
+
+- Updated dependencies [[`3137e45`](https://github.com/thirdweb-dev/js/commit/3137e45bb884525ba45fb389138d5360cd7333d1), [`0f9a7b2`](https://github.com/thirdweb-dev/js/commit/0f9a7b2571daf6fd9bbd8d9223e0c5e865b82668), [`2348417`](https://github.com/thirdweb-dev/js/commit/23484171148cbd6c42ec92aace2e30bbcd7d5073), [`94a699c`](https://github.com/thirdweb-dev/js/commit/94a699caaecee2247ccd7493c4cb04c6cc8b2e74), [`ca70cd3`](https://github.com/thirdweb-dev/js/commit/ca70cd3882b39ffd56275d267e6af9c04fae179b)]:
+  - @thirdweb-dev/sdk@4.0.36
+  - @thirdweb-dev/chains@0.1.73
+
 ## 2.4.10
 
 ### Patch Changes

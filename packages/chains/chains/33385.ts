@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 33385,
   "rpc": [
-    "https://zilliqa-evm-devnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://33385.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.devnet.zilliqa.com/"
   ],

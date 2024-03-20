@@ -34,7 +34,6 @@ export default {
     ]
   },
   "rpc": [
-    "https://polygon-zkevm-cardona-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2442.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.cardona.zkevm-rpc.com"
   ],

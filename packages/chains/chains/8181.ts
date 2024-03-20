@@ -33,7 +33,6 @@ export default {
   },
   "networkId": 8181,
   "rpc": [
-    "https://testnet-beone-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://8181.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://pre-boc1.beonechain.com"
   ],

@@ -19,9 +19,10 @@ export default {
   },
   "networkId": 1666600001,
   "rpc": [
-    "https://harmony-shard-1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1666600001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://api.s1.t.hmny.io"
+    "https://api.s1.t.hmny.io",
+    "https://harmony-1.drpc.org",
+    "wss://harmony-1.drpc.org"
   ],
   "shortName": "hmy-s1",
   "slip44": 1023,

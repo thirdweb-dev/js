@@ -32,7 +32,6 @@ export default {
   },
   "networkId": 1718,
   "rpc": [
-    "https://palette-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1718.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://palette-rpc.com:22000"
   ],

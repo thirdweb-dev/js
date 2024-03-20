@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 18122,
   "rpc": [
-    "https://smart-trade-networks.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://18122.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://beefledgerwallet.com:8544"
   ],

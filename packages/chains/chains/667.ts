@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 667,
   "rpc": [
-    "https://laos-arrakis.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://667.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://arrakis.gorengine.com/own",
     "wss://arrakis.gorengine.com/own"

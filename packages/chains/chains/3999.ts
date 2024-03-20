@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 3999,
   "rpc": [
-    "https://yuanchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://3999.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.yuan.org/eth"
   ],

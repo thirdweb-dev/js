@@ -30,7 +30,6 @@ export default {
   },
   "networkId": 713,
   "rpc": [
-    "https://vrcscan.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://713.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-mainnet-5.vrcscan.com",
     "https://rpc-mainnet-6.vrcscan.com",

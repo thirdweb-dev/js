@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 2606,
   "rpc": [
-    "https://pocrnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2606.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://pocrnet.westeurope.cloudapp.azure.com/http",
     "wss://pocrnet.westeurope.cloudapp.azure.com/ws"

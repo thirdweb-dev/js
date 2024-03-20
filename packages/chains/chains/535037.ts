@@ -18,7 +18,6 @@ export default {
   },
   "networkId": 535037,
   "rpc": [
-    "https://beaneco-smartchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://535037.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.bescscan.io"
   ],

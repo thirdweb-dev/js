@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 721,
   "rpc": [
-    "https://lycan-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://721.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.lycanchain.com/"
   ],

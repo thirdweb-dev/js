@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 1107,
   "rpc": [
-    "https://blxq-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1107.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnetq1.blx.org"
   ],

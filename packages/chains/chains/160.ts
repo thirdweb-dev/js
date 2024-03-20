@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 160,
   "rpc": [
-    "https://armonia-eva-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://160.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evascan.io/api/eth-rpc/"
   ],

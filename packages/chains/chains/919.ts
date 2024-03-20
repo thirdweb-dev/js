@@ -36,7 +36,6 @@ export default {
     ]
   },
   "rpc": [
-    "https://mode-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://919.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://sepolia.mode.network"
   ],

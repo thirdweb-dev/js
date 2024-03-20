@@ -43,6 +43,17 @@ describe("Feature Detection", async () => {
     );
   });
 
+  it("should extract implementation address for eip-7511 minimal proxy", async () => {
+    // https://eips.ethereum.org/EIPS/eip-7511#specification
+    const code =
+      "0x365f5f375f5f365f73bebebebebebebebebebebebebebebebebebebebe5af43d5f5f3e5f3d91602a57fd5bf3";
+    const implementationAddress =
+      extractMinimalProxyImplementationAddress(code);
+    expect(implementationAddress).to.equal(
+      "0xbebebebebebebebebebebebebebebebebebebebe",
+    );
+  });
+
   it("should extract implementation address for minimal proxy with receive", async () => {
     // https://github.com/0xSplits/splits-contracts/blob/c7b741926ec9746182d0d1e2c4c2046102e5d337/contracts/libraries/Clones.sol#L32
     const code =

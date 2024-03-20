@@ -33,7 +33,6 @@ export default {
   },
   "networkId": 4444,
   "rpc": [
-    "https://htmlcoin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://4444.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://janus.htmlcoin.com/api/"
   ],

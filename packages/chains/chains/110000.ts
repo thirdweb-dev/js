@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 110000,
   "rpc": [
-    "https://quarkchain-devnet-root.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://110000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://jrpc.devnet.quarkchain.io:38391"
   ],

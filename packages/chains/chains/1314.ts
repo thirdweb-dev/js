@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 1314,
   "rpc": [
-    "https://alyx.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1314.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.alyxchain.com"
   ],

@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 9223,
   "rpc": [
-    "https://codefin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://9223.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://chain-rpc.codefin.pro"
   ],

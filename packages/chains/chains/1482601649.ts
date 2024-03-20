@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 1482601649,
   "rpc": [
-    "https://skale-nebula-hub.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1482601649.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.skalenodes.com/v1/green-giddy-denebola",
     "wss://mainnet-proxy.skalenodes.com/v1/ws/green-giddy-denebola"

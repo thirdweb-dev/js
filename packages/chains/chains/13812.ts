@@ -18,7 +18,6 @@ export default {
   },
   "networkId": 13812,
   "rpc": [
-    "https://susono.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://13812.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://gateway.opn.network/node/ext/bc/2VsZe5DstWw2bfgdx3YbjKcMsJnNDjni95sZorBEdk9L9Qr9Fr/rpc"
   ],

@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 2731,
   "rpc": [
-    "https://elizabeth-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2731.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.timenetwork.io"
   ],

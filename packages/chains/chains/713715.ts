@@ -33,7 +33,6 @@ export default {
   },
   "networkId": 713715,
   "rpc": [
-    "https://sei-devnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://713715.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm-rpc-arctic-1.sei-apis.com",
     "https://evm-rpc.arctic-1.seinetwork.io"

@@ -21,7 +21,6 @@ export default {
   },
   "networkId": 1515,
   "rpc": [
-    "https://beagle-messaging-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1515.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://beagle.chat/eth"
   ],

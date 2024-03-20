@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 80096,
   "rpc": [
-    "https://hizoco.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://80096.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://hizoco.net/rpc"
   ],

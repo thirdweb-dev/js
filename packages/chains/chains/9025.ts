@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 9025,
   "rpc": [
-    "https://nexa-block.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://9025.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-nodes.nexablockscan.io"
   ],

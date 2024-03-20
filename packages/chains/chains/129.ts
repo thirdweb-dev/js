@@ -32,7 +32,6 @@ export default {
   },
   "networkId": 129,
   "rpc": [
-    "https://innovator-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://129.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.innovatorchain.com"
   ],

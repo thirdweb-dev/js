@@ -35,7 +35,6 @@ export default {
   "networkId": 356256156,
   "redFlags": [],
   "rpc": [
-    "https://gather-testnet-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://356256156.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.gather.network"
   ],

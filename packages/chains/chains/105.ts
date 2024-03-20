@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 105,
   "rpc": [
-    "https://web3games-devnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://105.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://devnet.web3games.org/evm"
   ],

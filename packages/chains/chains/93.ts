@@ -35,7 +35,6 @@ export default {
     "chain": "eip155-90"
   },
   "rpc": [
-    "https://garizon-stage3.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://93.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://s3.garizon.net/rpc"
   ],

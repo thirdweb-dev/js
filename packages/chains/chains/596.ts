@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 596,
   "rpc": [
-    "https://karura-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://596.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://eth-rpc-karura-testnet.aca-staging.network",
     "wss://eth-rpc-karura-testnet.aca-staging.network"

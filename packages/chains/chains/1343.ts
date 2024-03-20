@@ -24,7 +24,6 @@ export default {
   },
   "networkId": 1343,
   "rpc": [
-    "https://blitz-subnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1343.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/blitz/testnet/rpc"
   ],

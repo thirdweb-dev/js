@@ -29,7 +29,6 @@ export default {
     "chain": "eip155-248"
   },
   "rpc": [
-    "https://dm2-verse.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://68770.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.dm2verse.dmm.com"
   ],

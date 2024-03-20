@@ -27,7 +27,6 @@ export default {
   "networkId": 248,
   "redFlags": [],
   "rpc": [
-    "https://oasys.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://248.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.mainnet.oasys.games"
   ],

@@ -69,7 +69,7 @@ export class InjectedConnector extends WagmiConnector<
    */
   readonly ready: boolean;
 
-  #provider?: Ethereum;
+  private _provider?: Ethereum;
   connectorStorage: AsyncStorage;
 
   protected shimDisconnectKey = "injected.shimDisconnect";
@@ -246,10 +246,10 @@ export class InjectedConnector extends WagmiConnector<
   async getProvider() {
     const provider = this.options.getProvider();
     if (provider) {
-      this.#provider = provider;
+      this._provider = provider;
       // setting listeners
     }
-    return this.#provider as Ethereum;
+    return this._provider as Ethereum;
   }
 
   /**

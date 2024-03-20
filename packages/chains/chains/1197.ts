@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 1197,
   "rpc": [
-    "https://iora-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1197.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://dataseed.iorachain.com"
   ],

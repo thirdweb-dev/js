@@ -38,7 +38,6 @@ export default {
   },
   "redFlags": [],
   "rpc": [
-    "https://etherlink-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://128123.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node.ghostnet.etherlink.com"
   ],

@@ -27,9 +27,10 @@ export default {
   "networkId": 40,
   "redFlags": [],
   "rpc": [
-    "https://telos-evm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://40.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet.telos.net/evm"
+    "https://mainnet.telos.net/evm",
+    "https://telos.drpc.org",
+    "wss://telos.drpc.org"
   ],
   "shortName": "TelosEVM",
   "slug": "telos-evm",

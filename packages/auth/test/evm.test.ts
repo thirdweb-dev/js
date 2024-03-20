@@ -3,6 +3,8 @@ import { EthersWallet } from "@thirdweb-dev/wallets/evm/wallets/ethers";
 import { expect } from "chai";
 import { Wallet } from "ethers";
 
+require("dotenv-mono").load();
+
 describe("Wallet Authentication - EVM", async () => {
   let adminWallet: any, signerWallet: any, attackerWallet: any;
   let auth: ThirdwebAuth;
@@ -18,7 +20,9 @@ describe("Wallet Authentication - EVM", async () => {
     signerWallet = new EthersWallet(signerSigner);
     attackerWallet = new EthersWallet(attackerSigner);
 
-    auth = new ThirdwebAuth(signerWallet, "thirdweb.com");
+    auth = new ThirdwebAuth(signerWallet, "thirdweb.com", {
+      secretKey: process.env.TW_SECRET_KEY,
+    });
   });
 
   beforeEach(async () => {

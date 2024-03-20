@@ -901,6 +901,7 @@ const THIRDWEB_DEPLOYER = "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024";
 
 /**
  * Handles deploying new contracts
+ * @deploy
  * @public
  */
 export class ContractDeployer extends RPCConnectionHandler {
@@ -1603,7 +1604,6 @@ export class ContractDeployer extends RPCConnectionHandler {
         parsedMetadata,
         contractURI,
         signer,
-        this.storage,
       );
 
       // fetch the publish URI from the ContractPublisher contract
@@ -1649,7 +1649,7 @@ export class ContractDeployer extends RPCConnectionHandler {
       publisherAddress: AddressOrEns,
       contractName: string,
       constructorParams: any[],
-      version: string = "latest",
+      version = "latest",
       options?: DeployOptions,
     ): Promise<DeployTransaction> => {
       const publishedContract = await this.fetchPublishedContractFromPolygon(
@@ -1687,7 +1687,7 @@ export class ContractDeployer extends RPCConnectionHandler {
     contractName: string,
     constructorParams: any[],
     publisherAddress: string = THIRDWEB_DEPLOYER,
-    contractVersion: string = "latest",
+    contractVersion = "latest",
     saltForCreate2?: string,
   ): Promise<string> {
     const signer = this.getSigner();
@@ -1718,7 +1718,7 @@ export class ContractDeployer extends RPCConnectionHandler {
     contractName: string,
     constructorParams: any[],
     publisherAddress: string = THIRDWEB_DEPLOYER,
-    contractVersion: string = "latest",
+    contractVersion = "latest",
     saltForCreate2?: string,
   ): Promise<string> {
     const provider = this.getProvider();

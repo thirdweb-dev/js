@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 117,
   "rpc": [
-    "https://uptick.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://117.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://json-rpc.uptick.network"
   ],

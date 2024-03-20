@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 21133,
   "rpc": [
-    "https://all-about-healthy.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://21133.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.c4ex.net"
   ],

@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 70002,
   "rpc": [
-    "https://thinkium-chain-2.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://70002.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://proxy2.thinkiumrpc.net/"
   ],

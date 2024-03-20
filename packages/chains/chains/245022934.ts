@@ -30,9 +30,10 @@ export default {
   },
   "networkId": 245022934,
   "rpc": [
-    "https://neon-evm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://245022934.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://neon-proxy-mainnet.solana.p2p.org"
+    "https://neon-proxy-mainnet.solana.p2p.org",
+    "https://neon-evm.drpc.org",
+    "wss://neon-evm.drpc.org"
   ],
   "shortName": "neonevm-mainnet",
   "slug": "neon-evm",

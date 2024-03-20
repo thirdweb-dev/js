@@ -19,7 +19,6 @@ export default {
   },
   "networkId": 108801,
   "rpc": [
-    "https://brochain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://108801.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.brochain.org",
     "http://rpc.brochain.org",

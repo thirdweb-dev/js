@@ -14,7 +14,12 @@ import {
   type BytesLike,
 } from "ethers";
 import { QueryAllParams } from "../../../core/schema/QueryParams";
-import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
+import {
+  NFT,
+  NFTMetadata,
+  NFTMetadataInput,
+  NFTMetadataOrUri,
+} from "../../../core/schema/nft";
 import { resolveAddress } from "../../common/ens/resolveAddress";
 import {
   ExtensionNotImplementedError,
@@ -37,6 +42,7 @@ import {
   FEATURE_EDITION_REVEALABLE,
   FEATURE_EDITION_SIGNATURE_MINTABLE,
   FEATURE_EDITION_SUPPLY,
+  FEATURE_EDITION_UPDATABLE_METADATA,
 } from "../../constants/erc1155-features";
 import { AirdropInputSchema } from "../../schema/contracts/common/airdrop";
 import { Address } from "../../schema/shared/Address";
@@ -74,6 +80,7 @@ import { Erc1155Mintable } from "./internal/erc1155/erc-1155-mintable";
  * const contract = await sdk.getContract("{{contract_address}}");
  * await contract.erc1155.transfer(walletAddress, tokenId, quantity);
  * ```
+ * @erc1155
  * @public
  */
 export class Erc1155<
@@ -274,9 +281,9 @@ export class Erc1155<
 
   /**
    * Transfer multiple NFTs
-   * 
+   *
    * @remarks Transfer multiple NFTs from the connected wallet to another wallet.
-   * 
+   *
    * @example
    * ```javascript
    * // Address of the wallet you want to send the NFT to
@@ -287,7 +294,7 @@ export class Erc1155<
    * const amounts = [1, 2, 3];
    * await contract.erc1155.transferBatch(toAddress, tokenIds, amounts);
    * ```
-   * 
+   *
    * @twfeature ERC1155BatchTransferable
    */
   transferBatch = /* @__PURE__ */ buildTransactionFunction(
@@ -298,7 +305,9 @@ export class Erc1155<
       fromAddress?: AddressOrEns,
       data: BytesLike = [0],
     ) => {
-      const from = fromAddress ? await resolveAddress(fromAddress) : await this.contractWrapper.getSignerAddress();
+      const from = fromAddress
+        ? await resolveAddress(fromAddress)
+        : await this.contractWrapper.getSignerAddress();
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "safeBatchTransferFrom",
@@ -953,6 +962,49 @@ export class Erc1155<
         this.lazyMintable,
         FEATURE_EDITION_LAZY_MINTABLE_V2,
       ).lazyMint.prepare(metadatas, options);
+    },
+  );
+
+  ////// ERC1155 Update Metadata Extension //////
+
+  /**
+   * Update the metadata of an NFT
+   *
+   * @remarks Update the metadata of an NFT in the connected wallet
+   *
+   * @example
+   * ```javascript
+   * // The token ID of the NFT you want to update
+   * const tokenId = 0;
+   * // The updated metadata of the NFT
+   * const metadata = {
+   *   name: "Updated NFT",
+   *   description: "This is an updated NFT",
+   *   image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
+   * }
+   *
+   * const result = await contract.erc1155.updateMetadata(tokenId, metadata);
+   * ```
+   * @twfeature ERC1155UpdateMetadata
+   */
+  updateMetadata = /* @__PURE__ */ buildTransactionFunction(
+    async (tokenId: BigNumberish, metadata: NFTMetadataInput) => {
+      if (this.lazyMintable) {
+        return this.lazyMintable.updateMetadata.prepare(tokenId, metadata);
+      } else if (
+        detectContractFeature(this.contractWrapper, "ERC1155UpdatableMetadata")
+      ) {
+        const uri = await this.storage.upload(metadata);
+        return Transaction.fromContractWrapper({
+          contractWrapper: this.contractWrapper,
+          method: "setTokenURI",
+          args: [tokenId, uri],
+        });
+      } else {
+        throw new ExtensionNotImplementedError(
+          FEATURE_EDITION_UPDATABLE_METADATA,
+        );
+      }
     },
   );
 

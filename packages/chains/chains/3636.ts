@@ -7,6 +7,11 @@ export default {
       "name": "3xpl",
       "url": "https://3xpl.com/botanix",
       "standard": "EIP3091"
+    },
+    {
+      "name": "Blockscout",
+      "url": "https://blockscout.botanixlabs.dev",
+      "standard": "EIP3091"
     }
   ],
   "faucets": [
@@ -27,7 +32,6 @@ export default {
   },
   "networkId": 3636,
   "rpc": [
-    "https://botanix-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://3636.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node.botanixlabs.dev"
   ],

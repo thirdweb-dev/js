@@ -38,7 +38,6 @@ export default {
   },
   "networkId": 7001,
   "rpc": [
-    "https://zetachain-athens-3-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://7001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.ankr.com/zetachain_evm_athens_testnet"
   ],

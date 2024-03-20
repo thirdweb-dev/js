@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 66988,
   "rpc": [
-    "https://janus-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://66988.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.test.janusnetwork.io"
   ],

@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 225,
   "rpc": [
-    "https://lachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://225.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-mainnet.lachain.io"
   ],

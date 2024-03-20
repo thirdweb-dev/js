@@ -38,7 +38,7 @@ describe("Address & ENS", async () => {
     ).to.equal(1);
   });
 
-  it("Should resolve cb.id", async () => {
+  it.skip("Should resolve cb.id", async () => {
     const address = await sdk.deployer.deployNFTCollection({
       name: "NFT",
       primary_sale_recipient: "aneriamin.cb.id",

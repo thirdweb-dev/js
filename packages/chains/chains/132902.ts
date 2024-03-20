@@ -28,7 +28,6 @@ export default {
   },
   "redFlags": [],
   "rpc": [
-    "https://form-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://132902.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.form.network/http"
   ],

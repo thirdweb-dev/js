@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 207,
   "rpc": [
-    "https://vinuchain-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://207.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://vinuchain-rpc.com"
   ],

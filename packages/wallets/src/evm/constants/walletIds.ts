@@ -22,5 +22,6 @@ export const walletIds = {
   oneKey: "oneKey",
   rabby: "rabby",
   xdefi: "xdefi",
+  magicEden: "magicEden",
   // add new ids sorted alphabetically
 } as const;

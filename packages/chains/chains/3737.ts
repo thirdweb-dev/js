@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 3737,
   "rpc": [
-    "https://crossbell.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://3737.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.crossbell.io"
   ],

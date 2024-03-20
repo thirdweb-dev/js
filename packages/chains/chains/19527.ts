@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 19527,
   "rpc": [
-    "https://magnet-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://19527.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://magnet-rpc.magport.io/"
   ],

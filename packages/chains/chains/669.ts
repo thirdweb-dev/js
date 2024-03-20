@@ -21,7 +21,6 @@ export default {
   },
   "networkId": 669,
   "rpc": [
-    "https://juncachain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://669.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.juncachain.com",
     "wss://ws-testnet.juncachain.com"

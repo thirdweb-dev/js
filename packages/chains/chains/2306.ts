@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 2306,
   "rpc": [
-    "https://ebro-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2306.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://greendinoswap.com"
   ],

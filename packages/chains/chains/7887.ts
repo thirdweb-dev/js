@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 7887,
   "rpc": [
-    "https://kinto.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://7887.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.kinto.xyz/http",
     "https://kinto-mainnet.calderachain.xyz/http"

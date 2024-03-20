@@ -40,7 +40,6 @@ export default {
     ]
   },
   "rpc": [
-    "https://unreal.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://18231.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.unreal.gelato.digital",
     "wss://ws.unreal.gelato.digital"

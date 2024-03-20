@@ -25,11 +25,10 @@ export default {
   },
   "networkId": 11503,
   "rpc": [
-    "https://bevm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://11503.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.bevm.io/"
   ],
-  "shortName": "bevm",
+  "shortName": "bevm-test",
   "slug": "bevm-testnet",
   "testnet": true
 } as const satisfies Chain;

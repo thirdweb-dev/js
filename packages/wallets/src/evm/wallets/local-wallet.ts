@@ -176,7 +176,7 @@ export class LocalWallet extends AbstractClientWallet<
   /**
    * @internal
    */
-  #storage: AsyncStorage;
+  private _storage: AsyncStorage;
 
   /**
    * @internal
@@ -257,7 +257,7 @@ export class LocalWallet extends AbstractClientWallet<
 
     this.options = options || {};
 
-    this.#storage =
+    this._storage =
       options?.storage || createAsyncLocalStorage(walletIds.localWallet);
   }
 
@@ -562,7 +562,7 @@ export class LocalWallet extends AbstractClientWallet<
         },
       });
 
-      await this.#saveData(
+      await this._saveData(
         {
           address: wallet.address,
           data: encryptedData,
@@ -578,7 +578,7 @@ export class LocalWallet extends AbstractClientWallet<
         wallet.privateKey,
       );
 
-      await this.#saveData(
+      await this._saveData(
         {
           address: wallet.address,
           data: privateKey,
@@ -599,7 +599,7 @@ export class LocalWallet extends AbstractClientWallet<
       const mnemonic = await getEncryptor(options.encryption)(
         wallet.mnemonic.phrase,
       );
-      await this.#saveData(
+      await this._saveData(
         {
           address: wallet.address,
           data: mnemonic,
@@ -638,7 +638,7 @@ export class LocalWallet extends AbstractClientWallet<
    * ```
    */
   async deleteSaved() {
-    await this.#storage.removeItem(STORAGE_KEY_WALLET_DATA);
+    await this._storage.removeItem(STORAGE_KEY_WALLET_DATA);
   }
 
   /**
@@ -734,7 +734,7 @@ export class LocalWallet extends AbstractClientWallet<
    * ```
    */
   async getSavedData(storage?: AsyncStorage): Promise<WalletData | null> {
-    const _storage = storage || this.#storage;
+    const _storage = storage || this._storage;
 
     try {
       const savedDataStr = await _storage.getItem(STORAGE_KEY_WALLET_DATA);
@@ -756,8 +756,8 @@ export class LocalWallet extends AbstractClientWallet<
   /**
    * store the wallet data to storage
    */
-  async #saveData(data: WalletData, storage?: AsyncStorage) {
-    const _storage = storage || this.#storage;
+  private async _saveData(data: WalletData, storage?: AsyncStorage) {
+    const _storage = storage || this._storage;
     await _storage.setItem(STORAGE_KEY_WALLET_DATA, JSON.stringify(data));
   }
 

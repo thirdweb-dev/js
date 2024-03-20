@@ -5,7 +5,7 @@
     <br />
 </p>
 
-<h1 align="center"><a href='https://thirdweb.com/'>thirdweb</a> JavaScript/TypeScript monorepo</h1>
+<h1 align="center"><a href='https://thirdweb.com/'>thirdweb</a> TypeScript SDK</h1>
 
 <p align="center">
     <a href="https://github.com/thirdweb-dev/js/actions/workflows/build-test-lint.yml">
@@ -16,38 +16,72 @@
     </a>
 </p>
 
-<p align="center"><strong>Best in class web3 SDKs for Browser, Node and Mobile apps</strong></p>
+<p align="center"><strong>All-in-one web3 SDK for Browser, Node and Mobile apps</strong></p>
+
+> [!IMPORTANT]  
+> We rewrote the thirdweb SDK from scratch for performance! Head over to the [Beta version unified SDK](https://github.com/thirdweb-dev/js/tree/beta/packages/thirdweb).
+
+## Features
+
+- Support for React & React-Native
+- First party support for [Embedded Wallets](https://portal.thirdweb.com/connect/embedded-wallet/overview) (social/email login)
+- First party support for [Account Abstraction](https://portal.thirdweb.com/connect/account-abstraction)
+- Instant connection to any chain with RPC Edge integration
+- Integrated IPFS upload/download
+- UI Components for connection, transactions, nft rendering
+- High level contract extensions for interacting with common standards
+- Automatic ABI resolution
+
+## Library Comparison 
+
+|                                           | thirdweb | Wagmi              | Viem               | Ethers@6 |
+| ----------------------------------------- | -------- | ------------------ | ------------------ | -------- |
+| Type safe contract API                    | ✅       | ✅                 | ✅                 | ✅       |
+| Type safe wallet API                      | ✅       | ✅                 | ✅                 | ✅       |
+| EVM utils                                 | ✅       | ❌                 | ✅                 | ✅       |
+| RPC for any EVM                           | ✅       | ⚠️ public RPC only | ⚠️ public RPC only | ❌       |
+| Automatic ABI Resolution                  | ✅       | ❌                 | ❌                 | ❌       |
+| IPFS Upload/Download                      | ✅       | ❌                 | ❌                 | ❌       |
+| Embedded wallet (email/ social login)     | ✅       | ⚠️ via 3rd party   | ❌                 | ❌       |
+| Account abstraction (ERC4337) support     | ✅       | ⚠️ via 3rd party   | ⚠️ via 3rd party   | ❌       |
+| Web3 wallet connectors                    | ✅       | ✅                 | ❌                 | ❌       |
+| Local wallet creation                     | ✅       | ❌                 | ✅                 | ✅       |
+| Auth (SIWE)                               | ✅       | ⚠️ via 3rd party   | ❌                 | ❌       |
+| Extensions functions for common standards | ✅       | ❌                 | ❌                 | ❌       |
+| React Hooks                               | ✅       | ✅                 | ❌                 | ❌       |
+| React UI components                       | ✅       | ❌                 | ❌                 | ❌       |
+| React Native Hooks                        | ✅       | ❌                 | ❌                 | ❌       |
+| React Native UI Components                | ✅       | ❌                 | ❌                 | ❌       |
 
 ## Packages
 
-| Package                                  | Description                                                                 | Latest Version                                                                                                                                                                             |
-| ---------------------------------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [/sdk](./packages/sdk)                   | Best in class web3 SDK for Browser, Node and Mobile apps                    | <a href="https://www.npmjs.com/package/@thirdweb-dev/sdk"><img src="https://img.shields.io/npm/v/@thirdweb-dev/sdk?color=red&label=npm&logo=npm" alt="npm version"/></a>                   |
-| [/wallets](./packages/wallets)           | Unified web3 Wallet library to integrate any wallet into your applications. | <a href="https://www.npmjs.com/package/@thirdweb-dev/wallets"><img src="https://img.shields.io/npm/v/@thirdweb-dev/wallets?color=red&label=npm&logo=npm" alt="npm version"/></a>           |
-| [/react](./packages/react)               | Ultimate collection of React hooks for your web3 apps                       | <a href="https://www.npmjs.com/package/@thirdweb-dev/react"><img src="https://img.shields.io/npm/v/@thirdweb-dev/react?color=red&label=npm&logo=npm" alt="npm version"/></a>               |
-| [/react-native](./packages/react-native) | Ultimate collection of React hooks for your native mobile web3 apps         | <a href="https://www.npmjs.com/package/@thirdweb-dev/react-native"><img src="https://img.shields.io/npm/v/@thirdweb-dev/react-native?color=red&label=npm&logo=npm" alt="npm version"/></a> |
-| [/auth](./packages/auth)                 | Best in class wallet authentication for Node backends                       | <a href="https://www.npmjs.com/package/@thirdweb-dev/auth"><img src="https://img.shields.io/npm/v/@thirdweb-dev/auth?color=red&label=npm&logo=npm" alt="npm version"/></a>                 |
-| [/storage](./packages/storage)           | Best in class decentralized storage SDK for Browser and Node                | <a href="https://www.npmjs.com/package/@thirdweb-dev/storage"><img src="https://img.shields.io/npm/v/@thirdweb-dev/storage?color=red&label=npm&logo=npm" alt="npm version"/></a>           |
-| [/cli](./packages/cli)                   | Publish and deploy smart contracts without dealing with private keys        | <a href="https://www.npmjs.com/package/thirdweb"><img src="https://img.shields.io/npm/v/thirdweb?color=red&label=npm&logo=npm" alt="npm version"/></a>                                     |
-| [/chains](./packages/chains)             | All EVM chain information as JS objects for easy handling                   | <a href="https://www.npmjs.com/package/@thirdweb-dev/chains"><img src="https://img.shields.io/npm/v/@thirdweb-dev/chains?color=red&label=npm&logo=npm" alt="npm version"/></a>             |
-
-## Documentation
-
-Visit [https://portal.thirdweb.com/](https://portal.thirdweb.com/) to view the full documentation.
-
-<br />
+| Package                                  | Description                                                                                                                                                                         
+| -----------------------------------------|-----------------------------------------------------------------------------|
+| [/sdk](./packages/sdk)                   | Best in class web3 SDK for Browser, Node and Mobile apps                    | 
+| [/wallets](./packages/wallets)           | Unified web3 Wallet library to integrate any wallet into your applications. | 
+| [/react](./packages/react)               | Ultimate collection of React hooks for your web3 apps                       |        
+| [/react-native](./packages/react-native) | Ultimate collection of React hooks for your native mobile web3 apps         | 
+| [/auth](./packages/auth)                 | Best in class wallet authentication for Node backends                       | 
+| [/storage](./packages/storage)           | Best in class decentralized storage SDK for Browser and Node                | 
+| [/cli](./packages/cli)                   | Publish and deploy smart contracts without dealing with private keys        | 
+| [/chains](./packages/chains)             | All EVM chain information as JS objects for easy handling                   | 
 
 ## Contributing
 
-We welcome contributions from all developers, regardless of experience level. If you are interested in contributing, please read our [Contributing Guide](.github/contributing.md) where you'll learn how the repo works, how to test your changes, and how to submit a pull request.
+We welcome contributions from all developers regardless of experience level. If you are interested in contributing, please read our [Contributing Guide](.github/contributing.md) to learn how the repo works, how to test your changes, and how to submit a pull request. 
 
-<br />
+See our [open source page](https://thirdweb.com/open-source) for more information on our open-source bounties and program. 
 
-## Community
+## Additional Resources
 
-The best place to discuss your ideas, ask questions, and troubleshoot issues is our [Discord server](https://discord.gg/thirdweb).
+- [SDK Documentation](https://portal.thirdweb.com/typescript/v5)
+- [Templates](https://thirdweb.com/templates)
+- [YouTube](https://www.youtube.com/c/thirdweb_)
 
-<br/>
+
+## Support 
+
+For help or feedback, please [visit our support site](https://thirdweb.com/support)
 
 ## Security
 

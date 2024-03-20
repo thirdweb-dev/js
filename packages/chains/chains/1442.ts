@@ -27,9 +27,10 @@ export default {
   "networkId": 1442,
   "redFlags": [],
   "rpc": [
-    "https://polygon-zkevm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1442.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.public.zkevm-test.net"
+    "https://rpc.public.zkevm-test.net",
+    "https://polygon-zkevm-testnet.drpc.org",
+    "wss://polygon-zkevm-testnet.drpc.org"
   ],
   "shortName": "testnet-zkEVM-mango",
   "slip44": 1,

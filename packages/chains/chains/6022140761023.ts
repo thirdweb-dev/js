@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 6022140761023,
   "rpc": [
-    "https://molereum-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://6022140761023.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://molereum.jdubedition.com"
   ],

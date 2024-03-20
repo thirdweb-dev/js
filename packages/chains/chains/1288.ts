@@ -13,7 +13,6 @@ export default {
   },
   "networkId": 1288,
   "rpc": [
-    "https://moonrock.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1288.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.api.moonrock.moonbeam.network",
     "wss://wss.api.moonrock.moonbeam.network"

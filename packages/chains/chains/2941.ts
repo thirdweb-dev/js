@@ -27,7 +27,6 @@ export default {
   },
   "networkId": 2941,
   "rpc": [
-    "https://xenon-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2941.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-chain.xenonchain.com/",
     "https://testnet-dev.xenonchain.com/"

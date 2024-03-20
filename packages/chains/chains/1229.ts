@@ -25,7 +25,6 @@ export default {
   },
   "networkId": 1229,
   "rpc": [
-    "https://exzo-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://1229.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.exzo.technology"
   ],

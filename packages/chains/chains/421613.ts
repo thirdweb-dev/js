@@ -36,7 +36,6 @@ export default {
   },
   "redFlags": [],
   "rpc": [
-    "https://arbitrum-goerli.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://421613.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://goerli-rollup.arbitrum.io/rpc",
     "https://arbitrum-goerli.publicnode.com",
@@ -45,6 +44,7 @@ export default {
   "shortName": "arb-goerli",
   "slip44": 1,
   "slug": "arbitrum-goerli",
+  "status": "deprecated",
   "testnet": true,
   "title": "Arbitrum Goerli Rollup Testnet"
 } as const satisfies Chain;

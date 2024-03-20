@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 9779,
   "rpc": [
-    "https://pepenetwork.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://9779.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-mainnet.pepenetwork.io"
   ],

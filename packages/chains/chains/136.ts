@@ -31,7 +31,6 @@ export default {
   },
   "networkId": 136,
   "rpc": [
-    "https://deamchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://136.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.deamchain.com"
   ],

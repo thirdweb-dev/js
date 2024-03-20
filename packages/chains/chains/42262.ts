@@ -5,7 +5,7 @@ export default {
   "explorers": [
     {
       "name": "Oasis Emerald Explorer",
-      "url": "https://explorer.emerald.oasis.dev",
+      "url": "https://explorer.oasis.io/mainnet/emerald",
       "standard": "EIP3091"
     }
   ],
@@ -25,10 +25,9 @@ export default {
   },
   "networkId": 42262,
   "rpc": [
-    "https://oasis-emerald.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://42262.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://emerald.oasis.dev",
-    "wss://emerald.oasis.dev/ws"
+    "https://emerald.oasis.io",
+    "wss://emerald.oasis.io/ws"
   ],
   "shortName": "emerald",
   "slug": "oasis-emerald",

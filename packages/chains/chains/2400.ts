@@ -29,7 +29,6 @@ export default {
     "chain": "eip155-248"
   },
   "rpc": [
-    "https://tcg-verse.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://2400.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.tcgverse.xyz"
   ],
