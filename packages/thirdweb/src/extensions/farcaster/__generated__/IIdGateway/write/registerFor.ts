@@ -1,7 +1,8 @@
+import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { AbiParameterToPrimitiveType } from "abitype";
 import type { Prettify } from "../../../../../utils/type-utils.js";
+import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "registerFor" function.
@@ -24,6 +25,67 @@ export type RegisterForParams = Prettify<
       asyncParams: () => Promise<RegisterForParamsInternal>;
     }
 >;
+const FN_SELECTOR = "0xa0c7529c" as const;
+const FN_INPUTS = [
+  {
+    type: "address",
+    name: "to",
+  },
+  {
+    type: "address",
+    name: "recovery",
+  },
+  {
+    type: "uint256",
+    name: "deadline",
+  },
+  {
+    type: "bytes",
+    name: "sig",
+  },
+  {
+    type: "uint256",
+    name: "extraStorage",
+  },
+] as const;
+const FN_OUTPUTS = [
+  {
+    type: "uint256",
+    name: "fid",
+  },
+  {
+    type: "uint256",
+    name: "overpayment",
+  },
+] as const;
+
+/**
+ * Encodes the parameters for the "registerFor" function.
+ * @param options - The options for the registerFor function.
+ * @returns The encoded ABI parameters.
+ * @extension FARCASTER
+ * @example
+ * ```
+ * import { encodeRegisterForParams } "thirdweb/extensions/farcaster";
+ * const result = encodeRegisterForParams({
+ *  to: ...,
+ *  recovery: ...,
+ *  deadline: ...,
+ *  sig: ...,
+ *  extraStorage: ...,
+ * });
+ * ```
+ */
+export function encodeRegisterForParams(options: RegisterForParamsInternal) {
+  return encodeAbiParameters(FN_INPUTS, [
+    options.to,
+    options.recovery,
+    options.deadline,
+    options.sig,
+    options.extraStorage,
+  ]);
+}
+
 /**
  * Calls the "registerFor" function on the contract.
  * @param options - The options for the "registerFor" function.
@@ -51,41 +113,7 @@ export function registerFor(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0xa0c7529c",
-      [
-        {
-          type: "address",
-          name: "to",
-        },
-        {
-          type: "address",
-          name: "recovery",
-        },
-        {
-          type: "uint256",
-          name: "deadline",
-        },
-        {
-          type: "bytes",
-          name: "sig",
-        },
-        {
-          type: "uint256",
-          name: "extraStorage",
-        },
-      ],
-      [
-        {
-          type: "uint256",
-          name: "fid",
-        },
-        {
-          type: "uint256",
-          name: "overpayment",
-        },
-      ],
-    ],
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params:
       "asyncParams" in options
         ? async () => {

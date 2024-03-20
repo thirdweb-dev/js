@@ -103,14 +103,16 @@ export async function generateFromAbi(
 }
 
 function generateWriteFunction(f: AbiFunction, extensionName: string): string {
+  const preparedMethod = prepareMethod(f);
+  const needsAbiParamToPrimitiveType = f.inputs.length > 0;
   const inputTypeName = `${uppercaseFirstLetter(f.name)}Params`;
 
-  return `import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+  return `${needsAbiParamToPrimitiveType ? `import type { AbiParameterToPrimitiveType } from "abitype";\n` : ""}import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 ${
   f.inputs.length > 0
-    ? `import type { AbiParameterToPrimitiveType } from "abitype";
-import type { Prettify } from "../../../../../utils/type-utils.js";`
+    ? `import type { Prettify } from "../../../../../utils/type-utils.js";
+import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";`
     : ""
 }
 
@@ -134,6 +136,34 @@ export type ${inputTypeName} = Prettify<${inputTypeName}Internal | {
     `
     : ""
 };
+
+const FN_SELECTOR = "${preparedMethod[0]}" as const;
+const FN_INPUTS = ${JSON.stringify(preparedMethod[1], null, 2)} as const;
+const FN_OUTPUTS = ${JSON.stringify(preparedMethod[2], null, 2)} as const;
+
+${
+  f.inputs.length > 0
+    ? `/**
+ * Encodes the parameters for the "${f.name}" function.
+ * @param options - The options for the ${f.name} function.
+ * @returns The encoded ABI parameters.
+ * @extension ${extensionName.toUpperCase()}
+ * @example
+ * \`\`\`
+ * import { encode${uppercaseFirstLetter(f.name)}Params } "thirdweb/extensions/${extensionName}";
+ * const result = encode${uppercaseFirstLetter(f.name)}Params({\n * ${f.inputs
+   .map((x) => ` ${removeLeadingUnderscore(x.name)}: ...,`)
+   .join("\n * ")}\n * });
+ * \`\`\`
+ */
+export function encode${uppercaseFirstLetter(f.name)}Params(options: ${inputTypeName}Internal) {
+  return encodeAbiParameters(FN_INPUTS, [${f.inputs
+    .map((x) => `options.${removeLeadingUnderscore(x.name)}`)
+    .join(", ")}]);
+}
+`
+    : ""
+}
 
 
 
@@ -166,7 +196,7 @@ export function ${f.name}(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: ${JSON.stringify(prepareMethod(f), null, 2)},
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     ${
       f.inputs.length
         ? `params: "asyncParams" in options ? async () => {
@@ -186,11 +216,19 @@ export function ${f.name}(
 }
 
 function generateReadFunction(f: AbiFunction, extensionName: string): string {
-  return `import { readContract } from "../../../../../transaction/read-contract.js";
+  const preparedMethod = prepareMethod(f);
+  const needsAbiParamToPrimitiveType = f.inputs.length > 0;
+  return `${needsAbiParamToPrimitiveType ? `import type { AbiParameterToPrimitiveType } from "abitype";\n` : ""}import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 ${
   f.inputs.length > 0
-    ? `import type { AbiParameterToPrimitiveType } from "abitype";`
+    ? `import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";`
+    : ""
+}
+${
+  f.outputs.length > 0
+    ? `import { decodeAbiParameters } from "viem";
+import type { Hex } from "../../../../../utils/encoding/hex.js";`
     : ""
 }
 
@@ -211,6 +249,55 @@ export type ${uppercaseFirstLetter(f.name)}Params = {
 };`
     : ""
 }
+
+const FN_SELECTOR = "${preparedMethod[0]}" as const;
+const FN_INPUTS = ${JSON.stringify(preparedMethod[1], null, 2)} as const;
+const FN_OUTPUTS = ${JSON.stringify(preparedMethod[2], null, 2)} as const;
+
+${
+  f.inputs.length > 0
+    ? `/**
+ * Encodes the parameters for the "${f.name}" function.
+ * @param options - The options for the ${f.name} function.
+ * @returns The encoded ABI parameters.
+ * @extension ${extensionName.toUpperCase()}
+ * @example
+ * \`\`\`
+ * import { encode${uppercaseFirstLetter(f.name)}Params } "thirdweb/extensions/${extensionName}";
+ * const result = encode${uppercaseFirstLetter(f.name)}Params({\n * ${f.inputs
+   .map((x) => ` ${removeLeadingUnderscore(x.name)}: ...,`)
+   .join("\n * ")}\n * });
+ * \`\`\`
+ */
+export function encode${uppercaseFirstLetter(f.name)}Params(options: ${uppercaseFirstLetter(f.name)}Params) {
+  return encodeAbiParameters(FN_INPUTS, [${f.inputs
+    .map((x) => `options.${removeLeadingUnderscore(x.name)}`)
+    .join(", ")}]);
+}
+`
+    : ""
+}
+
+${
+  f.outputs.length > 0
+    ? `/**
+  * Decodes the result of the ${f.name} function call.
+  * @param result - The hexadecimal result to decode.
+  * @returns The decoded result as per the FN_OUTPUTS definition.
+  * @extension ${extensionName.toUpperCase()}
+  * @example
+  * \`\`\`
+  * import { decode${uppercaseFirstLetter(f.name)}Result } from "thirdweb/extensions/${extensionName}";
+  * const result = decode${uppercaseFirstLetter(f.name)}Result("...");
+  * \`\`\`
+  */
+export function decode${uppercaseFirstLetter(f.name)}Result(result: Hex) {
+  ${preparedMethod[2].length > 1 ? "return decodeAbiParameters(FN_OUTPUTS, result)" : "return decodeAbiParameters(FN_OUTPUTS, result)[0]"};
+}
+`
+    : ""
+}
+
 
 /**
  * Calls the "${f.name}" function on the contract.
@@ -238,7 +325,7 @@ export async function ${f.name}(
 ) {
   return readContract({
     contract: options.contract,
-    method: ${JSON.stringify(prepareMethod(f), null, 2)},
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params: [${f.inputs
       .map((x) => `options.${removeLeadingUnderscore(x.name)}`)
       .join(", ")}]

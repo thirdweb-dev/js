@@ -1,7 +1,8 @@
+import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { AbiParameterToPrimitiveType } from "abitype";
 import type { Prettify } from "../../../../../utils/type-utils.js";
+import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "depositTo" function.
@@ -17,6 +18,32 @@ export type DepositToParams = Prettify<
       asyncParams: () => Promise<DepositToParamsInternal>;
     }
 >;
+const FN_SELECTOR = "0xb760faf9" as const;
+const FN_INPUTS = [
+  {
+    type: "address",
+    name: "account",
+  },
+] as const;
+const FN_OUTPUTS = [] as const;
+
+/**
+ * Encodes the parameters for the "depositTo" function.
+ * @param options - The options for the depositTo function.
+ * @returns The encoded ABI parameters.
+ * @extension ERC4337
+ * @example
+ * ```
+ * import { encodeDepositToParams } "thirdweb/extensions/erc4337";
+ * const result = encodeDepositToParams({
+ *  account: ...,
+ * });
+ * ```
+ */
+export function encodeDepositToParams(options: DepositToParamsInternal) {
+  return encodeAbiParameters(FN_INPUTS, [options.account]);
+}
+
 /**
  * Calls the "depositTo" function on the contract.
  * @param options - The options for the "depositTo" function.
@@ -38,16 +65,7 @@ export type DepositToParams = Prettify<
 export function depositTo(options: BaseTransactionOptions<DepositToParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0xb760faf9",
-      [
-        {
-          type: "address",
-          name: "account",
-        },
-      ],
-      [],
-    ],
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params:
       "asyncParams" in options
         ? async () => {

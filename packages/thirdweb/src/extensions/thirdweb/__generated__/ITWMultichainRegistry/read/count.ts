@@ -1,6 +1,9 @@
+import type { AbiParameterToPrimitiveType } from "abitype";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
-import type { AbiParameterToPrimitiveType } from "abitype";
+import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { decodeAbiParameters } from "viem";
+import type { Hex } from "../../../../../utils/encoding/hex.js";
 
 /**
  * Represents the parameters for the "count" function.
@@ -8,6 +11,52 @@ import type { AbiParameterToPrimitiveType } from "abitype";
 export type CountParams = {
   deployer: AbiParameterToPrimitiveType<{ type: "address"; name: "_deployer" }>;
 };
+
+const FN_SELECTOR = "0x05d85eda" as const;
+const FN_INPUTS = [
+  {
+    type: "address",
+    name: "_deployer",
+  },
+] as const;
+const FN_OUTPUTS = [
+  {
+    type: "uint256",
+    name: "deploymentCount",
+  },
+] as const;
+
+/**
+ * Encodes the parameters for the "count" function.
+ * @param options - The options for the count function.
+ * @returns The encoded ABI parameters.
+ * @extension THIRDWEB
+ * @example
+ * ```
+ * import { encodeCountParams } "thirdweb/extensions/thirdweb";
+ * const result = encodeCountParams({
+ *  deployer: ...,
+ * });
+ * ```
+ */
+export function encodeCountParams(options: CountParams) {
+  return encodeAbiParameters(FN_INPUTS, [options.deployer]);
+}
+
+/**
+ * Decodes the result of the count function call.
+ * @param result - The hexadecimal result to decode.
+ * @returns The decoded result as per the FN_OUTPUTS definition.
+ * @extension THIRDWEB
+ * @example
+ * ```
+ * import { decodeCountResult } from "thirdweb/extensions/thirdweb";
+ * const result = decodeCountResult("...");
+ * ```
+ */
+export function decodeCountResult(result: Hex) {
+  return decodeAbiParameters(FN_OUTPUTS, result)[0];
+}
 
 /**
  * Calls the "count" function on the contract.
@@ -27,21 +76,7 @@ export type CountParams = {
 export async function count(options: BaseTransactionOptions<CountParams>) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0x05d85eda",
-      [
-        {
-          type: "address",
-          name: "_deployer",
-        },
-      ],
-      [
-        {
-          type: "uint256",
-          name: "deploymentCount",
-        },
-      ],
-    ],
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params: [options.deployer],
   });
 }

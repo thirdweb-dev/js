@@ -1,7 +1,8 @@
+import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { AbiParameterToPrimitiveType } from "abitype";
 import type { Prettify } from "../../../../../utils/type-utils.js";
+import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "safeTransferFrom" function.
@@ -21,6 +22,60 @@ export type SafeTransferFromParams = Prettify<
       asyncParams: () => Promise<SafeTransferFromParamsInternal>;
     }
 >;
+const FN_SELECTOR = "0xf242432a" as const;
+const FN_INPUTS = [
+  {
+    type: "address",
+    name: "_from",
+  },
+  {
+    type: "address",
+    name: "_to",
+  },
+  {
+    type: "uint256",
+    name: "tokenId",
+  },
+  {
+    type: "uint256",
+    name: "_value",
+  },
+  {
+    type: "bytes",
+    name: "_data",
+  },
+] as const;
+const FN_OUTPUTS = [] as const;
+
+/**
+ * Encodes the parameters for the "safeTransferFrom" function.
+ * @param options - The options for the safeTransferFrom function.
+ * @returns The encoded ABI parameters.
+ * @extension ERC1155
+ * @example
+ * ```
+ * import { encodeSafeTransferFromParams } "thirdweb/extensions/erc1155";
+ * const result = encodeSafeTransferFromParams({
+ *  from: ...,
+ *  to: ...,
+ *  tokenId: ...,
+ *  value: ...,
+ *  data: ...,
+ * });
+ * ```
+ */
+export function encodeSafeTransferFromParams(
+  options: SafeTransferFromParamsInternal,
+) {
+  return encodeAbiParameters(FN_INPUTS, [
+    options.from,
+    options.to,
+    options.tokenId,
+    options.value,
+    options.data,
+  ]);
+}
+
 /**
  * Calls the "safeTransferFrom" function on the contract.
  * @param options - The options for the "safeTransferFrom" function.
@@ -48,32 +103,7 @@ export function safeTransferFrom(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0xf242432a",
-      [
-        {
-          type: "address",
-          name: "_from",
-        },
-        {
-          type: "address",
-          name: "_to",
-        },
-        {
-          type: "uint256",
-          name: "tokenId",
-        },
-        {
-          type: "uint256",
-          name: "_value",
-        },
-        {
-          type: "bytes",
-          name: "_data",
-        },
-      ],
-      [],
-    ],
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params:
       "asyncParams" in options
         ? async () => {

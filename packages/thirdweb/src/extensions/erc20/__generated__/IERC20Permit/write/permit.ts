@@ -1,7 +1,8 @@
+import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { AbiParameterToPrimitiveType } from "abitype";
 import type { Prettify } from "../../../../../utils/type-utils.js";
+import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "permit" function.
@@ -23,6 +24,70 @@ export type PermitParams = Prettify<
       asyncParams: () => Promise<PermitParamsInternal>;
     }
 >;
+const FN_SELECTOR = "0xd505accf" as const;
+const FN_INPUTS = [
+  {
+    type: "address",
+    name: "owner",
+  },
+  {
+    type: "address",
+    name: "spender",
+  },
+  {
+    type: "uint256",
+    name: "value",
+  },
+  {
+    type: "uint256",
+    name: "deadline",
+  },
+  {
+    type: "uint8",
+    name: "v",
+  },
+  {
+    type: "bytes32",
+    name: "r",
+  },
+  {
+    type: "bytes32",
+    name: "s",
+  },
+] as const;
+const FN_OUTPUTS = [] as const;
+
+/**
+ * Encodes the parameters for the "permit" function.
+ * @param options - The options for the permit function.
+ * @returns The encoded ABI parameters.
+ * @extension ERC20
+ * @example
+ * ```
+ * import { encodePermitParams } "thirdweb/extensions/erc20";
+ * const result = encodePermitParams({
+ *  owner: ...,
+ *  spender: ...,
+ *  value: ...,
+ *  deadline: ...,
+ *  v: ...,
+ *  r: ...,
+ *  s: ...,
+ * });
+ * ```
+ */
+export function encodePermitParams(options: PermitParamsInternal) {
+  return encodeAbiParameters(FN_INPUTS, [
+    options.owner,
+    options.spender,
+    options.value,
+    options.deadline,
+    options.v,
+    options.r,
+    options.s,
+  ]);
+}
+
 /**
  * Calls the "permit" function on the contract.
  * @param options - The options for the "permit" function.
@@ -50,40 +115,7 @@ export type PermitParams = Prettify<
 export function permit(options: BaseTransactionOptions<PermitParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0xd505accf",
-      [
-        {
-          type: "address",
-          name: "owner",
-        },
-        {
-          type: "address",
-          name: "spender",
-        },
-        {
-          type: "uint256",
-          name: "value",
-        },
-        {
-          type: "uint256",
-          name: "deadline",
-        },
-        {
-          type: "uint8",
-          name: "v",
-        },
-        {
-          type: "bytes32",
-          name: "r",
-        },
-        {
-          type: "bytes32",
-          name: "s",
-        },
-      ],
-      [],
-    ],
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params:
       "asyncParams" in options
         ? async () => {

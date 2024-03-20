@@ -1,7 +1,8 @@
+import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { AbiParameterToPrimitiveType } from "abitype";
 import type { Prettify } from "../../../../../utils/type-utils.js";
+import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "buy" function.
@@ -27,6 +28,58 @@ export type BuyParams = Prettify<
       asyncParams: () => Promise<BuyParamsInternal>;
     }
 >;
+const FN_SELECTOR = "0x7687ab02" as const;
+const FN_INPUTS = [
+  {
+    type: "uint256",
+    name: "_listingId",
+  },
+  {
+    type: "address",
+    name: "_buyFor",
+  },
+  {
+    type: "uint256",
+    name: "_quantity",
+  },
+  {
+    type: "address",
+    name: "_currency",
+  },
+  {
+    type: "uint256",
+    name: "_totalPrice",
+  },
+] as const;
+const FN_OUTPUTS = [] as const;
+
+/**
+ * Encodes the parameters for the "buy" function.
+ * @param options - The options for the buy function.
+ * @returns The encoded ABI parameters.
+ * @extension MARKETPLACE
+ * @example
+ * ```
+ * import { encodeBuyParams } "thirdweb/extensions/marketplace";
+ * const result = encodeBuyParams({
+ *  listingId: ...,
+ *  buyFor: ...,
+ *  quantity: ...,
+ *  currency: ...,
+ *  totalPrice: ...,
+ * });
+ * ```
+ */
+export function encodeBuyParams(options: BuyParamsInternal) {
+  return encodeAbiParameters(FN_INPUTS, [
+    options.listingId,
+    options.buyFor,
+    options.quantity,
+    options.currency,
+    options.totalPrice,
+  ]);
+}
+
 /**
  * Calls the "buy" function on the contract.
  * @param options - The options for the "buy" function.
@@ -52,32 +105,7 @@ export type BuyParams = Prettify<
 export function buy(options: BaseTransactionOptions<BuyParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x7687ab02",
-      [
-        {
-          type: "uint256",
-          name: "_listingId",
-        },
-        {
-          type: "address",
-          name: "_buyFor",
-        },
-        {
-          type: "uint256",
-          name: "_quantity",
-        },
-        {
-          type: "address",
-          name: "_currency",
-        },
-        {
-          type: "uint256",
-          name: "_totalPrice",
-        },
-      ],
-      [],
-    ],
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params:
       "asyncParams" in options
         ? async () => {

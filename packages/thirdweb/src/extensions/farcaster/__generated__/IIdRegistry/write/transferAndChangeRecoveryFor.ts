@@ -1,7 +1,8 @@
+import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { AbiParameterToPrimitiveType } from "abitype";
 import type { Prettify } from "../../../../../utils/type-utils.js";
+import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "transferAndChangeRecoveryFor" function.
@@ -29,6 +30,72 @@ export type TransferAndChangeRecoveryForParams = Prettify<
       asyncParams: () => Promise<TransferAndChangeRecoveryForParamsInternal>;
     }
 >;
+const FN_SELECTOR = "0x4c5cbb34" as const;
+const FN_INPUTS = [
+  {
+    type: "address",
+    name: "from",
+  },
+  {
+    type: "address",
+    name: "to",
+  },
+  {
+    type: "address",
+    name: "recovery",
+  },
+  {
+    type: "uint256",
+    name: "fromDeadline",
+  },
+  {
+    type: "bytes",
+    name: "fromSig",
+  },
+  {
+    type: "uint256",
+    name: "toDeadline",
+  },
+  {
+    type: "bytes",
+    name: "toSig",
+  },
+] as const;
+const FN_OUTPUTS = [] as const;
+
+/**
+ * Encodes the parameters for the "transferAndChangeRecoveryFor" function.
+ * @param options - The options for the transferAndChangeRecoveryFor function.
+ * @returns The encoded ABI parameters.
+ * @extension FARCASTER
+ * @example
+ * ```
+ * import { encodeTransferAndChangeRecoveryForParams } "thirdweb/extensions/farcaster";
+ * const result = encodeTransferAndChangeRecoveryForParams({
+ *  from: ...,
+ *  to: ...,
+ *  recovery: ...,
+ *  fromDeadline: ...,
+ *  fromSig: ...,
+ *  toDeadline: ...,
+ *  toSig: ...,
+ * });
+ * ```
+ */
+export function encodeTransferAndChangeRecoveryForParams(
+  options: TransferAndChangeRecoveryForParamsInternal,
+) {
+  return encodeAbiParameters(FN_INPUTS, [
+    options.from,
+    options.to,
+    options.recovery,
+    options.fromDeadline,
+    options.fromSig,
+    options.toDeadline,
+    options.toSig,
+  ]);
+}
+
 /**
  * Calls the "transferAndChangeRecoveryFor" function on the contract.
  * @param options - The options for the "transferAndChangeRecoveryFor" function.
@@ -58,40 +125,7 @@ export function transferAndChangeRecoveryFor(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x4c5cbb34",
-      [
-        {
-          type: "address",
-          name: "from",
-        },
-        {
-          type: "address",
-          name: "to",
-        },
-        {
-          type: "address",
-          name: "recovery",
-        },
-        {
-          type: "uint256",
-          name: "fromDeadline",
-        },
-        {
-          type: "bytes",
-          name: "fromSig",
-        },
-        {
-          type: "uint256",
-          name: "toDeadline",
-        },
-        {
-          type: "bytes",
-          name: "toSig",
-        },
-      ],
-      [],
-    ],
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params:
       "asyncParams" in options
         ? async () => {

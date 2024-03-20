@@ -1,6 +1,9 @@
+import type { AbiParameterToPrimitiveType } from "abitype";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
-import type { AbiParameterToPrimitiveType } from "abitype";
+import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { decodeAbiParameters } from "viem";
+import type { Hex } from "../../../../../utils/encoding/hex.js";
 
 /**
  * Represents the parameters for the "getAddress" function.
@@ -12,6 +15,56 @@ export type GetAddressParams = {
   }>;
   data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "data" }>;
 };
+
+const FN_SELECTOR = "0x8878ed33" as const;
+const FN_INPUTS = [
+  {
+    type: "address",
+    name: "adminSigner",
+  },
+  {
+    type: "bytes",
+    name: "data",
+  },
+] as const;
+const FN_OUTPUTS = [
+  {
+    type: "address",
+  },
+] as const;
+
+/**
+ * Encodes the parameters for the "getAddress" function.
+ * @param options - The options for the getAddress function.
+ * @returns The encoded ABI parameters.
+ * @extension ERC4337
+ * @example
+ * ```
+ * import { encodeGetAddressParams } "thirdweb/extensions/erc4337";
+ * const result = encodeGetAddressParams({
+ *  adminSigner: ...,
+ *  data: ...,
+ * });
+ * ```
+ */
+export function encodeGetAddressParams(options: GetAddressParams) {
+  return encodeAbiParameters(FN_INPUTS, [options.adminSigner, options.data]);
+}
+
+/**
+ * Decodes the result of the getAddress function call.
+ * @param result - The hexadecimal result to decode.
+ * @returns The decoded result as per the FN_OUTPUTS definition.
+ * @extension ERC4337
+ * @example
+ * ```
+ * import { decodeGetAddressResult } from "thirdweb/extensions/erc4337";
+ * const result = decodeGetAddressResult("...");
+ * ```
+ */
+export function decodeGetAddressResult(result: Hex) {
+  return decodeAbiParameters(FN_OUTPUTS, result)[0];
+}
 
 /**
  * Calls the "getAddress" function on the contract.
@@ -34,24 +87,7 @@ export async function getAddress(
 ) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0x8878ed33",
-      [
-        {
-          type: "address",
-          name: "adminSigner",
-        },
-        {
-          type: "bytes",
-          name: "data",
-        },
-      ],
-      [
-        {
-          type: "address",
-        },
-      ],
-    ],
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params: [options.adminSigner, options.data],
   });
 }

@@ -1,7 +1,8 @@
+import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { AbiParameterToPrimitiveType } from "abitype";
 import type { Prettify } from "../../../../../utils/type-utils.js";
+import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "publishContract" function.
@@ -40,6 +41,66 @@ export type PublishContractParams = Prettify<
       asyncParams: () => Promise<PublishContractParamsInternal>;
     }
 >;
+const FN_SELECTOR = "0xd50299e6" as const;
+const FN_INPUTS = [
+  {
+    type: "address",
+    name: "publisher",
+  },
+  {
+    type: "string",
+    name: "contractId",
+  },
+  {
+    type: "string",
+    name: "publishMetadataUri",
+  },
+  {
+    type: "string",
+    name: "compilerMetadataUri",
+  },
+  {
+    type: "bytes32",
+    name: "bytecodeHash",
+  },
+  {
+    type: "address",
+    name: "implementation",
+  },
+] as const;
+const FN_OUTPUTS = [] as const;
+
+/**
+ * Encodes the parameters for the "publishContract" function.
+ * @param options - The options for the publishContract function.
+ * @returns The encoded ABI parameters.
+ * @extension THIRDWEB
+ * @example
+ * ```
+ * import { encodePublishContractParams } "thirdweb/extensions/thirdweb";
+ * const result = encodePublishContractParams({
+ *  publisher: ...,
+ *  contractId: ...,
+ *  publishMetadataUri: ...,
+ *  compilerMetadataUri: ...,
+ *  bytecodeHash: ...,
+ *  implementation: ...,
+ * });
+ * ```
+ */
+export function encodePublishContractParams(
+  options: PublishContractParamsInternal,
+) {
+  return encodeAbiParameters(FN_INPUTS, [
+    options.publisher,
+    options.contractId,
+    options.publishMetadataUri,
+    options.compilerMetadataUri,
+    options.bytecodeHash,
+    options.implementation,
+  ]);
+}
+
 /**
  * Calls the "publishContract" function on the contract.
  * @param options - The options for the "publishContract" function.
@@ -68,36 +129,7 @@ export function publishContract(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0xd50299e6",
-      [
-        {
-          type: "address",
-          name: "publisher",
-        },
-        {
-          type: "string",
-          name: "contractId",
-        },
-        {
-          type: "string",
-          name: "publishMetadataUri",
-        },
-        {
-          type: "string",
-          name: "compilerMetadataUri",
-        },
-        {
-          type: "bytes32",
-          name: "bytecodeHash",
-        },
-        {
-          type: "address",
-          name: "implementation",
-        },
-      ],
-      [],
-    ],
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params:
       "asyncParams" in options
         ? async () => {
