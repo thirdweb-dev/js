@@ -84,7 +84,6 @@ export async function getBuyWithCryptoHistory(
     ];
     return data;
   } catch (error) {
-    console.error("Fetch error:", error);
     throw new Error(`Fetch failed: ${error}`);
   }
 }
