@@ -1045,8 +1045,8 @@ importers:
         specifier: ^5.7.0
         version: 5.7.0
       '@walletconnect/react-native-compat':
-        specifier: 2.9.2
-        version: 2.9.2(@react-native-async-storage/async-storage@1.21.0)(react-native-get-random-values@1.10.0)
+        specifier: 2.11.3
+        version: 2.11.3(@react-native-async-storage/async-storage@1.21.0)(@react-native-community/netinfo@11.3.1)(react-native-get-random-values@1.10.0)(react-native@0.71.11)
       base-64:
         specifier: ^1.0.0
         version: 1.0.0
@@ -10890,6 +10890,14 @@ packages:
     resolution: {integrity: sha512-+zDZ20NUnSWghj7Ku5aFphMzuM9JulqCW+aPXT6IfIXFbb8tzYTTOSeRFOtuekJ99ibW2fUCSsjuKNlwDIbHFg==}
     dev: true
 
+  /@react-native-community/netinfo@11.3.1(react-native@0.71.11):
+    resolution: {integrity: sha512-UBnJxyV0b7i9Moa97Av+HKho1ByzX0DtbJXzUQS5E3xhQs6P2D/Os0iw3ouy7joY1TVd6uIhplPbr7l1SJNaNQ==}
+    peerDependencies:
+      react-native: '>=0.59'
+    dependencies:
+      react-native: 0.71.11(@babel/core@7.23.7)(@babel/preset-env@7.23.8)(react@18.2.0)
+    dev: false
+
   /@react-native/assets@1.0.0:
     resolution: {integrity: sha512-KrwSpS1tKI70wuKl68DwJZYEvXktDHdZMG0k2AXD/rJVSlB23/X2CB2cutVR0HwNMJIal9HOUOBB2rVfa6UGtQ==}
 
@@ -13510,16 +13518,25 @@ packages:
       - react
     dev: false
 
-  /@walletconnect/react-native-compat@2.9.2(@react-native-async-storage/async-storage@1.21.0)(react-native-get-random-values@1.10.0):
-    resolution: {integrity: sha512-TH+26R0SQNA7LqUx1XaNx4jJLjdKhu3gCvci7FHRuX8Y/s18Ri6V3iRKRvtkixlAfLQlhOmJjbgaxlffn60wCQ==}
+  /@walletconnect/react-native-compat@2.11.3(@react-native-async-storage/async-storage@1.21.0)(@react-native-community/netinfo@11.3.1)(react-native-get-random-values@1.10.0)(react-native@0.71.11):
+    resolution: {integrity: sha512-aAt4ZJUXc3otXxKuBZUJ0Td/9YUyBtlw/GTfKT4++8Wf2/FKEIHt79YgNGWCG6nn7ELThb4o7zG7aiaIhWkJOg==}
     peerDependencies:
       '@react-native-async-storage/async-storage': '*'
+      '@react-native-community/netinfo': '*'
+      expo-application: '*'
       react-native-get-random-values: '*'
+    peerDependenciesMeta:
+      expo-application:
+        optional: true
     dependencies:
       '@react-native-async-storage/async-storage': 1.21.0(react-native@0.71.11)
+      '@react-native-community/netinfo': 11.3.1(react-native@0.71.11)
       events: 3.3.0
       fast-text-encoding: 1.0.6
       react-native-get-random-values: 1.10.0(react-native@0.71.11)
+      react-native-url-polyfill: 2.0.0(react-native@0.71.11)
+    transitivePeerDependencies:
+      - react-native
     dev: false
 
   /@walletconnect/relay-api@1.0.9:
@@ -18826,7 +18843,6 @@ packages:
     dependencies:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
-    bundledDependencies: false
 
   /event-target-shim@5.0.1:
     resolution: {integrity: sha512-i/2XbnSz/uxRCU6+NdVJgKWDTM427+MqYbkQzD321DuCQJUqOuJKIA0IM2+W2xtYHdKOmZ4dR6fExsd4SXL+WQ==}
