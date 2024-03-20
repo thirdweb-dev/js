@@ -1,54 +1,27 @@
-import type { SharedDeployOptions } from "./types.js";
-import type { FetchDeployMetadataResult } from "../../utils/any-evm/deploy-metadata.js";
-import { encodeFunctionData } from "viem";
 import { eth_blockNumber } from "../../rpc/actions/eth_blockNumber.js";
 import { getRpcClient } from "../../rpc/rpc.js";
 import { keccakId } from "../../utils/any-evm/keccak-id.js";
 import { toHex } from "../../utils/encoding/hex.js";
 import type { ThirdwebContract } from "../contract.js";
 import { deployProxyByImplementation } from "../../extensions/thirdweb/__generated__/IContractFactory/write/deployProxyByImplementation.js";
-import { getDeployedImplementationContract } from "./utils/implementations.js";
+import type { ClientAndChain } from "../../utils/types.js";
+import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
+import { encode } from "../../transaction/actions/encode.js";
+import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 
 /**
  * @internal
  */
 export function prepareAutoFactoryDeployTransaction(
-  args: SharedDeployOptions & {
+  args: ClientAndChain & {
     cloneFactoryContract: ThirdwebContract;
-    initializerArgs: unknown[];
-    contractMetadata: FetchDeployMetadataResult;
+    initializeTransaction: PreparedTransaction;
     salt?: string;
   },
 ) {
-  const { compilerMetadata, extendedMetadata } = args.contractMetadata;
-
   return deployProxyByImplementation({
     contract: args.cloneFactoryContract,
     async asyncParams() {
-      // check if the implementation is deployed
-      const implementationContract = await getDeployedImplementationContract({
-        chain: args.chain,
-        client: args.client,
-        contractId: args.contractMetadata.compilerMetadata.name,
-        constructorParams: [], // TODO either infer this, or pass it in
-      });
-
-      if (!implementationContract) {
-        throw new Error(
-          `Implementation not deployed for ${args.contractMetadata.compilerMetadata.name}. Please deploy it first.`,
-        );
-      }
-
-      const initializerFunction =
-        extendedMetadata?.factoryDeploymentData
-          ?.implementationInitializerFunction;
-
-      const encodedInitializer = encodeFunctionData({
-        abi: compilerMetadata.abi,
-        functionName: initializerFunction,
-        args: args.initializerArgs,
-      });
-
       const rpcRequest = getRpcClient({
         ...args,
       });
@@ -58,9 +31,15 @@ export function prepareAutoFactoryDeployTransaction(
         : toHex(blockNumber, {
             size: 32,
           });
+      const implementation = await resolvePromisedValue(
+        args.initializeTransaction.to,
+      );
+      if (!implementation) {
+        throw new Error("initializeTransaction must have a 'to' field set");
+      }
       return {
-        data: encodedInitializer,
-        implementation: implementationContract.address,
+        data: await encode(args.initializeTransaction),
+        implementation,
         salt,
       } as const;
     },

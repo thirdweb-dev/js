@@ -17,7 +17,6 @@ export async function bootstrapOnchainInfra(options: ClientAndChainAndAccount) {
   // create2 factory
   const create2Factory = await getDeployedCreate2Factory(options);
   if (!create2Factory) {
-    console.log("Deploying Create2 factory");
     await deployCreate2Factory(options);
   }
 
@@ -39,17 +38,38 @@ export async function bootstrapOnchainInfra(options: ClientAndChainAndAccount) {
 /**
  * @internal
  */
+export async function bootstrapImplementation(
+  options: ClientAndChainAndAccount & {
+    contractId: string;
+    constructorParams?: unknown[];
+    publisher?: string;
+    version?: string;
+  },
+) {
+  await getOrDeployInfraContract({
+    ...options,
+    contractId: options.contractId,
+    constructorParams: options.constructorParams || [],
+    publisher: options.publisher,
+    version: options.version,
+  });
+}
+
+/**
+ * @internal
+ */
 export async function getOrDeployInfraContract(
   options: ClientAndChainAndAccount & {
     contractId: InfraContractId;
     constructorParams: unknown[];
+    publisher?: string;
+    version?: string;
   },
 ) {
   const infraContract = await getDeployedInfraContract(options);
   if (infraContract) {
     return infraContract;
   }
-  console.log(`Deploying ${options.contractId}`);
   const transaction = prepareInfraContractDeployTransaction(options);
   await sendAndConfirmTransaction({
     transaction,
