@@ -408,7 +408,7 @@ export function SwapScreenContent(props: {
             }}
             gap="sm"
           >
-            {isNotEnoughBalance ? "Not Enough Balance" : "Continue"}
+            {isNotEnoughBalance ? "Not Enough Funds" : "Continue"}
           </Button>
         )}
       </Container>
