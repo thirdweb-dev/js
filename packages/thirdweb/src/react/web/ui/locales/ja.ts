@@ -113,23 +113,6 @@ export function jaDefault(): ThirdwebLocale {
       },
     },
     wallets: {
-      injectedWallet(walletName: string) {
-        return {
-          connectionScreen: {
-            inProgress: "確認待ち",
-            failed: "接続に失敗しました",
-            instruction: `${walletName}のウォレットで接続リクエストを承認してください`,
-            retry: "再試行",
-          },
-          getStartedScreen: {
-            instruction: `QRコードをスキャンして${walletName}アプリをダウンロードしてください`,
-          },
-          scanScreen: {
-            instruction: `${walletName}のウォレットアプリでQRコードをスキャンして接続してください`,
-          },
-          getStartedLink: `${walletName}のウォレットを持っていませんか？`,
-        };
-      },
       walletConnect: {
         scanInstruction:
           "接続するためにウォレットアプリでこちらをスキャンしてください",
@@ -197,53 +180,7 @@ export function jaDefault(): ThirdwebLocale {
           resendCode: "確認コードを再送",
         },
       },
-      embeddedWallet: {
-        signInWithGoogle: "Googleでサインイン",
-        signInWithFacebook: "Facebookでサインイン",
-        signInWithApple: "Appleでサインイン",
-        emailPlaceholder: "メールアドレスを入力してください",
-        submitEmail: "続ける",
-        emailRequired: "メールアドレスが必要です",
-        invalidEmail: "無効なメールアドレス",
-        signIn: "サインイン",
-        maxAccountsExceeded: "アカウントの最大数を超えました",
-        socialLoginScreen: {
-          title: "サインイン",
-          instruction: "ポップアップウィンドウでアカウントにサインインします", // TODO: check if this is correct
-          failed: "サインインに失敗しました",
-          retry: "再試行",
-        },
-        emailLoginScreen: {
-          title: "サインイン",
-          enterCodeSendTo: "送信された確認コードを入力してください",
-          newDeviceDetected: "新しいデバイスが検出されました",
-          enterRecoveryCode:
-            "初回サインアップ時にメールで送信されたリカバリーコードを入力してください",
-          invalidCode: "無効な確認コード",
-          invalidCodeOrRecoveryCode: "無効な確認コードまたはリカバリーコード",
-          verify: "確認",
-          failedToSendCode: "確認コードの送信に失敗しました",
-          sendingCode: "確認コードを送信中",
-          resendCode: "確認コードを再送",
-        },
-        createPassword: {
-          title: "パスワードを作成",
-          instruction:
-            "アカウントのパスワードを設定してください。新しいデバイスから接続する際にこのパスワードが必要となります。",
-          saveInstruction: "パスワードは必ず保存してください。",
-          inputPlaceholder: "パスワードを入力してください",
-          confirmation: "パスワードを保存しました。",
-          submitButton: "パスワードを設定",
-          failedToSetPassword: "パスワードの設定に失敗しました。",
-        },
-        enterPassword: {
-          title: "パスワードを入力",
-          instruction: "アカウントのパスワードを入力してください",
-          inputPlaceholder: "パスワードを入力してください",
-          submitButton: "確認",
-          wrongPassword: "パスワードが違います",
-        },
-      },
+
       magicLink: {
         signIn: "サインイン",
         loginWith: "次でログイン：",
@@ -308,15 +245,6 @@ export function jaDefault(): ThirdwebLocale {
           uploadedSuccessfully: "正常にアップロードされました",
           // TODO
           invalidPrivateKey: "Invalid Private Key",
-        },
-      },
-      frameWallet: {
-        connectionFailedScreen: {
-          title: "Frameに接続できませんでした",
-          description:
-            "デスクトップアプリがインストールされていて実行中であることを確認してください。以下のリンクからFrameをダウンロードすることができます。Frameが実行されている場合は、このページをリフレッシュしてください。",
-          downloadFrame: "Frameをダウンロード",
-          supportLink: "まだ接続に問題がありますか？",
         },
       },
     },

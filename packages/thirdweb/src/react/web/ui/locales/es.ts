@@ -113,23 +113,6 @@ export function esDefault(): ThirdwebLocale {
       },
     },
     wallets: {
-      injectedWallet(walletName: string) {
-        return {
-          connectionScreen: {
-            inProgress: "Esperando confirmación",
-            failed: "Conexión fallida",
-            instruction: `Acepta la solicitud de conexión en tu cartera ${walletName}`,
-            retry: "Intentar de nuevo",
-          },
-          getStartedScreen: {
-            instruction: `Escanea el código QR para descargar la aplicación ${walletName}`,
-          },
-          scanScreen: {
-            instruction: `Escanea el código QR con la aplicación de cartera ${walletName} para conectarte`,
-          },
-          getStartedLink: `¿No tienes la cartera ${walletName}?`,
-        };
-      },
       walletConnect: {
         scanInstruction:
           "Escanea esto con tu aplicación de cartera para conectar",
@@ -197,54 +180,7 @@ export function esDefault(): ThirdwebLocale {
           resendCode: "Reenviar código de verificación",
         },
       },
-      embeddedWallet: {
-        signInWithGoogle: "Iniciar sesión con Google",
-        signInWithFacebook: "Iniciar sesión con Facebook",
-        signInWithApple: "Iniciar sesión con Apple",
-        emailPlaceholder: "Ingresa tu dirección de correo electrónico",
-        submitEmail: "Continuar",
-        signIn: "Iniciar sesión",
-        emailRequired: "Se requiere dirección de correo electrónico",
-        invalidEmail: "Dirección de correo electrónico inválida",
-        maxAccountsExceeded: "Número máximo de cuentas alcanzado",
-        socialLoginScreen: {
-          title: "Iniciar sesión",
-          instruction: "Inicie sesión en su cuenta en la ventana abierta",
-          failed: "Error al iniciar sesión",
-          retry: "Reintentar",
-        },
-        emailLoginScreen: {
-          title: "Iniciar sesión",
-          enterCodeSendTo: "Ingresa el código de verificación enviado a",
-          newDeviceDetected: "Nuevo dispositivo detectado",
-          enterRecoveryCode:
-            "Ingresa el código de recuperación que se te envió por correo electrónico cuando te registraste por primera vez",
-          invalidCode: "Código de verificación inválido",
-          invalidCodeOrRecoveryCode:
-            "Código de verificación o de recuperación inválido",
-          verify: "Verificar",
-          failedToSendCode: "Error al enviar el código de verificación",
-          sendingCode: "Enviando código de verificación",
-          resendCode: "Reenviar código de verificación",
-        },
-        createPassword: {
-          title: "Crear contraseña",
-          instruction:
-            "Establezca una contraseña para su cuenta. Necesitará esta contraseña cuando se conecte desde un nuevo dispositivo.",
-          saveInstruction: "Asegúrese de guardarla",
-          inputPlaceholder: "Ingrese su contraseña",
-          confirmation: "He guardado mi contraseña",
-          submitButton: "Establecer contraseña",
-          failedToSetPassword: "Error al establecer la contraseña",
-        },
-        enterPassword: {
-          title: "Ingrese la contraseña",
-          instruction: "Ingrese la contraseña de su cuenta",
-          inputPlaceholder: "Ingrese su contraseña",
-          submitButton: "Verificar",
-          wrongPassword: "Contraseña incorrecta",
-        },
-      },
+
       magicLink: {
         signIn: "Iniciar sesión",
         loginWith: "Iniciar sesión con",
@@ -313,15 +249,6 @@ export function esDefault(): ThirdwebLocale {
           uploadedSuccessfully: "Subido con éxito",
           // TODO
           invalidPrivateKey: "Invalid Private Key",
-        },
-      },
-      frameWallet: {
-        connectionFailedScreen: {
-          title: "Fallo al conectar con Frame",
-          description:
-            "Asegúrate de que la aplicación de escritorio esté instalada y en funcionamiento. Puedes descargar Frame desde el enlace de abajo. Asegúrate de actualizar esta página una vez que Frame esté funcionando.",
-          downloadFrame: "Descargar Frame",
-          supportLink: "¿Sigues teniendo problemas para conectar?",
         },
       },
     },
