@@ -1,21 +1,17 @@
 import type { ThirdwebContract } from "../../contract/contract.js";
 import { deployViaAutoFactory } from "../../contract/deployment/deploy-via-autofactory.js";
 import type { ClientAndChainAndAccount } from "../../utils/types.js";
-import { initialize as initDropERC721 } from "./__generated__/DropERC721/write/initialize.js";
-import { initialize as initTokenERC721 } from "./__generated__/TokenERC721/write/initialize.js";
-import { initialize as initOpenEditionERC721 } from "./__generated__/OpenEditionERC721/write/initialize.js";
+import { initialize as initDropERC20 } from "./__generated__/DropERC20/write/initialize.js";
+import { initialize as initTokenERC20 } from "./__generated__/TokenERC20/write/initialize.js";
 import type { FileOrBufferOrString } from "../../storage/upload/types.js";
 import { upload } from "../../storage/upload.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { getOrDeployInfraForPublishedContract } from "../../contract/deployment/utils/bootstrap.js";
 import type { Prettify } from "../../utils/type-utils.js";
 
-export type ERC721ContractType =
-  | "DropERC721"
-  | "TokenERC721"
-  | "OpenEditionERC721";
+export type ERC20ContractType = "DropERC20" | "TokenERC20";
 
-export type ERC721ContractParams = {
+export type ERC20ContractParams = {
   name: string;
   description?: string;
   image?: FileOrBufferOrString;
@@ -27,43 +23,38 @@ export type ERC721ContractParams = {
   saleRecipient?: string;
   platformFeeBps?: bigint;
   platformFeeRecipient?: string;
-  royaltyRecipient?: string;
-  royaltyBps?: bigint;
   trustedForwarders?: string[];
 };
 
-export type DeployERC721ContractOptions = Prettify<
+export type DeployERC20ContractOptions = Prettify<
   ClientAndChainAndAccount & {
-    type: ERC721ContractType;
-    params: ERC721ContractParams;
+    type: ERC20ContractType;
+    params: ERC20ContractParams;
   }
 >;
 
 /**
- * Deploys an thirdweb ERC721 contract of the given type.
+ * Deploys an thirdweb ERC20 contract of the given type.
  * On chains where the thirdweb infrastructure contracts are not deployed, this function will deploy them as well.
  * @param options - The deployment options.
  * @returns The deployed contract address.
  * @extension DEPLOY
  * @example
  * ```
- * import { deployERC721Contract } from "thirdweb/extensions/prebuilts";
- * const contractAddress = await deployERC721Contract({
+ * import { deployERC20Contract } from "thirdweb/extensions/prebuilts";
+ * const contractAddress = await deployERC20Contract({
  *  chain,
  *  client,
  *  account,
- *  type: "DropERC721",
+ *  type: "TokenERC20",
  *  params: {
- *    name: "MyNFT",
- *    description: "My NFT contract",
- *    symbol: "NFT",
+ *    name: "MyToken",
+ *    description: "My Token contract",
+ *    symbol: "MT",
  * },
  */
-export async function deployERC721Contract(
-  options: DeployERC721ContractOptions,
-) {
+export async function deployERC20Contract(options: DeployERC20ContractOptions) {
   const { chain, client, account, type, params } = options;
-
   const { cloneFactoryContract, implementationContract } =
     await getOrDeployInfraForPublishedContract({
       chain,
@@ -72,7 +63,6 @@ export async function deployERC721Contract(
       contractId: type,
       constructorParams: [],
     });
-
   const initializeTransaction = await getInitializeTransaction({
     client,
     implementationContract,
@@ -93,8 +83,8 @@ export async function deployERC721Contract(
 async function getInitializeTransaction(options: {
   client: ThirdwebClient;
   implementationContract: ThirdwebContract;
-  type: ERC721ContractType;
-  params: ERC721ContractParams;
+  type: ERC20ContractType;
+  params: ERC20ContractParams;
   accountAddress: string;
 }) {
   const { client, implementationContract, type, params, accountAddress } =
@@ -112,16 +102,14 @@ async function getInitializeTransaction(options: {
             image: params.image,
             external_link: params.external_link,
             social_urls: params.social_urls,
-            seller_fee_basis_points: params.royaltyBps,
-            fee_recipient: params.royaltyRecipient,
           },
         ],
       })
     )[0] ||
     "";
   switch (type) {
-    case "DropERC721":
-      return initDropERC721({
+    case "DropERC20":
+      return initDropERC20({
         contract: implementationContract,
         name: params.name || "",
         symbol: params.symbol || "",
@@ -130,34 +118,18 @@ async function getInitializeTransaction(options: {
         saleRecipient: params.saleRecipient || accountAddress,
         platformFeeBps: params.platformFeeBps || 0n,
         platformFeeRecipient: params.platformFeeRecipient || accountAddress,
-        royaltyRecipient: params.royaltyRecipient || accountAddress,
-        royaltyBps: params.royaltyBps || 0n,
         trustedForwarders: params.trustedForwarders || [],
       });
-    case "TokenERC721":
-      return initTokenERC721({
+    case "TokenERC20":
+      return initTokenERC20({
         contract: implementationContract,
         name: params.name || "",
         symbol: params.symbol || "",
         contractURI,
         defaultAdmin: params.defaultAdmin || accountAddress,
-        saleRecipient: params.saleRecipient || accountAddress,
+        primarySaleRecipient: params.saleRecipient || accountAddress,
         platformFeeBps: params.platformFeeBps || 0n,
         platformFeeRecipient: params.platformFeeRecipient || accountAddress,
-        royaltyRecipient: params.royaltyRecipient || accountAddress,
-        royaltyBps: params.royaltyBps || 0n,
-        trustedForwarders: params.trustedForwarders || [],
-      });
-    case "OpenEditionERC721":
-      return initOpenEditionERC721({
-        contract: implementationContract,
-        name: params.name || "",
-        symbol: params.symbol || "",
-        contractURI,
-        defaultAdmin: params.defaultAdmin || accountAddress,
-        saleRecipient: params.saleRecipient || accountAddress,
-        royaltyRecipient: params.royaltyRecipient || accountAddress,
-        royaltyBps: params.royaltyBps || 0n,
         trustedForwarders: params.trustedForwarders || [],
       });
   }

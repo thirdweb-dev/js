@@ -1,18 +1,12 @@
 import type { ThirdwebContract } from "../../contract/contract.js";
 import { deployViaAutoFactory } from "../../contract/deployment/deploy-via-autofactory.js";
-import { getDeployedCloneFactoryContract } from "../../contract/deployment/utils/clone-factory.js";
-import { getDeployedInfraContract } from "../../contract/deployment/utils/infra.js";
 import type { ClientAndChainAndAccount } from "../../utils/types.js";
 import { initialize as initDropERC1155 } from "./__generated__/DropERC1155/write/initialize.js";
 import { initialize as initTokenERC1155 } from "./__generated__/TokenERC1155/write/initialize.js";
 import type { FileOrBufferOrString } from "../../storage/upload/types.js";
 import { upload } from "../../storage/upload.js";
 import type { ThirdwebClient } from "../../client/client.js";
-import {
-  deployImplementation,
-  deployCloneFactory,
-  getOrDeployInfraForPublishedContract,
-} from "../../contract/deployment/utils/bootstrap.js";
+import { getOrDeployInfraForPublishedContract } from "../../contract/deployment/utils/bootstrap.js";
 import type { Prettify } from "../../utils/type-utils.js";
 
 export type ERC1155ContractType = "DropERC1155" | "TokenERC1155";
@@ -46,6 +40,7 @@ export type DeployERC1155ContractOptions = Prettify<
  * On chains where the thirdweb infrastructure contracts are not deployed, this function will deploy them as well.
  * @param options - The deployment options.
  * @returns The deployed contract address.
+ * @extension DEPLOY
  * @example
  * ```
  * import { deployERC1155Contract } from "thirdweb/extensions/prebuilts";
@@ -55,9 +50,9 @@ export type DeployERC1155ContractOptions = Prettify<
  *  account,
  *  type: "DropERC1155",
  *  params: {
- *    name: "MyNFT",
- *    description: "My NFT contract",
- *    symbol: "NFT",
+ *    name: "MyEdition",
+ *    description: "My edition contract",
+ *    symbol: "ME",
  * },
  */
 export async function deployERC1155Contract(
@@ -111,8 +106,8 @@ async function getInitializeTransaction(options: {
             image: params.image,
             external_link: params.external_link,
             social_urls: params.social_urls,
-            seller_fee_basis_points: params.platformFeeBps,
-            fee_recipient: params.platformFeeRecipient,
+            seller_fee_basis_points: params.royaltyBps,
+            fee_recipient: params.royaltyRecipient,
           },
         ],
       })

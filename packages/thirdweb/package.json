@@ -45,6 +45,11 @@
       "import": "./dist/esm/exports/contract.js",
       "default": "./dist/cjs/exports/contract.js"
     },
+    "./deploys": {
+      "types": "./dist/types/exports/deploys.d.ts",
+      "import": "./dist/esm/exports/deploys.js",
+      "default": "./dist/cjs/exports/deploys.js"
+    },
     "./event": {
       "types": "./dist/types/exports/event.d.ts",
       "import": "./dist/esm/exports/event.js",
@@ -115,6 +120,9 @@
       ],
       "contract": [
         "./dist/types/exports/contract.d.ts"
+      ],
+      "deploys": [
+        "./dist/types/exports/deploys.d.ts"
       ],
       "event": [
         "./dist/types/exports/event.d.ts"

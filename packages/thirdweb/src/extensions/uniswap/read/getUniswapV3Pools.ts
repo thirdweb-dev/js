@@ -20,7 +20,7 @@ export type GetUniswapV3PoolsResult = {
  * Finds the Uniswap V3 pools for the two tokens.
  * @param options - The token pair to find any pools for any Uniswap contract that implements getPool.
  * @returns The pools' addresses and fees.
- * @extension ERC20
+ * @extension UNISWAP
  * @example
  * ```ts
  * import { getUniswapV3Pool } from "thirdweb/extensions/uniswap";
