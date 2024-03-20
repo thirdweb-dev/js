@@ -59,8 +59,6 @@ export function TokenSelector(props: {
     ];
   }
 
-  const findingToken = input && tokenQuery.isLoading;
-
   const filteredList = input
     ? tokenList.filter((t) => {
         const inputStr = input.toLowerCase();
