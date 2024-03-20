@@ -35,7 +35,10 @@ export default {
   "rpc": [
     "https://8890.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-dev-testnet.orenium.org/",
-    "https://rpc-testnet.orenium.org/"
+    "https://rpc-testnet.orenium.org/",
+    "https://rpc-orc.oredex.finance",
+    "https://testnet-rpc.oredex.finance",
+    "https://oredex-node.oredex.finance"
   ],
   "shortName": "tore",
   "slip44": 1,

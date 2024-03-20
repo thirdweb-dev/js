@@ -1,3 +1,5 @@
+import { toEther } from "../../common/currency/toEther";
+import { estimateTransactionCost } from "../../common/gas-price";
 import { ContractWrapper } from "./internal/contract-wrapper";
 import { BaseContract, BigNumber, utils } from "ethers";
 
@@ -35,11 +37,11 @@ export class GasCostEstimator<TContract extends BaseContract> {
     fn: keyof TContract["functions"] | (string & {}),
     args: Parameters<TContract["functions"][typeof fn]> | any[],
   ): Promise<string> {
-    const [price, gasUnits] = await Promise.all([
-      this.contractWrapper.getProvider().getGasPrice(),
-      this.contractWrapper.estimateGas(fn, args),
-    ]);
-    return utils.formatEther(gasUnits.mul(price));
+    const gasCost = await estimateTransactionCost(
+      this.contractWrapper.getProvider(),
+      await this.contractWrapper.populateTransaction(fn, args),
+    );
+    return toEther(gasCost);
   }
 
   /**

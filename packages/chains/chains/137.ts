@@ -50,7 +50,9 @@ export default {
     "https://polygon-bor-rpc.publicnode.com",
     "wss://polygon-bor-rpc.publicnode.com",
     "https://polygon.gateway.tenderly.co",
-    "wss://polygon.gateway.tenderly.co"
+    "wss://polygon.gateway.tenderly.co",
+    "https://polygon.drpc.org",
+    "wss://polygon.drpc.org"
   ],
   "shortName": "matic",
   "slip44": 966,

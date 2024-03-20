@@ -24,8 +24,8 @@ export default {
     "https://5700.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.tanenbaum.io",
     "wss://rpc.tanenbaum.io/wss",
-    "https://syscoin-tanenbaum-evm-rpc.publicnode.com",
-    "wss://syscoin-tanenbaum-evm-rpc.publicnode.com"
+    "https://syscoin-tanenbaum-evm.publicnode.com",
+    "wss://syscoin-tanenbaum-evm.publicnode.com"
   ],
   "shortName": "tsys",
   "slip44": 1,

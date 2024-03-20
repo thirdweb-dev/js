@@ -1,5 +1,122 @@
 # @thirdweb-dev/sdk
 
+## 4.0.48
+
+### Patch Changes
+
+- [#2496](https://github.com/thirdweb-dev/js/pull/2496) [`863049d`](https://github.com/thirdweb-dev/js/commit/863049dc0ca989d2654b4aacba811263931a33fe) Thanks [@jnsdls](https://github.com/jnsdls)! - do not overwrite chains in supportedChains computation
+
+- [#2514](https://github.com/thirdweb-dev/js/pull/2514) [`c479277`](https://github.com/thirdweb-dev/js/commit/c47927708aa8e8ff42f40c4f740a859ec090ec70) Thanks [@jnsdls](https://github.com/jnsdls)! - simplify matchError function
+
+- Updated dependencies [[`e3f4490`](https://github.com/thirdweb-dev/js/commit/e3f44905cacd79d0826b05fe88375714af51405b), [`863049d`](https://github.com/thirdweb-dev/js/commit/863049dc0ca989d2654b4aacba811263931a33fe), [`b2728ec`](https://github.com/thirdweb-dev/js/commit/b2728ec6f230925048b12fa8c915f127858dbb1b), [`8a20aa5`](https://github.com/thirdweb-dev/js/commit/8a20aa58259edc5bac578dc5e4f4d971ed7adf36)]:
+  - @thirdweb-dev/contracts-js@1.3.18
+  - @thirdweb-dev/chains@0.1.81
+
+## 4.0.47
+
+### Patch Changes
+
+- [#2490](https://github.com/thirdweb-dev/js/pull/2490) [`f0250a7`](https://github.com/thirdweb-dev/js/commit/f0250a77cdbfa3b72e8dbf0ff345219a032e42b0) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Remove maxPriorityPerGas minimum
+
+- [#2481](https://github.com/thirdweb-dev/js/pull/2481) [`c67b287`](https://github.com/thirdweb-dev/js/commit/c67b2877643afdfb503b41a2b5d21e18dbff15f2) Thanks [@kumaryash90](https://github.com/kumaryash90)! - ZkSync contract verification
+
+- [#2459](https://github.com/thirdweb-dev/js/pull/2459) [`7ac4e6b`](https://github.com/thirdweb-dev/js/commit/7ac4e6ba4ee947c76f35b1b95927d7772edf6454) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Contracts version 3.11.1
+
+- [#2332](https://github.com/thirdweb-dev/js/pull/2332) [`d4be647`](https://github.com/thirdweb-dev/js/commit/d4be6479db3fec6b4891e5ca89487b4e703eb9cf) Thanks [@farhanW3](https://github.com/farhanW3)! - added domainSeparatorVersion SDK Options for relayers
+
+- Updated dependencies [[`c494db8`](https://github.com/thirdweb-dev/js/commit/c494db87cbfa4b6fc4013abb01936e86a4350ea8), [`7ac4e6b`](https://github.com/thirdweb-dev/js/commit/7ac4e6ba4ee947c76f35b1b95927d7772edf6454)]:
+  - @thirdweb-dev/chains@0.1.80
+  - @thirdweb-dev/contracts-js@1.3.17
+
+## 4.0.46
+
+### Patch Changes
+
+- [#2483](https://github.com/thirdweb-dev/js/pull/2483) [`846a350`](https://github.com/thirdweb-dev/js/commit/846a3503fe4a8d39e92dd318470cefefd3b94c69) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Min maxPriorityFeePerGas enforcement
+
+- Updated dependencies [[`2e01627`](https://github.com/thirdweb-dev/js/commit/2e01627c998a49a1dd41041f3743a28488c92697)]:
+  - @thirdweb-dev/chains@0.1.79
+
+## 4.0.45
+
+### Patch Changes
+
+- [#2469](https://github.com/thirdweb-dev/js/pull/2469) [`a2002d1`](https://github.com/thirdweb-dev/js/commit/a2002d16376c41fffa59daccfd98856aba90a627) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Better return type for getProofsForAllowListEntry
+
+## 4.0.44
+
+### Patch Changes
+
+- [#2457](https://github.com/thirdweb-dev/js/pull/2457) [`b2be63a`](https://github.com/thirdweb-dev/js/commit/b2be63ada466ea1784d680ae6244ac047a190103) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle l2 gas estimations when forcing gasLimit
+
+## 4.0.43
+
+### Patch Changes
+
+- [#2443](https://github.com/thirdweb-dev/js/pull/2443) [`cabfc29`](https://github.com/thirdweb-dev/js/commit/cabfc29119f25a78010f59f766bdcb8c392afa2d) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [Smart Wallet] Use bundler eth_getUserOperationReceipt instead of rpc eth_getLogs, remove polygon gas station error logs
+
+- [#2455](https://github.com/thirdweb-dev/js/pull/2455) [`173777a`](https://github.com/thirdweb-dev/js/commit/173777ade4ea59cde1c6f25a4654d48b277be9ad) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update optimism SDK to fix the pnpm preinstall issue
+
+## 4.0.42
+
+### Patch Changes
+
+- [#2441](https://github.com/thirdweb-dev/js/pull/2441) [`c6b025e`](https://github.com/thirdweb-dev/js/commit/c6b025e84451341f6f48c0a7c4b5f06b8e49d792) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle L1 fees for OP chains in `estimateGasCost()`
+
+## 4.0.41
+
+### Patch Changes
+
+- Updated dependencies [[`588897d`](https://github.com/thirdweb-dev/js/commit/588897d1b04e6c63da13639aeb47ca701308e1b2)]:
+  - @thirdweb-dev/chains@0.1.78
+
+## 4.0.40
+
+### Patch Changes
+
+- Updated dependencies [[`047fbe2`](https://github.com/thirdweb-dev/js/commit/047fbe2918808cbc8fded90104458b6e38d1207d)]:
+  - @thirdweb-dev/chains@0.1.77
+
+## 4.0.39
+
+### Patch Changes
+
+- [#2379](https://github.com/thirdweb-dev/js/pull/2379) [`ab44b8f`](https://github.com/thirdweb-dev/js/commit/ab44b8f0ae760065f400f76d69703e26bcbcc022) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [Smart Wallet] Do not deploy to sign typed data, allow presigned deploy+session key
+
+- [#2404](https://github.com/thirdweb-dev/js/pull/2404) [`9c7fbc1`](https://github.com/thirdweb-dev/js/commit/9c7fbc1603a7265209b6f56c2284fdb0e6b33a1d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Updateable metadata for DropERC721 contracts
+
+- [#2382](https://github.com/thirdweb-dev/js/pull/2382) [`7d8697e`](https://github.com/thirdweb-dev/js/commit/7d8697ec3ff72f33dda151e7eb82f5ff19c1f825) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Added useUpdateNFTMetadata hook
+
+- Updated dependencies [[`5f243bb`](https://github.com/thirdweb-dev/js/commit/5f243bba0ded5dace9344c79e8904a4a342d16af)]:
+  - @thirdweb-dev/chains@0.1.76
+
+## 4.0.38
+
+### Patch Changes
+
+- Updated dependencies [[`e87292a`](https://github.com/thirdweb-dev/js/commit/e87292ab604897ddfc337d24d2d1fe0f3560baae)]:
+  - @thirdweb-dev/chains@0.1.75
+
+## 4.0.37
+
+### Patch Changes
+
+- [#2343](https://github.com/thirdweb-dev/js/pull/2343) [`a00917c`](https://github.com/thirdweb-dev/js/commit/a00917cca451e64d7ea8dc8553c1c32540edaafa) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose contract.erc1155.updateMetadata()
+
+- [#2359](https://github.com/thirdweb-dev/js/pull/2359) [`bac0c9b`](https://github.com/thirdweb-dev/js/commit/bac0c9b4a1da26bbc7b1550c4b6f5e335b80c82b) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Fix joinABI filtering
+
+- [#2362](https://github.com/thirdweb-dev/js/pull/2362) [`7d74d30`](https://github.com/thirdweb-dev/js/commit/7d74d30b9fe2d2d2798a3c5efb1d71cd73841e53) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Resolve EIP7511 minimal proxy with Push0 opcode
+
+- [#2369](https://github.com/thirdweb-dev/js/pull/2369) [`8d2811d`](https://github.com/thirdweb-dev/js/commit/8d2811dd131d6c8eb8ce79278f0a8ebe1883265d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle updateMetadata for TokenERC1155 contracts
+
+- [#2374](https://github.com/thirdweb-dev/js/pull/2374) [`bc198e2`](https://github.com/thirdweb-dev/js/commit/bc198e215e57094aac525b262fe91add4786df92) Thanks [@MananTank](https://github.com/MananTank)! - Use `private foo` instead of `#foo` for making the members private in classes
+
+- Updated dependencies [[`abc0a53`](https://github.com/thirdweb-dev/js/commit/abc0a53dc398264f205d194e3f87a79f74e91eb1), [`bc198e2`](https://github.com/thirdweb-dev/js/commit/bc198e215e57094aac525b262fe91add4786df92)]:
+  - @thirdweb-dev/chains@0.1.74
+  - @thirdweb-dev/crypto@0.2.1
+  - @thirdweb-dev/merkletree@0.2.1
+  - @thirdweb-dev/storage@2.0.10
+
 ## 4.0.36
 
 ### Patch Changes

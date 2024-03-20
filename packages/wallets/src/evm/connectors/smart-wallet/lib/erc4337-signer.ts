@@ -1,5 +1,4 @@
 import { Contract, ethers, providers, utils } from "ethers";
-
 import { Bytes, Signer } from "ethers";
 import { BaseAccountAPI } from "./base-api";
 import type { ERC4337EthersProvider } from "./erc4337-provider";
@@ -7,10 +6,10 @@ import { HttpRpcClient } from "./http-rpc-client";
 import { hexlifyUserOp, randomNonce } from "./utils";
 import { ProviderConfig, UserOpOptions } from "../types";
 import { signTypedDataInternal } from "@thirdweb-dev/sdk";
-import {
-  checkContractWalletSignature,
-  chainIdToThirdwebRpc,
-} from "../../../wallets/abstract";
+import { chainIdToThirdwebRpc } from "../../../wallets/abstract";
+import { setAnalyticsHeaders } from "../../../utils/headers";
+import { isTwUrl } from "../../../utils/url";
+import { checkContractWalletSignature } from "./check-contract-wallet-signature";
 
 export class ERC4337EthersSigner extends Signer {
   config: ProviderConfig;
@@ -18,6 +17,7 @@ export class ERC4337EthersSigner extends Signer {
   erc4337provider: ERC4337EthersProvider;
   httpRpcClient: HttpRpcClient;
   smartAccountAPI: BaseAccountAPI;
+  approving: boolean;
 
   // TODO: we have 'erc4337provider', remove shared dependencies or avoid two-way reference
   constructor(
@@ -34,6 +34,7 @@ export class ERC4337EthersSigner extends Signer {
     this.erc4337provider = erc4337provider;
     this.httpRpcClient = httpRpcClient;
     this.smartAccountAPI = smartAccountAPI;
+    this.approving = false;
   }
 
   address?: string;
@@ -43,6 +44,14 @@ export class ERC4337EthersSigner extends Signer {
     transaction: utils.Deferrable<providers.TransactionRequest>,
     options?: UserOpOptions,
   ): Promise<providers.TransactionResponse> {
+    if (!this.approving) {
+      this.approving = true;
+      const tx = await this.smartAccountAPI.createApproveTx();
+      if (tx) {
+        await (await this.sendTransaction(tx)).wait();
+      }
+      this.approving = false;
+    }
     const tx = await ethers.utils.resolveProperties(transaction);
     await this.verifyAllNecessaryFields(tx);
 
@@ -93,7 +102,7 @@ export class ERC4337EthersSigner extends Signer {
           errorIn.reason;
 
         if (failedOpMessage?.includes("FailedOp")) {
-          let paymasterInfo: string = "";
+          let paymasterInfo = "";
           // TODO: better error extraction methods will be needed
           const matched = failedOpMessage.match(/FailedOp\((.*)\)/);
 
@@ -169,9 +178,58 @@ Code: ${errorCode}`;
     let factorySupports712: boolean;
     let signature: string;
 
+    const rpcUrl = chainIdToThirdwebRpc(chainId, this.config.clientId);
+
+    const headers: Record<string, string> = {};
+
+    if (isTwUrl(rpcUrl)) {
+      const bundleId =
+        typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
+          ? ((globalThis as any).APP_BUNDLE_ID as string)
+          : undefined;
+
+      if (this.config.secretKey) {
+        headers["x-secret-key"] = this.config.secretKey;
+      } else if (this.config.clientId) {
+        headers["x-client-id"] = this.config.clientId;
+
+        if (bundleId) {
+          headers["x-bundle-id"] = bundleId;
+        }
+      }
+
+      // Dashboard token
+      if (
+        typeof globalThis !== "undefined" &&
+        "TW_AUTH_TOKEN" in globalThis &&
+        typeof (globalThis as any).TW_AUTH_TOKEN === "string"
+      ) {
+        headers["authorization"] = `Bearer ${
+          (globalThis as any).TW_AUTH_TOKEN as string
+        }`;
+      }
+
+      // CLI token
+      if (
+        typeof globalThis !== "undefined" &&
+        "TW_CLI_AUTH_TOKEN" in globalThis &&
+        typeof (globalThis as any).TW_CLI_AUTH_TOKEN === "string"
+      ) {
+        headers["authorization"] = `Bearer ${
+          (globalThis as any).TW_CLI_AUTH_TOKEN as string
+        }`;
+        headers["x-authorize-wallet"] = "true";
+      }
+
+      setAnalyticsHeaders(headers);
+    }
+
     try {
-      const provider = new providers.JsonRpcProvider(
-        chainIdToThirdwebRpc(chainId, this.config.clientId),
+      const provider = new providers.StaticJsonRpcProvider(
+        {
+          url: chainIdToThirdwebRpc(chainId, this.config.clientId),
+          headers,
+        },
         chainId,
       );
       const walletContract = new Contract(
@@ -212,6 +270,8 @@ Code: ${errorCode}`;
       signature,
       address,
       chainId,
+      this.config.clientId,
+      this.config.secretKey,
     );
 
     if (isValid) {

@@ -4,7 +4,7 @@ export default {
   "chainId": 6038361,
   "explorers": [
     {
-      "name": "Blockscout zKyoto chain explorer",
+      "name": "Blockscout zKyoto explorer",
       "url": "https://astar-zkyoto.blockscout.com",
       "standard": "EIP3091"
     }
@@ -43,7 +43,6 @@ export default {
   ],
   "shortName": "azkyt",
   "slug": "astar-zkyoto",
-  "status": "incubating",
   "testnet": true,
   "title": "Astar zkEVM Testnet zKyoto"
 } as const satisfies Chain;

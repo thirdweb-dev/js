@@ -5,12 +5,12 @@ export default {
   "explorers": [
     {
       "name": "Oasis Emerald Testnet Explorer",
-      "url": "https://testnet.explorer.emerald.oasis.dev",
+      "url": "https://explorer.oasis.io/testnet/emerald",
       "standard": "EIP3091"
     }
   ],
   "faucets": [
-    "https://faucet.testnet.oasis.dev/"
+    "https://faucet.testnet.oasis.io/"
   ],
   "icon": {
     "url": "ipfs://bafkreiespupb52akiwrexxg7g72mh7m7h7lum5hmqijmpdh3kmuunzclha",
@@ -28,8 +28,8 @@ export default {
   "networkId": 42261,
   "rpc": [
     "https://42261.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet.emerald.oasis.dev/",
-    "wss://testnet.emerald.oasis.dev/ws"
+    "https://testnet.emerald.oasis.io/",
+    "wss://testnet.emerald.oasis.io/ws"
   ],
   "shortName": "emerald-testnet",
   "slip44": 1,

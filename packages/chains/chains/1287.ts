@@ -21,7 +21,9 @@ export default {
   "rpc": [
     "https://1287.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.api.moonbase.moonbeam.network",
-    "wss://wss.api.moonbase.moonbeam.network"
+    "wss://wss.api.moonbase.moonbeam.network",
+    "https://moonbase-alpha.drpc.org",
+    "wss://moonbase-alpha.drpc.org"
   ],
   "shortName": "mbase",
   "slip44": 1,

@@ -4,8 +4,8 @@ export default {
   "chainId": 3776,
   "explorers": [
     {
-      "name": "blockscout",
-      "url": "https://astar-zkevm.explorer.startale.com/",
+      "name": "Blockscout Astar zkEVM explorer",
+      "url": "https://astar-zkevm.explorer.startale.com",
       "standard": "EIP3091"
     }
   ],
@@ -35,10 +35,12 @@ export default {
     ]
   },
   "redFlags": [],
-  "rpc": [],
+  "rpc": [
+    "https://3776.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.startale.com/astar-zkevm"
+  ],
   "shortName": "astarzk",
   "slug": "astar-zkevm",
-  "status": "incubating",
   "testnet": false,
   "title": "Astar zkEVM Mainnet"
 } as const satisfies Chain;

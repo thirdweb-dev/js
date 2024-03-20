@@ -38,10 +38,13 @@ export default {
     "https://optimism-goerli-rpc.publicnode.com",
     "wss://optimism-goerli-rpc.publicnode.com",
     "https://optimism-goerli.gateway.tenderly.co",
-    "wss://optimism-goerli.gateway.tenderly.co"
+    "wss://optimism-goerli.gateway.tenderly.co",
+    "https://optimism-testnet.drpc.org",
+    "wss://optimism-testnet.drpc.org"
   ],
   "shortName": "ogor",
   "slip44": 1,
   "slug": "optimism-goerli",
+  "status": "deprecated",
   "testnet": true
 } as const satisfies Chain;

@@ -7,6 +7,11 @@ export default {
       "name": "3xpl",
       "url": "https://3xpl.com/botanix",
       "standard": "EIP3091"
+    },
+    {
+      "name": "Blockscout",
+      "url": "https://blockscout.botanixlabs.dev",
+      "standard": "EIP3091"
     }
   ],
   "faucets": [

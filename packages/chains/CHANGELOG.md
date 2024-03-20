@@ -1,5 +1,55 @@
 # @thirdweb-dev/chains
 
+## 0.1.81
+
+### Patch Changes
+
+- [#2496](https://github.com/thirdweb-dev/js/pull/2496) [`863049d`](https://github.com/thirdweb-dev/js/commit/863049dc0ca989d2654b4aacba811263931a33fe) Thanks [@jnsdls](https://github.com/jnsdls)! - do not append `?bundleId` query param to rpc url if the bundle id is undefined
+
+- [#2427](https://github.com/thirdweb-dev/js/pull/2427) [`8a20aa5`](https://github.com/thirdweb-dev/js/commit/8a20aa58259edc5bac578dc5e4f4d971ed7adf36) Thanks [@github-actions](https://github.com/apps/github-actions)! - Synced Chains Package
+
+## 0.1.80
+
+### Patch Changes
+
+- [#2484](https://github.com/thirdweb-dev/js/pull/2484) [`c494db8`](https://github.com/thirdweb-dev/js/commit/c494db87cbfa4b6fc4013abb01936e86a4350ea8) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update chains
+
+## 0.1.79
+
+### Patch Changes
+
+- [#2464](https://github.com/thirdweb-dev/js/pull/2464) [`2e01627`](https://github.com/thirdweb-dev/js/commit/2e01627c998a49a1dd41041f3743a28488c92697) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Sync chains
+
+## 0.1.78
+
+### Patch Changes
+
+- [#2416](https://github.com/thirdweb-dev/js/pull/2416) [`588897d`](https://github.com/thirdweb-dev/js/commit/588897d1b04e6c63da13639aeb47ca701308e1b2) Thanks [@github-actions](https://github.com/apps/github-actions)! - Synced Chains Package
+
+## 0.1.77
+
+### Patch Changes
+
+- [#2406](https://github.com/thirdweb-dev/js/pull/2406) [`047fbe2`](https://github.com/thirdweb-dev/js/commit/047fbe2918808cbc8fded90104458b6e38d1207d) Thanks [@github-actions](https://github.com/apps/github-actions)! - Synced Chains Package
+
+## 0.1.76
+
+### Patch Changes
+
+- [#2378](https://github.com/thirdweb-dev/js/pull/2378) [`5f243bb`](https://github.com/thirdweb-dev/js/commit/5f243bba0ded5dace9344c79e8904a4a342d16af) Thanks [@github-actions](https://github.com/apps/github-actions)! - Synced Chains Package
+
+## 0.1.75
+
+### Patch Changes
+
+- [#2372](https://github.com/thirdweb-dev/js/pull/2372) [`e87292a`](https://github.com/thirdweb-dev/js/commit/e87292ab604897ddfc337d24d2d1fe0f3560baae) Thanks [@github-actions](https://github.com/apps/github-actions)! - Synced Chains Package
+
+## 0.1.74
+
+### Patch Changes
+
+- [#2336](https://github.com/thirdweb-dev/js/pull/2336) [`abc0a53`](https://github.com/thirdweb-dev/js/commit/abc0a53dc398264f205d194e3f87a79f74e91eb1) Thanks [@github-actions](https://github.com/apps/github-actions)! - Synced Chains Package
+
 ## 0.1.73
 
 ### Patch Changes

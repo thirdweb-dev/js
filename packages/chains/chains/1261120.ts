@@ -44,7 +44,9 @@ export default {
   "rpc": [
     "https://1261120.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.zkatana.gelato.digital",
-    "https://rpc.startale.com/zkatana"
+    "https://rpc.startale.com/zkatana",
+    "https://astar-zkatana.drpc.org",
+    "wss://astar-zkatana.drpc.org"
   ],
   "shortName": "azktn",
   "slug": "zkatana",

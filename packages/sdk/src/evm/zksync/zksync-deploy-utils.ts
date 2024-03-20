@@ -11,8 +11,9 @@ import { type BytesLike, Contract, type Signer, utils, Wallet } from "ethers";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import type { DeployOptions } from "../types/deploy/deploy-options";
 import { ThirdwebSDK } from "../core/sdk";
-import { getImplementation } from "./constants/addresses";
+import { blockExplorerApiMap, getImplementation } from "./constants/addresses";
 import { DeploymentTransaction } from "../types/any-evm/deploy-data";
+import { zkVerify } from "./zksync-verification";
 
 export async function zkDeployContractFromUri(
   publishMetadataUri: string,
@@ -37,6 +38,7 @@ export async function zkDeployContractFromUri(
     );
   }
 
+  let deployedAddress;
   if (
     extendedMetadata &&
     extendedMetadata.factoryDeploymentData &&
@@ -96,7 +98,7 @@ export async function zkDeployContractFromUri(
         compilerMetadata.metadataUri,
       );
 
-      return proxy.address;
+      deployedAddress = proxy.address;
     } else {
       throw new Error("Invalid deploy type");
     }
@@ -131,8 +133,24 @@ export async function zkDeployContractFromUri(
       compilerMetadata.metadataUri,
     );
 
-    return contract.address;
+    deployedAddress = contract.address;
   }
+
+  // fire-and-forget verification, don't await
+  try {
+    zkVerify(
+      deployedAddress,
+      chainId,
+      blockExplorerApiMap[chainId],
+      "",
+      storage,
+      publishMetadataUri,
+    );
+  } catch (error) {
+    // ignore error
+  }
+
+  return deployedAddress;
 }
 
 export async function getZkTransactionsForDeploy(): Promise<
