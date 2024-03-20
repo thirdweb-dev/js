@@ -21,7 +21,7 @@ import type { NativeToken } from "../../nativeToken.js";
 import { TokenSelectorButton } from "./TokenSelector.js";
 import { ChainIcon } from "../../../../components/ChainIcon.js";
 import { WalletIcon } from "../../../icons/WalletIcon.js";
-import { formatNumber } from "../../../../../../core/utils/formatNumber.js";
+import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 
 /**
  * Shows an amount "value" and renders the selected token and chain

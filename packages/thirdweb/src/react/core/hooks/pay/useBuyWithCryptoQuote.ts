@@ -7,7 +7,7 @@ import { useContext } from "react";
 import {
   getBuyWithCryptoQuote,
   type BuyWithCryptoQuote,
-  type getBuyWithCryptoQuoteParams,
+  type GetBuyWithCryptoQuoteParams,
 } from "../../../../pay/buyWithCrypto/actions/getQuote.js";
 import { ThirdwebProviderContext } from "../../providers/thirdweb-provider-ctx.js";
 
@@ -16,7 +16,7 @@ export type BuyWithCryptoQuoteQueryOptions = Omit<
   "queryFn" | "queryKey" | "enabled"
 >;
 export type BuyWithCryptoQuoteQueryParams = Omit<
-  getBuyWithCryptoQuoteParams,
+  GetBuyWithCryptoQuoteParams,
   "client"
 >;
 /**
@@ -79,7 +79,7 @@ export function useBuyWithCryptoQuote(
       }
       return getBuyWithCryptoQuote({
         // typescript limitation with discriminated unions are collapsed
-        ...(buyWithCryptoParams as getBuyWithCryptoQuoteParams),
+        ...(buyWithCryptoParams as GetBuyWithCryptoQuoteParams),
         client: context.client,
       });
     },
