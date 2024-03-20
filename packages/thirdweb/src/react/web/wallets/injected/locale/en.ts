@@ -1,7 +1,9 @@
+import type { InjectedWalletLocale } from "./types.js";
+
 /**
  * @internal
  */
-const injectedWalletLocaleEn = (wallet: string) => ({
+const injectedWalletLocaleEn = (wallet: string): InjectedWalletLocale => ({
   connectionScreen: {
     inProgress: "Awaiting Confirmation",
     failed: "Connection failed",
