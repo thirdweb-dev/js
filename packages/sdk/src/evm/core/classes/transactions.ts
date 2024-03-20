@@ -1118,6 +1118,7 @@ async function enginePrepareRequest(
       transaction.from,
       spender,
       amount,
+      gaslessOptions.engine.domainSeparatorVersion,
     );
 
     const message = {
@@ -1307,6 +1308,7 @@ async function defenderPrepareRequest(
       transaction.from,
       spender,
       amount,
+      gaslessOptions.openzeppelin.domainSeparatorVersion,
     );
 
     const { r, s, v } = utils.splitSignature(sig);

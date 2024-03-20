@@ -38,7 +38,9 @@ export default {
     "https://4002.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.testnet.fantom.network",
     "https://fantom-testnet-rpc.publicnode.com",
-    "wss://fantom-testnet-rpc.publicnode.com"
+    "wss://fantom-testnet-rpc.publicnode.com",
+    "https://fantom-testnet.drpc.org",
+    "wss://fantom-testnet.drpc.org"
   ],
   "shortName": "tftm",
   "slip44": 1,

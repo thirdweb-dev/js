@@ -39,7 +39,9 @@ export default {
   "networkId": 245022926,
   "rpc": [
     "https://245022926.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://devnet.neonevm.org"
+    "https://devnet.neonevm.org",
+    "https://neon-evm-devnet.drpc.org",
+    "wss://neon-evm-devnet.drpc.org"
   ],
   "shortName": "neonevm-devnet",
   "slug": "neon-evm-devnet",

@@ -788,6 +788,7 @@ export class ContractWrapper<
         transaction.from,
         spender,
         amount,
+        this.options.gasless.engine.domainSeparatorVersion,
       );
 
       const message = {
@@ -1106,6 +1107,7 @@ export class ContractWrapper<
         transaction.from,
         spender,
         amount,
+        this.options.gasless.openzeppelin.domainSeparatorVersion,
       );
 
       const { r, s, v } = utils.splitSignature(sig);

@@ -25,7 +25,7 @@ export const SERVICE_DEFINITIONS = {
   },
   bundler: {
     name: "bundler",
-    title: "Smart Wallets",
+    title: "Account Abstraction",
     description: "Bundler & Paymaster services",
     // all actions allowed
     actions: [],

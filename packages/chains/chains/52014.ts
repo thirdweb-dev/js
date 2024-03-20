@@ -40,7 +40,7 @@ export default {
   "networkId": 52014,
   "rpc": [
     "https://52014.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://api.electroneum.com"
+    "https://rpc.electroneum.com"
   ],
   "shortName": "etn-mainnet",
   "slug": "electroneum",

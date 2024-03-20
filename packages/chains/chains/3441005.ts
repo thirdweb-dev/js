@@ -34,7 +34,9 @@ export default {
   "networkId": 3441005,
   "rpc": [
     "https://3441005.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://manta-testnet.calderachain.xyz/http"
+    "https://manta-testnet.calderachain.xyz/http",
+    "https://manta-pacific-testnet.drpc.org",
+    "wss://manta-pacific-testnet.drpc.org"
   ],
   "shortName": "mantaTestnet",
   "slip44": 1,

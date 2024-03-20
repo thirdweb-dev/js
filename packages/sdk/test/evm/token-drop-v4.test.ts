@@ -139,8 +139,8 @@ describe("Token Drop Contract (v4)", async () => {
       i % 3 === 0
         ? w.address.toLowerCase()
         : i % 3 === 1
-        ? w.address.toUpperCase().replace("0X", "0x")
-        : w.address,
+          ? w.address.toUpperCase().replace("0X", "0x")
+          : w.address,
     );
     await dropContract.claimConditions.set([
       {
@@ -200,7 +200,7 @@ describe("Token Drop Contract (v4)", async () => {
     try {
       await dropContract.claim(1);
     } catch (err: any) {
-      expectError(err, "!Qty");
+      expectError(err, "DropClaimExceedLimit");
     }
   });
 
@@ -240,7 +240,7 @@ describe("Token Drop Contract (v4)", async () => {
       await sdk.updateSignerOrProvider(w2);
       await dropContract.claim(2);
     } catch (e) {
-      expectError(e, "!Qty");
+      expectError(e, "DropClaimExceedLimit");
     }
   });
 
