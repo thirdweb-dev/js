@@ -7,7 +7,7 @@ import { prepareDeployTransactionFromMetadata } from "./deploy-from-metadata.js"
 import { fetchPublishedContractMetadata } from "./publisher.js";
 import { getDeployedCloneFactoryContract } from "./utils/clone-factory.js";
 
-describe("prepareDeployTransactionForPublishedContract", () => {
+describe("deployFromMetadata", () => {
   it("should prepare deploy transaction for a published contract", async () => {
     const cloneFactoryContract = await getDeployedCloneFactoryContract({
       chain: FORKED_ETHEREUM_CHAIN,

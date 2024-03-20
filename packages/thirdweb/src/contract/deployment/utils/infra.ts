@@ -5,6 +5,7 @@ import type { ClientAndChain } from "../../../utils/types.js";
 import type { Prettify } from "../../../utils/type-utils.js";
 import { computePublishedContractAddress } from "../../../utils/any-evm/compute-published-contract-address.js";
 import { computeDeploymentInfoFromContractId } from "../../../utils/any-evm/compute-published-contract-deploy-info.js";
+import { computeCreate2FactoryAddress } from "./create-2-factory.js";
 
 export type InfraContractId =
   | "WETH9"
@@ -42,15 +43,22 @@ export async function getDeployedInfraContract(
 /**
  * @internal
  */
-export async function prepareInfraContractDeployTransaction(
+export function prepareInfraContractDeployTransaction(
   options: GetDeployedInfraParams,
 ) {
-  const cloneFactoryInfo = await computeDeploymentInfoFromContractId({
-    ...options,
-  });
+  const { client, chain } = options;
   return prepareTransaction({
-    ...options,
-    to: cloneFactoryInfo.create2FactoryAddress,
-    data: cloneFactoryInfo.initBytecodeWithsalt,
+    client,
+    chain,
+    to: () =>
+      computeCreate2FactoryAddress({
+        client,
+        chain,
+      }),
+    data: async () => {
+      const infraContractInfo =
+        await computeDeploymentInfoFromContractId(options);
+      return infraContractInfo.initBytecodeWithsalt;
+    },
   });
 }

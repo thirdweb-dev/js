@@ -18,13 +18,11 @@ export async function computeDeploymentInfoFromContractId(args: {
   publisher?: string;
   version?: string;
 }) {
-  const { client, chain, contractId, constructorParams, publisher, version } =
-    args;
+  const { client, chain, contractId, constructorParams } = args;
   const contractMetadata = await fetchPublishedContractMetadata({
     client,
     contractId,
-    publisher,
-    version,
+    publisher: args.publisher,
   });
   return computeDeploymentInfoFromMetadata({
     client,
