@@ -444,8 +444,8 @@ importers:
   packages/contracts-js:
     dependencies:
       '@thirdweb-dev/contracts':
-        specifier: 3.11.3
-        version: 3.11.3(ethers@5.7.2)
+        specifier: 3.12.1
+        version: 3.12.1
     devDependencies:
       '@babel/preset-env':
         specifier: ^7.23.8
@@ -6596,19 +6596,6 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@chainlink/contracts@0.6.1(ethers@5.7.2):
-    resolution: {integrity: sha512-EuwijGexttw0UjfrW+HygwhQIrGAbqpf1ue28R55HhWMHBzphEH0PhWm8DQmFfj5OZNy8Io66N4L0nStkZ3QKQ==}
-    dependencies:
-      '@eth-optimism/contracts': 0.5.40(ethers@5.7.2)
-      '@openzeppelin/contracts': 4.9.3
-      '@openzeppelin/contracts-upgradeable': 4.7.3
-      '@openzeppelin/contracts-v0.7': /@openzeppelin/contracts@3.4.2
-    transitivePeerDependencies:
-      - bufferutil
-      - ethers
-      - utf-8-validate
-    dev: false
-
   /@chainsafe/as-sha256@0.3.1:
     resolution: {integrity: sha512-hldFFYuf49ed7DAakWVXSJODuq3pzJEguD8tQ7h+sGkM18vja+OFoJI9krnGmgzyuZC2ETX0NOIcCTy31v2Mtg==}
     dev: true
@@ -7777,20 +7764,6 @@ packages:
   /@eth-optimism/contracts-bedrock@0.17.1:
     resolution: {integrity: sha512-Hc5peN5PM8kzl9dzqSD5jv6ED3QliO1DF0dXLRJxfrXR7/rmEeyuAYESUwUM0gdJZjkwRYiS5m230BI6bQmnlw==}
     requiresBuild: true
-    dev: false
-
-  /@eth-optimism/contracts@0.5.40(ethers@5.7.2):
-    resolution: {integrity: sha512-MrzV0nvsymfO/fursTB7m/KunkPsCndltVgfdHaT1Aj5Vi6R/doKIGGkOofHX+8B6VMZpuZosKCMQ5lQuqjt8w==}
-    peerDependencies:
-      ethers: ^5
-    dependencies:
-      '@eth-optimism/core-utils': 0.12.0
-      '@ethersproject/abstract-provider': 5.7.0
-      '@ethersproject/abstract-signer': 5.7.0
-      ethers: 5.7.2
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
     dev: false
 
   /@eth-optimism/contracts@0.6.0(ethers@5.7.2):
@@ -9913,16 +9886,12 @@ packages:
       which: 4.0.0
     dev: true
 
-  /@openzeppelin/contracts-upgradeable@4.7.3:
-    resolution: {integrity: sha512-+wuegAMaLcZnLCJIvrVUDzA9z/Wp93f0Dla/4jJvIhijRrPabjQbZe6fWiECLaJyfn5ci9fqf9vTw3xpQOad2A==}
+  /@openzeppelin/contracts-upgradeable@4.9.6:
+    resolution: {integrity: sha512-m4iHazOsOCv1DgM7eD7GupTJ+NFVujRZt1wzddDPSVGpWdKq1SKkla5htKG7+IS4d2XOCtzkUNwRZ7Vq5aEUMA==}
     dev: false
 
-  /@openzeppelin/contracts@3.4.2:
-    resolution: {integrity: sha512-z0zMCjyhhp4y7XKAcDAi3Vgms4T2PstwBdahiO0+9NaGICQKjynK3wduSRplTgk4LXmoO1yfDGO5RbjKYxtuxA==}
-    dev: false
-
-  /@openzeppelin/contracts@4.9.3:
-    resolution: {integrity: sha512-He3LieZ1pP2TNt5JbkPA4PNT9WC3gOTOlDcFGJW4Le4QKqwmiNJCRt44APfxMxvq7OugU/cqYuPcSBzOw38DAg==}
+  /@openzeppelin/contracts@4.9.6:
+    resolution: {integrity: sha512-xSmezSupL+y9VkHZJGDoCBpmnB2ogM13ccaYDWqJTfS3dbuHkgjuwDFUmaFauBCboQMGB/S5UqUl2y54X99BmA==}
     dev: false
 
   /@panva/hkdf@1.0.4:
@@ -12831,23 +12800,19 @@ packages:
       react: 18.2.0
     dev: false
 
-  /@thirdweb-dev/contracts@3.11.3(ethers@5.7.2):
-    resolution: {integrity: sha512-oZe/63MH8+tB2WCUXVy7ZrdOuSNXDKs6Jw6LpI87+LLj3zMj7OzVbLJASDqCLGpatGnx6vNt9Fu/Dkbg7oJv2A==}
+  /@thirdweb-dev/contracts@3.12.1:
+    resolution: {integrity: sha512-FqgLO8ZQ31dwYMoDbZ+OXpEZbwx5bi8Ot9WQDdYohcTQTjM12tMXiBuobK5Iwpjqf2Q+GrN45IHEMh9zL0Wqkw==}
     engines: {node: '>=18.0.0'}
     dependencies:
-      '@chainlink/contracts': 0.6.1(ethers@5.7.2)
-      '@openzeppelin/contracts': 4.9.3
-      '@openzeppelin/contracts-upgradeable': 4.7.3
-      '@thirdweb-dev/dynamic-contracts': 1.1.4
+      '@openzeppelin/contracts': 4.9.6
+      '@openzeppelin/contracts-upgradeable': 4.9.6
+      '@thirdweb-dev/dynamic-contracts': 1.2.5
       erc721a-upgradeable: 3.3.0
-    transitivePeerDependencies:
-      - bufferutil
-      - ethers
-      - utf-8-validate
     dev: false
 
-  /@thirdweb-dev/dynamic-contracts@1.1.4:
-    resolution: {integrity: sha512-uvZBvcbrJH9IzGkQgaJGsKrRgKh3PcRtrbegk62aGEmv1+vlNakcbaVlOiNC8jHpc/S2pZ29CmuKZntl1cEF8Q==}
+  /@thirdweb-dev/dynamic-contracts@1.2.5:
+    resolution: {integrity: sha512-YVsz+jUWbwj+6aF2eTZGMfyw47a1HRmgNl4LQ3gW9gwYL5y5+OX/yOzv6aV5ibvoqCk/k10aIVK2eFrcpMubQA==}
+    engines: {node: '>=18.0.0'}
     dev: false
 
   /@tokenizer/token@0.3.0:
@@ -18070,7 +18035,7 @@ packages:
   /erc721a-upgradeable@3.3.0:
     resolution: {integrity: sha512-ILE0SjKuvhx+PABG0A/41QUp0MFiYmzrgo71htQ0Ov6JfDOmgUzGxDW8gZuYfKrdlYjNwSAqMpUFWBbyW3sWBA==}
     dependencies:
-      '@openzeppelin/contracts-upgradeable': 4.7.3
+      '@openzeppelin/contracts-upgradeable': 4.9.6
     dev: false
 
   /err-code@2.0.3:
