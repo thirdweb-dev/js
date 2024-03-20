@@ -1,4 +1,6 @@
-const connectLocaleEn = {
+import type { ConnectLocale } from "./types.js";
+
+const connectLocaleEn: ConnectLocale = {
   signIn: "Sign in",
   defaultButtonTitle: "Connect Wallet",
   connecting: "Connecting",
