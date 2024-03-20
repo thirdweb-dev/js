@@ -1,5 +1,5 @@
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/actions/getQuote.js";
-import { formatNumber } from "../../../../../../core/utils/formatNumber.js";
+import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { Container } from "../../../../components/basic.js";
 import { Text } from "../../../../components/text.js";
 import { useCustomTheme } from "../../../../design-system/CustomThemeProvider.js";

@@ -15,7 +15,7 @@ import {
 } from "../../../../../../core/hooks/pay/useBuyWithCryptoStatus.js";
 import { useActiveWallet } from "../../../../../../core/hooks/wallets/wallet-hooks.js";
 import { shortenString } from "../../../../../../core/utils/addresses.js";
-import { formatNumber } from "../../../../../../core/utils/formatNumber.js";
+import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { Img } from "../../../../components/Img.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
 import { Spacer } from "../../../../components/Spacer.js";

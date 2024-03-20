@@ -29,7 +29,7 @@ import type {
 } from "../../../../../pay/buyWithCrypto/actions/getStatus.js";
 import { defineChain } from "../../../../../chains/utils.js";
 import { swapTransactionsStore } from "./Buy/swap/pendingSwapTx.js";
-import { formatNumber } from "../../../../core/utils/formatNumber.js";
+import { formatNumber } from "../../../../../utils/formatNumber.js";
 
 type TxStatusInfo = {
   fromChainId: number;
