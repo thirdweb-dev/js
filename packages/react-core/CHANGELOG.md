@@ -1,5 +1,15 @@
 # @thirdweb-dev/react-core
 
+## 4.4.22
+
+### Patch Changes
+
+- [#2497](https://github.com/thirdweb-dev/js/pull/2497) [`79c9e13`](https://github.com/thirdweb-dev/js/commit/79c9e130fdc6e1f7de1486894a5ac3e6d6776fa4) Thanks [@makoshan](https://github.com/makoshan)! - Add imToken Wallet
+
+- Updated dependencies [[`79c9e13`](https://github.com/thirdweb-dev/js/commit/79c9e130fdc6e1f7de1486894a5ac3e6d6776fa4)]:
+  - @thirdweb-dev/wallets@2.4.24
+  - @thirdweb-dev/auth@4.1.46
+
 ## 4.4.21
 
 ### Patch Changes

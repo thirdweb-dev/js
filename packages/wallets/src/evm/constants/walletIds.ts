@@ -5,6 +5,7 @@ export const walletIds = {
   coreWallet: "coreWallet",
   cryptoDefiWallet: "cryptoDefiWallet",
   frame: "frame",
+  imtoken: "imToken",
   localWallet: "localWallet",
   magicLink: "magicLink",
   metamask: "metamask",
