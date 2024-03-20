@@ -1,6 +1,5 @@
 import type { SharedDeployOptions } from "./types.js";
 import type { FetchDeployMetadataResult } from "../../utils/any-evm/deploy-metadata.js";
-import { isContractDeployed } from "../../utils/bytecode/is-contract-deployed.js";
 import { encodeFunctionData } from "viem";
 import { eth_blockNumber } from "../../rpc/actions/eth_blockNumber.js";
 import { getRpcClient } from "../../rpc/rpc.js";
@@ -8,7 +7,7 @@ import { keccakId } from "../../utils/any-evm/keccak-id.js";
 import { toHex } from "../../utils/encoding/hex.js";
 import type { ThirdwebContract } from "../contract.js";
 import { deployProxyByImplementation } from "../../extensions/thirdweb/__generated__/IContractFactory/write/deployProxyByImplementation.js";
-import { computeContractAddress } from "../../utils/any-evm/compute-published-contract-address.js";
+import { getDeployedImplementationContract } from "./utils/implementations.js";
 
 /**
  * @internal
@@ -27,18 +26,16 @@ export function prepareAutoFactoryDeployTransaction(
     contract: args.cloneFactoryContract,
     async asyncParams() {
       // check if the implementation is deployed
-      const implementationAddress = await computeContractAddress({
-        ...args,
-        contractMetadata: args.contractMetadata,
-        constructorParams: [], // TODO guess this from the constructor abi
+      const implementationContract = await getDeployedImplementationContract({
+        chain: args.chain,
+        client: args.client,
+        contractId: args.contractMetadata.compilerMetadata.name,
+        constructorParams: [], // TODO either infer this, or pass it in
       });
-      const isImplementationDeployed = await isContractDeployed({
-        ...args,
-        address: implementationAddress,
-      });
-      if (!isImplementationDeployed) {
+
+      if (!implementationContract) {
         throw new Error(
-          `Implementation not deployed for ${args.contractMetadata.compilerMetadata.name} at ${implementationAddress}. Please deploy it first.`,
+          `Implementation not deployed for ${args.contractMetadata.compilerMetadata.name}. Please deploy it first.`,
         );
       }
 
@@ -63,7 +60,7 @@ export function prepareAutoFactoryDeployTransaction(
           });
       return {
         data: encodedInitializer,
-        implementation: implementationAddress,
+        implementation: implementationContract.address,
         salt,
       } as const;
     },

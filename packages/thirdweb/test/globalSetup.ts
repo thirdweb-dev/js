@@ -13,7 +13,7 @@ const clientId = SECRET_KEY
   : "";
 
 export default async function globalSetup() {
-  const shutdown = await startProxy({
+  const shutdownMainnet = await startProxy({
     port: 8545,
     options: {
       chainId: 1,
@@ -39,8 +39,13 @@ export default async function globalSetup() {
     },
   });
 
+  const shutdownAnvil = await startProxy({
+    port: 8547,
+  });
+
   return () => {
-    shutdown();
+    shutdownMainnet();
     shutdownOptimism();
+    shutdownAnvil();
   };
 }

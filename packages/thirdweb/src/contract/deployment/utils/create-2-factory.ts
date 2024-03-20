@@ -36,7 +36,9 @@ const SIGNATURE = {
  * @returns whether the Create2 factory is deployed.
  * @internal
  */
-export async function computeCreate2FactoryAddress(options: ClientAndChain) {
+export async function computeCreate2FactoryAddress(
+  options: ClientAndChain,
+): Promise<string> {
   // TODO add LRU cache
   const commonFactory = getContract({
     ...options,
@@ -65,9 +67,7 @@ export async function computeCreate2FactoryAddress(options: ClientAndChain) {
 /**
  * @internal
  */
-export async function getDeployedCreate2Factory(
-  options: ClientAndChainAndAccount,
-) {
+export async function getDeployedCreate2Factory(options: ClientAndChain) {
   const address = await computeCreate2FactoryAddress(options);
   const factory = getContract({
     ...options,
