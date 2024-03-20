@@ -62,16 +62,15 @@ export function setDefaultRoyaltyInfo(
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.royaltyRecipient,
-          resolvedParams.royaltyBps,
-        ] as const;
-      }
-
-      return [options.royaltyRecipient, options.royaltyBps] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.royaltyRecipient,
+              resolvedParams.royaltyBps,
+            ] as const;
+          }
+        : [options.royaltyRecipient, options.royaltyBps],
   });
 }

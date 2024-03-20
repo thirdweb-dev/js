@@ -70,13 +70,12 @@ export function mint(options: BaseTransactionOptions<MintParams>) {
         },
       ],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.shares, resolvedParams.receiver] as const;
-      }
-
-      return [options.shares, options.receiver] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.shares, resolvedParams.receiver] as const;
+          }
+        : [options.shares, options.receiver],
   });
 }

@@ -72,23 +72,22 @@ export function add(options: BaseTransactionOptions<AddParams>) {
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.deployer,
-          resolvedParams.deployment,
-          resolvedParams.chainId,
-          resolvedParams.metadataUri,
-        ] as const;
-      }
-
-      return [
-        options.deployer,
-        options.deployment,
-        options.chainId,
-        options.metadataUri,
-      ] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.deployer,
+              resolvedParams.deployment,
+              resolvedParams.chainId,
+              resolvedParams.metadataUri,
+            ] as const;
+          }
+        : [
+            options.deployer,
+            options.deployment,
+            options.chainId,
+            options.metadataUri,
+          ],
   });
 }

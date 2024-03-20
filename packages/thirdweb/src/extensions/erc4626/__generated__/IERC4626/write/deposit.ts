@@ -70,13 +70,12 @@ export function deposit(options: BaseTransactionOptions<DepositParams>) {
         },
       ],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.assets, resolvedParams.receiver] as const;
-      }
-
-      return [options.assets, options.receiver] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.assets, resolvedParams.receiver] as const;
+          }
+        : [options.assets, options.receiver],
   });
 }

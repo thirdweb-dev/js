@@ -54,13 +54,12 @@ export function approve(options: BaseTransactionOptions<ApproveParams>) {
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.to, resolvedParams.tokenId] as const;
-      }
-
-      return [options.to, options.tokenId] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.to, resolvedParams.tokenId] as const;
+          }
+        : [options.to, options.tokenId],
   });
 }

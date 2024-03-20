@@ -2,12 +2,39 @@ import { polygon } from "../../chains/chain-definitions/polygon.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { download } from "../../storage/download.js";
 import { readContract } from "../../transaction/read-contract.js";
+import {
+  fetchDeployMetadata,
+  type FetchDeployMetadataResult,
+} from "../../utils/any-evm/deploy-metadata.js";
 import { extractIPFSUri } from "../../utils/bytecode/extractIPFS.js";
 import { resolveImplementation } from "../../utils/bytecode/resolveImplementation.js";
 
 import { getContract, type ThirdwebContract } from "../contract.js";
 
 const CONTRACT_PUBLISHER_ADDRESS = "0xf5b896Ddb5146D5dA77efF4efBb3Eae36E300808"; // Polygon only
+export const THIRDWEB_DEPLOYER = "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024";
+
+/**
+ * @internal
+ */
+export async function fetchPublishedContractMetadata(options: {
+  client: ThirdwebClient;
+  contractId: string;
+  publisher?: string;
+  version?: string;
+}): Promise<FetchDeployMetadataResult> {
+  // TODO LRU cache
+  const publishedContract = await fetchPublishedContract({
+    client: options.client,
+    publisherAddress: options.publisher || THIRDWEB_DEPLOYER,
+    contractId: options.contractId,
+    version: options.version,
+  });
+  return fetchDeployMetadata({
+    client: options.client,
+    uri: publishedContract.publishMetadataUri,
+  });
+}
 
 // TODO: clean this up
 /**
@@ -165,7 +192,7 @@ const GET_PUBLISHED_CONTRACT_VERSIONS_ABI = {
 
 type FetchPublishedContractOptions = {
   publisherAddress: string;
-  contractName: string;
+  contractId: string;
   version?: string;
   client: ThirdwebClient;
 };
@@ -197,13 +224,13 @@ export async function fetchPublishedContract(
     return await readContract({
       contract: contractPublisher,
       method: GET_PUBLISHED_CONTRACT_ABI,
-      params: [options.publisherAddress, options.contractName],
+      params: [options.publisherAddress, options.contractId],
     });
   } else {
     const allVersions = await readContract({
       contract: contractPublisher,
       method: GET_PUBLISHED_CONTRACT_VERSIONS_ABI,
-      params: [options.publisherAddress, options.contractName],
+      params: [options.publisherAddress, options.contractId],
     });
 
     const versionsMetadata = (
@@ -238,7 +265,7 @@ export async function fetchPublishedContract(
     );
     if (!publishedContract) {
       throw Error(
-        `No published contract found for ${options.contractName} at version by '${options.publisherAddress}'`,
+        `No published contract found for ${options.contractId} at version by '${options.publisherAddress}'`,
       );
     }
     return publishedContract;

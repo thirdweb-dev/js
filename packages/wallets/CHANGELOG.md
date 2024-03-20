@@ -1,5 +1,16 @@
 # @thirdweb-dev/wallets
 
+## 2.4.23
+
+### Patch Changes
+
+- [#2493](https://github.com/thirdweb-dev/js/pull/2493) [`802ba8c`](https://github.com/thirdweb-dev/js/commit/802ba8c5a980d3bddd308f9b3d14cc9cbb5453d5) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Renaming of Smart Wallet -> Smart Account
+
+- Updated dependencies [[`e3f4490`](https://github.com/thirdweb-dev/js/commit/e3f44905cacd79d0826b05fe88375714af51405b), [`863049d`](https://github.com/thirdweb-dev/js/commit/863049dc0ca989d2654b4aacba811263931a33fe), [`863049d`](https://github.com/thirdweb-dev/js/commit/863049dc0ca989d2654b4aacba811263931a33fe), [`b2728ec`](https://github.com/thirdweb-dev/js/commit/b2728ec6f230925048b12fa8c915f127858dbb1b), [`8a20aa5`](https://github.com/thirdweb-dev/js/commit/8a20aa58259edc5bac578dc5e4f4d971ed7adf36), [`c479277`](https://github.com/thirdweb-dev/js/commit/c47927708aa8e8ff42f40c4f740a859ec090ec70)]:
+  - @thirdweb-dev/contracts-js@1.3.18
+  - @thirdweb-dev/chains@0.1.81
+  - @thirdweb-dev/sdk@4.0.48
+
 ## 2.4.22
 
 ### Patch Changes

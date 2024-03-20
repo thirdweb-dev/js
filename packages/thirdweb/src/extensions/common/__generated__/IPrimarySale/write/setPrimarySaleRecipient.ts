@@ -53,13 +53,12 @@ export function setPrimarySaleRecipient(
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.saleRecipient] as const;
-      }
-
-      return [options.saleRecipient] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.saleRecipient] as const;
+          }
+        : [options.saleRecipient],
   });
 }

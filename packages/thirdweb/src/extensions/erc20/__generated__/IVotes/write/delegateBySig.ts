@@ -83,27 +83,26 @@ export function delegateBySig(
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.delegatee,
-          resolvedParams.nonce,
-          resolvedParams.expiry,
-          resolvedParams.v,
-          resolvedParams.r,
-          resolvedParams.s,
-        ] as const;
-      }
-
-      return [
-        options.delegatee,
-        options.nonce,
-        options.expiry,
-        options.v,
-        options.r,
-        options.s,
-      ] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.delegatee,
+              resolvedParams.nonce,
+              resolvedParams.expiry,
+              resolvedParams.v,
+              resolvedParams.r,
+              resolvedParams.s,
+            ] as const;
+          }
+        : [
+            options.delegatee,
+            options.nonce,
+            options.expiry,
+            options.v,
+            options.r,
+            options.s,
+          ],
   });
 }

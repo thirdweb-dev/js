@@ -92,29 +92,28 @@ export function transferAndChangeRecoveryFor(
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.from,
-          resolvedParams.to,
-          resolvedParams.recovery,
-          resolvedParams.fromDeadline,
-          resolvedParams.fromSig,
-          resolvedParams.toDeadline,
-          resolvedParams.toSig,
-        ] as const;
-      }
-
-      return [
-        options.from,
-        options.to,
-        options.recovery,
-        options.fromDeadline,
-        options.fromSig,
-        options.toDeadline,
-        options.toSig,
-      ] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.from,
+              resolvedParams.to,
+              resolvedParams.recovery,
+              resolvedParams.fromDeadline,
+              resolvedParams.fromSig,
+              resolvedParams.toDeadline,
+              resolvedParams.toSig,
+            ] as const;
+          }
+        : [
+            options.from,
+            options.to,
+            options.recovery,
+            options.fromDeadline,
+            options.fromSig,
+            options.toDeadline,
+            options.toSig,
+          ],
   });
 }

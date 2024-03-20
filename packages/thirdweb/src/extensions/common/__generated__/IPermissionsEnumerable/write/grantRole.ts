@@ -54,13 +54,12 @@ export function grantRole(options: BaseTransactionOptions<GrantRoleParams>) {
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.role, resolvedParams.account] as const;
-      }
-
-      return [options.role, options.account] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.role, resolvedParams.account] as const;
+          }
+        : [options.role, options.account],
   });
 }

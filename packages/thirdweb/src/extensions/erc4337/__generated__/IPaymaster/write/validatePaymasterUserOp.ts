@@ -136,17 +136,16 @@ export function validatePaymasterUserOp(
         },
       ],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.userOp,
-          resolvedParams.userOpHash,
-          resolvedParams.maxCost,
-        ] as const;
-      }
-
-      return [options.userOp, options.userOpHash, options.maxCost] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.userOp,
+              resolvedParams.userOpHash,
+              resolvedParams.maxCost,
+            ] as const;
+          }
+        : [options.userOp, options.userOpHash, options.maxCost],
   });
 }

@@ -66,17 +66,16 @@ export function transferFrom(
         },
       ],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.from,
-          resolvedParams.to,
-          resolvedParams.value,
-        ] as const;
-      }
-
-      return [options.from, options.to, options.value] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.from,
+              resolvedParams.to,
+              resolvedParams.value,
+            ] as const;
+          }
+        : [options.from, options.to, options.value],
   });
 }

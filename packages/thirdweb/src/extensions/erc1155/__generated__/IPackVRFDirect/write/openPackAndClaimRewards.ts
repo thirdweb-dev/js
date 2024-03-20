@@ -72,21 +72,16 @@ export function openPackAndClaimRewards(
         },
       ],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.packId,
-          resolvedParams.amountToOpen,
-          resolvedParams.callBackGasLimit,
-        ] as const;
-      }
-
-      return [
-        options.packId,
-        options.amountToOpen,
-        options.callBackGasLimit,
-      ] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.packId,
+              resolvedParams.amountToOpen,
+              resolvedParams.callBackGasLimit,
+            ] as const;
+          }
+        : [options.packId, options.amountToOpen, options.callBackGasLimit],
   });
 }

@@ -169,18 +169,15 @@ export function ${f.name}(
     method: ${JSON.stringify(prepareMethod(f), null, 2)},
     ${
       f.inputs.length
-        ? `params: async () => {
-      if("asyncParams" in options){
+        ? `params: "asyncParams" in options ? async () => {
+      
         const resolvedParams = await options.asyncParams();
         return [${f.inputs
           .map((x) => `resolvedParams.${removeLeadingUnderscore(x.name)}`)
           .join(", ")}] as const;
-      }
-      
-      return [${f.inputs
+      } : [${f.inputs
         .map((x) => `options.${removeLeadingUnderscore(x.name)}`)
-        .join(", ")}] as const;
-      }`
+        .join(", ")}]`
         : ""
     }
   });

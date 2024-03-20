@@ -1,17 +1,18 @@
 import { getContractAddress } from "viem";
-import type { ThirdwebClient } from "../../../client/client.js";
 import { getContract } from "../../contract.js";
 import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed.js";
 import { isEIP155Enforced } from "../../../utils/any-evm/is-eip155-enforced.js";
 import { getKeylessTransaction } from "../../../utils/any-evm/keyless-transaction.js";
-import type { Chain } from "../../../chains/types.js";
 import { eth_sendRawTransaction } from "../../../rpc/actions/eth_sendRawTransaction.js";
 import { getRpcClient } from "../../../rpc/rpc.js";
-import type { Account } from "../../../wallets/interfaces/wallet.js";
 import { eth_getBalance } from "../../../rpc/actions/eth_getBalance.js";
 import { prepareTransaction } from "../../../transaction/prepare-transaction.js";
 import { sendTransaction } from "../../../transaction/actions/send-transaction.js";
 import { waitForReceipt } from "../../../transaction/actions/wait-for-tx-receipt.js";
+import type {
+  ClientAndChain,
+  ClientAndChainAndAccount,
+} from "../../../utils/types.js";
 
 const COMMON_FACTORY_ADDRESS = "0x4e59b44847b379578588920cA78FbF26c0B4956C"; // for pre-eip-155 supporting chains
 
@@ -29,20 +30,15 @@ const SIGNATURE = {
   s: "0x2222222222222222222222222222222222222222222222222222222222222222",
 } as const;
 
-type GetCreate2FactoryAddressOptions = {
-  chain: Chain;
-  client: ThirdwebClient;
-};
-
 /**
  * Computes the address of the Create2 factory contract and checks if it is deployed.
  * @param options - The options for retrieving the Create2 factory address.
  * @returns whether the Create2 factory is deployed.
  * @internal
  */
-export async function getCreate2FactoryAddress(
-  options: GetCreate2FactoryAddressOptions,
-) {
+export async function computeCreate2FactoryAddress(
+  options: ClientAndChain,
+): Promise<string> {
   // TODO add LRU cache
   const commonFactory = getContract({
     ...options,
@@ -65,40 +61,30 @@ export async function getCreate2FactoryAddress(
       })
     : await _getCreate2FactoryDeploymentInfo(eipChain, {});
 
-  const chainFactory = getContract({
-    ...options,
-    address: deploymentInfo.predictedAddress,
-  });
-  if (await isContractDeployed(chainFactory)) {
-    return deploymentInfo.predictedAddress;
-  } else {
-    return null;
-  }
+  return deploymentInfo.predictedAddress;
 }
 
 /**
  * @internal
  */
-export async function getCreate2Factory(
-  options: GetCreate2FactoryAddressOptions,
-) {
-  const address = await getCreate2FactoryAddress(options);
-  if (!address) {
-    return null;
-  }
-  return getContract({
+export async function getDeployedCreate2Factory(options: ClientAndChain) {
+  const address = await computeCreate2FactoryAddress(options);
+  const factory = getContract({
     ...options,
     address,
   });
+  const isDeployed = await isContractDeployed(factory);
+  if (!isDeployed) {
+    return null;
+  }
+  return factory;
 }
 
 /**
  * Deploys the Create2 factory contract using a keyless transaction.
  * @internal
  */
-export async function deployCreate2Factory(
-  options: GetCreate2FactoryAddressOptions & { account: Account },
-) {
+export async function deployCreate2Factory(options: ClientAndChainAndAccount) {
   const { client, chain, account } = options;
   const enforceEip155 = await isEIP155Enforced(options);
   const chainId = options.chain.id;

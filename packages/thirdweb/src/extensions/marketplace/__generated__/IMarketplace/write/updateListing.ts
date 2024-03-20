@@ -107,29 +107,28 @@ export function updateListing(
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.listingId,
-          resolvedParams.quantityToList,
-          resolvedParams.reservePricePerToken,
-          resolvedParams.buyoutPricePerToken,
-          resolvedParams.currencyToAccept,
-          resolvedParams.startTime,
-          resolvedParams.secondsUntilEndTime,
-        ] as const;
-      }
-
-      return [
-        options.listingId,
-        options.quantityToList,
-        options.reservePricePerToken,
-        options.buyoutPricePerToken,
-        options.currencyToAccept,
-        options.startTime,
-        options.secondsUntilEndTime,
-      ] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.listingId,
+              resolvedParams.quantityToList,
+              resolvedParams.reservePricePerToken,
+              resolvedParams.buyoutPricePerToken,
+              resolvedParams.currencyToAccept,
+              resolvedParams.startTime,
+              resolvedParams.secondsUntilEndTime,
+            ] as const;
+          }
+        : [
+            options.listingId,
+            options.quantityToList,
+            options.reservePricePerToken,
+            options.buyoutPricePerToken,
+            options.currencyToAccept,
+            options.startTime,
+            options.secondsUntilEndTime,
+          ],
   });
 }

@@ -10,8 +10,8 @@ export type FetchDeployMetadataOptions = {
 };
 
 export type FetchDeployMetadataResult = {
-  compilerMetadata: PreDeployMetadata;
-  extendedMetadata: FullPublishMetadata | undefined;
+  compilerMetadata: CompilerMetadata;
+  extendedMetadata: ExtendedMetadata | undefined;
 };
 
 /**
@@ -24,8 +24,8 @@ export async function fetchDeployMetadata(
   options: FetchDeployMetadataOptions,
 ): Promise<FetchDeployMetadataResult> {
   const [compilerMetadata, extendedMetadata] = await Promise.all([
-    fetchPreDeployMetadata(options),
-    fetchPublishedMetadata(options).catch(() => undefined),
+    fetchCompilerMetadata(options),
+    fetchExtendedMetadata(options).catch(() => undefined),
   ]);
   return { compilerMetadata, extendedMetadata };
 }
@@ -36,19 +36,19 @@ export async function fetchDeployMetadata(
  * @param options - The options for fetching the published metadata.
  * @internal
  */
-async function fetchPublishedMetadata(
+async function fetchExtendedMetadata(
   options: FetchDeployMetadataOptions,
-): Promise<FullPublishMetadata> {
+): Promise<ExtendedMetadata> {
   return download({
     uri: options.uri,
     client: options.client,
   }).then((r) => r.json());
 }
 
-async function fetchPreDeployMetadata(
+async function fetchCompilerMetadata(
   options: FetchDeployMetadataOptions,
-): Promise<PreDeployMetadata> {
-  const rawMeta: RawPredeployMetadata = await download({
+): Promise<CompilerMetadata> {
+  const rawMeta: RawCompilerMetadata = await download({
     uri: options.uri,
     client: options.client,
   }).then((r) => r.json());
@@ -56,7 +56,10 @@ async function fetchPreDeployMetadata(
     download({ uri: rawMeta.bytecodeUri, client: options.client }).then(
       (res) => res.text() as Promise<Hex>,
     ),
-    fetchContractMetadata({ client: options.client, uri: rawMeta.metadataUri }),
+    fetchAndParseCompilerMetadata({
+      client: options.client,
+      uri: rawMeta.metadataUri,
+    }),
   ]);
 
   return {
@@ -68,9 +71,9 @@ async function fetchPreDeployMetadata(
 
 const CONTRACT_METADATA_TIMEOUT_SEC = 2 * 1000;
 
-async function fetchContractMetadata(
+async function fetchAndParseCompilerMetadata(
   options: FetchDeployMetadataOptions,
-): Promise<ParsedPredeployMetadata> {
+): Promise<ParsedCompilerMetadata> {
   // short timeout to avoid hanging on unpinned contract metadata CIDs
   const metadata = await (
     await download({
@@ -86,7 +89,7 @@ async function fetchContractMetadata(
   return formatCompilerMetadata(metadata);
 }
 
-function formatCompilerMetadata(metadata: any): ParsedPredeployMetadata {
+function formatCompilerMetadata(metadata: any): ParsedCompilerMetadata {
   const abi = metadata.output.abi;
   const compilationTarget = metadata.settings.compilationTarget;
   const targets = Object.keys(compilationTarget);
@@ -114,7 +117,7 @@ function formatCompilerMetadata(metadata: any): ParsedPredeployMetadata {
 
 // types
 
-type RawPredeployMetadata = {
+type RawCompilerMetadata = {
   name: string;
   metadataUri: string;
   bytecodeUri: string;
@@ -122,7 +125,7 @@ type RawPredeployMetadata = {
   [key: string]: any;
 };
 
-type ParsedPredeployMetadata = {
+type ParsedCompilerMetadata = {
   name: string;
   abi: Abi;
   metadata: Record<string, unknown>;
@@ -136,13 +139,13 @@ type ParsedPredeployMetadata = {
   isPartialAbi?: boolean;
 };
 
-export type PreDeployMetadata = Prettify<
-  ParsedPredeployMetadata & {
+export type CompilerMetadata = Prettify<
+  ParsedCompilerMetadata & {
     bytecode: Hex;
   }
 >;
 
-export type FullPublishMetadata = {
+export type ExtendedMetadata = {
   name: string;
   version: string;
   metadataUri: string;

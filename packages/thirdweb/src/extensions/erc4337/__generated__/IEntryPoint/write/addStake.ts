@@ -51,13 +51,12 @@ export function addStake(options: BaseTransactionOptions<AddStakeParams>) {
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.unstakeDelaySec] as const;
-      }
-
-      return [options.unstakeDelaySec] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.unstakeDelaySec] as const;
+          }
+        : [options.unstakeDelaySec],
   });
 }

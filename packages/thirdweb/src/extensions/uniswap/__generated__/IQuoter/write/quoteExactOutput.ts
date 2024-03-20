@@ -64,13 +64,12 @@ export function quoteExactOutput(
         },
       ],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.path, resolvedParams.amountOut] as const;
-      }
-
-      return [options.path, options.amountOut] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.path, resolvedParams.amountOut] as const;
+          }
+        : [options.path, options.amountOut],
   });
 }

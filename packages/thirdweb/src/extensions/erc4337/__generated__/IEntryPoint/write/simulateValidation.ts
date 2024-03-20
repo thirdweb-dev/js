@@ -112,13 +112,12 @@ export function simulateValidation(
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.userOp] as const;
-      }
-
-      return [options.userOp] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.userOp] as const;
+          }
+        : [options.userOp],
   });
 }

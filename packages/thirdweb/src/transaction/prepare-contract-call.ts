@@ -2,7 +2,6 @@ import {
   parseAbiItem,
   type Abi,
   type AbiFunction,
-  type AbiParametersToPrimitiveTypes,
   type ExtractAbiFunctionNames,
 } from "abitype";
 import { type TransactionRequest, concatHex } from "viem";
@@ -23,7 +22,6 @@ import {
   type PreparedMethod,
 } from "../utils/abi/prepare-method.js";
 import { encodeAbiParameters } from "../utils/abi/encodeAbiParameters.js";
-import type { Hex } from "../utils/encoding/hex.js";
 
 export type PrepareContractCallOptions<
   TAbi extends Abi = [],
@@ -115,13 +113,9 @@ export function prepareContractCall<
   type ParsedMethod_ = ParseMethod<TAbi, TMethod>;
   type PreparedMethod_ = PreparedMethod<ParsedMethod_>;
   const { contract, method, params, ...rest } = options;
-  let preparedMethodPromise: Promise<PreparedMethod_>;
-  // this will be resolved exactly once, see the cache above 👆
-  async function resolvePreparedMethod(): Promise<PreparedMethod_> {
-    if (preparedMethodPromise) {
-      return preparedMethodPromise;
-    }
-    const prom = (async () => {
+
+  const preparedMethodPromise = () =>
+    (async () => {
       if (Array.isArray(method)) {
         return method as PreparedMethod_;
       }
@@ -157,52 +151,7 @@ export function prepareContractCall<
       }
       throw new Error(`Could not resolve method "${method}".`);
     })();
-    return (preparedMethodPromise = prom);
-  }
 
-  let resolvedParamsPromise: Promise<
-    Readonly<
-      AbiParametersToPrimitiveTypes<ParseMethod<TAbi, TMethod>["inputs"]>
-    >
-  >;
-
-  async function resolveParams_(): Promise<
-    Readonly<
-      AbiParametersToPrimitiveTypes<ParseMethod<TAbi, TMethod>["inputs"]>
-    >
-  > {
-    if (resolvedParamsPromise) {
-      return resolvedParamsPromise;
-    }
-    // @ts-expect-error -- to complicated
-    return (resolvedParamsPromise = resolvePromisedValue(params ?? []));
-  }
-
-  let encodedDataPromise: Promise<Hex | undefined>;
-  // this will be resolved exactly once, see the cache above 👆
-  async function encodeData_(): Promise<Hex | undefined> {
-    if (encodedDataPromise) {
-      return encodedDataPromise;
-    }
-    const prom = (async () => {
-      const [preparedM, rParams] = await Promise.all([
-        resolvePreparedMethod(),
-        resolveParams_(),
-      ]);
-
-      if (preparedM[1].length === 0) {
-        // just return the fn sig directly -> no params
-        return preparedM[0];
-      }
-
-      return concatHex([
-        preparedM[0],
-        // @ts-expect-error - trust
-        encodeAbiParameters(preparedM[1], rParams ?? []),
-      ]);
-    })();
-    return (encodedDataPromise = prom);
-  }
   return prepareTransaction(
     {
       ...rest,
@@ -210,10 +159,31 @@ export function prepareContractCall<
       to: contract.address,
       chain: contract.chain,
       client: contract.client,
-      data: encodeData_,
+      data: async () => {
+        let preparedM: PreparedMethod_;
+        if (Array.isArray(method)) {
+          preparedM = method as PreparedMethod_;
+        } else {
+          preparedM = await preparedMethodPromise();
+        }
+
+        if (preparedM[1].length === 0) {
+          // just return the fn sig directly -> no params
+          return preparedM[0];
+        }
+
+        return concatHex([
+          preparedM[0],
+          encodeAbiParameters(
+            preparedM[1],
+            // @ts-expect-error - trust
+            await resolvePromisedValue(params ?? []),
+          ),
+        ]);
+      },
     },
     {
-      preparedMethod: resolvePreparedMethod,
+      preparedMethod: preparedMethodPromise,
       contract: contract,
     },
   );

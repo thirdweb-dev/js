@@ -72,17 +72,16 @@ export function getRoyalty(options: BaseTransactionOptions<GetRoyaltyParams>) {
         },
       ],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.tokenAddress,
-          resolvedParams.tokenId,
-          resolvedParams.value,
-        ] as const;
-      }
-
-      return [options.tokenAddress, options.tokenId, options.value] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.tokenAddress,
+              resolvedParams.tokenId,
+              resolvedParams.value,
+            ] as const;
+          }
+        : [options.tokenAddress, options.tokenId, options.value],
   });
 }

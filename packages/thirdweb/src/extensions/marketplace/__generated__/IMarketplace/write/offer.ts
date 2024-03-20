@@ -84,25 +84,24 @@ export function offer(options: BaseTransactionOptions<OfferParams>) {
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.listingId,
-          resolvedParams.quantityWanted,
-          resolvedParams.currency,
-          resolvedParams.pricePerToken,
-          resolvedParams.expirationTimestamp,
-        ] as const;
-      }
-
-      return [
-        options.listingId,
-        options.quantityWanted,
-        options.currency,
-        options.pricePerToken,
-        options.expirationTimestamp,
-      ] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.listingId,
+              resolvedParams.quantityWanted,
+              resolvedParams.currency,
+              resolvedParams.pricePerToken,
+              resolvedParams.expirationTimestamp,
+            ] as const;
+          }
+        : [
+            options.listingId,
+            options.quantityWanted,
+            options.currency,
+            options.pricePerToken,
+            options.expirationTimestamp,
+          ],
   });
 }

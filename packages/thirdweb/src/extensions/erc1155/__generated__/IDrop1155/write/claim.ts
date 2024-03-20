@@ -114,29 +114,28 @@ export function claim(options: BaseTransactionOptions<ClaimParams>) {
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.receiver,
-          resolvedParams.tokenId,
-          resolvedParams.quantity,
-          resolvedParams.currency,
-          resolvedParams.pricePerToken,
-          resolvedParams.allowlistProof,
-          resolvedParams.data,
-        ] as const;
-      }
-
-      return [
-        options.receiver,
-        options.tokenId,
-        options.quantity,
-        options.currency,
-        options.pricePerToken,
-        options.allowlistProof,
-        options.data,
-      ] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.receiver,
+              resolvedParams.tokenId,
+              resolvedParams.quantity,
+              resolvedParams.currency,
+              resolvedParams.pricePerToken,
+              resolvedParams.allowlistProof,
+              resolvedParams.data,
+            ] as const;
+          }
+        : [
+            options.receiver,
+            options.tokenId,
+            options.quantity,
+            options.currency,
+            options.pricePerToken,
+            options.allowlistProof,
+            options.data,
+          ],
   });
 }

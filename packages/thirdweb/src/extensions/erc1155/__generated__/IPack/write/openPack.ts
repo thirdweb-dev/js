@@ -79,13 +79,15 @@ export function openPack(options: BaseTransactionOptions<OpenPackParams>) {
         },
       ],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.packId, resolvedParams.amountToOpen] as const;
-      }
-
-      return [options.packId, options.amountToOpen] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.packId,
+              resolvedParams.amountToOpen,
+            ] as const;
+          }
+        : [options.packId, options.amountToOpen],
   });
 }

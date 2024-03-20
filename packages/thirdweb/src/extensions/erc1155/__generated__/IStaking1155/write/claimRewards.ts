@@ -50,13 +50,12 @@ export function claimRewards(
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.tokenId] as const;
-      }
-
-      return [options.tokenId] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.tokenId] as const;
+          }
+        : [options.tokenId],
   });
 }

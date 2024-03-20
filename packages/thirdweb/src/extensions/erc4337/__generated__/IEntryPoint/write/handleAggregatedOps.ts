@@ -143,16 +143,15 @@ export function handleAggregatedOps(
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.opsPerAggregator,
-          resolvedParams.beneficiary,
-        ] as const;
-      }
-
-      return [options.opsPerAggregator, options.beneficiary] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.opsPerAggregator,
+              resolvedParams.beneficiary,
+            ] as const;
+          }
+        : [options.opsPerAggregator, options.beneficiary],
   });
 }

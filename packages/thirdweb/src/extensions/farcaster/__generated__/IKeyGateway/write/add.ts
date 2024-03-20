@@ -69,23 +69,22 @@ export function add(options: BaseTransactionOptions<AddParams>) {
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.keyType,
-          resolvedParams.key,
-          resolvedParams.metadataType,
-          resolvedParams.metadata,
-        ] as const;
-      }
-
-      return [
-        options.keyType,
-        options.key,
-        options.metadataType,
-        options.metadata,
-      ] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.keyType,
+              resolvedParams.key,
+              resolvedParams.metadataType,
+              resolvedParams.metadata,
+            ] as const;
+          }
+        : [
+            options.keyType,
+            options.key,
+            options.metadataType,
+            options.metadata,
+          ],
   });
 }

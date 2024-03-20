@@ -119,13 +119,12 @@ export function handleOps(options: BaseTransactionOptions<HandleOpsParams>) {
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.ops, resolvedParams.beneficiary] as const;
-      }
-
-      return [options.ops, options.beneficiary] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.ops, resolvedParams.beneficiary] as const;
+          }
+        : [options.ops, options.beneficiary],
   });
 }

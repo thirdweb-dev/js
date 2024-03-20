@@ -74,23 +74,22 @@ export function acceptOffer(
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.listingId,
-          resolvedParams.offeror,
-          resolvedParams.currency,
-          resolvedParams.totalPrice,
-        ] as const;
-      }
-
-      return [
-        options.listingId,
-        options.offeror,
-        options.currency,
-        options.totalPrice,
-      ] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.listingId,
+              resolvedParams.offeror,
+              resolvedParams.currency,
+              resolvedParams.totalPrice,
+            ] as const;
+          }
+        : [
+            options.listingId,
+            options.offeror,
+            options.currency,
+            options.totalPrice,
+          ],
   });
 }

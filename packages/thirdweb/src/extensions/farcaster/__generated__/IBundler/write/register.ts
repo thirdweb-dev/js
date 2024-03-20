@@ -132,21 +132,16 @@ export function register(options: BaseTransactionOptions<RegisterParams>) {
         },
       ],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.registerParams,
-          resolvedParams.signerParams,
-          resolvedParams.extraStorage,
-        ] as const;
-      }
-
-      return [
-        options.registerParams,
-        options.signerParams,
-        options.extraStorage,
-      ] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.registerParams,
+              resolvedParams.signerParams,
+              resolvedParams.extraStorage,
+            ] as const;
+          }
+        : [options.registerParams, options.signerParams, options.extraStorage],
   });
 }

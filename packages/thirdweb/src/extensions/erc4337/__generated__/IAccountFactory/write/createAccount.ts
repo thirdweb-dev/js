@@ -61,13 +61,12 @@ export function createAccount(
         },
       ],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.admin, resolvedParams.data] as const;
-      }
-
-      return [options.admin, options.data] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.admin, resolvedParams.data] as const;
+          }
+        : [options.admin, options.data],
   });
 }

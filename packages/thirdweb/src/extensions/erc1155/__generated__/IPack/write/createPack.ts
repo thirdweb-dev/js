@@ -126,27 +126,26 @@ export function createPack(options: BaseTransactionOptions<CreatePackParams>) {
         },
       ],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.contents,
-          resolvedParams.numOfRewardUnits,
-          resolvedParams.packUri,
-          resolvedParams.openStartTimestamp,
-          resolvedParams.amountDistributedPerOpen,
-          resolvedParams.recipient,
-        ] as const;
-      }
-
-      return [
-        options.contents,
-        options.numOfRewardUnits,
-        options.packUri,
-        options.openStartTimestamp,
-        options.amountDistributedPerOpen,
-        options.recipient,
-      ] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.contents,
+              resolvedParams.numOfRewardUnits,
+              resolvedParams.packUri,
+              resolvedParams.openStartTimestamp,
+              resolvedParams.amountDistributedPerOpen,
+              resolvedParams.recipient,
+            ] as const;
+          }
+        : [
+            options.contents,
+            options.numOfRewardUnits,
+            options.packUri,
+            options.openStartTimestamp,
+            options.amountDistributedPerOpen,
+            options.recipient,
+          ],
   });
 }

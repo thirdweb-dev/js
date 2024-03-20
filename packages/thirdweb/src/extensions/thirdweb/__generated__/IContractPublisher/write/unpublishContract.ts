@@ -62,13 +62,15 @@ export function unpublishContract(
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.publisher, resolvedParams.contractId] as const;
-      }
-
-      return [options.publisher, options.contractId] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.publisher,
+              resolvedParams.contractId,
+            ] as const;
+          }
+        : [options.publisher, options.contractId],
   });
 }

@@ -58,13 +58,12 @@ export function transfer(options: BaseTransactionOptions<TransferParams>) {
         },
       ],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.to, resolvedParams.value] as const;
-      }
-
-      return [options.to, options.value] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.to, resolvedParams.value] as const;
+          }
+        : [options.to, options.value],
   });
 }

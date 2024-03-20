@@ -72,23 +72,17 @@ export function onERC721Received(
         },
       ],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.operator,
-          resolvedParams.from,
-          resolvedParams.tokenId,
-          resolvedParams.data,
-        ] as const;
-      }
-
-      return [
-        options.operator,
-        options.from,
-        options.tokenId,
-        options.data,
-      ] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.operator,
+              resolvedParams.from,
+              resolvedParams.tokenId,
+              resolvedParams.data,
+            ] as const;
+          }
+        : [options.operator, options.from, options.tokenId, options.data],
   });
 }

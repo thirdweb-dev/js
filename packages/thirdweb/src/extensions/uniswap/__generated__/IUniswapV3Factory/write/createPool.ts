@@ -65,17 +65,16 @@ export function createPool(options: BaseTransactionOptions<CreatePoolParams>) {
         },
       ],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.tokenA,
-          resolvedParams.tokenB,
-          resolvedParams.fee,
-        ] as const;
-      }
-
-      return [options.tokenA, options.tokenB, options.fee] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.tokenA,
+              resolvedParams.tokenB,
+              resolvedParams.fee,
+            ] as const;
+          }
+        : [options.tokenA, options.tokenB, options.fee],
   });
 }

@@ -48,13 +48,12 @@ export function deleteRule(options: BaseTransactionOptions<DeleteRuleParams>) {
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.ruleId] as const;
-      }
-
-      return [options.ruleId] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.ruleId] as const;
+          }
+        : [options.ruleId],
   });
 }

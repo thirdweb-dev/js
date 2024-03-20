@@ -54,13 +54,12 @@ export function withdraw(options: BaseTransactionOptions<WithdrawParams>) {
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.tokenId, resolvedParams.amount] as const;
-      }
-
-      return [options.tokenId, options.amount] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.tokenId, resolvedParams.amount] as const;
+          }
+        : [options.tokenId, options.amount],
   });
 }

@@ -61,13 +61,12 @@ export function quoteExactInput(
         },
       ],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.path, resolvedParams.amountIn] as const;
-      }
-
-      return [options.path, options.amountIn] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.path, resolvedParams.amountIn] as const;
+          }
+        : [options.path, options.amountIn],
   });
 }

@@ -53,13 +53,12 @@ export function withdrawStake(
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.withdrawAddress] as const;
-      }
-
-      return [options.withdrawAddress] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.withdrawAddress] as const;
+          }
+        : [options.withdrawAddress],
   });
 }

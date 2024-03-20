@@ -60,16 +60,15 @@ export function withdrawTo(options: BaseTransactionOptions<WithdrawToParams>) {
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.withdrawAddress,
-          resolvedParams.withdrawAmount,
-        ] as const;
-      }
-
-      return [options.withdrawAddress, options.withdrawAmount] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.withdrawAddress,
+              resolvedParams.withdrawAmount,
+            ] as const;
+          }
+        : [options.withdrawAddress, options.withdrawAmount],
   });
 }

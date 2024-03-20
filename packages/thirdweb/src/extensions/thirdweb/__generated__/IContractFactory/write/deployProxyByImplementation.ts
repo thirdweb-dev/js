@@ -69,17 +69,16 @@ export function deployProxyByImplementation(
         },
       ],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.implementation,
-          resolvedParams.data,
-          resolvedParams.salt,
-        ] as const;
-      }
-
-      return [options.implementation, options.data, options.salt] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.implementation,
+              resolvedParams.data,
+              resolvedParams.salt,
+            ] as const;
+          }
+        : [options.implementation, options.data, options.salt],
   });
 }

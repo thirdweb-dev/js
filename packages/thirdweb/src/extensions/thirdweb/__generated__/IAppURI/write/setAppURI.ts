@@ -48,13 +48,12 @@ export function setAppURI(options: BaseTransactionOptions<SetAppURIParams>) {
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.uri] as const;
-      }
-
-      return [options.uri] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.uri] as const;
+          }
+        : [options.uri],
   });
 }

@@ -59,13 +59,12 @@ export function rent(options: BaseTransactionOptions<RentParams>) {
         },
       ],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.fid, resolvedParams.units] as const;
-      }
-
-      return [options.fid, options.units] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.fid, resolvedParams.units] as const;
+          }
+        : [options.fid, options.units],
   });
 }

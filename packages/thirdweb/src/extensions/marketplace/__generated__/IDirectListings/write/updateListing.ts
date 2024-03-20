@@ -106,13 +106,12 @@ export function updateListing(
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.listingId, resolvedParams.params] as const;
-      }
-
-      return [options.listingId, options.params] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.listingId, resolvedParams.params] as const;
+          }
+        : [options.listingId, options.params],
   });
 }

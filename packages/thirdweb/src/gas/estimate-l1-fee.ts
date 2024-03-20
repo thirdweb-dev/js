@@ -22,7 +22,10 @@ export async function estimateL1Fee(options: EstimateL1FeeOptions) {
     address: gasPriceOracleAddress || OPStackGasPriceOracleAddress,
     chain: transaction.chain,
   });
-  const serializableTx = await toSerializableTransaction({
+
+  // purposefully remove gasPrice from the transaction
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { gasPrice, ...serializableTx } = await toSerializableTransaction({
     transaction,
   });
   const serialized = serializeTransaction({

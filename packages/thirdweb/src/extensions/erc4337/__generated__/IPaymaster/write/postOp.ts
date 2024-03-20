@@ -63,17 +63,16 @@ export function postOp(options: BaseTransactionOptions<PostOpParams>) {
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.mode,
-          resolvedParams.context,
-          resolvedParams.actualGasCost,
-        ] as const;
-      }
-
-      return [options.mode, options.context, options.actualGasCost] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.mode,
+              resolvedParams.context,
+              resolvedParams.actualGasCost,
+            ] as const;
+          }
+        : [options.mode, options.context, options.actualGasCost],
   });
 }

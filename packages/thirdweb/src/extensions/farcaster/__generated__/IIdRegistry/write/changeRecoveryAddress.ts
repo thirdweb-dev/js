@@ -50,13 +50,12 @@ export function changeRecoveryAddress(
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.recovery] as const;
-      }
-
-      return [options.recovery] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.recovery] as const;
+          }
+        : [options.recovery],
   });
 }

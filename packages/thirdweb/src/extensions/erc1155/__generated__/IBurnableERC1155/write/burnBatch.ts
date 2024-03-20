@@ -60,17 +60,16 @@ export function burnBatch(options: BaseTransactionOptions<BurnBatchParams>) {
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.account,
-          resolvedParams.ids,
-          resolvedParams.values,
-        ] as const;
-      }
-
-      return [options.account, options.ids, options.values] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.account,
+              resolvedParams.ids,
+              resolvedParams.values,
+            ] as const;
+          }
+        : [options.account, options.ids, options.values],
   });
 }

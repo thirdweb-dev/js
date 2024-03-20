@@ -56,13 +56,12 @@ export function setTokenURI(
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.tokenId, resolvedParams.uri] as const;
-      }
-
-      return [options.tokenId, options.uri] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.tokenId, resolvedParams.uri] as const;
+          }
+        : [options.tokenId, options.uri],
   });
 }

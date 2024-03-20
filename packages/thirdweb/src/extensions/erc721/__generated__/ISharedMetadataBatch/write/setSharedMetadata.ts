@@ -83,13 +83,12 @@ export function setSharedMetadata(
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.metadata, resolvedParams.id] as const;
-      }
-
-      return [options.metadata, options.id] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.metadata, resolvedParams.id] as const;
+          }
+        : [options.metadata, options.id],
   });
 }
