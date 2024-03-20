@@ -62,16 +62,15 @@ export function setPlatformFeeInfo(
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.platformFeeRecipient,
-          resolvedParams.platformFeeBps,
-        ] as const;
-      }
-
-      return [options.platformFeeRecipient, options.platformFeeBps] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.platformFeeRecipient,
+              resolvedParams.platformFeeBps,
+            ] as const;
+          }
+        : [options.platformFeeRecipient, options.platformFeeBps],
   });
 }

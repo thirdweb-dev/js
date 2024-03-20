@@ -62,13 +62,15 @@ export function bidInAuction(
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.auctionId, resolvedParams.bidAmount] as const;
-      }
-
-      return [options.auctionId, options.bidAmount] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.auctionId,
+              resolvedParams.bidAmount,
+            ] as const;
+          }
+        : [options.auctionId, options.bidAmount],
   });
 }

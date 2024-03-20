@@ -53,13 +53,12 @@ export function setRulesEngineOverride(
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.rulesEngineAddress] as const;
-      }
-
-      return [options.rulesEngineAddress] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.rulesEngineAddress] as const;
+          }
+        : [options.rulesEngineAddress],
   });
 }

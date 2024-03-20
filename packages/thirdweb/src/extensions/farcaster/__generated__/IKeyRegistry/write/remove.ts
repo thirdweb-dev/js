@@ -48,13 +48,12 @@ export function remove(options: BaseTransactionOptions<RemoveParams>) {
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.key] as const;
-      }
-
-      return [options.key] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.key] as const;
+          }
+        : [options.key],
   });
 }

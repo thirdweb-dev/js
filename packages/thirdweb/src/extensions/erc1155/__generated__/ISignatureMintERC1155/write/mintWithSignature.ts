@@ -128,13 +128,12 @@ export function mintWithSignature(
         },
       ],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.req, resolvedParams.signature] as const;
-      }
-
-      return [options.req, options.signature] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.req, resolvedParams.signature] as const;
+          }
+        : [options.req, options.signature],
   });
 }

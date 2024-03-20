@@ -51,13 +51,12 @@ export function delegate(options: BaseTransactionOptions<DelegateParams>) {
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.delegatee] as const;
-      }
-
-      return [options.delegatee] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.delegatee] as const;
+          }
+        : [options.delegatee],
   });
 }

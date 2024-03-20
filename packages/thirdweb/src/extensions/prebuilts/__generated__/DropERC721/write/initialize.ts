@@ -126,35 +126,34 @@ export function initialize(options: BaseTransactionOptions<InitializeParams>) {
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.defaultAdmin,
-          resolvedParams.name,
-          resolvedParams.symbol,
-          resolvedParams.contractURI,
-          resolvedParams.trustedForwarders,
-          resolvedParams.saleRecipient,
-          resolvedParams.royaltyRecipient,
-          resolvedParams.royaltyBps,
-          resolvedParams.platformFeeBps,
-          resolvedParams.platformFeeRecipient,
-        ] as const;
-      }
-
-      return [
-        options.defaultAdmin,
-        options.name,
-        options.symbol,
-        options.contractURI,
-        options.trustedForwarders,
-        options.saleRecipient,
-        options.royaltyRecipient,
-        options.royaltyBps,
-        options.platformFeeBps,
-        options.platformFeeRecipient,
-      ] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.defaultAdmin,
+              resolvedParams.name,
+              resolvedParams.symbol,
+              resolvedParams.contractURI,
+              resolvedParams.trustedForwarders,
+              resolvedParams.saleRecipient,
+              resolvedParams.royaltyRecipient,
+              resolvedParams.royaltyBps,
+              resolvedParams.platformFeeBps,
+              resolvedParams.platformFeeRecipient,
+            ] as const;
+          }
+        : [
+            options.defaultAdmin,
+            options.name,
+            options.symbol,
+            options.contractURI,
+            options.trustedForwarders,
+            options.saleRecipient,
+            options.royaltyRecipient,
+            options.royaltyBps,
+            options.platformFeeBps,
+            options.platformFeeRecipient,
+          ],
   });
 }

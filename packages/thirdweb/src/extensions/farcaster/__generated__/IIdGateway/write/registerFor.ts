@@ -86,25 +86,24 @@ export function registerFor(
         },
       ],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.to,
-          resolvedParams.recovery,
-          resolvedParams.deadline,
-          resolvedParams.sig,
-          resolvedParams.extraStorage,
-        ] as const;
-      }
-
-      return [
-        options.to,
-        options.recovery,
-        options.deadline,
-        options.sig,
-        options.extraStorage,
-      ] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.to,
+              resolvedParams.recovery,
+              resolvedParams.deadline,
+              resolvedParams.sig,
+              resolvedParams.extraStorage,
+            ] as const;
+          }
+        : [
+            options.to,
+            options.recovery,
+            options.deadline,
+            options.sig,
+            options.extraStorage,
+          ],
   });
 }

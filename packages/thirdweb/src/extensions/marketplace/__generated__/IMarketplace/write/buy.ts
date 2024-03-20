@@ -78,25 +78,24 @@ export function buy(options: BaseTransactionOptions<BuyParams>) {
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.listingId,
-          resolvedParams.buyFor,
-          resolvedParams.quantity,
-          resolvedParams.currency,
-          resolvedParams.totalPrice,
-        ] as const;
-      }
-
-      return [
-        options.listingId,
-        options.buyFor,
-        options.quantity,
-        options.currency,
-        options.totalPrice,
-      ] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.listingId,
+              resolvedParams.buyFor,
+              resolvedParams.quantity,
+              resolvedParams.currency,
+              resolvedParams.totalPrice,
+            ] as const;
+          }
+        : [
+            options.listingId,
+            options.buyFor,
+            options.quantity,
+            options.currency,
+            options.totalPrice,
+          ],
   });
 }

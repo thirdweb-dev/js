@@ -87,29 +87,28 @@ export function addFor(options: BaseTransactionOptions<AddForParams>) {
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.fidOwner,
-          resolvedParams.keyType,
-          resolvedParams.key,
-          resolvedParams.metadataType,
-          resolvedParams.metadata,
-          resolvedParams.deadline,
-          resolvedParams.sig,
-        ] as const;
-      }
-
-      return [
-        options.fidOwner,
-        options.keyType,
-        options.key,
-        options.metadataType,
-        options.metadata,
-        options.deadline,
-        options.sig,
-      ] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.fidOwner,
+              resolvedParams.keyType,
+              resolvedParams.key,
+              resolvedParams.metadataType,
+              resolvedParams.metadata,
+              resolvedParams.deadline,
+              resolvedParams.sig,
+            ] as const;
+          }
+        : [
+            options.fidOwner,
+            options.keyType,
+            options.key,
+            options.metadataType,
+            options.metadata,
+            options.deadline,
+            options.sig,
+          ],
   });
 }

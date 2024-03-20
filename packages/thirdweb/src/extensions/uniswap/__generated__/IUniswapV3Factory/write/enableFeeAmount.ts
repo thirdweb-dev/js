@@ -59,13 +59,12 @@ export function enableFeeAmount(
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.fee, resolvedParams.tickSpacing] as const;
-      }
-
-      return [options.fee, options.tickSpacing] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.fee, resolvedParams.tickSpacing] as const;
+          }
+        : [options.fee, options.tickSpacing],
   });
 }

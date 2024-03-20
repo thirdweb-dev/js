@@ -98,27 +98,26 @@ export function publishContract(
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.publisher,
-          resolvedParams.contractId,
-          resolvedParams.publishMetadataUri,
-          resolvedParams.compilerMetadataUri,
-          resolvedParams.bytecodeHash,
-          resolvedParams.implementation,
-        ] as const;
-      }
-
-      return [
-        options.publisher,
-        options.contractId,
-        options.publishMetadataUri,
-        options.compilerMetadataUri,
-        options.bytecodeHash,
-        options.implementation,
-      ] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.publisher,
+              resolvedParams.contractId,
+              resolvedParams.publishMetadataUri,
+              resolvedParams.compilerMetadataUri,
+              resolvedParams.bytecodeHash,
+              resolvedParams.implementation,
+            ] as const;
+          }
+        : [
+            options.publisher,
+            options.contractId,
+            options.publishMetadataUri,
+            options.compilerMetadataUri,
+            options.bytecodeHash,
+            options.implementation,
+          ],
   });
 }

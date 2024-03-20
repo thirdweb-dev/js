@@ -60,17 +60,16 @@ export function burn(options: BaseTransactionOptions<BurnParams>) {
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.account,
-          resolvedParams.id,
-          resolvedParams.value,
-        ] as const;
-      }
-
-      return [options.account, options.id, options.value] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.account,
+              resolvedParams.id,
+              resolvedParams.value,
+            ] as const;
+          }
+        : [options.account, options.id, options.value],
   });
 }

@@ -135,21 +135,16 @@ export function validateUserOp(
         },
       ],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.userOp,
-          resolvedParams.userOpHash,
-          resolvedParams.missingAccountFunds,
-        ] as const;
-      }
-
-      return [
-        options.userOp,
-        options.userOpHash,
-        options.missingAccountFunds,
-      ] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.userOp,
+              resolvedParams.userOpHash,
+              resolvedParams.missingAccountFunds,
+            ] as const;
+          }
+        : [options.userOp, options.userOpHash, options.missingAccountFunds],
   });
 }

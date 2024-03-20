@@ -86,27 +86,26 @@ export function transferFor(
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.from,
-          resolvedParams.to,
-          resolvedParams.fromDeadline,
-          resolvedParams.fromSig,
-          resolvedParams.toDeadline,
-          resolvedParams.toSig,
-        ] as const;
-      }
-
-      return [
-        options.from,
-        options.to,
-        options.fromDeadline,
-        options.fromSig,
-        options.toDeadline,
-        options.toSig,
-      ] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.from,
+              resolvedParams.to,
+              resolvedParams.fromDeadline,
+              resolvedParams.fromSig,
+              resolvedParams.toDeadline,
+              resolvedParams.toSig,
+            ] as const;
+          }
+        : [
+            options.from,
+            options.to,
+            options.fromDeadline,
+            options.fromSig,
+            options.toDeadline,
+            options.toSig,
+          ],
   });
 }

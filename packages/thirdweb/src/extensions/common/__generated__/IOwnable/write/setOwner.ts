@@ -48,13 +48,12 @@ export function setOwner(options: BaseTransactionOptions<SetOwnerParams>) {
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.newOwner] as const;
-      }
-
-      return [options.newOwner] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.newOwner] as const;
+          }
+        : [options.newOwner],
   });
 }

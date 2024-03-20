@@ -80,25 +80,24 @@ export function buyFromListing(
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.listingId,
-          resolvedParams.buyFor,
-          resolvedParams.quantity,
-          resolvedParams.currency,
-          resolvedParams.expectedTotalPrice,
-        ] as const;
-      }
-
-      return [
-        options.listingId,
-        options.buyFor,
-        options.quantity,
-        options.currency,
-        options.expectedTotalPrice,
-      ] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.listingId,
+              resolvedParams.buyFor,
+              resolvedParams.quantity,
+              resolvedParams.currency,
+              resolvedParams.expectedTotalPrice,
+            ] as const;
+          }
+        : [
+            options.listingId,
+            options.buyFor,
+            options.quantity,
+            options.currency,
+            options.expectedTotalPrice,
+          ],
   });
 }

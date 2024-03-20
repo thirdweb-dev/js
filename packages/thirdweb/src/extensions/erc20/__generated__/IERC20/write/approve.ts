@@ -58,13 +58,12 @@ export function approve(options: BaseTransactionOptions<ApproveParams>) {
         },
       ],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.spender, resolvedParams.value] as const;
-      }
-
-      return [options.spender, options.value] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.spender, resolvedParams.value] as const;
+          }
+        : [options.spender, options.value],
   });
 }

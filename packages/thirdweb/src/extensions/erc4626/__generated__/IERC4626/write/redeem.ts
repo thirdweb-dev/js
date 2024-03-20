@@ -81,17 +81,16 @@ export function redeem(options: BaseTransactionOptions<RedeemParams>) {
         },
       ],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.shares,
-          resolvedParams.receiver,
-          resolvedParams.owner,
-        ] as const;
-      }
-
-      return [options.shares, options.receiver, options.owner] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.shares,
+              resolvedParams.receiver,
+              resolvedParams.owner,
+            ] as const;
+          }
+        : [options.shares, options.receiver, options.owner],
   });
 }

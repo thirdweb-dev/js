@@ -65,17 +65,16 @@ export function approveBuyerForListing(
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.listingId,
-          resolvedParams.buyer,
-          resolvedParams.toApprove,
-        ] as const;
-      }
-
-      return [options.listingId, options.buyer, options.toApprove] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.listingId,
+              resolvedParams.buyer,
+              resolvedParams.toApprove,
+            ] as const;
+          }
+        : [options.listingId, options.buyer, options.toApprove],
   });
 }

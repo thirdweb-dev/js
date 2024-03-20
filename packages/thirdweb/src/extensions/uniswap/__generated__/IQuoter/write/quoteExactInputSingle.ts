@@ -82,25 +82,24 @@ export function quoteExactInputSingle(
         },
       ],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.tokenIn,
-          resolvedParams.tokenOut,
-          resolvedParams.fee,
-          resolvedParams.amountIn,
-          resolvedParams.sqrtPriceLimitX96,
-        ] as const;
-      }
-
-      return [
-        options.tokenIn,
-        options.tokenOut,
-        options.fee,
-        options.amountIn,
-        options.sqrtPriceLimitX96,
-      ] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.tokenIn,
+              resolvedParams.tokenOut,
+              resolvedParams.fee,
+              resolvedParams.amountIn,
+              resolvedParams.sqrtPriceLimitX96,
+            ] as const;
+          }
+        : [
+            options.tokenIn,
+            options.tokenOut,
+            options.fee,
+            options.amountIn,
+            options.sqrtPriceLimitX96,
+          ],
   });
 }

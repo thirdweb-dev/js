@@ -85,21 +85,16 @@ export function airdropERC721(
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.tokenAddress,
-          resolvedParams.tokenOwner,
-          resolvedParams.contents,
-        ] as const;
-      }
-
-      return [
-        options.tokenAddress,
-        options.tokenOwner,
-        options.contents,
-      ] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.tokenAddress,
+              resolvedParams.tokenOwner,
+              resolvedParams.contents,
+            ] as const;
+          }
+        : [options.tokenAddress, options.tokenOwner, options.contents],
   });
 }

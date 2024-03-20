@@ -65,17 +65,16 @@ export function setRoyaltyInfoForToken(
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.tokenId,
-          resolvedParams.recipient,
-          resolvedParams.bps,
-        ] as const;
-      }
-
-      return [options.tokenId, options.recipient, options.bps] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.tokenId,
+              resolvedParams.recipient,
+              resolvedParams.bps,
+            ] as const;
+          }
+        : [options.tokenId, options.recipient, options.bps],
   });
 }

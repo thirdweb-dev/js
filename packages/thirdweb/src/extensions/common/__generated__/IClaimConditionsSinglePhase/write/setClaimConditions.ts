@@ -106,16 +106,15 @@ export function setClaimConditions(
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.phase,
-          resolvedParams.resetClaimEligibility,
-        ] as const;
-      }
-
-      return [options.phase, options.resetClaimEligibility] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.phase,
+              resolvedParams.resetClaimEligibility,
+            ] as const;
+          }
+        : [options.phase, options.resetClaimEligibility],
   });
 }

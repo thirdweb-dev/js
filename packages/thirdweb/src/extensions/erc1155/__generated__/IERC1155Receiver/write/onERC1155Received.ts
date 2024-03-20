@@ -78,25 +78,24 @@ export function onERC1155Received(
         },
       ],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.operator,
-          resolvedParams.from,
-          resolvedParams.id,
-          resolvedParams.value,
-          resolvedParams.data,
-        ] as const;
-      }
-
-      return [
-        options.operator,
-        options.from,
-        options.id,
-        options.value,
-        options.data,
-      ] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.operator,
+              resolvedParams.from,
+              resolvedParams.id,
+              resolvedParams.value,
+              resolvedParams.data,
+            ] as const;
+          }
+        : [
+            options.operator,
+            options.from,
+            options.id,
+            options.value,
+            options.data,
+          ],
   });
 }

@@ -63,17 +63,16 @@ export function remove(options: BaseTransactionOptions<RemoveParams>) {
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.deployer,
-          resolvedParams.deployment,
-          resolvedParams.chainId,
-        ] as const;
-      }
-
-      return [options.deployer, options.deployment, options.chainId] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.deployer,
+              resolvedParams.deployment,
+              resolvedParams.chainId,
+            ] as const;
+          }
+        : [options.deployer, options.deployment, options.chainId],
   });
 }

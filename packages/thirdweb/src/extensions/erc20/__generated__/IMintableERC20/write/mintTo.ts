@@ -54,13 +54,12 @@ export function mintTo(options: BaseTransactionOptions<MintToParams>) {
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.to, resolvedParams.amount] as const;
-      }
-
-      return [options.to, options.amount] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.to, resolvedParams.amount] as const;
+          }
+        : [options.to, options.amount],
   });
 }

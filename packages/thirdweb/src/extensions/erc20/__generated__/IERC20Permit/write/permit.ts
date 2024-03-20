@@ -84,29 +84,28 @@ export function permit(options: BaseTransactionOptions<PermitParams>) {
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.owner,
-          resolvedParams.spender,
-          resolvedParams.value,
-          resolvedParams.deadline,
-          resolvedParams.v,
-          resolvedParams.r,
-          resolvedParams.s,
-        ] as const;
-      }
-
-      return [
-        options.owner,
-        options.spender,
-        options.value,
-        options.deadline,
-        options.v,
-        options.r,
-        options.s,
-      ] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.owner,
+              resolvedParams.spender,
+              resolvedParams.value,
+              resolvedParams.deadline,
+              resolvedParams.v,
+              resolvedParams.r,
+              resolvedParams.s,
+            ] as const;
+          }
+        : [
+            options.owner,
+            options.spender,
+            options.value,
+            options.deadline,
+            options.v,
+            options.r,
+            options.s,
+          ],
   });
 }

@@ -65,17 +65,16 @@ export function onSignerRemoved(
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.signer,
-          resolvedParams.creatorAdmin,
-          resolvedParams.data,
-        ] as const;
-      }
-
-      return [options.signer, options.creatorAdmin, options.data] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.signer,
+              resolvedParams.creatorAdmin,
+              resolvedParams.data,
+            ] as const;
+          }
+        : [options.signer, options.creatorAdmin, options.data],
   });
 }

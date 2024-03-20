@@ -53,13 +53,12 @@ export function multicall(options: BaseTransactionOptions<MulticallParams>) {
         },
       ],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.data] as const;
-      }
-
-      return [options.data] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.data] as const;
+          }
+        : [options.data],
   });
 }

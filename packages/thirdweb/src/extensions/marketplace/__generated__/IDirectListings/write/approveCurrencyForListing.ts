@@ -68,21 +68,20 @@ export function approveCurrencyForListing(
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.listingId,
-          resolvedParams.currency,
-          resolvedParams.pricePerTokenInCurrency,
-        ] as const;
-      }
-
-      return [
-        options.listingId,
-        options.currency,
-        options.pricePerTokenInCurrency,
-      ] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.listingId,
+              resolvedParams.currency,
+              resolvedParams.pricePerTokenInCurrency,
+            ] as const;
+          }
+        : [
+            options.listingId,
+            options.currency,
+            options.pricePerTokenInCurrency,
+          ],
   });
 }

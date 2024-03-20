@@ -59,13 +59,12 @@ export function closeAuction(
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.listingId, resolvedParams.closeFor] as const;
-      }
-
-      return [options.listingId, options.closeFor] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.listingId, resolvedParams.closeFor] as const;
+          }
+        : [options.listingId, options.closeFor],
   });
 }

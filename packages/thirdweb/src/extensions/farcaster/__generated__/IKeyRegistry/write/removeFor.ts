@@ -66,23 +66,17 @@ export function removeFor(options: BaseTransactionOptions<RemoveForParams>) {
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.fidOwner,
-          resolvedParams.key,
-          resolvedParams.deadline,
-          resolvedParams.sig,
-        ] as const;
-      }
-
-      return [
-        options.fidOwner,
-        options.key,
-        options.deadline,
-        options.sig,
-      ] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.fidOwner,
+              resolvedParams.key,
+              resolvedParams.deadline,
+              resolvedParams.sig,
+            ] as const;
+          }
+        : [options.fidOwner, options.key, options.deadline, options.sig],
   });
 }

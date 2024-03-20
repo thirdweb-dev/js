@@ -56,13 +56,12 @@ export function setApprovalForAll(
       ],
       [],
     ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.operator, resolvedParams.approved] as const;
-      }
-
-      return [options.operator, options.approved] as const;
-    },
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.operator, resolvedParams.approved] as const;
+          }
+        : [options.operator, options.approved],
   });
 }
