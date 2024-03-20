@@ -183,6 +183,7 @@ export type ThirdwebLocale = {
       getStartedScreen: { instruction: string };
       scanScreen: { instruction: string };
     };
+    trustWallet: ExtensionAndQRScreensLocale;
     localWallet: {
       confirmPasswordLabel: string;
       createScreen: {
@@ -302,7 +303,7 @@ export type ThirdwebLocale = {
         title: string;
       };
     };
-    trustWallet: ExtensionAndQRScreensLocale;
+    imTokenWallet: ExtensionAndQRScreensLocale;
     walletConnect: { scanInstruction: string };
     zerionWallet: ExtensionAndQRScreensLocale;
   };

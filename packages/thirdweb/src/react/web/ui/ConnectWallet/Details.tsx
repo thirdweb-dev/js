@@ -5,9 +5,10 @@ import {
   // EnterIcon,
   PaperPlaneIcon,
   PinBottomIcon,
+  PlusIcon,
 } from "@radix-ui/react-icons";
 import styled from "@emotion/styled";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useSyncExternalStore } from "react";
 import {
   useActiveAccount,
   useActiveWallet,
@@ -38,7 +39,10 @@ import { Link, Text } from "../components/text.js";
 import { CopyIcon } from "../components/CopyIcon.js";
 import { shortenString } from "../../../core/utils/addresses.js";
 import { Img } from "../components/Img.js";
-import { useChainQuery } from "../../../core/hooks/others/useChainQuery.js";
+import {
+  useChainQuery,
+  useChainsQuery,
+} from "../../../core/hooks/others/useChainQuery.js";
 import { ChainIcon } from "../components/ChainIcon.js";
 import { useWalletBalance } from "../../../core/hooks/others/useWalletBalance.js";
 import { FundsIcon } from "./icons/FundsIcon.js";
@@ -61,6 +65,10 @@ import {
 import type { EmbeddedWallet } from "../../../../wallets/embedded/core/wallet/index.js";
 import { localWalletMetadata } from "../../../../wallets/local/index.js";
 import { ExportLocalWallet } from "./screens/ExportLocalWallet.js";
+import { swapTransactionsStore } from "./screens/Buy/swap/pendingSwapTx.js";
+import { SwapScreen } from "./screens/Buy/SwapScreen.js";
+import { SwapTransactionsScreen } from "./screens/SwapTransactionsScreen.js";
+import { useSwapSupportedChains } from "./screens/Buy/swap/useSwapSupportedChains.js";
 import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 
 const TW_CONNECTED_WALLET = "tw-connected-wallet";
@@ -72,7 +80,9 @@ type WalletDetailsModalScreen =
   | "export"
   | "send"
   | "receive"
-  | "network-switcher";
+  | "buy"
+  | "network-switcher"
+  | "pending-tx";
 
 /**
  * @internal
@@ -85,12 +95,23 @@ export const ConnectedWalletDetails: React.FC<{
   supportedTokens: SupportedTokens;
   chains: Chain[];
 }> = (props) => {
-  const locale = useWalletConnectionCtx().connectLocale;
+  const { connectLocale: locale, client } = useWalletConnectionCtx();
   const activeWallet = useActiveWallet();
   const activeAccount = useActiveAccount();
   const walletChain = useActiveWalletChain();
   const chainQuery = useChainQuery(walletChain);
   const { disconnect } = useDisconnect();
+  const swapTxs = useSyncExternalStore(
+    swapTransactionsStore.subscribe,
+    swapTransactionsStore.getValue,
+  );
+  const pendingSwapTxs = swapTxs.filter((tx) => tx.status === "PENDING");
+
+  // prefetch chains metadata with low concurrency
+  useChainsQuery(props.chains, 5);
+
+  // prefetch swap supported chains
+  useSwapSupportedChains(client);
 
   const tokenAddress =
     walletChain && props.detailsButton?.displayBalanceToken
@@ -106,21 +127,11 @@ export const ConnectedWalletDetails: React.FC<{
   const [screen, setScreen] = useState<WalletDetailsModalScreen>("main");
   const [isOpen, setIsOpen] = useState(false);
 
-  // const activeWalletConfig = undefined;
-  // const activeWalletConfig = useWalletConfig();
   // const ensQuery = useENS();
-
-  // const walletContext = useWalletContext();
-
-  // const wrapperWallet = activeWallet
-  //   ? walletContext.getWrapperWallet(activeWallet)
-  //   : undefined;
 
   // const [overrideWalletIconUrl, setOverrideWalletIconUrl] = useState<
   //   string | undefined
   // >(undefined);
-
-  // const sdk = useSDK();
 
   // const personalAccount = (activeWallet as WalletWithPersonalAccount)
   //   ?.personalAccount;
@@ -131,8 +142,6 @@ export const ConnectedWalletDetails: React.FC<{
 
   const disableSwitchChain = !activeWallet?.switchChain;
 
-  // const disableSwitchChain = !!personalWallet;
-
   // const isActuallyMetaMask =
   //   activeWallet && activeWallet instanceof MetaMaskWallet;
 
@@ -142,35 +151,6 @@ export const ConnectedWalletDetails: React.FC<{
     : "";
 
   const addressOrENS = shortAddress;
-  // const avatarUrl = undefined;
-  // const addressOrENS = ensQuery.data?.ens || shortAddress;
-  // const avatarUrl = ensQuery.data?.avatarUrl;
-
-  // useEffect(() => {
-  //   if (activeWallet) {
-  //     if (activeWallet.walletId === walletIds.embeddedWallet) {
-  //       (activeWallet as EmbeddedWallet)
-  //         .getLastUsedAuthStrategy()
-  //         .then((auth) => {
-  //           if (auth === "apple") {
-  //             setOverrideWalletIconUrl(appleIconUri);
-  //           } else if (auth === "google") {
-  //             setOverrideWalletIconUrl(googleIconUri);
-  //           } else if (auth === "facebook") {
-  //             setOverrideWalletIconUrl(facebookIconUri);
-  //           } else {
-  //             setOverrideWalletIconUrl(undefined);
-  //           }
-  //         });
-  //     } else if (activeWallet.walletId === walletIds.smartWallet) {
-  //       setOverrideWalletIconUrl(smartWalletIcon);
-  //     } else {
-  //       setOverrideWalletIconUrl(undefined);
-  //     }
-  //   } else {
-  //     setOverrideWalletIconUrl(undefined);
-  //   }
-  // }, [activeWallet]);
 
   useEffect(() => {
     if (!isOpen) {
@@ -180,9 +160,6 @@ export const ConnectedWalletDetails: React.FC<{
     }
   }, [isOpen]);
 
-  // const walletIconUrl =
-  //   overrideWalletIconUrl || activeWalletConfig?.meta.iconURL || "";
-  // const avatarOrWalletIconUrl = avatarUrl || walletIconUrl;
   let avatarOrWalletIconUrl = activeWallet?.metadata.iconUrl || "";
 
   if (activeWallet && "isSmartWallet" in activeWallet) {
@@ -359,12 +336,12 @@ export const ConnectedWalletDetails: React.FC<{
         <ConnectedToSmartWallet />
         <EmbeddedWalletEmail />
 
-        {/* Send and Receive */}
+        {/* Send, Receive, Swap */}
         <Container
           style={{
             display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: spacing.sm,
+            gridTemplateColumns: "1fr 1fr 1fr",
+            gap: spacing.xs,
           }}
         >
           <Button
@@ -380,13 +357,16 @@ export const ConnectedWalletDetails: React.FC<{
               setScreen("send");
             }}
           >
-            <PaperPlaneIcon
-              width={iconSize.sm}
-              height={iconSize.sm}
-              style={{
-                transform: "translateY(-10%) rotate(-45deg) ",
-              }}
-            />
+            <Container color="secondaryText" flex="row" center="both">
+              <PaperPlaneIcon
+                width={iconSize.sm}
+                height={iconSize.sm}
+                style={{
+                  transform: "translateY(-10%) rotate(-45deg) ",
+                }}
+              />
+            </Container>
+
             {locale.send}
           </Button>
 
@@ -403,8 +383,29 @@ export const ConnectedWalletDetails: React.FC<{
               setScreen("receive");
             }}
           >
-            <PinBottomIcon width={iconSize.sm} height={iconSize.sm} />{" "}
+            <Container color="secondaryText" flex="row" center="both">
+              <PinBottomIcon width={iconSize.sm} height={iconSize.sm} />{" "}
+            </Container>
             {locale.receive}{" "}
+          </Button>
+
+          <Button
+            variant="outline"
+            style={{
+              fontSize: fontSize.sm,
+              display: "flex",
+              gap: spacing.xs,
+              alignItems: "center",
+              padding: spacing.sm,
+            }}
+            onClick={() => {
+              setScreen("buy");
+            }}
+          >
+            <Container color="secondaryText" flex="row" center="both">
+              <PlusIcon width={iconSize.sm} height={iconSize.sm} />
+            </Container>
+            Buy
           </Button>
         </Container>
       </Container>
@@ -420,6 +421,24 @@ export const ConnectedWalletDetails: React.FC<{
           }}
         >
           {networkSwitcherButton}
+
+          {/* Transactions */}
+          <MenuButton
+            onClick={() => {
+              setScreen("pending-tx");
+            }}
+            style={{
+              fontSize: fontSize.sm,
+            }}
+          >
+            <TextAlignJustifyIcon width={iconSize.md} height={iconSize.md} />
+            <Container flex="row" gap="xs" center="y">
+              <Text color="primaryText">Transactions</Text>
+              {pendingSwapTxs && pendingSwapTxs.length > 0 && (
+                <BadgeCount>{pendingSwapTxs.length}</BadgeCount>
+              )}
+            </Container>
+          </MenuButton>
 
           {/* Switch to Personal Wallet  */}
           {/* {personalWallet &&
@@ -483,31 +502,6 @@ export const ConnectedWalletDetails: React.FC<{
               </MenuLink>
             )}
 
-          {/* Explorer link */}
-          {chainQuery.data?.explorers && chainQuery.data?.explorers[0]?.url && (
-            <MenuLink
-              href={
-                chainQuery.data.explorers[0].url +
-                "/address/" +
-                activeAccount?.address
-              }
-              target="_blank"
-              as="a"
-              style={{
-                textDecoration: "none",
-                color: "inherit",
-              }}
-            >
-              <Container flex="row" center="y" color="secondaryText">
-                <TextAlignJustifyIcon
-                  width={iconSize.md}
-                  height={iconSize.md}
-                />
-              </Container>
-              {locale.transactionHistory}
-            </MenuLink>
-          )}
-
           {/* Export  Wallet */}
           {activeWallet?.metadata.id === localWalletMetadata.id && (
             <div>
@@ -568,6 +562,15 @@ export const ConnectedWalletDetails: React.FC<{
     </div>
   );
 
+  if (screen === "pending-tx") {
+    content = (
+      <SwapTransactionsScreen
+        onBack={() => setScreen("main")}
+        client={client}
+      />
+    );
+  }
+
   if (screen === "network-switcher") {
     content = (
       <NetworkSelectorContent
@@ -587,7 +590,10 @@ export const ConnectedWalletDetails: React.FC<{
         }}
       />
     );
-  } else if (screen === "export") {
+  }
+
+  // export local wallet
+  else if (screen === "export") {
     content = (
       <ExportLocalWallet
         onExport={() => {
@@ -598,7 +604,10 @@ export const ConnectedWalletDetails: React.FC<{
         }}
       />
     );
-  } else if (screen === "send") {
+  }
+
+  // send funds
+  else if (screen === "send") {
     content = (
       <SendFunds
         supportedTokens={props.supportedTokens}
@@ -607,13 +616,28 @@ export const ConnectedWalletDetails: React.FC<{
         }}
       />
     );
-  } else if (screen === "receive") {
+  }
+
+  // receive funds
+  else if (screen === "receive") {
     content = (
       <ReceiveFunds
         iconUrl={avatarOrWalletIconUrl}
         onBack={() => {
           setScreen("main");
         }}
+      />
+    );
+  }
+
+  // swap tokens
+  else if (screen === "buy") {
+    content = (
+      <SwapScreen
+        client={client}
+        onBack={() => setScreen("main")}
+        supportedTokens={props.supportedTokens}
+        onViewPendingTx={() => setScreen("pending-tx")}
       />
     );
   }
@@ -700,6 +724,22 @@ const MenuButton = /* @__PURE__ */ StyledButton(() => {
     "&[data-variant='primary']:hover svg": {
       color: theme.colors.primaryText + "!important",
     },
+  };
+});
+
+const BadgeCount = /* @__PURE__ */ StyledDiv(() => {
+  const theme = useCustomTheme();
+  return {
+    background: theme.colors.primaryButtonBg,
+    color: theme.colors.primaryButtonText,
+    fontSize: fontSize.sm,
+    fontWeight: 500,
+    borderRadius: "50%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    minWidth: "22px",
+    minHeight: "22px",
   };
 });
 

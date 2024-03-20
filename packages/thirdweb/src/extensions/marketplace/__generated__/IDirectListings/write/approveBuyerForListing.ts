@@ -1,7 +1,8 @@
+import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { AbiParameterToPrimitiveType } from "abitype";
 import type { Prettify } from "../../../../../utils/type-utils.js";
+import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "approveBuyerForListing" function.
@@ -22,6 +23,48 @@ export type ApproveBuyerForListingParams = Prettify<
       asyncParams: () => Promise<ApproveBuyerForListingParamsInternal>;
     }
 >;
+const FN_SELECTOR = "0x48dd77df" as const;
+const FN_INPUTS = [
+  {
+    type: "uint256",
+    name: "_listingId",
+  },
+  {
+    type: "address",
+    name: "_buyer",
+  },
+  {
+    type: "bool",
+    name: "_toApprove",
+  },
+] as const;
+const FN_OUTPUTS = [] as const;
+
+/**
+ * Encodes the parameters for the "approveBuyerForListing" function.
+ * @param options - The options for the approveBuyerForListing function.
+ * @returns The encoded ABI parameters.
+ * @extension MARKETPLACE
+ * @example
+ * ```
+ * import { encodeApproveBuyerForListingParams } "thirdweb/extensions/marketplace";
+ * const result = encodeApproveBuyerForListingParams({
+ *  listingId: ...,
+ *  buyer: ...,
+ *  toApprove: ...,
+ * });
+ * ```
+ */
+export function encodeApproveBuyerForListingParams(
+  options: ApproveBuyerForListingParamsInternal,
+) {
+  return encodeAbiParameters(FN_INPUTS, [
+    options.listingId,
+    options.buyer,
+    options.toApprove,
+  ]);
+}
+
 /**
  * Calls the "approveBuyerForListing" function on the contract.
  * @param options - The options for the "approveBuyerForListing" function.
@@ -47,24 +90,7 @@ export function approveBuyerForListing(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x48dd77df",
-      [
-        {
-          type: "uint256",
-          name: "_listingId",
-        },
-        {
-          type: "address",
-          name: "_buyer",
-        },
-        {
-          type: "bool",
-          name: "_toApprove",
-        },
-      ],
-      [],
-    ],
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params:
       "asyncParams" in options
         ? async () => {

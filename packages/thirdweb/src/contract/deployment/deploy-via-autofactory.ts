@@ -4,10 +4,16 @@ import { keccakId } from "../../utils/any-evm/keccak-id.js";
 import { toHex } from "../../utils/encoding/hex.js";
 import type { ThirdwebContract } from "../contract.js";
 import { deployProxyByImplementation } from "../../extensions/thirdweb/__generated__/IContractFactory/write/deployProxyByImplementation.js";
-import type { ClientAndChain } from "../../utils/types.js";
+import type {
+  ClientAndChain,
+  ClientAndChainAndAccount,
+} from "../../utils/types.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
 import { encode } from "../../transaction/actions/encode.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
+import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
+import { parseEventLogs } from "../../event/actions/parse-logs.js";
+import { proxyDeployedEvent } from "../../extensions/thirdweb/__generated__/IContractFactory/events/ProxyDeployed.js";
 
 /**
  * @internal
@@ -44,4 +50,43 @@ export function prepareAutoFactoryDeployTransaction(
       } as const;
     },
   });
+}
+
+/**
+ * @internal
+ */
+export async function deployViaAutoFactory(
+  options: ClientAndChainAndAccount & {
+    cloneFactoryContract: ThirdwebContract;
+    initializeTransaction: PreparedTransaction;
+    salt?: string;
+  },
+): Promise<string> {
+  const {
+    chain,
+    client,
+    account,
+    cloneFactoryContract,
+    initializeTransaction,
+  } = options;
+  const tx = prepareAutoFactoryDeployTransaction({
+    chain,
+    client,
+    cloneFactoryContract,
+    initializeTransaction,
+  });
+  const receipt = await sendAndConfirmTransaction({
+    transaction: tx,
+    account,
+  });
+  const decodedEvent = parseEventLogs({
+    events: [proxyDeployedEvent()],
+    logs: receipt.logs,
+  });
+  if (decodedEvent.length === 0 || !decodedEvent[0]) {
+    throw new Error(
+      "No ProxyDeployed event found in transaction: " + receipt.transactionHash,
+    );
+  }
+  return decodedEvent[0]?.args.proxy;
 }

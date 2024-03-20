@@ -1,5 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterAll } from "vitest";
-import { waitForReceipt } from "./wait-for-tx-receipt.js";
+import {
+  DEFAULT_MAX_BLOCKS_WAIT_TIME,
+  waitForReceipt,
+} from "./wait-for-tx-receipt.js";
 import type { TransactionReceipt } from "viem";
 import { TEST_WALLET_B } from "../../../test/src/addresses.js";
 import { USDC_CONTRACT } from "../../../test/src/test-contracts.js";
@@ -90,24 +93,13 @@ describe("waitForReceipt", () => {
       transactionHash: MOCK_TX_HASH,
     });
 
-    // this is actually 11 blocks because the "first" block does not count (will fire immediately)
-    emitBlockNumber(1n);
-    emitBlockNumber(2n);
-    emitBlockNumber(3n);
-    emitBlockNumber(4n);
-    emitBlockNumber(5n);
-    emitBlockNumber(6n);
-    emitBlockNumber(7n);
-    emitBlockNumber(8n);
-    emitBlockNumber(9n);
-    emitBlockNumber(10n);
-    emitBlockNumber(11n);
+    for (let i = 1; i <= DEFAULT_MAX_BLOCKS_WAIT_TIME + 1; i++) {
+      emitBlockNumber(BigInt(i));
+    }
 
     await expect(result).rejects.toThrow(
-      "Transaction not found after 10 blocks",
+      `Transaction not found after ${DEFAULT_MAX_BLOCKS_WAIT_TIME} blocks`,
     );
-    expect(mockEthGetTransactionReceipt).toHaveBeenCalledTimes(10);
+    expect(mockEthGetTransactionReceipt).toHaveBeenCalledTimes(30);
   });
-
-  // TODO userop tests
 });

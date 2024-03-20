@@ -1,7 +1,8 @@
+import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { AbiParameterToPrimitiveType } from "abitype";
 import type { Prettify } from "../../../../../utils/type-utils.js";
+import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "setRoyaltyInfoForToken" function.
@@ -22,6 +23,48 @@ export type SetRoyaltyInfoForTokenParams = Prettify<
       asyncParams: () => Promise<SetRoyaltyInfoForTokenParamsInternal>;
     }
 >;
+const FN_SELECTOR = "0x9bcf7a15" as const;
+const FN_INPUTS = [
+  {
+    type: "uint256",
+    name: "tokenId",
+  },
+  {
+    type: "address",
+    name: "recipient",
+  },
+  {
+    type: "uint256",
+    name: "bps",
+  },
+] as const;
+const FN_OUTPUTS = [] as const;
+
+/**
+ * Encodes the parameters for the "setRoyaltyInfoForToken" function.
+ * @param options - The options for the setRoyaltyInfoForToken function.
+ * @returns The encoded ABI parameters.
+ * @extension COMMON
+ * @example
+ * ```
+ * import { encodeSetRoyaltyInfoForTokenParams } "thirdweb/extensions/common";
+ * const result = encodeSetRoyaltyInfoForTokenParams({
+ *  tokenId: ...,
+ *  recipient: ...,
+ *  bps: ...,
+ * });
+ * ```
+ */
+export function encodeSetRoyaltyInfoForTokenParams(
+  options: SetRoyaltyInfoForTokenParamsInternal,
+) {
+  return encodeAbiParameters(FN_INPUTS, [
+    options.tokenId,
+    options.recipient,
+    options.bps,
+  ]);
+}
+
 /**
  * Calls the "setRoyaltyInfoForToken" function on the contract.
  * @param options - The options for the "setRoyaltyInfoForToken" function.
@@ -47,24 +90,7 @@ export function setRoyaltyInfoForToken(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x9bcf7a15",
-      [
-        {
-          type: "uint256",
-          name: "tokenId",
-        },
-        {
-          type: "address",
-          name: "recipient",
-        },
-        {
-          type: "uint256",
-          name: "bps",
-        },
-      ],
-      [],
-    ],
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params:
       "asyncParams" in options
         ? async () => {

@@ -123,5 +123,13 @@ export function claimTo(options: BaseTransactionOptions<ClaimToParams>) {
         "0x", //data
       ] as const;
     },
+    value: async () => {
+      // TODO this should not be refetched
+      const cc = await getActiveClaimCondition({
+        contract: options.contract,
+        tokenId: options.tokenId,
+      });
+      return cc.pricePerToken * BigInt(options.quantity);
+    },
   });
 }

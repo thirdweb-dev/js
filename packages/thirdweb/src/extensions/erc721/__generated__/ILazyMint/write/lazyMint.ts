@@ -1,7 +1,8 @@
+import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { AbiParameterToPrimitiveType } from "abitype";
 import type { Prettify } from "../../../../../utils/type-utils.js";
+import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "lazyMint" function.
@@ -22,6 +23,51 @@ export type LazyMintParams = Prettify<
       asyncParams: () => Promise<LazyMintParamsInternal>;
     }
 >;
+const FN_SELECTOR = "0xd37c353b" as const;
+const FN_INPUTS = [
+  {
+    type: "uint256",
+    name: "amount",
+  },
+  {
+    type: "string",
+    name: "baseURIForTokens",
+  },
+  {
+    type: "bytes",
+    name: "extraData",
+  },
+] as const;
+const FN_OUTPUTS = [
+  {
+    type: "uint256",
+    name: "batchId",
+  },
+] as const;
+
+/**
+ * Encodes the parameters for the "lazyMint" function.
+ * @param options - The options for the lazyMint function.
+ * @returns The encoded ABI parameters.
+ * @extension ERC721
+ * @example
+ * ```
+ * import { encodeLazyMintParams } "thirdweb/extensions/erc721";
+ * const result = encodeLazyMintParams({
+ *  amount: ...,
+ *  baseURIForTokens: ...,
+ *  extraData: ...,
+ * });
+ * ```
+ */
+export function encodeLazyMintParams(options: LazyMintParamsInternal) {
+  return encodeAbiParameters(FN_INPUTS, [
+    options.amount,
+    options.baseURIForTokens,
+    options.extraData,
+  ]);
+}
+
 /**
  * Calls the "lazyMint" function on the contract.
  * @param options - The options for the "lazyMint" function.
@@ -45,29 +91,7 @@ export type LazyMintParams = Prettify<
 export function lazyMint(options: BaseTransactionOptions<LazyMintParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0xd37c353b",
-      [
-        {
-          type: "uint256",
-          name: "amount",
-        },
-        {
-          type: "string",
-          name: "baseURIForTokens",
-        },
-        {
-          type: "bytes",
-          name: "extraData",
-        },
-      ],
-      [
-        {
-          type: "uint256",
-          name: "batchId",
-        },
-      ],
-    ],
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params:
       "asyncParams" in options
         ? async () => {

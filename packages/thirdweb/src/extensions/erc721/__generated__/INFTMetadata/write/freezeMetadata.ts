@@ -1,6 +1,10 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 
+const FN_SELECTOR = "0xd111515d" as const;
+const FN_INPUTS = [] as const;
+const FN_OUTPUTS = [] as const;
+
 /**
  * Calls the "freezeMetadata" function on the contract.
  * @param options - The options for the "freezeMetadata" function.
@@ -20,6 +24,6 @@ import { prepareContractCall } from "../../../../../transaction/prepare-contract
 export function freezeMetadata(options: BaseTransactionOptions) {
   return prepareContractCall({
     contract: options.contract,
-    method: ["0xd111515d", [], []],
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
   });
 }

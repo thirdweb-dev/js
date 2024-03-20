@@ -1,6 +1,9 @@
+import type { AbiParameterToPrimitiveType } from "abitype";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
-import type { AbiParameterToPrimitiveType } from "abitype";
+import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { decodeAbiParameters } from "viem";
+import type { Hex } from "../../../../../utils/encoding/hex.js";
 
 /**
  * Represents the parameters for the "tokensOfOwner" function.
@@ -8,6 +11,51 @@ import type { AbiParameterToPrimitiveType } from "abitype";
 export type TokensOfOwnerParams = {
   owner: AbiParameterToPrimitiveType<{ type: "address"; name: "owner" }>;
 };
+
+const FN_SELECTOR = "0x8462151c" as const;
+const FN_INPUTS = [
+  {
+    type: "address",
+    name: "owner",
+  },
+] as const;
+const FN_OUTPUTS = [
+  {
+    type: "uint256[]",
+  },
+] as const;
+
+/**
+ * Encodes the parameters for the "tokensOfOwner" function.
+ * @param options - The options for the tokensOfOwner function.
+ * @returns The encoded ABI parameters.
+ * @extension ERC721
+ * @example
+ * ```
+ * import { encodeTokensOfOwnerParams } "thirdweb/extensions/erc721";
+ * const result = encodeTokensOfOwnerParams({
+ *  owner: ...,
+ * });
+ * ```
+ */
+export function encodeTokensOfOwnerParams(options: TokensOfOwnerParams) {
+  return encodeAbiParameters(FN_INPUTS, [options.owner]);
+}
+
+/**
+ * Decodes the result of the tokensOfOwner function call.
+ * @param result - The hexadecimal result to decode.
+ * @returns The decoded result as per the FN_OUTPUTS definition.
+ * @extension ERC721
+ * @example
+ * ```
+ * import { decodeTokensOfOwnerResult } from "thirdweb/extensions/erc721";
+ * const result = decodeTokensOfOwnerResult("...");
+ * ```
+ */
+export function decodeTokensOfOwnerResult(result: Hex) {
+  return decodeAbiParameters(FN_OUTPUTS, result)[0];
+}
 
 /**
  * Calls the "tokensOfOwner" function on the contract.
@@ -29,20 +77,7 @@ export async function tokensOfOwner(
 ) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0x8462151c",
-      [
-        {
-          type: "address",
-          name: "owner",
-        },
-      ],
-      [
-        {
-          type: "uint256[]",
-        },
-      ],
-    ],
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params: [options.owner],
   });
 }

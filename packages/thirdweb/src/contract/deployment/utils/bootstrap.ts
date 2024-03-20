@@ -1,5 +1,6 @@
 import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and-confirm-transaction.js";
 import type { ClientAndChainAndAccount } from "../../../utils/types.js";
+import { getDeployedCloneFactoryContract } from "./clone-factory.js";
 import {
   deployCreate2Factory,
   getDeployedCreate2Factory,
@@ -13,7 +14,49 @@ import {
 /**
  * @internal
  */
-export async function bootstrapOnchainInfra(options: ClientAndChainAndAccount) {
+export async function getOrDeployInfraForPublishedContract(
+  args: ClientAndChainAndAccount & {
+    contractId: string;
+    constructorParams: unknown[];
+  },
+) {
+  const { chain, client, account, contractId, constructorParams } = args;
+  let [cloneFactoryContract, implementationContract] = await Promise.all([
+    getDeployedCloneFactoryContract({
+      chain,
+      client,
+    }),
+    getDeployedInfraContract({
+      chain,
+      client,
+      contractId,
+      constructorParams,
+    }),
+  ]);
+
+  if (!implementationContract || !cloneFactoryContract) {
+    // deploy the infra and implementation contracts if not found
+    cloneFactoryContract = await deployCloneFactory({
+      client,
+      chain,
+      account,
+    });
+    implementationContract = await deployImplementation({
+      client,
+      chain,
+      account,
+      contractId,
+      constructorParams,
+    });
+  }
+  return { cloneFactoryContract, implementationContract };
+}
+
+/**
+ * @internal
+ * @returns the deployed clone factory contract
+ */
+export async function deployCloneFactory(options: ClientAndChainAndAccount) {
   // create2 factory
   const create2Factory = await getDeployedCreate2Factory(options);
   if (!create2Factory) {
@@ -28,7 +71,7 @@ export async function bootstrapOnchainInfra(options: ClientAndChainAndAccount) {
   });
 
   // clone factory
-  await getOrDeployInfraContract({
+  return getOrDeployInfraContract({
     ...options,
     contractId: "TWCloneFactory",
     constructorParams: [forwarder.address],
@@ -37,8 +80,9 @@ export async function bootstrapOnchainInfra(options: ClientAndChainAndAccount) {
 
 /**
  * @internal
+ * @returns the deployed infra contract
  */
-export async function bootstrapImplementation(
+export async function deployImplementation(
   options: ClientAndChainAndAccount & {
     contractId: string;
     constructorParams?: unknown[];
@@ -46,7 +90,7 @@ export async function bootstrapImplementation(
     version?: string;
   },
 ) {
-  await getOrDeployInfraContract({
+  return getOrDeployInfraContract({
     ...options,
     contractId: options.contractId,
     constructorParams: options.constructorParams || [],
@@ -56,6 +100,7 @@ export async function bootstrapImplementation(
 }
 
 /**
+ * Convenience function to get or deploy an infra contract
  * @internal
  */
 export async function getOrDeployInfraContract(

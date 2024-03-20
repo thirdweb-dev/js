@@ -1,7 +1,8 @@
+import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { AbiParameterToPrimitiveType } from "abitype";
 import type { Prettify } from "../../../../../utils/type-utils.js";
+import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "openPack" function.
@@ -21,6 +22,59 @@ export type OpenPackParams = Prettify<
       asyncParams: () => Promise<OpenPackParamsInternal>;
     }
 >;
+const FN_SELECTOR = "0x914e126a" as const;
+const FN_INPUTS = [
+  {
+    type: "uint256",
+    name: "packId",
+  },
+  {
+    type: "uint256",
+    name: "amountToOpen",
+  },
+] as const;
+const FN_OUTPUTS = [
+  {
+    type: "tuple[]",
+    components: [
+      {
+        type: "address",
+        name: "assetContract",
+      },
+      {
+        type: "uint8",
+        name: "tokenType",
+      },
+      {
+        type: "uint256",
+        name: "tokenId",
+      },
+      {
+        type: "uint256",
+        name: "totalAmount",
+      },
+    ],
+  },
+] as const;
+
+/**
+ * Encodes the parameters for the "openPack" function.
+ * @param options - The options for the openPack function.
+ * @returns The encoded ABI parameters.
+ * @extension ERC1155
+ * @example
+ * ```
+ * import { encodeOpenPackParams } "thirdweb/extensions/erc1155";
+ * const result = encodeOpenPackParams({
+ *  packId: ...,
+ *  amountToOpen: ...,
+ * });
+ * ```
+ */
+export function encodeOpenPackParams(options: OpenPackParamsInternal) {
+  return encodeAbiParameters(FN_INPUTS, [options.packId, options.amountToOpen]);
+}
+
 /**
  * Calls the "openPack" function on the contract.
  * @param options - The options for the "openPack" function.
@@ -43,42 +97,7 @@ export type OpenPackParams = Prettify<
 export function openPack(options: BaseTransactionOptions<OpenPackParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x914e126a",
-      [
-        {
-          type: "uint256",
-          name: "packId",
-        },
-        {
-          type: "uint256",
-          name: "amountToOpen",
-        },
-      ],
-      [
-        {
-          type: "tuple[]",
-          components: [
-            {
-              type: "address",
-              name: "assetContract",
-            },
-            {
-              type: "uint8",
-              name: "tokenType",
-            },
-            {
-              type: "uint256",
-              name: "tokenId",
-            },
-            {
-              type: "uint256",
-              name: "totalAmount",
-            },
-          ],
-        },
-      ],
-    ],
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params:
       "asyncParams" in options
         ? async () => {

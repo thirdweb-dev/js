@@ -1,13 +1,20 @@
 export {
-  getSwapRoute,
-  type SwapRoute,
-  type SwapRouteParams,
-} from "../pay/swap/actions/getSwap.js";
+  getBuyWithCryptoQuote,
+  type BuyWithCryptoQuote,
+  type QuoteApprovalParams,
+  type QuoteTokenInfo,
+  type GetBuyWithCryptoQuoteParams,
+} from "../pay/buyWithCrypto/actions/getQuote.js";
 
 export {
-  getSwapStatus,
-  type SwapStatusParams,
-  type SwapStatus,
-} from "../pay/swap/actions/getStatus.js";
+  getBuyWithCryptoStatus,
+  type BuyWithCryptoStatus,
+  type BuyWithCryptoTransaction,
+  type BuyWithCryptoTransactionDetails,
+} from "../pay/buyWithCrypto/actions/getStatus.js";
 
-export { sendSwap } from "../pay/swap/actions/sendSwap.js";
+export {
+  getBuyWithCryptoHistory,
+  type BuyWithCryptoHistoryData,
+  type BuyWithCryptoHistoryParams,
+} from "../pay/buyWithCrypto/actions/getHistory.js";

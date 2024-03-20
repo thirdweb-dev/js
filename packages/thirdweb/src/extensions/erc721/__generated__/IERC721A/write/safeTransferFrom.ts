@@ -1,7 +1,8 @@
+import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { AbiParameterToPrimitiveType } from "abitype";
 import type { Prettify } from "../../../../../utils/type-utils.js";
+import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "safeTransferFrom" function.
@@ -19,6 +20,48 @@ export type SafeTransferFromParams = Prettify<
       asyncParams: () => Promise<SafeTransferFromParamsInternal>;
     }
 >;
+const FN_SELECTOR = "0x42842e0e" as const;
+const FN_INPUTS = [
+  {
+    type: "address",
+    name: "from",
+  },
+  {
+    type: "address",
+    name: "to",
+  },
+  {
+    type: "uint256",
+    name: "tokenId",
+  },
+] as const;
+const FN_OUTPUTS = [] as const;
+
+/**
+ * Encodes the parameters for the "safeTransferFrom" function.
+ * @param options - The options for the safeTransferFrom function.
+ * @returns The encoded ABI parameters.
+ * @extension ERC721
+ * @example
+ * ```
+ * import { encodeSafeTransferFromParams } "thirdweb/extensions/erc721";
+ * const result = encodeSafeTransferFromParams({
+ *  from: ...,
+ *  to: ...,
+ *  tokenId: ...,
+ * });
+ * ```
+ */
+export function encodeSafeTransferFromParams(
+  options: SafeTransferFromParamsInternal,
+) {
+  return encodeAbiParameters(FN_INPUTS, [
+    options.from,
+    options.to,
+    options.tokenId,
+  ]);
+}
+
 /**
  * Calls the "safeTransferFrom" function on the contract.
  * @param options - The options for the "safeTransferFrom" function.
@@ -44,24 +87,7 @@ export function safeTransferFrom(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x42842e0e",
-      [
-        {
-          type: "address",
-          name: "from",
-        },
-        {
-          type: "address",
-          name: "to",
-        },
-        {
-          type: "uint256",
-          name: "tokenId",
-        },
-      ],
-      [],
-    ],
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params:
       "asyncParams" in options
         ? async () => {

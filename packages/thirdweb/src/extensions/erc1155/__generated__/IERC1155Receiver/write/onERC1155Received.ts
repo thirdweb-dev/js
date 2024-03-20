@@ -1,7 +1,8 @@
+import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { AbiParameterToPrimitiveType } from "abitype";
 import type { Prettify } from "../../../../../utils/type-utils.js";
+import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "onERC1155Received" function.
@@ -21,6 +22,64 @@ export type OnERC1155ReceivedParams = Prettify<
       asyncParams: () => Promise<OnERC1155ReceivedParamsInternal>;
     }
 >;
+const FN_SELECTOR = "0xf23a6e61" as const;
+const FN_INPUTS = [
+  {
+    type: "address",
+    name: "operator",
+  },
+  {
+    type: "address",
+    name: "from",
+  },
+  {
+    type: "uint256",
+    name: "id",
+  },
+  {
+    type: "uint256",
+    name: "value",
+  },
+  {
+    type: "bytes",
+    name: "data",
+  },
+] as const;
+const FN_OUTPUTS = [
+  {
+    type: "bytes4",
+  },
+] as const;
+
+/**
+ * Encodes the parameters for the "onERC1155Received" function.
+ * @param options - The options for the onERC1155Received function.
+ * @returns The encoded ABI parameters.
+ * @extension ERC1155
+ * @example
+ * ```
+ * import { encodeOnERC1155ReceivedParams } "thirdweb/extensions/erc1155";
+ * const result = encodeOnERC1155ReceivedParams({
+ *  operator: ...,
+ *  from: ...,
+ *  id: ...,
+ *  value: ...,
+ *  data: ...,
+ * });
+ * ```
+ */
+export function encodeOnERC1155ReceivedParams(
+  options: OnERC1155ReceivedParamsInternal,
+) {
+  return encodeAbiParameters(FN_INPUTS, [
+    options.operator,
+    options.from,
+    options.id,
+    options.value,
+    options.data,
+  ]);
+}
+
 /**
  * Calls the "onERC1155Received" function on the contract.
  * @param options - The options for the "onERC1155Received" function.
@@ -48,36 +107,7 @@ export function onERC1155Received(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0xf23a6e61",
-      [
-        {
-          type: "address",
-          name: "operator",
-        },
-        {
-          type: "address",
-          name: "from",
-        },
-        {
-          type: "uint256",
-          name: "id",
-        },
-        {
-          type: "uint256",
-          name: "value",
-        },
-        {
-          type: "bytes",
-          name: "data",
-        },
-      ],
-      [
-        {
-          type: "bytes4",
-        },
-      ],
-    ],
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params:
       "asyncParams" in options
         ? async () => {

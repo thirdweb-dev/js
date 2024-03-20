@@ -23,7 +23,7 @@ type DomainOverrides = {
 
 export const DEFAULT_RPC_URL = "rpc.thirdweb.com";
 const DEFAULT_EMBEDDED_WALLET_URL = "embedded-wallet.thirdweb.com";
-const DEFAULT_PAY_URL = "interstate.thirdweb.com";
+const DEFAULT_PAY_URL = "pay.thirdweb.com";
 const DEFAULT_STORAGE_URL = "storage.thirdweb.com";
 
 let domains: { [k in keyof DomainOverrides]-?: string } = {
