@@ -42,10 +42,10 @@ export function getGaslessPolygonSDK(signer?: Signer) {
     getDashboardChainRpc(Polygon),
     {
       gasless: {
-        openzeppelin: {
+        engine: {
           relayerUrl:
-            "https://api.defender.openzeppelin.com/autotasks/dad61716-3624-46c9-874f-0e73f15f04d5/runs/webhook/7d6a1834-dd33-4b7b-8af4-b6b4719a0b97/FdHMqyF3p6MGHw6K2nkLsv",
-          relayerForwarderAddress: "0x409D530A6961297ECE29121dbEE2c917c3398659",
+            "https://checkout.engine.thirdweb.com/relayer/0c2bdd3a-307f-4243-b6e5-5ba495222d2b",
+          relayerForwarderAddress: "0x409d530a6961297ece29121dbee2c917c3398659",
         },
         experimentalChainlessSupport: true,
       },

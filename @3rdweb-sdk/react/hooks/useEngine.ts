@@ -71,9 +71,9 @@ export function useEngineBackendWallets(instance: string) {
   const { token } = useApiAuthToken();
 
   return useQuery(
-    engineKeys.backendWallets(instance),
+    [engineKeys.backendWallets(instance)],
     async () => {
-      const res = await fetch(`${instance}backend-wallet/get-all`, {
+      const res = await fetch(`${instance}backend-wallet/get-all?limit=50`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
