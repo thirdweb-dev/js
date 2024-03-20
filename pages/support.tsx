@@ -19,7 +19,7 @@ import { ThirdwebNextPage } from "utils/types";
 const helpProducts = [
   {
     title: "Connect",
-    icon: require("public/assets/support/wallets.svg"),
+    icon: require("public/assets/support/wallets.png"),
     viewAllUrl: "https://support.thirdweb.com/wallets/dwWCB7ZD5sNcHEAj4rFFui",
     helpArticles: [
       {
@@ -34,7 +34,7 @@ const helpProducts = [
   },
   {
     title: "Contracts",
-    icon: require("public/assets/support/contracts.svg"),
+    icon: require("public/assets/support/contracts.png"),
     viewAllUrl:
       "https://support.thirdweb.com/smart-contracts/rtHYyzspnPaHmmANmJQz1k/",
     helpArticles: [
@@ -53,8 +53,8 @@ const helpProducts = [
     ],
   },
   {
-    title: "Infrastructure",
-    icon: require("public/assets/support/engine.svg"),
+    title: "Engine",
+    icon: require("public/assets/support/engine.png"),
     viewAllUrl:
       "https://support.thirdweb.com/infrastructure/eRgkLPBdL1WJJLzAbuWrPZ",
     helpArticles: [
@@ -73,7 +73,7 @@ const helpProducts = [
     ],
   },
   {
-    title: "Payments",
+    title: "Pay",
     icon: require("public/assets/support/payments.svg"),
     viewAllUrl: "https://support.thirdweb.com/payments/dsjpUFZYNivScVEb3PZGrj/",
     helpArticles: [
