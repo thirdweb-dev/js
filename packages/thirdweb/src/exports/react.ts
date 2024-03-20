@@ -38,12 +38,6 @@ export { defaultTokens } from "../react/web/ui/ConnectWallet/defaultTokens.js";
 
 export { defaultWallets } from "../react/web/wallets/defaultWallets.js";
 
-export { en } from "../react/web/ui/locales/en.js";
-export { es } from "../react/web/ui/locales/es.js";
-export { ja } from "../react/web/ui/locales/ja.js";
-export { tl } from "../react/web/ui/locales/tl.js";
-export type { ThirdwebLocale } from "../react/web/ui/locales/types.js";
-
 // wallets
 export {
   metamaskConfig,
