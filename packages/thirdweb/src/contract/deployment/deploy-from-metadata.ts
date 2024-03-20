@@ -1,16 +1,19 @@
 import type { Prettify } from "../../utils/type-utils.js";
 import type { SharedDeployOptions } from "./types.js";
-import { fetchDeployMetadata } from "../../utils/any-evm/deploy-metadata.js";
+import type { FetchDeployMetadataResult } from "../../utils/any-evm/deploy-metadata.js";
 import type { AbiConstructor } from "abitype";
 import { prepareDirectDeployTransaction } from "./deploy-with-abi.js";
 import { ensureBytecodePrefix } from "../../utils/bytecode/prefix.js";
 import { isHex } from "../../utils/encoding/hex.js";
-import { prepareDeployTransactionViaAutoFactory } from "./deploy-via-autofactory.js";
+import { prepareAutoFactoryDeployTransaction } from "./deploy-via-autofactory.js";
+import type { ThirdwebContract } from "../contract.js";
+import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
 
-export type PrepareDeployTransactionFromUriOptions = Prettify<
+export type PrepareDeployTransactionFromMetadataOptions = Prettify<
   {
-    uri: string;
+    contractMetadata: FetchDeployMetadataResult;
     constructorParams: unknown[];
+    cloneFactoryContract?: ThirdwebContract;
   } & SharedDeployOptions
 >;
 
@@ -21,24 +24,19 @@ export type PrepareDeployTransactionFromUriOptions = Prettify<
  * @throws An error if deployments are disabled on the network or if the contract bytecode is invalid.
  * @example
  * ```ts
- * import { prepareDeployTransactionFromUri } from "thirdweb/contract";
+ * import { prepareDeployTransactionFromMetadata } from "thirdweb/contract";
  * import { ethereum } from "thirdweb/chains";
- * const tx = await prepareDeployTransactionFromUri({
+ * const tx = await prepareDeployTransactionFromMetadata({
  *  client,
- *  uri: "ipfs://Qm...",
+ *  contractMetadata,
  *  constuctorParams: [123, "hello"],
- *  chain: ethereum,
  * });
  * ```
  */
-export async function prepareDeployTransactionFromUri(
-  options: PrepareDeployTransactionFromUriOptions,
-) {
-  const metadata = await fetchDeployMetadata({
-    client: options.client,
-    uri: options.uri,
-  });
-  const { compilerMetadata, extendedMetadata } = metadata;
+export function prepareDeployTransactionFromMetadata(
+  options: PrepareDeployTransactionFromMetadataOptions,
+): PreparedTransaction {
+  const { compilerMetadata, extendedMetadata } = options.contractMetadata;
 
   const forceDirectDeploy = options.forceDirectDeploy ?? false;
   const chainId = options.chain.id;
@@ -68,11 +66,17 @@ export async function prepareDeployTransactionFromUri(
     !forceDirectDeploy
   ) {
     if (extendedMetadata.deployType === "autoFactory") {
-      return prepareDeployTransactionViaAutoFactory({
+      if (!options.cloneFactoryContract) {
+        throw new Error(
+          "A cloneFactoryContract is required for autoFactory deployments.",
+        );
+      }
+      return prepareAutoFactoryDeployTransaction({
         chain: options.chain,
         client: options.client,
-        metadata,
+        contractMetadata: options.contractMetadata,
         initializerArgs: options.constructorParams,
+        cloneFactoryContract: options.cloneFactoryContract,
       });
     }
     // TODO: support factory and proxy deployments

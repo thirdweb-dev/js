@@ -12,6 +12,21 @@ export type PriceParams = {
   }>;
 };
 
+const METHOD = [
+  "0x26a49e37",
+  [
+    {
+      type: "uint256",
+      name: "extraStorage",
+    },
+  ],
+  [
+    {
+      type: "uint256",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "price" function on the contract.
  * @param options - The options for the price function.
@@ -30,20 +45,7 @@ export type PriceParams = {
 export async function price(options: BaseTransactionOptions<PriceParams>) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0x26a49e37",
-      [
-        {
-          type: "uint256",
-          name: "extraStorage",
-        },
-      ],
-      [
-        {
-          type: "uint256",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [options.extraStorage],
   });
 }

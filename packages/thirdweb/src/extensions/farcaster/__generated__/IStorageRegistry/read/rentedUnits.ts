@@ -1,6 +1,16 @@
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 
+const METHOD = [
+  "0x2751c4fd",
+  [],
+  [
+    {
+      type: "uint256",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "rentedUnits" function on the contract.
  * @param options - The options for the rentedUnits function.
@@ -17,15 +27,7 @@ import type { BaseTransactionOptions } from "../../../../../transaction/types.js
 export async function rentedUnits(options: BaseTransactionOptions) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0x2751c4fd",
-      [],
-      [
-        {
-          type: "uint256",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [],
   });
 }

@@ -1,6 +1,8 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 
+const METHOD = ["0x372500ab", [], []] as const;
+
 /**
  * Calls the "claimRewards" function on the contract.
  * @param options - The options for the "claimRewards" function.
@@ -20,6 +22,6 @@ import { prepareContractCall } from "../../../../../transaction/prepare-contract
 export function claimRewards(options: BaseTransactionOptions) {
   return prepareContractCall({
     contract: options.contract,
-    method: ["0x372500ab", [], []],
+    method: METHOD,
   });
 }

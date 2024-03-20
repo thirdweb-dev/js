@@ -1,6 +1,16 @@
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 
+const METHOD = [
+  "0xeb08ab28",
+  [],
+  [
+    {
+      type: "uint256",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "idCounter" function on the contract.
  * @param options - The options for the idCounter function.
@@ -17,15 +27,7 @@ import type { BaseTransactionOptions } from "../../../../../transaction/types.js
 export async function idCounter(options: BaseTransactionOptions) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0xeb08ab28",
-      [],
-      [
-        {
-          type: "uint256",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [],
   });
 }

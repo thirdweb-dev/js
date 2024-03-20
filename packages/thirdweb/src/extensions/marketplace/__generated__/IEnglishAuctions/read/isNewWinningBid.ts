@@ -16,6 +16,25 @@ export type IsNewWinningBidParams = {
   }>;
 };
 
+const METHOD = [
+  "0x2eb566bd",
+  [
+    {
+      type: "uint256",
+      name: "_auctionId",
+    },
+    {
+      type: "uint256",
+      name: "_bidAmount",
+    },
+  ],
+  [
+    {
+      type: "bool",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "isNewWinningBid" function on the contract.
  * @param options - The options for the isNewWinningBid function.
@@ -37,24 +56,7 @@ export async function isNewWinningBid(
 ) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0x2eb566bd",
-      [
-        {
-          type: "uint256",
-          name: "_auctionId",
-        },
-        {
-          type: "uint256",
-          name: "_bidAmount",
-        },
-      ],
-      [
-        {
-          type: "bool",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [options.auctionId, options.bidAmount],
   });
 }

@@ -10,6 +10,26 @@ export type IsValidSignerParams = {
   context: AbiParameterToPrimitiveType<{ type: "bytes"; name: "context" }>;
 };
 
+const METHOD = [
+  "0x523e3260",
+  [
+    {
+      type: "address",
+      name: "signer",
+    },
+    {
+      type: "bytes",
+      name: "context",
+    },
+  ],
+  [
+    {
+      type: "bytes4",
+      name: "magicValue",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "isValidSigner" function on the contract.
  * @param options - The options for the isValidSigner function.
@@ -31,25 +51,7 @@ export async function isValidSigner(
 ) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0x523e3260",
-      [
-        {
-          type: "address",
-          name: "signer",
-        },
-        {
-          type: "bytes",
-          name: "context",
-        },
-      ],
-      [
-        {
-          type: "bytes4",
-          name: "magicValue",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [options.signer, options.context],
   });
 }

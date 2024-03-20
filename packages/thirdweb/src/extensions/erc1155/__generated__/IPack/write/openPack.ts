@@ -21,6 +21,43 @@ export type OpenPackParams = Prettify<
       asyncParams: () => Promise<OpenPackParamsInternal>;
     }
 >;
+const METHOD = [
+  "0x914e126a",
+  [
+    {
+      type: "uint256",
+      name: "packId",
+    },
+    {
+      type: "uint256",
+      name: "amountToOpen",
+    },
+  ],
+  [
+    {
+      type: "tuple[]",
+      components: [
+        {
+          type: "address",
+          name: "assetContract",
+        },
+        {
+          type: "uint8",
+          name: "tokenType",
+        },
+        {
+          type: "uint256",
+          name: "tokenId",
+        },
+        {
+          type: "uint256",
+          name: "totalAmount",
+        },
+      ],
+    },
+  ],
+] as const;
+
 /**
  * Calls the "openPack" function on the contract.
  * @param options - The options for the "openPack" function.
@@ -43,49 +80,16 @@ export type OpenPackParams = Prettify<
 export function openPack(options: BaseTransactionOptions<OpenPackParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x914e126a",
-      [
-        {
-          type: "uint256",
-          name: "packId",
-        },
-        {
-          type: "uint256",
-          name: "amountToOpen",
-        },
-      ],
-      [
-        {
-          type: "tuple[]",
-          components: [
-            {
-              type: "address",
-              name: "assetContract",
-            },
-            {
-              type: "uint8",
-              name: "tokenType",
-            },
-            {
-              type: "uint256",
-              name: "tokenId",
-            },
-            {
-              type: "uint256",
-              name: "totalAmount",
-            },
-          ],
-        },
-      ],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.packId, resolvedParams.amountToOpen] as const;
-      }
-
-      return [options.packId, options.amountToOpen] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.packId,
+              resolvedParams.amountToOpen,
+            ] as const;
+          }
+        : [options.packId, options.amountToOpen],
   });
 }

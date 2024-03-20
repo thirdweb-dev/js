@@ -20,6 +20,17 @@ export type CancelListingParams = Prettify<
       asyncParams: () => Promise<CancelListingParamsInternal>;
     }
 >;
+const METHOD = [
+  "0x305a67a8",
+  [
+    {
+      type: "uint256",
+      name: "_listingId",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "cancelListing" function on the contract.
  * @param options - The options for the "cancelListing" function.
@@ -43,23 +54,13 @@ export function cancelListing(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x305a67a8",
-      [
-        {
-          type: "uint256",
-          name: "_listingId",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.listingId] as const;
-      }
-
-      return [options.listingId] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.listingId] as const;
+          }
+        : [options.listingId],
   });
 }

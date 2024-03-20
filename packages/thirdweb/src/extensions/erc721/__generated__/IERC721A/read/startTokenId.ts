@@ -1,6 +1,16 @@
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 
+const METHOD = [
+  "0xe6798baa",
+  [],
+  [
+    {
+      type: "uint256",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "startTokenId" function on the contract.
  * @param options - The options for the startTokenId function.
@@ -17,15 +27,7 @@ import type { BaseTransactionOptions } from "../../../../../transaction/types.js
 export async function startTokenId(options: BaseTransactionOptions) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0xe6798baa",
-      [],
-      [
-        {
-          type: "uint256",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [],
   });
 }

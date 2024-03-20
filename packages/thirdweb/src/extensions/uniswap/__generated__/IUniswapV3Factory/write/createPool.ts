@@ -19,6 +19,30 @@ export type CreatePoolParams = Prettify<
       asyncParams: () => Promise<CreatePoolParamsInternal>;
     }
 >;
+const METHOD = [
+  "0xa1671295",
+  [
+    {
+      type: "address",
+      name: "tokenA",
+    },
+    {
+      type: "address",
+      name: "tokenB",
+    },
+    {
+      type: "uint24",
+      name: "fee",
+    },
+  ],
+  [
+    {
+      type: "address",
+      name: "pool",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "createPool" function on the contract.
  * @param options - The options for the "createPool" function.
@@ -42,40 +66,17 @@ export type CreatePoolParams = Prettify<
 export function createPool(options: BaseTransactionOptions<CreatePoolParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0xa1671295",
-      [
-        {
-          type: "address",
-          name: "tokenA",
-        },
-        {
-          type: "address",
-          name: "tokenB",
-        },
-        {
-          type: "uint24",
-          name: "fee",
-        },
-      ],
-      [
-        {
-          type: "address",
-          name: "pool",
-        },
-      ],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.tokenA,
-          resolvedParams.tokenB,
-          resolvedParams.fee,
-        ] as const;
-      }
-
-      return [options.tokenA, options.tokenB, options.fee] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.tokenA,
+              resolvedParams.tokenB,
+              resolvedParams.fee,
+            ] as const;
+          }
+        : [options.tokenA, options.tokenB, options.fee],
   });
 }

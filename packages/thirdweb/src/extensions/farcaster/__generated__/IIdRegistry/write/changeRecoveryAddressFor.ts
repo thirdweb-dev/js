@@ -20,6 +20,29 @@ export type ChangeRecoveryAddressForParams = Prettify<
       asyncParams: () => Promise<ChangeRecoveryAddressForParamsInternal>;
     }
 >;
+const METHOD = [
+  "0x9cbef8dc",
+  [
+    {
+      type: "address",
+      name: "owner",
+    },
+    {
+      type: "address",
+      name: "recovery",
+    },
+    {
+      type: "uint256",
+      name: "deadline",
+    },
+    {
+      type: "bytes",
+      name: "sig",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "changeRecoveryAddressFor" function on the contract.
  * @param options - The options for the "changeRecoveryAddressFor" function.
@@ -46,45 +69,18 @@ export function changeRecoveryAddressFor(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x9cbef8dc",
-      [
-        {
-          type: "address",
-          name: "owner",
-        },
-        {
-          type: "address",
-          name: "recovery",
-        },
-        {
-          type: "uint256",
-          name: "deadline",
-        },
-        {
-          type: "bytes",
-          name: "sig",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.owner,
-          resolvedParams.recovery,
-          resolvedParams.deadline,
-          resolvedParams.sig,
-        ] as const;
-      }
-
-      return [
-        options.owner,
-        options.recovery,
-        options.deadline,
-        options.sig,
-      ] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.owner,
+              resolvedParams.recovery,
+              resolvedParams.deadline,
+              resolvedParams.sig,
+            ] as const;
+          }
+        : [options.owner, options.recovery, options.deadline, options.sig],
   });
 }

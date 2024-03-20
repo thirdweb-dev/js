@@ -27,6 +27,44 @@ export type ExactInputParams = Prettify<
       asyncParams: () => Promise<ExactInputParamsInternal>;
     }
 >;
+const METHOD = [
+  "0xc04b8d59",
+  [
+    {
+      type: "tuple",
+      name: "params",
+      components: [
+        {
+          type: "bytes",
+          name: "path",
+        },
+        {
+          type: "address",
+          name: "recipient",
+        },
+        {
+          type: "uint256",
+          name: "deadline",
+        },
+        {
+          type: "uint256",
+          name: "amountIn",
+        },
+        {
+          type: "uint256",
+          name: "amountOutMinimum",
+        },
+      ],
+    },
+  ],
+  [
+    {
+      type: "uint256",
+      name: "amountOut",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "exactInput" function on the contract.
  * @param options - The options for the "exactInput" function.
@@ -48,50 +86,13 @@ export type ExactInputParams = Prettify<
 export function exactInput(options: BaseTransactionOptions<ExactInputParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0xc04b8d59",
-      [
-        {
-          type: "tuple",
-          name: "params",
-          components: [
-            {
-              type: "bytes",
-              name: "path",
-            },
-            {
-              type: "address",
-              name: "recipient",
-            },
-            {
-              type: "uint256",
-              name: "deadline",
-            },
-            {
-              type: "uint256",
-              name: "amountIn",
-            },
-            {
-              type: "uint256",
-              name: "amountOutMinimum",
-            },
-          ],
-        },
-      ],
-      [
-        {
-          type: "uint256",
-          name: "amountOut",
-        },
-      ],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.params] as const;
-      }
-
-      return [options.params] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.params] as const;
+          }
+        : [options.params],
   });
 }

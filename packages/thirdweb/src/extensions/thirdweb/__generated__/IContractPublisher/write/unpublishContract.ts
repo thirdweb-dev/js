@@ -24,6 +24,21 @@ export type UnpublishContractParams = Prettify<
       asyncParams: () => Promise<UnpublishContractParamsInternal>;
     }
 >;
+const METHOD = [
+  "0x06eb56cc",
+  [
+    {
+      type: "address",
+      name: "publisher",
+    },
+    {
+      type: "string",
+      name: "contractId",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "unpublishContract" function on the contract.
  * @param options - The options for the "unpublishContract" function.
@@ -48,27 +63,16 @@ export function unpublishContract(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x06eb56cc",
-      [
-        {
-          type: "address",
-          name: "publisher",
-        },
-        {
-          type: "string",
-          name: "contractId",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.publisher, resolvedParams.contractId] as const;
-      }
-
-      return [options.publisher, options.contractId] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.publisher,
+              resolvedParams.contractId,
+            ] as const;
+          }
+        : [options.publisher, options.contractId],
   });
 }

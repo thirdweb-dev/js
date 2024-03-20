@@ -10,6 +10,21 @@ export type VerifyClaimParams = {
   quantity: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_quantity" }>;
 };
 
+const METHOD = [
+  "0x2f92023a",
+  [
+    {
+      type: "address",
+      name: "_claimer",
+    },
+    {
+      type: "uint256",
+      name: "_quantity",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "verifyClaim" function on the contract.
  * @param options - The options for the verifyClaim function.
@@ -31,20 +46,7 @@ export async function verifyClaim(
 ) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0x2f92023a",
-      [
-        {
-          type: "address",
-          name: "_claimer",
-        },
-        {
-          type: "uint256",
-          name: "_quantity",
-        },
-      ],
-      [],
-    ],
+    method: METHOD,
     params: [options.claimer, options.quantity],
   });
 }

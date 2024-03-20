@@ -27,6 +27,39 @@ export type SetSharedMetadataParams = Prettify<
       asyncParams: () => Promise<SetSharedMetadataParamsInternal>;
     }
 >;
+const METHOD = [
+  "0x696b0c1a",
+  [
+    {
+      type: "tuple",
+      name: "metadata",
+      components: [
+        {
+          type: "string",
+          name: "name",
+        },
+        {
+          type: "string",
+          name: "description",
+        },
+        {
+          type: "string",
+          name: "imageURI",
+        },
+        {
+          type: "string",
+          name: "animationURI",
+        },
+      ],
+    },
+    {
+      type: "bytes32",
+      name: "id",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "setSharedMetadata" function on the contract.
  * @param options - The options for the "setSharedMetadata" function.
@@ -51,45 +84,13 @@ export function setSharedMetadata(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x696b0c1a",
-      [
-        {
-          type: "tuple",
-          name: "metadata",
-          components: [
-            {
-              type: "string",
-              name: "name",
-            },
-            {
-              type: "string",
-              name: "description",
-            },
-            {
-              type: "string",
-              name: "imageURI",
-            },
-            {
-              type: "string",
-              name: "animationURI",
-            },
-          ],
-        },
-        {
-          type: "bytes32",
-          name: "id",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.metadata, resolvedParams.id] as const;
-      }
-
-      return [options.metadata, options.id] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.metadata, resolvedParams.id] as const;
+          }
+        : [options.metadata, options.id],
   });
 }

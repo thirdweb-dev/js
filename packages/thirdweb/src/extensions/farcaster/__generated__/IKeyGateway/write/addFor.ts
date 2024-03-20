@@ -26,6 +26,41 @@ export type AddForParams = Prettify<
       asyncParams: () => Promise<AddForParamsInternal>;
     }
 >;
+const METHOD = [
+  "0xa005d3d2",
+  [
+    {
+      type: "address",
+      name: "fidOwner",
+    },
+    {
+      type: "uint32",
+      name: "keyType",
+    },
+    {
+      type: "bytes",
+      name: "key",
+    },
+    {
+      type: "uint8",
+      name: "metadataType",
+    },
+    {
+      type: "bytes",
+      name: "metadata",
+    },
+    {
+      type: "uint256",
+      name: "deadline",
+    },
+    {
+      type: "bytes",
+      name: "sig",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "addFor" function on the contract.
  * @param options - The options for the "addFor" function.
@@ -53,63 +88,29 @@ export type AddForParams = Prettify<
 export function addFor(options: BaseTransactionOptions<AddForParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0xa005d3d2",
-      [
-        {
-          type: "address",
-          name: "fidOwner",
-        },
-        {
-          type: "uint32",
-          name: "keyType",
-        },
-        {
-          type: "bytes",
-          name: "key",
-        },
-        {
-          type: "uint8",
-          name: "metadataType",
-        },
-        {
-          type: "bytes",
-          name: "metadata",
-        },
-        {
-          type: "uint256",
-          name: "deadline",
-        },
-        {
-          type: "bytes",
-          name: "sig",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.fidOwner,
-          resolvedParams.keyType,
-          resolvedParams.key,
-          resolvedParams.metadataType,
-          resolvedParams.metadata,
-          resolvedParams.deadline,
-          resolvedParams.sig,
-        ] as const;
-      }
-
-      return [
-        options.fidOwner,
-        options.keyType,
-        options.key,
-        options.metadataType,
-        options.metadata,
-        options.deadline,
-        options.sig,
-      ] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.fidOwner,
+              resolvedParams.keyType,
+              resolvedParams.key,
+              resolvedParams.metadataType,
+              resolvedParams.metadata,
+              resolvedParams.deadline,
+              resolvedParams.sig,
+            ] as const;
+          }
+        : [
+            options.fidOwner,
+            options.keyType,
+            options.key,
+            options.metadataType,
+            options.metadata,
+            options.deadline,
+            options.sig,
+          ],
   });
 }

@@ -22,6 +22,25 @@ export type RemoveParams = Prettify<
       asyncParams: () => Promise<RemoveParamsInternal>;
     }
 >;
+const METHOD = [
+  "0x59e5fd04",
+  [
+    {
+      type: "address",
+      name: "_deployer",
+    },
+    {
+      type: "address",
+      name: "_deployment",
+    },
+    {
+      type: "uint256",
+      name: "_chainId",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "remove" function on the contract.
  * @param options - The options for the "remove" function.
@@ -45,35 +64,17 @@ export type RemoveParams = Prettify<
 export function remove(options: BaseTransactionOptions<RemoveParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x59e5fd04",
-      [
-        {
-          type: "address",
-          name: "_deployer",
-        },
-        {
-          type: "address",
-          name: "_deployment",
-        },
-        {
-          type: "uint256",
-          name: "_chainId",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.deployer,
-          resolvedParams.deployment,
-          resolvedParams.chainId,
-        ] as const;
-      }
-
-      return [options.deployer, options.deployment, options.chainId] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.deployer,
+              resolvedParams.deployment,
+              resolvedParams.chainId,
+            ] as const;
+          }
+        : [options.deployer, options.deployment, options.chainId],
   });
 }

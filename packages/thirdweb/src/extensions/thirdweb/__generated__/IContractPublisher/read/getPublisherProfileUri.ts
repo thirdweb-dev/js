@@ -12,6 +12,22 @@ export type GetPublisherProfileUriParams = {
   }>;
 };
 
+const METHOD = [
+  "0x4f781675",
+  [
+    {
+      type: "address",
+      name: "publisher",
+    },
+  ],
+  [
+    {
+      type: "string",
+      name: "uri",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "getPublisherProfileUri" function on the contract.
  * @param options - The options for the getPublisherProfileUri function.
@@ -32,21 +48,7 @@ export async function getPublisherProfileUri(
 ) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0x4f781675",
-      [
-        {
-          type: "address",
-          name: "publisher",
-        },
-      ],
-      [
-        {
-          type: "string",
-          name: "uri",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [options.publisher],
   });
 }

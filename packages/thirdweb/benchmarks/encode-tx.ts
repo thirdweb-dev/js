@@ -63,7 +63,7 @@ const ethers6Contract = new ethers.Contract(
 const transfer_viem = viem.prepareEncodeFunctionData({
   abi: ABI,
   functionName: "transfer",
-})
+});
 
 function randomBigint() {
   return BigInt(Math.floor(Math.random() * 1000));

@@ -11,6 +11,29 @@ export type KeyAtParams = {
   index: AbiParameterToPrimitiveType<{ type: "uint256"; name: "index" }>;
 };
 
+const METHOD = [
+  "0x0ea9442c",
+  [
+    {
+      type: "uint256",
+      name: "fid",
+    },
+    {
+      type: "uint8",
+      name: "state",
+    },
+    {
+      type: "uint256",
+      name: "index",
+    },
+  ],
+  [
+    {
+      type: "bytes",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "keyAt" function on the contract.
  * @param options - The options for the keyAt function.
@@ -31,28 +54,7 @@ export type KeyAtParams = {
 export async function keyAt(options: BaseTransactionOptions<KeyAtParams>) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0x0ea9442c",
-      [
-        {
-          type: "uint256",
-          name: "fid",
-        },
-        {
-          type: "uint8",
-          name: "state",
-        },
-        {
-          type: "uint256",
-          name: "index",
-        },
-      ],
-      [
-        {
-          type: "bytes",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [options.fid, options.state, options.index],
   });
 }

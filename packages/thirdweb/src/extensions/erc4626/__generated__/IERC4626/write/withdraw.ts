@@ -31,6 +31,34 @@ export type WithdrawParams = Prettify<
       asyncParams: () => Promise<WithdrawParamsInternal>;
     }
 >;
+const METHOD = [
+  "0xb460af94",
+  [
+    {
+      name: "assets",
+      type: "uint256",
+      internalType: "uint256",
+    },
+    {
+      name: "receiver",
+      type: "address",
+      internalType: "address",
+    },
+    {
+      name: "owner",
+      type: "address",
+      internalType: "address",
+    },
+  ],
+  [
+    {
+      name: "shares",
+      type: "uint256",
+      internalType: "uint256",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "withdraw" function on the contract.
  * @param options - The options for the "withdraw" function.
@@ -54,44 +82,17 @@ export type WithdrawParams = Prettify<
 export function withdraw(options: BaseTransactionOptions<WithdrawParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0xb460af94",
-      [
-        {
-          name: "assets",
-          type: "uint256",
-          internalType: "uint256",
-        },
-        {
-          name: "receiver",
-          type: "address",
-          internalType: "address",
-        },
-        {
-          name: "owner",
-          type: "address",
-          internalType: "address",
-        },
-      ],
-      [
-        {
-          name: "shares",
-          type: "uint256",
-          internalType: "uint256",
-        },
-      ],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.assets,
-          resolvedParams.receiver,
-          resolvedParams.owner,
-        ] as const;
-      }
-
-      return [options.assets, options.receiver, options.owner] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.assets,
+              resolvedParams.receiver,
+              resolvedParams.owner,
+            ] as const;
+          }
+        : [options.assets, options.receiver, options.owner],
   });
 }

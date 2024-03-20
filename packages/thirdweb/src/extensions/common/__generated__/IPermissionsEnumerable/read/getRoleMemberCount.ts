@@ -9,6 +9,21 @@ export type GetRoleMemberCountParams = {
   role: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "role" }>;
 };
 
+const METHOD = [
+  "0xca15c873",
+  [
+    {
+      type: "bytes32",
+      name: "role",
+    },
+  ],
+  [
+    {
+      type: "uint256",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "getRoleMemberCount" function on the contract.
  * @param options - The options for the getRoleMemberCount function.
@@ -29,20 +44,7 @@ export async function getRoleMemberCount(
 ) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0xca15c873",
-      [
-        {
-          type: "bytes32",
-          name: "role",
-        },
-      ],
-      [
-        {
-          type: "uint256",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [options.role],
   });
 }

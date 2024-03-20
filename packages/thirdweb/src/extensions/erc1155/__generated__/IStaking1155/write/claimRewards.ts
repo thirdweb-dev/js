@@ -17,6 +17,17 @@ export type ClaimRewardsParams = Prettify<
       asyncParams: () => Promise<ClaimRewardsParamsInternal>;
     }
 >;
+const METHOD = [
+  "0x0962ef79",
+  [
+    {
+      type: "uint256",
+      name: "tokenId",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "claimRewards" function on the contract.
  * @param options - The options for the "claimRewards" function.
@@ -40,23 +51,13 @@ export function claimRewards(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x0962ef79",
-      [
-        {
-          type: "uint256",
-          name: "tokenId",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.tokenId] as const;
-      }
-
-      return [options.tokenId] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.tokenId] as const;
+          }
+        : [options.tokenId],
   });
 }

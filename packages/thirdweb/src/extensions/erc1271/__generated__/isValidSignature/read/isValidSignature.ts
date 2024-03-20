@@ -10,6 +10,25 @@ export type IsValidSignatureParams = {
   signature: AbiParameterToPrimitiveType<{ type: "bytes"; name: "signature" }>;
 };
 
+const METHOD = [
+  "0x1626ba7e",
+  [
+    {
+      type: "bytes32",
+      name: "hash",
+    },
+    {
+      type: "bytes",
+      name: "signature",
+    },
+  ],
+  [
+    {
+      type: "bytes4",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "isValidSignature" function on the contract.
  * @param options - The options for the isValidSignature function.
@@ -31,24 +50,7 @@ export async function isValidSignature(
 ) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0x1626ba7e",
-      [
-        {
-          type: "bytes32",
-          name: "hash",
-        },
-        {
-          type: "bytes",
-          name: "signature",
-        },
-      ],
-      [
-        {
-          type: "bytes4",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [options.hash, options.signature],
   });
 }

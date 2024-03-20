@@ -9,6 +9,21 @@ export type IsActiveSignerParams = {
   signer: AbiParameterToPrimitiveType<{ type: "address"; name: "signer" }>;
 };
 
+const METHOD = [
+  "0x7dff5a79",
+  [
+    {
+      type: "address",
+      name: "signer",
+    },
+  ],
+  [
+    {
+      type: "bool",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "isActiveSigner" function on the contract.
  * @param options - The options for the isActiveSigner function.
@@ -29,20 +44,7 @@ export async function isActiveSigner(
 ) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0x7dff5a79",
-      [
-        {
-          type: "address",
-          name: "signer",
-        },
-      ],
-      [
-        {
-          type: "bool",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [options.signer],
   });
 }

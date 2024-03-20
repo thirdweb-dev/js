@@ -20,6 +20,17 @@ export type AddStakeParams = Prettify<
       asyncParams: () => Promise<AddStakeParamsInternal>;
     }
 >;
+const METHOD = [
+  "0x0396cb60",
+  [
+    {
+      type: "uint32",
+      name: "_unstakeDelaySec",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "addStake" function on the contract.
  * @param options - The options for the "addStake" function.
@@ -41,23 +52,13 @@ export type AddStakeParams = Prettify<
 export function addStake(options: BaseTransactionOptions<AddStakeParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x0396cb60",
-      [
-        {
-          type: "uint32",
-          name: "_unstakeDelaySec",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.unstakeDelaySec] as const;
-      }
-
-      return [options.unstakeDelaySec] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.unstakeDelaySec] as const;
+          }
+        : [options.unstakeDelaySec],
   });
 }

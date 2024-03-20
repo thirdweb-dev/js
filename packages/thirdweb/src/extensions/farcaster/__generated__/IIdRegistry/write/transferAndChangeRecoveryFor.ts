@@ -29,6 +29,41 @@ export type TransferAndChangeRecoveryForParams = Prettify<
       asyncParams: () => Promise<TransferAndChangeRecoveryForParamsInternal>;
     }
 >;
+const METHOD = [
+  "0x4c5cbb34",
+  [
+    {
+      type: "address",
+      name: "from",
+    },
+    {
+      type: "address",
+      name: "to",
+    },
+    {
+      type: "address",
+      name: "recovery",
+    },
+    {
+      type: "uint256",
+      name: "fromDeadline",
+    },
+    {
+      type: "bytes",
+      name: "fromSig",
+    },
+    {
+      type: "uint256",
+      name: "toDeadline",
+    },
+    {
+      type: "bytes",
+      name: "toSig",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "transferAndChangeRecoveryFor" function on the contract.
  * @param options - The options for the "transferAndChangeRecoveryFor" function.
@@ -58,63 +93,29 @@ export function transferAndChangeRecoveryFor(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x4c5cbb34",
-      [
-        {
-          type: "address",
-          name: "from",
-        },
-        {
-          type: "address",
-          name: "to",
-        },
-        {
-          type: "address",
-          name: "recovery",
-        },
-        {
-          type: "uint256",
-          name: "fromDeadline",
-        },
-        {
-          type: "bytes",
-          name: "fromSig",
-        },
-        {
-          type: "uint256",
-          name: "toDeadline",
-        },
-        {
-          type: "bytes",
-          name: "toSig",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.from,
-          resolvedParams.to,
-          resolvedParams.recovery,
-          resolvedParams.fromDeadline,
-          resolvedParams.fromSig,
-          resolvedParams.toDeadline,
-          resolvedParams.toSig,
-        ] as const;
-      }
-
-      return [
-        options.from,
-        options.to,
-        options.recovery,
-        options.fromDeadline,
-        options.fromSig,
-        options.toDeadline,
-        options.toSig,
-      ] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.from,
+              resolvedParams.to,
+              resolvedParams.recovery,
+              resolvedParams.fromDeadline,
+              resolvedParams.fromSig,
+              resolvedParams.toDeadline,
+              resolvedParams.toSig,
+            ] as const;
+          }
+        : [
+            options.from,
+            options.to,
+            options.recovery,
+            options.fromDeadline,
+            options.fromSig,
+            options.toDeadline,
+            options.toSig,
+          ],
   });
 }

@@ -1,6 +1,19 @@
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 
+const METHOD = [
+  "0xb24f2d39",
+  [],
+  [
+    {
+      type: "address",
+    },
+    {
+      type: "uint16",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "getDefaultRoyaltyInfo" function on the contract.
  * @param options - The options for the getDefaultRoyaltyInfo function.
@@ -17,18 +30,7 @@ import type { BaseTransactionOptions } from "../../../../../transaction/types.js
 export async function getDefaultRoyaltyInfo(options: BaseTransactionOptions) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0xb24f2d39",
-      [],
-      [
-        {
-          type: "address",
-        },
-        {
-          type: "uint16",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [],
   });
 }

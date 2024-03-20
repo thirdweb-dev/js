@@ -1,6 +1,16 @@
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 
+const METHOD = [
+  "0x313ce567",
+  [],
+  [
+    {
+      type: "uint8",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "decimals" function on the contract.
  * @param options - The options for the decimals function.
@@ -17,15 +27,7 @@ import type { BaseTransactionOptions } from "../../../../../transaction/types.js
 export async function decimals(options: BaseTransactionOptions) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0x313ce567",
-      [],
-      [
-        {
-          type: "uint8",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [],
   });
 }

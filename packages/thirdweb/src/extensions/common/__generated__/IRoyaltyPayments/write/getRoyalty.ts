@@ -22,6 +22,34 @@ export type GetRoyaltyParams = Prettify<
       asyncParams: () => Promise<GetRoyaltyParamsInternal>;
     }
 >;
+const METHOD = [
+  "0xf533b802",
+  [
+    {
+      type: "address",
+      name: "tokenAddress",
+    },
+    {
+      type: "uint256",
+      name: "tokenId",
+    },
+    {
+      type: "uint256",
+      name: "value",
+    },
+  ],
+  [
+    {
+      type: "address[]",
+      name: "recipients",
+    },
+    {
+      type: "uint256[]",
+      name: "amounts",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "getRoyalty" function on the contract.
  * @param options - The options for the "getRoyalty" function.
@@ -45,44 +73,17 @@ export type GetRoyaltyParams = Prettify<
 export function getRoyalty(options: BaseTransactionOptions<GetRoyaltyParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0xf533b802",
-      [
-        {
-          type: "address",
-          name: "tokenAddress",
-        },
-        {
-          type: "uint256",
-          name: "tokenId",
-        },
-        {
-          type: "uint256",
-          name: "value",
-        },
-      ],
-      [
-        {
-          type: "address[]",
-          name: "recipients",
-        },
-        {
-          type: "uint256[]",
-          name: "amounts",
-        },
-      ],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.tokenAddress,
-          resolvedParams.tokenId,
-          resolvedParams.value,
-        ] as const;
-      }
-
-      return [options.tokenAddress, options.tokenId, options.value] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.tokenAddress,
+              resolvedParams.tokenId,
+              resolvedParams.value,
+            ] as const;
+          }
+        : [options.tokenAddress, options.tokenId, options.value],
   });
 }

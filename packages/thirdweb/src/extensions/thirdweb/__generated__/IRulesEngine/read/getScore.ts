@@ -12,6 +12,22 @@ export type GetScoreParams = {
   }>;
 };
 
+const METHOD = [
+  "0xd47875d0",
+  [
+    {
+      type: "address",
+      name: "_tokenOwner",
+    },
+  ],
+  [
+    {
+      type: "uint256",
+      name: "score",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "getScore" function on the contract.
  * @param options - The options for the getScore function.
@@ -32,21 +48,7 @@ export async function getScore(
 ) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0xd47875d0",
-      [
-        {
-          type: "address",
-          name: "_tokenOwner",
-        },
-      ],
-      [
-        {
-          type: "uint256",
-          name: "score",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [options.tokenOwner],
   });
 }

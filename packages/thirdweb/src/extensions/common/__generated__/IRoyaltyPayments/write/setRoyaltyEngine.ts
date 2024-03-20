@@ -20,6 +20,17 @@ export type SetRoyaltyEngineParams = Prettify<
       asyncParams: () => Promise<SetRoyaltyEngineParamsInternal>;
     }
 >;
+const METHOD = [
+  "0x21ede032",
+  [
+    {
+      type: "address",
+      name: "_royaltyEngineAddress",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "setRoyaltyEngine" function on the contract.
  * @param options - The options for the "setRoyaltyEngine" function.
@@ -43,23 +54,13 @@ export function setRoyaltyEngine(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x21ede032",
-      [
-        {
-          type: "address",
-          name: "_royaltyEngineAddress",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.royaltyEngineAddress] as const;
-      }
-
-      return [options.royaltyEngineAddress] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.royaltyEngineAddress] as const;
+          }
+        : [options.royaltyEngineAddress],
   });
 }

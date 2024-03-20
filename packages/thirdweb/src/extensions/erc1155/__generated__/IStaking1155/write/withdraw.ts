@@ -18,6 +18,21 @@ export type WithdrawParams = Prettify<
       asyncParams: () => Promise<WithdrawParamsInternal>;
     }
 >;
+const METHOD = [
+  "0xc434dcfe",
+  [
+    {
+      type: "uint256",
+      name: "tokenId",
+    },
+    {
+      type: "uint64",
+      name: "amount",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "withdraw" function on the contract.
  * @param options - The options for the "withdraw" function.
@@ -40,27 +55,13 @@ export type WithdrawParams = Prettify<
 export function withdraw(options: BaseTransactionOptions<WithdrawParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0xc434dcfe",
-      [
-        {
-          type: "uint256",
-          name: "tokenId",
-        },
-        {
-          type: "uint64",
-          name: "amount",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.tokenId, resolvedParams.amount] as const;
-      }
-
-      return [options.tokenId, options.amount] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.tokenId, resolvedParams.amount] as const;
+          }
+        : [options.tokenId, options.amount],
   });
 }

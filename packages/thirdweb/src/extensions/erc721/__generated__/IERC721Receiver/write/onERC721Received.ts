@@ -20,6 +20,33 @@ export type OnERC721ReceivedParams = Prettify<
       asyncParams: () => Promise<OnERC721ReceivedParamsInternal>;
     }
 >;
+const METHOD = [
+  "0x150b7a02",
+  [
+    {
+      type: "address",
+      name: "operator",
+    },
+    {
+      type: "address",
+      name: "from",
+    },
+    {
+      type: "uint256",
+      name: "tokenId",
+    },
+    {
+      type: "bytes",
+      name: "data",
+    },
+  ],
+  [
+    {
+      type: "bytes4",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "onERC721Received" function on the contract.
  * @param options - The options for the "onERC721Received" function.
@@ -46,49 +73,18 @@ export function onERC721Received(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x150b7a02",
-      [
-        {
-          type: "address",
-          name: "operator",
-        },
-        {
-          type: "address",
-          name: "from",
-        },
-        {
-          type: "uint256",
-          name: "tokenId",
-        },
-        {
-          type: "bytes",
-          name: "data",
-        },
-      ],
-      [
-        {
-          type: "bytes4",
-        },
-      ],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.operator,
-          resolvedParams.from,
-          resolvedParams.tokenId,
-          resolvedParams.data,
-        ] as const;
-      }
-
-      return [
-        options.operator,
-        options.from,
-        options.tokenId,
-        options.data,
-      ] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.operator,
+              resolvedParams.from,
+              resolvedParams.tokenId,
+              resolvedParams.data,
+            ] as const;
+          }
+        : [options.operator, options.from, options.tokenId, options.data],
   });
 }

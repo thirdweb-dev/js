@@ -17,6 +17,17 @@ export type DeleteRuleParams = Prettify<
       asyncParams: () => Promise<DeleteRuleParamsInternal>;
     }
 >;
+const METHOD = [
+  "0x9d907761",
+  [
+    {
+      type: "bytes32",
+      name: "ruleId",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "deleteRule" function on the contract.
  * @param options - The options for the "deleteRule" function.
@@ -38,23 +49,13 @@ export type DeleteRuleParams = Prettify<
 export function deleteRule(options: BaseTransactionOptions<DeleteRuleParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x9d907761",
-      [
-        {
-          type: "bytes32",
-          name: "ruleId",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.ruleId] as const;
-      }
-
-      return [options.ruleId] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.ruleId] as const;
+          }
+        : [options.ruleId],
   });
 }

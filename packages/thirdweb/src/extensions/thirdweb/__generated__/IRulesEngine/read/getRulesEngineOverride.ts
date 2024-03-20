@@ -1,6 +1,17 @@
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 
+const METHOD = [
+  "0xa7145eb4",
+  [],
+  [
+    {
+      type: "address",
+      name: "rulesEngineAddress",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "getRulesEngineOverride" function on the contract.
  * @param options - The options for the getRulesEngineOverride function.
@@ -17,16 +28,7 @@ import type { BaseTransactionOptions } from "../../../../../transaction/types.js
 export async function getRulesEngineOverride(options: BaseTransactionOptions) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0xa7145eb4",
-      [],
-      [
-        {
-          type: "address",
-          name: "rulesEngineAddress",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [],
   });
 }

@@ -9,6 +9,21 @@ export type UriParams = {
   tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
 };
 
+const METHOD = [
+  "0x0e89341c",
+  [
+    {
+      type: "uint256",
+      name: "tokenId",
+    },
+  ],
+  [
+    {
+      type: "string",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "uri" function on the contract.
  * @param options - The options for the uri function.
@@ -27,20 +42,7 @@ export type UriParams = {
 export async function uri(options: BaseTransactionOptions<UriParams>) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0x0e89341c",
-      [
-        {
-          type: "uint256",
-          name: "tokenId",
-        },
-      ],
-      [
-        {
-          type: "string",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [options.tokenId],
   });
 }

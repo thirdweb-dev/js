@@ -32,6 +32,35 @@ export type AirdropERC20Params = Prettify<
       asyncParams: () => Promise<AirdropERC20ParamsInternal>;
     }
 >;
+const METHOD = [
+  "0x0670b2b3",
+  [
+    {
+      type: "address",
+      name: "tokenAddress",
+    },
+    {
+      type: "address",
+      name: "tokenOwner",
+    },
+    {
+      type: "tuple[]",
+      name: "contents",
+      components: [
+        {
+          type: "address",
+          name: "recipient",
+        },
+        {
+          type: "uint256",
+          name: "amount",
+        },
+      ],
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "airdropERC20" function on the contract.
  * @param options - The options for the "airdropERC20" function.
@@ -57,49 +86,17 @@ export function airdropERC20(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x0670b2b3",
-      [
-        {
-          type: "address",
-          name: "tokenAddress",
-        },
-        {
-          type: "address",
-          name: "tokenOwner",
-        },
-        {
-          type: "tuple[]",
-          name: "contents",
-          components: [
-            {
-              type: "address",
-              name: "recipient",
-            },
-            {
-              type: "uint256",
-              name: "amount",
-            },
-          ],
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.tokenAddress,
-          resolvedParams.tokenOwner,
-          resolvedParams.contents,
-        ] as const;
-      }
-
-      return [
-        options.tokenAddress,
-        options.tokenOwner,
-        options.contents,
-      ] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.tokenAddress,
+              resolvedParams.tokenOwner,
+              resolvedParams.contents,
+            ] as const;
+          }
+        : [options.tokenAddress, options.tokenOwner, options.contents],
   });
 }

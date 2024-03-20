@@ -28,6 +28,37 @@ export type TransferForParams = Prettify<
       asyncParams: () => Promise<TransferForParamsInternal>;
     }
 >;
+const METHOD = [
+  "0x16f72842",
+  [
+    {
+      type: "address",
+      name: "from",
+    },
+    {
+      type: "address",
+      name: "to",
+    },
+    {
+      type: "uint256",
+      name: "fromDeadline",
+    },
+    {
+      type: "bytes",
+      name: "fromSig",
+    },
+    {
+      type: "uint256",
+      name: "toDeadline",
+    },
+    {
+      type: "bytes",
+      name: "toSig",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "transferFor" function on the contract.
  * @param options - The options for the "transferFor" function.
@@ -56,57 +87,27 @@ export function transferFor(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x16f72842",
-      [
-        {
-          type: "address",
-          name: "from",
-        },
-        {
-          type: "address",
-          name: "to",
-        },
-        {
-          type: "uint256",
-          name: "fromDeadline",
-        },
-        {
-          type: "bytes",
-          name: "fromSig",
-        },
-        {
-          type: "uint256",
-          name: "toDeadline",
-        },
-        {
-          type: "bytes",
-          name: "toSig",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.from,
-          resolvedParams.to,
-          resolvedParams.fromDeadline,
-          resolvedParams.fromSig,
-          resolvedParams.toDeadline,
-          resolvedParams.toSig,
-        ] as const;
-      }
-
-      return [
-        options.from,
-        options.to,
-        options.fromDeadline,
-        options.fromSig,
-        options.toDeadline,
-        options.toSig,
-      ] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.from,
+              resolvedParams.to,
+              resolvedParams.fromDeadline,
+              resolvedParams.fromSig,
+              resolvedParams.toDeadline,
+              resolvedParams.toSig,
+            ] as const;
+          }
+        : [
+            options.from,
+            options.to,
+            options.fromDeadline,
+            options.fromSig,
+            options.toDeadline,
+            options.toSig,
+          ],
   });
 }

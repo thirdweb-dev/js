@@ -9,6 +9,44 @@ export type GetDepositInfoParams = {
   account: AbiParameterToPrimitiveType<{ type: "address"; name: "account" }>;
 };
 
+const METHOD = [
+  "0x5287ce12",
+  [
+    {
+      type: "address",
+      name: "account",
+    },
+  ],
+  [
+    {
+      type: "tuple",
+      name: "info",
+      components: [
+        {
+          type: "uint112",
+          name: "deposit",
+        },
+        {
+          type: "bool",
+          name: "staked",
+        },
+        {
+          type: "uint112",
+          name: "stake",
+        },
+        {
+          type: "uint32",
+          name: "unstakeDelaySec",
+        },
+        {
+          type: "uint48",
+          name: "withdrawTime",
+        },
+      ],
+    },
+  ],
+] as const;
+
 /**
  * Calls the "getDepositInfo" function on the contract.
  * @param options - The options for the getDepositInfo function.
@@ -29,43 +67,7 @@ export async function getDepositInfo(
 ) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0x5287ce12",
-      [
-        {
-          type: "address",
-          name: "account",
-        },
-      ],
-      [
-        {
-          type: "tuple",
-          name: "info",
-          components: [
-            {
-              type: "uint112",
-              name: "deposit",
-            },
-            {
-              type: "bool",
-              name: "staked",
-            },
-            {
-              type: "uint112",
-              name: "stake",
-            },
-            {
-              type: "uint32",
-              name: "unstakeDelaySec",
-            },
-            {
-              type: "uint48",
-              name: "withdrawTime",
-            },
-          ],
-        },
-      ],
-    ],
+    method: METHOD,
     params: [options.account],
   });
 }

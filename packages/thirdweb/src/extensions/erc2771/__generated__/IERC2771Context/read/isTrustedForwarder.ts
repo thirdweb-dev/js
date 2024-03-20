@@ -12,6 +12,21 @@ export type IsTrustedForwarderParams = {
   }>;
 };
 
+const METHOD = [
+  "0x572b6c05",
+  [
+    {
+      type: "address",
+      name: "forwarder",
+    },
+  ],
+  [
+    {
+      type: "bool",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "isTrustedForwarder" function on the contract.
  * @param options - The options for the isTrustedForwarder function.
@@ -32,20 +47,7 @@ export async function isTrustedForwarder(
 ) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0x572b6c05",
-      [
-        {
-          type: "address",
-          name: "forwarder",
-        },
-      ],
-      [
-        {
-          type: "bool",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [options.forwarder],
   });
 }

@@ -22,6 +22,25 @@ export type ApproveBuyerForListingParams = Prettify<
       asyncParams: () => Promise<ApproveBuyerForListingParamsInternal>;
     }
 >;
+const METHOD = [
+  "0x48dd77df",
+  [
+    {
+      type: "uint256",
+      name: "_listingId",
+    },
+    {
+      type: "address",
+      name: "_buyer",
+    },
+    {
+      type: "bool",
+      name: "_toApprove",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "approveBuyerForListing" function on the contract.
  * @param options - The options for the "approveBuyerForListing" function.
@@ -47,35 +66,17 @@ export function approveBuyerForListing(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x48dd77df",
-      [
-        {
-          type: "uint256",
-          name: "_listingId",
-        },
-        {
-          type: "address",
-          name: "_buyer",
-        },
-        {
-          type: "bool",
-          name: "_toApprove",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.listingId,
-          resolvedParams.buyer,
-          resolvedParams.toApprove,
-        ] as const;
-      }
-
-      return [options.listingId, options.buyer, options.toApprove] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.listingId,
+              resolvedParams.buyer,
+              resolvedParams.toApprove,
+            ] as const;
+          }
+        : [options.listingId, options.buyer, options.toApprove],
   });
 }

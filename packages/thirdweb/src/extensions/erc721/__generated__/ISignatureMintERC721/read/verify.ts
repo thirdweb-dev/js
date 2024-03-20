@@ -26,6 +26,76 @@ export type VerifyParams = {
   signature: AbiParameterToPrimitiveType<{ type: "bytes"; name: "signature" }>;
 };
 
+const METHOD = [
+  "0x252e82e8",
+  [
+    {
+      type: "tuple",
+      name: "req",
+      components: [
+        {
+          type: "address",
+          name: "to",
+        },
+        {
+          type: "address",
+          name: "royaltyRecipient",
+        },
+        {
+          type: "uint256",
+          name: "royaltyBps",
+        },
+        {
+          type: "address",
+          name: "primarySaleRecipient",
+        },
+        {
+          type: "string",
+          name: "uri",
+        },
+        {
+          type: "uint256",
+          name: "quantity",
+        },
+        {
+          type: "uint256",
+          name: "pricePerToken",
+        },
+        {
+          type: "address",
+          name: "currency",
+        },
+        {
+          type: "uint128",
+          name: "validityStartTimestamp",
+        },
+        {
+          type: "uint128",
+          name: "validityEndTimestamp",
+        },
+        {
+          type: "bytes32",
+          name: "uid",
+        },
+      ],
+    },
+    {
+      type: "bytes",
+      name: "signature",
+    },
+  ],
+  [
+    {
+      type: "bool",
+      name: "success",
+    },
+    {
+      type: "address",
+      name: "signer",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "verify" function on the contract.
  * @param options - The options for the verify function.
@@ -45,75 +115,7 @@ export type VerifyParams = {
 export async function verify(options: BaseTransactionOptions<VerifyParams>) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0x252e82e8",
-      [
-        {
-          type: "tuple",
-          name: "req",
-          components: [
-            {
-              type: "address",
-              name: "to",
-            },
-            {
-              type: "address",
-              name: "royaltyRecipient",
-            },
-            {
-              type: "uint256",
-              name: "royaltyBps",
-            },
-            {
-              type: "address",
-              name: "primarySaleRecipient",
-            },
-            {
-              type: "string",
-              name: "uri",
-            },
-            {
-              type: "uint256",
-              name: "quantity",
-            },
-            {
-              type: "uint256",
-              name: "pricePerToken",
-            },
-            {
-              type: "address",
-              name: "currency",
-            },
-            {
-              type: "uint128",
-              name: "validityStartTimestamp",
-            },
-            {
-              type: "uint128",
-              name: "validityEndTimestamp",
-            },
-            {
-              type: "bytes32",
-              name: "uid",
-            },
-          ],
-        },
-        {
-          type: "bytes",
-          name: "signature",
-        },
-      ],
-      [
-        {
-          type: "bool",
-          name: "success",
-        },
-        {
-          type: "address",
-          name: "signer",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [options.req, options.signature],
   });
 }

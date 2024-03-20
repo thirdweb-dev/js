@@ -9,6 +9,21 @@ export type DelegatesParams = {
   account: AbiParameterToPrimitiveType<{ type: "address"; name: "account" }>;
 };
 
+const METHOD = [
+  "0x587cde1e",
+  [
+    {
+      type: "address",
+      name: "account",
+    },
+  ],
+  [
+    {
+      type: "address",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "delegates" function on the contract.
  * @param options - The options for the delegates function.
@@ -29,20 +44,7 @@ export async function delegates(
 ) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0x587cde1e",
-      [
-        {
-          type: "address",
-          name: "account",
-        },
-      ],
-      [
-        {
-          type: "address",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [options.account],
   });
 }

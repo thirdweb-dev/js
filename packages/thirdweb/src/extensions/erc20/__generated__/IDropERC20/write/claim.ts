@@ -32,6 +32,47 @@ export type ClaimParams = Prettify<
       asyncParams: () => Promise<ClaimParamsInternal>;
     }
 >;
+const METHOD = [
+  "0x5ab31c1a",
+  [
+    {
+      type: "address",
+      name: "receiver",
+    },
+    {
+      type: "uint256",
+      name: "quantity",
+    },
+    {
+      type: "address",
+      name: "currency",
+    },
+    {
+      type: "uint256",
+      name: "pricePerToken",
+    },
+    {
+      type: "tuple",
+      name: "allowlistProof",
+      components: [
+        {
+          type: "bytes32[]",
+          name: "proof",
+        },
+        {
+          type: "uint256",
+          name: "maxQuantityInAllowlist",
+        },
+      ],
+    },
+    {
+      type: "bytes",
+      name: "data",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "claim" function on the contract.
  * @param options - The options for the "claim" function.
@@ -58,67 +99,27 @@ export type ClaimParams = Prettify<
 export function claim(options: BaseTransactionOptions<ClaimParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x5ab31c1a",
-      [
-        {
-          type: "address",
-          name: "receiver",
-        },
-        {
-          type: "uint256",
-          name: "quantity",
-        },
-        {
-          type: "address",
-          name: "currency",
-        },
-        {
-          type: "uint256",
-          name: "pricePerToken",
-        },
-        {
-          type: "tuple",
-          name: "allowlistProof",
-          components: [
-            {
-              type: "bytes32[]",
-              name: "proof",
-            },
-            {
-              type: "uint256",
-              name: "maxQuantityInAllowlist",
-            },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.receiver,
+              resolvedParams.quantity,
+              resolvedParams.currency,
+              resolvedParams.pricePerToken,
+              resolvedParams.allowlistProof,
+              resolvedParams.data,
+            ] as const;
+          }
+        : [
+            options.receiver,
+            options.quantity,
+            options.currency,
+            options.pricePerToken,
+            options.allowlistProof,
+            options.data,
           ],
-        },
-        {
-          type: "bytes",
-          name: "data",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.receiver,
-          resolvedParams.quantity,
-          resolvedParams.currency,
-          resolvedParams.pricePerToken,
-          resolvedParams.allowlistProof,
-          resolvedParams.data,
-        ] as const;
-      }
-
-      return [
-        options.receiver,
-        options.quantity,
-        options.currency,
-        options.pricePerToken,
-        options.allowlistProof,
-        options.data,
-      ] as const;
-    },
   });
 }

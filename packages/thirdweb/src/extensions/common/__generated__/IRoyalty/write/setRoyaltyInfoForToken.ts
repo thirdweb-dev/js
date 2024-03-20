@@ -22,6 +22,25 @@ export type SetRoyaltyInfoForTokenParams = Prettify<
       asyncParams: () => Promise<SetRoyaltyInfoForTokenParamsInternal>;
     }
 >;
+const METHOD = [
+  "0x9bcf7a15",
+  [
+    {
+      type: "uint256",
+      name: "tokenId",
+    },
+    {
+      type: "address",
+      name: "recipient",
+    },
+    {
+      type: "uint256",
+      name: "bps",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "setRoyaltyInfoForToken" function on the contract.
  * @param options - The options for the "setRoyaltyInfoForToken" function.
@@ -47,35 +66,17 @@ export function setRoyaltyInfoForToken(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x9bcf7a15",
-      [
-        {
-          type: "uint256",
-          name: "tokenId",
-        },
-        {
-          type: "address",
-          name: "recipient",
-        },
-        {
-          type: "uint256",
-          name: "bps",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.tokenId,
-          resolvedParams.recipient,
-          resolvedParams.bps,
-        ] as const;
-      }
-
-      return [options.tokenId, options.recipient, options.bps] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.tokenId,
+              resolvedParams.recipient,
+              resolvedParams.bps,
+            ] as const;
+          }
+        : [options.tokenId, options.recipient, options.bps],
   });
 }

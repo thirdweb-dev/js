@@ -9,6 +9,22 @@ export type CountParams = {
   deployer: AbiParameterToPrimitiveType<{ type: "address"; name: "_deployer" }>;
 };
 
+const METHOD = [
+  "0x05d85eda",
+  [
+    {
+      type: "address",
+      name: "_deployer",
+    },
+  ],
+  [
+    {
+      type: "uint256",
+      name: "deploymentCount",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "count" function on the contract.
  * @param options - The options for the count function.
@@ -27,21 +43,7 @@ export type CountParams = {
 export async function count(options: BaseTransactionOptions<CountParams>) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0x05d85eda",
-      [
-        {
-          type: "address",
-          name: "_deployer",
-        },
-      ],
-      [
-        {
-          type: "uint256",
-          name: "deploymentCount",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [options.deployer],
   });
 }

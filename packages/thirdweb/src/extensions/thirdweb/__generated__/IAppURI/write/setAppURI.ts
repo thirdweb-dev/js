@@ -17,6 +17,17 @@ export type SetAppURIParams = Prettify<
       asyncParams: () => Promise<SetAppURIParamsInternal>;
     }
 >;
+const METHOD = [
+  "0xfea18082",
+  [
+    {
+      type: "string",
+      name: "_uri",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "setAppURI" function on the contract.
  * @param options - The options for the "setAppURI" function.
@@ -38,23 +49,13 @@ export type SetAppURIParams = Prettify<
 export function setAppURI(options: BaseTransactionOptions<SetAppURIParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0xfea18082",
-      [
-        {
-          type: "string",
-          name: "_uri",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.uri] as const;
-      }
-
-      return [options.uri] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.uri] as const;
+          }
+        : [options.uri],
   });
 }

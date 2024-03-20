@@ -9,6 +9,21 @@ export type OwnerOfParams = {
   tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
 };
 
+const METHOD = [
+  "0x6352211e",
+  [
+    {
+      type: "uint256",
+      name: "tokenId",
+    },
+  ],
+  [
+    {
+      type: "address",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "ownerOf" function on the contract.
  * @param options - The options for the ownerOf function.
@@ -27,20 +42,7 @@ export type OwnerOfParams = {
 export async function ownerOf(options: BaseTransactionOptions<OwnerOfParams>) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0x6352211e",
-      [
-        {
-          type: "uint256",
-          name: "tokenId",
-        },
-      ],
-      [
-        {
-          type: "address",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [options.tokenId],
   });
 }

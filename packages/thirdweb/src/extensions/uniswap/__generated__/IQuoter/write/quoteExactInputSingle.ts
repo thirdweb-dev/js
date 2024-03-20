@@ -24,6 +24,38 @@ export type QuoteExactInputSingleParams = Prettify<
       asyncParams: () => Promise<QuoteExactInputSingleParamsInternal>;
     }
 >;
+const METHOD = [
+  "0xf7729d43",
+  [
+    {
+      type: "address",
+      name: "tokenIn",
+    },
+    {
+      type: "address",
+      name: "tokenOut",
+    },
+    {
+      type: "uint24",
+      name: "fee",
+    },
+    {
+      type: "uint256",
+      name: "amountIn",
+    },
+    {
+      type: "uint160",
+      name: "sqrtPriceLimitX96",
+    },
+  ],
+  [
+    {
+      type: "uint256",
+      name: "amountOut",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "quoteExactInputSingle" function on the contract.
  * @param options - The options for the "quoteExactInputSingle" function.
@@ -51,56 +83,25 @@ export function quoteExactInputSingle(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0xf7729d43",
-      [
-        {
-          type: "address",
-          name: "tokenIn",
-        },
-        {
-          type: "address",
-          name: "tokenOut",
-        },
-        {
-          type: "uint24",
-          name: "fee",
-        },
-        {
-          type: "uint256",
-          name: "amountIn",
-        },
-        {
-          type: "uint160",
-          name: "sqrtPriceLimitX96",
-        },
-      ],
-      [
-        {
-          type: "uint256",
-          name: "amountOut",
-        },
-      ],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.tokenIn,
-          resolvedParams.tokenOut,
-          resolvedParams.fee,
-          resolvedParams.amountIn,
-          resolvedParams.sqrtPriceLimitX96,
-        ] as const;
-      }
-
-      return [
-        options.tokenIn,
-        options.tokenOut,
-        options.fee,
-        options.amountIn,
-        options.sqrtPriceLimitX96,
-      ] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.tokenIn,
+              resolvedParams.tokenOut,
+              resolvedParams.fee,
+              resolvedParams.amountIn,
+              resolvedParams.sqrtPriceLimitX96,
+            ] as const;
+          }
+        : [
+            options.tokenIn,
+            options.tokenOut,
+            options.fee,
+            options.amountIn,
+            options.sqrtPriceLimitX96,
+          ],
   });
 }

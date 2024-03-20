@@ -9,6 +9,24 @@ export type GetRoyaltyInfoForTokenParams = {
   tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
 };
 
+const METHOD = [
+  "0x4cc157df",
+  [
+    {
+      type: "uint256",
+      name: "tokenId",
+    },
+  ],
+  [
+    {
+      type: "address",
+    },
+    {
+      type: "uint16",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "getRoyaltyInfoForToken" function on the contract.
  * @param options - The options for the getRoyaltyInfoForToken function.
@@ -29,23 +47,7 @@ export async function getRoyaltyInfoForToken(
 ) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0x4cc157df",
-      [
-        {
-          type: "uint256",
-          name: "tokenId",
-        },
-      ],
-      [
-        {
-          type: "address",
-        },
-        {
-          type: "uint16",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [options.tokenId],
   });
 }

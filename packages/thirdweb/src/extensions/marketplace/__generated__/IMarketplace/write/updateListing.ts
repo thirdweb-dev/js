@@ -44,6 +44,41 @@ export type UpdateListingParams = Prettify<
       asyncParams: () => Promise<UpdateListingParamsInternal>;
     }
 >;
+const METHOD = [
+  "0xc4b5b15f",
+  [
+    {
+      type: "uint256",
+      name: "_listingId",
+    },
+    {
+      type: "uint256",
+      name: "_quantityToList",
+    },
+    {
+      type: "uint256",
+      name: "_reservePricePerToken",
+    },
+    {
+      type: "uint256",
+      name: "_buyoutPricePerToken",
+    },
+    {
+      type: "address",
+      name: "_currencyToAccept",
+    },
+    {
+      type: "uint256",
+      name: "_startTime",
+    },
+    {
+      type: "uint256",
+      name: "_secondsUntilEndTime",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "updateListing" function on the contract.
  * @param options - The options for the "updateListing" function.
@@ -73,63 +108,29 @@ export function updateListing(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0xc4b5b15f",
-      [
-        {
-          type: "uint256",
-          name: "_listingId",
-        },
-        {
-          type: "uint256",
-          name: "_quantityToList",
-        },
-        {
-          type: "uint256",
-          name: "_reservePricePerToken",
-        },
-        {
-          type: "uint256",
-          name: "_buyoutPricePerToken",
-        },
-        {
-          type: "address",
-          name: "_currencyToAccept",
-        },
-        {
-          type: "uint256",
-          name: "_startTime",
-        },
-        {
-          type: "uint256",
-          name: "_secondsUntilEndTime",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.listingId,
-          resolvedParams.quantityToList,
-          resolvedParams.reservePricePerToken,
-          resolvedParams.buyoutPricePerToken,
-          resolvedParams.currencyToAccept,
-          resolvedParams.startTime,
-          resolvedParams.secondsUntilEndTime,
-        ] as const;
-      }
-
-      return [
-        options.listingId,
-        options.quantityToList,
-        options.reservePricePerToken,
-        options.buyoutPricePerToken,
-        options.currencyToAccept,
-        options.startTime,
-        options.secondsUntilEndTime,
-      ] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.listingId,
+              resolvedParams.quantityToList,
+              resolvedParams.reservePricePerToken,
+              resolvedParams.buyoutPricePerToken,
+              resolvedParams.currencyToAccept,
+              resolvedParams.startTime,
+              resolvedParams.secondsUntilEndTime,
+            ] as const;
+          }
+        : [
+            options.listingId,
+            options.quantityToList,
+            options.reservePricePerToken,
+            options.buyoutPricePerToken,
+            options.currencyToAccept,
+            options.startTime,
+            options.secondsUntilEndTime,
+          ],
   });
 }

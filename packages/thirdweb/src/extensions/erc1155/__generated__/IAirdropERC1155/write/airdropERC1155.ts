@@ -33,6 +33,39 @@ export type AirdropERC1155Params = Prettify<
       asyncParams: () => Promise<AirdropERC1155ParamsInternal>;
     }
 >;
+const METHOD = [
+  "0x41444690",
+  [
+    {
+      type: "address",
+      name: "tokenAddress",
+    },
+    {
+      type: "address",
+      name: "tokenOwner",
+    },
+    {
+      type: "tuple[]",
+      name: "contents",
+      components: [
+        {
+          type: "address",
+          name: "recipient",
+        },
+        {
+          type: "uint256",
+          name: "tokenId",
+        },
+        {
+          type: "uint256",
+          name: "amount",
+        },
+      ],
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "airdropERC1155" function on the contract.
  * @param options - The options for the "airdropERC1155" function.
@@ -58,53 +91,17 @@ export function airdropERC1155(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x41444690",
-      [
-        {
-          type: "address",
-          name: "tokenAddress",
-        },
-        {
-          type: "address",
-          name: "tokenOwner",
-        },
-        {
-          type: "tuple[]",
-          name: "contents",
-          components: [
-            {
-              type: "address",
-              name: "recipient",
-            },
-            {
-              type: "uint256",
-              name: "tokenId",
-            },
-            {
-              type: "uint256",
-              name: "amount",
-            },
-          ],
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.tokenAddress,
-          resolvedParams.tokenOwner,
-          resolvedParams.contents,
-        ] as const;
-      }
-
-      return [
-        options.tokenAddress,
-        options.tokenOwner,
-        options.contents,
-      ] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.tokenAddress,
+              resolvedParams.tokenOwner,
+              resolvedParams.contents,
+            ] as const;
+          }
+        : [options.tokenAddress, options.tokenOwner, options.contents],
   });
 }

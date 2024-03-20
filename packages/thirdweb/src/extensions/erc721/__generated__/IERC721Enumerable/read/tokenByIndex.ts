@@ -9,6 +9,21 @@ export type TokenByIndexParams = {
   index: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_index" }>;
 };
 
+const METHOD = [
+  "0x4f6ccce7",
+  [
+    {
+      type: "uint256",
+      name: "_index",
+    },
+  ],
+  [
+    {
+      type: "uint256",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "tokenByIndex" function on the contract.
  * @param options - The options for the tokenByIndex function.
@@ -29,20 +44,7 @@ export async function tokenByIndex(
 ) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0x4f6ccce7",
-      [
-        {
-          type: "uint256",
-          name: "_index",
-        },
-      ],
-      [
-        {
-          type: "uint256",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [options.index],
   });
 }

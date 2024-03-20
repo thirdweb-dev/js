@@ -13,6 +13,24 @@ export type PreviewDepositParams = {
   }>;
 };
 
+const METHOD = [
+  "0xef8b30f7",
+  [
+    {
+      name: "assets",
+      type: "uint256",
+      internalType: "uint256",
+    },
+  ],
+  [
+    {
+      name: "shares",
+      type: "uint256",
+      internalType: "uint256",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "previewDeposit" function on the contract.
  * @param options - The options for the previewDeposit function.
@@ -33,23 +51,7 @@ export async function previewDeposit(
 ) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0xef8b30f7",
-      [
-        {
-          name: "assets",
-          type: "uint256",
-          internalType: "uint256",
-        },
-      ],
-      [
-        {
-          name: "shares",
-          type: "uint256",
-          internalType: "uint256",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [options.assets],
   });
 }

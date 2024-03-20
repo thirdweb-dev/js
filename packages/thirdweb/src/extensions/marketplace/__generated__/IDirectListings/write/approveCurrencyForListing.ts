@@ -25,6 +25,25 @@ export type ApproveCurrencyForListingParams = Prettify<
       asyncParams: () => Promise<ApproveCurrencyForListingParamsInternal>;
     }
 >;
+const METHOD = [
+  "0xea8f9a3c",
+  [
+    {
+      type: "uint256",
+      name: "_listingId",
+    },
+    {
+      type: "address",
+      name: "_currency",
+    },
+    {
+      type: "uint256",
+      name: "_pricePerTokenInCurrency",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "approveCurrencyForListing" function on the contract.
  * @param options - The options for the "approveCurrencyForListing" function.
@@ -50,39 +69,21 @@ export function approveCurrencyForListing(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0xea8f9a3c",
-      [
-        {
-          type: "uint256",
-          name: "_listingId",
-        },
-        {
-          type: "address",
-          name: "_currency",
-        },
-        {
-          type: "uint256",
-          name: "_pricePerTokenInCurrency",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.listingId,
-          resolvedParams.currency,
-          resolvedParams.pricePerTokenInCurrency,
-        ] as const;
-      }
-
-      return [
-        options.listingId,
-        options.currency,
-        options.pricePerTokenInCurrency,
-      ] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.listingId,
+              resolvedParams.currency,
+              resolvedParams.pricePerTokenInCurrency,
+            ] as const;
+          }
+        : [
+            options.listingId,
+            options.currency,
+            options.pricePerTokenInCurrency,
+          ],
   });
 }

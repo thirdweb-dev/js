@@ -18,6 +18,21 @@ export type RevokeRoleParams = Prettify<
       asyncParams: () => Promise<RevokeRoleParamsInternal>;
     }
 >;
+const METHOD = [
+  "0xd547741f",
+  [
+    {
+      type: "bytes32",
+      name: "role",
+    },
+    {
+      type: "address",
+      name: "account",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "revokeRole" function on the contract.
  * @param options - The options for the "revokeRole" function.
@@ -40,27 +55,13 @@ export type RevokeRoleParams = Prettify<
 export function revokeRole(options: BaseTransactionOptions<RevokeRoleParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0xd547741f",
-      [
-        {
-          type: "bytes32",
-          name: "role",
-        },
-        {
-          type: "address",
-          name: "account",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.role, resolvedParams.account] as const;
-      }
-
-      return [options.role, options.account] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.role, resolvedParams.account] as const;
+          }
+        : [options.role, options.account],
   });
 }

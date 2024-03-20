@@ -25,6 +25,37 @@ export type DelegateBySigParams = Prettify<
       asyncParams: () => Promise<DelegateBySigParamsInternal>;
     }
 >;
+const METHOD = [
+  "0xc3cda520",
+  [
+    {
+      type: "address",
+      name: "delegatee",
+    },
+    {
+      type: "uint256",
+      name: "nonce",
+    },
+    {
+      type: "uint256",
+      name: "expiry",
+    },
+    {
+      type: "uint8",
+      name: "v",
+    },
+    {
+      type: "bytes32",
+      name: "r",
+    },
+    {
+      type: "bytes32",
+      name: "s",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "delegateBySig" function on the contract.
  * @param options - The options for the "delegateBySig" function.
@@ -53,57 +84,27 @@ export function delegateBySig(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0xc3cda520",
-      [
-        {
-          type: "address",
-          name: "delegatee",
-        },
-        {
-          type: "uint256",
-          name: "nonce",
-        },
-        {
-          type: "uint256",
-          name: "expiry",
-        },
-        {
-          type: "uint8",
-          name: "v",
-        },
-        {
-          type: "bytes32",
-          name: "r",
-        },
-        {
-          type: "bytes32",
-          name: "s",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.delegatee,
-          resolvedParams.nonce,
-          resolvedParams.expiry,
-          resolvedParams.v,
-          resolvedParams.r,
-          resolvedParams.s,
-        ] as const;
-      }
-
-      return [
-        options.delegatee,
-        options.nonce,
-        options.expiry,
-        options.v,
-        options.r,
-        options.s,
-      ] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.delegatee,
+              resolvedParams.nonce,
+              resolvedParams.expiry,
+              resolvedParams.v,
+              resolvedParams.r,
+              resolvedParams.s,
+            ] as const;
+          }
+        : [
+            options.delegatee,
+            options.nonce,
+            options.expiry,
+            options.v,
+            options.r,
+            options.s,
+          ],
   });
 }

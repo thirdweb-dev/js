@@ -26,6 +26,29 @@ export type DepositParams = Prettify<
       asyncParams: () => Promise<DepositParamsInternal>;
     }
 >;
+const METHOD = [
+  "0x6e553f65",
+  [
+    {
+      name: "assets",
+      type: "uint256",
+      internalType: "uint256",
+    },
+    {
+      name: "receiver",
+      type: "address",
+      internalType: "address",
+    },
+  ],
+  [
+    {
+      name: "shares",
+      type: "uint256",
+      internalType: "uint256",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "deposit" function on the contract.
  * @param options - The options for the "deposit" function.
@@ -48,35 +71,13 @@ export type DepositParams = Prettify<
 export function deposit(options: BaseTransactionOptions<DepositParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x6e553f65",
-      [
-        {
-          name: "assets",
-          type: "uint256",
-          internalType: "uint256",
-        },
-        {
-          name: "receiver",
-          type: "address",
-          internalType: "address",
-        },
-      ],
-      [
-        {
-          name: "shares",
-          type: "uint256",
-          internalType: "uint256",
-        },
-      ],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.assets, resolvedParams.receiver] as const;
-      }
-
-      return [options.assets, options.receiver] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.assets, resolvedParams.receiver] as const;
+          }
+        : [options.assets, options.receiver],
   });
 }

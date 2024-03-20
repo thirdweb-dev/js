@@ -1,6 +1,8 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 
+const METHOD = ["0xd0e30db0", [], []] as const;
+
 /**
  * Calls the "deposit" function on the contract.
  * @param options - The options for the "deposit" function.
@@ -20,6 +22,6 @@ import { prepareContractCall } from "../../../../../transaction/prepare-contract
 export function deposit(options: BaseTransactionOptions) {
   return prepareContractCall({
     contract: options.contract,
-    method: ["0xd0e30db0", [], []],
+    method: METHOD,
   });
 }

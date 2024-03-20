@@ -1,6 +1,16 @@
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 
+const METHOD = [
+  "0x11464fbe",
+  [],
+  [
+    {
+      type: "address",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "accountImplementation" function on the contract.
  * @param options - The options for the accountImplementation function.
@@ -17,15 +27,7 @@ import type { BaseTransactionOptions } from "../../../../../transaction/types.js
 export async function accountImplementation(options: BaseTransactionOptions) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0x11464fbe",
-      [],
-      [
-        {
-          type: "address",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [],
   });
 }

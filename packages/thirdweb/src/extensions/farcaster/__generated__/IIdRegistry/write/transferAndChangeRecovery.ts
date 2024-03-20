@@ -20,6 +20,29 @@ export type TransferAndChangeRecoveryParams = Prettify<
       asyncParams: () => Promise<TransferAndChangeRecoveryParamsInternal>;
     }
 >;
+const METHOD = [
+  "0x3ab8465d",
+  [
+    {
+      type: "address",
+      name: "to",
+    },
+    {
+      type: "address",
+      name: "recovery",
+    },
+    {
+      type: "uint256",
+      name: "deadline",
+    },
+    {
+      type: "bytes",
+      name: "sig",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "transferAndChangeRecovery" function on the contract.
  * @param options - The options for the "transferAndChangeRecovery" function.
@@ -46,45 +69,18 @@ export function transferAndChangeRecovery(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x3ab8465d",
-      [
-        {
-          type: "address",
-          name: "to",
-        },
-        {
-          type: "address",
-          name: "recovery",
-        },
-        {
-          type: "uint256",
-          name: "deadline",
-        },
-        {
-          type: "bytes",
-          name: "sig",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.to,
-          resolvedParams.recovery,
-          resolvedParams.deadline,
-          resolvedParams.sig,
-        ] as const;
-      }
-
-      return [
-        options.to,
-        options.recovery,
-        options.deadline,
-        options.sig,
-      ] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.to,
+              resolvedParams.recovery,
+              resolvedParams.deadline,
+              resolvedParams.sig,
+            ] as const;
+          }
+        : [options.to, options.recovery, options.deadline, options.sig],
   });
 }

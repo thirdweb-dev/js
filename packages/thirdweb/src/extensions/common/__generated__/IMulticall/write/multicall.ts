@@ -17,6 +17,22 @@ export type MulticallParams = Prettify<
       asyncParams: () => Promise<MulticallParamsInternal>;
     }
 >;
+const METHOD = [
+  "0xac9650d8",
+  [
+    {
+      type: "bytes[]",
+      name: "data",
+    },
+  ],
+  [
+    {
+      type: "bytes[]",
+      name: "results",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "multicall" function on the contract.
  * @param options - The options for the "multicall" function.
@@ -38,28 +54,13 @@ export type MulticallParams = Prettify<
 export function multicall(options: BaseTransactionOptions<MulticallParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0xac9650d8",
-      [
-        {
-          type: "bytes[]",
-          name: "data",
-        },
-      ],
-      [
-        {
-          type: "bytes[]",
-          name: "results",
-        },
-      ],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.data] as const;
-      }
-
-      return [options.data] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.data] as const;
+          }
+        : [options.data],
   });
 }

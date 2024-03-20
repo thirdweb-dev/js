@@ -9,6 +9,21 @@ export type CanClaimRewardsParams = {
   opener: AbiParameterToPrimitiveType<{ type: "address"; name: "_opener" }>;
 };
 
+const METHOD = [
+  "0xa9b47a66",
+  [
+    {
+      type: "address",
+      name: "_opener",
+    },
+  ],
+  [
+    {
+      type: "bool",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "canClaimRewards" function on the contract.
  * @param options - The options for the canClaimRewards function.
@@ -29,20 +44,7 @@ export async function canClaimRewards(
 ) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0xa9b47a66",
-      [
-        {
-          type: "address",
-          name: "_opener",
-        },
-      ],
-      [
-        {
-          type: "bool",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [options.opener],
   });
 }

@@ -13,6 +13,24 @@ export type MaxWithdrawParams = {
   }>;
 };
 
+const METHOD = [
+  "0xce96cb77",
+  [
+    {
+      name: "owner",
+      type: "address",
+      internalType: "address",
+    },
+  ],
+  [
+    {
+      name: "maxAssets",
+      type: "uint256",
+      internalType: "uint256",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "maxWithdraw" function on the contract.
  * @param options - The options for the maxWithdraw function.
@@ -33,23 +51,7 @@ export async function maxWithdraw(
 ) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0xce96cb77",
-      [
-        {
-          name: "owner",
-          type: "address",
-          internalType: "address",
-        },
-      ],
-      [
-        {
-          name: "maxAssets",
-          type: "uint256",
-          internalType: "uint256",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [options.owner],
   });
 }

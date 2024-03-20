@@ -9,6 +9,21 @@ export type GetApprovedParams = {
   tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
 };
 
+const METHOD = [
+  "0x081812fc",
+  [
+    {
+      type: "uint256",
+      name: "tokenId",
+    },
+  ],
+  [
+    {
+      type: "address",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "getApproved" function on the contract.
  * @param options - The options for the getApproved function.
@@ -29,20 +44,7 @@ export async function getApproved(
 ) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0x081812fc",
-      [
-        {
-          type: "uint256",
-          name: "tokenId",
-        },
-      ],
-      [
-        {
-          type: "address",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [options.tokenId],
   });
 }

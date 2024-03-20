@@ -9,6 +9,44 @@ export type GetPermissionsForSignerParams = {
   signer: AbiParameterToPrimitiveType<{ type: "address"; name: "signer" }>;
 };
 
+const METHOD = [
+  "0xf15d424e",
+  [
+    {
+      type: "address",
+      name: "signer",
+    },
+  ],
+  [
+    {
+      type: "tuple",
+      name: "permissions",
+      components: [
+        {
+          type: "address",
+          name: "signer",
+        },
+        {
+          type: "address[]",
+          name: "approvedTargets",
+        },
+        {
+          type: "uint256",
+          name: "nativeTokenLimitPerTransaction",
+        },
+        {
+          type: "uint128",
+          name: "startTimestamp",
+        },
+        {
+          type: "uint128",
+          name: "endTimestamp",
+        },
+      ],
+    },
+  ],
+] as const;
+
 /**
  * Calls the "getPermissionsForSigner" function on the contract.
  * @param options - The options for the getPermissionsForSigner function.
@@ -29,43 +67,7 @@ export async function getPermissionsForSigner(
 ) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0xf15d424e",
-      [
-        {
-          type: "address",
-          name: "signer",
-        },
-      ],
-      [
-        {
-          type: "tuple",
-          name: "permissions",
-          components: [
-            {
-              type: "address",
-              name: "signer",
-            },
-            {
-              type: "address[]",
-              name: "approvedTargets",
-            },
-            {
-              type: "uint256",
-              name: "nativeTokenLimitPerTransaction",
-            },
-            {
-              type: "uint128",
-              name: "startTimestamp",
-            },
-            {
-              type: "uint128",
-              name: "endTimestamp",
-            },
-          ],
-        },
-      ],
-    ],
+    method: METHOD,
     params: [options.signer],
   });
 }

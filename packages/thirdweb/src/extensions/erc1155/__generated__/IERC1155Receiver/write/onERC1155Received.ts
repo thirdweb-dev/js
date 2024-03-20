@@ -21,6 +21,37 @@ export type OnERC1155ReceivedParams = Prettify<
       asyncParams: () => Promise<OnERC1155ReceivedParamsInternal>;
     }
 >;
+const METHOD = [
+  "0xf23a6e61",
+  [
+    {
+      type: "address",
+      name: "operator",
+    },
+    {
+      type: "address",
+      name: "from",
+    },
+    {
+      type: "uint256",
+      name: "id",
+    },
+    {
+      type: "uint256",
+      name: "value",
+    },
+    {
+      type: "bytes",
+      name: "data",
+    },
+  ],
+  [
+    {
+      type: "bytes4",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "onERC1155Received" function on the contract.
  * @param options - The options for the "onERC1155Received" function.
@@ -48,55 +79,25 @@ export function onERC1155Received(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0xf23a6e61",
-      [
-        {
-          type: "address",
-          name: "operator",
-        },
-        {
-          type: "address",
-          name: "from",
-        },
-        {
-          type: "uint256",
-          name: "id",
-        },
-        {
-          type: "uint256",
-          name: "value",
-        },
-        {
-          type: "bytes",
-          name: "data",
-        },
-      ],
-      [
-        {
-          type: "bytes4",
-        },
-      ],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.operator,
-          resolvedParams.from,
-          resolvedParams.id,
-          resolvedParams.value,
-          resolvedParams.data,
-        ] as const;
-      }
-
-      return [
-        options.operator,
-        options.from,
-        options.id,
-        options.value,
-        options.data,
-      ] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.operator,
+              resolvedParams.from,
+              resolvedParams.id,
+              resolvedParams.value,
+              resolvedParams.data,
+            ] as const;
+          }
+        : [
+            options.operator,
+            options.from,
+            options.id,
+            options.value,
+            options.data,
+          ],
   });
 }

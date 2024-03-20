@@ -26,6 +26,29 @@ export type MintParams = Prettify<
       asyncParams: () => Promise<MintParamsInternal>;
     }
 >;
+const METHOD = [
+  "0x94bf804d",
+  [
+    {
+      name: "shares",
+      type: "uint256",
+      internalType: "uint256",
+    },
+    {
+      name: "receiver",
+      type: "address",
+      internalType: "address",
+    },
+  ],
+  [
+    {
+      name: "assets",
+      type: "uint256",
+      internalType: "uint256",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "mint" function on the contract.
  * @param options - The options for the "mint" function.
@@ -48,35 +71,13 @@ export type MintParams = Prettify<
 export function mint(options: BaseTransactionOptions<MintParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x94bf804d",
-      [
-        {
-          name: "shares",
-          type: "uint256",
-          internalType: "uint256",
-        },
-        {
-          name: "receiver",
-          type: "address",
-          internalType: "address",
-        },
-      ],
-      [
-        {
-          name: "assets",
-          type: "uint256",
-          internalType: "uint256",
-        },
-      ],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.shares, resolvedParams.receiver] as const;
-      }
-
-      return [options.shares, options.receiver] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.shares, resolvedParams.receiver] as const;
+          }
+        : [options.shares, options.receiver],
   });
 }

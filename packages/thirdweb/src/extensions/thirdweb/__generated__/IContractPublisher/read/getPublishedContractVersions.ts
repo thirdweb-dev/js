@@ -16,6 +16,48 @@ export type GetPublishedContractVersionsParams = {
   }>;
 };
 
+const METHOD = [
+  "0x80251dac",
+  [
+    {
+      type: "address",
+      name: "publisher",
+    },
+    {
+      type: "string",
+      name: "contractId",
+    },
+  ],
+  [
+    {
+      type: "tuple[]",
+      name: "published",
+      components: [
+        {
+          type: "string",
+          name: "contractId",
+        },
+        {
+          type: "uint256",
+          name: "publishTimestamp",
+        },
+        {
+          type: "string",
+          name: "publishMetadataUri",
+        },
+        {
+          type: "bytes32",
+          name: "bytecodeHash",
+        },
+        {
+          type: "address",
+          name: "implementation",
+        },
+      ],
+    },
+  ],
+] as const;
+
 /**
  * Calls the "getPublishedContractVersions" function on the contract.
  * @param options - The options for the getPublishedContractVersions function.
@@ -37,47 +79,7 @@ export async function getPublishedContractVersions(
 ) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0x80251dac",
-      [
-        {
-          type: "address",
-          name: "publisher",
-        },
-        {
-          type: "string",
-          name: "contractId",
-        },
-      ],
-      [
-        {
-          type: "tuple[]",
-          name: "published",
-          components: [
-            {
-              type: "string",
-              name: "contractId",
-            },
-            {
-              type: "uint256",
-              name: "publishTimestamp",
-            },
-            {
-              type: "string",
-              name: "publishMetadataUri",
-            },
-            {
-              type: "bytes32",
-              name: "bytecodeHash",
-            },
-            {
-              type: "address",
-              name: "implementation",
-            },
-          ],
-        },
-      ],
-    ],
+    method: METHOD,
     params: [options.publisher, options.contractId],
   });
 }

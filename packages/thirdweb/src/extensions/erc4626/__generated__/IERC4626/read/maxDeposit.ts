@@ -13,6 +13,24 @@ export type MaxDepositParams = {
   }>;
 };
 
+const METHOD = [
+  "0x402d267d",
+  [
+    {
+      name: "receiver",
+      type: "address",
+      internalType: "address",
+    },
+  ],
+  [
+    {
+      name: "maxAssets",
+      type: "uint256",
+      internalType: "uint256",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "maxDeposit" function on the contract.
  * @param options - The options for the maxDeposit function.
@@ -33,23 +51,7 @@ export async function maxDeposit(
 ) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0x402d267d",
-      [
-        {
-          name: "receiver",
-          type: "address",
-          internalType: "address",
-        },
-      ],
-      [
-        {
-          name: "maxAssets",
-          type: "uint256",
-          internalType: "uint256",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [options.receiver],
   });
 }

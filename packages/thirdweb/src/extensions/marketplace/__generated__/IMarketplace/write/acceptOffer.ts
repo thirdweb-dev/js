@@ -26,6 +26,29 @@ export type AcceptOfferParams = Prettify<
       asyncParams: () => Promise<AcceptOfferParamsInternal>;
     }
 >;
+const METHOD = [
+  "0xb13c0e63",
+  [
+    {
+      type: "uint256",
+      name: "_listingId",
+    },
+    {
+      type: "address",
+      name: "_offeror",
+    },
+    {
+      type: "address",
+      name: "_currency",
+    },
+    {
+      type: "uint256",
+      name: "_totalPrice",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "acceptOffer" function on the contract.
  * @param options - The options for the "acceptOffer" function.
@@ -52,45 +75,23 @@ export function acceptOffer(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0xb13c0e63",
-      [
-        {
-          type: "uint256",
-          name: "_listingId",
-        },
-        {
-          type: "address",
-          name: "_offeror",
-        },
-        {
-          type: "address",
-          name: "_currency",
-        },
-        {
-          type: "uint256",
-          name: "_totalPrice",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.listingId,
-          resolvedParams.offeror,
-          resolvedParams.currency,
-          resolvedParams.totalPrice,
-        ] as const;
-      }
-
-      return [
-        options.listingId,
-        options.offeror,
-        options.currency,
-        options.totalPrice,
-      ] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.listingId,
+              resolvedParams.offeror,
+              resolvedParams.currency,
+              resolvedParams.totalPrice,
+            ] as const;
+          }
+        : [
+            options.listingId,
+            options.offeror,
+            options.currency,
+            options.totalPrice,
+          ],
   });
 }

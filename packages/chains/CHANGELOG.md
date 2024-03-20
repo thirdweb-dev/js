@@ -1,5 +1,13 @@
 # @thirdweb-dev/chains
 
+## 0.1.81
+
+### Patch Changes
+
+- [#2496](https://github.com/thirdweb-dev/js/pull/2496) [`863049d`](https://github.com/thirdweb-dev/js/commit/863049dc0ca989d2654b4aacba811263931a33fe) Thanks [@jnsdls](https://github.com/jnsdls)! - do not append `?bundleId` query param to rpc url if the bundle id is undefined
+
+- [#2427](https://github.com/thirdweb-dev/js/pull/2427) [`8a20aa5`](https://github.com/thirdweb-dev/js/commit/8a20aa58259edc5bac578dc5e4f4d971ed7adf36) Thanks [@github-actions](https://github.com/apps/github-actions)! - Synced Chains Package
+
 ## 0.1.80
 
 ### Patch Changes

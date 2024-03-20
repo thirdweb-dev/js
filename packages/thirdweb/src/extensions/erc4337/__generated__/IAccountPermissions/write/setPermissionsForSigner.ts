@@ -32,6 +32,59 @@ export type SetPermissionsForSignerParams = Prettify<
       asyncParams: () => Promise<SetPermissionsForSignerParamsInternal>;
     }
 >;
+const METHOD = [
+  "0x5892e236",
+  [
+    {
+      type: "tuple",
+      name: "req",
+      components: [
+        {
+          type: "address",
+          name: "signer",
+        },
+        {
+          type: "uint8",
+          name: "isAdmin",
+        },
+        {
+          type: "address[]",
+          name: "approvedTargets",
+        },
+        {
+          type: "uint256",
+          name: "nativeTokenLimitPerTransaction",
+        },
+        {
+          type: "uint128",
+          name: "permissionStartTimestamp",
+        },
+        {
+          type: "uint128",
+          name: "permissionEndTimestamp",
+        },
+        {
+          type: "uint128",
+          name: "reqValidityStartTimestamp",
+        },
+        {
+          type: "uint128",
+          name: "reqValidityEndTimestamp",
+        },
+        {
+          type: "bytes32",
+          name: "uid",
+        },
+      ],
+    },
+    {
+      type: "bytes",
+      name: "signature",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "setPermissionsForSigner" function on the contract.
  * @param options - The options for the "setPermissionsForSigner" function.
@@ -56,65 +109,13 @@ export function setPermissionsForSigner(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x5892e236",
-      [
-        {
-          type: "tuple",
-          name: "req",
-          components: [
-            {
-              type: "address",
-              name: "signer",
-            },
-            {
-              type: "uint8",
-              name: "isAdmin",
-            },
-            {
-              type: "address[]",
-              name: "approvedTargets",
-            },
-            {
-              type: "uint256",
-              name: "nativeTokenLimitPerTransaction",
-            },
-            {
-              type: "uint128",
-              name: "permissionStartTimestamp",
-            },
-            {
-              type: "uint128",
-              name: "permissionEndTimestamp",
-            },
-            {
-              type: "uint128",
-              name: "reqValidityStartTimestamp",
-            },
-            {
-              type: "uint128",
-              name: "reqValidityEndTimestamp",
-            },
-            {
-              type: "bytes32",
-              name: "uid",
-            },
-          ],
-        },
-        {
-          type: "bytes",
-          name: "signature",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.req, resolvedParams.signature] as const;
-      }
-
-      return [options.req, options.signature] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.req, resolvedParams.signature] as const;
+          }
+        : [options.req, options.signature],
   });
 }

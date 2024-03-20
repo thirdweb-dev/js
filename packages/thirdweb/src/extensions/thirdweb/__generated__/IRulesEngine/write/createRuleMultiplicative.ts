@@ -26,6 +26,40 @@ export type CreateRuleMultiplicativeParams = Prettify<
       asyncParams: () => Promise<CreateRuleMultiplicativeParamsInternal>;
     }
 >;
+const METHOD = [
+  "0x1e2e9cb5",
+  [
+    {
+      type: "tuple",
+      name: "rule",
+      components: [
+        {
+          type: "address",
+          name: "token",
+        },
+        {
+          type: "uint8",
+          name: "tokenType",
+        },
+        {
+          type: "uint256",
+          name: "tokenId",
+        },
+        {
+          type: "uint256",
+          name: "scorePerOwnedToken",
+        },
+      ],
+    },
+  ],
+  [
+    {
+      type: "bytes32",
+      name: "ruleId",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "createRuleMultiplicative" function on the contract.
  * @param options - The options for the "createRuleMultiplicative" function.
@@ -49,46 +83,13 @@ export function createRuleMultiplicative(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x1e2e9cb5",
-      [
-        {
-          type: "tuple",
-          name: "rule",
-          components: [
-            {
-              type: "address",
-              name: "token",
-            },
-            {
-              type: "uint8",
-              name: "tokenType",
-            },
-            {
-              type: "uint256",
-              name: "tokenId",
-            },
-            {
-              type: "uint256",
-              name: "scorePerOwnedToken",
-            },
-          ],
-        },
-      ],
-      [
-        {
-          type: "bytes32",
-          name: "ruleId",
-        },
-      ],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.rule] as const;
-      }
-
-      return [options.rule] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.rule] as const;
+          }
+        : [options.rule],
   });
 }

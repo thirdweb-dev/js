@@ -23,6 +23,41 @@ export type PermitParams = Prettify<
       asyncParams: () => Promise<PermitParamsInternal>;
     }
 >;
+const METHOD = [
+  "0xd505accf",
+  [
+    {
+      type: "address",
+      name: "owner",
+    },
+    {
+      type: "address",
+      name: "spender",
+    },
+    {
+      type: "uint256",
+      name: "value",
+    },
+    {
+      type: "uint256",
+      name: "deadline",
+    },
+    {
+      type: "uint8",
+      name: "v",
+    },
+    {
+      type: "bytes32",
+      name: "r",
+    },
+    {
+      type: "bytes32",
+      name: "s",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "permit" function on the contract.
  * @param options - The options for the "permit" function.
@@ -50,63 +85,29 @@ export type PermitParams = Prettify<
 export function permit(options: BaseTransactionOptions<PermitParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0xd505accf",
-      [
-        {
-          type: "address",
-          name: "owner",
-        },
-        {
-          type: "address",
-          name: "spender",
-        },
-        {
-          type: "uint256",
-          name: "value",
-        },
-        {
-          type: "uint256",
-          name: "deadline",
-        },
-        {
-          type: "uint8",
-          name: "v",
-        },
-        {
-          type: "bytes32",
-          name: "r",
-        },
-        {
-          type: "bytes32",
-          name: "s",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.owner,
-          resolvedParams.spender,
-          resolvedParams.value,
-          resolvedParams.deadline,
-          resolvedParams.v,
-          resolvedParams.r,
-          resolvedParams.s,
-        ] as const;
-      }
-
-      return [
-        options.owner,
-        options.spender,
-        options.value,
-        options.deadline,
-        options.v,
-        options.r,
-        options.s,
-      ] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.owner,
+              resolvedParams.spender,
+              resolvedParams.value,
+              resolvedParams.deadline,
+              resolvedParams.v,
+              resolvedParams.r,
+              resolvedParams.s,
+            ] as const;
+          }
+        : [
+            options.owner,
+            options.spender,
+            options.value,
+            options.deadline,
+            options.v,
+            options.r,
+            options.s,
+          ],
   });
 }

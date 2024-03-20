@@ -18,6 +18,21 @@ export type GrantRoleParams = Prettify<
       asyncParams: () => Promise<GrantRoleParamsInternal>;
     }
 >;
+const METHOD = [
+  "0x2f2ff15d",
+  [
+    {
+      type: "bytes32",
+      name: "role",
+    },
+    {
+      type: "address",
+      name: "account",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "grantRole" function on the contract.
  * @param options - The options for the "grantRole" function.
@@ -40,27 +55,13 @@ export type GrantRoleParams = Prettify<
 export function grantRole(options: BaseTransactionOptions<GrantRoleParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x2f2ff15d",
-      [
-        {
-          type: "bytes32",
-          name: "role",
-        },
-        {
-          type: "address",
-          name: "account",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.role, resolvedParams.account] as const;
-      }
-
-      return [options.role, options.account] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.role, resolvedParams.account] as const;
+          }
+        : [options.role, options.account],
   });
 }

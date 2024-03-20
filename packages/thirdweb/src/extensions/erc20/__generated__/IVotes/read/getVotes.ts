@@ -9,6 +9,21 @@ export type GetVotesParams = {
   account: AbiParameterToPrimitiveType<{ type: "address"; name: "account" }>;
 };
 
+const METHOD = [
+  "0x9ab24eb0",
+  [
+    {
+      type: "address",
+      name: "account",
+    },
+  ],
+  [
+    {
+      type: "uint256",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "getVotes" function on the contract.
  * @param options - The options for the getVotes function.
@@ -29,20 +44,7 @@ export async function getVotes(
 ) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0x9ab24eb0",
-      [
-        {
-          type: "address",
-          name: "account",
-        },
-      ],
-      [
-        {
-          type: "uint256",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [options.account],
   });
 }

@@ -9,6 +9,21 @@ export type GetRoleAdminParams = {
   role: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "role" }>;
 };
 
+const METHOD = [
+  "0x248a9ca3",
+  [
+    {
+      type: "bytes32",
+      name: "role",
+    },
+  ],
+  [
+    {
+      type: "bytes32",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "getRoleAdmin" function on the contract.
  * @param options - The options for the getRoleAdmin function.
@@ -29,20 +44,7 @@ export async function getRoleAdmin(
 ) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0x248a9ca3",
-      [
-        {
-          type: "bytes32",
-          name: "role",
-        },
-      ],
-      [
-        {
-          type: "bytes32",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [options.role],
   });
 }

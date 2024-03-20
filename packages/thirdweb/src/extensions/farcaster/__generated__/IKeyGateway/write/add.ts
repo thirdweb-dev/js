@@ -23,6 +23,29 @@ export type AddParams = Prettify<
       asyncParams: () => Promise<AddParamsInternal>;
     }
 >;
+const METHOD = [
+  "0x22b1a414",
+  [
+    {
+      type: "uint32",
+      name: "keyType",
+    },
+    {
+      type: "bytes",
+      name: "key",
+    },
+    {
+      type: "uint8",
+      name: "metadataType",
+    },
+    {
+      type: "bytes",
+      name: "metadata",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "add" function on the contract.
  * @param options - The options for the "add" function.
@@ -47,45 +70,23 @@ export type AddParams = Prettify<
 export function add(options: BaseTransactionOptions<AddParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x22b1a414",
-      [
-        {
-          type: "uint32",
-          name: "keyType",
-        },
-        {
-          type: "bytes",
-          name: "key",
-        },
-        {
-          type: "uint8",
-          name: "metadataType",
-        },
-        {
-          type: "bytes",
-          name: "metadata",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.keyType,
-          resolvedParams.key,
-          resolvedParams.metadataType,
-          resolvedParams.metadata,
-        ] as const;
-      }
-
-      return [
-        options.keyType,
-        options.key,
-        options.metadataType,
-        options.metadata,
-      ] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.keyType,
+              resolvedParams.key,
+              resolvedParams.metadataType,
+              resolvedParams.metadata,
+            ] as const;
+          }
+        : [
+            options.keyType,
+            options.key,
+            options.metadataType,
+            options.metadata,
+          ],
   });
 }

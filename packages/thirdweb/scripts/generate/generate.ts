@@ -135,7 +135,7 @@ export type ${inputTypeName} = Prettify<${inputTypeName}Internal | {
     : ""
 };
 
-
+const METHOD = ${JSON.stringify(prepareMethod(f), null, 2)} as const;
 
 /**
  * Calls the "${f.name}" function on the contract.
@@ -166,21 +166,18 @@ export function ${f.name}(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: ${JSON.stringify(prepareMethod(f), null, 2)},
+    method: METHOD,
     ${
       f.inputs.length
-        ? `params: async () => {
-      if("asyncParams" in options){
+        ? `params: "asyncParams" in options ? async () => {
+      
         const resolvedParams = await options.asyncParams();
         return [${f.inputs
           .map((x) => `resolvedParams.${removeLeadingUnderscore(x.name)}`)
           .join(", ")}] as const;
-      }
-      
-      return [${f.inputs
+      } : [${f.inputs
         .map((x) => `options.${removeLeadingUnderscore(x.name)}`)
-        .join(", ")}] as const;
-      }`
+        .join(", ")}]`
         : ""
     }
   });
@@ -215,6 +212,8 @@ export type ${uppercaseFirstLetter(f.name)}Params = {
     : ""
 }
 
+const METHOD = ${JSON.stringify(prepareMethod(f), null, 2)} as const;
+
 /**
  * Calls the "${f.name}" function on the contract.
  * @param options - The options for the ${f.name} function.
@@ -241,7 +240,7 @@ export async function ${f.name}(
 ) {
   return readContract({
     contract: options.contract,
-    method: ${JSON.stringify(prepareMethod(f), null, 2)},
+    method: METHOD,
     params: [${f.inputs
       .map((x) => `options.${removeLeadingUnderscore(x.name)}`)
       .join(", ")}]

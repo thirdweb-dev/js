@@ -9,13 +9,13 @@ The send transaction benchmark measures sending native tokens (ETH) to another a
 
 | Library  | Time (avg)     | Min … Max             | P75       | P99       | P999      |
 | -------- | -------------- | --------------------- | --------- | --------- | --------- |
-| thirdweb | 5'167 µs/iter  | 2'875 µs … 11'247 µs  | 6'367 µs  | 9'769 µs  | 11'247 µs |
-| viem     | 6'819 µs/iter  | 5'072 µs … 11'107 µs  | 7'895 µs  | 11'107 µs | 11'107 µs |
-| ethers   | 26'362 µs/iter | 19'826 µs … 37'974 µs | 29'293 µs | 37'974 µs | 37'974 µs |
+| thirdweb | 3'244 µs/iter  | 1'879 µs … 5'580 µs   | 3'958 µs  | 5'543 µs  | 5'580 µs  |
+| viem     | 7'468 µs/iter  | 6'224 µs … 10'241 µs  | 8'077 µs  | 10'241 µs | 10'241 µs |
+| ethers   | 18'376 µs/iter | 17'534 µs … 20'136 µs | 19'084 µs | 20'136 µs | 20'136 µs |
 
-**Summary for transfer native tokens:**
+**Summary for Transfer Native Tokens:**
 
-- **thirdweb** is 1.32x faster than viem and 5.1x faster than ethers.
+- **thirdweb** is 2.3x faster than viem and 5.67x faster than ethers.
 
 ### Running benchmarks
 

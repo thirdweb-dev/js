@@ -9,6 +9,21 @@ export type FeeAmountTickSpacingParams = {
   fee: AbiParameterToPrimitiveType<{ type: "uint24"; name: "fee" }>;
 };
 
+const METHOD = [
+  "0x22afcccb",
+  [
+    {
+      type: "uint24",
+      name: "fee",
+    },
+  ],
+  [
+    {
+      type: "int24",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "feeAmountTickSpacing" function on the contract.
  * @param options - The options for the feeAmountTickSpacing function.
@@ -29,20 +44,7 @@ export async function feeAmountTickSpacing(
 ) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0x22afcccb",
-      [
-        {
-          type: "uint24",
-          name: "fee",
-        },
-      ],
-      [
-        {
-          type: "int24",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [options.fee],
   });
 }

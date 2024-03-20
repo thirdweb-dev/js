@@ -20,6 +20,17 @@ export type CollectAuctionTokensParams = Prettify<
       asyncParams: () => Promise<CollectAuctionTokensParamsInternal>;
     }
 >;
+const METHOD = [
+  "0x03a54fe0",
+  [
+    {
+      type: "uint256",
+      name: "_auctionId",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "collectAuctionTokens" function on the contract.
  * @param options - The options for the "collectAuctionTokens" function.
@@ -43,23 +54,13 @@ export function collectAuctionTokens(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x03a54fe0",
-      [
-        {
-          type: "uint256",
-          name: "_auctionId",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.auctionId] as const;
-      }
-
-      return [options.auctionId] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.auctionId] as const;
+          }
+        : [options.auctionId],
   });
 }

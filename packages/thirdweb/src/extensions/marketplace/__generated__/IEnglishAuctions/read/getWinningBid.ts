@@ -12,6 +12,30 @@ export type GetWinningBidParams = {
   }>;
 };
 
+const METHOD = [
+  "0x6891939d",
+  [
+    {
+      type: "uint256",
+      name: "_auctionId",
+    },
+  ],
+  [
+    {
+      type: "address",
+      name: "bidder",
+    },
+    {
+      type: "address",
+      name: "currency",
+    },
+    {
+      type: "uint256",
+      name: "bidAmount",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "getWinningBid" function on the contract.
  * @param options - The options for the getWinningBid function.
@@ -32,29 +56,7 @@ export async function getWinningBid(
 ) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0x6891939d",
-      [
-        {
-          type: "uint256",
-          name: "_auctionId",
-        },
-      ],
-      [
-        {
-          type: "address",
-          name: "bidder",
-        },
-        {
-          type: "address",
-          name: "currency",
-        },
-        {
-          type: "uint256",
-          name: "bidAmount",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [options.auctionId],
   });
 }

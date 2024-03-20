@@ -24,6 +24,33 @@ export type ClaimParams = Prettify<
       asyncParams: () => Promise<ClaimParamsInternal>;
     }
 >;
+const METHOD = [
+  "0x38524a10",
+  [
+    {
+      type: "address",
+      name: "receiver",
+    },
+    {
+      type: "uint256",
+      name: "quantity",
+    },
+    {
+      type: "uint256",
+      name: "tokenId",
+    },
+    {
+      type: "bytes32[]",
+      name: "proofs",
+    },
+    {
+      type: "uint256",
+      name: "proofMaxQuantityForWallet",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "claim" function on the contract.
  * @param options - The options for the "claim" function.
@@ -49,51 +76,25 @@ export type ClaimParams = Prettify<
 export function claim(options: BaseTransactionOptions<ClaimParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x38524a10",
-      [
-        {
-          type: "address",
-          name: "receiver",
-        },
-        {
-          type: "uint256",
-          name: "quantity",
-        },
-        {
-          type: "uint256",
-          name: "tokenId",
-        },
-        {
-          type: "bytes32[]",
-          name: "proofs",
-        },
-        {
-          type: "uint256",
-          name: "proofMaxQuantityForWallet",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.receiver,
-          resolvedParams.quantity,
-          resolvedParams.tokenId,
-          resolvedParams.proofs,
-          resolvedParams.proofMaxQuantityForWallet,
-        ] as const;
-      }
-
-      return [
-        options.receiver,
-        options.quantity,
-        options.tokenId,
-        options.proofs,
-        options.proofMaxQuantityForWallet,
-      ] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.receiver,
+              resolvedParams.quantity,
+              resolvedParams.tokenId,
+              resolvedParams.proofs,
+              resolvedParams.proofMaxQuantityForWallet,
+            ] as const;
+          }
+        : [
+            options.receiver,
+            options.quantity,
+            options.tokenId,
+            options.proofs,
+            options.proofMaxQuantityForWallet,
+          ],
   });
 }

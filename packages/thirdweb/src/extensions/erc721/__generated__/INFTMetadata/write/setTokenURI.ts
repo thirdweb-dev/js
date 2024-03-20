@@ -18,6 +18,21 @@ export type SetTokenURIParams = Prettify<
       asyncParams: () => Promise<SetTokenURIParamsInternal>;
     }
 >;
+const METHOD = [
+  "0x162094c4",
+  [
+    {
+      type: "uint256",
+      name: "_tokenId",
+    },
+    {
+      type: "string",
+      name: "_uri",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "setTokenURI" function on the contract.
  * @param options - The options for the "setTokenURI" function.
@@ -42,27 +57,13 @@ export function setTokenURI(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x162094c4",
-      [
-        {
-          type: "uint256",
-          name: "_tokenId",
-        },
-        {
-          type: "string",
-          name: "_uri",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.tokenId, resolvedParams.uri] as const;
-      }
-
-      return [options.tokenId, options.uri] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.tokenId, resolvedParams.uri] as const;
+          }
+        : [options.tokenId, options.uri],
   });
 }

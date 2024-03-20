@@ -17,6 +17,17 @@ export type SetContractURIParams = Prettify<
       asyncParams: () => Promise<SetContractURIParamsInternal>;
     }
 >;
+const METHOD = [
+  "0x938e3d7b",
+  [
+    {
+      type: "string",
+      name: "_uri",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "setContractURI" function on the contract.
  * @param options - The options for the "setContractURI" function.
@@ -40,23 +51,13 @@ export function setContractURI(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x938e3d7b",
-      [
-        {
-          type: "string",
-          name: "_uri",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.uri] as const;
-      }
-
-      return [options.uri] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.uri] as const;
+          }
+        : [options.uri],
   });
 }

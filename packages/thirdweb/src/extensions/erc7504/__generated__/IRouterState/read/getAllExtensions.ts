@@ -1,6 +1,51 @@
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 
+const METHOD = [
+  "0x4a00cc48",
+  [],
+  [
+    {
+      type: "tuple[]",
+      name: "allExtensions",
+      components: [
+        {
+          type: "tuple",
+          name: "metadata",
+          components: [
+            {
+              type: "string",
+              name: "name",
+            },
+            {
+              type: "string",
+              name: "metadataURI",
+            },
+            {
+              type: "address",
+              name: "implementation",
+            },
+          ],
+        },
+        {
+          type: "tuple[]",
+          name: "functions",
+          components: [
+            {
+              type: "bytes4",
+              name: "functionSelector",
+            },
+            {
+              type: "string",
+              name: "functionSignature",
+            },
+          ],
+        },
+      ],
+    },
+  ],
+] as const;
+
 /**
  * Calls the "getAllExtensions" function on the contract.
  * @param options - The options for the getAllExtensions function.
@@ -17,50 +62,7 @@ import type { BaseTransactionOptions } from "../../../../../transaction/types.js
 export async function getAllExtensions(options: BaseTransactionOptions) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0x4a00cc48",
-      [],
-      [
-        {
-          type: "tuple[]",
-          name: "allExtensions",
-          components: [
-            {
-              type: "tuple",
-              name: "metadata",
-              components: [
-                {
-                  type: "string",
-                  name: "name",
-                },
-                {
-                  type: "string",
-                  name: "metadataURI",
-                },
-                {
-                  type: "address",
-                  name: "implementation",
-                },
-              ],
-            },
-            {
-              type: "tuple[]",
-              name: "functions",
-              components: [
-                {
-                  type: "bytes4",
-                  name: "functionSelector",
-                },
-                {
-                  type: "string",
-                  name: "functionSignature",
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    ],
+    method: METHOD,
     params: [],
   });
 }

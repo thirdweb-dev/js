@@ -9,6 +9,21 @@ export type AddrParams = {
   name: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "name" }>;
 };
 
+const METHOD = [
+  "0x3b3b57de",
+  [
+    {
+      type: "bytes32",
+      name: "name",
+    },
+  ],
+  [
+    {
+      type: "address",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "addr" function on the contract.
  * @param options - The options for the addr function.
@@ -27,20 +42,7 @@ export type AddrParams = {
 export async function addr(options: BaseTransactionOptions<AddrParams>) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0x3b3b57de",
-      [
-        {
-          type: "bytes32",
-          name: "name",
-        },
-      ],
-      [
-        {
-          type: "address",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [options.name],
   });
 }

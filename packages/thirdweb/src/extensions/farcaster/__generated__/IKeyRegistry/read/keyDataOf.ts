@@ -10,6 +10,25 @@ export type KeyDataOfParams = {
   key: AbiParameterToPrimitiveType<{ type: "bytes"; name: "key" }>;
 };
 
+const METHOD = [
+  "0xac34cc5a",
+  [
+    {
+      type: "uint256",
+      name: "fid",
+    },
+    {
+      type: "bytes",
+      name: "key",
+    },
+  ],
+  [
+    {
+      type: "address",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "keyDataOf" function on the contract.
  * @param options - The options for the keyDataOf function.
@@ -31,24 +50,7 @@ export async function keyDataOf(
 ) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0xac34cc5a",
-      [
-        {
-          type: "uint256",
-          name: "fid",
-        },
-        {
-          type: "bytes",
-          name: "key",
-        },
-      ],
-      [
-        {
-          type: "address",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [options.fid, options.key],
   });
 }

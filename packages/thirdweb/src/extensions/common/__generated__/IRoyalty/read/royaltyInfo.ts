@@ -13,6 +13,30 @@ export type RoyaltyInfoParams = {
   }>;
 };
 
+const METHOD = [
+  "0x2a55205a",
+  [
+    {
+      type: "uint256",
+      name: "tokenId",
+    },
+    {
+      type: "uint256",
+      name: "salePrice",
+    },
+  ],
+  [
+    {
+      type: "address",
+      name: "receiver",
+    },
+    {
+      type: "uint256",
+      name: "royaltyAmount",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "royaltyInfo" function on the contract.
  * @param options - The options for the royaltyInfo function.
@@ -34,29 +58,7 @@ export async function royaltyInfo(
 ) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0x2a55205a",
-      [
-        {
-          type: "uint256",
-          name: "tokenId",
-        },
-        {
-          type: "uint256",
-          name: "salePrice",
-        },
-      ],
-      [
-        {
-          type: "address",
-          name: "receiver",
-        },
-        {
-          type: "uint256",
-          name: "royaltyAmount",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [options.tokenId, options.salePrice],
   });
 }

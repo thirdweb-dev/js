@@ -1,6 +1,16 @@
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 
+const METHOD = [
+  "0x0aa13b8c",
+  [],
+  [
+    {
+      type: "address",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "idRegistry" function on the contract.
  * @param options - The options for the idRegistry function.
@@ -17,15 +27,7 @@ import type { BaseTransactionOptions } from "../../../../../transaction/types.js
 export async function idRegistry(options: BaseTransactionOptions) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0x0aa13b8c",
-      [],
-      [
-        {
-          type: "address",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [],
   });
 }

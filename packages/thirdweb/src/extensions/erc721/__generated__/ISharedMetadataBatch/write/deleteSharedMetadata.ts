@@ -17,6 +17,17 @@ export type DeleteSharedMetadataParams = Prettify<
       asyncParams: () => Promise<DeleteSharedMetadataParamsInternal>;
     }
 >;
+const METHOD = [
+  "0x1ebb2422",
+  [
+    {
+      type: "bytes32",
+      name: "id",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "deleteSharedMetadata" function on the contract.
  * @param options - The options for the "deleteSharedMetadata" function.
@@ -40,23 +51,13 @@ export function deleteSharedMetadata(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x1ebb2422",
-      [
-        {
-          type: "bytes32",
-          name: "id",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.id] as const;
-      }
-
-      return [options.id] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.id] as const;
+          }
+        : [options.id],
   });
 }

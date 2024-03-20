@@ -18,6 +18,25 @@ export type MintToParams = Prettify<
       asyncParams: () => Promise<MintToParamsInternal>;
     }
 >;
+const METHOD = [
+  "0x0075a317",
+  [
+    {
+      type: "address",
+      name: "to",
+    },
+    {
+      type: "string",
+      name: "uri",
+    },
+  ],
+  [
+    {
+      type: "uint256",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "mintTo" function on the contract.
  * @param options - The options for the "mintTo" function.
@@ -40,31 +59,13 @@ export type MintToParams = Prettify<
 export function mintTo(options: BaseTransactionOptions<MintToParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x0075a317",
-      [
-        {
-          type: "address",
-          name: "to",
-        },
-        {
-          type: "string",
-          name: "uri",
-        },
-      ],
-      [
-        {
-          type: "uint256",
-        },
-      ],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.to, resolvedParams.uri] as const;
-      }
-
-      return [options.to, options.uri] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.to, resolvedParams.uri] as const;
+          }
+        : [options.to, options.uri],
   });
 }

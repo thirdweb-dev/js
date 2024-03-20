@@ -9,6 +9,21 @@ export type BalanceOfParams = {
   address: AbiParameterToPrimitiveType<{ type: "address"; name: "_address" }>;
 };
 
+const METHOD = [
+  "0x70a08231",
+  [
+    {
+      type: "address",
+      name: "_address",
+    },
+  ],
+  [
+    {
+      type: "uint256",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "balanceOf" function on the contract.
  * @param options - The options for the balanceOf function.
@@ -29,20 +44,7 @@ export async function balanceOf(
 ) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0x70a08231",
-      [
-        {
-          type: "address",
-          name: "_address",
-        },
-      ],
-      [
-        {
-          type: "uint256",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [options.address],
   });
 }

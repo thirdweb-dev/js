@@ -1,6 +1,16 @@
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 
+const METHOD = [
+  "0x086b5198",
+  [],
+  [
+    {
+      type: "address",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "keyRegistry" function on the contract.
  * @param options - The options for the keyRegistry function.
@@ -17,15 +27,7 @@ import type { BaseTransactionOptions } from "../../../../../transaction/types.js
 export async function keyRegistry(options: BaseTransactionOptions) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0x086b5198",
-      [],
-      [
-        {
-          type: "address",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [],
   });
 }

@@ -10,6 +10,25 @@ export type AllowanceParams = {
   spender: AbiParameterToPrimitiveType<{ type: "address"; name: "spender" }>;
 };
 
+const METHOD = [
+  "0xdd62ed3e",
+  [
+    {
+      type: "address",
+      name: "owner",
+    },
+    {
+      type: "address",
+      name: "spender",
+    },
+  ],
+  [
+    {
+      type: "uint256",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "allowance" function on the contract.
  * @param options - The options for the allowance function.
@@ -31,24 +50,7 @@ export async function allowance(
 ) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0xdd62ed3e",
-      [
-        {
-          type: "address",
-          name: "owner",
-        },
-        {
-          type: "address",
-          name: "spender",
-        },
-      ],
-      [
-        {
-          type: "uint256",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [options.owner, options.spender],
   });
 }

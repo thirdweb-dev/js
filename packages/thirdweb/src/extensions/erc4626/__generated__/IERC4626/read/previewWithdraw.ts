@@ -13,6 +13,24 @@ export type PreviewWithdrawParams = {
   }>;
 };
 
+const METHOD = [
+  "0x0a28a477",
+  [
+    {
+      name: "assets",
+      type: "uint256",
+      internalType: "uint256",
+    },
+  ],
+  [
+    {
+      name: "shares",
+      type: "uint256",
+      internalType: "uint256",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "previewWithdraw" function on the contract.
  * @param options - The options for the previewWithdraw function.
@@ -33,23 +51,7 @@ export async function previewWithdraw(
 ) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0x0a28a477",
-      [
-        {
-          name: "assets",
-          type: "uint256",
-          internalType: "uint256",
-        },
-      ],
-      [
-        {
-          name: "shares",
-          type: "uint256",
-          internalType: "uint256",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [options.assets],
   });
 }

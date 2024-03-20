@@ -10,6 +10,25 @@ export type IsApprovedForAllParams = {
   operator: AbiParameterToPrimitiveType<{ type: "address"; name: "_operator" }>;
 };
 
+const METHOD = [
+  "0xe985e9c5",
+  [
+    {
+      type: "address",
+      name: "_owner",
+    },
+    {
+      type: "address",
+      name: "_operator",
+    },
+  ],
+  [
+    {
+      type: "bool",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "isApprovedForAll" function on the contract.
  * @param options - The options for the isApprovedForAll function.
@@ -31,24 +50,7 @@ export async function isApprovedForAll(
 ) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0xe985e9c5",
-      [
-        {
-          type: "address",
-          name: "_owner",
-        },
-        {
-          type: "address",
-          name: "_operator",
-        },
-      ],
-      [
-        {
-          type: "bool",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [options.owner, options.operator],
   });
 }

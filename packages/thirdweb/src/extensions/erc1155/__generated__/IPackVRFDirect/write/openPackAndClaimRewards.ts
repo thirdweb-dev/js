@@ -25,6 +25,29 @@ export type OpenPackAndClaimRewardsParams = Prettify<
       asyncParams: () => Promise<OpenPackAndClaimRewardsParamsInternal>;
     }
 >;
+const METHOD = [
+  "0xac296b3f",
+  [
+    {
+      type: "uint256",
+      name: "_packId",
+    },
+    {
+      type: "uint256",
+      name: "_amountToOpen",
+    },
+    {
+      type: "uint32",
+      name: "_callBackGasLimit",
+    },
+  ],
+  [
+    {
+      type: "uint256",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "openPackAndClaimRewards" function on the contract.
  * @param options - The options for the "openPackAndClaimRewards" function.
@@ -50,43 +73,17 @@ export function openPackAndClaimRewards(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0xac296b3f",
-      [
-        {
-          type: "uint256",
-          name: "_packId",
-        },
-        {
-          type: "uint256",
-          name: "_amountToOpen",
-        },
-        {
-          type: "uint32",
-          name: "_callBackGasLimit",
-        },
-      ],
-      [
-        {
-          type: "uint256",
-        },
-      ],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.packId,
-          resolvedParams.amountToOpen,
-          resolvedParams.callBackGasLimit,
-        ] as const;
-      }
-
-      return [
-        options.packId,
-        options.amountToOpen,
-        options.callBackGasLimit,
-      ] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.packId,
+              resolvedParams.amountToOpen,
+              resolvedParams.callBackGasLimit,
+            ] as const;
+          }
+        : [options.packId, options.amountToOpen, options.callBackGasLimit],
   });
 }

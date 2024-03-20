@@ -9,6 +9,22 @@ export type GetAccountsOfSignerParams = {
   signer: AbiParameterToPrimitiveType<{ type: "address"; name: "signer" }>;
 };
 
+const METHOD = [
+  "0x0e6254fd",
+  [
+    {
+      type: "address",
+      name: "signer",
+    },
+  ],
+  [
+    {
+      type: "address[]",
+      name: "accounts",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "getAccountsOfSigner" function on the contract.
  * @param options - The options for the getAccountsOfSigner function.
@@ -29,21 +45,7 @@ export async function getAccountsOfSigner(
 ) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0x0e6254fd",
-      [
-        {
-          type: "address",
-          name: "signer",
-        },
-      ],
-      [
-        {
-          type: "address[]",
-          name: "accounts",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [options.signer],
   });
 }

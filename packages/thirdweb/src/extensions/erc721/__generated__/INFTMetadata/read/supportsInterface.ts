@@ -12,6 +12,21 @@ export type SupportsInterfaceParams = {
   }>;
 };
 
+const METHOD = [
+  "0x01ffc9a7",
+  [
+    {
+      type: "bytes4",
+      name: "interfaceId",
+    },
+  ],
+  [
+    {
+      type: "bool",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "supportsInterface" function on the contract.
  * @param options - The options for the supportsInterface function.
@@ -32,20 +47,7 @@ export async function supportsInterface(
 ) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0x01ffc9a7",
-      [
-        {
-          type: "bytes4",
-          name: "interfaceId",
-        },
-      ],
-      [
-        {
-          type: "bool",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [options.interfaceId],
   });
 }

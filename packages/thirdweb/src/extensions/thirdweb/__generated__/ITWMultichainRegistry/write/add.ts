@@ -26,6 +26,29 @@ export type AddParams = Prettify<
       asyncParams: () => Promise<AddParamsInternal>;
     }
 >;
+const METHOD = [
+  "0x26c5b516",
+  [
+    {
+      type: "address",
+      name: "_deployer",
+    },
+    {
+      type: "address",
+      name: "_deployment",
+    },
+    {
+      type: "uint256",
+      name: "_chainId",
+    },
+    {
+      type: "string",
+      name: "metadataUri",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "add" function on the contract.
  * @param options - The options for the "add" function.
@@ -50,45 +73,23 @@ export type AddParams = Prettify<
 export function add(options: BaseTransactionOptions<AddParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x26c5b516",
-      [
-        {
-          type: "address",
-          name: "_deployer",
-        },
-        {
-          type: "address",
-          name: "_deployment",
-        },
-        {
-          type: "uint256",
-          name: "_chainId",
-        },
-        {
-          type: "string",
-          name: "metadataUri",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.deployer,
-          resolvedParams.deployment,
-          resolvedParams.chainId,
-          resolvedParams.metadataUri,
-        ] as const;
-      }
-
-      return [
-        options.deployer,
-        options.deployment,
-        options.chainId,
-        options.metadataUri,
-      ] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.deployer,
+              resolvedParams.deployment,
+              resolvedParams.chainId,
+              resolvedParams.metadataUri,
+            ] as const;
+          }
+        : [
+            options.deployer,
+            options.deployment,
+            options.chainId,
+            options.metadataUri,
+          ],
   });
 }

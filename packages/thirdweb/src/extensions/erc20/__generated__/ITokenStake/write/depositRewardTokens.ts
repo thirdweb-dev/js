@@ -17,6 +17,17 @@ export type DepositRewardTokensParams = Prettify<
       asyncParams: () => Promise<DepositRewardTokensParamsInternal>;
     }
 >;
+const METHOD = [
+  "0x16c621e0",
+  [
+    {
+      type: "uint256",
+      name: "_amount",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "depositRewardTokens" function on the contract.
  * @param options - The options for the "depositRewardTokens" function.
@@ -40,23 +51,13 @@ export function depositRewardTokens(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x16c621e0",
-      [
-        {
-          type: "uint256",
-          name: "_amount",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.amount] as const;
-      }
-
-      return [options.amount] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.amount] as const;
+          }
+        : [options.amount],
   });
 }

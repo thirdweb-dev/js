@@ -27,6 +27,33 @@ export type BuyParams = Prettify<
       asyncParams: () => Promise<BuyParamsInternal>;
     }
 >;
+const METHOD = [
+  "0x7687ab02",
+  [
+    {
+      type: "uint256",
+      name: "_listingId",
+    },
+    {
+      type: "address",
+      name: "_buyFor",
+    },
+    {
+      type: "uint256",
+      name: "_quantity",
+    },
+    {
+      type: "address",
+      name: "_currency",
+    },
+    {
+      type: "uint256",
+      name: "_totalPrice",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "buy" function on the contract.
  * @param options - The options for the "buy" function.
@@ -52,51 +79,25 @@ export type BuyParams = Prettify<
 export function buy(options: BaseTransactionOptions<BuyParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x7687ab02",
-      [
-        {
-          type: "uint256",
-          name: "_listingId",
-        },
-        {
-          type: "address",
-          name: "_buyFor",
-        },
-        {
-          type: "uint256",
-          name: "_quantity",
-        },
-        {
-          type: "address",
-          name: "_currency",
-        },
-        {
-          type: "uint256",
-          name: "_totalPrice",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.listingId,
-          resolvedParams.buyFor,
-          resolvedParams.quantity,
-          resolvedParams.currency,
-          resolvedParams.totalPrice,
-        ] as const;
-      }
-
-      return [
-        options.listingId,
-        options.buyFor,
-        options.quantity,
-        options.currency,
-        options.totalPrice,
-      ] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.listingId,
+              resolvedParams.buyFor,
+              resolvedParams.quantity,
+              resolvedParams.currency,
+              resolvedParams.totalPrice,
+            ] as const;
+          }
+        : [
+            options.listingId,
+            options.buyFor,
+            options.quantity,
+            options.currency,
+            options.totalPrice,
+          ],
   });
 }

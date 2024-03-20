@@ -34,6 +34,55 @@ export type SetClaimConditionsParams = Prettify<
       asyncParams: () => Promise<SetClaimConditionsParamsInternal>;
     }
 >;
+const METHOD = [
+  "0xe23b8164",
+  [
+    {
+      type: "tuple[]",
+      name: "phases",
+      components: [
+        {
+          type: "uint256",
+          name: "startTimestamp",
+        },
+        {
+          type: "uint256",
+          name: "maxClaimableSupply",
+        },
+        {
+          type: "uint256",
+          name: "supplyClaimed",
+        },
+        {
+          type: "uint256",
+          name: "quantityLimitPerWallet",
+        },
+        {
+          type: "uint256",
+          name: "waitTimeInSecondsBetweenClaims",
+        },
+        {
+          type: "bytes32",
+          name: "merkleRoot",
+        },
+        {
+          type: "uint256",
+          name: "pricePerToken",
+        },
+        {
+          type: "address",
+          name: "currency",
+        },
+      ],
+    },
+    {
+      type: "bool",
+      name: "resetClaimEligibility",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "setClaimConditions" function on the contract.
  * @param options - The options for the "setClaimConditions" function.
@@ -58,64 +107,16 @@ export function setClaimConditions(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0xe23b8164",
-      [
-        {
-          type: "tuple[]",
-          name: "phases",
-          components: [
-            {
-              type: "uint256",
-              name: "startTimestamp",
-            },
-            {
-              type: "uint256",
-              name: "maxClaimableSupply",
-            },
-            {
-              type: "uint256",
-              name: "supplyClaimed",
-            },
-            {
-              type: "uint256",
-              name: "quantityLimitPerWallet",
-            },
-            {
-              type: "uint256",
-              name: "waitTimeInSecondsBetweenClaims",
-            },
-            {
-              type: "bytes32",
-              name: "merkleRoot",
-            },
-            {
-              type: "uint256",
-              name: "pricePerToken",
-            },
-            {
-              type: "address",
-              name: "currency",
-            },
-          ],
-        },
-        {
-          type: "bool",
-          name: "resetClaimEligibility",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.phases,
-          resolvedParams.resetClaimEligibility,
-        ] as const;
-      }
-
-      return [options.phases, options.resetClaimEligibility] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.phases,
+              resolvedParams.resetClaimEligibility,
+            ] as const;
+          }
+        : [options.phases, options.resetClaimEligibility],
   });
 }

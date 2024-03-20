@@ -22,6 +22,29 @@ export type DeployProxyByImplementationParams = Prettify<
       asyncParams: () => Promise<DeployProxyByImplementationParamsInternal>;
     }
 >;
+const METHOD = [
+  "0x11b804ab",
+  [
+    {
+      type: "address",
+      name: "implementation",
+    },
+    {
+      type: "bytes",
+      name: "data",
+    },
+    {
+      type: "bytes32",
+      name: "salt",
+    },
+  ],
+  [
+    {
+      type: "address",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "deployProxyByImplementation" function on the contract.
  * @param options - The options for the "deployProxyByImplementation" function.
@@ -47,39 +70,17 @@ export function deployProxyByImplementation(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x11b804ab",
-      [
-        {
-          type: "address",
-          name: "implementation",
-        },
-        {
-          type: "bytes",
-          name: "data",
-        },
-        {
-          type: "bytes32",
-          name: "salt",
-        },
-      ],
-      [
-        {
-          type: "address",
-        },
-      ],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.implementation,
-          resolvedParams.data,
-          resolvedParams.salt,
-        ] as const;
-      }
-
-      return [options.implementation, options.data, options.salt] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.implementation,
+              resolvedParams.data,
+              resolvedParams.salt,
+            ] as const;
+          }
+        : [options.implementation, options.data, options.salt],
   });
 }

@@ -20,6 +20,29 @@ export type RemoveForParams = Prettify<
       asyncParams: () => Promise<RemoveForParamsInternal>;
     }
 >;
+const METHOD = [
+  "0x787bd966",
+  [
+    {
+      type: "address",
+      name: "fidOwner",
+    },
+    {
+      type: "bytes",
+      name: "key",
+    },
+    {
+      type: "uint256",
+      name: "deadline",
+    },
+    {
+      type: "bytes",
+      name: "sig",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "removeFor" function on the contract.
  * @param options - The options for the "removeFor" function.
@@ -44,45 +67,18 @@ export type RemoveForParams = Prettify<
 export function removeFor(options: BaseTransactionOptions<RemoveForParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x787bd966",
-      [
-        {
-          type: "address",
-          name: "fidOwner",
-        },
-        {
-          type: "bytes",
-          name: "key",
-        },
-        {
-          type: "uint256",
-          name: "deadline",
-        },
-        {
-          type: "bytes",
-          name: "sig",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.fidOwner,
-          resolvedParams.key,
-          resolvedParams.deadline,
-          resolvedParams.sig,
-        ] as const;
-      }
-
-      return [
-        options.fidOwner,
-        options.key,
-        options.deadline,
-        options.sig,
-      ] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.fidOwner,
+              resolvedParams.key,
+              resolvedParams.deadline,
+              resolvedParams.sig,
+            ] as const;
+          }
+        : [options.fidOwner, options.key, options.deadline, options.sig],
   });
 }

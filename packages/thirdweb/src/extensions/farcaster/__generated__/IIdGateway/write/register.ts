@@ -21,6 +21,30 @@ export type RegisterParams = Prettify<
       asyncParams: () => Promise<RegisterParamsInternal>;
     }
 >;
+const METHOD = [
+  "0x6d705ebb",
+  [
+    {
+      type: "address",
+      name: "recovery",
+    },
+    {
+      type: "uint256",
+      name: "extraStorage",
+    },
+  ],
+  [
+    {
+      type: "uint256",
+      name: "fid",
+    },
+    {
+      type: "uint256",
+      name: "overpayment",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "register" function on the contract.
  * @param options - The options for the "register" function.
@@ -43,36 +67,16 @@ export type RegisterParams = Prettify<
 export function register(options: BaseTransactionOptions<RegisterParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x6d705ebb",
-      [
-        {
-          type: "address",
-          name: "recovery",
-        },
-        {
-          type: "uint256",
-          name: "extraStorage",
-        },
-      ],
-      [
-        {
-          type: "uint256",
-          name: "fid",
-        },
-        {
-          type: "uint256",
-          name: "overpayment",
-        },
-      ],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.recovery, resolvedParams.extraStorage] as const;
-      }
-
-      return [options.recovery, options.extraStorage] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.recovery,
+              resolvedParams.extraStorage,
+            ] as const;
+          }
+        : [options.recovery, options.extraStorage],
   });
 }

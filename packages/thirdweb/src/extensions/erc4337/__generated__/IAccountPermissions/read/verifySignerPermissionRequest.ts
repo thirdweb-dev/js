@@ -24,6 +24,68 @@ export type VerifySignerPermissionRequestParams = {
   signature: AbiParameterToPrimitiveType<{ type: "bytes"; name: "signature" }>;
 };
 
+const METHOD = [
+  "0xa9082d84",
+  [
+    {
+      type: "tuple",
+      name: "req",
+      components: [
+        {
+          type: "address",
+          name: "signer",
+        },
+        {
+          type: "uint8",
+          name: "isAdmin",
+        },
+        {
+          type: "address[]",
+          name: "approvedTargets",
+        },
+        {
+          type: "uint256",
+          name: "nativeTokenLimitPerTransaction",
+        },
+        {
+          type: "uint128",
+          name: "permissionStartTimestamp",
+        },
+        {
+          type: "uint128",
+          name: "permissionEndTimestamp",
+        },
+        {
+          type: "uint128",
+          name: "reqValidityStartTimestamp",
+        },
+        {
+          type: "uint128",
+          name: "reqValidityEndTimestamp",
+        },
+        {
+          type: "bytes32",
+          name: "uid",
+        },
+      ],
+    },
+    {
+      type: "bytes",
+      name: "signature",
+    },
+  ],
+  [
+    {
+      type: "bool",
+      name: "success",
+    },
+    {
+      type: "address",
+      name: "signer",
+    },
+  ],
+] as const;
+
 /**
  * Calls the "verifySignerPermissionRequest" function on the contract.
  * @param options - The options for the verifySignerPermissionRequest function.
@@ -45,67 +107,7 @@ export async function verifySignerPermissionRequest(
 ) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0xa9082d84",
-      [
-        {
-          type: "tuple",
-          name: "req",
-          components: [
-            {
-              type: "address",
-              name: "signer",
-            },
-            {
-              type: "uint8",
-              name: "isAdmin",
-            },
-            {
-              type: "address[]",
-              name: "approvedTargets",
-            },
-            {
-              type: "uint256",
-              name: "nativeTokenLimitPerTransaction",
-            },
-            {
-              type: "uint128",
-              name: "permissionStartTimestamp",
-            },
-            {
-              type: "uint128",
-              name: "permissionEndTimestamp",
-            },
-            {
-              type: "uint128",
-              name: "reqValidityStartTimestamp",
-            },
-            {
-              type: "uint128",
-              name: "reqValidityEndTimestamp",
-            },
-            {
-              type: "bytes32",
-              name: "uid",
-            },
-          ],
-        },
-        {
-          type: "bytes",
-          name: "signature",
-        },
-      ],
-      [
-        {
-          type: "bool",
-          name: "success",
-        },
-        {
-          type: "address",
-          name: "signer",
-        },
-      ],
-    ],
+    method: METHOD,
     params: [options.req, options.signature],
   });
 }

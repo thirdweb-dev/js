@@ -20,6 +20,17 @@ export type StakeParams = Prettify<
       asyncParams: () => Promise<StakeParamsInternal>;
     }
 >;
+const METHOD = [
+  "0x0fbf0a93",
+  [
+    {
+      type: "uint256[]",
+      name: "tokenIds",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "stake" function on the contract.
  * @param options - The options for the "stake" function.
@@ -41,23 +52,13 @@ export type StakeParams = Prettify<
 export function stake(options: BaseTransactionOptions<StakeParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x0fbf0a93",
-      [
-        {
-          type: "uint256[]",
-          name: "tokenIds",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.tokenIds] as const;
-      }
-
-      return [options.tokenIds] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.tokenIds] as const;
+          }
+        : [options.tokenIds],
   });
 }

@@ -24,6 +24,33 @@ export type SafeBatchTransferFromParams = Prettify<
       asyncParams: () => Promise<SafeBatchTransferFromParamsInternal>;
     }
 >;
+const METHOD = [
+  "0x2eb2c2d6",
+  [
+    {
+      type: "address",
+      name: "_from",
+    },
+    {
+      type: "address",
+      name: "_to",
+    },
+    {
+      type: "uint256[]",
+      name: "tokenIds",
+    },
+    {
+      type: "uint256[]",
+      name: "_values",
+    },
+    {
+      type: "bytes",
+      name: "_data",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "safeBatchTransferFrom" function on the contract.
  * @param options - The options for the "safeBatchTransferFrom" function.
@@ -51,51 +78,25 @@ export function safeBatchTransferFrom(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x2eb2c2d6",
-      [
-        {
-          type: "address",
-          name: "_from",
-        },
-        {
-          type: "address",
-          name: "_to",
-        },
-        {
-          type: "uint256[]",
-          name: "tokenIds",
-        },
-        {
-          type: "uint256[]",
-          name: "_values",
-        },
-        {
-          type: "bytes",
-          name: "_data",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [
-          resolvedParams.from,
-          resolvedParams.to,
-          resolvedParams.tokenIds,
-          resolvedParams.values,
-          resolvedParams.data,
-        ] as const;
-      }
-
-      return [
-        options.from,
-        options.to,
-        options.tokenIds,
-        options.values,
-        options.data,
-      ] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.from,
+              resolvedParams.to,
+              resolvedParams.tokenIds,
+              resolvedParams.values,
+              resolvedParams.data,
+            ] as const;
+          }
+        : [
+            options.from,
+            options.to,
+            options.tokenIds,
+            options.values,
+            options.data,
+          ],
   });
 }

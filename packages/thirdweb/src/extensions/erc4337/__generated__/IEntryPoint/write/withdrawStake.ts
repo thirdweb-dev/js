@@ -20,6 +20,17 @@ export type WithdrawStakeParams = Prettify<
       asyncParams: () => Promise<WithdrawStakeParamsInternal>;
     }
 >;
+const METHOD = [
+  "0xc23a5cea",
+  [
+    {
+      type: "address",
+      name: "withdrawAddress",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "withdrawStake" function on the contract.
  * @param options - The options for the "withdrawStake" function.
@@ -43,23 +54,13 @@ export function withdrawStake(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0xc23a5cea",
-      [
-        {
-          type: "address",
-          name: "withdrawAddress",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.withdrawAddress] as const;
-      }
-
-      return [options.withdrawAddress] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.withdrawAddress] as const;
+          }
+        : [options.withdrawAddress],
   });
 }

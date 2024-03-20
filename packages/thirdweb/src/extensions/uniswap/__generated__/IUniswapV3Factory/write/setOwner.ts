@@ -17,6 +17,17 @@ export type SetOwnerParams = Prettify<
       asyncParams: () => Promise<SetOwnerParamsInternal>;
     }
 >;
+const METHOD = [
+  "0x13af4035",
+  [
+    {
+      type: "address",
+      name: "newOwner",
+    },
+  ],
+  [],
+] as const;
+
 /**
  * Calls the "setOwner" function on the contract.
  * @param options - The options for the "setOwner" function.
@@ -38,23 +49,13 @@ export type SetOwnerParams = Prettify<
 export function setOwner(options: BaseTransactionOptions<SetOwnerParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x13af4035",
-      [
-        {
-          type: "address",
-          name: "newOwner",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
-      if ("asyncParams" in options) {
-        const resolvedParams = await options.asyncParams();
-        return [resolvedParams.newOwner] as const;
-      }
-
-      return [options.newOwner] as const;
-    },
+    method: METHOD,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.newOwner] as const;
+          }
+        : [options.newOwner],
   });
 }
