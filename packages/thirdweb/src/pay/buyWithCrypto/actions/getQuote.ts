@@ -219,27 +219,27 @@ export async function getBuyWithCryptoQuote(
   params: GetBuyWithCryptoQuoteParams,
 ): Promise<BuyWithCryptoQuote> {
   try {
-    const urlParamsObj: Record<string, string> = {
+    const queryParams = new URLSearchParams({
       fromAddress: params.fromAddress,
       fromChainId: params.fromChainId.toString(),
       fromTokenAddress: params.fromTokenAddress.toLowerCase(),
       toChainId: params.toChainId.toString(),
       toTokenAddress: params.toTokenAddress.toLowerCase(),
-    };
+    });
 
     if ("fromAmount" in params && params.fromAmount) {
-      urlParamsObj.fromAmount = params.fromAmount;
+      queryParams.append("fromAmount", params.fromAmount);
     }
 
     if ("toAmount" in params && params.toAmount) {
-      urlParamsObj.toAmount = params.toAmount;
+      queryParams.append("toAmount", params.toAmount);
     }
 
     if (params.maxSlippageBPS) {
-      urlParamsObj.maxSlippageBPS = params.maxSlippageBPS.toString();
+      queryParams.append("maxSlippageBPS", params.maxSlippageBPS.toString());
     }
 
-    const queryString = new URLSearchParams(urlParamsObj).toString();
+    const queryString = queryParams.toString();
     const url = `${getPayBuyWithCryptoQuoteEndpoint()}?${queryString}`;
 
     const response = await getClientFetch(params.client)(url);
