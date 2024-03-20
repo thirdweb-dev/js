@@ -407,9 +407,6 @@ async function alignTxFromEthers(
     accessList,
     chainId,
     to,
-    // unused here on purpose
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    from,
     data,
     nonce,
     value,
@@ -417,47 +414,61 @@ async function alignTxFromEthers(
     gasLimit,
     maxFeePerGas,
     maxPriorityFeePerGas,
-    ...rest
   } = tx;
 
-  // massage "type" to fit ethers
-  let type: string;
   switch (ethersType) {
-    case 0: {
-      type = "legacy";
-      break;
-    }
     case 1: {
-      type = "eip2930";
-      break;
+      if (!chainId) {
+        throw new Error("ChainId is required for EIP-2930 transactions");
+      }
+      return {
+        type: "eip2930",
+        chainId,
+        to,
+        data: (data ?? undefined) as Hex | undefined,
+        nonce: nonce ? ethers.BigNumber.from(gasPrice).toNumber() : undefined,
+        value: value ? ethers.BigNumber.from(value).toBigInt() : undefined,
+        gasPrice: gasPrice
+          ? ethers.BigNumber.from(gasPrice).toBigInt()
+          : undefined,
+        gas: gasLimit ? ethers.BigNumber.from(gasLimit).toBigInt() : undefined,
+        accessList: accessList as AccessList,
+      };
     }
     case 2: {
-      type = "eip1559";
-      break;
+      if (!chainId) {
+        throw new Error("ChainId is required for EIP-1559 transactions");
+      }
+      return {
+        type: "eip1559",
+        chainId,
+        to,
+        data: (data ?? undefined) as Hex | undefined,
+        nonce: nonce ? ethers.BigNumber.from(gasPrice).toNumber() : undefined,
+        value: value ? ethers.BigNumber.from(value).toBigInt() : undefined,
+        gas: gasLimit ? ethers.BigNumber.from(gasLimit).toBigInt() : undefined,
+        maxFeePerGas: maxFeePerGas
+          ? ethers.BigNumber.from(maxFeePerGas).toBigInt()
+          : undefined,
+        maxPriorityFeePerGas:
+          ethers.BigNumber.from(maxPriorityFeePerGas).toBigInt(),
+        accessList: accessList as AccessList,
+      };
     }
+    case 0:
     default: {
-      // fall back to legacy
-      type = "legacy";
-      break;
+      return {
+        type: "legacy",
+        chainId,
+        to,
+        data: (data ?? undefined) as Hex | undefined,
+        nonce: nonce ? ethers.BigNumber.from(gasPrice).toNumber() : undefined,
+        value: value ? ethers.BigNumber.from(value).toBigInt() : undefined,
+        gasPrice: gasPrice
+          ? ethers.BigNumber.from(gasPrice).toBigInt()
+          : undefined,
+        gas: gasLimit ? ethers.BigNumber.from(gasLimit).toBigInt() : undefined,
+      };
     }
   }
-
-  return {
-    ...rest,
-    // access list is the same values just strictly typed
-    accessList: accessList as AccessList,
-    chainId,
-    type,
-    to,
-    data: (data ?? undefined) as Hex | undefined,
-    nonce: nonce ? ethers.BigNumber.from(gasPrice).toNumber() : undefined,
-    value: value ? ethers.BigNumber.from(value).toBigInt() : undefined,
-    gasPrice: gasPrice ? ethers.BigNumber.from(gasPrice).toBigInt() : undefined,
-    gas: gasLimit ? ethers.BigNumber.from(gasLimit).toBigInt() : undefined,
-    maxFeePerGas: maxFeePerGas
-      ? ethers.BigNumber.from(maxFeePerGas).toBigInt()
-      : undefined,
-    maxPriorityFeePerGas:
-      ethers.BigNumber.from(maxPriorityFeePerGas).toBigInt(),
-  };
 }

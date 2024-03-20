@@ -80,7 +80,7 @@
     "rimraf": "5.0.5",
     "size-limit": "11.1.1",
     "typedoc-gen": "workspace:*",
-    "typescript": "5.4.2",
+    "typescript": "5.3.3",
     "vitest": "1.4.0"
   },
   "manypkg": {
