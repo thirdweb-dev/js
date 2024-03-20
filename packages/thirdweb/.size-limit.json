@@ -21,5 +21,11 @@
     "path": "./dist/esm/exports/chains.js",
     "limit": "500 B",
     "import": "{ ethereum }"
+  },
+  {
+    "name": "thirdweb/react (minimal + tree-shaking)",
+    "path": "./dist/esm/exports/react.js",
+    "limit": "60 kB",
+    "import": "{ ThirdwebProvider, useConnect }"
   }
 ]
