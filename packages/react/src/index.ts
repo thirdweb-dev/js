@@ -107,6 +107,11 @@ export {
   type Coin98WalletConfigOptions,
 } from "./wallet/wallets/coin98/coin98Wallet";
 
+export {
+  imTokenWallet,
+  type ImTokenWalletConfigOptions,
+} from "./wallet/wallets/imtoken/imTokenWallet";
+
 // theming
 export { darkTheme, lightTheme } from "./design-system/index";
 export type { Theme, ThemeOverrides } from "./design-system/index";
