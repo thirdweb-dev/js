@@ -185,6 +185,7 @@ export function ConfirmationScreen(props: {
       <Button
         variant="accent"
         fullWidth
+        disabled={status === "pending"}
         onClick={async () => {
           if (step === "approval" && props.buyWithCryptoQuote.approval) {
             try {
