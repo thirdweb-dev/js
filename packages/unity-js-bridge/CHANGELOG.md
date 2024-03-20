@@ -1,5 +1,15 @@
 # @thirdweb-dev/unity-js-bridge
 
+## 0.4.12
+
+### Patch Changes
+
+- [#2501](https://github.com/thirdweb-dev/js/pull/2501) [`9c884e2`](https://github.com/thirdweb-dev/js/commit/9c884e2f55f1d096555c1fcf65bc850684d258c9) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [Unity] Expose additional WC QR Options
+
+- Updated dependencies [[`79c9e13`](https://github.com/thirdweb-dev/js/commit/79c9e130fdc6e1f7de1486894a5ac3e6d6776fa4)]:
+  - @thirdweb-dev/wallets@2.4.24
+  - @thirdweb-dev/auth@4.1.46
+
 ## 0.4.11
 
 ### Patch Changes
