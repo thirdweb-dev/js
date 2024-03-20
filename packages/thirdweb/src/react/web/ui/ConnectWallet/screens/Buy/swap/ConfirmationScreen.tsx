@@ -199,7 +199,8 @@ export function ConfirmationScreen(props: {
 
               setStep("swap");
               setStatus("idle");
-            } catch {
+            } catch (e) {
+              console.error(e);
               setStatus("error");
             }
           }
@@ -234,7 +235,8 @@ export function ConfirmationScreen(props: {
               setSwapTx({
                 transactionHash: _swapTx.transactionHash, // ?? _swapTx.userOpHash,
               });
-            } catch {
+            } catch (e) {
+              console.error(e);
               setStatus("error");
             }
           }
