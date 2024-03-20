@@ -1,7 +1,8 @@
+import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { AbiParameterToPrimitiveType } from "abitype";
 import type { Prettify } from "../../../../../utils/type-utils.js";
+import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "onSignerAdded" function.
@@ -22,6 +23,48 @@ export type OnSignerAddedParams = Prettify<
       asyncParams: () => Promise<OnSignerAddedParamsInternal>;
     }
 >;
+const FN_SELECTOR = "0x9ddbb9d8" as const;
+const FN_INPUTS = [
+  {
+    type: "address",
+    name: "signer",
+  },
+  {
+    type: "address",
+    name: "creatorAdmin",
+  },
+  {
+    type: "bytes",
+    name: "data",
+  },
+] as const;
+const FN_OUTPUTS = [] as const;
+
+/**
+ * Encodes the parameters for the "onSignerAdded" function.
+ * @param options - The options for the onSignerAdded function.
+ * @returns The encoded ABI parameters.
+ * @extension ERC4337
+ * @example
+ * ```
+ * import { encodeOnSignerAddedParams } "thirdweb/extensions/erc4337";
+ * const result = encodeOnSignerAddedParams({
+ *  signer: ...,
+ *  creatorAdmin: ...,
+ *  data: ...,
+ * });
+ * ```
+ */
+export function encodeOnSignerAddedParams(
+  options: OnSignerAddedParamsInternal,
+) {
+  return encodeAbiParameters(FN_INPUTS, [
+    options.signer,
+    options.creatorAdmin,
+    options.data,
+  ]);
+}
+
 /**
  * Calls the "onSignerAdded" function on the contract.
  * @param options - The options for the "onSignerAdded" function.
@@ -47,24 +90,7 @@ export function onSignerAdded(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x9ddbb9d8",
-      [
-        {
-          type: "address",
-          name: "signer",
-        },
-        {
-          type: "address",
-          name: "creatorAdmin",
-        },
-        {
-          type: "bytes",
-          name: "data",
-        },
-      ],
-      [],
-    ],
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params:
       "asyncParams" in options
         ? async () => {

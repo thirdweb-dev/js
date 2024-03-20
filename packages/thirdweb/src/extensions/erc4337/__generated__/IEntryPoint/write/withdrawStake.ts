@@ -1,7 +1,8 @@
+import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { AbiParameterToPrimitiveType } from "abitype";
 import type { Prettify } from "../../../../../utils/type-utils.js";
+import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "withdrawStake" function.
@@ -20,6 +21,34 @@ export type WithdrawStakeParams = Prettify<
       asyncParams: () => Promise<WithdrawStakeParamsInternal>;
     }
 >;
+const FN_SELECTOR = "0xc23a5cea" as const;
+const FN_INPUTS = [
+  {
+    type: "address",
+    name: "withdrawAddress",
+  },
+] as const;
+const FN_OUTPUTS = [] as const;
+
+/**
+ * Encodes the parameters for the "withdrawStake" function.
+ * @param options - The options for the withdrawStake function.
+ * @returns The encoded ABI parameters.
+ * @extension ERC4337
+ * @example
+ * ```
+ * import { encodeWithdrawStakeParams } "thirdweb/extensions/erc4337";
+ * const result = encodeWithdrawStakeParams({
+ *  withdrawAddress: ...,
+ * });
+ * ```
+ */
+export function encodeWithdrawStakeParams(
+  options: WithdrawStakeParamsInternal,
+) {
+  return encodeAbiParameters(FN_INPUTS, [options.withdrawAddress]);
+}
+
 /**
  * Calls the "withdrawStake" function on the contract.
  * @param options - The options for the "withdrawStake" function.
@@ -43,16 +72,7 @@ export function withdrawStake(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0xc23a5cea",
-      [
-        {
-          type: "address",
-          name: "withdrawAddress",
-        },
-      ],
-      [],
-    ],
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params:
       "asyncParams" in options
         ? async () => {

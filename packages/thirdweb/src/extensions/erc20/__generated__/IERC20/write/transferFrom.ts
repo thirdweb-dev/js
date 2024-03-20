@@ -1,7 +1,8 @@
+import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { AbiParameterToPrimitiveType } from "abitype";
 import type { Prettify } from "../../../../../utils/type-utils.js";
+import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "transferFrom" function.
@@ -19,6 +20,50 @@ export type TransferFromParams = Prettify<
       asyncParams: () => Promise<TransferFromParamsInternal>;
     }
 >;
+const FN_SELECTOR = "0x23b872dd" as const;
+const FN_INPUTS = [
+  {
+    type: "address",
+    name: "from",
+  },
+  {
+    type: "address",
+    name: "to",
+  },
+  {
+    type: "uint256",
+    name: "value",
+  },
+] as const;
+const FN_OUTPUTS = [
+  {
+    type: "bool",
+  },
+] as const;
+
+/**
+ * Encodes the parameters for the "transferFrom" function.
+ * @param options - The options for the transferFrom function.
+ * @returns The encoded ABI parameters.
+ * @extension ERC20
+ * @example
+ * ```
+ * import { encodeTransferFromParams } "thirdweb/extensions/erc20";
+ * const result = encodeTransferFromParams({
+ *  from: ...,
+ *  to: ...,
+ *  value: ...,
+ * });
+ * ```
+ */
+export function encodeTransferFromParams(options: TransferFromParamsInternal) {
+  return encodeAbiParameters(FN_INPUTS, [
+    options.from,
+    options.to,
+    options.value,
+  ]);
+}
+
 /**
  * Calls the "transferFrom" function on the contract.
  * @param options - The options for the "transferFrom" function.
@@ -44,28 +89,7 @@ export function transferFrom(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x23b872dd",
-      [
-        {
-          type: "address",
-          name: "from",
-        },
-        {
-          type: "address",
-          name: "to",
-        },
-        {
-          type: "uint256",
-          name: "value",
-        },
-      ],
-      [
-        {
-          type: "bool",
-        },
-      ],
-    ],
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params:
       "asyncParams" in options
         ? async () => {

@@ -1,6 +1,9 @@
+import type { AbiParameterToPrimitiveType } from "abitype";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
-import type { AbiParameterToPrimitiveType } from "abitype";
+import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { decodeAbiParameters } from "viem";
+import type { Hex } from "../../../../../utils/encoding/hex.js";
 
 /**
  * Represents the parameters for the "supportsInterface" function.
@@ -11,6 +14,53 @@ export type SupportsInterfaceParams = {
     name: "interfaceId";
   }>;
 };
+
+const FN_SELECTOR = "0x01ffc9a7" as const;
+const FN_INPUTS = [
+  {
+    type: "bytes4",
+    name: "interfaceId",
+  },
+] as const;
+const FN_OUTPUTS = [
+  {
+    type: "bool",
+  },
+] as const;
+
+/**
+ * Encodes the parameters for the "supportsInterface" function.
+ * @param options - The options for the supportsInterface function.
+ * @returns The encoded ABI parameters.
+ * @extension ERC721
+ * @example
+ * ```
+ * import { encodeSupportsInterfaceParams } "thirdweb/extensions/erc721";
+ * const result = encodeSupportsInterfaceParams({
+ *  interfaceId: ...,
+ * });
+ * ```
+ */
+export function encodeSupportsInterfaceParams(
+  options: SupportsInterfaceParams,
+) {
+  return encodeAbiParameters(FN_INPUTS, [options.interfaceId]);
+}
+
+/**
+ * Decodes the result of the supportsInterface function call.
+ * @param result - The hexadecimal result to decode.
+ * @returns The decoded result as per the FN_OUTPUTS definition.
+ * @extension ERC721
+ * @example
+ * ```
+ * import { decodeSupportsInterfaceResult } from "thirdweb/extensions/erc721";
+ * const result = decodeSupportsInterfaceResult("...");
+ * ```
+ */
+export function decodeSupportsInterfaceResult(result: Hex) {
+  return decodeAbiParameters(FN_OUTPUTS, result)[0];
+}
 
 /**
  * Calls the "supportsInterface" function on the contract.
@@ -32,20 +82,7 @@ export async function supportsInterface(
 ) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0x01ffc9a7",
-      [
-        {
-          type: "bytes4",
-          name: "interfaceId",
-        },
-      ],
-      [
-        {
-          type: "bool",
-        },
-      ],
-    ],
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params: [options.interfaceId],
   });
 }

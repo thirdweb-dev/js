@@ -1,7 +1,8 @@
+import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { AbiParameterToPrimitiveType } from "abitype";
 import type { Prettify } from "../../../../../utils/type-utils.js";
+import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "approveCurrencyForListing" function.
@@ -25,6 +26,48 @@ export type ApproveCurrencyForListingParams = Prettify<
       asyncParams: () => Promise<ApproveCurrencyForListingParamsInternal>;
     }
 >;
+const FN_SELECTOR = "0xea8f9a3c" as const;
+const FN_INPUTS = [
+  {
+    type: "uint256",
+    name: "_listingId",
+  },
+  {
+    type: "address",
+    name: "_currency",
+  },
+  {
+    type: "uint256",
+    name: "_pricePerTokenInCurrency",
+  },
+] as const;
+const FN_OUTPUTS = [] as const;
+
+/**
+ * Encodes the parameters for the "approveCurrencyForListing" function.
+ * @param options - The options for the approveCurrencyForListing function.
+ * @returns The encoded ABI parameters.
+ * @extension MARKETPLACE
+ * @example
+ * ```
+ * import { encodeApproveCurrencyForListingParams } "thirdweb/extensions/marketplace";
+ * const result = encodeApproveCurrencyForListingParams({
+ *  listingId: ...,
+ *  currency: ...,
+ *  pricePerTokenInCurrency: ...,
+ * });
+ * ```
+ */
+export function encodeApproveCurrencyForListingParams(
+  options: ApproveCurrencyForListingParamsInternal,
+) {
+  return encodeAbiParameters(FN_INPUTS, [
+    options.listingId,
+    options.currency,
+    options.pricePerTokenInCurrency,
+  ]);
+}
+
 /**
  * Calls the "approveCurrencyForListing" function on the contract.
  * @param options - The options for the "approveCurrencyForListing" function.
@@ -50,24 +93,7 @@ export function approveCurrencyForListing(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0xea8f9a3c",
-      [
-        {
-          type: "uint256",
-          name: "_listingId",
-        },
-        {
-          type: "address",
-          name: "_currency",
-        },
-        {
-          type: "uint256",
-          name: "_pricePerTokenInCurrency",
-        },
-      ],
-      [],
-    ],
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params:
       "asyncParams" in options
         ? async () => {

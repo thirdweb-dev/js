@@ -1,7 +1,8 @@
+import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { AbiParameterToPrimitiveType } from "abitype";
 import type { Prettify } from "../../../../../utils/type-utils.js";
+import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "register" function.
@@ -42,6 +43,95 @@ export type RegisterParams = Prettify<
       asyncParams: () => Promise<RegisterParamsInternal>;
     }
 >;
+const FN_SELECTOR = "0xa44c9ce7" as const;
+const FN_INPUTS = [
+  {
+    type: "tuple",
+    name: "registerParams",
+    components: [
+      {
+        type: "address",
+        name: "to",
+      },
+      {
+        type: "address",
+        name: "recovery",
+      },
+      {
+        type: "uint256",
+        name: "deadline",
+      },
+      {
+        type: "bytes",
+        name: "sig",
+      },
+    ],
+  },
+  {
+    type: "tuple[]",
+    name: "signerParams",
+    components: [
+      {
+        type: "uint32",
+        name: "keyType",
+      },
+      {
+        type: "bytes",
+        name: "key",
+      },
+      {
+        type: "uint8",
+        name: "metadataType",
+      },
+      {
+        type: "bytes",
+        name: "metadata",
+      },
+      {
+        type: "uint256",
+        name: "deadline",
+      },
+      {
+        type: "bytes",
+        name: "sig",
+      },
+    ],
+  },
+  {
+    type: "uint256",
+    name: "extraStorage",
+  },
+] as const;
+const FN_OUTPUTS = [
+  {
+    type: "uint256",
+    name: "fid",
+  },
+] as const;
+
+/**
+ * Encodes the parameters for the "register" function.
+ * @param options - The options for the register function.
+ * @returns The encoded ABI parameters.
+ * @extension FARCASTER
+ * @example
+ * ```
+ * import { encodeRegisterParams } "thirdweb/extensions/farcaster";
+ * const result = encodeRegisterParams({
+ *  registerParams: ...,
+ *  signerParams: ...,
+ *  extraStorage: ...,
+ * });
+ * ```
+ */
+export function encodeRegisterParams(options: RegisterParamsInternal) {
+  return encodeAbiParameters(FN_INPUTS, [
+    options.registerParams,
+    options.signerParams,
+    options.extraStorage,
+  ]);
+}
+
 /**
  * Calls the "register" function on the contract.
  * @param options - The options for the "register" function.
@@ -65,73 +155,7 @@ export type RegisterParams = Prettify<
 export function register(options: BaseTransactionOptions<RegisterParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0xa44c9ce7",
-      [
-        {
-          type: "tuple",
-          name: "registerParams",
-          components: [
-            {
-              type: "address",
-              name: "to",
-            },
-            {
-              type: "address",
-              name: "recovery",
-            },
-            {
-              type: "uint256",
-              name: "deadline",
-            },
-            {
-              type: "bytes",
-              name: "sig",
-            },
-          ],
-        },
-        {
-          type: "tuple[]",
-          name: "signerParams",
-          components: [
-            {
-              type: "uint32",
-              name: "keyType",
-            },
-            {
-              type: "bytes",
-              name: "key",
-            },
-            {
-              type: "uint8",
-              name: "metadataType",
-            },
-            {
-              type: "bytes",
-              name: "metadata",
-            },
-            {
-              type: "uint256",
-              name: "deadline",
-            },
-            {
-              type: "bytes",
-              name: "sig",
-            },
-          ],
-        },
-        {
-          type: "uint256",
-          name: "extraStorage",
-        },
-      ],
-      [
-        {
-          type: "uint256",
-          name: "fid",
-        },
-      ],
-    ],
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params:
       "asyncParams" in options
         ? async () => {

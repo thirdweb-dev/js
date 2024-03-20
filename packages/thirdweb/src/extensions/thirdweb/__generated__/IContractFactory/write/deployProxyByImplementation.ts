@@ -1,7 +1,8 @@
+import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { AbiParameterToPrimitiveType } from "abitype";
 import type { Prettify } from "../../../../../utils/type-utils.js";
+import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "deployProxyByImplementation" function.
@@ -22,6 +23,52 @@ export type DeployProxyByImplementationParams = Prettify<
       asyncParams: () => Promise<DeployProxyByImplementationParamsInternal>;
     }
 >;
+const FN_SELECTOR = "0x11b804ab" as const;
+const FN_INPUTS = [
+  {
+    type: "address",
+    name: "implementation",
+  },
+  {
+    type: "bytes",
+    name: "data",
+  },
+  {
+    type: "bytes32",
+    name: "salt",
+  },
+] as const;
+const FN_OUTPUTS = [
+  {
+    type: "address",
+  },
+] as const;
+
+/**
+ * Encodes the parameters for the "deployProxyByImplementation" function.
+ * @param options - The options for the deployProxyByImplementation function.
+ * @returns The encoded ABI parameters.
+ * @extension THIRDWEB
+ * @example
+ * ```
+ * import { encodeDeployProxyByImplementationParams } "thirdweb/extensions/thirdweb";
+ * const result = encodeDeployProxyByImplementationParams({
+ *  implementation: ...,
+ *  data: ...,
+ *  salt: ...,
+ * });
+ * ```
+ */
+export function encodeDeployProxyByImplementationParams(
+  options: DeployProxyByImplementationParamsInternal,
+) {
+  return encodeAbiParameters(FN_INPUTS, [
+    options.implementation,
+    options.data,
+    options.salt,
+  ]);
+}
+
 /**
  * Calls the "deployProxyByImplementation" function on the contract.
  * @param options - The options for the "deployProxyByImplementation" function.
@@ -47,28 +94,7 @@ export function deployProxyByImplementation(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x11b804ab",
-      [
-        {
-          type: "address",
-          name: "implementation",
-        },
-        {
-          type: "bytes",
-          name: "data",
-        },
-        {
-          type: "bytes32",
-          name: "salt",
-        },
-      ],
-      [
-        {
-          type: "address",
-        },
-      ],
-    ],
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params:
       "asyncParams" in options
         ? async () => {
