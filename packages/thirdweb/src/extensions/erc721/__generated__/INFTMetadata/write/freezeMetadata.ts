@@ -21,6 +21,5 @@ export function freezeMetadata(options: BaseTransactionOptions) {
   return prepareContractCall({
     contract: options.contract,
     method: ["0xd111515d", [], []],
-    params: [],
   });
 }

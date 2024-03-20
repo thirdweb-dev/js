@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "withdrawTo" function.
  */
-export type WithdrawToParams = {
+
+type WithdrawToParamsInternal = {
   withdrawAddress: AbiParameterToPrimitiveType<{
     type: "address";
     name: "withdrawAddress";
@@ -16,6 +18,12 @@ export type WithdrawToParams = {
   }>;
 };
 
+export type WithdrawToParams = Prettify<
+  | WithdrawToParamsInternal
+  | {
+      asyncParams: () => Promise<WithdrawToParamsInternal>;
+    }
+>;
 /**
  * Calls the "withdrawTo" function on the contract.
  * @param options - The options for the "withdrawTo" function.
@@ -52,6 +60,15 @@ export function withdrawTo(options: BaseTransactionOptions<WithdrawToParams>) {
       ],
       [],
     ],
-    params: [options.withdrawAddress, options.withdrawAmount],
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.withdrawAddress,
+              resolvedParams.withdrawAmount,
+            ] as const;
+          }
+        : [options.withdrawAddress, options.withdrawAmount],
   });
 }

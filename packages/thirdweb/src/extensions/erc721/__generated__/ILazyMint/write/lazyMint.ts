@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "lazyMint" function.
  */
-export type LazyMintParams = {
+
+type LazyMintParamsInternal = {
   amount: AbiParameterToPrimitiveType<{ type: "uint256"; name: "amount" }>;
   baseURIForTokens: AbiParameterToPrimitiveType<{
     type: "string";
@@ -14,6 +16,12 @@ export type LazyMintParams = {
   extraData: AbiParameterToPrimitiveType<{ type: "bytes"; name: "extraData" }>;
 };
 
+export type LazyMintParams = Prettify<
+  | LazyMintParamsInternal
+  | {
+      asyncParams: () => Promise<LazyMintParamsInternal>;
+    }
+>;
 /**
  * Calls the "lazyMint" function on the contract.
  * @param options - The options for the "lazyMint" function.
@@ -60,6 +68,16 @@ export function lazyMint(options: BaseTransactionOptions<LazyMintParams>) {
         },
       ],
     ],
-    params: [options.amount, options.baseURIForTokens, options.extraData],
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.amount,
+              resolvedParams.baseURIForTokens,
+              resolvedParams.extraData,
+            ] as const;
+          }
+        : [options.amount, options.baseURIForTokens, options.extraData],
   });
 }

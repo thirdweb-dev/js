@@ -1,7 +1,7 @@
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
-import { prepareContractCall } from "../../../transaction/prepare-contract-call.js";
 import type { Prettify } from "../../../utils/type-utils.js";
 import { toUnits } from "../../../utils/units.js";
+import { mintTo as generatedMintTo } from "../__generated__/IMintableERC20/write/mintTo.js";
 /**
  * Represents the parameters for the `mintTo` function.
  */
@@ -32,21 +32,9 @@ export type MintToParams = Prettify<
  * ```
  */
 export function mintTo(options: BaseTransactionOptions<MintToParams>) {
-  return prepareContractCall({
-    ...options,
-    method: [
-      "0x449a52f8",
-      [
-        {
-          type: "address",
-        },
-        {
-          type: "uint256",
-        },
-      ],
-      [],
-    ],
-    params: async () => {
+  return generatedMintTo({
+    contract: options.contract,
+    asyncParams: async () => {
       let amount: bigint;
       if ("amount" in options) {
         // if we need to parse the amount from ether to gwei then we pull in the decimals extension
@@ -58,7 +46,10 @@ export function mintTo(options: BaseTransactionOptions<MintToParams>) {
       } else {
         amount = options.amountWei;
       }
-      return [options.to, amount] as const;
+      return {
+        to: options.to,
+        amount: amount,
+      } as const;
     },
   });
 }

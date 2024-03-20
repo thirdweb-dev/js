@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "setRoyaltyInfoForToken" function.
  */
-export type SetRoyaltyInfoForTokenParams = {
+
+type SetRoyaltyInfoForTokenParamsInternal = {
   tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
   recipient: AbiParameterToPrimitiveType<{
     type: "address";
@@ -14,6 +16,12 @@ export type SetRoyaltyInfoForTokenParams = {
   bps: AbiParameterToPrimitiveType<{ type: "uint256"; name: "bps" }>;
 };
 
+export type SetRoyaltyInfoForTokenParams = Prettify<
+  | SetRoyaltyInfoForTokenParamsInternal
+  | {
+      asyncParams: () => Promise<SetRoyaltyInfoForTokenParamsInternal>;
+    }
+>;
 /**
  * Calls the "setRoyaltyInfoForToken" function on the contract.
  * @param options - The options for the "setRoyaltyInfoForToken" function.
@@ -57,6 +65,16 @@ export function setRoyaltyInfoForToken(
       ],
       [],
     ],
-    params: [options.tokenId, options.recipient, options.bps],
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.tokenId,
+              resolvedParams.recipient,
+              resolvedParams.bps,
+            ] as const;
+          }
+        : [options.tokenId, options.recipient, options.bps],
   });
 }

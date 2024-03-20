@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "getRoyalty" function.
  */
-export type GetRoyaltyParams = {
+
+type GetRoyaltyParamsInternal = {
   tokenAddress: AbiParameterToPrimitiveType<{
     type: "address";
     name: "tokenAddress";
@@ -14,6 +16,12 @@ export type GetRoyaltyParams = {
   value: AbiParameterToPrimitiveType<{ type: "uint256"; name: "value" }>;
 };
 
+export type GetRoyaltyParams = Prettify<
+  | GetRoyaltyParamsInternal
+  | {
+      asyncParams: () => Promise<GetRoyaltyParamsInternal>;
+    }
+>;
 /**
  * Calls the "getRoyalty" function on the contract.
  * @param options - The options for the "getRoyalty" function.
@@ -64,6 +72,16 @@ export function getRoyalty(options: BaseTransactionOptions<GetRoyaltyParams>) {
         },
       ],
     ],
-    params: [options.tokenAddress, options.tokenId, options.value],
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.tokenAddress,
+              resolvedParams.tokenId,
+              resolvedParams.value,
+            ] as const;
+          }
+        : [options.tokenAddress, options.tokenId, options.value],
   });
 }

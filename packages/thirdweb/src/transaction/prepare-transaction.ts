@@ -60,9 +60,9 @@ export function prepareTransaction<
   const abi extends Abi = [],
   const abiFn extends AbiFunction = AbiFunction,
 >(options: PrepareTransactionOptions, info?: Additional<abi, abiFn>) {
-  return {
-    ...options,
-    __preparedMethod: info?.preparedMethod,
-    __contract: info?.contract,
-  } as PreparedTransaction<abi, abiFn>;
+  if (info) {
+    (options as any).__preparedMethod = info.preparedMethod;
+    (options as any).__contract = info.contract;
+  }
+  return options as PreparedTransaction<abi, abiFn>;
 }

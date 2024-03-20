@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "postOp" function.
  */
-export type PostOpParams = {
+
+type PostOpParamsInternal = {
   mode: AbiParameterToPrimitiveType<{ type: "uint8"; name: "mode" }>;
   context: AbiParameterToPrimitiveType<{ type: "bytes"; name: "context" }>;
   actualGasCost: AbiParameterToPrimitiveType<{
@@ -14,6 +16,12 @@ export type PostOpParams = {
   }>;
 };
 
+export type PostOpParams = Prettify<
+  | PostOpParamsInternal
+  | {
+      asyncParams: () => Promise<PostOpParamsInternal>;
+    }
+>;
 /**
  * Calls the "postOp" function on the contract.
  * @param options - The options for the "postOp" function.
@@ -55,6 +63,16 @@ export function postOp(options: BaseTransactionOptions<PostOpParams>) {
       ],
       [],
     ],
-    params: [options.mode, options.context, options.actualGasCost],
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.mode,
+              resolvedParams.context,
+              resolvedParams.actualGasCost,
+            ] as const;
+          }
+        : [options.mode, options.context, options.actualGasCost],
   });
 }

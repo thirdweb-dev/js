@@ -76,21 +76,19 @@ export const CUSTOM_GAS_FOR_CHAIN: Record<number, CustomChain> = {
     gasLimit: 200000,
   },
 };
-/* eslint-enable no-useless-computed-key */
 
 export function matchError(error: string): boolean {
-  const errorIndex = ERROR_SUBSTRINGS.findIndex((substring) =>
+  const hasError = ERROR_SUBSTRINGS.some((substring) =>
     error.includes(substring),
   );
+  // can early exit if we find a match
+  if (hasError) {
+    return true;
+  }
 
-  const compositeErrorIndex = ERROR_SUBSTRINGS_COMPOSITE.findIndex((arr) => {
-    let foundError = true;
-    arr.forEach((substring) => {
-      foundError &&= error.includes(substring);
-    });
-
-    return foundError;
+  const hasCompositeError = ERROR_SUBSTRINGS_COMPOSITE.some((arr) => {
+    return arr.some((substring) => error.includes(substring));
   });
 
-  return errorIndex !== -1 || compositeErrorIndex !== -1;
+  return hasCompositeError;
 }

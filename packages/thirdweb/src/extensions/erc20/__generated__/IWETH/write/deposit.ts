@@ -21,6 +21,5 @@ export function deposit(options: BaseTransactionOptions) {
   return prepareContractCall({
     contract: options.contract,
     method: ["0xd0e30db0", [], []],
-    params: [],
   });
 }

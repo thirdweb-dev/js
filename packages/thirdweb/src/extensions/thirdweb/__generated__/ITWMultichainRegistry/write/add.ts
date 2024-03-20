@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "add" function.
  */
-export type AddParams = {
+
+type AddParamsInternal = {
   deployer: AbiParameterToPrimitiveType<{ type: "address"; name: "_deployer" }>;
   deployment: AbiParameterToPrimitiveType<{
     type: "address";
@@ -18,6 +20,12 @@ export type AddParams = {
   }>;
 };
 
+export type AddParams = Prettify<
+  | AddParamsInternal
+  | {
+      asyncParams: () => Promise<AddParamsInternal>;
+    }
+>;
 /**
  * Calls the "add" function on the contract.
  * @param options - The options for the "add" function.
@@ -64,11 +72,22 @@ export function add(options: BaseTransactionOptions<AddParams>) {
       ],
       [],
     ],
-    params: [
-      options.deployer,
-      options.deployment,
-      options.chainId,
-      options.metadataUri,
-    ],
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.deployer,
+              resolvedParams.deployment,
+              resolvedParams.chainId,
+              resolvedParams.metadataUri,
+            ] as const;
+          }
+        : [
+            options.deployer,
+            options.deployment,
+            options.chainId,
+            options.metadataUri,
+          ],
   });
 }

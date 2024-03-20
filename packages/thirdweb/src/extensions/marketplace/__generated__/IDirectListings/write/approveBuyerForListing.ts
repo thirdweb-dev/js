@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "approveBuyerForListing" function.
  */
-export type ApproveBuyerForListingParams = {
+
+type ApproveBuyerForListingParamsInternal = {
   listingId: AbiParameterToPrimitiveType<{
     type: "uint256";
     name: "_listingId";
@@ -14,6 +16,12 @@ export type ApproveBuyerForListingParams = {
   toApprove: AbiParameterToPrimitiveType<{ type: "bool"; name: "_toApprove" }>;
 };
 
+export type ApproveBuyerForListingParams = Prettify<
+  | ApproveBuyerForListingParamsInternal
+  | {
+      asyncParams: () => Promise<ApproveBuyerForListingParamsInternal>;
+    }
+>;
 /**
  * Calls the "approveBuyerForListing" function on the contract.
  * @param options - The options for the "approveBuyerForListing" function.
@@ -57,6 +65,16 @@ export function approveBuyerForListing(
       ],
       [],
     ],
-    params: [options.listingId, options.buyer, options.toApprove],
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.listingId,
+              resolvedParams.buyer,
+              resolvedParams.toApprove,
+            ] as const;
+          }
+        : [options.listingId, options.buyer, options.toApprove],
   });
 }

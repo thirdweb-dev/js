@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "register" function.
  */
-export type RegisterParams = {
+
+type RegisterParamsInternal = {
   registerParams: AbiParameterToPrimitiveType<{
     type: "tuple";
     name: "registerParams";
@@ -34,6 +36,12 @@ export type RegisterParams = {
   }>;
 };
 
+export type RegisterParams = Prettify<
+  | RegisterParamsInternal
+  | {
+      asyncParams: () => Promise<RegisterParamsInternal>;
+    }
+>;
 /**
  * Calls the "register" function on the contract.
  * @param options - The options for the "register" function.
@@ -124,10 +132,16 @@ export function register(options: BaseTransactionOptions<RegisterParams>) {
         },
       ],
     ],
-    params: [
-      options.registerParams,
-      options.signerParams,
-      options.extraStorage,
-    ],
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.registerParams,
+              resolvedParams.signerParams,
+              resolvedParams.extraStorage,
+            ] as const;
+          }
+        : [options.registerParams, options.signerParams, options.extraStorage],
   });
 }

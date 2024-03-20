@@ -21,6 +21,5 @@ export function unlockStake(options: BaseTransactionOptions) {
   return prepareContractCall({
     contract: options.contract,
     method: ["0xbb9fe6bf", [], []],
-    params: [],
   });
 }

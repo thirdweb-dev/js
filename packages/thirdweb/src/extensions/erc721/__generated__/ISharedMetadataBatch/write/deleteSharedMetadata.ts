@@ -1,14 +1,22 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "deleteSharedMetadata" function.
  */
-export type DeleteSharedMetadataParams = {
+
+type DeleteSharedMetadataParamsInternal = {
   id: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "id" }>;
 };
 
+export type DeleteSharedMetadataParams = Prettify<
+  | DeleteSharedMetadataParamsInternal
+  | {
+      asyncParams: () => Promise<DeleteSharedMetadataParamsInternal>;
+    }
+>;
 /**
  * Calls the "deleteSharedMetadata" function on the contract.
  * @param options - The options for the "deleteSharedMetadata" function.
@@ -42,6 +50,12 @@ export function deleteSharedMetadata(
       ],
       [],
     ],
-    params: [options.id],
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.id] as const;
+          }
+        : [options.id],
   });
 }

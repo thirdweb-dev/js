@@ -2,7 +2,8 @@ import type { Address } from "abitype";
 import { toUnits } from "../../../utils/units.js";
 import type { Prettify } from "../../../utils/type-utils.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
-import { prepareContractCall } from "../../../transaction/prepare-contract-call.js";
+import { approve as generatedApprove } from "../__generated__/IERC20/write/approve.js";
+
 /**
  * Represents the parameters for the `approve` function.
  */
@@ -33,25 +34,9 @@ export type ApproveParams = Prettify<
  * ```
  */
 export function approve(options: BaseTransactionOptions<ApproveParams>) {
-  return prepareContractCall({
-    ...options,
-    method: [
-      "0x095ea7b3",
-      [
-        {
-          type: "address",
-        },
-        {
-          type: "uint256",
-        },
-      ],
-      [
-        {
-          type: "bool",
-        },
-      ],
-    ],
-    params: async () => {
+  return generatedApprove({
+    contract: options.contract,
+    asyncParams: async () => {
       let amount: bigint;
       if ("amount" in options) {
         // if we need to parse the amount from ether to gwei then we pull in the decimals extension
@@ -63,7 +48,10 @@ export function approve(options: BaseTransactionOptions<ApproveParams>) {
       } else {
         amount = options.amountWei;
       }
-      return [options.spender, amount] as const;
+      return {
+        spender: options.spender,
+        value: amount,
+      } as const;
     },
   });
 }

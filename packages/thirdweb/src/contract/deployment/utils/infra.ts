@@ -1,23 +1,28 @@
-import type { Chain } from "../../../chains/types.js";
-import type { ThirdwebClient } from "../../../client/client.js";
 import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed.js";
 import { getContract, type ThirdwebContract } from "../../contract.js";
-import { computeDeploymentInfoFromContractId } from "../../../utils/any-evm/compute-published-contract-deploy-info.js";
 import { prepareTransaction } from "../../../transaction/prepare-transaction.js";
-import { computeAddressFromContractId } from "../../../utils/any-evm/compute-published-contract-address.js";
+import type { ClientAndChain } from "../../../utils/types.js";
+import type { Prettify } from "../../../utils/type-utils.js";
+import { computePublishedContractAddress } from "../../../utils/any-evm/compute-published-contract-address.js";
+import { computeDeploymentInfoFromContractId } from "../../../utils/any-evm/compute-published-contract-deploy-info.js";
+import { computeCreate2FactoryAddress } from "./create-2-factory.js";
 
 export type InfraContractId =
   | "WETH9"
   | "Forwarder"
   | "ForwarderEOAOnly"
-  | "TWCloneFactory";
+  | "TWCloneFactory"
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  | (string & {});
 
-export type GetDeployedInfraParams = {
-  client: ThirdwebClient;
-  chain: Chain;
-  contractId: InfraContractId;
-  constructorParams: unknown[];
-};
+export type GetDeployedInfraParams = Prettify<
+  ClientAndChain & {
+    contractId: InfraContractId;
+    constructorParams: unknown[];
+    publisher?: string;
+    version?: string;
+  }
+>;
 
 /**
  * @internal
@@ -25,7 +30,7 @@ export type GetDeployedInfraParams = {
 export async function getDeployedInfraContract(
   options: GetDeployedInfraParams,
 ): Promise<ThirdwebContract | null> {
-  const address = await computeAddressFromContractId({
+  const address = await computePublishedContractAddress({
     ...options,
   });
   const factory = getContract({
@@ -42,15 +47,22 @@ export async function getDeployedInfraContract(
 /**
  * @internal
  */
-export async function prepareInfraContractDeployTransaction(
+export function prepareInfraContractDeployTransaction(
   options: GetDeployedInfraParams,
 ) {
-  const cloneFactoryInfo = await computeDeploymentInfoFromContractId({
-    ...options,
-  });
+  const { client, chain } = options;
   return prepareTransaction({
-    ...options,
-    to: cloneFactoryInfo.create2FactoryAddress,
-    data: cloneFactoryInfo.initBytecodeWithsalt,
+    client,
+    chain,
+    to: () =>
+      computeCreate2FactoryAddress({
+        client,
+        chain,
+      }),
+    data: async () => {
+      const infraContractInfo =
+        await computeDeploymentInfoFromContractId(options);
+      return infraContractInfo.initBytecodeWithsalt;
+    },
   });
 }

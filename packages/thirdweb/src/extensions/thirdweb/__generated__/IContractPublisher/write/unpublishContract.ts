@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "unpublishContract" function.
  */
-export type UnpublishContractParams = {
+
+type UnpublishContractParamsInternal = {
   publisher: AbiParameterToPrimitiveType<{
     type: "address";
     name: "publisher";
@@ -16,6 +18,12 @@ export type UnpublishContractParams = {
   }>;
 };
 
+export type UnpublishContractParams = Prettify<
+  | UnpublishContractParamsInternal
+  | {
+      asyncParams: () => Promise<UnpublishContractParamsInternal>;
+    }
+>;
 /**
  * Calls the "unpublishContract" function on the contract.
  * @param options - The options for the "unpublishContract" function.
@@ -54,6 +62,15 @@ export function unpublishContract(
       ],
       [],
     ],
-    params: [options.publisher, options.contractId],
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.publisher,
+              resolvedParams.contractId,
+            ] as const;
+          }
+        : [options.publisher, options.contractId],
   });
 }

@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "validateUserOp" function.
  */
-export type ValidateUserOpParams = {
+
+type ValidateUserOpParamsInternal = {
   userOp: AbiParameterToPrimitiveType<{
     type: "tuple";
     name: "userOp";
@@ -33,6 +35,12 @@ export type ValidateUserOpParams = {
   }>;
 };
 
+export type ValidateUserOpParams = Prettify<
+  | ValidateUserOpParamsInternal
+  | {
+      asyncParams: () => Promise<ValidateUserOpParamsInternal>;
+    }
+>;
 /**
  * Calls the "validateUserOp" function on the contract.
  * @param options - The options for the "validateUserOp" function.
@@ -127,6 +135,16 @@ export function validateUserOp(
         },
       ],
     ],
-    params: [options.userOp, options.userOpHash, options.missingAccountFunds],
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.userOp,
+              resolvedParams.userOpHash,
+              resolvedParams.missingAccountFunds,
+            ] as const;
+          }
+        : [options.userOp, options.userOpHash, options.missingAccountFunds],
   });
 }

@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "buyFromListing" function.
  */
-export type BuyFromListingParams = {
+
+type BuyFromListingParamsInternal = {
   listingId: AbiParameterToPrimitiveType<{
     type: "uint256";
     name: "_listingId";
@@ -19,6 +21,12 @@ export type BuyFromListingParams = {
   }>;
 };
 
+export type BuyFromListingParams = Prettify<
+  | BuyFromListingParamsInternal
+  | {
+      asyncParams: () => Promise<BuyFromListingParamsInternal>;
+    }
+>;
 /**
  * Calls the "buyFromListing" function on the contract.
  * @param options - The options for the "buyFromListing" function.
@@ -72,12 +80,24 @@ export function buyFromListing(
       ],
       [],
     ],
-    params: [
-      options.listingId,
-      options.buyFor,
-      options.quantity,
-      options.currency,
-      options.expectedTotalPrice,
-    ],
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.listingId,
+              resolvedParams.buyFor,
+              resolvedParams.quantity,
+              resolvedParams.currency,
+              resolvedParams.expectedTotalPrice,
+            ] as const;
+          }
+        : [
+            options.listingId,
+            options.buyFor,
+            options.quantity,
+            options.currency,
+            options.expectedTotalPrice,
+          ],
   });
 }

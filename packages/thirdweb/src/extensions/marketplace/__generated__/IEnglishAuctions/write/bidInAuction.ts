@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "bidInAuction" function.
  */
-export type BidInAuctionParams = {
+
+type BidInAuctionParamsInternal = {
   auctionId: AbiParameterToPrimitiveType<{
     type: "uint256";
     name: "_auctionId";
@@ -16,6 +18,12 @@ export type BidInAuctionParams = {
   }>;
 };
 
+export type BidInAuctionParams = Prettify<
+  | BidInAuctionParamsInternal
+  | {
+      asyncParams: () => Promise<BidInAuctionParamsInternal>;
+    }
+>;
 /**
  * Calls the "bidInAuction" function on the contract.
  * @param options - The options for the "bidInAuction" function.
@@ -54,6 +62,15 @@ export function bidInAuction(
       ],
       [],
     ],
-    params: [options.auctionId, options.bidAmount],
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.auctionId,
+              resolvedParams.bidAmount,
+            ] as const;
+          }
+        : [options.auctionId, options.bidAmount],
   });
 }

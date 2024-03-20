@@ -1,15 +1,23 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "createAccount" function.
  */
-export type CreateAccountParams = {
+
+type CreateAccountParamsInternal = {
   admin: AbiParameterToPrimitiveType<{ type: "address"; name: "admin" }>;
   data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "_data" }>;
 };
 
+export type CreateAccountParams = Prettify<
+  | CreateAccountParamsInternal
+  | {
+      asyncParams: () => Promise<CreateAccountParamsInternal>;
+    }
+>;
 /**
  * Calls the "createAccount" function on the contract.
  * @param options - The options for the "createAccount" function.
@@ -53,6 +61,12 @@ export function createAccount(
         },
       ],
     ],
-    params: [options.admin, options.data],
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.admin, resolvedParams.data] as const;
+          }
+        : [options.admin, options.data],
   });
 }

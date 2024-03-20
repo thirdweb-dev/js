@@ -26,11 +26,4 @@ export {
   prepareDirectDeployTransaction,
   type PrepareDirectDeployTransactionOptions,
 } from "../contract/deployment/deploy-with-abi.js";
-export {
-  prepareDeployTransactionFromUri,
-  type PrepareDeployTransactionFromUriOptions,
-} from "../contract/deployment/deploy-from-uri.js";
-export {
-  prepareDeployTransactionForPublishedContract,
-  type PrepareDeployTransactionForPublishedContractOptions,
-} from "../contract/deployment/deploy-published.js";
+export { prepareAutoFactoryDeployTransaction } from "../contract/deployment/deploy-via-autofactory.js";

@@ -1,14 +1,22 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "multicall" function.
  */
-export type MulticallParams = {
+
+type MulticallParamsInternal = {
   data: AbiParameterToPrimitiveType<{ type: "bytes[]"; name: "data" }>;
 };
 
+export type MulticallParams = Prettify<
+  | MulticallParamsInternal
+  | {
+      asyncParams: () => Promise<MulticallParamsInternal>;
+    }
+>;
 /**
  * Calls the "multicall" function on the contract.
  * @param options - The options for the "multicall" function.
@@ -45,6 +53,12 @@ export function multicall(options: BaseTransactionOptions<MulticallParams>) {
         },
       ],
     ],
-    params: [options.data],
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.data] as const;
+          }
+        : [options.data],
   });
 }

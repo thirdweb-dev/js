@@ -1,14 +1,22 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "changeRecoveryAddress" function.
  */
-export type ChangeRecoveryAddressParams = {
+
+type ChangeRecoveryAddressParamsInternal = {
   recovery: AbiParameterToPrimitiveType<{ type: "address"; name: "recovery" }>;
 };
 
+export type ChangeRecoveryAddressParams = Prettify<
+  | ChangeRecoveryAddressParamsInternal
+  | {
+      asyncParams: () => Promise<ChangeRecoveryAddressParamsInternal>;
+    }
+>;
 /**
  * Calls the "changeRecoveryAddress" function on the contract.
  * @param options - The options for the "changeRecoveryAddress" function.
@@ -42,6 +50,12 @@ export function changeRecoveryAddress(
       ],
       [],
     ],
-    params: [options.recovery],
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.recovery] as const;
+          }
+        : [options.recovery],
   });
 }

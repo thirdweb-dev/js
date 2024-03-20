@@ -1,7 +1,7 @@
 import type { Abi } from "abitype";
 import type { ThirdwebContract } from "../contract.js";
-import { fetchDeployBytecodeFromPublishedContractMetadata } from "./publisher.js";
-import { getCreate2FactoryAddress } from "../deployment/utils/create-2-factory.js";
+import { fetchDeployBytecodeFromPublishedContractMetadata } from "../deployment/publisher.js";
+import { computeCreate2FactoryAddress } from "../deployment/utils/create-2-factory.js";
 import { decodeAbiParameters } from "viem";
 import { getRpcClient } from "../../rpc/rpc.js";
 import { eth_getTransactionByHash } from "../../rpc/actions/eth_getTransactionByHash.js";
@@ -72,7 +72,7 @@ export async function fetchConstructorParams(
       throw new Error("Contract not published through thirdweb");
     }
     const bytecodeHex = bytecode.startsWith("0x") ? bytecode : `0x${bytecode}`;
-    const create2FactoryAddress = await getCreate2FactoryAddress(
+    const create2FactoryAddress = await computeCreate2FactoryAddress(
       options.contract,
     );
     // if deterministic deploy through create2factory, remove salt length too

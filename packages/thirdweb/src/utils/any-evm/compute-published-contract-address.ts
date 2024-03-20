@@ -5,33 +5,41 @@ import {
   computeDeploymentInfoFromContractId,
   computeDeploymentInfoFromMetadata,
 } from "./compute-published-contract-deploy-info.js";
-import type { PreDeployMetadata } from "./deploy-metadata.js";
+import type { FetchDeployMetadataResult } from "./deploy-metadata.js";
 
 /**
  * Predicts the implementation address of any published contract
  * @param args - The arguments for predicting the address of a published contract.
  * @param args.client - The Thirdweb client.
  * @param args.chain - The chain to predict the address on.
- * @param args.contractId - The ID of the contract to predict the address of.
  * @param args.constructorParams - The parameters for the contract constructor.
+ * @param args.contractId - The contract id.
+ * @param args.publisher - The publisher of the contract.
+ * @param args.version - The version of the contract.
  * @example
  * ```ts
  * import { computePublishedContractAddress } from "thirdweb/contract";
  *
- * const address = await computeAddressFromContractId({
+ * const contractMetadata = await fetchPublishedContractMetadata({
+ *  client,
+ *  chain,
+ * });
+ * const address = await computePublishedContractAddress({
  *   client,
  *   chain,
- *   contractId,
+ *   contractId: "DropERC721",
  *   constructorParams,
  * });
  * ```
  * @returns A promise that resolves to the predicted address of the contract.
  */
-export async function computeAddressFromContractId(args: {
+export async function computePublishedContractAddress(args: {
   client: ThirdwebClient;
   chain: Chain;
   contractId: string;
   constructorParams: unknown[];
+  publisher?: string;
+  version?: string;
 }): Promise<string> {
   const info = await computeDeploymentInfoFromContractId(args);
   return computeDeploymentAddress(info);
@@ -40,10 +48,10 @@ export async function computeAddressFromContractId(args: {
 /**
  * @internal
  */
-export async function computeAddressFromMetadata(args: {
+export async function computeContractAddress(args: {
   client: ThirdwebClient;
   chain: Chain;
-  compilerMetadata: PreDeployMetadata;
+  contractMetadata: FetchDeployMetadataResult;
   constructorParams: unknown[];
 }): Promise<string> {
   const info = await computeDeploymentInfoFromMetadata(args);

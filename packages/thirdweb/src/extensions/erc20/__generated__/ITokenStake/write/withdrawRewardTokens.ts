@@ -1,14 +1,22 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "withdrawRewardTokens" function.
  */
-export type WithdrawRewardTokensParams = {
+
+type WithdrawRewardTokensParamsInternal = {
   amount: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_amount" }>;
 };
 
+export type WithdrawRewardTokensParams = Prettify<
+  | WithdrawRewardTokensParamsInternal
+  | {
+      asyncParams: () => Promise<WithdrawRewardTokensParamsInternal>;
+    }
+>;
 /**
  * Calls the "withdrawRewardTokens" function on the contract.
  * @param options - The options for the "withdrawRewardTokens" function.
@@ -42,6 +50,12 @@ export function withdrawRewardTokens(
       ],
       [],
     ],
-    params: [options.amount],
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.amount] as const;
+          }
+        : [options.amount],
   });
 }

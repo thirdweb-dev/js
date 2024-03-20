@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "quoteExactInputSingle" function.
  */
-export type QuoteExactInputSingleParams = {
+
+type QuoteExactInputSingleParamsInternal = {
   tokenIn: AbiParameterToPrimitiveType<{ type: "address"; name: "tokenIn" }>;
   tokenOut: AbiParameterToPrimitiveType<{ type: "address"; name: "tokenOut" }>;
   fee: AbiParameterToPrimitiveType<{ type: "uint24"; name: "fee" }>;
@@ -16,6 +18,12 @@ export type QuoteExactInputSingleParams = {
   }>;
 };
 
+export type QuoteExactInputSingleParams = Prettify<
+  | QuoteExactInputSingleParamsInternal
+  | {
+      asyncParams: () => Promise<QuoteExactInputSingleParamsInternal>;
+    }
+>;
 /**
  * Calls the "quoteExactInputSingle" function on the contract.
  * @param options - The options for the "quoteExactInputSingle" function.
@@ -74,12 +82,24 @@ export function quoteExactInputSingle(
         },
       ],
     ],
-    params: [
-      options.tokenIn,
-      options.tokenOut,
-      options.fee,
-      options.amountIn,
-      options.sqrtPriceLimitX96,
-    ],
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.tokenIn,
+              resolvedParams.tokenOut,
+              resolvedParams.fee,
+              resolvedParams.amountIn,
+              resolvedParams.sqrtPriceLimitX96,
+            ] as const;
+          }
+        : [
+            options.tokenIn,
+            options.tokenOut,
+            options.fee,
+            options.amountIn,
+            options.sqrtPriceLimitX96,
+          ],
   });
 }

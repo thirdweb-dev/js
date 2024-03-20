@@ -1,14 +1,22 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "setAppURI" function.
  */
-export type SetAppURIParams = {
+
+type SetAppURIParamsInternal = {
   uri: AbiParameterToPrimitiveType<{ type: "string"; name: "_uri" }>;
 };
 
+export type SetAppURIParams = Prettify<
+  | SetAppURIParamsInternal
+  | {
+      asyncParams: () => Promise<SetAppURIParamsInternal>;
+    }
+>;
 /**
  * Calls the "setAppURI" function on the contract.
  * @param options - The options for the "setAppURI" function.
@@ -40,6 +48,12 @@ export function setAppURI(options: BaseTransactionOptions<SetAppURIParams>) {
       ],
       [],
     ],
-    params: [options.uri],
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.uri] as const;
+          }
+        : [options.uri],
   });
 }

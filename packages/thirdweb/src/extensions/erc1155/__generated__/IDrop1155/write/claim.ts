@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "claim" function.
  */
-export type ClaimParams = {
+
+type ClaimParamsInternal = {
   receiver: AbiParameterToPrimitiveType<{ type: "address"; name: "receiver" }>;
   tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
   quantity: AbiParameterToPrimitiveType<{ type: "uint256"; name: "quantity" }>;
@@ -27,6 +29,12 @@ export type ClaimParams = {
   data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "data" }>;
 };
 
+export type ClaimParams = Prettify<
+  | ClaimParamsInternal
+  | {
+      asyncParams: () => Promise<ClaimParamsInternal>;
+    }
+>;
 /**
  * Calls the "claim" function on the contract.
  * @param options - The options for the "claim" function.
@@ -106,14 +114,28 @@ export function claim(options: BaseTransactionOptions<ClaimParams>) {
       ],
       [],
     ],
-    params: [
-      options.receiver,
-      options.tokenId,
-      options.quantity,
-      options.currency,
-      options.pricePerToken,
-      options.allowlistProof,
-      options.data,
-    ],
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.receiver,
+              resolvedParams.tokenId,
+              resolvedParams.quantity,
+              resolvedParams.currency,
+              resolvedParams.pricePerToken,
+              resolvedParams.allowlistProof,
+              resolvedParams.data,
+            ] as const;
+          }
+        : [
+            options.receiver,
+            options.tokenId,
+            options.quantity,
+            options.currency,
+            options.pricePerToken,
+            options.allowlistProof,
+            options.data,
+          ],
   });
 }

@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "makeOffer" function.
  */
-export type MakeOfferParams = {
+
+type MakeOfferParamsInternal = {
   params: AbiParameterToPrimitiveType<{
     type: "tuple";
     name: "_params";
@@ -20,6 +22,12 @@ export type MakeOfferParams = {
   }>;
 };
 
+export type MakeOfferParams = Prettify<
+  | MakeOfferParamsInternal
+  | {
+      asyncParams: () => Promise<MakeOfferParamsInternal>;
+    }
+>;
 /**
  * Calls the "makeOffer" function on the contract.
  * @param options - The options for the "makeOffer" function.
@@ -82,6 +90,12 @@ export function makeOffer(options: BaseTransactionOptions<MakeOfferParams>) {
         },
       ],
     ],
-    params: [options.params],
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.params] as const;
+          }
+        : [options.params],
   });
 }

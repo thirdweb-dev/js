@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "openPackAndClaimRewards" function.
  */
-export type OpenPackAndClaimRewardsParams = {
+
+type OpenPackAndClaimRewardsParamsInternal = {
   packId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_packId" }>;
   amountToOpen: AbiParameterToPrimitiveType<{
     type: "uint256";
@@ -17,6 +19,12 @@ export type OpenPackAndClaimRewardsParams = {
   }>;
 };
 
+export type OpenPackAndClaimRewardsParams = Prettify<
+  | OpenPackAndClaimRewardsParamsInternal
+  | {
+      asyncParams: () => Promise<OpenPackAndClaimRewardsParamsInternal>;
+    }
+>;
 /**
  * Calls the "openPackAndClaimRewards" function on the contract.
  * @param options - The options for the "openPackAndClaimRewards" function.
@@ -64,6 +72,16 @@ export function openPackAndClaimRewards(
         },
       ],
     ],
-    params: [options.packId, options.amountToOpen, options.callBackGasLimit],
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.packId,
+              resolvedParams.amountToOpen,
+              resolvedParams.callBackGasLimit,
+            ] as const;
+          }
+        : [options.packId, options.amountToOpen, options.callBackGasLimit],
   });
 }

@@ -15,7 +15,7 @@ Imported bundle size to make a basic RPC call:
 
 ## Benchmarks
 
-_Latest results are from the `beta` branch on March 6th, 2024._
+_Latest results are from the `beta` branch on March 20th, 2024._
 
 - [Encode TX Benchmark Results](./encode-tx.md)
 - [RPC Benchmark Results](./rpc.md)

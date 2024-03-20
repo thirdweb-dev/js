@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "onSignerRemoved" function.
  */
-export type OnSignerRemovedParams = {
+
+type OnSignerRemovedParamsInternal = {
   signer: AbiParameterToPrimitiveType<{ type: "address"; name: "signer" }>;
   creatorAdmin: AbiParameterToPrimitiveType<{
     type: "address";
@@ -14,6 +16,12 @@ export type OnSignerRemovedParams = {
   data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "data" }>;
 };
 
+export type OnSignerRemovedParams = Prettify<
+  | OnSignerRemovedParamsInternal
+  | {
+      asyncParams: () => Promise<OnSignerRemovedParamsInternal>;
+    }
+>;
 /**
  * Calls the "onSignerRemoved" function on the contract.
  * @param options - The options for the "onSignerRemoved" function.
@@ -57,6 +65,16 @@ export function onSignerRemoved(
       ],
       [],
     ],
-    params: [options.signer, options.creatorAdmin, options.data],
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.signer,
+              resolvedParams.creatorAdmin,
+              resolvedParams.data,
+            ] as const;
+          }
+        : [options.signer, options.creatorAdmin, options.data],
   });
 }

@@ -103,11 +103,14 @@ export async function generateFromAbi(
 }
 
 function generateWriteFunction(f: AbiFunction, extensionName: string): string {
+  const inputTypeName = `${uppercaseFirstLetter(f.name)}Params`;
+
   return `import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 ${
   f.inputs.length > 0
-    ? `import type { AbiParameterToPrimitiveType } from "abitype";`
+    ? `import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";`
     : ""
 }
 
@@ -116,16 +119,23 @@ ${
     ? `/**
  * Represents the parameters for the "${f.name}" function.
  */
-export type ${uppercaseFirstLetter(f.name)}Params = {
+
+type ${inputTypeName}Internal = {
   ${f.inputs
     .map(
       (x) =>
         `${removeLeadingUnderscore(x.name)}: AbiParameterToPrimitiveType<${JSON.stringify(x)}>`,
     )
-    .join("\n")}
-};`
+    .join("\n")}}
+
+export type ${inputTypeName} = Prettify<${inputTypeName}Internal | {
+  asyncParams: () => Promise<${inputTypeName}Internal>;
+}>;
+    `
     : ""
-}
+};
+
+
 
 /**
  * Calls the "${f.name}" function on the contract.
@@ -151,15 +161,25 @@ export type ${uppercaseFirstLetter(f.name)}Params = {
  */
 export function ${f.name}(
   options: BaseTransactionOptions${
-    f.inputs.length > 0 ? `<${uppercaseFirstLetter(f.name)}Params>` : ""
+    f.inputs.length > 0 ? `<${inputTypeName}>` : ""
   }
 ) {
   return prepareContractCall({
     contract: options.contract,
     method: ${JSON.stringify(prepareMethod(f), null, 2)},
-    params: [${f.inputs
-      .map((x) => `options.${removeLeadingUnderscore(x.name)}`)
-      .join(", ")}]
+    ${
+      f.inputs.length
+        ? `params: "asyncParams" in options ? async () => {
+      
+        const resolvedParams = await options.asyncParams();
+        return [${f.inputs
+          .map((x) => `resolvedParams.${removeLeadingUnderscore(x.name)}`)
+          .join(", ")}] as const;
+      } : [${f.inputs
+        .map((x) => `options.${removeLeadingUnderscore(x.name)}`)
+        .join(", ")}]`
+        : ""
+    }
   });
 };
 `;

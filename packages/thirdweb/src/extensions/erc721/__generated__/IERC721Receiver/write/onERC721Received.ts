@@ -1,17 +1,25 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "onERC721Received" function.
  */
-export type OnERC721ReceivedParams = {
+
+type OnERC721ReceivedParamsInternal = {
   operator: AbiParameterToPrimitiveType<{ type: "address"; name: "operator" }>;
   from: AbiParameterToPrimitiveType<{ type: "address"; name: "from" }>;
   tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
   data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "data" }>;
 };
 
+export type OnERC721ReceivedParams = Prettify<
+  | OnERC721ReceivedParamsInternal
+  | {
+      asyncParams: () => Promise<OnERC721ReceivedParamsInternal>;
+    }
+>;
 /**
  * Calls the "onERC721Received" function on the contract.
  * @param options - The options for the "onERC721Received" function.
@@ -64,6 +72,17 @@ export function onERC721Received(
         },
       ],
     ],
-    params: [options.operator, options.from, options.tokenId, options.data],
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.operator,
+              resolvedParams.from,
+              resolvedParams.tokenId,
+              resolvedParams.data,
+            ] as const;
+          }
+        : [options.operator, options.from, options.tokenId, options.data],
   });
 }

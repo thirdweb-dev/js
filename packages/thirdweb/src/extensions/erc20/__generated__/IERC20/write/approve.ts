@@ -1,15 +1,23 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "approve" function.
  */
-export type ApproveParams = {
+
+type ApproveParamsInternal = {
   spender: AbiParameterToPrimitiveType<{ type: "address"; name: "spender" }>;
   value: AbiParameterToPrimitiveType<{ type: "uint256"; name: "value" }>;
 };
 
+export type ApproveParams = Prettify<
+  | ApproveParamsInternal
+  | {
+      asyncParams: () => Promise<ApproveParamsInternal>;
+    }
+>;
 /**
  * Calls the "approve" function on the contract.
  * @param options - The options for the "approve" function.
@@ -50,6 +58,12 @@ export function approve(options: BaseTransactionOptions<ApproveParams>) {
         },
       ],
     ],
-    params: [options.spender, options.value],
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.spender, resolvedParams.value] as const;
+          }
+        : [options.spender, options.value],
   });
 }

@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.22
+
+### Patch Changes
+
+- [#2493](https://github.com/thirdweb-dev/js/pull/2493) [`802ba8c`](https://github.com/thirdweb-dev/js/commit/802ba8c5a980d3bddd308f9b3d14cc9cbb5453d5) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Renaming of Smart Wallet -> Smart Account
+
 ## 0.4.21
 
 ### Patch Changes

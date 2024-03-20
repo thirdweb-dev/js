@@ -254,6 +254,7 @@ export class EmbeddedWallet {
           delete _typedData.types.EIP712Domain;
         }
         const chainId = Number(_typedData.domain?.chainId || 1);
+
         const { signedTypedData } =
           await querier.call<SignedTypedDataReturnType>({
             procedureName: "signTypedDataV4",

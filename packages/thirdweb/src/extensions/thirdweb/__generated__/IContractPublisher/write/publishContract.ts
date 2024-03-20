@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "publishContract" function.
  */
-export type PublishContractParams = {
+
+type PublishContractParamsInternal = {
   publisher: AbiParameterToPrimitiveType<{
     type: "address";
     name: "publisher";
@@ -32,6 +34,12 @@ export type PublishContractParams = {
   }>;
 };
 
+export type PublishContractParams = Prettify<
+  | PublishContractParamsInternal
+  | {
+      asyncParams: () => Promise<PublishContractParamsInternal>;
+    }
+>;
 /**
  * Calls the "publishContract" function on the contract.
  * @param options - The options for the "publishContract" function.
@@ -90,13 +98,26 @@ export function publishContract(
       ],
       [],
     ],
-    params: [
-      options.publisher,
-      options.contractId,
-      options.publishMetadataUri,
-      options.compilerMetadataUri,
-      options.bytecodeHash,
-      options.implementation,
-    ],
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.publisher,
+              resolvedParams.contractId,
+              resolvedParams.publishMetadataUri,
+              resolvedParams.compilerMetadataUri,
+              resolvedParams.bytecodeHash,
+              resolvedParams.implementation,
+            ] as const;
+          }
+        : [
+            options.publisher,
+            options.contractId,
+            options.publishMetadataUri,
+            options.compilerMetadataUri,
+            options.bytecodeHash,
+            options.implementation,
+          ],
   });
 }

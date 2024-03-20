@@ -1,17 +1,25 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "cancelListing" function.
  */
-export type CancelListingParams = {
+
+type CancelListingParamsInternal = {
   listingId: AbiParameterToPrimitiveType<{
     type: "uint256";
     name: "_listingId";
   }>;
 };
 
+export type CancelListingParams = Prettify<
+  | CancelListingParamsInternal
+  | {
+      asyncParams: () => Promise<CancelListingParamsInternal>;
+    }
+>;
 /**
  * Calls the "cancelListing" function on the contract.
  * @param options - The options for the "cancelListing" function.
@@ -45,6 +53,12 @@ export function cancelListing(
       ],
       [],
     ],
-    params: [options.listingId],
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.listingId] as const;
+          }
+        : [options.listingId],
   });
 }

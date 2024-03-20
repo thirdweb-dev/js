@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "recoverFor" function.
  */
-export type RecoverForParams = {
+
+type RecoverForParamsInternal = {
   from: AbiParameterToPrimitiveType<{ type: "address"; name: "from" }>;
   to: AbiParameterToPrimitiveType<{ type: "address"; name: "to" }>;
   recoveryDeadline: AbiParameterToPrimitiveType<{
@@ -23,6 +25,12 @@ export type RecoverForParams = {
   toSig: AbiParameterToPrimitiveType<{ type: "bytes"; name: "toSig" }>;
 };
 
+export type RecoverForParams = Prettify<
+  | RecoverForParamsInternal
+  | {
+      asyncParams: () => Promise<RecoverForParamsInternal>;
+    }
+>;
 /**
  * Calls the "recoverFor" function on the contract.
  * @param options - The options for the "recoverFor" function.
@@ -79,13 +87,26 @@ export function recoverFor(options: BaseTransactionOptions<RecoverForParams>) {
       ],
       [],
     ],
-    params: [
-      options.from,
-      options.to,
-      options.recoveryDeadline,
-      options.recoverySig,
-      options.toDeadline,
-      options.toSig,
-    ],
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.from,
+              resolvedParams.to,
+              resolvedParams.recoveryDeadline,
+              resolvedParams.recoverySig,
+              resolvedParams.toDeadline,
+              resolvedParams.toSig,
+            ] as const;
+          }
+        : [
+            options.from,
+            options.to,
+            options.recoveryDeadline,
+            options.recoverySig,
+            options.toDeadline,
+            options.toSig,
+          ],
   });
 }

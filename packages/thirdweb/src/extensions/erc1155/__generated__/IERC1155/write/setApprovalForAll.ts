@@ -1,15 +1,23 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "setApprovalForAll" function.
  */
-export type SetApprovalForAllParams = {
+
+type SetApprovalForAllParamsInternal = {
   operator: AbiParameterToPrimitiveType<{ type: "address"; name: "_operator" }>;
   approved: AbiParameterToPrimitiveType<{ type: "bool"; name: "_approved" }>;
 };
 
+export type SetApprovalForAllParams = Prettify<
+  | SetApprovalForAllParamsInternal
+  | {
+      asyncParams: () => Promise<SetApprovalForAllParamsInternal>;
+    }
+>;
 /**
  * Calls the "setApprovalForAll" function on the contract.
  * @param options - The options for the "setApprovalForAll" function.
@@ -48,6 +56,12 @@ export function setApprovalForAll(
       ],
       [],
     ],
-    params: [options.operator, options.approved],
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.operator, resolvedParams.approved] as const;
+          }
+        : [options.operator, options.approved],
   });
 }

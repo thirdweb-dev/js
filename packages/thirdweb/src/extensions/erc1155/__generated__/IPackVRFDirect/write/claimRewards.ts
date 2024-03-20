@@ -48,6 +48,5 @@ export function claimRewards(options: BaseTransactionOptions) {
         },
       ],
     ],
-    params: [],
   });
 }

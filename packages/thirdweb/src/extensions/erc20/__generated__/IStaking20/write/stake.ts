@@ -1,14 +1,22 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "stake" function.
  */
-export type StakeParams = {
+
+type StakeParamsInternal = {
   amount: AbiParameterToPrimitiveType<{ type: "uint256"; name: "amount" }>;
 };
 
+export type StakeParams = Prettify<
+  | StakeParamsInternal
+  | {
+      asyncParams: () => Promise<StakeParamsInternal>;
+    }
+>;
 /**
  * Calls the "stake" function on the contract.
  * @param options - The options for the "stake" function.
@@ -40,6 +48,12 @@ export function stake(options: BaseTransactionOptions<StakeParams>) {
       ],
       [],
     ],
-    params: [options.amount],
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.amount] as const;
+          }
+        : [options.amount],
   });
 }

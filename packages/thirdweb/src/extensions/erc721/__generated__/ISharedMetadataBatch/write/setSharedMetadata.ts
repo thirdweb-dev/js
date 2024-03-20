@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "setSharedMetadata" function.
  */
-export type SetSharedMetadataParams = {
+
+type SetSharedMetadataParamsInternal = {
   metadata: AbiParameterToPrimitiveType<{
     type: "tuple";
     name: "metadata";
@@ -19,6 +21,12 @@ export type SetSharedMetadataParams = {
   id: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "id" }>;
 };
 
+export type SetSharedMetadataParams = Prettify<
+  | SetSharedMetadataParamsInternal
+  | {
+      asyncParams: () => Promise<SetSharedMetadataParamsInternal>;
+    }
+>;
 /**
  * Calls the "setSharedMetadata" function on the contract.
  * @param options - The options for the "setSharedMetadata" function.
@@ -75,6 +83,12 @@ export function setSharedMetadata(
       ],
       [],
     ],
-    params: [options.metadata, options.id],
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.metadata, resolvedParams.id] as const;
+          }
+        : [options.metadata, options.id],
   });
 }

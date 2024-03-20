@@ -1,11 +1,13 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Prettify } from "../../../../../utils/type-utils.js";
 
 /**
  * Represents the parameters for the "validatePaymasterUserOp" function.
  */
-export type ValidatePaymasterUserOpParams = {
+
+type ValidatePaymasterUserOpParamsInternal = {
   userOp: AbiParameterToPrimitiveType<{
     type: "tuple";
     name: "userOp";
@@ -30,6 +32,12 @@ export type ValidatePaymasterUserOpParams = {
   maxCost: AbiParameterToPrimitiveType<{ type: "uint256"; name: "maxCost" }>;
 };
 
+export type ValidatePaymasterUserOpParams = Prettify<
+  | ValidatePaymasterUserOpParamsInternal
+  | {
+      asyncParams: () => Promise<ValidatePaymasterUserOpParamsInternal>;
+    }
+>;
 /**
  * Calls the "validatePaymasterUserOp" function on the contract.
  * @param options - The options for the "validatePaymasterUserOp" function.
@@ -128,6 +136,16 @@ export function validatePaymasterUserOp(
         },
       ],
     ],
-    params: [options.userOp, options.userOpHash, options.maxCost],
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [
+              resolvedParams.userOp,
+              resolvedParams.userOpHash,
+              resolvedParams.maxCost,
+            ] as const;
+          }
+        : [options.userOp, options.userOpHash, options.maxCost],
   });
 }
