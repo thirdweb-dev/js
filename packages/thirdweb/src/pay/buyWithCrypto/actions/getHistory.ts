@@ -64,11 +64,12 @@ export async function getBuyWithCryptoHistory(
   params: WalletBuyWithCryptoHistoryParams,
 ): Promise<WalletBuyWithCryptoHistoryData> {
   try {
-    const queryParams: any = { walletAddress: params.walletAddress };
-    queryParams["start"] = params.start;
-    queryParams["count"] = params.count;
+    const queryParams = new URLSearchParams();
+    queryParams.append("walletAddress", params.walletAddress);
+    queryParams.append("start", params.start.toString());
+    queryParams.append("count", params.count.toString());
 
-    const queryString = new URLSearchParams(queryParams).toString();
+    const queryString = queryParams.toString();
     const url = `${getPayBuyWithCryptoHistoryEndpoint()}?${queryString}`;
 
     const response = await getClientFetch(params.client)(url);
