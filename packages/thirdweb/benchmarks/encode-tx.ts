@@ -60,6 +60,11 @@ const ethers6Contract = new ethers.Contract(
   ethers.getDefaultProvider(LOCAL_RPC),
 );
 
+const transfer_viem = viem.prepareEncodeFunctionData({
+  abi: ABI,
+  functionName: "transfer",
+})
+
 function randomBigint() {
   return BigInt(Math.floor(Math.random() * 1000));
 }
@@ -84,8 +89,7 @@ group("encode transfer (warm cache)", () => {
 
   bench("viem", async () => {
     viem.encodeFunctionData({
-      abi: ABI,
-      functionName: "transfer",
+      ...transfer_viem,
       args: [VITALIK_WALLET, randomBigint()],
     });
   });
@@ -126,8 +130,7 @@ group("encode transfer (cold cache)", () => {
 
   bench("viem", async () => {
     viem.encodeFunctionData({
-      abi: ABI,
-      functionName: "transfer",
+      ...transfer_viem,
       args: [VITALIK_WALLET, randomBigint()],
     });
   });
