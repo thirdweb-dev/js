@@ -9,7 +9,7 @@ import {
 import type { PrepareTransactionOptions } from "../../../transaction/prepare-transaction.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { getClientFetch } from "../../../utils/fetch.js";
-import { getPayQuoteEndpoint } from "../utils/definitions.js";
+import { getPayBuyWithCryptoQuoteEndpoint } from "../utils/definitions.js";
 
 // TODO: add JSDoc description for all properties
 
@@ -240,7 +240,7 @@ export async function getBuyWithCryptoQuote(
     }
 
     const queryString = new URLSearchParams(urlParamsObj).toString();
-    const url = `${getPayQuoteEndpoint()}?${queryString}`;
+    const url = `${getPayBuyWithCryptoQuoteEndpoint()}?${queryString}`;
 
     const response = await getClientFetch(params.client)(url);
 

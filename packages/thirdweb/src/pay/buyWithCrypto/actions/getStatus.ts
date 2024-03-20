@@ -1,6 +1,6 @@
 import type { ThirdwebClient } from "../../../client/client.js";
 import { getClientFetch } from "../../../utils/fetch.js";
-import { getPayQuoteStatusUrl } from "../utils/definitions.js";
+import { getPayBuyWithCryptoStatusUrl } from "../utils/definitions.js";
 import type { QuoteTokenInfo } from "./getQuote.js";
 
 // TODO: add JSDoc description for all properties
@@ -64,7 +64,7 @@ export type BuyWithCryptoSubStatuses =
 export type SwapType = "SAME_CHAIN" | "CROSS_CHAIN";
 
 /**
- * The object returned by the [`getQuoteStatus`](https://portal.thirdweb.com/references/typescript/v5/getQuoteStatus) function to represent the status of a quoted transaction
+ * The object returned by the [`getBuyWithCryptoStatus`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoStatus) function to represent the status of a quoted transaction
  */
 export type BuyWithCryptoStatus = {
   quote: BuyWithCryptoQuoteSummary;
@@ -124,7 +124,7 @@ export async function getBuyWithCryptoStatus(
     const queryString = new URLSearchParams({
       transactionHash: buyWithCryptoTransaction.transactionHash,
     }).toString();
-    const url = `${getPayQuoteStatusUrl()}?${queryString}`;
+    const url = `${getPayBuyWithCryptoStatusUrl()}?${queryString}`;
 
     const response = await getClientFetch(buyWithCryptoTransaction.client)(url);
 

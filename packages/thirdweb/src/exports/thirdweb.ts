@@ -161,8 +161,8 @@ export {
 
 export {
   getBuyWithCryptoHistory,
-  type WalletSwapHistoryData,
-  type WalletSwapHistoryParams,
+  type WalletBuyWithCryptoHistoryData,
+  type WalletBuyWithCryptoHistoryParams,
 } from "../pay/buyWithCrypto/actions/getHistory.js";
 
 // ------------------------------------------------
