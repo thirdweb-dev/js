@@ -155,7 +155,7 @@ const CheckoutLanding: ThirdwebNextPage = () => {
             image={require("public/assets/landingpage/desktop/built-in-analytics.png")}
             mobileImage={require("public/assets/landingpage/mobile/built-in-analytics.png")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}
-            href="/dashboard/payments/contracts"
+            href="/dashboard/connect/pay?tab=checkouts"
             colSpan={1}
           />
           <LandingCardWithImage
@@ -164,7 +164,7 @@ const CheckoutLanding: ThirdwebNextPage = () => {
             image={require("public/assets/landingpage/desktop/chargeback-protection.png")}
             mobileImage={require("public/assets/landingpage/mobile/chargeback-protection.png")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}
-            href="/dashboard/payments/contracts"
+            href="/dashboard/connect/pay?tab=checkouts"
           />
           <LandingCardWithImage
             title="Everything you need to manage payments"
@@ -172,7 +172,7 @@ const CheckoutLanding: ThirdwebNextPage = () => {
             image={require("public/assets/landingpage/desktop/manage-payments.png")}
             mobileImage={require("public/assets/landingpage/mobile/manage-payments.png")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}
-            href="/dashboard/payments/contracts"
+            href="/dashboard/connect/pay?tab=checkouts"
           />
           <LandingCardWithImage
             title="Built for scale"
@@ -180,7 +180,7 @@ const CheckoutLanding: ThirdwebNextPage = () => {
             image={require("public/assets/landingpage/desktop/built-for-scale.png")}
             mobileImage={require("public/assets/landingpage/mobile/built-for-scale.png")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}
-            href="/dashboard/payments/contracts"
+            href="/dashboard/connect/pay?tab=checkouts"
             colSpan={1}
           />
           <LandingCardWithImage
@@ -235,7 +235,7 @@ const CheckoutLanding: ThirdwebNextPage = () => {
           title="Add checkouts to your app"
           titleWithGradient="in 10 minutes."
           trackingCategory={TRACKING_CATEGORY}
-          ctaLink="/dashboard/payments/contracts"
+          ctaLink="/dashboard/connect/pay?tab=checkouts"
           gradient="linear(to-r,  #1DC1AE, #1DC1AE)"
         />
       </Container>

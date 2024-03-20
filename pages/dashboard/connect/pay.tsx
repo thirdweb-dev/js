@@ -142,33 +142,32 @@ const usePayConfig = () => {
   };
 };
 
-const useOldPaymentConfig = () => {
-  const [tabIndex, setTabIndex] = useState(0);
+const useTabConfig = () => {
+  const [tabOption, setTabOption] = useState<"pay" | "checkouts">("pay");
   const router = useRouter();
 
   useEffect(() => {
-    if (router.query.tab === "contract-settings") {
-      setTabIndex(2);
+    if (router.query.tab === "checkouts") {
+      setTabOption("checkouts");
     }
   }, [router.query.tab]);
 
   const { data: paymentEnabledContracts } = usePaymentsEnabledContracts();
-  const radioOptions = ["pay", "checkout"].filter((option) => {
+  const radioOptions = ["pay", "checkouts"].filter((option) => {
     return (
       option === "pay" ||
-      (option === "checkout" && paymentEnabledContracts?.length)
+      (option === "checkouts" && (paymentEnabledContracts || [])?.length > 0)
     );
   });
-  return { tabIndex, setTabIndex, radioOptions };
+  return { tabOption, setTabOption, radioOptions };
 };
 
 const DashboardConnectPay: ThirdwebNextPage = () => {
-  const [configOption, setConfigOption] = useState<"pay" | "checkout">("pay");
-  const { tabIndex, setTabIndex, radioOptions } = useOldPaymentConfig();
+  const { tabOption, setTabOption, radioOptions } = useTabConfig();
   const { getRootProps, getRadioProps } = useRadioGroup({
     name: "config",
     defaultValue: "pay",
-    onChange: (value: "pay" | "checkout") => setConfigOption(value),
+    onChange: (value: "pay" | "checkouts") => setTabOption(value),
   });
 
   const { isLoggedIn } = useLoggedInUser();
@@ -203,7 +202,7 @@ const DashboardConnectPay: ThirdwebNextPage = () => {
           <Text maxW="xl">Configure your developer settings for payments </Text>
         </Flex>
 
-        {hasPayApiKeys && configOption === "pay" && (
+        {hasPayApiKeys && tabOption === "pay" && (
           <HStack gap={3}>
             {selectedKey && (
               <ApiKeysMenu
@@ -222,8 +221,12 @@ const DashboardConnectPay: ThirdwebNextPage = () => {
             {radioOptions.map((value) => {
               const radio = getRadioProps({ value });
               return (
-                <RadioCard key={value} {...radio}>
-                  {value === "pay" ? "Pay" : "Checkouts"}
+                <RadioCard
+                  key={value}
+                  {...radio}
+                  isChecked={value === tabOption}
+                >
+                  {value.charAt(0).toUpperCase() + value.slice(1)}
                 </RadioCard>
               );
             })}
@@ -231,8 +234,8 @@ const DashboardConnectPay: ThirdwebNextPage = () => {
         </FormControl>
       )}
 
-      {configOption === "checkout" ? (
-        <Tabs index={tabIndex} onChange={setTabIndex}>
+      {tabOption === "checkouts" ? (
+        <Tabs>
           <TabList>
             <Tab>Payments Enabled</Tab>
             <Tab>All Contracts</Tab>

@@ -1,4 +1,4 @@
-import { Divider, Flex, FormControl } from "@chakra-ui/react";
+import { Divider, Flex, FormControl, Input } from "@chakra-ui/react";
 import {
   Button,
   Card,
@@ -18,7 +18,6 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
-import { SolidityInput } from "contract-ui/components/solidity-inputs";
 
 interface PayConfigProps {
   apiKey: ApiKey;
@@ -121,9 +120,7 @@ export const PayConfig: React.FC<PayConfigProps> = ({ apiKey }) => {
               >
                 <FormLabel size="label.md">Recipient address</FormLabel>
 
-                <SolidityInput
-                  solidityType="address"
-                  formContext={form}
+                <Input
                   placeholder="0x..."
                   type="text"
                   {...form.register(`payoutAddress`)}

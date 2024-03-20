@@ -56,7 +56,7 @@ export const NoPaymentsEnabled: React.FC<NoPaymentsEnabledProps> = ({
           </TrackedLinkButton>
         ) : needsVerification ? (
           <TrackedLinkButton
-            href="/dashboard/payments/settings"
+            href="/dashboard/connect/pay?tab=checkouts"
             category="payments"
             label="kyc"
             bgColor="bgWhite"
