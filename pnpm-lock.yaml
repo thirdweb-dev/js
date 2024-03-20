@@ -444,8 +444,8 @@ importers:
   packages/contracts-js:
     dependencies:
       '@thirdweb-dev/contracts':
-        specifier: 3.11.2
-        version: 3.11.2(ethers@5.7.2)
+        specifier: 3.11.3
+        version: 3.11.3(ethers@5.7.2)
     devDependencies:
       '@babel/preset-env':
         specifier: ^7.23.8
@@ -12816,8 +12816,8 @@ packages:
       react: 18.2.0
     dev: false
 
-  /@thirdweb-dev/contracts@3.11.2(ethers@5.7.2):
-    resolution: {integrity: sha512-rwPFko1BJ1w4sZ6DxULCFqAaR1HObj3xEhUoQErLuhdTw+77g8Ymg4ZNVuzaSDfQZzqecLiF/YL7h/9z/zEfCQ==}
+  /@thirdweb-dev/contracts@3.11.3(ethers@5.7.2):
+    resolution: {integrity: sha512-oZe/63MH8+tB2WCUXVy7ZrdOuSNXDKs6Jw6LpI87+LLj3zMj7OzVbLJASDqCLGpatGnx6vNt9Fu/Dkbg7oJv2A==}
     engines: {node: '>=18.0.0'}
     dependencies:
       '@chainlink/contracts': 0.6.1(ethers@5.7.2)

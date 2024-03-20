@@ -247,6 +247,7 @@
     "./dist/abis/IDropERC20_V2.json": "./dist/abis/IDropERC20_V2.json",
     "./dist/abis/ERC2771ContextUpgradeableStorage.json": "./dist/abis/ERC2771ContextUpgradeableStorage.json",
     "./dist/abis/IClaimableERC1155.json": "./dist/abis/IClaimableERC1155.json",
+    "./dist/abis/LinkTokenInterface.json": "./dist/abis/LinkTokenInterface.json",
     "./dist/abis/ILazyMint.json": "./dist/abis/ILazyMint.json",
     "./dist/abis/IOperatorFilterToggle.json": "./dist/abis/IOperatorFilterToggle.json",
     "./dist/abis/IERC1155Metadata.json": "./dist/abis/IERC1155Metadata.json",
@@ -347,6 +348,7 @@
     "./dist/abis/IERC1155Supply.json": "./dist/abis/IERC1155Supply.json",
     "./dist/abis/AirdropERC1155Claimable.json": "./dist/abis/AirdropERC1155Claimable.json",
     "./dist/abis/ISignatureMintERC20.json": "./dist/abis/ISignatureMintERC20.json",
+    "./dist/abis/VRFV2WrapperInterface.json": "./dist/abis/VRFV2WrapperInterface.json",
     "./dist/abis/ERC1155.json": "./dist/abis/ERC1155.json",
     "./dist/abis/IRulesEngine.json": "./dist/abis/IRulesEngine.json",
     "./dist/abis/Router.json": "./dist/abis/Router.json",
@@ -422,7 +424,7 @@
   "license": "Apache-2.0",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/contracts-js",
   "dependencies": {
-    "@thirdweb-dev/contracts": "3.11.2"
+    "@thirdweb-dev/contracts": "3.11.3"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.23.8",
