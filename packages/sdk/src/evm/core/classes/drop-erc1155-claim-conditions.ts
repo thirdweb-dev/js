@@ -256,7 +256,8 @@ export class DropErc1155ClaimConditions<
     } catch (err: any) {
       if (
         includesErrorMessage(err, "!CONDITION") ||
-        includesErrorMessage(err, "no active mint condition")
+        includesErrorMessage(err, "no active mint condition") ||
+        includesErrorMessage(err, "DropNoActiveCondition")
       ) {
         reasons.push(ClaimEligibility.NoClaimConditionSet);
         return reasons;
@@ -374,20 +375,24 @@ export class DropErc1155ClaimConditions<
         } catch (e: any) {
           console.warn(
             "Merkle proof verification failed:",
-            "reason" in e ? e.reason : e,
+            "reason" in e ? e.reason || e.errorName : e,
           );
-          const reason = (e as any).reason;
+          const reason = (e as any).reason || (e as any).errorName;
           switch (reason) {
             case "!Qty":
+            case "DropClaimExceedLimit":
               reasons.push(ClaimEligibility.OverMaxClaimablePerWallet);
               break;
             case "!PriceOrCurrency":
+            case "DropClaimInvalidTokenPrice":
               reasons.push(ClaimEligibility.WrongPriceOrCurrency);
               break;
             case "!MaxSupply":
+            case "DropClaimExceedMaxSupply":
               reasons.push(ClaimEligibility.NotEnoughSupply);
               break;
             case "cant claim yet":
+            case "DropClaimNotStarted":
               reasons.push(ClaimEligibility.ClaimPhaseNotStarted);
               break;
             default: {

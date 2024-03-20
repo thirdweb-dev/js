@@ -61,7 +61,9 @@ export default {
     "https://17000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.holesky.ethpandaops.io",
     "https://ethereum-holesky-rpc.publicnode.com",
-    "wss://ethereum-holesky-rpc.publicnode.com"
+    "wss://ethereum-holesky-rpc.publicnode.com",
+    "https://holesky.drpc.org",
+    "wss://holesky.drpc.org"
   ],
   "shortName": "holesky",
   "slip44": 1,

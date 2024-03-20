@@ -1,5 +1,99 @@
 # @thirdweb-dev/wallets
 
+## 2.4.23
+
+### Patch Changes
+
+- [#2493](https://github.com/thirdweb-dev/js/pull/2493) [`802ba8c`](https://github.com/thirdweb-dev/js/commit/802ba8c5a980d3bddd308f9b3d14cc9cbb5453d5) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Renaming of Smart Wallet -> Smart Account
+
+- Updated dependencies [[`e3f4490`](https://github.com/thirdweb-dev/js/commit/e3f44905cacd79d0826b05fe88375714af51405b), [`863049d`](https://github.com/thirdweb-dev/js/commit/863049dc0ca989d2654b4aacba811263931a33fe), [`863049d`](https://github.com/thirdweb-dev/js/commit/863049dc0ca989d2654b4aacba811263931a33fe), [`b2728ec`](https://github.com/thirdweb-dev/js/commit/b2728ec6f230925048b12fa8c915f127858dbb1b), [`8a20aa5`](https://github.com/thirdweb-dev/js/commit/8a20aa58259edc5bac578dc5e4f4d971ed7adf36), [`c479277`](https://github.com/thirdweb-dev/js/commit/c47927708aa8e8ff42f40c4f740a859ec090ec70)]:
+  - @thirdweb-dev/contracts-js@1.3.18
+  - @thirdweb-dev/chains@0.1.81
+  - @thirdweb-dev/sdk@4.0.48
+
+## 2.4.22
+
+### Patch Changes
+
+- Updated dependencies [[`c494db8`](https://github.com/thirdweb-dev/js/commit/c494db87cbfa4b6fc4013abb01936e86a4350ea8), [`f0250a7`](https://github.com/thirdweb-dev/js/commit/f0250a77cdbfa3b72e8dbf0ff345219a032e42b0), [`c67b287`](https://github.com/thirdweb-dev/js/commit/c67b2877643afdfb503b41a2b5d21e18dbff15f2), [`7ac4e6b`](https://github.com/thirdweb-dev/js/commit/7ac4e6ba4ee947c76f35b1b95927d7772edf6454), [`d4be647`](https://github.com/thirdweb-dev/js/commit/d4be6479db3fec6b4891e5ca89487b4e703eb9cf)]:
+  - @thirdweb-dev/chains@0.1.80
+  - @thirdweb-dev/sdk@4.0.47
+  - @thirdweb-dev/contracts-js@1.3.17
+
+## 2.4.21
+
+### Patch Changes
+
+- Updated dependencies [[`846a350`](https://github.com/thirdweb-dev/js/commit/846a3503fe4a8d39e92dd318470cefefd3b94c69), [`2e01627`](https://github.com/thirdweb-dev/js/commit/2e01627c998a49a1dd41041f3743a28488c92697)]:
+  - @thirdweb-dev/sdk@4.0.46
+  - @thirdweb-dev/chains@0.1.79
+
+## 2.4.20
+
+### Patch Changes
+
+- Updated dependencies [[`a2002d1`](https://github.com/thirdweb-dev/js/commit/a2002d16376c41fffa59daccfd98856aba90a627)]:
+  - @thirdweb-dev/sdk@4.0.45
+
+## 2.4.19
+
+### Patch Changes
+
+- Updated dependencies [[`b2be63a`](https://github.com/thirdweb-dev/js/commit/b2be63ada466ea1784d680ae6244ac047a190103)]:
+  - @thirdweb-dev/sdk@4.0.44
+
+## 2.4.18
+
+### Patch Changes
+
+- [#2443](https://github.com/thirdweb-dev/js/pull/2443) [`cabfc29`](https://github.com/thirdweb-dev/js/commit/cabfc29119f25a78010f59f766bdcb8c392afa2d) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [Smart Wallet] Use bundler eth_getUserOperationReceipt instead of rpc eth_getLogs, remove polygon gas station error logs
+
+- Updated dependencies [[`cabfc29`](https://github.com/thirdweb-dev/js/commit/cabfc29119f25a78010f59f766bdcb8c392afa2d), [`173777a`](https://github.com/thirdweb-dev/js/commit/173777ade4ea59cde1c6f25a4654d48b277be9ad)]:
+  - @thirdweb-dev/sdk@4.0.43
+
+## 2.4.17
+
+### Patch Changes
+
+- [#2440](https://github.com/thirdweb-dev/js/pull/2440) [`c894270`](https://github.com/thirdweb-dev/js/commit/c894270401850575d1a4df73e16198177b46477a) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [Smart Wallet] Update Account Core ABI
+
+- [#2439](https://github.com/thirdweb-dev/js/pull/2439) [`332a145`](https://github.com/thirdweb-dev/js/commit/332a14552bf95e13e5220b1bd73414f000088568) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Make accountInfo/factoryInfo internal props optional in SmartWalletConfig
+
+- Updated dependencies [[`c6b025e`](https://github.com/thirdweb-dev/js/commit/c6b025e84451341f6f48c0a7c4b5f06b8e49d792)]:
+  - @thirdweb-dev/sdk@4.0.42
+
+## 2.4.16
+
+### Patch Changes
+
+- [#2417](https://github.com/thirdweb-dev/js/pull/2417) [`862905e`](https://github.com/thirdweb-dev/js/commit/862905e161a091c15eb9b054cfcca0e5d2879fd6) Thanks [@jnsdls](https://github.com/jnsdls)! - fix signature verification via smart-wallet
+
+- Updated dependencies [[`588897d`](https://github.com/thirdweb-dev/js/commit/588897d1b04e6c63da13639aeb47ca701308e1b2)]:
+  - @thirdweb-dev/chains@0.1.78
+  - @thirdweb-dev/sdk@4.0.41
+
+## 2.4.15
+
+### Patch Changes
+
+- [#2414](https://github.com/thirdweb-dev/js/pull/2414) [`74a92dc`](https://github.com/thirdweb-dev/js/commit/74a92dcb7dc4be7d03bcb8b7211e87016f52a81f) Thanks [@jnsdls](https://github.com/jnsdls)! - properly pass through clientId and secretKey variables to verifySignature functions
+
+- Updated dependencies [[`047fbe2`](https://github.com/thirdweb-dev/js/commit/047fbe2918808cbc8fded90104458b6e38d1207d)]:
+  - @thirdweb-dev/chains@0.1.77
+  - @thirdweb-dev/sdk@4.0.40
+
+## 2.4.14
+
+### Patch Changes
+
+- [#2379](https://github.com/thirdweb-dev/js/pull/2379) [`ab44b8f`](https://github.com/thirdweb-dev/js/commit/ab44b8f0ae760065f400f76d69703e26bcbcc022) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [Smart Wallet] Do not deploy to sign typed data, allow presigned deploy+session key
+
+- [#2388](https://github.com/thirdweb-dev/js/pull/2388) [`f80f630`](https://github.com/thirdweb-dev/js/commit/f80f6307a3ebe1adaaf072dd2e02aecf83bfa43f) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [Smart Wallet] ERC20Paymaster Generic Support
+
+- Updated dependencies [[`ab44b8f`](https://github.com/thirdweb-dev/js/commit/ab44b8f0ae760065f400f76d69703e26bcbcc022), [`9c7fbc1`](https://github.com/thirdweb-dev/js/commit/9c7fbc1603a7265209b6f56c2284fdb0e6b33a1d), [`5f243bb`](https://github.com/thirdweb-dev/js/commit/5f243bba0ded5dace9344c79e8904a4a342d16af), [`7d8697e`](https://github.com/thirdweb-dev/js/commit/7d8697ec3ff72f33dda151e7eb82f5ff19c1f825)]:
+  - @thirdweb-dev/sdk@4.0.39
+  - @thirdweb-dev/chains@0.1.76
+
 ## 2.4.13
 
 ### Patch Changes

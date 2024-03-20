@@ -44,7 +44,9 @@ export default {
     "https://sepolia.gateway.tenderly.co",
     "wss://sepolia.gateway.tenderly.co",
     "https://ethereum-sepolia-rpc.publicnode.com",
-    "wss://ethereum-sepolia-rpc.publicnode.com"
+    "wss://ethereum-sepolia-rpc.publicnode.com",
+    "https://sepolia.drpc.org",
+    "wss://sepolia.drpc.org"
   ],
   "shortName": "sep",
   "slip44": 1,

@@ -3,7 +3,7 @@ import {
   EmbeddedWallet,
   EmbeddedWalletOauthStrategy,
 } from "@thirdweb-dev/wallets";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Spacer } from "../../../components/Spacer";
 import { Spinner } from "../../../components/Spinner";
 import { Container, ModalHeader } from "../../../components/basic";
@@ -33,7 +33,6 @@ export const EmbeddedWalletSocialLogin = (
 
   const socialLogin = async () => {
     try {
-      console.log("socialLogin");
       const embeddedWallet = createWalletInstance();
       setConnectionStatus("connecting");
       const socialWindow = openOauthSignInWindow(props.strategy, themeObj);
@@ -63,13 +62,19 @@ export const EmbeddedWalletSocialLogin = (
     }
   };
 
-  const closeModal = props.connected;
+  const onConnect = props.connected;
 
+  const onConnectCalled = useRef(false);
   useEffect(() => {
-    if (connectionStatus === "connected") {
-      closeModal();
+    if (onConnectCalled.current) {
+      return;
     }
-  }, [connectionStatus, closeModal]);
+
+    if (connectionStatus === "connected") {
+      onConnect();
+      onConnectCalled.current = true;
+    }
+  }, [connectionStatus, onConnect]);
 
   return (
     <Container animate="fadein" flex="column" fullHeight>

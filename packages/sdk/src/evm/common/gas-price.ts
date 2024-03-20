@@ -1,6 +1,17 @@
 import { ChainId } from "../constants/chains/ChainId";
 import { BigNumber, utils, providers } from "ethers";
-import { Mumbai, Polygon, Flag, FlagTestnet } from "@thirdweb-dev/chains";
+import {
+  Mumbai,
+  Polygon,
+  Flag,
+  FlagTestnet,
+  Optimism,
+  OpSepoliaTestnet,
+  Base,
+  BaseSepoliaTestnet,
+  Zora,
+  ZoraSepoliaTestnet,
+} from "@thirdweb-dev/chains";
 
 type FeeData = {
   maxFeePerGas: null | BigNumber;
@@ -99,6 +110,34 @@ export async function getGasPrice(
   return txGasPrice;
 }
 
+export async function estimateTransactionCost(
+  provider: providers.Provider,
+  tx: providers.TransactionRequest,
+) {
+  const chainId = (await provider.getNetwork()).chainId;
+  let l1GasCost = BigNumber.from(0);
+  if (isOpStackChain(chainId)) {
+    const { asL2Provider } = await import("@eth-optimism/sdk");
+    const l2RpcProvider = asL2Provider(provider);
+    l1GasCost = await l2RpcProvider.estimateL1GasCost(tx);
+  }
+  const gasLimit = tx.gasLimit || (await provider.estimateGas(tx));
+  const gasPrice = await getGasPrice(provider);
+  const gasCost = BigNumber.from(gasLimit).mul(gasPrice);
+  return gasCost.add(l1GasCost);
+}
+
+function isOpStackChain(chainId: number) {
+  return (
+    chainId === Optimism.chainId ||
+    chainId === OpSepoliaTestnet.chainId ||
+    chainId === Base.chainId ||
+    chainId === BaseSepoliaTestnet.chainId ||
+    chainId === Zora.chainId ||
+    chainId === ZoraSepoliaTestnet.chainId
+  );
+}
+
 /**
  * @internal
  */
@@ -148,8 +187,8 @@ export async function getPolygonGasPriorityFee(
       const fixedFee = parseFloat(priorityFee).toFixed(9);
       return utils.parseUnits(fixedFee, "gwei");
     }
-  } catch (e) {
-    console.error("failed to fetch gas", e);
+  } catch {
+    // if the gas station is down, return the default gas fee
   }
   return getDefaultGasFee(chainId);
 }

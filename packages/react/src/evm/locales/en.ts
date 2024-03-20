@@ -46,12 +46,12 @@ export function enDefault(): ThirdwebLocale {
       guestWalletWarning:
         "This is a temporary guest wallet. Backup wallet if you don't want to lose access to it",
       switchTo: "Switch to", // Used in "Switch to <Wallet-Name>"
-      connectedToSmartWallet: "Connected To Smart Wallet",
+      connectedToSmartWallet: "Connected To Smart Account",
       confirmInWallet: "Confirm in wallet",
       disconnectWallet: "Disconnect Wallet",
       copyAddress: "Copy Address",
       personalWallet: "Personal Wallet",
-      smartWallet: "Smart Wallet",
+      smartWallet: "Smart Account",
       or: "OR",
       goBackButton: "Back",
       download: {
@@ -129,8 +129,8 @@ export function enDefault(): ThirdwebLocale {
         scanInstruction: "Scan this with your wallet app to connect",
       },
       smartWallet: {
-        connecting: "Connecting to Smart Wallet",
-        failedToConnect: "Failed to connect to Smart Wallet",
+        connecting: "Connecting to Smart Account",
+        failedToConnect: "Failed to connect to Smart Acount",
         wrongNetworkScreen: {
           title: "Wrong Network",
           subtitle: "Your wallet is not connected to the required network",

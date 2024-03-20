@@ -24,7 +24,9 @@ export default {
     "https://57000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-tanenbaum.rollux.com",
     "https://rpc.ankr.com/rollux_testnet/${ANKR_API_KEY}",
-    "wss://rpc-tanenbaum.rollux.com/wss"
+    "wss://rpc-tanenbaum.rollux.com/wss",
+    "https://rollux.rpc.tanenbaum.io",
+    "wss://rollux.rpc.tanenbaum.io/wss"
   ],
   "shortName": "tsys-rollux",
   "slip44": 1,

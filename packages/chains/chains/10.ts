@@ -57,7 +57,9 @@ export default {
     "https://optimism.gateway.tenderly.co",
     "wss://optimism.gateway.tenderly.co",
     "https://optimism-rpc.publicnode.com",
-    "wss://optimism-rpc.publicnode.com"
+    "wss://optimism-rpc.publicnode.com",
+    "https://optimism.drpc.org",
+    "wss://optimism.drpc.org"
   ],
   "shortName": "oeth",
   "slug": "optimism",

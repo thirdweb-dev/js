@@ -115,7 +115,7 @@ export type DefaultChains = typeof defaultChains;
 /**
  *
  * The `<ThirdwebProvider />` component lets you control what networks you want users to connect to,
- * what types of wallets can connect to your app, and the settings for the Thirdweb SDK.
+ * what types of wallets can connect to your app, and the settings for the thirdweb SDK.
  *
  * @example
  * You can wrap your application with the provider as follows:

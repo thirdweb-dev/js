@@ -192,6 +192,13 @@ export class ContractWrapper<
     return this.writeContract.estimateGas[fn as string](...args);
   }
 
+  public async populateTransaction(
+    fn: keyof TContract["functions"],
+    args: any[],
+  ): Promise<providers.TransactionRequest> {
+    return this.writeContract.populateTransaction[fn as string](...args);
+  }
+
   /**
    * @internal
    */
@@ -781,6 +788,7 @@ export class ContractWrapper<
         transaction.from,
         spender,
         amount,
+        this.options.gasless.engine.domainSeparatorVersion,
       );
 
       const message = {
@@ -1099,6 +1107,7 @@ export class ContractWrapper<
         transaction.from,
         spender,
         amount,
+        this.options.gasless.openzeppelin.domainSeparatorVersion,
       );
 
       const { r, s, v } = utils.splitSignature(sig);

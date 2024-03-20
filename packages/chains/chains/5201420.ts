@@ -40,7 +40,7 @@ export default {
   "networkId": 5201420,
   "rpc": [
     "https://5201420.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://api.electroneum.com"
+    "https://testnet-rpc.electroneum.com"
   ],
   "shortName": "etn-testnet",
   "slip44": 1,

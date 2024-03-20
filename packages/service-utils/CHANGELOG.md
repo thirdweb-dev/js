@@ -1,5 +1,29 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.22
+
+### Patch Changes
+
+- [#2493](https://github.com/thirdweb-dev/js/pull/2493) [`802ba8c`](https://github.com/thirdweb-dev/js/commit/802ba8c5a980d3bddd308f9b3d14cc9cbb5453d5) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Renaming of Smart Wallet -> Smart Account
+
+## 0.4.21
+
+### Patch Changes
+
+- [#2465](https://github.com/thirdweb-dev/js/pull/2465) [`e024d78`](https://github.com/thirdweb-dev/js/commit/e024d78ed03fb2f2a618908e87af80799cb79298) Thanks [@edwardysun](https://github.com/edwardysun)! - Add pay to usageEventSchema
+
+## 0.4.20
+
+### Patch Changes
+
+- [#2453](https://github.com/thirdweb-dev/js/pull/2453) [`eee200f`](https://github.com/thirdweb-dev/js/commit/eee200f8d4c4d4cb954b4a8dfcd5ac433f7d2988) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - chore: allow embedded-wallet.thirdweb.com to use a given client ID for rpc request
+
+## 0.4.19
+
+### Patch Changes
+
+- [#2431](https://github.com/thirdweb-dev/js/pull/2431) [`6cf298a`](https://github.com/thirdweb-dev/js/commit/6cf298a29a29e37cecb88953aab195db8934a740) Thanks [@edwardysun](https://github.com/edwardysun)! - Add pay to Services list
+
 ## 0.4.18
 
 ### Patch Changes

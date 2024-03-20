@@ -2,7 +2,13 @@ import type { Chain } from "../src/types";
 export default {
   "chain": "FIRE",
   "chainId": 917,
-  "explorers": [],
+  "explorers": [
+    {
+      "name": "FireScan",
+      "url": "https://rinia.firescan.io",
+      "standard": "EIP3091"
+    }
+  ],
   "faucets": [
     "https://faucet.thefirechain.com"
   ],
@@ -27,6 +33,5 @@ export default {
   "shortName": "tfire",
   "slip44": 1,
   "slug": "rinia-testnet",
-  "status": "incubating",
   "testnet": true
 } as const satisfies Chain;

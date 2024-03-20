@@ -16,6 +16,7 @@ import {
 import { walletIds } from "../constants/walletIds";
 import { getValidChainRPCs } from "@thirdweb-dev/chains";
 import { providers, utils } from "ethers";
+import { checkContractWalletSignature } from "../connectors/smart-wallet/lib/check-contract-wallet-signature";
 
 // export types and utils for convenience
 export type * from "../connectors/smart-wallet/types";
@@ -661,6 +662,44 @@ export class SmartWallet extends AbstractClientWallet<
   async getFactoryContract(): Promise<SmartContract> {
     const connector = await this.getConnector();
     return connector.getFactoryContract();
+  }
+
+  override async verifySignature(
+    message: string,
+    signature: string,
+    address: string,
+    chainId: number,
+  ): Promise<boolean> {
+    try {
+      const messageHash = utils.hashMessage(message);
+      const messageHashBytes = utils.arrayify(messageHash);
+      const recoveredAddress = utils.recoverAddress(
+        messageHashBytes,
+        signature,
+      );
+
+      if (recoveredAddress === address) {
+        return true;
+      }
+    } catch {
+      // no-op
+    }
+    // Check if the address is a smart contract wallet
+    if (chainId !== undefined) {
+      try {
+        return await checkContractWalletSignature(
+          message,
+          signature,
+          address,
+          chainId || 1,
+          this.options?.clientId,
+          this.options?.secretKey,
+        );
+      } catch {
+        // no-op
+      }
+    }
+    return false;
   }
 
   autoConnect(params: ConnectParams<SmartWalletConnectionArgs>) {

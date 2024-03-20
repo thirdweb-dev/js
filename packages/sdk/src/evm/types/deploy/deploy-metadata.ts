@@ -57,6 +57,11 @@ export interface NFTContractDeployMetadata {
    * The default app for this contract
    */
   app_uri?: string;
+
+  /**
+   * The default admin for this contract
+   */
+  defaultAdmin?: AddressOrEns;
 }
 
 /**
@@ -104,6 +109,10 @@ export interface OpenEditionContractDeployMetadata {
    * The default app for this contract
    */
   app_uri?: string;
+  /**
+   * The default admin for this contract
+   */
+  defaultAdmin?: AddressOrEns;
 }
 
 /**
@@ -152,6 +161,10 @@ export interface TokenContractDeployMetadata {
    * The default app for this contract
    */
   app_uri?: string;
+  /**
+   * The default admin for this contract
+   */
+  defaultAdmin?: AddressOrEns;
 }
 
 /**
@@ -192,6 +205,10 @@ export interface MarketplaceContractDeployMetadata {
    * The default app for this contract
    */
   app_uri?: string;
+  /**
+   * The default admin for this contract
+   */
+  defaultAdmin?: AddressOrEns;
 }
 
 /**
@@ -231,6 +248,10 @@ export interface MarketplaceV3ContractDeployMetadata {
    * The default app for this contract
    */
   app_uri?: string;
+  /**
+   * The default admin for this contract
+   */
+  defaultAdmin?: AddressOrEns;
 }
 
 /**
@@ -284,6 +305,10 @@ export interface VoteContractDeployMetadata {
    * The default app for this contract
    */
   app_uri?: string;
+  /**
+   * The default admin for this contract
+   */
+  defaultAdmin?: AddressOrEns;
 }
 
 /**
@@ -333,6 +358,10 @@ export interface SplitContractDeployMetadata {
    * The default app for this contract
    */
   app_uri?: string;
+  /**
+   * The default admin for this contract
+   */
+  defaultAdmin?: AddressOrEns;
 }
 
 /**
@@ -376,6 +405,10 @@ export interface MultiwrapContractDeployMetadata {
    * The default app for this contract
    */
   app_uri?: string;
+  /**
+   * The default admin for this contract
+   */
+  defaultAdmin?: AddressOrEns;
 }
 
 /**
@@ -407,6 +440,10 @@ export interface AirdropContractDeployMetadata {
    * The default app for this contract
    */
   app_uri?: string;
+  /**
+   * The default admin for this contract
+   */
+  defaultAdmin?: AddressOrEns;
 }
 
 /**

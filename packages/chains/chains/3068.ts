@@ -5,7 +5,7 @@ export default {
   "explorers": [
     {
       "name": "explorer-thebifrost",
-      "url": "https://explorer.mainnet.thebifrost.io",
+      "url": "https://explorer.mainnet.bifrostnetwork.com",
       "standard": "EIP3091"
     }
   ],
@@ -16,7 +16,7 @@ export default {
     "height": 480,
     "format": "png"
   },
-  "infoURL": "https://thebifrost.io",
+  "infoURL": "https://bifrostnetwork.com",
   "name": "Bifrost Mainnet",
   "nativeCurrency": {
     "name": "Bifrost",
@@ -26,8 +26,8 @@ export default {
   "networkId": 3068,
   "rpc": [
     "https://3068.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://public-01.mainnet.thebifrost.io/rpc",
-    "https://public-02.mainnet.thebifrost.io/rpc"
+    "https://public-01.mainnet.bifrostnetwork.com/rpc",
+    "https://public-02.mainnet.bifrostnetwork.com/rpc"
   ],
   "shortName": "bfc",
   "slug": "bifrost",

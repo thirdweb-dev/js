@@ -44,7 +44,9 @@ export default {
   ],
   "rpc": [
     "https://300.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://sepolia.era.zksync.dev"
+    "https://sepolia.era.zksync.dev",
+    "https://zksync-sepolia.drpc.org",
+    "wss://zksync-sepolia.drpc.org"
   ],
   "shortName": "zksync-sepolia",
   "slip44": 1,

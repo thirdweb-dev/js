@@ -24,6 +24,7 @@ const usageEventSchema = z.object({
     "connectWallet",
     "checkout",
     "engine",
+    "pay",
   ]),
   action: z.string(),
 
@@ -65,6 +66,10 @@ const usageEventSchema = z.object({
   msSinceQueue: z.number().nonnegative().optional(),
   msSinceSend: z.number().nonnegative().optional(),
   msTotalDuration: z.number().nonnegative().optional(),
+  swapId: z.string().optional(),
+  tokenAddress: z.string().optional(),
+  amountWei: z.string().optional(),
+  amountUSDCents: z.number().nonnegative().optional(),
 });
 export type UsageEvent = z.infer<typeof usageEventSchema>;
 
