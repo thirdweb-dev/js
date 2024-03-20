@@ -156,8 +156,7 @@ const useOldPaymentConfig = () => {
   const radioOptions = ["pay", "checkout"].filter((option) => {
     return (
       option === "pay" ||
-      (option === "checkout" && paymentEnabledContracts) ||
-      []?.length > 0
+      (option === "checkout" && paymentEnabledContracts?.length)
     );
   });
   return { tabIndex, setTabIndex, radioOptions };
