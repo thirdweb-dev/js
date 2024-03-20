@@ -10,25 +10,6 @@ export type GetRoleMemberParams = {
   index: AbiParameterToPrimitiveType<{ type: "uint256"; name: "index" }>;
 };
 
-const METHOD = [
-  "0x9010d07c",
-  [
-    {
-      type: "bytes32",
-      name: "role",
-    },
-    {
-      type: "uint256",
-      name: "index",
-    },
-  ],
-  [
-    {
-      type: "address",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "getRoleMember" function on the contract.
  * @param options - The options for the getRoleMember function.
@@ -50,7 +31,24 @@ export async function getRoleMember(
 ) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x9010d07c",
+      [
+        {
+          type: "bytes32",
+          name: "role",
+        },
+        {
+          type: "uint256",
+          name: "index",
+        },
+      ],
+      [
+        {
+          type: "address",
+        },
+      ],
+    ],
     params: [options.role, options.index],
   });
 }

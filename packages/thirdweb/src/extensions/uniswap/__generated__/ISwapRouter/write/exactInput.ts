@@ -27,44 +27,6 @@ export type ExactInputParams = Prettify<
       asyncParams: () => Promise<ExactInputParamsInternal>;
     }
 >;
-const METHOD = [
-  "0xc04b8d59",
-  [
-    {
-      type: "tuple",
-      name: "params",
-      components: [
-        {
-          type: "bytes",
-          name: "path",
-        },
-        {
-          type: "address",
-          name: "recipient",
-        },
-        {
-          type: "uint256",
-          name: "deadline",
-        },
-        {
-          type: "uint256",
-          name: "amountIn",
-        },
-        {
-          type: "uint256",
-          name: "amountOutMinimum",
-        },
-      ],
-    },
-  ],
-  [
-    {
-      type: "uint256",
-      name: "amountOut",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "exactInput" function on the contract.
  * @param options - The options for the "exactInput" function.
@@ -86,7 +48,43 @@ const METHOD = [
 export function exactInput(options: BaseTransactionOptions<ExactInputParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xc04b8d59",
+      [
+        {
+          type: "tuple",
+          name: "params",
+          components: [
+            {
+              type: "bytes",
+              name: "path",
+            },
+            {
+              type: "address",
+              name: "recipient",
+            },
+            {
+              type: "uint256",
+              name: "deadline",
+            },
+            {
+              type: "uint256",
+              name: "amountIn",
+            },
+            {
+              type: "uint256",
+              name: "amountOutMinimum",
+            },
+          ],
+        },
+      ],
+      [
+        {
+          type: "uint256",
+          name: "amountOut",
+        },
+      ],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

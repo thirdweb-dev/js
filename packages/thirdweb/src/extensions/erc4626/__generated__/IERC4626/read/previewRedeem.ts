@@ -13,24 +13,6 @@ export type PreviewRedeemParams = {
   }>;
 };
 
-const METHOD = [
-  "0x4cdad506",
-  [
-    {
-      name: "shares",
-      type: "uint256",
-      internalType: "uint256",
-    },
-  ],
-  [
-    {
-      name: "assets",
-      type: "uint256",
-      internalType: "uint256",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "previewRedeem" function on the contract.
  * @param options - The options for the previewRedeem function.
@@ -51,7 +33,23 @@ export async function previewRedeem(
 ) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x4cdad506",
+      [
+        {
+          name: "shares",
+          type: "uint256",
+          internalType: "uint256",
+        },
+      ],
+      [
+        {
+          name: "assets",
+          type: "uint256",
+          internalType: "uint256",
+        },
+      ],
+    ],
     params: [options.shares],
   });
 }

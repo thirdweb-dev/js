@@ -31,55 +31,6 @@ export type CreateListingParams = Prettify<
       asyncParams: () => Promise<CreateListingParamsInternal>;
     }
 >;
-const METHOD = [
-  "0x296f4e16",
-  [
-    {
-      type: "tuple",
-      name: "_params",
-      components: [
-        {
-          type: "address",
-          name: "assetContract",
-        },
-        {
-          type: "uint256",
-          name: "tokenId",
-        },
-        {
-          type: "uint256",
-          name: "startTime",
-        },
-        {
-          type: "uint256",
-          name: "secondsUntilEndTime",
-        },
-        {
-          type: "uint256",
-          name: "quantityToList",
-        },
-        {
-          type: "address",
-          name: "currencyToAccept",
-        },
-        {
-          type: "uint256",
-          name: "reservePricePerToken",
-        },
-        {
-          type: "uint256",
-          name: "buyoutPricePerToken",
-        },
-        {
-          type: "uint8",
-          name: "listingType",
-        },
-      ],
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "createListing" function on the contract.
  * @param options - The options for the "createListing" function.
@@ -103,7 +54,54 @@ export function createListing(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x296f4e16",
+      [
+        {
+          type: "tuple",
+          name: "_params",
+          components: [
+            {
+              type: "address",
+              name: "assetContract",
+            },
+            {
+              type: "uint256",
+              name: "tokenId",
+            },
+            {
+              type: "uint256",
+              name: "startTime",
+            },
+            {
+              type: "uint256",
+              name: "secondsUntilEndTime",
+            },
+            {
+              type: "uint256",
+              name: "quantityToList",
+            },
+            {
+              type: "address",
+              name: "currencyToAccept",
+            },
+            {
+              type: "uint256",
+              name: "reservePricePerToken",
+            },
+            {
+              type: "uint256",
+              name: "buyoutPricePerToken",
+            },
+            {
+              type: "uint8",
+              name: "listingType",
+            },
+          ],
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

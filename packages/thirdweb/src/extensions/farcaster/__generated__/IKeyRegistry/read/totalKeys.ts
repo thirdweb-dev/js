@@ -10,25 +10,6 @@ export type TotalKeysParams = {
   state: AbiParameterToPrimitiveType<{ type: "uint8"; name: "state" }>;
 };
 
-const METHOD = [
-  "0x6840b75e",
-  [
-    {
-      type: "uint256",
-      name: "fid",
-    },
-    {
-      type: "uint8",
-      name: "state",
-    },
-  ],
-  [
-    {
-      type: "uint256",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "totalKeys" function on the contract.
  * @param options - The options for the totalKeys function.
@@ -50,7 +31,24 @@ export async function totalKeys(
 ) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x6840b75e",
+      [
+        {
+          type: "uint256",
+          name: "fid",
+        },
+        {
+          type: "uint8",
+          name: "state",
+        },
+      ],
+      [
+        {
+          type: "uint256",
+        },
+      ],
+    ],
     params: [options.fid, options.state],
   });
 }

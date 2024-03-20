@@ -26,41 +26,6 @@ export type AddForParams = Prettify<
       asyncParams: () => Promise<AddForParamsInternal>;
     }
 >;
-const METHOD = [
-  "0xa005d3d2",
-  [
-    {
-      type: "address",
-      name: "fidOwner",
-    },
-    {
-      type: "uint32",
-      name: "keyType",
-    },
-    {
-      type: "bytes",
-      name: "key",
-    },
-    {
-      type: "uint8",
-      name: "metadataType",
-    },
-    {
-      type: "bytes",
-      name: "metadata",
-    },
-    {
-      type: "uint256",
-      name: "deadline",
-    },
-    {
-      type: "bytes",
-      name: "sig",
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "addFor" function on the contract.
  * @param options - The options for the "addFor" function.
@@ -88,7 +53,40 @@ const METHOD = [
 export function addFor(options: BaseTransactionOptions<AddForParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xa005d3d2",
+      [
+        {
+          type: "address",
+          name: "fidOwner",
+        },
+        {
+          type: "uint32",
+          name: "keyType",
+        },
+        {
+          type: "bytes",
+          name: "key",
+        },
+        {
+          type: "uint8",
+          name: "metadataType",
+        },
+        {
+          type: "bytes",
+          name: "metadata",
+        },
+        {
+          type: "uint256",
+          name: "deadline",
+        },
+        {
+          type: "bytes",
+          name: "sig",
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

@@ -17,17 +17,6 @@ export type WithdrawRewardTokensParams = Prettify<
       asyncParams: () => Promise<WithdrawRewardTokensParamsInternal>;
     }
 >;
-const METHOD = [
-  "0xcb43b2dd",
-  [
-    {
-      type: "uint256",
-      name: "_amount",
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "withdrawRewardTokens" function on the contract.
  * @param options - The options for the "withdrawRewardTokens" function.
@@ -51,7 +40,16 @@ export function withdrawRewardTokens(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xcb43b2dd",
+      [
+        {
+          type: "uint256",
+          name: "_amount",
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

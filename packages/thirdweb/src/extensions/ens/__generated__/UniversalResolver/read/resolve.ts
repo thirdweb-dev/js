@@ -10,28 +10,6 @@ export type ResolveParams = {
   data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "data" }>;
 };
 
-const METHOD = [
-  "0x9061b923",
-  [
-    {
-      type: "bytes",
-      name: "name",
-    },
-    {
-      type: "bytes",
-      name: "data",
-    },
-  ],
-  [
-    {
-      type: "bytes",
-    },
-    {
-      type: "address",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "resolve" function on the contract.
  * @param options - The options for the resolve function.
@@ -51,7 +29,27 @@ const METHOD = [
 export async function resolve(options: BaseTransactionOptions<ResolveParams>) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x9061b923",
+      [
+        {
+          type: "bytes",
+          name: "name",
+        },
+        {
+          type: "bytes",
+          name: "data",
+        },
+      ],
+      [
+        {
+          type: "bytes",
+        },
+        {
+          type: "address",
+        },
+      ],
+    ],
     params: [options.name, options.data],
   });
 }

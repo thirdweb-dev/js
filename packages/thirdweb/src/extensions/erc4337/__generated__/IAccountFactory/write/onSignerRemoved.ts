@@ -22,25 +22,6 @@ export type OnSignerRemovedParams = Prettify<
       asyncParams: () => Promise<OnSignerRemovedParamsInternal>;
     }
 >;
-const METHOD = [
-  "0x0db33003",
-  [
-    {
-      type: "address",
-      name: "signer",
-    },
-    {
-      type: "address",
-      name: "creatorAdmin",
-    },
-    {
-      type: "bytes",
-      name: "data",
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "onSignerRemoved" function on the contract.
  * @param options - The options for the "onSignerRemoved" function.
@@ -66,7 +47,24 @@ export function onSignerRemoved(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x0db33003",
+      [
+        {
+          type: "address",
+          name: "signer",
+        },
+        {
+          type: "address",
+          name: "creatorAdmin",
+        },
+        {
+          type: "bytes",
+          name: "data",
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

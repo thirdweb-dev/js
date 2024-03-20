@@ -42,74 +42,6 @@ export type RegisterParams = Prettify<
       asyncParams: () => Promise<RegisterParamsInternal>;
     }
 >;
-const METHOD = [
-  "0xa44c9ce7",
-  [
-    {
-      type: "tuple",
-      name: "registerParams",
-      components: [
-        {
-          type: "address",
-          name: "to",
-        },
-        {
-          type: "address",
-          name: "recovery",
-        },
-        {
-          type: "uint256",
-          name: "deadline",
-        },
-        {
-          type: "bytes",
-          name: "sig",
-        },
-      ],
-    },
-    {
-      type: "tuple[]",
-      name: "signerParams",
-      components: [
-        {
-          type: "uint32",
-          name: "keyType",
-        },
-        {
-          type: "bytes",
-          name: "key",
-        },
-        {
-          type: "uint8",
-          name: "metadataType",
-        },
-        {
-          type: "bytes",
-          name: "metadata",
-        },
-        {
-          type: "uint256",
-          name: "deadline",
-        },
-        {
-          type: "bytes",
-          name: "sig",
-        },
-      ],
-    },
-    {
-      type: "uint256",
-      name: "extraStorage",
-    },
-  ],
-  [
-    {
-      type: "uint256",
-      name: "fid",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "register" function on the contract.
  * @param options - The options for the "register" function.
@@ -133,7 +65,73 @@ const METHOD = [
 export function register(options: BaseTransactionOptions<RegisterParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xa44c9ce7",
+      [
+        {
+          type: "tuple",
+          name: "registerParams",
+          components: [
+            {
+              type: "address",
+              name: "to",
+            },
+            {
+              type: "address",
+              name: "recovery",
+            },
+            {
+              type: "uint256",
+              name: "deadline",
+            },
+            {
+              type: "bytes",
+              name: "sig",
+            },
+          ],
+        },
+        {
+          type: "tuple[]",
+          name: "signerParams",
+          components: [
+            {
+              type: "uint32",
+              name: "keyType",
+            },
+            {
+              type: "bytes",
+              name: "key",
+            },
+            {
+              type: "uint8",
+              name: "metadataType",
+            },
+            {
+              type: "bytes",
+              name: "metadata",
+            },
+            {
+              type: "uint256",
+              name: "deadline",
+            },
+            {
+              type: "bytes",
+              name: "sig",
+            },
+          ],
+        },
+        {
+          type: "uint256",
+          name: "extraStorage",
+        },
+      ],
+      [
+        {
+          type: "uint256",
+          name: "fid",
+        },
+      ],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

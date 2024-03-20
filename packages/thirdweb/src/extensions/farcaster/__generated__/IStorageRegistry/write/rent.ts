@@ -18,26 +18,6 @@ export type RentParams = Prettify<
       asyncParams: () => Promise<RentParamsInternal>;
     }
 >;
-const METHOD = [
-  "0x783a112b",
-  [
-    {
-      type: "uint256",
-      name: "fid",
-    },
-    {
-      type: "uint256",
-      name: "units",
-    },
-  ],
-  [
-    {
-      type: "uint256",
-      name: "overpayment",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "rent" function on the contract.
  * @param options - The options for the "rent" function.
@@ -60,7 +40,25 @@ const METHOD = [
 export function rent(options: BaseTransactionOptions<RentParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x783a112b",
+      [
+        {
+          type: "uint256",
+          name: "fid",
+        },
+        {
+          type: "uint256",
+          name: "units",
+        },
+      ],
+      [
+        {
+          type: "uint256",
+          name: "overpayment",
+        },
+      ],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

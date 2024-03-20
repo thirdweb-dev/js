@@ -13,26 +13,6 @@ export type GetMetadataUriParams = {
   }>;
 };
 
-const METHOD = [
-  "0xf4c2012d",
-  [
-    {
-      type: "uint256",
-      name: "_chainId",
-    },
-    {
-      type: "address",
-      name: "_deployment",
-    },
-  ],
-  [
-    {
-      type: "string",
-      name: "metadataUri",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "getMetadataUri" function on the contract.
  * @param options - The options for the getMetadataUri function.
@@ -54,7 +34,25 @@ export async function getMetadataUri(
 ) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xf4c2012d",
+      [
+        {
+          type: "uint256",
+          name: "_chainId",
+        },
+        {
+          type: "address",
+          name: "_deployment",
+        },
+      ],
+      [
+        {
+          type: "string",
+          name: "metadataUri",
+        },
+      ],
+    ],
     params: [options.chainId, options.deployment],
   });
 }

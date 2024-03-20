@@ -19,25 +19,6 @@ export type ClaimParams = Prettify<
       asyncParams: () => Promise<ClaimParamsInternal>;
     }
 >;
-const METHOD = [
-  "0x2bc43fd9",
-  [
-    {
-      type: "address",
-      name: "_receiver",
-    },
-    {
-      type: "uint256",
-      name: "_tokenId",
-    },
-    {
-      type: "uint256",
-      name: "_quantity",
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "claim" function on the contract.
  * @param options - The options for the "claim" function.
@@ -61,7 +42,24 @@ const METHOD = [
 export function claim(options: BaseTransactionOptions<ClaimParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x2bc43fd9",
+      [
+        {
+          type: "address",
+          name: "_receiver",
+        },
+        {
+          type: "uint256",
+          name: "_tokenId",
+        },
+        {
+          type: "uint256",
+          name: "_quantity",
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

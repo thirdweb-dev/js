@@ -28,48 +28,6 @@ export type MakeOfferParams = Prettify<
       asyncParams: () => Promise<MakeOfferParamsInternal>;
     }
 >;
-const METHOD = [
-  "0x016767fa",
-  [
-    {
-      type: "tuple",
-      name: "_params",
-      components: [
-        {
-          type: "address",
-          name: "assetContract",
-        },
-        {
-          type: "uint256",
-          name: "tokenId",
-        },
-        {
-          type: "uint256",
-          name: "quantity",
-        },
-        {
-          type: "address",
-          name: "currency",
-        },
-        {
-          type: "uint256",
-          name: "totalPrice",
-        },
-        {
-          type: "uint256",
-          name: "expirationTimestamp",
-        },
-      ],
-    },
-  ],
-  [
-    {
-      type: "uint256",
-      name: "offerId",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "makeOffer" function on the contract.
  * @param options - The options for the "makeOffer" function.
@@ -91,7 +49,47 @@ const METHOD = [
 export function makeOffer(options: BaseTransactionOptions<MakeOfferParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x016767fa",
+      [
+        {
+          type: "tuple",
+          name: "_params",
+          components: [
+            {
+              type: "address",
+              name: "assetContract",
+            },
+            {
+              type: "uint256",
+              name: "tokenId",
+            },
+            {
+              type: "uint256",
+              name: "quantity",
+            },
+            {
+              type: "address",
+              name: "currency",
+            },
+            {
+              type: "uint256",
+              name: "totalPrice",
+            },
+            {
+              type: "uint256",
+              name: "expirationTimestamp",
+            },
+          ],
+        },
+      ],
+      [
+        {
+          type: "uint256",
+          name: "offerId",
+        },
+      ],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

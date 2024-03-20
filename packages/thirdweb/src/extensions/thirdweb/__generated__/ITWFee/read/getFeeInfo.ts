@@ -10,30 +10,6 @@ export type GetFeeInfoParams = {
   type: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_type" }>;
 };
 
-const METHOD = [
-  "0x85b49ad0",
-  [
-    {
-      type: "address",
-      name: "_proxy",
-    },
-    {
-      type: "uint256",
-      name: "_type",
-    },
-  ],
-  [
-    {
-      type: "address",
-      name: "recipient",
-    },
-    {
-      type: "uint256",
-      name: "bps",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "getFeeInfo" function on the contract.
  * @param options - The options for the getFeeInfo function.
@@ -55,7 +31,29 @@ export async function getFeeInfo(
 ) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x85b49ad0",
+      [
+        {
+          type: "address",
+          name: "_proxy",
+        },
+        {
+          type: "uint256",
+          name: "_type",
+        },
+      ],
+      [
+        {
+          type: "address",
+          name: "recipient",
+        },
+        {
+          type: "uint256",
+          name: "bps",
+        },
+      ],
+    ],
     params: [options.proxy, options.type],
   });
 }

@@ -13,24 +13,6 @@ export type MaxMintParams = {
   }>;
 };
 
-const METHOD = [
-  "0xc63d75b6",
-  [
-    {
-      name: "receiver",
-      type: "address",
-      internalType: "address",
-    },
-  ],
-  [
-    {
-      name: "maxShares",
-      type: "uint256",
-      internalType: "uint256",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "maxMint" function on the contract.
  * @param options - The options for the maxMint function.
@@ -49,7 +31,23 @@ const METHOD = [
 export async function maxMint(options: BaseTransactionOptions<MaxMintParams>) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xc63d75b6",
+      [
+        {
+          name: "receiver",
+          type: "address",
+          internalType: "address",
+        },
+      ],
+      [
+        {
+          name: "maxShares",
+          type: "uint256",
+          internalType: "uint256",
+        },
+      ],
+    ],
     params: [options.receiver],
   });
 }

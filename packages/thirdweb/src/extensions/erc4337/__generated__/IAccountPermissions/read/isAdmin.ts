@@ -9,21 +9,6 @@ export type IsAdminParams = {
   signer: AbiParameterToPrimitiveType<{ type: "address"; name: "signer" }>;
 };
 
-const METHOD = [
-  "0x24d7806c",
-  [
-    {
-      type: "address",
-      name: "signer",
-    },
-  ],
-  [
-    {
-      type: "bool",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "isAdmin" function on the contract.
  * @param options - The options for the isAdmin function.
@@ -42,7 +27,20 @@ const METHOD = [
 export async function isAdmin(options: BaseTransactionOptions<IsAdminParams>) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x24d7806c",
+      [
+        {
+          type: "address",
+          name: "signer",
+        },
+      ],
+      [
+        {
+          type: "bool",
+        },
+      ],
+    ],
     params: [options.signer],
   });
 }

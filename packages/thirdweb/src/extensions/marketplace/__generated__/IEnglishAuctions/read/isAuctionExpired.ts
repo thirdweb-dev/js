@@ -12,21 +12,6 @@ export type IsAuctionExpiredParams = {
   }>;
 };
 
-const METHOD = [
-  "0x1389b117",
-  [
-    {
-      type: "uint256",
-      name: "_auctionId",
-    },
-  ],
-  [
-    {
-      type: "bool",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "isAuctionExpired" function on the contract.
  * @param options - The options for the isAuctionExpired function.
@@ -47,7 +32,20 @@ export async function isAuctionExpired(
 ) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x1389b117",
+      [
+        {
+          type: "uint256",
+          name: "_auctionId",
+        },
+      ],
+      [
+        {
+          type: "bool",
+        },
+      ],
+    ],
     params: [options.auctionId],
   });
 }

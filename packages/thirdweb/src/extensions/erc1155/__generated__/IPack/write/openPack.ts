@@ -21,43 +21,6 @@ export type OpenPackParams = Prettify<
       asyncParams: () => Promise<OpenPackParamsInternal>;
     }
 >;
-const METHOD = [
-  "0x914e126a",
-  [
-    {
-      type: "uint256",
-      name: "packId",
-    },
-    {
-      type: "uint256",
-      name: "amountToOpen",
-    },
-  ],
-  [
-    {
-      type: "tuple[]",
-      components: [
-        {
-          type: "address",
-          name: "assetContract",
-        },
-        {
-          type: "uint8",
-          name: "tokenType",
-        },
-        {
-          type: "uint256",
-          name: "tokenId",
-        },
-        {
-          type: "uint256",
-          name: "totalAmount",
-        },
-      ],
-    },
-  ],
-] as const;
-
 /**
  * Calls the "openPack" function on the contract.
  * @param options - The options for the "openPack" function.
@@ -80,7 +43,42 @@ const METHOD = [
 export function openPack(options: BaseTransactionOptions<OpenPackParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x914e126a",
+      [
+        {
+          type: "uint256",
+          name: "packId",
+        },
+        {
+          type: "uint256",
+          name: "amountToOpen",
+        },
+      ],
+      [
+        {
+          type: "tuple[]",
+          components: [
+            {
+              type: "address",
+              name: "assetContract",
+            },
+            {
+              type: "uint8",
+              name: "tokenType",
+            },
+            {
+              type: "uint256",
+              name: "tokenId",
+            },
+            {
+              type: "uint256",
+              name: "totalAmount",
+            },
+          ],
+        },
+      ],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

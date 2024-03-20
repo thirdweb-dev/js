@@ -13,25 +13,6 @@ export type BalanceOfBatchParams = {
   }>;
 };
 
-const METHOD = [
-  "0x4e1273f4",
-  [
-    {
-      type: "address[]",
-      name: "_owners",
-    },
-    {
-      type: "uint256[]",
-      name: "tokenIds",
-    },
-  ],
-  [
-    {
-      type: "uint256[]",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "balanceOfBatch" function on the contract.
  * @param options - The options for the balanceOfBatch function.
@@ -53,7 +34,24 @@ export async function balanceOfBatch(
 ) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x4e1273f4",
+      [
+        {
+          type: "address[]",
+          name: "_owners",
+        },
+        {
+          type: "uint256[]",
+          name: "tokenIds",
+        },
+      ],
+      [
+        {
+          type: "uint256[]",
+        },
+      ],
+    ],
     params: [options.owners, options.tokenIds],
   });
 }

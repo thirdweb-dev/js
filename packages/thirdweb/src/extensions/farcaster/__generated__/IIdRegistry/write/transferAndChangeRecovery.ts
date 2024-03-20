@@ -20,29 +20,6 @@ export type TransferAndChangeRecoveryParams = Prettify<
       asyncParams: () => Promise<TransferAndChangeRecoveryParamsInternal>;
     }
 >;
-const METHOD = [
-  "0x3ab8465d",
-  [
-    {
-      type: "address",
-      name: "to",
-    },
-    {
-      type: "address",
-      name: "recovery",
-    },
-    {
-      type: "uint256",
-      name: "deadline",
-    },
-    {
-      type: "bytes",
-      name: "sig",
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "transferAndChangeRecovery" function on the contract.
  * @param options - The options for the "transferAndChangeRecovery" function.
@@ -69,7 +46,28 @@ export function transferAndChangeRecovery(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x3ab8465d",
+      [
+        {
+          type: "address",
+          name: "to",
+        },
+        {
+          type: "address",
+          name: "recovery",
+        },
+        {
+          type: "uint256",
+          name: "deadline",
+        },
+        {
+          type: "bytes",
+          name: "sig",
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

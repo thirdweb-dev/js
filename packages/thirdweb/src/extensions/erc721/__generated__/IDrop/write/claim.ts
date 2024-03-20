@@ -34,55 +34,6 @@ export type ClaimParams = Prettify<
       asyncParams: () => Promise<ClaimParamsInternal>;
     }
 >;
-const METHOD = [
-  "0x84bb1e42",
-  [
-    {
-      type: "address",
-      name: "receiver",
-    },
-    {
-      type: "uint256",
-      name: "quantity",
-    },
-    {
-      type: "address",
-      name: "currency",
-    },
-    {
-      type: "uint256",
-      name: "pricePerToken",
-    },
-    {
-      type: "tuple",
-      name: "allowlistProof",
-      components: [
-        {
-          type: "bytes32[]",
-          name: "proof",
-        },
-        {
-          type: "uint256",
-          name: "quantityLimitPerWallet",
-        },
-        {
-          type: "uint256",
-          name: "pricePerToken",
-        },
-        {
-          type: "address",
-          name: "currency",
-        },
-      ],
-    },
-    {
-      type: "bytes",
-      name: "data",
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "claim" function on the contract.
  * @param options - The options for the "claim" function.
@@ -109,7 +60,54 @@ const METHOD = [
 export function claim(options: BaseTransactionOptions<ClaimParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x84bb1e42",
+      [
+        {
+          type: "address",
+          name: "receiver",
+        },
+        {
+          type: "uint256",
+          name: "quantity",
+        },
+        {
+          type: "address",
+          name: "currency",
+        },
+        {
+          type: "uint256",
+          name: "pricePerToken",
+        },
+        {
+          type: "tuple",
+          name: "allowlistProof",
+          components: [
+            {
+              type: "bytes32[]",
+              name: "proof",
+            },
+            {
+              type: "uint256",
+              name: "quantityLimitPerWallet",
+            },
+            {
+              type: "uint256",
+              name: "pricePerToken",
+            },
+            {
+              type: "address",
+              name: "currency",
+            },
+          ],
+        },
+        {
+          type: "bytes",
+          name: "data",
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

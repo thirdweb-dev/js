@@ -10,84 +10,6 @@ export type GetAllValidAuctionsParams = {
   endId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_endId" }>;
 };
 
-const METHOD = [
-  "0x7b063801",
-  [
-    {
-      type: "uint256",
-      name: "_startId",
-    },
-    {
-      type: "uint256",
-      name: "_endId",
-    },
-  ],
-  [
-    {
-      type: "tuple[]",
-      name: "auctions",
-      components: [
-        {
-          type: "uint256",
-          name: "auctionId",
-        },
-        {
-          type: "uint256",
-          name: "tokenId",
-        },
-        {
-          type: "uint256",
-          name: "quantity",
-        },
-        {
-          type: "uint256",
-          name: "minimumBidAmount",
-        },
-        {
-          type: "uint256",
-          name: "buyoutBidAmount",
-        },
-        {
-          type: "uint64",
-          name: "timeBufferInSeconds",
-        },
-        {
-          type: "uint64",
-          name: "bidBufferBps",
-        },
-        {
-          type: "uint64",
-          name: "startTimestamp",
-        },
-        {
-          type: "uint64",
-          name: "endTimestamp",
-        },
-        {
-          type: "address",
-          name: "auctionCreator",
-        },
-        {
-          type: "address",
-          name: "assetContract",
-        },
-        {
-          type: "address",
-          name: "currency",
-        },
-        {
-          type: "uint8",
-          name: "tokenType",
-        },
-        {
-          type: "uint8",
-          name: "status",
-        },
-      ],
-    },
-  ],
-] as const;
-
 /**
  * Calls the "getAllValidAuctions" function on the contract.
  * @param options - The options for the getAllValidAuctions function.
@@ -109,7 +31,83 @@ export async function getAllValidAuctions(
 ) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x7b063801",
+      [
+        {
+          type: "uint256",
+          name: "_startId",
+        },
+        {
+          type: "uint256",
+          name: "_endId",
+        },
+      ],
+      [
+        {
+          type: "tuple[]",
+          name: "auctions",
+          components: [
+            {
+              type: "uint256",
+              name: "auctionId",
+            },
+            {
+              type: "uint256",
+              name: "tokenId",
+            },
+            {
+              type: "uint256",
+              name: "quantity",
+            },
+            {
+              type: "uint256",
+              name: "minimumBidAmount",
+            },
+            {
+              type: "uint256",
+              name: "buyoutBidAmount",
+            },
+            {
+              type: "uint64",
+              name: "timeBufferInSeconds",
+            },
+            {
+              type: "uint64",
+              name: "bidBufferBps",
+            },
+            {
+              type: "uint64",
+              name: "startTimestamp",
+            },
+            {
+              type: "uint64",
+              name: "endTimestamp",
+            },
+            {
+              type: "address",
+              name: "auctionCreator",
+            },
+            {
+              type: "address",
+              name: "assetContract",
+            },
+            {
+              type: "address",
+              name: "currency",
+            },
+            {
+              type: "uint8",
+              name: "tokenType",
+            },
+            {
+              type: "uint8",
+              name: "status",
+            },
+          ],
+        },
+      ],
+    ],
     params: [options.startId, options.endId],
   });
 }

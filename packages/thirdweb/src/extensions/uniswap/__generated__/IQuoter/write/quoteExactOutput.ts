@@ -21,26 +21,6 @@ export type QuoteExactOutputParams = Prettify<
       asyncParams: () => Promise<QuoteExactOutputParamsInternal>;
     }
 >;
-const METHOD = [
-  "0x2f80bb1d",
-  [
-    {
-      type: "bytes",
-      name: "path",
-    },
-    {
-      type: "uint256",
-      name: "amountOut",
-    },
-  ],
-  [
-    {
-      type: "uint256",
-      name: "amountIn",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "quoteExactOutput" function on the contract.
  * @param options - The options for the "quoteExactOutput" function.
@@ -65,7 +45,25 @@ export function quoteExactOutput(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x2f80bb1d",
+      [
+        {
+          type: "bytes",
+          name: "path",
+        },
+        {
+          type: "uint256",
+          name: "amountOut",
+        },
+      ],
+      [
+        {
+          type: "uint256",
+          name: "amountIn",
+        },
+      ],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

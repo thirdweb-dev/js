@@ -12,22 +12,6 @@ export type GetPublishedUriFromCompilerUriParams = {
   }>;
 };
 
-const METHOD = [
-  "0x819e992f",
-  [
-    {
-      type: "string",
-      name: "compilerMetadataUri",
-    },
-  ],
-  [
-    {
-      type: "string[]",
-      name: "publishedMetadataUris",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "getPublishedUriFromCompilerUri" function on the contract.
  * @param options - The options for the getPublishedUriFromCompilerUri function.
@@ -48,7 +32,21 @@ export async function getPublishedUriFromCompilerUri(
 ) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x819e992f",
+      [
+        {
+          type: "string",
+          name: "compilerMetadataUri",
+        },
+      ],
+      [
+        {
+          type: "string[]",
+          name: "publishedMetadataUris",
+        },
+      ],
+    ],
     params: [options.compilerMetadataUri],
   });
 }

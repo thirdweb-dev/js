@@ -22,34 +22,6 @@ export type GetRoyaltyParams = Prettify<
       asyncParams: () => Promise<GetRoyaltyParamsInternal>;
     }
 >;
-const METHOD = [
-  "0xf533b802",
-  [
-    {
-      type: "address",
-      name: "tokenAddress",
-    },
-    {
-      type: "uint256",
-      name: "tokenId",
-    },
-    {
-      type: "uint256",
-      name: "value",
-    },
-  ],
-  [
-    {
-      type: "address[]",
-      name: "recipients",
-    },
-    {
-      type: "uint256[]",
-      name: "amounts",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "getRoyalty" function on the contract.
  * @param options - The options for the "getRoyalty" function.
@@ -73,7 +45,33 @@ const METHOD = [
 export function getRoyalty(options: BaseTransactionOptions<GetRoyaltyParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xf533b802",
+      [
+        {
+          type: "address",
+          name: "tokenAddress",
+        },
+        {
+          type: "uint256",
+          name: "tokenId",
+        },
+        {
+          type: "uint256",
+          name: "value",
+        },
+      ],
+      [
+        {
+          type: "address[]",
+          name: "recipients",
+        },
+        {
+          type: "uint256[]",
+          name: "amounts",
+        },
+      ],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

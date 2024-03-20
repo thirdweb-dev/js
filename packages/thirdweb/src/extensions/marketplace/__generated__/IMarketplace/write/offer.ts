@@ -33,33 +33,6 @@ export type OfferParams = Prettify<
       asyncParams: () => Promise<OfferParamsInternal>;
     }
 >;
-const METHOD = [
-  "0x5fef45e7",
-  [
-    {
-      type: "uint256",
-      name: "_listingId",
-    },
-    {
-      type: "uint256",
-      name: "_quantityWanted",
-    },
-    {
-      type: "address",
-      name: "_currency",
-    },
-    {
-      type: "uint256",
-      name: "_pricePerToken",
-    },
-    {
-      type: "uint256",
-      name: "_expirationTimestamp",
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "offer" function on the contract.
  * @param options - The options for the "offer" function.
@@ -85,7 +58,32 @@ const METHOD = [
 export function offer(options: BaseTransactionOptions<OfferParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x5fef45e7",
+      [
+        {
+          type: "uint256",
+          name: "_listingId",
+        },
+        {
+          type: "uint256",
+          name: "_quantityWanted",
+        },
+        {
+          type: "address",
+          name: "_currency",
+        },
+        {
+          type: "uint256",
+          name: "_pricePerToken",
+        },
+        {
+          type: "uint256",
+          name: "_expirationTimestamp",
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

@@ -17,17 +17,6 @@ export type GetSenderAddressParams = Prettify<
       asyncParams: () => Promise<GetSenderAddressParamsInternal>;
     }
 >;
-const METHOD = [
-  "0x9b249f69",
-  [
-    {
-      type: "bytes",
-      name: "initCode",
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "getSenderAddress" function on the contract.
  * @param options - The options for the "getSenderAddress" function.
@@ -51,7 +40,16 @@ export function getSenderAddress(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x9b249f69",
+      [
+        {
+          type: "bytes",
+          name: "initCode",
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

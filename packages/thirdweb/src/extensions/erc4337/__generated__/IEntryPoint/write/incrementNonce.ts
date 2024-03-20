@@ -17,17 +17,6 @@ export type IncrementNonceParams = Prettify<
       asyncParams: () => Promise<IncrementNonceParamsInternal>;
     }
 >;
-const METHOD = [
-  "0x0bd28e3b",
-  [
-    {
-      type: "uint192",
-      name: "key",
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "incrementNonce" function on the contract.
  * @param options - The options for the "incrementNonce" function.
@@ -51,7 +40,16 @@ export function incrementNonce(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x0bd28e3b",
+      [
+        {
+          type: "uint192",
+          name: "key",
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

@@ -9,22 +9,6 @@ export type CustodyOfParams = {
   fid: AbiParameterToPrimitiveType<{ type: "uint256"; name: "fid" }>;
 };
 
-const METHOD = [
-  "0x65269e47",
-  [
-    {
-      type: "uint256",
-      name: "fid",
-    },
-  ],
-  [
-    {
-      type: "address",
-      name: "owner",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "custodyOf" function on the contract.
  * @param options - The options for the custodyOf function.
@@ -45,7 +29,21 @@ export async function custodyOf(
 ) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x65269e47",
+      [
+        {
+          type: "uint256",
+          name: "fid",
+        },
+      ],
+      [
+        {
+          type: "address",
+          name: "owner",
+        },
+      ],
+    ],
     params: [options.fid],
   });
 }

@@ -22,25 +22,6 @@ export type RemoveParams = Prettify<
       asyncParams: () => Promise<RemoveParamsInternal>;
     }
 >;
-const METHOD = [
-  "0x59e5fd04",
-  [
-    {
-      type: "address",
-      name: "_deployer",
-    },
-    {
-      type: "address",
-      name: "_deployment",
-    },
-    {
-      type: "uint256",
-      name: "_chainId",
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "remove" function on the contract.
  * @param options - The options for the "remove" function.
@@ -64,7 +45,24 @@ const METHOD = [
 export function remove(options: BaseTransactionOptions<RemoveParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x59e5fd04",
+      [
+        {
+          type: "address",
+          name: "_deployer",
+        },
+        {
+          type: "address",
+          name: "_deployment",
+        },
+        {
+          type: "uint256",
+          name: "_chainId",
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

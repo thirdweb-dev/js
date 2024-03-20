@@ -40,37 +40,6 @@ export type PublishContractParams = Prettify<
       asyncParams: () => Promise<PublishContractParamsInternal>;
     }
 >;
-const METHOD = [
-  "0xd50299e6",
-  [
-    {
-      type: "address",
-      name: "publisher",
-    },
-    {
-      type: "string",
-      name: "contractId",
-    },
-    {
-      type: "string",
-      name: "publishMetadataUri",
-    },
-    {
-      type: "string",
-      name: "compilerMetadataUri",
-    },
-    {
-      type: "bytes32",
-      name: "bytecodeHash",
-    },
-    {
-      type: "address",
-      name: "implementation",
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "publishContract" function on the contract.
  * @param options - The options for the "publishContract" function.
@@ -99,7 +68,36 @@ export function publishContract(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xd50299e6",
+      [
+        {
+          type: "address",
+          name: "publisher",
+        },
+        {
+          type: "string",
+          name: "contractId",
+        },
+        {
+          type: "string",
+          name: "publishMetadataUri",
+        },
+        {
+          type: "string",
+          name: "compilerMetadataUri",
+        },
+        {
+          type: "bytes32",
+          name: "bytecodeHash",
+        },
+        {
+          type: "address",
+          name: "implementation",
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

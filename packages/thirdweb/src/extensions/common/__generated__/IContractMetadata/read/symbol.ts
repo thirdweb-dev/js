@@ -1,16 +1,6 @@
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 
-const METHOD = [
-  "0x95d89b41",
-  [],
-  [
-    {
-      type: "string",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "symbol" function on the contract.
  * @param options - The options for the symbol function.
@@ -27,7 +17,15 @@ const METHOD = [
 export async function symbol(options: BaseTransactionOptions) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x95d89b41",
+      [],
+      [
+        {
+          type: "string",
+        },
+      ],
+    ],
     params: [],
   });
 }

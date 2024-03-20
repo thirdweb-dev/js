@@ -1,16 +1,6 @@
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 
-const METHOD = [
-  "0x8da5cb5b",
-  [],
-  [
-    {
-      type: "address",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "owner" function on the contract.
  * @param options - The options for the owner function.
@@ -27,7 +17,15 @@ const METHOD = [
 export async function owner(options: BaseTransactionOptions) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x8da5cb5b",
+      [],
+      [
+        {
+          type: "address",
+        },
+      ],
+    ],
     params: [],
   });
 }

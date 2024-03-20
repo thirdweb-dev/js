@@ -23,41 +23,6 @@ export type PermitParams = Prettify<
       asyncParams: () => Promise<PermitParamsInternal>;
     }
 >;
-const METHOD = [
-  "0xd505accf",
-  [
-    {
-      type: "address",
-      name: "owner",
-    },
-    {
-      type: "address",
-      name: "spender",
-    },
-    {
-      type: "uint256",
-      name: "value",
-    },
-    {
-      type: "uint256",
-      name: "deadline",
-    },
-    {
-      type: "uint8",
-      name: "v",
-    },
-    {
-      type: "bytes32",
-      name: "r",
-    },
-    {
-      type: "bytes32",
-      name: "s",
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "permit" function on the contract.
  * @param options - The options for the "permit" function.
@@ -85,7 +50,40 @@ const METHOD = [
 export function permit(options: BaseTransactionOptions<PermitParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xd505accf",
+      [
+        {
+          type: "address",
+          name: "owner",
+        },
+        {
+          type: "address",
+          name: "spender",
+        },
+        {
+          type: "uint256",
+          name: "value",
+        },
+        {
+          type: "uint256",
+          name: "deadline",
+        },
+        {
+          type: "uint8",
+          name: "v",
+        },
+        {
+          type: "bytes32",
+          name: "r",
+        },
+        {
+          type: "bytes32",
+          name: "s",
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

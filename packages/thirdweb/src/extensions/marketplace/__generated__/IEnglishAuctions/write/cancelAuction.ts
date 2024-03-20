@@ -20,17 +20,6 @@ export type CancelAuctionParams = Prettify<
       asyncParams: () => Promise<CancelAuctionParamsInternal>;
     }
 >;
-const METHOD = [
-  "0x96b5a755",
-  [
-    {
-      type: "uint256",
-      name: "_auctionId",
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "cancelAuction" function on the contract.
  * @param options - The options for the "cancelAuction" function.
@@ -54,7 +43,16 @@ export function cancelAuction(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x96b5a755",
+      [
+        {
+          type: "uint256",
+          name: "_auctionId",
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

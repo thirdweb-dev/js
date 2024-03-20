@@ -26,29 +26,6 @@ export type AcceptOfferParams = Prettify<
       asyncParams: () => Promise<AcceptOfferParamsInternal>;
     }
 >;
-const METHOD = [
-  "0xb13c0e63",
-  [
-    {
-      type: "uint256",
-      name: "_listingId",
-    },
-    {
-      type: "address",
-      name: "_offeror",
-    },
-    {
-      type: "address",
-      name: "_currency",
-    },
-    {
-      type: "uint256",
-      name: "_totalPrice",
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "acceptOffer" function on the contract.
  * @param options - The options for the "acceptOffer" function.
@@ -75,7 +52,28 @@ export function acceptOffer(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xb13c0e63",
+      [
+        {
+          type: "uint256",
+          name: "_listingId",
+        },
+        {
+          type: "address",
+          name: "_offeror",
+        },
+        {
+          type: "address",
+          name: "_currency",
+        },
+        {
+          type: "uint256",
+          name: "_totalPrice",
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

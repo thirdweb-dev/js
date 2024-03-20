@@ -1,16 +1,6 @@
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 
-const METHOD = [
-  "0x2c39d670",
-  [],
-  [
-    {
-      type: "uint256",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "deprecationTimestamp" function on the contract.
  * @param options - The options for the deprecationTimestamp function.
@@ -27,7 +17,15 @@ const METHOD = [
 export async function deprecationTimestamp(options: BaseTransactionOptions) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x2c39d670",
+      [],
+      [
+        {
+          type: "uint256",
+        },
+      ],
+    ],
     params: [],
   });
 }

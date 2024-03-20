@@ -1,16 +1,6 @@
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 
-const METHOD = [
-  "0x6a5306a3",
-  [],
-  [
-    {
-      type: "bytes32",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "REGISTER_TYPEHASH" function on the contract.
  * @param options - The options for the REGISTER_TYPEHASH function.
@@ -27,7 +17,15 @@ const METHOD = [
 export async function REGISTER_TYPEHASH(options: BaseTransactionOptions) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x6a5306a3",
+      [],
+      [
+        {
+          type: "bytes32",
+        },
+      ],
+    ],
     params: [],
   });
 }

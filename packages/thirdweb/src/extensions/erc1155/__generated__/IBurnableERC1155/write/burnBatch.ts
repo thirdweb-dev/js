@@ -19,25 +19,6 @@ export type BurnBatchParams = Prettify<
       asyncParams: () => Promise<BurnBatchParamsInternal>;
     }
 >;
-const METHOD = [
-  "0x6b20c454",
-  [
-    {
-      type: "address",
-      name: "account",
-    },
-    {
-      type: "uint256[]",
-      name: "ids",
-    },
-    {
-      type: "uint256[]",
-      name: "values",
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "burnBatch" function on the contract.
  * @param options - The options for the "burnBatch" function.
@@ -61,7 +42,24 @@ const METHOD = [
 export function burnBatch(options: BaseTransactionOptions<BurnBatchParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x6b20c454",
+      [
+        {
+          type: "address",
+          name: "account",
+        },
+        {
+          type: "uint256[]",
+          name: "ids",
+        },
+        {
+          type: "uint256[]",
+          name: "values",
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

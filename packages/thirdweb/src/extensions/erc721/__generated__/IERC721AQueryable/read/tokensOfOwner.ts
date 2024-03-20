@@ -9,21 +9,6 @@ export type TokensOfOwnerParams = {
   owner: AbiParameterToPrimitiveType<{ type: "address"; name: "owner" }>;
 };
 
-const METHOD = [
-  "0x8462151c",
-  [
-    {
-      type: "address",
-      name: "owner",
-    },
-  ],
-  [
-    {
-      type: "uint256[]",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "tokensOfOwner" function on the contract.
  * @param options - The options for the tokensOfOwner function.
@@ -44,7 +29,20 @@ export async function tokensOfOwner(
 ) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x8462151c",
+      [
+        {
+          type: "address",
+          name: "owner",
+        },
+      ],
+      [
+        {
+          type: "uint256[]",
+        },
+      ],
+    ],
     params: [options.owner],
   });
 }

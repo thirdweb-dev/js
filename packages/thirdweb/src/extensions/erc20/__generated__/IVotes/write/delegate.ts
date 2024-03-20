@@ -20,17 +20,6 @@ export type DelegateParams = Prettify<
       asyncParams: () => Promise<DelegateParamsInternal>;
     }
 >;
-const METHOD = [
-  "0x5c19a95c",
-  [
-    {
-      type: "address",
-      name: "delegatee",
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "delegate" function on the contract.
  * @param options - The options for the "delegate" function.
@@ -52,7 +41,16 @@ const METHOD = [
 export function delegate(options: BaseTransactionOptions<DelegateParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x5c19a95c",
+      [
+        {
+          type: "address",
+          name: "delegatee",
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

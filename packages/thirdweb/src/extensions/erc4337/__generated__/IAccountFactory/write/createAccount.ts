@@ -18,26 +18,6 @@ export type CreateAccountParams = Prettify<
       asyncParams: () => Promise<CreateAccountParamsInternal>;
     }
 >;
-const METHOD = [
-  "0xd8fd8f44",
-  [
-    {
-      type: "address",
-      name: "admin",
-    },
-    {
-      type: "bytes",
-      name: "_data",
-    },
-  ],
-  [
-    {
-      type: "address",
-      name: "account",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "createAccount" function on the contract.
  * @param options - The options for the "createAccount" function.
@@ -62,7 +42,25 @@ export function createAccount(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xd8fd8f44",
+      [
+        {
+          type: "address",
+          name: "admin",
+        },
+        {
+          type: "bytes",
+          name: "_data",
+        },
+      ],
+      [
+        {
+          type: "address",
+          name: "account",
+        },
+      ],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

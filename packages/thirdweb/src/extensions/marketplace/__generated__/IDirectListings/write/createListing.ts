@@ -30,56 +30,6 @@ export type CreateListingParams = Prettify<
       asyncParams: () => Promise<CreateListingParamsInternal>;
     }
 >;
-const METHOD = [
-  "0x746415b5",
-  [
-    {
-      type: "tuple",
-      name: "_params",
-      components: [
-        {
-          type: "address",
-          name: "assetContract",
-        },
-        {
-          type: "uint256",
-          name: "tokenId",
-        },
-        {
-          type: "uint256",
-          name: "quantity",
-        },
-        {
-          type: "address",
-          name: "currency",
-        },
-        {
-          type: "uint256",
-          name: "pricePerToken",
-        },
-        {
-          type: "uint128",
-          name: "startTimestamp",
-        },
-        {
-          type: "uint128",
-          name: "endTimestamp",
-        },
-        {
-          type: "bool",
-          name: "reserved",
-        },
-      ],
-    },
-  ],
-  [
-    {
-      type: "uint256",
-      name: "listingId",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "createListing" function on the contract.
  * @param options - The options for the "createListing" function.
@@ -103,7 +53,55 @@ export function createListing(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x746415b5",
+      [
+        {
+          type: "tuple",
+          name: "_params",
+          components: [
+            {
+              type: "address",
+              name: "assetContract",
+            },
+            {
+              type: "uint256",
+              name: "tokenId",
+            },
+            {
+              type: "uint256",
+              name: "quantity",
+            },
+            {
+              type: "address",
+              name: "currency",
+            },
+            {
+              type: "uint256",
+              name: "pricePerToken",
+            },
+            {
+              type: "uint128",
+              name: "startTimestamp",
+            },
+            {
+              type: "uint128",
+              name: "endTimestamp",
+            },
+            {
+              type: "bool",
+              name: "reserved",
+            },
+          ],
+        },
+      ],
+      [
+        {
+          type: "uint256",
+          name: "listingId",
+        },
+      ],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

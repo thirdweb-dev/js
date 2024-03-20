@@ -21,21 +21,6 @@ export type CloseAuctionParams = Prettify<
       asyncParams: () => Promise<CloseAuctionParamsInternal>;
     }
 >;
-const METHOD = [
-  "0x6bab66ae",
-  [
-    {
-      type: "uint256",
-      name: "_listingId",
-    },
-    {
-      type: "address",
-      name: "_closeFor",
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "closeAuction" function on the contract.
  * @param options - The options for the "closeAuction" function.
@@ -60,7 +45,20 @@ export function closeAuction(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x6bab66ae",
+      [
+        {
+          type: "uint256",
+          name: "_listingId",
+        },
+        {
+          type: "address",
+          name: "_closeFor",
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

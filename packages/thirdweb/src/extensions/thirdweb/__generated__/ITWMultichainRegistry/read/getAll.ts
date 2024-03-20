@@ -9,36 +9,6 @@ export type GetAllParams = {
   deployer: AbiParameterToPrimitiveType<{ type: "address"; name: "_deployer" }>;
 };
 
-const METHOD = [
-  "0xeb077342",
-  [
-    {
-      type: "address",
-      name: "_deployer",
-    },
-  ],
-  [
-    {
-      type: "tuple[]",
-      name: "allDeployments",
-      components: [
-        {
-          type: "address",
-          name: "deploymentAddress",
-        },
-        {
-          type: "uint256",
-          name: "chainId",
-        },
-        {
-          type: "string",
-          name: "metadataURI",
-        },
-      ],
-    },
-  ],
-] as const;
-
 /**
  * Calls the "getAll" function on the contract.
  * @param options - The options for the getAll function.
@@ -57,7 +27,35 @@ const METHOD = [
 export async function getAll(options: BaseTransactionOptions<GetAllParams>) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xeb077342",
+      [
+        {
+          type: "address",
+          name: "_deployer",
+        },
+      ],
+      [
+        {
+          type: "tuple[]",
+          name: "allDeployments",
+          components: [
+            {
+              type: "address",
+              name: "deploymentAddress",
+            },
+            {
+              type: "uint256",
+              name: "chainId",
+            },
+            {
+              type: "string",
+              name: "metadataURI",
+            },
+          ],
+        },
+      ],
+    ],
     params: [options.deployer],
   });
 }

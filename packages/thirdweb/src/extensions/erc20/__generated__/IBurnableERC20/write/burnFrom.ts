@@ -18,21 +18,6 @@ export type BurnFromParams = Prettify<
       asyncParams: () => Promise<BurnFromParamsInternal>;
     }
 >;
-const METHOD = [
-  "0x79cc6790",
-  [
-    {
-      type: "address",
-      name: "account",
-    },
-    {
-      type: "uint256",
-      name: "amount",
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "burnFrom" function on the contract.
  * @param options - The options for the "burnFrom" function.
@@ -55,7 +40,20 @@ const METHOD = [
 export function burnFrom(options: BaseTransactionOptions<BurnFromParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x79cc6790",
+      [
+        {
+          type: "address",
+          name: "account",
+        },
+        {
+          type: "uint256",
+          name: "amount",
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

@@ -9,22 +9,6 @@ export type RecoveryOfParams = {
   fid: AbiParameterToPrimitiveType<{ type: "uint256"; name: "fid" }>;
 };
 
-const METHOD = [
-  "0xfa1a1b25",
-  [
-    {
-      type: "uint256",
-      name: "fid",
-    },
-  ],
-  [
-    {
-      type: "address",
-      name: "recovery",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "recoveryOf" function on the contract.
  * @param options - The options for the recoveryOf function.
@@ -45,7 +29,21 @@ export async function recoveryOf(
 ) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xfa1a1b25",
+      [
+        {
+          type: "uint256",
+          name: "fid",
+        },
+      ],
+      [
+        {
+          type: "address",
+          name: "recovery",
+        },
+      ],
+    ],
     params: [options.fid],
   });
 }

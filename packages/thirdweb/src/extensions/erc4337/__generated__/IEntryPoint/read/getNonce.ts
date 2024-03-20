@@ -10,26 +10,6 @@ export type GetNonceParams = {
   key: AbiParameterToPrimitiveType<{ type: "uint192"; name: "key" }>;
 };
 
-const METHOD = [
-  "0x35567e1a",
-  [
-    {
-      type: "address",
-      name: "sender",
-    },
-    {
-      type: "uint192",
-      name: "key",
-    },
-  ],
-  [
-    {
-      type: "uint256",
-      name: "nonce",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "getNonce" function on the contract.
  * @param options - The options for the getNonce function.
@@ -51,7 +31,25 @@ export async function getNonce(
 ) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x35567e1a",
+      [
+        {
+          type: "address",
+          name: "sender",
+        },
+        {
+          type: "uint192",
+          name: "key",
+        },
+      ],
+      [
+        {
+          type: "uint256",
+          name: "nonce",
+        },
+      ],
+    ],
     params: [options.sender, options.key],
   });
 }

@@ -18,21 +18,6 @@ export type ApproveParams = Prettify<
       asyncParams: () => Promise<ApproveParamsInternal>;
     }
 >;
-const METHOD = [
-  "0x095ea7b3",
-  [
-    {
-      type: "address",
-      name: "to",
-    },
-    {
-      type: "uint256",
-      name: "tokenId",
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "approve" function on the contract.
  * @param options - The options for the "approve" function.
@@ -55,7 +40,20 @@ const METHOD = [
 export function approve(options: BaseTransactionOptions<ApproveParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x095ea7b3",
+      [
+        {
+          type: "address",
+          name: "to",
+        },
+        {
+          type: "uint256",
+          name: "tokenId",
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

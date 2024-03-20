@@ -21,37 +21,6 @@ export type OnERC1155ReceivedParams = Prettify<
       asyncParams: () => Promise<OnERC1155ReceivedParamsInternal>;
     }
 >;
-const METHOD = [
-  "0xf23a6e61",
-  [
-    {
-      type: "address",
-      name: "operator",
-    },
-    {
-      type: "address",
-      name: "from",
-    },
-    {
-      type: "uint256",
-      name: "id",
-    },
-    {
-      type: "uint256",
-      name: "value",
-    },
-    {
-      type: "bytes",
-      name: "data",
-    },
-  ],
-  [
-    {
-      type: "bytes4",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "onERC1155Received" function on the contract.
  * @param options - The options for the "onERC1155Received" function.
@@ -79,7 +48,36 @@ export function onERC1155Received(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xf23a6e61",
+      [
+        {
+          type: "address",
+          name: "operator",
+        },
+        {
+          type: "address",
+          name: "from",
+        },
+        {
+          type: "uint256",
+          name: "id",
+        },
+        {
+          type: "uint256",
+          name: "value",
+        },
+        {
+          type: "bytes",
+          name: "data",
+        },
+      ],
+      [
+        {
+          type: "bytes4",
+        },
+      ],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

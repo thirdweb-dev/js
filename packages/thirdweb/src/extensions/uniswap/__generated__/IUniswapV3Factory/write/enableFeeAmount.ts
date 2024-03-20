@@ -21,21 +21,6 @@ export type EnableFeeAmountParams = Prettify<
       asyncParams: () => Promise<EnableFeeAmountParamsInternal>;
     }
 >;
-const METHOD = [
-  "0x8a7c195f",
-  [
-    {
-      type: "uint24",
-      name: "fee",
-    },
-    {
-      type: "int24",
-      name: "tickSpacing",
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "enableFeeAmount" function on the contract.
  * @param options - The options for the "enableFeeAmount" function.
@@ -60,7 +45,20 @@ export function enableFeeAmount(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x8a7c195f",
+      [
+        {
+          type: "uint24",
+          name: "fee",
+        },
+        {
+          type: "int24",
+          name: "tickSpacing",
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

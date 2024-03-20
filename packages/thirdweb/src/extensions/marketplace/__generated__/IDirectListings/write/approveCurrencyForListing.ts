@@ -25,25 +25,6 @@ export type ApproveCurrencyForListingParams = Prettify<
       asyncParams: () => Promise<ApproveCurrencyForListingParamsInternal>;
     }
 >;
-const METHOD = [
-  "0xea8f9a3c",
-  [
-    {
-      type: "uint256",
-      name: "_listingId",
-    },
-    {
-      type: "address",
-      name: "_currency",
-    },
-    {
-      type: "uint256",
-      name: "_pricePerTokenInCurrency",
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "approveCurrencyForListing" function on the contract.
  * @param options - The options for the "approveCurrencyForListing" function.
@@ -69,7 +50,24 @@ export function approveCurrencyForListing(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xea8f9a3c",
+      [
+        {
+          type: "uint256",
+          name: "_listingId",
+        },
+        {
+          type: "address",
+          name: "_currency",
+        },
+        {
+          type: "uint256",
+          name: "_pricePerTokenInCurrency",
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

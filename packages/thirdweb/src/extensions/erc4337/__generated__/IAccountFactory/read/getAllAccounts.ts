@@ -1,16 +1,6 @@
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 
-const METHOD = [
-  "0x08e93d0a",
-  [],
-  [
-    {
-      type: "address[]",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "getAllAccounts" function on the contract.
  * @param options - The options for the getAllAccounts function.
@@ -27,7 +17,15 @@ const METHOD = [
 export async function getAllAccounts(options: BaseTransactionOptions) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x08e93d0a",
+      [],
+      [
+        {
+          type: "address[]",
+        },
+      ],
+    ],
     params: [],
   });
 }

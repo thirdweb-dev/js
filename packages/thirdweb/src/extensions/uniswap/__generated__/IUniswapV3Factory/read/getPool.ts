@@ -11,30 +11,6 @@ export type GetPoolParams = {
   fee: AbiParameterToPrimitiveType<{ type: "uint24"; name: "fee" }>;
 };
 
-const METHOD = [
-  "0x1698ee82",
-  [
-    {
-      type: "address",
-      name: "tokenA",
-    },
-    {
-      type: "address",
-      name: "tokenB",
-    },
-    {
-      type: "uint24",
-      name: "fee",
-    },
-  ],
-  [
-    {
-      type: "address",
-      name: "pool",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "getPool" function on the contract.
  * @param options - The options for the getPool function.
@@ -55,7 +31,29 @@ const METHOD = [
 export async function getPool(options: BaseTransactionOptions<GetPoolParams>) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x1698ee82",
+      [
+        {
+          type: "address",
+          name: "tokenA",
+        },
+        {
+          type: "address",
+          name: "tokenB",
+        },
+        {
+          type: "uint24",
+          name: "fee",
+        },
+      ],
+      [
+        {
+          type: "address",
+          name: "pool",
+        },
+      ],
+    ],
     params: [options.tokenA, options.tokenB, options.fee],
   });
 }

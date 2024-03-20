@@ -32,35 +32,6 @@ export type AirdropERC20Params = Prettify<
       asyncParams: () => Promise<AirdropERC20ParamsInternal>;
     }
 >;
-const METHOD = [
-  "0x0670b2b3",
-  [
-    {
-      type: "address",
-      name: "tokenAddress",
-    },
-    {
-      type: "address",
-      name: "tokenOwner",
-    },
-    {
-      type: "tuple[]",
-      name: "contents",
-      components: [
-        {
-          type: "address",
-          name: "recipient",
-        },
-        {
-          type: "uint256",
-          name: "amount",
-        },
-      ],
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "airdropERC20" function on the contract.
  * @param options - The options for the "airdropERC20" function.
@@ -86,7 +57,34 @@ export function airdropERC20(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x0670b2b3",
+      [
+        {
+          type: "address",
+          name: "tokenAddress",
+        },
+        {
+          type: "address",
+          name: "tokenOwner",
+        },
+        {
+          type: "tuple[]",
+          name: "contents",
+          components: [
+            {
+              type: "address",
+              name: "recipient",
+            },
+            {
+              type: "uint256",
+              name: "amount",
+            },
+          ],
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

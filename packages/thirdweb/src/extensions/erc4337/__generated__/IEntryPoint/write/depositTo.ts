@@ -17,17 +17,6 @@ export type DepositToParams = Prettify<
       asyncParams: () => Promise<DepositToParamsInternal>;
     }
 >;
-const METHOD = [
-  "0xb760faf9",
-  [
-    {
-      type: "address",
-      name: "account",
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "depositTo" function on the contract.
  * @param options - The options for the "depositTo" function.
@@ -49,7 +38,16 @@ const METHOD = [
 export function depositTo(options: BaseTransactionOptions<DepositToParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xb760faf9",
+      [
+        {
+          type: "address",
+          name: "account",
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

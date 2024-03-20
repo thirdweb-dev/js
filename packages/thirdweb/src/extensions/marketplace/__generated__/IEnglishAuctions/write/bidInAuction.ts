@@ -24,21 +24,6 @@ export type BidInAuctionParams = Prettify<
       asyncParams: () => Promise<BidInAuctionParamsInternal>;
     }
 >;
-const METHOD = [
-  "0x0858e5ad",
-  [
-    {
-      type: "uint256",
-      name: "_auctionId",
-    },
-    {
-      type: "uint256",
-      name: "_bidAmount",
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "bidInAuction" function on the contract.
  * @param options - The options for the "bidInAuction" function.
@@ -63,7 +48,20 @@ export function bidInAuction(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x0858e5ad",
+      [
+        {
+          type: "uint256",
+          name: "_auctionId",
+        },
+        {
+          type: "uint256",
+          name: "_bidAmount",
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

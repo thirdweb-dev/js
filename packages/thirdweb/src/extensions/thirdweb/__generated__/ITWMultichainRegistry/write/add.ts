@@ -26,29 +26,6 @@ export type AddParams = Prettify<
       asyncParams: () => Promise<AddParamsInternal>;
     }
 >;
-const METHOD = [
-  "0x26c5b516",
-  [
-    {
-      type: "address",
-      name: "_deployer",
-    },
-    {
-      type: "address",
-      name: "_deployment",
-    },
-    {
-      type: "uint256",
-      name: "_chainId",
-    },
-    {
-      type: "string",
-      name: "metadataUri",
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "add" function on the contract.
  * @param options - The options for the "add" function.
@@ -73,7 +50,28 @@ const METHOD = [
 export function add(options: BaseTransactionOptions<AddParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x26c5b516",
+      [
+        {
+          type: "address",
+          name: "_deployer",
+        },
+        {
+          type: "address",
+          name: "_deployment",
+        },
+        {
+          type: "uint256",
+          name: "_chainId",
+        },
+        {
+          type: "string",
+          name: "metadataUri",
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

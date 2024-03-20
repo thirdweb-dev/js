@@ -24,21 +24,6 @@ export type SetPlatformFeeInfoParams = Prettify<
       asyncParams: () => Promise<SetPlatformFeeInfoParamsInternal>;
     }
 >;
-const METHOD = [
-  "0x1e7ac488",
-  [
-    {
-      type: "address",
-      name: "_platformFeeRecipient",
-    },
-    {
-      type: "uint256",
-      name: "_platformFeeBps",
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "setPlatformFeeInfo" function on the contract.
  * @param options - The options for the "setPlatformFeeInfo" function.
@@ -63,7 +48,20 @@ export function setPlatformFeeInfo(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x1e7ac488",
+      [
+        {
+          type: "address",
+          name: "_platformFeeRecipient",
+        },
+        {
+          type: "uint256",
+          name: "_platformFeeBps",
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

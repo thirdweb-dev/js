@@ -1,16 +1,6 @@
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 
-const METHOD = [
-  "0x95e7549f",
-  [],
-  [
-    {
-      type: "bool",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "gatewayFrozen" function on the contract.
  * @param options - The options for the gatewayFrozen function.
@@ -27,7 +17,15 @@ const METHOD = [
 export async function gatewayFrozen(options: BaseTransactionOptions) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x95e7549f",
+      [],
+      [
+        {
+          type: "bool",
+        },
+      ],
+    ],
     params: [],
   });
 }

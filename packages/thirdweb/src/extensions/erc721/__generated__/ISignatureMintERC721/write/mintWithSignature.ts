@@ -34,72 +34,6 @@ export type MintWithSignatureParams = Prettify<
       asyncParams: () => Promise<MintWithSignatureParamsInternal>;
     }
 >;
-const METHOD = [
-  "0x439c7be5",
-  [
-    {
-      type: "tuple",
-      name: "req",
-      components: [
-        {
-          type: "address",
-          name: "to",
-        },
-        {
-          type: "address",
-          name: "royaltyRecipient",
-        },
-        {
-          type: "uint256",
-          name: "royaltyBps",
-        },
-        {
-          type: "address",
-          name: "primarySaleRecipient",
-        },
-        {
-          type: "string",
-          name: "uri",
-        },
-        {
-          type: "uint256",
-          name: "quantity",
-        },
-        {
-          type: "uint256",
-          name: "pricePerToken",
-        },
-        {
-          type: "address",
-          name: "currency",
-        },
-        {
-          type: "uint128",
-          name: "validityStartTimestamp",
-        },
-        {
-          type: "uint128",
-          name: "validityEndTimestamp",
-        },
-        {
-          type: "bytes32",
-          name: "uid",
-        },
-      ],
-    },
-    {
-      type: "bytes",
-      name: "signature",
-    },
-  ],
-  [
-    {
-      type: "address",
-      name: "signer",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "mintWithSignature" function on the contract.
  * @param options - The options for the "mintWithSignature" function.
@@ -124,7 +58,71 @@ export function mintWithSignature(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x439c7be5",
+      [
+        {
+          type: "tuple",
+          name: "req",
+          components: [
+            {
+              type: "address",
+              name: "to",
+            },
+            {
+              type: "address",
+              name: "royaltyRecipient",
+            },
+            {
+              type: "uint256",
+              name: "royaltyBps",
+            },
+            {
+              type: "address",
+              name: "primarySaleRecipient",
+            },
+            {
+              type: "string",
+              name: "uri",
+            },
+            {
+              type: "uint256",
+              name: "quantity",
+            },
+            {
+              type: "uint256",
+              name: "pricePerToken",
+            },
+            {
+              type: "address",
+              name: "currency",
+            },
+            {
+              type: "uint128",
+              name: "validityStartTimestamp",
+            },
+            {
+              type: "uint128",
+              name: "validityEndTimestamp",
+            },
+            {
+              type: "bytes32",
+              name: "uid",
+            },
+          ],
+        },
+        {
+          type: "bytes",
+          name: "signature",
+        },
+      ],
+      [
+        {
+          type: "address",
+          name: "signer",
+        },
+      ],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

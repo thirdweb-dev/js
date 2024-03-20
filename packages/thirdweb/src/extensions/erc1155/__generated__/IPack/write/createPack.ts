@@ -43,64 +43,6 @@ export type CreatePackParams = Prettify<
       asyncParams: () => Promise<CreatePackParamsInternal>;
     }
 >;
-const METHOD = [
-  "0x092e6075",
-  [
-    {
-      type: "tuple[]",
-      name: "contents",
-      components: [
-        {
-          type: "address",
-          name: "assetContract",
-        },
-        {
-          type: "uint8",
-          name: "tokenType",
-        },
-        {
-          type: "uint256",
-          name: "tokenId",
-        },
-        {
-          type: "uint256",
-          name: "totalAmount",
-        },
-      ],
-    },
-    {
-      type: "uint256[]",
-      name: "numOfRewardUnits",
-    },
-    {
-      type: "string",
-      name: "packUri",
-    },
-    {
-      type: "uint128",
-      name: "openStartTimestamp",
-    },
-    {
-      type: "uint128",
-      name: "amountDistributedPerOpen",
-    },
-    {
-      type: "address",
-      name: "recipient",
-    },
-  ],
-  [
-    {
-      type: "uint256",
-      name: "packId",
-    },
-    {
-      type: "uint256",
-      name: "packTotalSupply",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "createPack" function on the contract.
  * @param options - The options for the "createPack" function.
@@ -127,7 +69,63 @@ const METHOD = [
 export function createPack(options: BaseTransactionOptions<CreatePackParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x092e6075",
+      [
+        {
+          type: "tuple[]",
+          name: "contents",
+          components: [
+            {
+              type: "address",
+              name: "assetContract",
+            },
+            {
+              type: "uint8",
+              name: "tokenType",
+            },
+            {
+              type: "uint256",
+              name: "tokenId",
+            },
+            {
+              type: "uint256",
+              name: "totalAmount",
+            },
+          ],
+        },
+        {
+          type: "uint256[]",
+          name: "numOfRewardUnits",
+        },
+        {
+          type: "string",
+          name: "packUri",
+        },
+        {
+          type: "uint128",
+          name: "openStartTimestamp",
+        },
+        {
+          type: "uint128",
+          name: "amountDistributedPerOpen",
+        },
+        {
+          type: "address",
+          name: "recipient",
+        },
+      ],
+      [
+        {
+          type: "uint256",
+          name: "packId",
+        },
+        {
+          type: "uint256",
+          name: "packTotalSupply",
+        },
+      ],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

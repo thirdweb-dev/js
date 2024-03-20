@@ -1,16 +1,6 @@
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 
-const METHOD = [
-  "0xa0a8e460",
-  [],
-  [
-    {
-      type: "uint8",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "contractVersion" function on the contract.
  * @param options - The options for the contractVersion function.
@@ -27,7 +17,15 @@ const METHOD = [
 export async function contractVersion(options: BaseTransactionOptions) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xa0a8e460",
+      [],
+      [
+        {
+          type: "uint8",
+        },
+      ],
+    ],
     params: [],
   });
 }

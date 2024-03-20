@@ -10,25 +10,6 @@ export type TokenOfOwnerByIndexParams = {
   index: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_index" }>;
 };
 
-const METHOD = [
-  "0x2f745c59",
-  [
-    {
-      type: "address",
-      name: "_owner",
-    },
-    {
-      type: "uint256",
-      name: "_index",
-    },
-  ],
-  [
-    {
-      type: "uint256",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "tokenOfOwnerByIndex" function on the contract.
  * @param options - The options for the tokenOfOwnerByIndex function.
@@ -50,7 +31,24 @@ export async function tokenOfOwnerByIndex(
 ) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x2f745c59",
+      [
+        {
+          type: "address",
+          name: "_owner",
+        },
+        {
+          type: "uint256",
+          name: "_index",
+        },
+      ],
+      [
+        {
+          type: "uint256",
+        },
+      ],
+    ],
     params: [options.owner, options.index],
   });
 }

@@ -18,21 +18,6 @@ export type BatchRentParams = Prettify<
       asyncParams: () => Promise<BatchRentParamsInternal>;
     }
 >;
-const METHOD = [
-  "0xa82c356e",
-  [
-    {
-      type: "uint256[]",
-      name: "fids",
-    },
-    {
-      type: "uint256[]",
-      name: "units",
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "batchRent" function on the contract.
  * @param options - The options for the "batchRent" function.
@@ -55,7 +40,20 @@ const METHOD = [
 export function batchRent(options: BaseTransactionOptions<BatchRentParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xa82c356e",
+      [
+        {
+          type: "uint256[]",
+          name: "fids",
+        },
+        {
+          type: "uint256[]",
+          name: "units",
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

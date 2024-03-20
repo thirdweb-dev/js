@@ -27,39 +27,6 @@ export type SetSharedMetadataParams = Prettify<
       asyncParams: () => Promise<SetSharedMetadataParamsInternal>;
     }
 >;
-const METHOD = [
-  "0x696b0c1a",
-  [
-    {
-      type: "tuple",
-      name: "metadata",
-      components: [
-        {
-          type: "string",
-          name: "name",
-        },
-        {
-          type: "string",
-          name: "description",
-        },
-        {
-          type: "string",
-          name: "imageURI",
-        },
-        {
-          type: "string",
-          name: "animationURI",
-        },
-      ],
-    },
-    {
-      type: "bytes32",
-      name: "id",
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "setSharedMetadata" function on the contract.
  * @param options - The options for the "setSharedMetadata" function.
@@ -84,7 +51,38 @@ export function setSharedMetadata(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x696b0c1a",
+      [
+        {
+          type: "tuple",
+          name: "metadata",
+          components: [
+            {
+              type: "string",
+              name: "name",
+            },
+            {
+              type: "string",
+              name: "description",
+            },
+            {
+              type: "string",
+              name: "imageURI",
+            },
+            {
+              type: "string",
+              name: "animationURI",
+            },
+          ],
+        },
+        {
+          type: "bytes32",
+          name: "id",
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

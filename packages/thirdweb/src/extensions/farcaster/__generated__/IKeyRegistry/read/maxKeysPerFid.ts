@@ -1,16 +1,6 @@
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 
-const METHOD = [
-  "0xe33acf38",
-  [],
-  [
-    {
-      type: "uint256",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "maxKeysPerFid" function on the contract.
  * @param options - The options for the maxKeysPerFid function.
@@ -27,7 +17,15 @@ const METHOD = [
 export async function maxKeysPerFid(options: BaseTransactionOptions) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xe33acf38",
+      [],
+      [
+        {
+          type: "uint256",
+        },
+      ],
+    ],
     params: [],
   });
 }

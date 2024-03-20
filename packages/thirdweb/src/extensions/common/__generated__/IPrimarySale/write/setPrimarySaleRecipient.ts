@@ -20,17 +20,6 @@ export type SetPrimarySaleRecipientParams = Prettify<
       asyncParams: () => Promise<SetPrimarySaleRecipientParamsInternal>;
     }
 >;
-const METHOD = [
-  "0x6f4f2837",
-  [
-    {
-      type: "address",
-      name: "_saleRecipient",
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "setPrimarySaleRecipient" function on the contract.
  * @param options - The options for the "setPrimarySaleRecipient" function.
@@ -54,7 +43,16 @@ export function setPrimarySaleRecipient(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x6f4f2837",
+      [
+        {
+          type: "address",
+          name: "_saleRecipient",
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

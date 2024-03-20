@@ -18,25 +18,6 @@ export type TransferParams = Prettify<
       asyncParams: () => Promise<TransferParamsInternal>;
     }
 >;
-const METHOD = [
-  "0xa9059cbb",
-  [
-    {
-      type: "address",
-      name: "to",
-    },
-    {
-      type: "uint256",
-      name: "value",
-    },
-  ],
-  [
-    {
-      type: "bool",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "transfer" function on the contract.
  * @param options - The options for the "transfer" function.
@@ -59,7 +40,24 @@ const METHOD = [
 export function transfer(options: BaseTransactionOptions<TransferParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xa9059cbb",
+      [
+        {
+          type: "address",
+          name: "to",
+        },
+        {
+          type: "uint256",
+          name: "value",
+        },
+      ],
+      [
+        {
+          type: "bool",
+        },
+      ],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

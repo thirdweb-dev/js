@@ -10,25 +10,6 @@ export type HasRoleParams = {
   account: AbiParameterToPrimitiveType<{ type: "address"; name: "account" }>;
 };
 
-const METHOD = [
-  "0x91d14854",
-  [
-    {
-      type: "bytes32",
-      name: "role",
-    },
-    {
-      type: "address",
-      name: "account",
-    },
-  ],
-  [
-    {
-      type: "bool",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "hasRole" function on the contract.
  * @param options - The options for the hasRole function.
@@ -48,7 +29,24 @@ const METHOD = [
 export async function hasRole(options: BaseTransactionOptions<HasRoleParams>) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x91d14854",
+      [
+        {
+          type: "bytes32",
+          name: "role",
+        },
+        {
+          type: "address",
+          name: "account",
+        },
+      ],
+      [
+        {
+          type: "bool",
+        },
+      ],
+    ],
     params: [options.role, options.account],
   });
 }

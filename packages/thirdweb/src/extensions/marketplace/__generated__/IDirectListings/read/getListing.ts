@@ -12,72 +12,6 @@ export type GetListingParams = {
   }>;
 };
 
-const METHOD = [
-  "0x107a274a",
-  [
-    {
-      type: "uint256",
-      name: "_listingId",
-    },
-  ],
-  [
-    {
-      type: "tuple",
-      name: "listing",
-      components: [
-        {
-          type: "uint256",
-          name: "listingId",
-        },
-        {
-          type: "uint256",
-          name: "tokenId",
-        },
-        {
-          type: "uint256",
-          name: "quantity",
-        },
-        {
-          type: "uint256",
-          name: "pricePerToken",
-        },
-        {
-          type: "uint128",
-          name: "startTimestamp",
-        },
-        {
-          type: "uint128",
-          name: "endTimestamp",
-        },
-        {
-          type: "address",
-          name: "listingCreator",
-        },
-        {
-          type: "address",
-          name: "assetContract",
-        },
-        {
-          type: "address",
-          name: "currency",
-        },
-        {
-          type: "uint8",
-          name: "tokenType",
-        },
-        {
-          type: "uint8",
-          name: "status",
-        },
-        {
-          type: "bool",
-          name: "reserved",
-        },
-      ],
-    },
-  ],
-] as const;
-
 /**
  * Calls the "getListing" function on the contract.
  * @param options - The options for the getListing function.
@@ -98,7 +32,71 @@ export async function getListing(
 ) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x107a274a",
+      [
+        {
+          type: "uint256",
+          name: "_listingId",
+        },
+      ],
+      [
+        {
+          type: "tuple",
+          name: "listing",
+          components: [
+            {
+              type: "uint256",
+              name: "listingId",
+            },
+            {
+              type: "uint256",
+              name: "tokenId",
+            },
+            {
+              type: "uint256",
+              name: "quantity",
+            },
+            {
+              type: "uint256",
+              name: "pricePerToken",
+            },
+            {
+              type: "uint128",
+              name: "startTimestamp",
+            },
+            {
+              type: "uint128",
+              name: "endTimestamp",
+            },
+            {
+              type: "address",
+              name: "listingCreator",
+            },
+            {
+              type: "address",
+              name: "assetContract",
+            },
+            {
+              type: "address",
+              name: "currency",
+            },
+            {
+              type: "uint8",
+              name: "tokenType",
+            },
+            {
+              type: "uint8",
+              name: "status",
+            },
+            {
+              type: "bool",
+              name: "reserved",
+            },
+          ],
+        },
+      ],
+    ],
     params: [options.listingId],
   });
 }

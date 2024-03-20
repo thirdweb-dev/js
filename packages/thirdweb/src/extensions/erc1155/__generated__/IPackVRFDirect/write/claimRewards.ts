@@ -1,35 +1,6 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 
-const METHOD = [
-  "0x372500ab",
-  [],
-  [
-    {
-      type: "tuple[]",
-      name: "rewardUnits",
-      components: [
-        {
-          type: "address",
-          name: "assetContract",
-        },
-        {
-          type: "uint8",
-          name: "tokenType",
-        },
-        {
-          type: "uint256",
-          name: "tokenId",
-        },
-        {
-          type: "uint256",
-          name: "totalAmount",
-        },
-      ],
-    },
-  ],
-] as const;
-
 /**
  * Calls the "claimRewards" function on the contract.
  * @param options - The options for the "claimRewards" function.
@@ -49,6 +20,33 @@ const METHOD = [
 export function claimRewards(options: BaseTransactionOptions) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x372500ab",
+      [],
+      [
+        {
+          type: "tuple[]",
+          name: "rewardUnits",
+          components: [
+            {
+              type: "address",
+              name: "assetContract",
+            },
+            {
+              type: "uint8",
+              name: "tokenType",
+            },
+            {
+              type: "uint256",
+              name: "tokenId",
+            },
+            {
+              type: "uint256",
+              name: "totalAmount",
+            },
+          ],
+        },
+      ],
+    ],
   });
 }

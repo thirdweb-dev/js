@@ -13,24 +13,6 @@ export type PreviewMintParams = {
   }>;
 };
 
-const METHOD = [
-  "0xb3d7f6b9",
-  [
-    {
-      name: "shares",
-      type: "uint256",
-      internalType: "uint256",
-    },
-  ],
-  [
-    {
-      name: "",
-      type: "uint256",
-      internalType: "uint256",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "previewMint" function on the contract.
  * @param options - The options for the previewMint function.
@@ -51,7 +33,23 @@ export async function previewMint(
 ) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xb3d7f6b9",
+      [
+        {
+          name: "shares",
+          type: "uint256",
+          internalType: "uint256",
+        },
+      ],
+      [
+        {
+          name: "",
+          type: "uint256",
+          internalType: "uint256",
+        },
+      ],
+    ],
     params: [options.shares],
   });
 }

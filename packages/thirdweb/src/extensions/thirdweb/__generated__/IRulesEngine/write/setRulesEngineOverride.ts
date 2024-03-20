@@ -20,17 +20,6 @@ export type SetRulesEngineOverrideParams = Prettify<
       asyncParams: () => Promise<SetRulesEngineOverrideParamsInternal>;
     }
 >;
-const METHOD = [
-  "0x0eb0adb6",
-  [
-    {
-      type: "address",
-      name: "_rulesEngineAddress",
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "setRulesEngineOverride" function on the contract.
  * @param options - The options for the "setRulesEngineOverride" function.
@@ -54,7 +43,16 @@ export function setRulesEngineOverride(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x0eb0adb6",
+      [
+        {
+          type: "address",
+          name: "_rulesEngineAddress",
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

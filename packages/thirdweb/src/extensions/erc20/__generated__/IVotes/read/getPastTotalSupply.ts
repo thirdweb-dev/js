@@ -12,21 +12,6 @@ export type GetPastTotalSupplyParams = {
   }>;
 };
 
-const METHOD = [
-  "0x8e539e8c",
-  [
-    {
-      type: "uint256",
-      name: "blockNumber",
-    },
-  ],
-  [
-    {
-      type: "uint256",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "getPastTotalSupply" function on the contract.
  * @param options - The options for the getPastTotalSupply function.
@@ -47,7 +32,20 @@ export async function getPastTotalSupply(
 ) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x8e539e8c",
+      [
+        {
+          type: "uint256",
+          name: "blockNumber",
+        },
+      ],
+      [
+        {
+          type: "uint256",
+        },
+      ],
+    ],
     params: [options.blockNumber],
   });
 }

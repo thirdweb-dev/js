@@ -1,16 +1,6 @@
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 
-const METHOD = [
-  "0xea2bbb83",
-  [],
-  [
-    {
-      type: "bytes32",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "TRANSFER_AND_CHANGE_RECOVERY_TYPEHASH" function on the contract.
  * @param options - The options for the TRANSFER_AND_CHANGE_RECOVERY_TYPEHASH function.
@@ -29,7 +19,15 @@ export async function TRANSFER_AND_CHANGE_RECOVERY_TYPEHASH(
 ) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xea2bbb83",
+      [],
+      [
+        {
+          type: "bytes32",
+        },
+      ],
+    ],
     params: [],
   });
 }

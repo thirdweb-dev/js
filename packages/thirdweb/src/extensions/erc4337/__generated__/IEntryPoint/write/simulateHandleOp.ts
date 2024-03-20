@@ -38,71 +38,6 @@ export type SimulateHandleOpParams = Prettify<
       asyncParams: () => Promise<SimulateHandleOpParamsInternal>;
     }
 >;
-const METHOD = [
-  "0xd6383f94",
-  [
-    {
-      type: "tuple",
-      name: "op",
-      components: [
-        {
-          type: "address",
-          name: "sender",
-        },
-        {
-          type: "uint256",
-          name: "nonce",
-        },
-        {
-          type: "bytes",
-          name: "initCode",
-        },
-        {
-          type: "bytes",
-          name: "callData",
-        },
-        {
-          type: "uint256",
-          name: "callGasLimit",
-        },
-        {
-          type: "uint256",
-          name: "verificationGasLimit",
-        },
-        {
-          type: "uint256",
-          name: "preVerificationGas",
-        },
-        {
-          type: "uint256",
-          name: "maxFeePerGas",
-        },
-        {
-          type: "uint256",
-          name: "maxPriorityFeePerGas",
-        },
-        {
-          type: "bytes",
-          name: "paymasterAndData",
-        },
-        {
-          type: "bytes",
-          name: "signature",
-        },
-      ],
-    },
-    {
-      type: "address",
-      name: "target",
-    },
-    {
-      type: "bytes",
-      name: "targetCallData",
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "simulateHandleOp" function on the contract.
  * @param options - The options for the "simulateHandleOp" function.
@@ -128,7 +63,70 @@ export function simulateHandleOp(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xd6383f94",
+      [
+        {
+          type: "tuple",
+          name: "op",
+          components: [
+            {
+              type: "address",
+              name: "sender",
+            },
+            {
+              type: "uint256",
+              name: "nonce",
+            },
+            {
+              type: "bytes",
+              name: "initCode",
+            },
+            {
+              type: "bytes",
+              name: "callData",
+            },
+            {
+              type: "uint256",
+              name: "callGasLimit",
+            },
+            {
+              type: "uint256",
+              name: "verificationGasLimit",
+            },
+            {
+              type: "uint256",
+              name: "preVerificationGas",
+            },
+            {
+              type: "uint256",
+              name: "maxFeePerGas",
+            },
+            {
+              type: "uint256",
+              name: "maxPriorityFeePerGas",
+            },
+            {
+              type: "bytes",
+              name: "paymasterAndData",
+            },
+            {
+              type: "bytes",
+              name: "signature",
+            },
+          ],
+        },
+        {
+          type: "address",
+          name: "target",
+        },
+        {
+          type: "bytes",
+          name: "targetCallData",
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

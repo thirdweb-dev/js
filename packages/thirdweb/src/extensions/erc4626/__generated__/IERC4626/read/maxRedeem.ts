@@ -13,24 +13,6 @@ export type MaxRedeemParams = {
   }>;
 };
 
-const METHOD = [
-  "0xd905777e",
-  [
-    {
-      name: "owner",
-      type: "address",
-      internalType: "address",
-    },
-  ],
-  [
-    {
-      name: "maxShares",
-      type: "uint256",
-      internalType: "uint256",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "maxRedeem" function on the contract.
  * @param options - The options for the maxRedeem function.
@@ -51,7 +33,23 @@ export async function maxRedeem(
 ) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xd905777e",
+      [
+        {
+          name: "owner",
+          type: "address",
+          internalType: "address",
+        },
+      ],
+      [
+        {
+          name: "maxShares",
+          type: "uint256",
+          internalType: "uint256",
+        },
+      ],
+    ],
     params: [options.owner],
   });
 }

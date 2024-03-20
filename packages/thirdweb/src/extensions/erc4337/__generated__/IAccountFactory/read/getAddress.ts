@@ -13,25 +13,6 @@ export type GetAddressParams = {
   data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "data" }>;
 };
 
-const METHOD = [
-  "0x8878ed33",
-  [
-    {
-      type: "address",
-      name: "adminSigner",
-    },
-    {
-      type: "bytes",
-      name: "data",
-    },
-  ],
-  [
-    {
-      type: "address",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "getAddress" function on the contract.
  * @param options - The options for the getAddress function.
@@ -53,7 +34,24 @@ export async function getAddress(
 ) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x8878ed33",
+      [
+        {
+          type: "address",
+          name: "adminSigner",
+        },
+        {
+          type: "bytes",
+          name: "data",
+        },
+      ],
+      [
+        {
+          type: "address",
+        },
+      ],
+    ],
     params: [options.adminSigner, options.data],
   });
 }

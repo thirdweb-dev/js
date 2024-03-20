@@ -15,34 +15,6 @@ export type VerifyFidSignatureParams = {
   sig: AbiParameterToPrimitiveType<{ type: "bytes"; name: "sig" }>;
 };
 
-const METHOD = [
-  "0x32faac70",
-  [
-    {
-      type: "address",
-      name: "custodyAddress",
-    },
-    {
-      type: "uint256",
-      name: "fid",
-    },
-    {
-      type: "bytes32",
-      name: "digest",
-    },
-    {
-      type: "bytes",
-      name: "sig",
-    },
-  ],
-  [
-    {
-      type: "bool",
-      name: "isValid",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "verifyFidSignature" function on the contract.
  * @param options - The options for the verifyFidSignature function.
@@ -66,7 +38,33 @@ export async function verifyFidSignature(
 ) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x32faac70",
+      [
+        {
+          type: "address",
+          name: "custodyAddress",
+        },
+        {
+          type: "uint256",
+          name: "fid",
+        },
+        {
+          type: "bytes32",
+          name: "digest",
+        },
+        {
+          type: "bytes",
+          name: "sig",
+        },
+      ],
+      [
+        {
+          type: "bool",
+          name: "isValid",
+        },
+      ],
+    ],
     params: [options.custodyAddress, options.fid, options.digest, options.sig],
   });
 }

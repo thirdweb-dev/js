@@ -1,16 +1,6 @@
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 
-const METHOD = [
-  "0x3644e515",
-  [],
-  [
-    {
-      type: "bytes32",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "DOMAIN_SEPARATOR" function on the contract.
  * @param options - The options for the DOMAIN_SEPARATOR function.
@@ -27,7 +17,15 @@ const METHOD = [
 export async function DOMAIN_SEPARATOR(options: BaseTransactionOptions) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x3644e515",
+      [],
+      [
+        {
+          type: "bytes32",
+        },
+      ],
+    ],
     params: [],
   });
 }

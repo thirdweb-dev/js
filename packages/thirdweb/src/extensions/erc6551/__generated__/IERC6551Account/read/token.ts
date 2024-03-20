@@ -1,25 +1,6 @@
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 
-const METHOD = [
-  "0xfc0c546a",
-  [],
-  [
-    {
-      type: "uint256",
-      name: "chainId",
-    },
-    {
-      type: "address",
-      name: "tokenContract",
-    },
-    {
-      type: "uint256",
-      name: "tokenId",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "token" function on the contract.
  * @param options - The options for the token function.
@@ -36,7 +17,24 @@ const METHOD = [
 export async function token(options: BaseTransactionOptions) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xfc0c546a",
+      [],
+      [
+        {
+          type: "uint256",
+          name: "chainId",
+        },
+        {
+          type: "address",
+          name: "tokenContract",
+        },
+        {
+          type: "uint256",
+          name: "tokenId",
+        },
+      ],
+    ],
     params: [],
   });
 }

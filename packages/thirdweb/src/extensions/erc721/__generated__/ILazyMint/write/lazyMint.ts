@@ -22,30 +22,6 @@ export type LazyMintParams = Prettify<
       asyncParams: () => Promise<LazyMintParamsInternal>;
     }
 >;
-const METHOD = [
-  "0xd37c353b",
-  [
-    {
-      type: "uint256",
-      name: "amount",
-    },
-    {
-      type: "string",
-      name: "baseURIForTokens",
-    },
-    {
-      type: "bytes",
-      name: "extraData",
-    },
-  ],
-  [
-    {
-      type: "uint256",
-      name: "batchId",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "lazyMint" function on the contract.
  * @param options - The options for the "lazyMint" function.
@@ -69,7 +45,29 @@ const METHOD = [
 export function lazyMint(options: BaseTransactionOptions<LazyMintParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xd37c353b",
+      [
+        {
+          type: "uint256",
+          name: "amount",
+        },
+        {
+          type: "string",
+          name: "baseURIForTokens",
+        },
+        {
+          type: "bytes",
+          name: "extraData",
+        },
+      ],
+      [
+        {
+          type: "uint256",
+          name: "batchId",
+        },
+      ],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

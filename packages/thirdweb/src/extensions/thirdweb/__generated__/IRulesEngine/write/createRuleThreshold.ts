@@ -27,44 +27,6 @@ export type CreateRuleThresholdParams = Prettify<
       asyncParams: () => Promise<CreateRuleThresholdParamsInternal>;
     }
 >;
-const METHOD = [
-  "0x1022a25e",
-  [
-    {
-      type: "tuple",
-      name: "rule",
-      components: [
-        {
-          type: "address",
-          name: "token",
-        },
-        {
-          type: "uint8",
-          name: "tokenType",
-        },
-        {
-          type: "uint256",
-          name: "tokenId",
-        },
-        {
-          type: "uint256",
-          name: "balance",
-        },
-        {
-          type: "uint256",
-          name: "score",
-        },
-      ],
-    },
-  ],
-  [
-    {
-      type: "bytes32",
-      name: "ruleId",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "createRuleThreshold" function on the contract.
  * @param options - The options for the "createRuleThreshold" function.
@@ -88,7 +50,43 @@ export function createRuleThreshold(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x1022a25e",
+      [
+        {
+          type: "tuple",
+          name: "rule",
+          components: [
+            {
+              type: "address",
+              name: "token",
+            },
+            {
+              type: "uint8",
+              name: "tokenType",
+            },
+            {
+              type: "uint256",
+              name: "tokenId",
+            },
+            {
+              type: "uint256",
+              name: "balance",
+            },
+            {
+              type: "uint256",
+              name: "score",
+            },
+          ],
+        },
+      ],
+      [
+        {
+          type: "bytes32",
+          name: "ruleId",
+        },
+      ],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

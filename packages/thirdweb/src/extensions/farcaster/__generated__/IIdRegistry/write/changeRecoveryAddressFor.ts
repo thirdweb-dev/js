@@ -20,29 +20,6 @@ export type ChangeRecoveryAddressForParams = Prettify<
       asyncParams: () => Promise<ChangeRecoveryAddressForParamsInternal>;
     }
 >;
-const METHOD = [
-  "0x9cbef8dc",
-  [
-    {
-      type: "address",
-      name: "owner",
-    },
-    {
-      type: "address",
-      name: "recovery",
-    },
-    {
-      type: "uint256",
-      name: "deadline",
-    },
-    {
-      type: "bytes",
-      name: "sig",
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "changeRecoveryAddressFor" function on the contract.
  * @param options - The options for the "changeRecoveryAddressFor" function.
@@ -69,7 +46,28 @@ export function changeRecoveryAddressFor(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x9cbef8dc",
+      [
+        {
+          type: "address",
+          name: "owner",
+        },
+        {
+          type: "address",
+          name: "recovery",
+        },
+        {
+          type: "uint256",
+          name: "deadline",
+        },
+        {
+          type: "bytes",
+          name: "sig",
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

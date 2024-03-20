@@ -24,42 +24,6 @@ export type RegisterForParams = Prettify<
       asyncParams: () => Promise<RegisterForParamsInternal>;
     }
 >;
-const METHOD = [
-  "0xa0c7529c",
-  [
-    {
-      type: "address",
-      name: "to",
-    },
-    {
-      type: "address",
-      name: "recovery",
-    },
-    {
-      type: "uint256",
-      name: "deadline",
-    },
-    {
-      type: "bytes",
-      name: "sig",
-    },
-    {
-      type: "uint256",
-      name: "extraStorage",
-    },
-  ],
-  [
-    {
-      type: "uint256",
-      name: "fid",
-    },
-    {
-      type: "uint256",
-      name: "overpayment",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "registerFor" function on the contract.
  * @param options - The options for the "registerFor" function.
@@ -87,7 +51,41 @@ export function registerFor(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xa0c7529c",
+      [
+        {
+          type: "address",
+          name: "to",
+        },
+        {
+          type: "address",
+          name: "recovery",
+        },
+        {
+          type: "uint256",
+          name: "deadline",
+        },
+        {
+          type: "bytes",
+          name: "sig",
+        },
+        {
+          type: "uint256",
+          name: "extraStorage",
+        },
+      ],
+      [
+        {
+          type: "uint256",
+          name: "fid",
+        },
+        {
+          type: "uint256",
+          name: "overpayment",
+        },
+      ],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

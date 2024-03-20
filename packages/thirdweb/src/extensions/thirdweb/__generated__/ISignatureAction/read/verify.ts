@@ -19,48 +19,6 @@ export type VerifyParams = {
   signature: AbiParameterToPrimitiveType<{ type: "bytes"; name: "signature" }>;
 };
 
-const METHOD = [
-  "0xc4376dd7",
-  [
-    {
-      type: "tuple",
-      name: "req",
-      components: [
-        {
-          type: "uint128",
-          name: "validityStartTimestamp",
-        },
-        {
-          type: "uint128",
-          name: "validityEndTimestamp",
-        },
-        {
-          type: "bytes32",
-          name: "uid",
-        },
-        {
-          type: "bytes",
-          name: "data",
-        },
-      ],
-    },
-    {
-      type: "bytes",
-      name: "signature",
-    },
-  ],
-  [
-    {
-      type: "bool",
-      name: "success",
-    },
-    {
-      type: "address",
-      name: "signer",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "verify" function on the contract.
  * @param options - The options for the verify function.
@@ -80,7 +38,47 @@ const METHOD = [
 export async function verify(options: BaseTransactionOptions<VerifyParams>) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xc4376dd7",
+      [
+        {
+          type: "tuple",
+          name: "req",
+          components: [
+            {
+              type: "uint128",
+              name: "validityStartTimestamp",
+            },
+            {
+              type: "uint128",
+              name: "validityEndTimestamp",
+            },
+            {
+              type: "bytes32",
+              name: "uid",
+            },
+            {
+              type: "bytes",
+              name: "data",
+            },
+          ],
+        },
+        {
+          type: "bytes",
+          name: "signature",
+        },
+      ],
+      [
+        {
+          type: "bool",
+          name: "success",
+        },
+        {
+          type: "address",
+          name: "signer",
+        },
+      ],
+    ],
     params: [options.req, options.signature],
   });
 }

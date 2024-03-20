@@ -1,16 +1,6 @@
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 
-const METHOD = [
-  "0x094ec830",
-  [],
-  [
-    {
-      type: "string",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "appURI" function on the contract.
  * @param options - The options for the appURI function.
@@ -27,7 +17,15 @@ const METHOD = [
 export async function appURI(options: BaseTransactionOptions) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x094ec830",
+      [],
+      [
+        {
+          type: "string",
+        },
+      ],
+    ],
     params: [],
   });
 }

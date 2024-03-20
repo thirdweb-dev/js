@@ -9,22 +9,6 @@ export type IdOfParams = {
   owner: AbiParameterToPrimitiveType<{ type: "address"; name: "owner" }>;
 };
 
-const METHOD = [
-  "0xd94fe832",
-  [
-    {
-      type: "address",
-      name: "owner",
-    },
-  ],
-  [
-    {
-      type: "uint256",
-      name: "fid",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "idOf" function on the contract.
  * @param options - The options for the idOf function.
@@ -43,7 +27,21 @@ const METHOD = [
 export async function idOf(options: BaseTransactionOptions<IdOfParams>) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xd94fe832",
+      [
+        {
+          type: "address",
+          name: "owner",
+        },
+      ],
+      [
+        {
+          type: "uint256",
+          name: "fid",
+        },
+      ],
+    ],
     params: [options.owner],
   });
 }

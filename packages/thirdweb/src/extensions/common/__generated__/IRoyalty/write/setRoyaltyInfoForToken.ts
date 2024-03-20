@@ -22,25 +22,6 @@ export type SetRoyaltyInfoForTokenParams = Prettify<
       asyncParams: () => Promise<SetRoyaltyInfoForTokenParamsInternal>;
     }
 >;
-const METHOD = [
-  "0x9bcf7a15",
-  [
-    {
-      type: "uint256",
-      name: "tokenId",
-    },
-    {
-      type: "address",
-      name: "recipient",
-    },
-    {
-      type: "uint256",
-      name: "bps",
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "setRoyaltyInfoForToken" function on the contract.
  * @param options - The options for the "setRoyaltyInfoForToken" function.
@@ -66,7 +47,24 @@ export function setRoyaltyInfoForToken(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x9bcf7a15",
+      [
+        {
+          type: "uint256",
+          name: "tokenId",
+        },
+        {
+          type: "address",
+          name: "recipient",
+        },
+        {
+          type: "uint256",
+          name: "bps",
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

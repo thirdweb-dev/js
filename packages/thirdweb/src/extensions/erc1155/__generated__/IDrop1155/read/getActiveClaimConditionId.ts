@@ -9,21 +9,6 @@ export type GetActiveClaimConditionIdParams = {
   tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_tokenId" }>;
 };
 
-const METHOD = [
-  "0x5ab063e8",
-  [
-    {
-      type: "uint256",
-      name: "_tokenId",
-    },
-  ],
-  [
-    {
-      type: "uint256",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "getActiveClaimConditionId" function on the contract.
  * @param options - The options for the getActiveClaimConditionId function.
@@ -44,7 +29,20 @@ export async function getActiveClaimConditionId(
 ) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x5ab063e8",
+      [
+        {
+          type: "uint256",
+          name: "_tokenId",
+        },
+      ],
+      [
+        {
+          type: "uint256",
+        },
+      ],
+    ],
     params: [options.tokenId],
   });
 }

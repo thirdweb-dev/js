@@ -1,16 +1,6 @@
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 
-const METHOD = [
-  "0xc68907de",
-  [],
-  [
-    {
-      type: "uint256",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "getActiveClaimConditionId" function on the contract.
  * @param options - The options for the getActiveClaimConditionId function.
@@ -29,7 +19,15 @@ export async function getActiveClaimConditionId(
 ) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xc68907de",
+      [],
+      [
+        {
+          type: "uint256",
+        },
+      ],
+    ],
     params: [],
   });
 }

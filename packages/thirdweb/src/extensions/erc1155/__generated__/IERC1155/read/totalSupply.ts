@@ -9,21 +9,6 @@ export type TotalSupplyParams = {
   id: AbiParameterToPrimitiveType<{ type: "uint256"; name: "id" }>;
 };
 
-const METHOD = [
-  "0xbd85b039",
-  [
-    {
-      type: "uint256",
-      name: "id",
-    },
-  ],
-  [
-    {
-      type: "uint256",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "totalSupply" function on the contract.
  * @param options - The options for the totalSupply function.
@@ -44,7 +29,20 @@ export async function totalSupply(
 ) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xbd85b039",
+      [
+        {
+          type: "uint256",
+          name: "id",
+        },
+      ],
+      [
+        {
+          type: "uint256",
+        },
+      ],
+    ],
     params: [options.id],
   });
 }

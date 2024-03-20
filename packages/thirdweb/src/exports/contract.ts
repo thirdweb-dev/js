@@ -26,7 +26,3 @@ export {
   prepareDirectDeployTransaction,
   type PrepareDirectDeployTransactionOptions,
 } from "../contract/deployment/deploy-with-abi.js";
-export {
-  prepareDeployTransactionFromMetadata,
-  type PrepareDeployTransactionFromMetadataOptions,
-} from "../contract/deployment/deploy-from-metadata.js";

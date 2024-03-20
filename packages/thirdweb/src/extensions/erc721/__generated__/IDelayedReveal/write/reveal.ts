@@ -21,26 +21,6 @@ export type RevealParams = Prettify<
       asyncParams: () => Promise<RevealParamsInternal>;
     }
 >;
-const METHOD = [
-  "0xce805642",
-  [
-    {
-      type: "uint256",
-      name: "identifier",
-    },
-    {
-      type: "bytes",
-      name: "key",
-    },
-  ],
-  [
-    {
-      type: "string",
-      name: "revealedURI",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "reveal" function on the contract.
  * @param options - The options for the "reveal" function.
@@ -63,7 +43,25 @@ const METHOD = [
 export function reveal(options: BaseTransactionOptions<RevealParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xce805642",
+      [
+        {
+          type: "uint256",
+          name: "identifier",
+        },
+        {
+          type: "bytes",
+          name: "key",
+        },
+      ],
+      [
+        {
+          type: "string",
+          name: "revealedURI",
+        },
+      ],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

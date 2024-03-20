@@ -30,56 +30,6 @@ export type ExactInputSingleParams = Prettify<
       asyncParams: () => Promise<ExactInputSingleParamsInternal>;
     }
 >;
-const METHOD = [
-  "0x414bf389",
-  [
-    {
-      type: "tuple",
-      name: "params",
-      components: [
-        {
-          type: "address",
-          name: "tokenIn",
-        },
-        {
-          type: "address",
-          name: "tokenOut",
-        },
-        {
-          type: "uint24",
-          name: "fee",
-        },
-        {
-          type: "address",
-          name: "recipient",
-        },
-        {
-          type: "uint256",
-          name: "deadline",
-        },
-        {
-          type: "uint256",
-          name: "amountIn",
-        },
-        {
-          type: "uint256",
-          name: "amountOutMinimum",
-        },
-        {
-          type: "uint160",
-          name: "sqrtPriceLimitX96",
-        },
-      ],
-    },
-  ],
-  [
-    {
-      type: "uint256",
-      name: "amountOut",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "exactInputSingle" function on the contract.
  * @param options - The options for the "exactInputSingle" function.
@@ -103,7 +53,55 @@ export function exactInputSingle(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x414bf389",
+      [
+        {
+          type: "tuple",
+          name: "params",
+          components: [
+            {
+              type: "address",
+              name: "tokenIn",
+            },
+            {
+              type: "address",
+              name: "tokenOut",
+            },
+            {
+              type: "uint24",
+              name: "fee",
+            },
+            {
+              type: "address",
+              name: "recipient",
+            },
+            {
+              type: "uint256",
+              name: "deadline",
+            },
+            {
+              type: "uint256",
+              name: "amountIn",
+            },
+            {
+              type: "uint256",
+              name: "amountOutMinimum",
+            },
+            {
+              type: "uint160",
+              name: "sqrtPriceLimitX96",
+            },
+          ],
+        },
+      ],
+      [
+        {
+          type: "uint256",
+          name: "amountOut",
+        },
+      ],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

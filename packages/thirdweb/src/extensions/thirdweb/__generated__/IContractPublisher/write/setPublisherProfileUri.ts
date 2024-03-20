@@ -21,21 +21,6 @@ export type SetPublisherProfileUriParams = Prettify<
       asyncParams: () => Promise<SetPublisherProfileUriParamsInternal>;
     }
 >;
-const METHOD = [
-  "0x6e578e54",
-  [
-    {
-      type: "address",
-      name: "publisher",
-    },
-    {
-      type: "string",
-      name: "uri",
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "setPublisherProfileUri" function on the contract.
  * @param options - The options for the "setPublisherProfileUri" function.
@@ -60,7 +45,20 @@ export function setPublisherProfileUri(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x6e578e54",
+      [
+        {
+          type: "address",
+          name: "publisher",
+        },
+        {
+          type: "string",
+          name: "uri",
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

@@ -9,21 +9,6 @@ export type NoncesParams = {
   account: AbiParameterToPrimitiveType<{ type: "address"; name: "account" }>;
 };
 
-const METHOD = [
-  "0x7ecebe00",
-  [
-    {
-      type: "address",
-      name: "account",
-    },
-  ],
-  [
-    {
-      type: "uint256",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "nonces" function on the contract.
  * @param options - The options for the nonces function.
@@ -42,7 +27,20 @@ const METHOD = [
 export async function nonces(options: BaseTransactionOptions<NoncesParams>) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x7ecebe00",
+      [
+        {
+          type: "address",
+          name: "account",
+        },
+      ],
+      [
+        {
+          type: "uint256",
+        },
+      ],
+    ],
     params: [options.account],
   });
 }

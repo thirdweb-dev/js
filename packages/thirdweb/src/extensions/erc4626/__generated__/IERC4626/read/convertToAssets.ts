@@ -13,24 +13,6 @@ export type ConvertToAssetsParams = {
   }>;
 };
 
-const METHOD = [
-  "0x07a2d13a",
-  [
-    {
-      name: "shares",
-      type: "uint256",
-      internalType: "uint256",
-    },
-  ],
-  [
-    {
-      name: "assets",
-      type: "uint256",
-      internalType: "uint256",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "convertToAssets" function on the contract.
  * @param options - The options for the convertToAssets function.
@@ -51,7 +33,23 @@ export async function convertToAssets(
 ) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x07a2d13a",
+      [
+        {
+          name: "shares",
+          type: "uint256",
+          internalType: "uint256",
+        },
+      ],
+      [
+        {
+          name: "assets",
+          type: "uint256",
+          internalType: "uint256",
+        },
+      ],
+    ],
     params: [options.shares],
   });
 }

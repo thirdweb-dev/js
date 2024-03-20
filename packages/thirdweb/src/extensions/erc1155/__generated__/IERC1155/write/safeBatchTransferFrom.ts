@@ -24,33 +24,6 @@ export type SafeBatchTransferFromParams = Prettify<
       asyncParams: () => Promise<SafeBatchTransferFromParamsInternal>;
     }
 >;
-const METHOD = [
-  "0x2eb2c2d6",
-  [
-    {
-      type: "address",
-      name: "_from",
-    },
-    {
-      type: "address",
-      name: "_to",
-    },
-    {
-      type: "uint256[]",
-      name: "tokenIds",
-    },
-    {
-      type: "uint256[]",
-      name: "_values",
-    },
-    {
-      type: "bytes",
-      name: "_data",
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "safeBatchTransferFrom" function on the contract.
  * @param options - The options for the "safeBatchTransferFrom" function.
@@ -78,7 +51,32 @@ export function safeBatchTransferFrom(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x2eb2c2d6",
+      [
+        {
+          type: "address",
+          name: "_from",
+        },
+        {
+          type: "address",
+          name: "_to",
+        },
+        {
+          type: "uint256[]",
+          name: "tokenIds",
+        },
+        {
+          type: "uint256[]",
+          name: "_values",
+        },
+        {
+          type: "bytes",
+          name: "_data",
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

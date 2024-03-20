@@ -9,30 +9,6 @@ export type GetStakeInfoParams = {
   staker: AbiParameterToPrimitiveType<{ type: "address"; name: "staker" }>;
 };
 
-const METHOD = [
-  "0xc3453153",
-  [
-    {
-      type: "address",
-      name: "staker",
-    },
-  ],
-  [
-    {
-      type: "uint256[]",
-      name: "_tokensStaked",
-    },
-    {
-      type: "uint256[]",
-      name: "_tokenAmounts",
-    },
-    {
-      type: "uint256",
-      name: "_totalRewards",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "getStakeInfo" function on the contract.
  * @param options - The options for the getStakeInfo function.
@@ -53,7 +29,29 @@ export async function getStakeInfo(
 ) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xc3453153",
+      [
+        {
+          type: "address",
+          name: "staker",
+        },
+      ],
+      [
+        {
+          type: "uint256[]",
+          name: "_tokensStaked",
+        },
+        {
+          type: "uint256[]",
+          name: "_tokenAmounts",
+        },
+        {
+          type: "uint256",
+          name: "_totalRewards",
+        },
+      ],
+    ],
     params: [options.staker],
   });
 }

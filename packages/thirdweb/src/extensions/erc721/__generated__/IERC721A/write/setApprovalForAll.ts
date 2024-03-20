@@ -18,21 +18,6 @@ export type SetApprovalForAllParams = Prettify<
       asyncParams: () => Promise<SetApprovalForAllParamsInternal>;
     }
 >;
-const METHOD = [
-  "0xa22cb465",
-  [
-    {
-      type: "address",
-      name: "operator",
-    },
-    {
-      type: "bool",
-      name: "_approved",
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "setApprovalForAll" function on the contract.
  * @param options - The options for the "setApprovalForAll" function.
@@ -57,7 +42,20 @@ export function setApprovalForAll(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xa22cb465",
+      [
+        {
+          type: "address",
+          name: "operator",
+        },
+        {
+          type: "bool",
+          name: "_approved",
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

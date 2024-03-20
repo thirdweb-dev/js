@@ -10,26 +10,6 @@ export type EncryptDecryptParams = {
   key: AbiParameterToPrimitiveType<{ type: "bytes"; name: "key" }>;
 };
 
-const METHOD = [
-  "0xe7150322",
-  [
-    {
-      type: "bytes",
-      name: "data",
-    },
-    {
-      type: "bytes",
-      name: "key",
-    },
-  ],
-  [
-    {
-      type: "bytes",
-      name: "result",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "encryptDecrypt" function on the contract.
  * @param options - The options for the encryptDecrypt function.
@@ -51,7 +31,25 @@ export async function encryptDecrypt(
 ) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xe7150322",
+      [
+        {
+          type: "bytes",
+          name: "data",
+        },
+        {
+          type: "bytes",
+          name: "key",
+        },
+      ],
+      [
+        {
+          type: "bytes",
+          name: "result",
+        },
+      ],
+    ],
     params: [options.data, options.key],
   });
 }

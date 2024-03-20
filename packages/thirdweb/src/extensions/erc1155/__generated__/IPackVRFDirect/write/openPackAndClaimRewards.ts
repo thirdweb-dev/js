@@ -25,29 +25,6 @@ export type OpenPackAndClaimRewardsParams = Prettify<
       asyncParams: () => Promise<OpenPackAndClaimRewardsParamsInternal>;
     }
 >;
-const METHOD = [
-  "0xac296b3f",
-  [
-    {
-      type: "uint256",
-      name: "_packId",
-    },
-    {
-      type: "uint256",
-      name: "_amountToOpen",
-    },
-    {
-      type: "uint32",
-      name: "_callBackGasLimit",
-    },
-  ],
-  [
-    {
-      type: "uint256",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "openPackAndClaimRewards" function on the contract.
  * @param options - The options for the "openPackAndClaimRewards" function.
@@ -73,7 +50,28 @@ export function openPackAndClaimRewards(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xac296b3f",
+      [
+        {
+          type: "uint256",
+          name: "_packId",
+        },
+        {
+          type: "uint256",
+          name: "_amountToOpen",
+        },
+        {
+          type: "uint32",
+          name: "_callBackGasLimit",
+        },
+      ],
+      [
+        {
+          type: "uint256",
+        },
+      ],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

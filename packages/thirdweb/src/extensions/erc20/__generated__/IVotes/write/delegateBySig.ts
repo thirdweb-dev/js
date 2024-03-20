@@ -25,37 +25,6 @@ export type DelegateBySigParams = Prettify<
       asyncParams: () => Promise<DelegateBySigParamsInternal>;
     }
 >;
-const METHOD = [
-  "0xc3cda520",
-  [
-    {
-      type: "address",
-      name: "delegatee",
-    },
-    {
-      type: "uint256",
-      name: "nonce",
-    },
-    {
-      type: "uint256",
-      name: "expiry",
-    },
-    {
-      type: "uint8",
-      name: "v",
-    },
-    {
-      type: "bytes32",
-      name: "r",
-    },
-    {
-      type: "bytes32",
-      name: "s",
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "delegateBySig" function on the contract.
  * @param options - The options for the "delegateBySig" function.
@@ -84,7 +53,36 @@ export function delegateBySig(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xc3cda520",
+      [
+        {
+          type: "address",
+          name: "delegatee",
+        },
+        {
+          type: "uint256",
+          name: "nonce",
+        },
+        {
+          type: "uint256",
+          name: "expiry",
+        },
+        {
+          type: "uint8",
+          name: "v",
+        },
+        {
+          type: "bytes32",
+          name: "r",
+        },
+        {
+          type: "bytes32",
+          name: "s",
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

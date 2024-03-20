@@ -32,64 +32,6 @@ export type CreateAuctionParams = Prettify<
       asyncParams: () => Promise<CreateAuctionParamsInternal>;
     }
 >;
-const METHOD = [
-  "0x16654d40",
-  [
-    {
-      type: "tuple",
-      name: "_params",
-      components: [
-        {
-          type: "address",
-          name: "assetContract",
-        },
-        {
-          type: "uint256",
-          name: "tokenId",
-        },
-        {
-          type: "uint256",
-          name: "quantity",
-        },
-        {
-          type: "address",
-          name: "currency",
-        },
-        {
-          type: "uint256",
-          name: "minimumBidAmount",
-        },
-        {
-          type: "uint256",
-          name: "buyoutBidAmount",
-        },
-        {
-          type: "uint64",
-          name: "timeBufferInSeconds",
-        },
-        {
-          type: "uint64",
-          name: "bidBufferBps",
-        },
-        {
-          type: "uint64",
-          name: "startTimestamp",
-        },
-        {
-          type: "uint64",
-          name: "endTimestamp",
-        },
-      ],
-    },
-  ],
-  [
-    {
-      type: "uint256",
-      name: "auctionId",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "createAuction" function on the contract.
  * @param options - The options for the "createAuction" function.
@@ -113,7 +55,63 @@ export function createAuction(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x16654d40",
+      [
+        {
+          type: "tuple",
+          name: "_params",
+          components: [
+            {
+              type: "address",
+              name: "assetContract",
+            },
+            {
+              type: "uint256",
+              name: "tokenId",
+            },
+            {
+              type: "uint256",
+              name: "quantity",
+            },
+            {
+              type: "address",
+              name: "currency",
+            },
+            {
+              type: "uint256",
+              name: "minimumBidAmount",
+            },
+            {
+              type: "uint256",
+              name: "buyoutBidAmount",
+            },
+            {
+              type: "uint64",
+              name: "timeBufferInSeconds",
+            },
+            {
+              type: "uint64",
+              name: "bidBufferBps",
+            },
+            {
+              type: "uint64",
+              name: "startTimestamp",
+            },
+            {
+              type: "uint64",
+              name: "endTimestamp",
+            },
+          ],
+        },
+      ],
+      [
+        {
+          type: "uint256",
+          name: "auctionId",
+        },
+      ],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

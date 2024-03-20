@@ -10,68 +10,6 @@ export type GetAllOffersParams = {
   endId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_endId" }>;
 };
 
-const METHOD = [
-  "0xc1edcfbe",
-  [
-    {
-      type: "uint256",
-      name: "_startId",
-    },
-    {
-      type: "uint256",
-      name: "_endId",
-    },
-  ],
-  [
-    {
-      type: "tuple[]",
-      name: "offers",
-      components: [
-        {
-          type: "uint256",
-          name: "offerId",
-        },
-        {
-          type: "uint256",
-          name: "tokenId",
-        },
-        {
-          type: "uint256",
-          name: "quantity",
-        },
-        {
-          type: "uint256",
-          name: "totalPrice",
-        },
-        {
-          type: "uint256",
-          name: "expirationTimestamp",
-        },
-        {
-          type: "address",
-          name: "offeror",
-        },
-        {
-          type: "address",
-          name: "assetContract",
-        },
-        {
-          type: "address",
-          name: "currency",
-        },
-        {
-          type: "uint8",
-          name: "tokenType",
-        },
-        {
-          type: "uint8",
-          name: "status",
-        },
-      ],
-    },
-  ],
-] as const;
-
 /**
  * Calls the "getAllOffers" function on the contract.
  * @param options - The options for the getAllOffers function.
@@ -93,7 +31,67 @@ export async function getAllOffers(
 ) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xc1edcfbe",
+      [
+        {
+          type: "uint256",
+          name: "_startId",
+        },
+        {
+          type: "uint256",
+          name: "_endId",
+        },
+      ],
+      [
+        {
+          type: "tuple[]",
+          name: "offers",
+          components: [
+            {
+              type: "uint256",
+              name: "offerId",
+            },
+            {
+              type: "uint256",
+              name: "tokenId",
+            },
+            {
+              type: "uint256",
+              name: "quantity",
+            },
+            {
+              type: "uint256",
+              name: "totalPrice",
+            },
+            {
+              type: "uint256",
+              name: "expirationTimestamp",
+            },
+            {
+              type: "address",
+              name: "offeror",
+            },
+            {
+              type: "address",
+              name: "assetContract",
+            },
+            {
+              type: "address",
+              name: "currency",
+            },
+            {
+              type: "uint8",
+              name: "tokenType",
+            },
+            {
+              type: "uint8",
+              name: "status",
+            },
+          ],
+        },
+      ],
+    ],
     params: [options.startId, options.endId],
   });
 }

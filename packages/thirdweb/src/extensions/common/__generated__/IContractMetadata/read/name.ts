@@ -1,16 +1,6 @@
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 
-const METHOD = [
-  "0x06fdde03",
-  [],
-  [
-    {
-      type: "string",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "name" function on the contract.
  * @param options - The options for the name function.
@@ -27,7 +17,15 @@ const METHOD = [
 export async function name(options: BaseTransactionOptions) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x06fdde03",
+      [],
+      [
+        {
+          type: "string",
+        },
+      ],
+    ],
     params: [],
   });
 }

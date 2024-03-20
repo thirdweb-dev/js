@@ -24,21 +24,6 @@ export type SetDefaultRoyaltyInfoParams = Prettify<
       asyncParams: () => Promise<SetDefaultRoyaltyInfoParamsInternal>;
     }
 >;
-const METHOD = [
-  "0x600dd5ea",
-  [
-    {
-      type: "address",
-      name: "_royaltyRecipient",
-    },
-    {
-      type: "uint256",
-      name: "_royaltyBps",
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "setDefaultRoyaltyInfo" function on the contract.
  * @param options - The options for the "setDefaultRoyaltyInfo" function.
@@ -63,7 +48,20 @@ export function setDefaultRoyaltyInfo(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x600dd5ea",
+      [
+        {
+          type: "address",
+          name: "_royaltyRecipient",
+        },
+        {
+          type: "uint256",
+          name: "_royaltyBps",
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

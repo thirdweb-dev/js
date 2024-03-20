@@ -12,44 +12,6 @@ export type GetAllPublishedContractsParams = {
   }>;
 };
 
-const METHOD = [
-  "0xaf8db690",
-  [
-    {
-      type: "address",
-      name: "publisher",
-    },
-  ],
-  [
-    {
-      type: "tuple[]",
-      name: "published",
-      components: [
-        {
-          type: "string",
-          name: "contractId",
-        },
-        {
-          type: "uint256",
-          name: "publishTimestamp",
-        },
-        {
-          type: "string",
-          name: "publishMetadataUri",
-        },
-        {
-          type: "bytes32",
-          name: "bytecodeHash",
-        },
-        {
-          type: "address",
-          name: "implementation",
-        },
-      ],
-    },
-  ],
-] as const;
-
 /**
  * Calls the "getAllPublishedContracts" function on the contract.
  * @param options - The options for the getAllPublishedContracts function.
@@ -70,7 +32,43 @@ export async function getAllPublishedContracts(
 ) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xaf8db690",
+      [
+        {
+          type: "address",
+          name: "publisher",
+        },
+      ],
+      [
+        {
+          type: "tuple[]",
+          name: "published",
+          components: [
+            {
+              type: "string",
+              name: "contractId",
+            },
+            {
+              type: "uint256",
+              name: "publishTimestamp",
+            },
+            {
+              type: "string",
+              name: "publishMetadataUri",
+            },
+            {
+              type: "bytes32",
+              name: "bytecodeHash",
+            },
+            {
+              type: "address",
+              name: "implementation",
+            },
+          ],
+        },
+      ],
+    ],
     params: [options.publisher],
   });
 }

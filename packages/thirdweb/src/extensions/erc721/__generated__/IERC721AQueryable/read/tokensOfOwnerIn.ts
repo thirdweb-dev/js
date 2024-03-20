@@ -11,29 +11,6 @@ export type TokensOfOwnerInParams = {
   stop: AbiParameterToPrimitiveType<{ type: "uint256"; name: "stop" }>;
 };
 
-const METHOD = [
-  "0x99a2557a",
-  [
-    {
-      type: "address",
-      name: "owner",
-    },
-    {
-      type: "uint256",
-      name: "start",
-    },
-    {
-      type: "uint256",
-      name: "stop",
-    },
-  ],
-  [
-    {
-      type: "uint256[]",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "tokensOfOwnerIn" function on the contract.
  * @param options - The options for the tokensOfOwnerIn function.
@@ -56,7 +33,28 @@ export async function tokensOfOwnerIn(
 ) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x99a2557a",
+      [
+        {
+          type: "address",
+          name: "owner",
+        },
+        {
+          type: "uint256",
+          name: "start",
+        },
+        {
+          type: "uint256",
+          name: "stop",
+        },
+      ],
+      [
+        {
+          type: "uint256[]",
+        },
+      ],
+    ],
     params: [options.owner, options.start, options.stop],
   });
 }

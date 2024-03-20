@@ -31,34 +31,6 @@ export type RedeemParams = Prettify<
       asyncParams: () => Promise<RedeemParamsInternal>;
     }
 >;
-const METHOD = [
-  "0xba087652",
-  [
-    {
-      name: "shares",
-      type: "uint256",
-      internalType: "uint256",
-    },
-    {
-      name: "receiver",
-      type: "address",
-      internalType: "address",
-    },
-    {
-      name: "owner",
-      type: "address",
-      internalType: "address",
-    },
-  ],
-  [
-    {
-      name: "assets",
-      type: "uint256",
-      internalType: "uint256",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "redeem" function on the contract.
  * @param options - The options for the "redeem" function.
@@ -82,7 +54,33 @@ const METHOD = [
 export function redeem(options: BaseTransactionOptions<RedeemParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xba087652",
+      [
+        {
+          name: "shares",
+          type: "uint256",
+          internalType: "uint256",
+        },
+        {
+          name: "receiver",
+          type: "address",
+          internalType: "address",
+        },
+        {
+          name: "owner",
+          type: "address",
+          internalType: "address",
+        },
+      ],
+      [
+        {
+          name: "assets",
+          type: "uint256",
+          internalType: "uint256",
+        },
+      ],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

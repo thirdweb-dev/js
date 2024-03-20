@@ -31,37 +31,6 @@ export type RecoverForParams = Prettify<
       asyncParams: () => Promise<RecoverForParamsInternal>;
     }
 >;
-const METHOD = [
-  "0xba656434",
-  [
-    {
-      type: "address",
-      name: "from",
-    },
-    {
-      type: "address",
-      name: "to",
-    },
-    {
-      type: "uint256",
-      name: "recoveryDeadline",
-    },
-    {
-      type: "bytes",
-      name: "recoverySig",
-    },
-    {
-      type: "uint256",
-      name: "toDeadline",
-    },
-    {
-      type: "bytes",
-      name: "toSig",
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "recoverFor" function on the contract.
  * @param options - The options for the "recoverFor" function.
@@ -88,7 +57,36 @@ const METHOD = [
 export function recoverFor(options: BaseTransactionOptions<RecoverForParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xba656434",
+      [
+        {
+          type: "address",
+          name: "from",
+        },
+        {
+          type: "address",
+          name: "to",
+        },
+        {
+          type: "uint256",
+          name: "recoveryDeadline",
+        },
+        {
+          type: "bytes",
+          name: "recoverySig",
+        },
+        {
+          type: "uint256",
+          name: "toDeadline",
+        },
+        {
+          type: "bytes",
+          name: "toSig",
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

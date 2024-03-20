@@ -27,33 +27,6 @@ export type BuyFromListingParams = Prettify<
       asyncParams: () => Promise<BuyFromListingParamsInternal>;
     }
 >;
-const METHOD = [
-  "0x704232dc",
-  [
-    {
-      type: "uint256",
-      name: "_listingId",
-    },
-    {
-      type: "address",
-      name: "_buyFor",
-    },
-    {
-      type: "uint256",
-      name: "_quantity",
-    },
-    {
-      type: "address",
-      name: "_currency",
-    },
-    {
-      type: "uint256",
-      name: "_expectedTotalPrice",
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "buyFromListing" function on the contract.
  * @param options - The options for the "buyFromListing" function.
@@ -81,7 +54,32 @@ export function buyFromListing(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x704232dc",
+      [
+        {
+          type: "uint256",
+          name: "_listingId",
+        },
+        {
+          type: "address",
+          name: "_buyFor",
+        },
+        {
+          type: "uint256",
+          name: "_quantity",
+        },
+        {
+          type: "address",
+          name: "_currency",
+        },
+        {
+          type: "uint256",
+          name: "_expectedTotalPrice",
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

@@ -13,25 +13,6 @@ export type GetPastVotesParams = {
   }>;
 };
 
-const METHOD = [
-  "0x3a46b1a8",
-  [
-    {
-      type: "address",
-      name: "account",
-    },
-    {
-      type: "uint256",
-      name: "blockNumber",
-    },
-  ],
-  [
-    {
-      type: "uint256",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "getPastVotes" function on the contract.
  * @param options - The options for the getPastVotes function.
@@ -53,7 +34,24 @@ export async function getPastVotes(
 ) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0x3a46b1a8",
+      [
+        {
+          type: "address",
+          name: "account",
+        },
+        {
+          type: "uint256",
+          name: "blockNumber",
+        },
+      ],
+      [
+        {
+          type: "uint256",
+        },
+      ],
+    ],
     params: [options.account, options.blockNumber],
   });
 }

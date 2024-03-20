@@ -22,25 +22,6 @@ export type PostOpParams = Prettify<
       asyncParams: () => Promise<PostOpParamsInternal>;
     }
 >;
-const METHOD = [
-  "0xa9a23409",
-  [
-    {
-      type: "uint8",
-      name: "mode",
-    },
-    {
-      type: "bytes",
-      name: "context",
-    },
-    {
-      type: "uint256",
-      name: "actualGasCost",
-    },
-  ],
-  [],
-] as const;
-
 /**
  * Calls the "postOp" function on the contract.
  * @param options - The options for the "postOp" function.
@@ -64,7 +45,24 @@ const METHOD = [
 export function postOp(options: BaseTransactionOptions<PostOpParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xa9a23409",
+      [
+        {
+          type: "uint8",
+          name: "mode",
+        },
+        {
+          type: "bytes",
+          name: "context",
+        },
+        {
+          type: "uint256",
+          name: "actualGasCost",
+        },
+      ],
+      [],
+    ],
     params:
       "asyncParams" in options
         ? async () => {

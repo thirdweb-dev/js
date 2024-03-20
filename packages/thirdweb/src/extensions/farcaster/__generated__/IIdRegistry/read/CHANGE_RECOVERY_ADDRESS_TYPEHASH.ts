@@ -1,16 +1,6 @@
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 
-const METHOD = [
-  "0xd5bac7f3",
-  [],
-  [
-    {
-      type: "bytes32",
-    },
-  ],
-] as const;
-
 /**
  * Calls the "CHANGE_RECOVERY_ADDRESS_TYPEHASH" function on the contract.
  * @param options - The options for the CHANGE_RECOVERY_ADDRESS_TYPEHASH function.
@@ -29,7 +19,15 @@ export async function CHANGE_RECOVERY_ADDRESS_TYPEHASH(
 ) {
   return readContract({
     contract: options.contract,
-    method: METHOD,
+    method: [
+      "0xd5bac7f3",
+      [],
+      [
+        {
+          type: "bytes32",
+        },
+      ],
+    ],
     params: [],
   });
 }
