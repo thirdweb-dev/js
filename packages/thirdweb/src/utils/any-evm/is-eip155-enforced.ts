@@ -74,18 +74,16 @@ const ERROR_SUBSTRINGS = [
 ];
 
 function matchError(error: string): boolean {
-  const errorIndex = ERROR_SUBSTRINGS.findIndex((substring) =>
+  const hasError = ERROR_SUBSTRINGS.some((substring) =>
     error.includes(substring),
   );
+  // can early exit if we find a match
+  if (hasError) {
+    return true;
+  }
 
-  const compositeErrorIndex = ERROR_SUBSTRINGS_COMPOSITE.findIndex((arr) => {
-    let foundError = true;
-    arr.forEach((substring) => {
-      foundError &&= error.includes(substring);
-    });
-
-    return foundError;
+  // otherwise return true if any of the composite substrings are found
+  return ERROR_SUBSTRINGS_COMPOSITE.some((arr) => {
+    return arr.some((substring) => error.includes(substring));
   });
-
-  return errorIndex !== -1 || compositeErrorIndex !== -1;
 }
