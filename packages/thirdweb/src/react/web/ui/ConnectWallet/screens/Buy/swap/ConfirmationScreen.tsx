@@ -194,7 +194,8 @@ export function ConfirmationScreen(props: {
                 props.buyWithCryptoQuote.approval,
               );
 
-              await waitForReceipt(tx);
+              console.debug("approve tx", tx);
+              await waitForReceipt(tx, 50);
               props.onQuoteFinalized(props.buyWithCryptoQuote);
 
               setStep("swap");
@@ -212,7 +213,8 @@ export function ConfirmationScreen(props: {
                 props.buyWithCryptoQuote.transactionRequest,
               );
 
-              await waitForReceipt(_swapTx);
+              console.debug("swap tx", _swapTx);
+              await waitForReceipt(_swapTx, 50);
               props.onQuoteFinalized(props.buyWithCryptoQuote);
 
               // these will be defined by this time

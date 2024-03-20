@@ -7,7 +7,7 @@ import { watchBlockNumber } from "../../rpc/watchBlockNumber.js";
 import { eth_getTransactionReceipt } from "../../rpc/actions/eth_getTransactionReceipt.js";
 import type { Prettify } from "../../utils/type-utils.js";
 
-export const MAX_BLOCKS_WAIT_TIME = 30; // TODO: instead of changing it here, make it configurable
+export const DEFAULT_MAX_BLOCKS_WAIT_TIME = 30;
 
 const map = new Map<string, Promise<TransactionReceipt>>();
 
@@ -20,6 +20,8 @@ export type WaitForReceiptOptions = Prettify<
 /**
  * Waits for the transaction receipt of a given transaction hash on a specific contract.
  * @param options - The options for waiting for the receipt.
+ * @param maxBlocksWaitTime - The maximum number of blocks to wait for the transaction to be mined.
+ * By default, it's 30 blocks.
  * @returns A promise that resolves with the transaction receipt.
  * @transaction
  * @example
@@ -33,6 +35,7 @@ export type WaitForReceiptOptions = Prettify<
  */
 export function waitForReceipt(
   options: WaitForReceiptOptions,
+  maxBlocksWaitTime = DEFAULT_MAX_BLOCKS_WAIT_TIME,
 ): Promise<TransactionReceipt> {
   const { transactionHash, transaction } = options;
   const chainId = transaction.chain.id;
@@ -61,11 +64,11 @@ export function waitForReceipt(
       chain: transaction.chain,
       onNewBlockNumber: async () => {
         blocksWaited++;
-        if (blocksWaited >= MAX_BLOCKS_WAIT_TIME) {
+        if (blocksWaited >= maxBlocksWaitTime) {
           unwatch();
           reject(
             new Error(
-              `Transaction not found after ${MAX_BLOCKS_WAIT_TIME} blocks`,
+              `Transaction not found after ${maxBlocksWaitTime} blocks`,
             ),
           );
           return;

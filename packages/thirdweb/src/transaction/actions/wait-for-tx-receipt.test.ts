@@ -1,5 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterAll } from "vitest";
-import { MAX_BLOCKS_WAIT_TIME, waitForReceipt } from "./wait-for-tx-receipt.js";
+import {
+  DEFAULT_MAX_BLOCKS_WAIT_TIME,
+  waitForReceipt,
+} from "./wait-for-tx-receipt.js";
 import type { TransactionReceipt } from "viem";
 import { TEST_WALLET_B } from "../../../test/src/addresses.js";
 import { USDC_CONTRACT } from "../../../test/src/test-contracts.js";
@@ -90,12 +93,12 @@ describe("waitForReceipt", () => {
       transactionHash: MOCK_TX_HASH,
     });
 
-    for (let i = 1; i <= MAX_BLOCKS_WAIT_TIME + 1; i++) {
+    for (let i = 1; i <= DEFAULT_MAX_BLOCKS_WAIT_TIME + 1; i++) {
       emitBlockNumber(BigInt(i));
     }
 
     await expect(result).rejects.toThrow(
-      `Transaction not found after ${MAX_BLOCKS_WAIT_TIME} blocks`,
+      `Transaction not found after ${DEFAULT_MAX_BLOCKS_WAIT_TIME} blocks`,
     );
     expect(mockEthGetTransactionReceipt).toHaveBeenCalledTimes(30);
   });
