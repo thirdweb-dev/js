@@ -6,13 +6,14 @@ import {
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import { TEST_ACCOUNT_A } from "../../../test/src/test-wallets.js";
 import { sendTransaction } from "../../transaction/actions/send-transaction.js";
-import { prepareDeployTransactionFromMetadata } from "./deploy-from-metadata.js";
-import { fetchPublishedContractMetadata } from "./publisher.js";
 import { getDeployedCloneFactoryContract } from "./utils/clone-factory.js";
 import {
   bootstrapImplementation,
   bootstrapOnchainInfra,
 } from "./utils/bootstrap.js";
+import { prepareAutoFactoryDeployTransaction } from "./deploy-via-autofactory.js";
+import { initialize } from "../../extensions/prebuilts/__generated__/DropERC721/write/initialize.js";
+import { getDeployedInfraContract } from "./utils/infra.js";
 
 describe("deployFromMetadata", () => {
   it("should deploy published contract with existing infra", async () => {
@@ -23,27 +24,35 @@ describe("deployFromMetadata", () => {
     if (!cloneFactoryContract) {
       throw new Error("Clone factory not found");
     }
-    const contractMetadata = await fetchPublishedContractMetadata({
+    const implementationContract = await getDeployedInfraContract({
+      chain: FORKED_ETHEREUM_CHAIN,
       client: TEST_CLIENT,
       contractId: "DropERC721",
+      constructorParams: [],
     });
-    const transaction = prepareDeployTransactionFromMetadata({
+    if (!implementationContract) {
+      throw new Error("Clone factory not found");
+    }
+
+    const initializeTransaction = initialize({
+      contract: implementationContract,
+      name: "NFTDrop unified",
+      symbol: "NFTD",
+      defaultAdmin: TEST_ACCOUNT_A.address,
+      platformFeeBps: 0n,
+      platformFeeRecipient: TEST_ACCOUNT_A.address,
+      royaltyBps: 0n,
+      royaltyRecipient: TEST_ACCOUNT_A.address,
+      saleRecipient: TEST_ACCOUNT_A.address,
+      trustedForwarders: [],
+      contractURI: "",
+    });
+
+    const transaction = prepareAutoFactoryDeployTransaction({
       chain: FORKED_ETHEREUM_CHAIN,
       client: TEST_CLIENT,
       cloneFactoryContract,
-      contractMetadata,
-      constructorParams: [
-        TEST_ACCOUNT_A.address,
-        "NFTDrop unified",
-        "NFTD",
-        "",
-        [],
-        TEST_ACCOUNT_A.address,
-        TEST_ACCOUNT_A.address,
-        0,
-        0,
-        TEST_ACCOUNT_A.address,
-      ],
+      initializeTransaction,
     });
     const hash = await sendTransaction({
       transaction,
@@ -55,6 +64,7 @@ describe("deployFromMetadata", () => {
   });
 
   it("should deploy published contract with no existing infra", async () => {
+    // bootstrap infra and implementation
     await bootstrapOnchainInfra({
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
@@ -66,6 +76,7 @@ describe("deployFromMetadata", () => {
       account: TEST_ACCOUNT_A,
       contractId: "DropERC721",
     });
+
     const cloneFactoryContract = await getDeployedCloneFactoryContract({
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
@@ -73,34 +84,42 @@ describe("deployFromMetadata", () => {
     if (!cloneFactoryContract) {
       throw new Error("Clone factory not found");
     }
-    const contractMetadata = await fetchPublishedContractMetadata({
+    const implementationContract = await getDeployedInfraContract({
+      chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
       contractId: "DropERC721",
+      constructorParams: [],
     });
-    const transaction = prepareDeployTransactionFromMetadata({
+    if (!implementationContract) {
+      throw new Error("Clone factory not found");
+    }
+
+    const initializeTransaction = initialize({
+      contract: implementationContract,
+      name: "NFTDrop unified",
+      symbol: "NFTD",
+      defaultAdmin: TEST_ACCOUNT_A.address,
+      platformFeeBps: 0n,
+      platformFeeRecipient: TEST_ACCOUNT_A.address,
+      royaltyBps: 0n,
+      royaltyRecipient: TEST_ACCOUNT_A.address,
+      saleRecipient: TEST_ACCOUNT_A.address,
+      trustedForwarders: [],
+      contractURI: "",
+    });
+
+    const transaction = prepareAutoFactoryDeployTransaction({
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
       cloneFactoryContract,
-      contractMetadata,
-      constructorParams: [
-        TEST_ACCOUNT_A.address,
-        "NFTDrop unified",
-        "NFTD",
-        "",
-        [],
-        TEST_ACCOUNT_A.address,
-        TEST_ACCOUNT_A.address,
-        0,
-        0,
-        TEST_ACCOUNT_A.address,
-      ],
+      initializeTransaction,
     });
     const hash = await sendTransaction({
       transaction,
       account: TEST_ACCOUNT_A,
     });
     expect(hash.transactionHash).toBe(
-      "0x3c2d91e0617837384180053ba1c03ab2ca11c10ab15c9995747e68ccbdfb9a65",
+      "0x531b94f7554b7c7ac5d72db3583e6997559ffa2acdc0d9afea1002c15db0632b",
     );
   });
 });

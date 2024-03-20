@@ -4,17 +4,18 @@ import type {
   AbiParametersToPrimitiveTypes,
 } from "abitype";
 import { concatHex } from "viem";
-import type { SharedDeployOptions } from "./types.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import { prepareTransaction } from "../../transaction/prepare-transaction.js";
 import { encodeAbiParameters } from "../../utils/abi/encodeAbiParameters.js";
-import type { Hex } from "../../utils/encoding/hex.js";
+import { isHex, type Hex } from "../../utils/encoding/hex.js";
+import { ensureBytecodePrefix } from "../../utils/bytecode/prefix.js";
+import type { ClientAndChain } from "../../utils/types.js";
 
 export type PrepareDirectDeployTransactionOptions<
   TConstructor extends AbiConstructor,
   TParams = AbiParametersToPrimitiveTypes<TConstructor["inputs"]>,
 > = Prettify<
-  Pick<SharedDeployOptions, "chain" | "client"> & {
+  ClientAndChain & {
     constructorAbi: TConstructor;
     bytecode: Hex;
     constructorParams: TParams extends readonly AbiParameter[]
@@ -47,13 +48,17 @@ export type PrepareDirectDeployTransactionOptions<
 export function prepareDirectDeployTransaction<
   const TConstructor extends AbiConstructor,
 >(options: PrepareDirectDeployTransactionOptions<TConstructor>) {
+  const bytecode = ensureBytecodePrefix(options.bytecode);
+  if (!isHex(bytecode)) {
+    throw new Error(`Contract bytecode is invalid.\n\n${bytecode}`);
+  }
   // prepare the tx
   return prepareTransaction({
     chain: options.chain,
     client: options.client,
     // the data is the bytecode and the constructor parameters
     data: concatHex([
-      options.bytecode,
+      bytecode,
       encodeAbiParameters(
         options.constructorAbi.inputs,
         options.constructorParams,
