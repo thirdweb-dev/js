@@ -46,4 +46,3 @@ export class ImTokenConnector extends InjectedConnector {
     });
   }
 }
-	

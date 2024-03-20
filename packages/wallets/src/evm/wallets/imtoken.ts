@@ -5,6 +5,7 @@ import { assertWindowEthereum } from "../utils/assertWindowEthereum";
 import { AbstractClientWallet, WalletOptions } from "./base";
 import type { ImTokenConnector as ImTokenConnectorType } from "../connectors/imtoken";
 import { walletIds } from "../constants/walletIds";
+import { TW_WC_PROJECT_ID } from "../constants/wc";
 
 type ImTokenAdditionalOptions = {
   qrcode?: boolean;
@@ -45,8 +46,8 @@ export class ImTokenWallet extends AbstractClientWallet<ImTokenAdditionalOptions
     if (!this.connector) {
       if (this.isInjected) {
         // import the connector dynamically
-        const { imtokenConnector } = await import("../connectors/imtoken");
-        const imtokenConnector = new imTokenConnector({
+        const { ImTokenConnector } = await import("../connectors/imtoken");
+        const imtokenConnector = new ImTokenConnector({
           chains: this.chains,
           connectorStorage: this.walletStorage,
           options: {

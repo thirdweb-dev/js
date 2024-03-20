@@ -8,7 +8,7 @@ import type {
   CryptoDefiWallet,
   EmbeddedWallet,
   FrameWallet,
-  ImTokenWallet
+  ImTokenWallet,
   LocalWallet,
   MagicEdenWallet,
   MagicLink,
@@ -42,7 +42,7 @@ export type WalletIdToWalletTypeMap = {
   rainbowWallet: RainbowWallet;
   blocto: BloctoWallet;
   frame: FrameWallet;
-  imtoken: ImTokenWallet
+  imToken: ImTokenWallet;
   localWallet: LocalWallet;
   magicLink: MagicLink;
   paper: PaperWallet;
@@ -59,7 +59,7 @@ export type WalletIdToWalletTypeMap = {
   cryptoDefiWallet: CryptoDefiWallet;
   rabby: RabbyWallet;
   xdefi: XDEFIWallet;
-  magicEden: MagicEdenWallet
+  magicEden: MagicEdenWallet;
 };
 
 /**

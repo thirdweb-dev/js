@@ -303,7 +303,7 @@ export type ThirdwebLocale = {
         title: string;
       };
     };
-    imtokenWallet: ExtensionAndQRScreensLocale;
+    imTokenWallet: ExtensionAndQRScreensLocale;
     walletConnect: { scanInstruction: string };
     zerionWallet: ExtensionAndQRScreensLocale;
   };
