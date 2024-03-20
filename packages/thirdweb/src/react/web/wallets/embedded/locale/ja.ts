@@ -1,4 +1,6 @@
-const embeddedWalletLocaleJa = {
+import type { EmbeddedWalletLocale } from "./types.js";
+
+const embeddedWalletLocaleJa: EmbeddedWalletLocale = {
   signInWithGoogle: "Googleでサインイン",
   signInWithFacebook: "Facebookでサインイン",
   signInWithApple: "Appleでサインイン",
@@ -8,6 +10,7 @@ const embeddedWalletLocaleJa = {
   invalidEmail: "無効なメールアドレス",
   signIn: "サインイン",
   maxAccountsExceeded: "アカウントの最大数を超えました",
+  or: "または",
   socialLoginScreen: {
     title: "サインイン",
     instruction: "ポップアップウィンドウでアカウントにサインインします", // TODO: check if this is correct

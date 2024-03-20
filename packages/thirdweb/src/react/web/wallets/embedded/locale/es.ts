@@ -1,4 +1,6 @@
-const embeddedWalletLocaleEs = {
+import type { EmbeddedWalletLocale } from "./types.js";
+
+const embeddedWalletLocaleEs: EmbeddedWalletLocale = {
   signInWithGoogle: "Iniciar sesión con Google",
   signInWithFacebook: "Iniciar sesión con Facebook",
   signInWithApple: "Iniciar sesión con Apple",
@@ -8,6 +10,7 @@ const embeddedWalletLocaleEs = {
   emailRequired: "Se requiere dirección de correo electrónico",
   invalidEmail: "Dirección de correo electrónico inválida",
   maxAccountsExceeded: "Número máximo de cuentas alcanzado",
+  or: "O",
   socialLoginScreen: {
     title: "Iniciar sesión",
     instruction: "Inicie sesión en su cuenta en la ventana abierta",

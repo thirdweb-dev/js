@@ -1,4 +1,6 @@
-const embeddedWalletLocaleTl = {
+import type { EmbeddedWalletLocale } from "./types.js";
+
+const embeddedWalletLocaleTl: EmbeddedWalletLocale = {
   signInWithGoogle: "Mag-sign in gamit ang Google",
   signInWithFacebook: "Mag-sign in gamit ang Facebook",
   signInWithApple: "Mag-sign in gamit ang Apple",
@@ -8,6 +10,7 @@ const embeddedWalletLocaleTl = {
   emailRequired: "Kinakailangan ang email address",
   invalidEmail: "Hindi wastong email address",
   maxAccountsExceeded: "Naabot mo na ang maximum na bilang ng accounts",
+  or: "O",
   socialLoginScreen: {
     title: "Mag-sign in",
     instruction: "Mag-sign in sa iyong account sa pop-up",

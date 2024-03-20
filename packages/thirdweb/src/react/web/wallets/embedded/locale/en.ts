@@ -1,4 +1,6 @@
-const embeddedWalletLocaleEn = {
+import type { EmbeddedWalletLocale } from "./types.js";
+
+const embeddedWalletLocaleEn: EmbeddedWalletLocale = {
   signInWithGoogle: "Sign in with Google",
   signInWithFacebook: "Sign in with Facebook",
   signInWithApple: "Sign in with Apple",
