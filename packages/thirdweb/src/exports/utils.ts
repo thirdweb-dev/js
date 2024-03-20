@@ -12,7 +12,8 @@ export { toEther, toTokens, toUnits, toWei } from "../utils/units.js";
 // any-evm utils
 export {
   deployCreate2Factory,
-  getCreate2FactoryAddress,
+  getDeployedCreate2Factory,
+  computeCreate2FactoryAddress,
 } from "../contract/deployment/utils/create-2-factory.js";
 export { computeDeploymentAddress } from "../utils/any-evm/compute-deployment-address.js";
 export { getInitBytecodeWithSalt } from "../utils/any-evm/get-init-bytecode-with-salt.js";

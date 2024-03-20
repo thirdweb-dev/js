@@ -1,18 +1,31 @@
 import { describe, it, expect } from "vitest";
-import { prepareDeployTransactionForPublishedContract } from "./deploy-published.js";
 import { FORKED_ETHEREUM_CHAIN } from "../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import { TEST_ACCOUNT_A } from "../../../test/src/test-wallets.js";
 import { sendTransaction } from "../../transaction/actions/send-transaction.js";
+import { prepareDeployTransactionFromMetadata } from "./deploy-from-metadata.js";
+import { fetchPublishedContractMetadata } from "./publisher.js";
+import { getDeployedCloneFactoryContract } from "./utils/clone-factory.js";
 
 describe("prepareDeployTransactionForPublishedContract", () => {
-  // TODO: @joaquim please fix test :)
-  it.skip("should prepare deploy transaction for a published contract", async () => {
-    const transaction = await prepareDeployTransactionForPublishedContract({
+  it("should prepare deploy transaction for a published contract", async () => {
+    const cloneFactoryContract = await getDeployedCloneFactoryContract({
       chain: FORKED_ETHEREUM_CHAIN,
       client: TEST_CLIENT,
-      contractName: "DropERC721",
+    });
+    if (!cloneFactoryContract) {
+      throw new Error("Clone factory not found");
+    }
+    const contractMetadata = await fetchPublishedContractMetadata({
+      client: TEST_CLIENT,
+      contractId: "DropERC721",
       publisher: "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024",
+    });
+    const transaction = prepareDeployTransactionFromMetadata({
+      chain: FORKED_ETHEREUM_CHAIN,
+      client: TEST_CLIENT,
+      cloneFactoryContract,
+      contractMetadata,
       constructorParams: [
         TEST_ACCOUNT_A.address,
         "NFTDrop unified",

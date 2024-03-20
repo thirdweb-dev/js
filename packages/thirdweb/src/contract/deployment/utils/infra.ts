@@ -1,10 +1,10 @@
-import type { Chain } from "../../../chains/types.js";
-import type { ThirdwebClient } from "../../../client/client.js";
 import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed.js";
 import { getContract, type ThirdwebContract } from "../../contract.js";
-import { computeDeploymentInfoFromContractId } from "../../../utils/any-evm/compute-published-contract-deploy-info.js";
 import { prepareTransaction } from "../../../transaction/prepare-transaction.js";
-import { computeAddressFromContractId } from "../../../utils/any-evm/compute-published-contract-address.js";
+import type { ClientAndChain } from "../../../utils/types.js";
+import type { Prettify } from "../../../utils/type-utils.js";
+import { computePublishedContractAddress } from "../../../utils/any-evm/compute-published-contract-address.js";
+import { computeDeploymentInfoFromContractId } from "../../../utils/any-evm/compute-published-contract-deploy-info.js";
 
 export type InfraContractId =
   | "WETH9"
@@ -12,12 +12,12 @@ export type InfraContractId =
   | "ForwarderEOAOnly"
   | "TWCloneFactory";
 
-export type GetDeployedInfraParams = {
-  client: ThirdwebClient;
-  chain: Chain;
-  contractId: InfraContractId;
-  constructorParams: unknown[];
-};
+export type GetDeployedInfraParams = Prettify<
+  ClientAndChain & {
+    contractId: InfraContractId;
+    constructorParams: unknown[];
+  }
+>;
 
 /**
  * @internal
@@ -25,7 +25,7 @@ export type GetDeployedInfraParams = {
 export async function getDeployedInfraContract(
   options: GetDeployedInfraParams,
 ): Promise<ThirdwebContract | null> {
-  const address = await computeAddressFromContractId({
+  const address = await computePublishedContractAddress({
     ...options,
   });
   const factory = getContract({
