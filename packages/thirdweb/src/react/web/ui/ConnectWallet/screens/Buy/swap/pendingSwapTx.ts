@@ -58,18 +58,6 @@ export const addPendingSwapTransaction = (
       });
 
       if (res.status === "COMPLETED" || res.status === "FAILED") {
-        track(client, {
-          source: "ConnectButton",
-          action:
-            res.status === "COMPLETED"
-              ? "swapStatus.success"
-              : "swapStatus.failed",
-          quote: quote,
-          tx: {
-            hash: txInfo.transactionHash,
-          },
-        });
-
         const value = swapTransactionsStore.getValue();
         const updatedValue = [...value];
         const oldValue = value[indexAdded];
@@ -91,15 +79,6 @@ export const addPendingSwapTransaction = (
 
     if (retryCount < maxRetries) {
       await tryToGetStatus();
-    } else {
-      track(client, {
-        source: "ConnectButton",
-        action: "swapStatus.timeout",
-        quote: quote,
-        tx: {
-          hash: txInfo.transactionHash,
-        },
-      });
     }
   }
 

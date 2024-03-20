@@ -53,6 +53,7 @@ export function ConfirmationScreen(props: {
   fromToken: ERC20OrNativeToken;
   toToken: ERC20OrNativeToken;
   onViewPendingTx: () => void;
+  onQuoteFinalized: (quote: BuyWithCryptoQuote) => void;
 }) {
   const { client } = useThirdwebProviderProps();
   const activeWallet = useActiveWallet();
@@ -61,6 +62,7 @@ export function ConfirmationScreen(props: {
   const [swapTx, setSwapTx] = useState<
     BuyWithCryptoStatusQueryParams | undefined
   >();
+
   const isApprovalRequired = props.buyWithCryptoQuote.approval !== undefined;
 
   const [step, setStep] = useState<"approval" | "swap">(
@@ -173,7 +175,7 @@ export function ConfirmationScreen(props: {
           <Container flex="row" gap="xs" center="y" color="danger">
             <CrossCircledIcon width={iconSize.sm} height={iconSize.sm} />
             <Text color="danger" size="sm">
-              {step === "approval" ? "Failed to Approve" : "Failed to Buy"}
+              {step === "approval" ? "Failed to Approve" : "Failed to Confirm"}
             </Text>
           </Container>
 
@@ -194,6 +196,7 @@ export function ConfirmationScreen(props: {
               );
 
               await waitForReceipt(tx);
+              props.onQuoteFinalized(props.buyWithCryptoQuote);
 
               setStep("swap");
               setStatus("idle");
@@ -210,6 +213,7 @@ export function ConfirmationScreen(props: {
               );
 
               await waitForReceipt(_swapTx);
+              props.onQuoteFinalized(props.buyWithCryptoQuote);
 
               // these will be defined by this time
               if (fromTokenSymbol && toTokenSymbol && fromChain.data) {

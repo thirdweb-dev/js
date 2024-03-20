@@ -41,6 +41,7 @@ import { BuyTokenInput } from "./swap/BuyTokenInput.js";
 import { ConfirmationScreen } from "./swap/ConfirmationScreen.js";
 import { PayWithCrypto } from "./swap/PayWithCrypto.js";
 import { SwapFees } from "./swap/SwapFees.js";
+import type { BuyWithCryptoQuote } from "../../../../../../pay/buyWithCrypto/actions/getQuote.js";
 
 const fallbackSupportedChains = /* @__PURE__ */ (() =>
   fallbackSwapSupportedChainIds.map(defineChain))();
@@ -141,8 +142,15 @@ export function SwapScreenContent(props: {
     tokenAddress: isNativeToken(fromToken) ? undefined : fromToken.address,
   });
 
+  // when a quote is finalized ( approve sent if required or swap sent )
+  // we save it here to stop refetching the quote query
+  const [finalizedQuote, setFinalizedQuote] = useState<
+    BuyWithCryptoQuote | undefined
+  >();
+
   const buyWithCryptoParams: BuyWithCryptoQuoteQueryParams | undefined =
     deferredTokenAmount &&
+    !finalizedQuote &&
     !(fromChain.id === toChain.id && fromToken === toToken)
       ? {
           // wallet
@@ -255,11 +263,20 @@ export function SwapScreenContent(props: {
 
   const sourceTokenAmount = swapQuote?.swapDetails.fromAmount || "";
 
-  if (screen === "confirmation" && buyWithCryptoQuoteQuery.data) {
+  const quoteToConfirm = finalizedQuote || buyWithCryptoQuoteQuery.data;
+
+  if (screen === "confirmation" && quoteToConfirm) {
     return (
       <ConfirmationScreen
-        onBack={() => setScreen("main")}
-        buyWithCryptoQuote={buyWithCryptoQuoteQuery.data}
+        onBack={() => {
+          // remove finalized quote when going back
+          setFinalizedQuote(undefined);
+          setScreen("main");
+        }}
+        buyWithCryptoQuote={quoteToConfirm}
+        onQuoteFinalized={(_quote) => {
+          setFinalizedQuote(_quote);
+        }}
         fromAmount={sourceTokenAmount}
         toAmount={tokenAmount}
         fromChain={fromChain}
