@@ -1,5 +1,17 @@
 # @thirdweb-dev/react
 
+## 4.4.21
+
+### Patch Changes
+
+- [#2493](https://github.com/thirdweb-dev/js/pull/2493) [`802ba8c`](https://github.com/thirdweb-dev/js/commit/802ba8c5a980d3bddd308f9b3d14cc9cbb5453d5) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Renaming of Smart Wallet -> Smart Account
+
+- Updated dependencies [[`863049d`](https://github.com/thirdweb-dev/js/commit/863049dc0ca989d2654b4aacba811263931a33fe), [`802ba8c`](https://github.com/thirdweb-dev/js/commit/802ba8c5a980d3bddd308f9b3d14cc9cbb5453d5), [`863049d`](https://github.com/thirdweb-dev/js/commit/863049dc0ca989d2654b4aacba811263931a33fe), [`8a20aa5`](https://github.com/thirdweb-dev/js/commit/8a20aa58259edc5bac578dc5e4f4d971ed7adf36), [`c479277`](https://github.com/thirdweb-dev/js/commit/c47927708aa8e8ff42f40c4f740a859ec090ec70)]:
+  - @thirdweb-dev/chains@0.1.81
+  - @thirdweb-dev/wallets@2.4.23
+  - @thirdweb-dev/sdk@4.0.48
+  - @thirdweb-dev/react-core@4.4.21
+
 ## 4.4.20
 
 ### Patch Changes

@@ -1,7 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
   "chain": "Avalanche",
-  "chainId": 91041,
+  "chainId": 69743,
   "explorers": [],
   "faucets": [],
   "features": [],
@@ -12,19 +12,19 @@ export default {
     "format": "svg"
   },
   "infoURL": "https://avacloud.io",
-  "name": "QI0318I1 Testnet",
+  "name": "SCG-K",
   "nativeCurrency": {
-    "name": "QI0318I1 Testnet Token",
-    "symbol": "DVN",
+    "name": "SCG-K Token",
+    "symbol": "REC",
     "decimals": 18
   },
-  "networkId": 91041,
+  "networkId": 69743,
   "redFlags": [],
   "rpc": [
-    "https://91041.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://subnets.avax.network/defi-kingdoms/dfk-chain/rpc"
+    "https://69743.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://subnets.avax.network/scgk/mainnet/rpc"
   ],
-  "shortName": "QI0318I1 Testnet",
-  "slug": "qi0318i1-testnet-qi0318i1 testnet",
-  "testnet": true
+  "shortName": "SCG-K",
+  "slug": "scg-k-scg-k",
+  "testnet": false
 } as const satisfies Chain;
