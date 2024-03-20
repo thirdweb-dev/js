@@ -63,6 +63,10 @@ export function SwapTransactionsScreen(props: { onBack: () => void }) {
 
   // add in-memory pending transactions
   inMemoryPendingTxs.forEach((tx) => {
+    if (pageIndex > 0) {
+      return;
+    }
+
     // if tx is already in history endpoint, don't add it
     if (txHashSet.has(tx.transactionHash)) {
       return;
@@ -82,8 +86,9 @@ export function SwapTransactionsScreen(props: { onBack: () => void }) {
     txInfosToShow.push({
       fromChainId: tx.source.token.chainId,
       transactionHash: tx.source.transactionHash,
-      boughtTokenAmount: tx.quote.toAmount,
-      boughtTokenSymbol: tx.quote.toToken.symbol || "",
+      boughtTokenAmount: tx.destination?.amount || tx.quote.toAmount,
+      boughtTokenSymbol:
+        tx.destination?.token.symbol || tx.quote.toToken.symbol || "",
       status: tx.status,
       subStatus: tx.subStatus,
     });
@@ -142,11 +147,13 @@ export function SwapTransactionsScreen(props: { onBack: () => void }) {
             </Container>
           )}
 
-          {txInfosToShow.map((txInfo, i) => {
-            return <TransactionInfo key={i} txInfo={txInfo} />;
+          {txInfosToShow.map((txInfo) => {
+            return (
+              <TransactionInfo key={txInfo.transactionHash} txInfo={txInfo} />
+            );
           })}
 
-          {_historyQuery.isLoading && txInfosToShow.length > 1 && (
+          {_historyQuery.isLoading && txInfosToShow.length > 0 && (
             <>
               <Skeleton width="100%" height="68px" />
               <Skeleton width="100%" height="68px" />
@@ -377,6 +384,14 @@ function getStatusMeta(
       status: "Bridging",
       color: "accentText",
       loading: true,
+    } as const;
+  }
+
+  if (subStatus === "PARTIAL_SUCCESS") {
+    return {
+      status: "Incomplete",
+      color: "secondaryText",
+      loading: false,
     } as const;
   }
 

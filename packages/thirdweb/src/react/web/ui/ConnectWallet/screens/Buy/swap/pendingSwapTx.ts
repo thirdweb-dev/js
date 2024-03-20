@@ -1,6 +1,4 @@
-import { track } from "../../../../../../../analytics/track.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
-import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/actions/getQuote.js";
 import {
   getBuyWithCryptoStatus,
   type BuyWithCryptoStatuses,
@@ -35,7 +33,6 @@ export const swapTransactionsStore = /* @__PURE__ */ createStore<SwapTxInfo[]>(
 export const addPendingSwapTransaction = (
   client: ThirdwebClient,
   txInfo: SwapTxInfo,
-  quote: BuyWithCryptoQuote,
 ) => {
   const currentValue = swapTransactionsStore.getValue();
   const indexAdded = currentValue.length;
@@ -62,11 +59,20 @@ export const addPendingSwapTransaction = (
         const updatedValue = [...value];
         const oldValue = value[indexAdded];
         if (oldValue) {
-          updatedValue[indexAdded] = {
+          const newValue = {
             ...oldValue,
             status: res.status,
             subStatus: res.subStatus,
           };
+          updatedValue[indexAdded] = newValue;
+
+          // in case - the destination token is different ( happens when tx is partially successful )
+          if (res.destination) {
+            newValue.to = {
+              symbol: res.destination.token.symbol || "",
+              value: res.destination.amount,
+            };
+          }
 
           swapTransactionsStore.setValue(updatedValue);
         }

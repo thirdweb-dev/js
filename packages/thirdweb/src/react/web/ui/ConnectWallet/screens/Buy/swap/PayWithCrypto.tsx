@@ -17,7 +17,7 @@ import type { TokenInfo } from "../../../defaultTokens.js";
 import { formatTokenBalance } from "../../TokenSelector.js";
 import type { Chain } from "../../../../../../../chains/types.js";
 import { Text } from "../../../../components/text.js";
-import type { NativeToken } from "../../nativeToken.js";
+import { isNativeToken, type NativeToken } from "../../nativeToken.js";
 import { TokenSelectorButton } from "./TokenSelector.js";
 import { ChainIcon } from "../../../../components/ChainIcon.js";
 import { WalletIcon } from "../../../icons/WalletIcon.js";
@@ -40,13 +40,10 @@ export function PayWithCrypto(props: {
   const chainQuery = useChainQuery(props.chain);
   const activeAccount = useActiveAccount();
 
-  const token =
-    props.token && !("nativeToken" in props.token) ? props.token : undefined;
-
   const balanceQuery = useWalletBalance({
     account: activeAccount,
     chain: props.chain,
-    tokenAddress: token?.address,
+    tokenAddress: isNativeToken(props.token) ? undefined : props.token.address,
   });
 
   return (

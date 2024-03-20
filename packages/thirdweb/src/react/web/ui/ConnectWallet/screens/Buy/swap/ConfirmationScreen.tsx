@@ -140,10 +140,9 @@ export function ConfirmationScreen(props: {
         </Container>
       </TokenInfoContainer>
 
-      <Spacer y="xl" />
-      <SwapFees quote={props.buyWithCryptoQuote} />
-
       <Spacer y="lg" />
+      <SwapFees quote={props.buyWithCryptoQuote} />
+      <Spacer y="md" />
 
       {/* Show 2 steps  */}
       {isApprovalRequired && (
@@ -217,23 +216,19 @@ export function ConfirmationScreen(props: {
 
               // these will be defined by this time
               if (fromTokenSymbol && toTokenSymbol && fromChain.data) {
-                addPendingSwapTransaction(
-                  client,
-                  {
-                    from: {
-                      symbol: fromTokenSymbol,
-                      value: props.fromAmount,
-                      chainId: props.fromChain.id,
-                    },
-                    to: {
-                      symbol: toTokenSymbol,
-                      value: props.toAmount,
-                    },
-                    status: "PENDING",
-                    transactionHash: _swapTx.transactionHash, // ?? _swapTx.userOpHash,
+                addPendingSwapTransaction(client, {
+                  from: {
+                    symbol: fromTokenSymbol,
+                    value: props.fromAmount,
+                    chainId: props.fromChain.id,
                   },
-                  props.buyWithCryptoQuote,
-                );
+                  to: {
+                    symbol: toTokenSymbol,
+                    value: props.toAmount,
+                  },
+                  status: "PENDING",
+                  transactionHash: _swapTx.transactionHash, // ?? _swapTx.userOpHash,
+                });
               }
 
               setSwapTx({
@@ -301,8 +296,8 @@ function Step(props: { isDone: boolean; label: string; isActive: boolean }) {
 const Circle = /* @__PURE__ */ StyledDiv(() => {
   return {
     border: `1px solid currentColor`,
-    width: iconSize.md + "px",
-    height: iconSize.md + "px",
+    width: "20px",
+    height: "20px",
     borderRadius: "50%",
     display: "flex",
     alignItems: "center",
