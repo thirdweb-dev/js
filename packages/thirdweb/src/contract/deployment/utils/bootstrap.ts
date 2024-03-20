@@ -1,5 +1,6 @@
 import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and-confirm-transaction.js";
 import type { ClientAndChainAndAccount } from "../../../utils/types.js";
+import { getDeployedCloneFactoryContract } from "./clone-factory.js";
 import {
   deployCreate2Factory,
   getDeployedCreate2Factory,
@@ -9,6 +10,47 @@ import {
   prepareInfraContractDeployTransaction,
   type InfraContractId,
 } from "./infra.js";
+
+/**
+ * @internal
+ */
+export async function getOrDeployInfraForPublishedContract(
+  args: ClientAndChainAndAccount & {
+    contractId: string;
+    constructorParams: unknown[];
+  },
+) {
+  const { chain, client, account, contractId, constructorParams } = args;
+  let [cloneFactoryContract, implementationContract] = await Promise.all([
+    getDeployedCloneFactoryContract({
+      chain,
+      client,
+    }),
+    getDeployedInfraContract({
+      chain,
+      client,
+      contractId,
+      constructorParams,
+    }),
+  ]);
+
+  if (!implementationContract || !cloneFactoryContract) {
+    // deploy the infra and implementation contracts if not found
+    cloneFactoryContract = await deployCloneFactory({
+      client,
+      chain,
+      account,
+    });
+    implementationContract = await deployImplementation({
+      client,
+      chain,
+      account,
+      contractId,
+      constructorParams,
+    });
+  }
+  return { cloneFactoryContract, implementationContract };
+}
 
 /**
  * @internal

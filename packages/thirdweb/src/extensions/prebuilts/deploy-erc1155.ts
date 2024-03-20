@@ -1,21 +1,23 @@
 import type { ThirdwebContract } from "../../contract/contract.js";
 import { deployViaAutoFactory } from "../../contract/deployment/deploy-via-autofactory.js";
+import { getDeployedCloneFactoryContract } from "../../contract/deployment/utils/clone-factory.js";
+import { getDeployedInfraContract } from "../../contract/deployment/utils/infra.js";
 import type { ClientAndChainAndAccount } from "../../utils/types.js";
-import { initialize as initDropERC721 } from "./__generated__/DropERC721/write/initialize.js";
-import { initialize as initTokenERC721 } from "./__generated__/TokenERC721/write/initialize.js";
-import { initialize as initOpenEditionERC721 } from "./__generated__/OpenEditionERC721/write/initialize.js";
+import { initialize as initDropERC1155 } from "./__generated__/DropERC1155/write/initialize.js";
+import { initialize as initTokenERC1155 } from "./__generated__/TokenERC1155/write/initialize.js";
 import type { FileOrBufferOrString } from "../../storage/upload/types.js";
 import { upload } from "../../storage/upload.js";
 import type { ThirdwebClient } from "../../client/client.js";
-import { getOrDeployInfraForPublishedContract } from "../../contract/deployment/utils/bootstrap.js";
+import {
+  deployImplementation,
+  deployCloneFactory,
+  getOrDeployInfraForPublishedContract,
+} from "../../contract/deployment/utils/bootstrap.js";
 import type { Prettify } from "../../utils/type-utils.js";
 
-export type ERC721ContractType =
-  | "DropERC721"
-  | "TokenERC721"
-  | "OpenEditionERC721";
+export type ERC1155ContractType = "DropERC1155" | "TokenERC1155";
 
-export type ERC721ContractParams = {
+export type ERC1155ContractParams = {
   name: string;
   description?: string;
   image?: FileOrBufferOrString;
@@ -32,37 +34,36 @@ export type ERC721ContractParams = {
   trustedForwarders?: string[];
 };
 
-export type DeployERC721ContractOptions = Prettify<
+export type DeployERC1155ContractOptions = Prettify<
   ClientAndChainAndAccount & {
-    type: ERC721ContractType;
-    params: ERC721ContractParams;
+    type: ERC1155ContractType;
+    params: ERC1155ContractParams;
   }
 >;
 
 /**
- * Deploys an thirdweb ERC721 contract of the given type.
+ * Deploys an thirdweb ERC1155 contract of the given type.
  * On chains where the thirdweb infrastructure contracts are not deployed, this function will deploy them as well.
  * @param options - The deployment options.
  * @returns The deployed contract address.
  * @example
  * ```
- * import { deployERC721Contract } from "thirdweb/extensions/prebuilts";
- * const contractAddress = await deployERC721Contract({
+ * import { deployERC1155Contract } from "thirdweb/extensions/prebuilts";
+ * const contractAddress = await deployERC1155Contract({
  *  chain,
  *  client,
  *  account,
- *  type: "DropERC721",
+ *  type: "DropERC1155",
  *  params: {
  *    name: "MyNFT",
  *    description: "My NFT contract",
  *    symbol: "NFT",
  * },
  */
-export async function deployERC721Contract(
-  options: DeployERC721ContractOptions,
+export async function deployERC1155Contract(
+  options: DeployERC1155ContractOptions,
 ) {
   const { chain, client, account, type, params } = options;
-
   const { cloneFactoryContract, implementationContract } =
     await getOrDeployInfraForPublishedContract({
       chain,
@@ -71,7 +72,6 @@ export async function deployERC721Contract(
       contractId: type,
       constructorParams: [],
     });
-
   const initializeTransaction = await getInitializeTransaction({
     client,
     implementationContract,
@@ -92,8 +92,8 @@ export async function deployERC721Contract(
 async function getInitializeTransaction(options: {
   client: ThirdwebClient;
   implementationContract: ThirdwebContract;
-  type: ERC721ContractType;
-  params: ERC721ContractParams;
+  type: ERC1155ContractType;
+  params: ERC1155ContractParams;
   accountAddress: string;
 }) {
   const { client, implementationContract, type, params, accountAddress } =
@@ -119,8 +119,8 @@ async function getInitializeTransaction(options: {
     )[0] ||
     "";
   switch (type) {
-    case "DropERC721":
-      return initDropERC721({
+    case "DropERC1155":
+      return initDropERC1155({
         contract: implementationContract,
         name: params.name || "",
         symbol: params.symbol || "",
@@ -133,28 +133,16 @@ async function getInitializeTransaction(options: {
         royaltyBps: params.royaltyBps || 0n,
         trustedForwarders: params.trustedForwarders || [],
       });
-    case "TokenERC721":
-      return initTokenERC721({
+    case "TokenERC1155":
+      return initTokenERC1155({
         contract: implementationContract,
         name: params.name || "",
         symbol: params.symbol || "",
         contractURI,
         defaultAdmin: params.defaultAdmin || accountAddress,
-        saleRecipient: params.saleRecipient || accountAddress,
+        primarySaleRecipient: params.saleRecipient || accountAddress,
         platformFeeBps: params.platformFeeBps || 0n,
         platformFeeRecipient: params.platformFeeRecipient || accountAddress,
-        royaltyRecipient: params.royaltyRecipient || accountAddress,
-        royaltyBps: params.royaltyBps || 0n,
-        trustedForwarders: params.trustedForwarders || [],
-      });
-    case "OpenEditionERC721":
-      return initOpenEditionERC721({
-        contract: implementationContract,
-        name: params.name || "",
-        symbol: params.symbol || "",
-        contractURI,
-        defaultAdmin: params.defaultAdmin || accountAddress,
-        saleRecipient: params.saleRecipient || accountAddress,
         royaltyRecipient: params.royaltyRecipient || accountAddress,
         royaltyBps: params.royaltyBps || 0n,
         trustedForwarders: params.trustedForwarders || [],
