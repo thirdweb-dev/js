@@ -11,11 +11,11 @@ The RPC benchmark measures encoding an ERC20 `transfer` call.
 | -------- | -------------- | -------------------- | --------- | --------- | --------- |
 | thirdweb | 2'199 ns/iter  | 1'969 ns … 4'085 ns  | 2'338 ns  | 3'242 ns  | 4'085 ns  |
 | ethers   | 32'311 ns/iter | 27'250 ns … 1'134 µs | 31'334 ns | 60'667 ns | 173 µs    |
-| viem     | 7'545 ns/iter  | 6'208 ns … 1'248 µs  | 7'292 ns  | 22'166 ns | 46'959 ns |
+| viem     | 1'186 ns/iter  | 1'067 ns … 1'648 ns  | 1'196 ns  |  1'613 ns | 1'648 ns |
 
 **Summary for encode transfer (warm cache):**
 
-- **thirdweb** is 3.43x faster than viem and 14.7x faster than ethers.
+- **thirdweb** is 14.7x faster than ethers.
 
 ### encode transfer (cold cache)
 
@@ -23,11 +23,11 @@ The RPC benchmark measures encoding an ERC20 `transfer` call.
 | -------- | -------------- | ------------------- | --------- | --------- | -------- |
 | thirdweb | 2'366 ns/iter  | 2'166 ns … 2'890 ns | 2'525 ns  | 2'793 ns  | 2'890 ns |
 | ethers   | 41'347 ns/iter | 34'875 ns … 960 µs  | 40'167 ns | 75'959 ns | 805 µs   |
-| viem     | 7'444 ns/iter  | 6'990 ns … 8'407 ns | 7'679 ns  | 8'273 ns  | 8'407 ns |
+| viem     | 1'206 ns/iter | 1'086 ns … 1'662 ns | 1'215 ns  | 1'613 ns  | 1'662 ns |
 
 **Summary for encode transfer (cold cache):**
 
-- **thirdweb** is 3.15x faster than viem and 17.47x faster than ethers.
+- **thirdweb** is 17.47x faster than ethers.
 
 ### Running benchmarks
 
