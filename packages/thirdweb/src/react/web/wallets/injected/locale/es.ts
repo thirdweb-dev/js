@@ -17,6 +17,11 @@ const injectedWalletLocaleEs = (walletName: string): InjectedWalletLocale => ({
     instruction: `Escanea el código QR con la aplicación de cartera ${walletName} para conectarte`,
   },
   getStartedLink: `¿No tienes la cartera ${walletName}?`,
+  download: {
+    chrome: "Descargar extensión para Chrome",
+    android: "Descargar en Google Play",
+    iOS: "Descargar en App Store",
+  },
 });
 
 export default injectedWalletLocaleEs;

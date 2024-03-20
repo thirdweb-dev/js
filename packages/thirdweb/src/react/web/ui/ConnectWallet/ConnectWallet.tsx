@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { useContext, useState, useMemo } from "react";
+import { useContext, useState, useMemo, useEffect } from "react";
 import { Spinner } from "../components/Spinner.js";
 import { Button } from "../components/buttons.js";
 import {
@@ -23,11 +23,12 @@ import {
 import type { ConnectButtonProps } from "./ConnectWalletProps.js";
 import { canFitWideModal } from "../../utils/canFitWideModal.js";
 import type { Chain } from "../../../../chains/types.js";
-import connectLocaleEn from "./locale/en.js";
+import type { ConnectLocale } from "./locale/types.js";
 import { WalletConnectionContext } from "../../../core/providers/wallet-connection.js";
 import { defaultWallets } from "../../wallets/defaultWallets.js";
 import { AutoConnect } from "../../../core/hooks/connection/useAutoConnect.js";
 import ConnectModal from "./Modal/ConnectModal.js";
+import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 
 const TW_CONNECT_WALLET = "tw-connect-wallet";
 
@@ -46,6 +47,54 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  */
 export function ConnectButton(props: ConnectButtonProps) {
   const wallets = props.wallets || defaultWallets;
+  const localeId = props.locale || "en-US";
+  const [locale, setLocale] = useState<ConnectLocale | undefined>();
+
+  useEffect(() => {
+    wallets.forEach((w) => {
+      w.prefetch?.(localeId);
+    });
+  }, [wallets, localeId]);
+
+  useEffect(() => {
+    if (localeId === "es-419") {
+      import("./locale/es.js").then((module) => {
+        setLocale(module.default);
+      });
+    } else if (localeId === "ja-JP") {
+      import("./locale/ja.js").then((module) => {
+        setLocale(module.default);
+      });
+    } else if (localeId === "tl_PH") {
+      import("./locale/tl.js").then((module) => {
+        setLocale(module.default);
+      });
+    } else {
+      import("./locale/en.js").then((module) => {
+        setLocale(module.default);
+      });
+    }
+  });
+
+  if (!locale) {
+    return (
+      <AnimatedButton
+        disabled={true}
+        className={`${
+          props.connectButton?.className || ""
+        } ${TW_CONNECT_WALLET}`}
+        variant="primary"
+        type="button"
+        style={{
+          minWidth: "140px",
+          ...props.connectButton?.style,
+        }}
+      >
+        <Spinner size="sm" color="primaryButtonText" />
+      </AnimatedButton>
+    );
+  }
+
   return (
     <WalletConnectionContext.Provider
       value={{
@@ -53,10 +102,11 @@ export function ConnectButton(props: ConnectButtonProps) {
         client: props.client,
         wallets: wallets,
         locale: props.locale || "en-US",
+        connectLocale: locale,
       }}
     >
       <WalletUIStatesProvider theme="dark">
-        <ConnectButtonInner {...props} />
+        <ConnectButtonInner {...props} connectLocale={locale} />
         <ConnectModal />
         <AutoConnect
           appMetadata={props.appMetadata}
@@ -68,13 +118,17 @@ export function ConnectButton(props: ConnectButtonProps) {
   );
 }
 
-function ConnectButtonInner(props: ConnectButtonProps) {
+function ConnectButtonInner(
+  props: ConnectButtonProps & {
+    connectLocale: ConnectLocale;
+  },
+) {
   const activeAccount = useActiveAccount();
   const activeWalletChain = useActiveWalletChain();
   const contextTheme = useCustomTheme();
   const theme = props.theme || contextTheme || "dark";
   const connectionStatus = useActiveWalletConnectionStatus();
-  const locale = connectLocaleEn;
+  const locale = props.connectLocale;
 
   const isLoading =
     connectionStatus === "connecting" || connectionStatus === "unknown";
@@ -283,7 +337,7 @@ function SwitchNetworkButton(props: {
 }) {
   const switchChain = useSwitchActiveWalletChain();
   const [switching, setSwitching] = useState(false);
-  const locale = connectLocaleEn;
+  const locale = useWalletConnectionCtx().connectLocale;
 
   const switchNetworkBtnTitle =
     props.switchNetworkBtnTitle ?? locale.switchNetwork;

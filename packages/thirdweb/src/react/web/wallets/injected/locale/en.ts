@@ -17,6 +17,11 @@ const injectedWalletLocaleEn = (wallet: string): InjectedWalletLocale => ({
     instruction: `Scan the QR code with ${wallet} wallet app to connect`,
   },
   getStartedLink: `Don't have ${wallet} wallet?`,
+  download: {
+    chrome: "Download Chrome Extension",
+    android: "Download on Google Play",
+    iOS: "Download on App Store",
+  },
 });
 
 export default injectedWalletLocaleEn;

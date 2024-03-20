@@ -12,7 +12,7 @@ import { useCustomTheme } from "../../ui/design-system/CustomThemeProvider.js";
 import { StyledButton } from "../../ui/design-system/elements.js";
 import { fontSize } from "../../ui/design-system/index.js";
 import { Text } from "../../ui/components/text.js";
-import embeddedWalletLocaleEn from "./locale/en.js";
+import type { EmbeddedWalletLocale } from "./locale/types.js";
 
 type VerificationStatus =
   | "verifying"
@@ -32,10 +32,11 @@ type ScreenToShow =
 export function EmbeddedWalletOTPLoginUI(props: {
   connectUIProps: ConnectUIProps;
   email: string;
+  locale: EmbeddedWalletLocale;
 }) {
   const email = props.email;
   const isWideModal = props.connectUIProps.screenConfig.size === "wide";
-  const locale = embeddedWalletLocaleEn;
+  const locale = props.locale;
   const [otpInput, setOtpInput] = useState("");
   const { createInstance, done, chain } = props.connectUIProps.connection;
   const { goBack } = props.connectUIProps.screenConfig;

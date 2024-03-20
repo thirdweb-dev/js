@@ -32,11 +32,6 @@ const connectLocaleEn: ConnectLocale = {
   smartWallet: "Smart Wallet",
   or: "OR",
   goBackButton: "Back",
-  download: {
-    chrome: "Download Chrome Extension",
-    android: "Download on Google Play",
-    iOS: "Download on App Store",
-  },
   welcomeScreen: {
     defaultTitle: "Your gateway to the decentralized world",
     defaultSubtitle: "Connect a wallet to get started",

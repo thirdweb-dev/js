@@ -21,20 +21,21 @@ import type {
 } from "./types.js";
 import { openOauthSignInWindow } from "./openOauthSignInWindow.js";
 import { InputSelectionUI } from "./InputSelectionUI.js";
-import embeddedWalletLocaleEn from "./locale/en.js";
+import type { EmbeddedWalletLocale } from "./locale/types.js";
 
 export type EmbeddedWalletFormUIProps = {
   connectUIProps: ConnectUIProps;
   authOptions: EmbeddedWalletAuth[];
   saveState: (state: EmbeddedWalletSelectUIState) => void;
   select: () => void;
+  locale: EmbeddedWalletLocale;
 };
 
 /**
  * @internal
  */
 export const EmbeddedWalletFormUI = (props: EmbeddedWalletFormUIProps) => {
-  const locale = embeddedWalletLocaleEn;
+  const locale = props.locale;
 
   const { screenConfig } = props.connectUIProps;
   const { done, createInstance, chain } = props.connectUIProps.connection;
@@ -132,7 +133,7 @@ export const EmbeddedWalletFormUI = (props: EmbeddedWalletFormUIProps) => {
       )}
 
       {screenConfig.size === "wide" && hasSocialLogins && enableEmailLogin && (
-        <TextDivider text={embeddedWalletLocaleEn.or} />
+        <TextDivider text={locale.or} />
       )}
 
       {/* Email Login */}
@@ -170,7 +171,7 @@ export const EmbeddedWalletFormUI = (props: EmbeddedWalletFormUIProps) => {
  * @internal
  */
 export function EmbeddedWalletFormUIScreen(props: EmbeddedWalletFormUIProps) {
-  const locale = embeddedWalletLocaleEn.emailLoginScreen;
+  const locale = props.locale.emailLoginScreen;
   const isCompact = props.connectUIProps.screenConfig.size === "compact";
   const { initialScreen, screen } = useScreenContext();
   const modalConfig = useContext(ModalConfigCtx);

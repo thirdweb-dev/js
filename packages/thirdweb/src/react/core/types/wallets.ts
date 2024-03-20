@@ -2,6 +2,7 @@ import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import type { Wallet } from "../../../wallets/interfaces/wallet.js";
 import type { AppMetadata } from "../../../wallets/types.js";
+import type { LocaleId } from "../../web/ui/types.js";
 
 /**
  * @walletConfig
@@ -69,7 +70,7 @@ export type WalletConfig = {
    * This is useful if wallet UI uses dynamic imports to fetch certain data and calling this function will prefetch that data to make the wallet UI load faster
    * @returns
    */
-  prefetch?: () => void;
+  prefetch?: (locale: LocaleId) => Promise<void>;
 };
 
 /**

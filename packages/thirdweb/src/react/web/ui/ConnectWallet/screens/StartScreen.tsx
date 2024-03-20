@@ -12,7 +12,7 @@ import { GlobeIcon } from "../icons/GlobalIcon.js";
 import { ModalConfigCtx } from "../../../providers/wallet-ui-states-provider.js";
 import { spacing } from "../../design-system/index.js";
 import { PoweredByThirdweb } from "../PoweredByTW.js";
-import connectLocaleEn from "../locale/en.js";
+import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 
 /**
  * @internal
@@ -24,7 +24,7 @@ export function StartScreen() {
     welcomeScreen: WelcomeScreen,
     showThirdwebBranding,
   } = useContext(ModalConfigCtx);
-  const locale = connectLocaleEn;
+  const locale = useWalletConnectionCtx().connectLocale;
 
   if (WelcomeScreen) {
     if (typeof WelcomeScreen === "function") {

@@ -12,7 +12,7 @@ import type {
 } from "./types.js";
 import type { EmbeddedWallet } from "../../../../wallets/embedded/core/wallet/index.js";
 import { Text } from "../../ui/components/text.js";
-import embeddedWalletLocaleEn from "./locale/en.js";
+import type { EmbeddedWalletLocale } from "./locale/types.js";
 
 /**
  * @internal
@@ -21,8 +21,9 @@ export function EmbeddedWalletSocialLogin(props: {
   connectUIProps: ConnectUIProps;
   socialAuth: EmbeddedWalletSocialAuth;
   state: EmbeddedWalletSelectUIState;
+  locale: EmbeddedWalletLocale;
 }) {
-  const ewLocale = embeddedWalletLocaleEn;
+  const ewLocale = props.locale;
   const locale = ewLocale.socialLoginScreen;
   const themeObj = useCustomTheme();
   const [authError, setAuthError] = useState<string | undefined>(undefined);

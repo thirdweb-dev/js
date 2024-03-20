@@ -12,7 +12,7 @@ import { ChromeIcon } from "../../ui/ConnectWallet/icons/ChromeIcon.js";
 import { PlayStoreIcon } from "../../ui/ConnectWallet/icons/PlayStoreIcon.js";
 import { Text } from "../../ui/components/text.js";
 import { openWindow } from "../../../core/utils/openWindow.js";
-import connectLocaleEn from "../../ui/ConnectWallet/locale/en.js";
+import type { InjectedWalletLocale } from "../injected/locale/types.js";
 
 /**
  * @internal
@@ -27,9 +27,7 @@ export const GetStartedScreen: React.FC<{
   header?: React.ReactNode;
   footer?: React.ReactNode;
   showBack?: boolean;
-  locale: {
-    scanToDownload: string;
-  };
+  locale: InjectedWalletLocale;
 }> = ({
   walletName,
   walletIconURL,
@@ -39,13 +37,11 @@ export const GetStartedScreen: React.FC<{
   header,
   footer,
   onBack,
-  locale: localeProp,
+  locale,
 }) => {
   const [showScreen, setShowScreen] = useState<
     "base" | "android-scan" | "ios-scan"
   >("base");
-
-  const locale = connectLocaleEn.download;
 
   const isScanScreen =
     showScreen === "android-scan" || showScreen === "ios-scan";
@@ -72,7 +68,7 @@ export const GetStartedScreen: React.FC<{
             walletIconURL={walletIconURL}
             onBack={handleBack}
             locale={{
-              scanToDownload: localeProp.scanToDownload,
+              scanToDownload: locale.getStartedScreen.instruction,
             }}
           />
         )}
@@ -86,7 +82,7 @@ export const GetStartedScreen: React.FC<{
             walletIconURL={walletIconURL}
             onBack={handleBack}
             locale={{
-              scanToDownload: localeProp.scanToDownload,
+              scanToDownload: locale.getStartedScreen.instruction,
             }}
           />
         )}
@@ -114,7 +110,7 @@ export const GetStartedScreen: React.FC<{
                     }}
                   >
                     <ChromeIcon size={iconSize.lg} />
-                    <span>{locale.chrome}</span>
+                    <span>{locale.download.chrome}</span>
                   </ButtonLink>
                 )}
 
@@ -131,7 +127,7 @@ export const GetStartedScreen: React.FC<{
                     }}
                   >
                     <PlayStoreIcon size={iconSize.lg} />
-                    <span>{locale.android}</span>
+                    <span>{locale.download.android}</span>
                   </ButtonLink>
                 )}
 
@@ -148,7 +144,7 @@ export const GetStartedScreen: React.FC<{
                     }}
                   >
                     <AppleIcon size={iconSize.lg} />
-                    <span>{locale.iOS}</span>
+                    <span>{locale.download.iOS}</span>
                   </ButtonLink>
                 )}
               </Container>

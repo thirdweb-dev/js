@@ -27,7 +27,7 @@ import { ConnectModalContent } from "./ConnectModalContent.js";
 import { canFitWideModal } from "../../../utils/canFitWideModal.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import type { Chain } from "../../../../../chains/types.js";
-import connectLocaleEn from "../locale/en.js";
+import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 
 export type ConnectEmbedProps = {
   /**
@@ -392,7 +392,7 @@ export function SyncedWalletUIStates(
   props: ComponentProps<typeof WalletUIStatesProvider>,
 ) {
   const setModalConfig = useContext(SetModalConfigCtx);
-  const locale = connectLocaleEn;
+  const locale = useWalletConnectionCtx().connectLocale;
 
   // update modalConfig on props change
   useEffect(() => {

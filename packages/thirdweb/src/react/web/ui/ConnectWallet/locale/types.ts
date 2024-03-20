@@ -17,7 +17,6 @@ export type ConnectLocale = {
   defaultButtonTitle: string;
   defaultModalTitle: string;
   disconnectWallet: string;
-  download: { android: string; chrome: string; iOS: string };
   getStarted: string;
   guest: string;
   guestWalletWarning: string;

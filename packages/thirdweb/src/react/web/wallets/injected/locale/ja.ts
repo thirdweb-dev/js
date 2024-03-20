@@ -17,6 +17,11 @@ const injectedWalletLocaleJa = (walletName: string): InjectedWalletLocale => ({
     instruction: `${walletName}のウォレットアプリでQRコードをスキャンして接続してください`,
   },
   getStartedLink: `${walletName}のウォレットを持っていませんか？`,
+  download: {
+    chrome: "Chrome拡張をダウンロード",
+    android: "Google Playでダウンロード",
+    iOS: "App Storeでダウンロード",
+  },
 });
 
 export default injectedWalletLocaleJa;

@@ -9,6 +9,13 @@ export type InjectedWalletLocale = {
     retry: string;
   };
   getStartedLink: string;
-  getStartedScreen: { instruction: string };
+  getStartedScreen: {
+    instruction: string;
+  };
   scanScreen: { instruction: string };
+  download: {
+    chrome: string;
+    android: string;
+    iOS: string;
+  };
 };

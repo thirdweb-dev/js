@@ -32,11 +32,6 @@ const connectWalletLocalJa: ConnectLocale = {
   smartWallet: "スマートウォレット",
   or: "または",
   goBackButton: "戻る", // TODO - check translation
-  download: {
-    chrome: "Chrome拡張をダウンロード",
-    android: "Google Playでダウンロード",
-    iOS: "App Storeでダウンロード",
-  },
   welcomeScreen: {
     defaultTitle: "分散型世界へのゲートウェイ",
     defaultSubtitle: "始めるためにウォレットを接続してください",

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { ConnectUIProps } from "../../../core/types/wallets.js";
 import { ConnectingScreen } from "./ConnectingScreen.js";
 import { wait } from "../../../core/utils/wait.js";
-import injectedWalletLocaleEn from "../injected/locale/en.js";
+import type { InjectedWalletLocale } from "../injected/locale/types.js";
 
 /**
  * @internal
@@ -10,11 +10,10 @@ import injectedWalletLocaleEn from "../injected/locale/en.js";
 export const InjectedConnectUI = (
   props: ConnectUIProps & {
     onGetStarted: () => void;
+    locale: InjectedWalletLocale;
   },
 ) => {
-  const locale = injectedWalletLocaleEn(props.walletConfig.metadata.name);
-
-  const { walletConfig, screenConfig } = props;
+  const { walletConfig, screenConfig, locale } = props;
   const { done, createInstance, chain } = props.connection;
   const [errorConnecting, setErrorConnecting] = useState(false);
 

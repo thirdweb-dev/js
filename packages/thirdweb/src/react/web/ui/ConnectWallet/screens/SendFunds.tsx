@@ -28,7 +28,7 @@ import styled from "@emotion/styled";
 import { useSendToken } from "../../hooks/useSendToken.js";
 import { defineChain } from "../../../../../chains/utils.js";
 import { isAddress } from "../../../../../utils/address.js";
-import connectLocaleEn from "../locale/en.js";
+import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 
 type TXError = Error & { data?: { message?: string } };
 
@@ -106,7 +106,7 @@ function SendFundsForm(props: {
   setAmount: (value: string) => void;
   onBack: () => void;
 }) {
-  const locale = connectLocaleEn.sendFundsScreen;
+  const locale = useWalletConnectionCtx().connectLocale.sendFundsScreen;
   const tokenAddress = props.token?.address;
   const chain = useActiveWalletChain();
   const activeAccount = useActiveAccount();
@@ -369,7 +369,7 @@ function TokenSelector(props: {
   // otherwise it loads the token with given address
   const tokenQuery = useActiveWalletBalance(input);
 
-  const locale = connectLocaleEn.sendFundsScreen;
+  const locale = useWalletConnectionCtx().connectLocale.sendFundsScreen;
   const chainQuery = useChainQuery(chain);
 
   let tokenList =

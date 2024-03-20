@@ -38,7 +38,7 @@ import {
 import type React from "react";
 import type { ChainMetadata, Chain } from "../../../../chains/types.js";
 import { convertApiChainToChain } from "../../../../chains/utils.js";
-import connectLocaleEn from "./locale/en.js";
+import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 
 type NetworkSelectorChainProps = {
   /**
@@ -245,7 +245,7 @@ function NetworkSelectorContentInner(
     return _chainMap;
   }, [props.chains]);
 
-  const locale = connectLocaleEn.networkSelector;
+  const locale = useWalletConnectionCtx().connectLocale.networkSelector;
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTab, setSelectedTab] = useState<"all" | "mainnet" | "testnet">(
     "all",
@@ -493,7 +493,8 @@ const NetworkTabContent = (props: {
   renderChain?: React.FC<NetworkSelectorChainProps>;
   close?: () => void;
 }) => {
-  const locale = connectLocaleEn.networkSelector.categoryLabel;
+  const locale =
+    useWalletConnectionCtx().connectLocale.networkSelector.categoryLabel;
 
   const { recentChainIds, popularChainIds, allChainIds } = props;
   return (
@@ -641,7 +642,7 @@ const ChainButton = /* @__PURE__ */ memo(function ChainButton(props: {
   confirming: boolean;
   switchingFailed: boolean;
 }) {
-  const locale = connectLocaleEn.networkSelector;
+  const locale = useWalletConnectionCtx().connectLocale;
   const { chain, handleSwitch, confirming, switchingFailed } = props;
   const activeChain = useActiveWalletChain();
   const apiChainQuery = useChainQuery(chain);
@@ -682,7 +683,7 @@ const ChainButton = /* @__PURE__ */ memo(function ChainButton(props: {
             {confirming && (
               <>
                 <Text size="xs" color="accentText">
-                  {connectLocaleEn.confirmInWallet}
+                  {locale.confirmInWallet}
                 </Text>
                 <Spinner size="xs" color="accentText" />
               </>
@@ -691,7 +692,7 @@ const ChainButton = /* @__PURE__ */ memo(function ChainButton(props: {
             {switchingFailed && (
               <Container animate="fadein">
                 <Text size="xs" color="danger">
-                  {locale.failedToSwitch}
+                  {locale.networkSelector.failedToSwitch}
                 </Text>
               </Container>
             )}

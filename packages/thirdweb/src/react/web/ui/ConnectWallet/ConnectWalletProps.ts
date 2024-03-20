@@ -4,7 +4,7 @@ import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
 import type { WalletConfig } from "../../../core/types/wallets.js";
 import type { Theme } from "../design-system/index.js";
-import type { UILocale } from "../types.js";
+import type { LocaleId } from "../types.js";
 import type { NetworkSelectorProps } from "./NetworkSelector.js";
 import type { SupportedTokens } from "./defaultTokens.js";
 import type { WelcomeScreen } from "./screens/types.js";
@@ -293,7 +293,7 @@ export type ConnectButtonProps = {
    *
    * Refer to the [`UILocale`](https://portal.thirdweb.com/references/typescript/v5/UILocale) type for supported locales.
    */
-  locale?: UILocale;
+  locale?: LocaleId;
 
   /**
    * Array of supported wallets. If not provided, default wallets will be used.

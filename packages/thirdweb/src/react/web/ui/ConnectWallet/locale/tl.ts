@@ -32,11 +32,7 @@ const connectWalletLocalTl: ConnectLocale = {
   smartWallet: "Smart Wallet",
   or: "O",
   goBackButton: "Bumalik",
-  download: {
-    chrome: "I-download ang Chrome Extension",
-    android: "I-download sa Google Play",
-    iOS: "I-download sa App Store",
-  },
+
   welcomeScreen: {
     defaultTitle: "Ang iyong daan patungo sa decentralized na mundo",
     defaultSubtitle: "Kumonekta ng wallet para magsimula",

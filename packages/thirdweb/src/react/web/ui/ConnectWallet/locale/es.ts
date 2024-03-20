@@ -32,11 +32,6 @@ const connectWalletLocalEs: ConnectLocale = {
   smartWallet: "Cartera inteligente",
   or: "O",
   goBackButton: "Atras",
-  download: {
-    chrome: "Descargar extensión para Chrome",
-    android: "Descargar en Google Play",
-    iOS: "Descargar en App Store",
-  },
   welcomeScreen: {
     defaultTitle: "Tu puerta de entrada al mundo descentralizado",
     defaultSubtitle: "Conecta una cartera para empezar",
