@@ -14,7 +14,7 @@ const clientId = SECRET_KEY
 
 export default async function globalSetup() {
   const shutdownMainnet = await startProxy({
-    port: 8545,
+    port: 8645,
     options: {
       chainId: 1,
       forkUrl: `https://1.rpc.thirdweb.com/${clientId}`,
@@ -27,7 +27,7 @@ export default async function globalSetup() {
   });
 
   const shutdownOptimism = await startProxy({
-    port: 8546,
+    port: 8646,
     options: {
       chainId: 10,
       forkUrl: `https://10.rpc.thirdweb.com/${clientId}`,
@@ -40,7 +40,7 @@ export default async function globalSetup() {
   });
 
   const shutdownAnvil = await startProxy({
-    port: 8547,
+    port: 8647,
   });
 
   return () => {
