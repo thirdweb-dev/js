@@ -20,8 +20,8 @@ const darkColors = {
   base4: "hsl(230deg 11.63% 17%)",
   primaryText: "#eeeef0",
   secondaryText: "#7c7a85",
-  danger: "#e54d2e",
-  success: "#5bb98b",
+  danger: "#e5484D",
+  success: "#30A46C",
   overlay: "rgba(0, 0, 0, 0.7)",
   accentText: "#3385FF",
   accentBg: "hsl(216 100% 50%)",
@@ -36,8 +36,8 @@ const lightColors = {
   primaryText: "#211f26",
   secondaryText: "#6f6d78",
   accentText: "hsl(216 100% 45%)",
-  success: "#30a46c",
-  danger: "#e54d2e",
+  success: "#30A46C",
+  danger: "#e5484D",
   overlay: "rgba(0, 0, 0, 0.7)",
   accentBg: "hsl(216 100% 50%)",
   textOnAccent: "#fdfcfd",
@@ -193,6 +193,7 @@ export const iconSize = {
   lg: "32",
   xl: "48",
   xxl: "64",
+  "3xl": "96",
 };
 
 // desktop first style media query

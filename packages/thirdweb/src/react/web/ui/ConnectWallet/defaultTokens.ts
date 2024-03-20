@@ -109,6 +109,12 @@ export const defaultTokens: SupportedTokens = {
       symbol: "WETH",
       icon: wrappedEthIcon,
     },
+    {
+      address: "0x0b2c639c533813f4aa9d7837caf62653d097ff85",
+      name: "USD Coin",
+      symbol: "USDC",
+      icon: usdcIcon,
+    },
   ],
   "56": [
     {
@@ -140,6 +146,12 @@ export const defaultTokens: SupportedTokens = {
   ],
   "137": [
     {
+      address: "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
+      name: "USD Coin",
+      symbol: "USDC",
+      icon: usdcIcon,
+    },
+    {
       address: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
       name: "Wrapped Matic",
       symbol: "WMATIC",
@@ -150,18 +162,6 @@ export const defaultTokens: SupportedTokens = {
       name: "Wrapped Ether",
       symbol: "WETH",
       icon: wrappedEthIcon,
-    },
-    {
-      address: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
-      name: "USD Coin (Bridged)",
-      symbol: "USDC.e",
-      icon: usdcIcon,
-    },
-    {
-      address: "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
-      name: "USD Coin",
-      symbol: "USDC",
-      icon: usdcIcon,
     },
     {
       address: "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",

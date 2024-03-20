@@ -1,13 +1,6 @@
 import styled from "@emotion/styled";
-import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import {
-  useState,
-  useDeferredValue,
-  useMemo,
-  useCallback,
-  memo,
-  useEffect,
-} from "react";
+import { CrossCircledIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { useState, useMemo, useCallback, memo, useEffect } from "react";
 import { ChainIcon } from "../components/ChainIcon.js";
 import { Skeleton } from "../components/Skeleton.js";
 import { Spacer } from "../components/Spacer.js";
@@ -39,6 +32,7 @@ import { useTWLocale } from "../../providers/locale-provider.js";
 import type React from "react";
 import type { ChainMetadata, Chain } from "../../../../chains/types.js";
 import { convertApiChainToChain } from "../../../../chains/utils.js";
+import { useDebouncedValue } from "../hooks/useDebouncedValue.js";
 
 type NetworkSelectorChainProps = {
   /**
@@ -213,6 +207,7 @@ type NetworkSelectorContentProps = {
   closeModal: () => void;
   chains: Chain[];
   networkSelector?: NetworkSelectorProps;
+  showTabs?: boolean;
 };
 
 /**
@@ -250,7 +245,8 @@ function NetworkSelectorContentInner(
   const [selectedTab, setSelectedTab] = useState<"all" | "mainnet" | "testnet">(
     "all",
   );
-  const deferredSearchTerm = useDeferredValue(searchTerm);
+  const deferredSearchTerm = useDebouncedValue(searchTerm, 300);
+
   const { onSwitch, onCustomClick } = props.networkSelector || {};
 
   const allChainsTab = useMemo(() => {
@@ -363,29 +359,38 @@ function NetworkSelectorContentInner(
           <ModalTitle>{locale.title}</ModalTitle>
         )}
       </Container>
-      <Container px="lg">
-        <Container flex="row" gap="xxs">
-          <TabButton
-            onClick={() => setSelectedTab("all")}
-            data-active={selectedTab === "all"}
-          >
-            {locale.allNetworks}
-          </TabButton>
-          <TabButton
-            onClick={() => setSelectedTab("mainnet")}
-            data-active={selectedTab === "mainnet"}
-          >
-            {locale.mainnets}
-          </TabButton>
-          <TabButton
-            onClick={() => setSelectedTab("testnet")}
-            data-active={selectedTab === "testnet"}
-          >
-            {locale.testnets}
-          </TabButton>
-        </Container>
-      </Container>
-      <Spacer y="lg" />
+
+      {/* Tabs */}
+      {props.showTabs !== false && (
+        <>
+          <Container px="lg">
+            <Container flex="row" gap="xxs">
+              <TabButton
+                onClick={() => setSelectedTab("all")}
+                data-active={selectedTab === "all"}
+              >
+                {locale.allNetworks}
+              </TabButton>
+              <TabButton
+                onClick={() => setSelectedTab("mainnet")}
+                data-active={selectedTab === "mainnet"}
+              >
+                {locale.mainnets}
+              </TabButton>
+              <TabButton
+                onClick={() => setSelectedTab("testnet")}
+                data-active={selectedTab === "testnet"}
+              >
+                {locale.testnets}
+              </TabButton>
+            </Container>
+          </Container>
+          <Spacer y="lg" />
+        </>
+      )}
+
+      {props.showTabs === false && <Spacer y="xxs" />}
+
       <Container px="lg">
         {/* Search */}
         <div
@@ -496,6 +501,12 @@ const NetworkTabContent = (props: {
   const locale = useTWLocale().connectWallet.networkSelector.categoryLabel;
 
   const { recentChainIds, popularChainIds, allChainIds } = props;
+
+  const noChainsToShow =
+    recentChainIds?.length === 0 &&
+    popularChainIds?.length === 0 &&
+    allChainIds.length === 0;
+
   return (
     <Container
       scrollY
@@ -548,6 +559,14 @@ const NetworkTabContent = (props: {
         renderChain={props.renderChain}
         close={props.close}
       />
+
+      {noChainsToShow && (
+        <Container flex="column" gap="md" center="both" color="secondaryText">
+          <Spacer y="xl" />
+          <CrossCircledIcon width={iconSize.xl} height={iconSize.xl} />
+          <Text> No Results </Text>
+        </Container>
+      )}
     </Container>
   );
 };
@@ -624,7 +643,7 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(
               <ChainButton
                 chain={chain}
                 confirming={confirming}
-                handleSwitch={handleSwitch}
+                onClick={() => handleSwitch(chain)}
                 switchingFailed={switchingFailed}
               />
             )}
@@ -635,15 +654,15 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(
   );
 } as React.FC<NetworkListProps>);
 
-const ChainButton = /* @__PURE__ */ memo(function ChainButton(props: {
+export const ChainButton = /* @__PURE__ */ memo(function ChainButton(props: {
   chain: Chain;
-  handleSwitch: (chain: Chain) => void;
+  onClick: () => void;
   confirming: boolean;
   switchingFailed: boolean;
 }) {
   const twLocale = useTWLocale();
   const locale = twLocale.connectWallet.networkSelector;
-  const { chain, handleSwitch, confirming, switchingFailed } = props;
+  const { chain, confirming, switchingFailed } = props;
   const activeChain = useActiveWalletChain();
   const apiChainQuery = useChainQuery(chain);
 
@@ -655,9 +674,7 @@ const ChainButton = /* @__PURE__ */ memo(function ChainButton(props: {
   return (
     <NetworkButton
       data-active={activeChain?.id === chain.id}
-      onClick={() => {
-        handleSwitch(chain);
-      }}
+      onClick={props.onClick}
     >
       {apiChainQuery.data ? (
         <ChainIcon

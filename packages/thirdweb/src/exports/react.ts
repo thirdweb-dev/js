@@ -1,8 +1,3 @@
-export {
-  ThirdwebProvider,
-  type ThirdwebProviderProps,
-} from "../react/web/providers/thirdweb-provider.js";
-
 export { darkTheme, lightTheme } from "../react/web/ui/design-system/index.js";
 export type {
   Theme,
@@ -22,27 +17,34 @@ export type {
   ConnectButton_detailsButtonOptions,
   ConnectButton_detailsModalOptions,
 } from "../react/web/ui/ConnectWallet/ConnectWalletProps.js";
-export type { WelcomeScreen } from "../react/web/ui/ConnectWallet/screens/types.js";
 export type { NetworkSelectorProps } from "../react/web/ui/ConnectWallet/NetworkSelector.js";
+export type { WelcomeScreen } from "../react/web/ui/ConnectWallet/screens/types.js";
 
 export {
   TransactionButton,
   type TransactionButtonProps,
 } from "../react/web/ui/TransactionButton/index.js";
 
-export { MediaRenderer } from "../react/web/ui/MediaRenderer/MediaRenderer.js";
-export type { MediaRendererProps } from "../react/web/ui/MediaRenderer/types.js";
+export {
+  ThirdwebProvider,
+  type ThirdwebProviderProps,
+} from "../react/web/providers/thirdweb-provider.js";
 
+// tokens
 export type { SupportedTokens } from "../react/web/ui/ConnectWallet/defaultTokens.js";
 export { defaultTokens } from "../react/web/ui/ConnectWallet/defaultTokens.js";
-
 export { defaultWallets } from "../react/web/wallets/defaultWallets.js";
 
+// locale
 export { en } from "../react/web/ui/locales/en.js";
 export { es } from "../react/web/ui/locales/es.js";
 export { ja } from "../react/web/ui/locales/ja.js";
 export { tl } from "../react/web/ui/locales/tl.js";
 export type { ThirdwebLocale } from "../react/web/ui/locales/types.js";
+
+// Media Renderer
+export { MediaRenderer } from "../react/web/ui/MediaRenderer/MediaRenderer.js";
+export type { MediaRendererProps } from "../react/web/ui/MediaRenderer/types.js";
 
 // wallets
 export {
@@ -87,8 +89,8 @@ export {
 export type { EmbeddedWalletAuth } from "../react/web/wallets/embedded/types.js";
 
 export {
-  type LocalWalletConfigOptions,
   localWalletConfig,
+  type LocalWalletConfigOptions,
 } from "../react/web/wallets/local/localWalletConfig.js";
 
 // react/core
@@ -123,16 +125,16 @@ export {
 export { createContractQuery } from "../react/core/utils/createQuery.js";
 export { useInvalidateContractQuery } from "../react/core/hooks/others/useInvalidateQueries.js";
 
-export { useSendSwap } from "../react/core/hooks/pay/useSendSwap.js";
-
+// Buy with crypto
 export {
-  useSwapRoute,
-  type SwapRoute,
-  type SwapRouteParams,
-} from "../react/core/hooks/pay/useSwapRoute.js";
-
+  useBuyWithCryptoQuote,
+  type BuyWithCryptoQuoteQueryParams,
+} from "../react/core/hooks/pay/useBuyWithCryptoQuote.js";
 export {
-  useSwapStatus,
-  type SwapStatus,
-  type SwapStatusParams,
-} from "../react/core/hooks/pay/useSwapStatus.js";
+  useBuyWithCryptoStatus,
+  type BuyWithCryptoStatusQueryParams,
+} from "../react/core/hooks/pay/useBuyWithCryptoStatus.js";
+export {
+  useBuyWithCryptoHistory,
+  type BuyWithCryptoHistoryQueryParams,
+} from "../react/core/hooks/pay/useBuyWithCryptoHistory.js";

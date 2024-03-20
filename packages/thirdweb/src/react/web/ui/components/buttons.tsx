@@ -67,6 +67,15 @@ export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
     "&[disabled]": {
       cursor: "not-allowed",
     },
+    "&[data-disabled='true']": {
+      background: theme.colors.walletSelectorButtonHoverBg,
+      color: theme.colors.secondaryText,
+      borderColor: "transparent",
+      boxShadow: "none",
+      "&:hover": {
+        borderColor: "transparent",
+      },
+    },
     ...(() => {
       if (props.variant === "outline") {
         return {

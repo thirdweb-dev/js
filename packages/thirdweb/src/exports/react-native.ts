@@ -35,16 +35,16 @@ export {
 export { createContractQuery } from "../react/core/utils/createQuery.js";
 export { useInvalidateContractQuery } from "../react/core/hooks/others/useInvalidateQueries.js";
 
-export { useSendSwap } from "../react/core/hooks/pay/useSendSwap.js";
-
+// Buy with crypto
 export {
-  useSwapRoute,
-  type SwapRoute,
-  type SwapRouteParams,
-} from "../react/core/hooks/pay/useSwapRoute.js";
-
+  useBuyWithCryptoQuote,
+  type BuyWithCryptoQuoteQueryParams,
+} from "../react/core/hooks/pay/useBuyWithCryptoQuote.js";
 export {
-  useSwapStatus,
-  type SwapStatus,
-  type SwapStatusParams,
-} from "../react/core/hooks/pay/useSwapStatus.js";
+  useBuyWithCryptoStatus,
+  type BuyWithCryptoStatusQueryParams,
+} from "../react/core/hooks/pay/useBuyWithCryptoStatus.js";
+export {
+  useBuyWithCryptoHistory,
+  type BuyWithCryptoHistoryQueryParams,
+} from "../react/core/hooks/pay/useBuyWithCryptoHistory.js";
