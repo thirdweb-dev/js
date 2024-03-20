@@ -6,6 +6,7 @@ import type { Chain } from "../../../../../../chains/types.js";
 import { defineChain } from "../../../../../../chains/utils.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../constants/addresses.js";
 import { fallbackSwapSupportedChainIds } from "../../../../../../pay/buyWithCrypto/supportedChains.js";
+import { getPayChainsEndpoint } from "../../../../../../pay/buyWithCrypto/utils/definitions.js";
 import { getClientFetch } from "../../../../../../utils/fetch.js";
 import type { Account } from "../../../../../../wallets/interfaces/wallet.js";
 import { useChainsQuery } from "../../../../../core/hooks/others/useChainQuery.js";
@@ -21,10 +22,12 @@ import {
   useSwitchActiveWalletChain,
 } from "../../../../../core/hooks/wallets/wallet-hooks.js";
 import { Spacer } from "../../../components/Spacer.js";
+import { Spinner } from "../../../components/Spinner.js";
 import { Container, Line, ModalHeader } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
 import { iconSize } from "../../../design-system/index.js";
+import { useDebouncedValue } from "../../../hooks/useDebouncedValue.js";
 import { ChainButton, NetworkSelectorContent } from "../../NetworkSelector.js";
 import type { SupportedTokens } from "../../defaultTokens.js";
 import { TokenSelector } from "../TokenSelector.js";
@@ -38,8 +41,6 @@ import { BuyTokenInput } from "./swap/BuyTokenInput.js";
 import { ConfirmationScreen } from "./swap/ConfirmationScreen.js";
 import { PayWithCrypto } from "./swap/PayWithCrypto.js";
 import { SwapFees } from "./swap/SwapFees.js";
-import { Spinner } from "../../../components/Spinner.js";
-import { useDebouncedValue } from "../../../hooks/useDebouncedValue.js";
 
 const fallbackSupportedChains = /* @__PURE__ */ (() =>
   fallbackSwapSupportedChainIds.map(defineChain))();
@@ -96,7 +97,7 @@ export function SwapScreenContent(props: {
     queryKey: ["swapSupportedChains", client],
     queryFn: async () => {
       const fetchWithHeaders = getClientFetch(client);
-      const res = await fetchWithHeaders("https://pay.thirdweb-dev.com/chains");
+      const res = await fetchWithHeaders(getPayChainsEndpoint());
       const data = await res.json();
       const chainIds = data.result.chainIds as number[];
       return chainIds.map(defineChain);

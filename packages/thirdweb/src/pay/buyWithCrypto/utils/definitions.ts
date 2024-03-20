@@ -22,3 +22,6 @@ export const getPayQuoteEndpoint = () =>
  */
 export const getPaySwapHistoryEndpoint = () =>
   `https://${getThirdwebDomains().pay}/buy-with-crypto/history/v1`;
+
+export const getPayChainsEndpoint = () =>
+  `https://${getThirdwebDomains().pay}/chains`;
