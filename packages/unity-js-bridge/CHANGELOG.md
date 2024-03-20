@@ -1,5 +1,19 @@
 # @thirdweb-dev/unity-js-bridge
 
+## 0.4.11
+
+### Patch Changes
+
+- [#2498](https://github.com/thirdweb-dev/js/pull/2498) [`112863e`](https://github.com/thirdweb-dev/js/commit/112863ecce0a0264267e716e9a32a9a3437524d9) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Unity 4.7.10
+
+- [#2494](https://github.com/thirdweb-dev/js/pull/2494) [`e36ebe2`](https://github.com/thirdweb-dev/js/commit/e36ebe224390e20b2bfd729930afac80108c535d) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [Unity] Resolve & Reverse Resolve ENS WebGL
+
+- Updated dependencies [[`863049d`](https://github.com/thirdweb-dev/js/commit/863049dc0ca989d2654b4aacba811263931a33fe), [`802ba8c`](https://github.com/thirdweb-dev/js/commit/802ba8c5a980d3bddd308f9b3d14cc9cbb5453d5), [`863049d`](https://github.com/thirdweb-dev/js/commit/863049dc0ca989d2654b4aacba811263931a33fe), [`8a20aa5`](https://github.com/thirdweb-dev/js/commit/8a20aa58259edc5bac578dc5e4f4d971ed7adf36), [`c479277`](https://github.com/thirdweb-dev/js/commit/c47927708aa8e8ff42f40c4f740a859ec090ec70)]:
+  - @thirdweb-dev/chains@0.1.81
+  - @thirdweb-dev/wallets@2.4.23
+  - @thirdweb-dev/sdk@4.0.48
+  - @thirdweb-dev/auth@4.1.45
+
 ## 0.4.10
 
 ### Patch Changes
