@@ -17,7 +17,7 @@ import { getPayBuyWithCryptoQuoteEndpoint } from "../utils/definitions.js";
  * The parameters for [`getBuyWithCryptoQuote`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoQuote) function
  * It includes information about which tokens to swap, the amount of tokens to swap, slippage, etc.
  */
-export type getBuyWithCryptoQuoteParams = {
+export type GetBuyWithCryptoQuoteParams = {
   /**
    * A client is the entry point to the thirdweb SDK. It is required for all other actions.
    *
@@ -216,7 +216,7 @@ export type BuyWithCryptoQuote = {
  * ```
  */
 export async function getBuyWithCryptoQuote(
-  params: getBuyWithCryptoQuoteParams,
+  params: GetBuyWithCryptoQuoteParams,
 ): Promise<BuyWithCryptoQuote> {
   try {
     const urlParamsObj: Record<string, string> = {
