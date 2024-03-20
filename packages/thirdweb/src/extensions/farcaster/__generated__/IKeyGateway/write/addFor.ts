@@ -1,7 +1,8 @@
+import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { AbiParameterToPrimitiveType } from "abitype";
 import type { Prettify } from "../../../../../utils/type-utils.js";
+import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "addFor" function.
@@ -26,6 +27,70 @@ export type AddForParams = Prettify<
       asyncParams: () => Promise<AddForParamsInternal>;
     }
 >;
+const FN_SELECTOR = "0xa005d3d2" as const;
+const FN_INPUTS = [
+  {
+    type: "address",
+    name: "fidOwner",
+  },
+  {
+    type: "uint32",
+    name: "keyType",
+  },
+  {
+    type: "bytes",
+    name: "key",
+  },
+  {
+    type: "uint8",
+    name: "metadataType",
+  },
+  {
+    type: "bytes",
+    name: "metadata",
+  },
+  {
+    type: "uint256",
+    name: "deadline",
+  },
+  {
+    type: "bytes",
+    name: "sig",
+  },
+] as const;
+const FN_OUTPUTS = [] as const;
+
+/**
+ * Encodes the parameters for the "addFor" function.
+ * @param options - The options for the addFor function.
+ * @returns The encoded ABI parameters.
+ * @extension FARCASTER
+ * @example
+ * ```
+ * import { encodeAddForParams } "thirdweb/extensions/farcaster";
+ * const result = encodeAddForParams({
+ *  fidOwner: ...,
+ *  keyType: ...,
+ *  key: ...,
+ *  metadataType: ...,
+ *  metadata: ...,
+ *  deadline: ...,
+ *  sig: ...,
+ * });
+ * ```
+ */
+export function encodeAddForParams(options: AddForParamsInternal) {
+  return encodeAbiParameters(FN_INPUTS, [
+    options.fidOwner,
+    options.keyType,
+    options.key,
+    options.metadataType,
+    options.metadata,
+    options.deadline,
+    options.sig,
+  ]);
+}
+
 /**
  * Calls the "addFor" function on the contract.
  * @param options - The options for the "addFor" function.
@@ -53,40 +118,7 @@ export type AddForParams = Prettify<
 export function addFor(options: BaseTransactionOptions<AddForParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0xa005d3d2",
-      [
-        {
-          type: "address",
-          name: "fidOwner",
-        },
-        {
-          type: "uint32",
-          name: "keyType",
-        },
-        {
-          type: "bytes",
-          name: "key",
-        },
-        {
-          type: "uint8",
-          name: "metadataType",
-        },
-        {
-          type: "bytes",
-          name: "metadata",
-        },
-        {
-          type: "uint256",
-          name: "deadline",
-        },
-        {
-          type: "bytes",
-          name: "sig",
-        },
-      ],
-      [],
-    ],
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params:
       "asyncParams" in options
         ? async () => {

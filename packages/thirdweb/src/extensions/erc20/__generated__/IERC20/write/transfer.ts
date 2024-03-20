@@ -1,7 +1,8 @@
+import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { AbiParameterToPrimitiveType } from "abitype";
 import type { Prettify } from "../../../../../utils/type-utils.js";
+import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "transfer" function.
@@ -18,6 +19,41 @@ export type TransferParams = Prettify<
       asyncParams: () => Promise<TransferParamsInternal>;
     }
 >;
+const FN_SELECTOR = "0xa9059cbb" as const;
+const FN_INPUTS = [
+  {
+    type: "address",
+    name: "to",
+  },
+  {
+    type: "uint256",
+    name: "value",
+  },
+] as const;
+const FN_OUTPUTS = [
+  {
+    type: "bool",
+  },
+] as const;
+
+/**
+ * Encodes the parameters for the "transfer" function.
+ * @param options - The options for the transfer function.
+ * @returns The encoded ABI parameters.
+ * @extension ERC20
+ * @example
+ * ```
+ * import { encodeTransferParams } "thirdweb/extensions/erc20";
+ * const result = encodeTransferParams({
+ *  to: ...,
+ *  value: ...,
+ * });
+ * ```
+ */
+export function encodeTransferParams(options: TransferParamsInternal) {
+  return encodeAbiParameters(FN_INPUTS, [options.to, options.value]);
+}
+
 /**
  * Calls the "transfer" function on the contract.
  * @param options - The options for the "transfer" function.
@@ -40,24 +76,7 @@ export type TransferParams = Prettify<
 export function transfer(options: BaseTransactionOptions<TransferParams>) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0xa9059cbb",
-      [
-        {
-          type: "address",
-          name: "to",
-        },
-        {
-          type: "uint256",
-          name: "value",
-        },
-      ],
-      [
-        {
-          type: "bool",
-        },
-      ],
-    ],
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params:
       "asyncParams" in options
         ? async () => {

@@ -1,6 +1,9 @@
+import type { AbiParameterToPrimitiveType } from "abitype";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
-import type { AbiParameterToPrimitiveType } from "abitype";
+import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { decodeAbiParameters } from "viem";
+import type { Hex } from "../../../../../utils/encoding/hex.js";
 
 /**
  * Represents the parameters for the "getRoleMemberCount" function.
@@ -8,6 +11,53 @@ import type { AbiParameterToPrimitiveType } from "abitype";
 export type GetRoleMemberCountParams = {
   role: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "role" }>;
 };
+
+const FN_SELECTOR = "0xca15c873" as const;
+const FN_INPUTS = [
+  {
+    type: "bytes32",
+    name: "role",
+  },
+] as const;
+const FN_OUTPUTS = [
+  {
+    type: "uint256",
+  },
+] as const;
+
+/**
+ * Encodes the parameters for the "getRoleMemberCount" function.
+ * @param options - The options for the getRoleMemberCount function.
+ * @returns The encoded ABI parameters.
+ * @extension COMMON
+ * @example
+ * ```
+ * import { encodeGetRoleMemberCountParams } "thirdweb/extensions/common";
+ * const result = encodeGetRoleMemberCountParams({
+ *  role: ...,
+ * });
+ * ```
+ */
+export function encodeGetRoleMemberCountParams(
+  options: GetRoleMemberCountParams,
+) {
+  return encodeAbiParameters(FN_INPUTS, [options.role]);
+}
+
+/**
+ * Decodes the result of the getRoleMemberCount function call.
+ * @param result - The hexadecimal result to decode.
+ * @returns The decoded result as per the FN_OUTPUTS definition.
+ * @extension COMMON
+ * @example
+ * ```
+ * import { decodeGetRoleMemberCountResult } from "thirdweb/extensions/common";
+ * const result = decodeGetRoleMemberCountResult("...");
+ * ```
+ */
+export function decodeGetRoleMemberCountResult(result: Hex) {
+  return decodeAbiParameters(FN_OUTPUTS, result)[0];
+}
 
 /**
  * Calls the "getRoleMemberCount" function on the contract.
@@ -29,20 +79,7 @@ export async function getRoleMemberCount(
 ) {
   return readContract({
     contract: options.contract,
-    method: [
-      "0xca15c873",
-      [
-        {
-          type: "bytes32",
-          name: "role",
-        },
-      ],
-      [
-        {
-          type: "uint256",
-        },
-      ],
-    ],
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params: [options.role],
   });
 }

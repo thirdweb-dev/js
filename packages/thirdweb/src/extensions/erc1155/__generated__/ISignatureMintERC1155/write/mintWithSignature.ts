@@ -1,7 +1,8 @@
+import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { AbiParameterToPrimitiveType } from "abitype";
 import type { Prettify } from "../../../../../utils/type-utils.js";
+import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "mintWithSignature" function.
@@ -35,6 +36,94 @@ export type MintWithSignatureParams = Prettify<
       asyncParams: () => Promise<MintWithSignatureParamsInternal>;
     }
 >;
+const FN_SELECTOR = "0x98a6e993" as const;
+const FN_INPUTS = [
+  {
+    type: "tuple",
+    name: "req",
+    components: [
+      {
+        type: "address",
+        name: "to",
+      },
+      {
+        type: "address",
+        name: "royaltyRecipient",
+      },
+      {
+        type: "uint256",
+        name: "royaltyBps",
+      },
+      {
+        type: "address",
+        name: "primarySaleRecipient",
+      },
+      {
+        type: "uint256",
+        name: "tokenId",
+      },
+      {
+        type: "string",
+        name: "uri",
+      },
+      {
+        type: "uint256",
+        name: "quantity",
+      },
+      {
+        type: "uint256",
+        name: "pricePerToken",
+      },
+      {
+        type: "address",
+        name: "currency",
+      },
+      {
+        type: "uint128",
+        name: "validityStartTimestamp",
+      },
+      {
+        type: "uint128",
+        name: "validityEndTimestamp",
+      },
+      {
+        type: "bytes32",
+        name: "uid",
+      },
+    ],
+  },
+  {
+    type: "bytes",
+    name: "signature",
+  },
+] as const;
+const FN_OUTPUTS = [
+  {
+    type: "address",
+    name: "signer",
+  },
+] as const;
+
+/**
+ * Encodes the parameters for the "mintWithSignature" function.
+ * @param options - The options for the mintWithSignature function.
+ * @returns The encoded ABI parameters.
+ * @extension ERC1155
+ * @example
+ * ```
+ * import { encodeMintWithSignatureParams } "thirdweb/extensions/erc1155";
+ * const result = encodeMintWithSignatureParams({
+ *  req: ...,
+ *  signature: ...,
+ * });
+ * ```
+ */
+export function encodeMintWithSignatureParams(
+  options: MintWithSignatureParamsInternal,
+) {
+  return encodeAbiParameters(FN_INPUTS, [options.req, options.signature]);
+}
+
 /**
  * Calls the "mintWithSignature" function on the contract.
  * @param options - The options for the "mintWithSignature" function.
@@ -59,75 +148,7 @@ export function mintWithSignature(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0x98a6e993",
-      [
-        {
-          type: "tuple",
-          name: "req",
-          components: [
-            {
-              type: "address",
-              name: "to",
-            },
-            {
-              type: "address",
-              name: "royaltyRecipient",
-            },
-            {
-              type: "uint256",
-              name: "royaltyBps",
-            },
-            {
-              type: "address",
-              name: "primarySaleRecipient",
-            },
-            {
-              type: "uint256",
-              name: "tokenId",
-            },
-            {
-              type: "string",
-              name: "uri",
-            },
-            {
-              type: "uint256",
-              name: "quantity",
-            },
-            {
-              type: "uint256",
-              name: "pricePerToken",
-            },
-            {
-              type: "address",
-              name: "currency",
-            },
-            {
-              type: "uint128",
-              name: "validityStartTimestamp",
-            },
-            {
-              type: "uint128",
-              name: "validityEndTimestamp",
-            },
-            {
-              type: "bytes32",
-              name: "uid",
-            },
-          ],
-        },
-        {
-          type: "bytes",
-          name: "signature",
-        },
-      ],
-      [
-        {
-          type: "address",
-          name: "signer",
-        },
-      ],
-    ],
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params:
       "asyncParams" in options
         ? async () => {

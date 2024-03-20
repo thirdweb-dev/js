@@ -1,7 +1,8 @@
+import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { AbiParameterToPrimitiveType } from "abitype";
 import type { Prettify } from "../../../../../utils/type-utils.js";
+import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "onERC1155BatchReceived" function.
@@ -21,6 +22,64 @@ export type OnERC1155BatchReceivedParams = Prettify<
       asyncParams: () => Promise<OnERC1155BatchReceivedParamsInternal>;
     }
 >;
+const FN_SELECTOR = "0xbc197c81" as const;
+const FN_INPUTS = [
+  {
+    type: "address",
+    name: "operator",
+  },
+  {
+    type: "address",
+    name: "from",
+  },
+  {
+    type: "uint256[]",
+    name: "ids",
+  },
+  {
+    type: "uint256[]",
+    name: "values",
+  },
+  {
+    type: "bytes",
+    name: "data",
+  },
+] as const;
+const FN_OUTPUTS = [
+  {
+    type: "bytes4",
+  },
+] as const;
+
+/**
+ * Encodes the parameters for the "onERC1155BatchReceived" function.
+ * @param options - The options for the onERC1155BatchReceived function.
+ * @returns The encoded ABI parameters.
+ * @extension ERC1155
+ * @example
+ * ```
+ * import { encodeOnERC1155BatchReceivedParams } "thirdweb/extensions/erc1155";
+ * const result = encodeOnERC1155BatchReceivedParams({
+ *  operator: ...,
+ *  from: ...,
+ *  ids: ...,
+ *  values: ...,
+ *  data: ...,
+ * });
+ * ```
+ */
+export function encodeOnERC1155BatchReceivedParams(
+  options: OnERC1155BatchReceivedParamsInternal,
+) {
+  return encodeAbiParameters(FN_INPUTS, [
+    options.operator,
+    options.from,
+    options.ids,
+    options.values,
+    options.data,
+  ]);
+}
+
 /**
  * Calls the "onERC1155BatchReceived" function on the contract.
  * @param options - The options for the "onERC1155BatchReceived" function.
@@ -48,36 +107,7 @@ export function onERC1155BatchReceived(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0xbc197c81",
-      [
-        {
-          type: "address",
-          name: "operator",
-        },
-        {
-          type: "address",
-          name: "from",
-        },
-        {
-          type: "uint256[]",
-          name: "ids",
-        },
-        {
-          type: "uint256[]",
-          name: "values",
-        },
-        {
-          type: "bytes",
-          name: "data",
-        },
-      ],
-      [
-        {
-          type: "bytes4",
-        },
-      ],
-    ],
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params:
       "asyncParams" in options
         ? async () => {

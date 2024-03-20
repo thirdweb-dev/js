@@ -1,7 +1,8 @@
+import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { AbiParameterToPrimitiveType } from "abitype";
 import type { Prettify } from "../../../../../utils/type-utils.js";
+import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "quoteExactInputSingle" function.
@@ -24,6 +25,65 @@ export type QuoteExactInputSingleParams = Prettify<
       asyncParams: () => Promise<QuoteExactInputSingleParamsInternal>;
     }
 >;
+const FN_SELECTOR = "0xf7729d43" as const;
+const FN_INPUTS = [
+  {
+    type: "address",
+    name: "tokenIn",
+  },
+  {
+    type: "address",
+    name: "tokenOut",
+  },
+  {
+    type: "uint24",
+    name: "fee",
+  },
+  {
+    type: "uint256",
+    name: "amountIn",
+  },
+  {
+    type: "uint160",
+    name: "sqrtPriceLimitX96",
+  },
+] as const;
+const FN_OUTPUTS = [
+  {
+    type: "uint256",
+    name: "amountOut",
+  },
+] as const;
+
+/**
+ * Encodes the parameters for the "quoteExactInputSingle" function.
+ * @param options - The options for the quoteExactInputSingle function.
+ * @returns The encoded ABI parameters.
+ * @extension UNISWAP
+ * @example
+ * ```
+ * import { encodeQuoteExactInputSingleParams } "thirdweb/extensions/uniswap";
+ * const result = encodeQuoteExactInputSingleParams({
+ *  tokenIn: ...,
+ *  tokenOut: ...,
+ *  fee: ...,
+ *  amountIn: ...,
+ *  sqrtPriceLimitX96: ...,
+ * });
+ * ```
+ */
+export function encodeQuoteExactInputSingleParams(
+  options: QuoteExactInputSingleParamsInternal,
+) {
+  return encodeAbiParameters(FN_INPUTS, [
+    options.tokenIn,
+    options.tokenOut,
+    options.fee,
+    options.amountIn,
+    options.sqrtPriceLimitX96,
+  ]);
+}
+
 /**
  * Calls the "quoteExactInputSingle" function on the contract.
  * @param options - The options for the "quoteExactInputSingle" function.
@@ -51,37 +111,7 @@ export function quoteExactInputSingle(
 ) {
   return prepareContractCall({
     contract: options.contract,
-    method: [
-      "0xf7729d43",
-      [
-        {
-          type: "address",
-          name: "tokenIn",
-        },
-        {
-          type: "address",
-          name: "tokenOut",
-        },
-        {
-          type: "uint24",
-          name: "fee",
-        },
-        {
-          type: "uint256",
-          name: "amountIn",
-        },
-        {
-          type: "uint160",
-          name: "sqrtPriceLimitX96",
-        },
-      ],
-      [
-        {
-          type: "uint256",
-          name: "amountOut",
-        },
-      ],
-    ],
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params:
       "asyncParams" in options
         ? async () => {
