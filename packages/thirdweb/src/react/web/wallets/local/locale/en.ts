@@ -1,4 +1,6 @@
-const localWalletLocaleEn = {
+import type { LocalWalletLocale } from "./types.js";
+
+const localWalletLocaleEn: LocalWalletLocale = {
   passwordLabel: "Password",
   confirmPasswordLabel: "Confirm Password",
   enterYourPassword: "Enter your password",
