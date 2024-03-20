@@ -183,7 +183,7 @@
     "mipd": "0.0.5",
     "node-libs-browser": "2.2.1",
     "uqr": "0.1.2",
-    "viem": "2.7.19"
+    "viem": "2.8.14"
   },
   "peerDependencies": {
     "ethers": "^5 || ^6",

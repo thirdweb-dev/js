@@ -418,9 +418,6 @@ async function alignTxFromEthers(
     accessList,
     chainId: ethersChainId,
     to: ethersTo,
-    // unused here on purpose
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    from,
     data,
     nonce,
     value,
@@ -428,54 +425,69 @@ async function alignTxFromEthers(
     gasLimit,
     maxFeePerGas,
     maxPriorityFeePerGas,
-    ...rest
   } = tx;
   let chainId: number | undefined;
   if (ethersChainId) {
     chainId = normalizeChainId(ethersChainId);
   }
 
-  // massage "type" to fit ethers
-  let type: string;
-  switch (ethersType) {
-    case 0: {
-      type = "legacy";
-      break;
-    }
-    case 1: {
-      type = "eip2930";
-      break;
-    }
-    case 2: {
-      type = "eip1559";
-      break;
-    }
-    default: {
-      // fall back to legacy
-      type = "legacy";
-      break;
-    }
-  }
-
   const to = await resolveEthers6Address(ethersTo);
 
-  return {
-    ...rest,
-    // access list is the same values just strictly typed
-    accessList: accessList as AccessList,
-    chainId,
-    type,
-    to,
-    data: (data ?? undefined) as Hex | undefined,
-    nonce: nonce ?? undefined,
-    value: value ? bigNumberIshToBigint(value) : undefined,
-    gasPrice: gasPrice ? bigNumberIshToBigint(gasPrice) : undefined,
-    gas: gasLimit ? bigNumberIshToBigint(gasLimit) : undefined,
-    maxFeePerGas: maxFeePerGas ? bigNumberIshToBigint(maxFeePerGas) : undefined,
-    maxPriorityFeePerGas: maxPriorityFeePerGas
-      ? bigNumberIshToBigint(maxPriorityFeePerGas)
-      : undefined,
-  };
+  // massage "type" to fit ethers
+  switch (ethersType) {
+    case 1: {
+      if (!chainId) {
+        throw new Error("ChainId is required for EIP-2930 transactions");
+      }
+      return {
+        type: "eip2930",
+
+        chainId,
+        accessList: accessList as AccessList,
+        to,
+        data: (data ?? undefined) as Hex | undefined,
+        gasPrice: gasPrice ? bigNumberIshToBigint(gasPrice) : undefined,
+        gas: gasLimit ? bigNumberIshToBigint(gasLimit) : undefined,
+        nonce: nonce ?? undefined,
+        value: value ? bigNumberIshToBigint(value) : undefined,
+      };
+    }
+    case 2: {
+      if (!chainId) {
+        throw new Error("ChainId is required for EIP-1559 transactions");
+      }
+      return {
+        type: "eip1559",
+        chainId,
+        accessList: accessList as AccessList,
+        to,
+        data: (data ?? undefined) as Hex | undefined,
+        gas: gasLimit ? bigNumberIshToBigint(gasLimit) : undefined,
+        nonce: nonce ?? undefined,
+        value: value ? bigNumberIshToBigint(value) : undefined,
+        maxFeePerGas: maxFeePerGas
+          ? bigNumberIshToBigint(maxFeePerGas)
+          : undefined,
+        maxPriorityFeePerGas: maxPriorityFeePerGas
+          ? bigNumberIshToBigint(maxPriorityFeePerGas)
+          : undefined,
+      };
+    }
+    case 0:
+    default: {
+      // fall back to legacy
+      return {
+        type: "legacy",
+        chainId,
+        to,
+        data: (data ?? undefined) as Hex | undefined,
+        nonce: nonce ?? undefined,
+        value: value ? bigNumberIshToBigint(value) : undefined,
+        gasPrice: gasPrice ? bigNumberIshToBigint(gasPrice) : undefined,
+        gas: gasLimit ? bigNumberIshToBigint(gasLimit) : undefined,
+      };
+    }
+  }
 }
 
 async function resolveEthers6Address(
