@@ -130,3 +130,5 @@ export {
   type SwapStatus,
   type SwapStatusParams,
 } from "../react/core/hooks/pay/useSwapStatus.js";
+
+export type { UILocale } from "../react/web/ui/types.js";

@@ -52,6 +52,7 @@ export function ConnectButton(props: ConnectButtonProps) {
         appMetadata: props.appMetadata,
         client: props.client,
         wallets: wallets,
+        locale: props.locale || "en-US",
       }}
     >
       <WalletUIStatesProvider theme="dark">

@@ -63,6 +63,13 @@ export type WalletConfig = {
    * providing the `personalWalletConfigs` ensures that auto connect will connect the last connected personal wallet first and then connect this wallet
    */
   personalWalletConfigs?: WalletConfig[];
+
+  /**
+   * Prefetch data required for this wallet.
+   * This is useful if wallet UI uses dynamic imports to fetch certain data and calling this function will prefetch that data to make the wallet UI load faster
+   * @returns
+   */
+  prefetch?: () => void;
 };
 
 /**

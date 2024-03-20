@@ -4,6 +4,7 @@ import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
 import type { WalletConfig } from "../../../core/types/wallets.js";
 import type { Theme } from "../design-system/index.js";
+import type { UILocale } from "../types.js";
 import type { NetworkSelectorProps } from "./NetworkSelector.js";
 import type { SupportedTokens } from "./defaultTokens.js";
 import type { WelcomeScreen } from "./screens/types.js";
@@ -284,6 +285,15 @@ export type ConnectButtonProps = {
    * ```
    */
   client: ThirdwebClient;
+
+  /**
+   * By default - ConnectButton UI uses the `en-US` locale for english language users.
+   *
+   * You can customize the language used in the ConnectButton UI by setting the `locale` prop.
+   *
+   * Refer to the [`UILocale`](https://portal.thirdweb.com/references/typescript/v5/UILocale) type for supported locales.
+   */
+  locale?: UILocale;
 
   /**
    * Array of supported wallets. If not provided, default wallets will be used.
