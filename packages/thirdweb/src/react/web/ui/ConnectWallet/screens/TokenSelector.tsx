@@ -92,7 +92,7 @@ export function TokenSelector(props: {
         />
       </Container>
 
-      {(filteredList.length > 0 || !input) && !tokenQuery.isLoading && (
+      {(filteredList.length > 0 || !input) && (
         <Container
           flex="column"
           gap="xs"
@@ -127,8 +127,7 @@ export function TokenSelector(props: {
         </Container>
       )}
 
-      {(findingToken ||
-        (filteredList.length === 0 && tokenQuery.isLoading)) && (
+      {filteredList.length === 0 && tokenQuery.isLoading && (
         <Container
           animate="fadein"
           p="lg"
