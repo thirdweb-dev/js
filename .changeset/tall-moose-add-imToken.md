@@ -3,4 +3,4 @@
 "@thirdweb-dev/react": patch
 ---
 
-[Wallets/React] Add imToken Wallet
+Add imToken Wallet
