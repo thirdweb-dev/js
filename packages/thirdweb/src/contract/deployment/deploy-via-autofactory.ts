@@ -7,7 +7,7 @@ import { keccakId } from "../../utils/any-evm/keccak-id.js";
 import { toHex } from "../../utils/encoding/hex.js";
 import type { ThirdwebContract } from "../contract.js";
 import { deployProxyByImplementation } from "../../extensions/thirdweb/__generated__/IContractFactory/write/deployProxyByImplementation.js";
-import { getDeployedImplementationContract } from "./utils/implementations.js";
+import { getDeployedInfraContract } from "./utils/infra.js";
 
 /**
  * @internal
@@ -26,11 +26,13 @@ export function prepareAutoFactoryDeployTransaction(
     contract: args.cloneFactoryContract,
     async asyncParams() {
       // check if the implementation is deployed
-      const implementationContract = await getDeployedImplementationContract({
+      const implementationContract = await getDeployedInfraContract({
         chain: args.chain,
         client: args.client,
         contractId: args.contractMetadata.compilerMetadata.name,
         constructorParams: [], // TODO either infer this, or pass it in
+        publisher: args.contractMetadata.extendedMetadata?.publisher,
+        version: args.contractMetadata.extendedMetadata?.version,
       });
 
       if (!implementationContract) {

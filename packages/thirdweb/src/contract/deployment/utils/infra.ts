@@ -11,12 +11,16 @@ export type InfraContractId =
   | "WETH9"
   | "Forwarder"
   | "ForwarderEOAOnly"
-  | "TWCloneFactory";
+  | "TWCloneFactory"
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  | (string & {});
 
 export type GetDeployedInfraParams = Prettify<
   ClientAndChain & {
     contractId: InfraContractId;
     constructorParams: unknown[];
+    publisher?: string;
+    version?: string;
   }
 >;
 
