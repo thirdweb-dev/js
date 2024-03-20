@@ -23,5 +23,9 @@ export const getPayBuyWithCryptoQuoteEndpoint = () =>
 export const getPayBuyWithCryptoHistoryEndpoint = () =>
   `https://${getThirdwebDomains().pay}/buy-with-crypto/history/v1`;
 
+/**
+ * Constructs the endpoint to get the pay endpoint
+ * @internal
+ */
 export const getPayChainsEndpoint = () =>
   `https://${getThirdwebDomains().pay}/chains`;

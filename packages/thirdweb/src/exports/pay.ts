@@ -3,7 +3,7 @@ export {
   type BuyWithCryptoQuote,
   type QuoteApprovalParams,
   type QuoteTokenInfo,
-  type getBuyWithCryptoQuoteParams,
+  type GetBuyWithCryptoQuoteParams,
 } from "../pay/buyWithCrypto/actions/getQuote.js";
 
 export {
@@ -15,6 +15,6 @@ export {
 
 export {
   getBuyWithCryptoHistory,
-  type WalletBuyWithCryptoHistoryData,
-  type WalletBuyWithCryptoHistoryParams,
+  type BuyWithCryptoHistoryData,
+  type BuyWithCryptoHistoryParams,
 } from "../pay/buyWithCrypto/actions/getHistory.js";

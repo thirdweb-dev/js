@@ -6,17 +6,17 @@ import {
 import { useContext } from "react";
 import {
   getBuyWithCryptoHistory,
-  type WalletBuyWithCryptoHistoryData,
-  type WalletBuyWithCryptoHistoryParams,
+  type BuyWithCryptoHistoryData,
+  type BuyWithCryptoHistoryParams,
 } from "../../../../pay/buyWithCrypto/actions/getHistory.js";
 import { ThirdwebProviderContext } from "../../providers/thirdweb-provider-ctx.js";
 
 export type BuyWithCryptoHistoryQueryParams = Omit<
-  WalletBuyWithCryptoHistoryParams,
+  BuyWithCryptoHistoryParams,
   "client"
 >;
 export type BuyWithCryptoQuoteQueryOptions = Omit<
-  UseQueryOptions<WalletBuyWithCryptoHistoryData>,
+  UseQueryOptions<BuyWithCryptoHistoryData>,
   "queryFn" | "queryKey" | "enabled"
 >;
 
@@ -25,9 +25,9 @@ export type BuyWithCryptoQuoteQueryOptions = Omit<
  *
  * This hook is a React Query wrapper of the [`getBuyWithCryptoHistory`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoHistory) function.
  * You can also use that function directly
- * @param buyWithCryptoHistoryParams - object of type [`WalletBuyWithCryptoHistoryParams`](https://portal.thirdweb.com/references/typescript/v5/WalletBuyWithCryptoHistoryParams)
+ * @param buyWithCryptoHistoryParams - object of type [`BuyWithCryptoHistoryParams`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoHistoryParams)
  * @param queryParams - options to configure the react query
- * @returns A React Query object which contains the data of type [`WalletBuyWithCryptoHistoryData`](https://portal.thirdweb.com/references/typescript/v5/WalletBuyWithCryptoHistoryData)
+ * @returns A React Query object which contains the data of type [`BuyWithCryptoHistoryData`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoHistoryData)
  * @example
  * ```tsx
  * import { useBuyWithCryptoHistory } from "thirdweb/react";
@@ -41,7 +41,7 @@ export type BuyWithCryptoQuoteQueryOptions = Omit<
 export function useBuyWithCryptoHistory(
   buyWithCryptoHistoryParams?: BuyWithCryptoHistoryQueryParams,
   queryParams?: BuyWithCryptoQuoteQueryOptions,
-): UseQueryResult<WalletBuyWithCryptoHistoryData> {
+): UseQueryResult<BuyWithCryptoHistoryData> {
   const context = useContext(ThirdwebProviderContext);
   return useQuery({
     ...queryParams,

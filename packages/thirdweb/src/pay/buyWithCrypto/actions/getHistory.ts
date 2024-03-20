@@ -7,7 +7,7 @@ import type { BuyWithCryptoStatus } from "./getStatus.js";
  * The parameters for [`getBuyWithCryptoHistory`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoHistory) function
  * It takes the wallet history address and optional cursor and page size. for paginated results.
  */
-export type WalletBuyWithCryptoHistoryParams = {
+export type BuyWithCryptoHistoryParams = {
   /**
    * A client is the entry point to the thirdweb SDK. It is required for all other actions.
    *
@@ -34,19 +34,19 @@ export type WalletBuyWithCryptoHistoryParams = {
  * The results for [`getBuyWithCryptoHistory`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoHistory) function
  * It includes information about transactions that the wallet address has made through thirdweb buy with crypto.
  */
-export type WalletBuyWithCryptoHistoryData = {
+export type BuyWithCryptoHistoryData = {
   page: BuyWithCryptoStatus[];
   hasNextPage: boolean;
 };
 
 /**
  * Gets the History of purchases for a given wallet address
- * @param params Object of type [`WalletBuyWithCryptoHistoryParams`](https://portal.thirdweb.com/references/typescript/v5/WalletBuyWithCryptoHistoryParams)
+ * @param params Object of type [`BuyWithCryptoHistoryParams`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoHistoryParams)
  * @example
  *
  * ```ts
  * import { createThirdwebClient } from "thirdweb";
- * import { WalletBuyWithCryptoHistoryData } from "thirdweb/pay";
+ * import { BuyWithCryptoHistoryData } from "thirdweb/pay";
  *
  * const client = createThirdwebClient({ clientId: "..." });
  * const walletAddress = "0x...";
@@ -58,11 +58,11 @@ export type WalletBuyWithCryptoHistoryData = {
  * // grabs the history of purchase transactions for the wallet address
  * const status = await getBuyWithCryptoHistory(params)
  * ```
- * @returns Object of type [`WalletBuyWithCryptoHistoryData`](https://portal.thirdweb.com/references/typescript/v5/WalletBuyWithCryptoHistoryData)
+ * @returns Object of type [`BuyWithCryptoHistoryData`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoHistoryData)
  */
 export async function getBuyWithCryptoHistory(
-  params: WalletBuyWithCryptoHistoryParams,
-): Promise<WalletBuyWithCryptoHistoryData> {
+  params: BuyWithCryptoHistoryParams,
+): Promise<BuyWithCryptoHistoryData> {
   try {
     const queryParams = new URLSearchParams();
     queryParams.append("walletAddress", params.walletAddress);
@@ -80,9 +80,7 @@ export async function getBuyWithCryptoHistory(
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data: WalletBuyWithCryptoHistoryData = (await response.json())[
-      "result"
-    ];
+    const data: BuyWithCryptoHistoryData = (await response.json())["result"];
     return data;
   } catch (error) {
     throw new Error(`Fetch failed: ${error}`);
