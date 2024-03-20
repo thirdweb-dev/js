@@ -318,4 +318,13 @@ export const defaultTokens: SupportedTokens = {
       icon: usdcIcon,
     },
   ],
+  // Base mainnet
+  "8453": [
+    {
+      address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      name: "USD Coin",
+      symbol: "USDC",
+      icon: usdcIcon,
+    },
+  ],
 };

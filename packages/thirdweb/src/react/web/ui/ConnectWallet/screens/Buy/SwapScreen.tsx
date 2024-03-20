@@ -1,16 +1,10 @@
 import { CrossCircledIcon } from "@radix-ui/react-icons";
-import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { polygon } from "../../../../../../chains/chain-definitions/polygon.js";
 import type { Chain } from "../../../../../../chains/types.js";
-import { defineChain } from "../../../../../../chains/utils.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../constants/addresses.js";
-import { fallbackSwapSupportedChainIds } from "../../../../../../pay/buyWithCrypto/supportedChains.js";
-import { getPayChainsEndpoint } from "../../../../../../pay/buyWithCrypto/utils/definitions.js";
-import { getClientFetch } from "../../../../../../utils/fetch.js";
 import type { Account } from "../../../../../../wallets/interfaces/wallet.js";
 import { useChainsQuery } from "../../../../../core/hooks/others/useChainQuery.js";
-import { useThirdwebProviderProps } from "../../../../../core/hooks/others/useThirdwebProviderProps.js";
 import { useWalletBalance } from "../../../../../core/hooks/others/useWalletBalance.js";
 import {
   useBuyWithCryptoQuote,
@@ -42,9 +36,7 @@ import { ConfirmationScreen } from "./swap/ConfirmationScreen.js";
 import { PayWithCrypto } from "./swap/PayWithCrypto.js";
 import { SwapFees } from "./swap/SwapFees.js";
 import type { BuyWithCryptoQuote } from "../../../../../../pay/buyWithCrypto/actions/getQuote.js";
-
-const fallbackSupportedChains = /* @__PURE__ */ (() =>
-  fallbackSwapSupportedChainIds.map(defineChain))();
+import { useSwapSupportedChains } from "./swap/useSwapSupportedChains.js";
 
 /**
  * @internal
@@ -93,23 +85,12 @@ export function SwapScreenContent(props: {
   const { activeChain, account } = props;
   const [isSwitching, setIsSwitching] = useState(false);
   const switchActiveWalletChain = useSwitchActiveWalletChain();
-  const { client } = useThirdwebProviderProps();
-  const supportedChainsQuery = useQuery({
-    queryKey: ["swapSupportedChains", client],
-    queryFn: async () => {
-      const fetchWithHeaders = getClientFetch(client);
-      const res = await fetchWithHeaders(getPayChainsEndpoint());
-      const data = await res.json();
-      const chainIds = data.result.chainIds as number[];
-      return chainIds.map(defineChain);
-    },
-    initialData: fallbackSupportedChains,
-  });
+  const supportedChainsQuery = useSwapSupportedChains();
 
   const supportedChains = supportedChainsQuery.data;
 
   // prefetch chains metadata
-  useChainsQuery(supportedChains, 50);
+  useChainsQuery(supportedChains || [], 50);
 
   // screens
   const [screen, setScreen] = useState<Screen>("main");
@@ -119,7 +100,7 @@ export function SwapScreenContent(props: {
   const [hasEditedAmount, setHasEditedAmount] = useState(false);
 
   const isChainSupported = useMemo(
-    () => supportedChains.includes(activeChain.id as any),
+    () => supportedChains?.find((c) => c.id === activeChain.id),
     [activeChain.id, supportedChains],
   );
 
@@ -175,6 +156,20 @@ export function SwapScreenContent(props: {
     refetchInterval: 30 * 1000,
     gcTime: 30 * 1000,
   });
+
+  if (!supportedChains) {
+    return (
+      <Container
+        flex="row"
+        center="both"
+        style={{
+          minHeight: "350px",
+        }}
+      >
+        <Spinner color="secondaryText" size="lg" />
+      </Container>
+    );
+  }
 
   if (screen === "select-from-token") {
     return (

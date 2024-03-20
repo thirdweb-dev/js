@@ -73,7 +73,12 @@ export function TokenSelector(props: {
     : tokenList;
 
   return (
-    <Container animate="fadein">
+    <Container
+      animate="fadein"
+      style={{
+        minHeight: "300px",
+      }}
+    >
       <Container p="lg">
         <ModalHeader onBack={props.onBack} title={locale.selectTokenTitle} />
         <Spacer y="xl" />
@@ -87,7 +92,7 @@ export function TokenSelector(props: {
         />
       </Container>
 
-      {filteredList.length > 0 && (
+      {(filteredList.length > 0 || !input) && !tokenQuery.isLoading && (
         <Container
           flex="column"
           gap="xs"
@@ -131,7 +136,7 @@ export function TokenSelector(props: {
           gap="md"
           center="both"
           style={{
-            minHeight: "150px",
+            minHeight: "200px",
             paddingTop: 0,
           }}
           color="secondaryText"
@@ -140,7 +145,7 @@ export function TokenSelector(props: {
         </Container>
       )}
 
-      {filteredList.length === 0 && !tokenQuery.isLoading && (
+      {filteredList.length === 0 && !tokenQuery.isLoading && input && (
         <Container
           animate="fadein"
           p="lg"
@@ -148,7 +153,7 @@ export function TokenSelector(props: {
           gap="md"
           center="both"
           style={{
-            minHeight: "150px",
+            minHeight: "200px",
             paddingTop: 0,
           }}
           color="secondaryText"
