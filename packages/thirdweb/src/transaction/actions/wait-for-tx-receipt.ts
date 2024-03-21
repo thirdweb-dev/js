@@ -1,11 +1,11 @@
 import type { Hex } from "viem";
 import type { SendTransactionResult, TransactionReceipt } from "../types.js";
-
-import type { PreparedTransaction } from "../prepare-transaction.js";
 import { getRpcClient } from "../../rpc/rpc.js";
 import { watchBlockNumber } from "../../rpc/watchBlockNumber.js";
 import { eth_getTransactionReceipt } from "../../rpc/actions/eth_getTransactionReceipt.js";
 import type { Prettify } from "../../utils/type-utils.js";
+import type { ThirdwebClient } from "../../client/client.js";
+import type { Chain } from "../../chains/types.js";
 
 export const DEFAULT_MAX_BLOCKS_WAIT_TIME = 30;
 
@@ -13,14 +13,15 @@ const map = new Map<string, Promise<TransactionReceipt>>();
 
 export type WaitForReceiptOptions = Prettify<
   SendTransactionResult & {
-    transaction: Pick<PreparedTransaction, "client" | "chain">;
+    client: ThirdwebClient;
+    chain: Chain;
+    maxBlocksWaitTime?: number;
   }
 >;
 
 /**
  * Waits for the transaction receipt of a given transaction hash on a specific contract.
  * @param options - The options for waiting for the receipt.
- * @param maxBlocksWaitTime - The maximum number of blocks to wait for the transaction to be mined.
  * By default, it's 30 blocks.
  * @returns A promise that resolves with the transaction receipt.
  * @transaction
@@ -28,18 +29,23 @@ export type WaitForReceiptOptions = Prettify<
  * ```ts
  * import { waitForReceipt } from "thirdweb";
  * const receipt = await waitForReceipt({
- *   transaction: myContract,
+ *   client,
+ *   chain,
  *   transactionHash: "0x123...",
  * });
  * ```
  */
 export function waitForReceipt(
   options: WaitForReceiptOptions,
-  maxBlocksWaitTime = DEFAULT_MAX_BLOCKS_WAIT_TIME,
 ): Promise<TransactionReceipt> {
-  const { transactionHash, transaction } = options;
-  const chainId = transaction.chain.id;
+  const { transactionHash, chain, client } = options;
+  if (!chain) {
+    console.log(options);
+  }
+  const chainId = chain.id;
   const key = `${chainId}:tx_${transactionHash}`;
+  const maxBlocksWaitTime =
+    options.maxBlocksWaitTime ?? DEFAULT_MAX_BLOCKS_WAIT_TIME;
 
   if (map.has(key)) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -54,14 +60,14 @@ export function waitForReceipt(
       );
     }
 
-    const request = getRpcClient(transaction);
+    const request = getRpcClient({ client, chain });
 
     // start at -1 because the first block doesn't count
     let blocksWaited = -1;
 
     const unwatch = watchBlockNumber({
-      client: transaction.client,
-      chain: transaction.chain,
+      client: client,
+      chain: chain,
       onNewBlockNumber: async () => {
         blocksWaited++;
         if (blocksWaited >= maxBlocksWaitTime) {

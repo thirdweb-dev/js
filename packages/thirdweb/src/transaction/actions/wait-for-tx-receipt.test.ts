@@ -68,7 +68,8 @@ describe("waitForReceipt", () => {
 
     // can't `await` here because we still need to be able to increment the block number below
     const res = waitForReceipt({
-      transaction: TRANSACTION,
+      chain: TRANSACTION.chain,
+      client: TRANSACTION.client,
       transactionHash: MOCK_TX_HASH,
     });
 
@@ -79,7 +80,10 @@ describe("waitForReceipt", () => {
 
   it("should reject with an error when neither transactionHash nor userOpHash is provided", async () => {
     // @ts-expect-error - this is what we're testing
-    const result = waitForReceipt({ transaction: TRANSACTION });
+    const result = waitForReceipt({
+      chain: TRANSACTION.chain,
+      client: TRANSACTION.client,
+    });
 
     await expect(result).rejects.toThrow(
       "Transaction has no transactionHash to wait for, did you execute it?",
@@ -89,7 +93,8 @@ describe("waitForReceipt", () => {
 
   it("should reject with an error when transaction is not found after waiting 10 blocks", async () => {
     const result = waitForReceipt({
-      transaction: TRANSACTION,
+      chain: TRANSACTION.chain,
+      client: TRANSACTION.client,
       transactionHash: MOCK_TX_HASH,
     });
 
