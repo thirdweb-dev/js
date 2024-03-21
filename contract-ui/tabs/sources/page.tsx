@@ -58,13 +58,12 @@ export async function verifyContract({
     );
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      console.error(`Error verifying contract: ${response.statusText}`);
     }
 
     return await response.json();
   } catch (error) {
     console.error(`Error verifying contract: ${error}`);
-    throw error;
   }
 }
 
