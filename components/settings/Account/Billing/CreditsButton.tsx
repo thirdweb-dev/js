@@ -43,15 +43,17 @@ export const CreditsButton = () => {
   const { isLoggedIn } = useLoggedInUser();
   const { data: credits } = useAccountCredits();
   const meQuery = useAccount();
-  const totalCreditBalance =
-    credits?.find((crd) => crd.name.startsWith("OP -"))
-      ?.remainingValueUsdCents || 0;
+  const totalCreditBalance = credits?.reduce(
+    (acc, credit) => acc + credit.remainingValueUsdCents,
+    0,
+  );
 
   if (!isLoggedIn || meQuery.isLoading || !meQuery.data) {
     return null;
   }
 
-  const credit = credits?.find((crd) => crd.name.startsWith("OP -"));
+  const opCredit = credits?.find((crd) => crd.name.startsWith("OP -"));
+  const restCredits = credits?.filter((crd) => !crd.name.startsWith("OP -"));
 
   return (
     <>
@@ -102,9 +104,18 @@ export const CreditsButton = () => {
           <ModalHeader>Credits Balance</ModalHeader>
           <ModalBody>
             <Flex flexDir="column" gap={4}>
-              <Card p={6} as={Flex} flexDir="column" gap={3}>
-                <CreditsItem credit={credit} onCreditsButton={true} />
-              </Card>
+              <CreditsItem
+                credit={opCredit}
+                onCreditsButton={true}
+                isOpCreditDefault={true}
+              />
+              {restCredits?.map((credit) => (
+                <CreditsItem
+                  key={credit.couponId}
+                  credit={credit}
+                  onCreditsButton={true}
+                />
+              ))}
             </Flex>
           </ModalBody>
           <ModalFooter />

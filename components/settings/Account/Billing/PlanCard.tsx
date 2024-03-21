@@ -8,7 +8,8 @@ export const BillingPlanCard = () => {
   const { data: credits } = useAccountCredits();
   const { data: account } = useAccount();
 
-  const credit = credits?.find((crd) => crd.name.startsWith("OP -"));
+  const opCredit = credits?.find((crd) => crd.name.startsWith("OP -"));
+  const restCredits = credits?.filter((crd) => !crd.name.startsWith("OP -"));
 
   if (!account) {
     return null;
@@ -31,7 +32,10 @@ export const BillingPlanCard = () => {
 
       <Flex flexDir="column" gap={4}>
         <Text size="body.md"></Text>
-        <CreditsItem credit={credit} />
+        <CreditsItem credit={opCredit} isOpCreditDefault={true} />
+        {restCredits?.map((credit) => (
+          <CreditsItem key={credit.couponId} credit={credit} />
+        ))}
       </Flex>
     </Card>
   );

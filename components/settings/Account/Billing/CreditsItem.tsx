@@ -10,19 +10,22 @@ import { Optimism } from "@thirdweb-dev/chains";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { ApplyForOpCreditsModal } from "components/onboarding/ApplyForOpCreditsModal";
 import { formatDistance } from "date-fns";
-import { Text, Button } from "tw-components";
+import { Text, Button, Card } from "tw-components";
 import { formatToDollars } from "./CreditsButton";
 import { useLocalStorage } from "hooks/useLocalStorage";
 import { useTrack } from "hooks/analytics/useTrack";
+import { ChakraNextImage } from "components/Image";
 
 interface CreditsItemProps {
   credit?: BillingCredit;
   onCreditsButton?: true;
+  isOpCreditDefault?: boolean;
 }
 
 export const CreditsItem: React.FC<CreditsItemProps> = ({
   credit,
   onCreditsButton,
+  isOpCreditDefault,
 }) => {
   const {
     isOpen: isMoreCreditsOpen,
@@ -38,13 +41,31 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
     false,
   );
 
+  const isOpCredit = credit?.name.startsWith("OP -") || isOpCreditDefault;
+  const isTwCredit = credit?.name.startsWith("TW -");
+
   return (
-    <>
+    <Card p={6} as={Flex} flexDir="column" gap={3}>
       <Flex flexDir="column" gap={4}>
         <Flex gap={2}>
-          <ChainIcon ipfsSrc={Optimism.icon.url} size={24} />
-          <Text color="bgBlack">Sponsorship credit balance</Text>{" "}
-          {!hasAppliedForOpGrant && (
+          {isOpCredit ? (
+            <ChainIcon ipfsSrc={Optimism.icon.url} size={24} />
+          ) : isTwCredit ? (
+            <ChakraNextImage
+              src={require("public/brand/thirdweb-icon.svg")}
+              alt="tw-credit"
+              boxSize={6}
+              objectFit="contain"
+            />
+          ) : null}
+          <Text color="bgBlack">
+            {isOpCredit
+              ? "Sponsorship credit balance"
+              : isTwCredit
+                ? "thirdweb credits"
+                : credit?.name}
+          </Text>
+          {!hasAppliedForOpGrant && isOpCredit && (
             <Button
               size="xs"
               variant="outline"
@@ -85,7 +106,7 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
             </Text>
           </Flex>
         </Flex>
-        {hasAppliedForOpGrant && !credit && (
+        {hasAppliedForOpGrant && !credit && isOpCredit && (
           <Alert
             status="info"
             borderRadius="lg"
@@ -105,10 +126,12 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
           </Alert>
         )}
       </Flex>
-      <ApplyForOpCreditsModal
-        isOpen={isMoreCreditsOpen}
-        onClose={onMoreCreditsClose}
-      />
-    </>
+      {isOpCredit && (
+        <ApplyForOpCreditsModal
+          isOpen={isMoreCreditsOpen}
+          onClose={onMoreCreditsClose}
+        />
+      )}
+    </Card>
   );
 };
