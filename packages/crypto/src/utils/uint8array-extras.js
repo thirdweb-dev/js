@@ -41,7 +41,7 @@ export function concatUint8Arrays(arrays, totalLength) {
     return new Uint8Array(0);
   }
 
-  if (totalLength == null) {
+  if (totalLength === null || totalLength === undefined) {
     totalLength = arrays.reduce(
       (accumulator, currentValue) => accumulator + currentValue.length,
       0,
