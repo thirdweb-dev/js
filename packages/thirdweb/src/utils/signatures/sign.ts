@@ -18,6 +18,15 @@ export type SignOptions = {
  * @param privateKey - The private key to sign the hash with.
  *
  * @returns The transaction signature.
+ *
+ * @example
+ * ```ts
+ * import { sign } from "thirdweb/utils";
+ *
+ * const signature = sign({
+ *   hash: "0x",
+ *   privateKey: "0x",
+ * });
  */
 export function sign(options: SignOptions): Signature {
   const { r, s, recovery } = secp256k1.sign(

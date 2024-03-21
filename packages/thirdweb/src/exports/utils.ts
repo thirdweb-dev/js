@@ -29,6 +29,10 @@ export {
 } from "../utils/signatures/resolve-signature.js";
 export { type SignOptions, sign } from "../utils/signatures/sign.js";
 export { signatureToHex } from "../utils/signatures/signature-to-hex.js";
+export {
+  type SignMessageOptions,
+  signMessage,
+} from "../utils/signatures/sign-message.js";
 
 // encoding
 // ------------------------------------------------

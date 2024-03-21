@@ -1,6 +1,6 @@
 import { secp256k1 } from "@noble/curves/secp256k1";
 import type { Signature } from "viem";
-import { hexToBigInt } from "../encoding/hex.js";
+import { hexToBigInt, type Hex } from "../encoding/hex.js";
 
 /**
  * @description Converts a signature to a hex string.
@@ -8,7 +8,10 @@ import { hexToBigInt } from "../encoding/hex.js";
  * @returns The hex string representation of the signature.
  * 
  * @example
- * signatureToHex({
+ * ```ts
+ * import { signatureToHex } from "thirdweb/utils";
+ * 
+ * const hex = signatureToHex({
       r: toHex(
         49782753348462494199823712700004552394425719014458918871452329774910450607807n,
       ),
@@ -16,10 +19,12 @@ import { hexToBigInt } from "../encoding/hex.js";
         33726695977844476214676913201140481102225469284307016937915595756355928419768n,
       ),
       v: 28n,
-    });
-	// "0x6e100a352ec6ad1b70802290e18aeed190704973570f3b8ed42cb9808e2ea6bf4a90a229a244495b41890987806fcbd2d5d23fc0dbe5f5256c2613c039d76db81c"
+   });
+   
+   console.log(hex);
+ * // "0x6e100a352ec6ad1b70802290e18aeed190704973570f3b8ed42cb9808e2ea6bf4a90a229a244495b41890987806fcbd2d5d23fc0dbe5f5256c2613c039d76db81c"
  */
-export function signatureToHex({ r, s, v }: Signature) {
+export function signatureToHex({ r, s, v }: Signature): Hex {
   const vHex = (() => {
     if (v === 27n) return "1b";
     if (v === 28n) return "1c";
