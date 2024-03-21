@@ -42,20 +42,30 @@ export async function verifyContract({
   contractAddress,
   chainId,
 }: VerifyContractParams) {
-  const response = await fetch(
-    "https://contract.thirdweb.com/verify/contract",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+  try {
+    const response = await fetch(
+      "https://contract.thirdweb.com/verify/contract",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          contractAddress,
+          chainId,
+        }),
       },
-      body: JSON.stringify({
-        contractAddress,
-        chainId,
-      }),
-    },
-  );
-  return response.json();
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error(`Error verifying contract: ${error}`);
+    throw error;
+  }
 }
 
 function useVerifyCall(
