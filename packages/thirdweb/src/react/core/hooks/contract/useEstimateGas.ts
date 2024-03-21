@@ -7,7 +7,7 @@ import type { PreparedTransaction } from "../../../../transaction/prepare-transa
 import { useActiveAccount } from "../wallets/wallet-hooks.js";
 
 /**
- * A hook to estimate the gas for a given transaction.
+ * A hook to estimate the gas used by given transaction.
  * @returns A mutation object to estimate gas.
  * @example
  * ```jsx
