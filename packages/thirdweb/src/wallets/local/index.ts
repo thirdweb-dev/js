@@ -78,6 +78,7 @@ export const localWalletMetadata: WalletMetadata = {
  *
  * ```
  * @returns A `LocalWallet` instance
+ * @wallet
  */
 export function localWallet(options: LocalWalletCreationOptions) {
   return new LocalWallet(options);

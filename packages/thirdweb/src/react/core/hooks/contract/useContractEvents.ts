@@ -33,6 +33,7 @@ type UseContractEventsOptions<
  * import { useContractEvents } from "thirdweb/react";
  * const contractEvents = useContractEvents({contract});
  * ```
+ * @contract
  */
 export function useContractEvents<
   const abi extends Abi,

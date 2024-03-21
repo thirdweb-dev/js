@@ -258,7 +258,7 @@ export function AutoConnect(props: AutoConnectProps) {
     })();
   });
 
-  return null;
+  return <div> </div>;
 }
 
 let noAutoConnectDone = false;
