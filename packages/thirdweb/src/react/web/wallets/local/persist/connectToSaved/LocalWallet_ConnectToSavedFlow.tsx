@@ -5,6 +5,7 @@ import { OverrideConfirmation } from "./overrideConfirmation.js";
 import type { LocalWalletStorageData } from "../../../../../../wallets/local/types.js";
 import { LocalWallet_ConnectToSaved } from "./LocalWallet_ConnectToSaved.js";
 import { LocalWallet_Persist_CreationFlow } from "../create/LocalWallet_Persist_CreationFlow.js";
+import type { LocalWalletLocale } from "../../locale/types.js";
 
 /**
  * - Show UI to connect to saved local wallet
@@ -17,6 +18,7 @@ export function LocalWallet_ConnectToSavedFlow(props: {
   connectUIProps: ConnectUIProps;
   persist: boolean;
   savedData: LocalWalletStorageData;
+  locale: LocalWalletLocale;
 }) {
   const [screen, setScreen] = useState<"main" | "create" | "export" | "backup">(
     "main",
@@ -25,6 +27,7 @@ export function LocalWallet_ConnectToSavedFlow(props: {
   if (screen === "main") {
     return (
       <LocalWallet_ConnectToSaved
+        locale={props.locale}
         connectUIProps={props.connectUIProps}
         persist={props.persist}
         savedData={props.savedData}
@@ -38,6 +41,7 @@ export function LocalWallet_ConnectToSavedFlow(props: {
   if (screen === "export") {
     return (
       <ExportSavedLocalWallet
+        locale={props.locale}
         onBack={() => {
           setScreen("main");
         }}
@@ -53,6 +57,7 @@ export function LocalWallet_ConnectToSavedFlow(props: {
   if (screen === "backup") {
     return (
       <OverrideConfirmation
+        locale={props.locale}
         connectUIProps={props.connectUIProps}
         onBackup={() => {
           setScreen("export");
@@ -70,6 +75,7 @@ export function LocalWallet_ConnectToSavedFlow(props: {
   if (screen === "create") {
     return (
       <LocalWallet_Persist_CreationFlow
+        locale={props.locale}
         onBack={() => {
           setScreen("main");
         }}

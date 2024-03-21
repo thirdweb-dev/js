@@ -21,7 +21,7 @@ import { getDecryptionFunction } from "../../../../../wallets/local/utils.js";
 import type { LocalWalletStorageData } from "../../../../../wallets/local/types.js";
 import { downloadTextFile } from "../utils/downloadTextFile.js";
 import { usePassword } from "../utils/usePassword.js";
-import localWalletLocaleEn from "../locale/en.js";
+import type { LocalWalletLocale } from "../locale/types.js";
 
 /**
  * UI for exporting the saved local wallet data
@@ -34,8 +34,9 @@ export const ExportSavedLocalWallet: React.FC<{
   onExport: () => void;
   connectUIProps: ConnectUIProps;
   savedData: LocalWalletStorageData;
+  locale: LocalWalletLocale;
 }> = (props) => {
-  const locale = localWalletLocaleEn;
+  const locale = props.locale;
   const isWideScreen = props.connectUIProps.screenConfig.size === "wide";
 
   // form state

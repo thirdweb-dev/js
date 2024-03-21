@@ -16,8 +16,7 @@ import {
 import { Text } from "../../../../ui/components/text.js";
 import { usePassword } from "../../utils/usePassword.js";
 import { isValidPrivateKey } from "../../../../../../wallets/local/utils.js";
-import localWalletLocaleEn from "../../locale/en.js";
-
+import type { LocalWalletLocale } from "../../locale/types.js";
 /**
  * Show UI to initiate the wallet by entering the private key
  * @internal
@@ -26,8 +25,9 @@ export const ImportLocalWallet: React.FC<{
   goBack: () => void;
   persist: boolean;
   connectUIProps: ConnectUIProps;
+  locale: LocalWalletLocale;
 }> = (props) => {
-  const locale = localWalletLocaleEn;
+  const locale = props.locale;
   const { createInstance, chain, done } = props.connectUIProps.connection;
 
   const [privateKeyInput, setPrivateKeyInput] = useState("");

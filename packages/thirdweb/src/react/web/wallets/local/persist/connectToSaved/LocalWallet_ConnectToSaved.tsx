@@ -17,7 +17,7 @@ import { shortenString } from "../../../../../core/utils/addresses.js";
 import { usePassword } from "../../utils/usePassword.js";
 import type { LocalWalletStorageData } from "../../../../../../wallets/local/types.js";
 import { Text } from "../../../../ui/components/text.js";
-import localWalletLocaleEn from "../../locale/en.js";
+import type { LocalWalletLocale } from "../../locale/types.js";
 
 /**
  * Connect to saved local wallet
@@ -31,9 +31,10 @@ export function LocalWallet_ConnectToSaved(props: {
   persist: boolean;
   savedData: LocalWalletStorageData;
   onBackupWallet: () => void;
+  locale: LocalWalletLocale;
 }) {
   const { createInstance, done, chain } = props.connectUIProps.connection;
-  const locale = localWalletLocaleEn;
+  const locale = props.locale;
 
   // form state
   const {

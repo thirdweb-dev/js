@@ -1,6 +1,12 @@
 import type { ConnectUIProps } from "../../../core/types/wallets.js";
 import { LocalWallet_Persist } from "./persist/LocalWallet_Persist.js";
 import { LocalWallet_NoPersist } from "./LocalWallet_NoPersist.js";
+import type { LocalWalletLocale } from "./locale/types.js";
+import type { LocaleId } from "../../ui/types.js";
+import { useEffect, useState } from "react";
+import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import { LoadingScreen } from "../shared/LoadingScreen.js";
+import { getLocalWalletLocale } from "./locale/getLocalWalletLocale.js";
 
 /**
  * UI for connecting to a local wallet
@@ -9,7 +15,20 @@ import { LocalWallet_NoPersist } from "./LocalWallet_NoPersist.js";
 export const LocalWalletConnectUI = (props: {
   connectUIProps: ConnectUIProps;
   persist: boolean;
+  prefetchedLocale?: LocalWalletLocale;
+  prefetchedLocaleId?: LocaleId;
 }) => {
+  const { locale: localeId } = useWalletConnectionCtx();
+  const [locale, setLocale] = useState<LocalWalletLocale | undefined>(
+    props.prefetchedLocaleId === localeId ? props.prefetchedLocale : undefined,
+  );
+
+  useEffect(() => {
+    getLocalWalletLocale(localeId).then((_local) => {
+      setLocale(_local);
+    });
+  }, [localeId]);
+
   if (!props.persist) {
     return (
       <LocalWallet_NoPersist
@@ -19,8 +38,13 @@ export const LocalWalletConnectUI = (props: {
     );
   }
 
+  if (!locale) {
+    return <LoadingScreen />;
+  }
+
   return (
     <LocalWallet_Persist
+      locale={locale}
       persist={props.persist}
       connectUIProps={props.connectUIProps}
     />

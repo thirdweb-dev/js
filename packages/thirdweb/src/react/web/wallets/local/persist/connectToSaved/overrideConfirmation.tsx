@@ -5,7 +5,7 @@ import { Container, ModalHeader } from "../../../../ui/components/basic.js";
 import { Button } from "../../../../ui/components/buttons.js";
 import { iconSize } from "../../../../ui/design-system/index.js";
 import { Text } from "../../../../ui/components/text.js";
-import localWalletLocaleEn from "../../locale/en.js";
+import type { LocalWalletLocale } from "../../locale/types.js";
 
 /**
  * Shows a warning screen when the user tries to create a new local wallet when one is already saved in local storage
@@ -17,8 +17,9 @@ export const OverrideConfirmation: React.FC<{
   onSkip: () => void;
   onBack: () => void;
   connectUIProps: ConnectUIProps;
+  locale: LocalWalletLocale;
 }> = (props) => {
-  const locale = localWalletLocaleEn.warningScreen;
+  const locale = props.locale.warningScreen;
   const isCompact = props.connectUIProps.screenConfig.size === "compact";
   return (
     <Container fullHeight flex="column" animate="fadein">

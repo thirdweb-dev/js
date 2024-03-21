@@ -17,7 +17,11 @@ import { Button } from "../../components/buttons.js";
 import { Label } from "../../components/formElements.js";
 import { spacing, iconSize } from "../../design-system/index.js";
 import { Text } from "../../components/text.js";
-import localWalletLocaleEn from "../../../wallets/local/locale/en.js";
+import { useState, useEffect } from "react";
+import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
+import { getLocalWalletLocale } from "../../../wallets/local/locale/getLocalWalletLocale.js";
+import type { LocalWalletLocale } from "../../../wallets/local/locale/types.js";
+import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
 
 /**
  * Export the private key and download it as a text file for current active local wallet
@@ -27,10 +31,22 @@ export function ExportLocalWallet(props: {
   onExport: () => void;
   onBack: () => void;
 }) {
-  const locale = localWalletLocaleEn;
+  const { locale: localeId } = useWalletConnectionCtx();
+  const [locale, setLocale] = useState<LocalWalletLocale | undefined>();
+
+  useEffect(() => {
+    getLocalWalletLocale(localeId).then((_local) => {
+      setLocale(_local);
+    });
+  }, [localeId]);
+
   const isWideScreen = false;
   const wallet = useActiveWallet() as LocalWallet;
   const account = useActiveAccount();
+
+  if (!locale) {
+    return <LoadingScreen />;
+  }
 
   const handleExport = async () => {
     const privateKey = await wallet.export({

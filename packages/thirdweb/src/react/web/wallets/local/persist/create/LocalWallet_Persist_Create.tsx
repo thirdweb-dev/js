@@ -14,7 +14,7 @@ import { spacing } from "../../../../ui/design-system/index.js";
 import { Text } from "../../../../ui/components/text.js";
 import { usePassword } from "../../utils/usePassword.js";
 import type { LocalWallet } from "../../../../../../wallets/local/index.js";
-import localWalletLocaleEn from "../../locale/en.js";
+import type { LocalWalletLocale } from "../../locale/types.js";
 
 /**
  * - Create random local wallet
@@ -27,8 +27,9 @@ export const LocalWallet_Persist_Create: React.FC<{
   persist: boolean;
   onBack?: () => void;
   onShowImportScreen: () => void;
+  locale: LocalWalletLocale;
 }> = (props) => {
-  const locale = localWalletLocaleEn;
+  const locale = props.locale;
   const [isConnecting, setIsConnecting] = useState(false);
   const { done, createInstance, chain } = props.connectUIProps.connection;
 

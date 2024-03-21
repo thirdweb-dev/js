@@ -6,6 +6,9 @@ import {
 import { walletConnect } from "../../../../wallets/wallet-connect/index.js";
 import type { WalletConfig } from "../../../core/types/wallets.js";
 import { asyncLocalStorage } from "../../../core/utils/asyncLocalStorage.js";
+import type { LocaleId } from "../../ui/types.js";
+import { getInjectedWalletLocale } from "../injected/locale/getInjectedWalletLocale.js";
+import type { InjectedWalletLocale } from "../injected/locale/types.js";
 import { InjectedAndWCConnectUI } from "../shared/InjectedAndWCConnectUI.js";
 
 export type RainbowConfigOptions = {
@@ -47,6 +50,9 @@ export type RainbowConfigOptions = {
  * @returns `WalletConfig` object to be passed into `ThirdwebProvider`
  */
 export const rainbowConfig = (options?: RainbowConfigOptions): WalletConfig => {
+  let prefetchedLocale: InjectedWalletLocale;
+  let prefetchedLocaleId: LocaleId;
+
   const config: WalletConfig = {
     recommended: options?.recommended,
     create(createOptions) {
@@ -78,11 +84,18 @@ export const rainbowConfig = (options?: RainbowConfigOptions): WalletConfig => {
             android: "https://rnbwapp.com/",
             other: "https://rnbwapp.com/",
           }}
+          prefetchedLocale={prefetchedLocale}
+          prefetchedLocaleId={prefetchedLocaleId}
         />
       );
     },
     isInstalled() {
       return !!injectedRainbowProvider();
+    },
+    async prefetch(localeId) {
+      const localeFn = await getInjectedWalletLocale(localeId);
+      prefetchedLocale = localeFn(rainbowWalletMetadata.name);
+      prefetchedLocaleId = localeId;
     },
   };
 

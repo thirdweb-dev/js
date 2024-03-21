@@ -1,4 +1,3 @@
-import { metamaskMetadata } from "../../../../wallets/injected/wallets/metamask.js";
 import {
   injectedOkxProvider,
   okxWallet,
@@ -96,7 +95,7 @@ export const okxConfig = (options?: OkxConfigOptions): WalletConfig => {
     },
     async prefetch(localeId) {
       const localeFn = await getInjectedWalletLocale(localeId);
-      prefetchedLocale = localeFn(metamaskMetadata.name);
+      prefetchedLocale = localeFn(okxWalletMetadata.name);
       prefetchedLocaleId = localeId;
     },
   };
