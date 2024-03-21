@@ -153,7 +153,11 @@ export class SmartWallet implements WalletWithPersonalAccount {
     }
 
     if (this.options.storage) {
-      saveConnectParamsToStorage(this.options.storage, this.metadata.id, {});
+      // TODO - find a way to pass the personal wallet id here
+      // right now it relies on the caller to pass metadata.id as the desired personalWalletId
+      saveConnectParamsToStorage(this.options.storage, this.metadata.id, {
+        personalWalletId: this.metadata.id,
+      });
     }
 
     // TODO: listen for chainChanged event on the personal wallet and emit the disconnect event on the smart wallet

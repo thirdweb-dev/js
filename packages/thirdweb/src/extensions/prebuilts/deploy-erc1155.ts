@@ -43,7 +43,7 @@ export type DeployERC1155ContractOptions = Prettify<
  * @extension DEPLOY
  * @example
  * ```
- * import { deployERC1155Contract } from "thirdweb/extensions/prebuilts";
+ * import { deployERC1155Contract } from "thirdweb/deploys";
  * const contractAddress = await deployERC1155Contract({
  *  chain,
  *  client,
