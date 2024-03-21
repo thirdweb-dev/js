@@ -93,11 +93,18 @@ export function ConnectButton(props: ConnectButtonProps) {
       <WalletUIStatesProvider theme="dark">
         <ConnectButtonInner {...props} connectLocale={locale} />
         <ConnectModal />
-        <AutoConnect
-          appMetadata={props.appMetadata}
-          client={props.client}
-          wallets={wallets}
-        />
+        {props.autoConnect !== false && (
+          <AutoConnect
+            appMetadata={props.appMetadata}
+            client={props.client}
+            wallets={wallets}
+            timeout={
+              typeof props.autoConnect === "boolean"
+                ? undefined
+                : props.autoConnect?.timeout
+            }
+          />
+        )}
       </WalletUIStatesProvider>
     </WalletConnectionContext.Provider>
   );
@@ -115,8 +122,7 @@ function ConnectButtonInner(
   const connectionStatus = useActiveWalletConnectionStatus();
   const locale = props.connectLocale;
 
-  const isLoading =
-    connectionStatus === "connecting" || connectionStatus === "unknown";
+  const isLoading = connectionStatus === "connecting";
 
   const connectButtonLabel =
     props.connectButton?.label || locale.defaultButtonTitle;

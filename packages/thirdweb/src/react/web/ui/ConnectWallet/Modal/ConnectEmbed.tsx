@@ -335,13 +335,12 @@ const ConnectEmbedContent = (
     }
   }, [requiresSignIn, screen, setScreen]);
 
-  const connectionStatus = useActiveWalletConnectionStatus();
   const isAutoConnecting = useIsAutoConnecting();
 
   let content = null;
 
   // show spinner on page load and during auto connecting a wallet
-  if (isAutoConnecting || connectionStatus === "unknown") {
+  if (isAutoConnecting) {
     content = (
       <Container
         flex="column"

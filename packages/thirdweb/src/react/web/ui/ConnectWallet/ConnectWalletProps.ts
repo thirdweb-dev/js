@@ -327,16 +327,27 @@ export type ConnectButtonProps = {
   wallets?: WalletConfig[];
 
   /**
-   * When the user has connected their wallet to your site, this flag determines whether or not you want to automatically connect to the last connected wallet when user visits your site again in the future.
+   * When the user has connected their wallet to your site, this configuration determines whether or not you want to automatically connect to the last connected wallet when user visits your site again in the future.
    *
-   * By default it is set to `true`
+   * By default it is set to `{ timeout: 15000 }` meaning that autoConnect is enabled and if the autoConnection does not succeed within 15 seconds, it will be cancelled.
+   *
+   * If you want to disable autoConnect, set this prop to `false`.
+   *
+   * If you want to customize the timeout, you can assign an object with a `timeout` key to this prop.
+   * ```tsx
+   * <ConnectButton client={client} autoConnect={{ timeout: 10000 }} />
+   * ```
    */
-  autoConnect?: boolean;
+  autoConnect?:
+    | {
+        timeout: number;
+      }
+    | boolean;
 
   /**
    * Metadata of the app that will be passed to connected wallet.
    *
-   * Some wallets may display this information to the user.
+   * Some wallets display this information to the user when they connect to your app.
    *
    *
    * ```ts

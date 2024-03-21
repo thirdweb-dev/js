@@ -17,23 +17,107 @@ import type { WalletWithPersonalAccount } from "../../../../wallets/interfaces/w
 import { asyncLocalStorage } from "../../utils/asyncLocalStorage.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
+import { timeoutPromise } from "../../utils/timeoutPromise.js";
 
 let autoConnectAttempted = false;
 
 export type AutoConnectProps = {
+  /**
+   * Array of wallets that your app uses
+   * @example
+   * ```tsx
+   * import { metamaskConfig, coinbaseConfig, walletConnectConfig } from "thirdweb/react";
+   *
+   * function Example() {
+   *  return (
+   *    <AutoConnect
+   *      client={client}
+   *      wallets={[
+   *        metamaskConfig(),
+   *        coinbaseConfig(),
+   *        walletConnectConfig(),
+   *      ]}
+   *    />
+   *  )
+   * }
+   * ```
+   */
   wallets: WalletConfig[];
+  /**
+   * A client is the entry point to the thirdweb SDK.
+   * It is required for all other actions.
+   * You can create a client using the `createThirdwebClient` function. Refer to the [Creating a Client](https://portal.thirdweb.com/typescript/v5/client) documentation for more information.
+   *
+   * You must provide a `clientId` or `secretKey` in order to initialize a client. Pass `clientId` if you want for client-side usage and `secretKey` for server-side usage.
+   *
+   * ```tsx
+   * import { createThirdwebClient } from "thirdweb";
+   *
+   * const client = createThirdwebClient({
+   *  clientId: "<your_client_id>",
+   * })
+   * ```
+   */
   client: ThirdwebClient;
+  /**
+   * Metadata of the app that will be passed to connected wallet.
+   *
+   * Some wallets display this information to the user when they connect to your app.
+   *
+   *
+   * ```ts
+   * {
+   *   name: "thirdweb powered dApp",
+   *   url: "https://thirdweb.com",
+   *   description: "thirdweb powered dApp",
+   *   logoUrl: "https://thirdweb.com/favicon.ico",
+   * };
+   * ```
+   */
   appMetadata: AppMetadata;
+
+  /**
+   * if the autoConnection does not succeed within given timeout in milliseconds, it will be cancelled.
+   *
+   * By default, the timeout is set to 15000ms (15 seconds).
+   *
+   * ```tsx
+   * <AutoConnect
+   *  client={client}
+   *  autoConnect={{ timeout: 10000 }}
+   *  wallets={wallets}
+   *  appMetadata={appMetadata}
+   * />
+   * ```
+   */
+  timeout?: number;
 };
 
 /**
- * @internal
+ * AutoConnect Last connected wallet.
+ * Note: If you are using `ConnectButton`, You don't need to use this component as it is already included in `ConnectButton`.
+ * @param props - Object of type `AutoConnectProps`. Refer to [`AutoConnectProps`](https://portal.thirdweb.com/references/typescript/v5/AutoConnectProps)
+ * @example
+ * ```tsx
+ * import { AutoConnect } from "@thirdweb/react";
+ *
+ * const wallets = [
+ *  metamaskConfig(),
+ *  coinbaseConfig(),
+ * ]
+ *
+ * function Example() {
+ *  return <AutoConnect wallets={wallets} client={client} appMetadata={appMetadata} />;
+ * }
+ * ```
+ * @component
  */
 export function AutoConnect(props: AutoConnectProps) {
   const setConnectionStatus = useSetActiveWalletConnectionStatus();
   const { connect } = useConnect();
   const { isAutoConnecting } = connectionManager;
   const { wallets, client, appMetadata } = props;
+  const timeout = props.timeout ?? 15000;
   // get the supported wallets from thirdweb provider
   // check the storage for last connected wallets and connect them all
   // check the storage for last active wallet and set it as active
@@ -44,7 +128,7 @@ export function AutoConnect(props: AutoConnectProps) {
 
     autoConnectAttempted = true;
 
-    const fn = async () => {
+    const startAutoConnect = async () => {
       const [lastConnectedWalletIds, lastActiveWalletId] = await Promise.all([
         getStoredConnectedWalletIds(asyncLocalStorage),
         getStoredActiveWalletId(asyncLocalStorage),
@@ -52,11 +136,12 @@ export function AutoConnect(props: AutoConnectProps) {
 
       // if no wallets were last connected
       if (!lastConnectedWalletIds) {
-        setConnectionStatus("disconnected");
         return;
       }
 
       async function handleWalletConnection(walletConfig: WalletConfig) {
+        setConnectionStatus("connecting");
+
         // if this wallet requires a personal wallet to be connected
         if (walletConfig.personalWalletConfigs) {
           // get saved connection params for this wallet
@@ -119,7 +204,15 @@ export function AutoConnect(props: AutoConnectProps) {
 
       if (activeWalletConfig) {
         try {
-          const wallet = await handleWalletConnection(activeWalletConfig);
+          const wallet = await timeoutPromise(
+            handleWalletConnection(activeWalletConfig),
+            {
+              ms: timeout,
+              message:
+                "AutoConnect timeout : " + timeout + "ms limit exceeded.",
+            },
+          );
+
           if (wallet) {
             connect(wallet);
           } else {
@@ -151,7 +244,7 @@ export function AutoConnect(props: AutoConnectProps) {
 
     (async () => {
       isAutoConnecting.setValue(true);
-      await fn();
+      startAutoConnect();
       isAutoConnecting.setValue(false);
     })();
   });

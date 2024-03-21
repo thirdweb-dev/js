@@ -132,3 +132,8 @@ export {
   useBuyWithCryptoHistory,
   type BuyWithCryptoHistoryQueryParams,
 } from "../react/core/hooks/pay/useBuyWithCryptoHistory.js";
+
+export {
+  AutoConnect,
+  type AutoConnectProps,
+} from "../react/core/hooks/connection/useAutoConnect.js";

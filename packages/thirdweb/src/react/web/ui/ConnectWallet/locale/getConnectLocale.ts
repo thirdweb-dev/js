@@ -1,6 +1,9 @@
 import type { LocaleId } from "../../types.js";
 import type { ConnectLocale } from "./types.js";
 
+/**
+ * @internal
+ */
 export async function getConnectLocale(
   localeId: LocaleId,
 ): Promise<ConnectLocale> {
