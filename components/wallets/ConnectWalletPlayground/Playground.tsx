@@ -240,13 +240,23 @@ export const ConnectWalletPlayground: React.FC<{
       },
     });
 
-    format(_code, {
-      parser: "babel",
-      plugins: [parserBabel, estree],
-      printWidth: 50,
-    }).then((formattedCode) => {
-      setCode(formattedCode);
-    });
+    async function formatCodeAndSetState(
+      unformattedCode: string,
+    ): Promise<string> {
+      try {
+        const formattedCode = await format(unformattedCode, {
+          parser: "babel",
+          plugins: [parserBabel, estree],
+          printWidth: 50,
+        });
+        setCode(formattedCode);
+        return formattedCode;
+      } catch (error) {
+        throw new Error(`Error formatting the code: ${error}`);
+      }
+    }
+
+    formatCodeAndSetState(_code);
   }, [
     authEnabled,
     btnTitle,

@@ -291,6 +291,9 @@ devDependencies:
   eslint-plugin-prettier:
     specifier: ^5.1.3
     version: 5.1.3(eslint-config-prettier@9.1.0)(eslint@8.57.0)(prettier@3.2.5)
+  eslint-plugin-promise:
+    specifier: ^6.1.1
+    version: 6.1.1(eslint@8.57.0)
   eslint-plugin-react:
     specifier: ^7.34.1
     version: 7.34.1(eslint@8.57.0)
@@ -5939,6 +5942,7 @@ packages:
 
   /@swagger-api/apidom-ns-json-schema-draft-4@0.97.0:
     resolution: {integrity: sha512-eBMIPxX4huNDGle6TOfSe1kKS1/HvL6w66GWWLFxZW2doCQHMADgjo7j/kVowrXiJtEoMgjBVp3W30WkcwBVug==}
+    requiresBuild: true
     dependencies:
       '@babel/runtime-corejs3': 7.24.0
       '@swagger-api/apidom-ast': 0.97.0
@@ -8048,8 +8052,8 @@ packages:
     resolution: {integrity: sha512-m62HoAs47Dz3MHpW1Ec9fdmnvK9GJYyPJl6mWifKblWmoA4s67zAuTF3V8qXv8hEUag6t1XBRF6BpfeKDva4HQ==}
     engines: {node: '>=18'}
     dependencies:
-      '@noble/curves': 1.3.0
-      '@noble/hashes': 1.3.3
+      '@noble/curves': 1.4.0
+      '@noble/hashes': 1.4.0
       '@xmtp/proto': 3.45.0
       viem: 2.8.5(typescript@5.4.2)(zod@3.22.4)
     transitivePeerDependencies:
@@ -10892,6 +10896,15 @@ packages:
       prettier: 3.2.5
       prettier-linter-helpers: 1.0.0
       synckit: 0.8.8
+    dev: true
+
+  /eslint-plugin-promise@6.1.1(eslint@8.57.0):
+    resolution: {integrity: sha512-tjqWDwVZQo7UIPMeDReOpUgHCmCiH+ePnVT+5zVapL0uuHnegBUs2smM13CzOs2Xb5+MHMRFTs9v24yjba4Oig==}
+    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    peerDependencies:
+      eslint: ^7.0.0 || ^8.0.0
+    dependencies:
+      eslint: 8.57.0
     dev: true
 
   /eslint-plugin-react-hooks@4.6.0(eslint@8.57.0):

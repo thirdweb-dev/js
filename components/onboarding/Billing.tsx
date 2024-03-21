@@ -68,32 +68,30 @@ export const OnboardingBilling: React.FC<OnboardingBillingProps> = ({
           description="thirdweb is free to get started with monthly usage credits. Add a payment method to ensure you experience no interruptions after exceeding credits."
         />
         <Flex flexDir="column" gap={8}>
-          {stripePromise && (
-            <Elements
-              stripe={stripePromise}
-              options={{
-                mode: "setup",
-                paymentMethodCreation: "manual",
-                currency: "usd",
-                paymentMethodConfiguration:
-                  process.env.NEXT_PUBLIC_STRIPE_PAYMENT_METHOD_CFG_ID,
-                appearance: {
-                  theme: colorMode === "dark" ? "night" : "stripe",
-                  ...appearance,
-                },
+          <Elements
+            stripe={stripePromise}
+            options={{
+              mode: "setup",
+              paymentMethodCreation: "manual",
+              currency: "usd",
+              paymentMethodConfiguration:
+                process.env.NEXT_PUBLIC_STRIPE_PAYMENT_METHOD_CFG_ID,
+              appearance: {
+                theme: colorMode === "dark" ? "night" : "stripe",
+                ...appearance,
+              },
+            }}
+          >
+            <OnboardingPaymentForm
+              onSave={() => {
+                queryClient.invalidateQueries(
+                  accountKeys.me(user?.address as string),
+                );
+                onSave();
               }}
-            >
-              <OnboardingPaymentForm
-                onSave={() => {
-                  queryClient.invalidateQueries(
-                    accountKeys.me(user?.address as string),
-                  );
-                  onSave();
-                }}
-                onCancel={handleCancel}
-              />
-            </Elements>
-          )}
+              onCancel={handleCancel}
+            />
+          </Elements>
         </Flex>
       </Flex>
     </FocusLock>
