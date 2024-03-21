@@ -33,6 +33,10 @@ export {
   type SignMessageOptions,
   signMessage,
 } from "../utils/signatures/sign-message.js";
+export {
+  type SignTypedDataOptions,
+  signTypedData,
+} from "../utils/signatures/sign-typed-data.js";
 
 // encoding
 // ------------------------------------------------
