@@ -1,5 +1,11 @@
 # @thirdweb-dev/crypto
 
+## 0.2.2
+
+### Patch Changes
+
+- [#2523](https://github.com/thirdweb-dev/js/pull/2523) [`35bddd6`](https://github.com/thirdweb-dev/js/commit/35bddd69c555c9277d8c3d703a93f23f74e0de77) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Fix function for old js
+
 ## 0.2.1
 
 ### Patch Changes

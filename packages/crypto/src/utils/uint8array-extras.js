@@ -41,10 +41,12 @@ export function concatUint8Arrays(arrays, totalLength) {
     return new Uint8Array(0);
   }
 
-  totalLength ??= arrays.reduce(
-    (accumulator, currentValue) => accumulator + currentValue.length,
-    0,
-  );
+  if (totalLength === null || totalLength === undefined) {
+    totalLength = arrays.reduce(
+      (accumulator, currentValue) => accumulator + currentValue.length,
+      0,
+    );
+  }
 
   const returnValue = new Uint8Array(totalLength);
 
