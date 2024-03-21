@@ -53,8 +53,9 @@ export type Account = {
   ) => Promise<Hex>;
 
   // OPTIONAL
+  publicKey?: Hex;
   estimateGas?: (tx: PreparedTransaction) => Promise<bigint>;
-  signTransaction?: (tx: TransactionSerializable) => Promise<Hex>;
+  signTransaction?: (tx: TransactionSerializable) => Promise<Hex>; // TODO: Allow for custom serializers and native serialize types
   sendBatchTransaction?: (
     txs: SendTransactionOption[],
   ) => Promise<SendTransactionResult>;
