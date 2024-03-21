@@ -21,6 +21,12 @@ import type {
   EmbeddedWalletAuth,
   EmbeddedWalletSelectUIState,
 } from "./types.js";
+import type { LocaleId } from "../../ui/types.js";
+import type { EmbeddedWalletLocale } from "./locale/types.js";
+import { getEmbeddedWalletLocale } from "./locale/getEmbeddedWalletLocale.js";
+import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import { useEffect, useState } from "react";
+import { LoadingScreen } from "../shared/LoadingScreen.js";
 
 export type EmbeddedWalletConfigOptions = {
   /**
@@ -82,6 +88,9 @@ export const embeddedWalletConfig = (
     (hasEmail && authOptions.length > 1) ||
     (!hasEmail && authOptions.length > 0);
 
+  let prefetchedLocaleId: LocaleId;
+  let prefetchedLocale: EmbeddedWalletLocale;
+
   const config: WalletConfig = {
     category: "socialLogin",
     recommended: options?.recommended,
@@ -109,6 +118,8 @@ export const embeddedWalletConfig = (
           saveState={props.selection.saveData}
           authOptions={authOptions}
           select={props.selection.select}
+          prefetchedLocaleId={prefetchedLocaleId}
+          prefetchedLocale={prefetchedLocale}
         />
       );
     },
@@ -117,8 +128,15 @@ export const embeddedWalletConfig = (
         <EmbeddedWalletConnectUI
           connectUIProps={props}
           authOptions={authOptions}
+          prefetchedLocaleId={prefetchedLocaleId}
+          prefetchedLocale={prefetchedLocale}
         />
       );
+    },
+    async prefetch(localeId) {
+      const locale = await getEmbeddedWalletLocale(localeId);
+      prefetchedLocale = locale;
+      prefetchedLocaleId = localeId;
     },
   };
 
@@ -130,10 +148,16 @@ function EmbeddedWalletSelectionUI(props: {
   saveState: (state: EmbeddedWalletSelectUIState) => void;
   authOptions: EmbeddedWalletAuth[];
   select: () => void;
+  prefetchedLocaleId?: LocaleId;
+  prefetchedLocale?: EmbeddedWalletLocale;
 }) {
   const { screen } = useScreenContext();
   const { size } = props.selectUIProps.screenConfig;
   const { walletConfig } = props.selectUIProps;
+  const locale = useEmbeddedWalletLocale(
+    props.prefetchedLocaleId,
+    props.prefetchedLocale,
+  );
 
   // do not show the "selectUI" if
   // modal is compact or
@@ -153,6 +177,10 @@ function EmbeddedWalletSelectionUI(props: {
     );
   }
 
+  if (!locale) {
+    return <LoadingScreen height="300px" />;
+  }
+
   return (
     <EmbeddedWalletFormUI
       connectUIProps={{
@@ -167,6 +195,7 @@ function EmbeddedWalletSelectionUI(props: {
       authOptions={props.authOptions}
       saveState={props.saveState}
       select={props.selectUIProps.selection.select}
+      locale={locale}
     />
   );
 }
@@ -174,15 +203,27 @@ function EmbeddedWalletSelectionUI(props: {
 function EmbeddedWalletConnectUI(props: {
   connectUIProps: ConnectUIProps;
   authOptions: EmbeddedWalletAuth[];
+  prefetchedLocaleId?: LocaleId;
+  prefetchedLocale?: EmbeddedWalletLocale;
 }) {
   const state = props.connectUIProps.selection
     .data as EmbeddedWalletSelectUIState;
+
+  const locale = useEmbeddedWalletLocale(
+    props.prefetchedLocaleId,
+    props.prefetchedLocale,
+  );
+
+  if (!locale) {
+    return <LoadingScreen />;
+  }
 
   if (state?.emailLogin) {
     return (
       <EmbeddedWalletOTPLoginUI
         email={state.emailLogin}
         connectUIProps={props.connectUIProps}
+        locale={locale}
       />
     );
   }
@@ -193,6 +234,7 @@ function EmbeddedWalletConnectUI(props: {
         connectUIProps={props.connectUIProps}
         socialAuth={state.socialLogin.type}
         state={state}
+        locale={locale}
       />
     );
   }
@@ -203,6 +245,25 @@ function EmbeddedWalletConnectUI(props: {
       authOptions={props.authOptions}
       saveState={props.connectUIProps.selection.saveData}
       select={() => {}}
+      locale={locale}
     />
   );
+}
+
+function useEmbeddedWalletLocale(
+  prefetchedLocaleId?: LocaleId,
+  prefetchedLocale?: EmbeddedWalletLocale,
+) {
+  const localeId = useWalletConnectionCtx().locale;
+  const [locale, setLocale] = useState<EmbeddedWalletLocale | undefined>(
+    prefetchedLocaleId === localeId ? prefetchedLocale : undefined,
+  );
+
+  useEffect(() => {
+    getEmbeddedWalletLocale(localeId).then((l) => {
+      setLocale(l);
+    });
+  }, [locale, localeId, prefetchedLocaleId]);
+
+  return locale;
 }

@@ -3,7 +3,7 @@ import {
   getTokenBalance,
   type GetTokenBalanceOptions,
 } from "../../../../wallets/utils/getTokenBalance.js";
-import { useThirdwebProviderProps } from "./useThirdwebProviderProps.js";
+import { useWalletConnectionCtx } from "./useWalletConnectionCtx.js";
 
 /**
  * Custom hook to fetch the balance of a wallet for a specific token.
@@ -15,7 +15,7 @@ export function useWalletBalance(
   options: Omit<Partial<GetTokenBalanceOptions>, "client">,
 ) {
   const { chain, account, tokenAddress } = options;
-  const { client } = useThirdwebProviderProps();
+  const { client } = useWalletConnectionCtx();
   const query = queryOptions({
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: [

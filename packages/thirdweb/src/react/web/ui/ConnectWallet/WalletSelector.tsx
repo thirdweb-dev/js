@@ -1,6 +1,5 @@
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
 import { useContext, useState, useRef, useEffect, useCallback } from "react";
-import { useTWLocale } from "../../providers/locale-provider.js";
 import {
   ModalConfigCtx,
   SetModalConfigCtx,
@@ -31,8 +30,8 @@ import { TWIcon } from "./icons/twIcon.js";
 import { Text } from "../components/text.js";
 import { PoweredByThirdweb } from "./PoweredByTW.js";
 import { useScreenContext } from "./Modal/screen.js";
-import { useThirdwebProviderProps } from "../../../core/hooks/others/useThirdwebProviderProps.js";
 import { localWalletMetadata } from "../../../../wallets/local/index.js";
+import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 
 type WalletSelectUIProps = {
   screenConfig: SelectUIProps["screenConfig"];
@@ -55,7 +54,7 @@ export const WalletSelector: React.FC<{
   const [isWalletGroupExpanded, setIsWalletGroupExpanded] = useState(false);
   // const disconnect = useDisconnect();
   // const connectionStatus = useActiveWalletConnectionStatus();
-  const locale = useTWLocale().connectWallet;
+  const locale = useWalletConnectionCtx().connectLocale;
 
   const localWalletConfig = props.walletConfigs.find(
     (w) => w.metadata.id === localWalletMetadata.id,
@@ -445,7 +444,7 @@ const WalletSelection: React.FC<{
   maxHeight?: string;
   selectUIProps: WalletSelectUIProps;
 }> = (props) => {
-  const { client, dappMetadata } = useThirdwebProviderProps();
+  const { client, appMetadata } = useWalletConnectionCtx();
   const modalConfig = useContext(ModalConfigCtx);
   const setModalConfig = useContext(SetModalConfigCtx);
   const walletConfigs = sortWalletConfigs(props.walletConfigs);
@@ -483,7 +482,7 @@ const WalletSelection: React.FC<{
                   createInstance: () => {
                     return walletConfig.create({
                       client,
-                      dappMetadata,
+                      appMetadata,
                     });
                   },
                 }}
@@ -513,7 +512,7 @@ export function WalletEntryButton(props: {
 }) {
   const { walletConfig, selectWallet } = props;
   const isRecommended = walletConfig.recommended;
-  const locale = useTWLocale().connectWallet;
+  const { connectLocale } = useWalletConnectionCtx();
   const { screen } = useScreenContext();
 
   return (
@@ -536,12 +535,12 @@ export function WalletEntryButton(props: {
           {walletConfig.metadata.name}
         </Text>
 
-        {isRecommended && <Text size="sm">{locale.recommended}</Text>}
+        {isRecommended && <Text size="sm">{connectLocale.recommended}</Text>}
 
         {!isRecommended &&
           walletConfig.isInstalled &&
           walletConfig.isInstalled() && (
-            <Text size="sm">{locale.installed}</Text>
+            <Text size="sm">{connectLocale.installed}</Text>
           )}
       </Container>
     </WalletButton>

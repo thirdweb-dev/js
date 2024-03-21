@@ -34,10 +34,10 @@ import {
 import { isNativeToken, type ERC20OrNativeToken } from "../../nativeToken.js";
 import { SwapFees } from "./SwapFees.js";
 import { addPendingSwapTransaction } from "./pendingSwapTx.js";
-import { useThirdwebProviderProps } from "../../../../../../core/hooks/others/useThirdwebProviderProps.js";
 import { TokenIcon } from "../../../../components/TokenIcon.js";
 import { waitForReceipt } from "../../../../../../../transaction/actions/wait-for-tx-receipt.js";
 import { AccentFailIcon } from "../../../icons/AccentFailIcon.js";
+import type { ThirdwebClient } from "../../../../../../../client/client.js";
 
 /**
  * @internal
@@ -54,8 +54,8 @@ export function ConfirmationScreen(props: {
   toToken: ERC20OrNativeToken;
   onViewPendingTx: () => void;
   onQuoteFinalized: (quote: BuyWithCryptoQuote) => void;
+  client: ThirdwebClient;
 }) {
-  const { client } = useThirdwebProviderProps();
   const activeWallet = useActiveWallet();
   const sendTransactionMutation = useSendTransaction();
 
@@ -218,7 +218,7 @@ export function ConfirmationScreen(props: {
 
               // these will be defined by this time
               if (fromTokenSymbol && toTokenSymbol && fromChain.data) {
-                addPendingSwapTransaction(client, {
+                addPendingSwapTransaction(props.client, {
                   from: {
                     symbol: fromTokenSymbol,
                     value: props.fromAmount,
@@ -235,6 +235,7 @@ export function ConfirmationScreen(props: {
 
               setSwapTx({
                 transactionHash: _swapTx.transactionHash, // ?? _swapTx.userOpHash,
+                client: props.client,
               });
             } catch (e) {
               console.error(e);

@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useTWLocale } from "../../providers/locale-provider.js";
 import type { ConnectUIProps } from "../../../core/types/wallets.js";
 import { Spacer } from "../../ui/components/Spacer.js";
 import { Spinner } from "../../ui/components/Spinner.js";
@@ -13,6 +12,7 @@ import type {
 } from "./types.js";
 import type { EmbeddedWallet } from "../../../../wallets/embedded/core/wallet/index.js";
 import { Text } from "../../ui/components/text.js";
+import type { EmbeddedWalletLocale } from "./locale/types.js";
 
 /**
  * @internal
@@ -21,8 +21,9 @@ export function EmbeddedWalletSocialLogin(props: {
   connectUIProps: ConnectUIProps;
   socialAuth: EmbeddedWalletSocialAuth;
   state: EmbeddedWalletSelectUIState;
+  locale: EmbeddedWalletLocale;
 }) {
-  const ewLocale = useTWLocale().wallets.embeddedWallet;
+  const ewLocale = props.locale;
   const locale = ewLocale.socialLoginScreen;
   const themeObj = useCustomTheme();
   const [authError, setAuthError] = useState<string | undefined>(undefined);

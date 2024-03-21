@@ -1,4 +1,3 @@
-import { useTWLocale } from "../../../providers/locale-provider.js";
 import { shortenString } from "../../../../core/utils/addresses.js";
 import { Img } from "../../components/Img.js";
 import { QRCode } from "../../components/QRCode.js";
@@ -11,6 +10,7 @@ import { useClipboard } from "../../hooks/useCopyClipboard.js";
 import { useActiveAccount } from "../../../../core/hooks/wallets/wallet-hooks.js";
 import { Text } from "../../components/text.js";
 import { CopyIcon } from "../../components/CopyIcon.js";
+import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 
 /**
  *
@@ -20,7 +20,7 @@ export function ReceiveFunds(props: { iconUrl: string; onBack: () => void }) {
   const account = useActiveAccount();
   const address = account?.address;
   const { hasCopied, onCopy } = useClipboard(address || "");
-  const locale = useTWLocale().connectWallet.receiveFundsScreen;
+  const locale = useWalletConnectionCtx().connectLocale.receiveFundsScreen;
 
   return (
     <Container p="lg">

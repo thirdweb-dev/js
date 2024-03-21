@@ -65,6 +65,8 @@ export const MediaRenderer = /* @__PURE__ */ (() =>
       },
       ref,
     ) {
+      const client = restProps.client;
+
       const mergedStyle: React.CSSProperties = {
         objectFit: "contain",
         width,
@@ -73,12 +75,14 @@ export const MediaRenderer = /* @__PURE__ */ (() =>
       };
 
       const mediaInfo = useResolvedMediaType(
+        client,
         src ?? undefined,
         mimeType,
         gatewayUrl,
       );
 
       const possiblePosterSrc = useResolvedMediaType(
+        client,
         poster ?? undefined,
         undefined,
         gatewayUrl,

@@ -1,13 +1,11 @@
 import { useCallback } from "react";
 import { track } from "../../../../analytics/track.js";
-import { useThirdwebProviderProps } from "../../../core/hooks/others/useThirdwebProviderProps.js";
+import type { ThirdwebClient } from "../../../../client/client.js";
 
 /**
  * @internal
  */
-export function useTrack() {
-  const { client } = useThirdwebProviderProps();
-
+export function useTrack(client: ThirdwebClient) {
   return useCallback(
     (data: object) => {
       // never be blocked by tracking - error or otherwise

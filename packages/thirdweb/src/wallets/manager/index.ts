@@ -8,11 +8,7 @@ import type { AsyncStorage } from "../storage/AsyncStorage.js";
 import { normalizeChainId } from "../utils/normalizeChainId.js";
 
 type WalletIdToConnectedWalletMap = Map<string, Wallet>;
-export type ConnectionStatus =
-  | "connected"
-  | "disconnected"
-  | "connecting"
-  | "unknown";
+export type ConnectionStatus = "connected" | "disconnected" | "connecting";
 
 const CONNECTED_WALLET_IDS = "thirdweb:connected-wallet-ids";
 const ACTIVE_WALLET_ID = "thirdweb:active-wallet-id";
@@ -36,7 +32,7 @@ export function createConnectionManager(storage: AsyncStorage) {
   const activeAccountStore = createStore<Account | undefined>(undefined);
   const activeWalletChainStore = createStore<Chain | undefined>(undefined);
   const activeWalletConnectionStatusStore =
-    createStore<ConnectionStatus>("unknown");
+    createStore<ConnectionStatus>("disconnected");
 
   // other connected accounts
   const walletIdToConnectedWalletMap =

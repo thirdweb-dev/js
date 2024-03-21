@@ -6,6 +6,9 @@ import {
 import { walletConnect } from "../../../../wallets/wallet-connect/index.js";
 import type { WalletConfig } from "../../../core/types/wallets.js";
 import { asyncLocalStorage } from "../../../core/utils/asyncLocalStorage.js";
+import type { LocaleId } from "../../ui/types.js";
+import { getInjectedWalletLocale } from "../injected/locale/getInjectedWalletLocale.js";
+import type { InjectedWalletLocale } from "../injected/locale/types.js";
 import { InjectedAndWCConnectUI } from "../shared/InjectedAndWCConnectUI.js";
 
 export type ZerionConfigOptions = {
@@ -47,6 +50,9 @@ export type ZerionConfigOptions = {
  * @returns `WalletConfig` object to be passed into `ThirdwebProvider`
  */
 export const zerionConfig = (options?: ZerionConfigOptions): WalletConfig => {
+  let prefetchedLocale: InjectedWalletLocale;
+  let prefetchedLocaleId: LocaleId;
+
   const config: WalletConfig = {
     recommended: options?.recommended,
     create(createOptions) {
@@ -56,7 +62,7 @@ export const zerionConfig = (options?: ZerionConfigOptions): WalletConfig => {
 
       return walletConnect({
         client: createOptions.client,
-        dappMetadata: createOptions.dappMetadata,
+        appMetadata: createOptions.appMetadata,
         metadata: zerionWalletMetadata,
         storage: asyncLocalStorage,
       });
@@ -77,11 +83,18 @@ export const zerionConfig = (options?: ZerionConfigOptions): WalletConfig => {
             android: "https://link.zerion.io/pt3gdRP0njb/",
             other: "https://link.zerion.io/pt3gdRP0njb/",
           }}
+          prefetchedLocale={prefetchedLocale}
+          prefetchedLocaleId={prefetchedLocaleId}
         />
       );
     },
     isInstalled() {
       return !!injectedZerionProvider();
+    },
+    async prefetch(localeId) {
+      const localeFn = await getInjectedWalletLocale(localeId);
+      prefetchedLocale = localeFn(zerionWalletMetadata.name);
+      prefetchedLocaleId = localeId;
     },
   };
 

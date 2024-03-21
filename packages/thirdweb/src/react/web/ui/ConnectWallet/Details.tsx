@@ -16,7 +16,6 @@ import {
   // useConnect,
   useDisconnect,
 } from "../../../core/hooks/wallets/wallet-hooks.js";
-import { useTWLocale } from "../../providers/locale-provider.js";
 import { Modal } from "../components/Modal.js";
 import { Skeleton } from "../components/Skeleton.js";
 import { Spacer } from "../components/Spacer.js";
@@ -70,6 +69,7 @@ import { swapTransactionsStore } from "./screens/Buy/swap/pendingSwapTx.js";
 import { SwapScreen } from "./screens/Buy/SwapScreen.js";
 import { SwapTransactionsScreen } from "./screens/SwapTransactionsScreen.js";
 import { useSwapSupportedChains } from "./screens/Buy/swap/useSwapSupportedChains.js";
+import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 
 const TW_CONNECTED_WALLET = "tw-connected-wallet";
 
@@ -95,7 +95,7 @@ export const ConnectedWalletDetails: React.FC<{
   supportedTokens: SupportedTokens;
   chains: Chain[];
 }> = (props) => {
-  const locale = useTWLocale().connectWallet;
+  const { connectLocale: locale, client } = useWalletConnectionCtx();
   const activeWallet = useActiveWallet();
   const activeAccount = useActiveAccount();
   const walletChain = useActiveWalletChain();
@@ -111,7 +111,7 @@ export const ConnectedWalletDetails: React.FC<{
   useChainsQuery(props.chains, 5);
 
   // prefetch swap supported chains
-  useSwapSupportedChains();
+  useSwapSupportedChains(client);
 
   const tokenAddress =
     walletChain && props.detailsButton?.displayBalanceToken
@@ -352,6 +352,7 @@ export const ConnectedWalletDetails: React.FC<{
               gap: spacing.xs,
               alignItems: "center",
               padding: spacing.sm,
+              flexWrap: "wrap",
             }}
             onClick={() => {
               setScreen("send");
@@ -378,6 +379,7 @@ export const ConnectedWalletDetails: React.FC<{
               gap: spacing.xs,
               alignItems: "center",
               padding: spacing.sm,
+              flexWrap: "wrap",
             }}
             onClick={() => {
               setScreen("receive");
@@ -397,6 +399,7 @@ export const ConnectedWalletDetails: React.FC<{
               gap: spacing.xs,
               alignItems: "center",
               padding: spacing.sm,
+              flexWrap: "wrap",
             }}
             onClick={() => {
               setScreen("buy");
@@ -405,7 +408,7 @@ export const ConnectedWalletDetails: React.FC<{
             <Container color="secondaryText" flex="row" center="both">
               <PlusIcon width={iconSize.sm} height={iconSize.sm} />
             </Container>
-            Buy
+            {locale.buy}
           </Button>
         </Container>
       </Container>
@@ -433,7 +436,7 @@ export const ConnectedWalletDetails: React.FC<{
           >
             <TextAlignJustifyIcon width={iconSize.md} height={iconSize.md} />
             <Container flex="row" gap="xs" center="y">
-              <Text color="primaryText">Transactions</Text>
+              <Text color="primaryText">{locale.transactions}</Text>
               {pendingSwapTxs && pendingSwapTxs.length > 0 && (
                 <BadgeCount>{pendingSwapTxs.length}</BadgeCount>
               )}
@@ -454,24 +457,6 @@ export const ConnectedWalletDetails: React.FC<{
             <AccountSwitcher name={locale.smartWallet} wallet={smartWallet} />
           )} */}
 
-          {/* Switch Account for Metamask */}
-          {/* {isActuallyMetaMask &&
-            activeWalletConfig &&
-            activeWalletConfig.isInstalled &&
-            activeWalletConfig.isInstalled() &&
-            !isMobile() && (
-              <MenuButton
-                type="button"
-                onClick={() => {
-                  (activeWallet as MetaMaskWallet).switchAccount();
-                  setIsOpen(false);
-                }}
-              >
-                <ShuffleIcon width={iconSize.md} height={iconSize.md} />
-                <Text color="primaryText">{locale.switchAccount}</Text>
-              </MenuButton>
-            )} */}
-
           {/* Request Testnet funds */}
           {(props.detailsModal?.showTestnetFaucet ?? false) &&
             ((chainQuery.data?.faucets && chainQuery.data.faucets.length > 0) ||
@@ -482,14 +467,6 @@ export const ConnectedWalletDetails: React.FC<{
                 }
                 target="_blank"
                 as="a"
-                onClick={async () => {
-                  // if (chain.chainId === LocalhostChainId) {
-                  //   e.preventDefault();
-                  //   setIsOpen(false);
-                  //   await sdk?.wallet.requestFunds(10);
-                  //   await balanceQuery.refetch();
-                  // }
-                }}
                 style={{
                   textDecoration: "none",
                   color: "inherit",
@@ -549,7 +526,8 @@ export const ConnectedWalletDetails: React.FC<{
           <Spacer y="sm" />
         </Container>
       )}
-      {/* {activeWallet?.walletId === walletIds.localWallet && (
+
+      {activeWallet?.metadata.id === localWalletMetadata.id && (
         <>
           <Line />
           <Container py="md">
@@ -558,12 +536,17 @@ export const ConnectedWalletDetails: React.FC<{
             </Text>
           </Container>
         </>
-      )} */}
+      )}
     </div>
   );
 
   if (screen === "pending-tx") {
-    content = <SwapTransactionsScreen onBack={() => setScreen("main")} />;
+    content = (
+      <SwapTransactionsScreen
+        onBack={() => setScreen("main")}
+        client={client}
+      />
+    );
   }
 
   if (screen === "network-switcher") {
@@ -629,6 +612,7 @@ export const ConnectedWalletDetails: React.FC<{
   else if (screen === "buy") {
     content = (
       <SwapScreen
+        client={client}
         onBack={() => setScreen("main")}
         supportedTokens={props.supportedTokens}
         onViewPendingTx={() => setScreen("pending-tx")}
@@ -790,7 +774,7 @@ function ConnectedToSmartWallet() {
   const activeAccount = useActiveAccount();
   const activeWallet = useActiveWallet();
   const chain = useActiveWalletChain();
-  const locale = useTWLocale().connectWallet;
+  const locale = useWalletConnectionCtx().connectLocale;
   const isSmartWallet = activeWallet && "isSmartWallet" in activeWallet;
 
   const [isSmartWalletDeployed] = useState(false);

@@ -30,6 +30,7 @@ import type {
 import { defineChain } from "../../../../../chains/utils.js";
 import { swapTransactionsStore } from "./Buy/swap/pendingSwapTx.js";
 import { formatNumber } from "../../../../../utils/formatNumber.js";
+import type { ThirdwebClient } from "../../../../../client/client.js";
 
 type TxStatusInfo = {
   fromChainId: number;
@@ -45,9 +46,12 @@ const PAGE_SIZE = 10;
 /**
  * @internal
  */
-export function SwapTransactionsScreen(props: { onBack: () => void }) {
+export function SwapTransactionsScreen(props: {
+  onBack: () => void;
+  client: ThirdwebClient;
+}) {
   const [pageIndex, setPageIndex] = useState(0);
-  const _historyQuery = useSwapTransactions(pageIndex);
+  const _historyQuery = useSwapTransactions(pageIndex, props.client);
 
   const inMemoryPendingTxs = useSyncExternalStore(
     swapTransactionsStore.subscribe,
@@ -241,13 +245,14 @@ export function SwapTransactionsScreen(props: { onBack: () => void }) {
 /**
  * @internal
  */
-export function useSwapTransactions(pageIndex: number) {
+export function useSwapTransactions(pageIndex: number, client: ThirdwebClient) {
   const account = useActiveAccount();
   const historyQuery = useBuyWithCryptoHistory(
     {
       walletAddress: account?.address || "",
       start: pageIndex * PAGE_SIZE,
       count: PAGE_SIZE,
+      client,
     },
     {
       // 30 seconds

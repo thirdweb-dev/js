@@ -3,18 +3,13 @@ import {
   type UseQueryOptions,
   type UseQueryResult,
 } from "@tanstack/react-query";
-import { useContext } from "react";
 import {
   getBuyWithCryptoHistory,
   type BuyWithCryptoHistoryData,
   type BuyWithCryptoHistoryParams,
 } from "../../../../pay/buyWithCrypto/actions/getHistory.js";
-import { ThirdwebProviderContext } from "../../providers/thirdweb-provider-ctx.js";
 
-export type BuyWithCryptoHistoryQueryParams = Omit<
-  BuyWithCryptoHistoryParams,
-  "client"
->;
+export type BuyWithCryptoHistoryQueryParams = BuyWithCryptoHistoryParams;
 export type BuyWithCryptoQuoteQueryOptions = Omit<
   UseQueryOptions<BuyWithCryptoHistoryData>,
   "queryFn" | "queryKey" | "enabled"
@@ -42,21 +37,20 @@ export function useBuyWithCryptoHistory(
   buyWithCryptoHistoryParams?: BuyWithCryptoHistoryQueryParams,
   queryParams?: BuyWithCryptoQuoteQueryOptions,
 ): UseQueryResult<BuyWithCryptoHistoryData> {
-  const context = useContext(ThirdwebProviderContext);
   return useQuery({
     ...queryParams,
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: ["buyWithCryptoHistory", buyWithCryptoHistoryParams],
     queryFn: () => {
-      if (!context?.client) {
-        throw new Error("Please wrap the component in a ThirdwebProvider!");
-      }
       if (!buyWithCryptoHistoryParams) {
         throw new Error("Swap params are required");
       }
+      if (!buyWithCryptoHistoryParams?.client) {
+        throw new Error("Client is required");
+      }
       return getBuyWithCryptoHistory({
         ...buyWithCryptoHistoryParams,
-        client: context.client,
+        client: buyWithCryptoHistoryParams.client,
       });
     },
     enabled: !!buyWithCryptoHistoryParams,

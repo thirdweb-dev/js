@@ -15,15 +15,21 @@ import {
   useActiveWalletConnectionStatus,
   useSwitchActiveWalletChain,
 } from "../../../core/hooks/wallets/wallet-hooks.js";
-import { useThirdwebProviderProps } from "../../../core/hooks/others/useThirdwebProviderProps.js";
-import { useTWLocale } from "../../providers/locale-provider.js";
 import {
   useSetIsWalletModalOpen,
   SetModalConfigCtx,
+  WalletUIStatesProvider,
 } from "../../providers/wallet-ui-states-provider.js";
 import type { ConnectButtonProps } from "./ConnectWalletProps.js";
 import { canFitWideModal } from "../../utils/canFitWideModal.js";
 import type { Chain } from "../../../../chains/types.js";
+import type { ConnectLocale } from "./locale/types.js";
+import { WalletConnectionContext } from "../../../core/providers/wallet-connection.js";
+import { defaultWallets } from "../../wallets/defaultWallets.js";
+import { AutoConnect } from "../../../core/hooks/connection/useAutoConnect.js";
+import ConnectModal from "./Modal/ConnectModal.js";
+import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import { getConnectLocale } from "./locale/getConnectLocale.js";
 
 const TW_CONNECT_WALLET = "tw-connect-wallet";
 
@@ -32,7 +38,13 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  * It renders a button which when clicked opens a modal to allow users to connect to wallets specified in the `ThirdwebProvider`'s `wallets` prop.
  * @example
  * ```tsx
- * <ConnectButton />
+ * <ConnectButton
+ *    client={client}
+ *    appMetadata={{
+ *      name: "Example",
+ *      url: "https://example.com",
+ *    }}
+ * />
  * ```
  * @param props
  * Props for the `ConnectButton` component
@@ -41,24 +53,88 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  * @component
  */
 export function ConnectButton(props: ConnectButtonProps) {
+  const wallets = props.wallets || defaultWallets;
+  const localeId = props.locale || "en-US";
+  const [locale, setLocale] = useState<ConnectLocale | undefined>();
+
+  useEffect(() => {
+    wallets.forEach((w) => {
+      w.prefetch?.(localeId);
+    });
+  }, [wallets, localeId]);
+
+  useEffect(() => {
+    getConnectLocale(localeId).then(setLocale);
+  }, [localeId]);
+
+  const autoConnectComp = props.autoConnect !== false && (
+    <AutoConnect
+      appMetadata={props.appMetadata}
+      client={props.client}
+      wallets={wallets}
+      timeout={
+        typeof props.autoConnect === "boolean"
+          ? undefined
+          : props.autoConnect?.timeout
+      }
+    />
+  );
+
+  if (!locale) {
+    return (
+      <AnimatedButton
+        disabled={true}
+        className={`${
+          props.connectButton?.className || ""
+        } ${TW_CONNECT_WALLET}`}
+        variant="primary"
+        type="button"
+        style={{
+          minWidth: "140px",
+          ...props.connectButton?.style,
+        }}
+      >
+        {autoConnectComp}
+        <Spinner size="sm" color="primaryButtonText" />
+      </AnimatedButton>
+    );
+  }
+
+  return (
+    <WalletConnectionContext.Provider
+      value={{
+        appMetadata: props.appMetadata,
+        client: props.client,
+        wallets: wallets,
+        locale: props.locale || "en-US",
+        connectLocale: locale,
+      }}
+    >
+      <WalletUIStatesProvider theme="dark">
+        <ConnectButtonInner {...props} connectLocale={locale} />
+        <ConnectModal />
+        {autoConnectComp}
+      </WalletUIStatesProvider>
+    </WalletConnectionContext.Provider>
+  );
+}
+
+function ConnectButtonInner(
+  props: ConnectButtonProps & {
+    connectLocale: ConnectLocale;
+  },
+) {
   const activeAccount = useActiveAccount();
   const activeWalletChain = useActiveWalletChain();
   const contextTheme = useCustomTheme();
   const theme = props.theme || contextTheme || "dark";
   const connectionStatus = useActiveWalletConnectionStatus();
-  const locale = useTWLocale();
+  const locale = props.connectLocale;
 
-  // preload the modal component
-  useEffect(() => {
-    import("./Modal/ConnectModal.js");
-  }, []);
-
-  const walletConfigs = useThirdwebProviderProps().wallets;
-  const isLoading =
-    connectionStatus === "connecting" || connectionStatus === "unknown";
+  const isLoading = connectionStatus === "connecting";
 
   const connectButtonLabel =
-    props.connectButton?.label || locale.connectWallet.defaultButtonTitle;
+    props.connectButton?.label || locale.defaultButtonTitle;
 
   const setIsWalletModalOpen = useSetIsWalletModalOpen();
 
@@ -109,6 +185,8 @@ export function ConnectButton(props: ConnectButtonProps) {
   //   }
   // }, [activeWallet]);
 
+  const wallets = props.wallets || defaultWallets;
+
   return (
     <CustomThemeProvider theme={theme}>
       {/* <Modal
@@ -148,20 +226,18 @@ export function ConnectButton(props: ConnectButtonProps) {
               }}
               aria-label={
                 connectionStatus === "connecting"
-                  ? locale.connectWallet.connecting
+                  ? locale.connecting
                   : connectButtonLabel
               }
               onClick={() => {
                 let modalSize = props.connectModal?.size || "wide";
 
-                if (!canFitWideModal() || walletConfigs.length === 1) {
+                if (!canFitWideModal() || wallets.length === 1) {
                   modalSize = "compact";
                 }
 
                 setModalConfig({
-                  title:
-                    props.connectModal?.title ||
-                    locale.connectWallet.defaultModalTitle,
+                  title: props.connectModal?.title || locale.defaultModalTitle,
                   theme,
                   data: undefined,
                   modalSize,
@@ -261,10 +337,10 @@ function SwitchNetworkButton(props: {
 }) {
   const switchChain = useSwitchActiveWalletChain();
   const [switching, setSwitching] = useState(false);
-  const locale = useTWLocale();
+  const locale = useWalletConnectionCtx().connectLocale;
 
   const switchNetworkBtnTitle =
-    props.switchNetworkBtnTitle ?? locale.connectWallet.switchNetwork;
+    props.switchNetworkBtnTitle ?? locale.switchNetwork;
 
   return (
     <AnimatedButton
@@ -289,7 +365,7 @@ function SwitchNetworkButton(props: {
         minWidth: "140px",
         ...props.style,
       }}
-      aria-label={switching ? locale.connectWallet.switchingNetwork : undefined}
+      aria-label={switching ? locale.switchingNetwork : undefined}
     >
       {switching ? (
         <Spinner size="sm" color="primaryButtonText" />

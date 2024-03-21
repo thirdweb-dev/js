@@ -1,7 +1,4 @@
-// export {
-//   ThirdwebProvider,
-//   type ThirdwebProviderProps,
-// } from "../react/mobile/providers/thirdweb-provider.js";
+export { ThirdwebProvider } from "../react/core/providers/thirdweb-provider.js";
 
 // react/core
 export {

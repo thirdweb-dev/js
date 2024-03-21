@@ -1,6 +1,6 @@
 import { createContext, useState, useRef, useEffect, useContext } from "react";
 import { reservedScreens } from "../constants.js";
-import { useThirdwebProviderProps } from "../../../../core/hooks/others/useThirdwebProviderProps.js";
+import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import type { WalletConfig } from "../../../../core/types/wallets.js";
 import { useActiveAccount } from "../../../../core/hooks/wallets/wallet-hooks.js";
 import { ModalConfigCtx } from "../../../providers/wallet-ui-states-provider.js";
@@ -21,7 +21,7 @@ export const ScreenSetupContext = /* @__PURE__ */ createContext<
  * @internal
  */
 export function useSetupScreen() {
-  const walletConfigs = useThirdwebProviderProps().wallets;
+  const walletConfigs = useWalletConnectionCtx().wallets;
   const modalConfig = useContext(ModalConfigCtx);
 
   let initialScreen: Screen = reservedScreens.main;

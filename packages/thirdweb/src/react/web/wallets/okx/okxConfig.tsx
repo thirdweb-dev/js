@@ -6,6 +6,9 @@ import {
 import { walletConnect } from "../../../../wallets/wallet-connect/index.js";
 import type { WalletConfig } from "../../../core/types/wallets.js";
 import { asyncLocalStorage } from "../../../core/utils/asyncLocalStorage.js";
+import type { LocaleId } from "../../ui/types.js";
+import { getInjectedWalletLocale } from "../injected/locale/getInjectedWalletLocale.js";
+import type { InjectedWalletLocale } from "../injected/locale/types.js";
 import { InjectedAndWCConnectUI } from "../shared/InjectedAndWCConnectUI.js";
 
 export type OkxConfigOptions = {
@@ -47,6 +50,9 @@ export type OkxConfigOptions = {
  * @returns `WalletConfig` object to be passed into `ThirdwebProvider`
  */
 export const okxConfig = (options?: OkxConfigOptions): WalletConfig => {
+  let prefetchedLocale: InjectedWalletLocale;
+  let prefetchedLocaleId: LocaleId;
+
   const config: WalletConfig = {
     recommended: options?.recommended,
     create(createOptions) {
@@ -56,7 +62,7 @@ export const okxConfig = (options?: OkxConfigOptions): WalletConfig => {
 
       return walletConnect({
         client: createOptions.client,
-        dappMetadata: createOptions.dappMetadata,
+        appMetadata: createOptions.appMetadata,
         metadata: okxWalletMetadata,
         storage: asyncLocalStorage,
       });
@@ -79,11 +85,18 @@ export const okxConfig = (options?: OkxConfigOptions): WalletConfig => {
             android: "okx://",
             other: "okx://",
           }}
+          prefetchedLocale={prefetchedLocale}
+          prefetchedLocaleId={prefetchedLocaleId}
         />
       );
     },
     isInstalled() {
       return !!injectedOkxProvider();
+    },
+    async prefetch(localeId) {
+      const localeFn = await getInjectedWalletLocale(localeId);
+      prefetchedLocale = localeFn(okxWalletMetadata.name);
+      prefetchedLocaleId = localeId;
     },
   };
 

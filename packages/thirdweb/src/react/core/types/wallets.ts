@@ -1,7 +1,8 @@
 import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import type { Wallet } from "../../../wallets/interfaces/wallet.js";
-import type { DAppMetaData } from "../../../wallets/types.js";
+import type { AppMetadata } from "../../../wallets/types.js";
+import type { LocaleId } from "../../web/ui/types.js";
 
 /**
  * @walletConfig
@@ -17,7 +18,7 @@ export type WalletConfig = {
 
   create: (options: {
     client: ThirdwebClient;
-    dappMetadata: DAppMetaData;
+    appMetadata: AppMetadata;
   }) => Wallet;
 
   /**
@@ -63,6 +64,13 @@ export type WalletConfig = {
    * providing the `personalWalletConfigs` ensures that auto connect will connect the last connected personal wallet first and then connect this wallet
    */
   personalWalletConfigs?: WalletConfig[];
+
+  /**
+   * Prefetch data required for this wallet.
+   * This is useful if wallet UI uses dynamic imports to fetch certain data and calling this function will prefetch that data to make the wallet UI load faster
+   * @returns
+   */
+  prefetch?: (locale: LocaleId) => Promise<void>;
 };
 
 /**

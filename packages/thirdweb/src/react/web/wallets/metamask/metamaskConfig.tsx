@@ -6,6 +6,9 @@ import {
 import { walletConnect } from "../../../../wallets/wallet-connect/index.js";
 import type { WalletConfig } from "../../../core/types/wallets.js";
 import { asyncLocalStorage } from "../../../core/utils/asyncLocalStorage.js";
+import type { LocaleId } from "../../ui/types.js";
+import { getInjectedWalletLocale } from "../injected/locale/getInjectedWalletLocale.js";
+import type { InjectedWalletLocale } from "../injected/locale/types.js";
 import { InjectedAndWCConnectUI } from "../shared/InjectedAndWCConnectUI.js";
 
 export type MetamaskConfigOptions = {
@@ -49,6 +52,9 @@ export type MetamaskConfigOptions = {
 export const metamaskConfig = (
   options?: MetamaskConfigOptions,
 ): WalletConfig => {
+  let prefetchedLocale: InjectedWalletLocale;
+  let prefetchedLocaleId: LocaleId;
+
   const config: WalletConfig = {
     recommended: options?.recommended,
     metadata: metamaskMetadata,
@@ -59,7 +65,7 @@ export const metamaskConfig = (
 
       return walletConnect({
         client: createOptions.client,
-        dappMetadata: createOptions.dappMetadata,
+        appMetadata: createOptions.appMetadata,
         metadata: metamaskMetadata,
         storage: asyncLocalStorage,
       });
@@ -81,11 +87,18 @@ export const metamaskConfig = (
             android: "https://metamask.app.link/",
             other: "https://metamask.app.link/",
           }}
+          prefetchedLocale={prefetchedLocale}
+          prefetchedLocaleId={prefetchedLocaleId}
         />
       );
     },
     isInstalled() {
       return !!injectedMetamaskProvider();
+    },
+    async prefetch(localeId) {
+      const localeFn = await getInjectedWalletLocale(localeId);
+      prefetchedLocale = localeFn(metamaskMetadata.name);
+      prefetchedLocaleId = localeId;
     },
   };
 

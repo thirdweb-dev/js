@@ -4,7 +4,10 @@ import {
 } from "../../../../wallets/local/index.js";
 import type { WalletConfig } from "../../../core/types/wallets.js";
 import { asyncLocalStorage } from "../../../core/utils/asyncLocalStorage.js";
+import type { LocaleId } from "../../ui/types.js";
 import { LocalWalletConnectUI } from "./LocalWalletConnectUI.js";
+import { getLocalWalletLocale } from "./locale/getLocalWalletLocale.js";
+import type { LocalWalletLocale } from "./locale/types.js";
 
 export type LocalWalletConfigOptions = {
   /**
@@ -43,6 +46,9 @@ export type LocalWalletConfigOptions = {
 export const localWalletConfig = (
   options?: LocalWalletConfigOptions,
 ): WalletConfig => {
+  let prefetchedLocale: LocalWalletLocale;
+  let prefetchedLocaleId: LocaleId;
+
   const config: WalletConfig = {
     metadata: localWalletMetadata,
     create(createOptions) {
@@ -56,8 +62,14 @@ export const localWalletConfig = (
         <LocalWalletConnectUI
           connectUIProps={props}
           persist={options?.persist !== undefined ? options.persist : true}
+          prefetchedLocale={prefetchedLocale}
+          prefetchedLocaleId={prefetchedLocaleId}
         />
       );
+    },
+    async prefetch(localeId) {
+      prefetchedLocale = await getLocalWalletLocale(localeId);
+      prefetchedLocaleId = localeId;
     },
   };
 

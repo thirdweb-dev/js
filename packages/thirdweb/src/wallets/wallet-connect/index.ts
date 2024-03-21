@@ -488,13 +488,13 @@ export class WalletConnect implements Wallet {
       optionalEvents: OPTIONAL_EVENTS,
       optionalChains: [targetChain.id],
       metadata: {
-        name: this.options.dappMetadata?.name || defaultDappMetadata.name,
+        name: this.options.appMetadata?.name || defaultDappMetadata.name,
         description:
-          this.options.dappMetadata?.description ||
+          this.options.appMetadata?.description ||
           defaultDappMetadata.description,
-        url: this.options.dappMetadata?.url || defaultDappMetadata.url,
+        url: this.options.appMetadata?.url || defaultDappMetadata.url,
         icons: [
-          this.options.dappMetadata?.logoUrl || defaultDappMetadata.logoUrl,
+          this.options.appMetadata?.logoUrl || defaultDappMetadata.logoUrl,
         ],
       },
       rpcMap: {

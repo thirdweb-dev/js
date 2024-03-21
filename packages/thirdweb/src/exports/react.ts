@@ -25,22 +25,12 @@ export {
   type TransactionButtonProps,
 } from "../react/web/ui/TransactionButton/index.js";
 
-export {
-  ThirdwebProvider,
-  type ThirdwebProviderProps,
-} from "../react/web/providers/thirdweb-provider.js";
+export { ThirdwebProvider } from "../react/core/providers/thirdweb-provider.js";
 
 // tokens
 export type { SupportedTokens } from "../react/web/ui/ConnectWallet/defaultTokens.js";
 export { defaultTokens } from "../react/web/ui/ConnectWallet/defaultTokens.js";
 export { defaultWallets } from "../react/web/wallets/defaultWallets.js";
-
-// locale
-export { en } from "../react/web/ui/locales/en.js";
-export { es } from "../react/web/ui/locales/es.js";
-export { ja } from "../react/web/ui/locales/ja.js";
-export { tl } from "../react/web/ui/locales/tl.js";
-export type { ThirdwebLocale } from "../react/web/ui/locales/types.js";
 
 // Media Renderer
 export { MediaRenderer } from "../react/web/ui/MediaRenderer/MediaRenderer.js";
@@ -130,6 +120,7 @@ export {
   useBuyWithCryptoQuote,
   type BuyWithCryptoQuoteQueryParams,
 } from "../react/core/hooks/pay/useBuyWithCryptoQuote.js";
+
 export {
   useBuyWithCryptoStatus,
   type BuyWithCryptoStatusQueryParams,
@@ -138,3 +129,8 @@ export {
   useBuyWithCryptoHistory,
   type BuyWithCryptoHistoryQueryParams,
 } from "../react/core/hooks/pay/useBuyWithCryptoHistory.js";
+
+export {
+  AutoConnect,
+  type AutoConnectProps,
+} from "../react/core/hooks/connection/useAutoConnect.js";

@@ -1,7 +1,6 @@
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import type { LocalWallet } from "../../../../../../wallets/local/index.js";
-import { useTWLocale } from "../../../../providers/locale-provider.js";
 import type { ConnectUIProps } from "../../../../../core/types/wallets.js";
 import { Spacer } from "../../../../ui/components/Spacer.js";
 import { Spinner } from "../../../../ui/components/Spinner.js";
@@ -18,6 +17,7 @@ import { shortenString } from "../../../../../core/utils/addresses.js";
 import { usePassword } from "../../utils/usePassword.js";
 import type { LocalWalletStorageData } from "../../../../../../wallets/local/types.js";
 import { Text } from "../../../../ui/components/text.js";
+import type { LocalWalletLocale } from "../../locale/types.js";
 
 /**
  * Connect to saved local wallet
@@ -31,9 +31,10 @@ export function LocalWallet_ConnectToSaved(props: {
   persist: boolean;
   savedData: LocalWalletStorageData;
   onBackupWallet: () => void;
+  locale: LocalWalletLocale;
 }) {
   const { createInstance, done, chain } = props.connectUIProps.connection;
-  const locale = useTWLocale().wallets.localWallet;
+  const locale = props.locale;
 
   // form state
   const {

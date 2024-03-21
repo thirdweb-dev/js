@@ -1,4 +1,4 @@
-import type { DAppMetaData, WalletMetadata } from "../types.js";
+import type { AppMetadata, WalletMetadata } from "../types.js";
 import { EthereumProvider } from "@walletconnect/ethereum-provider";
 import type { ThirdwebClient } from "../../client/client.js";
 import type { Chain } from "../../chains/types.js";
@@ -66,7 +66,7 @@ export type WalletConnectCreationOptions = {
    * };
    * ```
    */
-  dappMetadata?: DAppMetaData;
+  appMetadata?: AppMetadata;
   /**
    * Storage interface of type [`AsyncStorage`](https://portal.thirdweb.com/references/typescript/v5/AsyncStorage) to save connected wallet data to the storage for auto-connect.
    * If not provided, no wallet data will be saved to the storage by thirdweb SDK

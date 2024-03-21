@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import type { ChainMetadata } from "../../../../chains/types.js";
 import { resolveScheme } from "../../../../utils/ipfs.js";
-import { useThirdwebProviderProps } from "../../../core/hooks/others/useThirdwebProviderProps.js";
 import { StyledDiv } from "../design-system/elements.js";
+import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { Img } from "./Img.js";
 
 export const fallbackChainIcon =
@@ -19,7 +19,7 @@ export const ChainIcon: React.FC<{
   loading?: "lazy" | "eager";
   fallbackImage?: string;
 }> = (props) => {
-  const { client } = useThirdwebProviderProps();
+  const { client } = useWalletConnectionCtx();
 
   const getSrc = () => {
     const url = props.chain?.icon?.url;

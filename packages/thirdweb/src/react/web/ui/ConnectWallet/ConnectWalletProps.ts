@@ -1,6 +1,10 @@
 import type { Chain } from "../../../../chains/types.js";
+import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
+import type { AppMetadata } from "../../../../wallets/types.js";
+import type { WalletConfig } from "../../../core/types/wallets.js";
 import type { Theme } from "../design-system/index.js";
+import type { LocaleId } from "../types.js";
 import type { NetworkSelectorProps } from "./NetworkSelector.js";
 import type { SupportedTokens } from "./defaultTokens.js";
 import type { WelcomeScreen } from "./screens/types.js";
@@ -265,6 +269,98 @@ export type ConnectButton_connectModalOptions = {
  * @connectWallet
  */
 export type ConnectButtonProps = {
+  /**
+   * A client is the entry point to the thirdweb SDK.
+   * It is required for all other actions.
+   * You can create a client using the `createThirdwebClient` function. Refer to the [Creating a Client](https://portal.thirdweb.com/typescript/v5/client) documentation for more information.
+   *
+   * You must provide a `clientId` or `secretKey` in order to initialize a client. Pass `clientId` if you want for client-side usage and `secretKey` for server-side usage.
+   *
+   * ```tsx
+   * import { createThirdwebClient } from "thirdweb";
+   *
+   * const client = createThirdwebClient({
+   *  clientId: "<your_client_id>",
+   * })
+   * ```
+   */
+  client: ThirdwebClient;
+
+  /**
+   * By default - ConnectButton UI uses the `en-US` locale for english language users.
+   *
+   * You can customize the language used in the ConnectButton UI by setting the `locale` prop.
+   *
+   * Refer to the [`UILocale`](https://portal.thirdweb.com/references/typescript/v5/UILocale) type for supported locales.
+   */
+  locale?: LocaleId;
+
+  /**
+   * Array of supported wallets. If not provided, default wallets will be used.
+   * @example
+   * ```tsx
+   * import { metamaskConfig, coinbaseConfig, walletConnectConfig } from "thirdweb/react";
+   *
+   * function Example() {
+   *  return (
+   *    <ConnectButton
+   *      client={client}
+   *      wallets={[
+   *        metamaskConfig(),
+   *        coinbaseConfig(),
+   *        walletConnectConfig(),
+   *      ]}
+   *    />
+   *  )
+   * }
+   * ```
+   *
+   * If no wallets are specified. Below wallets will be used by default:
+   *
+   * - [Embedded Wallet](https://portal.thirdweb.com/references/typescript/v5/embeddedWalletConfig)
+   * - [MataMask Wallet](https://portal.thirdweb.com/references/typescript/v5/metamaskConfig)
+   * - [Coinbase Wallet](https://portal.thirdweb.com/references/typescript/v5/coinbaseConfig)
+   * - [WalletConnect](https://portal.thirdweb.com/references/typescript/v5/walletConnectConfig)
+   * - [rainbowConfig](https://portal.thirdweb.com/references/typescript/v5/rainbowConfig)
+   * - [zerionConfig](https://portal.thirdweb.com/references/typescript/v5/zerionConfig)
+   */
+  wallets?: WalletConfig[];
+
+  /**
+   * When the user has connected their wallet to your site, this configuration determines whether or not you want to automatically connect to the last connected wallet when user visits your site again in the future.
+   *
+   * By default it is set to `{ timeout: 15000 }` meaning that autoConnect is enabled and if the autoConnection does not succeed within 15 seconds, it will be cancelled.
+   *
+   * If you want to disable autoConnect, set this prop to `false`.
+   *
+   * If you want to customize the timeout, you can assign an object with a `timeout` key to this prop.
+   * ```tsx
+   * <ConnectButton client={client} autoConnect={{ timeout: 10000 }} />
+   * ```
+   */
+  autoConnect?:
+    | {
+        timeout: number;
+      }
+    | boolean;
+
+  /**
+   * Metadata of the app that will be passed to connected wallet.
+   *
+   * Some wallets display this information to the user when they connect to your app.
+   *
+   *
+   * ```ts
+   * {
+   *   name: "thirdweb powered dApp",
+   *   url: "https://thirdweb.com",
+   *   description: "thirdweb powered dApp",
+   *   logoUrl: "https://thirdweb.com/favicon.ico",
+   * };
+   * ```
+   */
+  appMetadata: AppMetadata;
+
   /**
    * The [`Chain`](https://portal.thirdweb.com/references/typescript/v5/Chain) object of the blockchain you want the wallet to connect to
    *

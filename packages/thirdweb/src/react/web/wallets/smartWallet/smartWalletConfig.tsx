@@ -1,6 +1,5 @@
 import { smartWallet } from "../../../../wallets/smart/index.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
-import { useThirdwebProviderProps } from "../../../core/hooks/others/useThirdwebProviderProps.js";
 import type {
   SelectUIProps,
   WalletConfig,
@@ -8,6 +7,7 @@ import type {
 import { WalletEntryButton } from "../../ui/ConnectWallet/WalletSelector.js";
 import { asyncLocalStorage } from "../../../core/utils/asyncLocalStorage.js";
 import { SmartConnectUI } from "./SmartWalletConnectUI.js";
+import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 
 export type SmartWalletConfigOptions = Omit<
   SmartWalletOptions,
@@ -51,22 +51,15 @@ export const smartWalletConfig = (
   walletConfig: WalletConfig,
   options: SmartWalletConfigOptions,
 ): WalletConfig => {
-  // prefix the id of personal wallet with "smart+"
-  // keep the name and iconUrl of the personal wallet
-  const metadata = {
-    ...walletConfig.metadata,
-    id: "smart+" + walletConfig.metadata.id,
-  };
-
   const config: WalletConfig = {
     recommended: walletConfig.recommended,
     category: walletConfig.category,
-    metadata: metadata,
+    metadata: walletConfig.metadata,
     create(createOptions) {
       return smartWallet({
         ...options,
         client: createOptions.client,
-        metadata,
+        metadata: walletConfig.metadata,
         storage: asyncLocalStorage,
       });
     },
@@ -97,7 +90,7 @@ function SmartSelectUI(props: {
   selectUIProps: SelectUIProps;
   personalWalletConfig: WalletConfig;
 }) {
-  const { client, dappMetadata } = useThirdwebProviderProps();
+  const { client, appMetadata } = useWalletConnectionCtx();
   const { personalWalletConfig } = props;
   const PersonalWalletSelectUI = props.personalWalletConfig.selectUI;
 
@@ -120,7 +113,7 @@ function SmartSelectUI(props: {
         createInstance: () => {
           return personalWalletConfig.create({
             client,
-            dappMetadata,
+            appMetadata,
           });
         },
         done: () => {}, // ignore connection done in select UI

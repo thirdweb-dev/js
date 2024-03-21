@@ -7,14 +7,18 @@ import {
   coinbaseWallet,
   injectedCoinbaseProvider,
 } from "../../../../wallets/injected/wallets/coinbase.js";
-import { useTWLocale } from "../../providers/locale-provider.js";
+import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import type {
   ConnectUIProps,
   WalletConfig,
 } from "../../../core/types/wallets.js";
 import { asyncLocalStorage } from "../../../core/utils/asyncLocalStorage.js";
+import type { LocaleId } from "../../ui/types.js";
+import { getInjectedWalletLocale } from "../injected/locale/getInjectedWalletLocale.js";
+import type { InjectedWalletLocale } from "../injected/locale/types.js";
 import { GetStartedScreen } from "../shared/GetStartedScreen.js";
 import { InjectedConnectUI } from "../shared/InjectedConnectUI.js";
+import { LoadingScreen } from "../shared/LoadingScreen.js";
 import { ScanScreen } from "../shared/ScanScreen.js";
 import { useState, useRef, useEffect } from "react";
 
@@ -49,6 +53,9 @@ export type CoinbaseConfigOptions = {
 export const coinbaseConfig = (
   options?: CoinbaseConfigOptions,
 ): WalletConfig => {
+  let prefetchedLocale: InjectedWalletLocale;
+  let prefetchedLocaleId: LocaleId;
+
   return {
     recommended: options?.recommended,
     metadata: coinbaseMetadata,
@@ -58,15 +65,28 @@ export const coinbaseConfig = (
         return coinbaseWallet();
       } else {
         return coinbaseSDKWallet({
-          appName: createOptions.dappMetadata.name,
-          appLogoUrl: createOptions.dappMetadata.logoUrl,
+          appName: createOptions.appMetadata.name,
+          appLogoUrl: createOptions.appMetadata.logoUrl,
           storage: asyncLocalStorage,
         });
       }
     },
-    connectUI: CoinbaseConnectUI,
+    connectUI(props) {
+      return (
+        <CoinbaseConnectUI
+          connectUIProps={props}
+          prefetchedLocale={prefetchedLocale}
+          prefetchedLocaleId={prefetchedLocaleId}
+        />
+      );
+    },
     isInstalled() {
       return !!injectedCoinbaseProvider();
+    },
+    async prefetch(localeId) {
+      const localeFn = await getInjectedWalletLocale(localeId);
+      prefetchedLocale = localeFn(coinbaseMetadata.name);
+      prefetchedLocaleId = localeId;
     },
   };
 };
@@ -78,20 +98,34 @@ const links = {
   ios: "https://apps.apple.com/us/app/coinbase-wallet-nfts-crypto/id1278383455",
 };
 
-function CoinbaseConnectUI(props: ConnectUIProps) {
+function CoinbaseConnectUI(props: {
+  connectUIProps: ConnectUIProps;
+  prefetchedLocale?: InjectedWalletLocale;
+  prefetchedLocaleId?: LocaleId;
+}) {
   const isInjected = !!injectedCoinbaseProvider();
   const [screen, setScreen] = useState<"main" | "get-started">("main");
-  const walletConfig = props.walletConfig;
-  const locale = useTWLocale().wallets.injectedWallet(
-    walletConfig.metadata.name,
+  const walletConfig = props.connectUIProps.walletConfig;
+  const { locale: localeId } = useWalletConnectionCtx();
+
+  const [locale, setLocale] = useState<InjectedWalletLocale | undefined>(
+    props.prefetchedLocaleId === localeId ? props.prefetchedLocale : undefined,
   );
+
+  useEffect(() => {
+    getInjectedWalletLocale(localeId).then((_local) => {
+      setLocale(_local(props.connectUIProps.walletConfig.metadata.name));
+    });
+  }, [localeId, props.connectUIProps.walletConfig.metadata.name]);
+
+  if (!locale) {
+    return <LoadingScreen />;
+  }
 
   if (screen === "get-started") {
     return (
       <GetStartedScreen
-        locale={{
-          scanToDownload: locale.getStartedScreen.instruction,
-        }}
+        locale={locale}
         walletIconURL={walletConfig.metadata.iconUrl}
         walletName={walletConfig.metadata.name}
         chromeExtensionLink={links.chrome}
@@ -107,7 +141,8 @@ function CoinbaseConnectUI(props: ConnectUIProps) {
   if (isInjected) {
     return (
       <InjectedConnectUI
-        {...props}
+        locale={locale}
+        {...props.connectUIProps}
         onGetStarted={() => {
           setScreen("get-started");
         }}
@@ -117,10 +152,11 @@ function CoinbaseConnectUI(props: ConnectUIProps) {
 
   return (
     <CoinbaseSDKWalletConnectUI
-      connectUIProps={props}
+      connectUIProps={props.connectUIProps}
       onGetStarted={() => {
         setScreen("get-started");
       }}
+      locale={locale}
     />
   );
 }
@@ -128,11 +164,10 @@ function CoinbaseConnectUI(props: ConnectUIProps) {
 function CoinbaseSDKWalletConnectUI(props: {
   connectUIProps: ConnectUIProps;
   onGetStarted: () => void;
+  locale: InjectedWalletLocale;
 }) {
   const { connectUIProps, onGetStarted } = props;
-  const locale = useTWLocale().wallets.injectedWallet(
-    connectUIProps.walletConfig.metadata.name,
-  );
+  const locale = props.locale;
   const { createInstance, done, chain } = connectUIProps.connection;
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>(undefined);
 

@@ -1,6 +1,5 @@
 import { CrossCircledIcon, CheckCircledIcon } from "@radix-ui/react-icons";
 import { useState, useMemo } from "react";
-import { useTWLocale } from "../../../providers/locale-provider.js";
 import { Skeleton } from "../../components/Skeleton.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Spinner } from "../../components/Spinner.js";
@@ -18,6 +17,7 @@ import { useWalletBalance } from "../../../../core/hooks/others/useWalletBalance
 import { Text } from "../../components/text.js";
 import { useSendToken } from "../../hooks/useSendToken.js";
 import { isAddress } from "../../../../../utils/address.js";
+import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import { TokenSelector, formatTokenBalance } from "./TokenSelector.js";
 import { type ERC20OrNativeToken, NATIVE_TOKEN } from "./nativeToken.js";
 import { TokenIcon } from "../../components/TokenIcon.js";
@@ -105,9 +105,10 @@ function SendFundsForm(props: {
   setAmount: (value: string) => void;
   onBack: () => void;
 }) {
-  const locale = useTWLocale().connectWallet.sendFundsScreen;
+  const locale = useWalletConnectionCtx().connectLocale.sendFundsScreen;
   const tokenAddress =
     props.token && "address" in props.token ? props.token.address : undefined;
+
   const chain = useActiveWalletChain();
   const activeAccount = useActiveAccount();
   const activeChain = useActiveWalletChain();

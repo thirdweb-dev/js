@@ -9,7 +9,6 @@ import { HeadlessConnectUI } from "../../../wallets/headlessConnectUI.js";
 import { ScreenSetupContext, type ScreenSetup } from "./screen.js";
 import { StartScreen } from "../screens/StartScreen.js";
 import { WalletSelector } from "../WalletSelector.js";
-import { useThirdwebProviderProps } from "../../../../core/hooks/others/useThirdwebProviderProps.js";
 import type {
   ScreenConfig,
   WalletConfig,
@@ -20,6 +19,7 @@ import {
 } from "./ConnectModalSkeleton.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import { useConnect } from "../../../../core/hooks/wallets/wallet-hooks.js";
+import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 
 /**
  * @internal
@@ -33,7 +33,7 @@ export const ConnectModalContent = (props: {
 }) => {
   const { onHide, onShow, onClose } = props;
   const { screen, setScreen, initialScreen } = props.screenSetup;
-  const { wallets, client, dappMetadata } = useThirdwebProviderProps();
+  const { wallets, client, appMetadata } = useWalletConnectionCtx();
   // const disconnect = useDisconnect();
   const modalConfig = useContext(ModalConfigCtx);
   const setModalConfig = useContext(SetModalConfigCtx);
@@ -169,7 +169,7 @@ export const ConnectModalContent = (props: {
           createInstance: () => {
             return walletConfig.create({
               client,
-              dappMetadata,
+              appMetadata,
             });
           },
         }}
