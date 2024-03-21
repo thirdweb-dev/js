@@ -27,6 +27,7 @@ export {
   resolveSignature,
   resolveSignatures,
 } from "../utils/signatures/resolve-signature.js";
+export { type SignOptions, sign } from "../utils/signatures/sign.js";
 
 // ------------------------------------------------
 // encoding
