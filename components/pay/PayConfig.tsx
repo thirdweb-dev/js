@@ -6,6 +6,7 @@ import {
   FormHelperText,
   FormLabel,
   Heading,
+  Text,
 } from "tw-components";
 
 import { ApiKey, useUpdateApiKey } from "@3rdweb-sdk/react/hooks/useApi";
@@ -97,9 +98,14 @@ export const PayConfig: React.FC<PayConfigProps> = ({ apiKey }) => {
   return (
     <Card>
       <Flex flexDir="column" gap={7}>
-        <Heading size="title.md" as="h2">
-          Fee Settings
-        </Heading>
+        <Flex flexDir={"column"} gap={3}>
+          <Heading size="title.md" as="h2">
+            Fee Sharing
+          </Heading>
+          <Text size="label.md" as="h3">
+            thirdweb shares 30% of its base fee across all Pay features
+          </Text>
+        </Flex>
 
         <form
           onSubmit={(e) => {

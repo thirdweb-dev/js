@@ -199,7 +199,10 @@ const DashboardConnectPay: ThirdwebNextPage = () => {
           <Heading size="title.lg" as="h1">
             Pay Settings
           </Heading>
-          <Text maxW="xl">Configure your developer settings for payments </Text>
+          <Text maxW="xl">
+            Configure developer settings for all Pay features, including Buy
+            With Crypto.
+          </Text>
         </Flex>
 
         {hasPayApiKeys && tabOption === "pay" && (
