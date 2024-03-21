@@ -1,10 +1,10 @@
 import { expect, test } from "vitest";
+import { parseEther, parseGwei } from "viem/utils";
 
 import { privateKeyAccount } from "./private-key.js";
 import { ANVIL_PKEY_A } from "~test/test-wallets.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
 import { typedData } from "~test/typed-data.js";
-import { parseEther, parseGwei } from "viem/utils";
 
 test("default", () => {
   expect(privateKeyAccount({ privateKey: ANVIL_PKEY_A, client: TEST_CLIENT }))

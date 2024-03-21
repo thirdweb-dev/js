@@ -2,6 +2,9 @@ import type {
   HDAccount,
   PrivateKeyAccount as ViemPrivateKeyAccount,
   TransactionSerializable,
+  TypedData,
+  TypedDataDefinition,
+  SignableMessage,
 } from "viem";
 import { publicKeyToAddress } from "viem/utils";
 import type { ThirdwebClient } from "../client/client.js";
@@ -14,7 +17,7 @@ import { secp256k1 } from "@noble/curves/secp256k1";
 import { signTransaction } from "../transaction/actions/sign-transaction.js";
 import { signMessage } from "../utils/signatures/sign-message.js";
 import { signTypedData } from "../utils/signatures/sign-typed-data.js";
-import type { Prettify } from "src/utils/type-utils.js";
+import type { Prettify } from "../utils/type-utils.js";
 
 export type PrivateKeyAccountOptions = {
   /**
@@ -102,19 +105,24 @@ export function privateKeyAccount(
         transactionHash,
       };
     },
-    signMessage: async ({ message }) => {
+    signMessage: async ({ message }: { message: SignableMessage }) => {
       return signMessage({
         message,
         privateKey,
       });
     },
-    signTypedData: async (typedData) => {
+    signTypedData: async <
+      const typedData extends TypedData | Record<string, unknown>,
+      primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,
+    >(
+      _typedData: TypedDataDefinition<typedData, primaryType>,
+    ) => {
       return signTypedData({
-        ...typedData,
+        ..._typedData,
         privateKey,
       });
     },
-    signTransaction: async (tx) => {
+    signTransaction: async (tx: TransactionSerializable) => {
       return signTransaction({
         transaction: tx,
         privateKey,
