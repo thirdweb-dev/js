@@ -8,9 +8,7 @@ import {
   reservedScreens,
 } from "../constants.js";
 import { useSetupScreen } from "./screen.js";
-import { type ComponentProps, useContext, useEffect } from "react";
-import { Spinner } from "../../components/Spinner.js";
-import { Container } from "../../components/basic.js";
+import { type ComponentProps, useContext, useEffect, useState } from "react";
 import { radius, type Theme } from "../../design-system/index.js";
 import { StyledDiv } from "../../design-system/elements.js";
 import {
@@ -28,8 +26,110 @@ import { canFitWideModal } from "../../../utils/canFitWideModal.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import type { Chain } from "../../../../../chains/types.js";
 import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
+import type { ThirdwebClient } from "../../../../../client/client.js";
+import type { WalletConfig } from "../../../../core/types/wallets.js";
+import type { LocaleId } from "../../types.js";
+import { WalletConnectionContext } from "../../../../core/providers/wallet-connection.js";
+import { defaultWallets } from "../../../wallets/defaultWallets.js";
+import type { ConnectLocale } from "../locale/types.js";
+import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
+import type { AppMetadata } from "../../../../../wallets/types.js";
+import { getConnectLocale } from "../locale/getConnectLocale.js";
+import { AutoConnect } from "../../../../core/hooks/connection/useAutoConnect.js";
 
 export type ConnectEmbedProps = {
+  /**
+   * A client is the entry point to the thirdweb SDK.
+   * It is required for all other actions.
+   * You can create a client using the `createThirdwebClient` function. Refer to the [Creating a Client](https://portal.thirdweb.com/typescript/v5/client) documentation for more information.
+   *
+   * You must provide a `clientId` or `secretKey` in order to initialize a client. Pass `clientId` if you want for client-side usage and `secretKey` for server-side usage.
+   *
+   * ```tsx
+   * import { createThirdwebClient } from "thirdweb";
+   *
+   * const client = createThirdwebClient({
+   *  clientId: "<your_client_id>",
+   * })
+   * ```
+   */
+  client: ThirdwebClient;
+
+  /**
+   * Metadata of the app that will be passed to connected wallet.
+   *
+   * Some wallets display this information to the user when they connect to your app.
+   *
+   *
+   * ```ts
+   * {
+   *   name: "thirdweb powered dApp",
+   *   url: "https://thirdweb.com",
+   *   description: "thirdweb powered dApp",
+   *   logoUrl: "https://thirdweb.com/favicon.ico",
+   * };
+   * ```
+   */
+  appMetadata: AppMetadata;
+
+  /**
+   * By default - ConnectButton UI uses the `en-US` locale for english language users.
+   *
+   * You can customize the language used in the ConnectButton UI by setting the `locale` prop.
+   *
+   * Refer to the [`UILocale`](https://portal.thirdweb.com/references/typescript/v5/UILocale) type for supported locales.
+   */
+  locale?: LocaleId;
+
+  /**
+   * Array of supported wallets. If not provided, default wallets will be used.
+   * @example
+   * ```tsx
+   * import { metamaskConfig, coinbaseConfig, walletConnectConfig } from "thirdweb/react";
+   *
+   * function Example() {
+   *  return (
+   *    <ConnectEmbed
+   *      client={client}
+   *      wallets={[
+   *        metamaskConfig(),
+   *        coinbaseConfig(),
+   *        walletConnectConfig(),
+   *      ]}
+   *    />
+   *  )
+   * }
+   * ```
+   *
+   * If no wallets are specified. Below wallets will be used by default:
+   *
+   * - [Embedded Wallet](https://portal.thirdweb.com/references/typescript/v5/embeddedWalletConfig)
+   * - [MataMask Wallet](https://portal.thirdweb.com/references/typescript/v5/metamaskConfig)
+   * - [Coinbase Wallet](https://portal.thirdweb.com/references/typescript/v5/coinbaseConfig)
+   * - [WalletConnect](https://portal.thirdweb.com/references/typescript/v5/walletConnectConfig)
+   * - [rainbowConfig](https://portal.thirdweb.com/references/typescript/v5/rainbowConfig)
+   * - [zerionConfig](https://portal.thirdweb.com/references/typescript/v5/zerionConfig)
+   */
+  wallets?: WalletConfig[];
+
+  /**
+   * When the user has connected their wallet to your site, this configuration determines whether or not you want to automatically connect to the last connected wallet when user visits your site again in the future.
+   *
+   * By default it is set to `{ timeout: 15000 }` meaning that autoConnect is enabled and if the autoConnection does not succeed within 15 seconds, it will be cancelled.
+   *
+   * If you want to disable autoConnect, set this prop to `false`.
+   *
+   * If you want to customize the timeout, you can assign an object with a `timeout` key to this prop.
+   * ```tsx
+   * <ConnectButton client={client} autoConnect={{ timeout: 10000 }} />
+   * ```
+   */
+  autoConnect?:
+    | {
+        timeout: number;
+      }
+    | boolean;
+
   /**
    * The [`Chain`](https://portal.thirdweb.com/references/typescript/v5/Chain) object of the blockchain you want the wallet to connect to
    *
@@ -131,22 +231,22 @@ export type ConnectEmbedProps = {
    *
    * This requires the `authConfig` prop to be set on the [`ThirdWebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider) component.
    */
-  auth?: {
-    /**
-     * specify whether signing in is optional or not.
-     *
-     * By default it is `false` ( sign in is required ) if `authConfig` is set on [`ThirdWebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider)
-     */
-    loginOptional?: boolean;
-    /**
-     * Callback to be called after user signs in with their wallet
-     */
-    onLogin?: (token: string) => void;
-    /**
-     * Callback to be called after user signs out
-     */
-    onLogout?: () => void;
-  };
+  // auth?: {
+  //   /**
+  //    * specify whether signing in is optional or not.
+  //    *
+  //    * By default it is `false` ( sign in is required ) if `authConfig` is set on [`ThirdWebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider)
+  //    */
+  //   loginOptional?: boolean;
+  //   /**
+  //    * Callback to be called after user signs in with their wallet
+  //    */
+  //   onLogin?: (token: string) => void;
+  //   /**
+  //    * Callback to be called after user signs out
+  //    */
+  //   onLogout?: () => void;
+  // };
 
   /**
    * Callback to be called on successful connection of wallet. The callback is called with the connected account
@@ -252,31 +352,16 @@ export function useShowConnectEmbed(loginOptional?: boolean) {
  *
  * it renders the same UI as the [`ConnectButton`](https://portal.thirdweb.com/react/v4/components/ConnectButton) component's modal - but directly on the page instead of being in a modal.
  *
- * It only renders UI if either one of the following conditions are met:
- * - wallet is not connected
- * - wallet is connected but the user is not signed in and `auth` is required ( loginOptional is not set to false )
- *
- * `ConnectEmbed` uses the [`useShowConnectEmbed`](https://portal.thirdweb.com/react/v4/useShowConnectEmbed) hook internally to determine if it should be rendered or not. You can also use this hook to determine if you should render something else instead of `ConnectEmbed`
+ * It only renders UI if wallet is not connected
  * @example
  * ```tsx
- * function Example() {
- *   const loginOptional = false;
- *   const showConnectEmbed = useShowConnectEmbed(loginOptional);
- *
- *   if (!showConnectEmbed) {
- *     return <div> Wallet is connected </div>
- *   }
- *
- *   return (
- *     <div>
- *       <ConnectEmbed
- *         auth={{
- *           loginOptional,
- *         }}
- *       />
- *     </div>
- *   );
- * }
+ * <ConnectEmbed
+ *    client={client}
+ *    appMetadata={{
+ *      name: "Example",
+ *      url: "https://example.com",
+ *    }}
+ * />
  * ```
  * @param props -
  * The props for the `ConnectEmbed` component.
@@ -285,8 +370,16 @@ export function useShowConnectEmbed(loginOptional?: boolean) {
  * @component
  */
 export function ConnectEmbed(props: ConnectEmbedProps) {
-  const loginOptional = props.auth?.loginOptional;
+  const loginOptional = true; // props.auth?.loginOptional;
   const show = useShowConnectEmbed(loginOptional);
+
+  const wallets = props.wallets || defaultWallets;
+  const localeId = props.locale || "en-US";
+  const [locale, setLocale] = useState<ConnectLocale | undefined>();
+
+  useEffect(() => {
+    getConnectLocale(localeId).then(setLocale);
+  }, [localeId]);
 
   const contextTheme = useCustomTheme();
 
@@ -297,23 +390,56 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
     termsOfServiceUrl: props.termsOfServiceUrl,
     privacyPolicyUrl: props.privacyPolicyUrl,
     isEmbed: true,
-    auth: props.auth,
+    // auth: props.auth,
     onConnect: props.onConnect,
     showThirdwebBranding: props.showThirdwebBranding,
   };
 
+  const autoConnectComp = props.autoConnect !== false && (
+    <AutoConnect
+      appMetadata={props.appMetadata}
+      client={props.client}
+      wallets={wallets}
+      timeout={
+        typeof props.autoConnect === "boolean"
+          ? undefined
+          : props.autoConnect?.timeout
+      }
+    />
+  );
+
   if (show) {
+    if (!locale) {
+      return (
+        <>
+          {autoConnectComp}
+          <LoadingScreen />;
+        </>
+      );
+    }
+
     return (
-      <WalletUIStatesProvider {...walletUIStatesProps}>
-        <CustomThemeProvider theme={walletUIStatesProps.theme}>
-          <ConnectEmbedContent {...props} onConnect={props.onConnect} />
-          <SyncedWalletUIStates {...walletUIStatesProps} />
-        </CustomThemeProvider>
-      </WalletUIStatesProvider>
+      <WalletConnectionContext.Provider
+        value={{
+          appMetadata: props.appMetadata,
+          client: props.client,
+          wallets: wallets,
+          locale: localeId,
+          connectLocale: locale,
+        }}
+      >
+        <WalletUIStatesProvider {...walletUIStatesProps}>
+          <CustomThemeProvider theme={walletUIStatesProps.theme}>
+            <ConnectEmbedContent {...props} onConnect={props.onConnect} />
+            <SyncedWalletUIStates {...walletUIStatesProps} />
+            {autoConnectComp}
+          </CustomThemeProvider>
+        </WalletUIStatesProvider>
+      </WalletConnectionContext.Provider>
     );
   }
 
-  return <div></div>;
+  return <div>{autoConnectComp}</div>;
 }
 
 /**
@@ -341,17 +467,7 @@ const ConnectEmbedContent = (
 
   // show spinner on page load and during auto connecting a wallet
   if (isAutoConnecting) {
-    content = (
-      <Container
-        flex="column"
-        center="both"
-        style={{
-          minHeight: "300px",
-        }}
-      >
-        <Spinner size="xl" color="accentText" />
-      </Container>
-    );
+    content = <LoadingScreen />;
   } else {
     content = (
       <ConnectModalContent

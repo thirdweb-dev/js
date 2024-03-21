@@ -38,7 +38,13 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  * It renders a button which when clicked opens a modal to allow users to connect to wallets specified in the `ThirdwebProvider`'s `wallets` prop.
  * @example
  * ```tsx
- * <ConnectButton />
+ * <ConnectButton
+ *    client={client}
+ *    appMetadata={{
+ *      name: "Example",
+ *      url: "https://example.com",
+ *    }}
+ * />
  * ```
  * @param props
  * Props for the `ConnectButton` component
@@ -61,6 +67,19 @@ export function ConnectButton(props: ConnectButtonProps) {
     getConnectLocale(localeId).then(setLocale);
   }, [localeId]);
 
+  const autoConnectComp = props.autoConnect !== false && (
+    <AutoConnect
+      appMetadata={props.appMetadata}
+      client={props.client}
+      wallets={wallets}
+      timeout={
+        typeof props.autoConnect === "boolean"
+          ? undefined
+          : props.autoConnect?.timeout
+      }
+    />
+  );
+
   if (!locale) {
     return (
       <AnimatedButton
@@ -75,6 +94,7 @@ export function ConnectButton(props: ConnectButtonProps) {
           ...props.connectButton?.style,
         }}
       >
+        {autoConnectComp}
         <Spinner size="sm" color="primaryButtonText" />
       </AnimatedButton>
     );
@@ -93,18 +113,7 @@ export function ConnectButton(props: ConnectButtonProps) {
       <WalletUIStatesProvider theme="dark">
         <ConnectButtonInner {...props} connectLocale={locale} />
         <ConnectModal />
-        {props.autoConnect !== false && (
-          <AutoConnect
-            appMetadata={props.appMetadata}
-            client={props.client}
-            wallets={wallets}
-            timeout={
-              typeof props.autoConnect === "boolean"
-                ? undefined
-                : props.autoConnect?.timeout
-            }
-          />
-        )}
+        {autoConnectComp}
       </WalletUIStatesProvider>
     </WalletConnectionContext.Provider>
   );
