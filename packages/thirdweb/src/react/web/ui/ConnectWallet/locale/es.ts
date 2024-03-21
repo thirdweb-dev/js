@@ -16,10 +16,12 @@ const connectWalletLocalEs: ConnectLocale = {
   guest: "Invitado",
   send: "Enviar",
   receive: "Recibir",
+  buy: "Buy", // TODO
+  transactions: "Transactions", // TODO
+  viewAllTransactions: "View All Transactions", // TODO
   currentNetwork: "Red actual",
   switchAccount: "Cambiar cuenta",
   requestTestnetFunds: "Solicitar fondos de Testnet",
-  transactionHistory: "Historial de transacciones",
   backupWallet: "Respaldar cartera",
   guestWalletWarning:
     "Esta es una cartera de invitado temporal. Haz una copia de seguridad si no quieres perder el acceso a ella",

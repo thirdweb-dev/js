@@ -51,22 +51,15 @@ export const smartWalletConfig = (
   walletConfig: WalletConfig,
   options: SmartWalletConfigOptions,
 ): WalletConfig => {
-  // prefix the id of personal wallet with "smart+"
-  // keep the name and iconUrl of the personal wallet
-  const metadata = {
-    ...walletConfig.metadata,
-    id: "smart+" + walletConfig.metadata.id,
-  };
-
   const config: WalletConfig = {
     recommended: walletConfig.recommended,
     category: walletConfig.category,
-    metadata: metadata,
+    metadata: walletConfig.metadata,
     create(createOptions) {
       return smartWallet({
         ...options,
         client: createOptions.client,
-        metadata,
+        metadata: walletConfig.metadata,
         storage: asyncLocalStorage,
       });
     },

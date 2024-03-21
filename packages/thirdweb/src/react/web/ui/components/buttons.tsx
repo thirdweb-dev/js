@@ -33,6 +33,8 @@ export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
     transition: "border 200ms ease",
     gap: (props.gap && spacing[props.gap]) || 0,
     width: props.fullWidth ? "100%" : undefined,
+    textAlign: "center",
+    maxWidth: "100%",
     background: (() => {
       switch (props.variant) {
         case "primary":

@@ -33,22 +33,27 @@ export type BuyWithCryptoQuoteQueryParams = GetBuyWithCryptoQuoteParams;
  * function Component() {
  *  const buyWithCryptoQuoteQuery = useBuyWithCryptoQuote(swapParams);
  *  const sendTransactionMutation = useSendTransaction();
- *  const [buyWithCryptoTx, setBuyWithCryptoTx] = useState<BuyWithCryptoStatusQueryParams | undefined>();
- *  const buyWithCryptoStatusQuery = useBuyWithCryptoStatus(buyWithCryptoTx);
+ *  const [buyTxHash, setBuyTxHash] = useState<BuyWithCryptoStatusQueryParams | undefined>();
+ *  const buyWithCryptoStatusQuery = useBuyWithCryptoStatus(buyTxHash ? {
+ *    client,
+ *    transactionHash: buyTxHash,
+ *  }: undefined);
  *
  *  async function handleBuyWithCrypto() {
  *
  *    // if approval is required
  *    if (buyWithCryptoQuoteQuery.data.approval) {
- *      await sendTransactionMutation.mutateAsync(swapQuote.data.approval);
+ *      const approveTx = await sendTransactionMutation.mutateAsync(swapQuote.data.approval);
+ *      await waitForApproval(approveTx);
  *    }
  *
  *    // send the transaction to buy crypto
  *    // this promise is resolved when user confirms the transaction in the wallet and the transaction is sent to the blockchain
- *    const buyWithCryptoTxn = await sendTransactionMutation.mutateAsync(swapQuote.data.transactionRequest);
+ *    const buyTx = await sendTransactionMutation.mutateAsync(swapQuote.data.transactionRequest);
+ *    await waitForApproval(buyTx);
  *
- *    // set buyWithCryptoTx to poll the status of the swap transaction
- *    setBuyWithCryptoTx({transactionHash: buyWithCryptoTxn.transactionHash ?? buyWithCryptoTxn.userOpHash});
+ *    // set buyTx.transactionHash to poll the status of the swap transaction
+ *    setBuyWithCryptoTx(buyTx.transactionHash);
  *  }
  *
  *  return <button onClick={handleBuyWithCrypto}>Swap</button>

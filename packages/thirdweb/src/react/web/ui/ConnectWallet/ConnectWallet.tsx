@@ -29,6 +29,7 @@ import { defaultWallets } from "../../wallets/defaultWallets.js";
 import { AutoConnect } from "../../../core/hooks/connection/useAutoConnect.js";
 import ConnectModal from "./Modal/ConnectModal.js";
 import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import { getConnectLocale } from "./locale/getConnectLocale.js";
 
 const TW_CONNECT_WALLET = "tw-connect-wallet";
 
@@ -57,24 +58,8 @@ export function ConnectButton(props: ConnectButtonProps) {
   }, [wallets, localeId]);
 
   useEffect(() => {
-    if (localeId === "es-419") {
-      import("./locale/es.js").then((module) => {
-        setLocale(module.default);
-      });
-    } else if (localeId === "ja-JP") {
-      import("./locale/ja.js").then((module) => {
-        setLocale(module.default);
-      });
-    } else if (localeId === "tl_PH") {
-      import("./locale/tl.js").then((module) => {
-        setLocale(module.default);
-      });
-    } else {
-      import("./locale/en.js").then((module) => {
-        setLocale(module.default);
-      });
-    }
-  });
+    getConnectLocale(localeId).then(setLocale);
+  }, [localeId]);
 
   if (!locale) {
     return (

@@ -352,6 +352,7 @@ export const ConnectedWalletDetails: React.FC<{
               gap: spacing.xs,
               alignItems: "center",
               padding: spacing.sm,
+              flexWrap: "wrap",
             }}
             onClick={() => {
               setScreen("send");
@@ -378,6 +379,7 @@ export const ConnectedWalletDetails: React.FC<{
               gap: spacing.xs,
               alignItems: "center",
               padding: spacing.sm,
+              flexWrap: "wrap",
             }}
             onClick={() => {
               setScreen("receive");
@@ -397,6 +399,7 @@ export const ConnectedWalletDetails: React.FC<{
               gap: spacing.xs,
               alignItems: "center",
               padding: spacing.sm,
+              flexWrap: "wrap",
             }}
             onClick={() => {
               setScreen("buy");
@@ -405,7 +408,7 @@ export const ConnectedWalletDetails: React.FC<{
             <Container color="secondaryText" flex="row" center="both">
               <PlusIcon width={iconSize.sm} height={iconSize.sm} />
             </Container>
-            Buy
+            {locale.buy}
           </Button>
         </Container>
       </Container>
@@ -433,7 +436,7 @@ export const ConnectedWalletDetails: React.FC<{
           >
             <TextAlignJustifyIcon width={iconSize.md} height={iconSize.md} />
             <Container flex="row" gap="xs" center="y">
-              <Text color="primaryText">Transactions</Text>
+              <Text color="primaryText">{locale.transactions}</Text>
               {pendingSwapTxs && pendingSwapTxs.length > 0 && (
                 <BadgeCount>{pendingSwapTxs.length}</BadgeCount>
               )}
@@ -454,24 +457,6 @@ export const ConnectedWalletDetails: React.FC<{
             <AccountSwitcher name={locale.smartWallet} wallet={smartWallet} />
           )} */}
 
-          {/* Switch Account for Metamask */}
-          {/* {isActuallyMetaMask &&
-            activeWalletConfig &&
-            activeWalletConfig.isInstalled &&
-            activeWalletConfig.isInstalled() &&
-            !isMobile() && (
-              <MenuButton
-                type="button"
-                onClick={() => {
-                  (activeWallet as MetaMaskWallet).switchAccount();
-                  setIsOpen(false);
-                }}
-              >
-                <ShuffleIcon width={iconSize.md} height={iconSize.md} />
-                <Text color="primaryText">{locale.switchAccount}</Text>
-              </MenuButton>
-            )} */}
-
           {/* Request Testnet funds */}
           {(props.detailsModal?.showTestnetFaucet ?? false) &&
             ((chainQuery.data?.faucets && chainQuery.data.faucets.length > 0) ||
@@ -482,14 +467,6 @@ export const ConnectedWalletDetails: React.FC<{
                 }
                 target="_blank"
                 as="a"
-                onClick={async () => {
-                  // if (chain.chainId === LocalhostChainId) {
-                  //   e.preventDefault();
-                  //   setIsOpen(false);
-                  //   await sdk?.wallet.requestFunds(10);
-                  //   await balanceQuery.refetch();
-                  // }
-                }}
                 style={{
                   textDecoration: "none",
                   color: "inherit",
@@ -549,7 +526,8 @@ export const ConnectedWalletDetails: React.FC<{
           <Spacer y="sm" />
         </Container>
       )}
-      {/* {activeWallet?.walletId === walletIds.localWallet && (
+
+      {activeWallet?.metadata.id === localWalletMetadata.id && (
         <>
           <Line />
           <Container py="md">
@@ -558,7 +536,7 @@ export const ConnectedWalletDetails: React.FC<{
             </Text>
           </Container>
         </>
-      )} */}
+      )}
     </div>
   );
 

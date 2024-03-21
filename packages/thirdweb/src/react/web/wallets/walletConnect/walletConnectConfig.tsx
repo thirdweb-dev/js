@@ -21,7 +21,8 @@ import { isMobile } from "../../../core/utils/isMobile.js";
 import { HeadlessConnectUI } from "../headlessConnectUI.js";
 import type { WalletConnectConnectionOptions } from "../../../../wallets/wallet-connect/types.js";
 import { asyncLocalStorage } from "../../../core/utils/asyncLocalStorage.js";
-import walletConnectLocaleEn from "./locale/en.js";
+import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import { walletConnectLocales } from "./locale.js";
 
 export type WalletConnectConfigOptions = {
   /**
@@ -105,7 +106,8 @@ const ConnectUI = (
     };
   },
 ) => {
-  const locale = walletConnectLocaleEn;
+  const localeId = useWalletConnectionCtx().locale;
+  const locale = walletConnectLocales[localeId];
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>();
   const { walletConfig } = props;
   const { chain, done, createInstance, chains } = props.connection;
@@ -178,7 +180,7 @@ const ConnectUI = (
       <Line />
       <Container py="lg" flex="row" center="x">
         <Button variant="link" onClick={handleWCModalConnect}>
-          {"Open Official WalletConnect Modal"}
+          {locale.openWCModal}
         </Button>
       </Container>
     </Container>

@@ -134,21 +134,99 @@ const SmartWalletConnecting = (props: {
     }
   }, [handleConnect, wrongNetwork]);
 
-  if (smartWalletConnectionStatus === "connecting") {
+  if (wrongNetwork) {
     return (
-      <Container
-        fullHeight
-        flex="column"
-        center="both"
-        style={{
-          minHeight: "300px",
-        }}
-      >
-        <Text color="primaryText" multiline center>
-          {locale.connecting}
-        </Text>
-        <Spacer y="lg" />
-        <Spinner color="accentText" size="lg" />
+      <Container fullHeight animate="fadein" flex="column">
+        <Container p="lg">
+          <ModalHeader
+            title={props.personalWalletConfig.metadata.name}
+            imgSrc={props.personalWalletConfig.metadata.iconUrl}
+            onBack={props.connectUIProps.screenConfig.goBack}
+          />
+        </Container>
+
+        {modalSize === "compact" && <Spacer y="lg" />}
+
+        <Container expand flex="column" center="both" p="lg">
+          <Container p={modalSize === "wide" ? "lg" : undefined}>
+            <Container flex="row" center="x" color="danger">
+              <ExclamationTriangleIcon
+                width={iconSize.lg}
+                height={iconSize.lg}
+              />
+            </Container>
+
+            <Spacer y="md" />
+
+            <Text size="lg" color="primaryText" center weight={500}>
+              {locale.wrongNetworkScreen.title}
+            </Text>
+
+            <Spacer y="lg" />
+
+            <Text multiline center>
+              {locale.wrongNetworkScreen.subtitle}
+            </Text>
+
+            <Spacer y="xl" />
+
+            <Container flex="column" gap="md">
+              <Button
+                type="button"
+                fullWidth
+                variant="accent"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: spacing.sm,
+                }}
+                onClick={async () => {
+                  if (!personalWallet.switchChain) {
+                    setPersonalWalletChainSwitchStatus("switch-error");
+                    throw new Error("No switchChain method");
+                  }
+
+                  try {
+                    setPersonalWalletChainSwitchStatus("switching");
+                    await personalWallet.switchChain(props.smartWalletChain);
+                    setPersonalWalletChainSwitchStatus("idle");
+                  } catch (e) {
+                    console.error(e);
+                    setPersonalWalletChainSwitchStatus("switch-error");
+                  }
+                }}
+              >
+                {" "}
+                {personalWalletChainSwitchStatus === "switching"
+                  ? "Switching"
+                  : "Switch Network"}
+                {personalWalletChainSwitchStatus === "switching" && (
+                  <Spinner size="sm" color="accentButtonText" />
+                )}
+              </Button>
+
+              <Container
+                flex="row"
+                gap="sm"
+                center="both"
+                color="danger"
+                style={{
+                  textAlign: "center",
+                  fontSize: fontSize.sm,
+                  opacity:
+                    personalWalletChainSwitchStatus === "switch-error" ? 1 : 0,
+                  transition: "opacity 200ms ease",
+                }}
+              >
+                <ExclamationTriangleIcon
+                  width={iconSize.sm}
+                  height={iconSize.sm}
+                />
+                <span>{locale.wrongNetworkScreen.failedToSwitch}</span>
+              </Container>
+            </Container>
+          </Container>
+        </Container>
       </Container>
     );
   }
@@ -171,94 +249,19 @@ const SmartWalletConnecting = (props: {
   }
 
   return (
-    <Container fullHeight animate="fadein" flex="column">
-      <Container p="lg">
-        <ModalHeader
-          title={props.personalWalletConfig.metadata.name}
-          imgSrc={props.personalWalletConfig.metadata.iconUrl}
-          onBack={props.connectUIProps.screenConfig.goBack}
-        />
-      </Container>
-
-      {modalSize === "compact" && <Spacer y="lg" />}
-
-      <Container expand flex="column" center="both" p="lg">
-        <Container p={modalSize === "wide" ? "lg" : undefined}>
-          <Container flex="row" center="x" color="danger">
-            <ExclamationTriangleIcon width={iconSize.lg} height={iconSize.lg} />
-          </Container>
-
-          <Spacer y="md" />
-
-          <Text size="lg" color="primaryText" center weight={500}>
-            {locale.wrongNetworkScreen.title}
-          </Text>
-
-          <Spacer y="lg" />
-
-          <Text multiline center>
-            {locale.wrongNetworkScreen.subtitle}
-          </Text>
-
-          <Spacer y="xl" />
-
-          <Container flex="column" gap="md">
-            <Button
-              type="button"
-              fullWidth
-              variant="accent"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: spacing.sm,
-              }}
-              onClick={async () => {
-                if (!personalWallet.switchChain) {
-                  setPersonalWalletChainSwitchStatus("switch-error");
-                  throw new Error("No switchChain method");
-                }
-
-                try {
-                  setPersonalWalletChainSwitchStatus("switching");
-                  await personalWallet.switchChain(props.smartWalletChain);
-                  setPersonalWalletChainSwitchStatus("idle");
-                } catch (e) {
-                  console.error(e);
-                  setPersonalWalletChainSwitchStatus("switch-error");
-                }
-              }}
-            >
-              {" "}
-              {personalWalletChainSwitchStatus === "switching"
-                ? "Switching"
-                : "Switch Network"}
-              {personalWalletChainSwitchStatus === "switching" && (
-                <Spinner size="sm" color="accentButtonText" />
-              )}
-            </Button>
-
-            <Container
-              flex="row"
-              gap="sm"
-              center="both"
-              color="danger"
-              style={{
-                textAlign: "center",
-                fontSize: fontSize.sm,
-                opacity:
-                  personalWalletChainSwitchStatus === "switch-error" ? 1 : 0,
-                transition: "opacity 200ms ease",
-              }}
-            >
-              <ExclamationTriangleIcon
-                width={iconSize.sm}
-                height={iconSize.sm}
-              />
-              <span>{locale.wrongNetworkScreen.failedToSwitch}</span>
-            </Container>
-          </Container>
-        </Container>
-      </Container>
+    <Container
+      fullHeight
+      flex="column"
+      center="both"
+      style={{
+        minHeight: "300px",
+      }}
+    >
+      <Text color="primaryText" multiline center>
+        {locale.connecting}
+      </Text>
+      <Spacer y="lg" />
+      <Spinner color="accentText" size="lg" />
     </Container>
   );
 };

@@ -9,6 +9,7 @@ const connectLocaleEn: ConnectLocale = {
   defaultModalTitle: "Connect",
   recommended: "Recommended",
   installed: "Installed",
+  buy: "Buy",
   continueAsGuest: "Continue as guest",
   connectAWallet: "Connect a wallet",
   newToWallets: "New to wallets?",
@@ -19,7 +20,8 @@ const connectLocaleEn: ConnectLocale = {
   currentNetwork: "Current network",
   switchAccount: "Switch Account",
   requestTestnetFunds: "Request Testnet Funds",
-  transactionHistory: "Transaction History",
+  transactions: "Transactions",
+  viewAllTransactions: "View All Transactions",
   backupWallet: "Backup Wallet",
   guestWalletWarning:
     "This is a temporary guest wallet. Backup wallet if you don't want to lose access to it",

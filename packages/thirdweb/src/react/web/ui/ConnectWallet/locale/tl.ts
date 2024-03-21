@@ -14,12 +14,14 @@ const connectWalletLocalTl: ConnectLocale = {
   newToWallets: "Bago sa mga wallet?",
   getStarted: "Simulan",
   guest: "Guest",
+  buy: "Buy", // TODO
+  transactions: "Transactions", // TODO
+  viewAllTransactions: "View All Transactions", // TODO
   send: "Ipadala",
   receive: "Matanggap",
   currentNetwork: "Kasalukuyang network",
   switchAccount: "Palitan ang Account",
   requestTestnetFunds: "Humingi ng Testnet Funds",
-  transactionHistory: "Kasaysayan ng Transaksyon",
   backupWallet: "I-backup ang Wallet",
   guestWalletWarning:
     "Ito ay isang pansamantalang guest wallet. I-download mo ang backup para hindi ka mawalan ng access dito.",

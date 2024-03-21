@@ -19,6 +19,7 @@ export type ConnectLocale = {
   disconnectWallet: string;
   getStarted: string;
   guest: string;
+  buy: string;
   guestWalletWarning: string;
   installed: string;
   networkSelector: {
@@ -83,6 +84,7 @@ export type ConnectLocale = {
   switchNetwork: string;
   switchTo: string;
   switchingNetwork: string;
-  transactionHistory: string;
+  transactions: string;
+  viewAllTransactions: string;
   welcomeScreen: { defaultSubtitle: string; defaultTitle: string };
 };
