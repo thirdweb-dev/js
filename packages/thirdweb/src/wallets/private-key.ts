@@ -56,6 +56,8 @@ export type PrivateKeyAccount = Prettify<
   }
 >;
 
+export const privateKeyToAccount = privateKeyAccount;
+
 /**
  * Get an `Account` object from a private key.
  * @param options - The options for `privateKeyAccount`
