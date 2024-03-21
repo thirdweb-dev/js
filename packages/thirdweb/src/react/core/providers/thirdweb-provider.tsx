@@ -55,8 +55,7 @@ export function ThirdwebProvider(props: ThirdwebProviderProps) {
               }
               if (isBaseTransactionOptions(variables)) {
                 if (
-                  isObjectWithKeys(data, ["transactionHash", "transaction"]) ||
-                  isObjectWithKeys(data, ["userOpHash", "transaction"])
+                  isObjectWithKeys(data, ["transactionHash", "client", "chain"])
                 ) {
                   waitForReceipt(data as WaitForReceiptOptions)
                     .catch((e) => {

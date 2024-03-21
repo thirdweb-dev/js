@@ -469,10 +469,8 @@ async function _sendUserOp(args: {
   });
 
   return {
-    transaction: {
-      client: options.client,
-      chain: options.chain,
-    },
+    client: options.client,
+    chain: options.chain,
     transactionHash: await promise,
   };
 }

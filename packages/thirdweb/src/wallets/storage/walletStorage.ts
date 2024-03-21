@@ -18,7 +18,6 @@ export async function saveConnectParamsToStorage<T extends object>(
 ) {
   // params must be stringifiable
   if (!isStringifiable(params)) {
-    console.debug("params", params);
     throw new Error("given params are not stringifiable");
   }
 

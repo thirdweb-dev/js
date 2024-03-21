@@ -65,7 +65,8 @@ export async function sendBatchTransaction(
     const result = await account.sendBatchTransaction(serializedTxs);
     return {
       ...result,
-      transaction: firstTx,
+      chain: firstTx.chain,
+      client: firstTx.client,
     };
   } else {
     throw new Error("Account doesn't implement sendBatchTransaction");

@@ -19,7 +19,7 @@ export type SendTransactionOptions = {
  * ```ts
  * import { sendTransaction } from "thirdweb";
  *
- * const transactionHash = await sendTransaction({
+ * const { transactionHash } = await sendTransaction({
  *  account,
  *  transaction
  * });
@@ -35,5 +35,5 @@ export async function sendTransaction(
     from: account.address,
   });
   const result = await account.sendTransaction(serializableTx);
-  return { ...result, transaction: options.transaction };
+  return { ...result, chain: transaction.chain, client: transaction.client };
 }

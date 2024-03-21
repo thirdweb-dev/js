@@ -12,7 +12,7 @@ import {
  * @example
  * ```jsx
  * import { useWaitForReceipt } from "thirdweb/react";
- * const { data: receipt, isLoading } = useWaitForReceipt({contract, transactionHash});
+ * const { data: receipt, isLoading } = useWaitForReceipt({client, chain, transactionHash});
  * ```
  */
 export function useWaitForReceipt(
@@ -23,7 +23,7 @@ export function useWaitForReceipt(
     queryKey: [
       "waitForReceipt",
       // TODO: here chain can be undfined so we go to a `-1` chain but this feels wrong
-      options?.transaction.chain.id || -1,
+      options?.chain.id || -1,
       options?.transactionHash,
     ] as const,
     queryFn: async () => {
