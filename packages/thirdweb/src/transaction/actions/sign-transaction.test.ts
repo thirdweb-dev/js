@@ -1,4 +1,4 @@
-import { type TransactionSerializableBase } from "viem";
+import type { TransactionSerializableBase } from "viem";
 import { signTransaction } from "./sign-transaction.js";
 import { describe, expect, test } from "vitest";
 import { ANVIL_PKEY_A } from "~test/test-wallets.js";

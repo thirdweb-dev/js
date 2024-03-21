@@ -11,12 +11,26 @@ export type SignTypedDataOptions<
   privateKey: Hex;
 };
 
+/**
+ * Signs a typed data object with a given private key according to EIP712.
+ * @param options The typed data is passed within options alongside the private key
+ * @param options.privateKey The private key to sign the typed data with
+ * @returns The signature as a hex string
+ * @example
+ * ```ts
+ * import { signTypedData } from "thirdweb/utils";
+ * signTypedData({
+ *   privateKey: "0x...",
+ *   ...typedData
+ * });
+ * ```
+ */
 export function signTypedData<
   const typedData extends TypedData | Record<string, unknown>,
   primaryType extends keyof typedData | "EIP712Domain",
->(parameters: SignTypedDataOptions<typedData, primaryType>): Hex {
+>(options: SignTypedDataOptions<typedData, primaryType>): Hex {
   const { privateKey, ...typedData } =
-    parameters as unknown as SignTypedDataOptions;
+    options as unknown as SignTypedDataOptions;
   const signature = sign({
     hash: hashTypedData(typedData), // TODO: Implement native hashTypedData
     privateKey,

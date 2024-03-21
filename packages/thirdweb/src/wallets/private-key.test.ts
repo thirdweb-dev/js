@@ -38,7 +38,7 @@ test("sign transaction", async () => {
     client: TEST_CLIENT,
   });
   expect(
-    await account.signTransaction!({
+    await account.signTransaction({
       chainId: 1,
       maxFeePerGas: parseGwei("20"),
       gas: 21000n,
