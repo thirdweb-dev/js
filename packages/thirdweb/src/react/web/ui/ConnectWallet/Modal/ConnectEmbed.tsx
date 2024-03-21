@@ -77,7 +77,7 @@ export type ConnectEmbedProps = {
    *
    * You can customize the language used in the ConnectButton UI by setting the `locale` prop.
    *
-   * Refer to the [`UILocale`](https://portal.thirdweb.com/references/typescript/v5/UILocale) type for supported locales.
+   * Refer to the [`LocaleId`](https://portal.thirdweb.com/references/typescript/v5/LocaleId) type for supported locales.
    */
   locale?: LocaleId;
 

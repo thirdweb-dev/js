@@ -17,7 +17,7 @@ export type SmartWalletConfigOptions = Omit<
 /**
  * Integrate a [smart wallet](https://portal.thirdweb.com/glossary/smart-wallet) connection using a personal wallet (acting as the key to the smart wallet) in
  * [`ConnectButton`](https://portal.thirdweb.com/typescript/v5/react/components/ConnectButton)
- * or [`ConnectEmbed`](https://portal.thirdweb.com/typescript/v5/react/components/ConnectEmbed) by configuring it in [`ThirdwebProvider`](https://portal.thirdweb.com/typescript/v5/react/ThirdwebProvider).
+ * or [`ConnectEmbed`](https://portal.thirdweb.com/typescript/v5/react/components/ConnectEmbed) by configuring it in `wallets` prop.
  *
  * A Smart Wallet is a wallet that is controlled by a smart contract following the [ERC-4337 specification](https://eips.ethereum.org/EIPS/eip-4337).
  * @param walletConfig - `WalletConfig` object of a personal wallet to use with the smart wallet.
@@ -25,27 +25,22 @@ export type SmartWalletConfigOptions = Omit<
  * Refer to [`SmartWalletConfigOptions`](https://portal.thirdweb.com/references/typescript/v5/SmartWalletConfigOptions) for more details.
  * @example
  * ```tsx
- * import {
- *   ThirdwebProvider,
- *   metamaskConfig,
- *   smartWalletConfig,
- * } from "thirdweb/react";
+ * import { ConnectButton, smartWalletConfig, metamaskConfig, coinbaseConfig } from "thirdweb/react";
  *
  * function Example() {
  *   return (
- *     <ThirdwebProvider
- *       client={client}
- *       wallets={[
- *         smartWalletConfig(metamaskConfig(), smartWalletOptions),
- *         smartWalletConfig(coinbaseConfig(), smartWalletOptions),
- *       ]}
- *     >
- *       <App />
- *     </ThirdwebProvider>
+ *     <ConnectButton
+ *      client={client}
+ *      wallets={[
+ *        smartWalletConfig(metamaskConfig(), options),
+ *        smartWalletConfig(coinbaseConfig(), options),
+ *      ]}
+ *      appMetadata={appMetadata}
+ *     />
  *   );
  * }
  * ```
- * @returns WalletConfig object to be passed into `ThirdwebProvider`
+ * @returns `WalletConfig` object which can be added to the `wallets` prop in either `ConnectButton` or `ConnectEmbed` component.
  */
 export const smartWalletConfig = (
   walletConfig: WalletConfig,

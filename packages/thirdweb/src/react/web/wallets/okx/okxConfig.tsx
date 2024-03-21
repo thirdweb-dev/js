@@ -32,22 +32,24 @@ export type OkxConfigOptions = {
 /**
  * Integrate OKX wallet connection in
  * [`ConnectButton`](https://portal.thirdweb.com/typescript/v5/react/components/ConnectButton)
- * or [`ConnectEmbed`](https://portal.thirdweb.com/typescript/v5/react/components/ConnectEmbed) by configuring it in [`ThirdwebProvider`](https://portal.thirdweb.com/typescript/v5/react/ThirdwebProvider).
+ * or [`ConnectEmbed`](https://portal.thirdweb.com/typescript/v5/react/components/ConnectEmbed) by configuring it in `wallets` prop.
  * @param options - Options for configuring the OKX wallet.
  * Refer to [`OkxConfigOptions`](https://portal.thirdweb.com/references/typescript/v5/OkxConfigOptions) for more details.
  * @example
  * ```tsx
- * import { ThirdwebProvider, okxConfig } from "thirdweb/react";
+ * import { ConnectButton, okxConfig } from "thirdweb/react";
  *
  * function Example() {
  *   return (
- *     <ThirdwebProvider client={client} wallets={[okxConfig()]}>
- *       <App />
- *     </ThirdwebProvider>
+ *     <ConnectButton
+ *      client={client}
+ *      wallets={[okxConfig()]}
+ *      appMetadata={appMetadata}
+ *     />
  *   );
  * }
  * ```
- * @returns `WalletConfig` object to be passed into `ThirdwebProvider`
+ * @returns `WalletConfig` object which can be added to the `wallets` prop in either `ConnectButton` or `ConnectEmbed` component.
  */
 export const okxConfig = (options?: OkxConfigOptions): WalletConfig => {
   let prefetchedLocale: InjectedWalletLocale;
