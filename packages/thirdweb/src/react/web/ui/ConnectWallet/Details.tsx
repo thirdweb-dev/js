@@ -352,7 +352,6 @@ export const ConnectedWalletDetails: React.FC<{
               gap: spacing.xs,
               alignItems: "center",
               padding: spacing.sm,
-              flexWrap: "wrap",
             }}
             onClick={() => {
               setScreen("send");
@@ -379,7 +378,6 @@ export const ConnectedWalletDetails: React.FC<{
               gap: spacing.xs,
               alignItems: "center",
               padding: spacing.sm,
-              flexWrap: "wrap",
             }}
             onClick={() => {
               setScreen("receive");
@@ -399,7 +397,6 @@ export const ConnectedWalletDetails: React.FC<{
               gap: spacing.xs,
               alignItems: "center",
               padding: spacing.sm,
-              flexWrap: "wrap",
             }}
             onClick={() => {
               setScreen("buy");
