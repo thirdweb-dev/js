@@ -59,6 +59,7 @@ export type BuyWithCryptoQuoteQueryParams = GetBuyWithCryptoQuoteParams;
  *  return <button onClick={handleBuyWithCrypto}>Swap</button>
  * }
  * ```
+ * @buyCrypto
  */
 export function useBuyWithCryptoQuote(
   buyWithCryptoParams?: BuyWithCryptoQuoteQueryParams,

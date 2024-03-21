@@ -50,6 +50,7 @@ export type ZerionConfigOptions = {
  * }
  * ```
  * @returns `WalletConfig` object which can be added to the `wallets` prop in either `ConnectButton` or `ConnectEmbed` component.
+ * @walletConfig
  */
 export const zerionConfig = (options?: ZerionConfigOptions): WalletConfig => {
   let prefetchedLocale: InjectedWalletLocale;

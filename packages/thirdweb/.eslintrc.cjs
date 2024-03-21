@@ -39,6 +39,8 @@ const jsdocRuleOverrides = {
         "component",
         "walletUtils",
         "walletConnection",
+        "buyCrypto",
+        "storage",
       ],
     },
   ],

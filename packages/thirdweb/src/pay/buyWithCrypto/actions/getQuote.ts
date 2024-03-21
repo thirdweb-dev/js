@@ -214,6 +214,7 @@ export type BuyWithCryptoQuote = {
  *  maxSlippageBPS: 50, // optional: max 0.5% slippage
  * });
  * ```
+ * @buyCrypto
  */
 export async function getBuyWithCryptoQuote(
   params: GetBuyWithCryptoQuoteParams,

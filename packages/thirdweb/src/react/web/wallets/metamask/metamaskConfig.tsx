@@ -50,6 +50,7 @@ export type MetamaskConfigOptions = {
  * }
  * ```
  * @returns `WalletConfig` object which can be added to the `wallets` prop in either `ConnectButton` or `ConnectEmbed` component.
+ * @walletConfig
  */
 export const metamaskConfig = (
   options?: MetamaskConfigOptions,

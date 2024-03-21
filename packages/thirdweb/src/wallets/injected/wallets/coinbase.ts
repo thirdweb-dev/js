@@ -48,6 +48,7 @@ import { injectedProvider } from "../mipdStore.js";
  * const address = await wallet.connect({ chain: mumbai })
  * ```
  * @returns The `InjectedWallet` instance
+ * @wallet
  */
 export function coinbaseWallet() {
   return new InjectedWallet({

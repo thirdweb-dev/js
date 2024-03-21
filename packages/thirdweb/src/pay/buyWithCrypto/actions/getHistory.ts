@@ -6,6 +6,7 @@ import type { BuyWithCryptoStatus } from "./getStatus.js";
 /**
  * The parameters for [`getBuyWithCryptoHistory`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoHistory) function
  * It takes the wallet history address and optional cursor and page size. for paginated results.
+ * @buyCrypto
  */
 export type BuyWithCryptoHistoryParams = {
   /**
@@ -33,6 +34,7 @@ export type BuyWithCryptoHistoryParams = {
 /**
  * The results for [`getBuyWithCryptoHistory`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoHistory) function
  * It includes information about transactions that the wallet address has made through thirdweb buy with crypto.
+ * @buyCrypto
  */
 export type BuyWithCryptoHistoryData = {
   page: BuyWithCryptoStatus[];
@@ -59,6 +61,7 @@ export type BuyWithCryptoHistoryData = {
  * const status = await getBuyWithCryptoHistory(params)
  * ```
  * @returns Object of type [`BuyWithCryptoHistoryData`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoHistoryData)
+ * @buyCrypto
  */
 export async function getBuyWithCryptoHistory(
   params: BuyWithCryptoHistoryParams,

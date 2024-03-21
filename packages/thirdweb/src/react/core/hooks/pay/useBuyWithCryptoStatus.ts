@@ -51,6 +51,7 @@ export type BuyWithCryptoStatusQueryParams = BuyWithCryptoTransaction;
  *  return <button onClick={handleBuyWithCrypto}>Swap</button>
  * }
  * ```
+ * @buyCrypto
  */
 export function useBuyWithCryptoStatus(
   buyWithCryptoStatusParams?: BuyWithCryptoStatusQueryParams,

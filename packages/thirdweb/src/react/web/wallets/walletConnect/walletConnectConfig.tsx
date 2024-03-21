@@ -64,6 +64,7 @@ export type WalletConnectConfigOptions = {
  * }
  * ```
  * @returns `WalletConfig` object to be passed into `ThirdwebProvider`
+ * @walletConfig
  */
 export const walletConnectConfig = (
   options?: WalletConnectConfigOptions,

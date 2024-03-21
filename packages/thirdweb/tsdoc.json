@@ -48,6 +48,14 @@
     {
       "tagName": "@walletUtils",
       "syntaxKind": "block"
+    },
+    {
+      "tagName": "@buyCrypto",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@storage",
+      "syntaxKind": "block"
     }
   ],
   "supportForTags": {
@@ -62,6 +70,8 @@
     "@component": true,
     "@walletConfig": true,
     "@walletConnection": true,
-    "@walletUtils": true
+    "@walletUtils": true,
+    "@buyCrypto": true,
+    "@storage": true
   }
 }

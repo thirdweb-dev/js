@@ -17,6 +17,7 @@ const mipdStore: Store | undefined = /* @__PURE__ */ (() =>
  * const coinbaseProvider = injectedProvider("com.coinbase");
  * ```
  * @returns The details of the Injected Provider if it exists. `undefined` otherwise.
+ * @walletUtils
  */
 export function injectedProvider(walletId: WalletRDNS): Ethereum | undefined {
   if (!mipdStore) {

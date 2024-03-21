@@ -54,6 +54,7 @@ export const rainbowWalletMetadata = {
  * const address = await wallet.connect({ chain: mumbai })
  * ```
  * @returns The `InjectedWallet` instance
+ * @wallet
  */
 export function rainbowWallet() {
   return new InjectedWallet({

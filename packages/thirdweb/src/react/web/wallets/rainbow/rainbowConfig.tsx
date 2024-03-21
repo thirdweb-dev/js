@@ -50,6 +50,7 @@ export type RainbowConfigOptions = {
  * }
  * ```
  * @returns `WalletConfig` object which can be added to the `wallets` prop in either `ConnectButton` or `ConnectEmbed` component.
+ * @walletConfig
  */
 export const rainbowConfig = (options?: RainbowConfigOptions): WalletConfig => {
   let prefetchedLocale: InjectedWalletLocale;

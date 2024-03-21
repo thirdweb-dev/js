@@ -44,6 +44,7 @@ export type LocalWalletConfigOptions = {
  * }
  * ```
  * @returns `WalletConfig` object which can be added to the `wallets` prop in either `ConnectButton` or `ConnectEmbed` component.
+ * @walletConfig
  */
 export const localWalletConfig = (
   options?: LocalWalletConfigOptions,

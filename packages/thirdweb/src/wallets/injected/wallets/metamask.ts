@@ -55,6 +55,7 @@ export const metamaskMetadata: WalletMetadata = {
  * const address = await wallet.connect({ chain: mumbai })
  * ```
  * @returns The `InjectedWallet` instance
+ * @wallet
  */
 export function metamaskWallet() {
   return new InjectedWallet({

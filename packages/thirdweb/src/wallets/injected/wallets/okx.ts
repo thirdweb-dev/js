@@ -51,6 +51,7 @@ export const okxWalletMetadata: WalletMetadata = {
  * const address = await wallet.connect({ chain: mumbai })
  * ```
  * @returns The `InjectedWallet` instance
+ * @wallet
  */
 export function okxWallet() {
   return new InjectedWallet({

@@ -15,6 +15,7 @@ import type { PreparedTransaction } from "../../../../transaction/prepare-transa
  * // later
  * const transactionHash = await sendTx(tx);
  * ```
+ * @transaction
  */
 export function useSendTransaction(): UseMutationResult<
   WaitForReceiptOptions,

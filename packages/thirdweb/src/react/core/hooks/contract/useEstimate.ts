@@ -17,6 +17,7 @@ import { useActiveAccount } from "../wallets/wallet-hooks.js";
  * // later
  * const estimatedGas = await estimateGas(tx);
  * ```
+ * @transaction
  */
 export function useEstimateGas(): UseMutationResult<
   EstimateGasResult,

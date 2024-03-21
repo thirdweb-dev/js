@@ -132,6 +132,7 @@ export type CoinbaseSDKWalletOptions = {
  * })
  * ```
  * @returns A `CoinbaseSDKWallet` instance.
+ * @wallet
  */
 export function coinbaseSDKWallet(options: CoinbaseSDKWalletOptions) {
   return new CoinbaseSDKWallet(options);

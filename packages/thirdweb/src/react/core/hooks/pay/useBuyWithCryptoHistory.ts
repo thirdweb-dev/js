@@ -32,6 +32,7 @@ export type BuyWithCryptoQuoteQueryOptions = Omit<
  *  return <pre>{JSON.stringify(buyWithCryptoHistory.data, null, 2)}</pre>
  * }
  * ```
+ * @buyCrypto
  */
 export function useBuyWithCryptoHistory(
   buyWithCryptoHistoryParams?: BuyWithCryptoHistoryQueryParams,

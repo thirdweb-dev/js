@@ -49,6 +49,7 @@ export type EmbeddedWalletConnectionOptions = (
  * ```
  *
  * Refer to [`EmbeddedWalletConnectionOptions`](https://portal.thirdweb.com/references/typescript/v5/EmbeddedWalletConnectionOptions) to see all the available options for connecting the wallet.
+ * @wallet
  */
 export function embeddedWallet(options: EmbeddedWalletCreationOptions) {
   return new EmbeddedWallet(options);
