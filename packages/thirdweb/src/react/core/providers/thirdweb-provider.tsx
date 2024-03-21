@@ -8,9 +8,28 @@ import {
 import { isBaseTransactionOptions } from "../../../transaction/types.js";
 
 /**
- * @internal
+ * The ThirdwebProvider is component is a provider component that sets up the React Query client.
+ * @param props - The props for the ThirdwebProvider
+ * @example
+ * ```jsx
+ * import { createThirdwebClient } from "thirdweb";
+ * import { ThirdwebProvider } from "thirdweb/react";
+ *
+ * const client = createThirdwebClient({
+ *  clientId: "<your_client_id>",
+ * })
+ *
+ * function Example() {
+ *  return (
+ *    <ThirdwebProvider>
+ *      <App />
+ *    </ThirdwebProvider>
+ *   )
+ * }
+ * ```
+ * @component
  */
-export function ThirdwebQueryProvider(props: ThirdwebQueryProviderProps) {
+export function ThirdwebProvider(props: React.PropsWithChildren) {
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -67,7 +86,3 @@ export function ThirdwebQueryProvider(props: ThirdwebQueryProviderProps) {
     </QueryClientProvider>
   );
 }
-
-export type ThirdwebQueryProviderProps = {
-  children?: React.ReactNode;
-};

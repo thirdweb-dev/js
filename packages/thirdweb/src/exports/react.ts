@@ -25,10 +25,7 @@ export {
   type TransactionButtonProps,
 } from "../react/web/ui/TransactionButton/index.js";
 
-export {
-  ThirdwebProvider,
-  type ThirdwebProviderProps,
-} from "../react/web/providers/thirdweb-provider.js";
+export { ThirdwebProvider } from "../react/core/providers/thirdweb-provider.js";
 
 // tokens
 export type { SupportedTokens } from "../react/web/ui/ConnectWallet/defaultTokens.js";
