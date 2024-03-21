@@ -38,6 +38,7 @@ export {
   signTypedData,
 } from "../utils/signatures/sign-typed-data.js";
 
+// ------------------------------------------------
 // encoding
 // ------------------------------------------------
 
