@@ -66,7 +66,7 @@ export const HeroSection = ({ TRACKING_CATEGORY }: HeroSectionProps) => {
             <Heading
               as="h1"
               size="title.2xl"
-              fontWeight={900}
+              fontWeight={800}
               px={{ base: 2, md: 0 }}
               fontSize={{ base: "36px", sm: "45px" }}
             >

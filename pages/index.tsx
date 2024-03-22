@@ -16,19 +16,13 @@ import { HomepageTopNav } from "components/product-pages/common/Topnav";
 import { PageId } from "page-id";
 import { Suspense } from "react";
 import { ThirdwebNextPage } from "utils/types";
-import { PRODUCTS, metrics } from "components/product-pages/common/nav/data";
+import { metrics } from "components/product-pages/common/nav/data";
 import { Heading, Text } from "tw-components";
 import LandingCardWithMetrics from "components/landing-pages/card-with-metrics";
 
 const TRACKING_CATEGORY = "homepage";
 
 const HomePage: ThirdwebNextPage = () => {
-  const filterProducts = (section: string) => {
-    return PRODUCTS.filter(
-      (p) => p.section === section && !!p.inLandingPage && !!p.link,
-    );
-  };
-
   return (
     <DarkMode>
       <Flex
@@ -49,39 +43,36 @@ const HomePage: ThirdwebNextPage = () => {
           <PartnerCarousel />
           <StatsSection />
           <HomePageCard
-            title="Onboard everyone to web3, instantly"
-            description="The complete web3 wallet stack — with a customizable Connect Wallet modal, embedded wallets for flexible sign-in options, and account abstraction for the smoothest user experiences."
-            introductionTitle="WALLET PRODUCTS"
-            image={require("public/assets/homepage/desktop-wallets.png")}
-            mobileImage={require("public/assets/homepage/mobile-wallets.png")}
-            products={filterProducts("connect")}
+            title="Client SDKs to connect users to web3"
+            description="Onboard every user, connect to any wallet, and build apps that anyone can use — with in-app wallets, account abstraction, and fiat & crypto payments."
+            miniTitle="Connect"
+            miniImage={require("public/assets/landingpage/connect-icon.png")}
+            ctaText="Get started"
+            ctaLink="/connect"
+            image={require("public/assets/landingpage/connect-hero.png")}
+            mobileImage={require("public/assets/landingpage/connect-hero.png")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}
           />
           <HomePageCard
-            title="Build smart contracts, deploy on any EVM"
-            description="The smart contract development toolkit — with a powerful Solidity SDK to build custom contracts, a library of pre-built & audited contracts, and a 1-click deployment flow to any EVM-compatible blockchains."
-            introductionTitle="CONTRACT PRODUCTS"
-            image={require("public/assets/homepage/desktop-contracts.png")}
-            mobileImage={require("public/assets/homepage/mobile-contracts.png")}
-            products={filterProducts("contracts")}
+            title="Dedicated APIs for web3 apps & games"
+            description="Scalable smart contract APIs backed by secure wallets, with automatic nonce queuing & gas-optimized retries."
+            miniTitle="Engine"
+            miniImage={require("public/assets/landingpage/engine-icon.png")}
+            ctaText="Get started"
+            ctaLink="/engine"
+            image={require("public/assets/landingpage/engine-hero.png")}
+            mobileImage={require("public/assets/landingpage/engine-hero.png")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}
           />
           <HomePageCard
-            title="Scale with enterprise-grade infrastructure"
-            description="The production-grade server for scalable web3 apps — with backend wallet creation, nonce management, smart contract interactions, account abstraction support, gasless transactions, and managed infrastructure."
-            introductionTitle="INFRASTRUCTURE PRODUCT"
-            image={require("public/assets/homepage/desktop-engine.png")}
-            mobileImage={require("public/assets/homepage/mobile-engine.png")}
-            products={filterProducts("infrastructure")}
-            TRACKING_CATEGORY={TRACKING_CATEGORY}
-          />
-          <HomePageCard
-            title="Simplify NFT purchases with fiat checkouts"
-            description="The most powerful NFT checkout — with worldwide availability, support for major payment methods, and full compliance for enterprise-grade apps. Built to onboard everyone, even if they've never created a web3 wallet or bought crypto."
-            introductionTitle="CHECKOUT PRODUCT"
-            image={require("public/assets/homepage/desktop-checkout.png")}
-            mobileImage={require("public/assets/homepage/mobile-checkout.png")}
-            products={filterProducts("payments")}
+            title="End-to-end tools for smart contracts"
+            description="Trusted and modular smart contracts that can be deployed securely on any EVM chain."
+            miniTitle="Contracts"
+            miniImage={require("public/assets/landingpage/contracts-icon.png")}
+            ctaText="Get started"
+            ctaLink="/contracts"
+            image={require("public/assets/landingpage/contracts-hero.png")}
+            mobileImage={require("public/assets/landingpage/contracts-hero.png")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}
           />
 
@@ -93,7 +84,7 @@ const HomePage: ThirdwebNextPage = () => {
                     Trusted by the best
                   </Heading>
 
-                  <Text size="body.lg" mt={6}>
+                  <Text fontSize={[16, 20]} mt={6}>
                     Powering web3 apps across verticals — from onchain games to
                     creator platforms.
                   </Text>

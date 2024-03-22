@@ -93,11 +93,6 @@ function redirects() {
       permanent: false,
     },
     {
-      source: "/contracts",
-      destination: "/explore",
-      permanent: false,
-    },
-    {
       source: "/settings",
       destination: "/dashboard/settings/api-keys",
       permanent: false,

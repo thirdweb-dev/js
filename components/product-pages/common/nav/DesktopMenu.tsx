@@ -5,7 +5,6 @@ import { NestedHoverMenu } from "./NestedHoverMenu";
 import {
   DEVELOPER_RESOURCES,
   DEVELOPER_SECTIONS,
-  PRODUCTS,
   PRODUCT_SECTIONS,
   COMPANY,
   SOLUTIONS,
@@ -23,13 +22,9 @@ export const DesktopMenu: React.FC = () => {
         spacing={10}
         as="nav"
       >
-        <NestedHoverMenu
-          title="Products"
-          initialSection="contracts"
-          sections={PRODUCT_SECTIONS}
-          items={PRODUCTS}
-        />
+        <HoverMenu title="Products" items={PRODUCT_SECTIONS} />
         <HoverMenu title="Solutions" items={SOLUTIONS} />
+
         <TrackedLink
           fontWeight={400}
           href="/pricing"

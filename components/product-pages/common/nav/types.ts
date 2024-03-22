@@ -6,6 +6,10 @@ export interface SectionProps {
   label: string;
   description: string;
   icon?: StaticImageData;
+  link?: string;
+  section?: "contracts-v2" | "connect-v2" | "engine-v2";
+  iconType?: IconType;
+  comingSoon?: boolean;
 }
 
 export interface SectionItemProps {

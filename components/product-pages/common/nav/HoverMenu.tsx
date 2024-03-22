@@ -8,12 +8,12 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { Card, Text } from "tw-components";
-import { SectionItemProps } from "./types";
+import { SectionItemProps, SectionProps } from "./types";
 import { useEffect, useRef, useState } from "react";
 
 interface HoverMenuProps {
   title: string;
-  items: SectionItemProps[];
+  items: SectionItemProps[] | SectionProps[];
   columns?: 1 | 2;
 }
 

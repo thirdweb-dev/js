@@ -1,9 +1,9 @@
 import { Box, Flex, Icon, Stack } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { Text, TrackedLink } from "tw-components";
-import { SectionItemProps } from "./types";
+import { SectionItemProps, SectionProps } from "./types";
 
-export const NavCard: React.FC<SectionItemProps> = ({
+export const NavCard: React.FC<SectionItemProps | SectionProps> = ({
   name,
   description,
   label,
@@ -14,11 +14,11 @@ export const NavCard: React.FC<SectionItemProps> = ({
 }) => {
   return (
     <TrackedLink
-      href={link}
+      href={link ?? "/"}
       category="topnav"
       label={label}
       textDecor="none !important"
-      isExternal={link.startsWith("http")}
+      isExternal={typeof link === "string" && link.startsWith("http")}
       pointerEvents={comingSoon ? "none" : "auto"}
     >
       <Box _hover={{ bg: "whiteAlpha.50" }} p="8px" borderRadius="md">

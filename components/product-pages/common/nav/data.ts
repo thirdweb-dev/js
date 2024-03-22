@@ -2,24 +2,28 @@ import { SectionItemProps, SectionProps } from "./types";
 
 export const PRODUCT_SECTIONS: SectionProps[] = [
   {
-    name: "Smart Contracts",
-    label: "contracts",
-    description: "Create, deploy, and interact with smart contracts",
-  },
-  {
     name: "Connect",
     label: "connect",
     description: "Onboard, authenticate and manage users",
+    link: "/connect",
+    icon: require("public/assets/landingpage/connect-icon.png"),
+    section: "connect-v2",
   },
   {
-    name: "Infrastructure",
-    label: "infrastructure",
+    name: "Contracts",
+    label: "contracts",
+    description: "Create, deploy, and interact with smart contracts",
+    link: "/contracts",
+    icon: require("public/assets/landingpage/contracts-icon.png"),
+    section: "contracts-v2",
+  },
+  {
+    name: "Engine",
+    label: "engine",
     description: "Connect your application to decentralized networks",
-  },
-  {
-    name: "Payments",
-    label: "payments",
-    description: "Facilitate financial transactions on the blockchain",
+    link: "/engine",
+    icon: require("public/assets/landingpage/engine-icon.png"),
+    section: "engine-v2",
   },
 ];
 
@@ -288,10 +292,19 @@ export const DEVELOPER_RESOURCES: SectionItemProps[] = [
     section: "resources",
   },
   {
-    name: "SDKs",
-    label: "sdk",
+    name: "TypeScript",
+    label: "typescript",
     description: "Integrate web3 into your app",
-    link: "/sdk",
+    link: "https://portal.thirdweb.com/typescript-sdks",
+    icon: require("public/assets/product-icons/sdks.png"),
+    section: "sdks",
+  },
+
+  {
+    name: "Unity",
+    label: "unity",
+    description: "Build games with blockchain and web3 capabilities",
+    link: "https://portal.thirdweb.com/unity",
     icon: require("public/assets/product-icons/sdks.png"),
     section: "sdks",
   },
@@ -304,10 +317,10 @@ export const DEVELOPER_RESOURCES: SectionItemProps[] = [
     section: "tools",
   },
   {
-    name: "UI Components",
-    label: "ui-components",
-    description: "Plug-and-play frontend components",
-    link: "/ui-components",
+    name: "Solidity",
+    label: "solidity",
+    description: "Build custom smart contracts efficiently",
+    link: "https://portal.thirdweb.com/contracts/build/overview",
     icon: require("public/assets/product-icons/ui-components.png"),
     section: "sdks",
   },
@@ -320,10 +333,10 @@ export const DEVELOPER_RESOURCES: SectionItemProps[] = [
     section: "tools",
   },
   {
-    name: "Wallet SDK",
-    label: "wallet-sdk",
-    description: "Connect any wallet",
-    link: "https://portal.thirdweb.com/wallet-sdk/latest",
+    name: "React",
+    label: "react",
+    description: "Components and Hooks for wallets and contracts",
+    link: "https://portal.thirdweb.com/typescript/v5/react",
     icon: require("public/assets/product-icons/wallet-sdk.png"),
     section: "sdks",
   },
