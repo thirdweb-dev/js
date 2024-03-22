@@ -44,6 +44,7 @@ export type PrepareDirectDeployTransactionOptions<
  *  constructorParams: [123],
  * });
  * ```
+ * @extension DEPLOY
  */
 export function prepareDirectDeployTransaction<
   const TConstructor extends AbiConstructor,

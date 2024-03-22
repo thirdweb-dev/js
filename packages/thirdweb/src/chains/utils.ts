@@ -112,7 +112,12 @@ type GetRpcUrlForChainOptions = {
  * Otherwise, a thirdweb RPC URL will be constructed using the chain ID and client ID.
  * @param options - The options object containing the chain and client information.
  * @returns The RPC URL for the specified chain.
- * @internal
+ * @example
+ * ```ts
+ * import { getRpcUrlForChain } from "thirdweb/chains";
+ * const rpcUrl = getRpcUrlForChain({ chain: 1, client });
+ * console.log(rpcUrl); // "https://1.rpc.thirdweb.com/...
+ * ```
  */
 export function getRpcUrlForChain(options: GetRpcUrlForChainOptions): string {
   const baseRpcUrl = getThirdwebDomains().rpc;

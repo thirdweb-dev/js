@@ -8,6 +8,7 @@
  * const bytecode = "0x363d3d373d3d3d363d73...";
  * const implementationAddress = extractMinimalProxyImplementationAddress(bytecode);
  * ```
+ * @utils
  */
 export function extractMinimalProxyImplementationAddress(
   bytecode: string,

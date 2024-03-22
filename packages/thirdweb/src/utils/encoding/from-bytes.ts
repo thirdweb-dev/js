@@ -38,6 +38,7 @@ export type FromBytesReturnType<TTo> = TTo extends "string"
  * const number = fromBytes(bytes, "number");
  * console.log(number); // 420
  * ```
+ * @utils
  */
 export function fromBytes<
   TTo extends "string" | "hex" | "bigint" | "number" | "boolean",
@@ -79,6 +80,7 @@ export type BytesToBigIntOpts = {
  * const bigInt = bytesToBigInt(bytes);
  * console.log(bigInt); // 420n
  * ```
+ * @utils
  */
 export function bytesToBigInt(
   bytes: Uint8Array,
@@ -109,6 +111,7 @@ export type BytesToBoolOpts = {
  * const bool = bytesToBool(bytes);
  * console.log(bool); // true
  * ```
+ * @utils
  */
 export function bytesToBool(
   bytes_: Uint8Array,
@@ -140,6 +143,7 @@ export type BytesToNumberOpts = BytesToBigIntOpts;
  * const number = bytesToNumber(bytes);
  * console.log(number); // 420
  * ```
+ * @utils
  */
 export function bytesToNumber(
   bytes: Uint8Array,
@@ -169,6 +173,7 @@ export type BytesToStringOpts = {
  * const string = bytesToString(bytes);
  * console.log(string); // "Hello"
  * ```
+ * @utils
  */
 export function bytesToString(
   bytes_: Uint8Array,

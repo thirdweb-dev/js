@@ -10,7 +10,7 @@ import { isAddress } from "../address.js";
 const AddressZero = "0x0000000000000000000000000000000000000000";
 
 /**
- * Resolves the implementation address and bytecode for a given contract.
+ * Resolves the implementation address and bytecode for a given proxy contract.
  * @param contract The contract to resolve the implementation for.
  * @returns A promise that resolves to an object containing the implementation address and bytecode.
  * @example
@@ -18,6 +18,7 @@ const AddressZero = "0x0000000000000000000000000000000000000000";
  * import { resolveImplementation } from "thirdweb";
  * const implementation = await resolveImplementation(contract);
  * ```
+ * @contract
  */
 export async function resolveImplementation(
   contract: ThirdwebContract<any>,

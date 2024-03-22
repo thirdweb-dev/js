@@ -20,6 +20,7 @@ export type SignLoginPayloadParams = {
  *  account: account,
  * });
  * ```
+ * @auth
  */
 export async function signLoginPayload(options: SignLoginPayloadParams) {
   const { payload, account } = options;

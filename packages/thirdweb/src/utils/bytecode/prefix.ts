@@ -13,6 +13,7 @@ import { isHex, type Hex } from "../encoding/hex.js";
  * const prefixedBytecode = ensureBytecodePrefix(bytecode);
  * console.log(prefixedBytecode);
  * ```
+ * @utils
  */
 export function ensureBytecodePrefix(bytecode: string): Hex {
   if (isHex(bytecode, { strict: false })) {

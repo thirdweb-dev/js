@@ -20,7 +20,7 @@ type DetectExtensionOptions = {
  *  contract,
  *  method: "function decimals() view returns (uint8)",
  * });
- * @internal
+ * @contract
  */
 export async function detectMethod(
   options: DetectExtensionOptions,

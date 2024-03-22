@@ -9,6 +9,7 @@
  * toTokens(1000000000000000000n, 18)
  * // '1'
  * ```
+ * @utils
  */
 export function toTokens(units: bigint, decimals: number): string {
   // Convert to string once and handle negativity.
@@ -52,6 +53,7 @@ export function toTokens(units: bigint, decimals: number): string {
  * toEther(1000000000000000000n)
  * // '1'
  * ```
+ * @utils
  */
 export function toEther(wei: bigint) {
   return toTokens(wei, 18);
@@ -68,6 +70,7 @@ export function toEther(wei: bigint) {
  * toUnits('1', 18)
  * // 1000000000000000000n
  * ```
+ * @utils
  */
 export function toUnits(tokens: string, decimals: number): bigint {
   let [integerPart, fractionPart = ""] = tokens.split(".") as [string, string];
@@ -122,6 +125,7 @@ export function toUnits(tokens: string, decimals: number): bigint {
  * toWei('1')
  * // 1000000000000000000n
  * ```
+ * @utils
  */
 export function toWei(tokens: string) {
   return toUnits(tokens, 18);

@@ -11,6 +11,7 @@ import { stringToBytes } from "../encoding/to-bytes.js";
  * import { keccackId } from "thirdweb/utils";
  * const keccakId = keccackId(input);
  * ```
+ * @utils
  */
 export function keccakId(input: string): Hex {
   return keccak256(stringToBytes(input));

@@ -100,6 +100,7 @@ export type HexToStringOpts = {
  * const string = hexToString("0x48656c6c6f2c20776f726c6421");
  * console.log(string); // "Hello, world!"
  * ```
+ * @utils
  */
 export function hexToString(hex: Hex, opts: HexToStringOpts = {}): string {
   let bytes = hexToUint8Array(hex);
@@ -128,6 +129,7 @@ export type HexToBigIntOpts = {
  * const bigInt = hexToBigInt("0x1a4");
  * console.log(bigInt); // 420n
  * ```
+ * @utils
  */
 export function hexToBigInt(hex: Hex, opts: HexToBigIntOpts = {}): bigint {
   const { signed } = opts;
@@ -162,6 +164,7 @@ export type HexToNumberOpts = HexToBigIntOpts;
  * const number = hexToNumber("0x1a4");
  * console.log(number); // 420
  * ```
+ * @utils
  */
 export function hexToNumber(hex: Hex, opts: HexToNumberOpts = {}): number {
   return Number(hexToBigInt(hex, opts));
@@ -184,6 +187,7 @@ export type HexToBoolOpts = {
  * const bool = hexToBool("0x01");
  * console.log(bool); // true
  * ```
+ * @utils
  */
 export function hexToBool(hex: Hex, opts: HexToBoolOpts = {}): boolean {
   if (opts.size) {
@@ -215,6 +219,7 @@ export type HexToUint8ArrayOpts = {
  * const bytes = hexToUint8Array("0x48656c6c6f2c20776f726c6421");
  * console.log(bytes); // Uint8Array([72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33])
  * ```
+ * @utils
  */
 export function hexToUint8Array(
   hex: Hex,
@@ -277,6 +282,7 @@ export type FromHexReturnType<TTo> = TTo extends "string"
  * const string = fromHex("0x48656c6c6f2c20776f726c6421", "string");
  * console.log(string); // "Hello, world!"
  * ```
+ * @utils
  */
 export function fromHex<
   TTo extends "string" | "bigint" | "number" | "bytes" | "boolean",
@@ -320,6 +326,7 @@ export type BoolToHexOpts = {
  * const hex = boolToHex(true);
  * console.log(hex); // "0x01"
  * ```
+ * @utils
  */
 export function boolToHex(value: boolean, opts: BoolToHexOpts = {}): Hex {
   const hex = `0x${Number(value)}` as const;
@@ -346,6 +353,7 @@ export type Uint8ArrayToHexOpts = {
  * const hex = uint8arrayToHex(new Uint8Array([72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100]));
  * console.log(hex); // "0x48656c6c6f2c20776f726c64"
  * ```
+ * @utils
  */
 export function uint8ArrayToHex(
   value: Uint8Array,
@@ -390,6 +398,7 @@ export type NumberToHexOpts =
  * const hex = numberToHex(420);
  * console.log(hex); // "0x1a4"
  * ```
+ * @utils
  */
 export function numberToHex(
   value_: number | bigint,
@@ -449,6 +458,7 @@ export type StringToHexOpts = {
  * const hex = stringToHex("Hello, world!");
  * console.log(hex); // "0x48656c6c6f2c20776f726c6421"
  * ```
+ * @utils
  */
 export function stringToHex(value_: string, opts: StringToHexOpts = {}): Hex {
   const value = cachedTextEncoder().encode(value_);
@@ -471,6 +481,7 @@ export type ToHexParameters = {
  * const hex = toHex(420);
  * console.log(hex); // "0x1a4"
  * ```
+ * @utils
  */
 export function toHex(
   value: string | number | bigint | boolean | Uint8Array,

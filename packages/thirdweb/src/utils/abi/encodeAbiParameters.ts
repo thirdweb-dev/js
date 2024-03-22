@@ -34,6 +34,7 @@ import { isAddress } from "../address.js";
  * const data = encodeAbiParameters(params, values);
  * console.log(data);
  * ```
+ * @utils
  */
 export function encodeAbiParameters<
   const TParams extends readonly AbiParameter[] | readonly unknown[],

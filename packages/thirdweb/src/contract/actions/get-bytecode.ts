@@ -15,6 +15,7 @@ const BYTECODE_CACHE = new WeakMap<ThirdwebContract<Abi>, Promise<Hex>>();
  * import { getBytecode } from "thirdweb/contract";
  * const bytecode = await getBytecode(contract);
  * ```
+ * @contract
  */
 export function getBytecode<abi extends Abi>(
   contract: ThirdwebContract<abi>,

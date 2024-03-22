@@ -33,6 +33,7 @@ export type ParseEventLogsResult<
  *  events: [preparedEvent, preparedEvent2],
  * });
  * ```
+ * @contract
  */
 export function parseEventLogs<
   const abiEvents extends PreparedEvent<AbiEvent>[],

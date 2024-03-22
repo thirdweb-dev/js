@@ -14,6 +14,7 @@ import { ensureBytecodePrefix } from "./prefix.js";
  * const ipfsHash = extractIPFSUri(bytecode);
  * console.log(ipfsHash);
  * ```
+ * @utils
  */
 export function extractIPFSUri(bytecode: string): string | undefined {
   const numericBytecode = hexToBytes(ensureBytecodePrefix(bytecode));

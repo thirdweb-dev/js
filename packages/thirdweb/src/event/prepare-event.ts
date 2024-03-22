@@ -43,6 +43,7 @@ export type PreparedEvent<abiEvent extends AbiEvent> = {
  *  signature: "event MyEvent(uint256 myArg)",
  * });
  * ```
+ * @contract
  */
 export function prepareEvent<TSignature extends `event ${string}` | AbiEvent>(
   options: PrepareEventOptions<TSignature>,

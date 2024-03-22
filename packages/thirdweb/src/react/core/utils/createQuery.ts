@@ -17,6 +17,7 @@ const CONTRACT_QUERY_CACHE = new WeakMap();
  * const useTotalSupply = createContractQuery(totalSupply);
  * const { data, isLoading } = useTotalSupply({contract})
  * ```
+ * @transaction
  */
 export function createContractQuery<
   opts extends object,

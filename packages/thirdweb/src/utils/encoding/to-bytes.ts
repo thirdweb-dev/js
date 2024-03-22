@@ -42,6 +42,7 @@ export type ToBytesParameters = {
  * const bytes = toBytes("0x1a4");
  * console.log(bytes); // Uint8Array(2) [ 1, 164 ]
  * ```
+ * @utils
  */
 export function toBytes(
   value: string | bigint | number | boolean | Hex,
@@ -77,6 +78,7 @@ export type BoolToBytesOpts = {
  * const bytes = boolToBytes(true);
  * console.log(bytes); // Uint8Array(1) [ 1 ]
  * ```
+ * @utils
  */
 export function boolToBytes(value: boolean, opts: BoolToBytesOpts = {}) {
   const bytes = new Uint8Array(1);
@@ -105,6 +107,7 @@ export type HexToBytesOpts = {
  * const bytes = hexToBytes("0x1a4");
  * console.log(bytes); // Uint8Array(2) [ 1, 164 ]
  * ```
+ * @utils
  */
 export function hexToBytes(hex_: Hex, opts: HexToBytesOpts = {}): Uint8Array {
   let hex = hex_;
@@ -146,6 +149,7 @@ export function hexToBytes(hex_: Hex, opts: HexToBytesOpts = {}): Uint8Array {
  * const bytes = numberToBytes(420);
  * console.log(bytes); // Uint8Array(2) [ 1, 164 ]
  * ```
+ * @utils
  */
 export function numberToBytes(value: bigint | number, opts?: NumberToHexOpts) {
   const hex = numberToHex(value, opts);
@@ -168,6 +172,7 @@ export type StringToBytesOpts = {
  * const bytes = stringToBytes("Hello, world!");
  * console.log(bytes); // Uint8Array(13) [ 72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33 ]
  * ```
+ * @utils
  */
 export function stringToBytes(
   value: string,

@@ -28,6 +28,7 @@ export type ThirdwebContract<abi extends Abi = []> = Readonly<
  *  abi: [...],
  * });
  * ```
+ * @contract
  */
 export function getContract<const abi extends Abi = []>(
   options: ContractOptions<abi>,

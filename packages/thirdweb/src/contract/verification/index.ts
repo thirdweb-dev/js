@@ -43,6 +43,7 @@ type VerifyContractOptions = {
  * });
  * console.log(verificationResult);
  * ```
+ * @contract
  */
 export async function verifyContract(
   options: VerifyContractOptions,
@@ -169,6 +170,7 @@ type CheckVerificationStatusOptions = {
  * });
  * console.log(verificationStatus);
  * ```
+ * @contract
  */
 export async function checkVerificationStatus(
   options: CheckVerificationStatusOptions,

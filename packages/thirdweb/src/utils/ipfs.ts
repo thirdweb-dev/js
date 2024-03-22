@@ -25,6 +25,7 @@ const DEFAULT_GATEWAY = "https://{clientId}.ipfscdn.io/ipfs/{cid}";
  *  uri: "ipfs://Qm...",
  * });
  * ```
+ * @storage
  */
 export function resolveScheme(options: ResolveSchemeOptions) {
   let url: string;
