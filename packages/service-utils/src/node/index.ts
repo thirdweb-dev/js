@@ -195,7 +195,6 @@ export function logHttpRequest({
     const authorizationData = extractAuthorizationData({ req, clientId });
     const headers = req.headers;
 
-    const _statusMessage = statusMessage ?? res.statusMessage;
     console.log(
       JSON.stringify({
         method: req.method,
@@ -206,7 +205,7 @@ export function logHttpRequest({
         clientId: authorizationData.clientId,
         isAuthed,
         status: res.statusCode,
-        statusMessage: _statusMessage,
+        statusMessage,
         sdkName: headers["x-sdk-name"] ?? undefined,
         sdkVersion: headers["x-sdk-version"] ?? undefined,
         platform: headers["x-sdk-platform"] ?? undefined,
@@ -214,7 +213,5 @@ export function logHttpRequest({
         latencyMs,
       }),
     );
-  } catch (err) {
-    console.error("Failed to log HTTP request:", err);
-  }
+  } catch (err) {}
 }
