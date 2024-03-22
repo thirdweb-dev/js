@@ -57,7 +57,8 @@ export type DeployERC721ContractOptions = Prettify<
  *    name: "MyNFT",
  *    description: "My NFT contract",
  *    symbol: "NFT",
- * },
+ * });
+ * ```
  */
 export async function deployERC721Contract(
   options: DeployERC721ContractOptions,

@@ -53,7 +53,8 @@ export type DeployERC1155ContractOptions = Prettify<
  *    name: "MyEdition",
  *    description: "My edition contract",
  *    symbol: "ME",
- * },
+ * });
+ * ```
  */
 export async function deployERC1155Contract(
   options: DeployERC1155ContractOptions,

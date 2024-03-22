@@ -70,9 +70,9 @@ export const localWalletMetadata: WalletMetadata = {
  * and `save` to save the wallet data to storage. You can also use `export` to get the wallet data in various formats.
  *
  * ```ts
- * import { LocalWallet } from "thirdweb/wallets";
+ * import { localWallet } from "thirdweb/wallets";
  *
- * const wallet = new LocalWallet({
+ * const wallet = localWallet({
  * client,
  * })
  *
@@ -103,9 +103,9 @@ export function localWallet(options: LocalWalletCreationOptions) {
  * Refer to [Creating a Client](https://portal.thirdweb.com/typescript/v5/client) documentation to learn how to create a client.
  *
  * ```ts
- * import { LocalWallet } from "thirdweb/wallets";
+ * import { localWallet } from "thirdweb/wallets";
  *
- * const wallet = new LocalWallet({
+ * const wallet = localWallet({
  *   client,
  * })
  *
@@ -133,7 +133,7 @@ export class LocalWallet implements Wallet {
    * Refer to [`LocalWalletCreationOptions`](https://portal.thirdweb.com/references/typescript/v5/LocalWalletCreationOptions) for more details.
    * @example
    * ```ts
-   * const wallet = new LocalWallet({
+   * const wallet = localWallet({
    *  client,
    * });
    * ```

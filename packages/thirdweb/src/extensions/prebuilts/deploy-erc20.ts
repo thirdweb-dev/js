@@ -51,7 +51,8 @@ export type DeployERC20ContractOptions = Prettify<
  *    name: "MyToken",
  *    description: "My Token contract",
  *    symbol: "MT",
- * },
+ * });
+ * ```
  */
 export async function deployERC20Contract(options: DeployERC20ContractOptions) {
   const { chain, client, account, type, params } = options;
