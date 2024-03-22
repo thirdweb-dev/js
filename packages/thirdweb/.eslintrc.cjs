@@ -43,6 +43,7 @@ const jsdocRuleOverrides = {
         "storage",
         "auth",
         "utils",
+        "chain",
       ],
     },
   ],

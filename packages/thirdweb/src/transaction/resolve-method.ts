@@ -20,6 +20,7 @@ import type { ThirdwebContract } from "../contract/contract.js";
  *  params: [to, value],
  * });
  * ```
+ * @contract
  */
 export function resolveMethod<abiFn extends AbiFunction>(method: string) {
   return async function (contract: ThirdwebContract) {

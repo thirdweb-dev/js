@@ -63,6 +63,7 @@ type PadOptions = {
  * const paddedHex = padHex("0x1a4", { size: 32 });
  * console.log(paddedHex); // "0x000000000000000000000000000001a4"
  * ```
+ * @utils
  */
 export function padHex(hex_: Hex, options: PadOptions = {}) {
   const { dir, size = 32 } = options;

@@ -153,8 +153,8 @@ export type WatchBlockNumberOptions = {
  *
  * // later stop watching
  * unwatch();
- *
  * ```
+ * @rpc
  */
 export function watchBlockNumber(opts: WatchBlockNumberOptions) {
   const { client, chain, onNewBlockNumber, overPollRatio } = opts;

@@ -25,6 +25,7 @@ import type {
  *  },
  * });
  * ```
+ * @chain
  */
 export function defineChain(
   options: number | ChainOptions | ViemChain | LegacyChain,
@@ -118,6 +119,7 @@ type GetRpcUrlForChainOptions = {
  * const rpcUrl = getRpcUrlForChain({ chain: 1, client });
  * console.log(rpcUrl); // "https://1.rpc.thirdweb.com/...
  * ```
+ * @chain
  */
 export function getRpcUrlForChain(options: GetRpcUrlForChainOptions): string {
   const baseRpcUrl = getThirdwebDomains().rpc;
@@ -222,6 +224,7 @@ type FetchChainResponse =
  * const chainData = await getChainMetadata(chain);
  * console.log(chainData);
  * ```
+ * @chain
  */
 export function getChainMetadata(chain: Chain): Promise<ChainMetadata> {
   const chainId = chain.id;
