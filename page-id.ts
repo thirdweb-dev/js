@@ -88,6 +88,9 @@ export enum PageId {
   // thirdweb.com/web3-dashboard
   DashboardLanding = "dashboard-landing",
 
+  // thirdweb.com/cointracts
+  ContractsLanding = "contracts-landing",
+
   // thirdweb.com/web3-storage
   StorageLanding = "storage-landing",
 
