@@ -83,6 +83,20 @@ export const viemAdapter = {
      * ```
      */
     toViem: toViemWalletClient,
+
+    /**
+     * Converts a Viem Wallet client to an Account.
+     * @param options - The options for creating the Account.
+     * @returns The Account.
+     * @example
+     * ```ts
+     * import { viemAdapter } from "thirdweb/adapters";
+     *
+     * const account = viemAdapter.walletClient.fromViem({
+     *   walletClient,
+     * });
+     */
+    fromViem: fromViemWalletClient,
   },
 };
 
@@ -205,4 +219,38 @@ function toViemWalletClient(options: ToViemWalletClientOptions): WalletClient {
     chain: viemChain,
     key: "thirdweb-wallet",
   });
+}
+
+function fromViemWalletClient(options: {
+  walletClient: WalletClient;
+}): Account {
+  const viemAccount = options.walletClient.account;
+  if (!viemAccount) {
+    throw new Error("Wallet not connected.");
+  }
+  return {
+    address: viemAccount.address,
+    signMessage: async (msg) => {
+      return options.walletClient.signMessage({
+        account: viemAccount.address,
+        ...msg,
+      });
+    },
+    sendTransaction: async (tx) => {
+      const txHash = await options.walletClient.sendTransaction({
+        account: viemAccount.address,
+        chain: options.walletClient.chain,
+        ...tx,
+        type: "eip1559",
+        gasPrice: undefined,
+      });
+      return {
+        transaction: tx,
+        transactionHash: txHash,
+      };
+    },
+    signTypedData(_typedData) {
+      return options.walletClient.signTypedData(_typedData as any); // TODO fix types
+    },
+  };
 }
