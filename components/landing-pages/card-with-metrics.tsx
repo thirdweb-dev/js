@@ -79,7 +79,11 @@ const CardWithMetric = ({
         </Flex>
 
         {items.length > 0 && (
-          <SimpleGrid columns={4} placeItems="center" mt={8}>
+          <SimpleGrid
+            columns={4}
+            placeItems={items.length === 1 ? "start" : "center"}
+            mt={8}
+          >
             {items.map((item, index) => (
               <GridItem colSpan={item.colSpan ? item.colSpan : 1} key={index}>
                 <Flex flex={1} flexDir="column">

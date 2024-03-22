@@ -77,6 +77,7 @@
     "react-intersection-observer": "^9.8.1",
     "react-markdown": "^9.0.1",
     "react-otp-input": "^3.1.1",
+    "react-responsive-carousel": "^3.2.23",
     "react-table": "^7.8.0",
     "recharts": "^2.12.3",
     "remark-gfm": "^4.0.0",

@@ -55,9 +55,11 @@ export const LandingHeroWithSideImage: React.FC<
               <ChakraNextImage alt="" boxSize={7} src={miniImage} />
             ) : null}
 
-            <Heading size="subtitle.sm" as="span">
-              {miniTitle}
-            </Heading>
+            {miniTitle && (
+              <Heading size="subtitle.sm" as="span">
+                {miniTitle}
+              </Heading>
+            )}
           </Flex>
           <Heading as="h1" size="display.sm" px={{ base: 2, md: 0 }} mr={6}>
             {title}{" "}
