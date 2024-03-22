@@ -23,6 +23,7 @@ export type ConnectionManager = ReturnType<typeof createConnectionManager>;
  * const manager = createConnectionManager();
  * ```
  * @returns A connection manager object
+ * @walletConnection
  */
 export function createConnectionManager(storage: AsyncStorage) {
   // stores

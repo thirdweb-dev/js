@@ -1,8 +1,8 @@
 import { queryOptions, useQuery } from "@tanstack/react-query";
 import {
-  getTokenBalance,
-  type GetTokenBalanceOptions,
-} from "../../../../wallets/utils/getTokenBalance.js";
+  getWalletBalance,
+  type GetWalletBalanceOptions,
+} from "../../../../wallets/utils/getWalletBalance.js";
 import { useWalletConnectionCtx } from "./useWalletConnectionCtx.js";
 
 /**
@@ -12,7 +12,7 @@ import { useWalletConnectionCtx } from "./useWalletConnectionCtx.js";
  * @internal
  */
 export function useWalletBalance(
-  options: Omit<Partial<GetTokenBalanceOptions>, "client">,
+  options: Omit<Partial<GetWalletBalanceOptions>, "client">,
 ) {
   const { chain, account, tokenAddress } = options;
   const { client } = useWalletConnectionCtx();
@@ -34,7 +34,7 @@ export function useWalletBalance(
       if (!account) {
         throw new Error("account is required");
       }
-      return getTokenBalance({ chain, client, account, tokenAddress });
+      return getWalletBalance({ chain, client, account, tokenAddress });
     },
     enabled: !!chain && !!client && !!account,
   });

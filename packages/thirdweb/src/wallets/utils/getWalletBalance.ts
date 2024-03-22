@@ -11,7 +11,7 @@ import { getRpcClient } from "../../rpc/rpc.js";
 import { toTokens } from "../../utils/units.js";
 import type { Account } from "../interfaces/wallet.js";
 
-export type GetTokenBalanceOptions = {
+export type GetWalletBalanceOptions = {
   account: Pick<Account, "address">;
   client: ThirdwebClient;
   chain: Chain;
@@ -21,7 +21,7 @@ export type GetTokenBalanceOptions = {
   tokenAddress?: string;
 };
 
-type GetTokenBalanceResult = {
+type GetWalletBalanceResult = {
   value: bigint;
   decimals: number;
   displayValue: string;
@@ -30,18 +30,23 @@ type GetTokenBalanceResult = {
 };
 
 /**
- * Retrieves the balance of a token for a given wallet.
+ * Retrieves the balance of a token or native currency for a given wallet.
  * @param options - The options for retrieving the token balance.
+ * @param options.account - The account for which to retrieve the balance.
+ * @param options.client - The Thirdweb client to use for the request.
+ * @param options.chain - The chain for which to retrieve the balance.
+ * @param options.tokenAddress - (Optional) The address of the token to retrieve the balance for. If not provided, the balance of the native token will be retrieved.
  * @returns A promise that resolves to the token balance result.
  * @example
  * ```ts
- * import { getTokenBalance } from "thirdweb/wallets";
- * const balance = await getTokenBalance({ account, client, chain, tokenAddress });
+ * import { getWalletBalance } from "thirdweb/wallets";
+ * const balance = await getWalletBalance({ account, client, chain, tokenAddress });
  * ```
+ * @walletUtils
  */
-export async function getTokenBalance(
-  options: GetTokenBalanceOptions,
-): Promise<GetTokenBalanceResult> {
+export async function getWalletBalance(
+  options: GetWalletBalanceOptions,
+): Promise<GetWalletBalanceResult> {
   const { account, client, chain, tokenAddress } = options;
   // erc20 case
   if (tokenAddress) {

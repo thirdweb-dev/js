@@ -10,9 +10,9 @@ export type { ConnectionStatus } from "../wallets/manager/index.js";
 export { createConnectionManager } from "../wallets/manager/index.js";
 
 export {
-  getTokenBalance,
-  type GetTokenBalanceOptions,
-} from "../wallets/utils/getTokenBalance.js";
+  getWalletBalance,
+  type GetWalletBalanceOptions,
+} from "../wallets/utils/getWalletBalance.js";
 
 // private-key
 export {
