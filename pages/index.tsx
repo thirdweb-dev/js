@@ -48,6 +48,7 @@ const HomePage: ThirdwebNextPage = () => {
             miniTitle="Connect"
             miniImage={require("public/assets/landingpage/connect-icon.png")}
             ctaText="Get started"
+            label="get-started-connect"
             ctaLink="/connect"
             image={require("public/assets/landingpage/connect-hero.png")}
             mobileImage={require("public/assets/landingpage/connect-hero.png")}
@@ -59,6 +60,7 @@ const HomePage: ThirdwebNextPage = () => {
             miniTitle="Engine"
             miniImage={require("public/assets/landingpage/engine-icon.png")}
             ctaText="Get started"
+            label="get-started-engine"
             ctaLink="/engine"
             image={require("public/assets/landingpage/engine-hero.png")}
             mobileImage={require("public/assets/landingpage/engine-hero.png")}
@@ -70,6 +72,7 @@ const HomePage: ThirdwebNextPage = () => {
             miniTitle="Contracts"
             miniImage={require("public/assets/landingpage/contracts-icon.png")}
             ctaText="Get started"
+            label="get-started-contracts"
             ctaLink="/contracts"
             image={require("public/assets/landingpage/contracts-hero.png")}
             mobileImage={require("public/assets/landingpage/contracts-hero.png")}

@@ -4,7 +4,7 @@ import { LandingDesktopMobileImage } from "components/landing-pages/desktop-mobi
 import { StaticImageData } from "next/image";
 import React, { ReactNode } from "react";
 import { BsFillLightningChargeFill } from "react-icons/bs";
-import { ButtonProps, Heading, Text, TrackedLinkButton } from "tw-components";
+import { Heading, Text, TrackedLinkButton } from "tw-components";
 
 interface HomePageCardProps {
   title: string;
@@ -13,10 +13,8 @@ interface HomePageCardProps {
   miniTitle: string;
   ctaLink: string;
   ctaText: string;
-  contactUsButtonMaxWidth?: ButtonProps["maxWidth"];
+  label: string;
   customContactUsComponent?: ReactNode;
-  contactUsText?: string;
-  contactUsLink?: string;
   image: StaticImageData;
   mobileImage?: StaticImageData;
   TRACKING_CATEGORY: string;
@@ -30,11 +28,9 @@ const HomePageCard = ({
   image,
   mobileImage,
   ctaLink,
-  contactUsButtonMaxWidth,
   customContactUsComponent,
-  contactUsText,
-  contactUsLink,
   ctaText,
+  label,
   TRACKING_CATEGORY,
 }: HomePageCardProps) => {
   return (
@@ -97,29 +93,13 @@ const HomePageCard = ({
               color="black"
               href={ctaLink}
               category={TRACKING_CATEGORY}
-              label={ctaText.replaceAll(" ", "-").toLowerCase()}
+              label={label}
               fontWeight="bold"
               maxW="190px"
               leftIcon={<Icon as={BsFillLightningChargeFill} boxSize={4} />}
             >
               {ctaText}
             </TrackedLinkButton>
-
-            {contactUsLink && contactUsText && (
-              <TrackedLinkButton
-                py={6}
-                px={8}
-                variant="outline"
-                maxW={contactUsButtonMaxWidth}
-                href={contactUsLink}
-                category={TRACKING_CATEGORY}
-                label={contactUsText.replaceAll(" ", "-").toLowerCase()}
-                fontWeight="bold"
-                w="full"
-              >
-                {contactUsText}
-              </TrackedLinkButton>
-            )}
 
             {customContactUsComponent && customContactUsComponent}
           </Flex>
