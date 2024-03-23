@@ -1,9 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { getChainProvider } from "@thirdweb-dev/sdk/evm";
 import { providers } from "ethers";
-import { useAddress } from "./wallet";
+import { useAddress, useChainId } from "./wallet";
 import { useSupportedChains } from "./useSupportedChains";
 import { useWalletContext } from "../../core/providers/thirdweb-wallet-provider";
+import { Base } from "@thirdweb-dev/chains";
 
 /**
  *
@@ -11,12 +12,17 @@ import { useWalletContext } from "../../core/providers/thirdweb-wallet-provider"
  */
 export function useENS() {
   const address = useAddress();
+  const chainId = useChainId();
   const supportedChains = useSupportedChains();
   const { clientId } = useWalletContext();
-  const ethereum = supportedChains.find((chain) => chain.chainId === 1);
+  let chain = supportedChains.find((chain) => chain.chainId === 1);
+
+  if (chainId === Base.chainId) {
+    chain = Base;
+  }
 
   return useQuery({
-    queryKey: ["ens", address, ethereum?.rpc],
+    queryKey: ["ens", address, chain?.rpc],
     cacheTime: 60 * 60 * 24 * 1000, // 24h
     staleTime: 60 * 60 * 1000, // 1h
     retry: false,
@@ -26,15 +32,15 @@ export function useENS() {
         return null;
       }
 
-      const provider = getChainProvider(1, {
+      const provider = getChainProvider(chain?.chainId || 1, {
         clientId,
-        supportedChains: ethereum
+        supportedChains: chain
           ? [
               {
-                chainId: 1,
-                rpc: [...ethereum.rpc],
-                nativeCurrency: ethereum.nativeCurrency,
-                slug: ethereum.slug,
+                chainId: chain.chainId,
+                rpc: [...chain.rpc],
+                nativeCurrency: chain.nativeCurrency,
+                slug: chain.slug,
               },
             ]
           : undefined,
