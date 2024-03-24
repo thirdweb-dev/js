@@ -7,6 +7,7 @@ import {
   type WalletClient,
   createWalletClient,
   custom,
+  type TransactionSerializableEIP1559,
 } from "viem";
 import { getContract, type ThirdwebContract } from "../contract/contract.js";
 import type { Abi } from "abitype";
@@ -226,23 +227,24 @@ function fromViemWalletClient(options: {
 }): Account {
   const viemAccount = options.walletClient.account;
   if (!viemAccount) {
-    throw new Error("Wallet not connected.");
+    throw new Error(
+      "Account not found in walletClient, please pass it explicitely.",
+    );
   }
   return {
     address: viemAccount.address,
     signMessage: async (msg) => {
       return options.walletClient.signMessage({
-        account: viemAccount.address,
+        account: viemAccount,
         ...msg,
       });
     },
     sendTransaction: async (tx) => {
+      const tx1559 = tx as TransactionSerializableEIP1559; // TODO check other txTypes
       const txHash = await options.walletClient.sendTransaction({
-        account: viemAccount.address,
+        account: viemAccount,
         chain: options.walletClient.chain,
-        ...tx,
-        type: "eip1559",
-        gasPrice: undefined,
+        ...tx1559,
       });
       return {
         transaction: tx,
