@@ -1815,8 +1815,8 @@ importers:
         specifier: 1.31.2
         version: 1.31.2
       serve:
-        specifier: ^14.0.1
-        version: 14.2.0
+        specifier: ^14.2.1
+        version: 14.2.1
 
   test/e2e/next-13:
     dependencies:
@@ -1877,8 +1877,8 @@ importers:
         specifier: ^2
         version: 2.2.0(vite@3.2.8)
       serve:
-        specifier: ^14.0.1
-        version: 14.2.0
+        specifier: ^14.2.1
+        version: 14.2.1
       vite:
         specifier: ^3.2.8
         version: 3.2.8(@types/node@18.17.1)
@@ -18826,7 +18826,6 @@ packages:
     dependencies:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
-    bundledDependencies: false
 
   /event-target-shim@5.0.1:
     resolution: {integrity: sha512-i/2XbnSz/uxRCU6+NdVJgKWDTM427+MqYbkQzD321DuCQJUqOuJKIA0IM2+W2xtYHdKOmZ4dR6fExsd4SXL+WQ==}
@@ -28129,8 +28128,8 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /serve@14.2.0:
-    resolution: {integrity: sha512-+HOw/XK1bW8tw5iBilBz/mJLWRzM8XM6MPxL4J/dKzdxq1vfdEWSwhaR7/yS8EJp5wzvP92p1qirysJvnEtjXg==}
+  /serve@14.2.1:
+    resolution: {integrity: sha512-48er5fzHh7GCShLnNyPBRPEjs2I6QBozeGr02gaacROiyS/8ARADlj595j39iZXAqBbJHH/ivJJyPRWY9sQWZA==}
     engines: {node: '>= 14'}
     hasBin: true
     dependencies:
