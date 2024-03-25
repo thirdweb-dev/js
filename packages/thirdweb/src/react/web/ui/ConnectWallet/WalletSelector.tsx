@@ -1,14 +1,10 @@
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
-import { useContext, useState, useRef, useEffect, useCallback } from "react";
+import { useContext, useState, useRef, useEffect } from "react";
 import {
   ModalConfigCtx,
-  SetModalConfigCtx,
   // SetModalConfigCtx,
 } from "../../providers/wallet-ui-states-provider.js";
-import type {
-  WalletConfig,
-  SelectUIProps,
-} from "../../../core/types/wallets.js";
+import type { SelectUIProps } from "../../../core/types/wallets.js";
 import { Img } from "../components/Img.js";
 import { Spacer } from "../components/Spacer.js";
 import { TextDivider } from "../components/TextDivider.js";
@@ -24,14 +20,23 @@ import { ModalTitle } from "../components/modalElements.js";
 import { Link } from "../components/text.js";
 import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 import { StyledUl, StyledButton } from "../design-system/elements.js";
-import { iconSize, spacing, radius } from "../design-system/index.js";
+import { iconSize, spacing, radius, fontSize } from "../design-system/index.js";
 import { TOS } from "./Modal/TOS.js";
 import { TWIcon } from "./icons/twIcon.js";
 import { Text } from "../components/text.js";
 import { PoweredByThirdweb } from "./PoweredByTW.js";
 import { useScreenContext } from "./Modal/screen.js";
-import { localWalletMetadata } from "../../../../wallets/local/index.js";
+// import { localWalletMetadata } from "../../../../wallets/local/index._ts";
 import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
+import { useWalletInfo } from "../hooks/useWalletInfo.js";
+import { Skeleton } from "../components/Skeleton.js";
+import { WalletImage } from "../components/WalletImage.js";
+import { getMIPDStore } from "../../../../wallets/injected/mipdStore.js";
+import { createWallet } from "../../../../wallets/create-wallet.js";
+
+const localWalletId = "local";
+const embeddedWalletId = "embedded";
 
 type WalletSelectUIProps = {
   screenConfig: SelectUIProps["screenConfig"];
@@ -42,8 +47,8 @@ type WalletSelectUIProps = {
  * @internal
  */
 export const WalletSelector: React.FC<{
-  walletConfigs: WalletConfig[];
-  selectWallet: (wallet: WalletConfig) => void;
+  wallets: Wallet[];
+  selectWallet: (wallet: Wallet) => void;
   onGetStarted: () => void;
   title: string;
   selectUIProps: WalletSelectUIProps;
@@ -52,24 +57,25 @@ export const WalletSelector: React.FC<{
   const isCompact = modalConfig.modalSize === "compact";
   const { termsOfServiceUrl, privacyPolicyUrl } = modalConfig;
   const [isWalletGroupExpanded, setIsWalletGroupExpanded] = useState(false);
+
   // const disconnect = useDisconnect();
   // const connectionStatus = useActiveWalletConnectionStatus();
   const locale = useWalletConnectionCtx().connectLocale;
+  const recommendedWallets = useWalletConnectionCtx().recommendedWallets;
 
-  const localWalletConfig = props.walletConfigs.find(
-    (w) => w.metadata.id === localWalletMetadata.id,
-  );
+  const localWalletConfig = props.wallets.find((w) => w.id === localWalletId);
 
-  const nonLocalWalletConfigs = props.walletConfigs.filter(
-    (w) => w.metadata.id !== localWalletMetadata.id,
+  const nonLocalWalletConfigs = props.wallets.filter(
+    (w) => w.id !== localWalletId,
   );
 
   const socialWallets = nonLocalWalletConfigs.filter(
-    (w) => w.category === "socialLogin",
+    (w) => w.id === embeddedWalletId,
   );
 
-  const eoaWallets = sortWalletConfigs(
-    nonLocalWalletConfigs.filter((w) => w.category !== "socialLogin"),
+  const eoaWallets = sortWallets(
+    nonLocalWalletConfigs.filter((w) => w.id !== embeddedWalletId),
+    recommendedWallets,
   );
 
   const continueAsGuest = localWalletConfig && (
@@ -133,7 +139,7 @@ export const WalletSelector: React.FC<{
     </Container>
   );
 
-  const handleSelect = async (wallet: WalletConfig) => {
+  const handleSelect = async (wallet: Wallet) => {
     // if (connectionStatus !== "disconnected") {
     //   await disconnect();
     // }
@@ -156,12 +162,7 @@ export const WalletSelector: React.FC<{
     >
       <Container flex="row" gap="xxs">
         {eoaWallets.slice(0, 2).map((w) => (
-          <Img
-            key={w.metadata.id}
-            width={iconSize.sm}
-            height={iconSize.sm}
-            src={w.metadata.iconUrl}
-          />
+          <WalletImage key={w.id} id={w.id} size={iconSize.sm} />
         ))}
       </Container>
       {locale.connectAWallet}
@@ -204,7 +205,7 @@ export const WalletSelector: React.FC<{
   if (!isCompact) {
     topSection = (
       <WalletSelection
-        walletConfigs={nonLocalWalletConfigs}
+        wallets={nonLocalWalletConfigs}
         selectWallet={handleSelect}
         selectUIProps={props.selectUIProps}
       />
@@ -223,7 +224,7 @@ export const WalletSelector: React.FC<{
     if (socialWallets.length === 0) {
       topSection = (
         <WalletSelection
-          walletConfigs={nonLocalWalletConfigs}
+          wallets={nonLocalWalletConfigs}
           selectWallet={handleSelect}
           selectUIProps={props.selectUIProps}
         />
@@ -259,7 +260,7 @@ export const WalletSelector: React.FC<{
         topSection = (
           <Container px="xs">
             <WalletSelection
-              walletConfigs={socialWallets}
+              wallets={socialWallets}
               selectWallet={handleSelect}
               selectUIProps={props.selectUIProps}
             />
@@ -315,7 +316,7 @@ export const WalletSelector: React.FC<{
               <>
                 <Container px="lg">
                   <WalletSelection
-                    walletConfigs={eoaWallets}
+                    wallets={eoaWallets}
                     selectWallet={handleSelect}
                     selectUIProps={props.selectUIProps}
                   />
@@ -345,7 +346,7 @@ export const WalletSelector: React.FC<{
       else {
         topSection = (
           <WalletSelection
-            walletConfigs={eoaWallets}
+            wallets={eoaWallets}
             selectWallet={handleSelect}
             selectUIProps={props.selectUIProps}
           />
@@ -435,45 +436,72 @@ export const WalletSelector: React.FC<{
   );
 };
 
+let _installedWallets: Wallet[] = [];
+
+function getInstalledWallets() {
+  if (_installedWallets.length === 0) {
+    const providers = getMIPDStore().getProviders();
+    const walletIds = providers.map((provider) => provider.info.rdns);
+    _installedWallets = walletIds.map((w) => createWallet(w, {}));
+  }
+  console.log({ _installedWallets });
+  return _installedWallets;
+}
+
 /**
  * @internal
  */
 const WalletSelection: React.FC<{
-  walletConfigs: WalletConfig[];
-  selectWallet: (wallet: WalletConfig) => void;
+  wallets: Wallet[];
+  selectWallet: (wallet: Wallet) => void;
   maxHeight?: string;
   selectUIProps: WalletSelectUIProps;
 }> = (props) => {
-  const { client, appMetadata } = useWalletConnectionCtx();
-  const modalConfig = useContext(ModalConfigCtx);
-  const setModalConfig = useContext(SetModalConfigCtx);
-  const walletConfigs = sortWalletConfigs(props.walletConfigs);
-  const saveData = useCallback(
-    (data: any) => {
-      setModalConfig({
-        ...modalConfig,
-        data,
-      });
-    },
-    [modalConfig, setModalConfig],
-  );
+  const { recommendedWallets } = useWalletConnectionCtx();
+
+  const installedWallets = getInstalledWallets();
+  const propsWallets = props.wallets;
+  const _wallets: Wallet[] = [...propsWallets];
+
+  installedWallets.forEach((iW) => {
+    if (!propsWallets.find((w) => w.id === iW.id)) {
+      _wallets.push(iW);
+    }
+  });
+
+  const wallets = sortWallets(_wallets, recommendedWallets);
+
+  console.log("wallets are", wallets);
+
+  // const modalConfig = useContext(ModalConfigCtx);
+  // const setModalConfig = useContext(SetModalConfigCtx);
+
+  // const saveData = useCallback(
+  //   (data: any) => {
+  //     setModalConfig({
+  //       ...modalConfig,
+  //       data,
+  //     });
+  //   },
+  //   [modalConfig, setModalConfig],
+  // );
 
   return (
     <WalletList>
-      {walletConfigs.map((walletConfig) => {
+      {wallets.map((wallet) => {
         return (
           <li
-            key={walletConfig.metadata.id}
-            data-full-width={!!walletConfig.selectUI}
+            key={wallet.id}
+            // data-full-width={!!walletConfig.selectUI}
           >
-            {walletConfig.selectUI ? (
+            {/* {walletConfig.selectUI ? (
               <walletConfig.selectUI
                 screenConfig={props.selectUIProps.screenConfig}
                 selection={{
                   select: () => {
                     props.selectWallet(walletConfig);
                   },
-                  isSingularOption: walletConfigs.length === 1,
+                  isSingularOption: wallets.length === 1,
                   data: modalConfig.data,
                   saveData: saveData,
                 }}
@@ -489,13 +517,15 @@ const WalletSelection: React.FC<{
                 walletConfig={walletConfig}
               />
             ) : (
-              <WalletEntryButton
-                walletConfig={walletConfig}
-                selectWallet={() => {
-                  props.selectWallet(walletConfig);
-                }}
-              />
-            )}
+
+            )} */}
+
+            <WalletEntryButton
+              wallet={wallet}
+              selectWallet={() => {
+                props.selectWallet(wallet);
+              }}
+            />
           </li>
         );
       })}
@@ -507,13 +537,20 @@ const WalletSelection: React.FC<{
  * @internal
  */
 export function WalletEntryButton(props: {
-  walletConfig: WalletConfig;
+  wallet: Wallet;
   selectWallet: () => void;
 }) {
-  const { walletConfig, selectWallet } = props;
-  const isRecommended = walletConfig.recommended;
-  const { connectLocale } = useWalletConnectionCtx();
+  const { wallet, selectWallet } = props;
+  const { connectLocale, recommendedWallets } = useWalletConnectionCtx();
+  const isRecommended = recommendedWallets?.find((w) => w === wallet);
   const { screen } = useScreenContext();
+  const walletInfo = useWalletInfo(wallet.id);
+
+  const walletName =
+    getMIPDStore()
+      .getProviders()
+      .find((p) => p.info.rdns === wallet.id)?.info.name ||
+    walletInfo.data?.name;
 
   return (
     <WalletButton
@@ -521,27 +558,26 @@ export function WalletEntryButton(props: {
       onClick={() => {
         selectWallet();
       }}
-      data-active={screen === walletConfig}
+      data-active={screen === wallet}
     >
-      <Img
-        src={walletConfig.metadata.iconUrl}
-        width={iconSize.xl}
-        height={iconSize.xl}
-        loading="eager"
-      />
+      <WalletImage id={wallet.id} size={iconSize.xl} />
 
       <Container flex="column" gap="xxs" expand>
-        <Text color="primaryText" weight={600}>
-          {walletConfig.metadata.name}
-        </Text>
+        {walletName ? (
+          <Text color="primaryText" weight={600}>
+            {walletName}
+          </Text>
+        ) : (
+          <Skeleton width="100px" height={fontSize.md} />
+        )}
 
         {isRecommended && <Text size="sm">{connectLocale.recommended}</Text>}
-
+        {/*
         {!isRecommended &&
           walletConfig.isInstalled &&
           walletConfig.isInstalled() && (
             <Text size="sm">{connectLocale.installed}</Text>
-          )}
+          )} */}
       </Container>
     </WalletButton>
   );
@@ -593,41 +629,44 @@ const WalletButton = /* @__PURE__ */ StyledButton(() => {
  *
  * @internal
  */
-function sortWalletConfigs(walletConfigs: WalletConfig[]) {
+function sortWallets(wallets: Wallet[], recommendedWallets?: Wallet[]) {
   return (
-    walletConfigs
+    wallets
       // show the installed wallets first
-      .sort((a, b) => {
-        const aInstalled = a.isInstalled ? a.isInstalled() : false;
-        const bInstalled = b.isInstalled ? b.isInstalled() : false;
+      // .sort((a, b) => {
+      //   const aInstalled = a.isInstalled ? a.isInstalled() : false;
+      //   const bInstalled = b.isInstalled ? b.isInstalled() : false;
 
-        if (aInstalled && !bInstalled) {
-          return -1;
-        }
-        if (!aInstalled && bInstalled) {
-          return 1;
-        }
-        return 0;
-      })
+      //   if (aInstalled && !bInstalled) {
+      //     return -1;
+      //   }
+      //   if (!aInstalled && bInstalled) {
+      //     return 1;
+      //   }
+      //   return 0;
+      // })
       // show the recommended wallets even before that
       .sort((a, b) => {
-        if (a.recommended && !b.recommended) {
+        const aIsRecommended = recommendedWallets?.find((w) => w === a);
+        const bIsRecommended = recommendedWallets?.find((w) => w === b);
+
+        if (aIsRecommended && !bIsRecommended) {
           return -1;
         }
-        if (!a.recommended && b.recommended) {
+        if (!aIsRecommended && bIsRecommended) {
           return 1;
         }
         return 0;
       })
-      // show the wallets with selectUI first before others
-      .sort((a, b) => {
-        if (a.selectUI && !b.selectUI) {
-          return -1;
-        }
-        if (!a.selectUI && b.selectUI) {
-          return 1;
-        }
-        return 0;
-      })
+    // show the wallets with selectUI first before others
+    // .sort((a, b) => {
+    //   if (a.selectUI && !b.selectUI) {
+    //     return -1;
+    //   }
+    //   if (!a.selectUI && b.selectUI) {
+    //     return 1;
+    //   }
+    //   return 0;
+    // })
   );
 }

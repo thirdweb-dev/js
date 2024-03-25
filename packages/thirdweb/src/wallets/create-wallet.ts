@@ -1,8 +1,8 @@
 /* eslint-disable better-tree-shaking/no-top-level-side-effects */
-import type { Wallet } from "./interfaces/wallet.js";
+import { Wallet } from "./interfaces/wallet.js";
 
 // todo - auto generate
-export type WalletId = "metamask" | "coinbase" | "rainbow";
+export type WalletId = string;
 
 type WalletConfigMap = {
   metamask: "foo";
@@ -53,7 +53,7 @@ export function createWallet<
     : undefined,
 >(walletId: TWalletId, walletConfig: TWalletConfig): Wallet {
   console.log(walletId, walletConfig);
-  return null as unknown as Wallet;
+  return new Wallet(walletId, walletConfig);
 }
 
 // testing the type

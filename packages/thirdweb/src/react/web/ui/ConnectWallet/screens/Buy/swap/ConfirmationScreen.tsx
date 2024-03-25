@@ -13,7 +13,7 @@ import {
   useBuyWithCryptoStatus,
   type BuyWithCryptoStatusQueryParams,
 } from "../../../../../../core/hooks/pay/useBuyWithCryptoStatus.js";
-import { useActiveWallet } from "../../../../../../core/hooks/wallets/wallet-hooks.js";
+// import { useActiveWallet } from "../../../../../../core/hooks/wallets/wallet-hooks.js";
 import { shortenString } from "../../../../../../core/utils/addresses.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { Img } from "../../../../components/Img.js";
@@ -56,7 +56,7 @@ export function ConfirmationScreen(props: {
   onQuoteFinalized: (quote: BuyWithCryptoQuote) => void;
   client: ThirdwebClient;
 }) {
-  const activeWallet = useActiveWallet();
+  // const activeWallet = useActiveWallet();
   const sendTransactionMutation = useSendTransaction();
 
   const [swapTx, setSwapTx] = useState<
@@ -129,11 +129,7 @@ export function ConfirmationScreen(props: {
 
       <TokenInfoContainer>
         <Container flex="row" gap="md" center="y">
-          <Img
-            width={iconSize.lg}
-            height={iconSize.lg}
-            src={activeWallet?.metadata.iconUrl || ""}
-          />
+          <Img width={iconSize.lg} height={iconSize.lg} src={""} />
           <Text color="primaryText" size="sm">
             {shortenString(props.account.address, false)}
           </Text>

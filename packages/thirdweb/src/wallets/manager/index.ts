@@ -49,21 +49,21 @@ export function createConnectionManager(storage: AsyncStorage) {
   const addConnectedWallet = (wallet: Wallet) => {
     const oldValue = walletIdToConnectedWalletMap.getValue();
     const newValue = new Map(oldValue);
-    newValue.set(wallet.metadata.id, wallet);
+    newValue.set(wallet.id, wallet);
     walletIdToConnectedWalletMap.setValue(newValue);
   };
 
   const removeConnectedWallet = (wallet: Wallet) => {
     const oldValue = walletIdToConnectedWalletMap.getValue();
     const newValue = new Map(oldValue);
-    newValue.delete(wallet.metadata.id);
+    newValue.delete(wallet.id);
     walletIdToConnectedWalletMap.setValue(newValue);
   };
 
   const onWalletDisconnect = (wallet: Wallet) => {
     const currentMap = walletIdToConnectedWalletMap.getValue();
     const newMap = new Map(currentMap);
-    newMap.delete(wallet.metadata.id);
+    newMap.delete(wallet.id);
 
     walletIdToConnectedWalletMap.setValue(newMap);
 
@@ -89,7 +89,7 @@ export function createConnectionManager(storage: AsyncStorage) {
 
     // also add it to connected wallets if it's not already there
     const _connectedWalletsMap = walletIdToConnectedWalletMap.getValue();
-    if (!_connectedWalletsMap.has(wallet.metadata.id)) {
+    if (!_connectedWalletsMap.has(wallet.id)) {
       addConnectedWallet(wallet);
     }
 
@@ -146,9 +146,7 @@ export function createConnectionManager(storage: AsyncStorage) {
   effect(
     () => {
       const accounts = connectedWallets.getValue();
-      const ids = accounts
-        .map((acc) => acc?.metadata.id)
-        .filter((c) => !!c) as string[];
+      const ids = accounts.map((acc) => acc?.id).filter((c) => !!c) as string[];
 
       storage.setItem(CONNECTED_WALLET_IDS, JSON.stringify(ids));
     },
@@ -159,7 +157,7 @@ export function createConnectionManager(storage: AsyncStorage) {
   // save active wallet id to storage
   effect(
     () => {
-      const value = activeWalletStore.getValue()?.metadata.id;
+      const value = activeWalletStore.getValue()?.id;
       if (value) {
         storage.setItem(ACTIVE_WALLET_ID, value);
       } else {

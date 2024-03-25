@@ -26,47 +26,7 @@ export type WalletConnectCreationOptions = {
    * Passing a `metadata` object will override the default `metadata` property on the `Wallet` instance.
    */
   metadata?: WalletMetadata;
-  /**
-   * A client is the entry point to the thirdweb SDK.
-   * It is required for all other actions.
-   * You can create a client using the `createThirdwebClient` function. Refer to the [Creating a Client](https://portal.thirdweb.com/typescript/v5/client) documentation for more information.
-   *
-   * You must provide a `clientId` or `secretKey` in order to initialize a client. Pass `clientId` if you want for client-side usage and `secretKey` for server-side usage.
-   *
-   * ```tsx
-   * import { createThirdwebClient } from "thirdweb";
-   *
-   * const client = createThirdwebClient({
-   *  clientId: "<your_client_id>",
-   * })
-   * ```
-   */
-  client: ThirdwebClient;
-  /**
-   * Your project’s unique identifier that can be obtained at https://cloud.walletconnect.com/
-   *
-   * If you don't pass a `projectId`, a default `projectId` will be used that is created by thirdweb.
-   *
-   * Refer to [WalletConnect docs](https://docs.walletconnect.com) for more info
-   */
-  projectId?: string;
-  /**
-   * Metadata of the dApp that will be passed to connected wallet.
-   *
-   * Some wallets may display this information to the user.
-   *
-   * Setting this property is highly recommended. If this is not set, Below default metadata will be used:
-   *
-   * ```ts
-   * {
-   *   name: "thirdweb powered dApp",
-   *   url: "https://thirdweb.com",
-   *   description: "thirdweb powered dApp",
-   *   logoUrl: "https://thirdweb.com/favicon.ico",
-   * };
-   * ```
-   */
-  appMetadata?: AppMetadata;
+
   /**
    * Storage interface of type [`AsyncStorage`](https://portal.thirdweb.com/references/typescript/v5/AsyncStorage) to save connected wallet data to the storage for auto-connect.
    * If not provided, no wallet data will be saved to the storage by thirdweb SDK
@@ -172,4 +132,46 @@ export type WalletConnectConnectionOptions = {
    * This can be used to
    */
   onSessionRequestSent?: () => void;
+
+  /**
+   * A client is the entry point to the thirdweb SDK.
+   * It is required for all other actions.
+   * You can create a client using the `createThirdwebClient` function. Refer to the [Creating a Client](https://portal.thirdweb.com/typescript/v5/client) documentation for more information.
+   *
+   * You must provide a `clientId` or `secretKey` in order to initialize a client. Pass `clientId` if you want for client-side usage and `secretKey` for server-side usage.
+   *
+   * ```tsx
+   * import { createThirdwebClient } from "thirdweb";
+   *
+   * const client = createThirdwebClient({
+   *  clientId: "<your_client_id>",
+   * })
+   * ```
+   */
+  client: ThirdwebClient;
+  /**
+   * Your project’s unique identifier that can be obtained at https://cloud.walletconnect.com/
+   *
+   * If you don't pass a `projectId`, a default `projectId` will be used that is created by thirdweb.
+   *
+   * Refer to [WalletConnect docs](https://docs.walletconnect.com) for more info
+   */
+  projectId?: string;
+  /**
+   * Metadata of the dApp that will be passed to connected wallet.
+   *
+   * Some wallets may display this information to the user.
+   *
+   * Setting this property is highly recommended. If this is not set, Below default metadata will be used:
+   *
+   * ```ts
+   * {
+   *   name: "thirdweb powered dApp",
+   *   url: "https://thirdweb.com",
+   *   description: "thirdweb powered dApp",
+   *   logoUrl: "https://thirdweb.com/favicon.ico",
+   * };
+   * ```
+   */
+  appMetadata?: AppMetadata;
 };

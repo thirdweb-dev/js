@@ -35,7 +35,7 @@ import {
 import { NetworkSelectorContent } from "./NetworkSelector.js";
 import { onModalUnmount } from "./constants.js";
 import type { SupportedTokens } from "./defaultTokens.js";
-import { Link, Text } from "../components/text.js";
+import { Text } from "../components/text.js";
 import { CopyIcon } from "../components/CopyIcon.js";
 import { shortenString } from "../../../core/utils/addresses.js";
 import { Img } from "../components/Img.js";
@@ -58,18 +58,20 @@ import type { Chain } from "../../../../chains/types.js";
 //   Wallet,
 //   WalletWithPersonalAccount,
 // } from "../../../../wallets/interfaces/wallet.js";
-import {
-  // personalAccountToSmartAccountMap,
-  smartWalletMetadata,
-} from "../../../../wallets/smart/index.js";
-import type { EmbeddedWallet } from "../../../../wallets/embedded/core/wallet/index.js";
-import { localWalletMetadata } from "../../../../wallets/local/index.js";
-import { ExportLocalWallet } from "./screens/ExportLocalWallet.js";
+// import {
+//   // personalAccountToSmartAccountMap,
+//   smartWalletMetadata,
+// } from "../../../../wallets/smart/index._ts";
+// import type { EmbeddedWallet } from "../../../../wallets/embedded/core/wallet/index._ts";
+// import { localWalletMetadata } from "../../../../wallets/local/index._ts";
+// import { ExportLocalWallet } from "./screens/ExportLocalWallet._tsx";
 import { swapTransactionsStore } from "./screens/Buy/swap/pendingSwapTx.js";
 import { SwapScreen } from "./screens/Buy/SwapScreen.js";
 import { SwapTransactionsScreen } from "./screens/SwapTransactionsScreen.js";
 import { useSwapSupportedChains } from "./screens/Buy/swap/useSwapSupportedChains.js";
 import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+
+const localWalletId = "local";
 
 const TW_CONNECTED_WALLET = "tw-connected-wallet";
 
@@ -160,11 +162,11 @@ export const ConnectedWalletDetails: React.FC<{
     }
   }, [isOpen]);
 
-  let avatarOrWalletIconUrl = activeWallet?.metadata.iconUrl || "";
+  const avatarOrWalletIconUrl = ""; // activeWallet?.metadata.iconUrl || "";
 
-  if (activeWallet && "isSmartWallet" in activeWallet) {
-    avatarOrWalletIconUrl = smartWalletMetadata.iconUrl;
-  }
+  // if (activeWallet && "isSmartWallet" in activeWallet) {
+  //   avatarOrWalletIconUrl = smartWalletMetadata.iconUrl;
+  // }
 
   const trigger = props.detailsButton?.render ? (
     <div>
@@ -191,7 +193,7 @@ export const ConnectedWalletDetails: React.FC<{
 
       <Container flex="column" gap="xxs">
         {/* Address */}
-        {activeWallet?.metadata.id === localWalletMetadata.id ? (
+        {activeWallet?.id === localWalletId ? (
           <Text
             color="danger"
             size="xs"
@@ -333,8 +335,8 @@ export const ConnectedWalletDetails: React.FC<{
       <Spacer y="lg" />
 
       <Container px="lg">
-        <ConnectedToSmartWallet />
-        <EmbeddedWalletEmail />
+        {/* <ConnectedToSmartWallet /> */}
+        {/* <EmbeddedWalletEmail /> */}
 
         {/* Send, Receive, Swap */}
         <Container
@@ -477,7 +479,7 @@ export const ConnectedWalletDetails: React.FC<{
             )}
 
           {/* Export  Wallet */}
-          {activeWallet?.metadata.id === localWalletMetadata.id && (
+          {activeWallet?.id === localWalletId && (
             <div>
               <MenuButton
                 onClick={() => {
@@ -524,7 +526,7 @@ export const ConnectedWalletDetails: React.FC<{
         </Container>
       )}
 
-      {activeWallet?.metadata.id === localWalletMetadata.id && (
+      {activeWallet?.id === localWalletId && (
         <>
           <Line />
           <Container py="md">
@@ -568,18 +570,18 @@ export const ConnectedWalletDetails: React.FC<{
   }
 
   // export local wallet
-  else if (screen === "export") {
-    content = (
-      <ExportLocalWallet
-        onExport={() => {
-          setIsOpen(false);
-        }}
-        onBack={() => {
-          setScreen("main");
-        }}
-      />
-    );
-  }
+  // else if (screen === "export") {
+  //   content = (
+  //     <ExportLocalWallet
+  //       onExport={() => {
+  //         setIsOpen(false);
+  //       }}
+  //       onBack={() => {
+  //         setScreen("main");
+  //       }}
+  //     />
+  //   );
+  // }
 
   // send funds
   else if (screen === "send") {
@@ -757,94 +759,94 @@ const StyledChevronRightIcon = /* @__PURE__ */ styled(
 //   );
 // }
 
-const ActiveDot = /* @__PURE__ */ StyledDiv(() => {
-  const theme = useCustomTheme();
-  return {
-    width: "8px",
-    height: "8px",
-    borderRadius: "50%",
-    backgroundColor: theme.colors.success,
-  };
-});
+// const ActiveDot = /* @__PURE__ */ StyledDiv(() => {
+//   const theme = useCustomTheme();
+//   return {
+//     width: "8px",
+//     height: "8px",
+//     borderRadius: "50%",
+//     backgroundColor: theme.colors.success,
+//   };
+// });
 
-function ConnectedToSmartWallet() {
-  const activeAccount = useActiveAccount();
-  const activeWallet = useActiveWallet();
-  const chain = useActiveWalletChain();
-  const locale = useWalletConnectionCtx().connectLocale;
-  const isSmartWallet = activeWallet && "isSmartWallet" in activeWallet;
+// function ConnectedToSmartWallet() {
+//   const activeAccount = useActiveAccount();
+//   const activeWallet = useActiveWallet();
+//   const chain = useActiveWalletChain();
+//   const locale = useWalletConnectionCtx().connectLocale;
+//   const isSmartWallet = activeWallet && "isSmartWallet" in activeWallet;
 
-  const [isSmartWalletDeployed] = useState(false);
+//   const [isSmartWalletDeployed] = useState(false);
 
-  // useEffect(() => {
-  //   if (activeAccount && isSmartWallet) {
-  //     (activeAccount.wallet as SmartWallet).isDeployed().then((isDeployed) => {
-  //       setIsSmartWalletDeployed(isDeployed);
-  //     });
-  //   } else {
-  //     setIsSmartWalletDeployed(false);
-  //   }
-  // }, [activeWallet]);
+//   // useEffect(() => {
+//   //   if (activeAccount && isSmartWallet) {
+//   //     (activeAccount.wallet as SmartWallet).isDeployed().then((isDeployed) => {
+//   //       setIsSmartWalletDeployed(isDeployed);
+//   //     });
+//   //   } else {
+//   //     setIsSmartWalletDeployed(false);
+//   //   }
+//   // }, [activeWallet]);
 
-  const content = (
-    <Container flex="row" gap="xxs" center="both">
-      <ActiveDot />
-      {locale.connectedToSmartWallet}
-    </Container>
-  );
+//   const content = (
+//     <Container flex="row" gap="xxs" center="both">
+//       <ActiveDot />
+//       {locale.connectedToSmartWallet}
+//     </Container>
+//   );
 
-  if (chain && activeAccount && isSmartWallet) {
-    return (
-      <>
-        {isSmartWalletDeployed ? (
-          <Link
-            color="secondaryText"
-            hoverColor="primaryText"
-            href={`https://thirdweb.com/${chain.id}/${activeAccount.address}/account`}
-            target="_blank"
-            size="sm"
-          >
-            {content}
-          </Link>
-        ) : (
-          <Text size="sm"> {content}</Text>
-        )}
+//   if (chain && activeAccount && isSmartWallet) {
+//     return (
+//       <>
+//         {isSmartWalletDeployed ? (
+//           <Link
+//             color="secondaryText"
+//             hoverColor="primaryText"
+//             href={`https://thirdweb.com/${chain.id}/${activeAccount.address}/account`}
+//             target="_blank"
+//             size="sm"
+//           >
+//             {content}
+//           </Link>
+//         ) : (
+//           <Text size="sm"> {content}</Text>
+//         )}
 
-        <Spacer y="md" />
-      </>
-    );
-  }
+//         <Spacer y="md" />
+//       </>
+//     );
+//   }
 
-  return null;
-}
+//   return null;
+// }
 
-function EmbeddedWalletEmail() {
-  const user = useEmbeddedWalletUser();
-  if (user?.email) {
-    return (
-      <Container
-        flex="row"
-        center="x"
-        style={{
-          paddingBottom: spacing.md,
-        }}
-      >
-        <Text size="sm">{user.email}</Text>
-      </Container>
-    );
-  }
+// function EmbeddedWalletEmail() {
+//   const user = useEmbeddedWalletUser();
+//   if (user?.email) {
+//     return (
+//       <Container
+//         flex="row"
+//         center="x"
+//         style={{
+//           paddingBottom: spacing.md,
+//         }}
+//       >
+//         <Text size="sm">{user.email}</Text>
+//       </Container>
+//     );
+//   }
 
-  return undefined;
-}
+//   return undefined;
+// }
 
-function useEmbeddedWalletUser() {
-  const activeWallet = useActiveWallet();
-  const user =
-    activeWallet &&
-    "isEmbeddedWallet" in activeWallet &&
-    "getUser" in activeWallet
-      ? (activeWallet as EmbeddedWallet).getUser()
-      : undefined;
+// function useEmbeddedWalletUser() {
+//   const activeWallet = useActiveWallet();
+//   const user =
+//     activeWallet &&
+//     "isEmbeddedWallet" in activeWallet &&
+//     "getUser" in activeWallet
+//       ? (activeWallet as EmbeddedWallet).getUser()
+//       : undefined;
 
-  return user;
-}
+//   return user;
+// }

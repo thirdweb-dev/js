@@ -25,7 +25,7 @@ import { canFitWideModal } from "../../utils/canFitWideModal.js";
 import type { Chain } from "../../../../chains/types.js";
 import type { ConnectLocale } from "./locale/types.js";
 import { WalletConnectionContext } from "../../../core/providers/wallet-connection.js";
-import { defaultWallets } from "../../wallets/defaultWallets.js";
+import { getDefaultWallets } from "../../wallets/defaultWallets.js";
 import { AutoConnect } from "../../../core/hooks/connection/useAutoConnect.js";
 import ConnectModal from "./Modal/ConnectModal.js";
 import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
@@ -53,15 +53,15 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  * @component
  */
 export function ConnectButton(props: ConnectButtonProps) {
-  const wallets = props.wallets || defaultWallets;
+  const wallets = props.wallets || getDefaultWallets();
   const localeId = props.locale || "en-US";
   const [locale, setLocale] = useState<ConnectLocale | undefined>();
 
-  useEffect(() => {
-    wallets.forEach((w) => {
-      w.prefetch?.(localeId);
-    });
-  }, [wallets, localeId]);
+  // useEffect(() => {
+  //   wallets.forEach((w) => {
+  //     w.prefetch?.(localeId);
+  //   });
+  // }, [wallets, localeId]);
 
   useEffect(() => {
     getConnectLocale(localeId).then(setLocale);
@@ -185,7 +185,7 @@ function ConnectButtonInner(
   //   }
   // }, [activeWallet]);
 
-  const wallets = props.wallets || defaultWallets;
+  const wallets = props.wallets || getDefaultWallets();
 
   return (
     <CustomThemeProvider theme={theme}>

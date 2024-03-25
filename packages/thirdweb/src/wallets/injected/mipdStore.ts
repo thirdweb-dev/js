@@ -1,6 +1,5 @@
 import { createStore, type Store } from "mipd";
 import type { Ethereum } from "../interfaces/ethereum.js";
-import type { WalletRDNS } from "./types.js";
 
 // if we're in the browser -> create the store once immediately
 const mipdStore: Store | undefined = /* @__PURE__ */ (() =>
@@ -19,7 +18,7 @@ const mipdStore: Store | undefined = /* @__PURE__ */ (() =>
  * @returns The details of the Injected Provider if it exists. `undefined` otherwise.
  * @walletUtils
  */
-export function injectedProvider(walletId: WalletRDNS): Ethereum | undefined {
+export function injectedProvider(walletId: string): Ethereum | undefined {
   if (!mipdStore) {
     throw new Error("store not initialized");
   }

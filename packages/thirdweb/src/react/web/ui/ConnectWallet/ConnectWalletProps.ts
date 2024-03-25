@@ -2,7 +2,6 @@ import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
-import type { WalletConfig } from "../../../core/types/wallets.js";
 import type { Theme } from "../design-system/index.js";
 import type { LocaleId } from "../types.js";
 import type { NetworkSelectorProps } from "./NetworkSelector.js";
@@ -324,7 +323,7 @@ export type ConnectButtonProps = {
    * - [rainbowConfig](https://portal.thirdweb.com/references/typescript/v5/rainbowConfig)
    * - [zerionConfig](https://portal.thirdweb.com/references/typescript/v5/zerionConfig)
    */
-  wallets?: WalletConfig[];
+  wallets?: Wallet[];
 
   /**
    * When the user has connected their wallet to your site, this configuration determines whether or not you want to automatically connect to the last connected wallet when user visits your site again in the future.

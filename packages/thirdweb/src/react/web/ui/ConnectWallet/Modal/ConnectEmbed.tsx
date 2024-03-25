@@ -27,10 +27,9 @@ import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import type { Chain } from "../../../../../chains/types.js";
 import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
-import type { WalletConfig } from "../../../../core/types/wallets.js";
 import type { LocaleId } from "../../types.js";
 import { WalletConnectionContext } from "../../../../core/providers/wallet-connection.js";
-import { defaultWallets } from "../../../wallets/defaultWallets.js";
+import { getDefaultWallets } from "../../../wallets/defaultWallets.js";
 import type { ConnectLocale } from "../locale/types.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
 import type { AppMetadata } from "../../../../../wallets/types.js";
@@ -110,7 +109,7 @@ export type ConnectEmbedProps = {
    * - [rainbowConfig](https://portal.thirdweb.com/references/typescript/v5/rainbowConfig)
    * - [zerionConfig](https://portal.thirdweb.com/references/typescript/v5/zerionConfig)
    */
-  wallets?: WalletConfig[];
+  wallets?: Wallet[];
 
   /**
    * When the user has connected their wallet to your site, this configuration determines whether or not you want to automatically connect to the last connected wallet when user visits your site again in the future.
@@ -373,7 +372,7 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
   const loginOptional = true; // props.auth?.loginOptional;
   const show = useShowConnectEmbed(loginOptional);
 
-  const wallets = props.wallets || defaultWallets;
+  const wallets = props.wallets || getDefaultWallets();
   const localeId = props.locale || "en-US";
   const [locale, setLocale] = useState<ConnectLocale | undefined>();
 
