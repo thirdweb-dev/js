@@ -70,6 +70,7 @@ import { SwapScreen } from "./screens/Buy/SwapScreen.js";
 import { SwapTransactionsScreen } from "./screens/SwapTransactionsScreen.js";
 import { useSwapSupportedChains } from "./screens/Buy/swap/useSwapSupportedChains.js";
 import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import { WalletImage } from "../components/WalletImage.js";
 
 const localWalletId = "local";
 
@@ -181,15 +182,7 @@ export const ConnectedWalletDetails: React.FC<{
       style={props.detailsButton?.style}
       data-test="connected-wallet-details"
     >
-      <Img
-        width={iconSize.lg}
-        height={iconSize.lg}
-        src={avatarOrWalletIconUrl}
-        className={`${TW_CONNECTED_WALLET}__wallet-icon`}
-        style={{
-          borderRadius: radius.sm,
-        }}
-      />
+      <WalletImage size={iconSize.lg} id={activeWallet?.id || ""} />
 
       <Container flex="column" gap="xxs">
         {/* Address */}

@@ -1,3 +1,5 @@
+export { createWallet } from "../wallets/create-wallet.js";
+
 export type {
   Wallet,
   Account,
