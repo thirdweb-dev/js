@@ -277,7 +277,7 @@ export function SwapScreenContent(props: {
         onQuoteFinalized={(_quote) => {
           setFinalizedQuote(_quote);
         }}
-        fromAmount={sourceTokenAmount}
+        fromAmount={quoteToConfirm.swapDetails.fromAmount}
         toAmount={tokenAmount}
         fromChain={fromChain}
         toChain={toChain}
