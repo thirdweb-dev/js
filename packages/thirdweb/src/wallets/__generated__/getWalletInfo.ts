@@ -7,7 +7,7 @@
  * @returns A promise that resolves to the wallet.
  * @internal
  */
-export async function getWallet(id: string, image?: boolean) {
+export async function getWalletInfo(id: string, image?: boolean): Promise<any> {
   switch (id) {
     case "io.metamask": {
       return image
