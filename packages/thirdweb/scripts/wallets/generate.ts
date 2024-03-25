@@ -47,6 +47,11 @@ type Wallet = {
 const allWalletsArray = Object.values(allWalletsJson.listings) as Wallet[];
 
 function rdns(wallet: Wallet) {
+  // prefer the rdns if it exists
+  if (wallet.rdns) {
+    return wallet.rdns;
+  }
+  // otherwise compute it from the homepage
   return new URL(wallet.homepage).hostname
     .split(".")
     .filter((s) => s !== "www")

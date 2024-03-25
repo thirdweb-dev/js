@@ -12,7 +12,7 @@ export const walletInfos = [
     name: "MetaMask",
   },
   {
-    id: "com.trustwallet",
+    id: "com.trustwallet.app",
     name: "Trust Wallet",
   },
   {
@@ -28,7 +28,7 @@ export const walletInfos = [
     name: "Uniswap Wallet",
   },
   {
-    id: "io.zerion",
+    id: "io.zerion.wallet",
     name: "Zerion",
   },
   {
@@ -52,7 +52,7 @@ export const walletInfos = [
     name: "Crypto.com | DeFi Wallet",
   },
   {
-    id: "com.okx",
+    id: "com.okex.wallet",
     name: "OKX Wallet",
   },
   {
@@ -60,11 +60,11 @@ export const walletInfos = [
     name: "TokenPocket",
   },
   {
-    id: "com.robinhood",
+    id: "com.robinhood.wallet",
     name: "Robinhood Wallet",
   },
   {
-    id: "xyz.frontier",
+    id: "xyz.frontier.wallet",
     name: "Frontier",
   },
   {
@@ -412,7 +412,7 @@ export const walletInfos = [
     name: "Nitrogen Wallet",
   },
   {
-    id: "io.loopring",
+    id: "io.loopring.wallet",
     name: "Loopring",
   },
   {
@@ -504,7 +504,7 @@ export const walletInfos = [
     name: "Keplr",
   },
   {
-    id: "com.brave",
+    id: "com.brave.wallet",
     name: "Brave Wallet",
   },
   {
@@ -640,7 +640,7 @@ export const walletInfos = [
     name: "ByteBank",
   },
   {
-    id: "io.coolwallet",
+    id: "com.coolbitx.cwsapp",
     name: "CoolWallet",
   },
   {
@@ -748,7 +748,7 @@ export const walletInfos = [
     name: "PREMA Wallet",
   },
   {
-    id: "so.onekey",
+    id: "so.onekey.wallet",
     name: "OneKey",
   },
   {
@@ -772,12 +772,8 @@ export const walletInfos = [
     name: "Phantom",
   },
   {
-    id: "com.coinbase",
+    id: "com.coinbase.wallet",
     name: "Coinbase Wallet",
-  },
-  {
-    id: "com.bitski",
-    name: "Bitski",
   },
   {
     id: "xyz.mpcwallet",
@@ -1028,7 +1024,7 @@ export const walletInfos = [
     name: "Konio",
   },
   {
-    id: "net.gateweb3",
+    id: "io.gate.wallet",
     name: "GateWeb3",
   },
   {
@@ -1308,7 +1304,7 @@ export const walletInfos = [
     name: "Dropp",
   },
   {
-    id: "xyz.roam",
+    id: "xyz.roam.wallet",
     name: "Roam",
   },
   {
@@ -1372,7 +1368,7 @@ export const walletInfos = [
     name: "Numo Wallet",
   },
   {
-    id: "one.moongate",
+    id: "com.moongate.one",
     name: "MG",
   },
   {
@@ -1480,7 +1476,7 @@ export const walletInfos = [
     name: "eth-q1",
   },
   {
-    id: "com.blanqlabs",
+    id: "com.blanqlabs.wallet",
     name: "Blanq",
   },
   {
@@ -1544,11 +1540,11 @@ export const walletInfos = [
     name: "Enkrypt",
   },
   {
-    id: "com.scramble-wallet",
+    id: "com.scramble",
     name: "Scramble",
   },
   {
-    id: "com.fastexwallet",
+    id: "com.fastex.wallet",
     name: "Fastex Wallet",
   },
   {
@@ -1636,7 +1632,7 @@ export const walletInfos = [
     name: "paycool",
   },
   {
-    id: "com.mpcvault",
+    id: "com.mpcvault.broswerplugin",
     name: "MPCVault",
   },
   {

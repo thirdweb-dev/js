@@ -14,10 +14,10 @@ export async function getWalletInfo(id: string, image?: boolean): Promise<any> {
         ? (await import("./io.metamask/image.js")).default
         : (await import("./io.metamask/index.js")).wallet;
     }
-    case "com.trustwallet": {
+    case "com.trustwallet.app": {
       return image
-        ? (await import("./com.trustwallet/image.js")).default
-        : (await import("./com.trustwallet/index.js")).wallet;
+        ? (await import("./com.trustwallet.app/image.js")).default
+        : (await import("./com.trustwallet.app/index.js")).wallet;
     }
     case "global.safe": {
       return image
@@ -34,10 +34,10 @@ export async function getWalletInfo(id: string, image?: boolean): Promise<any> {
         ? (await import("./org.uniswap/image.js")).default
         : (await import("./org.uniswap/index.js")).wallet;
     }
-    case "io.zerion": {
+    case "io.zerion.wallet": {
       return image
-        ? (await import("./io.zerion/image.js")).default
-        : (await import("./io.zerion/index.js")).wallet;
+        ? (await import("./io.zerion.wallet/image.js")).default
+        : (await import("./io.zerion.wallet/index.js")).wallet;
     }
     case "im.token": {
       return image
@@ -64,25 +64,25 @@ export async function getWalletInfo(id: string, image?: boolean): Promise<any> {
         ? (await import("./com.crypto/image.js")).default
         : (await import("./com.crypto/index.js")).wallet;
     }
-    case "com.okx": {
+    case "com.okex.wallet": {
       return image
-        ? (await import("./com.okx/image.js")).default
-        : (await import("./com.okx/index.js")).wallet;
+        ? (await import("./com.okex.wallet/image.js")).default
+        : (await import("./com.okex.wallet/index.js")).wallet;
     }
     case "pro.tokenpocket": {
       return image
         ? (await import("./pro.tokenpocket/image.js")).default
         : (await import("./pro.tokenpocket/index.js")).wallet;
     }
-    case "com.robinhood": {
+    case "com.robinhood.wallet": {
       return image
-        ? (await import("./com.robinhood/image.js")).default
-        : (await import("./com.robinhood/index.js")).wallet;
+        ? (await import("./com.robinhood.wallet/image.js")).default
+        : (await import("./com.robinhood.wallet/index.js")).wallet;
     }
-    case "xyz.frontier": {
+    case "xyz.frontier.wallet": {
       return image
-        ? (await import("./xyz.frontier/image.js")).default
-        : (await import("./xyz.frontier/index.js")).wallet;
+        ? (await import("./xyz.frontier.wallet/image.js")).default
+        : (await import("./xyz.frontier.wallet/index.js")).wallet;
     }
     case "com.blockchain": {
       return image
@@ -514,10 +514,10 @@ export async function getWalletInfo(id: string, image?: boolean): Promise<any> {
         ? (await import("./org.nitrogen/image.js")).default
         : (await import("./org.nitrogen/index.js")).wallet;
     }
-    case "io.loopring": {
+    case "io.loopring.wallet": {
       return image
-        ? (await import("./io.loopring/image.js")).default
-        : (await import("./io.loopring/index.js")).wallet;
+        ? (await import("./io.loopring.wallet/image.js")).default
+        : (await import("./io.loopring.wallet/index.js")).wallet;
     }
     case "finance.a4": {
       return image
@@ -629,10 +629,10 @@ export async function getWalletInfo(id: string, image?: boolean): Promise<any> {
         ? (await import("./app.keplr/image.js")).default
         : (await import("./app.keplr/index.js")).wallet;
     }
-    case "com.brave": {
+    case "com.brave.wallet": {
       return image
-        ? (await import("./com.brave/image.js")).default
-        : (await import("./com.brave/index.js")).wallet;
+        ? (await import("./com.brave.wallet/image.js")).default
+        : (await import("./com.brave.wallet/index.js")).wallet;
     }
     case "com.crossmint": {
       return image
@@ -799,10 +799,10 @@ export async function getWalletInfo(id: string, image?: boolean): Promise<any> {
         ? (await import("./org.bytebank/image.js")).default
         : (await import("./org.bytebank/index.js")).wallet;
     }
-    case "io.coolwallet": {
+    case "com.coolbitx.cwsapp": {
       return image
-        ? (await import("./io.coolwallet/image.js")).default
-        : (await import("./io.coolwallet/index.js")).wallet;
+        ? (await import("./com.coolbitx.cwsapp/image.js")).default
+        : (await import("./com.coolbitx.cwsapp/index.js")).wallet;
     }
     case "com.optowallet": {
       return image
@@ -934,10 +934,10 @@ export async function getWalletInfo(id: string, image?: boolean): Promise<any> {
         ? (await import("./com.premanft/image.js")).default
         : (await import("./com.premanft/index.js")).wallet;
     }
-    case "so.onekey": {
+    case "so.onekey.wallet": {
       return image
-        ? (await import("./so.onekey/image.js")).default
-        : (await import("./so.onekey/index.js")).wallet;
+        ? (await import("./so.onekey.wallet/image.js")).default
+        : (await import("./so.onekey.wallet/index.js")).wallet;
     }
     case "finance.slingshot": {
       return image
@@ -964,15 +964,10 @@ export async function getWalletInfo(id: string, image?: boolean): Promise<any> {
         ? (await import("./app.phantom/image.js")).default
         : (await import("./app.phantom/index.js")).wallet;
     }
-    case "com.coinbase": {
+    case "com.coinbase.wallet": {
       return image
-        ? (await import("./com.coinbase/image.js")).default
-        : (await import("./com.coinbase/index.js")).wallet;
-    }
-    case "com.bitski": {
-      return image
-        ? (await import("./com.bitski/image.js")).default
-        : (await import("./com.bitski/index.js")).wallet;
+        ? (await import("./com.coinbase.wallet/image.js")).default
+        : (await import("./com.coinbase.wallet/index.js")).wallet;
     }
     case "xyz.mpcwallet": {
       return image
@@ -1284,10 +1279,10 @@ export async function getWalletInfo(id: string, image?: boolean): Promise<any> {
         ? (await import("./io.konio/image.js")).default
         : (await import("./io.konio/index.js")).wallet;
     }
-    case "net.gateweb3": {
+    case "io.gate.wallet": {
       return image
-        ? (await import("./net.gateweb3/image.js")).default
-        : (await import("./net.gateweb3/index.js")).wallet;
+        ? (await import("./io.gate.wallet/image.js")).default
+        : (await import("./io.gate.wallet/index.js")).wallet;
     }
     case "app.utorg": {
       return image
@@ -1634,10 +1629,10 @@ export async function getWalletInfo(id: string, image?: boolean): Promise<any> {
         ? (await import("./cc.dropp/image.js")).default
         : (await import("./cc.dropp/index.js")).wallet;
     }
-    case "xyz.roam": {
+    case "xyz.roam.wallet": {
       return image
-        ? (await import("./xyz.roam/image.js")).default
-        : (await import("./xyz.roam/index.js")).wallet;
+        ? (await import("./xyz.roam.wallet/image.js")).default
+        : (await import("./xyz.roam.wallet/index.js")).wallet;
     }
     case "com.mycloudwallet": {
       return image
@@ -1714,10 +1709,10 @@ export async function getWalletInfo(id: string, image?: boolean): Promise<any> {
         ? (await import("./xyz.r3vl.my/image.js")).default
         : (await import("./xyz.r3vl.my/index.js")).wallet;
     }
-    case "one.moongate": {
+    case "com.moongate.one": {
       return image
-        ? (await import("./one.moongate/image.js")).default
-        : (await import("./one.moongate/index.js")).wallet;
+        ? (await import("./com.moongate.one/image.js")).default
+        : (await import("./com.moongate.one/index.js")).wallet;
     }
     case "com.wemix": {
       return image
@@ -1849,10 +1844,10 @@ export async function getWalletInfo(id: string, image?: boolean): Promise<any> {
         ? (await import("./xyz.webeasy/image.js")).default
         : (await import("./xyz.webeasy/index.js")).wallet;
     }
-    case "com.blanqlabs": {
+    case "com.blanqlabs.wallet": {
       return image
-        ? (await import("./com.blanqlabs/image.js")).default
-        : (await import("./com.blanqlabs/index.js")).wallet;
+        ? (await import("./com.blanqlabs.wallet/image.js")).default
+        : (await import("./com.blanqlabs.wallet/index.js")).wallet;
     }
     case "foundation.klaytn": {
       return image
@@ -1929,15 +1924,15 @@ export async function getWalletInfo(id: string, image?: boolean): Promise<any> {
         ? (await import("./com.enkrypt/image.js")).default
         : (await import("./com.enkrypt/index.js")).wallet;
     }
-    case "com.scramble-wallet": {
+    case "com.scramble": {
       return image
-        ? (await import("./com.scramble-wallet/image.js")).default
-        : (await import("./com.scramble-wallet/index.js")).wallet;
+        ? (await import("./com.scramble/image.js")).default
+        : (await import("./com.scramble/index.js")).wallet;
     }
-    case "com.fastexwallet": {
+    case "com.fastex.wallet": {
       return image
-        ? (await import("./com.fastexwallet/image.js")).default
-        : (await import("./com.fastexwallet/index.js")).wallet;
+        ? (await import("./com.fastex.wallet/image.js")).default
+        : (await import("./com.fastex.wallet/index.js")).wallet;
     }
     case "io.wallacy": {
       return image
@@ -2044,10 +2039,10 @@ export async function getWalletInfo(id: string, image?: boolean): Promise<any> {
         ? (await import("./cool.pay/image.js")).default
         : (await import("./cool.pay/index.js")).wallet;
     }
-    case "com.mpcvault": {
+    case "com.mpcvault.broswerplugin": {
       return image
-        ? (await import("./com.mpcvault/image.js")).default
-        : (await import("./com.mpcvault/index.js")).wallet;
+        ? (await import("./com.mpcvault.broswerplugin/image.js")).default
+        : (await import("./com.mpcvault.broswerplugin/index.js")).wallet;
     }
     case "io.legacynetwork": {
       return image
