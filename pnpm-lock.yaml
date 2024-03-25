@@ -442,8 +442,8 @@ importers:
         specifier: ^5.7.2
         version: 5.7.2
       js-awe:
-        specifier: ^1.0.62
-        version: 1.0.62
+        specifier: ^1.0.64
+        version: 1.0.64
       tinybench:
         specifier: ^2.5.1
         version: 2.5.1
@@ -18826,7 +18826,6 @@ packages:
     dependencies:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
-    bundledDependencies: false
 
   /event-target-shim@5.0.1:
     resolution: {integrity: sha512-i/2XbnSz/uxRCU6+NdVJgKWDTM427+MqYbkQzD321DuCQJUqOuJKIA0IM2+W2xtYHdKOmZ4dR6fExsd4SXL+WQ==}
@@ -22659,8 +22658,8 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /js-awe@1.0.62:
-    resolution: {integrity: sha512-F+GTv/1yihXgMUe+OuGASHreg3MSL0iYFrJCLtGB3mtzU/6M8zlUJWkwHQNXhnUs7EAOxFYyfkXA7EUOqr/4NA==}
+  /js-awe@1.0.64:
+    resolution: {integrity: sha512-S09bxXn8b6qqPz5Et5Odnsk39FZiOdlJh6cCBYkxGNp+Ezg7ryBs8NizeNEv901sHzk4/i+WO1uYBPdiEBVGmg==}
     dependencies:
       fluture: 14.0.0
       jsonpath-plus: 7.2.0

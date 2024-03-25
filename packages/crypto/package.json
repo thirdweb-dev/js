@@ -37,7 +37,7 @@
     "crypto-js": "^4.2.0",
     "eslint-config-thirdweb": "workspace:*",
     "ethers": "^5.7.2",
-    "js-awe": "^1.0.62",
+    "js-awe": "^1.0.64",
     "tinybench": "^2.5.1",
     "typescript": "^5.3.3",
     "viem": "^1.19.1"
