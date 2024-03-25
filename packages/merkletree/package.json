@@ -33,7 +33,7 @@
     "treeify": "^1.1.0"
   },
   "devDependencies": {
-    "@preconstruct/cli": "2.7.0",
+    "@preconstruct/cli": "2.8.3",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "@types/benchmark": "^2.1.4",
     "@types/treeify": "^1.0.2",
