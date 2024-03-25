@@ -135,3 +135,6 @@ export {
   AutoConnect,
   type AutoConnectProps,
 } from "../react/core/hooks/connection/useAutoConnect.js";
+
+// For testing only
+export { WalletImage } from "../react/web/ui/test/WalletImage.js";
