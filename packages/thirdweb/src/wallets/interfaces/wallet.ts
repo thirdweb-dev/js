@@ -113,7 +113,7 @@ export class Wallet {
     const walletInfo = await getWalletInfo(this.id);
     console.log("options", options); // temp
 
-    const isExtensionInstalled = injectedProvider(walletInfo.rnds);
+    const isExtensionInstalled = injectedProvider(walletInfo.rdns);
 
     if (isExtensionInstalled) {
       const { autoConnectInjectedWallet, switchChainInjectedWallet } =
