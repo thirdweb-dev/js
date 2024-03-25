@@ -30,8 +30,8 @@ importers:
         specifier: ^2.26.2
         version: 2.26.2
       '@changesets/get-dependents-graph':
-        specifier: ^1.3.6
-        version: 1.3.6
+        specifier: ^2.0.0
+        version: 2.0.0
       '@changesets/get-release-plan':
         specifier: ^3.0.17
         version: 3.0.17
@@ -6801,6 +6801,16 @@ packages:
       chalk: 2.4.2
       fs-extra: 7.0.1
       semver: 7.5.3
+    dev: false
+
+  /@changesets/get-dependents-graph@2.0.0:
+    resolution: {integrity: sha512-cafUXponivK4vBgZ3yLu944mTvam06XEn2IZGjjKc0antpenkYANXiiE6GExV/yKdsCnE8dXVZ25yGqLYZmScA==}
+    dependencies:
+      '@changesets/types': 6.0.0
+      '@manypkg/get-packages': 1.1.3
+      chalk: 2.4.2
+      fs-extra: 7.0.1
+      semver: 7.6.0
     dev: false
 
   /@changesets/get-github-info@0.6.0:
@@ -18242,7 +18252,7 @@ packages:
       minimatch: 3.1.2
       object.values: 1.1.6
       resolve: 1.22.1
-      semver: 7.5.4
+      semver: 7.6.0
       tsconfig-paths: 3.14.2
     transitivePeerDependencies:
       - eslint-import-resolver-typescript
@@ -18446,7 +18456,7 @@ packages:
       object.values: 1.1.6
       prop-types: 15.8.1
       resolve: 2.0.0-next.4
-      semver: 7.5.4
+      semver: 7.6.0
       string.prototype.matchall: 4.0.8
 
   /eslint-plugin-svg-jsx@1.2.2:
@@ -18826,7 +18836,6 @@ packages:
     dependencies:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
-    bundledDependencies: false
 
   /event-target-shim@5.0.1:
     resolution: {integrity: sha512-i/2XbnSz/uxRCU6+NdVJgKWDTM427+MqYbkQzD321DuCQJUqOuJKIA0IM2+W2xtYHdKOmZ4dR6fExsd4SXL+WQ==}
