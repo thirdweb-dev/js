@@ -11,8 +11,8 @@ describe("Wallet Authentication - EVM - Smart Wallet", async () => {
   let auth: ThirdwebAuth;
 
   before(async () => {
-    const factoryAddress = "0x13947435c2fe6BE51ED82F6f59C38617a323dB9B";
-    const chain = 80001;
+    const factoryAddress = "0xbf1C9aA4B1A085f7DA890a44E82B0A1289A40052";
+    const chain = 421614;
     const localWallet = new LocalWallet();
     await localWallet.generate();
     const smartWallet = new SmartWallet({
@@ -48,12 +48,12 @@ describe("Wallet Authentication - EVM - Smart Wallet", async () => {
   it("Should verify logged in wallet with chain ID and expiration", async () => {
     const payload = await auth.login({
       expirationTime: new Date(Date.now() + 1000 * 60 * 5),
-      chainId: "80001",
+      chainId: "421614",
     });
 
     auth.updateWallet(adminWallet);
     const address = await auth.verify(payload, {
-      chainId: "80001",
+      chainId: "421614",
     });
 
     expect(address).to.equal(await signerWallet.getAddress());
