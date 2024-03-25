@@ -40,11 +40,12 @@ export function useActiveWallet() {
  * @example
  * ```jsx
  * import { useSwitchActiveWalletChain } from "thirdweb/react";
+ * import { sepolia } from "thirdweb/chains";
  *
  * const switchChain = useSwitchActiveWalletChain();
  *
  * // later in your code
- * <button onClick={() => switchChain(chainId)}>Switch Chain</button>
+ * <button onClick={() => switchChain(sepolia)}>Switch Chain</button>
  * ```
  * @walletConnection
  */
