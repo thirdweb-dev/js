@@ -158,6 +158,7 @@ export const ConnectModalContent = (props: {
   const getWalletUI = (wallet: Wallet) => {
     return (
       <AnyWalletConnectUI
+        key={wallet.id}
         wallet={wallet}
         onBack={wallets.length > 1 ? handleBack : undefined}
         done={() => {
