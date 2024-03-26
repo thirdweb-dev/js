@@ -1,10 +1,13 @@
 import type { AuthArgsType, PreAuthArgsType } from "./type.js";
-import { AuthProvider } from "../../implementations/interfaces/auth.js";
+import {
+  AuthProvider,
+  type AuthLoginReturnType,
+} from "../../implementations/interfaces/auth.js";
 import { UserWalletStatus } from "../../implementations/interfaces/embedded-wallets/embedded-wallets.js";
 import type { EmbeddedWalletSdk } from "../../implementations/lib/embedded-wallet.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 
-const ewsSDKCache = new Map<ThirdwebClient, EmbeddedWalletSdk>();
+const ewsSDKCache = new WeakMap<ThirdwebClient, EmbeddedWalletSdk>();
 
 /**
  * @internal
@@ -16,7 +19,7 @@ async function getEmbeddedWalletSDK(client: ThirdwebClient) {
   const { EmbeddedWalletSdk } = await import(
     "../../implementations/lib/embedded-wallet.js"
   );
-  // TODO (ew) cache this
+
   const ewSDK = new EmbeddedWalletSdk({
     client: client,
   });
@@ -24,11 +27,28 @@ async function getEmbeddedWalletSDK(client: ThirdwebClient) {
   return ewSDK;
 }
 
+export type GetAuthenticatedUserParams = {
+  client: ThirdwebClient;
+};
+
 /**
- * @internal
+ * Retrieves the authenticated user from the embedded wallet SDK.
+ * @param options - The arguments for retrieving the authenticated user.
+ * @returns The authenticated user if logged in and wallet initialized, otherwise undefined.
+ * @example
+ * ```ts
+ * import { getAuthenticatedUser } from "thirdweb/wallets/embedded";
+ *
+ * const user = await getAuthenticatedUser({ client });
+ * if (user) {
+ *  console.log(user.walletAddress);
+ * }
+ * ```
  */
-export async function getAuthenticatedUser(args: { client: ThirdwebClient }) {
-  const { client } = args;
+export async function getAuthenticatedUser(
+  options: GetAuthenticatedUserParams,
+) {
+  const { client } = options;
   const ewSDK = await getEmbeddedWalletSDK(client);
   const user = await ewSDK.getUser();
   switch (user.status) {
@@ -40,7 +60,20 @@ export async function getAuthenticatedUser(args: { client: ThirdwebClient }) {
 }
 
 /**
- * @internal
+ * Pre-authenticates the user based on the provided authentication strategy.
+ * @param args - The arguments required for pre-authentication.
+ * @returns A promise that resolves to the pre-authentication result.
+ * @throws An error if the provided authentication strategy doesn't require pre-authentication.
+ * @example
+ * ```ts
+ * import { preAuthenticate } from "thirdweb/wallets/embedded";
+ *
+ * const result = await preAuthenticate({
+ *  client,
+ *  strategy: "email",
+ *  email: "example@example.org",
+ * });
+ * ```
  */
 export async function preAuthenticate(args: PreAuthArgsType) {
   const ewSDK = await getEmbeddedWalletSDK(args.client);
@@ -57,9 +90,24 @@ export async function preAuthenticate(args: PreAuthArgsType) {
 }
 
 /**
- * @internal
+ * Authenticates the user based on the provided authentication arguments.
+ * @param args - The authentication arguments.
+ * @returns A promise that resolves to the authentication result.
+ * @example
+ * ```ts
+ * import { authenticate } from "thirdweb/wallets/embedded";
+ *
+ * const result = await authenticate({
+ *  client,
+ *  strategy: "email",
+ *  email: "example@example.org",
+ *  verificationCode: "123456",
+ * });
+ * ```
  */
-export async function authenticate(args: AuthArgsType) {
+export async function authenticate(
+  args: AuthArgsType,
+): Promise<AuthLoginReturnType> {
   const ewSDK = await getEmbeddedWalletSDK(args.client);
   const strategy = args.strategy;
   switch (strategy) {
