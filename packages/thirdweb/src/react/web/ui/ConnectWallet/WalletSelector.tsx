@@ -556,6 +556,10 @@ export function WalletEntryButton(props: {
       .find((p) => p.info.rdns === wallet.id)?.info.name ||
     walletInfo.data?.name;
 
+  const isInstalled = getMIPDStore()
+    .getProviders()
+    .find((p) => p.info.rdns === wallet.id);
+
   return (
     <WalletButton
       type="button"
@@ -576,12 +580,10 @@ export function WalletEntryButton(props: {
         )}
 
         {isRecommended && <Text size="sm">{connectLocale.recommended}</Text>}
-        {/*
-        {!isRecommended &&
-          walletConfig.isInstalled &&
-          walletConfig.isInstalled() && (
-            <Text size="sm">{connectLocale.installed}</Text>
-          )} */}
+
+        {!isRecommended && isInstalled && (
+          <Text size="sm">{connectLocale.installed}</Text>
+        )}
       </Container>
     </WalletButton>
   );
@@ -634,21 +636,22 @@ const WalletButton = /* @__PURE__ */ StyledButton(() => {
  * @internal
  */
 function sortWallets(wallets: Wallet[], recommendedWallets?: Wallet[]) {
+  const providers = getMIPDStore().getProviders();
   return (
     wallets
       // show the installed wallets first
-      // .sort((a, b) => {
-      //   const aInstalled = a.isInstalled ? a.isInstalled() : false;
-      //   const bInstalled = b.isInstalled ? b.isInstalled() : false;
+      .sort((a, b) => {
+        const aInstalled = providers.find((p) => p.info.rdns === a.id);
+        const bInstalled = providers.find((p) => p.info.rdns === b.id);
 
-      //   if (aInstalled && !bInstalled) {
-      //     return -1;
-      //   }
-      //   if (!aInstalled && bInstalled) {
-      //     return 1;
-      //   }
-      //   return 0;
-      // })
+        if (aInstalled && !bInstalled) {
+          return -1;
+        }
+        if (!aInstalled && bInstalled) {
+          return 1;
+        }
+        return 0;
+      })
       // show the recommended wallets even before that
       .sort((a, b) => {
         const aIsRecommended = recommendedWallets?.find((w) => w === a);
