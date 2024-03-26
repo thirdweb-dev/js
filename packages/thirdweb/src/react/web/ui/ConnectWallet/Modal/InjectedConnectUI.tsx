@@ -29,7 +29,6 @@ export const InjectedConnectUI = (props: {
       setErrorConnecting(false);
       await wait(1000);
       await wallet.connect({
-        extension: true,
         chain: chain,
       });
 
