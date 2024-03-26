@@ -108,6 +108,8 @@ export function ConnectButton(props: ConnectButtonProps) {
         wallets: wallets,
         locale: props.locale || "en-US",
         connectLocale: locale,
+        chain: props.chain,
+        chains: props.chains,
       }}
     >
       <WalletUIStatesProvider theme="dark">

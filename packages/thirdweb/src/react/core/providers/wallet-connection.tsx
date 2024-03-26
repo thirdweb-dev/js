@@ -4,10 +4,13 @@ import type { AppMetadata } from "../../../wallets/types.js";
 import type { LocaleId } from "../../web/ui/types.js";
 import type { Wallet } from "../../../wallets/interfaces/wallet.js";
 import type { ConnectLocale } from "../../web/ui/ConnectWallet/locale/types.js";
+import type { Chain } from "../../../chains/types.js";
 
 export const WalletConnectionContext = /* @__PURE__ */ createContext<{
   wallets: Wallet[];
   client: ThirdwebClient;
+  chain?: Chain;
+  chains?: Chain[];
   appMetadata: AppMetadata;
   locale: LocaleId;
   connectLocale: ConnectLocale;

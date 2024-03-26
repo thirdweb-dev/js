@@ -1,14 +1,36 @@
+import { useEffect, useState } from "react";
+import { getMIPDStore } from "../../../../../wallets/injected/mipdStore.js";
+import type { InjectedSupportedWalletIds } from "../../../../../wallets/__generated__/wallet-ids.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
 import { useWalletInfo } from "../../hooks/useWalletInfo.js";
+import { InjectedConnectUI } from "./InjectedConnectUI.js";
+import type { InjectedWalletLocale } from "../../../wallets/injected/locale/types.js";
+import { getInjectedWalletLocale } from "../../../wallets/injected/locale/getInjectedWalletLocale.js";
+import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 
 /**
  * @internal
  */
-export function AnyWalletConnectUI(props: { wallet: Wallet }) {
+export function AnyWalletConnectUI(props: {
+  wallet: Wallet;
+  done: () => void;
+  onBack?: () => void;
+}) {
   const walletInfo = useWalletInfo(props.wallet.id);
+  const localeId = useWalletConnectionCtx().locale;
+  const [locale, setLocale] = useState<InjectedWalletLocale | null>(null);
 
-  if (walletInfo.isLoading) {
+  useEffect(() => {
+    if (!walletInfo.data) {
+      return;
+    }
+    getInjectedWalletLocale(localeId).then((w) => {
+      setLocale(w(walletInfo.data.name));
+    });
+  }, [localeId, walletInfo.data]);
+
+  if (!walletInfo.data || !locale) {
     return <LoadingScreen />;
   }
 
@@ -16,5 +38,23 @@ export function AnyWalletConnectUI(props: { wallet: Wallet }) {
 
   console.log(walletInfo.data);
 
-  return <div>connect: {props.wallet.id}</div>;
+  const isInstalled = getMIPDStore()
+    .getProviders()
+    .find((w) => w.info.rdns === walletInfo.data.rdns);
+  if (walletInfo.data.rdns && isInstalled) {
+    return (
+      <InjectedConnectUI
+        wallet={props.wallet as Wallet<InjectedSupportedWalletIds>}
+        walletInfo={walletInfo.data}
+        done={props.done}
+        locale={locale}
+        onGetStarted={() => {
+          // TODO
+        }}
+        onBack={props.onBack}
+      />
+    );
+  }
+
+  return <div> TODO </div>;
 }

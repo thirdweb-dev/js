@@ -1,15 +1,16 @@
 import { keyframes } from "@emotion/react";
-import { Img } from "../../components/Img.js";
 import { useCustomTheme } from "../../design-system/CustomThemeProvider.js";
 import { fadeInAnimation } from "../../design-system/animations.js";
 import { StyledDiv } from "../../design-system/elements.js";
-import { radius } from "../../design-system/index.js";
+import { radius, spacing } from "../../design-system/index.js";
+import type { WalletId } from "../../../../../wallets/wallet-types.js";
+import { WalletImage } from "../../components/WalletImage.js";
 
 /**
  *
  * @internal
  */
-export function WalletLogoSpinner(props: { error: boolean; iconUrl: string }) {
+export function WalletLogoSpinner(props: { error: boolean; id: WalletId }) {
   const loaderRadius = 20;
   const radiusFactor = 36 - loaderRadius;
   const dashArrayStart = 116 + radiusFactor;
@@ -48,12 +49,24 @@ export function WalletLogoSpinner(props: { error: boolean; iconUrl: string }) {
             />
           </svg>
 
-          <Img src={props.iconUrl} width={"80"} height={"80"} />
+          <WalletBg>
+            <WalletImage id={props.id} size={"68"} />
+          </WalletBg>
         </div>
       </div>
     </LogoContainer>
   );
 }
+
+const WalletBg = /* @__PURE__ */ StyledDiv(() => {
+  const theme = useCustomTheme();
+  return {
+    background: theme.colors.walletSelectorButtonHoverBg,
+    borderRadius: radius.xl,
+    border: `1px solid ${theme.colors.borderColor}`,
+    padding: spacing.sm,
+  };
+});
 
 const dashRotateAnimation = keyframes`
 from {
@@ -79,13 +92,13 @@ const shakeErrorAnimation = keyframes`
   }
 `;
 
-const plusAnimation = keyframes`
+const pulseAnimation = keyframes`
 0% {
   transform: scale(0.95);
 }
 100% {
   opacity: 0;
-  transform: scale(1.4);
+  transform: scale(1.3);
 }
 `;
 
@@ -113,7 +126,7 @@ const LogoContainer = /* @__PURE__ */ StyledDiv(() => {
       position: "absolute",
       inset: 0,
       background: theme.colors.danger,
-      animation: `${plusAnimation} 1.5s ease infinite`,
+      animation: `${pulseAnimation} 1.5s ease infinite`,
       borderRadius: "20px",
       zIndex: -1,
     },

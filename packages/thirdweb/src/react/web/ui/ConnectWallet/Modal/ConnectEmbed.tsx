@@ -425,6 +425,8 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
           wallets: wallets,
           locale: localeId,
           connectLocale: locale,
+          chain: props.chain,
+          chains: props.chains,
         }}
       >
         <WalletUIStatesProvider {...walletUIStatesProps}>

@@ -156,7 +156,15 @@ export const ConnectModalContent = (props: {
   const getStarted = <StartScreen />;
 
   const getWalletUI = (wallet: Wallet) => {
-    return <AnyWalletConnectUI wallet={wallet} />;
+    return (
+      <AnyWalletConnectUI
+        wallet={wallet}
+        onBack={wallets.length > 1 ? handleBack : undefined}
+        done={() => {
+          handleConnected(wallet);
+        }}
+      />
+    );
   };
 
   // const signatureScreen = (
