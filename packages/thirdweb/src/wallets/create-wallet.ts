@@ -17,3 +17,29 @@ export function createWallet<ID extends WalletId>(
 ): Wallet<ID> {
   return new Wallet(...args);
 }
+
+/**
+ * Creates a smart wallet.
+ * @param options - The options for creating the wallet.
+ * @returns The created smart wallet.
+ * @example
+ * ```ts
+ * import { smartWallet } from "thirdweb/wallets";
+ * ```
+ */
+export function smartWallet(options: CreateWalletArgs<"smart">[1]) {
+  return createWallet("smart", options);
+}
+
+/**
+ * Creates an embedded wallet.
+ * @param options - The options for creating the wallet.
+ * @returns The created embedded wallet.
+ * @example
+ * ```ts
+ * import { embeddedWallet } from "thirdweb/wallets";
+ * ```
+ */
+export function embeddedWallet(options: CreateWalletArgs<"embedded">[1]) {
+  return createWallet("embedded", options);
+}

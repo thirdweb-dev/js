@@ -9,6 +9,7 @@ import type { Address } from "abitype";
 import type { AsyncStorage } from "../storage/AsyncStorage.js";
 
 export type SmartWalletOptions = {
+  // TODO remove client from this
   client: ThirdwebClient;
   chain: Chain;
   gasless: boolean;

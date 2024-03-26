@@ -1,4 +1,8 @@
-export { createWallet } from "../wallets/create-wallet.js";
+export {
+  createWallet,
+  smartWallet,
+  embeddedWallet,
+} from "../wallets/create-wallet.js";
 
 export type { Wallet, Account } from "../wallets/interfaces/wallet.js";
 export type { WalletEventListener } from "../wallets/interfaces/listeners.js";

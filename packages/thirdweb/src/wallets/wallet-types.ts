@@ -7,7 +7,14 @@ import type {
   WCSupportedWalletIds,
   InjectedSupportedWalletIds,
 } from "./__generated__/wallet-ids.js";
-import type { SmartWalletOptions } from "./smart/types.js";
+import type {
+  SmartWalletConnectionOptions,
+  SmartWalletOptions,
+} from "./smart/types.js";
+import type {
+  EmbeddedWalletAutoConnectOptions,
+  EmbeddedWalletConnectionOptions,
+} from "./embedded/core/wallet/index.js";
 
 // combine generic + custom ones
 export type WalletId =
@@ -37,29 +44,15 @@ type LocalWalletAutoConnectOptions = {
   todo: true;
 };
 
-// TODO
-type EmbeddedWalletConnectOptions = {
-  chain?: Chain;
-  todo: true;
-};
-
-type EmbeddedWalletAutoConnectOptions = {
-  todo: true;
-};
-
-type SmartWalletConnectOpions = {
-  smart_todo: true;
-};
-
 // wallet.connect types
 export type WalletConnectionOption<T extends WalletId> = T extends "smart"
-  ? SmartWalletConnectOpions
+  ? SmartWalletConnectionOptions
   : T extends "local"
     ? // locale wallet
       LocalWalletConnectOptions
     : // embedded wallet
       T extends "embedded"
-      ? EmbeddedWalletConnectOptions
+      ? EmbeddedWalletConnectionOptions
       : // injected + wc both supported
         T extends InjectedSupportedWalletIds & WCSupportedWalletIds
         ? InjectedConnectOptions | WCConnectOptions
@@ -71,7 +64,7 @@ export type WalletConnectionOption<T extends WalletId> = T extends "smart"
 
 // wallet.autoConnect types
 export type WalletAutoConnectionOption<T extends WalletId> = T extends "smart"
-  ? SmartWalletConnectOpions
+  ? SmartWalletConnectionOptions
   : T extends "local"
     ? // locale wallet
       LocalWalletAutoConnectOptions
@@ -89,14 +82,12 @@ export type WalletAutoConnectionOption<T extends WalletId> = T extends "smart"
 
 // wallet creation options
 
-type SmartWalletCreationOptions = SmartWalletOptions;
-
 type EmbeddedWalletCreationOptions = {
   embedded_todo_creation: true;
 };
 
 export type WalletCreationOptions<T extends WalletId> = T extends "smart"
-  ? SmartWalletCreationOptions
+  ? SmartWalletOptions
   : T extends "embedded"
     ? EmbeddedWalletCreationOptions
     : undefined;
