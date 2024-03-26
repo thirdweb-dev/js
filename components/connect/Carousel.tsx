@@ -19,7 +19,7 @@ const showcaseMenus = [
   {
     id: "account-abstraction-icon",
     title: "In-App Wallets",
-    href: "https://portal.thirdweb.com/connect/account-abstraction",
+    href: "https://portal.thirdweb.com/connect/embedded-wallet/overview",
     description:
       "Onboard anyone with flexible auth options, account recovery, & account abstraction.",
     image: require("public/assets/product-pages/connect/icon-aa.png"),
