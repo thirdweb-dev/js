@@ -160,8 +160,6 @@ export const ConnectedWalletDetails: React.FC<{
     }
   }, [isOpen]);
 
-  const avatarOrWalletIconUrl = ""; // activeWallet?.metadata.iconUrl || "";
-
   // if (activeWallet && "isSmartWallet" in activeWallet) {
   //   avatarOrWalletIconUrl = smartWalletMetadata.iconUrl;
   // }
@@ -581,7 +579,7 @@ export const ConnectedWalletDetails: React.FC<{
   else if (screen === "receive") {
     content = (
       <ReceiveFunds
-        iconUrl={avatarOrWalletIconUrl}
+        walletId={activeWallet?.id || ""}
         onBack={() => {
           setScreen("main");
         }}
