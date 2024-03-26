@@ -97,3 +97,12 @@ export {
   claimTo,
   type ClaimToParams,
 } from "../../extensions/erc721/drops/write/claimTo.js";
+
+/**
+ * SIGNATURE extension for ERC721
+ */
+export {
+  mintWithSignature,
+  type GenerateMintSignatureOptions,
+  generateMintSignature,
+} from "../../extensions/erc721/write/sigMint.js";
