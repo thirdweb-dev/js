@@ -23,6 +23,7 @@ import {
 } from "./types";
 
 const DEFAULT_AUTH_OPTIONS: AuthOption[] = [
+  "phone",
   "email",
   "google",
   "apple",
@@ -70,38 +71,50 @@ const DEFAULT_AUTH_OPTIONS: AuthOption[] = [
 export const embeddedWallet = (
   options?: EmbeddedWalletConfigOptions,
 ): WalletConfig<EmbeddedWallet> => {
-  const defaultConfig: EmbeddedWalletConfigOptions = {
-    auth: {
-      options: DEFAULT_AUTH_OPTIONS,
-    },
-  };
+  const authOptions = options?.auth?.options ?? DEFAULT_AUTH_OPTIONS;
 
-  const finalOptions: EmbeddedWalletConfigOptions = options
-    ? { ...defaultConfig, ...options }
-    : defaultConfig;
+  const isEmailEnabled = authOptions.indexOf("email") !== -1;
+  const isPhoneEnabled = authOptions.indexOf("phone") !== -1;
+  const isSocialsEnabled = authOptions.some(
+    (x) => x !== "email" && x !== "phone",
+  );
 
-  const { auth } = finalOptions;
+  function getName() {
+    // only email
+    if (isEmailEnabled && !isPhoneEnabled && !isSocialsEnabled) {
+      return "Email";
+    }
 
-  let name = "Email & Socials";
+    // only phone
+    if (isPhoneEnabled && !isEmailEnabled && !isSocialsEnabled) {
+      return "Phone";
+    }
 
-  // if only email is enabled, show the name as "Email"
-  if (
-    finalOptions?.auth?.options.length === 1 &&
-    finalOptions.auth.options[0] === "email"
-  ) {
-    name = "Email";
+    // only phone + email
+    if (isPhoneEnabled && isEmailEnabled && !isSocialsEnabled) {
+      return "Email & Phone";
+    }
+
+    // only phone + socials
+    if (isPhoneEnabled && isSocialsEnabled && !isEmailEnabled) {
+      return "Phone & Socials";
+    }
+
+    // only email + socials
+    if (isEmailEnabled && isSocialsEnabled && !isPhoneEnabled) {
+      return "Email & Socials";
+    }
+
+    return "Social Login";
   }
 
-  // if email is not enabled, show the name as "Social Login"
-  if (finalOptions?.auth?.options.indexOf("email") === -1) {
-    name = "Social Login";
-  }
+  const name = getName();
 
   return {
     category: "socialLogin",
     isHeadless: true,
     id: EmbeddedWallet.id,
-    recommended: finalOptions?.recommended,
+    recommended: options?.recommended,
     meta: {
       ...EmbeddedWallet.meta,
       name,
@@ -110,25 +123,14 @@ export const embeddedWallet = (
     create(walletOptions: WalletOptions) {
       return new EmbeddedWallet({
         ...walletOptions,
-        ...finalOptions,
         clientId: walletOptions?.clientId ?? "",
       });
     },
     selectUI(props) {
-      return (
-        <EmbeddedWalletSelectionUI
-          {...props}
-          authOptions={auth ? auth?.options : DEFAULT_AUTH_OPTIONS}
-        />
-      );
+      return <EmbeddedWalletSelectionUI {...props} authOptions={authOptions} />;
     },
     connectUI(props) {
-      return (
-        <EmbeddedWalletConnectUI
-          {...props}
-          authOptions={auth ? auth?.options : DEFAULT_AUTH_OPTIONS}
-        />
-      );
+      return <EmbeddedWalletConnectUI {...props} authOptions={authOptions} />;
     },
   };
 };
@@ -198,7 +200,7 @@ const EmbeddedWalletConnectUI = (
       return (
         <EmbeddedWalletOTPLoginUI
           {...props}
-          selectionData={loginType.email}
+          userInfo={loginType}
           goBack={handleBack}
         />
       );

@@ -24,7 +24,6 @@ import { useCustomTheme } from "../../../../design-system/CustomThemeProvider";
 
 export function CreatePassword(props: {
   goBack: () => void;
-  email: string;
   onPassword: (password: string) => Promise<void>;
   modalSize: "wide" | "compact";
 }) {

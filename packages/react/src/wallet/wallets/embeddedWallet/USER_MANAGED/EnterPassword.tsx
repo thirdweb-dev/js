@@ -11,7 +11,7 @@ import { useTWLocale } from "../../../../evm/providers/locale-provider";
 export function EnterPasswordOrRecovery(props: {
   goBack: () => void;
   onVerify: (password: string) => void;
-  email: string;
+  emailOrPhone: string;
   modalSize: "wide" | "compact";
 }) {
   const locale = useTWLocale().wallets.embeddedWallet.enterPassword;
@@ -55,7 +55,7 @@ export function EnterPasswordOrRecovery(props: {
           <Text center>{locale.instruction}</Text>
           <Spacer y="sm" />
           <Text center color="primaryText">
-            {props.email}
+            {props.emailOrPhone}
           </Text>
 
           <Spacer y="xl" />

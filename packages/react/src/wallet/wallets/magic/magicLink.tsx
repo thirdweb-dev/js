@@ -38,6 +38,7 @@ import {
   twitterIconUri,
 } from "../../ConnectWallet/icons/socialLogins";
 import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
+import { validateEmail } from "../../utils/validateEmail";
 
 /**
  * @wallet
@@ -353,9 +354,7 @@ const MagicUI: React.FC<{
               const isPhone = Number.isInteger(Number(input[input.length - 1]));
 
               if (isEmail && isEmailEnabled) {
-                const emailRegex =
-                  /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,})$/g;
-                const isValidEmail = emailRegex.test(input.replace(/\+/g, ""));
+                const isValidEmail = validateEmail(input);
                 if (!isValidEmail) {
                   return locale.invalidEmail;
                 }
