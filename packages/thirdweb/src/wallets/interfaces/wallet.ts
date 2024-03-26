@@ -132,9 +132,19 @@ export class Wallet<ID extends WalletId = WalletId> {
    * @returns A Promise that resolves to the connected `Account`
    */
   async autoConnect(options: WalletAutoConnectionOption<ID>): Promise<Account> {
+    const data = getWalletData(this);
     // smart
     if (this.id === "smart") {
-      const { connectSmartWallet } = await import("../smart/index.js");
+      const { connectSmartWallet, disconnect } = await import(
+        "../smart/index.js"
+      );
+      if (data) {
+        data.methods = {
+          disconnect(wallet) {
+            return disconnect(wallet as Wallet<"smart">);
+          },
+        };
+      }
       return connectSmartWallet(
         this as Wallet<"smart">,
         options as WalletConnectionOption<"smart">,
@@ -143,9 +153,17 @@ export class Wallet<ID extends WalletId = WalletId> {
 
     // embedded
     if (this.id === "embedded") {
-      const { autoConnectEmbeddedWallet } = await import(
-        "../embedded/core/wallet/index.js"
-      );
+      const {
+        autoConnectEmbeddedWallet,
+        switchChainEmbeddedWallet,
+        disconnectEmbeddedWallet,
+      } = await import("../embedded/core/wallet/index.js");
+      if (data) {
+        data.methods = {
+          switchChain: switchChainEmbeddedWallet,
+          disconnect: disconnectEmbeddedWallet,
+        };
+      }
       return autoConnectEmbeddedWallet(
         this,
         options as WalletConnectionOption<"embedded">,
@@ -158,7 +176,6 @@ export class Wallet<ID extends WalletId = WalletId> {
       const { autoConnectInjectedWallet, switchChainInjectedWallet } =
         await import("../injected/index.js");
 
-      const data = getWalletData(this);
       if (data) {
         data.methods = {
           switchChain(wallet, chain) {
@@ -178,7 +195,6 @@ export class Wallet<ID extends WalletId = WalletId> {
           "../wallet-connect/index.js"
         );
 
-        const data = getWalletData(this);
         if (data) {
           data.methods = {
             switchChain(wallet, chain) {
@@ -209,7 +225,16 @@ export class Wallet<ID extends WalletId = WalletId> {
 
     // smart
     if (this.id === "smart") {
-      const { connectSmartWallet } = await import("../smart/index.js");
+      const { connectSmartWallet, disconnect } = await import(
+        "../smart/index.js"
+      );
+      if (data) {
+        data.methods = {
+          disconnect(wallet) {
+            return disconnect(wallet as Wallet<"smart">);
+          },
+        };
+      }
       return connectSmartWallet(
         this,
         options as WalletConnectionOption<"smart">,
@@ -218,9 +243,19 @@ export class Wallet<ID extends WalletId = WalletId> {
 
     // embedded
     if (this.id === "embedded") {
-      const { connectEmbeddedWallet } = await import(
-        "../embedded/core/wallet/index.js"
-      );
+      const {
+        connectEmbeddedWallet,
+        switchChainEmbeddedWallet,
+        disconnectEmbeddedWallet,
+      } = await import("../embedded/core/wallet/index.js");
+
+      if (data) {
+        data.methods = {
+          switchChain: switchChainEmbeddedWallet,
+          disconnect: disconnectEmbeddedWallet,
+        };
+      }
+
       return connectEmbeddedWallet(
         this,
         options as WalletConnectionOption<"embedded">,
@@ -241,7 +276,7 @@ export class Wallet<ID extends WalletId = WalletId> {
         };
       }
 
-      await connectWC(this, wcOptions);
+      return await connectWC(this, wcOptions);
     }
 
     // injected
