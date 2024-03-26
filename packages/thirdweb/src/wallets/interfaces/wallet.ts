@@ -110,7 +110,7 @@ export class Wallet<TWalletId extends WalletId = WalletId> {
    * ```
    * @returns A Promise that resolves to the connected `Account`
    */
-  async autoConnect(options?: any) {
+  async autoConnect(options?: WalletConfigMap[WalletId]["connect"]) {
     const walletInfo = await getWalletInfo(this.id);
     console.log("options", options); // temp
 
@@ -156,7 +156,7 @@ export class Wallet<TWalletId extends WalletId = WalletId> {
    * ```
    * @returns A Promise that resolves to the connected account
    */
-  async connect(options?: any) {
+  async connect(options?: WalletConfigMap[WalletId]["connect"]) {
     console.log("options", options);
 
     // wallet connect
