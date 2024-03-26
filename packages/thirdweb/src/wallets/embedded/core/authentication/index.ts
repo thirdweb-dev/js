@@ -32,7 +32,7 @@ export type GetAuthenticatedUserParams = {
 };
 
 /**
- * Retrieves the authenticated user from the embedded wallet SDK.
+ * Retrieves the authenticated user for the active embedded wallet.
  * @param options - The arguments for retrieving the authenticated user.
  * @returns The authenticated user if logged in and wallet initialized, otherwise undefined.
  * @example
@@ -55,6 +55,26 @@ export async function getAuthenticatedUser(
     case UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED: {
       return user;
     }
+  }
+  return undefined;
+}
+
+/**
+ * Retrieves the authenticated user email for the active embedded wallet.
+ * @param options - The arguments for retrieving the authenticated user.
+ * @returns The authenticated user email if logged in and wallet initialized, otherwise undefined.
+ * @example
+ * ```ts
+ * import { getUserEmail } from "thirdweb/wallets/embedded";
+ *
+ * const email = await getUserEmail({ client });
+ * console.log(email);
+ * ```
+ */
+export async function getUserEmail(options: GetAuthenticatedUserParams) {
+  const user = await getAuthenticatedUser(options);
+  if (user) {
+    return user.authDetails.email;
   }
   return undefined;
 }
