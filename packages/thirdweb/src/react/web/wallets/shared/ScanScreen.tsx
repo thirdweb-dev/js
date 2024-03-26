@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import { ModalConfigCtx } from "../../providers/wallet-ui-states-provider.js";
-import { Img } from "../../ui/components/Img.js";
 import { QRCode } from "../../ui/components/QRCode.js";
 import { Spacer } from "../../ui/components/Spacer.js";
 import {
@@ -11,6 +10,8 @@ import {
 import { Button } from "../../ui/components/buttons.js";
 import { iconSize, spacing, fontSize } from "../../ui/design-system/index.js";
 import { Text } from "../../ui/components/text.js";
+import type { WalletId } from "../../../../wallets/wallet-types.js";
+import { WalletImage } from "../../ui/components/WalletImage.js";
 
 /**
  * @internal
@@ -20,7 +21,7 @@ export const ScanScreen: React.FC<{
   onGetStarted: () => void;
   qrCodeUri?: string;
   walletName: string;
-  walletIconURL: string;
+  walletId: WalletId;
   qrScanInstruction: string;
   getStartedLink: string;
 }> = (props) => {
@@ -41,13 +42,7 @@ export const ScanScreen: React.FC<{
         >
           <QRCode
             qrCodeUri={props.qrCodeUri}
-            QRIcon={
-              <Img
-                width={iconSize.xxl}
-                height={iconSize.xxl}
-                src={props.walletIconURL}
-              />
-            }
+            QRIcon={<WalletImage size={iconSize.xxl} id={props.walletId} />}
           />
 
           <Spacer y="lg" />
