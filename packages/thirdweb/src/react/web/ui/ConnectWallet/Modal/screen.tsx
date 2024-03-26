@@ -29,6 +29,7 @@ export function useSetupScreen() {
 
   let initialScreen: Screen = reservedScreens.main;
 
+  // @ts-expect-error - need to bring back embedded wallet special case
   const socialLogin = wallets.find((w) => w.id === embeddedWalletId);
 
   if (wallets.length === 1 && wallets[0]) {

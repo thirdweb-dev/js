@@ -186,6 +186,7 @@ export const ConnectedWalletDetails: React.FC<{
 
       <Container flex="column" gap="xxs">
         {/* Address */}
+        {/* @ts-expect-error - need to bring back local wallet special case */}
         {activeWallet?.id === localWalletId ? (
           <Text
             color="danger"
@@ -472,6 +473,7 @@ export const ConnectedWalletDetails: React.FC<{
             )}
 
           {/* Export  Wallet */}
+          {/* @ts-expect-error - need to bring back local wallet special case */}
           {activeWallet?.id === localWalletId && (
             <div>
               <MenuButton
@@ -519,6 +521,7 @@ export const ConnectedWalletDetails: React.FC<{
         </Container>
       )}
 
+      {/* @ts-expect-error - need to bring back local wallet special case */}
       {activeWallet?.id === localWalletId && (
         <>
           <Line />

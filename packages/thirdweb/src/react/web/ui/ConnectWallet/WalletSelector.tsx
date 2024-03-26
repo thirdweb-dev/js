@@ -63,17 +63,21 @@ export const WalletSelector: React.FC<{
   const locale = useWalletConnectionCtx().connectLocale;
   const recommendedWallets = useWalletConnectionCtx().recommendedWallets;
 
+  // @ts-expect-error - need to bring back local wallet special case
   const localWalletConfig = props.wallets.find((w) => w.id === localWalletId);
 
   const nonLocalWalletConfigs = props.wallets.filter(
+    // @ts-expect-error - need to bring back local wallet special case
     (w) => w.id !== localWalletId,
   );
 
   const socialWallets = nonLocalWalletConfigs.filter(
+    // @ts-expect-error - need to bring back embedded wallet special case
     (w) => w.id === embeddedWalletId,
   );
 
   const eoaWallets = sortWallets(
+    // @ts-expect-error - need to bring back embedded wallet special case
     nonLocalWalletConfigs.filter((w) => w.id !== embeddedWalletId),
     recommendedWallets,
   );

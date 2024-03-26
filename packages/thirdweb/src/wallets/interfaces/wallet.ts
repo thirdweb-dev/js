@@ -14,6 +14,7 @@ import { normalizeChainId } from "../utils/normalizeChainId.js";
 import { defineChain } from "../../chains/utils.js";
 import { getWalletInfo } from "../__generated__/getWalletInfo.js";
 import { injectedProvider } from "../injected/mipdStore.js";
+import type { WalletConfigMap, WalletId } from "../__generated__/wallet-ids.js";
 
 // TODO: add generic ID on wallet class, creation options, connect options etc
 
@@ -21,24 +22,24 @@ export type SendTransactionOption = TransactionSerializable & {
   chainId: number;
 };
 
-type WalletData = {
-  options?: any;
+type WalletData<TWalletId extends WalletId> = {
+  options?: WalletConfigMap[WalletId]["config"];
   chain: Chain | undefined;
   account?: Account | undefined;
   onChainChanged: (newChainId: string) => void;
   onDisconnect: () => void;
   // dynamically loaded methods for given wallet id when doing connect/autoConnect
   methods?: {
-    switchChain?: (wallet: Wallet, chain: Chain) => Promise<void>;
-    disconnect?: (wallet: Wallet) => Promise<void>;
+    switchChain?: (wallet: Wallet<TWalletId>, chain: Chain) => Promise<void>;
+    disconnect?: (wallet: Wallet<TWalletId>) => Promise<void>;
   };
 };
 
 /**
  * Wallet interface
  */
-export class Wallet {
-  id: string;
+export class Wallet<TWalletId extends WalletId = WalletId> {
+  id: TWalletId;
   events?: {
     addListener: WalletEventListener;
     removeListener: WalletEventListener;
@@ -46,7 +47,7 @@ export class Wallet {
 
   // TODO: hide this
 
-  _data: WalletData;
+  _data: WalletData<WalletId>;
 
   /**
    * Create a Wallet instance
@@ -58,7 +59,7 @@ export class Wallet {
    * const wallet = new Wallet();
    * ```
    */
-  constructor(id: string, options?: any) {
+  constructor(id: TWalletId, options?: WalletConfigMap[WalletId]["config"]) {
     this.id = id;
     this._data = {
       options: options,
@@ -121,11 +122,11 @@ export class Wallet {
 
       this._data.methods = {
         switchChain(wallet, chain) {
-          return switchChainInjectedWallet(wallet, walletInfo, chain);
+          return switchChainInjectedWallet(wallet, chain);
         },
       };
 
-      const account = await autoConnectInjectedWallet(this, walletInfo);
+      const account = await autoConnectInjectedWallet(this);
       return account;
     }
 
@@ -156,13 +157,12 @@ export class Wallet {
    * @returns A Promise that resolves to the connected account
    */
   async connect(options?: any) {
-    const walletInfo = await getWalletInfo(this.id);
     console.log("options", options);
 
     // wallet connect
     if (options && "walletConnect" in options) {
-      const { autoConnectWC } = await import("../wallet-connect/index.js");
-      await autoConnectWC(this);
+      const { connectWC } = await import("../wallet-connect/index.js");
+      await connectWC(this, options.walletConnect);
     }
 
     const { connectInjectedWallet, switchChainInjectedWallet } = await import(
@@ -171,11 +171,11 @@ export class Wallet {
 
     this._data.methods = {
       switchChain(wallet, chain) {
-        return switchChainInjectedWallet(wallet, walletInfo, chain);
+        return switchChainInjectedWallet(wallet, chain);
       },
     };
 
-    const account = await connectInjectedWallet(this, walletInfo);
+    const account = await connectInjectedWallet(this);
     return account;
   }
 

@@ -1,37 +1,38 @@
 /* eslint-disable better-tree-shaking/no-top-level-side-effects */
+import type { WalletConfigMap, WalletId } from "./__generated__/wallet-ids.js";
+import type { Prettify } from "../utils/type-utils.js";
 import { Wallet } from "./interfaces/wallet.js";
 
-// todo - auto generate
-export type WalletId = string;
+// all keys of the WalletConfigMap where the config is required
+type WalletsRequiresConfig = Prettify<{
+  [K in keyof WalletConfigMap]: [WalletConfigMap[K]["config"]] extends [never]
+    ? false
+    : true;
+}>;
 
-type WalletConfigMap = {
-  metamask: "foo";
-  coinbase?: "bar";
-};
-
-type NonOptionalKeysOfMap<T> = Exclude<
+type WalletIdsThatRequireConfig = Prettify<
   {
-    [K in keyof T]: undefined extends T[K] ? never : K;
-  }[keyof T],
-  undefined
+    [K in keyof WalletsRequiresConfig]: WalletsRequiresConfig[K] extends true
+      ? K
+      : never;
+  }[keyof WalletsRequiresConfig]
 >;
 
-type WalletIdsThatRequireOptions = NonOptionalKeysOfMap<WalletConfigMap>;
-type WalletIdsThatDoNotRequireOptions = Exclude<
+type WalletIdsThatDoNotRequireConfig = Exclude<
   WalletId,
-  WalletIdsThatRequireOptions
+  WalletIdsThatRequireConfig
 >;
 
 export function createWallet<
-  const TWalletId extends WalletIdsThatRequireOptions,
-  const TWalletConfig = WalletConfigMap[TWalletId],
->(walletId: TWalletId, walletConfig: TWalletConfig): Wallet;
+  const TWalletId extends WalletIdsThatRequireConfig,
+  const TWalletConfig = WalletConfigMap[TWalletId]["config"],
+>(walletId: TWalletId, walletConfig: TWalletConfig): Wallet<TWalletId>;
 export function createWallet<
-  const TWalletId extends WalletIdsThatDoNotRequireOptions,
+  const TWalletId extends WalletIdsThatDoNotRequireConfig,
   const TWalletConfig = TWalletId extends keyof WalletConfigMap
-    ? WalletConfigMap[TWalletId]
+    ? WalletConfigMap[TWalletId]["config"]
     : never,
->(walletId: TWalletId, walletConfig?: TWalletConfig): Wallet;
+>(walletId: TWalletId, walletConfig?: TWalletConfig): Wallet<TWalletId>;
 
 /**
  * Creates a wallet based on the provided walletId and options.
@@ -51,14 +52,6 @@ export function createWallet<
   const TWalletConfig = TWalletId extends keyof WalletConfigMap
     ? WalletConfigMap[TWalletId]
     : undefined,
->(walletId: TWalletId, walletConfig: TWalletConfig): Wallet {
-  console.log(walletId, walletConfig);
-  return new Wallet(walletId, walletConfig);
+>(walletId: TWalletId, walletConfig: TWalletConfig): Wallet<TWalletId> {
+  return new Wallet(walletId, walletConfig) as Wallet<TWalletId>;
 }
-
-// testing the type
-
-// createWallet("metamask", "foo");
-// createWallet("coinbase", "bar");
-// createWallet("coinbase");
-// createWallet("rainbow");

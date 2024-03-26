@@ -24,17 +24,16 @@ import {
   type Hex,
 } from "../../utils/encoding/hex.js";
 import { getAddress } from "../../utils/address.js";
+import type { WalletId } from "../__generated__/wallet-ids.js";
 
 // TODO: type fixes
 
 // TODO: save the provider in data
 
-function getInjectedProvider(walletInfo: any) {
-  const provider = injectedProvider(walletInfo.rdns);
+function getInjectedProvider(walletId: WalletId) {
+  const provider = injectedProvider(walletId);
   if (!provider) {
-    throw new Error(
-      `no injected provider found for wallet: "${walletInfo.rdns}"`,
-    );
+    throw new Error(`no injected provider found for wallet: "${walletId}"`);
   }
 
   return provider;
@@ -43,8 +42,8 @@ function getInjectedProvider(walletInfo: any) {
 /**
  * @internal
  */
-export async function connectInjectedWallet(wallet: Wallet, walletInfo: any) {
-  const provider = getInjectedProvider(walletInfo);
+export async function connectInjectedWallet(wallet: Wallet) {
+  const provider = getInjectedProvider(wallet.id);
   const options = wallet._data.options;
   const addresses = await provider.request({
     method: "eth_requestAccounts",
@@ -60,11 +59,8 @@ export async function connectInjectedWallet(wallet: Wallet, walletInfo: any) {
 /**
  * @internal
  */
-export async function autoConnectInjectedWallet(
-  wallet: Wallet,
-  walletInfo: any,
-) {
-  const provider = getInjectedProvider(walletInfo);
+export async function autoConnectInjectedWallet(wallet: Wallet) {
+  const provider = getInjectedProvider(wallet.id);
 
   // connected accounts
   const addresses = await provider.request({
@@ -82,12 +78,8 @@ export async function autoConnectInjectedWallet(
 /**
  * @internal
  */
-export async function switchChainInjectedWallet(
-  wallet: Wallet,
-  walletInfo: any,
-  chain: Chain,
-) {
-  const provider = getInjectedProvider(walletInfo);
+export async function switchChainInjectedWallet(wallet: Wallet, chain: Chain) {
+  const provider = getInjectedProvider(wallet.id);
   const hexChainId = numberToHex(chain.id);
   try {
     await provider.request({
