@@ -15,50 +15,12 @@ import {
   prepareBatchExecute,
   prepareExecute,
 } from "./lib/calls.js";
-import { saveConnectParamsToStorage } from "../storage/walletStorage.js";
-import type { Chain } from "../../chains/types.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
 import type { SignableMessage } from "viem";
-import type { TransactionReceipt } from "../../transaction/types.js";
 import { watchBlockNumber } from "../../rpc/watchBlockNumber.js";
 import type { WaitForReceiptOptions } from "../../transaction/actions/wait-for-tx-receipt.js";
 import type { Hex } from "../../utils/encoding/hex.js";
-
-/**
- * `smartWallet` allows you to connect to a [smart wallet](https://portal.thirdweb.com/glossary/smart-wallet) using a personal wallet (acting as the key to the smart wallet)
- *
- * A Smart Wallet is a wallet that is controlled by a smart contract following the [ERC-4337 specification](https://eips.ethereum.org/EIPS/eip-4337).
- * @param options - The options for the creating [`SmartWallet`](https://portal.thirdweb.com/references/typescript/v5/SmartWallet) instance
- * Refer to the [`SmartWalletOptions`](https://portal.thirdweb.com/references/typescript/v5/SmartWalletOptions) type for more details
- * @example
- * To connect to a smart wallet, a personal wallet (acting as the key to the smart wallet) must first be connected.
- *
- * Refer to [`SmartWalletConnectionOptions`](https://portal.thirdweb.com/references/typescript/v5/SmartWalletConnectionOptions) to see all the options `connect` method accepts.
- *
- * ```ts
- * import { smartWallet } from "thirdweb/wallets";
- * import { metamaskWallet } from "thirdweb/wallets";
- *
- * // connect a personal wallet first - e.g. metamask, coinbase, etc.
- * const metamask = metamaskWallet();
- * const personalAccount = await metamask.connect();
- *
- * const wallet = smartWallet({
- *  client,
- *  chain,
- *  gasless: true,
- * });
- *
- * await wallet.connect({
- *  personalAccount,
- * });
- * ```
- * @returns The [`SmartWallet`](https://portal.thirdweb.com/references/typescript/v5/SmartWallet) instance
- * @wallet
- */
-export function smartWallet(options: SmartWalletOptions): SmartWallet {
-  return new SmartWallet(options);
-}
+import { getWalletData } from "../interfaces/wallet-data.js";
 
 // TODO expose for Wallet<"smart">
 // export const smartWalletMetadata = {
@@ -72,9 +34,12 @@ export function smartWallet(options: SmartWalletOptions): SmartWallet {
  * We can get the personal account for given smart account but not the other way around - this map gives us the reverse lookup
  * @internal
  */
-export const personalAccountToSmartAccountMap = new WeakMap<Account, Wallet>();
+export const personalAccountToSmartAccountMap = new WeakMap<
+  Account,
+  Wallet<"smart">
+>();
 
-const smartWalletToPersonalAccountMap = new WeakMap<Wallet, Account>();
+const smartWalletToPersonalAccountMap = new WeakMap<Wallet<"smart">, Account>();
 
 /**
  * @internal
@@ -89,7 +54,11 @@ export async function connectSmartWallet(
     throw new Error("Personal wallet does not have an account");
   }
   // TODO, this needs to be typed correctly based on `Wallet<"smart">` when it exists
-  const options = wallet._data.options;
+  const walletData = getWalletData(wallet);
+  if (!walletData) {
+    throw new Error("Wallet data not found");
+  }
+  const options = walletData.options;
   const chain = connectChain ?? options.chain;
   const factoryAddress = options.factoryAddress;
 
@@ -121,14 +90,14 @@ export async function connectSmartWallet(
   personalAccountToSmartAccountMap.set(personalAccount, wallet);
   smartWalletToPersonalAccountMap.set(wallet, personalAccount);
   // this.account = account;
-  wallet._data.account = account;
+  walletData.account = account;
   return account;
 }
 
 /**
  * @internal
  */
-export async function disconnect(wallet: Wallet): Promise<void> {
+export async function disconnect(wallet: Wallet<"smart">): Promise<void> {
   // look up the personalAccount for the smart wallet
   const personalAccount = smartWalletToPersonalAccountMap.get(wallet);
   if (personalAccount) {
@@ -136,111 +105,10 @@ export async function disconnect(wallet: Wallet): Promise<void> {
     personalAccountToSmartAccountMap.delete(personalAccount);
     smartWalletToPersonalAccountMap.delete(wallet);
   }
-  wallet._data.account = undefined;
-  wallet._data.chain = undefined;
-}
-
-async function isAccountContractDeployed(wallet: Wallet): Promise<boolean> {
-  const { isContractDeployed } = await import(
-    "../../utils/bytecode/is-contract-deployed.js"
-  );
-  return isContractDeployed(this.accountContract);
-}
-
-/**
- *
- */
-export class SmartWallet implements WalletWithPersonalAccount {
-  private options: SmartWalletOptions;
-  private chain?: Chain | undefined;
-  private account?: Account | undefined;
-  private factoryContract: ThirdwebContract;
-  private accountContract?: ThirdwebContract | undefined;
-
-  personalAccount: Account | undefined;
-  metadata: Wallet["metadata"];
-  isSmartWallet: true;
-
-  /**
-   * Create an instance of the SmartWallet.
-   * @param options - The options for the smart wallet.
-   * @example
-   * ```ts
-   * const wallet = new SmartWallet(options)
-   * ```
-   */
-  constructor(options: SmartWalletOptions) {
-    this.options = options;
-    this.metadata = options.metadata || smartWalletMetadata;
-    this.isSmartWallet = true;
-    this.chain = options.chain;
-    this.factoryContract = getContract({
-      client: options.client,
-      address: options.factoryAddress,
-      chain: options.chain,
-    });
-  }
-
-  /**
-   * Force deploy the smart account onchain.
-   * @example
-   * ```ts
-   * const receipt = await wallet.deploy()
-   * ```
-   * @returns The transaction receipt.
-   */
-  async deploy(): Promise<TransactionReceipt> {
-    if (!this.account || !this.accountContract) {
-      throw new Error("Not connected to a personal wallet");
-    }
-    return _deployAccount({
-      options: this.options,
-      account: this.account,
-      accountContract: this.accountContract,
-    });
-  }
-
-  /**
-   * Check if the smart account is deployed onchain.
-   * @example
-   *  ```ts
-   * const isDeployed = await wallet.isDeployed()
-   * ```
-   * @returns A boolean indicating if the smart account is deployed.
-   * @throws Throws an error if not connected to a personal wallet.
-   */
-  async isDeployed(): Promise<boolean> {
-    if (!this.accountContract) {
-      throw new Error("Not connected to a personal wallet");
-    }
-    const { isContractDeployed } = await import(
-      "../../utils/bytecode/is-contract-deployed.js"
-    );
-    return isContractDeployed(this.accountContract);
-  }
-
-  /**
-   * Get the account contract.
-   * @example
-   * ```ts
-   * const accountContract = wallet.getAccountContract();
-   * ```
-   * @returns The account contract or undefined if not connected to a personal wallet.
-   */
-  getAccountContract(): ThirdwebContract | undefined {
-    return this.accountContract;
-  }
-
-  /**
-   * Get the factory contract.
-   * @example
-   * ```ts
-   * const factoryContract = wallet.getFactoryContract();
-   * ```
-   * @returns The factory contract.
-   */
-  getFactoryContract(): ThirdwebContract {
-    return this.factoryContract;
+  const walletData = getWalletData(wallet);
+  if (walletData) {
+    walletData.account = undefined;
+    walletData.chain = undefined;
   }
 }
 

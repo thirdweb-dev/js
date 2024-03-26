@@ -26,25 +26,16 @@ import type {
   WCConnectOptions,
 } from "../wallet-connect/types.js";
 import type { AsyncStorage } from "../storage/AsyncStorage.js";
+import {
+  getWalletData,
+  setWalletData,
+  type WalletData,
+} from "./wallet-data.js";
 
 // TODO: add generic ID on wallet class, creation options, connect options etc
 
 export type SendTransactionOption = TransactionSerializable & {
   chainId: number;
-};
-
-type WalletData<TWalletId extends WalletId> = {
-  chain: Chain | undefined;
-  storage?: AsyncStorage;
-  options: WalletCreationOptions<TWalletId>;
-  account?: Account | undefined;
-  onChainChanged: (newChainId: string) => void;
-  onDisconnect: () => void;
-  // dynamically loaded methods for given wallet id when doing connect/autoConnect
-  methods?: {
-    switchChain?: (wallet: Wallet<TWalletId>, chain: Chain) => Promise<void>;
-    disconnect?: (wallet: Wallet<TWalletId>) => Promise<void>;
-  };
 };
 
 /**
@@ -56,10 +47,6 @@ export class Wallet<ID extends WalletId = WalletId> {
     addListener: WalletEventListener;
     removeListener: WalletEventListener;
   };
-
-  // TODO: hide this
-
-  _data: WalletData<ID>;
 
   /**
    * Create a Wallet instance
@@ -73,18 +60,22 @@ export class Wallet<ID extends WalletId = WalletId> {
   constructor(...args: CreateWalletArgs<ID>) {
     const [id, options] = args;
     this.id = id;
-    this._data = {
+
+    const data: WalletData<ID> = {
       chain: undefined,
       options: options as WalletCreationOptions<ID>,
       onChainChanged: (newChainId: string) => {
         const chainId = normalizeChainId(newChainId);
-        this._data.chain = defineChain(chainId);
+        data.chain = defineChain(chainId);
       },
       onDisconnect: () => {
-        this._data.account = undefined;
-        this._data.chain = undefined;
+        data.account = undefined;
+        data.chain = undefined;
       },
     };
+
+    // set the wallet data
+    setWalletData(this, data);
   }
 
   // TODO: change it to event emitter instead later
@@ -99,7 +90,10 @@ export class Wallet<ID extends WalletId = WalletId> {
    * ```
    */
   setStorage(storage: AsyncStorage) {
-    this._data.storage = storage;
+    const data = getWalletData(this);
+    if (data) {
+      data.storage = storage;
+    }
   }
 
   /**
@@ -111,7 +105,7 @@ export class Wallet<ID extends WalletId = WalletId> {
    * ```
    */
   getChain(): Chain | undefined {
-    return this._data.chain;
+    return getWalletData(this)?.chain;
   }
 
   /**
@@ -123,7 +117,7 @@ export class Wallet<ID extends WalletId = WalletId> {
    * ```
    */
   getAccount(): Account | undefined {
-    return this._data.account;
+    return getWalletData(this)?.account;
   }
 
   /**
@@ -144,11 +138,14 @@ export class Wallet<ID extends WalletId = WalletId> {
       const { autoConnectInjectedWallet, switchChainInjectedWallet } =
         await import("../injected/index.js");
 
-      this._data.methods = {
-        switchChain(wallet, chain) {
-          return switchChainInjectedWallet(wallet, chain);
-        },
-      };
+      const data = getWalletData(this);
+      if (data) {
+        data.methods = {
+          switchChain(wallet, chain) {
+            return switchChainInjectedWallet(wallet, chain);
+          },
+        };
+      }
 
       return autoConnectInjectedWallet(this);
     }
@@ -161,12 +158,16 @@ export class Wallet<ID extends WalletId = WalletId> {
           "../wallet-connect/index.js"
         );
 
-        this._data.methods = {
-          switchChain(wallet, chain) {
-            return switchChainWC(wallet, chain);
-          },
-          disconnect: disconnectWC,
-        };
+        const data = getWalletData(this);
+        if (data) {
+          data.methods = {
+            switchChain(wallet, chain) {
+              return switchChainWC(wallet, chain);
+            },
+            disconnect: disconnectWC,
+          };
+        }
+
         return autoConnectWC(this, wcOptions);
       }
     }
@@ -184,6 +185,7 @@ export class Wallet<ID extends WalletId = WalletId> {
    * @returns A Promise that resolves to the connected account
    */
   async connect(options: WalletConnectionOption<ID>) {
+    const data = getWalletData(this);
     console.log("options", options);
 
     // wallet connect
@@ -193,10 +195,12 @@ export class Wallet<ID extends WalletId = WalletId> {
         "../wallet-connect/index.js"
       );
 
-      this._data.methods = {
-        switchChain: switchChainWC,
-        disconnect: disconnectWC,
-      };
+      if (data) {
+        data.methods = {
+          switchChain: switchChainWC,
+          disconnect: disconnectWC,
+        };
+      }
 
       await connectWC(this, wcOptions);
     }
@@ -205,12 +209,13 @@ export class Wallet<ID extends WalletId = WalletId> {
     const { connectInjectedWallet, switchChainInjectedWallet } = await import(
       "../injected/index.js"
     );
-
-    this._data.methods = {
-      switchChain(wallet, chain) {
-        return switchChainInjectedWallet(wallet, chain);
-      },
-    };
+    if (data) {
+      data.methods = {
+        switchChain(wallet, chain) {
+          return switchChainInjectedWallet(wallet, chain);
+        },
+      };
+    }
 
     return connectInjectedWallet(this, options as InjectedConnectOptions);
   }
@@ -223,8 +228,9 @@ export class Wallet<ID extends WalletId = WalletId> {
    * ```
    */
   async disconnect() {
-    this._data.onDisconnect();
-    const disconnectMethod = this._data.methods?.disconnect;
+    const data = getWalletData(this);
+    data?.onDisconnect();
+    const disconnectMethod = data?.methods?.disconnect;
     if (disconnectMethod) {
       await disconnectMethod(this);
     }
@@ -250,7 +256,7 @@ export class Wallet<ID extends WalletId = WalletId> {
    * ```
    */
   async switchChain(chain: Chain) {
-    const method = this._data.methods?.switchChain;
+    const method = getWalletData(this)?.methods?.switchChain;
     if (!method) {
       throw new Error("Switch chain not supported by wallet");
     }

@@ -1,7 +1,4 @@
-import type {
-  WalletId,
-  CreateWalletArgs,
-} from "./__generated__/wallet-types.js";
+import type { WalletId, CreateWalletArgs } from "./wallet-types.js";
 import { Wallet } from "./interfaces/wallet.js";
 
 // TODO: figure out how to define the type without tuple args type and using function overloads

@@ -6,6 +6,7 @@ import type {
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Chain } from "../../../../chains/types.js";
 import { ethereum } from "../../../../chains/chain-definitions/ethereum.js";
+import { getWalletData } from "../../../interfaces/wallet-data.js";
 
 export type EmbeddedWalletConnectionOptions = (
   | MultiStepAuthArgsType
@@ -29,8 +30,12 @@ export async function connectEmbeddedWallet(
   });
   const authAccount = await authResult.user.wallet.getAccount();
 
-  wallet._data.chain = options?.chain || ethereum;
-  wallet._data.account = authAccount;
+  const walletData = getWalletData(wallet);
+
+  if (walletData) {
+    walletData.chain = options?.chain || ethereum;
+    walletData.account = authAccount;
+  }
 
   return authAccount;
 }
@@ -55,8 +60,12 @@ export async function autoConnectEmbeddedWallet(
 
   const authAccount = await user.wallet.getAccount();
 
-  wallet._data.chain = options?.chain || ethereum;
-  wallet._data.account = authAccount;
+  const walletData = getWalletData(wallet);
+
+  if (walletData) {
+    walletData.chain = options?.chain || ethereum;
+    walletData.account = authAccount;
+  }
 
   return authAccount;
 }
@@ -68,13 +77,19 @@ export async function switchChainEmbeddedWallet(
   wallet: Wallet,
   chain: Chain,
 ): Promise<void> {
-  wallet._data.chain = chain;
+  const walletData = getWalletData(wallet);
+  if (walletData) {
+    walletData.chain = chain;
+  }
 }
 
 /**
  * @internal
  */
 export async function disconnectEmbeddedWallet(wallet: Wallet): Promise<void> {
-  wallet._data.account = undefined;
-  wallet._data.chain = undefined;
+  const walletData = getWalletData(wallet);
+  if (walletData) {
+    walletData.account = undefined;
+    walletData.chain = undefined;
+  }
 }

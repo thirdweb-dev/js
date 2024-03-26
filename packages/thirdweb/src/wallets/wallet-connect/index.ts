@@ -32,6 +32,7 @@ import type { Chain } from "../../chains/types.js";
 import { ethereum } from "../../chains/chain-definitions/ethereum.js";
 import { isHex, numberToHex, type Hex } from "../../utils/encoding/hex.js";
 import { defaultDappMetadata } from "../utils/defaultDappMetadata.js";
+import { getWalletData } from "../interfaces/wallet-data.js";
 
 const defaultWCProjectId = "145769e410f16970a79ff77b2d89a1e0"; // TODO: CHANGE THIS !!!!
 
@@ -119,7 +120,10 @@ export async function connectWC(
   }
 
   const chain = defineChain(normalizeChainId(provider.chainId));
-  wallet._data.chain = chain;
+  const walletData = getWalletData(wallet);
+  if (walletData) {
+    walletData.chain = chain;
+  }
 
   if (options) {
     const savedParams: SavedConnectParams = {
@@ -128,8 +132,8 @@ export async function connectWC(
       pairingTopic: wcOptions?.pairingTopic,
     };
 
-    if (wallet._data.storage) {
-      saveConnectParamsToStorage(wallet._data.storage, wallet.id, savedParams);
+    if (walletData?.storage) {
+      saveConnectParamsToStorage(walletData.storage, wallet.id, savedParams);
     }
   }
 
@@ -148,7 +152,8 @@ export async function autoConnectWC(
   wallet: Wallet,
   options: WCAutoConnectOptions,
 ): Promise<Account> {
-  const storage = wallet._data.storage;
+  const walletData = getWalletData(wallet);
+  const storage = walletData?.storage;
 
   const savedConnectParams: SavedConnectParams | null = storage
     ? await getSavedConnectParamsFromStorage(storage, wallet.id)
@@ -178,7 +183,9 @@ export async function autoConnectWC(
     throw new Error("No accounts found on provider.");
   }
 
-  wallet._data.chain = defineChain(normalizeChainId(provider.chainId));
+  if (walletData) {
+    walletData.chain = defineChain(normalizeChainId(provider.chainId));
+  }
 
   return onConnect(wallet, address);
 }
@@ -237,7 +244,7 @@ export async function switchChainWC(wallet: Wallet, chain: Chain) {
  */
 export async function disconnectWC(wallet: Wallet) {
   const provider = walletToProviderMap.get(wallet);
-  const storage = wallet._data.storage;
+  const storage = getWalletData(wallet)?.storage;
 
   onDisconnect(wallet);
   if (storage) {
@@ -305,18 +312,21 @@ async function initProvider(
       await provider.disconnect();
     }
   }
+  const walletData = getWalletData(wallet);
 
-  // setup listeners
-  provider.on("disconnect", wallet._data.onDisconnect);
-  provider.on("session_delete", wallet._data.onDisconnect);
+  if (walletData) {
+    // setup listeners
+    provider.on("disconnect", walletData.onDisconnect);
+    provider.on("session_delete", walletData.onDisconnect);
 
-  // TODO: check which type of chain id actually comes from wallet connect
-  const onChainChanged = (chainId: number | string) => {
-    wallet._data.storage?.setItem(storageKeys.lastUsedChainId, String(chainId));
-    wallet._data.onChainChanged(String(chainId));
-  };
+    // TODO: check which type of chain id actually comes from wallet connect
+    const onChainChanged = (chainId: number | string) => {
+      walletData.storage?.setItem(storageKeys.lastUsedChainId, String(chainId));
+      walletData.onChainChanged(String(chainId));
+    };
 
-  provider.on("chainChanged", onChainChanged);
+    provider.on("chainChanged", onChainChanged);
+  }
 
   // try switching to correct chain
   if (options?.chain && provider.chainId !== options?.chain.id) {
@@ -352,12 +362,13 @@ function assertProvider(wallet: Wallet) {
 }
 
 function onConnect(wallet: Wallet, address: string): Account {
+  const walletData = getWalletData(wallet);
   const provider = assertProvider(wallet);
 
   const account: Account = {
     address,
     async sendTransaction(tx: SendTransactionOption) {
-      if (!wallet._data.chain || !this.address) {
+      if (!walletData?.chain || !this.address) {
         throw new Error("Invalid chain or address");
       }
 
@@ -409,25 +420,31 @@ function onConnect(wallet: Wallet, address: string): Account {
     },
   };
 
-  wallet._data.account = account;
+  if (walletData) {
+    walletData.account = account;
+  }
 
   return account;
 }
 
 function onDisconnect(wallet: Wallet) {
   setRequestedChainsIds(wallet, []);
-  wallet._data.storage?.removeItem(storageKeys.lastUsedChainId);
+  const walletData = getWalletData(wallet);
 
-  const provider = walletToProviderMap.get(wallet);
+  if (walletData) {
+    walletData.storage?.removeItem(storageKeys.lastUsedChainId);
 
-  if (provider) {
-    provider.removeListener("chainChanged", wallet._data.onChainChanged);
-    provider.removeListener("disconnect", wallet._data.onDisconnect);
-    provider.removeListener("session_delete", wallet._data.onDisconnect);
+    const provider = walletToProviderMap.get(wallet);
+
+    if (provider) {
+      provider.removeListener("chainChanged", walletData.onChainChanged);
+      provider.removeListener("disconnect", walletData.onDisconnect);
+      provider.removeListener("session_delete", walletData.onDisconnect);
+    }
+
+    walletData.account = undefined;
+    walletData.chain = undefined;
   }
-
-  wallet._data.account = undefined;
-  wallet._data.chain = undefined;
 }
 
 // Storage utils  -----------------------------------------------------------------------------------------------
@@ -475,7 +492,7 @@ function getNamespaceMethods(wallet: Wallet) {
  * @internal
  */
 function setRequestedChainsIds(wallet: Wallet, chains: number[]) {
-  wallet._data.storage?.setItem(
+  getWalletData(wallet)?.storage?.setItem(
     storageKeys.requestedChains,
     JSON.stringify(chains),
   );
@@ -486,10 +503,11 @@ function setRequestedChainsIds(wallet: Wallet, chains: number[]) {
  * @internal
  */
 async function getRequestedChainsIds(wallet: Wallet): Promise<number[]> {
-  if (!wallet._data.storage) {
+  const storage = getWalletData(wallet)?.storage;
+  if (!storage) {
     return [];
   }
-  const data = await wallet._data.storage.getItem(storageKeys.requestedChains);
+  const data = await storage.getItem(storageKeys.requestedChains);
   return data ? JSON.parse(data) : [];
 }
 

@@ -24,10 +24,8 @@ import {
   type Hex,
 } from "../../utils/encoding/hex.js";
 import { getAddress } from "../../utils/address.js";
-import type {
-  InjectedConnectOptions,
-  WalletId,
-} from "../__generated__/wallet-types.js";
+import type { InjectedConnectOptions, WalletId } from "../wallet-types.js";
+import { getWalletData } from "../interfaces/wallet-data.js";
 
 // TODO: save the provider in data
 
@@ -110,7 +108,11 @@ export async function switchChainInjectedWallet(wallet: Wallet, chain: Chain) {
     }
   }
 
-  wallet._data.chain = chain;
+  const data = getWalletData(wallet);
+
+  if (data) {
+    data.chain = chain;
+  }
 }
 
 /**
@@ -139,7 +141,11 @@ async function onConnect(
     .request({ method: "eth_chainId" })
     .then(normalizeChainId);
 
-  wallet._data.chain = defineChain(chainId);
+  const walletData = getWalletData(wallet);
+
+  if (walletData) {
+    walletData.chain = defineChain(chainId);
+  }
 
   // this.updateMetadata();
 
@@ -149,12 +155,17 @@ async function onConnect(
   }
 
   const onDisconnect = () => {
-    wallet._data.onDisconnect();
-    provider.removeListener("chainChanged", wallet._data.onChainChanged);
+    if (walletData) {
+      walletData.onDisconnect();
+      provider.removeListener("chainChanged", walletData.onChainChanged);
+    }
   };
 
   if (provider.on) {
-    provider.on("chainChanged", wallet._data.onChainChanged);
+    if (walletData) {
+      provider.on("chainChanged", walletData.onChainChanged);
+    }
+
     provider.on("disconnect", onDisconnect);
   }
 
@@ -174,7 +185,7 @@ async function onConnect(
   const account: Account = {
     address,
     async sendTransaction(tx: SendTransactionOption) {
-      if (!wallet._data.chain || !account.address) {
+      if (!walletData?.chain || !account.address) {
         throw new Error("Provider not setup");
       }
 
@@ -244,7 +255,9 @@ async function onConnect(
     },
   };
 
-  wallet._data.account = account;
+  if (walletData) {
+    walletData.account = account;
+  }
 
   return account;
 }
