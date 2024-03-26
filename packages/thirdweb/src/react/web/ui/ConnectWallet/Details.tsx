@@ -38,7 +38,6 @@ import type { SupportedTokens } from "./defaultTokens.js";
 import { Text } from "../components/text.js";
 import { CopyIcon } from "../components/CopyIcon.js";
 import { shortenString } from "../../../core/utils/addresses.js";
-import { Img } from "../components/Img.js";
 import {
   useChainQuery,
   useChainsQuery,
@@ -270,15 +269,7 @@ export const ConnectedWalletDetails: React.FC<{
     <div>
       <Spacer y="xl" />
       <Container px="lg" flex="column" center="x">
-        <Img
-          width={iconSize.xxl}
-          height={iconSize.xxl}
-          src={avatarOrWalletIconUrl}
-          alt=""
-          style={{
-            borderRadius: radius.sm,
-          }}
-        />
+        <WalletImage id={activeWallet?.id || ""} size={iconSize.xxl} />
 
         <Spacer y="md" />
 
