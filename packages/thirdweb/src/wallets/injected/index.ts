@@ -24,9 +24,10 @@ import {
   type Hex,
 } from "../../utils/encoding/hex.js";
 import { getAddress } from "../../utils/address.js";
-import type { WalletId } from "../__generated__/wallet-ids.js";
-
-// TODO: type fixes
+import type {
+  InjectedConnectOptions,
+  WalletId,
+} from "../__generated__/wallet-types.js";
 
 // TODO: save the provider in data
 
@@ -42,9 +43,11 @@ function getInjectedProvider(walletId: WalletId) {
 /**
  * @internal
  */
-export async function connectInjectedWallet(wallet: Wallet) {
+export async function connectInjectedWallet(
+  wallet: Wallet,
+  options: InjectedConnectOptions,
+) {
   const provider = getInjectedProvider(wallet.id);
-  const options = wallet._data.options;
   const addresses = await provider.request({
     method: "eth_requestAccounts",
   });
@@ -52,7 +55,7 @@ export async function connectInjectedWallet(wallet: Wallet) {
   return onConnect(wallet, {
     provider,
     addresses,
-    chain: options?.chain ? options.chain : undefined,
+    chain: options.chain ? options.chain : undefined,
   });
 }
 

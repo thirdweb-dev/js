@@ -17,6 +17,7 @@ import {
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import { useConnect } from "../../../../core/hooks/wallets/wallet-hooks.js";
 import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
+import { AnyWalletConnectUI } from "./AnyWalletConnectUI.js";
 
 /**
  * @internal
@@ -155,30 +156,7 @@ export const ConnectModalContent = (props: {
   const getStarted = <StartScreen />;
 
   const getWalletUI = (wallet: Wallet) => {
-    console.log(wallet);
-    // const ConnectUI = walletConfig.connectUI || HeadlessConnectUI;
-
-    return <div> connect UI </div>;
-
-    // return (
-    //   <ConnectUI
-    //     walletConfig={walletConfig}
-    //     screenConfig={screenConfig}
-    //     connection={{
-    //       ...connection,
-    //       createInstance: () => {
-    //         return walletConfig.create({
-    //           client,
-    //           appMetadata,
-    //         });
-    //       },
-    //     }}
-    //     selection={{
-    //       data: modalConfig.data,
-    //       saveData,
-    //     }}
-    //   />
-    // );
+    return <AnyWalletConnectUI wallet={wallet} />;
   };
 
   // const signatureScreen = (

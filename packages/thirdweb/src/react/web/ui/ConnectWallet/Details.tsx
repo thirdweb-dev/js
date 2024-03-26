@@ -72,8 +72,6 @@ import { useSwapSupportedChains } from "./screens/Buy/swap/useSwapSupportedChain
 import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { WalletImage } from "../components/WalletImage.js";
 
-const localWalletId = "local";
-
 const TW_CONNECTED_WALLET = "tw-connected-wallet";
 
 const LocalhostChainId = 1337;
@@ -186,8 +184,7 @@ export const ConnectedWalletDetails: React.FC<{
 
       <Container flex="column" gap="xxs">
         {/* Address */}
-        {/* @ts-expect-error - need to bring back local wallet special case */}
-        {activeWallet?.id === localWalletId ? (
+        {activeWallet?.id === "local" ? (
           <Text
             color="danger"
             size="xs"
@@ -473,8 +470,7 @@ export const ConnectedWalletDetails: React.FC<{
             )}
 
           {/* Export  Wallet */}
-          {/* @ts-expect-error - need to bring back local wallet special case */}
-          {activeWallet?.id === localWalletId && (
+          {activeWallet?.id === "local" && (
             <div>
               <MenuButton
                 onClick={() => {
@@ -521,8 +517,7 @@ export const ConnectedWalletDetails: React.FC<{
         </Container>
       )}
 
-      {/* @ts-expect-error - need to bring back local wallet special case */}
-      {activeWallet?.id === localWalletId && (
+      {activeWallet?.id === "local" && (
         <>
           <Line />
           <Container py="md">

@@ -204,7 +204,9 @@ export function AutoConnect(props: AutoConnectProps) {
 
         // if this wallet does not require a personal wallet to be connected
         else {
-          await wallet.autoConnect();
+          await wallet.autoConnect({
+            client: props.client,
+          });
           return wallet;
         }
       }

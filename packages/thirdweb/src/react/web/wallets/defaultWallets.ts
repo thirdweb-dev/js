@@ -6,9 +6,9 @@ import { createWallet } from "../../../wallets/create-wallet.js";
  */
 export function getDefaultWallets(): Wallet[] {
   return [
-    createWallet("io.metamask", {}),
-    createWallet("com.coinbase.wallet", {}),
-    createWallet("me.rainbow", {}),
-    createWallet("io.zerion.wallet", {}),
+    createWallet("io.metamask"),
+    createWallet("com.coinbase.wallet"),
+    createWallet("me.rainbow"),
+    createWallet("io.zerion.wallet"),
   ];
 }

@@ -1,6 +1,6 @@
 import { createStore, type Store } from "mipd";
 import type { Ethereum } from "../interfaces/ethereum.js";
-import type { WalletId } from "../__generated__/wallet-ids.js";
+import type { WalletId } from "../__generated__/wallet-types.js";
 
 declare module "mipd" {
   export interface Register {

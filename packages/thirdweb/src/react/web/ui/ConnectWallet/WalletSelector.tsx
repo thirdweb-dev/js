@@ -34,6 +34,7 @@ import { Skeleton } from "../components/Skeleton.js";
 import { WalletImage } from "../components/WalletImage.js";
 import { getMIPDStore } from "../../../../wallets/injected/mipdStore.js";
 import { createWallet } from "../../../../wallets/create-wallet.js";
+import type { InjectedSupportedWalletIds } from "../../../../wallets/__generated__/wallet-ids.js";
 
 const localWalletId = "local";
 const embeddedWalletId = "embedded";
@@ -63,21 +64,17 @@ export const WalletSelector: React.FC<{
   const locale = useWalletConnectionCtx().connectLocale;
   const recommendedWallets = useWalletConnectionCtx().recommendedWallets;
 
-  // @ts-expect-error - need to bring back local wallet special case
   const localWalletConfig = props.wallets.find((w) => w.id === localWalletId);
 
   const nonLocalWalletConfigs = props.wallets.filter(
-    // @ts-expect-error - need to bring back local wallet special case
     (w) => w.id !== localWalletId,
   );
 
   const socialWallets = nonLocalWalletConfigs.filter(
-    // @ts-expect-error - need to bring back embedded wallet special case
     (w) => w.id === embeddedWalletId,
   );
 
   const eoaWallets = sortWallets(
-    // @ts-expect-error - need to bring back embedded wallet special case
     nonLocalWalletConfigs.filter((w) => w.id !== embeddedWalletId),
     recommendedWallets,
   );
@@ -446,7 +443,9 @@ function getInstalledWallets() {
   if (_installedWallets.length === 0) {
     const providers = getMIPDStore().getProviders();
     const walletIds = providers.map((provider) => provider.info.rdns);
-    _installedWallets = walletIds.map((w) => createWallet(w, {}));
+    _installedWallets = walletIds.map((w) =>
+      createWallet(w as InjectedSupportedWalletIds),
+    );
   }
   console.log({ _installedWallets });
   return _installedWallets;

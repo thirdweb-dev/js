@@ -18,5 +18,3 @@ export {
 // injected
 
 export { injectedProvider } from "../../wallets/injected/mipdStore.js";
-
-export type { WalletConnectConnectionOptions } from "../../wallets/wallet-connect/types.js";
