@@ -202,6 +202,14 @@ export const ExtraPublishMetadataSchemaInput = /* @__PURE__ */ (() =>
       ),
       displayName: z.string().optional(),
       description: z.string().optional(),
+      externalLinks: z
+        .array(
+          z.object({
+            name: z.string(),
+            url: z.string(),
+          }),
+        )
+        .optional(),
       readme: z.string().optional(),
       license: z.string().optional(),
       changelog: z.string().optional(),
