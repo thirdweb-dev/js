@@ -1,10 +1,6 @@
 export { createWallet } from "../wallets/create-wallet.js";
 
-export type {
-  Wallet,
-  Account,
-  WalletWithPersonalAccount,
-} from "../wallets/interfaces/wallet.js";
+export type { Wallet, Account } from "../wallets/interfaces/wallet.js";
 export type { WalletEventListener } from "../wallets/interfaces/listeners.js";
 export type { WalletMetadata } from "../wallets/types.js";
 

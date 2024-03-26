@@ -12,7 +12,6 @@ import type { Chain } from "../../chains/types.js";
 import type { SendTransactionResult } from "../../transaction/types.js";
 import { normalizeChainId } from "../utils/normalizeChainId.js";
 import { defineChain } from "../../chains/utils.js";
-import { getWalletInfo } from "../__generated__/getWalletInfo.js";
 import { injectedProvider } from "../injected/mipdStore.js";
 import type { WalletConfigMap, WalletId } from "../__generated__/wallet-ids.js";
 
@@ -103,18 +102,14 @@ export class Wallet<TWalletId extends WalletId = WalletId> {
    * Auto connect to the wallet provider. This only succeeds if the wallet provider is still connected.
    *
    * Auto connect is useful to avoid asking the user to connect to the wallet provider again on page refresh or revisit.
-   * @param options - The options for auto connecting wallet
    * @example
    * ```ts
    * const account = await wallet.autoConnect();
    * ```
    * @returns A Promise that resolves to the connected `Account`
    */
-  async autoConnect(options?: WalletConfigMap[WalletId]["connect"]) {
-    const walletInfo = await getWalletInfo(this.id);
-    console.log("options", options); // temp
-
-    const isExtensionInstalled = injectedProvider(walletInfo.rdns);
+  async autoConnect(): Promise<Account> {
+    const isExtensionInstalled = injectedProvider(this.id);
 
     if (isExtensionInstalled) {
       const { autoConnectInjectedWallet, switchChainInjectedWallet } =
@@ -126,8 +121,7 @@ export class Wallet<TWalletId extends WalletId = WalletId> {
         },
       };
 
-      const account = await autoConnectInjectedWallet(this);
-      return account;
+      return autoConnectInjectedWallet(this);
     }
 
     // wallet connect
@@ -135,13 +129,14 @@ export class Wallet<TWalletId extends WalletId = WalletId> {
       const { autoConnectWC, switchChainWC, disconnectWC } = await import(
         "../wallet-connect/index.js"
       );
+
       this._data.methods = {
         switchChain(wallet, chain) {
           return switchChainWC(wallet, chain);
         },
         disconnect: disconnectWC,
       };
-      await autoConnectWC(this);
+      return autoConnectWC(this);
     }
 
     throw new Error("Failed to auto connect");
@@ -156,12 +151,20 @@ export class Wallet<TWalletId extends WalletId = WalletId> {
    * ```
    * @returns A Promise that resolves to the connected account
    */
-  async connect(options?: WalletConfigMap[WalletId]["connect"]) {
+  async connect(options: WalletConfigMap[WalletId]["connect"]) {
     console.log("options", options);
 
     // wallet connect
     if (options && "walletConnect" in options) {
-      const { connectWC } = await import("../wallet-connect/index.js");
+      const { connectWC, switchChainWC, disconnectWC } = await import(
+        "../wallet-connect/index.js"
+      );
+
+      this._data.methods = {
+        switchChain: switchChainWC,
+        disconnect: disconnectWC,
+      };
+
       await connectWC(this, options.walletConnect);
     }
 
@@ -221,11 +224,6 @@ export class Wallet<TWalletId extends WalletId = WalletId> {
 
     await method(this, chain);
   }
-}
-
-export interface WalletWithPersonalAccount extends Wallet {
-  autoConnect: (options: { personalAccount: Account }) => Promise<Account>;
-  personalAccount?: Account;
 }
 
 export type Account = {
