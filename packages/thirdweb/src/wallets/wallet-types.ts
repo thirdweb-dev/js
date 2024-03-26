@@ -26,17 +26,13 @@ export type WalletId =
 
 // connect options
 export type InjectedConnectOptions = {
-  extension: true;
   chain?: Chain;
 };
 
-type InjectedAutoConnectOptions = {
-  extension: true;
-};
+type InjectedAutoConnectOptions = undefined;
 
 // TODO
 type LocalWalletConnectOptions = {
-  // chain?: Chain
   todo: true;
 };
 
@@ -82,14 +78,13 @@ export type WalletAutoConnectionOption<T extends WalletId> = T extends "smart"
 
 // wallet creation options
 
-type EmbeddedWalletCreationOptions = {
-  embedded_todo_creation: true;
-};
+// type EmbeddedWalletCreationOptions = {};
 
 export type WalletCreationOptions<T extends WalletId> = T extends "smart"
   ? SmartWalletOptions
   : T extends "embedded"
-    ? EmbeddedWalletCreationOptions
+    ? // TODO add otpinal options here later (?)
+      undefined
     : undefined;
 
 // generic args for createWallet(...args) or new Wallet(...args)

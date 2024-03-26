@@ -27,43 +27,7 @@ export { getMIPDStore } from "../wallets/injected/mipdStore.js";
 
 export { injectedProvider } from "../wallets/injected/mipdStore.js";
 
-// wallet-connect
-
-export type {} from "../wallets/wallet-connect/types.js";
-
 export {
   getStoredActiveWalletId,
   getStoredConnectedWalletIds,
 } from "../wallets/manager/index.js";
-
-// export {
-//   coinbaseSDKWallet,
-//   type CoinbaseSDKWalletOptions,
-//   type CoinbaseSDKWalletConnectionOptions,
-//   type CoinbaseSDKWallet,
-// } from "../wallets/coinbase/coinbaseSDKWallet.js";
-
-// export type { AuthenticatedUser } from "../wallets/embedded/core/wallet/types.js";
-
-// export {
-//   type MultiStepAuthArgsType,
-//   type SingleStepAuthArgsType,
-// } from "../wallets/embedded/core/authentication/type.js";
-
-// local wallet
-// export {
-//   localWallet,
-//   type LocalWallet,
-//   type LocalWalletConnectionOptions,
-//   type LocalWalletCreationOptions,
-// } from "../wallets/local/index.js";
-// export type {
-//   LocalWalletDecryptOptions,
-//   LocalWalletEncryptOptions,
-//   LocalWalletExportOptions,
-//   LocalWalletImportOptions,
-//   LocalWalletLoadOptions,
-//   LocalWalletLoadOrCreateOptions,
-//   LocalWalletSaveOptions,
-//   LocalWalletStorageData,
-// } from "../wallets/local/types.js";

@@ -33,13 +33,12 @@ export function smartWallet(options: CreateWalletArgs<"smart">[1]) {
 
 /**
  * Creates an embedded wallet.
- * @param options - The options for creating the wallet.
  * @returns The created embedded wallet.
  * @example
  * ```ts
  * import { embeddedWallet } from "thirdweb/wallets";
  * ```
  */
-export function embeddedWallet(options: CreateWalletArgs<"embedded">[1]) {
-  return createWallet("embedded", options);
+export function embeddedWallet() {
+  return createWallet("embedded");
 }

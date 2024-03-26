@@ -133,63 +133,45 @@ export class Wallet<ID extends WalletId = WalletId> {
    */
   async autoConnect(options: WalletAutoConnectionOption<ID>): Promise<Account> {
     const data = getWalletData(this);
-    // smart
-    if (this.id === "smart") {
-      const { connectSmartWallet, disconnect } = await import(
-        "../smart/index.js"
-      );
-      if (data) {
-        data.methods = {
-          disconnect(wallet) {
-            return disconnect(wallet as Wallet<"smart">);
-          },
-        };
+
+    switch (true) {
+      // smart wallet case
+      case this.id === "smart": {
+        const { connectSmartWallet, disconnect } = await import(
+          "../smart/index.js"
+        );
+        if (data) {
+          data.methods = {
+            disconnect(wallet) {
+              return disconnect(wallet as Wallet<"smart">);
+            },
+          };
+        }
+        return connectSmartWallet(
+          this as Wallet<"smart">,
+          options as WalletConnectionOption<"smart">,
+        );
       }
-      return connectSmartWallet(
-        this as Wallet<"smart">,
-        options as WalletConnectionOption<"smart">,
-      );
-    }
-
-    // embedded
-    if (this.id === "embedded") {
-      const {
-        autoConnectEmbeddedWallet,
-        switchChainEmbeddedWallet,
-        disconnectEmbeddedWallet,
-      } = await import("../embedded/core/wallet/index.js");
-      if (data) {
-        data.methods = {
-          switchChain: switchChainEmbeddedWallet,
-          disconnect: disconnectEmbeddedWallet,
-        };
+      // embedded wallet case
+      case this.id === "embedded": {
+        const {
+          autoConnectEmbeddedWallet,
+          switchChainEmbeddedWallet,
+          disconnectEmbeddedWallet,
+        } = await import("../embedded/core/wallet/index.js");
+        if (data) {
+          data.methods = {
+            switchChain: switchChainEmbeddedWallet,
+            disconnect: disconnectEmbeddedWallet,
+          };
+        }
+        return autoConnectEmbeddedWallet(
+          this,
+          options as WalletConnectionOption<"embedded">,
+        );
       }
-      return autoConnectEmbeddedWallet(
-        this,
-        options as WalletConnectionOption<"embedded">,
-      );
-    }
-
-    const isExtensionInstalled = injectedProvider(this.id);
-
-    if (isExtensionInstalled) {
-      const { autoConnectInjectedWallet, switchChainInjectedWallet } =
-        await import("../injected/index.js");
-
-      if (data) {
-        data.methods = {
-          switchChain(wallet, chain) {
-            return switchChainInjectedWallet(wallet, chain);
-          },
-        };
-      }
-
-      return autoConnectInjectedWallet(this);
-    }
-
-    // wallet connect
-    else {
-      if (options && "walletConnect" in options) {
+      // wallet connect case
+      case options && "walletConnect" in options: {
         const wcOptions = options as WCAutoConnectOptions;
         const { autoConnectWC, switchChainWC, disconnectWC } = await import(
           "../wallet-connect/index.js"
@@ -206,9 +188,25 @@ export class Wallet<ID extends WalletId = WalletId> {
 
         return autoConnectWC(this, wcOptions);
       }
-    }
 
-    throw new Error("Failed to auto connect");
+      // injected provider case
+      case !!injectedProvider(this.id): {
+        const { autoConnectInjectedWallet, switchChainInjectedWallet } =
+          await import("../injected/index.js");
+        if (data) {
+          data.methods = {
+            switchChain(wallet, chain) {
+              return switchChainInjectedWallet(wallet, chain);
+            },
+          };
+        }
+
+        return autoConnectInjectedWallet(this);
+      }
+
+      default:
+        throw new Error("Failed to auto connect");
+    }
   }
 
   /**
@@ -223,75 +221,79 @@ export class Wallet<ID extends WalletId = WalletId> {
   async connect(options: WalletConnectionOption<ID>) {
     const data = getWalletData(this);
 
-    // smart
-    if (this.id === "smart") {
-      const { connectSmartWallet, disconnect } = await import(
-        "../smart/index.js"
-      );
-      if (data) {
-        data.methods = {
-          disconnect(wallet) {
-            return disconnect(wallet as Wallet<"smart">);
-          },
-        };
+    switch (true) {
+      // smart wallet case
+      case this.id === "smart": {
+        const { connectSmartWallet, disconnect } = await import(
+          "../smart/index.js"
+        );
+        if (data) {
+          data.methods = {
+            disconnect(wallet) {
+              return disconnect(wallet as Wallet<"smart">);
+            },
+          };
+        }
+        return connectSmartWallet(
+          this,
+          options as WalletConnectionOption<"smart">,
+        );
       }
-      return connectSmartWallet(
-        this,
-        options as WalletConnectionOption<"smart">,
-      );
-    }
+      // embedded wallet case
+      case this.id === "embedded": {
+        const {
+          connectEmbeddedWallet,
+          switchChainEmbeddedWallet,
+          disconnectEmbeddedWallet,
+        } = await import("../embedded/core/wallet/index.js");
 
-    // embedded
-    if (this.id === "embedded") {
-      const {
-        connectEmbeddedWallet,
-        switchChainEmbeddedWallet,
-        disconnectEmbeddedWallet,
-      } = await import("../embedded/core/wallet/index.js");
+        if (data) {
+          data.methods = {
+            switchChain: switchChainEmbeddedWallet,
+            disconnect: disconnectEmbeddedWallet,
+          };
+        }
 
-      if (data) {
-        data.methods = {
-          switchChain: switchChainEmbeddedWallet,
-          disconnect: disconnectEmbeddedWallet,
-        };
+        return connectEmbeddedWallet(
+          this,
+          options as WalletConnectionOption<"embedded">,
+        );
+      }
+      // wallet connect case
+      case options && "walletConnect" in options: {
+        const wcOptions = options as WCConnectOptions;
+        const { connectWC, switchChainWC, disconnectWC } = await import(
+          "../wallet-connect/index.js"
+        );
+
+        if (data) {
+          data.methods = {
+            switchChain: switchChainWC,
+            disconnect: disconnectWC,
+          };
+        }
+
+        return await connectWC(this, wcOptions);
       }
 
-      return connectEmbeddedWallet(
-        this,
-        options as WalletConnectionOption<"embedded">,
-      );
-    }
+      // injected provider case
+      case !!injectedProvider(this.id): {
+        const { connectInjectedWallet, switchChainInjectedWallet } =
+          await import("../injected/index.js");
+        if (data) {
+          data.methods = {
+            switchChain(wallet, chain) {
+              return switchChainInjectedWallet(wallet, chain);
+            },
+          };
+        }
 
-    // wallet connect
-    if (options && "walletConnect" in options) {
-      const wcOptions = options as WCConnectOptions;
-      const { connectWC, switchChainWC, disconnectWC } = await import(
-        "../wallet-connect/index.js"
-      );
-
-      if (data) {
-        data.methods = {
-          switchChain: switchChainWC,
-          disconnect: disconnectWC,
-        };
+        return connectInjectedWallet(this, options as InjectedConnectOptions);
       }
 
-      return await connectWC(this, wcOptions);
+      default:
+        throw new Error("Failed to connect");
     }
-
-    // injected
-    const { connectInjectedWallet, switchChainInjectedWallet } = await import(
-      "../injected/index.js"
-    );
-    if (data) {
-      data.methods = {
-        switchChain(wallet, chain) {
-          return switchChainInjectedWallet(wallet, chain);
-        },
-      };
-    }
-
-    return connectInjectedWallet(this, options as InjectedConnectOptions);
   }
 
   /**
