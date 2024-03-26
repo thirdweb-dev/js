@@ -10,6 +10,10 @@ import { ChainIcon } from "components/icons/ChainIcon";
 import { Heading, LinkButton, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 
+interface ExternalLink {
+  name: string;
+  url: string;
+}
 interface MetadataHeaderProps {
   isLoaded: boolean;
   isError?: boolean;
@@ -21,6 +25,7 @@ interface MetadataHeaderProps {
     image?: string | null;
   };
   chain?: Chain;
+  externalLinks?: ExternalLink[];
 }
 
 export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
@@ -29,6 +34,7 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
   address,
   data,
   chain,
+  externalLinks,
 }) => {
   const isMobile = useBreakpointValue({ base: true, md: false });
   const cleanedChainName = chain?.name?.replace("Mainnet", "").trim();
@@ -143,6 +149,18 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
                 href={`${validBlockExplorer.url}/address/${address}`}
               >
                 {validBlockExplorer.name}
+              </LinkButton>
+            ))}
+          {externalLinks &&
+            externalLinks.map((e) => (
+              <LinkButton
+                key={e.name}
+                variant="ghost"
+                isExternal
+                size="xs"
+                href={e.url}
+              >
+                {e.name}
               </LinkButton>
             ))}
         </Flex>

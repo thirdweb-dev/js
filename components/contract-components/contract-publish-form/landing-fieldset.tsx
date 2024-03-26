@@ -29,6 +29,7 @@ import {
   Link,
   Text,
 } from "tw-components";
+import { ExternalLinksFieldset } from "./external-links-fieldset";
 
 interface LandingFieldsetProps {
   latestVersion: string | undefined;
@@ -189,6 +190,7 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
           </Tabs>
         </FormControl>
       </Box>
+      <ExternalLinksFieldset />
       <Box>
         <Heading size="title.md" mb={2}>
           Version information
