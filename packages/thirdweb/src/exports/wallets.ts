@@ -31,13 +31,6 @@ export { injectedProvider } from "../wallets/injected/mipdStore.js";
 
 export type {} from "../wallets/wallet-connect/types.js";
 
-// smart
-// export { smartWallet, type SmartWallet } from "../wallets/smart/index.js";
-// export type {
-//   SmartWalletOptions,
-//   SmartWalletConnectionOptions,
-// } from "../wallets/smart/types.js";
-
 export {
   getStoredActiveWalletId,
   getStoredConnectedWalletIds,

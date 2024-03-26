@@ -132,6 +132,26 @@ export class Wallet<ID extends WalletId = WalletId> {
    * @returns A Promise that resolves to the connected `Account`
    */
   async autoConnect(options: WalletAutoConnectionOption<ID>): Promise<Account> {
+    // smart
+    if (this.id === "smart") {
+      const { connectSmartWallet } = await import("../smart/index.js");
+      return connectSmartWallet(
+        this as Wallet<"smart">,
+        options as WalletConnectionOption<"smart">,
+      );
+    }
+
+    // embedded
+    if (this.id === "embedded") {
+      const { autoConnectEmbeddedWallet } = await import(
+        "../embedded/core/wallet/index.js"
+      );
+      return autoConnectEmbeddedWallet(
+        this,
+        options as WalletConnectionOption<"embedded">,
+      );
+    }
+
     const isExtensionInstalled = injectedProvider(this.id);
 
     if (isExtensionInstalled) {
@@ -186,7 +206,26 @@ export class Wallet<ID extends WalletId = WalletId> {
    */
   async connect(options: WalletConnectionOption<ID>) {
     const data = getWalletData(this);
-    console.log("options", options);
+
+    // smart
+    if (this.id === "smart") {
+      const { connectSmartWallet } = await import("../smart/index.js");
+      return connectSmartWallet(
+        this,
+        options as WalletConnectionOption<"smart">,
+      );
+    }
+
+    // embedded
+    if (this.id === "embedded") {
+      const { connectEmbeddedWallet } = await import(
+        "../embedded/core/wallet/index.js"
+      );
+      return connectEmbeddedWallet(
+        this,
+        options as WalletConnectionOption<"embedded">,
+      );
+    }
 
     // wallet connect
     if (options && "walletConnect" in options) {
