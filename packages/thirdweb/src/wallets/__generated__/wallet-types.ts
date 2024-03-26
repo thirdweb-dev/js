@@ -14,11 +14,11 @@ import type {
 export type WalletId =
   | "local"
   | "embedded"
+  | "smart"
   | WCSupportedWalletIds
   | InjectedSupportedWalletIds;
 
 // connect options
-
 export type InjectedConnectOptions = {
   extension: true;
   chain?: Chain;
@@ -48,8 +48,7 @@ type EmbeddedWalletAutoConnectOptions = {
   todo: true;
 };
 
-// get wallet.connect options
-// check wallet type of wallet it is and assign options type
+// wallet.connect types
 export type WalletConnectionOption<T extends WalletId> = T extends "local"
   ? // locale wallet
     LocalWalletConnectOptions
@@ -65,8 +64,7 @@ export type WalletConnectionOption<T extends WalletId> = T extends "local"
         : // wc only
           WCConnectOptions;
 
-// get wallet.connect options
-// check wallet type of wallet it is and assign options type
+// wallet.autoConnect types
 export type WalletAutoConnectionOption<T extends WalletId> = T extends "local"
   ? // locale wallet
     LocalWalletAutoConnectOptions
@@ -82,12 +80,12 @@ export type WalletAutoConnectionOption<T extends WalletId> = T extends "local"
         : // wc only
           WCAutoConnectOptions;
 
-// get wallet.connect options
-// check wallet type of wallet it is and assign options type
+// wallet creation options
 export type WalletCreationOptions<T extends WalletId> = T extends "embedded"
   ? { todo: true }
   : never;
 
+// generic args for createWallet(...args) or new Wallet(...args)
 export type CreateWalletArgs<T extends WalletId> =
   WalletCreationOptions<T> extends undefined
     ? [T]
