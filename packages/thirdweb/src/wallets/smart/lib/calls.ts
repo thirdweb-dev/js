@@ -1,5 +1,5 @@
 import type { ThirdwebContract } from "../../../contract/contract.js";
-import type { SmartWalletOptions } from "../types._ts";
+import type { SmartWalletOptions } from "../types.ts";
 import { readContract } from "../../../transaction/read-contract.js";
 import type {
   Account,

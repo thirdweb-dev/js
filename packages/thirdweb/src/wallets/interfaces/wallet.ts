@@ -20,7 +20,7 @@ import type {
   WalletConnectionOption,
   WalletCreationOptions,
   WalletId,
-} from "../__generated__/wallet-types.js";
+} from "../wallet-types.js";
 import type {
   WCAutoConnectOptions,
   WCConnectOptions,
@@ -36,7 +36,7 @@ export type SendTransactionOption = TransactionSerializable & {
 type WalletData<TWalletId extends WalletId> = {
   chain: Chain | undefined;
   storage?: AsyncStorage;
-  options?: WalletCreationOptions<TWalletId>;
+  options: WalletCreationOptions<TWalletId>;
   account?: Account | undefined;
   onChainChanged: (newChainId: string) => void;
   onDisconnect: () => void;
@@ -59,7 +59,7 @@ export class Wallet<ID extends WalletId = WalletId> {
 
   // TODO: hide this
 
-  _data: WalletData<WalletId>;
+  _data: WalletData<ID>;
 
   /**
    * Create a Wallet instance
@@ -75,7 +75,7 @@ export class Wallet<ID extends WalletId = WalletId> {
     this.id = id;
     this._data = {
       chain: undefined,
-      options,
+      options: options as WalletCreationOptions<ID>,
       onChainChanged: (newChainId: string) => {
         const chainId = normalizeChainId(newChainId);
         this._data.chain = defineChain(chainId);

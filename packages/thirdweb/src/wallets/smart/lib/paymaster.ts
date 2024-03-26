@@ -4,13 +4,13 @@ import type {
   PaymasterResult,
   SmartWalletOptions,
   UserOperation,
-} from "../types._ts";
+} from "../types.js";
 import {
   DEBUG,
   ENTRYPOINT_ADDRESS,
   getDefaultPaymasterUrl,
 } from "./constants.js";
-import { hexlifyUserOp } from "./utils._ts";
+import { hexlifyUserOp } from "./utils.js";
 
 /**
  * TODO Docs

@@ -4,13 +4,13 @@ import type {
   EstimationResult,
   SmartWalletOptions,
   UserOperation,
-} from "../types._ts";
+} from "../types.js";
 import {
   DEBUG,
   ENTRYPOINT_ADDRESS,
   getDefaultBundlerUrl,
 } from "./constants.js";
-import { hexlifyUserOp } from "./utils._ts";
+import { hexlifyUserOp } from "./utils.js";
 import type { TransactionReceipt } from "../../../transaction/types.js";
 
 /**

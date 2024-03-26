@@ -40,6 +40,8 @@ export type SmartWalletOptions = {
 
 export type SmartWalletConnectionOptions = {
   personalAccount: Account;
+  client: ThirdwebClient;
+  chain?: Chain;
 };
 
 export type UserOperation = {
