@@ -21,10 +21,7 @@ import type {
   WalletCreationOptions,
   WalletId,
 } from "../wallet-types.js";
-import type {
-  WCAutoConnectOptions,
-  WCConnectOptions,
-} from "../wallet-connect/types.js";
+import type { WCConnectOptions } from "../wallet-connect/types.js";
 import type { AsyncStorage } from "../storage/AsyncStorage.js";
 import {
   getWalletData,
@@ -134,79 +131,76 @@ export class Wallet<ID extends WalletId = WalletId> {
   async autoConnect(options: WalletAutoConnectionOption<ID>): Promise<Account> {
     const data = getWalletData(this);
 
-    switch (true) {
-      // smart wallet case
-      case this.id === "smart": {
-        const { connectSmartWallet, disconnect } = await import(
-          "../smart/index.js"
-        );
-        if (data) {
-          data.methods = {
-            disconnect(wallet) {
-              return disconnect(wallet as Wallet<"smart">);
-            },
-          };
-        }
-        return connectSmartWallet(
-          this as Wallet<"smart">,
-          options as WalletConnectionOption<"smart">,
-        );
+    // smart wallet
+    if (this.id === "smart") {
+      const { connectSmartWallet, disconnect } = await import(
+        "../smart/index.js"
+      );
+      if (data) {
+        data.methods = {
+          disconnect(wallet) {
+            return disconnect(wallet as Wallet<"smart">);
+          },
+        };
       }
-      // embedded wallet case
-      case this.id === "embedded": {
-        const {
-          autoConnectEmbeddedWallet,
-          switchChainEmbeddedWallet,
-          disconnectEmbeddedWallet,
-        } = await import("../embedded/core/wallet/index.js");
-        if (data) {
-          data.methods = {
-            switchChain: switchChainEmbeddedWallet,
-            disconnect: disconnectEmbeddedWallet,
-          };
-        }
-        return autoConnectEmbeddedWallet(
-          this,
-          options as WalletConnectionOption<"embedded">,
-        );
-      }
-      // wallet connect case
-      case options && "walletConnect" in options: {
-        const wcOptions = options as WCAutoConnectOptions;
-        const { autoConnectWC, switchChainWC, disconnectWC } = await import(
-          "../wallet-connect/index.js"
-        );
-
-        if (data) {
-          data.methods = {
-            switchChain(wallet, chain) {
-              return switchChainWC(wallet, chain);
-            },
-            disconnect: disconnectWC,
-          };
-        }
-
-        return autoConnectWC(this, wcOptions);
-      }
-
-      // injected provider case
-      case !!injectedProvider(this.id): {
-        const { autoConnectInjectedWallet, switchChainInjectedWallet } =
-          await import("../injected/index.js");
-        if (data) {
-          data.methods = {
-            switchChain(wallet, chain) {
-              return switchChainInjectedWallet(wallet, chain);
-            },
-          };
-        }
-
-        return autoConnectInjectedWallet(this);
-      }
-
-      default:
-        throw new Error("Failed to auto connect");
+      return connectSmartWallet(
+        this as Wallet<"smart">,
+        options as WalletConnectionOption<"smart">,
+      );
     }
+    // embedded wallet
+    else if (this.id === "embedded") {
+      const {
+        autoConnectEmbeddedWallet,
+        switchChainEmbeddedWallet,
+        disconnectEmbeddedWallet,
+      } = await import("../embedded/core/wallet/index.js");
+      if (data) {
+        data.methods = {
+          switchChain: switchChainEmbeddedWallet,
+          disconnect: disconnectEmbeddedWallet,
+        };
+      }
+      return autoConnectEmbeddedWallet(
+        this,
+        options as WalletConnectionOption<"embedded">,
+      );
+    }
+
+    // injected provider
+    else if (!!injectedProvider(this.id)) {
+      const { autoConnectInjectedWallet, switchChainInjectedWallet } =
+        await import("../injected/index.js");
+      if (data) {
+        data.methods = {
+          switchChain(wallet, chain) {
+            return switchChainInjectedWallet(wallet, chain);
+          },
+        };
+      }
+
+      return autoConnectInjectedWallet(this);
+    }
+
+    // wallet connect
+    else if (options && "client" in options) {
+      const { autoConnectWC, switchChainWC, disconnectWC } = await import(
+        "../wallet-connect/index.js"
+      );
+
+      if (data) {
+        data.methods = {
+          switchChain(wallet, chain) {
+            return switchChainWC(wallet, chain);
+          },
+          disconnect: disconnectWC,
+        };
+      }
+
+      return autoConnectWC(this, options);
+    }
+
+    throw new Error("Failed to auto connect");
   }
 
   /**

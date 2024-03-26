@@ -474,8 +474,6 @@ const WalletSelection: React.FC<{
 
   const wallets = sortWallets(_wallets, recommendedWallets);
 
-  console.log("wallets are", wallets);
-
   // const modalConfig = useContext(ModalConfigCtx);
   // const setModalConfig = useContext(SetModalConfigCtx);
 
