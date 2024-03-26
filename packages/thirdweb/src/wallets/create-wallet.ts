@@ -53,5 +53,26 @@ export function createWallet<
     ? WalletConfigMap[TWalletId]
     : undefined,
 >(walletId: TWalletId, walletConfig: TWalletConfig): Wallet<TWalletId> {
+  /* TODO should likely just "create" the wallet here in-line instead of hiding it away separately in a class
+   could define: `account` `chain` `provider` etc here as `let <name> = ...` and access them in the function below
+   something like:
+  
+  let account: Account | undefined;
+  let chain: Chain | undefined;
+  let provider: Ethereum | undefined; (or wallet connect, etc.)
+  
+  return {
+    getChain() {
+      return chain;
+    },
+    getAccount() {
+      return account;
+    },
+    
+    ... etc
+  }
+
+  basically, Wallet does not need to be a class
+  */
   return new Wallet(walletId, walletConfig) as Wallet<TWalletId>;
 }
