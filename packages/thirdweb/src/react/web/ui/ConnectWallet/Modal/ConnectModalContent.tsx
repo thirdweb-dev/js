@@ -1,18 +1,14 @@
 import {
   ModalConfigCtx,
-  SetModalConfigCtx,
+  // SetModalConfigCtx,
   // SetModalConfigCtx,
 } from "../../../providers/wallet-ui-states-provider.js";
 import { useCallback, useContext } from "react";
 import { reservedScreens, onModalUnmount } from "../constants.js";
-import { HeadlessConnectUI } from "../../../wallets/headlessConnectUI.js";
+// import { HeadlessConnectUI } from "../../../wallets/headlessConnectUI.js";
 import { ScreenSetupContext, type ScreenSetup } from "./screen.js";
 import { StartScreen } from "../screens/StartScreen.js";
 import { WalletSelector } from "../WalletSelector.js";
-import type {
-  ScreenConfig,
-  WalletConfig,
-} from "../../../../core/types/wallets.js";
 import {
   ConnectModalCompactLayout,
   ConnectModalWideLayout,
@@ -20,6 +16,8 @@ import {
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import { useConnect } from "../../../../core/hooks/wallets/wallet-hooks.js";
 import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
+import { AnyWalletConnectUI } from "./AnyWalletConnectUI.js";
+import { SmartConnectUI } from "./SmartWalletConnectUI.js";
 
 /**
  * @internal
@@ -31,31 +29,20 @@ export const ConnectModalContent = (props: {
   isOpen: boolean;
   onClose: () => void;
 }) => {
-  const { onHide, onShow, onClose } = props;
+  const { onShow, onClose } = props;
   const { screen, setScreen, initialScreen } = props.screenSetup;
-  const { wallets, client, appMetadata } = useWalletConnectionCtx();
+  const { wallets, accountAbstraction } = useWalletConnectionCtx();
   // const disconnect = useDisconnect();
   const modalConfig = useContext(ModalConfigCtx);
-  const setModalConfig = useContext(SetModalConfigCtx);
+  // const setModalConfig = useContext(SetModalConfigCtx);
   // const activeWalletConnectionStatus = useActiveWalletConnectionStatus();
   // const activeWallet = useActiveWallet();
   const { connect } = useConnect();
 
   const title = modalConfig.title;
-  const theme = modalConfig.theme;
   const modalSize = modalConfig.modalSize;
   const onConnect = modalConfig.onConnect;
   const isWideModal = modalSize === "wide";
-
-  const saveData = useCallback(
-    (data: any) => {
-      setModalConfig((prev) => ({
-        ...prev,
-        data: data,
-      }));
-    },
-    [setModalConfig],
-  );
 
   // const { user } = useUser();
   // const authConfig = useThirdwebAuthContext();
@@ -116,66 +103,46 @@ export const ConnectModalContent = (props: {
   // const { setConnectionStatus, createWalletInstance, activeWallet } =
   //   useWalletContext();
 
-  const setModalVisibility = useCallback(
-    (value: boolean) => {
-      if (value) {
-        onShow();
-      } else {
-        onHide();
-      }
-    },
-    [onHide, onShow],
-  );
-
-  const screenConfig: ScreenConfig = {
-    setModalVisibility,
-    theme: typeof theme === "string" ? theme : theme.type,
-    goBack: wallets.length > 1 ? handleBack : undefined,
-    size: modalConfig.modalSize,
-  };
-
-  const connection = {
-    done: handleConnected,
-    chain: modalConfig.chain,
-    chains: modalConfig.chains,
-  };
-
   const walletList = (
     <WalletSelector
       title={title}
-      walletConfigs={wallets}
+      wallets={wallets}
       onGetStarted={() => {
         setScreen(reservedScreens.getStarted);
       }}
       selectWallet={setScreen}
-      selectUIProps={{
-        screenConfig: screenConfig,
-        connection: connection,
-      }}
+      done={handleConnected}
+      goBack={wallets.length > 1 ? handleBack : undefined}
     />
   );
 
   const getStarted = <StartScreen />;
 
-  const getWalletUI = (walletConfig: WalletConfig) => {
-    const ConnectUI = walletConfig.connectUI || HeadlessConnectUI;
+  const goBack = wallets.length > 1 ? handleBack : undefined;
+
+  const getWalletUI = (wallet: Wallet) => {
+    if (accountAbstraction) {
+      return (
+        <SmartConnectUI
+          key={wallet.id}
+          accountAbstraction={accountAbstraction}
+          done={(smartWallet) => {
+            console.log("connected smart wallet");
+            handleConnected(smartWallet);
+          }}
+          personalWallet={wallet}
+          onBack={goBack}
+        />
+      );
+    }
 
     return (
-      <ConnectUI
-        walletConfig={walletConfig}
-        screenConfig={screenConfig}
-        connection={{
-          ...connection,
-          createInstance: () => {
-            return walletConfig.create({
-              client,
-              appMetadata,
-            });
-          },
-        }}
-        selection={{
-          data: modalConfig.data,
-          saveData,
+      <AnyWalletConnectUI
+        key={wallet.id}
+        wallet={wallet}
+        onBack={goBack}
+        done={() => {
+          handleConnected(wallet);
         }}
       />
     );

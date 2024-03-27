@@ -7,13 +7,14 @@ import { Button } from "../../ui/components/buttons.js";
 import { spacing, iconSize } from "../../ui/design-system/index.js";
 import { WalletLogoSpinner } from "../../ui/ConnectWallet/screens/WalletLogoSpinner.js";
 import { Text } from "../../ui/components/text.js";
+import type { WalletId } from "../../../../wallets/wallet-types.js";
 
 /**
  * @internal
  */
 export const ConnectingScreen: React.FC<{
   onBack?: () => void;
-  walletIconURL: string;
+  walletId: WalletId;
   walletName: string;
   onGetStarted: () => void;
   errorConnecting: boolean;
@@ -52,7 +53,7 @@ export const ConnectingScreen: React.FC<{
         <Container py="3xl">
           <WalletLogoSpinner
             error={props.errorConnecting}
-            iconUrl={props.walletIconURL}
+            id={props.walletId}
           />
         </Container>
 

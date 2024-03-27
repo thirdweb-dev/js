@@ -11,6 +11,7 @@ export type PreAuthArgsType = MultiStepAuthProviderType & {
 export type MultiStepAuthArgsType = MultiStepAuthProviderType & {
   verificationCode: string;
 };
+
 export type SingleStepAuthArgsType =
   | {
       strategy: "google";

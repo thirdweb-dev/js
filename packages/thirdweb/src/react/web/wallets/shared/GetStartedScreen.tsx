@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { isMobile } from "../../../core/utils/isMobile.js";
-import { Img } from "../../ui/components/Img.js";
 import { QRCode } from "../../ui/components/QRCode.js";
 import { Spacer } from "../../ui/components/Spacer.js";
 import { Container, ModalHeader } from "../../ui/components/basic.js";
@@ -13,32 +12,23 @@ import { PlayStoreIcon } from "../../ui/ConnectWallet/icons/PlayStoreIcon.js";
 import { Text } from "../../ui/components/text.js";
 import { openWindow } from "../../../core/utils/openWindow.js";
 import type { InjectedWalletLocale } from "../injected/locale/types.js";
+import type { WalletInfo } from "../../../../wallets/wallet-info.js";
+import { WalletImage } from "../../ui/components/WalletImage.js";
+import type { WalletId } from "../../../../wallets/wallet-types.js";
+import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 
 /**
  * @internal
  */
 export const GetStartedScreen: React.FC<{
   onBack?: () => void;
-  walletName: string;
-  walletIconURL: string;
-  chromeExtensionLink?: string;
-  googlePlayStoreLink?: string;
-  appleStoreLink?: string;
+  wallet: Wallet;
+  walletInfo: WalletInfo;
   header?: React.ReactNode;
   footer?: React.ReactNode;
   showBack?: boolean;
   locale: InjectedWalletLocale;
-}> = ({
-  walletName,
-  walletIconURL,
-  appleStoreLink,
-  googlePlayStoreLink,
-  chromeExtensionLink,
-  header,
-  footer,
-  onBack,
-  locale,
-}) => {
+}> = ({ wallet, walletInfo, header, footer, onBack, locale }) => {
   const [showScreen, setShowScreen] = useState<
     "base" | "android-scan" | "ios-scan"
   >("base");
@@ -59,13 +49,13 @@ export const GetStartedScreen: React.FC<{
   return (
     <Container fullHeight flex="column" animate="fadein">
       <Container expand flex="column" p="lg">
-        {showScreen === "android-scan" && googlePlayStoreLink && (
+        {showScreen === "android-scan" && walletInfo.app.android && (
           <InstallScanScreen
             platformIcon={<PlayStoreIcon size={iconSize.md} />}
-            url={googlePlayStoreLink}
+            url={walletInfo.app.android}
             platform="Google Play"
-            walletName={walletName}
-            walletIconURL={walletIconURL}
+            walletName={walletInfo.name}
+            walletId={wallet.id}
             onBack={handleBack}
             locale={{
               scanToDownload: locale.getStartedScreen.instruction,
@@ -73,13 +63,13 @@ export const GetStartedScreen: React.FC<{
           />
         )}
 
-        {showScreen === "ios-scan" && appleStoreLink && (
+        {showScreen === "ios-scan" && walletInfo.app.ios && (
           <InstallScanScreen
             platformIcon={<AppleIcon size={iconSize.md} />}
-            url={appleStoreLink}
+            url={walletInfo.app.ios}
             platform="App Store"
-            walletName={walletName}
-            walletIconURL={walletIconURL}
+            walletName={walletInfo.name}
+            walletId={wallet.id}
             onBack={handleBack}
             locale={{
               scanToDownload: locale.getStartedScreen.instruction,
@@ -89,7 +79,9 @@ export const GetStartedScreen: React.FC<{
 
         {showScreen === "base" && (
           <Container expand flex="column">
-            {header || <ModalHeader onBack={handleBack} title={walletName} />}
+            {header || (
+              <ModalHeader onBack={handleBack} title={walletInfo.name} />
+            )}
             <Spacer y="xl" />
 
             <Container
@@ -103,10 +95,10 @@ export const GetStartedScreen: React.FC<{
             >
               <Container flex="column" gap="xs">
                 {/* Chrome Extension  */}
-                {chromeExtensionLink && (
+                {walletInfo.app.chrome && (
                   <ButtonLink
                     onClick={() => {
-                      openWindow(chromeExtensionLink);
+                      openWindow(walletInfo.app.chrome || "");
                     }}
                   >
                     <ChromeIcon size={iconSize.lg} />
@@ -115,12 +107,12 @@ export const GetStartedScreen: React.FC<{
                 )}
 
                 {/* Google Play store  */}
-                {googlePlayStoreLink && (
+                {walletInfo.app.android && (
                   <ButtonLink
                     as="button"
                     onClick={() => {
                       if (isMobile()) {
-                        openWindow(googlePlayStoreLink);
+                        openWindow(walletInfo.app.android || "");
                       } else {
                         setShowScreen("android-scan");
                       }
@@ -132,12 +124,12 @@ export const GetStartedScreen: React.FC<{
                 )}
 
                 {/* App Store  */}
-                {appleStoreLink && (
+                {walletInfo.app.ios && (
                   <ButtonLink
                     as="button"
                     onClick={() => {
                       if (isMobile()) {
-                        openWindow(appleStoreLink);
+                        openWindow(walletInfo.app.ios || "");
                       } else {
                         setShowScreen("ios-scan");
                       }
@@ -166,7 +158,7 @@ const InstallScanScreen: React.FC<{
   platform: string;
   walletName: string;
   platformIcon: React.ReactNode;
-  walletIconURL: string;
+  walletId: WalletId;
   onBack?: () => void;
   locale: {
     scanToDownload: string;
@@ -187,13 +179,7 @@ const InstallScanScreen: React.FC<{
       >
         <QRCode
           qrCodeUri={props.url}
-          QRIcon={
-            <Img
-              src={props.walletIconURL}
-              width={iconSize.xxl}
-              height={iconSize.xxl}
-            />
-          }
+          QRIcon={<WalletImage id={props.walletId} size={iconSize.xxl} />}
         />
 
         <Spacer y="xl" />

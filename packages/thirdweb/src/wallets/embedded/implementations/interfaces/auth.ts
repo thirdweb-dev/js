@@ -4,11 +4,13 @@ import type {
   SetUpWalletRpcReturnType,
 } from "./embedded-wallets/embedded-wallets.js";
 
+// TODO: remove usage of enums, instead use object with as const
 export enum RecoveryShareManagement {
   USER_MANAGED = "USER_MANAGED",
   CLOUD_MANAGED = "AWS_MANAGED",
 }
 
+// TODO: remove usage of enums, instead use object with as const
 export enum AuthProvider {
   COGNITO = "Cognito",
   GOOGLE = "Google",

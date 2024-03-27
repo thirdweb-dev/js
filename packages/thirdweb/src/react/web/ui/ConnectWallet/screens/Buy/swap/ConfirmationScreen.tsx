@@ -13,10 +13,9 @@ import {
   useBuyWithCryptoStatus,
   type BuyWithCryptoStatusQueryParams,
 } from "../../../../../../core/hooks/pay/useBuyWithCryptoStatus.js";
-import { useActiveWallet } from "../../../../../../core/hooks/wallets/wallet-hooks.js";
+// import { useActiveWallet } from "../../../../../../core/hooks/wallets/wallet-hooks.js";
 import { shortenString } from "../../../../../../core/utils/addresses.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
-import { Img } from "../../../../components/Img.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
@@ -38,6 +37,8 @@ import { TokenIcon } from "../../../../components/TokenIcon.js";
 import { waitForReceipt } from "../../../../../../../transaction/actions/wait-for-tx-receipt.js";
 import { AccentFailIcon } from "../../../icons/AccentFailIcon.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
+import { WalletImage } from "../../../../components/WalletImage.js";
+import { useActiveWallet } from "../../../../../../core/hooks/wallets/wallet-hooks.js";
 
 /**
  * @internal
@@ -129,11 +130,10 @@ export function ConfirmationScreen(props: {
 
       <TokenInfoContainer>
         <Container flex="row" gap="md" center="y">
-          <Img
-            width={iconSize.lg}
-            height={iconSize.lg}
-            src={activeWallet?.metadata.iconUrl || ""}
-          />
+          {/* todo render a placeholder here if we don't have an activeWallet (?) */}
+          {activeWallet?.id && (
+            <WalletImage size={iconSize.lg} id={activeWallet.id} />
+          )}
           <Text color="primaryText" size="sm">
             {shortenString(props.account.address, false)}
           </Text>

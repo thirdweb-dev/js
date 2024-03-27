@@ -27,15 +27,15 @@ import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import type { Chain } from "../../../../../chains/types.js";
 import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
-import type { WalletConfig } from "../../../../core/types/wallets.js";
 import type { LocaleId } from "../../types.js";
 import { WalletConnectionContext } from "../../../../core/providers/wallet-connection.js";
-import { defaultWallets } from "../../../wallets/defaultWallets.js";
+import { getDefaultWallets } from "../../../wallets/defaultWallets.js";
 import type { ConnectLocale } from "../locale/types.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
 import type { AppMetadata } from "../../../../../wallets/types.js";
 import { getConnectLocale } from "../locale/getConnectLocale.js";
 import { AutoConnect } from "../../../../core/hooks/connection/useAutoConnect.js";
+import type { SmartWalletOptions } from "../../../../../wallets/smart/types.js";
 
 export type ConnectEmbedProps = {
   /**
@@ -70,7 +70,7 @@ export type ConnectEmbedProps = {
    * };
    * ```
    */
-  appMetadata: AppMetadata;
+  appMetadata?: AppMetadata;
 
   /**
    * By default - ConnectButton UI uses the `en-US` locale for english language users.
@@ -110,7 +110,7 @@ export type ConnectEmbedProps = {
    * - [rainbowConfig](https://portal.thirdweb.com/references/typescript/v5/rainbowConfig)
    * - [zerionConfig](https://portal.thirdweb.com/references/typescript/v5/zerionConfig)
    */
-  wallets?: WalletConfig[];
+  wallets?: Wallet[];
 
   /**
    * When the user has connected their wallet to your site, this configuration determines whether or not you want to automatically connect to the last connected wallet when user visits your site again in the future.
@@ -283,6 +283,23 @@ export type ConnectEmbedProps = {
    * ```
    */
   showThirdwebBranding?: boolean;
+
+  /**
+   * Configure options for WalletConnect
+   *
+   * By default WalletConnect uses the thirdweb's default project id.
+   * Setting your own project id is recommended.
+   *
+   * You can create a project id by signing up on [walletconnect.com](https://walletconnect.com/)
+   */
+  walletConnect?: {
+    projectId?: string;
+  };
+
+  /**
+   * Enable Account abstraction by configuring the options for SmartWallet
+   */
+  accountAbstraction?: SmartWalletOptions;
 };
 
 /**
@@ -373,7 +390,7 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
   const loginOptional = true; // props.auth?.loginOptional;
   const show = useShowConnectEmbed(loginOptional);
 
-  const wallets = props.wallets || defaultWallets;
+  const wallets = props.wallets || getDefaultWallets();
   const localeId = props.locale || "en-US";
   const [locale, setLocale] = useState<ConnectLocale | undefined>();
 
@@ -426,6 +443,10 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
           wallets: wallets,
           locale: localeId,
           connectLocale: locale,
+          chain: props.chain,
+          chains: props.chains,
+          walletConnect: props.walletConnect,
+          accountAbstraction: props.accountAbstraction,
         }}
       >
         <WalletUIStatesProvider {...walletUIStatesProps}>

@@ -1,8 +1,8 @@
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
+import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
-import type { WalletConfig } from "../../../core/types/wallets.js";
 import type { Theme } from "../design-system/index.js";
 import type { LocaleId } from "../types.js";
 import type { NetworkSelectorProps } from "./NetworkSelector.js";
@@ -324,7 +324,7 @@ export type ConnectButtonProps = {
    * - [rainbowConfig](https://portal.thirdweb.com/references/typescript/v5/rainbowConfig)
    * - [zerionConfig](https://portal.thirdweb.com/references/typescript/v5/zerionConfig)
    */
-  wallets?: WalletConfig[];
+  wallets?: Wallet[];
 
   /**
    * When the user has connected their wallet to your site, this configuration determines whether or not you want to automatically connect to the last connected wallet when user visits your site again in the future.
@@ -348,8 +348,7 @@ export type ConnectButtonProps = {
    * Metadata of the app that will be passed to connected wallet.
    *
    * Some wallets display this information to the user when they connect to your app.
-   *
-   *
+   * @example
    * ```ts
    * {
    *   name: "thirdweb powered dApp",
@@ -359,7 +358,7 @@ export type ConnectButtonProps = {
    * };
    * ```
    */
-  appMetadata: AppMetadata;
+  appMetadata?: AppMetadata;
 
   /**
    * The [`Chain`](https://portal.thirdweb.com/references/typescript/v5/Chain) object of the blockchain you want the wallet to connect to
@@ -578,4 +577,21 @@ export type ConnectButtonProps = {
    *
    */
   onConnect?: (wallet: Wallet) => void;
+
+  /**
+   * Configure options for WalletConnect
+   *
+   * By default WalletConnect uses the thirdweb's default project id.
+   * Setting your own project id is recommended.
+   *
+   * You can create a project id by signing up on [walletconnect.com](https://walletconnect.com/)
+   */
+  walletConnect?: {
+    projectId?: string;
+  };
+
+  /**
+   * Enable Account abstraction by configuring the options for SmartWallet
+   */
+  accountAbstraction?: SmartWalletOptions;
 };

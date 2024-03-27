@@ -1,11 +1,9 @@
 import type { Chain } from "../../chains/types.js";
-import { defineChain } from "../../chains/utils.js";
 import { computedStore } from "../../reactive/computedStore.js";
 import { effect } from "../../reactive/effect.js";
 import { createStore } from "../../reactive/store.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
 import type { AsyncStorage } from "../storage/AsyncStorage.js";
-import { normalizeChainId } from "../utils/normalizeChainId.js";
 
 type WalletIdToConnectedWalletMap = Map<string, Wallet>;
 export type ConnectionStatus = "connected" | "disconnected" | "connecting";
@@ -49,21 +47,21 @@ export function createConnectionManager(storage: AsyncStorage) {
   const addConnectedWallet = (wallet: Wallet) => {
     const oldValue = walletIdToConnectedWalletMap.getValue();
     const newValue = new Map(oldValue);
-    newValue.set(wallet.metadata.id, wallet);
+    newValue.set(wallet.id, wallet);
     walletIdToConnectedWalletMap.setValue(newValue);
   };
 
   const removeConnectedWallet = (wallet: Wallet) => {
     const oldValue = walletIdToConnectedWalletMap.getValue();
     const newValue = new Map(oldValue);
-    newValue.delete(wallet.metadata.id);
+    newValue.delete(wallet.id);
     walletIdToConnectedWalletMap.setValue(newValue);
   };
 
   const onWalletDisconnect = (wallet: Wallet) => {
     const currentMap = walletIdToConnectedWalletMap.getValue();
     const newMap = new Map(currentMap);
-    newMap.delete(wallet.metadata.id);
+    newMap.delete(wallet.id);
 
     walletIdToConnectedWalletMap.setValue(newMap);
 
@@ -89,7 +87,7 @@ export function createConnectionManager(storage: AsyncStorage) {
 
     // also add it to connected wallets if it's not already there
     const _connectedWalletsMap = walletIdToConnectedWalletMap.getValue();
-    if (!_connectedWalletsMap.has(wallet.metadata.id)) {
+    if (!_connectedWalletsMap.has(wallet.id)) {
       addConnectedWallet(wallet);
     }
 
@@ -100,44 +98,42 @@ export function createConnectionManager(storage: AsyncStorage) {
     activeWalletConnectionStatusStore.setValue("connected");
 
     // setup listeners
-    if (wallet.events) {
-      const onAccountsChanged = (addresses: string[]) => {
-        const newAddress = addresses[0];
-        if (!newAddress) {
-          onWalletDisconnect(wallet);
-          return;
-        } else {
-          // TODO: get this new object as argument from onAccountsChanged
-          // this requires emitting events from the wallet
-          const newAccount: Account = {
-            ...account,
-            address: newAddress,
-          };
 
-          activeAccountStore.setValue(newAccount);
-        }
-      };
-
-      const onChainChanged = (newChainId: string) => {
-        const chainId = normalizeChainId(newChainId);
-        activeWalletChainStore.setValue(defineChain(chainId));
-      };
-
-      const handleDisconnect = () => {
+    const onAccountsChanged = (addresses: string[]) => {
+      const newAddress = addresses[0];
+      if (!newAddress) {
         onWalletDisconnect(wallet);
-        if (wallet.events) {
-          wallet.events.removeListener("accountsChanged", onAccountsChanged);
-          wallet.events.removeListener("chainChanged", onChainChanged);
-          wallet.events.removeListener("disconnect", handleDisconnect);
-        }
-      };
+        return;
+      } else {
+        // TODO: get this new object as argument from onAccountsChanged
+        // this requires emitting events from the wallet
+        const newAccount: Account = {
+          ...account,
+          address: newAddress,
+        };
 
-      if (wallet.events) {
-        wallet.events.addListener("accountsChanged", onAccountsChanged);
-        wallet.events.addListener("chainChanged", onChainChanged);
-        wallet.events.addListener("disconnect", handleDisconnect);
+        activeAccountStore.setValue(newAccount);
       }
-    }
+    };
+
+    const unsubAccounts = wallet.subscribe(
+      "accountsChanged",
+      onAccountsChanged,
+    );
+    const unsubChainChanged = wallet.subscribe("chainChanged", (chain) =>
+      activeWalletChainStore.setValue(chain),
+    );
+    const unsubDisconnect = wallet.subscribe("disconnect", () => {
+      handleDisconnect();
+    });
+
+    const handleDisconnect = () => {
+      onWalletDisconnect(wallet);
+
+      unsubAccounts();
+      unsubChainChanged();
+      unsubDisconnect();
+    };
   };
 
   // side effects
@@ -146,9 +142,7 @@ export function createConnectionManager(storage: AsyncStorage) {
   effect(
     () => {
       const accounts = connectedWallets.getValue();
-      const ids = accounts
-        .map((acc) => acc?.metadata.id)
-        .filter((c) => !!c) as string[];
+      const ids = accounts.map((acc) => acc?.id).filter((c) => !!c) as string[];
 
       storage.setItem(CONNECTED_WALLET_IDS, JSON.stringify(ids));
     },
@@ -159,7 +153,7 @@ export function createConnectionManager(storage: AsyncStorage) {
   // save active wallet id to storage
   effect(
     () => {
-      const value = activeWalletStore.getValue()?.metadata.id;
+      const value = activeWalletStore.getValue()?.id;
       if (value) {
         storage.setItem(ACTIVE_WALLET_ID, value);
       } else {

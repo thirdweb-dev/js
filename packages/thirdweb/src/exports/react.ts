@@ -30,58 +30,10 @@ export { ThirdwebProvider } from "../react/core/providers/thirdweb-provider.js";
 // tokens
 export type { SupportedTokens } from "../react/web/ui/ConnectWallet/defaultTokens.js";
 export { defaultTokens } from "../react/web/ui/ConnectWallet/defaultTokens.js";
-export { defaultWallets } from "../react/web/wallets/defaultWallets.js";
 
 // Media Renderer
 export { MediaRenderer } from "../react/web/ui/MediaRenderer/MediaRenderer.js";
 export type { MediaRendererProps } from "../react/web/ui/MediaRenderer/types.js";
-
-// wallets
-export {
-  metamaskConfig,
-  type MetamaskConfigOptions,
-} from "../react/web/wallets/metamask/metamaskConfig.js";
-
-export {
-  coinbaseConfig,
-  type CoinbaseConfigOptions,
-} from "../react/web/wallets/coinbase/coinbaseConfig.js";
-
-export {
-  rainbowConfig,
-  type RainbowConfigOptions,
-} from "../react/web/wallets/rainbow/rainbowConfig.js";
-
-export {
-  walletConnectConfig,
-  type WalletConnectConfigOptions,
-} from "../react/web/wallets/walletConnect/walletConnectConfig.js";
-
-export {
-  zerionConfig,
-  type ZerionConfigOptions,
-} from "../react/web/wallets/zerion/zerionConfig.js";
-
-export {
-  okxConfig,
-  type OkxConfigOptions,
-} from "../react/web/wallets/okx/okxConfig.js";
-
-export {
-  smartWalletConfig,
-  type SmartWalletConfigOptions,
-} from "../react/web/wallets/smartWallet/smartWalletConfig.js";
-
-export {
-  embeddedWalletConfig,
-  type EmbeddedWalletConfigOptions,
-} from "../react/web/wallets/embedded/embeddedWalletConfig.js";
-export type { EmbeddedWalletAuth } from "../react/web/wallets/embedded/types.js";
-
-export {
-  localWalletConfig,
-  type LocalWalletConfigOptions,
-} from "../react/web/wallets/local/localWalletConfig.js";
 
 // react/core
 export {

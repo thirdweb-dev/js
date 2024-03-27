@@ -11,6 +11,7 @@ import {
   getDefaultPaymasterUrl,
 } from "./constants.js";
 import { hexlifyUserOp } from "./utils.js";
+import type { ThirdwebClient } from "../../../client/client.js";
 
 /**
  * TODO Docs
@@ -18,7 +19,7 @@ import { hexlifyUserOp } from "./utils.js";
  */
 export async function getPaymasterAndData(args: {
   userOp: UserOperation;
-  options: SmartWalletOptions;
+  options: SmartWalletOptions & { client: ThirdwebClient };
 }): Promise<PaymasterResult> {
   const { userOp, options } = args;
 

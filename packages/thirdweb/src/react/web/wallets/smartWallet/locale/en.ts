@@ -1,4 +1,6 @@
-const smartWalletLocalEn = {
+import type { SmartWalletLocale } from "./types.js";
+
+const smartWalletLocalEn: SmartWalletLocale = {
   connecting: "Connecting to Smart Wallet",
   failedToConnect: "Failed to connect to Smart Wallet",
   wrongNetworkScreen: {

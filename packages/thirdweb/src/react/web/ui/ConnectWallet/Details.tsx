@@ -38,7 +38,6 @@ import type { SupportedTokens } from "./defaultTokens.js";
 import { Link, Text } from "../components/text.js";
 import { CopyIcon } from "../components/CopyIcon.js";
 import { shortenString } from "../../../core/utils/addresses.js";
-import { Img } from "../components/Img.js";
 import {
   useChainQuery,
   useChainsQuery,
@@ -58,17 +57,22 @@ import type { Chain } from "../../../../chains/types.js";
 //   Wallet,
 //   WalletWithPersonalAccount,
 // } from "../../../../wallets/interfaces/wallet.js";
-import {
-  // personalAccountToSmartAccountMap,
-  smartWalletMetadata,
-} from "../../../../wallets/smart/index.js";
-import type { EmbeddedWallet } from "../../../../wallets/embedded/core/wallet/index.js";
-import { localWalletMetadata } from "../../../../wallets/local/index.js";
-import { ExportLocalWallet } from "./screens/ExportLocalWallet.js";
+// import {
+//   // personalAccountToSmartAccountMap,
+//   smartWalletMetadata,
+// } from "../../../../wallets/smart/index._ts";
+// import type { EmbeddedWallet } from "../../../../wallets/embedded/core/wallet/index._ts";
+// import { localWalletMetadata } from "../../../../wallets/local/index._ts";
+// import { ExportLocalWallet } from "./screens/ExportLocalWallet._tsx";
 import { swapTransactionsStore } from "./screens/Buy/swap/pendingSwapTx.js";
 import { SwapScreen } from "./screens/Buy/SwapScreen.js";
 import { SwapTransactionsScreen } from "./screens/SwapTransactionsScreen.js";
 import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import { WalletImage } from "../components/WalletImage.js";
+import { getUserEmail } from "../../../../wallets/embedded/core/authentication/index.js";
+import { useQuery } from "@tanstack/react-query";
+import { getContract } from "../../../../contract/contract.js";
+import { isContractDeployed } from "../../../../utils/bytecode/is-contract-deployed.js";
 
 const TW_CONNECTED_WALLET = "tw-connected-wallet";
 
@@ -156,11 +160,9 @@ export const ConnectedWalletDetails: React.FC<{
     }
   }, [isOpen]);
 
-  let avatarOrWalletIconUrl = activeWallet?.metadata.iconUrl || "";
-
-  if (activeWallet && "isSmartWallet" in activeWallet) {
-    avatarOrWalletIconUrl = smartWalletMetadata.iconUrl;
-  }
+  // if (activeWallet && "isSmartWallet" in activeWallet) {
+  //   avatarOrWalletIconUrl = smartWalletMetadata.iconUrl;
+  // }
 
   const trigger = props.detailsButton?.render ? (
     <div>
@@ -175,19 +177,15 @@ export const ConnectedWalletDetails: React.FC<{
       style={props.detailsButton?.style}
       data-test="connected-wallet-details"
     >
-      <Img
-        width={iconSize.lg}
-        height={iconSize.lg}
-        src={avatarOrWalletIconUrl}
-        className={`${TW_CONNECTED_WALLET}__wallet-icon`}
-        style={{
-          borderRadius: radius.sm,
-        }}
-      />
+      {/* TODO: render a placeholder if we don't have an active wallet? */}
+      {activeWallet?.id && (
+        <WalletImage size={iconSize.lg} id={activeWallet.id} />
+      )}
 
       <Container flex="column" gap="xxs">
         {/* Address */}
-        {activeWallet?.metadata.id === localWalletMetadata.id ? (
+
+        {/* activeWallet?.id === "local" ? (
           <Text
             color="danger"
             size="xs"
@@ -197,7 +195,8 @@ export const ConnectedWalletDetails: React.FC<{
           >
             {locale.guest}
           </Text>
-        ) : addressOrENS ? (
+        ) :  */}
+        {addressOrENS ? (
           <Text
             size="sm"
             color="primaryText"
@@ -273,15 +272,10 @@ export const ConnectedWalletDetails: React.FC<{
     <div>
       <Spacer y="xl" />
       <Container px="lg" flex="column" center="x">
-        <Img
-          width={iconSize.xxl}
-          height={iconSize.xxl}
-          src={avatarOrWalletIconUrl}
-          alt=""
-          style={{
-            borderRadius: radius.sm,
-          }}
-        />
+        {/* TODO: render a placeholder if we don't have an active wallet? */}
+        {activeWallet?.id && (
+          <WalletImage id={activeWallet.id} size={iconSize.xxl} />
+        )}
 
         <Spacer y="md" />
 
@@ -473,7 +467,7 @@ export const ConnectedWalletDetails: React.FC<{
             )}
 
           {/* Export  Wallet */}
-          {activeWallet?.metadata.id === localWalletMetadata.id && (
+          {/* {activeWallet?.id === "local" && (
             <div>
               <MenuButton
                 onClick={() => {
@@ -487,7 +481,7 @@ export const ConnectedWalletDetails: React.FC<{
                 <Text color="primaryText">{locale.backupWallet}</Text>
               </MenuButton>
             </div>
-          )}
+          )} */}
 
           {props.detailsModal?.footer && (
             <props.detailsModal.footer close={() => setIsOpen(false)} />
@@ -520,7 +514,7 @@ export const ConnectedWalletDetails: React.FC<{
         </Container>
       )}
 
-      {activeWallet?.metadata.id === localWalletMetadata.id && (
+      {/* {activeWallet?.id === "local" && (
         <>
           <Line />
           <Container py="md">
@@ -529,7 +523,7 @@ export const ConnectedWalletDetails: React.FC<{
             </Text>
           </Container>
         </>
-      )}
+      )} */}
     </div>
   );
 
@@ -564,18 +558,18 @@ export const ConnectedWalletDetails: React.FC<{
   }
 
   // export local wallet
-  else if (screen === "export") {
-    content = (
-      <ExportLocalWallet
-        onExport={() => {
-          setIsOpen(false);
-        }}
-        onBack={() => {
-          setScreen("main");
-        }}
-      />
-    );
-  }
+  // else if (screen === "export") {
+  //   content = (
+  //     <ExportLocalWallet
+  //       onExport={() => {
+  //         setIsOpen(false);
+  //       }}
+  //       onBack={() => {
+  //         setScreen("main");
+  //       }}
+  //     />
+  //   );
+  // }
 
   // send funds
   else if (screen === "send") {
@@ -593,7 +587,7 @@ export const ConnectedWalletDetails: React.FC<{
   else if (screen === "receive") {
     content = (
       <ReceiveFunds
-        iconUrl={avatarOrWalletIconUrl}
+        walletId={activeWallet?.id}
         onBack={() => {
           setScreen("main");
         }}
@@ -768,19 +762,26 @@ function ConnectedToSmartWallet() {
   const activeWallet = useActiveWallet();
   const chain = useActiveWalletChain();
   const locale = useWalletConnectionCtx().connectLocale;
-  const isSmartWallet = activeWallet && "isSmartWallet" in activeWallet;
+  const isSmartWallet = activeWallet?.id === "smart";
+  const { client } = useWalletConnectionCtx();
 
-  const [isSmartWalletDeployed] = useState(false);
+  const [isSmartWalletDeployed, setIsSmartWalletDeployed] = useState(false);
 
-  // useEffect(() => {
-  //   if (activeAccount && isSmartWallet) {
-  //     (activeAccount.wallet as SmartWallet).isDeployed().then((isDeployed) => {
-  //       setIsSmartWalletDeployed(isDeployed);
-  //     });
-  //   } else {
-  //     setIsSmartWalletDeployed(false);
-  //   }
-  // }, [activeWallet]);
+  useEffect(() => {
+    if (activeAccount && isSmartWallet && activeAccount.address && chain) {
+      const contract = getContract({
+        address: activeAccount.address,
+        chain,
+        client,
+      });
+
+      isContractDeployed(contract).then((isDeployed) => {
+        setIsSmartWalletDeployed(isDeployed);
+      });
+    } else {
+      setIsSmartWalletDeployed(false);
+    }
+  }, [activeAccount, activeWallet, chain, client, isSmartWallet]);
 
   const content = (
     <Container flex="row" gap="xxs" center="both">
@@ -815,8 +816,17 @@ function ConnectedToSmartWallet() {
 }
 
 function EmbeddedWalletEmail() {
-  const user = useEmbeddedWalletUser();
-  if (user?.email) {
+  const { client } = useWalletConnectionCtx();
+  const emailQuery = useQuery({
+    queryKey: ["embedded-wallet-user", client],
+    queryFn: async () => {
+      return getUserEmail({
+        client: client,
+      });
+    },
+  });
+
+  if (emailQuery.data) {
     return (
       <Container
         flex="row"
@@ -825,22 +835,10 @@ function EmbeddedWalletEmail() {
           paddingBottom: spacing.md,
         }}
       >
-        <Text size="sm">{user.email}</Text>
+        <Text size="sm">{emailQuery.data}</Text>
       </Container>
     );
   }
 
-  return undefined;
-}
-
-function useEmbeddedWalletUser() {
-  const activeWallet = useActiveWallet();
-  const user =
-    activeWallet &&
-    "isEmbeddedWallet" in activeWallet &&
-    "getUser" in activeWallet
-      ? (activeWallet as EmbeddedWallet).getUser()
-      : undefined;
-
-  return user;
+  return null;
 }
