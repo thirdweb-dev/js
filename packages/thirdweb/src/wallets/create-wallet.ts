@@ -69,12 +69,12 @@ export function createWallet<const ID extends WalletId>(
         chain = newChain;
       });
 
-      const unsubscribe = emitter.subscribe("disconnect", () => {
+      const unsubscribeDisconnect = emitter.subscribe("disconnect", () => {
         account = undefined;
         chain = undefined;
         // unsubscribe
         unsubscribeChain();
-        unsubscribe();
+        unsubscribeDisconnect();
       });
 
       let handleSwitchChain: (chain: Chain) => Promise<void> = async () => {
