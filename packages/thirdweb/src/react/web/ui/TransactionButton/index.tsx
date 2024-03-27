@@ -16,31 +16,27 @@ import { useState } from "react";
 /**
  * Props for the [`TransactionButton`](https://portal.thirdweb.com/references/typescript/v5/TransactionButton) component.
  */
-export type TransactionButtonProps<TWaitForReceipt extends boolean> = {
+export type TransactionButtonProps = {
   /**
    * The a function returning a prepared transaction of type [`PreparedTransaction`](https://portal.thirdweb.com/references/typescript/v5/PreparedTransaction) to be sent when the button is clicked
    */
   transaction: () =>
     | PreparedTransaction<any>
     | Promise<PreparedTransaction<any>>;
-  /**
-   * Whether to wait for the transaction receipt after sending the transaction
-   */
-  waitForReceipt?: TWaitForReceipt;
 
   /**
    * Callback that will be called when the transaction is submitted onchain
    * @param transactionResult - The object of type [`WaitForReceiptOptions`](https://portal.thirdweb.com/references/typescript/v5/WaitForReceiptOptions)
    */
-  onSubmitted?: (transactionResult: WaitForReceiptOptions) => void;
+  onTransactionSent?: (transactionResult: WaitForReceiptOptions) => void;
   /**
    *
-   *Callback that will be called when the transaction is confirmed onchain
+   * Callback that will be called when the transaction is confirmed onchain.
+   * If this callback is set, the component will wait for the transaction to be confirmed.
    *
-   ***NOTE**: This callback will only be called if `waitForReceipt` is also set to true!
    * @param receipt - The transaction receipt object of type [`TransactionReceipt`](https://portal.thirdweb.com/references/typescript/v5/TransactionReceipt)
    */
-  onReceipt?: (receipt: TransactionReceipt) => void;
+  onTransactionConfirmed?: (receipt: TransactionReceipt) => void;
   /**
    * The Error thrown when trying to send the transaction
    * @param error - The `Error` object thrown
@@ -81,17 +77,14 @@ export type TransactionButtonProps<TWaitForReceipt extends boolean> = {
  * ```
  * @component
  */
-export function TransactionButton<
-  const TWaitForReceipt extends boolean = false,
->(props: TransactionButtonProps<TWaitForReceipt>) {
+export function TransactionButton(props: TransactionButtonProps) {
   const {
     children,
     transaction,
-    onSubmitted,
-    onReceipt,
+    onTransactionSent,
+    onTransactionConfirmed,
     onError,
     onClick,
-    waitForReceipt,
     ...buttonProps
   } = props;
   const account = useActiveAccount();
@@ -122,15 +115,13 @@ export function TransactionButton<
 
             const result = await sendTransaction.mutateAsync(resolvedTx);
 
-            if (onSubmitted) {
-              onSubmitted(result);
+            if (onTransactionSent) {
+              onTransactionSent(result);
             }
 
-            if (waitForReceipt) {
+            if (onTransactionConfirmed) {
               const receipt = await doWaitForReceipt(result);
-              if (onReceipt) {
-                onReceipt(receipt);
-              }
+              onTransactionConfirmed(receipt);
             }
           } catch (error) {
             if (onError) {
