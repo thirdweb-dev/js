@@ -22,6 +22,7 @@ import type {
   WalletConnectionOption,
 } from "../wallet-types.js";
 import type { Chain } from "../../chains/types.js";
+import type { ThirdwebClient } from "../../client/client.js";
 
 /**
  * We can get the personal account for given smart account but not the other way around - this map gives us the reverse lookup
@@ -75,6 +76,7 @@ export async function connectSmartWallet(
     personalAccount,
     accountContract,
     factoryContract,
+    client,
   });
 
   personalAccountToSmartAccountMap.set(personalAccount, wallet);
@@ -103,6 +105,7 @@ async function createSmartAccount(
     personalAccount: Account;
     factoryContract: ThirdwebContract;
     accountContract: ThirdwebContract;
+    client: ThirdwebClient;
   },
 ): Promise<Account> {
   const { accountContract, factoryContract } = options;
@@ -223,7 +226,7 @@ async function createSmartAccount(
 }
 
 async function _deployAccount(args: {
-  options: SmartWalletOptions;
+  options: SmartWalletOptions & { client: ThirdwebClient };
   account: Account;
   accountContract: ThirdwebContract;
 }) {
@@ -251,7 +254,10 @@ async function _sendUserOp(args: {
   factoryContract: ThirdwebContract;
   accountContract: ThirdwebContract;
   executeTx: PreparedTransaction;
-  options: SmartWalletOptions & { personalAccount: Account };
+  options: SmartWalletOptions & {
+    personalAccount: Account;
+    client: ThirdwebClient;
+  };
 }): Promise<WaitForReceiptOptions> {
   const { factoryContract, accountContract, executeTx, options } = args;
   const unsignedUserOp = await createUnsignedUserOp({

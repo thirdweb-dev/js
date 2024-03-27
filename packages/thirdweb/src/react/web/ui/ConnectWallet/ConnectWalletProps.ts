@@ -1,6 +1,7 @@
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
+import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
 import type { Theme } from "../design-system/index.js";
 import type { LocaleId } from "../types.js";
@@ -588,4 +589,9 @@ export type ConnectButtonProps = {
   walletConnect?: {
     projectId?: string;
   };
+
+  /**
+   * Enable Account abstraction by configuring the options for SmartWallet
+   */
+  accountAbstraction?: SmartWalletOptions;
 };

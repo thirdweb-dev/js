@@ -4,7 +4,10 @@ import {
 } from "../../../../transaction/actions/wait-for-tx-receipt.js";
 import { Button } from "../components/buttons.js";
 import { Spinner } from "../components/Spinner.js";
-import { useActiveAccount } from "../../../core/hooks/wallets/wallet-hooks.js";
+import {
+  useActiveAccount,
+  useActiveWallet,
+} from "../../../core/hooks/wallets/wallet-hooks.js";
 import { useSendTransaction } from "../../../core/hooks/contract/useSend.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
 import type { TransactionReceipt } from "../../../../transaction/types.js";
@@ -92,6 +95,7 @@ export function TransactionButton<
     ...buttonProps
   } = props;
   const account = useActiveAccount();
+  const wallet = useActiveWallet();
   const [isPending, setIsPending] = useState(false);
 
   const sendTransaction = useSendTransaction();
@@ -111,6 +115,10 @@ export function TransactionButton<
           try {
             setIsPending(true);
             const resolvedTx = await transaction();
+
+            if (wallet && wallet.getChain()?.id !== resolvedTx.chain.id) {
+              await wallet?.switchChain(resolvedTx.chain);
+            }
 
             const result = await sendTransaction.mutateAsync(resolvedTx);
 

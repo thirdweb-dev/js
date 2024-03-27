@@ -35,6 +35,7 @@ import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
 import type { AppMetadata } from "../../../../../wallets/types.js";
 import { getConnectLocale } from "../locale/getConnectLocale.js";
 import { AutoConnect } from "../../../../core/hooks/connection/useAutoConnect.js";
+import type { SmartWalletOptions } from "../../../../../wallets/smart/types.js";
 
 export type ConnectEmbedProps = {
   /**
@@ -294,6 +295,11 @@ export type ConnectEmbedProps = {
   walletConnect?: {
     projectId?: string;
   };
+
+  /**
+   * Enable Account abstraction by configuring the options for SmartWallet
+   */
+  accountAbstraction?: SmartWalletOptions;
 };
 
 /**

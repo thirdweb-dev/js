@@ -56,8 +56,7 @@ export function createWallet<const ID extends WalletId>(
      * COINBASE WALLET VIA SDK
      * -> if no injected coinbase found, we'll use the coinbase SDK
      */
-    case id === "com.coinbase.wallet" &&
-      !injectedProvider("com.coinbase.wallet"): {
+    case id === "com.coinbase.wallet": {
       return coinbaseWalletSDK() as Wallet<ID>;
     }
 
@@ -258,7 +257,7 @@ export function smartWallet(
  * ```
  */
 export function embeddedWallet(
-  createOptions: CreateWalletArgs<"embedded">[1],
+  createOptions?: CreateWalletArgs<"embedded">[1],
 ): Wallet<"embedded"> {
   let account: Account | undefined = undefined;
   let chain: Chain | undefined = undefined;
