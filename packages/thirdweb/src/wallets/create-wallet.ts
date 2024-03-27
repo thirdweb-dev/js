@@ -6,11 +6,8 @@ import type {
 import type { Account, Wallet } from "./interfaces/wallet.js";
 import type { Chain } from "../chains/types.js";
 import { injectedProvider } from "./injected/mipdStore.js";
-import type {
-  InjectedSupportedWalletIds,
-  WCSupportedWalletIds,
-} from "./__generated__/wallet-ids.js";
-import type { WCAutoConnectOptions } from "./wallet-connect/types.js";
+import type { InjectedSupportedWalletIds } from "./__generated__/wallet-ids.js";
+
 import { createWalletEmitter } from "./wallet-emitter.js";
 
 // TODO: figure out how to define the type without tuple args type and using function overloads
@@ -64,13 +61,14 @@ export function createWallet<const ID extends WalletId>(
      * WALLET CONNECT AND INJECTED WALLETS
      */
     default: {
+      const emitter = createWalletEmitter<ID>();
       let account: Account | undefined = undefined;
       let chain: Chain | undefined = undefined;
 
-      let switchChain: (chain: Chain) => Promise<void> = async () => {
+      let handleSwitchChain: (chain: Chain) => Promise<void> = async () => {
         throw new Error("Not implemented yet");
       };
-      let disconnect: () => Promise<void> = async () => {
+      let handleDisconnect: () => void = () => {
         account = undefined;
         chain = undefined;
       };
@@ -82,47 +80,42 @@ export function createWallet<const ID extends WalletId>(
         autoConnect: async (options) => {
           // injeted wallet priority for autoconnect
           if (injectedProvider(id)) {
-            const { autoConnectInjectedWallet, switchChainInjectedWallet } =
-              await import("./injected/index.js");
-            switchChain = (newChain) =>
-              switchChainInjectedWallet(
-                wallet as Wallet<InjectedSupportedWalletIds>,
-                newChain,
-              ).then(() => {
-                chain = newChain;
-              });
-            const [connectedAccount, connectedChain] =
-              await autoConnectInjectedWallet(
-                wallet as Wallet<InjectedSupportedWalletIds>,
-              );
+            const { autoConnectInjectedWallet } = await import(
+              "./injected/index.js"
+            );
+
+            const [
+              connectedAccount,
+              connectedChain,
+              doDisconnect,
+              doSwitchChain,
+            ] = await autoConnectInjectedWallet(
+              id as InjectedSupportedWalletIds,
+              emitter,
+            );
             // set the states
             account = connectedAccount;
             chain = connectedChain;
+            handleDisconnect = doDisconnect;
+            handleSwitchChain = doSwitchChain;
             // return account
             return account;
           }
 
           if (options && "client" in options) {
-            const { autoConnectWC, switchChainWC, disconnectWC } = await import(
-              "./wallet-connect/index.js"
-            );
-            switchChain = (newChain) =>
-              switchChainWC(
-                wallet as Wallet<WCSupportedWalletIds>,
-                newChain,
-              ).then(() => {
-                chain = newChain;
-              });
-            disconnect = () =>
-              disconnectWC(wallet as Wallet<WCSupportedWalletIds>);
+            const { autoConnectWC } = await import("./wallet-connect/index.js");
 
-            const [connectedAccount, connectedChain] = await autoConnectWC(
-              wallet as Wallet<WCSupportedWalletIds>,
-              options as WCAutoConnectOptions,
-            );
+            const [
+              connectedAccount,
+              connectedChain,
+              doDisconnect,
+              doSwitchChain,
+            ] = await autoConnectWC(options, emitter);
             // set the states
             account = connectedAccount;
             chain = connectedChain;
+            handleDisconnect = doDisconnect;
+            handleSwitchChain = doSwitchChain;
             // return account
             return account;
           }
@@ -131,56 +124,50 @@ export function createWallet<const ID extends WalletId>(
         connect: async (options) => {
           // prefer walletconnect over injected for connect (more explicit)
           if (options && "walletConnect" in options) {
-            const { connectWC, switchChainWC, disconnectWC } = await import(
-              "./wallet-connect/index.js"
-            );
-            switchChain = (newChain) =>
-              switchChainWC(
-                wallet as Wallet<WCSupportedWalletIds>,
-                newChain,
-              ).then(() => {
-                chain = newChain;
-              });
-            disconnect = () =>
-              disconnectWC(wallet as Wallet<WCSupportedWalletIds>);
+            const { connectWC } = await import("./wallet-connect/index.js");
 
-            const [connectedAccount, connectedChain] = await connectWC(
-              wallet as Wallet<WCSupportedWalletIds>,
-              options,
-            );
+            const [
+              connectedAccount,
+              connectedChain,
+              doDisconnect,
+              doSwitchChain,
+            ] = await connectWC(options, emitter);
             // set the states
             account = connectedAccount;
             chain = connectedChain;
+            handleDisconnect = doDisconnect;
+            handleSwitchChain = doSwitchChain;
             // return account
             return account;
           }
           if (injectedProvider(id)) {
-            const { connectInjectedWallet, switchChainInjectedWallet } =
-              await import("./injected/index.js");
-            switchChain = (newChain) =>
-              switchChainInjectedWallet(
-                wallet as Wallet<InjectedSupportedWalletIds>,
-                newChain,
-              ).then(() => {
-                chain = newChain;
-              });
+            const { connectInjectedWallet } = await import(
+              "./injected/index.js"
+            );
 
-            const [connectedAccount, connectedChain] =
-              await connectInjectedWallet(
-                wallet as Wallet<InjectedSupportedWalletIds>,
-                options as InjectedConnectOptions,
-              );
+            const [
+              connectedAccount,
+              connectedChain,
+              doDisconnect,
+              doSwitchChain,
+            ] = await connectInjectedWallet(
+              id as InjectedSupportedWalletIds,
+              options as InjectedConnectOptions,
+              emitter,
+            );
             // set the states
             account = connectedAccount;
             chain = connectedChain;
+            handleDisconnect = doDisconnect;
+            handleSwitchChain = doSwitchChain;
             // return account
             return account;
           }
           throw new Error("Failed to connect");
         },
         // these get overridden in connect and autoconnect
-        disconnect: () => disconnect(),
-        switchChain: (c) => switchChain(c),
+        disconnect: async () => handleDisconnect(),
+        switchChain: (c) => handleSwitchChain(c),
       };
       return wallet;
     }

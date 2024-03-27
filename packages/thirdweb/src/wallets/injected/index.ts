@@ -7,11 +7,7 @@ import type { Address } from "abitype";
 import type { Ethereum } from "../interfaces/ethereum.js";
 import { normalizeChainId } from "../utils/normalizeChainId.js";
 import { injectedProvider } from "./mipdStore.js";
-import type {
-  SendTransactionOption,
-  Account,
-  Wallet,
-} from "../interfaces/wallet.js";
+import type { SendTransactionOption, Account } from "../interfaces/wallet.js";
 import { getValidPublicRPCUrl } from "../utils/chains.js";
 import { stringify } from "../../utils/json.js";
 import { defineChain, getChainMetadata } from "../../chains/utils.js";
@@ -27,6 +23,8 @@ import { getAddress } from "../../utils/address.js";
 import type { InjectedConnectOptions, WalletId } from "../wallet-types.js";
 
 import type { InjectedSupportedWalletIds } from "../__generated__/wallet-ids.js";
+import type { DisconnectFn, SwitchChainFn } from "../types.js";
+import type { WalletEmitter } from "../wallet-emitter.js";
 
 // TODO: save the provider in data
 
@@ -43,91 +41,15 @@ function getInjectedProvider(walletId: WalletId) {
  * @internal
  */
 export async function connectInjectedWallet(
-  wallet: Wallet<InjectedSupportedWalletIds>,
+  id: InjectedSupportedWalletIds,
   options: InjectedConnectOptions,
-) {
-  const provider = getInjectedProvider(wallet.id);
+  emitter: WalletEmitter<InjectedSupportedWalletIds>,
+): Promise<ReturnType<typeof onConnect>> {
+  const provider = getInjectedProvider(id);
   const addresses = await provider.request({
     method: "eth_requestAccounts",
   });
 
-  return onConnect(wallet, {
-    provider,
-    addresses,
-    chain: options.chain ? options.chain : undefined,
-  });
-}
-
-/**
- * @internal
- */
-export async function autoConnectInjectedWallet(
-  wallet: Wallet<InjectedSupportedWalletIds>,
-) {
-  const provider = getInjectedProvider(wallet.id);
-
-  // connected accounts
-  const addresses = await provider.request({
-    method: "eth_accounts",
-  });
-
-  return onConnect(wallet, {
-    provider,
-    addresses,
-    // do not force switch chain on autoConnect
-    chain: undefined,
-  });
-}
-
-/**
- * @internal
- */
-export async function switchChainInjectedWallet(
-  wallet: Wallet<InjectedSupportedWalletIds>,
-  chain: Chain,
-) {
-  const provider = getInjectedProvider(wallet.id);
-  const hexChainId = numberToHex(chain.id);
-  try {
-    await provider.request({
-      method: "wallet_switchEthereumChain",
-      params: [{ chainId: hexChainId }],
-    });
-  } catch (e: any) {
-    // if chain does not exist, add the chain
-    if (e?.code === 4902 || e?.data?.originalError?.code === 4902) {
-      const apiChain = await getChainMetadata(chain);
-      await provider.request({
-        method: "wallet_addEthereumChain",
-        params: [
-          {
-            chainId: hexChainId,
-            chainName: apiChain.name,
-            nativeCurrency: apiChain.nativeCurrency,
-            rpcUrls: getValidPublicRPCUrl(apiChain), // no client id on purpose here
-            blockExplorerUrls: apiChain.explorers?.map((x) => x.url),
-          },
-        ],
-      });
-    } else {
-      throw e;
-    }
-  }
-}
-
-/**
- * Call this method when the wallet provider is connected or auto connected
- * @internal
- */
-async function onConnect(
-  wallet: Wallet<InjectedSupportedWalletIds>,
-  data: {
-    chain?: Chain;
-    provider: Ethereum;
-    addresses: string[];
-  },
-): Promise<[Account, Chain]> {
-  const { addresses, provider, chain } = data;
   const addr = addresses[0];
   if (!addr) {
     throw new Error("no accounts available");
@@ -142,48 +64,58 @@ async function onConnect(
     .then(normalizeChainId);
 
   let connectedChain = defineChain(chainId);
-  // const walletData = getWalletData(wallet);
-
-  // if (walletData) {
-  //   walletData.chain = defineChain(chainId);
-  // }
-
-  // this.updateMetadata();
 
   // if we want a specific chainId and it is not the same as the provider chainId, trigger switchChain
-  if (chain && chain.id !== chainId) {
-    await wallet.switchChain(chain);
-    connectedChain = chain;
+  if (options.chain && options.chain.id !== chainId) {
+    await switchChain(provider, options.chain);
+    connectedChain = options.chain;
   }
 
-  const onDisconnect = () => {
-    // if (walletData) {
-    //   walletData.onDisconnect();
-    //   provider.removeListener("chainChanged", walletData.onChainChanged);
-    // }
-  };
+  return onConnect(provider, address, connectedChain, emitter);
+}
 
-  if (provider.on) {
-    // if (walletData) {
-    //   provider.on("chainChanged", walletData.onChainChanged);
-    // }
+/**
+ * @internal
+ */
+export async function autoConnectInjectedWallet(
+  id: InjectedSupportedWalletIds,
+  emitter: WalletEmitter<InjectedSupportedWalletIds>,
+): Promise<ReturnType<typeof onConnect>> {
+  const provider = getInjectedProvider(id);
 
-    provider.on("disconnect", onDisconnect);
+  // connected accounts
+  const addresses = await provider.request({
+    method: "eth_accounts",
+  });
+
+  const addr = addresses[0];
+  if (!addr) {
+    throw new Error("no accounts available");
   }
 
-  wallet.events = {
-    addListener(event, listener) {
-      if (provider.on) {
-        provider.on(event, listener);
-      }
-    },
-    removeListener(event, listener) {
-      if (provider.removeListener) {
-        provider.removeListener(event, listener);
-      }
-    },
-  };
+  // use the first account
+  const address = getAddress(addr);
 
+  // get the chainId the provider is on
+  const chainId = await provider
+    .request({ method: "eth_chainId" })
+    .then(normalizeChainId);
+
+  const connectedChain = defineChain(chainId);
+
+  return onConnect(provider, address, connectedChain, emitter);
+}
+
+/**
+ * Call this method when the wallet provider is connected or auto connected
+ * @internal
+ */
+async function onConnect(
+  provider: Ethereum,
+  address: string,
+  chain: Chain,
+  emitter: WalletEmitter<InjectedSupportedWalletIds>,
+): Promise<[Account, Chain, DisconnectFn, SwitchChainFn]> {
   const account: Account = {
     address,
     async sendTransaction(tx: SendTransactionOption) {
@@ -253,5 +185,75 @@ async function onConnect(
     },
   };
 
-  return [account, connectedChain] as const;
+  function disconnect() {
+    if (!provider || !provider.removeListener) {
+      return;
+    }
+    provider.removeListener("accountsChanged", onAccountsChanged);
+    provider.removeListener("chainChanged", onChainChanged);
+    provider.removeListener("disconnect", onDisconnect);
+  }
+
+  function onDisconnect() {
+    disconnect();
+    emitter.emit("disconnect", undefined);
+  }
+
+  function onAccountsChanged(accounts: string[]) {
+    if (accounts.length === 0) {
+      onDisconnect();
+    } else {
+      emitter.emit("accountsChanged", accounts);
+    }
+  }
+
+  function onChainChanged(newChainId: string) {
+    const newChain = defineChain(normalizeChainId(newChainId));
+    emitter.emit("chainChanged", newChain);
+  }
+
+  if (provider.on) {
+    provider.on("accountsChanged", onAccountsChanged);
+    provider.on("chainChanged", onChainChanged);
+    provider.on("disconnect", onDisconnect);
+  }
+
+  return [
+    account,
+    chain,
+    disconnect,
+    (newChain) => switchChain(provider, newChain),
+  ] as const;
+}
+
+/**
+ * @internal
+ */
+async function switchChain(provider: Ethereum, chain: Chain) {
+  const hexChainId = numberToHex(chain.id);
+  try {
+    await provider.request({
+      method: "wallet_switchEthereumChain",
+      params: [{ chainId: hexChainId }],
+    });
+  } catch (e: any) {
+    // if chain does not exist, add the chain
+    if (e?.code === 4902 || e?.data?.originalError?.code === 4902) {
+      const apiChain = await getChainMetadata(chain);
+      await provider.request({
+        method: "wallet_addEthereumChain",
+        params: [
+          {
+            chainId: hexChainId,
+            chainName: apiChain.name,
+            nativeCurrency: apiChain.nativeCurrency,
+            rpcUrls: getValidPublicRPCUrl(apiChain), // no client id on purpose here
+            blockExplorerUrls: apiChain.explorers?.map((x) => x.url),
+          },
+        ],
+      });
+    } else {
+      throw e;
+    }
+  }
 }
