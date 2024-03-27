@@ -6,7 +6,13 @@ export default {
     {
       "name": "Tectum explorer",
       "url": "https://explorer.tectum.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmYvFVprVdAGJH4iHUCXGEmy7pq8MMfxEjM64SuXutz9qx",
+        "width": 256,
+        "height": 256,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
