@@ -260,7 +260,7 @@ export function smartWallet(
  * ```
  */
 export function embeddedWallet(
-  createOptions: CreateWalletArgs<"embedded">[1],
+  createOptions?: CreateWalletArgs<"embedded">[1],
 ): Wallet<"embedded"> {
   let account: Account | undefined = undefined;
   let chain: Chain | undefined = undefined;
