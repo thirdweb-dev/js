@@ -215,14 +215,6 @@ export const SOLUTIONS: SectionItemProps[] = [
 
 export const COMPANY: SectionItemProps[] = [
   {
-    name: "About us",
-    label: "about",
-    description: "Learn more about our company",
-    link: "/about",
-    icon: require("public/assets/tw-icons/general.png"),
-    section: "company",
-  },
-  {
     name: "Mission",
     label: "mission",
     description: "Why we work in web3",
