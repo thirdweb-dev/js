@@ -65,6 +65,18 @@ export function createWallet<const ID extends WalletId>(
       let account: Account | undefined = undefined;
       let chain: Chain | undefined = undefined;
 
+      const unsubscribeChain = emitter.subscribe("chainChanged", (newChain) => {
+        chain = newChain;
+      });
+
+      const unsubscribe = emitter.subscribe("disconnect", () => {
+        account = undefined;
+        chain = undefined;
+        // unsubscribe
+        unsubscribeChain();
+        unsubscribe();
+      });
+
       let handleSwitchChain: (chain: Chain) => Promise<void> = async () => {
         throw new Error("Not implemented yet");
       };
