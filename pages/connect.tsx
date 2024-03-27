@@ -168,10 +168,6 @@ const ConnectLanding: ThirdwebNextPage = () => {
           justifyContent="center"
           gap="24px"
         >
-          {/* Title and Description */}
-          <Heading fontSize={[30, 40]} color="white" textAlign="center">
-            Every frontend component for your web3 app
-          </Heading>
           <Carousel TRACKING_CATEGORY={TRACKING_CATEGORY} />
         </Flex>
 

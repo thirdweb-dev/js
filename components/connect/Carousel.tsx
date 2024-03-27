@@ -10,23 +10,22 @@ import { useTrack } from "hooks/analytics/useTrack";
 const showcaseMenus = [
   {
     id: "connect-icon",
-    title: "Connect",
+    title: "Onboard users",
     href: "/dashboard/connect/playground",
-    description:
-      "Frontend components for Connect Wallet flows, IPFS media, & onchain interactions.",
+    description: "Onboard anyone with every sign-in option for web2 & web3.",
     image: require("public/assets/product-pages/connect/icon-connect.png"),
   },
   {
     id: "account-abstraction-icon",
-    title: "In-App Wallets",
+    title: "Abstract complexity",
     href: "https://portal.thirdweb.com/connect/embedded-wallet/overview",
     description:
-      "Onboard anyone with flexible auth options, account recovery, & account abstraction.",
+      "Make your app easy to use with in-app wallets & account abstraction.",
     image: require("public/assets/product-pages/connect/icon-aa.png"),
   },
   {
     id: "pay-icon",
-    title: "Pay",
+    title: "Generate revenue",
     href: "https://portal.thirdweb.com/connect/pay/buy-with-crypto",
     description:
       "The easiest way for users to transact in your app with fiat & cross-chain crypto.",
