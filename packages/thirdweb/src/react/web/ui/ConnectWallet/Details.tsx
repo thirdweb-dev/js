@@ -69,6 +69,8 @@ import { SwapScreen } from "./screens/Buy/SwapScreen.js";
 import { SwapTransactionsScreen } from "./screens/SwapTransactionsScreen.js";
 import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { WalletImage } from "../components/WalletImage.js";
+import { getUserEmail } from "../../../../wallets/embedded/core/authentication/index.js";
+import { useQuery } from "@tanstack/react-query";
 
 const TW_CONNECTED_WALLET = "tw-connected-wallet";
 
@@ -320,7 +322,7 @@ export const ConnectedWalletDetails: React.FC<{
 
       <Container px="lg">
         {/* <ConnectedToSmartWallet /> */}
-        {/* <EmbeddedWalletEmail /> */}
+        <EmbeddedWalletEmail />
 
         {/* Send, Receive, Swap */}
         <Container
@@ -804,33 +806,30 @@ const StyledChevronRightIcon = /* @__PURE__ */ styled(
 //   return null;
 // }
 
-// function EmbeddedWalletEmail() {
-//   const user = useEmbeddedWalletUser();
-//   if (user?.email) {
-//     return (
-//       <Container
-//         flex="row"
-//         center="x"
-//         style={{
-//           paddingBottom: spacing.md,
-//         }}
-//       >
-//         <Text size="sm">{user.email}</Text>
-//       </Container>
-//     );
-//   }
+function EmbeddedWalletEmail() {
+  const { client } = useWalletConnectionCtx();
+  const emailQuery = useQuery({
+    queryKey: ["embedded-wallet-user", client],
+    queryFn: async () => {
+      return getUserEmail({
+        client: client,
+      });
+    },
+  });
 
-//   return undefined;
-// }
+  if (emailQuery.data) {
+    return (
+      <Container
+        flex="row"
+        center="x"
+        style={{
+          paddingBottom: spacing.md,
+        }}
+      >
+        <Text size="sm">{emailQuery.data}</Text>
+      </Container>
+    );
+  }
 
-// function useEmbeddedWalletUser() {
-//   const activeWallet = useActiveWallet();
-//   const user =
-//     activeWallet &&
-//     "isEmbeddedWallet" in activeWallet &&
-//     "getUser" in activeWallet
-//       ? (activeWallet as EmbeddedWallet).getUser()
-//       : undefined;
-
-//   return user;
-// }
+  return null;
+}
