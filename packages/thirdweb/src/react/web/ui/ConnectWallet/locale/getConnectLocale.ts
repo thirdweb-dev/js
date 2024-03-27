@@ -8,10 +8,10 @@ export async function getConnectLocale(
   localeId: LocaleId,
 ): Promise<ConnectLocale> {
   switch (localeId) {
-    case "es-419": {
+    case "es_ES": {
       return (await import("./es.js")).default;
     }
-    case "ja-JP": {
+    case "ja_JP": {
       return (await import("./ja.js")).default;
     }
     case "tl_PH": {

@@ -401,7 +401,7 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
   const show = useShowConnectEmbed(loginOptional);
 
   const wallets = props.wallets || getDefaultWallets();
-  const localeId = props.locale || "en-US";
+  const localeId = props.locale || "en_US";
   const [locale, setLocale] = useState<ConnectLocale | undefined>();
 
   useEffect(() => {

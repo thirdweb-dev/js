@@ -54,7 +54,7 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  */
 export function ConnectButton(props: ConnectButtonProps) {
   const wallets = props.wallets || getDefaultWallets();
-  const localeId = props.locale || "en-US";
+  const localeId = props.locale || "en_US";
   const [locale, setLocale] = useState<ConnectLocale | undefined>();
 
   // useEffect(() => {
@@ -106,7 +106,7 @@ export function ConnectButton(props: ConnectButtonProps) {
         appMetadata: props.appMetadata,
         client: props.client,
         wallets: wallets,
-        locale: props.locale || "en-US",
+        locale: props.locale || "en_US",
         connectLocale: locale,
         chain: props.chain,
         chains: props.chains,
