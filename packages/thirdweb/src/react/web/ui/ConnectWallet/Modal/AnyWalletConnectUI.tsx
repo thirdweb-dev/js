@@ -13,7 +13,7 @@ import { getInjectedWalletLocale } from "../../../wallets/injected/locale/getInj
 import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import { GetStartedScreen } from "../../../wallets/shared/GetStartedScreen.js";
 import { WalletConnectConnection } from "../../../wallets/shared/WalletConnectConnection.js";
-import { CoinbaseSDKWalletConnectUI } from "../../../wallets/coinbase/coinbaseConfig.js";
+import { CoinbaseSDKWalletConnectUI } from "../../../wallets/shared/CoinbaseSDKConnection.js";
 
 /**
  * @internal
