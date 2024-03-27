@@ -23,8 +23,11 @@ import { createWalletEmitter } from "./wallet-emitter.js";
  *
  * const metamaskWallet = createWallet("io.metamask");
  *
- * const account = await metamaskWallet.connect();
+ * const account = await metamaskWallet.connect({
+ *  client,
+ * });
  * ```
+ * @wallet
  */
 export function createWallet<const ID extends WalletId>(
   ...args: CreateWalletArgs<ID>
@@ -194,7 +197,19 @@ export function createWallet<const ID extends WalletId>(
  * @example
  * ```ts
  * import { smartWallet } from "thirdweb/wallets";
+ *
+ * const wallet = smartWallet({
+ *  factoryAddress: "0x1234...",
+ *  chain: sepolia,
+ *  gasless: true,
+ * });
+ *
+ * const account = await wallet.connect({
+ *   client,
+ *   personalAccount: account,
+ * });
  * ```
+ * @wallet
  */
 export function smartWallet(
   createOptions: CreateWalletArgs<"smart">[1],
@@ -257,7 +272,16 @@ export function smartWallet(
  * @example
  * ```ts
  * import { embeddedWallet } from "thirdweb/wallets";
+ *
+ * const wallet = embeddedWallet();
+ *
+ * const account = await wallet.connect({
+ *   client,
+ *   chain,
+ *   strategy: "google",
+ * });
  * ```
+ * @wallet
  */
 export function embeddedWallet(
   createOptions?: CreateWalletArgs<"embedded">[1],
