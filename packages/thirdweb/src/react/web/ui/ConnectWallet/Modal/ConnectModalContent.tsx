@@ -9,7 +9,6 @@ import { reservedScreens, onModalUnmount } from "../constants.js";
 import { ScreenSetupContext, type ScreenSetup } from "./screen.js";
 import { StartScreen } from "../screens/StartScreen.js";
 import { WalletSelector } from "../WalletSelector.js";
-import type { ScreenConfig } from "../../../../core/types/wallets.js";
 import {
   ConnectModalCompactLayout,
   ConnectModalWideLayout,
@@ -29,7 +28,7 @@ export const ConnectModalContent = (props: {
   isOpen: boolean;
   onClose: () => void;
 }) => {
-  const { onHide, onShow, onClose } = props;
+  const { onShow, onClose } = props;
   const { screen, setScreen, initialScreen } = props.screenSetup;
   const { wallets } = useWalletConnectionCtx();
   // const disconnect = useDisconnect();
@@ -40,20 +39,9 @@ export const ConnectModalContent = (props: {
   const { connect } = useConnect();
 
   const title = modalConfig.title;
-  const theme = modalConfig.theme;
   const modalSize = modalConfig.modalSize;
   const onConnect = modalConfig.onConnect;
   const isWideModal = modalSize === "wide";
-
-  // const saveData = useCallback(
-  //   (data: any) => {
-  //     setModalConfig((prev) => ({
-  //       ...prev,
-  //       data: data,
-  //     }));
-  //   },
-  //   [setModalConfig],
-  // );
 
   // const { user } = useUser();
   // const authConfig = useThirdwebAuthContext();
@@ -114,30 +102,6 @@ export const ConnectModalContent = (props: {
   // const { setConnectionStatus, createWalletInstance, activeWallet } =
   //   useWalletContext();
 
-  const setModalVisibility = useCallback(
-    (value: boolean) => {
-      if (value) {
-        onShow();
-      } else {
-        onHide();
-      }
-    },
-    [onHide, onShow],
-  );
-
-  const screenConfig: ScreenConfig = {
-    setModalVisibility,
-    theme: typeof theme === "string" ? theme : theme.type,
-    goBack: wallets.length > 1 ? handleBack : undefined,
-    size: modalConfig.modalSize,
-  };
-
-  const connection = {
-    done: handleConnected,
-    chain: modalConfig.chain,
-    chains: modalConfig.chains,
-  };
-
   const walletList = (
     <WalletSelector
       title={title}
@@ -146,10 +110,8 @@ export const ConnectModalContent = (props: {
         setScreen(reservedScreens.getStarted);
       }}
       selectWallet={setScreen}
-      selectUIProps={{
-        screenConfig: screenConfig,
-        connection: connection,
-      }}
+      done={handleConnected}
+      goBack={wallets.length > 1 ? handleBack : undefined}
     />
   );
 
