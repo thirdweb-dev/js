@@ -34,7 +34,7 @@ export default {
     "format": "png"
   },
   "infoURL": "https://github.com/Qitmeer",
-  "name": "Qitmeer",
+  "name": "Qitmeer Network Mainnet",
   "nativeCurrency": {
     "name": "Qitmeer",
     "symbol": "MEER",
@@ -54,6 +54,6 @@ export default {
   ],
   "shortName": "meer",
   "slip44": 813,
-  "slug": "qitmeer",
+  "slug": "qitmeer-network",
   "testnet": false
 } as const satisfies Chain;

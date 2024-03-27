@@ -1,7 +1,7 @@
 /* eslint-disable better-tree-shaking/no-top-level-side-effects */
 import { SmartWallet } from "../src/evm/wallets/smart-wallet";
 import { LocalWallet } from "../src/evm/wallets/local-wallet";
-import { Mumbai } from "@thirdweb-dev/chains";
+import { ArbitrumSepolia } from "@thirdweb-dev/chains";
 import { ThirdwebSDK, SmartContract } from "@thirdweb-dev/sdk";
 import { checkContractWalletSignature } from "../src/evm/connectors/smart-wallet/lib/check-contract-wallet-signature";
 
@@ -13,9 +13,9 @@ let smartWallet: SmartWallet;
 let smartWalletAddress: string;
 let personalWallet: LocalWallet;
 let contract: SmartContract;
-const factoryAddress = "0x13947435c2fe6BE51ED82F6f59C38617a323dB9B"; // pre 712
-const factoryAddressV2 = "0xC64d04AedecA895b3F20DC6866b4b532e0b22634"; // post 712
-const chain = Mumbai;
+const factoryAddress = "0x564cf6453a1b0FF8DB603E92EA4BbD410dea45F3"; // pre 712
+const factoryAddressV2 = "0xbf1C9aA4B1A085f7DA890a44E82B0A1289A40052"; // post 712
+const chain = ArbitrumSepolia;
 const SECRET_KEY = process.env.TW_SECRET_KEY;
 
 const describeIf = (condition: boolean) =>
@@ -35,7 +35,7 @@ beforeAll(async () => {
     secretKey: SECRET_KEY,
   });
   contract = await sdk.getContract(
-    "0xD170A53dADb19f62C78AB9982236857B71dbc83A", // mumbai edition drop
+    "0x6A7a26c9a595E6893C255C9dF0b593e77518e0c3", // arb sep edition drop
   );
 });
 

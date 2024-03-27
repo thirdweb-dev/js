@@ -1,7 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
   "chain": "Avalanche",
-  "chainId": 18898,
+  "chainId": 13396,
   "explorers": [],
   "faucets": [],
   "features": [],
@@ -12,19 +12,19 @@ export default {
     "format": "svg"
   },
   "infoURL": "https://avacloud.io",
-  "name": "QaUser4 Testnet",
+  "name": "Masa Network ",
   "nativeCurrency": {
-    "name": "QaUser4 Testnet Token",
-    "symbol": "NLD",
+    "name": "Masa Network  Token",
+    "symbol": "MASA",
     "decimals": 18
   },
-  "networkId": 18898,
+  "networkId": 13396,
   "redFlags": [],
   "rpc": [
-    "https://18898.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://subnets.avax.network/defi-kingdoms/dfk-chain/rpc"
+    "https://13396.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://subnets.avax.network/masanetwork/mainnet/rpc"
   ],
-  "shortName": "QaUser4 Testnet",
-  "slug": "qauser4-testnet-qauser4 testnet-18898",
-  "testnet": true
+  "shortName": "Masa Network ",
+  "slug": "masa-network",
+  "testnet": false
 } as const satisfies Chain;

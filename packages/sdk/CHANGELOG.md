@@ -1,5 +1,14 @@
 # @thirdweb-dev/sdk
 
+## 4.0.50
+
+### Patch Changes
+
+- [#2545](https://github.com/thirdweb-dev/js/pull/2545) [`436d9ba`](https://github.com/thirdweb-dev/js/commit/436d9baba24a56394422f485c2864f73065909e5) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Add external links to publish metadata
+
+- Updated dependencies [[`cb0ef6a`](https://github.com/thirdweb-dev/js/commit/cb0ef6a6a25cee255e18b8489fdb4123bb69c279)]:
+  - @thirdweb-dev/chains@0.1.82
+
 ## 4.0.49
 
 ### Patch Changes
