@@ -4,12 +4,6 @@ export default {
   "chainId": 8654,
   "explorers": [],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmbCBBH4dFHGr8u1yQspCieQG9hLcPFNYdRx1wnVsX8hUw",
-    "width": 512,
-    "height": 512,
-    "format": "svg"
-  },
   "infoURL": "https://www.buildwithtoki.com",
   "name": "Toki Network",
   "nativeCurrency": {

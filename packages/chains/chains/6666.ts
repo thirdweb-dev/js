@@ -6,13 +6,7 @@ export default {
     {
       "name": "Cybria Explorer",
       "url": "https://explorer.cybascan.io",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://bafkreiagdqfrvnbdjhkh27gjbvepzo66dpqgnbffmpnywuw5ncprg3jk3u",
-        "width": 2264,
-        "height": 408,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [

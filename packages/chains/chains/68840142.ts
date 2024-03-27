@@ -13,12 +13,6 @@ export default {
     "https://faucet.triangleplatform.com/frame"
   ],
   "features": [],
-  "icon": {
-    "url": "ipfs://QmRxeKFwBwrXyDksoN4NzNRp3R35s8pVnTBfBj4AJSCq5g",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
   "infoURL": "https://frame.xyz",
   "name": "Frame Testnet",
   "nativeCurrency": {

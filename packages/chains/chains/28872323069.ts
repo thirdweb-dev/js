@@ -4,12 +4,6 @@ export default {
   "chainId": 28872323069,
   "explorers": [],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://bafkreihdfuzytq2og65n3d3b2kzfvk6yywvqdlorrt6h76q4baz5phcvju",
-    "width": 256,
-    "height": 256,
-    "format": "png"
-  },
   "infoURL": "https://gitswarm.com/",
   "name": "GitSwarm Test Network",
   "nativeCurrency": {
