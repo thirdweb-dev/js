@@ -35,7 +35,7 @@ import {
 import { NetworkSelectorContent } from "./NetworkSelector.js";
 import { onModalUnmount } from "./constants.js";
 import type { SupportedTokens } from "./defaultTokens.js";
-import { Text } from "../components/text.js";
+import { Link, Text } from "../components/text.js";
 import { CopyIcon } from "../components/CopyIcon.js";
 import { shortenString } from "../../../core/utils/addresses.js";
 import {
@@ -71,6 +71,8 @@ import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConn
 import { WalletImage } from "../components/WalletImage.js";
 import { getUserEmail } from "../../../../wallets/embedded/core/authentication/index.js";
 import { useQuery } from "@tanstack/react-query";
+import { getContract } from "../../../../contract/contract.js";
+import { isContractDeployed } from "../../../../utils/bytecode/is-contract-deployed.js";
 
 const TW_CONNECTED_WALLET = "tw-connected-wallet";
 
@@ -321,7 +323,7 @@ export const ConnectedWalletDetails: React.FC<{
       <Spacer y="lg" />
 
       <Container px="lg">
-        {/* <ConnectedToSmartWallet /> */}
+        <ConnectedToSmartWallet />
         <EmbeddedWalletEmail />
 
         {/* Send, Receive, Swap */}
@@ -745,66 +747,73 @@ const StyledChevronRightIcon = /* @__PURE__ */ styled(
 //   );
 // }
 
-// const ActiveDot = /* @__PURE__ */ StyledDiv(() => {
-//   const theme = useCustomTheme();
-//   return {
-//     width: "8px",
-//     height: "8px",
-//     borderRadius: "50%",
-//     backgroundColor: theme.colors.success,
-//   };
-// });
+const ActiveDot = /* @__PURE__ */ StyledDiv(() => {
+  const theme = useCustomTheme();
+  return {
+    width: "8px",
+    height: "8px",
+    borderRadius: "50%",
+    backgroundColor: theme.colors.success,
+  };
+});
 
-// function ConnectedToSmartWallet() {
-//   const activeAccount = useActiveAccount();
-//   const activeWallet = useActiveWallet();
-//   const chain = useActiveWalletChain();
-//   const locale = useWalletConnectionCtx().connectLocale;
-//   const isSmartWallet = activeWallet && "isSmartWallet" in activeWallet;
+function ConnectedToSmartWallet() {
+  const activeAccount = useActiveAccount();
+  const activeWallet = useActiveWallet();
+  const chain = useActiveWalletChain();
+  const locale = useWalletConnectionCtx().connectLocale;
+  const isSmartWallet = activeWallet?.id === "smart";
+  const { client } = useWalletConnectionCtx();
 
-//   const [isSmartWalletDeployed] = useState(false);
+  const [isSmartWalletDeployed, setIsSmartWalletDeployed] = useState(false);
 
-//   // useEffect(() => {
-//   //   if (activeAccount && isSmartWallet) {
-//   //     (activeAccount.wallet as SmartWallet).isDeployed().then((isDeployed) => {
-//   //       setIsSmartWalletDeployed(isDeployed);
-//   //     });
-//   //   } else {
-//   //     setIsSmartWalletDeployed(false);
-//   //   }
-//   // }, [activeWallet]);
+  useEffect(() => {
+    if (activeAccount && isSmartWallet && activeAccount.address && chain) {
+      const contract = getContract({
+        address: activeAccount.address,
+        chain,
+        client,
+      });
 
-//   const content = (
-//     <Container flex="row" gap="xxs" center="both">
-//       <ActiveDot />
-//       {locale.connectedToSmartWallet}
-//     </Container>
-//   );
+      isContractDeployed(contract).then((isDeployed) => {
+        setIsSmartWalletDeployed(isDeployed);
+      });
+    } else {
+      setIsSmartWalletDeployed(false);
+    }
+  }, [activeAccount, activeWallet, chain, client, isSmartWallet]);
 
-//   if (chain && activeAccount && isSmartWallet) {
-//     return (
-//       <>
-//         {isSmartWalletDeployed ? (
-//           <Link
-//             color="secondaryText"
-//             hoverColor="primaryText"
-//             href={`https://thirdweb.com/${chain.id}/${activeAccount.address}/account`}
-//             target="_blank"
-//             size="sm"
-//           >
-//             {content}
-//           </Link>
-//         ) : (
-//           <Text size="sm"> {content}</Text>
-//         )}
+  const content = (
+    <Container flex="row" gap="xxs" center="both">
+      <ActiveDot />
+      {locale.connectedToSmartWallet}
+    </Container>
+  );
 
-//         <Spacer y="md" />
-//       </>
-//     );
-//   }
+  if (chain && activeAccount && isSmartWallet) {
+    return (
+      <>
+        {isSmartWalletDeployed ? (
+          <Link
+            color="secondaryText"
+            hoverColor="primaryText"
+            href={`https://thirdweb.com/${chain.id}/${activeAccount.address}/account`}
+            target="_blank"
+            size="sm"
+          >
+            {content}
+          </Link>
+        ) : (
+          <Text size="sm"> {content}</Text>
+        )}
 
-//   return null;
-// }
+        <Spacer y="md" />
+      </>
+    );
+  }
+
+  return null;
+}
 
 function EmbeddedWalletEmail() {
   const { client } = useWalletConnectionCtx();
