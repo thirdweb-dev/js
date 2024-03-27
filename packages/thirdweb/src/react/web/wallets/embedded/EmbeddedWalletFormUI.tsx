@@ -59,9 +59,6 @@ export const EmbeddedWalletFormUI = (props: EmbeddedWalletFormUIProps) => {
     }));
   }
 
-  // const { screenConfig } = props.connectUIProps;
-  // const { done, createInstance, chain } = props.connectUIProps.connection;
-
   const themeObj = useCustomTheme();
 
   const loginMethodsLabel = {
@@ -70,10 +67,10 @@ export const EmbeddedWalletFormUI = (props: EmbeddedWalletFormUIProps) => {
     apple: locale.signInWithApple,
   };
 
-  const enableEmailLogin = true;
-  // const enableEmailLogin = props.authOptions.includes("email");
   const config = props.wallet.getConfig();
+
   const authOptions = config?.auth?.options || defaultAuthOptions;
+  const enableEmailLogin = authOptions.includes("email");
 
   const socialLogins = authOptions.filter(
     (x) => x !== "email",
