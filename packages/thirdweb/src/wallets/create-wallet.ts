@@ -25,112 +25,20 @@ export function createWallet<const ID extends WalletId>(
 ): Wallet<ID> {
   const [id, creationOptions] = args;
 
-  // shared by all wallets
-  let account: Account | undefined = undefined;
-  let chain: Chain | undefined = undefined;
-
-  function getAccount() {
-    return account;
-  }
-  function getChain() {
-    return chain;
-  }
-
-  // the meat of the function
   switch (true) {
     /**
      * SMART WALLET
      */
     case id === "smart": {
-      const _smartWallet: Wallet<"smart"> = {
-        id,
-        getChain,
-        getAccount,
-        autoConnect: async (options) => {
-          const { connectSmartWallet } = await import("./smart/index.js");
-          const [connectedAccount, connectedChain] = await connectSmartWallet(
-            _smartWallet,
-            options,
-            creationOptions as CreateWalletArgs<"smart">[1],
-          );
-          // set the states
-          account = connectedAccount;
-          chain = connectedChain;
-          // return account
-          return account;
-        },
-        connect: async (options) => {
-          const { connectSmartWallet } = await import("./smart/index.js");
-          const [connectedAccount, connectedChain] = await connectSmartWallet(
-            _smartWallet,
-            options,
-            creationOptions as CreateWalletArgs<"smart">[1],
-          );
-          // set the states
-          account = connectedAccount;
-          chain = connectedChain;
-          // return account
-          return account;
-        },
-        disconnect: async () => {
-          const { disconnectSmartWallet } = await import("./smart/index.js");
-          await disconnectSmartWallet(_smartWallet);
-          account = undefined;
-          chain = undefined;
-        },
-        switchChain: async () => {
-          throw new Error("Not implemented yet");
-        },
-      };
-
-      return _smartWallet as Wallet<ID>;
+      return smartWallet(
+        creationOptions as CreateWalletArgs<"smart">[1],
+      ) as Wallet<ID>;
     }
     /**
      * EMBEDDED WALLET
      */
     case id === "embedded": {
-      const _embeddedWallet: Wallet<"embedded"> = {
-        id,
-        getChain,
-        getAccount,
-        autoConnect: async (options) => {
-          const { autoConnectEmbeddedWallet } = await import(
-            "./embedded/core/wallet/index.js"
-          );
-
-          const [connectedAccount, connectedChain] =
-            await autoConnectEmbeddedWallet(options);
-          // set the states
-          account = connectedAccount;
-          chain = connectedChain;
-          // return only the account
-          return account;
-        },
-        connect: async (options) => {
-          const { connectEmbeddedWallet } = await import(
-            "./embedded/core/wallet/index.js"
-          );
-
-          const [connectedAccount, connectedChain] =
-            await connectEmbeddedWallet(options);
-          // set the states
-          account = connectedAccount;
-          chain = connectedChain;
-          // return only the account
-          return account;
-        },
-        disconnect: async () => {
-          // simply un-set the states
-          account = undefined;
-          chain = undefined;
-        },
-        switchChain: async (newChain) => {
-          // simply set the new chain
-          chain = newChain;
-        },
-      };
-
-      return _embeddedWallet as Wallet<ID>;
+      return embeddedWallet() as Wallet<ID>;
     }
 
     /**
@@ -139,85 +47,16 @@ export function createWallet<const ID extends WalletId>(
      */
     case id === "com.coinbase.wallet" &&
       !injectedProvider("com.coinbase.wallet"): {
-      function onChainChanged(newChainId: string) {
-        // set the new chain
-        chain = defineChain(normalizeChainId(newChainId));
-      }
-      function onAccountsChanged(
-        provider: CoinbaseWalletProvider,
-        accounts: string[],
-      ) {
-        if (accounts.length === 0) {
-          onDisconnect(provider);
-        }
-      }
-      function onDisconnect(provider: CoinbaseWalletProvider) {
-        provider.removeListener("accountsChanged", onAccountsChanged);
-        provider.removeListener("chainChanged", onChainChanged);
-        provider.removeListener("disconnect", onDisconnect);
-        // un-set the states
-        account = undefined;
-        chain = undefined;
-      }
-
-      const coinbaseSDKWallet: Wallet<"com.coinbase.wallet"> = {
-        id,
-        getChain,
-        getAccount,
-        autoConnect: async (options) => {
-          const { autoConnectCoinbaseWalletSDK } = await import(
-            "./coinbase/coinbaseSDKWallet.js"
-          );
-          const [connectedAccount, connectedChain] =
-            await autoConnectCoinbaseWalletSDK(coinbaseSDKWallet, options, {
-              onAccountsChanged,
-              onChainChanged,
-              onDisconnect,
-            });
-          // set the states
-          account = connectedAccount;
-          chain = connectedChain;
-          // return account
-          return account;
-        },
-        connect: async (options) => {
-          const { connectCoinbaseWalletSDK } = await import(
-            "./coinbase/coinbaseSDKWallet.js"
-          );
-          const [connectedAccount, connectedChain] =
-            await connectCoinbaseWalletSDK(coinbaseSDKWallet, options, {
-              onAccountsChanged,
-              onChainChanged,
-              onDisconnect,
-            });
-
-          // set the states
-          account = connectedAccount;
-          chain = connectedChain;
-          // return account
-          return account;
-        },
-        disconnect: async () => {
-          const { disconnectCoinbaseWalletSDK } = await import(
-            "./coinbase/coinbaseSDKWallet.js"
-          );
-          await disconnectCoinbaseWalletSDK(coinbaseSDKWallet, onDisconnect);
-        },
-        switchChain: async (newChain) => {
-          const { switchChainCoinbaseWalletSDK } = await import(
-            "./coinbase/coinbaseSDKWallet.js"
-          );
-          await switchChainCoinbaseWalletSDK(coinbaseSDKWallet, newChain);
-        },
-      };
-
-      return coinbaseSDKWallet as Wallet<ID>;
+      return coinbaseWalletSDK() as Wallet<ID>;
     }
 
     /**
      * WALLET CONNECT AND INJECTED WALLETS
      */
     default: {
+      let account: Account | undefined = undefined;
+      let chain: Chain | undefined = undefined;
+
       let switchChain: (chain: Chain) => Promise<void> = async () => {
         throw new Error("Not implemented yet");
       };
@@ -227,8 +66,8 @@ export function createWallet<const ID extends WalletId>(
       };
       const wallet: Wallet<ID> = {
         id,
-        getChain,
-        getAccount,
+        getChain: () => chain,
+        getAccount: () => account,
         autoConnect: async (options) => {
           // injeted wallet priority for autoconnect
           if (injectedProvider(id)) {
@@ -339,15 +178,61 @@ export function createWallet<const ID extends WalletId>(
 
 /**
  * Creates a smart wallet.
- * @param options - The options for creating the wallet.
+ * @param createOptions - The options for creating the wallet.
  * @returns The created smart wallet.
  * @example
  * ```ts
  * import { smartWallet } from "thirdweb/wallets";
  * ```
  */
-export function smartWallet(options: CreateWalletArgs<"smart">[1]) {
-  return createWallet("smart", options);
+export function smartWallet(
+  createOptions: CreateWalletArgs<"smart">[1],
+): Wallet<"smart"> {
+  let account: Account | undefined = undefined;
+  let chain: Chain | undefined = undefined;
+
+  const _smartWallet: Wallet<"smart"> = {
+    id: "smart",
+    getChain: () => chain,
+    getAccount: () => account,
+    autoConnect: async (options) => {
+      const { connectSmartWallet } = await import("./smart/index.js");
+      const [connectedAccount, connectedChain] = await connectSmartWallet(
+        _smartWallet,
+        options,
+        createOptions,
+      );
+      // set the states
+      account = connectedAccount;
+      chain = connectedChain;
+      // return account
+      return account;
+    },
+    connect: async (options) => {
+      const { connectSmartWallet } = await import("./smart/index.js");
+      const [connectedAccount, connectedChain] = await connectSmartWallet(
+        _smartWallet,
+        options,
+        createOptions,
+      );
+      // set the states
+      account = connectedAccount;
+      chain = connectedChain;
+      // return account
+      return account;
+    },
+    disconnect: async () => {
+      const { disconnectSmartWallet } = await import("./smart/index.js");
+      await disconnectSmartWallet(_smartWallet);
+      account = undefined;
+      chain = undefined;
+    },
+    switchChain: async () => {
+      throw new Error("Not implemented yet");
+    },
+  };
+
+  return _smartWallet;
 }
 
 /**
@@ -358,6 +243,132 @@ export function smartWallet(options: CreateWalletArgs<"smart">[1]) {
  * import { embeddedWallet } from "thirdweb/wallets";
  * ```
  */
-export function embeddedWallet() {
-  return createWallet("embedded");
+export function embeddedWallet(): Wallet<"embedded"> {
+  let account: Account | undefined = undefined;
+  let chain: Chain | undefined = undefined;
+  return {
+    id: "embedded",
+    getChain: () => chain,
+    getAccount: () => account,
+    autoConnect: async (options) => {
+      const { autoConnectEmbeddedWallet } = await import(
+        "./embedded/core/wallet/index.js"
+      );
+
+      const [connectedAccount, connectedChain] =
+        await autoConnectEmbeddedWallet(options);
+      // set the states
+      account = connectedAccount;
+      chain = connectedChain;
+      // return only the account
+      return account;
+    },
+    connect: async (options) => {
+      const { connectEmbeddedWallet } = await import(
+        "./embedded/core/wallet/index.js"
+      );
+
+      const [connectedAccount, connectedChain] =
+        await connectEmbeddedWallet(options);
+      // set the states
+      account = connectedAccount;
+      chain = connectedChain;
+      // return only the account
+      return account;
+    },
+    disconnect: async () => {
+      // simply un-set the states
+      account = undefined;
+      chain = undefined;
+    },
+    switchChain: async (newChain) => {
+      // simply set the new chain
+      chain = newChain;
+    },
+  };
+}
+
+/**
+ * internal helper functions
+ */
+
+function coinbaseWalletSDK(): Wallet<"com.coinbase.wallet"> {
+  let account: Account | undefined = undefined;
+  let chain: Chain | undefined = undefined;
+  function onChainChanged(newChainId: string) {
+    // set the new chain
+    chain = defineChain(normalizeChainId(newChainId));
+  }
+  function onAccountsChanged(
+    provider: CoinbaseWalletProvider,
+    accounts: string[],
+  ) {
+    if (accounts.length === 0) {
+      onDisconnect(provider);
+    }
+  }
+  function onDisconnect(provider: CoinbaseWalletProvider) {
+    provider.removeListener("accountsChanged", onAccountsChanged);
+    provider.removeListener("chainChanged", onChainChanged);
+    provider.removeListener("disconnect", onDisconnect);
+    // un-set the states
+    account = undefined;
+    chain = undefined;
+  }
+
+  const coinbaseSDKWallet: Wallet<"com.coinbase.wallet"> = {
+    id: "com.coinbase.wallet",
+    getChain: () => chain,
+    getAccount: () => account,
+    autoConnect: async (options) => {
+      const { autoConnectCoinbaseWalletSDK } = await import(
+        "./coinbase/coinbaseSDKWallet.js"
+      );
+      const [connectedAccount, connectedChain] =
+        await autoConnectCoinbaseWalletSDK(coinbaseSDKWallet, options, {
+          onAccountsChanged,
+          onChainChanged,
+          onDisconnect,
+        });
+      // set the states
+      account = connectedAccount;
+      chain = connectedChain;
+      // return account
+      return account;
+    },
+    connect: async (options) => {
+      const { connectCoinbaseWalletSDK } = await import(
+        "./coinbase/coinbaseSDKWallet.js"
+      );
+      const [connectedAccount, connectedChain] = await connectCoinbaseWalletSDK(
+        coinbaseSDKWallet,
+        options,
+        {
+          onAccountsChanged,
+          onChainChanged,
+          onDisconnect,
+        },
+      );
+
+      // set the states
+      account = connectedAccount;
+      chain = connectedChain;
+      // return account
+      return account;
+    },
+    disconnect: async () => {
+      const { disconnectCoinbaseWalletSDK } = await import(
+        "./coinbase/coinbaseSDKWallet.js"
+      );
+      await disconnectCoinbaseWalletSDK(coinbaseSDKWallet, onDisconnect);
+    },
+    switchChain: async (newChain) => {
+      const { switchChainCoinbaseWalletSDK } = await import(
+        "./coinbase/coinbaseSDKWallet.js"
+      );
+      await switchChainCoinbaseWalletSDK(coinbaseSDKWallet, newChain);
+    },
+  };
+
+  return coinbaseSDKWallet;
 }
