@@ -24,7 +24,7 @@ export type WalletId =
   | WCSupportedWalletIds
   | InjectedSupportedWalletIds;
 
-export type CustomWalletIds = "local" | "embedded" | "smart";
+export type CustomWalletIds = "embedded" | "smart";
 
 // connect options
 export type InjectedConnectOptions = {
@@ -34,13 +34,6 @@ export type InjectedConnectOptions = {
 type InjectedAutoConnectOptions = undefined;
 
 // TODO
-type LocalWalletConnectOptions = {
-  todo: true;
-};
-
-type LocalWalletAutoConnectOptions = {
-  todo: true;
-};
 
 type EmbeddedWalletCreationOptions =
   | {
@@ -53,44 +46,37 @@ type EmbeddedWalletCreationOptions =
 // wallet.connect types
 export type WalletConnectionOption<T extends WalletId> = T extends "smart"
   ? SmartWalletConnectionOptions
-  : T extends "local"
-    ? // locale wallet
-      LocalWalletConnectOptions
-    : // embedded wallet
-      T extends "embedded"
-      ? EmbeddedWalletConnectionOptions
-      : // coinbase wallet (inhected + coinbaseWallet)
-        T extends "com.coinbase.wallet"
-        ? InjectedConnectOptions | CoinbaseSDKWalletConnectionOptions
-        : // injected + wc both supported
-          T extends InjectedSupportedWalletIds & WCSupportedWalletIds
-          ? InjectedConnectOptions | WCConnectOptions
-          : // injected only
-            T extends InjectedSupportedWalletIds
-            ? InjectedConnectOptions
-            : // wc only
-              WCConnectOptions;
+  : // embedded wallet
+    T extends "embedded"
+    ? EmbeddedWalletConnectionOptions
+    : // coinbase wallet (inhected + coinbaseWallet)
+      T extends "com.coinbase.wallet"
+      ? InjectedConnectOptions | CoinbaseSDKWalletConnectionOptions
+      : // injected + wc both supported
+        T extends InjectedSupportedWalletIds & WCSupportedWalletIds
+        ? InjectedConnectOptions | WCConnectOptions
+        : // injected only
+          T extends InjectedSupportedWalletIds
+          ? InjectedConnectOptions
+          : // wc only
+            WCConnectOptions;
 
 // wallet.autoConnect types
 export type WalletAutoConnectionOption<T extends WalletId> = T extends "smart"
   ? SmartWalletConnectionOptions
-  : T extends "local"
-    ? // locale wallet
-      LocalWalletAutoConnectOptions
-    : // embedded wallet
-      T extends "embedded"
-      ? EmbeddedWalletAutoConnectOptions
-      : // coinbase wallet (inhected + coinbaseWallet)
-        T extends "com.coinbase.wallet"
-        ? InjectedConnectOptions | CoinbaseSDKWalletConnectionOptions
-        : // injected + wc both supported
-          T extends InjectedSupportedWalletIds & WCSupportedWalletIds
-          ? InjectedAutoConnectOptions | WCAutoConnectOptions
-          : // injected only
-            T extends InjectedSupportedWalletIds
-            ? InjectedAutoConnectOptions
-            : // wc only
-              WCAutoConnectOptions;
+  : T extends "embedded"
+    ? EmbeddedWalletAutoConnectOptions
+    : // coinbase wallet (inhected + coinbaseWallet)
+      T extends "com.coinbase.wallet"
+      ? InjectedConnectOptions | CoinbaseSDKWalletConnectionOptions
+      : // injected + wc both supported
+        T extends InjectedSupportedWalletIds & WCSupportedWalletIds
+        ? InjectedAutoConnectOptions | WCAutoConnectOptions
+        : // injected only
+          T extends InjectedSupportedWalletIds
+          ? InjectedAutoConnectOptions
+          : // wc only
+            WCAutoConnectOptions;
 
 export type WalletCreationOptions<T extends WalletId> = T extends "smart"
   ? SmartWalletOptions

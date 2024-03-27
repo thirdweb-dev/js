@@ -124,6 +124,7 @@ export const ConnectModalContent = (props: {
     if (accountAbstraction) {
       return (
         <SmartConnectUI
+          key={wallet.id}
           accountAbstraction={accountAbstraction}
           done={(smartWallet) => {
             console.log("connected smart wallet");

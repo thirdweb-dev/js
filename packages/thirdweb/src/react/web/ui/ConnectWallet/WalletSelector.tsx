@@ -38,7 +38,7 @@ const EmbeddedWalletSelectionUI = /* @__PURE__ */ lazy(
   () => import("../../wallets/embedded/EmbeddedWalletSelectionUI.js"),
 );
 
-const localWalletId: WalletId = "local";
+// const localWalletId = "local";
 const embeddedWalletId: WalletId = "embedded";
 
 /**
@@ -72,9 +72,9 @@ export const WalletSelector: React.FC<{
   const locale = useWalletConnectionCtx().connectLocale;
   const recommendedWallets = useWalletConnectionCtx().recommendedWallets;
 
-  const localWalletConfig = _wallets.find((w) => w.id === localWalletId);
+  const localWalletConfig = false; // _wallets.find((w) => w.id === localWalletId);
 
-  const nonLocalWalletConfigs = _wallets.filter((w) => w.id !== localWalletId);
+  const nonLocalWalletConfigs = _wallets; // _wallets.filter((w) => w.id !== localWalletId);
 
   const socialWallets = nonLocalWalletConfigs.filter(
     (w) => w.id === embeddedWalletId,

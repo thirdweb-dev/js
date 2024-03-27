@@ -180,7 +180,8 @@ export const ConnectedWalletDetails: React.FC<{
 
       <Container flex="column" gap="xxs">
         {/* Address */}
-        {activeWallet?.id === "local" ? (
+
+        {/* activeWallet?.id === "local" ? (
           <Text
             color="danger"
             size="xs"
@@ -190,7 +191,8 @@ export const ConnectedWalletDetails: React.FC<{
           >
             {locale.guest}
           </Text>
-        ) : addressOrENS ? (
+        ) :  */}
+        {addressOrENS ? (
           <Text
             size="sm"
             color="primaryText"
@@ -461,7 +463,7 @@ export const ConnectedWalletDetails: React.FC<{
             )}
 
           {/* Export  Wallet */}
-          {activeWallet?.id === "local" && (
+          {/* {activeWallet?.id === "local" && (
             <div>
               <MenuButton
                 onClick={() => {
@@ -475,7 +477,7 @@ export const ConnectedWalletDetails: React.FC<{
                 <Text color="primaryText">{locale.backupWallet}</Text>
               </MenuButton>
             </div>
-          )}
+          )} */}
 
           {props.detailsModal?.footer && (
             <props.detailsModal.footer close={() => setIsOpen(false)} />
@@ -508,7 +510,7 @@ export const ConnectedWalletDetails: React.FC<{
         </Container>
       )}
 
-      {activeWallet?.id === "local" && (
+      {/* {activeWallet?.id === "local" && (
         <>
           <Line />
           <Container py="md">
@@ -517,7 +519,7 @@ export const ConnectedWalletDetails: React.FC<{
             </Text>
           </Container>
         </>
-      )}
+      )} */}
     </div>
   );
 
