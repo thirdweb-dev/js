@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import { getMIPDStore } from "../../../../../wallets/injected/mipdStore.js";
 import type {
   InjectedSupportedWalletIds,
@@ -13,7 +13,13 @@ import { getInjectedWalletLocale } from "../../../wallets/injected/locale/getInj
 import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import { GetStartedScreen } from "../../../wallets/shared/GetStartedScreen.js";
 import { WalletConnectConnection } from "../../../wallets/shared/WalletConnectConnection.js";
-import { CoinbaseSDKWalletConnectUI } from "../../../wallets/shared/CoinbaseSDKConnection.js";
+
+const CoinbaseSDKWalletConnectUI = /* @__PURE__ */ lazy(
+  () => import("../../../wallets/shared/CoinbaseSDKConnection.js"),
+);
+const EmbeddedWalletConnectUI = /* @__PURE__ */ lazy(
+  () => import("../../../wallets/embedded/EmbeddedWalletConnectUI.js"),
+);
 
 /**
  * @internal
@@ -77,16 +83,18 @@ export function AnyWalletConnectUI(props: {
   // coinbase wallet sdk
   if (props.wallet.id === "com.coinbase.wallet") {
     return (
-      <CoinbaseSDKWalletConnectUI
-        locale={locale}
-        onGetStarted={() => {
-          setScreen("get-started");
-        }}
-        onBack={props.onBack}
-        done={props.done}
-        wallet={props.wallet as Wallet<"com.coinbase.wallet">}
-        walletInfo={walletInfo.data}
-      />
+      <Suspense fallback={<LoadingScreen />}>
+        <CoinbaseSDKWalletConnectUI
+          locale={locale}
+          onGetStarted={() => {
+            setScreen("get-started");
+          }}
+          onBack={props.onBack}
+          done={props.done}
+          wallet={props.wallet as Wallet<"com.coinbase.wallet">}
+          walletInfo={walletInfo.data}
+        />
+      </Suspense>
     );
   }
 
@@ -106,6 +114,27 @@ export function AnyWalletConnectUI(props: {
     );
   }
 
-  // other wallets
-  return <div>TODO: wallet ui for: {props.wallet.id}</div>;
+  if (props.wallet.id === "embedded") {
+    return (
+      <Suspense fallback={<LoadingScreen />}>
+        <EmbeddedWalletConnectUI
+          wallet={props.wallet as Wallet<"embedded">}
+          done={props.done}
+          goBack={props.onBack}
+        />
+      </Suspense>
+    );
+  }
+
+  // if can't connect in any way - show get started screen
+  return (
+    <GetStartedScreen
+      locale={locale}
+      wallet={props.wallet}
+      walletInfo={walletInfo.data}
+      onBack={() => {
+        setScreen("main");
+      }}
+    />
+  );
 }

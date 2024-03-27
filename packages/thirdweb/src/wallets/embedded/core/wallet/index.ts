@@ -15,6 +15,10 @@ export type EmbeddedWalletConnectionOptions = (
   chain?: Chain;
 };
 
+export type EmbeddedWalletSocialAuth = "google" | "apple" | "facebook";
+
+export type EmbeddedWalletAuth = "email" | EmbeddedWalletSocialAuth;
+
 /**
  * @internal
  */

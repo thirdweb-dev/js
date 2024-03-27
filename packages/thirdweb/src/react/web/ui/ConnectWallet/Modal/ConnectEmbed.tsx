@@ -282,6 +282,18 @@ export type ConnectEmbedProps = {
    * ```
    */
   showThirdwebBranding?: boolean;
+
+  /**
+   * Configure options for WalletConnect
+   *
+   * By default WalletConnect uses the thirdweb's default project id.
+   * Setting your own project id is recommended.
+   *
+   * You can create a project id by signing up on [walletconnect.com](https://walletconnect.com/)
+   */
+  walletConnect?: {
+    projectId?: string;
+  };
 };
 
 /**
@@ -427,6 +439,7 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
           connectLocale: locale,
           chain: props.chain,
           chains: props.chains,
+          walletConnect: props.walletConnect,
         }}
       >
         <WalletUIStatesProvider {...walletUIStatesProps}>

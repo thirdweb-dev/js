@@ -26,7 +26,7 @@ export const WalletConnectConnection: React.FC<{
   const { onBack, onGetStarted, wallet, walletInfo, locale, done } = props;
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>();
   const [errorConnecting, setErrorConnecting] = useState(false);
-  const { chain, chains, client } = useWalletConnectionCtx();
+  const { chain, chains, client, walletConnect } = useWalletConnectionCtx();
 
   const connect = useCallback(() => {
     setErrorConnecting(false);
@@ -46,6 +46,7 @@ export const WalletConnectConnection: React.FC<{
         chain,
         client: client,
         walletConnect: {
+          projectId: walletConnect?.projectId,
           showQrModal: false,
           onDisplayUri(uri) {
             setQrCodeUri(uri);
@@ -77,6 +78,7 @@ export const WalletConnectConnection: React.FC<{
         console.error(e);
       });
   }, [
+    walletConnect,
     walletInfo.mobile.native,
     walletInfo.mobile.universal,
     wallet,

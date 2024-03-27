@@ -10,7 +10,7 @@ import { ScanScreen } from "./ScanScreen.js";
 /**
  * @internal
  */
-export function CoinbaseSDKWalletConnectUI(props: {
+function CoinbaseSDKWalletConnectUI(props: {
   onBack?: () => void;
   onGetStarted: () => void;
   done: () => void;
@@ -61,3 +61,5 @@ export function CoinbaseSDKWalletConnectUI(props: {
     />
   );
 }
+
+export default CoinbaseSDKWalletConnectUI;

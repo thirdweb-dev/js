@@ -12,6 +12,7 @@ import type {
   SmartWalletOptions,
 } from "./smart/types.js";
 import type {
+  EmbeddedWalletAuth,
   EmbeddedWalletAutoConnectOptions,
   EmbeddedWalletConnectionOptions,
 } from "./embedded/core/wallet/index.js";
@@ -40,6 +41,14 @@ type LocalWalletConnectOptions = {
 type LocalWalletAutoConnectOptions = {
   todo: true;
 };
+
+type EmbeddedWalletCreationOptions =
+  | {
+      auth?: {
+        options: EmbeddedWalletAuth[];
+      };
+    }
+  | undefined;
 
 // wallet.connect types
 export type WalletConnectionOption<T extends WalletId> = T extends "smart"
@@ -86,12 +95,13 @@ export type WalletAutoConnectionOption<T extends WalletId> = T extends "smart"
 export type WalletCreationOptions<T extends WalletId> = T extends "smart"
   ? SmartWalletOptions
   : T extends "embedded"
-    ? // TODO add otpinal options here later (?)
-      undefined
+    ? EmbeddedWalletCreationOptions
     : undefined;
 
 // generic args for createWallet(...args) or new Wallet(...args)
 export type CreateWalletArgs<T extends WalletId> =
   WalletCreationOptions<T> extends undefined
-    ? [T]
-    : [T, WalletCreationOptions<T>];
+    ? [id: T]
+    : undefined extends WalletCreationOptions<T>
+      ? [id: T, options?: WalletCreationOptions<T>]
+      : [id: T, options: WalletCreationOptions<T>];

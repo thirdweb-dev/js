@@ -35,9 +35,10 @@ import { WalletImage } from "../components/WalletImage.js";
 import { getMIPDStore } from "../../../../wallets/injected/mipdStore.js";
 import { createWallet } from "../../../../wallets/create-wallet.js";
 import type { InjectedSupportedWalletIds } from "../../../../wallets/__generated__/wallet-ids.js";
+import type { WalletId } from "../../../../wallets/wallet-types.js";
 
-const localWalletId = "local";
-const embeddedWalletId = "embedded";
+const localWalletId: WalletId = "local";
+const embeddedWalletId: WalletId = "embedded";
 
 type WalletSelectUIProps = {
   screenConfig: SelectUIProps["screenConfig"];
@@ -59,16 +60,24 @@ export const WalletSelector: React.FC<{
   const { termsOfServiceUrl, privacyPolicyUrl } = modalConfig;
   const [isWalletGroupExpanded, setIsWalletGroupExpanded] = useState(false);
 
+  const installedWallets = getInstalledWallets();
+  const propsWallets = props.wallets;
+  const _wallets: Wallet[] = [...propsWallets];
+
+  installedWallets.forEach((iW) => {
+    if (!propsWallets.find((w) => w.id === iW.id)) {
+      _wallets.push(iW);
+    }
+  });
+
   // const disconnect = useDisconnect();
   // const connectionStatus = useActiveWalletConnectionStatus();
   const locale = useWalletConnectionCtx().connectLocale;
   const recommendedWallets = useWalletConnectionCtx().recommendedWallets;
 
-  const localWalletConfig = props.wallets.find((w) => w.id === localWalletId);
+  const localWalletConfig = _wallets.find((w) => w.id === localWalletId);
 
-  const nonLocalWalletConfigs = props.wallets.filter(
-    (w) => w.id !== localWalletId,
-  );
+  const nonLocalWalletConfigs = _wallets.filter((w) => w.id !== localWalletId);
 
   const socialWallets = nonLocalWalletConfigs.filter(
     (w) => w.id === embeddedWalletId,
@@ -462,17 +471,7 @@ const WalletSelection: React.FC<{
 }> = (props) => {
   const { recommendedWallets } = useWalletConnectionCtx();
 
-  const installedWallets = getInstalledWallets();
-  const propsWallets = props.wallets;
-  const _wallets: Wallet[] = [...propsWallets];
-
-  installedWallets.forEach((iW) => {
-    if (!propsWallets.find((w) => w.id === iW.id)) {
-      _wallets.push(iW);
-    }
-  });
-
-  const wallets = sortWallets(_wallets, recommendedWallets);
+  const wallets = sortWallets(props.wallets, recommendedWallets);
 
   // const modalConfig = useContext(ModalConfigCtx);
   // const setModalConfig = useContext(SetModalConfigCtx);

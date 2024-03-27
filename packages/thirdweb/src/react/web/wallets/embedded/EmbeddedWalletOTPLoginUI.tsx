@@ -1,7 +1,5 @@
-import { useState, useCallback, useRef, useEffect } from "react";
-import type { EmbeddedWallet } from "../../../../wallets/embedded/core/wallet/index._ts";
+import { useState, useCallback, useRef, useEffect, useContext } from "react";
 import type { SendEmailOtpReturnType } from "../../../../wallets/embedded/implementations/index.js";
-import type { ConnectUIProps } from "../../../core/types/wallets.js";
 import { FadeIn } from "../../ui/components/FadeIn.js";
 import { OTPInput } from "../../ui/components/OTPInput.js";
 import { Spacer } from "../../ui/components/Spacer.js";
@@ -13,6 +11,10 @@ import { StyledButton } from "../../ui/design-system/elements.js";
 import { fontSize } from "../../ui/design-system/index.js";
 import { Text } from "../../ui/components/text.js";
 import type { EmbeddedWalletLocale } from "./locale/types.js";
+import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
+import { ModalConfigCtx } from "../../providers/wallet-ui-states-provider.js";
+import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import { preAuthenticate } from "../../../../wallets/embedded/core/authentication/index.js";
 
 type VerificationStatus =
   | "verifying"
@@ -30,18 +32,24 @@ type ScreenToShow =
  * @internal
  */
 export function EmbeddedWalletOTPLoginUI(props: {
-  connectUIProps: ConnectUIProps;
+  wallet: Wallet<"embedded">;
   email: string;
   locale: EmbeddedWalletLocale;
+  done: () => void;
+  goBack?: () => void;
 }) {
+  const { wallet, done, goBack } = props;
   const email = props.email;
-  const isWideModal = props.connectUIProps.screenConfig.size === "wide";
+  const { modalSize } = useContext(ModalConfigCtx);
+  const isWideModal = modalSize === "wide";
   const locale = props.locale;
   const [otpInput, setOtpInput] = useState("");
-  const { createInstance, done, chain } = props.connectUIProps.connection;
-  const { goBack } = props.connectUIProps.screenConfig;
+  const { client, chain } = useWalletConnectionCtx();
 
-  const [wallet, setWallet] = useState<EmbeddedWallet | null>(null);
+  // const { createInstance, done, chain } = props.connectUIProps.connection;
+  // const { goBack } = props.connectUIProps.screenConfig;
+
+  // const [wallet, setWallet] = useState<EmbeddedWallet | null>(null);
   const [verifyStatus, setVerifyStatus] = useState<VerificationStatus>("idle");
   const [emailStatus, setEmailStatus] = useState<EmailStatus>("sending");
 
@@ -53,11 +61,10 @@ export function EmbeddedWalletOTPLoginUI(props: {
     setEmailStatus("sending");
 
     try {
-      const _wallet = createInstance() as EmbeddedWallet;
-      setWallet(_wallet);
-      const status = await _wallet.preAuthenticate({
+      const status = await preAuthenticate({
         email,
         strategy: "email",
+        client,
       });
       setEmailStatus(status);
     } catch (e) {
@@ -65,7 +72,7 @@ export function EmbeddedWalletOTPLoginUI(props: {
       setVerifyStatus("idle");
       setEmailStatus("error");
     }
-  }, [createInstance, email]);
+  }, [client, email]);
 
   const verify = async (otp: string) => {
     if (typeof emailStatus !== "object" || otp.length !== 6) {
@@ -98,6 +105,7 @@ export function EmbeddedWalletOTPLoginUI(props: {
               strategy: "email",
               email,
               verificationCode: otp,
+              client,
             });
           } catch (e: any) {
             if (e instanceof Error && e.message.includes("encryption key")) {
@@ -115,6 +123,7 @@ export function EmbeddedWalletOTPLoginUI(props: {
               strategy: "email",
               email,
               verificationCode: otp,
+              client,
             });
           } catch (e: any) {
             if (e instanceof Error && e.message.includes("encryption key")) {
@@ -134,12 +143,13 @@ export function EmbeddedWalletOTPLoginUI(props: {
           strategy: "email",
           email,
           verificationCode: otp,
+          client,
         });
         if (!authResult) {
           throw new Error("Failed to verify OTP");
         }
 
-        done(wallet);
+        done();
       }
 
       setVerifyStatus("valid");

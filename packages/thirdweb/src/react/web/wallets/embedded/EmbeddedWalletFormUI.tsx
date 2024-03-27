@@ -1,8 +1,9 @@
 import styled from "@emotion/styled";
-import type { ConnectUIProps } from "../../../core/types/wallets.js";
 import { useContext } from "react";
-import type { EmbeddedWallet } from "../../../../wallets/embedded/core/wallet/index._ts";
-import { ModalConfigCtx } from "../../providers/wallet-ui-states-provider.js";
+import {
+  ModalConfigCtx,
+  SetModalConfigCtx,
+} from "../../providers/wallet-ui-states-provider.js";
 import { TOS } from "../../ui/ConnectWallet/Modal/TOS.js";
 import { useScreenContext } from "../../ui/ConnectWallet/Modal/screen.js";
 import { PoweredByThirdweb } from "../../ui/ConnectWallet/PoweredByTW.js";
@@ -14,21 +15,31 @@ import { Button } from "../../ui/components/buttons.js";
 import { useCustomTheme } from "../../ui/design-system/CustomThemeProvider.js";
 import { iconSize, spacing, fontSize } from "../../ui/design-system/index.js";
 import { socialIcons } from "./socialIcons.js";
+import type { EmbeddedWalletSelectUIState } from "./types.js";
+import { openOauthSignInWindow } from "./openOauthSignInWindow.js";
+import type { EmbeddedWalletLocale } from "./locale/types.js";
+import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
+import { InputSelectionUI } from "./InputSelectionUI.js";
 import type {
   EmbeddedWalletAuth,
-  EmbeddedWalletSelectUIState,
   EmbeddedWalletSocialAuth,
-} from "./types._ts";
-import { openOauthSignInWindow } from "./openOauthSignInWindow._ts";
-import { InputSelectionUI } from "./InputSelectionUI._tsx";
-import type { EmbeddedWalletLocale } from "./locale/types.js";
+} from "../../../../wallets/embedded/core/wallet/index.js";
+
+const defaultAuthOptions: EmbeddedWalletAuth[] = [
+  "email",
+  "google",
+  "apple",
+  "facebook",
+];
 
 export type EmbeddedWalletFormUIProps = {
-  connectUIProps: ConnectUIProps;
-  authOptions: EmbeddedWalletAuth[];
-  saveState: (state: EmbeddedWalletSelectUIState) => void;
+  // authOptions: EmbeddedWalletAuth[];
   select: () => void;
   locale: EmbeddedWalletLocale;
+  done: () => void;
+  wallet: Wallet<"embedded">;
+  goBack?: () => void;
 };
 
 /**
@@ -36,9 +47,20 @@ export type EmbeddedWalletFormUIProps = {
  */
 export const EmbeddedWalletFormUI = (props: EmbeddedWalletFormUIProps) => {
   const locale = props.locale;
+  const { chain, client } = useWalletConnectionCtx();
+  const { done, wallet } = props;
+  const { modalSize } = useContext(ModalConfigCtx);
+  const setModalConfig = useContext(SetModalConfigCtx);
 
-  const { screenConfig } = props.connectUIProps;
-  const { done, createInstance, chain } = props.connectUIProps.connection;
+  function saveState(data: EmbeddedWalletSelectUIState) {
+    setModalConfig((p) => ({
+      ...p,
+      data,
+    }));
+  }
+
+  // const { screenConfig } = props.connectUIProps;
+  // const { done, createInstance, chain } = props.connectUIProps.connection;
 
   const themeObj = useCustomTheme();
 
@@ -50,8 +72,10 @@ export const EmbeddedWalletFormUI = (props: EmbeddedWalletFormUIProps) => {
 
   const enableEmailLogin = true;
   // const enableEmailLogin = props.authOptions.includes("email");
+  const config = props.wallet.getConfig();
+  const authOptions = config?.auth?.options || defaultAuthOptions;
 
-  const socialLogins = props.authOptions.filter(
+  const socialLogins = authOptions.filter(
     (x) => x !== "email",
   ) as EmbeddedWalletSocialAuth[];
 
@@ -60,8 +84,6 @@ export const EmbeddedWalletFormUI = (props: EmbeddedWalletFormUIProps) => {
   // Need to trigger login on button click to avoid popup from being blocked
   const handleSocialLogin = async (strategy: EmbeddedWalletSocialAuth) => {
     try {
-      const wallet = createInstance() as EmbeddedWallet;
-
       const socialLoginWindow = openOauthSignInWindow(strategy, themeObj);
       if (!socialLoginWindow) {
         throw new Error("Failed to open login window");
@@ -69,6 +91,7 @@ export const EmbeddedWalletFormUI = (props: EmbeddedWalletFormUIProps) => {
 
       const connectPromise = wallet.connect({
         chain,
+        client,
         strategy: strategy,
         openedWindow: socialLoginWindow,
         closeOpenedWindow: (openedWindow) => {
@@ -76,9 +99,8 @@ export const EmbeddedWalletFormUI = (props: EmbeddedWalletFormUIProps) => {
         },
       });
 
-      props.saveState({
+      saveState({
         socialLogin: {
-          wallet,
           type: strategy,
           connectionPromise: connectPromise,
         },
@@ -86,8 +108,7 @@ export const EmbeddedWalletFormUI = (props: EmbeddedWalletFormUIProps) => {
       props.select();
 
       await connectPromise;
-
-      done(wallet);
+      done();
     } catch (e) {
       console.error(`Error sign in with ${strategy}`, e);
     }
@@ -132,7 +153,7 @@ export const EmbeddedWalletFormUI = (props: EmbeddedWalletFormUIProps) => {
         </Container>
       )}
 
-      {screenConfig.size === "wide" && hasSocialLogins && enableEmailLogin && (
+      {modalSize === "wide" && hasSocialLogins && enableEmailLogin && (
         <TextDivider text={locale.or} />
       )}
 
@@ -140,7 +161,7 @@ export const EmbeddedWalletFormUI = (props: EmbeddedWalletFormUIProps) => {
       {enableEmailLogin && (
         <InputSelectionUI
           onSelect={(email) => {
-            props.saveState({
+            saveState({
               emailLogin: email,
             });
             props.select();
@@ -172,11 +193,9 @@ export const EmbeddedWalletFormUI = (props: EmbeddedWalletFormUIProps) => {
  */
 export function EmbeddedWalletFormUIScreen(props: EmbeddedWalletFormUIProps) {
   const locale = props.locale.emailLoginScreen;
-  const isCompact = props.connectUIProps.screenConfig.size === "compact";
-  const { initialScreen, screen } = useScreenContext();
   const modalConfig = useContext(ModalConfigCtx);
-  const walletConfig = props.connectUIProps.walletConfig;
-  const { goBack } = props.connectUIProps.screenConfig;
+  const isCompact = modalConfig.modalSize === "compact";
+  const { initialScreen, screen } = useScreenContext();
 
   return (
     <Container
@@ -190,9 +209,9 @@ export function EmbeddedWalletFormUIScreen(props: EmbeddedWalletFormUIProps) {
     >
       <ModalHeader
         onBack={
-          screen === walletConfig && initialScreen === walletConfig
+          screen === props.wallet && initialScreen === props.wallet
             ? undefined
-            : goBack
+            : props.goBack
         }
         title={locale.title}
       />

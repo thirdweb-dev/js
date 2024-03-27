@@ -15,4 +15,7 @@ export const WalletConnectionContext = /* @__PURE__ */ createContext<{
   locale: LocaleId;
   connectLocale: ConnectLocale;
   recommendedWallets?: Wallet[];
+  walletConnect?: {
+    projectId?: string;
+  };
 } | null>(null);

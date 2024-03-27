@@ -38,7 +38,9 @@ export function createWallet<const ID extends WalletId>(
      * EMBEDDED WALLET
      */
     case id === "embedded": {
-      return embeddedWallet() as Wallet<ID>;
+      return embeddedWallet(
+        creationOptions as CreateWalletArgs<"embedded">[1],
+      ) as Wallet<ID>;
     }
 
     /**
@@ -66,6 +68,7 @@ export function createWallet<const ID extends WalletId>(
       };
       const wallet: Wallet<ID> = {
         id,
+        getConfig: () => args[1],
         getChain: () => chain,
         getAccount: () => account,
         autoConnect: async (options) => {
@@ -194,6 +197,7 @@ export function smartWallet(
   const _smartWallet: Wallet<"smart"> = {
     id: "smart",
     getChain: () => chain,
+    getConfig: () => createOptions,
     getAccount: () => account,
     autoConnect: async (options) => {
       const { connectSmartWallet } = await import("./smart/index.js");
@@ -237,18 +241,22 @@ export function smartWallet(
 
 /**
  * Creates an embedded wallet.
+ * @param createOptions - configuration options
  * @returns The created embedded wallet.
  * @example
  * ```ts
  * import { embeddedWallet } from "thirdweb/wallets";
  * ```
  */
-export function embeddedWallet(): Wallet<"embedded"> {
+export function embeddedWallet(
+  createOptions: CreateWalletArgs<"embedded">[1],
+): Wallet<"embedded"> {
   let account: Account | undefined = undefined;
   let chain: Chain | undefined = undefined;
   return {
     id: "embedded",
     getChain: () => chain,
+    getConfig: () => createOptions,
     getAccount: () => account,
     autoConnect: async (options) => {
       const { autoConnectEmbeddedWallet } = await import(
@@ -319,6 +327,7 @@ function coinbaseWalletSDK(): Wallet<"com.coinbase.wallet"> {
   const coinbaseSDKWallet: Wallet<"com.coinbase.wallet"> = {
     id: "com.coinbase.wallet",
     getChain: () => chain,
+    getConfig: () => undefined,
     getAccount: () => account,
     autoConnect: async (options) => {
       const { autoConnectCoinbaseWalletSDK } = await import(

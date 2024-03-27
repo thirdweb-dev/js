@@ -10,6 +10,7 @@ import type { PreparedTransaction } from "../../transaction/prepare-transaction.
 import type { SendTransactionResult } from "../../transaction/types.js";
 import type { Chain } from "../../chains/types.js";
 import type {
+  CreateWalletArgs,
   WalletAutoConnectionOption,
   WalletConnectionOption,
   WalletId,
@@ -42,6 +43,7 @@ export type Wallet<TWalletId extends WalletId = WalletId> = {
     addListener: WalletEventListener;
     removeListener: WalletEventListener;
   };
+  getConfig: () => CreateWalletArgs<TWalletId>[1];
 };
 
 export type Account = {
