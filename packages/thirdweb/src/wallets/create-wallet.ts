@@ -58,8 +58,7 @@ export function createWallet<const ID extends WalletId>(
      * COINBASE WALLET VIA SDK
      * -> if no injected coinbase found, we'll use the coinbase SDK
      */
-    case id === "com.coinbase.wallet" &&
-      !injectedProvider("com.coinbase.wallet"): {
+    case id === "com.coinbase.wallet": {
       return coinbaseWalletSDK() as Wallet<ID>;
     }
 
