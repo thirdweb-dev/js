@@ -67,7 +67,6 @@ import type { Chain } from "../../../../chains/types.js";
 import { swapTransactionsStore } from "./screens/Buy/swap/pendingSwapTx.js";
 import { SwapScreen } from "./screens/Buy/SwapScreen.js";
 import { SwapTransactionsScreen } from "./screens/SwapTransactionsScreen.js";
-import { useSwapSupportedChains } from "./screens/Buy/swap/useSwapSupportedChains.js";
 import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { WalletImage } from "../components/WalletImage.js";
 
@@ -109,9 +108,6 @@ export const ConnectedWalletDetails: React.FC<{
 
   // prefetch chains metadata with low concurrency
   useChainsQuery(props.chains, 5);
-
-  // prefetch swap supported chains
-  useSwapSupportedChains(client);
 
   const tokenAddress =
     walletChain && props.detailsButton?.displayBalanceToken

@@ -145,7 +145,7 @@ export function TransactionButton<
   return (
     <Button
       {...buttonProps}
-      data-disabled={true}
+      disabled={true}
       variant={"primary"}
       style={{
         ...buttonProps.style,
