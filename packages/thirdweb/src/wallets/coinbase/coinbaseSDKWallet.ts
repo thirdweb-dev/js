@@ -27,6 +27,7 @@ import {
   uint8ArrayToHex,
 } from "../../utils/encoding/hex.js";
 import { getAddress } from "../../utils/address.js";
+import { getDefaultAppMetadata } from "../utils/defaultDappMetadata.js";
 
 /**
  * Options for connecting to the CoinbaseSDK Wallet
@@ -151,8 +152,7 @@ async function initProvider(
 ) {
   const client = new CoinbaseWalletSDK({
     ...options,
-    // TODO: get a default name!
-    appName: options.appMetadata?.name || "TODO",
+    appName: options.appMetadata?.name || getDefaultAppMetadata().name,
   });
 
   if (options.onUri) {

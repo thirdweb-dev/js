@@ -69,7 +69,7 @@ export type ConnectEmbedProps = {
    * };
    * ```
    */
-  appMetadata: AppMetadata;
+  appMetadata?: AppMetadata;
 
   /**
    * By default - ConnectButton UI uses the `en-US` locale for english language users.

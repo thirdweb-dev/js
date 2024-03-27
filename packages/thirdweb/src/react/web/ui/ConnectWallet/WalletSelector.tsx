@@ -662,15 +662,17 @@ function sortWallets(wallets: Wallet[], recommendedWallets?: Wallet[]) {
         }
         return 0;
       })
-    // show the wallets with selectUI first before others
-    // .sort((a, b) => {
-    //   if (a.selectUI && !b.selectUI) {
-    //     return -1;
-    //   }
-    //   if (!a.selectUI && b.selectUI) {
-    //     return 1;
-    //   }
-    //   return 0;
-    // })
+      // show wallets with select ui first ( currently only embedded )
+      .sort((a, b) => {
+        const aIsEmbedded = a.id === "embedded";
+        const bIsEmbedded = b.id === "embedded";
+        if (aIsEmbedded && !bIsEmbedded) {
+          return -1;
+        }
+        if (!aIsEmbedded && bIsEmbedded) {
+          return 1;
+        }
+        return 0;
+      })
   );
 }

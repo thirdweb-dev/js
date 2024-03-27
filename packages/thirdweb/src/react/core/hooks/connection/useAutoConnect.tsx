@@ -77,7 +77,7 @@ export type AutoConnectProps = {
    * };
    * ```
    */
-  appMetadata: AppMetadata;
+  appMetadata?: AppMetadata;
 
   /**
    * if the autoConnection does not succeed within given timeout in milliseconds, it will be cancelled.

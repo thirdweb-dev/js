@@ -43,7 +43,7 @@ export function useWalletInfo(id: WalletId) {
         case "embedded": {
           return {
             id: "embedded",
-            name: "Embedded Wallet",
+            name: "Social Login",
             homepage: "https://thirdweb.com",
             app: {
               browser: null,

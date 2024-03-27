@@ -18,7 +18,7 @@ export type WalletConfig = {
 
   create: (options: {
     client: ThirdwebClient;
-    appMetadata: AppMetadata;
+    appMetadata?: AppMetadata;
   }) => Wallet;
 
   /**

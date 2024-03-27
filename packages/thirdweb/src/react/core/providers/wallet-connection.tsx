@@ -11,7 +11,7 @@ export const WalletConnectionContext = /* @__PURE__ */ createContext<{
   client: ThirdwebClient;
   chain?: Chain;
   chains?: Chain[];
-  appMetadata: AppMetadata;
+  appMetadata?: AppMetadata;
   locale: LocaleId;
   connectLocale: ConnectLocale;
   recommendedWallets?: Wallet[];

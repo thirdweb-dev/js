@@ -347,8 +347,7 @@ export type ConnectButtonProps = {
    * Metadata of the app that will be passed to connected wallet.
    *
    * Some wallets display this information to the user when they connect to your app.
-   *
-   *
+   * @example
    * ```ts
    * {
    *   name: "thirdweb powered dApp",
@@ -358,7 +357,7 @@ export type ConnectButtonProps = {
    * };
    * ```
    */
-  appMetadata: AppMetadata;
+  appMetadata?: AppMetadata;
 
   /**
    * The [`Chain`](https://portal.thirdweb.com/references/typescript/v5/Chain) object of the blockchain you want the wallet to connect to

@@ -31,7 +31,7 @@ import {
 import type { Chain } from "../../chains/types.js";
 import { ethereum } from "../../chains/chain-definitions/ethereum.js";
 import { isHex, numberToHex, type Hex } from "../../utils/encoding/hex.js";
-import { defaultDappMetadata } from "../utils/defaultDappMetadata.js";
+import { getDefaultAppMetadata } from "../utils/defaultDappMetadata.js";
 // import { getWalletData } from "../interfaces/wallet-data.js";
 import type { WCSupportedWalletIds } from "../__generated__/wallet-ids.js";
 
@@ -281,11 +281,14 @@ async function initProvider(
     optionalEvents: OPTIONAL_EVENTS,
     optionalChains: [targetChain.id],
     metadata: {
-      name: wcOptions?.appMetadata?.name || defaultDappMetadata.name,
+      name: wcOptions?.appMetadata?.name || getDefaultAppMetadata().name,
       description:
-        wcOptions?.appMetadata?.description || defaultDappMetadata.description,
-      url: wcOptions?.appMetadata?.url || defaultDappMetadata.url,
-      icons: [wcOptions?.appMetadata?.logoUrl || defaultDappMetadata.logoUrl],
+        wcOptions?.appMetadata?.description ||
+        getDefaultAppMetadata().description,
+      url: wcOptions?.appMetadata?.url || getDefaultAppMetadata().url,
+      icons: [
+        wcOptions?.appMetadata?.logoUrl || getDefaultAppMetadata().logoUrl,
+      ],
     },
     rpcMap: {
       [targetChain.id]: rpc,
