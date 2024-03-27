@@ -70,7 +70,8 @@ const allWalletsWithIds = allWalletsArray.map((wallet) => {
 // generate walletInfos
 
 const walletConnectSupportedWallets = allWalletsWithIds.filter((w) => {
-  return w.mobile.universal || w.mobile.native || w.desktop.universal;
+  // TODO bring back desktop wallets once supported
+  return w.mobile.universal || w.mobile.native;
 });
 
 const injectedSupportedWallets = allWalletsWithIds.filter((w) => {
