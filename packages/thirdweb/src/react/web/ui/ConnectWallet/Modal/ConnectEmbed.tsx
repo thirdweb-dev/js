@@ -446,6 +446,7 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
           chain: props.chain,
           chains: props.chains,
           walletConnect: props.walletConnect,
+          accountAbstraction: props.accountAbstraction,
         }}
       >
         <WalletUIStatesProvider {...walletUIStatesProps}>

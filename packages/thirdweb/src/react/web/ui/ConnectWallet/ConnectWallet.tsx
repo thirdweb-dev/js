@@ -111,6 +111,7 @@ export function ConnectButton(props: ConnectButtonProps) {
         chain: props.chain,
         chains: props.chains,
         walletConnect: props.walletConnect,
+        accountAbstraction: props.accountAbstraction,
       }}
     >
       <WalletUIStatesProvider theme="dark">

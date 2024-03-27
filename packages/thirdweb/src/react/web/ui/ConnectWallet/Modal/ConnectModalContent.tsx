@@ -17,6 +17,7 @@ import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import { useConnect } from "../../../../core/hooks/wallets/wallet-hooks.js";
 import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import { AnyWalletConnectUI } from "./AnyWalletConnectUI.js";
+import { SmartConnectUI } from "./SmartWalletConnectUI.js";
 
 /**
  * @internal
@@ -30,7 +31,7 @@ export const ConnectModalContent = (props: {
 }) => {
   const { onShow, onClose } = props;
   const { screen, setScreen, initialScreen } = props.screenSetup;
-  const { wallets } = useWalletConnectionCtx();
+  const { wallets, accountAbstraction } = useWalletConnectionCtx();
   // const disconnect = useDisconnect();
   const modalConfig = useContext(ModalConfigCtx);
   // const setModalConfig = useContext(SetModalConfigCtx);
@@ -117,12 +118,28 @@ export const ConnectModalContent = (props: {
 
   const getStarted = <StartScreen />;
 
+  const goBack = wallets.length > 1 ? handleBack : undefined;
+
   const getWalletUI = (wallet: Wallet) => {
+    if (accountAbstraction) {
+      return (
+        <SmartConnectUI
+          accountAbstraction={accountAbstraction}
+          done={(smartWallet) => {
+            console.log("connected smart wallet");
+            handleConnected(smartWallet);
+          }}
+          personalWallet={wallet}
+          onBack={goBack}
+        />
+      );
+    }
+
     return (
       <AnyWalletConnectUI
         key={wallet.id}
         wallet={wallet}
-        onBack={wallets.length > 1 ? handleBack : undefined}
+        onBack={goBack}
         done={() => {
           handleConnected(wallet);
         }}
