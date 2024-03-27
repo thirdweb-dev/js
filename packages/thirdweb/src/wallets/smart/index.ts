@@ -3,10 +3,7 @@ import type {
   SendTransactionOption,
   Wallet,
 } from "../interfaces/wallet.js";
-import type {
-  SmartWalletConnectionOptions,
-  SmartWalletOptions,
-} from "./types.js";
+import type { SmartWalletOptions } from "./types.js";
 import { createUnsignedUserOp, signUserOp } from "./lib/userop.js";
 import { bundleUserOp, getUserOpReceipt } from "./lib/bundler.js";
 import { getContract, type ThirdwebContract } from "../../contract/contract.js";
@@ -20,7 +17,11 @@ import type { SignableMessage } from "viem";
 import { watchBlockNumber } from "../../rpc/watchBlockNumber.js";
 import type { WaitForReceiptOptions } from "../../transaction/actions/wait-for-tx-receipt.js";
 import type { Hex } from "../../utils/encoding/hex.js";
-import { getWalletData } from "../interfaces/wallet-data.js";
+import type {
+  CreateWalletArgs,
+  WalletConnectionOption,
+} from "../wallet-types.js";
+import type { Chain } from "../../chains/types.js";
 
 /**
  * We can get the personal account for given smart account but not the other way around - this map gives us the reverse lookup
@@ -38,19 +39,16 @@ const smartWalletToPersonalAccountMap = new WeakMap<Wallet<"smart">, Account>();
  */
 export async function connectSmartWallet(
   wallet: Wallet<"smart">,
-  connectionOptions: SmartWalletConnectionOptions,
-): Promise<Account> {
+  connectionOptions: WalletConnectionOption<"smart">,
+  creationOptions: CreateWalletArgs<"smart">[1],
+): Promise<[Account, Chain]> {
   const { personalAccount, client, chain: connectChain } = connectionOptions;
 
   if (!personalAccount) {
     throw new Error("Personal wallet does not have an account");
   }
-  // TODO, this needs to be typed correctly based on `Wallet<"smart">` when it exists
-  const walletData = getWalletData(wallet);
-  if (!walletData) {
-    throw new Error("Wallet data not found");
-  }
-  const options = walletData.options;
+
+  const options = creationOptions;
   const chain = connectChain ?? options.chain;
   const factoryAddress = options.factoryAddress;
 
@@ -81,26 +79,22 @@ export async function connectSmartWallet(
 
   personalAccountToSmartAccountMap.set(personalAccount, wallet);
   smartWalletToPersonalAccountMap.set(wallet, personalAccount);
-  // this.account = account;
-  walletData.account = account;
-  return account;
+
+  return [account, chain] as const;
 }
 
 /**
  * @internal
  */
-export async function disconnect(wallet: Wallet<"smart">): Promise<void> {
+export async function disconnectSmartWallet(
+  wallet: Wallet<"smart">,
+): Promise<void> {
   // look up the personalAccount for the smart wallet
   const personalAccount = smartWalletToPersonalAccountMap.get(wallet);
   if (personalAccount) {
     // remove the mappings
     personalAccountToSmartAccountMap.delete(personalAccount);
     smartWalletToPersonalAccountMap.delete(wallet);
-  }
-  const walletData = getWalletData(wallet);
-  if (walletData) {
-    walletData.account = undefined;
-    walletData.chain = undefined;
   }
 }
 

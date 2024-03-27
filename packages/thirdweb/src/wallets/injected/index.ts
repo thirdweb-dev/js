@@ -9,8 +9,8 @@ import { normalizeChainId } from "../utils/normalizeChainId.js";
 import { injectedProvider } from "./mipdStore.js";
 import type {
   SendTransactionOption,
-  Wallet,
   Account,
+  Wallet,
 } from "../interfaces/wallet.js";
 import { getValidPublicRPCUrl } from "../utils/chains.js";
 import { stringify } from "../../utils/json.js";
@@ -25,7 +25,8 @@ import {
 } from "../../utils/encoding/hex.js";
 import { getAddress } from "../../utils/address.js";
 import type { InjectedConnectOptions, WalletId } from "../wallet-types.js";
-import { getWalletData } from "../interfaces/wallet-data.js";
+
+import type { InjectedSupportedWalletIds } from "../__generated__/wallet-ids.js";
 
 // TODO: save the provider in data
 
@@ -42,7 +43,7 @@ function getInjectedProvider(walletId: WalletId) {
  * @internal
  */
 export async function connectInjectedWallet(
-  wallet: Wallet,
+  wallet: Wallet<InjectedSupportedWalletIds>,
   options: InjectedConnectOptions,
 ) {
   const provider = getInjectedProvider(wallet.id);
@@ -60,7 +61,9 @@ export async function connectInjectedWallet(
 /**
  * @internal
  */
-export async function autoConnectInjectedWallet(wallet: Wallet) {
+export async function autoConnectInjectedWallet(
+  wallet: Wallet<InjectedSupportedWalletIds>,
+) {
   const provider = getInjectedProvider(wallet.id);
 
   // connected accounts
@@ -79,7 +82,10 @@ export async function autoConnectInjectedWallet(wallet: Wallet) {
 /**
  * @internal
  */
-export async function switchChainInjectedWallet(wallet: Wallet, chain: Chain) {
+export async function switchChainInjectedWallet(
+  wallet: Wallet<InjectedSupportedWalletIds>,
+  chain: Chain,
+) {
   const provider = getInjectedProvider(wallet.id);
   const hexChainId = numberToHex(chain.id);
   try {
@@ -107,12 +113,6 @@ export async function switchChainInjectedWallet(wallet: Wallet, chain: Chain) {
       throw e;
     }
   }
-
-  const data = getWalletData(wallet);
-
-  if (data) {
-    data.chain = chain;
-  }
 }
 
 /**
@@ -120,13 +120,13 @@ export async function switchChainInjectedWallet(wallet: Wallet, chain: Chain) {
  * @internal
  */
 async function onConnect(
-  wallet: Wallet,
+  wallet: Wallet<InjectedSupportedWalletIds>,
   data: {
     chain?: Chain;
     provider: Ethereum;
     addresses: string[];
   },
-): Promise<Account> {
+): Promise<[Account, Chain]> {
   const { addresses, provider, chain } = data;
   const addr = addresses[0];
   if (!addr) {
@@ -141,30 +141,32 @@ async function onConnect(
     .request({ method: "eth_chainId" })
     .then(normalizeChainId);
 
-  const walletData = getWalletData(wallet);
+  let connectedChain = defineChain(chainId);
+  // const walletData = getWalletData(wallet);
 
-  if (walletData) {
-    walletData.chain = defineChain(chainId);
-  }
+  // if (walletData) {
+  //   walletData.chain = defineChain(chainId);
+  // }
 
   // this.updateMetadata();
 
   // if we want a specific chainId and it is not the same as the provider chainId, trigger switchChain
   if (chain && chain.id !== chainId) {
     await wallet.switchChain(chain);
+    connectedChain = chain;
   }
 
   const onDisconnect = () => {
-    if (walletData) {
-      walletData.onDisconnect();
-      provider.removeListener("chainChanged", walletData.onChainChanged);
-    }
+    // if (walletData) {
+    //   walletData.onDisconnect();
+    //   provider.removeListener("chainChanged", walletData.onChainChanged);
+    // }
   };
 
   if (provider.on) {
-    if (walletData) {
-      provider.on("chainChanged", walletData.onChainChanged);
-    }
+    // if (walletData) {
+    //   provider.on("chainChanged", walletData.onChainChanged);
+    // }
 
     provider.on("disconnect", onDisconnect);
   }
@@ -185,10 +187,6 @@ async function onConnect(
   const account: Account = {
     address,
     async sendTransaction(tx: SendTransactionOption) {
-      if (!walletData?.chain || !account.address) {
-        throw new Error("Provider not setup");
-      }
-
       const transactionHash = (await provider.request({
         method: "eth_sendTransaction",
         params: [
@@ -255,9 +253,5 @@ async function onConnect(
     },
   };
 
-  if (walletData) {
-    walletData.account = account;
-  }
-
-  return account;
+  return [account, connectedChain] as const;
 }

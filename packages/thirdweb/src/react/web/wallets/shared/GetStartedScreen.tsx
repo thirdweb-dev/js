@@ -14,8 +14,8 @@ import { openWindow } from "../../../core/utils/openWindow.js";
 import type { InjectedWalletLocale } from "../injected/locale/types.js";
 import type { WalletInfo } from "../../../../wallets/wallet-info.js";
 import { WalletImage } from "../../ui/components/WalletImage.js";
-import { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
+import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 
 /**
  * @internal

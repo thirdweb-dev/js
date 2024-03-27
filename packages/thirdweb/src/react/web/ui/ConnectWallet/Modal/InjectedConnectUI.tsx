@@ -29,7 +29,8 @@ export const InjectedConnectUI = (props: {
       connectPrompted.current = true;
       setErrorConnecting(false);
       await wait(1000);
-      wallet.setStorage(asyncLocalStorage);
+      // set storage for the wallet if it supports it
+      wallet.setStorage?.(asyncLocalStorage);
       await wallet.connect({
         chain: chain,
       });

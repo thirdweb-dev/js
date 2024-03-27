@@ -447,7 +447,7 @@ function getInstalledWallets() {
       createWallet(w as InjectedSupportedWalletIds),
     );
   }
-  console.log({ _installedWallets });
+
   return _installedWallets;
 }
 

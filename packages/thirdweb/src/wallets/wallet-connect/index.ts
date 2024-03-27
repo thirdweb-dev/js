@@ -8,11 +8,11 @@ import {
 } from "viem";
 import type { Address } from "abitype";
 import { normalizeChainId } from "../utils/normalizeChainId.js";
-import {
-  deleteConnectParamsFromStorage,
-  getSavedConnectParamsFromStorage,
-  saveConnectParamsToStorage,
-} from "../storage/walletStorage.js";
+// import {
+//   deleteConnectParamsFromStorage,
+//   // getSavedConnectParamsFromStorage,
+//   // saveConnectParamsToStorage,
+// } from "../storage/walletStorage.js";
 
 import type {
   Account,
@@ -32,39 +32,40 @@ import type { Chain } from "../../chains/types.js";
 import { ethereum } from "../../chains/chain-definitions/ethereum.js";
 import { isHex, numberToHex, type Hex } from "../../utils/encoding/hex.js";
 import { defaultDappMetadata } from "../utils/defaultDappMetadata.js";
-import { getWalletData } from "../interfaces/wallet-data.js";
+// import { getWalletData } from "../interfaces/wallet-data.js";
+import type { WCSupportedWalletIds } from "../__generated__/wallet-ids.js";
 
 const defaultWCProjectId = "145769e410f16970a79ff77b2d89a1e0"; // TODO: CHANGE THIS !!!!
 
 const NAMESPACE = "eip155";
 const ADD_ETH_CHAIN_METHOD = "wallet_addEthereumChain";
 
-const storageKeys = {
-  requestedChains: "tw.wc.requestedChains",
-  lastUsedChainId: "tw.wc.lastUsedChainId",
-};
+// const storageKeys = {
+//   requestedChains: "tw.wc.requestedChains",
+//   lastUsedChainId: "tw.wc.lastUsedChainId",
+// };
 
 const isNewChainsStale = true;
 const defaultShowQrModal = true;
 
 const walletToProviderMap = new WeakMap<
-  Wallet,
+  Wallet<WCSupportedWalletIds>,
   InstanceType<typeof EthereumProvider>
 >();
 
-type SavedConnectParams = {
-  optionalChains?: Chain[];
-  chain: Chain;
-  pairingTopic?: string;
-};
+// type SavedConnectParams = {
+//   optionalChains?: Chain[];
+//   chain: Chain;
+//   pairingTopic?: string;
+// };
 
 /**
  * @internal
  */
 export async function connectWC(
-  wallet: Wallet,
+  wallet: Wallet<WCSupportedWalletIds>,
   options: WCConnectOptions,
-): Promise<Account> {
+): Promise<[Account, Chain]> {
   const provider = await initProvider(wallet, false, options);
   const wcOptions = options.walletConnect;
 
@@ -120,28 +121,28 @@ export async function connectWC(
   }
 
   const chain = defineChain(normalizeChainId(provider.chainId));
-  const walletData = getWalletData(wallet);
-  if (walletData) {
-    walletData.chain = chain;
-  }
+  // const walletData = getWalletData(wallet);
+  // if (walletData) {
+  //   walletData.chain = chain;
+  // }
 
-  if (options) {
-    const savedParams: SavedConnectParams = {
-      optionalChains: wcOptions?.optionalChains,
-      chain: chain,
-      pairingTopic: wcOptions?.pairingTopic,
-    };
+  // if (options) {
+  //   const savedParams: SavedConnectParams = {
+  //     optionalChains: wcOptions?.optionalChains,
+  //     chain: chain,
+  //     pairingTopic: wcOptions?.pairingTopic,
+  //   };
 
-    if (walletData?.storage) {
-      saveConnectParamsToStorage(walletData.storage, wallet.id, savedParams);
-    }
-  }
+  //   if (walletData?.storage) {
+  //     saveConnectParamsToStorage(walletData.storage, wallet.id, savedParams);
+  //   }
+  // }
 
   if (wcOptions?.onDisplayUri) {
     provider.events.removeListener("display_uri", wcOptions.onDisplayUri);
   }
 
-  return onConnect(wallet, address);
+  return [onConnect(wallet, address), chain] as const;
 }
 
 /**
@@ -149,26 +150,19 @@ export async function connectWC(
  * @internal
  */
 export async function autoConnectWC(
-  wallet: Wallet,
+  wallet: Wallet<WCSupportedWalletIds>,
   options: WCAutoConnectOptions,
-): Promise<Account> {
-  const walletData = getWalletData(wallet);
-  const storage = walletData?.storage;
-
-  const savedConnectParams: SavedConnectParams | null = storage
-    ? await getSavedConnectParamsFromStorage(storage, wallet.id)
-    : null;
-
+): Promise<[Account, Chain]> {
   const provider = await initProvider(
     wallet,
     true,
-    savedConnectParams
+    options.savedConnectParams
       ? {
-          chain: savedConnectParams.chain,
+          chain: options.savedConnectParams.chain,
           client: options.client,
           walletConnect: {
-            pairingTopic: savedConnectParams.pairingTopic,
-            optionalChains: savedConnectParams.optionalChains,
+            pairingTopic: options.savedConnectParams.pairingTopic,
+            optionalChains: options.savedConnectParams.optionalChains,
           },
         }
       : {
@@ -183,17 +177,19 @@ export async function autoConnectWC(
     throw new Error("No accounts found on provider.");
   }
 
-  if (walletData) {
-    walletData.chain = defineChain(normalizeChainId(provider.chainId));
-  }
-
-  return onConnect(wallet, address);
+  return [
+    onConnect(wallet, address),
+    defineChain(normalizeChainId(provider.chainId)),
+  ] as const;
 }
 
 /**
  * @internal
  */
-export async function switchChainWC(wallet: Wallet, chain: Chain) {
+export async function switchChainWC(
+  wallet: Wallet<WCSupportedWalletIds>,
+  chain: Chain,
+) {
   const provider = assertProvider(wallet);
 
   const chainId = chain.id;
@@ -242,14 +238,14 @@ export async function switchChainWC(wallet: Wallet, chain: Chain) {
 /**
  * @internal
  */
-export async function disconnectWC(wallet: Wallet) {
+export async function disconnectWC(wallet: Wallet<WCSupportedWalletIds>) {
   const provider = walletToProviderMap.get(wallet);
-  const storage = getWalletData(wallet)?.storage;
+  // const storage = getWalletData(wallet)?.storage;
 
   onDisconnect(wallet);
-  if (storage) {
-    deleteConnectParamsFromStorage(storage, wallet.id);
-  }
+  // if (storage) {
+  //   deleteConnectParamsFromStorage(storage, wallet.id);
+  // }
 
   if (provider) {
     provider.disconnect();
@@ -259,7 +255,7 @@ export async function disconnectWC(wallet: Wallet) {
 // Connection utils -----------------------------------------------------------------------------------------------
 
 async function initProvider(
-  wallet: Wallet,
+  wallet: Wallet<WCSupportedWalletIds>,
   isAutoConnect: boolean,
   options: WCConnectOptions,
 ) {
@@ -312,21 +308,21 @@ async function initProvider(
       await provider.disconnect();
     }
   }
-  const walletData = getWalletData(wallet);
+  // const walletData = getWalletData(wallet);
 
-  if (walletData) {
-    // setup listeners
-    provider.on("disconnect", walletData.onDisconnect);
-    provider.on("session_delete", walletData.onDisconnect);
+  // if (walletData) {
+  //   // setup listeners
+  //   provider.on("disconnect", walletData.onDisconnect);
+  //   provider.on("session_delete", walletData.onDisconnect);
 
-    // TODO: check which type of chain id actually comes from wallet connect
-    const onChainChanged = (chainId: number | string) => {
-      walletData.storage?.setItem(storageKeys.lastUsedChainId, String(chainId));
-      walletData.onChainChanged(String(chainId));
-    };
+  //   // TODO: check which type of chain id actually comes from wallet connect
+  //   const onChainChanged = (chainId: number | string) => {
+  //     walletData.storage?.setItem(storageKeys.lastUsedChainId, String(chainId));
+  //     walletData.onChainChanged(String(chainId));
+  //   };
 
-    provider.on("chainChanged", onChainChanged);
-  }
+  //   provider.on("chainChanged", onChainChanged);
+  // }
 
   // try switching to correct chain
   if (options?.chain && provider.chainId !== options?.chain.id) {
@@ -353,7 +349,7 @@ async function initProvider(
   return provider;
 }
 
-function assertProvider(wallet: Wallet) {
+function assertProvider(wallet: Wallet<WCSupportedWalletIds>) {
   const provider = walletToProviderMap.get(wallet);
   if (!provider) {
     throw new Error("Provider not initialized");
@@ -361,17 +357,15 @@ function assertProvider(wallet: Wallet) {
   return provider;
 }
 
-function onConnect(wallet: Wallet, address: string): Account {
-  const walletData = getWalletData(wallet);
+function onConnect(
+  wallet: Wallet<WCSupportedWalletIds>,
+  address: string,
+): Account {
   const provider = assertProvider(wallet);
 
   const account: Account = {
     address,
     async sendTransaction(tx: SendTransactionOption) {
-      if (!walletData?.chain || !this.address) {
-        throw new Error("Invalid chain or address");
-      }
-
       const transactionHash = (await provider.request({
         method: "eth_sendTransaction",
         params: [
@@ -420,31 +414,27 @@ function onConnect(wallet: Wallet, address: string): Account {
     },
   };
 
-  if (walletData) {
-    walletData.account = account;
-  }
-
   return account;
 }
 
-function onDisconnect(wallet: Wallet) {
+function onDisconnect(wallet: Wallet<WCSupportedWalletIds>) {
   setRequestedChainsIds(wallet, []);
-  const walletData = getWalletData(wallet);
+  // const walletData = getWalletData(wallet);
 
-  if (walletData) {
-    walletData.storage?.removeItem(storageKeys.lastUsedChainId);
+  // if (walletData) {
+  //   walletData.storage?.removeItem(storageKeys.lastUsedChainId);
 
-    const provider = walletToProviderMap.get(wallet);
+  //   const provider = walletToProviderMap.get(wallet);
 
-    if (provider) {
-      provider.removeListener("chainChanged", walletData.onChainChanged);
-      provider.removeListener("disconnect", walletData.onDisconnect);
-      provider.removeListener("session_delete", walletData.onDisconnect);
-    }
+  //   if (provider) {
+  //     provider.removeListener("chainChanged", walletData.onChainChanged);
+  //     provider.removeListener("disconnect", walletData.onDisconnect);
+  //     provider.removeListener("session_delete", walletData.onDisconnect);
+  //   }
 
-    walletData.account = undefined;
-    walletData.chain = undefined;
-  }
+  //   walletData.account = undefined;
+  //   walletData.chain = undefined;
+  // }
 }
 
 // Storage utils  -----------------------------------------------------------------------------------------------
@@ -454,7 +444,10 @@ function onDisconnect(wallet: Wallet) {
  * @param connectToChainId
  * @internal
  */
-async function isChainsStale(wallet: Wallet, chains: number[]) {
+async function isChainsStale(
+  wallet: Wallet<WCSupportedWalletIds>,
+  chains: number[],
+) {
   const namespaceMethods = getNamespaceMethods(wallet);
 
   // if chain adding method is available, then chains are not stale
@@ -482,7 +475,7 @@ async function isChainsStale(wallet: Wallet, chains: number[]) {
   return !chains.every((id) => requestedChains.includes(id));
 }
 
-function getNamespaceMethods(wallet: Wallet) {
+function getNamespaceMethods(wallet: Wallet<WCSupportedWalletIds>) {
   const provider = assertProvider(wallet);
   return provider.session?.namespaces[NAMESPACE]?.methods || [];
 }
@@ -491,31 +484,43 @@ function getNamespaceMethods(wallet: Wallet) {
  * Set the requested chains to the storage.
  * @internal
  */
-function setRequestedChainsIds(wallet: Wallet, chains: number[]) {
-  getWalletData(wallet)?.storage?.setItem(
-    storageKeys.requestedChains,
-    JSON.stringify(chains),
-  );
+function setRequestedChainsIds(
+  // @ts-expect-error - fix later
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  wallet: Wallet<WCSupportedWalletIds>,
+  // @ts-expect-error - fix later
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  chains: number[],
+) {
+  // getWalletData(wallet)?.storage?.setItem(
+  //   storageKeys.requestedChains,
+  //   JSON.stringify(chains),
+  // );
 }
 
 /**
  * Get the last requested chains from the storage.
  * @internal
  */
-async function getRequestedChainsIds(wallet: Wallet): Promise<number[]> {
-  const storage = getWalletData(wallet)?.storage;
-  if (!storage) {
-    return [];
-  }
-  const data = await storage.getItem(storageKeys.requestedChains);
-  return data ? JSON.parse(data) : [];
+async function getRequestedChainsIds(
+  // @ts-expect-error - fix later
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  wallet: Wallet<WCSupportedWalletIds>,
+): Promise<number[]> {
+  // const storage = getWalletData(wallet)?.storage;
+  // if (!storage) {
+  //   return [];
+  // }
+  // const data = await storage.getItem(storageKeys.requestedChains);
+  // return data ? JSON.parse(data) : [];
+  return [];
 }
 
 /**
  * Get the chainIds from the wallet connect session.
  * @internal
  */
-function getNamespaceChainsIds(wallet: Wallet): number[] {
+function getNamespaceChainsIds(wallet: Wallet<WCSupportedWalletIds>): number[] {
   const provider = walletToProviderMap.get(wallet);
 
   if (!provider) {

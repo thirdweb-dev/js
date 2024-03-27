@@ -29,6 +29,8 @@ export function CoinbaseSDKWalletConnectUI(props: {
         onUri: (uri) => {
           setQrCodeUri(uri);
         },
+        headlessMode: true,
+        reloadOnDisconnect: false,
       })
       .then(() => {
         done();
