@@ -107,5 +107,5 @@ export function AnyWalletConnectUI(props: {
   }
 
   // other wallets
-  return <div> TODO: Other wallets Connect UI </div>;
+  return <div>TODO: wallet ui for: {props.wallet.id}</div>;
 }
