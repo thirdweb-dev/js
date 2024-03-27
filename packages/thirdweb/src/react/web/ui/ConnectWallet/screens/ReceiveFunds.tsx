@@ -11,12 +11,16 @@ import { Text } from "../../components/text.js";
 import { CopyIcon } from "../../components/CopyIcon.js";
 import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import { WalletImage } from "../../components/WalletImage.js";
+import type { WalletId } from "../../../../../wallets/wallet-types.js";
 
 /**
  *
  * @internal
  */
-export function ReceiveFunds(props: { walletId: string; onBack: () => void }) {
+export function ReceiveFunds(props: {
+  walletId?: WalletId;
+  onBack: () => void;
+}) {
   const account = useActiveAccount();
   const address = account?.address;
   const { hasCopied, onCopy } = useClipboard(address || "");
@@ -32,7 +36,11 @@ export function ReceiveFunds(props: { walletId: string; onBack: () => void }) {
         <QRCode
           qrCodeUri={address}
           size={310}
-          QRIcon={<WalletImage id={props.walletId} size={iconSize.xxl} />}
+          QRIcon={
+            props.walletId && (
+              <WalletImage id={props.walletId} size={iconSize.xxl} />
+            )
+          }
         />
       </Container>
       <Spacer y="xl" />

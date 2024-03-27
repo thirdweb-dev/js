@@ -15,6 +15,7 @@ import type { InjectedWalletLocale } from "../injected/locale/types.js";
 import type { WalletInfo } from "../../../../wallets/wallet-info.js";
 import { WalletImage } from "../../ui/components/WalletImage.js";
 import { Wallet } from "../../../../wallets/interfaces/wallet.js";
+import type { WalletId } from "../../../../wallets/wallet-types.js";
 
 /**
  * @internal
@@ -157,7 +158,7 @@ const InstallScanScreen: React.FC<{
   platform: string;
   walletName: string;
   platformIcon: React.ReactNode;
-  walletId: string;
+  walletId: WalletId;
   onBack?: () => void;
   locale: {
     scanToDownload: string;

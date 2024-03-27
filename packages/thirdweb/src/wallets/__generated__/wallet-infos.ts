@@ -190,10 +190,6 @@ export const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "Opera Crypto Browser",
   },
   {
-    id: "io.horizen",
-    name: "Cobalt Wallet",
-  },
-  {
     id: "com.chain",
     name: "Chain",
   },
@@ -206,10 +202,6 @@ export const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "Verso",
   },
   {
-    id: "io.jadewallet",
-    name: "Jade Wallet",
-  },
-  {
     id: "me.haha",
     name: "HaHa",
   },
@@ -220,10 +212,6 @@ export const ALL_MINIMAL_WALLET_INFOS = (<const>[
   {
     id: "finance.kelp",
     name: "Kelp",
-  },
-  {
-    id: "one.numio",
-    name: "Numio",
   },
   {
     id: "io.clingon",
@@ -258,10 +246,6 @@ export const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "Copiosa",
   },
   {
-    id: "io.imota",
-    name: "Imota ",
-  },
-  {
     id: "com.liberawallet",
     name: "Libera",
   },
@@ -278,20 +262,12 @@ export const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "Ancrypto",
   },
   {
-    id: "com.cypherock",
-    name: "Cypherock cySync",
-  },
-  {
     id: "network.cvl",
     name: "CVL Wallet",
   },
   {
     id: "io.cypherwallet",
     name: "Cypher Wallet",
-  },
-  {
-    id: "app.status",
-    name: "Status",
   },
   {
     id: "io.enjin",
@@ -306,10 +282,6 @@ export const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "Everspace",
   },
   {
-    id: "io.blockwallet",
-    name: "BlockWallet",
-  },
-  {
     id: "io.kriptomat",
     name: "Kriptomat",
   },
@@ -322,14 +294,6 @@ export const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "Theta Wallet",
   },
   {
-    id: "xyz.dawnwallet",
-    name: "Dawn Wallet",
-  },
-  {
-    id: "io.rabby",
-    name: "Rabby",
-  },
-  {
     id: "io.leapwallet",
     name: "Leap Cosmos Wallet",
   },
@@ -338,20 +302,8 @@ export const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "ISLAMIwallet",
   },
   {
-    id: "io.upbond",
-    name: "UPBOND Wallet",
-  },
-  {
-    id: "com.viverse",
-    name: "VIVE Wallet",
-  },
-  {
     id: "link.app.wwallet",
     name: "Wirex Wallet",
-  },
-  {
-    id: "com.blockcerts",
-    name: "BCERTin wallet",
   },
   {
     id: "com.monarchwallet",
@@ -370,36 +322,12 @@ export const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "CoinCircle",
   },
   {
-    id: "io.wallid",
-    name: "MyWalliD",
-  },
-  {
-    id: "com.bitgert",
-    name: "BRISE Wallet",
-  },
-  {
     id: "money.snowball",
     name: "Snowball",
   },
   {
-    id: "com.gamestop.wallet",
-    name: "GameStop Wallet",
-  },
-  {
     id: "io.paraswap",
     name: "ParaSwap Wallet",
-  },
-  {
-    id: "com.balletcrypto",
-    name: "Ballet Crypto",
-  },
-  {
-    id: "com.uvtoken",
-    name: "UvToken",
-  },
-  {
-    id: "co.realt",
-    name: "RealT Wallet",
   },
   {
     id: "network.mrhb",
@@ -422,16 +350,8 @@ export const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "Loopring",
   },
   {
-    id: "finance.a4",
-    name: "A4 Wallet",
-  },
-  {
     id: "com.bee",
     name: "BeeWallet",
-  },
-  {
-    id: "io.dohrnii",
-    name: "Dohrnii Wallet",
   },
   {
     id: "cc.localtrade.lab",
@@ -442,24 +362,12 @@ export const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "Xcapit",
   },
   {
-    id: "com.bc-vault",
-    name: "BC Vault",
-  },
-  {
     id: "io.safematrix",
     name: "Safematrix",
   },
   {
-    id: "com.neonwallet",
-    name: "Neon Wallet",
-  },
-  {
     id: "com.absolutewallet",
     name: "Absolute Wallet",
-  },
-  {
-    id: "com.locker-token",
-    name: "Locker Token",
   },
   {
     id: "xyz.sequence",
@@ -482,14 +390,6 @@ export const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "Spatium",
   },
   {
-    id: "com.cryptnox",
-    name: "Cryptnox Wallet",
-  },
-  {
-    id: "io.ownbit",
-    name: "Ownbit",
-  },
-  {
     id: "com.rktechworks",
     name: "ID Pocket",
   },
@@ -502,24 +402,12 @@ export const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "Flooz",
   },
   {
-    id: "network.platon",
-    name: "ATON",
-  },
-  {
     id: "app.keplr",
     name: "Keplr",
   },
   {
-    id: "com.brave.wallet",
-    name: "Brave Wallet",
-  },
-  {
     id: "com.crossmint",
     name: "Crossmint",
-  },
-  {
-    id: "io.gryfyn",
-    name: "Gryfyn",
   },
   {
     id: "com.pierwallet",
@@ -530,24 +418,12 @@ export const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "Core",
   },
   {
-    id: "xyz.taho",
-    name: "Taho",
-  },
-  {
     id: "us.tor.app",
     name: "Torus",
   },
   {
-    id: "sh.frame",
-    name: "Frame",
-  },
-  {
     id: "app.keeper-wallet",
     name: "Keeper",
-  },
-  {
-    id: "org.uniblow",
-    name: "Uniblow",
   },
   {
     id: "com.dcentwallet",
@@ -682,10 +558,6 @@ export const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "Qubic Wallet",
   },
   {
-    id: "io.havensuite",
-    name: "Haven Wallet",
-  },
-  {
     id: "com.holdstation",
     name: "Holdstation Wallet",
   },
@@ -700,10 +572,6 @@ export const ALL_MINIMAL_WALLET_INFOS = (<const>[
   {
     id: "io.simplehold",
     name: "SimpleHold",
-  },
-  {
-    id: "com.payperless",
-    name: "Payperless",
   },
   {
     id: "digital.minerva",
@@ -774,32 +642,12 @@ export const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "Venly",
   },
   {
-    id: "app.phantom",
-    name: "Phantom",
-  },
-  {
-    id: "com.coinbase.wallet",
-    name: "Coinbase Wallet",
-  },
-  {
-    id: "xyz.mpcwallet",
-    name: "MPCWallet",
-  },
-  {
-    id: "io.xdefi",
-    name: "XDEFI Wallet",
-  },
-  {
-    id: "co.treasurewallet",
-    name: "TREASURE",
+    id: "com.brave.wallet",
+    name: "Bitski",
   },
   {
     id: "io.streakk",
     name: "Streakk Wallet",
-  },
-  {
-    id: "org.sender",
-    name: "Sender",
   },
   {
     id: "com.saitamatoken",
@@ -854,18 +702,6 @@ export const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "Fizz",
   },
   {
-    id: "com.nftydaze",
-    name: "PiEthereum Hardware",
-  },
-  {
-    id: "finance.everywhere",
-    name: "Reunit",
-  },
-  {
-    id: "app.tholos",
-    name: "Tholos",
-  },
-  {
     id: "app.stickey",
     name: "Stickey Wallet",
   },
@@ -884,10 +720,6 @@ export const ALL_MINIMAL_WALLET_INFOS = (<const>[
   {
     id: "app.krystal",
     name: "Krystal",
-  },
-  {
-    id: "com.keepkey",
-    name: "KeepKey Desktop",
   },
   {
     id: "fi.pillar",
@@ -924,10 +756,6 @@ export const ALL_MINIMAL_WALLET_INFOS = (<const>[
   {
     id: "com.tomi",
     name: "tomiPAY",
-  },
-  {
-    id: "io.nash",
-    name: "Nash",
   },
   {
     id: "com.bybit",
@@ -1050,10 +878,6 @@ export const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "Binance.US",
   },
   {
-    id: "com.waynance",
-    name: "SISTEMAS",
-  },
-  {
     id: "co.muza",
     name: "MUZA",
   },
@@ -1082,10 +906,6 @@ export const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "Altme",
   },
   {
-    id: "us.unido",
-    name: "Unido",
-  },
-  {
     id: "com.bitpie",
     name: "Bitpie",
   },
@@ -1106,10 +926,6 @@ export const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "Coininn Wallet",
   },
   {
-    id: "org.syscoin",
-    name: "Safe App Syscoin",
-  },
-  {
     id: "io.functionx",
     name: "f(x)Wallet",
   },
@@ -1120,10 +936,6 @@ export const ALL_MINIMAL_WALLET_INFOS = (<const>[
   {
     id: "com.amazewallet",
     name: "AmazeWallet",
-  },
-  {
-    id: "com.atato",
-    name: "atato custody",
   },
   {
     id: "com.paliwallet",
@@ -1202,10 +1014,6 @@ export const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "UniPass Wallet",
   },
   {
-    id: "world.suku.wallet",
-    name: "Suku Wallet",
-  },
-  {
     id: "com.oasys-wallet",
     name: "Oasys Passport",
   },
@@ -1258,16 +1066,8 @@ export const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "New Money",
   },
   {
-    id: "app.zeal",
-    name: "Zeal",
-  },
-  {
     id: "com.ivirse",
     name: "IApp",
-  },
-  {
-    id: "games.kayros",
-    name: "Kayros",
   },
   {
     id: "ch.dssecurity",
@@ -1374,10 +1174,6 @@ export const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "Numo Wallet",
   },
   {
-    id: "com.moongate.one",
-    name: "MG",
-  },
-  {
     id: "com.wemix",
     name: "WemixWallet",
   },
@@ -1438,16 +1234,8 @@ export const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "M1NTY",
   },
   {
-    id: "io.novaspektr",
-    name: "Nova Spektr",
-  },
-  {
     id: "io.noone",
     name: "Noone Wallet",
-  },
-  {
-    id: "io.youba",
-    name: "Youba",
   },
   {
     id: "com.bitso",
@@ -1476,10 +1264,6 @@ export const ALL_MINIMAL_WALLET_INFOS = (<const>[
   {
     id: "io.bharatbox",
     name: "BharatBox App",
-  },
-  {
-    id: "xyz.webeasy",
-    name: "eth-q1",
   },
   {
     id: "com.blanqlabs.wallet",
@@ -1534,20 +1318,8 @@ export const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "Rovi Money",
   },
   {
-    id: "town.nof",
-    name: "NoF",
-  },
-  {
     id: "io.toric",
     name: "Toric Wallet",
-  },
-  {
-    id: "com.enkrypt",
-    name: "Enkrypt",
-  },
-  {
-    id: "com.scramble",
-    name: "Scramble",
   },
   {
     id: "com.fastex.wallet",
@@ -1626,14 +1398,6 @@ export const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "Keychain",
   },
   {
-    id: "swiss.bitbox",
-    name: "BitBox",
-  },
-  {
-    id: "app.dreamos",
-    name: "DreamOS",
-  },
-  {
     id: "cool.pay",
     name: "paycool",
   },
@@ -1652,6 +1416,34 @@ export const ALL_MINIMAL_WALLET_INFOS = (<const>[
   {
     id: "me.iopay",
     name: "ioPay",
+  },
+  {
+    id: "io.rabby",
+    name: "Rabby",
+  },
+  {
+    id: "app.phantom",
+    name: "Phantom",
+  },
+  {
+    id: "com.coinbase.wallet",
+    name: "Coinbase Wallet",
+  },
+  {
+    id: "io.xdefi",
+    name: "XDEFI Wallet",
+  },
+  {
+    id: "com.moongate.one",
+    name: "MG",
+  },
+  {
+    id: "com.enkrypt",
+    name: "Enkrypt",
+  },
+  {
+    id: "com.scramble",
+    name: "Scramble",
   },
   {
     id: "app.backpack",

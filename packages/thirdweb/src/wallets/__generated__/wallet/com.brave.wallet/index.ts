@@ -3,17 +3,18 @@
 
 export const wallet = {
   id: "com.brave.wallet",
-  name: "Brave Wallet",
-  homepage: "https://brave.com/wallet/",
-  image_id: "8cecad66-73e3-46ee-f45f-01503c032f00",
+  name: "Bitski",
+  homepage: "https://bitski.com",
+  image_id: "94d94cb5-a94f-47cf-70e6-fe8d3f1c3700",
   app: {
-    browser: null,
-    ios: null,
+    browser: "https://wallet.bitski.com",
+    ios: "https://apps.apple.com/us/app/bitski-wallet/id1587199538",
     android: null,
     mac: null,
     windows: null,
     linux: null,
-    chrome: "https://brave.com/wallet/",
+    chrome:
+      "https://chrome.google.com/webstore/detail/bitski/feejiigddaafeojfddjjlmfkabimkell",
     firefox: null,
     safari: null,
     edge: null,
@@ -21,11 +22,12 @@ export const wallet = {
   },
   rdns: "com.brave.wallet",
   mobile: {
-    native: null,
-    universal: null,
+    native: "bitski://",
+    universal: "https://wallet.bitski.com/walletconnect/wc",
   },
   desktop: {
     native: null,
-    universal: null,
+    universal:
+      "https://chrome.google.com/webstore/detail/bitski/feejiigddaafeojfddjjlmfkabimkell",
   },
 } as const;

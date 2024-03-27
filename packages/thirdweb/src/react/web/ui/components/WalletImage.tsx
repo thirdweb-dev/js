@@ -1,4 +1,5 @@
 import { getMIPDStore } from "../../../../wallets/injected/mipdStore.js";
+import type { WalletId } from "../../../../wallets/wallet-types.js";
 import { radius } from "../design-system/index.js";
 import { useWalletImage } from "../hooks/useWalletInfo.js";
 import { Img } from "./Img.js";
@@ -6,7 +7,7 @@ import { Img } from "./Img.js";
 /**
  * @internal
  */
-export function WalletImage(props: { id: string; size: string }) {
+export function WalletImage(props: { id: WalletId; size: string }) {
   const mipdImage = getMIPDStore()
     .getProviders()
     .find((provider) => provider.info.rdns === props.id)?.info.icon;
@@ -28,7 +29,7 @@ export function WalletImage(props: { id: string; size: string }) {
   return <WalletImageQuery id={props.id} size={props.size} />;
 }
 
-function WalletImageQuery(props: { id: string; size: string }) {
+function WalletImageQuery(props: { id: WalletId; size: string }) {
   const walletImage = useWalletImage(props.id);
 
   return (

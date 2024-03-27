@@ -177,7 +177,10 @@ export const ConnectedWalletDetails: React.FC<{
       style={props.detailsButton?.style}
       data-test="connected-wallet-details"
     >
-      <WalletImage size={iconSize.lg} id={activeWallet?.id || ""} />
+      {/* TODO: render a placeholder if we don't have an active wallet? */}
+      {activeWallet?.id && (
+        <WalletImage size={iconSize.lg} id={activeWallet.id} />
+      )}
 
       <Container flex="column" gap="xxs">
         {/* Address */}
@@ -267,7 +270,10 @@ export const ConnectedWalletDetails: React.FC<{
     <div>
       <Spacer y="xl" />
       <Container px="lg" flex="column" center="x">
-        <WalletImage id={activeWallet?.id || ""} size={iconSize.xxl} />
+        {/* TODO: render a placeholder if we don't have an active wallet? */}
+        {activeWallet?.id && (
+          <WalletImage id={activeWallet.id} size={iconSize.xxl} />
+        )}
 
         <Spacer y="md" />
 
@@ -579,7 +585,7 @@ export const ConnectedWalletDetails: React.FC<{
   else if (screen === "receive") {
     content = (
       <ReceiveFunds
-        walletId={activeWallet?.id || ""}
+        walletId={activeWallet?.id}
         onBack={() => {
           setScreen("main");
         }}

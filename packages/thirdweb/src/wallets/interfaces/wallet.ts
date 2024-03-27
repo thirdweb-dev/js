@@ -131,76 +131,108 @@ export class Wallet<ID extends WalletId = WalletId> {
   async autoConnect(options: WalletAutoConnectionOption<ID>): Promise<Account> {
     const data = getWalletData(this);
 
-    // smart wallet
-    if (this.id === "smart") {
-      const { connectSmartWallet, disconnect } = await import(
-        "../smart/index.js"
-      );
-      if (data) {
-        data.methods = {
-          disconnect(wallet) {
-            return disconnect(wallet as Wallet<"smart">);
-          },
-        };
+    switch (true) {
+      // smart wallet
+      case this.id === "smart": {
+        const { connectSmartWallet, disconnect } = await import(
+          "../smart/index.js"
+        );
+        if (data) {
+          data.methods = {
+            disconnect(wallet) {
+              return disconnect(wallet as Wallet<"smart">);
+            },
+          };
+        }
+        return connectSmartWallet(
+          this as Wallet<"smart">,
+          options as WalletConnectionOption<"smart">,
+        );
       }
-      return connectSmartWallet(
-        this as Wallet<"smart">,
-        options as WalletConnectionOption<"smart">,
-      );
-    }
-    // embedded wallet
-    else if (this.id === "embedded") {
-      const {
-        autoConnectEmbeddedWallet,
-        switchChainEmbeddedWallet,
-        disconnectEmbeddedWallet,
-      } = await import("../embedded/core/wallet/index.js");
-      if (data) {
-        data.methods = {
-          switchChain: switchChainEmbeddedWallet,
-          disconnect: disconnectEmbeddedWallet,
-        };
-      }
-      return autoConnectEmbeddedWallet(
-        this,
-        options as WalletConnectionOption<"embedded">,
-      );
-    }
+      // embedded wallet
+      case this.id === "embedded": {
+        const {
+          autoConnectEmbeddedWallet,
+          switchChainEmbeddedWallet,
+          disconnectEmbeddedWallet,
+        } = await import("../embedded/core/wallet/index.js");
 
-    // injected provider
-    else if (!!injectedProvider(this.id)) {
-      const { autoConnectInjectedWallet, switchChainInjectedWallet } =
-        await import("../injected/index.js");
-      if (data) {
-        data.methods = {
-          switchChain(wallet, chain) {
-            return switchChainInjectedWallet(wallet, chain);
-          },
-        };
+        if (data) {
+          data.methods = {
+            switchChain: switchChainEmbeddedWallet,
+            disconnect: disconnectEmbeddedWallet,
+          };
+        }
+
+        return autoConnectEmbeddedWallet(
+          this,
+          options as WalletConnectionOption<"embedded">,
+        );
       }
 
-      return autoConnectInjectedWallet(this);
-    }
-
-    // wallet connect
-    else if (options && "client" in options) {
-      const { autoConnectWC, switchChainWC, disconnectWC } = await import(
-        "../wallet-connect/index.js"
-      );
-
-      if (data) {
-        data.methods = {
-          switchChain(wallet, chain) {
-            return switchChainWC(wallet, chain);
-          },
-          disconnect: disconnectWC,
-        };
+      // coinbase wallet SDK case -> check if id is coinbase and coinbase wallet is not injected
+      case this.id === "com.coinbase.wallet" &&
+        !injectedProvider("com.coinbase.wallet"): {
+        const {
+          autoConnectCoinbaseWalletSDK,
+          switchChainCoinbaseWalletSDK,
+          disconnectCoinbaseWalletSDK,
+        } = await import("../coinbase/coinbaseSDKWallet.js");
+        if (data) {
+          data.methods = {
+            switchChain(wallet, chain) {
+              return switchChainCoinbaseWalletSDK(
+                wallet as Wallet<"com.coinbase.wallet">,
+                chain,
+              );
+            },
+            disconnect(wallet) {
+              return disconnectCoinbaseWalletSDK(
+                wallet as Wallet<"com.coinbase.wallet">,
+              );
+            },
+          };
+        }
+        return autoConnectCoinbaseWalletSDK(
+          this as Wallet<"com.coinbase.wallet">,
+          options as WalletConnectionOption<"com.coinbase.wallet">,
+        );
       }
 
-      return autoConnectWC(this, options);
-    }
+      //  injected case
+      case !!injectedProvider(this.id): {
+        const { autoConnectInjectedWallet, switchChainInjectedWallet } =
+          await import("../injected/index.js");
+        if (data) {
+          data.methods = {
+            switchChain(wallet, chain) {
+              return switchChainInjectedWallet(wallet, chain);
+            },
+          };
+        }
 
-    throw new Error("Failed to auto connect");
+        return autoConnectInjectedWallet(this);
+      }
+
+      // wallet connect
+      case options && "client" in options: {
+        const { autoConnectWC, switchChainWC, disconnectWC } = await import(
+          "../wallet-connect/index.js"
+        );
+
+        if (data) {
+          data.methods = {
+            switchChain: switchChainWC,
+            disconnect: disconnectWC,
+          };
+        }
+
+        return autoConnectWC(this, options as WCConnectOptions);
+      }
+
+      default:
+        throw new Error("Failed to auto connect");
+    }
   }
 
   /**
@@ -253,6 +285,35 @@ export class Wallet<ID extends WalletId = WalletId> {
           options as WalletConnectionOption<"embedded">,
         );
       }
+      // coinbase wallet SDK case -> check if id is coinbase and coinbase wallet is not injected
+      case this.id === "com.coinbase.wallet" &&
+        !injectedProvider("com.coinbase.wallet"): {
+        const {
+          connectCoinbaseWalletSDK,
+          switchChainCoinbaseWalletSDK,
+          disconnectCoinbaseWalletSDK,
+        } = await import("../coinbase/coinbaseSDKWallet.js");
+        if (data) {
+          data.methods = {
+            switchChain(wallet, chain) {
+              return switchChainCoinbaseWalletSDK(
+                wallet as Wallet<"com.coinbase.wallet">,
+                chain,
+              );
+            },
+            disconnect(wallet) {
+              return disconnectCoinbaseWalletSDK(
+                wallet as Wallet<"com.coinbase.wallet">,
+              );
+            },
+          };
+        }
+        return connectCoinbaseWalletSDK(
+          this,
+          options as WalletConnectionOption<"com.coinbase.wallet">,
+        );
+      }
+
       // wallet connect case
       case options && "walletConnect" in options: {
         const wcOptions = options as WCConnectOptions;

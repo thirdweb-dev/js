@@ -130,7 +130,10 @@ export function ConfirmationScreen(props: {
 
       <TokenInfoContainer>
         <Container flex="row" gap="md" center="y">
-          <WalletImage size={iconSize.lg} id={activeWallet?.id || ""} />
+          {/* todo render a placeholder here if we don't have an activeWallet (?) */}
+          {activeWallet?.id && (
+            <WalletImage size={iconSize.lg} id={activeWallet.id} />
+          )}
           <Text color="primaryText" size="sm">
             {shortenString(props.account.address, false)}
           </Text>

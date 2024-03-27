@@ -18,11 +18,11 @@ import type {
 
 // combine generic + custom ones
 export type WalletId =
-  | "local"
-  | "embedded"
-  | "smart"
+  | CustomWalletIds
   | WCSupportedWalletIds
   | InjectedSupportedWalletIds;
+
+export type CustomWalletIds = "local" | "embedded" | "smart";
 
 // connect options
 export type InjectedConnectOptions = {
@@ -75,10 +75,6 @@ export type WalletAutoConnectionOption<T extends WalletId> = T extends "smart"
           ? InjectedAutoConnectOptions
           : // wc only
             WCAutoConnectOptions;
-
-// wallet creation options
-
-// type EmbeddedWalletCreationOptions = {};
 
 export type WalletCreationOptions<T extends WalletId> = T extends "smart"
   ? SmartWalletOptions
