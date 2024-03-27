@@ -12,13 +12,14 @@ import {
 } from "./constants.js";
 import { hexlifyUserOp } from "./utils.js";
 import type { TransactionReceipt } from "../../../transaction/types.js";
+import type { ThirdwebClient } from "../../../client/client.js";
 
 /**
  * @internal
  */
 export async function bundleUserOp(args: {
   userOp: UserOperation;
-  options: SmartWalletOptions;
+  options: SmartWalletOptions & { client: ThirdwebClient };
 }): Promise<Hex> {
   return sendBundlerRequest({
     ...args,
@@ -35,7 +36,7 @@ export async function bundleUserOp(args: {
  */
 export async function estimateUserOpGas(args: {
   userOp: UserOperation;
-  options: SmartWalletOptions;
+  options: SmartWalletOptions & { client: ThirdwebClient };
 }): Promise<EstimationResult> {
   const res = await sendBundlerRequest({
     ...args,
@@ -59,7 +60,7 @@ export async function estimateUserOpGas(args: {
  */
 export async function getUserOpReceipt(args: {
   userOpHash: Hex;
-  options: SmartWalletOptions;
+  options: SmartWalletOptions & { client: ThirdwebClient };
 }): Promise<TransactionReceipt | undefined> {
   const res = await sendBundlerRequest({
     ...args,
@@ -71,7 +72,7 @@ export async function getUserOpReceipt(args: {
 }
 
 async function sendBundlerRequest(args: {
-  options: SmartWalletOptions;
+  options: SmartWalletOptions & { client: ThirdwebClient };
   operation:
     | "eth_estimateUserOperationGas"
     | "eth_sendUserOperation"

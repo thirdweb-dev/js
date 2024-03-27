@@ -16,6 +16,7 @@ import { keccak256 } from "../../../utils/hashing/keccak256.js";
 import { hexToBytes } from "../../../utils/encoding/to-bytes.js";
 import type { Hex } from "../../../utils/encoding/hex.js";
 import { encodeAbiParameters } from "../../../utils/abi/encodeAbiParameters.js";
+import type { ThirdwebClient } from "../../../client/client.js";
 
 /**
  * Create an unsigned user operation
@@ -29,7 +30,10 @@ export async function createUnsignedUserOp(args: {
   factoryContract: ThirdwebContract;
   accountContract: ThirdwebContract;
   executeTx: PreparedTransaction;
-  options: SmartWalletOptions & { personalAccount: Account };
+  options: SmartWalletOptions & {
+    personalAccount: Account;
+    client: ThirdwebClient;
+  };
 }): Promise<UserOperation> {
   const { factoryContract, accountContract, executeTx, options } = args;
   const isDeployed = await isContractDeployed(accountContract);
