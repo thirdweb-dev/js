@@ -2,13 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "chain": "ETH",
   "chainId": 17186,
-  "explorers": [
-    {
-      "name": "lazy crimson coral explorer",
-      "url": "https://explorerl2new-lazy-crimson-coral-cotlv0ftqf.t.conduit.xyz",
-      "standard": "standard"
-    }
-  ],
+  "explorers": [],
   "faucets": [],
   "features": [],
   "name": "lazy-crimson-coral",
@@ -28,7 +22,10 @@ export default {
     ]
   },
   "redFlags": [],
-  "rpc": [],
+  "rpc": [
+    "https://17186.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://l2-lazy-crimson-coral-cotlv0ftqf.t.conduit.xyz"
+  ],
   "shortName": "lazy-crimson-coral",
   "slug": "lazy-crimson-coral",
   "testnet": true

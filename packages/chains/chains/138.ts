@@ -7,8 +7,13 @@ export default {
   },
   "explorers": [
     {
+      "name": "Blockscout Explorer",
+      "url": "https://blockscout.defi-oracle.io",
+      "standard": "none"
+    },
+    {
       "name": "Quorum Explorer",
-      "url": "https://public-0138.defi-oracle.io",
+      "url": "https://explorer.defi-oracle.io",
       "standard": "none"
     }
   ],
@@ -27,7 +32,7 @@ export default {
     "height": 1043,
     "format": "png"
   },
-  "infoURL": "https://defi-oracle.io/",
+  "infoURL": "https://info.defi-oracle.io/",
   "name": "Defi Oracle Meta Mainnet",
   "nativeCurrency": {
     "name": "Ether",
@@ -37,8 +42,8 @@ export default {
   "networkId": 1,
   "rpc": [
     "https://138.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.public-0138.defi-oracle.io",
-    "wss://rpc.public-0138.defi-oracle.io"
+    "https://rpc.defi-oracle.io",
+    "wss://wss.defi-oracle.io"
   ],
   "shortName": "dfio-meta-main",
   "slip44": 60,

@@ -1,7 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
   "chain": "Avalanche",
-  "chainId": 18898,
+  "chainId": 89283,
   "explorers": [],
   "faucets": [],
   "features": [],
@@ -12,19 +12,19 @@ export default {
     "format": "svg"
   },
   "infoURL": "https://avacloud.io",
-  "name": "QaUser4 Testnet",
+  "name": "QIS0326 Testnet",
   "nativeCurrency": {
-    "name": "QaUser4 Testnet Token",
-    "symbol": "NLD",
+    "name": "QIS0326 Testnet Token",
+    "symbol": "AKK",
     "decimals": 18
   },
-  "networkId": 18898,
+  "networkId": 89283,
   "redFlags": [],
   "rpc": [
-    "https://18898.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://89283.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/defi-kingdoms/dfk-chain/rpc"
   ],
-  "shortName": "QaUser4 Testnet",
-  "slug": "qauser4-testnet-qauser4 testnet-18898",
+  "shortName": "QIS0326 Testnet",
+  "slug": "qis0326-testnet",
   "testnet": true
 } as const satisfies Chain;
