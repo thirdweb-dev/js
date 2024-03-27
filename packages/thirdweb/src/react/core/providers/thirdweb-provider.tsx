@@ -12,12 +12,7 @@ import { isBaseTransactionOptions } from "../../../transaction/types.js";
  * @param props - The props for the ThirdwebProvider
  * @example
  * ```jsx
- * import { createThirdwebClient } from "thirdweb";
  * import { ThirdwebProvider } from "thirdweb/react";
- *
- * const client = createThirdwebClient({
- *  clientId: "<your_client_id>",
- * })
  *
  * function Example() {
  *  return (

@@ -299,23 +299,26 @@ export type ConnectButtonProps = {
    * Array of supported wallets. If not provided, default wallets will be used.
    * @example
    * ```tsx
-   * import { metamaskConfig, coinbaseConfig, walletConnectConfig } from "thirdweb/react";
+   * import { createWallet, embeddedWallet } from "thirdweb/react";
+   *
+   * const wallets = [
+   *   embeddedWallet(),
+   *   createWallet("io.metamask"),
+   *   createWallet("com.coinbase.wallet"),
+   *   createWallet("me.rainbow"),
+   * ];
    *
    * function Example() {
    *  return (
    *    <ConnectButton
    *      client={client}
-   *      wallets={[
-   *        metamaskConfig(),
-   *        coinbaseConfig(),
-   *        walletConnectConfig(),
-   *      ]}
+   *      wallets={wallets}
    *    />
    *  )
    * }
    * ```
    *
-   * If no wallets are specified. Below wallets will be used by default:
+   * If no wallets are specified. The component will show any EIP-6963 compliant wallet installed, as well as these default wallets:
    *
    * - [Embedded Wallet](https://portal.thirdweb.com/references/typescript/v5/embeddedWalletConfig)
    * - [MataMask Wallet](https://portal.thirdweb.com/references/typescript/v5/metamaskConfig)
@@ -374,11 +377,7 @@ export type ConnectButtonProps = {
    * At minimum, you need to pass the `id` of the blockchain to `defineChain` function to create a `Chain` object.
    * @example
    * ```tsx
-   * import { defineChain } from "thirdweb/react";
-   *
-   * const polygon = defineChain({
-   *  id: 137,
-   * });
+   * import { polygon } from "thirdweb/wallets";
    *
    * function Example() {
    *  return <div> <ConnectButton chain={polygon} /> </div>
@@ -591,7 +590,18 @@ export type ConnectButtonProps = {
   };
 
   /**
-   * Enable Account abstraction by configuring the options for SmartWallet
+   * Enable Account abstraction for all wallets. This will connect to the users's smart account based on the connected personal wallet and the given options.
+   *
+   * This allows to sponsor gas fees for your user's transaction using the thirdweb account abstraction infrastructure.
+   *
+   * ```tsx
+   * <ConnectButton
+   *   accountAbstraction={{
+   *    factoryAddress: "0x123...",
+   *    chain: sepolia,
+   *    gasless: true;
+   *   }}
+   * />
    */
   accountAbstraction?: SmartWalletOptions;
 };
