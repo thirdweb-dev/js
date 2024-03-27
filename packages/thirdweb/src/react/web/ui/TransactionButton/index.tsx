@@ -33,7 +33,6 @@ export type TransactionButtonProps = {
    *
    * Callback that will be called when the transaction is confirmed onchain.
    * If this callback is set, the component will wait for the transaction to be confirmed.
-   *
    * @param receipt - The transaction receipt object of type [`TransactionReceipt`](https://portal.thirdweb.com/references/typescript/v5/TransactionReceipt)
    */
   onTransactionConfirmed?: (receipt: TransactionReceipt) => void;
