@@ -86,6 +86,7 @@ export function createWallet<const ID extends WalletId>(
       };
       const wallet: Wallet<ID> = {
         id,
+        subscribe: emitter.subscribe,
         getConfig: () => args[1],
         getChain: () => chain,
         getAccount: () => account,
@@ -198,11 +199,13 @@ export function createWallet<const ID extends WalletId>(
 export function smartWallet(
   createOptions: CreateWalletArgs<"smart">[1],
 ): Wallet<"smart"> {
+  const emitter = createWalletEmitter<"embedded">();
   let account: Account | undefined = undefined;
   let chain: Chain | undefined = undefined;
 
   const _smartWallet: Wallet<"smart"> = {
     id: "smart",
+    subscribe: emitter.subscribe,
     getChain: () => chain,
     getConfig: () => createOptions,
     getAccount: () => account,
@@ -237,6 +240,7 @@ export function smartWallet(
       await disconnectSmartWallet(_smartWallet);
       account = undefined;
       chain = undefined;
+      emitter.emit("disconnect", undefined);
     },
     switchChain: async () => {
       throw new Error("Not implemented yet");
@@ -258,10 +262,12 @@ export function smartWallet(
 export function embeddedWallet(
   createOptions?: CreateWalletArgs<"embedded">[1],
 ): Wallet<"embedded"> {
+  const emitter = createWalletEmitter<"embedded">();
   let account: Account | undefined = undefined;
   let chain: Chain | undefined = undefined;
   return {
     id: "embedded",
+    subscribe: emitter.subscribe,
     getChain: () => chain,
     getConfig: () => createOptions,
     getAccount: () => account,
@@ -295,10 +301,12 @@ export function embeddedWallet(
       // simply un-set the states
       account = undefined;
       chain = undefined;
+      emitter.emit("disconnect", undefined);
     },
     switchChain: async (newChain) => {
       // simply set the new chain
       chain = newChain;
+      emitter.emit("chainChanged", newChain);
     },
   };
 }
@@ -337,6 +345,7 @@ function coinbaseWalletSDK(): Wallet<"com.coinbase.wallet"> {
 
   return {
     id: "com.coinbase.wallet",
+    subscribe: emitter.subscribe,
     getChain: () => chain,
     getConfig: () => undefined,
     getAccount: () => account,

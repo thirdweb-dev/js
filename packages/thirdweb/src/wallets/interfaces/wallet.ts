@@ -15,7 +15,7 @@ import type {
   WalletConnectionOption,
   WalletId,
 } from "../wallet-types.js";
-import type { WalletEventListener } from "./listeners.js";
+import type { WalletEmitter } from "../wallet-emitter.js";
 
 // TODO: add generic ID on wallet class, creation options, connect options etc
 
@@ -39,10 +39,8 @@ export type Wallet<TWalletId extends WalletId = WalletId> = {
   // storage management (temporary and "internal")
   setStorage?(storage: any): void;
   // events
-  events?: {
-    addListener: WalletEventListener;
-    removeListener: WalletEventListener;
-  };
+  subscribe: WalletEmitter<TWalletId>["subscribe"];
+
   getConfig: () => CreateWalletArgs<TWalletId>[1];
 };
 

@@ -4,7 +4,6 @@ import { AnyWalletConnectUI } from "./AnyWalletConnectUI.js";
 import type { SmartWalletLocale } from "../../../wallets/smartWallet/locale/types.js";
 import { getSmartWalletLocale } from "../../../wallets/smartWallet/locale/getSmartWalletLocale.js";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
-import { normalizeChainId } from "../../../../../wallets/utils/normalizeChainId.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Spinner } from "../../components/Spinner.js";
 import { Container, ModalHeader } from "../../components/basic.js";
@@ -84,15 +83,15 @@ function SmartWalletConnecting(props: {
   >(personalWallet.getChain()?.id);
 
   useEffect(() => {
-    function handleChainChanged(chain: string) {
-      setPersonalWalletChainId(normalizeChainId(chain));
-    }
-    personalWallet.events?.addListener("chainChanged", handleChainChanged);
+    const unsubChainChanged = personalWallet.subscribe(
+      "chainChanged",
+      (chain) => setPersonalWalletChainId(chain.id),
+    );
 
     return () => {
-      personalWallet.events?.removeListener("chainChanged", handleChainChanged);
+      unsubChainChanged();
     };
-  }, [personalWallet.events]);
+  }, [personalWallet]);
 
   const wrongNetwork = personalWalletChainId !== smartWalletChain.id;
 
