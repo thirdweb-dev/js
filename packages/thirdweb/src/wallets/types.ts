@@ -1,3 +1,5 @@
+import type { Chain } from "../chains/types.js";
+
 export type WalletMetadata = {
   id: string;
   name: string;
@@ -22,3 +24,6 @@ export type AppMetadata = {
    */
   logoUrl?: string;
 };
+
+export type DisconnectFn = () => void;
+export type SwitchChainFn = (chain: Chain) => Promise<void>;

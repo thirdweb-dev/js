@@ -1,5 +1,5 @@
-import type { Account, Wallet } from "../interfaces/wallet.js";
-import type { AppMetadata } from "../types.js";
+import type { Account } from "../interfaces/wallet.js";
+import type { AppMetadata, DisconnectFn, SwitchChainFn } from "../types.js";
 import {
   CoinbaseWalletSDK,
   type CoinbaseWalletProvider,
@@ -28,6 +28,7 @@ import {
 } from "../../utils/encoding/hex.js";
 import { getAddress } from "../../utils/address.js";
 import { getDefaultAppMetadata } from "../utils/defaultDappMetadata.js";
+import type { WalletEmitter } from "../wallet-emitter.js";
 
 /**
  * Options for connecting to the CoinbaseSDK Wallet
@@ -127,29 +128,7 @@ export type CoinbaseSDKWalletOptions = {
   appLogoUrl?: string | null;
 };
 
-const walletToProviderMap = new WeakMap<Wallet, CoinbaseWalletProvider>();
-
-type CbCallbacks = {
-  onAccountsChanged: (
-    provider: CoinbaseWalletProvider,
-    accounts: string[],
-  ) => void;
-  onChainChanged: (newChainId: string) => void;
-  onDisconnect: (provider: CoinbaseWalletProvider) => void;
-};
-
-function assertProvider(wallet: Wallet) {
-  const provider = walletToProviderMap.get(wallet);
-  if (!provider) {
-    throw new Error("Provider not initialized");
-  }
-  return provider;
-}
-
-async function initProvider(
-  wallet: Wallet<"com.coinbase.wallet">,
-  options: CoinbaseSDKWalletConnectionOptions,
-) {
+async function initProvider(options: CoinbaseSDKWalletConnectionOptions) {
   const client = new CoinbaseWalletSDK({
     ...options,
     appName: options.appMetadata?.name || getDefaultAppMetadata().name,
@@ -161,20 +140,18 @@ async function initProvider(
 
   const chain = options?.chain || ethereum;
 
-  const provider = client.makeWeb3Provider(chain.rpc, chain.id);
-  walletToProviderMap.set(wallet, provider);
-  return provider;
+  return client.makeWeb3Provider(chain.rpc, chain.id);
 }
 
 function onConnect(
-  wallet: Wallet<"com.coinbase.wallet">,
   address: string,
-): Account {
+  chain: Chain,
+  provider: CoinbaseWalletProvider,
+  emitter: WalletEmitter<"com.coinbase.wallet">,
+): [Account, Chain, DisconnectFn, SwitchChainFn] {
   const account: Account = {
     address,
     async sendTransaction(tx: SendTransactionOption) {
-      const provider = assertProvider(wallet);
-
       const transactionHash = (await provider.request({
         method: "eth_sendTransaction",
         params: [
@@ -194,7 +171,6 @@ function onConnect(
       };
     },
     async signMessage({ message }) {
-      const provider = assertProvider(wallet);
       if (!account.address) {
         throw new Error("Provider not setup");
       }
@@ -215,7 +191,6 @@ function onConnect(
       });
     },
     async signTypedData(typedData) {
-      const provider = assertProvider(wallet);
       if (!account.address) {
         throw new Error("Provider not setup");
       }
@@ -243,18 +218,56 @@ function onConnect(
     },
   };
 
-  return account;
+  function disconnect() {
+    if (!provider) {
+      return;
+    }
+    provider.disconnect();
+    provider.close();
+    provider.removeListener("accountsChanged", onAccountsChanged);
+    provider.removeListener("chainChanged", onChainChanged);
+    provider.removeListener("disconnect", onDisconnect);
+  }
+
+  function onDisconnect() {
+    disconnect();
+    emitter.emit("disconnect", undefined);
+  }
+
+  function onAccountsChanged(accounts: string[]) {
+    if (accounts.length === 0) {
+      onDisconnect();
+    } else {
+      emitter.emit("accountsChanged", accounts);
+    }
+  }
+
+  function onChainChanged(newChainId: string) {
+    const newChain = defineChain(normalizeChainId(newChainId));
+    emitter.emit("chainChanged", newChain);
+  }
+
+  // subscribe to events
+  provider.on("accountsChanged", onAccountsChanged);
+  provider.on("chainChanged", onChainChanged);
+  provider.on("disconnect", onDisconnect);
+
+  return [
+    account,
+    chain,
+    disconnect,
+    (newChain) => switchChainCoinbaseWalletSDK(provider, newChain),
+  ];
 }
 
 /**
  * @internal
  */
 export async function connectCoinbaseWalletSDK(
-  wallet: Wallet<"com.coinbase.wallet">,
   options: CoinbaseSDKWalletConnectionOptions,
-  callbacks: CbCallbacks,
-): Promise<[Account, Chain]> {
-  const provider = await initProvider(wallet, options);
+  emitter: WalletEmitter<"com.coinbase.wallet">,
+): Promise<ReturnType<typeof onConnect>> {
+  const provider = await initProvider(options);
 
   const accounts = (await provider.request({
     method: "eth_requestAccounts",
@@ -263,14 +276,6 @@ export async function connectCoinbaseWalletSDK(
   if (!accounts[0]) {
     throw new Error("No accounts found");
   }
-
-  provider.on("accountsChanged", (accs) =>
-    callbacks.onAccountsChanged(provider, accs),
-  );
-  provider.on("chainChanged", (newChainId) =>
-    callbacks.onChainChanged(newChainId),
-  );
-  provider.on("disconnect", () => callbacks.onDisconnect(provider));
 
   const address = getAddress(accounts[0]);
 
@@ -286,22 +291,21 @@ export async function connectCoinbaseWalletSDK(
     options?.chain &&
     connectedChainId !== options?.chain.id
   ) {
-    await switchChainCoinbaseWalletSDK(wallet, options.chain);
+    await switchChainCoinbaseWalletSDK(provider, options.chain);
     chain = options.chain;
   }
 
-  return [onConnect(wallet, address), chain] as const;
+  return onConnect(address, chain, provider, emitter);
 }
 
 /**
  * @internal
  */
 export async function autoConnectCoinbaseWalletSDK(
-  wallet: Wallet<"com.coinbase.wallet">,
   options: CoinbaseSDKWalletConnectionOptions,
-  callbacks: CbCallbacks,
-): Promise<[Account, Chain]> {
-  const provider = await initProvider(wallet, options);
+  emitter: WalletEmitter<"com.coinbase.wallet">,
+): Promise<ReturnType<typeof onConnect>> {
+  const provider = await initProvider(options);
 
   // connected accounts
   const addresses = await (provider as Ethereum).request({
@@ -314,31 +318,19 @@ export async function autoConnectCoinbaseWalletSDK(
     throw new Error("No accounts found");
   }
 
-  provider.on("accountsChanged", (accs) =>
-    callbacks.onAccountsChanged(provider, accs),
-  );
-  provider.on("chainChanged", (newChainId) =>
-    callbacks.onChainChanged(newChainId),
-  );
-  provider.on("disconnect", () => callbacks.onDisconnect(provider));
-
   const connectedChainId = (await provider.request({
     method: "eth_chainId",
   })) as string | number;
   const chainId = normalizeChainId(connectedChainId);
+  const chain = defineChain(chainId);
 
-  return [onConnect(wallet, address), defineChain(chainId)] as const;
+  return onConnect(address, chain, provider, emitter);
 }
 
-/**
- * @internal
- */
-export async function switchChainCoinbaseWalletSDK(
-  wallet: Wallet<"com.coinbase.wallet">,
+async function switchChainCoinbaseWalletSDK(
+  provider: CoinbaseWalletProvider,
   chain: Chain,
 ) {
-  const provider = assertProvider(wallet);
-
   const chainIdHex = numberToHex(chain.id);
 
   try {
@@ -366,19 +358,4 @@ export async function switchChainCoinbaseWalletSDK(
       });
     }
   }
-}
-
-/**
- * @internal
- */
-export async function disconnectCoinbaseWalletSDK(
-  wallet: Wallet<"com.coinbase.wallet">,
-  onDisconnect: CbCallbacks["onDisconnect"],
-) {
-  const provider = assertProvider(wallet);
-  if (provider) {
-    provider.disconnect();
-    provider.close();
-  }
-  onDisconnect(provider);
 }

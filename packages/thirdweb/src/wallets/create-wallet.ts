@@ -6,14 +6,12 @@ import type {
 import type { Account, Wallet } from "./interfaces/wallet.js";
 import type { Chain } from "../chains/types.js";
 import { injectedProvider } from "./injected/mipdStore.js";
-import { normalizeChainId } from "./utils/normalizeChainId.js";
-import { defineChain } from "../chains/utils.js";
-import type { CoinbaseWalletProvider } from "@coinbase/wallet-sdk";
 import type {
   InjectedSupportedWalletIds,
   WCSupportedWalletIds,
 } from "./__generated__/wallet-ids.js";
 import type { WCAutoConnectOptions } from "./wallet-connect/types.js";
+import { createWalletEmitter } from "./wallet-emitter.js";
 
 // TODO: figure out how to define the type without tuple args type and using function overloads
 
@@ -312,30 +310,34 @@ export function embeddedWallet(
  */
 
 function coinbaseWalletSDK(): Wallet<"com.coinbase.wallet"> {
+  const emitter = createWalletEmitter<"com.coinbase.wallet">();
   let account: Account | undefined = undefined;
   let chain: Chain | undefined = undefined;
-  function onChainChanged(newChainId: string) {
-    // set the new chain
-    chain = defineChain(normalizeChainId(newChainId));
-  }
-  function onAccountsChanged(
-    provider: CoinbaseWalletProvider,
-    accounts: string[],
-  ) {
-    if (accounts.length === 0) {
-      onDisconnect(provider);
-    }
-  }
-  function onDisconnect(provider: CoinbaseWalletProvider) {
-    provider.removeListener("accountsChanged", onAccountsChanged);
-    provider.removeListener("chainChanged", onChainChanged);
-    provider.removeListener("disconnect", onDisconnect);
-    // un-set the states
+
+  let handleDisconnect: () => void = () => {
     account = undefined;
     chain = undefined;
-  }
+  };
 
-  const coinbaseSDKWallet: Wallet<"com.coinbase.wallet"> = {
+  let handleSwitchChain = async (newChain: Chain) => {
+    chain = newChain;
+  };
+
+  const unsubscribeChainChanged = emitter.subscribe(
+    "chainChanged",
+    (newChain) => {
+      chain = newChain;
+    },
+  );
+
+  const unsubscribeDisconnect = emitter.subscribe("disconnect", () => {
+    handleDisconnect();
+    // unsubscribe
+    unsubscribeChainChanged();
+    unsubscribeDisconnect();
+  });
+
+  return {
     id: "com.coinbase.wallet",
     getChain: () => chain,
     getConfig: () => undefined,
@@ -344,15 +346,13 @@ function coinbaseWalletSDK(): Wallet<"com.coinbase.wallet"> {
       const { autoConnectCoinbaseWalletSDK } = await import(
         "./coinbase/coinbaseSDKWallet.js"
       );
-      const [connectedAccount, connectedChain] =
-        await autoConnectCoinbaseWalletSDK(coinbaseSDKWallet, options, {
-          onAccountsChanged,
-          onChainChanged,
-          onDisconnect,
-        });
+      const [connectedAccount, connectedChain, doDisconnect, doSwitchChain] =
+        await autoConnectCoinbaseWalletSDK(options, emitter);
       // set the states
       account = connectedAccount;
       chain = connectedChain;
+      handleDisconnect = doDisconnect;
+      handleSwitchChain = doSwitchChain;
       // return account
       return account;
     },
@@ -360,35 +360,22 @@ function coinbaseWalletSDK(): Wallet<"com.coinbase.wallet"> {
       const { connectCoinbaseWalletSDK } = await import(
         "./coinbase/coinbaseSDKWallet.js"
       );
-      const [connectedAccount, connectedChain] = await connectCoinbaseWalletSDK(
-        coinbaseSDKWallet,
-        options,
-        {
-          onAccountsChanged,
-          onChainChanged,
-          onDisconnect,
-        },
-      );
+      const [connectedAccount, connectedChain, doDisconnect, doSwitchChain] =
+        await connectCoinbaseWalletSDK(options, emitter);
 
       // set the states
       account = connectedAccount;
       chain = connectedChain;
+      handleDisconnect = doDisconnect;
+      handleSwitchChain = doSwitchChain;
       // return account
       return account;
     },
     disconnect: async () => {
-      const { disconnectCoinbaseWalletSDK } = await import(
-        "./coinbase/coinbaseSDKWallet.js"
-      );
-      await disconnectCoinbaseWalletSDK(coinbaseSDKWallet, onDisconnect);
+      handleDisconnect();
     },
     switchChain: async (newChain) => {
-      const { switchChainCoinbaseWalletSDK } = await import(
-        "./coinbase/coinbaseSDKWallet.js"
-      );
-      await switchChainCoinbaseWalletSDK(coinbaseSDKWallet, newChain);
+      await handleSwitchChain(newChain);
     },
   };
-
-  return coinbaseSDKWallet;
 }

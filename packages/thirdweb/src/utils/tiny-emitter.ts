@@ -2,7 +2,7 @@ type GenericEmitterType = {
   [key: string]: unknown;
 };
 
-type Emitter<T extends GenericEmitterType> = {
+export type Emitter<T extends GenericEmitterType> = {
   subscribe<K extends keyof T>(event: K, cb: (data: T[K]) => void): () => void;
   emit<K extends keyof T>(event: K, data: T[K]): void;
 };
