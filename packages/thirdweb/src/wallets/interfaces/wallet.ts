@@ -261,7 +261,7 @@ export class Wallet<ID extends WalletId = WalletId> {
           };
         }
         return connectSmartWallet(
-          this,
+          this as Wallet<"smart">,
           options as WalletConnectionOption<"smart">,
         );
       }

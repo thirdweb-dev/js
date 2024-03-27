@@ -15,6 +15,7 @@ import type {
   EmbeddedWalletAutoConnectOptions,
   EmbeddedWalletConnectionOptions,
 } from "./embedded/core/wallet/index.js";
+import type { CoinbaseSDKWalletConnectionOptions } from "./coinbase/coinbaseSDKWallet.js";
 
 // combine generic + custom ones
 export type WalletId =
@@ -49,14 +50,17 @@ export type WalletConnectionOption<T extends WalletId> = T extends "smart"
     : // embedded wallet
       T extends "embedded"
       ? EmbeddedWalletConnectionOptions
-      : // injected + wc both supported
-        T extends InjectedSupportedWalletIds & WCSupportedWalletIds
-        ? InjectedConnectOptions | WCConnectOptions
-        : // injected only
-          T extends InjectedSupportedWalletIds
-          ? InjectedConnectOptions
-          : // wc only
-            WCConnectOptions;
+      : // coinbase wallet (inhected + coinbaseWallet)
+        T extends "com.coinbase.wallet"
+        ? InjectedConnectOptions | CoinbaseSDKWalletConnectionOptions
+        : // injected + wc both supported
+          T extends InjectedSupportedWalletIds & WCSupportedWalletIds
+          ? InjectedConnectOptions | WCConnectOptions
+          : // injected only
+            T extends InjectedSupportedWalletIds
+            ? InjectedConnectOptions
+            : // wc only
+              WCConnectOptions;
 
 // wallet.autoConnect types
 export type WalletAutoConnectionOption<T extends WalletId> = T extends "smart"
@@ -67,14 +71,17 @@ export type WalletAutoConnectionOption<T extends WalletId> = T extends "smart"
     : // embedded wallet
       T extends "embedded"
       ? EmbeddedWalletAutoConnectOptions
-      : // injected + wc both supported
-        T extends InjectedSupportedWalletIds & WCSupportedWalletIds
-        ? InjectedAutoConnectOptions | WCAutoConnectOptions
-        : // injected only
-          T extends InjectedSupportedWalletIds
-          ? InjectedAutoConnectOptions
-          : // wc only
-            WCAutoConnectOptions;
+      : // coinbase wallet (inhected + coinbaseWallet)
+        T extends "com.coinbase.wallet"
+        ? InjectedConnectOptions | CoinbaseSDKWalletConnectionOptions
+        : // injected + wc both supported
+          T extends InjectedSupportedWalletIds & WCSupportedWalletIds
+          ? InjectedAutoConnectOptions | WCAutoConnectOptions
+          : // injected only
+            T extends InjectedSupportedWalletIds
+            ? InjectedAutoConnectOptions
+            : // wc only
+              WCAutoConnectOptions;
 
 export type WalletCreationOptions<T extends WalletId> = T extends "smart"
   ? SmartWalletOptions

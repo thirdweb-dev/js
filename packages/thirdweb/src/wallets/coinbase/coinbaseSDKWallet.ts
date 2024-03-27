@@ -1,6 +1,9 @@
 import type { Account, Wallet } from "../interfaces/wallet.js";
 import type { AppMetadata } from "../types.js";
-import type { CoinbaseWalletProvider } from "@coinbase/wallet-sdk";
+import {
+  CoinbaseWalletSDK,
+  type CoinbaseWalletProvider,
+} from "@coinbase/wallet-sdk";
 import { normalizeChainId } from "../utils/normalizeChainId.js";
 import {
   type SignTypedDataParameters,
@@ -97,7 +100,7 @@ export type CoinbaseSDKWalletConnectionOptions = {
    * Callback to be called with QR code URI
    * @param uri - The URI for rendering QR code
    */
-  onUri?: (uri: string | null) => void;
+  onUri?: (uri: string | undefined) => void;
   /**
    * Metadata of the dApp that will be passed to connected wallet.
    *
@@ -157,7 +160,6 @@ async function initProvider(
   wallet: Wallet<"com.coinbase.wallet">,
   options: CoinbaseSDKWalletConnectionOptions,
 ) {
-  const { CoinbaseWalletSDK } = await import("@coinbase/wallet-sdk");
   const client = new CoinbaseWalletSDK({
     ...options,
     // TODO: get a default name!
@@ -165,7 +167,7 @@ async function initProvider(
   });
 
   if (options.onUri) {
-    options.onUri(client.getQrUrl());
+    options.onUri(client.getQrUrl() || undefined);
   }
 
   const chain = options?.chain || ethereum;

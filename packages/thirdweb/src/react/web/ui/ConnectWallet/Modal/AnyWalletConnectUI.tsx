@@ -13,6 +13,7 @@ import { getInjectedWalletLocale } from "../../../wallets/injected/locale/getInj
 import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import { GetStartedScreen } from "../../../wallets/shared/GetStartedScreen.js";
 import { WalletConnectConnection } from "../../../wallets/shared/WalletConnectConnection.js";
+import { CoinbaseSDKWalletConnectUI } from "../../../wallets/coinbase/coinbaseConfig.js";
 
 /**
  * @internal
@@ -69,6 +70,22 @@ export function AnyWalletConnectUI(props: {
           setScreen("get-started");
         }}
         onBack={props.onBack}
+      />
+    );
+  }
+
+  // coinbase wallet sdk
+  if (props.wallet.id === "com.coinbase.wallet") {
+    return (
+      <CoinbaseSDKWalletConnectUI
+        locale={locale}
+        onGetStarted={() => {
+          setScreen("get-started");
+        }}
+        onBack={props.onBack}
+        done={props.done}
+        wallet={props.wallet as Wallet<"com.coinbase.wallet">}
+        walletInfo={walletInfo.data}
       />
     );
   }
