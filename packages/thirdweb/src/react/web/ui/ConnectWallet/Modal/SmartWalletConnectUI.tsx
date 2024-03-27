@@ -193,6 +193,10 @@ function SmartWalletConnecting(props: {
                   try {
                     setPersonalWalletChainSwitchStatus("switching");
                     await personalWallet.switchChain(smartWalletChain);
+                    const newChain = personalWallet.getChain();
+                    if (newChain) {
+                      setPersonalWalletChainId(newChain.id);
+                    }
                     setPersonalWalletChainSwitchStatus("idle");
                   } catch (e) {
                     console.error(e);
