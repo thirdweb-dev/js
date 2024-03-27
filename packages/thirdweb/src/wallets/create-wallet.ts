@@ -18,7 +18,18 @@ import type { WCAutoConnectOptions } from "./wallet-connect/types.js";
 // TODO: figure out how to define the type without tuple args type and using function overloads
 
 /**
- * @internal
+ * Creates a wallet based on the provided ID and arguments.
+ * @template ID - The type of the wallet ID.
+ * @param args - The arguments for creating the wallet.
+ * @returns - The created wallet.
+ * @example
+ * ```ts
+ * import { createWallet } from "thirdweb/wallets";
+ *
+ * const metamaskWallet = createWallet("io.metamask");
+ *
+ * const account = await metamaskWallet.connect();
+ * ```
  */
 export function createWallet<const ID extends WalletId>(
   ...args: CreateWalletArgs<ID>
