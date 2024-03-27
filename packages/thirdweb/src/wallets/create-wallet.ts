@@ -91,7 +91,7 @@ export function createWallet<const ID extends WalletId>(
             return account;
           }
 
-          if (options && "walletConnect" in options) {
+          if (options && "client" in options) {
             const { autoConnectWC, switchChainWC, disconnectWC } = await import(
               "./wallet-connect/index.js"
             );
