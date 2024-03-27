@@ -106,6 +106,10 @@ const PARTNER_LOGO_MAP = {
     img: require("./logos/treasure.png"),
     filter: undefined,
   },
+  xai: {
+    img: require("./logos/xai.png"),
+    filter: undefined,
+  },
 } as const;
 
 type Partner = keyof typeof PARTNER_LOGO_MAP;
