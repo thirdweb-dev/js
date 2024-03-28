@@ -1,7 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
   "chain": "unreal",
-  "chainId": 18231,
+  "chainId": 18233,
   "explorers": [
     {
       "name": "blockscout",
@@ -23,27 +23,30 @@ export default {
     "format": "png"
   },
   "infoURL": "https://raas.gelato.network/rollups/details/public/unreal",
-  "name": "unreal-old",
+  "name": "unreal",
   "nativeCurrency": {
     "name": "unreal Ether",
-    "symbol": "ETH",
+    "symbol": "reETH",
     "decimals": 18
   },
-  "networkId": 18231,
+  "networkId": 18233,
   "parent": {
     "type": "L2",
-    "chain": "eip155-11155111",
-    "bridges": []
+    "chain": "eip155-17000",
+    "bridges": [
+      {
+        "url": "https://bridge.gelato.network/bridge/unreal"
+      }
+    ]
   },
   "rpc": [
-    "https://18231.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.unreal.gelato.digital",
-    "wss://ws.unreal.gelato.digital"
+    "https://18233.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.unreal-orbit.gelato.digital",
+    "wss://ws.unreal-orbit.gelato.digital"
   ],
-  "shortName": "unreal-old",
+  "shortName": "unreal",
   "slip44": 60,
-  "slug": "unreal-old",
-  "status": "deprecated",
+  "slug": "unreal",
   "testnet": true,
   "title": "unreal testnet for re.al"
 } as const satisfies Chain;
