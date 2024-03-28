@@ -609,4 +609,11 @@ export type ConnectButtonProps = {
    * Wallets to show as recommended in the `ConnectButton`'s Modal
    */
   recommendedWallets?: Wallet[];
+
+  /**
+   * By default, ConnectButton modal shows a "All Wallets" button that shows a list of 350+ wallets.
+   *
+   * You can disable this button by setting `showAllWallets` prop to `false`
+   */
+  showAllWallets?: boolean;
 };

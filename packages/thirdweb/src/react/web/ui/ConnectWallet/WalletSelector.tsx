@@ -488,7 +488,7 @@ const WalletSelection: React.FC<{
   goBack?: () => void;
   onShowAll?: () => void;
 }> = (props) => {
-  const { recommendedWallets } = useWalletConnectionCtx();
+  const { recommendedWallets, showAllWallets } = useWalletConnectionCtx();
   const { modalSize } = useContext(ModalConfigCtx);
   const wallets = sortWallets(props.wallets, recommendedWallets);
 
@@ -538,7 +538,7 @@ const WalletSelection: React.FC<{
         );
       })}
 
-      {props.onShowAll && (
+      {props.onShowAll && showAllWallets !== false && (
         <ButtonContainer>
           <WalletButton onClick={props.onShowAll}>
             <ShowAllWalletsIcon>

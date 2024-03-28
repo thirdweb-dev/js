@@ -114,6 +114,7 @@ export function ConnectButton(props: ConnectButtonProps) {
         walletConnect: props.walletConnect,
         accountAbstraction: props.accountAbstraction,
         recommendedWallets: props.recommendedWallets,
+        showAllWallets: props.showAllWallets,
       }}
     >
       <WalletUIStatesProvider theme="dark">

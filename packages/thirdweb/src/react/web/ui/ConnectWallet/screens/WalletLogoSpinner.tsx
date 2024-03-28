@@ -64,7 +64,7 @@ const WalletBg = /* @__PURE__ */ StyledDiv(() => {
     background: theme.colors.walletSelectorButtonHoverBg,
     borderRadius: radius.xl,
     border: `1px solid ${theme.colors.borderColor}`,
-    padding: spacing.sm,
+    padding: spacing.xs,
   };
 });
 
