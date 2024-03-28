@@ -55,7 +55,7 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
 
   async init() {
     this._wcWallet = await Web3Wallet.init({
-      core: this._core,
+      core: this._core as any,
       metadata: this._wcMetadata,
     });
 
