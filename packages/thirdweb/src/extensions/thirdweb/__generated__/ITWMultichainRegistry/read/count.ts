@@ -32,7 +32,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { encodeCountParams } "thirdweb/extensions/thirdweb";
  * const result = encodeCountParams({
  *  deployer: ...,
@@ -49,7 +49,7 @@ export function encodeCountParams(options: CountParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { decodeCountResult } from "thirdweb/extensions/thirdweb";
  * const result = decodeCountResult("...");
  * ```
@@ -64,7 +64,7 @@ export function decodeCountResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { count } from "thirdweb/extensions/thirdweb";
  *
  * const result = await count({

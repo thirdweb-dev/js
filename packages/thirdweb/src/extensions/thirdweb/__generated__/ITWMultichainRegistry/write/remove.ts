@@ -39,7 +39,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { encodeRemoveParams } "thirdweb/extensions/thirdweb";
  * const result = encodeRemoveParams({
  *  deployer: ...,
@@ -62,7 +62,7 @@ export function encodeRemoveParams(options: RemoveParams) {
  * @returns A prepared transaction object.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { remove } from "thirdweb/extensions/thirdweb";
  *
  * const transaction = remove({

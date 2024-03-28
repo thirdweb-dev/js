@@ -31,7 +31,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC1155
  * @example
- * ```
+ * ```ts
  * import { encodeCanClaimRewardsParams } "thirdweb/extensions/erc1155";
  * const result = encodeCanClaimRewardsParams({
  *  opener: ...,
@@ -48,7 +48,7 @@ export function encodeCanClaimRewardsParams(options: CanClaimRewardsParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC1155
  * @example
- * ```
+ * ```ts
  * import { decodeCanClaimRewardsResult } from "thirdweb/extensions/erc1155";
  * const result = decodeCanClaimRewardsResult("...");
  * ```
@@ -63,7 +63,7 @@ export function decodeCanClaimRewardsResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC1155
  * @example
- * ```
+ * ```ts
  * import { canClaimRewards } from "thirdweb/extensions/erc1155";
  *
  * const result = await canClaimRewards({

@@ -37,7 +37,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC6551
  * @example
- * ```
+ * ```ts
  * import { encodeIsValidSignerParams } "thirdweb/extensions/erc6551";
  * const result = encodeIsValidSignerParams({
  *  signer: ...,
@@ -55,7 +55,7 @@ export function encodeIsValidSignerParams(options: IsValidSignerParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC6551
  * @example
- * ```
+ * ```ts
  * import { decodeIsValidSignerResult } from "thirdweb/extensions/erc6551";
  * const result = decodeIsValidSignerResult("...");
  * ```
@@ -70,7 +70,7 @@ export function decodeIsValidSignerResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC6551
  * @example
- * ```
+ * ```ts
  * import { isValidSigner } from "thirdweb/extensions/erc6551";
  *
  * const result = await isValidSigner({

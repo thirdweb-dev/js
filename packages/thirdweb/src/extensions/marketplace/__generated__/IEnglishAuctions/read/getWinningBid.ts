@@ -43,7 +43,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension MARKETPLACE
  * @example
- * ```
+ * ```ts
  * import { encodeGetWinningBidParams } "thirdweb/extensions/marketplace";
  * const result = encodeGetWinningBidParams({
  *  auctionId: ...,
@@ -60,7 +60,7 @@ export function encodeGetWinningBidParams(options: GetWinningBidParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension MARKETPLACE
  * @example
- * ```
+ * ```ts
  * import { decodeGetWinningBidResult } from "thirdweb/extensions/marketplace";
  * const result = decodeGetWinningBidResult("...");
  * ```
@@ -75,7 +75,7 @@ export function decodeGetWinningBidResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension MARKETPLACE
  * @example
- * ```
+ * ```ts
  * import { getWinningBid } from "thirdweb/extensions/marketplace";
  *
  * const result = await getWinningBid({

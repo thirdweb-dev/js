@@ -43,7 +43,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { encodeDeployProxyByImplementationParams } "thirdweb/extensions/thirdweb";
  * const result = encodeDeployProxyByImplementationParams({
  *  implementation: ...,
@@ -68,7 +68,7 @@ export function encodeDeployProxyByImplementationParams(
  * @returns A prepared transaction object.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { deployProxyByImplementation } from "thirdweb/extensions/thirdweb";
  *
  * const transaction = deployProxyByImplementation({

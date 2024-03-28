@@ -30,7 +30,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { encodeVerifyClaimParams } "thirdweb/extensions/erc721";
  * const result = encodeVerifyClaimParams({
  *  claimer: ...,
@@ -48,7 +48,7 @@ export function encodeVerifyClaimParams(options: VerifyClaimParams) {
  * @returns The parsed result of the function call.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { verifyClaim } from "thirdweb/extensions/erc721";
  *
  * const result = await verifyClaim({

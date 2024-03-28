@@ -19,7 +19,7 @@ const FN_OUTPUTS = [
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { decodeGetAllAdminsResult } from "thirdweb/extensions/erc4337";
  * const result = decodeGetAllAdminsResult("...");
  * ```
@@ -34,7 +34,7 @@ export function decodeGetAllAdminsResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { getAllAdmins } from "thirdweb/extensions/erc4337";
  *
  * const result = await getAllAdmins();

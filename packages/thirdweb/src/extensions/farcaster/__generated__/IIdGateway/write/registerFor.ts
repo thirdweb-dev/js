@@ -58,7 +58,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { encodeRegisterForParams } "thirdweb/extensions/farcaster";
  * const result = encodeRegisterForParams({
  *  to: ...,
@@ -85,7 +85,7 @@ export function encodeRegisterForParams(options: RegisterForParams) {
  * @returns A prepared transaction object.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { registerFor } from "thirdweb/extensions/farcaster";
  *
  * const transaction = registerFor({

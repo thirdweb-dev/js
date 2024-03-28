@@ -31,7 +31,7 @@ export type WithdrawEventFilters = Partial<{
  * @returns The prepared event object.
  * @extension ERC4626
  * @example
- * ```
+ * ```ts
  * import { getContractEvents } from "thirdweb";
  * import { withdrawEvent } from "thirdweb/extensions/erc4626";
  *

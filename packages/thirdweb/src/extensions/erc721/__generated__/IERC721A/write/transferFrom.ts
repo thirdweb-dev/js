@@ -36,7 +36,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { encodeTransferFromParams } "thirdweb/extensions/erc721";
  * const result = encodeTransferFromParams({
  *  from: ...,
@@ -59,7 +59,7 @@ export function encodeTransferFromParams(options: TransferFromParams) {
  * @returns A prepared transaction object.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { transferFrom } from "thirdweb/extensions/erc721";
  *
  * const transaction = transferFrom({

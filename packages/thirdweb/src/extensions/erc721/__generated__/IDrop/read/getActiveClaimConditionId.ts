@@ -18,7 +18,7 @@ const FN_OUTPUTS = [
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { decodeGetActiveClaimConditionIdResult } from "thirdweb/extensions/erc721";
  * const result = decodeGetActiveClaimConditionIdResult("...");
  * ```
@@ -33,7 +33,7 @@ export function decodeGetActiveClaimConditionIdResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { getActiveClaimConditionId } from "thirdweb/extensions/erc721";
  *
  * const result = await getActiveClaimConditionId();

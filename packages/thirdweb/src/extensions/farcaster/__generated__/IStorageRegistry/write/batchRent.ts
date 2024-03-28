@@ -31,7 +31,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { encodeBatchRentParams } "thirdweb/extensions/farcaster";
  * const result = encodeBatchRentParams({
  *  fids: ...,
@@ -49,7 +49,7 @@ export function encodeBatchRentParams(options: BatchRentParams) {
  * @returns A prepared transaction object.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { batchRent } from "thirdweb/extensions/farcaster";
  *
  * const transaction = batchRent({

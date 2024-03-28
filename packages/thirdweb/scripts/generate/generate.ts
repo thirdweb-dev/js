@@ -145,7 +145,7 @@ ${
  * @returns The encoded ABI parameters.
  * @extension ${extensionName.toUpperCase()}
  * @example
- * \`\`\`
+ * \`\`\`ts
  * import { encode${uppercaseFirstLetter(f.name)}Params } "thirdweb/extensions/${extensionName}";
  * const result = encode${uppercaseFirstLetter(f.name)}Params({\n * ${f.inputs
    .map((x) => ` ${removeLeadingUnderscore(x.name)}: ...,`)
@@ -169,7 +169,7 @@ export function encode${uppercaseFirstLetter(f.name)}Params(options: ${inputType
  * @returns A prepared transaction object.
  * @extension ${extensionName.toUpperCase()}
  * @example
- * \`\`\`
+ * \`\`\`ts
  * import { ${f.name} } from "thirdweb/extensions/${extensionName}";
  * 
  * const transaction = ${f.name}(${
@@ -262,7 +262,7 @@ ${
  * @returns The encoded ABI parameters.
  * @extension ${extensionName.toUpperCase()}
  * @example
- * \`\`\`
+ * \`\`\`ts
  * import { encode${uppercaseFirstLetter(f.name)}Params } "thirdweb/extensions/${extensionName}";
  * const result = encode${uppercaseFirstLetter(f.name)}Params({\n * ${f.inputs
    .map((x) => ` ${removeLeadingUnderscore(x.name)}: ...,`)
@@ -286,7 +286,7 @@ ${
   * @returns The decoded result as per the FN_OUTPUTS definition.
   * @extension ${extensionName.toUpperCase()}
   * @example
-  * \`\`\`
+  * \`\`\`ts
   * import { decode${uppercaseFirstLetter(f.name)}Result } from "thirdweb/extensions/${extensionName}";
   * const result = decode${uppercaseFirstLetter(f.name)}Result("...");
   * \`\`\`
@@ -305,7 +305,7 @@ export function decode${uppercaseFirstLetter(f.name)}Result(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ${extensionName.toUpperCase()}
  * @example
- * \`\`\`
+ * \`\`\`ts
  * import { ${f.name} } from "thirdweb/extensions/${extensionName}";
  * 
  * const result = await ${f.name}(${
@@ -362,7 +362,7 @@ export type ${uppercaseFirstLetter(e.name)}EventFilters = Partial<{
  * @returns The prepared event object.
  * @extension ${extensionName.toUpperCase()}
  * @example
- * \`\`\`
+ * \`\`\`ts
  * import { getContractEvents } from "thirdweb";
  * import { ${eventNameToPreparedEventName(e.name)} } from "thirdweb/extensions/${extensionName}";
  * 

@@ -23,7 +23,7 @@ export type ProxyDeployedEventFilters = Partial<{
  * @returns The prepared event object.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { getContractEvents } from "thirdweb";
  * import { proxyDeployedEvent } from "thirdweb/extensions/thirdweb";
  *

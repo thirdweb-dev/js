@@ -18,7 +18,7 @@ const FN_OUTPUTS = [
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { decodeADD_TYPEHASHResult } from "thirdweb/extensions/farcaster";
  * const result = decodeADD_TYPEHASHResult("...");
  * ```
@@ -33,7 +33,7 @@ export function decodeADD_TYPEHASHResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { ADD_TYPEHASH } from "thirdweb/extensions/farcaster";
  *
  * const result = await ADD_TYPEHASH();

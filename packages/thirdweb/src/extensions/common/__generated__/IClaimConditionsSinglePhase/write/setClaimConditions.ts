@@ -81,7 +81,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { encodeSetClaimConditionsParams } "thirdweb/extensions/common";
  * const result = encodeSetClaimConditionsParams({
  *  phase: ...,
@@ -104,7 +104,7 @@ export function encodeSetClaimConditionsParams(
  * @returns A prepared transaction object.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { setClaimConditions } from "thirdweb/extensions/common";
  *
  * const transaction = setClaimConditions({

@@ -35,7 +35,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC20
  * @example
- * ```
+ * ```ts
  * import { encodeApproveParams } "thirdweb/extensions/erc20";
  * const result = encodeApproveParams({
  *  spender: ...,
@@ -53,7 +53,7 @@ export function encodeApproveParams(options: ApproveParams) {
  * @returns A prepared transaction object.
  * @extension ERC20
  * @example
- * ```
+ * ```ts
  * import { approve } from "thirdweb/extensions/erc20";
  *
  * const transaction = approve({

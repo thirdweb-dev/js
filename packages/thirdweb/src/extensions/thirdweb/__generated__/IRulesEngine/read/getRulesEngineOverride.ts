@@ -19,7 +19,7 @@ const FN_OUTPUTS = [
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { decodeGetRulesEngineOverrideResult } from "thirdweb/extensions/thirdweb";
  * const result = decodeGetRulesEngineOverrideResult("...");
  * ```
@@ -34,7 +34,7 @@ export function decodeGetRulesEngineOverrideResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { getRulesEngineOverride } from "thirdweb/extensions/thirdweb";
  *
  * const result = await getRulesEngineOverride();

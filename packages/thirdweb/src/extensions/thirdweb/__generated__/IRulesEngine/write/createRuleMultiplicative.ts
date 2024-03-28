@@ -58,7 +58,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { encodeCreateRuleMultiplicativeParams } "thirdweb/extensions/thirdweb";
  * const result = encodeCreateRuleMultiplicativeParams({
  *  rule: ...,
@@ -77,7 +77,7 @@ export function encodeCreateRuleMultiplicativeParams(
  * @returns A prepared transaction object.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { createRuleMultiplicative } from "thirdweb/extensions/thirdweb";
  *
  * const transaction = createRuleMultiplicative({

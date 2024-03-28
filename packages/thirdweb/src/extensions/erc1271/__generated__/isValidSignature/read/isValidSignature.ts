@@ -36,7 +36,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC1271
  * @example
- * ```
+ * ```ts
  * import { encodeIsValidSignatureParams } "thirdweb/extensions/erc1271";
  * const result = encodeIsValidSignatureParams({
  *  hash: ...,
@@ -54,7 +54,7 @@ export function encodeIsValidSignatureParams(options: IsValidSignatureParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC1271
  * @example
- * ```
+ * ```ts
  * import { decodeIsValidSignatureResult } from "thirdweb/extensions/erc1271";
  * const result = decodeIsValidSignatureResult("...");
  * ```
@@ -69,7 +69,7 @@ export function decodeIsValidSignatureResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC1271
  * @example
- * ```
+ * ```ts
  * import { isValidSignature } from "thirdweb/extensions/erc1271";
  *
  * const result = await isValidSignature({

@@ -31,7 +31,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { encodeGrantRoleParams } "thirdweb/extensions/common";
  * const result = encodeGrantRoleParams({
  *  role: ...,
@@ -49,7 +49,7 @@ export function encodeGrantRoleParams(options: GrantRoleParams) {
  * @returns A prepared transaction object.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { grantRole } from "thirdweb/extensions/common";
  *
  * const transaction = grantRole({

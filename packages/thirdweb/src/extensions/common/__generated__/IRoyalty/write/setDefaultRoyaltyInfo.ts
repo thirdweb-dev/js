@@ -37,7 +37,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { encodeSetDefaultRoyaltyInfoParams } "thirdweb/extensions/common";
  * const result = encodeSetDefaultRoyaltyInfoParams({
  *  royaltyRecipient: ...,
@@ -60,7 +60,7 @@ export function encodeSetDefaultRoyaltyInfoParams(
  * @returns A prepared transaction object.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { setDefaultRoyaltyInfo } from "thirdweb/extensions/common";
  *
  * const transaction = setDefaultRoyaltyInfo({

@@ -31,7 +31,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { encodeTokenByIndexParams } "thirdweb/extensions/erc721";
  * const result = encodeTokenByIndexParams({
  *  index: ...,
@@ -48,7 +48,7 @@ export function encodeTokenByIndexParams(options: TokenByIndexParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { decodeTokenByIndexResult } from "thirdweb/extensions/erc721";
  * const result = decodeTokenByIndexResult("...");
  * ```
@@ -63,7 +63,7 @@ export function decodeTokenByIndexResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { tokenByIndex } from "thirdweb/extensions/erc721";
  *
  * const result = await tokenByIndex({

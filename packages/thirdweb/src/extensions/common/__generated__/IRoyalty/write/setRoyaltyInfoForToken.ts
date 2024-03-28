@@ -39,7 +39,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { encodeSetRoyaltyInfoForTokenParams } "thirdweb/extensions/common";
  * const result = encodeSetRoyaltyInfoForTokenParams({
  *  tokenId: ...,
@@ -64,7 +64,7 @@ export function encodeSetRoyaltyInfoForTokenParams(
  * @returns A prepared transaction object.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { setRoyaltyInfoForToken } from "thirdweb/extensions/common";
  *
  * const transaction = setRoyaltyInfoForToken({

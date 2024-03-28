@@ -54,7 +54,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension UNISWAP
  * @example
- * ```
+ * ```ts
  * import { encodeQuoteExactInputSingleParams } "thirdweb/extensions/uniswap";
  * const result = encodeQuoteExactInputSingleParams({
  *  tokenIn: ...,
@@ -83,7 +83,7 @@ export function encodeQuoteExactInputSingleParams(
  * @returns A prepared transaction object.
  * @extension UNISWAP
  * @example
- * ```
+ * ```ts
  * import { quoteExactInputSingle } from "thirdweb/extensions/uniswap";
  *
  * const transaction = quoteExactInputSingle({

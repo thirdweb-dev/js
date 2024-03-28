@@ -36,7 +36,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { encodeIsApprovedForAllParams } "thirdweb/extensions/erc721";
  * const result = encodeIsApprovedForAllParams({
  *  owner: ...,
@@ -54,7 +54,7 @@ export function encodeIsApprovedForAllParams(options: IsApprovedForAllParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { decodeIsApprovedForAllResult } from "thirdweb/extensions/erc721";
  * const result = decodeIsApprovedForAllResult("...");
  * ```
@@ -69,7 +69,7 @@ export function decodeIsApprovedForAllResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { isApprovedForAll } from "thirdweb/extensions/erc721";
  *
  * const result = await isApprovedForAll({

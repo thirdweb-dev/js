@@ -45,7 +45,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { encodeOnERC721ReceivedParams } "thirdweb/extensions/erc721";
  * const result = encodeOnERC721ReceivedParams({
  *  operator: ...,
@@ -70,7 +70,7 @@ export function encodeOnERC721ReceivedParams(options: OnERC721ReceivedParams) {
  * @returns A prepared transaction object.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { onERC721Received } from "thirdweb/extensions/erc721";
  *
  * const transaction = onERC721Received({

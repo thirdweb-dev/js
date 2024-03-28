@@ -48,7 +48,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { encodeGetRoyaltyParams } "thirdweb/extensions/common";
  * const result = encodeGetRoyaltyParams({
  *  tokenAddress: ...,
@@ -71,7 +71,7 @@ export function encodeGetRoyaltyParams(options: GetRoyaltyParams) {
  * @returns A prepared transaction object.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { getRoyalty } from "thirdweb/extensions/common";
  *
  * const transaction = getRoyalty({

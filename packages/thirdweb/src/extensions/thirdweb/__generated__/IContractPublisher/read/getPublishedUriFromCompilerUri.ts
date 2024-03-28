@@ -35,7 +35,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { encodeGetPublishedUriFromCompilerUriParams } "thirdweb/extensions/thirdweb";
  * const result = encodeGetPublishedUriFromCompilerUriParams({
  *  compilerMetadataUri: ...,
@@ -54,7 +54,7 @@ export function encodeGetPublishedUriFromCompilerUriParams(
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { decodeGetPublishedUriFromCompilerUriResult } from "thirdweb/extensions/thirdweb";
  * const result = decodeGetPublishedUriFromCompilerUriResult("...");
  * ```
@@ -69,7 +69,7 @@ export function decodeGetPublishedUriFromCompilerUriResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { getPublishedUriFromCompilerUri } from "thirdweb/extensions/thirdweb";
  *
  * const result = await getPublishedUriFromCompilerUri({

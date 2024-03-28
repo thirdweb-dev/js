@@ -31,7 +31,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC20
  * @example
- * ```
+ * ```ts
  * import { encodeGetVotesParams } "thirdweb/extensions/erc20";
  * const result = encodeGetVotesParams({
  *  account: ...,
@@ -48,7 +48,7 @@ export function encodeGetVotesParams(options: GetVotesParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC20
  * @example
- * ```
+ * ```ts
  * import { decodeGetVotesResult } from "thirdweb/extensions/erc20";
  * const result = decodeGetVotesResult("...");
  * ```
@@ -63,7 +63,7 @@ export function decodeGetVotesResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC20
  * @example
- * ```
+ * ```ts
  * import { getVotes } from "thirdweb/extensions/erc20";
  *
  * const result = await getVotes({

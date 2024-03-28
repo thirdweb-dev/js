@@ -23,7 +23,7 @@ export type AdminResetEventFilters = Partial<{
  * @returns The prepared event object.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { getContractEvents } from "thirdweb";
  * import { adminResetEvent } from "thirdweb/extensions/farcaster";
  *

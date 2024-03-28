@@ -18,7 +18,7 @@ const FN_OUTPUTS = [
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { decodeSymbolResult } from "thirdweb/extensions/common";
  * const result = decodeSymbolResult("...");
  * ```
@@ -33,7 +33,7 @@ export function decodeSymbolResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { symbol } from "thirdweb/extensions/common";
  *
  * const result = await symbol();

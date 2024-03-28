@@ -31,7 +31,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { encodeNoncesParams } "thirdweb/extensions/farcaster";
  * const result = encodeNoncesParams({
  *  account: ...,
@@ -48,7 +48,7 @@ export function encodeNoncesParams(options: NoncesParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { decodeNoncesResult } from "thirdweb/extensions/farcaster";
  * const result = decodeNoncesResult("...");
  * ```
@@ -63,7 +63,7 @@ export function decodeNoncesResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { nonces } from "thirdweb/extensions/farcaster";
  *
  * const result = await nonces({

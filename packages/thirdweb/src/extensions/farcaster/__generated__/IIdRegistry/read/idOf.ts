@@ -32,7 +32,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { encodeIdOfParams } "thirdweb/extensions/farcaster";
  * const result = encodeIdOfParams({
  *  owner: ...,
@@ -49,7 +49,7 @@ export function encodeIdOfParams(options: IdOfParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { decodeIdOfResult } from "thirdweb/extensions/farcaster";
  * const result = decodeIdOfResult("...");
  * ```
@@ -64,7 +64,7 @@ export function decodeIdOfResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { idOf } from "thirdweb/extensions/farcaster";
  *
  * const result = await idOf({

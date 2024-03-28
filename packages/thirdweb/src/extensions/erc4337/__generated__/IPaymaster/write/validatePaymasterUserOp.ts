@@ -110,7 +110,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { encodeValidatePaymasterUserOpParams } "thirdweb/extensions/erc4337";
  * const result = encodeValidatePaymasterUserOpParams({
  *  userOp: ...,
@@ -135,7 +135,7 @@ export function encodeValidatePaymasterUserOpParams(
  * @returns A prepared transaction object.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { validatePaymasterUserOp } from "thirdweb/extensions/erc4337";
  *
  * const transaction = validatePaymasterUserOp({

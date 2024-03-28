@@ -18,7 +18,7 @@ export type RewardsClaimedEventFilters = Partial<{
  * @returns The prepared event object.
  * @extension ERC20
  * @example
- * ```
+ * ```ts
  * import { getContractEvents } from "thirdweb";
  * import { rewardsClaimedEvent } from "thirdweb/extensions/erc20";
  *

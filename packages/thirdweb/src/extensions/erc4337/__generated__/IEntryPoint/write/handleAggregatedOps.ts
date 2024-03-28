@@ -118,7 +118,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { encodeHandleAggregatedOpsParams } "thirdweb/extensions/erc4337";
  * const result = encodeHandleAggregatedOpsParams({
  *  opsPerAggregator: ...,
@@ -141,7 +141,7 @@ export function encodeHandleAggregatedOpsParams(
  * @returns A prepared transaction object.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { handleAggregatedOps } from "thirdweb/extensions/erc4337";
  *
  * const transaction = handleAggregatedOps({

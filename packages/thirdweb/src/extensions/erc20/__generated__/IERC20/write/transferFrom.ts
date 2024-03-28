@@ -40,7 +40,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC20
  * @example
- * ```
+ * ```ts
  * import { encodeTransferFromParams } "thirdweb/extensions/erc20";
  * const result = encodeTransferFromParams({
  *  from: ...,
@@ -63,7 +63,7 @@ export function encodeTransferFromParams(options: TransferFromParams) {
  * @returns A prepared transaction object.
  * @extension ERC20
  * @example
- * ```
+ * ```ts
  * import { transferFrom } from "thirdweb/extensions/erc20";
  *
  * const transaction = transferFrom({

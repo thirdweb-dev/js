@@ -38,7 +38,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC4626
  * @example
- * ```
+ * ```ts
  * import { encodeMaxMintParams } "thirdweb/extensions/erc4626";
  * const result = encodeMaxMintParams({
  *  receiver: ...,
@@ -55,7 +55,7 @@ export function encodeMaxMintParams(options: MaxMintParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC4626
  * @example
- * ```
+ * ```ts
  * import { decodeMaxMintResult } from "thirdweb/extensions/erc4626";
  * const result = decodeMaxMintResult("...");
  * ```
@@ -70,7 +70,7 @@ export function decodeMaxMintResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC4626
  * @example
- * ```
+ * ```ts
  * import { maxMint } from "thirdweb/extensions/erc4626";
  *
  * const result = await maxMint({

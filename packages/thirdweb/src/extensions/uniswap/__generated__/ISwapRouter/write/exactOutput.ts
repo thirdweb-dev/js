@@ -63,7 +63,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension UNISWAP
  * @example
- * ```
+ * ```ts
  * import { encodeExactOutputParams } "thirdweb/extensions/uniswap";
  * const result = encodeExactOutputParams({
  *  params: ...,
@@ -80,7 +80,7 @@ export function encodeExactOutputParams(options: ExactOutputParams) {
  * @returns A prepared transaction object.
  * @extension UNISWAP
  * @example
- * ```
+ * ```ts
  * import { exactOutput } from "thirdweb/extensions/uniswap";
  *
  * const transaction = exactOutput({

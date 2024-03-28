@@ -18,7 +18,7 @@ export type PlatformFeeInfoUpdatedEventFilters = Partial<{
  * @returns The prepared event object.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { getContractEvents } from "thirdweb";
  * import { platformFeeInfoUpdatedEvent } from "thirdweb/extensions/common";
  *

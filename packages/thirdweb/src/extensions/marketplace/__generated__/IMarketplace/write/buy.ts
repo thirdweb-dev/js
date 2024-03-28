@@ -52,7 +52,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension MARKETPLACE
  * @example
- * ```
+ * ```ts
  * import { encodeBuyParams } "thirdweb/extensions/marketplace";
  * const result = encodeBuyParams({
  *  listingId: ...,
@@ -79,7 +79,7 @@ export function encodeBuyParams(options: BuyParams) {
  * @returns A prepared transaction object.
  * @extension MARKETPLACE
  * @example
- * ```
+ * ```ts
  * import { buy } from "thirdweb/extensions/marketplace";
  *
  * const transaction = buy({

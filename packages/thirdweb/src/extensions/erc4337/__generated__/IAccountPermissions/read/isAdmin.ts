@@ -31,7 +31,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { encodeIsAdminParams } "thirdweb/extensions/erc4337";
  * const result = encodeIsAdminParams({
  *  signer: ...,
@@ -48,7 +48,7 @@ export function encodeIsAdminParams(options: IsAdminParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { decodeIsAdminResult } from "thirdweb/extensions/erc4337";
  * const result = decodeIsAdminResult("...");
  * ```
@@ -63,7 +63,7 @@ export function decodeIsAdminResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { isAdmin } from "thirdweb/extensions/erc4337";
  *
  * const result = await isAdmin({

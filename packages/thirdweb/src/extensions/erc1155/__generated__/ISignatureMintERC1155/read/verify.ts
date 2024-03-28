@@ -108,7 +108,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC1155
  * @example
- * ```
+ * ```ts
  * import { encodeVerifyParams } "thirdweb/extensions/erc1155";
  * const result = encodeVerifyParams({
  *  req: ...,
@@ -126,7 +126,7 @@ export function encodeVerifyParams(options: VerifyParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC1155
  * @example
- * ```
+ * ```ts
  * import { decodeVerifyResult } from "thirdweb/extensions/erc1155";
  * const result = decodeVerifyResult("...");
  * ```
@@ -141,7 +141,7 @@ export function decodeVerifyResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC1155
  * @example
- * ```
+ * ```ts
  * import { verify } from "thirdweb/extensions/erc1155";
  *
  * const result = await verify({

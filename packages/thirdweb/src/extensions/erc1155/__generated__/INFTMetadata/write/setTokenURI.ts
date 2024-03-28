@@ -31,7 +31,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension ERC1155
  * @example
- * ```
+ * ```ts
  * import { encodeSetTokenURIParams } "thirdweb/extensions/erc1155";
  * const result = encodeSetTokenURIParams({
  *  tokenId: ...,
@@ -49,7 +49,7 @@ export function encodeSetTokenURIParams(options: SetTokenURIParams) {
  * @returns A prepared transaction object.
  * @extension ERC1155
  * @example
- * ```
+ * ```ts
  * import { setTokenURI } from "thirdweb/extensions/erc1155";
  *
  * const transaction = setTokenURI({

@@ -31,7 +31,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension ERC1155
  * @example
- * ```
+ * ```ts
  * import { encodeSetApprovalForAllParams } "thirdweb/extensions/erc1155";
  * const result = encodeSetApprovalForAllParams({
  *  operator: ...,
@@ -51,7 +51,7 @@ export function encodeSetApprovalForAllParams(
  * @returns A prepared transaction object.
  * @extension ERC1155
  * @example
- * ```
+ * ```ts
  * import { setApprovalForAll } from "thirdweb/extensions/erc1155";
  *
  * const transaction = setApprovalForAll({

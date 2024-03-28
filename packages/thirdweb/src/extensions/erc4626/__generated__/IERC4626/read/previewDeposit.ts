@@ -38,7 +38,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC4626
  * @example
- * ```
+ * ```ts
  * import { encodePreviewDepositParams } "thirdweb/extensions/erc4626";
  * const result = encodePreviewDepositParams({
  *  assets: ...,
@@ -55,7 +55,7 @@ export function encodePreviewDepositParams(options: PreviewDepositParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC4626
  * @example
- * ```
+ * ```ts
  * import { decodePreviewDepositResult } from "thirdweb/extensions/erc4626";
  * const result = decodePreviewDepositResult("...");
  * ```
@@ -70,7 +70,7 @@ export function decodePreviewDepositResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC4626
  * @example
- * ```
+ * ```ts
  * import { previewDeposit } from "thirdweb/extensions/erc4626";
  *
  * const result = await previewDeposit({

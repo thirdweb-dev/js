@@ -40,7 +40,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { encodeGetMetadataUriParams } "thirdweb/extensions/thirdweb";
  * const result = encodeGetMetadataUriParams({
  *  chainId: ...,
@@ -58,7 +58,7 @@ export function encodeGetMetadataUriParams(options: GetMetadataUriParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { decodeGetMetadataUriResult } from "thirdweb/extensions/thirdweb";
  * const result = decodeGetMetadataUriResult("...");
  * ```
@@ -73,7 +73,7 @@ export function decodeGetMetadataUriResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { getMetadataUri } from "thirdweb/extensions/thirdweb";
  *
  * const result = await getMetadataUri({

@@ -79,7 +79,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension PREBUILTS
  * @example
- * ```
+ * ```ts
  * import { encodeInitializeParams } "thirdweb/extensions/prebuilts";
  * const result = encodeInitializeParams({
  *  defaultAdmin: ...,
@@ -112,7 +112,7 @@ export function encodeInitializeParams(options: InitializeParams) {
  * @returns A prepared transaction object.
  * @extension PREBUILTS
  * @example
- * ```
+ * ```ts
  * import { initialize } from "thirdweb/extensions/prebuilts";
  *
  * const transaction = initialize({
