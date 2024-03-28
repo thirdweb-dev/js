@@ -16,8 +16,8 @@ export class ImTokenConnector extends InjectedConnector {
       name: "imToken",
       getProvider() {
         function getReady(ethereum?: Ethereum) {
-          const isToken = !!ethereum?.isToken;
-          if (!isToken) {
+          const isImToken = !!ethereum?.isImToken;
+          if (!isImToken) {
             return;
           }
           return ethereum;

@@ -54,6 +54,9 @@ export function getInjectedName(ethereum?: Ethereum) {
     if (provider.isMetaMask) {
       return "MetaMask";
     }
+    if (provider.isImToken) {
+      return "imToken";
+    }
   };
 
   // Some injected providers detect multiple other providers and create a list at `ethers.providers`
