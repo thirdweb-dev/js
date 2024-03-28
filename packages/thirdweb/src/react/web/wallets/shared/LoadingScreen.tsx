@@ -8,7 +8,7 @@ export function LoadingScreen(props: { height?: string }) {
   return (
     <Container
       style={{
-        height: props.height || "350px",
+        minHeight: props.height || "350px",
       }}
       fullHeight
       flex="row"

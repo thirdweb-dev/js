@@ -310,6 +310,18 @@ export type ConnectEmbedProps = {
    * />
    */
   accountAbstraction?: SmartWalletOptions;
+
+  /**
+   * Wallets to show as recommended in the `ConnectEmbed` UI
+   */
+  recommendedWallets?: Wallet[];
+
+  /**
+   * By default, `ConnectEmbed` shows a "All Wallets" button that shows a list of 350+ wallets.
+   *
+   * You can disable this button by setting `showAllWallets` prop to `false`
+   */
+  showAllWallets?: boolean;
 };
 
 /**
@@ -457,6 +469,8 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
           chains: props.chains,
           walletConnect: props.walletConnect,
           accountAbstraction: props.accountAbstraction,
+          recommendedWallets: props.recommendedWallets,
+          showAllWallets: props.showAllWallets,
         }}
       >
         <WalletUIStatesProvider {...walletUIStatesProps}>

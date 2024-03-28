@@ -14,7 +14,7 @@ const injectedWalletLocaleTl = (walletName: string): InjectedWalletLocale => ({
     instruction: `I-scan ang QR code para ma-download ang ${walletName} app`,
   },
   scanScreen: {
-    instruction: `I-scan ang QR code gamit ang ${walletName} wallet app para makonekta`,
+    instruction: `I-scan ang QR code gamit ang ${walletName} app para makonekta`,
   },
   getStartedLink: `Wala kang ${walletName} wallet?`,
   download: {

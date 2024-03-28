@@ -141,7 +141,9 @@ export type MinimalWalletInfo = {
 /**
  * @internal
  */
-export const ALL_MINIMAL_WALLET_INFOS = <const>${JSON.stringify(walletInfos, null, 2)} satisfies MinimalWalletInfo[];
+const ALL_MINIMAL_WALLET_INFOS = <const>${JSON.stringify(walletInfos, null, 2)} satisfies MinimalWalletInfo[];
+
+export default ALL_MINIMAL_WALLET_INFOS;
 `,
     {
       parser: "babel-ts",
