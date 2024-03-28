@@ -17,6 +17,8 @@ import { ModalConfigCtx } from "../../../providers/wallet-ui-states-provider.js"
 import { createWallet } from "../../../../../wallets/create-wallet.js";
 import { useWalletInfo } from "../../hooks/useWalletInfo.js";
 import type { WalletInfo } from "../../../../../wallets/wallet-info.js";
+import { saveConnectParamsToStorage } from "../../../../../wallets/storage/walletStorage.js";
+import { asyncLocalStorage } from "../../../../core/utils/asyncLocalStorage.js";
 
 /**
  * @internal
@@ -116,6 +118,10 @@ function SmartWalletConnecting(props: {
       await smartWallet.connect({
         personalAccount,
         client,
+      });
+
+      saveConnectParamsToStorage(asyncLocalStorage, "accountAbstraction", {
+        personalWalletId: personalWallet.id,
       });
 
       done(smartWallet);
