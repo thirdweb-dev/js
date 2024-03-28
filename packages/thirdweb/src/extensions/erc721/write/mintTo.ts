@@ -1,4 +1,5 @@
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
+import type { NFTInput } from "../../../utils/nft/parseNft.js";
 import { mintTo as generatedMintTo } from "../__generated__/IMintableERC721/write/mintTo.js";
 
 export type MintToParams = {
