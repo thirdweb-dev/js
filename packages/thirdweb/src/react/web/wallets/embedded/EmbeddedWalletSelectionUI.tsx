@@ -53,7 +53,7 @@ function EmbeddedWalletSelectionUI(props: {
   }
 
   if (!locale) {
-    return <LoadingScreen height="300px" />;
+    return <LoadingScreen height="195px" />;
   }
 
   return (

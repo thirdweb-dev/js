@@ -481,7 +481,7 @@ const WalletSelection: React.FC<{
   onShowAll?: () => void;
 }> = (props) => {
   const { recommendedWallets } = useWalletConnectionCtx();
-
+  const { modalSize } = useContext(ModalConfigCtx);
   const wallets = sortWallets(props.wallets, recommendedWallets);
 
   // const modalConfig = useContext(ModalConfigCtx);
@@ -509,7 +509,7 @@ const WalletSelection: React.FC<{
             key={wallet.id}
             // data-full-width={!!walletConfig.selectUI}
           >
-            {wallet.id === "embedded" ? (
+            {wallet.id === "embedded" && modalSize === "compact" ? (
               <Suspense fallback={<LoadingScreen height="195px" />}>
                 <EmbeddedWalletSelectionUI
                   done={() => props.done(wallet)}
