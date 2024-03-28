@@ -32,23 +32,27 @@ export type AutoConnectProps = {
    * Array of wallets that your app uses
    * @example
    * ```tsx
-   * import { metamaskConfig, coinbaseConfig, walletConnectConfig } from "thirdweb/react";
+   * import { createWallet, embeddedWallet } from "thirdweb/react";
+   *
+   * const wallets = [
+   *   createWallet("embedded"),
+   *   createWallet("io.metamask"),
+   *   createWallet("com.coinbase.wallet"),
+   *   createWallet("me.rainbow"),
+   * ];
    *
    * function Example() {
    *  return (
-   *    <AutoConnect
+   *    <ConnectButton
    *      client={client}
-   *      wallets={[
-   *        metamaskConfig(),
-   *        coinbaseConfig(),
-   *        walletConnectConfig(),
-   *      ]}
+   *      wallets={wallets}
    *    />
    *  )
    * }
    * ```
    */
   wallets: Wallet[];
+
   /**
    * A client is the entry point to the thirdweb SDK.
    * It is required for all other actions.
@@ -65,18 +69,18 @@ export type AutoConnectProps = {
    * ```
    */
   client: ThirdwebClient;
+
   /**
-   * Metadata of the app that will be passed to connected wallet.
+   * Metadata of the app that will be passed to connected wallet. Setting this is highly recommended.
    *
    * Some wallets display this information to the user when they connect to your app.
-   *
-   *
+   * @example
    * ```ts
    * {
-   *   name: "thirdweb powered dApp",
-   *   url: "https://thirdweb.com",
-   *   description: "thirdweb powered dApp",
-   *   logoUrl: "https://thirdweb.com/favicon.ico",
+   *   name: "My App",
+   *   url: "https://my-app.com",
+   *   description: "some description about your app",
+   *   logoUrl: "https://path/to/my-app/logo.svg",
    * };
    * ```
    */
@@ -123,12 +127,15 @@ export type AutoConnectProps = {
  * @param props - Object of type `AutoConnectProps`. Refer to [`AutoConnectProps`](https://portal.thirdweb.com/references/typescript/v5/AutoConnectProps)
  * @example
  * ```tsx
- * import { AutoConnect } from "@thirdweb/react";
+ * import { AutoConnect } from "thirdweb/react";
+ * import { createWallet } from "thirdweb/wallets";
+ *
  *
  * // list of wallets that your app uses
  * const wallets = [
- *  metamaskConfig(),
- *  coinbaseConfig(),
+ *  createWallet('io.metamask'),
+ *  createWallet("embedded"),
+ *  createWallet("me.rainbow"),
  * ]
  *
  * function Example() {
@@ -287,13 +294,3 @@ export function NoAutoConnect() {
 
   return null;
 }
-
-// function isValidWithPersonalWalletConnectionOptions(
-//   options: any,
-// ): options is WithPersonalWalletConnectionOptions {
-//   return (
-//     typeof options === "object" &&
-//     options !== null &&
-//     typeof options.personalWalletId === "string"
-//   );
-// }
