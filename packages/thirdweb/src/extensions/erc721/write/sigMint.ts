@@ -16,12 +16,16 @@ import type { Account } from "../../../wallets/interfaces/wallet.js";
  * @param options - The transaction options.
  * @example
  * ```ts
- * import { mintWithSignature } from "thirdweb/extensions/erc721";
- * const tx = await mintWithSignature({
+ * import { mintWithSignature, generateMintSignature } from "thirdweb/extensions/erc721";
+ *
+ * const { payload, signature } = await generateMintSignature(...)
+ *
+ * const transaction = mintWithSignature({
  *   contract,
  *   payload,
- *   signature: "0x...",
+ *   signature,
  * });
+ * await sendTransaction({ transaction, account });
  * ```
  * @extension ERC721
  * @returns A promise that resolves to the transaction result.
@@ -39,7 +43,8 @@ export type GenerateMintSignatureOptions = {
  * @param options - The options for the minting process.
  * @example
  * ```ts
- * import { generateMintSignature } from "thirdweb/extensions/erc721";
+ * import { mintWithSignature, generateMintSignature } from "thirdweb/extensions/erc721";
+ *
  * const { payload, signature } = await generateMintSignature({
  *   account,
  *   contract,
@@ -52,7 +57,16 @@ export type GenerateMintSignatureOptions = {
  *     },
  *   },
  * });
+ *
+ * const transaction = mintWithSignature({
+ *   contract,
+ *   payload,
+ *   signature,
+ * });
+ * await sendTransaction({ transaction, account });
  * ```
+ * @extension ERC721
+ * @returns A promise that resolves to the payload and signature.
  */
 export async function generateMintSignature(
   options: GenerateMintSignatureOptions,

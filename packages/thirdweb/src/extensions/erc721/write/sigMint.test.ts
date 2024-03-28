@@ -1,4 +1,4 @@
-import { beforeAll, describe, expect, it, vi } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 import { generateMintSignature, mintWithSignature } from "./sigMint.js";
 import {
   TEST_ACCOUNT_A,
@@ -14,7 +14,7 @@ import {
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/addresses.js";
 import { USDC_CONTRACT_ADDRESS } from "../../../../test/src/test-contracts.js";
 import { toHex } from "../../../utils/encoding/hex.js";
-import { sendTransaction } from "../../../exports/thirdweb.js";
+import { sendTransaction } from "../../../transaction/actions/send-transaction.js";
 
 describe(
   "generateMintSignature",
