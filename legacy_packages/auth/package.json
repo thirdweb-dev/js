@@ -51,7 +51,7 @@
     },
     "./package.json": "./package.json"
   },
-  "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/auth",
+  "repository": "https://github.com/thirdweb-dev/js/tree/main/legacy_packages/auth",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
   "sideEffects": false,

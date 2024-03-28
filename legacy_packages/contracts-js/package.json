@@ -423,7 +423,7 @@
     "./dist/abis/ContractMetadataImpl.json": "./dist/abis/ContractMetadataImpl.json"
   },
   "license": "Apache-2.0",
-  "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/contracts-js",
+  "repository": "https://github.com/thirdweb-dev/js/tree/main/legacy_packages/contracts-js",
   "dependencies": {
     "@thirdweb-dev/contracts": "3.12.1"
   },

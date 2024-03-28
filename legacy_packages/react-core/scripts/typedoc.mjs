@@ -6,8 +6,8 @@ import { typedoc } from "typedoc-gen";
 typedoc({
   entryPoints: ["src/index.ts"],
   exclude: [
-    "**/packages/sdk/**",
-    "**/packages/wallets/**",
-    "**/packages/chains/**",
+    "**/legacy_packages/sdk/**",
+    "**/legacy_packages/wallets/**",
+    "**/legacy_packages/chains/**",
   ],
 });
