@@ -1,11 +1,11 @@
 import type { Chain } from "../src/types";
 export default {
-  "chain": "SanRChain",
+  "chain": "Santiment Intelligence Network",
   "chainId": 11888,
   "explorers": [
     {
-      "name": "SanR Chain Explorer",
-      "url": "https://sanrchain-explorer.santiment.net",
+      "name": "Santiment Intelligence Explorer",
+      "url": "https://app-explorer-pos.sanr.app",
       "standard": "none"
     }
   ],
@@ -17,10 +17,10 @@ export default {
     "format": "png"
   },
   "infoURL": "https://sanr.app",
-  "name": "SanR Chain",
+  "name": "Santiment Intelligence Network",
   "nativeCurrency": {
-    "name": "nSAN",
-    "symbol": "nSAN",
+    "name": "SANR",
+    "symbol": "SANR",
     "decimals": 18
   },
   "networkId": 11888,
@@ -38,6 +38,6 @@ export default {
     "https://sanrchain-node.santiment.net"
   ],
   "shortName": "SAN",
-  "slug": "sanr-chain",
+  "slug": "santiment-intelligence-network",
   "testnet": false
 } as const satisfies Chain;
