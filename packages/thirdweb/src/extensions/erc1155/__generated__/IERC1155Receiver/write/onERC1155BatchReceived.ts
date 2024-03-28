@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "onERC1155BatchReceived" function.
  */
 
-type OnERC1155BatchReceivedParamsInternal = {
+export type OnERC1155BatchReceivedParams = {
   operator: AbiParameterToPrimitiveType<{ type: "address"; name: "operator" }>;
   from: AbiParameterToPrimitiveType<{ type: "address"; name: "from" }>;
   ids: AbiParameterToPrimitiveType<{ type: "uint256[]"; name: "ids" }>;
@@ -16,12 +15,6 @@ type OnERC1155BatchReceivedParamsInternal = {
   data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "data" }>;
 };
 
-export type OnERC1155BatchReceivedParams = Prettify<
-  | OnERC1155BatchReceivedParamsInternal
-  | {
-      asyncParams: () => Promise<OnERC1155BatchReceivedParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0xbc197c81" as const;
 const FN_INPUTS = [
   {
@@ -69,7 +62,7 @@ const FN_OUTPUTS = [
  * ```
  */
 export function encodeOnERC1155BatchReceivedParams(
-  options: OnERC1155BatchReceivedParamsInternal,
+  options: OnERC1155BatchReceivedParams,
 ) {
   return encodeAbiParameters(FN_INPUTS, [
     options.operator,
@@ -90,6 +83,7 @@ export function encodeOnERC1155BatchReceivedParams(
  * import { onERC1155BatchReceived } from "thirdweb/extensions/erc1155";
  *
  * const transaction = onERC1155BatchReceived({
+ *  contract,
  *  operator: ...,
  *  from: ...,
  *  ids: ...,
@@ -103,7 +97,12 @@ export function encodeOnERC1155BatchReceivedParams(
  * ```
  */
 export function onERC1155BatchReceived(
-  options: BaseTransactionOptions<OnERC1155BatchReceivedParams>,
+  options: BaseTransactionOptions<
+    | OnERC1155BatchReceivedParams
+    | {
+        asyncParams: () => Promise<OnERC1155BatchReceivedParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

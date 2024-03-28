@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "permit" function.
  */
 
-type PermitParamsInternal = {
+export type PermitParams = {
   owner: AbiParameterToPrimitiveType<{ type: "address"; name: "owner" }>;
   spender: AbiParameterToPrimitiveType<{ type: "address"; name: "spender" }>;
   value: AbiParameterToPrimitiveType<{ type: "uint256"; name: "value" }>;
@@ -18,12 +17,6 @@ type PermitParamsInternal = {
   s: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "s" }>;
 };
 
-export type PermitParams = Prettify<
-  | PermitParamsInternal
-  | {
-      asyncParams: () => Promise<PermitParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0xd505accf" as const;
 const FN_INPUTS = [
   {
@@ -76,7 +69,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodePermitParams(options: PermitParamsInternal) {
+export function encodePermitParams(options: PermitParams) {
   return encodeAbiParameters(FN_INPUTS, [
     options.owner,
     options.spender,
@@ -98,6 +91,7 @@ export function encodePermitParams(options: PermitParamsInternal) {
  * import { permit } from "thirdweb/extensions/erc20";
  *
  * const transaction = permit({
+ *  contract,
  *  owner: ...,
  *  spender: ...,
  *  value: ...,
@@ -112,7 +106,14 @@ export function encodePermitParams(options: PermitParamsInternal) {
  *
  * ```
  */
-export function permit(options: BaseTransactionOptions<PermitParams>) {
+export function permit(
+  options: BaseTransactionOptions<
+    | PermitParams
+    | {
+        asyncParams: () => Promise<PermitParams>;
+      }
+  >,
+) {
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,

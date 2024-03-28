@@ -1,23 +1,16 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "remove" function.
  */
 
-type RemoveParamsInternal = {
+export type RemoveParams = {
   key: AbiParameterToPrimitiveType<{ type: "bytes"; name: "key" }>;
 };
 
-export type RemoveParams = Prettify<
-  | RemoveParamsInternal
-  | {
-      asyncParams: () => Promise<RemoveParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x58edef4c" as const;
 const FN_INPUTS = [
   {
@@ -40,7 +33,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodeRemoveParams(options: RemoveParamsInternal) {
+export function encodeRemoveParams(options: RemoveParams) {
   return encodeAbiParameters(FN_INPUTS, [options.key]);
 }
 
@@ -54,6 +47,7 @@ export function encodeRemoveParams(options: RemoveParamsInternal) {
  * import { remove } from "thirdweb/extensions/farcaster";
  *
  * const transaction = remove({
+ *  contract,
  *  key: ...,
  * });
  *
@@ -62,7 +56,14 @@ export function encodeRemoveParams(options: RemoveParamsInternal) {
  *
  * ```
  */
-export function remove(options: BaseTransactionOptions<RemoveParams>) {
+export function remove(
+  options: BaseTransactionOptions<
+    | RemoveParams
+    | {
+        asyncParams: () => Promise<RemoveParams>;
+      }
+  >,
+) {
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,

@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "buy" function.
  */
 
-type BuyParamsInternal = {
+export type BuyParams = {
   listingId: AbiParameterToPrimitiveType<{
     type: "uint256";
     name: "_listingId";
@@ -22,12 +21,6 @@ type BuyParamsInternal = {
   }>;
 };
 
-export type BuyParams = Prettify<
-  | BuyParamsInternal
-  | {
-      asyncParams: () => Promise<BuyParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x7687ab02" as const;
 const FN_INPUTS = [
   {
@@ -70,7 +63,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodeBuyParams(options: BuyParamsInternal) {
+export function encodeBuyParams(options: BuyParams) {
   return encodeAbiParameters(FN_INPUTS, [
     options.listingId,
     options.buyFor,
@@ -90,6 +83,7 @@ export function encodeBuyParams(options: BuyParamsInternal) {
  * import { buy } from "thirdweb/extensions/marketplace";
  *
  * const transaction = buy({
+ *  contract,
  *  listingId: ...,
  *  buyFor: ...,
  *  quantity: ...,
@@ -102,7 +96,14 @@ export function encodeBuyParams(options: BuyParamsInternal) {
  *
  * ```
  */
-export function buy(options: BaseTransactionOptions<BuyParams>) {
+export function buy(
+  options: BaseTransactionOptions<
+    | BuyParams
+    | {
+        asyncParams: () => Promise<BuyParams>;
+      }
+  >,
+) {
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,

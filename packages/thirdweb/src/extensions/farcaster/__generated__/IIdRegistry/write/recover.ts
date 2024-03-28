@@ -1,26 +1,19 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "recover" function.
  */
 
-type RecoverParamsInternal = {
+export type RecoverParams = {
   from: AbiParameterToPrimitiveType<{ type: "address"; name: "from" }>;
   to: AbiParameterToPrimitiveType<{ type: "address"; name: "to" }>;
   deadline: AbiParameterToPrimitiveType<{ type: "uint256"; name: "deadline" }>;
   sig: AbiParameterToPrimitiveType<{ type: "bytes"; name: "sig" }>;
 };
 
-export type RecoverParams = Prettify<
-  | RecoverParamsInternal
-  | {
-      asyncParams: () => Promise<RecoverParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x2a42ede3" as const;
 const FN_INPUTS = [
   {
@@ -58,7 +51,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodeRecoverParams(options: RecoverParamsInternal) {
+export function encodeRecoverParams(options: RecoverParams) {
   return encodeAbiParameters(FN_INPUTS, [
     options.from,
     options.to,
@@ -77,6 +70,7 @@ export function encodeRecoverParams(options: RecoverParamsInternal) {
  * import { recover } from "thirdweb/extensions/farcaster";
  *
  * const transaction = recover({
+ *  contract,
  *  from: ...,
  *  to: ...,
  *  deadline: ...,
@@ -88,7 +82,14 @@ export function encodeRecoverParams(options: RecoverParamsInternal) {
  *
  * ```
  */
-export function recover(options: BaseTransactionOptions<RecoverParams>) {
+export function recover(
+  options: BaseTransactionOptions<
+    | RecoverParams
+    | {
+        asyncParams: () => Promise<RecoverParams>;
+      }
+  >,
+) {
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,

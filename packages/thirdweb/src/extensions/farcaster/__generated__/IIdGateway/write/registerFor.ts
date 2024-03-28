@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "registerFor" function.
  */
 
-type RegisterForParamsInternal = {
+export type RegisterForParams = {
   to: AbiParameterToPrimitiveType<{ type: "address"; name: "to" }>;
   recovery: AbiParameterToPrimitiveType<{ type: "address"; name: "recovery" }>;
   deadline: AbiParameterToPrimitiveType<{ type: "uint256"; name: "deadline" }>;
@@ -19,12 +18,6 @@ type RegisterForParamsInternal = {
   }>;
 };
 
-export type RegisterForParams = Prettify<
-  | RegisterForParamsInternal
-  | {
-      asyncParams: () => Promise<RegisterForParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0xa0c7529c" as const;
 const FN_INPUTS = [
   {
@@ -76,7 +69,7 @@ const FN_OUTPUTS = [
  * });
  * ```
  */
-export function encodeRegisterForParams(options: RegisterForParamsInternal) {
+export function encodeRegisterForParams(options: RegisterForParams) {
   return encodeAbiParameters(FN_INPUTS, [
     options.to,
     options.recovery,
@@ -96,6 +89,7 @@ export function encodeRegisterForParams(options: RegisterForParamsInternal) {
  * import { registerFor } from "thirdweb/extensions/farcaster";
  *
  * const transaction = registerFor({
+ *  contract,
  *  to: ...,
  *  recovery: ...,
  *  deadline: ...,
@@ -109,7 +103,12 @@ export function encodeRegisterForParams(options: RegisterForParamsInternal) {
  * ```
  */
 export function registerFor(
-  options: BaseTransactionOptions<RegisterForParams>,
+  options: BaseTransactionOptions<
+    | RegisterForParams
+    | {
+        asyncParams: () => Promise<RegisterForParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

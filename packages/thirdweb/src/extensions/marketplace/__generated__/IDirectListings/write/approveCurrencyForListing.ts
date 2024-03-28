@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "approveCurrencyForListing" function.
  */
 
-type ApproveCurrencyForListingParamsInternal = {
+export type ApproveCurrencyForListingParams = {
   listingId: AbiParameterToPrimitiveType<{
     type: "uint256";
     name: "_listingId";
@@ -20,12 +19,6 @@ type ApproveCurrencyForListingParamsInternal = {
   }>;
 };
 
-export type ApproveCurrencyForListingParams = Prettify<
-  | ApproveCurrencyForListingParamsInternal
-  | {
-      asyncParams: () => Promise<ApproveCurrencyForListingParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0xea8f9a3c" as const;
 const FN_INPUTS = [
   {
@@ -59,7 +52,7 @@ const FN_OUTPUTS = [] as const;
  * ```
  */
 export function encodeApproveCurrencyForListingParams(
-  options: ApproveCurrencyForListingParamsInternal,
+  options: ApproveCurrencyForListingParams,
 ) {
   return encodeAbiParameters(FN_INPUTS, [
     options.listingId,
@@ -78,6 +71,7 @@ export function encodeApproveCurrencyForListingParams(
  * import { approveCurrencyForListing } from "thirdweb/extensions/marketplace";
  *
  * const transaction = approveCurrencyForListing({
+ *  contract,
  *  listingId: ...,
  *  currency: ...,
  *  pricePerTokenInCurrency: ...,
@@ -89,7 +83,12 @@ export function encodeApproveCurrencyForListingParams(
  * ```
  */
 export function approveCurrencyForListing(
-  options: BaseTransactionOptions<ApproveCurrencyForListingParams>,
+  options: BaseTransactionOptions<
+    | ApproveCurrencyForListingParams
+    | {
+        asyncParams: () => Promise<ApproveCurrencyForListingParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "createRuleThreshold" function.
  */
 
-type CreateRuleThresholdParamsInternal = {
+export type CreateRuleThresholdParams = {
   rule: AbiParameterToPrimitiveType<{
     type: "tuple";
     name: "rule";
@@ -22,12 +21,6 @@ type CreateRuleThresholdParamsInternal = {
   }>;
 };
 
-export type CreateRuleThresholdParams = Prettify<
-  | CreateRuleThresholdParamsInternal
-  | {
-      asyncParams: () => Promise<CreateRuleThresholdParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x1022a25e" as const;
 const FN_INPUTS = [
   {
@@ -78,7 +71,7 @@ const FN_OUTPUTS = [
  * ```
  */
 export function encodeCreateRuleThresholdParams(
-  options: CreateRuleThresholdParamsInternal,
+  options: CreateRuleThresholdParams,
 ) {
   return encodeAbiParameters(FN_INPUTS, [options.rule]);
 }
@@ -93,6 +86,7 @@ export function encodeCreateRuleThresholdParams(
  * import { createRuleThreshold } from "thirdweb/extensions/thirdweb";
  *
  * const transaction = createRuleThreshold({
+ *  contract,
  *  rule: ...,
  * });
  *
@@ -102,7 +96,12 @@ export function encodeCreateRuleThresholdParams(
  * ```
  */
 export function createRuleThreshold(
-  options: BaseTransactionOptions<CreateRuleThresholdParams>,
+  options: BaseTransactionOptions<
+    | CreateRuleThresholdParams
+    | {
+        asyncParams: () => Promise<CreateRuleThresholdParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

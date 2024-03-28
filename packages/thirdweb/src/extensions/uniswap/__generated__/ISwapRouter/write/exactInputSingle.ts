@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "exactInputSingle" function.
  */
 
-type ExactInputSingleParamsInternal = {
+export type ExactInputSingleParams = {
   params: AbiParameterToPrimitiveType<{
     type: "tuple";
     name: "params";
@@ -25,12 +24,6 @@ type ExactInputSingleParamsInternal = {
   }>;
 };
 
-export type ExactInputSingleParams = Prettify<
-  | ExactInputSingleParamsInternal
-  | {
-      asyncParams: () => Promise<ExactInputSingleParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x414bf389" as const;
 const FN_INPUTS = [
   {
@@ -92,9 +85,7 @@ const FN_OUTPUTS = [
  * });
  * ```
  */
-export function encodeExactInputSingleParams(
-  options: ExactInputSingleParamsInternal,
-) {
+export function encodeExactInputSingleParams(options: ExactInputSingleParams) {
   return encodeAbiParameters(FN_INPUTS, [options.params]);
 }
 
@@ -108,6 +99,7 @@ export function encodeExactInputSingleParams(
  * import { exactInputSingle } from "thirdweb/extensions/uniswap";
  *
  * const transaction = exactInputSingle({
+ *  contract,
  *  params: ...,
  * });
  *
@@ -117,7 +109,12 @@ export function encodeExactInputSingleParams(
  * ```
  */
 export function exactInputSingle(
-  options: BaseTransactionOptions<ExactInputSingleParams>,
+  options: BaseTransactionOptions<
+    | ExactInputSingleParams
+    | {
+        asyncParams: () => Promise<ExactInputSingleParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "lazyMint" function.
  */
 
-type LazyMintParamsInternal = {
+export type LazyMintParams = {
   amount: AbiParameterToPrimitiveType<{ type: "uint256"; name: "amount" }>;
   baseURIForTokens: AbiParameterToPrimitiveType<{
     type: "string";
@@ -17,12 +16,6 @@ type LazyMintParamsInternal = {
   extraData: AbiParameterToPrimitiveType<{ type: "bytes"; name: "extraData" }>;
 };
 
-export type LazyMintParams = Prettify<
-  | LazyMintParamsInternal
-  | {
-      asyncParams: () => Promise<LazyMintParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0xd37c353b" as const;
 const FN_INPUTS = [
   {
@@ -60,7 +53,7 @@ const FN_OUTPUTS = [
  * });
  * ```
  */
-export function encodeLazyMintParams(options: LazyMintParamsInternal) {
+export function encodeLazyMintParams(options: LazyMintParams) {
   return encodeAbiParameters(FN_INPUTS, [
     options.amount,
     options.baseURIForTokens,
@@ -78,6 +71,7 @@ export function encodeLazyMintParams(options: LazyMintParamsInternal) {
  * import { lazyMint } from "thirdweb/extensions/erc721";
  *
  * const transaction = lazyMint({
+ *  contract,
  *  amount: ...,
  *  baseURIForTokens: ...,
  *  extraData: ...,
@@ -88,7 +82,14 @@ export function encodeLazyMintParams(options: LazyMintParamsInternal) {
  *
  * ```
  */
-export function lazyMint(options: BaseTransactionOptions<LazyMintParams>) {
+export function lazyMint(
+  options: BaseTransactionOptions<
+    | LazyMintParams
+    | {
+        asyncParams: () => Promise<LazyMintParams>;
+      }
+  >,
+) {
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,

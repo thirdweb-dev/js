@@ -1,23 +1,16 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "changeRecoveryAddress" function.
  */
 
-type ChangeRecoveryAddressParamsInternal = {
+export type ChangeRecoveryAddressParams = {
   recovery: AbiParameterToPrimitiveType<{ type: "address"; name: "recovery" }>;
 };
 
-export type ChangeRecoveryAddressParams = Prettify<
-  | ChangeRecoveryAddressParamsInternal
-  | {
-      asyncParams: () => Promise<ChangeRecoveryAddressParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0xf1f0b224" as const;
 const FN_INPUTS = [
   {
@@ -41,7 +34,7 @@ const FN_OUTPUTS = [] as const;
  * ```
  */
 export function encodeChangeRecoveryAddressParams(
-  options: ChangeRecoveryAddressParamsInternal,
+  options: ChangeRecoveryAddressParams,
 ) {
   return encodeAbiParameters(FN_INPUTS, [options.recovery]);
 }
@@ -56,6 +49,7 @@ export function encodeChangeRecoveryAddressParams(
  * import { changeRecoveryAddress } from "thirdweb/extensions/farcaster";
  *
  * const transaction = changeRecoveryAddress({
+ *  contract,
  *  recovery: ...,
  * });
  *
@@ -65,7 +59,12 @@ export function encodeChangeRecoveryAddressParams(
  * ```
  */
 export function changeRecoveryAddress(
-  options: BaseTransactionOptions<ChangeRecoveryAddressParams>,
+  options: BaseTransactionOptions<
+    | ChangeRecoveryAddressParams
+    | {
+        asyncParams: () => Promise<ChangeRecoveryAddressParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

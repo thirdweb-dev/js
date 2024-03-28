@@ -1,24 +1,17 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "createAccount" function.
  */
 
-type CreateAccountParamsInternal = {
+export type CreateAccountParams = {
   admin: AbiParameterToPrimitiveType<{ type: "address"; name: "admin" }>;
   data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "_data" }>;
 };
 
-export type CreateAccountParams = Prettify<
-  | CreateAccountParamsInternal
-  | {
-      asyncParams: () => Promise<CreateAccountParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0xd8fd8f44" as const;
 const FN_INPUTS = [
   {
@@ -51,9 +44,7 @@ const FN_OUTPUTS = [
  * });
  * ```
  */
-export function encodeCreateAccountParams(
-  options: CreateAccountParamsInternal,
-) {
+export function encodeCreateAccountParams(options: CreateAccountParams) {
   return encodeAbiParameters(FN_INPUTS, [options.admin, options.data]);
 }
 
@@ -67,6 +58,7 @@ export function encodeCreateAccountParams(
  * import { createAccount } from "thirdweb/extensions/erc4337";
  *
  * const transaction = createAccount({
+ *  contract,
  *  admin: ...,
  *  data: ...,
  * });
@@ -77,7 +69,12 @@ export function encodeCreateAccountParams(
  * ```
  */
 export function createAccount(
-  options: BaseTransactionOptions<CreateAccountParams>,
+  options: BaseTransactionOptions<
+    | CreateAccountParams
+    | {
+        asyncParams: () => Promise<CreateAccountParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

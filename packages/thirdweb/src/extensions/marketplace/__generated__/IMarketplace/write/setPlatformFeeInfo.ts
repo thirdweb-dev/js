@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "setPlatformFeeInfo" function.
  */
 
-type SetPlatformFeeInfoParamsInternal = {
+export type SetPlatformFeeInfoParams = {
   platformFeeRecipient: AbiParameterToPrimitiveType<{
     type: "address";
     name: "_platformFeeRecipient";
@@ -19,12 +18,6 @@ type SetPlatformFeeInfoParamsInternal = {
   }>;
 };
 
-export type SetPlatformFeeInfoParams = Prettify<
-  | SetPlatformFeeInfoParamsInternal
-  | {
-      asyncParams: () => Promise<SetPlatformFeeInfoParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x1e7ac488" as const;
 const FN_INPUTS = [
   {
@@ -53,7 +46,7 @@ const FN_OUTPUTS = [] as const;
  * ```
  */
 export function encodeSetPlatformFeeInfoParams(
-  options: SetPlatformFeeInfoParamsInternal,
+  options: SetPlatformFeeInfoParams,
 ) {
   return encodeAbiParameters(FN_INPUTS, [
     options.platformFeeRecipient,
@@ -71,6 +64,7 @@ export function encodeSetPlatformFeeInfoParams(
  * import { setPlatformFeeInfo } from "thirdweb/extensions/marketplace";
  *
  * const transaction = setPlatformFeeInfo({
+ *  contract,
  *  platformFeeRecipient: ...,
  *  platformFeeBps: ...,
  * });
@@ -81,7 +75,12 @@ export function encodeSetPlatformFeeInfoParams(
  * ```
  */
 export function setPlatformFeeInfo(
-  options: BaseTransactionOptions<SetPlatformFeeInfoParams>,
+  options: BaseTransactionOptions<
+    | SetPlatformFeeInfoParams
+    | {
+        asyncParams: () => Promise<SetPlatformFeeInfoParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

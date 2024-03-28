@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "validateUserOp" function.
  */
 
-type ValidateUserOpParamsInternal = {
+export type ValidateUserOpParams = {
   userOp: AbiParameterToPrimitiveType<{
     type: "tuple";
     name: "userOp";
@@ -36,12 +35,6 @@ type ValidateUserOpParamsInternal = {
   }>;
 };
 
-export type ValidateUserOpParams = Prettify<
-  | ValidateUserOpParamsInternal
-  | {
-      asyncParams: () => Promise<ValidateUserOpParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x3a871cdd" as const;
 const FN_INPUTS = [
   {
@@ -125,9 +118,7 @@ const FN_OUTPUTS = [
  * });
  * ```
  */
-export function encodeValidateUserOpParams(
-  options: ValidateUserOpParamsInternal,
-) {
+export function encodeValidateUserOpParams(options: ValidateUserOpParams) {
   return encodeAbiParameters(FN_INPUTS, [
     options.userOp,
     options.userOpHash,
@@ -145,6 +136,7 @@ export function encodeValidateUserOpParams(
  * import { validateUserOp } from "thirdweb/extensions/erc4337";
  *
  * const transaction = validateUserOp({
+ *  contract,
  *  userOp: ...,
  *  userOpHash: ...,
  *  missingAccountFunds: ...,
@@ -156,7 +148,12 @@ export function encodeValidateUserOpParams(
  * ```
  */
 export function validateUserOp(
-  options: BaseTransactionOptions<ValidateUserOpParams>,
+  options: BaseTransactionOptions<
+    | ValidateUserOpParams
+    | {
+        asyncParams: () => Promise<ValidateUserOpParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

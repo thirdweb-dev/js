@@ -1,26 +1,19 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "removeFor" function.
  */
 
-type RemoveForParamsInternal = {
+export type RemoveForParams = {
   fidOwner: AbiParameterToPrimitiveType<{ type: "address"; name: "fidOwner" }>;
   key: AbiParameterToPrimitiveType<{ type: "bytes"; name: "key" }>;
   deadline: AbiParameterToPrimitiveType<{ type: "uint256"; name: "deadline" }>;
   sig: AbiParameterToPrimitiveType<{ type: "bytes"; name: "sig" }>;
 };
 
-export type RemoveForParams = Prettify<
-  | RemoveForParamsInternal
-  | {
-      asyncParams: () => Promise<RemoveForParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x787bd966" as const;
 const FN_INPUTS = [
   {
@@ -58,7 +51,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodeRemoveForParams(options: RemoveForParamsInternal) {
+export function encodeRemoveForParams(options: RemoveForParams) {
   return encodeAbiParameters(FN_INPUTS, [
     options.fidOwner,
     options.key,
@@ -77,6 +70,7 @@ export function encodeRemoveForParams(options: RemoveForParamsInternal) {
  * import { removeFor } from "thirdweb/extensions/farcaster";
  *
  * const transaction = removeFor({
+ *  contract,
  *  fidOwner: ...,
  *  key: ...,
  *  deadline: ...,
@@ -88,7 +82,14 @@ export function encodeRemoveForParams(options: RemoveForParamsInternal) {
  *
  * ```
  */
-export function removeFor(options: BaseTransactionOptions<RemoveForParams>) {
+export function removeFor(
+  options: BaseTransactionOptions<
+    | RemoveForParams
+    | {
+        asyncParams: () => Promise<RemoveForParams>;
+      }
+  >,
+) {
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,

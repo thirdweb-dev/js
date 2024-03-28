@@ -1,26 +1,19 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "collectAuctionTokens" function.
  */
 
-type CollectAuctionTokensParamsInternal = {
+export type CollectAuctionTokensParams = {
   auctionId: AbiParameterToPrimitiveType<{
     type: "uint256";
     name: "_auctionId";
   }>;
 };
 
-export type CollectAuctionTokensParams = Prettify<
-  | CollectAuctionTokensParamsInternal
-  | {
-      asyncParams: () => Promise<CollectAuctionTokensParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x03a54fe0" as const;
 const FN_INPUTS = [
   {
@@ -44,7 +37,7 @@ const FN_OUTPUTS = [] as const;
  * ```
  */
 export function encodeCollectAuctionTokensParams(
-  options: CollectAuctionTokensParamsInternal,
+  options: CollectAuctionTokensParams,
 ) {
   return encodeAbiParameters(FN_INPUTS, [options.auctionId]);
 }
@@ -59,6 +52,7 @@ export function encodeCollectAuctionTokensParams(
  * import { collectAuctionTokens } from "thirdweb/extensions/marketplace";
  *
  * const transaction = collectAuctionTokens({
+ *  contract,
  *  auctionId: ...,
  * });
  *
@@ -68,7 +62,12 @@ export function encodeCollectAuctionTokensParams(
  * ```
  */
 export function collectAuctionTokens(
-  options: BaseTransactionOptions<CollectAuctionTokensParams>,
+  options: BaseTransactionOptions<
+    | CollectAuctionTokensParams
+    | {
+        asyncParams: () => Promise<CollectAuctionTokensParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

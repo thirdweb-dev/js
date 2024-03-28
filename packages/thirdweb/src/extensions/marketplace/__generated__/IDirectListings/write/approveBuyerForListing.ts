@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "approveBuyerForListing" function.
  */
 
-type ApproveBuyerForListingParamsInternal = {
+export type ApproveBuyerForListingParams = {
   listingId: AbiParameterToPrimitiveType<{
     type: "uint256";
     name: "_listingId";
@@ -17,12 +16,6 @@ type ApproveBuyerForListingParamsInternal = {
   toApprove: AbiParameterToPrimitiveType<{ type: "bool"; name: "_toApprove" }>;
 };
 
-export type ApproveBuyerForListingParams = Prettify<
-  | ApproveBuyerForListingParamsInternal
-  | {
-      asyncParams: () => Promise<ApproveBuyerForListingParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x48dd77df" as const;
 const FN_INPUTS = [
   {
@@ -56,7 +49,7 @@ const FN_OUTPUTS = [] as const;
  * ```
  */
 export function encodeApproveBuyerForListingParams(
-  options: ApproveBuyerForListingParamsInternal,
+  options: ApproveBuyerForListingParams,
 ) {
   return encodeAbiParameters(FN_INPUTS, [
     options.listingId,
@@ -75,6 +68,7 @@ export function encodeApproveBuyerForListingParams(
  * import { approveBuyerForListing } from "thirdweb/extensions/marketplace";
  *
  * const transaction = approveBuyerForListing({
+ *  contract,
  *  listingId: ...,
  *  buyer: ...,
  *  toApprove: ...,
@@ -86,7 +80,12 @@ export function encodeApproveBuyerForListingParams(
  * ```
  */
 export function approveBuyerForListing(
-  options: BaseTransactionOptions<ApproveBuyerForListingParams>,
+  options: BaseTransactionOptions<
+    | ApproveBuyerForListingParams
+    | {
+        asyncParams: () => Promise<ApproveBuyerForListingParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

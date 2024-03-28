@@ -1,23 +1,16 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "depositRewardTokens" function.
  */
 
-type DepositRewardTokensParamsInternal = {
+export type DepositRewardTokensParams = {
   amount: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_amount" }>;
 };
 
-export type DepositRewardTokensParams = Prettify<
-  | DepositRewardTokensParamsInternal
-  | {
-      asyncParams: () => Promise<DepositRewardTokensParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x16c621e0" as const;
 const FN_INPUTS = [
   {
@@ -41,7 +34,7 @@ const FN_OUTPUTS = [] as const;
  * ```
  */
 export function encodeDepositRewardTokensParams(
-  options: DepositRewardTokensParamsInternal,
+  options: DepositRewardTokensParams,
 ) {
   return encodeAbiParameters(FN_INPUTS, [options.amount]);
 }
@@ -56,6 +49,7 @@ export function encodeDepositRewardTokensParams(
  * import { depositRewardTokens } from "thirdweb/extensions/erc20";
  *
  * const transaction = depositRewardTokens({
+ *  contract,
  *  amount: ...,
  * });
  *
@@ -65,7 +59,12 @@ export function encodeDepositRewardTokensParams(
  * ```
  */
 export function depositRewardTokens(
-  options: BaseTransactionOptions<DepositRewardTokensParams>,
+  options: BaseTransactionOptions<
+    | DepositRewardTokensParams
+    | {
+        asyncParams: () => Promise<DepositRewardTokensParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

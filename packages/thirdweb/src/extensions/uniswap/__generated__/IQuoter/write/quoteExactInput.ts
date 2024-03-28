@@ -1,24 +1,17 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "quoteExactInput" function.
  */
 
-type QuoteExactInputParamsInternal = {
+export type QuoteExactInputParams = {
   path: AbiParameterToPrimitiveType<{ type: "bytes"; name: "path" }>;
   amountIn: AbiParameterToPrimitiveType<{ type: "uint256"; name: "amountIn" }>;
 };
 
-export type QuoteExactInputParams = Prettify<
-  | QuoteExactInputParamsInternal
-  | {
-      asyncParams: () => Promise<QuoteExactInputParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0xcdca1753" as const;
 const FN_INPUTS = [
   {
@@ -51,9 +44,7 @@ const FN_OUTPUTS = [
  * });
  * ```
  */
-export function encodeQuoteExactInputParams(
-  options: QuoteExactInputParamsInternal,
-) {
+export function encodeQuoteExactInputParams(options: QuoteExactInputParams) {
   return encodeAbiParameters(FN_INPUTS, [options.path, options.amountIn]);
 }
 
@@ -67,6 +58,7 @@ export function encodeQuoteExactInputParams(
  * import { quoteExactInput } from "thirdweb/extensions/uniswap";
  *
  * const transaction = quoteExactInput({
+ *  contract,
  *  path: ...,
  *  amountIn: ...,
  * });
@@ -77,7 +69,12 @@ export function encodeQuoteExactInputParams(
  * ```
  */
 export function quoteExactInput(
-  options: BaseTransactionOptions<QuoteExactInputParams>,
+  options: BaseTransactionOptions<
+    | QuoteExactInputParams
+    | {
+        asyncParams: () => Promise<QuoteExactInputParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

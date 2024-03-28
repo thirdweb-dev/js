@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "onERC1155Received" function.
  */
 
-type OnERC1155ReceivedParamsInternal = {
+export type OnERC1155ReceivedParams = {
   operator: AbiParameterToPrimitiveType<{ type: "address"; name: "operator" }>;
   from: AbiParameterToPrimitiveType<{ type: "address"; name: "from" }>;
   id: AbiParameterToPrimitiveType<{ type: "uint256"; name: "id" }>;
@@ -16,12 +15,6 @@ type OnERC1155ReceivedParamsInternal = {
   data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "data" }>;
 };
 
-export type OnERC1155ReceivedParams = Prettify<
-  | OnERC1155ReceivedParamsInternal
-  | {
-      asyncParams: () => Promise<OnERC1155ReceivedParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0xf23a6e61" as const;
 const FN_INPUTS = [
   {
@@ -69,7 +62,7 @@ const FN_OUTPUTS = [
  * ```
  */
 export function encodeOnERC1155ReceivedParams(
-  options: OnERC1155ReceivedParamsInternal,
+  options: OnERC1155ReceivedParams,
 ) {
   return encodeAbiParameters(FN_INPUTS, [
     options.operator,
@@ -90,6 +83,7 @@ export function encodeOnERC1155ReceivedParams(
  * import { onERC1155Received } from "thirdweb/extensions/erc1155";
  *
  * const transaction = onERC1155Received({
+ *  contract,
  *  operator: ...,
  *  from: ...,
  *  id: ...,
@@ -103,7 +97,12 @@ export function encodeOnERC1155ReceivedParams(
  * ```
  */
 export function onERC1155Received(
-  options: BaseTransactionOptions<OnERC1155ReceivedParams>,
+  options: BaseTransactionOptions<
+    | OnERC1155ReceivedParams
+    | {
+        asyncParams: () => Promise<OnERC1155ReceivedParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

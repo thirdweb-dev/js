@@ -1,26 +1,19 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "cancelDirectListing" function.
  */
 
-type CancelDirectListingParamsInternal = {
+export type CancelDirectListingParams = {
   listingId: AbiParameterToPrimitiveType<{
     type: "uint256";
     name: "_listingId";
   }>;
 };
 
-export type CancelDirectListingParams = Prettify<
-  | CancelDirectListingParamsInternal
-  | {
-      asyncParams: () => Promise<CancelDirectListingParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x7506c84a" as const;
 const FN_INPUTS = [
   {
@@ -44,7 +37,7 @@ const FN_OUTPUTS = [] as const;
  * ```
  */
 export function encodeCancelDirectListingParams(
-  options: CancelDirectListingParamsInternal,
+  options: CancelDirectListingParams,
 ) {
   return encodeAbiParameters(FN_INPUTS, [options.listingId]);
 }
@@ -59,6 +52,7 @@ export function encodeCancelDirectListingParams(
  * import { cancelDirectListing } from "thirdweb/extensions/marketplace";
  *
  * const transaction = cancelDirectListing({
+ *  contract,
  *  listingId: ...,
  * });
  *
@@ -68,7 +62,12 @@ export function encodeCancelDirectListingParams(
  * ```
  */
 export function cancelDirectListing(
-  options: BaseTransactionOptions<CancelDirectListingParams>,
+  options: BaseTransactionOptions<
+    | CancelDirectListingParams
+    | {
+        asyncParams: () => Promise<CancelDirectListingParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

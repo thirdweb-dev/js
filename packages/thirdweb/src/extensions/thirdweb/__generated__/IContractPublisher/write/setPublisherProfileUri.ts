@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "setPublisherProfileUri" function.
  */
 
-type SetPublisherProfileUriParamsInternal = {
+export type SetPublisherProfileUriParams = {
   publisher: AbiParameterToPrimitiveType<{
     type: "address";
     name: "publisher";
@@ -16,12 +15,6 @@ type SetPublisherProfileUriParamsInternal = {
   uri: AbiParameterToPrimitiveType<{ type: "string"; name: "uri" }>;
 };
 
-export type SetPublisherProfileUriParams = Prettify<
-  | SetPublisherProfileUriParamsInternal
-  | {
-      asyncParams: () => Promise<SetPublisherProfileUriParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x6e578e54" as const;
 const FN_INPUTS = [
   {
@@ -50,7 +43,7 @@ const FN_OUTPUTS = [] as const;
  * ```
  */
 export function encodeSetPublisherProfileUriParams(
-  options: SetPublisherProfileUriParamsInternal,
+  options: SetPublisherProfileUriParams,
 ) {
   return encodeAbiParameters(FN_INPUTS, [options.publisher, options.uri]);
 }
@@ -65,6 +58,7 @@ export function encodeSetPublisherProfileUriParams(
  * import { setPublisherProfileUri } from "thirdweb/extensions/thirdweb";
  *
  * const transaction = setPublisherProfileUri({
+ *  contract,
  *  publisher: ...,
  *  uri: ...,
  * });
@@ -75,7 +69,12 @@ export function encodeSetPublisherProfileUriParams(
  * ```
  */
 export function setPublisherProfileUri(
-  options: BaseTransactionOptions<SetPublisherProfileUriParams>,
+  options: BaseTransactionOptions<
+    | SetPublisherProfileUriParams
+    | {
+        asyncParams: () => Promise<SetPublisherProfileUriParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

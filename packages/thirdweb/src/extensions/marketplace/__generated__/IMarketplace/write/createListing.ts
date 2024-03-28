@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "createListing" function.
  */
 
-type CreateListingParamsInternal = {
+export type CreateListingParams = {
   params: AbiParameterToPrimitiveType<{
     type: "tuple";
     name: "_params";
@@ -26,12 +25,6 @@ type CreateListingParamsInternal = {
   }>;
 };
 
-export type CreateListingParams = Prettify<
-  | CreateListingParamsInternal
-  | {
-      asyncParams: () => Promise<CreateListingParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x296f4e16" as const;
 const FN_INPUTS = [
   {
@@ -92,9 +85,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodeCreateListingParams(
-  options: CreateListingParamsInternal,
-) {
+export function encodeCreateListingParams(options: CreateListingParams) {
   return encodeAbiParameters(FN_INPUTS, [options.params]);
 }
 
@@ -108,6 +99,7 @@ export function encodeCreateListingParams(
  * import { createListing } from "thirdweb/extensions/marketplace";
  *
  * const transaction = createListing({
+ *  contract,
  *  params: ...,
  * });
  *
@@ -117,7 +109,12 @@ export function encodeCreateListingParams(
  * ```
  */
 export function createListing(
-  options: BaseTransactionOptions<CreateListingParams>,
+  options: BaseTransactionOptions<
+    | CreateListingParams
+    | {
+        asyncParams: () => Promise<CreateListingParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

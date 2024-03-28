@@ -1,24 +1,17 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "setTokenURI" function.
  */
 
-type SetTokenURIParamsInternal = {
+export type SetTokenURIParams = {
   tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_tokenId" }>;
   uri: AbiParameterToPrimitiveType<{ type: "string"; name: "_uri" }>;
 };
 
-export type SetTokenURIParams = Prettify<
-  | SetTokenURIParamsInternal
-  | {
-      asyncParams: () => Promise<SetTokenURIParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x162094c4" as const;
 const FN_INPUTS = [
   {
@@ -46,7 +39,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodeSetTokenURIParams(options: SetTokenURIParamsInternal) {
+export function encodeSetTokenURIParams(options: SetTokenURIParams) {
   return encodeAbiParameters(FN_INPUTS, [options.tokenId, options.uri]);
 }
 
@@ -60,6 +53,7 @@ export function encodeSetTokenURIParams(options: SetTokenURIParamsInternal) {
  * import { setTokenURI } from "thirdweb/extensions/erc1155";
  *
  * const transaction = setTokenURI({
+ *  contract,
  *  tokenId: ...,
  *  uri: ...,
  * });
@@ -70,7 +64,12 @@ export function encodeSetTokenURIParams(options: SetTokenURIParamsInternal) {
  * ```
  */
 export function setTokenURI(
-  options: BaseTransactionOptions<SetTokenURIParams>,
+  options: BaseTransactionOptions<
+    | SetTokenURIParams
+    | {
+        asyncParams: () => Promise<SetTokenURIParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

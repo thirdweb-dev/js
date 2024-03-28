@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "simulateHandleOp" function.
  */
 
-type SimulateHandleOpParamsInternal = {
+export type SimulateHandleOpParams = {
   op: AbiParameterToPrimitiveType<{
     type: "tuple";
     name: "op";
@@ -33,12 +32,6 @@ type SimulateHandleOpParamsInternal = {
   }>;
 };
 
-export type SimulateHandleOpParams = Prettify<
-  | SimulateHandleOpParamsInternal
-  | {
-      asyncParams: () => Promise<SimulateHandleOpParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0xd6383f94" as const;
 const FN_INPUTS = [
   {
@@ -117,9 +110,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodeSimulateHandleOpParams(
-  options: SimulateHandleOpParamsInternal,
-) {
+export function encodeSimulateHandleOpParams(options: SimulateHandleOpParams) {
   return encodeAbiParameters(FN_INPUTS, [
     options.op,
     options.target,
@@ -137,6 +128,7 @@ export function encodeSimulateHandleOpParams(
  * import { simulateHandleOp } from "thirdweb/extensions/erc4337";
  *
  * const transaction = simulateHandleOp({
+ *  contract,
  *  op: ...,
  *  target: ...,
  *  targetCallData: ...,
@@ -148,7 +140,12 @@ export function encodeSimulateHandleOpParams(
  * ```
  */
 export function simulateHandleOp(
-  options: BaseTransactionOptions<SimulateHandleOpParams>,
+  options: BaseTransactionOptions<
+    | SimulateHandleOpParams
+    | {
+        asyncParams: () => Promise<SimulateHandleOpParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "setPermissionsForSigner" function.
  */
 
-type SetPermissionsForSignerParamsInternal = {
+export type SetPermissionsForSignerParams = {
   req: AbiParameterToPrimitiveType<{
     type: "tuple";
     name: "req";
@@ -27,12 +26,6 @@ type SetPermissionsForSignerParamsInternal = {
   signature: AbiParameterToPrimitiveType<{ type: "bytes"; name: "signature" }>;
 };
 
-export type SetPermissionsForSignerParams = Prettify<
-  | SetPermissionsForSignerParamsInternal
-  | {
-      asyncParams: () => Promise<SetPermissionsForSignerParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x5892e236" as const;
 const FN_INPUTS = [
   {
@@ -99,7 +92,7 @@ const FN_OUTPUTS = [] as const;
  * ```
  */
 export function encodeSetPermissionsForSignerParams(
-  options: SetPermissionsForSignerParamsInternal,
+  options: SetPermissionsForSignerParams,
 ) {
   return encodeAbiParameters(FN_INPUTS, [options.req, options.signature]);
 }
@@ -114,6 +107,7 @@ export function encodeSetPermissionsForSignerParams(
  * import { setPermissionsForSigner } from "thirdweb/extensions/erc4337";
  *
  * const transaction = setPermissionsForSigner({
+ *  contract,
  *  req: ...,
  *  signature: ...,
  * });
@@ -124,7 +118,12 @@ export function encodeSetPermissionsForSignerParams(
  * ```
  */
 export function setPermissionsForSigner(
-  options: BaseTransactionOptions<SetPermissionsForSignerParams>,
+  options: BaseTransactionOptions<
+    | SetPermissionsForSignerParams
+    | {
+        asyncParams: () => Promise<SetPermissionsForSignerParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

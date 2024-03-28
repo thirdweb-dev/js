@@ -1,23 +1,16 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "claimRewards" function.
  */
 
-type ClaimRewardsParamsInternal = {
+export type ClaimRewardsParams = {
   tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
 };
 
-export type ClaimRewardsParams = Prettify<
-  | ClaimRewardsParamsInternal
-  | {
-      asyncParams: () => Promise<ClaimRewardsParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x0962ef79" as const;
 const FN_INPUTS = [
   {
@@ -40,7 +33,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodeClaimRewardsParams(options: ClaimRewardsParamsInternal) {
+export function encodeClaimRewardsParams(options: ClaimRewardsParams) {
   return encodeAbiParameters(FN_INPUTS, [options.tokenId]);
 }
 
@@ -54,6 +47,7 @@ export function encodeClaimRewardsParams(options: ClaimRewardsParamsInternal) {
  * import { claimRewards } from "thirdweb/extensions/erc1155";
  *
  * const transaction = claimRewards({
+ *  contract,
  *  tokenId: ...,
  * });
  *
@@ -63,7 +57,12 @@ export function encodeClaimRewardsParams(options: ClaimRewardsParamsInternal) {
  * ```
  */
 export function claimRewards(
-  options: BaseTransactionOptions<ClaimRewardsParams>,
+  options: BaseTransactionOptions<
+    | ClaimRewardsParams
+    | {
+        asyncParams: () => Promise<ClaimRewardsParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

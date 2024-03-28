@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "offer" function.
  */
 
-type OfferParamsInternal = {
+export type OfferParams = {
   listingId: AbiParameterToPrimitiveType<{
     type: "uint256";
     name: "_listingId";
@@ -28,12 +27,6 @@ type OfferParamsInternal = {
   }>;
 };
 
-export type OfferParams = Prettify<
-  | OfferParamsInternal
-  | {
-      asyncParams: () => Promise<OfferParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x5fef45e7" as const;
 const FN_INPUTS = [
   {
@@ -76,7 +69,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodeOfferParams(options: OfferParamsInternal) {
+export function encodeOfferParams(options: OfferParams) {
   return encodeAbiParameters(FN_INPUTS, [
     options.listingId,
     options.quantityWanted,
@@ -96,6 +89,7 @@ export function encodeOfferParams(options: OfferParamsInternal) {
  * import { offer } from "thirdweb/extensions/marketplace";
  *
  * const transaction = offer({
+ *  contract,
  *  listingId: ...,
  *  quantityWanted: ...,
  *  currency: ...,
@@ -108,7 +102,14 @@ export function encodeOfferParams(options: OfferParamsInternal) {
  *
  * ```
  */
-export function offer(options: BaseTransactionOptions<OfferParams>) {
+export function offer(
+  options: BaseTransactionOptions<
+    | OfferParams
+    | {
+        asyncParams: () => Promise<OfferParams>;
+      }
+  >,
+) {
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,

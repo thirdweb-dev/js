@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "createAuction" function.
  */
 
-type CreateAuctionParamsInternal = {
+export type CreateAuctionParams = {
   params: AbiParameterToPrimitiveType<{
     type: "tuple";
     name: "_params";
@@ -27,12 +26,6 @@ type CreateAuctionParamsInternal = {
   }>;
 };
 
-export type CreateAuctionParams = Prettify<
-  | CreateAuctionParamsInternal
-  | {
-      asyncParams: () => Promise<CreateAuctionParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x16654d40" as const;
 const FN_INPUTS = [
   {
@@ -102,9 +95,7 @@ const FN_OUTPUTS = [
  * });
  * ```
  */
-export function encodeCreateAuctionParams(
-  options: CreateAuctionParamsInternal,
-) {
+export function encodeCreateAuctionParams(options: CreateAuctionParams) {
   return encodeAbiParameters(FN_INPUTS, [options.params]);
 }
 
@@ -118,6 +109,7 @@ export function encodeCreateAuctionParams(
  * import { createAuction } from "thirdweb/extensions/marketplace";
  *
  * const transaction = createAuction({
+ *  contract,
  *  params: ...,
  * });
  *
@@ -127,7 +119,12 @@ export function encodeCreateAuctionParams(
  * ```
  */
 export function createAuction(
-  options: BaseTransactionOptions<CreateAuctionParams>,
+  options: BaseTransactionOptions<
+    | CreateAuctionParams
+    | {
+        asyncParams: () => Promise<CreateAuctionParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

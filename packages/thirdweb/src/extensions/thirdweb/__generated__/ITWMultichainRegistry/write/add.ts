@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "add" function.
  */
 
-type AddParamsInternal = {
+export type AddParams = {
   deployer: AbiParameterToPrimitiveType<{ type: "address"; name: "_deployer" }>;
   deployment: AbiParameterToPrimitiveType<{
     type: "address";
@@ -21,12 +20,6 @@ type AddParamsInternal = {
   }>;
 };
 
-export type AddParams = Prettify<
-  | AddParamsInternal
-  | {
-      asyncParams: () => Promise<AddParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x26c5b516" as const;
 const FN_INPUTS = [
   {
@@ -64,7 +57,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodeAddParams(options: AddParamsInternal) {
+export function encodeAddParams(options: AddParams) {
   return encodeAbiParameters(FN_INPUTS, [
     options.deployer,
     options.deployment,
@@ -83,6 +76,7 @@ export function encodeAddParams(options: AddParamsInternal) {
  * import { add } from "thirdweb/extensions/thirdweb";
  *
  * const transaction = add({
+ *  contract,
  *  deployer: ...,
  *  deployment: ...,
  *  chainId: ...,
@@ -94,7 +88,14 @@ export function encodeAddParams(options: AddParamsInternal) {
  *
  * ```
  */
-export function add(options: BaseTransactionOptions<AddParams>) {
+export function add(
+  options: BaseTransactionOptions<
+    | AddParams
+    | {
+        asyncParams: () => Promise<AddParams>;
+      }
+  >,
+) {
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,

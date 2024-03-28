@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "enableFeeAmount" function.
  */
 
-type EnableFeeAmountParamsInternal = {
+export type EnableFeeAmountParams = {
   fee: AbiParameterToPrimitiveType<{ type: "uint24"; name: "fee" }>;
   tickSpacing: AbiParameterToPrimitiveType<{
     type: "int24";
@@ -16,12 +15,6 @@ type EnableFeeAmountParamsInternal = {
   }>;
 };
 
-export type EnableFeeAmountParams = Prettify<
-  | EnableFeeAmountParamsInternal
-  | {
-      asyncParams: () => Promise<EnableFeeAmountParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x8a7c195f" as const;
 const FN_INPUTS = [
   {
@@ -49,9 +42,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodeEnableFeeAmountParams(
-  options: EnableFeeAmountParamsInternal,
-) {
+export function encodeEnableFeeAmountParams(options: EnableFeeAmountParams) {
   return encodeAbiParameters(FN_INPUTS, [options.fee, options.tickSpacing]);
 }
 
@@ -65,6 +56,7 @@ export function encodeEnableFeeAmountParams(
  * import { enableFeeAmount } from "thirdweb/extensions/uniswap";
  *
  * const transaction = enableFeeAmount({
+ *  contract,
  *  fee: ...,
  *  tickSpacing: ...,
  * });
@@ -75,7 +67,12 @@ export function encodeEnableFeeAmountParams(
  * ```
  */
 export function enableFeeAmount(
-  options: BaseTransactionOptions<EnableFeeAmountParams>,
+  options: BaseTransactionOptions<
+    | EnableFeeAmountParams
+    | {
+        asyncParams: () => Promise<EnableFeeAmountParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

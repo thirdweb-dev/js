@@ -1,25 +1,18 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "burnBatch" function.
  */
 
-type BurnBatchParamsInternal = {
+export type BurnBatchParams = {
   account: AbiParameterToPrimitiveType<{ type: "address"; name: "account" }>;
   ids: AbiParameterToPrimitiveType<{ type: "uint256[]"; name: "ids" }>;
   values: AbiParameterToPrimitiveType<{ type: "uint256[]"; name: "values" }>;
 };
 
-export type BurnBatchParams = Prettify<
-  | BurnBatchParamsInternal
-  | {
-      asyncParams: () => Promise<BurnBatchParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x6b20c454" as const;
 const FN_INPUTS = [
   {
@@ -52,7 +45,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodeBurnBatchParams(options: BurnBatchParamsInternal) {
+export function encodeBurnBatchParams(options: BurnBatchParams) {
   return encodeAbiParameters(FN_INPUTS, [
     options.account,
     options.ids,
@@ -70,6 +63,7 @@ export function encodeBurnBatchParams(options: BurnBatchParamsInternal) {
  * import { burnBatch } from "thirdweb/extensions/erc1155";
  *
  * const transaction = burnBatch({
+ *  contract,
  *  account: ...,
  *  ids: ...,
  *  values: ...,
@@ -80,7 +74,14 @@ export function encodeBurnBatchParams(options: BurnBatchParamsInternal) {
  *
  * ```
  */
-export function burnBatch(options: BaseTransactionOptions<BurnBatchParams>) {
+export function burnBatch(
+  options: BaseTransactionOptions<
+    | BurnBatchParams
+    | {
+        asyncParams: () => Promise<BurnBatchParams>;
+      }
+  >,
+) {
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,

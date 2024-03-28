@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "setDefaultRoyaltyInfo" function.
  */
 
-type SetDefaultRoyaltyInfoParamsInternal = {
+export type SetDefaultRoyaltyInfoParams = {
   royaltyRecipient: AbiParameterToPrimitiveType<{
     type: "address";
     name: "_royaltyRecipient";
@@ -19,12 +18,6 @@ type SetDefaultRoyaltyInfoParamsInternal = {
   }>;
 };
 
-export type SetDefaultRoyaltyInfoParams = Prettify<
-  | SetDefaultRoyaltyInfoParamsInternal
-  | {
-      asyncParams: () => Promise<SetDefaultRoyaltyInfoParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x600dd5ea" as const;
 const FN_INPUTS = [
   {
@@ -53,7 +46,7 @@ const FN_OUTPUTS = [] as const;
  * ```
  */
 export function encodeSetDefaultRoyaltyInfoParams(
-  options: SetDefaultRoyaltyInfoParamsInternal,
+  options: SetDefaultRoyaltyInfoParams,
 ) {
   return encodeAbiParameters(FN_INPUTS, [
     options.royaltyRecipient,
@@ -71,6 +64,7 @@ export function encodeSetDefaultRoyaltyInfoParams(
  * import { setDefaultRoyaltyInfo } from "thirdweb/extensions/common";
  *
  * const transaction = setDefaultRoyaltyInfo({
+ *  contract,
  *  royaltyRecipient: ...,
  *  royaltyBps: ...,
  * });
@@ -81,7 +75,12 @@ export function encodeSetDefaultRoyaltyInfoParams(
  * ```
  */
 export function setDefaultRoyaltyInfo(
-  options: BaseTransactionOptions<SetDefaultRoyaltyInfoParams>,
+  options: BaseTransactionOptions<
+    | SetDefaultRoyaltyInfoParams
+    | {
+        asyncParams: () => Promise<SetDefaultRoyaltyInfoParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "delegateBySig" function.
  */
 
-type DelegateBySigParamsInternal = {
+export type DelegateBySigParams = {
   delegatee: AbiParameterToPrimitiveType<{
     type: "address";
     name: "delegatee";
@@ -20,12 +19,6 @@ type DelegateBySigParamsInternal = {
   s: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "s" }>;
 };
 
-export type DelegateBySigParams = Prettify<
-  | DelegateBySigParamsInternal
-  | {
-      asyncParams: () => Promise<DelegateBySigParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0xc3cda520" as const;
 const FN_INPUTS = [
   {
@@ -73,9 +66,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodeDelegateBySigParams(
-  options: DelegateBySigParamsInternal,
-) {
+export function encodeDelegateBySigParams(options: DelegateBySigParams) {
   return encodeAbiParameters(FN_INPUTS, [
     options.delegatee,
     options.nonce,
@@ -96,6 +87,7 @@ export function encodeDelegateBySigParams(
  * import { delegateBySig } from "thirdweb/extensions/erc20";
  *
  * const transaction = delegateBySig({
+ *  contract,
  *  delegatee: ...,
  *  nonce: ...,
  *  expiry: ...,
@@ -110,7 +102,12 @@ export function encodeDelegateBySigParams(
  * ```
  */
 export function delegateBySig(
-  options: BaseTransactionOptions<DelegateBySigParams>,
+  options: BaseTransactionOptions<
+    | DelegateBySigParams
+    | {
+        asyncParams: () => Promise<DelegateBySigParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,
