@@ -379,7 +379,15 @@ export const WalletSelector: React.FC<{
   }
 
   return (
-    <Container scrollY flex="column" animate="fadein" fullHeight>
+    <Container
+      scrollY
+      flex="column"
+      animate="fadein"
+      fullHeight
+      style={{
+        maxHeight: modalConfig.modalSize === "compact" ? "550px" : undefined,
+      }}
+    >
       {/* Header */}
       {!modalConfig.isEmbed && (
         <Container

@@ -28,7 +28,8 @@ function AllWalletsUI(props: {
   onBack: () => void;
   onSelect: (wallet: Wallet) => void;
 }) {
-  const recommendedWallets = useWalletConnectionCtx().recommendedWallets;
+  const { recommendedWallets, wallets: specifiedWallets } =
+    useWalletConnectionCtx();
   const { modalSize } = useContext(ModalConfigCtx);
 
   const fuseInstance = useMemo(() => {
@@ -51,7 +52,25 @@ function AllWalletsUI(props: {
     ? fuseInstance.search(deferredSearchTerm).map((result) => result.item)
     : walletInfos;
 
-  const sortedWallets = sortWallets(walletInfosWithSearch, recommendedWallets);
+  const installedWalletsFirst = sortWallets(
+    walletInfosWithSearch,
+    recommendedWallets,
+  );
+
+  // show specified wallets first
+  const sortedWallets = useMemo(() => {
+    return installedWalletsFirst.sort((a, b) => {
+      const aIsSpecified = specifiedWallets.find((w) => w.id === a.id);
+      const bIsSpecified = specifiedWallets.find((w) => w.id === b.id);
+      if (aIsSpecified && !bIsSpecified) {
+        return -1;
+      }
+      if (!aIsSpecified && bIsSpecified) {
+        return 1;
+      }
+      return 0;
+    });
+  }, [installedWalletsFirst, specifiedWallets]);
 
   const { itemsToShow, lastItemRef } = useShowMore<HTMLLIElement>(10, 10);
 
@@ -107,7 +126,7 @@ function AllWalletsUI(props: {
 
       {walletInfosToShow.length > 0 && (
         <>
-          <Spacer y="lg" />
+          <Spacer y="md" />
           <Container animate="fadein" expand scrollY>
             <div
               ref={listContainer}
