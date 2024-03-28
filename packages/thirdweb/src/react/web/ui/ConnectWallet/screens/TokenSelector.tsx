@@ -39,7 +39,7 @@ export function TokenSelector(props: {
   // if input is undefined, it loads the native token
   // otherwise it loads the token with given address
   const tokenQuery = useWalletBalance({
-    account: activeAccount,
+    address: activeAccount?.address,
     chain: chain,
     tokenAddress: input,
   });
@@ -171,7 +171,7 @@ function SelectTokenButton(props: {
 }) {
   const account = useActiveAccount();
   const tokenBalanceQuery = useWalletBalance({
-    account,
+    address: account?.address,
     chain: props.chain,
     tokenAddress: isNativeToken(props.token) ? undefined : props.token.address,
   });

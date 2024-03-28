@@ -14,14 +14,14 @@ import { useWalletConnectionCtx } from "./useWalletConnectionCtx.js";
 export function useWalletBalance(
   options: Omit<Partial<GetWalletBalanceOptions>, "client">,
 ) {
-  const { chain, account, tokenAddress } = options;
+  const { chain, address, tokenAddress } = options;
   const { client } = useWalletConnectionCtx();
   const query = queryOptions({
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: [
       "walletBalance",
       chain?.id || -1,
-      account?.address || "0x0",
+      address || "0x0",
       { tokenAddress },
     ] as const,
     queryFn: async () => {
@@ -31,12 +31,12 @@ export function useWalletBalance(
       if (!client) {
         throw new Error("client is required");
       }
-      if (!account) {
-        throw new Error("account is required");
+      if (!address) {
+        throw new Error("address is required");
       }
-      return getWalletBalance({ chain, client, account, tokenAddress });
+      return getWalletBalance({ chain, client, address, tokenAddress });
     },
-    enabled: !!chain && !!client && !!account,
+    enabled: !!chain && !!client && !!address,
   });
   return useQuery(query);
 }

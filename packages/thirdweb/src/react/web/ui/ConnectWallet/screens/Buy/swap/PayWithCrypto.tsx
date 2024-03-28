@@ -41,7 +41,7 @@ export function PayWithCrypto(props: {
   const activeAccount = useActiveAccount();
 
   const balanceQuery = useWalletBalance({
-    account: activeAccount,
+    address: activeAccount?.address,
     chain: props.chain,
     tokenAddress: isNativeToken(props.token) ? undefined : props.token.address,
   });

@@ -9,10 +9,9 @@ import { getContract } from "../../contract/contract.js";
 import { eth_getBalance } from "../../rpc/actions/eth_getBalance.js";
 import { getRpcClient } from "../../rpc/rpc.js";
 import { toTokens } from "../../utils/units.js";
-import type { Account } from "../interfaces/wallet.js";
 
 export type GetWalletBalanceOptions = {
-  account: Pick<Account, "address">;
+  address: string;
   client: ThirdwebClient;
   chain: Chain;
   /**
@@ -47,7 +46,7 @@ type GetWalletBalanceResult = {
 export async function getWalletBalance(
   options: GetWalletBalanceOptions,
 ): Promise<GetWalletBalanceResult> {
-  const { account, client, chain, tokenAddress } = options;
+  const { address, client, chain, tokenAddress } = options;
   // erc20 case
   if (tokenAddress) {
     // load balanceOf dynamically to avoid circular dependency
@@ -56,7 +55,7 @@ export async function getWalletBalance(
     );
     return getBalance({
       contract: getContract({ client, chain, address: tokenAddress }),
-      address: account.address,
+      address,
     });
   }
   // native token case
@@ -67,7 +66,7 @@ export async function getWalletBalance(
       getChainSymbol(chain),
       getChainDecimals(chain),
       getChainNativeCurrencyName(chain),
-      eth_getBalance(rpcRequest, { address: account.address }),
+      eth_getBalance(rpcRequest, { address }),
     ]);
 
   return {
