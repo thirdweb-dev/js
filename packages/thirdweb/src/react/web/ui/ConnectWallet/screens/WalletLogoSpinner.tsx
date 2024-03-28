@@ -62,7 +62,7 @@ const WalletBg = /* @__PURE__ */ StyledDiv(() => {
   const theme = useCustomTheme();
   return {
     background: theme.colors.walletSelectorButtonHoverBg,
-    borderRadius: radius.xl,
+    borderRadius: "15px",
     border: `1px solid ${theme.colors.borderColor}`,
     padding: spacing.xs,
   };

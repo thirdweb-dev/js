@@ -171,6 +171,9 @@ function AllWalletsUI(props: {
           color="secondaryText"
           animate="fadein"
           expand
+          style={{
+            minHeight: "250px",
+          }}
         >
           <CrossCircledIcon width={iconSize.xl} height={iconSize.xl} />
           <Text> No Results </Text>
