@@ -1,25 +1,18 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "transfer" function.
  */
 
-type TransferParamsInternal = {
+export type TransferParams = {
   to: AbiParameterToPrimitiveType<{ type: "address"; name: "to" }>;
   deadline: AbiParameterToPrimitiveType<{ type: "uint256"; name: "deadline" }>;
   sig: AbiParameterToPrimitiveType<{ type: "bytes"; name: "sig" }>;
 };
 
-export type TransferParams = Prettify<
-  | TransferParamsInternal
-  | {
-      asyncParams: () => Promise<TransferParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0xbe45fd62" as const;
 const FN_INPUTS = [
   {
@@ -52,7 +45,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodeTransferParams(options: TransferParamsInternal) {
+export function encodeTransferParams(options: TransferParams) {
   return encodeAbiParameters(FN_INPUTS, [
     options.to,
     options.deadline,
@@ -70,6 +63,7 @@ export function encodeTransferParams(options: TransferParamsInternal) {
  * import { transfer } from "thirdweb/extensions/farcaster";
  *
  * const transaction = transfer({
+ *  contract,
  *  to: ...,
  *  deadline: ...,
  *  sig: ...,
@@ -80,7 +74,14 @@ export function encodeTransferParams(options: TransferParamsInternal) {
  *
  * ```
  */
-export function transfer(options: BaseTransactionOptions<TransferParams>) {
+export function transfer(
+  options: BaseTransactionOptions<
+    | TransferParams
+    | {
+        asyncParams: () => Promise<TransferParams>;
+      }
+  >,
+) {
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,

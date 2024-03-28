@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "onSignerAdded" function.
  */
 
-type OnSignerAddedParamsInternal = {
+export type OnSignerAddedParams = {
   signer: AbiParameterToPrimitiveType<{ type: "address"; name: "signer" }>;
   creatorAdmin: AbiParameterToPrimitiveType<{
     type: "address";
@@ -17,12 +16,6 @@ type OnSignerAddedParamsInternal = {
   data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "data" }>;
 };
 
-export type OnSignerAddedParams = Prettify<
-  | OnSignerAddedParamsInternal
-  | {
-      asyncParams: () => Promise<OnSignerAddedParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x9ddbb9d8" as const;
 const FN_INPUTS = [
   {
@@ -55,9 +48,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodeOnSignerAddedParams(
-  options: OnSignerAddedParamsInternal,
-) {
+export function encodeOnSignerAddedParams(options: OnSignerAddedParams) {
   return encodeAbiParameters(FN_INPUTS, [
     options.signer,
     options.creatorAdmin,
@@ -75,6 +66,7 @@ export function encodeOnSignerAddedParams(
  * import { onSignerAdded } from "thirdweb/extensions/erc4337";
  *
  * const transaction = onSignerAdded({
+ *  contract,
  *  signer: ...,
  *  creatorAdmin: ...,
  *  data: ...,
@@ -86,7 +78,12 @@ export function encodeOnSignerAddedParams(
  * ```
  */
 export function onSignerAdded(
-  options: BaseTransactionOptions<OnSignerAddedParams>,
+  options: BaseTransactionOptions<
+    | OnSignerAddedParams
+    | {
+        asyncParams: () => Promise<OnSignerAddedParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

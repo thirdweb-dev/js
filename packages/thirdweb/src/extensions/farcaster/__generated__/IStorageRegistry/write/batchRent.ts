@@ -1,24 +1,17 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "batchRent" function.
  */
 
-type BatchRentParamsInternal = {
+export type BatchRentParams = {
   fids: AbiParameterToPrimitiveType<{ type: "uint256[]"; name: "fids" }>;
   units: AbiParameterToPrimitiveType<{ type: "uint256[]"; name: "units" }>;
 };
 
-export type BatchRentParams = Prettify<
-  | BatchRentParamsInternal
-  | {
-      asyncParams: () => Promise<BatchRentParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0xa82c356e" as const;
 const FN_INPUTS = [
   {
@@ -46,7 +39,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodeBatchRentParams(options: BatchRentParamsInternal) {
+export function encodeBatchRentParams(options: BatchRentParams) {
   return encodeAbiParameters(FN_INPUTS, [options.fids, options.units]);
 }
 
@@ -60,6 +53,7 @@ export function encodeBatchRentParams(options: BatchRentParamsInternal) {
  * import { batchRent } from "thirdweb/extensions/farcaster";
  *
  * const transaction = batchRent({
+ *  contract,
  *  fids: ...,
  *  units: ...,
  * });
@@ -69,7 +63,14 @@ export function encodeBatchRentParams(options: BatchRentParamsInternal) {
  *
  * ```
  */
-export function batchRent(options: BaseTransactionOptions<BatchRentParams>) {
+export function batchRent(
+  options: BaseTransactionOptions<
+    | BatchRentParams
+    | {
+        asyncParams: () => Promise<BatchRentParams>;
+      }
+  >,
+) {
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,

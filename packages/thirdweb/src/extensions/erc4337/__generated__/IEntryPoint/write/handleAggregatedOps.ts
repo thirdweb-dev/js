@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "handleAggregatedOps" function.
  */
 
-type HandleAggregatedOpsParamsInternal = {
+export type HandleAggregatedOpsParams = {
   opsPerAggregator: AbiParameterToPrimitiveType<{
     type: "tuple[]";
     name: "opsPerAggregator";
@@ -40,12 +39,6 @@ type HandleAggregatedOpsParamsInternal = {
   }>;
 };
 
-export type HandleAggregatedOpsParams = Prettify<
-  | HandleAggregatedOpsParamsInternal
-  | {
-      asyncParams: () => Promise<HandleAggregatedOpsParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x4b1d7cf5" as const;
 const FN_INPUTS = [
   {
@@ -134,7 +127,7 @@ const FN_OUTPUTS = [] as const;
  * ```
  */
 export function encodeHandleAggregatedOpsParams(
-  options: HandleAggregatedOpsParamsInternal,
+  options: HandleAggregatedOpsParams,
 ) {
   return encodeAbiParameters(FN_INPUTS, [
     options.opsPerAggregator,
@@ -152,6 +145,7 @@ export function encodeHandleAggregatedOpsParams(
  * import { handleAggregatedOps } from "thirdweb/extensions/erc4337";
  *
  * const transaction = handleAggregatedOps({
+ *  contract,
  *  opsPerAggregator: ...,
  *  beneficiary: ...,
  * });
@@ -162,7 +156,12 @@ export function encodeHandleAggregatedOpsParams(
  * ```
  */
 export function handleAggregatedOps(
-  options: BaseTransactionOptions<HandleAggregatedOpsParams>,
+  options: BaseTransactionOptions<
+    | HandleAggregatedOpsParams
+    | {
+        asyncParams: () => Promise<HandleAggregatedOpsParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

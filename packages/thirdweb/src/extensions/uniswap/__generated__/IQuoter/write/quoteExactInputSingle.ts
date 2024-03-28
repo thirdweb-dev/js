@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "quoteExactInputSingle" function.
  */
 
-type QuoteExactInputSingleParamsInternal = {
+export type QuoteExactInputSingleParams = {
   tokenIn: AbiParameterToPrimitiveType<{ type: "address"; name: "tokenIn" }>;
   tokenOut: AbiParameterToPrimitiveType<{ type: "address"; name: "tokenOut" }>;
   fee: AbiParameterToPrimitiveType<{ type: "uint24"; name: "fee" }>;
@@ -19,12 +18,6 @@ type QuoteExactInputSingleParamsInternal = {
   }>;
 };
 
-export type QuoteExactInputSingleParams = Prettify<
-  | QuoteExactInputSingleParamsInternal
-  | {
-      asyncParams: () => Promise<QuoteExactInputSingleParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0xf7729d43" as const;
 const FN_INPUTS = [
   {
@@ -73,7 +66,7 @@ const FN_OUTPUTS = [
  * ```
  */
 export function encodeQuoteExactInputSingleParams(
-  options: QuoteExactInputSingleParamsInternal,
+  options: QuoteExactInputSingleParams,
 ) {
   return encodeAbiParameters(FN_INPUTS, [
     options.tokenIn,
@@ -94,6 +87,7 @@ export function encodeQuoteExactInputSingleParams(
  * import { quoteExactInputSingle } from "thirdweb/extensions/uniswap";
  *
  * const transaction = quoteExactInputSingle({
+ *  contract,
  *  tokenIn: ...,
  *  tokenOut: ...,
  *  fee: ...,
@@ -107,7 +101,12 @@ export function encodeQuoteExactInputSingleParams(
  * ```
  */
 export function quoteExactInputSingle(
-  options: BaseTransactionOptions<QuoteExactInputSingleParams>,
+  options: BaseTransactionOptions<
+    | QuoteExactInputSingleParams
+    | {
+        asyncParams: () => Promise<QuoteExactInputSingleParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

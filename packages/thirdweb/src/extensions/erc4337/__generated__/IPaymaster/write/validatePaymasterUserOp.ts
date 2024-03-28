@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "validatePaymasterUserOp" function.
  */
 
-type ValidatePaymasterUserOpParamsInternal = {
+export type ValidatePaymasterUserOpParams = {
   userOp: AbiParameterToPrimitiveType<{
     type: "tuple";
     name: "userOp";
@@ -33,12 +32,6 @@ type ValidatePaymasterUserOpParamsInternal = {
   maxCost: AbiParameterToPrimitiveType<{ type: "uint256"; name: "maxCost" }>;
 };
 
-export type ValidatePaymasterUserOpParams = Prettify<
-  | ValidatePaymasterUserOpParamsInternal
-  | {
-      asyncParams: () => Promise<ValidatePaymasterUserOpParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0xf465c77e" as const;
 const FN_INPUTS = [
   {
@@ -127,7 +120,7 @@ const FN_OUTPUTS = [
  * ```
  */
 export function encodeValidatePaymasterUserOpParams(
-  options: ValidatePaymasterUserOpParamsInternal,
+  options: ValidatePaymasterUserOpParams,
 ) {
   return encodeAbiParameters(FN_INPUTS, [
     options.userOp,
@@ -146,6 +139,7 @@ export function encodeValidatePaymasterUserOpParams(
  * import { validatePaymasterUserOp } from "thirdweb/extensions/erc4337";
  *
  * const transaction = validatePaymasterUserOp({
+ *  contract,
  *  userOp: ...,
  *  userOpHash: ...,
  *  maxCost: ...,
@@ -157,7 +151,12 @@ export function encodeValidatePaymasterUserOpParams(
  * ```
  */
 export function validatePaymasterUserOp(
-  options: BaseTransactionOptions<ValidatePaymasterUserOpParams>,
+  options: BaseTransactionOptions<
+    | ValidatePaymasterUserOpParams
+    | {
+        asyncParams: () => Promise<ValidatePaymasterUserOpParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

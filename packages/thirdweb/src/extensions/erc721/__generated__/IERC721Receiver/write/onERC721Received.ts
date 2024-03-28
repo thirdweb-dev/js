@@ -1,26 +1,19 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "onERC721Received" function.
  */
 
-type OnERC721ReceivedParamsInternal = {
+export type OnERC721ReceivedParams = {
   operator: AbiParameterToPrimitiveType<{ type: "address"; name: "operator" }>;
   from: AbiParameterToPrimitiveType<{ type: "address"; name: "from" }>;
   tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
   data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "data" }>;
 };
 
-export type OnERC721ReceivedParams = Prettify<
-  | OnERC721ReceivedParamsInternal
-  | {
-      asyncParams: () => Promise<OnERC721ReceivedParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x150b7a02" as const;
 const FN_INPUTS = [
   {
@@ -62,9 +55,7 @@ const FN_OUTPUTS = [
  * });
  * ```
  */
-export function encodeOnERC721ReceivedParams(
-  options: OnERC721ReceivedParamsInternal,
-) {
+export function encodeOnERC721ReceivedParams(options: OnERC721ReceivedParams) {
   return encodeAbiParameters(FN_INPUTS, [
     options.operator,
     options.from,
@@ -83,6 +74,7 @@ export function encodeOnERC721ReceivedParams(
  * import { onERC721Received } from "thirdweb/extensions/erc721";
  *
  * const transaction = onERC721Received({
+ *  contract,
  *  operator: ...,
  *  from: ...,
  *  tokenId: ...,
@@ -95,7 +87,12 @@ export function encodeOnERC721ReceivedParams(
  * ```
  */
 export function onERC721Received(
-  options: BaseTransactionOptions<OnERC721ReceivedParams>,
+  options: BaseTransactionOptions<
+    | OnERC721ReceivedParams
+    | {
+        asyncParams: () => Promise<OnERC721ReceivedParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

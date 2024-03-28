@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "createPack" function.
  */
 
-type CreatePackParamsInternal = {
+export type CreatePackParams = {
   contents: AbiParameterToPrimitiveType<{
     type: "tuple[]";
     name: "contents";
@@ -38,12 +37,6 @@ type CreatePackParamsInternal = {
   }>;
 };
 
-export type CreatePackParams = Prettify<
-  | CreatePackParamsInternal
-  | {
-      asyncParams: () => Promise<CreatePackParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x092e6075" as const;
 const FN_INPUTS = [
   {
@@ -118,7 +111,7 @@ const FN_OUTPUTS = [
  * });
  * ```
  */
-export function encodeCreatePackParams(options: CreatePackParamsInternal) {
+export function encodeCreatePackParams(options: CreatePackParams) {
   return encodeAbiParameters(FN_INPUTS, [
     options.contents,
     options.numOfRewardUnits,
@@ -139,6 +132,7 @@ export function encodeCreatePackParams(options: CreatePackParamsInternal) {
  * import { createPack } from "thirdweb/extensions/erc1155";
  *
  * const transaction = createPack({
+ *  contract,
  *  contents: ...,
  *  numOfRewardUnits: ...,
  *  packUri: ...,
@@ -152,7 +146,14 @@ export function encodeCreatePackParams(options: CreatePackParamsInternal) {
  *
  * ```
  */
-export function createPack(options: BaseTransactionOptions<CreatePackParams>) {
+export function createPack(
+  options: BaseTransactionOptions<
+    | CreatePackParams
+    | {
+        asyncParams: () => Promise<CreatePackParams>;
+      }
+  >,
+) {
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,

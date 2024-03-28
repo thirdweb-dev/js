@@ -1,23 +1,16 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "cancelOffer" function.
  */
 
-type CancelOfferParamsInternal = {
+export type CancelOfferParams = {
   offerId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_offerId" }>;
 };
 
-export type CancelOfferParams = Prettify<
-  | CancelOfferParamsInternal
-  | {
-      asyncParams: () => Promise<CancelOfferParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0xef706adf" as const;
 const FN_INPUTS = [
   {
@@ -40,7 +33,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodeCancelOfferParams(options: CancelOfferParamsInternal) {
+export function encodeCancelOfferParams(options: CancelOfferParams) {
   return encodeAbiParameters(FN_INPUTS, [options.offerId]);
 }
 
@@ -54,6 +47,7 @@ export function encodeCancelOfferParams(options: CancelOfferParamsInternal) {
  * import { cancelOffer } from "thirdweb/extensions/marketplace";
  *
  * const transaction = cancelOffer({
+ *  contract,
  *  offerId: ...,
  * });
  *
@@ -63,7 +57,12 @@ export function encodeCancelOfferParams(options: CancelOfferParamsInternal) {
  * ```
  */
 export function cancelOffer(
-  options: BaseTransactionOptions<CancelOfferParams>,
+  options: BaseTransactionOptions<
+    | CancelOfferParams
+    | {
+        asyncParams: () => Promise<CancelOfferParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

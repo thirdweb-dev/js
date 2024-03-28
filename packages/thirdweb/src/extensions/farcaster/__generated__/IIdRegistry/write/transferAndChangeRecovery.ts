@@ -1,26 +1,19 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "transferAndChangeRecovery" function.
  */
 
-type TransferAndChangeRecoveryParamsInternal = {
+export type TransferAndChangeRecoveryParams = {
   to: AbiParameterToPrimitiveType<{ type: "address"; name: "to" }>;
   recovery: AbiParameterToPrimitiveType<{ type: "address"; name: "recovery" }>;
   deadline: AbiParameterToPrimitiveType<{ type: "uint256"; name: "deadline" }>;
   sig: AbiParameterToPrimitiveType<{ type: "bytes"; name: "sig" }>;
 };
 
-export type TransferAndChangeRecoveryParams = Prettify<
-  | TransferAndChangeRecoveryParamsInternal
-  | {
-      asyncParams: () => Promise<TransferAndChangeRecoveryParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x3ab8465d" as const;
 const FN_INPUTS = [
   {
@@ -59,7 +52,7 @@ const FN_OUTPUTS = [] as const;
  * ```
  */
 export function encodeTransferAndChangeRecoveryParams(
-  options: TransferAndChangeRecoveryParamsInternal,
+  options: TransferAndChangeRecoveryParams,
 ) {
   return encodeAbiParameters(FN_INPUTS, [
     options.to,
@@ -79,6 +72,7 @@ export function encodeTransferAndChangeRecoveryParams(
  * import { transferAndChangeRecovery } from "thirdweb/extensions/farcaster";
  *
  * const transaction = transferAndChangeRecovery({
+ *  contract,
  *  to: ...,
  *  recovery: ...,
  *  deadline: ...,
@@ -91,7 +85,12 @@ export function encodeTransferAndChangeRecoveryParams(
  * ```
  */
 export function transferAndChangeRecovery(
-  options: BaseTransactionOptions<TransferAndChangeRecoveryParams>,
+  options: BaseTransactionOptions<
+    | TransferAndChangeRecoveryParams
+    | {
+        asyncParams: () => Promise<TransferAndChangeRecoveryParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

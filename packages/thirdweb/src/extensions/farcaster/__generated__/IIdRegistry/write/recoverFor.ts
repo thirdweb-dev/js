@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "recoverFor" function.
  */
 
-type RecoverForParamsInternal = {
+export type RecoverForParams = {
   from: AbiParameterToPrimitiveType<{ type: "address"; name: "from" }>;
   to: AbiParameterToPrimitiveType<{ type: "address"; name: "to" }>;
   recoveryDeadline: AbiParameterToPrimitiveType<{
@@ -26,12 +25,6 @@ type RecoverForParamsInternal = {
   toSig: AbiParameterToPrimitiveType<{ type: "bytes"; name: "toSig" }>;
 };
 
-export type RecoverForParams = Prettify<
-  | RecoverForParamsInternal
-  | {
-      asyncParams: () => Promise<RecoverForParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0xba656434" as const;
 const FN_INPUTS = [
   {
@@ -79,7 +72,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodeRecoverForParams(options: RecoverForParamsInternal) {
+export function encodeRecoverForParams(options: RecoverForParams) {
   return encodeAbiParameters(FN_INPUTS, [
     options.from,
     options.to,
@@ -100,6 +93,7 @@ export function encodeRecoverForParams(options: RecoverForParamsInternal) {
  * import { recoverFor } from "thirdweb/extensions/farcaster";
  *
  * const transaction = recoverFor({
+ *  contract,
  *  from: ...,
  *  to: ...,
  *  recoveryDeadline: ...,
@@ -113,7 +107,14 @@ export function encodeRecoverForParams(options: RecoverForParamsInternal) {
  *
  * ```
  */
-export function recoverFor(options: BaseTransactionOptions<RecoverForParams>) {
+export function recoverFor(
+  options: BaseTransactionOptions<
+    | RecoverForParams
+    | {
+        asyncParams: () => Promise<RecoverForParams>;
+      }
+  >,
+) {
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,

@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "airdropERC721" function.
  */
 
-type AirdropERC721ParamsInternal = {
+export type AirdropERC721Params = {
   tokenAddress: AbiParameterToPrimitiveType<{
     type: "address";
     name: "tokenAddress";
@@ -27,12 +26,6 @@ type AirdropERC721ParamsInternal = {
   }>;
 };
 
-export type AirdropERC721Params = Prettify<
-  | AirdropERC721ParamsInternal
-  | {
-      asyncParams: () => Promise<AirdropERC721ParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x7c2c059d" as const;
 const FN_INPUTS = [
   {
@@ -75,9 +68,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodeAirdropERC721Params(
-  options: AirdropERC721ParamsInternal,
-) {
+export function encodeAirdropERC721Params(options: AirdropERC721Params) {
   return encodeAbiParameters(FN_INPUTS, [
     options.tokenAddress,
     options.tokenOwner,
@@ -95,6 +86,7 @@ export function encodeAirdropERC721Params(
  * import { airdropERC721 } from "thirdweb/extensions/erc721";
  *
  * const transaction = airdropERC721({
+ *  contract,
  *  tokenAddress: ...,
  *  tokenOwner: ...,
  *  contents: ...,
@@ -106,7 +98,12 @@ export function encodeAirdropERC721Params(
  * ```
  */
 export function airdropERC721(
-  options: BaseTransactionOptions<AirdropERC721Params>,
+  options: BaseTransactionOptions<
+    | AirdropERC721Params
+    | {
+        asyncParams: () => Promise<AirdropERC721Params>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

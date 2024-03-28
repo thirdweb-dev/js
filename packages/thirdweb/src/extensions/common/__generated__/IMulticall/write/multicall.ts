@@ -1,23 +1,16 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "multicall" function.
  */
 
-type MulticallParamsInternal = {
+export type MulticallParams = {
   data: AbiParameterToPrimitiveType<{ type: "bytes[]"; name: "data" }>;
 };
 
-export type MulticallParams = Prettify<
-  | MulticallParamsInternal
-  | {
-      asyncParams: () => Promise<MulticallParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0xac9650d8" as const;
 const FN_INPUTS = [
   {
@@ -45,7 +38,7 @@ const FN_OUTPUTS = [
  * });
  * ```
  */
-export function encodeMulticallParams(options: MulticallParamsInternal) {
+export function encodeMulticallParams(options: MulticallParams) {
   return encodeAbiParameters(FN_INPUTS, [options.data]);
 }
 
@@ -59,6 +52,7 @@ export function encodeMulticallParams(options: MulticallParamsInternal) {
  * import { multicall } from "thirdweb/extensions/common";
  *
  * const transaction = multicall({
+ *  contract,
  *  data: ...,
  * });
  *
@@ -67,7 +61,14 @@ export function encodeMulticallParams(options: MulticallParamsInternal) {
  *
  * ```
  */
-export function multicall(options: BaseTransactionOptions<MulticallParams>) {
+export function multicall(
+  options: BaseTransactionOptions<
+    | MulticallParams
+    | {
+        asyncParams: () => Promise<MulticallParams>;
+      }
+  >,
+) {
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,

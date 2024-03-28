@@ -1,24 +1,17 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "burnFrom" function.
  */
 
-type BurnFromParamsInternal = {
+export type BurnFromParams = {
   account: AbiParameterToPrimitiveType<{ type: "address"; name: "account" }>;
   amount: AbiParameterToPrimitiveType<{ type: "uint256"; name: "amount" }>;
 };
 
-export type BurnFromParams = Prettify<
-  | BurnFromParamsInternal
-  | {
-      asyncParams: () => Promise<BurnFromParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x79cc6790" as const;
 const FN_INPUTS = [
   {
@@ -46,7 +39,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodeBurnFromParams(options: BurnFromParamsInternal) {
+export function encodeBurnFromParams(options: BurnFromParams) {
   return encodeAbiParameters(FN_INPUTS, [options.account, options.amount]);
 }
 
@@ -60,6 +53,7 @@ export function encodeBurnFromParams(options: BurnFromParamsInternal) {
  * import { burnFrom } from "thirdweb/extensions/erc20";
  *
  * const transaction = burnFrom({
+ *  contract,
  *  account: ...,
  *  amount: ...,
  * });
@@ -69,7 +63,14 @@ export function encodeBurnFromParams(options: BurnFromParamsInternal) {
  *
  * ```
  */
-export function burnFrom(options: BaseTransactionOptions<BurnFromParams>) {
+export function burnFrom(
+  options: BaseTransactionOptions<
+    | BurnFromParams
+    | {
+        asyncParams: () => Promise<BurnFromParams>;
+      }
+  >,
+) {
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,

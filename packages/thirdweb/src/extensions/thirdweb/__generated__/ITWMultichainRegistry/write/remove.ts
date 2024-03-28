@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "remove" function.
  */
 
-type RemoveParamsInternal = {
+export type RemoveParams = {
   deployer: AbiParameterToPrimitiveType<{ type: "address"; name: "_deployer" }>;
   deployment: AbiParameterToPrimitiveType<{
     type: "address";
@@ -17,12 +16,6 @@ type RemoveParamsInternal = {
   chainId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_chainId" }>;
 };
 
-export type RemoveParams = Prettify<
-  | RemoveParamsInternal
-  | {
-      asyncParams: () => Promise<RemoveParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x59e5fd04" as const;
 const FN_INPUTS = [
   {
@@ -55,7 +48,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodeRemoveParams(options: RemoveParamsInternal) {
+export function encodeRemoveParams(options: RemoveParams) {
   return encodeAbiParameters(FN_INPUTS, [
     options.deployer,
     options.deployment,
@@ -73,6 +66,7 @@ export function encodeRemoveParams(options: RemoveParamsInternal) {
  * import { remove } from "thirdweb/extensions/thirdweb";
  *
  * const transaction = remove({
+ *  contract,
  *  deployer: ...,
  *  deployment: ...,
  *  chainId: ...,
@@ -83,7 +77,14 @@ export function encodeRemoveParams(options: RemoveParamsInternal) {
  *
  * ```
  */
-export function remove(options: BaseTransactionOptions<RemoveParams>) {
+export function remove(
+  options: BaseTransactionOptions<
+    | RemoveParams
+    | {
+        asyncParams: () => Promise<RemoveParams>;
+      }
+  >,
+) {
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,

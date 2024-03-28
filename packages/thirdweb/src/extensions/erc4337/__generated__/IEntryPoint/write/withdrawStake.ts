@@ -1,26 +1,19 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "withdrawStake" function.
  */
 
-type WithdrawStakeParamsInternal = {
+export type WithdrawStakeParams = {
   withdrawAddress: AbiParameterToPrimitiveType<{
     type: "address";
     name: "withdrawAddress";
   }>;
 };
 
-export type WithdrawStakeParams = Prettify<
-  | WithdrawStakeParamsInternal
-  | {
-      asyncParams: () => Promise<WithdrawStakeParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0xc23a5cea" as const;
 const FN_INPUTS = [
   {
@@ -43,9 +36,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodeWithdrawStakeParams(
-  options: WithdrawStakeParamsInternal,
-) {
+export function encodeWithdrawStakeParams(options: WithdrawStakeParams) {
   return encodeAbiParameters(FN_INPUTS, [options.withdrawAddress]);
 }
 
@@ -59,6 +50,7 @@ export function encodeWithdrawStakeParams(
  * import { withdrawStake } from "thirdweb/extensions/erc4337";
  *
  * const transaction = withdrawStake({
+ *  contract,
  *  withdrawAddress: ...,
  * });
  *
@@ -68,7 +60,12 @@ export function encodeWithdrawStakeParams(
  * ```
  */
 export function withdrawStake(
-  options: BaseTransactionOptions<WithdrawStakeParams>,
+  options: BaseTransactionOptions<
+    | WithdrawStakeParams
+    | {
+        asyncParams: () => Promise<WithdrawStakeParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

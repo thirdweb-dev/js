@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "addFor" function.
  */
 
-type AddForParamsInternal = {
+export type AddForParams = {
   fidOwner: AbiParameterToPrimitiveType<{ type: "address"; name: "fidOwner" }>;
   keyType: AbiParameterToPrimitiveType<{ type: "uint32"; name: "keyType" }>;
   key: AbiParameterToPrimitiveType<{ type: "bytes"; name: "key" }>;
@@ -21,12 +20,6 @@ type AddForParamsInternal = {
   sig: AbiParameterToPrimitiveType<{ type: "bytes"; name: "sig" }>;
 };
 
-export type AddForParams = Prettify<
-  | AddForParamsInternal
-  | {
-      asyncParams: () => Promise<AddForParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0xa005d3d2" as const;
 const FN_INPUTS = [
   {
@@ -79,7 +72,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodeAddForParams(options: AddForParamsInternal) {
+export function encodeAddForParams(options: AddForParams) {
   return encodeAbiParameters(FN_INPUTS, [
     options.fidOwner,
     options.keyType,
@@ -101,6 +94,7 @@ export function encodeAddForParams(options: AddForParamsInternal) {
  * import { addFor } from "thirdweb/extensions/farcaster";
  *
  * const transaction = addFor({
+ *  contract,
  *  fidOwner: ...,
  *  keyType: ...,
  *  key: ...,
@@ -115,7 +109,14 @@ export function encodeAddForParams(options: AddForParamsInternal) {
  *
  * ```
  */
-export function addFor(options: BaseTransactionOptions<AddForParams>) {
+export function addFor(
+  options: BaseTransactionOptions<
+    | AddForParams
+    | {
+        asyncParams: () => Promise<AddForParams>;
+      }
+  >,
+) {
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,

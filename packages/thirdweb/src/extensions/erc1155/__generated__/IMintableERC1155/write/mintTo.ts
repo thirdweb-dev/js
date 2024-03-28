@@ -1,26 +1,19 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "mintTo" function.
  */
 
-type MintToParamsInternal = {
+export type MintToParams = {
   to: AbiParameterToPrimitiveType<{ type: "address"; name: "to" }>;
   tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
   uri: AbiParameterToPrimitiveType<{ type: "string"; name: "uri" }>;
   amount: AbiParameterToPrimitiveType<{ type: "uint256"; name: "amount" }>;
 };
 
-export type MintToParams = Prettify<
-  | MintToParamsInternal
-  | {
-      asyncParams: () => Promise<MintToParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0xb03f4528" as const;
 const FN_INPUTS = [
   {
@@ -58,7 +51,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodeMintToParams(options: MintToParamsInternal) {
+export function encodeMintToParams(options: MintToParams) {
   return encodeAbiParameters(FN_INPUTS, [
     options.to,
     options.tokenId,
@@ -77,6 +70,7 @@ export function encodeMintToParams(options: MintToParamsInternal) {
  * import { mintTo } from "thirdweb/extensions/erc1155";
  *
  * const transaction = mintTo({
+ *  contract,
  *  to: ...,
  *  tokenId: ...,
  *  uri: ...,
@@ -88,7 +82,14 @@ export function encodeMintToParams(options: MintToParamsInternal) {
  *
  * ```
  */
-export function mintTo(options: BaseTransactionOptions<MintToParams>) {
+export function mintTo(
+  options: BaseTransactionOptions<
+    | MintToParams
+    | {
+        asyncParams: () => Promise<MintToParams>;
+      }
+  >,
+) {
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,

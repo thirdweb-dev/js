@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "onSignerRemoved" function.
  */
 
-type OnSignerRemovedParamsInternal = {
+export type OnSignerRemovedParams = {
   signer: AbiParameterToPrimitiveType<{ type: "address"; name: "signer" }>;
   creatorAdmin: AbiParameterToPrimitiveType<{
     type: "address";
@@ -17,12 +16,6 @@ type OnSignerRemovedParamsInternal = {
   data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "data" }>;
 };
 
-export type OnSignerRemovedParams = Prettify<
-  | OnSignerRemovedParamsInternal
-  | {
-      asyncParams: () => Promise<OnSignerRemovedParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x0db33003" as const;
 const FN_INPUTS = [
   {
@@ -55,9 +48,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodeOnSignerRemovedParams(
-  options: OnSignerRemovedParamsInternal,
-) {
+export function encodeOnSignerRemovedParams(options: OnSignerRemovedParams) {
   return encodeAbiParameters(FN_INPUTS, [
     options.signer,
     options.creatorAdmin,
@@ -75,6 +66,7 @@ export function encodeOnSignerRemovedParams(
  * import { onSignerRemoved } from "thirdweb/extensions/erc4337";
  *
  * const transaction = onSignerRemoved({
+ *  contract,
  *  signer: ...,
  *  creatorAdmin: ...,
  *  data: ...,
@@ -86,7 +78,12 @@ export function encodeOnSignerRemovedParams(
  * ```
  */
 export function onSignerRemoved(
-  options: BaseTransactionOptions<OnSignerRemovedParams>,
+  options: BaseTransactionOptions<
+    | OnSignerRemovedParams
+    | {
+        asyncParams: () => Promise<OnSignerRemovedParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "deployProxyByImplementation" function.
  */
 
-type DeployProxyByImplementationParamsInternal = {
+export type DeployProxyByImplementationParams = {
   implementation: AbiParameterToPrimitiveType<{
     type: "address";
     name: "implementation";
@@ -17,12 +16,6 @@ type DeployProxyByImplementationParamsInternal = {
   salt: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "salt" }>;
 };
 
-export type DeployProxyByImplementationParams = Prettify<
-  | DeployProxyByImplementationParamsInternal
-  | {
-      asyncParams: () => Promise<DeployProxyByImplementationParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x11b804ab" as const;
 const FN_INPUTS = [
   {
@@ -60,7 +53,7 @@ const FN_OUTPUTS = [
  * ```
  */
 export function encodeDeployProxyByImplementationParams(
-  options: DeployProxyByImplementationParamsInternal,
+  options: DeployProxyByImplementationParams,
 ) {
   return encodeAbiParameters(FN_INPUTS, [
     options.implementation,
@@ -79,6 +72,7 @@ export function encodeDeployProxyByImplementationParams(
  * import { deployProxyByImplementation } from "thirdweb/extensions/thirdweb";
  *
  * const transaction = deployProxyByImplementation({
+ *  contract,
  *  implementation: ...,
  *  data: ...,
  *  salt: ...,
@@ -90,7 +84,12 @@ export function encodeDeployProxyByImplementationParams(
  * ```
  */
 export function deployProxyByImplementation(
-  options: BaseTransactionOptions<DeployProxyByImplementationParams>,
+  options: BaseTransactionOptions<
+    | DeployProxyByImplementationParams
+    | {
+        asyncParams: () => Promise<DeployProxyByImplementationParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

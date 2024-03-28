@@ -1,23 +1,16 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "getSenderAddress" function.
  */
 
-type GetSenderAddressParamsInternal = {
+export type GetSenderAddressParams = {
   initCode: AbiParameterToPrimitiveType<{ type: "bytes"; name: "initCode" }>;
 };
 
-export type GetSenderAddressParams = Prettify<
-  | GetSenderAddressParamsInternal
-  | {
-      asyncParams: () => Promise<GetSenderAddressParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x9b249f69" as const;
 const FN_INPUTS = [
   {
@@ -40,9 +33,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodeGetSenderAddressParams(
-  options: GetSenderAddressParamsInternal,
-) {
+export function encodeGetSenderAddressParams(options: GetSenderAddressParams) {
   return encodeAbiParameters(FN_INPUTS, [options.initCode]);
 }
 
@@ -56,6 +47,7 @@ export function encodeGetSenderAddressParams(
  * import { getSenderAddress } from "thirdweb/extensions/erc4337";
  *
  * const transaction = getSenderAddress({
+ *  contract,
  *  initCode: ...,
  * });
  *
@@ -65,7 +57,12 @@ export function encodeGetSenderAddressParams(
  * ```
  */
 export function getSenderAddress(
-  options: BaseTransactionOptions<GetSenderAddressParams>,
+  options: BaseTransactionOptions<
+    | GetSenderAddressParams
+    | {
+        asyncParams: () => Promise<GetSenderAddressParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

@@ -83,6 +83,11 @@ export async function resolveAbiFromContractApi(
     `${contractApiBaseUrl}/${contract.chain.id}/${contract.address}`,
   );
   const json = await response.json();
+  if (!json || json.error) {
+    throw new Error(
+      `Failed to resolve ABI from contract API. ${json.error || ""}`,
+    );
+  }
   return json;
 }
 

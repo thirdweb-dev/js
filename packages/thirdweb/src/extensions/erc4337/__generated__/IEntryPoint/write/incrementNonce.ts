@@ -1,23 +1,16 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "incrementNonce" function.
  */
 
-type IncrementNonceParamsInternal = {
+export type IncrementNonceParams = {
   key: AbiParameterToPrimitiveType<{ type: "uint192"; name: "key" }>;
 };
 
-export type IncrementNonceParams = Prettify<
-  | IncrementNonceParamsInternal
-  | {
-      asyncParams: () => Promise<IncrementNonceParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x0bd28e3b" as const;
 const FN_INPUTS = [
   {
@@ -40,9 +33,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodeIncrementNonceParams(
-  options: IncrementNonceParamsInternal,
-) {
+export function encodeIncrementNonceParams(options: IncrementNonceParams) {
   return encodeAbiParameters(FN_INPUTS, [options.key]);
 }
 
@@ -56,6 +47,7 @@ export function encodeIncrementNonceParams(
  * import { incrementNonce } from "thirdweb/extensions/erc4337";
  *
  * const transaction = incrementNonce({
+ *  contract,
  *  key: ...,
  * });
  *
@@ -65,7 +57,12 @@ export function encodeIncrementNonceParams(
  * ```
  */
 export function incrementNonce(
-  options: BaseTransactionOptions<IncrementNonceParams>,
+  options: BaseTransactionOptions<
+    | IncrementNonceParams
+    | {
+        asyncParams: () => Promise<IncrementNonceParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

@@ -1,26 +1,19 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "setPrimarySaleRecipient" function.
  */
 
-type SetPrimarySaleRecipientParamsInternal = {
+export type SetPrimarySaleRecipientParams = {
   saleRecipient: AbiParameterToPrimitiveType<{
     type: "address";
     name: "_saleRecipient";
   }>;
 };
 
-export type SetPrimarySaleRecipientParams = Prettify<
-  | SetPrimarySaleRecipientParamsInternal
-  | {
-      asyncParams: () => Promise<SetPrimarySaleRecipientParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x6f4f2837" as const;
 const FN_INPUTS = [
   {
@@ -44,7 +37,7 @@ const FN_OUTPUTS = [] as const;
  * ```
  */
 export function encodeSetPrimarySaleRecipientParams(
-  options: SetPrimarySaleRecipientParamsInternal,
+  options: SetPrimarySaleRecipientParams,
 ) {
   return encodeAbiParameters(FN_INPUTS, [options.saleRecipient]);
 }
@@ -59,6 +52,7 @@ export function encodeSetPrimarySaleRecipientParams(
  * import { setPrimarySaleRecipient } from "thirdweb/extensions/common";
  *
  * const transaction = setPrimarySaleRecipient({
+ *  contract,
  *  saleRecipient: ...,
  * });
  *
@@ -68,7 +62,12 @@ export function encodeSetPrimarySaleRecipientParams(
  * ```
  */
 export function setPrimarySaleRecipient(
-  options: BaseTransactionOptions<SetPrimarySaleRecipientParams>,
+  options: BaseTransactionOptions<
+    | SetPrimarySaleRecipientParams
+    | {
+        asyncParams: () => Promise<SetPrimarySaleRecipientParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,
