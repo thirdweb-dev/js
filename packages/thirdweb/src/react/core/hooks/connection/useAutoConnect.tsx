@@ -43,7 +43,7 @@ export type AutoConnectProps = {
    *
    * function Example() {
    *  return (
-   *    <ConnectButton
+   *    <AutoConnect
    *      client={client}
    *      wallets={wallets}
    *    />
