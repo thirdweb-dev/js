@@ -604,4 +604,9 @@ export type ConnectButtonProps = {
    * />
    */
   accountAbstraction?: SmartWalletOptions;
+
+  /**
+   * Wallets to show as recommended in the `ConnectButton`'s Modal
+   */
+  recommendedWallets?: Wallet[];
 };

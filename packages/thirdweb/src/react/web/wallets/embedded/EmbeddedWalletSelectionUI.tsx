@@ -43,7 +43,7 @@ function EmbeddedWalletSelectionUI(props: {
   ) {
     return (
       <WalletEntryButton
-        wallet={props.wallet}
+        walletId={props.wallet.id}
         selectWallet={() => {
           saveState({});
           props.select();

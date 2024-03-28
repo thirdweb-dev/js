@@ -1,11 +1,6 @@
-import {
-  ModalConfigCtx,
-  // SetModalConfigCtx,
-  // SetModalConfigCtx,
-} from "../../../providers/wallet-ui-states-provider.js";
-import { useCallback, useContext } from "react";
+import { ModalConfigCtx } from "../../../providers/wallet-ui-states-provider.js";
+import { Suspense, lazy, useCallback, useContext } from "react";
 import { reservedScreens, onModalUnmount } from "../constants.js";
-// import { HeadlessConnectUI } from "../../../wallets/headlessConnectUI.js";
 import { ScreenSetupContext, type ScreenSetup } from "./screen.js";
 import { StartScreen } from "../screens/StartScreen.js";
 import { WalletSelector } from "../WalletSelector.js";
@@ -18,6 +13,9 @@ import { useConnect } from "../../../../core/hooks/wallets/wallet-hooks.js";
 import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import { AnyWalletConnectUI } from "./AnyWalletConnectUI.js";
 import { SmartConnectUI } from "./SmartWalletConnectUI.js";
+import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
+
+const AllWalletsUI = /* @__PURE__ */ lazy(() => import("./AllWalletsUI.js"));
 
 /**
  * @internal
@@ -111,9 +109,18 @@ export const ConnectModalContent = (props: {
         setScreen(reservedScreens.getStarted);
       }}
       selectWallet={setScreen}
+      onShowAll={() => {
+        setScreen(reservedScreens.showAll);
+      }}
       done={handleConnected}
       goBack={wallets.length > 1 ? handleBack : undefined}
     />
+  );
+
+  const showAll = (
+    <Suspense fallback={<LoadingScreen />}>
+      <AllWalletsUI onBack={handleBack} onSelect={setScreen} />
+    </Suspense>
   );
 
   const getStarted = <StartScreen />;
@@ -167,6 +174,7 @@ export const ConnectModalContent = (props: {
               {/* {screen === reservedScreens.signIn && signatureScreen} */}
               {screen === reservedScreens.main && <>{getStarted}</>}
               {screen === reservedScreens.getStarted && getStarted}
+              {screen === reservedScreens.showAll && showAll}
               {typeof screen !== "string" && getWalletUI(screen)}
             </>
           }
@@ -176,6 +184,7 @@ export const ConnectModalContent = (props: {
           {/* {screen === reservedScreens.signIn && signatureScreen} */}
           {screen === reservedScreens.main && walletList}
           {screen === reservedScreens.getStarted && getStarted}
+          {screen === reservedScreens.showAll && showAll}
           {typeof screen !== "string" && getWalletUI(screen)}
         </ConnectModalCompactLayout>
       )}

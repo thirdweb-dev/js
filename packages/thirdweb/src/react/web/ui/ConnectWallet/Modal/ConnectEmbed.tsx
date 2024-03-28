@@ -310,6 +310,11 @@ export type ConnectEmbedProps = {
    * />
    */
   accountAbstraction?: SmartWalletOptions;
+
+  /**
+   * Wallets to show as recommended in the `ConnectButton`'s Modal
+   */
+  recommendedWallets?: Wallet[];
 };
 
 /**
@@ -457,6 +462,7 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
           chains: props.chains,
           walletConnect: props.walletConnect,
           accountAbstraction: props.accountAbstraction,
+          recommendedWallets: props.recommendedWallets,
         }}
       >
         <WalletUIStatesProvider {...walletUIStatesProps}>

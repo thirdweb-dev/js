@@ -17,8 +17,8 @@ import {
 import { Button, IconButton } from "../components/buttons.js";
 import { ModalTitle } from "../components/modalElements.js";
 import { Link } from "../components/text.js";
-import { StyledUl } from "../design-system/elements.js";
-import { iconSize, spacing } from "../design-system/index.js";
+import { StyledDiv, StyledUl } from "../design-system/elements.js";
+import { fontSize, iconSize, radius, spacing } from "../design-system/index.js";
 import { TOS } from "./Modal/TOS.js";
 import { TWIcon } from "./icons/twIcon.js";
 import { Text } from "../components/text.js";
@@ -32,7 +32,9 @@ import { createWallet } from "../../../../wallets/create-wallet.js";
 import type { InjectedSupportedWalletIds } from "../../../../wallets/__generated__/wallet-ids.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
 import { LoadingScreen } from "../../wallets/shared/LoadingScreen.js";
-import { WalletEntryButton } from "./WalletEntryButton.js";
+import { WalletButton, WalletEntryButton } from "./WalletEntryButton.js";
+import { sortWallets } from "../../utils/sortWallets.js";
+import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 
 const EmbeddedWalletSelectionUI = /* @__PURE__ */ lazy(
   () => import("../../wallets/embedded/EmbeddedWalletSelectionUI.js"),
@@ -51,6 +53,7 @@ export const WalletSelector: React.FC<{
   title: string;
   done: (wallet: Wallet) => void;
   goBack?: () => void;
+  onShowAll: () => void;
 }> = (props) => {
   const modalConfig = useContext(ModalConfigCtx);
   const isCompact = modalConfig.modalSize === "compact";
@@ -216,6 +219,7 @@ export const WalletSelector: React.FC<{
         selectWallet={handleSelect}
         done={props.done}
         goBack={props.goBack}
+        onShowAll={props.onShowAll}
       />
     );
 
@@ -236,6 +240,7 @@ export const WalletSelector: React.FC<{
           selectWallet={handleSelect}
           done={props.done}
           goBack={props.goBack}
+          onShowAll={props.onShowAll}
         />
       );
 
@@ -330,6 +335,7 @@ export const WalletSelector: React.FC<{
                     selectWallet={handleSelect}
                     done={props.done}
                     goBack={props.goBack}
+                    onShowAll={props.onShowAll}
                   />
                 </Container>
 
@@ -361,6 +367,7 @@ export const WalletSelector: React.FC<{
             selectWallet={handleSelect}
             done={props.done}
             goBack={props.goBack}
+            onShowAll={props.onShowAll}
           />
         );
 
@@ -471,6 +478,7 @@ const WalletSelection: React.FC<{
   maxHeight?: string;
   done: (wallet: Wallet) => void;
   goBack?: () => void;
+  onShowAll?: () => void;
 }> = (props) => {
   const { recommendedWallets } = useWalletConnectionCtx();
 
@@ -490,7 +498,11 @@ const WalletSelection: React.FC<{
   // );
 
   return (
-    <WalletList>
+    <WalletList
+      style={{
+        minHeight: "100%",
+      }}
+    >
       {wallets.map((wallet) => {
         return (
           <li
@@ -508,7 +520,7 @@ const WalletSelection: React.FC<{
               </Suspense>
             ) : (
               <WalletEntryButton
-                wallet={wallet}
+                walletId={wallet.id}
                 selectWallet={() => {
                   props.selectWallet(wallet);
                 }}
@@ -517,9 +529,70 @@ const WalletSelection: React.FC<{
           </li>
         );
       })}
+
+      {props.onShowAll && (
+        <ButtonContainer>
+          <WalletButton onClick={props.onShowAll}>
+            <ShowAllWalletsIcon>
+              <div data-dot></div>
+              <div data-dot></div>
+              <div data-dot></div>
+              <div data-dot></div>
+            </ShowAllWalletsIcon>
+            <Container flex="row" gap="xs">
+              <Text color="primaryText">All Wallets</Text>
+              <BadgeText> 350+ </BadgeText>
+            </Container>
+          </WalletButton>
+        </ButtonContainer>
+      )}
     </WalletList>
   );
 };
+
+const BadgeText = /* @__PURE__ */ StyledDiv(() => {
+  const theme = useCustomTheme();
+  return {
+    backgroundColor: theme.colors.secondaryButtonBg,
+    paddingBlock: "3px",
+    paddingInline: spacing.xxs,
+    fontSize: fontSize.xs,
+    borderRadius: radius.sm,
+    color: theme.colors.secondaryText,
+  };
+});
+
+const ButtonContainer = /* @__PURE__ */ StyledDiv(() => {
+  const theme = useCustomTheme();
+  return {
+    "&:hover [data-dot]": {
+      background: theme.colors.primaryText,
+    },
+  };
+});
+
+const ShowAllWalletsIcon = /* @__PURE__ */ StyledDiv(() => {
+  const theme = useCustomTheme();
+  return {
+    width: iconSize.xl + "px",
+    height: iconSize.xl + "px",
+    backgroundColor: theme.colors.walletSelectorButtonHoverBg,
+    border: `2px solid ${theme.colors.borderColor}`,
+    borderRadius: radius.md,
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    justifyItems: "center",
+    alignItems: "center",
+    padding: spacing.xs,
+    "& div": {
+      transition: "background 200ms ease",
+      background: theme.colors.secondaryText,
+      borderRadius: "50%",
+      width: "10px",
+      height: "10px",
+    },
+  };
+});
 
 const WalletList = /* @__PURE__ */ StyledUl({
   all: "unset",
@@ -537,52 +610,3 @@ const WalletList = /* @__PURE__ */ StyledUl({
   marginBottom: 0,
   paddingBottom: spacing.lg,
 });
-
-/**
- *
- * @internal
- */
-function sortWallets(wallets: Wallet[], recommendedWallets?: Wallet[]) {
-  const providers = getMIPDStore().getProviders();
-  return (
-    wallets
-      // show the installed wallets first
-      .sort((a, b) => {
-        const aInstalled = providers.find((p) => p.info.rdns === a.id);
-        const bInstalled = providers.find((p) => p.info.rdns === b.id);
-
-        if (aInstalled && !bInstalled) {
-          return -1;
-        }
-        if (!aInstalled && bInstalled) {
-          return 1;
-        }
-        return 0;
-      })
-      // show the recommended wallets even before that
-      .sort((a, b) => {
-        const aIsRecommended = recommendedWallets?.find((w) => w === a);
-        const bIsRecommended = recommendedWallets?.find((w) => w === b);
-
-        if (aIsRecommended && !bIsRecommended) {
-          return -1;
-        }
-        if (!aIsRecommended && bIsRecommended) {
-          return 1;
-        }
-        return 0;
-      })
-      // show wallets with select ui first ( currently only embedded )
-      .sort((a, b) => {
-        const aIsEmbedded = a.id === "embedded";
-        const bIsEmbedded = b.id === "embedded";
-        if (aIsEmbedded && !bIsEmbedded) {
-          return -1;
-        }
-        if (!aIsEmbedded && bIsEmbedded) {
-          return 1;
-        }
-        return 0;
-      })
-  );
-}

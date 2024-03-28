@@ -12,7 +12,7 @@ export type MinimalWalletInfo = {
 /**
  * @internal
  */
-export const ALL_MINIMAL_WALLET_INFOS = (<const>[
+const ALL_MINIMAL_WALLET_INFOS = (<const>[
   {
     id: "io.metamask",
     name: "MetaMask",
@@ -1314,3 +1314,5 @@ export const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "Backpack",
   },
 ]) satisfies MinimalWalletInfo[];
+
+export default ALL_MINIMAL_WALLET_INFOS;

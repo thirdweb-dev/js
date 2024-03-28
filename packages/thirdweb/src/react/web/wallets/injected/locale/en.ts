@@ -14,7 +14,7 @@ const injectedWalletLocaleEn = (wallet: string): InjectedWalletLocale => ({
     instruction: `Scan the QR code to download ${wallet} app`,
   },
   scanScreen: {
-    instruction: `Scan the QR code with ${wallet} wallet app to connect`,
+    instruction: `Scan the QR code with ${wallet} app to connect`,
   },
   getStartedLink: `Don't have ${wallet} wallet?`,
   download: {
