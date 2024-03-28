@@ -71,7 +71,7 @@ export const ethers5Adapter = /* @__PURE__ */ (() => {
        * @returns A Promise that resolves to an ethers.js Contract.
        * @example
        * ```ts
-       * import { ethers5Adapter } from "thirdweb/adapters";
+       * import { ethers5Adapter } from "thirdweb/adapters/ethers5";
        * const ethersContract = await ethers5Adapter.contract.toEthers(twContract);
        * ```
        */
