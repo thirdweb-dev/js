@@ -39,7 +39,7 @@ function CoinbaseSDKWalletConnectUI(props: {
       .catch((e) => {
         console.error(e);
       });
-  }, [wallet, chain, done]);
+  }, [client, wallet, chain, done]);
 
   const scanStarted = useRef(false);
   useEffect(() => {

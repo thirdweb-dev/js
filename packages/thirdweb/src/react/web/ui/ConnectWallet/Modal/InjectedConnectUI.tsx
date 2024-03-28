@@ -38,7 +38,7 @@ export const InjectedConnectUI = (props: {
       setErrorConnecting(true);
       console.error(e);
     }
-  }, [chain, done, wallet]);
+  }, [client, chain, done, wallet]);
 
   const connectPrompted = useRef(false);
   useEffect(() => {
