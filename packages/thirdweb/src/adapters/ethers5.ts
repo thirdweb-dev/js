@@ -57,7 +57,7 @@ export const ethers5Adapter = /* @__PURE__ */ (() => {
        * @returns The ethers.js provider.
        * @example
        * ```ts
-       * import { ethers5Adapter } from "@thirdweb/adapters";
+       * import { ethers5Adapter } from "thirdweb/adapters/ethers5";
        * const provider = ethers5Adapter.provider.toEthers(client, chainId);
        * ```
        */
@@ -71,7 +71,7 @@ export const ethers5Adapter = /* @__PURE__ */ (() => {
        * @returns A Promise that resolves to an ethers.js Contract.
        * @example
        * ```ts
-       * import { ethers5Adapter } from "@thirdweb/adapters";
+       * import { ethers5Adapter } from "thirdweb/adapters";
        * const ethersContract = await ethers5Adapter.contract.toEthers(twContract);
        * ```
        */
@@ -83,7 +83,7 @@ export const ethers5Adapter = /* @__PURE__ */ (() => {
        * @returns A promise that resolves to a ThirdwebContract instance.
        * @example
        * ```ts
-       * import { ethers5Adapter } from "@thirdweb/adapters";
+       * import { ethers5Adapter } from "thirdweb/adapters/ethers5";
        *
        * const twContract = await ethers5Adapter.contract.fromEthersContract({
        *  client,
@@ -102,7 +102,7 @@ export const ethers5Adapter = /* @__PURE__ */ (() => {
        * @returns - A Promise that resolves to aa Wallet object.
        * @example
        * ```ts
-       * import { ethers5Adapter } from "@thirdweb/adapters";
+       * import { ethers5Adapter } from "thirdweb/adapters/ethers5";
        * const wallet = await ethers5Adapter.signer.fromEthersSigner(signer);
        * ```
        */
@@ -115,7 +115,7 @@ export const ethers5Adapter = /* @__PURE__ */ (() => {
        * @returns A promise that resolves to an ethers.js signer.
        * @example
        * ```ts
-       * import { ethers5Adapter } from "@thirdweb/adapters";
+       * import { ethers5Adapter } from "thirdweb/adapters/ethers5";
        * const signer = await ethers5Adapter.signer.toEthers(client, chain, account);
        * ```
        */
