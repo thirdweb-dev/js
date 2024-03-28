@@ -2459,7 +2459,7 @@ export { default as BevmTestnet } from "../chains/11503"
 export { default as Tenzro } from "../chains/11516"
 export { default as SardisTestnet } from "../chains/11612"
 export { default as QiM202402121 } from "../chains/11625"
-export { default as SanrChain } from "../chains/11888"
+export { default as SantimentIntelligenceNetwork } from "../chains/11888"
 export { default as PolygonSupernetArianee } from "../chains/11891"
 export { default as MikiasSTestnet } from "../chains/12001"
 export { default as Satoshichain } from "../chains/12009"
@@ -5632,7 +5632,7 @@ type ChainIdsBySlug = {
 "tenzro": 11516,
 "sardis-testnet": 11612,
 "qi-m-202402121": 11625,
-"sanr-chain": 11888,
+"santiment-intelligence-network": 11888,
 "polygon-supernet-arianee": 11891,
 "mikias-s-testnet": 12001,
 "satoshichain": 12009,
