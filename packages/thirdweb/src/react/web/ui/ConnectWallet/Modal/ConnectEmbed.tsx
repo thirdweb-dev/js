@@ -414,13 +414,6 @@ const ConnectEmbedContent = (
   const screenSetup = useSetupScreen();
   const { setScreen, initialScreen } = screenSetup;
 
-  // if showing main screen but signIn is required, switch to signIn screen
-  // useEffect(() => {
-  //   if (requiresSignIn && screen === reservedScreens.main) {
-  //     setScreen(reservedScreens.signIn);
-  //   }
-  // }, [requiresSignIn, screen, setScreen]);
-
   const isAutoConnecting = useIsAutoConnecting();
 
   let content = null;
