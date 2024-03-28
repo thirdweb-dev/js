@@ -1,6 +1,6 @@
 <p align="center">
 <br />
-<a href="https://thirdweb.com"><img src="https://github.com/thirdweb-dev/js/blob/main/packages/sdk/logo.svg?raw=true" width="200" alt=""/></a>
+<a href="https://thirdweb.com"><img src="https://github.com/thirdweb-dev/js/blob/main/legacy_packages/sdk/logo.svg?raw=true" width="200" alt=""/></a>
 <br />
 </p>
 <h1 align="center">thirdweb CLI</h1>
@@ -114,7 +114,7 @@ git clone https://github.com/thirdweb-dev/js.git
 pnpm i && pnpm build
 ```
 
-3. From inside `js/packages/cli` Run the `build:watch` command to compile any changes in real time
+3. From inside `js/legacy_packages/cli` Run the `build:watch` command to compile any changes in real time
 
 ```bash
 $ npm install -g ./
