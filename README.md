@@ -19,7 +19,7 @@
 <p align="center"><strong>All-in-one web3 SDK for Browser, Node and Mobile apps</strong></p>
 
 > [!IMPORTANT]  
-> We rewrote the thirdweb SDK from scratch for performance! Head over to the [Beta version unified SDK](https://github.com/thirdweb-dev/js/tree/beta/packages/thirdweb).
+> We rewrote the thirdweb SDK from scratch for performance! Head over to the [Beta version](https://github.com/thirdweb-dev/js/tree/beta/packages/thirdweb).
 
 ## Features
 
