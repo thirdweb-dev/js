@@ -37,7 +37,7 @@ async function main() {
       }
       const runner = bunAvailable ? "bunx" : "npx";
       // eslint-disable-next-line better-tree-shaking/no-top-level-side-effects
-      spawn(runner, ["--yes", "@thirdweb-dev/cli@beta", command, ...rest], {
+      spawn(runner, ["--yes", "@thirdweb-dev/cli@latest", command, ...rest], {
         stdio: "inherit",
       });
     }
