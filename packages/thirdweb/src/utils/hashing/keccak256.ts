@@ -22,6 +22,7 @@ export type Keccak256Hash<TTo extends To> =
  * import { keccak256 } from "thirdweb/utils";
  * const hash = keccak256("0x1234");
  * ```
+ * @utils
  */
 export function keccak256<TTo extends To = "hex">(
   value: Hex | Uint8Array,

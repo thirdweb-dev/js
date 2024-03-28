@@ -61,6 +61,7 @@ export type GetContractEventsResult<
  *  events: [preparedEvent, preparedEvent2],
  * });
  * ```
+ * @contract
  */
 export async function getContractEvents<
   const abi extends Abi,

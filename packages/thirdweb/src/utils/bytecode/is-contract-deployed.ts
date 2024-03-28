@@ -19,6 +19,7 @@ const cache = new WeakSet<ThirdwebContract>();
  * const isDeployed = await isContractDeployed(contract);
  * console.log(isDeployed);
  * ```
+ * @contract
  */
 export async function isContractDeployed(
   contract: ThirdwebContract,

@@ -49,6 +49,7 @@ export type WatchContractEventsOptions<
  *  },
  * });
  * ```
+ * @contract
  */
 export function watchContractEvents<
   const abi extends Abi,

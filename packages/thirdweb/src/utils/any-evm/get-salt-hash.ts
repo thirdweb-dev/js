@@ -12,6 +12,7 @@ import { keccakId } from "./keccak-id.js";
  * import { getSaltHash } from "thirdweb";
  * const saltHash = getSaltHash(bytecode);
  * ```
+ * @utils
  */
 export function getSaltHash(bytecode: string): Hex {
   bytecode = ensureBytecodePrefix(bytecode);

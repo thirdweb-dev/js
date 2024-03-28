@@ -22,6 +22,8 @@ type GetInitiBytecodeWithSaltOptions = {
  *  encodedArgs,
  *  salt,
  * });
+ * ```
+ * @utils
  */
 export function getInitBytecodeWithSalt(
   options: GetInitiBytecodeWithSaltOptions,

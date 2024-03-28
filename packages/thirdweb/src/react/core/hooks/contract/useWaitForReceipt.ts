@@ -14,6 +14,7 @@ import {
  * import { useWaitForReceipt } from "thirdweb/react";
  * const { data: receipt, isLoading } = useWaitForReceipt({client, chain, transactionHash});
  * ```
+ * @transaction
  */
 export function useWaitForReceipt(
   options: WaitForReceiptOptions | undefined,

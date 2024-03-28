@@ -1,4 +1,4 @@
-import type { EmbeddedWalletSocialAuth } from "./types.js";
+import type { EmbeddedWalletSocialAuth } from "../../../../wallets/embedded/core/wallet/index.js";
 import type { Theme } from "../../ui/design-system/index.js";
 
 function getBodyTitle(authOption: EmbeddedWalletSocialAuth) {

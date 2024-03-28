@@ -47,7 +47,7 @@ export type DeployERC721ContractOptions = Prettify<
  * @extension DEPLOY
  * @example
  * ```
- * import { deployERC721Contract } from "thirdweb/extensions/prebuilts";
+ * import { deployERC721Contract } from "thirdweb/deploys";
  * const contractAddress = await deployERC721Contract({
  *  chain,
  *  client,
@@ -57,7 +57,8 @@ export type DeployERC721ContractOptions = Prettify<
  *    name: "MyNFT",
  *    description: "My NFT contract",
  *    symbol: "NFT",
- * },
+ * });
+ * ```
  */
 export async function deployERC721Contract(
   options: DeployERC721ContractOptions,

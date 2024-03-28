@@ -19,6 +19,7 @@ const IS_ADDRESS_CACHE = new LruMap<boolean>(4096);
  * isAddress('0x5aAeb6053F3E94C9b9A09f33669435E7Ef1BeAed');
  * //=> true
  * ```
+ * @utils
  */
 export function isAddress(address: string): address is Address {
   if (IS_ADDRESS_CACHE.has(address)) {
@@ -50,6 +51,7 @@ export function isAddress(address: string): address is Address {
  * checksumAddress('0x5aAeb6053F3E94C9b9A09f33669435E7Ef1BeAed');
  * //=> '0x5aAeb6053F3E94C9b9A09f33669435E7Ef1BeAed'
  * ```
+ * @utils
  */
 export function checksumAddress(address: string): Address {
   const hexAddress = address.substring(2).toLowerCase();
@@ -84,6 +86,7 @@ export function checksumAddress(address: string): Address {
  * getAddress('0x5aAeb6053F3E94C9b9A09f33669435E7Ef1BeAed');
  * //=> '0x5aAeb6053F3E94C9b9A09f33669435E7Ef1BeAed'
  * ```
+ * @utils
  */
 export function getAddress(address: string): Address {
   if (!isAddress(address)) {

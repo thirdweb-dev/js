@@ -14,6 +14,7 @@ export type Ed25519Keypair = {
  * ```
  * createSigner()
  * ```
+ * @extension FARCASTER
  */
 export async function createEd25519Keypair(): Promise<Ed25519Keypair> {
   const privateKey = ed25519.utils.randomPrivateKey();

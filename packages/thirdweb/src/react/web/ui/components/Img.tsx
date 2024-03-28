@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { useState } from "react";
 import { resolveScheme } from "../../../../utils/ipfs.js";
-import { useThirdwebProviderProps } from "../../../core/hooks/others/useThirdwebProviderProps.js";
+import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { Skeleton } from "./Skeleton.js";
 
 /**
@@ -17,7 +17,8 @@ export const Img: React.FC<{
   style?: React.CSSProperties;
   fallbackImage?: string;
 }> = (props) => {
-  const { client } = useThirdwebProviderProps();
+  const { client } = useWalletConnectionCtx();
+
   const [isLoaded, setIsLoaded] = useState(false);
 
   const propSrc = props.src;

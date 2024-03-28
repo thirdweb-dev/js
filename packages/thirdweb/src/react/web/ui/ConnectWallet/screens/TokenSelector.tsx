@@ -1,7 +1,6 @@
 import { CrossCircledIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import { useWalletBalance } from "../../../../core/hooks/others/useWalletBalance.js";
-import { useTWLocale } from "../../../providers/locale-provider.js";
 import { useActiveAccount } from "../../../../core/hooks/wallets/wallet-hooks.js";
 import { Skeleton } from "../../components/Skeleton.js";
 import { Spacer } from "../../components/Spacer.js";
@@ -21,6 +20,7 @@ import {
 } from "./nativeToken.js";
 import { TokenIcon } from "../../components/TokenIcon.js";
 import type { TokenInfo } from "../defaultTokens.js";
+import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 
 /**
  *
@@ -44,7 +44,7 @@ export function TokenSelector(props: {
     tokenAddress: input,
   });
 
-  const locale = useTWLocale().connectWallet.sendFundsScreen;
+  const locale = useWalletConnectionCtx().connectLocale.sendFundsScreen;
 
   let tokenList = props.tokenList;
 

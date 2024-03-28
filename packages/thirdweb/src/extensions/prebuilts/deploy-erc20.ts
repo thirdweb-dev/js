@@ -41,7 +41,7 @@ export type DeployERC20ContractOptions = Prettify<
  * @extension DEPLOY
  * @example
  * ```
- * import { deployERC20Contract } from "thirdweb/extensions/prebuilts";
+ * import { deployERC20Contract } from "thirdweb/deploys";
  * const contractAddress = await deployERC20Contract({
  *  chain,
  *  client,
@@ -51,7 +51,8 @@ export type DeployERC20ContractOptions = Prettify<
  *    name: "MyToken",
  *    description: "My Token contract",
  *    symbol: "MT",
- * },
+ * });
+ * ```
  */
 export async function deployERC20Contract(options: DeployERC20ContractOptions) {
   const { chain, client, account, type, params } = options;

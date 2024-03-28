@@ -21,6 +21,7 @@ export type DownloadOptions = Prettify<
  *  uri: "ipfs://Qm...",
  * });
  * ```
+ * @storage
  */
 export async function download(options: DownloadOptions) {
   const res = await getClientFetch(options.client)(resolveScheme(options), {

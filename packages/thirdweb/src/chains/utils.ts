@@ -25,6 +25,7 @@ import type {
  *  },
  * });
  * ```
+ * @chain
  */
 export function defineChain(
   options: number | ChainOptions | ViemChain | LegacyChain,
@@ -112,7 +113,13 @@ type GetRpcUrlForChainOptions = {
  * Otherwise, a thirdweb RPC URL will be constructed using the chain ID and client ID.
  * @param options - The options object containing the chain and client information.
  * @returns The RPC URL for the specified chain.
- * @internal
+ * @example
+ * ```ts
+ * import { getRpcUrlForChain } from "thirdweb/chains";
+ * const rpcUrl = getRpcUrlForChain({ chain: 1, client });
+ * console.log(rpcUrl); // "https://1.rpc.thirdweb.com/...
+ * ```
+ * @chain
  */
 export function getRpcUrlForChain(options: GetRpcUrlForChainOptions): string {
   const baseRpcUrl = getThirdwebDomains().rpc;
@@ -217,6 +224,7 @@ type FetchChainResponse =
  * const chainData = await getChainMetadata(chain);
  * console.log(chainData);
  * ```
+ * @chain
  */
 export function getChainMetadata(chain: Chain): Promise<ChainMetadata> {
   const chainId = chain.id;

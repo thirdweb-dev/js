@@ -37,6 +37,7 @@ import { PayWithCrypto } from "./swap/PayWithCrypto.js";
 import { SwapFees } from "./swap/SwapFees.js";
 import type { BuyWithCryptoQuote } from "../../../../../../pay/buyWithCrypto/actions/getQuote.js";
 import { useSwapSupportedChains } from "./swap/useSwapSupportedChains.js";
+import type { ThirdwebClient } from "../../../../../../client/client.js";
 
 /**
  * @internal
@@ -45,6 +46,7 @@ export function SwapScreen(props: {
   onBack: () => void;
   supportedTokens: SupportedTokens;
   onViewPendingTx: () => void;
+  client: ThirdwebClient;
 }) {
   const activeChain = useActiveWalletChain();
   const account = useActiveAccount();
@@ -76,16 +78,17 @@ type Screen =
  * @internal
  */
 export function SwapScreenContent(props: {
+  client: ThirdwebClient;
   onBack: () => void;
   supportedTokens: SupportedTokens;
   activeChain: Chain;
   account: Account;
   onViewPendingTx: () => void;
 }) {
-  const { activeChain, account } = props;
+  const { activeChain, account, client } = props;
   const [isSwitching, setIsSwitching] = useState(false);
   const switchActiveWalletChain = useSwitchActiveWalletChain();
-  const supportedChainsQuery = useSwapSupportedChains();
+  const supportedChainsQuery = useSwapSupportedChains(client);
 
   const supportedChains = supportedChainsQuery.data;
 
@@ -147,6 +150,7 @@ export function SwapScreenContent(props: {
             ? NATIVE_TOKEN_ADDRESS
             : toToken.address,
           toAmount: deferredTokenAmount,
+          client,
         }
       : undefined;
 
@@ -263,6 +267,7 @@ export function SwapScreenContent(props: {
   if (screen === "confirmation" && quoteToConfirm) {
     return (
       <ConfirmationScreen
+        client={client}
         onBack={() => {
           // remove finalized quote when going back
           setFinalizedQuote(undefined);
@@ -272,7 +277,7 @@ export function SwapScreenContent(props: {
         onQuoteFinalized={(_quote) => {
           setFinalizedQuote(_quote);
         }}
-        fromAmount={sourceTokenAmount}
+        fromAmount={quoteToConfirm.swapDetails.fromAmount}
         toAmount={tokenAmount}
         fromChain={fromChain}
         toChain={toChain}

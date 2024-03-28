@@ -30,6 +30,7 @@ type PickedQueryOptions = Pick<UseQueryOptions, "enabled">;
  * import { useReadContract } from "thirdweb/react";
  * const { data, isLoading } = useReadContract({contract, method: "totalSupply"});
  * ```
+ * @contract
  */
 export function useReadContract<
   const abi extends Abi,

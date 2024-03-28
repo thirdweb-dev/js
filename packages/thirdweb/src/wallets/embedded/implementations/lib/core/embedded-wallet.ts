@@ -168,24 +168,8 @@ export class EmbeddedWallet {
   }
 
   /**
-   * Returns an Ethers.Js compatible signer that you can use in conjunction with the rest of dApp
-   * @param network.rpcEndpoint
-   * @example
-   * ```typescript
-   * const Paper = new ThirdwebEmbeddedWalletSdk({clientId: "", chain: "Polygon"});
-   * const user = await Paper.getUser();
-   * if (user.status === UserStatus.LOGGED_IN_WALLET_INITIALIZED) {
-   *    // returns a signer on the Polygon mainnet
-   *    const signer = await user.getEthersJsSigner();
-   *    // returns a signer on the specified RPC endpoints
-   *    const signer = await user.getEthersJsSigner({rpcEndpoint: "https://eth-rpc.gateway.pokt.network"});
-   * }
-   * ```
-   * @param network - object with the rpc url where calls will be routed through
-   * @throws If attempting to call the function without the user wallet initialize on their current device. This should never happen if call {@link ThirdwebEmbeddedWalletSdk.initializeUser} before accessing this function
-   * @returns A signer that is compatible with Ether.js. Defaults to the public rpc on the chain specified when initializing the {@link ThirdwebEmbeddedWalletSdk} instance
+   * Returns an account that communicates with the iFrame for signing operations
    * @internal
-   *
    */
   async getAccount(): Promise<Account> {
     const querier = this

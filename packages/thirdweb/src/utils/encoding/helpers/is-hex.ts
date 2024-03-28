@@ -16,6 +16,7 @@ export type IsHexOptions = {
  * const result = isHex("0x1a4");
  * console.log(result); // true
  * ```
+ * @utils
  */
 export function isHex(
   value: unknown,

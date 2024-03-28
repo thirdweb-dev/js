@@ -1,0 +1,45 @@
+{
+  "name": "@thirdweb-dev/chains",
+  "version": "0.1.82",
+  "main": "dist/thirdweb-dev-chains.cjs.js",
+  "module": "dist/thirdweb-dev-chains.esm.js",
+  "exports": {
+    ".": {
+      "module": "./dist/thirdweb-dev-chains.esm.js",
+      "default": "./dist/thirdweb-dev-chains.cjs.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "author": "thirdweb eng <eng@thirdweb.com>",
+  "devDependencies": {
+    "@babel/core": "^7.23.7",
+    "@babel/preset-env": "^7.23.8",
+    "@babel/preset-typescript": "^7.23.3",
+    "@babel/runtime": "^7.23.8",
+    "@preconstruct/cli": "2.7.0",
+    "@thirdweb-dev/tsconfig": "workspace:*",
+    "eslint-config-thirdweb": "workspace:*",
+    "plop": "^3.1.2",
+    "typescript": "^5.3.3"
+  },
+  "preconstruct": {
+    "entrypoints": [
+      "index.ts"
+    ],
+    "exports": true
+  },
+  "sideEffects": false,
+  "scripts": {
+    "db:seed": "bun scripts/seed-db.ts",
+    "db:sync": "bun scripts/sync-db.ts",
+    "build": "tsc && preconstruct build",
+    "push": "yalc push",
+    "plop": "plop",
+    "add-chain": "plop add-chain",
+    "override-chain": "plop override-chain",
+    "test": "bun test"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -5,6 +5,7 @@ import type { Chain } from "../chains/types.js";
 import type { ThirdwebClient } from "../client/client.js";
 import { getContract } from "../contract/contract.js";
 import { isValidSignature } from "../extensions/erc1271/__generated__/isValidSignature/read/isValidSignature.js";
+import type { Prettify } from "../utils/type-utils.js";
 
 export type VerifyEOASignatureParams = {
   message: string;
@@ -27,6 +28,7 @@ export type VerifyEOASignatureParams = {
  *  address: '0x1234567890123456789012345678901234567890',
  * });
  * ```
+ * @auth
  */
 export async function verifyEOASignature(options: VerifyEOASignatureParams) {
   const messageHash = hashMessage(options.message);
@@ -46,10 +48,12 @@ export async function verifyEOASignature(options: VerifyEOASignatureParams) {
   return false;
 }
 
-export type VerifyContractWalletSignatureParams = VerifyEOASignatureParams & {
-  chain: Chain;
-  client: ThirdwebClient;
-};
+export type VerifyContractWalletSignatureParams = Prettify<
+  VerifyEOASignatureParams & {
+    chain: Chain;
+    client: ThirdwebClient;
+  }
+>;
 
 const EIP1271_MAGICVALUE = "0x1626ba7e";
 
@@ -70,6 +74,7 @@ const EIP1271_MAGICVALUE = "0x1626ba7e";
  *  client: ...,
  * });
  * ```
+ * @auth
  */
 export async function verifyContractWalletSignature(
   options: VerifyContractWalletSignatureParams,
@@ -95,8 +100,9 @@ export async function verifyContractWalletSignature(
   return result === EIP1271_MAGICVALUE;
 }
 
-export type VerifySignatureParams = VerifyEOASignatureParams &
-  Partial<VerifyContractWalletSignatureParams>;
+export type VerifySignatureParams = Prettify<
+  VerifyEOASignatureParams & Partial<VerifyContractWalletSignatureParams>
+>;
 
 /**
  * Verifies the signature based on the provided options.
@@ -112,6 +118,7 @@ export type VerifySignatureParams = VerifyEOASignatureParams &
  *  address: '0x1234567890123456789012345678901234567890'
  * });
  * ```
+ * @auth
  */
 export async function verifySignature(options: VerifySignatureParams) {
   try {

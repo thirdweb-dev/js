@@ -31,6 +31,7 @@ import { verifyLoginPayload } from "./core/verify-login-payload.js";
  *  const { valid, parsedJWT } = await auth.verifyJWT({ jwt });
  *
  * ```
+ * @auth
  */
 export function createAuth(options: AuthOptions) {
   return {

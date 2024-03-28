@@ -70,6 +70,7 @@ function uppercaseFirstLetter(str: string) {
  * const res = await resolveSignature("0x1f931c1c");
  * console.log(res);
  * ```
+ * @utils
  */
 export async function resolveSignature(hexSig: string): Promise<{
   function: FunctionString | null;
@@ -98,6 +99,7 @@ export async function resolveSignature(hexSig: string): Promise<{
  * const res = await resolveSignatures(["0x1f931c1c", "0x1f931c1c"]);
  * console.log(res);
  * ```
+ * @utils
  */
 export async function resolveSignatures(hexSigs: string[]): Promise<{
   functions: FunctionString[];

@@ -20,6 +20,7 @@ export type HashMessage<TTo extends To> =
  * const hash = hashMessage("hello world");
  * ```
  * @returns The Ethereum Signed Message hash of the message in the specified format.
+ * @utils
  */
 export function hashMessage<TTo extends To = "hex">(
   message: SignableMessage,

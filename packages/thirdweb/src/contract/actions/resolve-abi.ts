@@ -27,6 +27,8 @@ const ABI_RESOLUTION_CACHE = new WeakMap<ThirdwebContract<Abi>, Promise<Abi>>();
  *  chain: ethereum,
  * });
  * const abi = await resolveContractAbi(myContract);
+ * ```
+ * @contract
  */
 export function resolveContractAbi<abi extends Abi>(
   contract: ThirdwebContract<abi>,
@@ -71,6 +73,7 @@ export function resolveContractAbi<abi extends Abi>(
  * });
  * const abi = await resolveAbiFromContractApi(myContract);
  * ```
+ * @contract
  */
 export async function resolveAbiFromContractApi(
   contract: ThirdwebContract<any>,
@@ -101,6 +104,7 @@ export async function resolveAbiFromContractApi(
  * });
  * const abi = await resolveAbiFromBytecode(myContract);
  * ```
+ * @contract
  */
 export async function resolveAbiFromBytecode(
   contract: ThirdwebContract<any>,
@@ -254,6 +258,7 @@ const DIAMOND_ABI = {
  * });
  * const abi = await resolveCompositeAbiFromBytecode(myContract);
  * ```
+ * @contract
  */
 export async function resolveCompositeAbi(
   contract: ThirdwebContract,

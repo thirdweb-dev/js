@@ -35,6 +35,7 @@ export type UploadMobileOptions = InternalUploadMobileOptions & {
  * ];
  * const jsonUris = await storage.uploadBatch(objects);
  * ```
+ * @storage
  */
 export async function uploadMobile(options?: UploadMobileOptions) {
   if (!options) {

@@ -20,14 +20,18 @@ export type ThirdwebContract<abi extends Abi = []> = Readonly<
  * @example
  * ```ts
  * import { createThirdwebClient, getContract } from "thirdweb";
+ * import { sepolia } from "thirdweb/chains";
+ *
  * const client = createThirdwebClient({ clientId: "..." });
  * const contract = getContract({
  *  client,
- *  address: "...",
+ *  chain: sepolia,
+ *  address: "0x123...",
  *  // optional ABI
  *  abi: [...],
  * });
  * ```
+ * @contract
  */
 export function getContract<const abi extends Abi = []>(
   options: ContractOptions<abi>,

@@ -1,5 +1,4 @@
 import { useMutation } from "@tanstack/react-query";
-import { useThirdwebProviderProps } from "../../../core/hooks/others/useThirdwebProviderProps.js";
 import { useSendTransaction } from "../../../core/hooks/contract/useSend.js";
 import { useActiveWalletChain } from "../../../core/hooks/wallets/wallet-hooks.js";
 import { toWei } from "../../../../utils/units.js";
@@ -7,6 +6,7 @@ import { getContract } from "../../../../contract/contract.js";
 import { prepareTransaction } from "../../../../transaction/prepare-transaction.js";
 import { waitForReceipt } from "../../../../transaction/actions/wait-for-tx-receipt.js";
 import { transfer } from "../../../../extensions/erc20/write/transfer.js";
+import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 
 // Q: Should we expose this hook?
 
@@ -17,7 +17,7 @@ import { transfer } from "../../../../extensions/erc20/write/transfer.js";
 export function useSendToken() {
   const sendTransaction = useSendTransaction();
   const activeChain = useActiveWalletChain();
-  const { client } = useThirdwebProviderProps();
+  const { client } = useWalletConnectionCtx();
 
   return useMutation({
     async mutationFn(option: {

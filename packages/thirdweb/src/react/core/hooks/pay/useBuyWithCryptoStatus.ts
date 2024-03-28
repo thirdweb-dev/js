@@ -1,19 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import {
   getBuyWithCryptoStatus,
   type BuyWithCryptoStatus,
   type BuyWithCryptoTransaction,
 } from "../../../../pay/buyWithCrypto/actions/getStatus.js";
-import { ThirdwebProviderContext } from "../../providers/thirdweb-provider-ctx.js";
 
 // TODO: use the estimate to vary the polling interval
 const DEFAULT_POLL_INTERVAL = 5000;
 
-export type BuyWithCryptoStatusQueryParams = Omit<
-  BuyWithCryptoTransaction,
-  "client"
->;
+export type BuyWithCryptoStatusQueryParams = BuyWithCryptoTransaction;
 
 /**
  * A hook to get a status of swap transaction.
@@ -29,27 +25,33 @@ export type BuyWithCryptoStatusQueryParams = Omit<
  * function Component() {
  *  const buyWithCryptoQuoteQuery = useBuyWithCryptoQuote(swapParams);
  *  const sendTransactionMutation = useSendTransaction();
- *  const [buyWithCryptoTx, setBuyWithCryptoTx] = useState<BuyWithCryptoStatusQueryParams | undefined>();
- *  const buyWithCryptoStatusQuery = useBuyWithCryptoStatus(buyWithCryptoTx);
+ *  const [buyTxHash, setBuyTxHash] = useState<BuyWithCryptoStatusQueryParams | undefined>();
+ *  const buyWithCryptoStatusQuery = useBuyWithCryptoStatus(buyTxHash ? {
+ *    client,
+ *    transactionHash: buyTxHash,
+ *  }: undefined);
  *
  *  async function handleBuyWithCrypto() {
  *
  *    // if approval is required
  *    if (buyWithCryptoQuoteQuery.data.approval) {
- *      await sendTransactionMutation.mutateAsync(swapQuote.data.approval);
+ *      const approveTx = await sendTransactionMutation.mutateAsync(swapQuote.data.approval);
+ *      await waitForApproval(approveTx);
  *    }
  *
  *    // send the transaction to buy crypto
  *    // this promise is resolved when user confirms the transaction in the wallet and the transaction is sent to the blockchain
- *    const buyWithCryptoTxn = await sendTransactionMutation.mutateAsync(swapQuote.data.transactionRequest);
+ *    const buyTx = await sendTransactionMutation.mutateAsync(swapQuote.data.transactionRequest);
+ *    await waitForApproval(buyTx);
  *
- *    // set buyWithCryptoTx to poll the status of the swap transaction
- *    setBuyWithCryptoTx({transactionHash: buyWithCryptoTxn.transactionHash ?? buyWithCryptoTxn.userOpHash});
+ *    // set buyTx.transactionHash to poll the status of the swap transaction
+ *    setBuyWithCryptoTx(buyTx.transactionHash);
  *  }
  *
  *  return <button onClick={handleBuyWithCrypto}>Swap</button>
  * }
  * ```
+ * @buyCrypto
  */
 export function useBuyWithCryptoStatus(
   buyWithCryptoStatusParams?: BuyWithCryptoStatusQueryParams,
@@ -57,7 +59,6 @@ export function useBuyWithCryptoStatus(
   const [refetchInterval, setRefetchInterval] = useState<number>(
     DEFAULT_POLL_INTERVAL,
   );
-  const context = useContext(ThirdwebProviderContext);
 
   return useQuery<BuyWithCryptoStatus, Error>({
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
@@ -66,16 +67,16 @@ export function useBuyWithCryptoStatus(
       buyWithCryptoStatusParams?.transactionHash,
     ] as const,
     queryFn: async () => {
-      if (!context?.client) {
-        throw new Error("Please wrap the component in a ThirdwebProvider!");
-      }
       if (!buyWithCryptoStatusParams) {
         throw new Error("Missing swap status params");
+      }
+      if (!buyWithCryptoStatusParams?.client) {
+        throw new Error("Missing client in swap status params");
       }
 
       const swapStatus_ = await getBuyWithCryptoStatus({
         ...buyWithCryptoStatusParams,
-        client: context.client,
+        client: buyWithCryptoStatusParams.client,
       });
       if (
         swapStatus_.status === "COMPLETED" ||

@@ -1,6 +1,7 @@
 packages:
   # include packages in subfolders (e.g. apps/ and packages/)
   - "test/**/*"
-  - 'packages/*'
+  - "packages/*"
+  - "legacy_packages/*"
   # if required, exclude some directories
   # - '!**/test/**'

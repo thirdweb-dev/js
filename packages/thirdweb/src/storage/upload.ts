@@ -32,6 +32,7 @@ export type UploadOptions = InternalUploadOptions & {
  *  ],
  * });
  * ```
+ * @storage
  */
 export async function upload(options: UploadOptions) {
   // deal with the differnt file types

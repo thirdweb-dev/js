@@ -1,10 +1,10 @@
 import { useState, createContext, useContext } from "react";
 import type { WelcomeScreen } from "../ui/ConnectWallet/screens/types.js";
-import { useTWLocale } from "./locale-provider.js";
 import type { Theme } from "../ui/design-system/index.js";
 import { canFitWideModal } from "../utils/canFitWideModal.js";
 import type { Wallet } from "../../../wallets/interfaces/wallet.js";
 import type { Chain } from "../../../chains/types.js";
+import { useWalletConnectionCtx } from "../../core/hooks/others/useWalletConnectionCtx.js";
 
 type BoolSetter = (value: boolean) => void;
 
@@ -71,10 +71,10 @@ export const WalletUIStatesProvider = (
 ) => {
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
   const enforceCompact = !canFitWideModal();
-  const locale = useTWLocale();
+  const { connectLocale } = useWalletConnectionCtx();
 
   const [modalConfig, setModalConfig] = useState<ModalConfig>({
-    title: props.title || locale.connectWallet.defaultModalTitle,
+    title: props.title || connectLocale.defaultModalTitle,
     theme: props.theme || "dark",
     data: undefined,
     modalSize: (enforceCompact ? "compact" : props.modalSize) || "wide",

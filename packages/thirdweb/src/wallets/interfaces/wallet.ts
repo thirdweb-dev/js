@@ -6,37 +6,43 @@ import type {
   TypedData,
   TypedDataDefinition,
 } from "viem";
-import type { WalletEventListener } from "./listeners.js";
-import type { WalletMetadata } from "../types.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
-import type { Chain } from "../../chains/types.js";
 import type { SendTransactionResult } from "../../transaction/types.js";
+import type { Chain } from "../../chains/types.js";
+import type {
+  CreateWalletArgs,
+  WalletAutoConnectionOption,
+  WalletConnectionOption,
+  WalletId,
+} from "../wallet-types.js";
+import type { WalletEmitter } from "../wallet-emitter.js";
+
+// TODO: add generic ID on wallet class, creation options, connect options etc
 
 export type SendTransactionOption = TransactionSerializable & {
   chainId: number;
 };
 
-export type Wallet = {
-  // REQUIRED
-  metadata: WalletMetadata;
-  connect: (options?: any) => Promise<Account>;
-  autoConnect: (options?: any) => Promise<Account>;
-  disconnect: () => Promise<void>;
-  getAccount(): Account | undefined;
+/**
+ * Wallet interface
+ */
+export type Wallet<TWalletId extends WalletId = WalletId> = {
+  id: TWalletId;
   getChain(): Chain | undefined;
+  getAccount(): Account | undefined;
+  // connetion management methods
+  autoConnect(options: WalletAutoConnectionOption<TWalletId>): Promise<Account>;
+  connect(options: WalletConnectionOption<TWalletId>): Promise<Account>;
+  disconnect(): Promise<void>;
+  // chain management methods
+  switchChain(chain: Chain): Promise<void>;
+  // storage management (temporary and "internal")
+  setStorage?(storage: any): void;
+  // events
+  subscribe: WalletEmitter<TWalletId>["subscribe"];
 
-  // OPTIONAL
-  events?: {
-    addListener: WalletEventListener;
-    removeListener: WalletEventListener;
-  };
-  switchChain?: (newChain: Chain) => Promise<void>;
+  getConfig: () => CreateWalletArgs<TWalletId>[1];
 };
-
-export interface WalletWithPersonalAccount extends Wallet {
-  autoConnect: (options: { personalAccount: Account }) => Promise<Account>;
-  personalAccount?: Account;
-}
 
 export type Account = {
   // REQUIRED
@@ -53,9 +59,8 @@ export type Account = {
   ) => Promise<Hex>;
 
   // OPTIONAL
-  publicKey?: Hex;
   estimateGas?: (tx: PreparedTransaction) => Promise<bigint>;
-  signTransaction?: (tx: TransactionSerializable) => Promise<Hex>; // TODO: Allow for custom serializers and native serialize types
+  signTransaction?: (tx: TransactionSerializable) => Promise<Hex>;
   sendBatchTransaction?: (
     txs: SendTransactionOption[],
   ) => Promise<SendTransactionResult>;

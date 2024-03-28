@@ -32,21 +32,20 @@ import { useResolvedMediaType } from "./useResolvedMediaType.js";
  *
  * You can use thirdweb CLI to upload any file to IPFS and get the IPFS URI
  *
- * ```bash
- * npx thirdweb upload <path/to/file>
- * ````
+ * `npx thirdweb upload <path/to/file>`
  * @example
  * ```tsx
  * import { MediaRenderer } from "thirdweb/react";
  *
+ * const client = createThirdwebClient({ clientId: "..." });
+ *
  * function Home() {
  * 	return (
- * 		<MediaRenderer src="ipfs://QmV4HC9fNrPJQeYpbW55NLLuSBMyzE11zS1L4HmL6Lbk7X" />
+ * 		<MediaRenderer client={client} src="ipfs://QmV4HC9fNrPJQeYpbW55NLLuSBMyzE11zS1L4HmL6Lbk7X" />
  * 	);
  * }
  * ```
- * @param props -
- * Refer to [`MediaRendererProps`](https://portal.thirdweb.com/references/typescript/v5/MediaRendererProps) to see the available props.
+ * @param props - Refer to [`MediaRendererProps`](https://portal.thirdweb.com/references/typescript/v5/MediaRendererProps) to see the available props.
  */
 export const MediaRenderer = /* @__PURE__ */ (() =>
   React.forwardRef<HTMLMediaElement, MediaRendererProps>(
@@ -65,6 +64,8 @@ export const MediaRenderer = /* @__PURE__ */ (() =>
       },
       ref,
     ) {
+      const client = restProps.client;
+
       const mergedStyle: React.CSSProperties = {
         objectFit: "contain",
         width,
@@ -73,12 +74,14 @@ export const MediaRenderer = /* @__PURE__ */ (() =>
       };
 
       const mediaInfo = useResolvedMediaType(
+        client,
         src ?? undefined,
         mimeType,
         gatewayUrl,
       );
 
       const possiblePosterSrc = useResolvedMediaType(
+        client,
         poster ?? undefined,
         undefined,
         gatewayUrl,

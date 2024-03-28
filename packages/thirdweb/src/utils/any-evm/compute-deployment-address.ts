@@ -25,6 +25,7 @@ type ComputeDeploymentAddressOptions = {
  *  salt,
  * });
  * ```
+ * @utils
  */
 export function computeDeploymentAddress(
   options: ComputeDeploymentAddressOptions,

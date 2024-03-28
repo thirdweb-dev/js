@@ -1,7 +1,4 @@
-// export {
-//   ThirdwebProvider,
-//   type ThirdwebProviderProps,
-// } from "../react/mobile/providers/thirdweb-provider.js";
+export { ThirdwebProvider } from "../react/core/providers/thirdweb-provider.js";
 
 // react/core
 export {
@@ -21,7 +18,7 @@ export {
 // contract related
 export { useReadContract } from "../react/core/hooks/contract/useRead.js";
 export { useSendTransaction } from "../react/core/hooks/contract/useSend.js";
-export { useEstimateGas } from "../react/core/hooks/contract/useEstimate.js";
+export { useEstimateGas } from "../react/core/hooks/contract/useEstimateGas.js";
 export { useWaitForReceipt } from "../react/core/hooks/contract/useWaitForReceipt.js";
 export { useContractEvents } from "../react/core/hooks/contract/useContractEvents.js";
 

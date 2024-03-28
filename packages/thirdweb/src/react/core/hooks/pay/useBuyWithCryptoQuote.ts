@@ -3,22 +3,17 @@ import {
   type UseQueryOptions,
   type UseQueryResult,
 } from "@tanstack/react-query";
-import { useContext } from "react";
 import {
   getBuyWithCryptoQuote,
   type BuyWithCryptoQuote,
   type GetBuyWithCryptoQuoteParams,
 } from "../../../../pay/buyWithCrypto/actions/getQuote.js";
-import { ThirdwebProviderContext } from "../../providers/thirdweb-provider-ctx.js";
 
 export type BuyWithCryptoQuoteQueryOptions = Omit<
   UseQueryOptions<BuyWithCryptoQuote>,
   "queryFn" | "queryKey" | "enabled"
 >;
-export type BuyWithCryptoQuoteQueryParams = Omit<
-  GetBuyWithCryptoQuoteParams,
-  "client"
->;
+export type BuyWithCryptoQuoteQueryParams = GetBuyWithCryptoQuoteParams;
 /**
  * Hook to get a quote of type [`BuyWithCryptoQuote`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoQuote) for buying tokens with crypto.
  * This quote contains the information about the purchase such as token amounts, processing fees, estimated time etc.
@@ -38,34 +33,38 @@ export type BuyWithCryptoQuoteQueryParams = Omit<
  * function Component() {
  *  const buyWithCryptoQuoteQuery = useBuyWithCryptoQuote(swapParams);
  *  const sendTransactionMutation = useSendTransaction();
- *  const [buyWithCryptoTx, setBuyWithCryptoTx] = useState<BuyWithCryptoStatusQueryParams | undefined>();
- *  const buyWithCryptoStatusQuery = useBuyWithCryptoStatus(buyWithCryptoTx);
+ *  const [buyTxHash, setBuyTxHash] = useState<BuyWithCryptoStatusQueryParams | undefined>();
+ *  const buyWithCryptoStatusQuery = useBuyWithCryptoStatus(buyTxHash ? {
+ *    client,
+ *    transactionHash: buyTxHash,
+ *  }: undefined);
  *
  *  async function handleBuyWithCrypto() {
  *
  *    // if approval is required
  *    if (buyWithCryptoQuoteQuery.data.approval) {
- *      await sendTransactionMutation.mutateAsync(swapQuote.data.approval);
+ *      const approveTx = await sendTransactionMutation.mutateAsync(swapQuote.data.approval);
+ *      await waitForApproval(approveTx);
  *    }
  *
  *    // send the transaction to buy crypto
  *    // this promise is resolved when user confirms the transaction in the wallet and the transaction is sent to the blockchain
- *    const buyWithCryptoTxn = await sendTransactionMutation.mutateAsync(swapQuote.data.transactionRequest);
+ *    const buyTx = await sendTransactionMutation.mutateAsync(swapQuote.data.transactionRequest);
+ *    await waitForApproval(buyTx);
  *
- *    // set buyWithCryptoTx to poll the status of the swap transaction
- *    setBuyWithCryptoTx({transactionHash: buyWithCryptoTxn.transactionHash ?? buyWithCryptoTxn.userOpHash});
+ *    // set buyTx.transactionHash to poll the status of the swap transaction
+ *    setBuyWithCryptoTx(buyTx.transactionHash);
  *  }
  *
  *  return <button onClick={handleBuyWithCrypto}>Swap</button>
  * }
  * ```
+ * @buyCrypto
  */
 export function useBuyWithCryptoQuote(
   buyWithCryptoParams?: BuyWithCryptoQuoteQueryParams,
   queryParams?: BuyWithCryptoQuoteQueryOptions,
 ): UseQueryResult<BuyWithCryptoQuote> {
-  const context = useContext(ThirdwebProviderContext);
-
   return useQuery({
     ...queryParams,
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
@@ -74,13 +73,13 @@ export function useBuyWithCryptoQuote(
       if (!buyWithCryptoParams) {
         throw new Error("Swap params are required");
       }
-      if (!context?.client) {
-        throw new Error("Please wrap the component in a ThirdwebProvider!");
+      if (!buyWithCryptoParams?.client) {
+        throw new Error("Client is required in swap params");
       }
       return getBuyWithCryptoQuote({
         // typescript limitation with discriminated unions are collapsed
         ...(buyWithCryptoParams as GetBuyWithCryptoQuoteParams),
-        client: context.client,
+        client: buyWithCryptoParams.client,
       });
     },
     enabled: !!buyWithCryptoParams,

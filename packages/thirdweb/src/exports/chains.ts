@@ -1,12 +1,17 @@
 // chain type
 export type { Chain } from "../chains/types.js";
 // define chain, chainMetadata
-export { defineChain, getChainMetadata } from "../chains/utils.js";
+export {
+  defineChain,
+  getChainMetadata,
+  getRpcUrlForChain,
+} from "../chains/utils.js";
 
 /**
  * PRE_DEFINED CHAINS
  */
 export { anvil } from "../chains/chain-definitions/anvil.js";
+export { arbitrumNova } from "../chains/chain-definitions/arbitrum-nova.js";
 export { arbitrumSepolia } from "../chains/chain-definitions/arbitrum-sepolia.js";
 export { arbitrum } from "../chains/chain-definitions/arbitrum.js";
 export { avalancheFuji } from "../chains/chain-definitions/avalanche-fuji.js";

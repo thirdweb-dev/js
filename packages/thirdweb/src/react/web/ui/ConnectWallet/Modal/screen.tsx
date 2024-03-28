@@ -1,11 +1,14 @@
 import { createContext, useState, useRef, useEffect, useContext } from "react";
 import { reservedScreens } from "../constants.js";
-import { useThirdwebProviderProps } from "../../../../core/hooks/others/useThirdwebProviderProps.js";
-import type { WalletConfig } from "../../../../core/types/wallets.js";
+import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
+// import type { WalletConfig } from "../../../../core/types/wallets.js";
 import { useActiveAccount } from "../../../../core/hooks/wallets/wallet-hooks.js";
 import { ModalConfigCtx } from "../../../providers/wallet-ui-states-provider.js";
+import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 
-type Screen = string | WalletConfig;
+type Screen = string | Wallet;
+
+const embeddedWalletId = "embedded";
 
 export type ScreenSetup = {
   screen: Screen;
@@ -21,19 +24,15 @@ export const ScreenSetupContext = /* @__PURE__ */ createContext<
  * @internal
  */
 export function useSetupScreen() {
-  const walletConfigs = useThirdwebProviderProps().wallets;
+  const wallets = useWalletConnectionCtx().wallets;
   const modalConfig = useContext(ModalConfigCtx);
 
   let initialScreen: Screen = reservedScreens.main;
 
-  const socialLogin = walletConfigs.find((w) => w.category === "socialLogin");
+  const socialLogin = wallets.find((w) => w.id === embeddedWalletId);
 
-  if (
-    walletConfigs.length === 1 &&
-    walletConfigs[0] &&
-    !walletConfigs[0]?.selectUI
-  ) {
-    initialScreen = walletConfigs[0];
+  if (wallets.length === 1 && wallets[0]) {
+    initialScreen = wallets[0];
   } else if (
     modalConfig.modalSize === "wide" &&
     !modalConfig.welcomeScreen &&
@@ -42,7 +41,7 @@ export function useSetupScreen() {
     initialScreen = socialLogin;
   }
 
-  const [screen, setScreen] = useState<string | WalletConfig>(initialScreen);
+  const [screen, setScreen] = useState<string | Wallet>(initialScreen);
   const prevInitialScreen = useRef(initialScreen);
   const activeAccount = useActiveAccount();
 

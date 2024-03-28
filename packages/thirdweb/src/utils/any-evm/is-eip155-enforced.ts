@@ -23,6 +23,7 @@ type IsEIP155EnforcedOptions = {
  * import { isEIP155Enforced } from "thirdweb/utils";
  * const isEIP155 = await isEIP155Enforced({ chain, client });
  * ```
+ * @utils
  */
 export async function isEIP155Enforced(
   options: IsEIP155EnforcedOptions,

@@ -30,6 +30,7 @@ const prepareMethodCache = new LruMap<PreparedMethod<AbiFunction>>(4096);
  * const method = "function transfer(address to, uint256 value)";
  * const preparedMethod = prepareMethod(method);
  * ```
+ * @contract
  */
 export function prepareMethod<
   const TMethod extends AbiFunction | `function ${string}`,

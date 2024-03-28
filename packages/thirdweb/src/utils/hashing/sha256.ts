@@ -22,6 +22,7 @@ export type Sha256Hash<TTo extends To> =
  * import { sha256 } from "thirdweb/utils";
  * const hash = sha256("0x1234");
  * ```
+ * @utils
  */
 export function sha256<TTo extends To = "hex">(
   value: Hex | Uint8Array,

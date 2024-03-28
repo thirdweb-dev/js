@@ -65,6 +65,7 @@ export type SwapType = "SAME_CHAIN" | "CROSS_CHAIN";
 
 /**
  * The object returned by the [`getBuyWithCryptoStatus`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoStatus) function to represent the status of a quoted transaction
+ * @buyCrypto
  */
 export type BuyWithCryptoStatus = {
   quote: BuyWithCryptoQuoteSummary;
@@ -113,6 +114,7 @@ export type BuyWithCryptoStatus = {
  * }});
  * ```
  * @returns Object of type [`BuyWithCryptoStatus`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoStatus)
+ * @buyCrypto
  */
 export async function getBuyWithCryptoStatus(
   buyWithCryptoTransaction: BuyWithCryptoTransaction,

@@ -7,6 +7,7 @@ import {
   type WalletClient,
   createWalletClient,
   custom,
+  type TransactionSerializableEIP1559,
 } from "viem";
 import { getContract, type ThirdwebContract } from "../contract/contract.js";
 import type { Abi } from "abitype";
@@ -83,6 +84,20 @@ export const viemAdapter = {
      * ```
      */
     toViem: toViemWalletClient,
+
+    /**
+     * Converts a Viem Wallet client to an Account.
+     * @param options - The options for creating the Account.
+     * @returns The Account.
+     * @example
+     * ```ts
+     * import { viemAdapter } from "thirdweb/adapters";
+     *
+     * const account = viemAdapter.walletClient.fromViem({
+     *   walletClient,
+     * });
+     */
+    fromViem: fromViemWalletClient,
   },
 };
 
@@ -205,4 +220,39 @@ function toViemWalletClient(options: ToViemWalletClientOptions): WalletClient {
     chain: viemChain,
     key: "thirdweb-wallet",
   });
+}
+
+function fromViemWalletClient(options: {
+  walletClient: WalletClient;
+}): Account {
+  const viemAccount = options.walletClient.account;
+  if (!viemAccount) {
+    throw new Error(
+      "Account not found in walletClient, please pass it explicitely.",
+    );
+  }
+  return {
+    address: viemAccount.address,
+    signMessage: async (msg) => {
+      return options.walletClient.signMessage({
+        account: viemAccount,
+        ...msg,
+      });
+    },
+    sendTransaction: async (tx) => {
+      const tx1559 = tx as TransactionSerializableEIP1559; // TODO check other txTypes
+      const txHash = await options.walletClient.sendTransaction({
+        account: viemAccount,
+        chain: options.walletClient.chain,
+        ...tx1559,
+      });
+      return {
+        transaction: tx,
+        transactionHash: txHash,
+      };
+    },
+    signTypedData(_typedData) {
+      return options.walletClient.signTypedData(_typedData as any); // TODO fix types
+    },
+  };
 }

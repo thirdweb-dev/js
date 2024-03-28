@@ -1,14 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import { getPayChainsEndpoint } from "../../../../../../../pay/buyWithCrypto/utils/definitions.js";
 import { getClientFetch } from "../../../../../../../utils/fetch.js";
-import { useThirdwebProviderProps } from "../../../../../../core/hooks/others/useThirdwebProviderProps.js";
 import { defineChain } from "../../../../../../../chains/utils.js";
+import type { ThirdwebClient } from "../../../../../../../client/client.js";
 
 /**
  * @internal
  */
-export function useSwapSupportedChains() {
-  const { client } = useThirdwebProviderProps();
+export function useSwapSupportedChains(client: ThirdwebClient) {
   return useQuery({
     queryKey: ["swapSupportedChains", client],
     queryFn: async () => {

@@ -177,7 +177,6 @@ export function deriveClientIdFromSecretKeyHash(secretKeyHash: string) {
 }
 
 export function logHttpRequest({
-  source,
   clientId,
   req,
   res,
@@ -185,6 +184,7 @@ export function logHttpRequest({
   statusMessage,
   latencyMs,
 }: AuthInput & {
+  // @deprecated
   source: string;
   res: ServerResponse;
   isAuthed?: boolean;
@@ -195,27 +195,23 @@ export function logHttpRequest({
     const authorizationData = extractAuthorizationData({ req, clientId });
     const headers = req.headers;
 
-    const _statusMessage = statusMessage ?? res.statusMessage;
     console.log(
       JSON.stringify({
-        source,
+        method: req.method,
         pathname: req.url,
         hasSecretKey: !!authorizationData.secretKey,
         hasClientId: !!authorizationData.clientId,
         hasJwt: !!authorizationData.jwt,
         clientId: authorizationData.clientId,
-        isAuthed: !!isAuthed ?? null,
+        isAuthed,
         status: res.statusCode,
-        statusMessage: _statusMessage,
-        sdkName: headers["x-sdk-name"] ?? "unknown",
-        sdkVersion: headers["x-sdk-version"] ?? "unknown",
-        platform: headers["x-sdk-platform"] ?? "unknown",
-        os: headers["x-sdk-os"] ?? "unknown",
-        latencyMs: latencyMs ?? null,
+        statusMessage,
+        sdkName: headers["x-sdk-name"] ?? undefined,
+        sdkVersion: headers["x-sdk-version"] ?? undefined,
+        platform: headers["x-sdk-platform"] ?? undefined,
+        os: headers["x-sdk-os"] ?? undefined,
+        latencyMs,
       }),
     );
-    console.log(`statusMessage=${_statusMessage}`);
-  } catch (err) {
-    console.error("Failed to log HTTP request:", err);
-  }
+  } catch (err) {}
 }

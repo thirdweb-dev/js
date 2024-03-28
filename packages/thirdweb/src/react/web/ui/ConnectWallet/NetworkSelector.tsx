@@ -28,10 +28,10 @@ import {
   useChainQuery,
   useChainsQuery,
 } from "../../../core/hooks/others/useChainQuery.js";
-import { useTWLocale } from "../../providers/locale-provider.js";
 import type React from "react";
 import type { ChainMetadata, Chain } from "../../../../chains/types.js";
 import { convertApiChainToChain } from "../../../../chains/utils.js";
+import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { useDebouncedValue } from "../hooks/useDebouncedValue.js";
 
 type NetworkSelectorChainProps = {
@@ -240,7 +240,7 @@ function NetworkSelectorContentInner(
     return _chainMap;
   }, [props.chains]);
 
-  const locale = useTWLocale().connectWallet.networkSelector;
+  const locale = useWalletConnectionCtx().connectLocale.networkSelector;
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTab, setSelectedTab] = useState<"all" | "mainnet" | "testnet">(
     "all",
@@ -498,7 +498,8 @@ const NetworkTabContent = (props: {
   renderChain?: React.FC<NetworkSelectorChainProps>;
   close?: () => void;
 }) => {
-  const locale = useTWLocale().connectWallet.networkSelector.categoryLabel;
+  const locale =
+    useWalletConnectionCtx().connectLocale.networkSelector.categoryLabel;
 
   const { recentChainIds, popularChainIds, allChainIds } = props;
 
@@ -660,9 +661,9 @@ export const ChainButton = /* @__PURE__ */ memo(function ChainButton(props: {
   confirming: boolean;
   switchingFailed: boolean;
 }) {
-  const twLocale = useTWLocale();
-  const locale = twLocale.connectWallet.networkSelector;
+  const locale = useWalletConnectionCtx().connectLocale;
   const { chain, confirming, switchingFailed } = props;
+
   const activeChain = useActiveWalletChain();
   const apiChainQuery = useChainQuery(chain);
 
@@ -700,7 +701,7 @@ export const ChainButton = /* @__PURE__ */ memo(function ChainButton(props: {
             {confirming && (
               <>
                 <Text size="xs" color="accentText">
-                  {twLocale.connectWallet.confirmInWallet}
+                  {locale.confirmInWallet}
                 </Text>
                 <Spinner size="xs" color="accentText" />
               </>
@@ -709,7 +710,7 @@ export const ChainButton = /* @__PURE__ */ memo(function ChainButton(props: {
             {switchingFailed && (
               <Container animate="fadein">
                 <Text size="xs" color="danger">
-                  {locale.failedToSwitch}
+                  {locale.networkSelector.failedToSwitch}
                 </Text>
               </Container>
             )}
