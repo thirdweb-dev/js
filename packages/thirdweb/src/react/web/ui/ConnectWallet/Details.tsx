@@ -820,9 +820,11 @@ function EmbeddedWalletEmail() {
   const emailQuery = useQuery({
     queryKey: ["embedded-wallet-user", client],
     queryFn: async () => {
-      return getUserEmail({
+      const data = await getUserEmail({
         client: client,
       });
+
+      return data || null;
     },
   });
 
