@@ -36,8 +36,6 @@ export type Wallet<TWalletId extends WalletId = WalletId> = {
   disconnect(): Promise<void>;
   // chain management methods
   switchChain(chain: Chain): Promise<void>;
-  // storage management (temporary and "internal")
-  setStorage?(storage: any): void;
   // events
   subscribe: WalletEmitter<TWalletId>["subscribe"];
 
