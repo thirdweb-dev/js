@@ -55,7 +55,7 @@ export const ethers6Adapter = /* @__PURE__ */ (() => {
        * @returns The ethers.js provider.
        * @example
        * ```ts
-       * import { ethers6Adapter } from "@thirdweb/adapters";
+       * import { ethers6Adapter } from "thirdweb/adapters/ethers6";
        * const provider = ethers6Adapter.provider.toEthers(client, chainId);
        * ```
        */
@@ -71,7 +71,7 @@ export const ethers6Adapter = /* @__PURE__ */ (() => {
        * @returns A Promise that resolves to an ethers.js Contract.
        * @example
        * ```ts
-       * import { ethers6Adapter } from "@thirdweb/adapters";
+       * import { ethers6Adapter } from "thirdweb/adapters/ethers6";
        * const ethersContract = await ethers6Adapter.contract.toEthers(twContract);
        * ```
        */
@@ -85,7 +85,7 @@ export const ethers6Adapter = /* @__PURE__ */ (() => {
        * @returns A promise that resolves to a ThirdwebContract instance.
        * @example
        * ```ts
-       * import { ethers6Adapter } from "@thirdweb/adapters";
+       * import { ethers6Adapter } from "thirdweb/adapters/ethers6";
        *
        * const twContract = await ethers6Adapter.contract.fromEthersContract({
        *  client,
@@ -106,7 +106,7 @@ export const ethers6Adapter = /* @__PURE__ */ (() => {
        * @returns - A Promise that resolves to an Wallet object.
        * @example
        * ```ts
-       * import { ethers6Adapter } from "@thirdweb/adapters";
+       * import { ethers6Adapter } from "thirdweb/adapters/ethers6";
        * const wallet = await ethers6Adapter.signer.fromEthersSigner(signer);
        * ```
        */
@@ -123,7 +123,7 @@ export const ethers6Adapter = /* @__PURE__ */ (() => {
        * @returns A promise that resolves to an ethers.js signer.
        * @example
        * ```ts
-       * import { ethers6Adapter } from "@thirdweb/adapters";
+       * import { ethers6Adapter } from "thirdweb/adapters/ethers6";
        * const signer = await ethers6Adapter.signer.toEthers(client, chain, account);
        * ```
        */

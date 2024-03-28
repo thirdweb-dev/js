@@ -6,7 +6,7 @@ import { universalCrypto } from "../crypto/aes/lib/universal-crypto.js";
  * @example
  *
  * ```ts
- * import { uuid } from '@thirdweb-dev/utils';
+ * import { uuid } from 'thirdweb/utils';
  *
  * const id = await uuid();
  * ```

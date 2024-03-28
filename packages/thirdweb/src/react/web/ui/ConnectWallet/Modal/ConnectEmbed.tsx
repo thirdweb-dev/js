@@ -2,11 +2,7 @@ import {
   SetModalConfigCtx,
   WalletUIStatesProvider,
 } from "../../../providers/wallet-ui-states-provider.js";
-import {
-  modalMaxWidthCompact,
-  defaultTheme,
-  reservedScreens,
-} from "../constants.js";
+import { modalMaxWidthCompact, defaultTheme } from "../constants.js";
 import { useSetupScreen } from "./screen.js";
 import { type ComponentProps, useContext, useEffect, useState } from "react";
 import { radius, type Theme } from "../../design-system/index.js";
@@ -18,7 +14,6 @@ import {
 import { DynamicHeight } from "../../components/DynamicHeight.js";
 import {
   useActiveAccount,
-  useActiveWalletConnectionStatus,
   useIsAutoConnecting,
 } from "../../../../core/hooks/wallets/wallet-hooks.js";
 import { ConnectModalContent } from "./ConnectModalContent.js";
@@ -56,26 +51,25 @@ export type ConnectEmbedProps = {
   client: ThirdwebClient;
 
   /**
-   * Metadata of the app that will be passed to connected wallet.
+   * Metadata of the app that will be passed to connected wallet. Setting this is highly recommended.
    *
    * Some wallets display this information to the user when they connect to your app.
-   *
-   *
+   * @example
    * ```ts
    * {
-   *   name: "thirdweb powered dApp",
-   *   url: "https://thirdweb.com",
-   *   description: "thirdweb powered dApp",
-   *   logoUrl: "https://thirdweb.com/favicon.ico",
+   *   name: "My App",
+   *   url: "https://my-app.com",
+   *   description: "some description about your app",
+   *   logoUrl: "https://path/to/my-app/logo.svg",
    * };
    * ```
    */
   appMetadata?: AppMetadata;
 
   /**
-   * By default - ConnectButton UI uses the `en-US` locale for english language users.
+   * By default - ConnectEmbed UI uses the `en-US` locale for english language users.
    *
-   * You can customize the language used in the ConnectButton UI by setting the `locale` prop.
+   * You can customize the language used in the ConnectEmbed UI by setting the `locale` prop.
    *
    * Refer to the [`LocaleId`](https://portal.thirdweb.com/references/typescript/v5/LocaleId) type for supported locales.
    */
@@ -85,7 +79,8 @@ export type ConnectEmbedProps = {
    * Array of supported wallets. If not provided, default wallets will be used.
    * @example
    * ```tsx
-   * import { createWallet, embeddedWallet } from "thirdweb/react";
+   * import { AutoConnect } from "thirdweb/react";
+   * import { createWallet, embeddedWallet } from "thirdweb/wallets";
    *
    * const wallets = [
    *   embeddedWallet(),
@@ -104,14 +99,19 @@ export type ConnectEmbedProps = {
    * }
    * ```
    *
-   * If no wallets are specified. The component will show any EIP-6963 compliant wallet installed, as well as these default wallets:
+   * If no wallets are specified. The component will show All the EIP-6963 compliant installed wallet extensions, as well as below default wallets:
    *
-   * - [Embedded Wallet](https://portal.thirdweb.com/references/typescript/v5/embeddedWalletConfig)
-   * - [MataMask Wallet](https://portal.thirdweb.com/references/typescript/v5/metamaskConfig)
-   * - [Coinbase Wallet](https://portal.thirdweb.com/references/typescript/v5/coinbaseConfig)
-   * - [WalletConnect](https://portal.thirdweb.com/references/typescript/v5/walletConnectConfig)
-   * - [rainbowConfig](https://portal.thirdweb.com/references/typescript/v5/rainbowConfig)
-   * - [zerionConfig](https://portal.thirdweb.com/references/typescript/v5/zerionConfig)
+   * ```tsx
+   * const defaultWallets = [
+   *  embeddedWallet(),
+   *  createWallet("io.metamask"),
+   *  createWallet("com.coinbase.wallet"),
+   *  createWallet("me.rainbow"),
+   *  createWallet("io.zerion.wallet"),
+   * ]
+   * ```
+   *
+   * The `ConnectEmbed` also shows a "All wallets" button at the end of wallet list which allows user to connect to any of the 350+ wallets
    */
   wallets?: Wallet[];
 
@@ -124,7 +124,7 @@ export type ConnectEmbedProps = {
    *
    * If you want to customize the timeout, you can assign an object with a `timeout` key to this prop.
    * ```tsx
-   * <ConnectButton client={client} autoConnect={{ timeout: 10000 }} />
+   * <ConnectEmbed client={client} autoConnect={{ timeout: 10000 }} />
    * ```
    */
   autoConnect?:
@@ -226,28 +226,6 @@ export type ConnectEmbedProps = {
   privacyPolicyUrl?: string;
 
   /**
-   * Enforce that users must sign in with their wallet using [auth](https://portal.thirdweb.com/auth) after connecting their wallet.
-   *
-   * This requires the `authConfig` prop to be set on the [`ThirdWebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider) component.
-   */
-  // auth?: {
-  //   /**
-  //    * specify whether signing in is optional or not.
-  //    *
-  //    * By default it is `false` ( sign in is required ) if `authConfig` is set on [`ThirdWebProvider`](https://portal.thirdweb.com/react/v4/ThirdwebProvider)
-  //    */
-  //   loginOptional?: boolean;
-  //   /**
-  //    * Callback to be called after user signs in with their wallet
-  //    */
-  //   onLogin?: (token: string) => void;
-  //   /**
-  //    * Callback to be called after user signs out
-  //    */
-  //   onLogout?: () => void;
-  // };
-
-  /**
    * Callback to be called on successful connection of wallet. The callback is called with the connected account
    *
    * ```tsx
@@ -325,68 +303,6 @@ export type ConnectEmbedProps = {
 };
 
 /**
- * @internal
- */
-function useSignInRequired(loginOptional?: boolean) {
-  const connectionStatus = useActiveWalletConnectionStatus();
-
-  // TODO
-  // const { user } = useUser();
-  // const authConfig = useThirdwebAuthContext();
-
-  if (loginOptional === true) {
-    return false;
-  }
-
-  // return (
-  //   !!authConfig?.authUrl && !user?.address && connectionStatus === "connected"
-  // );
-
-  console.log(connectionStatus);
-
-  return false;
-}
-
-/**
- * Returns `true` if the `<ConnectEmbed />` should be rendered.
- * It returns true if either one of the following conditions are met:
- * - the wallet is not connected
- * - the wallet is connected but the user is not signed in and `auth` is required ( loginOptional is not set to false )
- * @example
- * ```tsx
- * function Example() {
- *   const loginOptional = false;
- *   const showConnectEmbed = useShowConnectEmbed(loginOptional);
- *
- *   if (!showConnectEmbed) {
- *     return <div> Wallet is connected </div>
- *   }
- *
- *   return (
- *     <div>
- *       <ConnectEmbed
- *         auth={{
- *           loginOptional,
- *         }}
- *       />
- *     </div>
- *   );
- * }
- *```
- * @param loginOptional -
- * Specify whether the `<ConnectEmbed />` you want to render has auth enabled or not.
- * If not specified, it is assumed to be `false` ( login is required )
- * @returns `true` if the `<ConnectEmbed />` should be rendered.
- */
-export function useShowConnectEmbed(loginOptional?: boolean) {
-  const activeAccount = useActiveAccount();
-  // const connectionStatus = useConnectionStatus();
-  const signInRequired = useSignInRequired(loginOptional);
-
-  return !activeAccount || signInRequired;
-}
-
-/**
  * A component that allows the user to connect their wallet.
  *
  * it renders the same UI as the [`ConnectButton`](https://portal.thirdweb.com/react/v4/components/ConnectButton) component's modal - but directly on the page instead of being in a modal.
@@ -409,8 +325,8 @@ export function useShowConnectEmbed(loginOptional?: boolean) {
  * @component
  */
 export function ConnectEmbed(props: ConnectEmbedProps) {
-  const loginOptional = true; // props.auth?.loginOptional;
-  const show = useShowConnectEmbed(loginOptional);
+  const activeAccount = useActiveAccount();
+  const show = !activeAccount;
 
   const wallets = props.wallets || getDefaultWallets();
   const localeId = props.locale || "en_US";
@@ -495,16 +411,9 @@ const ConnectEmbedContent = (
     loginOptional?: boolean;
   },
 ) => {
-  const requiresSignIn = useSignInRequired(props.loginOptional);
+  // const requiresSignIn = false;
   const screenSetup = useSetupScreen();
-  const { screen, setScreen, initialScreen } = screenSetup;
-
-  // if showing main screen but signIn is required, switch to signIn screen
-  useEffect(() => {
-    if (requiresSignIn && screen === reservedScreens.main) {
-      setScreen(reservedScreens.signIn);
-    }
-  }, [requiresSignIn, screen, setScreen]);
+  const { setScreen, initialScreen } = screenSetup;
 
   const isAutoConnecting = useIsAutoConnecting();
 
