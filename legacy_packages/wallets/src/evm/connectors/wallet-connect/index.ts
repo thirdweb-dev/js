@@ -363,7 +363,7 @@ export class WalletConnectConnector extends WagmiConnector<
           ]),
         ),
 
-        qrModalOptions: this.options.qrModalOptions,
+        qrModalOptions: this.options.qrModalOptions as any,
       });
     }
   }
