@@ -236,8 +236,8 @@ importers:
         specifier: ^13.4
         version: 13.4.12(@babel/core@7.24.1)(react-dom@18.2.0)(react@18.2.0)
       next-auth:
-        specifier: ^4.22.3
-        version: 4.22.3(next@13.4.12)(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^4.24.5
+        version: 4.24.5(next@13.4.12)(react-dom@18.2.0)(react@18.2.0)
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -19101,7 +19101,6 @@ packages:
     dependencies:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
-    bundledDependencies: false
 
   /event-target-shim@5.0.1:
     resolution: {integrity: sha512-i/2XbnSz/uxRCU6+NdVJgKWDTM427+MqYbkQzD321DuCQJUqOuJKIA0IM2+W2xtYHdKOmZ4dR6fExsd4SXL+WQ==}
@@ -24495,10 +24494,10 @@ packages:
     engines: {node: '>= 0.4.0'}
     dev: true
 
-  /next-auth@4.22.3(next@13.4.12)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-XAgy9xV3J2eJOXrQhmxdjV6MLM29ibm6WtMXc3KY6IPZeApf+SuBuPvlqCUfbu5YsAzlg9WSw6u01dChTfeZOA==}
+  /next-auth@4.24.5(next@13.4.12)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-3RafV3XbfIKk6rF6GlLE4/KxjTcuMCifqrmD+98ejFq73SRoj2rmzoca8u764977lH/Q7jo6Xu6yM+Re1Mz/Og==}
     peerDependencies:
-      next: ^12.2.5 || ^13
+      next: ^12.2.5 || ^13 || ^14
       nodemailer: ^6.6.5
       react: ^17.0.2 || ^18
       react-dom: ^17.0.2 || ^18

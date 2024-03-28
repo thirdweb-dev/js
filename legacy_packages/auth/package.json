@@ -109,7 +109,7 @@
     "fastify": "^4.25.2",
     "mocha": "10.4.0",
     "next": "^13.4",
-    "next-auth": "^4.22.3",
+    "next-auth": "^4.24.5",
     "typescript": "^5.3.3"
   },
   "peerDependencies": {
