@@ -2,10 +2,10 @@
 import fs from "fs";
 import path from "path";
 
-export const changes = [
+export const _legacyChanges = [
   // react
   {
-    path: "./packages/react/package.json",
+    path: "./legacy_packages/react/package.json",
     entry: "./src/index.ts",
     exports: {
       ".": "./src/index.ts",
@@ -14,7 +14,7 @@ export const changes = [
   },
   // react-core
   {
-    path: "./packages/react-core/package.json",
+    path: "./legacy_packages/react-core/package.json",
     entry: "./src/index.ts",
     exports: {
       ".": "./src/index.ts",
@@ -23,7 +23,7 @@ export const changes = [
   },
   // wallets
   {
-    path: "./packages/wallets/package.json",
+    path: "./legacy_packages/wallets/package.json",
     entry: "./src/index.ts",
     exports: {
       ".": "./src/index.ts",
@@ -58,6 +58,9 @@ export const changes = [
       "./evm/wallets/smart-wallet": "./src/evm/wallets/smart-wallet.ts",
     },
   },
+];
+
+export const _changes = [
   // thirdweb v5 sdk
   {
     path: "./packages/thirdweb/package.json",
@@ -91,8 +94,10 @@ const absPath = (relativePath) => path.join(process.cwd(), relativePath);
 /**
  *
  * @param {"original" | 'hotlink'} changeKey
+ * @param {boolean} isLegacy
  */
-export function updatePackages(changeKey) {
+export function updatePackages(changeKey, isLegacy) {
+  const changes = isLegacy ? _legacyChanges : _changes;
   changes.forEach((change) => {
     // read the package json file
     const pkg = JSON.parse(fs.readFileSync(absPath(change.path), "utf8"));
