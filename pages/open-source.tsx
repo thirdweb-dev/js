@@ -60,12 +60,14 @@ const filterOut = [
   "warengonzaga",
   "kien-ngo",
   "easyrun42",
-  "elasticbottle",
+  "ElasticBottle",
   "IDubuque",
   "rahul-thirdweb",
   "gerrysaporito",
   "edwardysun",
-  "mmeigoni",
+  "mmeigooni",
+  "ianthirdweb",
+  "sangster009",
 ];
 
 const repositories = [
