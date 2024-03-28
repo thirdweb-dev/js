@@ -16,7 +16,7 @@ export type RefreshJWTParams = {
  * @returns A Promise that resolves to the refreshed JWT.
  * @example
  * ```ts
- * import { refreshJWT } from '@thirdweb-dev/utils';
+ * import { refreshJWT } from 'thirdweb/utils';
  *
  * const jwt = await refreshJWT({
  *  account,

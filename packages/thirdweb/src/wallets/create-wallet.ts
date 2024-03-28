@@ -14,7 +14,6 @@ import { createWalletEmitter } from "./wallet-emitter.js";
 
 /**
  * Creates a wallet based on the provided ID and arguments.
- * @template ID - The type of the wallet ID.
  * @param args - The arguments for creating the wallet.
  * @returns - The created wallet.
  * @example
@@ -94,7 +93,7 @@ export function createWallet<const ID extends WalletId>(
         getChain: () => chain,
         getAccount: () => account,
         autoConnect: async (options) => {
-          // injeted wallet priority for autoconnect
+          // injected wallet priority for autoConnect
           if (injectedProvider(id)) {
             const { autoConnectInjectedWallet } = await import(
               "./injected/index.js"
