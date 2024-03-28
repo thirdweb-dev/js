@@ -42,6 +42,9 @@ export default {
   "rpc": [
     "https://16.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://coston-api.flare.network/ext/C/rpc",
+    "https://01-gravelines-004-01.rpc.tatum.io/ext/bc/C/rpc",
+    "https://02-chicago-004-02.rpc.tatum.io/ext/bc/C/rpc",
+    "https://02-tokyo-004-03.rpc.tatum.io/ext/bc/C/rpc",
     "https://coston.enosys.global/ext/C/rpc"
   ],
   "shortName": "cflr",

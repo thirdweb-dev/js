@@ -42,6 +42,8 @@ export default {
     "https://flare-api.flare.network/ext/C/rpc",
     "https://flare-bundler.etherspot.io",
     "https://rpc.ankr.com/flare",
+    "https://01-gravelines-003-01.rpc.tatum.io/ext/bc/C/rpc",
+    "https://01-vinthill-003-02.rpc.tatum.io/ext/bc/C/rpc",
     "https://rpc.ftso.au/flare",
     "https://flare.enosys.global/ext/C/rpc",
     "https://flare.solidifi.app/ext/C/rpc"
