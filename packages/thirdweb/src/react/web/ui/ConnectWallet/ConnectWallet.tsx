@@ -40,10 +40,6 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  * ```tsx
  * <ConnectButton
  *    client={client}
- *    appMetadata={{
- *      name: "Example",
- *      url: "https://example.com",
- *    }}
  * />
  * ```
  * @param props
@@ -56,12 +52,6 @@ export function ConnectButton(props: ConnectButtonProps) {
   const wallets = props.wallets || getDefaultWallets();
   const localeId = props.locale || "en_US";
   const [locale, setLocale] = useState<ConnectLocale | undefined>();
-
-  // useEffect(() => {
-  //   wallets.forEach((w) => {
-  //     w.prefetch?.(localeId);
-  //   });
-  // }, [wallets, localeId]);
 
   useEffect(() => {
     getConnectLocale(localeId).then(setLocale);

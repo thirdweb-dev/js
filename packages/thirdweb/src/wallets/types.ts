@@ -1,11 +1,5 @@
 import type { Chain } from "../chains/types.js";
 
-export type WalletMetadata = {
-  id: string;
-  name: string;
-  iconUrl: string;
-};
-
 export type AppMetadata = {
   /**
    * the name of your app

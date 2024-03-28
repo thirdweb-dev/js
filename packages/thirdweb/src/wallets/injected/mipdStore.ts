@@ -13,14 +13,17 @@ const mipdStore: Store | undefined = /* @__PURE__ */ (() =>
   typeof window !== "undefined" ? createStore() : undefined)();
 
 /**
- * Get the details of Injected Provider with given a wallet ID (rdns) using [EIP-6963](https://eips.ethereum.org/EIPS/eip-6963) Provider Discovery.
+ * Get Injected Provider for given wallet by passing a wallet ID (rdns) using [EIP-6963](https://eips.ethereum.org/EIPS/eip-6963) Provider Discovery.
  * @param walletId - The Wallet Id (rdns) to check.
  * @example
  * ```ts
- * import { isInjected } from "thirdweb/wallets";
+ * import { injectedProvider } from "thirdweb/wallets";
  *
  * const metamaskProvider = injectedProvider("io.metamask");
- * const coinbaseProvider = injectedProvider("com.coinbase");
+ *
+ * if (metamaskProvider) {
+ *  console.log("Metamask is installed");
+ * }
  * ```
  * @returns The details of the Injected Provider if it exists. `undefined` otherwise.
  * @walletUtils

@@ -302,7 +302,7 @@ export type ConnectButtonProps = {
    * import { createWallet, embeddedWallet } from "thirdweb/react";
    *
    * const wallets = [
-   *   embeddedWallet(),
+   *   createWallet("embedded"),
    *   createWallet("io.metamask"),
    *   createWallet("com.coinbase.wallet"),
    *   createWallet("me.rainbow"),
@@ -318,14 +318,19 @@ export type ConnectButtonProps = {
    * }
    * ```
    *
-   * If no wallets are specified. The component will show any EIP-6963 compliant wallet installed, as well as these default wallets:
+   * If no wallets are specified. The component will show All the EIP-6963 compliant installed wallet extensions, as well as below default wallets:
    *
-   * - [Embedded Wallet](https://portal.thirdweb.com/references/typescript/v5/embeddedWalletConfig)
-   * - [MataMask Wallet](https://portal.thirdweb.com/references/typescript/v5/metamaskConfig)
-   * - [Coinbase Wallet](https://portal.thirdweb.com/references/typescript/v5/coinbaseConfig)
-   * - [WalletConnect](https://portal.thirdweb.com/references/typescript/v5/walletConnectConfig)
-   * - [rainbowConfig](https://portal.thirdweb.com/references/typescript/v5/rainbowConfig)
-   * - [zerionConfig](https://portal.thirdweb.com/references/typescript/v5/zerionConfig)
+   * ```tsx
+   * const defaultWallets = [
+   *  createWallet("embedded"),
+   *  createWallet("io.metamask"),
+   *  createWallet("com.coinbase.wallet"),
+   *  createWallet("me.rainbow"),
+   *  createWallet("io.zerion.wallet"),
+   * ]
+   * ```
+   *
+   * The `ConnectButton` also shows a "All wallets" button at the end of wallet list which allows user to connect to any of the 350+ wallets
    */
   wallets?: Wallet[];
 
@@ -348,16 +353,16 @@ export type ConnectButtonProps = {
     | boolean;
 
   /**
-   * Metadata of the app that will be passed to connected wallet.
+   * Metadata of the app that will be passed to connected wallet. Setting this is highly recommended.
    *
    * Some wallets display this information to the user when they connect to your app.
    * @example
    * ```ts
    * {
-   *   name: "thirdweb powered dApp",
-   *   url: "https://thirdweb.com",
-   *   description: "thirdweb powered dApp",
-   *   logoUrl: "https://thirdweb.com/favicon.ico",
+   *   name: "My App",
+   *   url: "https://my-app.com",
+   *   description: "some description about your app",
+   *   logoUrl: "https://path/to/my-app/logo.svg",
    * };
    * ```
    */
