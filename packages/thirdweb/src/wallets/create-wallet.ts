@@ -114,6 +114,11 @@ export function createWallet<const ID extends WalletId>(
             chain = connectedChain;
             handleDisconnect = doDisconnect;
             handleSwitchChain = doSwitchChain;
+            trackConnect({
+              client: options.client,
+              walletType: id,
+              walletAddress: account.address,
+            });
             // return account
             return account;
           }

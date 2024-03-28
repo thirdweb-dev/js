@@ -85,10 +85,10 @@ export type WalletAutoConnectionOption<T extends WalletId> = T extends "smart"
       ? InjectedConnectOptions | CoinbaseSDKWalletConnectionOptions
       : // injected + wc both supported
         T extends InjectedSupportedWalletIds & WCSupportedWalletIds
-        ? undefined | WCAutoConnectOptions
+        ? InjectedConnectOptions | WCAutoConnectOptions
         : // injected only
           T extends InjectedSupportedWalletIds
-          ? undefined
+          ? InjectedConnectOptions
           : // wc only
             WCAutoConnectOptions;
 /**
