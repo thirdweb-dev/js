@@ -20,11 +20,12 @@ function CoinbaseSDKWalletConnectUI(props: {
 }) {
   const { onBack, done, wallet, walletInfo, onGetStarted, locale } = props;
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>();
-  const { chain } = useWalletConnectionCtx();
+  const { client, chain } = useWalletConnectionCtx();
 
   const connect = useCallback(() => {
     wallet
       .connect({
+        client,
         chain,
         onUri: (uri) => {
           setQrCodeUri(uri);

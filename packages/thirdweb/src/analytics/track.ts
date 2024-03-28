@@ -3,10 +3,24 @@ import { getClientFetch } from "../utils/fetch.js";
 
 const ANALYTICS_ENDPOINT = "https://c.thirdweb.com/event";
 
+export function trackConnect(args: {
+  client: ThirdwebClient;
+  walletType: string;
+  walletAddress: string;
+}) {
+  const { client, walletType, walletAddress } = args;
+  track(client, {
+    source: "connectWallet",
+    action: "connect",
+    walletType,
+    walletAddress,
+  });
+}
+
 /**
  * @internal
  */
-export function track(client: ThirdwebClient, data: object) {
+function track(client: ThirdwebClient, data: object) {
   const fetch = getClientFetch(client);
 
   fetch(ANALYTICS_ENDPOINT, {

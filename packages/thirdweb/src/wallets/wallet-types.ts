@@ -17,6 +17,7 @@ import type {
   EmbeddedWalletConnectionOptions,
 } from "./embedded/core/wallet/index.js";
 import type { CoinbaseSDKWalletConnectionOptions } from "./coinbase/coinbaseSDKWallet.js";
+import type { ThirdwebClient } from "../client/client.js";
 
 export type WalletId =
   | "embedded"
@@ -26,6 +27,13 @@ export type WalletId =
 
 // connect options
 export type InjectedConnectOptions = {
+  /**
+   * The Thirdweb client.
+   */
+  client: ThirdwebClient;
+  /**
+   * Optional chain to connect to.
+   */
   chain?: Chain;
 };
 
