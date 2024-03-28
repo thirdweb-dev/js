@@ -11,7 +11,9 @@ async function script() {
 
   console.log("\x1b[34m%s\x1b[0m", "Creating Symlinks");
   await execute([
-    "cd packages/react",
+    "cd packages/thirdweb",
+    "pnpm link",
+    "cd ../react",
     "pnpm link",
     "cd ../react-core",
     "pnpm link",
@@ -53,7 +55,7 @@ async function script() {
     "\x1b[33m%s\x1b[0m",
     `\
 optimizeDeps: {
-  exclude: ['@thirdweb-dev/react'],
+  exclude: ['your-pkg-1', 'your-pkg-2'],
 }\n\n`,
   );
 
@@ -65,7 +67,7 @@ optimizeDeps: {
     "\x1b[33m%s\x1b[0m",
     `\
 const nextConfig = {
-  transpilePackages: ['@thirdweb-dev/react'],
+  transpilePackages: ['your-pkg-1', 'your-pkg-2'],
 };\n\n`,
   );
 

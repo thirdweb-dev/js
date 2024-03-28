@@ -1,0 +1,84 @@
+import type { AbiParameterToPrimitiveType } from "abitype";
+import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
+import type { Prettify } from "../../../../../utils/type-utils.js";
+import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+
+/**
+ * Represents the parameters for the "grantRole" function.
+ */
+
+type GrantRoleParamsInternal = {
+  role: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "role" }>;
+  account: AbiParameterToPrimitiveType<{ type: "address"; name: "account" }>;
+};
+
+export type GrantRoleParams = Prettify<
+  | GrantRoleParamsInternal
+  | {
+      asyncParams: () => Promise<GrantRoleParamsInternal>;
+    }
+>;
+const FN_SELECTOR = "0x2f2ff15d" as const;
+const FN_INPUTS = [
+  {
+    type: "bytes32",
+    name: "role",
+  },
+  {
+    type: "address",
+    name: "account",
+  },
+] as const;
+const FN_OUTPUTS = [] as const;
+
+/**
+ * Encodes the parameters for the "grantRole" function.
+ * @param options - The options for the grantRole function.
+ * @returns The encoded ABI parameters.
+ * @extension COMMON
+ * @example
+ * ```
+ * import { encodeGrantRoleParams } "thirdweb/extensions/common";
+ * const result = encodeGrantRoleParams({
+ *  role: ...,
+ *  account: ...,
+ * });
+ * ```
+ */
+export function encodeGrantRoleParams(options: GrantRoleParamsInternal) {
+  return encodeAbiParameters(FN_INPUTS, [options.role, options.account]);
+}
+
+/**
+ * Calls the "grantRole" function on the contract.
+ * @param options - The options for the "grantRole" function.
+ * @returns A prepared transaction object.
+ * @extension COMMON
+ * @example
+ * ```
+ * import { grantRole } from "thirdweb/extensions/common";
+ *
+ * const transaction = grantRole({
+ *  role: ...,
+ *  account: ...,
+ * });
+ *
+ * // Send the transaction
+ * ...
+ *
+ * ```
+ */
+export function grantRole(options: BaseTransactionOptions<GrantRoleParams>) {
+  return prepareContractCall({
+    contract: options.contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+    params:
+      "asyncParams" in options
+        ? async () => {
+            const resolvedParams = await options.asyncParams();
+            return [resolvedParams.role, resolvedParams.account] as const;
+          }
+        : [options.role, options.account],
+  });
+}

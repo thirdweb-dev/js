@@ -17,7 +17,7 @@ export type BatchOptions = Partial<typeof DEFAULT_BATCH_OPTIONS>;
 export class StaticJsonRpcBatchProvider extends providers.StaticJsonRpcProvider {
   private _timeLimitMs: number;
   private _sizeLimit: number;
-  _pendingBatchAggregator: NodeJS.Timer | null;
+  _pendingBatchAggregator: ReturnType<typeof setTimeout> | null;
   _pendingBatch: Array<{
     request: { method: string; params: Array<any>; id: number; jsonrpc: "2.0" };
     resolve: (result: any) => void;

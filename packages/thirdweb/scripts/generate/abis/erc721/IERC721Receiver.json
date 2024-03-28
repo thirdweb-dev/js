@@ -1,0 +1,3 @@
+[
+  "function onERC721Received(address operator, address from, uint256 tokenId, bytes data) returns (bytes4)"
+]

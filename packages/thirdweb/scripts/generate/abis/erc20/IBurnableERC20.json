@@ -1,0 +1,4 @@
+[
+  "function burn(uint256 amount)",
+  "function burnFrom(address account, uint256 amount)"
+]

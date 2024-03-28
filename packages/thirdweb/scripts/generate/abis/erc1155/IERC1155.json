@@ -1,0 +1,14 @@
+[
+  "event ApprovalForAll(address indexed _owner, address indexed _operator, bool _approved)",
+  "event TransferBatch(address indexed _operator, address indexed _from, address indexed _to, uint256[] tokenIds, uint256[] _values)",
+  "event TransferSingle(address indexed _operator, address indexed _from, address indexed _to, uint256 tokenId, uint256 _value)",
+  "event URI(string _value, uint256 indexed tokenId)",
+  "function balanceOf(address _owner, uint256 tokenId) view returns (uint256)",
+  "function balanceOfBatch(address[] _owners, uint256[] tokenIds) view returns (uint256[])",
+  "function isApprovedForAll(address _owner, address _operator) view returns (bool)",
+  "function safeBatchTransferFrom(address _from, address _to, uint256[] tokenIds, uint256[] _values, bytes _data)",
+  "function safeTransferFrom(address _from, address _to, uint256 tokenId, uint256 _value, bytes _data)",
+  "function setApprovalForAll(address _operator, bool _approved)",
+  "function uri(uint256 tokenId) view returns (string)",
+  "function totalSupply(uint256 id) view returns (uint256)"
+]

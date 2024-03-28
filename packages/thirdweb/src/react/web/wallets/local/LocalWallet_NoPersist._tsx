@@ -1,0 +1,57 @@
+import { useEffect } from "react";
+import type { LocalWallet } from "../../../../wallets/local/index._ts";
+import type { ConnectUIProps } from "../../../core/types/wallets.js";
+import { Spinner } from "../../ui/components/Spinner.js";
+import { Container } from "../../ui/components/basic.js";
+import { wait } from "../../../core/utils/wait.js";
+
+/**
+ * Generate a random local wallet without saving it on mount and show a spinner while doing so.
+ * @internal
+ */
+export const LocalWallet_NoPersist: React.FC<{
+  persist: boolean;
+  connectUIProps: ConnectUIProps;
+}> = (props) => {
+  const { done, createInstance, chain } = props.connectUIProps.connection;
+
+  useEffect(() => {
+    let isUnmounted = false;
+
+    async function handleConnect() {
+      const wallet = createInstance() as LocalWallet;
+      await wallet.generate();
+      await wait(1000);
+
+      if (isUnmounted) {
+        return;
+      }
+
+      await wallet.connect({ chain });
+
+      if (isUnmounted) {
+        return;
+      }
+
+      done(wallet);
+    }
+
+    handleConnect();
+    return () => {
+      isUnmounted = true;
+    };
+  }, [done, createInstance, chain]);
+
+  return (
+    <Container
+      flex="row"
+      center="both"
+      fullHeight
+      style={{
+        minHeight: "300px",
+      }}
+    >
+      <Spinner size="xl" color="accentText" />
+    </Container>
+  );
+};

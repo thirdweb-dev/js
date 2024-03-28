@@ -1,0 +1,4 @@
+[
+  "event RequestExecuted(address indexed user, address indexed signer, (uint128 validityStartTimestamp, uint128 validityEndTimestamp, bytes32 uid, bytes data) _req)",
+  "function verify((uint128 validityStartTimestamp, uint128 validityEndTimestamp, bytes32 uid, bytes data) req, bytes signature) view returns (bool success, address signer)"
+]

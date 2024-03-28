@@ -1,0 +1,14 @@
+[
+  "event ContractPublished(address indexed operator, address indexed publisher, (string contractId, uint256 publishTimestamp, string publishMetadataUri, bytes32 bytecodeHash, address implementation) publishedContract)",
+  "event ContractUnpublished(address indexed operator, address indexed publisher, string indexed contractId)",
+  "event Paused(bool isPaused)",
+  "event PublisherProfileUpdated(address indexed publisher, string prevURI, string newURI)",
+  "function getAllPublishedContracts(address publisher) view returns ((string contractId, uint256 publishTimestamp, string publishMetadataUri, bytes32 bytecodeHash, address implementation)[] published)",
+  "function getPublishedContract(address publisher, string contractId) view returns ((string contractId, uint256 publishTimestamp, string publishMetadataUri, bytes32 bytecodeHash, address implementation) published)",
+  "function getPublishedContractVersions(address publisher, string contractId) view returns ((string contractId, uint256 publishTimestamp, string publishMetadataUri, bytes32 bytecodeHash, address implementation)[] published)",
+  "function getPublishedUriFromCompilerUri(string compilerMetadataUri) view returns (string[] publishedMetadataUris)",
+  "function getPublisherProfileUri(address publisher) view returns (string uri)",
+  "function publishContract(address publisher, string contractId, string publishMetadataUri, string compilerMetadataUri, bytes32 bytecodeHash, address implementation)",
+  "function setPublisherProfileUri(address publisher, string uri)",
+  "function unpublishContract(address publisher, string contractId)"
+]

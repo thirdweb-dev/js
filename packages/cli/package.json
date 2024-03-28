@@ -1,5 +1,5 @@
 {
-  "name": "thirdweb",
+  "name": "@thirdweb-dev/cli",
   "main": "dist/cli/index.js",
   "version": "0.13.56",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/cli",
@@ -72,7 +72,8 @@
     "build": "pnpm clean && tsup --env.NODE_ENV production --minify --format cjs --external hardhat --dts-resolve",
     "build:watch": "pnpm run build --watch",
     "generate-thirdweb-package": "node scripts/generate-thirdweb-package.js",
-    "e2e": "jest"
+    "e2e": "jest",
+    "push": "yalc push"
   },
   "files": [
     "src/",

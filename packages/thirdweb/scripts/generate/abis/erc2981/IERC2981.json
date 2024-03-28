@@ -1,0 +1,3 @@
+[
+  "function royaltyInfo(uint256 tokenId, uint256 salePrice) view returns (address receiver, uint256 royaltyAmount)"
+]

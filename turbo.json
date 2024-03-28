@@ -5,6 +5,11 @@
       "outputs": ["dist/**"],
       "dependsOn": ["^build"]
     },
+    "bench": {
+      "cache": false,
+      "dependsOn": ["build"],
+      "env": ["TW_SECRET_KEY", "CI"]
+    },
     "typedoc": {
       "outputs": ["typedoc/**"],
       "dependsOn": ["^build"]
@@ -68,11 +73,16 @@
       "outputs": ["dist/**", "cf-worker/**", "node/**"],
       "dependsOn": ["^build"]
     },
+
+    "thirdweb#update-version": {
+      "inputs": ["package.json"],
+      "outputs": ["src/version.ts"]
+    },
     "test": {
-      "outputs": [],
+      "outputs": ["codecov/**"],
       "inputs": ["src/**", "test/**"],
       "dependsOn": ["build"],
-      "env": ["TW_SECRET_KEY"]
+      "env": ["TW_SECRET_KEY", "CI"]
     },
     "e2e": {
       "outputs": [],
@@ -109,7 +119,7 @@
       "inputs": ["src/**", "fixtures/**", "package.json"],
       "dependsOn": ["build"]
     },
-    "thirdweb#e2e": {
+    "@thirdweb-dev/cli#e2e": {
       "outputs": [],
       "inputs": ["src/**", "e2e/**"],
       "dependsOn": ["build"],

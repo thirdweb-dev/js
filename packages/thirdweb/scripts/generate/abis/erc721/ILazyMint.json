@@ -1,0 +1,4 @@
+[
+  "event TokensLazyMinted(uint256 indexed startTokenId, uint256 endTokenId, string baseURI, bytes encryptedBaseURI)",
+  "function lazyMint(uint256 amount, string baseURIForTokens, bytes extraData) returns (uint256 batchId)"
+]

@@ -58,6 +58,27 @@ export const changes = [
       "./evm/wallets/smart-wallet": "./src/evm/wallets/smart-wallet.ts",
     },
   },
+  // thirdweb v5 sdk
+  {
+    path: "./packages/thirdweb/package.json",
+    entry: "./src/exports/thirdweb.ts",
+    exports: {
+      ".": "./src/exports/thirdweb.ts",
+      "./chains": "./src/exports/chains.ts",
+      "./contract": "./src/exports/contract.ts",
+      "./event": "./src/exports/event.ts",
+      "./pay": "./src/exports/pay.ts",
+      "./react": "./src/exports/react.ts",
+      "./storage": "./src/exports/storage.ts",
+      "./utils": "./src/exports/utils.ts",
+      "./rpc": "./src/exports/rpc.ts",
+      "./transaction": "./src/exports/transaction.ts",
+      "./wallets": "./src/exports/wallets.ts",
+      "./adapters/*": "./src/exports/adapters/*.ts",
+      "./wallets/*": "./src/exports/wallets/*.ts",
+      "./extensions/*": "./src/exports/extensions/*.ts",
+    },
+  },
 ];
 
 /**
@@ -80,9 +101,14 @@ export function updatePackages(changeKey) {
     if (changeKey === "hotlink") {
       pkg._main = pkg.main;
       pkg.main = change.entry;
+
+      pkg._module = pkg.module;
+      pkg.module = change.entry;
     } else {
       pkg.main = pkg._main;
       delete pkg._main;
+      pkg.module = pkg._module;
+      delete pkg._module;
     }
 
     if (changeKey === "hotlink") {
@@ -90,8 +116,14 @@ export function updatePackages(changeKey) {
       pkg._exports = JSON.parse(JSON.stringify(pkg.exports));
 
       for (const key in change.exports) {
-        pkg.exports[key].module = change.exports[key];
-        delete pkg.exports[key].default;
+        try {
+          pkg.exports[key] = {};
+          pkg.exports[key].module = change.exports[key];
+          delete pkg.exports[key].default;
+        } catch (e) {
+          console.log("key :", key);
+          throw e;
+        }
       }
     } else {
       // revert pkg.exports
@@ -102,9 +134,18 @@ export function updatePackages(changeKey) {
     if (changeKey === "hotlink") {
       pkg._types = pkg.types;
       pkg.types = "";
+      if (pkg.typings) {
+        pkg._typings = pkg.typings;
+        pkg.typings = "";
+      }
     } else {
       pkg.types = pkg._types;
       delete pkg._types;
+
+      if (pkg._typings) {
+        pkg.typings = pkg._typings;
+        delete pkg._typings;
+      }
     }
 
     // save file

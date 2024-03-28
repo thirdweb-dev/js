@@ -1,0 +1,5 @@
+[
+  "event PrimarySaleRecipientUpdated(address indexed recipient)",
+  "function primarySaleRecipient() view returns (address)",
+  "function setPrimarySaleRecipient(address _saleRecipient)"
+]

@@ -1,0 +1,80 @@
+import {
+  localWallet,
+  localWalletMetadata,
+} from "../../../../wallets/local/index._ts";
+import type { WalletConfig } from "../../../core/types/wallets.js";
+import { asyncLocalStorage } from "../../../core/utils/asyncLocalStorage.js";
+import type { LocaleId } from "../../ui/types.js";
+import { LocalWalletConnectUI } from "./LocalWalletConnectUI.js";
+import { getLocalWalletLocale } from "./locale/getLocalWalletLocale.js";
+import type { LocalWalletLocale } from "./locale/types.js";
+
+export type LocalWalletConfigOptions = {
+  /**
+   * If `true`, the wallet data will be stored on localStorage encrypted with user's password.
+   * Because of this - a password creation step is required to connect the wallet.
+   * When page is reloaded, the user will need to enter their password again to connect.
+   *
+   * If `false`, wallet data will not be stored, and no password will be required to connect.
+   * The wallet will be lost when the user leaves or reloads the page - unless the user manually exports the wallet data.
+   *
+   * By default, it is set to `true`.
+   */
+  persist?: boolean;
+};
+
+/**
+ * Integrate Local wallet connection in
+ * [`ConnectButton`](https://portal.thirdweb.com/typescript/v5/react/components/ConnectButton)
+ * or [`ConnectEmbed`](https://portal.thirdweb.com/typescript/v5/react/components/ConnectEmbed) by configuring it in `wallets` prop.
+ * @param options - Options for configuring the Local wallet.
+ * Refer to [`LocalWalletConfigOptions`](https://portal.thirdweb.com/references/typescript/v5/LocalWalletConfigOptions) for more details.
+ * @example
+ * ```tsx
+ * import { ConnectButton, localWalletConfig } from "thirdweb/react";
+ *
+ * function Example() {
+ *   return (
+ *     <ConnectButton
+ *      client={client}
+ *      wallets={[localWalletConfig()]}
+ *      appMetadata={appMetadata}
+ *     />
+ *   );
+ * }
+ * ```
+ * @returns `WalletConfig` object which can be added to the `wallets` prop in either `ConnectButton` or `ConnectEmbed` component.
+ * @walletConfig
+ */
+export const localWalletConfig = (
+  options?: LocalWalletConfigOptions,
+): WalletConfig => {
+  let prefetchedLocale: LocalWalletLocale;
+  let prefetchedLocaleId: LocaleId;
+
+  const config: WalletConfig = {
+    metadata: localWalletMetadata,
+    create(createOptions) {
+      return localWallet({
+        client: createOptions.client,
+        storage: asyncLocalStorage,
+      });
+    },
+    connectUI(props) {
+      return (
+        <LocalWalletConnectUI
+          connectUIProps={props}
+          persist={options?.persist !== undefined ? options.persist : true}
+          prefetchedLocale={prefetchedLocale}
+          prefetchedLocaleId={prefetchedLocaleId}
+        />
+      );
+    },
+    async prefetch(localeId) {
+      prefetchedLocale = await getLocalWalletLocale(localeId);
+      prefetchedLocaleId = localeId;
+    },
+  };
+
+  return config;
+};

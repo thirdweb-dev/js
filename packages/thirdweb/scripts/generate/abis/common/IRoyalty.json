@@ -1,0 +1,10 @@
+[
+  "event DefaultRoyalty(address indexed newRoyaltyRecipient, uint256 newRoyaltyBps)",
+  "event RoyaltyForToken(uint256 indexed tokenId, address indexed royaltyRecipient, uint256 royaltyBps)",
+  "function getDefaultRoyaltyInfo() view returns (address, uint16)",
+  "function getRoyaltyInfoForToken(uint256 tokenId) view returns (address, uint16)",
+  "function royaltyInfo(uint256 tokenId, uint256 salePrice) view returns (address receiver, uint256 royaltyAmount)",
+  "function setDefaultRoyaltyInfo(address _royaltyRecipient, uint256 _royaltyBps)",
+  "function setRoyaltyInfoForToken(uint256 tokenId, address recipient, uint256 bps)",
+  "function supportsInterface(bytes4 interfaceId) view returns (bool)"
+]

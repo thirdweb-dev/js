@@ -1,0 +1,12 @@
+[
+  "event RuleCreated(bytes32 indexed ruleId, (bytes32 ruleId, address token, uint8 tokenType, uint256 tokenId, uint256 balance, uint256 score, uint8 ruleType) rule)",
+  "event RuleDeleted(bytes32 indexed ruleId)",
+  "event RulesEngineOverriden(address indexed newRulesEngine)",
+  "function createRuleMultiplicative((address token, uint8 tokenType, uint256 tokenId, uint256 scorePerOwnedToken) rule) returns (bytes32 ruleId)",
+  "function createRuleThreshold((address token, uint8 tokenType, uint256 tokenId, uint256 balance, uint256 score) rule) returns (bytes32 ruleId)",
+  "function deleteRule(bytes32 ruleId)",
+  "function getAllRules() view returns ((bytes32 ruleId, address token, uint8 tokenType, uint256 tokenId, uint256 balance, uint256 score, uint8 ruleType)[] rules)",
+  "function getRulesEngineOverride() view returns (address rulesEngineAddress)",
+  "function getScore(address _tokenOwner) view returns (uint256 score)",
+  "function setRulesEngineOverride(address _rulesEngineAddress)"
+]

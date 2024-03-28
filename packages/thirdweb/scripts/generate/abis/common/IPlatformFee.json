@@ -1,0 +1,7 @@
+[
+  "event FlatPlatformFeeUpdated(address platformFeeRecipient, uint256 flatFee)",
+  "event PlatformFeeInfoUpdated(address indexed platformFeeRecipient, uint256 platformFeeBps)",
+  "event PlatformFeeTypeUpdated(uint8 feeType)",
+  "function getPlatformFeeInfo() view returns (address, uint16)",
+  "function setPlatformFeeInfo(address _platformFeeRecipient, uint256 _platformFeeBps)"
+]

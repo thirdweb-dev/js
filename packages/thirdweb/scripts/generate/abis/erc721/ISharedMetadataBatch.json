@@ -1,0 +1,7 @@
+[
+  "event SharedMetadataDeleted(bytes32 indexed id)",
+  "event SharedMetadataUpdated(bytes32 indexed id, string name, string description, string imageURI, string animationURI)",
+  "function deleteSharedMetadata(bytes32 id)",
+  "function getAllSharedMetadata() view returns ((bytes32 id, (string name, string description, string imageURI, string animationURI) metadata)[] metadata)",
+  "function setSharedMetadata((string name, string description, string imageURI, string animationURI) metadata, bytes32 id)"
+]

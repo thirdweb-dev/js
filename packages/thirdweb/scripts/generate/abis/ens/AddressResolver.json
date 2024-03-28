@@ -1,0 +1,4 @@
+[
+  "function addr(bytes32 name) external view returns (address)",
+  "function addr(bytes32 name, uint256 coinType) external view returns (bytes memory)"
+]

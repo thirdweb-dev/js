@@ -1,0 +1,31 @@
+[
+  {
+    "name": "thirdweb (esm)",
+    "path": "./dist/esm/exports/thirdweb.js",
+    "limit": "30 kB",
+    "import": "*"
+  },
+  {
+    "name": "thirdweb (cjs)",
+    "path": "./dist/cjs/exports/thirdweb.js",
+    "limit": "100 kB"
+  },
+  {
+    "name": "thirdweb (minimal + tree-shaking)",
+    "path": "./dist/esm/exports/thirdweb.js",
+    "limit": "5 kB",
+    "import": "{ createThirdwebClient, getRpcClient, defineChain }"
+  },
+  {
+    "name": "thirdweb/chains (tree-shaking)",
+    "path": "./dist/esm/exports/chains.js",
+    "limit": "500 B",
+    "import": "{ ethereum }"
+  },
+  {
+    "name": "thirdweb/react (minimal + tree-shaking)",
+    "path": "./dist/esm/exports/react.js",
+    "limit": "15 kB",
+    "import": "{ ThirdwebProvider, useConnect }"
+  }
+]

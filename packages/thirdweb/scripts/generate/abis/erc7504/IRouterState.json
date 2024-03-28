@@ -1,0 +1,3 @@
+[
+  "function getAllExtensions() view returns (((string name, string metadataURI, address implementation) metadata, (bytes4 functionSelector, string functionSignature)[] functions)[] allExtensions)"
+]

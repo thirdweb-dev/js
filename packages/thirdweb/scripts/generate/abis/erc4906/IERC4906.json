@@ -1,0 +1,4 @@
+[
+  "event BatchMetadataUpdate(uint256 _fromTokenId, uint256 _toTokenId)",
+  "event MetadataUpdate(uint256 _tokenId)"
+]
