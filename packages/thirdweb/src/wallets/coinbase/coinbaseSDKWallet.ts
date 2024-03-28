@@ -15,6 +15,7 @@ import type { SendTransactionOption } from "../interfaces/wallet.js";
 import type { Address } from "abitype";
 import { stringify } from "../../utils/json.js";
 import type { Ethereum } from "../interfaces/ethereum.js";
+
 import { defineChain, getChainMetadata } from "../../chains/utils.js";
 import type { Chain } from "../../chains/types.js";
 import { ethereum } from "../../chains/chain-definitions/ethereum.js";

@@ -19,6 +19,7 @@ async function getEmbeddedWalletSDK(client: ThirdwebClient) {
   const { EmbeddedWalletSdk } = await import(
     "../../implementations/lib/embedded-wallet.js"
   );
+
   const ewSDK = new EmbeddedWalletSdk({
     client: client,
   });
