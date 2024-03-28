@@ -5,20 +5,26 @@ import { execute } from "./execute.mjs";
 
 async function script() {
   console.log(banner);
+  const isLegacy = process.argv[2] === "legacy";
 
   console.log("\x1b[34m%s\x1b[0m", "Reverting package json files");
-  updatePackages("original");
+  updatePackages("original", isLegacy);
 
   console.log("\x1b[34m%s\x1b[0m", "Removing Symlinks");
-  await execute([
-    "cd packages/react",
-    "pnpm unlink",
-    "cd ../react-core",
-    "pnpm unlink",
-    "cd ../wallets",
-    "pnpm unlink",
-    "cd ../..",
-  ]);
+
+  if (isLegacy) {
+    await execute([
+      "cd legacy_packages/react",
+      "pnpm unlink",
+      "cd ../react-core",
+      "pnpm unlink",
+      "cd ../wallets",
+      "pnpm unlink",
+      "cd ../..",
+    ]);
+  } else {
+    await execute(["cd packages/thirdweb", "pnpm unlink"]);
+  }
 
   console.log("\x1b[32m%s\x1b[0m", "\nHotlink Reverted\n\n");
 }
