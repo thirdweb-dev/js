@@ -79,7 +79,8 @@ export type ConnectEmbedProps = {
    * Array of supported wallets. If not provided, default wallets will be used.
    * @example
    * ```tsx
-   * import { createWallet, embeddedWallet } from "thirdweb/react";
+   * import { AutoConnect } from "thirdweb/react";
+   * import { createWallet, embeddedWallet } from "thirdweb/wallets";
    *
    * const wallets = [
    *   createWallet("embedded"),

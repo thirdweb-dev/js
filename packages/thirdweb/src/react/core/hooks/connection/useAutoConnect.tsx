@@ -32,7 +32,8 @@ export type AutoConnectProps = {
    * Array of wallets that your app uses
    * @example
    * ```tsx
-   * import { createWallet, embeddedWallet } from "thirdweb/react";
+   * import { AutoConnect } from "thirdweb/react";
+   * import { createWallet, embeddedWallet } from "thirdweb/wallets";
    *
    * const wallets = [
    *   createWallet("embedded"),
