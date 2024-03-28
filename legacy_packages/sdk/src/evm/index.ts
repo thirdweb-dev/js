@@ -245,3 +245,9 @@ export * from "./schema/tokens/pack";
 export type { DirectListingInputParams } from "./schema/marketplacev3/direct-listings";
 export type { EnglishAuctionInputParams } from "./schema/marketplacev3/english-auctions";
 //#endregion @r/legacy_packages/sdk/src/evm/schema
+
+//#region @r/legacy_packages/sdk/src/evm/pay
+export * from "./pay/buyWithCrypto/actions/getHistory";
+export * from "./pay/buyWithCrypto/actions/getQuote";
+export * from "./pay/buyWithCrypto/actions/getStatus";
+//#endregion @r/legacy_packages/sdk/src/evm/pay
