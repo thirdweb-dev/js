@@ -302,7 +302,7 @@ export type ConnectButtonProps = {
    * import { createWallet, embeddedWallet } from "thirdweb/react";
    *
    * const wallets = [
-   *   createWallet("embedded"),
+   *   embeddedWallet(),
    *   createWallet("io.metamask"),
    *   createWallet("com.coinbase.wallet"),
    *   createWallet("me.rainbow"),
