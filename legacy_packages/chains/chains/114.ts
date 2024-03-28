@@ -43,6 +43,9 @@ export default {
     "https://114.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://coston2-api.flare.network/ext/C/rpc",
     "https://flaretestnet-bundler.etherspot.io",
+    "https://01-gravelines-005-01.rpc.tatum.io/ext/bc/C/rpc",
+    "https://02-chicago-005-02.rpc.tatum.io/ext/bc/C/rpc",
+    "https://02-tokyo-005-03.rpc.tatum.io/ext/bc/C/rpc",
     "https://coston2.enosys.global/ext/C/rpc"
   ],
   "shortName": "c2flr",
