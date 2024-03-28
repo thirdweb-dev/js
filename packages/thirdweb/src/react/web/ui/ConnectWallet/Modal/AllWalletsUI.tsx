@@ -57,8 +57,6 @@ function AllWalletsUI(props: {
 
   const walletInfosToShow = sortedWallets.slice(0, itemsToShow);
 
-  console.log({ walletInfosToShow });
-
   return (
     <Container fullHeight flex="column" animate="fadein">
       <Container p="lg">
