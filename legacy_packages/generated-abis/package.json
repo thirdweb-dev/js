@@ -16,7 +16,7 @@
     },
     "./package.json": "./package.json"
   },
-  "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/generated-abis",
+  "repository": "https://github.com/thirdweb-dev/js/tree/main/legacy_packages/generated-abis",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/thirdweb-dev/js/issues"

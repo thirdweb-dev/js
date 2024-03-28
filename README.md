@@ -1,7 +1,7 @@
 <p align="center">
     <br />
     <a href="https://thirdweb.com">
-        <img src="https://github.com/thirdweb-dev/js/blob/main/packages/sdk/logo.svg?raw=true" width="200" alt=""/></a>
+        <img src="https://github.com/thirdweb-dev/js/blob/main/legacy_packages/sdk/logo.svg?raw=true" width="200" alt=""/></a>
     <br />
 </p>
 
@@ -19,7 +19,7 @@
 <p align="center"><strong>All-in-one web3 SDK for Browser, Node and Mobile apps</strong></p>
 
 > [!IMPORTANT]  
-> We rewrote the thirdweb SDK from scratch for performance! Head over to the [Beta version unified SDK](https://github.com/thirdweb-dev/js/tree/beta/packages/thirdweb).
+> We rewrote the thirdweb SDK from scratch for performance! Head over to the [v5 SDK](https://github.com/thirdweb-dev/js/tree/main/packages/thirdweb).
 
 ## Features
 
@@ -32,7 +32,7 @@
 - High level contract extensions for interacting with common standards
 - Automatic ABI resolution
 
-## Library Comparison 
+## Library Comparison
 
 |                                           | thirdweb | Wagmi              | Viem               | Ethers@6 |
 | ----------------------------------------- | -------- | ------------------ | ------------------ | -------- |
@@ -55,22 +55,22 @@
 
 ## Packages
 
-| Package                                  | Description                                                                                                                                                                         
-| -----------------------------------------|-----------------------------------------------------------------------------|
-| [/sdk](./packages/sdk)                   | Best in class web3 SDK for Browser, Node and Mobile apps                    | 
-| [/wallets](./packages/wallets)           | Unified web3 Wallet library to integrate any wallet into your applications. | 
-| [/react](./packages/react)               | Ultimate collection of React hooks for your web3 apps                       |        
-| [/react-native](./packages/react-native) | Ultimate collection of React hooks for your native mobile web3 apps         | 
-| [/auth](./packages/auth)                 | Best in class wallet authentication for Node backends                       | 
-| [/storage](./packages/storage)           | Best in class decentralized storage SDK for Browser and Node                | 
-| [/cli](./packages/cli)                   | Publish and deploy smart contracts without dealing with private keys        | 
-| [/chains](./packages/chains)             | All EVM chain information as JS objects for easy handling                   | 
+| Package                                         | Description                                                                 |
+| ----------------------------------------------- | --------------------------------------------------------------------------- |
+| [/sdk](./legacy_packages/sdk)                   | Best in class web3 SDK for Browser, Node and Mobile apps                    |
+| [/wallets](./legacy_packages/wallets)           | Unified web3 Wallet library to integrate any wallet into your applications. |
+| [/react](./legacy_packages/react)               | Ultimate collection of React hooks for your web3 apps                       |
+| [/react-native](./legacy_packages/react-native) | Ultimate collection of React hooks for your native mobile web3 apps         |
+| [/auth](./legacy_packages/auth)                 | Best in class wallet authentication for Node backends                       |
+| [/storage](./legacy_packages/storage)           | Best in class decentralized storage SDK for Browser and Node                |
+| [/cli](./legacy_packages/cli)                   | Publish and deploy smart contracts without dealing with private keys        |
+| [/chains](./legacy_packages/chains)             | All EVM chain information as JS objects for easy handling                   |
 
 ## Contributing
 
-We welcome contributions from all developers regardless of experience level. If you are interested in contributing, please read our [Contributing Guide](.github/contributing.md) to learn how the repo works, how to test your changes, and how to submit a pull request. 
+We welcome contributions from all developers regardless of experience level. If you are interested in contributing, please read our [Contributing Guide](.github/contributing.md) to learn how the repo works, how to test your changes, and how to submit a pull request.
 
-See our [open source page](https://thirdweb.com/open-source) for more information on our open-source bounties and program. 
+See our [open source page](https://thirdweb.com/open-source) for more information on our open-source bounties and program.
 
 ## Additional Resources
 
@@ -78,8 +78,7 @@ See our [open source page](https://thirdweb.com/open-source) for more informatio
 - [Templates](https://thirdweb.com/templates)
 - [YouTube](https://www.youtube.com/c/thirdweb_)
 
-
-## Support 
+## Support
 
 For help or feedback, please [visit our support site](https://thirdweb.com/support)
 

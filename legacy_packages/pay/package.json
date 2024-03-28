@@ -14,7 +14,7 @@
     },
     "./package.json": "./package.json"
   },
-  "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/pay",
+  "repository": "https://github.com/thirdweb-dev/js/tree/main/legacy_packages/pay",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/thirdweb-dev/js/issues"

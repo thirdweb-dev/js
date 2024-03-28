@@ -32,7 +32,7 @@ export type { SmartContract } from "./contracts/smart-contract";
 // re-export from functions entry point
 export * from "./functions";
 
-//#region @r/packages/sdk/src/evm/core
+//#region @r/legacy_packages/sdk/src/evm/core
 export * from "./core/types";
 export * from "./core/classes/contract-encoder";
 export * from "./core/classes/contract-metadata";
@@ -69,9 +69,9 @@ export * from "./core/classes/airdrop-erc1155";
 export * from "./core/classes/contract-verifier";
 export * from "./core/wallet/user-wallet";
 export * from "./core/sdk";
-//#endregion @r/packages/sdk/src/evm/core
+//#endregion @r/legacy_packages/sdk/src/evm/core
 
-//#region @r/packages/sdk/src/evm/common/*
+//#region @r/legacy_packages/sdk/src/evm/common/*
 export * from "./common/error";
 export * from "./common/snapshots";
 export * from "./common/role";
@@ -153,9 +153,9 @@ export { getCachedAbiForContract } from "./common/abi";
 export * from "./common/ens/resolveEns";
 export * from "./common/ens/resolveAddress";
 export * from "./common/sign";
-//#endregion @r/packages/sdk/src/evm/common/*
+//#endregion @r/legacy_packages/sdk/src/evm/common/*
 
-//#region @r/packages/sdk/src/evm/constants/*
+//#region @r/legacy_packages/sdk/src/evm/constants/*
 export * from "./constants/addresses/LOCAL_NODE_PKEY";
 export * from "./constants/addresses/CONTRACT_ADDRESSES";
 export * from "./constants/addresses/APPROVED_IMPLEMENTATIONS";
@@ -173,17 +173,17 @@ export * from "./constants/currency";
 export * from "./constants/events";
 export * from "./constants/urls";
 export * from "./constants/contract-features";
-//#endregion @r/packages/sdk/src/evm/constants/*
+//#endregion @r/legacy_packages/sdk/src/evm/constants/*
 
-//#region @r/packages/sdk/src/evm/enums
+//#region @r/legacy_packages/sdk/src/evm/enums
 export * from "./enums/marketplace/ListingType";
 export * from "./enums/marketplace/Status";
 export * from "./enums/vote/ProposalState";
 export * from "./enums/vote/Vote";
 export * from "./enums/ClaimEligibility";
-//#endregion @r/packages/sdk/src/evm/enums
+//#endregion @r/legacy_packages/sdk/src/evm/enums
 
-//#region @r/packages/sdk/src/evm/types
+//#region @r/legacy_packages/sdk/src/evm/types
 export * from "./types/claim-conditions/claim-conditions";
 export * from "./types/airdrop/airdrop";
 export * from "./types/marketplace/NewDirectListing";
@@ -212,7 +212,7 @@ export * from "./types/contract";
 export * from "./types/account";
 //#endregion
 
-//#region @r/packages/sdk/src/evm/schema
+//#region @r/legacy_packages/sdk/src/evm/schema
 export * from "./schema/shared/BigNumberSchema";
 export * from "./schema/shared/AddressSchema";
 export * from "./schema/shared/AddressOrEnsSchema";
@@ -244,4 +244,4 @@ export * from "./schema/tokens/token";
 export * from "./schema/tokens/pack";
 export type { DirectListingInputParams } from "./schema/marketplacev3/direct-listings";
 export type { EnglishAuctionInputParams } from "./schema/marketplacev3/english-auctions";
-//#endregion @r/packages/sdk/src/evm/schema
+//#endregion @r/legacy_packages/sdk/src/evm/schema

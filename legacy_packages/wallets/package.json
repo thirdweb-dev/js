@@ -493,7 +493,7 @@
     "./package.json": "./package.json"
   },
   "types": "dist/thirdweb-dev-wallets.cjs.d.ts",
-  "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/wallets",
+  "repository": "https://github.com/thirdweb-dev/js/tree/main/legacy_packages/wallets",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/thirdweb-dev/js/issues"

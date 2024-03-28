@@ -1,6 +1,6 @@
 <p align="center">
 <br />
-<a href="https://thirdweb.com"><img src="https://github.com/thirdweb-dev/js/blob/main/packages/sdk/logo.svg?raw=true" width="200" alt=""/></a>
+<a href="https://thirdweb.com"><img src="https://github.com/thirdweb-dev/js/blob/main/legacy_packages/sdk/logo.svg?raw=true" width="200" alt=""/></a>
 <br />
 </p>
 <h1 align="center">thirdweb TypeScript SDK</h1>
@@ -116,7 +116,7 @@ node my_script.js
 
 #### 3.2 Frontend usage
 
-For frontend applications, head over to our [React Github repo](https://github.com/thirdweb-dev/js/tree/main/packages/react) which shows you how to connect to a user's wallet like Metamask, and automatically instantiate the thirdweb SDK for you.
+For frontend applications, head over to our [React Github repo](https://github.com/thirdweb-dev/js/tree/main/legacy_packages/react) which shows you how to connect to a user's wallet like Metamask, and automatically instantiate the thirdweb SDK for you.
 
 Easiest way to get started on the frontend is using one of our templates in the [thirdweb examples repo](https://github.com/thirdweb-example).
 

@@ -120,7 +120,7 @@ jobs:
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         with:
-          files: ./packages/sdk/coverage/evm/lcov.info,./packages/thirdweb/coverage/lcov.info
+          files: ./legacy_packages/sdk/coverage/evm/lcov.info,./packages/thirdweb/coverage/lcov.info
 
   e2e:
     timeout-minutes: 15
