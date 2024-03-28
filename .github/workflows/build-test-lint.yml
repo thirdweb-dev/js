@@ -161,6 +161,8 @@ jobs:
           CLI_E2E_API_KEY: ${{ secrets.CLI_E2E_API_KEY }}
 
   benchmark:
+    # only run if is not merge_group
+    if: github.event_name != 'merge_group'
     timeout-minutes: 15
     name: "Benchmark"
     runs-on: ubuntu-latest-16
