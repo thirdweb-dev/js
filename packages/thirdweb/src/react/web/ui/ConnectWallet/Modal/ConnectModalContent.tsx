@@ -134,7 +134,6 @@ export const ConnectModalContent = (props: {
           key={wallet.id}
           accountAbstraction={accountAbstraction}
           done={(smartWallet) => {
-            console.log("connected smart wallet");
             handleConnected(smartWallet);
           }}
           personalWallet={wallet}

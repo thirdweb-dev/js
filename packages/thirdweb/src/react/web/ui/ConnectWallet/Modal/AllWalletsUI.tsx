@@ -51,7 +51,6 @@ function AllWalletsUI(props: {
     ? fuseInstance.search(deferredSearchTerm).map((result) => result.item)
     : walletInfos;
 
-  console.log({ walletInfosWithSearch });
   const sortedWallets = sortWallets(walletInfosWithSearch, recommendedWallets);
 
   const { itemsToShow, lastItemRef } = useShowMore<HTMLLIElement>(10, 10);
