@@ -1,23 +1,16 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "withdraw" function.
  */
 
-type WithdrawParamsInternal = {
+export type WithdrawParams = {
   amount: AbiParameterToPrimitiveType<{ type: "uint256"; name: "amount" }>;
 };
 
-export type WithdrawParams = Prettify<
-  | WithdrawParamsInternal
-  | {
-      asyncParams: () => Promise<WithdrawParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x2e1a7d4d" as const;
 const FN_INPUTS = [
   {
@@ -40,7 +33,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodeWithdrawParams(options: WithdrawParamsInternal) {
+export function encodeWithdrawParams(options: WithdrawParams) {
   return encodeAbiParameters(FN_INPUTS, [options.amount]);
 }
 
@@ -54,6 +47,7 @@ export function encodeWithdrawParams(options: WithdrawParamsInternal) {
  * import { withdraw } from "thirdweb/extensions/erc20";
  *
  * const transaction = withdraw({
+ *  contract,
  *  amount: ...,
  * });
  *
@@ -62,7 +56,14 @@ export function encodeWithdrawParams(options: WithdrawParamsInternal) {
  *
  * ```
  */
-export function withdraw(options: BaseTransactionOptions<WithdrawParams>) {
+export function withdraw(
+  options: BaseTransactionOptions<
+    | WithdrawParams
+    | {
+        asyncParams: () => Promise<WithdrawParams>;
+      }
+  >,
+) {
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,

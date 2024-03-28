@@ -1,24 +1,17 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "grantRole" function.
  */
 
-type GrantRoleParamsInternal = {
+export type GrantRoleParams = {
   role: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "role" }>;
   account: AbiParameterToPrimitiveType<{ type: "address"; name: "account" }>;
 };
 
-export type GrantRoleParams = Prettify<
-  | GrantRoleParamsInternal
-  | {
-      asyncParams: () => Promise<GrantRoleParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x2f2ff15d" as const;
 const FN_INPUTS = [
   {
@@ -46,7 +39,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodeGrantRoleParams(options: GrantRoleParamsInternal) {
+export function encodeGrantRoleParams(options: GrantRoleParams) {
   return encodeAbiParameters(FN_INPUTS, [options.role, options.account]);
 }
 
@@ -60,6 +53,7 @@ export function encodeGrantRoleParams(options: GrantRoleParamsInternal) {
  * import { grantRole } from "thirdweb/extensions/common";
  *
  * const transaction = grantRole({
+ *  contract,
  *  role: ...,
  *  account: ...,
  * });
@@ -69,7 +63,14 @@ export function encodeGrantRoleParams(options: GrantRoleParamsInternal) {
  *
  * ```
  */
-export function grantRole(options: BaseTransactionOptions<GrantRoleParams>) {
+export function grantRole(
+  options: BaseTransactionOptions<
+    | GrantRoleParams
+    | {
+        asyncParams: () => Promise<GrantRoleParams>;
+      }
+  >,
+) {
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,

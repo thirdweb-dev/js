@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "transferAndChangeRecoveryFor" function.
  */
 
-type TransferAndChangeRecoveryForParamsInternal = {
+export type TransferAndChangeRecoveryForParams = {
   from: AbiParameterToPrimitiveType<{ type: "address"; name: "from" }>;
   to: AbiParameterToPrimitiveType<{ type: "address"; name: "to" }>;
   recovery: AbiParameterToPrimitiveType<{ type: "address"; name: "recovery" }>;
@@ -24,12 +23,6 @@ type TransferAndChangeRecoveryForParamsInternal = {
   toSig: AbiParameterToPrimitiveType<{ type: "bytes"; name: "toSig" }>;
 };
 
-export type TransferAndChangeRecoveryForParams = Prettify<
-  | TransferAndChangeRecoveryForParamsInternal
-  | {
-      asyncParams: () => Promise<TransferAndChangeRecoveryForParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x4c5cbb34" as const;
 const FN_INPUTS = [
   {
@@ -83,7 +76,7 @@ const FN_OUTPUTS = [] as const;
  * ```
  */
 export function encodeTransferAndChangeRecoveryForParams(
-  options: TransferAndChangeRecoveryForParamsInternal,
+  options: TransferAndChangeRecoveryForParams,
 ) {
   return encodeAbiParameters(FN_INPUTS, [
     options.from,
@@ -106,6 +99,7 @@ export function encodeTransferAndChangeRecoveryForParams(
  * import { transferAndChangeRecoveryFor } from "thirdweb/extensions/farcaster";
  *
  * const transaction = transferAndChangeRecoveryFor({
+ *  contract,
  *  from: ...,
  *  to: ...,
  *  recovery: ...,
@@ -121,7 +115,12 @@ export function encodeTransferAndChangeRecoveryForParams(
  * ```
  */
 export function transferAndChangeRecoveryFor(
-  options: BaseTransactionOptions<TransferAndChangeRecoveryForParams>,
+  options: BaseTransactionOptions<
+    | TransferAndChangeRecoveryForParams
+    | {
+        asyncParams: () => Promise<TransferAndChangeRecoveryForParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

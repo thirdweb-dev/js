@@ -1,23 +1,16 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "stake" function.
  */
 
-type StakeParamsInternal = {
+export type StakeParams = {
   amount: AbiParameterToPrimitiveType<{ type: "uint256"; name: "amount" }>;
 };
 
-export type StakeParams = Prettify<
-  | StakeParamsInternal
-  | {
-      asyncParams: () => Promise<StakeParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0xa694fc3a" as const;
 const FN_INPUTS = [
   {
@@ -40,7 +33,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodeStakeParams(options: StakeParamsInternal) {
+export function encodeStakeParams(options: StakeParams) {
   return encodeAbiParameters(FN_INPUTS, [options.amount]);
 }
 
@@ -54,6 +47,7 @@ export function encodeStakeParams(options: StakeParamsInternal) {
  * import { stake } from "thirdweb/extensions/erc20";
  *
  * const transaction = stake({
+ *  contract,
  *  amount: ...,
  * });
  *
@@ -62,7 +56,14 @@ export function encodeStakeParams(options: StakeParamsInternal) {
  *
  * ```
  */
-export function stake(options: BaseTransactionOptions<StakeParams>) {
+export function stake(
+  options: BaseTransactionOptions<
+    | StakeParams
+    | {
+        asyncParams: () => Promise<StakeParams>;
+      }
+  >,
+) {
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,

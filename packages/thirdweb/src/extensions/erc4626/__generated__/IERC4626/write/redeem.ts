@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "redeem" function.
  */
 
-type RedeemParamsInternal = {
+export type RedeemParams = {
   shares: AbiParameterToPrimitiveType<{
     name: "shares";
     type: "uint256";
@@ -26,12 +25,6 @@ type RedeemParamsInternal = {
   }>;
 };
 
-export type RedeemParams = Prettify<
-  | RedeemParamsInternal
-  | {
-      asyncParams: () => Promise<RedeemParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0xba087652" as const;
 const FN_INPUTS = [
   {
@@ -73,7 +66,7 @@ const FN_OUTPUTS = [
  * });
  * ```
  */
-export function encodeRedeemParams(options: RedeemParamsInternal) {
+export function encodeRedeemParams(options: RedeemParams) {
   return encodeAbiParameters(FN_INPUTS, [
     options.shares,
     options.receiver,
@@ -91,6 +84,7 @@ export function encodeRedeemParams(options: RedeemParamsInternal) {
  * import { redeem } from "thirdweb/extensions/erc4626";
  *
  * const transaction = redeem({
+ *  contract,
  *  shares: ...,
  *  receiver: ...,
  *  owner: ...,
@@ -101,7 +95,14 @@ export function encodeRedeemParams(options: RedeemParamsInternal) {
  *
  * ```
  */
-export function redeem(options: BaseTransactionOptions<RedeemParams>) {
+export function redeem(
+  options: BaseTransactionOptions<
+    | RedeemParams
+    | {
+        asyncParams: () => Promise<RedeemParams>;
+      }
+  >,
+) {
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,

@@ -1,23 +1,16 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "setAppURI" function.
  */
 
-type SetAppURIParamsInternal = {
+export type SetAppURIParams = {
   uri: AbiParameterToPrimitiveType<{ type: "string"; name: "_uri" }>;
 };
 
-export type SetAppURIParams = Prettify<
-  | SetAppURIParamsInternal
-  | {
-      asyncParams: () => Promise<SetAppURIParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0xfea18082" as const;
 const FN_INPUTS = [
   {
@@ -40,7 +33,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodeSetAppURIParams(options: SetAppURIParamsInternal) {
+export function encodeSetAppURIParams(options: SetAppURIParams) {
   return encodeAbiParameters(FN_INPUTS, [options.uri]);
 }
 
@@ -54,6 +47,7 @@ export function encodeSetAppURIParams(options: SetAppURIParamsInternal) {
  * import { setAppURI } from "thirdweb/extensions/thirdweb";
  *
  * const transaction = setAppURI({
+ *  contract,
  *  uri: ...,
  * });
  *
@@ -62,7 +56,14 @@ export function encodeSetAppURIParams(options: SetAppURIParamsInternal) {
  *
  * ```
  */
-export function setAppURI(options: BaseTransactionOptions<SetAppURIParams>) {
+export function setAppURI(
+  options: BaseTransactionOptions<
+    | SetAppURIParams
+    | {
+        asyncParams: () => Promise<SetAppURIParams>;
+      }
+  >,
+) {
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,

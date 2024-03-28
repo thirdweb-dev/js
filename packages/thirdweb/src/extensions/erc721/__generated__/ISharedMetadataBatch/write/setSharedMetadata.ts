@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "setSharedMetadata" function.
  */
 
-type SetSharedMetadataParamsInternal = {
+export type SetSharedMetadataParams = {
   metadata: AbiParameterToPrimitiveType<{
     type: "tuple";
     name: "metadata";
@@ -22,12 +21,6 @@ type SetSharedMetadataParamsInternal = {
   id: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "id" }>;
 };
 
-export type SetSharedMetadataParams = Prettify<
-  | SetSharedMetadataParamsInternal
-  | {
-      asyncParams: () => Promise<SetSharedMetadataParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x696b0c1a" as const;
 const FN_INPUTS = [
   {
@@ -74,7 +67,7 @@ const FN_OUTPUTS = [] as const;
  * ```
  */
 export function encodeSetSharedMetadataParams(
-  options: SetSharedMetadataParamsInternal,
+  options: SetSharedMetadataParams,
 ) {
   return encodeAbiParameters(FN_INPUTS, [options.metadata, options.id]);
 }
@@ -89,6 +82,7 @@ export function encodeSetSharedMetadataParams(
  * import { setSharedMetadata } from "thirdweb/extensions/erc721";
  *
  * const transaction = setSharedMetadata({
+ *  contract,
  *  metadata: ...,
  *  id: ...,
  * });
@@ -99,7 +93,12 @@ export function encodeSetSharedMetadataParams(
  * ```
  */
 export function setSharedMetadata(
-  options: BaseTransactionOptions<SetSharedMetadataParams>,
+  options: BaseTransactionOptions<
+    | SetSharedMetadataParams
+    | {
+        asyncParams: () => Promise<SetSharedMetadataParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

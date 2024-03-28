@@ -1,26 +1,19 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "addStake" function.
  */
 
-type AddStakeParamsInternal = {
+export type AddStakeParams = {
   unstakeDelaySec: AbiParameterToPrimitiveType<{
     type: "uint32";
     name: "_unstakeDelaySec";
   }>;
 };
 
-export type AddStakeParams = Prettify<
-  | AddStakeParamsInternal
-  | {
-      asyncParams: () => Promise<AddStakeParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x0396cb60" as const;
 const FN_INPUTS = [
   {
@@ -43,7 +36,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodeAddStakeParams(options: AddStakeParamsInternal) {
+export function encodeAddStakeParams(options: AddStakeParams) {
   return encodeAbiParameters(FN_INPUTS, [options.unstakeDelaySec]);
 }
 
@@ -57,6 +50,7 @@ export function encodeAddStakeParams(options: AddStakeParamsInternal) {
  * import { addStake } from "thirdweb/extensions/erc4337";
  *
  * const transaction = addStake({
+ *  contract,
  *  unstakeDelaySec: ...,
  * });
  *
@@ -65,7 +59,14 @@ export function encodeAddStakeParams(options: AddStakeParamsInternal) {
  *
  * ```
  */
-export function addStake(options: BaseTransactionOptions<AddStakeParams>) {
+export function addStake(
+  options: BaseTransactionOptions<
+    | AddStakeParams
+    | {
+        asyncParams: () => Promise<AddStakeParams>;
+      }
+  >,
+) {
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,

@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "makeOffer" function.
  */
 
-type MakeOfferParamsInternal = {
+export type MakeOfferParams = {
   params: AbiParameterToPrimitiveType<{
     type: "tuple";
     name: "_params";
@@ -23,12 +22,6 @@ type MakeOfferParamsInternal = {
   }>;
 };
 
-export type MakeOfferParams = Prettify<
-  | MakeOfferParamsInternal
-  | {
-      asyncParams: () => Promise<MakeOfferParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x016767fa" as const;
 const FN_INPUTS = [
   {
@@ -82,7 +75,7 @@ const FN_OUTPUTS = [
  * });
  * ```
  */
-export function encodeMakeOfferParams(options: MakeOfferParamsInternal) {
+export function encodeMakeOfferParams(options: MakeOfferParams) {
   return encodeAbiParameters(FN_INPUTS, [options.params]);
 }
 
@@ -96,6 +89,7 @@ export function encodeMakeOfferParams(options: MakeOfferParamsInternal) {
  * import { makeOffer } from "thirdweb/extensions/marketplace";
  *
  * const transaction = makeOffer({
+ *  contract,
  *  params: ...,
  * });
  *
@@ -104,7 +98,14 @@ export function encodeMakeOfferParams(options: MakeOfferParamsInternal) {
  *
  * ```
  */
-export function makeOffer(options: BaseTransactionOptions<MakeOfferParams>) {
+export function makeOffer(
+  options: BaseTransactionOptions<
+    | MakeOfferParams
+    | {
+        asyncParams: () => Promise<MakeOfferParams>;
+      }
+  >,
+) {
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,

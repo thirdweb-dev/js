@@ -1,26 +1,19 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "delegate" function.
  */
 
-type DelegateParamsInternal = {
+export type DelegateParams = {
   delegatee: AbiParameterToPrimitiveType<{
     type: "address";
     name: "delegatee";
   }>;
 };
 
-export type DelegateParams = Prettify<
-  | DelegateParamsInternal
-  | {
-      asyncParams: () => Promise<DelegateParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x5c19a95c" as const;
 const FN_INPUTS = [
   {
@@ -43,7 +36,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodeDelegateParams(options: DelegateParamsInternal) {
+export function encodeDelegateParams(options: DelegateParams) {
   return encodeAbiParameters(FN_INPUTS, [options.delegatee]);
 }
 
@@ -57,6 +50,7 @@ export function encodeDelegateParams(options: DelegateParamsInternal) {
  * import { delegate } from "thirdweb/extensions/erc20";
  *
  * const transaction = delegate({
+ *  contract,
  *  delegatee: ...,
  * });
  *
@@ -65,7 +59,14 @@ export function encodeDelegateParams(options: DelegateParamsInternal) {
  *
  * ```
  */
-export function delegate(options: BaseTransactionOptions<DelegateParams>) {
+export function delegate(
+  options: BaseTransactionOptions<
+    | DelegateParams
+    | {
+        asyncParams: () => Promise<DelegateParams>;
+      }
+  >,
+) {
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,

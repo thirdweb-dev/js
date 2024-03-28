@@ -1,25 +1,18 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "createPool" function.
  */
 
-type CreatePoolParamsInternal = {
+export type CreatePoolParams = {
   tokenA: AbiParameterToPrimitiveType<{ type: "address"; name: "tokenA" }>;
   tokenB: AbiParameterToPrimitiveType<{ type: "address"; name: "tokenB" }>;
   fee: AbiParameterToPrimitiveType<{ type: "uint24"; name: "fee" }>;
 };
 
-export type CreatePoolParams = Prettify<
-  | CreatePoolParamsInternal
-  | {
-      asyncParams: () => Promise<CreatePoolParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0xa1671295" as const;
 const FN_INPUTS = [
   {
@@ -57,7 +50,7 @@ const FN_OUTPUTS = [
  * });
  * ```
  */
-export function encodeCreatePoolParams(options: CreatePoolParamsInternal) {
+export function encodeCreatePoolParams(options: CreatePoolParams) {
   return encodeAbiParameters(FN_INPUTS, [
     options.tokenA,
     options.tokenB,
@@ -75,6 +68,7 @@ export function encodeCreatePoolParams(options: CreatePoolParamsInternal) {
  * import { createPool } from "thirdweb/extensions/uniswap";
  *
  * const transaction = createPool({
+ *  contract,
  *  tokenA: ...,
  *  tokenB: ...,
  *  fee: ...,
@@ -85,7 +79,14 @@ export function encodeCreatePoolParams(options: CreatePoolParamsInternal) {
  *
  * ```
  */
-export function createPool(options: BaseTransactionOptions<CreatePoolParams>) {
+export function createPool(
+  options: BaseTransactionOptions<
+    | CreatePoolParams
+    | {
+        asyncParams: () => Promise<CreatePoolParams>;
+      }
+  >,
+) {
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,

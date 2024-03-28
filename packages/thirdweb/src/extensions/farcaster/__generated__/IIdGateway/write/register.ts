@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "register" function.
  */
 
-type RegisterParamsInternal = {
+export type RegisterParams = {
   recovery: AbiParameterToPrimitiveType<{ type: "address"; name: "recovery" }>;
   extraStorage: AbiParameterToPrimitiveType<{
     type: "uint256";
@@ -16,12 +15,6 @@ type RegisterParamsInternal = {
   }>;
 };
 
-export type RegisterParams = Prettify<
-  | RegisterParamsInternal
-  | {
-      asyncParams: () => Promise<RegisterParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x6d705ebb" as const;
 const FN_INPUTS = [
   {
@@ -58,7 +51,7 @@ const FN_OUTPUTS = [
  * });
  * ```
  */
-export function encodeRegisterParams(options: RegisterParamsInternal) {
+export function encodeRegisterParams(options: RegisterParams) {
   return encodeAbiParameters(FN_INPUTS, [
     options.recovery,
     options.extraStorage,
@@ -75,6 +68,7 @@ export function encodeRegisterParams(options: RegisterParamsInternal) {
  * import { register } from "thirdweb/extensions/farcaster";
  *
  * const transaction = register({
+ *  contract,
  *  recovery: ...,
  *  extraStorage: ...,
  * });
@@ -84,7 +78,14 @@ export function encodeRegisterParams(options: RegisterParamsInternal) {
  *
  * ```
  */
-export function register(options: BaseTransactionOptions<RegisterParams>) {
+export function register(
+  options: BaseTransactionOptions<
+    | RegisterParams
+    | {
+        asyncParams: () => Promise<RegisterParams>;
+      }
+  >,
+) {
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,

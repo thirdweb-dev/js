@@ -1,24 +1,17 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "approve" function.
  */
 
-type ApproveParamsInternal = {
+export type ApproveParams = {
   spender: AbiParameterToPrimitiveType<{ type: "address"; name: "spender" }>;
   value: AbiParameterToPrimitiveType<{ type: "uint256"; name: "value" }>;
 };
 
-export type ApproveParams = Prettify<
-  | ApproveParamsInternal
-  | {
-      asyncParams: () => Promise<ApproveParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x095ea7b3" as const;
 const FN_INPUTS = [
   {
@@ -50,7 +43,7 @@ const FN_OUTPUTS = [
  * });
  * ```
  */
-export function encodeApproveParams(options: ApproveParamsInternal) {
+export function encodeApproveParams(options: ApproveParams) {
   return encodeAbiParameters(FN_INPUTS, [options.spender, options.value]);
 }
 
@@ -64,6 +57,7 @@ export function encodeApproveParams(options: ApproveParamsInternal) {
  * import { approve } from "thirdweb/extensions/erc20";
  *
  * const transaction = approve({
+ *  contract,
  *  spender: ...,
  *  value: ...,
  * });
@@ -73,7 +67,14 @@ export function encodeApproveParams(options: ApproveParamsInternal) {
  *
  * ```
  */
-export function approve(options: BaseTransactionOptions<ApproveParams>) {
+export function approve(
+  options: BaseTransactionOptions<
+    | ApproveParams
+    | {
+        asyncParams: () => Promise<ApproveParams>;
+      }
+  >,
+) {
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,

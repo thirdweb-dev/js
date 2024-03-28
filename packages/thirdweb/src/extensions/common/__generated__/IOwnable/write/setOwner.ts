@@ -1,23 +1,16 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "setOwner" function.
  */
 
-type SetOwnerParamsInternal = {
+export type SetOwnerParams = {
   newOwner: AbiParameterToPrimitiveType<{ type: "address"; name: "_newOwner" }>;
 };
 
-export type SetOwnerParams = Prettify<
-  | SetOwnerParamsInternal
-  | {
-      asyncParams: () => Promise<SetOwnerParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x13af4035" as const;
 const FN_INPUTS = [
   {
@@ -40,7 +33,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodeSetOwnerParams(options: SetOwnerParamsInternal) {
+export function encodeSetOwnerParams(options: SetOwnerParams) {
   return encodeAbiParameters(FN_INPUTS, [options.newOwner]);
 }
 
@@ -54,6 +47,7 @@ export function encodeSetOwnerParams(options: SetOwnerParamsInternal) {
  * import { setOwner } from "thirdweb/extensions/common";
  *
  * const transaction = setOwner({
+ *  contract,
  *  newOwner: ...,
  * });
  *
@@ -62,7 +56,14 @@ export function encodeSetOwnerParams(options: SetOwnerParamsInternal) {
  *
  * ```
  */
-export function setOwner(options: BaseTransactionOptions<SetOwnerParams>) {
+export function setOwner(
+  options: BaseTransactionOptions<
+    | SetOwnerParams
+    | {
+        asyncParams: () => Promise<SetOwnerParams>;
+      }
+  >,
+) {
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,

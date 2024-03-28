@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "bidInAuction" function.
  */
 
-type BidInAuctionParamsInternal = {
+export type BidInAuctionParams = {
   auctionId: AbiParameterToPrimitiveType<{
     type: "uint256";
     name: "_auctionId";
@@ -19,12 +18,6 @@ type BidInAuctionParamsInternal = {
   }>;
 };
 
-export type BidInAuctionParams = Prettify<
-  | BidInAuctionParamsInternal
-  | {
-      asyncParams: () => Promise<BidInAuctionParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x0858e5ad" as const;
 const FN_INPUTS = [
   {
@@ -52,7 +45,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodeBidInAuctionParams(options: BidInAuctionParamsInternal) {
+export function encodeBidInAuctionParams(options: BidInAuctionParams) {
   return encodeAbiParameters(FN_INPUTS, [options.auctionId, options.bidAmount]);
 }
 
@@ -66,6 +59,7 @@ export function encodeBidInAuctionParams(options: BidInAuctionParamsInternal) {
  * import { bidInAuction } from "thirdweb/extensions/marketplace";
  *
  * const transaction = bidInAuction({
+ *  contract,
  *  auctionId: ...,
  *  bidAmount: ...,
  * });
@@ -76,7 +70,12 @@ export function encodeBidInAuctionParams(options: BidInAuctionParamsInternal) {
  * ```
  */
 export function bidInAuction(
-  options: BaseTransactionOptions<BidInAuctionParams>,
+  options: BaseTransactionOptions<
+    | BidInAuctionParams
+    | {
+        asyncParams: () => Promise<BidInAuctionParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,
