@@ -261,7 +261,10 @@ export async function checkVerificationStatus(
 
         const data = await result.json();
 
-        if (data?.result !== VerificationStatus.PENDING) {
+        if (
+          data?.result !== VerificationStatus.PENDING &&
+          data?.result !== VerificationStatus.IN_PROGRESS
+        ) {
           clearInterval(intervalId);
           resolve(data);
         }

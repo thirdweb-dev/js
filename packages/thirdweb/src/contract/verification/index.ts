@@ -145,6 +145,7 @@ const VerificationStatus = {
   FAILED: "Fail - Unable to verify",
   SUCCESS: "Pass - Verified",
   PENDING: "Pending in queue",
+  IN_PROGRESS: "In progress",
   ALREADY_VERIFIED: "Contract source code already verified",
   AUTOMATICALLY_VERIFIED: "Already Verified",
 };
@@ -185,7 +186,10 @@ export async function checkVerificationStatus(
 
         const data = await result.json();
 
-        if (data?.result !== VerificationStatus.PENDING) {
+        if (
+          data?.result !== VerificationStatus.PENDING &&
+          data?.result !== VerificationStatus.IN_PROGRESS
+        ) {
           clearInterval(intervalId);
           resolve(data);
         }
