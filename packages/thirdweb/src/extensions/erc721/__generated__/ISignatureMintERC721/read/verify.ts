@@ -9,17 +9,16 @@ import type { Hex } from "../../../../../utils/encoding/hex.js";
  * Represents the parameters for the "verify" function.
  */
 export type VerifyParams = {
-  req: AbiParameterToPrimitiveType<{
+  payload: AbiParameterToPrimitiveType<{
     type: "tuple";
-    name: "req";
+    name: "payload";
     components: [
       { type: "address"; name: "to" },
       { type: "address"; name: "royaltyRecipient" },
       { type: "uint256"; name: "royaltyBps" },
       { type: "address"; name: "primarySaleRecipient" },
       { type: "string"; name: "uri" },
-      { type: "uint256"; name: "quantity" },
-      { type: "uint256"; name: "pricePerToken" },
+      { type: "uint256"; name: "price" },
       { type: "address"; name: "currency" },
       { type: "uint128"; name: "validityStartTimestamp" },
       { type: "uint128"; name: "validityEndTimestamp" },
@@ -29,11 +28,11 @@ export type VerifyParams = {
   signature: AbiParameterToPrimitiveType<{ type: "bytes"; name: "signature" }>;
 };
 
-const FN_SELECTOR = "0x252e82e8" as const;
+const FN_SELECTOR = "0xde903774" as const;
 const FN_INPUTS = [
   {
     type: "tuple",
-    name: "req",
+    name: "payload",
     components: [
       {
         type: "address",
@@ -57,11 +56,7 @@ const FN_INPUTS = [
       },
       {
         type: "uint256",
-        name: "quantity",
-      },
-      {
-        type: "uint256",
-        name: "pricePerToken",
+        name: "price",
       },
       {
         type: "address",
@@ -106,13 +101,13 @@ const FN_OUTPUTS = [
  * ```
  * import { encodeVerifyParams } "thirdweb/extensions/erc721";
  * const result = encodeVerifyParams({
- *  req: ...,
+ *  payload: ...,
  *  signature: ...,
  * });
  * ```
  */
 export function encodeVerifyParams(options: VerifyParams) {
-  return encodeAbiParameters(FN_INPUTS, [options.req, options.signature]);
+  return encodeAbiParameters(FN_INPUTS, [options.payload, options.signature]);
 }
 
 /**
@@ -140,7 +135,7 @@ export function decodeVerifyResult(result: Hex) {
  * import { verify } from "thirdweb/extensions/erc721";
  *
  * const result = await verify({
- *  req: ...,
+ *  payload: ...,
  *  signature: ...,
  * });
  *
@@ -150,6 +145,6 @@ export async function verify(options: BaseTransactionOptions<VerifyParams>) {
   return readContract({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params: [options.req, options.signature],
+    params: [options.payload, options.signature],
   });
 }

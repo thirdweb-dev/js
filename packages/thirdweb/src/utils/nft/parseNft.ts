@@ -1,3 +1,22 @@
+import type { FileOrBufferOrString } from "../../storage/upload/types.js";
+import type { Prettify } from "../type-utils.js";
+
+/**
+ * Represents the input data for creating an NFT (Non-Fungible Token).
+ */
+export type NFTInput = Prettify<
+  {
+    name?: string;
+    description?: string;
+    image?: FileOrBufferOrString;
+    animation_url?: FileOrBufferOrString;
+    external_url?: FileOrBufferOrString;
+    background_color?: string;
+    // TODO check if we truly need both of these?
+    properties?: Record<string, unknown> | Array<Record<string, unknown>>;
+  } & Record<string, unknown>
+>;
+
 export type NFTMetadata = {
   id: bigint;
   uri: string;

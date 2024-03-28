@@ -20,13 +20,14 @@ export async function extractError<abi extends Abi>(args: {
     };
     if (errorObj.data) {
       if (errorObj.data !== "0x") {
+        let abi = contract?.abi;
+        if (contract && !abi) {
+          abi = await resolveContractAbi(contract).catch(() => undefined);
+        }
+        console.log("abi", abi);
         const parsedError = decodeErrorResult({
           data: errorObj.data,
-          abi: contract?.abi
-            ? contract.abi
-            : contract
-              ? await resolveContractAbi(contract)
-              : undefined,
+          abi,
         });
         return new TransactionError(
           `${parsedError.errorName}${

@@ -1,6 +1,5 @@
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { nextTokenIdToClaim } from "../__generated__/IDrop/read/nextTokenIdToClaim.js";
-import { totalMinted } from "../__generated__/ISignatureDropERC721/read/totalMinted.js";
 
 /**
  * Retrieves the total claimed supply of ERC721 tokens.
@@ -21,14 +20,5 @@ import { totalMinted } from "../__generated__/ISignatureDropERC721/read/totalMin
 export async function getTotalClaimedSupply(
   options: BaseTransactionOptions,
 ): Promise<bigint> {
-  const results = await Promise.allSettled([
-    totalMinted(options),
-    nextTokenIdToClaim(options),
-  ]);
-  for (const result of results) {
-    if (result.status === "fulfilled") {
-      return result.value;
-    }
-  }
-  throw new Error("Failed to get total claimed supply");
+  return nextTokenIdToClaim(options);
 }
