@@ -19,7 +19,7 @@ jobs:
 
       - name: Run chains sync
         run: bun run db:sync
-        working-directory: ./packages/chains
+        working-directory: ./legacy_packages/chains
 
       - name: Check for Changes
         id: git-check
