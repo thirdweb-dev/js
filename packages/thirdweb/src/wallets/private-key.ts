@@ -1,15 +1,23 @@
 import type {
   HDAccount,
-  PrivateKeyAccount,
-  Hex,
+  PrivateKeyAccount as ViemPrivateKeyAccount,
   TransactionSerializable,
+  TypedData,
+  TypedDataDefinition,
+  SignableMessage,
 } from "viem";
-import { privateKeyToAccount } from "viem/accounts";
+import { publicKeyToAddress } from "viem/utils";
 import type { ThirdwebClient } from "../client/client.js";
 import { defineChain } from "../chains/utils.js";
 import { getRpcClient } from "../rpc/rpc.js";
 import { eth_sendRawTransaction } from "../rpc/actions/eth_sendRawTransaction.js";
 import type { Account } from "./interfaces/wallet.js";
+import { toHex, type Hex } from "../utils/encoding/hex.js";
+import { secp256k1 } from "@noble/curves/secp256k1";
+import { signTransaction } from "../transaction/actions/sign-transaction.js";
+import { signMessage } from "../utils/signatures/sign-message.js";
+import { signTypedData } from "../utils/signatures/sign-typed-data.js";
+import type { Prettify } from "../utils/type-utils.js";
 
 export type PrivateKeyAccountOptions = {
   /**
@@ -41,6 +49,15 @@ export type PrivateKeyAccountOptions = {
   privateKey: string;
 };
 
+export type PrivateKeyAccount = Prettify<
+  Account & {
+    publicKey: Hex;
+    signTransaction: (tx: TransactionSerializable) => Promise<Hex>;
+  }
+>;
+
+export const privateKeyToAccount = privateKeyAccount;
+
 /**
  * Get an `Account` object from a private key.
  * @param options - The options for `privateKeyAccount`
@@ -57,12 +74,65 @@ export type PrivateKeyAccountOptions = {
  * ```
  * @wallet
  */
-export function privateKeyAccount(options: PrivateKeyAccountOptions): Account {
-  if (!options.privateKey.startsWith("0x")) {
-    options.privateKey = "0x" + options.privateKey;
-  }
-  const viemAccount = privateKeyToAccount(options.privateKey as Hex);
-  return viemToThirdwebAccount(viemAccount, options.client);
+export function privateKeyAccount(
+  options: PrivateKeyAccountOptions,
+): PrivateKeyAccount {
+  const { client } = options;
+  const privateKey = `0x${options.privateKey.replace(/^0x/, "")}` satisfies Hex;
+
+  const publicKey = toHex(secp256k1.getPublicKey(privateKey.slice(2), false));
+  const address = publicKeyToAddress(publicKey); // TODO: Implement publicKeyToAddress natively (will need checksumAddress downstream)
+
+  return {
+    address,
+    publicKey,
+    sendTransaction: async (
+      // TODO: figure out how we would pass our "chain" object in here?
+      // maybe we *do* actually have to take in a tx object instead of the raw tx?
+      tx: TransactionSerializable & { chainId: number },
+    ) => {
+      const rpcRequest = getRpcClient({
+        client: client,
+        chain: defineChain(tx.chainId),
+      });
+      const signedTx = signTransaction({
+        transaction: tx,
+        privateKey,
+      });
+      const transactionHash = await eth_sendRawTransaction(
+        rpcRequest,
+        signedTx,
+      );
+      return {
+        transactionHash,
+      };
+    },
+    signMessage: async ({ message }: { message: SignableMessage }) => {
+      return signMessage({
+        message,
+        privateKey,
+      });
+    },
+    signTypedData: async <
+      const typedData extends TypedData | Record<string, unknown>,
+      primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,
+    >(
+      _typedData: TypedDataDefinition<typedData, primaryType>,
+    ) => {
+      return signTypedData({
+        ..._typedData,
+        privateKey,
+      });
+    },
+    signTransaction: async (tx: TransactionSerializable) => {
+      return signTransaction({
+        transaction: tx,
+        privateKey,
+      });
+    },
+    // TODO: estimateGas fn
+    // TODO: sendBatchTransaction fn
+  } satisfies PrivateKeyAccount;
 }
 
 export type MnemonicAccountOptions = {
@@ -93,10 +163,10 @@ export type MnemonicAccountOptions = {
  * @internal
  */
 export function viemToThirdwebAccount(
-  viemAccount: HDAccount | PrivateKeyAccount,
+  viemAccount: HDAccount | ViemPrivateKeyAccount,
   client: ThirdwebClient,
-) {
-  const account: Account = {
+): Account {
+  const account = {
     address: viemAccount.address,
     sendTransaction: async (
       // TODO: figure out how we would pass our "chain" object in here?

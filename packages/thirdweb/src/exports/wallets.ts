@@ -19,6 +19,7 @@ export {
 // private-key
 export {
   privateKeyAccount,
+  privateKeyToAccount,
   type PrivateKeyAccountOptions,
 } from "../wallets/private-key.js";
 
