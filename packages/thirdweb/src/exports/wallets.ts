@@ -5,7 +5,6 @@ export {
 } from "../wallets/create-wallet.js";
 
 export type { Wallet, Account } from "../wallets/interfaces/wallet.js";
-
 export type { ConnectionStatus } from "../wallets/manager/index.js";
 
 export {
@@ -59,3 +58,6 @@ export type {
   WalletEmitter,
   WalletEmitterEvents,
 } from "../wallets/wallet-emitter.js";
+
+export { getAllWalletsList } from "../wallets/getAllWalletsList.js";
+export { getWalletInfo } from "../wallets/__generated__/getWalletInfo.js";

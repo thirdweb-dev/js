@@ -30,7 +30,7 @@ export type Wallet<TWalletId extends WalletId = WalletId> = {
   id: TWalletId;
   getChain(): Chain | undefined;
   getAccount(): Account | undefined;
-  // connetion management methods
+  // connection management methods
   autoConnect(options: WalletAutoConnectionOption<TWalletId>): Promise<Account>;
   connect(options: WalletConnectionOption<TWalletId>): Promise<Account>;
   disconnect(): Promise<void>;
