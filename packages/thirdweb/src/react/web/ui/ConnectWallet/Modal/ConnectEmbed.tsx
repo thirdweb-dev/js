@@ -83,7 +83,7 @@ export type ConnectEmbedProps = {
    * import { createWallet, embeddedWallet } from "thirdweb/wallets";
    *
    * const wallets = [
-   *   createWallet("embedded"),
+   *   embeddedWallet(),
    *   createWallet("io.metamask"),
    *   createWallet("com.coinbase.wallet"),
    *   createWallet("me.rainbow"),
@@ -103,7 +103,7 @@ export type ConnectEmbedProps = {
    *
    * ```tsx
    * const defaultWallets = [
-   *  createWallet("embedded"),
+   *  embeddedWallet(),
    *  createWallet("io.metamask"),
    *  createWallet("com.coinbase.wallet"),
    *  createWallet("me.rainbow"),

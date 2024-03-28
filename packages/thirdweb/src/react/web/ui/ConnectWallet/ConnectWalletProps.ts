@@ -323,7 +323,7 @@ export type ConnectButtonProps = {
    *
    * ```tsx
    * const defaultWallets = [
-   *  createWallet("embedded"),
+   *  embeddedWallet(),
    *  createWallet("io.metamask"),
    *  createWallet("com.coinbase.wallet"),
    *  createWallet("me.rainbow"),
