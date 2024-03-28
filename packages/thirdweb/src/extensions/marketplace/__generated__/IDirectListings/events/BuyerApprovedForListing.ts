@@ -23,7 +23,7 @@ export type BuyerApprovedForListingEventFilters = Partial<{
  * @returns The prepared event object.
  * @extension MARKETPLACE
  * @example
- * ```
+ * ```ts
  * import { getContractEvents } from "thirdweb";
  * import { buyerApprovedForListingEvent } from "thirdweb/extensions/marketplace";
  *

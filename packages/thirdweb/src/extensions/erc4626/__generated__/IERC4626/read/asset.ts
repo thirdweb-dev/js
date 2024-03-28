@@ -20,7 +20,7 @@ const FN_OUTPUTS = [
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC4626
  * @example
- * ```
+ * ```ts
  * import { decodeAssetResult } from "thirdweb/extensions/erc4626";
  * const result = decodeAssetResult("...");
  * ```
@@ -35,7 +35,7 @@ export function decodeAssetResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC4626
  * @example
- * ```
+ * ```ts
  * import { asset } from "thirdweb/extensions/erc4626";
  *
  * const result = await asset();

@@ -31,7 +31,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { encodeTokenURIParams } "thirdweb/extensions/erc721";
  * const result = encodeTokenURIParams({
  *  tokenId: ...,
@@ -48,7 +48,7 @@ export function encodeTokenURIParams(options: TokenURIParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { decodeTokenURIResult } from "thirdweb/extensions/erc721";
  * const result = decodeTokenURIResult("...");
  * ```
@@ -63,7 +63,7 @@ export function decodeTokenURIResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { tokenURI } from "thirdweb/extensions/erc721";
  *
  * const result = await tokenURI({

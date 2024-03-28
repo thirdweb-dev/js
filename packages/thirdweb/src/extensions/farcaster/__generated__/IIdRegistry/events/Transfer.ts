@@ -23,7 +23,7 @@ export type TransferEventFilters = Partial<{
  * @returns The prepared event object.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { getContractEvents } from "thirdweb";
  * import { transferEvent } from "thirdweb/extensions/farcaster";
  *

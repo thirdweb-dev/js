@@ -29,7 +29,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { encodeSetPrimarySaleRecipientParams } "thirdweb/extensions/common";
  * const result = encodeSetPrimarySaleRecipientParams({
  *  saleRecipient: ...,
@@ -48,7 +48,7 @@ export function encodeSetPrimarySaleRecipientParams(
  * @returns A prepared transaction object.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { setPrimarySaleRecipient } from "thirdweb/extensions/common";
  *
  * const transaction = setPrimarySaleRecipient({

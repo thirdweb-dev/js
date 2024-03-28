@@ -95,7 +95,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension MARKETPLACE
  * @example
- * ```
+ * ```ts
  * import { encodeGetAllValidAuctionsParams } "thirdweb/extensions/marketplace";
  * const result = encodeGetAllValidAuctionsParams({
  *  startId: ...,
@@ -115,7 +115,7 @@ export function encodeGetAllValidAuctionsParams(
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension MARKETPLACE
  * @example
- * ```
+ * ```ts
  * import { decodeGetAllValidAuctionsResult } from "thirdweb/extensions/marketplace";
  * const result = decodeGetAllValidAuctionsResult("...");
  * ```
@@ -130,7 +130,7 @@ export function decodeGetAllValidAuctionsResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension MARKETPLACE
  * @example
- * ```
+ * ```ts
  * import { getAllValidAuctions } from "thirdweb/extensions/marketplace";
  *
  * const result = await getAllValidAuctions({

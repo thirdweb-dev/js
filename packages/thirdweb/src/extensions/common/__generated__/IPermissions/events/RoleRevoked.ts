@@ -28,7 +28,7 @@ export type RoleRevokedEventFilters = Partial<{
  * @returns The prepared event object.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { getContractEvents } from "thirdweb";
  * import { roleRevokedEvent } from "thirdweb/extensions/common";
  *

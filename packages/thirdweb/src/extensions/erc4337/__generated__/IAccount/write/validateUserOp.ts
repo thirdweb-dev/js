@@ -109,7 +109,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { encodeValidateUserOpParams } "thirdweb/extensions/erc4337";
  * const result = encodeValidateUserOpParams({
  *  userOp: ...,
@@ -132,7 +132,7 @@ export function encodeValidateUserOpParams(options: ValidateUserOpParams) {
  * @returns A prepared transaction object.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { validateUserOp } from "thirdweb/extensions/erc4337";
  *
  * const transaction = validateUserOp({

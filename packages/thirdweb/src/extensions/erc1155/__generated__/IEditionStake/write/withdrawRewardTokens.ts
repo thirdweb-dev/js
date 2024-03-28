@@ -26,7 +26,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension ERC1155
  * @example
- * ```
+ * ```ts
  * import { encodeWithdrawRewardTokensParams } "thirdweb/extensions/erc1155";
  * const result = encodeWithdrawRewardTokensParams({
  *  amount: ...,
@@ -45,7 +45,7 @@ export function encodeWithdrawRewardTokensParams(
  * @returns A prepared transaction object.
  * @extension ERC1155
  * @example
- * ```
+ * ```ts
  * import { withdrawRewardTokens } from "thirdweb/extensions/erc1155";
  *
  * const transaction = withdrawRewardTokens({

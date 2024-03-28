@@ -18,7 +18,7 @@ const FN_OUTPUTS = [
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC6551
  * @example
- * ```
+ * ```ts
  * import { decodeStateResult } from "thirdweb/extensions/erc6551";
  * const result = decodeStateResult("...");
  * ```
@@ -33,7 +33,7 @@ export function decodeStateResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC6551
  * @example
- * ```
+ * ```ts
  * import { state } from "thirdweb/extensions/erc6551";
  *
  * const result = await state();

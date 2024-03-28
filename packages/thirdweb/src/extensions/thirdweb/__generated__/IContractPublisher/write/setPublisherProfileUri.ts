@@ -34,7 +34,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { encodeSetPublisherProfileUriParams } "thirdweb/extensions/thirdweb";
  * const result = encodeSetPublisherProfileUriParams({
  *  publisher: ...,
@@ -54,7 +54,7 @@ export function encodeSetPublisherProfileUriParams(
  * @returns A prepared transaction object.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { setPublisherProfileUri } from "thirdweb/extensions/thirdweb";
  *
  * const transaction = setPublisherProfileUri({

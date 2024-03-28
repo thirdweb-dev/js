@@ -35,7 +35,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { encodeGetPublisherProfileUriParams } "thirdweb/extensions/thirdweb";
  * const result = encodeGetPublisherProfileUriParams({
  *  publisher: ...,
@@ -54,7 +54,7 @@ export function encodeGetPublisherProfileUriParams(
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { decodeGetPublisherProfileUriResult } from "thirdweb/extensions/thirdweb";
  * const result = decodeGetPublisherProfileUriResult("...");
  * ```
@@ -69,7 +69,7 @@ export function decodeGetPublisherProfileUriResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { getPublisherProfileUri } from "thirdweb/extensions/thirdweb";
  *
  * const result = await getPublisherProfileUri({

@@ -23,7 +23,7 @@ export type OwnerChangedEventFilters = Partial<{
  * @returns The prepared event object.
  * @extension UNISWAP
  * @example
- * ```
+ * ```ts
  * import { getContractEvents } from "thirdweb";
  * import { ownerChangedEvent } from "thirdweb/extensions/uniswap";
  *

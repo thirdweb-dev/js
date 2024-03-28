@@ -38,7 +38,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC4626
  * @example
- * ```
+ * ```ts
  * import { encodeMaxRedeemParams } "thirdweb/extensions/erc4626";
  * const result = encodeMaxRedeemParams({
  *  owner: ...,
@@ -55,7 +55,7 @@ export function encodeMaxRedeemParams(options: MaxRedeemParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC4626
  * @example
- * ```
+ * ```ts
  * import { decodeMaxRedeemResult } from "thirdweb/extensions/erc4626";
  * const result = decodeMaxRedeemResult("...");
  * ```
@@ -70,7 +70,7 @@ export function decodeMaxRedeemResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC4626
  * @example
- * ```
+ * ```ts
  * import { maxRedeem } from "thirdweb/extensions/erc4626";
  *
  * const result = await maxRedeem({

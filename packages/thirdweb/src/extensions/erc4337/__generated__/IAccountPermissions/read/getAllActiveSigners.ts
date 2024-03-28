@@ -41,7 +41,7 @@ const FN_OUTPUTS = [
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { decodeGetAllActiveSignersResult } from "thirdweb/extensions/erc4337";
  * const result = decodeGetAllActiveSignersResult("...");
  * ```
@@ -56,7 +56,7 @@ export function decodeGetAllActiveSignersResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { getAllActiveSigners } from "thirdweb/extensions/erc4337";
  *
  * const result = await getAllActiveSigners();

@@ -59,7 +59,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { encodeAddForParams } "thirdweb/extensions/farcaster";
  * const result = encodeAddForParams({
  *  fidOwner: ...,
@@ -90,7 +90,7 @@ export function encodeAddForParams(options: AddForParams) {
  * @returns A prepared transaction object.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { addFor } from "thirdweb/extensions/farcaster";
  *
  * const transaction = addFor({

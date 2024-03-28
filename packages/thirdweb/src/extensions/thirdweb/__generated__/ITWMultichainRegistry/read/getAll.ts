@@ -46,7 +46,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { encodeGetAllParams } "thirdweb/extensions/thirdweb";
  * const result = encodeGetAllParams({
  *  deployer: ...,
@@ -63,7 +63,7 @@ export function encodeGetAllParams(options: GetAllParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { decodeGetAllResult } from "thirdweb/extensions/thirdweb";
  * const result = decodeGetAllResult("...");
  * ```
@@ -78,7 +78,7 @@ export function decodeGetAllResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { getAll } from "thirdweb/extensions/thirdweb";
  *
  * const result = await getAll({

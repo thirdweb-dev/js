@@ -28,7 +28,7 @@ export type AirdropFailedEventFilters = Partial<{
  * @returns The prepared event object.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { getContractEvents } from "thirdweb";
  * import { airdropFailedEvent } from "thirdweb/extensions/erc721";
  *

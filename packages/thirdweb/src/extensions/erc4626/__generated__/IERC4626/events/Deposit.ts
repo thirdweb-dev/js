@@ -25,7 +25,7 @@ export type DepositEventFilters = Partial<{
  * @returns The prepared event object.
  * @extension ERC4626
  * @example
- * ```
+ * ```ts
  * import { getContractEvents } from "thirdweb";
  * import { depositEvent } from "thirdweb/extensions/erc4626";
  *

@@ -34,7 +34,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension UNISWAP
  * @example
- * ```
+ * ```ts
  * import { encodeEnableFeeAmountParams } "thirdweb/extensions/uniswap";
  * const result = encodeEnableFeeAmountParams({
  *  fee: ...,
@@ -52,7 +52,7 @@ export function encodeEnableFeeAmountParams(options: EnableFeeAmountParams) {
  * @returns A prepared transaction object.
  * @extension UNISWAP
  * @example
- * ```
+ * ```ts
  * import { enableFeeAmount } from "thirdweb/extensions/uniswap";
  *
  * const transaction = enableFeeAmount({

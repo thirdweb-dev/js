@@ -34,7 +34,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension MARKETPLACE
  * @example
- * ```
+ * ```ts
  * import { encodeIsAuctionExpiredParams } "thirdweb/extensions/marketplace";
  * const result = encodeIsAuctionExpiredParams({
  *  auctionId: ...,
@@ -51,7 +51,7 @@ export function encodeIsAuctionExpiredParams(options: IsAuctionExpiredParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension MARKETPLACE
  * @example
- * ```
+ * ```ts
  * import { decodeIsAuctionExpiredResult } from "thirdweb/extensions/marketplace";
  * const result = decodeIsAuctionExpiredResult("...");
  * ```
@@ -66,7 +66,7 @@ export function decodeIsAuctionExpiredResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension MARKETPLACE
  * @example
- * ```
+ * ```ts
  * import { isAuctionExpired } from "thirdweb/extensions/marketplace";
  *
  * const result = await isAuctionExpired({

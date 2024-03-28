@@ -81,7 +81,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension ERC20
  * @example
- * ```
+ * ```ts
  * import { encodeSetClaimConditionsParams } "thirdweb/extensions/erc20";
  * const result = encodeSetClaimConditionsParams({
  *  phases: ...,
@@ -104,7 +104,7 @@ export function encodeSetClaimConditionsParams(
  * @returns A prepared transaction object.
  * @extension ERC20
  * @example
- * ```
+ * ```ts
  * import { setClaimConditions } from "thirdweb/extensions/erc20";
  *
  * const transaction = setClaimConditions({

@@ -28,7 +28,7 @@ export type DeletedEventFilters = Partial<{
  * @returns The prepared event object.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { getContractEvents } from "thirdweb";
  * import { deletedEvent } from "thirdweb/extensions/thirdweb";
  *

@@ -31,7 +31,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { encodeRevokeRoleParams } "thirdweb/extensions/common";
  * const result = encodeRevokeRoleParams({
  *  role: ...,
@@ -49,7 +49,7 @@ export function encodeRevokeRoleParams(options: RevokeRoleParams) {
  * @returns A prepared transaction object.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { revokeRole } from "thirdweb/extensions/common";
  *
  * const transaction = revokeRole({

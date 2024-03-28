@@ -88,7 +88,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension MARKETPLACE
  * @example
- * ```
+ * ```ts
  * import { encodeCreateAuctionParams } "thirdweb/extensions/marketplace";
  * const result = encodeCreateAuctionParams({
  *  params: ...,
@@ -105,7 +105,7 @@ export function encodeCreateAuctionParams(options: CreateAuctionParams) {
  * @returns A prepared transaction object.
  * @extension MARKETPLACE
  * @example
- * ```
+ * ```ts
  * import { createAuction } from "thirdweb/extensions/marketplace";
  *
  * const transaction = createAuction({

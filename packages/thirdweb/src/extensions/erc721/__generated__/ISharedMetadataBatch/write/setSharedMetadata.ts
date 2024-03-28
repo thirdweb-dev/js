@@ -58,7 +58,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { encodeSetSharedMetadataParams } "thirdweb/extensions/erc721";
  * const result = encodeSetSharedMetadataParams({
  *  metadata: ...,
@@ -78,7 +78,7 @@ export function encodeSetSharedMetadataParams(
  * @returns A prepared transaction object.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { setSharedMetadata } from "thirdweb/extensions/erc721";
  *
  * const transaction = setSharedMetadata({

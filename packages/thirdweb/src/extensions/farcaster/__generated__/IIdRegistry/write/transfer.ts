@@ -36,7 +36,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { encodeTransferParams } "thirdweb/extensions/farcaster";
  * const result = encodeTransferParams({
  *  to: ...,
@@ -59,7 +59,7 @@ export function encodeTransferParams(options: TransferParams) {
  * @returns A prepared transaction object.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { transfer } from "thirdweb/extensions/farcaster";
  *
  * const transaction = transfer({

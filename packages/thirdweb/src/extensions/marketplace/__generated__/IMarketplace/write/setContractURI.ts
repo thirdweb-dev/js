@@ -26,7 +26,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension MARKETPLACE
  * @example
- * ```
+ * ```ts
  * import { encodeSetContractURIParams } "thirdweb/extensions/marketplace";
  * const result = encodeSetContractURIParams({
  *  uri: ...,
@@ -43,7 +43,7 @@ export function encodeSetContractURIParams(options: SetContractURIParams) {
  * @returns A prepared transaction object.
  * @extension MARKETPLACE
  * @example
- * ```
+ * ```ts
  * import { setContractURI } from "thirdweb/extensions/marketplace";
  *
  * const transaction = setContractURI({

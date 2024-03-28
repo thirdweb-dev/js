@@ -23,7 +23,7 @@ export type ChangeRecoveryAddressEventFilters = Partial<{
  * @returns The prepared event object.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { getContractEvents } from "thirdweb";
  * import { changeRecoveryAddressEvent } from "thirdweb/extensions/farcaster";
  *

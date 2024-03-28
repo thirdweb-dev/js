@@ -26,7 +26,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { encodeDepositToParams } "thirdweb/extensions/erc4337";
  * const result = encodeDepositToParams({
  *  account: ...,
@@ -43,7 +43,7 @@ export function encodeDepositToParams(options: DepositToParams) {
  * @returns A prepared transaction object.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { depositTo } from "thirdweb/extensions/erc4337";
  *
  * const transaction = depositTo({

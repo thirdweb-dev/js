@@ -29,7 +29,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { encodeWithdrawParams } "thirdweb/extensions/erc721";
  * const result = encodeWithdrawParams({
  *  tokenIds: ...,
@@ -46,7 +46,7 @@ export function encodeWithdrawParams(options: WithdrawParams) {
  * @returns A prepared transaction object.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { withdraw } from "thirdweb/extensions/erc721";
  *
  * const transaction = withdraw({

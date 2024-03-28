@@ -18,7 +18,7 @@ const FN_OUTPUTS = [
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension MARKETPLACE
  * @example
- * ```
+ * ```ts
  * import { decodeTotalListingsResult } from "thirdweb/extensions/marketplace";
  * const result = decodeTotalListingsResult("...");
  * ```
@@ -33,7 +33,7 @@ export function decodeTotalListingsResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension MARKETPLACE
  * @example
- * ```
+ * ```ts
  * import { totalListings } from "thirdweb/extensions/marketplace";
  *
  * const result = await totalListings();

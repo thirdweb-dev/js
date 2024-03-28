@@ -37,7 +37,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { encodeGetNonceParams } "thirdweb/extensions/erc4337";
  * const result = encodeGetNonceParams({
  *  sender: ...,
@@ -55,7 +55,7 @@ export function encodeGetNonceParams(options: GetNonceParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { decodeGetNonceResult } from "thirdweb/extensions/erc4337";
  * const result = decodeGetNonceResult("...");
  * ```
@@ -70,7 +70,7 @@ export function decodeGetNonceResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { getNonce } from "thirdweb/extensions/erc4337";
  *
  * const result = await getNonce({

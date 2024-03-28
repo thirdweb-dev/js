@@ -57,7 +57,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { encodeGetAllPublishedContractsParams } "thirdweb/extensions/thirdweb";
  * const result = encodeGetAllPublishedContractsParams({
  *  publisher: ...,
@@ -76,7 +76,7 @@ export function encodeGetAllPublishedContractsParams(
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { decodeGetAllPublishedContractsResult } from "thirdweb/extensions/thirdweb";
  * const result = decodeGetAllPublishedContractsResult("...");
  * ```
@@ -91,7 +91,7 @@ export function decodeGetAllPublishedContractsResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { getAllPublishedContracts } from "thirdweb/extensions/thirdweb";
  *
  * const result = await getAllPublishedContracts({

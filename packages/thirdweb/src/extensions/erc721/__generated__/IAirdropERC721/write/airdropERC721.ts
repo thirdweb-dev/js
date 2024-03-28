@@ -59,7 +59,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { encodeAirdropERC721Params } "thirdweb/extensions/erc721";
  * const result = encodeAirdropERC721Params({
  *  tokenAddress: ...,
@@ -82,7 +82,7 @@ export function encodeAirdropERC721Params(options: AirdropERC721Params) {
  * @returns A prepared transaction object.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { airdropERC721 } from "thirdweb/extensions/erc721";
  *
  * const transaction = airdropERC721({

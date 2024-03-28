@@ -31,7 +31,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC20
  * @example
- * ```
+ * ```ts
  * import { encodeNoncesParams } "thirdweb/extensions/erc20";
  * const result = encodeNoncesParams({
  *  owner: ...,
@@ -48,7 +48,7 @@ export function encodeNoncesParams(options: NoncesParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC20
  * @example
- * ```
+ * ```ts
  * import { decodeNoncesResult } from "thirdweb/extensions/erc20";
  * const result = decodeNoncesResult("...");
  * ```
@@ -63,7 +63,7 @@ export function decodeNoncesResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC20
  * @example
- * ```
+ * ```ts
  * import { nonces } from "thirdweb/extensions/erc20";
  *
  * const result = await nonces({

@@ -36,7 +36,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { encodeCreateAccountParams } "thirdweb/extensions/erc4337";
  * const result = encodeCreateAccountParams({
  *  admin: ...,
@@ -54,7 +54,7 @@ export function encodeCreateAccountParams(options: CreateAccountParams) {
  * @returns A prepared transaction object.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { createAccount } from "thirdweb/extensions/erc4337";
  *
  * const transaction = createAccount({

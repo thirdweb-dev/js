@@ -83,7 +83,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { encodeSetPermissionsForSignerParams } "thirdweb/extensions/erc4337";
  * const result = encodeSetPermissionsForSignerParams({
  *  req: ...,
@@ -103,7 +103,7 @@ export function encodeSetPermissionsForSignerParams(
  * @returns A prepared transaction object.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { setPermissionsForSigner } from "thirdweb/extensions/erc4337";
  *
  * const transaction = setPermissionsForSigner({

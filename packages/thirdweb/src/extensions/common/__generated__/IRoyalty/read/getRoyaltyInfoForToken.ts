@@ -34,7 +34,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { encodeGetRoyaltyInfoForTokenParams } "thirdweb/extensions/common";
  * const result = encodeGetRoyaltyInfoForTokenParams({
  *  tokenId: ...,
@@ -53,7 +53,7 @@ export function encodeGetRoyaltyInfoForTokenParams(
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { decodeGetRoyaltyInfoForTokenResult } from "thirdweb/extensions/common";
  * const result = decodeGetRoyaltyInfoForTokenResult("...");
  * ```
@@ -68,7 +68,7 @@ export function decodeGetRoyaltyInfoForTokenResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { getRoyaltyInfoForToken } from "thirdweb/extensions/common";
  *
  * const result = await getRoyaltyInfoForToken({

@@ -37,7 +37,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { encodeEncryptDecryptParams } "thirdweb/extensions/erc721";
  * const result = encodeEncryptDecryptParams({
  *  data: ...,
@@ -55,7 +55,7 @@ export function encodeEncryptDecryptParams(options: EncryptDecryptParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { decodeEncryptDecryptResult } from "thirdweb/extensions/erc721";
  * const result = decodeEncryptDecryptResult("...");
  * ```
@@ -70,7 +70,7 @@ export function decodeEncryptDecryptResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { encryptDecrypt } from "thirdweb/extensions/erc721";
  *
  * const result = await encryptDecrypt({

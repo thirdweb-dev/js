@@ -32,7 +32,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { encodeGetAccountsOfSignerParams } "thirdweb/extensions/erc4337";
  * const result = encodeGetAccountsOfSignerParams({
  *  signer: ...,
@@ -51,7 +51,7 @@ export function encodeGetAccountsOfSignerParams(
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { decodeGetAccountsOfSignerResult } from "thirdweb/extensions/erc4337";
  * const result = decodeGetAccountsOfSignerResult("...");
  * ```
@@ -66,7 +66,7 @@ export function decodeGetAccountsOfSignerResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { getAccountsOfSigner } from "thirdweb/extensions/erc4337";
  *
  * const result = await getAccountsOfSigner({

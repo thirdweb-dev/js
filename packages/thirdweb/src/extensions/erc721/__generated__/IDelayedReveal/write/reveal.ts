@@ -39,7 +39,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { encodeRevealParams } "thirdweb/extensions/erc721";
  * const result = encodeRevealParams({
  *  identifier: ...,
@@ -57,7 +57,7 @@ export function encodeRevealParams(options: RevealParams) {
  * @returns A prepared transaction object.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { reveal } from "thirdweb/extensions/erc721";
  *
  * const transaction = reveal({

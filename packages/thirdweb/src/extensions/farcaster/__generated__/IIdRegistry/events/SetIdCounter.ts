@@ -5,7 +5,7 @@ import { prepareEvent } from "../../../../../event/prepare-event.js";
  * @returns The prepared event object.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { getContractEvents } from "thirdweb";
  * import { setIdCounterEvent } from "thirdweb/extensions/farcaster";
  *

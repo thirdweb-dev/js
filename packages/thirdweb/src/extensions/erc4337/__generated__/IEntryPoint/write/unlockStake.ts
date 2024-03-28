@@ -11,7 +11,7 @@ const FN_OUTPUTS = [] as const;
  * @returns A prepared transaction object.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { unlockStake } from "thirdweb/extensions/erc4337";
  *
  * const transaction = unlockStake();

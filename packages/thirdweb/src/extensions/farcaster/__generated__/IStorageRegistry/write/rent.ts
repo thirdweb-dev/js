@@ -36,7 +36,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { encodeRentParams } "thirdweb/extensions/farcaster";
  * const result = encodeRentParams({
  *  fid: ...,
@@ -54,7 +54,7 @@ export function encodeRentParams(options: RentParams) {
  * @returns A prepared transaction object.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { rent } from "thirdweb/extensions/farcaster";
  *
  * const transaction = rent({

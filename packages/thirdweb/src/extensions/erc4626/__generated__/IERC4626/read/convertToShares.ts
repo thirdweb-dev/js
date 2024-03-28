@@ -38,7 +38,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC4626
  * @example
- * ```
+ * ```ts
  * import { encodeConvertToSharesParams } "thirdweb/extensions/erc4626";
  * const result = encodeConvertToSharesParams({
  *  assets: ...,
@@ -55,7 +55,7 @@ export function encodeConvertToSharesParams(options: ConvertToSharesParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC4626
  * @example
- * ```
+ * ```ts
  * import { decodeConvertToSharesResult } from "thirdweb/extensions/erc4626";
  * const result = decodeConvertToSharesResult("...");
  * ```
@@ -70,7 +70,7 @@ export function decodeConvertToSharesResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC4626
  * @example
- * ```
+ * ```ts
  * import { convertToShares } from "thirdweb/extensions/erc4626";
  *
  * const result = await convertToShares({
