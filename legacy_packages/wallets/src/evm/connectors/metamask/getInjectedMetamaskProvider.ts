@@ -65,6 +65,10 @@ export function getInjectedMetamaskProvider(): Ethereum | undefined {
       return;
     }
 
+    if (ethereum.isImToken) {
+      return;
+    }
+
     return ethereum;
   }
 
