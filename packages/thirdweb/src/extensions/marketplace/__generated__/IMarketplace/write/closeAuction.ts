@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "closeAuction" function.
  */
 
-type CloseAuctionParamsInternal = {
+export type CloseAuctionParams = {
   listingId: AbiParameterToPrimitiveType<{
     type: "uint256";
     name: "_listingId";
@@ -16,12 +15,6 @@ type CloseAuctionParamsInternal = {
   closeFor: AbiParameterToPrimitiveType<{ type: "address"; name: "_closeFor" }>;
 };
 
-export type CloseAuctionParams = Prettify<
-  | CloseAuctionParamsInternal
-  | {
-      asyncParams: () => Promise<CloseAuctionParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x6bab66ae" as const;
 const FN_INPUTS = [
   {
@@ -49,7 +42,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodeCloseAuctionParams(options: CloseAuctionParamsInternal) {
+export function encodeCloseAuctionParams(options: CloseAuctionParams) {
   return encodeAbiParameters(FN_INPUTS, [options.listingId, options.closeFor]);
 }
 
@@ -63,6 +56,7 @@ export function encodeCloseAuctionParams(options: CloseAuctionParamsInternal) {
  * import { closeAuction } from "thirdweb/extensions/marketplace";
  *
  * const transaction = closeAuction({
+ *  contract,
  *  listingId: ...,
  *  closeFor: ...,
  * });
@@ -73,7 +67,12 @@ export function encodeCloseAuctionParams(options: CloseAuctionParamsInternal) {
  * ```
  */
 export function closeAuction(
-  options: BaseTransactionOptions<CloseAuctionParams>,
+  options: BaseTransactionOptions<
+    | CloseAuctionParams
+    | {
+        asyncParams: () => Promise<CloseAuctionParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

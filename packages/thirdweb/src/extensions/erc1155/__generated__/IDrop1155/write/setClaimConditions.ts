@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "setClaimConditions" function.
  */
 
-type SetClaimConditionsParamsInternal = {
+export type SetClaimConditionsParams = {
   tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
   phases: AbiParameterToPrimitiveType<{
     type: "tuple[]";
@@ -30,12 +29,6 @@ type SetClaimConditionsParamsInternal = {
   }>;
 };
 
-export type SetClaimConditionsParams = Prettify<
-  | SetClaimConditionsParamsInternal
-  | {
-      asyncParams: () => Promise<SetClaimConditionsParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x183718d1" as const;
 const FN_INPUTS = [
   {
@@ -103,7 +96,7 @@ const FN_OUTPUTS = [] as const;
  * ```
  */
 export function encodeSetClaimConditionsParams(
-  options: SetClaimConditionsParamsInternal,
+  options: SetClaimConditionsParams,
 ) {
   return encodeAbiParameters(FN_INPUTS, [
     options.tokenId,
@@ -122,6 +115,7 @@ export function encodeSetClaimConditionsParams(
  * import { setClaimConditions } from "thirdweb/extensions/erc1155";
  *
  * const transaction = setClaimConditions({
+ *  contract,
  *  tokenId: ...,
  *  phases: ...,
  *  resetClaimEligibility: ...,
@@ -133,7 +127,12 @@ export function encodeSetClaimConditionsParams(
  * ```
  */
 export function setClaimConditions(
-  options: BaseTransactionOptions<SetClaimConditionsParams>,
+  options: BaseTransactionOptions<
+    | SetClaimConditionsParams
+    | {
+        asyncParams: () => Promise<SetClaimConditionsParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

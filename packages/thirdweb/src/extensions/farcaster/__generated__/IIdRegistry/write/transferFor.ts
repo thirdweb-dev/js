@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "transferFor" function.
  */
 
-type TransferForParamsInternal = {
+export type TransferForParams = {
   from: AbiParameterToPrimitiveType<{ type: "address"; name: "from" }>;
   to: AbiParameterToPrimitiveType<{ type: "address"; name: "to" }>;
   fromDeadline: AbiParameterToPrimitiveType<{
@@ -23,12 +22,6 @@ type TransferForParamsInternal = {
   toSig: AbiParameterToPrimitiveType<{ type: "bytes"; name: "toSig" }>;
 };
 
-export type TransferForParams = Prettify<
-  | TransferForParamsInternal
-  | {
-      asyncParams: () => Promise<TransferForParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x16f72842" as const;
 const FN_INPUTS = [
   {
@@ -76,7 +69,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodeTransferForParams(options: TransferForParamsInternal) {
+export function encodeTransferForParams(options: TransferForParams) {
   return encodeAbiParameters(FN_INPUTS, [
     options.from,
     options.to,
@@ -97,6 +90,7 @@ export function encodeTransferForParams(options: TransferForParamsInternal) {
  * import { transferFor } from "thirdweb/extensions/farcaster";
  *
  * const transaction = transferFor({
+ *  contract,
  *  from: ...,
  *  to: ...,
  *  fromDeadline: ...,
@@ -111,7 +105,12 @@ export function encodeTransferForParams(options: TransferForParamsInternal) {
  * ```
  */
 export function transferFor(
-  options: BaseTransactionOptions<TransferForParams>,
+  options: BaseTransactionOptions<
+    | TransferForParams
+    | {
+        asyncParams: () => Promise<TransferForParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

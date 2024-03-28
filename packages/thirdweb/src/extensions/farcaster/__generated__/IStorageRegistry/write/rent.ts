@@ -1,24 +1,17 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "rent" function.
  */
 
-type RentParamsInternal = {
+export type RentParams = {
   fid: AbiParameterToPrimitiveType<{ type: "uint256"; name: "fid" }>;
   units: AbiParameterToPrimitiveType<{ type: "uint256"; name: "units" }>;
 };
 
-export type RentParams = Prettify<
-  | RentParamsInternal
-  | {
-      asyncParams: () => Promise<RentParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x783a112b" as const;
 const FN_INPUTS = [
   {
@@ -51,7 +44,7 @@ const FN_OUTPUTS = [
  * });
  * ```
  */
-export function encodeRentParams(options: RentParamsInternal) {
+export function encodeRentParams(options: RentParams) {
   return encodeAbiParameters(FN_INPUTS, [options.fid, options.units]);
 }
 
@@ -65,6 +58,7 @@ export function encodeRentParams(options: RentParamsInternal) {
  * import { rent } from "thirdweb/extensions/farcaster";
  *
  * const transaction = rent({
+ *  contract,
  *  fid: ...,
  *  units: ...,
  * });
@@ -74,7 +68,14 @@ export function encodeRentParams(options: RentParamsInternal) {
  *
  * ```
  */
-export function rent(options: BaseTransactionOptions<RentParams>) {
+export function rent(
+  options: BaseTransactionOptions<
+    | RentParams
+    | {
+        asyncParams: () => Promise<RentParams>;
+      }
+  >,
+) {
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,

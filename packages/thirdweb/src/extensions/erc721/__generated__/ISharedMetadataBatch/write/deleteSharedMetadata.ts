@@ -1,23 +1,16 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "deleteSharedMetadata" function.
  */
 
-type DeleteSharedMetadataParamsInternal = {
+export type DeleteSharedMetadataParams = {
   id: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "id" }>;
 };
 
-export type DeleteSharedMetadataParams = Prettify<
-  | DeleteSharedMetadataParamsInternal
-  | {
-      asyncParams: () => Promise<DeleteSharedMetadataParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x1ebb2422" as const;
 const FN_INPUTS = [
   {
@@ -41,7 +34,7 @@ const FN_OUTPUTS = [] as const;
  * ```
  */
 export function encodeDeleteSharedMetadataParams(
-  options: DeleteSharedMetadataParamsInternal,
+  options: DeleteSharedMetadataParams,
 ) {
   return encodeAbiParameters(FN_INPUTS, [options.id]);
 }
@@ -56,6 +49,7 @@ export function encodeDeleteSharedMetadataParams(
  * import { deleteSharedMetadata } from "thirdweb/extensions/erc721";
  *
  * const transaction = deleteSharedMetadata({
+ *  contract,
  *  id: ...,
  * });
  *
@@ -65,7 +59,12 @@ export function encodeDeleteSharedMetadataParams(
  * ```
  */
 export function deleteSharedMetadata(
-  options: BaseTransactionOptions<DeleteSharedMetadataParams>,
+  options: BaseTransactionOptions<
+    | DeleteSharedMetadataParams
+    | {
+        asyncParams: () => Promise<DeleteSharedMetadataParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

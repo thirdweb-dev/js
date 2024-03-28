@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "safeBatchTransferFrom" function.
  */
 
-type SafeBatchTransferFromParamsInternal = {
+export type SafeBatchTransferFromParams = {
   from: AbiParameterToPrimitiveType<{ type: "address"; name: "_from" }>;
   to: AbiParameterToPrimitiveType<{ type: "address"; name: "_to" }>;
   tokenIds: AbiParameterToPrimitiveType<{
@@ -19,12 +18,6 @@ type SafeBatchTransferFromParamsInternal = {
   data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "_data" }>;
 };
 
-export type SafeBatchTransferFromParams = Prettify<
-  | SafeBatchTransferFromParamsInternal
-  | {
-      asyncParams: () => Promise<SafeBatchTransferFromParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x2eb2c2d6" as const;
 const FN_INPUTS = [
   {
@@ -68,7 +61,7 @@ const FN_OUTPUTS = [] as const;
  * ```
  */
 export function encodeSafeBatchTransferFromParams(
-  options: SafeBatchTransferFromParamsInternal,
+  options: SafeBatchTransferFromParams,
 ) {
   return encodeAbiParameters(FN_INPUTS, [
     options.from,
@@ -89,6 +82,7 @@ export function encodeSafeBatchTransferFromParams(
  * import { safeBatchTransferFrom } from "thirdweb/extensions/erc1155";
  *
  * const transaction = safeBatchTransferFrom({
+ *  contract,
  *  from: ...,
  *  to: ...,
  *  tokenIds: ...,
@@ -102,7 +96,12 @@ export function encodeSafeBatchTransferFromParams(
  * ```
  */
 export function safeBatchTransferFrom(
-  options: BaseTransactionOptions<SafeBatchTransferFromParams>,
+  options: BaseTransactionOptions<
+    | SafeBatchTransferFromParams
+    | {
+        asyncParams: () => Promise<SafeBatchTransferFromParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "simulateValidation" function.
  */
 
-type SimulateValidationParamsInternal = {
+export type SimulateValidationParams = {
   userOp: AbiParameterToPrimitiveType<{
     type: "tuple";
     name: "userOp";
@@ -28,12 +27,6 @@ type SimulateValidationParamsInternal = {
   }>;
 };
 
-export type SimulateValidationParams = Prettify<
-  | SimulateValidationParamsInternal
-  | {
-      asyncParams: () => Promise<SimulateValidationParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0xee219423" as const;
 const FN_INPUTS = [
   {
@@ -103,7 +96,7 @@ const FN_OUTPUTS = [] as const;
  * ```
  */
 export function encodeSimulateValidationParams(
-  options: SimulateValidationParamsInternal,
+  options: SimulateValidationParams,
 ) {
   return encodeAbiParameters(FN_INPUTS, [options.userOp]);
 }
@@ -118,6 +111,7 @@ export function encodeSimulateValidationParams(
  * import { simulateValidation } from "thirdweb/extensions/erc4337";
  *
  * const transaction = simulateValidation({
+ *  contract,
  *  userOp: ...,
  * });
  *
@@ -127,7 +121,12 @@ export function encodeSimulateValidationParams(
  * ```
  */
 export function simulateValidation(
-  options: BaseTransactionOptions<SimulateValidationParams>,
+  options: BaseTransactionOptions<
+    | SimulateValidationParams
+    | {
+        asyncParams: () => Promise<SimulateValidationParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

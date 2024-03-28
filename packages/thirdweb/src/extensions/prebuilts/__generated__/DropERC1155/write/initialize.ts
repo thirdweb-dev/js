@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "initialize" function.
  */
 
-type InitializeParamsInternal = {
+export type InitializeParams = {
   defaultAdmin: AbiParameterToPrimitiveType<{
     type: "address";
     name: "_defaultAdmin";
@@ -45,12 +44,6 @@ type InitializeParamsInternal = {
   }>;
 };
 
-export type InitializeParams = Prettify<
-  | InitializeParamsInternal
-  | {
-      asyncParams: () => Promise<InitializeParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0xe1591634" as const;
 const FN_INPUTS = [
   {
@@ -118,7 +111,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodeInitializeParams(options: InitializeParamsInternal) {
+export function encodeInitializeParams(options: InitializeParams) {
   return encodeAbiParameters(FN_INPUTS, [
     options.defaultAdmin,
     options.name,
@@ -143,6 +136,7 @@ export function encodeInitializeParams(options: InitializeParamsInternal) {
  * import { initialize } from "thirdweb/extensions/prebuilts";
  *
  * const transaction = initialize({
+ *  contract,
  *  defaultAdmin: ...,
  *  name: ...,
  *  symbol: ...,
@@ -160,7 +154,14 @@ export function encodeInitializeParams(options: InitializeParamsInternal) {
  *
  * ```
  */
-export function initialize(options: BaseTransactionOptions<InitializeParams>) {
+export function initialize(
+  options: BaseTransactionOptions<
+    | InitializeParams
+    | {
+        asyncParams: () => Promise<InitializeParams>;
+      }
+  >,
+) {
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,

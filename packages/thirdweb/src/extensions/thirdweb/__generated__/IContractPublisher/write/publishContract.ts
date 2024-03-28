@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "publishContract" function.
  */
 
-type PublishContractParamsInternal = {
+export type PublishContractParams = {
   publisher: AbiParameterToPrimitiveType<{
     type: "address";
     name: "publisher";
@@ -35,12 +34,6 @@ type PublishContractParamsInternal = {
   }>;
 };
 
-export type PublishContractParams = Prettify<
-  | PublishContractParamsInternal
-  | {
-      asyncParams: () => Promise<PublishContractParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0xd50299e6" as const;
 const FN_INPUTS = [
   {
@@ -88,9 +81,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodePublishContractParams(
-  options: PublishContractParamsInternal,
-) {
+export function encodePublishContractParams(options: PublishContractParams) {
   return encodeAbiParameters(FN_INPUTS, [
     options.publisher,
     options.contractId,
@@ -111,6 +102,7 @@ export function encodePublishContractParams(
  * import { publishContract } from "thirdweb/extensions/thirdweb";
  *
  * const transaction = publishContract({
+ *  contract,
  *  publisher: ...,
  *  contractId: ...,
  *  publishMetadataUri: ...,
@@ -125,7 +117,12 @@ export function encodePublishContractParams(
  * ```
  */
 export function publishContract(
-  options: BaseTransactionOptions<PublishContractParams>,
+  options: BaseTransactionOptions<
+    | PublishContractParams
+    | {
+        asyncParams: () => Promise<PublishContractParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

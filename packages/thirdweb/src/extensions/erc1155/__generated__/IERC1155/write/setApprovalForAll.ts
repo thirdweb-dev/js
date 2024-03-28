@@ -1,24 +1,17 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "setApprovalForAll" function.
  */
 
-type SetApprovalForAllParamsInternal = {
+export type SetApprovalForAllParams = {
   operator: AbiParameterToPrimitiveType<{ type: "address"; name: "_operator" }>;
   approved: AbiParameterToPrimitiveType<{ type: "bool"; name: "_approved" }>;
 };
 
-export type SetApprovalForAllParams = Prettify<
-  | SetApprovalForAllParamsInternal
-  | {
-      asyncParams: () => Promise<SetApprovalForAllParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0xa22cb465" as const;
 const FN_INPUTS = [
   {
@@ -47,7 +40,7 @@ const FN_OUTPUTS = [] as const;
  * ```
  */
 export function encodeSetApprovalForAllParams(
-  options: SetApprovalForAllParamsInternal,
+  options: SetApprovalForAllParams,
 ) {
   return encodeAbiParameters(FN_INPUTS, [options.operator, options.approved]);
 }
@@ -62,6 +55,7 @@ export function encodeSetApprovalForAllParams(
  * import { setApprovalForAll } from "thirdweb/extensions/erc1155";
  *
  * const transaction = setApprovalForAll({
+ *  contract,
  *  operator: ...,
  *  approved: ...,
  * });
@@ -72,7 +66,12 @@ export function encodeSetApprovalForAllParams(
  * ```
  */
 export function setApprovalForAll(
-  options: BaseTransactionOptions<SetApprovalForAllParams>,
+  options: BaseTransactionOptions<
+    | SetApprovalForAllParams
+    | {
+        asyncParams: () => Promise<SetApprovalForAllParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

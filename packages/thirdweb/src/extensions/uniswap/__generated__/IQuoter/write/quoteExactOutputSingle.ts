@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "quoteExactOutputSingle" function.
  */
 
-type QuoteExactOutputSingleParamsInternal = {
+export type QuoteExactOutputSingleParams = {
   tokenIn: AbiParameterToPrimitiveType<{ type: "address"; name: "tokenIn" }>;
   tokenOut: AbiParameterToPrimitiveType<{ type: "address"; name: "tokenOut" }>;
   fee: AbiParameterToPrimitiveType<{ type: "uint24"; name: "fee" }>;
@@ -22,12 +21,6 @@ type QuoteExactOutputSingleParamsInternal = {
   }>;
 };
 
-export type QuoteExactOutputSingleParams = Prettify<
-  | QuoteExactOutputSingleParamsInternal
-  | {
-      asyncParams: () => Promise<QuoteExactOutputSingleParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x30d07f21" as const;
 const FN_INPUTS = [
   {
@@ -76,7 +69,7 @@ const FN_OUTPUTS = [
  * ```
  */
 export function encodeQuoteExactOutputSingleParams(
-  options: QuoteExactOutputSingleParamsInternal,
+  options: QuoteExactOutputSingleParams,
 ) {
   return encodeAbiParameters(FN_INPUTS, [
     options.tokenIn,
@@ -97,6 +90,7 @@ export function encodeQuoteExactOutputSingleParams(
  * import { quoteExactOutputSingle } from "thirdweb/extensions/uniswap";
  *
  * const transaction = quoteExactOutputSingle({
+ *  contract,
  *  tokenIn: ...,
  *  tokenOut: ...,
  *  fee: ...,
@@ -110,7 +104,12 @@ export function encodeQuoteExactOutputSingleParams(
  * ```
  */
 export function quoteExactOutputSingle(
-  options: BaseTransactionOptions<QuoteExactOutputSingleParams>,
+  options: BaseTransactionOptions<
+    | QuoteExactOutputSingleParams
+    | {
+        asyncParams: () => Promise<QuoteExactOutputSingleParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

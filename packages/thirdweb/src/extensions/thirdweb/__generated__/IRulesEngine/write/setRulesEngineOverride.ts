@@ -1,26 +1,19 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "setRulesEngineOverride" function.
  */
 
-type SetRulesEngineOverrideParamsInternal = {
+export type SetRulesEngineOverrideParams = {
   rulesEngineAddress: AbiParameterToPrimitiveType<{
     type: "address";
     name: "_rulesEngineAddress";
   }>;
 };
 
-export type SetRulesEngineOverrideParams = Prettify<
-  | SetRulesEngineOverrideParamsInternal
-  | {
-      asyncParams: () => Promise<SetRulesEngineOverrideParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x0eb0adb6" as const;
 const FN_INPUTS = [
   {
@@ -44,7 +37,7 @@ const FN_OUTPUTS = [] as const;
  * ```
  */
 export function encodeSetRulesEngineOverrideParams(
-  options: SetRulesEngineOverrideParamsInternal,
+  options: SetRulesEngineOverrideParams,
 ) {
   return encodeAbiParameters(FN_INPUTS, [options.rulesEngineAddress]);
 }
@@ -59,6 +52,7 @@ export function encodeSetRulesEngineOverrideParams(
  * import { setRulesEngineOverride } from "thirdweb/extensions/thirdweb";
  *
  * const transaction = setRulesEngineOverride({
+ *  contract,
  *  rulesEngineAddress: ...,
  * });
  *
@@ -68,7 +62,12 @@ export function encodeSetRulesEngineOverrideParams(
  * ```
  */
 export function setRulesEngineOverride(
-  options: BaseTransactionOptions<SetRulesEngineOverrideParams>,
+  options: BaseTransactionOptions<
+    | SetRulesEngineOverrideParams
+    | {
+        asyncParams: () => Promise<SetRulesEngineOverrideParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

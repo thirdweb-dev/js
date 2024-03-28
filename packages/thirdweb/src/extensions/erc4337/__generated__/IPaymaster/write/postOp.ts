@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "postOp" function.
  */
 
-type PostOpParamsInternal = {
+export type PostOpParams = {
   mode: AbiParameterToPrimitiveType<{ type: "uint8"; name: "mode" }>;
   context: AbiParameterToPrimitiveType<{ type: "bytes"; name: "context" }>;
   actualGasCost: AbiParameterToPrimitiveType<{
@@ -17,12 +16,6 @@ type PostOpParamsInternal = {
   }>;
 };
 
-export type PostOpParams = Prettify<
-  | PostOpParamsInternal
-  | {
-      asyncParams: () => Promise<PostOpParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0xa9a23409" as const;
 const FN_INPUTS = [
   {
@@ -55,7 +48,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodePostOpParams(options: PostOpParamsInternal) {
+export function encodePostOpParams(options: PostOpParams) {
   return encodeAbiParameters(FN_INPUTS, [
     options.mode,
     options.context,
@@ -73,6 +66,7 @@ export function encodePostOpParams(options: PostOpParamsInternal) {
  * import { postOp } from "thirdweb/extensions/erc4337";
  *
  * const transaction = postOp({
+ *  contract,
  *  mode: ...,
  *  context: ...,
  *  actualGasCost: ...,
@@ -83,7 +77,14 @@ export function encodePostOpParams(options: PostOpParamsInternal) {
  *
  * ```
  */
-export function postOp(options: BaseTransactionOptions<PostOpParams>) {
+export function postOp(
+  options: BaseTransactionOptions<
+    | PostOpParams
+    | {
+        asyncParams: () => Promise<PostOpParams>;
+      }
+  >,
+) {
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,

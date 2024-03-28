@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "mint" function.
  */
 
-type MintParamsInternal = {
+export type MintParams = {
   shares: AbiParameterToPrimitiveType<{
     name: "shares";
     type: "uint256";
@@ -21,12 +20,6 @@ type MintParamsInternal = {
   }>;
 };
 
-export type MintParams = Prettify<
-  | MintParamsInternal
-  | {
-      asyncParams: () => Promise<MintParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x94bf804d" as const;
 const FN_INPUTS = [
   {
@@ -62,7 +55,7 @@ const FN_OUTPUTS = [
  * });
  * ```
  */
-export function encodeMintParams(options: MintParamsInternal) {
+export function encodeMintParams(options: MintParams) {
   return encodeAbiParameters(FN_INPUTS, [options.shares, options.receiver]);
 }
 
@@ -76,6 +69,7 @@ export function encodeMintParams(options: MintParamsInternal) {
  * import { mint } from "thirdweb/extensions/erc4626";
  *
  * const transaction = mint({
+ *  contract,
  *  shares: ...,
  *  receiver: ...,
  * });
@@ -85,7 +79,14 @@ export function encodeMintParams(options: MintParamsInternal) {
  *
  * ```
  */
-export function mint(options: BaseTransactionOptions<MintParams>) {
+export function mint(
+  options: BaseTransactionOptions<
+    | MintParams
+    | {
+        asyncParams: () => Promise<MintParams>;
+      }
+  >,
+) {
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,

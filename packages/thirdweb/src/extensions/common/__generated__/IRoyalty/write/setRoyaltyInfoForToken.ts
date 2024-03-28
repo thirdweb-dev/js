@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "setRoyaltyInfoForToken" function.
  */
 
-type SetRoyaltyInfoForTokenParamsInternal = {
+export type SetRoyaltyInfoForTokenParams = {
   tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
   recipient: AbiParameterToPrimitiveType<{
     type: "address";
@@ -17,12 +16,6 @@ type SetRoyaltyInfoForTokenParamsInternal = {
   bps: AbiParameterToPrimitiveType<{ type: "uint256"; name: "bps" }>;
 };
 
-export type SetRoyaltyInfoForTokenParams = Prettify<
-  | SetRoyaltyInfoForTokenParamsInternal
-  | {
-      asyncParams: () => Promise<SetRoyaltyInfoForTokenParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x9bcf7a15" as const;
 const FN_INPUTS = [
   {
@@ -56,7 +49,7 @@ const FN_OUTPUTS = [] as const;
  * ```
  */
 export function encodeSetRoyaltyInfoForTokenParams(
-  options: SetRoyaltyInfoForTokenParamsInternal,
+  options: SetRoyaltyInfoForTokenParams,
 ) {
   return encodeAbiParameters(FN_INPUTS, [
     options.tokenId,
@@ -75,6 +68,7 @@ export function encodeSetRoyaltyInfoForTokenParams(
  * import { setRoyaltyInfoForToken } from "thirdweb/extensions/common";
  *
  * const transaction = setRoyaltyInfoForToken({
+ *  contract,
  *  tokenId: ...,
  *  recipient: ...,
  *  bps: ...,
@@ -86,7 +80,12 @@ export function encodeSetRoyaltyInfoForTokenParams(
  * ```
  */
 export function setRoyaltyInfoForToken(
-  options: BaseTransactionOptions<SetRoyaltyInfoForTokenParams>,
+  options: BaseTransactionOptions<
+    | SetRoyaltyInfoForTokenParams
+    | {
+        asyncParams: () => Promise<SetRoyaltyInfoForTokenParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

@@ -1,23 +1,16 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "deleteRule" function.
  */
 
-type DeleteRuleParamsInternal = {
+export type DeleteRuleParams = {
   ruleId: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "ruleId" }>;
 };
 
-export type DeleteRuleParams = Prettify<
-  | DeleteRuleParamsInternal
-  | {
-      asyncParams: () => Promise<DeleteRuleParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x9d907761" as const;
 const FN_INPUTS = [
   {
@@ -40,7 +33,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodeDeleteRuleParams(options: DeleteRuleParamsInternal) {
+export function encodeDeleteRuleParams(options: DeleteRuleParams) {
   return encodeAbiParameters(FN_INPUTS, [options.ruleId]);
 }
 
@@ -54,6 +47,7 @@ export function encodeDeleteRuleParams(options: DeleteRuleParamsInternal) {
  * import { deleteRule } from "thirdweb/extensions/thirdweb";
  *
  * const transaction = deleteRule({
+ *  contract,
  *  ruleId: ...,
  * });
  *
@@ -62,7 +56,14 @@ export function encodeDeleteRuleParams(options: DeleteRuleParamsInternal) {
  *
  * ```
  */
-export function deleteRule(options: BaseTransactionOptions<DeleteRuleParams>) {
+export function deleteRule(
+  options: BaseTransactionOptions<
+    | DeleteRuleParams
+    | {
+        asyncParams: () => Promise<DeleteRuleParams>;
+      }
+  >,
+) {
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,

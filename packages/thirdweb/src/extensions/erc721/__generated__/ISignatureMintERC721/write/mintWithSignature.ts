@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "mintWithSignature" function.
  */
 
-type MintWithSignatureParamsInternal = {
+export type MintWithSignatureParams = {
   req: AbiParameterToPrimitiveType<{
     type: "tuple";
     name: "req";
@@ -29,12 +28,6 @@ type MintWithSignatureParamsInternal = {
   signature: AbiParameterToPrimitiveType<{ type: "bytes"; name: "signature" }>;
 };
 
-export type MintWithSignatureParams = Prettify<
-  | MintWithSignatureParamsInternal
-  | {
-      asyncParams: () => Promise<MintWithSignatureParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x439c7be5" as const;
 const FN_INPUTS = [
   {
@@ -114,7 +107,7 @@ const FN_OUTPUTS = [
  * ```
  */
 export function encodeMintWithSignatureParams(
-  options: MintWithSignatureParamsInternal,
+  options: MintWithSignatureParams,
 ) {
   return encodeAbiParameters(FN_INPUTS, [options.req, options.signature]);
 }
@@ -129,6 +122,7 @@ export function encodeMintWithSignatureParams(
  * import { mintWithSignature } from "thirdweb/extensions/erc721";
  *
  * const transaction = mintWithSignature({
+ *  contract,
  *  req: ...,
  *  signature: ...,
  * });
@@ -139,7 +133,12 @@ export function encodeMintWithSignatureParams(
  * ```
  */
 export function mintWithSignature(
-  options: BaseTransactionOptions<MintWithSignatureParams>,
+  options: BaseTransactionOptions<
+    | MintWithSignatureParams
+    | {
+        asyncParams: () => Promise<MintWithSignatureParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

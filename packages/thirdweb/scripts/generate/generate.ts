@@ -111,8 +111,7 @@ function generateWriteFunction(f: AbiFunction, extensionName: string): string {
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 ${
   f.inputs.length > 0
-    ? `import type { Prettify } from "../../../../../utils/type-utils.js";
-import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";`
+    ? `import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";`
     : ""
 }
 
@@ -122,7 +121,7 @@ ${
  * Represents the parameters for the "${f.name}" function.
  */
 
-type ${inputTypeName}Internal = {
+export type ${inputTypeName} = {
   ${f.inputs
     .map(
       (x) =>
@@ -130,9 +129,6 @@ type ${inputTypeName}Internal = {
     )
     .join("\n")}}
 
-export type ${inputTypeName} = Prettify<${inputTypeName}Internal | {
-  asyncParams: () => Promise<${inputTypeName}Internal>;
-}>;
     `
     : ""
 };
@@ -156,7 +152,7 @@ ${
    .join("\n * ")}\n * });
  * \`\`\`
  */
-export function encode${uppercaseFirstLetter(f.name)}Params(options: ${inputTypeName}Internal) {
+export function encode${uppercaseFirstLetter(f.name)}Params(options: ${inputTypeName}) {
   return encodeAbiParameters(FN_INPUTS, [${f.inputs
     .map((x) => `options.${removeLeadingUnderscore(x.name)}`)
     .join(", ")}]);
@@ -178,7 +174,7 @@ export function encode${uppercaseFirstLetter(f.name)}Params(options: ${inputType
  * 
  * const transaction = ${f.name}(${
    f.inputs.length > 0
-     ? `{\n * ${f.inputs
+     ? `{\n *  contract,\n * ${f.inputs
          .map((x) => ` ${removeLeadingUnderscore(x.name)}: ...,`)
          .join("\n * ")}\n * }`
      : ""
@@ -191,7 +187,11 @@ export function encode${uppercaseFirstLetter(f.name)}Params(options: ${inputType
  */
 export function ${f.name}(
   options: BaseTransactionOptions${
-    f.inputs.length > 0 ? `<${inputTypeName}>` : ""
+    f.inputs.length > 0
+      ? `<${inputTypeName} | {
+      asyncParams: () => Promise<${inputTypeName}>
+    }>`
+      : ""
   }
 ) {
   return prepareContractCall({

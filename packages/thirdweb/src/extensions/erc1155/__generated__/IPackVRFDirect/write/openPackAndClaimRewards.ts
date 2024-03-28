@@ -1,14 +1,13 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "openPackAndClaimRewards" function.
  */
 
-type OpenPackAndClaimRewardsParamsInternal = {
+export type OpenPackAndClaimRewardsParams = {
   packId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_packId" }>;
   amountToOpen: AbiParameterToPrimitiveType<{
     type: "uint256";
@@ -20,12 +19,6 @@ type OpenPackAndClaimRewardsParamsInternal = {
   }>;
 };
 
-export type OpenPackAndClaimRewardsParams = Prettify<
-  | OpenPackAndClaimRewardsParamsInternal
-  | {
-      asyncParams: () => Promise<OpenPackAndClaimRewardsParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0xac296b3f" as const;
 const FN_INPUTS = [
   {
@@ -63,7 +56,7 @@ const FN_OUTPUTS = [
  * ```
  */
 export function encodeOpenPackAndClaimRewardsParams(
-  options: OpenPackAndClaimRewardsParamsInternal,
+  options: OpenPackAndClaimRewardsParams,
 ) {
   return encodeAbiParameters(FN_INPUTS, [
     options.packId,
@@ -82,6 +75,7 @@ export function encodeOpenPackAndClaimRewardsParams(
  * import { openPackAndClaimRewards } from "thirdweb/extensions/erc1155";
  *
  * const transaction = openPackAndClaimRewards({
+ *  contract,
  *  packId: ...,
  *  amountToOpen: ...,
  *  callBackGasLimit: ...,
@@ -93,7 +87,12 @@ export function encodeOpenPackAndClaimRewardsParams(
  * ```
  */
 export function openPackAndClaimRewards(
-  options: BaseTransactionOptions<OpenPackAndClaimRewardsParams>,
+  options: BaseTransactionOptions<
+    | OpenPackAndClaimRewardsParams
+    | {
+        asyncParams: () => Promise<OpenPackAndClaimRewardsParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

@@ -1,23 +1,16 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "withdrawRewardTokens" function.
  */
 
-type WithdrawRewardTokensParamsInternal = {
+export type WithdrawRewardTokensParams = {
   amount: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_amount" }>;
 };
 
-export type WithdrawRewardTokensParams = Prettify<
-  | WithdrawRewardTokensParamsInternal
-  | {
-      asyncParams: () => Promise<WithdrawRewardTokensParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0xcb43b2dd" as const;
 const FN_INPUTS = [
   {
@@ -41,7 +34,7 @@ const FN_OUTPUTS = [] as const;
  * ```
  */
 export function encodeWithdrawRewardTokensParams(
-  options: WithdrawRewardTokensParamsInternal,
+  options: WithdrawRewardTokensParams,
 ) {
   return encodeAbiParameters(FN_INPUTS, [options.amount]);
 }
@@ -56,6 +49,7 @@ export function encodeWithdrawRewardTokensParams(
  * import { withdrawRewardTokens } from "thirdweb/extensions/erc721";
  *
  * const transaction = withdrawRewardTokens({
+ *  contract,
  *  amount: ...,
  * });
  *
@@ -65,7 +59,12 @@ export function encodeWithdrawRewardTokensParams(
  * ```
  */
 export function withdrawRewardTokens(
-  options: BaseTransactionOptions<WithdrawRewardTokensParams>,
+  options: BaseTransactionOptions<
+    | WithdrawRewardTokensParams
+    | {
+        asyncParams: () => Promise<WithdrawRewardTokensParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

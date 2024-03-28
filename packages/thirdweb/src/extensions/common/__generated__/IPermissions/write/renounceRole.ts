@@ -1,24 +1,17 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "renounceRole" function.
  */
 
-type RenounceRoleParamsInternal = {
+export type RenounceRoleParams = {
   role: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "role" }>;
   account: AbiParameterToPrimitiveType<{ type: "address"; name: "account" }>;
 };
 
-export type RenounceRoleParams = Prettify<
-  | RenounceRoleParamsInternal
-  | {
-      asyncParams: () => Promise<RenounceRoleParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x36568abe" as const;
 const FN_INPUTS = [
   {
@@ -46,7 +39,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodeRenounceRoleParams(options: RenounceRoleParamsInternal) {
+export function encodeRenounceRoleParams(options: RenounceRoleParams) {
   return encodeAbiParameters(FN_INPUTS, [options.role, options.account]);
 }
 
@@ -60,6 +53,7 @@ export function encodeRenounceRoleParams(options: RenounceRoleParamsInternal) {
  * import { renounceRole } from "thirdweb/extensions/common";
  *
  * const transaction = renounceRole({
+ *  contract,
  *  role: ...,
  *  account: ...,
  * });
@@ -70,7 +64,12 @@ export function encodeRenounceRoleParams(options: RenounceRoleParamsInternal) {
  * ```
  */
 export function renounceRole(
-  options: BaseTransactionOptions<RenounceRoleParams>,
+  options: BaseTransactionOptions<
+    | RenounceRoleParams
+    | {
+        asyncParams: () => Promise<RenounceRoleParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,

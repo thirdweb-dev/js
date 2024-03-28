@@ -1,23 +1,16 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
-import type { Prettify } from "../../../../../utils/type-utils.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 
 /**
  * Represents the parameters for the "setContractURI" function.
  */
 
-type SetContractURIParamsInternal = {
+export type SetContractURIParams = {
   uri: AbiParameterToPrimitiveType<{ type: "string"; name: "_uri" }>;
 };
 
-export type SetContractURIParams = Prettify<
-  | SetContractURIParamsInternal
-  | {
-      asyncParams: () => Promise<SetContractURIParamsInternal>;
-    }
->;
 const FN_SELECTOR = "0x938e3d7b" as const;
 const FN_INPUTS = [
   {
@@ -40,9 +33,7 @@ const FN_OUTPUTS = [] as const;
  * });
  * ```
  */
-export function encodeSetContractURIParams(
-  options: SetContractURIParamsInternal,
-) {
+export function encodeSetContractURIParams(options: SetContractURIParams) {
   return encodeAbiParameters(FN_INPUTS, [options.uri]);
 }
 
@@ -56,6 +47,7 @@ export function encodeSetContractURIParams(
  * import { setContractURI } from "thirdweb/extensions/thirdweb";
  *
  * const transaction = setContractURI({
+ *  contract,
  *  uri: ...,
  * });
  *
@@ -65,7 +57,12 @@ export function encodeSetContractURIParams(
  * ```
  */
 export function setContractURI(
-  options: BaseTransactionOptions<SetContractURIParams>,
+  options: BaseTransactionOptions<
+    | SetContractURIParams
+    | {
+        asyncParams: () => Promise<SetContractURIParams>;
+      }
+  >,
 ) {
   return prepareContractCall({
     contract: options.contract,
