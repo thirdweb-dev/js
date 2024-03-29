@@ -11,7 +11,8 @@
   },
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "test": "turbo run test --filter=./packages/* --filter=./legacy_packages/*",
+    "test": "turbo run test --filter=./packages/*",
+    "test:legacy": "turbo run test --filter=./legacy_packages/*",
     "e2e": "turbo run e2e",
     "build": "turbo run build --filter=./packages/* --filter=./legacy_packages/*",
     "bench": "turbo run bench",

@@ -8,7 +8,4 @@ test-evm: FORCE
 	./scripts/waitForHardhatNode.sh
 	pnpm run test:all
 
-test-sol: FORCE
-	./scripts/run_tests.sh
-
 FORCE: ;
