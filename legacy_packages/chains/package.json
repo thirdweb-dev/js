@@ -12,12 +12,12 @@
   },
   "author": "thirdweb eng <eng@thirdweb.com>",
   "devDependencies": {
-    "@babel/runtime": "^7.23.8",
+    "@babel/runtime": "^7.24.1",
     "@preconstruct/cli": "2.7.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "eslint-config-thirdweb": "workspace:*",
     "plop": "^3.1.2",
-    "typescript": "^5.3.3"
+    "typescript": "5.3.3"
   },
   "preconstruct": {
     "entrypoints": [

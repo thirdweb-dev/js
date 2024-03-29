@@ -13,7 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "typedoc": "^0.25.7"
+    "typedoc": "^0.25.12"
   },
   "devDependencies": {
     "tsup": "^6.7.0"

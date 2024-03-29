@@ -24,11 +24,11 @@ export type LocalWalletImportModalProps = {
   onWalletImported: (wallet: LocalWalletInstance) => void;
 };
 
-export const LocalWalletImportModal = ({
+export const LocalWalletImportModal: React.FC<LocalWalletImportModalProps> = ({
   isVisible,
   onClose,
   onWalletImported,
-}: LocalWalletImportModalProps) => {
+}) => {
   const l = useLocale();
   const [password, setPassword] = useState<string | undefined>();
   const [privateKeyOrMnemonic, setPrivateKeyOrMnemonic] = useState<
@@ -140,12 +140,12 @@ export const LocalWalletImportModal = ({
 
   const onPickFilePress = async () => {
     const result = await DocumentPicker.getDocumentAsync({
-      copyToCacheDirectory: true,
       type: "application/json",
+      multiple: false,
     });
 
-    if (result.type === "success") {
-      setJsonFile(result.uri);
+    if (!result.canceled && result.assets.length > 0) {
+      setJsonFile(result.assets[0].uri);
       setError(undefined);
     } else {
       setError(l.local_wallet.error_accessing_file);
