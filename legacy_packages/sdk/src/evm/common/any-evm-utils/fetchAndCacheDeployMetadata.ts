@@ -7,6 +7,7 @@ import {
   FullPublishMetadata,
   PreDeployMetadataFetched,
 } from "../../schema/contracts/custom";
+import { CompilerOptions } from "../../types/compiler/compiler-options";
 
 type DeployAndPublishMetadata = {
   compilerMetadata: PreDeployMetadataFetched;
@@ -22,14 +23,24 @@ const deployMetadataCache =
 export async function fetchAndCacheDeployMetadata(
   publishMetadataUri: string,
   storage: ThirdwebStorage,
+  compilerOptions?: CompilerOptions,
 ): Promise<DeployMetadata> {
-  const cached = deployMetadataCache.get(publishMetadataUri);
+  let compiler = compilerOptions
+    ? `${compilerOptions.compilerType}_${
+        compilerOptions.compilerVersion || ""
+      }_${compilerOptions.evmVersion || ""}
+  `
+    : "default";
+  const cacheKey = `${compiler} - ${publishMetadataUri}`;
+
+  const cached = deployMetadataCache.get(cacheKey);
   if (cached) {
     return cached;
   }
   const compilerMetadata = await fetchPreDeployMetadata(
     publishMetadataUri,
     storage,
+    compilerOptions,
   );
   let extendedMetadata;
   try {
@@ -44,6 +55,6 @@ export async function fetchAndCacheDeployMetadata(
     compilerMetadata,
     extendedMetadata,
   };
-  deployMetadataCache.put(publishMetadataUri, data);
+  deployMetadataCache.put(cacheKey, data);
   return data;
 }
