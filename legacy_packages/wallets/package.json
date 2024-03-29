@@ -606,7 +606,7 @@
     "rimraf": "^3.0.2",
     "tweetnacl": "^1.0.3",
     "typedoc-gen": "workspace:*",
-    "typescript": "5.3.3"
+    "typescript": "5.4.3"
   },
   "scripts": {
     "format": "prettier --write 'src/**/*'",

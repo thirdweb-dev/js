@@ -39,7 +39,7 @@
     "ethers": "^5.7.2",
     "js-awe": "^1.0.64",
     "tinybench": "^2.6.0",
-    "typescript": "5.3.3",
+    "typescript": "5.4.3",
     "viem": "^1.21.4"
   },
   "scripts": {

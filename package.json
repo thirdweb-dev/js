@@ -77,7 +77,7 @@
     "sharp": "^0.33.3",
     "size-limit": "11.1.2",
     "typedoc-gen": "workspace:*",
-    "typescript": "5.3.3",
+    "typescript": "5.4.3",
     "vitest": "1.4.0"
   },
   "manypkg": {

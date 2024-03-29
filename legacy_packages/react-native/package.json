@@ -68,7 +68,7 @@
     "react-native-camera": "^4.2.1",
     "rimraf": "^3.0.2",
     "typedoc-gen": "workspace:*",
-    "typescript": "5.3.3"
+    "typescript": "5.4.3"
   },
   "optionalDependencies": {
     "amazon-cognito-identity-js": "^6.3.12",

@@ -44,7 +44,7 @@
     "@preconstruct/cli": "2.7.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "eslint-config-thirdweb": "workspace:*",
-    "typescript": "5.3.3"
+    "typescript": "5.4.3"
   },
   "scripts": {
     "format": "prettier --write 'src/**/*'",
