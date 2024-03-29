@@ -4,7 +4,7 @@ import { getRpcClient } from "../rpc.js";
 import { FORKED_ETHEREUM_CHAIN } from "~test/chains.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
 
-const fetchSpy = vi.spyOn(globalThis, "fetch");
+const fetchSpy = vi.spyOn(global, "fetch");
 
 const rpcClient = getRpcClient({
   chain: FORKED_ETHEREUM_CHAIN,

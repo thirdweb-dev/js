@@ -4,7 +4,7 @@ import { getBalance } from "./getBalance.js";
 import { USDC_CONTRACT } from "~test/test-contracts.js";
 import { VITALIK_WALLET } from "~test/addresses.js";
 
-const fetchSpy = vi.spyOn(globalThis, "fetch");
+const fetchSpy = vi.spyOn(global, "fetch");
 
 describe("erc20.getBalance", () => {
   it("should return the getBalance result", async () => {

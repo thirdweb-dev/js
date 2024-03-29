@@ -7,7 +7,7 @@ import {
 import { DOODLES_CONTRACT } from "~test/test-contracts.js";
 import { DOODLES_ABI } from "../../../test/src/abis/doodles.js";
 
-const fetchSpy = vi.spyOn(globalThis, "fetch");
+const fetchSpy = vi.spyOn(global, "fetch");
 
 describe("resolveContractAbi", () => {
   it("should use the abi on the contract if it exists", async () => {
@@ -30,38 +30,36 @@ describe("resolveContractAbi", () => {
     const DOODLES_CONTRACT_CLONE = { ...DOODLES_CONTRACT };
     const abi1 = await resolveContractAbi(DOODLES_CONTRACT_CLONE);
     expect(abi1).toMatchObject(DOODLES_ABI);
-    // expect(fetchSpy).toHaveBeenCalledTimes(1);
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
     expect(fetchSpy).toHaveBeenCalledWith(
       `https://contract.thirdweb.com/abi/1/${DOODLES_CONTRACT_CLONE.address}`,
       expect.any(Object),
     );
     const abi2 = await resolveContractAbi(DOODLES_CONTRACT_CLONE);
     expect(abi2).toMatchObject(DOODLES_ABI);
-    // expect(fetchSpy).toHaveBeenCalledTimes(1);
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
   });
 });
 
-describe("resolveAbiFromContractApi", () => {
-  it("should resolve abi from contract api", async () => {
-    // we do this so we don't hit any PRIOR cache
-    const DOODLES_CONTRACT_CLONE = { ...DOODLES_CONTRACT };
-    const abi = await resolveAbiFromContractApi(DOODLES_CONTRACT_CLONE);
-    expect(abi).toMatchObject(DOODLES_ABI);
-    expect(fetchSpy).toHaveBeenCalledTimes(1);
-    expect(fetchSpy).toHaveBeenCalledWith(
-      `https://contract.thirdweb.com/abi/1/${DOODLES_CONTRACT_CLONE.address}`,
-      expect.any(Object),
-    );
-  });
-
-  it.runIf(process.env.TW_SECRET_KEY)(
-    "should resolve abi from contract api",
-    async () => {
-      // we do this so we don't hit any PRIOR cache
-      const DOODLES_CONTRACT_CLONE = { ...DOODLES_CONTRACT };
-      const abi = await resolveAbiFromBytecode(DOODLES_CONTRACT_CLONE);
-      expect(abi).toMatchObject(DOODLES_ABI);
-      expect(fetchSpy).toHaveBeenCalledTimes(2);
-    },
+it("should resolve abi from contract api", async () => {
+  // we do this so we don't hit any PRIOR cache
+  const DOODLES_CONTRACT_CLONE = { ...DOODLES_CONTRACT };
+  const abi = await resolveAbiFromContractApi(DOODLES_CONTRACT_CLONE);
+  expect(abi).toMatchObject(DOODLES_ABI);
+  expect(fetchSpy).toHaveBeenCalledTimes(1);
+  expect(fetchSpy).toHaveBeenCalledWith(
+    `https://contract.thirdweb.com/abi/1/${DOODLES_CONTRACT_CLONE.address}`,
+    expect.any(Object),
   );
 });
+
+it.runIf(process.env.TW_SECRET_KEY)(
+  "should resolve abi from bytecode",
+  async () => {
+    // we do this so we don't hit any PRIOR cache
+    const DOODLES_CONTRACT_CLONE = { ...DOODLES_CONTRACT };
+    const abi = await resolveAbiFromBytecode(DOODLES_CONTRACT_CLONE);
+    expect(abi).toMatchObject(DOODLES_ABI);
+    expect(fetchSpy).toHaveBeenCalledTimes(2);
+  },
+);

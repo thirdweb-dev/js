@@ -4,7 +4,7 @@ import { describe, it, expect, vi } from "vitest";
 import { prepareContractCall } from "../prepare-contract-call.js";
 import { simulateTransaction } from "./simulate.js";
 
-const fetchSpy = vi.spyOn(globalThis, "fetch");
+const fetchSpy = vi.spyOn(global, "fetch");
 
 describe("transaction: simulate", () => {
   it("should simulate correctly (human-readable)", async () => {

@@ -3,7 +3,7 @@ import { describe, it, expect, vi } from "vitest";
 import { NFT_DROP_CONTRACT } from "../../../../../test/src/test-contracts.js";
 import { getActiveClaimCondition } from "./getActiveClaimCondition.js";
 
-const fetchSpy = vi.spyOn(globalThis, "fetch");
+const fetchSpy = vi.spyOn(global, "fetch");
 
 describe("erc721.getClaimConditions", () => {
   it("should return the correct claim conditions", async () => {
