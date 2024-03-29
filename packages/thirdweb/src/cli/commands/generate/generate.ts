@@ -12,12 +12,13 @@ import {
   type AbiFunction,
   formatAbiItem,
 } from "abitype";
-import { format } from "prettier";
+
 import { prepareMethod } from "../../../utils/abi/prepare-method.js";
 import { mkdir, writeFile } from "node:fs/promises";
 import { packageDirectory } from "./utils.js";
 import { join } from "node:path";
 import { existsSync } from "node:fs";
+import type { Options } from "prettier";
 
 const client = createThirdwebClient({ clientId: "test" });
 
@@ -150,7 +151,7 @@ async function generateFromAbi(abi: Abi | string[]) {
     );
   }
 
-  const prettified = await format(body, {
+  const prettified = await prettifyCode(body, {
     parser: "babel-ts",
   });
   return prettified;
@@ -329,4 +330,19 @@ function lowercaseFirstLetter(str: string) {
 
 function eventNameToPreparedEventName(name: string) {
   return `${lowercaseFirstLetter(name)}Event`;
+}
+
+const printedPrettierWarning = false;
+
+async function prettifyCode(code: string, options: Options) {
+  try {
+    const { format } = await import("prettier/standalone.js");
+    return await format(code, options);
+  } catch (e) {
+    if (!printedPrettierWarning) {
+      console.info("Prettier not found, skipping code formatting.");
+    }
+  }
+
+  return code;
 }
