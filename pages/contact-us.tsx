@@ -259,27 +259,24 @@ const ContactUs: ThirdwebNextPage = () => {
                     })}
                   >
                     <option value="solo">Solo</option>
-                    <option value="2-10">2-10</option>
-                    <option value="11-49">11-49</option>
+                    <option value="2-49">2-49</option>
                     <option value="50-99">50-99</option>
                     <option value="100-249">100-249</option>
-                    <option value="250+">250</option>
+                    <option value="250+">250+</option>
                   </Select>
                 </FormControl>
                 <FormControl gap={6} isRequired>
                   <Select
                     h={14}
                     borderColor="gray.300"
-                    placeholder="What industry is your company most closely aligned with? *"
+                    placeholder="What industry best aligns with your business? *"
                     color="black"
                     {...form.register("0-2/product_type", { required: true })}
                   >
-                    <option value="Brand / Commerce">Brand / Commerce</option>
                     <option value="Game">Game</option>
-                    <option value="Tech">Tech</option>
-                    <option value="Protocols & Chains">
-                      Protocols & Chains
-                    </option>
+                    <option value="DeFi">DeFi</option>
+                    <option value="Consumer App">Consumer App</option>
+                    <option value="Protocol & Chain">Protocol & Chain</option>
                   </Select>
                 </FormControl>
                 <FormControl gap={6} isRequired>
@@ -290,18 +287,9 @@ const ContactUs: ThirdwebNextPage = () => {
                     color="black"
                     {...form.register("products", { required: true })}
                   >
-                    <option value="Gaming">Gaming</option>
-                    <option value="CommerceKit">CommerceKit</option>
-                    <option value="MintingAPI">Minting API</option>
-                    <option value="Wallets">Wallets</option>
-                    <option value="Marketplaces">Marketplaces</option>
-                    <option value="Account Abstraction">
-                      Account Abstraction
-                    </option>
-                    <option value="Chains & Appchains">
-                      Chains & Appchains
-                    </option>
-                    <option value="Other">Other</option>
+                    <option value="Connect">Connect</option>
+                    <option value="Engine">Engine</option>
+                    <option value="OnChain">OnChain</option>
                   </Select>
                 </FormControl>
                 <FormControl gap={6} isRequired>
