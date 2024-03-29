@@ -15,7 +15,7 @@
     "@types/cross-spawn": "^6.0.6",
     "@types/inquirer": "^8.2.10",
     "@types/js-yaml": "^4.0.9",
-    "@types/node": "^18.19.26",
+    "@types/node": "20.11.30",
     "@types/prompts": "^2.4.9",
     "@types/rimraf": "^3.0.2",
     "@types/tar": "^6.1.11",
