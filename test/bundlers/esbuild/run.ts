@@ -9,7 +9,11 @@ const spinner = ora("Running fixtures: ").start();
 for (const fixture of fixtures) {
   spinner.suffixText = fixture;
   try {
-    await execa("esbuild", ["fixtures/" + fixture, "--bundle"]);
+    await execa("esbuild", [
+      "fixtures/" + fixture,
+      "--bundle",
+      "--platform=node",
+    ]);
   } catch (error) {
     if (error.exitCode !== 0) {
       console.error(error);

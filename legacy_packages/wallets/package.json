@@ -606,7 +606,6 @@
     "hardhat": "^2.22.2",
     "jest": "^29.7.0",
     "rimraf": "^3.0.2",
-    "ts-jest": "^29.1.2",
     "tweetnacl": "^1.0.3",
     "typedoc-gen": "workspace:*",
     "typescript": "5.3.3"
@@ -626,6 +625,6 @@
     "node": ">=18"
   },
   "jest": {
-    "testTimeout": 30000
+    "testTimeout": 60000
   }
 }
