@@ -7,7 +7,7 @@ import {
 import { VITALIK_WALLET } from "../../test/src/addresses.js";
 import { readContract } from "./read-contract.js";
 
-const fetchSpy = vi.spyOn(global, "fetch");
+const fetchSpy = vi.spyOn(globalThis, "fetch");
 
 describe("transaction: read", () => {
   it("should read from the contract correctly", async () => {

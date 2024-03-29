@@ -3,7 +3,7 @@ import { describe, it, expect, vi } from "vitest";
 import { getNFT } from "./getNFT.js";
 import { DROP1155_CONTRACT } from "~test/test-contracts.js";
 
-const fetchSpy = vi.spyOn(global, "fetch");
+const fetchSpy = vi.spyOn(globalThis, "fetch");
 
 describe("erc1155.getNFT", () => {
   it.runIf(process.env.TW_SECRET_KEY)("without owner", async () => {

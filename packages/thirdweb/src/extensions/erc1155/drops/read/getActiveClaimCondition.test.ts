@@ -3,7 +3,7 @@ import { describe, it, expect, vi } from "vitest";
 import { DROP1155_CONTRACT } from "../../../../../test/src/test-contracts.js";
 import { getActiveClaimCondition } from "./getActiveClaimCondition.js";
 
-const fetchSpy = vi.spyOn(global, "fetch");
+const fetchSpy = vi.spyOn(globalThis, "fetch");
 
 describe("erc1155.getClaimConditions", () => {
   it("should return the correct claim conditions", async () => {

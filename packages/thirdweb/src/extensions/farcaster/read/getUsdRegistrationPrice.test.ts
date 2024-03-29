@@ -4,7 +4,7 @@ import { TEST_CLIENT } from "~test/test-clients.js";
 import { getUsdRegistrationPrice } from "./getUsdRegistrationPrice.js";
 import { FORKED_OPTIMISM_CHAIN } from "~test/chains.js";
 
-const fetchSpy = vi.spyOn(global, "fetch");
+const fetchSpy = vi.spyOn(globalThis, "fetch");
 
 describe("farcaster.getRegistrationPrice", () => {
   it("should return the price to register a new fid in USD", async () => {

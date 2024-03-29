@@ -6,7 +6,7 @@ import { describe, it, expect, vi } from "vitest";
 import { resolveMethod } from "../resolve-method.js";
 import { prepareContractCall } from "../prepare-contract-call.js";
 
-const fetchSpy = vi.spyOn(global, "fetch");
+const fetchSpy = vi.spyOn(globalThis, "fetch");
 
 const USDC_TRANSFER_ENCODE_RESULT =
   "0xa9059cbb00000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000064";
