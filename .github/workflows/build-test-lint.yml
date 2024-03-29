@@ -35,7 +35,7 @@ jobs:
       - name: Setup bun
         uses: oven-sh/setup-bun@v1
         with:
-          bun-version: 1.0.21
+          bun-version: 1.0.35
 
       - name: Install
         uses: ./.github/composite-actions/install
@@ -68,7 +68,7 @@ jobs:
       - name: Setup bun
         uses: oven-sh/setup-bun@v1
         with:
-          bun-version: 1.0.21
+          bun-version: 1.0.35
 
       - uses: pnpm/action-setup@v2
         with:
@@ -99,7 +99,7 @@ jobs:
       - name: Setup bun
         uses: oven-sh/setup-bun@v1
         with:
-          bun-version: 1.0.21
+          bun-version: 1.0.35
 
       - uses: pnpm/action-setup@v2
         with:
@@ -138,7 +138,7 @@ jobs:
       - name: Setup bun
         uses: oven-sh/setup-bun@v1
         with:
-          bun-version: 1.0.21
+          bun-version: 1.0.35
 
       - uses: pnpm/action-setup@v2
         with:
