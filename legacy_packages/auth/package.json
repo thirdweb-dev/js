@@ -61,7 +61,7 @@
     "lint": "eslint src/ && bunx publint --strict --level warning",
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/ && rm -rf node_modules/",
-    "test": "mocha --config './test/.mocharc.json' --timeout 240000 --parallel './test/**/*.test.ts'",
+    "test": "vitest",
     "push": "yalc push"
   },
   "preconstruct": {
@@ -87,13 +87,10 @@
     "@swc-node/register": "^1.9.0",
     "@swc/core": "^1.4.11",
     "@thirdweb-dev/tsconfig": "workspace:*",
-    "@types/chai": "^4.3.14",
     "@types/cookie": "^0.6.0",
     "@types/cookie-parser": "^1.4.7",
     "@types/express": "^4.17.21",
-    "@types/mocha": "^10.0.6",
     "@types/uuid": "^9.0.8",
-    "chai": "^4.4.1",
     "cookie-parser": "^1.4.6",
     "eslint": "^8.57.0",
     "eslint-config-thirdweb": "workspace:*",
@@ -104,7 +101,6 @@
     "ethers": "^5.7.2",
     "express": "^4.19.2",
     "fastify": "^4.26.2",
-    "mocha": "10.4.0",
     "next": "^13.5.6",
     "next-auth": "^4.24.7",
     "typescript": "5.4.3"
