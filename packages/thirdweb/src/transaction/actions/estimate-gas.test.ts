@@ -1,15 +1,12 @@
 import { USDC_CONTRACT } from "~test/test-contracts.js";
 import { TEST_WALLET_A } from "~test/addresses.js";
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { estimateGas } from "./estimate-gas.js";
 import { prepareContractCall } from "../prepare-contract-call.js";
 
 const fetchSpy = vi.spyOn(globalThis, "fetch");
 
 describe("transaction: estimate-gas", () => {
-  beforeEach(() => {
-    fetchSpy.mockClear();
-  });
   it("should estimate gas correctly (human-readable)", async () => {
     const tx = prepareContractCall({
       contract: USDC_CONTRACT,

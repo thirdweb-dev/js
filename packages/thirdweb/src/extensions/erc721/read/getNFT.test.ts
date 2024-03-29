@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, afterEach } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 
 import { getNFT } from "./getNFT.js";
 import { DOODLES_CONTRACT } from "~test/test-contracts.js";
@@ -6,9 +6,6 @@ import { DOODLES_CONTRACT } from "~test/test-contracts.js";
 const fetchSpy = vi.spyOn(globalThis, "fetch");
 
 describe("erc721.getNFT", () => {
-  afterEach(() => {
-    fetchSpy.mockClear();
-  });
   it.runIf(process.env.TW_SECRET_KEY)("without owner", async () => {
     const nft = await getNFT({
       contract: DOODLES_CONTRACT,

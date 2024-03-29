@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, afterEach } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { eth_blockNumber } from "./eth_blockNumber.js";
 import { getRpcClient } from "../rpc.js";
 import { FORKED_ETHEREUM_CHAIN } from "~test/chains.js";
@@ -12,9 +12,6 @@ const rpcClient = getRpcClient({
 });
 
 describe("eth_blockNumber", () => {
-  afterEach(() => {
-    fetchSpy.mockClear();
-  });
   it("should return the block number", async () => {
     const blockNumber = await eth_blockNumber(rpcClient);
     expect(blockNumber).toEqual(19139495n);

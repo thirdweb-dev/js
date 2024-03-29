@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, afterEach } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 
 import { DROP1155_CONTRACT } from "../../../../../test/src/test-contracts.js";
 import { getActiveClaimCondition } from "./getActiveClaimCondition.js";
@@ -6,9 +6,6 @@ import { getActiveClaimCondition } from "./getActiveClaimCondition.js";
 const fetchSpy = vi.spyOn(globalThis, "fetch");
 
 describe("erc1155.getClaimConditions", () => {
-  afterEach(() => {
-    fetchSpy.mockClear();
-  });
   it("should return the correct claim conditions", async () => {
     const cc = await getActiveClaimCondition({
       contract: DROP1155_CONTRACT,

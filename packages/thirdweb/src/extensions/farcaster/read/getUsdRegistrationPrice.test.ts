@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, afterEach } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 
 import { TEST_CLIENT } from "~test/test-clients.js";
 import { getUsdRegistrationPrice } from "./getUsdRegistrationPrice.js";
@@ -7,10 +7,6 @@ import { FORKED_OPTIMISM_CHAIN } from "~test/chains.js";
 const fetchSpy = vi.spyOn(globalThis, "fetch");
 
 describe("farcaster.getRegistrationPrice", () => {
-  afterEach(() => {
-    fetchSpy.mockClear();
-  });
-
   it("should return the price to register a new fid in USD", async () => {
     const price = await getUsdRegistrationPrice({
       client: TEST_CLIENT,

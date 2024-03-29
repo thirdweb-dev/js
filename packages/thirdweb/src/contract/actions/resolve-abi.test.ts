@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, afterEach } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import {
   resolveAbiFromContractApi,
   resolveContractAbi,
@@ -10,10 +10,6 @@ import { DOODLES_ABI } from "../../../test/src/abis/doodles.js";
 const fetchSpy = vi.spyOn(globalThis, "fetch");
 
 describe("resolveContractAbi", () => {
-  afterEach(() => {
-    fetchSpy.mockClear();
-  });
-
   it("should use the abi on the contract if it exists", async () => {
     const DOODLES_CONTRACT_CLONE = { ...DOODLES_CONTRACT, abi: DOODLES_ABI };
     const abi = await resolveContractAbi(DOODLES_CONTRACT_CLONE);
@@ -46,9 +42,6 @@ describe("resolveContractAbi", () => {
 });
 
 describe("resolveAbiFromContractApi", () => {
-  afterEach(() => {
-    fetchSpy.mockClear();
-  });
   it("should resolve abi from contract api", async () => {
     // we do this so we don't hit any PRIOR cache
     const DOODLES_CONTRACT_CLONE = { ...DOODLES_CONTRACT };
@@ -63,9 +56,6 @@ describe("resolveAbiFromContractApi", () => {
 });
 
 describe("resolveAbiFromContractApi", () => {
-  afterEach(() => {
-    fetchSpy.mockClear();
-  });
   it.runIf(process.env.TW_SECRET_KEY)(
     "should resolve abi from contract api",
     async () => {

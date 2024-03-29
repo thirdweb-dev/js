@@ -1,15 +1,12 @@
 import { USDC_CONTRACT } from "~test/test-contracts.js";
 import { TEST_WALLET_A } from "~test/addresses.js";
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { prepareContractCall } from "../prepare-contract-call.js";
 import { simulateTransaction } from "./simulate.js";
 
 const fetchSpy = vi.spyOn(globalThis, "fetch");
 
 describe("transaction: simulate", () => {
-  beforeEach(() => {
-    fetchSpy.mockClear();
-  });
   it("should simulate correctly (human-readable)", async () => {
     const tx = prepareContractCall({
       contract: USDC_CONTRACT,

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, afterEach } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { getRpcClient } from "../rpc.js";
 import { FORKED_ETHEREUM_CHAIN } from "~test/chains.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
@@ -17,9 +17,6 @@ const rpcClient = getRpcClient({
 });
 
 describe("eth_getBalance", () => {
-  afterEach(() => {
-    fetchSpy.mockClear();
-  });
   it("should return the correct balance at the given block", async () => {
     const vitalikBalance = await eth_getBalance(rpcClient, {
       address: VITALIK_WALLET,
