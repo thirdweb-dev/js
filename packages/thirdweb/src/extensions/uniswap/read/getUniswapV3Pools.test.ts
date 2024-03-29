@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, afterEach } from "vitest";
+import { describe, it, expect } from "vitest";
 
 import { getUniswapV3Pools } from "./getUniswapV3Pools.js";
 import {
@@ -8,13 +8,7 @@ import {
   MOG_CONTRACT_ADDRESS,
 } from "~test/test-contracts.js";
 
-const fetchSpy = vi.spyOn(globalThis, "fetch");
-
 describe("uniswap.getUniswapV3Pool", () => {
-  afterEach(() => {
-    fetchSpy.mockClear();
-  });
-
   it("should return the WETH/OHM pool address and fee", async () => {
     const pools = await getUniswapV3Pools({
       contract: UNISWAPV3_FACTORY_CONTRACT,

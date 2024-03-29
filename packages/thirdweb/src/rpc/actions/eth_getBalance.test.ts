@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, afterEach } from "vitest";
-import { getRpcClient } from "../rpc.js";
+import { describe, it, expect, vi } from "vitest";
+
 import { FORKED_ETHEREUM_CHAIN } from "~test/chains.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
 import { eth_getBalance } from "./eth_getBalance.js";
@@ -8,8 +8,10 @@ import {
   VITALIK_WALLET,
   ZERO_ADDRESS,
 } from "~test/addresses.js";
+import { getRpcClient } from "../rpc.js";
+import * as fetchRpc from "../fetch-rpc.js";
 
-const fetchSpy = vi.spyOn(globalThis, "fetch");
+const fetchSpy = vi.spyOn(fetchRpc, "fetchRpc");
 
 const rpcClient = getRpcClient({
   chain: FORKED_ETHEREUM_CHAIN,
@@ -17,9 +19,6 @@ const rpcClient = getRpcClient({
 });
 
 describe("eth_getBalance", () => {
-  afterEach(() => {
-    fetchSpy.mockClear();
-  });
   it("should return the correct balance at the given block", async () => {
     const vitalikBalance = await eth_getBalance(rpcClient, {
       address: VITALIK_WALLET,
@@ -44,9 +43,22 @@ describe("eth_getBalance", () => {
     // should only have been called once
     expect(fetchSpy).toHaveBeenCalledTimes(1);
     // check the exact payload, we should not have more than one ethBlockNumber request in the body!
-    expect(fetchSpy.mock.lastCall?.[1]?.body).toMatchInlineSnapshot(
-      `"[{"method":"eth_getBalance","params":["0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B","latest"],"id":0,"jsonrpc":"2.0"}]"`,
-    );
+    expect(fetchSpy.mock.lastCall?.[2]).toMatchInlineSnapshot(`
+      {
+        "requestTimeoutMs": undefined,
+        "requests": [
+          {
+            "id": 0,
+            "jsonrpc": "2.0",
+            "method": "eth_getBalance",
+            "params": [
+              "0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B",
+              "latest",
+            ],
+          },
+        ],
+      }
+    `);
   });
 
   it("should batch requests correctly", async () => {
@@ -77,8 +89,39 @@ describe("eth_getBalance", () => {
     // should only have been called once
     expect(fetchSpy).toHaveBeenCalledTimes(1);
     // check the exact payload, we should not have more than one ethBlockNumber request in the body!
-    expect(fetchSpy.mock.lastCall?.[1]?.body).toMatchInlineSnapshot(
-      `"[{"method":"eth_getBalance","params":["0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B","latest"],"id":0,"jsonrpc":"2.0"},{"method":"eth_getBalance","params":["0x0000000000000000000000000000000000000000","latest"],"id":1,"jsonrpc":"2.0"},{"method":"eth_getBalance","params":["0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef","latest"],"id":2,"jsonrpc":"2.0"}]"`,
-    );
+    expect(fetchSpy.mock.lastCall?.[2]).toMatchInlineSnapshot(`
+      {
+        "requestTimeoutMs": undefined,
+        "requests": [
+          {
+            "id": 0,
+            "jsonrpc": "2.0",
+            "method": "eth_getBalance",
+            "params": [
+              "0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B",
+              "latest",
+            ],
+          },
+          {
+            "id": 1,
+            "jsonrpc": "2.0",
+            "method": "eth_getBalance",
+            "params": [
+              "0x0000000000000000000000000000000000000000",
+              "latest",
+            ],
+          },
+          {
+            "id": 2,
+            "jsonrpc": "2.0",
+            "method": "eth_getBalance",
+            "params": [
+              "0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef",
+              "latest",
+            ],
+          },
+        ],
+      }
+    `);
   });
 });

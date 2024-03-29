@@ -12,15 +12,11 @@
   },
   "author": "thirdweb eng <eng@thirdweb.com>",
   "devDependencies": {
-    "@babel/core": "^7.23.7",
-    "@babel/preset-env": "^7.23.8",
-    "@babel/preset-typescript": "^7.23.3",
-    "@babel/runtime": "^7.23.8",
+    "@babel/runtime": "^7.24.1",
     "@preconstruct/cli": "2.7.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "eslint-config-thirdweb": "workspace:*",
-    "plop": "^3.1.2",
-    "typescript": "^5.3.3"
+    "typescript": "5.4.3"
   },
   "preconstruct": {
     "entrypoints": [
@@ -34,9 +30,6 @@
     "db:sync": "bun scripts/sync-db.ts",
     "build": "tsc && preconstruct build",
     "push": "yalc push",
-    "plop": "plop",
-    "add-chain": "plop add-chain",
-    "override-chain": "plop override-chain",
     "test": "bun test"
   },
   "engines": {

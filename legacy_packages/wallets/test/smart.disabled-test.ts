@@ -5,6 +5,7 @@ import { SmartWallet } from "../src/evm/wallets/smart-wallet";
 import { EthersWallet } from "../src/evm/wallets/ethers";
 import { EntryPoint__factory } from "@account-abstraction/contracts";
 import { AbstractWallet } from "../src";
+import { describe, it, beforeAll } from "vitest";
 
 // TODO make this work with a mock bundler/paymaster
 

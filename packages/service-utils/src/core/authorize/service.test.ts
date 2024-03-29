@@ -5,6 +5,7 @@ import {
 } from "../../mocks";
 import { CoreServiceConfig } from "../api";
 import { ServiceAuthorizationPayload, authorizeService } from "./service";
+import { describe, it, expect } from "vitest";
 
 describe("authorizeService", () => {
   it("should authorize service with valid service scope and action", () => {

@@ -1,4 +1,4 @@
-import { execa } from "execa";
+import { $ } from "bun";
 import fs from "node:fs/promises";
 import ora from "ora";
 
@@ -9,7 +9,7 @@ const spinner = ora("Running fixtures: ").start();
 for (const fixture of fixtures) {
   spinner.suffixText = fixture;
   try {
-    await execa("esbuild", ["fixtures/" + fixture, "--bundle"]);
+    await $`esbuild fixtures/${fixture} --bundle`.text();
   } catch (error) {
     if (error.exitCode !== 0) {
       console.error(error);

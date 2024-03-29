@@ -1,15 +1,9 @@
-import { describe, it, expect, vi, afterEach } from "vitest";
+import { describe, it, expect } from "vitest";
 
 import { getAllOwners } from "./getAllOwners.js";
 import { AZUKI_CONTRACT, DOODLES_CONTRACT } from "~test/test-contracts.js";
 
-const fetchSpy = vi.spyOn(globalThis, "fetch");
-
 describe.runIf(process.env.TW_SECRET_KEY)("erc721.getAllOwners", () => {
-  afterEach(() => {
-    fetchSpy.mockClear();
-  });
-
   it("works for azuki", async () => {
     const nfts = await getAllOwners({
       contract: AZUKI_CONTRACT,

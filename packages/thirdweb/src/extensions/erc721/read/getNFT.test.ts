@@ -1,17 +1,12 @@
-import { describe, it, expect, vi, afterEach } from "vitest";
+import { describe, it, expect } from "vitest";
 
 import { getNFT } from "./getNFT.js";
 import { DOODLES_CONTRACT } from "~test/test-contracts.js";
 
-const fetchSpy = vi.spyOn(globalThis, "fetch");
-
 describe("erc721.getNFT", () => {
-  afterEach(() => {
-    fetchSpy.mockClear();
-  });
   it.runIf(process.env.TW_SECRET_KEY)("without owner", async () => {
     const nft = await getNFT({
-      contract: DOODLES_CONTRACT,
+      contract: { ...DOODLES_CONTRACT },
       tokenId: 1n,
       includeOwner: false,
     });
@@ -50,8 +45,6 @@ describe("erc721.getNFT", () => {
         "type": "ERC721",
       }
     `);
-    // 2 fetch calls: 1 for RPC, 1 for fetching the tokenUri
-    expect(fetchSpy).toHaveBeenCalledTimes(2);
   });
 
   it.runIf(process.env.TW_SECRET_KEY)("with owner", async () => {

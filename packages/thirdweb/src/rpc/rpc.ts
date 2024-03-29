@@ -1,53 +1,9 @@
 import type { EIP1193RequestFn, EIP1474Methods } from "viem";
 import type { ThirdwebClient } from "../client/client.js";
-import { getClientFetch } from "../utils/fetch.js";
-import { stringify } from "../utils/json.js";
+
 import { getRpcUrlForChain } from "../chains/utils.js";
 import type { Chain } from "../chains/types.js";
-
-type SuccessResult<T> = {
-  method?: never;
-  result: T;
-  error?: never;
-};
-type ErrorResult<T> = {
-  method?: never;
-  result?: never;
-  error: T;
-};
-type Subscription<TResult, TError> = {
-  method: "eth_subscription";
-  error?: never;
-  result?: never;
-  params: {
-    subscription: string;
-  } & (
-    | {
-        result: TResult;
-        error?: never;
-      }
-    | {
-        result?: never;
-        error: TError;
-      }
-  );
-};
-
-type RpcRequest = {
-  jsonrpc?: "2.0";
-  method: string;
-  params?: any;
-  id?: number;
-};
-
-type RpcResponse<TResult = any, TError = any> = {
-  jsonrpc: `${number}`;
-  id: number;
-} & (
-  | SuccessResult<TResult>
-  | ErrorResult<TError>
-  | Subscription<TResult, TError>
-);
+import { fetchRpc, fetchSingleRpc, type RpcRequest } from "./fetch-rpc.js";
 
 const RPC_CLIENT_MAP = new WeakMap();
 
@@ -233,6 +189,7 @@ export function getRpcClient(
 
     return async function (request) {
       const requestKey = rpcRequestKey(request);
+
       // if the request for this key is already inflight, return the promise directly
       if (inflightRequests.has(requestKey)) {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -265,83 +222,4 @@ export function getRpcClient(
 
   rpcClientMap.set(chainId, rpcClient);
   return rpcClient as EIP1193RequestFn<EIP1474Methods>;
-}
-
-type FetchRpcOptions = {
-  requests: RpcRequest[];
-  requestTimeoutMs?: number;
-};
-
-/**
- * @internal
- */
-async function fetchRpc(
-  rpcUrl: string,
-  client: ThirdwebClient,
-  options: FetchRpcOptions,
-): Promise<RpcResponse[]> {
-  const response = await getClientFetch(client)(rpcUrl, {
-    headers: {
-      ...client.config?.rpc?.fetch?.headers,
-      "Content-Type": "application/json",
-    },
-    body: stringify(options.requests),
-    method: "POST",
-    requestTimeoutMs:
-      options.requestTimeoutMs ?? client.config?.rpc?.fetch?.requestTimeoutMs,
-    keepalive: client.config?.rpc?.fetch?.keepalive,
-  });
-
-  if (!response.ok) {
-    response.body?.cancel();
-    throw new Error(`RPC request failed with status ${response.status}`);
-  }
-
-  let result;
-
-  if (response.headers.get("Content-Type")?.startsWith("application/json")) {
-    result = await response.json();
-  } else {
-    result = await response.text();
-  }
-
-  return result;
-}
-
-type FetchSingleRpcOptions = {
-  request: RpcRequest;
-  requestTimeoutMs?: number;
-};
-
-async function fetchSingleRpc(
-  rpcUrl: string,
-  client: ThirdwebClient,
-  options: FetchSingleRpcOptions,
-): Promise<RpcResponse> {
-  const response = await getClientFetch(client)(rpcUrl, {
-    headers: {
-      ...(client.config?.rpc?.fetch?.headers || {}),
-      "Content-Type": "application/json",
-    },
-    body: stringify(options.request),
-    method: "POST",
-    requestTimeoutMs:
-      options.requestTimeoutMs ?? client.config?.rpc?.fetch?.requestTimeoutMs,
-    keepalive: client.config?.rpc?.fetch?.keepalive,
-  });
-
-  if (!response.ok) {
-    response.body?.cancel();
-    throw new Error(`RPC request failed with status ${response.status}`);
-  }
-
-  let result;
-
-  if (response.headers.get("Content-Type")?.startsWith("application/json")) {
-    result = await response.json();
-  } else {
-    result = await response.text();
-  }
-
-  return result;
 }
