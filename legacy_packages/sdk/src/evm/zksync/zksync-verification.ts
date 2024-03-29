@@ -9,6 +9,7 @@ import { fetchSourceFilesFromMetadata } from "../common/fetchSourceFilesFromMeta
 import { fetchRawPredeployMetadata } from "../common/feature-detection/fetchRawPredeployMetadata";
 import { fetchContractMetadata } from "../common/fetchContractMetadata";
 import { checkVerificationStatus } from "../common/verification";
+import { ThirdwebSDK } from "../core/sdk";
 
 const RequestStatus = {
   OK: "1",
@@ -27,7 +28,8 @@ export async function zkVerify(
   explorerAPIUrl: string,
   explorerAPIKey: string,
   storage: ThirdwebStorage,
-  contractUri?: string,
+  metadataUri?: string,
+  zkVersion?: string,
   encodedConstructorArgs?: string,
 ) {
   try {
@@ -43,21 +45,24 @@ export async function zkVerify(
       };
       compilerMetadata.metadata.sources = twProxyArtifactZK.sources;
     } else {
-      invariant(contractUri, "No contract URI provided");
-      const rawMeta = await fetchRawPredeployMetadata(contractUri, storage);
-      const zksolcs = rawMeta.compilers?.zksolc;
-      invariant(zksolcs && zksolcs.length > 0, "No zk compilers found");
-
-      const metadataUri = zksolcs[0].metadataUri;
-      invariant(metadataUri, "ZkSolc metadata not found");
+      if (!metadataUri || metadataUri.length === 0) {
+        metadataUri = await fetchFromMultiChainRegistry(
+          contractAddress,
+          chainId,
+        );
+      }
+      invariant(metadataUri && metadataUri.length > 0, "No contract URI found");
 
       const parsedMetadata = await fetchContractMetadata(metadataUri, storage);
+      const zk_version =
+        parsedMetadata.metadata.settings.zk_version || zkVersion;
+      invariant(zk_version, "zk version not found");
 
       compilerMetadata = {
         name: parsedMetadata.name,
         abi: parsedMetadata.abi,
         metadata: parsedMetadata.metadata,
-        zk_version: rawMeta.zk_version,
+        zk_version,
       };
     }
 
@@ -184,4 +189,19 @@ async function zkFetchConstructorParams(
     // Could not retrieve constructor parameters, using empty parameters as fallback
     return "";
   }
+}
+
+async function fetchFromMultiChainRegistry(
+  address: string,
+  chainId: number,
+): Promise<string | undefined> {
+  try {
+    // random wallet is fine here, we're doing gasless calls
+    const sdk = new ThirdwebSDK("polygon");
+    const uri = await sdk.multiChainRegistry.getContractMetadataURI(
+      chainId,
+      address,
+    );
+    return uri;
+  } catch (e) {}
 }
