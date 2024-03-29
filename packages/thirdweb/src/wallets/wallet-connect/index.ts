@@ -65,7 +65,7 @@ const storageKeys = {
 export async function connectWC(
   options: WCConnectOptions,
   emitter: WalletEmitter<WCSupportedWalletIds>,
-  walletId: WCSupportedWalletIds,
+  walletId: WCSupportedWalletIds | "walletConnect",
 ): Promise<ReturnType<typeof onConnect>> {
   const provider = await initProvider(options, walletId);
 
@@ -140,7 +140,7 @@ export async function connectWC(
 export async function autoConnectWC(
   options: WCAutoConnectOptions,
   emitter: WalletEmitter<WCSupportedWalletIds>,
-  walletId: WCSupportedWalletIds,
+  walletId: WCSupportedWalletIds | "walletConnect",
 ): Promise<ReturnType<typeof onConnect>> {
   const savedConnectParams: SavedConnectParams | null = asyncLocalStorage
     ? await getSavedConnectParamsFromStorage(asyncLocalStorage, walletId)
@@ -196,7 +196,7 @@ export async function autoConnectWC(
 
 async function initProvider(
   options: WCConnectOptions,
-  walletId: WCSupportedWalletIds,
+  walletId: WCSupportedWalletIds | "walletConnect",
   isAutoConnect = false,
 ) {
   const walletInfo = await getWalletInfo(walletId);
@@ -257,33 +257,41 @@ async function initProvider(
     }
   }
 
-  function handleSessionRequest() {
-    if (typeof window === "undefined") {
-      return;
+  if (walletId !== "walletConnect") {
+    function handleSessionRequest() {
+      if (typeof window === "undefined") {
+        return;
+      }
+
+      if (!isMobile()) {
+        return;
+      }
+
+      const preferUniversal =
+        walletInfo.mobile.universal || walletInfo.mobile.native;
+      const preferNative =
+        walletInfo.mobile.native || walletInfo.mobile.universal;
+
+      if (isAndroid()) {
+        if (preferUniversal) {
+          openWindow(preferUniversal);
+        }
+      } else if (isIOS()) {
+        if (preferNative) {
+          openWindow(preferNative);
+        }
+      } else {
+        if (preferUniversal) {
+          openWindow(preferUniversal);
+        }
+      }
     }
 
-    if (!isMobile()) {
-      return;
-    }
-
-    const preferUniversal =
-      walletInfo.mobile.universal || walletInfo.mobile.native || "";
-    const preferNative =
-      walletInfo.mobile.native || walletInfo.mobile.universal || "";
-
-    if (isAndroid()) {
-      openWindow(preferUniversal);
-    } else if (isIOS()) {
-      openWindow(preferNative);
-    } else {
-      openWindow(preferUniversal);
-    }
+    provider.signer.client.on("session_request_sent", handleSessionRequest);
+    provider.events.addListener("disconnect", () => {
+      provider.signer.client.off("session_request_sent", handleSessionRequest);
+    });
   }
-
-  provider.signer.client.on("session_request_sent", handleSessionRequest);
-  provider.events.addListener("disconnect", () => {
-    provider.signer.client.off("session_request_sent", handleSessionRequest);
-  });
 
   // try switching to correct chain
   if (options?.chain && provider.chainId !== options?.chain.id) {

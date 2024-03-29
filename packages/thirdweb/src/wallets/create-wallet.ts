@@ -168,7 +168,7 @@ export function createWallet<const ID extends WalletId>(
             ] = await connectWC(
               wcOptions,
               emitter,
-              wallet.id as WCSupportedWalletIds,
+              wallet.id as WCSupportedWalletIds | "walletConnect",
             );
             // set the states
             account = connectedAccount;
