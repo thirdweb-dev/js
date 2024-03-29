@@ -1315,7 +1315,7 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
   },
   {
     id: "smart",
-    name: "Smart Contract Wallet",
+    name: "Smart Wallet",
   },
   {
     id: "embedded",

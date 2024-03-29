@@ -92,7 +92,7 @@ const walletInfos = allSupportedWallets.map((wallet) => {
 const customWalletInfos = [
   {
     id: "smart",
-    name: "Smart Contract Wallet",
+    name: "Smart Wallet",
   },
   {
     id: "embedded",
