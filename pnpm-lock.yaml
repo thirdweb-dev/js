@@ -1116,8 +1116,8 @@ importers:
         specifier: ^3.1.3
         version: 3.1.3
       thirdweb:
-        specifier: ^5.0.0
-        version: 5.0.0(@types/react@18.2.17)(ethers@5.7.2)(react-dom@18.2.0)(react@18.2.0)(typescript@5.3.3)(zod@3.22.4)
+        specifier: workspace:*
+        version: link:../../packages/thirdweb
       tiny-invariant:
         specifier: ^1.2.0
         version: 1.3.1
@@ -28622,68 +28622,6 @@ packages:
     resolution: {integrity: sha512-RVZSIV5IG10Hk3enotrhvz0T9em6cyHBLkH/YAZuKqd8hRkKhSfCGIcP2KUY0EPxndzANBmNllzWPwak+bheSw==}
     dependencies:
       any-promise: 1.3.0
-
-  /thirdweb@5.0.0(@types/react@18.2.17)(ethers@5.7.2)(react-dom@18.2.0)(react@18.2.0)(typescript@5.3.3)(zod@3.22.4):
-    resolution: {integrity: sha512-UJNuTAXMnXwNCrdUCXCmWff94+2c9M8X4xa5eYwlUCX80oxiNxFoC0ivj9smDCDpj/SH5Y5e9WK6F5WZ1XXh/w==}
-    engines: {node: '>=18'}
-    hasBin: true
-    peerDependencies:
-      ethers: ^5 || ^6
-      react: '>=18'
-      typescript: '>=5.0.4'
-    peerDependenciesMeta:
-      ethers:
-        optional: true
-      react:
-        optional: true
-      typescript:
-        optional: true
-    dependencies:
-      '@coinbase/wallet-sdk': 3.7.2
-      '@emotion/react': 11.11.4(@types/react@18.2.17)(react@18.2.0)
-      '@emotion/styled': 11.11.0(@emotion/react@11.11.4)(@types/react@18.2.17)(react@18.2.0)
-      '@google/model-viewer': 2.1.1
-      '@noble/curves': 1.4.0
-      '@noble/hashes': 1.4.0
-      '@radix-ui/react-dialog': 1.0.5(@types/react-dom@18.2.7)(@types/react@18.2.17)(react-dom@18.2.0)(react@18.2.0)
-      '@radix-ui/react-focus-scope': 1.0.4(@types/react-dom@18.2.7)(@types/react@18.2.17)(react-dom@18.2.0)(react@18.2.0)
-      '@radix-ui/react-icons': 1.3.0(react@18.2.0)
-      '@radix-ui/react-tooltip': 1.0.7(@types/react-dom@18.2.7)(@types/react@18.2.17)(react-dom@18.2.0)(react@18.2.0)
-      '@tanstack/react-query': 5.28.9(react@18.2.0)
-      '@walletconnect/ethereum-provider': 2.11.3(@types/react@18.2.17)(react@18.2.0)
-      abitype: 1.0.0(typescript@5.3.3)(zod@3.22.4)
-      ethers: 5.7.2
-      fast-text-encoding: 1.0.6
-      fuse.js: 7.0.0
-      mipd: 0.0.7(typescript@5.3.3)
-      node-libs-browser: 2.2.1
-      react: 18.2.0
-      typescript: 5.3.3
-      uqr: 0.1.2
-      viem: 2.9.4(typescript@5.3.3)(zod@3.22.4)
-    transitivePeerDependencies:
-      - '@azure/app-configuration'
-      - '@azure/cosmos'
-      - '@azure/data-tables'
-      - '@azure/identity'
-      - '@azure/keyvault-secrets'
-      - '@azure/storage-blob'
-      - '@capacitor/preferences'
-      - '@netlify/blobs'
-      - '@planetscale/database'
-      - '@react-native-async-storage/async-storage'
-      - '@types/react'
-      - '@types/react-dom'
-      - '@upstash/redis'
-      - '@vercel/kv'
-      - bufferutil
-      - encoding
-      - react-dom
-      - supports-color
-      - uWebSockets.js
-      - utf-8-validate
-      - zod
-    dev: false
 
   /thread-stream@0.15.2:
     resolution: {integrity: sha512-UkEhKIg2pD+fjkHQKyJO3yoIvAP3N6RlNFt2dUhcS1FGvCD1cQa1M/PGknCLFIyZdtJOWQjejp7bdNqmN7zwdA==}

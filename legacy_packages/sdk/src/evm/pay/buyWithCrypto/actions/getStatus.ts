@@ -7,6 +7,8 @@ export type BuyWithCryptoTransaction = {
   transactionHash: string;
 };
 
+export { type BuyWithCryptoStatus } from "thirdweb/pay";
+
 /**
  * Gets the status of a buy with crypto transaction
  * @param buyWithCryptoTransaction - Object of type [`BuyWithCryptoTransaction`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoTransaction)
@@ -41,7 +43,6 @@ export type BuyWithCryptoTransaction = {
  * }});
  * ```
  * @returns Object of type [`BuyWithCryptoStatus`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoStatus)
- * @buyCrypto
  */
 export async function getBuyWithCryptoStatus(
   buyWithCryptoTransaction: BuyWithCryptoTransaction,

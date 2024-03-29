@@ -302,3 +302,8 @@ export { getErcs, getErc1155, getErc721, getErc20 } from "./types";
 // transaction hooks
 export { useWatchTransactions } from "./hooks/useTransactions";
 export type { UseWatchTransactionsParams } from "./hooks/useTransactions";
+
+// pay hooks
+export * from "./hooks/pay/useBuyWithCryptoHistory";
+export * from "./hooks/pay/useBuyWithCryptoQuote";
+export * from "./hooks/pay/useBuyWithCryptoStatus";

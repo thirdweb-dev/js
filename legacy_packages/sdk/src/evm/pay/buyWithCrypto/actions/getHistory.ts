@@ -10,7 +10,6 @@ import {
 /**
  * The parameters for [`getBuyWithCryptoHistory`](https://portal.thirdweb.com/references/typescript/v4/getBuyWithCryptoHistory) function
  * It takes the wallet history address and optional cursor and page size. for paginated results.
- * @buyCrypto
  */
 export type BuyWithCryptoHistoryParams = {
   /**
@@ -21,9 +20,11 @@ export type BuyWithCryptoHistoryParams = {
   clientId: string;
 } & Omit<BuyWithCryptoHistoryParamsV5, "client">;
 
+export { type BuyWithCryptoHistoryData } from "thirdweb/pay";
+
 /**
  * Gets the History of purchases for a given wallet address
- * @param params Object of type [`BuyWithCryptoHistoryParams`](https://portal.thirdweb.com/references/typescript/v4/BuyWithCryptoHistoryParams)
+ * @param params - Object of type [`BuyWithCryptoHistoryParams`](https://portal.thirdweb.com/references/typescript/v4/BuyWithCryptoHistoryParams)
  * @example
  *
  * ```ts
@@ -39,7 +40,6 @@ export type BuyWithCryptoHistoryParams = {
  * const status = await getBuyWithCryptoHistory(params)
  * ```
  * @returns Object of type [`BuyWithCryptoHistoryData`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoHistoryData)
- * @buyCrypto
  */
 export async function getBuyWithCryptoHistory(
   params: BuyWithCryptoHistoryParams,

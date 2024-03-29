@@ -5,7 +5,7 @@ import {
   getBuyWithCryptoQuote as getBuyWithCryptoQuoteV5,
   prepareTransaction,
 } from "thirdweb";
-import { resolvePromisedValue } from "thirdweb/dist/types/utils/promise/resolve-promised-value";
+import { resolvePromisedValue } from "thirdweb/utils";
 
 /**
  * The parameters for [`getBuyWithCryptoQuote`](https://portal.thirdweb.com/references/typescript/v4/getBuyWithCryptoQuote) function
@@ -114,7 +114,6 @@ export type BuyWithCryptoQuote = {
  *  maxSlippageBPS: 50, // optional: max 0.5% slippage
  * });
  * ```
- * @buyCrypto
  */
 export async function getBuyWithCryptoQuote(
   params: GetBuyWithCryptoQuoteParams,
