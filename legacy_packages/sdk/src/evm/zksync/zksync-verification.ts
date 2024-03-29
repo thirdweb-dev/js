@@ -180,14 +180,14 @@ async function zkFetchConstructorParams(
         utils.hexDataSlice(transaction.data, 4),
       );
 
-      return decoded[2];
+      return decoded[2].startsWith("0x") ? decoded[2] : `0x${decoded[2]}`;
     } else {
       // TODO: decode for create2 deployments via factory
-      return "";
+      return "0x";
     }
   } else {
     // Could not retrieve constructor parameters, using empty parameters as fallback
-    return "";
+    return "0x";
   }
 }
 
