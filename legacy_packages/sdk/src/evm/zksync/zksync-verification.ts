@@ -6,7 +6,6 @@ import { getChainProvider } from "../constants/urls";
 import { Abi } from "../schema/contracts/custom";
 import { twProxyArtifactZK } from "./temp-artifact/TWProxy";
 import { fetchSourceFilesFromMetadata } from "../common/fetchSourceFilesFromMetadata";
-import { fetchRawPredeployMetadata } from "../common/feature-detection/fetchRawPredeployMetadata";
 import { fetchContractMetadata } from "../common/fetchContractMetadata";
 import { checkVerificationStatus } from "../common/verification";
 import { ThirdwebSDK } from "../core/sdk";

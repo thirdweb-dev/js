@@ -34,10 +34,10 @@ export class ZKHardhatBuilder extends BaseBuilder {
 
     logger.debug("successfully extracted hardhat config", actualHardhatConfig);
 
-    // await execute("npx hardhat clean", options.projectPath);
+    await execute("npx hardhat clean", options.projectPath);
 
     let ignoreIpfsHash = false;
-    // if (options.zksync) {
+
     const zkNetwork = Object.entries(actualHardhatConfig.networks).find(
       (network) => {
         return (network[1] as any).zksync;
@@ -54,21 +54,6 @@ export class ZKHardhatBuilder extends BaseBuilder {
       `npx hardhat compile --network ${zkNetwork?.[0]}`,
       options.projectPath,
     );
-    // } else {
-    //   await execute(`npx hardhat compile`, options.projectPath);
-    // }
-
-    // const solcConfigs = actualHardhatConfig.solidity.compilers;
-    // if (solcConfigs) {
-    //   for (const solcConfig of solcConfigs) {
-    //     const byteCodeHash = solcConfig.settings?.metadata?.bytecodeHash;
-    //     if (byteCodeHash && byteCodeHash !== "ipfs") {
-    //       throw new Error(
-    //         `Deploying requires "bytecodeHash: 'ipfs'" in your hardhat.config.js file, but it's currently set as "bytecodeHash: '${byteCodeHash}'". Please change it to 'ipfs' and try again.`,
-    //       );
-    //     }
-    //   }
-    // }
 
     const artifactsPath = actualHardhatConfig.paths.artifacts;
     const sourcesDir = actualHardhatConfig.paths.sources.replace(

@@ -35,7 +35,7 @@ export class HardhatBuilder extends BaseBuilder {
 
     logger.debug("successfully extracted hardhat config", actualHardhatConfig);
 
-    // await execute("npx hardhat clean", options.projectPath);
+    await execute("npx hardhat clean", options.projectPath);
     await execute(`npx hardhat compile`, options.projectPath);
 
     const solcConfigs = actualHardhatConfig.solidity.compilers;
