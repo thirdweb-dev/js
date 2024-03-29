@@ -248,6 +248,25 @@ export function createWallet<const ID extends WalletId>(
 }
 
 /**
+ * Creates a wallet that allows connecting to any wallet that supports the WalletConnect protocol.
+ * @returns The created smart wallet.
+ * @example
+ * ```ts
+ * import { walletConnect } from "thirdweb/wallets";
+ *
+ * const wallet = walletConnect();
+ *
+ * const account = await wallet.connect({
+ *  client
+ * });
+ * ```
+ * @wallet
+ */
+export function walletConnect() {
+  return createWallet("walletConnect");
+}
+
+/**
  * Creates a smart wallet.
  * @param createOptions - The options for creating the wallet.
  * @returns The created smart wallet.
