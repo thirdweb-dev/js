@@ -90,14 +90,11 @@ function ConnectModalInlineContent(props: {
     <>
       <ConnectModalContent
         screenSetup={screenSetup}
-        onHide={() => {
-          // no op
+        setModalVisibility={() => {
+          // noop
         }}
         isOpen={true}
         onClose={() => {
-          // no op
-        }}
-        onShow={() => {
           // no op
         }}
       />

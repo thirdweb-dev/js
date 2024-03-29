@@ -1,4 +1,4 @@
-import type { AsyncStorage } from "../../../wallets/storage/AsyncStorage.js";
+import type { AsyncStorage } from "./AsyncStorage.js";
 
 export const asyncLocalStorage: AsyncStorage = {
   async getItem(key: string) {

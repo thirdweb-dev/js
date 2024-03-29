@@ -18,7 +18,7 @@ import { createWallet } from "../../../../../wallets/create-wallet.js";
 import { useWalletInfo } from "../../hooks/useWalletInfo.js";
 import type { WalletInfo } from "../../../../../wallets/wallet-info.js";
 import { saveConnectParamsToStorage } from "../../../../../wallets/storage/walletStorage.js";
-import { asyncLocalStorage } from "../../../../core/utils/asyncLocalStorage.js";
+import { asyncLocalStorage } from "../../../../../wallets/storage/asyncLocalStorage.js";
 
 /**
  * @internal
@@ -28,6 +28,7 @@ export function SmartConnectUI(props: {
   done: (smartWallet: Wallet) => void;
   onBack?: () => void;
   accountAbstraction: SmartWalletOptions;
+  setModalVisibility: (value: boolean) => void;
 }) {
   const personalWalletInfo = useWalletInfo(props.personalWallet.id);
   const [keyConnected, setKeyConnected] = useState(false);
@@ -45,6 +46,7 @@ export function SmartConnectUI(props: {
           setKeyConnected(true);
         }}
         onBack={props.onBack}
+        setModalVisibility={props.setModalVisibility}
       />
     );
   }

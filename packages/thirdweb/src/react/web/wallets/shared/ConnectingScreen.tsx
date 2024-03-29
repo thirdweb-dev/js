@@ -16,7 +16,7 @@ export const ConnectingScreen: React.FC<{
   onBack?: () => void;
   walletId: WalletId;
   walletName: string;
-  onGetStarted: () => void;
+  onGetStarted?: () => void;
   errorConnecting: boolean;
   onRetry: () => void;
   locale: {
@@ -92,14 +92,17 @@ export const ConnectingScreen: React.FC<{
         </Container>
       </Container>
 
-      <Spacer y="xl" />
-      <Line />
-
-      <Container flex="row" center="x" p="lg">
-        <Button variant="link" onClick={props.onGetStarted}>
-          {locale.getStartedLink}
-        </Button>
-      </Container>
+      {props.onGetStarted && (
+        <>
+          <Spacer y="xl" />
+          <Line />
+          <Container flex="row" center="x" p="lg">
+            <Button variant="link" onClick={props.onGetStarted}>
+              {locale.getStartedLink}
+            </Button>
+          </Container>
+        </>
+      )}
     </Container>
   );
 };

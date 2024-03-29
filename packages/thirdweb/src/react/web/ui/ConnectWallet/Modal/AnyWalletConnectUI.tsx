@@ -12,7 +12,10 @@ import type { InjectedWalletLocale } from "../../../wallets/injected/locale/type
 import { getInjectedWalletLocale } from "../../../wallets/injected/locale/getInjectedWalletLocale.js";
 import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import { GetStartedScreen } from "../../../wallets/shared/GetStartedScreen.js";
-import { WalletConnectConnection } from "../../../wallets/shared/WalletConnectConnection.js";
+import {
+  WalletConnectConnection,
+  WalletConnectStandaloneConnection,
+} from "../../../wallets/shared/WalletConnectConnection.js";
 
 const CoinbaseSDKWalletConnectUI = /* @__PURE__ */ lazy(
   () => import("../../../wallets/shared/CoinbaseSDKConnection.js"),
@@ -28,6 +31,7 @@ export function AnyWalletConnectUI(props: {
   wallet: Wallet;
   done: () => void;
   onBack?: () => void;
+  setModalVisibility: (value: boolean) => void;
 }) {
   const [screen, setScreen] = useState<"main" | "get-started">("main");
   const walletInfo = useWalletInfo(props.wallet.id);
@@ -110,6 +114,20 @@ export function AnyWalletConnectUI(props: {
         done={props.done}
         wallet={props.wallet as Wallet<WCSupportedWalletIds>}
         walletInfo={walletInfo.data}
+      />
+    );
+  }
+
+  // wallet connect
+  if (props.wallet.id === "walletConnect") {
+    return (
+      <WalletConnectStandaloneConnection
+        locale={locale}
+        onBack={props.onBack}
+        done={props.done}
+        wallet={props.wallet as Wallet<"walletConnect">}
+        walletInfo={walletInfo.data}
+        setModalVisibility={props.setModalVisibility}
       />
     );
   }
