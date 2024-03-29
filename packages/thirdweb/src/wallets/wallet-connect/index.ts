@@ -25,6 +25,9 @@ import { getDefaultAppMetadata } from "../utils/defaultDappMetadata.js";
 import type { WCSupportedWalletIds } from "../__generated__/wallet-ids.js";
 import type { DisconnectFn, SwitchChainFn } from "../types.js";
 import type { WalletEmitter } from "../wallet-emitter.js";
+import { isAndroid, isIOS, isMobile } from "../../utils/web/isMobile.js";
+import { openWindow } from "../../utils/web/openWindow.js";
+import { getWalletInfo } from "../__generated__/getWalletInfo.js";
 
 type WCProvider = InstanceType<typeof EthereumProvider>;
 
@@ -42,8 +45,9 @@ const defaultShowQrModal = true;
 export async function connectWC(
   options: WCConnectOptions,
   emitter: WalletEmitter<WCSupportedWalletIds>,
+  walletId: WCSupportedWalletIds,
 ): Promise<ReturnType<typeof onConnect>> {
-  const provider = await initProvider(options);
+  const provider = await initProvider(options, walletId);
   const wcOptions = options.walletConnect;
 
   const targetChain = options?.chain || ethereum;
@@ -54,21 +58,11 @@ export async function connectWC(
     client: options.client,
   });
 
-  const { onDisplayUri, onSessionRequestSent } = wcOptions || {};
+  const { onDisplayUri } = wcOptions || {};
 
-  if (onDisplayUri || onSessionRequestSent) {
+  if (onDisplayUri) {
     if (onDisplayUri) {
       provider.events.addListener("display_uri", onDisplayUri);
-    }
-
-    if (onSessionRequestSent) {
-      provider.signer.client.on("session_request_sent", onSessionRequestSent);
-      provider.events.addListener("disconnect", () => {
-        provider.signer.client.off(
-          "session_request_sent",
-          onSessionRequestSent,
-        );
-      });
     }
   }
 
@@ -106,6 +100,7 @@ export async function connectWC(
 export async function autoConnectWC(
   options: WCAutoConnectOptions,
   emitter: WalletEmitter<WCSupportedWalletIds>,
+  walletId: WCSupportedWalletIds,
 ): Promise<ReturnType<typeof onConnect>> {
   const provider = await initProvider(
     options.savedConnectParams
@@ -121,6 +116,7 @@ export async function autoConnectWC(
           client: options.client,
           walletConnect: {},
         },
+    walletId,
   );
 
   const address = provider.accounts[0];
@@ -153,7 +149,11 @@ export async function autoConnectWC(
 
 // Connection utils -----------------------------------------------------------------------------------------------
 
-async function initProvider(options: WCConnectOptions) {
+async function initProvider(
+  options: WCConnectOptions,
+  walletId: WCSupportedWalletIds,
+) {
+  const walletInfo = await getWalletInfo(walletId);
   const wcOptions = options.walletConnect;
   const { EthereumProvider, OPTIONAL_EVENTS, OPTIONAL_METHODS } = await import(
     "@walletconnect/ethereum-provider"
@@ -190,6 +190,29 @@ async function initProvider(options: WCConnectOptions) {
     },
     qrModalOptions: wcOptions?.qrModalOptions,
     disableProviderPing: true,
+  });
+
+  function handleSessionRequest() {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    if (!isMobile()) {
+      return;
+    }
+
+    if (isAndroid()) {
+      openWindow(walletInfo.mobile.native || "");
+    } else if (isIOS()) {
+      openWindow(walletInfo.mobile.universal || "");
+    } else {
+      openWindow(walletInfo.mobile.universal || "");
+    }
+  }
+
+  provider.signer.client.on("session_request_sent", handleSessionRequest);
+  provider.events.addListener("disconnect", () => {
+    provider.signer.client.off("session_request_sent", handleSessionRequest);
   });
 
   provider.events.setMaxListeners(Infinity);

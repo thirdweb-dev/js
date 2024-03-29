@@ -1,4 +1,4 @@
-import { detectOS } from "../../../utils/detect-platform.js";
+import { detectOS } from "../detect-platform.js";
 
 /**
  * @internal

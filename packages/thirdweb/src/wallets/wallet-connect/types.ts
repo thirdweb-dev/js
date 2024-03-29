@@ -131,11 +131,6 @@ export type WCConnectOptions = {
      * ```
      */
     onDisplayUri?: (uri: string) => void;
-    /**
-     * Callback to be called to listen to the `session_request_sent` event emitted by WalletConnect's `EthereumProvider`.
-     * This can be used to
-     */
-    onSessionRequestSent?: () => void;
 
     /**
      * Your project’s unique identifier that can be obtained at https://cloud.walletconnect.com/

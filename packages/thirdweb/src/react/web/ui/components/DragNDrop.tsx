@@ -8,7 +8,7 @@ import { StyledDiv } from "../design-system/elements.js";
 import { Container } from "./basic.js";
 import { Text } from "./text.js";
 import type { IconFC } from "../ConnectWallet/icons/types.js";
-import { isMobile } from "../../../core/utils/isMobile.js";
+import { isMobile } from "../../../../utils/web/isMobile.js";
 
 /**
  * @internal
