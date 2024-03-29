@@ -1,4 +1,4 @@
-import { execa } from "execa";
+import { $ } from "bun";
 import fs from "node:fs/promises";
 import ora from "ora";
 
@@ -20,7 +20,7 @@ for (const fixture of fixtures) {
 `,
     );
 
-    await execa("vite", ["build", "fixtures/"]);
+    await $`vite build fixtures/`.text();
   } catch (error) {
     if (error.exitCode !== 0) {
       console.error(error);

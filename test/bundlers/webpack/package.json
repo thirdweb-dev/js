@@ -14,7 +14,6 @@
     "e2e": "bun run.ts"
   },
   "devDependencies": {
-    "execa": "^8.0.1",
     "ora": "^6.3.1",
     "webpack": "^5.91.0",
     "webpack-cli": "^5.1.4"

@@ -16,7 +16,6 @@
   "devDependencies": {
     "@swc/cli": "^0.1.65",
     "@swc/core": "^1.4.11",
-    "execa": "^8.0.1",
     "ora": "^6.3.1"
   }
 }

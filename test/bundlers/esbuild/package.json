@@ -15,7 +15,6 @@
   },
   "devDependencies": {
     "esbuild": "0.20.2",
-    "execa": "^8.0.1",
     "ora": "^6.3.1"
   }
 }

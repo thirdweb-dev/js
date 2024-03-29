@@ -1,4 +1,4 @@
-import { execa } from "execa";
+import { $ } from "bun";
 import fs from "node:fs/promises";
 import ora from "ora";
 
@@ -9,7 +9,7 @@ const spinner = ora("Running fixtures: ").start();
 for (const fixture of fixtures) {
   spinner.suffixText = fixture;
   try {
-    await execa("webpack", ["build", "./fixtures/" + fixture]);
+    await $`webpack build ./fixtures/${fixture} --mode=production`.text();
   } catch (error) {
     if (error.exitCode !== 0) {
       console.error(error);

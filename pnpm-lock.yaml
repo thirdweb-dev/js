@@ -1617,9 +1617,6 @@ importers:
       esbuild:
         specifier: 0.20.2
         version: 0.20.2
-      execa:
-        specifier: ^8.0.1
-        version: 8.0.1
       ora:
         specifier: ^6.3.1
         version: 6.3.1
@@ -1654,9 +1651,6 @@ importers:
       '@swc/core':
         specifier: ^1.4.11
         version: 1.4.11
-      execa:
-        specifier: ^8.0.1
-        version: 8.0.1
       ora:
         specifier: ^6.3.1
         version: 6.3.1
@@ -1685,9 +1679,6 @@ importers:
         specifier: workspace:*
         version: link:../../../legacy_packages/wallets
     devDependencies:
-      execa:
-        specifier: ^8.0.1
-        version: 8.0.1
       ora:
         specifier: ^6.3.1
         version: 6.3.1
@@ -1719,9 +1710,6 @@ importers:
         specifier: workspace:*
         version: link:../../../legacy_packages/wallets
     devDependencies:
-      execa:
-        specifier: ^8.0.1
-        version: 8.0.1
       ora:
         specifier: ^6.3.1
         version: 6.3.1
@@ -1756,9 +1744,6 @@ importers:
         specifier: workspace:*
         version: link:../../../legacy_packages/wallets
     devDependencies:
-      execa:
-        specifier: ^8.0.1
-        version: 8.0.1
       ora:
         specifier: ^6.3.1
         version: 6.3.1
@@ -1787,9 +1772,6 @@ importers:
         specifier: workspace:*
         version: link:../../../legacy_packages/wallets
     devDependencies:
-      execa:
-        specifier: ^8.0.1
-        version: 8.0.1
       ora:
         specifier: ^6.3.1
         version: 6.3.1
