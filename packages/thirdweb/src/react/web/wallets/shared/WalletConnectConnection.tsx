@@ -1,14 +1,13 @@
 import { ScanScreen } from "./ScanScreen.js";
 import { useState, useRef, useEffect, useCallback } from "react";
-import { isAndroid, isIOS, isMobile } from "../../../core/utils/isMobile.js";
-import { handelWCSessionRequest } from "../../../core/utils/handleWCSessionRequest.js";
 import { ConnectingScreen } from "./ConnectingScreen.js";
-import { openWindow } from "../../../core/utils/openWindow.js";
 import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import type { InjectedWalletLocale } from "../injected/locale/types.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { WalletInfo } from "../../../../wallets/wallet-info.js";
 import type { WCSupportedWalletIds } from "../../../../wallets/__generated__/wallet-ids.js";
+import { isMobile, isAndroid, isIOS } from "../../../../utils/web/isMobile.js";
+import { openWindow } from "../../../../utils/web/openWindow.js";
 
 /**
  * QR Scan UI for connecting a specific wallet on desktop.
@@ -31,16 +30,6 @@ export const WalletConnectConnection: React.FC<{
   const connect = useCallback(() => {
     setErrorConnecting(false);
 
-    const platformUris = {
-      ios: walletInfo.mobile.native || "",
-      android: walletInfo.mobile.universal || "",
-      other: walletInfo.mobile.universal || "",
-    };
-
-    const onSessionRequestSent = isMobile()
-      ? () => handelWCSessionRequest(platformUris)
-      : undefined;
-
     wallet
       .connect({
         chain,
@@ -49,6 +38,12 @@ export const WalletConnectConnection: React.FC<{
           projectId: walletConnect?.projectId,
           showQrModal: false,
           onDisplayUri(uri) {
+            const platformUris = {
+              ios: walletInfo.mobile.native || "",
+              android: walletInfo.mobile.universal || "",
+              other: walletInfo.mobile.universal || "",
+            };
+
             setQrCodeUri(uri);
             if (isMobile()) {
               if (isAndroid()) {
@@ -66,7 +61,6 @@ export const WalletConnectConnection: React.FC<{
               }
             }
           },
-          onSessionRequestSent,
           optionalChains: chains,
         },
       })

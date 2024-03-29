@@ -6,7 +6,10 @@ import type {
 import type { Account, Wallet } from "./interfaces/wallet.js";
 import type { Chain } from "../chains/types.js";
 import { injectedProvider } from "./injected/mipdStore.js";
-import type { InjectedSupportedWalletIds } from "./__generated__/wallet-ids.js";
+import type {
+  InjectedSupportedWalletIds,
+  WCSupportedWalletIds,
+} from "./__generated__/wallet-ids.js";
 
 import { createWalletEmitter } from "./wallet-emitter.js";
 import { trackConnect } from "../analytics/track.js";
@@ -131,7 +134,11 @@ export function createWallet<const ID extends WalletId>(
               connectedChain,
               doDisconnect,
               doSwitchChain,
-            ] = await autoConnectWC(options, emitter);
+            ] = await autoConnectWC(
+              options,
+              emitter,
+              wallet.id as WCSupportedWalletIds,
+            );
             // set the states
             account = connectedAccount;
             chain = connectedChain;
@@ -157,7 +164,11 @@ export function createWallet<const ID extends WalletId>(
               connectedChain,
               doDisconnect,
               doSwitchChain,
-            ] = await connectWC(options, emitter);
+            ] = await connectWC(
+              options,
+              emitter,
+              wallet.id as WCSupportedWalletIds,
+            );
             // set the states
             account = connectedAccount;
             chain = connectedChain;
