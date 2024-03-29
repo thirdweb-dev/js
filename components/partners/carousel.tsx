@@ -26,7 +26,7 @@ const MarqueeGroup: ComponentWithChildren<{
   );
 };
 
-export const Marquee: ComponentWithChildren<{
+const Marquee: ComponentWithChildren<{
   animationDirection?: "normal" | "reverse";
   display?: LayoutProps["display"];
 }> = ({ children, display, animationDirection }) => {

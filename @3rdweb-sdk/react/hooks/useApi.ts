@@ -256,7 +256,7 @@ export interface BillingCredit {
   isActive: boolean;
 }
 
-export interface UseAccountInput {
+interface UseAccountInput {
   refetchInterval?:
     | number
     | ((
@@ -824,40 +824,6 @@ export function useRevokeApiKey() {
   );
 }
 
-function useGenerateApiKey() {
-  const { user } = useLoggedInUser();
-  const queryClient = useQueryClient();
-
-  return useMutationWithInvalidate(
-    async (id: string) => {
-      invariant(user?.address, "walletAddress is required");
-
-      const res = await fetch(`${THIRDWEB_API_HOST}/v1/keys/${id}/generate`, {
-        method: "PUT",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({}),
-      });
-      const json = await res.json();
-
-      if (json.error) {
-        throw new Error(json.error.message);
-      }
-
-      return json.data;
-    },
-    {
-      onSuccess: () => {
-        return queryClient.invalidateQueries(
-          apiKeys.keys(user?.address as string),
-        );
-      },
-    },
-  );
-}
-
 export const usePolicies = (serviceId?: string) => {
   return useQuery({
     queryKey: ["policies", serviceId],
@@ -1072,8 +1038,10 @@ export function useApiAuthToken() {
       inflightPromise = fetchAuthToken(user.address, abortController);
     }
 
+    // eslint-disable-next-line promise/catch-or-return
     inflightPromise
       .then((t) => {
+        // eslint-disable-next-line promise/always-return
         if (mounted) {
           setToken(t.jwt);
           if (t.paymentsSellerId) {
@@ -1103,29 +1071,6 @@ export function useApiAuthToken() {
   }, [user?.address]);
 
   return { error, isLoading, token, paymentsSellerId };
-}
-
-/**
- * @deprecated
- */
-async function fetchApiKeyAvailability(name: string) {
-  const res = await fetch(
-    `${THIRDWEB_API_HOST}/v1/keys/availability?name=${name}`,
-    {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    },
-  );
-  const json = await res.json();
-
-  if (json.error) {
-    throw new Error(json.error.message);
-  }
-
-  return !!json.data.available;
 }
 
 /**

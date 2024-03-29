@@ -62,26 +62,8 @@ const applicationImageUrlValidation = z.union([
     },
   ),
 ]);
-export const PERCENTAGE_TO_BPS = 100;
-export const developerFeeBpsValidation = z
-  .preprocess(
-    (arg) => {
-      if (typeof arg === "string") {
-        return parseFloat(arg);
-      }
-      return arg;
-    },
-    z
-      .number({
-        required_error: "Please enter a valid swap fee",
-        invalid_type_error: "Please enter a valid swap fee",
-      })
-      .min(0, "Swap fee must be greater than or equal to 0%")
-      .max(3, "Swap fee must be less than or equal to 3%"),
-  )
-  .transform((val) => val * PERCENTAGE_TO_BPS);
 
-export const payoutAddressValidation = z
+const payoutAddressValidation = z
   .string()
   .regex(/(\b0x[a-fA-F0-9]{40}\b)/, "Please enter a valid address");
 
