@@ -4,10 +4,9 @@ import { LocalWallet } from "../src/evm/wallets/local-wallet";
 import { BaseSepoliaTestnet } from "@thirdweb-dev/chains";
 import { ThirdwebSDK, SmartContract } from "@thirdweb-dev/sdk";
 import { BigNumber, ethers } from "ethers";
+import { describe, it, expect, beforeAll } from "vitest";
 
 require("dotenv-mono").load();
-
-jest.setTimeout(240_000);
 
 let smartWallet: SmartWallet;
 let smartWalletAddress: string;
@@ -42,66 +41,75 @@ beforeAll(async () => {
   );
 });
 
-describeIf(!!process.env.TW_SECRET_KEY)("ERC20Paymaster core tests", () => {
-  it("can connect", async () => {
-    expect(smartWalletAddress).toHaveLength(42);
-  });
-
-  it("should deploy+approve (gasless) and execute a tx", async () => {
-    const tokenContract = await sdk.getContract(erc20TokenAddress);
-
-    // initial checks
-    let approvedAmount = (
-      await tokenContract.erc20.allowanceOf(
-        smartWalletAddress,
-        erc20PaymasterAddress,
-      )
-    ).value;
-    expect(approvedAmount.toNumber()).toEqual(0);
-
-    let isDeployed = await smartWallet.isDeployed();
-    expect(isDeployed).toEqual(false);
-
-    let balance = (await contract.erc20.balance()).value;
-    expect(balance.toNumber()).toEqual(0);
-
-    // airdrop tokens for payment
-    const tempLocalWallet = new LocalWallet();
-    await tempLocalWallet.generate();
-    const tempSmartWallet = new SmartWallet({
-      chain,
-      factoryAddress,
-      gasless: true,
-      secretKey: process.env.TW_SECRET_KEY,
+describeIf(!!process.env.TW_SECRET_KEY)(
+  "ERC20Paymaster core tests",
+  {
+    timeout: 240_000,
+  },
+  () => {
+    it("can connect", async () => {
+      expect(smartWalletAddress).toHaveLength(42);
     });
-    await tempSmartWallet.connect({
-      personalWallet: tempLocalWallet,
-    });
-    const claimTx = await contract.erc20.claimTo.prepare(smartWalletAddress, 1); // tx costs 1
-    const claimReceipt = await tempSmartWallet.execute(claimTx);
-    expect(claimReceipt.receipt.transactionHash).toHaveLength(66);
-    balance = (await contract.erc20.balance()).value;
-    expect(balance).toEqual(ethers.utils.parseEther("1"));
 
-    // transact with newly funded smart wallet using erc20 exclusively
-    const preparedTx = await contract.erc20.claim.prepare(1);
-    const tx = await smartWallet.execute(preparedTx);
-    expect(tx.receipt.transactionHash).toHaveLength(66);
+    it("should deploy+approve (gasless) and execute a tx", async () => {
+      const tokenContract = await sdk.getContract(erc20TokenAddress);
 
-    approvedAmount = (
-      await tokenContract.erc20.allowanceOf(
+      // initial checks
+      let approvedAmount = (
+        await tokenContract.erc20.allowanceOf(
+          smartWalletAddress,
+          erc20PaymasterAddress,
+        )
+      ).value;
+      expect(approvedAmount.toNumber()).toEqual(0);
+
+      let isDeployed = await smartWallet.isDeployed();
+      expect(isDeployed).toEqual(false);
+
+      let balance = (await contract.erc20.balance()).value;
+      expect(balance.toNumber()).toEqual(0);
+
+      // airdrop tokens for payment
+      const tempLocalWallet = new LocalWallet();
+      await tempLocalWallet.generate();
+      const tempSmartWallet = new SmartWallet({
+        chain,
+        factoryAddress,
+        gasless: true,
+        secretKey: process.env.TW_SECRET_KEY,
+      });
+      await tempSmartWallet.connect({
+        personalWallet: tempLocalWallet,
+      });
+      const claimTx = await contract.erc20.claimTo.prepare(
         smartWalletAddress,
-        erc20PaymasterAddress,
-      )
-    ).value;
-    expect(approvedAmount).toEqual(
-      BigNumber.from(2).pow(96).sub(1).sub(ethers.utils.parseEther("1")), // 2^96 - 1 - 1^18 <- 1^18 is the tx cost removed from allowance
-    );
+        1,
+      ); // tx costs 1
+      const claimReceipt = await tempSmartWallet.execute(claimTx);
+      expect(claimReceipt.receipt.transactionHash).toHaveLength(66);
+      balance = (await contract.erc20.balance()).value;
+      expect(balance).toEqual(ethers.utils.parseEther("1"));
 
-    isDeployed = await smartWallet.isDeployed();
-    expect(isDeployed).toEqual(true);
+      // transact with newly funded smart wallet using erc20 exclusively
+      const preparedTx = await contract.erc20.claim.prepare(1);
+      const tx = await smartWallet.execute(preparedTx);
+      expect(tx.receipt.transactionHash).toHaveLength(66);
 
-    balance = (await contract.erc20.balance()).value;
-    expect(balance).toEqual(ethers.utils.parseEther("1")); // we spent 1 token to claim 1 token
-  });
-});
+      approvedAmount = (
+        await tokenContract.erc20.allowanceOf(
+          smartWalletAddress,
+          erc20PaymasterAddress,
+        )
+      ).value;
+      expect(approvedAmount).toEqual(
+        BigNumber.from(2).pow(96).sub(1).sub(ethers.utils.parseEther("1")), // 2^96 - 1 - 1^18 <- 1^18 is the tx cost removed from allowance
+      );
+
+      isDeployed = await smartWallet.isDeployed();
+      expect(isDeployed).toEqual(true);
+
+      balance = (await contract.erc20.balance()).value;
+      expect(balance).toEqual(ethers.utils.parseEther("1")); // we spent 1 token to claim 1 token
+    });
+  },
+);

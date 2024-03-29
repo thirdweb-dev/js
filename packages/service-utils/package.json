@@ -46,12 +46,9 @@
     "@cloudflare/workers-types": "4.20240320.1",
     "@preconstruct/cli": "2.7.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
-    "@types/jest": "^29.5.12",
     "@types/node": "^20.11.30",
     "eslint": "8.57.0",
     "eslint-config-thirdweb": "workspace:*",
-    "jest": "^29.7.0",
-    "ts-jest": "^29.1.2",
     "typescript": "5.3.3"
   },
   "scripts": {
@@ -61,6 +58,6 @@
     "clean": "rm -rf dist/",
     "build": "tsc && preconstruct build",
     "push": "yalc push",
-    "test": "jest"
+    "test": "vitest"
   }
 }
