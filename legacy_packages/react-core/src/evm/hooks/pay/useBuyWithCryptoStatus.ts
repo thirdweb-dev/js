@@ -20,34 +20,40 @@ export type BuyWithCryptoStatusQueryParams = BuyWithCryptoTransaction;
  * @returns A react query object which contains the data of type [`BuyWithCryptoStatus`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoStatus)
  * @example
  * ```tsx
- * import { useSigner, useBuyWithCryptoQuote, useBuyWithCryptoStatus, type BuyWithCryptoStatusQueryParams } from "@thirdweb-dev/react-core";
+ * import { useSigner, useBuyWithCryptoQuote, useBuyWithCryptoStatus } from "@thirdweb-dev/react-core";
  *
  * function Component() {
- *  const buyWithCryptoQuoteQuery = useBuyWithCryptoQuote(swapParams);
- *  const signer = useSigner();
- *  const [buyTxHash, setBuyTxHash] = useState<BuyWithCryptoStatusQueryParams | undefined>();
- *  const buyWithCryptoStatusQuery = useBuyWithCryptoStatus(buyTxHash ? {
- *    client,
- *    transactionHash: buyTxHash,
- *  }: undefined);
+ *   const buyWithCryptoQuoteQuery = useBuyWithCryptoQuote* (swapParams);
+ *   const signer = useSigner();
+ *   const [buyTxHash, setBuyTxHash] = useState<string | undefined>();
+ *   const buyWithCryptoStatusQuery = useBuyWithCryptoStatus* (buyTxHash ? {
+ *     clientId: "YOUR_CLIENT_ID",
+ *     transactionHash: buyTxHash,
+ *   }: undefined);
  *
- *  async function handleBuyWithCrypto() {
+ *   async function handleBuyWithCrypto() {
+ *     if (!buyWithCryptoQuoteQuery.data || !signer) {
+ *       return;
+ *     }
  *
- *    // if approval is required
- *    if (buyWithCryptoQuoteQuery.data.approval) {
- *      const approveTx = await signer.sendTransaction(swapQuote.data.approval);
- *    }
+ *     // if approval is required
+ *     if (buyWithCryptoQuoteQuery.data.approval) {
+ *       const approveTx = await signer.sendTransaction* (buyWithCryptoQuoteQuery.data.approval);
+ *     }
  *
- *    // send the transaction to buy crypto
- *    // this promise is resolved when user confirms the transaction in the wallet and the transaction is sent to the blockchain
- *    const buyTx = await signer.sendTransaction(swapQuote.data.transactionRequest);
+ *     // send the transaction to buy crypto
+ *     // this promise is resolved when user confirms the transaction * in the wallet and the transaction is sent to the blockchain
+ *     const buyTx = await signer.sendTransaction* (buyWithCryptoQuoteQuery.data.transactionRequest);
  *
- *    // set buyTx.transactionHash to poll the status of the swap transaction
- *    setBuyWithCryptoTx(buyTx.transactionHash);
+ *     // set buyTx.transactionHash to poll the status of the swap * transaction
+ *     setBuyTxHash(buyTx.hash);
+ *   }
+ *
+ *   if (buyWithCryptoStatusQuery.data) {
+ *     console.log('buyWithCryptoStatusQuery.data', * buyWithCryptoStatusQuery.data)
+ *   }
+ *     return <button onClick={handleBuyWithCrypto}>Swap</button>
  *  }
- *
- *  return <button onClick={handleBuyWithCrypto}>Swap</button>
- * }
  * ```
  */
 export function useBuyWithCryptoStatus(

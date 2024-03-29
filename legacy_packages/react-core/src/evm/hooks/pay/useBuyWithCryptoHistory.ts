@@ -25,7 +25,7 @@ export type BuyWithCryptoHistoryQueryParams = BuyWithCryptoHistoryParams;
  * }
  * ```
  */
-export function useBuyWithCryptoHistoryV4(
+export function useBuyWithCryptoHistory(
   buyWithCryptoHistoryParams?: BuyWithCryptoHistoryQueryParams,
 ) {
   return useQuery<BuyWithCryptoHistoryData, Error>({
