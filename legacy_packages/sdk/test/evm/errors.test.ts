@@ -20,7 +20,7 @@ describe("Error Handling", async () => {
       });
       expect.fail();
     } catch (err) {
-      expectError(err, "sender doesn't have enough funds to send tx");
+      expectError(err, "Sender doesn't have enough funds to send tx");
     }
   });
 
