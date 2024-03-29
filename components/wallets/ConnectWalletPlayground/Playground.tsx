@@ -25,7 +25,6 @@ import {
   FormLabel,
   CodeBlock,
   TrackedLink,
-  Link,
 } from "tw-components";
 import { ChakraNextImage } from "components/Image";
 import { format } from "prettier/standalone";
@@ -55,8 +54,6 @@ import { PreviewThirdwebProvider } from "./PreviewThirdwebProvider";
 import { usePlaygroundWallets } from "./usePlaygroundWallets";
 import { usePlaygroundTheme } from "./usePlaygroundTheme";
 import { useTrack } from "hooks/analytics/useTrack";
-
-const TRACKING_CATEGORY = "connect-wallet-playground";
 
 type OptionalUrl = { url: string; enabled: boolean };
 export const ConnectWalletPlayground: React.FC<{
@@ -800,33 +797,37 @@ export const ConnectWalletPlayground: React.FC<{
         }}
         isChecked={enabledWallets.length > 0 && smartWalletOptions.enabled}
       />
-      <Alert
-        status="info"
-        borderRadius="lg"
-        backgroundColor="backgroundCardHighlight"
-        borderLeftColor="blue.500"
-        borderLeftWidth={4}
-        as={Flex}
-        gap={1}
-        mt={4}
-      >
-        <AlertIcon />
-        <Flex flexDir="column">
-          <AlertTitle>
-            We highly recommend setting sponsorship rules to prevent abuse
-          </AlertTitle>
-          <AlertDescription as={Text}>
-            You can set rules in the{" "}
-            <Link
-              href={`/dashboard/connect/account-abstraction?tab=1`}
-              color="blue.500"
-            >
-              configuration page
-            </Link>
-            .
-          </AlertDescription>
-        </Flex>
-      </Alert>
+      {enabledWallets.length > 0 && smartWalletOptions.enabled && (
+        <Alert
+          status="info"
+          borderRadius="lg"
+          backgroundColor="backgroundCardHighlight"
+          borderLeftColor="blue.500"
+          borderLeftWidth={4}
+          as={Flex}
+          gap={1}
+          mt={4}
+        >
+          <AlertIcon />
+          <Flex flexDir="column">
+            <AlertTitle>
+              We highly recommend setting sponsorship rules to prevent abuse
+            </AlertTitle>
+            <AlertDescription as={Text}>
+              You can set rules in the{" "}
+              <TrackedLink
+                href={`/dashboard/connect/account-abstraction?tab=1`}
+                color="blue.500"
+                category={trackingCategory}
+                label="sponsorship-rules-config"
+              >
+                configuration page
+              </TrackedLink>
+              .
+            </AlertDescription>
+          </Flex>
+        </Alert>
+      )}
 
       {enabledWallets.length === 0 && (
         <>
@@ -1339,7 +1340,7 @@ export const ConnectWalletPlayground: React.FC<{
                   "https://play.google.com/store/search?q=thirdweb&c=apps&hl=en_US&gl=US"
                 }
                 bg="transparent"
-                category={TRACKING_CATEGORY}
+                category={trackingCategory}
                 label="google-play-button"
               >
                 <ChakraNextImage
@@ -1354,7 +1355,7 @@ export const ConnectWalletPlayground: React.FC<{
                   "https://apps.apple.com/us/app/thirdweb-connect/id6471451064"
                 }
                 bg="transparent"
-                category={TRACKING_CATEGORY}
+                category={trackingCategory}
                 label="apple-store-button"
               >
                 <ChakraNextImage
