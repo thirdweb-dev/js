@@ -1009,7 +1009,7 @@ importers:
         specifier: 1.0.0
         version: 1.0.0(typescript@5.4.3)(zod@3.22.4)
       bn.js:
-        specifier: ^5.2.1
+        specifier: 5.2.1
         version: 5.2.1
       bs58:
         specifier: ^5.0.0
@@ -1209,8 +1209,8 @@ importers:
         specifier: ^0.5.0
         version: 0.5.0
       '@blocto/sdk':
-        specifier: 0.10.0
-        version: 0.10.0
+        specifier: 0.5.5
+        version: 0.5.5
       '@coinbase/wallet-sdk':
         specifier: ^3.7.2
         version: 3.7.2
@@ -6287,14 +6287,18 @@ packages:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
     dev: true
 
-  /@blocto/sdk@0.10.0:
-    resolution: {integrity: sha512-PjmyQZtYTl7UkQcl223S8nh7j5pmWSEnyE3bTdMoXOaXd0blj9aIbkqu1ErvHb96GII2Co+FnbcSp6ioTZG+XQ==}
+  /@blocto/sdk@0.5.5:
+    resolution: {integrity: sha512-u7bbAYmYDCf0QWvXleVOTeGFRbo8evT3uacsLJ6dv01HspmLDKZWjFyu7i3ARebJTpenHvwM78XHV7KTvBqTRg==}
     peerDependencies:
+      '@solana/web3.js': ^1.30.2
       aptos: ^1.3.14
     peerDependenciesMeta:
+      '@solana/web3.js':
+        optional: true
       aptos:
         optional: true
     dependencies:
+      bs58: 5.0.0
       buffer: 6.0.3
       eip1193-provider: 1.0.1
       js-sha3: 0.8.0

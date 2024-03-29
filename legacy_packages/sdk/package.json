@@ -137,7 +137,7 @@
     "@thirdweb-dev/merkletree": "workspace:*",
     "@thirdweb-dev/storage": "workspace:*",
     "abitype": "1.0.0",
-    "bn.js": "^5.2.1",
+    "bn.js": "5.2.1",
     "bs58": "^5.0.0",
     "buffer": "^6.0.3",
     "eventemitter3": "^5.0.1",
