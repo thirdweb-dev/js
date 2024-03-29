@@ -32,7 +32,7 @@ export { type BuyWithCryptoHistoryData } from "thirdweb/pay";
  *
  * const walletAddress = "0x...";
  * const params = {
- *  client,
+ *  clientId: "YOUR_CLIENT_ID",
  *  walletAddress,
  * };
  *
