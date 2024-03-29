@@ -9,7 +9,7 @@ overrides:
   glob-parent@<5.1.2: '>=5.1.2'
   nth-check@<2.0.1: '>=2.0.1'
   socket.io-parser@>=4.0.4 <4.2.3: '>=4.2.3'
-  fast-xml-parser@<4.2.4: '>=4.2.4'
+  fast-xml-parser@<=4.2.4: '>4.2.4'
   '@openzeppelin/contracts@>=4.3.0 <4.9.1': '>=4.9.1'
   '@openzeppelin/contracts@>=4.7.0 <4.9.2': '>=4.9.2'
   xml2js@<0.5.0: '>=0.5.0'
@@ -19,6 +19,7 @@ overrides:
   protobufjs@>=6.10.0 <7.2.4: '>=7.2.4'
   tough-cookie@<4.1.3: '>=4.1.3'
   '@ethereumjs/util@<9.0.0': '>=9.0.0'
+  axios@<0.28.0: '>=0.28.0'
 
 importers:
 
@@ -3002,7 +3003,7 @@ packages:
       '@aws-sdk/util-utf8': 3.310.0
       '@smithy/protocol-http': 1.2.0
       '@smithy/types': 1.2.0
-      fast-xml-parser: 4.2.4
+      fast-xml-parser: 4.3.6
       tslib: 2.6.2
     transitivePeerDependencies:
       - aws-crt
@@ -8466,7 +8467,7 @@ packages:
     deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     dependencies:
       '@json-rpc-tools/utils': 1.7.6
-      axios: 0.21.4
+      axios: 1.6.8
       safe-json-utils: 1.1.1
       ws: 7.5.9
     transitivePeerDependencies:
@@ -10968,7 +10969,7 @@ packages:
       '@safe-global/safe-core-sdk': 3.3.5(ethers@5.7.2)
       '@safe-global/safe-core-sdk-types': 1.10.1
       '@safe-global/safe-deployments': 1.34.0
-      axios: 0.27.2
+      axios: 1.6.8
     transitivePeerDependencies:
       - debug
       - encoding
@@ -14193,23 +14194,6 @@ packages:
   /axe-core@4.7.0:
     resolution: {integrity: sha512-M0JtH+hlOL5pLQwHOLNYZaXuhqmvS8oExsqB1SBYgA4Dk7u/xx+YdGHXaK5pyUfed5mYXdlYiphWq3G8cRi5JQ==}
     engines: {node: '>=4'}
-    dev: false
-
-  /axios@0.21.4:
-    resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
-    dependencies:
-      follow-redirects: 1.15.6(debug@4.3.4)
-    transitivePeerDependencies:
-      - debug
-    dev: false
-
-  /axios@0.27.2:
-    resolution: {integrity: sha512-t+yRIyySRTp/wua5xEr+z1q60QmLq8ABsS5O9Me1AsE5dfKqgnCFzwiCZZ/cGNd1lq4/7akDWMxdhVlucjmnOQ==}
-    dependencies:
-      follow-redirects: 1.15.6(debug@4.3.4)
-      form-data: 4.0.0
-    transitivePeerDependencies:
-      - debug
     dev: false
 
   /axios@1.6.8:
@@ -17894,13 +17878,6 @@ packages:
 
   /fast-uri@2.3.0:
     resolution: {integrity: sha512-eel5UKGn369gGEWOqBShmFJWfq/xSJvsgDzgLYC845GneayWvXBf0lJCBn5qTABfewy1ZDPoaR5OZCP+kssfuw==}
-
-  /fast-xml-parser@4.2.4:
-    resolution: {integrity: sha512-fbfMDvgBNIdDJLdLOwacjFAPYt67tr31H9ZhWSm45CDAxvd0I6WTlSOUo7K2P/K5sA5JgMKG64PI3DMcaFdWpQ==}
-    hasBin: true
-    dependencies:
-      strnum: 1.0.5
-    dev: false
 
   /fast-xml-parser@4.2.5:
     resolution: {integrity: sha512-B9/wizE4WngqQftFPmdaMYlXoJlJOYxGQOanC77fq9k8+Z0v5dDSVh+3glErdIROP//s/jgb7ZuxKfB8nVyo0g==}
