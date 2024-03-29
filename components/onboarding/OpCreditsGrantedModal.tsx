@@ -167,6 +167,10 @@ Apply here!`,
                       credits you have left at the top of the dashboard and in
                       the billing page.
                     </Text>
+                    <Text color="faded">
+                      Credits are applicable across the following chains: OP
+                      Mainnet, Base, Zora, Frax, Mode.
+                    </Text>
                   </Flex>
                 </AccordionPanel>
               </AccordionItem>
