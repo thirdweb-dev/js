@@ -45,9 +45,12 @@ export async function zkVerify(
     } else {
       invariant(contractUri, "No contract URI provided");
       const rawMeta = await fetchRawPredeployMetadata(contractUri, storage);
-      const metadataUri = rawMeta.compilers?.zksolc?.metadataUri;
+      const zksolcs = rawMeta.compilers?.zksolc;
+      invariant(zksolcs && zksolcs.length > 0, "No zk compilers found");
 
+      const metadataUri = zksolcs[0].metadataUri;
       invariant(metadataUri, "ZkSolc metadata not found");
+
       const parsedMetadata = await fetchContractMetadata(metadataUri, storage);
 
       compilerMetadata = {
