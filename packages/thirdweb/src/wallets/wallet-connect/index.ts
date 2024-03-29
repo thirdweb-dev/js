@@ -201,12 +201,17 @@ async function initProvider(
       return;
     }
 
+    const preferUniversal =
+      walletInfo.mobile.universal || walletInfo.mobile.native || "";
+    const preferNative =
+      walletInfo.mobile.native || walletInfo.mobile.universal || "";
+
     if (isAndroid()) {
-      openWindow(walletInfo.mobile.universal || "");
+      openWindow(preferUniversal);
     } else if (isIOS()) {
-      openWindow(walletInfo.mobile.native || "");
+      openWindow(preferNative);
     } else {
-      openWindow(walletInfo.mobile.universal || "");
+      openWindow(preferUniversal);
     }
   }
 
