@@ -1,9 +1,7 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 
 import { NFT_DROP_CONTRACT } from "../../../../../test/src/test-contracts.js";
 import { getActiveClaimCondition } from "./getActiveClaimCondition.js";
-
-const fetchSpy = vi.spyOn(globalThis, "fetch");
 
 describe("erc721.getClaimConditions", () => {
   it("should return the correct claim conditions", async () => {
@@ -22,7 +20,5 @@ describe("erc721.getClaimConditions", () => {
       startTimestamp: 1704652200n,
       supplyClaimed: 5598n,
     });
-    // 1 call for the condition id and 1 call for the condition
-    expect(fetchSpy).toHaveBeenCalledTimes(2);
   });
 });

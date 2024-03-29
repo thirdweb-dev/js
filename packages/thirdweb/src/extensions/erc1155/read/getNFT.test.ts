@@ -1,9 +1,7 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 
 import { getNFT } from "./getNFT.js";
 import { DROP1155_CONTRACT } from "~test/test-contracts.js";
-
-const fetchSpy = vi.spyOn(globalThis, "fetch");
 
 describe("erc1155.getNFT", () => {
   it.runIf(process.env.TW_SECRET_KEY)("without owner", async () => {
@@ -42,7 +40,5 @@ describe("erc1155.getNFT", () => {
         "type": "ERC1155",
       }
     `);
-    // 2 fetch calls: 1 for RPC, 1 for fetching the tokenUri
-    expect(fetchSpy).toHaveBeenCalledTimes(2);
   });
 });

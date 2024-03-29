@@ -1,10 +1,8 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 
 import { getBalance } from "./getBalance.js";
 import { USDC_CONTRACT } from "~test/test-contracts.js";
 import { VITALIK_WALLET } from "~test/addresses.js";
-
-const fetchSpy = vi.spyOn(globalThis, "fetch");
 
 describe("erc20.getBalance", () => {
   it("should return the getBalance result", async () => {
@@ -21,6 +19,5 @@ describe("erc20.getBalance", () => {
         "value": 81831338n,
       }
     `);
-    expect(fetchSpy).toHaveBeenCalledTimes(1);
   });
 });

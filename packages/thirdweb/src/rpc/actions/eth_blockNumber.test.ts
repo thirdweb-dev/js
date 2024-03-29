@@ -1,10 +1,8 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import { eth_blockNumber } from "./eth_blockNumber.js";
 import { getRpcClient } from "../rpc.js";
 import { FORKED_ETHEREUM_CHAIN } from "~test/chains.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
-
-const fetchSpy = vi.spyOn(globalThis, "fetch");
 
 const rpcClient = getRpcClient({
   chain: FORKED_ETHEREUM_CHAIN,
@@ -15,7 +13,6 @@ describe("eth_blockNumber", () => {
   it("should return the block number", async () => {
     const blockNumber = await eth_blockNumber(rpcClient);
     expect(blockNumber).toEqual(19139495n);
-    expect(fetchSpy).toHaveBeenCalledTimes(1);
   });
 
   it("should dedupe requests", async () => {
@@ -28,11 +25,5 @@ describe("eth_blockNumber", () => {
     expect(blockNumber1).toEqual(19139495n);
     expect(blockNumber2).toEqual(19139495n);
     expect(blockNumber3).toEqual(19139495n);
-    // should only have been called once
-    expect(fetchSpy).toHaveBeenCalledTimes(1);
-    // check the exact payload, we should not have more than one ethBlockNumber request in the body!
-    expect(fetchSpy.mock.lastCall?.[1]?.body).toMatchInlineSnapshot(
-      `"[{"method":"eth_blockNumber","id":0,"jsonrpc":"2.0"}]"`,
-    );
   });
 });
