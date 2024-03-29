@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { getRpcClient } from "../rpc.js";
 import { FORKED_ETHEREUM_CHAIN } from "~test/chains.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
@@ -11,12 +11,15 @@ import {
 
 const fetchSpy = vi.spyOn(globalThis, "fetch");
 
-const rpcClient = getRpcClient({
-  chain: FORKED_ETHEREUM_CHAIN,
-  client: TEST_CLIENT,
-});
-
 describe("eth_getBalance", () => {
+  let rpcClient: ReturnType<typeof getRpcClient>;
+  beforeEach(() => {
+    // fresh client for each test run?
+    rpcClient = getRpcClient({
+      chain: { ...FORKED_ETHEREUM_CHAIN },
+      client: { ...TEST_CLIENT },
+    });
+  });
   it("should return the correct balance at the given block", async () => {
     const vitalikBalance = await eth_getBalance(rpcClient, {
       address: VITALIK_WALLET,
