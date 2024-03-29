@@ -28,5 +28,7 @@ export default defineConfig({
     // clear any mocks between any tests
     clearMocks: true,
     maxConcurrency: 1,
+    pool: "forks",
+    cache: false,
   },
 });
