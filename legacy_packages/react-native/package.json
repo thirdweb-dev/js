@@ -36,7 +36,7 @@
     "@thirdweb-dev/sdk": "workspace:*",
     "@thirdweb-dev/storage": "workspace:*",
     "@thirdweb-dev/wallets": "workspace:*",
-    "abitype": "^0.2.5",
+    "abitype": "1.0.0",
     "aws-amplify": "^5.3.18",
     "expo-application": "5.7.0",
     "expo-clipboard": "^4.8.0",

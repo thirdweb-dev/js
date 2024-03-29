@@ -14,7 +14,7 @@
     "e2e": "bun run.ts"
   },
   "devDependencies": {
-    "esbuild": "0.15.17",
+    "esbuild": "0.20.2",
     "execa": "^8.0.1",
     "ora": "^6.3.1"
   }
