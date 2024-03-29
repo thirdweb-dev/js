@@ -202,9 +202,9 @@ async function initProvider(
     }
 
     if (isAndroid()) {
-      openWindow(walletInfo.mobile.native || "");
-    } else if (isIOS()) {
       openWindow(walletInfo.mobile.universal || "");
+    } else if (isIOS()) {
+      openWindow(walletInfo.mobile.native || "");
     } else {
       openWindow(walletInfo.mobile.universal || "");
     }
