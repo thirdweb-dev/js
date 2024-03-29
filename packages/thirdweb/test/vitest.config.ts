@@ -24,5 +24,10 @@ export default defineConfig({
     // setupFiles: [join(__dirname, "./setup.ts")],
     globalSetup: [join(__dirname, "./globalSetup.ts")],
     testTimeout: 20_000,
+    retry: process.env.CI ? 0 : 3,
+    // clear any mocks between any tests
+    clearMocks: true,
+    pool: "forks",
+    cache: false,
   },
 });

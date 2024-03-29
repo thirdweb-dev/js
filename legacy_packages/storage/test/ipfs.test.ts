@@ -1,17 +1,16 @@
 /* eslint-disable no-unused-expressions */
-import { expect } from "chai";
 import { readFileSync } from "fs";
 import { getGatewayUrlForCid, IpfsUploader, ThirdwebStorage } from "../src";
 import { DEFAULT_GATEWAY_URLS, prepareGatewayUrls } from "../src/common/urls";
+import { describe, it, expect } from "vitest";
 
 // load env variables
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 require("dotenv-mono").load();
 
 const secretKey = process.env.TW_SECRET_KEY as string;
 
-const itIfCI = process.env.CI ? it : it.skip;
-
-describe("IPFS", async () => {
+describe("IPFS", { timeout: 30000 }, async () => {
   if (!secretKey) {
     throw new Error("TW_SECRET_KEY is not set in the environment variables");
   }
@@ -413,7 +412,7 @@ describe("IPFS", async () => {
   });
 
   // only run this in CI because on local it will always be different (different api key)
-  itIfCI(
+  it.runIf(process.env.CI)(
     "Should return URIs with gateway URLs if specified on function",
     async () => {
       const uri = await storage.upload(

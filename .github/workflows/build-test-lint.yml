@@ -28,14 +28,14 @@ jobs:
 
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 25
 
       - name: Setup bun
         uses: oven-sh/setup-bun@v1
         with:
-          bun-version: 1.0.21
+          bun-version: 1.0.35
 
       - name: Install
         uses: ./.github/composite-actions/install
@@ -46,7 +46,7 @@ jobs:
       - id: get-week
         run: echo "WEEK=$(date +%U)" >> $GITHUB_OUTPUT
 
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         timeout-minutes: 5
         id: cache-build
         with:
@@ -60,7 +60,7 @@ jobs:
     needs: build
     steps:
       - name: Setup node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           check-latest: true
@@ -68,13 +68,13 @@ jobs:
       - name: Setup bun
         uses: oven-sh/setup-bun@v1
         with:
-          bun-version: 1.0.21
+          bun-version: 1.0.35
 
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v3
         with:
           version: 8
 
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         timeout-minutes: 5
         id: restore-build
         with:
@@ -90,7 +90,7 @@ jobs:
     needs: build
     steps:
       - name: Setup node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           check-latest: true
@@ -99,13 +99,13 @@ jobs:
       - name: Setup bun
         uses: oven-sh/setup-bun@v1
         with:
-          bun-version: 1.0.21
+          bun-version: 1.0.35
 
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v3
         with:
           version: 8
 
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         timeout-minutes: 5
         id: restore-build
         with:
@@ -120,16 +120,16 @@ jobs:
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         with:
-          files: ./legacy_packages/sdk/coverage/evm/lcov.info,./packages/thirdweb/coverage/lcov.info
+          files: ./packages/thirdweb/coverage/lcov.info
 
-  e2e:
+  test_legacy:
     timeout-minutes: 15
-    name: E2E Tests
+    name: Unit Tests (Legacy)
     runs-on: ubuntu-latest-16
     needs: build
     steps:
       - name: Setup node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           check-latest: true
@@ -138,13 +138,49 @@ jobs:
       - name: Setup bun
         uses: oven-sh/setup-bun@v1
         with:
-          bun-version: 1.0.21
+          bun-version: 1.0.35
 
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v3
         with:
           version: 8
 
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
+        timeout-minutes: 5
+        id: restore-build
+        with:
+          path: ./*
+          key: ${{ github.sha }}-${{ github.run_number }}
+
+      - run: pnpm test:legacy
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./legacy_packages/sdk/coverage/evm/lcov.info
+
+  e2e:
+    timeout-minutes: 15
+    name: E2E Tests
+    runs-on: ubuntu-latest-16
+    needs: build
+    steps:
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          check-latest: true
+
+      # we use bun for some test suites
+      - name: Setup bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: 1.0.35
+
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - uses: actions/cache@v4
         timeout-minutes: 5
         id: restore-build
         with:
@@ -169,16 +205,16 @@ jobs:
     needs: build
     steps:
       - name: Setup node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           check-latest: true
 
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v3
         with:
           version: 8
 
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         timeout-minutes: 5
         id: restore-build
         with:

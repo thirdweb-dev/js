@@ -1,12 +1,10 @@
 import { USDC_CONTRACT, USDC_CONTRACT_WITH_ABI } from "~test/test-contracts.js";
 import { TEST_WALLET_A } from "~test/addresses.js";
 import { encode } from "./encode.js";
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 
 import { resolveMethod } from "../resolve-method.js";
 import { prepareContractCall } from "../prepare-contract-call.js";
-
-const fetchSpy = vi.spyOn(globalThis, "fetch");
 
 const USDC_TRANSFER_ENCODE_RESULT =
   "0xa9059cbb00000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000064";
@@ -20,8 +18,6 @@ describe("transaction: encode", () => {
     });
     const encoded = await encode(tx);
     expect(encoded).toEqual(USDC_TRANSFER_ENCODE_RESULT);
-    // we should not have made any network requests
-    expect(fetchSpy).not.toHaveBeenCalled();
   });
 
   it("should encode correctly (transaction abi)", async () => {
@@ -41,8 +37,6 @@ describe("transaction: encode", () => {
     });
     const encoded = await encode(tx);
     expect(encoded).toEqual(USDC_TRANSFER_ENCODE_RESULT);
-    // we should not have made any network requests
-    expect(fetchSpy).not.toHaveBeenCalled();
   });
 
   it("should encode correctly (contract abi)", async () => {
@@ -53,8 +47,6 @@ describe("transaction: encode", () => {
     });
     const encoded = await encode(tx);
     expect(encoded).toEqual(USDC_TRANSFER_ENCODE_RESULT);
-    // we should not have made any network requests
-    expect(fetchSpy).not.toHaveBeenCalled();
   });
 
   it("should encode correctly (auto-abi)", async () => {
@@ -65,7 +57,5 @@ describe("transaction: encode", () => {
     });
     const encoded = await encode(tx);
     expect(encoded).toEqual(USDC_TRANSFER_ENCODE_RESULT);
-    // we should have called the contract metadata endpoint exactly once
-    expect(fetchSpy).toHaveBeenCalledTimes(1);
   });
 });

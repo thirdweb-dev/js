@@ -15,7 +15,7 @@ import {
   DAppMetaData,
   SignerWallet,
 } from "@thirdweb-dev/wallets";
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 
 /**
  * The possible props for the ThirdwebProvider.

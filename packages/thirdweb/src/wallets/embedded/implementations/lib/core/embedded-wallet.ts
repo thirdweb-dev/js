@@ -237,13 +237,13 @@ export class EmbeddedWallet {
         if (_typedData.types && _typedData.types.EIP712Domain) {
           delete _typedData.types.EIP712Domain;
         }
-        const chainId = Number(_typedData.domain?.chainId || 1);
+        const chainId = Number((_typedData.domain as any)?.chainId || 1);
 
         const { signedTypedData } =
           await querier.call<SignedTypedDataReturnType>({
             procedureName: "signTypedDataV4",
             params: {
-              domain: _typedData.domain,
+              domain: _typedData.domain as any,
               types:
                 _typedData.types as SignerProcedureTypes["signTypedDataV4"]["types"],
               message:

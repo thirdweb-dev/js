@@ -1,5 +1,6 @@
 import { usageLimit } from ".";
 import { validApiKeyMeta, validServiceConfig } from "../../mocks";
+import { describe, it, expect } from "vitest";
 
 describe("usageLimit", () => {
   it("should not usage limit if service scope is not in limits", async () => {

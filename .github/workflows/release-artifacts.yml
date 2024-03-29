@@ -24,13 +24,13 @@ jobs:
     runs-on: ubuntu-latest-16
     steps:
       - name: Checkout branch
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # bun setup is required, because pnpm typdoc will run pnpm build and some packages uses bun for build
       - name: Setup bun
         uses: oven-sh/setup-bun@v1
         with:
-          bun-version: 1.0.21
+          bun-version: 1.0.35
 
       - name: Install
         uses: ./.github/composite-actions/install

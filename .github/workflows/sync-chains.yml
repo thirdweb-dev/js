@@ -15,7 +15,7 @@ jobs:
       - name: Install bun
         uses: oven-sh/setup-bun@v1
         with:
-          bun-version: 1.0.21
+          bun-version: 1.0.35
 
       - name: Run chains sync
         run: bun run db:sync
