@@ -251,10 +251,7 @@ const ContractPage: ThirdwebNextPage = () => {
               />
               <PrimaryDashboardButton contractAddress={contractAddress} />
             </Flex>
-            <DeprecatedAlert
-              chain={chain as Chain}
-              description="You can't interact with this contract through the dashboard as this chain has been deprecated."
-            />
+            <DeprecatedAlert chain={chain as Chain} />
           </Flex>
         </Container>
       </Box>
