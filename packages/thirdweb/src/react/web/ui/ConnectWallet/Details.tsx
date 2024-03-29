@@ -121,7 +121,7 @@ export const ConnectedWalletDetails: React.FC<{
   const balanceQuery = useWalletBalance({
     chain: walletChain ? walletChain : undefined,
     tokenAddress,
-    account: activeAccount,
+    address: activeAccount?.address,
   });
 
   const [screen, setScreen] = useState<WalletDetailsModalScreen>("main");

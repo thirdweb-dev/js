@@ -18,7 +18,7 @@ export type PublisherProfileUpdatedEventFilters = Partial<{
  * @returns The prepared event object.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { getContractEvents } from "thirdweb";
  * import { publisherProfileUpdatedEvent } from "thirdweb/extensions/thirdweb";
  *

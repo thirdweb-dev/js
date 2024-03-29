@@ -41,7 +41,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { encodeRemoveForParams } "thirdweb/extensions/farcaster";
  * const result = encodeRemoveForParams({
  *  fidOwner: ...,
@@ -66,7 +66,7 @@ export function encodeRemoveForParams(options: RemoveForParams) {
  * @returns A prepared transaction object.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { removeFor } from "thirdweb/extensions/farcaster";
  *
  * const transaction = removeFor({

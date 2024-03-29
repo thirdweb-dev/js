@@ -31,7 +31,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension ERC20
  * @example
- * ```
+ * ```ts
  * import { encodeBurnFromParams } "thirdweb/extensions/erc20";
  * const result = encodeBurnFromParams({
  *  account: ...,
@@ -49,7 +49,7 @@ export function encodeBurnFromParams(options: BurnFromParams) {
  * @returns A prepared transaction object.
  * @extension ERC20
  * @example
- * ```
+ * ```ts
  * import { burnFrom } from "thirdweb/extensions/erc20";
  *
  * const transaction = burnFrom({

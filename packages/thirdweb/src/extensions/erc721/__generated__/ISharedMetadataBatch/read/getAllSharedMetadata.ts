@@ -47,7 +47,7 @@ const FN_OUTPUTS = [
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { decodeGetAllSharedMetadataResult } from "thirdweb/extensions/erc721";
  * const result = decodeGetAllSharedMetadataResult("...");
  * ```
@@ -62,7 +62,7 @@ export function decodeGetAllSharedMetadataResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { getAllSharedMetadata } from "thirdweb/extensions/erc721";
  *
  * const result = await getAllSharedMetadata();

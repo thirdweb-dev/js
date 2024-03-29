@@ -31,7 +31,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { encodeIsActiveSignerParams } "thirdweb/extensions/erc4337";
  * const result = encodeIsActiveSignerParams({
  *  signer: ...,
@@ -48,7 +48,7 @@ export function encodeIsActiveSignerParams(options: IsActiveSignerParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { decodeIsActiveSignerResult } from "thirdweb/extensions/erc4337";
  * const result = decodeIsActiveSignerResult("...");
  * ```
@@ -63,7 +63,7 @@ export function decodeIsActiveSignerResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { isActiveSigner } from "thirdweb/extensions/erc4337";
  *
  * const result = await isActiveSigner({

@@ -29,7 +29,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension MARKETPLACE
  * @example
- * ```
+ * ```ts
  * import { encodeCancelDirectListingParams } "thirdweb/extensions/marketplace";
  * const result = encodeCancelDirectListingParams({
  *  listingId: ...,
@@ -48,7 +48,7 @@ export function encodeCancelDirectListingParams(
  * @returns A prepared transaction object.
  * @extension MARKETPLACE
  * @example
- * ```
+ * ```ts
  * import { cancelDirectListing } from "thirdweb/extensions/marketplace";
  *
  * const transaction = cancelDirectListing({

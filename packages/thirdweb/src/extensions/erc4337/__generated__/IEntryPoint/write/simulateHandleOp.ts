@@ -101,7 +101,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { encodeSimulateHandleOpParams } "thirdweb/extensions/erc4337";
  * const result = encodeSimulateHandleOpParams({
  *  op: ...,
@@ -124,7 +124,7 @@ export function encodeSimulateHandleOpParams(options: SimulateHandleOpParams) {
  * @returns A prepared transaction object.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { simulateHandleOp } from "thirdweb/extensions/erc4337";
  *
  * const transaction = simulateHandleOp({

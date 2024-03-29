@@ -36,7 +36,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { encodeGetRoleMemberParams } "thirdweb/extensions/common";
  * const result = encodeGetRoleMemberParams({
  *  role: ...,
@@ -54,7 +54,7 @@ export function encodeGetRoleMemberParams(options: GetRoleMemberParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { decodeGetRoleMemberResult } from "thirdweb/extensions/common";
  * const result = decodeGetRoleMemberResult("...");
  * ```
@@ -69,7 +69,7 @@ export function decodeGetRoleMemberResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { getRoleMember } from "thirdweb/extensions/common";
  *
  * const result = await getRoleMember({

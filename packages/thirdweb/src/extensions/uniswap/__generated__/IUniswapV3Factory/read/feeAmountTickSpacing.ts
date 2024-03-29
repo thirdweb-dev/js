@@ -31,7 +31,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension UNISWAP
  * @example
- * ```
+ * ```ts
  * import { encodeFeeAmountTickSpacingParams } "thirdweb/extensions/uniswap";
  * const result = encodeFeeAmountTickSpacingParams({
  *  fee: ...,
@@ -50,7 +50,7 @@ export function encodeFeeAmountTickSpacingParams(
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension UNISWAP
  * @example
- * ```
+ * ```ts
  * import { decodeFeeAmountTickSpacingResult } from "thirdweb/extensions/uniswap";
  * const result = decodeFeeAmountTickSpacingResult("...");
  * ```
@@ -65,7 +65,7 @@ export function decodeFeeAmountTickSpacingResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension UNISWAP
  * @example
- * ```
+ * ```ts
  * import { feeAmountTickSpacing } from "thirdweb/extensions/uniswap";
  *
  * const result = await feeAmountTickSpacing({

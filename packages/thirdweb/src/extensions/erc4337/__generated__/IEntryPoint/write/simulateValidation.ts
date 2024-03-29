@@ -88,7 +88,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { encodeSimulateValidationParams } "thirdweb/extensions/erc4337";
  * const result = encodeSimulateValidationParams({
  *  userOp: ...,
@@ -107,7 +107,7 @@ export function encodeSimulateValidationParams(
  * @returns A prepared transaction object.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { simulateValidation } from "thirdweb/extensions/erc4337";
  *
  * const transaction = simulateValidation({

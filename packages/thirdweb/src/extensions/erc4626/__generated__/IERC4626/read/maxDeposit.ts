@@ -38,7 +38,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC4626
  * @example
- * ```
+ * ```ts
  * import { encodeMaxDepositParams } "thirdweb/extensions/erc4626";
  * const result = encodeMaxDepositParams({
  *  receiver: ...,
@@ -55,7 +55,7 @@ export function encodeMaxDepositParams(options: MaxDepositParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC4626
  * @example
- * ```
+ * ```ts
  * import { decodeMaxDepositResult } from "thirdweb/extensions/erc4626";
  * const result = decodeMaxDepositResult("...");
  * ```
@@ -70,7 +70,7 @@ export function decodeMaxDepositResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC4626
  * @example
- * ```
+ * ```ts
  * import { maxDeposit } from "thirdweb/extensions/erc4626";
  *
  * const result = await maxDeposit({

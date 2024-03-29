@@ -6,7 +6,24 @@ const ANALYTICS_ENDPOINT = "https://c.thirdweb.com/event";
 /**
  * @internal
  */
-export function track(client: ThirdwebClient, data: object) {
+export function trackConnect(args: {
+  client: ThirdwebClient;
+  walletType: string;
+  walletAddress: string;
+}) {
+  const { client, walletType, walletAddress } = args;
+  track(client, {
+    source: "connectWallet",
+    action: "connect",
+    walletType,
+    walletAddress,
+  });
+}
+
+/**
+ * @internal
+ */
+function track(client: ThirdwebClient, data: object) {
   const fetch = getClientFetch(client);
 
   fetch(ANALYTICS_ENDPOINT, {

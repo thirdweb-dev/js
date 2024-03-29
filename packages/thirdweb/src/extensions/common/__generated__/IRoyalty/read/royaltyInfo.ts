@@ -44,7 +44,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { encodeRoyaltyInfoParams } "thirdweb/extensions/common";
  * const result = encodeRoyaltyInfoParams({
  *  tokenId: ...,
@@ -62,7 +62,7 @@ export function encodeRoyaltyInfoParams(options: RoyaltyInfoParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { decodeRoyaltyInfoResult } from "thirdweb/extensions/common";
  * const result = decodeRoyaltyInfoResult("...");
  * ```
@@ -77,7 +77,7 @@ export function decodeRoyaltyInfoResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { royaltyInfo } from "thirdweb/extensions/common";
  *
  * const result = await royaltyInfo({

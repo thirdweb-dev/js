@@ -23,7 +23,7 @@ export type CancelledAuctionEventFilters = Partial<{
  * @returns The prepared event object.
  * @extension MARKETPLACE
  * @example
- * ```
+ * ```ts
  * import { getContractEvents } from "thirdweb";
  * import { cancelledAuctionEvent } from "thirdweb/extensions/marketplace";
  *

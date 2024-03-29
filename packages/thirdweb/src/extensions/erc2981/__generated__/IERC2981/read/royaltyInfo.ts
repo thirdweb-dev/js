@@ -44,7 +44,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC2981
  * @example
- * ```
+ * ```ts
  * import { encodeRoyaltyInfoParams } "thirdweb/extensions/erc2981";
  * const result = encodeRoyaltyInfoParams({
  *  tokenId: ...,
@@ -62,7 +62,7 @@ export function encodeRoyaltyInfoParams(options: RoyaltyInfoParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC2981
  * @example
- * ```
+ * ```ts
  * import { decodeRoyaltyInfoResult } from "thirdweb/extensions/erc2981";
  * const result = decodeRoyaltyInfoResult("...");
  * ```
@@ -77,7 +77,7 @@ export function decodeRoyaltyInfoResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC2981
  * @example
- * ```
+ * ```ts
  * import { royaltyInfo } from "thirdweb/extensions/erc2981";
  *
  * const result = await royaltyInfo({

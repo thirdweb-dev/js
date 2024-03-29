@@ -42,7 +42,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension MARKETPLACE
  * @example
- * ```
+ * ```ts
  * import { encodeIsNewWinningBidParams } "thirdweb/extensions/marketplace";
  * const result = encodeIsNewWinningBidParams({
  *  auctionId: ...,
@@ -60,7 +60,7 @@ export function encodeIsNewWinningBidParams(options: IsNewWinningBidParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension MARKETPLACE
  * @example
- * ```
+ * ```ts
  * import { decodeIsNewWinningBidResult } from "thirdweb/extensions/marketplace";
  * const result = decodeIsNewWinningBidResult("...");
  * ```
@@ -75,7 +75,7 @@ export function decodeIsNewWinningBidResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension MARKETPLACE
  * @example
- * ```
+ * ```ts
  * import { isNewWinningBid } from "thirdweb/extensions/marketplace";
  *
  * const result = await isNewWinningBid({

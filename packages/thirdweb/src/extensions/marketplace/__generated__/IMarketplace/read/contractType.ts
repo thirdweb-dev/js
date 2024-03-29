@@ -18,7 +18,7 @@ const FN_OUTPUTS = [
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension MARKETPLACE
  * @example
- * ```
+ * ```ts
  * import { decodeContractTypeResult } from "thirdweb/extensions/marketplace";
  * const result = decodeContractTypeResult("...");
  * ```
@@ -33,7 +33,7 @@ export function decodeContractTypeResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension MARKETPLACE
  * @example
- * ```
+ * ```ts
  * import { contractType } from "thirdweb/extensions/marketplace";
  *
  * const result = await contractType();

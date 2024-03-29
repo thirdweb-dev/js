@@ -57,7 +57,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC4626
  * @example
- * ```
+ * ```ts
  * import { encodeRedeemParams } "thirdweb/extensions/erc4626";
  * const result = encodeRedeemParams({
  *  shares: ...,
@@ -80,7 +80,7 @@ export function encodeRedeemParams(options: RedeemParams) {
  * @returns A prepared transaction object.
  * @extension ERC4626
  * @example
- * ```
+ * ```ts
  * import { redeem } from "thirdweb/extensions/erc4626";
  *
  * const transaction = redeem({

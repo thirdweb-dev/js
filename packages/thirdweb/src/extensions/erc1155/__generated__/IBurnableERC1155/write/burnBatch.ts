@@ -36,7 +36,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension ERC1155
  * @example
- * ```
+ * ```ts
  * import { encodeBurnBatchParams } "thirdweb/extensions/erc1155";
  * const result = encodeBurnBatchParams({
  *  account: ...,
@@ -59,7 +59,7 @@ export function encodeBurnBatchParams(options: BurnBatchParams) {
  * @returns A prepared transaction object.
  * @extension ERC1155
  * @example
- * ```
+ * ```ts
  * import { burnBatch } from "thirdweb/extensions/erc1155";
  *
  * const transaction = burnBatch({

@@ -63,7 +63,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { encodeCreateRuleThresholdParams } "thirdweb/extensions/thirdweb";
  * const result = encodeCreateRuleThresholdParams({
  *  rule: ...,
@@ -82,7 +82,7 @@ export function encodeCreateRuleThresholdParams(
  * @returns A prepared transaction object.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { createRuleThreshold } from "thirdweb/extensions/thirdweb";
  *
  * const transaction = createRuleThreshold({

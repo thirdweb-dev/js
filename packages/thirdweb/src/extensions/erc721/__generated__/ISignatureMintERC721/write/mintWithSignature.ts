@@ -93,7 +93,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { encodeMintWithSignatureParams } "thirdweb/extensions/erc721";
  * const result = encodeMintWithSignatureParams({
  *  payload: ...,
@@ -113,7 +113,7 @@ export function encodeMintWithSignatureParams(
  * @returns A prepared transaction object.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { mintWithSignature } from "thirdweb/extensions/erc721";
  *
  * const transaction = mintWithSignature({

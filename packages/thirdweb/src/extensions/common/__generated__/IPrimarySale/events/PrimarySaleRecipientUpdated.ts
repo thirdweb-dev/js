@@ -18,7 +18,7 @@ export type PrimarySaleRecipientUpdatedEventFilters = Partial<{
  * @returns The prepared event object.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { getContractEvents } from "thirdweb";
  * import { primarySaleRecipientUpdatedEvent } from "thirdweb/extensions/common";
  *

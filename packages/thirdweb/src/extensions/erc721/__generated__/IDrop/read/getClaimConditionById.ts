@@ -69,7 +69,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { encodeGetClaimConditionByIdParams } "thirdweb/extensions/erc721";
  * const result = encodeGetClaimConditionByIdParams({
  *  conditionId: ...,
@@ -88,7 +88,7 @@ export function encodeGetClaimConditionByIdParams(
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { decodeGetClaimConditionByIdResult } from "thirdweb/extensions/erc721";
  * const result = decodeGetClaimConditionByIdResult("...");
  * ```
@@ -103,7 +103,7 @@ export function decodeGetClaimConditionByIdResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { getClaimConditionById } from "thirdweb/extensions/erc721";
  *
  * const result = await getClaimConditionById({

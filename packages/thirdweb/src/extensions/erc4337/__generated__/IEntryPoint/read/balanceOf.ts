@@ -31,7 +31,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { encodeBalanceOfParams } "thirdweb/extensions/erc4337";
  * const result = encodeBalanceOfParams({
  *  account: ...,
@@ -48,7 +48,7 @@ export function encodeBalanceOfParams(options: BalanceOfParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { decodeBalanceOfResult } from "thirdweb/extensions/erc4337";
  * const result = decodeBalanceOfResult("...");
  * ```
@@ -63,7 +63,7 @@ export function decodeBalanceOfResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { balanceOf } from "thirdweb/extensions/erc4337";
  *
  * const result = await balanceOf({

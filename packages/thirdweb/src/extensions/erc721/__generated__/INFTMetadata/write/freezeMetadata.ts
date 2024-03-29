@@ -11,7 +11,7 @@ const FN_OUTPUTS = [] as const;
  * @returns A prepared transaction object.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { freezeMetadata } from "thirdweb/extensions/erc721";
  *
  * const transaction = freezeMetadata();

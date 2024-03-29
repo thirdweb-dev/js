@@ -14,7 +14,7 @@
 ## Installation
 
 ```bash
-npm install thirdweb@beta
+npm install thirdweb
 ```
 
 ## Features

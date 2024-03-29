@@ -26,7 +26,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { encodeDeleteRuleParams } "thirdweb/extensions/thirdweb";
  * const result = encodeDeleteRuleParams({
  *  ruleId: ...,
@@ -43,7 +43,7 @@ export function encodeDeleteRuleParams(options: DeleteRuleParams) {
  * @returns A prepared transaction object.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { deleteRule } from "thirdweb/extensions/thirdweb";
  *
  * const transaction = deleteRule({

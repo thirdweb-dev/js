@@ -18,7 +18,7 @@ const FN_OUTPUTS = [
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC20
  * @example
- * ```
+ * ```ts
  * import { decodeDOMAIN_SEPARATORResult } from "thirdweb/extensions/erc20";
  * const result = decodeDOMAIN_SEPARATORResult("...");
  * ```
@@ -33,7 +33,7 @@ export function decodeDOMAIN_SEPARATORResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC20
  * @example
- * ```
+ * ```ts
  * import { DOMAIN_SEPARATOR } from "thirdweb/extensions/erc20";
  *
  * const result = await DOMAIN_SEPARATOR();

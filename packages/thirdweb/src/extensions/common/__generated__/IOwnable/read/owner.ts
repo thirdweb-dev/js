@@ -18,7 +18,7 @@ const FN_OUTPUTS = [
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { decodeOwnerResult } from "thirdweb/extensions/common";
  * const result = decodeOwnerResult("...");
  * ```
@@ -33,7 +33,7 @@ export function decodeOwnerResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { owner } from "thirdweb/extensions/common";
  *
  * const result = await owner();

@@ -28,7 +28,7 @@ export type AcceptedOfferEventFilters = Partial<{
  * @returns The prepared event object.
  * @extension MARKETPLACE
  * @example
- * ```
+ * ```ts
  * import { getContractEvents } from "thirdweb";
  * import { acceptedOfferEvent } from "thirdweb/extensions/marketplace";
  *

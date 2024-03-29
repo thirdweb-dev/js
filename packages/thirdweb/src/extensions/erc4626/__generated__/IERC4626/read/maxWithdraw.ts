@@ -38,7 +38,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC4626
  * @example
- * ```
+ * ```ts
  * import { encodeMaxWithdrawParams } "thirdweb/extensions/erc4626";
  * const result = encodeMaxWithdrawParams({
  *  owner: ...,
@@ -55,7 +55,7 @@ export function encodeMaxWithdrawParams(options: MaxWithdrawParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC4626
  * @example
- * ```
+ * ```ts
  * import { decodeMaxWithdrawResult } from "thirdweb/extensions/erc4626";
  * const result = decodeMaxWithdrawResult("...");
  * ```
@@ -70,7 +70,7 @@ export function decodeMaxWithdrawResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC4626
  * @example
- * ```
+ * ```ts
  * import { maxWithdraw } from "thirdweb/extensions/erc4626";
  *
  * const result = await maxWithdraw({

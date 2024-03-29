@@ -18,7 +18,7 @@ const FN_OUTPUTS = [
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { decodeMaxKeysPerFidResult } from "thirdweb/extensions/farcaster";
  * const result = decodeMaxKeysPerFidResult("...");
  * ```
@@ -33,7 +33,7 @@ export function decodeMaxKeysPerFidResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { maxKeysPerFid } from "thirdweb/extensions/farcaster";
  *
  * const result = await maxKeysPerFid();

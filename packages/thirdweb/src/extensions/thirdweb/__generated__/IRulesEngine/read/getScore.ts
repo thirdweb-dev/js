@@ -35,7 +35,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { encodeGetScoreParams } "thirdweb/extensions/thirdweb";
  * const result = encodeGetScoreParams({
  *  tokenOwner: ...,
@@ -52,7 +52,7 @@ export function encodeGetScoreParams(options: GetScoreParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { decodeGetScoreResult } from "thirdweb/extensions/thirdweb";
  * const result = decodeGetScoreResult("...");
  * ```
@@ -67,7 +67,7 @@ export function decodeGetScoreResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { getScore } from "thirdweb/extensions/thirdweb";
  *
  * const result = await getScore({

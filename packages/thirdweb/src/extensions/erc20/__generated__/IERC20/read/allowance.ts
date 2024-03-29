@@ -36,7 +36,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC20
  * @example
- * ```
+ * ```ts
  * import { encodeAllowanceParams } "thirdweb/extensions/erc20";
  * const result = encodeAllowanceParams({
  *  owner: ...,
@@ -54,7 +54,7 @@ export function encodeAllowanceParams(options: AllowanceParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC20
  * @example
- * ```
+ * ```ts
  * import { decodeAllowanceResult } from "thirdweb/extensions/erc20";
  * const result = decodeAllowanceResult("...");
  * ```
@@ -69,7 +69,7 @@ export function decodeAllowanceResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC20
  * @example
- * ```
+ * ```ts
  * import { allowance } from "thirdweb/extensions/erc20";
  *
  * const result = await allowance({

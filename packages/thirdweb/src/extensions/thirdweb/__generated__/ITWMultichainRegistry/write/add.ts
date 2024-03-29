@@ -47,7 +47,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { encodeAddParams } "thirdweb/extensions/thirdweb";
  * const result = encodeAddParams({
  *  deployer: ...,
@@ -72,7 +72,7 @@ export function encodeAddParams(options: AddParams) {
  * @returns A prepared transaction object.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { add } from "thirdweb/extensions/thirdweb";
  *
  * const transaction = add({

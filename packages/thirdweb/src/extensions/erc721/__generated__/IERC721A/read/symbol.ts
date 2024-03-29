@@ -18,7 +18,7 @@ const FN_OUTPUTS = [
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { decodeSymbolResult } from "thirdweb/extensions/erc721";
  * const result = decodeSymbolResult("...");
  * ```
@@ -33,7 +33,7 @@ export function decodeSymbolResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { symbol } from "thirdweb/extensions/erc721";
  *
  * const result = await symbol();

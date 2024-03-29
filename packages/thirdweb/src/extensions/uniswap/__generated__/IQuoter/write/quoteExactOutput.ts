@@ -39,7 +39,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension UNISWAP
  * @example
- * ```
+ * ```ts
  * import { encodeQuoteExactOutputParams } "thirdweb/extensions/uniswap";
  * const result = encodeQuoteExactOutputParams({
  *  path: ...,
@@ -57,7 +57,7 @@ export function encodeQuoteExactOutputParams(options: QuoteExactOutputParams) {
  * @returns A prepared transaction object.
  * @extension UNISWAP
  * @example
- * ```
+ * ```ts
  * import { quoteExactOutput } from "thirdweb/extensions/uniswap";
  *
  * const transaction = quoteExactOutput({

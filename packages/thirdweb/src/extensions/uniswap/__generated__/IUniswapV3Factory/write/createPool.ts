@@ -41,7 +41,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension UNISWAP
  * @example
- * ```
+ * ```ts
  * import { encodeCreatePoolParams } "thirdweb/extensions/uniswap";
  * const result = encodeCreatePoolParams({
  *  tokenA: ...,
@@ -64,7 +64,7 @@ export function encodeCreatePoolParams(options: CreatePoolParams) {
  * @returns A prepared transaction object.
  * @extension UNISWAP
  * @example
- * ```
+ * ```ts
  * import { createPool } from "thirdweb/extensions/uniswap";
  *
  * const transaction = createPool({

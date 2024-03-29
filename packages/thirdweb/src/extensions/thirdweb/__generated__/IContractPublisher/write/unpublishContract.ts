@@ -37,7 +37,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { encodeUnpublishContractParams } "thirdweb/extensions/thirdweb";
  * const result = encodeUnpublishContractParams({
  *  publisher: ...,
@@ -60,7 +60,7 @@ export function encodeUnpublishContractParams(
  * @returns A prepared transaction object.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { unpublishContract } from "thirdweb/extensions/thirdweb";
  *
  * const transaction = unpublishContract({

@@ -31,7 +31,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { encodePriceParams } "thirdweb/extensions/farcaster";
  * const result = encodePriceParams({
  *  units: ...,
@@ -48,7 +48,7 @@ export function encodePriceParams(options: PriceParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { decodePriceResult } from "thirdweb/extensions/farcaster";
  * const result = decodePriceResult("...");
  * ```
@@ -63,7 +63,7 @@ export function decodePriceResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { price } from "thirdweb/extensions/farcaster";
  *
  * const result = await price({

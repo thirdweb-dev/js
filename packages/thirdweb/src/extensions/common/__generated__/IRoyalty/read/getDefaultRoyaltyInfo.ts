@@ -21,7 +21,7 @@ const FN_OUTPUTS = [
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { decodeGetDefaultRoyaltyInfoResult } from "thirdweb/extensions/common";
  * const result = decodeGetDefaultRoyaltyInfoResult("...");
  * ```
@@ -36,7 +36,7 @@ export function decodeGetDefaultRoyaltyInfoResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { getDefaultRoyaltyInfo } from "thirdweb/extensions/common";
  *
  * const result = await getDefaultRoyaltyInfo();

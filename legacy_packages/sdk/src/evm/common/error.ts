@@ -404,6 +404,12 @@ export function parseRevertReason(error: any): string {
     errorString = error.toString();
   }
 
+  // if the error is just too long, just return the message to limit Regexp processing time
+  // see: https://cwe.mitre.org/data/definitions/1333.html
+  if (errorString.length > 5000) {
+    return error.message || "";
+  }
+
   return (
     parseMessageParts(/.*?"message":"([^"\\]*).*?/, errorString) ||
     parseMessageParts(/.*?"reason":"([^"\\]*).*?/, errorString) ||

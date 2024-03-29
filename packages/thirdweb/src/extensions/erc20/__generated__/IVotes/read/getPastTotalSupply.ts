@@ -34,7 +34,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC20
  * @example
- * ```
+ * ```ts
  * import { encodeGetPastTotalSupplyParams } "thirdweb/extensions/erc20";
  * const result = encodeGetPastTotalSupplyParams({
  *  blockNumber: ...,
@@ -53,7 +53,7 @@ export function encodeGetPastTotalSupplyParams(
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC20
  * @example
- * ```
+ * ```ts
  * import { decodeGetPastTotalSupplyResult } from "thirdweb/extensions/erc20";
  * const result = decodeGetPastTotalSupplyResult("...");
  * ```
@@ -68,7 +68,7 @@ export function decodeGetPastTotalSupplyResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC20
  * @example
- * ```
+ * ```ts
  * import { getPastTotalSupply } from "thirdweb/extensions/erc20";
  *
  * const result = await getPastTotalSupply({

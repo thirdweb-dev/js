@@ -36,7 +36,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { encodeTotalKeysParams } "thirdweb/extensions/farcaster";
  * const result = encodeTotalKeysParams({
  *  fid: ...,
@@ -54,7 +54,7 @@ export function encodeTotalKeysParams(options: TotalKeysParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { decodeTotalKeysResult } from "thirdweb/extensions/farcaster";
  * const result = decodeTotalKeysResult("...");
  * ```
@@ -69,7 +69,7 @@ export function decodeTotalKeysResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { totalKeys } from "thirdweb/extensions/farcaster";
  *
  * const result = await totalKeys({

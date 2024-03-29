@@ -49,7 +49,7 @@ const FN_OUTPUTS = [
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { decodeGetAllRulesResult } from "thirdweb/extensions/thirdweb";
  * const result = decodeGetAllRulesResult("...");
  * ```
@@ -64,7 +64,7 @@ export function decodeGetAllRulesResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { getAllRules } from "thirdweb/extensions/thirdweb";
  *
  * const result = await getAllRules();

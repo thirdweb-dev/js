@@ -23,7 +23,7 @@ export type ListingRemovedEventFilters = Partial<{
  * @returns The prepared event object.
  * @extension MARKETPLACE
  * @example
- * ```
+ * ```ts
  * import { getContractEvents } from "thirdweb";
  * import { listingRemovedEvent } from "thirdweb/extensions/marketplace";
  *

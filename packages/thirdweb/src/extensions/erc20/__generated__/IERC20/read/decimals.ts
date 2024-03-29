@@ -18,7 +18,7 @@ const FN_OUTPUTS = [
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC20
  * @example
- * ```
+ * ```ts
  * import { decodeDecimalsResult } from "thirdweb/extensions/erc20";
  * const result = decodeDecimalsResult("...");
  * ```
@@ -33,7 +33,7 @@ export function decodeDecimalsResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC20
  * @example
- * ```
+ * ```ts
  * import { decimals } from "thirdweb/extensions/erc20";
  *
  * const result = await decimals();

@@ -26,7 +26,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension UNISWAP
  * @example
- * ```
+ * ```ts
  * import { encodeSetOwnerParams } "thirdweb/extensions/uniswap";
  * const result = encodeSetOwnerParams({
  *  newOwner: ...,
@@ -43,7 +43,7 @@ export function encodeSetOwnerParams(options: SetOwnerParams) {
  * @returns A prepared transaction object.
  * @extension UNISWAP
  * @example
- * ```
+ * ```ts
  * import { setOwner } from "thirdweb/extensions/uniswap";
  *
  * const transaction = setOwner({

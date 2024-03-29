@@ -18,7 +18,7 @@ export type RulesEngineOverridenEventFilters = Partial<{
  * @returns The prepared event object.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { getContractEvents } from "thirdweb";
  * import { rulesEngineOverridenEvent } from "thirdweb/extensions/thirdweb";
  *

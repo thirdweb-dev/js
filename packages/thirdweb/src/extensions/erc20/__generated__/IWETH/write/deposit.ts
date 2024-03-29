@@ -11,7 +11,7 @@ const FN_OUTPUTS = [] as const;
  * @returns A prepared transaction object.
  * @extension ERC20
  * @example
- * ```
+ * ```ts
  * import { deposit } from "thirdweb/extensions/erc20";
  *
  * const transaction = deposit();

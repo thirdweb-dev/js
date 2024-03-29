@@ -31,7 +31,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC1155
  * @example
- * ```
+ * ```ts
  * import { encodeTotalSupplyParams } "thirdweb/extensions/erc1155";
  * const result = encodeTotalSupplyParams({
  *  id: ...,
@@ -48,7 +48,7 @@ export function encodeTotalSupplyParams(options: TotalSupplyParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC1155
  * @example
- * ```
+ * ```ts
  * import { decodeTotalSupplyResult } from "thirdweb/extensions/erc1155";
  * const result = decodeTotalSupplyResult("...");
  * ```
@@ -63,7 +63,7 @@ export function decodeTotalSupplyResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC1155
  * @example
- * ```
+ * ```ts
  * import { totalSupply } from "thirdweb/extensions/erc1155";
  *
  * const result = await totalSupply({
