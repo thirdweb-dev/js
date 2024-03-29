@@ -2,6 +2,7 @@ export type ProjectType =
   | "brownie"
   | "foundry"
   | "hardhat"
+  | "zk-hardhat"
   | "truffle"
   | "solc"
   | "vite"
