@@ -1,5 +1,11 @@
 # @thirdweb-dev/sdk
 
+## 4.0.53
+
+### Patch Changes
+
+- [#2584](https://github.com/thirdweb-dev/js/pull/2584) [`6bd1b82`](https://github.com/thirdweb-dev/js/commit/6bd1b82a58505ec3af3a12ceeab51d78ee3b8bc0) Thanks [@kumaryash90](https://github.com/kumaryash90)! - cli changes for zksync publish
+
 ## 4.0.52
 
 ### Patch Changes

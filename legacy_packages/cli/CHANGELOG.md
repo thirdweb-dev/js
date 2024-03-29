@@ -1,5 +1,16 @@
 # thirdweb
 
+## 0.13.59
+
+### Patch Changes
+
+- [#2584](https://github.com/thirdweb-dev/js/pull/2584) [`6bd1b82`](https://github.com/thirdweb-dev/js/commit/6bd1b82a58505ec3af3a12ceeab51d78ee3b8bc0) Thanks [@kumaryash90](https://github.com/kumaryash90)! - cli changes for zksync publish
+
+- Updated dependencies [[`6bd1b82`](https://github.com/thirdweb-dev/js/commit/6bd1b82a58505ec3af3a12ceeab51d78ee3b8bc0)]:
+  - @thirdweb-dev/sdk@4.0.53
+  - @thirdweb-dev/wallets@2.4.29
+  - @thirdweb-dev/auth@4.1.51
+
 ## 0.13.58
 
 ### Patch Changes
