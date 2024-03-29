@@ -9,6 +9,7 @@ import { injectedProvider } from "./injected/mipdStore.js";
 import type { InjectedSupportedWalletIds } from "./__generated__/wallet-ids.js";
 
 import { createWalletEmitter } from "./wallet-emitter.js";
+import { trackConnect } from "../analytics/track.js";
 
 // TODO: figure out how to define the type without tuple args type and using function overloads
 
@@ -113,6 +114,11 @@ export function createWallet<const ID extends WalletId>(
             chain = connectedChain;
             handleDisconnect = doDisconnect;
             handleSwitchChain = doSwitchChain;
+            trackConnect({
+              client: options.client,
+              walletType: id,
+              walletAddress: account.address,
+            });
             // return account
             return account;
           }
@@ -131,6 +137,11 @@ export function createWallet<const ID extends WalletId>(
             chain = connectedChain;
             handleDisconnect = doDisconnect;
             handleSwitchChain = doSwitchChain;
+            trackConnect({
+              client: options.client,
+              walletType: id,
+              walletAddress: account.address,
+            });
             // return account
             return account;
           }
@@ -152,6 +163,11 @@ export function createWallet<const ID extends WalletId>(
             chain = connectedChain;
             handleDisconnect = doDisconnect;
             handleSwitchChain = doSwitchChain;
+            trackConnect({
+              client: options.client,
+              walletType: id,
+              walletAddress: account.address,
+            });
             // return account
             return account;
           }
@@ -175,6 +191,11 @@ export function createWallet<const ID extends WalletId>(
             chain = connectedChain;
             handleDisconnect = doDisconnect;
             handleSwitchChain = doSwitchChain;
+            trackConnect({
+              client: options.client,
+              walletType: id,
+              walletAddress: account.address,
+            });
             // return account
             return account;
           }
@@ -233,6 +254,11 @@ export function smartWallet(
       // set the states
       account = connectedAccount;
       chain = connectedChain;
+      trackConnect({
+        client: options.client,
+        walletType: "smart",
+        walletAddress: account.address,
+      });
       // return account
       return account;
     },
@@ -246,6 +272,11 @@ export function smartWallet(
       // set the states
       account = connectedAccount;
       chain = connectedChain;
+      trackConnect({
+        client: options.client,
+        walletType: "smart",
+        walletAddress: account.address,
+      });
       // return account
       return account;
     },
@@ -304,6 +335,11 @@ export function embeddedWallet(
       // set the states
       account = connectedAccount;
       chain = connectedChain;
+      trackConnect({
+        client: options.client,
+        walletType: "embedded",
+        walletAddress: account.address,
+      });
       // return only the account
       return account;
     },
@@ -317,6 +353,11 @@ export function embeddedWallet(
       // set the states
       account = connectedAccount;
       chain = connectedChain;
+      trackConnect({
+        client: options.client,
+        walletType: "embedded",
+        walletAddress: account.address,
+      });
       // return only the account
       return account;
     },
@@ -383,6 +424,11 @@ function coinbaseWalletSDK(): Wallet<"com.coinbase.wallet"> {
       chain = connectedChain;
       handleDisconnect = doDisconnect;
       handleSwitchChain = doSwitchChain;
+      trackConnect({
+        client: options.client,
+        walletType: "com.coinbase.wallet",
+        walletAddress: account.address,
+      });
       // return account
       return account;
     },
@@ -398,6 +444,11 @@ function coinbaseWalletSDK(): Wallet<"com.coinbase.wallet"> {
       chain = connectedChain;
       handleDisconnect = doDisconnect;
       handleSwitchChain = doSwitchChain;
+      trackConnect({
+        client: options.client,
+        walletType: "com.coinbase.wallet",
+        walletAddress: account.address,
+      });
       // return account
       return account;
     },

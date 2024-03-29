@@ -116,7 +116,7 @@ function SendFundsForm(props: {
   const balanceQuery = useWalletBalance({
     chain,
     tokenAddress: tokenAddress,
-    account: activeAccount,
+    address: activeAccount?.address,
   });
 
   const { receiverAddress, setReceiverAddress, amount, setAmount } = props;
