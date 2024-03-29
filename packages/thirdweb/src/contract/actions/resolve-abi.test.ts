@@ -53,9 +53,7 @@ describe("resolveAbiFromContractApi", () => {
       expect.any(Object),
     );
   });
-});
 
-describe("resolveAbiFromContractApi", () => {
   it.runIf(process.env.TW_SECRET_KEY)(
     "should resolve abi from contract api",
     async () => {

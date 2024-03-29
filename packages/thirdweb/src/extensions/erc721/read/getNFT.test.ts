@@ -8,7 +8,7 @@ const fetchSpy = vi.spyOn(globalThis, "fetch");
 describe("erc721.getNFT", () => {
   it.runIf(process.env.TW_SECRET_KEY)("without owner", async () => {
     const nft = await getNFT({
-      contract: DOODLES_CONTRACT,
+      contract: { ...DOODLES_CONTRACT },
       tokenId: 1n,
       includeOwner: false,
     });
