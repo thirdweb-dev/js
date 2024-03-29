@@ -22,16 +22,16 @@ const AllWalletsUI = /* @__PURE__ */ lazy(() => import("./AllWalletsUI.js"));
  */
 export const ConnectModalContent = (props: {
   screenSetup: ScreenSetup;
-  onHide: () => void;
-  onShow: () => void;
-  isOpen: boolean;
   onClose: () => void;
+  isOpen: boolean;
+  setModalVisibility: (value: boolean) => void;
 }) => {
-  const { onShow, onClose } = props;
+  const { setModalVisibility, onClose } = props;
   const { screen, setScreen, initialScreen } = props.screenSetup;
   const { wallets, accountAbstraction } = useWalletConnectionCtx();
   // const disconnect = useDisconnect();
   const modalConfig = useContext(ModalConfigCtx);
+
   // const setModalConfig = useContext(SetModalConfigCtx);
   // const activeWalletConnectionStatus = useActiveWalletConnectionStatus();
   // const activeWallet = useActiveWallet();
@@ -59,7 +59,7 @@ export const ConnectModalContent = (props: {
       //   : !!authConfig?.authUrl && !user?.address;
 
       onModalUnmount(() => {
-        onShow();
+        setModalVisibility(true);
       });
 
       // show sign in screen if required
@@ -77,7 +77,7 @@ export const ConnectModalContent = (props: {
       // authConfig?.authUrl,
       // user?.address,
       setScreen,
-      onShow,
+      setModalVisibility,
       onClose,
       onConnect,
       connect,
@@ -138,6 +138,7 @@ export const ConnectModalContent = (props: {
           }}
           personalWallet={wallet}
           onBack={goBack}
+          setModalVisibility={props.setModalVisibility}
         />
       );
     }
@@ -150,6 +151,7 @@ export const ConnectModalContent = (props: {
         done={() => {
           handleConnected(wallet);
         }}
+        setModalVisibility={props.setModalVisibility}
       />
     );
   };
