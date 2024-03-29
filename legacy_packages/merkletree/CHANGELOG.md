@@ -1,5 +1,14 @@
 # @thirdweb-dev/merkletree
 
+## 0.2.3
+
+### Patch Changes
+
+- [#2577](https://github.com/thirdweb-dev/js/pull/2577) [`d93286b`](https://github.com/thirdweb-dev/js/commit/d93286bc1f8224d055b50ce3ffa4f302869cb2b1) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
+
+- Updated dependencies [[`d93286b`](https://github.com/thirdweb-dev/js/commit/d93286bc1f8224d055b50ce3ffa4f302869cb2b1)]:
+  - @thirdweb-dev/crypto@0.2.3
+
 ## 0.2.2
 
 ### Patch Changes
