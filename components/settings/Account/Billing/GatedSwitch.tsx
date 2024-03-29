@@ -35,7 +35,7 @@ export const GatedSwitch: React.FC<GatedSwitchProps> = ({
             To access this feature, you need to upgrade to the{" "}
             <TrackedLink
               textAlign="center"
-              href="/dashboard/settings/billing"
+              href={`/dashboard/settings/billing${account && !account.trialPeriodEndedAt ? "?claimGrowth" : ""}`}
               category="advancedFeature"
               label={trackingLabel}
               color="blue.500"

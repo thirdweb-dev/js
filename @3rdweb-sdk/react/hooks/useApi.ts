@@ -21,6 +21,7 @@ export enum AccountStatus {
   PaymentVerification = "paymentVerification",
   ValidPayment = "validPayment",
   InvalidPayment = "invalidPayment",
+  InvalidPaymentMethod = "invalidPaymentMethod",
 }
 
 export enum AccountPlan {
@@ -418,7 +419,7 @@ export function useUpdateAccount() {
   );
 }
 
-export function useUpdateAccountPlan() {
+export function useUpdateAccountPlan(waitForWebhook?: boolean) {
   const { user } = useLoggedInUser();
   const queryClient = useQueryClient();
 
@@ -439,6 +440,12 @@ export function useUpdateAccountPlan() {
 
       if (json.error) {
         throw new Error(json.error.message);
+      }
+
+      // Wait for account plan to update via stripe webhook
+      // TODO: find a better way to notify the client that the plan has been updated
+      if (waitForWebhook) {
+        await new Promise((resolve) => setTimeout(resolve, 1000 * 10));
       }
 
       return json.data;

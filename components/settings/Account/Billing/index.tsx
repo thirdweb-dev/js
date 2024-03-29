@@ -28,7 +28,9 @@ interface BillingProps {
 
 export const Billing: React.FC<BillingProps> = ({ account }) => {
   const [claimedGrowth] = useLocalStorage("claim-growth-trial", false, true);
-  const updatePlanMutation = useUpdateAccountPlan();
+  const updatePlanMutation = useUpdateAccountPlan(
+    account?.plan === AccountPlan.Free,
+  );
   const {
     isOpen: isPaymentMethodOpen,
     onOpen: onPaymentMethodOpen,
@@ -221,6 +223,7 @@ export const Billing: React.FC<BillingProps> = ({ account }) => {
     AccountStatus.NoCustomer,
     AccountStatus.NoPayment,
     AccountStatus.InvalidPayment,
+    AccountStatus.InvalidPaymentMethod,
   ].includes(account.status);
 
   return (
@@ -256,7 +259,9 @@ export const Billing: React.FC<BillingProps> = ({ account }) => {
         paymentVerification={paymentVerification}
         invalidPayment={invalidPayment}
         loading={paymentMethodSaving || updatePlanMutation.isLoading}
-        canTrialGrowth={!!claimedGrowth}
+        canTrialGrowth={
+          !!claimedGrowth && account && !account?.trialPeriodEndedAt
+        }
         trialPeriodEndedAt={account.trialPeriodEndedAt}
         onSelect={handlePlanSelect}
       />

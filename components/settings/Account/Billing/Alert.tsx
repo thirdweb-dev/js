@@ -11,14 +11,18 @@ import {
   AlertTitle,
   Flex,
   IconButton,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useLocalStorage } from "hooks/useLocalStorage";
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { FiX } from "react-icons/fi";
 import { useRouter } from "next/router";
 
 import { Heading, Text, TrackedLinkButton } from "tw-components";
+import { ManageBillingButton } from "./ManageButton";
+import { OnboardingBilling } from "components/onboarding/Billing";
+import { OnboardingModal } from "components/onboarding/Modal";
 
 enum DismissedStorageType {
   Usage_50 = "usage_50",
@@ -33,7 +37,16 @@ type DismissedStorage = {
 export const BillingAlert = () => {
   const { isLoggedIn } = useLoggedInUser();
   const usageQuery = useAccountUsage();
-  const meQuery = useAccount();
+  const meQuery = useAccount({
+    refetchInterval: (account) =>
+      [
+        AccountStatus.InvalidPayment,
+        AccountStatus.InvalidPaymentMethod,
+        AccountStatus.PaymentVerification,
+      ].includes(account?.status as AccountStatus)
+        ? 1000
+        : false,
+  });
   const router = useRouter();
 
   const [dismissedAlert, setDismissedAlert] = useLocalStorage<
@@ -165,6 +178,17 @@ export const BillingAlert = () => {
     );
   }
 
+  if (status === AccountStatus.InvalidPaymentMethod) {
+    // Todo: add reason for failure here.
+    return (
+      <BillingTypeAlert
+        title="Your payment method is invalid"
+        description="To use thirdweb services without interruption, please add your payment method."
+        status="error"
+      />
+    );
+  }
+
   if (
     status !== AccountStatus.ValidPayment &&
     exceededUsage_50 &&
@@ -245,6 +269,25 @@ const BillingTypeAlert: React.FC<BillingTypeAlertProps> = ({
   ctaHref = "/dashboard/settings/billing",
   label = "addPaymentAlert",
 }) => {
+  // TODO: We should find a way to move this deeper into the
+  // TODO: ManageBillingButton component and set an optional field to override
+  const [paymentMethodSaving, setPaymentMethodSaving] = useState(false);
+  const meQuery = useAccount();
+  const { data: account } = meQuery;
+
+  const {
+    onOpen: onPaymentMethodOpen,
+    onClose: onPaymentMethodClose,
+    isOpen: isPaymentMethodOpen,
+  } = useDisclosure();
+
+  const handlePaymentAdded = () => {
+    setPaymentMethodSaving(true);
+    onPaymentMethodClose();
+  };
+
+  const isBilling = ctaHref === "/dashboard/settings/billing";
+
   return (
     <Alert
       status={status}
@@ -256,6 +299,18 @@ const BillingTypeAlert: React.FC<BillingTypeAlertProps> = ({
       variant="left-accent"
       bg="backgroundCardHighlight"
     >
+      <>
+        <OnboardingModal
+          isOpen={isPaymentMethodOpen}
+          onClose={onPaymentMethodClose}
+        >
+          <OnboardingBilling
+            onSave={handlePaymentAdded}
+            onCancel={onPaymentMethodClose}
+          />
+        </OnboardingModal>
+      </>
+
       <Flex>
         <AlertIcon boxSize={4} mt={1} ml={1} />
         <Flex flexDir="column" gap={1} pl={1}>
@@ -266,15 +321,37 @@ const BillingTypeAlert: React.FC<BillingTypeAlertProps> = ({
             <Text as="span">{description}</Text>
           </AlertTitle>
           <AlertDescription my={2}>
+            {isBilling && account ? (
+              <ManageBillingButton
+                account={account}
+                loading={paymentMethodSaving}
+                loadingText="Verifying payment method"
+                buttonProps={{ colorScheme: "primary" }}
+                onClick={onPaymentMethodOpen}
+              />
+            ) : (
+              <TrackedLinkButton
+                href={ctaHref}
+                category="billing"
+                label={label}
+                fontWeight="medium"
+                colorScheme="blue"
+                size="sm"
+              >
+                {ctaText}
+              </TrackedLinkButton>
+            )}
             <TrackedLinkButton
-              href={ctaHref}
+              ml="4"
+              variant="outline"
+              href="/support"
               category="billing"
-              label={label}
-              fontWeight="medium"
-              colorScheme="blue"
-              size="sm"
+              label="support"
+              color="blue.500"
+              fontSize="small"
+              isExternal
             >
-              {ctaText}
+              Contact Support
             </TrackedLinkButton>
           </AlertDescription>
         </Flex>

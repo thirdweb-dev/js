@@ -43,6 +43,16 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
 
   const isOpCredit = credit?.name.startsWith("OP -") || isOpCreditDefault;
   const isTwCredit = credit?.name.startsWith("TW -");
+  const isStartupCredit = credit?.name.startsWith("SU -");
+
+  let creditTitle = credit?.name ?? "thirdweb credits";
+  if (isOpCredit) {
+    creditTitle = "Optimism sponsorship credits";
+  } else if (isTwCredit) {
+    creditTitle = "thirdweb credits";
+  } else if (isStartupCredit) {
+    creditTitle = "Startup grant credits";
+  }
 
   return (
     <Card p={6} as={Flex} flexDir="column" gap={3}>
@@ -57,14 +67,15 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
               boxSize={6}
               objectFit="contain"
             />
+          ) : isStartupCredit ? (
+            <ChakraNextImage
+              src={require("public/brand/thirdweb-icon.svg")}
+              alt="tw-credit"
+              boxSize={6}
+              objectFit="contain"
+            />
           ) : null}
-          <Text color="bgBlack">
-            {isOpCredit
-              ? "Sponsorship credit balance"
-              : isTwCredit
-                ? "thirdweb credits"
-                : credit?.name}
-          </Text>
+          <Text color="bgBlack">{creditTitle}</Text>
           {!hasAppliedForOpGrant && isOpCredit && (
             <Button
               size="xs"

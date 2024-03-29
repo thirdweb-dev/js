@@ -1,3 +1,4 @@
+import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { NavLink } from "./nav-link";
 import { SIDEBAR_WIDTH, SideBarTunnel } from "./tunnel";
 import { Route } from "./types";
@@ -31,6 +32,8 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
   zIndex = "sticky",
 }) => {
   const openState = useDisclosure();
+  const meQuery = useAccount();
+  const { data: account } = meQuery;
 
   const activeLink = useMemo(
     () =>
@@ -105,7 +108,12 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
                   ? links.map(({ path, subActivePath, title: linkTitle }) => (
                       <NavLink
                         key={path}
-                        href={path}
+                        href={`${path}${
+                          path.includes("billing") &&
+                          !account?.trialPeriodEndedAt
+                            ? "?claimGrowth"
+                            : ""
+                        }`}
                         subActivePath={subActivePath}
                       >
                         {linkTitle}

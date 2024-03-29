@@ -52,7 +52,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
             ctaTitle="Get started for free"
             ctaProps={{
               category: trackingCategory,
-              href: "/dashboard/settings/billing",
+              href: `/dashboard/settings/billing${canTrialGrowth && "?claimGrowth"}`,
             }}
           />
 

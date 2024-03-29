@@ -23,7 +23,7 @@ export const UpgradeButton = () => {
     <TrackedLinkButton
       category="header"
       label="upgrade"
-      href="/dashboard/settings/billing"
+      href={`/dashboard/settings/billing${meQuery.data && !meQuery.data.trialPeriodEndedAt && "?claimGrowth"}`}
       variant="outline"
       colorScheme="blue"
       size="sm"
