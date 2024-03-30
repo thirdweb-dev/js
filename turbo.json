@@ -142,5 +142,5 @@
       "dependsOn": ["build"]
     }
   },
-  "globalEnv": ["CI"]
+  "globalEnv": ["CI", "TW_SECRET_KEY"]
 }
