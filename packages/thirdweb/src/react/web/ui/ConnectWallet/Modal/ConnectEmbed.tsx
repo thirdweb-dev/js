@@ -430,10 +430,7 @@ const ConnectEmbedContent = (
         onClose={() => {
           setScreen(initialScreen);
         }}
-        onHide={() => {
-          // no op
-        }}
-        onShow={() => {
+        setModalVisibility={() => {
           // no op
         }}
       />

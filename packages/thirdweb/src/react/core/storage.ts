@@ -1,5 +1,5 @@
 import type { AsyncStorage } from "../../wallets/storage/AsyncStorage.js";
-import { asyncLocalStorage } from "./utils/asyncLocalStorage.js";
+import { asyncLocalStorage } from "../../wallets/storage/asyncLocalStorage.js";
 
 let storage: AsyncStorage;
 

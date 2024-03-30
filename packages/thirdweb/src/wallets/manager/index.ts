@@ -4,6 +4,7 @@ import { effect } from "../../reactive/effect.js";
 import { createStore } from "../../reactive/store.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
 import type { AsyncStorage } from "../storage/AsyncStorage.js";
+import { deleteConnectParamsFromStorage } from "../storage/walletStorage.js";
 
 type WalletIdToConnectedWalletMap = Map<string, Wallet>;
 export type ConnectionStatus = "connected" | "disconnected" | "connecting";
@@ -60,6 +61,8 @@ export function createConnectionManager(storage: AsyncStorage) {
 
   const onWalletDisconnect = (wallet: Wallet) => {
     const currentMap = walletIdToConnectedWalletMap.getValue();
+    deleteConnectParamsFromStorage(storage, wallet.id);
+
     const newMap = new Map(currentMap);
     newMap.delete(wallet.id);
 

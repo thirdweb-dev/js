@@ -74,8 +74,10 @@ const ConnectModal = () => {
     }
   }, [isWalletModalOpen, setIsWalletModalOpen, screen]);
 
-  const onHide = useCallback(() => setHideModal(true), []);
-  const onShow = useCallback(() => setHideModal(false), []);
+  const setModalVisibility = useCallback(
+    (value: boolean) => setHideModal(!value),
+    [],
+  );
 
   // if wallet is suddenly disconnected when showing the sign in screen, close the modal and reset the screen
   useEffect(() => {
@@ -122,8 +124,7 @@ const ConnectModal = () => {
       >
         <ConnectModalContent
           screenSetup={screenSetup}
-          onHide={onHide}
-          onShow={onShow}
+          setModalVisibility={setModalVisibility}
           isOpen={isWalletModalOpen}
           onClose={closeModal}
         />

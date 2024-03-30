@@ -18,7 +18,7 @@ import { WalletImage } from "../../ui/components/WalletImage.js";
  */
 export const ScanScreen: React.FC<{
   onBack?: () => void;
-  onGetStarted: () => void;
+  onGetStarted?: () => void;
   qrCodeUri?: string;
   walletName: string;
   walletId: WalletId;
@@ -62,22 +62,24 @@ export const ScanScreen: React.FC<{
 
       <Spacer y="lg" />
 
-      <ScreenBottomContainer
-        style={{
-          border: modalConfig.modalSize === "compact" ? undefined : "none",
-        }}
-      >
-        <Button
-          variant="link"
-          onClick={props.onGetStarted}
+      {props.onGetStarted && (
+        <ScreenBottomContainer
           style={{
-            fontSize: fontSize.sm,
-            textAlign: "center",
+            border: modalConfig.modalSize === "compact" ? undefined : "none",
           }}
         >
-          {props.getStartedLink}
-        </Button>
-      </ScreenBottomContainer>
+          <Button
+            variant="link"
+            onClick={props.onGetStarted}
+            style={{
+              fontSize: fontSize.sm,
+              textAlign: "center",
+            }}
+          >
+            {props.getStartedLink}
+          </Button>
+        </ScreenBottomContainer>
+      )}
     </Container>
   );
 };

@@ -2,6 +2,7 @@ export {
   createWallet,
   smartWallet,
   embeddedWallet,
+  walletConnect,
 } from "../wallets/create-wallet.js";
 
 export type { Wallet, Account } from "../wallets/interfaces/wallet.js";
