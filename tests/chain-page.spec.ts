@@ -1,7 +1,8 @@
 import { test, expect } from "@playwright/test";
+import { getBaseURL } from "./setup";
 
 test.beforeEach(async ({ page, baseURL }) => {
-  await page.goto(baseURL ? `${baseURL}/1` : "/1");
+  await page.goto(`${getBaseURL(baseURL)}/1`);
 });
 
 test.describe("Chain Page", () => {

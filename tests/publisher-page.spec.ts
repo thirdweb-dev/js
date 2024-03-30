@@ -1,7 +1,8 @@
 import { test, expect } from "@playwright/test";
+import { getBaseURL } from "./setup";
 
 test.beforeEach(async ({ page, baseURL }) => {
-  await page.goto(baseURL ? `${baseURL}/thirdweb.eth` : "/thirdweb.eth");
+  await page.goto(`${getBaseURL(baseURL)}/thirdweb.eth`);
 });
 
 test.describe("Publisher Page", () => {
