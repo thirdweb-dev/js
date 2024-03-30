@@ -14,9 +14,9 @@ export {
   type GetWalletBalanceOptions,
 } from "../wallets/utils/getWalletBalance.js";
 export {
-  generateRandomWallet,
-  type GenerateRandomWalletOptions,
-} from "../wallets/utils/generateRandomWallet.js";
+  generateWallet,
+  type GenerateWalletOptions,
+} from "../wallets/utils/generateWallet.js";
 
 // private-key
 export {

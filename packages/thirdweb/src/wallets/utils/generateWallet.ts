@@ -4,7 +4,7 @@ import { toHex } from "../../utils/encoding/hex.js";
 import { privateKeyAccount } from "../private-key.js";
 import type { ThirdwebClient } from "../../client/client.js";
 
-export type GenerateRandomWalletOptions = {
+export type GenerateWalletOptions = {
   client: ThirdwebClient;
 };
 
@@ -15,13 +15,13 @@ export type GenerateRandomWalletOptions = {
  * @returns A Thirdweb wallet.
  * @example
  * ```ts
- * import { generateRandomWallet } from "thirdweb/wallets";
- * const wallet = await generateRandomWallet({ client });
+ * import { generateWallet } from "thirdweb/wallets";
+ * const wallet = await generateWallet({ client });
  * ```
  * @walletUtils
  */
-export async function generateRandomWallet(
-  options: GenerateRandomWalletOptions,
+export async function generateWallet(
+  options: GenerateWalletOptions,
 ): Promise<Account> {
   const privateKey = toHex(secp256k1.utils.randomPrivateKey());
   return privateKeyAccount({ privateKey, client: options.client });
