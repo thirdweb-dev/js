@@ -4,7 +4,7 @@ import { getNFT } from "./getNFT.js";
 import { DOODLES_CONTRACT } from "~test/test-contracts.js";
 
 describe("erc721.getNFT", () => {
-  it.runIf(process.env.TW_SECRET_KEY)("without owner", async () => {
+  it("without owner", async () => {
     const nft = await getNFT({
       contract: { ...DOODLES_CONTRACT },
       tokenId: 1n,
@@ -47,7 +47,7 @@ describe("erc721.getNFT", () => {
     `);
   });
 
-  it.runIf(process.env.TW_SECRET_KEY)("with owner", async () => {
+  it("with owner", async () => {
     const nft = await getNFT({
       contract: { ...DOODLES_CONTRACT },
       tokenId: 1n,

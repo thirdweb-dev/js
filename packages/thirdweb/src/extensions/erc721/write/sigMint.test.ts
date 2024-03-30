@@ -16,7 +16,9 @@ import { USDC_CONTRACT_ADDRESS } from "../../../../test/src/test-contracts.js";
 import { toHex } from "../../../utils/encoding/hex.js";
 import { sendTransaction } from "../../../transaction/actions/send-transaction.js";
 
-describe(
+// skip this test suite if there is no secret key available to test with
+// TODO: remove reliance on secret key during unit tests entirely
+describe.runIf(process.env.TW_SECRET_KEY)(
   "generateMintSignature",
   {
     timeout: 60000,

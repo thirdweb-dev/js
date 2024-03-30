@@ -4,7 +4,9 @@ import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import { optimism } from "../../chains/chain-definitions/optimism.js";
 import { ethereum } from "../../chains/chain-definitions/ethereum.js";
 
-describe("isEIP155Enforced", () => {
+// skip this test suite if there is no secret key available to test with
+// TODO: remove reliance on secret key during unit tests entirely
+describe.runIf(process.env.TW_SECRET_KEY)("isEIP155Enforced", () => {
   it("should return true if EIP-155 is enforced", async () => {
     // Call the isEIP155Enforced function with a chain that enforces EIP-155
     const result = await isEIP155Enforced({
