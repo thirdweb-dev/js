@@ -38,11 +38,6 @@ export const SDKs: FooterLinkInfo[] = [
     name: "React",
     link: "https://portal.thirdweb.com/react/latest",
   },
-  // {
-  //   label: "python",
-  //   name: "Python",
-  //   link: "https://portal.thirdweb.com/python",
-  // },
   {
     label: "contracts",
     name: "Contracts",

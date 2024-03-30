@@ -10,76 +10,56 @@ import { Card, CodeBlock, LinkButton, LinkButtonProps } from "tw-components";
 const darkTheme = themes.dracula;
 
 export const landingSnippets = {
-  javascript: `import { ThirdwebSDK } from "@thirdweb-dev/sdk";
+  javascript: `import { createThirdwebClient, getContract } from "thirdweb";
+import { sepolia } from "thirdweb/chains";
 
-// initialize the SDK
-const sdk = new ThirdwebSDK("sepolia");
+// initialize the client
+const client = createThirdwebClient({ clientId });
 
 // connect to your smart contract
-const contract = await sdk.getContract("0xe68904F3018fF980b6b64D06d7f7fBCeFF4cB06c");
+const contract = getContract({ client, chain: sepolia, address: "0x..." });
 
 // get all NFTs
-const nfts = await contract.erc721.getAll();
+const nfts = await getNFTs({ contract });
 
 console.info(nfts);`,
-  react: `import { ThirdwebNftMedia, useContract, useNFTs } from "@thirdweb-dev/react";
+  react: `import { createThirdwebClient, getContract } from "thirdweb";
+import { sepolia } from "thirdweb/chains";
+import { useReadContract, MediaRenderer } from "thirdweb/react";
+
+// initialize the client
+const client = createThirdwebClient({ clientId });
+
+// connect to your smart contract
+const contract = getContract({ client, chain: sepolia, address: "0x..." });
 
 export default function App() {
-  // Connect to your smart contract
-  const { contract } = useContract("0xe68904F3018fF980b6b64D06d7f7fBCeFF4cB06c");
-
   // Get all NFTs
-  const nfts = useNFTs(contract);
+  const { data: nfts, isLoading } = useReadContract(getNFTs, { contract });
 
   // Render NFTs
   return (nfts.data || []).map((nft) => (
-    <ThirdwebNftMedia key={nft.metadata.id.toString()} metadata={nft.metadata} />
+    <MediaRenderer key={nft.id.toString()} src={nft.metadata.image} />
   ));
 }`,
-  "react-native": `import { useContract, useNFTs } from "@thirdweb-dev/react-native";
+  "react-native": `import { createThirdwebClient, getContract, resolveScheme } from "thirdweb";
+import { sepolia } from "thirdweb/chains";
+import { useReadContract } from "thirdweb/react";
+
+// initialize the client
+const client = createThirdwebClient({ clientId });
+  
+// connect to your smart contract
+const contract = getContract({ client, chain: sepolia, address: "0x..." });
 
 export default function App() {
-  // Connect to your smart contract
-  const { contract } = useContract("0xe68904F3018fF980b6b64D06d7f7fBCeFF4cB06c");
-
   // Get all NFTs
-  const nfts = useNFTs(contract);
+  const { data: nfts, isLoading } = useReadContract(getNFTs, { contract });
 
   // Render NFTs
   return (nfts.data || []).map((nft) => (
-    <Image key={nft.metadata.id.toString()} source={{uri: nft.metadata.image}} />
+    <Image key={nft.metadata.id.toString()} source={{uri: resolveScheme({ url: nft.metadata.image, client }}} />
   ));
-}`,
-  python: `from thirdweb import ThirdwebSDK
-from pprint import pprint
-
-sdk = ThirdwebSDK("sepolia")
-
-nftCollection = sdk.get_nft_drop("0xe68904F3018fF980b6b64D06d7f7fBCeFF4cB06c")
-
-nfts = nftCollection.get_all()
-pprint(nfts)`,
-  go: `package main
-
-import (
-  "context"
-  "encoding/json"
-  "fmt"
-  "github.com/thirdweb-dev/go-sdk/v2/thirdweb"
-)
-
-func main() {
-  sdk, _ := thirdweb.NewThirdwebSDK("sepolia", nil)
-
-  // Add your NFT Drop contract address here
-  address := "0xe68904F3018fF980b6b64D06d7f7fBCeFF4cB06c"
-  nft, _ := sdk.GetNFTDrop(address)
-
-  // Now you can use any of the read-only SDK contract functions
-  nfts, _ := nft.GetAll(context.Background())
-
-  b, _ := json.MarshalIndent(nfts, "", "  ")
-  fmt.Printf(string(b))
 }`,
   unity: `using Thirdweb;
 
@@ -93,79 +73,18 @@ Contract contract = sdk.GetContract("0xb1c42E0C4289E68f1C337Eb0Da6a38C4c9F3f58e"
 List<NFT> nfts = await contract.ERC721.GetAll()`,
 };
 
-const authSnippets = {
-  javascript: `import { ThirdwebSDK } from "@thirdweb-dev/sdk";
-
-const sdk = new ThirdwebSDK("sepolia");
-
-// Login with a single line of code
-const payload = await sdk.auth.login();
-
-// And verify the address of the logged in wallet
-const address = await sdk.auth.verify(payload);`,
-  react: `import { useSDK } from "@thirdweb-dev/react";
-
-export default function App() {
- const sdk = useSDK();
-
- async function login() {
-  // Login with a single line of code
-  const payload = await sdk.auth.login();
-
-  // And verify the address of the logged in wallet
-  const address = await sdk.auth.verify(payload);
- }
-}`,
-  "react-native": "",
-  python: `from thirdweb import ThirdwebSDK
-
-sdk = ThirdwebSDK("sepolia")
-
-# Login with a single line of code
-payload = sdk.auth.login();
-
-# And verify the address of the logged in wallet
-address = sdk.auth.verify(payload);`,
-  go: `import "github.com/thirdweb-dev/go-sdk/thirdweb"
-
-func main() {
-  sdk, err := thirdweb.NewThirdwebSDK("sepolia", nil)
-
-  // Login with a single line of code
-  payload, err := sdk.Auth.Login()
-
-  // And verify the address of the logged in wallet
-  address, err := sdk.Auth.Verify(payload)
-}`,
-  unity: `using Thirdweb;
-
-// Reference the SDK
-var sdk = ThirdwebManager.Instance.SDK;
-
-// Generate and sign
-LoginPayload data = await ThirdwebManager.Instance.SDK.wallet.Authenticate("example.com");
-
-// Verify
-string result = await ThirdwebManager.Instance.SDK.wallet.Verify(data);`,
-};
-
 export interface CodeSelectorProps {
   defaultLanguage?: CodeOptions;
-  snippets?: "landing" | "auth";
   docs?: string;
 }
 
 export const CodeSelector: React.FC<CodeSelectorProps> = ({
   defaultLanguage = "javascript",
-  snippets = "landing",
   docs = "https://portal.thirdweb.com/",
 }) => {
   const [activeLanguage, setActiveLanguage] =
     useState<CodeOptions>(defaultLanguage);
   const trackEvent = useTrack();
-
-  const actualSnippets =
-    snippets === "landing" ? landingSnippets : authSnippets;
 
   return (
     <>
@@ -183,8 +102,8 @@ export const CodeSelector: React.FC<CodeSelectorProps> = ({
         maxW="calc(100% - 60px)"
         flexWrap="wrap"
       >
-        {Object.keys(actualSnippets).map((key) =>
-          actualSnippets[key as keyof typeof actualSnippets] ? (
+        {Object.keys(landingSnippets).map((key) =>
+          landingSnippets[key as keyof typeof landingSnippets] ? (
             <CodeOptionButton
               key={key}
               setActiveLanguage={setActiveLanguage}
@@ -218,7 +137,7 @@ export const CodeSelector: React.FC<CodeSelectorProps> = ({
           w="full"
           py={6}
           pb={{ base: 12, md: 6 }}
-          code={actualSnippets[activeLanguage]}
+          code={landingSnippets[activeLanguage]}
           language={
             activeLanguage === "react" || activeLanguage === "react-native"
               ? "jsx"
@@ -246,20 +165,18 @@ export const CodeSelector: React.FC<CodeSelectorProps> = ({
             }
           />
 
-          {snippets === "landing" && (
-            <CustomLinkButton
-              text="Run"
-              href={`https://replit.com/@thirdweb/${activeLanguage}-sdk`}
-              icon={<Icon color={"white"} as={AiOutlineCode} />}
-              onClick={() =>
-                trackEvent({
-                  category: "code-selector",
-                  action: "click",
-                  label: "documentation",
-                })
-              }
-            />
-          )}
+          <CustomLinkButton
+            text="Run"
+            href={`https://replit.com/@thirdweb/${activeLanguage}-sdk`}
+            icon={<Icon color={"white"} as={AiOutlineCode} />}
+            onClick={() =>
+              trackEvent({
+                category: "code-selector",
+                action: "click",
+                label: "documentation",
+              })
+            }
+          />
         </Flex>
       </Card>
     </>

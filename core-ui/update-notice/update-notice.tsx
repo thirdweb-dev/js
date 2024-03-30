@@ -6,10 +6,11 @@ import { SiJavascript } from "@react-icons/all-files/si/SiJavascript";
 import { SiReact } from "@react-icons/all-files/si/SiReact";
 // import { SiUnity } from "@react-icons/all-files/si/SiUnity";
 import type { IconType } from "react-icons";
+import { SiUnity } from "react-icons/si";
 import { Badge, Card, Heading, Text, TrackedLink } from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";
 
-type SDKTypes = "react" | "typescript";
+type SDKTypes = "react" | "typescript" | "unity";
 
 type Version = {
   sdk: SDKTypes;
@@ -29,20 +30,13 @@ const SDKTypeMap: Record<
     icon: SiJavascript,
     color: "#f7df1e",
     ghUrl:
-      "https://github.com/thirdweb-dev/js/releases/tag/%40thirdweb-dev%2Fsdk%40",
+      "https://github.com/thirdweb-dev/js/releases",
   },
-  // go: {
-  //   icon: SiGo,
-  //   ghUrl: "go",
-  // },
-  // python: {
-  //   icon: SiPython,
-  //   ghUrl: "python",
-  // },
-  // unity: {
-  //   icon: SiUnity,
-  //   ghUrl: "unity",
-  // },
+  unity: {
+    icon: SiUnity,
+    color: "#dedede",
+    ghUrl: "https://github.com/thirdweb-dev/unity/releases",
+  },
 };
 
 interface UpdatenoticeProps {

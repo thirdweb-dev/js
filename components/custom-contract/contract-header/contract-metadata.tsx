@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 
 interface ContractMetadataProps {
   contractAddress: string;
-  chain: Chain | null;
+  chain: Chain | undefined;
 }
 
 export const ContractMetadata: React.FC<ContractMetadataProps> = ({
@@ -37,7 +37,7 @@ export const ContractMetadata: React.FC<ContractMetadataProps> = ({
       isError={contractMetadataQuery.isError || wasError}
       isLoaded={contractMetadataQuery.isSuccess}
       data={contractMetadataQuery.data}
-      chain={chain || undefined}
+      chain={chain}
       address={contractAddress}
       externalLinks={latestPublished?.externalLinks}
     />

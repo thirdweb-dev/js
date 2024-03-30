@@ -6,12 +6,13 @@ import { themes } from "prism-react-renderer";
 const darkTheme = themes.vsDark;
 
 const withThirdwebCode = `// Fetch all nfts from a erc721 contract on polygon.
+import { createThirdwebClient, getContract } from "thirdweb";
+import { polygon } from "thirdweb/chains";
+import { getNFTs } from "thirdweb/extensions/erc721";
 
-import { ThirdwebSDK } from "@thirdweb-dev/sdk";
-
-const sdk = new ThirdwebSDK("polygon");
-const contract = await sdk.getContract("0x..");
-const nfts = await contract.erc721.getAll();`;
+const client = createThirdwebClient({ clientId });
+const contract = getContract({ client, chain: polygon, address: "0x..." });
+const nfts = await getNFTs({ contract });`;
 
 const withoutThirdwebCode = `// Fetch all nfts from a erc721 contract on polygon.
 

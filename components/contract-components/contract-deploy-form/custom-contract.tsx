@@ -50,7 +50,6 @@ import {
 } from "tw-components";
 import { TrustedForwardersFieldset } from "./trusted-forwarders-fieldset";
 import { DeprecatedAlert } from "components/shared/DeprecatedAlert";
-import { Chain } from "@thirdweb-dev/chains";
 import { useMemo } from "react";
 import { verifyContract } from "contract-ui/tabs/sources/page";
 
@@ -598,7 +597,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
             Deploy Now
           </TransactionButton>
         </Flex>
-        <DeprecatedAlert chain={networkInfo as Chain} />
+        <DeprecatedAlert chain={networkInfo} />
       </Flex>
     </FormProvider>
   );

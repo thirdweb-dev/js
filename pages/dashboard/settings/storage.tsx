@@ -265,30 +265,6 @@ console.info(url);
 
 // You can also download the data from the uri
 const data = await storage.downloadJSON(uri);`,
-  python: `from thirdweb import ThirdwebSDK
-
-sdk = ThirdwebSDK("sepolia")
-metadata = {
-  "name": "NFT",
-  "image": "ipfs://..."
-}
-uri = sdk.storage.upload(metadata)`,
-  go: `package main
-
-import (
-    "context"
-    "github.com/thirdweb-dev/go-sdk/v2/thirdweb"
-)
-
-func main() {
-    sdk, _ := thirdweb.NewThirdwebSDK("sepolia", nil)
-
-    metadata := map[string]interface{}{
-      "name": "NFT",
-      "image": "ipfs://..."
-    }
-    uri, _ := sdk.Storage.Upload(context.Background(), metadata, "", "")
-}`,
   unity: `using Thirdweb;
 
 // Reference the SDK

@@ -21,7 +21,7 @@ import {
 import { Link, Text } from "tw-components";
 
 interface DeprecatedAlertProps {
-  chain: Chain;
+  chain: Chain | undefined;
 }
 
 const TO_BE_DEPRECATED_CHAINS: Record<number, { date: Date }> = {
@@ -39,6 +39,10 @@ const RECOMMENDED_CHAINS: Record<number, Chain> = {
 };
 
 export const DeprecatedAlert: React.FC<DeprecatedAlertProps> = ({ chain }) => {
+  // the chain can *somehow* be `null` here!
+  if (!chain) {
+    return null;
+  }
   const recommendedChain = RECOMMENDED_CHAINS[chain.chainId];
   const tobeDeprecatedChain = TO_BE_DEPRECATED_CHAINS[chain.chainId];
 
@@ -81,7 +85,7 @@ export const DeprecatedAlert: React.FC<DeprecatedAlertProps> = ({ chain }) => {
               <br />
               We recommend switching to{" "}
               <Link href={recommendedChain.slug} color="primary.500">
-                {recommendedChain?.name}
+                {recommendedChain.name}
               </Link>{" "}
               to continue testing your smart contracts.
             </>

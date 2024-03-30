@@ -1,7 +1,5 @@
 import { Icon } from "@chakra-ui/react";
-import { SiGo } from "@react-icons/all-files/si/SiGo";
 import { SiJavascript } from "@react-icons/all-files/si/SiJavascript";
-import { SiPython } from "@react-icons/all-files/si/SiPython";
 import { SiReact } from "@react-icons/all-files/si/SiReact";
 import { SiUnity } from "@react-icons/all-files/si/SiUnity";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -21,14 +19,6 @@ export const LOGO_OPTIONS = {
   "react-native": {
     icon: SiReact,
     fill: "#61dafb",
-  },
-  python: {
-    icon: SiPython,
-    fill: "#3e7aac",
-  },
-  go: {
-    icon: SiGo,
-    fill: "#50b7e0",
   },
   unity: {
     icon: SiUnity,

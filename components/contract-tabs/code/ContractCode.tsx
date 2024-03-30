@@ -53,8 +53,6 @@ const INSTALL_COMMANDS = {
   react: "npm install @thirdweb-dev/sdk @thirdweb-dev/react ethers@5",
   "react-native":
     "npm install 'ethers@5' node-libs-browser react-native-crypto react-native-randombytes react-native-get-random-values react-native-svg react-native-mmkv@2.5.1 @react-native-async-storage/async-storage @thirdweb-dev/react-native @thirdweb-dev/react-native-compat",
-  python: "pip install thirdweb-sdk",
-  go: "go get github.com/thirdweb-dev/go-sdk/thirdweb",
   unity: ``,
 };
 
@@ -162,14 +160,7 @@ export const ContractCode: React.FC<ContractCodeProps> = ({
             <>
               <Heading size="title.sm">Getting started</Heading>
               <Text>First, install the latest version of the SDK:</Text>
-              <CodeBlock
-                language="bash"
-                code={
-                  INSTALL_COMMANDS[
-                    environment !== "web3button" ? environment : "react"
-                  ]
-                }
-              />
+              <CodeBlock language="bash" code={INSTALL_COMMANDS[environment]} />
             </>
           )}
           <Text>

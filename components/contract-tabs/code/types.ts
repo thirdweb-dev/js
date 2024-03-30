@@ -1,11 +1,8 @@
 export type CodeEnvironment =
   | "javascript"
   | "typescript"
-  | "web3button"
   | "react"
   | "react-native"
-  | "python"
-  | "go"
   | "unity";
 
 export interface SupportedEnvironment {

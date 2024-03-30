@@ -150,20 +150,13 @@ const Web3SDK: ThirdwebNextPage = () => {
                 ,{" "}
                 <Link
                   color="blue.500"
-                  href="https://portal.thirdweb.com/python"
-                >
-                  Python
-                </Link>
-                ,{" "}
-                <Link
-                  color="blue.500"
                   href="https://portal.thirdweb.com/typescript/latest"
                 >
                   TypeScript
                 </Link>
                 ,{" "}
-                <Link color="blue.500" href="https://portal.thirdweb.com/go">
-                  Go
+                <Link color="blue.500" href="https://portal.thirdweb.com/unity">
+                  Unity
                 </Link>{" "}
                 SDKs.
               </>

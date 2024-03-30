@@ -69,20 +69,6 @@ export default function Component() {
     }
   }
 }`,
-    web3button: `import { Web3Button } from "@thirdweb-dev/react";
-
-export default function Component() {
-  return (
-    <Web3Button
-      contractAddress="{{contract_address}}"
-      action={(contract) => {
-        contract.call("{{function}}", [{{args}}])
-      }}
-    >
-      {{function}}
-    </Web3Button>
-  )
-}`,
   },
   events: {
     javascript: `// You can get a specific event
@@ -511,9 +497,7 @@ const CodePlayground = ({
             darkTheme={themes.dracula}
             code={code}
             language={
-              environment === "react" ||
-              environment === "react-native" ||
-              environment === "web3button"
+              environment === "react" || environment === "react-native"
                 ? "jsx"
                 : environment === "unity"
                   ? "cpp"

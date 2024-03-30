@@ -23,10 +23,6 @@ const LOGO_OPTIONS = {
     icon: SiUnity,
     fill: "#ffffff",
   },
-  web3button: {
-    icon: SiReact,
-    fill: "#61dafb",
-  },
 } as const;
 
 export type CodeOptions = keyof typeof LOGO_OPTIONS;
