@@ -69,12 +69,6 @@ public/sitemap*.xml
 .vscode
 
 
-
-# future_app dir
-future_app/
-
-# generated files
-graphql/generated.ts
 # Sentry Config File
 .sentryclirc
 /test-results/
