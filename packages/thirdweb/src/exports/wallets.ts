@@ -8,10 +8,15 @@ export {
 export type { Wallet, Account } from "../wallets/interfaces/wallet.js";
 export type { ConnectionStatus } from "../wallets/manager/index.js";
 
+// utils
 export {
   getWalletBalance,
   type GetWalletBalanceOptions,
 } from "../wallets/utils/getWalletBalance.js";
+export {
+  generateRandomWallet,
+  type GenerateRandomWalletOptions,
+} from "../wallets/utils/generateRandomWallet.js";
 
 // private-key
 export {
