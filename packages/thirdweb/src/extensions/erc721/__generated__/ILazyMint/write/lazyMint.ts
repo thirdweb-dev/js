@@ -44,7 +44,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { encodeLazyMintParams } "thirdweb/extensions/erc721";
  * const result = encodeLazyMintParams({
  *  amount: ...,
@@ -67,7 +67,7 @@ export function encodeLazyMintParams(options: LazyMintParams) {
  * @returns A prepared transaction object.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { lazyMint } from "thirdweb/extensions/erc721";
  *
  * const transaction = lazyMint({

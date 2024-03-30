@@ -18,7 +18,7 @@ const FN_OUTPUTS = [
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { decodeIdCounterResult } from "thirdweb/extensions/farcaster";
  * const result = decodeIdCounterResult("...");
  * ```
@@ -33,7 +33,7 @@ export function decodeIdCounterResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { idCounter } from "thirdweb/extensions/farcaster";
  *
  * const result = await idCounter();

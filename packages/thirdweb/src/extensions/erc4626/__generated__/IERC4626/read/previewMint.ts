@@ -38,7 +38,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC4626
  * @example
- * ```
+ * ```ts
  * import { encodePreviewMintParams } "thirdweb/extensions/erc4626";
  * const result = encodePreviewMintParams({
  *  shares: ...,
@@ -55,7 +55,7 @@ export function encodePreviewMintParams(options: PreviewMintParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC4626
  * @example
- * ```
+ * ```ts
  * import { decodePreviewMintResult } from "thirdweb/extensions/erc4626";
  * const result = decodePreviewMintResult("...");
  * ```
@@ -70,7 +70,7 @@ export function decodePreviewMintResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC4626
  * @example
- * ```
+ * ```ts
  * import { previewMint } from "thirdweb/extensions/erc4626";
  *
  * const result = await previewMint({

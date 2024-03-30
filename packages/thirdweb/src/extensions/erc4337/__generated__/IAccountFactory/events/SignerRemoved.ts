@@ -23,7 +23,7 @@ export type SignerRemovedEventFilters = Partial<{
  * @returns The prepared event object.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { getContractEvents } from "thirdweb";
  * import { signerRemovedEvent } from "thirdweb/extensions/erc4337";
  *

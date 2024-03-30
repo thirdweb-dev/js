@@ -40,6 +40,9 @@ export default {
   "rpc": [
     "https://19.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://songbird-api.flare.network/ext/C/rpc",
+    "https://01-gravelines-006-01.rpc.tatum.io/ext/bc/C/rpc",
+    "https://01-vinthill-006-02.rpc.tatum.io/ext/bc/C/rpc",
+    "https://02-tokyo-006-03.rpc.tatum.io/ext/bc/C/rpc",
     "https://rpc.ftso.au/songbird",
     "https://songbird.enosys.global/ext/C/rpc",
     "https://songbird.solidifi.app/ext/C/rpc"

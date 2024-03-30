@@ -18,7 +18,7 @@ const FN_OUTPUTS = [
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC1822
  * @example
- * ```
+ * ```ts
  * import { decodeProxiableUUIDResult } from "thirdweb/extensions/erc1822";
  * const result = decodeProxiableUUIDResult("...");
  * ```
@@ -33,7 +33,7 @@ export function decodeProxiableUUIDResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC1822
  * @example
- * ```
+ * ```ts
  * import { proxiableUUID } from "thirdweb/extensions/erc1822";
  *
  * const result = await proxiableUUID();

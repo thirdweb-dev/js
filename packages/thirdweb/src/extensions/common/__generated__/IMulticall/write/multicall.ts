@@ -31,7 +31,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { encodeMulticallParams } "thirdweb/extensions/common";
  * const result = encodeMulticallParams({
  *  data: ...,
@@ -48,7 +48,7 @@ export function encodeMulticallParams(options: MulticallParams) {
  * @returns A prepared transaction object.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { multicall } from "thirdweb/extensions/common";
  *
  * const transaction = multicall({

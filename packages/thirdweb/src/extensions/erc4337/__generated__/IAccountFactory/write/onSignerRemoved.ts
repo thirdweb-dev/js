@@ -39,7 +39,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { encodeOnSignerRemovedParams } "thirdweb/extensions/erc4337";
  * const result = encodeOnSignerRemovedParams({
  *  signer: ...,
@@ -62,7 +62,7 @@ export function encodeOnSignerRemovedParams(options: OnSignerRemovedParams) {
  * @returns A prepared transaction object.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { onSignerRemoved } from "thirdweb/extensions/erc4337";
  *
  * const transaction = onSignerRemoved({

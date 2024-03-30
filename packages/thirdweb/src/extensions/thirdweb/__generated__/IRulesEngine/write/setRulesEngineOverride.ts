@@ -29,7 +29,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { encodeSetRulesEngineOverrideParams } "thirdweb/extensions/thirdweb";
  * const result = encodeSetRulesEngineOverrideParams({
  *  rulesEngineAddress: ...,
@@ -48,7 +48,7 @@ export function encodeSetRulesEngineOverrideParams(
  * @returns A prepared transaction object.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { setRulesEngineOverride } from "thirdweb/extensions/thirdweb";
  *
  * const transaction = setRulesEngineOverride({

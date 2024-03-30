@@ -121,7 +121,7 @@ export const ConnectedWalletDetails: React.FC<{
   const balanceQuery = useWalletBalance({
     chain: walletChain ? walletChain : undefined,
     tokenAddress,
-    account: activeAccount,
+    address: activeAccount?.address,
   });
 
   const [screen, setScreen] = useState<WalletDetailsModalScreen>("main");
@@ -820,9 +820,11 @@ function EmbeddedWalletEmail() {
   const emailQuery = useQuery({
     queryKey: ["embedded-wallet-user", client],
     queryFn: async () => {
-      return getUserEmail({
+      const data = await getUserEmail({
         client: client,
       });
+
+      return data || null;
     },
   });
 

@@ -18,7 +18,7 @@ const FN_OUTPUTS = [
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { decodeKeyRegistryResult } from "thirdweb/extensions/farcaster";
  * const result = decodeKeyRegistryResult("...");
  * ```
@@ -33,7 +33,7 @@ export function decodeKeyRegistryResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { keyRegistry } from "thirdweb/extensions/farcaster";
  *
  * const result = await keyRegistry();

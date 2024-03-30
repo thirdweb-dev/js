@@ -18,7 +18,7 @@ const FN_OUTPUTS = [
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { decodeContractURIResult } from "thirdweb/extensions/thirdweb";
  * const result = decodeContractURIResult("...");
  * ```
@@ -33,7 +33,7 @@ export function decodeContractURIResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { contractURI } from "thirdweb/extensions/thirdweb";
  *
  * const result = await contractURI();

@@ -18,7 +18,7 @@ const FN_OUTPUTS = [
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { decodeStorageRegistryResult } from "thirdweb/extensions/farcaster";
  * const result = decodeStorageRegistryResult("...");
  * ```
@@ -33,7 +33,7 @@ export function decodeStorageRegistryResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { storageRegistry } from "thirdweb/extensions/farcaster";
  *
  * const result = await storageRegistry();

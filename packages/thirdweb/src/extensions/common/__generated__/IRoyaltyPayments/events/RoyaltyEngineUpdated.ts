@@ -23,7 +23,7 @@ export type RoyaltyEngineUpdatedEventFilters = Partial<{
  * @returns The prepared event object.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { getContractEvents } from "thirdweb";
  * import { royaltyEngineUpdatedEvent } from "thirdweb/extensions/common";
  *

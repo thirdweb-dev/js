@@ -23,7 +23,7 @@ export type OwnerUpdatedEventFilters = Partial<{
  * @returns The prepared event object.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { getContractEvents } from "thirdweb";
  * import { ownerUpdatedEvent } from "thirdweb/extensions/common";
  *

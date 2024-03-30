@@ -38,7 +38,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC4626
  * @example
- * ```
+ * ```ts
  * import { encodePreviewWithdrawParams } "thirdweb/extensions/erc4626";
  * const result = encodePreviewWithdrawParams({
  *  assets: ...,
@@ -55,7 +55,7 @@ export function encodePreviewWithdrawParams(options: PreviewWithdrawParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC4626
  * @example
- * ```
+ * ```ts
  * import { decodePreviewWithdrawResult } from "thirdweb/extensions/erc4626";
  * const result = decodePreviewWithdrawResult("...");
  * ```
@@ -70,7 +70,7 @@ export function decodePreviewWithdrawResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC4626
  * @example
- * ```
+ * ```ts
  * import { previewWithdraw } from "thirdweb/extensions/erc4626";
  *
  * const result = await previewWithdraw({

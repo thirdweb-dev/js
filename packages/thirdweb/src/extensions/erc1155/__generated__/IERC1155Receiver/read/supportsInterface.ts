@@ -34,7 +34,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC1155
  * @example
- * ```
+ * ```ts
  * import { encodeSupportsInterfaceParams } "thirdweb/extensions/erc1155";
  * const result = encodeSupportsInterfaceParams({
  *  interfaceId: ...,
@@ -53,7 +53,7 @@ export function encodeSupportsInterfaceParams(
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC1155
  * @example
- * ```
+ * ```ts
  * import { decodeSupportsInterfaceResult } from "thirdweb/extensions/erc1155";
  * const result = decodeSupportsInterfaceResult("...");
  * ```
@@ -68,7 +68,7 @@ export function decodeSupportsInterfaceResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC1155
  * @example
- * ```
+ * ```ts
  * import { supportsInterface } from "thirdweb/extensions/erc1155";
  *
  * const result = await supportsInterface({

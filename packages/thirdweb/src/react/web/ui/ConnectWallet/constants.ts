@@ -2,6 +2,7 @@ export const reservedScreens = {
   main: "main",
   getStarted: "getStarted",
   signIn: "signIn",
+  showAll: "showAll",
 };
 
 export const modalMaxWidthCompact = "360px";

@@ -30,14 +30,12 @@ export type Wallet<TWalletId extends WalletId = WalletId> = {
   id: TWalletId;
   getChain(): Chain | undefined;
   getAccount(): Account | undefined;
-  // connetion management methods
+  // connection management methods
   autoConnect(options: WalletAutoConnectionOption<TWalletId>): Promise<Account>;
   connect(options: WalletConnectionOption<TWalletId>): Promise<Account>;
   disconnect(): Promise<void>;
   // chain management methods
   switchChain(chain: Chain): Promise<void>;
-  // storage management (temporary and "internal")
-  setStorage?(storage: any): void;
   // events
   subscribe: WalletEmitter<TWalletId>["subscribe"];
 

@@ -39,7 +39,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { encodeGetAddressParams } "thirdweb/extensions/erc4337";
  * const result = encodeGetAddressParams({
  *  adminSigner: ...,
@@ -57,7 +57,7 @@ export function encodeGetAddressParams(options: GetAddressParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { decodeGetAddressResult } from "thirdweb/extensions/erc4337";
  * const result = decodeGetAddressResult("...");
  * ```
@@ -72,7 +72,7 @@ export function decodeGetAddressResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { getAddress } from "thirdweb/extensions/erc4337";
  *
  * const result = await getAddress({

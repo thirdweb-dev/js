@@ -28,7 +28,7 @@ export type RoleGrantedEventFilters = Partial<{
  * @returns The prepared event object.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { getContractEvents } from "thirdweb";
  * import { roleGrantedEvent } from "thirdweb/extensions/common";
  *

@@ -36,7 +36,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { encodeGetStakeInfoParams } "thirdweb/extensions/erc721";
  * const result = encodeGetStakeInfoParams({
  *  staker: ...,
@@ -53,7 +53,7 @@ export function encodeGetStakeInfoParams(options: GetStakeInfoParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { decodeGetStakeInfoResult } from "thirdweb/extensions/erc721";
  * const result = decodeGetStakeInfoResult("...");
  * ```
@@ -68,7 +68,7 @@ export function decodeGetStakeInfoResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { getStakeInfo } from "thirdweb/extensions/erc721";
  *
  * const result = await getStakeInfo({

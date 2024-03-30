@@ -6,7 +6,6 @@ import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import type { InjectedSupportedWalletIds } from "../../../../../wallets/__generated__/wallet-ids.js";
 import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import type { WalletInfo } from "../../../../../wallets/wallet-info.js";
-import { asyncLocalStorage } from "../../../../core/utils/asyncLocalStorage.js";
 
 /**
  * @internal
@@ -20,7 +19,7 @@ export const InjectedConnectUI = (props: {
   done: () => void;
 }) => {
   const { wallet, done } = props;
-  const { chain } = useWalletConnectionCtx();
+  const { client, chain } = useWalletConnectionCtx();
   const [errorConnecting, setErrorConnecting] = useState(false);
   const locale = props.locale;
 
@@ -29,9 +28,8 @@ export const InjectedConnectUI = (props: {
       connectPrompted.current = true;
       setErrorConnecting(false);
       await wait(1000);
-      // set storage for the wallet if it supports it
-      wallet.setStorage?.(asyncLocalStorage);
       await wallet.connect({
+        client,
         chain: chain,
       });
 
@@ -40,7 +38,7 @@ export const InjectedConnectUI = (props: {
       setErrorConnecting(true);
       console.error(e);
     }
-  }, [chain, done, wallet]);
+  }, [client, chain, done, wallet]);
 
   const connectPrompted = useRef(false);
   useEffect(() => {

@@ -26,7 +26,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension ERC20
  * @example
- * ```
+ * ```ts
  * import { encodeStakeParams } "thirdweb/extensions/erc20";
  * const result = encodeStakeParams({
  *  amount: ...,
@@ -43,7 +43,7 @@ export function encodeStakeParams(options: StakeParams) {
  * @returns A prepared transaction object.
  * @extension ERC20
  * @example
- * ```
+ * ```ts
  * import { stake } from "thirdweb/extensions/erc20";
  *
  * const transaction = stake({

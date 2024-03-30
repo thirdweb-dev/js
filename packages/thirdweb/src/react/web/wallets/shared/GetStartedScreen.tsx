@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { isMobile } from "../../../core/utils/isMobile.js";
 import { QRCode } from "../../ui/components/QRCode.js";
 import { Spacer } from "../../ui/components/Spacer.js";
 import { Container, ModalHeader } from "../../ui/components/basic.js";
@@ -10,12 +9,13 @@ import { AppleIcon } from "../../ui/ConnectWallet/icons/AppleIcon.js";
 import { ChromeIcon } from "../../ui/ConnectWallet/icons/ChromeIcon.js";
 import { PlayStoreIcon } from "../../ui/ConnectWallet/icons/PlayStoreIcon.js";
 import { Text } from "../../ui/components/text.js";
-import { openWindow } from "../../../core/utils/openWindow.js";
 import type { InjectedWalletLocale } from "../injected/locale/types.js";
 import type { WalletInfo } from "../../../../wallets/wallet-info.js";
 import { WalletImage } from "../../ui/components/WalletImage.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
+import { isMobile } from "../../../../utils/web/isMobile.js";
+import { openWindow } from "../../../../utils/web/openWindow.js";
 
 /**
  * @internal

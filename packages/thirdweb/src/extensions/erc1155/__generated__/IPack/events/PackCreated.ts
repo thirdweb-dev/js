@@ -18,7 +18,7 @@ export type PackCreatedEventFilters = Partial<{
  * @returns The prepared event object.
  * @extension ERC1155
  * @example
- * ```
+ * ```ts
  * import { getContractEvents } from "thirdweb";
  * import { packCreatedEvent } from "thirdweb/extensions/erc1155";
  *

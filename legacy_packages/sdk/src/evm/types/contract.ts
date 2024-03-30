@@ -65,7 +65,6 @@ export type ExtractFunctionType<
   TAbi extends Abi,
   TFunctionName extends TAbiFunctionNames<TAbi>,
 > = (
-  // @ts-expect-error - TODO: fix this
   ...args: ExtractFunctionInputsType<TAbi, TFunctionName>
 ) => ExtractFunctionOutputsType<TAbi, TFunctionName>;
 

@@ -3,6 +3,7 @@ import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../transaction/prepare-contract-call.js";
 import { getActiveClaimCondition } from "../read/getActiveClaimCondition.js";
 import { padHex } from "../../../../utils/encoding/hex.js";
+import { NATIVE_TOKEN_ADDRESS } from "../../../../constants/addresses.js";
 
 const CLAIM_ABI = {
   inputs: [
@@ -129,7 +130,11 @@ export function claimTo(options: BaseTransactionOptions<ClaimToParams>) {
         contract: options.contract,
         tokenId: options.tokenId,
       });
-      return cc.pricePerToken * BigInt(options.quantity);
+      if (cc.currency === NATIVE_TOKEN_ADDRESS) {
+        return cc.pricePerToken * BigInt(options.quantity);
+      } else {
+        return 0n;
+      }
     },
   });
 }

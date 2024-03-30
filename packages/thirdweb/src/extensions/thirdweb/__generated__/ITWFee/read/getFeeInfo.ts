@@ -41,7 +41,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { encodeGetFeeInfoParams } "thirdweb/extensions/thirdweb";
  * const result = encodeGetFeeInfoParams({
  *  proxy: ...,
@@ -59,7 +59,7 @@ export function encodeGetFeeInfoParams(options: GetFeeInfoParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { decodeGetFeeInfoResult } from "thirdweb/extensions/thirdweb";
  * const result = decodeGetFeeInfoResult("...");
  * ```
@@ -74,7 +74,7 @@ export function decodeGetFeeInfoResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { getFeeInfo } from "thirdweb/extensions/thirdweb";
  *
  * const result = await getFeeInfo({

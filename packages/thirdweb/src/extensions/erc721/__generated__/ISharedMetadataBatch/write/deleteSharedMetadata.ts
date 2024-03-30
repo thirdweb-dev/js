@@ -26,7 +26,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { encodeDeleteSharedMetadataParams } "thirdweb/extensions/erc721";
  * const result = encodeDeleteSharedMetadataParams({
  *  id: ...,
@@ -45,7 +45,7 @@ export function encodeDeleteSharedMetadataParams(
  * @returns A prepared transaction object.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { deleteSharedMetadata } from "thirdweb/extensions/erc721";
  *
  * const transaction = deleteSharedMetadata({

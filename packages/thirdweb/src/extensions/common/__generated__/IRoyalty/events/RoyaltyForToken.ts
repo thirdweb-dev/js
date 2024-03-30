@@ -23,7 +23,7 @@ export type RoyaltyForTokenEventFilters = Partial<{
  * @returns The prepared event object.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { getContractEvents } from "thirdweb";
  * import { royaltyForTokenEvent } from "thirdweb/extensions/common";
  *

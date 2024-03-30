@@ -17,10 +17,13 @@ import type {
   Wallet,
   // WalletWithPersonalAccount,
 } from "../../../../wallets/interfaces/wallet.js";
-import { asyncLocalStorage } from "../../utils/asyncLocalStorage.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
 import { timeoutPromise } from "../../utils/timeoutPromise.js";
+import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
+import { createWallet } from "../../../../wallets/create-wallet.js";
+import { getSavedConnectParamsFromStorage } from "../../../../wallets/storage/walletStorage.js";
+import { asyncLocalStorage } from "../../../../wallets/storage/asyncLocalStorage.js";
 
 let autoConnectAttempted = false;
 
@@ -29,23 +32,28 @@ export type AutoConnectProps = {
    * Array of wallets that your app uses
    * @example
    * ```tsx
-   * import { metamaskConfig, coinbaseConfig, walletConnectConfig } from "thirdweb/react";
+   * import { AutoConnect } from "thirdweb/react";
+   * import { createWallet, embeddedWallet } from "thirdweb/wallets";
+   *
+   * const wallets = [
+   *   embeddedWallet(),
+   *   createWallet("io.metamask"),
+   *   createWallet("com.coinbase.wallet"),
+   *   createWallet("me.rainbow"),
+   * ];
    *
    * function Example() {
    *  return (
    *    <AutoConnect
    *      client={client}
-   *      wallets={[
-   *        metamaskConfig(),
-   *        coinbaseConfig(),
-   *        walletConnectConfig(),
-   *      ]}
+   *      wallets={wallets}
    *    />
    *  )
    * }
    * ```
    */
   wallets: Wallet[];
+
   /**
    * A client is the entry point to the thirdweb SDK.
    * It is required for all other actions.
@@ -62,18 +70,18 @@ export type AutoConnectProps = {
    * ```
    */
   client: ThirdwebClient;
+
   /**
-   * Metadata of the app that will be passed to connected wallet.
+   * Metadata of the app that will be passed to connected wallet. Setting this is highly recommended.
    *
    * Some wallets display this information to the user when they connect to your app.
-   *
-   *
+   * @example
    * ```ts
    * {
-   *   name: "thirdweb powered dApp",
-   *   url: "https://thirdweb.com",
-   *   description: "thirdweb powered dApp",
-   *   logoUrl: "https://thirdweb.com/favicon.ico",
+   *   name: "My App",
+   *   url: "https://my-app.com",
+   *   description: "some description about your app",
+   *   logoUrl: "https://path/to/my-app/logo.svg",
    * };
    * ```
    */
@@ -94,6 +102,22 @@ export type AutoConnectProps = {
    * ```
    */
   timeout?: number;
+
+  /**
+   * Enable Account abstraction for all wallets. This will connect to the users's smart account based on the connected personal wallet and the given options.
+   *
+   * If you are connecting to smart wallet using personal wallet - setting this configuration will autoConnect the personal wallet and then connect to the smart wallet.
+   *
+   * ```tsx
+   * <AutoConnect
+   *   accountAbstraction={{
+   *    factoryAddress: "0x123...",
+   *    chain: sepolia,
+   *    gasless: true;
+   *   }}
+   * />
+   */
+  accountAbstraction?: SmartWalletOptions;
 };
 
 /**
@@ -104,12 +128,15 @@ export type AutoConnectProps = {
  * @param props - Object of type `AutoConnectProps`. Refer to [`AutoConnectProps`](https://portal.thirdweb.com/references/typescript/v5/AutoConnectProps)
  * @example
  * ```tsx
- * import { AutoConnect } from "@thirdweb/react";
+ * import { AutoConnect } from "thirdweb/react";
+ * import { createWallet, embeddedWallet } from "thirdweb/wallets";
+ *
  *
  * // list of wallets that your app uses
  * const wallets = [
- *  metamaskConfig(),
- *  coinbaseConfig(),
+ *  createWallet('io.metamask'),
+ *  embeddedWallet(),
+ *  createWallet("me.rainbow"),
  * ]
  *
  * function Example() {
@@ -128,7 +155,7 @@ export function AutoConnect(props: AutoConnectProps) {
   const setConnectionStatus = useSetActiveWalletConnectionStatus();
   const { connect } = useConnect();
   const { isAutoConnecting } = connectionManager;
-  const { wallets } = props;
+  const { wallets, accountAbstraction } = props;
   const timeout = props.timeout ?? 15000;
   // get the supported wallets from thirdweb provider
   // check the storage for last connected wallets and connect them all
@@ -153,92 +180,74 @@ export function AutoConnect(props: AutoConnectProps) {
 
       async function handleWalletConnection(wallet: Wallet) {
         setConnectionStatus("connecting");
-
-        // if this wallet requires a personal wallet to be connected
-        // if (walletConfig.personalWalletConfigs) {
-        //   // get saved connection params for this wallet
-        //   const savedParams = await getSavedConnectParamsFromStorage(
-        //     asyncLocalStorage,
-        //     walletConfig.metadata.id,
-        //   );
-
-        //   // if must be an object with `personalWalletId` property
-        //   if (!isValidWithPersonalWalletConnectionOptions(savedParams)) {
-        //     throw new Error("Invalid connection params");
-        //   }
-
-        //   // find the personal wallet config
-        //   const personalWalletConfig = walletConfig.personalWalletConfigs.find(
-        //     (w) => w.metadata.id === savedParams.personalWalletId,
-        //   );
-
-        //   if (!personalWalletConfig) {
-        //     throw new Error("Personal wallet not found");
-        //   }
-
-        //   // create and auto connect the personal wallet to get personal account
-        //   const personalWallet = personalWalletConfig.create({
-        //     client,
-        //     appMetadata,
-        //   });
-
-        //   const account = await personalWallet.autoConnect();
-
-        //   // create wallet
-        //   const wallet = walletConfig.create({
-        //     client,
-        //     appMetadata,
-        //   }) as WalletWithPersonalAccount;
-
-        //   // auto connect the wallet using the personal account
-        //   await wallet.autoConnect({
-        //     personalAccount: account,
-        //   });
-
-        //   return wallet;
-        // }
-
-        if (false) {
-          // do nothing
-        }
-
-        // if this wallet does not require a personal wallet to be connected
-        else {
-          await wallet.autoConnect({
-            client: props.client,
-          });
-          return wallet;
-        }
+        return wallet.autoConnect({
+          client: props.client,
+        });
       }
 
-      // connect the last active wallet and set it as active
-      const activeWalletConfig = wallets.find(
-        (w) => w.id === lastActiveWalletId,
-      );
+      if (lastActiveWalletId === "smart") {
+        if (!accountAbstraction) {
+          return;
+        }
 
-      if (activeWalletConfig) {
-        try {
-          const wallet = await timeoutPromise(
-            handleWalletConnection(activeWalletConfig),
-            {
+        const savedParams = await getSavedConnectParamsFromStorage(
+          asyncLocalStorage,
+          "accountAbstraction",
+        );
+
+        const personalWalletId =
+          savedParams && "personalWalletId" in savedParams
+            ? savedParams.personalWalletId
+            : null;
+
+        if (personalWalletId) {
+          const personalWallet = wallets.find((w) => w.id === personalWalletId);
+
+          if (personalWallet) {
+            try {
+              const account = await timeoutPromise(
+                handleWalletConnection(personalWallet),
+                {
+                  ms: timeout,
+                  message:
+                    "AutoConnect timeout : " + timeout + "ms limit exceeded.",
+                },
+              );
+
+              const smartWallet = createWallet("smart", accountAbstraction);
+              await smartWallet.connect({
+                personalAccount: account,
+                client: props.client,
+              });
+
+              connect(smartWallet);
+            } catch (e) {
+              console.error("Failed to auto connect personal wallet");
+              console.error(e);
+              setConnectionStatus("disconnected");
+            }
+          }
+        }
+      } else {
+        const activeWallet = wallets.find((w) => w.id === lastActiveWalletId);
+
+        if (activeWallet) {
+          try {
+            await timeoutPromise(handleWalletConnection(activeWallet), {
               ms: timeout,
               message:
                 "AutoConnect timeout : " + timeout + "ms limit exceeded.",
-            },
-          );
+            });
 
-          if (wallet) {
-            connect(wallet);
-          } else {
+            connect(activeWallet);
+          } catch (e) {
+            console.error("Failed to auto connect last active wallet");
+            console.error(e);
             setConnectionStatus("disconnected");
           }
-        } catch (e) {
-          console.error("Failed to auto connect last active wallet");
-          console.error(e);
+        } else {
           setConnectionStatus("disconnected");
         }
-      } else {
-        setConnectionStatus("disconnected");
       }
 
       // then connect wallets that were last connected but were not set as active
@@ -247,10 +256,14 @@ export function AutoConnect(props: AutoConnectProps) {
           w.id !== lastActiveWalletId && lastConnectedWalletIds.includes(w.id),
       );
 
-      otherWallets.forEach(async (config) => {
-        const account = await handleWalletConnection(config);
-        if (account) {
-          connectionManager.addConnectedWallet(account);
+      otherWallets.forEach(async (wallet) => {
+        try {
+          await handleWalletConnection(wallet);
+          connectionManager.addConnectedWallet(wallet);
+        } catch (e) {
+          console.error("Failed to auto connect a non-active connected wallet");
+          console.error(e);
+          setConnectionStatus("disconnected");
         }
       });
     };
@@ -282,13 +295,3 @@ export function NoAutoConnect() {
 
   return null;
 }
-
-// function isValidWithPersonalWalletConnectionOptions(
-//   options: any,
-// ): options is WithPersonalWalletConnectionOptions {
-//   return (
-//     typeof options === "object" &&
-//     options !== null &&
-//     typeof options.personalWalletId === "string"
-//   );
-// }

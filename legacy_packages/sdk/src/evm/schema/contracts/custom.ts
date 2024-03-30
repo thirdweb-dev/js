@@ -115,6 +115,14 @@ export type AbiInput = z.input<typeof AbiSchema>;
 /**
  * @internal
  */
+export const CompilerTypeInput = /* @__PURE__ */ (() =>
+  z.union([z.literal("solc"), z.literal("zksolc")]))();
+
+export type CompilerType = z.input<typeof CompilerTypeInput>;
+
+/**
+ * @internal
+ */
 export const PreDeployMetadata = /* @__PURE__ */ (() =>
   z
     .object({
@@ -122,6 +130,21 @@ export const PreDeployMetadata = /* @__PURE__ */ (() =>
       metadataUri: z.string(),
       bytecodeUri: z.string(),
       analytics: z.any().optional(),
+      compilers: z
+        .record(
+          CompilerTypeInput,
+          // z.record(
+          z.array(
+            z.object({
+              compilerVersion: z.string().optional(),
+              evmVersion: z.string().optional(),
+              metadataUri: z.string(),
+              bytecodeUri: z.string(),
+            }),
+          ),
+          // ),
+        )
+        .optional(),
     })
     .catchall(z.any()))();
 

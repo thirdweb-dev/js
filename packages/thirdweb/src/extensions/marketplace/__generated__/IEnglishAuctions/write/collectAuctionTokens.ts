@@ -29,7 +29,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension MARKETPLACE
  * @example
- * ```
+ * ```ts
  * import { encodeCollectAuctionTokensParams } "thirdweb/extensions/marketplace";
  * const result = encodeCollectAuctionTokensParams({
  *  auctionId: ...,
@@ -48,7 +48,7 @@ export function encodeCollectAuctionTokensParams(
  * @returns A prepared transaction object.
  * @extension MARKETPLACE
  * @example
- * ```
+ * ```ts
  * import { collectAuctionTokens } from "thirdweb/extensions/marketplace";
  *
  * const transaction = collectAuctionTokens({

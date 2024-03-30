@@ -93,7 +93,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { encodeGetUserOpHashParams } "thirdweb/extensions/erc4337";
  * const result = encodeGetUserOpHashParams({
  *  userOp: ...,
@@ -110,7 +110,7 @@ export function encodeGetUserOpHashParams(options: GetUserOpHashParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { decodeGetUserOpHashResult } from "thirdweb/extensions/erc4337";
  * const result = decodeGetUserOpHashResult("...");
  * ```
@@ -125,7 +125,7 @@ export function decodeGetUserOpHashResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { getUserOpHash } from "thirdweb/extensions/erc4337";
  *
  * const result = await getUserOpHash({

@@ -50,7 +50,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { encodeVerifyFidSignatureParams } "thirdweb/extensions/farcaster";
  * const result = encodeVerifyFidSignatureParams({
  *  custodyAddress: ...,
@@ -77,7 +77,7 @@ export function encodeVerifyFidSignatureParams(
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { decodeVerifyFidSignatureResult } from "thirdweb/extensions/farcaster";
  * const result = decodeVerifyFidSignatureResult("...");
  * ```
@@ -92,7 +92,7 @@ export function decodeVerifyFidSignatureResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { verifyFidSignature } from "thirdweb/extensions/farcaster";
  *
  * const result = await verifyFidSignature({

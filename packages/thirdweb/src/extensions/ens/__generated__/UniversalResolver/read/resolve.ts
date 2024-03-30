@@ -39,7 +39,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ENS
  * @example
- * ```
+ * ```ts
  * import { encodeResolveParams } "thirdweb/extensions/ens";
  * const result = encodeResolveParams({
  *  name: ...,
@@ -57,7 +57,7 @@ export function encodeResolveParams(options: ResolveParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ENS
  * @example
- * ```
+ * ```ts
  * import { decodeResolveResult } from "thirdweb/extensions/ens";
  * const result = decodeResolveResult("...");
  * ```
@@ -72,7 +72,7 @@ export function decodeResolveResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ENS
  * @example
- * ```
+ * ```ts
  * import { resolve } from "thirdweb/extensions/ens";
  *
  * const result = await resolve({

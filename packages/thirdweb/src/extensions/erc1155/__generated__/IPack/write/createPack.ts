@@ -99,7 +99,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC1155
  * @example
- * ```
+ * ```ts
  * import { encodeCreatePackParams } "thirdweb/extensions/erc1155";
  * const result = encodeCreatePackParams({
  *  contents: ...,
@@ -128,7 +128,7 @@ export function encodeCreatePackParams(options: CreatePackParams) {
  * @returns A prepared transaction object.
  * @extension ERC1155
  * @example
- * ```
+ * ```ts
  * import { createPack } from "thirdweb/extensions/erc1155";
  *
  * const transaction = createPack({

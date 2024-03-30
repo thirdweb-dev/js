@@ -78,7 +78,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension UNISWAP
  * @example
- * ```
+ * ```ts
  * import { encodeExactInputSingleParams } "thirdweb/extensions/uniswap";
  * const result = encodeExactInputSingleParams({
  *  params: ...,
@@ -95,7 +95,7 @@ export function encodeExactInputSingleParams(options: ExactInputSingleParams) {
  * @returns A prepared transaction object.
  * @extension UNISWAP
  * @example
- * ```
+ * ```ts
  * import { exactInputSingle } from "thirdweb/extensions/uniswap";
  *
  * const transaction = exactInputSingle({

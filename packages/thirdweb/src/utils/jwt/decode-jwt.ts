@@ -10,7 +10,7 @@ import type { JWTPayload } from "./types.js";
  * @throws {Error} If the JWT header is invalid or if the JWT is invalid.
  * @example
  * ```ts
- * import { decodeJWT } from '@thirdweb-dev/utils';
+ * import { decodeJWT } from 'thirdweb/utils';
  *
  * const { payload, signature } = decodeJWT(jwt);
  * ```

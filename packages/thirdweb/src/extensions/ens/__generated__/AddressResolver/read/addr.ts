@@ -31,7 +31,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ENS
  * @example
- * ```
+ * ```ts
  * import { encodeAddrParams } "thirdweb/extensions/ens";
  * const result = encodeAddrParams({
  *  name: ...,
@@ -48,7 +48,7 @@ export function encodeAddrParams(options: AddrParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ENS
  * @example
- * ```
+ * ```ts
  * import { decodeAddrResult } from "thirdweb/extensions/ens";
  * const result = decodeAddrResult("...");
  * ```
@@ -63,7 +63,7 @@ export function decodeAddrResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ENS
  * @example
- * ```
+ * ```ts
  * import { addr } from "thirdweb/extensions/ens";
  *
  * const result = await addr({

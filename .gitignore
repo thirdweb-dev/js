@@ -10,7 +10,7 @@ dist-ssr
 .cache
 server/dist
 public/dist
-./packages/contracts-js/abis
+./legacy_packages/contracts-js/abis
 .idea/
 .yalc/
 yalc.lock
@@ -20,4 +20,4 @@ playwright-report/
 .env/
 
 # Artifacts
-packages/cli/artifacts/
+legacy_packages/cli/artifacts/

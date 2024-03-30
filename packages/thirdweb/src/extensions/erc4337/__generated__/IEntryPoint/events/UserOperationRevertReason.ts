@@ -23,7 +23,7 @@ export type UserOperationRevertReasonEventFilters = Partial<{
  * @returns The prepared event object.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { getContractEvents } from "thirdweb";
  * import { userOperationRevertReasonEvent } from "thirdweb/extensions/erc4337";
  *

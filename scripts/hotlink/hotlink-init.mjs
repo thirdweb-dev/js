@@ -4,31 +4,34 @@ import { updatePackages } from "./changes.mjs";
 import { execute } from "./execute.mjs";
 
 async function script() {
+  const isLegacy = process.argv[2] === "legacy";
   console.log(banner);
 
   console.log("\x1b[34m%s\x1b[0m", "Updating package json files");
-  updatePackages("hotlink");
+  updatePackages("hotlink", isLegacy);
 
   console.log("\x1b[34m%s\x1b[0m", "Creating Symlinks");
-  await execute([
-    "cd packages/thirdweb",
-    "pnpm link",
-    "cd ../react",
-    "pnpm link",
-    "cd ../react-core",
-    "pnpm link",
-    "cd ../wallets",
-    "pnpm link",
-    "cd ../..",
-  ]);
+  if (isLegacy) {
+    await execute([
+      "cd legacy_packages/react",
+      "pnpm link",
+      "cd ../react-core",
+      "pnpm link",
+      "cd ../wallets",
+      "pnpm link",
+      "cd ../..",
+    ]);
 
-  // use react-core and wallets link in react package
-  await execute([
-    "cd packages/react",
-    "pnpm link @thirdweb-dev/react-core",
-    "pnpm link @thirdweb-dev/wallets",
-    "cd ../..",
-  ]);
+    // use react-core and wallets link in react package
+    await execute([
+      "cd packages/react",
+      "pnpm link @thirdweb-dev/react-core",
+      "pnpm link @thirdweb-dev/wallets",
+      "cd ../..",
+    ]);
+  } else {
+    await execute(["cd packages/thirdweb", "pnpm link", "cd ../../"]);
+  }
 
   // done
   console.log("\x1b[32m%s\x1b[0m", "\nHotlink Complete ✨\n\n");

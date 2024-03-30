@@ -34,7 +34,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC2771
  * @example
- * ```
+ * ```ts
  * import { encodeIsTrustedForwarderParams } "thirdweb/extensions/erc2771";
  * const result = encodeIsTrustedForwarderParams({
  *  forwarder: ...,
@@ -53,7 +53,7 @@ export function encodeIsTrustedForwarderParams(
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC2771
  * @example
- * ```
+ * ```ts
  * import { decodeIsTrustedForwarderResult } from "thirdweb/extensions/erc2771";
  * const result = decodeIsTrustedForwarderResult("...");
  * ```
@@ -68,7 +68,7 @@ export function decodeIsTrustedForwarderResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC2771
  * @example
- * ```
+ * ```ts
  * import { isTrustedForwarder } from "thirdweb/extensions/erc2771";
  *
  * const result = await isTrustedForwarder({

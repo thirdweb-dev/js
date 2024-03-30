@@ -53,7 +53,7 @@ const FN_OUTPUTS = [
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC7504
  * @example
- * ```
+ * ```ts
  * import { decodeGetAllExtensionsResult } from "thirdweb/extensions/erc7504";
  * const result = decodeGetAllExtensionsResult("...");
  * ```
@@ -68,7 +68,7 @@ export function decodeGetAllExtensionsResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC7504
  * @example
- * ```
+ * ```ts
  * import { getAllExtensions } from "thirdweb/extensions/erc7504";
  *
  * const result = await getAllExtensions();

@@ -41,7 +41,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC1155
  * @example
- * ```
+ * ```ts
  * import { encodeGetStakeInfoForTokenParams } "thirdweb/extensions/erc1155";
  * const result = encodeGetStakeInfoForTokenParams({
  *  tokenId: ...,
@@ -61,7 +61,7 @@ export function encodeGetStakeInfoForTokenParams(
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC1155
  * @example
- * ```
+ * ```ts
  * import { decodeGetStakeInfoForTokenResult } from "thirdweb/extensions/erc1155";
  * const result = decodeGetStakeInfoForTokenResult("...");
  * ```
@@ -76,7 +76,7 @@ export function decodeGetStakeInfoForTokenResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC1155
  * @example
- * ```
+ * ```ts
  * import { getStakeInfoForToken } from "thirdweb/extensions/erc1155";
  *
  * const result = await getStakeInfoForToken({

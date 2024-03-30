@@ -25,7 +25,7 @@ type EncodeJWTParams = { payload: JWTPayloadInput; account: Account };
  * @throws Error if the account is not found.
  * @example
  * ```ts
- * import { encodeJWT } from '@thirdweb-dev/utils';
+ * import { encodeJWT } from 'thirdweb/utils';
  *
  * const jwt = await encodeJWT({
  *  payload: {

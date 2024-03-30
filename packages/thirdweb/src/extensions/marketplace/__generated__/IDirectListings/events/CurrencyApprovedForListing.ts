@@ -23,7 +23,7 @@ export type CurrencyApprovedForListingEventFilters = Partial<{
  * @returns The prepared event object.
  * @extension MARKETPLACE
  * @example
- * ```
+ * ```ts
  * import { getContractEvents } from "thirdweb";
  * import { currencyApprovedForListingEvent } from "thirdweb/extensions/marketplace";
  *

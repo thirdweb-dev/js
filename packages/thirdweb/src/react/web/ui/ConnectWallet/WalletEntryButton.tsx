@@ -6,44 +6,44 @@ import { Text } from "../components/text.js";
 import { useScreenContext } from "./Modal/screen.js";
 // import { localWalletMetadata } from "../../../../wallets/local/index._ts";
 import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
-import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { useWalletInfo } from "../hooks/useWalletInfo.js";
 import { Skeleton } from "../components/Skeleton.js";
 import { WalletImage } from "../components/WalletImage.js";
 import { getMIPDStore } from "../../../../wallets/injected/mipdStore.js";
+import type { WalletId } from "../../../../wallets/wallet-types.js";
 
 /**
  * @internal
  */
 export function WalletEntryButton(props: {
-  wallet: Wallet;
+  walletId: WalletId;
   selectWallet: () => void;
 }) {
-  const { wallet, selectWallet } = props;
+  const { walletId, selectWallet } = props;
   const { connectLocale, recommendedWallets } = useWalletConnectionCtx();
-  const isRecommended = recommendedWallets?.find((w) => w === wallet);
+  const isRecommended = recommendedWallets?.find((w) => w.id === walletId);
   const { screen } = useScreenContext();
-  const walletInfo = useWalletInfo(wallet.id);
+  const walletInfo = useWalletInfo(walletId);
 
   const walletName =
     getMIPDStore()
       .getProviders()
-      .find((p) => p.info.rdns === wallet.id)?.info.name ||
+      .find((p) => p.info.rdns === walletId)?.info.name ||
     walletInfo.data?.name;
 
   const isInstalled = getMIPDStore()
     .getProviders()
-    .find((p) => p.info.rdns === wallet.id);
+    .find((p) => p.info.rdns === walletId);
 
   return (
     <WalletButton
       type="button"
-      onClick={() => {
-        selectWallet();
-      }}
-      data-active={screen === wallet}
+      onClick={selectWallet}
+      data-active={
+        screen && typeof screen === "object" && screen.id === walletId
+      }
     >
-      <WalletImage id={wallet.id} size={iconSize.xl} />
+      <WalletImage id={walletId} size={iconSize.xl} />
 
       <Container flex="column" gap="xxs" expand>
         {walletName ? (
@@ -64,7 +64,7 @@ export function WalletEntryButton(props: {
   );
 }
 
-const WalletButton = /* @__PURE__ */ StyledButton(() => {
+export const WalletButton = /* @__PURE__ */ StyledButton(() => {
   const theme = useCustomTheme();
   return {
     all: "unset",

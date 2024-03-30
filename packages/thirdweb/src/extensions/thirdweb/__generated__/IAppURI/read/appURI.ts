@@ -18,7 +18,7 @@ const FN_OUTPUTS = [
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { decodeAppURIResult } from "thirdweb/extensions/thirdweb";
  * const result = decodeAppURIResult("...");
  * ```
@@ -33,7 +33,7 @@ export function decodeAppURIResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { appURI } from "thirdweb/extensions/thirdweb";
  *
  * const result = await appURI();

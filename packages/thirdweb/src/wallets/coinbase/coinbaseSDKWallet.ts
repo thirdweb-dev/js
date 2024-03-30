@@ -29,11 +29,17 @@ import {
 import { getAddress } from "../../utils/address.js";
 import { getDefaultAppMetadata } from "../utils/defaultDappMetadata.js";
 import type { WalletEmitter } from "../wallet-emitter.js";
+import type { ThirdwebClient } from "../../client/client.js";
 
 /**
  * Options for connecting to the CoinbaseSDK Wallet
  */
 export type CoinbaseSDKWalletConnectionOptions = {
+  /**
+   * The Thirdweb client object
+   */
+  client: ThirdwebClient;
+
   /**
    * Whether to use Dark theme in the Coinbase Wallet "Onboarding Overlay" popup.
    *
@@ -114,18 +120,6 @@ export type CoinbaseSDKWalletConnectionOptions = {
    * ```
    */
   appMetadata?: AppMetadata;
-};
-
-export type CoinbaseSDKWalletOptions = {
-  /**
-   * Name of your application. This will be displayed in the Coinbase Wallet app/extension when connecting to your app.
-   */
-  appName: string;
-
-  /**
-   * URL to your application's logo. This will be displayed in the Coinbase Wallet app/extension when connecting to your app.
-   */
-  appLogoUrl?: string | null;
 };
 
 async function initProvider(options: CoinbaseSDKWalletConnectionOptions) {

@@ -31,7 +31,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { encodeGetApprovedParams } "thirdweb/extensions/erc721";
  * const result = encodeGetApprovedParams({
  *  tokenId: ...,
@@ -48,7 +48,7 @@ export function encodeGetApprovedParams(options: GetApprovedParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { decodeGetApprovedResult } from "thirdweb/extensions/erc721";
  * const result = decodeGetApprovedResult("...");
  * ```
@@ -63,7 +63,7 @@ export function decodeGetApprovedResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { getApproved } from "thirdweb/extensions/erc721";
  *
  * const result = await getApproved({

@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/storage",
-  "version": "2.0.11",
+  "version": "2.0.12",
   "main": "dist/thirdweb-dev-storage.cjs.js",
   "module": "dist/thirdweb-dev-storage.esm.js",
   "exports": {
@@ -10,7 +10,7 @@
     },
     "./package.json": "./package.json"
   },
-  "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/storage",
+  "repository": "https://github.com/thirdweb-dev/js/tree/main/legacy_packages/storage",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
   "sideEffects": false,
@@ -20,9 +20,7 @@
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/",
     "build": "tsc && preconstruct build",
-    "test:all": "NODE_ENV=test SWC_NODE_PROJECT=./tsconfig.test.json mocha --timeout 30000 --parallel './test/**/*.test.ts'",
-    "test": "pnpm test:all",
-    "test:single": "NODE_ENV=test SWC_NODE_PROJECT=./tsconfig.test.json mocha --timeout 30000",
+    "test": "vitest",
     "push": "yalc push",
     "typedoc": "node scripts/typedoc.mjs"
   },
@@ -33,28 +31,20 @@
     "exports": true
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.23.8",
-    "@babel/preset-typescript": "^7.23.3",
-    "@microsoft/api-documenter": "^7.22.30",
-    "@microsoft/api-extractor": "^7.36.3",
-    "@microsoft/tsdoc": "^0.14.1",
+    "@microsoft/api-documenter": "^7.24.1",
+    "@microsoft/api-extractor": "^7.43.0",
+    "@microsoft/tsdoc": "^0.14.2",
     "@preconstruct/cli": "2.7.0",
-    "@swc-node/register": "^1.6.8",
+    "@swc-node/register": "^1.9.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
-    "@types/chai": "^4.3.5",
-    "@types/mocha": "^10.0.0",
-    "@types/uuid": "^9.0.5",
-    "@typescript-eslint/eslint-plugin": "^6.2.0",
-    "@typescript-eslint/parser": "^6.19.1",
-    "chai": "^4.3.6",
-    "eslint": "^8.56.0",
+    "@types/uuid": "^9.0.8",
+    "eslint": "^8.57.0",
     "eslint-config-thirdweb": "workspace:*",
-    "eslint-plugin-tsdoc": "^0.2.16",
+    "eslint-plugin-tsdoc": "^0.2.17",
     "esm": "^3.2.25",
-    "mocha": "^10.2.0",
-    "rimraf": "^3.0.2",
+    "rimraf": "5.0.5",
     "typedoc-gen": "workspace:*",
-    "typescript": "^5.3.3"
+    "typescript": "5.4.3"
   },
   "dependencies": {
     "@thirdweb-dev/crypto": "workspace:*",

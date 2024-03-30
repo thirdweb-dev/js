@@ -15,11 +15,11 @@ jobs:
       - name: Install bun
         uses: oven-sh/setup-bun@v1
         with:
-          bun-version: 1.0.21
+          bun-version: 1.0.35
 
       - name: Run chains sync
         run: bun run db:sync
-        working-directory: ./packages/chains
+        working-directory: ./legacy_packages/chains
 
       - name: Check for Changes
         id: git-check

@@ -20,7 +20,7 @@ export function useInstalledWallets() {
     isCoinbaseWalletInstalled = !!getInjectedCoinbaseProvider();
     isZerionWalletInstalled = !!window_.ethereum?.isZerion;
     isTrustWalletInstalled = !!window_.ethereum?.isTrust;
-    isImTokenInstalled = !!window_.ethereum?.isToken;
+    isImTokenInstalled = !!window_.ethereum?.isImToken;
   }
 
   return {

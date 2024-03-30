@@ -121,7 +121,7 @@ export function SwapScreenContent(props: {
   const deferredTokenAmount = useDebouncedValue(tokenAmount, 300);
 
   const fromTokenBalanceQuery = useWalletBalance({
-    account: account,
+    address: account.address,
     chain: fromChain,
     tokenAddress: isNativeToken(fromToken) ? undefined : fromToken.address,
   });

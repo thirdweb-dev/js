@@ -5,7 +5,7 @@ import { prepareEvent } from "../../../../../event/prepare-event.js";
  * @returns The prepared event object.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { getContractEvents } from "thirdweb";
  * import { contractURIUpdatedEvent } from "thirdweb/extensions/common";
  *

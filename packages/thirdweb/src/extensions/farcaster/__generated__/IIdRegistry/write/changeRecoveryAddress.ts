@@ -26,7 +26,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { encodeChangeRecoveryAddressParams } "thirdweb/extensions/farcaster";
  * const result = encodeChangeRecoveryAddressParams({
  *  recovery: ...,
@@ -45,7 +45,7 @@ export function encodeChangeRecoveryAddressParams(
  * @returns A prepared transaction object.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { changeRecoveryAddress } from "thirdweb/extensions/farcaster";
  *
  * const transaction = changeRecoveryAddress({

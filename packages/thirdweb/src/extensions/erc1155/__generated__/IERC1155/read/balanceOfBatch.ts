@@ -39,7 +39,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC1155
  * @example
- * ```
+ * ```ts
  * import { encodeBalanceOfBatchParams } "thirdweb/extensions/erc1155";
  * const result = encodeBalanceOfBatchParams({
  *  owners: ...,
@@ -57,7 +57,7 @@ export function encodeBalanceOfBatchParams(options: BalanceOfBatchParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC1155
  * @example
- * ```
+ * ```ts
  * import { decodeBalanceOfBatchResult } from "thirdweb/extensions/erc1155";
  * const result = decodeBalanceOfBatchResult("...");
  * ```
@@ -72,7 +72,7 @@ export function decodeBalanceOfBatchResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC1155
  * @example
- * ```
+ * ```ts
  * import { balanceOfBatch } from "thirdweb/extensions/erc1155";
  *
  * const result = await balanceOfBatch({

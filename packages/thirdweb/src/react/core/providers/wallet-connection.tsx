@@ -20,4 +20,5 @@ export const WalletConnectionContext = /* @__PURE__ */ createContext<{
     projectId?: string;
   };
   accountAbstraction?: SmartWalletOptions;
+  showAllWallets?: boolean;
 } | null>(null);

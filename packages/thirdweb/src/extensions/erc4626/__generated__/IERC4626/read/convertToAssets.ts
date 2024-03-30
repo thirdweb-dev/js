@@ -38,7 +38,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC4626
  * @example
- * ```
+ * ```ts
  * import { encodeConvertToAssetsParams } "thirdweb/extensions/erc4626";
  * const result = encodeConvertToAssetsParams({
  *  shares: ...,
@@ -55,7 +55,7 @@ export function encodeConvertToAssetsParams(options: ConvertToAssetsParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC4626
  * @example
- * ```
+ * ```ts
  * import { decodeConvertToAssetsResult } from "thirdweb/extensions/erc4626";
  * const result = decodeConvertToAssetsResult("...");
  * ```
@@ -70,7 +70,7 @@ export function decodeConvertToAssetsResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC4626
  * @example
- * ```
+ * ```ts
  * import { convertToAssets } from "thirdweb/extensions/erc4626";
  *
  * const result = await convertToAssets({

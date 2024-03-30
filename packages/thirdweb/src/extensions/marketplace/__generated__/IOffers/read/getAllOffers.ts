@@ -79,7 +79,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension MARKETPLACE
  * @example
- * ```
+ * ```ts
  * import { encodeGetAllOffersParams } "thirdweb/extensions/marketplace";
  * const result = encodeGetAllOffersParams({
  *  startId: ...,
@@ -97,7 +97,7 @@ export function encodeGetAllOffersParams(options: GetAllOffersParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension MARKETPLACE
  * @example
- * ```
+ * ```ts
  * import { decodeGetAllOffersResult } from "thirdweb/extensions/marketplace";
  * const result = decodeGetAllOffersResult("...");
  * ```
@@ -112,7 +112,7 @@ export function decodeGetAllOffersResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension MARKETPLACE
  * @example
- * ```
+ * ```ts
  * import { getAllOffers } from "thirdweb/extensions/marketplace";
  *
  * const result = await getAllOffers({

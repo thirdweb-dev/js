@@ -68,7 +68,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { encodeVerifyParams } "thirdweb/extensions/thirdweb";
  * const result = encodeVerifyParams({
  *  req: ...,
@@ -86,7 +86,7 @@ export function encodeVerifyParams(options: VerifyParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { decodeVerifyResult } from "thirdweb/extensions/thirdweb";
  * const result = decodeVerifyResult("...");
  * ```
@@ -101,7 +101,7 @@ export function decodeVerifyResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { verify } from "thirdweb/extensions/thirdweb";
  *
  * const result = await verify({

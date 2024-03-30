@@ -93,7 +93,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { encodeVerifySignerPermissionRequestParams } "thirdweb/extensions/erc4337";
  * const result = encodeVerifySignerPermissionRequestParams({
  *  req: ...,
@@ -113,7 +113,7 @@ export function encodeVerifySignerPermissionRequestParams(
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { decodeVerifySignerPermissionRequestResult } from "thirdweb/extensions/erc4337";
  * const result = decodeVerifySignerPermissionRequestResult("...");
  * ```
@@ -128,7 +128,7 @@ export function decodeVerifySignerPermissionRequestResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { verifySignerPermissionRequest } from "thirdweb/extensions/erc4337";
  *
  * const result = await verifySignerPermissionRequest({

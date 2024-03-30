@@ -54,7 +54,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension ERC20
  * @example
- * ```
+ * ```ts
  * import { encodeDelegateBySigParams } "thirdweb/extensions/erc20";
  * const result = encodeDelegateBySigParams({
  *  delegatee: ...,
@@ -83,7 +83,7 @@ export function encodeDelegateBySigParams(options: DelegateBySigParams) {
  * @returns A prepared transaction object.
  * @extension ERC20
  * @example
- * ```
+ * ```ts
  * import { delegateBySig } from "thirdweb/extensions/erc20";
  *
  * const transaction = delegateBySig({

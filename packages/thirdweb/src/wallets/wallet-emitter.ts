@@ -2,7 +2,7 @@ import type { Chain } from "../chains/types.js";
 import { createEmitter, type Emitter } from "../utils/tiny-emitter.js";
 import type { WalletAutoConnectionOption, WalletId } from "./wallet-types.js";
 
-type WalletEmitterEvents<TWalletId extends WalletId> = {
+export type WalletEmitterEvents<TWalletId extends WalletId> = {
   accountsChanged: string[];
   disconnect?: never;
   chainChanged: Chain;

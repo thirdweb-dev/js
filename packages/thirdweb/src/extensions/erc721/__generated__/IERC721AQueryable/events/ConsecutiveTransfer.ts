@@ -28,7 +28,7 @@ export type ConsecutiveTransferEventFilters = Partial<{
  * @returns The prepared event object.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { getContractEvents } from "thirdweb";
  * import { consecutiveTransferEvent } from "thirdweb/extensions/erc721";
  *

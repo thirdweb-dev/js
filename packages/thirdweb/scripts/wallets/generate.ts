@@ -89,6 +89,21 @@ const walletInfos = allSupportedWallets.map((wallet) => {
   return { id: wallet.id, name: wallet.name };
 });
 
+const customWalletInfos = [
+  {
+    id: "smart",
+    name: "Smart Wallet",
+  },
+  {
+    id: "embedded",
+    name: "Embedded Wallet",
+  },
+  {
+    id: "walletConnect",
+    name: "WalletConnect",
+  },
+];
+
 // clean the __geneated__ folder within `src/wallets/` directory
 const OUT_PATH = join(__dirname, "../../src/wallets/__generated__");
 
@@ -141,7 +156,9 @@ export type MinimalWalletInfo = {
 /**
  * @internal
  */
-export const ALL_MINIMAL_WALLET_INFOS = <const>${JSON.stringify(walletInfos, null, 2)} satisfies MinimalWalletInfo[];
+const ALL_MINIMAL_WALLET_INFOS = <const>${JSON.stringify([...walletInfos, ...customWalletInfos], null, 2)} satisfies MinimalWalletInfo[];
+
+export default ALL_MINIMAL_WALLET_INFOS;
 `,
     {
       parser: "babel-ts",
@@ -220,6 +237,19 @@ const walletImports = allSupportedWallets
   )
   .join("\n");
 
+const customWalletImports = ["smart", "embedded", "walletConnect"]
+  .map(
+    (walletId) =>
+      `case "${walletId}": {
+        return (
+          image
+            ? import("../custom/${walletId}/image.js").then((img) => img.default)
+            : import("../custom/${walletId}/index.js").then((w) => w.wallet)
+        ) as Promise<[TImage] extends [true] ? string : any>;
+}`,
+  )
+  .join("\n");
+
 await writeFile(
   join(OUT_PATH, "getWalletInfo.ts"),
   await format(
@@ -236,6 +266,7 @@ import type { WalletId } from "../wallet-types.js";
  */
 export async function getWalletInfo<TImage extends boolean>(id: WalletId, image?: TImage): Promise<[TImage] extends [true] ? string : WalletInfo> {
   switch (id) {
+    ${customWalletImports}
     ${walletImports}
     default: {
       throw new Error(\`Wallet with id \${id} not found\`);

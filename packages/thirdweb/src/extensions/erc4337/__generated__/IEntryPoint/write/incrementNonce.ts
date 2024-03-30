@@ -26,7 +26,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { encodeIncrementNonceParams } "thirdweb/extensions/erc4337";
  * const result = encodeIncrementNonceParams({
  *  key: ...,
@@ -43,7 +43,7 @@ export function encodeIncrementNonceParams(options: IncrementNonceParams) {
  * @returns A prepared transaction object.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { incrementNonce } from "thirdweb/extensions/erc4337";
  *
  * const transaction = incrementNonce({

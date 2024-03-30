@@ -31,7 +31,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC20
  * @example
- * ```
+ * ```ts
  * import { encodeDelegatesParams } "thirdweb/extensions/erc20";
  * const result = encodeDelegatesParams({
  *  account: ...,
@@ -48,7 +48,7 @@ export function encodeDelegatesParams(options: DelegatesParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC20
  * @example
- * ```
+ * ```ts
  * import { decodeDelegatesResult } from "thirdweb/extensions/erc20";
  * const result = decodeDelegatesResult("...");
  * ```
@@ -63,7 +63,7 @@ export function decodeDelegatesResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC20
  * @example
- * ```
+ * ```ts
  * import { delegates } from "thirdweb/extensions/erc20";
  *
  * const result = await delegates({

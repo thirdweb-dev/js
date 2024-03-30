@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/merkletree",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "main": "dist/thirdweb-dev-merkletree.cjs.js",
   "module": "dist/thirdweb-dev-merkletree.esm.js",
   "exports": {
@@ -10,7 +10,7 @@
     },
     "./package.json": "./package.json"
   },
-  "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/utils",
+  "repository": "https://github.com/thirdweb-dev/js/tree/main/legacy_packages/utils",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/thirdweb-dev/js/issues"
@@ -35,17 +35,17 @@
   "devDependencies": {
     "@preconstruct/cli": "2.7.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
-    "@types/benchmark": "^2.1.4",
-    "@types/treeify": "^1.0.2",
+    "@types/benchmark": "^2.1.5",
+    "@types/treeify": "^1.0.3",
     "benchmark": "^2.1.4",
     "circomlibjs": "^0.1.7",
     "eslint-config-thirdweb": "workspace:*",
-    "ethereum-cryptography": "^1.0.3",
-    "ethereumjs-util": "^7.0.9",
+    "ethereum-cryptography": "^1.2.0",
+    "ethereumjs-util": "^7.1.5",
     "keccak256": "^1.0.6",
     "sha1": "^1.1.1",
-    "tape": "^4.9.2",
-    "typescript": "^5.3.3"
+    "tape": "^4.17.0",
+    "typescript": "5.4.3"
   },
   "scripts": {
     "format": "prettier --write 'src/**/*'",

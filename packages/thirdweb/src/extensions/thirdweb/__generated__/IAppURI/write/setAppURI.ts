@@ -26,7 +26,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { encodeSetAppURIParams } "thirdweb/extensions/thirdweb";
  * const result = encodeSetAppURIParams({
  *  uri: ...,
@@ -43,7 +43,7 @@ export function encodeSetAppURIParams(options: SetAppURIParams) {
  * @returns A prepared transaction object.
  * @extension THIRDWEB
  * @example
- * ```
+ * ```ts
  * import { setAppURI } from "thirdweb/extensions/thirdweb";
  *
  * const transaction = setAppURI({

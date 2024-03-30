@@ -39,7 +39,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC20
  * @example
- * ```
+ * ```ts
  * import { encodeGetPastVotesParams } "thirdweb/extensions/erc20";
  * const result = encodeGetPastVotesParams({
  *  account: ...,
@@ -57,7 +57,7 @@ export function encodeGetPastVotesParams(options: GetPastVotesParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC20
  * @example
- * ```
+ * ```ts
  * import { decodeGetPastVotesResult } from "thirdweb/extensions/erc20";
  * const result = decodeGetPastVotesResult("...");
  * ```
@@ -72,7 +72,7 @@ export function decodeGetPastVotesResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC20
  * @example
- * ```
+ * ```ts
  * import { getPastVotes } from "thirdweb/extensions/erc20";
  *
  * const result = await getPastVotes({

@@ -37,7 +37,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension MARKETPLACE
  * @example
- * ```
+ * ```ts
  * import { encodeSetPlatformFeeInfoParams } "thirdweb/extensions/marketplace";
  * const result = encodeSetPlatformFeeInfoParams({
  *  platformFeeRecipient: ...,
@@ -60,7 +60,7 @@ export function encodeSetPlatformFeeInfoParams(
  * @returns A prepared transaction object.
  * @extension MARKETPLACE
  * @example
- * ```
+ * ```ts
  * import { setPlatformFeeInfo } from "thirdweb/extensions/marketplace";
  *
  * const transaction = setPlatformFeeInfo({

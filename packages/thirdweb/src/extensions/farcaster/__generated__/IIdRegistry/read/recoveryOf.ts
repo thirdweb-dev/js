@@ -32,7 +32,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { encodeRecoveryOfParams } "thirdweb/extensions/farcaster";
  * const result = encodeRecoveryOfParams({
  *  fid: ...,
@@ -49,7 +49,7 @@ export function encodeRecoveryOfParams(options: RecoveryOfParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { decodeRecoveryOfResult } from "thirdweb/extensions/farcaster";
  * const result = decodeRecoveryOfResult("...");
  * ```
@@ -64,7 +64,7 @@ export function decodeRecoveryOfResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { recoveryOf } from "thirdweb/extensions/farcaster";
  *
  * const result = await recoveryOf({

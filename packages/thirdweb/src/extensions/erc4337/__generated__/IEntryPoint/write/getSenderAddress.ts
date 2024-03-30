@@ -26,7 +26,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { encodeGetSenderAddressParams } "thirdweb/extensions/erc4337";
  * const result = encodeGetSenderAddressParams({
  *  initCode: ...,
@@ -43,7 +43,7 @@ export function encodeGetSenderAddressParams(options: GetSenderAddressParams) {
  * @returns A prepared transaction object.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { getSenderAddress } from "thirdweb/extensions/erc4337";
  *
  * const transaction = getSenderAddress({

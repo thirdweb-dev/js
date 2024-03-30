@@ -41,7 +41,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { encodeTokensOfOwnerInParams } "thirdweb/extensions/erc721";
  * const result = encodeTokensOfOwnerInParams({
  *  owner: ...,
@@ -64,7 +64,7 @@ export function encodeTokensOfOwnerInParams(options: TokensOfOwnerInParams) {
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { decodeTokensOfOwnerInResult } from "thirdweb/extensions/erc721";
  * const result = decodeTokensOfOwnerInResult("...");
  * ```
@@ -79,7 +79,7 @@ export function decodeTokensOfOwnerInResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { tokensOfOwnerIn } from "thirdweb/extensions/erc721";
  *
  * const result = await tokensOfOwnerIn({

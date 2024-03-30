@@ -39,7 +39,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { encodePostOpParams } "thirdweb/extensions/erc4337";
  * const result = encodePostOpParams({
  *  mode: ...,
@@ -62,7 +62,7 @@ export function encodePostOpParams(options: PostOpParams) {
  * @returns A prepared transaction object.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { postOp } from "thirdweb/extensions/erc4337";
  *
  * const transaction = postOp({

@@ -29,7 +29,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { encodeSetRoyaltyEngineParams } "thirdweb/extensions/common";
  * const result = encodeSetRoyaltyEngineParams({
  *  royaltyEngineAddress: ...,
@@ -46,7 +46,7 @@ export function encodeSetRoyaltyEngineParams(options: SetRoyaltyEngineParams) {
  * @returns A prepared transaction object.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { setRoyaltyEngine } from "thirdweb/extensions/common";
  *
  * const transaction = setRoyaltyEngine({

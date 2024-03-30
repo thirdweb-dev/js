@@ -1,5 +1,42 @@
 # @thirdweb-dev/sdk
 
+## 4.0.54
+
+### Patch Changes
+
+- Updated dependencies [[`3ef3786`](https://github.com/thirdweb-dev/js/commit/3ef378659e83341663dfaded417e33b5af29bbbc)]:
+  - @thirdweb-dev/chains@0.1.85
+
+## 4.0.53
+
+### Patch Changes
+
+- [#2584](https://github.com/thirdweb-dev/js/pull/2584) [`6bd1b82`](https://github.com/thirdweb-dev/js/commit/6bd1b82a58505ec3af3a12ceeab51d78ee3b8bc0) Thanks [@kumaryash90](https://github.com/kumaryash90)! - cli changes for zksync publish
+
+## 4.0.52
+
+### Patch Changes
+
+- [#2573](https://github.com/thirdweb-dev/js/pull/2573) [`c81bb88`](https://github.com/thirdweb-dev/js/commit/c81bb882c505a5f1feb8f627377e76a771cce3f4) Thanks [@jnsdls](https://github.com/jnsdls)! - fix CWE-1333
+
+- [#2577](https://github.com/thirdweb-dev/js/pull/2577) [`d93286b`](https://github.com/thirdweb-dev/js/commit/d93286bc1f8224d055b50ce3ffa4f302869cb2b1) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
+
+- Updated dependencies [[`d93286b`](https://github.com/thirdweb-dev/js/commit/d93286bc1f8224d055b50ce3ffa4f302869cb2b1), [`50e7dba`](https://github.com/thirdweb-dev/js/commit/50e7dbaa9dae77cb8cd865405c322495e2498c65)]:
+  - @thirdweb-dev/contracts-js@1.3.19
+  - @thirdweb-dev/merkletree@0.2.3
+  - @thirdweb-dev/storage@2.0.12
+  - @thirdweb-dev/chains@0.1.84
+  - @thirdweb-dev/crypto@0.2.3
+
+## 4.0.51
+
+### Patch Changes
+
+- [#2566](https://github.com/thirdweb-dev/js/pull/2566) [`c63d9ea`](https://github.com/thirdweb-dev/js/commit/c63d9ea7acdea12a6ce0f5e2bde139fe26887df5) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Verification status in progress
+
+- Updated dependencies [[`095d227`](https://github.com/thirdweb-dev/js/commit/095d227a13d0c9c1de76fa3812b7f71b2130d532)]:
+  - @thirdweb-dev/chains@0.1.83
+
 ## 4.0.50
 
 ### Patch Changes

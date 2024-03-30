@@ -5,5 +5,5 @@ import { typedoc } from "typedoc-gen";
 
 typedoc({
   entryPoints: ["src/index.ts"],
-  exclude: ["**/packages/storage/**", "**/packages/chains/**"],
+  exclude: ["**/legacy_packages/storage/**", "**/legacy_packages/chains/**"],
 });

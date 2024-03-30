@@ -43,7 +43,7 @@ function EmbeddedWalletSelectionUI(props: {
   ) {
     return (
       <WalletEntryButton
-        wallet={props.wallet}
+        walletId={props.wallet.id}
         selectWallet={() => {
           saveState({});
           props.select();
@@ -53,7 +53,7 @@ function EmbeddedWalletSelectionUI(props: {
   }
 
   if (!locale) {
-    return <LoadingScreen height="300px" />;
+    return <LoadingScreen height="195px" />;
   }
 
   return (

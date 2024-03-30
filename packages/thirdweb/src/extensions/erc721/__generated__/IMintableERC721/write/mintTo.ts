@@ -35,7 +35,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { encodeMintToParams } "thirdweb/extensions/erc721";
  * const result = encodeMintToParams({
  *  to: ...,
@@ -53,7 +53,7 @@ export function encodeMintToParams(options: MintToParams) {
  * @returns A prepared transaction object.
  * @extension ERC721
  * @example
- * ```
+ * ```ts
  * import { mintTo } from "thirdweb/extensions/erc721";
  *
  * const transaction = mintTo({

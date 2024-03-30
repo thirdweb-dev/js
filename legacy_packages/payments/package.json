@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/payments",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "dist/thirdweb-dev-payments.cjs.js",
   "module": "dist/thirdweb-dev-payments.esm.js",
   "types": "dist/thirdweb-dev-payments.cjs.d.ts",
@@ -17,7 +17,7 @@
     },
     "./package.json": "./package.json"
   },
-  "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/payments",
+  "repository": "https://github.com/thirdweb-dev/js/tree/main/legacy_packages/payments",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/thirdweb-dev/js/issues"
@@ -44,7 +44,7 @@
     "@preconstruct/cli": "2.7.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "eslint-config-thirdweb": "workspace:*",
-    "typescript": "^5.3.3"
+    "typescript": "5.4.3"
   },
   "scripts": {
     "format": "prettier --write 'src/**/*'",

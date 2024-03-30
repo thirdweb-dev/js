@@ -50,7 +50,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC1155
  * @example
- * ```
+ * ```ts
  * import { encodeOnERC1155BatchReceivedParams } "thirdweb/extensions/erc1155";
  * const result = encodeOnERC1155BatchReceivedParams({
  *  operator: ...,
@@ -79,7 +79,7 @@ export function encodeOnERC1155BatchReceivedParams(
  * @returns A prepared transaction object.
  * @extension ERC1155
  * @example
- * ```
+ * ```ts
  * import { onERC1155BatchReceived } from "thirdweb/extensions/erc1155";
  *
  * const transaction = onERC1155BatchReceived({

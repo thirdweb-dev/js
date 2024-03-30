@@ -23,7 +23,7 @@ export default {
     "format": "png"
   },
   "infoURL": "https://raas.gelato.network/rollups/details/public/unreal",
-  "name": "unreal",
+  "name": "unreal-old",
   "nativeCurrency": {
     "name": "unreal Ether",
     "symbol": "ETH",
@@ -33,20 +33,17 @@ export default {
   "parent": {
     "type": "L2",
     "chain": "eip155-11155111",
-    "bridges": [
-      {
-        "url": "https://bridge.unreal.gelato.digital"
-      }
-    ]
+    "bridges": []
   },
   "rpc": [
     "https://18231.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.unreal.gelato.digital",
     "wss://ws.unreal.gelato.digital"
   ],
-  "shortName": "unreal",
+  "shortName": "unreal-old",
   "slip44": 60,
-  "slug": "unreal",
+  "slug": "unreal-old",
+  "status": "deprecated",
   "testnet": true,
   "title": "unreal testnet for re.al"
 } as const satisfies Chain;

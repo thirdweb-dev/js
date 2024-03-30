@@ -34,7 +34,7 @@ const FN_OUTPUTS = [
  * @returns A prepared transaction object.
  * @extension ERC1155
  * @example
- * ```
+ * ```ts
  * import { claimRewards } from "thirdweb/extensions/erc1155";
  *
  * const transaction = claimRewards();

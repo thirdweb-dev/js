@@ -57,7 +57,7 @@ type InjectedProviderFlags = {
   isRabbyWallet?: true;
   isCoin98Wallet?: true;
   // imToken
-  isToken?: true;
+  isImToken?: true;
 };
 type InjectedProviders = InjectedProviderFlags & {
   isMetaMask: true;

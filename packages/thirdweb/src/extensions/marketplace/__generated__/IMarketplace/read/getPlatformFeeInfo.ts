@@ -21,7 +21,7 @@ const FN_OUTPUTS = [
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension MARKETPLACE
  * @example
- * ```
+ * ```ts
  * import { decodeGetPlatformFeeInfoResult } from "thirdweb/extensions/marketplace";
  * const result = decodeGetPlatformFeeInfoResult("...");
  * ```
@@ -36,7 +36,7 @@ export function decodeGetPlatformFeeInfoResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension MARKETPLACE
  * @example
- * ```
+ * ```ts
  * import { getPlatformFeeInfo } from "thirdweb/extensions/marketplace";
  *
  * const result = await getPlatformFeeInfo();

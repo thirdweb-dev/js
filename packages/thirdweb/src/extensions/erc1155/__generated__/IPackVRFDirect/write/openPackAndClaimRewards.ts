@@ -46,7 +46,7 @@ const FN_OUTPUTS = [
  * @returns The encoded ABI parameters.
  * @extension ERC1155
  * @example
- * ```
+ * ```ts
  * import { encodeOpenPackAndClaimRewardsParams } "thirdweb/extensions/erc1155";
  * const result = encodeOpenPackAndClaimRewardsParams({
  *  packId: ...,
@@ -71,7 +71,7 @@ export function encodeOpenPackAndClaimRewardsParams(
  * @returns A prepared transaction object.
  * @extension ERC1155
  * @example
- * ```
+ * ```ts
  * import { openPackAndClaimRewards } from "thirdweb/extensions/erc1155";
  *
  * const transaction = openPackAndClaimRewards({

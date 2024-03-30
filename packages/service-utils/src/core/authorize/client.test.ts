@@ -1,5 +1,6 @@
 import { validApiKeyMeta } from "../../mocks";
 import { ClientAuthorizationPayload, authorizeClient } from "./client";
+import { describe, it, expect } from "vitest";
 
 describe("authorizeClient", () => {
   const validAuthOptions: ClientAuthorizationPayload = {

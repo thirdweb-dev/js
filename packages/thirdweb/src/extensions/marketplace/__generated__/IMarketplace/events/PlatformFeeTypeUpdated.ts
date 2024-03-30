@@ -5,7 +5,7 @@ import { prepareEvent } from "../../../../../event/prepare-event.js";
  * @returns The prepared event object.
  * @extension MARKETPLACE
  * @example
- * ```
+ * ```ts
  * import { getContractEvents } from "thirdweb";
  * import { platformFeeTypeUpdatedEvent } from "thirdweb/extensions/marketplace";
  *

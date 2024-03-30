@@ -12,6 +12,17 @@
       }
     },
     {
+      "name": "ThirdwebSDKProvider",
+      "summary": "The `ThirdwebSDKProvider` is used when you want to provide your own wallet connection logic and just use the thirdweb SDK to interact with smart contracts and the blockchain. This means you can use everything in the SDK except for wallet connection-related components and hooks. if you need those please use the `ThirdwebProvider` instead.\n\n`ThirdwebSDKProvider` allows you to set a provider & signer to the thirdweb SDK.\n\n",
+      "remarks": null,
+      "examples": {
+        "tyepscript": "import { ThirdwebSDKProvider } from \"@thirdweb-dev/react\";\nimport { ethers } from \"ethers\";\n\n// Example shows how to get the signer from the injected provider ( wallet extension )\nfunction Example() {\n return (\n   <ThirdwebSDKProvider\n     activeChain=\"ethereum\"\n     clientId=\"YOUR_CLIENT_ID\"\n     signer={new ethers.providers.Web3Provider(window.ethereum).getSigner()}\n   >\n     <App />\n   </ThirdwebSDKProvider>\n )\n}"
+      },
+      "reference": {
+        "javascript": "https://docs.thirdweb.com/react/react.thirdwebsdkprovider"
+      }
+    },
+    {
       "name": "useAcceptDirectListingOffer",
       "summary": "Hook for accepting an offer from a direct listing on a `Marketplace` contract.\n\nAllows the seller (the user who listed the NFT for sale) to accept an offer on their listing, triggering a sale event, meaning the: - NFT(s) are transferred from the seller to the buyer. - Funds from the offeror are sent to the seller.\n\n",
       "remarks": null,

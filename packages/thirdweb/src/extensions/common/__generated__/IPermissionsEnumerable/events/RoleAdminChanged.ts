@@ -28,7 +28,7 @@ export type RoleAdminChangedEventFilters = Partial<{
  * @returns The prepared event object.
  * @extension COMMON
  * @example
- * ```
+ * ```ts
  * import { getContractEvents } from "thirdweb";
  * import { roleAdminChangedEvent } from "thirdweb/extensions/common";
  *

@@ -60,7 +60,7 @@ const FN_OUTPUTS = [] as const;
  * @returns The encoded ABI parameters.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { encodeRecoverForParams } "thirdweb/extensions/farcaster";
  * const result = encodeRecoverForParams({
  *  from: ...,
@@ -89,7 +89,7 @@ export function encodeRecoverForParams(options: RecoverForParams) {
  * @returns A prepared transaction object.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { recoverFor } from "thirdweb/extensions/farcaster";
  *
  * const transaction = recoverFor({

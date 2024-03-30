@@ -3,12 +3,12 @@ import fs from "fs";
 import createCSharpSnippet from "./utils/create-csharp-snippet.mjs";
 import createReactSnippet from "./utils/create-react-snippet-from-mapping.mjs";
 // Note: these JSON files are only available after running the `pnpm generate-docs` in root
-import typescriptSnippets from "../../packages/sdk/docs/evm/snippets.json" assert { type: "json" };
-import reactWebSnippets from "../../packages/react/docs/evm/snippets.json" assert { type: "json" };
-import reactCoreSnippets from "../../packages/react-core/docs/evm/snippets.json" assert { type: "json" };
-import typescriptFeatureSnippets from "../../packages/sdk/docs/evm/feature_snippets.json" assert { type: "json" };
-import reactFeatureSnippets from "../../packages/react/docs/evm/feature_snippets.json" assert { type: "json" };
-import reactCoreFeatureSnippets from "../../packages/react-core/docs/evm/feature_snippets.json" assert { type: "json" };
+import typescriptSnippets from "../../legacy_packages/sdk/docs/evm/snippets.json" assert { type: "json" };
+import reactWebSnippets from "../../legacy_packages/react/docs/evm/snippets.json" assert { type: "json" };
+import reactCoreSnippets from "../../legacy_packages/react-core/docs/evm/snippets.json" assert { type: "json" };
+import typescriptFeatureSnippets from "../../legacy_packages/sdk/docs/evm/feature_snippets.json" assert { type: "json" };
+import reactFeatureSnippets from "../../legacy_packages/react/docs/evm/feature_snippets.json" assert { type: "json" };
+import reactCoreFeatureSnippets from "../../legacy_packages/react-core/docs/evm/feature_snippets.json" assert { type: "json" };
 
 // Maybe feature_snippets_sdk.json and feature_snippets_sdk.json is not being used anywhere
 // TODO: if that's the case - stop generating them here

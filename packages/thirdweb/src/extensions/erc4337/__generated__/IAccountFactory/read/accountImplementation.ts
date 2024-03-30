@@ -18,7 +18,7 @@ const FN_OUTPUTS = [
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { decodeAccountImplementationResult } from "thirdweb/extensions/erc4337";
  * const result = decodeAccountImplementationResult("...");
  * ```
@@ -33,7 +33,7 @@ export function decodeAccountImplementationResult(result: Hex) {
  * @returns The parsed result of the function call.
  * @extension ERC4337
  * @example
- * ```
+ * ```ts
  * import { accountImplementation } from "thirdweb/extensions/erc4337";
  *
  * const result = await accountImplementation();
