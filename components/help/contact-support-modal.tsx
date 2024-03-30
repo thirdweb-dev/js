@@ -93,6 +93,7 @@ export const ContactSupportModal = () => {
                 {...form.register("markdown", { required: true })}
                 rows={7}
                 maxLength={10000}
+                placeholder="Please describe the issue you're encountering in detail, including steps that led to the error, any error messages, troubleshooting steps you've already taken, and the product(s), dashboard, or SDKs involved."
               />
             </FormControl>
           </ModalBody>
