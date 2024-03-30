@@ -8,7 +8,7 @@ import { getBytecode } from "../../contract/actions/get-bytecode.js";
 
 // skip this test suite if there is no secret key available to test with
 // TODO: remove reliance on secret key during unit tests entirely
-describe.skipIf(!process.env.TW_SECRET_KEY)("extractIPFSUri", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("extractIPFSUri", () => {
   it("works if ipfs is there", async () => {
     //  get some bytecode
     const bytecode = await getBytecode(DOODLES_CONTRACT);

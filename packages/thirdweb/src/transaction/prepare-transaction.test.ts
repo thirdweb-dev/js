@@ -22,7 +22,7 @@ describe("prepareTransaction", () => {
 
   // skip this test if there is no secret key available to test with
   // TODO: remove reliance on secret key during unit tests entirely
-  it.skipIf(!process.env.TW_SECRET_KEY)(
+  it.runIf(process.env.TW_SECRET_KEY)(
     "should estimate the gas correctly",
     async () => {
       const preparedTx = prepareTransaction({

@@ -14,7 +14,7 @@ import { getDeployedInfraContract } from "./utils/infra.js";
 
 // skip this test suite if there is no secret key available to test with
 // TODO: remove reliance on secret key during unit tests entirely
-describe.skipIf(!process.env.TW_SECRET_KEY)("deployFromMetadata", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("deployFromMetadata", () => {
   it("should deploy published contract with existing infra", async () => {
     const cloneFactoryContract = await getDeployedCloneFactoryContract({
       chain: FORKED_ETHEREUM_CHAIN,

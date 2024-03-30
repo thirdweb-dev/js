@@ -59,7 +59,7 @@ vi.spyOn(waitForReceiptExports, "waitForReceipt").mockResolvedValueOnce(
 
 // skip this test suite if there is no secret key available to test with
 // TODO: remove reliance on secret key during unit tests entirely
-describe.skipIf(!process.env.TW_SECRET_KEY)("sendAndConfirmTransaction", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("sendAndConfirmTransaction", () => {
   afterAll(() => {
     vi.restoreAllMocks();
   });

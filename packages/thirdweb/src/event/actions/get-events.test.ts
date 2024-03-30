@@ -9,7 +9,7 @@ import { prepareEvent } from "../prepare-event.js";
 
 // skip this test suite if there is no secret key available to test with
 // TODO: remove reliance on secret key during unit tests entirely
-describe.skipIf(!process.env.TW_SECRET_KEY)("getEvents", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("getEvents", () => {
   it("should get all events", async () => {
     const events = await getContractEvents({
       contract: USDC_CONTRACT,

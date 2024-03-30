@@ -8,7 +8,7 @@ import { getContract } from "../../contract/contract.js";
 
 // skip this test suite if there is no secret key available to test with
 // TODO: remove reliance on secret key during unit tests entirely
-describe.skipIf(!process.env.TW_SECRET_KEY)("deployERC1155", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("deployERC1155", () => {
   it("should deploy ERC1155 drop", async () => {
     const address = await deployERC1155Contract({
       client: TEST_CLIENT,
