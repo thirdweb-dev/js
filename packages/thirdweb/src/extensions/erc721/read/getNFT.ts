@@ -1,5 +1,4 @@
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
-import { fetchTokenMetadata } from "../../../utils/nft/fetchTokenMetadata.js";
 import { parseNFT, type NFT } from "../../../utils/nft/parseNft.js";
 import type { Prettify } from "../../../utils/type-utils.js";
 import {
@@ -16,6 +15,13 @@ export type GetNFTParams = Prettify<
      * Whether to include the owner of the NFT.
      */
     includeOwner?: boolean;
+
+    /**
+     * Whether to load the metadata of the NFT.
+     * If you don't need the metadata,
+     * setting this to `true` might improve the performance
+     */
+    includeMetadata?: boolean;
   }
 >;
 
@@ -36,9 +42,10 @@ export type GetNFTParams = Prettify<
 export async function getNFT(
   options: BaseTransactionOptions<GetNFTParams>,
 ): Promise<NFT> {
+  const { tokenId, includeMetadata, includeOwner } = options;
   const [uri, owner] = await Promise.all([
     tokenURI(options).catch(() => null),
-    options.includeOwner
+    includeOwner
       ? import("../__generated__/IERC721A/read/ownerOf.js")
           .then((m) => m.ownerOf(options))
           .catch(() => null)
@@ -48,12 +55,12 @@ export async function getNFT(
   if (!uri) {
     return parseNFT(
       {
-        id: options.tokenId,
+        id: tokenId,
         type: "ERC721",
         uri: "",
       },
       {
-        tokenId: options.tokenId,
+        tokenId: tokenId,
         tokenUri: "",
         type: "ERC721",
         owner,
@@ -61,21 +68,28 @@ export async function getNFT(
     );
   }
 
-  return parseNFT(
-    await fetchTokenMetadata({
-      client: options.contract.client,
-      tokenId: options.tokenId,
-      tokenUri: uri,
-    }).catch(() => ({
-      id: options.tokenId,
-      type: "ERC721",
-      uri,
-    })),
-    {
-      tokenId: options.tokenId,
-      tokenUri: uri,
-      type: "ERC721",
-      owner,
-    },
-  );
+  const baseMetadata = {
+    id: tokenId,
+    type: "ERC721",
+    uri,
+  };
+
+  const metadata = includeMetadata
+    ? await import("../../../utils/nft/fetchTokenMetadata.js").then((m) =>
+        m
+          .fetchTokenMetadata({
+            client: options.contract.client,
+            tokenId: tokenId,
+            tokenUri: uri,
+          })
+          .catch(() => baseMetadata),
+      )
+    : baseMetadata;
+
+  return parseNFT(metadata, {
+    tokenId: tokenId,
+    tokenUri: uri,
+    type: "ERC721",
+    owner,
+  });
 }
