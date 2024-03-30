@@ -3,7 +3,7 @@ import { describe, it, expect } from "vitest";
 import { getNFT } from "./getNFT.js";
 import { DOODLES_CONTRACT } from "~test/test-contracts.js";
 
-describe.runIf(process.env.TW_SECRET_KEY)("erc721.getNFT", () => {
+describe("erc721.getNFT", () => {
   it("without owner", async () => {
     const nft = await getNFT({
       contract: { ...DOODLES_CONTRACT },
