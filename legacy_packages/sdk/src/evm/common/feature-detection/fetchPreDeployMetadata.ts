@@ -23,8 +23,9 @@ export async function fetchPreDeployMetadata(
   let bytecodeUri;
   let metadataUri;
 
-  if (compilerOptions) {
-    invariant(rawMeta.compilers, "Specified compiler not found");
+  // TODO: Add an invariant, throw if no compilers in rawMeta in case compilerOptions are provided.
+  // Keeping it this way until all contracts are republished with new metadata.
+  if (compilerOptions && rawMeta.compilers) {
     let metadata;
     switch (compilerOptions.compilerType) {
       case "solc":

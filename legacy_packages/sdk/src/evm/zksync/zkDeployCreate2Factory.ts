@@ -38,11 +38,11 @@ class ContractFactory extends ZkContractFactory {
   // }
 
   override getDeployTransaction(...args: any[]): providers.TransactionRequest {
-    let salt = utils.id("salt1234");
+    const salt = utils.id("salt1234");
     const txRequest = super.getDeployTransaction(...args);
 
     // Removing overrides
-    if (this.interface.deploy.inputs.length + 1 == args.length) {
+    if (this.interface.deploy.inputs.length + 1 === args.length) {
       args.pop();
     }
 

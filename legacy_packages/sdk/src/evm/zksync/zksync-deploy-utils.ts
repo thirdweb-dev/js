@@ -94,20 +94,20 @@ export async function zkDeployContractFromUri(
   clientId?: string,
   secretKey?: string,
 ): Promise<string> {
-  let deterministicDeployment = false;
-
-  if (options?.compilerOptions) {
-    if (options.compilerOptions.compilerType !== "zksolc") {
-      throw Error("Invalid compiler type");
-    }
-    deterministicDeployment = true;
-  }
   const { compilerMetadata, extendedMetadata } =
     await fetchAndCacheDeployMetadata(
       publishMetadataUri,
       storage,
       options?.compilerOptions,
     );
+
+  let deterministicDeployment = false;
+  if (options?.compilerOptions && extendedMetadata?.compilers) {
+    if (options.compilerOptions.compilerType !== "zksolc") {
+      throw Error("Invalid compiler type");
+    }
+    deterministicDeployment = true;
+  }
   const forceDirectDeploy = options?.forceDirectDeploy || false;
 
   const isNetworkEnabled =
