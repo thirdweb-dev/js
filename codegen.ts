@@ -26,9 +26,9 @@ const config: CodegenConfig = {
   ],
   // emitLegacyCommonJSImports: false,
   // this is annoying, would be better if all of our code was in src/
-  documents: ["./graphql/**/*.graphql"],
+  documents: ["./src/graphql/**/*.graphql"],
   generates: {
-    "./graphql/generated.ts": {
+    "./src/graphql/generated.ts": {
       plugins: [
         "typescript",
         "typescript-operations",

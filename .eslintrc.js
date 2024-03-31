@@ -178,7 +178,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: "core-ui/**/*",
+      files: "src/core-ui/**/*",
       rules: {
         // no restricted imports
         "@typescript-eslint/no-restricted-imports": [
@@ -204,7 +204,7 @@ module.exports = {
     },
     // disable restricted imports in tw-components
     {
-      files: "tw-components/**/*",
+      files: "src/tw-components/**/*",
       rules: {
         "no-restricted-imports": ["off"],
       },
