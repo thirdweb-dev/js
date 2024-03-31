@@ -1,6 +1,4 @@
 import type {
-  HDAccount,
-  PrivateKeyAccount as ViemPrivateKeyAccount,
   TransactionSerializable,
   TypedData,
   TypedDataDefinition,
@@ -11,13 +9,12 @@ import type { ThirdwebClient } from "../client/client.js";
 import { defineChain } from "../chains/utils.js";
 import { getRpcClient } from "../rpc/rpc.js";
 import { eth_sendRawTransaction } from "../rpc/actions/eth_sendRawTransaction.js";
-import type { Account } from "./interfaces/wallet.js";
+import type { LocalAccount } from "./interfaces/wallet.js";
 import { toHex, type Hex } from "../utils/encoding/hex.js";
 import { secp256k1 } from "@noble/curves/secp256k1";
 import { signTransaction } from "../transaction/actions/sign-transaction.js";
 import { signMessage } from "../utils/signatures/sign-message.js";
 import { signTypedData } from "../utils/signatures/sign-typed-data.js";
-import type { Prettify } from "../utils/type-utils.js";
 
 export type PrivateKeyAccountOptions = {
   /**
@@ -49,13 +46,6 @@ export type PrivateKeyAccountOptions = {
   privateKey: string;
 };
 
-export type PrivateKeyAccount = Prettify<
-  Account & {
-    publicKey: Hex;
-    signTransaction: (tx: TransactionSerializable) => Promise<Hex>;
-  }
->;
-
 export const privateKeyToAccount = privateKeyAccount;
 
 /**
@@ -76,7 +66,7 @@ export const privateKeyToAccount = privateKeyAccount;
  */
 export function privateKeyAccount(
   options: PrivateKeyAccountOptions,
-): PrivateKeyAccount {
+): LocalAccount {
   const { client } = options;
   const privateKey = `0x${options.privateKey.replace(/^0x/, "")}` satisfies Hex;
 
@@ -86,6 +76,8 @@ export function privateKeyAccount(
   return {
     address,
     publicKey,
+    type: "local",
+    source: "privateKey",
     sendTransaction: async (
       // TODO: figure out how we would pass our "chain" object in here?
       // maybe we *do* actually have to take in a tx object instead of the raw tx?
@@ -130,9 +122,7 @@ export function privateKeyAccount(
         privateKey,
       });
     },
-    // TODO: estimateGas fn
-    // TODO: sendBatchTransaction fn
-  } satisfies PrivateKeyAccount;
+  } satisfies LocalAccount;
 }
 
 export type MnemonicAccountOptions = {
@@ -158,37 +148,3 @@ export type MnemonicAccountOptions = {
    */
   mnemonic: string;
 };
-
-/**
- * @internal
- */
-export function viemToThirdwebAccount(
-  viemAccount: HDAccount | ViemPrivateKeyAccount,
-  client: ThirdwebClient,
-): Account {
-  const account = {
-    address: viemAccount.address,
-    sendTransaction: async (
-      // TODO: figure out how we would pass our "chain" object in here?
-      // maybe we *do* actually have to take in a tx object instead of the raw tx?
-      tx: TransactionSerializable & { chainId: number },
-    ) => {
-      const rpcRequest = getRpcClient({
-        client: client,
-        chain: defineChain(tx.chainId),
-      });
-      const signedTx = await viemAccount.signTransaction(tx);
-      const transactionHash = await eth_sendRawTransaction(
-        rpcRequest,
-        signedTx,
-      );
-      return {
-        transactionHash,
-      };
-    },
-    signTransaction: viemAccount.signTransaction,
-    signMessage: viemAccount.signMessage,
-    signTypedData: viemAccount.signTypedData,
-  };
-  return account;
-}

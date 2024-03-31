@@ -15,7 +15,11 @@ import type { Chain } from "../chains/types.js";
 import type { ThirdwebClient } from "../client/client.js";
 import { resolveContractAbi } from "../contract/actions/resolve-abi.js";
 import { getRpcUrlForChain } from "../chains/utils.js";
-import type { Account } from "../wallets/interfaces/wallet.js";
+import type {
+  Account,
+  JsonRpcAccount,
+  LocalAccount,
+} from "../wallets/interfaces/wallet.js";
 import { getRpcClient } from "../rpc/rpc.js";
 
 export const viemAdapter = {
@@ -162,7 +166,7 @@ function toViemPublicClient(options: ToViemPublicClientOptions): PublicClient {
 }
 
 type ToViemWalletClientOptions = {
-  account: Account;
+  account: JsonRpcAccount | LocalAccount;
   client: ThirdwebClient;
   chain: Chain;
 };
@@ -216,7 +220,7 @@ function toViemWalletClient(options: ToViemWalletClientOptions): WalletClient {
 
   return createWalletClient({
     transport,
-    account: account.address,
+    account: account.type === "local" ? account : account.address, // viem defaults to JsonRpcAccounts so we pass the whole account if it's locally generated
     chain: viemChain,
     key: "thirdweb-wallet",
   });

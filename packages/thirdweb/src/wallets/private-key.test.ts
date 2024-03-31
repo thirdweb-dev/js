@@ -16,6 +16,8 @@ test("default", () => {
       "signMessage": [Function],
       "signTransaction": [Function],
       "signTypedData": [Function],
+      "source": "privateKey",
+      "type": "local",
     }
   `);
 });

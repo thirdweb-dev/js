@@ -16,6 +16,7 @@ import type {
   WalletId,
 } from "../wallet-types.js";
 import type { WalletEmitter } from "../wallet-emitter.js";
+import type { Prettify } from "../../utils/type-utils.js";
 
 // TODO: add generic ID on wallet class, creation options, connect options etc
 
@@ -45,6 +46,7 @@ export type Wallet<TWalletId extends WalletId = WalletId> = {
 export type Account = {
   // REQUIRED
   address: Address;
+  type?: "local" | "json-rpc";
   sendTransaction: (
     tx: SendTransactionOption,
   ) => Promise<SendTransactionResult>;
@@ -63,3 +65,18 @@ export type Account = {
     txs: SendTransactionOption[],
   ) => Promise<SendTransactionResult>;
 };
+
+export type JsonRpcAccount = Prettify<
+  Account & {
+    type?: "json-rpc";
+  }
+>;
+
+export type LocalAccount = Prettify<
+  Account & {
+    publicKey: Hex;
+    type: "local";
+    source: string;
+    signTransaction: (tx: TransactionSerializable) => Promise<Hex>;
+  }
+>;
