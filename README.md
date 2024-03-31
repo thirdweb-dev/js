@@ -18,9 +18,6 @@
 
 <p align="center"><strong>All-in-one web3 SDK for Browser, Node and Mobile apps</strong></p>
 
-> [!IMPORTANT]  
-> We rewrote the thirdweb SDK from scratch for performance! Head over to the [v5 SDK](https://github.com/thirdweb-dev/js/tree/main/packages/thirdweb).
-
 ## Features
 
 - Support for React & React-Native
@@ -53,19 +50,6 @@
 | React Native Hooks                        | ✅       | ❌                 | ❌                 | ❌       |
 | React Native UI Components                | ✅       | ❌                 | ❌                 | ❌       |
 
-## Packages
-
-| Package                                         | Description                                                                 |
-| ----------------------------------------------- | --------------------------------------------------------------------------- |
-| [/sdk](./legacy_packages/sdk)                   | Best in class web3 SDK for Browser, Node and Mobile apps                    |
-| [/wallets](./legacy_packages/wallets)           | Unified web3 Wallet library to integrate any wallet into your applications. |
-| [/react](./legacy_packages/react)               | Ultimate collection of React hooks for your web3 apps                       |
-| [/react-native](./legacy_packages/react-native) | Ultimate collection of React hooks for your native mobile web3 apps         |
-| [/auth](./legacy_packages/auth)                 | Best in class wallet authentication for Node backends                       |
-| [/storage](./legacy_packages/storage)           | Best in class decentralized storage SDK for Browser and Node                |
-| [/cli](./legacy_packages/cli)                   | Publish and deploy smart contracts without dealing with private keys        |
-| [/chains](./legacy_packages/chains)             | All EVM chain information as JS objects for easy handling                   |
-
 ## Contributing
 
 We welcome contributions from all developers regardless of experience level. If you are interested in contributing, please read our [Contributing Guide](.github/contributing.md) to learn how the repo works, how to test your changes, and how to submit a pull request.
@@ -74,9 +58,9 @@ See our [open source page](https://thirdweb.com/open-source) for more informatio
 
 ## Additional Resources
 
-- [SDK Documentation](https://portal.thirdweb.com/typescript/v5)
+- [Documentation](https://portal.thirdweb.com/typescript/v5)
 - [Templates](https://thirdweb.com/templates)
-- [YouTube](https://www.youtube.com/c/thirdweb_)
+- [YouTube](https://www.youtube.com/c/thirdweb)
 
 ## Support
 
