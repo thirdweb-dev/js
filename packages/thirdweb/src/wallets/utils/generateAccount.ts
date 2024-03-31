@@ -9,14 +9,14 @@ export type GenerateAccountOptions = {
 };
 
 /**
- * Generates a new wallet with a random private key.
- * @param options - The options for generating the wallet.
- * @param options.client - The Thirdweb client to use for the generated wallet.
- * @returns A Thirdweb wallet.
+ * Generates a new account with a random private key.
+ * @param options - The options for generating the account.
+ * @param options.client - The Thirdweb client to use for the generated account.
+ * @returns A Thirdweb account.
  * @example
  * ```ts
  * import { generateAccount } from "thirdweb/wallets";
- * const wallet = await generateAccount({ client });
+ * const account = await generateAccount({ client });
  * ```
  * @walletUtils
  */
