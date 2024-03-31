@@ -6,53 +6,49 @@ import { deployERC1155Contract } from "./deploy-erc1155.js";
 import { name } from "../common/read/name.js";
 import { getContract } from "../../contract/contract.js";
 
-describe(
-  "deployERC1155",
-  {
-    retry: 0,
-  },
-  () => {
-    it("should deploy ERC1155 drop", async () => {
-      const address = await deployERC1155Contract({
+// skip this test suite if there is no secret key available to test with
+// TODO: remove reliance on secret key during unit tests entirely
+describe.runIf(process.env.TW_SECRET_KEY)("deployERC1155", () => {
+  it("should deploy ERC1155 drop", async () => {
+    const address = await deployERC1155Contract({
+      client: TEST_CLIENT,
+      chain: ANVIL_CHAIN,
+      account: TEST_ACCOUNT_A,
+      type: "DropERC1155",
+      params: {
+        name: "EditionDrop",
+        symbol: "NFTD",
+      },
+    });
+    expect(address).toBe("0xd91A47278829a0128D7212225FE74BC153A7FAF8");
+    const deployedName = await name({
+      contract: getContract({
         client: TEST_CLIENT,
         chain: ANVIL_CHAIN,
-        account: TEST_ACCOUNT_A,
-        type: "DropERC1155",
-        params: {
-          name: "EditionDrop",
-          symbol: "NFTD",
-        },
-      });
-      expect(address).toBe("0xd91A47278829a0128D7212225FE74BC153A7FAF8");
-      const deployedName = await name({
-        contract: getContract({
-          client: TEST_CLIENT,
-          chain: ANVIL_CHAIN,
-          address,
-        }),
-      });
-      expect(deployedName).toBe("EditionDrop");
+        address,
+      }),
     });
+    expect(deployedName).toBe("EditionDrop");
+  });
 
-    it("should deploy ERC1155 token", async () => {
-      const address = await deployERC1155Contract({
+  it("should deploy ERC1155 token", async () => {
+    const address = await deployERC1155Contract({
+      client: TEST_CLIENT,
+      chain: ANVIL_CHAIN,
+      account: TEST_ACCOUNT_A,
+      type: "TokenERC1155",
+      params: {
+        name: "Edition",
+      },
+    });
+    expect(address).toBe("0x7dD915A335Af52698bFFFE14D1D3F0DCfdC0a8E6");
+    const deployedName = await name({
+      contract: getContract({
         client: TEST_CLIENT,
         chain: ANVIL_CHAIN,
-        account: TEST_ACCOUNT_A,
-        type: "TokenERC1155",
-        params: {
-          name: "Edition",
-        },
-      });
-      expect(address).toBe("0x7dD915A335Af52698bFFFE14D1D3F0DCfdC0a8E6");
-      const deployedName = await name({
-        contract: getContract({
-          client: TEST_CLIENT,
-          chain: ANVIL_CHAIN,
-          address,
-        }),
-      });
-      expect(deployedName).toBe("Edition");
+        address,
+      }),
     });
-  },
-);
+    expect(deployedName).toBe("Edition");
+  });
+});
