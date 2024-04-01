@@ -4,21 +4,19 @@ import {
   type GetContractReturnType,
   type PublicClient,
   type Chain as ViemChain,
+  type Account as ViemAccount,
   type WalletClient,
   createWalletClient,
   custom,
   type TransactionSerializableEIP1559,
 } from "viem";
 import { getContract, type ThirdwebContract } from "../contract/contract.js";
-import type { Abi } from "abitype";
+import type { Abi, Address } from "abitype";
 import type { Chain } from "../chains/types.js";
 import type { ThirdwebClient } from "../client/client.js";
 import { resolveContractAbi } from "../contract/actions/resolve-abi.js";
 import { getRpcUrlForChain } from "../chains/utils.js";
-import {
-  type Account,
-  accountKeySymbol,
-} from "../wallets/interfaces/wallet.js";
+import { type Account, getAccountKey } from "../wallets/interfaces/wallet.js";
 import { getRpcClient } from "../rpc/rpc.js";
 import { secp256k1 } from "@noble/curves/secp256k1";
 import { toHex } from "../utils/encoding/hex.js";
@@ -220,14 +218,16 @@ function toViemWalletClient(options: ToViemWalletClientOptions): WalletClient {
   });
 
   // viem defaults to JsonRpcAccounts so we pass the whole account if it's locally generated
-  let viemAccountOrAddress;
-  if (account[accountKeySymbol]) {
+  let viemAccountOrAddress: ViemAccount | Address;
+  const possibleAccountKey = getAccountKey(account);
+  if (possibleAccountKey && account.signTransaction) {
     viemAccountOrAddress = {
       ...account,
+      signTransaction: account.signTransaction,
       source: "custom",
       type: "local" as const,
       publicKey: toHex(
-        secp256k1.getPublicKey(account[accountKeySymbol].slice(2), false),
+        secp256k1.getPublicKey(possibleAccountKey.slice(2), false),
       ),
     };
   } else {

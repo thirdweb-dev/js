@@ -42,9 +42,17 @@ export type Wallet<TWalletId extends WalletId = WalletId> = {
   getConfig: () => CreateWalletArgs<TWalletId>[1];
 };
 
-// Symbols to track account origins internally for downstream adapters
+// Symbols to track account key internally for downstream adapters
 // eslint-disable-next-line better-tree-shaking/no-top-level-side-effects
-export const accountKeySymbol: unique symbol = Symbol("key");
+const accountKeySymbol = Symbol("key");
+
+/**
+ * @internal
+ */
+export function getAccountKey(account: Account): Hex | undefined {
+  return account[accountKeySymbol];
+}
+
 export type Account = {
   // REQUIRED
   address: Address;
