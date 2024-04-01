@@ -21,6 +21,7 @@ import { PreDeployMetadataFetched } from "../schema/contracts/custom";
 import { Bytes, Interface } from "ethers/lib/utils";
 import { hashBytecode } from "zksync-ethers/build/utils";
 import { caches } from "./caches";
+import { DeploymentPreset } from "./types/deploy-data";
 
 export async function zkComputeDeploymentInfo(
   contractType: DeployedContractType,
@@ -30,7 +31,7 @@ export async function zkComputeDeploymentInfo(
   contractOptions?: ContractOptions,
   clientId?: string,
   secretKey?: string,
-): Promise<any> {
+): Promise<DeploymentPreset> {
   const contractName = contractOptions && contractOptions.contractName;
   const version = contractOptions && contractOptions.version;
   let publisherAddress = contractOptions && contractOptions.publisherAddress;
@@ -83,7 +84,6 @@ export async function zkComputeDeploymentInfo(
   let bytecodeHash;
   let bytecodePrefixed;
   if (!contractDeployed) {
-    const contractInterface = new Interface(metadata.abi);
     bytecodePrefixed = metadata.bytecode.startsWith("0x")
       ? metadata.bytecode
       : `0x${metadata.bytecode}`;
@@ -100,12 +100,11 @@ export async function zkComputeDeploymentInfo(
       predictedAddress: address,
       to: create2Factory,
       constructorCalldata: constructorCalldata,
-      bytecode: bytecodePrefixed,
-      bytecodeHash: bytecodeHash,
+      bytecode: bytecodePrefixed as string,
+      bytecodeHash: bytecodeHash as string,
       abi: metadata.abi,
       params: args.params,
     },
-    encodedArgs: args.encodedArgs,
   };
 }
 

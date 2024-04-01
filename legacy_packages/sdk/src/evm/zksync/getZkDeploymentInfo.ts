@@ -5,6 +5,7 @@ import { SINGLETON_FACTORY } from "./constants";
 import { caches } from "./caches";
 import { ConstructorParamMap } from "../types/any-evm/deploy-data";
 import { zkComputeDeploymentInfo } from "./zkComputeDeploymentInfo";
+import { DeploymentPreset } from "./types/deploy-data";
 
 /**
  *
@@ -25,7 +26,7 @@ export async function getZkDeploymentInfo(
   create2Factory?: string,
   clientId?: string,
   secretKey?: string,
-): Promise<any[]> {
+): Promise<DeploymentPreset[]> {
   caches.deploymentPresets = {};
   const create2FactoryAddress = create2Factory
     ? create2Factory
@@ -34,7 +35,7 @@ export async function getZkDeploymentInfo(
   const compilerMetadata = deployMetadata.compilerMetadata;
   const extendedMetadata = deployMetadata.extendedMetadata;
   const customParams: ConstructorParamMap = {};
-  const finalDeploymentInfo: any[] = [];
+  const finalDeploymentInfo: DeploymentPreset[] = [];
 
   const implementationDeployInfo = await zkComputeDeploymentInfo(
     "implementation",

@@ -13,6 +13,7 @@ import {
   getMarkerAbi,
   singletonDeployAbi,
 } from "./constants";
+import { PrecomputedDeploymentTransaction } from "./types/deploy-data";
 
 /**
  * Deploy a contract at a deterministic address, using Create2 method
@@ -27,7 +28,7 @@ import {
  */
 export async function zkDeployContractDeterministic(
   signer: Signer,
-  transaction: any,
+  transaction: PrecomputedDeploymentTransaction,
   options?: DeployOptions,
   gasLimit: number = 5_000_000,
 ) {
@@ -65,11 +66,6 @@ export async function zkDeployContractDeterministic(
     console.debug(
       `deploying contract via create2 factory at: ${transaction.predictedAddress}`,
     );
-
-    const tx: any = {
-      to: transaction.to,
-      data: transaction.data,
-    };
 
     const singleton = new Contract(
       transaction.to || "0xa51baf6a9c0ef5Db8C1898d5aDD92Bf3227d6088",
