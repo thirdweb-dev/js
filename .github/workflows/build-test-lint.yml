@@ -118,7 +118,7 @@ jobs:
       - run: pnpm test
 
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           files: ./packages/thirdweb/coverage/lcov.info
 
@@ -154,7 +154,7 @@ jobs:
       - run: pnpm test:legacy
 
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           files: ./legacy_packages/sdk/coverage/evm/lcov.info
 
