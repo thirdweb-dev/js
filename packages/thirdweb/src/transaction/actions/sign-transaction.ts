@@ -29,10 +29,10 @@ export type SignTransactionOptions = {
 export function signTransaction({
   transaction,
   privateKey,
-  // TODO: Setup more advanced transaction result typing
 }: SignTransactionOptions): Hex {
-  // We don't need to worry about sidecars yet since we're on an older version of viem
-  // TODO: Add eip4844 type check when upgrading viem past 2.8.0
+  if (transaction.type === "eip4844") {
+    transaction = { ...transaction, sidecars: false };
+  }
 
   const serializedTransaction = serializeTransaction(transaction);
 
