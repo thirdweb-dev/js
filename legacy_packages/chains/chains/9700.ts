@@ -6,22 +6,10 @@ export default {
     {
       "name": "Oort MainnetDev Scan",
       "url": "https://dev-scan.oortech.com",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://bafkreidrbvklkb52sgmg7cmy42fhf7vqpig7qj7bnrq24ijdwywkzr2tfy",
-        "width": 1440,
-        "height": 1440,
-        "format": "png"
-      }
+      "standard": "none"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://bafkreidrbvklkb52sgmg7cmy42fhf7vqpig7qj7bnrq24ijdwywkzr2tfy",
-    "width": 1440,
-    "height": 1440,
-    "format": "png"
-  },
   "infoURL": "https://oortech.com",
   "name": "Oort MainnetDev",
   "nativeCurrency": {
