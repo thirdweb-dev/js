@@ -134,6 +134,17 @@ export class HttpRpcClient {
     );
   }
 
+  async getUserOperationGasPrice(): Promise<{
+    maxFeePerGas: string;
+    maxPriorityFeePerGas: string;
+  }> {
+    await this.initializing;
+    return await this.userOpJsonRpcProvider.send(
+      "thirdweb_getUserOperationGasPrice",
+      [],
+    );
+  }
+
   async getUserOperationReceipt(userOpHash: string): Promise<any> {
     await this.initializing;
     return await this.userOpJsonRpcProvider.send(
