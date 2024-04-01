@@ -15,6 +15,6 @@
   },
   "devDependencies": {
     "ora": "^6.3.1",
-    "vite": "^5.2.6"
+    "vite": "^5.2.7"
   }
 }
