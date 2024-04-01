@@ -55,7 +55,9 @@ export async function zkVerify(
       const parsedMetadata = await fetchContractMetadata(metadataUri, storage);
       const zk_version =
         parsedMetadata.metadata.settings.zkVersion || zkVersion;
-      console.error("zk version not found");
+      if (!zk_version) {
+        console.error("zk version not found");
+      }
 
       compilerMetadata = {
         name: parsedMetadata.name,
