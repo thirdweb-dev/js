@@ -45,7 +45,7 @@
     "@thirdweb-dev/service-utils": "0.4.24",
     "@thirdweb-dev/storage": "2.0.12",
     "@thirdweb-dev/wallets": "^2.4.30",
-    "@vercel/og": "^0.5.20",
+    "@vercel/og": "^0.6.2",
     "airtable": "^0.12.2",
     "chakra-react-select": "^4.7.6",
     "color": "^4.2.3",
