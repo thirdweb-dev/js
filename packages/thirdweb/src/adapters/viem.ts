@@ -220,9 +220,7 @@ function toViemWalletClient(options: ToViemWalletClientOptions): WalletClient {
   // viem defaults to JsonRpcAccounts so we pass the whole account if it's locally generated
   let viemAccountOrAddress: ViemAccount | Address;
   const possibleAccountKey = getAccountKey(account);
-  console.log(possibleAccountKey);
   if (possibleAccountKey && account.signTransaction) {
-    console.log("HERE!");
     viemAccountOrAddress = {
       ...account,
       signTransaction: account.signTransaction,
