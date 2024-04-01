@@ -9,7 +9,11 @@ import type { ThirdwebClient } from "../client/client.js";
 import { defineChain } from "../chains/utils.js";
 import { getRpcClient } from "../rpc/rpc.js";
 import { eth_sendRawTransaction } from "../rpc/actions/eth_sendRawTransaction.js";
-import type { LocalAccount } from "./interfaces/wallet.js";
+import {
+  accountTypeSymbol,
+  type Account,
+  accountPublicKeySymbol,
+} from "./interfaces/wallet.js";
 import { toHex, type Hex } from "../utils/encoding/hex.js";
 import { secp256k1 } from "@noble/curves/secp256k1";
 import { signTransaction } from "../transaction/actions/sign-transaction.js";
@@ -64,20 +68,15 @@ export const privateKeyToAccount = privateKeyAccount;
  * ```
  * @wallet
  */
-export function privateKeyAccount(
-  options: PrivateKeyAccountOptions,
-): LocalAccount {
+export function privateKeyAccount(options: PrivateKeyAccountOptions): Account {
   const { client } = options;
   const privateKey = `0x${options.privateKey.replace(/^0x/, "")}` satisfies Hex;
 
   const publicKey = toHex(secp256k1.getPublicKey(privateKey.slice(2), false));
   const address = publicKeyToAddress(publicKey); // TODO: Implement publicKeyToAddress natively (will need checksumAddress downstream)
 
-  return {
+  const account = {
     address,
-    publicKey,
-    type: "local",
-    source: "privateKey",
     sendTransaction: async (
       // TODO: figure out how we would pass our "chain" object in here?
       // maybe we *do* actually have to take in a tx object instead of the raw tx?
@@ -122,5 +121,11 @@ export function privateKeyAccount(
         privateKey,
       });
     },
-  } satisfies LocalAccount;
+  };
+
+  return {
+    ...account,
+    [accountTypeSymbol]: "local" as const,
+    [accountPublicKeySymbol]: publicKey,
+  } satisfies Account;
 }

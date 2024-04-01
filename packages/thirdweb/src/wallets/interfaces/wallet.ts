@@ -43,10 +43,12 @@ export type Wallet<TWalletId extends WalletId = WalletId> = {
   getConfig: () => CreateWalletArgs<TWalletId>[1];
 };
 
+// Symbols to track account origins internally for downstream adapters
+export const accountTypeSymbol: unique symbol = Symbol("type");
+export const accountPublicKeySymbol: unique symbol = Symbol("publicKey");
 export type Account = {
   // REQUIRED
   address: Address;
-  type?: "local" | "json-rpc";
   sendTransaction: (
     tx: SendTransactionOption,
   ) => Promise<SendTransactionResult>;
@@ -64,19 +66,14 @@ export type Account = {
   sendBatchTransaction?: (
     txs: SendTransactionOption[],
   ) => Promise<SendTransactionResult>;
-};
-
-export type JsonRpcAccount = Prettify<
-  Account & {
-    type?: "json-rpc";
-  }
->;
-
-export type LocalAccount = Prettify<
-  Account & {
-    publicKey: Hex;
-    type: "local";
-    source: string;
-    signTransaction: (tx: TransactionSerializable) => Promise<Hex>;
-  }
->;
+} & (
+  | {
+      signTransaction: (tx: TransactionSerializable) => Promise<Hex>;
+      [accountTypeSymbol]: "local";
+      [accountPublicKeySymbol]: Hex;
+    }
+  | {
+      [accountTypeSymbol]?: never;
+      [accountPublicKeySymbol]?: never;
+    }
+);
