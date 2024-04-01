@@ -433,8 +433,8 @@ importers:
         specifier: ^5.7.2
         version: 5.7.2
       js-awe:
-        specifier: ^1.0.64
-        version: 1.0.64
+        specifier: ^1.0.65
+        version: 1.0.65
       tinybench:
         specifier: ^2.6.0
         version: 2.6.0
@@ -20045,8 +20045,8 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /js-awe@1.0.64:
-    resolution: {integrity: sha512-S09bxXn8b6qqPz5Et5Odnsk39FZiOdlJh6cCBYkxGNp+Ezg7ryBs8NizeNEv901sHzk4/i+WO1uYBPdiEBVGmg==}
+  /js-awe@1.0.65:
+    resolution: {integrity: sha512-eR1FTE7nnZMJUrma+tLEBEWj+ckY1+cRNJWIJuZg2Os0Dufc5UY7AILZlq7FnIu4JT6sueod8thM4SYAs5FZ5Q==}
     dependencies:
       fluture: 14.0.0
       jsonpath-plus: 7.2.0
