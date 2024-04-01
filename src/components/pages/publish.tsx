@@ -52,6 +52,8 @@ export const PublishWithVersionPage: React.FC<PublishWithVersionPageProps> = ({
     "",
   );
 
+  const availableVersions = allVersions.data?.map(({ version: v }) => v) || [];
+
   return (
     <Flex direction="column" gap={{ base: 6, md: 10 }}>
       <SimpleGrid
@@ -125,21 +127,24 @@ export const PublishWithVersionPage: React.FC<PublishWithVersionPageProps> = ({
           <Flex gap={3}>
             <Select
               onChange={(e) => {
-                trackEvent({
-                  category: "release-selector",
-                  action: "click",
-                  version_selected: e.target.value,
-                });
-                const pathName =
-                  e.target.value === allVersions.data?.[0].version
-                    ? `/${author}/${contractName}`
-                    : `/${author}/${contractName}/${e.target.value}`;
+                const val = e.target.value;
+                if (availableVersions.includes(val)) {
+                  trackEvent({
+                    category: "release-selector",
+                    action: "click",
+                    version_selected: val,
+                  });
+                  const pathName =
+                    val === allVersions.data?.[0].version
+                      ? `/${author}/${contractName}`
+                      : `/${author}/${contractName}/${val}`;
 
-                router.push(pathName);
+                  router.push(pathName);
+                }
               }}
               value={version}
             >
-              {(allVersions?.data || []).map(({ version: v }, idx) => (
+              {availableVersions.map((v, idx) => (
                 <option key={v} value={v}>
                   {v}
                   {idx === 0 ? " (latest)" : ""}

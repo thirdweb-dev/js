@@ -908,10 +908,13 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
             <Text>Choose a language:</Text>
             <Select
               onChange={(e) => {
-                router.push(
-                  `/${chainName}/${contractAddress}/code?environment=${e.target.value}`,
-                );
-                setEnvironment(e.target.value as CodeEnvironment);
+                const val = e.target.value;
+                if (isValidEnvironment(val)) {
+                  router.push(
+                    `/${chainName}/${contractAddress}/code?environment=${val}`,
+                  );
+                  setEnvironment(val);
+                }
               }}
               value={environment}
             >
@@ -948,6 +951,10 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
     </SimpleGrid>
   );
 };
+
+function isValidEnvironment(env: string): env is CodeEnvironment {
+  return ["javascript", "react", "react-native", "unity"].includes(env);
+}
 
 function filterData(
   data: SnippetApiResponse,

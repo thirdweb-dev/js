@@ -17,6 +17,7 @@ import { useRouter } from "next/router";
 import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FiFilePlus } from "react-icons/fi";
+import { getAddress } from "thirdweb";
 import { Button, FormErrorMessage, Heading, Text } from "tw-components";
 
 type ImportModalProps = {
@@ -55,10 +56,20 @@ export const ImportModal: React.FC<ImportModalProps> = (props) => {
           if (!chainId) {
             throw new Error("No chain ID");
           }
+          let contractAddress: string;
+
+          try {
+            contractAddress = getAddress(data.contractAddress);
+          } catch {
+            form.setError("contractAddress", {
+              message: "Invalid contract address",
+            });
+            return;
+          }
 
           try {
             const res = await fetch(
-              `https://contract.thirdweb.com/metadata/${chainId}/${data.contractAddress}`,
+              `https://contract.thirdweb.com/metadata/${chainId}/${contractAddress}`,
             );
             const json = await res.json();
 
@@ -83,25 +94,24 @@ export const ImportModal: React.FC<ImportModalProps> = (props) => {
               registry.isFetched &&
               registry.data?.find(
                 (c) =>
-                  c.address.toLowerCase() ===
-                  data.contractAddress.toLowerCase(),
+                  c.address.toLowerCase() === contractAddress.toLowerCase(),
               ) &&
               registry.isSuccess;
 
             if (isInRegistry) {
-              router.push(`/${chainSlug}/${data.contractAddress}`);
+              router.push(`/${chainSlug}/${contractAddress}`);
               setIsRedirecting(true);
               return;
             }
 
             addToDashboard.mutate(
               {
-                contractAddress: data.contractAddress,
+                contractAddress,
                 chainId,
               },
               {
                 onSuccess: () => {
-                  router.push(`/${chainSlug}/${data.contractAddress}`);
+                  router.push(`/${chainSlug}/${contractAddress}`);
                 },
                 onError: (err) => {
                   console.error(err);

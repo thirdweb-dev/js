@@ -93,12 +93,15 @@ export const EventsFeed: React.FC<EventsFeedProps> = ({ contractAddress }) => {
             w="50%"
             value={selectedEvent}
             onChange={(e) => {
-              const path =
-                e.target.value === "all"
-                  ? `/${chainSlug}/${contractAddress}/events`
-                  : `/${chainSlug}/${contractAddress}/events?event=${e.target.value}`;
-              router.push(path);
-              setSelectedEvent(e.target.value);
+              const val = e.target.value;
+              if (eventTypes.includes(val)) {
+                const path =
+                  e.target.value === "all"
+                    ? `/${chainSlug}/${contractAddress}/events`
+                    : `/${chainSlug}/${contractAddress}/events?event=${val}`;
+                router.push(path);
+                setSelectedEvent(val);
+              }
             }}
           >
             <option value="all">All</option>
