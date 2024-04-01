@@ -10,6 +10,7 @@ import { SiTwitter } from "@react-icons/all-files/si/SiTwitter";
 import type { ProfileMetadata } from "@thirdweb-dev/sdk";
 import { FiGlobe } from "react-icons/fi";
 import { LinkButton, TrackedIconButton } from "tw-components";
+import { hostnameEndsWith } from "../../../utils/url";
 
 const TRACKING_CATEGORY = "releaser-header";
 
@@ -30,7 +31,7 @@ export const PublisherSocials: React.FC<PublisherSocialsProps> = ({
         isExternal
         noIcon
         href={
-          publisherProfile.twitter.includes("twitter.com")
+          hostnameEndsWith(publisherProfile.twitter, "twitter.com")
             ? publisherProfile.twitter
             : `https://twitter.com/${publisherProfile.twitter}`
         }
@@ -60,7 +61,7 @@ export const PublisherSocials: React.FC<PublisherSocialsProps> = ({
         isExternal
         noIcon
         href={
-          publisherProfile.github.includes("github.com")
+          hostnameEndsWith(publisherProfile.github, "github.com")
             ? publisherProfile.github
             : `https://github.com/${publisherProfile.github}`
         }
@@ -91,7 +92,7 @@ export const PublisherSocials: React.FC<PublisherSocialsProps> = ({
         isExternal
         noIcon
         href={
-          publisherProfile.medium.includes("medium.com")
+          hostnameEndsWith(publisherProfile.medium, "medium.com")
             ? publisherProfile.medium
             : `https://medium.com/@${publisherProfile.medium}`
         }
@@ -108,7 +109,7 @@ export const PublisherSocials: React.FC<PublisherSocialsProps> = ({
         isExternal
         noIcon
         href={
-          publisherProfile.telegram.includes("t.me")
+          hostnameEndsWith(publisherProfile.telegram, "t.me")
             ? publisherProfile.telegram
             : `https://t.me/${publisherProfile.telegram}`
         }
@@ -138,7 +139,7 @@ export const PublisherSocials: React.FC<PublisherSocialsProps> = ({
         isExternal
         noIcon
         href={
-          publisherProfile.reddit.includes("reddit.com")
+          hostnameEndsWith(publisherProfile.reddit, "reddit.com")
             ? publisherProfile.reddit
             : `https://reddit.com/user/${publisherProfile.reddit}`
         }
@@ -155,7 +156,7 @@ export const PublisherSocials: React.FC<PublisherSocialsProps> = ({
         isExternal
         noIcon
         href={
-          publisherProfile.linkedin.includes("linkedin.com")
+          hostnameEndsWith(publisherProfile.linkedin, "linkedin.com")
             ? publisherProfile.linkedin
             : `https://linkedin.com/in/${publisherProfile.linkedin}`
         }

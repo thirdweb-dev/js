@@ -1,5 +1,6 @@
 import { Chain, getValidChainRPCs } from "@thirdweb-dev/chains";
 import { DASHBOARD_THIRDWEB_CLIENT_ID, isProd } from "constants/rpc";
+import { hostnameEndsWith } from "../utils/url";
 
 export function getDashboardChainRpc(chain: Chain) {
   try {
@@ -9,7 +10,7 @@ export function getDashboardChainRpc(chain: Chain) {
       "http",
     )[0];
     // based on the environment hit dev or production
-    if (rpcUrl.includes("rpc.thirdweb.com")) {
+    if (hostnameEndsWith(rpcUrl, "rpc.thirdweb.com")) {
       if (!isProd) {
         return rpcUrl.replace("rpc.thirdweb.com", "rpc.thirdweb-dev.com");
       }

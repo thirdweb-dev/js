@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { hostnameEndsWith } from "../utils/url";
 
 // Neynar's api
 const apiUrl = "https://api.neynar.com";
@@ -10,7 +11,9 @@ const validateMessageSchema = z.object({
 });
 
 export const untrustedMetaDataSchema = z.object({
-  url: z.string().startsWith("https://thirdweb.com"),
+  url: z.string().refine((url) => {
+    return hostnameEndsWith(url, "thirdweb.com");
+  }),
 });
 
 export class Warpcast {
