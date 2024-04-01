@@ -913,6 +913,7 @@ export function useContractEvents(abi: Abi) {
   return abi ? extractEventsFromAbi(abi) : undefined;
 }
 
+// TODO: this points to very old snippets, we need to update this!
 export function useFeatureContractCodeSnippetQuery(language: string) {
   if (language === "javascript") {
     language = "sdk";
@@ -923,6 +924,12 @@ export function useFeatureContractCodeSnippetQuery(language: string) {
   }
 
   return useQuery(["feature-code-snippet", language], async () => {
+    // only allow specific languages
+    if (
+      ["go", "python", "react", "sdk", "unity"].includes(language) === false
+    ) {
+      throw new Error("Invalid language");
+    }
     const res = await fetch(
       `https://raw.githubusercontent.com/thirdweb-dev/docs/main/docs/feature_snippets_${language}.json`,
     );
