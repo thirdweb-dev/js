@@ -16,7 +16,6 @@ import type {
   WalletId,
 } from "../wallet-types.js";
 import type { WalletEmitter } from "../wallet-emitter.js";
-import type { Prettify } from "../../utils/type-utils.js";
 
 // TODO: add generic ID on wallet class, creation options, connect options etc
 
@@ -44,8 +43,8 @@ export type Wallet<TWalletId extends WalletId = WalletId> = {
 };
 
 // Symbols to track account origins internally for downstream adapters
-export const accountTypeSymbol: unique symbol = Symbol("type");
-export const accountPublicKeySymbol: unique symbol = Symbol("publicKey");
+// eslint-disable-next-line better-tree-shaking/no-top-level-side-effects
+export const accountKeySymbol: unique symbol = Symbol("key");
 export type Account = {
   // REQUIRED
   address: Address;
@@ -68,12 +67,11 @@ export type Account = {
   ) => Promise<SendTransactionResult>;
 } & (
   | {
+      // if a private key account, signTransaction will be defined and an accountKeySymbol assigned
       signTransaction: (tx: TransactionSerializable) => Promise<Hex>;
-      [accountTypeSymbol]: "local";
-      [accountPublicKeySymbol]: Hex;
+      [accountKeySymbol]: Hex;
     }
   | {
-      [accountTypeSymbol]?: never;
-      [accountPublicKeySymbol]?: never;
+      [accountKeySymbol]?: never;
     }
 );

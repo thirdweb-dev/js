@@ -15,8 +15,7 @@ test("default", () => {
       "signMessage": [Function],
       "signTransaction": [Function],
       "signTypedData": [Function],
-      Symbol(type): "local",
-      Symbol(publicKey): "0x048318535b54105d4a7aae60c08fc45f9687181b4fdfc625bd1a753fa7397fed753547f11ca8696646f2f3acb08e31016afac23e630c5d11f59f61fef57b0d2aa5",
+      Symbol(key): "${ANVIL_PKEY_A}",
     }
   `);
 });
@@ -39,9 +38,13 @@ test("sign transaction", async () => {
     client: TEST_CLIENT,
   });
 
-  expect(account.signTransaction).toBeDefined();
+  if (!account.signTransaction) {
+    // throwing an error instead of testing for a definition to make the TS compiler happy on the subsequent expect
+    throw new Error("signTransaction should be defined for local accounts");
+  }
+
   expect(
-    await account.signTransaction!({
+    await account.signTransaction({
       chainId: 1,
       maxFeePerGas: toUnits("20", 9),
       gas: 21000n,

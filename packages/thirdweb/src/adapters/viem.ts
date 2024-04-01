@@ -16,11 +16,12 @@ import type { ThirdwebClient } from "../client/client.js";
 import { resolveContractAbi } from "../contract/actions/resolve-abi.js";
 import { getRpcUrlForChain } from "../chains/utils.js";
 import {
-  accountTypeSymbol,
-  accountPublicKeySymbol,
   type Account,
+  accountKeySymbol,
 } from "../wallets/interfaces/wallet.js";
 import { getRpcClient } from "../rpc/rpc.js";
+import { secp256k1 } from "@noble/curves/secp256k1";
+import { toHex } from "../utils/encoding/hex.js";
 
 export const viemAdapter = {
   contract: {
@@ -220,12 +221,14 @@ function toViemWalletClient(options: ToViemWalletClientOptions): WalletClient {
 
   // viem defaults to JsonRpcAccounts so we pass the whole account if it's locally generated
   let viemAccountOrAddress;
-  if (account[accountTypeSymbol] === "local") {
+  if (account[accountKeySymbol]) {
     viemAccountOrAddress = {
       ...account,
       source: "custom",
-      type: account[accountTypeSymbol],
-      publicKey: account[accountPublicKeySymbol],
+      type: "local" as const,
+      publicKey: toHex(
+        secp256k1.getPublicKey(account[accountKeySymbol].slice(2), false),
+      ),
     };
   } else {
     viemAccountOrAddress = account.address;
