@@ -46,7 +46,8 @@ export default {
     "https://evm.humans.stakepool.dev.br",
     "https://mainnet-humans-evm.konsortech.xyz",
     "https://evm-rpc.mainnet.humans.zone",
-    "https://json-rpc.humans.bh.rocks"
+    "https://json-rpc.humans.bh.rocks",
+    "https://evm-rpc.humans.huginn.tech"
   ],
   "shortName": "humans",
   "slug": "humans-ai",
