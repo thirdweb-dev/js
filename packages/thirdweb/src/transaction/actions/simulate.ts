@@ -1,5 +1,5 @@
 import { decodeAbiParameters, formatTransactionRequest } from "viem";
-import type { Account, Wallet } from "../../wallets/interfaces/wallet.js";
+import type { Account } from "../../wallets/interfaces/wallet.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import type { PreparedTransaction } from "../prepare-transaction.js";
 import type { Abi, AbiFunction } from "abitype";

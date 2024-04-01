@@ -44,3 +44,17 @@ export {
   getAddress as predictAccountAddress,
   type GetAddressParams as PredictAccountAddressParams,
 } from "../../extensions/erc4337/__generated__/IAccountFactory/read/getAddress.js";
+
+// ENTRYPOINT
+
+export { accountDeployedEvent } from "../../extensions/erc4337/__generated__/IEntryPoint/events/AccountDeployed.js";
+export { userOperationEventEvent } from "../../extensions/erc4337/__generated__/IEntryPoint/events/UserOperationEvent.js";
+export { userOperationRevertReasonEvent } from "../../extensions/erc4337/__generated__/IEntryPoint/events/UserOperationRevertReason.js";
+export {
+  getUserOpHash,
+  type GetUserOpHashParams,
+} from "../../extensions/erc4337/__generated__/IEntryPoint/read/getUserOpHash.js";
+export {
+  simulateHandleOp,
+  type SimulateHandleOpParams,
+} from "../../extensions/erc4337/__generated__/IEntryPoint/write/simulateHandleOp.js";
