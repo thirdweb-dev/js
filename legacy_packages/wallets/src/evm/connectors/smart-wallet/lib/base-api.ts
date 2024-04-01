@@ -15,6 +15,7 @@ import {
 import { Transaction, getDynamicFeeData } from "@thirdweb-dev/sdk";
 import { HttpRpcClient } from "./http-rpc-client";
 import type { BaseApiParams, PaymasterAPI, UserOpOptions } from "../types";
+import { isTwUrl } from "../../../utils/url";
 
 const DUMMY_SIGNATURE =
   "0xfffffffffffffffffffffffffffffff0000000000000000000000000000000007aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1c";
@@ -191,24 +192,34 @@ export abstract class BaseAccountAPI {
           tx.encode(),
         );
     let { maxFeePerGas, maxPriorityFeePerGas } = info;
-    if (!maxFeePerGas || !maxPriorityFeePerGas) {
-      const feeData = await getDynamicFeeData(
-        this.provider as providers.JsonRpcProvider,
+    // get fees from bundler if available
+    if (isTwUrl(httpRpcClient.bundlerUrl)) {
+      const bundlerFeeData = await httpRpcClient.getUserOperationGasPrice();
+      maxFeePerGas = BigNumber.from(bundlerFeeData.maxFeePerGas);
+      maxPriorityFeePerGas = BigNumber.from(
+        bundlerFeeData.maxPriorityFeePerGas,
       );
-      if (!maxPriorityFeePerGas) {
-        maxPriorityFeePerGas = feeData.maxPriorityFeePerGas ?? undefined;
-      }
-      if (!maxFeePerGas) {
-        maxFeePerGas = feeData.maxFeePerGas ?? undefined;
-        const network = await this.provider.getNetwork();
-        const chainId = network.chainId;
+    } else {
+      // if bundler is not available, try to get fees from the network if not passed explicitly
+      if (!maxFeePerGas || !maxPriorityFeePerGas) {
+        const feeData = await getDynamicFeeData(
+          this.provider as providers.JsonRpcProvider,
+        );
+        if (!maxPriorityFeePerGas) {
+          maxPriorityFeePerGas = feeData.maxPriorityFeePerGas ?? undefined;
+        }
+        if (!maxFeePerGas) {
+          maxFeePerGas = feeData.maxFeePerGas ?? undefined;
+          const network = await this.provider.getNetwork();
+          const chainId = network.chainId;
 
-        if (
-          chainId === Celo.chainId ||
-          chainId === CeloAlfajoresTestnet.chainId ||
-          chainId === CeloBaklavaTestnet.chainId
-        ) {
-          maxPriorityFeePerGas = maxFeePerGas;
+          if (
+            chainId === Celo.chainId ||
+            chainId === CeloAlfajoresTestnet.chainId ||
+            chainId === CeloBaklavaTestnet.chainId
+          ) {
+            maxPriorityFeePerGas = maxFeePerGas;
+          }
         }
       }
     }
