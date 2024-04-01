@@ -1413,8 +1413,8 @@ importers:
         version: 3.22.4
     devDependencies:
       '@cloudflare/workers-types':
-        specifier: 4.20240320.1
-        version: 4.20240320.1
+        specifier: 4.20240329.0
+        version: 4.20240329.0
       '@preconstruct/cli':
         specifier: 2.7.0
         version: 2.7.0
@@ -6511,8 +6511,8 @@ packages:
       prettier: 2.8.8
     dev: false
 
-  /@cloudflare/workers-types@4.20240320.1:
-    resolution: {integrity: sha512-CiYtVpQURPgQqtBKkmOAnfPElVZuD7Xyf1IxKtKp2B4aB9gnooapwJhzeY8c4Ls4u17SgMS0MprOkrgYwzZ6xg==}
+  /@cloudflare/workers-types@4.20240329.0:
+    resolution: {integrity: sha512-AbzgvSQjG8Nci4xxQEcjTTVjiWXgOQnFIbIHtEZXteHiMGDXMWGegjWBo5JHGsZCq+U5V/SD5EnlypQnUQEoig==}
     dev: true
 
   /@codspeed/core@3.1.0:
