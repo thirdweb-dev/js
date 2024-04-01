@@ -62,12 +62,14 @@ export async function fetchPreDeployMetadata(
     metadataUri = rawMeta.metadataUri;
   }
 
-  const deployBytecode = await (await storage.download(bytecodeUri)).text();
-  const parsedMeta = await fetchContractMetadata(metadataUri, storage);
+  const [deployBytecode, parsedMeta] = await Promise.all([
+    storage.download(bytecodeUri),
+    fetchContractMetadata(metadataUri, storage),
+  ]);
 
   return PreDeployMetadataFetchedSchema.parse({
     ...rawMeta,
     ...parsedMeta,
-    bytecode: deployBytecode,
+    bytecode: await deployBytecode.text(),
   });
 }
