@@ -53,6 +53,13 @@ export function getAccountKey(account: Account): Hex | undefined {
   return account[accountKeySymbol];
 }
 
+/**
+ * @internal
+ */
+export function setAccountKey(account: Account, key: Hex) {
+  account[accountKeySymbol] = key;
+}
+
 export type Account = {
   // REQUIRED
   address: Address;
