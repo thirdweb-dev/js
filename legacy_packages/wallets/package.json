@@ -524,7 +524,7 @@
     "@coinbase/wallet-sdk": "^3.7.2",
     "@google-cloud/kms": "3.0.1",
     "@magic-ext/connect": "^6.7.2",
-    "@magic-ext/oauth": "^7.6.2",
+    "@magic-ext/oauth": "^22.0.3",
     "@magic-sdk/provider": "^13.6.2",
     "@metamask/eth-sig-util": "^4.0.1",
     "@paperxyz/embedded-wallet-service-sdk": "^1.2.5",

@@ -1222,8 +1222,8 @@ importers:
         specifier: ^6.7.2
         version: 6.7.2
       '@magic-ext/oauth':
-        specifier: ^7.6.2
-        version: 7.6.2
+        specifier: ^22.0.3
+        version: 22.0.3
       '@magic-sdk/provider':
         specifier: ^13.6.2
         version: 13.6.2(localforage@1.10.0)
@@ -1486,7 +1486,7 @@ importers:
         version: 7.0.0
       mipd:
         specifier: 0.0.7
-        version: 0.0.7
+        version: 0.0.7(typescript@5.4.3)
       node-libs-browser:
         specifier: 2.2.1
         version: 2.2.1
@@ -8520,10 +8520,10 @@ packages:
     deprecated: Connect extension has been merged to magic-sdk, please download the latest magic-sdk to unlock more features
     dev: false
 
-  /@magic-ext/oauth@7.6.2:
-    resolution: {integrity: sha512-yqQBdtkMouD+owAJkPlevLbal/iCREH/D3PmDW9a7Dsfjy2xs557oIpGkLSZexTIHd3Cxga9hWNpdqFukUfzYg==}
+  /@magic-ext/oauth@22.0.3:
+    resolution: {integrity: sha512-Wnre4iOTHyHPeaxdpaGwZAWqiAyTHadQHld6IfFcehVS3gKc96J674WEa3GFIvOFK5nEAJNkngh17KLly9HlZg==}
     dependencies:
-      '@magic-sdk/types': 11.6.2
+      crypto-js: 3.3.0
     dev: false
 
   /@magic-sdk/commons@9.6.2(@magic-sdk/provider@13.6.2)(@magic-sdk/types@11.6.2):
@@ -15680,6 +15680,10 @@ packages:
       randombytes: 2.1.0
       randomfill: 1.0.4
 
+  /crypto-js@3.3.0:
+    resolution: {integrity: sha512-DIT51nX0dCfKltpRiXV+/TVZq+Qq2NgF4644+K7Ttnla7zEzqc+kjJyiB96BHNyUTBxyjzRcZYpUdZa+QAqi6Q==}
+    dev: false
+
   /crypto-js@4.2.0:
     resolution: {integrity: sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==}
 
@@ -21559,13 +21563,15 @@ packages:
       yallist: 4.0.0
     dev: false
 
-  /mipd@0.0.7:
+  /mipd@0.0.7(typescript@5.4.3):
     resolution: {integrity: sha512-aAPZPNDQ3uMTdKbuO2YmAw2TxLHO0moa4YKAyETM/DTj5FloZo+a+8tU+iv4GmW+sOxKLSRwcSFuczk+Cpt6fg==}
     peerDependencies:
       typescript: '>=5.0.4'
     peerDependenciesMeta:
       typescript:
         optional: true
+    dependencies:
+      typescript: 5.4.3
     dev: false
 
   /mitata@0.1.11:
