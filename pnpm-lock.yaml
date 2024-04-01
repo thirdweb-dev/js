@@ -126,8 +126,8 @@ dependencies:
     specifier: ^3.12.0
     version: 3.12.0(next@14.1.4)(react-dom@18.2.0)(react@18.2.0)
   next-seo:
-    specifier: ^5.15.0
-    version: 5.15.0(next@14.1.4)(react-dom@18.2.0)(react@18.2.0)
+    specifier: ^6.5.0
+    version: 6.5.0(next@14.1.4)(react-dom@18.2.0)(react@18.2.0)
   papaparse:
     specifier: ^5.4.1
     version: 5.4.1
@@ -14423,8 +14423,8 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /next-seo@5.15.0(next@14.1.4)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-LGbcY91yDKGMb7YI+28n3g+RuChUkt6pXNpa8FkfKkEmNiJkeRDEXTnnjVtwT9FmMhG6NH8qwHTelGrlYm9rgg==}
+  /next-seo@6.5.0(next@14.1.4)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-MfzUeWTN/x/rsKp/1n0213eojO97lIl0unxqbeCY+6pAucViHDA8GSLRRcXpgjsSmBxfCFdfpu7LXbt4ANQoNQ==}
     peerDependencies:
       next: ^8.1.1-canary.54 || >=9.0.0
       react: '>=16.0.0'
