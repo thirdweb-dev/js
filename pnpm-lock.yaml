@@ -24,8 +24,8 @@ dependencies:
     specifier: ^2.1.2
     version: 2.1.2(@chakra-ui/styled-system@2.9.2)
   '@coinbase/onchainkit':
-    specifier: ^0.10.2
-    version: 0.10.2(@tanstack/react-query@4.36.1)(@xmtp/frames-validator@0.5.2)(graphql-request@6.1.0)(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(viem@2.9.5)
+    specifier: ^0.11.0
+    version: 0.11.0(@tanstack/react-query@4.36.1)(@xmtp/frames-validator@0.5.2)(graphql-request@6.1.0)(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(viem@2.9.5)
   '@emotion/react':
     specifier: ^11.11.4
     version: 11.11.4(@types/react@18.2.73)(react@18.2.0)
@@ -2089,8 +2089,8 @@ packages:
       react: 18.2.0
     dev: false
 
-  /@coinbase/onchainkit@0.10.2(@tanstack/react-query@4.36.1)(@xmtp/frames-validator@0.5.2)(graphql-request@6.1.0)(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(viem@2.9.5):
-    resolution: {integrity: sha512-7k0hngPb92eCI5hDFajeXp0hr/UVU5JTRPbqg5jAdQws3ew6TB1d59GJSSGJOc7vyDu+H9TEPq53T+Eu0cOk2A==}
+  /@coinbase/onchainkit@0.11.0(@tanstack/react-query@4.36.1)(@xmtp/frames-validator@0.5.2)(graphql-request@6.1.0)(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(viem@2.9.5):
+    resolution: {integrity: sha512-jplMmlADttZxlO6amMRTsTSxhj/HxfF1H/fflPvjxpe1NvX+ovJzI5oSvUsOg2rt1srGVJhlptlAtQA9HXVFbQ==}
     peerDependencies:
       '@tanstack/react-query': ^5
       '@xmtp/frames-validator': ^0.5.0
