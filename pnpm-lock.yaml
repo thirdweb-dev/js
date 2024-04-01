@@ -986,8 +986,8 @@ importers:
   legacy_packages/sdk:
     dependencies:
       '@eth-optimism/sdk':
-        specifier: 3.2.2
-        version: 3.2.2(ethers@5.7.2)
+        specifier: 3.2.3
+        version: 3.2.3(ethers@5.7.2)
       '@thirdweb-dev/chains':
         specifier: workspace:*
         version: link:../chains
@@ -7300,8 +7300,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@eth-optimism/sdk@3.2.2(ethers@5.7.2):
-    resolution: {integrity: sha512-P8YXAlh2lun0KZlwrw4FqmK4kNIoOOzI816XXhfkW3nMVADGRAru3TKSM74MgmEuyGiHrA9EoPRq1WLqUX4B0w==}
+  /@eth-optimism/sdk@3.2.3(ethers@5.7.2):
+    resolution: {integrity: sha512-e3XQTbbU+HTzsEv/VIsJpZifK6YZVlzEtF6tj/Vz/VIEDCjZk5JPcnCQOMVcs9ICI4EJyyur+y/+RU7fPa6qtg==}
     peerDependencies:
       ethers: ^5
     dependencies:
