@@ -1,4 +1,4 @@
-import { ContractFactory, Provider } from "zksync-ethers";
+import { Provider } from "zksync-ethers";
 import {
   ConstructorParamMap,
   ContractOptions,
@@ -18,7 +18,6 @@ import { extractConstructorParamsFromAbi } from "../common/feature-detection/ext
 import { getRoyaltyEngineV1ByChainId } from "../constants/royaltyEngine";
 import { getZkNativeTokenByChainId } from "./constants/addresses";
 import { PreDeployMetadataFetched } from "../schema/contracts/custom";
-import { Bytes, Interface } from "ethers/lib/utils";
 import { hashBytecode } from "zksync-ethers/build/utils";
 import { caches } from "./caches";
 import { DeploymentPreset } from "./types/deploy-data";
@@ -67,11 +66,7 @@ export async function zkComputeDeploymentInfo(
   const args = await encodeConstructorParamsForImplementation(
     metadata,
     provider,
-    storage,
-    create2Factory,
     contractOptions?.constructorParams,
-    clientId,
-    secretKey,
   );
   const address = zkComputeDeploymentAddress(
     metadata.bytecode,
@@ -117,11 +112,7 @@ export async function zkComputeDeploymentInfo(
 export async function encodeConstructorParamsForImplementation(
   compilerMetadata: PreDeployMetadataFetched,
   provider: Provider,
-  storage: ThirdwebStorage,
-  create2Factory: string,
   constructorParamMap?: ConstructorParamMap,
-  clientId?: string,
-  secretKey?: string,
 ): Promise<{ encodedArgs: BytesLike; params: any[] }> {
   const constructorParams = extractConstructorParamsFromAbi(
     compilerMetadata.abi,

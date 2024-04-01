@@ -8,58 +8,6 @@ import { isZkContractDeployed } from "./isZkContractDeployed";
 import { PUBLISHED_PRIVATE_KEY, SINGLETON_FACTORY } from "./constants";
 import { BytesLike, parseEther } from "ethers/lib/utils";
 import { zkSingletonFactoryArtifact } from "./temp-artifact/ZkSingletonFactory";
-import { ContractInterface, providers, utils } from "ethers";
-import { DeploymentType } from "zksync-ethers/build/types";
-import { CONTRACT_DEPLOYER, hashBytecode } from "zksync-ethers/build/utils";
-
-class ContractFactory extends ZkContractFactory {
-  constructor(
-    abi: ContractInterface,
-    bytecode: BytesLike,
-    signer: Wallet,
-    deploymentType?: DeploymentType,
-  ) {
-    super(abi, bytecode, signer, deploymentType);
-  }
-
-  // private encodeCalldata(salt: BytesLike, bytecodeHash: BytesLike, constructorCalldata: BytesLike) {
-  //     if (this.deploymentType == 'create') {
-  //         return CONTRACT_DEPLOYER.encodeFunctionData('create', [salt, bytecodeHash, constructorCalldata]);
-  //     } else if (this.deploymentType == 'createAccount') {
-  //         return CONTRACT_DEPLOYER.encodeFunctionData('createAccount', [
-  //             salt,
-  //             bytecodeHash,
-  //             constructorCalldata,
-  //             AccountAbstractionVersion.Version1
-  //         ]);
-  //     } else {
-  //         throw new Error(`Unsupported deployment type ${this.deploymentType}`);
-  //     }
-  // }
-
-  override getDeployTransaction(...args: any[]): providers.TransactionRequest {
-    const salt = utils.id("thirdweb");
-    const txRequest = super.getDeployTransaction(...args);
-
-    // Removing overrides
-    if (this.interface.deploy.inputs.length + 1 === args.length) {
-      args.pop();
-    }
-
-    // Salt argument is not used, so we provide a placeholder value.
-    const bytecodeHash = hashBytecode(this.bytecode);
-    const constructorCalldata = utils.arrayify(
-      this.interface.encodeDeploy(args),
-    );
-    txRequest.data = CONTRACT_DEPLOYER.encodeFunctionData("create2", [
-      salt,
-      bytecodeHash,
-      constructorCalldata,
-    ]);
-
-    return txRequest;
-  }
-}
 
 /**
  * Deploy ZkSyncSingletonFactory
@@ -90,7 +38,7 @@ export async function zkDeployCreate2Factory(signer: Signer): Promise<string> {
     });
   }
 
-  const create2FactoryDeploy = new ContractFactory(
+  const create2FactoryDeploy = new ZkContractFactory(
     zkSingletonFactoryArtifact.abi,
     zkSingletonFactoryArtifact.bytecode as BytesLike,
     create2Signer,

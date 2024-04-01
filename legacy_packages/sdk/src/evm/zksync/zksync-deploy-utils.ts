@@ -34,8 +34,6 @@ import { zkVerify } from "./zksync-verification";
 async function zkDeployViaAutoFactory(
   deployMetadata: DeployMetadata,
   signer: Signer,
-  initializerFunction: string,
-  paramValues: any[],
   storage: ThirdwebStorage,
   options?: DeployOptions,
   clientId?: string,
@@ -153,9 +151,6 @@ export async function zkDeployContractFromUri(
         implementationAddress = await zkDeployViaAutoFactory(
           { compilerMetadata, extendedMetadata },
           signer,
-          extendedMetadata.factoryDeploymentData
-            .implementationInitializerFunction,
-          paramValues,
           storage,
           options,
           clientId,

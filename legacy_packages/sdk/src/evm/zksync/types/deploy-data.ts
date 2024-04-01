@@ -1,6 +1,5 @@
-import { BytesLike, ContractInterface } from "ethers";
+import { ContractInterface } from "ethers";
 import { DeployedContractType } from "../../types/any-evm/deploy-data";
-import { Abi } from "../../schema/contracts/custom";
 
 export type PrecomputedDeploymentTransaction = {
   predictedAddress: string;

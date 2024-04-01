@@ -1,4 +1,4 @@
-import { BigNumber, utils, type PopulatedTransaction } from "ethers";
+import { utils } from "ethers";
 import invariant from "tiny-invariant";
 
 import { isZkContractDeployed } from "./isZkContractDeployed";

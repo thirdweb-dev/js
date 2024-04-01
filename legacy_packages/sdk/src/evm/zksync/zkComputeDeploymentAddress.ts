@@ -1,5 +1,4 @@
 import { type BytesLike, utils } from "ethers";
-import { getSaltHash } from "../common/any-evm-utils/getSaltHash";
 import { create2Address, hashBytecode } from "zksync-ethers/build/utils";
 
 /**

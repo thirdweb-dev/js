@@ -33,7 +33,6 @@ export async function getZkDeploymentInfo(
     : SINGLETON_FACTORY;
 
   const compilerMetadata = deployMetadata.compilerMetadata;
-  const extendedMetadata = deployMetadata.extendedMetadata;
   const customParams: ConstructorParamMap = {};
   const finalDeploymentInfo: DeploymentPreset[] = [];
 

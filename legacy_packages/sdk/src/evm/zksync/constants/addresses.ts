@@ -168,7 +168,7 @@ export function zkGetDefaultTrustedForwarders(
  */
 export function getZkNativeTokenByChainId(chainId: ChainId): NativeToken {
   return (
-    NATIVE_TOKENS[chainId as number] || {
+    NATIVE_TOKENS[chainId] || {
       name: "Ether",
       symbol: "ETH",
       decimals: 18,
