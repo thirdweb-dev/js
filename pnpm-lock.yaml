@@ -442,8 +442,8 @@ importers:
         specifier: 5.4.3
         version: 5.4.3
       viem:
-        specifier: 2.9.5
-        version: 2.9.5(typescript@5.4.3)(zod@3.22.4)
+        specifier: 2.9.6
+        version: 2.9.6(typescript@5.4.3)(zod@3.22.4)
 
   legacy_packages/generated-abis: {}
 
@@ -1486,7 +1486,7 @@ importers:
         version: 7.0.0
       mipd:
         specifier: 0.0.7
-        version: 0.0.7
+        version: 0.0.7(typescript@5.4.3)
       node-libs-browser:
         specifier: 2.2.1
         version: 2.2.1
@@ -1500,8 +1500,8 @@ importers:
         specifier: 0.1.2
         version: 0.1.2
       viem:
-        specifier: 2.9.5
-        version: 2.9.5(typescript@5.4.3)(zod@3.22.4)
+        specifier: 2.9.6
+        version: 2.9.6(typescript@5.4.3)(zod@3.22.4)
 
   packages/tw-tsconfig: {}
 
@@ -21559,13 +21559,15 @@ packages:
       yallist: 4.0.0
     dev: false
 
-  /mipd@0.0.7:
+  /mipd@0.0.7(typescript@5.4.3):
     resolution: {integrity: sha512-aAPZPNDQ3uMTdKbuO2YmAw2TxLHO0moa4YKAyETM/DTj5FloZo+a+8tU+iv4GmW+sOxKLSRwcSFuczk+Cpt6fg==}
     peerDependencies:
       typescript: '>=5.0.4'
     peerDependenciesMeta:
       typescript:
         optional: true
+    dependencies:
+      typescript: 5.4.3
     dev: false
 
   /mitata@0.1.11:
@@ -26483,8 +26485,8 @@ packages:
       semver: 7.6.0
     dev: true
 
-  /viem@2.9.5(typescript@5.4.3)(zod@3.22.4):
-    resolution: {integrity: sha512-IKLmGZJEQkdt9fqvryjR+W1FsPZM+dhALT0pwR8xhBOLvVHM0/lEViGRWDpm2ArNsFszipFhc2EpKp80/PnXkw==}
+  /viem@2.9.6(typescript@5.4.3)(zod@3.22.4):
+    resolution: {integrity: sha512-VVFWjGQei2wnWTvAB/xrIf22m6flCwxeBr8LnwejXMTSSi1EORWEswrw2lfKTmw3TlRPSG4uSiQMa/d0l0DKRg==}
     peerDependencies:
       typescript: '>=5.0.4'
     peerDependenciesMeta:
