@@ -44,7 +44,7 @@ export type Wallet<TWalletId extends WalletId = WalletId> = {
 
 // Symbols to track account key internally for downstream adapters
 // eslint-disable-next-line better-tree-shaking/no-top-level-side-effects
-const accountKeySymbol = Symbol("key");
+const accountKeySymbol: unique symbol = Symbol("key");
 
 /**
  * @internal
