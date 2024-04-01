@@ -1092,8 +1092,8 @@ importers:
         specifier: ^4.4.1
         version: 4.4.1
       deep-equal-in-any-order:
-        specifier: ^1.1.20
-        version: 1.1.20
+        specifier: ^2.0.6
+        version: 2.0.6
       dotenv-mono:
         specifier: ^1.3.14
         version: 1.3.14
@@ -15923,8 +15923,8 @@ packages:
     dependencies:
       type-detect: 4.0.8
 
-  /deep-equal-in-any-order@1.1.20:
-    resolution: {integrity: sha512-GTpQxcQx28KvV6ChrHb4AcL5z+eFEymtoSUaWe+FEakEpZ/66jTvz52xLUym/sK4Pn1sbYLsCV5rEURDeiFl3w==}
+  /deep-equal-in-any-order@2.0.6:
+    resolution: {integrity: sha512-RfnWHQzph10YrUjvWwhd15Dne8ciSJcZ3U6OD7owPwiVwsdE5IFSoZGg8rlwJD11ES+9H5y8j3fCofviRHOqLQ==}
     dependencies:
       lodash.mapvalues: 4.6.0
       sort-any: 2.0.0
@@ -17489,7 +17489,6 @@ packages:
     dependencies:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
-    bundledDependencies: false
 
   /event-emitter@0.3.5:
     resolution: {integrity: sha512-D9rRn9y7kLPnJ+hMq7S/nhvoKwwvVJahBi2BPmx3bvbsEdK3W9ii8cBSGjP+72/LnM4n6fo3+dkCX5FeTQruXA==}
