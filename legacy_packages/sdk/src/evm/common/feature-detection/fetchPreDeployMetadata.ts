@@ -28,7 +28,7 @@ export async function fetchPreDeployMetadata(
   if (compilerOptions && rawMeta.compilers) {
     let metadata;
     switch (compilerOptions.compilerType) {
-      case "solc":
+      case "solc": {
         if (compilerOptions.compilerVersion) {
           metadata = rawMeta.compilers.solc?.find(
             (m) =>
@@ -40,7 +40,8 @@ export async function fetchPreDeployMetadata(
           metadata = rawMeta.compilers.solc[len - 1];
         }
         break;
-      case "zksolc":
+      }
+      case "zksolc": {
         if (compilerOptions.compilerVersion) {
           metadata = rawMeta.compilers.zksolc?.find(
             (m) =>
@@ -52,6 +53,7 @@ export async function fetchPreDeployMetadata(
           metadata = rawMeta.compilers.zksolc[len - 1];
         }
         break;
+      }
     }
     invariant(metadata, "Compiler or EVM version not found");
 
