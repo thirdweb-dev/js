@@ -289,7 +289,7 @@ const AppFooter: React.FC = () => {
         <Text>Chainlist</Text>
       </TrackedLink>
       <Text alignSelf="center" order={{ base: 2, md: 0 }} opacity={0.5}>
-        thirdweb &copy; {new Date().getFullYear()}
+        Copyright &copy; {new Date().getFullYear()} thirdweb
       </Text>
     </GridItem>
   );
