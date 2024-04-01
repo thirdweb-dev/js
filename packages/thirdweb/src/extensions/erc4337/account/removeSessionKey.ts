@@ -8,6 +8,23 @@ export type RemoveSessionKeyOptions = {
   sessionKeyAddress: string;
 };
 
+/**
+ * Removes session key permissions for a specified address.
+ * @param options - The options for the removeSessionKey function.
+ * @returns The transaction object to be sent.
+ * @example
+ * ```
+ * import { removeSessionKey } from 'thirdweb/extensions/erc4337';
+ *
+ * const transaction = removeSessionKey({
+ * contract,
+ * account,
+ * sessionKeyAddress
+ * });
+ * await sendTransaction({ transaction, account });
+ * ```
+ * @extension ERC4337
+ */
 export async function removeSessionKey(
   options: BaseTransactionOptions<RemoveSessionKeyOptions>,
 ) {

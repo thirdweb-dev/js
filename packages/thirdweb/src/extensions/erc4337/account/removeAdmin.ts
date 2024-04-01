@@ -8,7 +8,24 @@ export type RemoveAdminOptions = {
   adminAddress: string;
 };
 
-export async function removeAdmin(
+/**
+ * Removes admin permissions for a specified address.
+ * @param options - The options for the removeAdmin function.
+ * @returns The transaction object to be sent.
+ * @example
+ * ```
+ * import { removeAdmin } from 'thirdweb/extensions/erc4337';
+ *
+ * const transaction = removeAdmin({
+ *  contract,
+ *  account,
+ *  adminAddress: '0x...'
+ * });
+ * await sendTransaction({ transaction, account });
+ * ```
+ * @extension ERC4337
+ */
+export function removeAdmin(
   options: BaseTransactionOptions<RemoveAdminOptions>,
 ) {
   const { contract, account, adminAddress } = options;

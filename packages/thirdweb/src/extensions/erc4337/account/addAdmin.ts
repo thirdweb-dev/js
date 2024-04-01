@@ -8,6 +8,23 @@ export type AddAdminOptions = {
   adminAddress: string;
 };
 
+/**
+ * Adds admin permissions for a specified address.
+ * @param options - The options for the addAdmin function.
+ * @returns The transaction object to be sent.
+ * @example
+ * ```
+ * import { addAdmin } from 'thirdweb/extensions/erc4337';
+ *
+ * const transaction = addAdmin({
+ * contract,
+ * account,
+ * adminAddress: '0x...'
+ * });
+ * await sendTransaction({ transaction, account });
+ * ```
+ * @extension ERC4337
+ */
 export async function addAdmin(
   options: BaseTransactionOptions<AddAdminOptions>,
 ) {
