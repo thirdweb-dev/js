@@ -555,8 +555,8 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       '@headlessui/react':
-        specifier: 1.7.6
-        version: 1.7.6(react-dom@18.2.0)(react@18.2.0)
+        specifier: 1.7.18
+        version: 1.7.18(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/colors':
         specifier: ^0.1.9
         version: 0.1.9
@@ -1486,7 +1486,7 @@ importers:
         version: 7.0.0
       mipd:
         specifier: 0.0.7
-        version: 0.0.7
+        version: 0.0.7(typescript@5.4.3)
       node-libs-browser:
         specifier: 2.2.1
         version: 2.2.1
@@ -8108,13 +8108,14 @@ packages:
     dependencies:
       '@hapi/hoek': 9.3.0
 
-  /@headlessui/react@1.7.6(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-yM/IOGCRaS/DaQRchElrTiH0jOfYWbBX5wkZTAbPDu4OMYdQ1ateM/UgApOcv+7DNpeRaMjUz4bZ4xxNgTGNLA==}
+  /@headlessui/react@1.7.18(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-4i5DOrzwN4qSgNsL4Si61VMkUcWbcSKueUV7sFhpHzQcSShdlHENE5+QBntMSRvHt8NyoFO2AGG8si9lq+w4zQ==}
     engines: {node: '>=10'}
     peerDependencies:
       react: ^16 || ^17 || ^18
       react-dom: ^16 || ^17 || ^18
     dependencies:
+      '@tanstack/react-virtual': 3.2.0(react-dom@18.2.0)(react@18.2.0)
       client-only: 0.0.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
@@ -12042,6 +12043,21 @@ packages:
     dependencies:
       '@tanstack/query-core': 5.28.9
       react: 18.2.0
+    dev: false
+
+  /@tanstack/react-virtual@3.2.0(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-OEdMByf2hEfDa6XDbGlZN8qO6bTjlNKqjM3im9JG+u3mCL8jALy0T/67oDI001raUUPh1Bdmfn4ZvPOV5knpcg==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      '@tanstack/virtual-core': 3.2.0
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /@tanstack/virtual-core@3.2.0:
+    resolution: {integrity: sha512-P5XgYoAw/vfW65byBbJQCw+cagdXDT/qH6wmABiLt4v4YBT2q2vqCOhihe+D1Nt325F/S/0Tkv6C5z0Lv+VBQQ==}
     dev: false
 
   /@thirdweb-dev/contracts@3.12.1:
@@ -21559,13 +21575,15 @@ packages:
       yallist: 4.0.0
     dev: false
 
-  /mipd@0.0.7:
+  /mipd@0.0.7(typescript@5.4.3):
     resolution: {integrity: sha512-aAPZPNDQ3uMTdKbuO2YmAw2TxLHO0moa4YKAyETM/DTj5FloZo+a+8tU+iv4GmW+sOxKLSRwcSFuczk+Cpt6fg==}
     peerDependencies:
       typescript: '>=5.0.4'
     peerDependenciesMeta:
       typescript:
         optional: true
+    dependencies:
+      typescript: 5.4.3
     dev: false
 
   /mitata@0.1.11:

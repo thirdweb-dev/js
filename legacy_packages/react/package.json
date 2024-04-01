@@ -104,7 +104,7 @@
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
     "@google/model-viewer": "^2.1.1",
-    "@headlessui/react": "1.7.6",
+    "@headlessui/react": "1.7.18",
     "@radix-ui/colors": "^0.1.9",
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-focus-scope": "^1.0.4",
