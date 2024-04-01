@@ -4,7 +4,13 @@ import { setPermissionsForSigner } from "../__generated__/IAccountPermissions/wr
 import { defaultPermissionsForAdmin, signPermissionRequest } from "./common.js";
 
 export type RemoveAdminOptions = {
+  /**
+   * The admin account that will perform the operation.
+   */
   account: Account;
+  /**
+   * The address to remove as an admin.
+   */
   adminAddress: string;
 };
 

@@ -2,14 +2,14 @@ import { universalCrypto } from "../crypto/aes/lib/universal-crypto.js";
 import { uint8ArrayToHex } from "./encoding/hex.js";
 
 /**
- * @intenal
+ * @internal
  */
 export async function uuid() {
   return (await universalCrypto()).randomUUID();
 }
 
 /**
- * @interal
+ * @internal
  */
 export async function randomBytes32() {
   return uint8ArrayToHex(

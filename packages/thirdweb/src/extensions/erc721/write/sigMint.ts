@@ -79,7 +79,7 @@ export async function generateMintSignature(
   }
 
   const startTime = mintRequest.validityStartTimestamp || new Date(0);
-  const endTime = mintRequest.validityEndTimestamp || tenYearsFromNow;
+  const endTime = mintRequest.validityEndTimestamp || tenYearsFromNow();
 
   const uid = mintRequest.uid || randomBytes32();
 

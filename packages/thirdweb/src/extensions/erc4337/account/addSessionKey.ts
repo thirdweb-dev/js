@@ -5,8 +5,17 @@ import { signPermissionRequest, toContractPermissions } from "./common.js";
 import type { AccountPermissions } from "./types.js";
 
 export type AddSessionKeyOptions = {
+  /**
+   * The adming account that will perform the operation.
+   */
   account: Account;
+  /**
+   * The address to add as a session key.
+   */
   sessionKeyAddress: string;
+  /**
+   * The permissions to assign to the session key.
+   */
   permissions: AccountPermissions;
 };
 
@@ -33,7 +42,7 @@ export type AddSessionKeyOptions = {
  * ```
  * @extension ERC4337
  */
-export async function addSessionKey(
+export function addSessionKey(
   options: BaseTransactionOptions<AddSessionKeyOptions>,
 ) {
   const { contract, sessionKeyAddress, account, permissions } = options;

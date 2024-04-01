@@ -36,7 +36,7 @@ export async function signPermissionRequest(options: {
 export async function toContractPermissions(options: {
   target: string;
   permissions: AccountPermissions;
-}) {
+}): Promise<SetPermissionsForSignerParams["req"]> {
   const { target, permissions } = options;
   return {
     approvedTargets:
@@ -50,10 +50,10 @@ export async function toContractPermissions(options: {
       permissions.permissionStartTimestamp || new Date(0),
     ),
     permissionEndTimestamp: dateToSeconds(
-      permissions.permissionEndTimestamp || tenYearsFromNow,
+      permissions.permissionEndTimestamp || tenYearsFromNow(),
     ),
     reqValidityStartTimestamp: 0n,
-    reqValidityEndTimestamp: dateToSeconds(tenYearsFromNow),
+    reqValidityEndTimestamp: dateToSeconds(tenYearsFromNow()),
     uid: await randomBytes32(),
     isAdmin: 0, // session key flag
     signer: target,
@@ -74,7 +74,7 @@ export async function defaultPermissionsForAdmin(options: {
     permissionStartTimestamp: 0n,
     permissionEndTimestamp: 0n,
     reqValidityStartTimestamp: 0n,
-    reqValidityEndTimestamp: dateToSeconds(tenYearsFromNow),
+    reqValidityEndTimestamp: dateToSeconds(tenYearsFromNow()),
     uid: await randomBytes32(),
     isAdmin: action === "add-admin" ? 1 : action === "remove-admin" ? 2 : 0,
     signer: target,

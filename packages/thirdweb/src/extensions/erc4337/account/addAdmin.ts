@@ -4,7 +4,13 @@ import { setPermissionsForSigner } from "../__generated__/IAccountPermissions/wr
 import { defaultPermissionsForAdmin, signPermissionRequest } from "./common.js";
 
 export type AddAdminOptions = {
+  /**
+   * The admin account that will perform the operation.
+   */
   account: Account;
+  /**
+   * The address to add as an admin.
+   */
   adminAddress: string;
 };
 
@@ -25,9 +31,7 @@ export type AddAdminOptions = {
  * ```
  * @extension ERC4337
  */
-export async function addAdmin(
-  options: BaseTransactionOptions<AddAdminOptions>,
-) {
+export function addAdmin(options: BaseTransactionOptions<AddAdminOptions>) {
   const { contract, account, adminAddress } = options;
   return setPermissionsForSigner({
     contract,

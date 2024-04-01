@@ -21,17 +21,10 @@ export type SimulateOptions<
     | {
         account: Account;
         from?: never;
-        wallet?: never;
       }
     | {
         account?: never;
         from?: string;
-        wallet?: never;
-      }
-    | {
-        account?: never;
-        from?: never;
-        wallet?: Wallet;
       }
   )
 >;
@@ -64,11 +57,7 @@ export async function simulateTransaction<
   // 1. the user specified from address
   // 2. the passed in account address
   // 3. the passed in wallet's account address
-  const from =
-    options.from ??
-    options.account?.address ??
-    options.wallet?.getAccount()?.address ??
-    undefined;
+  const from = options.from ?? options.account?.address ?? undefined;
 
   const serializedTx = formatTransactionRequest({
     data,

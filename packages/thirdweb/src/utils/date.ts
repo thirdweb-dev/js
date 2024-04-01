@@ -3,9 +3,9 @@ import { toBigInt } from "./bigint.js";
 /**
  * @internal
  */
-export const tenYearsFromNow = new Date(
-  Date.now() + 1000 * 60 * 60 * 24 * 365 * 10,
-); // 10 years
+export function tenYearsFromNow() {
+  return new Date(Date.now() + 1000 * 60 * 60 * 24 * 365 * 10); // 10 years
+}
 
 /**
  * @internal
