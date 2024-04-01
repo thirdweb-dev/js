@@ -31,7 +31,7 @@ export async function fetchAndCacheDeployMetadata(
       }_${compilerOptions.evmVersion || ""}
   `
     : "default";
-  const cacheKey = `${compiler} - ${publishMetadataUri}`;
+  const cacheKey = `${compiler}_${publishMetadataUri}`;
 
   const cached = deployMetadataCache.get(cacheKey);
   if (cached) {
