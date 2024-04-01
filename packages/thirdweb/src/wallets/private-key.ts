@@ -124,27 +124,3 @@ export function privateKeyAccount(
     },
   } satisfies LocalAccount;
 }
-
-export type MnemonicAccountOptions = {
-  /**
-   * A client is the entry point to the thirdweb SDK.
-   * It is required for all other actions.
-   * You can create a client using the `createThirdwebClient` function. Refer to the [Creating a Client](https://portal.thirdweb.com/typescript/v5/client) documentation for more information.
-   *
-   * You must provide a `clientId` or `secretKey` in order to initialize a client. Pass `clientId` if you want for client-side usage and `secretKey` for server-side usage.
-   *
-   * ```tsx
-   * import { createThirdwebClient } from "thirdweb";
-   *
-   * const client = createThirdwebClient({
-   *  clientId: "<your_client_id>",
-   * })
-   * ```
-   */
-  client: ThirdwebClient;
-
-  /**
-   * The mnemonic to use for the account.
-   */
-  mnemonic: string;
-};
