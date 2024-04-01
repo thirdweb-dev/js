@@ -27,7 +27,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "node ./scripts/pre-release.mjs && changeset publish",
+    "release": "node ./scripts/pre-release.mjs && turbo run update-version && turbo run build && changeset publish",
     "version-packages:nightly": "node scripts/pre-nightly.mjs && changeset version --snapshot nightly",
     "release:nightly": "node ./scripts/pre-release.mjs && turbo run update-version && turbo run build && changeset publish --tag nightly",
     "version-packages:next": "node scripts/pre-nightly.mjs && changeset version --snapshot next",
