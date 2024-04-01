@@ -179,9 +179,7 @@ const DashboardConnectPay: ThirdwebNextPage = () => {
   // Pay setting api key configuration
 
   if (!isLoggedIn) {
-    return (
-      <ConnectWalletPrompt description="manage Pay in Connect configuration" />
-    );
+    return <ConnectWalletPrompt description="manage your Pay configuration" />;
   }
 
   return (

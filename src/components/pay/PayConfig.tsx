@@ -6,6 +6,7 @@ import {
   FormHelperText,
   FormLabel,
   Heading,
+  Link,
   Text,
 } from "tw-components";
 import { ApiKey, useUpdateApiKey } from "@3rdweb-sdk/react/hooks/useApi";
@@ -102,7 +103,15 @@ export const PayConfig: React.FC<PayConfigProps> = ({ apiKey }) => {
             Fee Sharing
           </Heading>
           <Text size="label.md" as="h3">
-            thirdweb shares 30% of its base fee across all Pay features
+            thirdweb collects a 1% fee per end user transaction through Buy With
+            Crypto. We share 30% of this fee with you.{" "}
+            <Link
+              href="https://portal.thirdweb.com/connect/pay/fee-sharing"
+              isExternal
+              color="primary.500"
+            >
+              Learn more.
+            </Link>
           </Text>
         </Flex>
 
