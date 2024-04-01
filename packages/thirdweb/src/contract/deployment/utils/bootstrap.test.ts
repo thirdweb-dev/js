@@ -7,7 +7,9 @@ import { getDeployedCreate2Factory } from "./create-2-factory.js";
 import { getDeployedInfraContract } from "./infra.js";
 import { fail } from "assert";
 
-describe("bootstrap", () => {
+// skip this test suite if there is no secret key available to test with
+// TODO: remove reliance on secret key during unit tests entirely
+describe.runIf(process.env.TW_SECRET_KEY)("bootstrap", () => {
   it("should bootstrap onchain infra", async () => {
     await deployCloneFactory({
       chain: ANVIL_CHAIN,
