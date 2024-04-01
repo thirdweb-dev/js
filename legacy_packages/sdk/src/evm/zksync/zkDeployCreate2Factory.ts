@@ -3,14 +3,14 @@ import {
   Signer,
   Wallet,
   ContractFactory as ZkContractFactory,
-} from "zksync-web3";
+} from "zksync-ethers";
 import { isZkContractDeployed } from "./isZkContractDeployed";
 import { PUBLISHED_PRIVATE_KEY, SINGLETON_FACTORY } from "./constants";
 import { BytesLike, parseEther } from "ethers/lib/utils";
 import { zkSingletonFactoryArtifact } from "./temp-artifact/ZkSingletonFactory";
 import { ContractInterface, providers, utils } from "ethers";
-import { DeploymentType } from "zksync-web3/build/src/types";
-import { CONTRACT_DEPLOYER, hashBytecode } from "zksync-web3/build/src/utils";
+import { DeploymentType } from "zksync-ethers/build/types";
+import { CONTRACT_DEPLOYER, hashBytecode } from "zksync-ethers/build/utils";
 
 class ContractFactory extends ZkContractFactory {
   constructor(
@@ -38,7 +38,7 @@ class ContractFactory extends ZkContractFactory {
   // }
 
   override getDeployTransaction(...args: any[]): providers.TransactionRequest {
-    const salt = utils.id("salt1234");
+    const salt = utils.id("thirdweb");
     const txRequest = super.getDeployTransaction(...args);
 
     // Removing overrides

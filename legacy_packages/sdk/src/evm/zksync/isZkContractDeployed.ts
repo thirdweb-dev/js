@@ -1,4 +1,4 @@
-import { Provider } from "zksync-web3";
+import { Provider } from "zksync-ethers";
 
 /**
  * Check if a contract exists at the given address

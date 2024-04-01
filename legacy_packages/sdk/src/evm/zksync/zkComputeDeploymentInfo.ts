@@ -1,4 +1,4 @@
-import { ContractFactory, Provider } from "zksync-web3";
+import { ContractFactory, Provider } from "zksync-ethers";
 import {
   ConstructorParamMap,
   ContractOptions,
@@ -18,8 +18,8 @@ import { extractConstructorParamsFromAbi } from "../common/feature-detection/ext
 import { getRoyaltyEngineV1ByChainId } from "../constants/royaltyEngine";
 import { getZkNativeTokenByChainId } from "./constants/addresses";
 import { PreDeployMetadataFetched } from "../schema/contracts/custom";
-import { Interface } from "ethers/lib/utils";
-import { hashBytecode } from "zksync-web3/build/src/utils";
+import { Bytes, Interface } from "ethers/lib/utils";
+import { hashBytecode } from "zksync-ethers/build/utils";
 import { caches } from "./caches";
 
 export async function zkComputeDeploymentInfo(
@@ -63,7 +63,7 @@ export async function zkComputeDeploymentInfo(
     ).compilerMetadata;
   }
 
-  const encodedArgs = await encodeConstructorParamsForImplementation(
+  const args = await encodeConstructorParamsForImplementation(
     metadata,
     provider,
     storage,
@@ -74,22 +74,23 @@ export async function zkComputeDeploymentInfo(
   );
   const address = zkComputeDeploymentAddress(
     metadata.bytecode,
-    encodedArgs,
+    args.encodedArgs,
     create2Factory,
   );
   const contractDeployed = await isZkContractDeployed(address, provider);
 
   let constructorCalldata;
   let bytecodeHash;
+  let bytecodePrefixed;
   if (!contractDeployed) {
     const contractInterface = new Interface(metadata.abi);
-    const bytecodePrefixed = metadata.bytecode.startsWith("0x")
+    bytecodePrefixed = metadata.bytecode.startsWith("0x")
       ? metadata.bytecode
       : `0x${metadata.bytecode}`;
     bytecodeHash = `0x${Buffer.from(hashBytecode(bytecodePrefixed)).toString(
       "hex",
     )}`;
-    constructorCalldata = utils.arrayify(encodedArgs);
+    constructorCalldata = utils.arrayify(args.encodedArgs);
   }
 
   return {
@@ -99,9 +100,12 @@ export async function zkComputeDeploymentInfo(
       predictedAddress: address,
       to: create2Factory,
       constructorCalldata: constructorCalldata,
+      bytecode: bytecodePrefixed,
       bytecodeHash: bytecodeHash,
+      abi: metadata.abi,
+      params: args.params,
     },
-    encodedArgs,
+    encodedArgs: args.encodedArgs,
   };
 }
 
@@ -119,7 +123,7 @@ export async function encodeConstructorParamsForImplementation(
   constructorParamMap?: ConstructorParamMap,
   clientId?: string,
   secretKey?: string,
-): Promise<BytesLike> {
+): Promise<{ encodedArgs: BytesLike; params: any[] }> {
   const constructorParams = extractConstructorParamsFromAbi(
     compilerMetadata.abi,
   );
@@ -178,5 +182,5 @@ export async function encodeConstructorParamsForImplementation(
     constructorParamTypes,
     constructorParamValues,
   );
-  return encodedArgs;
+  return { encodedArgs, params: constructorParamValues };
 }

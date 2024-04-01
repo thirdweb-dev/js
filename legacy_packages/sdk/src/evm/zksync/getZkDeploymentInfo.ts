@@ -1,6 +1,6 @@
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { DeployMetadata } from "../types/deploy/deploy-options";
-import { Provider } from "zksync-web3";
+import { Provider } from "zksync-ethers";
 import { SINGLETON_FACTORY } from "./constants";
 import { caches } from "./caches";
 import { ConstructorParamMap } from "../types/any-evm/deploy-data";

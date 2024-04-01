@@ -2,8 +2,17 @@ import { BigNumber, utils, type PopulatedTransaction } from "ethers";
 import invariant from "tiny-invariant";
 
 import { isZkContractDeployed } from "./isZkContractDeployed";
-import { Contract, Signer } from "zksync-web3";
+import {
+  Contract,
+  Signer,
+  ContractFactory as ZkContractFactory,
+} from "zksync-ethers";
 import { DeployOptions } from "../types/deploy/deploy-options";
+import {
+  KNOWN_CODES_STORAGE,
+  getMarkerAbi,
+  singletonDeployAbi,
+} from "./constants";
 
 /**
  * Deploy a contract at a deterministic address, using Create2 method
@@ -20,7 +29,7 @@ export async function zkDeployContractDeterministic(
   signer: Signer,
   transaction: any,
   options?: DeployOptions,
-  gasLimit: number = 7000000,
+  gasLimit: number = 5_000_000,
 ) {
   // Check if the implementation contract is already deployed
   invariant(signer.provider, "Provider required");
@@ -30,6 +39,29 @@ export async function zkDeployContractDeterministic(
   );
 
   if (!contractDeployed) {
+    // check if bytecodehash is known
+    const kcs = new Contract(KNOWN_CODES_STORAGE, getMarkerAbi, signer);
+    const marker = await kcs.getMarker(transaction.bytecodeHash);
+    const parsedMarker = marker.toString();
+
+    // if not known, deploy once directly (create, not create2)
+    if (parsedMarker !== "1") {
+      try {
+        const implFactory = new ZkContractFactory(
+          transaction.abi,
+          transaction.bytecode,
+          signer,
+          "create",
+        );
+        console.debug(`Bytecodehash not known. Deploying contract directly.`);
+        const impl = await implFactory.deploy(...transaction.params);
+        await impl.deployed();
+      } catch (e) {
+        throw new Error("Error deploying directly.");
+      }
+    }
+
+    // deploy again with create2
     console.debug(
       `deploying contract via create2 factory at: ${transaction.predictedAddress}`,
     );
@@ -39,30 +71,34 @@ export async function zkDeployContractDeterministic(
       data: transaction.data,
     };
 
-    const singletonAbi = [
-      "function deploy(bytes32,bytes32,bytes) external payable",
-    ];
-
     const singleton = new Contract(
       transaction.to || "0xa51baf6a9c0ef5Db8C1898d5aDD92Bf3227d6088",
-      singletonAbi,
+      singletonDeployAbi,
       signer,
     );
 
-    const deployTx = await singleton.deploy(
-      utils.id("thirdweb"),
-      transaction.bytecodeHash,
-      transaction.constructorCalldata,
-    );
-
-    // try {
-    //   await signer.estimateGas(tx);
-    // } catch (e) {
-    //   console.debug("error estimating gas while deploying prebuilt: ", e);
-    //   tx.gasLimit = BigNumber.from(gasLimit);
-    // }
-    // options?.notifier?.("deploying", "preset");
-    // await (await signer.sendTransaction(tx)).wait();
-    // options?.notifier?.("deployed", "preset");
+    options?.notifier?.("deploying", "preset");
+    try {
+      await singleton.deploy(
+        utils.id("thirdweb"),
+        transaction.bytecodeHash,
+        transaction.constructorCalldata,
+      );
+      options?.notifier?.("deployed", "preset");
+    } catch (e: any) {
+      if (e.toString().includes(`method="estimateGas"`)) {
+        await singleton.deploy(
+          utils.id("thirdweb"),
+          transaction.bytecodeHash,
+          transaction.constructorCalldata,
+          {
+            gasLimit,
+          },
+        );
+        options?.notifier?.("deployed", "preset");
+      } else {
+        console.debug("error estimating gas while deploying prebuilt: ", e);
+      }
+    }
   }
 }

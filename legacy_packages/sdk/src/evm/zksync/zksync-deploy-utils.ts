@@ -2,7 +2,7 @@ import {
   Provider,
   ContractFactory as ZkContractFactory,
   type Signer as ZkSigner,
-} from "zksync-web3";
+} from "zksync-ethers";
 import { twProxyArtifactZK } from "./temp-artifact/TWProxy";
 import { fetchAndCacheDeployMetadata } from "../common/any-evm-utils/fetchAndCacheDeployMetadata";
 import { convertParamValues } from "../common/any-evm-utils/convertParamValues";
@@ -149,7 +149,8 @@ export async function zkDeployContractFromUri(
           initializerParamTypes,
           constructorParamValues,
         );
-        implementationAddress = zkDeployViaAutoFactory(
+
+        implementationAddress = await zkDeployViaAutoFactory(
           { compilerMetadata, extendedMetadata },
           signer,
           extendedMetadata.factoryDeploymentData
@@ -311,7 +312,7 @@ async function registerContractOnMultiChainRegistry(
     });
     return true;
   } catch (e) {
-    console.log("Error registering contract on multi chain registry", e);
+    console.debug("Error registering contract on multi chain registry", e);
     return false;
   }
 }

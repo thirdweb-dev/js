@@ -1,6 +1,6 @@
 import { type BytesLike, utils } from "ethers";
 import { getSaltHash } from "../common/any-evm-utils/getSaltHash";
-import { create2Address, hashBytecode } from "zksync-web3/build/src/utils";
+import { create2Address, hashBytecode } from "zksync-ethers/build/utils";
 
 /**
  * Pre-compute a contract's deployment address for a CREATE2 deployment.

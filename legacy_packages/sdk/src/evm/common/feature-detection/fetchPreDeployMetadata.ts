@@ -29,18 +29,28 @@ export async function fetchPreDeployMetadata(
     let metadata;
     switch (compilerOptions.compilerType) {
       case "solc":
-        metadata = rawMeta.compilers.solc?.find(
-          (m) =>
-            m.compilerVersion === compilerOptions.compilerVersion &&
-            m.evmVersion === compilerOptions.evmVersion,
-        );
+        if (compilerOptions.compilerVersion) {
+          metadata = rawMeta.compilers.solc?.find(
+            (m) =>
+              m.compilerVersion === compilerOptions.compilerVersion &&
+              m.evmVersion === compilerOptions.evmVersion,
+          );
+        } else if (rawMeta.compilers.solc) {
+          const len = rawMeta.compilers.solc.length;
+          metadata = rawMeta.compilers.solc[len - 1];
+        }
         break;
       case "zksolc":
-        metadata = rawMeta.compilers.zksolc?.find(
-          (m) =>
-            m.compilerVersion === compilerOptions.compilerVersion &&
-            m.evmVersion === compilerOptions.evmVersion,
-        );
+        if (compilerOptions.compilerVersion) {
+          metadata = rawMeta.compilers.zksolc?.find(
+            (m) =>
+              m.compilerVersion === compilerOptions.compilerVersion &&
+              m.evmVersion === compilerOptions.evmVersion,
+          );
+        } else if (rawMeta.compilers.zksolc) {
+          const len = rawMeta.compilers.zksolc.length;
+          metadata = rawMeta.compilers.zksolc[len - 1];
+        }
         break;
     }
     invariant(metadata, "Compiler or EVM version not found");
