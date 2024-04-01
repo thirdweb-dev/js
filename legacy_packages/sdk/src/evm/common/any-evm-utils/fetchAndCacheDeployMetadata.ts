@@ -25,7 +25,7 @@ export async function fetchAndCacheDeployMetadata(
   storage: ThirdwebStorage,
   compilerOptions?: CompilerOptions,
 ): Promise<DeployMetadata> {
-  let compiler = compilerOptions
+  const compiler = compilerOptions
     ? `${compilerOptions.compilerType}_${
         compilerOptions.compilerVersion || ""
       }_${compilerOptions.evmVersion || ""}

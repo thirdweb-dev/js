@@ -140,7 +140,7 @@ export async function encodeConstructorParamsForImplementation(
       }
       if (p.name && p.name.includes("nativeTokenWrapper")) {
         const chainId = (await provider.getNetwork()).chainId;
-        let nativeTokenWrapperAddress =
+        const nativeTokenWrapperAddress =
           getZkNativeTokenByChainId(chainId).wrapped.address;
         return nativeTokenWrapperAddress;
       } else if (p.name && p.name.includes("royaltyEngineAddress")) {

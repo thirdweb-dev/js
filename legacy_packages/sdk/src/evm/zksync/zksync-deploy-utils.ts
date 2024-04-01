@@ -8,18 +8,20 @@ import { fetchAndCacheDeployMetadata } from "../common/any-evm-utils/fetchAndCac
 import { convertParamValues } from "../common/any-evm-utils/convertParamValues";
 import { extractConstructorParamsFromAbi } from "../common/feature-detection/extractConstructorParamsFromAbi";
 import { extractFunctionParamsFromAbi } from "../common/feature-detection/extractFunctionParamsFromAbi";
-import { type BytesLike, Contract, type Signer, utils, Wallet } from "ethers";
+import { type BytesLike, Contract, type Signer, utils } from "ethers";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import type {
   DeployMetadata,
   DeployOptions,
 } from "../types/deploy/deploy-options";
-import { ThirdwebSDK } from "../core/sdk";
 import { blockExplorerApiMap, getImplementation } from "./constants/addresses";
 import { DeploymentTransaction } from "../types/any-evm/deploy-data";
 import { zkDeployCreate2Factory } from "./zkDeployCreate2Factory";
 import { getZkDeploymentInfo } from "./getZkDeploymentInfo";
-import { zkDeployContractDeterministic } from "./zkDeployContractDeterministic";
+import {
+  registerContractOnMultiChainRegistry,
+  zkDeployContractDeterministic,
+} from "./zkDeployContractDeterministic";
 import invariant from "tiny-invariant";
 import { zkVerify } from "./zksync-verification";
 
@@ -70,7 +72,13 @@ async function zkDeployViaAutoFactory(
   // process txns one at a time
   for (const tx of transactionsforDirectDeploy) {
     try {
-      await zkDeployContractDeterministic(signer as ZkSigner, tx, options);
+      await zkDeployContractDeterministic(
+        signer as ZkSigner,
+        tx,
+        storage,
+        deployMetadata.compilerMetadata.metadataUri,
+        options,
+      );
     } catch (e) {
       console.debug(
         `Error deploying contract at ${tx.predictedAddress}`,
@@ -138,15 +146,6 @@ export async function zkDeployContractFromUri(
             .implementationInitializerFunction,
           `implementationInitializerFunction not set'`,
         );
-        const initializerParamTypes = extractFunctionParamsFromAbi(
-          compilerMetadata.abi,
-          extendedMetadata.factoryDeploymentData
-            .implementationInitializerFunction,
-        ).map((p) => p.type);
-        const paramValues = convertParamValues(
-          initializerParamTypes,
-          constructorParamValues,
-        );
 
         implementationAddress = await zkDeployViaAutoFactory(
           { compilerMetadata, extendedMetadata },
@@ -206,6 +205,18 @@ export async function zkDeployContractFromUri(
         chainId,
         compilerMetadata.metadataUri,
       );
+
+      // fire-and-forget verification, don't await
+      try {
+        zkVerify(
+          implementationAddress,
+          chainId,
+          blockExplorerApiMap[chainId],
+          "",
+          storage,
+          compilerMetadata.metadataUri,
+        );
+      } catch (e) {}
 
       deployedAddress = proxy.address;
     } else {
@@ -272,42 +283,4 @@ export async function getZkTransactionsForDeploy(): Promise<
     addresses: [],
   });
   return transactions;
-}
-
-async function registerContractOnMultiChainRegistry(
-  address: string,
-  chainId: number,
-  metadataURI: string,
-) {
-  try {
-    // random wallet is fine here, we're doing gasless calls
-    const wallet = Wallet.createRandom();
-    const sdk = ThirdwebSDK.fromPrivateKey(wallet.privateKey, "polygon", {
-      gasless: {
-        openzeppelin: {
-          relayerUrl:
-            "https://api.defender.openzeppelin.com/autotasks/dad61716-3624-46c9-874f-0e73f15f04d5/runs/webhook/7d6a1834-dd33-4b7b-8af4-b6b4719a0b97/FdHMqyF3p6MGHw6K2nkLsv",
-          relayerForwarderAddress: "0x409d530a6961297ece29121dbee2c917c3398659",
-        },
-        experimentalChainlessSupport: true,
-      },
-    });
-    const existingMeta = await sdk.multiChainRegistry.getContractMetadataURI(
-      chainId,
-      address,
-    );
-    if (existingMeta && existingMeta !== "") {
-      return true;
-    }
-    // add to multichain registry with metadata uri unlocks the contract on SDK/dashboard for everyone
-    await sdk.multiChainRegistry.addContract({
-      address,
-      chainId,
-      metadataURI,
-    });
-    return true;
-  } catch (e) {
-    console.debug("Error registering contract on multi chain registry", e);
-    return false;
-  }
 }
