@@ -59,6 +59,19 @@ jobs:
         with:
           directory: ./packages
 
+  e2e:
+    timeout-minutes: 15
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Setup & Install
+        uses: ./.github/composite-actions/install
+
+      # TODO actually run e2e tests
+
   benchmark:
     timeout-minutes: 15
     name: "Benchmarks"
