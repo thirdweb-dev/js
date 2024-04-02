@@ -1,11 +1,11 @@
-import { CrossCircledIcon } from "@radix-ui/react-icons";
+import { ChevronDownIcon, CrossCircledIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import { useWalletBalance } from "../../../../core/hooks/others/useWalletBalance.js";
 import { useActiveAccount } from "../../../../core/hooks/wallets/wallet-hooks.js";
 import { Skeleton } from "../../components/Skeleton.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Spinner } from "../../components/Spinner.js";
-import { Container, ModalHeader } from "../../components/basic.js";
+import { Container, Line, ModalHeader } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
 import { Input } from "../../components/formElements.js";
 import { useCustomTheme } from "../../design-system/CustomThemeProvider.js";
@@ -21,6 +21,9 @@ import {
 import { TokenIcon } from "../../components/TokenIcon.js";
 import type { TokenInfo } from "../defaultTokens.js";
 import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
+import { NetworkSelectorContent, ChainButton } from "../NetworkSelector.js";
+import { useChainQuery } from "../../../../core/hooks/others/useChainQuery.js";
+import { ChainIcon, fallbackChainIcon } from "../../components/ChainIcon.js";
 
 /**
  *
@@ -31,10 +34,16 @@ export function TokenSelector(props: {
   onBack: () => void;
   tokenList: TokenInfo[];
   chain: Chain;
+  chainSelection?: {
+    chains: Chain[];
+    select: (chain: Chain) => void;
+  };
 }) {
+  const [screen, setScreen] = useState<"base" | "select-chain">("base");
   const [input, setInput] = useState("");
   const activeAccount = useActiveAccount();
   const chain = props.chain;
+  const chainQuery = useChainQuery(chain);
 
   // if input is undefined, it loads the native token
   // otherwise it loads the token with given address
@@ -70,6 +79,35 @@ export function TokenSelector(props: {
       })
     : tokenList;
 
+  const { chainSelection } = props;
+
+  if (screen === "select-chain" && chainSelection) {
+    return (
+      <NetworkSelectorContent
+        showTabs={false}
+        onBack={() => setScreen("base")}
+        // pass swap supported chains
+        chains={chainSelection.chains}
+        closeModal={() => setScreen("base")}
+        networkSelector={{
+          renderChain(renderChainProps) {
+            return (
+              <ChainButton
+                chain={renderChainProps.chain}
+                confirming={false}
+                switchingFailed={false}
+                onClick={() => {
+                  chainSelection.select(renderChainProps.chain);
+                  setScreen("base");
+                }}
+              />
+            );
+          },
+        }}
+      />
+    );
+  }
+
   return (
     <Container
       animate="fadein"
@@ -79,86 +117,145 @@ export function TokenSelector(props: {
     >
       <Container p="lg">
         <ModalHeader onBack={props.onBack} title={locale.selectTokenTitle} />
-        <Spacer y="xl" />
-        <Input
-          placeholder={locale.searchToken}
-          variant="outline"
-          value={input}
-          onChange={(e) => {
-            setInput(e.target.value);
-          }}
-        />
       </Container>
 
-      {(filteredList.length > 0 || !input) && (
-        <Container
-          flex="column"
-          gap="xs"
-          p="md"
-          scrollY
-          style={{
-            paddingTop: 0,
-            paddingBottom: spacing.lg,
-            maxHeight: "400px",
-          }}
-        >
-          {!input && (
-            <SelectTokenButton
-              onClick={() => {
-                props.onTokenSelect(NATIVE_TOKEN);
-              }}
-              chain={props.chain}
-              token={NATIVE_TOKEN}
-            />
-          )}
+      <Line />
 
-          {filteredList.map((token) => {
-            return (
+      <Container
+        scrollY
+        style={{
+          maxHeight: "450px",
+        }}
+      >
+        <Spacer y="md" />
+
+        {props.chainSelection && (
+          <>
+            <Container px="lg">
+              <Text size="sm">Select Network</Text>
+              <Spacer y="xxs" />
+              <SelectTokenBtn
+                fullWidth
+                variant="secondary"
+                onClick={() => {
+                  setScreen("select-chain");
+                }}
+              >
+                <ChainIcon
+                  chain={chainQuery.data}
+                  size={iconSize.lg}
+                  fallbackImage={fallbackChainIcon}
+                />
+
+                {chainQuery.data ? (
+                  <Text color="primaryText" size="sm">
+                    {" "}
+                    {chainQuery.data.name}
+                  </Text>
+                ) : (
+                  <Skeleton height={fontSize.md} />
+                )}
+
+                <ChevronDownIcon
+                  width={iconSize.sm}
+                  height={iconSize.sm}
+                  style={{
+                    marginLeft: "auto",
+                  }}
+                />
+              </SelectTokenBtn>
+              <Spacer y="xl" />
+              <Text size="sm">Select Token</Text>
+            </Container>
+          </>
+        )}
+
+        <Container px="lg">
+          <Spacer y="xs" />
+          <Input
+            placeholder={locale.searchToken}
+            variant="outline"
+            value={input}
+            onChange={(e) => {
+              setInput(e.target.value);
+            }}
+          />
+        </Container>
+
+        <Spacer y="md" />
+
+        {(filteredList.length > 0 || !input) && (
+          <Container
+            flex="column"
+            gap="xs"
+            px="lg"
+            scrollY
+            style={{
+              paddingTop: 0,
+              paddingBottom: spacing.lg,
+              // maxHeight: props.chainSelection ? "300px" : "400px",
+            }}
+          >
+            {!input && (
               <SelectTokenButton
-                onClick={() => props.onTokenSelect(token)}
-                token={token}
-                key={token.address}
+                onClick={() => {
+                  props.onTokenSelect(NATIVE_TOKEN);
+                }}
                 chain={props.chain}
+                token={NATIVE_TOKEN}
               />
-            );
-          })}
-        </Container>
-      )}
+            )}
 
-      {filteredList.length === 0 && tokenQuery.isLoading && (
-        <Container
-          animate="fadein"
-          p="lg"
-          flex="column"
-          gap="md"
-          center="both"
-          style={{
-            minHeight: "200px",
-            paddingTop: 0,
-          }}
-          color="secondaryText"
-        >
-          <Spinner size="lg" color="accentText" />
-        </Container>
-      )}
+            {filteredList.map((token) => {
+              return (
+                <SelectTokenButton
+                  onClick={() => props.onTokenSelect(token)}
+                  token={token}
+                  key={token.address}
+                  chain={props.chain}
+                />
+              );
+            })}
+          </Container>
+        )}
 
-      {filteredList.length === 0 && !tokenQuery.isLoading && input && (
-        <Container
-          animate="fadein"
-          p="lg"
-          flex="column"
-          gap="md"
-          center="both"
-          style={{
-            minHeight: "200px",
-            paddingTop: 0,
-          }}
-          color="secondaryText"
-        >
-          <CrossCircledIcon width={iconSize.lg} height={iconSize.lg} />
-          {locale.noTokensFound}
-        </Container>
-      )}
+        {filteredList.length === 0 && tokenQuery.isLoading && (
+          <Container
+            animate="fadein"
+            p="lg"
+            flex="column"
+            gap="md"
+            center="both"
+            style={{
+              minHeight: "200px",
+              paddingTop: 0,
+            }}
+            color="secondaryText"
+          >
+            <Spinner size="lg" color="accentText" />
+          </Container>
+        )}
+
+        {filteredList.length === 0 && !tokenQuery.isLoading && input && (
+          <Container
+            animate="fadein"
+            p="lg"
+            flex="column"
+            gap="md"
+            center="both"
+            style={{
+              minHeight: "200px",
+              paddingTop: 0,
+            }}
+            color="secondaryText"
+          >
+            <CrossCircledIcon width={iconSize.lg} height={iconSize.lg} />
+            {locale.noTokensFound}
+          </Container>
+        )}
+
+        <Spacer y="md" />
+      </Container>
     </Container>
   );
 }
@@ -184,7 +281,7 @@ function SelectTokenButton(props: {
     <SelectTokenBtn fullWidth variant="secondary" onClick={props.onClick}>
       <TokenIcon token={props.token} chain={props.chain} size="lg" />
 
-      <Container flex="column" gap="xs">
+      <Container flex="column" gap="xxs">
         {tokenName ? (
           <Text size="sm" color="primaryText">
             {tokenName}
@@ -206,7 +303,7 @@ function SelectTokenButton(props: {
 const SelectTokenBtn = /* @__PURE__ */ styled(Button)(() => {
   const theme = useCustomTheme();
   return {
-    background: "transparent",
+    background: theme.colors.walletSelectorButtonHoverBg,
     justifyContent: "flex-start",
     gap: spacing.sm,
     padding: spacing.sm,

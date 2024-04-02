@@ -22,7 +22,6 @@ import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
 import { iconSize } from "../../../design-system/index.js";
 import { useDebouncedValue } from "../../../hooks/useDebouncedValue.js";
-import { ChainButton, NetworkSelectorContent } from "../../NetworkSelector.js";
 import type { SupportedTokens } from "../../defaultTokens.js";
 import { TokenSelector } from "../TokenSelector.js";
 import {
@@ -65,13 +64,7 @@ export function SwapScreen(props: {
   );
 }
 
-type Screen =
-  | "main"
-  | "select-from-token"
-  | "select-to-token"
-  | "select-from-chain"
-  | "select-to-chain"
-  | "confirmation";
+type Screen = "main" | "select-from-token" | "select-to-token" | "confirmation";
 
 /**
  *
@@ -188,6 +181,10 @@ export function SwapScreenContent(props: {
           setScreen("main");
         }}
         chain={fromChain}
+        chainSelection={{
+          chains: supportedChains,
+          select: (c) => setFromChain(c),
+        }}
       />
     );
   }
@@ -204,39 +201,9 @@ export function SwapScreenContent(props: {
           setScreen("main");
         }}
         chain={toChain}
-      />
-    );
-  }
-
-  if (screen === "select-from-chain" || screen === "select-to-chain") {
-    return (
-      <NetworkSelectorContent
-        showTabs={false}
-        onBack={() => setScreen("main")}
-        // pass swap supported chains
-        chains={supportedChains}
-        closeModal={() => setScreen("main")}
-        networkSelector={{
-          renderChain(renderChainProps) {
-            return (
-              <ChainButton
-                chain={renderChainProps.chain}
-                confirming={false}
-                switchingFailed={false}
-                onClick={() => {
-                  const chain = renderChainProps.chain;
-                  if (screen === "select-from-chain") {
-                    setFromChain(chain);
-                    setFromToken(NATIVE_TOKEN);
-                  } else {
-                    setToChain(chain);
-                    setToToken(NATIVE_TOKEN);
-                  }
-                  setScreen("main");
-                }}
-              />
-            );
-          },
+        chainSelection={{
+          chains: supportedChains,
+          select: (c) => setToChain(c),
         }}
       />
     );
@@ -315,8 +282,7 @@ export function SwapScreenContent(props: {
           }}
           token={toToken}
           chain={toChain}
-          onChainClick={() => setScreen("select-to-chain")}
-          onTokenClick={() => setScreen("select-to-token")}
+          onSelectToken={() => setScreen("select-to-token")}
         />
       </Container>
 
@@ -332,13 +298,12 @@ export function SwapScreenContent(props: {
             {/* From */}
             <PayWithCrypto
               value={sourceTokenAmount}
-              onTokenClick={() => setScreen("select-from-token")}
+              onSelectToken={() => setScreen("select-from-token")}
               chain={fromChain}
               token={fromToken}
               isLoading={
                 buyWithCryptoQuoteQuery.isLoading && !sourceTokenAmount
               }
-              onChainClick={() => setScreen("select-from-chain")}
             />
 
             <Spacer y="lg" />

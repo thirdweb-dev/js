@@ -31,8 +31,7 @@ import { formatNumber } from "../../../../../../../utils/formatNumber.js";
  */
 export function PayWithCrypto(props: {
   value: string;
-  onTokenClick: () => void;
-  onChainClick: () => void;
+  onSelectToken: () => void;
   chain: Chain;
   token: TokenInfo | NativeToken;
   isLoading: boolean;
@@ -61,7 +60,7 @@ export function PayWithCrypto(props: {
           {/* Left */}
 
           <TokenSelectorButton
-            onClick={props.onTokenClick}
+            onClick={props.onSelectToken}
             style={{
               border: "none",
               paddingInline: 0,
@@ -119,7 +118,7 @@ export function PayWithCrypto(props: {
                 paddingBlock: spacing.sm,
               }}
               gap="xs"
-              onClick={props.onChainClick}
+              // onClick={props.onChainClick}
             >
               <ChainIcon chain={chainQuery.data} size={iconSize.sm} />
               <Container color="secondaryText" flex="row" center="y" gap="xxs">
