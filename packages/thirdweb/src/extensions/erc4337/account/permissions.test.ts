@@ -23,7 +23,7 @@ import { adminUpdatedEvent } from "../__generated__/IAccountPermissions/events/A
 import { signerPermissionsUpdatedEvent } from "../__generated__/IAccountPermissions/events/SignerPermissionsUpdated.js";
 import { ADDRESS_ZERO } from "../../../constants/addresses.js";
 
-describe("Account Permissions", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("Account Permissions", () => {
   let accountFactoryContract: ThirdwebContract;
   let accountContract: ThirdwebContract;
 
