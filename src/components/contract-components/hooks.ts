@@ -62,7 +62,7 @@ import { StorageSingleton, getThirdwebSDK } from "lib/sdk";
 import { StaticImageData } from "next/image";
 import { useMemo } from "react";
 import invariant from "tiny-invariant";
-import { Web3Provider } from "zksync-web3";
+import { Web3Provider } from "zksync-ethers";
 import { z } from "zod";
 
 const HEADLESS_WALLET_IDS: string[] = [
@@ -630,7 +630,7 @@ export function useCustomContractDeployMutation(
 
         // deploy contract
         if (isZkSync) {
-          // Get metamask signer using zksync-web3 library -- for custom fields in signature
+          // Get metamask signer using zksync-ethers library -- for custom fields in signature
           const zkSigner = new Web3Provider(
             window.ethereum as unknown as providers.ExternalProvider,
           ).getSigner();
@@ -640,7 +640,7 @@ export function useCustomContractDeployMutation(
             Object.values(data.deployParams),
             zkSigner,
             StorageSingleton,
-            chainId,
+            chainId as number,
           );
         } else {
           if (data.deployDeterministic) {

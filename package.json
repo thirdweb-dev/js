@@ -39,12 +39,12 @@
     "@tanstack/react-query": "^4.36.1",
     "@tanstack/react-query-persist-client": "^4.36.1",
     "@tanstack/react-table": "^8.15.3",
-    "@thirdweb-dev/chains": "0.1.84",
-    "@thirdweb-dev/react": "4.4.28",
-    "@thirdweb-dev/sdk": "4.0.54",
-    "@thirdweb-dev/service-utils": "0.4.24",
-    "@thirdweb-dev/storage": "2.0.12",
-    "@thirdweb-dev/wallets": "^2.4.30",
+    "@thirdweb-dev/chains": "0.1.86",
+    "@thirdweb-dev/react": "4.4.29",
+    "@thirdweb-dev/sdk": "4.0.55",
+    "@thirdweb-dev/service-utils": "0.4.25",
+    "@thirdweb-dev/storage": "2.0.13",
+    "@thirdweb-dev/wallets": "2.4.31",
     "@vercel/og": "^0.6.2",
     "airtable": "^0.12.2",
     "chakra-react-select": "^4.7.6",
@@ -84,9 +84,9 @@
     "remark-gfm": "^4.0.0",
     "spdx-correct": "^3.2.0",
     "swagger-ui-react": "^5.13.0",
-    "thirdweb": "5.0.3",
+    "thirdweb": "5.1.0",
     "tiny-invariant": "^1.3.3",
-    "zksync-web3": "^0.14.4",
+    "zksync-ethers": "^5.6.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {
@@ -131,7 +131,8 @@
       "bn.js": "^5.2.1",
       "zod": "^3.19.1",
       "xml2js": "0.6.2",
-      "axios@<0.28": "^0.28.0"
+      "axios@<0.28": "^0.28.0",
+      "es5-ext@^0.10.53": "0.10.53"
     }
   },
   "next-unused": {
