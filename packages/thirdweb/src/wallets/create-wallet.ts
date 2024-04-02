@@ -84,6 +84,10 @@ export function createWallet<const ID extends WalletId>(
         unsubscribeDisconnect();
       });
 
+      emitter.subscribe("accountChanged", (_account) => {
+        account = _account;
+      });
+
       let handleSwitchChain: (chain: Chain) => Promise<void> = async () => {
         throw new Error("Not implemented yet");
       };
@@ -461,6 +465,10 @@ function coinbaseWalletSDK(): Wallet<"com.coinbase.wallet"> {
     // unsubscribe
     unsubscribeChainChanged();
     unsubscribeDisconnect();
+  });
+
+  emitter.subscribe("accountChanged", (_account) => {
+    account = _account;
   });
 
   return {

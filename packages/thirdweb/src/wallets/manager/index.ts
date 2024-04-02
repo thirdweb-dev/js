@@ -102,27 +102,12 @@ export function createConnectionManager(storage: AsyncStorage) {
 
     // setup listeners
 
-    const onAccountsChanged = (addresses: string[]) => {
-      const newAddress = addresses[0];
-      if (!newAddress) {
-        onWalletDisconnect(wallet);
-        return;
-      } else {
-        // TODO: get this new object as argument from onAccountsChanged
-        // this requires emitting events from the wallet
-        const newAccount: Account = {
-          ...account,
-          address: newAddress,
-        };
-
-        activeAccountStore.setValue(newAccount);
-      }
+    const onAccountsChanged = (newAccount: Account) => {
+      activeAccountStore.setValue(newAccount);
     };
 
-    const unsubAccounts = wallet.subscribe(
-      "accountsChanged",
-      onAccountsChanged,
-    );
+    const unsubAccounts = wallet.subscribe("accountChanged", onAccountsChanged);
+
     const unsubChainChanged = wallet.subscribe("chainChanged", (chain) =>
       activeWalletChainStore.setValue(chain),
     );
