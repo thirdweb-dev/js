@@ -51,7 +51,7 @@ jobs:
     steps:
       - name: get pull request ref
         id: get_pull_request_ref
-        uses: octokit/request-action@v2.1.0
+        uses: octokit/request-action@v2.2.0
         with:
           route: GET /repos/{owner}/{repository}/pulls/{issue_id}
           owner: ${{ github.repository_owner }}
