@@ -92,7 +92,7 @@
     "eslint-plugin-prettier": "^5.1.3",
     "eslint-plugin-svg-jsx": "^1.2.4",
     "eslint-plugin-tsdoc": "^0.2.17",
-    "ethers": "^5.7.2",
+    "ethers": "^6.11.1",
     "react": "18.2.0",
     "react-dom": "^18.2.0",
     "stream": "npm:stream-browserify@^3.0.0",

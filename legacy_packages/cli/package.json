@@ -40,7 +40,7 @@
     "commander": "^9.5.0",
     "detect-package-manager": "^2.0.1",
     "enquirer": "^2.4.1",
-    "ethers": "^5.7.2",
+    "ethers": "^6.11.1",
     "got": "11.8.5",
     "inquirer": "^8.2.6",
     "js-yaml": "^4.1.0",

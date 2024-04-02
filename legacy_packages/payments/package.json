@@ -38,7 +38,7 @@
   },
   "sideEffects": false,
   "dependencies": {
-    "ethers": "^5.7.2"
+    "ethers": "^6.11.1"
   },
   "devDependencies": {
     "@preconstruct/cli": "2.7.0",
