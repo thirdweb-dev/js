@@ -1,0 +1,34 @@
+name: Lint
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    types: [opened, synchronize]
+  # trigger on merge group as well (merge queue)
+  merge_group:
+    types: [checks_requested]
+    branches: ["main"]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+  # To use Remote Caching, uncomment the next lines and follow the steps below.
+env:
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+  TW_SECRET_KEY: ${{ secrets.TW_SECRET_KEY }}
+  CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+jobs:
+  lint:
+    timeout-minutes: 15
+    name: Lint Packages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup & Install
+        uses: ./.github/composite-actions/install
+
+      - run: pnpm lint
