@@ -9,6 +9,7 @@ import type { WCSupportedWalletIds } from "../../../../wallets/__generated__/wal
 import { isMobile, isAndroid, isIOS } from "../../../../utils/web/isMobile.js";
 import { openWindow } from "../../../../utils/web/openWindow.js";
 import { wait } from "../../../../utils/promise/wait.js";
+import { formatWalletConnectUrl } from "../../../../utils/url.js";
 
 /**
  * QR Scan UI for connecting a specific wallet on desktop.
@@ -49,15 +50,15 @@ export const WalletConnectConnection: React.FC<{
             if (isMobile()) {
               if (isAndroid()) {
                 openWindow(
-                  `${platformUris.android}wc?uri=${encodeURIComponent(uri)}`,
+                  formatWalletConnectUrl(platformUris.android, uri).redirect,
                 );
               } else if (isIOS()) {
                 openWindow(
-                  `${platformUris.ios}wc?uri=${encodeURIComponent(uri)}`,
+                  formatWalletConnectUrl(platformUris.ios, uri).redirect,
                 );
               } else {
                 openWindow(
-                  `${platformUris.other}wc?uri=${encodeURIComponent(uri)}`,
+                  formatWalletConnectUrl(platformUris.other, uri).redirect,
                 );
               }
             }
