@@ -2,28 +2,48 @@
 
 # Platform team owns everything by default
 
-* @thirdweb-dev/platform
+* @jnsdls @joaquim @MananTank
 
-# Devrel owns all markdown files (README etc.)
+# legacy packages
+legacy_packages/auth/ @jnsdls
+legacy_packages/chains/ @jnsdls
+legacy_packages/cli/ @jnsdls
+legacy_packages/contracts-js/ @jnsdls
+legacy_packages/crypto/ @jnsdls
+legacy_packages/generated-abis/ @jnsdls
+legacy_packages/merkletree/ @jnsdls
+legacy_packages/pay/ @jnsdls
+legacy_packages/payments/ @jnsdls
+legacy_packages/react/ @MananTank @jnsdls
+legacy_packages/react-core/ @MananTank @jnsdls
+legacy_packages/react-native/ @jnsdls
+legacy_packages/react-native-compat/ @jnsdls
+legacy_packages/sdk/ @joaquim @jnsdls
+legacy_packages/storage/ @jnsdls
+legacy_packages/wallets/ @MananTank @jnsdls
 
-*.md @thirdweb-dev/devrel
-.changeset/
 
-# Shared ownership of the react and react-core packages
+# legacy e2e
+legacy_e2e/ @jnsdls
 
-packages/react/ @thirdweb-dev/product @thirdweb-dev/platform
-packages/react-core/ @thirdweb-dev/product @thirdweb-dev/platform
+# packages
 
-# Shared ownership of the CLI
+## specific thirdweb pieces
+packages/thirdweb/src/react/ @MananTank
+packages/thirdweb/src/reactive/ @MananTank
+packages/thirdweb/src/gas/ @joaquim
+packages/thirdweb/src/pay/ @MananTank @IDubuque
 
-packages/cli/ @thirdweb-dev/product @thirdweb-dev/platform
+packages/typedoc-gen/ @MananTank
+# owned by phil for now
+packages/service-utils/ @arcoraven
+packages/eslint-config-thirdweb/ @jnsdls
+packages/tw-tsconfig/ @jnsdls
+packages/unity-js-bridge/ @joaquim @0xFirekeeper
 
-# Chains is owned specifically by jonas for now
 
-packages/chains/ @jnsdls
-
-# .github folder + .changeset + turbo config is owned by joaquim and jonas for now
-
-.github/ @jnsdls @joaquim-verges
-.changeset/config.json @jnsdls @joaquim-verges
-turbo.json @joaquim-verges @jnsdls
+# .github folder + .changeset + turbo config is owned by jonas for now
+scripts/ @jnsdls
+.github/ @jnsdls
+.changeset/config.json @jnsdls
+turbo.json @jnsdls
