@@ -18,7 +18,7 @@ const rpcClient = getRpcClient({
   client: TEST_CLIENT,
 });
 
-describe("eth_getBalance", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("eth_getBalance", () => {
   it("should return the correct balance at the given block", async () => {
     const vitalikBalance = await eth_getBalance(rpcClient, {
       address: VITALIK_WALLET,

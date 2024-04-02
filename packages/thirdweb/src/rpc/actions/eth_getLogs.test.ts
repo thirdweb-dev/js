@@ -9,7 +9,7 @@ const rpcClient = getRpcClient({
   client: TEST_CLIENT,
 });
 
-describe("eth_getLogs", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("eth_getLogs", () => {
   it("should return unparsed logs, without events", async () => {
     const logs = await eth_getLogs(rpcClient);
     expect(logs).toMatchInlineSnapshot(`[]`);
