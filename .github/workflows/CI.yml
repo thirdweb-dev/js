@@ -3,10 +3,14 @@ name: CI
 on:
   push:
     branches: ["main"]
-    paths: ["packages/**"]
+    paths:
+      - "packages/**"
+      - "package.json"
   pull_request:
     types: [opened, synchronize]
-    paths: ["packages/**"]
+    paths:
+      - "packages/**"
+      - "package.json"
   # trigger on merge group as well (merge queue)
   merge_group:
     types: [checks_requested]
