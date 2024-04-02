@@ -185,10 +185,7 @@ async function onConnect(
     },
   };
 
-  function disconnect() {
-    if (!provider || !provider.removeListener) {
-      return;
-    }
+  async function disconnect() {
     provider.removeListener("accountsChanged", onAccountsChanged);
     provider.removeListener("chainChanged", onChainChanged);
     provider.removeListener("disconnect", onDisconnect);

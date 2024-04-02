@@ -212,15 +212,12 @@ function onConnect(
     },
   };
 
-  function disconnect() {
-    if (!provider) {
-      return;
-    }
-    provider.disconnect();
-    provider.close();
+  async function disconnect() {
     provider.removeListener("accountsChanged", onAccountsChanged);
     provider.removeListener("chainChanged", onChainChanged);
     provider.removeListener("disconnect", onDisconnect);
+    provider.disconnect();
+    await provider.close();
   }
 
   function onDisconnect() {
