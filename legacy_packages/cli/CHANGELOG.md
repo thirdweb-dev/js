@@ -1,5 +1,18 @@
 # thirdweb
 
+## 0.13.61
+
+### Patch Changes
+
+- [#2623](https://github.com/thirdweb-dev/js/pull/2623) [`26a50b1`](https://github.com/thirdweb-dev/js/commit/26a50b1e0591529748fb3f0d3fb7cd2ffcc47f19) Thanks [@jnsdls](https://github.com/jnsdls)! - update depdendencies
+
+- Updated dependencies [[`00be583`](https://github.com/thirdweb-dev/js/commit/00be583b8902a1a0e5382ffdaafa6b9e31316075), [`26a50b1`](https://github.com/thirdweb-dev/js/commit/26a50b1e0591529748fb3f0d3fb7cd2ffcc47f19), [`82e5f53`](https://github.com/thirdweb-dev/js/commit/82e5f53bc49208cbc43ef3eb64e3a4b6ef6c7cf6)]:
+  - @thirdweb-dev/wallets@2.4.31
+  - @thirdweb-dev/sdk@4.0.55
+  - @thirdweb-dev/chains@0.1.86
+  - @thirdweb-dev/auth@4.1.53
+  - @thirdweb-dev/storage@2.0.13
+
 ## 0.13.60
 
 ### Patch Changes
