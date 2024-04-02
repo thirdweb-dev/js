@@ -30,7 +30,7 @@ const TX_RESULT = {
   to: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
   value: undefined,
 };
-describe("sendTransaction", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("sendTransaction", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });

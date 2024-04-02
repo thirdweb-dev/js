@@ -8,7 +8,7 @@ import {
   MOG_CONTRACT_ADDRESS,
 } from "~test/test-contracts.js";
 
-describe("uniswap.getUniswapV3Pool", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("uniswap.getUniswapV3Pool", () => {
   it("should return the WETH/OHM pool address and fee", async () => {
     const pools = await getUniswapV3Pools({
       contract: UNISWAPV3_FACTORY_CONTRACT,

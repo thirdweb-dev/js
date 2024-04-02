@@ -9,7 +9,7 @@ const rpcClient = getRpcClient({
   client: TEST_CLIENT,
 });
 
-describe("eth_blockNumber", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("eth_blockNumber", () => {
   it("should return the block number", async () => {
     const blockNumber = await eth_blockNumber(rpcClient);
     expect(blockNumber).toEqual(19139495n);

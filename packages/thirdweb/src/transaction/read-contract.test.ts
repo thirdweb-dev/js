@@ -7,7 +7,7 @@ import {
 import { VITALIK_WALLET } from "../../test/src/addresses.js";
 import { readContract } from "./read-contract.js";
 
-describe("transaction: read", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("transaction: read", () => {
   it("should read from the contract correctly", async () => {
     const result = await readContract({
       contract: USDC_CONTRACT,
