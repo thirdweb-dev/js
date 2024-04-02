@@ -30,7 +30,7 @@
     "@coinbase/wallet-mobile-sdk": "1.0.13",
     "@paperxyz/embedded-wallet-service-sdk": "^1.2.5",
     "@shopify/restyle": "^2.4.2",
-    "@tanstack/react-query": "^4.36.1",
+    "@tanstack/react-query": "^5.28.14",
     "@thirdweb-dev/chains": "workspace:*",
     "@thirdweb-dev/react-core": "workspace:*",
     "@thirdweb-dev/sdk": "workspace:*",
