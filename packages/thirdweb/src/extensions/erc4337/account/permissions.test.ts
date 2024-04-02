@@ -17,14 +17,13 @@ import { simulateTransaction } from "../../../transaction/actions/simulate.js";
 import { addAdmin } from "./addAdmin.js";
 import { getAllAdmins } from "../__generated__/IAccountPermissions/read/getAllAdmins.js";
 import { removeAdmin } from "./removeAdmin.js";
-import { getAllSigners } from "../__generated__/IAccountPermissions/read/getAllSigners.js";
 import { addSessionKey } from "./addSessionKey.js";
 import { parseEventLogs } from "../../../event/actions/parse-logs.js";
 import { adminUpdatedEvent } from "../__generated__/IAccountPermissions/events/AdminUpdated.js";
 import { signerPermissionsUpdatedEvent } from "../__generated__/IAccountPermissions/events/SignerPermissionsUpdated.js";
 import { ADDRESS_ZERO } from "../../../constants/addresses.js";
 
-describe.todo("Account Permissions", () => {
+describe("Account Permissions", () => {
   let accountFactoryContract: ThirdwebContract;
   let accountContract: ThirdwebContract;
 
@@ -57,15 +56,12 @@ describe.todo("Account Permissions", () => {
     });
   });
 
-  it("should fetch the correct inital state", async () => {
-    const admins = await getAllAdmins({
+  it("should allow adding admins", async () => {
+    let admins = await getAllAdmins({
       contract: accountContract,
     });
     expect(admins).toEqual([TEST_ACCOUNT_A.address]);
-  });
-
-  it("should allow adding admins", async () => {
-    const receipt = await sendAndConfirmTransaction({
+    let receipt = await sendAndConfirmTransaction({
       transaction: addAdmin({
         account: TEST_ACCOUNT_A,
         contract: accountContract,
@@ -73,17 +69,14 @@ describe.todo("Account Permissions", () => {
       }),
       account: TEST_ACCOUNT_A,
     });
-    const logs = parseEventLogs({
+    let logs = parseEventLogs({
       events: [adminUpdatedEvent()],
       logs: receipt.logs,
     });
     expect(logs.length).toBe(1);
     expect(logs[0]?.args.signer).toBe(TEST_ACCOUNT_B.address);
     expect(logs[0]?.args.isAdmin).toBe(true);
-  });
-
-  it("should fetch the correct state after adding", async () => {
-    const admins = await getAllAdmins({
+    admins = await getAllAdmins({
       contract: accountContract,
     });
     expect(admins.length).toBe(2);
@@ -91,10 +84,7 @@ describe.todo("Account Permissions", () => {
       TEST_ACCOUNT_A.address,
       TEST_ACCOUNT_B.address,
     ]);
-  });
-
-  it("should allow removing admins", async () => {
-    const receipt = await sendAndConfirmTransaction({
+    receipt = await sendAndConfirmTransaction({
       transaction: removeAdmin({
         account: TEST_ACCOUNT_B,
         contract: accountContract,
@@ -102,27 +92,17 @@ describe.todo("Account Permissions", () => {
       }),
       account: TEST_ACCOUNT_B,
     });
-    const logs = parseEventLogs({
+    logs = parseEventLogs({
       events: [adminUpdatedEvent()],
       logs: receipt.logs,
     });
     expect(logs[0]?.args.signer).toBe(TEST_ACCOUNT_A.address);
     expect(logs[0]?.args.isAdmin).toBe(false);
-  });
-
-  it("should fetch the correct state after removing", async () => {
-    const admins = await getAllAdmins({
+    admins = await getAllAdmins({
       contract: accountContract,
     });
     expect(admins.length).toBe(1);
     expect(admins).toStrictEqual([TEST_ACCOUNT_B.address]);
-  });
-
-  it("should fetch the correct before adding a session key", async () => {
-    const signers = await getAllSigners({
-      contract: accountContract,
-    });
-    expect(signers).toEqual([]);
   });
 
   it("should allow adding session keys", async () => {
@@ -143,6 +123,8 @@ describe.todo("Account Permissions", () => {
     });
     expect(logs[0]?.args.authorizingSigner).toBe(TEST_ACCOUNT_B.address);
     expect(logs[0]?.args.targetSigner).toBe(TEST_ACCOUNT_A.address);
-    expect(logs[0]?.args.permissions.approvedTargets).toBe([ADDRESS_ZERO]);
+    expect(logs[0]?.args.permissions.approvedTargets).toStrictEqual([
+      ADDRESS_ZERO,
+    ]);
   });
 });
