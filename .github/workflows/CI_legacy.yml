@@ -27,7 +27,7 @@ env:
 jobs:
   lint:
     timeout-minutes: 15
-    name: Lint Packages (Legacy Packages)
+    name: Lint Packages
     runs-on: ubuntu-latest
     steps:
       - name: Check out the code
@@ -40,7 +40,7 @@ jobs:
 
   test:
     timeout-minutes: 15
-    name: Unit Tests (Legacy Packages)
+    name: Unit Tests
     runs-on: ubuntu-latest-16
     steps:
       - name: Check out the code
@@ -58,7 +58,7 @@ jobs:
 
   e2e:
     timeout-minutes: 15
-    name: E2E Tests (Legacy Packages)
+    name: E2E Tests
     runs-on: ubuntu-latest-16
     steps:
       - name: Check out the code
