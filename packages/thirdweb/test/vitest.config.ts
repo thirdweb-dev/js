@@ -16,7 +16,7 @@ export default defineConfig({
       all: true,
       provider: "v8",
       reporter: process.env.CI ? ["lcov"] : ["text", "json", "html"],
-      exclude: ["**/*.test.ts", "**/test/**"],
+      exclude: ["**/*.test.ts", "**/test/**", "**/__generated__/**"],
       include: ["src/**"],
     },
     environment: "node",
