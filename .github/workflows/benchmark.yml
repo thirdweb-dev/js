@@ -24,6 +24,9 @@ jobs:
     name: "Benchmark"
     runs-on: ubuntu-latest-16
     steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
       - name: Setup & Install
         uses: ./.github/composite-actions/install
 

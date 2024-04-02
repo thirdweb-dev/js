@@ -4,8 +4,6 @@ description: "Sets up Node.js and runs install"
 runs:
   using: composite
   steps:
-   - name: Check out the code
-        uses: actions/checkout@v4
     # we use bun for some test suites
     - name: Setup bun
       uses: oven-sh/setup-bun@v1
