@@ -73,5 +73,7 @@ export async function fetchPreDeployMetadata(
     ...rawMeta,
     ...parsedMeta,
     bytecode: await deployBytecode.text(),
+    fetchedMetadataUri: metadataUri,
+    fetchedBytecodeUri: bytecodeUri,
   });
 }

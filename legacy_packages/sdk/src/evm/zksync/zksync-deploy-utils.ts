@@ -76,7 +76,7 @@ async function zkDeployViaAutoFactory(
         signer as ZkSigner,
         tx,
         storage,
-        deployMetadata.compilerMetadata.metadataUri,
+        deployMetadata.compilerMetadata.fetchedMetadataUri,
         options,
       );
     } catch (e) {
@@ -203,20 +203,8 @@ export async function zkDeployContractFromUri(
       await registerContractOnMultiChainRegistry(
         proxy.address,
         chainId,
-        compilerMetadata.metadataUri,
+        compilerMetadata.fetchedMetadataUri,
       );
-
-      // fire-and-forget verification, don't await
-      try {
-        zkVerify(
-          implementationAddress,
-          chainId,
-          blockExplorerApiMap[chainId],
-          "",
-          storage,
-          compilerMetadata.metadataUri,
-        );
-      } catch (e) {}
 
       deployedAddress = proxy.address;
     } else {
@@ -250,7 +238,7 @@ export async function zkDeployContractFromUri(
     await registerContractOnMultiChainRegistry(
       contract.address,
       chainId,
-      compilerMetadata.metadataUri,
+      compilerMetadata.fetchedMetadataUri,
     );
 
     deployedAddress = contract.address;
@@ -264,7 +252,7 @@ export async function zkDeployContractFromUri(
       blockExplorerApiMap[chainId],
       "",
       storage,
-      publishMetadataUri,
+      compilerMetadata.fetchedMetadataUri,
     );
   } catch (error) {
     // ignore error
