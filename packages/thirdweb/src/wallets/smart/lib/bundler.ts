@@ -13,6 +13,9 @@ import {
 import { hexlifyUserOp } from "./utils.js";
 import type { TransactionReceipt } from "../../../transaction/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
+import { decodeErrorResult } from "viem";
+import { parseEventLogs } from "../../../event/actions/parse-logs.js";
+import { userOperationRevertReasonEvent } from "../../../extensions/erc4337/__generated__/IEntryPoint/events/UserOperationRevertReason.js";
 
 /**
  * @internal
@@ -67,8 +70,27 @@ export async function getUserOpReceipt(args: {
     operation: "eth_getUserOperationReceipt",
     params: [args.userOpHash],
   });
-  // TODO theres more info in res we could be returning here
-  return res?.receipt;
+  if (!res) {
+    return undefined;
+  }
+  if (res.success === false) {
+    // parse revert reason
+    const logs = parseEventLogs({
+      events: [userOperationRevertReasonEvent()],
+      logs: res.logs,
+    });
+    const revertReason = logs[0]?.args?.revertReason;
+    if (!revertReason) {
+      throw new Error(`UserOp failed at txHash: ${res.transactionHash}`);
+    }
+    const revertMsg = decodeErrorResult({
+      data: revertReason,
+    });
+    throw new Error(
+      `UserOp failed with reason: '${revertMsg.args.join(",")}' at txHash: ${res.transactionHash}`,
+    );
+  }
+  return res.receipt;
 }
 
 async function sendBundlerRequest(args: {

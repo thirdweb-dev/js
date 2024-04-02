@@ -1,8 +1,6 @@
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/addresses.js";
 import type { ThirdwebContract } from "../../../contract/contract.js";
-import { universalCrypto } from "../../../crypto/aes/lib/universal-crypto.js";
 import { toBigInt } from "../../../utils/bigint.js";
-import { uint8ArrayToHex } from "../../../utils/encoding/hex.js";
 import type { NFTInput } from "../../../utils/nft/parseNft.js";
 import { toUnits } from "../../../utils/units.js";
 import { decimals } from "../../erc20/read/decimals.js";
@@ -10,6 +8,8 @@ import type { AbiParameterToPrimitiveType } from "abitype";
 import { mintWithSignature as generatedMintWithSignature } from "../__generated__/ISignatureMintERC721/write/mintWithSignature.js";
 import { upload } from "../../../storage/upload.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
+import { randomBytes32 } from "../../../utils/uuid.js";
+import { dateToSeconds, tenYearsFromNow } from "../../../utils/date.js";
 
 /**
  * Mints a new ERC721 token with the given minter signature
@@ -72,22 +72,16 @@ export async function generateMintSignature(
   options: GenerateMintSignatureOptions,
 ) {
   const { mintRequest, account, contract } = options;
-  let priceInWei: bigint = 0n;
+  let priceInWei = 0n;
   if (mintRequest.price) {
     const d = await decimals(options).catch(() => 18);
     priceInWei = toUnits(mintRequest.price.toString(), d);
   }
 
   const startTime = mintRequest.validityStartTimestamp || new Date(0);
-  const endTime =
-    mintRequest.validityEndTimestamp ||
-    new Date(Date.now() + 1000 * 60 * 60 * 24 * 365 * 10); // 10 years
+  const endTime = mintRequest.validityEndTimestamp || tenYearsFromNow();
 
-  const uid =
-    mintRequest.uid ||
-    uint8ArrayToHex(
-      (await universalCrypto()).getRandomValues(new Uint8Array(32)),
-    );
+  const uid = mintRequest.uid || (await randomBytes32());
 
   let uri: string;
   if (typeof mintRequest.metadata === "object") {
@@ -109,8 +103,8 @@ export async function generateMintSignature(
     uri: uri || "",
     price: priceInWei,
     currency: mintRequest.currency || NATIVE_TOKEN_ADDRESS,
-    validityStartTimestamp: toBigInt(Math.floor(startTime.getTime() / 1000)),
-    validityEndTimestamp: toBigInt(Math.floor(endTime.getTime() / 1000)),
+    validityStartTimestamp: dateToSeconds(startTime),
+    validityEndTimestamp: dateToSeconds(endTime),
     uid,
   } as PayloadType;
 
