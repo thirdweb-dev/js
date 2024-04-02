@@ -73,7 +73,7 @@ jobs:
       # TODO actually run e2e tests
 
   benchmark:
-    # cannot run benchmakrs on merge group
+    # cannot run benchmarks on merge group
     if: github.event_name != 'merge_group'
     timeout-minutes: 15
     name: "Benchmarks"
