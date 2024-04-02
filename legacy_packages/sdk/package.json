@@ -89,7 +89,7 @@
     "@types/chai": "^4.3.14",
     "@types/deep-equal-in-any-order": "^1.0.3",
     "@types/mocha": "^10.0.6",
-    "@types/node": "20.11.30",
+    "@types/node": "20.12.2",
     "@types/uuid": "^9.0.8",
     "chai": "^4.4.1",
     "deep-equal-in-any-order": "^1.1.20",
@@ -129,7 +129,7 @@
     }
   },
   "dependencies": {
-    "@eth-optimism/sdk": "3.2.2",
+    "@eth-optimism/sdk": "3.2.3",
     "@thirdweb-dev/chains": "workspace:*",
     "@thirdweb-dev/contracts-js": "workspace:*",
     "@thirdweb-dev/crypto": "workspace:*",

@@ -43,6 +43,10 @@ export {
   simulateTransaction,
   type SimulateOptions,
 } from "../transaction/actions/simulate.js";
+export {
+  signTransaction,
+  type SignTransactionOptions,
+} from "../transaction/actions/sign-transaction.js";
 
 //types & utils
 export {

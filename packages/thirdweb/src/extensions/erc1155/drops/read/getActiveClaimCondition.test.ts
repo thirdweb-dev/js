@@ -3,7 +3,7 @@ import { describe, it, expect } from "vitest";
 import { DROP1155_CONTRACT } from "../../../../../test/src/test-contracts.js";
 import { getActiveClaimCondition } from "./getActiveClaimCondition.js";
 
-describe("erc1155.getClaimConditions", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("erc1155.getClaimConditions", () => {
   it("should return the correct claim conditions", async () => {
     const cc = await getActiveClaimCondition({
       contract: DROP1155_CONTRACT,

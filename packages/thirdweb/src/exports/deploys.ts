@@ -18,3 +18,6 @@ export {
   type ERC1155ContractType,
   deployERC1155Contract,
 } from "../extensions/prebuilts/deploy-erc1155.js";
+
+export { prepareDirectDeployTransaction } from "../contract/deployment/deploy-with-abi.js";
+export { deployViaAutoFactory } from "../contract/deployment/deploy-via-autofactory.js";

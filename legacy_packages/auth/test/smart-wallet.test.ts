@@ -7,7 +7,7 @@ import { describe, it, beforeEach, beforeAll, expect } from "vitest";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require("dotenv-mono").load();
 
-describe(
+describe.runIf(process.env.TW_SECRET_KEY)(
   "Wallet Authentication - EVM - Smart Wallet",
   {
     timeout: 60000,

@@ -141,6 +141,17 @@ export function getRpcClient(
               inflight.reject(new Error("No response"));
               return;
             }
+            // handle errors in the response
+            if (response instanceof Error) {
+              inflight.reject(response);
+              return;
+            }
+
+            // handle strings as responses??
+            if (typeof response === "string") {
+              inflight.reject(new Error(response));
+              return;
+            }
 
             if ("error" in response) {
               inflight.reject(response.error);
