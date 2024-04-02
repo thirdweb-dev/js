@@ -1142,9 +1142,9 @@ importers:
       typescript:
         specifier: 5.4.3
         version: 5.4.3
-      zksync-web3:
-        specifier: ^0.14.4
-        version: 0.14.4(ethers@5.7.2)
+      zksync-ethers:
+        specifier: ^5.6.0
+        version: 5.6.0(ethers@5.7.2)
 
   legacy_packages/storage:
     dependencies:
@@ -23272,7 +23272,7 @@ packages:
     engines: {node: '>=12.0.0'}
     hasBin: true
     peerDependencies:
-      protobufjs: '>=7.2.4'
+      protobufjs: ^7.0.0
     dependencies:
       chalk: 4.1.2
       escodegen: 1.14.3
@@ -27641,6 +27641,15 @@ packages:
       zen-observable: 0.7.1
     dev: false
 
+  /zksync-ethers@5.6.0(ethers@5.7.2):
+    resolution: {integrity: sha512-+lw1dhURpVZos6+g82HdXVw2i/OI+S2nTqyNvBK2xwnQYv8vqxv0Ux/cMPV2AflswTG1/zrMmseRp+UJUCaw9g==}
+    engines: {node: '>=16.0.0'}
+    peerDependencies:
+      ethers: ~5.7.0
+    dependencies:
+      ethers: 5.7.2
+    dev: true
+
   /zksync-web3@0.14.4(ethers@5.7.2):
     resolution: {integrity: sha512-kYehMD/S6Uhe1g434UnaMN+sBr9nQm23Ywn0EUP5BfQCsbjcr3ORuS68PosZw8xUTu3pac7G6YMSnNHk+fwzvg==}
     deprecated: This package has been deprecated in favor of zksync-ethers@5.0.0
@@ -27648,6 +27657,7 @@ packages:
       ethers: ^5.7.0
     dependencies:
       ethers: 5.7.2
+    dev: false
 
   /zod-to-json-schema@3.22.5(zod@3.22.4):
     resolution: {integrity: sha512-+akaPo6a0zpVCCseDed504KBJUQpEW5QZw7RMneNmKw+fGaML1Z9tUNLnHHAC8x6dzVRO1eB2oEMyZRnuBZg7Q==}

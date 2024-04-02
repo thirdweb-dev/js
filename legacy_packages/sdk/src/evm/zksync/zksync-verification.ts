@@ -54,8 +54,10 @@ export async function zkVerify(
 
       const parsedMetadata = await fetchContractMetadata(metadataUri, storage);
       const zk_version =
-        parsedMetadata.metadata.settings.zk_version || zkVersion;
-      invariant(zk_version, "zk version not found");
+        parsedMetadata.metadata.settings.zkVersion || zkVersion;
+      if (!zk_version) {
+        console.error("zk version not found");
+      }
 
       compilerMetadata = {
         name: parsedMetadata.name,
@@ -158,7 +160,7 @@ async function zkFetchConstructorParams(
 ): Promise<string> {
   const constructorParamTypes = extractConstructorParamsFromAbi(abi);
   if (constructorParamTypes.length === 0) {
-    return "";
+    return "0x";
   }
 
   const result = await fetch(
