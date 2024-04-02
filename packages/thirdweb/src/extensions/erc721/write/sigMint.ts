@@ -72,7 +72,7 @@ export async function generateMintSignature(
   options: GenerateMintSignatureOptions,
 ) {
   const { mintRequest, account, contract } = options;
-  let priceInWei: bigint = 0n;
+  let priceInWei = 0n;
   if (mintRequest.price) {
     const d = await decimals(options).catch(() => 18);
     priceInWei = toUnits(mintRequest.price.toString(), d);
@@ -81,7 +81,7 @@ export async function generateMintSignature(
   const startTime = mintRequest.validityStartTimestamp || new Date(0);
   const endTime = mintRequest.validityEndTimestamp || tenYearsFromNow();
 
-  const uid = mintRequest.uid || randomBytes32();
+  const uid = mintRequest.uid || (await randomBytes32());
 
   let uri: string;
   if (typeof mintRequest.metadata === "object") {
