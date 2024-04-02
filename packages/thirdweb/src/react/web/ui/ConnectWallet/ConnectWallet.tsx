@@ -26,7 +26,7 @@ import type { Chain } from "../../../../chains/types.js";
 import type { ConnectLocale } from "./locale/types.js";
 import { WalletConnectionContext } from "../../../core/providers/wallet-connection.js";
 import { getDefaultWallets } from "../../wallets/defaultWallets.js";
-import { AutoConnect } from "../../../core/hooks/connection/useAutoConnect.js";
+import { AutoConnect } from "../../../core/hooks/connection/useAutoConnect.jsx";
 import ConnectModal from "./Modal/ConnectModal.js";
 import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { getConnectLocale } from "./locale/getConnectLocale.js";
