@@ -225,7 +225,7 @@
     "push": "yalc push",
     "size": "size-limit",
     "test:watch": "vitest -c ./test/vitest.config.ts dev",
-    "test": "CI=true vitest -c ./test/vitest.config.ts --coverage --bail=1",
+    "test": "vitest run -c ./test/vitest.config.ts --coverage --bail=1",
     "test:cov": "vitest dev -c ./test/vitest.config.ts --coverage",
     "test:dev": "vitest dev -c ./test/vitest.config.ts",
     "typedoc": "node scripts/typedoc.mjs",
