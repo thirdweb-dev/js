@@ -1,12 +1,12 @@
-name: Unit Tests (Legacy Packages)
+name: CI
 
 on:
   push:
     branches: ["main"]
-    paths: ["legacy_packages/**"]
+    paths: ["packages/**"]
   pull_request:
     types: [opened, synchronize]
-    paths: ["legacy_packages/**"]
+    paths: ["packages/**"]
   # trigger on merge group as well (merge queue)
   merge_group:
     types: [checks_requested]
@@ -25,9 +25,22 @@ env:
   CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
 jobs:
+  lint:
+    timeout-minutes: 15
+    name: Lint Packages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Setup & Install
+        uses: ./.github/composite-actions/install
+
+      - run: pnpm lint
+
   test:
     timeout-minutes: 15
-    name: Unit Tests (Legacy)
+    name: Unit Tests
     runs-on: ubuntu-latest-16
     steps:
       - name: Check out the code
@@ -36,9 +49,29 @@ jobs:
       - name: Setup & Install
         uses: ./.github/composite-actions/install
 
-      - run: pnpm test:legacy
+      - name: Set up foundry
+        uses: foundry-rs/foundry-toolchain@v1
+
+      - run: pnpm test
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4
         with:
-          directory: ./legacy_packages
+          directory: ./packages
+
+  benchmark:
+    timeout-minutes: 15
+    name: "Benchmarks"
+    runs-on: ubuntu-latest-16
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Setup & Install
+        uses: ./.github/composite-actions/install
+
+      - name: Run benchmarks
+        uses: CodSpeedHQ/action@v2
+        with:
+          token: ${{ secrets.CODSPEED_TOKEN }}
+          run: "pnpm bench"

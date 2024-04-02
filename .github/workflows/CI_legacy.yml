@@ -1,4 +1,4 @@
-name: E2E Tests (legacy)
+name: CI (Legacy Packages)
 
 on:
   push:
@@ -25,9 +25,40 @@ env:
   CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
 jobs:
+  lint:
+    timeout-minutes: 15
+    name: Lint Packages (Legacy Packages)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Setup & Install
+        uses: ./.github/composite-actions/install
+
+      - run: pnpm lint:legacy
+
+  test:
+    timeout-minutes: 15
+    name: Unit Tests (Legacy Packages)
+    runs-on: ubuntu-latest-16
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Setup & Install
+        uses: ./.github/composite-actions/install
+
+      - run: pnpm test:legacy
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          directory: ./legacy_packages
+
   e2e:
     timeout-minutes: 15
-    name: E2E Tests
+    name: E2E Tests (Legacy Packages)
     runs-on: ubuntu-latest-16
     steps:
       - name: Check out the code
@@ -40,7 +71,7 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run e2e tests
-        run: pnpm e2e
+        run: pnpm e2e:legacy
         env:
           NODE_OPTIONS: "--max_old_space_size=4096"
           CLI_E2E_API_KEY: ${{ secrets.CLI_E2E_API_KEY }}
