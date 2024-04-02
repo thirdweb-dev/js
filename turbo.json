@@ -7,7 +7,7 @@
     },
     "bench": {
       "cache": false,
-      "dependsOn": ["build"],
+      "dependsOn": [],
       "env": ["TW_SECRET_KEY", "CI"]
     },
     "typedoc": {
@@ -81,7 +81,13 @@
     "test": {
       "outputs": ["codecov/**"],
       "inputs": ["src/**", "test/**"],
-      "dependsOn": ["build"],
+      "dependsOn": [],
+      "env": ["TW_SECRET_KEY", "CI"]
+    },
+    "test:legacy": {
+      "outputs": ["codecov/**"],
+      "inputs": ["src/**", "test/**"],
+      "dependsOn": ["^build"],
       "env": ["TW_SECRET_KEY", "CI"]
     },
     "e2e": {

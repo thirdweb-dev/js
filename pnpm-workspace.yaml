@@ -1,7 +1,7 @@
 packages:
-  # include packages in subfolders (e.g. apps/ and packages/)
-  - "test/**/*"
   - "packages/*"
   - "legacy_packages/*"
-  # if required, exclude some directories
-  # - '!**/test/**'
+  # e2e tests
+
+  # include packages in subfolders (e.g. apps/ and packages/)
+  - "legacy_e2e/**/*"

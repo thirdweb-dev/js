@@ -129,6 +129,192 @@ importers:
         specifier: 1.4.0
         version: 1.4.0(@types/node@20.12.2)
 
+  legacy_e2e/bundlers/esbuild:
+    dependencies:
+      '@thirdweb-dev/auth':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/auth
+      '@thirdweb-dev/chains':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/chains
+      '@thirdweb-dev/crypto':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/crypto
+      '@thirdweb-dev/merkletree':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/merkletree
+      '@thirdweb-dev/sdk':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/sdk
+      '@thirdweb-dev/storage':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/storage
+      '@thirdweb-dev/wallets':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/wallets
+    devDependencies:
+      esbuild:
+        specifier: 0.20.2
+        version: 0.20.2
+      ora:
+        specifier: ^6.3.1
+        version: 6.3.1
+
+  legacy_e2e/bundlers/swc:
+    dependencies:
+      '@thirdweb-dev/auth':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/auth
+      '@thirdweb-dev/chains':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/chains
+      '@thirdweb-dev/crypto':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/crypto
+      '@thirdweb-dev/merkletree':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/merkletree
+      '@thirdweb-dev/sdk':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/sdk
+      '@thirdweb-dev/storage':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/storage
+      '@thirdweb-dev/wallets':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/wallets
+    devDependencies:
+      '@swc/cli':
+        specifier: 0.3.10
+        version: 0.3.10(@swc/core@1.4.11)
+      '@swc/core':
+        specifier: ^1.4.11
+        version: 1.4.11
+      ora:
+        specifier: ^6.3.1
+        version: 6.3.1
+
+  legacy_e2e/bundlers/vite:
+    dependencies:
+      '@thirdweb-dev/auth':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/auth
+      '@thirdweb-dev/chains':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/chains
+      '@thirdweb-dev/crypto':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/crypto
+      '@thirdweb-dev/merkletree':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/merkletree
+      '@thirdweb-dev/sdk':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/sdk
+      '@thirdweb-dev/storage':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/storage
+      '@thirdweb-dev/wallets':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/wallets
+    devDependencies:
+      ora:
+        specifier: ^6.3.1
+        version: 6.3.1
+      vite:
+        specifier: ^5.2.7
+        version: 5.2.7(@types/node@20.12.2)
+
+  legacy_e2e/bundlers/webpack:
+    dependencies:
+      '@thirdweb-dev/auth':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/auth
+      '@thirdweb-dev/chains':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/chains
+      '@thirdweb-dev/crypto':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/crypto
+      '@thirdweb-dev/merkletree':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/merkletree
+      '@thirdweb-dev/sdk':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/sdk
+      '@thirdweb-dev/storage':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/storage
+      '@thirdweb-dev/wallets':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/wallets
+    devDependencies:
+      ora:
+        specifier: ^6.3.1
+        version: 6.3.1
+      webpack:
+        specifier: ^5.91.0
+        version: 5.91.0(webpack-cli@5.1.4)
+      webpack-cli:
+        specifier: ^5.1.4
+        version: 5.1.4(webpack@5.91.0)
+
+  legacy_e2e/runtimes/node-commonjs:
+    dependencies:
+      '@thirdweb-dev/auth':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/auth
+      '@thirdweb-dev/chains':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/chains
+      '@thirdweb-dev/crypto':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/crypto
+      '@thirdweb-dev/merkletree':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/merkletree
+      '@thirdweb-dev/sdk':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/sdk
+      '@thirdweb-dev/storage':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/storage
+      '@thirdweb-dev/wallets':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/wallets
+    devDependencies:
+      ora:
+        specifier: ^6.3.1
+        version: 6.3.1
+
+  legacy_e2e/runtimes/node-module:
+    dependencies:
+      '@thirdweb-dev/auth':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/auth
+      '@thirdweb-dev/chains':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/chains
+      '@thirdweb-dev/crypto':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/crypto
+      '@thirdweb-dev/merkletree':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/merkletree
+      '@thirdweb-dev/sdk':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/sdk
+      '@thirdweb-dev/storage':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/storage
+      '@thirdweb-dev/wallets':
+        specifier: workspace:*
+        version: link:../../../legacy_packages/wallets
+    devDependencies:
+      ora:
+        specifier: ^6.3.1
+        version: 6.3.1
+
   legacy_packages/auth:
     dependencies:
       '@fastify/cookie':
@@ -1557,192 +1743,6 @@ importers:
       typescript:
         specifier: 5.4.3
         version: 5.4.3
-
-  test/bundlers/esbuild:
-    dependencies:
-      '@thirdweb-dev/auth':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/auth
-      '@thirdweb-dev/chains':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/chains
-      '@thirdweb-dev/crypto':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/crypto
-      '@thirdweb-dev/merkletree':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/merkletree
-      '@thirdweb-dev/sdk':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/sdk
-      '@thirdweb-dev/storage':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/storage
-      '@thirdweb-dev/wallets':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/wallets
-    devDependencies:
-      esbuild:
-        specifier: 0.20.2
-        version: 0.20.2
-      ora:
-        specifier: ^6.3.1
-        version: 6.3.1
-
-  test/bundlers/swc:
-    dependencies:
-      '@thirdweb-dev/auth':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/auth
-      '@thirdweb-dev/chains':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/chains
-      '@thirdweb-dev/crypto':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/crypto
-      '@thirdweb-dev/merkletree':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/merkletree
-      '@thirdweb-dev/sdk':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/sdk
-      '@thirdweb-dev/storage':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/storage
-      '@thirdweb-dev/wallets':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/wallets
-    devDependencies:
-      '@swc/cli':
-        specifier: 0.3.10
-        version: 0.3.10(@swc/core@1.4.11)
-      '@swc/core':
-        specifier: ^1.4.11
-        version: 1.4.11
-      ora:
-        specifier: ^6.3.1
-        version: 6.3.1
-
-  test/bundlers/vite:
-    dependencies:
-      '@thirdweb-dev/auth':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/auth
-      '@thirdweb-dev/chains':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/chains
-      '@thirdweb-dev/crypto':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/crypto
-      '@thirdweb-dev/merkletree':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/merkletree
-      '@thirdweb-dev/sdk':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/sdk
-      '@thirdweb-dev/storage':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/storage
-      '@thirdweb-dev/wallets':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/wallets
-    devDependencies:
-      ora:
-        specifier: ^6.3.1
-        version: 6.3.1
-      vite:
-        specifier: ^5.2.7
-        version: 5.2.7(@types/node@20.12.2)
-
-  test/bundlers/webpack:
-    dependencies:
-      '@thirdweb-dev/auth':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/auth
-      '@thirdweb-dev/chains':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/chains
-      '@thirdweb-dev/crypto':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/crypto
-      '@thirdweb-dev/merkletree':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/merkletree
-      '@thirdweb-dev/sdk':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/sdk
-      '@thirdweb-dev/storage':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/storage
-      '@thirdweb-dev/wallets':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/wallets
-    devDependencies:
-      ora:
-        specifier: ^6.3.1
-        version: 6.3.1
-      webpack:
-        specifier: ^5.91.0
-        version: 5.91.0(webpack-cli@5.1.4)
-      webpack-cli:
-        specifier: ^5.1.4
-        version: 5.1.4(webpack@5.91.0)
-
-  test/runtimes/node-commonjs:
-    dependencies:
-      '@thirdweb-dev/auth':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/auth
-      '@thirdweb-dev/chains':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/chains
-      '@thirdweb-dev/crypto':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/crypto
-      '@thirdweb-dev/merkletree':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/merkletree
-      '@thirdweb-dev/sdk':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/sdk
-      '@thirdweb-dev/storage':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/storage
-      '@thirdweb-dev/wallets':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/wallets
-    devDependencies:
-      ora:
-        specifier: ^6.3.1
-        version: 6.3.1
-
-  test/runtimes/node-module:
-    dependencies:
-      '@thirdweb-dev/auth':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/auth
-      '@thirdweb-dev/chains':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/chains
-      '@thirdweb-dev/crypto':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/crypto
-      '@thirdweb-dev/merkletree':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/merkletree
-      '@thirdweb-dev/sdk':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/sdk
-      '@thirdweb-dev/storage':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/storage
-      '@thirdweb-dev/wallets':
-        specifier: workspace:*
-        version: link:../../../legacy_packages/wallets
-    devDependencies:
-      ora:
-        specifier: ^6.3.1
-        version: 6.3.1
 
 packages:
 
@@ -8715,7 +8715,7 @@ packages:
       ext-name: 5.0.0
       file-type: 17.1.6
       filenamify: 5.1.1
-      got: 11.8.6
+      got: 11.8.5
       os-filter-obj: 2.0.0
     dev: true
 
@@ -18800,24 +18800,6 @@ packages:
       lowercase-keys: 2.0.0
       p-cancelable: 2.1.1
       responselike: 2.0.1
-    dev: false
-
-  /got@11.8.6:
-    resolution: {integrity: sha512-6tfZ91bOr7bOXnK7PRDCGBLa1H4U080YHNaAQ2KsMGlLEzRbk44nsZF2E1IeRc3vtJHPVbKCYgdFbaGO2ljd8g==}
-    engines: {node: '>=10.19.0'}
-    dependencies:
-      '@sindresorhus/is': 4.6.0
-      '@szmarczak/http-timer': 4.0.6
-      '@types/cacheable-request': 6.0.3
-      '@types/responselike': 1.0.3
-      cacheable-lookup: 5.0.4
-      cacheable-request: 7.0.4
-      decompress-response: 6.0.0
-      http2-wrapper: 1.0.3
-      lowercase-keys: 2.0.0
-      p-cancelable: 2.1.1
-      responselike: 2.0.1
-    dev: true
 
   /got@12.6.1:
     resolution: {integrity: sha512-mThBblvlAF1d4O5oqyvN+ZxLAYwIJK7bpMxgYqPD9okW0C3qm5FFn7k811QrcuEBwaogR3ngOFoCfs6mRv7teQ==}
@@ -23272,7 +23254,7 @@ packages:
     engines: {node: '>=12.0.0'}
     hasBin: true
     peerDependencies:
-      protobufjs: ^7.0.0
+      protobufjs: '>=7.2.4'
     dependencies:
       chalk: 4.1.2
       escodegen: 1.14.3
