@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { sha256, sha256Hex, sha256Sync, sha256HexSync } from "../src";
 import { createHash } from "node:crypto";
 

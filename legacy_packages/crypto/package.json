@@ -49,7 +49,7 @@
     "clean": "rm -rf dist/",
     "build": "tsc && preconstruct build",
     "push": "yalc push",
-    "test": "bun test",
+    "test": "vitest",
     "benchmark:aes-encrypt": "bun benchmark/aes-encrypt.ts",
     "benchmark:aes-decrypt": "bun benchmark/aes-decrypt.ts",
     "benchmark:sha256": "bun benchmark/sha256.ts",
