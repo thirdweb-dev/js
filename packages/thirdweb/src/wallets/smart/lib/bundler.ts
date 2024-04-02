@@ -2,6 +2,7 @@ import { getClientFetch } from "../../../utils/fetch.js";
 import { hexToBigInt, type Hex } from "../../../utils/encoding/hex.js";
 import type {
   EstimationResult,
+  GasPriceResult,
   SmartWalletOptions,
   UserOperation,
 } from "../types.js";
@@ -61,6 +62,24 @@ export async function estimateUserOpGas(args: {
 /**
  * @internal
  */
+export async function getUserOpGasPrice(args: {
+  options: SmartWalletOptions & { client: ThirdwebClient };
+}): Promise<GasPriceResult> {
+  const res = await sendBundlerRequest({
+    ...args,
+    operation: "thirdweb_getUserOperationGasPrice",
+    params: [],
+  });
+
+  return {
+    maxPriorityFeePerGas: hexToBigInt(res.maxPriorityFeePerGas),
+    maxFeePerGas: hexToBigInt(res.maxFeePerGas),
+  };
+}
+
+/**
+ * @internal
+ */
 export async function getUserOpReceipt(args: {
   userOpHash: Hex;
   options: SmartWalletOptions & { client: ThirdwebClient };
@@ -98,7 +117,8 @@ async function sendBundlerRequest(args: {
   operation:
     | "eth_estimateUserOperationGas"
     | "eth_sendUserOperation"
-    | "eth_getUserOperationReceipt";
+    | "eth_getUserOperationReceipt"
+    | "thirdweb_getUserOperationGasPrice";
   params: any[];
 }) {
   const { options, operation, params } = args;
