@@ -22,6 +22,7 @@ export async function encode<abi extends Abi, abiFn extends AbiFunction>(
   transaction: PreparedTransaction<abi, abiFn>,
 ): Promise<Hex> {
   if (encodeWeakMap.has(transaction)) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return encodeWeakMap.get(transaction)!;
   }
   const promise = (async () => {

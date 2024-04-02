@@ -17,7 +17,6 @@ import { simulateTransaction } from "../../../transaction/actions/simulate.js";
 import { addAdmin } from "./addAdmin.js";
 import { getAllAdmins } from "../__generated__/IAccountPermissions/read/getAllAdmins.js";
 import { removeAdmin } from "./removeAdmin.js";
-import { getAllSigners } from "../__generated__/IAccountPermissions/read/getAllSigners.js";
 import { addSessionKey } from "./addSessionKey.js";
 import { parseEventLogs } from "../../../event/actions/parse-logs.js";
 import { adminUpdatedEvent } from "../__generated__/IAccountPermissions/events/AdminUpdated.js";
