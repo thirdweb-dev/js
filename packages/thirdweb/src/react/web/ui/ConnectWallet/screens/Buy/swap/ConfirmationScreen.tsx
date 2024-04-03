@@ -19,17 +19,12 @@ import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
-import { Container, ModalHeader } from "../../../../components/basic.js";
+import { Container, Line, ModalHeader } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { useCustomTheme } from "../../../../design-system/CustomThemeProvider.js";
 import { StyledDiv } from "../../../../design-system/elements.js";
-import {
-  fontSize,
-  iconSize,
-  radius,
-  spacing,
-} from "../../../../design-system/index.js";
+import { fontSize, iconSize } from "../../../../design-system/index.js";
 import { isNativeToken, type ERC20OrNativeToken } from "../../nativeToken.js";
 import { SwapFees } from "./SwapFees.js";
 import { addPendingSwapTransaction } from "./pendingSwapTx.js";
@@ -37,8 +32,8 @@ import { TokenIcon } from "../../../../components/TokenIcon.js";
 import { waitForReceipt } from "../../../../../../../transaction/actions/wait-for-tx-receipt.js";
 import { AccentFailIcon } from "../../../icons/AccentFailIcon.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
-import { WalletImage } from "../../../../components/WalletImage.js";
-import { useActiveWallet } from "../../../../../../core/hooks/wallets/wallet-hooks.js";
+import { formatSeconds } from "./formatSeconds.js";
+import { keyframes } from "@emotion/react";
 
 /**
  * @internal
@@ -57,7 +52,6 @@ export function ConfirmationScreen(props: {
   onQuoteFinalized: (quote: BuyWithCryptoQuote) => void;
   client: ThirdwebClient;
 }) {
-  const activeWallet = useActiveWallet();
   const sendTransactionMutation = useSendTransaction();
 
   const [swapTx, setSwapTx] = useState<
@@ -111,48 +105,48 @@ export function ConfirmationScreen(props: {
       <ModalHeader title="Confirm Buy" onBack={props.onBack} />
       <Spacer y="lg" />
 
-      <TokenSelection
-        label="You Receive"
-        chain={props.toChain}
-        amount={String(formatNumber(Number(props.toAmount), 4))}
-        symbol={toTokenSymbol || ""}
-        token={props.toToken}
-      />
+      {/* You Receive */}
+      <ConfirmItem label="Receive">
+        <TokenInfo
+          chain={props.toChain}
+          amount={String(formatNumber(Number(props.toAmount), 4))}
+          symbol={toTokenSymbol || ""}
+          token={props.toToken}
+        />
+      </ConfirmItem>
 
-      <Spacer y="lg" />
+      <ConfirmItem label="Pay">
+        <TokenInfo
+          chain={props.fromChain}
+          amount={String(formatNumber(Number(props.fromAmount), 4))}
+          symbol={fromTokenSymbol || ""}
+          token={props.fromToken}
+        />
+      </ConfirmItem>
 
-      {/* You Pay */}
-      <TokenSelection
-        label="You Pay"
-        chain={props.fromChain}
-        amount={String(formatNumber(Number(props.fromAmount), 4))}
-        symbol={fromTokenSymbol || ""}
-        token={props.fromToken}
-      />
+      {/* Fees  */}
+      <ConfirmItem label="Fees">
+        <SwapFees quote={props.buyWithCryptoQuote} align="right" />
+      </ConfirmItem>
 
-      <Spacer y="lg" />
+      {/* Send to  */}
+      <ConfirmItem label="Send to">
+        <Text color="primaryText">
+          {shortenString(props.account.address, false)}
+        </Text>
+      </ConfirmItem>
 
-      <Text size="sm" color="secondaryText">
-        Recipient Address
-      </Text>
-
-      <Spacer y="xs" />
-
-      <TokenInfoContainer>
-        <Container flex="row" gap="md" center="y">
-          {/* todo render a placeholder here if we don't have an activeWallet (?) */}
-          {activeWallet?.id && (
-            <WalletImage size={iconSize.lg} id={activeWallet.id} />
+      {/* Time  */}
+      <ConfirmItem label="Time">
+        <Text color="primaryText">
+          ~
+          {formatSeconds(
+            props.buyWithCryptoQuote.swapDetails.estimated.durationSeconds || 0,
           )}
-          <Text color="primaryText" size="sm">
-            {shortenString(props.account.address, false)}
-          </Text>
-        </Container>
-      </TokenInfoContainer>
+        </Text>
+      </ConfirmItem>
 
       <Spacer y="lg" />
-      <SwapFees quote={props.buyWithCryptoQuote} />
-      <Spacer y="md" />
 
       {/* Show 2 steps  */}
       {isApprovalRequired && (
@@ -265,8 +259,8 @@ export function ConfirmationScreen(props: {
 const ConnectorLine = /* @__PURE__ */ StyledDiv(() => {
   const theme = useCustomTheme();
   return {
-    height: "1.5px",
-    background: theme.colors.secondaryText,
+    height: "4px",
+    background: theme.colors.borderColor,
     flex: 1,
   };
 });
@@ -284,7 +278,7 @@ function Step(props: { isDone: boolean; label: string; isActive: boolean }) {
         props.isDone
           ? "success"
           : props.isActive
-            ? "primaryText"
+            ? "accentText"
             : "secondaryText"
       }
     >
@@ -292,20 +286,36 @@ function Step(props: { isDone: boolean; label: string; isActive: boolean }) {
         {props.isDone ? (
           <CheckIcon width={iconSize.sm} height={iconSize.sm} />
         ) : (
-          <div
-            style={{
-              background: "currentColor",
-              width: "7px",
-              height: "7px",
-              borderRadius: "50%",
-            }}
-          />
+          <PulsingDot data-active={props.isActive} />
         )}
       </Circle>
       {props.label}
     </Container>
   );
 }
+
+const pulseAnimation = keyframes`
+0% {
+  opacity: 1;
+  transform: scale(0.5);
+}
+100% {
+  opacity: 0;
+  transform: scale(1.5);
+}
+`;
+
+const PulsingDot = /* @__PURE__ */ StyledDiv(() => {
+  return {
+    background: "currentColor",
+    width: "9px",
+    height: "9px",
+    borderRadius: "50%",
+    '&[data-active="true"]': {
+      animation: `${pulseAnimation} 1s infinite`,
+    },
+  };
+});
 
 const Circle = /* @__PURE__ */ StyledDiv(() => {
   return {
@@ -319,8 +329,7 @@ const Circle = /* @__PURE__ */ StyledDiv(() => {
   };
 });
 
-function TokenSelection(props: {
-  label: string;
+function TokenInfo(props: {
   chain: Chain;
   token: ERC20OrNativeToken;
   amount: string;
@@ -328,27 +337,47 @@ function TokenSelection(props: {
 }) {
   const chainQuery = useChainQuery(props.chain);
   return (
-    <div>
-      <Text size="sm" color="secondaryText">
-        {props.label}
-      </Text>
-      <Spacer y="xxs" />
-      <TokenInfoContainer>
-        <Container flex="row" gap="md" center="y">
-          <TokenIcon token={props.token} chain={props.chain} size="lg" />
-          <Container flex="column" gap="xxs">
-            <Text color="primaryText" size="sm">
-              {props.amount} {props.symbol}
-            </Text>
-            {chainQuery.data ? (
-              <Text size="xs">{chainQuery.data.name}</Text>
-            ) : (
-              <Skeleton width={"100px"} height={fontSize.xs} />
-            )}
-          </Container>
-        </Container>
-      </TokenInfoContainer>
-    </div>
+    <Container
+      flex="column"
+      gap="xxs"
+      style={{
+        alignItems: "flex-end",
+      }}
+    >
+      <Container flex="row" center="y" gap="xs">
+        <Text color="primaryText" size="md">
+          {props.amount} {props.symbol}
+        </Text>
+        <TokenIcon token={props.token} chain={props.chain} size="sm" />
+      </Container>
+
+      {chainQuery.data ? (
+        <Text size="sm">{chainQuery.data.name}</Text>
+      ) : (
+        <Skeleton width={"100px"} height={fontSize.sm} />
+      )}
+    </Container>
+  );
+}
+
+function ConfirmItem(props: { label: string; children: React.ReactNode }) {
+  return (
+    <>
+      <Container
+        flex="row"
+        gap="md"
+        py="md"
+        style={{
+          justifyContent: "space-between",
+        }}
+      >
+        <Text size="md" color="secondaryText">
+          {props.label}
+        </Text>
+        {props.children}
+      </Container>
+      <Line />
+    </>
   );
 }
 
@@ -470,14 +499,3 @@ function WaitingForConfirmation(props: {
     </Container>
   );
 }
-
-const TokenInfoContainer = /* @__PURE__ */ StyledDiv(() => {
-  const theme = useCustomTheme();
-  return {
-    padding: spacing.sm,
-    borderRadius: radius.md,
-    background: theme.colors.tertiaryBg,
-    display: "flex",
-    alignItems: "center",
-  };
-});

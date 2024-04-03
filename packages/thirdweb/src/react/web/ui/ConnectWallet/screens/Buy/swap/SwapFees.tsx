@@ -6,9 +6,18 @@ import { Text } from "../../../../components/text.js";
 /**
  * @internal
  */
-export function SwapFees(props: { quote: BuyWithCryptoQuote }) {
+export function SwapFees(props: {
+  quote: BuyWithCryptoQuote;
+  align: "left" | "right";
+}) {
   return (
-    <Container flex="column" gap="xs">
+    <Container
+      flex="column"
+      gap="xs"
+      style={{
+        alignItems: props.align === "right" ? "flex-end" : "flex-start",
+      }}
+    >
       {props.quote.processingFees.map((fee) => {
         const feeAmount = formatNumber(Number(fee.amount), 4);
         return (

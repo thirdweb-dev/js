@@ -63,6 +63,7 @@ import { Input } from "../../../components/formElements.js";
 import { WalletIcon } from "../../icons/WalletIcon.js";
 import { isAddress } from "../../../../../../utils/address.js";
 import { DynamicHeight } from "../../../components/DynamicHeight.js";
+import { formatSeconds } from "./swap/formatSeconds.js";
 
 /**
  * @internal
@@ -540,7 +541,7 @@ function DrawerContent(props: {
           </Text>
 
           <Spacer y="lg" />
-          {quote && <SwapFees quote={quote} />}
+          {quote && <SwapFees quote={quote} align="left" />}
         </div>
       )}
 
@@ -628,23 +629,6 @@ const StyledInput = /* @__PURE__ */ styled(Input)(() => {
     },
   };
 });
-
-function formatSeconds(seconds: number) {
-  // hours and minutes
-  if (seconds > 3600) {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    return `${hours} Hours ${minutes} Minutes`;
-  }
-
-  // minutes only
-  else if (seconds > 60) {
-    const minutes = Math.ceil(seconds / 60);
-    return `${minutes} Minutes`;
-  }
-
-  return `${seconds}s`;
-}
 
 const ViewFeeIcon: IconFC = (props) => {
   return (

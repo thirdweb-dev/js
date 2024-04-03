@@ -15,6 +15,7 @@ import {
   useActiveWalletChain,
   // useConnect,
   useDisconnect,
+  useSwitchActiveWalletChain,
 } from "../../../core/hooks/wallets/wallet-hooks.js";
 import { Modal } from "../components/Modal.js";
 import { Skeleton } from "../components/Skeleton.js";
@@ -46,6 +47,7 @@ import { ChainIcon } from "../components/ChainIcon.js";
 import { useWalletBalance } from "../../../core/hooks/others/useWalletBalance.js";
 import { FundsIcon } from "./icons/FundsIcon.js";
 import type {
+  ConnectButtonProps,
   ConnectButton_detailsButtonOptions,
   ConnectButton_detailsModalOptions,
 } from "./ConnectWalletProps.js";
@@ -73,6 +75,7 @@ import { getUserEmail } from "../../../../wallets/embedded/core/authentication/i
 import { useQuery } from "@tanstack/react-query";
 import { getContract } from "../../../../contract/contract.js";
 import { isContractDeployed } from "../../../../utils/bytecode/is-contract-deployed.js";
+import { Spinner } from "../components/Spinner.js";
 
 const TW_CONNECTED_WALLET = "tw-connected-wallet";
 
@@ -97,6 +100,8 @@ export const ConnectedWalletDetails: React.FC<{
   theme: "light" | "dark" | Theme;
   supportedTokens: SupportedTokens;
   chains: Chain[];
+  chain?: Chain;
+  switchButton: ConnectButtonProps["switchButton"];
 }> = (props) => {
   const { connectLocale: locale, client } = useWalletConnectionCtx();
   const activeWallet = useActiveWallet();
@@ -164,10 +169,20 @@ export const ConnectedWalletDetails: React.FC<{
   //   avatarOrWalletIconUrl = smartWalletMetadata.iconUrl;
   // }
 
+  const isNetworkMismatch =
+    props.chain && walletChain && walletChain.id !== props.chain.id;
+
   const trigger = props.detailsButton?.render ? (
     <div>
       <props.detailsButton.render />
     </div>
+  ) : props.chain && isNetworkMismatch ? (
+    <SwitchNetworkButton
+      style={props.switchButton?.style}
+      className={props.switchButton?.className}
+      switchNetworkBtnTitle={props.switchButton?.label}
+      targetChain={props.chain}
+    />
   ) : (
     <WalletInfoButton
       type="button"
@@ -843,4 +858,52 @@ function EmbeddedWalletEmail() {
   }
 
   return null;
+}
+
+/**
+ * @internal
+ */
+function SwitchNetworkButton(props: {
+  style?: React.CSSProperties;
+  className?: string;
+  switchNetworkBtnTitle?: string;
+  targetChain: Chain;
+}) {
+  const switchChain = useSwitchActiveWalletChain();
+  const [switching, setSwitching] = useState(false);
+  const locale = useWalletConnectionCtx().connectLocale;
+
+  const switchNetworkBtnTitle =
+    props.switchNetworkBtnTitle ?? locale.switchNetwork;
+
+  return (
+    <Button
+      className={`tw-connect-wallet--switch-network ${props.className || ""}`}
+      variant="primary"
+      type="button"
+      data-is-loading={switching}
+      data-test="switch-network-button"
+      disabled={switching}
+      onClick={async () => {
+        setSwitching(true);
+        try {
+          await switchChain(props.targetChain);
+        } catch (e) {
+          console.error(e);
+        }
+        setSwitching(false);
+      }}
+      style={{
+        minWidth: "140px",
+        ...props.style,
+      }}
+      aria-label={switching ? locale.switchingNetwork : undefined}
+    >
+      {switching ? (
+        <Spinner size="sm" color="primaryButtonText" />
+      ) : (
+        switchNetworkBtnTitle
+      )}
+    </Button>
+  );
 }
