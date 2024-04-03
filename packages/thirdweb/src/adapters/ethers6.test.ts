@@ -3,7 +3,7 @@ import * as ethers6 from "ethers6";
 import { privateKeyAccount } from "../wallets/private-key.js";
 import { TEST_CLIENT } from "../../test/src/test-clients.js";
 import { toEthersSigner } from "./ethers6.js";
-import { defineChain } from "../chains/utils.js";
+import { ANVIL_CHAIN } from "../../test/src/chains.js";
 
 const FAKE_PKEY =
   "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef";
@@ -19,7 +19,7 @@ describe("toEthersSigner", () => {
       ethers6,
       TEST_CLIENT,
       account,
-      defineChain(31337),
+      ANVIL_CHAIN,
     );
     expect(signer).toBeDefined();
     expect(signer.signMessage).toBeDefined();
@@ -30,7 +30,7 @@ describe("toEthersSigner", () => {
       ethers6,
       TEST_CLIENT,
       account,
-      defineChain(31337),
+      ANVIL_CHAIN,
     );
     expect(signer.signTypedData).toBeDefined();
 

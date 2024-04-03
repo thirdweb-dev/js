@@ -4,22 +4,22 @@ import {
   type GetContractReturnType,
   type PublicClient,
   type Chain as ViemChain,
-  type Account as ViemAccount,
   type WalletClient,
   createWalletClient,
   custom,
   type TransactionSerializableEIP1559,
 } from "viem";
 import { getContract, type ThirdwebContract } from "../contract/contract.js";
-import type { Abi, Address } from "abitype";
+import type { Abi } from "abitype";
 import type { Chain } from "../chains/types.js";
 import type { ThirdwebClient } from "../client/client.js";
 import { resolveContractAbi } from "../contract/actions/resolve-abi.js";
 import { getRpcUrlForChain } from "../chains/utils.js";
-import { type Account, getAccountKey } from "../wallets/interfaces/wallet.js";
+import type { Account } from "../wallets/interfaces/wallet.js";
 import { getRpcClient } from "../rpc/rpc.js";
-import { secp256k1 } from "@noble/curves/secp256k1";
-import { toHex } from "../utils/encoding/hex.js";
+import { sendTransaction } from "../transaction/actions/send-transaction.js";
+import { prepareTransaction } from "../transaction/prepare-transaction.js";
+import { estimateGas } from "../transaction/actions/estimate-gas.js";
 
 export const viemAdapter = {
   contract: {
@@ -170,7 +170,7 @@ type ToViemWalletClientOptions = {
   chain: Chain;
 };
 
-function toViemWalletClient(options: ToViemWalletClientOptions): WalletClient {
+function toViemWalletClient(options: ToViemWalletClientOptions) {
   const { account, chain, client } = options;
   if (!account) {
     throw new Error("Wallet not connected.");
@@ -194,13 +194,25 @@ function toViemWalletClient(options: ToViemWalletClientOptions): WalletClient {
   const transport = custom({
     request: async (request) => {
       if (request.method === "eth_sendTransaction") {
-        const result = await account.sendTransaction(request.params[0]);
+        const result = await sendTransaction({
+          transaction: prepareTransaction({
+            ...request.params[0],
+            chain,
+            client,
+          }),
+          account: account,
+        });
         return result.transactionHash;
       }
       if (request.method === "eth_estimateGas") {
-        if (account.estimateGas) {
-          return account.estimateGas(request.params[0]);
-        }
+        return estimateGas({
+          transaction: prepareTransaction({
+            ...request.params[0],
+            chain,
+            client,
+          }),
+          account: account,
+        });
       }
       if (request.method === "personal_sign") {
         return account.signMessage({
@@ -217,26 +229,9 @@ function toViemWalletClient(options: ToViemWalletClientOptions): WalletClient {
     },
   });
 
-  // viem defaults to JsonRpcAccounts so we pass the whole account if it's locally generated
-  let viemAccountOrAddress: ViemAccount | Address;
-  const possibleAccountKey = getAccountKey(account);
-  if (possibleAccountKey && account.signTransaction) {
-    viemAccountOrAddress = {
-      ...account,
-      signTransaction: account.signTransaction,
-      source: "custom",
-      type: "local" as const,
-      publicKey: toHex(
-        secp256k1.getPublicKey(possibleAccountKey.slice(2), false),
-      ),
-    };
-  } else {
-    viemAccountOrAddress = account.address;
-  }
-
   return createWalletClient({
     transport,
-    account: viemAccountOrAddress,
+    account: account.address,
     chain: viemChain,
     key: "thirdweb-wallet",
   });

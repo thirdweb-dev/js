@@ -42,24 +42,6 @@ export type Wallet<TWalletId extends WalletId = WalletId> = {
   getConfig: () => CreateWalletArgs<TWalletId>[1];
 };
 
-// Symbols to track account key internally for downstream adapters
-// eslint-disable-next-line better-tree-shaking/no-top-level-side-effects
-const accountKeySymbol: unique symbol = Symbol("key");
-
-/**
- * @internal
- */
-export function getAccountKey(account: Account): Hex | undefined {
-  return account[accountKeySymbol];
-}
-
-/**
- * @internal
- */
-export function setAccountKey(account: Account, key: Hex) {
-  account[accountKeySymbol] = key;
-}
-
 export type Account = {
   // REQUIRED
   address: Address;
@@ -80,13 +62,4 @@ export type Account = {
   sendBatchTransaction?: (
     txs: SendTransactionOption[],
   ) => Promise<SendTransactionResult>;
-} & (
-  | {
-      // if a private key account, signTransaction will be defined and an accountKeySymbol assigned
-      signTransaction: (tx: TransactionSerializable) => Promise<Hex>;
-      [accountKeySymbol]: Hex;
-    }
-  | {
-      [accountKeySymbol]?: never;
-    }
-);
+};
