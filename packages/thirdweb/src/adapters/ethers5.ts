@@ -131,7 +131,7 @@ export const ethers5Adapter = /* @__PURE__ */ (() => {
         chain: Chain;
         account: Account;
       }) =>
-        toEthersSigner(ethers, options.client, options.chain, options.account),
+        toEthersSigner(ethers, options.client, options.account, options.chain),
     },
   };
 })();
@@ -274,8 +274,7 @@ export async function toEthersSigner(
     }
 
     /**
-     *
-     * @example
+     * @internal
      */
     override getAddress(): Promise<string> {
       if (!account) {
@@ -284,9 +283,7 @@ export async function toEthersSigner(
       return Promise.resolve(account.address);
     }
     /**
-     *
-     * @param message
-     * @example
+     * @internal
      */
     override signMessage(message: string | Uint8Array): Promise<string> {
       if (!account) {
@@ -298,9 +295,7 @@ export async function toEthersSigner(
       });
     }
     /**
-     *
-     * @param transaction
-     * @example
+     * @internal
      */
     override async signTransaction(
       transaction: ethers5.ethers.utils.Deferrable<ethers5.ethers.providers.TransactionRequest>,
@@ -318,9 +313,7 @@ export async function toEthersSigner(
     }
 
     /**
-     *
-     * @param transaction
-     * @example
+     * @internal
      */
     override async sendTransaction(
       transaction: ethers5.ethers.utils.Deferrable<
@@ -430,8 +423,7 @@ export async function toEthersSigner(
     }
 
     /**
-     *
-     * @example
+     * @internal
      */
     override connect(): ethers5.ethers.Signer {
       return this;
