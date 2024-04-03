@@ -1,4 +1,4 @@
-import { CrossCircledIcon } from "@radix-ui/react-icons";
+import { ClockIcon, CrossCircledIcon } from "@radix-ui/react-icons";
 import { useMemo, useState } from "react";
 import { polygon } from "../../../../../../chains/chain-definitions/polygon.js";
 import type { Chain } from "../../../../../../chains/types.js";
@@ -20,7 +20,12 @@ import { Spinner } from "../../../components/Spinner.js";
 import { Container, Line, ModalHeader } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
-import { iconSize } from "../../../design-system/index.js";
+import {
+  fontSize,
+  iconSize,
+  radius,
+  spacing,
+} from "../../../design-system/index.js";
 import { useDebouncedValue } from "../../../hooks/useDebouncedValue.js";
 import type { SupportedTokens } from "../../defaultTokens.js";
 import { TokenSelector } from "../TokenSelector.js";
@@ -33,10 +38,14 @@ import { PaymentSelection } from "./PaymentSelection.js";
 import { BuyTokenInput } from "./swap/BuyTokenInput.js";
 import { ConfirmationScreen } from "./swap/ConfirmationScreen.js";
 import { PayWithCrypto } from "./swap/PayWithCrypto.js";
-import { SwapFees } from "./swap/SwapFees.js";
+// import { SwapFees } from "./swap/SwapFees.js";
 import type { BuyWithCryptoQuote } from "../../../../../../pay/buyWithCrypto/actions/getQuote.js";
 import { useSwapSupportedChains } from "./swap/useSwapSupportedChains.js";
 import type { ThirdwebClient } from "../../../../../../client/client.js";
+import { Skeleton } from "../../../components/Skeleton.js";
+import type { IconFC } from "../../icons/types.js";
+import styled from "@emotion/styled";
+import { useCustomTheme } from "../../../design-system/CustomThemeProvider.js";
 
 /**
  * @internal
@@ -228,7 +237,6 @@ export function SwapScreenContent(props: {
   };
 
   const sourceTokenAmount = swapQuote?.swapDetails.fromAmount || "";
-
   const quoteToConfirm = finalizedQuote || buyWithCryptoQuoteQuery.data;
 
   if (screen === "confirmation" && quoteToConfirm) {
@@ -262,16 +270,21 @@ export function SwapScreenContent(props: {
     Number(fromTokenBalanceQuery.data.displayValue) < Number(sourceTokenAmount);
 
   const disableContinue = !swapQuote || isNotEnoughBalance;
-
   const switchChainRequired = props.activeChain.id !== fromChain.id;
+
+  const estimatedSeconds =
+    buyWithCryptoQuoteQuery.data?.swapDetails.estimated.durationSeconds;
 
   return (
     <Container animate="fadein">
-      <Container p="lg">
+      <Container
+        p="lg"
+        style={{
+          minHeight: hasEditedAmount ? undefined : "300px",
+        }}
+      >
         <ModalHeader title="Buy" onBack={props.onBack} />
-        <Spacer y="xl" />
-
-        {!hasEditedAmount && <Spacer y="xl" />}
+        <Spacer y="lg" />
 
         {/* To */}
         <BuyTokenInput
@@ -286,14 +299,13 @@ export function SwapScreenContent(props: {
         />
       </Container>
 
-      {!hasEditedAmount && <Spacer y="xxl" />}
       <Line />
 
       <Container p="lg">
         {hasEditedAmount && (
           <div>
             <PaymentSelection />
-            <Spacer y="lg" />
+            <Spacer y="md" />
 
             {/* From */}
             <PayWithCrypto
@@ -306,15 +318,55 @@ export function SwapScreenContent(props: {
               }
             />
 
-            <Spacer y="lg" />
+            <Line />
+
+            <Container
+              bg="tertiaryBg"
+              flex="row"
+              style={{
+                borderRadius: radius.md,
+                borderTopLeftRadius: 0,
+                borderTopRightRadius: 0,
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Container
+                flex="row"
+                center="y"
+                gap="xxs"
+                color="accentText"
+                p="sm"
+              >
+                <ClockIcon width={iconSize.sm} height={iconSize.sm} />
+                {buyWithCryptoQuoteQuery.isLoading ? (
+                  <Skeleton height={fontSize.xs} width="50px" />
+                ) : (
+                  <Text size="xs" color="secondaryText">
+                    {estimatedSeconds
+                      ? "~" + formatSeconds(estimatedSeconds)
+                      : "--"}
+                  </Text>
+                )}
+              </Container>
+
+              <FeesButton variant="secondary">
+                <ViewFeeIcon size={iconSize.sm} />
+                <Text size="xs" color="secondaryText">
+                  View Fees
+                </Text>
+              </FeesButton>
+            </Container>
+
+            <Spacer y="md" />
 
             <Container flex="column" gap="md">
-              {buyWithCryptoQuoteQuery.data && (
+              {/* {buyWithCryptoQuoteQuery.data && (
                 <div>
                   <SwapFees quote={buyWithCryptoQuoteQuery.data} />
                   <Spacer y="lg" />
                 </div>
-              )}
+              )} */}
 
               {isSwapQuoteError && (
                 <div>
@@ -380,3 +432,63 @@ export function SwapScreenContent(props: {
     </Container>
   );
 }
+
+function formatSeconds(seconds: number) {
+  // hours and minutes
+  if (seconds > 3600) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    return `${hours} Hours ${minutes} Minutes`;
+  }
+
+  // minutes only
+  else if (seconds > 60) {
+    const minutes = Math.ceil(seconds / 60);
+    return `${minutes} Minutes`;
+  }
+
+  return `${seconds}s`;
+}
+
+const ViewFeeIcon: IconFC = (props) => {
+  return (
+    <svg
+      width={props.size}
+      height={props.size}
+      viewBox="0 0 12 12"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M9.5 1.5H2.5C1.94772 1.5 1.5 1.94772 1.5 2.5V9.5C1.5 10.0523 1.94772 10.5 2.5 10.5H9.5C10.0523 10.5 10.5 10.0523 10.5 9.5V2.5C10.5 1.94772 10.0523 1.5 9.5 1.5Z"
+        stroke="#3385FF"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M4.5 7.5L7.5 4.5"
+        stroke="#3385FF"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+};
+
+const FeesButton = /* @__PURE__ */ styled(Button)(() => {
+  const theme = useCustomTheme();
+  return {
+    background: "transparent",
+    border: `1px solid transparent`,
+    "&:hover": {
+      background: "transparent",
+      borderColor: theme.colors.accentText,
+    },
+    justifyContent: "flex-start",
+    transition: "background 0.3s, border-color 0.3s",
+    gap: spacing.sm,
+    padding: spacing.sm,
+    color: theme.colors.primaryText,
+    borderRadius: radius.md,
+  };
+});

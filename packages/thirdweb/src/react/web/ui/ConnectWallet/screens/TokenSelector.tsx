@@ -303,7 +303,7 @@ function SelectTokenButton(props: {
 const SelectTokenBtn = /* @__PURE__ */ styled(Button)(() => {
   const theme = useCustomTheme();
   return {
-    background: theme.colors.walletSelectorButtonHoverBg,
+    background: theme.colors.tertiaryBg,
     justifyContent: "flex-start",
     gap: spacing.sm,
     padding: spacing.sm,

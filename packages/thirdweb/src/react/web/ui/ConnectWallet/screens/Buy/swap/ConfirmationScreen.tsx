@@ -476,7 +476,7 @@ const TokenInfoContainer = /* @__PURE__ */ StyledDiv(() => {
   return {
     padding: spacing.sm,
     borderRadius: radius.md,
-    background: theme.colors.walletSelectorButtonHoverBg,
+    background: theme.colors.tertiaryBg,
     display: "flex",
     alignItems: "center",
   };

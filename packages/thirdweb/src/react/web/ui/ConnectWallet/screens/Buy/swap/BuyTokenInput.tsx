@@ -122,34 +122,6 @@ export function BuyTokenInput(props: {
         >
           <Container flex="row" center="y" gap="sm">
             <TokenIcon token={props.token} chain={props.chain} size="md" />
-            {/* <BorderBox
-              style={{
-                padding: "6px",
-              }}
-            >
-
-            </BorderBox> */}
-
-            {/* <BorderBox
-              style={{
-                position: "relative",
-                padding: "4px",
-                transform: "translate(-10%, -10%)",
-              }}
-            >
-              <ChainIcon chain={chainQuery.data} size={iconSize.md} />
-              <BorderBox
-                style={{
-                  position: "absolute",
-                  right: 0,
-                  bottom: 0,
-                  transform: "translate(40%, 40%)",
-                  padding: "2px",
-                }}
-              >
-                <TokenIcon token={props.token} chain={props.chain} size="sm" />
-              </BorderBox>
-            </BorderBox> */}
 
             <Container flex="column" gap="xxs">
               {/* Token Symbol */}
@@ -174,17 +146,6 @@ export function BuyTokenInput(props: {
             }}
           />
         </TokenButton>
-
-        {/* <TokenSelectorButton
-          onClick={props.onTokenClick}
-          token={props.token}
-          chain={props.chain}
-          style={{
-            padding: 0,
-            fontSize: fontSize.sm,
-            border: "none",
-          }}
-        /> */}
       </Container>
     </Container>
   );
@@ -193,20 +154,8 @@ export function BuyTokenInput(props: {
 const TokenButton = /* @__PURE__ */ styled(Button)(() => {
   const theme = useCustomTheme();
   return {
-    background: theme.colors.walletSelectorButtonHoverBg,
+    background: theme.colors.tertiaryBg,
     justifyContent: "flex-start",
     transition: "background 0.3s",
   };
 });
-
-// const BorderBox = /* @__PURE__ */ StyledDiv(() => {
-//   const theme = useCustomTheme();
-//   return {
-//     border: `2px solid ${theme.colors.borderColor}`,
-//     borderRadius: radius.sm,
-//     // background: theme.colors.walletSelectorButtonHoverBg,
-//     display: "flex",
-//     justifyContent: "center",
-//     alignItems: "center",
-//   };
-// });

@@ -61,7 +61,7 @@ export function WalletLogoSpinner(props: { error: boolean; id: WalletId }) {
 const WalletBg = /* @__PURE__ */ StyledDiv(() => {
   const theme = useCustomTheme();
   return {
-    background: theme.colors.walletSelectorButtonHoverBg,
+    background: theme.colors.tertiaryBg,
     borderRadius: "15px",
     border: `1px solid ${theme.colors.borderColor}`,
     padding: spacing.xs,

@@ -371,7 +371,7 @@ const TxHashLink = /* @__PURE__ */ StyledAnchor(() => {
     borderRadius: radius.lg,
     cursor: "pointer",
     animation: `${fadeInAnimation} 300ms ease`,
-    background: theme.colors.walletSelectorButtonHoverBg,
+    background: theme.colors.tertiaryBg,
     "&:hover": {
       transition: "background 250ms ease",
       background: theme.colors.secondaryButtonBg,

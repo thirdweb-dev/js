@@ -79,11 +79,11 @@ export const WalletButton = /* @__PURE__ */ StyledButton(() => {
     borderRadius: radius.md,
     padding: `${spacing.xs} ${spacing.xs}`,
     "&:hover": {
-      backgroundColor: theme.colors.walletSelectorButtonHoverBg,
+      backgroundColor: theme.colors.tertiaryBg,
       transform: "scale(1.01)",
     },
     '&[data-active="true"]': {
-      backgroundColor: theme.colors.walletSelectorButtonHoverBg,
+      backgroundColor: theme.colors.tertiaryBg,
     },
     transition: "background-color 200ms ease, transform 200ms ease",
   };

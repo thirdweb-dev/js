@@ -667,7 +667,7 @@ const MenuButton = /* @__PURE__ */ StyledButton(() => {
     lineHeight: 1.3,
     transition: "background-color 200ms ease, transform 200ms ease",
     "&:hover": {
-      backgroundColor: theme.colors.walletSelectorButtonHoverBg,
+      backgroundColor: theme.colors.tertiaryBg,
       transform: "scale(1.01)",
       svg: {
         color: theme.colors.accentText,

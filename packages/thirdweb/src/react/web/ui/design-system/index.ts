@@ -75,7 +75,7 @@ export type Theme = {
 
     inputAutofillBg: string;
     scrollbarBg: string;
-    walletSelectorButtonHoverBg: string;
+    tertiaryBg: string;
 
     separatorLine: string;
 
@@ -128,7 +128,7 @@ function createThemeObj(colors: ThemeColors): Theme {
 
       inputAutofillBg: colors.base2,
       scrollbarBg: colors.base2,
-      walletSelectorButtonHoverBg: colors.base2,
+      tertiaryBg: colors.base2,
 
       separatorLine: colors.base4,
 

@@ -584,7 +584,7 @@ const ShowAllWalletsIcon = /* @__PURE__ */ StyledDiv(() => {
   return {
     width: iconSize.xl + "px",
     height: iconSize.xl + "px",
-    backgroundColor: theme.colors.walletSelectorButtonHoverBg,
+    backgroundColor: theme.colors.tertiaryBg,
     border: `2px solid ${theme.colors.borderColor}`,
     borderRadius: radius.md,
     display: "grid",
