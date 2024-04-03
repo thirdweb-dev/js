@@ -251,13 +251,19 @@ async function fromEthersSigner(signer: ethers5.Signer): Promise<Account> {
   return account;
 }
 
-async function toEthersSigner(
+/**
+ * @internal
+ */
+export async function toEthersSigner(
   ethers: Ethers5,
   client: ThirdwebClient,
-  chain: Chain,
   account: Account,
+  chain: Chain,
 ) {
   class ThirdwebAdapterSigner extends ethers.Signer {
+    /**
+     * @internal
+     */
     constructor() {
       super();
       ethers.utils.defineReadOnly(
@@ -267,12 +273,21 @@ async function toEthersSigner(
       );
     }
 
+    /**
+     *
+     * @example
+     */
     override getAddress(): Promise<string> {
       if (!account) {
         throw new Error("Account not found");
       }
       return Promise.resolve(account.address);
     }
+    /**
+     *
+     * @param message
+     * @example
+     */
     override signMessage(message: string | Uint8Array): Promise<string> {
       if (!account) {
         throw new Error("Account not found");
@@ -282,6 +297,11 @@ async function toEthersSigner(
           typeof message === "string" ? message : uint8ArrayToHex(message),
       });
     }
+    /**
+     *
+     * @param transaction
+     * @example
+     */
     override async signTransaction(
       transaction: ethers5.ethers.utils.Deferrable<ethers5.ethers.providers.TransactionRequest>,
     ): Promise<string> {
@@ -297,6 +317,11 @@ async function toEthersSigner(
       );
     }
 
+    /**
+     *
+     * @param transaction
+     * @example
+     */
     override async sendTransaction(
       transaction: ethers5.ethers.utils.Deferrable<
         ethers5.ethers.providers.TransactionRequest & { chainId: number }
@@ -404,6 +429,10 @@ async function toEthersSigner(
       return account.signTypedData(typedData);
     }
 
+    /**
+     *
+     * @example
+     */
     override connect(): ethers5.ethers.Signer {
       return this;
     }

@@ -278,7 +278,7 @@ async function fromEthersSigner(signer: ethers6.Signer): Promise<Account> {
  * @returns A promise that resolves to an ethers.js signer.
  * @internal
  */
-export async function toEthersSigner(
+async function toEthersSigner(
   ethers: Ethers6,
   client: ThirdwebClient,
   account: Account,

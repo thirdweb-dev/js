@@ -1,8 +1,9 @@
 import { describe, test, expect } from "vitest";
 import { privateKeyAccount } from "../wallets/private-key.js";
 import { TEST_CLIENT } from "../../test/src/test-clients.js";
-import { ethers6Adapter } from "./ethers6.js";
+import { toEthersSigner } from "./ethers5.js";
 import { ANVIL_CHAIN } from "../../test/src/chains.js";
+import * as ethers5 from "ethers5";
 
 const FAKE_PKEY =
   "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef";
@@ -12,24 +13,26 @@ const account = privateKeyAccount({
   client: TEST_CLIENT,
 });
 
-describe("toEthersSigner", () => {
-  test("should return an ethers 6 signer", async () => {
-    const signer = await ethers6Adapter.signer.toEthers({
-      client: TEST_CLIENT,
+describe("ethers5 adapter", () => {
+  test("should return an ethers 5 signer", async () => {
+    const signer = await toEthersSigner(
+      ethers5,
+      TEST_CLIENT,
       account,
-      chain: ANVIL_CHAIN,
-    });
+      ANVIL_CHAIN,
+    );
     expect(signer).toBeDefined();
     expect(signer.signMessage).toBeDefined();
   });
 
   test("should sign typed data", async () => {
-    const signer = await ethers6Adapter.signer.toEthers({
-      client: TEST_CLIENT,
+    const signer = await toEthersSigner(
+      ethers5,
+      TEST_CLIENT,
       account,
-      chain: ANVIL_CHAIN,
-    });
-    expect(signer.signTypedData).toBeDefined();
+      ANVIL_CHAIN,
+    );
+    expect(signer._signTypedData).toBeDefined();
 
     // All properties on a domain are optional
     const domain = {
@@ -65,7 +68,7 @@ describe("toEthersSigner", () => {
       contents: "Hello, Bob!",
     };
 
-    const signature = await signer.signTypedData(domain, types, value);
+    const signature = await signer._signTypedData(domain, types, value);
 
     expect(signature).toMatchInlineSnapshot(
       `"0x10d3ce8040590e48889801080ad40f3d514c2c3ce03bbbe3e179bbf5ba56c75425951fa15220f637e2ab79fd033b99c4b340339e00e360316547e956c61ffcb01c"`,
