@@ -119,8 +119,7 @@ export async function createUnsignedUserOp(args: {
         userOp: partialOp,
         options,
       });
-      // add 50k overhead for entrypoint checks
-      partialOp.callGasLimit = estimates.callGasLimit + 50_000n;
+      partialOp.callGasLimit = estimates.callGasLimit;
       partialOp.verificationGasLimit = estimates.verificationGasLimit;
       partialOp.preVerificationGas = estimates.preVerificationGas;
       // need paymaster to re-sign after estimates
@@ -148,6 +147,10 @@ export async function createUnsignedUserOp(args: {
     partialOp.verificationGasLimit = estimates.verificationGasLimit;
     partialOp.preVerificationGas = estimates.preVerificationGas;
   }
+
+  // add 50k overhead for entrypoint checks
+  partialOp.callGasLimit = partialOp.callGasLimit + 50_000n;
+
   return {
     ...partialOp,
     signature: "0x",
