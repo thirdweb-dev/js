@@ -1,5 +1,5 @@
+import { describe, expect, it } from "vitest";
 import { aesEncrypt, aesDecrypt, aesDecryptCompat } from "../src";
-
 import { AES } from "crypto-js";
 
 describe("AES", () => {

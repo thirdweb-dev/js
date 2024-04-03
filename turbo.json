@@ -80,7 +80,7 @@
     "test": {
       "outputs": ["codecov/**"],
       "inputs": ["src/**", "test/**"],
-      "dependsOn": [],
+      "dependsOn": ["^build"],
       "env": ["TW_SECRET_KEY", "CI"]
     },
     "test:legacy": {
