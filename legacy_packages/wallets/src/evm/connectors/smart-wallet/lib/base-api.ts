@@ -261,7 +261,10 @@ export abstract class BaseAccountAPI {
       } catch (error: any) {
         throw this.unwrapBundlerError(error);
       }
-      partialOp.callGasLimit = BigNumber.from(estimates.callGasLimit);
+      // add 50k overhead for entrypoint checks
+      partialOp.callGasLimit = BigNumber.from(estimates.callGasLimit).add(
+        50_000,
+      );
       partialOp.verificationGasLimit = BigNumber.from(
         estimates.verificationGasLimit,
       );
@@ -281,7 +284,10 @@ export abstract class BaseAccountAPI {
         paymasterResult.verificationGasLimit &&
         paymasterResult.preVerificationGas
       ) {
-        partialOp.callGasLimit = BigNumber.from(paymasterResult.callGasLimit);
+        // add 50k overhead for entrypoint checks
+        partialOp.callGasLimit = BigNumber.from(
+          paymasterResult.callGasLimit,
+        ).add(50_000);
         partialOp.verificationGasLimit = BigNumber.from(
           paymasterResult.verificationGasLimit,
         );
@@ -296,7 +302,7 @@ export abstract class BaseAccountAPI {
         } catch (error: any) {
           throw this.unwrapBundlerError(error);
         }
-        // add 50k overhead for entrypoint checks (following same as unity-sdk)
+        // add 50k overhead for entrypoint checks
         partialOp.callGasLimit = BigNumber.from(estimates.callGasLimit).add(
           50_000,
         );
@@ -327,7 +333,7 @@ export abstract class BaseAccountAPI {
         throw this.unwrapBundlerError(error);
       }
 
-      // add 50k overhead for entrypoint checks (following same as unity-sdk)
+      // add 50k overhead for entrypoint checks
       partialOp.callGasLimit = BigNumber.from(estimates.callGasLimit).add(
         50_000,
       );
