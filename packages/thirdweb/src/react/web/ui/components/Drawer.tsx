@@ -7,50 +7,53 @@ import { IconButton } from "./buttons.js";
 
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { CrossContainer } from "./Modal.js";
+import { forwardRef, useRef } from "react";
 
+type DrawerProps = {
+  children: React.ReactNode;
+};
 /**
  *
  * @internal
  */
-export function Drawer(props: {
-  children: React.ReactNode;
-  onBack: () => void;
-}) {
-  return (
-    <>
-      <DrawerOverlay />
-      <DrawerContainer>
-        <CrossContainer>
-          <IconButton type="button" aria-label="Close">
-            <Cross2Icon
-              width={iconSize.md}
-              height={iconSize.md}
-              style={{
-                color: "inherit",
-              }}
-            />
-          </IconButton>
-        </CrossContainer>
+export const Drawer = /* @__PURE__ */ forwardRef<HTMLDivElement, DrawerProps>(
+  function Drawer_(props, ref) {
+    return (
+      <>
+        <DrawerContainer ref={ref}>
+          <CrossContainer>
+            <IconButton type="button" aria-label="Close">
+              <Cross2Icon
+                width={iconSize.md}
+                height={iconSize.md}
+                style={{
+                  color: "inherit",
+                }}
+              />
+            </IconButton>
+          </CrossContainer>
 
-        {props.children}
-      </DrawerContainer>
-    </>
-  );
-}
+          {props.children}
+        </DrawerContainer>
+      </>
+    );
+  },
+);
 
-const DrawerContainer = /* @__PURE__ */ StyledDiv(() => {
+export const DrawerContainer = /* @__PURE__ */ StyledDiv(() => {
   const theme = useCustomTheme();
   return {
     zIndex: 10000,
     padding: spacing.lg,
-    borderTopLeftRadius: radius.lg,
-    borderTopRightRadius: radius.lg,
+    borderTopLeftRadius: radius.xl,
+    borderTopRightRadius: radius.xl,
     background: theme.colors.modalBg,
     position: "fixed",
     bottom: 0,
     left: 0,
     right: 0,
-    animation: `${drawerOpenAnimation} 0.3s ease`,
+    animation: `${drawerOpenAnimation} 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1)`,
+    borderTop: `1px solid ${theme.colors.borderColor}`,
   };
 });
 
@@ -75,3 +78,38 @@ export const DrawerOverlay = /* @__PURE__ */ StyledDiv(() => {
     animation: `${fadeInAnimation} 400ms cubic-bezier(0.16, 1, 0.3, 1)`,
   };
 });
+
+/**
+ *
+ * @internal
+ */
+export function useDrawer() {
+  const drawerRef = useRef<HTMLDivElement>(null);
+  const drawerOverlayRef = useRef<HTMLDivElement>(null);
+
+  const onClose = (closeDrawer: () => void) => {
+    if (drawerRef.current) {
+      const animOptions = {
+        easing: "cubic-bezier(0.175, 0.885, 0.32, 1.1)",
+        fill: "forwards",
+        duration: 300,
+      } as const;
+
+      const closeAnimation = drawerRef.current.animate(
+        [{ transform: "translateY(100%)", opacity: 0 }],
+        animOptions,
+      );
+
+      drawerOverlayRef.current?.animate([{ opacity: 0 }], animOptions);
+      closeAnimation.onfinish = closeDrawer;
+    } else {
+      closeDrawer();
+    }
+  };
+
+  return {
+    drawerRef,
+    drawerOverlayRef,
+    onClose,
+  };
+}

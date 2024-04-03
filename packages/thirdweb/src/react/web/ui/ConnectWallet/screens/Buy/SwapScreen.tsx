@@ -1,9 +1,12 @@
 import { ClockIcon, CrossCircledIcon } from "@radix-ui/react-icons";
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { polygon } from "../../../../../../chains/chain-definitions/polygon.js";
 import type { Chain } from "../../../../../../chains/types.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../constants/addresses.js";
-import type { Account } from "../../../../../../wallets/interfaces/wallet.js";
+import type {
+  Account,
+  Wallet,
+} from "../../../../../../wallets/interfaces/wallet.js";
 import { useChainsQuery } from "../../../../../core/hooks/others/useChainQuery.js";
 import { useWalletBalance } from "../../../../../core/hooks/others/useWalletBalance.js";
 import {
@@ -12,6 +15,7 @@ import {
 } from "../../../../../core/hooks/pay/useBuyWithCryptoQuote.js";
 import {
   useActiveAccount,
+  useActiveWallet,
   useActiveWalletChain,
   useSwitchActiveWalletChain,
 } from "../../../../../core/hooks/wallets/wallet-hooks.js";
@@ -46,8 +50,19 @@ import { Skeleton } from "../../../components/Skeleton.js";
 import type { IconFC } from "../../icons/types.js";
 import styled from "@emotion/styled";
 import { useCustomTheme } from "../../../design-system/CustomThemeProvider.js";
-import { Drawer } from "../../../components/Drawer.js";
+import {
+  Drawer,
+  DrawerOverlay,
+  useDrawer,
+} from "../../../components/Drawer.js";
 import { SwapFees } from "./swap/SwapFees.js";
+import { WalletImage } from "../../../components/WalletImage.js";
+import { shortenString } from "../../../../../core/utils/addresses.js";
+import { ChevronDownIcon } from "@radix-ui/react-icons";
+import { Input } from "../../../components/formElements.js";
+import { WalletIcon } from "../../icons/WalletIcon.js";
+import { isAddress } from "../../../../../../utils/address.js";
+import { DynamicHeight } from "../../../components/DynamicHeight.js";
 
 /**
  * @internal
@@ -59,9 +74,10 @@ export function SwapScreen(props: {
   client: ThirdwebClient;
 }) {
   const activeChain = useActiveWalletChain();
+  const activeWallet = useActiveWallet();
   const account = useActiveAccount();
 
-  if (!activeChain || !account) {
+  if (!activeChain || !account || !activeWallet) {
     return null; // this should never happen
   }
 
@@ -69,6 +85,7 @@ export function SwapScreen(props: {
     <SwapScreenContent
       {...props}
       activeChain={activeChain}
+      activeWallet={activeWallet}
       account={account}
       onViewPendingTx={props.onViewPendingTx}
     />
@@ -76,7 +93,7 @@ export function SwapScreen(props: {
 }
 
 type Screen = "main" | "select-from-token" | "select-to-token" | "confirmation";
-type DrawerScreen = "fees" | undefined;
+type DrawerScreen = "fees" | "address" | undefined;
 
 /**
  *
@@ -87,14 +104,14 @@ export function SwapScreenContent(props: {
   onBack: () => void;
   supportedTokens: SupportedTokens;
   activeChain: Chain;
+  activeWallet: Wallet;
   account: Account;
   onViewPendingTx: () => void;
 }) {
-  const { activeChain, account, client } = props;
+  const { activeChain, account, client, activeWallet } = props;
   const [isSwitching, setIsSwitching] = useState(false);
   const switchActiveWalletChain = useSwitchActiveWalletChain();
   const supportedChainsQuery = useSwapSupportedChains(client);
-  const drawerRef = useRef<HTMLDivElement>(null);
 
   const supportedChains = supportedChainsQuery.data;
 
@@ -104,6 +121,13 @@ export function SwapScreenContent(props: {
   // screens
   const [screen, setScreen] = useState<Screen>("main");
   const [drawerScreen, setDrawerScreen] = useState<DrawerScreen>();
+  const { drawerRef, drawerOverlayRef, onClose } = useDrawer();
+
+  const closeDrawer = () => {
+    onClose(() => {
+      setDrawerScreen(undefined);
+    });
+  };
 
   // token amount
   const [tokenAmount, setTokenAmount] = useState<string>("");
@@ -118,6 +142,7 @@ export function SwapScreenContent(props: {
   const defaultChain = isChainSupported ? activeChain : polygon;
   const [fromChain, setFromChain] = useState<Chain>(defaultChain);
   const [toChain, setToChain] = useState<Chain>(defaultChain);
+  const [address, setAddress] = useState<string>(account.address);
 
   // selected tokens
   const [fromToken, setFromToken] = useState<ERC20OrNativeToken>(NATIVE_TOKEN);
@@ -145,7 +170,7 @@ export function SwapScreenContent(props: {
     !(fromChain.id === toChain.id && fromToken === toToken)
       ? {
           // wallet
-          fromAddress: account.address,
+          fromAddress: address,
           // from token
           fromChainId: fromChain.id,
           fromTokenAddress: isNativeToken(fromToken)
@@ -291,33 +316,38 @@ export function SwapScreenContent(props: {
           ) {
             e.preventDefault();
             e.stopPropagation();
-            setDrawerScreen(undefined);
+            closeDrawer();
           }
         }}
       >
+        {/* Drawer */}
         {drawerScreen && (
-          <Drawer onBack={() => setDrawerScreen(undefined)}>
-            <div ref={drawerRef}>
-              <Text size="lg" color="primaryText">
-                Fee
-              </Text>
-
-              <Spacer y="lg" />
-              {buyWithCryptoQuoteQuery.data && (
-                <SwapFees quote={buyWithCryptoQuoteQuery.data} />
-              )}
-            </div>
-          </Drawer>
+          <>
+            <DrawerOverlay ref={drawerOverlayRef} />
+            <Drawer ref={drawerRef}>
+              <DrawerContent
+                drawerScreen={drawerScreen}
+                quote={swapQuote}
+                activeAccount={account}
+                activeWallet={activeWallet}
+                onSelect={(v) => {
+                  setAddress(v);
+                  closeDrawer();
+                }}
+              />
+            </Drawer>
+          </>
         )}
 
         <Container
           p="lg"
           style={{
-            minHeight: hasEditedAmount ? undefined : "300px",
+            paddingBottom: 0,
           }}
         >
           <ModalHeader title="Buy" onBack={props.onBack} />
           <Spacer y="lg" />
+          {!hasEditedAmount && <Spacer y="xl" />}
 
           {/* To */}
           <BuyTokenInput
@@ -332,9 +362,8 @@ export function SwapScreenContent(props: {
           />
         </Container>
 
-        <Line />
-
-        <Container p="lg">
+        <Spacer y="md" />
+        <Container px="lg">
           {hasEditedAmount && (
             <div>
               <PaymentSelection />
@@ -355,6 +384,7 @@ export function SwapScreenContent(props: {
 
               <Line />
 
+              {/* Other info */}
               <Container
                 bg="tertiaryBg"
                 flex="row"
@@ -402,14 +432,24 @@ export function SwapScreenContent(props: {
 
               <Spacer y="md" />
 
-              <Container flex="column" gap="md">
-                {/* {buyWithCryptoQuoteQuery.data && (
-                <div>
-                  <SwapFees quote={buyWithCryptoQuoteQuery.data} />
-                  <Spacer y="lg" />
-                </div>
-              )} */}
+              {/* Send To */}
+              <Container>
+                <Text size="sm">Send To</Text>
+                <Spacer y="xxs" />
+                <WalletSelectorButton
+                  address={address}
+                  activeAccount={account}
+                  activeWallet={activeWallet}
+                  onClick={() => {
+                    setDrawerScreen("address");
+                  }}
+                  chevron
+                />
+              </Container>
 
+              <Spacer y="md" />
+
+              <Container flex="column" gap="md">
                 {isSwapQuoteError && (
                   <div>
                     <Container flex="row" gap="xs" center="y" color="danger">
@@ -473,10 +513,121 @@ export function SwapScreenContent(props: {
             </Button>
           )}
         </Container>
+        <Spacer y="lg" />
       </div>
     </Container>
   );
 }
+
+function DrawerContent(props: {
+  drawerScreen: DrawerScreen;
+  quote?: BuyWithCryptoQuote;
+  activeWallet: Wallet;
+  activeAccount: Account;
+  onSelect: (address: string) => void;
+}) {
+  const { drawerScreen, quote } = props;
+  const [address, setAddress] = useState<string>("");
+  const isValidAddress = useMemo(() => isAddress(address), [address]);
+  const showError = !!address && !isValidAddress;
+
+  return (
+    <DynamicHeight>
+      {drawerScreen === "fees" && (
+        <div>
+          <Text size="lg" color="primaryText">
+            Fees
+          </Text>
+
+          <Spacer y="lg" />
+          {quote && <SwapFees quote={quote} />}
+        </div>
+      )}
+
+      {drawerScreen === "address" && (
+        <div>
+          <Text size="lg" color="primaryText">
+            Send to
+          </Text>
+          <Spacer y="lg" />
+          <Container
+            flex="row"
+            center="y"
+            style={{
+              flexWrap: "nowrap",
+              height: "50px",
+            }}
+          >
+            <StyledInput
+              data-is-error={showError}
+              value={address}
+              placeholder="Enter wallet address"
+              variant="outline"
+              onChange={(e) => setAddress(e.target.value)}
+            />
+            <Button
+              variant="accent"
+              disabled={!isValidAddress}
+              style={{
+                height: "100%",
+                minWidth: "100px",
+                borderTopLeftRadius: 0,
+                borderBottomLeftRadius: 0,
+              }}
+              onClick={() => {
+                props.onSelect(address);
+              }}
+            >
+              Confirm
+            </Button>
+          </Container>
+
+          {showError && (
+            <>
+              <Spacer y="xxs" />
+              <Text color="danger" size="sm">
+                Invalid address
+              </Text>
+            </>
+          )}
+
+          <Spacer y="xl" />
+          <Text size="sm">Connected</Text>
+          <Spacer y="xs" />
+          <WalletSelectorButton
+            address={props.activeAccount.address}
+            activeAccount={props.activeAccount}
+            activeWallet={props.activeWallet}
+            onClick={() => {
+              props.onSelect(props.activeAccount.address);
+            }}
+          />
+        </div>
+      )}
+    </DynamicHeight>
+  );
+}
+
+const StyledInput = /* @__PURE__ */ styled(Input)(() => {
+  const theme = useCustomTheme();
+  return {
+    border: `1.5px solid ${theme.colors.borderColor}`,
+    borderTopRightRadius: 0,
+    borderBottomRightRadius: 0,
+    height: "100%",
+    boxSizing: "border-box",
+    boxShadow: "none",
+    borderRight: "none",
+    "&:focus": {
+      boxShadow: "none",
+      borderColor: theme.colors.accentText,
+    },
+    "&[data-is-error='true']": {
+      boxShadow: "none",
+      borderColor: theme.colors.danger,
+    },
+  };
+});
 
 function formatSeconds(seconds: number) {
   // hours and minutes
@@ -520,6 +671,37 @@ const ViewFeeIcon: IconFC = (props) => {
   );
 };
 
+function WalletSelectorButton(props: {
+  onClick: () => void;
+  activeWallet: Wallet;
+  activeAccount: Account;
+  address: string;
+  chevron?: boolean;
+}) {
+  return (
+    <AccountButton variant="secondary" fullWidth onClick={props.onClick}>
+      {props.activeAccount.address === props.address ? (
+        <WalletImage id={props.activeWallet.id} size={iconSize.md} />
+      ) : (
+        <Container color="secondaryText" flex="row" center="both">
+          <WalletIcon size={iconSize.md} />
+        </Container>
+      )}
+
+      <Text size="sm">{shortenString(props.address, false)}</Text>
+      {props.chevron && (
+        <ChevronDownIcon
+          width={iconSize.sm}
+          height={iconSize.sm}
+          style={{
+            marginLeft: "auto",
+          }}
+        />
+      )}
+    </AccountButton>
+  );
+}
+
 const FeesButton = /* @__PURE__ */ styled(Button)(() => {
   const theme = useCustomTheme();
   return {
@@ -534,6 +716,23 @@ const FeesButton = /* @__PURE__ */ styled(Button)(() => {
     gap: spacing.xs,
     padding: spacing.sm,
     color: theme.colors.primaryText,
+    borderRadius: radius.md,
+  };
+});
+
+const AccountButton = /* @__PURE__ */ styled(Button)(() => {
+  const theme = useCustomTheme();
+  return {
+    background: theme.colors.tertiaryBg,
+    border: `1px solid transparent`,
+    "&:hover": {
+      background: theme.colors.tertiaryBg,
+      borderColor: theme.colors.accentText,
+    },
+    justifyContent: "flex-start",
+    transition: "background 0.3s, border-color 0.3s",
+    gap: spacing.sm,
+    padding: spacing.sm,
     borderRadius: radius.md,
   };
 });

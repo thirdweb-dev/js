@@ -134,7 +134,7 @@ const TokenButton = /* @__PURE__ */ styled(Button)(() => {
     transition: "background 0.3s, border-color 0.3s",
     gap: spacing.sm,
     paddingInline: spacing.sm,
-    paddingBlock: spacing.md,
+    paddingBlock: spacing.sm,
     color: theme.colors.primaryText,
     borderRadius: radius.md,
     minWidth: "50%",

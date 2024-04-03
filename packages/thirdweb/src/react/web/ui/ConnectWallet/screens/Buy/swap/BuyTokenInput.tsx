@@ -3,7 +3,11 @@ import { Input } from "../../../../components/formElements.js";
 import type { Chain } from "../../../../../../../chains/types.js";
 import type { ERC20OrNativeToken } from "../../nativeToken.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
-import { fontSize, iconSize } from "../../../../design-system/index.js";
+import {
+  fontSize,
+  iconSize,
+  spacing,
+} from "../../../../design-system/index.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Button } from "../../../../components/buttons.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
@@ -39,73 +43,79 @@ export function BuyTokenInput(props: {
     <Container>
       {/* Input */}
 
-      <Container
-        flex="row"
-        center="both"
-        gap="xs"
-        style={{
-          flexWrap: "nowrap",
+      <div
+        onClick={(e) => {
+          e.currentTarget.querySelector("input")?.focus();
         }}
       >
-        <Input
-          variant="outline"
-          pattern="^[0-9]*[.,]?[0-9]*$"
-          inputMode="decimal"
-          placeholder="0"
-          type="text"
-          data-placeholder={props.value === ""}
-          value={props.value || "0"}
-          onClick={(e) => {
-            // put cursor at the end of the input
-            if (props.value === "") {
-              e.currentTarget.setSelectionRange(
-                e.currentTarget.value.length,
-                e.currentTarget.value.length,
-              );
-            }
-          }}
-          onChange={(e) => {
-            let value = e.target.value;
-
-            if (value.startsWith(".")) {
-              value = "0" + value;
-            }
-
-            const numValue = Number(value);
-            if (isNaN(numValue)) {
-              return;
-            }
-
-            if (value.startsWith("0") && !value.startsWith("0.")) {
-              props.onChange(value.slice(1));
-            } else {
-              props.onChange(value);
-            }
-          }}
+        <Container
+          flex="row"
+          center="both"
+          gap="xs"
           style={{
-            border: "none",
-            fontSize:
-              props.value.length > 10
-                ? "26px"
-                : props.value.length > 6
-                  ? "34px"
-                  : "50px",
-            boxShadow: "none",
-            padding: "0",
-            paddingBlock: "2px",
-            fontWeight: 600,
-            textAlign: "right",
-            width: getWidth(),
-            maxWidth: "calc(100% - 100px)",
+            flexWrap: "nowrap",
           }}
-        />
-        <TokenSymbol
-          token={props.token}
-          chain={props.chain}
-          size="lg"
-          color="secondaryText"
-        />
-      </Container>
+        >
+          <Input
+            variant="outline"
+            pattern="^[0-9]*[.,]?[0-9]*$"
+            inputMode="decimal"
+            placeholder="0"
+            type="text"
+            data-placeholder={props.value === ""}
+            value={props.value || "0"}
+            onClick={(e) => {
+              // put cursor at the end of the input
+              if (props.value === "") {
+                e.currentTarget.setSelectionRange(
+                  e.currentTarget.value.length,
+                  e.currentTarget.value.length,
+                );
+              }
+            }}
+            onChange={(e) => {
+              let value = e.target.value;
+
+              if (value.startsWith(".")) {
+                value = "0" + value;
+              }
+
+              const numValue = Number(value);
+              if (isNaN(numValue)) {
+                return;
+              }
+
+              if (value.startsWith("0") && !value.startsWith("0.")) {
+                props.onChange(value.slice(1));
+              } else {
+                props.onChange(value);
+              }
+            }}
+            style={{
+              border: "none",
+              fontSize:
+                props.value.length > 10
+                  ? "26px"
+                  : props.value.length > 6
+                    ? "34px"
+                    : "50px",
+              boxShadow: "none",
+              padding: "0",
+              paddingBlock: "2px",
+              fontWeight: 600,
+              textAlign: "right",
+              width: getWidth(),
+              maxWidth: "calc(100% - 100px)",
+            }}
+          />
+          <TokenSymbol
+            token={props.token}
+            chain={props.chain}
+            size="lg"
+            color="secondaryText"
+          />
+        </Container>
+      </div>
 
       <Spacer y="md" />
 
@@ -123,7 +133,12 @@ export function BuyTokenInput(props: {
           <Container flex="row" center="y" gap="sm">
             <TokenIcon token={props.token} chain={props.chain} size="md" />
 
-            <Container flex="column" gap="xxs">
+            <Container
+              flex="column"
+              style={{
+                gap: "4px",
+              }}
+            >
               {/* Token Symbol */}
               <TokenSymbol token={props.token} chain={props.chain} size="sm" />
 
@@ -157,5 +172,6 @@ const TokenButton = /* @__PURE__ */ styled(Button)(() => {
     background: theme.colors.tertiaryBg,
     justifyContent: "flex-start",
     transition: "background 0.3s",
+    padding: spacing.sm,
   };
 });
