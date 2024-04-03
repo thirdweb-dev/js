@@ -296,7 +296,10 @@ export abstract class BaseAccountAPI {
         } catch (error: any) {
           throw this.unwrapBundlerError(error);
         }
-        partialOp.callGasLimit = BigNumber.from(estimates.callGasLimit);
+        // add 50k overhead for entrypoint checks (following same as unity-sdk)
+        partialOp.callGasLimit = BigNumber.from(estimates.callGasLimit).add(
+          50_000,
+        );
         partialOp.verificationGasLimit = BigNumber.from(
           estimates.verificationGasLimit,
         );
@@ -324,7 +327,10 @@ export abstract class BaseAccountAPI {
         throw this.unwrapBundlerError(error);
       }
 
-      partialOp.callGasLimit = BigNumber.from(estimates.callGasLimit);
+      // add 50k overhead for entrypoint checks (following same as unity-sdk)
+      partialOp.callGasLimit = BigNumber.from(estimates.callGasLimit).add(
+        50_000,
+      );
       partialOp.verificationGasLimit = BigNumber.from(
         estimates.verificationGasLimit,
       );
@@ -332,9 +338,6 @@ export abstract class BaseAccountAPI {
         estimates.preVerificationGas,
       );
     }
-
-    // add 50k overhead for entrypoint checks (following same as unity-sdk)
-    partialOp.callGasLimit = partialOp.callGasLimit.add(50_000);
 
     return {
       ...partialOp,
