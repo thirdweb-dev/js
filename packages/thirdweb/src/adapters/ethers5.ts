@@ -5,11 +5,10 @@ import type { Abi } from "abitype";
 import type { AccessList, Hex, TransactionSerializable } from "viem";
 import type { ThirdwebClient } from "../client/client.js";
 import type { Account } from "../wallets/interfaces/wallet.js";
-import { defineChain, getRpcUrlForChain } from "../chains/utils.js";
+import { getRpcUrlForChain } from "../chains/utils.js";
 import type { Chain } from "../chains/types.js";
 import { getContract, type ThirdwebContract } from "../contract/contract.js";
 import { toHex, uint8ArrayToHex } from "../utils/encoding/hex.js";
-import { resolvePromisedValue } from "../utils/promise/resolve-promised-value.js";
 import { waitForReceipt } from "../transaction/actions/wait-for-tx-receipt.js";
 import { prepareTransaction } from "../transaction/prepare-transaction.js";
 import { sendTransaction } from "../transaction/actions/send-transaction.js";
@@ -302,7 +301,7 @@ async function toEthersSigner(
       const alignedTx = await alignTxFromEthers(awaitedTx, ethers);
       const tx = prepareTransaction({
         client,
-        chain: defineChain(await resolvePromisedValue(transaction.chainId)),
+        chain,
         accessList: alignedTx.accessList,
         data: alignedTx.data,
         gas: alignedTx.gas,
