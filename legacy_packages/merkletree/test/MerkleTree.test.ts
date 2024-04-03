@@ -1,8 +1,9 @@
+import { describe, it as test, expect } from "vitest";
 import { MerkleTree } from "../src/index";
 import { keccak256Sync, sha256Sync } from "@thirdweb-dev/crypto";
 
 describe("MerkleTree", () => {
-  it("sha256 with keccak256 leaves", () => {
+  test("sha256 with keccak256 leaves", () => {
     const leaves = ["a", "b", "c"].map(keccak256Sync);
     const tree = new MerkleTree(leaves, sha256Sync);
 
@@ -14,7 +15,7 @@ describe("MerkleTree", () => {
     expect(tree.getHexLayers()).toMatchSnapshot();
   });
 
-  it("sha256 with keccak256 leaves with duplicate odd option", () => {
+  test("sha256 with keccak256 leaves with duplicate odd option", () => {
     const leaves = ["a", "b", "c"].map(keccak256Sync);
     const tree = new MerkleTree(leaves, sha256Sync, { duplicateOdd: true });
 
@@ -26,7 +27,7 @@ describe("MerkleTree", () => {
     expect(tree.getHexLayers()).toMatchSnapshot();
   });
 
-  it("sha256 with sort pairs option", () => {
+  test("sha256 with sort pairs option", () => {
     const leaves = ["a", "b", "c", "d", "e", "f"].map(sha256Sync);
     const tree = new MerkleTree(leaves, sha256Sync, { sortPairs: true });
 
@@ -34,7 +35,7 @@ describe("MerkleTree", () => {
     expect(tree.getHexRoot()).toMatchSnapshot();
   });
 
-  it("sha256 verify with positional hex proof and no pairSort", () => {
+  test("sha256 verify with positional hex proof and no pairSort", () => {
     const leaves = ["a", "b", "c", "d", "e", "f"].map(sha256Sync);
     const tree = new MerkleTree(leaves, sha256Sync, { sortPairs: false });
 
@@ -64,7 +65,7 @@ describe("MerkleTree", () => {
     ).toBe(true);
   });
 
-  it("sha256 verify with hex proof and pairSort", () => {
+  test("sha256 verify with hex proof and pairSort", () => {
     const leaves = ["a", "b", "c", "d", "e", "f"].map(sha256Sync);
     const tree = new MerkleTree(leaves, sha256Sync, { sortPairs: true });
 
@@ -79,7 +80,7 @@ describe("MerkleTree", () => {
     ).toBe(true);
   });
 
-  it("keccak256 with sort leaves and sort pairs option", () => {
+  test("keccak256 with sort leaves and sort pairs option", () => {
     const leaves = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"].map(
       keccak256Sync,
     );
@@ -92,7 +93,7 @@ describe("MerkleTree", () => {
     expect(tree.getHexRoot()).toMatchSnapshot();
   });
 
-  it("keccak256 with sort option", () => {
+  test("keccak256 with sort option", () => {
     const leaves = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"].map(
       keccak256Sync,
     );
@@ -102,7 +103,7 @@ describe("MerkleTree", () => {
     expect(tree.getHexRoot()).toMatchSnapshot();
   });
 
-  it("sha256 with sha256 leaves and sort pairs option and duplicate odd option", () => {
+  test("sha256 with sha256 leaves and sort pairs option and duplicate odd option", () => {
     const leaves = ["a", "b", "c", "d", "e", "f"].map(sha256Sync);
     const tree = new MerkleTree(leaves, sha256Sync, {
       sortPairs: true,
@@ -113,7 +114,7 @@ describe("MerkleTree", () => {
     expect(tree.getHexRoot()).toMatchSnapshot();
   });
 
-  it("sha256 with hash leaves option", () => {
+  test("sha256 with hash leaves option", () => {
     const expectedRoot =
       "0x1f7379539707bcaea00564168d1d4d626b09b73f8a2a365234c62d763f854da2";
 
@@ -126,7 +127,7 @@ describe("MerkleTree", () => {
     expect(tree2.getHexRoot()).toEqual(expectedRoot);
   });
 
-  it("sha256 with hash leaves option and duplicate odd option", () => {
+  test("sha256 with hash leaves option and duplicate odd option", () => {
     const leaves = ["a", "b", "c", "d", "e", "f"];
     const tree = new MerkleTree(leaves, sha256Sync, {
       hashLeaves: true,
@@ -138,7 +139,7 @@ describe("MerkleTree", () => {
     expect(tree.getRoot().toString("hex")).toEqual(root);
   });
 
-  it("solidity keccak256", () => {
+  test("solidity keccak256", () => {
     const leaves = ["a", "b", "c"].map(keccak256Sync);
 
     const a_hash =

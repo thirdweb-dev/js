@@ -3,10 +3,16 @@ name: CI (Legacy Packages)
 on:
   push:
     branches: ["main"]
-    paths: ["legacy_packages/**", "legacy_e2e/**"]
+    paths:
+      - "legacy_packages/**"
+      - "legacy_e2e/**"
+      - "package.json"
   pull_request:
     types: [opened, synchronize]
-    paths: ["legacy_packages/**", "legacy_e2e/**"]
+    paths:
+      - "legacy_packages/**"
+      - "legacy_e2e/**"
+      - "package.json"
   # trigger on merge group as well (merge queue)
   merge_group:
     types: [checks_requested]
@@ -25,6 +31,19 @@ env:
   CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
 jobs:
+  build:
+    runs-on: ubuntu-latest-16
+    name: Build Packages
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Setup & Install
+        uses: ./.github/composite-actions/install
+
+      - name: Build Packages
+        run: pnpm build:legacy_packages
+
   lint:
     timeout-minutes: 15
     name: Lint Packages

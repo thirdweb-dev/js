@@ -27,38 +27,26 @@
   },
   "sideEffects": false,
   "dependencies": {
-    "@thirdweb-dev/crypto": "workspace:*",
     "buffer": "^6.0.3",
     "buffer-reverse": "^1.0.1",
     "treeify": "^1.1.0"
   },
   "devDependencies": {
     "@preconstruct/cli": "2.7.0",
+    "@thirdweb-dev/crypto": "workspace:*",
     "@thirdweb-dev/tsconfig": "workspace:*",
-    "@types/benchmark": "^2.1.5",
     "@types/treeify": "^1.0.3",
-    "benchmark": "^2.1.4",
-    "circomlibjs": "^0.1.7",
     "eslint-config-thirdweb": "workspace:*",
-    "ethereum-cryptography": "^1.2.0",
-    "ethereumjs-util": "^7.1.5",
-    "keccak256": "^1.0.6",
-    "sha1": "^1.1.1",
-    "tape": "^4.17.0",
     "typescript": "5.4.3"
   },
   "scripts": {
     "format": "prettier --write 'src/**/*'",
-    "lint": "eslint src/ && bunx publint --strict --level warning",
+    "lint": "eslint src/",
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/",
     "build": "tsc && preconstruct build",
     "push": "yalc push",
-    "test": "bun test && node test/MerkleTree.js",
-    "benchmark:aes-encrypt": "bun benchmark/aes-encrypt.ts",
-    "benchmark:aes-decrypt": "bun benchmark/aes-decrypt.ts",
-    "benchmark:sha256": "bun benchmark/sha256.ts",
-    "benchmark": "bun run benchmark:aes-encrypt && bun run benchmark:aes-decrypt && bun run benchmark:sha256"
+    "test": "vitest"
   },
   "engines": {
     "node": ">=18"
