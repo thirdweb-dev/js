@@ -333,6 +333,9 @@ export abstract class BaseAccountAPI {
       );
     }
 
+    // add 50k overhead for entrypoint checks (following same as unity-sdk)
+    partialOp.callGasLimit = partialOp.callGasLimit.add(50_000);
+
     return {
       ...partialOp,
       signature: "",

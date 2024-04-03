@@ -147,6 +147,9 @@ export async function createUnsignedUserOp(args: {
     partialOp.preVerificationGas = estimates.preVerificationGas;
   }
 
+  // add 50k overhead for entrypoint checks (following same as unity-sdk)
+  partialOp.callGasLimit = partialOp.callGasLimit + 50_000n;
+
   return {
     ...partialOp,
     signature: "0x",
