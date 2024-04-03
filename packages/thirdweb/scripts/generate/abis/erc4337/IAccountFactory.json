@@ -1,0 +1,12 @@
+[
+  "event AccountCreated(address indexed account, address indexed accountAdmin)",
+  "event SignerAdded(address indexed account, address indexed signer)",
+  "event SignerRemoved(address indexed account, address indexed signer)",
+  "function accountImplementation() view returns (address)",
+  "function createAccount(address admin, bytes _data) returns (address account)",
+  "function getAccountsOfSigner(address signer) view returns (address[] accounts)",
+  "function getAddress(address adminSigner, bytes data) view returns (address)",
+  "function getAllAccounts() view returns (address[])",
+  "function onSignerAdded(address signer, address creatorAdmin, bytes data)",
+  "function onSignerRemoved(address signer, address creatorAdmin, bytes data)"
+]

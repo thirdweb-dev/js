@@ -1,0 +1,16 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": ["src/exports/**/*.ts", "package.json"],
+  "project": ["src/**/*.{ts,tsx}", "scripts/**/*.mjs"],
+  "ignoreBinaries": ["eslint", "prettier", "printf", "yalc"],
+  "ignoreDependencies": ["ethers", "react", "tslib"],
+  // plugins
+  "eslint": {
+    "config": ".eslintrc.cjs"
+  },
+  "vitest": {
+    "config": "test/vitest.config.ts",
+    "entry": ["src/**/*.{test,bench}.ts", "test/globalSetup.ts"],
+    "project": ["src/**/*.{ts,tsx}", "test/**/*.ts"]
+  }
+}

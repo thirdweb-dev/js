@@ -1,0 +1,6 @@
+[
+  "function contractType() pure returns (bytes32)",
+  "function contractURI() view returns (string)",
+  "function contractVersion() pure returns (uint8)",
+  "function setContractURI(string _uri)"
+]

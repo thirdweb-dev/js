@@ -1,0 +1,6 @@
+[
+  "event RewardTokensDepositedByAdmin(uint256 _amount)",
+  "event RewardTokensWithdrawnByAdmin(uint256 _amount)",
+  "function depositRewardTokens(uint256 _amount) payable",
+  "function withdrawRewardTokens(uint256 _amount)"
+]

@@ -1,5 +1,110 @@
 # @thirdweb-dev/unity-js-bridge
 
+## 0.6.5
+
+### Patch Changes
+
+- [#2634](https://github.com/thirdweb-dev/js/pull/2634) [`c9f290a`](https://github.com/thirdweb-dev/js/commit/c9f290a1d45623f71fe7c103f7c3b407504e858e) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Unity 4.9.1
+
+- Updated dependencies [[`9af8561`](https://github.com/thirdweb-dev/js/commit/9af85612845573b54b54cb72e55404aad2c74700), [`fbf4556`](https://github.com/thirdweb-dev/js/commit/fbf4556d489b3be7c0c0ff85736e803573f55228)]:
+  - @thirdweb-dev/sdk@4.0.56
+  - @thirdweb-dev/chains@0.1.87
+  - @thirdweb-dev/wallets@2.4.32
+  - @thirdweb-dev/auth@4.1.54
+
+## 0.6.4
+
+### Patch Changes
+
+- Updated dependencies [[`00be583`](https://github.com/thirdweb-dev/js/commit/00be583b8902a1a0e5382ffdaafa6b9e31316075), [`26a50b1`](https://github.com/thirdweb-dev/js/commit/26a50b1e0591529748fb3f0d3fb7cd2ffcc47f19), [`82e5f53`](https://github.com/thirdweb-dev/js/commit/82e5f53bc49208cbc43ef3eb64e3a4b6ef6c7cf6)]:
+  - @thirdweb-dev/wallets@2.4.31
+  - @thirdweb-dev/sdk@4.0.55
+  - @thirdweb-dev/chains@0.1.86
+  - @thirdweb-dev/auth@4.1.53
+  - @thirdweb-dev/pay@0.1.6
+  - @thirdweb-dev/storage@2.0.13
+
+## 0.6.3
+
+### Patch Changes
+
+- Updated dependencies [[`3ef3786`](https://github.com/thirdweb-dev/js/commit/3ef378659e83341663dfaded417e33b5af29bbbc)]:
+  - @thirdweb-dev/chains@0.1.85
+  - @thirdweb-dev/sdk@4.0.54
+  - @thirdweb-dev/wallets@2.4.30
+  - @thirdweb-dev/auth@4.1.52
+
+## 0.6.2
+
+### Patch Changes
+
+- Updated dependencies [[`6bd1b82`](https://github.com/thirdweb-dev/js/commit/6bd1b82a58505ec3af3a12ceeab51d78ee3b8bc0)]:
+  - @thirdweb-dev/sdk@4.0.53
+  - @thirdweb-dev/wallets@2.4.29
+  - @thirdweb-dev/auth@4.1.51
+
+## 0.6.1
+
+### Patch Changes
+
+- [#2577](https://github.com/thirdweb-dev/js/pull/2577) [`d93286b`](https://github.com/thirdweb-dev/js/commit/d93286bc1f8224d055b50ce3ffa4f302869cb2b1) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
+
+- Updated dependencies [[`c81bb88`](https://github.com/thirdweb-dev/js/commit/c81bb882c505a5f1feb8f627377e76a771cce3f4), [`d93286b`](https://github.com/thirdweb-dev/js/commit/d93286bc1f8224d055b50ce3ffa4f302869cb2b1), [`50e7dba`](https://github.com/thirdweb-dev/js/commit/50e7dbaa9dae77cb8cd865405c322495e2498c65)]:
+  - @thirdweb-dev/sdk@4.0.52
+  - @thirdweb-dev/storage@2.0.12
+  - @thirdweb-dev/wallets@2.4.28
+  - @thirdweb-dev/chains@0.1.84
+  - @thirdweb-dev/auth@4.1.50
+  - @thirdweb-dev/pay@0.1.6
+
+## 0.6.0
+
+### Minor Changes
+
+- [#2556](https://github.com/thirdweb-dev/js/pull/2556) [`6d7eedc`](https://github.com/thirdweb-dev/js/commit/6d7eedc213f7fa31b01c2b430bd3de4030003370) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Unity 4.9.0
+
+### Patch Changes
+
+- Updated dependencies [[`13f00cf`](https://github.com/thirdweb-dev/js/commit/13f00cf476b126683649a166e9e03b8e3f6599e4), [`c63d9ea`](https://github.com/thirdweb-dev/js/commit/c63d9ea7acdea12a6ce0f5e2bde139fe26887df5), [`095d227`](https://github.com/thirdweb-dev/js/commit/095d227a13d0c9c1de76fa3812b7f71b2130d532)]:
+  - @thirdweb-dev/wallets@2.4.27
+  - @thirdweb-dev/sdk@4.0.51
+  - @thirdweb-dev/chains@0.1.83
+  - @thirdweb-dev/auth@4.1.49
+
+## 0.5.0
+
+### Minor Changes
+
+- [#2532](https://github.com/thirdweb-dev/js/pull/2532) [`65ea874`](https://github.com/thirdweb-dev/js/commit/65ea87425cc5e1033ea61690cd519afc4dddaa1c) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Unity 4.8.0
+
+### Patch Changes
+
+- Updated dependencies [[`436d9ba`](https://github.com/thirdweb-dev/js/commit/436d9baba24a56394422f485c2864f73065909e5), [`cb0ef6a`](https://github.com/thirdweb-dev/js/commit/cb0ef6a6a25cee255e18b8489fdb4123bb69c279)]:
+  - @thirdweb-dev/sdk@4.0.50
+  - @thirdweb-dev/chains@0.1.82
+  - @thirdweb-dev/wallets@2.4.26
+  - @thirdweb-dev/auth@4.1.48
+
+## 0.4.13
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@4.0.49
+  - @thirdweb-dev/storage@2.0.11
+  - @thirdweb-dev/wallets@2.4.25
+  - @thirdweb-dev/auth@4.1.47
+
+## 0.4.12
+
+### Patch Changes
+
+- [#2501](https://github.com/thirdweb-dev/js/pull/2501) [`9c884e2`](https://github.com/thirdweb-dev/js/commit/9c884e2f55f1d096555c1fcf65bc850684d258c9) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [Unity] Expose additional WC QR Options
+
+- Updated dependencies [[`79c9e13`](https://github.com/thirdweb-dev/js/commit/79c9e130fdc6e1f7de1486894a5ac3e6d6776fa4)]:
+  - @thirdweb-dev/wallets@2.4.24
+  - @thirdweb-dev/auth@4.1.46
+
 ## 0.4.11
 
 ### Patch Changes

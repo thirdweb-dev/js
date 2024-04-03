@@ -1,0 +1,38 @@
+{
+  "name": "@thirdweb-dev/chains",
+  "version": "0.1.87",
+  "main": "dist/thirdweb-dev-chains.cjs.js",
+  "module": "dist/thirdweb-dev-chains.esm.js",
+  "exports": {
+    ".": {
+      "module": "./dist/thirdweb-dev-chains.esm.js",
+      "default": "./dist/thirdweb-dev-chains.cjs.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "author": "thirdweb eng <eng@thirdweb.com>",
+  "devDependencies": {
+    "@babel/runtime": "^7.24.1",
+    "@preconstruct/cli": "2.7.0",
+    "@thirdweb-dev/tsconfig": "workspace:*",
+    "eslint-config-thirdweb": "workspace:*",
+    "typescript": "5.4.3"
+  },
+  "preconstruct": {
+    "entrypoints": [
+      "index.ts"
+    ],
+    "exports": true
+  },
+  "sideEffects": false,
+  "scripts": {
+    "db:seed": "bun scripts/seed-db.ts",
+    "db:sync": "bun scripts/sync-db.ts",
+    "build": "tsc && preconstruct build",
+    "push": "yalc push",
+    "test": "vitest"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

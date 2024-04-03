@@ -1,0 +1,6 @@
+[
+  "event RoyaltyEngineUpdated(address indexed previousAddress, address indexed newAddress)",
+  "function getRoyalty(address tokenAddress, uint256 tokenId, uint256 value) returns (address[] recipients, uint256[] amounts)",
+  "function setRoyaltyEngine(address _royaltyEngineAddress)",
+  "function supportsInterface(bytes4 interfaceId) view returns (bool)"
+]

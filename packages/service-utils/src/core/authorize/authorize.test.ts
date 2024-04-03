@@ -1,5 +1,6 @@
 import { authorize } from ".";
 import { CoreServiceConfig } from "../api";
+import { describe, it, expect } from "vitest";
 
 const validServiceConfig: CoreServiceConfig = {
   apiUrl: "https://api.example.com",

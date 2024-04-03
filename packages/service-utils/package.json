@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/service-utils",
-  "version": "0.4.22",
+  "version": "0.4.25",
   "main": "dist/thirdweb-dev-service-utils.cjs.js",
   "module": "dist/thirdweb-dev-service-utils.esm.js",
   "exports": {
@@ -38,34 +38,26 @@
     "exports": true
   },
   "sideEffects": false,
+  "dependencies": {
+    "aws4fetch": "1.0.18",
+    "zod": "3.22.4"
+  },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20230724.0",
+    "@cloudflare/workers-types": "4.20240329.0",
     "@preconstruct/cli": "2.7.0",
-    "@smithy/types": "^2.0.2",
     "@thirdweb-dev/tsconfig": "workspace:*",
-    "@types/jest": "^29.5.3",
-    "@types/node": "^18.17.1",
-    "@typescript-eslint/eslint-plugin": "^6.2.0",
-    "@typescript-eslint/parser": "^6.19.1",
-    "eslint": "^8.56.0",
-    "eslint-config-prettier": "^8.9.0",
+    "@types/node": "20.12.2",
+    "eslint": "8.57.0",
     "eslint-config-thirdweb": "workspace:*",
-    "jest": "^29.6.2",
-    "prettier": "^3.1.1",
-    "ts-jest": "^29.1.1",
-    "typescript": "^5.3.3"
+    "typescript": "5.4.3"
   },
   "scripts": {
     "format": "prettier --write 'src/**/*'",
-    "lint": "eslint src/ && bunx publint --strict --level warning",
+    "lint": "eslint src/",
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/",
     "build": "tsc && preconstruct build",
     "push": "yalc push",
-    "test": "jest"
-  },
-  "dependencies": {
-    "aws4fetch": "^1.0.17",
-    "zod": "^3.22.3"
+    "test": "vitest"
   }
 }

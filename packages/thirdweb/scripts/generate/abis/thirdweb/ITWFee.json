@@ -1,0 +1,3 @@
+[
+  "function getFeeInfo(address _proxy, uint256 _type) view returns (address recipient, uint256 bps)"
+]

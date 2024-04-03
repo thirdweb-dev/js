@@ -1,0 +1,4 @@
+[
+  "event SharedMetadataUpdated(string name, string description, string imageURI, string animationURI)",
+  "function setSharedMetadata((string name, string description, string imageURI, string animationURI) _metadata)"
+]

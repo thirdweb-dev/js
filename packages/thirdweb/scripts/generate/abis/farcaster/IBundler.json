@@ -1,0 +1,6 @@
+[
+  "function idGateway() external view returns (address)",
+  "function keyGateway() external view returns (address)",
+  "function price(uint256 extraStorage) external view returns (uint256)",
+  "function register((address to, address recovery, uint256 deadline, bytes sig) calldata registerParams, (uint32 keyType, bytes key, uint8 metadataType, bytes metadata, uint256 deadline, bytes sig)[] calldata signerParams, uint256 extraStorage) external payable returns (uint256 fid)"
+]

@@ -151,7 +151,7 @@ class ThirdwebBridge implements TWBridge {
       }
       (globalThis as any).X_SDK_NAME = "UnitySDK_WebGL";
       (globalThis as any).X_SDK_PLATFORM = "unity";
-      (globalThis as any).X_SDK_VERSION = "4.7.10";
+      (globalThis as any).X_SDK_VERSION = "4.9.1";
       (globalThis as any).X_SDK_OS = browser?.os ?? "unknown";
     }
     this.initializedChain = chain;
@@ -221,8 +221,18 @@ class ThirdwebBridge implements TWBridge {
             chains: supportedChains,
             clientId: sdkOptions.clientId,
             qrModalOptions: {
+              enableExplorer:
+                sdkOptions.wallet?.walletConnectEnableExplorer ?? false,
               explorerRecommendedWalletIds:
-                sdkOptions.wallet?.walletConnectExplorerRecommendedWalletIds,
+                sdkOptions.wallet?.walletConnectExplorerRecommendedWalletIds ??
+                undefined,
+              walletImages:
+                sdkOptions.wallet?.walletConnectWalletImages ?? undefined,
+              desktopWallets:
+                sdkOptions.wallet?.walletConnectDesktopWallets ?? undefined,
+              mobileWallets:
+                sdkOptions.wallet?.walletConnectMobileWallets ?? undefined,
+              themeMode: sdkOptions.wallet?.walletConnectThemeMode ?? undefined,
             },
           });
           break;

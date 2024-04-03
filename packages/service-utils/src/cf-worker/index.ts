@@ -175,7 +175,6 @@ function bufferToHex(buffer: ArrayBuffer) {
 }
 
 export async function logHttpRequest({
-  source,
   clientId,
   req,
   res,
@@ -183,6 +182,7 @@ export async function logHttpRequest({
   statusMessage,
   latencyMs,
 }: AuthInput & {
+  // @deprecated
   source: string;
   res: Response;
   isAuthed?: boolean;
@@ -195,23 +195,23 @@ export async function logHttpRequest({
 
     console.log(
       JSON.stringify({
-        source,
+        method: req.method,
         pathname: req.url,
         hasSecretKey: !!authorizationData.secretKey,
         hasClientId: !!authorizationData.clientId,
         hasJwt: !!authorizationData.jwt,
         clientId: authorizationData.clientId,
-        isAuthed: !!isAuthed ?? null,
+        isAuthed,
         status: res.status,
-        sdkName: headers.get("x-sdk-name") ?? "unknown",
-        sdkVersion: headers.get("x-sdk-version") ?? "unknown",
-        platform: headers.get("x-sdk-platform") ?? "unknown",
-        os: headers.get("x-sdk-os") ?? "unknown",
-        latencyMs: latencyMs ?? null,
+        sdkName: headers.get("x-sdk-name") ?? undefined,
+        sdkVersion: headers.get("x-sdk-version") ?? undefined,
+        platform: headers.get("x-sdk-platform") ?? undefined,
+        os: headers.get("x-sdk-os") ?? undefined,
+        latencyMs,
       }),
     );
-    console.log(`statusMessage=${statusMessage ?? res.statusText}`);
-  } catch (err) {
-    console.error("Failed to log HTTP request:", err);
-  }
+    if (statusMessage) {
+      console.log(`statusMessage=${statusMessage}`);
+    }
+  } catch (err) {}
 }

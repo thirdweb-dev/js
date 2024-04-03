@@ -1,0 +1,9 @@
+[
+  "event Added(address indexed deployer, address indexed deployment, uint256 indexed chainId, string metadataUri)",
+  "event Deleted(address indexed deployer, address indexed deployment, uint256 indexed chainId)",
+  "function add(address _deployer, address _deployment, uint256 _chainId, string metadataUri)",
+  "function count(address _deployer) view returns (uint256 deploymentCount)",
+  "function getAll(address _deployer) view returns ((address deploymentAddress, uint256 chainId, string metadataURI)[] allDeployments)",
+  "function getMetadataUri(uint256 _chainId, address _deployment) view returns (string metadataUri)",
+  "function remove(address _deployer, address _deployment, uint256 _chainId)"
+]

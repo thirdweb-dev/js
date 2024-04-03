@@ -1,0 +1,8 @@
+[
+  "event BatchMetadataUpdate(uint256 _fromTokenId, uint256 _toTokenId)",
+  "event MetadataFrozen()",
+  "event MetadataUpdate(uint256 _tokenId)",
+  "function freezeMetadata()",
+  "function setTokenURI(uint256 _tokenId, string _uri)",
+  "function supportsInterface(bytes4 interfaceId) view returns (bool)"
+]

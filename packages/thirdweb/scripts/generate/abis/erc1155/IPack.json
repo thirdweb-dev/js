@@ -1,0 +1,7 @@
+[
+  "event PackCreated(uint256 indexed packId, address recipient, uint256 totalPacksCreated)",
+  "event PackOpened(uint256 indexed packId, address indexed opener, uint256 numOfPacksOpened, (address assetContract, uint8 tokenType, uint256 tokenId, uint256 totalAmount)[] rewardUnitsDistributed)",
+  "event PackUpdated(uint256 indexed packId, address recipient, uint256 totalPacksCreated)",
+  "function createPack((address assetContract, uint8 tokenType, uint256 tokenId, uint256 totalAmount)[] contents, uint256[] numOfRewardUnits, string packUri, uint128 openStartTimestamp, uint128 amountDistributedPerOpen, address recipient) payable returns (uint256 packId, uint256 packTotalSupply)",
+  "function openPack(uint256 packId, uint256 amountToOpen) returns ((address assetContract, uint8 tokenType, uint256 tokenId, uint256 totalAmount)[])"
+]

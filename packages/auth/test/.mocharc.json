@@ -1,8 +1,0 @@
-{
-  "extension": [
-    "ts"
-  ],
-  "require": [
-    "@swc-node/register"
-  ]
-}

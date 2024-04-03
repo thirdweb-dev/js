@@ -1,5 +1,23 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.25
+
+### Patch Changes
+
+- [#2623](https://github.com/thirdweb-dev/js/pull/2623) [`26a50b1`](https://github.com/thirdweb-dev/js/commit/26a50b1e0591529748fb3f0d3fb7cd2ffcc47f19) Thanks [@jnsdls](https://github.com/jnsdls)! - update depdendencies
+
+## 0.4.24
+
+### Patch Changes
+
+- [#2577](https://github.com/thirdweb-dev/js/pull/2577) [`d93286b`](https://github.com/thirdweb-dev/js/commit/d93286bc1f8224d055b50ce3ffa4f302869cb2b1) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
+
+## 0.4.23
+
+### Patch Changes
+
+- [#2531](https://github.com/thirdweb-dev/js/pull/2531) [`0aea03e`](https://github.com/thirdweb-dev/js/commit/0aea03e418138f69745f286df1b7fd8f3a1827ad) Thanks [@arcoraven](https://github.com/arcoraven)! - Simplify HTTP logging helper
+
 ## 0.4.22
 
 ### Patch Changes

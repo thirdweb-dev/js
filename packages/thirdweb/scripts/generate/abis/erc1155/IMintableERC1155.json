@@ -1,0 +1,4 @@
+[
+  "event TokensMinted(address indexed mintedTo, uint256 indexed tokenIdMinted, string uri, uint256 quantityMinted)",
+  "function mintTo(address to, uint256 tokenId, string uri, uint256 amount)"
+]

@@ -1,15 +1,15 @@
 {
   "name": "eslint-config-thirdweb",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "main": "index.js",
   "license": "Apache-2.0",
   "dependencies": {
-    "@typescript-eslint/eslint-plugin": "^6.2.0",
-    "@typescript-eslint/parser": "^6.19.1",
-    "eslint-config-next": "^13.2.12",
-    "eslint-config-prettier": "^8.9.0",
-    "eslint-config-turbo": "^0.0.8",
-    "eslint-plugin-react": "^7.33.0"
+    "@typescript-eslint/eslint-plugin": "7.5.0",
+    "@typescript-eslint/parser": "7.4.0",
+    "eslint-config-next": "13.4.12",
+    "eslint-config-prettier": "9.1.0",
+    "eslint-config-turbo": "1.13.1",
+    "eslint-plugin-react": "7.34.1"
   },
   "publishConfig": {
     "access": "public"

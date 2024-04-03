@@ -1,0 +1,4 @@
+[
+  "function postOp(uint8 mode, bytes context, uint256 actualGasCost)",
+  "function validatePaymasterUserOp((address sender, uint256 nonce, bytes initCode, bytes callData, uint256 callGasLimit, uint256 verificationGasLimit, uint256 preVerificationGas, uint256 maxFeePerGas, uint256 maxPriorityFeePerGas, bytes paymasterAndData, bytes signature) userOp, bytes32 userOpHash, uint256 maxCost) returns (bytes context, uint256 validationData)"
+]

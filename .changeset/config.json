@@ -16,9 +16,6 @@
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
   "ignore": [
-    "e2e-cra-5",
-    "e2e-next-13",
-    "e2e-vite-3",
     "bundlers-esbuild",
     "bundlers-vite",
     "bundlers-webpack",

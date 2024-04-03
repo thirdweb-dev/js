@@ -1,0 +1,7 @@
+[
+  "event ContractURIUpdated(string prevURI, string newURI)",
+  "function contractURI() view returns (string)",
+  "function setContractURI(string _uri)",
+  "function name() view returns (string)",
+  "function symbol() view returns (string)"
+]

@@ -51,7 +51,7 @@ jobs:
     steps:
       - name: get pull request ref
         id: get_pull_request_ref
-        uses: octokit/request-action@v2.1.0
+        uses: octokit/request-action@v2.2.0
         with:
           route: GET /repos/{owner}/{repository}/pulls/{issue_id}
           owner: ${{ github.repository_owner }}
@@ -61,7 +61,7 @@ jobs:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: pull the repo.
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           persist-credentials: true
           repository: ${{ fromJson(steps.get_pull_request_ref.outputs.data).head.repo.full_name }}
@@ -70,7 +70,7 @@ jobs:
       - name: Setup bun
         uses: oven-sh/setup-bun@v1
         with:
-          bun-version: 1.0.21
+          bun-version: 1.0.35
 
       - name: Install
         uses: ./.github/composite-actions/install

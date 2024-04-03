@@ -1,0 +1,5 @@
+[
+  "function tokenByIndex(uint256 _index) view returns (uint256)",
+  "function tokenOfOwnerByIndex(address _owner, uint256 _index) view returns (uint256)",
+  "function nextTokenIdToMint() view returns (uint256)"
+]
