@@ -31,6 +31,7 @@ export function ThirdwebProvider(props: React.PropsWithChildren) {
         defaultOptions: {
           mutations: {
             onSettled: (data, error, variables) => {
+              console.log("Mutation settled", data, error, variables);
               if (error) {
                 // TODO: remove - but useful for debug now
                 console.error("[Mutation Error]", error);
@@ -50,14 +51,14 @@ export function ThirdwebProvider(props: React.PropsWithChildren) {
                           // invalidate any readContract queries for this chainId:contractAddress
                           [
                             "readContract",
-                            variables.contract.chain.id,
-                            variables.contract.address,
+                            variables.__contract?.chain.id,
+                            variables.__contract?.address,
                           ] as const,
                           // invalidate any walletBalance queries for this chainId
                           // TODO: add wallet address in here if we can get it somehow
                           [
                             "walletBalance",
-                            variables.contract.chain.id,
+                            variables.__contract?.chain.id,
                           ] as const,
                         ],
                       });

@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { useSendTransaction } from "../../../core/hooks/contract/useSend.js";
+import { useSendTransaction } from "../../../core/hooks/contract/useSendTransaction.js";
 import { useActiveWalletChain } from "../../../core/hooks/wallets/wallet-hooks.js";
 import { toWei } from "../../../../utils/units.js";
 import { getContract } from "../../../../contract/contract.js";
