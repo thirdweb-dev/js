@@ -225,6 +225,9 @@ function toViemWalletClient(options: ToViemWalletClientOptions) {
         const data = JSON.parse(request.params[1]);
         return account.signTypedData(data);
       }
+      if (request.method === "eth_accounts") {
+        return [account.address];
+      }
       return rpcClient(request);
     },
   });
