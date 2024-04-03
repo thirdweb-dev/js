@@ -284,10 +284,7 @@ export abstract class BaseAccountAPI {
         paymasterResult.verificationGasLimit &&
         paymasterResult.preVerificationGas
       ) {
-        // add 50k overhead for entrypoint checks
-        partialOp.callGasLimit = BigNumber.from(
-          paymasterResult.callGasLimit,
-        ).add(50_000);
+        partialOp.callGasLimit = BigNumber.from(paymasterResult.callGasLimit);
         partialOp.verificationGasLimit = BigNumber.from(
           paymasterResult.verificationGasLimit,
         );
