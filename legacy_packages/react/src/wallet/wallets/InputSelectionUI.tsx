@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Spacer } from "../../components/Spacer";
 import { Button } from "../../components/buttons";
-import { Text } from "../../components/text";
 import { Input } from "../../components/formElements";
+import { Text } from "../../components/text";
 
 export function InputSelectionUI(props: {
   onSelect: (data: string) => void;
@@ -31,7 +31,11 @@ export function InputSelectionUI(props: {
     (!input && !!props.emptyErrorMessage && showError);
 
   return (
-    <div>
+    <div
+      style={{
+        width: "100%",
+      }}
+    >
       <div
         style={{
           position: "relative",

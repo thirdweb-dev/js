@@ -151,14 +151,7 @@ export const EmbeddedWalletFormUI = (props: {
 
       {/* Email Login */}
       {inputMode !== "none" && (
-        <Container
-          flex="column"
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            width: "100%",
-          }}
-        >
+        <Container>
           {inputMode === "email" ? (
             <InputSelectionUI
               type={type}
@@ -177,7 +170,7 @@ export const EmbeddedWalletFormUI = (props: {
               submitButtonText={locale.submitEmail}
             />
           ) : (
-            <Container flex="row" gap="xxs">
+            <Container flex="row" gap="xs">
               <InputSelectionUI
                 type={type}
                 onSelect={(value) => {
@@ -207,9 +200,12 @@ export const EmbeddedWalletFormUI = (props: {
             </Container>
           )}
           {allowSwitchInputMode && (
-            <LinkButton onClick={switchInputMode} type="button">
-              {switchInputModeText}
-            </LinkButton>
+            <>
+              <Spacer y="md" />
+              <LinkButton onClick={switchInputMode} type="button">
+                {switchInputModeText}
+              </LinkButton>
+            </>
           )}
         </Container>
       )}
