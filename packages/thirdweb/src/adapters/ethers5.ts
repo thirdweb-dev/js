@@ -331,9 +331,7 @@ export async function toEthersSigner(
      * @internal
      */
     override async sendTransaction(
-      transaction: ethers5.ethers.utils.Deferrable<
-        ethers5.ethers.providers.TransactionRequest & { chainId: number }
-      >,
+      transaction: ethers5.ethers.utils.Deferrable<ethers5.ethers.providers.TransactionRequest>,
     ): Promise<ethers5.ethers.providers.TransactionResponse> {
       if (!account) {
         throw new Error("Account not found");
