@@ -16,7 +16,7 @@ export type ToSerialiableTransactionOptions = {
  */
 export async function toSerializableTransaction(
   options: ToSerialiableTransactionOptions,
-): Promise<TransactionSerializable> {
+) {
   const rpcRequest = getRpcClient(options.transaction);
   const chainId = options.transaction.chain.id;
   const from = options.from;

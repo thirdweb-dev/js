@@ -321,10 +321,7 @@ async function toEthersSigner(
         transaction: ethersTx,
         from: account.address,
       });
-      const result = await account.sendTransaction({
-        chainId: chain.id,
-        ...serializableTx,
-      });
+      const result = await account.sendTransaction(serializableTx);
 
       const txResponseParams: ethers6.TransactionResponseParams = {
         ...serializableTx,

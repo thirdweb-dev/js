@@ -94,6 +94,6 @@ describe("ethers5 adapter", () => {
       to: TEST_ACCOUNT_B.address,
       value: 100,
     });
-    expect(txResponse.hash).toBe(66);
+    expect(txResponse.hash.length).toBe(66);
   });
 });
