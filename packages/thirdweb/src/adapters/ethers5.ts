@@ -1,4 +1,4 @@
-import type * as ethers5 from "ethers5";
+import * as ethers5 from "ethers5";
 import type * as ethers6 from "ethers6";
 import * as universalethers from "ethers";
 import type { Abi } from "abitype";
@@ -8,7 +8,7 @@ import type { Account } from "../wallets/interfaces/wallet.js";
 import { defineChain, getRpcUrlForChain } from "../chains/utils.js";
 import type { Chain } from "../chains/types.js";
 import { getContract, type ThirdwebContract } from "../contract/contract.js";
-import { uint8ArrayToHex } from "../utils/encoding/hex.js";
+import { toHex, uint8ArrayToHex } from "../utils/encoding/hex.js";
 import { resolvePromisedValue } from "../utils/promise/resolve-promised-value.js";
 import { waitForReceipt } from "../transaction/actions/wait-for-tx-receipt.js";
 import { prepareTransaction } from "../transaction/prepare-transaction.js";
@@ -111,6 +111,7 @@ export const ethers5Adapter = /* @__PURE__ */ (() => {
       /**
        * Converts a Thirdweb wallet to an ethers.js signer.
        * @param client - The thirdweb client.
+       * @param chain - The chain.
        * @param account - The account.
        * @returns A promise that resolves to an ethers.js signer.
        * @example
@@ -119,8 +120,8 @@ export const ethers5Adapter = /* @__PURE__ */ (() => {
        * const signer = await ethers5Adapter.signer.toEthers(client, chain, account);
        * ```
        */
-      toEthers: (client: ThirdwebClient, account: Account) =>
-        toEthersSigner(ethers, client, account),
+      toEthers: (client: ThirdwebClient, chain: Chain, account: Account) =>
+        toEthersSigner(ethers, client, chain, account),
     },
   };
 })();
@@ -243,9 +244,19 @@ async function fromEthersSigner(signer: ethers5.Signer): Promise<Account> {
 async function toEthersSigner(
   ethers: Ethers5,
   client: ThirdwebClient,
+  chain: Chain,
   account: Account,
 ) {
   class ThirdwebAdapterSigner extends ethers.Signer {
+    constructor() {
+      super();
+      ethers5.utils.defineReadOnly(
+        this,
+        "provider",
+        toEthersProvider(ethers, client, chain),
+      );
+    }
+
     override getAddress(): Promise<string> {
       if (!account) {
         throw new Error("Account not found");
@@ -348,6 +359,36 @@ async function toEthersSigner(
       };
 
       return response;
+    }
+
+    // eslint-disable-next-line jsdoc/require-jsdoc
+    async _signTypedData(
+      domain: ethers5.ethers.TypedDataDomain,
+      types: Record<string, ethers5.ethers.TypedDataField[]>,
+      value: Record<string, any>,
+    ): Promise<string> {
+      if (!account) {
+        throw new Error("Account not found");
+      }
+      const typedDataEncoder = new ethers.utils._TypedDataEncoder(types);
+
+      const typedData = {
+        primaryType: typedDataEncoder.primaryType,
+        domain: {
+          chainId: domain.chainId
+            ? bigNumberIshToNumber(domain.chainId)
+            : undefined,
+          name: domain.name ?? undefined,
+
+          salt: domain.salt ? toHex(domain.salt.toString()) : undefined,
+          verifyingContract: domain.verifyingContract ?? undefined,
+          version: domain.version ?? undefined,
+        },
+        types,
+        message: value,
+      };
+
+      return account.signTypedData(typedData);
     }
 
     override connect(): ethers5.ethers.Signer {
@@ -471,4 +512,15 @@ async function alignTxFromEthers(
       };
     }
   }
+}
+
+function bigNumberIshToBigint(value: ethers5.BigNumberish): bigint {
+  if (typeof value === "bigint") {
+    return value;
+  }
+  return BigInt(value);
+}
+
+function bigNumberIshToNumber(value: ethers5.BigNumberish): number {
+  return Number(bigNumberIshToBigint(value));
 }
