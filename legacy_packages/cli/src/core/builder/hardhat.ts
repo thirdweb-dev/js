@@ -36,22 +36,7 @@ export class HardhatBuilder extends BaseBuilder {
     logger.debug("successfully extracted hardhat config", actualHardhatConfig);
 
     await execute("npx hardhat clean", options.projectPath);
-
-    let ignoreIpfsHash = false;
-    if (options.zksync) {
-      const zkNetwork = Object.entries(actualHardhatConfig.networks).find(
-        (network) => {
-          return (network[1] as any).zksync;
-        },
-      );
-      ignoreIpfsHash = (zkNetwork?.[1] as any).zksync; // IPFS hash can't be recovered from ZKSync bytecode
-      await execute(
-        `npx hardhat compile --network ${zkNetwork?.[0]}`,
-        options.projectPath,
-      );
-    } else {
-      await execute(`npx hardhat compile`, options.projectPath);
-    }
+    await execute(`npx hardhat compile`, options.projectPath);
 
     const solcConfigs = actualHardhatConfig.solidity.compilers;
     if (solcConfigs) {
@@ -127,7 +112,7 @@ export class HardhatBuilder extends BaseBuilder {
           }
 
           let bytecode = info.evm.bytecode.object;
-          let deployedBytecode = info.evm.deployedBytecode?.object || bytecode;
+          let deployedBytecode = info.evm.deployedBytecode.object;
 
           // link external libraries if any
           bytecode = linkLibrary(bytecode, libraries);
@@ -135,9 +120,10 @@ export class HardhatBuilder extends BaseBuilder {
 
           const { metadata, abi } = info;
 
-          const meta = metadata.solc_metadata
-            ? JSON.parse(metadata.solc_metadata)
-            : JSON.parse(metadata);
+          const meta = JSON.parse(metadata);
+
+          const evmVersion = meta.settings?.evmVersion || "";
+          const compilerVersion = meta.compiler?.version || "";
           const sources = Object.keys(meta.sources)
             .map((path) => {
               const directPath = join(options.projectPath, path);
@@ -165,20 +151,15 @@ export class HardhatBuilder extends BaseBuilder {
           );
           const fileName = fileNames.length > 0 ? fileNames[0] : "";
 
-          if (
-            this.shouldProcessContract(
-              abi,
-              deployedBytecode,
-              contractName,
-              ignoreIpfsHash,
-            )
-          ) {
+          if (this.shouldProcessContract(abi, deployedBytecode, contractName)) {
             contracts.push({
-              metadata: JSON.stringify(meta),
+              metadata,
               bytecode,
               name: contractName,
               fileName,
               sources,
+              compilerVersion,
+              evmVersion,
             });
           }
         }

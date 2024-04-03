@@ -6,9 +6,9 @@ import { getChainProvider } from "../constants/urls";
 import { Abi } from "../schema/contracts/custom";
 import { twProxyArtifactZK } from "./temp-artifact/TWProxy";
 import { fetchSourceFilesFromMetadata } from "../common/fetchSourceFilesFromMetadata";
-import { fetchRawPredeployMetadata } from "../common/feature-detection/fetchRawPredeployMetadata";
 import { fetchContractMetadata } from "../common/fetchContractMetadata";
 import { checkVerificationStatus } from "../common/verification";
+import { ThirdwebSDK } from "../core/sdk";
 
 const RequestStatus = {
   OK: "1",
@@ -27,7 +27,8 @@ export async function zkVerify(
   explorerAPIUrl: string,
   explorerAPIKey: string,
   storage: ThirdwebStorage,
-  contractUri?: string,
+  metadataUri?: string,
+  zkVersion?: string,
   encodedConstructorArgs?: string,
 ) {
   try {
@@ -43,18 +44,26 @@ export async function zkVerify(
       };
       compilerMetadata.metadata.sources = twProxyArtifactZK.sources;
     } else {
-      invariant(contractUri, "No contract URI provided");
-      const rawMeta = await fetchRawPredeployMetadata(contractUri, storage);
-      const metadataUri = rawMeta.compilers?.zksolc?.metadataUri;
+      if (!metadataUri || metadataUri.length === 0) {
+        metadataUri = await fetchFromMultiChainRegistry(
+          contractAddress,
+          chainId,
+        );
+      }
+      invariant(metadataUri && metadataUri.length > 0, "No contract URI found");
 
-      invariant(metadataUri, "ZkSolc metadata not found");
       const parsedMetadata = await fetchContractMetadata(metadataUri, storage);
+      const zk_version =
+        parsedMetadata.metadata.settings.zkVersion || zkVersion;
+      if (!zk_version) {
+        console.error("zk version not found");
+      }
 
       compilerMetadata = {
         name: parsedMetadata.name,
         abi: parsedMetadata.abi,
         metadata: parsedMetadata.metadata,
-        zk_version: rawMeta.zk_version,
+        zk_version,
       };
     }
 
@@ -151,7 +160,7 @@ async function zkFetchConstructorParams(
 ): Promise<string> {
   const constructorParamTypes = extractConstructorParamsFromAbi(abi);
   if (constructorParamTypes.length === 0) {
-    return "";
+    return "0x";
   }
 
   const result = await fetch(
@@ -172,13 +181,28 @@ async function zkFetchConstructorParams(
         utils.hexDataSlice(transaction.data, 4),
       );
 
-      return decoded[2];
+      return decoded[2].startsWith("0x") ? decoded[2] : `0x${decoded[2]}`;
     } else {
       // TODO: decode for create2 deployments via factory
-      return "";
+      return "0x";
     }
   } else {
     // Could not retrieve constructor parameters, using empty parameters as fallback
-    return "";
+    return "0x";
   }
+}
+
+async function fetchFromMultiChainRegistry(
+  address: string,
+  chainId: number,
+): Promise<string | undefined> {
+  try {
+    // random wallet is fine here, we're doing gasless calls
+    const sdk = new ThirdwebSDK("polygon");
+    const uri = await sdk.multiChainRegistry.getContractMetadataURI(
+      chainId,
+      address,
+    );
+    return uri;
+  } catch (e) {}
 }

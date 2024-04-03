@@ -11,8 +11,8 @@ export default {
     "height": 300,
     "format": "png"
   },
-  "infoURL": "https://raas.gelato.network/rollups/details/public/op-celestia-testnet",
-  "name": "Gelato OP Celestia",
+  "infoURL": "https://raas.gelato.network/rollups/details/public/opcelestia-raspberry",
+  "name": "OP Celestia Rasberry",
   "nativeCurrency": {
     "name": "Ether",
     "symbol": "ETH",
@@ -21,8 +21,8 @@ export default {
   "networkId": 123420111,
   "redFlags": [],
   "rpc": [],
-  "shortName": "opcelestia",
-  "slug": "gelato-op-celestia",
+  "shortName": "opcelestia-rasberry",
+  "slug": "op-celestia-rasberry",
   "testnet": true,
-  "title": "Gelato OP Celestia Testnet"
+  "title": "OP Celestia Rasberry"
 } as const satisfies Chain;

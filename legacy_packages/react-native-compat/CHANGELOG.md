@@ -1,5 +1,15 @@
 # @thirdweb-dev/react-native-compat
 
+## 0.7.26
+
+### Patch Changes
+
+- [#2623](https://github.com/thirdweb-dev/js/pull/2623) [`26a50b1`](https://github.com/thirdweb-dev/js/commit/26a50b1e0591529748fb3f0d3fb7cd2ffcc47f19) Thanks [@jnsdls](https://github.com/jnsdls)! - update depdendencies
+
+## 0.7.25
+
+## 0.7.24
+
 ## 0.7.23
 
 ### Patch Changes

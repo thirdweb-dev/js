@@ -10,7 +10,7 @@ export default {
     },
     {
       "name": "Astar zkEVM Testnet zKyoto",
-      "url": "hhttps://zkyoto.explorer.startale.com/",
+      "url": "https://zkyoto.explorer.startale.com",
       "standard": "EIP3091"
     }
   ],

@@ -4,6 +4,7 @@ import { effect } from "../../reactive/effect.js";
 import { createStore } from "../../reactive/store.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
 import type { AsyncStorage } from "../storage/AsyncStorage.js";
+import { deleteConnectParamsFromStorage } from "../storage/walletStorage.js";
 
 type WalletIdToConnectedWalletMap = Map<string, Wallet>;
 export type ConnectionStatus = "connected" | "disconnected" | "connecting";
@@ -60,6 +61,8 @@ export function createConnectionManager(storage: AsyncStorage) {
 
   const onWalletDisconnect = (wallet: Wallet) => {
     const currentMap = walletIdToConnectedWalletMap.getValue();
+    deleteConnectParamsFromStorage(storage, wallet.id);
+
     const newMap = new Map(currentMap);
     newMap.delete(wallet.id);
 
@@ -99,27 +102,12 @@ export function createConnectionManager(storage: AsyncStorage) {
 
     // setup listeners
 
-    const onAccountsChanged = (addresses: string[]) => {
-      const newAddress = addresses[0];
-      if (!newAddress) {
-        onWalletDisconnect(wallet);
-        return;
-      } else {
-        // TODO: get this new object as argument from onAccountsChanged
-        // this requires emitting events from the wallet
-        const newAccount: Account = {
-          ...account,
-          address: newAddress,
-        };
-
-        activeAccountStore.setValue(newAccount);
-      }
+    const onAccountsChanged = (newAccount: Account) => {
+      activeAccountStore.setValue(newAccount);
     };
 
-    const unsubAccounts = wallet.subscribe(
-      "accountsChanged",
-      onAccountsChanged,
-    );
+    const unsubAccounts = wallet.subscribe("accountChanged", onAccountsChanged);
+
     const unsubChainChanged = wallet.subscribe("chainChanged", (chain) =>
       activeWalletChainStore.setValue(chain),
     );

@@ -4,6 +4,12 @@ description: "Sets up Node.js and runs install"
 runs:
   using: composite
   steps:
+    # we use bun for some test suites
+    - name: Setup bun
+      uses: oven-sh/setup-bun@v1
+      with:
+        bun-version: 1.0.35
+    # pnpm for our dependencies
     - uses: pnpm/action-setup@v3
       with:
         version: 8
@@ -11,6 +17,7 @@ runs:
       uses: actions/setup-node@v4
       with:
         node-version: 20
+        check-latest: true
         registry-url: "https://registry.npmjs.org"
         cache: "pnpm"
 

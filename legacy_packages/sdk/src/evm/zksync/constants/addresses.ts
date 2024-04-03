@@ -1,5 +1,9 @@
 /* eslint-disable no-useless-computed-key */
 
+import { constants } from "ethers";
+import { ChainId } from "../../constants/chains/ChainId";
+import { NativeToken } from "../../types/currency";
+
 const AddressZero = "0x0000000000000000000000000000000000000000";
 
 /**
@@ -22,6 +26,39 @@ export const CONTRACT_ADDRESSES: Record<
     openzeppelinForwarder: AddressZero,
     openzeppelinForwarderEOA: AddressZero,
     biconomyForwarder: AddressZero,
+  },
+};
+
+/**
+ * @public
+ */
+export const NATIVE_TOKEN_ADDRESS =
+  "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
+
+/**
+ * @public
+ */
+export const NATIVE_TOKENS: Record<number, NativeToken> = /* @__PURE__ */ {
+  // eslint-disable-next-line no-useless-computed-key
+  [280]: {
+    name: "zkSync Era Testnet",
+    symbol: "ETH",
+    decimals: 18,
+    wrapped: {
+      address: "0x20b28B1e4665FFf290650586ad76E977EAb90c5D",
+      name: "Wrapped Ether",
+      symbol: "WETH",
+    },
+  },
+  [324]: {
+    name: "zkSync Era Mainnet",
+    symbol: "ETH",
+    decimals: 18,
+    wrapped: {
+      address: "0x5AEa5775959fBC2557Cc8789bC1bf90A239D9a91",
+      name: "Wrapped Ether",
+      symbol: "WETH",
+    },
   },
 };
 
@@ -122,4 +159,24 @@ export function zkGetDefaultTrustedForwarders(
   //  Since ZkSync has gas sponsoring through native Account Abstraction,
   //  it doesn’t need a forwarder
   return [];
+}
+
+/**
+ * Returns the native token for a given chain
+ * @param chainId - the chain id
+ * @public
+ */
+export function getZkNativeTokenByChainId(chainId: ChainId): NativeToken {
+  return (
+    NATIVE_TOKENS[chainId] || {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+      wrapped: {
+        address: constants.AddressZero,
+        name: "Wrapped Ether",
+        symbol: "WETH",
+      },
+    }
+  );
 }

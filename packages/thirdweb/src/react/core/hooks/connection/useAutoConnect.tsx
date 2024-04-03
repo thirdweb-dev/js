@@ -17,13 +17,13 @@ import type {
   Wallet,
   // WalletWithPersonalAccount,
 } from "../../../../wallets/interfaces/wallet.js";
-import { asyncLocalStorage } from "../../utils/asyncLocalStorage.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
 import { timeoutPromise } from "../../utils/timeoutPromise.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import { createWallet } from "../../../../wallets/create-wallet.js";
 import { getSavedConnectParamsFromStorage } from "../../../../wallets/storage/walletStorage.js";
+import { asyncLocalStorage } from "../../../../wallets/storage/asyncLocalStorage.js";
 
 let autoConnectAttempted = false;
 

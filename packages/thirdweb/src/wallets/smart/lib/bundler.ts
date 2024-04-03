@@ -2,6 +2,7 @@ import { getClientFetch } from "../../../utils/fetch.js";
 import { hexToBigInt, type Hex } from "../../../utils/encoding/hex.js";
 import type {
   EstimationResult,
+  GasPriceResult,
   SmartWalletOptions,
   UserOperation,
 } from "../types.js";
@@ -13,6 +14,9 @@ import {
 import { hexlifyUserOp } from "./utils.js";
 import type { TransactionReceipt } from "../../../transaction/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
+import { decodeErrorResult } from "viem";
+import { parseEventLogs } from "../../../event/actions/parse-logs.js";
+import { userOperationRevertReasonEvent } from "../../../extensions/erc4337/__generated__/IEntryPoint/events/UserOperationRevertReason.js";
 
 /**
  * @internal
@@ -58,6 +62,24 @@ export async function estimateUserOpGas(args: {
 /**
  * @internal
  */
+export async function getUserOpGasPrice(args: {
+  options: SmartWalletOptions & { client: ThirdwebClient };
+}): Promise<GasPriceResult> {
+  const res = await sendBundlerRequest({
+    ...args,
+    operation: "thirdweb_getUserOperationGasPrice",
+    params: [],
+  });
+
+  return {
+    maxPriorityFeePerGas: hexToBigInt(res.maxPriorityFeePerGas),
+    maxFeePerGas: hexToBigInt(res.maxFeePerGas),
+  };
+}
+
+/**
+ * @internal
+ */
 export async function getUserOpReceipt(args: {
   userOpHash: Hex;
   options: SmartWalletOptions & { client: ThirdwebClient };
@@ -67,8 +89,27 @@ export async function getUserOpReceipt(args: {
     operation: "eth_getUserOperationReceipt",
     params: [args.userOpHash],
   });
-  // TODO theres more info in res we could be returning here
-  return res?.receipt;
+  if (!res) {
+    return undefined;
+  }
+  if (res.success === false) {
+    // parse revert reason
+    const logs = parseEventLogs({
+      events: [userOperationRevertReasonEvent()],
+      logs: res.logs,
+    });
+    const revertReason = logs[0]?.args?.revertReason;
+    if (!revertReason) {
+      throw new Error(`UserOp failed at txHash: ${res.transactionHash}`);
+    }
+    const revertMsg = decodeErrorResult({
+      data: revertReason,
+    });
+    throw new Error(
+      `UserOp failed with reason: '${revertMsg.args.join(",")}' at txHash: ${res.transactionHash}`,
+    );
+  }
+  return res.receipt;
 }
 
 async function sendBundlerRequest(args: {
@@ -76,7 +117,8 @@ async function sendBundlerRequest(args: {
   operation:
     | "eth_estimateUserOperationGas"
     | "eth_sendUserOperation"
-    | "eth_getUserOperationReceipt";
+    | "eth_getUserOperationReceipt"
+    | "thirdweb_getUserOperationGasPrice";
   params: any[];
 }) {
   const { options, operation, params } = args;

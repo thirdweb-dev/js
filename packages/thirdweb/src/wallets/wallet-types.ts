@@ -20,10 +20,19 @@ import type { CoinbaseSDKWalletConnectionOptions } from "./coinbase/coinbaseSDKW
 import type { ThirdwebClient } from "../client/client.js";
 
 export type WalletId =
+  | "walletConnect"
   | "embedded"
   | "smart"
   | WCSupportedWalletIds
   | InjectedSupportedWalletIds;
+
+export type StandaloneWCConnectOptions = WCConnectOptions["walletConnect"] & {
+  client: ThirdwebClient;
+  /**
+   * Optional chain to connect to.
+   */
+  chain?: Chain;
+};
 
 // connect options
 export type InjectedConnectOptions = {
@@ -52,22 +61,25 @@ export type EmbeddedWalletCreationOptions =
  * type X = WalletConnectionOption<'io.metamask'>
  * ````
  */
-export type WalletConnectionOption<T extends WalletId> = T extends "smart"
-  ? SmartWalletConnectionOptions
-  : // embedded wallet
-    T extends "embedded"
-    ? EmbeddedWalletConnectionOptions
-    : // coinbase wallet (inhected + coinbaseWallet)
-      T extends "com.coinbase.wallet"
-      ? InjectedConnectOptions | CoinbaseSDKWalletConnectionOptions
-      : // injected + wc both supported
-        T extends InjectedSupportedWalletIds & WCSupportedWalletIds
-        ? InjectedConnectOptions | WCConnectOptions
-        : // injected only
-          T extends InjectedSupportedWalletIds
-          ? InjectedConnectOptions
-          : // wc only
-            WCConnectOptions;
+export type WalletConnectionOption<T extends WalletId> =
+  T extends "walletConnect"
+    ? StandaloneWCConnectOptions
+    : T extends "smart"
+      ? SmartWalletConnectionOptions
+      : // embedded wallet
+        T extends "embedded"
+        ? EmbeddedWalletConnectionOptions
+        : // coinbase wallet (inhected + coinbaseWallet)
+          T extends "com.coinbase.wallet"
+          ? InjectedConnectOptions | CoinbaseSDKWalletConnectionOptions
+          : // injected + wc both supported
+            T extends InjectedSupportedWalletIds & WCSupportedWalletIds
+            ? InjectedConnectOptions | WCConnectOptions
+            : // injected only
+              T extends InjectedSupportedWalletIds
+              ? InjectedConnectOptions
+              : // wc only
+                WCConnectOptions;
 
 /**
  * Generic type for getting the type of object that the `wallet.autoConnect` method takes as the first argument.
@@ -76,21 +88,24 @@ export type WalletConnectionOption<T extends WalletId> = T extends "smart"
  * type X = WalletAutoConnectionOption<'io.metamask'>
  * ````
  */
-export type WalletAutoConnectionOption<T extends WalletId> = T extends "smart"
-  ? SmartWalletConnectionOptions
-  : T extends "embedded"
-    ? EmbeddedWalletAutoConnectOptions
-    : // coinbase wallet (inhected + coinbaseWallet)
-      T extends "com.coinbase.wallet"
-      ? InjectedConnectOptions | CoinbaseSDKWalletConnectionOptions
-      : // injected + wc both supported
-        T extends InjectedSupportedWalletIds & WCSupportedWalletIds
-        ? InjectedConnectOptions | WCAutoConnectOptions
-        : // injected only
-          T extends InjectedSupportedWalletIds
-          ? InjectedConnectOptions
-          : // wc only
-            WCAutoConnectOptions;
+export type WalletAutoConnectionOption<T extends WalletId> =
+  T extends "walletConnect"
+    ? WCAutoConnectOptions
+    : T extends "smart"
+      ? SmartWalletConnectionOptions
+      : T extends "embedded"
+        ? EmbeddedWalletAutoConnectOptions
+        : // coinbase wallet (inhected + coinbaseWallet)
+          T extends "com.coinbase.wallet"
+          ? InjectedConnectOptions | CoinbaseSDKWalletConnectionOptions
+          : // injected + wc both supported
+            T extends InjectedSupportedWalletIds & WCSupportedWalletIds
+            ? InjectedConnectOptions | WCAutoConnectOptions
+            : // injected only
+              T extends InjectedSupportedWalletIds
+              ? InjectedConnectOptions
+              : // wc only
+                WCAutoConnectOptions;
 /**
  * Generic type for getting the type of object that the `createWallet` function takes as the second argument. ( the first argument being the wallet id )
  * @example

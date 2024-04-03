@@ -23,21 +23,39 @@ async function main() {
     }
 
     default: {
+      const isWindows = /^win/.test(process.platform);
       let bunAvailable = false;
-      try {
-        const res = execSync("bun --version", {
-          stdio: "ignore",
-          encoding: "utf-8",
-        });
-        if (typeof res === "string" && res.indexOf(".") > -1) {
-          bunAvailable = true;
+      // bun has no windows support yet anyways
+      if (!isWindows) {
+        try {
+          const res = execSync("bun --version", {
+            stdio: "ignore",
+            encoding: "utf-8",
+          });
+          if (typeof res === "string" && res.indexOf(".") > -1) {
+            bunAvailable = true;
+          }
+        } catch {
+          bunAvailable = false;
         }
-      } catch {
-        bunAvailable = false;
       }
-      const runner = bunAvailable ? "bunx" : "npx";
+      let runner = "npx";
+
+      switch (true) {
+        case bunAvailable:
+          runner = "bun";
+          break;
+        case isWindows:
+          runner = "npx.cmd";
+          break;
+      }
+
+      const args = command
+        ? ["--yes", "@thirdweb-dev/cli@latest", command, ...rest]
+        : ["--yes", "@thirdweb-dev/cli@latest", ...rest];
+
       // eslint-disable-next-line better-tree-shaking/no-top-level-side-effects
-      spawn(runner, ["--yes", "@thirdweb-dev/cli@latest", command, ...rest], {
+      spawn(runner, args, {
         stdio: "inherit",
       });
     }

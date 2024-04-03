@@ -7,7 +7,7 @@
     },
     "bench": {
       "cache": false,
-      "dependsOn": ["build"],
+      "dependsOn": [],
       "env": ["TW_SECRET_KEY", "CI"]
     },
     "typedoc": {
@@ -73,7 +73,6 @@
       "outputs": ["dist/**", "cf-worker/**", "node/**"],
       "dependsOn": ["^build"]
     },
-
     "thirdweb#update-version": {
       "inputs": ["package.json"],
       "outputs": ["src/version.ts"]
@@ -81,51 +80,29 @@
     "test": {
       "outputs": ["codecov/**"],
       "inputs": ["src/**", "test/**"],
-      "dependsOn": ["build"],
+      "dependsOn": ["^build"],
+      "env": ["TW_SECRET_KEY", "CI"]
+    },
+    "test:legacy": {
+      "outputs": ["codecov/**"],
+      "inputs": ["src/**", "test/**"],
+      "dependsOn": ["^build"],
       "env": ["TW_SECRET_KEY", "CI"]
     },
     "e2e": {
       "outputs": [],
-      "inputs": ["src/**"],
-      "dependsOn": ["build"]
-    },
-    "e2e-cra-5#build": {
-      "outputs": ["build/**"],
       "inputs": ["src/**", "fixtures/**"],
       "dependsOn": ["^build"]
     },
-    "e2e-next-12#build": {
-      "outputs": [".next/**"],
-      "inputs": ["src/**", "fixtures/**"],
-      "dependsOn": ["^build"]
-    },
-    "e2e-vite-3#build": {
-      "outputs": ["dist/**"],
-      "inputs": ["src/**", "fixtures/**"],
-      "dependsOn": ["^build"]
-    },
-    "e2e-cra-5#e2e": {
-      "outputs": ["playwright-report/**"],
-      "inputs": ["src/**", "fixtures/**", "package.json"],
-      "dependsOn": ["build"]
-    },
-    "e2e-next-12#e2e": {
-      "outputs": ["playwright-report/**"],
-      "inputs": ["src/**", "fixtures/**", "package.json"],
-      "dependsOn": ["build"]
-    },
-    "e2e-vite-3#e2e": {
-      "outputs": ["playwright-report/**"],
-      "inputs": ["src/**", "fixtures/**", "package.json"],
-      "dependsOn": ["build"]
-    },
-    "@thirdweb-dev/cli#e2e": {
+    "e2e:legacy": {
       "outputs": [],
-      "inputs": ["src/**", "e2e/**"],
-      "dependsOn": ["build"],
-      "env": ["TW_SECRET_KEY"]
+      "inputs": ["src/**", "fixtures/**"],
+      "dependsOn": ["^build"]
     },
     "lint": {
+      "outputs": []
+    },
+    "lint:legacy": {
       "outputs": []
     },
     "fix": {
@@ -142,5 +119,5 @@
       "dependsOn": ["build"]
     }
   },
-  "globalEnv": ["CI"]
+  "globalEnv": ["CI", "TW_SECRET_KEY"]
 }

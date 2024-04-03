@@ -4,9 +4,13 @@ import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed
 import type { ThirdwebContract } from "../../../contract/contract.js";
 import { encode } from "../../../transaction/actions/encode.js";
 import { getDefaultGasOverrides } from "../../../gas/fee-data.js";
-import { DUMMY_SIGNATURE, ENTRYPOINT_ADDRESS } from "./constants.js";
+import {
+  DUMMY_SIGNATURE,
+  ENTRYPOINT_ADDRESS,
+  getDefaultBundlerUrl,
+} from "./constants.js";
 import { getPaymasterAndData } from "./paymaster.js";
-import { estimateUserOpGas } from "./bundler.js";
+import { estimateUserOpGas, getUserOpGasPrice } from "./bundler.js";
 import { randomNonce } from "./utils.js";
 import { prepareCreateAccount } from "./calls.js";
 import type { Account } from "../../interfaces/wallet.js";
@@ -17,6 +21,7 @@ import { hexToBytes } from "../../../utils/encoding/to-bytes.js";
 import type { Hex } from "../../../utils/encoding/hex.js";
 import { encodeAbiParameters } from "../../../utils/abi/encodeAbiParameters.js";
 import type { ThirdwebClient } from "../../../client/client.js";
+import { isThirdwebUrl } from "../../../utils/fetch.js";
 
 /**
  * Create an unsigned user operation
@@ -44,17 +49,30 @@ export async function createUnsignedUserOp(args: {
         options,
       });
   const callData = await encode(executeTx);
+
   let { maxFeePerGas, maxPriorityFeePerGas } = executeTx;
-  if (!maxFeePerGas || !maxPriorityFeePerGas) {
-    const feeData = await getDefaultGasOverrides(
-      factoryContract.client,
-      factoryContract.chain,
-    );
-    if (!maxPriorityFeePerGas) {
-      maxPriorityFeePerGas = feeData.maxPriorityFeePerGas ?? undefined;
-    }
-    if (!maxFeePerGas) {
-      maxFeePerGas = feeData.maxFeePerGas ?? undefined;
+  const bundlerUrl =
+    options.overrides?.bundlerUrl ?? getDefaultBundlerUrl(options.chain);
+  if (isThirdwebUrl(bundlerUrl)) {
+    // get gas prices from bundler
+    const bundlerGasPrice = await getUserOpGasPrice({
+      options,
+    });
+    maxFeePerGas = bundlerGasPrice.maxFeePerGas;
+    maxPriorityFeePerGas = bundlerGasPrice.maxPriorityFeePerGas;
+  } else {
+    // otherwise fallback to RPC gas prices if not passed in explicitely
+    if (!maxFeePerGas || !maxPriorityFeePerGas) {
+      const feeData = await getDefaultGasOverrides(
+        factoryContract.client,
+        factoryContract.chain,
+      );
+      if (!maxPriorityFeePerGas) {
+        maxPriorityFeePerGas = feeData.maxPriorityFeePerGas ?? undefined;
+      }
+      if (!maxFeePerGas) {
+        maxFeePerGas = feeData.maxFeePerGas ?? undefined;
+      }
     }
   }
 

@@ -2,7 +2,9 @@ import { describe, it, expect } from "vitest";
 import { resolveAddress } from "./resolve-address.js";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 
-describe("ENS", () => {
+// skip this test suite if there is no secret key available to test with
+// TODO: remove reliance on secret key during unit tests entirely
+describe.runIf(process.env.TW_SECRET_KEY)("ENS", () => {
   it("should resolve ENS", async () => {
     const name = "vitalik.eth";
     const address = await resolveAddress({

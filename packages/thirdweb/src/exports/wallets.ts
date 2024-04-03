@@ -2,19 +2,26 @@ export {
   createWallet,
   smartWallet,
   embeddedWallet,
+  walletConnect,
 } from "../wallets/create-wallet.js";
 
 export type { Wallet, Account } from "../wallets/interfaces/wallet.js";
 export type { ConnectionStatus } from "../wallets/manager/index.js";
 
+// utils
 export {
   getWalletBalance,
   type GetWalletBalanceOptions,
 } from "../wallets/utils/getWalletBalance.js";
+export {
+  generateAccount,
+  type GenerateAccountOptions,
+} from "../wallets/utils/generateAccount.js";
 
 // private-key
 export {
   privateKeyAccount,
+  privateKeyToAccount,
   type PrivateKeyAccountOptions,
 } from "../wallets/private-key.js";
 

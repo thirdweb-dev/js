@@ -13,10 +13,9 @@ export class TruffleBuilder extends BaseBuilder {
   }> {
     // get the current config first
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const truffleConfig = require(join(
-      options.projectPath,
-      "truffle-config.js",
-    ));
+    const truffleConfig = require(
+      join(options.projectPath, "truffle-config.js"),
+    );
 
     const buildPath = join(
       options.projectPath,
@@ -41,6 +40,9 @@ export class TruffleBuilder extends BaseBuilder {
         contractInfo;
       const meta = JSON.parse(metadata);
       const abi = meta.output.abi;
+
+      const evmVersion = meta.settings?.evmVersion || "";
+      const compilerVersion = meta.compiler?.version || "";
 
       const target = meta.settings.compilationTarget;
       if (
@@ -81,6 +83,8 @@ export class TruffleBuilder extends BaseBuilder {
           name: contractName,
           fileName,
           sources,
+          compilerVersion,
+          evmVersion,
         });
       }
     }

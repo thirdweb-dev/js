@@ -178,7 +178,7 @@ export class EmbeddedWallet {
       procedureName: "getAddress",
       params: undefined,
     });
-    const signTransaction = async (tx: SendTransactionOption) => {
+    const _signTransaction = async (tx: SendTransactionOption) => {
       const { signedTransaction } =
         await querier.call<SignTransactionReturnType>({
           procedureName: "signTransaction",
@@ -205,12 +205,21 @@ export class EmbeddedWallet {
     const client = this.client;
     return {
       address,
+      async signTransaction(tx) {
+        if (!tx.chainId) {
+          throw new Error("chainId required in tx to sign");
+        }
+        return _signTransaction({
+          ...tx,
+          chainId: tx.chainId,
+        });
+      },
       async sendTransaction(tx) {
         const rpcRequest = getRpcClient({
           client,
           chain: defineChain(tx.chainId),
         });
-        const signedTx = await signTransaction(tx);
+        const signedTx = await _signTransaction(tx);
         const transactionHash = await eth_sendRawTransaction(
           rpcRequest,
           signedTx,

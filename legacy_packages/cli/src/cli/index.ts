@@ -377,6 +377,7 @@ const main = async () => {
     .option("--dry-run", "dry run (skip actually publishing)")
     .option("-d, --debug", "show debug logs")
     .option("--ci", "Continuous Integration mode")
+    .option("--zksync", "Publish with ZKSync settings")
     .option(
       "--link-lib <library:address...>",
       "Specify library names and addresses",

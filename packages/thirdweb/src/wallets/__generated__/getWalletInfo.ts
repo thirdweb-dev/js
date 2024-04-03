@@ -14,6 +14,29 @@ export async function getWalletInfo<TImage extends boolean>(
   image?: TImage,
 ): Promise<[TImage] extends [true] ? string : WalletInfo> {
   switch (id) {
+    case "smart": {
+      return (
+        image
+          ? import("../custom/smart/image.js").then((img) => img.default)
+          : import("../custom/smart/index.js").then((w) => w.wallet)
+      ) as Promise<[TImage] extends [true] ? string : any>;
+    }
+    case "embedded": {
+      return (
+        image
+          ? import("../custom/embedded/image.js").then((img) => img.default)
+          : import("../custom/embedded/index.js").then((w) => w.wallet)
+      ) as Promise<[TImage] extends [true] ? string : any>;
+    }
+    case "walletConnect": {
+      return (
+        image
+          ? import("../custom/walletConnect/image.js").then(
+              (img) => img.default,
+            )
+          : import("../custom/walletConnect/index.js").then((w) => w.wallet)
+      ) as Promise<[TImage] extends [true] ? string : any>;
+    }
     case "io.metamask": {
       return (
         image

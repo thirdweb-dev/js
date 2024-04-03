@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import {
   keccak256SyncHex,
   keccak256SyncHexPrefixed,
@@ -12,6 +13,7 @@ const STRING_TO_HASH = "hello world";
 describe("keccak256", () => {
   it("keccak256SyncHexPrefixed === ethers.utils.keccak256", async () => {
     const out = keccak256SyncHexPrefixed(STRING_TO_HASH);
+    // eslint-disable-next-line no-restricted-globals
     const ethersOut = utils.keccak256(Buffer.from(STRING_TO_HASH));
 
     expect(out).toEqual(ethersOut);
