@@ -7,7 +7,9 @@ const STRING_TO_HASH = "hello world";
 describe("sha256", () => {
   it("sha256", async () => {
     const out = await sha256(STRING_TO_HASH);
-    const hash = createHash("sha256").update(STRING_TO_HASH).digest();
+    const hash = new Uint8Array(
+      createHash("sha256").update(STRING_TO_HASH).digest(),
+    );
     expect(out).toEqual(hash);
   });
 
@@ -19,7 +21,9 @@ describe("sha256", () => {
 
   it("sha256Sync", async () => {
     const out = sha256Sync(STRING_TO_HASH);
-    const hash = createHash("sha256").update(STRING_TO_HASH).digest();
+    const hash = new Uint8Array(
+      createHash("sha256").update(STRING_TO_HASH).digest(),
+    );
     expect(out).toEqual(hash);
   });
 
