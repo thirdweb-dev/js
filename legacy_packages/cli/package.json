@@ -1,7 +1,7 @@
 {
   "name": "@thirdweb-dev/cli",
   "main": "dist/cli/index.js",
-  "version": "0.13.60",
+  "version": "0.13.61",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/legacy_packages/cli",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
@@ -65,7 +65,6 @@
     "build": "pnpm clean && tsup --env.NODE_ENV production --minify --format cjs --external hardhat --dts-resolve",
     "build:watch": "pnpm run build --watch",
     "generate-thirdweb-package": "node scripts/generate-thirdweb-package.js",
-    "e2e": "vitest",
     "push": "yalc push"
   },
   "files": [

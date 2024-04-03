@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/react-core",
-  "version": "4.4.28",
+  "version": "4.4.29",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/legacy_packages/react-core",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
@@ -45,7 +45,7 @@
   "private": false,
   "scripts": {
     "format": "prettier --write 'src/**/*'",
-    "lint": "eslint src/ && bunx publint --strict --level warning",
+    "lint": "eslint src/",
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/",
     "generate-docs": "mkdir -p etc && pnpm generate-docs:evm && pnpm generate-snippets",

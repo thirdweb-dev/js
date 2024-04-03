@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, test } from "vitest";
 import { Ethereum } from "../src";
 import {
   type ChainRPCOptions,
@@ -79,7 +80,9 @@ describe("chains/utils", () => {
       ],
     ],
   ])("getValidChainRPCs(Ethereum, %s, %s) = %p", (clientId, mode, expected) => {
-    expect(getValidChainRPCs(Ethereum, clientId, mode)).toEqual(expected);
+    expect(
+      getValidChainRPCs(Ethereum, clientId, mode as "http" | "ws"),
+    ).toEqual(expected);
   });
 
   test.each(CHAIN_RPC_TEST_CASES)(
@@ -188,7 +191,9 @@ describe("chains/utils with APP_BUNDLE_ID", () => {
       ],
     ],
   ])("getValidChainRPCs(Ethereum, %s, %s) = %p", (clientId, mode, expected) => {
-    expect(getValidChainRPCs(Ethereum, clientId, mode)).toEqual(expected);
+    expect(
+      getValidChainRPCs(Ethereum, clientId, mode as "http" | "ws"),
+    ).toEqual(expected);
   });
 
   test.each([

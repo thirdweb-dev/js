@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/crypto",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "main": "dist/thirdweb-dev-crypto.cjs.js",
   "module": "dist/thirdweb-dev-crypto.esm.js",
   "exports": {
@@ -44,12 +44,12 @@
   },
   "scripts": {
     "format": "prettier --write 'src/**/*'",
-    "lint": "eslint src/ && bunx publint --strict --level warning",
+    "lint": "eslint src/",
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/",
     "build": "tsc && preconstruct build",
     "push": "yalc push",
-    "test": "bun test",
+    "test": "vitest",
     "benchmark:aes-encrypt": "bun benchmark/aes-encrypt.ts",
     "benchmark:aes-decrypt": "bun benchmark/aes-decrypt.ts",
     "benchmark:sha256": "bun benchmark/sha256.ts",

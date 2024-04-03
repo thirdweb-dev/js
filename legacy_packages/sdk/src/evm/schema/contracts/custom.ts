@@ -377,6 +377,8 @@ export const CompilerMetadataFetchedSchema = /* @__PURE__ */ (() =>
 export const PreDeployMetadataFetchedSchema = /* @__PURE__ */ (() =>
   PreDeployMetadata.merge(CompilerMetadataFetchedSchema).extend({
     bytecode: z.string(),
+    fetchedMetadataUri: z.string(),
+    fetchedBytecodeUri: z.string(),
   }))();
 
 export type PreDeployMetadataFetched = z.infer<

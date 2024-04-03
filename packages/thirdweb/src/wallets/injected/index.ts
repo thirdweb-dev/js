@@ -200,10 +200,15 @@ async function onConnect(
   }
 
   function onAccountsChanged(accounts: string[]) {
-    if (accounts.length === 0) {
-      onDisconnect();
+    if (accounts[0]) {
+      const newAccount = {
+        ...account,
+        address: getAddress(accounts[0]),
+      };
+
+      emitter.emit("accountChanged", newAccount);
     } else {
-      emitter.emit("accountsChanged", accounts);
+      onDisconnect();
     }
   }
 

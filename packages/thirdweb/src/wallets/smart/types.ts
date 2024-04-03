@@ -76,3 +76,8 @@ export type EstimationResult = {
   verificationGasLimit: bigint;
   callGasLimit: bigint;
 };
+
+export type GasPriceResult = {
+  maxFeePerGas: bigint;
+  maxPriorityFeePerGas: bigint;
+};

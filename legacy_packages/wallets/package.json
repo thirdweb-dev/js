@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/wallets",
-  "version": "2.4.30",
+  "version": "2.4.31",
   "main": "dist/thirdweb-dev-wallets.cjs.js",
   "module": "dist/thirdweb-dev-wallets.esm.js",
   "browser": {
@@ -522,7 +522,7 @@
     "@account-abstraction/contracts": "^0.5.0",
     "@blocto/sdk": "0.5.5",
     "@coinbase/wallet-sdk": "^3.7.2",
-    "@google-cloud/kms": "3.0.1",
+    "@google-cloud/kms": "4.2.0",
     "@magic-ext/connect": "^6.7.2",
     "@magic-ext/oauth": "^7.6.2",
     "@magic-sdk/provider": "^13.6.2",
@@ -610,7 +610,7 @@
   },
   "scripts": {
     "format": "prettier --write 'src/**/*'",
-    "lint": "eslint src/ && bunx publint --strict --level warning",
+    "lint": "eslint src/",
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/",
     "build": "tsc && cross-env THIRDWEB_EWS_SDK_VERSION=$npm_package_version preconstruct build",

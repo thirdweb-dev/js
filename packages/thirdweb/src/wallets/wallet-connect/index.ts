@@ -19,7 +19,6 @@ import {
   getRpcUrlForChain,
 } from "../../chains/utils.js";
 import type { Chain } from "../../chains/types.js";
-import { ethereum } from "../../chains/chain-definitions/ethereum.js";
 import { isHex, numberToHex, type Hex } from "../../utils/encoding/hex.js";
 import { getDefaultAppMetadata } from "../utils/defaultDappMetadata.js";
 import type { WCSupportedWalletIds } from "../__generated__/wallet-ids.js";
@@ -34,6 +33,8 @@ import {
   getSavedConnectParamsFromStorage,
   saveConnectParamsToStorage,
 } from "../storage/walletStorage.js";
+import type { ThirdwebClient } from "../../client/client.js";
+import { getAddress } from "../../utils/address.js";
 
 const asyncLocalStorage =
   typeof window !== "undefined" ? _asyncLocalStorage : undefined;
@@ -42,7 +43,7 @@ type WCProvider = InstanceType<typeof EthereumProvider>;
 
 type SavedConnectParams = {
   optionalChains?: Chain[];
-  chain: Chain;
+  chain?: Chain;
   pairingTopic?: string;
 };
 
@@ -76,14 +77,6 @@ export async function connectWC(
 
   const wcOptions = options.walletConnect;
 
-  const targetChain = options?.chain || ethereum;
-  const targetChainId = targetChain.id;
-
-  const rpc = getRpcUrlForChain({
-    chain: targetChain,
-    client: options.client,
-  });
-
   const { onDisplayUri } = wcOptions || {};
 
   if (onDisplayUri) {
@@ -92,17 +85,23 @@ export async function connectWC(
     }
   }
 
+  const { rpcMap, chainsToRequest } = getChainsToRequest({
+    client: options.client,
+    chain: options.chain,
+    optionalChains: options.walletConnect?.optionalChains,
+  });
+
   // If there no active session, or the chain is stale, force connect.
   if (!provider.session || _isChainsState) {
     await provider.connect({
-      pairingTopic: wcOptions?.pairingTopic,
-      chains: [Number(targetChainId)],
-      rpcMap: {
-        [targetChainId.toString()]: rpc,
-      },
+      ...(wcOptions?.pairingTopic
+        ? { pairingTopic: wcOptions?.pairingTopic }
+        : {}),
+      optionalChains: chainsToRequest,
+      rpcMap: rpcMap,
     });
 
-    setRequestedChainsIds([targetChainId]);
+    setRequestedChainsIds(chainsToRequest);
   }
 
   // If session exists and chains are authorized, enable provider for required chain
@@ -117,7 +116,7 @@ export async function connectWC(
   if (options) {
     const savedParams: SavedConnectParams = {
       optionalChains: options.walletConnect?.optionalChains,
-      chain: chain,
+      chain: options.chain,
       pairingTopic: options.walletConnect?.pairingTopic,
     };
 
@@ -205,11 +204,10 @@ async function initProvider(
     "@walletconnect/ethereum-provider"
   );
 
-  const targetChain = options.chain || ethereum;
-
-  const rpc = getRpcUrlForChain({
-    chain: targetChain,
+  const { rpcMap, chainsToRequest } = getChainsToRequest({
     client: options.client,
+    chain: options.chain,
+    optionalChains: options.walletConnect?.optionalChains,
   });
 
   const provider = await EthereumProvider.init({
@@ -220,7 +218,7 @@ async function initProvider(
     projectId: wcOptions?.projectId || defaultWCProjectId,
     optionalMethods: OPTIONAL_METHODS,
     optionalEvents: OPTIONAL_EVENTS,
-    optionalChains: [targetChain.id],
+    optionalChains: chainsToRequest,
     metadata: {
       name: wcOptions?.appMetadata?.name || getDefaultAppMetadata().name,
       description:
@@ -231,9 +229,7 @@ async function initProvider(
         wcOptions?.appMetadata?.logoUrl || getDefaultAppMetadata().logoUrl,
       ],
     },
-    rpcMap: {
-      [targetChain.id]: rpc,
-    },
+    rpcMap: rpcMap,
     qrModalOptions: wcOptions?.qrModalOptions,
     disableProviderPing: true,
   });
@@ -242,15 +238,7 @@ async function initProvider(
 
   // disconnect the provider if chains are stale when (if not auto connecting)
   if (!isAutoConnect) {
-    const chains = [
-      targetChain,
-      ...(options?.walletConnect?.optionalChains || []),
-    ];
-
-    const isStale = await isChainsStale(
-      provider,
-      chains.map((c) => c.id),
-    );
+    const isStale = await isChainsStale(provider, chainsToRequest);
 
     if (isStale && provider.session) {
       await provider.disconnect();
@@ -291,20 +279,6 @@ async function initProvider(
     provider.events.addListener("disconnect", () => {
       provider.signer.client.off("session_request_sent", handleSessionRequest);
     });
-  }
-
-  // try switching to correct chain
-  if (options?.chain && provider.chainId !== options?.chain.id) {
-    try {
-      await switchChainWC(provider, options.chain);
-    } catch (e) {
-      console.error("Failed to Switch chain to target chain");
-      console.error(e);
-      // throw only if not auto connecting
-      if (!isAutoConnect) {
-        throw e;
-      }
-    }
   }
 
   return provider;
@@ -385,10 +359,14 @@ function onConnect(
   }
 
   function onAccountsChanged(accounts: string[]) {
-    if (accounts.length === 0) {
-      onDisconnect();
+    if (accounts[0]) {
+      const newAccount: Account = {
+        ...account,
+        address: getAddress(accounts[0]),
+      };
+      emitter.emit("accountChanged", newAccount);
     } else {
-      emitter.emit("accountsChanged", accounts);
+      onDisconnect();
     }
   }
 
@@ -520,4 +498,46 @@ function setRequestedChainsIds(chains: number[]) {
 async function getRequestedChainsIds(): Promise<number[]> {
   const data = localStorage.getItem(storageKeys.requestedChains);
   return data ? JSON.parse(data) : [];
+}
+
+type ArrayOneOrMore<T> = {
+  0: T;
+} & Array<T>;
+
+function getChainsToRequest(options: {
+  chain?: Chain;
+  optionalChains?: Chain[];
+  client: ThirdwebClient;
+}) {
+  const rpcMap: Record<number, string> = {};
+
+  if (options.chain) {
+    rpcMap[options.chain.id] = getRpcUrlForChain({
+      chain: options.chain,
+      client: options.client,
+    });
+  }
+
+  // limit optional chains to 10
+  const optionalChains = (options?.optionalChains || []).slice(0, 10);
+
+  optionalChains.forEach((chain) => {
+    rpcMap[chain.id] = getRpcUrlForChain({
+      chain: chain,
+      client: options.client,
+    });
+  });
+
+  const optionalChainIds = optionalChains.map((c) => c.id) || [];
+
+  const chainsToRequest: ArrayOneOrMore<number> = options.chain
+    ? [options.chain.id, ...optionalChainIds]
+    : optionalChainIds.length > 0
+      ? (optionalChainIds as ArrayOneOrMore<number>)
+      : [1];
+
+  return {
+    rpcMap,
+    chainsToRequest,
+  };
 }
