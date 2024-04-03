@@ -1,5 +1,7 @@
 # @thirdweb-dev/react-native-compat
 
+## 0.7.27
+
 ## 0.7.26
 
 ### Patch Changes
