@@ -518,7 +518,7 @@ function bigNumberIshToBigint(value: ethers5.BigNumberish): bigint {
   if (typeof value === "bigint") {
     return value;
   }
-  return BigInt(value);
+  return BigInt(value.toString());
 }
 
 function bigNumberIshToNumber(value: ethers5.BigNumberish): number {
