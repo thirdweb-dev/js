@@ -1,4 +1,4 @@
-import * as ethers5 from "ethers5";
+import type * as ethers5 from "ethers5";
 import type * as ethers6 from "ethers6";
 import * as universalethers from "ethers";
 import type { Abi } from "abitype";
@@ -250,7 +250,7 @@ async function toEthersSigner(
   class ThirdwebAdapterSigner extends ethers.Signer {
     constructor() {
       super();
-      ethers5.utils.defineReadOnly(
+      ethers.utils.defineReadOnly(
         this,
         "provider",
         toEthersProvider(ethers, client, chain),
