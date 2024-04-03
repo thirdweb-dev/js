@@ -50,34 +50,36 @@ export const ethers6Adapter = /* @__PURE__ */ (() => {
     provider: {
       /**
        * Converts a Thirdweb client and chain ID into an ethers.js provider.
-       * @param client - The Thirdweb client.
-       * @param chain - The chain.
+       * @param options - The options for converting the Thirdweb client and chain ID into an ethers.js provider.
+       * @param options.client - The Thirdweb client.
+       * @param options.chain - The chain.
        * @returns The ethers.js provider.
        * @example
        * ```ts
        * import { ethers6Adapter } from "thirdweb/adapters/ethers6";
-       * const provider = ethers6Adapter.provider.toEthers(client, chainId);
+       * const provider = ethers6Adapter.provider.toEthers({ client, chainId });
        * ```
        */
-      toEthers: (client: ThirdwebClient, chain: Chain) => {
+      toEthers: (options: { client: ThirdwebClient; chain: Chain }) => {
         assertEthers6(ethers);
-        return toEthersProvider(ethers, client, chain);
+        return toEthersProvider(ethers, options.client, options.chain);
       },
     },
     contract: {
       /**
        * Converts a ThirdwebContract to an ethers.js Contract.
-       * @param twContract - The ThirdwebContract to convert.
+       * @param options - The options for converting the ThirdwebContract to an ethers.js Contract.
+       * @param options.thirdwebContract - The ThirdwebContract to convert.
        * @returns A Promise that resolves to an ethers.js Contract.
        * @example
        * ```ts
        * import { ethers6Adapter } from "thirdweb/adapters/ethers6";
-       * const ethersContract = await ethers6Adapter.contract.toEthers(twContract);
+       * const ethersContract = await ethers6Adapter.contract.toEthers({ thirdwebContract });
        * ```
        */
-      toEthers: (twContract: ThirdwebContract) => {
+      toEthers: (options: { thirdwebContract: ThirdwebContract }) => {
         assertEthers6(ethers);
-        return toEthersContract(ethers, twContract);
+        return toEthersContract(ethers, options.thirdwebContract);
       },
       /**
        * Creates a ThirdwebContract instance from an ethers.js contract.
@@ -102,34 +104,45 @@ export const ethers6Adapter = /* @__PURE__ */ (() => {
     signer: {
       /**
        * Converts an ethers6 Signer into an Wallet object.
-       * @param signer - The ethers6 Signer object.
+       * @param options - The options for converting the ethers6 Signer into a Wallet object.
+       * @param options.signer - The ethers6 Signer object.
        * @returns - A Promise that resolves to an Wallet object.
        * @example
        * ```ts
        * import { ethers6Adapter } from "thirdweb/adapters/ethers6";
-       * const wallet = await ethers6Adapter.signer.fromEthersSigner(signer);
+       * const wallet = await ethers6Adapter.signer.fromEthersSigner({ signer });
        * ```
        */
-      fromEthers: (signer: ethers6.Signer) => {
+      fromEthers: (options: { signer: ethers6.Signer }) => {
         assertEthers6(ethers);
-        return fromEthersSigner(signer);
+        return fromEthersSigner(options.signer);
       },
 
       /**
        * Converts a Thirdweb wallet to an ethers.js signer.
-       * @param client - The thirdweb client.
-       * @param account - The account.
-       * @param chain - The chain.
+       * @param options - The options for converting the Thirdweb wallet to an ethers.js signer.
+       * @param options.client - The thirdweb client.
+       * @param options.account - The account.
+       * @param options.chain - The chain.
        * @returns A promise that resolves to an ethers.js signer.
        * @example
        * ```ts
        * import { ethers6Adapter } from "thirdweb/adapters/ethers6";
-       * const signer = await ethers6Adapter.signer.toEthers(client, chain, account);
+       * const signer = await ethers6Adapter.signer.toEthers({ client, chain, account });
        * ```
        */
-      toEthers: (client: ThirdwebClient, account: Account, chain: Chain) => {
+      toEthers: (options: {
+        client: ThirdwebClient;
+        account: Account;
+        chain: Chain;
+      }) => {
         assertEthers6(ethers);
-        return toEthersSigner(ethers, client, account, chain);
+        return toEthersSigner(
+          ethers,
+          options.client,
+          options.account,
+          options.chain,
+        );
       },
     },
   };
@@ -265,7 +278,7 @@ async function fromEthersSigner(signer: ethers6.Signer): Promise<Account> {
  * @returns A promise that resolves to an ethers.js signer.
  * @internal
  */
-export async function toEthersSigner(
+async function toEthersSigner(
   ethers: Ethers6,
   client: ThirdwebClient,
   account: Account,
