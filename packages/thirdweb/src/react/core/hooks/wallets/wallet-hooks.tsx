@@ -70,13 +70,13 @@ export function useActiveWalletChain() {
 }
 
 /**
- * A hook that returns all connected accounts
- * @returns An array of all connected accounts
+ * A hook that returns all connected wallets
+ * @returns An array of all connected wallets
  * @example
  * ```jsx
- * import { useConnectedAccounts } from "thirdweb/react";
+ * import { useConnectedWallets } from "thirdweb/react";
  *
- * const accounts = useConnectedAccounts();
+ * const wallets = useConnectedWallets();
  * ```
  * @walletConnection
  */

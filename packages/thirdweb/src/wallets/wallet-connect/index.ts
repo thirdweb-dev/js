@@ -52,7 +52,6 @@ const defaultWCProjectId = "08c4b07e3ad25f1a27c14a4e8cecb6f0";
 const NAMESPACE = "eip155";
 const ADD_ETH_CHAIN_METHOD = "wallet_addEthereumChain";
 
-const isNewChainsStale = true;
 const defaultShowQrModal = true;
 
 const storageKeys = {
@@ -69,12 +68,6 @@ export async function connectWC(
   walletId: WCSupportedWalletIds | "walletConnect",
 ): Promise<ReturnType<typeof onConnect>> {
   const provider = await initProvider(options, walletId);
-
-  const _isChainsState = await isChainsStale(provider, [
-    provider.chainId,
-    ...(options?.walletConnect?.optionalChains || []).map((c) => c.id),
-  ]);
-
   const wcOptions = options.walletConnect;
 
   const { onDisplayUri } = wcOptions || {};
@@ -91,8 +84,7 @@ export async function connectWC(
     optionalChains: options.walletConnect?.optionalChains,
   });
 
-  // If there no active session, or the chain is stale, force connect.
-  if (!provider.session || _isChainsState) {
+  if (provider.session) {
     await provider.connect({
       ...(wcOptions?.pairingTopic
         ? { pairingTopic: wcOptions?.pairingTopic }
@@ -100,10 +92,9 @@ export async function connectWC(
       optionalChains: chainsToRequest,
       rpcMap: rpcMap,
     });
-
-    setRequestedChainsIds(chainsToRequest);
   }
 
+  setRequestedChainsIds(chainsToRequest);
   // If session exists and chains are authorized, enable provider for required chain
   const addresses = await provider.enable();
   const address = addresses[0];
@@ -174,23 +165,6 @@ export async function autoConnectWC(
   return onConnect(address, chain, provider, emitter);
 }
 
-// /**
-//  * @internal
-//  */
-// export async function disconnectWC(wallet: Wallet<WCSupportedWalletIds>) {
-//   const provider = walletToProviderMap.get(wallet);
-//   // const storage = getWalletData(wallet)?.storage;
-
-//   onDisconnect(wallet);
-//   // if (storage) {
-//   //   deleteConnectParamsFromStorage(storage, wallet.id);
-//   // }
-
-//   if (provider) {
-//     provider.disconnect();
-//   }
-// }
-
 // Connection utils -----------------------------------------------------------------------------------------------
 
 async function initProvider(
@@ -238,9 +212,9 @@ async function initProvider(
 
   // disconnect the provider if chains are stale when (if not auto connecting)
   if (!isAutoConnect) {
-    const isStale = await isChainsStale(provider, chainsToRequest);
+    // const isStale = await isChainsStale(provider, chainsToRequest);
 
-    if (isStale && provider.session) {
+    if (provider.session) {
       await provider.disconnect();
     }
   }
@@ -341,14 +315,11 @@ function onConnect(
     },
   };
 
-  function disconnect() {
-    if (!provider) {
-      return;
-    }
-    provider.disconnect();
+  async function disconnect() {
     provider.removeListener("accountsChanged", onAccountsChanged);
     provider.removeListener("chainChanged", onChainChanged);
     provider.removeListener("disconnect", onDisconnect);
+    await provider.disconnect();
   }
 
   function onDisconnect() {
@@ -365,6 +336,7 @@ function onConnect(
         address: getAddress(accounts[0]),
       };
       emitter.emit("accountChanged", newAccount);
+      emitter.emit("accountsChanged", accounts);
     } else {
       onDisconnect();
     }
@@ -396,9 +368,6 @@ function getNamespaceMethods(provider: WCProvider) {
 }
 
 function getNamespaceChainsIds(provider: WCProvider): number[] {
-  if (!provider) {
-    return [];
-  }
   const chainIds = provider.session?.namespaces[NAMESPACE]?.chains?.map(
     (chain) => parseInt(chain.split(":")[1] || ""),
   );
@@ -448,39 +417,6 @@ async function switchChainWC(provider: WCProvider, chain: Chain) {
 
     throw new SwitchChainError(error);
   }
-}
-
-/**
- * if every chain requested were already requested earlier - then they are not stale
- * @param connectToChainId
- * @internal
- */
-async function isChainsStale(provider: WCProvider, chains: number[]) {
-  const namespaceMethods = getNamespaceMethods(provider);
-
-  // if chain adding method is available, then chains are not stale
-  if (namespaceMethods.includes(ADD_ETH_CHAIN_METHOD)) {
-    return false;
-  }
-
-  // if new chains are considered stale, then return true
-  if (!isNewChainsStale) {
-    return false;
-  }
-
-  const requestedChains = await getRequestedChainsIds();
-  const namespaceChains = getNamespaceChainsIds(provider);
-
-  // if any of the requested chains are not in the namespace chains, then they are stale
-  if (
-    namespaceChains.length &&
-    !namespaceChains.some((id) => chains.includes(id))
-  ) {
-    return false;
-  }
-
-  // if chain was requested earlier, then they are not stale
-  return !chains.every((id) => requestedChains.includes(id));
 }
 
 /**
