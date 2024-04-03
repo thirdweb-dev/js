@@ -75,6 +75,10 @@ export const CUSTOM_GAS_FOR_CHAIN: Record<number, CustomChain> = {
     gasPrice: 2500 * 10 ** 9,
     gasLimit: 200000,
   },
+  [2710]: {
+    name: "Morph Testnet",
+    gasPrice: 6.2 * 10 ** 9,
+  },
 };
 
 export function matchError(error: string): boolean {
