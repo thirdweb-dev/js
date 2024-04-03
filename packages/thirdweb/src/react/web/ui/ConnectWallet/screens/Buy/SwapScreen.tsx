@@ -1,5 +1,5 @@
 import { ClockIcon, CrossCircledIcon } from "@radix-ui/react-icons";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { polygon } from "../../../../../../chains/chain-definitions/polygon.js";
 import type { Chain } from "../../../../../../chains/types.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../constants/addresses.js";
@@ -46,6 +46,8 @@ import { Skeleton } from "../../../components/Skeleton.js";
 import type { IconFC } from "../../icons/types.js";
 import styled from "@emotion/styled";
 import { useCustomTheme } from "../../../design-system/CustomThemeProvider.js";
+import { Drawer } from "../../../components/Drawer.js";
+import { SwapFees } from "./swap/SwapFees.js";
 
 /**
  * @internal
@@ -74,6 +76,7 @@ export function SwapScreen(props: {
 }
 
 type Screen = "main" | "select-from-token" | "select-to-token" | "confirmation";
+type DrawerScreen = "fees" | undefined;
 
 /**
  *
@@ -91,6 +94,7 @@ export function SwapScreenContent(props: {
   const [isSwitching, setIsSwitching] = useState(false);
   const switchActiveWalletChain = useSwitchActiveWalletChain();
   const supportedChainsQuery = useSwapSupportedChains(client);
+  const drawerRef = useRef<HTMLDivElement>(null);
 
   const supportedChains = supportedChainsQuery.data;
 
@@ -99,6 +103,7 @@ export function SwapScreenContent(props: {
 
   // screens
   const [screen, setScreen] = useState<Screen>("main");
+  const [drawerScreen, setDrawerScreen] = useState<DrawerScreen>();
 
   // token amount
   const [tokenAmount, setTokenAmount] = useState<string>("");
@@ -277,158 +282,198 @@ export function SwapScreenContent(props: {
 
   return (
     <Container animate="fadein">
-      <Container
-        p="lg"
-        style={{
-          minHeight: hasEditedAmount ? undefined : "300px",
+      <div
+        onClick={(e) => {
+          if (
+            drawerScreen &&
+            drawerRef.current &&
+            !drawerRef.current.contains(e.target as Node)
+          ) {
+            e.preventDefault();
+            e.stopPropagation();
+            setDrawerScreen(undefined);
+          }
         }}
       >
-        <ModalHeader title="Buy" onBack={props.onBack} />
-        <Spacer y="lg" />
+        {drawerScreen && (
+          <Drawer onBack={() => setDrawerScreen(undefined)}>
+            <div ref={drawerRef}>
+              <Text size="lg" color="primaryText">
+                Fee
+              </Text>
 
-        {/* To */}
-        <BuyTokenInput
-          value={tokenAmount}
-          onChange={async (value) => {
-            setHasEditedAmount(true);
-            setTokenAmount(value);
+              <Spacer y="lg" />
+              {buyWithCryptoQuoteQuery.data && (
+                <SwapFees quote={buyWithCryptoQuoteQuery.data} />
+              )}
+            </div>
+          </Drawer>
+        )}
+
+        <Container
+          p="lg"
+          style={{
+            minHeight: hasEditedAmount ? undefined : "300px",
           }}
-          token={toToken}
-          chain={toChain}
-          onSelectToken={() => setScreen("select-to-token")}
-        />
-      </Container>
+        >
+          <ModalHeader title="Buy" onBack={props.onBack} />
+          <Spacer y="lg" />
 
-      <Line />
+          {/* To */}
+          <BuyTokenInput
+            value={tokenAmount}
+            onChange={async (value) => {
+              setHasEditedAmount(true);
+              setTokenAmount(value);
+            }}
+            token={toToken}
+            chain={toChain}
+            onSelectToken={() => setScreen("select-to-token")}
+          />
+        </Container>
 
-      <Container p="lg">
-        {hasEditedAmount && (
-          <div>
-            <PaymentSelection />
-            <Spacer y="md" />
+        <Line />
 
-            {/* From */}
-            <PayWithCrypto
-              value={sourceTokenAmount}
-              onSelectToken={() => setScreen("select-from-token")}
-              chain={fromChain}
-              token={fromToken}
-              isLoading={
-                buyWithCryptoQuoteQuery.isLoading && !sourceTokenAmount
-              }
-            />
+        <Container p="lg">
+          {hasEditedAmount && (
+            <div>
+              <PaymentSelection />
+              <Spacer y="md" />
 
-            <Line />
+              {/* From */}
+              <PayWithCrypto
+                value={sourceTokenAmount}
+                onSelectToken={() => {
+                  setScreen("select-from-token");
+                }}
+                chain={fromChain}
+                token={fromToken}
+                isLoading={
+                  buyWithCryptoQuoteQuery.isLoading && !sourceTokenAmount
+                }
+              />
 
-            <Container
-              bg="tertiaryBg"
-              flex="row"
-              style={{
-                borderRadius: radius.md,
-                borderTopLeftRadius: 0,
-                borderTopRightRadius: 0,
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
+              <Line />
+
               <Container
+                bg="tertiaryBg"
                 flex="row"
-                center="y"
-                gap="xxs"
-                color="accentText"
-                p="sm"
+                style={{
+                  borderRadius: radius.md,
+                  borderTopLeftRadius: 0,
+                  borderTopRightRadius: 0,
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
               >
-                <ClockIcon width={iconSize.sm} height={iconSize.sm} />
-                {buyWithCryptoQuoteQuery.isLoading ? (
-                  <Skeleton height={fontSize.xs} width="50px" />
-                ) : (
+                <Container
+                  flex="row"
+                  center="y"
+                  gap="xxs"
+                  color="accentText"
+                  p="sm"
+                >
+                  <ClockIcon width={iconSize.sm} height={iconSize.sm} />
+                  {buyWithCryptoQuoteQuery.isLoading ? (
+                    <Skeleton height={fontSize.xs} width="50px" />
+                  ) : (
+                    <Text size="xs" color="secondaryText">
+                      {estimatedSeconds
+                        ? "~" + formatSeconds(estimatedSeconds)
+                        : "--"}
+                    </Text>
+                  )}
+                </Container>
+
+                <FeesButton
+                  variant="secondary"
+                  onClick={() => {
+                    setDrawerScreen("fees");
+                  }}
+                >
+                  <Container color="accentText" flex="row" center="both">
+                    <ViewFeeIcon size={iconSize.sm} />
+                  </Container>
                   <Text size="xs" color="secondaryText">
-                    {estimatedSeconds
-                      ? "~" + formatSeconds(estimatedSeconds)
-                      : "--"}
+                    View Fees
                   </Text>
-                )}
+                </FeesButton>
               </Container>
 
-              <FeesButton variant="secondary">
-                <ViewFeeIcon size={iconSize.sm} />
-                <Text size="xs" color="secondaryText">
-                  View Fees
-                </Text>
-              </FeesButton>
-            </Container>
+              <Spacer y="md" />
 
-            <Spacer y="md" />
-
-            <Container flex="column" gap="md">
-              {/* {buyWithCryptoQuoteQuery.data && (
+              <Container flex="column" gap="md">
+                {/* {buyWithCryptoQuoteQuery.data && (
                 <div>
                   <SwapFees quote={buyWithCryptoQuoteQuery.data} />
                   <Spacer y="lg" />
                 </div>
               )} */}
 
-              {isSwapQuoteError && (
-                <div>
-                  <Container flex="row" gap="xs" center="y" color="danger">
-                    <CrossCircledIcon
-                      width={iconSize.sm}
-                      height={iconSize.sm}
-                    />
-                    <Text color="danger" size="sm">
-                      {getErrorMessage()}
-                    </Text>
-                  </Container>
-                  <Spacer y="lg" />
-                </div>
+                {isSwapQuoteError && (
+                  <div>
+                    <Container flex="row" gap="xs" center="y" color="danger">
+                      <CrossCircledIcon
+                        width={iconSize.sm}
+                        height={iconSize.sm}
+                      />
+                      <Text color="danger" size="sm">
+                        {getErrorMessage()}
+                      </Text>
+                    </Container>
+                    <Spacer y="lg" />
+                  </div>
+                )}
+              </Container>
+            </div>
+          )}
+
+          {switchChainRequired && (
+            <Button
+              fullWidth
+              variant="accent"
+              disabled={!hasEditedAmount}
+              data-disabled={!hasEditedAmount}
+              gap="sm"
+              onClick={async () => {
+                setIsSwitching(true);
+                try {
+                  await switchActiveWalletChain(fromChain);
+                } catch {}
+                setIsSwitching(false);
+              }}
+            >
+              {hasEditedAmount ? (
+                <>
+                  {isSwitching && (
+                    <Spinner size="sm" color="accentButtonText" />
+                  )}
+                  {isSwitching ? "Switching" : "Switch Network"}
+                </>
+              ) : (
+                "Continue"
               )}
-            </Container>
-          </div>
-        )}
+            </Button>
+          )}
 
-        {switchChainRequired && (
-          <Button
-            fullWidth
-            variant="accent"
-            disabled={!hasEditedAmount}
-            data-disabled={!hasEditedAmount}
-            gap="sm"
-            onClick={async () => {
-              setIsSwitching(true);
-              try {
-                await switchActiveWalletChain(fromChain);
-              } catch {}
-              setIsSwitching(false);
-            }}
-          >
-            {hasEditedAmount ? (
-              <>
-                {isSwitching && <Spinner size="sm" color="accentButtonText" />}
-                {isSwitching ? "Switching" : "Switch Network"}
-              </>
-            ) : (
-              "Continue"
-            )}
-          </Button>
-        )}
-
-        {!switchChainRequired && (
-          <Button
-            variant={disableContinue ? "outline" : "accent"}
-            fullWidth
-            data-disabled={disableContinue}
-            disabled={disableContinue}
-            onClick={async () => {
-              if (!disableContinue) {
-                setScreen("confirmation");
-              }
-            }}
-            gap="sm"
-          >
-            {isNotEnoughBalance ? "Not Enough Funds" : "Continue"}
-          </Button>
-        )}
-      </Container>
+          {!switchChainRequired && (
+            <Button
+              variant={disableContinue ? "outline" : "accent"}
+              fullWidth
+              data-disabled={disableContinue}
+              disabled={disableContinue}
+              onClick={async () => {
+                if (!disableContinue) {
+                  setScreen("confirmation");
+                }
+              }}
+              gap="sm"
+            >
+              {isNotEnoughBalance ? "Not Enough Funds" : "Continue"}
+            </Button>
+          )}
+        </Container>
+      </div>
     </Container>
   );
 }
@@ -461,13 +506,13 @@ const ViewFeeIcon: IconFC = (props) => {
     >
       <path
         d="M9.5 1.5H2.5C1.94772 1.5 1.5 1.94772 1.5 2.5V9.5C1.5 10.0523 1.94772 10.5 2.5 10.5H9.5C10.0523 10.5 10.5 10.0523 10.5 9.5V2.5C10.5 1.94772 10.0523 1.5 9.5 1.5Z"
-        stroke="#3385FF"
+        stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M4.5 7.5L7.5 4.5"
-        stroke="#3385FF"
+        stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -486,7 +531,7 @@ const FeesButton = /* @__PURE__ */ styled(Button)(() => {
     },
     justifyContent: "flex-start",
     transition: "background 0.3s, border-color 0.3s",
-    gap: spacing.sm,
+    gap: spacing.xs,
     padding: spacing.sm,
     color: theme.colors.primaryText,
     borderRadius: radius.md,
