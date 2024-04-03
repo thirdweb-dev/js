@@ -5,7 +5,7 @@ export default {
   "explorers": [
     {
       "name": "Blockscout",
-      "url": "https://plume-testnet.explorer.caldera.xyz",
+      "url": "https://testnet-explorer.plumenetwork.xyz",
       "standard": "EIP3091",
       "icon": {
         "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
@@ -35,13 +35,14 @@ export default {
     "chain": "eip155-11155111",
     "bridges": [
       {
-        "url": "https://plume-testnet.calderabridge.xyz"
+        "url": "https://testnet-bridge.plumenetwork.xyz"
       }
     ]
   },
   "rpc": [
     "https://161221135.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://plume-testnet.rpc.caldera.xyz/http"
+    "https://testnet-rpc.plumenetwork.xyz/http",
+    "wss://testnet-rpc.plumenetwork.xyz/ws"
   ],
   "shortName": "plume-testnet",
   "slip44": 1,
