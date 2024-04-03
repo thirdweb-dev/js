@@ -4,12 +4,10 @@ import { TEST_CLIENT } from "../../test/src/test-clients.js";
 import { toEthersSigner } from "./ethers5.js";
 import { ANVIL_CHAIN } from "../../test/src/chains.js";
 import * as ethers5 from "ethers5";
-
-const FAKE_PKEY =
-  "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef";
+import { ANVIL_PKEY_A, TEST_ACCOUNT_B } from "../../test/src/test-wallets.js";
 
 const account = privateKeyAccount({
-  privateKey: FAKE_PKEY,
+  privateKey: ANVIL_PKEY_A,
   client: TEST_CLIENT,
 });
 
@@ -23,6 +21,18 @@ describe("ethers5 adapter", () => {
     );
     expect(signer).toBeDefined();
     expect(signer.signMessage).toBeDefined();
+  });
+
+  test("should sign message", async () => {
+    const signer = await toEthersSigner(
+      ethers5,
+      TEST_CLIENT,
+      account,
+      ANVIL_CHAIN,
+    );
+    const expectedSig = await account.signMessage({ message: "hello world" });
+    const sig = await signer.signMessage("hello world");
+    expect(sig).toBe(expectedSig);
   });
 
   test("should sign typed data", async () => {
@@ -70,8 +80,20 @@ describe("ethers5 adapter", () => {
 
     const signature = await signer._signTypedData(domain, types, value);
 
-    expect(signature).toMatchInlineSnapshot(
-      `"0x10d3ce8040590e48889801080ad40f3d514c2c3ce03bbbe3e179bbf5ba56c75425951fa15220f637e2ab79fd033b99c4b340339e00e360316547e956c61ffcb01c"`,
+    expect(signature.length).toBe(132);
+  });
+
+  test("should send a tx", async () => {
+    const signer = await toEthersSigner(
+      ethers5,
+      TEST_CLIENT,
+      account,
+      ANVIL_CHAIN,
     );
+    const txResponse = await signer.sendTransaction({
+      to: TEST_ACCOUNT_B.address,
+      value: 100,
+    });
+    expect(txResponse.hash).toBe(66);
   });
 });

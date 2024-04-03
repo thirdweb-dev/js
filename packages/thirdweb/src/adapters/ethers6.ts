@@ -11,6 +11,8 @@ import { getRpcUrlForChain } from "../chains/utils.js";
 import type { Chain } from "../chains/types.js";
 import { getContract, type ThirdwebContract } from "../contract/contract.js";
 import { toHex, uint8ArrayToHex } from "../utils/encoding/hex.js";
+import { toSerializableTransaction } from "../transaction/actions/to-serializable-transaction.js";
+import type { PreparedTransaction } from "../transaction/prepare-transaction.js";
 
 type Ethers6 = typeof ethers6;
 
@@ -305,25 +307,33 @@ async function toEthersSigner(
     }
     // eslint-disable-next-line jsdoc/require-jsdoc
     override async sendTransaction(
-      tx: ethers6.ethers.TransactionRequest & { chainId: number },
+      tx: ethers6.ethers.TransactionRequest,
     ): Promise<ethers6.ethers.TransactionResponse> {
-      const alignedTx = await alignTxFromEthers(tx);
       if (!account) {
         throw new Error("Account not found");
       }
+      const ethersTx = await alignTxFromEthers({
+        chain,
+        client,
+        tx,
+      });
+      const serializableTx = await toSerializableTransaction({
+        transaction: ethersTx,
+        from: account.address,
+      });
       const result = await account.sendTransaction({
-        ...alignedTx,
-        chainId: tx.chainId,
+        chainId: chain.id,
+        ...serializableTx,
       });
 
       const txResponseParams: ethers6.TransactionResponseParams = {
-        ...alignedTx,
+        ...serializableTx,
         blockHash: null,
         from: this.address,
         hash: result.transactionHash as string,
         blockNumber: null,
         index: 0,
-        gasLimit: alignedTx.gas as bigint,
+        gasLimit: serializableTx.gas as bigint,
         // @ts-expect-error - we don't have this reliably so we'll just not include it
         signature: null,
       };
@@ -340,9 +350,16 @@ async function toEthersSigner(
       if (!account.signTransaction) {
         throw new Error("Account does not support signing transactions");
       }
-      const viemTx = await alignTxFromEthers(tx);
-
-      return account.signTransaction(viemTx);
+      const ethersTx = await alignTxFromEthers({
+        chain,
+        client,
+        tx,
+      });
+      const serializableTx = await toSerializableTransaction({
+        transaction: ethersTx,
+        from: account.address,
+      });
+      return account.signTransaction(serializableTx);
     }
     // eslint-disable-next-line jsdoc/require-jsdoc
     override signMessage(message: string | Uint8Array): Promise<string> {
@@ -423,9 +440,12 @@ function alignTxToEthers(
   return { ...rest, type };
 }
 
-async function alignTxFromEthers(
-  tx: ethers6.TransactionRequest,
-): Promise<TransactionSerializable> {
+async function alignTxFromEthers(options: {
+  client: ThirdwebClient;
+  chain: Chain;
+  tx: ethers6.TransactionRequest;
+}): Promise<PreparedTransaction> {
+  const { client, chain, tx } = options;
   const {
     type: ethersType,
     accessList,
@@ -453,11 +473,10 @@ async function alignTxFromEthers(
         throw new Error("ChainId is required for EIP-2930 transactions");
       }
       return {
-        type: "eip2930",
-
-        chainId,
+        client,
+        chain,
         accessList: accessList as AccessList,
-        to,
+        to: (to ?? undefined) as string | undefined,
         data: (data ?? undefined) as Hex | undefined,
         gasPrice: gasPrice ? bigNumberIshToBigint(gasPrice) : undefined,
         gas: gasLimit ? bigNumberIshToBigint(gasLimit) : undefined,
@@ -470,10 +489,10 @@ async function alignTxFromEthers(
         throw new Error("ChainId is required for EIP-1559 transactions");
       }
       return {
-        type: "eip1559",
-        chainId,
+        client,
+        chain,
         accessList: accessList as AccessList,
-        to,
+        to: (to ?? undefined) as string | undefined,
         data: (data ?? undefined) as Hex | undefined,
         gas: gasLimit ? bigNumberIshToBigint(gasLimit) : undefined,
         nonce: nonce ?? undefined,
@@ -490,9 +509,9 @@ async function alignTxFromEthers(
     default: {
       // fall back to legacy
       return {
-        type: "legacy",
-        chainId,
-        to,
+        client,
+        chain,
+        to: (to ?? undefined) as string | undefined,
         data: (data ?? undefined) as Hex | undefined,
         nonce: nonce ?? undefined,
         value: value ? bigNumberIshToBigint(value) : undefined,
