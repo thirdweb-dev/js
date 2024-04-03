@@ -41,6 +41,7 @@ export type ClientIdWithQuerierAndChainType = ClientIdWithQuerierType & {
 // Auth Types
 export type AuthDetails = {
   email?: string;
+  phoneNumber?: string;
   userWalletId: string;
   encryptionKey?: string;
   backupRecoveryCodes?: string[];

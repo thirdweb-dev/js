@@ -143,6 +143,7 @@ export type ThirdwebLocale = {
         title: string;
         verify: string;
       };
+      signInWithEmail: string;
       emailPlaceholder: string;
       emailRequired: string;
       enterPassword: {
@@ -156,9 +157,8 @@ export type ThirdwebLocale = {
       invalidEmailOrPhone: string;
       invalidPhone: string;
       countryCodeMissing: string;
-      loginWithEmailOrPhone: string;
-      emailOrPhoneRequired: string;
-      loginWithPhone: string;
+      phonePlaceholder: string;
+      signInWithPhone: string;
       phoneRequired: string;
       signIn: string;
       signInWithApple: string;

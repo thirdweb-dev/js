@@ -12,12 +12,10 @@ import { Spinner } from "../../../components/Spinner";
 import { Container, Line, ModalHeader } from "../../../components/basic";
 import { Button } from "../../../components/buttons";
 import { Text } from "../../../components/text";
-import { fontSize } from "../../../design-system";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { LinkButton } from "./LinkButton";
 import { CreatePassword } from "./USER_MANAGED/CreatePassword";
 import { EnterPasswordOrRecovery } from "./USER_MANAGED/EnterPassword";
-import { useTWLocale } from "../../../evm/providers/locale-provider";
-import { StyledButton } from "../../../design-system/elements";
-import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
 
 type EmbeddedWalletOTPLoginUIProps = ConnectUIProps<EmbeddedWallet>;
 
@@ -406,19 +404,3 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
 
   return null;
 };
-
-const LinkButton = /* @__PURE__ */ StyledButton(() => {
-  const theme = useCustomTheme();
-  return {
-    all: "unset",
-    color: theme.colors.accentText,
-    fontSize: fontSize.sm,
-    cursor: "pointer",
-    textAlign: "center",
-    fontWeight: 500,
-    width: "100%",
-    "&:hover": {
-      color: theme.colors.primaryText,
-    },
-  };
-});

@@ -213,6 +213,7 @@ export function esDefault(): ThirdwebLocale {
         signInWithGoogle: "Iniciar sesión con Google",
         signInWithFacebook: "Iniciar sesión con Facebook",
         signInWithApple: "Iniciar sesión con Apple",
+        signInWithEmail: "Iniciar sesión con correo electrónico",
         emailPlaceholder: "Ingresa tu dirección de correo electrónico",
         submitEmail: "Continuar",
         signIn: "Iniciar sesión",
@@ -223,11 +224,8 @@ export function esDefault(): ThirdwebLocale {
         invalidEmailOrPhone:
           "Dirección de correo electrónico o número de teléfono inválido",
         countryCodeMissing: "Phone number must start with a country code",
-        emailOrPhoneRequired:
-          "Se requiere correo electrónico o número de teléfono",
-        loginWithEmailOrPhone:
-          "Iniciar sesión con correo electrónico o número de teléfono",
-        loginWithPhone: "Iniciar sesión con número de teléfono",
+        phonePlaceholder: "Ingresa tu número de teléfono",
+        signInWithPhone: "Iniciar sesión con número de teléfono",
         phoneRequired: "Se requiere número de teléfono",
         socialLoginScreen: {
           title: "Iniciar sesión",

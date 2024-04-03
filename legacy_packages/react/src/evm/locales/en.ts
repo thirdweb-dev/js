@@ -1,5 +1,5 @@
-import { ThirdwebLocale } from "./types";
 import { DeepPartial, immutableOverride } from "../utils/applyOverrides";
+import { ThirdwebLocale } from "./types";
 
 // wallets that connect via extension and QR scan
 function extensionAndQRScanScreens(walletName: string) {
@@ -210,6 +210,7 @@ export function enDefault(): ThirdwebLocale {
         signInWithGoogle: "Sign in with Google",
         signInWithFacebook: "Sign in with Facebook",
         signInWithApple: "Sign in with Apple",
+        signInWithEmail: "Sign in with Email",
         emailPlaceholder: "Enter your email address",
         submitEmail: "Continue",
         signIn: "Sign in",
@@ -220,9 +221,8 @@ export function enDefault(): ThirdwebLocale {
         invalidPhone: "Invalid phone number",
         invalidEmailOrPhone: "Invalid email address or phone number",
         countryCodeMissing: "Phone number must start with a country code",
-        emailOrPhoneRequired: "email or phone number is required",
-        loginWithEmailOrPhone: "Login with email or phone number",
-        loginWithPhone: "Login with phone number",
+        phonePlaceholder: "Eg. 110-000-0000",
+        signInWithPhone: "Sign in with phone number",
         phoneRequired: "phone number is required",
         socialLoginScreen: {
           title: "Sign in",

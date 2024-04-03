@@ -4,24 +4,25 @@ import {
   EmbeddedWallet,
   EmbeddedWalletOauthStrategy,
 } from "@thirdweb-dev/wallets";
+import { useCallback, useContext, useState } from "react";
 import { Img } from "../../../components/Img";
 import { Spacer } from "../../../components/Spacer";
 import { TextDivider } from "../../../components/TextDivider";
 import { Container, ModalHeader } from "../../../components/basic";
 import { Button } from "../../../components/buttons";
 import { fontSize, iconSize, spacing } from "../../../design-system";
-import { useTWLocale } from "../../../evm/providers/locale-provider";
-import { openOauthSignInWindow } from "../../utils/openOauthSignInWindow";
-import { InputSelectionUI } from "../InputSelectionUI";
-import { socialIcons } from "./socialIcons";
-import type { AuthOption, EmbeddedWalletLoginType } from "./types";
 import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
-import { useScreenContext } from "../../ConnectWallet/Modal/screen";
-import { PoweredByThirdweb } from "../../ConnectWallet/PoweredByTW";
-import { useContext } from "react";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
 import { TOS } from "../../ConnectWallet/Modal/TOS";
+import { useScreenContext } from "../../ConnectWallet/Modal/screen";
+import { PoweredByThirdweb } from "../../ConnectWallet/PoweredByTW";
+import { openOauthSignInWindow } from "../../utils/openOauthSignInWindow";
 import { validateEmail } from "../../utils/validateEmail";
+import { InputSelectionUI } from "../InputSelectionUI";
+import { LinkButton } from "./LinkButton";
+import { socialIcons } from "./socialIcons";
+import type { AuthOption, EmbeddedWalletLoginType } from "./types";
 
 export const EmbeddedWalletFormUI = (props: {
   onSelect: (loginType: EmbeddedWalletLoginType) => void;
@@ -48,19 +49,28 @@ export const EmbeddedWalletFormUI = (props: {
 
   const isEmailEnabled = props.authOptions.includes("email");
   const isPhoneEnabled = props.authOptions.includes("phone");
+  const [inputMode, setInputMode] = useState<"email" | "phone" | "none">(
+    isEmailEnabled ? "email" : isPhoneEnabled ? "phone" : "none",
+  );
 
-  let placeholder = locale.loginWithEmailOrPhone;
+  const placeholder =
+    inputMode === "email" ? locale.emailPlaceholder : locale.phonePlaceholder;
+  const emptyErrorMessage =
+    inputMode === "email" ? locale.emailRequired : locale.phoneRequired;
+
   let type = "text";
-  let emptyErrorMessage = locale.emailOrPhoneRequired;
-  if (isEmailEnabled && !isPhoneEnabled) {
-    placeholder = locale.emailPlaceholder;
-    emptyErrorMessage = locale.emailRequired;
+  if (inputMode === "email") {
     type = "email";
-  } else if (!isEmailEnabled && isPhoneEnabled) {
-    placeholder = locale.loginWithPhone;
-    emptyErrorMessage = locale.phoneRequired;
+  } else if (inputMode === "phone") {
     type = "tel";
   }
+
+  const switchInputModeText =
+    inputMode === "email" ? locale.signInWithPhone : locale.signInWithEmail;
+  const switchInputMode = useCallback(() => {
+    setInputMode((prev) => (prev === "email" ? "phone" : "email"));
+  }, []);
+  const allowSwitchInputMode = isEmailEnabled && isPhoneEnabled;
 
   const socialLogins = props.authOptions.filter(
     (x) => x !== "email" && x !== "phone",
@@ -96,7 +106,6 @@ export const EmbeddedWalletFormUI = (props: {
   };
 
   const showOnlyIcons = socialLogins.length > 1;
-  const showInputUI = isEmailEnabled || isPhoneEnabled;
 
   return (
     <Container flex="column" gap="lg">
@@ -141,48 +150,68 @@ export const EmbeddedWalletFormUI = (props: {
       )}
 
       {/* Email Login */}
-      {showInputUI && (
-        <InputSelectionUI
-          type={type}
-          onSelect={(value) => {
-            const isEmail = validateEmail(value);
-            if (isEmail) {
-              props.onSelect({ email: value });
-            } else {
-              props.onSelect({ phone: value });
-            }
+      {inputMode !== "none" && (
+        <Container
+          flex="column"
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
           }}
-          placeholder={placeholder}
-          name="emailOrPhone"
-          errorMessage={(_input) => {
-            const input = _input.toLowerCase();
-            const isEmail = input.includes("@");
-            const isPhone = Number.isInteger(Number(input[input.length - 1]));
+        >
+          {inputMode === "email" ? (
+            <InputSelectionUI
+              type={type}
+              onSelect={(value) => {
+                props.onSelect({ email: value });
+              }}
+              placeholder={placeholder}
+              name="email"
+              errorMessage={(input) => {
+                const isValidEmail = validateEmail(input.toLowerCase());
+                if (!isValidEmail) {
+                  return locale.invalidEmail;
+                }
+              }}
+              emptyErrorMessage={emptyErrorMessage}
+              submitButtonText={locale.submitEmail}
+            />
+          ) : (
+            <Container flex="row" gap="xxs">
+              <InputSelectionUI
+                type={type}
+                onSelect={(value) => {
+                  props.onSelect({ phone: value });
+                }}
+                placeholder={placeholder}
+                name="phone"
+                errorMessage={(_input) => {
+                  const input = _input.toLowerCase();
+                  const isPhone = Number.isInteger(
+                    Number(input[input.length - 1]),
+                  );
 
-            if (isEmail && isEmailEnabled) {
-              const isValidEmail = validateEmail(input);
-              if (!isValidEmail) {
-                return locale.invalidEmail;
-              }
-            } else if (isPhone && isPhoneEnabled) {
-              if (!input.startsWith("+")) {
-                return locale.countryCodeMissing;
-              }
-            } else {
-              if (isEmailEnabled && isPhoneEnabled) {
-                return locale.invalidEmailOrPhone;
-              }
-              if (isEmailEnabled) {
-                return locale.invalidEmail;
-              }
-              if (isPhoneEnabled) {
-                return locale.invalidPhone;
-              }
-            }
-          }}
-          emptyErrorMessage={emptyErrorMessage}
-          submitButtonText={locale.submitEmail}
-        />
+                  // TODO: Move this to a separate function
+                  // if (isPhone && isPhoneEnabled) {
+                  //   if (!input.startsWith("+")) {
+                  //     return locale.countryCodeMissing;
+                  //   }
+                  // } else
+                  if (!isPhone && isPhoneEnabled) {
+                    return locale.invalidPhone;
+                  }
+                }}
+                emptyErrorMessage={emptyErrorMessage}
+                submitButtonText={locale.submitEmail}
+              />
+            </Container>
+          )}
+          {allowSwitchInputMode && (
+            <LinkButton onClick={switchInputMode} type="button">
+              {switchInputModeText}
+            </LinkButton>
+          )}
+        </Container>
       )}
     </Container>
   );
