@@ -51,31 +51,35 @@ export const ethers5Adapter = /* @__PURE__ */ (() => {
     provider: {
       /**
        * Converts a Thirdweb client and chain ID into an ethers.js provider.
-       * @param client - The Thirdweb client.
-       * @param chain - The chain.
+       * @param options - The options for converting the Thirdweb client and chain ID into an ethers.js provider.
+       * @param options.client - The Thirdweb client.
+       * @param options.chain - The chain.
        * @returns The ethers.js provider.
        * @example
        * ```ts
        * import { ethers5Adapter } from "thirdweb/adapters/ethers5";
-       * const provider = ethers5Adapter.provider.toEthers(client, chainId);
+       * const provider = ethers5Adapter.provider.toEthers({ client, chainId });
        * ```
        */
-      toEthers: (client: ThirdwebClient, chain: Chain) =>
-        toEthersProvider(ethers, client, chain),
+      toEthers: (options: { client: ThirdwebClient; chain: Chain }) =>
+        toEthersProvider(ethers, options.client, options.chain),
     },
     contract: {
       /**
        * Converts a ThirdwebContract to an ethers.js Contract.
-       * @param twContract - The ThirdwebContract to convert.
+       * @param options - The options for converting the ThirdwebContract to an ethers.js Contract.
+       * @param options.thirdwebContract - The ThirdwebContract to convert.
        * @returns A Promise that resolves to an ethers.js Contract.
        * @example
        * ```ts
        * import { ethers5Adapter } from "thirdweb/adapters/ethers5";
-       * const ethersContract = await ethers5Adapter.contract.toEthers(twContract);
+       * const ethersContract = await ethers5Adapter.contract.toEthers({
+       *   thirdwebContract,
+       * });
        * ```
        */
-      toEthers: (twContract: ThirdwebContract) =>
-        toEthersContract(ethers, twContract),
+      toEthers: (options: { thirdwebContract: ThirdwebContract }) =>
+        toEthersContract(ethers, options.thirdwebContract),
       /**
        * Creates a ThirdwebContract instance from an ethers.js contract.
        * @param options - The options for creating the ThirdwebContract instance.
@@ -97,30 +101,37 @@ export const ethers5Adapter = /* @__PURE__ */ (() => {
     signer: {
       /**
        * Converts an ethers5 Signer into a Wallet object.
-       * @param signer - The ethers5 Signer object.
+       * @param options - The options for converting the ethers5 Signer into a Wallet object.
+       * @param options.signer - The ethers5 Signer object.
        * @returns - A Promise that resolves to aa Wallet object.
        * @example
        * ```ts
        * import { ethers5Adapter } from "thirdweb/adapters/ethers5";
-       * const wallet = await ethers5Adapter.signer.fromEthersSigner(signer);
+       * const wallet = await ethers5Adapter.signer.fromEthersSigner({ signer });
        * ```
        */
-      fromEthers: (signer: ethers5.Signer) => fromEthersSigner(signer),
+      fromEthers: (options: { signer: ethers5.Signer }) =>
+        fromEthersSigner(options.signer),
 
       /**
        * Converts a Thirdweb wallet to an ethers.js signer.
-       * @param client - The thirdweb client.
-       * @param chain - The chain.
-       * @param account - The account.
+       * @param options - The options for converting the Thirdweb wallet to an ethers.js signer.
+       * @param options.client - The thirdweb client.
+       * @param options.chain - The chain.
+       * @param options.account - The account.
        * @returns A promise that resolves to an ethers.js signer.
        * @example
        * ```ts
        * import { ethers5Adapter } from "thirdweb/adapters/ethers5";
-       * const signer = await ethers5Adapter.signer.toEthers(client, chain, account);
+       * const signer = await ethers5Adapter.signer.toEthers({ client, chain, account });
        * ```
        */
-      toEthers: (client: ThirdwebClient, chain: Chain, account: Account) =>
-        toEthersSigner(ethers, client, chain, account),
+      toEthers: (options: {
+        client: ThirdwebClient;
+        chain: Chain;
+        account: Account;
+      }) =>
+        toEthersSigner(ethers, options.client, options.chain, options.account),
     },
   };
 })();
@@ -300,8 +311,8 @@ async function toEthersSigner(
       const awaitedTx = await ethers.utils.resolveProperties(transaction);
       const alignedTx = await alignTxFromEthers(awaitedTx, ethers);
       const tx = prepareTransaction({
-        client,
-        chain,
+        client: client,
+        chain: chain,
         accessList: alignedTx.accessList,
         data: alignedTx.data,
         gas: alignedTx.gas,
@@ -313,7 +324,10 @@ async function toEthersSigner(
         to: alignedTx.to ?? undefined,
         value: alignedTx.value,
       });
-      const result = await sendTransaction({ transaction: tx, account });
+      const result = await sendTransaction({
+        transaction: tx,
+        account: account,
+      });
 
       const response: ethers5.ethers.providers.TransactionResponse = {
         chainId: tx.chain.id,
