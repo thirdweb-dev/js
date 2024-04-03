@@ -46,7 +46,6 @@ function assertEthers5(
 
 export const ethers5Adapter = /* @__PURE__ */ (() => {
   const ethers = universalethers;
-  assertEthers5(ethers);
   return {
     provider: {
       /**
@@ -61,8 +60,10 @@ export const ethers5Adapter = /* @__PURE__ */ (() => {
        * const provider = ethers5Adapter.provider.toEthers({ client, chainId });
        * ```
        */
-      toEthers: (options: { client: ThirdwebClient; chain: Chain }) =>
-        toEthersProvider(ethers, options.client, options.chain),
+      toEthers: (options: { client: ThirdwebClient; chain: Chain }) => {
+        assertEthers5(ethers);
+        return toEthersProvider(ethers, options.client, options.chain);
+      },
     },
     contract: {
       /**
@@ -78,8 +79,11 @@ export const ethers5Adapter = /* @__PURE__ */ (() => {
        * });
        * ```
        */
-      toEthers: (options: { thirdwebContract: ThirdwebContract }) =>
-        toEthersContract(ethers, options.thirdwebContract),
+      toEthers: (options: { thirdwebContract: ThirdwebContract }) => {
+        assertEthers5(ethers);
+        return toEthersContract(ethers, options.thirdwebContract);
+      },
+
       /**
        * Creates a ThirdwebContract instance from an ethers.js contract.
        * @param options - The options for creating the ThirdwebContract instance.
@@ -95,8 +99,10 @@ export const ethers5Adapter = /* @__PURE__ */ (() => {
        * });
        * ```
        */
-      fromEthers: (options: FromEthersContractOptions) =>
-        fromEthersContract(options),
+      fromEthers: (options: FromEthersContractOptions) => {
+        assertEthers5(ethers);
+        return fromEthersContract(options);
+      },
     },
     signer: {
       /**
@@ -110,8 +116,10 @@ export const ethers5Adapter = /* @__PURE__ */ (() => {
        * const wallet = await ethers5Adapter.signer.fromEthersSigner({ signer });
        * ```
        */
-      fromEthers: (options: { signer: ethers5.Signer }) =>
-        fromEthersSigner(options.signer),
+      fromEthers: (options: { signer: ethers5.Signer }) => {
+        assertEthers5(ethers);
+        return fromEthersSigner(options.signer);
+      },
 
       /**
        * Converts a Thirdweb wallet to an ethers.js signer.
@@ -130,8 +138,15 @@ export const ethers5Adapter = /* @__PURE__ */ (() => {
         client: ThirdwebClient;
         chain: Chain;
         account: Account;
-      }) =>
-        toEthersSigner(ethers, options.client, options.account, options.chain),
+      }) => {
+        assertEthers5(ethers);
+        return toEthersSigner(
+          ethers,
+          options.client,
+          options.account,
+          options.chain,
+        );
+      },
     },
   };
 })();
