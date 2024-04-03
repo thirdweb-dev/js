@@ -7,6 +7,7 @@ import { zeroAddress } from "viem";
 import { typedData } from "~test/typed-data.js";
 import { ANVIL_PKEY_A } from "~test/test-wallets.js";
 import { ANVIL_CHAIN } from "../../test/src/chains.js";
+import { mainnet } from "../chains/chain-definitions/ethereum.js";
 
 const account = privateKeyAccount({
   privateKey: ANVIL_PKEY_A,
@@ -61,5 +62,17 @@ describe("walletClient.toViem", () => {
     });
     expect(txHash).toBeDefined();
     expect(txHash.slice(0, 2)).toBe("0x");
+  });
+
+  test("should get address on live chain", async () => {
+    walletClient = viemAdapter.walletClient.toViem({
+      client: TEST_CLIENT,
+      account,
+      chain: mainnet,
+    });
+
+    const address = await walletClient.getAddresses();
+    expect(address[0]).toBeDefined();
+    expect(address[0]).toBe(account.address);
   });
 });
