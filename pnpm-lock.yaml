@@ -1001,8 +1001,8 @@ importers:
         specifier: ^11.10.1
         version: 11.10.1(expo@50.0.14)
       expo-file-system:
-        specifier: ^15.9.0
-        version: 15.9.0(expo@50.0.14)
+        specifier: ^16.0.8
+        version: 16.0.8(expo@50.0.14)
       expo-secure-store:
         specifier: ^12.8.1
         version: 12.8.1(expo@50.0.14)
@@ -17548,15 +17548,6 @@ packages:
       expo: '*'
     dependencies:
       expo: 50.0.14(@babel/core@7.24.3)(@react-native/babel-preset@0.73.21)
-    dev: false
-
-  /expo-file-system@15.9.0(expo@50.0.14):
-    resolution: {integrity: sha512-ikzqBGpbSzp/57+aruXzRR2s0HEVYxdd1o3RxfswJRujjT/6X128xmUTTFDaQUr+zydyvxvY7Mo0szWpXhPyLA==}
-    peerDependencies:
-      expo: '*'
-    dependencies:
-      expo: 50.0.14(@babel/core@7.24.3)(@react-native/babel-preset@0.73.21)
-      uuid: 3.4.0
     dev: false
 
   /expo-file-system@16.0.8(expo@50.0.14):
