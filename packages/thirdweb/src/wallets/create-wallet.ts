@@ -76,10 +76,10 @@ export function createWallet<const ID extends WalletId>(
         chain = newChain;
       });
 
-      const reset = () => {
+      function reset() {
         account = undefined;
         chain = undefined;
-      };
+      }
 
       let handleDisconnect = async () => {};
 
@@ -440,10 +440,10 @@ function coinbaseWalletSDK(): Wallet<"com.coinbase.wallet"> {
   let account: Account | undefined = undefined;
   let chain: Chain | undefined = undefined;
 
-  const reset = () => {
+  function reset() {
     account = undefined;
     chain = undefined;
-  };
+  }
 
   let handleDisconnect = async () => {};
 

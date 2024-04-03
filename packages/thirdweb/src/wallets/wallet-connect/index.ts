@@ -52,7 +52,6 @@ const defaultWCProjectId = "08c4b07e3ad25f1a27c14a4e8cecb6f0";
 const NAMESPACE = "eip155";
 const ADD_ETH_CHAIN_METHOD = "wallet_addEthereumChain";
 
-// const isNewChainsStale = true;
 const defaultShowQrModal = true;
 
 const storageKeys = {
@@ -69,12 +68,6 @@ export async function connectWC(
   walletId: WCSupportedWalletIds | "walletConnect",
 ): Promise<ReturnType<typeof onConnect>> {
   const provider = await initProvider(options, walletId);
-
-  // const _isChainsState = await isChainsStale(provider, [
-  //   provider.chainId,
-  //   ...(options?.walletConnect?.optionalChains || []).map((c) => c.id),
-  // ]);
-
   const wcOptions = options.walletConnect;
 
   const { onDisplayUri } = wcOptions || {};
@@ -171,23 +164,6 @@ export async function autoConnectWC(
 
   return onConnect(address, chain, provider, emitter);
 }
-
-// /**
-//  * @internal
-//  */
-// export async function disconnectWC(wallet: Wallet<WCSupportedWalletIds>) {
-//   const provider = walletToProviderMap.get(wallet);
-//   // const storage = getWalletData(wallet)?.storage;
-
-//   onDisconnect(wallet);
-//   // if (storage) {
-//   //   deleteConnectParamsFromStorage(storage, wallet.id);
-//   // }
-
-//   if (provider) {
-//     provider.disconnect();
-//   }
-// }
 
 // Connection utils -----------------------------------------------------------------------------------------------
 
@@ -442,39 +418,6 @@ async function switchChainWC(provider: WCProvider, chain: Chain) {
     throw new SwitchChainError(error);
   }
 }
-
-/**
- * if every chain requested were already requested earlier - then they are not stale
- * @param connectToChainId
- * @internal
- */
-// async function isChainsStale(provider: WCProvider, chains: number[]) {
-//   const namespaceMethods = getNamespaceMethods(provider);
-
-//   // if chain adding method is available, then chains are not stale
-//   if (namespaceMethods.includes(ADD_ETH_CHAIN_METHOD)) {
-//     return false;
-//   }
-
-//   // if new chains are considered stale, then return true
-//   if (!isNewChainsStale) {
-//     return false;
-//   }
-
-//   const requestedChains = await getRequestedChainsIds();
-//   const namespaceChains = getNamespaceChainsIds(provider);
-
-//   // if any of the requested chains are not in the namespace chains, then they are stale
-//   if (
-//     namespaceChains.length &&
-//     !namespaceChains.some((id) => chains.includes(id))
-//   ) {
-//     return false;
-//   }
-
-//   // if chain was requested earlier, then they are not stale
-//   return !chains.every((id) => requestedChains.includes(id));
-// }
 
 /**
  * Set the requested chains to the storage.
