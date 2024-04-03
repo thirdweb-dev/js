@@ -204,6 +204,7 @@ async function onConnect(
       };
 
       emitter.emit("accountChanged", newAccount);
+      emitter.emit("accountsChanged", accounts);
     } else {
       onDisconnect();
     }

@@ -360,6 +360,7 @@ function onConnect(
         address: getAddress(accounts[0]),
       };
       emitter.emit("accountChanged", newAccount);
+      emitter.emit("accountsChanged", accounts);
     } else {
       onDisconnect();
     }
