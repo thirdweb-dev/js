@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { RefObject, useMemo, useRef } from "react";
 import { Theme, fontSize, spacing } from "../../../design-system";
 import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
 import { StyledSelect } from "../../../design-system/elements";
@@ -1274,25 +1274,15 @@ export function CountrySelector({
   setCountryCode: React.Dispatch<React.SetStateAction<string>>;
 }) {
   const selectRef = useRef<HTMLSelectElement>(null);
-  const [selectWidth, setSelectWidth] = React.useState<number | undefined>(
-    undefined,
-  );
 
-  React.useEffect(() => {
-    const resize_ob = new ResizeObserver(([entry]) =>
-      setSelectWidth(entry?.contentRect.width),
-    );
-
-    if (selectRef.current) {
-      resize_ob.observe(selectRef.current);
-    }
-
-    return () => resize_ob.disconnect();
-  }, []);
+  const width = useTextWidth({
+    ref: selectRef,
+  });
 
   return (
     <>
       <Select
+        ref={selectRef}
         name="countries"
         id="countries"
         value={countryCode}
@@ -1300,7 +1290,7 @@ export function CountrySelector({
           setCountryCode(e.target.value);
         }}
         style={{
-          width: selectWidth,
+          width,
         }}
       >
         {placeholderSupportedSmsCountries.map((country) => {
@@ -1314,25 +1304,39 @@ export function CountrySelector({
           );
         })}
       </Select>
-      <HiddenSelect ref={selectRef} id="width_tmp_select">
-        <option>{countryCode}</option>
-      </HiddenSelect>
     </>
   );
 }
+
+const getContext = () => {
+  const fragment: DocumentFragment = document.createDocumentFragment();
+  const canvas: HTMLCanvasElement = document.createElement("canvas");
+  fragment.appendChild(canvas);
+  return canvas.getContext("2d") as CanvasRenderingContext2D;
+};
+
+type useTextWidthRefOptions = {
+  ref: RefObject<Element>;
+};
+
+const useTextWidth = (options: useTextWidthRefOptions) => {
+  return useMemo(() => {
+    if (options.ref.current && options.ref.current.textContent) {
+      const context = getContext();
+      const computedStyles = window.getComputedStyle(options.ref.current);
+      context.font = computedStyles.font;
+      const metrics = context.measureText(options.ref.current.textContent);
+      return metrics.width;
+    }
+
+    return NaN;
+  }, [options.ref]);
+};
 
 type SelectProps = {
   sm?: boolean;
   theme?: Theme;
 };
-
-const HiddenSelect = /* @__PURE__ */ StyledSelect((props: SelectProps) => {
-  return {
-    fontSize: fontSize.md,
-    padding: props.sm ? spacing.sm : fontSize.sm,
-    visibility: "hidden",
-  };
-});
 
 export const Select = /* @__PURE__ */ StyledSelect((props: SelectProps) => {
   const theme = useCustomTheme();
