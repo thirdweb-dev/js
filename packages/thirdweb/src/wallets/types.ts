@@ -19,5 +19,5 @@ export type AppMetadata = {
   logoUrl?: string;
 };
 
-export type DisconnectFn = () => void;
+export type DisconnectFn = () => Promise<void>;
 export type SwitchChainFn = (chain: Chain) => Promise<void>;

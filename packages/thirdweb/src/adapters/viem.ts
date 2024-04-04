@@ -46,7 +46,7 @@ export const viemAdapter = {
      * @example
      * ```ts
      * import { viemAdapter } from "thirdweb/adapters";
-     *  const viemContract = await viemAdapter.contract.toViem(contract);
+     *  const viemContract = await viemAdapter.contract.toViem({ thirdwebContract });
      * ```
      */
     toViem: toViemContract,
@@ -121,12 +121,12 @@ function fromViemContract<const TAbi extends Abi>(
   });
 }
 
-async function toViemContract<const TAbi extends Abi>(
-  contract: ThirdwebContract<TAbi>,
-): Promise<GetContractReturnType<TAbi>> {
+async function toViemContract<const TAbi extends Abi>(options: {
+  thirdwebContract: ThirdwebContract<TAbi>;
+}): Promise<GetContractReturnType<TAbi>> {
   return {
-    address: contract.address,
-    abi: await resolveContractAbi(contract),
+    address: options.thirdwebContract.address,
+    abi: await resolveContractAbi(options.thirdwebContract),
   };
 }
 
@@ -224,6 +224,9 @@ function toViemWalletClient(options: ToViemWalletClientOptions) {
       if (request.method === "eth_signTypedData_v4") {
         const data = JSON.parse(request.params[1]);
         return account.signTypedData(data);
+      }
+      if (request.method === "eth_accounts") {
+        return [account.address];
       }
       return rpcClient(request);
     },

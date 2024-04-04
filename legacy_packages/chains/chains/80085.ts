@@ -36,6 +36,7 @@ export default {
   "redFlags": [],
   "rpc": [
     "https://80085.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://quicknode-rpc.berachain.com",
     "https://artio.rpc.berachain.com",
     "https://rpc.ankr.com/berachain_testnet"
   ],

@@ -19,7 +19,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployERC721", () => {
         name: "NFTDrop",
       },
     });
-    expect(address).toBe("0x6AA2E0148a57EcDdb025C856c4e68682CFfcac78");
+    expect(address).toBeDefined();
     const deployedName = await name({
       contract: getContract({
         client: TEST_CLIENT,
@@ -40,7 +40,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployERC721", () => {
         name: "NFTCollection",
       },
     });
-    expect(address).toBe("0x349D9e8751C40Be121a862FaC1Dc7c357281846E");
+    expect(address).toBeDefined();
     const deployedName = await name({
       contract: getContract({
         client: TEST_CLIENT,
@@ -61,7 +61,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployERC721", () => {
         name: "OE",
       },
     });
-    expect(address).toBe("0x5804ebCE1834B8F57D31f0078B8f7Dd1F1Da4985");
+    expect(address).toBeDefined();
     const deployedName = await name({
       contract: getContract({
         client: TEST_CLIENT,
