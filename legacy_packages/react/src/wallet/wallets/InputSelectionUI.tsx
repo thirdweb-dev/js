@@ -15,7 +15,7 @@ export function InputSelectionUI(props: {
   submitButtonText: string;
   format?: "phone";
 }) {
-  const [countryCode, setCountryCode] = useState("+1");
+  const [countryCodeInfo, setCountryCodeInfo] = useState("US +1");
   const [input, setInput] = useState("");
   const [error, setError] = useState<string | undefined>();
   const [showError, setShowError] = useState(false);
@@ -26,7 +26,11 @@ export function InputSelectionUI(props: {
       return;
     }
 
-    props.onSelect(props.format === "phone" ? `${countryCode}${input}` : input);
+    props.onSelect(
+      props.format === "phone"
+        ? `+${countryCodeInfo.split("+")[1]}${input}`
+        : input,
+    );
   };
 
   const renderingError =
@@ -49,8 +53,8 @@ export function InputSelectionUI(props: {
       >
         {props.format === "phone" && (
           <CountrySelector
-            countryCode={countryCode}
-            setCountryCode={setCountryCode}
+            countryCode={countryCodeInfo}
+            setCountryCode={setCountryCodeInfo}
           />
         )}
         <Input

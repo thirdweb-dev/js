@@ -1286,15 +1286,18 @@ export function CountrySelector({
     <Select
       name="countries"
       id="countries"
-      value={countryCode.split("+")[1]}
+      value={countryCode}
       onChange={(e) => {
-        setCountryCode(`+${e.target.value}`);
+        setCountryCode(e.target.value);
       }}
     >
       {data.map((country) => {
         return (
-          <option key={country.countryIsoCode} value={country.phoneNumberCode}>
-            {country.countryIsoCode} {country.phoneNumberCode}
+          <option
+            key={country.countryIsoCode}
+            value={`${country.countryIsoCode} +${country.phoneNumberCode}`}
+          >
+            {country.countryIsoCode} +{country.phoneNumberCode}
           </option>
         );
       })}
