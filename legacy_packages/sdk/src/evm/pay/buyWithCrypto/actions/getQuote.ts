@@ -4,6 +4,7 @@ import {
   createThirdwebClient,
   getBuyWithCryptoQuote as getBuyWithCryptoQuoteV5,
   prepareTransaction,
+  type ThirdwebClient,
 } from "thirdweb";
 import { resolvePromisedValue } from "thirdweb/utils";
 
@@ -13,11 +14,18 @@ import { resolvePromisedValue } from "thirdweb/utils";
  */
 export type GetBuyWithCryptoQuoteParams = {
   /**
-   * A client ID to identify the client making the request.
+   * A client ID of the API key to identify the client making the request.
    *
-   * You can get a client ID from the dashboard over at https://thirdweb.com/dashboard/settings/api-keys
+   * You can get an API key from the dashboard over at https://thirdweb.com/dashboard/settings/api-keys
    */
-  clientId: string;
+  clientId?: string;
+
+  /**
+   * A secretKey of the API key to identify the server making the request.
+   *
+   * You can get an API key from the dashboard over at https://thirdweb.com/dashboard/settings/api-keys
+   */
+  secretKey?: string;
 
   /**
    * The address of the wallet from which the tokens will be sent.
@@ -86,7 +94,7 @@ export type BuyWithCryptoQuote = {
   paymentTokens: BuyWithCryptoQuoteV5["paymentTokens"];
   processingFees: BuyWithCryptoQuoteV5["processingFees"];
 
-  clientId: string;
+  client: BuyWithCryptoQuoteV5["client"];
 };
 
 /**
@@ -118,11 +126,28 @@ export type BuyWithCryptoQuote = {
 export async function getBuyWithCryptoQuote(
   params: GetBuyWithCryptoQuoteParams,
 ): Promise<BuyWithCryptoQuote> {
+  let client: ThirdwebClient | undefined;
+
+  if (params.secretKey) {
+    client = createThirdwebClient({
+      secretKey: params.secretKey,
+    });
+  }
+  if (params.clientId) {
+    client = createThirdwebClient({
+      clientId: params.clientId,
+    });
+  }
+
+  if (!client) {
+    throw new Error(
+      "You must provide either a `clientId` or a `secretKey` to get a quote",
+    );
+  }
+
   const data = await getBuyWithCryptoQuoteV5({
     ...params,
-    client: createThirdwebClient({
-      clientId: params.clientId,
-    }),
+    client,
   });
 
   const sendTxn = prepareTransaction(data.transactionRequest);
@@ -182,7 +207,7 @@ export async function getBuyWithCryptoQuote(
     swapDetails: data.swapDetails,
     paymentTokens: data.paymentTokens,
     processingFees: data.processingFees,
-    clientId: params.clientId,
+    client,
   };
 
   return swapRoute;

@@ -1,6 +1,7 @@
 import {
   BuyWithCryptoHistoryParams as BuyWithCryptoHistoryParamsV5,
   createThirdwebClient,
+  type ThirdwebClient,
 } from "thirdweb";
 import {
   getBuyWithCryptoHistory as getBuyWithCryptoHistoryV5,
@@ -17,7 +18,14 @@ export type BuyWithCryptoHistoryParams = {
    *
    * You can get a client ID from the dashboard over at https://thirdweb.com/dashboard/settings/api-keys
    */
-  clientId: string;
+  clientId?: string;
+
+  /**
+   * A secretKey of the API key to identify the server making the request.
+   *
+   * You can get an API key from the dashboard over at https://thirdweb.com/dashboard/settings/api-keys
+   */
+  secretKey?: string;
 } & Omit<BuyWithCryptoHistoryParamsV5, "client">;
 
 export { type BuyWithCryptoHistoryData } from "thirdweb/pay";
@@ -44,10 +52,28 @@ export { type BuyWithCryptoHistoryData } from "thirdweb/pay";
 export async function getBuyWithCryptoHistory(
   params: BuyWithCryptoHistoryParams,
 ): Promise<BuyWithCryptoHistoryData> {
+  let client: ThirdwebClient | undefined;
+
+  if (params.secretKey) {
+    client = createThirdwebClient({
+      secretKey: params.secretKey,
+    });
+  }
+
+  if (params.clientId) {
+    client = createThirdwebClient({
+      clientId: params.clientId,
+    });
+  }
+
+  if (!client) {
+    throw new Error(
+      "You must provide either a `clientId` or a `secretKey` to get a quote",
+    );
+  }
+
   return getBuyWithCryptoHistoryV5({
     ...params,
-    client: createThirdwebClient({
-      clientId: params.clientId,
-    }),
+    client: client,
   });
 }
