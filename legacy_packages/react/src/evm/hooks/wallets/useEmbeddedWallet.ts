@@ -202,6 +202,7 @@ export function useEmbeddedWalletUserEmail(): UseQueryResult<
       if (wallet && wallet.walletId === walletIds.embeddedWallet) {
         return (wallet as EmbeddedWallet).getEmail() ?? "";
       }
+      return "";
     },
     {
       retry: false,
@@ -250,6 +251,7 @@ export function useEmbeddedWalletUserPhoneNumber(): UseQueryResult<
       if (wallet && wallet.walletId === walletIds.embeddedWallet) {
         return (wallet as EmbeddedWallet).getPhoneNumber() ?? "";
       }
+      return "";
     },
     {
       retry: false,
