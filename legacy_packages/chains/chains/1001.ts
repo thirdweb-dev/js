@@ -4,8 +4,13 @@ export default {
   "chainId": 1001,
   "explorers": [
     {
-      "name": "klaytnscope",
-      "url": "https://scope.klaytn.com",
+      "name": "Klaytnscope",
+      "url": "https://baobab.klaytnscope.com",
+      "standard": "EIP3091"
+    },
+    {
+      "name": "Klaytnfinder",
+      "url": "https://baobab.klaytnfinder.io",
       "standard": "EIP3091"
     }
   ],
@@ -13,7 +18,7 @@ export default {
     "https://baobab.wallet.klaytn.com/access?next=faucet"
   ],
   "features": [],
-  "infoURL": "https://www.klaytn.com/",
+  "infoURL": "https://klaytn.foundation",
   "name": "Klaytn Testnet Baobab",
   "nativeCurrency": {
     "name": "KLAY",
@@ -24,9 +29,8 @@ export default {
   "redFlags": [],
   "rpc": [
     "https://1001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://api.baobab.klaytn.net:8651",
-    "https://klaytn-baobab.drpc.org",
-    "wss://klaytn-baobab.drpc.org"
+    "https://public-en-baobab.klaytn.net",
+    "https://api.baobab.klaytn.net:8651"
   ],
   "shortName": "Baobab",
   "slip44": 1,

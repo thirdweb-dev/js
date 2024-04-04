@@ -2,7 +2,12 @@ import {
   SetModalConfigCtx,
   WalletUIStatesProvider,
 } from "../../../providers/wallet-ui-states-provider.js";
-import { modalMaxWidthCompact, defaultTheme } from "../constants.js";
+import {
+  modalMaxWidthCompact,
+  defaultTheme,
+  modalMaxWidthWide,
+  wideModalMaxHeight,
+} from "../constants.js";
 import { useSetupScreen } from "./screen.js";
 import { type ComponentProps, useContext, useEffect, useState } from "react";
 import { radius, type Theme } from "../../design-system/index.js";
@@ -300,6 +305,15 @@ export type ConnectEmbedProps = {
    * You can disable this button by setting `showAllWallets` prop to `false`
    */
   showAllWallets?: boolean;
+
+  /**
+   * ConnectEmbed supports two modal size variants: `compact` and `wide`.
+   *
+   * By default it is set to `compact`, you can set it to `wide` if you want to show a wider modal.
+   *
+   * Note that if the screen width can not fit the wide modal, the `compact` version will be shown regardless of this `modalSize` options provided
+   */
+  modalSize?: "compact" | "wide";
 };
 
 /**
@@ -338,9 +352,13 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
 
   const contextTheme = useCustomTheme();
 
+  const modalSize = !canFitWideModal()
+    ? "compact"
+    : props.modalSize || ("compact" as const);
+
   const walletUIStatesProps = {
     theme: props.theme || contextTheme || defaultTheme,
-    modalSize: "compact" as const,
+    modalSize: modalSize,
     title: undefined,
     termsOfServiceUrl: props.termsOfServiceUrl,
     privacyPolicyUrl: props.privacyPolicyUrl,
@@ -368,7 +386,9 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
       return (
         <>
           {autoConnectComp}
-          <LoadingScreen />;
+          <EmbedContainer modalSize={modalSize}>
+            <LoadingScreen />
+          </EmbedContainer>
         </>
       );
     }
@@ -419,6 +439,10 @@ const ConnectEmbedContent = (
 
   let content = null;
 
+  const modalSize = !canFitWideModal()
+    ? "compact"
+    : props.modalSize || ("compact" as const);
+
   // show spinner on page load and during auto connecting a wallet
   if (isAutoConnecting) {
     content = <LoadingScreen />;
@@ -439,14 +463,15 @@ const ConnectEmbedContent = (
 
   return (
     <EmbedContainer
+      modalSize={modalSize}
       className={props.className}
-      style={{
-        height: "auto",
-        maxWidth: modalMaxWidthCompact,
-        ...props.style,
-      }}
+      style={props.style}
     >
-      <DynamicHeight> {content} </DynamicHeight>
+      {modalSize === "wide" ? (
+        content
+      ) : (
+        <DynamicHeight> {content} </DynamicHeight>
+      )}
     </EmbedContainer>
   );
 };
@@ -489,22 +514,29 @@ export function SyncedWalletUIStates(
   return <WalletUIStatesProvider {...props} />;
 }
 
-const EmbedContainer = /* @__PURE__ */ StyledDiv(() => {
-  const theme = useCustomTheme();
-  return {
-    color: theme.colors.primaryText,
-    background: theme.colors.modalBg,
-    width: "100%",
-    boxSizing: "border-box",
-    position: "relative",
-    lineHeight: "normal",
-    borderRadius: radius.xl,
-    border: `1px solid ${theme.colors.borderColor}`,
-    overflow: "hidden",
-    fontFamily: theme.fontFamily,
-    "& *::selection": {
-      backgroundColor: theme.colors.primaryText,
-      color: theme.colors.modalBg,
-    },
-  };
-});
+const EmbedContainer = /* @__PURE__ */ StyledDiv(
+  (props: { modalSize: "compact" | "wide" }) => {
+    const { modalSize } = props;
+    const theme = useCustomTheme();
+    return {
+      color: theme.colors.primaryText,
+      background: theme.colors.modalBg,
+      height: modalSize === "compact" ? "auto" : wideModalMaxHeight,
+      width: modalSize === "compact" ? modalMaxWidthCompact : modalMaxWidthWide,
+      boxSizing: "border-box",
+      position: "relative",
+      lineHeight: "normal",
+      borderRadius: radius.xl,
+      border: `1px solid ${theme.colors.borderColor}`,
+      overflow: "hidden",
+      fontFamily: theme.fontFamily,
+      "& *::selection": {
+        backgroundColor: theme.colors.primaryText,
+        color: theme.colors.modalBg,
+      },
+      "& *": {
+        boxSizing: "border-box",
+      },
+    };
+  },
+);

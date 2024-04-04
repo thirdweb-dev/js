@@ -27,6 +27,7 @@ export default {
     }
   ],
   "faucets": [],
+  "features": [],
   "icon": {
     "url": "ipfs://bafybeifc2h3x7jgy4x4nmg2m54ghbvmkfu6oweujambwefzqzew5vujhsi",
     "width": 400,
@@ -45,13 +46,14 @@ export default {
     "type": "L2",
     "chain": "eip155-1"
   },
+  "redFlags": [],
   "rpc": [
     "https://81457.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.blast.io",
     "https://rpc.ankr.com/blast",
     "https://blast.din.dev/rpc",
-    "https://blastl2-mainnet.public.blastapi.io",
-    "https://blast.blockpi.network/v1/rpc/public"
+    "https://blast.blockpi.network/v1/rpc/public",
+    "https://blastl2-mainnet.public.blastapi.io"
   ],
   "shortName": "blastmainnet",
   "slug": "blast-blastmainnet",

@@ -34,7 +34,7 @@ export default {
   "redFlags": [],
   "rpc": [
     "https://308.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.furtheon.org/"
+    "https://rpc.furtheon.org"
   ],
   "shortName": "FTH",
   "slug": "furtheon-network",
