@@ -73,7 +73,7 @@ export async function getAuthenticatedUser(
  */
 export async function getUserEmail(options: GetAuthenticatedUserParams) {
   const user = await getAuthenticatedUser(options);
-  if (user) {
+  if (user && "email" in user.authDetails) {
     return user.authDetails.email;
   }
   return undefined;
@@ -93,7 +93,7 @@ export async function getUserEmail(options: GetAuthenticatedUserParams) {
  */
 export async function getUserPhoneNumber(options: GetAuthenticatedUserParams) {
   const user = await getAuthenticatedUser(options);
-  if (user) {
+  if (user && "phoneNumber" in user.authDetails) {
     return user.authDetails.phoneNumber;
   }
   return undefined;
