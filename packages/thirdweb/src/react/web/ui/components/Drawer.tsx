@@ -11,6 +11,7 @@ import { forwardRef, useRef } from "react";
 
 type DrawerProps = {
   children: React.ReactNode;
+  close: () => void;
 };
 /**
  *
@@ -22,7 +23,7 @@ export const Drawer = /* @__PURE__ */ forwardRef<HTMLDivElement, DrawerProps>(
       <>
         <DrawerContainer ref={ref}>
           <CrossContainer>
-            <IconButton type="button" aria-label="Close">
+            <IconButton type="button" aria-label="Close" onClick={props.close}>
               <Cross2Icon
                 width={iconSize.md}
                 height={iconSize.md}

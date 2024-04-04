@@ -170,6 +170,7 @@ export function Container(props: {
       data-animate={props.animate}
       bg={props.bg}
       color={props.color}
+      borderColor={props.borderColor}
       style={{
         ...styles,
         ...props.style,

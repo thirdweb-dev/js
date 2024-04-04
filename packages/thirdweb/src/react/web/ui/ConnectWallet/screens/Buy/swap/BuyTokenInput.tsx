@@ -170,6 +170,7 @@ const TokenButton = /* @__PURE__ */ styled(Button)(() => {
   const theme = useCustomTheme();
   return {
     background: theme.colors.tertiaryBg,
+    border: `1px solid ${theme.colors.borderColor}`,
     justifyContent: "flex-start",
     transition: "background 0.3s",
     padding: spacing.sm,

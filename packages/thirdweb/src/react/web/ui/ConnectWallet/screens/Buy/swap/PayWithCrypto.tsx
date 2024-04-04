@@ -48,10 +48,14 @@ export function PayWithCrypto(props: {
   return (
     <Container
       bg="tertiaryBg"
+      borderColor="borderColor"
       style={{
         borderRadius: radius.md,
         borderBottomRightRadius: 0,
         borderBottomLeftRadius: 0,
+        borderWidth: "1px",
+        borderStyle: "solid",
+        borderBottom: "none",
       }}
     >
       <Container

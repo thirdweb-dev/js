@@ -21,7 +21,7 @@ import {
 } from "../../../../../core/hooks/wallets/wallet-hooks.js";
 import { Spacer } from "../../../components/Spacer.js";
 import { Spinner } from "../../../components/Spinner.js";
-import { Container, Line, ModalHeader } from "../../../components/basic.js";
+import { Container, ModalHeader } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
 import {
@@ -325,7 +325,7 @@ export function SwapScreenContent(props: {
         {drawerScreen && (
           <>
             <DrawerOverlay ref={drawerOverlayRef} />
-            <Drawer ref={drawerRef}>
+            <Drawer ref={drawerRef} close={closeDrawer}>
               <DrawerContent
                 drawerScreen={drawerScreen}
                 quote={swapQuote}
@@ -383,18 +383,19 @@ export function SwapScreenContent(props: {
                 }
               />
 
-              <Line />
-
               {/* Other info */}
               <Container
                 bg="tertiaryBg"
                 flex="row"
+                borderColor="borderColor"
                 style={{
                   borderRadius: radius.md,
                   borderTopLeftRadius: 0,
                   borderTopRightRadius: 0,
                   justifyContent: "space-between",
                   alignItems: "center",
+                  borderWidth: "1px",
+                  borderStyle: "solid",
                 }}
               >
                 <Container
@@ -672,7 +673,9 @@ function WalletSelectorButton(props: {
         </Container>
       )}
 
-      <Text size="sm">{shortenString(props.address, false)}</Text>
+      <Text size="sm" color="primaryText">
+        {shortenString(props.address, false)}
+      </Text>
       {props.chevron && (
         <ChevronDownIcon
           width={iconSize.sm}
@@ -708,7 +711,7 @@ const AccountButton = /* @__PURE__ */ styled(Button)(() => {
   const theme = useCustomTheme();
   return {
     background: theme.colors.tertiaryBg,
-    border: `1px solid transparent`,
+    border: `1px solid ${theme.colors.borderColor}`,
     "&:hover": {
       background: theme.colors.tertiaryBg,
       borderColor: theme.colors.accentText,
