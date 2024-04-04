@@ -1,11 +1,11 @@
 import type { Chain } from "../src/types";
 export default {
   "chain": "Karak",
-  "chainId": 2511,
+  "chainId": 8054,
   "explorers": [
     {
-      "name": "Karak Goerli Explorer",
-      "url": "https://goerli.scan.karak.network",
+      "name": "Karak Sepolia Explorer",
+      "url": "https://explorer.sepolia.karak.network",
       "standard": "EIP3091"
     }
   ],
@@ -17,23 +17,22 @@ export default {
     "format": "png"
   },
   "infoURL": "https://karak.network",
-  "name": "Karak Goerli",
+  "name": "Karak Sepolia",
   "nativeCurrency": {
-    "name": "Karak",
-    "symbol": "KRK",
+    "name": "Ether",
+    "symbol": "ETH",
     "decimals": 18
   },
-  "networkId": 2511,
+  "networkId": 8054,
   "parent": {
     "type": "L2",
-    "chain": "eip155-5"
+    "chain": "eip155-11155111"
   },
   "rpc": [
-    "https://2511.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://goerli.node1.karak.network"
+    "https://8054.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.sepolia.karak.network"
   ],
-  "shortName": "karak-goerli",
-  "slug": "karak-goerli",
-  "status": "deprecated",
+  "shortName": "karak-sepolia",
+  "slug": "karak-sepolia",
   "testnet": false
 } as const satisfies Chain;
