@@ -154,6 +154,7 @@ export async function readContract<
     data: encodedData,
     to: contract.address,
   });
+  console.log("DEBUG -- read", result);
   // use the prepared method to decode the result
   const decoded = decodeAbiParameters(resolvedPreparedMethod[2], result);
   if (Array.isArray(decoded) && decoded.length === 1) {
