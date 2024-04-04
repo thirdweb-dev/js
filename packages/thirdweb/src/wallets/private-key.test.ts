@@ -15,7 +15,6 @@ test("default", () => {
       "signMessage": [Function],
       "signTransaction": [Function],
       "signTypedData": [Function],
-      Symbol(key): "${ANVIL_PKEY_A}",
     }
   `);
 });

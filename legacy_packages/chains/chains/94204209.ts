@@ -31,12 +31,25 @@ export default {
     "decimals": 18
   },
   "networkId": 94204209,
+  "parent": {
+    "type": "L2",
+    "chain": "eip155-11155111",
+    "bridges": [
+      {
+        "url": "https://bridge.gelato.network/bridge/polygon-blackberry"
+      }
+    ]
+  },
   "redFlags": [],
   "rpc": [
     "https://94204209.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.polygon-blackberry.gelato.digital"
+    "https://rpc.polygon-blackberry.gelato.digital",
+    "wss://ws.polygon-blackberry.gelato.digital"
   ],
   "shortName": "polygon-blackberry",
+  "slip44": 60,
   "slug": "polygon-blackberry",
-  "testnet": true
+  "status": "active",
+  "testnet": true,
+  "title": "Polygon Blackberry Testnet"
 } as const satisfies Chain;

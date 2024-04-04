@@ -5,11 +5,10 @@ import type { Abi } from "abitype";
 import type { AccessList, Hex, TransactionSerializable } from "viem";
 import type { ThirdwebClient } from "../client/client.js";
 import type { Account } from "../wallets/interfaces/wallet.js";
-import { defineChain, getRpcUrlForChain } from "../chains/utils.js";
+import { getRpcUrlForChain } from "../chains/utils.js";
 import type { Chain } from "../chains/types.js";
 import { getContract, type ThirdwebContract } from "../contract/contract.js";
-import { uint8ArrayToHex } from "../utils/encoding/hex.js";
-import { resolvePromisedValue } from "../utils/promise/resolve-promised-value.js";
+import { toHex, uint8ArrayToHex } from "../utils/encoding/hex.js";
 import { waitForReceipt } from "../transaction/actions/wait-for-tx-receipt.js";
 import { prepareTransaction } from "../transaction/prepare-transaction.js";
 import { sendTransaction } from "../transaction/actions/send-transaction.js";
@@ -47,36 +46,44 @@ function assertEthers5(
 
 export const ethers5Adapter = /* @__PURE__ */ (() => {
   const ethers = universalethers;
-  assertEthers5(ethers);
   return {
     provider: {
       /**
        * Converts a Thirdweb client and chain ID into an ethers.js provider.
-       * @param client - The Thirdweb client.
-       * @param chain - The chain.
+       * @param options - The options for converting the Thirdweb client and chain ID into an ethers.js provider.
+       * @param options.client - The Thirdweb client.
+       * @param options.chain - The chain.
        * @returns The ethers.js provider.
        * @example
        * ```ts
        * import { ethers5Adapter } from "thirdweb/adapters/ethers5";
-       * const provider = ethers5Adapter.provider.toEthers(client, chainId);
+       * const provider = ethers5Adapter.provider.toEthers({ client, chainId });
        * ```
        */
-      toEthers: (client: ThirdwebClient, chain: Chain) =>
-        toEthersProvider(ethers, client, chain),
+      toEthers: (options: { client: ThirdwebClient; chain: Chain }) => {
+        assertEthers5(ethers);
+        return toEthersProvider(ethers, options.client, options.chain);
+      },
     },
     contract: {
       /**
        * Converts a ThirdwebContract to an ethers.js Contract.
-       * @param twContract - The ThirdwebContract to convert.
+       * @param options - The options for converting the ThirdwebContract to an ethers.js Contract.
+       * @param options.thirdwebContract - The ThirdwebContract to convert.
        * @returns A Promise that resolves to an ethers.js Contract.
        * @example
        * ```ts
        * import { ethers5Adapter } from "thirdweb/adapters/ethers5";
-       * const ethersContract = await ethers5Adapter.contract.toEthers(twContract);
+       * const ethersContract = await ethers5Adapter.contract.toEthers({
+       *   thirdwebContract,
+       * });
        * ```
        */
-      toEthers: (twContract: ThirdwebContract) =>
-        toEthersContract(ethers, twContract),
+      toEthers: (options: { thirdwebContract: ThirdwebContract }) => {
+        assertEthers5(ethers);
+        return toEthersContract(ethers, options.thirdwebContract);
+      },
+
       /**
        * Creates a ThirdwebContract instance from an ethers.js contract.
        * @param options - The options for creating the ThirdwebContract instance.
@@ -92,35 +99,54 @@ export const ethers5Adapter = /* @__PURE__ */ (() => {
        * });
        * ```
        */
-      fromEthers: (options: FromEthersContractOptions) =>
-        fromEthersContract(options),
+      fromEthers: (options: FromEthersContractOptions) => {
+        assertEthers5(ethers);
+        return fromEthersContract(options);
+      },
     },
     signer: {
       /**
        * Converts an ethers5 Signer into a Wallet object.
-       * @param signer - The ethers5 Signer object.
+       * @param options - The options for converting the ethers5 Signer into a Wallet object.
+       * @param options.signer - The ethers5 Signer object.
        * @returns - A Promise that resolves to aa Wallet object.
        * @example
        * ```ts
        * import { ethers5Adapter } from "thirdweb/adapters/ethers5";
-       * const wallet = await ethers5Adapter.signer.fromEthersSigner(signer);
+       * const wallet = await ethers5Adapter.signer.fromEthersSigner({ signer });
        * ```
        */
-      fromEthers: (signer: ethers5.Signer) => fromEthersSigner(signer),
+      fromEthers: (options: { signer: ethers5.Signer }) => {
+        assertEthers5(ethers);
+        return fromEthersSigner(options.signer);
+      },
 
       /**
        * Converts a Thirdweb wallet to an ethers.js signer.
-       * @param client - The thirdweb client.
-       * @param account - The account.
+       * @param options - The options for converting the Thirdweb wallet to an ethers.js signer.
+       * @param options.client - The thirdweb client.
+       * @param options.chain - The chain.
+       * @param options.account - The account.
        * @returns A promise that resolves to an ethers.js signer.
        * @example
        * ```ts
        * import { ethers5Adapter } from "thirdweb/adapters/ethers5";
-       * const signer = await ethers5Adapter.signer.toEthers(client, chain, account);
+       * const signer = await ethers5Adapter.signer.toEthers({ client, chain, account });
        * ```
        */
-      toEthers: (client: ThirdwebClient, account: Account) =>
-        toEthersSigner(ethers, client, account),
+      toEthers: (options: {
+        client: ThirdwebClient;
+        chain: Chain;
+        account: Account;
+      }) => {
+        assertEthers5(ethers);
+        return toEthersSigner(
+          ethers,
+          options.client,
+          options.account,
+          options.chain,
+        );
+      },
     },
   };
 })();
@@ -240,18 +266,40 @@ async function fromEthersSigner(signer: ethers5.Signer): Promise<Account> {
   return account;
 }
 
-async function toEthersSigner(
+/**
+ * @internal
+ */
+export async function toEthersSigner(
   ethers: Ethers5,
   client: ThirdwebClient,
   account: Account,
+  chain: Chain,
 ) {
   class ThirdwebAdapterSigner extends ethers.Signer {
+    /**
+     * @internal
+     */
+    constructor() {
+      super();
+      ethers.utils.defineReadOnly(
+        this,
+        "provider",
+        toEthersProvider(ethers, client, chain),
+      );
+    }
+
+    /**
+     * @internal
+     */
     override getAddress(): Promise<string> {
       if (!account) {
         throw new Error("Account not found");
       }
       return Promise.resolve(account.address);
     }
+    /**
+     * @internal
+     */
     override signMessage(message: string | Uint8Array): Promise<string> {
       if (!account) {
         throw new Error("Account not found");
@@ -261,6 +309,9 @@ async function toEthersSigner(
           typeof message === "string" ? message : uint8ArrayToHex(message),
       });
     }
+    /**
+     * @internal
+     */
     override async signTransaction(
       transaction: ethers5.ethers.utils.Deferrable<ethers5.ethers.providers.TransactionRequest>,
     ): Promise<string> {
@@ -276,10 +327,11 @@ async function toEthersSigner(
       );
     }
 
+    /**
+     * @internal
+     */
     override async sendTransaction(
-      transaction: ethers5.ethers.utils.Deferrable<
-        ethers5.ethers.providers.TransactionRequest & { chainId: number }
-      >,
+      transaction: ethers5.ethers.utils.Deferrable<ethers5.ethers.providers.TransactionRequest>,
     ): Promise<ethers5.ethers.providers.TransactionResponse> {
       if (!account) {
         throw new Error("Account not found");
@@ -290,8 +342,8 @@ async function toEthersSigner(
       const awaitedTx = await ethers.utils.resolveProperties(transaction);
       const alignedTx = await alignTxFromEthers(awaitedTx, ethers);
       const tx = prepareTransaction({
-        client,
-        chain: defineChain(await resolvePromisedValue(transaction.chainId)),
+        client: client,
+        chain: chain,
         accessList: alignedTx.accessList,
         data: alignedTx.data,
         gas: alignedTx.gas,
@@ -303,7 +355,10 @@ async function toEthersSigner(
         to: alignedTx.to ?? undefined,
         value: alignedTx.value,
       });
-      const result = await sendTransaction({ transaction: tx, account });
+      const result = await sendTransaction({
+        transaction: tx,
+        account: account,
+      });
 
       const response: ethers5.ethers.providers.TransactionResponse = {
         chainId: tx.chain.id,
@@ -350,6 +405,39 @@ async function toEthersSigner(
       return response;
     }
 
+    // eslint-disable-next-line jsdoc/require-jsdoc
+    async _signTypedData(
+      domain: ethers5.ethers.TypedDataDomain,
+      types: Record<string, ethers5.ethers.TypedDataField[]>,
+      value: Record<string, any>,
+    ): Promise<string> {
+      if (!account) {
+        throw new Error("Account not found");
+      }
+      const typedDataEncoder = new ethers.utils._TypedDataEncoder(types);
+
+      const typedData = {
+        primaryType: typedDataEncoder.primaryType,
+        domain: {
+          chainId: domain.chainId
+            ? bigNumberIshToNumber(domain.chainId)
+            : undefined,
+          name: domain.name ?? undefined,
+
+          salt: domain.salt ? toHex(domain.salt.toString()) : undefined,
+          verifyingContract: domain.verifyingContract ?? undefined,
+          version: domain.version ?? undefined,
+        },
+        types,
+        message: value,
+      };
+
+      return account.signTypedData(typedData);
+    }
+
+    /**
+     * @internal
+     */
     override connect(): ethers5.ethers.Signer {
       return this;
     }
@@ -471,4 +559,15 @@ async function alignTxFromEthers(
       };
     }
   }
+}
+
+function bigNumberIshToBigint(value: ethers5.BigNumberish): bigint {
+  if (typeof value === "bigint") {
+    return value;
+  }
+  return BigInt(value.toString());
+}
+
+function bigNumberIshToNumber(value: ethers5.BigNumberish): number {
+  return Number(bigNumberIshToBigint(value));
 }

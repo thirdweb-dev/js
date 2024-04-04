@@ -76,10 +76,15 @@ export function createWallet<const ID extends WalletId>(
         chain = newChain;
       });
 
-      const unsubscribeDisconnect = emitter.subscribe("disconnect", () => {
+      function reset() {
         account = undefined;
         chain = undefined;
-        // unsubscribe
+      }
+
+      let handleDisconnect = async () => {};
+
+      const unsubscribeDisconnect = emitter.subscribe("disconnect", () => {
+        reset();
         unsubscribeChain();
         unsubscribeDisconnect();
       });
@@ -90,10 +95,6 @@ export function createWallet<const ID extends WalletId>(
 
       let handleSwitchChain: (chain: Chain) => Promise<void> = async () => {
         throw new Error("Not implemented yet");
-      };
-      let handleDisconnect: () => void = () => {
-        account = undefined;
-        chain = undefined;
       };
 
       const wallet: Wallet<ID> = {
@@ -177,11 +178,7 @@ export function createWallet<const ID extends WalletId>(
             // set the states
             account = connectedAccount;
             chain = connectedChain;
-            handleDisconnect = () => {
-              doDisconnect();
-              account = undefined;
-              chain = undefined;
-            };
+            handleDisconnect = doDisconnect;
             handleSwitchChain = doSwitchChain;
             trackConnect({
               client: wcOptions.client,
@@ -226,11 +223,7 @@ export function createWallet<const ID extends WalletId>(
             // set the states
             account = connectedAccount;
             chain = connectedChain;
-            handleDisconnect = () => {
-              doDisconnect();
-              account = undefined;
-              chain = undefined;
-            };
+            handleDisconnect = doDisconnect;
             handleSwitchChain = doSwitchChain;
             trackConnect({
               client: options.client,
@@ -243,7 +236,10 @@ export function createWallet<const ID extends WalletId>(
           throw new Error("Failed to connect");
         },
         // these get overridden in connect and autoConnect
-        disconnect: async () => handleDisconnect(),
+        disconnect: async () => {
+          reset();
+          await handleDisconnect();
+        },
         switchChain: (c) => handleSwitchChain(c),
       };
       return wallet;
@@ -341,11 +337,11 @@ export function smartWallet(
       return account;
     },
     disconnect: async () => {
-      const { disconnectSmartWallet } = await import("./smart/index.js");
-      await disconnectSmartWallet(_smartWallet);
       account = undefined;
       chain = undefined;
       emitter.emit("disconnect", undefined);
+      const { disconnectSmartWallet } = await import("./smart/index.js");
+      await disconnectSmartWallet(_smartWallet);
     },
     switchChain: async () => {
       throw new Error("Not implemented yet");
@@ -444,10 +440,12 @@ function coinbaseWalletSDK(): Wallet<"com.coinbase.wallet"> {
   let account: Account | undefined = undefined;
   let chain: Chain | undefined = undefined;
 
-  let handleDisconnect: () => void = () => {
+  function reset() {
     account = undefined;
     chain = undefined;
-  };
+  }
+
+  let handleDisconnect = async () => {};
 
   let handleSwitchChain = async (newChain: Chain) => {
     chain = newChain;
@@ -461,8 +459,7 @@ function coinbaseWalletSDK(): Wallet<"com.coinbase.wallet"> {
   );
 
   const unsubscribeDisconnect = emitter.subscribe("disconnect", () => {
-    handleDisconnect();
-    // unsubscribe
+    reset();
     unsubscribeChainChanged();
     unsubscribeDisconnect();
   });
@@ -517,7 +514,8 @@ function coinbaseWalletSDK(): Wallet<"com.coinbase.wallet"> {
       return account;
     },
     disconnect: async () => {
-      handleDisconnect();
+      reset();
+      await handleDisconnect();
     },
     switchChain: async (newChain) => {
       await handleSwitchChain(newChain);

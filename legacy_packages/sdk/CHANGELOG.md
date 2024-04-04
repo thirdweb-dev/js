@@ -1,5 +1,21 @@
 # @thirdweb-dev/sdk
 
+## 4.0.57
+
+### Patch Changes
+
+- Updated dependencies [[`b3fca95`](https://github.com/thirdweb-dev/js/commit/b3fca9509feb0ac6e0ded816f08570b2954f6521)]:
+  - @thirdweb-dev/chains@0.1.88
+
+## 4.0.56
+
+### Patch Changes
+
+- [#2592](https://github.com/thirdweb-dev/js/pull/2592) [`9af8561`](https://github.com/thirdweb-dev/js/commit/9af85612845573b54b54cb72e55404aad2c74700) Thanks [@kumaryash90](https://github.com/kumaryash90)! - ZkSync deterministic deployments
+
+- Updated dependencies [[`fbf4556`](https://github.com/thirdweb-dev/js/commit/fbf4556d489b3be7c0c0ff85736e803573f55228)]:
+  - @thirdweb-dev/chains@0.1.87
+
 ## 4.0.55
 
 ### Patch Changes
