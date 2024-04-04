@@ -28,35 +28,34 @@ const contract = getContract({
 });
 const factoryAddress = "0x564cf6453a1b0FF8DB603E92EA4BbD410dea45F3"; // pre 712
 const factoryAddressV2 = "0xbf1C9aA4B1A085f7DA890a44E82B0A1289A40052"; // post 712
-const SECRET_KEY = process.env.TW_SECRET_KEY;
 
-const describeIf = (condition: boolean) => (condition ? describe : describe);
-
-beforeAll(async () => {
-  personalAccount = await generateAccount({
-    client,
-  });
-  const wallet = smartWallet({
-    chain,
-    factoryAddress,
-    gasless: true,
-  });
-  smartAccount = await wallet.connect({ client: TEST_CLIENT, personalAccount });
-  smartWalletAddress = smartAccount.address;
-  accountContract = getContract({
-    address: smartWalletAddress,
-    chain,
-    client,
-  });
-});
-
-describeIf(!!SECRET_KEY)(
+describe.runIf(process.env.TW_SECRET_KEY)(
   "SmartWallet core tests",
   {
     retry: 0,
     timeout: 240_000,
   },
   () => {
+    beforeAll(async () => {
+      personalAccount = await generateAccount({
+        client,
+      });
+      const wallet = smartWallet({
+        chain,
+        factoryAddress,
+        gasless: true,
+      });
+      smartAccount = await wallet.connect({
+        client: TEST_CLIENT,
+        personalAccount,
+      });
+      smartWalletAddress = smartAccount.address;
+      accountContract = getContract({
+        address: smartWalletAddress,
+        chain,
+        client,
+      });
+    });
     it("can connect", async () => {
       expect(smartWalletAddress).toHaveLength(42);
     });
