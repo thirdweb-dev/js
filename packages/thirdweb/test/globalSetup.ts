@@ -17,10 +17,8 @@ export default async function globalSetup() {
     port: 8645,
     options: {
       chainId: 1,
-      forkUrl: SECRET_KEY
-        ? `https://1.rpc.thirdweb.com/${clientId}`
-        : "https://mainnet.gateway.tenderly.co",
-      forkHeader: SECRET_KEY ? { "x-secret-key": SECRET_KEY } : {},
+      forkUrl: "https://mainnet.gateway.tenderly.co",
+      forkHeader: {},
       forkChainId: 1,
       forkBlockNumber: FORK_BLOCK_NUMBER,
       noMining: true,
