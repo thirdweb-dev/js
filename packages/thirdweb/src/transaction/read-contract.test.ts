@@ -6,13 +6,18 @@ import {
 } from "../../test/src/test-contracts.js";
 import { VITALIK_WALLET } from "../../test/src/addresses.js";
 import { readContract } from "./read-contract.js";
+import { balanceOf } from "../extensions/erc20/__generated__/IERC20/read/balanceOf.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("transaction: read", () => {
   it("should read from the contract correctly", async () => {
-    const result = await readContract({
+    // const result = await readContract({
+    //   contract: USDC_CONTRACT,
+    //   method: "function balanceOf(address) returns (uint256)",
+    //   params: [VITALIK_WALLET],
+    // });
+    const result = balanceOf({
       contract: USDC_CONTRACT,
-      method: "function balanceOf(address) returns (uint256)",
-      params: [VITALIK_WALLET],
+      address: VITALIK_WALLET,
     });
 
     expect(result).toMatchInlineSnapshot(`81831338n`);
