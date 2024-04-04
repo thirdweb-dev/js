@@ -128,7 +128,7 @@ export async function preAuthenticate(args: PreAuthArgsType) {
     default:
       assertUnreachable(
         strategy,
-        `Provider: ${strategy} doesnt require pre-authentication`,
+        `Provider: ${strategy} does not require pre-authentication`,
       );
   }
 }
