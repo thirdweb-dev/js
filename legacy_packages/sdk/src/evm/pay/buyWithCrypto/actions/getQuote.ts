@@ -130,25 +130,53 @@ export async function getBuyWithCryptoQuote(
     ? prepareTransaction(data.approval)
     : undefined;
 
+  const [
+    sendTxnTo,
+    sendTxnData,
+    sendTxnGasPrice,
+    sendTxnGasLimit,
+    sendTxnNonce,
+    sendTxnValue,
+    approvalTxnTo,
+    approvalTxnData,
+    approvalTxnGasLimit,
+    approvalTxnGasPrice,
+    approvalTxnNonce,
+    approvalTxnValue,
+  ] = await Promise.all([
+    resolvePromisedValue(sendTxn.to),
+    resolvePromisedValue(sendTxn.data),
+    resolvePromisedValue(sendTxn.gasPrice),
+    resolvePromisedValue(sendTxn.gas),
+    resolvePromisedValue(sendTxn.nonce),
+    resolvePromisedValue(sendTxn.value),
+    resolvePromisedValue(approvalTxn?.to),
+    resolvePromisedValue(approvalTxn?.data),
+    resolvePromisedValue(approvalTxn?.gas),
+    resolvePromisedValue(approvalTxn?.gasPrice),
+    resolvePromisedValue(approvalTxn?.nonce),
+    resolvePromisedValue(approvalTxn?.value),
+  ]);
+
   const swapRoute: BuyWithCryptoQuote = {
     transactionRequest: {
-      to: await resolvePromisedValue(sendTxn?.to),
-      data: await resolvePromisedValue(sendTxn.data),
-      gasPrice: await resolvePromisedValue(sendTxn.gasPrice),
-      gasLimit: await resolvePromisedValue(sendTxn.gas),
-      nonce: await resolvePromisedValue(sendTxn.nonce),
-      value: await resolvePromisedValue(sendTxn.value),
-      chainId: await sendTxn.chain.id,
+      to: sendTxnTo,
+      data: sendTxnData,
+      gasPrice: sendTxnGasPrice,
+      gasLimit: sendTxnGasLimit,
+      nonce: sendTxnNonce,
+      value: sendTxnValue,
+      chainId: sendTxn.chain.id,
     },
     approval: approvalTxn
       ? {
-          to: await resolvePromisedValue(approvalTxn.to),
-          data: await resolvePromisedValue(approvalTxn.data),
-          gasLimit: await resolvePromisedValue(approvalTxn.gas),
-          gasPrice: await resolvePromisedValue(approvalTxn.gasPrice),
-          nonce: await resolvePromisedValue(approvalTxn.nonce),
-          value: await resolvePromisedValue(approvalTxn.value),
-          chainId: await approvalTxn.chain.id,
+          to: approvalTxnTo,
+          data: approvalTxnData,
+          gasLimit: approvalTxnGasLimit,
+          gasPrice: approvalTxnGasPrice,
+          nonce: approvalTxnNonce,
+          value: approvalTxnValue,
+          chainId: approvalTxn.chain.id,
         }
       : undefined,
     swapDetails: data.swapDetails,

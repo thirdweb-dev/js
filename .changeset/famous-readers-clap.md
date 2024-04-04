@@ -1,5 +1,5 @@
 ---
-"@thirdweb-dev/sdk": minor
+"@thirdweb-dev/sdk": patch
 ---
 
 feat: add purchase with crypto from v5

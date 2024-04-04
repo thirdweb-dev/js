@@ -1,5 +1,5 @@
 ---
-"@thirdweb-dev/react-core": minor
+"@thirdweb-dev/react-core": patch
 ---
 
 feat: introduces hooks for buyWithCrypto from v5.
