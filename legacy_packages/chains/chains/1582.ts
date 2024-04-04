@@ -2,16 +2,8 @@ import type { Chain } from "../src/types";
 export default {
   "chain": "gETH",
   "chainId": 1582,
-  "explorers": [
-    {
-      "name": "Bubs Testnet Explorer",
-      "url": "https://explorer.bubstestnet.com",
-      "standard": "EIP3091"
-    }
-  ],
-  "faucets": [
-    "https://bubstestnet.com"
-  ],
+  "explorers": [],
+  "faucets": [],
   "features": [],
   "icon": {
     "url": "ipfs://bafybeibfpls2ealp4e5fdeoxessfjjkldgjnrcx2erph7524pg7alskk6a/1f9cb.svg",
@@ -28,11 +20,9 @@ export default {
   },
   "networkId": 1582,
   "redFlags": [],
-  "rpc": [
-    "https://1582.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://bubs.calderachain.xyz/http"
-  ],
+  "rpc": [],
   "shortName": "Bubs",
   "slug": "bubs-testnet",
+  "status": "deprecated",
   "testnet": true
 } as const satisfies Chain;
