@@ -56,17 +56,12 @@ export function CountrySelector({
   );
 }
 
-type SelectProps = {
-  sm?: boolean;
-  theme?: Theme;
-};
-
-export const Select = /* @__PURE__ */ StyledSelect((props: SelectProps) => {
+export const Select = /* @__PURE__ */ StyledSelect(() => {
   const theme = useCustomTheme();
   return {
-    fontSize: fontSize.md,
+    fontSize: fontSize.sm,
     display: "block",
-    padding: props.sm ? spacing.sm : fontSize.sm,
+    padding: spacing.sm,
     boxSizing: "border-box",
     outline: "none",
     border: "none",
@@ -74,12 +69,15 @@ export const Select = /* @__PURE__ */ StyledSelect((props: SelectProps) => {
     color: theme.colors.primaryText,
     WebkitAppearance: "none",
     appearance: "none",
+    cursor: "pointer",
     background: "transparent",
     "&::placeholder": {
       color: theme.colors.secondaryText,
     },
     boxShadow: `0 0 0 1.5px ${theme.colors.borderColor}`,
-
+    "&:focus, &:hover": {
+      boxShadow: `0 0 0 2px ${theme.colors.accentText}`,
+    },
     "&[disabled]": {
       cursor: "not-allowed",
     },
