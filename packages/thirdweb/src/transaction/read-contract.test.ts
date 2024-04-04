@@ -23,7 +23,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("transaction: read", () => {
       method: "function balanceOf(address) returns (uint256)",
       params: [VITALIK_WALLET],
     });
-    expect(result).toMatchInlineSnapshot(0n);
+    expect(result).toBe(0n);
   });
 
   it("should parse errors correctly", async () => {
