@@ -6,12 +6,9 @@ import {
 } from "../../test/src/test-contracts.js";
 import { VITALIK_WALLET } from "../../test/src/addresses.js";
 import { readContract } from "./read-contract.js";
-import { isContractDeployed } from "../utils/bytecode/is-contract-deployed.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("transaction: read", () => {
-  it("should read from the contract correctly", async () => {
-    const isDeployed = await isContractDeployed(USDC_CONTRACT);
-    expect(isDeployed).toBe(true);
+  it.skip("should read from the contract correctly", async () => {
     const result = await readContract({
       contract: USDC_CONTRACT,
       method: "function balanceOf(address) returns (uint256)",

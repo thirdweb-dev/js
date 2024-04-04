@@ -115,10 +115,10 @@ export class HttpRpcClient {
   }
 
   async estimateUserOpGas(
-    userOp1: Partial<UserOperationStruct>,
+    userOp: Partial<UserOperationStruct>,
   ): Promise<EstimateUserOpGasResult> {
     await this.initializing;
-    const hexifiedUserOp = await hexlifyUserOp(userOp1);
+    const hexifiedUserOp = await hexlifyUserOp(userOp);
     const jsonRequestData: [UserOperationStruct, string] = [
       hexifiedUserOp,
       this.entryPointAddress,
