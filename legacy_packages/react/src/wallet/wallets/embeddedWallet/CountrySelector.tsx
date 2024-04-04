@@ -16,7 +16,9 @@ export function CountrySelector({
   const { data: supportedCountries } = useQuery({
     queryKey: ["supported-sms-countries"],
     queryFn: async () => {
-      const { supportedSmsCountries } = await import("@thirdweb-dev/wallets");
+      const { supportedSmsCountries } = await import(
+        "@thirdweb-dev/wallets/evm/wallets/embedded-wallet"
+      );
       return supportedSmsCountries;
     },
   });
