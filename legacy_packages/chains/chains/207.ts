@@ -26,7 +26,7 @@ export default {
   "name": "VinuChain Network",
   "nativeCurrency": {
     "name": "VinuChain",
-    "symbol": "VС",
+    "symbol": "VC",
     "decimals": 18
   },
   "networkId": 207,
