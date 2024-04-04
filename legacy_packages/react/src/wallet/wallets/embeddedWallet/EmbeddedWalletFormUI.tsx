@@ -49,6 +49,7 @@ export const EmbeddedWalletFormUI = (props: {
 
   const isEmailEnabled = props.authOptions.includes("email");
   const isPhoneEnabled = props.authOptions.includes("phone");
+
   const [inputMode, setInputMode] = useState<"email" | "phone" | "none">(
     isEmailEnabled ? "email" : isPhoneEnabled ? "phone" : "none",
   );
@@ -108,7 +109,13 @@ export const EmbeddedWalletFormUI = (props: {
   const showOnlyIcons = socialLogins.length > 1;
 
   return (
-    <Container flex="column" gap="lg">
+    <Container
+      flex="column"
+      gap="lg"
+      style={{
+        position: "relative",
+      }}
+    >
       {/* Social Login */}
       {hasSocialLogins && (
         <Container
@@ -170,34 +177,33 @@ export const EmbeddedWalletFormUI = (props: {
               submitButtonText={locale.submitEmail}
             />
           ) : (
-            <Container flex="row" gap="xs">
-              <InputSelectionUI
-                type={type}
-                onSelect={(value) => {
-                  props.onSelect({ phone: value });
-                }}
-                placeholder={placeholder}
-                name="phone"
-                errorMessage={(_input) => {
-                  const input = _input.toLowerCase();
-                  const isPhone = Number.isInteger(
-                    Number(input[input.length - 1]),
-                  );
+            <InputSelectionUI
+              format="phone"
+              type={type}
+              onSelect={(value) => {
+                props.onSelect({ phone: value });
+              }}
+              placeholder={placeholder}
+              name="phone"
+              errorMessage={(_input) => {
+                const input = _input.toLowerCase();
+                const isPhone = Number.isInteger(
+                  Number(input[input.length - 1]),
+                );
 
-                  // TODO: Move this to a separate function
-                  // if (isPhone && isPhoneEnabled) {
-                  //   if (!input.startsWith("+")) {
-                  //     return locale.countryCodeMissing;
-                  //   }
-                  // } else
-                  if (!isPhone && isPhoneEnabled) {
-                    return locale.invalidPhone;
-                  }
-                }}
-                emptyErrorMessage={emptyErrorMessage}
-                submitButtonText={locale.submitEmail}
-              />
-            </Container>
+                // TODO: Move this to a separate function
+                // if (isPhone && isPhoneEnabled) {
+                //   if (!input.startsWith("+")) {
+                //     return locale.countryCodeMissing;
+                //   }
+                // } else
+                if (!isPhone && isPhoneEnabled) {
+                  return locale.invalidPhone;
+                }
+              }}
+              emptyErrorMessage={emptyErrorMessage}
+              submitButtonText={locale.submitEmail}
+            />
           )}
           {allowSwitchInputMode && (
             <>
