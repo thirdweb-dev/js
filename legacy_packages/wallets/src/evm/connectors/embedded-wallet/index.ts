@@ -208,6 +208,11 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     return user.authDetails.email;
   }
 
+  async getPhoneNumber() {
+    const user = await this.getUser();
+    return user.authDetails.phoneNumber;
+  }
+
   async getRecoveryInformation() {
     const user = await this.getUser();
     return user.authDetails;

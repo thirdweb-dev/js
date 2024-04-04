@@ -1,4 +1,9 @@
 import {
+  UseQueryResult,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
+import {
   useCreateWalletInstance,
   useSetConnectedWallet,
   useSetConnectionStatus,
@@ -7,17 +12,12 @@ import {
   useWallets,
 } from "@thirdweb-dev/react-core";
 import {
+  EmbeddedWallet,
   walletIds,
   type AuthParams,
-  EmbeddedWallet,
 } from "@thirdweb-dev/wallets";
 import { useCallback, useEffect } from "react";
 import { embeddedWallet } from "../../../wallet/wallets/embeddedWallet/embeddedWallet";
-import {
-  UseQueryResult,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
 
 /**
  * Hook to connect `EmbeddedWallet` which allows users to login via Email or social logins
@@ -200,7 +200,55 @@ export function useEmbeddedWalletUserEmail(): UseQueryResult<
     [wallet?.walletId, "embeddedWallet-email"],
     () => {
       if (wallet && wallet.walletId === walletIds.embeddedWallet) {
-        return (wallet as EmbeddedWallet).getEmail();
+        return (wallet as EmbeddedWallet).getEmail() ?? "";
+      }
+    },
+    {
+      retry: false,
+      enabled: wallet?.walletId === walletIds.embeddedWallet,
+    },
+  );
+
+  // Invalidate the query when the wallet changes
+  useEffect(() => {
+    queryClient.invalidateQueries([wallet?.walletId, "embeddedWallet-email"]);
+  }, [wallet, queryClient]);
+
+  return emailQuery;
+}
+
+/**
+ * Hook to get the user's phone number from connected `EmbeddedWallet`
+ *
+ * @example
+ * ```ts
+ * const phoneNumberQuery = useEmbeddedWalletUserPhoneNumber();
+ *
+ * if (phoneNumberQuery.isFetching) {
+ *  return <div> Loading... </div>;
+ * }
+ *
+ * if (phoneNumberQuery.data) {
+ *  return <div> Connected with {phoneNumberQuery.data} </div>;
+ * }
+ *
+ * return <div> Not connected </div>;
+ * ```
+ *
+ * @walletConnection
+ * @returns Hook's `data` property contains the `string` email if `EmbeddedWallet` is connected, otherwise `undefined`
+ */
+export function useEmbeddedWalletUserPhoneNumber(): UseQueryResult<
+  string | undefined
+> {
+  const wallet = useWallet();
+  const queryClient = useQueryClient();
+
+  const emailQuery = useQuery<string | undefined, string>(
+    [wallet?.walletId, "embeddedWallet-phone-number"],
+    () => {
+      if (wallet && wallet.walletId === walletIds.embeddedWallet) {
+        return (wallet as EmbeddedWallet).getPhoneNumber() ?? "";
       }
     },
     {

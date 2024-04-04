@@ -228,6 +228,19 @@ export class EmbeddedWallet extends AbstractClientWallet<
   }
 
   /**
+   * Get the phone number associated with the currently connected wallet.
+   * @example
+   * ```ts
+   * ```javascript
+   * const email = await wallet.getPhoneNumber();
+   * ```
+   */
+  async getPhoneNumber() {
+    const connector = (await this.getConnector()) as EmbeddedWalletConnector;
+    return connector.getPhoneNumber();
+  }
+
+  /**
    * Get the instance of `EmbeddedWalletSdk` used by the wallet.
    */
   async getEmbeddedWalletSDK() {
