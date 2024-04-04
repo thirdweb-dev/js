@@ -20,10 +20,10 @@ describe.runIf(process.env.TW_SECRET_KEY)("transaction: read", () => {
   it("should read from the contract 721 correctly", async () => {
     const result = await readContract({
       contract: DOODLES_CONTRACT,
-      method: "function tokenURI(uint256) returns (string)",
-      params: [1n],
+      method: "function balanceOf(address) returns (uint256)",
+      params: [VITALIK_WALLET],
     });
-    expect(result).toMatchInlineSnapshot(`"ipfs://QmPMc4tcBsMqLRuCQtPmPe84bpSjrC3Ky7t3JWuHXYB4aS/1"`);
+    expect(result).toMatchInlineSnapshot(0n);
   });
 
   it("should parse errors correctly", async () => {
