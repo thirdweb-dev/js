@@ -221,7 +221,7 @@ export function enDefault(): ThirdwebLocale {
         invalidPhone: "Invalid phone number",
         invalidEmailOrPhone: "Invalid email address or phone number",
         countryCodeMissing: "Phone number must start with a country code",
-        phonePlaceholder: "Eg. 110-000-0000",
+        phonePlaceholder: "Enter your phone number",
         signInWithPhone: "Sign in with phone number",
         phoneRequired: "phone number is required",
         socialLoginScreen: {
