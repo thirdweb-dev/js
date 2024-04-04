@@ -1,5 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import React, { useRef } from "react";
 import { Theme, fontSize, spacing } from "../../../design-system";
 import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
 import { StyledSelect } from "../../../design-system/elements";
@@ -1274,34 +1273,51 @@ export function CountrySelector({
   countryCode: string;
   setCountryCode: React.Dispatch<React.SetStateAction<string>>;
 }) {
-  const { data } = useQuery({
-    queryKey: ["supported-sms-countries"],
-    queryFn: async () => {
-      return placeholderSupportedSmsCountries;
-    },
-    initialData: placeholderSupportedSmsCountries,
-  });
+  const selectRef = useRef<HTMLSelectElement>(null);
+  const [selectWidth, setSelectWidth] = React.useState<number | undefined>(
+    undefined,
+  );
+
+  React.useEffect(() => {
+    const resize_ob = new ResizeObserver(([entry]) =>
+      setSelectWidth(entry?.contentRect.width),
+    );
+
+    if (selectRef.current) {
+      resize_ob.observe(selectRef.current);
+    }
+
+    return () => resize_ob.disconnect();
+  }, []);
 
   return (
-    <Select
-      name="countries"
-      id="countries"
-      value={countryCode}
-      onChange={(e) => {
-        setCountryCode(e.target.value);
-      }}
-    >
-      {data.map((country) => {
-        return (
-          <option
-            key={country.countryIsoCode}
-            value={`${country.countryIsoCode} +${country.phoneNumberCode}`}
-          >
-            {country.countryIsoCode} +{country.phoneNumberCode}
-          </option>
-        );
-      })}
-    </Select>
+    <>
+      <Select
+        name="countries"
+        id="countries"
+        value={countryCode}
+        onChange={(e) => {
+          setCountryCode(e.target.value);
+        }}
+        style={{
+          width: selectWidth,
+        }}
+      >
+        {placeholderSupportedSmsCountries.map((country) => {
+          return (
+            <option
+              key={country.countryIsoCode}
+              value={`${country.countryIsoCode} +${country.phoneNumberCode}`}
+            >
+              {country.countryIsoCode} +{country.phoneNumberCode}
+            </option>
+          );
+        })}
+      </Select>
+      <HiddenSelect ref={selectRef} id="width_tmp_select">
+        <option>{countryCode}</option>
+      </HiddenSelect>
+    </>
   );
 }
 
@@ -1309,6 +1325,14 @@ type SelectProps = {
   sm?: boolean;
   theme?: Theme;
 };
+
+const HiddenSelect = /* @__PURE__ */ StyledSelect((props: SelectProps) => {
+  return {
+    fontSize: fontSize.md,
+    padding: props.sm ? spacing.sm : fontSize.sm,
+    visibility: "hidden",
+  };
+});
 
 export const Select = /* @__PURE__ */ StyledSelect((props: SelectProps) => {
   const theme = useCustomTheme();
