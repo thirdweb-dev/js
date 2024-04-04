@@ -235,4 +235,19 @@ export class BaseLogin extends AbstractLogin<
     });
     return this.postLogin(result);
   }
+
+  /**
+   * @internal
+   */
+  override async verifySmsLoginOtp({
+    phoneNumber,
+    otp,
+    recoveryCode,
+  }: LoginQuerierTypes["verifyThirdwebSmsLoginOtp"]): Promise<AuthLoginReturnType> {
+    const result = await this.LoginQuerier.call<AuthAndWalletRpcReturnType>({
+      procedureName: "verifyThirdwebSmsLoginOtp",
+      params: { phoneNumber, otp, recoveryCode },
+    });
+    return this.postLogin(result);
+  }
 }

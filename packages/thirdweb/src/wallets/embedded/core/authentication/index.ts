@@ -1,11 +1,11 @@
-import type { AuthArgsType, PreAuthArgsType } from "./type.js";
+import type { ThirdwebClient } from "../../../../client/client.js";
 import {
   AuthProvider,
   type AuthLoginReturnType,
 } from "../../implementations/interfaces/auth.js";
 import { UserWalletStatus } from "../../implementations/interfaces/embedded-wallets/embedded-wallets.js";
 import type { EmbeddedWalletSdk } from "../../implementations/lib/embedded-wallet.js";
-import type { ThirdwebClient } from "../../../../client/client.js";
+import type { AuthArgsType, PreAuthArgsType } from "./type.js";
 
 const ewsSDKCache = new WeakMap<ThirdwebClient, EmbeddedWalletSdk>();
 
@@ -62,7 +62,7 @@ export async function getAuthenticatedUser(
 /**
  * Retrieves the authenticated user email for the active embedded wallet.
  * @param options - The arguments for retrieving the authenticated user.
- * @returns The authenticated user email if logged in and wallet initialized, otherwise undefined.
+ * @returns The authenticated user email if logged in and wallet initialized with an email present, otherwise undefined.
  * @example
  * ```ts
  * import { getUserEmail } from "thirdweb/wallets/embedded";
@@ -75,6 +75,26 @@ export async function getUserEmail(options: GetAuthenticatedUserParams) {
   const user = await getAuthenticatedUser(options);
   if (user) {
     return user.authDetails.email;
+  }
+  return undefined;
+}
+
+/**
+ * Retrieves the authenticated user phone number for the active embedded wallet.
+ * @param options - The arguments for retrieving the authenticated user.
+ * @returns The authenticated user phone number if logged in and wallet initialized with a phone  number present, otherwise undefined.
+ * @example
+ * ```ts
+ * import { getUserPhoneNumber } from "thirdweb/wallets/embedded";
+ *
+ * const phoneNumber = await getUserPhoneNumber({ client });
+ * console.log(phoneNumber);
+ * ```
+ */
+export async function getUserPhoneNumber(options: GetAuthenticatedUserParams) {
+  const user = await getAuthenticatedUser(options);
+  if (user) {
+    return user.authDetails.phoneNumber;
   }
   return undefined;
 }
@@ -102,8 +122,12 @@ export async function preAuthenticate(args: PreAuthArgsType) {
     case "email": {
       return ewSDK.auth.sendEmailLoginOtp({ email: args.email });
     }
+    case "phone": {
+      return ewSDK.auth.sendSmsLoginOtp({ phoneNumber: args.phoneNumber });
+    }
     default:
-      throw new Error(
+      assertUnreachable(
+        strategy,
         `Provider: ${strategy} doesnt require pre-authentication`,
       );
   }
@@ -135,6 +159,12 @@ export async function authenticate(
       return await ewSDK.auth.verifyEmailLoginOtp({
         email: args.email,
         otp: args.verificationCode,
+      });
+    }
+    case "phone": {
+      return await ewSDK.auth.verifySmsLoginOtp({
+        otp: args.verificationCode,
+        phoneNumber: args.phoneNumber,
       });
     }
     case "apple":
@@ -172,8 +202,8 @@ export async function authenticate(
   }
 }
 
-function assertUnreachable(x: never): never {
-  throw new Error("Invalid param: " + x);
+function assertUnreachable(x: never, message?: string): never {
+  throw new Error(message ?? `Invalid param: ${x}`);
 }
 
 const oauthStrategyToAuthProvider: Record<

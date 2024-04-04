@@ -14,9 +14,15 @@ export type LoginQuerierTypes = {
   loginWithCustomAuthEndpoint: { payload: string; encryptionKey: string };
   loginWithCustomJwt: { jwt: string; encryptionKey?: string };
   loginWithThirdwebModal: undefined | { email: string };
+  sendThirdwebSmsLoginOtp: { phoneNumber: string };
   sendThirdwebEmailLoginOtp: { email: string };
   verifyThirdwebEmailLoginOtp: {
     email: string;
+    otp: string;
+    recoveryCode?: string;
+  };
+  verifyThirdwebSmsLoginOtp: {
+    phoneNumber: string;
     otp: string;
     recoveryCode?: string;
   };
@@ -100,8 +106,27 @@ export abstract class AbstractLogin<
     });
     return result;
   }
+  /**
+   *
+   * @internal
+   */
+  async sendSmsLoginOtp({
+    phoneNumber,
+  }: LoginQuerierTypes["sendThirdwebSmsLoginOtp"]): Promise<SendEmailOtpReturnType> {
+    await this.preLogin();
+    const result = await this.LoginQuerier.call<SendEmailOtpReturnType>({
+      procedureName: "sendThirdwebSmsLoginOtp",
+      params: { phoneNumber },
+    });
+    return result;
+  }
 
   abstract verifyEmailLoginOtp(
     args: EMAIL_VERIFICATION,
   ): Promise<AuthLoginReturnType>;
+  abstract verifySmsLoginOtp(args: {
+    phoneNumber: string;
+    otp: string;
+    recoveryCode?: string;
+  }): Promise<AuthLoginReturnType>;
 }
