@@ -30,8 +30,7 @@ const factoryAddress = "0x564cf6453a1b0FF8DB603E92EA4BbD410dea45F3"; // pre 712
 const factoryAddressV2 = "0xbf1C9aA4B1A085f7DA890a44E82B0A1289A40052"; // post 712
 const SECRET_KEY = process.env.TW_SECRET_KEY;
 
-const describeIf = (condition: boolean) =>
-  condition ? describe : describe.skip;
+const describeIf = (condition: boolean) => (condition ? describe : describe);
 
 beforeAll(async () => {
   personalAccount = await generateAccount({
@@ -156,6 +155,7 @@ describeIf(!!SECRET_KEY)(
         signature,
         address: newAccount.address,
         chain,
+        client,
       });
       expect(isValidV1).toEqual(true);
       const isValidV2 = await checkContractWalletSignature({

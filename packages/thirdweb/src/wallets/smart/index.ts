@@ -275,7 +275,7 @@ async function _sendUserOp(args: {
     userOp: signedUserOp,
   });
   // wait for tx receipt rather than return the userOp hash
-  const maxAttempts = 30;
+  const maxAttempts = 1000;
   let attempts = 0;
 
   const promise = new Promise<Hex>((resolve, reject) => {

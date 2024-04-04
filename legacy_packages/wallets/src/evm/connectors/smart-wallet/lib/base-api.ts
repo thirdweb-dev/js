@@ -261,16 +261,9 @@ export abstract class BaseAccountAPI {
       } catch (error: any) {
         throw this.unwrapBundlerError(error);
       }
-      // add 50k overhead for entrypoint checks
-      partialOp.callGasLimit = BigNumber.from(estimates.callGasLimit).add(
-        50_000,
-      );
-      partialOp.verificationGasLimit = BigNumber.from(
-        estimates.verificationGasLimit,
-      );
-      partialOp.preVerificationGas = BigNumber.from(
-        estimates.preVerificationGas,
-      );
+      partialOp.callGasLimit = estimates.callGasLimit;
+      partialOp.verificationGasLimit = estimates.verificationGasLimit;
+      partialOp.preVerificationGas = estimates.preVerificationGas;
     } else if (gasless) {
       const paymasterResult =
         await this.paymasterAPI.getPaymasterAndData(partialOp);
@@ -299,16 +292,9 @@ export abstract class BaseAccountAPI {
         } catch (error: any) {
           throw this.unwrapBundlerError(error);
         }
-        // add 50k overhead for entrypoint checks
-        partialOp.callGasLimit = BigNumber.from(estimates.callGasLimit).add(
-          50_000,
-        );
-        partialOp.verificationGasLimit = BigNumber.from(
-          estimates.verificationGasLimit,
-        );
-        partialOp.preVerificationGas = BigNumber.from(
-          estimates.preVerificationGas,
-        );
+        partialOp.callGasLimit = estimates.callGasLimit;
+        partialOp.verificationGasLimit = estimates.verificationGasLimit;
+        partialOp.preVerificationGas = estimates.preVerificationGas;
         // need paymaster to re-sign after estimates
         if (paymasterAndData && paymasterAndData !== "0x") {
           const paymasterResult2 =
@@ -330,16 +316,9 @@ export abstract class BaseAccountAPI {
         throw this.unwrapBundlerError(error);
       }
 
-      // add 50k overhead for entrypoint checks
-      partialOp.callGasLimit = BigNumber.from(estimates.callGasLimit).add(
-        50_000,
-      );
-      partialOp.verificationGasLimit = BigNumber.from(
-        estimates.verificationGasLimit,
-      );
-      partialOp.preVerificationGas = BigNumber.from(
-        estimates.preVerificationGas,
-      );
+      partialOp.callGasLimit = estimates.callGasLimit;
+      partialOp.verificationGasLimit = estimates.verificationGasLimit;
+      partialOp.preVerificationGas = estimates.preVerificationGas;
     }
 
     return {
