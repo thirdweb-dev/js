@@ -23,9 +23,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("transaction: read", () => {
       method: "function tokenURI(uint256) returns (string)",
       params: [1n],
     });
-    expect(result).toBe(
-      `ipfs://QmPMc4tcBsMqLRuCQtPmPe84bpSjrC3Ky7t3JWuHXYB4aS/1`,
-    );
+    expect(result).toMatchInlineSnapshot(`"ipfs://QmPMc4tcBsMqLRuCQtPmPe84bpSjrC3Ky7t3JWuHXYB4aS/1"`);
   });
 
   it("should parse errors correctly", async () => {
