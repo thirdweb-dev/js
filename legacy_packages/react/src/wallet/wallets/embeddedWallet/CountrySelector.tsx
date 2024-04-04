@@ -1,4 +1,4 @@
-import React, { RefObject, useMemo, useRef } from "react";
+import React, { useRef } from "react";
 import { Theme, fontSize, spacing } from "../../../design-system";
 import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
 import { StyledSelect } from "../../../design-system/elements";
@@ -1275,10 +1275,6 @@ export function CountrySelector({
 }) {
   const selectRef = useRef<HTMLSelectElement>(null);
 
-  const width = useTextWidth({
-    ref: selectRef,
-  });
-
   return (
     <>
       <Select
@@ -1288,9 +1284,6 @@ export function CountrySelector({
         value={countryCode}
         onChange={(e) => {
           setCountryCode(e.target.value);
-        }}
-        style={{
-          width,
         }}
       >
         {placeholderSupportedSmsCountries.map((country) => {
@@ -1307,31 +1300,6 @@ export function CountrySelector({
     </>
   );
 }
-
-const getContext = () => {
-  const fragment: DocumentFragment = document.createDocumentFragment();
-  const canvas: HTMLCanvasElement = document.createElement("canvas");
-  fragment.appendChild(canvas);
-  return canvas.getContext("2d") as CanvasRenderingContext2D;
-};
-
-type useTextWidthRefOptions = {
-  ref: RefObject<Element>;
-};
-
-const useTextWidth = (options: useTextWidthRefOptions) => {
-  return useMemo(() => {
-    if (options.ref.current && options.ref.current.textContent) {
-      const context = getContext();
-      const computedStyles = window.getComputedStyle(options.ref.current);
-      context.font = computedStyles.font;
-      const metrics = context.measureText(options.ref.current.textContent);
-      return metrics.width;
-    }
-
-    return NaN;
-  }, [options.ref]);
-};
 
 type SelectProps = {
   sm?: boolean;
@@ -1360,5 +1328,10 @@ export const Select = /* @__PURE__ */ StyledSelect((props: SelectProps) => {
     "&[disabled]": {
       cursor: "not-allowed",
     },
+    minWidth: "0px",
+    maxWidth: "90px",
+    textOverflow: "ellipsis",
+    overflow: "hidden",
+    whiteSpace: "nowrap",
   };
 });
