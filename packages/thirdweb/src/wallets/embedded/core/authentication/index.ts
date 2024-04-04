@@ -62,7 +62,7 @@ export async function getAuthenticatedUser(
 /**
  * Retrieves the authenticated user email for the active embedded wallet.
  * @param options - The arguments for retrieving the authenticated user.
- * @returns The authenticated user email if logged in and wallet initialized with an email present, otherwise undefined.
+ * @returns The authenticated user email if authenticated with email or social logins, otherwise undefined.
  * @example
  * ```ts
  * import { getUserEmail } from "thirdweb/wallets/embedded";
