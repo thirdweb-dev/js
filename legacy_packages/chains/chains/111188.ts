@@ -50,7 +50,6 @@ export default {
   "shortName": "re-al",
   "slip44": 60,
   "slug": "re-al",
-  "status": "incubating",
   "testnet": false,
   "title": "re.al Real-World Assets network"
 } as const satisfies Chain;
