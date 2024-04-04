@@ -161,9 +161,9 @@ const ContractPage: ThirdwebNextPage = () => {
     return getContract({
       address: contractAddress,
       client: thirdwebClient,
-      chain: defineDashboardChain(chain?.chainId),
+      chain: defineDashboardChain(chain.chainId, chain),
     });
-  }, [contractAddress, chain?.chainId]);
+  }, [contractAddress, chain]);
 
   const routes = useContractRouteConfig(contractAddress);
 

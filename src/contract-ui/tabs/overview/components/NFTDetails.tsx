@@ -8,8 +8,8 @@ import { useMemo } from "react";
 import { useReadContract } from "thirdweb/react";
 import { getNFTs } from "thirdweb/extensions/erc721";
 import {
-  defineDashboardChain,
   thirdwebClient,
+  useV5DashboardChain,
 } from "../../../../lib/thirdweb-client";
 
 interface NFTDetailsProps {
@@ -27,15 +27,16 @@ export const NFTDetails: React.FC<NFTDetailsProps> = ({
 }) => {
   const isMobile = useBreakpointValue({ base: true, md: false });
   const nftsHref = useTabHref("nfts");
+  const chain = useV5DashboardChain(chainId);
 
   const contract = useMemo(
     () =>
       getContract({
         client: thirdwebClient,
         address: contractAddress,
-        chain: defineDashboardChain(chainId),
+        chain,
       }),
-    [contractAddress, chainId],
+    [contractAddress, chain],
   );
 
   const nftQuery = useReadContract(getNFTs, {

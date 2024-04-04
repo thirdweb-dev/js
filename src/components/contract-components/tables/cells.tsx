@@ -5,7 +5,7 @@ import { useChainSlug } from "hooks/chains/chainSlug";
 import { shortenIfAddress } from "utils/usedapp-external";
 import { usePublishedContractsFromDeploy } from "../hooks";
 import { getContract } from "thirdweb";
-import { defineDashboardChain, thirdwebClient } from "lib/thirdweb-client";
+import { thirdwebClient, useV5DashboardChain } from "lib/thirdweb-client";
 import { BasicContract } from "contract-ui/types/types";
 import { getContractMetadata } from "thirdweb/extensions/common";
 import { useReadContract } from "thirdweb/react";
@@ -17,11 +17,12 @@ interface AsyncContractNameCellProps {
 export const AsyncContractNameCell = memo(
   ({ cell }: AsyncContractNameCellProps) => {
     const chainSlug = useChainSlug(cell.chainId);
+    const chain = useV5DashboardChain(cell.chainId);
 
     const contract = getContract({
       client: thirdwebClient,
       address: cell.address,
-      chain: defineDashboardChain(cell.chainId),
+      chain,
     });
 
     const contractMetadata = useReadContract(getContractMetadata, {

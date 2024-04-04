@@ -3,7 +3,7 @@ import { Card, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { useChainSlug } from "hooks/chains/chainSlug";
 import { getContract } from "thirdweb";
-import { defineDashboardChain, thirdwebClient } from "lib/thirdweb-client";
+import { thirdwebClient, useV5DashboardChain } from "lib/thirdweb-client";
 import { useReadContract } from "thirdweb/react";
 import { getContractMetadata } from "thirdweb/extensions/common";
 
@@ -22,11 +22,12 @@ export const PaymentEnabledCard: React.FC<PaymentEnabledCardProps> = ({
   chainId,
 }) => {
   const chainSlug = useChainSlug(chainId);
+  const chainV5 = useV5DashboardChain(chainId);
 
   const contract = getContract({
     client: thirdwebClient,
     address,
-    chain: defineDashboardChain(chainId),
+    chain: chainV5,
   });
 
   const { data: contractMetadata, isSuccess } = useReadContract(
