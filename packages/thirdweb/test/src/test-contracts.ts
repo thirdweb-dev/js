@@ -1,24 +1,24 @@
 import { TEST_CLIENT } from "./test-clients.js";
-import { USDC_ABI } from "./abis/usdc.js";
+import { USDT_ABI } from "./abis/usdc.js";
 import { FORKED_ETHEREUM_CHAIN } from "./chains.js";
 import { getContract } from "../../src/contract/contract.js";
 
 // ERC20
 
-export const USDC_CONTRACT_ADDRESS =
-  "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48";
+export const USDT_CONTRACT_ADDRESS =
+  "0xdAC17F958D2ee523a2206206994597C13D831ec7";
 
-export const USDC_CONTRACT = getContract({
+export const USDT_CONTRACT = getContract({
   client: TEST_CLIENT,
-  address: USDC_CONTRACT_ADDRESS,
+  address: USDT_CONTRACT_ADDRESS,
   chain: FORKED_ETHEREUM_CHAIN,
 });
 
-export const USDC_CONTRACT_WITH_ABI = getContract({
+export const USDT_CONTRACT_WITH_ABI = getContract({
   client: TEST_CLIENT,
-  address: USDC_CONTRACT_ADDRESS,
+  address: USDT_CONTRACT_ADDRESS,
   chain: FORKED_ETHEREUM_CHAIN,
-  abi: USDC_ABI,
+  abi: USDT_ABI,
 });
 
 // ERC721

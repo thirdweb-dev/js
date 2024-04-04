@@ -1,20 +1,16 @@
 import { describe, it, expect } from "vitest";
 
-import { DOODLES_CONTRACT } from "../../test/src/test-contracts.js";
+import {
+  DOODLES_CONTRACT,
+  USDT_CONTRACT,
+} from "../../test/src/test-contracts.js";
 import { VITALIK_WALLET } from "../../test/src/addresses.js";
 import { readContract } from "./read-contract.js";
-import { getContract } from "../contract/contract.js";
-import { TEST_CLIENT } from "../../test/src/test-clients.js";
-import { FORKED_ETHEREUM_CHAIN } from "../../test/src/chains.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("transaction: read", () => {
   it("should read from the contract correctly", async () => {
     const result = await readContract({
-      contract: getContract({
-        address: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
-        client: TEST_CLIENT,
-        chain: FORKED_ETHEREUM_CHAIN,
-      }),
+      contract: USDT_CONTRACT,
       method: "function balanceOf(address) returns (uint256)",
       params: [VITALIK_WALLET],
     });
