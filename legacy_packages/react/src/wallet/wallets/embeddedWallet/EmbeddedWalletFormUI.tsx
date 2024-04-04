@@ -47,11 +47,23 @@ export const EmbeddedWalletFormUI = (props: {
     apple: locale.signInWithApple,
   };
 
-  const isEmailEnabled = props.authOptions.includes("email");
-  const isPhoneEnabled = props.authOptions.includes("phone");
+  const emailIndex = props.authOptions.indexOf("email");
+  const isEmailEnabled = emailIndex !== -1;
+  const phoneIndex = props.authOptions.indexOf("phone");
+  const isPhoneEnabled = phoneIndex !== -1;
 
+  const selectDefaultInputMode = () => {
+    if (isEmailEnabled && isPhoneEnabled) {
+      return emailIndex < phoneIndex ? "email" : "phone";
+    } else if (isEmailEnabled) {
+      return "email";
+    } else if (isPhoneEnabled) {
+      return "phone";
+    }
+    return "none";
+  };
   const [inputMode, setInputMode] = useState<"email" | "phone" | "none">(
-    isEmailEnabled ? "email" : isPhoneEnabled ? "phone" : "none",
+    selectDefaultInputMode(),
   );
 
   const placeholder =
@@ -181,22 +193,16 @@ export const EmbeddedWalletFormUI = (props: {
               format="phone"
               type={type}
               onSelect={(value) => {
-                props.onSelect({ phone: value });
+                // removes white spaces and special characters
+                props.onSelect({ phone: value.replace(/[-\(\) ]/g, "") });
               }}
               placeholder={placeholder}
               name="phone"
               errorMessage={(_input) => {
-                const input = _input.toLowerCase();
-                const isPhone = Number.isInteger(
-                  Number(input[input.length - 1]),
-                );
+                // removes white spaces and special characters
+                const input = _input.replace(/[-\(\) ]/g, "");
+                const isPhone = /^[0-9]+$/.test(input);
 
-                // TODO: Move this to a separate function
-                // if (isPhone && isPhoneEnabled) {
-                //   if (!input.startsWith("+")) {
-                //     return locale.countryCodeMissing;
-                //   }
-                // } else
                 if (!isPhone && isPhoneEnabled) {
                   return locale.invalidPhone;
                 }
