@@ -1,5 +1,5 @@
 import { TEST_CLIENT } from "./test-clients.js";
-import { USDT_ABI } from "./abis/usdc.js";
+import { USDT_ABI } from "./abis/usdt.js";
 import { FORKED_ETHEREUM_CHAIN } from "./chains.js";
 import { getContract } from "../../src/contract/contract.js";
 
