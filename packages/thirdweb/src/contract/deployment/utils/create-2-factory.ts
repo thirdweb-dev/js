@@ -213,8 +213,4 @@ const CUSTOM_GAS_FOR_CHAIN: Record<string, CustomChain> = {
     gasPrice: 2500n * 10n ** 9n,
     gasLimit: 200000n,
   },
-  "2710": {
-    name: "Morph Testnet",
-    gasPrice: 62n * 10n ** 8n,
-  },
 };

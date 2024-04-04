@@ -11,7 +11,7 @@ import { getKeylessTxn } from "./getKeylessTxn";
  */
 export function getCreate2FactoryDeploymentInfo(
   chainId: number,
-  gasOptions: { gasPrice?: number; gasLimit?: number },
+  gasOptions: { gasPrice?: bigint; gasLimit?: bigint },
 ): KeylessDeploymentInfo {
   const signature = utils.joinSignature(SIGNATURE);
   const deploymentTransaction = getKeylessTxn(

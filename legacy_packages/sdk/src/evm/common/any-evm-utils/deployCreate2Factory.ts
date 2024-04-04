@@ -1,7 +1,7 @@
 import { BigNumber, Signer } from "ethers";
 import invariant from "tiny-invariant";
 import type { DeployOptions } from "../../types/deploy/deploy-options";
-import { CUSTOM_GAS_FOR_CHAIN } from "../any-evm-constants";
+import { CUSTOM_GAS_BINS, CUSTOM_GAS_FOR_CHAIN } from "../any-evm-constants";
 import { COMMON_FACTORY } from "./constants";
 import { isContractDeployed } from "./isContractDeployed";
 import { isEIP155Enforced } from "./isEIP155Enforced";
@@ -21,11 +21,8 @@ export async function deployCreate2Factory(
   options?: DeployOptions,
 ): Promise<string> {
   invariant(signer.provider, "No provider");
-  const commonFactoryExists = await isContractDeployed(
-    COMMON_FACTORY,
-    signer.provider,
-  );
-  if (commonFactoryExists) {
+  let factoryExists = await isContractDeployed(COMMON_FACTORY, signer.provider);
+  if (factoryExists) {
     return COMMON_FACTORY;
   }
 
@@ -33,32 +30,36 @@ export async function deployCreate2Factory(
   const networkId = (await signer.provider.getNetwork()).chainId;
   const chainId = enforceEip155 ? networkId : 0;
   console.debug(`ChainId ${networkId} enforces EIP155: ${enforceEip155}`);
-  const deploymentInfo = CUSTOM_GAS_FOR_CHAIN[networkId]
+  let deploymentInfo = CUSTOM_GAS_FOR_CHAIN[networkId]
     ? getCreate2FactoryDeploymentInfo(chainId, {
         gasPrice: CUSTOM_GAS_FOR_CHAIN[networkId].gasPrice,
         gasLimit: CUSTOM_GAS_FOR_CHAIN[networkId].gasLimit,
       })
     : getCreate2FactoryDeploymentInfo(chainId, {});
 
-  const factoryExists = await isContractDeployed(
+  factoryExists = await isContractDeployed(
     deploymentInfo.deployment,
     signer.provider,
   );
 
   // deploy community factory if not already deployed
+  let bin;
   if (!factoryExists) {
-    const gasPrice = CUSTOM_GAS_FOR_CHAIN[networkId]?.gasPrice
-      ? CUSTOM_GAS_FOR_CHAIN[networkId].gasPrice
-      : 100 * 10 ** 9;
-    const gasLimit = CUSTOM_GAS_FOR_CHAIN[networkId]?.gasLimit
-      ? CUSTOM_GAS_FOR_CHAIN[networkId].gasLimit
-      : 100000;
+    const gasPriceFetched = (await signer.provider.getGasPrice()).toBigInt();
+    bin = CUSTOM_GAS_BINS.find((e) => e >= gasPriceFetched) || gasPriceFetched;
 
-    invariant(gasLimit, "gasLimit undefined for create2 factory deploy");
-    invariant(gasPrice, "gasPrice undefined for create2 factory deploy");
+    deploymentInfo = getCreate2FactoryDeploymentInfo(chainId, {
+      gasPrice: bin,
+    });
+    factoryExists = await isContractDeployed(
+      deploymentInfo.deployment,
+      signer.provider,
+    );
+  }
 
+  if (!factoryExists) {
     // send balance to the keyless signer
-    const valueToSend = BigNumber.from(gasPrice).mul(gasLimit);
+    const valueToSend = BigNumber.from(bin).mul(100_000n);
 
     if (
       (await signer.provider.getBalance(deploymentInfo.signer)).lt(valueToSend)
