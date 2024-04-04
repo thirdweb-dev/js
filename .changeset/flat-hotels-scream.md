@@ -8,7 +8,7 @@ example usage:
 
 ```ts
 import { createThirdwebClient } from "thirdweb";
-import { preAuthenticate } from "thirdweb/wallets/embedded";
+import { preAuthenticate, connectEmbeddedWallet } from "thirdweb/wallets/embedded";
 
 // phone number with country code, no spaces
 const phoneNumber = "+11234567890";

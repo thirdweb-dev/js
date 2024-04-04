@@ -28,6 +28,7 @@ import type {
 
 const defaultAuthOptions: EmbeddedWalletAuth[] = [
   "email",
+  "phone",
   "google",
   "apple",
   "facebook",
