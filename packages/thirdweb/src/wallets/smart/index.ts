@@ -282,6 +282,7 @@ async function _sendUserOp(args: {
     const unwatch = watchBlockNumber({
       chain: options.chain,
       client: options.client,
+      overPollRatio: 1,
       onNewBlockNumber: async () => {
         attempts++;
         if (attempts >= maxAttempts) {
