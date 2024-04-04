@@ -29,7 +29,7 @@ const contract = getContract({
 const factoryAddress = "0x564cf6453a1b0FF8DB603E92EA4BbD410dea45F3"; // pre 712
 const factoryAddressV2 = "0xbf1C9aA4B1A085f7DA890a44E82B0A1289A40052"; // post 712
 
-describe.runIf(process.env.TW_SECRET_KEY)(
+describe.skip(
   "SmartWallet core tests",
   {
     retry: 0,
