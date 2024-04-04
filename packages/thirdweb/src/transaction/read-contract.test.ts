@@ -15,7 +15,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("transaction: read", () => {
     //   method: "function balanceOf(address) returns (uint256)",
     //   params: [VITALIK_WALLET],
     // });
-    const result = balanceOf({
+    const result = await balanceOf({
       contract: USDC_CONTRACT,
       address: VITALIK_WALLET,
     });
