@@ -1,11 +1,11 @@
+import { ethereum } from "../../../../chains/chain-definitions/ethereum.js";
+import type { Chain } from "../../../../chains/types.js";
+import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Account } from "../../../interfaces/wallet.js";
 import type {
   MultiStepAuthArgsType,
   SingleStepAuthArgsType,
 } from "../authentication/type.js";
-import type { ThirdwebClient } from "../../../../client/client.js";
-import type { Chain } from "../../../../chains/types.js";
-import { ethereum } from "../../../../chains/chain-definitions/ethereum.js";
 
 export type EmbeddedWalletConnectionOptions = (
   | MultiStepAuthArgsType
@@ -17,7 +17,7 @@ export type EmbeddedWalletConnectionOptions = (
 
 export type EmbeddedWalletSocialAuth = "google" | "apple" | "facebook";
 
-export type EmbeddedWalletAuth = "email" | EmbeddedWalletSocialAuth;
+export type EmbeddedWalletAuth = "email" | "phone" | EmbeddedWalletSocialAuth;
 
 /**
  * @internal
