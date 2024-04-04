@@ -82,7 +82,7 @@ export async function getUserEmail(options: GetAuthenticatedUserParams) {
 /**
  * Retrieves the authenticated user phone number for the active embedded wallet.
  * @param options - The arguments for retrieving the authenticated user.
- * @returns The authenticated user phone number if logged in and wallet initialized with a phone  number present, otherwise undefined.
+ * @returns The authenticated user phone number if authenticated with phone number, otherwise undefined.
  * @example
  * ```ts
  * import { getUserPhoneNumber } from "thirdweb/wallets/embedded";
@@ -128,7 +128,7 @@ export async function preAuthenticate(args: PreAuthArgsType) {
     default:
       assertUnreachable(
         strategy,
-        `Provider: ${strategy} doesnt require pre-authentication`,
+        `Provider: ${strategy} does not require pre-authentication`,
       );
   }
 }
