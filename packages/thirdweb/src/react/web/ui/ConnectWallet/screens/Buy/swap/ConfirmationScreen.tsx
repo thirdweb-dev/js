@@ -7,7 +7,7 @@ import { useState } from "react";
 import type { Chain } from "../../../../../../../chains/types.js";
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/actions/getQuote.js";
 import type { Account } from "../../../../../../../wallets/interfaces/wallet.js";
-import { useSendTransaction } from "../../../../../../core/hooks/contract/useSend.js";
+import { useSendTransaction } from "../../../../../../core/hooks/contract/useSendTransaction.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
 import {
   useBuyWithCryptoStatus,

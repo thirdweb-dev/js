@@ -29,6 +29,7 @@ export default {
   "faucets": [
     "https://faucet.apothem.network"
   ],
+  "features": [],
   "icon": {
     "url": "ipfs://QmeRq7pabiJE2n1xU3Y5Mb4TZSX9kQ74x7a3P2Z4PqcMRX",
     "width": 1450,
@@ -43,8 +44,10 @@ export default {
     "decimals": 18
   },
   "networkId": 51,
+  "redFlags": [],
   "rpc": [
     "https://51.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://apothem.xdcrpc.com",
     "https://rpc.apothem.network",
     "https://erpc.apothem.network"
   ],

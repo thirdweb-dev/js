@@ -2,11 +2,12 @@ import { describe, test, expect, beforeAll } from "vitest";
 import { privateKeyAccount } from "../wallets/private-key.js";
 import { TEST_CLIENT } from "../../test/src/test-clients.js";
 import { viemAdapter } from "./viem.js";
-import { defineChain } from "../chains/utils.js";
-import type { WalletClient } from "viem";
+import { zeroAddress } from "viem";
 
 import { typedData } from "~test/typed-data.js";
 import { ANVIL_PKEY_A } from "~test/test-wallets.js";
+import { ANVIL_CHAIN } from "../../test/src/chains.js";
+import { mainnet } from "../chains/chain-definitions/ethereum.js";
 
 const account = privateKeyAccount({
   privateKey: ANVIL_PKEY_A,
@@ -14,13 +15,13 @@ const account = privateKeyAccount({
 });
 
 describe("walletClient.toViem", () => {
-  let walletClient: WalletClient;
+  let walletClient: ReturnType<typeof viemAdapter.walletClient.toViem>;
 
   beforeAll(() => {
     walletClient = viemAdapter.walletClient.toViem({
       client: TEST_CLIENT,
       account,
-      chain: defineChain(31337),
+      chain: ANVIL_CHAIN,
     });
   });
 
@@ -47,7 +48,31 @@ describe("walletClient.toViem", () => {
     );
   });
 
-  test("should contain a local account", async () => {
-    expect(walletClient.account?.type).toBe("local");
+  test("should contain a json-rpc account", async () => {
+    expect(walletClient.account?.type).toBe("json-rpc");
+  });
+
+  test("should send a transaction", async () => {
+    if (!walletClient.account) {
+      throw new Error("Account not found");
+    }
+    const txHash = await walletClient.sendTransaction({
+      to: zeroAddress,
+      value: 0n,
+    });
+    expect(txHash).toBeDefined();
+    expect(txHash.slice(0, 2)).toBe("0x");
+  });
+
+  test("should get address on live chain", async () => {
+    walletClient = viemAdapter.walletClient.toViem({
+      client: TEST_CLIENT,
+      account,
+      chain: mainnet,
+    });
+
+    const address = await walletClient.getAddresses();
+    expect(address[0]).toBeDefined();
+    expect(address[0]).toBe(account.address);
   });
 });

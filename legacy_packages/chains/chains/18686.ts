@@ -4,8 +4,8 @@ export default {
   "chainId": 18686,
   "explorers": [
     {
-      "name": "MXC zkEVM Mainnet",
-      "url": "https://explorer.mxc.com",
+      "name": "MXC zkEVM Moonchain",
+      "url": "https://explorer.moonchain.com",
       "standard": "EIP3091"
     }
   ],
@@ -17,9 +17,9 @@ export default {
     "format": "png"
   },
   "infoURL": "https://doc.mxc.com/docs/intro",
-  "name": "MXC zkEVM Mainnet",
+  "name": "MXC zkEVM Moonchain",
   "nativeCurrency": {
-    "name": "MXC zkEVM Mainnet",
+    "name": "MXC zkEVM Moonchain",
     "symbol": "MXC",
     "decimals": 18
   },
@@ -29,6 +29,6 @@ export default {
     "https://rpc.mxc.com"
   ],
   "shortName": "MXCzkEVM",
-  "slug": "mxc-zkevm",
+  "slug": "mxc-zkevm-moonchain",
   "testnet": false
 } as const satisfies Chain;
