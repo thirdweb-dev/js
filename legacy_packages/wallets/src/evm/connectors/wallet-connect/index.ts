@@ -124,8 +124,6 @@ export class WalletConnectConnector extends WagmiConnector<
       const provider = await this.getProvider();
       this.setupListeners();
 
-      const isChainsStale = await this._isChainsStale();
-
       if (provider.session) {
         await provider.disconnect();
 
