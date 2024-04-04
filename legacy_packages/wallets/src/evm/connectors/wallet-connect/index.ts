@@ -124,15 +124,9 @@ export class WalletConnectConnector extends WagmiConnector<
       const provider = await this.getProvider();
       this.setupListeners();
 
-      const isChainsStale = await this._isChainsStale();
-
-      // If there is an active session with stale chains, disconnect the current session.
-      if (provider.session && isChainsStale) {
+      if (provider.session) {
         await provider.disconnect();
-      }
 
-      // If there no active session, or the chains are stale, connect.
-      if (!provider.session || isChainsStale) {
         const optionalChains = this.filteredChains
           .filter((chain) => chain.chainId !== targetChainId)
           .map((optionalChain) => optionalChain.chainId);
