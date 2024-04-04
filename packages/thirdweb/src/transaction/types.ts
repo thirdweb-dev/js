@@ -10,6 +10,7 @@ import type { ThirdwebContract } from "../contract/contract.js";
 import { isObjectWithKeys } from "../utils/type-guards.js";
 import type { Hex } from "../utils/encoding/hex.js";
 import type { TransactionReceipt as ViemTransactionReceipt } from "viem";
+import type { PreparedTransaction } from "./prepare-transaction.js";
 
 export type SendTransactionResult = {
   readonly transactionHash: Hex;
@@ -44,11 +45,11 @@ export type BaseTransactionOptions<
  */
 export function isBaseTransactionOptions(
   value: unknown,
-): value is BaseTransactionOptions {
+): value is PreparedTransaction {
   return (
-    isObjectWithKeys(value, ["contract"]) &&
-    isObjectWithKeys(value.contract, ["address", "chain"]) &&
-    typeof value.contract.address === "string"
+    isObjectWithKeys(value, ["__contract"]) &&
+    isObjectWithKeys(value.__contract, ["address", "chain"]) &&
+    typeof value.__contract.address === "string"
   );
 }
 

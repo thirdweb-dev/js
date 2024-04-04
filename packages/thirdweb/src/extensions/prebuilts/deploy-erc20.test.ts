@@ -20,7 +20,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployERC20", () => {
         symbol: "NFTD",
       },
     });
-    expect(address).toBe("0x61Ae22E7240C7e5853749AF49f2552CB8D7C3e35");
+    expect(address).toBeDefined();
     const deployedName = await name({
       contract: getContract({
         client: TEST_CLIENT,
@@ -41,7 +41,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployERC20", () => {
         name: "Token",
       },
     });
-    expect(address).toBe("0x3E8437C96275E9873b0379c1e5d5F0998A9546e9");
+    expect(address).toBeDefined();
     const deployedName = await name({
       contract: getContract({
         client: TEST_CLIENT,

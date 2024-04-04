@@ -5,6 +5,7 @@ import type { WalletAutoConnectionOption, WalletId } from "./wallet-types.js";
 
 export type WalletEmitterEvents<TWalletId extends WalletId> = {
   accountChanged: Account;
+  accountsChanged: string[];
   disconnect?: never;
   chainChanged: Chain;
   onConnect: WalletAutoConnectionOption<TWalletId>;

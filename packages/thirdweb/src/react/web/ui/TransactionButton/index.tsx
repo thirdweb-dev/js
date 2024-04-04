@@ -8,7 +8,7 @@ import {
   useActiveAccount,
   useActiveWallet,
 } from "../../../core/hooks/wallets/wallet-hooks.js";
-import { useSendTransaction } from "../../../core/hooks/contract/useSend.js";
+import { useSendTransaction } from "../../../core/hooks/contract/useSendTransaction.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
 import type { TransactionReceipt } from "../../../../transaction/types.js";
 import { useState } from "react";
