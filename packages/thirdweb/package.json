@@ -165,6 +165,7 @@
   "sideEffects": false,
   "files": [
     "dist/*",
+    "src/*",
     "!**/*.tsbuildinfo",
     "!**/*.test.ts",
     "!**/*.test.ts.snap",
