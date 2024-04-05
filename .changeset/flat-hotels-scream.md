@@ -2,7 +2,7 @@
 "thirdweb": minor
 ---
 
-feat: add phone authentication method for embedded wallets
+add phone authentication method for embedded wallets
 
 example usage:
 
