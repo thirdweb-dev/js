@@ -12,7 +12,7 @@ import {
   type ThirdwebContract,
 } from "../../../contract/contract.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/addresses.js";
-import { USDC_CONTRACT_ADDRESS } from "../../../../test/src/test-contracts.js";
+import { USDT_CONTRACT_ADDRESS } from "../../../../test/src/test-contracts.js";
 import { toHex } from "../../../utils/encoding/hex.js";
 import { sendTransaction } from "../../../transaction/actions/send-transaction.js";
 
@@ -105,7 +105,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
           primarySaleRecipient: TEST_ACCOUNT_A.address,
           metadata: "https://example.com/token",
           price: 0.2,
-          currency: USDC_CONTRACT_ADDRESS,
+          currency: USDT_CONTRACT_ADDRESS,
           validityStartTimestamp: new Date(1635724800), // October 31, 2021 00:00:00 UTC
           validityEndTimestamp: new Date(1667260800), // October 31, 2022 00:00:00 UTC
           uid: toHex("abcdef1234567890", { size: 32 }),
@@ -124,7 +124,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       );
       expect(payload.uri).toBe("https://example.com/token");
       expect(payload.price).toBe(200000000000000000n);
-      expect(payload.currency).toBe(USDC_CONTRACT_ADDRESS);
+      expect(payload.currency).toBe(USDT_CONTRACT_ADDRESS);
       expect(payload.validityStartTimestamp).toBe(1635724n);
       expect(payload.validityEndTimestamp).toBe(1667260n);
       expect(payload.uid).toBe(

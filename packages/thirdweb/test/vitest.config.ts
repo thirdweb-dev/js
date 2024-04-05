@@ -16,7 +16,18 @@ export default defineConfig({
       all: true,
       provider: "v8",
       reporter: process.env.CI ? ["lcov"] : ["text", "json", "html"],
-      exclude: ["**/*.test.ts", "**/test/**", "**/__generated__/**"],
+      exclude: [
+        // test files do not count
+        "**/*.test.ts",
+        // benchmark files do not count
+        "**/*.bench.ts",
+        // anything inside /test/ does not count
+        "**/test/**",
+        // generated files do not count
+        "**/__generated__/**",
+        // exports do not count
+        "src/exports/**",
+      ],
       include: ["src/**"],
     },
     environment: "node",

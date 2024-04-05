@@ -43,7 +43,7 @@ export default {
   "redFlags": [],
   "rpc": [
     "https://369.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://pulsechain.publicnode.com",
+    "https://evex.cloud/pulserpc",
     "https://rpc.pulsechain.com",
     "wss://rpc.pulsechain.com",
     "https://pulsechain-rpc.publicnode.com",

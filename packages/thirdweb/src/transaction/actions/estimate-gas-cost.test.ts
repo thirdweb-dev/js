@@ -1,5 +1,5 @@
-import { USDC_CONTRACT } from "~test/test-contracts.js";
-import { TEST_WALLET_A } from "~test/addresses.js";
+import { USDT_CONTRACT } from "~test/test-contracts.js";
+import { TEST_WALLET_A, TEST_WALLET_B } from "~test/addresses.js";
 import { describe, it, expect } from "vitest";
 import { prepareContractCall } from "../prepare-contract-call.js";
 import { estimateGasCost } from "./estimate-gas-cost.js";
@@ -9,18 +9,20 @@ describe.runIf(process.env.TW_SECRET_KEY)(
   () => {
     it("should estimateGasCost correctly", async () => {
       const tx = prepareContractCall({
-        contract: USDC_CONTRACT,
-        method: "function transfer(address, uint256) returns (bool)",
-        params: [TEST_WALLET_A, 100n],
+        contract: USDT_CONTRACT,
+        method: "function approve(address, uint256) returns (bool)",
+        params: [TEST_WALLET_B, 100n],
       });
       const result = await estimateGasCost({
         transaction: tx,
         from: TEST_WALLET_A,
       });
-      expect(result).toEqual({
-        ether: "0.001003554133979864",
-        wei: 1003554133979864n,
-      });
+      expect(result).toMatchInlineSnapshot(`
+        {
+          "ether": "0.001196638702568277",
+          "wei": 1196638702568277n,
+        }
+      `);
     });
   },
 );

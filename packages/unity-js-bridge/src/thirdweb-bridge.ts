@@ -108,6 +108,7 @@ interface TWBridge {
   smartWalletIsDeployed: () => Promise<string>;
   resolveENSFromAddress: (address: string) => Promise<string>;
   resolveAddressFromENS: (ens: string) => Promise<string>;
+  copyBuffer: (text: string) => Promise<void>;
 }
 
 const w = window;
@@ -151,7 +152,7 @@ class ThirdwebBridge implements TWBridge {
       }
       (globalThis as any).X_SDK_NAME = "UnitySDK_WebGL";
       (globalThis as any).X_SDK_PLATFORM = "unity";
-      (globalThis as any).X_SDK_VERSION = "4.9.1";
+      (globalThis as any).X_SDK_VERSION = "4.10.0";
       (globalThis as any).X_SDK_OS = browser?.os ?? "unknown";
     }
     this.initializedChain = chain;
@@ -296,6 +297,7 @@ class ThirdwebBridge implements TWBridge {
     chainId: string,
     password?: string,
     email?: string,
+    phoneNumber?: string,
     personalWallet: PossibleWallet = "localWallet",
     authOptions?: string,
     smartWalletAccountOverride?: string,
@@ -316,9 +318,9 @@ class ThirdwebBridge implements TWBridge {
         const embeddedWallet = walletInstance as EmbeddedWallet;
         const authOptionsParsed = JSON.parse(authOptions || "{}");
         if (authOptionsParsed.authProvider === 0) {
-          // DefaultManaged
+          // EmailOTP
           if (!email) {
-            throw new Error("Email is required for EmbeddedWallet");
+            throw new Error("Email is required for EmailOTP auth provider");
           }
           const authResult = await embeddedWallet.authenticate({
             strategy: "iframe_email_verification",
@@ -332,12 +334,15 @@ class ThirdwebBridge implements TWBridge {
           // OAuth
           let authProvider: EmbeddedWalletOauthStrategy;
           switch (authOptionsParsed.authProvider) {
+            // Google
             case 1:
               authProvider = "google";
               break;
+            // Apple
             case 2:
               authProvider = "apple";
               break;
+            // Facebook
             case 3:
               authProvider = "facebook";
               break;
@@ -383,6 +388,24 @@ class ThirdwebBridge implements TWBridge {
             chainId: chainIdNumber,
             authResult,
           });
+        } else if (authOptionsParsed.authProvider === 6) {
+          // PhoneOTP
+          throw new Error(
+            "PhoneOTP auth provider not implemented yet for WebGL, stay tuned!",
+          );
+          // if (!phoneNumber) {
+          //   throw new Error(
+          //     "Phone number is required for PhoneOTP auth provider",
+          //   );
+          // }
+          // const authResult = await embeddedWallet.authenticate({
+          //   strategy: "iframe_phone_number_verification",
+          //   phoneNumber,
+          // });
+          // await embeddedWallet.connect({
+          //   chainId: chainIdNumber,
+          //   authResult,
+          // });
         } else {
           throw new Error(
             "Invalid auth provider: " + authOptionsParsed.authProvider,
@@ -883,6 +906,12 @@ class ThirdwebBridge implements TWBridge {
 
     const res = await provider.resolveName(ens);
     return JSON.stringify({ result: res });
+  }
+
+  public async copyBuffer(text: string) {
+    navigator.clipboard.writeText(text).catch(function (err) {
+      console.error("Could not copy text: ", err);
+    });
   }
 
   public openPopupWindow() {
