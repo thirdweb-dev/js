@@ -1,7 +1,10 @@
 import type { Address } from "abitype";
 import { createAuction as generatedCreateAuction } from "../../__generated__/IEnglishAuctions/write/createAuction.js";
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
-import { NATIVE_TOKEN_ADDRESS } from "../../../../constants/addresses.js";
+import {
+  NATIVE_TOKEN_ADDRESS,
+  isNativeTokenAddress,
+} from "../../../../constants/addresses.js";
 import { isERC721 } from "../../../erc721/read/isERC721.js";
 import { isERC1155 } from "../../../erc1155/read/isERC1155.js";
 import { getContract } from "../../../../contract/contract.js";
@@ -166,7 +169,7 @@ export function createAuction(
       let buyoutBidAmount: bigint;
       if ("buyoutBidAmount" in options) {
         // for native token, we know decimals are 18
-        if (currencyAddress === NATIVE_TOKEN_ADDRESS) {
+        if (isNativeTokenAddress(currencyAddress)) {
           buyoutBidAmount = toUnits(options.buyoutBidAmount, 18);
         } else {
           // otherwise get the decimals of the currency
@@ -189,7 +192,7 @@ export function createAuction(
       let minimumBidAmount: bigint;
       if ("minimumBidAmount" in options) {
         // for native token, we know decimals are 18
-        if (currencyAddress === NATIVE_TOKEN_ADDRESS) {
+        if (isNativeTokenAddress(currencyAddress)) {
           minimumBidAmount = toUnits(options.minimumBidAmount, 18);
         } else {
           // otherwise get the decimals of the currency

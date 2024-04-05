@@ -100,6 +100,10 @@ export async function mapDirectListing(
     }),
     getNFTAsset({
       ...options,
+      contract: getContract({
+        ...options.contract,
+        address: rawListing.assetContract,
+      }),
       tokenId: rawListing.tokenId,
     }),
   ]);
@@ -155,6 +159,10 @@ export async function mapEnglishAuction(
     }),
     getNFTAsset({
       ...options,
+      contract: getContract({
+        ...options.contract,
+        address: rawAuction.assetContract,
+      }),
       tokenId: rawAuction.tokenId,
     }),
   ]);

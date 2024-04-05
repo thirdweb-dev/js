@@ -8,23 +8,49 @@
 
 Added initial support for the Marketplace extensions, available via the `thirdweb/extensions/marketplace` module.
 
-#### Direct Listings
+### Direct Listings
+
+#### Write
 
 - `createListing`
+
+#### Read
+
 - `totalListings`
 - `getListing`
 - `getAllListings`
 - `getAllValidListings`
 
-#### English Auctions
+#### Events
+
+- `buyerApprovedForListingEvent`
+- `cancelledListingEvent`
+- `currencyApprovedForListingEvent`
+- `newListingEvent`
+- `newSaleEvent`
+- `updatedListingEvent`
+
+### English Auctions
+
+#### Write
 
 - `createAuction`
+
+#### Read
+
 - `totalAuctions`
 - `getAuction`
 - `getAllAuctions`
 - `getAllValidAuctions`
 
-#### Types
+#### Events
+
+- `auctionClosedEvent`
+- `cancelledAuctionEvent`
+- `newAuctionEvent`
+- `newBidEvent`
+
+### Types
 
 - `DirectListing`
 - `EnglishAuction`

@@ -133,3 +133,8 @@ export {
 export { encodeAbiParameters } from "../utils/abi/encodeAbiParameters.js";
 
 export { setThirdwebDomains } from "../utils/domains.js";
+
+// ------------------------------------------------
+// json
+// ------------------------------------------------
+export { stringify } from "../utils/json.js";

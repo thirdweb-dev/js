@@ -1,7 +1,10 @@
 import type { Address } from "abitype";
 import { createListing as generatedCreateListing } from "../../__generated__/IDirectListings/write/createListing.js";
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
-import { NATIVE_TOKEN_ADDRESS } from "../../../../constants/addresses.js";
+import {
+  NATIVE_TOKEN_ADDRESS,
+  isNativeTokenAddress,
+} from "../../../../constants/addresses.js";
 import { isERC721 } from "../../../erc721/read/isERC721.js";
 import { isERC1155 } from "../../../erc1155/read/isERC1155.js";
 import { getContract } from "../../../../contract/contract.js";
@@ -134,7 +137,7 @@ export function createListing(
       let pricePerToken: bigint;
       if ("pricePerToken" in options) {
         // for native token, we know decimals are 18
-        if (currencyAddress === NATIVE_TOKEN_ADDRESS) {
+        if (isNativeTokenAddress(currencyAddress)) {
           pricePerToken = toUnits(options.pricePerToken, 18);
         } else {
           // otherwise get the decimals of the currency
