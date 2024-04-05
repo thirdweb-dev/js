@@ -1,84 +1,25 @@
-import { describe, it, expect, vi, beforeEach, afterAll } from "vitest";
-import { USDC_CONTRACT } from "../../../test/src/test-contracts.js";
-import { TEST_WALLET_A, TEST_WALLET_B } from "../../../test/src/addresses.js";
-import { transfer } from "../../extensions/erc20/write/transfer.js";
-import type { Account } from "../../wallets/interfaces/wallet.js";
-import * as waitForReceiptExports from "./wait-for-tx-receipt.js";
-import type { TransactionReceipt } from "../types.js";
+import { describe, it, expect } from "vitest";
+import { TEST_WALLET_B } from "../../../test/src/addresses.js";
 import { sendAndConfirmTransaction } from "./send-and-confirm-transaction.js";
+import { TEST_ACCOUNT_A } from "../../../test/src/test-wallets.js";
+import { prepareTransaction } from "../prepare-transaction.js";
+import { ANVIL_CHAIN } from "../../../test/src/chains.js";
+import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 
-const MOCK_TX_HASH =
-  "0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef";
-
-const mockAccount = {
-  address: TEST_WALLET_A,
-  sendTransaction: vi.fn().mockResolvedValue({ transactionHash: MOCK_TX_HASH }),
-  signMessage: vi.fn().mockResolvedValue("0xabcdef1234567890"),
-  signTypedData: vi.fn().mockResolvedValue("0xabcdef1234567890"),
-} satisfies Account;
-
-const TRANSACTION = transfer({
-  to: TEST_WALLET_B,
-  amount: 100,
-  contract: USDC_CONTRACT,
-});
-
-const TX_RESULT = {
-  accessList: undefined,
-  chainId: 1,
-  data: "0xa9059cbb00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000005f5e100",
-  gas: 45134n,
-  nonce: 0,
-  to: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-  value: undefined,
-};
-
-const MOCK_SUCCESS_RECEIPT: TransactionReceipt = {
-  transactionHash: MOCK_TX_HASH,
-  blockNumber: 1234n,
-  status: "success",
-  blockHash: "0xabcdef1234567890",
-  contractAddress: "0x1234567890abcdef",
-  cumulativeGasUsed: 123456n,
-  from: "0xabcdef1234567890",
-  gasUsed: 123456n,
-  logs: [],
-  logsBloom: "0xabcdef1234567890",
-  to: "0x1234567890abcdef",
-  transactionIndex: 1234,
-  effectiveGasPrice: 123456n,
-  type: "legacy",
-  root: "0xabcdef1234567890",
-  blobGasPrice: 123456n,
-  blobGasUsed: 123456n,
-};
-
-vi.spyOn(waitForReceiptExports, "waitForReceipt").mockResolvedValueOnce(
-  MOCK_SUCCESS_RECEIPT,
-);
-
-// skip this test suite if there is no secret key available to test with
-// TODO: remove reliance on secret key during unit tests entirely
-describe.runIf(process.env.TW_SECRET_KEY)("sendAndConfirmTransaction", () => {
-  afterAll(() => {
-    vi.restoreAllMocks();
-  });
-
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
+describe("sendAndConfirmTransaction", () => {
   it("should send transaction then wait for confirmation", async () => {
-    const res = sendAndConfirmTransaction({
-      account: mockAccount,
-      transaction: TRANSACTION,
+    const transaction = prepareTransaction({
+      chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
+      value: 100n,
+      to: TEST_WALLET_B,
+    });
+    const res = await sendAndConfirmTransaction({
+      account: TEST_ACCOUNT_A,
+      transaction,
     });
 
-    await expect(res).resolves.toMatchObject(MOCK_SUCCESS_RECEIPT);
-    expect(mockAccount.sendTransaction).toHaveBeenCalledTimes(1);
-    expect(waitForReceiptExports.waitForReceipt).toHaveBeenCalledTimes(1);
-    expect(mockAccount.sendTransaction.mock.lastCall[0]).toMatchObject(
-      TX_RESULT,
-    );
+    expect(res.transactionHash.length).toBe(66);
+    expect(res.blockNumber).toBeGreaterThan(0n);
   });
 });

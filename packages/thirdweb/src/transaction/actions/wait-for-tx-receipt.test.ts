@@ -5,7 +5,7 @@ import {
 } from "./wait-for-tx-receipt.js";
 import type { TransactionReceipt } from "viem";
 import { TEST_WALLET_B } from "../../../test/src/addresses.js";
-import { USDC_CONTRACT } from "../../../test/src/test-contracts.js";
+import { USDT_CONTRACT } from "../../../test/src/test-contracts.js";
 import * as watchBlockNumberExports from "../../rpc/watchBlockNumber.js";
 import * as ethGetTransactionReceiptExports from "../../rpc/actions/eth_getTransactionReceipt.js";
 import { transfer } from "../../extensions/erc20/write/transfer.js";
@@ -35,7 +35,7 @@ const MOCK_SUCCESS_RECEIPT: TransactionReceipt = {
 const TRANSACTION = transfer({
   to: TEST_WALLET_B,
   amount: 100,
-  contract: USDC_CONTRACT,
+  contract: USDT_CONTRACT,
 });
 
 const mockEthGetTransactionReceipt = vi.spyOn(

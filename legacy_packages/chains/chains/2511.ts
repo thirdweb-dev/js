@@ -4,7 +4,7 @@ export default {
   "chainId": 2511,
   "explorers": [
     {
-      "name": "Karak Testnet Explorer",
+      "name": "Karak Goerli Explorer",
       "url": "https://goerli.scan.karak.network",
       "standard": "EIP3091"
     }
@@ -17,7 +17,7 @@ export default {
     "format": "png"
   },
   "infoURL": "https://karak.network",
-  "name": "Karak Testnet",
+  "name": "Karak Goerli",
   "nativeCurrency": {
     "name": "Karak",
     "symbol": "KRK",
@@ -32,7 +32,8 @@ export default {
     "https://2511.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://goerli.node1.karak.network"
   ],
-  "shortName": "karak-testnet",
-  "slug": "karak-testnet",
-  "testnet": true
+  "shortName": "karak-goerli",
+  "slug": "karak-goerli",
+  "status": "deprecated",
+  "testnet": false
 } as const satisfies Chain;

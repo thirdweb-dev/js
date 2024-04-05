@@ -6,7 +6,12 @@ export default {
     {
       "name": "Klaytnscope",
       "url": "https://scope.klaytn.com",
-      "standard": "none"
+      "standard": "EIP3091"
+    },
+    {
+      "name": "Klaytnfinder",
+      "url": "https://klaytnfinder.io",
+      "standard": "EIP3091"
     },
     {
       "name": "klaytnfinder",
@@ -22,7 +27,7 @@ export default {
     "height": 1000,
     "format": "png"
   },
-  "infoURL": "https://www.klaytn.com/",
+  "infoURL": "https://klaytn.foundation",
   "name": "Klaytn Mainnet Cypress",
   "nativeCurrency": {
     "name": "KLAY",
@@ -35,8 +40,7 @@ export default {
     "https://8217.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://public-en-cypress.klaytn.net",
     "https://klaytn-mainnet-rpc.allthatnode.com:8551",
-    "https://klaytn.blockpi.network/v1/rpc/public",
-    "https://public-node-api.klaytnapi.com/v1/cypress"
+    "https://klaytn.blockpi.network/v1/rpc/public"
   ],
   "shortName": "Cypress",
   "slip44": 8217,
