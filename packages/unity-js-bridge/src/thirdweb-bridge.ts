@@ -108,6 +108,7 @@ interface TWBridge {
   smartWalletIsDeployed: () => Promise<string>;
   resolveENSFromAddress: (address: string) => Promise<string>;
   resolveAddressFromENS: (ens: string) => Promise<string>;
+  copyBuffer: (text: string) => Promise<void>;
 }
 
 const w = window;
@@ -905,6 +906,12 @@ class ThirdwebBridge implements TWBridge {
 
     const res = await provider.resolveName(ens);
     return JSON.stringify({ result: res });
+  }
+
+  public async copyBuffer(text: string) {
+    navigator.clipboard.writeText(text).catch(function (err) {
+      console.error("Could not copy text: ", err);
+    });
   }
 
   public openPopupWindow() {
