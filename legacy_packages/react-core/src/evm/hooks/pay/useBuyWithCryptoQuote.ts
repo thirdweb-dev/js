@@ -47,13 +47,15 @@ export type BuyWithCryptoQuoteQueryParams = GetBuyWithCryptoQuoteParams;
  *     // if approval is required
  *     if (buyWithCryptoQuoteQuery.data.approval) {
  *       const approveTx = await signer.sendTransaction* (buyWithCryptoQuoteQuery.data.approval);
+ *       await approveTx.wait();
  *     }
  *
  *     // send the transaction to buy crypto
  *     // this promise is resolved when user confirms the transaction * in the wallet and the transaction is sent to the blockchain
  *     const buyTx = await signer.sendTransaction* (buyWithCryptoQuoteQuery.data.transactionRequest);
+ *     await buyTx.wait();
  *
- *     // set buyTx.transactionHash to poll the status of the swap * transaction
+ *     // set buyTx.hash to poll the status of the swap * transaction
  *     setBuyTxHash(buyTx.hash);
  *   }
  *
