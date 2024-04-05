@@ -1,6 +1,6 @@
-import { fontSize, radius, Theme, spacing } from "../design-system";
-import { StyledDiv, StyledInput, StyledLabel } from "../design-system/elements";
 import { useCustomTheme } from "../design-system/CustomThemeProvider";
+import { StyledLabel, StyledInput, StyledDiv } from "../design-system/elements";
+import { fontSize, spacing, radius, type Theme } from "../design-system";
 
 type LabelProps = {
   color?: keyof Theme["colors"];
@@ -26,6 +26,7 @@ export const Input = /* @__PURE__ */ StyledInput((props: InputProps) => {
   const theme = useCustomTheme();
   return {
     fontSize: fontSize.md,
+    fontFamily: "inherit",
     display: "block",
     padding: props.sm ? spacing.sm : fontSize.sm,
     boxSizing: "border-box",
@@ -53,8 +54,14 @@ export const Input = /* @__PURE__ */ StyledInput((props: InputProps) => {
       WebkitBoxShadow: `0 0 0px 1000px ${theme.colors.inputAutofillBg} inset, 0 0 0 2px ${theme.colors.accentText} !important`,
       boxShadow: `0 0 0px 1000px ${theme.colors.inputAutofillBg} inset, 0 0 0 2px ${theme.colors.accentText} !important`,
     },
+    "&[data-placeholder='true']": {
+      color: theme.colors.secondaryText,
+    },
     "&:focus": {
       boxShadow: `0 0 0 2px ${theme.colors.accentText}`,
+    },
+    "&[data-focus='false']:focus": {
+      boxShadow: "none",
     },
     "&:not([type='password'])": {
       overflow: "hidden",

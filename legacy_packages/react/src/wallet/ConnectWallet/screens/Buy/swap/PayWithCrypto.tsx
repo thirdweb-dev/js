@@ -16,9 +16,9 @@ import { useChainQuery } from "../../../../hooks/useChainQuery";
 import { formatNumber } from "../../../../utils/formatNumber";
 import { formatTokenBalance } from "../../../../utils/formatTokenBalance";
 import { isNativeToken, type ERC20OrNativeToken } from "../../nativeToken";
-import { useBalance } from "@thirdweb-dev/react-core";
 import { Text } from "../../../../../components/text";
 import { WalletIcon } from "../../../icons/WalletIcon";
+import { useMultiChainBalance } from "../../../../hooks/useMultiChainBalance";
 
 /**
  * Shows an amount "value" and renders the selected token and chain
@@ -34,10 +34,10 @@ export function PayWithCrypto(props: {
   isLoading: boolean;
 }) {
   const chainQuery = useChainQuery(props.chainId);
-  const balanceQuery = useBalance(
-    isNativeToken(props.token) ? undefined : props.token.address,
-    props.chainId,
-  );
+  const balanceQuery = useMultiChainBalance({
+    tokenAddress: isNativeToken(props.token) ? undefined : props.token.address,
+    chainId: props.chainId,
+  });
 
   return (
     <Container

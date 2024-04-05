@@ -1,15 +1,5 @@
-import type { Chain } from "@thirdweb-dev/chains";
+import { fetchChain, type Chain } from "@thirdweb-dev/chains";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
-
-type FetchChainResponse =
-  | {
-      data: Chain;
-      error?: never;
-    }
-  | {
-      data?: never;
-      error: unknown;
-    };
 
 /**
  * @internal
@@ -23,14 +13,11 @@ export function useChainQuery(chainId?: number): UseQueryResult<Chain> {
       if (!chainId) {
         throw new Error("chainId is required");
       }
-      const res = await fetch(`https://api.thirdweb.com/v1/chains/${chainId}`);
-      if (!res.ok) {
-        res.body?.cancel();
-        throw new Error(`Failed to fetch chain data for chainId ${chainId}`);
+      const chain = await fetchChain(chainId);
+      if (!chain) {
+        throw new Error(`Chain with chainId "${chainId}" not found`);
       }
-
-      const response = (await res.json()) as FetchChainResponse;
-      return response.data;
+      return chain;
     },
   });
 }

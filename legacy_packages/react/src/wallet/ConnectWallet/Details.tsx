@@ -42,7 +42,7 @@ import {
   WalletInstance,
   useENS,
 } from "@thirdweb-dev/react-core";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import {
   MetaMaskWallet,
   type SmartWallet,
@@ -73,6 +73,9 @@ import {
 import { useEmbeddedWalletUserEmail } from "../../evm/hooks/wallets/useEmbeddedWallet";
 import { onModalUnmount } from "./constants";
 import { useChainQuery } from "../hooks/useChainQuery";
+import { SwapScreen } from "./screens/Buy/swap/SwapScreen";
+import { SwapTransactionsScreen } from "./screens/SwapTransactionsScreen";
+import { swapTransactionsStore } from "./screens/Buy/swap/pendingSwapTx";
 
 const TW_CONNECTED_WALLET = "tw-connected-wallet";
 
@@ -82,7 +85,8 @@ type WalletDetailsModalScreen =
   | "send"
   | "buy"
   | "receive"
-  | "network-switcher";
+  | "network-switcher"
+  | "pending-tx";
 
 export const ConnectedWalletDetails: React.FC<{
   onDisconnect: () => void;
@@ -108,6 +112,12 @@ export const ConnectedWalletDetails: React.FC<{
   const chain = useChain();
   const walletChainId = useChainId();
   const chainQuery = useChainQuery(walletChainId);
+
+  const swapTxs = useSyncExternalStore(
+    swapTransactionsStore.subscribe,
+    swapTransactionsStore.getValue,
+  );
+  const pendingSwapTxs = swapTxs.filter((tx) => tx.status === "PENDING");
 
   const disconnect = useDisconnect();
   const chains = useSupportedChains();
@@ -457,6 +467,24 @@ export const ConnectedWalletDetails: React.FC<{
         >
           {networkSwitcherButton}
 
+          {/* Transactions */}
+          <MenuButton
+            onClick={() => {
+              setScreen("pending-tx");
+            }}
+            style={{
+              fontSize: fontSize.sm,
+            }}
+          >
+            <TextAlignJustifyIcon width={iconSize.md} height={iconSize.md} />
+            <Container flex="row" gap="xs" center="y">
+              <Text color="primaryText">{"Transactions"}</Text>
+              {pendingSwapTxs && pendingSwapTxs.length > 0 && (
+                <BadgeCount>{pendingSwapTxs.length}</BadgeCount>
+              )}
+            </Container>
+          </MenuButton>
+
           {/* Switch to Personal Wallet for Safe */}
           {personalWallet &&
             personalWalletConfig &&
@@ -524,27 +552,6 @@ export const ConnectedWalletDetails: React.FC<{
                 {locale.requestTestnetFunds}
               </MenuLink>
             )}
-
-          {/* Explorer link */}
-          {chain?.explorers && chain.explorers[0]?.url && (
-            <MenuLink
-              href={chain.explorers[0].url + "/address/" + address}
-              target="_blank"
-              as="a"
-              style={{
-                textDecoration: "none",
-                color: "inherit",
-              }}
-            >
-              <Container flex="row" center="y" color="secondaryText">
-                <TextAlignJustifyIcon
-                  width={iconSize.md}
-                  height={iconSize.md}
-                />
-              </Container>
-              {locale.transactionHistory}
-            </MenuLink>
-          )}
 
           {/* Export  Wallet */}
           {activeWallet?.walletId === walletIds.localWallet && (
@@ -643,6 +650,19 @@ export const ConnectedWalletDetails: React.FC<{
           setScreen("main");
         }}
         chainId={walletChainId}
+      />
+    );
+  } else if (screen === "pending-tx") {
+    content = <SwapTransactionsScreen onBack={() => setScreen("main")} />;
+  }
+
+  // swap tokens
+  else if (screen === "buy") {
+    content = (
+      <SwapScreen
+        onBack={() => setScreen("main")}
+        supportedTokens={props.supportedTokens}
+        onViewPendingTx={() => setScreen("pending-tx")}
       />
     );
   } else if (screen === "receive") {
@@ -860,3 +880,19 @@ function EmbeddedWalletEmail() {
 
   return undefined;
 }
+
+const BadgeCount = /* @__PURE__ */ StyledDiv(() => {
+  const theme = useCustomTheme();
+  return {
+    background: theme.colors.primaryButtonBg,
+    color: theme.colors.primaryButtonText,
+    fontSize: fontSize.sm,
+    fontWeight: 500,
+    borderRadius: "50%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    minWidth: "22px",
+    minHeight: "22px",
+  };
+});

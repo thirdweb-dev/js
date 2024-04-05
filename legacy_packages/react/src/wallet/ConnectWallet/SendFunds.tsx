@@ -13,15 +13,12 @@ import { type SupportedTokens, defaultTokens } from "./defaultTokens";
 import { Text } from "../../components/text";
 import { type ERC20OrNativeToken, NATIVE_TOKEN } from "./nativeToken";
 import { useTWLocale } from "../../evm/providers/locale-provider";
-import {
-  useBalance,
-  useWallet,
-  type TransactionResult,
-} from "@thirdweb-dev/react-core";
+import { useWallet, type TransactionResult } from "@thirdweb-dev/react-core";
 import { utils } from "ethers";
 import { TokenIcon } from "../../components/TokenIcon";
 import { formatTokenBalance } from "../utils/formatTokenBalance";
 import { TokenSelector } from "./screens/TokenSelector";
+import { useMultiChainBalance } from "../hooks/useMultiChainBalance";
 
 type TXError = Error & { data?: { message?: string } };
 
@@ -111,7 +108,10 @@ function SendFundsForm(props: {
   const tokenAddress =
     props.token && "address" in props.token ? props.token.address : undefined;
 
-  const balanceQuery = useBalance(tokenAddress, props.chainId);
+  const balanceQuery = useMultiChainBalance({
+    tokenAddress,
+    chainId: props.chainId,
+  });
 
   const { receiverAddress, setReceiverAddress, amount, setAmount } = props;
 

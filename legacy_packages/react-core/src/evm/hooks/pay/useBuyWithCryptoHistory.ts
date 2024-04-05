@@ -1,4 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
+import {
+  useQuery,
+  type UseQueryOptions,
+  type UseQueryResult,
+} from "@tanstack/react-query";
 import {
   BuyWithCryptoHistoryData,
   BuyWithCryptoHistoryParams,
@@ -6,6 +10,11 @@ import {
 } from "@thirdweb-dev/sdk";
 
 export type BuyWithCryptoHistoryQueryParams = BuyWithCryptoHistoryParams;
+
+export type BuyWithCryptoQuoteQueryOptions = Omit<
+  UseQueryOptions<BuyWithCryptoHistoryData>,
+  "queryFn" | "queryKey" | "enabled"
+>;
 
 /**
  * Hook to get the history of purchases a given wallet has performed.
@@ -27,20 +36,16 @@ export type BuyWithCryptoHistoryQueryParams = BuyWithCryptoHistoryParams;
  */
 export function useBuyWithCryptoHistory(
   buyWithCryptoHistoryParams?: BuyWithCryptoHistoryQueryParams,
-) {
-  return useQuery<BuyWithCryptoHistoryData, Error>({
-    queryKey: ["buyWithCryptoHistory", buyWithCryptoHistoryParams],
+  queryParams?: BuyWithCryptoQuoteQueryOptions,
+): UseQueryResult<BuyWithCryptoHistoryData> {
+  return useQuery<BuyWithCryptoHistoryData>({
+    ...queryParams,
+    queryKey: ["buyWithCryptoHistory", buyWithCryptoHistoryParams] as const,
     queryFn: () => {
       if (!buyWithCryptoHistoryParams) {
         throw new Error("Swap params are required");
       }
-      if (!buyWithCryptoHistoryParams?.clientId) {
-        throw new Error("clientId is required");
-      }
-      return getBuyWithCryptoHistory({
-        ...buyWithCryptoHistoryParams,
-        clientId: buyWithCryptoHistoryParams.clientId,
-      });
+      return getBuyWithCryptoHistory(buyWithCryptoHistoryParams);
     },
     enabled: !!buyWithCryptoHistoryParams,
   });

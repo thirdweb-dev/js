@@ -49,10 +49,7 @@ import { BigNumber } from "ethers";
  *
  * @token
  */
-export function useBalance(
-  tokenAddress?: ContractAddress,
-  chainId?: number,
-): UseQueryResult<
+export function useBalance(tokenAddress?: ContractAddress): UseQueryResult<
   | {
       symbol: string;
       value: BigNumber;
@@ -65,17 +62,11 @@ export function useBalance(
 > {
   const walletAddress = useAddress();
 
-  const {
-    wallet,
-    address,
-    chainId: _chainId,
-  } = useThirdwebConnectedWalletContext();
-
-  const chain = chainId || _chainId;
+  const { wallet, address, chainId } = useThirdwebConnectedWalletContext();
 
   const cacheKey = useMemo(() => {
-    return cacheKeys.wallet.balance(chain || -1, address, tokenAddress);
-  }, [chain, tokenAddress, address]);
+    return cacheKeys.wallet.balance(chainId || -1, address, tokenAddress);
+  }, [chainId, tokenAddress, address]);
 
   return useQuery(
     cacheKey,

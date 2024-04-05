@@ -19,12 +19,12 @@ import { Button } from "../../../components/buttons";
 import { Input } from "../../../components/formElements";
 import { iconSize, fontSize, spacing } from "../../../design-system";
 import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
-import { useBalance } from "@thirdweb-dev/react-core";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
 import type { Chain } from "@thirdweb-dev/chains";
 import { Text } from "../../../components/text";
 import { formatTokenBalance } from "../../utils/formatTokenBalance";
 import { useChainQuery } from "../../hooks/useChainQuery";
+import { useMultiChainBalance } from "../../hooks/useMultiChainBalance";
 
 /**
  *
@@ -46,7 +46,10 @@ export function TokenSelector(props: {
 
   // if input is undefined, it loads the native token
   // otherwise it loads the token with given address
-  const tokenQuery = useBalance(input, props.chainId);
+  const tokenQuery = useMultiChainBalance({
+    tokenAddress: input,
+    chainId: props.chainId,
+  });
 
   const locale = useTWLocale().connectWallet.sendFundsScreen;
 
@@ -260,10 +263,10 @@ function SelectTokenButton(props: {
   chainId: number;
   onClick: () => void;
 }) {
-  const tokenBalanceQuery = useBalance(
-    isNativeToken(props.token) ? undefined : props.token.address,
-    props.chainId,
-  );
+  const tokenBalanceQuery = useMultiChainBalance({
+    tokenAddress: isNativeToken(props.token) ? undefined : props.token.address,
+    chainId: props.chainId,
+  });
 
   const tokenName = isNativeToken(props.token)
     ? tokenBalanceQuery.data?.name

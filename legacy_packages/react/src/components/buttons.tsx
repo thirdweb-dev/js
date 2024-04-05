@@ -1,6 +1,11 @@
-import { fontSize, radius, spacing, Theme } from "../design-system";
-import { StyledButton } from "../design-system/elements";
-import { useCustomTheme } from "../design-system/CustomThemeProvider";
+import {
+  fontSize,
+  radius,
+  spacing,
+  type Theme,
+} from "../design-system/index.js";
+import { StyledButton } from "../design-system/elements.js";
+import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 
 type ButtonProps = {
   variant: "primary" | "secondary" | "link" | "accent" | "outline";
@@ -28,6 +33,8 @@ export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
     transition: "border 200ms ease",
     gap: (props.gap && spacing[props.gap]) || 0,
     width: props.fullWidth ? "100%" : undefined,
+    textAlign: "center",
+    maxWidth: "100%",
     background: (() => {
       switch (props.variant) {
         case "primary":
@@ -62,6 +69,15 @@ export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
     "&[disabled]": {
       cursor: "not-allowed",
     },
+    "&[data-disabled='true']": {
+      background: theme.colors.walletSelectorButtonHoverBg,
+      color: theme.colors.secondaryText,
+      borderColor: "transparent",
+      boxShadow: "none",
+      "&:hover": {
+        borderColor: "transparent",
+      },
+    },
     ...(() => {
       if (props.variant === "outline") {
         return {
@@ -88,6 +104,8 @@ export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
           },
         };
       }
+
+      return {};
     })(),
   };
 });

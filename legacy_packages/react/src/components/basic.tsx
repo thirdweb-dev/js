@@ -185,6 +185,10 @@ const Box = /* @__PURE__ */ StyledDiv((props: BoxProps) => {
   const theme = useCustomTheme();
   return {
     color: props.color ? theme.colors[props.color] : "inherit",
+    background: props.bg ? theme.colors[props.bg] : undefined,
+    borderColor: props.borderColor
+      ? theme.colors[props.borderColor]
+      : undefined,
     "&[data-animate='fadein']": {
       opacity: 0,
       animation: `${fadeInAnimation} 350ms ease forwards`,
