@@ -26,7 +26,17 @@ export default async function handler(
   const isNftOwned = await ThirdwebDegenEngine.isNFTOwned(faracsterAddress);
 
   if (isNftOwned) {
-    throw new Error("Already owns an NFT");
+    const htmlResponse = getFrameHtmlResponse({
+      buttons: [
+        {
+          label: `NFT already minted`,
+          action: `post`,
+        },
+      ],
+      image: `${getAbsoluteUrl()}/assets/og-image/degen-enchine-frame.png`,
+    });
+
+    return res.status(200).send(htmlResponse);
   }
 
   await ThirdwebDegenEngine.mint(faracsterAddress);
@@ -35,6 +45,7 @@ export default async function handler(
     buttons: [
       {
         label: `Successfully minted to address ${shortenAddress(faracsterAddress)}`,
+        action: `post`,
       },
     ],
     image: `${getAbsoluteUrl()}/assets/og-image/degen-enchine-frame.png`,

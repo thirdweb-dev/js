@@ -7,13 +7,7 @@ const mintResponseSchema = z.object({
 });
 
 const ownedResponseSchema = z.object({
-  result: z.array(
-    z.object({
-      owner: z.string().startsWith("0x"),
-      type: z.string(),
-      supply: z.string(),
-    }),
-  ),
+  result: z.string(),
 });
 
 const thirdwebEngineUrl = process.env.THIRDWEB_ENGINE_URL;
@@ -48,7 +42,7 @@ export class ThirdwebDegenEngine {
 
   public static isNFTOwned = async (receiver: string) => {
     const response = await fetch(
-      `${thirdwebEngineUrl}/contract/${degenChainId}/${degenNftContractAddress}/erc721/get-owned?walletAddress=${receiver.toLowerCase()}`,
+      `${thirdwebEngineUrl}/contract/${degenChainId}/${degenNftContractAddress}/erc721/balance-of?walletAddress=${receiver.toLowerCase()}`,
       {
         method: "GET",
         headers: {
@@ -63,6 +57,6 @@ export class ThirdwebDegenEngine {
 
     const parsedResult = ownedResponseSchema.parse(result);
 
-    return parsedResult.result.length > 0;
+    return parsedResult.result !== "0";
   };
 }
