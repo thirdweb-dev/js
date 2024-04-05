@@ -75,6 +75,7 @@ jobs:
         uses: codecov/codecov-action@v4
         with:
           directory: ./packages
+          flags: packages
 
   e2e:
     timeout-minutes: 15
