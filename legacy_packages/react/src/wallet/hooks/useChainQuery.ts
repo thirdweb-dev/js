@@ -14,11 +14,15 @@ type FetchChainResponse =
 /**
  * @internal
  */
-export function useChainQuery(chainId: number): UseQueryResult<Chain> {
+export function useChainQuery(chainId?: number): UseQueryResult<Chain> {
   return useQuery({
     queryKey: ["chain", chainId],
     staleTime: 1000 * 60 * 60, // 1 hour
+    enabled: !!chainId,
     queryFn: async () => {
+      if (!chainId) {
+        throw new Error("chainId is required");
+      }
       const res = await fetch(`https://api.thirdweb.com/v1/chains/${chainId}`);
       if (!res.ok) {
         res.body?.cancel();

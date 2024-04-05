@@ -72,6 +72,7 @@ import {
 } from "./icons/socialLogins";
 import { useEmbeddedWalletUserEmail } from "../../evm/hooks/wallets/useEmbeddedWallet";
 import { onModalUnmount } from "./constants";
+import { useChainQuery } from "../hooks/useChainQuery";
 
 const TW_CONNECTED_WALLET = "tw-connected-wallet";
 
@@ -106,6 +107,7 @@ export const ConnectedWalletDetails: React.FC<{
   const locale = useTWLocale().connectWallet;
   const chain = useChain();
   const walletChainId = useChainId();
+  const chainQuery = useChainQuery(walletChainId);
 
   const disconnect = useDisconnect();
   const chains = useSupportedChains();
@@ -272,10 +274,10 @@ export const ConnectedWalletDetails: React.FC<{
           position: "relative",
         }}
       >
-        <ChainIcon chain={chain} size={iconSize.md} active />
+        <ChainIcon chain={chain || chainQuery.data} size={iconSize.md} active />
       </div>
       <Text color="primaryText" multiline>
-        {chain?.name || `Unknown chain #${walletChainId}`}
+        {chain?.name || chainQuery.data?.name || `chain #${walletChainId}`}
       </Text>
       <StyledChevronRightIcon
         width={iconSize.sm}
