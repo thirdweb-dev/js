@@ -223,14 +223,15 @@ export function ConfirmationScreen(props: {
               // these will be defined by this time
               if (fromTokenSymbol && toTokenSymbol && fromChain.data) {
                 addPendingSwapTransaction(props.clientId, {
-                  from: {
+                  source: {
                     symbol: fromTokenSymbol,
                     value: props.fromAmount,
                     chainId: props.fromChainId,
                   },
-                  to: {
+                  destination: {
                     symbol: toTokenSymbol,
                     value: props.toAmount,
+                    chainId: props.toChainId,
                   },
                   status: "PENDING",
                   transactionHash: swapTxReceipt.transactionHash,
