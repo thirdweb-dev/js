@@ -1,4 +1,4 @@
-import { Flex, DarkMode, Container, Box } from "@chakra-ui/react";
+import { Flex, DarkMode, Container, Box, SimpleGrid } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { HomepageFooter } from "components/footer/Footer";
 import HeroSection from "components/grant/superchain/HeroSection";
@@ -30,7 +30,7 @@ const description =
 const superchains = [
   {
     id: "optimism",
-    name: "Optimism",
+    name: "OP Mainnet",
     link: "/optimism?switch",
     src: require("../../../public/assets/grant/superchain/icon-op.png"),
   },
@@ -218,87 +218,179 @@ const GrantSuperChain = () => {
                 </Text>
               </Container>
 
-              <Flex position="relative" px={{ base: 6, lg: 12 }}>
-                <Flex
-                  flexWrap="wrap"
-                  alignItems="flex-start"
-                  justifyContent="center"
+              <Flex
+                position="relative"
+                px={{ base: 6, lg: 12 }}
+                flexDir="column"
+                alignItems="center"
+                gap="27px"
+              >
+                <SimpleGrid
+                  columns={{ base: 1, sm: 2, md: 4 }}
+                  placeItems="start"
                   gap="27px"
                 >
-                  {superchains.map(({ id, name, src, link, isComingSoon }) => {
-                    return (
-                      <TrackedLink
-                        key={id}
-                        href={link}
-                        category={TRACKING_CATEGORY}
-                        label={id}
-                        textDecor="none!important"
-                        isExternal
-                        pointerEvents={isComingSoon ? "none" : "all"}
-                      >
-                        <Card
-                          as={Flex}
-                          flexDir="column"
-                          alignItems="center"
-                          justifyContent="center"
-                          padding="14px"
-                          transition="border-color 200ms ease, box-shadow 200ms ease, transform 200ms ease"
-                          _hover={{
-                            borderColor: "blue.500",
-                            boxShadow: "0 0 16px hsl(215deg 100% 60% / 30%)",
-                            transform: "scale(1.01)",
-                          }}
-                          width="122px"
-                          opacity={isComingSoon ? 0.6 : 1}
+                  {superchains
+                    .slice(0, 4)
+                    .map(({ id, name, src, link, isComingSoon }) => {
+                      return (
+                        <TrackedLink
+                          key={id}
+                          href={link}
+                          category={TRACKING_CATEGORY}
+                          label={id}
+                          textDecor="none!important"
+                          isExternal
+                          pointerEvents={isComingSoon ? "none" : "all"}
+                          w="full"
                         >
-                          <ChakraNextImage
-                            src={src}
-                            alt={id}
-                            w="74px"
-                            h="74px"
-                          />
-
-                          <Flex
-                            justifyContent="center"
+                          <Card
+                            as={Flex}
+                            flexDir="column"
                             alignItems="center"
-                            gap="6px"
-                            mt="16px"
+                            justifyContent="center"
+                            padding="14px"
+                            transition="border-color 200ms ease, box-shadow 200ms ease, transform 200ms ease"
+                            _hover={{
+                              borderColor: "blue.500",
+                              boxShadow: "0 0 16px hsl(215deg 100% 60% / 30%)",
+                              transform: "scale(1.01)",
+                            }}
+                            opacity={isComingSoon ? 0.6 : 1}
                           >
+                            <ChakraNextImage
+                              src={src}
+                              alt={id}
+                              w="74px"
+                              h="74px"
+                            />
+
+                            <Flex
+                              justifyContent="center"
+                              alignItems="center"
+                              gap="6px"
+                              mt="16px"
+                            >
+                              <Text
+                                textAlign="center"
+                                fontSize="14px"
+                                fontWeight={500}
+                                color="#fff"
+                              >
+                                {name}
+                              </Text>
+
+                              {!isComingSoon && (
+                                <ChakraNextImage
+                                  src={require("../../../public/assets/grant/superchain/link.svg")}
+                                  alt="arrow"
+                                  height="18px"
+                                  width="18px"
+                                />
+                              )}
+                            </Flex>
+                          </Card>
+
+                          {isComingSoon && (
                             <Text
                               textAlign="center"
                               fontSize="14px"
-                              fontWeight={500}
-                              color="#fff"
+                              fontWeight={400}
+                              color="rgba(255, 255, 255, 0.70)"
+                              mt="8px"
                             >
-                              {name}
+                              Coming soon
                             </Text>
+                          )}
+                        </TrackedLink>
+                      );
+                    })}
+                </SimpleGrid>
 
-                            {!isComingSoon && (
-                              <ChakraNextImage
-                                src={require("../../../public/assets/grant/superchain/link.svg")}
-                                alt="arrow"
-                                height="18px"
-                                width="18px"
-                              />
-                            )}
-                          </Flex>
-                        </Card>
-
-                        {isComingSoon && (
-                          <Text
-                            textAlign="center"
-                            fontSize="14px"
-                            fontWeight={400}
-                            color="rgba(255, 255, 255, 0.70)"
-                            mt="8px"
+                <SimpleGrid
+                  columns={{ base: 1, sm: 2, md: 3 }}
+                  placeItems="start"
+                  gap="27px"
+                  w="full"
+                  margin="0 auto"
+                  maxW="450px"
+                >
+                  {superchains
+                    .slice(4)
+                    .map(({ id, name, src, link, isComingSoon }) => {
+                      return (
+                        <TrackedLink
+                          key={`two-${id}`}
+                          href={link}
+                          category={TRACKING_CATEGORY}
+                          label={id}
+                          textDecor="none!important"
+                          isExternal
+                          pointerEvents={isComingSoon ? "none" : "all"}
+                          w="full"
+                        >
+                          <Card
+                            as={Flex}
+                            flexDir="column"
+                            alignItems="center"
+                            justifyContent="center"
+                            padding="14px"
+                            transition="border-color 200ms ease, box-shadow 200ms ease, transform 200ms ease"
+                            _hover={{
+                              borderColor: "blue.500",
+                              boxShadow: "0 0 16px hsl(215deg 100% 60% / 30%)",
+                              transform: "scale(1.01)",
+                            }}
+                            opacity={isComingSoon ? 0.6 : 1}
                           >
-                            Coming soon
-                          </Text>
-                        )}
-                      </TrackedLink>
-                    );
-                  })}
-                </Flex>
+                            <ChakraNextImage
+                              src={src}
+                              alt={id}
+                              w="74px"
+                              h="74px"
+                            />
+
+                            <Flex
+                              justifyContent="center"
+                              alignItems="center"
+                              gap="6px"
+                              mt="16px"
+                            >
+                              <Text
+                                textAlign="center"
+                                fontSize="14px"
+                                fontWeight={500}
+                                color="#fff"
+                              >
+                                {name}
+                              </Text>
+
+                              {!isComingSoon && (
+                                <ChakraNextImage
+                                  src={require("../../../public/assets/grant/superchain/link.svg")}
+                                  alt="arrow"
+                                  height="18px"
+                                  width="18px"
+                                />
+                              )}
+                            </Flex>
+                          </Card>
+
+                          {isComingSoon && (
+                            <Text
+                              textAlign="center"
+                              fontSize="14px"
+                              fontWeight={400}
+                              color="rgba(255, 255, 255, 0.70)"
+                              mt="8px"
+                            >
+                              Coming soon
+                            </Text>
+                          )}
+                        </TrackedLink>
+                      );
+                    })}
+                </SimpleGrid>
               </Flex>
             </Flex>
 
