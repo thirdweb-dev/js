@@ -119,9 +119,6 @@ jobs:
       - name: Check out the code
         uses: actions/checkout@v4
 
-      - name: Setup & Install
-        uses: ./.github/composite-actions/install
-
       - name: Report bundle size
         uses: andresz1/size-limit-action@master
         with:
