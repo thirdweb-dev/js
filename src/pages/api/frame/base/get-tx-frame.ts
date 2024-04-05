@@ -9,8 +9,8 @@ import { abi } from "./abi";
 import { FrameRequest } from "@coinbase/onchainkit";
 import { NextApiRequest, NextApiResponse } from "next";
 
-// https://thirdweb.com/base/0xB6606041437BCBD727373ffF037dDa0247771184
-const contractAddress = "0xB6606041437BCBD727373ffF037dDa0247771184";
+// https://thirdweb.com/base/0x352810fF1c51a42B568662D46570A30B590a715a
+const contractAddress = "0x352810fF1c51a42B568662D46570A30B590a715a";
 
 export default async function handler(
   req: NextApiRequest,
