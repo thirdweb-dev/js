@@ -608,13 +608,14 @@ export const ConnectedWalletDetails: React.FC<{
         }}
       />
     );
-  } else if (screen === "send") {
+  } else if (screen === "send" && walletChainId) {
     content = (
       <SendFunds
         supportedTokens={props.supportedTokens}
         onBack={() => {
           setScreen("main");
         }}
+        chainId={walletChainId}
       />
     );
   } else if (screen === "receive") {

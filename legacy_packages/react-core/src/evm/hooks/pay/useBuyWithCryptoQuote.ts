@@ -1,9 +1,18 @@
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import {
+  useQuery,
+  type UseQueryResult,
+  type UseQueryOptions,
+} from "@tanstack/react-query";
 import {
   BuyWithCryptoQuote,
   getBuyWithCryptoQuote,
   GetBuyWithCryptoQuoteParams,
 } from "@thirdweb-dev/sdk";
+
+export type BuyWithCryptoQuoteQueryOptions = Omit<
+  UseQueryOptions<BuyWithCryptoQuote>,
+  "queryFn" | "queryKey" | "enabled"
+>;
 
 export type BuyWithCryptoQuoteQueryParams = GetBuyWithCryptoQuoteParams;
 /**
@@ -57,8 +66,10 @@ export type BuyWithCryptoQuoteQueryParams = GetBuyWithCryptoQuoteParams;
  */
 export function useBuyWithCryptoQuote(
   buyWithCryptoParams?: BuyWithCryptoQuoteQueryParams,
+  queryParams?: BuyWithCryptoQuoteQueryOptions,
 ): UseQueryResult<BuyWithCryptoQuote> {
-  return useQuery({
+  return useQuery<BuyWithCryptoQuote>({
+    ...queryParams,
     queryKey: ["buyWithCryptoQuote", buyWithCryptoParams],
     queryFn: () => {
       if (!buyWithCryptoParams) {
@@ -67,10 +78,7 @@ export function useBuyWithCryptoQuote(
       if (!buyWithCryptoParams?.clientId) {
         throw new Error("Client ID is required in swap params");
       }
-      return getBuyWithCryptoQuote({
-        ...(buyWithCryptoParams as GetBuyWithCryptoQuoteParams),
-        clientId: buyWithCryptoParams.clientId,
-      });
+      return getBuyWithCryptoQuote(buyWithCryptoParams);
     },
     enabled: !!buyWithCryptoParams,
   });

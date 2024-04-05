@@ -67,20 +67,12 @@ export function useBuyWithCryptoQuote(
 ): UseQueryResult<BuyWithCryptoQuote> {
   return useQuery({
     ...queryParams,
-    // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: ["buyWithCryptoQuote", buyWithCryptoParams],
     queryFn: () => {
       if (!buyWithCryptoParams) {
         throw new Error("Swap params are required");
       }
-      if (!buyWithCryptoParams?.client) {
-        throw new Error("Client is required in swap params");
-      }
-      return getBuyWithCryptoQuote({
-        // typescript limitation with discriminated unions are collapsed
-        ...(buyWithCryptoParams as GetBuyWithCryptoQuoteParams),
-        client: buyWithCryptoParams.client,
-      });
+      return getBuyWithCryptoQuote(buyWithCryptoParams);
     },
     enabled: !!buyWithCryptoParams,
   });
