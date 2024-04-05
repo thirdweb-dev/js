@@ -46,10 +46,10 @@ export async function computeCreate2FactoryAddress(
   if (CUSTOM_GAS_FOR_CHAIN[chainId]) {
     const enforceEip155 = await isEIP155Enforced(options);
     const eipChain = enforceEip155 ? chainId : 0;
-    const gasPrice = CUSTOM_GAS_FOR_CHAIN[eipChain.toString()]?.gasPrice;
-    const gasLimit = CUSTOM_GAS_FOR_CHAIN[eipChain.toString()]?.gasLimit;
+    const gasPrice = CUSTOM_GAS_FOR_CHAIN[chainId.toString()]?.gasPrice;
+    const gasLimit = CUSTOM_GAS_FOR_CHAIN[chainId.toString()]?.gasLimit;
 
-    const deploymentInfo = await _getCreate2FactoryDeploymentInfo(chainId, {
+    const deploymentInfo = await _getCreate2FactoryDeploymentInfo(eipChain, {
       gasPrice,
       gasLimit,
     });
