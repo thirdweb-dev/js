@@ -1,8 +1,10 @@
-import { providers, utils } from "ethers";
+import { BigNumber, providers, utils } from "ethers";
 import { UserOperationStruct } from "@account-abstraction/contracts";
 import { isTwUrl } from "../../../utils/url";
 import { hexlifyUserOp } from "./utils";
 import { setAnalyticsHeaders } from "../../../utils/headers";
+import { EstimateUserOpGasRawResult, EstimateUserOpGasResult } from "../types";
+import { MANAGED_ACCOUNT_GAS_BUFFER } from "./constants";
 
 export const DEBUG = false; // TODO set as public flag
 
@@ -112,14 +114,11 @@ export class HttpRpcClient {
     ]);
   }
 
-  async estimateUserOpGas(userOp1: Partial<UserOperationStruct>): Promise<{
-    preVerificationGas: string;
-    verificationGas: string;
-    verificationGasLimit: string;
-    callGasLimit: string;
-  }> {
+  async estimateUserOpGas(
+    userOp: Partial<UserOperationStruct>,
+  ): Promise<EstimateUserOpGasResult> {
     await this.initializing;
-    const hexifiedUserOp = await hexlifyUserOp(userOp1);
+    const hexifiedUserOp = await hexlifyUserOp(userOp);
     const jsonRequestData: [UserOperationStruct, string] = [
       hexifiedUserOp,
       this.entryPointAddress,
@@ -128,10 +127,20 @@ export class HttpRpcClient {
       "eth_estimateUserOperationGas",
       jsonRequestData,
     );
-    return await this.userOpJsonRpcProvider.send(
-      "eth_estimateUserOperationGas",
-      [hexifiedUserOp, this.entryPointAddress],
-    );
+    const data: EstimateUserOpGasRawResult =
+      await this.userOpJsonRpcProvider.send("eth_estimateUserOperationGas", [
+        hexifiedUserOp,
+        this.entryPointAddress,
+      ]);
+    // adds gas buffer to callGasLimit to account for ManagedAccountFactory delegate calls
+    return {
+      preVerificationGas: BigNumber.from(data.preVerificationGas),
+      verificationGas: BigNumber.from(data.verificationGas),
+      verificationGasLimit: BigNumber.from(data.verificationGasLimit),
+      callGasLimit: BigNumber.from(data.callGasLimit).add(
+        MANAGED_ACCOUNT_GAS_BUFFER,
+      ),
+    };
   }
 
   async getUserOperationGasPrice(): Promise<{

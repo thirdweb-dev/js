@@ -29,7 +29,8 @@ export async function isContractDeployed(
     return true;
   }
   // this already dedupes requests for the same contract
-  const isDeployed = (await getBytecode(contract)) !== "0x";
+  const bytecode = await getBytecode(contract);
+  const isDeployed = bytecode !== "0x";
   // if it's deployed, we add it to the cache
   if (isDeployed) {
     cache.add(contract);

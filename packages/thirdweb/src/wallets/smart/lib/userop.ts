@@ -146,7 +146,6 @@ export async function createUnsignedUserOp(args: {
     partialOp.verificationGasLimit = estimates.verificationGasLimit;
     partialOp.preVerificationGas = estimates.preVerificationGas;
   }
-
   return {
     ...partialOp,
     signature: "0x",
