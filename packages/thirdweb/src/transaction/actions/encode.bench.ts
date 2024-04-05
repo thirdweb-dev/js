@@ -1,8 +1,8 @@
 import { bench } from "vitest";
 import { prepareContractCall } from "../prepare-contract-call.js";
 import {
-  USDC_CONTRACT,
-  USDC_CONTRACT_WITH_ABI,
+  USDT_CONTRACT,
+  USDT_CONTRACT_WITH_ABI,
 } from "../../../test/src/test-contracts.js";
 import { VITALIK_WALLET } from "../../../test/src/addresses.js";
 import { encode } from "./encode.js";
@@ -11,7 +11,7 @@ import { prepareMethod } from "../../utils/abi/prepare-method.js";
 
 bench("encode tx (human readable)", async () => {
   const tx = prepareContractCall({
-    contract: { ...USDC_CONTRACT },
+    contract: { ...USDT_CONTRACT },
     method: "function transfer(address,uint256)",
     params: [VITALIK_WALLET, 100n],
   });
@@ -20,7 +20,7 @@ bench("encode tx (human readable)", async () => {
 
 bench("encode tx (json abi)", async () => {
   const tx = prepareContractCall({
-    contract: { ...USDC_CONTRACT },
+    contract: { ...USDT_CONTRACT },
     method: {
       name: "transfer",
       type: "function",
@@ -38,7 +38,7 @@ bench("encode tx (json abi)", async () => {
 
 bench("encode tx (contract abi)", async () => {
   const tx = prepareContractCall({
-    contract: { ...USDC_CONTRACT_WITH_ABI },
+    contract: { ...USDT_CONTRACT_WITH_ABI },
     method: "transfer",
     params: [VITALIK_WALLET, 100n],
   });
@@ -47,7 +47,7 @@ bench("encode tx (contract abi)", async () => {
 
 bench("encode tx (prepared method)", async () => {
   const tx = prepareContractCall({
-    contract: { ...USDC_CONTRACT },
+    contract: { ...USDT_CONTRACT },
     method: prepareMethod("function transfer(address,uint256)"),
     params: [VITALIK_WALLET, 100n],
   });

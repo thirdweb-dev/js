@@ -106,6 +106,8 @@ export type VerifySignatureParams = Prettify<
 
 /**
  * Verifies the signature based on the provided options.
+ * Handles smart contract wallet signatures and EOA signatures.
+ * IMPORTANT: in order to check smart contract signatures, a chain and client must be provided.
  * @param options - The options for signature verification.
  * @returns A boolean indicating whether the signature is valid or not.
  * @example

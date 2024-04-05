@@ -52,7 +52,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       this.config.bundlerUrl || `https://${this.chainId}.bundler.thirdweb.com`;
     const paymasterUrl =
       this.config.paymasterUrl ||
-      `https://${this.chainId}.bundler.thirdweb.com/v2`;
+      `https://${this.chainId}.bundler.thirdweb.com`;
     const entryPointAddress = config.entryPointAddress || ENTRYPOINT_ADDRESS;
     const localSigner = await params.personalWallet.getSigner();
     const providerConfig: ProviderConfig = {
