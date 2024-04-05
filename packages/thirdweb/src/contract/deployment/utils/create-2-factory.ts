@@ -1,4 +1,4 @@
-import { getContractAddress, type TransactionSerializedLegacy } from "viem";
+import { getContractAddress } from "viem";
 import { getContract } from "../../contract.js";
 import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed.js";
 import { isEIP155Enforced } from "../../../utils/any-evm/is-eip155-enforced.js";
