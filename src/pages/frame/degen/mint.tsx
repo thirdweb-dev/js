@@ -13,7 +13,7 @@ const BaseFramePage = () => {
   const router = useRouter();
 
   useEffect(() => {
-    router.push("https://frames.thirdweb.com/mint");
+    router.push("https://frames.thirdweb.com/degen");
   }, [router]);
 
   return (
