@@ -52,3 +52,10 @@ export {
   getAllValidAuctions,
   type GetAllValidAuctionParams,
 } from "../../extensions/marketplace/read/english-auction/getAllValidAuctions.js";
+
+// WRITE
+
+export {
+  createAuction,
+  type CreateAuctionParams,
+} from "../../extensions/marketplace/__generated__/IEnglishAuctions/write/createAuction.js";

@@ -1,0 +1,38 @@
+---
+"thirdweb": patch
+---
+
+---
+
+## Marketplace Extensions
+
+Added initial support for the Marketplace extensions, available via the `thirdweb/extensions/marketplace` module.
+
+#### Direct Listings
+
+- `createListing`
+- `totalListings`
+- `getListing`
+- `getAllListings`
+- `getAllValidListings`
+
+#### English Auctions
+
+- `createAuction`
+- `totalAuctions`
+- `getAuction`
+- `getAllAuctions`
+- `getAllValidAuctions`
+
+#### Types
+
+- `DirectListing`
+- `EnglishAuction`
+
+## ERC721 Extensions
+
+- Added `isERC721` to the `thirdweb/extensions/erc721` module.
+
+## ERC1155 Extensions
+
+- Added `isERC1155` to the `thirdweb/extensions/erc1155` module.

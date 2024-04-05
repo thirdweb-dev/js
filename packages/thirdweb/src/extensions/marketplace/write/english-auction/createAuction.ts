@@ -1,5 +1,5 @@
 import type { Address } from "abitype";
-import { createListing as generatedCreateListing } from "../../__generated__/IDirectListings/write/createListing.js";
+import { createAuction as generatedCreateAuction } from "../../__generated__/IEnglishAuctions/write/createAuction.js";
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../constants/addresses.js";
 import { isERC721 } from "../../../erc721/read/isERC721.js";
@@ -9,7 +9,35 @@ import { getRpcClient } from "../../../../rpc/rpc.js";
 import { toUnits } from "../../../../utils/units.js";
 import { eth_getBlockByNumber } from "../../../../rpc/actions/eth_getBlockByNumber.js";
 
-export type CreateListingParams = {
+type MinimumBidAmount =
+  | {
+      /**
+       * The minimum price that a bid must be in order to be accepted. (in Ether)
+       */
+      minimumBidAmount: string;
+    }
+  | {
+      /**
+       * The minimum price that a bid must be in order to be accepted. (in wei)
+       */
+      minimumBidAmountWei: bigint;
+    };
+
+type BuyoutBidAmount =
+  | {
+      /**
+       * The buyout price of the auction. (in Ether)
+       */
+      buyoutBidAmount: string;
+    }
+  | {
+      /**
+       * The buyout price of the auction. (in wei)
+       */
+      buyoutBidAmountWei: bigint;
+    };
+
+export type CreateAuctionParams = {
   /**
    * The contract address of the asset being listed
    */
@@ -40,43 +68,45 @@ export type CreateListingParams = {
    * @default new Date() + 10 years
    */
   endTimestamp?: Date;
+
   /**
-   * Whether the listing is reserved to be bought from a specific set of buyers
-   * @default false
+   * This is a buffer e.g. x seconds.
+   *
+   * If a new winning bid is made less than x seconds before expirationTimestamp, the
+   * expirationTimestamp is increased by x seconds.
+   * @default 900 (15 minutes)
    */
-  isReservedListing?: boolean;
-} & (
-  | {
-      /**
-       * The price per token (in Ether)
-       */
-      pricePerToken: string;
-    }
-  | {
-      /**
-       * The price per token (in wei)
-       */
-      pricePerTokenWei: string;
-    }
-);
+  timeBufferInSeconds?: number;
+
+  /**
+   * This is a buffer in basis points e.g. x%.
+   *
+   * To be considered as a new winning bid, a bid must be at least x% greater than
+   * the current winning bid.
+   * @default 500 (5%)
+   */
+  bidBufferBps?: number;
+} & MinimumBidAmount &
+  BuyoutBidAmount;
 
 /**
- * Creates a direct listing.
- * @param options The options for creating the direct listing.
- * @returns The result of creating the direct listing.
+ * Creates an auction.
+ * @param options The options for creating the auction.
+ * @returns The result of creating the auction.
  * @example
  * ```typescript
- * import { createListing } from "thirdweb/extensions/marketplace";
+ * import { createAuction } from "thirdweb/extensions/marketplace";
  *
- * const transaction = createListing({...});
+ * const transaction = createAuction({...});
  *
  * const { transactionHash } = await sendTransaction({ transaction, account });
+ *
  * ```
  */
-export function createListing(
-  options: BaseTransactionOptions<CreateListingParams>,
+export function createAuction(
+  options: BaseTransactionOptions<CreateAuctionParams>,
 ) {
-  return generatedCreateListing({
+  return generatedCreateAuction({
     ...options,
     asyncParams: async () => {
       const assetContract = getContract({
@@ -128,14 +158,16 @@ export function createListing(
         quantity = options.quantity ?? 1n;
       }
 
-      // validate price
       const currencyAddress =
         options.currencyContractAddress ?? NATIVE_TOKEN_ADDRESS;
-      let pricePerToken: bigint;
-      if ("pricePerToken" in options) {
+
+      // validate buyout bid amount
+
+      let buyoutBidAmount: bigint;
+      if ("buyoutBidAmount" in options) {
         // for native token, we know decimals are 18
         if (currencyAddress === NATIVE_TOKEN_ADDRESS) {
-          pricePerToken = toUnits(options.pricePerToken, 18);
+          buyoutBidAmount = toUnits(options.buyoutBidAmount, 18);
         } else {
           // otherwise get the decimals of the currency
           const currencyContract = getContract({
@@ -146,10 +178,36 @@ export function createListing(
           const currencyDecimals = await decimals({
             contract: currencyContract,
           });
-          pricePerToken = toUnits(options.pricePerToken, currencyDecimals);
+          buyoutBidAmount = toUnits(options.buyoutBidAmount, currencyDecimals);
         }
       } else {
-        pricePerToken = BigInt(options.pricePerTokenWei);
+        buyoutBidAmount = BigInt(options.buyoutBidAmountWei);
+      }
+
+      // validate buyout bid amount
+
+      let minimumBidAmount: bigint;
+      if ("minimumBidAmount" in options) {
+        // for native token, we know decimals are 18
+        if (currencyAddress === NATIVE_TOKEN_ADDRESS) {
+          minimumBidAmount = toUnits(options.minimumBidAmount, 18);
+        } else {
+          // otherwise get the decimals of the currency
+          const currencyContract = getContract({
+            ...options.contract,
+            address: currencyAddress,
+          });
+          const { decimals } = await import("../../../erc20/read/decimals.js");
+          const currencyDecimals = await decimals({
+            contract: currencyContract,
+          });
+          minimumBidAmount = toUnits(
+            options.minimumBidAmount,
+            currencyDecimals,
+          );
+        }
+      } else {
+        minimumBidAmount = BigInt(options.minimumBidAmountWei);
       }
 
       return {
@@ -158,10 +216,14 @@ export function createListing(
           tokenId: options.tokenId,
           currency: options.currencyContractAddress ?? NATIVE_TOKEN_ADDRESS,
           quantity,
-          pricePerToken,
           startTimestamp,
           endTimestamp,
-          reserved: options.isReservedListing ?? false,
+          buyoutBidAmount,
+          minimumBidAmount,
+
+          // TODO validate these?
+          bidBufferBps: BigInt(options.bidBufferBps ?? 500),
+          timeBufferInSeconds: BigInt(options.timeBufferInSeconds ?? 900),
         },
       } as const;
     },
