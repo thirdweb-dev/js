@@ -629,7 +629,7 @@ function DrawerContent(props: {
           <Text size="sm">Connected</Text>
           <Spacer y="xs" />
           <WalletSelectorButton
-            address={address}
+            address={props.activeAddress}
             activeAddress={props.activeAddress}
             activeWalletConfig={props.activeWalletConfig}
             activeWallet={props.activeWallet}
