@@ -3,7 +3,7 @@ import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../transaction/prepare-contract-call.js";
 import { getActiveClaimCondition } from "../read/getActiveClaimCondition.js";
 import { padHex } from "../../../../utils/encoding/hex.js";
-import { NATIVE_TOKEN_ADDRESS } from "../../../../constants/addresses.js";
+import { isNativeTokenAddress } from "../../../../constants/addresses.js";
 /**
  * Represents the parameters for claiming an ERC721 token.
  */
@@ -118,7 +118,7 @@ export function claimTo(options: BaseTransactionOptions<ClaimToParams>) {
       const cc = await getActiveClaimCondition({
         contract: options.contract,
       });
-      if (cc.currency === NATIVE_TOKEN_ADDRESS) {
+      if (isNativeTokenAddress(cc.currency)) {
         return cc.pricePerToken * BigInt(options.quantity);
       } else {
         return 0n;

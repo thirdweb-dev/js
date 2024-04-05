@@ -135,3 +135,8 @@ export { encodeAbiParameters } from "../utils/abi/encodeAbiParameters.js";
 // Useful helpers
 export { setThirdwebDomains } from "../utils/domains.js";
 export { resolvePromisedValue } from "../utils/promise/resolve-promised-value.js";
+
+// ------------------------------------------------
+// json
+// ------------------------------------------------
+export { stringify } from "../utils/json.js";
