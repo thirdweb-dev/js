@@ -6,14 +6,15 @@ type SwapTxInfo = {
   transactionHash: string;
   status: BuyWithCryptoStatus["status"];
   subStatus?: BuyWithCryptoStatus["subStatus"];
-  from: {
+  source: {
     symbol: string;
     value: string;
     chainId: number;
   };
-  to: {
+  destination: {
     symbol: string;
     value: string;
+    chainId: number;
   };
 };
 
@@ -108,9 +109,10 @@ export const addPendingSwapTransaction = (
 
           // in case - the destination token is different ( happens when tx is partially successful )
           if (res.destination) {
-            newValue.to = {
+            newValue.destination = {
               symbol: res.destination.token.symbol || "",
               value: res.destination.amount,
+              chainId: res.destination.token.chainId,
             };
           }
 

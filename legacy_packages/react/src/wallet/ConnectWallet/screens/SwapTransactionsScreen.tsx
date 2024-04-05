@@ -25,7 +25,7 @@ import { Text } from "../../../components/text";
 import { CryptoIcon } from "../icons/CryptoIcon";
 
 type TxStatusInfo = {
-  fromChainId: number;
+  boughChainId: number;
   transactionHash: string;
   boughtTokenAmount: string;
   boughtTokenSymbol: string;
@@ -66,10 +66,10 @@ export function SwapTransactionsScreen(props: { onBack: () => void }) {
     }
 
     txInfosToShow.push({
-      fromChainId: tx.from.chainId,
+      boughChainId: tx.destination.chainId,
       transactionHash: tx.transactionHash,
-      boughtTokenAmount: tx.to.value,
-      boughtTokenSymbol: tx.to.symbol,
+      boughtTokenAmount: tx.destination.value,
+      boughtTokenSymbol: tx.destination.symbol,
       status: "PENDING",
     });
   });
@@ -77,7 +77,7 @@ export function SwapTransactionsScreen(props: { onBack: () => void }) {
   // Add data from endpoint
   _historyQuery.data?.page.forEach((tx) => {
     txInfosToShow.push({
-      fromChainId: tx.source.token.chainId,
+      boughChainId: tx.destination?.token.chainId || tx.quote.toToken.chainId,
       transactionHash: tx.source.transactionHash,
       boughtTokenAmount: tx.destination?.amount || tx.quote.toAmount,
       boughtTokenSymbol:
@@ -251,14 +251,14 @@ function useSwapTransactions(pageIndex: number) {
 
 function TransactionInfo(props: { txInfo: TxStatusInfo }) {
   const {
-    fromChainId,
+    boughChainId,
     transactionHash,
     boughtTokenAmount,
     boughtTokenSymbol,
     status,
   } = props.txInfo;
 
-  const chainQuery = useChainQuery(fromChainId);
+  const chainQuery = useChainQuery(boughChainId);
   const statusMeta = getStatusMeta(status, props.txInfo.subStatus);
 
   return (
