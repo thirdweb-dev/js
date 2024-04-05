@@ -181,6 +181,7 @@ export function NetworkSelector(props: NetworkSelectorProps) {
 export function NetworkSelectorContent(
   props: NetworkSelectorProps & {
     onBack?: () => void;
+    showTabs?: boolean;
   },
 ) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -261,28 +262,33 @@ export function NetworkSelectorContent(
       </Container>
 
       <Tabs.Root className="TabsRoot" defaultValue="all">
-        <Container px="lg">
-          <Tabs.List
-            className="TabsList"
-            aria-label="Manage your account"
-            style={{
-              display: "flex",
-              gap: spacing.xxs,
-            }}
-          >
-            <TabButton className="TabsTrigger" value="all">
-              {locale.allNetworks}
-            </TabButton>
-            <TabButton className="TabsTrigger" value="mainnet">
-              {locale.mainnets}
-            </TabButton>
-            <TabButton className="TabsTrigger" value="testnet">
-              {locale.testnets}
-            </TabButton>
-          </Tabs.List>
-        </Container>
+        {props.showTabs !== false && (
+          <>
+            <Container px="lg">
+              <Tabs.List
+                className="TabsList"
+                aria-label="Manage your account"
+                style={{
+                  display: "flex",
+                  gap: spacing.xxs,
+                }}
+              >
+                <TabButton className="TabsTrigger" value="all">
+                  {locale.allNetworks}
+                </TabButton>
+                <TabButton className="TabsTrigger" value="mainnet">
+                  {locale.mainnets}
+                </TabButton>
+                <TabButton className="TabsTrigger" value="testnet">
+                  {locale.testnets}
+                </TabButton>
+              </Tabs.List>
+            </Container>
+            <Spacer y="lg" />
+          </>
+        )}
 
-        <Spacer y="lg" />
+        {props.showTabs === false && <Spacer y="xxs" />}
 
         {chains.length > 10 && (
           <>

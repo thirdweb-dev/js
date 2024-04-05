@@ -42,13 +42,17 @@ import { BigNumber } from "ethers";
  * ```
  *
  * @param tokenAddress - The address of the token contract, if not provided, it defaults to the native token
+ * @param chainId - The chain ID of the network you want to get the balance from. If not provided, it defaults to `activeChain` set in the `ThirdwebProvider`
  *
  * @returns
  * The hook's `data` property contains the token's balance in the `value` property as a `BigNumber` object.
  *
  * @token
  */
-export function useBalance(tokenAddress?: ContractAddress): UseQueryResult<
+export function useBalance(
+  tokenAddress?: ContractAddress,
+  chainId?: number,
+): UseQueryResult<
   | {
       symbol: string;
       value: BigNumber;
@@ -61,11 +65,17 @@ export function useBalance(tokenAddress?: ContractAddress): UseQueryResult<
 > {
   const walletAddress = useAddress();
 
-  const { wallet, address, chainId } = useThirdwebConnectedWalletContext();
+  const {
+    wallet,
+    address,
+    chainId: _chainId,
+  } = useThirdwebConnectedWalletContext();
+
+  const chain = chainId || _chainId;
 
   const cacheKey = useMemo(() => {
-    return cacheKeys.wallet.balance(chainId || -1, address, tokenAddress);
-  }, [chainId, tokenAddress, address]);
+    return cacheKeys.wallet.balance(chain || -1, address, tokenAddress);
+  }, [chain, tokenAddress, address]);
 
   return useQuery(
     cacheKey,
