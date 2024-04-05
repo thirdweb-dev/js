@@ -24,6 +24,7 @@ export type KeylessDeploymentInfo = {
   signer: string;
   transaction: string;
   deployment: string;
+  valueToSend: bigint;
 };
 
 export type DeployedContractType =

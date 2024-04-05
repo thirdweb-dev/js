@@ -14,10 +14,13 @@ export function getCreate2FactoryDeploymentInfo(
   gasOptions: { gasPrice?: bigint; gasLimit?: bigint },
 ): KeylessDeploymentInfo {
   const signature = utils.joinSignature(SIGNATURE);
+  const gasPrice = gasOptions.gasPrice ? gasOptions.gasPrice : 100n * 10n ** 9n;
+  const gasLimit = gasOptions.gasLimit ? gasOptions.gasLimit : 100000n;
+
   const deploymentTransaction = getKeylessTxn(
     {
-      gasPrice: gasOptions.gasPrice ? gasOptions.gasPrice : 100 * 10 ** 9,
-      gasLimit: gasOptions.gasLimit ? gasOptions.gasLimit : 100000,
+      gasPrice,
+      gasLimit,
       nonce: 0,
       data: CREATE2_FACTORY_BYTECODE,
       chainId: chainId,
@@ -32,5 +35,6 @@ export function getCreate2FactoryDeploymentInfo(
   return {
     ...deploymentTransaction,
     deployment: create2FactoryAddress,
+    valueToSend: gasPrice * gasLimit,
   };
 }

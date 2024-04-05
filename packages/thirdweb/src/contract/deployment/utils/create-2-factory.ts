@@ -1,4 +1,4 @@
-import { getContractAddress } from "viem";
+import { getContractAddress, type TransactionSerializedLegacy } from "viem";
 import { getContract } from "../../contract.js";
 import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed.js";
 import { isEIP155Enforced } from "../../../utils/any-evm/is-eip155-enforced.js";
@@ -40,42 +40,74 @@ const SIGNATURE = {
 export async function computeCreate2FactoryAddress(
   options: ClientAndChain,
 ): Promise<string> {
-  // TODO add LRU cache
-  let factory = getContract({
-    ...options,
-    address: COMMON_FACTORY_ADDRESS,
-  });
-  // if the common factory is deployed, return the address
-  if (await isContractDeployed(factory)) {
+  const chainId = options.chain.id;
+
+  // special handling for chains with hardcoded gasPrice and gasLimit
+  if (CUSTOM_GAS_FOR_CHAIN[chainId]) {
+    const enforceEip155 = await isEIP155Enforced(options);
+    const eipChain = enforceEip155 ? chainId : 0;
+    const gasPrice = CUSTOM_GAS_FOR_CHAIN[eipChain.toString()]?.gasPrice;
+    const gasLimit = CUSTOM_GAS_FOR_CHAIN[eipChain.toString()]?.gasLimit;
+
+    const deploymentInfo = await _getCreate2FactoryDeploymentInfo(chainId, {
+      gasPrice,
+      gasLimit,
+    });
+
+    return deploymentInfo.predictedAddress;
+  }
+
+  // default flow
+  const allBinsInfo = await Promise.all([
+    // to generate EIP-155 transaction
+    ...CUSTOM_GAS_BINS.map((b) => {
+      return _getCreate2FactoryDeploymentInfo(chainId, { gasPrice: b });
+    }),
+
+    // to generate pre EIP-155 transaction, hence chainId 0
+    ...CUSTOM_GAS_BINS.map((b) => {
+      return _getCreate2FactoryDeploymentInfo(0, { gasPrice: b });
+    }),
+  ]);
+
+  const allFactories = await Promise.all(
+    allBinsInfo.map((b) => {
+      const tempFactory = getContract({
+        ...options,
+        address: b.predictedAddress,
+      });
+      return isContractDeployed(tempFactory);
+    }),
+  );
+
+  const indexOfCommonFactory = allBinsInfo.findIndex(
+    (b) => b.predictedAddress === COMMON_FACTORY_ADDRESS,
+  );
+  if (indexOfCommonFactory && allFactories[indexOfCommonFactory]) {
     return COMMON_FACTORY_ADDRESS;
   }
 
-  const enforceEip155 = await isEIP155Enforced(options);
-  const chainId = options.chain.id;
-  const custom = CUSTOM_GAS_FOR_CHAIN[chainId.toString()];
-  const eipChain = enforceEip155 ? chainId : 0;
-
-  let deploymentInfo = custom
-    ? await _getCreate2FactoryDeploymentInfo(eipChain, {
-        gasPrice: custom.gasPrice,
-        gasLimit: custom.gasLimit,
-      })
-    : await _getCreate2FactoryDeploymentInfo(eipChain, {});
-
-  factory = getContract({
-    ...options,
-    address: deploymentInfo.predictedAddress,
-  });
-
-  let bin;
-  if (!(await isContractDeployed(factory))) {
-    const gasPriceFetched = await getGasPrice(options);
-    bin = CUSTOM_GAS_BINS.find((e) => e >= gasPriceFetched) || gasPriceFetched;
-
-    deploymentInfo = await _getCreate2FactoryDeploymentInfo(eipChain, {
-      gasPrice: bin,
-    });
+  const indexOfExistingDeployment = allFactories.findIndex((b) => b);
+  if (
+    indexOfExistingDeployment &&
+    allBinsInfo &&
+    allBinsInfo[indexOfExistingDeployment]?.predictedAddress
+  ) {
+    // TODO: cleanup
+    return allBinsInfo[indexOfExistingDeployment]?.predictedAddress as string;
   }
+
+  const [enforceEip155, gasPriceFetched] = await Promise.all([
+    isEIP155Enforced(options),
+    getGasPrice(options),
+  ]);
+  const eipChain = enforceEip155 ? chainId : 0;
+  const bin =
+    CUSTOM_GAS_BINS.find((e) => e >= gasPriceFetched) || gasPriceFetched;
+
+  const deploymentInfo = await _getCreate2FactoryDeploymentInfo(eipChain, {
+    gasPrice: bin,
+  });
 
   return deploymentInfo.predictedAddress;
 }
@@ -234,41 +266,20 @@ const CUSTOM_GAS_FOR_CHAIN: Record<string, CustomChain> = {
 
 const CUSTOM_GAS_BINS = [
   1n,
-  10n,
-  10n ** 2n,
-  10n ** 3n,
-  10n ** 4n,
-  10n ** 5n,
-  10n ** 6n,
-  10n ** 7n,
-  10n ** 8n,
-  10n ** 9n,
-  10n * 10n ** 9n,
+  1n * 10n ** 9n,
   100n * 10n ** 9n,
   500n * 10n ** 9n,
   1000n * 10n ** 9n,
-  2000n * 10n ** 9n,
-  3000n * 10n ** 9n,
-  4000n * 10n ** 9n,
+  2500n * 10n ** 9n,
   5000n * 10n ** 9n,
-  6000n * 10n ** 9n,
-  7000n * 10n ** 9n,
+  7500n * 10n ** 9n,
   10_000n * 10n ** 9n,
-  20_000n * 10n ** 9n,
-  30_000n * 10n ** 9n,
-  40_000n * 10n ** 9n,
+  25_000n * 10n ** 9n,
   50_000n * 10n ** 9n,
-  60_000n * 10n ** 9n,
-  70_000n * 10n ** 9n,
-  80_000n * 10n ** 9n,
-  90_000n * 10n ** 9n,
+  75_000n * 10n ** 9n,
   100_000n * 10n ** 9n,
-  150_000n * 10n ** 9n,
-  200_000n * 10n ** 9n,
   250_000n * 10n ** 9n,
-  300_000n * 10n ** 9n,
-  350_000n * 10n ** 9n,
-  400_000n * 10n ** 9n,
   500_000n * 10n ** 9n,
-  1000_000n * 10n ** 9n,
+  750_000n * 10n ** 9n,
+  1_000_000n * 10n ** 9n,
 ];
