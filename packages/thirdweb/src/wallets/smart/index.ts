@@ -14,10 +14,7 @@ import {
 } from "./lib/calls.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
 import type { SignableMessage } from "viem";
-import {
-  waitForReceipt,
-  type WaitForReceiptOptions,
-} from "../../transaction/actions/wait-for-tx-receipt.js";
+import type { WaitForReceiptOptions } from "../../transaction/actions/wait-for-tx-receipt.js";
 import type { Hex } from "../../utils/encoding/hex.js";
 import type {
   CreateWalletArgs,
