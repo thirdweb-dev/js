@@ -17,7 +17,7 @@ export type MintToParams = {
  * @example
  * ```ts
  * import { mintTo } from "thirdweb/extensions/erc721";
- * const tx = await mintTo({
+ * const transaction = mintTo({
  *  contract,
  *  to: "0x...",
  *  nft: {
@@ -26,6 +26,9 @@ export type MintToParams = {
  *    image: "https://example.com/image.png",
  *  },
  * });
+ *
+ * const { transactionHash } = await sendTransaction({ transaction, account });
+ *
  * ```
  */
 export function mintTo(options: BaseTransactionOptions<MintToParams>) {

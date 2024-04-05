@@ -1,3 +1,4 @@
+import { isNativeTokenAddress } from "../../../constants/addresses.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { name } from "../../common/read/name.js";
 import { symbol } from "../../common/read/symbol.js";
@@ -24,6 +25,17 @@ export type GetCurrencyMetadataResult = {
 export async function getCurrencyMetadata(
   options: BaseTransactionOptions,
 ): Promise<GetCurrencyMetadataResult> {
+  // if the contract is the native token, return the native currency metadata
+  if (isNativeTokenAddress(options.contract.address)) {
+    return {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+      // overwrite with native currency of the chain if available
+      ...options.contract.chain.nativeCurrency,
+    };
+  }
+
   const [name_, symbol_, decimals_] = await Promise.all([
     name(options),
     symbol(options),
