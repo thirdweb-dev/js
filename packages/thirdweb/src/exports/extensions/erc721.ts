@@ -1,6 +1,7 @@
 /**
  * READ extension for ERC721
  */
+export { isERC721 } from "../../extensions/erc721/read/isERC721.js";
 export {
   getNFT,
   type GetNFTParams,

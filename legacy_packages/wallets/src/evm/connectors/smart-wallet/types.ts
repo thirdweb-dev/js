@@ -157,3 +157,17 @@ export interface UserOpResult {
   transactionHash: string;
   success: boolean;
 }
+
+export type EstimateUserOpGasRawResult = {
+  preVerificationGas: string;
+  verificationGas: string;
+  verificationGasLimit: string;
+  callGasLimit: string;
+};
+
+export type EstimateUserOpGasResult = {
+  preVerificationGas: BigNumber;
+  verificationGas: BigNumber;
+  verificationGasLimit: BigNumber;
+  callGasLimit: BigNumber;
+};

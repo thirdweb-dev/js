@@ -13,5 +13,6 @@
   "function getAuction(uint256 _auctionId) view returns ((uint256 auctionId, uint256 tokenId, uint256 quantity, uint256 minimumBidAmount, uint256 buyoutBidAmount, uint64 timeBufferInSeconds, uint64 bidBufferBps, uint64 startTimestamp, uint64 endTimestamp, address auctionCreator, address assetContract, address currency, uint8 tokenType, uint8 status) auction)",
   "function getWinningBid(uint256 _auctionId) view returns (address bidder, address currency, uint256 bidAmount)",
   "function isAuctionExpired(uint256 _auctionId) view returns (bool)",
-  "function isNewWinningBid(uint256 _auctionId, uint256 _bidAmount) view returns (bool)"
+  "function isNewWinningBid(uint256 _auctionId, uint256 _bidAmount) view returns (bool)",
+  "function totalAuctions() view returns (uint256)"
 ]

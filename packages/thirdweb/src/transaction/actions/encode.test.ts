@@ -1,4 +1,4 @@
-import { USDC_CONTRACT, USDC_CONTRACT_WITH_ABI } from "~test/test-contracts.js";
+import { USDT_CONTRACT, USDT_CONTRACT_WITH_ABI } from "~test/test-contracts.js";
 import { TEST_WALLET_A } from "~test/addresses.js";
 import { encode } from "./encode.js";
 import { describe, it, expect } from "vitest";
@@ -12,7 +12,7 @@ const USDC_TRANSFER_ENCODE_RESULT =
 describe("transaction: encode", () => {
   it("should encode correctly (human-readable)", async () => {
     const tx = prepareContractCall({
-      contract: USDC_CONTRACT,
+      contract: USDT_CONTRACT,
       method: "function transfer(address, uint256) returns (bool)",
       params: [TEST_WALLET_A, 100n],
     });
@@ -22,7 +22,7 @@ describe("transaction: encode", () => {
 
   it("should encode correctly (transaction abi)", async () => {
     const tx = prepareContractCall({
-      contract: USDC_CONTRACT,
+      contract: USDT_CONTRACT,
       method: {
         inputs: [
           { internalType: "address", name: "to", type: "address" },
@@ -41,7 +41,7 @@ describe("transaction: encode", () => {
 
   it("should encode correctly (contract abi)", async () => {
     const tx = prepareContractCall({
-      contract: USDC_CONTRACT_WITH_ABI,
+      contract: USDT_CONTRACT_WITH_ABI,
       method: "transfer",
       params: [TEST_WALLET_A, 100n],
     });
@@ -51,7 +51,7 @@ describe("transaction: encode", () => {
 
   it("should encode correctly (auto-abi)", async () => {
     const tx = prepareContractCall({
-      contract: USDC_CONTRACT,
+      contract: USDT_CONTRACT,
       method: resolveMethod("transfer"),
       params: [TEST_WALLET_A, 100n],
     });

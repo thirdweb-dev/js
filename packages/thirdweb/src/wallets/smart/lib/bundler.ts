@@ -9,6 +9,7 @@ import type {
 import {
   DEBUG,
   ENTRYPOINT_ADDRESS,
+  MANAGED_ACCOUNT_GAS_BUFFER,
   getDefaultBundlerUrl,
 } from "./constants.js";
 import { hexlifyUserOp } from "./utils.js";
@@ -51,11 +52,12 @@ export async function estimateUserOpGas(args: {
     ],
   });
 
+  // add gas buffer for managed account factory delegate calls
   return {
     preVerificationGas: hexToBigInt(res.preVerificationGas),
     verificationGas: hexToBigInt(res.verificationGas),
     verificationGasLimit: hexToBigInt(res.verificationGasLimit),
-    callGasLimit: hexToBigInt(res.callGasLimit),
+    callGasLimit: hexToBigInt(res.callGasLimit) + MANAGED_ACCOUNT_GAS_BUFFER,
   };
 }
 
@@ -124,7 +126,7 @@ async function sendBundlerRequest(args: {
   const { options, operation, params } = args;
 
   if (DEBUG) {
-    console.debug(`sending ${operation} with payload:`, params);
+    console.debug(`>>> sending ${operation} with payload:`, params);
   }
 
   const bundlerUrl =
@@ -159,7 +161,7 @@ Code: ${code}`,
   }
 
   if (DEBUG) {
-    console.debug(`${operation} result:`, res);
+    console.debug(`<<< ${operation} result:`, res);
   }
 
   return res.result;
