@@ -5,7 +5,7 @@ import type { Chain } from "../chains/types.js";
 
 const MAX_POLL_DELAY = 5000; // 5 seconds
 const DEFAULT_POLL_DELAY = 1000; // 1 second
-const MIN_POLL_DELAY = 100; // 100 milliseconds
+const MIN_POLL_DELAY = 500; // 500 milliseconds
 const DEFAULT_OVERPOLL_RATIO = 2; // poll twice as often as the average block time by default
 
 const SLIDING_WINDOW_SIZE = 10; // always keep track of the last 10 block times

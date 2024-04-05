@@ -2,9 +2,10 @@
 
 # Platform team owns everything by default
 
-* @jnsdls @joaquim @MananTank
+- @jnsdls @joaquim-verges @MananTank
 
 # legacy packages
+
 legacy_packages/auth/ @jnsdls
 legacy_packages/chains/ @jnsdls
 legacy_packages/cli/ @jnsdls
@@ -18,31 +19,34 @@ legacy_packages/react/ @MananTank @jnsdls
 legacy_packages/react-core/ @MananTank @jnsdls
 legacy_packages/react-native/ @jnsdls
 legacy_packages/react-native-compat/ @jnsdls
-legacy_packages/sdk/ @joaquim @jnsdls
+legacy_packages/sdk/ @joaquim-verges @jnsdls
 legacy_packages/storage/ @jnsdls
 legacy_packages/wallets/ @MananTank @jnsdls
 
-
 # legacy e2e
+
 legacy_e2e/ @jnsdls
 
 # packages
 
 ## specific thirdweb pieces
+
 packages/thirdweb/src/react/ @MananTank
 packages/thirdweb/src/reactive/ @MananTank
-packages/thirdweb/src/gas/ @joaquim
+packages/thirdweb/src/gas/ @joaquim-verges
 packages/thirdweb/src/pay/ @MananTank @IDubuque
 
 packages/typedoc-gen/ @MananTank
+
 # owned by phil for now
+
 packages/service-utils/ @arcoraven
 packages/eslint-config-thirdweb/ @jnsdls
 packages/tw-tsconfig/ @jnsdls
-packages/unity-js-bridge/ @joaquim @0xFirekeeper
-
+packages/unity-js-bridge/ @joaquim-verges @0xFirekeeper
 
 # .github folder + .changeset + turbo config is owned by jonas for now
+
 scripts/ @jnsdls
 .github/ @jnsdls
 .changeset/config.json @jnsdls

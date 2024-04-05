@@ -75,6 +75,7 @@ jobs:
         uses: codecov/codecov-action@v4
         with:
           directory: ./packages
+          flags: packages
 
   e2e:
     timeout-minutes: 15
@@ -107,3 +108,23 @@ jobs:
         with:
           token: ${{ secrets.CODSPEED_TOKEN }}
           run: "pnpm bench"
+
+  size:
+    # only run on pull requests
+    if: github.event_name == 'pull_request'
+    timeout-minutes: 15
+    name: "Size"
+    runs-on: ubuntu-latest-16
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Setup & Install
+        uses: ./.github/composite-actions/install
+
+      - name: Report bundle size
+        uses: andresz1/size-limit-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          package_manager: pnpm
+          directory: packages/thirdweb

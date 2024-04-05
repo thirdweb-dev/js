@@ -26,10 +26,14 @@ export function getBytecode<abi extends Abi>(
 
   const prom = (async () => {
     const rpcRequest = getRpcClient(contract);
-    return eth_getCode(rpcRequest, {
+    const result = await eth_getCode(rpcRequest, {
       address: contract.address,
       blockTag: "latest",
     });
+    if (result === "0x") {
+      BYTECODE_CACHE.delete(contract);
+    }
+    return result;
   })();
   BYTECODE_CACHE.set(contract, prom);
   return prom;

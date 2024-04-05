@@ -187,6 +187,9 @@ const DialogContent = /* @__PURE__ */ StyledDiv(() => {
     outline: "none",
     overflow: "hidden",
     fontFamily: theme.fontFamily,
+    "& *": {
+      boxSizing: "border-box",
+    },
     [media.mobile]: {
       top: "auto",
       bottom: 0,
