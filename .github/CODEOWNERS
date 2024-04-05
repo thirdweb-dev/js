@@ -1,0 +1,13 @@
+# Order is important; the last matching pattern takes the most precedence.
+
+# Connect team owns everything by default
+
+- @jnsdls @joaquim-verges @MananTank
+
+# pages overrides
+
+src/pages/dashboard/engine/ @arcoraven
+
+# configurations
+
+.github/ @jnsdls
