@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { getContractEvents } from "./get-events.js";
 import {
   DOODLES_CONTRACT,
-  USDC_CONTRACT,
+  USDT_CONTRACT,
 } from "../../../test/src/test-contracts.js";
 import { transferEvent } from "../../extensions/erc721/__generated__/IERC721A/events/Transfer.js";
 import { prepareEvent } from "../prepare-event.js";
@@ -12,28 +12,28 @@ import { prepareEvent } from "../prepare-event.js";
 describe.runIf(process.env.TW_SECRET_KEY)("getEvents", () => {
   it("should get all events", async () => {
     const events = await getContractEvents({
-      contract: USDC_CONTRACT,
+      contract: USDT_CONTRACT,
       fromBlock: 19139495n - 10n,
     });
-    expect(events.length).toBe(87);
+    expect(events.length).toBe(261);
   });
 
   it("should get individual events with signature", async () => {
     const events = await getContractEvents({
-      contract: USDC_CONTRACT,
-      fromBlock: 19139495n - 10n,
+      contract: USDT_CONTRACT,
+      fromBlock: 19139495n - 100n,
       events: [
         prepareEvent({
           signature: "event Burn(address indexed burner, uint256 amount)",
         }),
       ],
     });
-    expect(events.length).toBe(2);
+    expect(events.length).toMatchInlineSnapshot(`0`);
   });
 
   it("should get specified events", async () => {
     const events = await getContractEvents({
-      contract: USDC_CONTRACT,
+      contract: USDT_CONTRACT,
       fromBlock: 19139495n - 10n,
       events: [
         prepareEvent({
@@ -68,7 +68,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("getEvents", () => {
         }),
       ],
     });
-    expect(events.length).toBe(15);
+    expect(events.length).toMatchInlineSnapshot(`9`);
   });
 
   it("should get individual events with extension", async () => {

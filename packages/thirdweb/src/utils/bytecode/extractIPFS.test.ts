@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import {
   DOODLES_CONTRACT,
-  USDC_CONTRACT,
+  USDT_CONTRACT,
 } from "../../../test/src/test-contracts.js";
 import { extractIPFSUri } from "./extractIPFS.js";
 import { getBytecode } from "../../contract/actions/get-bytecode.js";
@@ -23,7 +23,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("extractIPFSUri", () => {
 
   it("does not work if ipfs is not there", async () => {
     //  get some bytecode
-    const bytecode = await getBytecode(USDC_CONTRACT);
+    const bytecode = await getBytecode(USDT_CONTRACT);
     //  extract IPFS hash
     const ipfsHash = extractIPFSUri(bytecode);
 
