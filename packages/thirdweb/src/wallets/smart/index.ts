@@ -14,8 +14,10 @@ import {
 } from "./lib/calls.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
 import type { SignableMessage } from "viem";
-import { watchBlockNumber } from "../../rpc/watchBlockNumber.js";
-import type { WaitForReceiptOptions } from "../../transaction/actions/wait-for-tx-receipt.js";
+import {
+  waitForReceipt,
+  type WaitForReceiptOptions,
+} from "../../transaction/actions/wait-for-tx-receipt.js";
 import type { Hex } from "../../utils/encoding/hex.js";
 import type {
   CreateWalletArgs,
@@ -23,6 +25,7 @@ import type {
 } from "../wallet-types.js";
 import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
+import type { TransactionReceipt } from "../../transaction/types.js";
 
 /**
  * We can get the personal account for given smart account but not the other way around - this map gives us the reverse lookup
@@ -231,12 +234,10 @@ async function _deployAccount(args: {
   accountContract: ThirdwebContract;
 }) {
   const { options, account, accountContract } = args;
-  const [{ sendTransaction }, { waitForReceipt }, { prepareTransaction }] =
-    await Promise.all([
-      import("../../transaction/actions/send-transaction.js"),
-      import("../../transaction/actions/wait-for-tx-receipt.js"),
-      import("../../transaction/prepare-transaction.js"),
-    ]);
+  const [{ sendTransaction }, { prepareTransaction }] = await Promise.all([
+    import("../../transaction/actions/send-transaction.js"),
+    import("../../transaction/prepare-transaction.js"),
+  ]);
   const dummyTx = prepareTransaction({
     client: options.client,
     chain: options.chain,
@@ -247,7 +248,7 @@ async function _deployAccount(args: {
     transaction: dummyTx,
     account,
   });
-  return waitForReceipt(deployResult);
+  return deployResult;
 }
 
 async function _sendUserOp(args: {
@@ -275,35 +276,35 @@ async function _sendUserOp(args: {
     userOp: signedUserOp,
   });
   // wait for tx receipt rather than return the userOp hash
-  const maxAttempts = 200;
-  let attempts = 0;
-
-  const promise = new Promise<Hex>((resolve, reject) => {
-    const unwatch = watchBlockNumber({
-      chain: options.chain,
-      client: options.client,
-      overPollRatio: 1,
-      onNewBlockNumber: async () => {
-        attempts++;
-        if (attempts >= maxAttempts) {
-          unwatch();
-          reject(
-            "Max attempts reached without finding a receipt for userOp: " +
-              userOpHash,
-          );
-        }
-        const receipt = await getUserOpReceipt({ options, userOpHash });
-        if (receipt) {
-          unwatch();
-          resolve(receipt.transactionHash);
-        }
-      },
-    });
+  const receipt = await waitForUserOpReceipt({
+    options,
+    userOpHash,
   });
 
   return {
     client: options.client,
     chain: options.chain,
-    transactionHash: await promise,
+    transactionHash: receipt.transactionHash,
   };
+}
+
+async function waitForUserOpReceipt(args: {
+  options: SmartWalletOptions & {
+    personalAccount: Account;
+    client: ThirdwebClient;
+  };
+  userOpHash: Hex;
+}): Promise<TransactionReceipt> {
+  const { options, userOpHash } = args;
+  const timeout = 30000;
+  const interval = 1000;
+  const endtime = Date.now() + timeout;
+  while (Date.now() < endtime) {
+    const userOpReceipt = await getUserOpReceipt({ options, userOpHash });
+    if (userOpReceipt) {
+      return userOpReceipt;
+    }
+    await new Promise((resolve) => setTimeout(resolve, interval));
+  }
+  throw new Error("Timeout waiting for userOp to be mined");
 }
