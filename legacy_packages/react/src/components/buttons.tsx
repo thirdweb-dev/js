@@ -1,11 +1,6 @@
-import {
-  fontSize,
-  radius,
-  spacing,
-  type Theme,
-} from "../design-system/index.js";
-import { StyledButton } from "../design-system/elements.js";
-import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
+import { fontSize, radius, spacing, type Theme } from "../design-system/index";
+import { StyledButton } from "../design-system/elements";
+import { useCustomTheme } from "../design-system/CustomThemeProvider";
 
 type ButtonProps = {
   variant: "primary" | "secondary" | "link" | "accent" | "outline";

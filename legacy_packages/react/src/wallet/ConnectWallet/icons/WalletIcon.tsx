@@ -1,4 +1,4 @@
-import type { IconFC } from "./types.js";
+import type { IconFC } from "./types";
 
 /**
  * @internal

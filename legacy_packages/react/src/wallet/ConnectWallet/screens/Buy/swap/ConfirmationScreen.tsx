@@ -5,7 +5,7 @@ import {
   CrossCircledIcon,
 } from "@radix-ui/react-icons";
 import { useState } from "react";
-import { formatSeconds } from "./formatSeconds.js";
+import { formatSeconds } from "./formatSeconds";
 import { keyframes } from "@emotion/react";
 import {
   type BuyWithCryptoStatusQueryParams,
@@ -14,26 +14,22 @@ import {
   useSigner,
 } from "@thirdweb-dev/react-core";
 import { type BuyWithCryptoQuote } from "@thirdweb-dev/sdk";
-import { Skeleton } from "../../../../../components/Skeleton.js";
-import { Spacer } from "../../../../../components/Spacer.js";
-import { Spinner } from "../../../../../components/Spinner.js";
-import { TokenIcon } from "../../../../../components/TokenIcon.js";
-import {
-  Container,
-  ModalHeader,
-  Line,
-} from "../../../../../components/basic.js";
-import { Button } from "../../../../../components/buttons.js";
-import { useCustomTheme } from "../../../../../design-system/CustomThemeProvider.js";
-import { StyledDiv } from "../../../../../design-system/elements.js";
-import { iconSize, fontSize } from "../../../../../design-system/index.js";
-import { useChainQuery } from "../../../../hooks/useChainQuery.js";
-import { formatNumber } from "../../../../utils/formatNumber.js";
-import { isNativeToken, type ERC20OrNativeToken } from "../../nativeToken.js";
-import { SwapFees } from "./SwapFees.js";
-import { addPendingSwapTransaction } from "./pendingSwapTx.js";
-import { Text } from "../../../../../components/text.js";
-import { AccentFailIcon } from "../../../icons/AccentFailIcon.js";
+import { Skeleton } from "../../../../../components/Skeleton";
+import { Spacer } from "../../../../../components/Spacer";
+import { Spinner } from "../../../../../components/Spinner";
+import { TokenIcon } from "../../../../../components/TokenIcon";
+import { Container, ModalHeader, Line } from "../../../../../components/basic";
+import { Button } from "../../../../../components/buttons";
+import { useCustomTheme } from "../../../../../design-system/CustomThemeProvider";
+import { StyledDiv } from "../../../../../design-system/elements";
+import { iconSize, fontSize } from "../../../../../design-system/index";
+import { useChainQuery } from "../../../../hooks/useChainQuery";
+import { formatNumber } from "../../../../utils/formatNumber";
+import { isNativeToken, type ERC20OrNativeToken } from "../../nativeToken";
+import { SwapFees } from "./SwapFees";
+import { addPendingSwapTransaction } from "./pendingSwapTx";
+import { Text } from "../../../../../components/text";
+import { AccentFailIcon } from "../../../icons/AccentFailIcon";
 
 /**
  * @internal

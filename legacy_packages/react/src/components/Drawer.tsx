@@ -1,12 +1,12 @@
-import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
-import { fadeInAnimation } from "../design-system/animations.js";
-import { StyledDiv } from "../design-system/elements.js";
-import { iconSize, radius, spacing } from "../design-system/index.js";
+import { useCustomTheme } from "../design-system/CustomThemeProvider";
+import { fadeInAnimation } from "../design-system/animations";
+import { StyledDiv } from "../design-system/elements";
+import { iconSize, radius, spacing } from "../design-system/index";
 import { keyframes } from "@emotion/react";
-import { IconButton } from "./buttons.js";
+import { IconButton } from "./buttons";
 
 import { Cross2Icon } from "@radix-ui/react-icons";
-import { CrossContainer } from "./Modal.js";
+import { CrossContainer } from "./Modal";
 import { forwardRef, useRef } from "react";
 
 type DrawerProps = {

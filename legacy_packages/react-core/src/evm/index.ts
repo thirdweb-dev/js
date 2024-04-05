@@ -304,6 +304,15 @@ export { useWatchTransactions } from "./hooks/useTransactions";
 export type { UseWatchTransactionsParams } from "./hooks/useTransactions";
 
 // pay hooks
-export * from "./hooks/pay/useBuyWithCryptoHistory";
-export * from "./hooks/pay/useBuyWithCryptoQuote";
-export * from "./hooks/pay/useBuyWithCryptoStatus";
+export {
+  type BuyWithCryptoHistoryQueryParams,
+  useBuyWithCryptoHistory,
+} from "./hooks/pay/useBuyWithCryptoHistory";
+export {
+  useBuyWithCryptoQuote,
+  type BuyWithCryptoQuoteQueryParams,
+} from "./hooks/pay/useBuyWithCryptoQuote";
+export {
+  type BuyWithCryptoStatusQueryParams,
+  useBuyWithCryptoStatus,
+} from "./hooks/pay/useBuyWithCryptoStatus";

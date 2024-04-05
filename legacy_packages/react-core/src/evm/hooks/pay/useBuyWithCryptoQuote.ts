@@ -9,7 +9,7 @@ import {
   GetBuyWithCryptoQuoteParams,
 } from "@thirdweb-dev/sdk";
 
-export type BuyWithCryptoQuoteQueryOptions = Omit<
+type BuyWithCryptoQuoteQueryOptions = Omit<
   UseQueryOptions<BuyWithCryptoQuote>,
   "queryFn" | "queryKey" | "enabled"
 >;

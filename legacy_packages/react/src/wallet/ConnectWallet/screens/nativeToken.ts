@@ -1,4 +1,4 @@
-import type { TokenInfo } from "../defaultTokens.js";
+import type { TokenInfo } from "../defaultTokens";
 
 export type NativeToken = { nativeToken: true };
 
