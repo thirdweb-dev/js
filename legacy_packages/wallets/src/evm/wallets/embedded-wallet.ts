@@ -458,3 +458,5 @@ export class EmbeddedWallet extends AbstractClientWallet<
 }
 
 const LAST_USED_AUTH_STRATEGY = "lastUsedAuthStrategy";
+
+export { supportedSmsCountries } from "../connectors/embedded-wallet/implementations/lib/auth/supported-sms-countries";
