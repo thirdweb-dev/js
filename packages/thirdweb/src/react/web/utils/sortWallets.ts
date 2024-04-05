@@ -40,8 +40,8 @@ export function sortWallets<T extends { id: string }>(
       })
       // show wallets with select ui first ( currently only embedded )
       .sort((a, b) => {
-        const aIsEmbedded = a.id === "embedded";
-        const bIsEmbedded = b.id === "embedded";
+        const aIsEmbedded = a.id === "inApp";
+        const bIsEmbedded = b.id === "inApp";
         if (aIsEmbedded && !bIsEmbedded) {
           return -1;
         }

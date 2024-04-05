@@ -48,11 +48,11 @@ export function createWallet<const ID extends WalletId>(
       ) as Wallet<ID>;
     }
     /**
-     * EMBEDDED WALLET
+     * IN-APP WALLET
      */
-    case "embedded": {
-      return embeddedWallet(
-        creationOptions as CreateWalletArgs<"embedded">[1],
+    case "inApp": {
+      return inAppWallet(
+        creationOptions as CreateWalletArgs<"inApp">[1],
       ) as Wallet<ID>;
     }
 
@@ -290,7 +290,7 @@ export function walletConnect() {
 export function smartWallet(
   createOptions: CreateWalletArgs<"smart">[1],
 ): Wallet<"smart"> {
-  const emitter = createWalletEmitter<"embedded">();
+  const emitter = createWalletEmitter<"inApp">();
   let account: Account | undefined = undefined;
   let chain: Chain | undefined = undefined;
 
@@ -353,6 +353,7 @@ export function smartWallet(
 
 /**
  * Creates an embedded wallet.
+ * @deprecated Use `inAppWallet` instead.
  * @param createOptions - configuration options
  * @returns The created embedded wallet.
  * @example
@@ -369,14 +370,36 @@ export function smartWallet(
  * ```
  * @wallet
  */
-export function embeddedWallet(
-  createOptions?: CreateWalletArgs<"embedded">[1],
-): Wallet<"embedded"> {
-  const emitter = createWalletEmitter<"embedded">();
+export function embeddedWallet(createOptions?: CreateWalletArgs<"inApp">[1]) {
+  return inAppWallet(createOptions);
+}
+
+/**
+ * Creates an in-app wallet.
+ * @param createOptions - configuration options
+ * @returns The created in-app wallet.
+ * @example
+ * ```ts
+ * import { inAppWallet } from "thirdweb/wallets";
+ *
+ * const wallet = inAppWallet();
+ *
+ * const account = await wallet.connect({
+ *   client,
+ *   chain,
+ *   strategy: "google",
+ * });
+ * ```
+ * @wallet
+ */
+export function inAppWallet(
+  createOptions?: CreateWalletArgs<"inApp">[1],
+): Wallet<"inApp"> {
+  const emitter = createWalletEmitter<"inApp">();
   let account: Account | undefined = undefined;
   let chain: Chain | undefined = undefined;
   return {
-    id: "embedded",
+    id: "inApp",
     subscribe: emitter.subscribe,
     getChain: () => chain,
     getConfig: () => createOptions,
@@ -393,7 +416,7 @@ export function embeddedWallet(
       chain = connectedChain;
       trackConnect({
         client: options.client,
-        walletType: "embedded",
+        walletType: "inApp",
         walletAddress: account.address,
       });
       // return only the account
@@ -411,7 +434,7 @@ export function embeddedWallet(
       chain = connectedChain;
       trackConnect({
         client: options.client,
-        walletType: "embedded",
+        walletType: "inApp",
         walletAddress: account.address,
       });
       // return only the account

@@ -1,4 +1,4 @@
-export { embeddedWallet, inAppWallet } from "../../wallets/create-wallet.js";
+export { inAppWallet } from "../../wallets/create-wallet.js";
 
 export {
   preAuthenticate,

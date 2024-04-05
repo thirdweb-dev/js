@@ -8,7 +8,7 @@ import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 
 type Screen = string | Wallet;
 
-const embeddedWalletId = "embedded";
+const inAppWalletId = "inApp";
 
 export type ScreenSetup = {
   screen: Screen;
@@ -29,7 +29,7 @@ export function useSetupScreen() {
 
   let initialScreen: Screen = reservedScreens.main;
 
-  const socialLogin = wallets.find((w) => w.id === embeddedWalletId);
+  const socialLogin = wallets.find((w) => w.id === inAppWalletId);
 
   if (wallets.length === 1 && wallets[0]) {
     initialScreen = wallets[0];

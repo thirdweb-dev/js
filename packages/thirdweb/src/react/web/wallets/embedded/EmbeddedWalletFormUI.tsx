@@ -38,7 +38,7 @@ export type EmbeddedWalletFormUIProps = {
   select: () => void;
   locale: EmbeddedWalletLocale;
   done: () => void;
-  wallet: Wallet<"embedded">;
+  wallet: Wallet<"inApp">;
   goBack?: () => void;
 };
 

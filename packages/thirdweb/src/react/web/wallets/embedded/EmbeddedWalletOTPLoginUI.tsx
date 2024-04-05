@@ -32,7 +32,7 @@ type ScreenToShow =
  * @internal
  */
 export function EmbeddedWalletOTPLoginUI(props: {
-  wallet: Wallet<"embedded">;
+  wallet: Wallet<"inApp">;
   email: string;
   locale: EmbeddedWalletLocale;
   done: () => void;

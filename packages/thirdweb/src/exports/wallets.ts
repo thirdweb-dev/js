@@ -2,6 +2,7 @@ export {
   createWallet,
   smartWallet,
   embeddedWallet,
+  inAppWallet,
   walletConnect,
 } from "../wallets/create-wallet.js";
 

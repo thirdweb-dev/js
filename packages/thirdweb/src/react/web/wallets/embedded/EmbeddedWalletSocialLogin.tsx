@@ -19,7 +19,7 @@ import type { EmbeddedWalletSocialAuth } from "../../../../wallets/embedded/core
 export function EmbeddedWalletSocialLogin(props: {
   socialAuth: EmbeddedWalletSocialAuth;
   locale: EmbeddedWalletLocale;
-  wallet: Wallet<"embedded">;
+  wallet: Wallet<"inApp">;
   done: () => void;
   goBack?: () => void;
   state: EmbeddedWalletSelectUIState;

@@ -21,7 +21,7 @@ import type { ThirdwebClient } from "../client/client.js";
 
 export type WalletId =
   | "walletConnect"
-  | "embedded"
+  | "inApp"
   | "smart"
   | WCSupportedWalletIds
   | InjectedSupportedWalletIds;
@@ -66,8 +66,8 @@ export type WalletConnectionOption<T extends WalletId> =
     ? StandaloneWCConnectOptions
     : T extends "smart"
       ? SmartWalletConnectionOptions
-      : // embedded wallet
-        T extends "embedded"
+      : // inApp wallet
+        T extends "inApp"
         ? EmbeddedWalletConnectionOptions
         : // coinbase wallet (inhected + coinbaseWallet)
           T extends "com.coinbase.wallet"
@@ -93,7 +93,7 @@ export type WalletAutoConnectionOption<T extends WalletId> =
     ? WCAutoConnectOptions
     : T extends "smart"
       ? SmartWalletConnectionOptions
-      : T extends "embedded"
+      : T extends "inApp"
         ? EmbeddedWalletAutoConnectOptions
         : // coinbase wallet (inhected + coinbaseWallet)
           T extends "com.coinbase.wallet"
@@ -115,7 +115,7 @@ export type WalletAutoConnectionOption<T extends WalletId> =
  */
 export type WalletCreationOptions<T extends WalletId> = T extends "smart"
   ? SmartWalletOptions
-  : T extends "embedded"
+  : T extends "inApp"
     ? EmbeddedWalletCreationOptions
     : undefined;
 

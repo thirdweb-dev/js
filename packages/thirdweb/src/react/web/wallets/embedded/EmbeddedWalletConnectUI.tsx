@@ -13,7 +13,7 @@ import { EmbeddedWalletSocialLogin } from "./EmbeddedWalletSocialLogin.js";
  * @internal
  */
 function EmbeddedWalletConnectUI(props: {
-  wallet: Wallet<"embedded">;
+  wallet: Wallet<"inApp">;
   done: () => void;
   goBack?: () => void;
 }) {

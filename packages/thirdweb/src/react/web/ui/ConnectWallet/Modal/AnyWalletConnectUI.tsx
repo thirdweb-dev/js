@@ -132,11 +132,11 @@ export function AnyWalletConnectUI(props: {
     );
   }
 
-  if (props.wallet.id === "embedded") {
+  if (props.wallet.id === "inApp") {
     return (
       <Suspense fallback={<LoadingScreen />}>
         <EmbeddedWalletConnectUI
-          wallet={props.wallet as Wallet<"embedded">}
+          wallet={props.wallet as Wallet<"inApp">}
           done={props.done}
           goBack={props.onBack}
         />

@@ -6,7 +6,7 @@ import { createWallet } from "../../../wallets/create-wallet.js";
  */
 export function getDefaultWallets(): Wallet[] {
   return [
-    createWallet("embedded"),
+    createWallet("inApp"),
     createWallet("io.metamask"),
     createWallet("com.coinbase.wallet"),
     createWallet("me.rainbow"),

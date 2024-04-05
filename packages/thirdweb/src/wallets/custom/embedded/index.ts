@@ -1,5 +1,5 @@
 export const wallet = {
-  id: "embedded",
+  id: "inApp",
   name: "Social Login",
   homepage: "https://thirdweb.com",
   app: {

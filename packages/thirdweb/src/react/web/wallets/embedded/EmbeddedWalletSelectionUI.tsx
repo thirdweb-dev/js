@@ -18,7 +18,7 @@ import { WalletEntryButton } from "../../ui/ConnectWallet/WalletEntryButton.js";
  */
 function EmbeddedWalletSelectionUI(props: {
   select: () => void;
-  wallet: Wallet<"embedded">;
+  wallet: Wallet<"inApp">;
   done: () => void;
   goBack?: () => void;
 }) {
