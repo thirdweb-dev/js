@@ -773,6 +773,9 @@ importers:
       qrcode:
         specifier: ^1.5.3
         version: 1.5.3
+      thirdweb:
+        specifier: workspace:*
+        version: link:../../packages/thirdweb
       tiny-invariant:
         specifier: ^1.3.3
         version: 1.3.3
@@ -17588,7 +17591,6 @@ packages:
     dependencies:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
-    bundledDependencies: false
 
   /event-emitter@0.3.5:
     resolution: {integrity: sha512-D9rRn9y7kLPnJ+hMq7S/nhvoKwwvVJahBi2BPmx3bvbsEdK3W9ii8cBSGjP+72/LnM4n6fo3+dkCX5FeTQruXA==}
