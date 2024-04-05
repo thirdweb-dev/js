@@ -773,9 +773,6 @@ importers:
       qrcode:
         specifier: ^1.5.3
         version: 1.5.3
-      thirdweb:
-        specifier: workspace:*
-        version: link:../../packages/thirdweb
       tiny-invariant:
         specifier: ^1.3.3
         version: 1.3.3

@@ -5,9 +5,8 @@ import {
   type ERC20OrNativeToken,
   type NativeToken,
 } from "../wallet/ConnectWallet/nativeToken";
+import { useChainQuery } from "../wallet/hooks/useChainQuery";
 import { Img } from "./Img";
-import { useChainQuery } from "thirdweb/react";
-import { defineChain } from "thirdweb";
 
 /**
  * @internal
@@ -44,7 +43,7 @@ function NativeTokenIcon(props: {
   nativeToken: NativeToken;
   size: keyof typeof iconSize;
 }) {
-  const chainQuery = useChainQuery(defineChain(props.chainId));
+  const chainQuery = useChainQuery(props.chainId);
 
   return (
     <Img

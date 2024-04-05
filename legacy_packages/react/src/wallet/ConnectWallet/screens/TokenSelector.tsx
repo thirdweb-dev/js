@@ -9,7 +9,6 @@ import {
 } from "./nativeToken";
 import type { TokenInfo } from "../defaultTokens";
 import { NetworkSelectorContent, ChainButton } from "../NetworkSelector";
-import { useChainQuery } from "thirdweb/react";
 import { ChainIcon, fallbackChainIcon } from "../../../components/ChainIcon";
 import { Skeleton } from "../../../components/Skeleton";
 import { Spacer } from "../../../components/Spacer";
@@ -21,11 +20,11 @@ import { Input } from "../../../components/formElements";
 import { iconSize, fontSize, spacing } from "../../../design-system";
 import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
 import { useBalance } from "@thirdweb-dev/react-core";
-import { defineChain } from "thirdweb";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
 import type { Chain } from "@thirdweb-dev/chains";
 import { Text } from "../../../components/text";
 import { formatTokenBalance } from "../../utils/formatTokenBalance";
+import { useChainQuery } from "../../hooks/useChainQuery";
 
 /**
  *
@@ -43,7 +42,7 @@ export function TokenSelector(props: {
 }) {
   const [screen, setScreen] = useState<"base" | "select-chain">("base");
   const [input, setInput] = useState("");
-  const chainQuery = useChainQuery(defineChain(props.chainId));
+  const chainQuery = useChainQuery(props.chainId);
 
   // if input is undefined, it loads the native token
   // otherwise it loads the token with given address
