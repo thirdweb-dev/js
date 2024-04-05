@@ -27,6 +27,7 @@ import {
   ShuffleIcon,
   TextAlignJustifyIcon,
   ExitIcon,
+  PlusIcon,
 } from "@radix-ui/react-icons";
 import { Localhost } from "@thirdweb-dev/chains";
 import {
@@ -78,6 +79,7 @@ type WalletDetailsModalScreen =
   | "main"
   | "export"
   | "send"
+  | "buy"
   | "receive"
   | "network-switcher";
 
@@ -99,6 +101,7 @@ export const ConnectedWalletDetails: React.FC<{
   detailsModalFooter?: (props: { close: () => void }) => JSX.Element;
   hideSendButton?: boolean;
   hideReceiveButton?: boolean;
+  hideBuyButton?: boolean;
 }> = (props) => {
   const locale = useTWLocale().connectWallet;
   const chain = useChain();
@@ -289,8 +292,17 @@ export const ConnectedWalletDetails: React.FC<{
   const showFaucet =
     props.hideTestnetFaucet === undefined ? false : !props.hideTestnetFaucet;
 
-  const showBothButtons =
-    props.hideSendButton !== true && props.hideReceiveButton !== true;
+  let buttonsToShow = 3;
+
+  if (props.hideReceiveButton) {
+    buttonsToShow -= 1;
+  }
+  if (props.hideSendButton) {
+    buttonsToShow -= 1;
+  }
+  if (props.hideBuyButton) {
+    buttonsToShow -= 1;
+  }
 
   let content = (
     <div>
@@ -358,17 +370,11 @@ export const ConnectedWalletDetails: React.FC<{
 
         {/* Send and Receive */}
         <Container
-          style={
-            showBothButtons
-              ? {
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: spacing.sm,
-                }
-              : {
-                  display: "grid",
-                }
-          }
+          style={{
+            display: "grid",
+            gridTemplateColumns: `repeat(${buttonsToShow}, 1fr)`,
+            gap: spacing.sm,
+          }}
         >
           {props.hideSendButton !== true && (
             <Button
@@ -413,12 +419,31 @@ export const ConnectedWalletDetails: React.FC<{
               {locale.receive}{" "}
             </Button>
           )}
+
+          {props.hideBuyButton !== true && (
+            <Button
+              variant="outline"
+              style={{
+                fontSize: fontSize.sm,
+                display: "flex",
+                gap: spacing.xs,
+                alignItems: "center",
+                padding: spacing.sm,
+              }}
+              onClick={() => {
+                setScreen("buy");
+              }}
+            >
+              <Container color="secondaryText" flex="row" center="both">
+                <PlusIcon width={iconSize.sm} height={iconSize.sm} />
+              </Container>
+              {"Buy"}
+            </Button>
+          )}
         </Container>
       </Container>
 
-      {props.hideSendButton && props.hideReceiveButton ? null : (
-        <Spacer y="md" />
-      )}
+      {buttonsToShow === 0 ? null : <Spacer y="md" />}
 
       <Container px="md">
         {/* Network Switcher */}
