@@ -1,9 +1,7 @@
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { toTokens } from "../../../utils/units.js";
-import { symbol } from "../../common/read/symbol.js";
-import { name } from "../../common/read/name.js";
 import { balanceOf } from "../__generated__/IERC20/read/balanceOf.js";
-import { decimals } from "./decimals.js";
+import { getCurrencyMetadata } from "./getCurrencyMetadata.js";
 /**
  * Represents the parameters for retrieving the balance of an address.
  */
@@ -40,17 +38,13 @@ export type GetBalanceResult = {
 export async function getBalance(
   options: BaseTransactionOptions<GetBalanceParams>,
 ): Promise<GetBalanceResult> {
-  const [balanceWei, decimals_, symbol_, name_] = await Promise.all([
+  const [balanceWei, currencyMetadata] = await Promise.all([
     balanceOf(options),
-    decimals(options),
-    symbol(options),
-    name(options),
+    getCurrencyMetadata(options),
   ]);
   return {
+    ...currencyMetadata,
     value: balanceWei,
-    decimals: decimals_,
-    displayValue: toTokens(balanceWei, decimals_),
-    symbol: symbol_,
-    name: name_,
+    displayValue: toTokens(balanceWei, currencyMetadata.decimals),
   };
 }

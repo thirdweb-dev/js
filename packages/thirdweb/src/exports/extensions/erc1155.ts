@@ -1,4 +1,5 @@
 // READ
+export { isERC1155 } from "../../extensions/erc1155/read/isERC1155.js";
 export {
   balanceOfBatch,
   type BalanceOfBatchParams,
