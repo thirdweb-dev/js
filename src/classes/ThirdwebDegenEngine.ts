@@ -10,6 +10,8 @@ const ownedResponseSchema = z.object({
   result: z.string(),
 });
 
+const validAction = z.union([z.literal("mint"), z.literal("redirect")]);
+
 const thirdwebEngineUrl = process.env.THIRDWEB_ENGINE_URL;
 const thirdwebEngineWallet = process.env.THIRDWEB_ENGINE_WALLET;
 const thirdwebEngineAccessToken = process.env.THIRDWEB_ACCESS_TOKEN;
@@ -58,5 +60,9 @@ export class ThirdwebDegenEngine {
     const parsedResult = ownedResponseSchema.parse(result);
 
     return parsedResult.result !== "0";
+  };
+
+  public static validateAction = (action: string) => {
+    return validAction.parse(action);
   };
 }

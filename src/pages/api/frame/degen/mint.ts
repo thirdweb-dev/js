@@ -1,55 +1,80 @@
 import { CoinbaseKit } from "classes/CoinbaseKit";
-import { getFrameHtmlResponse } from "@coinbase/onchainkit";
-import { errorResponse } from "utils/api";
-import { getFarcasterAccountAddress } from "utils/tx-frame";
+import { FrameRequest, getFrameHtmlResponse } from "@coinbase/onchainkit";
+import {
+  errorResponse,
+  redirectResponse,
+  successHtmlResponse,
+} from "utils/api";
 import { ThirdwebDegenEngine } from "classes/ThirdwebDegenEngine";
 import { getAbsoluteUrl } from "lib/vercel-utils";
-import { shortenAddress } from "@thirdweb-dev/react";
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextRequest } from "next/server";
+import { shortenAddress } from "utils/string";
+import { getFarcasterAccountAddress } from "utils/farcaster";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
+const postUrl = `${getAbsoluteUrl()}/api/frame/degen/mint`;
+const imageUrl = `${getAbsoluteUrl()}/assets/og-image/degen-enchine-frame.png`;
+
+const thirdwebDashboardContractUrl =
+  "https://thirdweb.com/degen-chain/0x1efacE838cdCD5B19d8D0CC4d22d7AEFdDfB0d6f";
+
+export const config = {
+  runtime: "edge",
+};
+
+export default async function handler(req: NextRequest) {
   if (req.method !== "POST") {
     return errorResponse("Invalid method", 400);
   }
 
-  const { isValid, message } = await CoinbaseKit.validateMessage(req.body);
+  const body = (await req.json()) as FrameRequest;
+
+  const { isValid, message } = await CoinbaseKit.validateMessage(body);
 
   if (!isValid || !message) {
-    return res.status(400).send("Invalid message");
+    return errorResponse("Invalid message", 400);
   }
 
-  const faracsterAddress = getFarcasterAccountAddress(message.interactor);
+  const { searchParams } = new URL(req.url);
 
-  const isNftOwned = await ThirdwebDegenEngine.isNFTOwned(faracsterAddress);
+  const queryAction = searchParams.get("action");
 
-  if (isNftOwned) {
+  const action = ThirdwebDegenEngine.validateAction(queryAction as string);
+
+  if (action === "mint") {
+    const faracsterAddress = getFarcasterAccountAddress(message.interactor);
+
+    const isNftOwned = await ThirdwebDegenEngine.isNFTOwned(faracsterAddress);
+
+    if (isNftOwned) {
+      const htmlResponse = getFrameHtmlResponse({
+        buttons: [
+          {
+            label: `NFT already minted`,
+            action: `post_redirect`,
+          },
+        ],
+        image: imageUrl,
+        post_url: `${postUrl}?action=redirect`,
+      });
+
+      return successHtmlResponse(htmlResponse, 200);
+    }
+
+    await ThirdwebDegenEngine.mint(faracsterAddress);
+
     const htmlResponse = getFrameHtmlResponse({
       buttons: [
         {
-          label: `NFT already minted`,
-          action: `post`,
+          label: `Successfully minted to address ${shortenAddress(faracsterAddress)}`,
+          action: `post_redirect`,
         },
       ],
-      image: `${getAbsoluteUrl()}/assets/og-image/degen-enchine-frame.png`,
+      image: imageUrl,
+      post_url: `${postUrl}?action=redirect`,
     });
 
-    return res.status(200).send(htmlResponse);
+    return successHtmlResponse(htmlResponse, 200);
   }
 
-  await ThirdwebDegenEngine.mint(faracsterAddress);
-
-  const htmlResponse = getFrameHtmlResponse({
-    buttons: [
-      {
-        label: `Successfully minted to address ${shortenAddress(faracsterAddress)}`,
-        action: `post`,
-      },
-    ],
-    image: `${getAbsoluteUrl()}/assets/og-image/degen-enchine-frame.png`,
-  });
-
-  return res.status(200).send(htmlResponse);
+  return redirectResponse(thirdwebDashboardContractUrl, 302);
 }

@@ -41,7 +41,7 @@ const BaseFramePage = () => {
         <meta property="fc:frame:button:1:action" content="post" />
         <meta
           property="fc:frame:button:1:target"
-          content={`${getAbsoluteUrl()}/api/frame/degen/mint`}
+          content={`${getAbsoluteUrl()}/api/frame/degen/mint?action=mint`}
         />
       </Head>
     </>
