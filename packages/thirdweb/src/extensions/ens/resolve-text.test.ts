@@ -12,7 +12,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("ENS:resolve-text", () => {
       name: "jns.eth",
       key: "com.twitter",
     });
-    await expect(record).resolves.toMatchInlineSnapshot(`"jnsdls"`);
+    expect(record).toMatchInlineSnapshot(`"jnsdls"`);
   });
 
   it("resolves name without text record to null", async () => {
