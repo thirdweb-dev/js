@@ -43,7 +43,7 @@ export type InitializedUser = {
   authDetails: AuthDetails;
 };
 
-// Embedded Wallet Types
+// In APp Wallet Types
 export enum UserWalletStatus {
   LOGGED_OUT = "Logged Out",
   LOGGED_IN_WALLET_UNINITIALIZED = "Logged In, Wallet Uninitialized",

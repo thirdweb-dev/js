@@ -36,7 +36,7 @@ export class Auth {
 
   /**
    * Used to manage the user's auth states. This should not be instantiated directly.
-   * Call {@link EmbeddedWalletSdk.auth} instead.
+   * Call {@link InAppWalletSdk.auth} instead.
    * @internal
    */
   constructor({
@@ -90,9 +90,9 @@ export class Auth {
    * Used to log the user into their thirdweb wallet on your platform via a myriad of auth providers
    * @example
    * ```typescript
-   * const thirdwebEmbeddedWallet = new EmbeddedWalletSdk({clientId: "YOUR_CLIENT_ID", chain: "Polygon"})
+   * const thirdwebInAppWallet = new InAppWalletSdk({clientId: "YOUR_CLIENT_ID", chain: "Polygon"})
    * try {
-   *   const user = await thirdwebEmbeddedWallet.auth.loginWithModal();
+   *   const user = await thirdwebInAppWallet.auth.loginWithModal();
    *   // user is now logged in
    * } catch (e) {
    *   // User closed modal or something else went wrong during the authentication process
@@ -110,10 +110,10 @@ export class Auth {
    * @example
    * ```typescript
    *  // Basic Flow
-   *  const thirdwebEmbeddedWallet = new EmbeddedWalletSdk({clientId: "", chain: "Polygon"});
+   *  const thirdwebInAppWallet = new InAppWalletSdk({clientId: "", chain: "Polygon"});
    *  try {
    *    // prompts user to enter the code they received
-   *    const user = await thirdwebEmbeddedWallet.auth.loginWithThirdwebEmailOtp({ email : "you@example.com" });
+   *    const user = await thirdwebInAppWallet.auth.loginWithThirdwebEmailOtp({ email : "you@example.com" });
    *    // user is now logged in
    *  } catch (e) {
    *    // User closed the OTP modal or something else went wrong during the authentication process
@@ -121,7 +121,7 @@ export class Auth {
    *  }
    * ```
    * @param args - args.email: We will send the email an OTP that needs to be entered in order for them to be logged in.
-   * @returns `{{user: InitializedUser}}` An InitializedUser object. See {@link EmbeddedWalletSdk.getUser} for more
+   * @returns `{{user: InitializedUser}}` An InitializedUser object. See {@link InAppWalletSdk.getUser} for more
    */
   async loginWithEmailOtp(
     args: Parameters<BaseLogin["loginWithEmailOtp"]>[0],
@@ -162,10 +162,10 @@ export class Auth {
    * @example
    * @param param0.email
    * ```typescript
-   *  const thirdwebEmbeddedWallet = new EmbeddedWalletSdk({clientId: "", chain: "Polygon"});
+   *  const thirdwebInAppWallet = new InAppWalletSdk({clientId: "", chain: "Polygon"});
    *  // sends user an OTP code
    * try {
-   *    await thirdwebEmbeddedWallet.auth.sendEmailLoginOtp({ email : "you@example.com" });
+   *    await thirdwebInAppWallet.auth.sendEmailLoginOtp({ email : "you@example.com" });
    * } catch(e) {
    *    // Error Sending user's email an OTP code
    *    console.error(e);
@@ -173,7 +173,7 @@ export class Auth {
    *
    * // Then when your user is ready to verify their OTP
    * try {
-   *    const user = await thirdwebEmbeddedWallet.auth.verifyEmailLoginOtp({ email: "you@example.com", otp: "6-DIGIT_CODE_HERE" });
+   *    const user = await thirdwebInAppWallet.auth.verifyEmailLoginOtp({ email: "you@example.com", otp: "6-DIGIT_CODE_HERE" });
    * } catch(e) {
    *    // Error verifying the OTP code
    *    console.error(e)

@@ -5,7 +5,7 @@ type DomainOverrides = {
    */
   rpc?: string;
   /**
-   * The base URL for the embedded wallet service
+   * The base URL for the in-app wallet service
    * @default "embedded-wallet.thirdweb.com"
    */
   inAppWallet?: string;

@@ -12,7 +12,7 @@ const ewsSDKCache = new WeakMap<ThirdwebClient, InAppWalletSdk>();
 /**
  * @internal
  */
-async function getEmbeddedWalletSDK(client: ThirdwebClient) {
+async function getInAppWalletSDK(client: ThirdwebClient) {
   if (ewsSDKCache.has(client)) {
     return ewsSDKCache.get(client) as InAppWalletSdk;
   }
@@ -32,12 +32,12 @@ export type GetAuthenticatedUserParams = {
 };
 
 /**
- * Retrieves the authenticated user for the active embedded wallet.
+ * Retrieves the authenticated user for the active in-app wallet.
  * @param options - The arguments for retrieving the authenticated user.
  * @returns The authenticated user if logged in and wallet initialized, otherwise undefined.
  * @example
  * ```ts
- * import { getAuthenticatedUser } from "thirdweb/wallets/embedded";
+ * import { getAuthenticatedUser } from "thirdweb/wallets/in-app";
  *
  * const user = await getAuthenticatedUser({ client });
  * if (user) {
@@ -49,7 +49,7 @@ export async function getAuthenticatedUser(
   options: GetAuthenticatedUserParams,
 ) {
   const { client } = options;
-  const ewSDK = await getEmbeddedWalletSDK(client);
+  const ewSDK = await getInAppWalletSDK(client);
   const user = await ewSDK.getUser();
   switch (user.status) {
     case UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED: {
@@ -60,12 +60,12 @@ export async function getAuthenticatedUser(
 }
 
 /**
- * Retrieves the authenticated user email for the active embedded wallet.
+ * Retrieves the authenticated user email for the active in-app wallet.
  * @param options - The arguments for retrieving the authenticated user.
  * @returns The authenticated user email if logged in and wallet initialized, otherwise undefined.
  * @example
  * ```ts
- * import { getUserEmail } from "thirdweb/wallets/embedded";
+ * import { getUserEmail } from "thirdweb/wallets/in-app";
  *
  * const email = await getUserEmail({ client });
  * console.log(email);
@@ -86,7 +86,7 @@ export async function getUserEmail(options: GetAuthenticatedUserParams) {
  * @throws An error if the provided authentication strategy doesn't require pre-authentication.
  * @example
  * ```ts
- * import { preAuthenticate } from "thirdweb/wallets/embedded";
+ * import { preAuthenticate } from "thirdweb/wallets/in-app";
  *
  * const result = await preAuthenticate({
  *  client,
@@ -96,7 +96,7 @@ export async function getUserEmail(options: GetAuthenticatedUserParams) {
  * ```
  */
 export async function preAuthenticate(args: PreAuthArgsType) {
-  const ewSDK = await getEmbeddedWalletSDK(args.client);
+  const ewSDK = await getInAppWalletSDK(args.client);
   const strategy = args.strategy;
   switch (strategy) {
     case "email": {
@@ -115,7 +115,7 @@ export async function preAuthenticate(args: PreAuthArgsType) {
  * @returns A promise that resolves to the authentication result.
  * @example
  * ```ts
- * import { authenticate } from "thirdweb/wallets/embedded";
+ * import { authenticate } from "thirdweb/wallets/in-app";
  *
  * const result = await authenticate({
  *  client,
@@ -128,7 +128,7 @@ export async function preAuthenticate(args: PreAuthArgsType) {
 export async function authenticate(
   args: AuthArgsType,
 ): Promise<AuthLoginReturnType> {
-  const ewSDK = await getEmbeddedWalletSDK(args.client);
+  const ewSDK = await getInAppWalletSDK(args.client);
   const strategy = args.strategy;
   switch (strategy) {
     case "email": {

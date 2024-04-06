@@ -50,7 +50,7 @@ export abstract class AbstractLogin<
   protected baseUrl: string;
   /**
    * Used to manage the user's auth states. This should not be instantiated directly.
-   * Call {@link EmbeddedWalletSdk.auth} instead.
+   * Call {@link InAppWalletSDK.auth} instead.
    * @internal
    */
   constructor({

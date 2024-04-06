@@ -14,8 +14,8 @@ export class InAppWalletIframeCommunicator<
    */
   constructor({ clientId, baseUrl }: { clientId: string; baseUrl: string }) {
     super({
-      iframeId: EMBEDDED_WALLET_IFRAME_ID,
-      link: createEmbeddedWalletIframeLink({
+      iframeId: IN_APP_WALLET_IFRAME_ID,
+      link: createInAppWalletIframeLink({
         clientId,
         path: IN_APP_WALLET_PATH,
         baseUrl,
@@ -47,7 +47,7 @@ export class InAppWalletIframeCommunicator<
 /**
  * @internal
  */
-export function createEmbeddedWalletIframeLink({
+export function createInAppWalletIframeLink({
   clientId,
   baseUrl,
   path,
@@ -58,16 +58,16 @@ export function createEmbeddedWalletIframeLink({
   path: string;
   queryParams?: { [key: string]: string | number };
 }) {
-  const embeddedWalletUrl = new URL(`${path}`, baseUrl);
+  const inAppWalletUrl = new URL(`${path}`, baseUrl);
   if (queryParams) {
     for (const queryKey of Object.keys(queryParams)) {
-      embeddedWalletUrl.searchParams.set(
+      inAppWalletUrl.searchParams.set(
         queryKey,
         queryParams[queryKey]?.toString() || "",
       );
     }
   }
-  embeddedWalletUrl.searchParams.set("clientId", clientId);
-  return embeddedWalletUrl;
+  inAppWalletUrl.searchParams.set("clientId", clientId);
+  return inAppWalletUrl;
 }
-export const EMBEDDED_WALLET_IFRAME_ID = "thirdweb-embedded-wallet-iframe";
+export const IN_APP_WALLET_IFRAME_ID = "thirdweb-in-app-wallet-iframe";

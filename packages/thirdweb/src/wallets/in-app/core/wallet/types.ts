@@ -1,7 +1,7 @@
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { AsyncStorage } from "../../../storage/AsyncStorage.js";
 
-export type EmbeddedWalletCreationOptions = {
+export type InAppWalletCreationOptions = {
   /**
    * A client is the entry point to the thirdweb SDK.
    * It is required for all other actions.

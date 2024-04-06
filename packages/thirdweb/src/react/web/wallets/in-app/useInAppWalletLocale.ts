@@ -1,5 +1,5 @@
 import type { InAppWalletLocale } from "./locale/types.js";
-import { getInAppWalletLocale } from "./locale/getEmbeddedWalletLocale.js";
+import { getInAppWalletLocale } from "./locale/getInAppWalletLocale.js";
 import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { useEffect, useState } from "react";
 
