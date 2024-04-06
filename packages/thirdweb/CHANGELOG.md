@@ -1,5 +1,82 @@
 # thirdweb
 
+## 5.3.0
+
+### Minor Changes
+
+- [#2697](https://github.com/thirdweb-dev/js/pull/2697) [`c2eba49`](https://github.com/thirdweb-dev/js/commit/c2eba49112d60027ee3dbd8e67452e5d98bd3362) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Deprecate `embeddedWallet` in favor of `inAppWallet` (same functionality)
+
+### Patch Changes
+
+- [#2689](https://github.com/thirdweb-dev/js/pull/2689) [`740a675`](https://github.com/thirdweb-dev/js/commit/740a675a404f8d13d50052aa751f4c013d35d528) Thanks [@jnsdls](https://github.com/jnsdls)! - ---
+
+  ## Marketplace Extensions
+
+  Added initial support for the Marketplace extensions, available via the `thirdweb/extensions/marketplace` module.
+
+  ### Direct Listings
+
+  #### Write
+
+  - `createListing`
+
+  #### Read
+
+  - `totalListings`
+  - `getListing`
+  - `getAllListings`
+  - `getAllValidListings`
+
+  #### Events
+
+  - `buyerApprovedForListingEvent`
+  - `cancelledListingEvent`
+  - `currencyApprovedForListingEvent`
+  - `newListingEvent`
+  - `newSaleEvent`
+  - `updatedListingEvent`
+
+  ### English Auctions
+
+  #### Write
+
+  - `createAuction`
+
+  #### Read
+
+  - `totalAuctions`
+  - `getAuction`
+  - `getAllAuctions`
+  - `getAllValidAuctions`
+
+  #### Events
+
+  - `auctionClosedEvent`
+  - `cancelledAuctionEvent`
+  - `newAuctionEvent`
+  - `newBidEvent`
+
+  ### Types
+
+  - `DirectListing`
+  - `EnglishAuction`
+
+  ## ERC721 Extensions
+
+  - Added `isERC721` to the `thirdweb/extensions/erc721` module.
+
+  ## ERC1155 Extensions
+
+  - Added `isERC1155` to the `thirdweb/extensions/erc1155` module.
+
+- [#2700](https://github.com/thirdweb-dev/js/pull/2700) [`f709f13`](https://github.com/thirdweb-dev/js/commit/f709f136a71575eeb16db852103510daca9433f1) Thanks [@jnsdls](https://github.com/jnsdls)! - ENS: add support for `resolveName()`, `resolveAvatar()` and `resolveText()`
+
+- [#2686](https://github.com/thirdweb-dev/js/pull/2686) [`a2423ca`](https://github.com/thirdweb-dev/js/commit/a2423cac70cbeacbdc29494b9df9486e96aa73df) Thanks [@MananTank](https://github.com/MananTank)! - Add `modalSize` prop on `ConnectEmbed` to allow `"wide"` modal size.
+
+- [#2684](https://github.com/thirdweb-dev/js/pull/2684) [`4504a8d`](https://github.com/thirdweb-dev/js/commit/4504a8d17020ee46fa813a3c012c35c651663ce4) Thanks [@MananTank](https://github.com/MananTank)! - Fix sourcemap warnings in CRA
+
+- [#2677](https://github.com/thirdweb-dev/js/pull/2677) [`0e479e2`](https://github.com/thirdweb-dev/js/commit/0e479e2082fd685c9b8cae7d1cad53cade65de18) Thanks [@farhanW3](https://github.com/farhanW3)! - added 50k overhead to userOp gas estimations
+
 ## 5.2.0
 
 ### Minor Changes
