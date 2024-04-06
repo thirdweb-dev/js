@@ -12,16 +12,16 @@ import type {
   SmartWalletOptions,
 } from "./smart/types.js";
 import type {
-  EmbeddedWalletAuth,
-  EmbeddedWalletAutoConnectOptions,
-  EmbeddedWalletConnectionOptions,
-} from "./embedded/core/wallet/index.js";
+  InAppWalletAuth,
+  InAppWalletAutoConnectOptions,
+  InAppWalletConnectionOptions,
+} from "./in-app/core/wallet/index.js";
 import type { CoinbaseSDKWalletConnectionOptions } from "./coinbase/coinbaseSDKWallet.js";
 import type { ThirdwebClient } from "../client/client.js";
 
 export type WalletId =
   | "walletConnect"
-  | "embedded"
+  | "inApp"
   | "smart"
   | WCSupportedWalletIds
   | InjectedSupportedWalletIds;
@@ -46,10 +46,10 @@ export type InjectedConnectOptions = {
   chain?: Chain;
 };
 
-export type EmbeddedWalletCreationOptions =
+export type InAppWalletCreationOptions =
   | {
       auth?: {
-        options: EmbeddedWalletAuth[];
+        options: InAppWalletAuth[];
       };
     }
   | undefined;
@@ -66,9 +66,9 @@ export type WalletConnectionOption<T extends WalletId> =
     ? StandaloneWCConnectOptions
     : T extends "smart"
       ? SmartWalletConnectionOptions
-      : // embedded wallet
-        T extends "embedded"
-        ? EmbeddedWalletConnectionOptions
+      : // inApp wallet
+        T extends "inApp"
+        ? InAppWalletConnectionOptions
         : // coinbase wallet (inhected + coinbaseWallet)
           T extends "com.coinbase.wallet"
           ? InjectedConnectOptions | CoinbaseSDKWalletConnectionOptions
@@ -93,8 +93,8 @@ export type WalletAutoConnectionOption<T extends WalletId> =
     ? WCAutoConnectOptions
     : T extends "smart"
       ? SmartWalletConnectionOptions
-      : T extends "embedded"
-        ? EmbeddedWalletAutoConnectOptions
+      : T extends "inApp"
+        ? InAppWalletAutoConnectOptions
         : // coinbase wallet (inhected + coinbaseWallet)
           T extends "com.coinbase.wallet"
           ? InjectedConnectOptions | CoinbaseSDKWalletConnectionOptions
@@ -115,8 +115,8 @@ export type WalletAutoConnectionOption<T extends WalletId> =
  */
 export type WalletCreationOptions<T extends WalletId> = T extends "smart"
   ? SmartWalletOptions
-  : T extends "embedded"
-    ? EmbeddedWalletCreationOptions
+  : T extends "inApp"
+    ? InAppWalletCreationOptions
     : undefined;
 
 /**

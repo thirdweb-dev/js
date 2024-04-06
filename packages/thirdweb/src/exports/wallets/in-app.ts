@@ -1,10 +1,4 @@
-export {
-  inAppWallet,
-  /**
-   * @deprecated use inAppWallet instead
-   */
-  inAppWallet as embeddedWallet,
-} from "../../wallets/create-wallet.js";
+export { inAppWallet } from "../../wallets/create-wallet.js";
 
 export {
   preAuthenticate,

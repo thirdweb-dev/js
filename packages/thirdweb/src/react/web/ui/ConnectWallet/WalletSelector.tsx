@@ -36,12 +36,12 @@ import { WalletButton, WalletEntryButton } from "./WalletEntryButton.js";
 import { sortWallets } from "../../utils/sortWallets.js";
 import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 
-const EmbeddedWalletSelectionUI = /* @__PURE__ */ lazy(
-  () => import("../../wallets/embedded/EmbeddedWalletSelectionUI.js"),
+const InAppWalletSelectionUI = /* @__PURE__ */ lazy(
+  () => import("../../wallets/in-app/InAppWalletSelectionUI.js"),
 );
 
 // const localWalletId = "local";
-const embeddedWalletId: WalletId = "embedded";
+const inAppWalletId: WalletId = "inApp";
 
 /**
  * @internal
@@ -80,11 +80,11 @@ export const WalletSelector: React.FC<{
   const nonLocalWalletConfigs = _wallets; // _wallets.filter((w) => w.id !== localWalletId);
 
   const socialWallets = nonLocalWalletConfigs.filter(
-    (w) => w.id === embeddedWalletId,
+    (w) => w.id === inAppWalletId,
   );
 
   const eoaWallets = sortWallets(
-    nonLocalWalletConfigs.filter((w) => w.id !== embeddedWalletId),
+    nonLocalWalletConfigs.filter((w) => w.id !== inAppWalletId),
     recommendedWallets,
   );
 
@@ -517,12 +517,12 @@ const WalletSelection: React.FC<{
             key={wallet.id}
             // data-full-width={!!walletConfig.selectUI}
           >
-            {wallet.id === "embedded" && modalSize === "compact" ? (
+            {wallet.id === "inApp" && modalSize === "compact" ? (
               <Suspense fallback={<LoadingScreen height="195px" />}>
-                <EmbeddedWalletSelectionUI
+                <InAppWalletSelectionUI
                   done={() => props.done(wallet)}
                   select={() => props.selectWallet(wallet)}
-                  wallet={wallet as Wallet<"embedded">}
+                  wallet={wallet as Wallet<"inApp">}
                   goBack={props.goBack}
                 />
               </Suspense>
