@@ -38,13 +38,13 @@
     "@swc-node/register": "^1.9.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "@types/uuid": "^9.0.8",
-    "eslint": "^8.57.0",
+    "eslint": "9.0.0",
     "eslint-config-thirdweb": "workspace:*",
     "eslint-plugin-tsdoc": "^0.2.17",
     "esm": "^3.2.25",
     "rimraf": "5.0.5",
     "typedoc-gen": "workspace:*",
-    "typescript": "5.4.3"
+    "typescript": "5.4.4"
   },
   "dependencies": {
     "@thirdweb-dev/crypto": "workspace:*",

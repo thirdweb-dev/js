@@ -37,7 +37,7 @@
     "@thirdweb-dev/tsconfig": "workspace:*",
     "@types/treeify": "^1.0.3",
     "eslint-config-thirdweb": "workspace:*",
-    "typescript": "5.4.3"
+    "typescript": "5.4.4"
   },
   "scripts": {
     "format": "prettier --write 'src/**/*'",

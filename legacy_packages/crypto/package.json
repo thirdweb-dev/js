@@ -39,8 +39,8 @@
     "ethers": "^5.7.2",
     "js-awe": "^1.0.65",
     "tinybench": "^2.6.0",
-    "typescript": "5.4.3",
-    "viem": "2.9.6"
+    "typescript": "5.4.4",
+    "viem": "2.9.9"
   },
   "scripts": {
     "format": "prettier --write 'src/**/*'",
