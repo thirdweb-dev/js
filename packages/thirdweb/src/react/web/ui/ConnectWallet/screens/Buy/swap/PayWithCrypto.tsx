@@ -49,6 +49,7 @@ export function PayWithCrypto(props: {
     <Container
       bg="tertiaryBg"
       borderColor="borderColor"
+      flex="row"
       style={{
         borderRadius: radius.md,
         borderBottomRightRadius: 0,
@@ -56,71 +57,67 @@ export function PayWithCrypto(props: {
         borderWidth: "1px",
         borderStyle: "solid",
         borderBottom: "none",
+        flexWrap: "nowrap",
+        justifyContent: "space-between",
+        minHeight: "64px",
+        alignItems: "center",
       }}
     >
-      <Container
-        flex="row"
+      {/* Left */}
+      <TokenButton variant="secondary" onClick={props.onSelectToken}>
+        <TokenIcon token={props.token} chain={props.chain} size="md" />
+        <Container flex="column" gap="xxs">
+          <Container flex="row" gap="xs" center="y">
+            <TokenSymbol token={props.token} chain={props.chain} size="sm" />
+            <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
+          </Container>
+          {chainQuery.data?.name ? (
+            <Text size="xs"> {chainQuery.data.name}</Text>
+          ) : (
+            <Skeleton width="90px" height={fontSize.xs} />
+          )}
+        </Container>
+      </TokenButton>
+
+      {/* Right */}
+      <div
         style={{
-          flexWrap: "nowrap",
-          justifyContent: "space-between",
+          flexGrow: 1,
+          flexShrink: 1,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-end",
+          gap: spacing.xxs,
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap",
+          justifyContent: "center",
+          paddingRight: spacing.sm,
         }}
       >
-        {/* Left */}
-        <TokenButton variant="secondary" onClick={props.onSelectToken}>
-          <TokenIcon token={props.token} chain={props.chain} size="md" />
-          <Container flex="column" gap="xxs">
-            <Container flex="row" gap="xs" center="y">
-              <TokenSymbol token={props.token} chain={props.chain} size="sm" />
-              <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
-            </Container>
-            {chainQuery.data?.name ? (
-              <Text size="xs"> {chainQuery.data.name}</Text>
-            ) : (
-              <Skeleton width="90px" height={fontSize.xs} />
-            )}
-          </Container>
-        </TokenButton>
+        {props.isLoading ? (
+          <Skeleton width="120px" height={fontSize.md} />
+        ) : (
+          <Text
+            size="md"
+            color={props.value ? "primaryText" : "secondaryText"}
+            style={{}}
+          >
+            {formatNumber(Number(props.value), 4) || "--"}
+          </Text>
+        )}
 
-        {/* Right */}
-        <div
-          style={{
-            flexGrow: 1,
-            flexShrink: 1,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-end",
-            gap: spacing.xxs,
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-            justifyContent: "center",
-            paddingRight: spacing.sm,
-          }}
-        >
-          {props.isLoading ? (
-            <Skeleton width="120px" height={fontSize.md} />
-          ) : (
-            <Text
-              size="md"
-              color={props.value ? "primaryText" : "secondaryText"}
-              style={{}}
-            >
-              {formatNumber(Number(props.value), 4) || "--"}
+        <Container flex="row" gap="xxs" center="y" color="secondaryText">
+          <WalletIcon size={fontSize.xs} />
+          {balanceQuery.data ? (
+            <Text size="xs" color="secondaryText" weight={500}>
+              {formatTokenBalance(balanceQuery.data, true)}
             </Text>
+          ) : (
+            <Skeleton width="70px" height={fontSize.xs} />
           )}
-
-          <Container flex="row" gap="xxs" center="y" color="secondaryText">
-            <WalletIcon size={fontSize.xs} />
-            {balanceQuery.data ? (
-              <Text size="xs" color="secondaryText" weight={500}>
-                {formatTokenBalance(balanceQuery.data, true)}
-              </Text>
-            ) : (
-              <Skeleton width="70px" height={fontSize.xs} />
-            )}
-          </Container>
-        </div>
-      </Container>
+        </Container>
+      </div>
     </Container>
   );
 }

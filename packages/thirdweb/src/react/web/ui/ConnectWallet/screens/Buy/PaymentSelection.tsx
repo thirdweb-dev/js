@@ -3,14 +3,16 @@ import { Container } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
 import { useCustomTheme } from "../../../design-system/CustomThemeProvider.js";
-import { StyledDiv } from "../../../design-system/elements.js";
-import { fontSize, radius, spacing } from "../../../design-system/index.js";
+import { fontSize, spacing } from "../../../design-system/index.js";
 import styled from "@emotion/styled";
 
 /**
  * @internal
  */
-export function PaymentSelection() {
+export function PaymentSelection(props: {
+  selected: "crypto" | "creditCard";
+  onSelect: (method: "crypto" | "creditCard") => void;
+}) {
   return (
     <div>
       <Text size="sm">Pay with </Text>
@@ -22,7 +24,13 @@ export function PaymentSelection() {
           gridGap: spacing.sm,
         }}
       >
-        <CheckButton isChecked={true} variant="outline">
+        <CheckButton
+          isChecked={props.selected === "crypto"}
+          variant="outline"
+          onClick={() => {
+            props.onSelect("crypto");
+          }}
+        >
           <Container gap="xxs" flex="row" center="y">
             Crypto
           </Container>
@@ -33,16 +41,14 @@ export function PaymentSelection() {
           }}
         >
           <CheckButton
+            isChecked={props.selected === "creditCard"}
             variant="outline"
-            isChecked={false}
-            style={{
-              opacity: 0.5,
+            onClick={() => {
+              props.onSelect("creditCard");
             }}
-            disabled
           >
             Credit Card
           </CheckButton>
-          <FloatingBadge> Coming Soon </FloatingBadge>
         </div>
       </Container>
     </div>
@@ -62,21 +68,5 @@ const CheckButton = /* @__PURE__ */ styled(Button)((props: {
     paddingInline: spacing.xxs,
     paddingBlock: spacing.sm,
     width: "100%",
-  };
-});
-
-const FloatingBadge = /* @__PURE__ */ StyledDiv(() => {
-  const theme = useCustomTheme();
-  return {
-    position: "absolute",
-    top: 0,
-    right: 0,
-    transform: "translate(10%, -60%)",
-    backgroundColor: theme.colors.secondaryButtonBg,
-    paddingBlock: "3px",
-    paddingInline: spacing.xs,
-    fontSize: fontSize.xs,
-    borderRadius: radius.sm,
-    color: theme.colors.accentText,
   };
 });

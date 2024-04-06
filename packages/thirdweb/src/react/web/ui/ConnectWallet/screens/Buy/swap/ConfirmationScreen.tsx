@@ -26,7 +26,7 @@ import { useCustomTheme } from "../../../../design-system/CustomThemeProvider.js
 import { StyledDiv } from "../../../../design-system/elements.js";
 import { fontSize, iconSize } from "../../../../design-system/index.js";
 import { isNativeToken, type ERC20OrNativeToken } from "../../nativeToken.js";
-import { SwapFees } from "./SwapFees.js";
+import { SwapFees } from "./Fees.js";
 import { addPendingSwapTransaction } from "./pendingSwapTx.js";
 import { TokenIcon } from "../../../../components/TokenIcon.js";
 import { waitForReceipt } from "../../../../../../../transaction/actions/wait-for-tx-receipt.js";
@@ -38,7 +38,7 @@ import { keyframes } from "@emotion/react";
 /**
  * @internal
  */
-export function ConfirmationScreen(props: {
+export function SwapConfirmationScreen(props: {
   onBack: () => void;
   buyWithCryptoQuote: BuyWithCryptoQuote;
   fromAmount: string;

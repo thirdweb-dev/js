@@ -24,12 +24,7 @@ import { Spinner } from "../../../components/Spinner.js";
 import { Container, ModalHeader } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
-import {
-  fontSize,
-  iconSize,
-  radius,
-  spacing,
-} from "../../../design-system/index.js";
+import { fontSize, iconSize, radius } from "../../../design-system/index.js";
 import { useDebouncedValue } from "../../../hooks/useDebouncedValue.js";
 import type { SupportedTokens } from "../../defaultTokens.js";
 import { TokenSelector } from "../TokenSelector.js";
@@ -40,35 +35,34 @@ import {
 } from "../nativeToken.js";
 import { PaymentSelection } from "./PaymentSelection.js";
 import { BuyTokenInput } from "./swap/BuyTokenInput.js";
-import { ConfirmationScreen } from "./swap/ConfirmationScreen.js";
+import { SwapConfirmationScreen } from "./swap/ConfirmationScreen.js";
 import { PayWithCrypto } from "./swap/PayWithCrypto.js";
-// import { SwapFees } from "./swap/SwapFees.js";
 import type { BuyWithCryptoQuote } from "../../../../../../pay/buyWithCrypto/actions/getQuote.js";
 import { useSwapSupportedChains } from "./swap/useSwapSupportedChains.js";
 import type { ThirdwebClient } from "../../../../../../client/client.js";
 import { Skeleton } from "../../../components/Skeleton.js";
 import type { IconFC } from "../../icons/types.js";
-import styled from "@emotion/styled";
-import { useCustomTheme } from "../../../design-system/CustomThemeProvider.js";
 import {
   Drawer,
   DrawerOverlay,
   useDrawer,
 } from "../../../components/Drawer.js";
-import { SwapFees } from "./swap/SwapFees.js";
-import { WalletImage } from "../../../components/WalletImage.js";
-import { shortenString } from "../../../../../core/utils/addresses.js";
-import { ChevronDownIcon } from "@radix-ui/react-icons";
-import { Input } from "../../../components/formElements.js";
-import { WalletIcon } from "../../icons/WalletIcon.js";
-import { isAddress } from "../../../../../../utils/address.js";
+import { OnRampFees, SwapFees } from "./swap/Fees.js";
 import { DynamicHeight } from "../../../components/DynamicHeight.js";
 import { formatSeconds } from "./swap/formatSeconds.js";
+import { useOnrampQuote } from "../../../../../core/hooks/pay/useOnrampQuote.js";
+import { LoadingScreen } from "../../../../wallets/shared/LoadingScreen.js";
+import { PayWithCreditCard } from "./swap/PayWithCreditCard.js";
+import { AccountSelectionScreen } from "./AccountSelectionScreen.js";
+import { AccountSelectorButton } from "./AccountSelectorButton.js";
+import { FeesButton } from "./buttons.js";
+import { OnRampConfirmationScreen } from "./swap/OnRampConfirmationScreen.js";
+import { KadoScreen } from "./KadoScreen.js";
 
 /**
  * @internal
  */
-export function SwapScreen(props: {
+export function BuyScreen(props: {
   onBack: () => void;
   supportedTokens: SupportedTokens;
   onViewPendingTx: () => void;
@@ -77,30 +71,38 @@ export function SwapScreen(props: {
   const activeChain = useActiveWalletChain();
   const activeWallet = useActiveWallet();
   const account = useActiveAccount();
+  const supportedChainsQuery = useSwapSupportedChains(props.client);
 
-  if (!activeChain || !account || !activeWallet) {
-    return null; // this should never happen
+  if (!activeChain || !account || !activeWallet || !supportedChainsQuery.data) {
+    return <LoadingScreen />;
   }
 
   return (
-    <SwapScreenContent
+    <BuyScreenContent
       {...props}
       activeChain={activeChain}
       activeWallet={activeWallet}
       account={account}
       onViewPendingTx={props.onViewPendingTx}
+      supportedChains={supportedChainsQuery.data}
     />
   );
 }
 
-type Screen = "main" | "select-from-token" | "select-to-token" | "confirmation";
+type Screen =
+  | "main"
+  | "select-from-token"
+  | "select-to-token"
+  | "confirmation"
+  | "usd-confirmation"
+  | "kado-iframe";
 type DrawerScreen = "fees" | "address" | undefined;
 
 /**
  *
  * @internal
  */
-export function SwapScreenContent(props: {
+export function BuyScreenContent(props: {
   client: ThirdwebClient;
   onBack: () => void;
   supportedTokens: SupportedTokens;
@@ -108,13 +110,12 @@ export function SwapScreenContent(props: {
   activeWallet: Wallet;
   account: Account;
   onViewPendingTx: () => void;
+  supportedChains: Chain[];
 }) {
-  const { activeChain, account, client, activeWallet } = props;
+  const { activeChain, account, client, activeWallet, supportedChains } = props;
   const [isSwitching, setIsSwitching] = useState(false);
   const switchActiveWalletChain = useSwitchActiveWalletChain();
-  const supportedChainsQuery = useSwapSupportedChains(client);
-
-  const supportedChains = supportedChainsQuery.data;
+  const [method, setMethod] = useState<"crypto" | "creditCard">("crypto");
 
   // prefetch chains metadata
   useChainsQuery(supportedChains || [], 50);
@@ -194,19 +195,7 @@ export function SwapScreenContent(props: {
     gcTime: 30 * 1000,
   });
 
-  if (!supportedChains) {
-    return (
-      <Container
-        flex="row"
-        center="both"
-        style={{
-          minHeight: "350px",
-        }}
-      >
-        <Spinner color="secondaryText" size="lg" />
-      </Container>
-    );
-  }
+  const onRampQuoteQuery = useOnrampQuote();
 
   if (screen === "select-from-token") {
     return (
@@ -249,6 +238,17 @@ export function SwapScreenContent(props: {
     );
   }
 
+  if (screen === "kado-iframe" && onRampQuoteQuery.data) {
+    return (
+      <KadoScreen
+        quote={onRampQuoteQuery.data}
+        onBack={() => {
+          setScreen("main");
+        }}
+      />
+    );
+  }
+
   const swapQuote = buyWithCryptoQuoteQuery.data;
   const isSwapQuoteError = buyWithCryptoQuoteQuery.isError;
 
@@ -270,9 +270,31 @@ export function SwapScreenContent(props: {
   const sourceTokenAmount = swapQuote?.swapDetails.fromAmount || "";
   const quoteToConfirm = finalizedQuote || buyWithCryptoQuoteQuery.data;
 
+  if (screen === "usd-confirmation" && onRampQuoteQuery.data) {
+    return (
+      <OnRampConfirmationScreen
+        account={account}
+        client={client}
+        toAmount={tokenAmount}
+        onBack={() => {
+          // remove finalized quote when going back
+          setFinalizedQuote(undefined);
+          setScreen("main");
+        }}
+        onQuoteFinalized={() => {
+          // TODO?
+        }}
+        quote={onRampQuoteQuery.data}
+        fromAmount={onRampQuoteQuery.data.fromCurrency.amount}
+        toChain={toChain}
+        toToken={toToken}
+      />
+    );
+  }
+
   if (screen === "confirmation" && quoteToConfirm) {
     return (
-      <ConfirmationScreen
+      <SwapConfirmationScreen
         client={client}
         onBack={() => {
           // remove finalized quote when going back
@@ -303,8 +325,9 @@ export function SwapScreenContent(props: {
   const disableContinue = !swapQuote || isNotEnoughBalance;
   const switchChainRequired = props.activeChain.id !== fromChain.id;
 
-  const estimatedSeconds =
-    buyWithCryptoQuoteQuery.data?.swapDetails.estimated.durationSeconds;
+  console.log({
+    drawerScreen,
+  });
 
   return (
     <Container animate="fadein">
@@ -326,16 +349,55 @@ export function SwapScreenContent(props: {
           <>
             <DrawerOverlay ref={drawerOverlayRef} />
             <Drawer ref={drawerRef} close={closeDrawer}>
-              <DrawerContent
-                drawerScreen={drawerScreen}
-                quote={swapQuote}
-                activeAccount={account}
-                activeWallet={activeWallet}
-                onSelect={(v) => {
-                  setAddress(v);
-                  closeDrawer();
-                }}
-              />
+              <DynamicHeight>
+                {drawerScreen === "address" && (
+                  <AccountSelectionScreen
+                    onSelect={(v) => {
+                      setAddress(v);
+                      closeDrawer();
+                    }}
+                    activeAccount={account}
+                    activeWallet={props.activeWallet}
+                  />
+                )}
+
+                {method === "crypto" && (
+                  <>
+                    {drawerScreen === "fees" && (
+                      <div>
+                        <Text size="lg" color="primaryText">
+                          Fees
+                        </Text>
+
+                        <Spacer y="lg" />
+                        {swapQuote && (
+                          <SwapFees quote={swapQuote} align="left" />
+                        )}
+                      </div>
+                    )}
+                  </>
+                )}
+
+                {method === "creditCard" && (
+                  <>
+                    {drawerScreen === "fees" && (
+                      <div>
+                        <Text size="lg" color="primaryText">
+                          Fees
+                        </Text>
+
+                        <Spacer y="lg" />
+                        {onRampQuoteQuery.data && (
+                          <OnRampFees
+                            quote={onRampQuoteQuery.data}
+                            align="left"
+                          />
+                        )}
+                      </div>
+                    )}
+                  </>
+                )}
+              </DynamicHeight>
             </Drawer>
           </>
         )}
@@ -367,70 +429,48 @@ export function SwapScreenContent(props: {
         <Container px="lg">
           {hasEditedAmount && (
             <div>
-              <PaymentSelection />
+              <PaymentSelection selected={method} onSelect={setMethod} />
               <Spacer y="md" />
 
-              {/* From */}
-              <PayWithCrypto
-                value={sourceTokenAmount}
-                onSelectToken={() => {
-                  setScreen("select-from-token");
-                }}
-                chain={fromChain}
-                token={fromToken}
-                isLoading={
-                  buyWithCryptoQuoteQuery.isLoading && !sourceTokenAmount
-                }
-              />
+              {method === "crypto" && (
+                <>
+                  <PayWithCrypto
+                    value={sourceTokenAmount}
+                    onSelectToken={() => {
+                      setScreen("select-from-token");
+                    }}
+                    chain={fromChain}
+                    token={fromToken}
+                    isLoading={
+                      buyWithCryptoQuoteQuery.isLoading && !sourceTokenAmount
+                    }
+                  />
+                  <SecondaryInfo
+                    quoteIsLoading={buyWithCryptoQuoteQuery.isLoading}
+                    estimatedSeconds={
+                      buyWithCryptoQuoteQuery.data?.swapDetails.estimated
+                        .durationSeconds
+                    }
+                    onViewFees={() => setDrawerScreen("fees")}
+                  />
+                </>
+              )}
 
-              {/* Other info */}
-              <Container
-                bg="tertiaryBg"
-                flex="row"
-                borderColor="borderColor"
-                style={{
-                  borderRadius: radius.md,
-                  borderTopLeftRadius: 0,
-                  borderTopRightRadius: 0,
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  borderWidth: "1px",
-                  borderStyle: "solid",
-                }}
-              >
-                <Container
-                  flex="row"
-                  center="y"
-                  gap="xxs"
-                  color="accentText"
-                  p="sm"
-                >
-                  <ClockIcon width={iconSize.sm} height={iconSize.sm} />
-                  {buyWithCryptoQuoteQuery.isLoading ? (
-                    <Skeleton height={fontSize.xs} width="50px" />
-                  ) : (
-                    <Text size="xs" color="secondaryText">
-                      {estimatedSeconds
-                        ? "~" + formatSeconds(estimatedSeconds)
-                        : "--"}
-                    </Text>
-                  )}
-                </Container>
-
-                <FeesButton
-                  variant="secondary"
-                  onClick={() => {
-                    setDrawerScreen("fees");
-                  }}
-                >
-                  <Container color="accentText" flex="row" center="both">
-                    <ViewFeeIcon size={iconSize.sm} />
-                  </Container>
-                  <Text size="xs" color="secondaryText">
-                    View Fees
-                  </Text>
-                </FeesButton>
-              </Container>
+              {method === "creditCard" && (
+                <>
+                  <PayWithCreditCard
+                    isLoading={onRampQuoteQuery.isLoading}
+                    value={onRampQuoteQuery.data?.fromCurrency.amount}
+                  />
+                  <SecondaryInfo
+                    quoteIsLoading={onRampQuoteQuery.isLoading}
+                    estimatedSeconds={
+                      onRampQuoteQuery.data?.estimatedDurationSeconds
+                    }
+                    onViewFees={() => setDrawerScreen("fees")}
+                  />
+                </>
+              )}
 
               <Spacer y="md" />
 
@@ -438,7 +478,7 @@ export function SwapScreenContent(props: {
               <Container>
                 <Text size="sm">Send To</Text>
                 <Spacer y="xxs" />
-                <WalletSelectorButton
+                <AccountSelectorButton
                   address={address}
                   activeAccount={account}
                   activeWallet={activeWallet}
@@ -452,7 +492,7 @@ export function SwapScreenContent(props: {
               <Spacer y="md" />
 
               <Container flex="column" gap="md">
-                {isSwapQuoteError && (
+                {method === "crypto" && isSwapQuoteError && (
                   <div>
                     <Container flex="row" gap="xs" center="y" color="danger">
                       <CrossCircledIcon
@@ -470,48 +510,65 @@ export function SwapScreenContent(props: {
             </div>
           )}
 
-          {switchChainRequired && (
-            <Button
-              fullWidth
-              variant="accent"
-              disabled={!hasEditedAmount}
-              data-disabled={!hasEditedAmount}
-              gap="sm"
-              onClick={async () => {
-                setIsSwitching(true);
-                try {
-                  await switchActiveWalletChain(fromChain);
-                } catch {}
-                setIsSwitching(false);
-              }}
-            >
-              {hasEditedAmount ? (
-                <>
-                  {isSwitching && (
-                    <Spinner size="sm" color="accentButtonText" />
+          {method === "crypto" && (
+            <>
+              {switchChainRequired && (
+                <Button
+                  fullWidth
+                  variant="accent"
+                  disabled={!hasEditedAmount}
+                  data-disabled={!hasEditedAmount}
+                  gap="sm"
+                  onClick={async () => {
+                    setIsSwitching(true);
+                    try {
+                      await switchActiveWalletChain(fromChain);
+                    } catch {}
+                    setIsSwitching(false);
+                  }}
+                >
+                  {hasEditedAmount ? (
+                    <>
+                      {isSwitching && (
+                        <Spinner size="sm" color="accentButtonText" />
+                      )}
+                      {isSwitching ? "Switching" : "Switch Network"}
+                    </>
+                  ) : (
+                    "Continue"
                   )}
-                  {isSwitching ? "Switching" : "Switch Network"}
-                </>
-              ) : (
-                "Continue"
+                </Button>
               )}
-            </Button>
+
+              {!switchChainRequired && (
+                <Button
+                  variant={disableContinue ? "outline" : "accent"}
+                  fullWidth
+                  data-disabled={disableContinue}
+                  disabled={disableContinue}
+                  onClick={async () => {
+                    if (!disableContinue) {
+                      setScreen("confirmation");
+                    }
+                  }}
+                  gap="sm"
+                >
+                  {isNotEnoughBalance ? "Not Enough Funds" : "Continue"}
+                </Button>
+              )}
+            </>
           )}
 
-          {!switchChainRequired && (
+          {method === "creditCard" && (
             <Button
-              variant={disableContinue ? "outline" : "accent"}
+              variant="accent"
               fullWidth
-              data-disabled={disableContinue}
-              disabled={disableContinue}
               onClick={async () => {
-                if (!disableContinue) {
-                  setScreen("confirmation");
-                }
+                setScreen("kado-iframe");
               }}
               gap="sm"
             >
-              {isNotEnoughBalance ? "Not Enough Funds" : "Continue"}
+              Continue
             </Button>
           )}
         </Container>
@@ -520,116 +577,6 @@ export function SwapScreenContent(props: {
     </Container>
   );
 }
-
-function DrawerContent(props: {
-  drawerScreen: DrawerScreen;
-  quote?: BuyWithCryptoQuote;
-  activeWallet: Wallet;
-  activeAccount: Account;
-  onSelect: (address: string) => void;
-}) {
-  const { drawerScreen, quote } = props;
-  const [address, setAddress] = useState<string>("");
-  const isValidAddress = useMemo(() => isAddress(address), [address]);
-  const showError = !!address && !isValidAddress;
-
-  return (
-    <DynamicHeight>
-      {drawerScreen === "fees" && (
-        <div>
-          <Text size="lg" color="primaryText">
-            Fees
-          </Text>
-
-          <Spacer y="lg" />
-          {quote && <SwapFees quote={quote} align="left" />}
-        </div>
-      )}
-
-      {drawerScreen === "address" && (
-        <div>
-          <Text size="lg" color="primaryText">
-            Send to
-          </Text>
-          <Spacer y="lg" />
-          <Container
-            flex="row"
-            center="y"
-            style={{
-              flexWrap: "nowrap",
-              height: "50px",
-            }}
-          >
-            <StyledInput
-              data-is-error={showError}
-              value={address}
-              placeholder="Enter wallet address"
-              variant="outline"
-              onChange={(e) => setAddress(e.target.value)}
-            />
-            <Button
-              variant="accent"
-              disabled={!isValidAddress}
-              style={{
-                height: "100%",
-                minWidth: "100px",
-                borderTopLeftRadius: 0,
-                borderBottomLeftRadius: 0,
-              }}
-              onClick={() => {
-                props.onSelect(address);
-              }}
-            >
-              Confirm
-            </Button>
-          </Container>
-
-          {showError && (
-            <>
-              <Spacer y="xxs" />
-              <Text color="danger" size="sm">
-                Invalid address
-              </Text>
-            </>
-          )}
-
-          <Spacer y="xl" />
-          <Text size="sm">Connected</Text>
-          <Spacer y="xs" />
-          <WalletSelectorButton
-            address={props.activeAccount.address}
-            activeAccount={props.activeAccount}
-            activeWallet={props.activeWallet}
-            onClick={() => {
-              props.onSelect(props.activeAccount.address);
-            }}
-          />
-        </div>
-      )}
-    </DynamicHeight>
-  );
-}
-
-const StyledInput = /* @__PURE__ */ styled(Input)(() => {
-  const theme = useCustomTheme();
-  return {
-    border: `1.5px solid ${theme.colors.borderColor}`,
-    borderTopRightRadius: 0,
-    borderBottomRightRadius: 0,
-    height: "100%",
-    boxSizing: "border-box",
-    boxShadow: "none",
-    borderRight: "none",
-    "&:focus": {
-      boxShadow: "none",
-      borderColor: theme.colors.accentText,
-    },
-    "&[data-is-error='true']": {
-      boxShadow: "none",
-      borderColor: theme.colors.danger,
-    },
-  };
-});
 
 const ViewFeeIcon: IconFC = (props) => {
   return (
@@ -656,70 +603,47 @@ const ViewFeeIcon: IconFC = (props) => {
   );
 };
 
-function WalletSelectorButton(props: {
-  onClick: () => void;
-  activeWallet: Wallet;
-  activeAccount: Account;
-  address: string;
-  chevron?: boolean;
+function SecondaryInfo(props: {
+  estimatedSeconds?: number | undefined;
+  quoteIsLoading: boolean;
+  onViewFees: () => void;
 }) {
-  return (
-    <AccountButton variant="secondary" fullWidth onClick={props.onClick}>
-      {props.activeAccount.address === props.address ? (
-        <WalletImage id={props.activeWallet.id} size={iconSize.md} />
-      ) : (
-        <Container color="secondaryText" flex="row" center="both">
-          <WalletIcon size={iconSize.md} />
-        </Container>
-      )}
+  const { estimatedSeconds, quoteIsLoading } = props;
 
-      <Text size="sm" color="primaryText">
-        {shortenString(props.address, false)}
-      </Text>
-      {props.chevron && (
-        <ChevronDownIcon
-          width={iconSize.sm}
-          height={iconSize.sm}
-          style={{
-            marginLeft: "auto",
-          }}
-        />
-      )}
-    </AccountButton>
+  return (
+    <Container
+      bg="tertiaryBg"
+      flex="row"
+      borderColor="borderColor"
+      style={{
+        borderRadius: radius.md,
+        borderTopLeftRadius: 0,
+        borderTopRightRadius: 0,
+        justifyContent: "space-between",
+        alignItems: "center",
+        borderWidth: "1px",
+        borderStyle: "solid",
+      }}
+    >
+      <Container flex="row" center="y" gap="xxs" color="accentText" p="sm">
+        <ClockIcon width={iconSize.sm} height={iconSize.sm} />
+        {quoteIsLoading ? (
+          <Skeleton height={fontSize.xs} width="50px" />
+        ) : (
+          <Text size="xs" color="secondaryText">
+            {estimatedSeconds ? "~" + formatSeconds(estimatedSeconds) : "--"}
+          </Text>
+        )}
+      </Container>
+
+      <FeesButton variant="secondary" onClick={props.onViewFees}>
+        <Container color="accentText" flex="row" center="both">
+          <ViewFeeIcon size={iconSize.sm} />
+        </Container>
+        <Text size="xs" color="secondaryText">
+          View Fees
+        </Text>
+      </FeesButton>
+    </Container>
   );
 }
-
-const FeesButton = /* @__PURE__ */ styled(Button)(() => {
-  const theme = useCustomTheme();
-  return {
-    background: "transparent",
-    border: `1px solid transparent`,
-    "&:hover": {
-      background: "transparent",
-      borderColor: theme.colors.accentText,
-    },
-    justifyContent: "flex-start",
-    transition: "background 0.3s, border-color 0.3s",
-    gap: spacing.xs,
-    padding: spacing.sm,
-    color: theme.colors.primaryText,
-    borderRadius: radius.md,
-  };
-});
-
-const AccountButton = /* @__PURE__ */ styled(Button)(() => {
-  const theme = useCustomTheme();
-  return {
-    background: theme.colors.tertiaryBg,
-    border: `1px solid ${theme.colors.borderColor}`,
-    "&:hover": {
-      background: theme.colors.tertiaryBg,
-      borderColor: theme.colors.accentText,
-    },
-    justifyContent: "flex-start",
-    transition: "background 0.3s, border-color 0.3s",
-    gap: spacing.sm,
-    padding: spacing.sm,
-    borderRadius: radius.md,
-  };
-});

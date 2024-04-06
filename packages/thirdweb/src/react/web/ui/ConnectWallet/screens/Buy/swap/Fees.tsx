@@ -1,5 +1,6 @@
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/actions/getQuote.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
+import type { OnRampQuote } from "../../../../../../core/hooks/pay/useOnrampQuote.js";
 import { Container } from "../../../../components/basic.js";
 import { Text } from "../../../../components/text.js";
 
@@ -18,11 +19,11 @@ export function SwapFees(props: {
         alignItems: props.align === "right" ? "flex-end" : "flex-start",
       }}
     >
-      {props.quote.processingFees.map((fee) => {
+      {props.quote.processingFees.map((fee, i) => {
         const feeAmount = formatNumber(Number(fee.amount), 4);
         return (
           <>
-            <Container key={fee.token.symbol} flex="row" gap="xxs">
+            <Container key={i} flex="row" gap="xxs">
               <Text color="primaryText" size="sm">
                 {feeAmount === 0 ? "~" : ""}
                 {feeAmount} {fee.token.symbol}
@@ -32,6 +33,35 @@ export function SwapFees(props: {
               </Text>
             </Container>
           </>
+        );
+      })}
+    </Container>
+  );
+}
+
+/**
+ * @internal
+ */
+export function OnRampFees(props: {
+  quote: OnRampQuote;
+  align: "left" | "right";
+}) {
+  return (
+    <Container
+      flex="column"
+      gap="xs"
+      style={{
+        alignItems: props.align === "right" ? "flex-end" : "flex-start",
+      }}
+    >
+      {props.quote.onRampFees.map((fee, i) => {
+        const feeAmount = formatNumber(Number(fee.amount), 4);
+
+        return (
+          <Text color="primaryText" size="sm" key={i}>
+            {feeAmount === 0 ? "~" : ""}
+            {fee.currencySymbol} {feeAmount}
+          </Text>
         );
       })}
     </Container>

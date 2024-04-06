@@ -67,7 +67,7 @@ import type { Chain } from "../../../../chains/types.js";
 // import { localWalletMetadata } from "../../../../wallets/local/index._ts";
 // import { ExportLocalWallet } from "./screens/ExportLocalWallet._tsx";
 import { swapTransactionsStore } from "./screens/Buy/swap/pendingSwapTx.js";
-import { SwapScreen } from "./screens/Buy/SwapScreen.js";
+import { BuyScreen } from "./screens/Buy/SwapScreen.js";
 import { SwapTransactionsScreen } from "./screens/SwapTransactionsScreen.js";
 import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { WalletImage } from "../components/WalletImage.js";
@@ -613,7 +613,7 @@ export const ConnectedWalletDetails: React.FC<{
   // swap tokens
   else if (screen === "buy") {
     content = (
-      <SwapScreen
+      <BuyScreen
         client={client}
         onBack={() => setScreen("main")}
         supportedTokens={props.supportedTokens}
