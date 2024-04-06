@@ -13,4 +13,13 @@ describe.runIf(process.env.TW_SECRET_KEY)("ENS:resolve-address", () => {
     });
     expect(address).toBe("0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045");
   });
+
+  it("should shortcut if the name is already an address", async () => {
+    const name = "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045";
+    const address = await resolveAddress({
+      client: TEST_CLIENT,
+      name,
+    });
+    expect(address).toBe("0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045");
+  });
 });

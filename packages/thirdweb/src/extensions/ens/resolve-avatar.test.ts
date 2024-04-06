@@ -26,4 +26,12 @@ describe.runIf(process.env.TW_SECRET_KEY)("ENS:resolve-avatar", () => {
       `"Qmf8yNB8xVXGZjXXRnnrKT1FRydGKaHobovFr2qMXEw6uj/61"`,
     );
   });
+
+  it("resolves name without avatar record to null", async () => {
+    const avatarUri = await resolveAvatar({
+      client: TEST_CLIENT,
+      name: "unregistered-name.eth",
+    });
+    expect(avatarUri).toBeNull();
+  });
 });
