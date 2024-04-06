@@ -14,7 +14,7 @@ export type RemoveForParams = {
   sig: AbiParameterToPrimitiveType<{ type: "bytes"; name: "sig" }>;
 };
 
-const FN_SELECTOR = "0x787bd966" as const;
+export const FN_SELECTOR = "0x787bd966" as const;
 const FN_INPUTS = [
   {
     type: "address",

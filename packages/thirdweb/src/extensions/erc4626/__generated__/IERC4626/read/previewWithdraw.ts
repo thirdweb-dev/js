@@ -16,7 +16,7 @@ export type PreviewWithdrawParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x0a28a477" as const;
+export const FN_SELECTOR = "0x0a28a477" as const;
 const FN_INPUTS = [
   {
     name: "assets",

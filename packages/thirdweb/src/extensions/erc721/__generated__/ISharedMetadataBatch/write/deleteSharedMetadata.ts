@@ -11,7 +11,7 @@ export type DeleteSharedMetadataParams = {
   id: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "id" }>;
 };
 
-const FN_SELECTOR = "0x1ebb2422" as const;
+export const FN_SELECTOR = "0x1ebb2422" as const;
 const FN_INPUTS = [
   {
     type: "bytes32",

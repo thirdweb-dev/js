@@ -13,7 +13,7 @@ export type SafeTransferFromParams = {
   tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
 };
 
-const FN_SELECTOR = "0x42842e0e" as const;
+export const FN_SELECTOR = "0x42842e0e" as const;
 const FN_INPUTS = [
   {
     type: "address",

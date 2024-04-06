@@ -11,7 +11,7 @@ export type ClaimRewardsParams = {
   tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
 };
 
-const FN_SELECTOR = "0x0962ef79" as const;
+export const FN_SELECTOR = "0x0962ef79" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

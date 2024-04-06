@@ -15,7 +15,7 @@ export type GetPastTotalSupplyParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x8e539e8c" as const;
+export const FN_SELECTOR = "0x8e539e8c" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

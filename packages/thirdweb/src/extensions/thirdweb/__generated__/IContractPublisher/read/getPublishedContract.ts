@@ -19,7 +19,7 @@ export type GetPublishedContractParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x7ec047fa" as const;
+export const FN_SELECTOR = "0x7ec047fa" as const;
 const FN_INPUTS = [
   {
     type: "address",

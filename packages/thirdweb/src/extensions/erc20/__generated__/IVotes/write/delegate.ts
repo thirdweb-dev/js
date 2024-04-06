@@ -14,7 +14,7 @@ export type DelegateParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x5c19a95c" as const;
+export const FN_SELECTOR = "0x5c19a95c" as const;
 const FN_INPUTS = [
   {
     type: "address",

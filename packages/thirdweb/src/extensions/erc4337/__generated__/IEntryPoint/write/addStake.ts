@@ -14,7 +14,7 @@ export type AddStakeParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x0396cb60" as const;
+export const FN_SELECTOR = "0x0396cb60" as const;
 const FN_INPUTS = [
   {
     type: "uint32",

@@ -27,7 +27,7 @@ export type VerifySignerPermissionRequestParams = {
   signature: AbiParameterToPrimitiveType<{ type: "bytes"; name: "signature" }>;
 };
 
-const FN_SELECTOR = "0xa9082d84" as const;
+export const FN_SELECTOR = "0xa9082d84" as const;
 const FN_INPUTS = [
   {
     type: "tuple",

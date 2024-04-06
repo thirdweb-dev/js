@@ -11,7 +11,7 @@ export type WithdrawParams = {
   amount: AbiParameterToPrimitiveType<{ type: "uint256"; name: "amount" }>;
 };
 
-const FN_SELECTOR = "0x2e1a7d4d" as const;
+export const FN_SELECTOR = "0x2e1a7d4d" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

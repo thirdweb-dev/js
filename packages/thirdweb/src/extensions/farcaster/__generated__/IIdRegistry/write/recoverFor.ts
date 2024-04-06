@@ -25,7 +25,7 @@ export type RecoverForParams = {
   toSig: AbiParameterToPrimitiveType<{ type: "bytes"; name: "toSig" }>;
 };
 
-const FN_SELECTOR = "0xba656434" as const;
+export const FN_SELECTOR = "0xba656434" as const;
 const FN_INPUTS = [
   {
     type: "address",

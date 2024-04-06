@@ -16,7 +16,7 @@ export type BalanceOfBatchParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x4e1273f4" as const;
+export const FN_SELECTOR = "0x4e1273f4" as const;
 const FN_INPUTS = [
   {
     type: "address[]",

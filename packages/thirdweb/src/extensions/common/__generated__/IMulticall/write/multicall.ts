@@ -11,7 +11,7 @@ export type MulticallParams = {
   data: AbiParameterToPrimitiveType<{ type: "bytes[]"; name: "data" }>;
 };
 
-const FN_SELECTOR = "0xac9650d8" as const;
+export const FN_SELECTOR = "0xac9650d8" as const;
 const FN_INPUTS = [
   {
     type: "bytes[]",

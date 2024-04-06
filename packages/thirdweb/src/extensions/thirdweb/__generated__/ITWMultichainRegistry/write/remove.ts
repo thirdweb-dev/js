@@ -16,7 +16,7 @@ export type RemoveParams = {
   chainId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_chainId" }>;
 };
 
-const FN_SELECTOR = "0x59e5fd04" as const;
+export const FN_SELECTOR = "0x59e5fd04" as const;
 const FN_INPUTS = [
   {
     type: "address",

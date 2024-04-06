@@ -12,7 +12,7 @@ export type IdOfParams = {
   owner: AbiParameterToPrimitiveType<{ type: "address"; name: "owner" }>;
 };
 
-const FN_SELECTOR = "0xd94fe832" as const;
+export const FN_SELECTOR = "0xd94fe832" as const;
 const FN_INPUTS = [
   {
     type: "address",

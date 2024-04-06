@@ -12,7 +12,7 @@ export type GetApprovedParams = {
   tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
 };
 
-const FN_SELECTOR = "0x081812fc" as const;
+export const FN_SELECTOR = "0x081812fc" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

@@ -12,7 +12,7 @@ export type CanClaimRewardsParams = {
   opener: AbiParameterToPrimitiveType<{ type: "address"; name: "_opener" }>;
 };
 
-const FN_SELECTOR = "0xa9b47a66" as const;
+export const FN_SELECTOR = "0xa9b47a66" as const;
 const FN_INPUTS = [
   {
     type: "address",

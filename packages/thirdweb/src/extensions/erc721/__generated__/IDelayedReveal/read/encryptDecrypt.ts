@@ -13,7 +13,7 @@ export type EncryptDecryptParams = {
   key: AbiParameterToPrimitiveType<{ type: "bytes"; name: "key" }>;
 };
 
-const FN_SELECTOR = "0xe7150322" as const;
+export const FN_SELECTOR = "0xe7150322" as const;
 const FN_INPUTS = [
   {
     type: "bytes",

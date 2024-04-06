@@ -15,7 +15,7 @@ export type CloseAuctionParams = {
   closeFor: AbiParameterToPrimitiveType<{ type: "address"; name: "_closeFor" }>;
 };
 
-const FN_SELECTOR = "0x6bab66ae" as const;
+export const FN_SELECTOR = "0x6bab66ae" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

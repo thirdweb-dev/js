@@ -12,7 +12,7 @@ export type AddrParams = {
   name: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "name" }>;
 };
 
-const FN_SELECTOR = "0x3b3b57de" as const;
+export const FN_SELECTOR = "0x3b3b57de" as const;
 const FN_INPUTS = [
   {
     type: "bytes32",

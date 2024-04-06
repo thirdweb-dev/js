@@ -35,7 +35,7 @@ export type ValidateUserOpParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x3a871cdd" as const;
+export const FN_SELECTOR = "0x3a871cdd" as const;
 const FN_INPUTS = [
   {
     type: "tuple",

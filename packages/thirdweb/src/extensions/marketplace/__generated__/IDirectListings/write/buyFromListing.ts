@@ -21,7 +21,7 @@ export type BuyFromListingParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x704232dc" as const;
+export const FN_SELECTOR = "0x704232dc" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

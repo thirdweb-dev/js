@@ -15,7 +15,7 @@ export type OpenPackParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x914e126a" as const;
+export const FN_SELECTOR = "0x914e126a" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

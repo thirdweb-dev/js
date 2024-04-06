@@ -29,7 +29,7 @@ export type MintWithSignatureParams = {
   signature: AbiParameterToPrimitiveType<{ type: "bytes"; name: "signature" }>;
 };
 
-const FN_SELECTOR = "0x98a6e993" as const;
+export const FN_SELECTOR = "0x98a6e993" as const;
 const FN_INPUTS = [
   {
     type: "tuple",

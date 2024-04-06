@@ -38,7 +38,7 @@ export type UpdateListingParams = {
   }>;
 };
 
-const FN_SELECTOR = "0xc4b5b15f" as const;
+export const FN_SELECTOR = "0xc4b5b15f" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

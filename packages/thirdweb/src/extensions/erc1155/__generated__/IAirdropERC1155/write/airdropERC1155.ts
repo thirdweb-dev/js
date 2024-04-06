@@ -27,7 +27,7 @@ export type AirdropERC1155Params = {
   }>;
 };
 
-const FN_SELECTOR = "0x41444690" as const;
+export const FN_SELECTOR = "0x41444690" as const;
 const FN_INPUTS = [
   {
     type: "address",

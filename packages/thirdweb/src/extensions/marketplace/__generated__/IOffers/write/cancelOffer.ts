@@ -11,7 +11,7 @@ export type CancelOfferParams = {
   offerId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_offerId" }>;
 };
 
-const FN_SELECTOR = "0xef706adf" as const;
+export const FN_SELECTOR = "0xef706adf" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

@@ -19,7 +19,7 @@ export type IsNewWinningBidParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x2eb566bd" as const;
+export const FN_SELECTOR = "0x2eb566bd" as const;
 const FN_INPUTS = [
   {
     type: "uint256",
