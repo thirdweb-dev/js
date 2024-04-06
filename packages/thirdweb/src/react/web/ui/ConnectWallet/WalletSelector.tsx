@@ -36,8 +36,8 @@ import { WalletButton, WalletEntryButton } from "./WalletEntryButton.js";
 import { sortWallets } from "../../utils/sortWallets.js";
 import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 
-const EmbeddedWalletSelectionUI = /* @__PURE__ */ lazy(
-  () => import("../../wallets/embedded/EmbeddedWalletSelectionUI.js"),
+const InAppWalletSelectionUI = /* @__PURE__ */ lazy(
+  () => import("../../wallets/in-app/InAppWalletSelectionUI.js"),
 );
 
 // const localWalletId = "local";
@@ -519,7 +519,7 @@ const WalletSelection: React.FC<{
           >
             {wallet.id === "inApp" && modalSize === "compact" ? (
               <Suspense fallback={<LoadingScreen height="195px" />}>
-                <EmbeddedWalletSelectionUI
+                <InAppWalletSelectionUI
                   done={() => props.done(wallet)}
                   select={() => props.selectWallet(wallet)}
                   wallet={wallet as Wallet<"inApp">}

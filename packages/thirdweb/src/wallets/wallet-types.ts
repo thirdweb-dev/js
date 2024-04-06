@@ -12,10 +12,10 @@ import type {
   SmartWalletOptions,
 } from "./smart/types.js";
 import type {
-  EmbeddedWalletAuth,
-  EmbeddedWalletAutoConnectOptions,
-  EmbeddedWalletConnectionOptions,
-} from "./embedded/core/wallet/index.js";
+  InAppWalletAuth,
+  InAppWalletAutoConnectOptions,
+  InAppWalletConnectionOptions,
+} from "./in-app/core/wallet/index.js";
 import type { CoinbaseSDKWalletConnectionOptions } from "./coinbase/coinbaseSDKWallet.js";
 import type { ThirdwebClient } from "../client/client.js";
 
@@ -46,10 +46,10 @@ export type InjectedConnectOptions = {
   chain?: Chain;
 };
 
-export type EmbeddedWalletCreationOptions =
+export type InAppWalletCreationOptions =
   | {
       auth?: {
-        options: EmbeddedWalletAuth[];
+        options: InAppWalletAuth[];
       };
     }
   | undefined;
@@ -68,7 +68,7 @@ export type WalletConnectionOption<T extends WalletId> =
       ? SmartWalletConnectionOptions
       : // inApp wallet
         T extends "inApp"
-        ? EmbeddedWalletConnectionOptions
+        ? InAppWalletConnectionOptions
         : // coinbase wallet (inhected + coinbaseWallet)
           T extends "com.coinbase.wallet"
           ? InjectedConnectOptions | CoinbaseSDKWalletConnectionOptions
@@ -94,7 +94,7 @@ export type WalletAutoConnectionOption<T extends WalletId> =
     : T extends "smart"
       ? SmartWalletConnectionOptions
       : T extends "inApp"
-        ? EmbeddedWalletAutoConnectOptions
+        ? InAppWalletAutoConnectOptions
         : // coinbase wallet (inhected + coinbaseWallet)
           T extends "com.coinbase.wallet"
           ? InjectedConnectOptions | CoinbaseSDKWalletConnectionOptions
@@ -116,7 +116,7 @@ export type WalletAutoConnectionOption<T extends WalletId> =
 export type WalletCreationOptions<T extends WalletId> = T extends "smart"
   ? SmartWalletOptions
   : T extends "inApp"
-    ? EmbeddedWalletCreationOptions
+    ? InAppWalletCreationOptions
     : undefined;
 
 /**

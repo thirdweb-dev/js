@@ -20,8 +20,8 @@ import {
 const CoinbaseSDKWalletConnectUI = /* @__PURE__ */ lazy(
   () => import("../../../wallets/shared/CoinbaseSDKConnection.js"),
 );
-const EmbeddedWalletConnectUI = /* @__PURE__ */ lazy(
-  () => import("../../../wallets/embedded/EmbeddedWalletConnectUI.js"),
+const InAppWalletConnectUI = /* @__PURE__ */ lazy(
+  () => import("../../../wallets/in-app/InAppWalletConnectUI.js"),
 );
 
 /**
@@ -135,7 +135,7 @@ export function AnyWalletConnectUI(props: {
   if (props.wallet.id === "inApp") {
     return (
       <Suspense fallback={<LoadingScreen />}>
-        <EmbeddedWalletConnectUI
+        <InAppWalletConnectUI
           wallet={props.wallet as Wallet<"inApp">}
           done={props.done}
           goBack={props.onBack}

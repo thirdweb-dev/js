@@ -1,8 +1,11 @@
 export {
   createWallet,
   smartWallet,
-  embeddedWallet,
   inAppWallet,
+  /**
+   * @deprecated use inAppWallet instead
+   */
+  inAppWallet as embeddedWallet,
   walletConnect,
 } from "../wallets/create-wallet.js";
 
@@ -31,7 +34,11 @@ export { injectedProvider } from "../wallets/injected/mipdStore.js";
 
 export type {
   WalletId,
-  EmbeddedWalletCreationOptions,
+  InAppWalletCreationOptions,
+  /**
+   * @deprecated use InAppWalletCreationOptions instead
+   */
+  InAppWalletCreationOptions as EmbeddedWalletCreationOptions,
   WalletAutoConnectionOption,
   WalletCreationOptions,
   WalletConnectionOption,
@@ -54,11 +61,27 @@ export type {
 } from "../wallets/smart/types.js";
 
 export type {
-  EmbeddedWalletAuth,
-  EmbeddedWalletAutoConnectOptions,
-  EmbeddedWalletConnectionOptions,
-  EmbeddedWalletSocialAuth,
-} from "../wallets/embedded/core/wallet/index.js";
+  InAppWalletAuth,
+  /**
+   * @deprecated use InAppWalletAuth instead
+   */
+  InAppWalletAuth as EmbeddedWalletAuth,
+  InAppWalletAutoConnectOptions,
+  /**
+   * @deprecated use InAppWalletAutoConnectOptions instead
+   */
+  InAppWalletAutoConnectOptions as EmbeddedWalletAutoConnectOptions,
+  InAppWalletConnectionOptions,
+  /**
+   * @deprecated use InAppWalletConnectionOptions instead
+   */
+  InAppWalletConnectionOptions as EmbeddedWalletConnectionOptions,
+  InAppWalletSocialAuth,
+  /**
+   * @deprecated use InAppWalletSocialAuth instead
+   */
+  InAppWalletSocialAuth as EmbeddedWalletSocialAuth,
+} from "../wallets/in-app/core/wallet/index.js";
 
 export type { CoinbaseSDKWalletConnectionOptions } from "../wallets/coinbase/coinbaseSDKWallet.js";
 

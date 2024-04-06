@@ -61,7 +61,7 @@ import type { Chain } from "../../../../chains/types.js";
 //   // personalAccountToSmartAccountMap,
 //   smartWalletMetadata,
 // } from "../../../../wallets/smart/index._ts";
-// import type { EmbeddedWallet } from "../../../../wallets/embedded/core/wallet/index._ts";
+// import type { EmbeddedWallet } from "../../../../wallets/in-app/core/wallet/index._ts";
 // import { localWalletMetadata } from "../../../../wallets/local/index._ts";
 // import { ExportLocalWallet } from "./screens/ExportLocalWallet._tsx";
 import { swapTransactionsStore } from "./screens/Buy/swap/pendingSwapTx.js";
@@ -69,7 +69,7 @@ import { SwapScreen } from "./screens/Buy/SwapScreen.js";
 import { SwapTransactionsScreen } from "./screens/SwapTransactionsScreen.js";
 import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { WalletImage } from "../components/WalletImage.js";
-import { getUserEmail } from "../../../../wallets/embedded/core/authentication/index.js";
+import { getUserEmail } from "../../../../wallets/in-app/core/authentication/index.js";
 import { useQuery } from "@tanstack/react-query";
 import { getContract } from "../../../../contract/contract.js";
 import { isContractDeployed } from "../../../../utils/bytecode/is-contract-deployed.js";

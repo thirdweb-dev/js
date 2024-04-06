@@ -352,29 +352,6 @@ export function smartWallet(
 }
 
 /**
- * Creates an embedded wallet.
- * @deprecated Use `inAppWallet` instead.
- * @param createOptions - configuration options
- * @returns The created embedded wallet.
- * @example
- * ```ts
- * import { embeddedWallet } from "thirdweb/wallets";
- *
- * const wallet = embeddedWallet();
- *
- * const account = await wallet.connect({
- *   client,
- *   chain,
- *   strategy: "google",
- * });
- * ```
- * @wallet
- */
-export function embeddedWallet(createOptions?: CreateWalletArgs<"inApp">[1]) {
-  return inAppWallet(createOptions);
-}
-
-/**
  * Creates an in-app wallet.
  * @param createOptions - configuration options
  * @returns The created in-app wallet.
@@ -405,12 +382,12 @@ export function inAppWallet(
     getConfig: () => createOptions,
     getAccount: () => account,
     autoConnect: async (options) => {
-      const { autoConnectEmbeddedWallet } = await import(
-        "./embedded/core/wallet/index.js"
+      const { autoConnectInAppWallet } = await import(
+        "./in-app/core/wallet/index.js"
       );
 
       const [connectedAccount, connectedChain] =
-        await autoConnectEmbeddedWallet(options);
+        await autoConnectInAppWallet(options);
       // set the states
       account = connectedAccount;
       chain = connectedChain;
@@ -423,12 +400,12 @@ export function inAppWallet(
       return account;
     },
     connect: async (options) => {
-      const { connectEmbeddedWallet } = await import(
-        "./embedded/core/wallet/index.js"
+      const { connectInAppWallet } = await import(
+        "./in-app/core/wallet/index.js"
       );
 
       const [connectedAccount, connectedChain] =
-        await connectEmbeddedWallet(options);
+        await connectInAppWallet(options);
       // set the states
       account = connectedAccount;
       chain = connectedChain;

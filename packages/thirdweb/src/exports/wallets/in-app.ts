@@ -5,4 +5,4 @@ export {
   authenticate,
   getUserEmail,
   type GetAuthenticatedUserParams,
-} from "../../wallets/embedded/core/authentication/index.js";
+} from "../../wallets/in-app/core/authentication/index.js";
