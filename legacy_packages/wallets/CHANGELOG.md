@@ -1,5 +1,17 @@
 # @thirdweb-dev/wallets
 
+## 2.4.34
+
+### Patch Changes
+
+- [#2677](https://github.com/thirdweb-dev/js/pull/2677) [`0e479e2`](https://github.com/thirdweb-dev/js/commit/0e479e2082fd685c9b8cae7d1cad53cade65de18) Thanks [@farhanW3](https://github.com/farhanW3)! - added 50k overhead to userOp gas estimations
+
+- [#2683](https://github.com/thirdweb-dev/js/pull/2683) [`b3d0140`](https://github.com/thirdweb-dev/js/commit/b3d01402dd93c24f6b16aaa55674c2c10eb33be5) Thanks [@MananTank](https://github.com/MananTank)! - Always start new WalletConnect session when calling `connect` method for WalletConnect connector
+
+- Updated dependencies [[`83ecf67`](https://github.com/thirdweb-dev/js/commit/83ecf67c4b973b17fbc57eeaa03d7a8176ff5d39)]:
+  - @thirdweb-dev/chains@0.1.89
+  - @thirdweb-dev/sdk@4.0.58
+
 ## 2.4.33
 
 ### Patch Changes
