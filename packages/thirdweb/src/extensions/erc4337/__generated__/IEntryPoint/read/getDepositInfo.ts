@@ -12,7 +12,7 @@ export type GetDepositInfoParams = {
   account: AbiParameterToPrimitiveType<{ type: "address"; name: "account" }>;
 };
 
-const FN_SELECTOR = "0x5287ce12" as const;
+export const FN_SELECTOR = "0x5287ce12" as const;
 const FN_INPUTS = [
   {
     type: "address",

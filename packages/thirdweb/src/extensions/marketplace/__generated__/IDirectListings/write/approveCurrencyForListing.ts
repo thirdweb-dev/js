@@ -19,7 +19,7 @@ export type ApproveCurrencyForListingParams = {
   }>;
 };
 
-const FN_SELECTOR = "0xea8f9a3c" as const;
+export const FN_SELECTOR = "0xea8f9a3c" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

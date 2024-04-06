@@ -16,7 +16,7 @@ export type PreviewMintParams = {
   }>;
 };
 
-const FN_SELECTOR = "0xb3d7f6b9" as const;
+export const FN_SELECTOR = "0xb3d7f6b9" as const;
 const FN_INPUTS = [
   {
     name: "shares",

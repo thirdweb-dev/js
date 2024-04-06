@@ -15,7 +15,7 @@ export type GetPublisherProfileUriParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x4f781675" as const;
+export const FN_SELECTOR = "0x4f781675" as const;
 const FN_INPUTS = [
   {
     type: "address",

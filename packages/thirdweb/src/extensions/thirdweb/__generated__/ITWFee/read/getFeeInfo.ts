@@ -13,7 +13,7 @@ export type GetFeeInfoParams = {
   type: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_type" }>;
 };
 
-const FN_SELECTOR = "0x85b49ad0" as const;
+export const FN_SELECTOR = "0x85b49ad0" as const;
 const FN_INPUTS = [
   {
     type: "address",

@@ -13,7 +13,7 @@ export type IsValidSignatureParams = {
   signature: AbiParameterToPrimitiveType<{ type: "bytes"; name: "signature" }>;
 };
 
-const FN_SELECTOR = "0x1626ba7e" as const;
+export const FN_SELECTOR = "0x1626ba7e" as const;
 const FN_INPUTS = [
   {
     type: "bytes32",

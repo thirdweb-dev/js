@@ -15,7 +15,7 @@ export type RevealParams = {
   key: AbiParameterToPrimitiveType<{ type: "bytes"; name: "key" }>;
 };
 
-const FN_SELECTOR = "0xce805642" as const;
+export const FN_SELECTOR = "0xce805642" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

@@ -133,7 +133,7 @@ export type ${inputTypeName} = {
     : ""
 };
 
-const FN_SELECTOR = "${preparedMethod[0]}" as const;
+export const FN_SELECTOR = "${preparedMethod[0]}" as const;
 const FN_INPUTS = ${JSON.stringify(preparedMethod[1], null, 2)} as const;
 const FN_OUTPUTS = ${JSON.stringify(preparedMethod[2], null, 2)} as const;
 
@@ -250,7 +250,7 @@ export type ${uppercaseFirstLetter(f.name)}Params = {
     : ""
 }
 
-const FN_SELECTOR = "${preparedMethod[0]}" as const;
+export const FN_SELECTOR = "${preparedMethod[0]}" as const;
 const FN_INPUTS = ${JSON.stringify(preparedMethod[1], null, 2)} as const;
 const FN_OUTPUTS = ${JSON.stringify(preparedMethod[2], null, 2)} as const;
 

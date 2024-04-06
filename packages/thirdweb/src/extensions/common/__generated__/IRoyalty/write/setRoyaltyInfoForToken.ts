@@ -16,7 +16,7 @@ export type SetRoyaltyInfoForTokenParams = {
   bps: AbiParameterToPrimitiveType<{ type: "uint256"; name: "bps" }>;
 };
 
-const FN_SELECTOR = "0x9bcf7a15" as const;
+export const FN_SELECTOR = "0x9bcf7a15" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

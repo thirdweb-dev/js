@@ -18,7 +18,7 @@ export type QuoteExactInputSingleParams = {
   }>;
 };
 
-const FN_SELECTOR = "0xf7729d43" as const;
+export const FN_SELECTOR = "0xf7729d43" as const;
 const FN_INPUTS = [
   {
     type: "address",

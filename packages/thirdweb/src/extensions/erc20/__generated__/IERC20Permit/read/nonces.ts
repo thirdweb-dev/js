@@ -12,7 +12,7 @@ export type NoncesParams = {
   owner: AbiParameterToPrimitiveType<{ type: "address"; name: "owner" }>;
 };
 
-const FN_SELECTOR = "0x7ecebe00" as const;
+export const FN_SELECTOR = "0x7ecebe00" as const;
 const FN_INPUTS = [
   {
     type: "address",

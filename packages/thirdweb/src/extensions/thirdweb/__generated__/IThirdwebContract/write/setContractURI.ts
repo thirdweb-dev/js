@@ -11,7 +11,7 @@ export type SetContractURIParams = {
   uri: AbiParameterToPrimitiveType<{ type: "string"; name: "_uri" }>;
 };
 
-const FN_SELECTOR = "0x938e3d7b" as const;
+export const FN_SELECTOR = "0x938e3d7b" as const;
 const FN_INPUTS = [
   {
     type: "string",

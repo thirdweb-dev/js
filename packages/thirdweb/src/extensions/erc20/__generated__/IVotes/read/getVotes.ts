@@ -12,7 +12,7 @@ export type GetVotesParams = {
   account: AbiParameterToPrimitiveType<{ type: "address"; name: "account" }>;
 };
 
-const FN_SELECTOR = "0x9ab24eb0" as const;
+export const FN_SELECTOR = "0x9ab24eb0" as const;
 const FN_INPUTS = [
   {
     type: "address",

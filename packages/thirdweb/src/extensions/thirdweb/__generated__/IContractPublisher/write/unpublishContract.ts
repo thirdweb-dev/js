@@ -18,7 +18,7 @@ export type UnpublishContractParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x06eb56cc" as const;
+export const FN_SELECTOR = "0x06eb56cc" as const;
 const FN_INPUTS = [
   {
     type: "address",

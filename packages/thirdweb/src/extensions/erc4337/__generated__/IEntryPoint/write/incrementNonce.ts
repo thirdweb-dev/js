@@ -11,7 +11,7 @@ export type IncrementNonceParams = {
   key: AbiParameterToPrimitiveType<{ type: "uint192"; name: "key" }>;
 };
 
-const FN_SELECTOR = "0x0bd28e3b" as const;
+export const FN_SELECTOR = "0x0bd28e3b" as const;
 const FN_INPUTS = [
   {
     type: "uint192",

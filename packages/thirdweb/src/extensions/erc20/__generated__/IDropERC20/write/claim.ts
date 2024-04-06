@@ -26,7 +26,7 @@ export type ClaimParams = {
   data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "data" }>;
 };
 
-const FN_SELECTOR = "0x5ab31c1a" as const;
+export const FN_SELECTOR = "0x5ab31c1a" as const;
 const FN_INPUTS = [
   {
     type: "address",

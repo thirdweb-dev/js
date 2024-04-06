@@ -28,7 +28,7 @@ export type SetClaimConditionsParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x74bc7db7" as const;
+export const FN_SELECTOR = "0x74bc7db7" as const;
 const FN_INPUTS = [
   {
     type: "tuple[]",

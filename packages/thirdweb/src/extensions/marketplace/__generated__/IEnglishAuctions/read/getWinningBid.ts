@@ -15,7 +15,7 @@ export type GetWinningBidParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x6891939d" as const;
+export const FN_SELECTOR = "0x6891939d" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

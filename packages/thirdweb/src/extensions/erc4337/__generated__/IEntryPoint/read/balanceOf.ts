@@ -12,7 +12,7 @@ export type BalanceOfParams = {
   account: AbiParameterToPrimitiveType<{ type: "address"; name: "account" }>;
 };
 
-const FN_SELECTOR = "0x70a08231" as const;
+export const FN_SELECTOR = "0x70a08231" as const;
 const FN_INPUTS = [
   {
     type: "address",

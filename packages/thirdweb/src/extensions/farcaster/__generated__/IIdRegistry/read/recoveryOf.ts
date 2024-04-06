@@ -12,7 +12,7 @@ export type RecoveryOfParams = {
   fid: AbiParameterToPrimitiveType<{ type: "uint256"; name: "fid" }>;
 };
 
-const FN_SELECTOR = "0xfa1a1b25" as const;
+export const FN_SELECTOR = "0xfa1a1b25" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

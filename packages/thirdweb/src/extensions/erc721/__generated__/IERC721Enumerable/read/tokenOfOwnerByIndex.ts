@@ -13,7 +13,7 @@ export type TokenOfOwnerByIndexParams = {
   index: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_index" }>;
 };
 
-const FN_SELECTOR = "0x2f745c59" as const;
+export const FN_SELECTOR = "0x2f745c59" as const;
 const FN_INPUTS = [
   {
     type: "address",

@@ -16,7 +16,7 @@ export type MaxRedeemParams = {
   }>;
 };
 
-const FN_SELECTOR = "0xd905777e" as const;
+export const FN_SELECTOR = "0xd905777e" as const;
 const FN_INPUTS = [
   {
     name: "owner",

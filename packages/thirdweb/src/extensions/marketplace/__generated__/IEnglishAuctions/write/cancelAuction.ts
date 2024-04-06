@@ -14,7 +14,7 @@ export type CancelAuctionParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x96b5a755" as const;
+export const FN_SELECTOR = "0x96b5a755" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

@@ -17,7 +17,7 @@ export type PermitParams = {
   s: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "s" }>;
 };
 
-const FN_SELECTOR = "0xd505accf" as const;
+export const FN_SELECTOR = "0xd505accf" as const;
 const FN_INPUTS = [
   {
     type: "address",

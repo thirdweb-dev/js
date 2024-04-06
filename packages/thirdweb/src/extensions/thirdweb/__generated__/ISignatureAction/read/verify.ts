@@ -22,7 +22,7 @@ export type VerifyParams = {
   signature: AbiParameterToPrimitiveType<{ type: "bytes"; name: "signature" }>;
 };
 
-const FN_SELECTOR = "0xc4376dd7" as const;
+export const FN_SELECTOR = "0xc4376dd7" as const;
 const FN_INPUTS = [
   {
     type: "tuple",

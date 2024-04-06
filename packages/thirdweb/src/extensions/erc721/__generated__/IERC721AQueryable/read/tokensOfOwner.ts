@@ -12,7 +12,7 @@ export type TokensOfOwnerParams = {
   owner: AbiParameterToPrimitiveType<{ type: "address"; name: "owner" }>;
 };
 
-const FN_SELECTOR = "0x8462151c" as const;
+export const FN_SELECTOR = "0x8462151c" as const;
 const FN_INPUTS = [
   {
     type: "address",

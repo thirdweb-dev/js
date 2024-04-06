@@ -14,7 +14,7 @@ export type GetPoolParams = {
   fee: AbiParameterToPrimitiveType<{ type: "uint24"; name: "fee" }>;
 };
 
-const FN_SELECTOR = "0x1698ee82" as const;
+export const FN_SELECTOR = "0x1698ee82" as const;
 const FN_INPUTS = [
   {
     type: "address",

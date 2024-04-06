@@ -18,7 +18,7 @@ export type SetPlatformFeeInfoParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x1e7ac488" as const;
+export const FN_SELECTOR = "0x1e7ac488" as const;
 const FN_INPUTS = [
   {
     type: "address",

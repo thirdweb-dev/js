@@ -15,7 +15,7 @@ export type IsTrustedForwarderParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x572b6c05" as const;
+export const FN_SELECTOR = "0x572b6c05" as const;
 const FN_INPUTS = [
   {
     type: "address",

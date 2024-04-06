@@ -12,7 +12,7 @@ export type IsAdminParams = {
   signer: AbiParameterToPrimitiveType<{ type: "address"; name: "signer" }>;
 };
 
-const FN_SELECTOR = "0x24d7806c" as const;
+export const FN_SELECTOR = "0x24d7806c" as const;
 const FN_INPUTS = [
   {
     type: "address",
