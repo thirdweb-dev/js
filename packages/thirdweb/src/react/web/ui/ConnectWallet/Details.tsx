@@ -49,27 +49,15 @@ import type {
   ConnectButton_detailsButtonOptions,
   ConnectButton_detailsModalOptions,
 } from "./ConnectWalletProps.js";
-// import { connectionManager } from "../../../core/connectionManager.js";
 import { SendFunds } from "./screens/SendFunds.js";
 import { ReceiveFunds } from "./screens/ReceiveFunds.js";
 import type { Chain } from "../../../../chains/types.js";
-// import type {
-//   Wallet,
-//   WalletWithPersonalAccount,
-// } from "../../../../wallets/interfaces/wallet.js";
-// import {
-//   // personalAccountToSmartAccountMap,
-//   smartWalletMetadata,
-// } from "../../../../wallets/smart/index._ts";
-// import type { EmbeddedWallet } from "../../../../wallets/embedded/core/wallet/index._ts";
-// import { localWalletMetadata } from "../../../../wallets/local/index._ts";
-// import { ExportLocalWallet } from "./screens/ExportLocalWallet._tsx";
 import { swapTransactionsStore } from "./screens/Buy/swap/pendingSwapTx.js";
 import { SwapScreen } from "./screens/Buy/SwapScreen.js";
 import { SwapTransactionsScreen } from "./screens/SwapTransactionsScreen.js";
 import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { WalletImage } from "../components/WalletImage.js";
-import { getUserEmail } from "../../../../wallets/embedded/core/authentication/index.js";
+import { getUserEmail } from "../../../../wallets/in-app/core/authentication/index.js";
 import { useQuery } from "@tanstack/react-query";
 import { getContract } from "../../../../contract/contract.js";
 import { isContractDeployed } from "../../../../utils/bytecode/is-contract-deployed.js";
@@ -324,7 +312,7 @@ export const ConnectedWalletDetails: React.FC<{
 
       <Container px="lg">
         <ConnectedToSmartWallet />
-        <EmbeddedWalletEmail />
+        <InAppWalletEmail />
 
         {/* Send, Receive, Swap */}
         <Container
@@ -815,10 +803,10 @@ function ConnectedToSmartWallet() {
   return null;
 }
 
-function EmbeddedWalletEmail() {
+function InAppWalletEmail() {
   const { client } = useWalletConnectionCtx();
   const emailQuery = useQuery({
-    queryKey: ["embedded-wallet-user", client],
+    queryKey: ["in-app-wallet-user", client],
     queryFn: async () => {
       const data = await getUserEmail({
         client: client,

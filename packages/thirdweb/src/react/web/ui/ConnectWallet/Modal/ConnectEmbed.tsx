@@ -85,10 +85,10 @@ export type ConnectEmbedProps = {
    * @example
    * ```tsx
    * import { AutoConnect } from "thirdweb/react";
-   * import { createWallet, embeddedWallet } from "thirdweb/wallets";
+   * import { createWallet, inAppWallet } from "thirdweb/wallets";
    *
    * const wallets = [
-   *   embeddedWallet(),
+   *   inAppWallet(),
    *   createWallet("io.metamask"),
    *   createWallet("com.coinbase.wallet"),
    *   createWallet("me.rainbow"),
@@ -108,7 +108,7 @@ export type ConnectEmbedProps = {
    *
    * ```tsx
    * const defaultWallets = [
-   *  embeddedWallet(),
+   *  inAppWallet(),
    *  createWallet("io.metamask"),
    *  createWallet("com.coinbase.wallet"),
    *  createWallet("me.rainbow"),

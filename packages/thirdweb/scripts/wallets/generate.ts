@@ -95,8 +95,8 @@ const customWalletInfos = [
     name: "Smart Wallet",
   },
   {
-    id: "embedded",
-    name: "Embedded Wallet",
+    id: "inApp",
+    name: "In-App Wallet",
   },
   {
     id: "walletConnect",
@@ -237,7 +237,7 @@ const walletImports = allSupportedWallets
   )
   .join("\n");
 
-const customWalletImports = ["smart", "embedded", "walletConnect"]
+const customWalletImports = ["smart", "inApp", "walletConnect"]
   .map(
     (walletId) =>
       `case "${walletId}": {
