@@ -48,6 +48,6 @@
     "clean": "rm -rf dist/",
     "build": "tsc && preconstruct build",
     "push": "yalc push",
-    "test": "vitest"
+    "test": "vitest run"
   }
 }

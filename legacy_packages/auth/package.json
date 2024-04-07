@@ -61,7 +61,7 @@
     "lint": "eslint src/",
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/ && rm -rf node_modules/",
-    "test": "vitest",
+    "test": "vitest run",
     "push": "yalc push"
   },
   "preconstruct": {
