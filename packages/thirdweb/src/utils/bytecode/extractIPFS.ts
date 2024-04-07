@@ -17,24 +17,24 @@ import { ensureBytecodePrefix } from "./prefix.js";
  * @utils
  */
 export function extractIPFSUri(bytecode: string): string | undefined {
-	const numericBytecode = hexToBytes(ensureBytecodePrefix(bytecode));
+  const numericBytecode = hexToBytes(ensureBytecodePrefix(bytecode));
 
-	const cborLength =
-		// @ts-expect-error - TS doesn't like this, but it's fine
-		numericBytecode[numericBytecode.length - 2] * 0x100 +
-		// @ts-expect-error - TS doesn't like this, but it's fine
-		numericBytecode[numericBytecode.length - 1];
-	const cborStart = numericBytecode.length - 2 - cborLength;
-	// if the cborStart is invalid, return undefined
-	if (cborStart < 0 || cborStart > numericBytecode.length) {
-		return undefined;
-	}
-	const bytecodeBuffer = numericBytecode.slice(cborStart, -2);
+  const cborLength =
+    // @ts-expect-error - TS doesn't like this, but it's fine
+    numericBytecode[numericBytecode.length - 2] * 0x100 +
+    // @ts-expect-error - TS doesn't like this, but it's fine
+    numericBytecode[numericBytecode.length - 1];
+  const cborStart = numericBytecode.length - 2 - cborLength;
+  // if the cborStart is invalid, return undefined
+  if (cborStart < 0 || cborStart > numericBytecode.length) {
+    return undefined;
+  }
+  const bytecodeBuffer = numericBytecode.slice(cborStart, -2);
 
-	const cborData = decode(bytecodeBuffer);
-	if ("ipfs" in cborData) {
-		return `ipfs://${base58Encode(cborData.ipfs)}`;
-	}
+  const cborData = decode(bytecodeBuffer);
+  if ("ipfs" in cborData) {
+    return `ipfs://${base58Encode(cborData.ipfs)}`;
+  }
 
-	return undefined;
+  return undefined;
 }

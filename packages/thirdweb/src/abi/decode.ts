@@ -9,8 +9,8 @@ import { type Hex, decodeAbiParameters } from "viem";
  * @internal
  */
 export function decodeFunctionResult<const abiFn extends AbiFunction>(
-	abiFn: abiFn,
-	data: Hex,
+  abiFn: abiFn,
+  data: Hex,
 ) {
-	return decodeAbiParameters<abiFn["outputs"]>(abiFn.outputs, data);
+  return decodeAbiParameters<abiFn["outputs"]>(abiFn.outputs, data);
 }

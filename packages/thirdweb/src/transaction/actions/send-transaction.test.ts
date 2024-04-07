@@ -7,18 +7,18 @@ import { prepareTransaction } from "../prepare-transaction.js";
 import { sendTransaction } from "./send-transaction.js";
 
 describe("sendTransaction", () => {
-	it("should send transaction", async () => {
-		const transaction = prepareTransaction({
-			chain: ANVIL_CHAIN,
-			client: TEST_CLIENT,
-			value: 100n,
-			to: TEST_WALLET_B,
-		});
-		const res = await sendTransaction({
-			account: TEST_ACCOUNT_A,
-			transaction,
-		});
+  it("should send transaction", async () => {
+    const transaction = prepareTransaction({
+      chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
+      value: 100n,
+      to: TEST_WALLET_B,
+    });
+    const res = await sendTransaction({
+      account: TEST_ACCOUNT_A,
+      transaction,
+    });
 
-		expect(res.transactionHash.length).toBe(66);
-	});
+    expect(res.transactionHash.length).toBe(66);
+  });
 });

@@ -2,13 +2,13 @@
  * The address of the native token.
  */
 export const NATIVE_TOKEN_ADDRESS =
-	"0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
+  "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
 
 /**
  * @internal
  */
 export function isNativeTokenAddress(address: string) {
-	return address.toLowerCase() === NATIVE_TOKEN_ADDRESS;
+  return address.toLowerCase() === NATIVE_TOKEN_ADDRESS;
 }
 
 /**

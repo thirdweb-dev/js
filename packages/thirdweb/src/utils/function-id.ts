@@ -16,11 +16,11 @@ const functionIdCache = new WeakMap<AnyFunction, string>();
  * @internal
  */
 export function getFunctionId(fn: AnyFunction) {
-	if (functionIdCache.has(fn)) {
-		// biome-ignore lint/style/noNonNullAssertion: the `has` above ensures that this will always be set
-		return functionIdCache.get(fn)!;
-	}
-	const id = uint8ArrayToHex(sha256(fn.toString()));
-	functionIdCache.set(fn, id);
-	return id;
+  if (functionIdCache.has(fn)) {
+    // biome-ignore lint/style/noNonNullAssertion: the `has` above ensures that this will always be set
+    return functionIdCache.get(fn)!;
+  }
+  const id = uint8ArrayToHex(sha256(fn.toString()));
+  functionIdCache.set(fn, id);
+  return id;
 }

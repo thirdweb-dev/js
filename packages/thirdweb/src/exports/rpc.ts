@@ -2,8 +2,8 @@ export { getRpcClient } from "../rpc/rpc.js";
 
 // blockNumber watcher
 export {
-	watchBlockNumber,
-	type WatchBlockNumberOptions,
+  watchBlockNumber,
+  type WatchBlockNumberOptions,
 } from "../rpc/watchBlockNumber.js";
 
 // all the actions

@@ -7,19 +7,19 @@ import { prepareTransaction } from "../prepare-transaction.js";
 import { sendAndConfirmTransaction } from "./send-and-confirm-transaction.js";
 
 describe("sendAndConfirmTransaction", () => {
-	it("should send transaction then wait for confirmation", async () => {
-		const transaction = prepareTransaction({
-			chain: ANVIL_CHAIN,
-			client: TEST_CLIENT,
-			value: 100n,
-			to: TEST_WALLET_B,
-		});
-		const res = await sendAndConfirmTransaction({
-			account: TEST_ACCOUNT_A,
-			transaction,
-		});
+  it("should send transaction then wait for confirmation", async () => {
+    const transaction = prepareTransaction({
+      chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
+      value: 100n,
+      to: TEST_WALLET_B,
+    });
+    const res = await sendAndConfirmTransaction({
+      account: TEST_ACCOUNT_A,
+      transaction,
+    });
 
-		expect(res.transactionHash.length).toBe(66);
-		expect(res.blockNumber).toBeGreaterThan(0n);
-	});
+    expect(res.transactionHash.length).toBe(66);
+    expect(res.blockNumber).toBeGreaterThan(0n);
+  });
 });

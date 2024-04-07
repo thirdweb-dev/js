@@ -7,8 +7,8 @@ import { type Hex, toHex } from "../encoding/hex.js";
  * Options for signing a transaction hash.
  */
 export type SignOptions = {
-	hash: Hex;
-	privateKey: Hex;
+  hash: Hex;
+  privateKey: Hex;
 };
 
 /**
@@ -27,10 +27,10 @@ export type SignOptions = {
  * });
  */
 export function sign({ hash, privateKey }: SignOptions): Signature {
-	const { r, s, recovery } = secp256k1.sign(hash.slice(2), privateKey.slice(2));
-	return {
-		r: toHex(r),
-		s: toHex(s),
-		v: recovery ? 28n : 27n,
-	};
+  const { r, s, recovery } = secp256k1.sign(hash.slice(2), privateKey.slice(2));
+  return {
+    r: toHex(r),
+    s: toHex(s),
+    v: recovery ? 28n : 27n,
+  };
 }

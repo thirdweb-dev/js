@@ -13,8 +13,8 @@ import { type Hex, isHex } from "./is-hex.js";
  * ```
  */
 export function byteSize(value: Hex | Uint8Array) {
-	if (isHex(value, { strict: false })) {
-		return Math.ceil((value.length - 2) / 2);
-	}
-	return value.length;
+  if (isHex(value, { strict: false })) {
+    return Math.ceil((value.length - 2) / 2);
+  }
+  return value.length;
 }

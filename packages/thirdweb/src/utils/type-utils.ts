@@ -8,14 +8,14 @@
  * //   ^? type Result = ['a', 'c']
  */
 export type Filter<
-	T extends readonly unknown[],
-	P,
-	Acc extends readonly unknown[] = [],
+  T extends readonly unknown[],
+  P,
+  Acc extends readonly unknown[] = [],
 > = T extends readonly [infer F, ...infer Rest extends readonly unknown[]]
-	? [F] extends [P]
-		? Filter<Rest, P, [...Acc, F]>
-		: Filter<Rest, P, Acc>
-	: readonly [...Acc];
+  ? [F] extends [P]
+    ? Filter<Rest, P, [...Acc, F]>
+    : Filter<Rest, P, Acc>
+  : readonly [...Acc];
 
 /**
  * @description Makes attributes on the type T required if TRequired is true.
@@ -27,8 +27,8 @@ export type Filter<
  * => { a: string, b?: number }
  */
 export type MaybeRequired<T, TRequired extends boolean> = TRequired extends true
-	? Required<T>
-	: T;
+  ? Required<T>
+  : T;
 
 /**
  * @description Combines members of an intersection into a readable type.
@@ -38,5 +38,5 @@ export type MaybeRequired<T, TRequired extends boolean> = TRequired extends true
  * => { a: string, b: string, c: number, d: bigint }
  */
 export type Prettify<T> = {
-	[K in keyof T]: T[K];
+  [K in keyof T]: T[K];
 } & {};

@@ -1,7 +1,7 @@
 import type { ThirdwebClient } from "../../../../client/client.js";
 import {
-	type AuthLoginReturnType,
-	AuthProvider,
+  type AuthLoginReturnType,
+  AuthProvider,
 } from "../../implementations/interfaces/auth.js";
 import { UserWalletStatus } from "../../implementations/interfaces/in-app-wallets/in-app-wallets.js";
 import type { InAppWalletSdk } from "../../implementations/lib/in-app-wallet.js";
@@ -13,22 +13,22 @@ const ewsSDKCache = new WeakMap<ThirdwebClient, InAppWalletSdk>();
  * @internal
  */
 async function getInAppWalletSDK(client: ThirdwebClient) {
-	if (ewsSDKCache.has(client)) {
-		return ewsSDKCache.get(client) as InAppWalletSdk;
-	}
-	const { InAppWalletSdk } = await import(
-		"../../implementations/lib/in-app-wallet.js"
-	);
+  if (ewsSDKCache.has(client)) {
+    return ewsSDKCache.get(client) as InAppWalletSdk;
+  }
+  const { InAppWalletSdk } = await import(
+    "../../implementations/lib/in-app-wallet.js"
+  );
 
-	const ewSDK = new InAppWalletSdk({
-		client: client,
-	});
-	ewsSDKCache.set(client, ewSDK);
-	return ewSDK;
+  const ewSDK = new InAppWalletSdk({
+    client: client,
+  });
+  ewsSDKCache.set(client, ewSDK);
+  return ewSDK;
 }
 
 export type GetAuthenticatedUserParams = {
-	client: ThirdwebClient;
+  client: ThirdwebClient;
 };
 
 /**
@@ -46,17 +46,17 @@ export type GetAuthenticatedUserParams = {
  * ```
  */
 export async function getAuthenticatedUser(
-	options: GetAuthenticatedUserParams,
+  options: GetAuthenticatedUserParams,
 ) {
-	const { client } = options;
-	const ewSDK = await getInAppWalletSDK(client);
-	const user = await ewSDK.getUser();
-	switch (user.status) {
-		case UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED: {
-			return user;
-		}
-	}
-	return undefined;
+  const { client } = options;
+  const ewSDK = await getInAppWalletSDK(client);
+  const user = await ewSDK.getUser();
+  switch (user.status) {
+    case UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED: {
+      return user;
+    }
+  }
+  return undefined;
 }
 
 /**
@@ -72,11 +72,11 @@ export async function getAuthenticatedUser(
  * ```
  */
 export async function getUserEmail(options: GetAuthenticatedUserParams) {
-	const user = await getAuthenticatedUser(options);
-	if (user) {
-		return user.authDetails.email;
-	}
-	return undefined;
+  const user = await getAuthenticatedUser(options);
+  if (user) {
+    return user.authDetails.email;
+  }
+  return undefined;
 }
 
 /**
@@ -96,17 +96,17 @@ export async function getUserEmail(options: GetAuthenticatedUserParams) {
  * ```
  */
 export async function preAuthenticate(args: PreAuthArgsType) {
-	const ewSDK = await getInAppWalletSDK(args.client);
-	const strategy = args.strategy;
-	switch (strategy) {
-		case "email": {
-			return ewSDK.auth.sendEmailLoginOtp({ email: args.email });
-		}
-		default:
-			throw new Error(
-				`Provider: ${strategy} doesnt require pre-authentication`,
-			);
-	}
+  const ewSDK = await getInAppWalletSDK(args.client);
+  const strategy = args.strategy;
+  switch (strategy) {
+    case "email": {
+      return ewSDK.auth.sendEmailLoginOtp({ email: args.email });
+    }
+    default:
+      throw new Error(
+        `Provider: ${strategy} doesnt require pre-authentication`,
+      );
+  }
 }
 
 /**
@@ -126,61 +126,61 @@ export async function preAuthenticate(args: PreAuthArgsType) {
  * ```
  */
 export async function authenticate(
-	args: AuthArgsType,
+  args: AuthArgsType,
 ): Promise<AuthLoginReturnType> {
-	const ewSDK = await getInAppWalletSDK(args.client);
-	const strategy = args.strategy;
-	switch (strategy) {
-		case "email": {
-			return await ewSDK.auth.verifyEmailLoginOtp({
-				email: args.email,
-				otp: args.verificationCode,
-			});
-		}
-		case "apple":
-		case "facebook":
-		case "google": {
-			const oauthProvider = oauthStrategyToAuthProvider[strategy];
-			return ewSDK.auth.loginWithOauth({
-				oauthProvider,
-				closeOpenedWindow: args.closeOpenedWindow,
-				openedWindow: args.openedWindow,
-			});
-		}
-		case "jwt": {
-			return ewSDK.auth.loginWithCustomJwt({
-				jwt: args.jwt,
-				encryptionKey: args.encryptionKey,
-			});
-		}
-		case "auth_endpoint": {
-			return ewSDK.auth.loginWithCustomAuthEndpoint({
-				payload: args.payload,
-				encryptionKey: args.encryptionKey,
-			});
-		}
-		case "iframe_email_verification": {
-			return ewSDK.auth.loginWithEmailOtp({
-				email: args.email,
-			});
-		}
-		case "iframe": {
-			return ewSDK.auth.loginWithModal();
-		}
-		default:
-			assertUnreachable(strategy);
-	}
+  const ewSDK = await getInAppWalletSDK(args.client);
+  const strategy = args.strategy;
+  switch (strategy) {
+    case "email": {
+      return await ewSDK.auth.verifyEmailLoginOtp({
+        email: args.email,
+        otp: args.verificationCode,
+      });
+    }
+    case "apple":
+    case "facebook":
+    case "google": {
+      const oauthProvider = oauthStrategyToAuthProvider[strategy];
+      return ewSDK.auth.loginWithOauth({
+        oauthProvider,
+        closeOpenedWindow: args.closeOpenedWindow,
+        openedWindow: args.openedWindow,
+      });
+    }
+    case "jwt": {
+      return ewSDK.auth.loginWithCustomJwt({
+        jwt: args.jwt,
+        encryptionKey: args.encryptionKey,
+      });
+    }
+    case "auth_endpoint": {
+      return ewSDK.auth.loginWithCustomAuthEndpoint({
+        payload: args.payload,
+        encryptionKey: args.encryptionKey,
+      });
+    }
+    case "iframe_email_verification": {
+      return ewSDK.auth.loginWithEmailOtp({
+        email: args.email,
+      });
+    }
+    case "iframe": {
+      return ewSDK.auth.loginWithModal();
+    }
+    default:
+      assertUnreachable(strategy);
+  }
 }
 
 function assertUnreachable(x: never): never {
-	throw new Error(`Invalid param: ${x}`);
+  throw new Error(`Invalid param: ${x}`);
 }
 
 const oauthStrategyToAuthProvider: Record<
-	"google" | "facebook" | "apple",
-	AuthProvider
+  "google" | "facebook" | "apple",
+  AuthProvider
 > = {
-	google: AuthProvider.GOOGLE,
-	facebook: AuthProvider.FACEBOOK,
-	apple: AuthProvider.APPLE,
+  google: AuthProvider.GOOGLE,
+  facebook: AuthProvider.FACEBOOK,
+  apple: AuthProvider.APPLE,
 };

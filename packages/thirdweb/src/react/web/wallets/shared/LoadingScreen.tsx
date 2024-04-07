@@ -5,16 +5,16 @@ import { Container } from "../../ui/components/basic.js";
  * @internal
  */
 export function LoadingScreen(props: { height?: string }) {
-	return (
-		<Container
-			style={{
-				minHeight: props.height || "350px",
-			}}
-			fullHeight
-			flex="row"
-			center="both"
-		>
-			<Spinner size="lg" color="secondaryText" />
-		</Container>
-	);
+  return (
+    <Container
+      style={{
+        minHeight: props.height || "350px",
+      }}
+      fullHeight
+      flex="row"
+      center="both"
+    >
+      <Spinner size="lg" color="secondaryText" />
+    </Container>
+  );
 }

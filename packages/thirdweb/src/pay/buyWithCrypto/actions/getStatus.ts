@@ -6,60 +6,60 @@ import type { QuoteTokenInfo } from "./getQuote.js";
 // TODO: add JSDoc description for all properties
 
 export type BuyWithCryptoTransactionDetails = {
-	transactionHash: string;
-	token: QuoteTokenInfo;
-	amountWei: string;
-	amount: string;
-	amountUSDCents: number;
-	completedAt?: string; // ISO DATE
-	explorerLink?: string;
+  transactionHash: string;
+  token: QuoteTokenInfo;
+  amountWei: string;
+  amount: string;
+  amountUSDCents: number;
+  completedAt?: string; // ISO DATE
+  explorerLink?: string;
 };
 
 export type BuyWithCryptoQuoteSummary = {
-	fromToken: QuoteTokenInfo;
-	toToken: QuoteTokenInfo;
+  fromToken: QuoteTokenInfo;
+  toToken: QuoteTokenInfo;
 
-	fromAmountWei: string;
-	fromAmount: string;
+  fromAmountWei: string;
+  fromAmount: string;
 
-	toAmountWei: string;
-	toAmount: string;
+  toAmountWei: string;
+  toAmount: string;
 
-	toAmountMin: string;
-	toAmountMinWei: string;
+  toAmountMin: string;
+  toAmountMinWei: string;
 
-	estimated: {
-		fromAmountUSDCents: number;
-		toAmountMinUSDCents: number;
-		toAmountUSDCents: number;
-		slippageBPS: number;
-		feesUSDCents: number;
-		gasCostUSDCents?: number;
-		durationSeconds?: number;
-	}; // SAME AS QUOTE
+  estimated: {
+    fromAmountUSDCents: number;
+    toAmountMinUSDCents: number;
+    toAmountUSDCents: number;
+    slippageBPS: number;
+    feesUSDCents: number;
+    gasCostUSDCents?: number;
+    durationSeconds?: number;
+  }; // SAME AS QUOTE
 
-	createdAt: string; // ISO DATE
+  createdAt: string; // ISO DATE
 };
 
 export type BuyWithCryptoTransaction = {
-	client: ThirdwebClient;
-	transactionHash: string;
+  client: ThirdwebClient;
+  transactionHash: string;
 };
 
 export type BuyWithCryptoStatuses =
-	| "NOT_FOUND"
-	| "NONE"
-	| "PENDING"
-	| "FAILED"
-	| "COMPLETED";
+  | "NOT_FOUND"
+  | "NONE"
+  | "PENDING"
+  | "FAILED"
+  | "COMPLETED";
 
 export type BuyWithCryptoSubStatuses =
-	| "NONE"
-	| "WAITING_BRIDGE"
-	| "REVERTED_ON_CHAIN"
-	| "SUCCESS"
-	| "PARTIAL_SUCCESS"
-	| "UNKNOWN_ERROR";
+  | "NONE"
+  | "WAITING_BRIDGE"
+  | "REVERTED_ON_CHAIN"
+  | "SUCCESS"
+  | "PARTIAL_SUCCESS"
+  | "UNKNOWN_ERROR";
 
 export type SwapType = "SAME_CHAIN" | "CROSS_CHAIN";
 
@@ -68,16 +68,16 @@ export type SwapType = "SAME_CHAIN" | "CROSS_CHAIN";
  * @buyCrypto
  */
 export type BuyWithCryptoStatus = {
-	quote: BuyWithCryptoQuoteSummary;
-	swapType: SwapType;
-	source: BuyWithCryptoTransactionDetails;
-	destination?: BuyWithCryptoTransactionDetails;
-	status: BuyWithCryptoStatuses;
-	subStatus: BuyWithCryptoSubStatuses;
-	fromAddress: string;
-	toAddress: string;
-	failureMessage?: string;
-	bridge?: string;
+  quote: BuyWithCryptoQuoteSummary;
+  swapType: SwapType;
+  source: BuyWithCryptoTransactionDetails;
+  destination?: BuyWithCryptoTransactionDetails;
+  status: BuyWithCryptoStatuses;
+  subStatus: BuyWithCryptoSubStatuses;
+  fromAddress: string;
+  toAddress: string;
+  failureMessage?: string;
+  bridge?: string;
 };
 
 /**
@@ -117,29 +117,29 @@ export type BuyWithCryptoStatus = {
  * @buyCrypto
  */
 export async function getBuyWithCryptoStatus(
-	buyWithCryptoTransaction: BuyWithCryptoTransaction,
+  buyWithCryptoTransaction: BuyWithCryptoTransaction,
 ): Promise<BuyWithCryptoStatus> {
-	try {
-		if (!buyWithCryptoTransaction.transactionHash) {
-			throw new Error("Transaction hash is required");
-		}
-		const queryString = new URLSearchParams({
-			transactionHash: buyWithCryptoTransaction.transactionHash,
-		}).toString();
-		const url = `${getPayBuyWithCryptoStatusUrl()}?${queryString}`;
+  try {
+    if (!buyWithCryptoTransaction.transactionHash) {
+      throw new Error("Transaction hash is required");
+    }
+    const queryString = new URLSearchParams({
+      transactionHash: buyWithCryptoTransaction.transactionHash,
+    }).toString();
+    const url = `${getPayBuyWithCryptoStatusUrl()}?${queryString}`;
 
-		const response = await getClientFetch(buyWithCryptoTransaction.client)(url);
+    const response = await getClientFetch(buyWithCryptoTransaction.client)(url);
 
-		// Assuming the response directly matches the SwapResponse interface
-		if (!response.ok) {
-			response.body?.cancel();
-			throw new Error(`HTTP error! status: ${response.status}`);
-		}
+    // Assuming the response directly matches the SwapResponse interface
+    if (!response.ok) {
+      response.body?.cancel();
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
 
-		const data: BuyWithCryptoStatus = (await response.json()).result;
-		return data;
-	} catch (error) {
-		console.error("Fetch error:", error);
-		throw new Error(`Fetch failed: ${error}`);
-	}
+    const data: BuyWithCryptoStatus = (await response.json()).result;
+    return data;
+  } catch (error) {
+    console.error("Fetch error:", error);
+    throw new Error(`Fetch failed: ${error}`);
+  }
 }

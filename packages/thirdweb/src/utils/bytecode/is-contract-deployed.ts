@@ -22,18 +22,18 @@ const cache = new WeakSet<ThirdwebContract>();
  * @contract
  */
 export async function isContractDeployed(
-	contract: ThirdwebContract,
+  contract: ThirdwebContract,
 ): Promise<boolean> {
-	if (cache.has(contract)) {
-		// it's only in there if it's deployed
-		return true;
-	}
-	// this already dedupes requests for the same contract
-	const bytecode = await getBytecode(contract);
-	const isDeployed = bytecode !== "0x";
-	// if it's deployed, we add it to the cache
-	if (isDeployed) {
-		cache.add(contract);
-	}
-	return isDeployed;
+  if (cache.has(contract)) {
+    // it's only in there if it's deployed
+    return true;
+  }
+  // this already dedupes requests for the same contract
+  const bytecode = await getBytecode(contract);
+  const isDeployed = bytecode !== "0x";
+  // if it's deployed, we add it to the cache
+  if (isDeployed) {
+    cache.add(contract);
+  }
+  return isDeployed;
 }

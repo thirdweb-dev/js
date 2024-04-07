@@ -7,16 +7,16 @@ import type { InAppWalletLocale } from "./locale/types.js";
  * @internal
  */
 export function useInAppWalletLocale() {
-	const localeId = useWalletConnectionCtx().locale;
-	const [locale, setLocale] = useState<InAppWalletLocale | undefined>(
-		undefined,
-	);
+  const localeId = useWalletConnectionCtx().locale;
+  const [locale, setLocale] = useState<InAppWalletLocale | undefined>(
+    undefined,
+  );
 
-	useEffect(() => {
-		getInAppWalletLocale(localeId).then((l) => {
-			setLocale(l);
-		});
-	}, [localeId]);
+  useEffect(() => {
+    getInAppWalletLocale(localeId).then((l) => {
+      setLocale(l);
+    });
+  }, [localeId]);
 
-	return locale;
+  return locale;
 }

@@ -1,7 +1,7 @@
 import { type UseMutationResult, useMutation } from "@tanstack/react-query";
 import {
-	type EstimateGasCostResult,
-	estimateGasCost,
+  type EstimateGasCostResult,
+  estimateGasCost,
 } from "../../../../transaction/actions/estimate-gas-cost.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
 import { useActiveAccount } from "../wallets/wallet-hooks.js";
@@ -21,13 +21,13 @@ import { useActiveAccount } from "../wallets/wallet-hooks.js";
  * @transaction
  */
 export function useEstimateGasCost(): UseMutationResult<
-	EstimateGasCostResult,
-	Error,
-	PreparedTransaction
+  EstimateGasCostResult,
+  Error,
+  PreparedTransaction
 > {
-	const account = useActiveAccount();
+  const account = useActiveAccount();
 
-	return useMutation({
-		mutationFn: (transaction) => estimateGasCost({ transaction, account }),
-	});
+  return useMutation({
+    mutationFn: (transaction) => estimateGasCost({ transaction, account }),
+  });
 }

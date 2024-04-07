@@ -1,8 +1,8 @@
 export type Hex = `0x${string}`;
 
 export type IsHexOptions = {
-	/** If set to true, the value must start with "0x" and only contain hexadecimal characters. If set to false, the value can start with "0x" or not. Default is true. */
-	strict?: boolean;
+  /** If set to true, the value must start with "0x" and only contain hexadecimal characters. If set to false, the value can start with "0x" or not. Default is true. */
+  strict?: boolean;
 };
 
 /**
@@ -19,16 +19,16 @@ export type IsHexOptions = {
  * @utils
  */
 export function isHex(
-	value: unknown,
-	options: IsHexOptions = {},
+  value: unknown,
+  options: IsHexOptions = {},
 ): value is Hex {
-	if (!value) {
-		return false;
-	}
-	if (typeof value !== "string") {
-		return false;
-	}
-	return options.strict
-		? /^0x[0-9a-fA-F]*$/.test(value)
-		: value.startsWith("0x");
+  if (!value) {
+    return false;
+  }
+  if (typeof value !== "string") {
+    return false;
+  }
+  return options.strict
+    ? /^0x[0-9a-fA-F]*$/.test(value)
+    : value.startsWith("0x");
 }

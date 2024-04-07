@@ -12,27 +12,27 @@ import { initialize as initTokenERC1155 } from "./__generated__/TokenERC1155/wri
 export type ERC1155ContractType = "DropERC1155" | "TokenERC1155";
 
 export type ERC1155ContractParams = {
-	name: string;
-	description?: string;
-	image?: FileOrBufferOrString;
-	external_link?: string;
-	social_urls?: Record<string, string>;
-	symbol?: string;
-	contractURI?: string;
-	defaultAdmin?: string;
-	saleRecipient?: string;
-	platformFeeBps?: bigint;
-	platformFeeRecipient?: string;
-	royaltyRecipient?: string;
-	royaltyBps?: bigint;
-	trustedForwarders?: string[];
+  name: string;
+  description?: string;
+  image?: FileOrBufferOrString;
+  external_link?: string;
+  social_urls?: Record<string, string>;
+  symbol?: string;
+  contractURI?: string;
+  defaultAdmin?: string;
+  saleRecipient?: string;
+  platformFeeBps?: bigint;
+  platformFeeRecipient?: string;
+  royaltyRecipient?: string;
+  royaltyBps?: bigint;
+  trustedForwarders?: string[];
 };
 
 export type DeployERC1155ContractOptions = Prettify<
-	ClientAndChainAndAccount & {
-		type: ERC1155ContractType;
-		params: ERC1155ContractParams;
-	}
+  ClientAndChainAndAccount & {
+    type: ERC1155ContractType;
+    params: ERC1155ContractParams;
+  }
 >;
 
 /**
@@ -57,91 +57,91 @@ export type DeployERC1155ContractOptions = Prettify<
  * ```
  */
 export async function deployERC1155Contract(
-	options: DeployERC1155ContractOptions,
+  options: DeployERC1155ContractOptions,
 ) {
-	const { chain, client, account, type, params } = options;
-	const { cloneFactoryContract, implementationContract } =
-		await getOrDeployInfraForPublishedContract({
-			chain,
-			client,
-			account,
-			contractId: type,
-			constructorParams: [],
-		});
-	const initializeTransaction = await getInitializeTransaction({
-		client,
-		implementationContract,
-		type,
-		params,
-		accountAddress: account.address,
-	});
+  const { chain, client, account, type, params } = options;
+  const { cloneFactoryContract, implementationContract } =
+    await getOrDeployInfraForPublishedContract({
+      chain,
+      client,
+      account,
+      contractId: type,
+      constructorParams: [],
+    });
+  const initializeTransaction = await getInitializeTransaction({
+    client,
+    implementationContract,
+    type,
+    params,
+    accountAddress: account.address,
+  });
 
-	return deployViaAutoFactory({
-		client,
-		chain,
-		account,
-		cloneFactoryContract,
-		initializeTransaction,
-	});
+  return deployViaAutoFactory({
+    client,
+    chain,
+    account,
+    cloneFactoryContract,
+    initializeTransaction,
+  });
 }
 
 async function getInitializeTransaction(options: {
-	client: ThirdwebClient;
-	implementationContract: ThirdwebContract;
-	type: ERC1155ContractType;
-	params: ERC1155ContractParams;
-	accountAddress: string;
+  client: ThirdwebClient;
+  implementationContract: ThirdwebContract;
+  type: ERC1155ContractType;
+  params: ERC1155ContractParams;
+  accountAddress: string;
 }) {
-	const { client, implementationContract, type, params, accountAddress } =
-		options;
-	const contractURI =
-		options.params.contractURI ||
-		(
-			await upload({
-				client,
-				files: [
-					{
-						name: params.name,
-						description: params.description,
-						symbol: params.symbol,
-						image: params.image,
-						external_link: params.external_link,
-						social_urls: params.social_urls,
-						seller_fee_basis_points: params.royaltyBps,
-						fee_recipient: params.royaltyRecipient,
-					},
-				],
-			})
-		)[0] ||
-		"";
-	switch (type) {
-		case "DropERC1155":
-			return initDropERC1155({
-				contract: implementationContract,
-				name: params.name || "",
-				symbol: params.symbol || "",
-				contractURI,
-				defaultAdmin: params.defaultAdmin || accountAddress,
-				saleRecipient: params.saleRecipient || accountAddress,
-				platformFeeBps: params.platformFeeBps || 0n,
-				platformFeeRecipient: params.platformFeeRecipient || accountAddress,
-				royaltyRecipient: params.royaltyRecipient || accountAddress,
-				royaltyBps: params.royaltyBps || 0n,
-				trustedForwarders: params.trustedForwarders || [],
-			});
-		case "TokenERC1155":
-			return initTokenERC1155({
-				contract: implementationContract,
-				name: params.name || "",
-				symbol: params.symbol || "",
-				contractURI,
-				defaultAdmin: params.defaultAdmin || accountAddress,
-				primarySaleRecipient: params.saleRecipient || accountAddress,
-				platformFeeBps: params.platformFeeBps || 0n,
-				platformFeeRecipient: params.platformFeeRecipient || accountAddress,
-				royaltyRecipient: params.royaltyRecipient || accountAddress,
-				royaltyBps: params.royaltyBps || 0n,
-				trustedForwarders: params.trustedForwarders || [],
-			});
-	}
+  const { client, implementationContract, type, params, accountAddress } =
+    options;
+  const contractURI =
+    options.params.contractURI ||
+    (
+      await upload({
+        client,
+        files: [
+          {
+            name: params.name,
+            description: params.description,
+            symbol: params.symbol,
+            image: params.image,
+            external_link: params.external_link,
+            social_urls: params.social_urls,
+            seller_fee_basis_points: params.royaltyBps,
+            fee_recipient: params.royaltyRecipient,
+          },
+        ],
+      })
+    )[0] ||
+    "";
+  switch (type) {
+    case "DropERC1155":
+      return initDropERC1155({
+        contract: implementationContract,
+        name: params.name || "",
+        symbol: params.symbol || "",
+        contractURI,
+        defaultAdmin: params.defaultAdmin || accountAddress,
+        saleRecipient: params.saleRecipient || accountAddress,
+        platformFeeBps: params.platformFeeBps || 0n,
+        platformFeeRecipient: params.platformFeeRecipient || accountAddress,
+        royaltyRecipient: params.royaltyRecipient || accountAddress,
+        royaltyBps: params.royaltyBps || 0n,
+        trustedForwarders: params.trustedForwarders || [],
+      });
+    case "TokenERC1155":
+      return initTokenERC1155({
+        contract: implementationContract,
+        name: params.name || "",
+        symbol: params.symbol || "",
+        contractURI,
+        defaultAdmin: params.defaultAdmin || accountAddress,
+        primarySaleRecipient: params.saleRecipient || accountAddress,
+        platformFeeBps: params.platformFeeBps || 0n,
+        platformFeeRecipient: params.platformFeeRecipient || accountAddress,
+        royaltyRecipient: params.royaltyRecipient || accountAddress,
+        royaltyBps: params.royaltyBps || 0n,
+        trustedForwarders: params.trustedForwarders || [],
+      });
+  }
 }

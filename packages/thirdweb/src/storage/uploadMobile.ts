@@ -3,7 +3,7 @@ import { uploadBatchMobile } from "./upload/mobile.js";
 import type { InternalUploadMobileOptions } from "./upload/types.js";
 
 export type UploadMobileOptions = InternalUploadMobileOptions & {
-	client: ThirdwebClient;
+  client: ThirdwebClient;
 };
 
 /**
@@ -38,15 +38,15 @@ export type UploadMobileOptions = InternalUploadMobileOptions & {
  * @storage
  */
 export async function uploadMobile(options?: UploadMobileOptions) {
-	if (!options) {
-		return [];
-	}
+  if (!options) {
+    return [];
+  }
 
-	const data = options?.files.filter((item) => item !== undefined);
+  const data = options?.files.filter((item) => item !== undefined);
 
-	if (!data?.length) {
-		return [];
-	}
+  if (!data?.length) {
+    return [];
+  }
 
-	return await uploadBatchMobile(options?.client, data, options);
+  return await uploadBatchMobile(options?.client, data, options);
 }

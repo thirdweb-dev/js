@@ -10,16 +10,16 @@ import { getAllInBatches, mapEnglishAuction } from "../../utils.js";
 const DEFAULT_QUERY_ALL_COUNT = 100n;
 
 export type GetAllAuctionParams = {
-	/**
-	 * The start index of the listings to retrieve.
-	 * @default 0
-	 */
-	start?: number;
-	/**
-	 * The number of listings to retrieve.
-	 * @default 100
-	 */
-	count?: bigint;
+  /**
+   * The start index of the listings to retrieve.
+   * @default 0
+   */
+  start?: number;
+  /**
+   * The number of listings to retrieve.
+   * @default 100
+   */
+  count?: bigint;
 };
 
 /**
@@ -35,43 +35,43 @@ export type GetAllAuctionParams = {
  * ```
  */
 export async function getAllAuctions(
-	options: BaseTransactionOptions<GetAllAuctionParams>,
+  options: BaseTransactionOptions<GetAllAuctionParams>,
 ): Promise<EnglishAuction[]> {
-	const totalCount = await totalAuctions(options);
-	// if the totalListingCount is 0, return an empty array and skip all other work
-	if (totalCount === 0n) {
-		return [];
-	}
+  const totalCount = await totalAuctions(options);
+  // if the totalListingCount is 0, return an empty array and skip all other work
+  if (totalCount === 0n) {
+    return [];
+  }
 
-	const start = BigInt(options.start || 0);
-	const count = BigInt(options.count || DEFAULT_QUERY_ALL_COUNT);
-	const end = min(totalCount, start + count);
+  const start = BigInt(options.start || 0);
+  const count = BigInt(options.count || DEFAULT_QUERY_ALL_COUNT);
+  const end = min(totalCount, start + count);
 
-	const rpcClient = getRpcClient(options.contract);
-	const [rawAuctions, latestBlock] = await Promise.all([
-		getAllInBatches(
-			(startId, endId) =>
-				getAllAuctionsGenerated({ contract: options.contract, startId, endId }),
-			{
-				start,
-				end,
-				maxSize: DEFAULT_QUERY_ALL_COUNT,
-			},
-			// flatten the array of arrays
-		).then((listings) => listings.flat()),
-		// get the latest block number once
-		eth_getBlockByNumber(rpcClient, {
-			blockTag: "latest",
-		}),
-	]);
+  const rpcClient = getRpcClient(options.contract);
+  const [rawAuctions, latestBlock] = await Promise.all([
+    getAllInBatches(
+      (startId, endId) =>
+        getAllAuctionsGenerated({ contract: options.contract, startId, endId }),
+      {
+        start,
+        end,
+        maxSize: DEFAULT_QUERY_ALL_COUNT,
+      },
+      // flatten the array of arrays
+    ).then((listings) => listings.flat()),
+    // get the latest block number once
+    eth_getBlockByNumber(rpcClient, {
+      blockTag: "latest",
+    }),
+  ]);
 
-	return await Promise.all(
-		rawAuctions.map((rawAuction) =>
-			mapEnglishAuction({
-				contract: options.contract,
-				latestBlock,
-				rawAuction,
-			}),
-		),
-	);
+  return await Promise.all(
+    rawAuctions.map((rawAuction) =>
+      mapEnglishAuction({
+        contract: options.contract,
+        latestBlock,
+        rawAuction,
+      }),
+    ),
+  );
 }

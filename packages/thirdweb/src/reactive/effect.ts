@@ -13,26 +13,26 @@ import type { Store } from "./store.js";
  * @returns A function to stop listening to changes in the dependencies
  */
 export function effect<T>(
-	// pass the values of the dependencies to the computation function
-	effectFn: () => T,
-	// biome-ignore lint/suspicious/noExplicitAny: library function that accepts any store type
-	dependencies: (Store<any> | ReadonlyStore<any>)[],
-	runOnMount = true,
+  // pass the values of the dependencies to the computation function
+  effectFn: () => T,
+  // biome-ignore lint/suspicious/noExplicitAny: library function that accepts any store type
+  dependencies: (Store<any> | ReadonlyStore<any>)[],
+  runOnMount = true,
 ) {
-	if (runOnMount) {
-		effectFn();
-	}
+  if (runOnMount) {
+    effectFn();
+  }
 
-	// when any of the dependencies change, recompute the value and set it
-	const unsubscribeList = dependencies.map((store) => {
-		return store.subscribe(() => {
-			effectFn();
-		});
-	});
+  // when any of the dependencies change, recompute the value and set it
+  const unsubscribeList = dependencies.map((store) => {
+    return store.subscribe(() => {
+      effectFn();
+    });
+  });
 
-	return () => {
-		for (const fn of unsubscribeList) {
-			fn();
-		}
-	};
+  return () => {
+    for (const fn of unsubscribeList) {
+      fn();
+    }
+  };
 }

@@ -2,8 +2,8 @@ import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { computeDeploymentAddress } from "./compute-deployment-address.js";
 import {
-	computeDeploymentInfoFromContractId,
-	computeDeploymentInfoFromMetadata,
+  computeDeploymentInfoFromContractId,
+  computeDeploymentInfoFromMetadata,
 } from "./compute-published-contract-deploy-info.js";
 import type { FetchDeployMetadataResult } from "./deploy-metadata.js";
 
@@ -34,26 +34,26 @@ import type { FetchDeployMetadataResult } from "./deploy-metadata.js";
  * @returns A promise that resolves to the predicted address of the contract.
  */
 export async function computePublishedContractAddress(args: {
-	client: ThirdwebClient;
-	chain: Chain;
-	contractId: string;
-	constructorParams: unknown[];
-	publisher?: string;
-	version?: string;
+  client: ThirdwebClient;
+  chain: Chain;
+  contractId: string;
+  constructorParams: unknown[];
+  publisher?: string;
+  version?: string;
 }): Promise<string> {
-	const info = await computeDeploymentInfoFromContractId(args);
-	return computeDeploymentAddress(info);
+  const info = await computeDeploymentInfoFromContractId(args);
+  return computeDeploymentAddress(info);
 }
 
 /**
  * @internal
  */
 export async function computeContractAddress(args: {
-	client: ThirdwebClient;
-	chain: Chain;
-	contractMetadata: FetchDeployMetadataResult;
-	constructorParams: unknown[];
+  client: ThirdwebClient;
+  chain: Chain;
+  contractMetadata: FetchDeployMetadataResult;
+  constructorParams: unknown[];
 }): Promise<string> {
-	const info = await computeDeploymentInfoFromMetadata(args);
-	return computeDeploymentAddress(info);
+  const info = await computeDeploymentInfoFromMetadata(args);
+  return computeDeploymentAddress(info);
 }

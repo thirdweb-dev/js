@@ -7,8 +7,8 @@ let textDecoder: TextDecoder;
  * @internal
  */
 export function cachedTextDecoder(): TextDecoder {
-	if (!textDecoder) {
-		textDecoder = new TextDecoder();
-	}
-	return textDecoder;
+  if (!textDecoder) {
+    textDecoder = new TextDecoder();
+  }
+  return textDecoder;
 }

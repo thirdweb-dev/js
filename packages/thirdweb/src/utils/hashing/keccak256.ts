@@ -1,16 +1,16 @@
 import { keccak_256 } from "@noble/hashes/sha3";
 import {
-	type Hex,
-	hexToUint8Array,
-	isHex,
-	uint8ArrayToHex,
+  type Hex,
+  hexToUint8Array,
+  isHex,
+  uint8ArrayToHex,
 } from "../encoding/hex.js";
 
 type To = "hex" | "bytes";
 
 export type Keccak256Hash<TTo extends To> =
-	| (TTo extends "bytes" ? Uint8Array : never)
-	| (TTo extends "hex" ? Hex : never);
+  | (TTo extends "bytes" ? Uint8Array : never)
+  | (TTo extends "hex" ? Hex : never);
 
 /**
  * Calculates the Keccak-256 hash of the given value.
@@ -25,15 +25,15 @@ export type Keccak256Hash<TTo extends To> =
  * @utils
  */
 export function keccak256<TTo extends To = "hex">(
-	value: Hex | Uint8Array,
-	to?: TTo,
+  value: Hex | Uint8Array,
+  to?: TTo,
 ): Keccak256Hash<TTo> {
-	const bytes = keccak_256(
-		isHex(value, { strict: false }) ? hexToUint8Array(value) : value,
-	);
-	if (to === "bytes") {
-		return bytes as Keccak256Hash<TTo>;
-	}
-	// default fall through to hex
-	return uint8ArrayToHex(bytes) as Keccak256Hash<TTo>;
+  const bytes = keccak_256(
+    isHex(value, { strict: false }) ? hexToUint8Array(value) : value,
+  );
+  if (to === "bytes") {
+    return bytes as Keccak256Hash<TTo>;
+  }
+  // default fall through to hex
+  return uint8ArrayToHex(bytes) as Keccak256Hash<TTo>;
 }

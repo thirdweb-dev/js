@@ -11,18 +11,18 @@ const DEFAULT_QUERY_ALL_COUNT = 100;
  * Parameters for retrieving NFTs.
  */
 export type GetOwnedNFTsParams = {
-	/**
-	 * Which tokenId to start at.
-	 */
-	start?: number;
-	/**
-	 * The number of NFTs to retrieve.
-	 */
-	count?: number;
-	/**
-	 * The address of the wallet to get the NFTs of.
-	 */
-	address: string;
+  /**
+   * Which tokenId to start at.
+   */
+  start?: number;
+  /**
+   * The number of NFTs to retrieve.
+   */
+  count?: number;
+  /**
+   * The address of the wallet to get the NFTs of.
+   */
+  address: string;
 };
 
 /**
@@ -42,48 +42,48 @@ export type GetOwnedNFTsParams = {
  * ```
  */
 export async function getOwnedNFTs(
-	options: BaseTransactionOptions<GetOwnedNFTsParams>,
+  options: BaseTransactionOptions<GetOwnedNFTsParams>,
 ): Promise<(NFT & { quantityOwned: bigint })[]> {
-	const maxId = await nextTokenIdToMint(options);
+  const maxId = await nextTokenIdToMint(options);
 
-	// approach is naieve, likely can be improved
-	const owners: Address[] = [];
-	const tokenIds: bigint[] = [];
-	for (let i = 0n; i < maxId; i++) {
-		owners.push(options.address);
-		tokenIds.push(i);
-	}
+  // approach is naieve, likely can be improved
+  const owners: Address[] = [];
+  const tokenIds: bigint[] = [];
+  for (let i = 0n; i < maxId; i++) {
+    owners.push(options.address);
+    tokenIds.push(i);
+  }
 
-	const balances = await balanceOfBatch({
-		...options,
-		owners,
-		tokenIds,
-	});
+  const balances = await balanceOfBatch({
+    ...options,
+    owners,
+    tokenIds,
+  });
 
-	let ownedBalances = balances
-		.map((b, i) => {
-			return {
-				tokenId: i,
-				balance: b,
-			};
-		})
-		.filter((b) => b.balance > 0);
+  let ownedBalances = balances
+    .map((b, i) => {
+      return {
+        tokenId: i,
+        balance: b,
+      };
+    })
+    .filter((b) => b.balance > 0);
 
-	if (options.start || options.count) {
-		const start = options?.start || 0;
-		const count = options?.count || DEFAULT_QUERY_ALL_COUNT;
-		ownedBalances = ownedBalances.slice(start, start + count);
-	}
+  if (options.start || options.count) {
+    const start = options?.start || 0;
+    const count = options?.count || DEFAULT_QUERY_ALL_COUNT;
+    ownedBalances = ownedBalances.slice(start, start + count);
+  }
 
-	const nfts = await Promise.all(
-		ownedBalances.map((ob) =>
-			getNFT({ ...options, tokenId: BigInt(ob.tokenId) }),
-		),
-	);
+  const nfts = await Promise.all(
+    ownedBalances.map((ob) =>
+      getNFT({ ...options, tokenId: BigInt(ob.tokenId) }),
+    ),
+  );
 
-	return nfts.map((nft, index) => ({
-		...nft,
-		owner: options.address,
-		quantityOwned: ownedBalances[index]?.balance || 0n,
-	}));
+  return nfts.map((nft, index) => ({
+    ...nft,
+    owner: options.address,
+    quantityOwned: ownedBalances[index]?.balance || 0n,
+  }));
 }

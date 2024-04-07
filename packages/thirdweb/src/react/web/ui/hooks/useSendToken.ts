@@ -15,51 +15,51 @@ import { useActiveWalletChain } from "../../../core/hooks/wallets/wallet-hooks.j
  * @internal
  */
 export function useSendToken() {
-	const sendTransaction = useSendTransaction();
-	const activeChain = useActiveWalletChain();
-	const { client } = useWalletConnectionCtx();
+  const sendTransaction = useSendTransaction();
+  const activeChain = useActiveWalletChain();
+  const { client } = useWalletConnectionCtx();
 
-	return useMutation({
-		async mutationFn(option: {
-			tokenAddress?: string;
-			receiverAddress: string;
-			amount: string;
-		}) {
-			const { tokenAddress, receiverAddress, amount } = option;
-			if (!activeChain) {
-				throw new Error("No active chain");
-			}
+  return useMutation({
+    async mutationFn(option: {
+      tokenAddress?: string;
+      receiverAddress: string;
+      amount: string;
+    }) {
+      const { tokenAddress, receiverAddress, amount } = option;
+      if (!activeChain) {
+        throw new Error("No active chain");
+      }
 
-			// native token transfer
-			if (!tokenAddress) {
-				const sendNativeTokenTx = prepareTransaction({
-					chain: activeChain,
-					client,
-					to: receiverAddress,
-					value: toWei(amount),
-				});
+      // native token transfer
+      if (!tokenAddress) {
+        const sendNativeTokenTx = prepareTransaction({
+          chain: activeChain,
+          client,
+          to: receiverAddress,
+          value: toWei(amount),
+        });
 
-				const txHash = await sendTransaction.mutateAsync(sendNativeTokenTx);
-				await waitForReceipt(txHash);
-			}
+        const txHash = await sendTransaction.mutateAsync(sendNativeTokenTx);
+        await waitForReceipt(txHash);
+      }
 
-			// erc20 token transfer
-			else {
-				const contract = getContract({
-					address: tokenAddress,
-					client,
-					chain: activeChain,
-				});
+      // erc20 token transfer
+      else {
+        const contract = getContract({
+          address: tokenAddress,
+          client,
+          chain: activeChain,
+        });
 
-				const tx = transfer({
-					amount,
-					contract,
-					to: receiverAddress,
-				});
+        const tx = transfer({
+          amount,
+          contract,
+          to: receiverAddress,
+        });
 
-				const txHash = await sendTransaction.mutateAsync(tx);
-				await waitForReceipt(txHash);
-			}
-		},
-	});
+        const txHash = await sendTransaction.mutateAsync(tx);
+        await waitForReceipt(txHash);
+      }
+    },
+  });
 }

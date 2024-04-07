@@ -11,72 +11,72 @@ import { type AccountPermissions, SignerPermissionRequest } from "./types.js";
  * @internal
  */
 export async function signPermissionRequest(options: {
-	account: Account;
-	contract: ThirdwebContract;
-	req: SetPermissionsForSignerParams["req"];
+  account: Account;
+  contract: ThirdwebContract;
+  req: SetPermissionsForSignerParams["req"];
 }) {
-	const { account, contract, req } = options;
-	const signature = await account.signTypedData({
-		domain: {
-			name: "Account",
-			version: "1",
-			verifyingContract: contract.address,
-			chainId: contract.chain.id,
-		},
-		primaryType: "SignerPermissionRequest",
-		types: { SignerPermissionRequest },
-		message: req,
-	});
-	return { req, signature };
+  const { account, contract, req } = options;
+  const signature = await account.signTypedData({
+    domain: {
+      name: "Account",
+      version: "1",
+      verifyingContract: contract.address,
+      chainId: contract.chain.id,
+    },
+    primaryType: "SignerPermissionRequest",
+    types: { SignerPermissionRequest },
+    message: req,
+  });
+  return { req, signature };
 }
 
 /**
  * @internal
  */
 export async function toContractPermissions(options: {
-	target: string;
-	permissions: AccountPermissions;
+  target: string;
+  permissions: AccountPermissions;
 }): Promise<SetPermissionsForSignerParams["req"]> {
-	const { target, permissions } = options;
-	return {
-		approvedTargets:
-			permissions.approvedTargets === "*"
-				? [ADDRESS_ZERO]
-				: permissions.approvedTargets,
-		nativeTokenLimitPerTransaction: toWei(
-			permissions.nativeTokenLimitPerTransaction?.toString() || "0",
-		),
-		permissionStartTimestamp: dateToSeconds(
-			permissions.permissionStartTimestamp || new Date(0),
-		),
-		permissionEndTimestamp: dateToSeconds(
-			permissions.permissionEndTimestamp || tenYearsFromNow(),
-		),
-		reqValidityStartTimestamp: 0n,
-		reqValidityEndTimestamp: dateToSeconds(tenYearsFromNow()),
-		uid: await randomBytes32(),
-		isAdmin: 0, // session key flag
-		signer: target,
-	};
+  const { target, permissions } = options;
+  return {
+    approvedTargets:
+      permissions.approvedTargets === "*"
+        ? [ADDRESS_ZERO]
+        : permissions.approvedTargets,
+    nativeTokenLimitPerTransaction: toWei(
+      permissions.nativeTokenLimitPerTransaction?.toString() || "0",
+    ),
+    permissionStartTimestamp: dateToSeconds(
+      permissions.permissionStartTimestamp || new Date(0),
+    ),
+    permissionEndTimestamp: dateToSeconds(
+      permissions.permissionEndTimestamp || tenYearsFromNow(),
+    ),
+    reqValidityStartTimestamp: 0n,
+    reqValidityEndTimestamp: dateToSeconds(tenYearsFromNow()),
+    uid: await randomBytes32(),
+    isAdmin: 0, // session key flag
+    signer: target,
+  };
 }
 
 /**
  * @internal
  */
 export async function defaultPermissionsForAdmin(options: {
-	target: string;
-	action: "add-admin" | "remove-admin";
+  target: string;
+  action: "add-admin" | "remove-admin";
 }): Promise<SetPermissionsForSignerParams["req"]> {
-	const { target, action } = options;
-	return {
-		approvedTargets: [],
-		nativeTokenLimitPerTransaction: 0n,
-		permissionStartTimestamp: 0n,
-		permissionEndTimestamp: 0n,
-		reqValidityStartTimestamp: 0n,
-		reqValidityEndTimestamp: dateToSeconds(tenYearsFromNow()),
-		uid: await randomBytes32(),
-		isAdmin: action === "add-admin" ? 1 : action === "remove-admin" ? 2 : 0,
-		signer: target,
-	};
+  const { target, action } = options;
+  return {
+    approvedTargets: [],
+    nativeTokenLimitPerTransaction: 0n,
+    permissionStartTimestamp: 0n,
+    permissionEndTimestamp: 0n,
+    reqValidityStartTimestamp: 0n,
+    reqValidityEndTimestamp: dateToSeconds(tenYearsFromNow()),
+    uid: await randomBytes32(),
+    isAdmin: action === "add-admin" ? 1 : action === "remove-admin" ? 2 : 0,
+    signer: target,
+  };
 }

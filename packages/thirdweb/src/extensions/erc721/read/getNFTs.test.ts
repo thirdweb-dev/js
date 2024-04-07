@@ -4,14 +4,14 @@ import { DOODLES_CONTRACT } from "~test/test-contracts.js";
 import { getNFTs } from "./getNFTs.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("erc721.getNFTs", () => {
-	it("works for a contract with 0 indexed NFTs", async () => {
-		const nfts = await getNFTs({
-			contract: DOODLES_CONTRACT,
-			count: 5,
-		});
+  it("works for a contract with 0 indexed NFTs", async () => {
+    const nfts = await getNFTs({
+      contract: DOODLES_CONTRACT,
+      count: 5,
+    });
 
-		expect(nfts.length).toBe(5);
-		expect(nfts).toMatchInlineSnapshot(`
+    expect(nfts.length).toBe(5);
+    expect(nfts).toMatchInlineSnapshot(`
       [
         {
           "id": 0n,
@@ -180,9 +180,9 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc721.getNFTs", () => {
         },
       ]
     `);
-	});
+  });
 
-	it.todo("works for a contract with `1` indexed NFTs", async () => {
-		// TODO find a contract that we can use that has "1 indexed" NFTs, then re-enable this test
-	});
+  it.todo("works for a contract with `1` indexed NFTs", async () => {
+    // TODO find a contract that we can use that has "1 indexed" NFTs, then re-enable this test
+  });
 });

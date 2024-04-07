@@ -10,16 +10,16 @@ import { getAllInBatches, mapDirectListing } from "../../utils.js";
 const DEFAULT_QUERY_ALL_COUNT = 100n;
 
 export type GetAllListingParams = {
-	/**
-	 * The start index of the listings to retrieve.
-	 * @default 0
-	 */
-	start?: number;
-	/**
-	 * The number of listings to retrieve.
-	 * @default 100
-	 */
-	count?: bigint;
+  /**
+   * The start index of the listings to retrieve.
+   * @default 0
+   */
+  start?: number;
+  /**
+   * The number of listings to retrieve.
+   * @default 100
+   */
+  count?: bigint;
 };
 
 /**
@@ -35,43 +35,43 @@ export type GetAllListingParams = {
  * ```
  */
 export async function getAllListings(
-	options: BaseTransactionOptions<GetAllListingParams>,
+  options: BaseTransactionOptions<GetAllListingParams>,
 ): Promise<DirectListing[]> {
-	const totalCount = await totalListings(options);
-	// if the totalListingCount is 0, return an empty array and skip all other work
-	if (totalCount === 0n) {
-		return [];
-	}
+  const totalCount = await totalListings(options);
+  // if the totalListingCount is 0, return an empty array and skip all other work
+  if (totalCount === 0n) {
+    return [];
+  }
 
-	const start = BigInt(options.start || 0);
-	const count = BigInt(options.count || DEFAULT_QUERY_ALL_COUNT);
-	const end = min(totalCount, start + count);
+  const start = BigInt(options.start || 0);
+  const count = BigInt(options.count || DEFAULT_QUERY_ALL_COUNT);
+  const end = min(totalCount, start + count);
 
-	const rpcClient = getRpcClient(options.contract);
-	const [rawListings, latestBlock] = await Promise.all([
-		getAllInBatches(
-			(startId, endId) =>
-				getAllListingGenerated({ contract: options.contract, startId, endId }),
-			{
-				start,
-				end,
-				maxSize: DEFAULT_QUERY_ALL_COUNT,
-			},
-			// flatten the array of arrays
-		).then((listings) => listings.flat()),
-		// get the latest block number once
-		eth_getBlockByNumber(rpcClient, {
-			blockTag: "latest",
-		}),
-	]);
+  const rpcClient = getRpcClient(options.contract);
+  const [rawListings, latestBlock] = await Promise.all([
+    getAllInBatches(
+      (startId, endId) =>
+        getAllListingGenerated({ contract: options.contract, startId, endId }),
+      {
+        start,
+        end,
+        maxSize: DEFAULT_QUERY_ALL_COUNT,
+      },
+      // flatten the array of arrays
+    ).then((listings) => listings.flat()),
+    // get the latest block number once
+    eth_getBlockByNumber(rpcClient, {
+      blockTag: "latest",
+    }),
+  ]);
 
-	return await Promise.all(
-		rawListings.map((rawListing) =>
-			mapDirectListing({
-				contract: options.contract,
-				latestBlock,
-				rawListing,
-			}),
-		),
-	);
+  return await Promise.all(
+    rawListings.map((rawListing) =>
+      mapDirectListing({
+        contract: options.contract,
+        latestBlock,
+        rawListing,
+      }),
+    ),
+  );
 }

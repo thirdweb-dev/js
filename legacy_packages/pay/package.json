@@ -1,47 +1,47 @@
 {
-	"name": "@thirdweb-dev/pay",
-	"version": "0.1.6",
-	"main": "dist/thirdweb-dev-pay.cjs.js",
-	"module": "dist/thirdweb-dev-pay.esm.js",
-	"exports": {
-		".": {
-			"module": "./dist/thirdweb-dev-pay.esm.js",
-			"default": "./dist/thirdweb-dev-pay.cjs.js"
-		},
-		"./integrations/coinbase": {
-			"module": "./integrations/coinbase/dist/thirdweb-dev-pay-integrations-coinbase.esm.js",
-			"default": "./integrations/coinbase/dist/thirdweb-dev-pay-integrations-coinbase.cjs.js"
-		},
-		"./package.json": "./package.json"
-	},
-	"repository": "https://github.com/thirdweb-dev/js/tree/main/legacy_packages/pay",
-	"license": "Apache-2.0",
-	"bugs": {
-		"url": "https://github.com/thirdweb-dev/js/issues"
-	},
-	"author": "thirdweb eng <eng@thirdweb.com>",
-	"files": ["dist/", "integrations/"],
-	"preconstruct": {
-		"entrypoints": ["index.ts", "integrations/**"],
-		"exports": true
-	},
-	"sideEffects": false,
-	"dependencies": {
-		"@coinbase/cbpay-js": "^1.10.0"
-	},
-	"devDependencies": {
-		"eslint": "8.57.0",
-		"@preconstruct/cli": "2.7.0",
-		"@thirdweb-dev/tsconfig": "workspace:*",
-		"eslint-config-thirdweb": "workspace:*",
-		"typescript": "5.4.4"
-	},
-	"scripts": {
-		"format": "prettier --write 'src/**/*'",
-		"lint": "eslint src/",
-		"fix": "eslint src/ --fix",
-		"clean": "rm -rf dist/",
-		"build": "tsc && preconstruct build",
-		"push": "yalc push"
-	}
+  "name": "@thirdweb-dev/pay",
+  "version": "0.1.6",
+  "main": "dist/thirdweb-dev-pay.cjs.js",
+  "module": "dist/thirdweb-dev-pay.esm.js",
+  "exports": {
+    ".": {
+      "module": "./dist/thirdweb-dev-pay.esm.js",
+      "default": "./dist/thirdweb-dev-pay.cjs.js"
+    },
+    "./integrations/coinbase": {
+      "module": "./integrations/coinbase/dist/thirdweb-dev-pay-integrations-coinbase.esm.js",
+      "default": "./integrations/coinbase/dist/thirdweb-dev-pay-integrations-coinbase.cjs.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "repository": "https://github.com/thirdweb-dev/js/tree/main/legacy_packages/pay",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/thirdweb-dev/js/issues"
+  },
+  "author": "thirdweb eng <eng@thirdweb.com>",
+  "files": ["dist/", "integrations/"],
+  "preconstruct": {
+    "entrypoints": ["index.ts", "integrations/**"],
+    "exports": true
+  },
+  "sideEffects": false,
+  "dependencies": {
+    "@coinbase/cbpay-js": "^1.10.0"
+  },
+  "devDependencies": {
+    "eslint": "8.57.0",
+    "@preconstruct/cli": "2.7.0",
+    "@thirdweb-dev/tsconfig": "workspace:*",
+    "eslint-config-thirdweb": "workspace:*",
+    "typescript": "5.4.4"
+  },
+  "scripts": {
+    "format": "prettier --write 'src/**/*'",
+    "lint": "eslint src/",
+    "fix": "eslint src/ --fix",
+    "clean": "rm -rf dist/",
+    "build": "tsc && preconstruct build",
+    "push": "yalc push"
+  }
 }

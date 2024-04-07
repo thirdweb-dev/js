@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import {
-	type BuyWithCryptoStatus,
-	type BuyWithCryptoTransaction,
-	getBuyWithCryptoStatus,
+  type BuyWithCryptoStatus,
+  type BuyWithCryptoTransaction,
+  getBuyWithCryptoStatus,
 } from "../../../../pay/buyWithCrypto/actions/getStatus.js";
 
 // TODO: use the estimate to vary the polling interval
@@ -54,40 +54,40 @@ export type BuyWithCryptoStatusQueryParams = BuyWithCryptoTransaction;
  * @buyCrypto
  */
 export function useBuyWithCryptoStatus(
-	buyWithCryptoStatusParams?: BuyWithCryptoStatusQueryParams,
+  buyWithCryptoStatusParams?: BuyWithCryptoStatusQueryParams,
 ) {
-	const [refetchInterval, setRefetchInterval] = useState<number>(
-		DEFAULT_POLL_INTERVAL,
-	);
+  const [refetchInterval, setRefetchInterval] = useState<number>(
+    DEFAULT_POLL_INTERVAL,
+  );
 
-	return useQuery<BuyWithCryptoStatus, Error>({
-		queryKey: [
-			"swapStatus",
-			buyWithCryptoStatusParams?.transactionHash,
-		] as const,
-		queryFn: async () => {
-			if (!buyWithCryptoStatusParams) {
-				throw new Error("Missing swap status params");
-			}
-			if (!buyWithCryptoStatusParams?.client) {
-				throw new Error("Missing client in swap status params");
-			}
+  return useQuery<BuyWithCryptoStatus, Error>({
+    queryKey: [
+      "swapStatus",
+      buyWithCryptoStatusParams?.transactionHash,
+    ] as const,
+    queryFn: async () => {
+      if (!buyWithCryptoStatusParams) {
+        throw new Error("Missing swap status params");
+      }
+      if (!buyWithCryptoStatusParams?.client) {
+        throw new Error("Missing client in swap status params");
+      }
 
-			const swapStatus_ = await getBuyWithCryptoStatus({
-				...buyWithCryptoStatusParams,
-				client: buyWithCryptoStatusParams.client,
-			});
-			if (
-				swapStatus_.status === "COMPLETED" ||
-				swapStatus_.status === "FAILED"
-			) {
-				setRefetchInterval(0);
-			}
-			return swapStatus_;
-		},
-		enabled: !!buyWithCryptoStatusParams,
-		refetchInterval: refetchInterval,
-		refetchIntervalInBackground: true,
-		retry: true,
-	});
+      const swapStatus_ = await getBuyWithCryptoStatus({
+        ...buyWithCryptoStatusParams,
+        client: buyWithCryptoStatusParams.client,
+      });
+      if (
+        swapStatus_.status === "COMPLETED" ||
+        swapStatus_.status === "FAILED"
+      ) {
+        setRefetchInterval(0);
+      }
+      return swapStatus_;
+    },
+    enabled: !!buyWithCryptoStatusParams,
+    refetchInterval: refetchInterval,
+    refetchIntervalInBackground: true,
+    retry: true,
+  });
 }

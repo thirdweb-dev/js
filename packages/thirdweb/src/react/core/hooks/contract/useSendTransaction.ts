@@ -18,21 +18,21 @@ import { useActiveAccount } from "../wallets/wallet-hooks.js";
  * @transaction
  */
 export function useSendTransaction(): UseMutationResult<
-	WaitForReceiptOptions,
-	Error,
-	PreparedTransaction
+  WaitForReceiptOptions,
+  Error,
+  PreparedTransaction
 > {
-	const account = useActiveAccount();
+  const account = useActiveAccount();
 
-	return useMutation({
-		mutationFn: async (transaction) => {
-			if (!account) {
-				throw new Error("No active account");
-			}
-			return await sendTransaction({
-				transaction,
-				account,
-			});
-		},
-	});
+  return useMutation({
+    mutationFn: async (transaction) => {
+      if (!account) {
+        throw new Error("No active account");
+      }
+      return await sendTransaction({
+        transaction,
+        account,
+      });
+    },
+  });
 }

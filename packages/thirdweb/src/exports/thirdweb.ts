@@ -1,8 +1,8 @@
 // convince abitype that things are OK
 declare module "abitype" {
-	export interface Register {
-		AddressType: string;
-	}
+  export interface Register {
+    AddressType: string;
+  }
 }
 
 /**
@@ -14,9 +14,9 @@ export { ADDRESS_ZERO, NATIVE_TOKEN_ADDRESS } from "../constants/addresses.js";
  * CLIENT
  */
 export {
-	createThirdwebClient,
-	type CreateThirdwebClientOptions,
-	type ThirdwebClient,
+  createThirdwebClient,
+  type CreateThirdwebClientOptions,
+  type ThirdwebClient,
 } from "../client/client.js";
 
 /**
@@ -34,8 +34,8 @@ export { defineChain } from "../chains/utils.js";
 export { getRpcClient } from "../rpc/rpc.js";
 // blockNumber watcher
 export {
-	watchBlockNumber,
-	type WatchBlockNumberOptions,
+  watchBlockNumber,
+  type WatchBlockNumberOptions,
 } from "../rpc/watchBlockNumber.js";
 
 // all the actions
@@ -59,9 +59,9 @@ export { eth_sendRawTransaction } from "../rpc/actions/eth_sendRawTransaction.js
  * CONTRACT
  */
 export {
-	getContract,
-	type ContractOptions,
-	type ThirdwebContract,
+  getContract,
+  type ContractOptions,
+  type ThirdwebContract,
 } from "../contract/contract.js";
 
 /**
@@ -69,24 +69,24 @@ export {
  */
 
 export {
-	prepareTransaction,
-	type PrepareTransactionOptions,
-	type PreparedTransaction,
+  prepareTransaction,
+  type PrepareTransactionOptions,
+  type PreparedTransaction,
 } from "../transaction/prepare-transaction.js";
 
 export {
-	isBaseTransactionOptions,
-	type BaseTransactionOptions,
+  isBaseTransactionOptions,
+  type BaseTransactionOptions,
 } from "../transaction/types.js";
 
 export {
-	prepareContractCall,
-	type PrepareContractCallOptions,
+  prepareContractCall,
+  type PrepareContractCallOptions,
 } from "../transaction/prepare-contract-call.js";
 
 export {
-	readContract,
-	type ReadContractOptions,
+  readContract,
+  type ReadContractOptions,
 } from "../transaction/read-contract.js";
 
 // method resolver
@@ -95,17 +95,17 @@ export { resolveMethod } from "../transaction/resolve-method.js";
 // transaction actions
 export { encode } from "../transaction/actions/encode.js";
 export {
-	estimateGas,
-	type EstimateGasOptions,
+  estimateGas,
+  type EstimateGasOptions,
 } from "../transaction/actions/estimate-gas.js";
 export {
-	sendTransaction,
-	type SendTransactionOptions,
+  sendTransaction,
+  type SendTransactionOptions,
 } from "../transaction/actions/send-transaction.js";
 export { sendAndConfirmTransaction } from "../transaction/actions/send-and-confirm-transaction.js";
 export {
-	simulateTransaction,
-	type SimulateOptions,
+  simulateTransaction,
+  type SimulateOptions,
 } from "../transaction/actions/simulate.js";
 export { waitForReceipt } from "../transaction/actions/wait-for-tx-receipt.js";
 export { signTransaction } from "../transaction/actions/sign-transaction.js";
@@ -114,25 +114,25 @@ export { signTransaction } from "../transaction/actions/sign-transaction.js";
  * EVENTS
  */
 export {
-	prepareEvent,
-	type PrepareEventOptions,
-	type PreparedEvent,
+  prepareEvent,
+  type PrepareEventOptions,
+  type PreparedEvent,
 } from "../event/prepare-event.js";
 
 // actions
 export {
-	getContractEvents,
-	type GetContractEventsOptions,
-	type GetContractEventsResult,
+  getContractEvents,
+  type GetContractEventsOptions,
+  type GetContractEventsResult,
 } from "../event/actions/get-events.js";
 export {
-	parseEventLogs,
-	type ParseEventLogsOptions,
-	type ParseEventLogsResult,
+  parseEventLogs,
+  type ParseEventLogsOptions,
+  type ParseEventLogsResult,
 } from "../event/actions/parse-logs.js";
 export {
-	watchContractEvents,
-	type WatchContractEventsOptions,
+  watchContractEvents,
+  type WatchContractEventsOptions,
 } from "../event/actions/watch-events.js";
 
 /**
@@ -146,24 +146,24 @@ export type { NFT } from "../utils/nft/parseNft.js";
 export { toEther, toTokens, toUnits, toWei } from "../utils/units.js";
 
 export {
-	getBuyWithCryptoQuote,
-	type BuyWithCryptoQuote,
-	type QuoteApprovalParams,
-	type QuoteTokenInfo,
-	type GetBuyWithCryptoQuoteParams,
+  getBuyWithCryptoQuote,
+  type BuyWithCryptoQuote,
+  type QuoteApprovalParams,
+  type QuoteTokenInfo,
+  type GetBuyWithCryptoQuoteParams,
 } from "../pay/buyWithCrypto/actions/getQuote.js";
 
 export {
-	getBuyWithCryptoStatus,
-	type BuyWithCryptoStatus,
-	type BuyWithCryptoTransaction,
-	type BuyWithCryptoTransactionDetails,
+  getBuyWithCryptoStatus,
+  type BuyWithCryptoStatus,
+  type BuyWithCryptoTransaction,
+  type BuyWithCryptoTransactionDetails,
 } from "../pay/buyWithCrypto/actions/getStatus.js";
 
 export {
-	getBuyWithCryptoHistory,
-	type BuyWithCryptoHistoryData,
-	type BuyWithCryptoHistoryParams,
+  getBuyWithCryptoHistory,
+  type BuyWithCryptoHistoryData,
+  type BuyWithCryptoHistoryParams,
 } from "../pay/buyWithCrypto/actions/getHistory.js";
 
 // ------------------------------------------------
@@ -172,63 +172,63 @@ export {
 
 // hex
 export {
-	boolToHex,
-	// from
-	fromHex,
-	hexToBigInt,
-	hexToBool,
-	hexToNumber,
-	hexToString,
-	hexToUint8Array,
-	// util
-	isHex,
-	numberToHex,
-	padHex,
-	stringToHex,
-	// to
-	toHex,
-	uint8ArrayToHex,
-	type BoolToHexOpts,
-	type FromHexParameters,
-	type FromHexReturnType,
-	type HexToBigIntOpts,
-	type HexToBoolOpts,
-	type HexToNumberOpts,
-	type HexToStringOpts,
-	type HexToUint8ArrayOpts,
-	type IsHexOptions,
-	type NumberToHexOpts,
-	type StringToHexOpts,
-	type ToHexParameters,
-	type Uint8ArrayToHexOpts,
+  boolToHex,
+  // from
+  fromHex,
+  hexToBigInt,
+  hexToBool,
+  hexToNumber,
+  hexToString,
+  hexToUint8Array,
+  // util
+  isHex,
+  numberToHex,
+  padHex,
+  stringToHex,
+  // to
+  toHex,
+  uint8ArrayToHex,
+  type BoolToHexOpts,
+  type FromHexParameters,
+  type FromHexReturnType,
+  type HexToBigIntOpts,
+  type HexToBoolOpts,
+  type HexToNumberOpts,
+  type HexToStringOpts,
+  type HexToUint8ArrayOpts,
+  type IsHexOptions,
+  type NumberToHexOpts,
+  type StringToHexOpts,
+  type ToHexParameters,
+  type Uint8ArrayToHexOpts,
 } from "../utils/encoding/hex.js";
 
 // bytes
 // to
 export {
-	boolToBytes,
-	hexToBytes,
-	numberToBytes,
-	stringToBytes,
-	toBytes,
-	type BoolToBytesOpts,
-	type HexToBytesOpts,
-	type StringToBytesOpts,
-	type ToBytesParameters,
+  boolToBytes,
+  hexToBytes,
+  numberToBytes,
+  stringToBytes,
+  toBytes,
+  type BoolToBytesOpts,
+  type HexToBytesOpts,
+  type StringToBytesOpts,
+  type ToBytesParameters,
 } from "../utils/encoding/to-bytes.js";
 // from
 export {
-	bytesToBigInt,
-	bytesToBool,
-	bytesToNumber,
-	bytesToString,
-	fromBytes,
-	type BytesToBigIntOpts,
-	type BytesToBoolOpts,
-	type BytesToNumberOpts,
-	type BytesToStringOpts,
-	type FromBytesParameters,
-	type FromBytesReturnType,
+  bytesToBigInt,
+  bytesToBool,
+  bytesToNumber,
+  bytesToString,
+  fromBytes,
+  type BytesToBigIntOpts,
+  type BytesToBoolOpts,
+  type BytesToNumberOpts,
+  type BytesToStringOpts,
+  type FromBytesParameters,
+  type FromBytesReturnType,
 } from "../utils/encoding/from-bytes.js";
 
 // ------------------------------------------------
@@ -245,10 +245,10 @@ export { sha256 } from "../utils/hashing/sha256.js";
 // address
 // ------------------------------------------------
 export {
-	getAddress,
-	isAddress,
-	type Address,
-	type AddressInput,
+  getAddress,
+  isAddress,
+  type Address,
+  type AddressInput,
 } from "../utils/address.js";
 
 // re-exports of types

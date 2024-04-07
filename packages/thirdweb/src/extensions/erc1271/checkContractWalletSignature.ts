@@ -4,9 +4,9 @@ import { isHex } from "../../utils/encoding/hex.js";
 import { isValidSignature } from "./__generated__/isValidSignature/read/isValidSignature.js";
 
 export type CheckContractWalletSignatureOptions = {
-	contract: ThirdwebContract;
-	message: SignableMessage;
-	signature: string;
+  contract: ThirdwebContract;
+  message: SignableMessage;
+  signature: string;
 };
 const MAGIC_VALUE = "0x1626ba7e";
 
@@ -29,15 +29,15 @@ const MAGIC_VALUE = "0x1626ba7e";
  * @returns A promise that resolves with a boolean indicating if the signature is valid.
  */
 export async function checkContractWalletSignature(
-	options: CheckContractWalletSignatureOptions,
+  options: CheckContractWalletSignatureOptions,
 ) {
-	if (!isHex(options.signature)) {
-		throw new Error("The signature must be a valid hex string.");
-	}
-	const result = await isValidSignature({
-		contract: options.contract,
-		hash: hashMessage(options.message),
-		signature: options.signature,
-	});
-	return result === MAGIC_VALUE;
+  if (!isHex(options.signature)) {
+    throw new Error("The signature must be a valid hex string.");
+  }
+  const result = await isValidSignature({
+    contract: options.contract,
+    hash: hashMessage(options.message),
+    signature: options.signature,
+  });
+  return result === MAGIC_VALUE;
 }

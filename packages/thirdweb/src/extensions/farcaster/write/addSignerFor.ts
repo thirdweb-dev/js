@@ -21,31 +21,31 @@ import { getFid } from "../read/getFid.js";
  * `deadline` must match the one used to generate the signatures.
  */
 export type AddSignerForParams = Prettify<
-	{
-		client: ThirdwebClient;
-		signerPublicKey: Hex;
-		chain?: Chain;
-		disableCache?: boolean;
-	} & (
-		| {
-				appAccount: Account;
-		  }
-		| {
-				signedKeyRequestMetadata: Hex;
-				appAccountAddress: Address;
-				deadline: bigint;
-		  }
-	) &
-		(
-			| {
-					userAccount: Account;
-			  }
-			| {
-					addSignature: Hex;
-					userAddress: Address;
-					deadline: bigint;
-			  }
-		)
+  {
+    client: ThirdwebClient;
+    signerPublicKey: Hex;
+    chain?: Chain;
+    disableCache?: boolean;
+  } & (
+    | {
+        appAccount: Account;
+      }
+    | {
+        signedKeyRequestMetadata: Hex;
+        appAccountAddress: Address;
+        deadline: bigint;
+      }
+  ) &
+    (
+      | {
+          userAccount: Account;
+        }
+      | {
+          addSignature: Hex;
+          userAddress: Address;
+          deadline: bigint;
+        }
+    )
 >;
 
 /**
@@ -65,133 +65,133 @@ export type AddSignerForParams = Prettify<
  * ```
  */
 export function addSignerFor(options: AddSignerForParams) {
-	const keyGateway = getKeyGateway({
-		client: options.client,
-		chain: options.chain,
-	});
-	return prepareContractCall({
-		contract: keyGateway,
-		method: [
-			"0xa005d3d2",
-			[
-				{
-					type: "address",
-					name: "fidOwner",
-				},
-				{
-					type: "uint32",
-					name: "keyType",
-				},
-				{
-					type: "bytes",
-					name: "key",
-				},
-				{
-					type: "uint8",
-					name: "metadataType",
-				},
-				{
-					type: "bytes",
-					name: "metadata",
-				},
-				{
-					type: "uint256",
-					name: "deadline",
-				},
-				{
-					type: "bytes",
-					name: "sig",
-				},
-			],
-			[],
-		],
-		params: async () => {
-			const deadline =
-				"deadline" in options
-					? options.deadline
-					: BigInt(Math.floor(Date.now() / 1000) + 3600); // default signatures last for 1 hour
+  const keyGateway = getKeyGateway({
+    client: options.client,
+    chain: options.chain,
+  });
+  return prepareContractCall({
+    contract: keyGateway,
+    method: [
+      "0xa005d3d2",
+      [
+        {
+          type: "address",
+          name: "fidOwner",
+        },
+        {
+          type: "uint32",
+          name: "keyType",
+        },
+        {
+          type: "bytes",
+          name: "key",
+        },
+        {
+          type: "uint8",
+          name: "metadataType",
+        },
+        {
+          type: "bytes",
+          name: "metadata",
+        },
+        {
+          type: "uint256",
+          name: "deadline",
+        },
+        {
+          type: "bytes",
+          name: "sig",
+        },
+      ],
+      [],
+    ],
+    params: async () => {
+      const deadline =
+        "deadline" in options
+          ? options.deadline
+          : BigInt(Math.floor(Date.now() / 1000) + 3600); // default signatures last for 1 hour
 
-			const appAccountAddress =
-				"appAccount" in options
-					? options.appAccount.address
-					: options.appAccountAddress;
-			const userAddress =
-				"userAccount" in options
-					? options.userAccount.address
-					: options.userAddress;
+      const appAccountAddress =
+        "appAccount" in options
+          ? options.appAccount.address
+          : options.appAccountAddress;
+      const userAddress =
+        "userAccount" in options
+          ? options.userAccount.address
+          : options.userAddress;
 
-			// Fetch the app's FID
-			const appFid = await getFid({
-				client: options.client,
-				chain: options.chain,
-				address: appAccountAddress,
-				disableCache: options.disableCache,
-			});
-			if (appFid === 0n) {
-				throw new Error(`No fid found for app account: ${appAccountAddress}`);
-			}
+      // Fetch the app's FID
+      const appFid = await getFid({
+        client: options.client,
+        chain: options.chain,
+        address: appAccountAddress,
+        disableCache: options.disableCache,
+      });
+      if (appFid === 0n) {
+        throw new Error(`No fid found for app account: ${appAccountAddress}`);
+      }
 
-			// Set the signedKeyRequestMetadata if provided, otherwise generate using the app account
-			let signedKeyRequestMetadata: Hex;
-			if ("signedKeyRequestMetadata" in options) {
-				signedKeyRequestMetadata = options.signedKeyRequestMetadata;
-			} else if ("appAccount" in options) {
-				const { getSignedKeyRequestMetadata } = await import(
-					"../eip712Signatures/keyRequestSignature.js"
-				);
-				signedKeyRequestMetadata = await getSignedKeyRequestMetadata({
-					account: options.appAccount,
-					message: {
-						requestFid: toBigInt(appFid),
-						key: options.signerPublicKey,
-						deadline,
-					},
-				});
-			} else {
-				throw new Error(
-					"Invalid options, expected signedKeyRequestMetadata or appAccount to be provided",
-				);
-			}
+      // Set the signedKeyRequestMetadata if provided, otherwise generate using the app account
+      let signedKeyRequestMetadata: Hex;
+      if ("signedKeyRequestMetadata" in options) {
+        signedKeyRequestMetadata = options.signedKeyRequestMetadata;
+      } else if ("appAccount" in options) {
+        const { getSignedKeyRequestMetadata } = await import(
+          "../eip712Signatures/keyRequestSignature.js"
+        );
+        signedKeyRequestMetadata = await getSignedKeyRequestMetadata({
+          account: options.appAccount,
+          message: {
+            requestFid: toBigInt(appFid),
+            key: options.signerPublicKey,
+            deadline,
+          },
+        });
+      } else {
+        throw new Error(
+          "Invalid options, expected signedKeyRequestMetadata or appAccount to be provided",
+        );
+      }
 
-			// Fetch the user's current key gateway nonce
-			const nonce = await nonces({
-				account: userAddress,
-				contract: keyGateway,
-			});
+      // Fetch the user's current key gateway nonce
+      const nonce = await nonces({
+        account: userAddress,
+        contract: keyGateway,
+      });
 
-			// Set the addSignature if provided, otherwise generate one using the user account
-			let addSignature: Hex;
-			if ("addSignature" in options) {
-				addSignature = options.addSignature;
-			} else if ("userAccount" in options) {
-				const { signAdd } = await import("../eip712Signatures/addSignature.js");
-				addSignature = await signAdd({
-					account: options.userAccount,
-					message: {
-						owner: userAddress,
-						keyType: 1,
-						key: options.signerPublicKey,
-						metadataType: 1,
-						metadata: signedKeyRequestMetadata,
-						nonce,
-						deadline,
-					},
-				});
-			} else {
-				throw new Error(
-					"Invalid options, expected addSignature or userAccount to be provided",
-				);
-			}
+      // Set the addSignature if provided, otherwise generate one using the user account
+      let addSignature: Hex;
+      if ("addSignature" in options) {
+        addSignature = options.addSignature;
+      } else if ("userAccount" in options) {
+        const { signAdd } = await import("../eip712Signatures/addSignature.js");
+        addSignature = await signAdd({
+          account: options.userAccount,
+          message: {
+            owner: userAddress,
+            keyType: 1,
+            key: options.signerPublicKey,
+            metadataType: 1,
+            metadata: signedKeyRequestMetadata,
+            nonce,
+            deadline,
+          },
+        });
+      } else {
+        throw new Error(
+          "Invalid options, expected addSignature or userAccount to be provided",
+        );
+      }
 
-			return [
-				userAddress,
-				1,
-				options.signerPublicKey,
-				1,
-				signedKeyRequestMetadata,
-				deadline,
-				addSignature,
-			] as const;
-		},
-	});
+      return [
+        userAddress,
+        1,
+        options.signerPublicKey,
+        1,
+        signedKeyRequestMetadata,
+        deadline,
+        addSignature,
+      ] as const;
+    },
+  });
 }

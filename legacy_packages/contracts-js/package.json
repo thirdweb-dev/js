@@ -440,15 +440,9 @@
   "peerDependencies": {
     "ethers": "^5"
   },
-  "files": [
-    "dist/",
-    "factories/"
-  ],
+  "files": ["dist/", "factories/"],
   "preconstruct": {
-    "entrypoints": [
-      "index.ts",
-      "./factories/TW*.ts"
-    ],
+    "entrypoints": ["index.ts", "./factories/TW*.ts"],
     "exports": {
       "extra": {}
     }

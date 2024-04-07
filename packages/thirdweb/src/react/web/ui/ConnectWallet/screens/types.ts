@@ -30,31 +30,31 @@
  * @connectWallet
  */
 export type WelcomeScreen =
-	| {
-			/**
-			 * Custom title
-			 */
-			title?: string;
-			/**
-			 * Custom subtitle
-			 */
-			subtitle?: string;
-			/**
-			 * Custom image
-			 */
-			img?: {
-				/**
-				 * Image source
-				 */
-				src: string;
-				/**
-				 * Image width
-				 */
-				width?: number;
-				/**
-				 * Image height
-				 */
-				height?: number;
-			};
-	  }
-	| (() => React.ReactNode);
+  | {
+      /**
+       * Custom title
+       */
+      title?: string;
+      /**
+       * Custom subtitle
+       */
+      subtitle?: string;
+      /**
+       * Custom image
+       */
+      img?: {
+        /**
+         * Image source
+         */
+        src: string;
+        /**
+         * Image width
+         */
+        width?: number;
+        /**
+         * Image height
+         */
+        height?: number;
+      };
+    }
+  | (() => React.ReactNode);

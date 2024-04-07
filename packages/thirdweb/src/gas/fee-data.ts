@@ -10,79 +10,79 @@ import { getGasPrice } from "./get-gas-price.js";
 import { roundUpGas } from "./op-gas-fee-reducer.js";
 
 type FeeData = {
-	maxFeePerGas: null | bigint;
-	maxPriorityFeePerGas: null | bigint;
+  maxFeePerGas: null | bigint;
+  maxPriorityFeePerGas: null | bigint;
 };
 
 type FeeDataParams =
-	| {
-			gasPrice?: never;
-			maxFeePerGas?: bigint;
-			maxPriorityFeePerGas?: bigint;
-	  }
-	| {
-			gasPrice?: bigint;
-			maxFeePerGas?: never;
-			maxPriorityFeePerGas?: never;
-	  };
+  | {
+      gasPrice?: never;
+      maxFeePerGas?: bigint;
+      maxPriorityFeePerGas?: bigint;
+    }
+  | {
+      gasPrice?: bigint;
+      maxFeePerGas?: never;
+      maxPriorityFeePerGas?: never;
+    };
 
 /**
  *
  * @internal
  */
 export async function getGasOverridesForTransaction(
-	transaction: PreparedTransaction,
+  transaction: PreparedTransaction,
 ): Promise<FeeDataParams> {
-	// if we have a `gasPrice` param in the transaction, use that.
-	if ("gasPrice" in transaction) {
-		const resolvedGasPrice = await resolvePromisedValue(transaction.gasPrice);
-		// if the value ends up being "undefined" -> continue to getting the real data
-		if (resolvedGasPrice !== undefined) {
-			return { gasPrice: resolvedGasPrice };
-		}
-	}
-	// if we have a maxFeePerGas and maxPriorityFeePerGas, use those
-	if (
-		"maxFeePerGas" in transaction &&
-		"maxPriorityFeePerGas" in transaction &&
-		transaction.maxFeePerGas &&
-		transaction.maxPriorityFeePerGas
-	) {
-		const [resolvedMaxFee, resolvedMaxPriorityFee] = await Promise.all([
-			resolvePromisedValue(transaction.maxFeePerGas),
-			resolvePromisedValue(transaction.maxPriorityFeePerGas),
-		]);
-		return {
-			maxFeePerGas: resolvedMaxFee,
-			maxPriorityFeePerGas: resolvedMaxPriorityFee,
-		};
-	}
-	// otherwise call getDefaultGasOverrides
-	const defaultGasOverrides = await getDefaultGasOverrides(
-		transaction.client,
-		transaction.chain,
-	);
-	if (!transaction.chain.experimental?.increaseZeroByteCount) {
-		// return as is
-		return defaultGasOverrides;
-	}
-	// otherwise adjust each value
-	if (defaultGasOverrides.gasPrice) {
-		return { gasPrice: roundUpGas(defaultGasOverrides.gasPrice) };
-	}
-	if (
-		defaultGasOverrides.maxFeePerGas &&
-		defaultGasOverrides.maxPriorityFeePerGas
-	) {
-		return {
-			maxFeePerGas: roundUpGas(defaultGasOverrides.maxFeePerGas),
-			maxPriorityFeePerGas: roundUpGas(
-				defaultGasOverrides.maxPriorityFeePerGas,
-			),
-		};
-	}
-	// this should never happen
-	return defaultGasOverrides;
+  // if we have a `gasPrice` param in the transaction, use that.
+  if ("gasPrice" in transaction) {
+    const resolvedGasPrice = await resolvePromisedValue(transaction.gasPrice);
+    // if the value ends up being "undefined" -> continue to getting the real data
+    if (resolvedGasPrice !== undefined) {
+      return { gasPrice: resolvedGasPrice };
+    }
+  }
+  // if we have a maxFeePerGas and maxPriorityFeePerGas, use those
+  if (
+    "maxFeePerGas" in transaction &&
+    "maxPriorityFeePerGas" in transaction &&
+    transaction.maxFeePerGas &&
+    transaction.maxPriorityFeePerGas
+  ) {
+    const [resolvedMaxFee, resolvedMaxPriorityFee] = await Promise.all([
+      resolvePromisedValue(transaction.maxFeePerGas),
+      resolvePromisedValue(transaction.maxPriorityFeePerGas),
+    ]);
+    return {
+      maxFeePerGas: resolvedMaxFee,
+      maxPriorityFeePerGas: resolvedMaxPriorityFee,
+    };
+  }
+  // otherwise call getDefaultGasOverrides
+  const defaultGasOverrides = await getDefaultGasOverrides(
+    transaction.client,
+    transaction.chain,
+  );
+  if (!transaction.chain.experimental?.increaseZeroByteCount) {
+    // return as is
+    return defaultGasOverrides;
+  }
+  // otherwise adjust each value
+  if (defaultGasOverrides.gasPrice) {
+    return { gasPrice: roundUpGas(defaultGasOverrides.gasPrice) };
+  }
+  if (
+    defaultGasOverrides.maxFeePerGas &&
+    defaultGasOverrides.maxPriorityFeePerGas
+  ) {
+    return {
+      maxFeePerGas: roundUpGas(defaultGasOverrides.maxFeePerGas),
+      maxPriorityFeePerGas: roundUpGas(
+        defaultGasOverrides.maxPriorityFeePerGas,
+      ),
+    };
+  }
+  // this should never happen
+  return defaultGasOverrides;
 }
 
 /**
@@ -95,19 +95,19 @@ export async function getGasOverridesForTransaction(
  * @internal
  */
 export async function getDefaultGasOverrides(
-	client: ThirdwebClient,
-	chain: Chain,
+  client: ThirdwebClient,
+  chain: Chain,
 ) {
-	const feeData = await getDynamicFeeData(client, chain);
-	if (feeData.maxFeePerGas && feeData.maxPriorityFeePerGas) {
-		return {
-			maxFeePerGas: feeData.maxFeePerGas,
-			maxPriorityFeePerGas: feeData.maxPriorityFeePerGas,
-		};
-	}
-	return {
-		gasPrice: await getGasPrice({ client, chain, percentMultiplier: 10 }),
-	};
+  const feeData = await getDynamicFeeData(client, chain);
+  if (feeData.maxFeePerGas && feeData.maxPriorityFeePerGas) {
+    return {
+      maxFeePerGas: feeData.maxFeePerGas,
+      maxPriorityFeePerGas: feeData.maxPriorityFeePerGas,
+    };
+  }
+  return {
+    gasPrice: await getGasPrice({ client, chain, percentMultiplier: 10 }),
+  };
 }
 
 /**
@@ -118,57 +118,57 @@ export async function getDefaultGasOverrides(
  * @internal
  */
 async function getDynamicFeeData(
-	client: ThirdwebClient,
-	chain: Chain,
+  client: ThirdwebClient,
+  chain: Chain,
 ): Promise<FeeData> {
-	let maxFeePerGas: null | bigint = null;
-	let maxPriorityFeePerGas_: null | bigint = null;
+  let maxFeePerGas: null | bigint = null;
+  let maxPriorityFeePerGas_: null | bigint = null;
 
-	const rpcRequest = getRpcClient({ client, chain });
+  const rpcRequest = getRpcClient({ client, chain });
 
-	const [block, maxPriorityFeePerGas] = await Promise.all([
-		eth_getBlockByNumber(rpcRequest, { blockTag: "latest" }),
-		eth_maxPriorityFeePerGas(rpcRequest).catch(() => null),
-	]);
+  const [block, maxPriorityFeePerGas] = await Promise.all([
+    eth_getBlockByNumber(rpcRequest, { blockTag: "latest" }),
+    eth_maxPriorityFeePerGas(rpcRequest).catch(() => null),
+  ]);
 
-	const baseBlockFee = block?.baseFeePerGas ? block.baseFeePerGas : 100n;
+  const baseBlockFee = block?.baseFeePerGas ? block.baseFeePerGas : 100n;
 
-	const chainId = chain.id;
-	// flag chain testnet & flag chain
-	if (chainId === 220 || chainId === 1220) {
-		// these does not support eip-1559, for some reason even though `eth_maxPriorityFeePerGas` is available?!?
-		// return null because otherwise TX break
-		return { maxFeePerGas: null, maxPriorityFeePerGas: null };
-		// mumbai & polygon
-	}
-	if (chainId === 80001 || chainId === 137) {
-		// for polygon, get fee data from gas station
-		maxPriorityFeePerGas_ = await getPolygonGasPriorityFee(chainId);
-	} else if (maxPriorityFeePerGas) {
-		// prioritize fee from eth_maxPriorityFeePerGas
-		maxPriorityFeePerGas_ = maxPriorityFeePerGas;
-	}
+  const chainId = chain.id;
+  // flag chain testnet & flag chain
+  if (chainId === 220 || chainId === 1220) {
+    // these does not support eip-1559, for some reason even though `eth_maxPriorityFeePerGas` is available?!?
+    // return null because otherwise TX break
+    return { maxFeePerGas: null, maxPriorityFeePerGas: null };
+    // mumbai & polygon
+  }
+  if (chainId === 80001 || chainId === 137) {
+    // for polygon, get fee data from gas station
+    maxPriorityFeePerGas_ = await getPolygonGasPriorityFee(chainId);
+  } else if (maxPriorityFeePerGas) {
+    // prioritize fee from eth_maxPriorityFeePerGas
+    maxPriorityFeePerGas_ = maxPriorityFeePerGas;
+  }
 
-	if (!maxPriorityFeePerGas_) {
-		// chain does not support eip-1559, return null for both
-		return { maxFeePerGas: null, maxPriorityFeePerGas: null };
-	}
+  if (!maxPriorityFeePerGas_) {
+    // chain does not support eip-1559, return null for both
+    return { maxFeePerGas: null, maxPriorityFeePerGas: null };
+  }
 
-	// add 10% tip to maxPriorityFeePerGas for faster processing
-	maxPriorityFeePerGas_ = getPreferredPriorityFee(maxPriorityFeePerGas_);
-	// eip-1559 formula, doubling the base fee ensures that the tx can be included in the next 6 blocks no matter how busy the network is
-	// good article on the subject: https://www.blocknative.com/blog/eip-1559-fees
-	maxFeePerGas = baseBlockFee * 2n + maxPriorityFeePerGas_;
+  // add 10% tip to maxPriorityFeePerGas for faster processing
+  maxPriorityFeePerGas_ = getPreferredPriorityFee(maxPriorityFeePerGas_);
+  // eip-1559 formula, doubling the base fee ensures that the tx can be included in the next 6 blocks no matter how busy the network is
+  // good article on the subject: https://www.blocknative.com/blog/eip-1559-fees
+  maxFeePerGas = baseBlockFee * 2n + maxPriorityFeePerGas_;
 
-	// special cased for Celo gas fees
-	if (chainId === 42220 || chainId === 44787 || chainId === 62320) {
-		maxPriorityFeePerGas_ = maxFeePerGas;
-	}
+  // special cased for Celo gas fees
+  if (chainId === 42220 || chainId === 44787 || chainId === 62320) {
+    maxPriorityFeePerGas_ = maxFeePerGas;
+  }
 
-	return {
-		maxFeePerGas,
-		maxPriorityFeePerGas: maxPriorityFeePerGas_,
-	};
+  return {
+    maxFeePerGas,
+    maxPriorityFeePerGas: maxPriorityFeePerGas_,
+  };
 }
 
 /**
@@ -179,25 +179,25 @@ async function getDynamicFeeData(
  * @internal
  */
 function getPreferredPriorityFee(
-	defaultPriorityFeePerGas: bigint,
-	percentMultiplier = 10,
+  defaultPriorityFeePerGas: bigint,
+  percentMultiplier = 10,
 ): bigint {
-	const extraTip =
-		(defaultPriorityFeePerGas / BigInt(100)) * BigInt(percentMultiplier);
-	const totalPriorityFee = defaultPriorityFeePerGas + extraTip;
-	return totalPriorityFee;
+  const extraTip =
+    (defaultPriorityFeePerGas / BigInt(100)) * BigInt(percentMultiplier);
+  const totalPriorityFee = defaultPriorityFeePerGas + extraTip;
+  return totalPriorityFee;
 }
 
 /**
  * @internal
  */
 function getGasStationUrl(chainId: 137 | 80001): string {
-	switch (chainId) {
-		case 137:
-			return "https://gasstation.polygon.technology/v2";
-		case 80001:
-			return "https://gasstation-testnet.polygon.technology/v2";
-	}
+  switch (chainId) {
+    case 137:
+      return "https://gasstation.polygon.technology/v2";
+    case 80001:
+      return "https://gasstation-testnet.polygon.technology/v2";
+  }
 }
 
 const MIN_POLYGON_GAS_PRICE = 31n; // 31 gwei
@@ -208,12 +208,12 @@ const MIN_MUMBAI_GAS_PRICE = 1n; // 1 gwei
  * @internal
  */
 function getDefaultGasFee(chainId: 137 | 80001): bigint {
-	switch (chainId) {
-		case 137:
-			return MIN_POLYGON_GAS_PRICE;
-		case 80001:
-			return MIN_MUMBAI_GAS_PRICE;
-	}
+  switch (chainId) {
+    case 137:
+      return MIN_POLYGON_GAS_PRICE;
+    case 80001:
+      return MIN_MUMBAI_GAS_PRICE;
+  }
 }
 
 /**
@@ -222,17 +222,17 @@ function getDefaultGasFee(chainId: 137 | 80001): bigint {
  * @internal
  */
 async function getPolygonGasPriorityFee(chainId: 137 | 80001): Promise<bigint> {
-	const gasStationUrl = getGasStationUrl(chainId);
-	try {
-		const data = await (await fetch(gasStationUrl)).json();
-		// take the standard speed here, SDK options will define the extra tip
-		const priorityFee = data.fast.maxPriorityFee;
-		if (priorityFee > 0) {
-			const fixedFee = Number.parseFloat(priorityFee).toFixed(9);
-			return toUnits(fixedFee, 9);
-		}
-	} catch (e) {
-		console.error("failed to fetch gas", e);
-	}
-	return getDefaultGasFee(chainId);
+  const gasStationUrl = getGasStationUrl(chainId);
+  try {
+    const data = await (await fetch(gasStationUrl)).json();
+    // take the standard speed here, SDK options will define the extra tip
+    const priorityFee = data.fast.maxPriorityFee;
+    if (priorityFee > 0) {
+      const fixedFee = Number.parseFloat(priorityFee).toFixed(9);
+      return toUnits(fixedFee, 9);
+    }
+  } catch (e) {
+    console.error("failed to fetch gas", e);
+  }
+  return getDefaultGasFee(chainId);
 }

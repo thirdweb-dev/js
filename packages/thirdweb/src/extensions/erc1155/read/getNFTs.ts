@@ -10,14 +10,14 @@ const DEFAULT_QUERY_ALL_COUNT = 100n;
  * Parameters for retrieving NFTs.
  */
 export type GetNFTsParams = {
-	/**
-	 * Which tokenId to start at.
-	 */
-	start?: number;
-	/**
-	 * The number of NFTs to retrieve.
-	 */
-	count?: number;
+  /**
+   * Which tokenId to start at.
+   */
+  start?: number;
+  /**
+   * The number of NFTs to retrieve.
+   */
+  count?: number;
 };
 
 /**
@@ -36,23 +36,23 @@ export type GetNFTsParams = {
  * ```
  */
 export async function getNFTs(
-	options: BaseTransactionOptions<GetNFTsParams>,
+  options: BaseTransactionOptions<GetNFTsParams>,
 ): Promise<NFT[]> {
-	const start = BigInt(options.start || 0);
-	const count = BigInt(options.count || DEFAULT_QUERY_ALL_COUNT);
-	const totalCount = await nextTokenIdToMint(options);
-	const maxId = min(totalCount, start + count);
+  const start = BigInt(options.start || 0);
+  const count = BigInt(options.count || DEFAULT_QUERY_ALL_COUNT);
+  const totalCount = await nextTokenIdToMint(options);
+  const maxId = min(totalCount, start + count);
 
-	const promises: ReturnType<typeof getNFT>[] = [];
+  const promises: ReturnType<typeof getNFT>[] = [];
 
-	for (let i = start; i < maxId; i++) {
-		promises.push(
-			getNFT({
-				...options,
-				tokenId: i,
-			}),
-		);
-	}
+  for (let i = start; i < maxId; i++) {
+    promises.push(
+      getNFT({
+        ...options,
+        tokenId: i,
+      }),
+    );
+  }
 
-	return await Promise.all(promises);
+  return await Promise.all(promises);
 }

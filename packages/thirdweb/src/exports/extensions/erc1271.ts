@@ -1,4 +1,4 @@
 export {
-	type CheckContractWalletSignatureOptions,
-	checkContractWalletSignature,
+  type CheckContractWalletSignatureOptions,
+  checkContractWalletSignature,
 } from "../../extensions/erc1271/checkContractWalletSignature.js";

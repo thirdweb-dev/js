@@ -3,8 +3,8 @@ import { getRpcClient } from "../../../../rpc/rpc.js";
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 
 import {
-	type GetAuctionParams as GetAuctionParamsGenerated,
-	getAuction as getAuctionGenerated,
+  type GetAuctionParams as GetAuctionParamsGenerated,
+  getAuction as getAuctionGenerated,
 } from "../../__generated__/IEnglishAuctions/read/getAuction.js";
 import type { EnglishAuction } from "../../types.js";
 import { mapEnglishAuction } from "../../utils.js";
@@ -24,19 +24,19 @@ export type GetAuctionParams = GetAuctionParamsGenerated;
  * ```
  */
 export async function getAuction(
-	options: BaseTransactionOptions<GetAuctionParams>,
+  options: BaseTransactionOptions<GetAuctionParams>,
 ): Promise<EnglishAuction> {
-	const rpcClient = getRpcClient(options.contract);
-	const [rawAuction, latestBlock] = await Promise.all([
-		getAuctionGenerated(options),
-		eth_getBlockByNumber(rpcClient, {
-			blockTag: "latest",
-		}),
-	]);
+  const rpcClient = getRpcClient(options.contract);
+  const [rawAuction, latestBlock] = await Promise.all([
+    getAuctionGenerated(options),
+    eth_getBlockByNumber(rpcClient, {
+      blockTag: "latest",
+    }),
+  ]);
 
-	return mapEnglishAuction({
-		contract: options.contract,
-		latestBlock,
-		rawAuction,
-	});
+  return mapEnglishAuction({
+    contract: options.contract,
+    latestBlock,
+    rawAuction,
+  });
 }

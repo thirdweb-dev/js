@@ -3,23 +3,23 @@
  * @internal
  */
 export function timeoutPromise<T>(
-	promise: Promise<T>,
-	option: { ms: number; message: string },
+  promise: Promise<T>,
+  option: { ms: number; message: string },
 ) {
-	return new Promise<T>((resolve, reject) => {
-		const timeoutId = setTimeout(() => {
-			reject(new Error(option.message));
-		}, option.ms);
+  return new Promise<T>((resolve, reject) => {
+    const timeoutId = setTimeout(() => {
+      reject(new Error(option.message));
+    }, option.ms);
 
-		promise.then(
-			(res) => {
-				clearTimeout(timeoutId);
-				resolve(res);
-			},
-			(err) => {
-				clearTimeout(timeoutId);
-				reject(err);
-			},
-		);
-	});
+    promise.then(
+      (res) => {
+        clearTimeout(timeoutId);
+        resolve(res);
+      },
+      (err) => {
+        clearTimeout(timeoutId);
+        reject(err);
+      },
+    );
+  });
 }

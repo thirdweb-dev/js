@@ -20,40 +20,40 @@ const CONTRACT_QUERY_CACHE = new WeakMap();
  * @transaction
  */
 export function createContractQuery<
-	opts extends object,
-	result,
-	abi extends Abi,
+  opts extends object,
+  result,
+  abi extends Abi,
 >(
-	readCall: (options: BaseTransactionOptions<opts, abi>) => Promise<result>,
+  readCall: (options: BaseTransactionOptions<opts, abi>) => Promise<result>,
 ): (
-	options: BaseTransactionOptions<opts, abi> & {
-		queryOptions?: Partial<{ enabled: boolean }>;
-	},
+  options: BaseTransactionOptions<opts, abi> & {
+    queryOptions?: Partial<{ enabled: boolean }>;
+  },
 ) => UseQueryResult<result, Error> {
-	if (CONTRACT_QUERY_CACHE.has(readCall)) {
-		return CONTRACT_QUERY_CACHE.get(readCall) as (
-			options: BaseTransactionOptions<opts, abi>,
-		) => UseQueryResult<result, Error>;
-	}
-	function useRead(
-		options: BaseTransactionOptions<opts, abi> & {
-			queryOptions?: Partial<{ enabled: boolean }>;
-		},
-	) {
-		const { contract, queryOptions, ...params } = options;
+  if (CONTRACT_QUERY_CACHE.has(readCall)) {
+    return CONTRACT_QUERY_CACHE.get(readCall) as (
+      options: BaseTransactionOptions<opts, abi>,
+    ) => UseQueryResult<result, Error>;
+  }
+  function useRead(
+    options: BaseTransactionOptions<opts, abi> & {
+      queryOptions?: Partial<{ enabled: boolean }>;
+    },
+  ) {
+    const { contract, queryOptions, ...params } = options;
 
-		return useQuery({
-			queryKey: [
-				"readContract",
-				contract.chain.id,
-				contract.address,
-				getFunctionId(readCall),
-				stringify(params),
-			] as const,
-			queryFn: () => readCall(options),
-			...queryOptions,
-		});
-	}
-	CONTRACT_QUERY_CACHE.set(readCall, useRead);
-	return useRead;
+    return useQuery({
+      queryKey: [
+        "readContract",
+        contract.chain.id,
+        contract.address,
+        getFunctionId(readCall),
+        stringify(params),
+      ] as const,
+      queryFn: () => readCall(options),
+      ...queryOptions,
+    });
+  }
+  CONTRACT_QUERY_CACHE.set(readCall, useRead);
+  return useRead;
 }

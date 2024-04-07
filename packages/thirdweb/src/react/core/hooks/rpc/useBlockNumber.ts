@@ -7,10 +7,10 @@ import { getRpcClient } from "../../../../rpc/rpc.js";
 import { watchBlockNumber } from "../../../../rpc/watchBlockNumber.js";
 
 export type UseBlockNumberOptions = {
-	client: ThirdwebClient;
-	chain: Chain;
-	enabled?: boolean;
-	watch?: boolean;
+  client: ThirdwebClient;
+  chain: Chain;
+  enabled?: boolean;
+  watch?: boolean;
 };
 
 /**
@@ -24,35 +24,35 @@ export type UseBlockNumberOptions = {
  * ```
  */
 export function useBlockNumber(options: UseBlockNumberOptions) {
-	const { client, chain, enabled = true, watch = true } = options;
+  const { client, chain, enabled = true, watch = true } = options;
 
-	const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
-	const queryKey = useMemo(() => [chain.id, "blockNumber"] as const, [chain]);
-	const query = useQuery({
-		// TODO: technically client should be part of the queryKey here...
+  const queryKey = useMemo(() => [chain.id, "blockNumber"] as const, [chain]);
+  const query = useQuery({
+    // TODO: technically client should be part of the queryKey here...
 
-		queryKey: queryKey,
-		queryFn: async () => {
-			const rpcRequest = getRpcClient({ client, chain });
-			return await eth_blockNumber(rpcRequest);
-		},
-		enabled,
-	});
+    queryKey: queryKey,
+    queryFn: async () => {
+      const rpcRequest = getRpcClient({ client, chain });
+      return await eth_blockNumber(rpcRequest);
+    },
+    enabled,
+  });
 
-	useEffect(() => {
-		if (!enabled || !watch) {
-			// don't watch if not enabled or not watching
-			return;
-		}
-		return watchBlockNumber({
-			client,
-			chain,
-			onNewBlockNumber: (newBlockNumber) => {
-				queryClient.setQueryData(queryKey, newBlockNumber);
-			},
-		});
-	}, [client, chain, enabled, queryClient, queryKey, watch]);
+  useEffect(() => {
+    if (!enabled || !watch) {
+      // don't watch if not enabled or not watching
+      return;
+    }
+    return watchBlockNumber({
+      client,
+      chain,
+      onNewBlockNumber: (newBlockNumber) => {
+        queryClient.setQueryData(queryKey, newBlockNumber);
+      },
+    });
+  }, [client, chain, enabled, queryClient, queryKey, watch]);
 
-	return query.data;
+  return query.data;
 }

@@ -13,8 +13,8 @@ import { supportsInterface } from "../../erc165/__generated__/IERC165/read/suppo
  * ```
  */
 export function isERC721(options: BaseTransactionOptions) {
-	return supportsInterface({
-		contract: options.contract,
-		interfaceId: "0x80ac58cd",
-	});
+  return supportsInterface({
+    contract: options.contract,
+    interfaceId: "0x80ac58cd",
+  });
 }

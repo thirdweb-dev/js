@@ -1,15 +1,15 @@
 import {
-	type Signature,
-	type TransactionSerializable,
-	recoverAddress,
-	serializeTransaction,
-	signatureToHex,
+  type Signature,
+  type TransactionSerializable,
+  recoverAddress,
+  serializeTransaction,
+  signatureToHex,
 } from "viem";
 import { keccak256 } from "../hashing/keccak256.js";
 
 type GetKeylessTransactionOptions = {
-	transaction: TransactionSerializable;
-	signature: Signature;
+  transaction: TransactionSerializable;
+  signature: Signature;
 };
 
 /**
@@ -20,26 +20,26 @@ type GetKeylessTransactionOptions = {
  * @internal
  */
 export async function getKeylessTransaction(
-	options: GetKeylessTransactionOptions,
+  options: GetKeylessTransactionOptions,
 ) {
-	// 1. Create serialized txn string
-	const hash = keccak256(serializeTransaction(options.transaction));
+  // 1. Create serialized txn string
+  const hash = keccak256(serializeTransaction(options.transaction));
 
-	// 2. Determine signer address from custom signature + txn
-	const address = await recoverAddress({
-		hash,
-		signature: signatureToHex(options.signature),
-	});
+  // 2. Determine signer address from custom signature + txn
+  const address = await recoverAddress({
+    hash,
+    signature: signatureToHex(options.signature),
+  });
 
-	// 3. Create the signed serialized txn string.
-	// To be sent directly to the chain using a provider.
-	const transaction = serializeTransaction(
-		options.transaction,
-		options.signature,
-	);
+  // 3. Create the signed serialized txn string.
+  // To be sent directly to the chain using a provider.
+  const transaction = serializeTransaction(
+    options.transaction,
+    options.signature,
+  );
 
-	return {
-		signerAddress: address,
-		transaction,
-	};
+  return {
+    signerAddress: address,
+    transaction,
+  };
 }

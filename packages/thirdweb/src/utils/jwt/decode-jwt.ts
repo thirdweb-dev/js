@@ -16,20 +16,20 @@ import type { JWTPayload } from "./types.js";
  * ```
  */
 export function deccodeJWT(jwt: string) {
-	const [encodedHeader, encodedPayload, encodedSignature] = jwt.split(".");
+  const [encodedHeader, encodedPayload, encodedSignature] = jwt.split(".");
 
-	if (encodedHeader !== PRECOMPILED_B64_ENCODED_JWT_HEADER) {
-		throw new Error("Invalid JWT header");
-	}
-	if (!encodedPayload || !encodedSignature) {
-		throw new Error("Invalid JWT");
-	}
+  if (encodedHeader !== PRECOMPILED_B64_ENCODED_JWT_HEADER) {
+    throw new Error("Invalid JWT header");
+  }
+  if (!encodedPayload || !encodedSignature) {
+    throw new Error("Invalid JWT");
+  }
 
-	const payload: JWTPayload = JSON.parse(base64ToString(encodedPayload));
-	const signature = base64ToString(encodedSignature) as Hex;
+  const payload: JWTPayload = JSON.parse(base64ToString(encodedPayload));
+  const signature = base64ToString(encodedSignature) as Hex;
 
-	return {
-		payload,
-		signature,
-	};
+  return {
+    payload,
+    signature,
+  };
 }

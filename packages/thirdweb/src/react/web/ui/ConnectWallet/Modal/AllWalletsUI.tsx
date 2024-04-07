@@ -25,173 +25,173 @@ import { WalletEntryButton } from "../WalletEntryButton.js";
  * @internal
  */
 function AllWalletsUI(props: {
-	onBack: () => void;
-	onSelect: (wallet: Wallet) => void;
+  onBack: () => void;
+  onSelect: (wallet: Wallet) => void;
 }) {
-	const { recommendedWallets, wallets: specifiedWallets } =
-		useWalletConnectionCtx();
-	const { modalSize } = useContext(ModalConfigCtx);
+  const { recommendedWallets, wallets: specifiedWallets } =
+    useWalletConnectionCtx();
+  const { modalSize } = useContext(ModalConfigCtx);
 
-	const fuseInstance = useMemo(() => {
-		return new Fuse(walletInfos, {
-			threshold: 0.4,
-			keys: [
-				{
-					name: "name",
-					weight: 1,
-				},
-			],
-		});
-	}, []);
+  const fuseInstance = useMemo(() => {
+    return new Fuse(walletInfos, {
+      threshold: 0.4,
+      keys: [
+        {
+          name: "name",
+          weight: 1,
+        },
+      ],
+    });
+  }, []);
 
-	const listContainer = useRef<HTMLDivElement | null>(null);
-	const [searchTerm, setSearchTerm] = useState("");
-	const deferredSearchTerm = useDebouncedValue(searchTerm, 300);
+  const listContainer = useRef<HTMLDivElement | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const deferredSearchTerm = useDebouncedValue(searchTerm, 300);
 
-	const walletInfosWithSearch = deferredSearchTerm
-		? fuseInstance.search(deferredSearchTerm).map((result) => result.item)
-		: walletInfos;
+  const walletInfosWithSearch = deferredSearchTerm
+    ? fuseInstance.search(deferredSearchTerm).map((result) => result.item)
+    : walletInfos;
 
-	const installedWalletsFirst = sortWallets(
-		walletInfosWithSearch,
-		recommendedWallets,
-	);
+  const installedWalletsFirst = sortWallets(
+    walletInfosWithSearch,
+    recommendedWallets,
+  );
 
-	// show specified wallets first
-	const sortedWallets = useMemo(() => {
-		return installedWalletsFirst.sort((a, b) => {
-			const aIsSpecified = specifiedWallets.find((w) => w.id === a.id);
-			const bIsSpecified = specifiedWallets.find((w) => w.id === b.id);
-			if (aIsSpecified && !bIsSpecified) {
-				return -1;
-			}
-			if (!aIsSpecified && bIsSpecified) {
-				return 1;
-			}
-			return 0;
-		});
-	}, [installedWalletsFirst, specifiedWallets]);
+  // show specified wallets first
+  const sortedWallets = useMemo(() => {
+    return installedWalletsFirst.sort((a, b) => {
+      const aIsSpecified = specifiedWallets.find((w) => w.id === a.id);
+      const bIsSpecified = specifiedWallets.find((w) => w.id === b.id);
+      if (aIsSpecified && !bIsSpecified) {
+        return -1;
+      }
+      if (!aIsSpecified && bIsSpecified) {
+        return 1;
+      }
+      return 0;
+    });
+  }, [installedWalletsFirst, specifiedWallets]);
 
-	const { itemsToShow, lastItemRef } = useShowMore<HTMLLIElement>(10, 10);
+  const { itemsToShow, lastItemRef } = useShowMore<HTMLLIElement>(10, 10);
 
-	const walletInfosToShow = sortedWallets.slice(0, itemsToShow);
+  const walletInfosToShow = sortedWallets.slice(0, itemsToShow);
 
-	return (
-		<Container fullHeight flex="column" animate="fadein">
-			<Container p="lg">
-				<ModalHeader title="Select Wallet" onBack={props.onBack} />
-			</Container>
+  return (
+    <Container fullHeight flex="column" animate="fadein">
+      <Container p="lg">
+        <ModalHeader title="Select Wallet" onBack={props.onBack} />
+      </Container>
 
-			<Spacer y="xs" />
+      <Spacer y="xs" />
 
-			<Container px="lg">
-				{/* Search */}
-				<div
-					style={{
-						display: "flex",
-						alignItems: "center",
-						position: "relative",
-					}}
-				>
-					<StyledMagnifyingGlassIcon width={iconSize.md} height={iconSize.md} />
+      <Container px="lg">
+        {/* Search */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            position: "relative",
+          }}
+        >
+          <StyledMagnifyingGlassIcon width={iconSize.md} height={iconSize.md} />
 
-					<Input
-						style={{
-							padding: `${spacing.sm} ${spacing.md} ${spacing.sm} ${spacing.xxl}`,
-						}}
-						tabIndex={-1}
-						variant="outline"
-						placeholder={"Search Wallet"}
-						value={searchTerm}
-						onChange={(e) => {
-							listContainer.current?.parentElement?.scroll({
-								top: 0,
-							});
-							setSearchTerm(e.target.value);
-						}}
-					/>
-					{/* Searching Spinner */}
-					{deferredSearchTerm !== searchTerm && (
-						<div
-							style={{
-								position: "absolute",
-								right: spacing.md,
-							}}
-						>
-							<Spinner size="md" color="accentText" />
-						</div>
-					)}
-				</div>
-			</Container>
+          <Input
+            style={{
+              padding: `${spacing.sm} ${spacing.md} ${spacing.sm} ${spacing.xxl}`,
+            }}
+            tabIndex={-1}
+            variant="outline"
+            placeholder={"Search Wallet"}
+            value={searchTerm}
+            onChange={(e) => {
+              listContainer.current?.parentElement?.scroll({
+                top: 0,
+              });
+              setSearchTerm(e.target.value);
+            }}
+          />
+          {/* Searching Spinner */}
+          {deferredSearchTerm !== searchTerm && (
+            <div
+              style={{
+                position: "absolute",
+                right: spacing.md,
+              }}
+            >
+              <Spinner size="md" color="accentText" />
+            </div>
+          )}
+        </div>
+      </Container>
 
-			{walletInfosToShow.length > 0 && (
-				<>
-					<Spacer y="md" />
-					<Container animate="fadein" expand scrollY>
-						<div
-							ref={listContainer}
-							style={{
-								maxHeight: modalSize === "compact" ? "400px" : undefined,
-								paddingInline: spacing.md,
-							}}
-						>
-							{walletInfosToShow.map((walletInfo, i) => {
-								const isLast = i === walletInfosToShow.length - 1;
+      {walletInfosToShow.length > 0 && (
+        <>
+          <Spacer y="md" />
+          <Container animate="fadein" expand scrollY>
+            <div
+              ref={listContainer}
+              style={{
+                maxHeight: modalSize === "compact" ? "400px" : undefined,
+                paddingInline: spacing.md,
+              }}
+            >
+              {walletInfosToShow.map((walletInfo, i) => {
+                const isLast = i === walletInfosToShow.length - 1;
 
-								return (
-									<li
-										ref={isLast ? lastItemRef : undefined}
-										key={walletInfo.id}
-										style={{
-											listStyle: "none",
-										}}
-									>
-										<WalletEntryButton
-											walletId={walletInfo.id}
-											selectWallet={() => {
-												const wallet = createWallet(walletInfo.id);
-												props.onSelect(wallet);
-											}}
-										/>
-									</li>
-								);
-							})}
-						</div>
+                return (
+                  <li
+                    ref={isLast ? lastItemRef : undefined}
+                    key={walletInfo.id}
+                    style={{
+                      listStyle: "none",
+                    }}
+                  >
+                    <WalletEntryButton
+                      walletId={walletInfo.id}
+                      selectWallet={() => {
+                        const wallet = createWallet(walletInfo.id);
+                        props.onSelect(wallet);
+                      }}
+                    />
+                  </li>
+                );
+              })}
+            </div>
 
-						<Spacer y="xl" />
-					</Container>
-				</>
-			)}
+            <Spacer y="xl" />
+          </Container>
+        </>
+      )}
 
-			{walletInfosToShow.length === 0 && (
-				<Container
-					flex="column"
-					gap="md"
-					center="both"
-					color="secondaryText"
-					animate="fadein"
-					expand
-					style={{
-						minHeight: "250px",
-					}}
-				>
-					<CrossCircledIcon width={iconSize.xl} height={iconSize.xl} />
-					<Text> No Results </Text>
-				</Container>
-			)}
-		</Container>
-	);
+      {walletInfosToShow.length === 0 && (
+        <Container
+          flex="column"
+          gap="md"
+          center="both"
+          color="secondaryText"
+          animate="fadein"
+          expand
+          style={{
+            minHeight: "250px",
+          }}
+        >
+          <CrossCircledIcon width={iconSize.xl} height={iconSize.xl} />
+          <Text> No Results </Text>
+        </Container>
+      )}
+    </Container>
+  );
 }
 
 const StyledMagnifyingGlassIcon = /* @__PURE__ */ styled(MagnifyingGlassIcon)(
-	() => {
-		const theme = useCustomTheme();
-		return {
-			color: theme.colors.secondaryText,
-			position: "absolute",
-			left: spacing.sm,
-		};
-	},
+  () => {
+    const theme = useCustomTheme();
+    return {
+      color: theme.colors.secondaryText,
+      position: "absolute",
+      left: spacing.sm,
+    };
+  },
 );
 
 export default AllWalletsUI;

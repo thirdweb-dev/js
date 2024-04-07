@@ -4,12 +4,12 @@ import { DROP1155_CONTRACT } from "~test/test-contracts.js";
 import { getNFT } from "./getNFT.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("erc1155.getNFT", () => {
-	it("without owner", async () => {
-		const nft = await getNFT({
-			contract: DROP1155_CONTRACT,
-			tokenId: 2n,
-		});
-		expect(nft).toMatchInlineSnapshot(`
+  it("without owner", async () => {
+    const nft = await getNFT({
+      contract: DROP1155_CONTRACT,
+      tokenId: 2n,
+    });
+    expect(nft).toMatchInlineSnapshot(`
       {
         "id": 2n,
         "metadata": {
@@ -40,5 +40,5 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc1155.getNFT", () => {
         "type": "ERC1155",
       }
     `);
-	});
+  });
 });

@@ -2,8 +2,8 @@ import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import type { NFT } from "../../../utils/nft/parseNft.js";
 import { getNFT } from "./getNFT.js";
 import {
-	type GetOwnedTokenIdsParams,
-	getOwnedTokenIds,
+  type GetOwnedTokenIdsParams,
+  getOwnedTokenIds,
 } from "./getOwnedTokenIds.js";
 
 export type GetOwnedNFTsParams = GetOwnedTokenIdsParams;
@@ -24,20 +24,20 @@ export type GetOwnedNFTsParams = GetOwnedTokenIdsParams;
  * ```
  */
 export async function getOwnedNFTs(
-	options: BaseTransactionOptions<GetOwnedNFTsParams>,
+  options: BaseTransactionOptions<GetOwnedNFTsParams>,
 ): Promise<NFT[]> {
-	const tokenIds = await getOwnedTokenIds(options);
+  const tokenIds = await getOwnedTokenIds(options);
 
-	return Promise.all(
-		tokenIds.map((tokenId) =>
-			getNFT({
-				contract: options.contract,
-				tokenId,
-			}).then((nft) => ({
-				...nft,
-				// add the owner to the NFT since we know it
-				owner: options.owner,
-			})),
-		),
-	);
+  return Promise.all(
+    tokenIds.map((tokenId) =>
+      getNFT({
+        contract: options.contract,
+        tokenId,
+      }).then((nft) => ({
+        ...nft,
+        // add the owner to the NFT since we know it
+        owner: options.owner,
+      })),
+    ),
+  );
 }

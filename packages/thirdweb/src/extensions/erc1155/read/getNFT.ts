@@ -8,7 +8,7 @@ import { uri } from "../__generated__/IERC1155/read/uri.js";
  * Parameters for getting an NFT.
  */
 export type GetNFTParams = {
-	tokenId: bigint;
+  tokenId: bigint;
 };
 
 /**
@@ -26,34 +26,34 @@ export type GetNFTParams = {
  * ```
  */
 export async function getNFT(
-	options: BaseTransactionOptions<GetNFTParams>,
+  options: BaseTransactionOptions<GetNFTParams>,
 ): Promise<NFT> {
-	const [tokenUri, supply] = await Promise.all([
-		uri({
-			contract: options.contract,
-			tokenId: options.tokenId,
-		}),
-		totalSupply({
-			contract: options.contract,
-			id: options.tokenId,
-		}),
-	]);
-	return parseNFT(
-		await fetchTokenMetadata({
-			client: options.contract.client,
-			tokenId: options.tokenId,
-			tokenUri,
-		}).catch(() => ({
-			id: options.tokenId,
-			type: "ERC1155",
-			uri: tokenUri,
-		})),
-		{
-			tokenId: options.tokenId,
-			tokenUri,
-			type: "ERC1155",
-			owner: null,
-			supply,
-		},
-	);
+  const [tokenUri, supply] = await Promise.all([
+    uri({
+      contract: options.contract,
+      tokenId: options.tokenId,
+    }),
+    totalSupply({
+      contract: options.contract,
+      id: options.tokenId,
+    }),
+  ]);
+  return parseNFT(
+    await fetchTokenMetadata({
+      client: options.contract.client,
+      tokenId: options.tokenId,
+      tokenUri,
+    }).catch(() => ({
+      id: options.tokenId,
+      type: "ERC1155",
+      uri: tokenUri,
+    })),
+    {
+      tokenId: options.tokenId,
+      tokenUri,
+      type: "ERC1155",
+      owner: null,
+      supply,
+    },
+  );
 }

@@ -6,15 +6,8 @@
   "repository": "https://github.com/thirdweb-dev/js/tree/main/legacy_packages/react-native-compat",
   "license": "Apache-2.0",
   "main": "dist/index.js",
-  "files": [
-    "dist/*"
-  ],
-  "keywords": [
-    "thirdweb",
-    "dapp",
-    "react",
-    "react-native"
-  ],
+  "files": ["dist/*"],
+  "keywords": ["thirdweb", "dapp", "react", "react-native"],
   "scripts": {
     "prettier": "prettier --check './**/*.{js,ts,jsx,tsx}'",
     "build": "tsc",

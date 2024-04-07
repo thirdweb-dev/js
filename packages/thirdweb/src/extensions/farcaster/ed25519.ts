@@ -3,8 +3,8 @@ import { fromBytes } from "../../utils/encoding/from-bytes.js";
 import type { Hex } from "../../utils/encoding/hex.js";
 
 export type Ed25519Keypair = {
-	publicKey: Hex;
-	privateKey: Hex;
+  publicKey: Hex;
+  privateKey: Hex;
 };
 
 /**
@@ -17,10 +17,10 @@ export type Ed25519Keypair = {
  * @extension FARCASTER
  */
 export async function createEd25519Keypair(): Promise<Ed25519Keypair> {
-	const privateKey = ed25519.utils.randomPrivateKey();
-	const publicKey = ed25519.getPublicKey(privateKey);
-	return {
-		publicKey: fromBytes(publicKey, "hex"),
-		privateKey: fromBytes(privateKey, "hex"),
-	};
+  const privateKey = ed25519.utils.randomPrivateKey();
+  const publicKey = ed25519.getPublicKey(privateKey);
+  return {
+    publicKey: fromBytes(publicKey, "hex"),
+    privateKey: fromBytes(privateKey, "hex"),
+  };
 }

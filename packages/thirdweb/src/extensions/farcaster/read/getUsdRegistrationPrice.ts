@@ -7,10 +7,10 @@ import { usdUnitPrice } from "../__generated__/IStorageRegistry/read/usdUnitPric
 import { getStorageRegistry } from "../contracts/getStorageRegistry.js";
 
 export type GetUsdRegistrationPriceParams = {
-	client: ThirdwebClient;
-	chain?: Chain;
-	extraStorage?: bigint | number | string;
-	disableCache?: boolean;
+  client: ThirdwebClient;
+  chain?: Chain;
+  extraStorage?: bigint | number | string;
+  disableCache?: boolean;
 };
 
 /**
@@ -28,27 +28,27 @@ export type GetUsdRegistrationPriceParams = {
  * ```
  */
 export async function getUsdRegistrationPrice(
-	options: GetUsdRegistrationPriceParams,
+  options: GetUsdRegistrationPriceParams,
 ): Promise<number> {
-	const extraStorage = toBigInt(options.extraStorage ?? 0);
-	if (extraStorage < 0n) {
-		throw new Error(
-			`Expected extraStorage to be greater than or equal to 0, got ${options.extraStorage}`,
-		);
-	}
+  const extraStorage = toBigInt(options.extraStorage ?? 0);
+  if (extraStorage < 0n) {
+    throw new Error(
+      `Expected extraStorage to be greater than or equal to 0, got ${options.extraStorage}`,
+    );
+  }
 
-	const fetch = async () => {
-		const contract = getStorageRegistry({
-			client: options.client,
-			chain: options.chain,
-		});
-		const bigNumberValue =
-			(await usdUnitPrice({ contract })) * (extraStorage + 1n);
-		return Number(toTokens(bigNumberValue, 8)); // storage registry uses 8 decimal places
-	};
+  const fetch = async () => {
+    const contract = getStorageRegistry({
+      client: options.client,
+      chain: options.chain,
+    });
+    const bigNumberValue =
+      (await usdUnitPrice({ contract })) * (extraStorage + 1n);
+    return Number(toTokens(bigNumberValue, 8)); // storage registry uses 8 decimal places
+  };
 
-	return withCache(fetch, {
-		cacheKey: `${toBigInt(extraStorage)}:getUsdRegistrationPrice`,
-		cacheTime: options.disableCache ? 0 : 5 * 60 * 1000, // 5 minutes
-	});
+  return withCache(fetch, {
+    cacheKey: `${toBigInt(extraStorage)}:getUsdRegistrationPrice`,
+    cacheTime: options.disableCache ? 0 : 5 * 60 * 1000, // 5 minutes
+  });
 }

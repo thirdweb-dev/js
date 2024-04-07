@@ -5,7 +5,7 @@ import type { Account } from "../interfaces/wallet.js";
 import { privateKeyAccount } from "../private-key.js";
 
 export type GenerateAccountOptions = {
-	client: ThirdwebClient;
+  client: ThirdwebClient;
 };
 
 /**
@@ -21,8 +21,8 @@ export type GenerateAccountOptions = {
  * @walletUtils
  */
 export async function generateAccount(
-	options: GenerateAccountOptions,
+  options: GenerateAccountOptions,
 ): Promise<Account> {
-	const privateKey = toHex(secp256k1.utils.randomPrivateKey());
-	return privateKeyAccount({ privateKey, client: options.client });
+  const privateKey = toHex(secp256k1.utils.randomPrivateKey());
+  return privateKeyAccount({ privateKey, client: options.client });
 }

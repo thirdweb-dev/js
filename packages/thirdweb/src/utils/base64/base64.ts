@@ -14,10 +14,10 @@ type Base64String = `${Base64Prefix},${string}`;
  * ```
  */
 export function isBase64JSON(input: string): input is Base64String {
-	if (input.startsWith("data:application/json;base64")) {
-		return true;
-	}
-	return false;
+  if (input.startsWith("data:application/json;base64")) {
+    return true;
+  }
+  return false;
 }
 
 /**
@@ -31,6 +31,6 @@ export function isBase64JSON(input: string): input is Base64String {
  * ```
  */
 export function parseBase64String(input: Base64String) {
-	const [, base64] = input.split(",") as [Base64Prefix, string];
-	return base64ToString(base64);
+  const [, base64] = input.split(",") as [Base64Prefix, string];
+  return base64ToString(base64);
 }

@@ -17,11 +17,11 @@ import { getTotalClaimedSupply } from "./getTotalClaimedSupply.js";
  * });
  */
 export async function getTotalUnclaimedSupply(
-	options: BaseTransactionOptions,
+  options: BaseTransactionOptions,
 ): Promise<bigint> {
-	const [nextTokenIdToMint_, totalClaimedSupply_] = await Promise.all([
-		nextTokenIdToMint(options),
-		getTotalClaimedSupply(options),
-	]);
-	return nextTokenIdToMint_ - totalClaimedSupply_;
+  const [nextTokenIdToMint_, totalClaimedSupply_] = await Promise.all([
+    nextTokenIdToMint(options),
+    getTotalClaimedSupply(options),
+  ]);
+  return nextTokenIdToMint_ - totalClaimedSupply_;
 }

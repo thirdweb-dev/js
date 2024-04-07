@@ -2,9 +2,9 @@
  * Header used for JWT token specifying hash algorithm
  */
 export const RAW_HEADER = {
-	// Specify ECDSA with SHA-256 for hashing algorithm
-	alg: "ES256",
-	typ: "JWT",
+  // Specify ECDSA with SHA-256 for hashing algorithm
+  alg: "ES256",
+  typ: "JWT",
 };
 
 /**
@@ -16,4 +16,4 @@ export const RAW_HEADER = {
  * ```
  */
 export const PRECOMPILED_B64_ENCODED_JWT_HEADER =
-	"eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9";
+  "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9";

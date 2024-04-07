@@ -1,32 +1,32 @@
 import {
-	type BlockTag,
-	type EIP1193RequestFn,
-	type EIP1474Methods,
-	type GetBlockReturnType,
-	formatBlock,
+  type BlockTag,
+  type EIP1193RequestFn,
+  type EIP1474Methods,
+  type GetBlockReturnType,
+  formatBlock,
 } from "viem";
 import { numberToHex } from "../../utils/encoding/hex.js";
 
 type GetBlockParameters<
-	TIncludeTransactions extends boolean = false,
-	TBlockTag extends BlockTag = "latest",
+  TIncludeTransactions extends boolean = false,
+  TBlockTag extends BlockTag = "latest",
 > = {
-	/** Whether or not to include transaction data in the response. */
-	includeTransactions?: TIncludeTransactions;
+  /** Whether or not to include transaction data in the response. */
+  includeTransactions?: TIncludeTransactions;
 } & (
-	| {
-			/** The block number. */
-			blockNumber?: bigint;
-			blockTag?: never;
-	  }
-	| {
-			blockNumber?: never;
-			/**
-			 * The block tag.
-			 * default: 'latest'
-			 */
-			blockTag?: TBlockTag | BlockTag;
-	  }
+  | {
+      /** The block number. */
+      blockNumber?: bigint;
+      blockTag?: never;
+    }
+  | {
+      blockNumber?: never;
+      /**
+       * The block tag.
+       * default: 'latest'
+       */
+      blockTag?: TBlockTag | BlockTag;
+    }
 );
 
 /**
@@ -47,29 +47,29 @@ type GetBlockParameters<
  * ```
  */
 export async function eth_getBlockByNumber<
-	TIncludeTransactions extends boolean = false,
-	TBlockTag extends BlockTag = "latest",
+  TIncludeTransactions extends boolean = false,
+  TBlockTag extends BlockTag = "latest",
 >(
-	request: EIP1193RequestFn<EIP1474Methods>,
-	params: GetBlockParameters<TIncludeTransactions, TBlockTag>,
+  request: EIP1193RequestFn<EIP1474Methods>,
+  params: GetBlockParameters<TIncludeTransactions, TBlockTag>,
 ): Promise<GetBlockReturnType<undefined, TIncludeTransactions, TBlockTag>> {
-	const blockTag = params.blockTag ?? "latest";
-	const includeTransactions = params.includeTransactions ?? false;
-	const blockNumberHex =
-		params.blockNumber !== undefined
-			? numberToHex(params.blockNumber)
-			: undefined;
+  const blockTag = params.blockTag ?? "latest";
+  const includeTransactions = params.includeTransactions ?? false;
+  const blockNumberHex =
+    params.blockNumber !== undefined
+      ? numberToHex(params.blockNumber)
+      : undefined;
 
-	const block = await request({
-		method: "eth_getBlockByNumber",
-		params: [blockNumberHex || blockTag, includeTransactions],
-	});
-	if (!block) {
-		throw new Error("Block not found");
-	}
-	return formatBlock(block) as GetBlockReturnType<
-		undefined,
-		TIncludeTransactions,
-		TBlockTag
-	>;
+  const block = await request({
+    method: "eth_getBlockByNumber",
+    params: [blockNumberHex || blockTag, includeTransactions],
+  });
+  if (!block) {
+    throw new Error("Block not found");
+  }
+  return formatBlock(block) as GetBlockReturnType<
+    undefined,
+    TIncludeTransactions,
+    TBlockTag
+  >;
 }

@@ -1,13 +1,13 @@
 import {
-	type EIP1193RequestFn,
-	type EIP1474Methods,
-	type Hash,
-	type Transaction,
-	formatTransaction,
+  type EIP1193RequestFn,
+  type EIP1474Methods,
+  type Hash,
+  type Transaction,
+  formatTransaction,
 } from "viem";
 
 type GetTransactionByHashParameters = {
-	hash: Hash;
+  hash: Hash;
 };
 
 /**
@@ -27,17 +27,17 @@ type GetTransactionByHashParameters = {
  * ```
  */
 export async function eth_getTransactionByHash(
-	request: EIP1193RequestFn<EIP1474Methods>,
-	params: GetTransactionByHashParameters,
+  request: EIP1193RequestFn<EIP1474Methods>,
+  params: GetTransactionByHashParameters,
 ): Promise<Transaction> {
-	const receipt = await request({
-		method: "eth_getTransactionByHash",
-		params: [params.hash],
-	});
+  const receipt = await request({
+    method: "eth_getTransactionByHash",
+    params: [params.hash],
+  });
 
-	if (!receipt) {
-		throw new Error("Transaction not found.");
-	}
+  if (!receipt) {
+    throw new Error("Transaction not found.");
+  }
 
-	return formatTransaction(receipt);
+  return formatTransaction(receipt);
 }

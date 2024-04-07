@@ -7,13 +7,13 @@ import type { Prettify } from "./type-utils.js";
  * @internal
  */
 export type ClientAndChain = {
-	client: ThirdwebClient;
-	chain: Chain;
+  client: ThirdwebClient;
+  chain: Chain;
 };
 
 /**
  * @internal
  */
 export type ClientAndChainAndAccount = Prettify<
-	ClientAndChain & { account: Account }
+  ClientAndChain & { account: Account }
 >;

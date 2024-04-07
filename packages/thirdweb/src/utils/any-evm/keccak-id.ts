@@ -14,5 +14,5 @@ import { keccak256 } from "../hashing/keccak256.js";
  * @utils
  */
 export function keccakId(input: string): Hex {
-	return keccak256(stringToBytes(input));
+  return keccak256(stringToBytes(input));
 }

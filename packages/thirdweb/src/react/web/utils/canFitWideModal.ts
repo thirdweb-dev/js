@@ -5,8 +5,8 @@ import { wideModalScreenThreshold } from "../ui/ConnectWallet/constants.js";
  * @internal
  */
 export function canFitWideModal(): boolean {
-	if (typeof window !== "undefined") {
-		return window.innerWidth >= wideModalScreenThreshold;
-	}
-	return false;
+  if (typeof window !== "undefined") {
+    return window.innerWidth >= wideModalScreenThreshold;
+  }
+  return false;
 }

@@ -1,4 +1,4 @@
 export {
-	privateKeyAccount,
-	type PrivateKeyAccountOptions,
+  privateKeyAccount,
+  type PrivateKeyAccountOptions,
 } from "../../wallets/private-key.js";

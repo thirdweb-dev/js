@@ -7,18 +7,18 @@ export { symbol } from "../../extensions/common/read/symbol.js";
 
 // write
 export {
-	setContractURI,
-	type SetContractURIParams,
+  setContractURI,
+  type SetContractURIParams,
 } from "../../extensions/common/__generated__/IContractMetadata/write/setContractURI.js";
 
 export {
-	setOwner,
-	type SetOwnerParams,
+  setOwner,
+  type SetOwnerParams,
 } from "../../extensions/common/__generated__/IOwnable/write/setOwner.js";
 
 // events
 
 export {
-	ownerUpdatedEvent,
-	type OwnerUpdatedEventFilters,
+  ownerUpdatedEvent,
+  type OwnerUpdatedEventFilters,
 } from "../../extensions/common/__generated__/IOwnable/events/OwnerUpdated.js";

@@ -3,14 +3,14 @@ import type { Chain } from "../chains/types.js";
 import type { ThirdwebClient } from "../client/client.js";
 
 export type ContractOptions<abi extends Abi = []> = {
-	client: ThirdwebClient;
-	address: string;
-	chain: Chain;
-	readonly abi?: abi;
+  client: ThirdwebClient;
+  address: string;
+  chain: Chain;
+  readonly abi?: abi;
 };
 
 export type ThirdwebContract<abi extends Abi = []> = Readonly<
-	ContractOptions<abi>
+  ContractOptions<abi>
 >;
 
 /**
@@ -34,7 +34,7 @@ export type ThirdwebContract<abi extends Abi = []> = Readonly<
  * @contract
  */
 export function getContract<const abi extends Abi = []>(
-	options: ContractOptions<abi>,
+  options: ContractOptions<abi>,
 ): ThirdwebContract<abi> {
-	return options;
+  return options;
 }

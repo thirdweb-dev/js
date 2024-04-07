@@ -9,99 +9,99 @@ import { canFitWideModal } from "../utils/canFitWideModal.js";
 type BoolSetter = (value: boolean) => void;
 
 type ModalConfig = {
-	title: string;
-	theme: "light" | "dark" | Theme;
-	// biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
-	data: any;
-	modalSize: "wide" | "compact";
-	termsOfServiceUrl?: string;
-	privacyPolicyUrl?: string;
-	welcomeScreen?: WelcomeScreen;
-	titleIconUrl?: string;
-	auth?: {
-		loginOptional?: boolean;
-		onLogin?: (token: string) => void;
-		onLogout?: () => void;
-	};
-	isEmbed?: boolean;
-	onConnect?: (wallet: Wallet) => void;
-	chain?: Chain;
-	chains?: Chain[];
-	showThirdwebBranding?: boolean;
+  title: string;
+  theme: "light" | "dark" | Theme;
+  // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
+  data: any;
+  modalSize: "wide" | "compact";
+  termsOfServiceUrl?: string;
+  privacyPolicyUrl?: string;
+  welcomeScreen?: WelcomeScreen;
+  titleIconUrl?: string;
+  auth?: {
+    loginOptional?: boolean;
+    onLogin?: (token: string) => void;
+    onLogout?: () => void;
+  };
+  isEmbed?: boolean;
+  onConnect?: (wallet: Wallet) => void;
+  chain?: Chain;
+  chains?: Chain[];
+  showThirdwebBranding?: boolean;
 };
 
 const WalletModalOpen = /* @__PURE__ */ createContext(false);
 const SetWalletModalOpen = /* @__PURE__ */ createContext<
-	BoolSetter | undefined
+  BoolSetter | undefined
 >(undefined);
 
 export const ModalConfigCtx = /* @__PURE__ */ createContext<ModalConfig>({
-	title: "",
-	theme: "dark",
-	data: undefined,
-	modalSize: "wide",
+  title: "",
+  theme: "dark",
+  data: undefined,
+  modalSize: "wide",
 });
 
 export const SetModalConfigCtx = /* @__PURE__ */ createContext<
-	React.Dispatch<React.SetStateAction<ModalConfig>>
+  React.Dispatch<React.SetStateAction<ModalConfig>>
 >(() => {});
 
 /**
  * @internal
  */
 export const WalletUIStatesProvider = (
-	props: React.PropsWithChildren<{
-		theme?: "light" | "dark" | Theme;
-		modalSize?: "wide" | "compact";
-		title?: string;
-		titleIconUrl?: string;
-		termsOfServiceUrl?: string;
-		privacyPolicyUrl?: string;
-		welcomeScreen?: WelcomeScreen;
-		isEmbed?: boolean;
-		auth?: {
-			loginOptional?: boolean;
-			onLogin?: (token: string) => void;
-			onLogout?: () => void;
-		};
-		onConnect?: (wallet: Wallet) => void;
-		chain?: Chain;
-		chains?: Chain[];
-		showThirdwebBranding?: boolean;
-	}>,
+  props: React.PropsWithChildren<{
+    theme?: "light" | "dark" | Theme;
+    modalSize?: "wide" | "compact";
+    title?: string;
+    titleIconUrl?: string;
+    termsOfServiceUrl?: string;
+    privacyPolicyUrl?: string;
+    welcomeScreen?: WelcomeScreen;
+    isEmbed?: boolean;
+    auth?: {
+      loginOptional?: boolean;
+      onLogin?: (token: string) => void;
+      onLogout?: () => void;
+    };
+    onConnect?: (wallet: Wallet) => void;
+    chain?: Chain;
+    chains?: Chain[];
+    showThirdwebBranding?: boolean;
+  }>,
 ) => {
-	const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
-	const enforceCompact = !canFitWideModal();
-	const { connectLocale } = useWalletConnectionCtx();
+  const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
+  const enforceCompact = !canFitWideModal();
+  const { connectLocale } = useWalletConnectionCtx();
 
-	const [modalConfig, setModalConfig] = useState<ModalConfig>({
-		title: props.title || connectLocale.defaultModalTitle,
-		theme: props.theme || "dark",
-		data: undefined,
-		modalSize: (enforceCompact ? "compact" : props.modalSize) || "wide",
-		termsOfServiceUrl: props.termsOfServiceUrl,
-		privacyPolicyUrl: props.privacyPolicyUrl,
-		welcomeScreen: props.welcomeScreen,
-		titleIconUrl: props.titleIconUrl,
-		isEmbed: props.isEmbed,
-		auth: props.auth,
-		onConnect: props.onConnect,
-		chain: props.chain,
-		chains: props.chains,
-		showThirdwebBranding: props.showThirdwebBranding,
-	});
+  const [modalConfig, setModalConfig] = useState<ModalConfig>({
+    title: props.title || connectLocale.defaultModalTitle,
+    theme: props.theme || "dark",
+    data: undefined,
+    modalSize: (enforceCompact ? "compact" : props.modalSize) || "wide",
+    termsOfServiceUrl: props.termsOfServiceUrl,
+    privacyPolicyUrl: props.privacyPolicyUrl,
+    welcomeScreen: props.welcomeScreen,
+    titleIconUrl: props.titleIconUrl,
+    isEmbed: props.isEmbed,
+    auth: props.auth,
+    onConnect: props.onConnect,
+    chain: props.chain,
+    chains: props.chains,
+    showThirdwebBranding: props.showThirdwebBranding,
+  });
 
-	return (
-		<WalletModalOpen.Provider value={isWalletModalOpen}>
-			<SetWalletModalOpen.Provider value={setIsWalletModalOpen}>
-				<ModalConfigCtx.Provider value={modalConfig}>
-					<SetModalConfigCtx.Provider value={setModalConfig}>
-						{props.children}
-					</SetModalConfigCtx.Provider>
-				</ModalConfigCtx.Provider>
-			</SetWalletModalOpen.Provider>
-		</WalletModalOpen.Provider>
-	);
+  return (
+    <WalletModalOpen.Provider value={isWalletModalOpen}>
+      <SetWalletModalOpen.Provider value={setIsWalletModalOpen}>
+        <ModalConfigCtx.Provider value={modalConfig}>
+          <SetModalConfigCtx.Provider value={setModalConfig}>
+            {props.children}
+          </SetModalConfigCtx.Provider>
+        </ModalConfigCtx.Provider>
+      </SetWalletModalOpen.Provider>
+    </WalletModalOpen.Provider>
+  );
 };
 
 /**
@@ -114,7 +114,7 @@ export const WalletUIStatesProvider = (
  * @connectWallet
  */
 export const useIsWalletModalOpen = () => {
-	return useContext(WalletModalOpen);
+  return useContext(WalletModalOpen);
 };
 
 /**
@@ -142,13 +142,13 @@ export const useIsWalletModalOpen = () => {
  * @connectWallet
  */
 export const useSetIsWalletModalOpen = () => {
-	const context = useContext(SetWalletModalOpen);
-	if (context === undefined) {
-		throw new Error(
-			"useSetWalletModalOpen must be used within a ThirdwebProvider",
-		);
-	}
-	return context;
+  const context = useContext(SetWalletModalOpen);
+  if (context === undefined) {
+    throw new Error(
+      "useSetWalletModalOpen must be used within a ThirdwebProvider",
+    );
+  }
+  return context;
 };
 
 // UNUSED

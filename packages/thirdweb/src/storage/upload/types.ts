@@ -7,8 +7,8 @@ export type FileOrBuffer = File | Uint8Array | BufferOrStringWithName;
  * @internal
  */
 export type BufferOrStringWithName = {
-	data: Uint8Array | string;
-	name: string;
+  data: Uint8Array | string;
+  name: string;
 };
 
 /**
@@ -17,19 +17,19 @@ export type BufferOrStringWithName = {
 export type FileOrBufferOrString = FileOrBuffer | string;
 
 export type BuildFormDataOptions = {
-	rewriteFileNames?: {
-		fileStartNumber: number;
-	};
-	uploadWithoutDirectory?: boolean;
-	metadata?: Record<string, string>;
+  rewriteFileNames?: {
+    fileStartNumber: number;
+  };
+  uploadWithoutDirectory?: boolean;
+  metadata?: Record<string, string>;
 };
 
 export type UploadOptions = {
-	files: (FileOrBufferOrString | Record<string, unknown>)[];
+  files: (FileOrBufferOrString | Record<string, unknown>)[];
 } & BuildFormDataOptions;
 
 export type UploadFile = { name?: string; type?: string; uri: string };
 
 export type InternalUploadMobileOptions = {
-	files: UploadFile[];
+  files: UploadFile[];
 } & BuildFormDataOptions;

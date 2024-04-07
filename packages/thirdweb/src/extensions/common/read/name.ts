@@ -15,9 +15,9 @@ import { name as generatedName } from "../__generated__/IContractMetadata/read/n
  * ```
  */
 export async function name(options: BaseTransactionOptions): Promise<string> {
-	return withCache(() => generatedName(options), {
-		cacheKey: `${options.contract.chain.id}:${options.contract.address}:name`,
-		// can never change, so cache forever
-		cacheTime: Number.POSITIVE_INFINITY,
-	});
+  return withCache(() => generatedName(options), {
+    cacheKey: `${options.contract.chain.id}:${options.contract.address}:name`,
+    // can never change, so cache forever
+    cacheTime: Number.POSITIVE_INFINITY,
+  });
 }

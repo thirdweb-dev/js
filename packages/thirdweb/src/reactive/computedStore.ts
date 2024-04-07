@@ -1,8 +1,8 @@
 import type { Store } from "./store.js";
 
 export type ReadonlyStore<T> = {
-	getValue(): T;
-	subscribe(listener: () => void): () => void;
+  getValue(): T;
+  subscribe(listener: () => void): () => void;
 };
 
 /**
@@ -16,43 +16,43 @@ export type ReadonlyStore<T> = {
  * @returns A store object
  */
 export function computedStore<T>(
-	// pass the values of the dependencies to the computation function
-	computation: () => T,
-	// biome-ignore lint/suspicious/noExplicitAny: library function that accepts any store type
-	dependencies: (Store<any> | ReadonlyStore<any>)[],
+  // pass the values of the dependencies to the computation function
+  computation: () => T,
+  // biome-ignore lint/suspicious/noExplicitAny: library function that accepts any store type
+  dependencies: (Store<any> | ReadonlyStore<any>)[],
 ): ReadonlyStore<T> {
-	type Listener = () => void;
-	const listeners = new Set<Listener>();
+  type Listener = () => void;
+  const listeners = new Set<Listener>();
 
-	let value = computation();
+  let value = computation();
 
-	const notify = () => {
-		for (const listener of listeners) {
-			listener();
-		}
-	};
+  const notify = () => {
+    for (const listener of listeners) {
+      listener();
+    }
+  };
 
-	const setValue = (newValue: T) => {
-		value = newValue;
-		notify();
-	};
+  const setValue = (newValue: T) => {
+    value = newValue;
+    notify();
+  };
 
-	// when any of the dependencies change, recompute the value and set it
-	for (const store of dependencies) {
-		store.subscribe(() => {
-			setValue(computation());
-		});
-	}
+  // when any of the dependencies change, recompute the value and set it
+  for (const store of dependencies) {
+    store.subscribe(() => {
+      setValue(computation());
+    });
+  }
 
-	return {
-		getValue() {
-			return value;
-		},
-		subscribe(listener: Listener) {
-			listeners.add(listener);
-			return () => {
-				listeners.delete(listener);
-			};
-		},
-	};
+  return {
+    getValue() {
+      return value;
+    },
+    subscribe(listener: Listener) {
+      listeners.add(listener);
+      return () => {
+        listeners.delete(listener);
+      };
+    },
+  };
 }

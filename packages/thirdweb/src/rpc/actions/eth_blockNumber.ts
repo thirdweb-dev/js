@@ -14,10 +14,10 @@ import { hexToBigInt } from "../../utils/encoding/hex.js";
  * ```
  */
 export async function eth_blockNumber(
-	request: EIP1193RequestFn<EIP1474Methods>,
+  request: EIP1193RequestFn<EIP1474Methods>,
 ): Promise<bigint> {
-	const blockNumberHex = await request({
-		method: "eth_blockNumber",
-	});
-	return hexToBigInt(blockNumberHex);
+  const blockNumberHex = await request({
+    method: "eth_blockNumber",
+  });
+  return hexToBigInt(blockNumberHex);
 }

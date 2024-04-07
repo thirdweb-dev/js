@@ -8,9 +8,9 @@ import { hashMessage } from "../utils/hashing/hashMessage.js";
 import type { Prettify } from "../utils/type-utils.js";
 
 export type VerifyEOASignatureParams = {
-	message: string;
-	signature: string;
-	address: string;
+  message: string;
+  signature: string;
+  address: string;
 };
 
 /**
@@ -31,28 +31,28 @@ export type VerifyEOASignatureParams = {
  * @auth
  */
 export async function verifyEOASignature(options: VerifyEOASignatureParams) {
-	const messageHash = hashMessage(options.message);
+  const messageHash = hashMessage(options.message);
 
-	if (!isHex(options.signature)) {
-		return false;
-	}
+  if (!isHex(options.signature)) {
+    return false;
+  }
 
-	const recoveredAddress = await recoverAddress({
-		hash: messageHash,
-		signature: options.signature,
-	});
+  const recoveredAddress = await recoverAddress({
+    hash: messageHash,
+    signature: options.signature,
+  });
 
-	if (recoveredAddress.toLowerCase() === options.address.toLowerCase()) {
-		return true;
-	}
-	return false;
+  if (recoveredAddress.toLowerCase() === options.address.toLowerCase()) {
+    return true;
+  }
+  return false;
 }
 
 export type VerifyContractWalletSignatureParams = Prettify<
-	VerifyEOASignatureParams & {
-		chain: Chain;
-		client: ThirdwebClient;
-	}
+  VerifyEOASignatureParams & {
+    chain: Chain;
+    client: ThirdwebClient;
+  }
 >;
 
 const EIP1271_MAGICVALUE = "0x1626ba7e";
@@ -77,31 +77,31 @@ const EIP1271_MAGICVALUE = "0x1626ba7e";
  * @auth
  */
 export async function verifyContractWalletSignature(
-	options: VerifyContractWalletSignatureParams,
+  options: VerifyContractWalletSignatureParams,
 ) {
-	if (!isHex(options.signature)) {
-		throw new Error("Invalid signature");
-	}
+  if (!isHex(options.signature)) {
+    throw new Error("Invalid signature");
+  }
 
-	const contract = getContract({
-		address: options.address,
-		chain: options.chain,
-		client: options.client,
-	});
+  const contract = getContract({
+    address: options.address,
+    chain: options.chain,
+    client: options.client,
+  });
 
-	const messageHash = hashMessage(options.message);
+  const messageHash = hashMessage(options.message);
 
-	const result = await isValidSignature({
-		contract,
-		hash: messageHash,
-		signature: options.signature,
-	});
+  const result = await isValidSignature({
+    contract,
+    hash: messageHash,
+    signature: options.signature,
+  });
 
-	return result === EIP1271_MAGICVALUE;
+  return result === EIP1271_MAGICVALUE;
 }
 
 export type VerifySignatureParams = Prettify<
-	VerifyEOASignatureParams & Partial<VerifyContractWalletSignatureParams>
+  VerifyEOASignatureParams & Partial<VerifyContractWalletSignatureParams>
 >;
 
 /**
@@ -123,27 +123,27 @@ export type VerifySignatureParams = Prettify<
  * @auth
  */
 export async function verifySignature(options: VerifySignatureParams) {
-	try {
-		const isValidEOASig = await verifyEOASignature(options);
-		if (isValidEOASig) {
-			return true;
-		}
-	} catch {
-		// no-op, we skip to contract signature check
-	}
-	if (isVerifyContractWalletSignatureParams(options)) {
-		try {
-			return await verifyContractWalletSignature(options);
-		} catch {
-			// no-op we skip to return false
-		}
-	}
-	// if we reach here, we have no way to verify the signature
-	return false;
+  try {
+    const isValidEOASig = await verifyEOASignature(options);
+    if (isValidEOASig) {
+      return true;
+    }
+  } catch {
+    // no-op, we skip to contract signature check
+  }
+  if (isVerifyContractWalletSignatureParams(options)) {
+    try {
+      return await verifyContractWalletSignature(options);
+    } catch {
+      // no-op we skip to return false
+    }
+  }
+  // if we reach here, we have no way to verify the signature
+  return false;
 }
 
 function isVerifyContractWalletSignatureParams(
-	options: VerifySignatureParams,
+  options: VerifySignatureParams,
 ): options is VerifyContractWalletSignatureParams {
-	return "chain" in options && "client" in options;
+  return "chain" in options && "client" in options;
 }

@@ -9,26 +9,26 @@ import type { BuyWithCryptoStatus } from "./getStatus.js";
  * @buyCrypto
  */
 export type BuyWithCryptoHistoryParams = {
-	/**
-	 * A client is the entry point to the thirdweb SDK. It is required for all other actions.
-	 *
-	 * You can create a client using the `createThirdwebClient` function.
-	 * Refer to the [Creating a Client](https://portal.thirdweb.com/typescript/v5/client) documentation for more information.
-	 *
-	 */
-	client: ThirdwebClient;
-	/**
-	 * The address of the wallet to get the wallet history for
-	 */
-	walletAddress: string;
-	/**
-	 * The number of results to return in a single page. The default value is 10.
-	 */
-	count: number;
-	/**
-	 * The cursor for the page of results to return. The default value is `undefined`.
-	 */
-	start: number;
+  /**
+   * A client is the entry point to the thirdweb SDK. It is required for all other actions.
+   *
+   * You can create a client using the `createThirdwebClient` function.
+   * Refer to the [Creating a Client](https://portal.thirdweb.com/typescript/v5/client) documentation for more information.
+   *
+   */
+  client: ThirdwebClient;
+  /**
+   * The address of the wallet to get the wallet history for
+   */
+  walletAddress: string;
+  /**
+   * The number of results to return in a single page. The default value is 10.
+   */
+  count: number;
+  /**
+   * The cursor for the page of results to return. The default value is `undefined`.
+   */
+  start: number;
 };
 
 /**
@@ -37,8 +37,8 @@ export type BuyWithCryptoHistoryParams = {
  * @buyCrypto
  */
 export type BuyWithCryptoHistoryData = {
-	page: BuyWithCryptoStatus[];
-	hasNextPage: boolean;
+  page: BuyWithCryptoStatus[];
+  hasNextPage: boolean;
 };
 
 /**
@@ -64,28 +64,28 @@ export type BuyWithCryptoHistoryData = {
  * @buyCrypto
  */
 export async function getBuyWithCryptoHistory(
-	params: BuyWithCryptoHistoryParams,
+  params: BuyWithCryptoHistoryParams,
 ): Promise<BuyWithCryptoHistoryData> {
-	try {
-		const queryParams = new URLSearchParams();
-		queryParams.append("walletAddress", params.walletAddress);
-		queryParams.append("start", params.start.toString());
-		queryParams.append("count", params.count.toString());
+  try {
+    const queryParams = new URLSearchParams();
+    queryParams.append("walletAddress", params.walletAddress);
+    queryParams.append("start", params.start.toString());
+    queryParams.append("count", params.count.toString());
 
-		const queryString = queryParams.toString();
-		const url = `${getPayBuyWithCryptoHistoryEndpoint()}?${queryString}`;
+    const queryString = queryParams.toString();
+    const url = `${getPayBuyWithCryptoHistoryEndpoint()}?${queryString}`;
 
-		const response = await getClientFetch(params.client)(url);
+    const response = await getClientFetch(params.client)(url);
 
-		// Assuming the response directly matches the SwapResponse interface
-		if (!response.ok) {
-			response.body?.cancel();
-			throw new Error(`HTTP error! status: ${response.status}`);
-		}
+    // Assuming the response directly matches the SwapResponse interface
+    if (!response.ok) {
+      response.body?.cancel();
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
 
-		const data: BuyWithCryptoHistoryData = (await response.json()).result;
-		return data;
-	} catch (error) {
-		throw new Error(`Fetch failed: ${error}`);
-	}
+    const data: BuyWithCryptoHistoryData = (await response.json()).result;
+    return data;
+  } catch (error) {
+    throw new Error(`Fetch failed: ${error}`);
+  }
 }

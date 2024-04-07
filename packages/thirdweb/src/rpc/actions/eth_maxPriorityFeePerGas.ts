@@ -14,10 +14,10 @@ import { hexToBigInt } from "../../utils/encoding/hex.js";
  * ```
  */
 export async function eth_maxPriorityFeePerGas(
-	request: EIP1193RequestFn<EIP1474Methods>,
+  request: EIP1193RequestFn<EIP1474Methods>,
 ): Promise<bigint> {
-	const result = await request({
-		method: "eth_maxPriorityFeePerGas",
-	});
-	return hexToBigInt(result);
+  const result = await request({
+    method: "eth_maxPriorityFeePerGas",
+  });
+  return hexToBigInt(result);
 }

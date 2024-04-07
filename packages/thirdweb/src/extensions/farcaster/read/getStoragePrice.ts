@@ -6,10 +6,10 @@ import { unitPrice } from "../__generated__/IStorageRegistry/read/unitPrice.js";
 import { getStorageRegistry } from "../contracts/getStorageRegistry.js";
 
 export type GetStoragePriceParams = {
-	client: ThirdwebClient;
-	chain?: Chain;
-	units?: bigint | number | string;
-	disableCache?: boolean;
+  client: ThirdwebClient;
+  chain?: Chain;
+  units?: bigint | number | string;
+  disableCache?: boolean;
 };
 
 /**
@@ -27,25 +27,25 @@ export type GetStoragePriceParams = {
  * ```
  */
 export async function getStoragePrice(
-	options: GetStoragePriceParams,
+  options: GetStoragePriceParams,
 ): Promise<bigint> {
-	const units = toBigInt(options.units ?? 1);
-	if (units < 1n) {
-		throw new Error(
-			`Expected units to be greater than or equal to 1, got ${options.units}`,
-		);
-	}
+  const units = toBigInt(options.units ?? 1);
+  if (units < 1n) {
+    throw new Error(
+      `Expected units to be greater than or equal to 1, got ${options.units}`,
+    );
+  }
 
-	const fetch = async () => {
-		const contract = getStorageRegistry({
-			client: options.client,
-			chain: options.chain,
-		});
-		return (await unitPrice({ contract })) * units;
-	};
+  const fetch = async () => {
+    const contract = getStorageRegistry({
+      client: options.client,
+      chain: options.chain,
+    });
+    return (await unitPrice({ contract })) * units;
+  };
 
-	return withCache(fetch, {
-		cacheKey: `${toBigInt(units)}:getStoragePrice`,
-		cacheTime: options.disableCache ? 0 : 5 * 60 * 1000, // 5 minutes
-	});
+  return withCache(fetch, {
+    cacheKey: `${toBigInt(units)}:getStoragePrice`,
+    cacheTime: options.disableCache ? 0 : 5 * 60 * 1000, // 5 minutes
+  });
 }

@@ -7,13 +7,13 @@ import { UniswapFee } from "../types.js";
  * Represents the parameters for the `findUniswapV3Pool` function.
  */
 export type GetUniswapV3PoolsParams = {
-	tokenA: Address;
-	tokenB: Address;
+  tokenA: Address;
+  tokenB: Address;
 };
 
 export type GetUniswapV3PoolsResult = {
-	poolFee: UniswapFee;
-	poolAddress: Address;
+  poolFee: UniswapFee;
+  poolAddress: Address;
 };
 
 /**
@@ -32,32 +32,32 @@ export type GetUniswapV3PoolsResult = {
  * ```
  */
 export async function getUniswapV3Pools(
-	options: BaseTransactionOptions<GetUniswapV3PoolsParams>,
+  options: BaseTransactionOptions<GetUniswapV3PoolsParams>,
 ): Promise<GetUniswapV3PoolsResult[]> {
-	const { getPool } = await import(
-		"../__generated__/IUniswapV3Factory/read/getPool.js"
-	);
+  const { getPool } = await import(
+    "../__generated__/IUniswapV3Factory/read/getPool.js"
+  );
 
-	const promises = Object.values(UniswapFee)
-		.filter((value) => typeof value === "number")
-		.map(async (fee) => {
-			const poolAddress = await getPool({
-				contract: options.contract,
-				tokenA: options.tokenA,
-				tokenB: options.tokenB,
-				fee: Number(fee),
-			});
+  const promises = Object.values(UniswapFee)
+    .filter((value) => typeof value === "number")
+    .map(async (fee) => {
+      const poolAddress = await getPool({
+        contract: options.contract,
+        tokenA: options.tokenA,
+        tokenB: options.tokenB,
+        fee: Number(fee),
+      });
 
-			return {
-				poolFee: Number(fee),
-				poolAddress,
-			};
-		});
+      return {
+        poolFee: Number(fee),
+        poolAddress,
+      };
+    });
 
-	const results = await Promise.all(promises);
-	const validPools = results.filter(
-		(result) => result.poolAddress && result.poolAddress !== ADDRESS_ZERO,
-	);
+  const results = await Promise.all(promises);
+  const validPools = results.filter(
+    (result) => result.poolAddress && result.poolAddress !== ADDRESS_ZERO,
+  );
 
-	return validPools;
+  return validPools;
 }

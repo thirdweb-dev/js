@@ -4,10 +4,10 @@ import { DEFAULT_RPC_URL, getThirdwebDomains } from "../utils/domains.js";
 import { isThirdwebUrl } from "../utils/fetch.js";
 import { withCache } from "../utils/promise/withCache.js";
 import type {
-	Chain,
-	ChainMetadata,
-	ChainOptions,
-	LegacyChain,
+  Chain,
+  ChainMetadata,
+  ChainOptions,
+  LegacyChain,
 } from "./types.js";
 
 /**
@@ -28,84 +28,84 @@ import type {
  * @chain
  */
 export function defineChain(
-	options: number | ChainOptions | ViemChain | LegacyChain,
+  options: number | ChainOptions | ViemChain | LegacyChain,
 ): Chain {
-	if (typeof options === "number") {
-		return { id: options, rpc: `https://${options}.rpc.thirdweb.com` } as const;
-	}
-	if (isViemChain(options)) {
-		return convertViemChain(options);
-	}
-	if (isLegacyChain(options)) {
-		return convertLegacyChain(options);
-	}
-	// otherwise if it's not a viem chain, continue
-	let rpc = options.rpc;
-	if (!rpc) {
-		rpc = `https://${options.id}.rpc.thirdweb.com`;
-	}
-	return { ...options, rpc } as const;
+  if (typeof options === "number") {
+    return { id: options, rpc: `https://${options}.rpc.thirdweb.com` } as const;
+  }
+  if (isViemChain(options)) {
+    return convertViemChain(options);
+  }
+  if (isLegacyChain(options)) {
+    return convertLegacyChain(options);
+  }
+  // otherwise if it's not a viem chain, continue
+  let rpc = options.rpc;
+  if (!rpc) {
+    rpc = `https://${options.id}.rpc.thirdweb.com`;
+  }
+  return { ...options, rpc } as const;
 }
 
 function isLegacyChain(
-	chain: ChainOptions | ViemChain | LegacyChain,
+  chain: ChainOptions | ViemChain | LegacyChain,
 ): chain is LegacyChain {
-	return "rpc" in chain && Array.isArray(chain.rpc) && "slug" in chain;
+  return "rpc" in chain && Array.isArray(chain.rpc) && "slug" in chain;
 }
 
 function convertLegacyChain(legacyChain: LegacyChain): Chain {
-	const c: Chain = {
-		id: legacyChain.chainId,
-		name: legacyChain.name,
-		rpc:
-			legacyChain.rpc[0] ?? `https://${legacyChain.chainId}.rpc.thirdweb.com`,
-		blockExplorers: legacyChain?.explorers?.map((explorer) => ({
-			name: explorer.name,
-			url: explorer.url,
-			apiUrl: explorer.url,
-		})),
-		nativeCurrency: {
-			name: legacyChain.nativeCurrency.name,
-			symbol: legacyChain.nativeCurrency.symbol,
-			decimals: legacyChain.nativeCurrency.decimals,
-		},
-	};
-	if (legacyChain.testnet) {
-		return { ...c, testnet: true };
-	}
-	return c;
+  const c: Chain = {
+    id: legacyChain.chainId,
+    name: legacyChain.name,
+    rpc:
+      legacyChain.rpc[0] ?? `https://${legacyChain.chainId}.rpc.thirdweb.com`,
+    blockExplorers: legacyChain?.explorers?.map((explorer) => ({
+      name: explorer.name,
+      url: explorer.url,
+      apiUrl: explorer.url,
+    })),
+    nativeCurrency: {
+      name: legacyChain.nativeCurrency.name,
+      symbol: legacyChain.nativeCurrency.symbol,
+      decimals: legacyChain.nativeCurrency.decimals,
+    },
+  };
+  if (legacyChain.testnet) {
+    return { ...c, testnet: true };
+  }
+  return c;
 }
 
 function isViemChain(
-	chain: ChainOptions | ViemChain | LegacyChain,
+  chain: ChainOptions | ViemChain | LegacyChain,
 ): chain is ViemChain {
-	return "rpcUrls" in chain && !("rpc" in chain);
+  return "rpcUrls" in chain && !("rpc" in chain);
 }
 
 function convertViemChain(viemChain: ViemChain): Chain {
-	return defineChain({
-		id: viemChain.id,
-		name: viemChain.name,
-		nativeCurrency: {
-			name: viemChain.nativeCurrency.name,
-			symbol: viemChain.nativeCurrency.symbol,
-			decimals: viemChain.nativeCurrency.decimals,
-		},
-		blockExplorers: viemChain?.blockExplorers
-			? Object.values(viemChain?.blockExplorers).map((explorer) => {
-					return {
-						name: explorer.name,
-						url: explorer.url,
-						apiUrl: explorer.apiUrl,
-					};
-				})
-			: [],
-	});
+  return defineChain({
+    id: viemChain.id,
+    name: viemChain.name,
+    nativeCurrency: {
+      name: viemChain.nativeCurrency.name,
+      symbol: viemChain.nativeCurrency.symbol,
+      decimals: viemChain.nativeCurrency.decimals,
+    },
+    blockExplorers: viemChain?.blockExplorers
+      ? Object.values(viemChain?.blockExplorers).map((explorer) => {
+          return {
+            name: explorer.name,
+            url: explorer.url,
+            apiUrl: explorer.apiUrl,
+          };
+        })
+      : [],
+  });
 }
 
 type GetRpcUrlForChainOptions = {
-	client: ThirdwebClient;
-	chain: Chain | number;
+  client: ThirdwebClient;
+  chain: Chain | number;
 };
 
 /**
@@ -123,23 +123,23 @@ type GetRpcUrlForChainOptions = {
  * @chain
  */
 export function getRpcUrlForChain(options: GetRpcUrlForChainOptions): string {
-	const baseRpcUrl = getThirdwebDomains().rpc;
+  const baseRpcUrl = getThirdwebDomains().rpc;
 
-	// if the chain is just a number, construct the RPC URL using the chain ID and client ID
-	if (typeof options.chain === "number") {
-		return `https://${options.chain}.${baseRpcUrl}/${options.client.clientId}`;
-	}
-	const { rpc } = options.chain;
+  // if the chain is just a number, construct the RPC URL using the chain ID and client ID
+  if (typeof options.chain === "number") {
+    return `https://${options.chain}.${baseRpcUrl}/${options.client.clientId}`;
+  }
+  const { rpc } = options.chain;
 
-	// add on the client ID to the RPC URL if it's a thirdweb URL
-	if (isThirdwebUrl(rpc)) {
-		const rpcUrl = new URL(
-			options.chain.rpc.replace(DEFAULT_RPC_URL, baseRpcUrl),
-		);
-		rpcUrl.pathname = `/${options.client.clientId}`;
-		return rpcUrl.toString();
-	}
-	return rpc;
+  // add on the client ID to the RPC URL if it's a thirdweb URL
+  if (isThirdwebUrl(rpc)) {
+    const rpcUrl = new URL(
+      options.chain.rpc.replace(DEFAULT_RPC_URL, baseRpcUrl),
+    );
+    rpcUrl.pathname = `/${options.client.clientId}`;
+    return rpcUrl.toString();
+  }
+  return rpc;
 }
 
 /**
@@ -149,16 +149,16 @@ export function getRpcUrlForChain(options: GetRpcUrlForChainOptions): string {
  * @internal
  */
 export async function getChainSymbol(chain: Chain): Promise<string> {
-	if (!chain.nativeCurrency?.symbol) {
-		return getChainMetadata(chain)
-			.then((data) => data.nativeCurrency.symbol)
-			.catch(() => {
-				// if we fail to fetch the chain data, return "ETH" as a fallback
-				return "ETH";
-			});
-	}
-	// if we have a symbol, return it
-	return chain.nativeCurrency.symbol;
+  if (!chain.nativeCurrency?.symbol) {
+    return getChainMetadata(chain)
+      .then((data) => data.nativeCurrency.symbol)
+      .catch(() => {
+        // if we fail to fetch the chain data, return "ETH" as a fallback
+        return "ETH";
+      });
+  }
+  // if we have a symbol, return it
+  return chain.nativeCurrency.symbol;
 }
 
 /**
@@ -169,16 +169,16 @@ export async function getChainSymbol(chain: Chain): Promise<string> {
  * @internal
  */
 export async function getChainDecimals(chain: Chain): Promise<number> {
-	if (!chain.nativeCurrency?.decimals) {
-		return getChainMetadata(chain)
-			.then((data) => data.nativeCurrency.decimals)
-			.catch(() => {
-				// if we fail to fetch the chain data, return 18 as a fallback (most likely it's 18)
-				return 18;
-			});
-	}
-	// if we have decimals, return it
-	return chain.nativeCurrency.decimals;
+  if (!chain.nativeCurrency?.decimals) {
+    return getChainMetadata(chain)
+      .then((data) => data.nativeCurrency.decimals)
+      .catch(() => {
+        // if we fail to fetch the chain data, return 18 as a fallback (most likely it's 18)
+        return 18;
+      });
+  }
+  // if we have decimals, return it
+  return chain.nativeCurrency.decimals;
 }
 
 /**
@@ -190,29 +190,29 @@ export async function getChainDecimals(chain: Chain): Promise<number> {
  * @internal
  */
 export async function getChainNativeCurrencyName(
-	chain: Chain,
+  chain: Chain,
 ): Promise<string> {
-	if (!chain.nativeCurrency?.name) {
-		return getChainMetadata(chain)
-			.then((data) => data.nativeCurrency.name)
-			.catch(() => {
-				// if we fail to fetch the chain data, return 18 as a fallback (most likely it's 18)
-				return "ETH";
-			});
-	}
-	// if we have a name, return it
-	return chain.nativeCurrency.name;
+  if (!chain.nativeCurrency?.name) {
+    return getChainMetadata(chain)
+      .then((data) => data.nativeCurrency.name)
+      .catch(() => {
+        // if we fail to fetch the chain data, return 18 as a fallback (most likely it's 18)
+        return "ETH";
+      });
+  }
+  // if we have a name, return it
+  return chain.nativeCurrency.name;
 }
 
 type FetchChainResponse =
-	| {
-			data: ChainMetadata;
-			error?: never;
-	  }
-	| {
-			data?: never;
-			error: unknown;
-	  };
+  | {
+      data: ChainMetadata;
+      error?: never;
+    }
+  | {
+      data?: never;
+      error: unknown;
+    };
 
 /**
  * Retrieves chain data for a given chain.
@@ -228,54 +228,54 @@ type FetchChainResponse =
  * @chain
  */
 export function getChainMetadata(chain: Chain): Promise<ChainMetadata> {
-	const chainId = chain.id;
-	return withCache(
-		async () => {
-			const res = await fetch(`https://api.thirdweb.com/v1/chains/${chainId}`);
-			if (!res.ok) {
-				res.body?.cancel();
-				throw new Error(`Failed to fetch chain data for chainId ${chainId}`);
-			}
+  const chainId = chain.id;
+  return withCache(
+    async () => {
+      const res = await fetch(`https://api.thirdweb.com/v1/chains/${chainId}`);
+      if (!res.ok) {
+        res.body?.cancel();
+        throw new Error(`Failed to fetch chain data for chainId ${chainId}`);
+      }
 
-			const response = (await res.json()) as FetchChainResponse;
-			if (response.error) {
-				throw new Error(`Failed to fetch chain data for chainId ${chainId}`);
-			}
-			if (!response.data) {
-				throw new Error(`Failed to fetch chain data for chainId ${chainId}`);
-			}
+      const response = (await res.json()) as FetchChainResponse;
+      if (response.error) {
+        throw new Error(`Failed to fetch chain data for chainId ${chainId}`);
+      }
+      if (!response.data) {
+        throw new Error(`Failed to fetch chain data for chainId ${chainId}`);
+      }
 
-			const data = response.data;
+      const data = response.data;
 
-			return {
-				...data,
-				name: chain?.name || data.name,
-				chainId: chain?.id || data.chainId,
-				rpc: chain?.rpc ? [chain.rpc] : data.rpc,
-				testnet: chain?.testnet || data.testnet,
-				nativeCurrency: chain?.nativeCurrency
-					? {
-							...data.nativeCurrency,
-							...chain.nativeCurrency,
-						}
-					: data.nativeCurrency,
-				// TODO: handle explorers - don't know what should be the standard
-				// explorers: chain?.blockExplorers
-				//   ? chain.blockExplorers.map((x) => {
-				//       return {
-				//         name: x.name,
-				//         url: x.url,
-				//         standard: '' /// ???
-				//       };
-				//     })
-				//   : result.data.explorers,
-			};
-		},
-		{
-			cacheKey: `chain:${chainId}`,
-			cacheTime: 5 * 60 * 1000, // 5 minutes
-		},
-	);
+      return {
+        ...data,
+        name: chain?.name || data.name,
+        chainId: chain?.id || data.chainId,
+        rpc: chain?.rpc ? [chain.rpc] : data.rpc,
+        testnet: chain?.testnet || data.testnet,
+        nativeCurrency: chain?.nativeCurrency
+          ? {
+              ...data.nativeCurrency,
+              ...chain.nativeCurrency,
+            }
+          : data.nativeCurrency,
+        // TODO: handle explorers - don't know what should be the standard
+        // explorers: chain?.blockExplorers
+        //   ? chain.blockExplorers.map((x) => {
+        //       return {
+        //         name: x.name,
+        //         url: x.url,
+        //         standard: '' /// ???
+        //       };
+        //     })
+        //   : result.data.explorers,
+      };
+    },
+    {
+      cacheKey: `chain:${chainId}`,
+      cacheTime: 5 * 60 * 1000, // 5 minutes
+    },
+  );
 }
 
 /**
@@ -283,18 +283,18 @@ export function getChainMetadata(chain: Chain): Promise<ChainMetadata> {
  * @internal
  */
 export function convertApiChainToChain(apiChain: ChainMetadata): Chain {
-	return {
-		id: apiChain.chainId,
-		name: apiChain.name,
-		rpc: apiChain.rpc[0] || "",
-		testnet: apiChain.testnet === true ? true : undefined,
-		nativeCurrency: apiChain.nativeCurrency,
-		blockExplorers: apiChain.explorers?.map((explorer) => {
-			return {
-				name: explorer.name,
-				url: explorer.url,
-				apiUrl: explorer.url,
-			};
-		}),
-	};
+  return {
+    id: apiChain.chainId,
+    name: apiChain.name,
+    rpc: apiChain.rpc[0] || "",
+    testnet: apiChain.testnet === true ? true : undefined,
+    nativeCurrency: apiChain.nativeCurrency,
+    blockExplorers: apiChain.explorers?.map((explorer) => {
+      return {
+        name: explorer.name,
+        url: explorer.url,
+        apiUrl: explorer.url,
+      };
+    }),
+  };
 }

@@ -1,7 +1,7 @@
 import type {
-	EIP1193RequestFn,
-	EIP1474Methods,
-	RpcTransactionRequest,
+  EIP1193RequestFn,
+  EIP1474Methods,
+  RpcTransactionRequest,
 } from "viem";
 import { hexToBigInt } from "../../utils/encoding/hex.js";
 
@@ -22,12 +22,12 @@ import { hexToBigInt } from "../../utils/encoding/hex.js";
  * ```
  */
 export async function eth_estimateGas(
-	request: EIP1193RequestFn<EIP1474Methods>,
-	transactionRequest: RpcTransactionRequest,
+  request: EIP1193RequestFn<EIP1474Methods>,
+  transactionRequest: RpcTransactionRequest,
 ): Promise<bigint> {
-	const estimateResult = await request({
-		method: "eth_estimateGas",
-		params: [transactionRequest],
-	});
-	return hexToBigInt(estimateResult);
+  const estimateResult = await request({
+    method: "eth_estimateGas",
+    params: [transactionRequest],
+  });
+  return hexToBigInt(estimateResult);
 }

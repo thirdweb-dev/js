@@ -5,13 +5,13 @@ import { sign } from "./sign.js";
 import { signatureToHex } from "./signature-to-hex.js";
 
 export type SignMessageOptions = {
-	message: Prettify<
-		| string
-		| {
-				raw: Hex | Uint8Array;
-		  }
-	>;
-	privateKey: Hex;
+  message: Prettify<
+    | string
+    | {
+        raw: Hex | Uint8Array;
+      }
+  >;
+  privateKey: Hex;
 };
 
 /**
@@ -30,6 +30,6 @@ export type SignMessageOptions = {
  * ```
  */
 export function signMessage({ message, privateKey }: SignMessageOptions): Hex {
-	const signature = sign({ hash: hashMessage(message), privateKey });
-	return signatureToHex(signature);
+  const signature = sign({ hash: hashMessage(message), privateKey });
+  return signatureToHex(signature);
 }

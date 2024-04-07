@@ -7,15 +7,15 @@ import { fetchConstructorParams } from "./constructor-params.js";
 import { fetchSourceFilesFromMetadata } from "./source-files.js";
 
 const RequestStatus = {
-	OK: "1",
-	NOTOK: "0",
+  OK: "1",
+  NOTOK: "0",
 };
 
 type VerifyContractOptions = {
-	contract: ThirdwebContract;
-	explorerApiUrl: string;
-	explorerApiKey: string;
-	encodedConstructorArgs?: string;
+  contract: ThirdwebContract;
+  explorerApiUrl: string;
+  explorerApiKey: string;
+  encodedConstructorArgs?: string;
 };
 
 /**
@@ -46,113 +46,113 @@ type VerifyContractOptions = {
  * @contract
  */
 export async function verifyContract(
-	options: VerifyContractOptions,
+  options: VerifyContractOptions,
 ): Promise<string | string[]> {
-	const implementation = await resolveImplementation(options.contract);
-	const ipfsUri = extractIPFSUri(implementation.bytecode);
-	if (!ipfsUri) {
-		throw new Error(
-			"Contract bytecode does not contain IPFS URI, cannot verify",
-		);
-	}
-	const res = await download({
-		uri: ipfsUri,
-		client: options.contract.client,
-	});
-	const compilerMetadata = formatCompilerMetadata(await res.json());
+  const implementation = await resolveImplementation(options.contract);
+  const ipfsUri = extractIPFSUri(implementation.bytecode);
+  if (!ipfsUri) {
+    throw new Error(
+      "Contract bytecode does not contain IPFS URI, cannot verify",
+    );
+  }
+  const res = await download({
+    uri: ipfsUri,
+    client: options.contract.client,
+  });
+  const compilerMetadata = formatCompilerMetadata(await res.json());
 
-	const sources = await fetchSourceFilesFromMetadata({
-		client: options.contract.client,
-		publishedMetadata: compilerMetadata,
-	});
+  const sources = await fetchSourceFilesFromMetadata({
+    client: options.contract.client,
+    publishedMetadata: compilerMetadata,
+  });
 
-	const sourcesWithUrl = compilerMetadata.metadata.sources;
-	const sourcesWithContents: Record<string, { content: string }> = {};
-	for (const path of Object.keys(sourcesWithUrl)) {
-		const sourceCode = sources.find((source) => path === source.filename);
-		if (!sourceCode) {
-			throw new Error(`Could not find source file for ${path}`);
-		}
-		sourcesWithContents[path] = {
-			content: sourceCode.source,
-		};
-	}
+  const sourcesWithUrl = compilerMetadata.metadata.sources;
+  const sourcesWithContents: Record<string, { content: string }> = {};
+  for (const path of Object.keys(sourcesWithUrl)) {
+    const sourceCode = sources.find((source) => path === source.filename);
+    if (!sourceCode) {
+      throw new Error(`Could not find source file for ${path}`);
+    }
+    sourcesWithContents[path] = {
+      content: sourceCode.source,
+    };
+  }
 
-	const compilerInput = {
-		language: "Solidity",
-		sources: sourcesWithContents,
-		settings: {
-			optimizer: compilerMetadata.metadata.settings.optimizer,
-			evmVersion: compilerMetadata.metadata.settings.evmVersion,
-			remappings: compilerMetadata.metadata.settings.remappings,
-			outputSelection: {
-				"*": {
-					"*": [
-						"abi",
-						"evm.bytecode",
-						"evm.deployedBytecode",
-						"evm.methodIdentifiers",
-						"metadata",
-					],
-					"": ["ast"],
-				},
-			},
-		},
-	};
+  const compilerInput = {
+    language: "Solidity",
+    sources: sourcesWithContents,
+    settings: {
+      optimizer: compilerMetadata.metadata.settings.optimizer,
+      evmVersion: compilerMetadata.metadata.settings.evmVersion,
+      remappings: compilerMetadata.metadata.settings.remappings,
+      outputSelection: {
+        "*": {
+          "*": [
+            "abi",
+            "evm.bytecode",
+            "evm.deployedBytecode",
+            "evm.methodIdentifiers",
+            "metadata",
+          ],
+          "": ["ast"],
+        },
+      },
+    },
+  };
 
-	const compilationTarget =
-		compilerMetadata.metadata.settings.compilationTarget;
-	const targets = Object.keys(compilationTarget);
-	const contractPath = targets[0];
+  const compilationTarget =
+    compilerMetadata.metadata.settings.compilationTarget;
+  const targets = Object.keys(compilationTarget);
+  const contractPath = targets[0];
 
-	const encodedArgs = options.encodedConstructorArgs
-		? options.encodedConstructorArgs
-		: await fetchConstructorParams({
-				abi: compilerMetadata?.metadata?.output?.abi || [],
-				contract: options.contract,
-				explorerApiUrl: options.explorerApiUrl,
-				explorerApiKey: options.explorerApiKey,
-			});
+  const encodedArgs = options.encodedConstructorArgs
+    ? options.encodedConstructorArgs
+    : await fetchConstructorParams({
+        abi: compilerMetadata?.metadata?.output?.abi || [],
+        contract: options.contract,
+        explorerApiUrl: options.explorerApiUrl,
+        explorerApiKey: options.explorerApiKey,
+      });
 
-	const requestBody: Record<string, string> = {
-		apikey: options.explorerApiKey,
-		module: "contract",
-		action: "verifysourcecode",
-		contractaddress: options.contract.address,
-		sourceCode: JSON.stringify(compilerInput),
-		codeformat: "solidity-standard-json-input",
-		contractname: `${contractPath}:${compilerMetadata.name}`,
-		compilerversion: `v${compilerMetadata.metadata.compiler.version}`,
-		constructorArguements: encodedArgs,
-	};
+  const requestBody: Record<string, string> = {
+    apikey: options.explorerApiKey,
+    module: "contract",
+    action: "verifysourcecode",
+    contractaddress: options.contract.address,
+    sourceCode: JSON.stringify(compilerInput),
+    codeformat: "solidity-standard-json-input",
+    contractname: `${contractPath}:${compilerMetadata.name}`,
+    compilerversion: `v${compilerMetadata.metadata.compiler.version}`,
+    constructorArguements: encodedArgs,
+  };
 
-	const parameters = new URLSearchParams({ ...requestBody });
-	const result = await fetch(options.explorerApiUrl, {
-		method: "POST",
-		headers: { "Content-Type": "application/x-www-form-urlencoded" },
-		body: parameters.toString(),
-	});
+  const parameters = new URLSearchParams({ ...requestBody });
+  const result = await fetch(options.explorerApiUrl, {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: parameters.toString(),
+  });
 
-	const data = await result.json();
-	if (data.status === RequestStatus.OK) {
-		return data.result;
-	}
-	throw new Error(`${data.result}`);
+  const data = await result.json();
+  if (data.status === RequestStatus.OK) {
+    return data.result;
+  }
+  throw new Error(`${data.result}`);
 }
 
 const VerificationStatus = {
-	FAILED: "Fail - Unable to verify",
-	SUCCESS: "Pass - Verified",
-	PENDING: "Pending in queue",
-	IN_PROGRESS: "In progress",
-	ALREADY_VERIFIED: "Contract source code already verified",
-	AUTOMATICALLY_VERIFIED: "Already Verified",
+  FAILED: "Fail - Unable to verify",
+  SUCCESS: "Pass - Verified",
+  PENDING: "Pending in queue",
+  IN_PROGRESS: "In progress",
+  ALREADY_VERIFIED: "Contract source code already verified",
+  AUTOMATICALLY_VERIFIED: "Already Verified",
 };
 
 type CheckVerificationStatusOptions = {
-	explorerApiUrl: string;
-	explorerApiKey: string;
-	guid: string | string[];
+  explorerApiUrl: string;
+  explorerApiKey: string;
+  guid: string | string[];
 };
 
 /**
@@ -173,29 +173,29 @@ type CheckVerificationStatusOptions = {
  * @contract
  */
 export async function checkVerificationStatus(
-	options: CheckVerificationStatusOptions,
+  options: CheckVerificationStatusOptions,
 ): Promise<unknown> {
-	const endpoint = `${options.explorerApiUrl}?module=contract&action=checkverifystatus&guid=${options.guid}&apikey=${options.explorerApiKey}"`;
-	return new Promise((resolve, reject) => {
-		const intervalId = setInterval(async () => {
-			try {
-				const result = await fetch(endpoint, {
-					method: "GET",
-				});
+  const endpoint = `${options.explorerApiUrl}?module=contract&action=checkverifystatus&guid=${options.guid}&apikey=${options.explorerApiKey}"`;
+  return new Promise((resolve, reject) => {
+    const intervalId = setInterval(async () => {
+      try {
+        const result = await fetch(endpoint, {
+          method: "GET",
+        });
 
-				const data = await result.json();
+        const data = await result.json();
 
-				if (
-					data?.result !== VerificationStatus.PENDING &&
-					data?.result !== VerificationStatus.IN_PROGRESS
-				) {
-					clearInterval(intervalId);
-					resolve(data);
-				}
-			} catch (e) {
-				clearInterval(intervalId);
-				reject(e);
-			}
-		}, 3000);
-	});
+        if (
+          data?.result !== VerificationStatus.PENDING &&
+          data?.result !== VerificationStatus.IN_PROGRESS
+        ) {
+          clearInterval(intervalId);
+          resolve(data);
+        }
+      } catch (e) {
+        clearInterval(intervalId);
+        reject(e);
+      }
+    }, 3000);
+  });
 }

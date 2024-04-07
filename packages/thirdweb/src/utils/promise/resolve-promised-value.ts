@@ -8,9 +8,9 @@
  * @internal
  */
 export async function resolvePromisedValue<V>(
-	value: V,
+  value: V,
 ): Promise<V extends () => Promise<infer R> ? R : V> {
-	return typeof value === "function" ? await value() : value;
+  return typeof value === "function" ? await value() : value;
 }
 
 export type PromisedValue<T> = T | (() => Promise<T>);

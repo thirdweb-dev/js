@@ -4,14 +4,14 @@ import { DOODLES_CONTRACT } from "~test/test-contracts.js";
 import { getAllOwners } from "./getAllOwners.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("erc721.getAllOwners", () => {
-	it("works for a contract with 0 indexed NFTs", async () => {
-		const nfts = await getAllOwners({
-			contract: DOODLES_CONTRACT,
-			count: 5,
-		});
+  it("works for a contract with 0 indexed NFTs", async () => {
+    const nfts = await getAllOwners({
+      contract: DOODLES_CONTRACT,
+      count: 5,
+    });
 
-		expect(nfts.length).toBe(5);
-		expect(nfts).toMatchInlineSnapshot(`
+    expect(nfts.length).toBe(5);
+    expect(nfts).toMatchInlineSnapshot(`
       [
         {
           "owner": "0x3010775D16E7B79AF280035c64a1Df5F705CfdDb",
@@ -35,9 +35,9 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc721.getAllOwners", () => {
         },
       ]
     `);
-	});
+  });
 
-	it.todo("works for a contract with `1` indexed NFTs", async () => {
-		// TODO - find a contract with `1` indexed NFTs to test
-	});
+  it.todo("works for a contract with `1` indexed NFTs", async () => {
+    // TODO - find a contract with `1` indexed NFTs to test
+  });
 });

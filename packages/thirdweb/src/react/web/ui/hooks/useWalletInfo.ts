@@ -7,24 +7,24 @@ import type { WalletId } from "../../../../wallets/wallet-types.js";
  * @internal
  */
 export function useWalletInfo(id: WalletId) {
-	return useQuery<WalletInfo>({
-		queryKey: ["wallet-info", id],
-		queryFn: () => {
-			return getWalletInfo(id, false);
-		},
-		retry: false,
-	});
+  return useQuery<WalletInfo>({
+    queryKey: ["wallet-info", id],
+    queryFn: () => {
+      return getWalletInfo(id, false);
+    },
+    retry: false,
+  });
 }
 
 /**
  * @internal
  */
 export function useWalletImage(id: WalletId) {
-	return useQuery({
-		queryKey: ["wallet-image", id],
-		queryFn: () => {
-			return getWalletInfo(id, true);
-		},
-		retry: false,
-	});
+  return useQuery({
+    queryKey: ["wallet-image", id],
+    queryFn: () => {
+      return getWalletInfo(id, true);
+    },
+    retry: false,
+  });
 }

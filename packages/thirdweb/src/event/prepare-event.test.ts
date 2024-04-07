@@ -2,13 +2,13 @@ import { describe, expect, it } from "vitest";
 import { prepareEvent } from "./prepare-event.js";
 
 describe("prepareEvent", () => {
-	it("should prepare event without params", () => {
-		const event = prepareEvent({
-			signature:
-				"event Transfer(address indexed from, address indexed to, uint256 value)",
-		});
+  it("should prepare event without params", () => {
+    const event = prepareEvent({
+      signature:
+        "event Transfer(address indexed from, address indexed to, uint256 value)",
+    });
 
-		expect(event).toMatchInlineSnapshot(`
+    expect(event).toMatchInlineSnapshot(`
       {
         "abiEvent": {
           "inputs": [
@@ -36,19 +36,19 @@ describe("prepareEvent", () => {
         ],
       }
     `);
-	});
+  });
 
-	it("should prepare event with params", () => {
-		const event = prepareEvent({
-			signature:
-				"event Transfer(address indexed from, address indexed to, uint256 value)",
-			filters: {
-				from: "0x80f0d7c215ea4067609bd8f410b130d10cafa817",
-				to: "0xe5c232f3fd62f104db6f2a05aa6b5d1db15a20f7",
-			},
-		});
+  it("should prepare event with params", () => {
+    const event = prepareEvent({
+      signature:
+        "event Transfer(address indexed from, address indexed to, uint256 value)",
+      filters: {
+        from: "0x80f0d7c215ea4067609bd8f410b130d10cafa817",
+        to: "0xe5c232f3fd62f104db6f2a05aa6b5d1db15a20f7",
+      },
+    });
 
-		expect(event).toMatchInlineSnapshot(`
+    expect(event).toMatchInlineSnapshot(`
       {
         "abiEvent": {
           "inputs": [
@@ -78,5 +78,5 @@ describe("prepareEvent", () => {
         ],
       }
     `);
-	});
+  });
 });

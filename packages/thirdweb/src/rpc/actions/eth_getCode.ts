@@ -2,8 +2,8 @@ import type { Address } from "abitype";
 import type { BlockTag, EIP1193RequestFn, EIP1474Methods, Hex } from "viem";
 
 type GetCodeParams = {
-	address: Address;
-	blockTag?: BlockTag;
+  address: Address;
+  blockTag?: BlockTag;
 };
 
 /**
@@ -22,11 +22,11 @@ type GetCodeParams = {
  * ```
  */
 export async function eth_getCode(
-	request: EIP1193RequestFn<EIP1474Methods>,
-	params: GetCodeParams,
+  request: EIP1193RequestFn<EIP1474Methods>,
+  params: GetCodeParams,
 ): Promise<Hex> {
-	return request({
-		method: "eth_getCode",
-		params: [params.address as Hex, params.blockTag || "latest"],
-	});
+  return request({
+    method: "eth_getCode",
+    params: [params.address as Hex, params.blockTag || "latest"],
+  });
 }

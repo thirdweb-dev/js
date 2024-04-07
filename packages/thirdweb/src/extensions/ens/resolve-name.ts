@@ -10,10 +10,10 @@ import { reverse } from "./__generated__/UniversalResolver/read/reverse.js";
 import { UNIVERSAL_RESOLVER_ADDRESS } from "./constants.js";
 
 export type ResolveNameOptions = {
-	client: ThirdwebClient;
-	address: Address;
-	resolverAddress?: string;
-	resolverChain?: Chain;
+  client: ThirdwebClient;
+  address: Address;
+  resolverAddress?: string;
+  resolverChain?: Chain;
 };
 
 /**
@@ -31,32 +31,32 @@ export type ResolveNameOptions = {
  * @returns A promise that resolves to the Ethereum address.
  */
 export async function resolveName(options: ResolveNameOptions) {
-	const { client, address, resolverAddress, resolverChain } = options;
+  const { client, address, resolverAddress, resolverChain } = options;
 
-	return withCache(
-		async () => {
-			const contract = getContract({
-				client,
-				chain: resolverChain || ethereum,
-				address: resolverAddress || UNIVERSAL_RESOLVER_ADDRESS,
-			});
+  return withCache(
+    async () => {
+      const contract = getContract({
+        client,
+        chain: resolverChain || ethereum,
+        address: resolverAddress || UNIVERSAL_RESOLVER_ADDRESS,
+      });
 
-			const reverseName = toHex(
-				packetToBytes(`${address.toLowerCase().substring(2)}.addr.reverse`),
-			);
+      const reverseName = toHex(
+        packetToBytes(`${address.toLowerCase().substring(2)}.addr.reverse`),
+      );
 
-			const [name, resolvedAddress] = await reverse({ contract, reverseName });
+      const [name, resolvedAddress] = await reverse({ contract, reverseName });
 
-			if (address.toLowerCase() !== resolvedAddress.toLowerCase()) {
-				return null;
-			}
+      if (address.toLowerCase() !== resolvedAddress.toLowerCase()) {
+        return null;
+      }
 
-			return name;
-		},
-		{
-			cacheKey: `ens:name:${address}`,
-			// 1min cache
-			cacheTime: 60 * 1000,
-		},
-	);
+      return name;
+    },
+    {
+      cacheKey: `ens:name:${address}`,
+      // 1min cache
+      cacheTime: 60 * 1000,
+    },
+  );
 }

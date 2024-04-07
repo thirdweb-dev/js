@@ -6,14 +6,14 @@ import { mintTo as generatedMintTo } from "../__generated__/IMintableERC20/write
  * Represents the parameters for the `mintTo` function.
  */
 export type MintToParams = Prettify<
-	{ to: string } & (
-		| {
-				amount: number | string;
-		  }
-		| {
-				amountWei: bigint;
-		  }
-	)
+  { to: string } & (
+    | {
+        amount: number | string;
+      }
+    | {
+        amountWei: bigint;
+      }
+  )
 >;
 
 /**
@@ -32,24 +32,24 @@ export type MintToParams = Prettify<
  * ```
  */
 export function mintTo(options: BaseTransactionOptions<MintToParams>) {
-	return generatedMintTo({
-		contract: options.contract,
-		asyncParams: async () => {
-			let amount: bigint;
-			if ("amount" in options) {
-				// if we need to parse the amount from ether to gwei then we pull in the decimals extension
-				const { decimals } = await import("../read/decimals.js");
-				// if this fails we fall back to `18` decimals
-				const d = await decimals(options).catch(() => 18);
-				// turn ether into gwei
-				amount = toUnits(options.amount.toString(), d);
-			} else {
-				amount = options.amountWei;
-			}
-			return {
-				to: options.to,
-				amount: amount,
-			} as const;
-		},
-	});
+  return generatedMintTo({
+    contract: options.contract,
+    asyncParams: async () => {
+      let amount: bigint;
+      if ("amount" in options) {
+        // if we need to parse the amount from ether to gwei then we pull in the decimals extension
+        const { decimals } = await import("../read/decimals.js");
+        // if this fails we fall back to `18` decimals
+        const d = await decimals(options).catch(() => 18);
+        // turn ether into gwei
+        amount = toUnits(options.amount.toString(), d);
+      } else {
+        amount = options.amountWei;
+      }
+      return {
+        to: options.to,
+        amount: amount,
+      } as const;
+    },
+  });
 }

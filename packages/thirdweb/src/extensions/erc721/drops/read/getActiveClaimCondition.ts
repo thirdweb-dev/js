@@ -15,7 +15,7 @@ import { getClaimConditionById } from "../../__generated__/IDrop/read/getClaimCo
  * ```
  */
 export async function getActiveClaimCondition(options: BaseTransactionOptions) {
-	const conditionId = await getActiveClaimConditionId(options);
+  const conditionId = await getActiveClaimConditionId(options);
 
-	return getClaimConditionById({ ...options, conditionId });
+  return getClaimConditionById({ ...options, conditionId });
 }

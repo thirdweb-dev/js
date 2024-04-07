@@ -1,31 +1,31 @@
 import type { Address } from "abitype";
 import {
-	type BlockNumber,
-	type BlockTag,
-	type EIP1193RequestFn,
-	type EIP1474Methods,
-	type Hash,
-	type LogTopic,
-	type RpcLog,
-	formatLog,
+  type BlockNumber,
+  type BlockTag,
+  type EIP1193RequestFn,
+  type EIP1474Methods,
+  type Hash,
+  type LogTopic,
+  type RpcLog,
+  formatLog,
 } from "viem";
 import { numberToHex } from "../../utils/encoding/hex.js";
 
 export type GetLogsBlockParams =
-	| {
-			fromBlock?: BlockNumber | BlockTag;
-			toBlock?: BlockNumber | BlockTag;
-			blockHash?: never;
-	  }
-	| {
-			fromBlock?: never;
-			toBlock?: never;
-			blockHash?: Hash;
-	  };
+  | {
+      fromBlock?: BlockNumber | BlockTag;
+      toBlock?: BlockNumber | BlockTag;
+      blockHash?: never;
+    }
+  | {
+      fromBlock?: never;
+      toBlock?: never;
+      blockHash?: Hash;
+    };
 
 export type GetLogsParams = {
-	topics?: LogTopic[];
-	address?: Address;
+  topics?: LogTopic[];
+  address?: Address;
 } & GetLogsBlockParams;
 
 /**
@@ -46,69 +46,69 @@ export type GetLogsParams = {
  * ```
  */
 export async function eth_getLogs(
-	request: EIP1193RequestFn<EIP1474Methods>,
-	params: GetLogsParams = {},
+  request: EIP1193RequestFn<EIP1474Methods>,
+  params: GetLogsParams = {},
 ) {
-	const topics = params.topics ?? [];
+  const topics = params.topics ?? [];
 
-	let logs: RpcLog[];
-	// in the case we have a blockHash
-	if (params.blockHash) {
-		const param: {
-			address?: string | string[];
-			topics: LogTopic[];
-			blockHash: `0x${string}`;
-		} = {
-			topics,
-			blockHash: params.blockHash,
-		};
-		if (params.address) {
-			param.address = params.address;
-		}
-		logs = await request({
-			method: "eth_getLogs",
-			params: [param],
-		});
-	}
-	// otherwise
-	else {
-		const param: {
-			address?: string | string[];
-			topics?: LogTopic[];
-		} & (
-			| {
-					fromBlock?: BlockTag | `0x${string}`;
-					toBlock?: BlockTag | `0x${string}`;
-					blockHash?: never;
-			  }
-			| {
-					fromBlock?: never;
-					toBlock?: never;
-					blockHash?: `0x${string}`;
-			  }
-		) = { topics };
-		if (params.address) {
-			param.address = params.address;
-		}
+  let logs: RpcLog[];
+  // in the case we have a blockHash
+  if (params.blockHash) {
+    const param: {
+      address?: string | string[];
+      topics: LogTopic[];
+      blockHash: `0x${string}`;
+    } = {
+      topics,
+      blockHash: params.blockHash,
+    };
+    if (params.address) {
+      param.address = params.address;
+    }
+    logs = await request({
+      method: "eth_getLogs",
+      params: [param],
+    });
+  }
+  // otherwise
+  else {
+    const param: {
+      address?: string | string[];
+      topics?: LogTopic[];
+    } & (
+      | {
+          fromBlock?: BlockTag | `0x${string}`;
+          toBlock?: BlockTag | `0x${string}`;
+          blockHash?: never;
+        }
+      | {
+          fromBlock?: never;
+          toBlock?: never;
+          blockHash?: `0x${string}`;
+        }
+    ) = { topics };
+    if (params.address) {
+      param.address = params.address;
+    }
 
-		if (params.fromBlock) {
-			param.fromBlock =
-				typeof params.fromBlock === "bigint"
-					? numberToHex(params.fromBlock)
-					: params.fromBlock;
-		}
-		if (params.toBlock) {
-			param.toBlock =
-				typeof params.toBlock === "bigint"
-					? numberToHex(params.toBlock)
-					: params.toBlock;
-		}
+    if (params.fromBlock) {
+      param.fromBlock =
+        typeof params.fromBlock === "bigint"
+          ? numberToHex(params.fromBlock)
+          : params.fromBlock;
+    }
+    if (params.toBlock) {
+      param.toBlock =
+        typeof params.toBlock === "bigint"
+          ? numberToHex(params.toBlock)
+          : params.toBlock;
+    }
 
-		logs = await request({
-			method: "eth_getLogs",
-			params: [param],
-		});
-	}
+    logs = await request({
+      method: "eth_getLogs",
+      params: [param],
+    });
+  }
 
-	return logs.map((log) => formatLog(log));
+  return logs.map((log) => formatLog(log));
 }

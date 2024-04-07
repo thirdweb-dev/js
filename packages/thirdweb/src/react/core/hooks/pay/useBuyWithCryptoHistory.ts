@@ -1,18 +1,18 @@
 import {
-	type UseQueryOptions,
-	type UseQueryResult,
-	useQuery,
+  type UseQueryOptions,
+  type UseQueryResult,
+  useQuery,
 } from "@tanstack/react-query";
 import {
-	type BuyWithCryptoHistoryData,
-	type BuyWithCryptoHistoryParams,
-	getBuyWithCryptoHistory,
+  type BuyWithCryptoHistoryData,
+  type BuyWithCryptoHistoryParams,
+  getBuyWithCryptoHistory,
 } from "../../../../pay/buyWithCrypto/actions/getHistory.js";
 
 export type BuyWithCryptoHistoryQueryParams = BuyWithCryptoHistoryParams;
 export type BuyWithCryptoQuoteQueryOptions = Omit<
-	UseQueryOptions<BuyWithCryptoHistoryData>,
-	"queryFn" | "queryKey" | "enabled"
+  UseQueryOptions<BuyWithCryptoHistoryData>,
+  "queryFn" | "queryKey" | "enabled"
 >;
 
 /**
@@ -35,25 +35,25 @@ export type BuyWithCryptoQuoteQueryOptions = Omit<
  * @buyCrypto
  */
 export function useBuyWithCryptoHistory(
-	buyWithCryptoHistoryParams?: BuyWithCryptoHistoryQueryParams,
-	queryParams?: BuyWithCryptoQuoteQueryOptions,
+  buyWithCryptoHistoryParams?: BuyWithCryptoHistoryQueryParams,
+  queryParams?: BuyWithCryptoQuoteQueryOptions,
 ): UseQueryResult<BuyWithCryptoHistoryData> {
-	return useQuery({
-		...queryParams,
+  return useQuery({
+    ...queryParams,
 
-		queryKey: ["buyWithCryptoHistory", buyWithCryptoHistoryParams],
-		queryFn: () => {
-			if (!buyWithCryptoHistoryParams) {
-				throw new Error("Swap params are required");
-			}
-			if (!buyWithCryptoHistoryParams?.client) {
-				throw new Error("Client is required");
-			}
-			return getBuyWithCryptoHistory({
-				...buyWithCryptoHistoryParams,
-				client: buyWithCryptoHistoryParams.client,
-			});
-		},
-		enabled: !!buyWithCryptoHistoryParams,
-	});
+    queryKey: ["buyWithCryptoHistory", buyWithCryptoHistoryParams],
+    queryFn: () => {
+      if (!buyWithCryptoHistoryParams) {
+        throw new Error("Swap params are required");
+      }
+      if (!buyWithCryptoHistoryParams?.client) {
+        throw new Error("Client is required");
+      }
+      return getBuyWithCryptoHistory({
+        ...buyWithCryptoHistoryParams,
+        client: buyWithCryptoHistoryParams.client,
+      });
+    },
+    enabled: !!buyWithCryptoHistoryParams,
+  });
 }

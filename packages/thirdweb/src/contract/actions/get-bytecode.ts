@@ -18,23 +18,23 @@ const BYTECODE_CACHE = new WeakMap<ThirdwebContract<Abi>, Promise<Hex>>();
  * @contract
  */
 export function getBytecode<abi extends Abi>(
-	contract: ThirdwebContract<abi>,
+  contract: ThirdwebContract<abi>,
 ): Promise<Hex> {
-	if (BYTECODE_CACHE.has(contract)) {
-		return BYTECODE_CACHE.get(contract) as Promise<Hex>;
-	}
+  if (BYTECODE_CACHE.has(contract)) {
+    return BYTECODE_CACHE.get(contract) as Promise<Hex>;
+  }
 
-	const prom = (async () => {
-		const rpcRequest = getRpcClient(contract);
-		const result = await eth_getCode(rpcRequest, {
-			address: contract.address,
-			blockTag: "latest",
-		});
-		if (result === "0x") {
-			BYTECODE_CACHE.delete(contract);
-		}
-		return result;
-	})();
-	BYTECODE_CACHE.set(contract, prom);
-	return prom;
+  const prom = (async () => {
+    const rpcRequest = getRpcClient(contract);
+    const result = await eth_getCode(rpcRequest, {
+      address: contract.address,
+      blockTag: "latest",
+    });
+    if (result === "0x") {
+      BYTECODE_CACHE.delete(contract);
+    }
+    return result;
+  })();
+  BYTECODE_CACHE.set(contract, prom);
+  return prom;
 }

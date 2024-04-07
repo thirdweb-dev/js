@@ -8,28 +8,28 @@ import type { Theme } from "../design-system/index.js";
  * @internal
  */
 export const Spinner: React.FC<{
-	color: keyof Theme["colors"];
-	size: keyof typeof iconSize;
+  color: keyof Theme["colors"];
+  size: keyof typeof iconSize;
 }> = (props) => {
-	const theme = useCustomTheme();
-	return (
-		<Svg
-			style={{
-				width: `${iconSize[props.size]}px`,
-				height: `${iconSize[props.size]}px`,
-			}}
-			viewBox="0 0 50 50"
-		>
-			<Circle
-				cx="25"
-				cy="25"
-				r="20"
-				fill="none"
-				stroke={theme.colors[props.color]}
-				strokeWidth="4"
-			/>
-		</Svg>
-	);
+  const theme = useCustomTheme();
+  return (
+    <Svg
+      style={{
+        width: `${iconSize[props.size]}px`,
+        height: `${iconSize[props.size]}px`,
+      }}
+      viewBox="0 0 50 50"
+    >
+      <Circle
+        cx="25"
+        cy="25"
+        r="20"
+        fill="none"
+        stroke={theme.colors[props.color]}
+        strokeWidth="4"
+      />
+    </Svg>
+  );
 };
 
 // animations
@@ -55,12 +55,12 @@ const rotateAnimation = keyframes`
 `;
 
 const Svg = /* @__PURE__ */ StyledSvg({
-	animation: `${rotateAnimation} 2s linear infinite`,
-	width: "1em",
-	height: "1em",
+  animation: `${rotateAnimation} 2s linear infinite`,
+  width: "1em",
+  height: "1em",
 });
 
 const Circle = /* @__PURE__ */ StyledCircle({
-	strokeLinecap: "round",
-	animation: `${dashAnimation} 1.5s ease-in-out infinite`,
+  strokeLinecap: "round",
+  animation: `${dashAnimation} 1.5s ease-in-out infinite`,
 });

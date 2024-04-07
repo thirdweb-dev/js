@@ -5,38 +5,38 @@ import { fontSize, iconSize, media } from "../design-system/index.js";
 import { IconButton } from "./buttons.js";
 
 export const ModalTitle = /* @__PURE__ */ StyledH2(
-	(props: { centerOnMobile?: boolean }) => {
-		const theme = useCustomTheme();
-		return {
-			margin: 0,
-			fontWeight: 600,
-			fontSize: fontSize.lg,
-			color: theme.colors.primaryText,
-			lineHeight: 1.3,
-			textAlign: "left",
-			[media.mobile]: {
-				textAlign: props.centerOnMobile ? "center" : "left",
-			},
-		};
-	},
+  (props: { centerOnMobile?: boolean }) => {
+    const theme = useCustomTheme();
+    return {
+      margin: 0,
+      fontWeight: 600,
+      fontSize: fontSize.lg,
+      color: theme.colors.primaryText,
+      lineHeight: 1.3,
+      textAlign: "left",
+      [media.mobile]: {
+        textAlign: props.centerOnMobile ? "center" : "left",
+      },
+    };
+  },
 );
 
 /**
  * @internal
  */
 export const BackButton: React.FC<{
-	onClick: () => void;
-	style?: React.CSSProperties;
+  onClick: () => void;
+  style?: React.CSSProperties;
 }> = (props) => {
-	return (
-		<IconButton
-			onClick={props.onClick}
-			style={{ transform: "translateX(-25%)", ...props.style }}
-			type="button"
-		>
-			<ChevronLeftIcon width={iconSize.md} height={iconSize.md} />
-		</IconButton>
-	);
+  return (
+    <IconButton
+      onClick={props.onClick}
+      style={{ transform: "translateX(-25%)", ...props.style }}
+      type="button"
+    >
+      <ChevronLeftIcon width={iconSize.md} height={iconSize.md} />
+    </IconButton>
+  );
 };
 
 // UNUSED

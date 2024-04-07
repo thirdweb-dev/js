@@ -5,9 +5,9 @@ import { symbol } from "../../common/read/symbol.js";
 import { decimals } from "../__generated__/IERC20/read/decimals.js";
 
 export type GetCurrencyMetadataResult = {
-	name: string;
-	symbol: string;
-	decimals: number;
+  name: string;
+  symbol: string;
+  decimals: number;
 };
 
 /**
@@ -23,27 +23,27 @@ export type GetCurrencyMetadataResult = {
  * ```
  */
 export async function getCurrencyMetadata(
-	options: BaseTransactionOptions,
+  options: BaseTransactionOptions,
 ): Promise<GetCurrencyMetadataResult> {
-	// if the contract is the native token, return the native currency metadata
-	if (isNativeTokenAddress(options.contract.address)) {
-		return {
-			name: "Ether",
-			symbol: "ETH",
-			decimals: 18,
-			// overwrite with native currency of the chain if available
-			...options.contract.chain.nativeCurrency,
-		};
-	}
+  // if the contract is the native token, return the native currency metadata
+  if (isNativeTokenAddress(options.contract.address)) {
+    return {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+      // overwrite with native currency of the chain if available
+      ...options.contract.chain.nativeCurrency,
+    };
+  }
 
-	const [name_, symbol_, decimals_] = await Promise.all([
-		name(options),
-		symbol(options),
-		decimals(options),
-	]);
-	return {
-		name: name_,
-		symbol: symbol_,
-		decimals: decimals_,
-	};
+  const [name_, symbol_, decimals_] = await Promise.all([
+    name(options),
+    symbol(options),
+    decimals(options),
+  ]);
+  return {
+    name: name_,
+    symbol: symbol_,
+    decimals: decimals_,
+  };
 }

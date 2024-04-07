@@ -15,9 +15,9 @@ import { symbol as generatedSymbol } from "../__generated__/IContractMetadata/re
  * ```
  */
 export async function symbol(options: BaseTransactionOptions): Promise<string> {
-	return withCache(() => generatedSymbol(options), {
-		cacheKey: `${options.contract.chain.id}:${options.contract.address}:symbol`,
-		// can never change, so cache forever
-		cacheTime: Number.POSITIVE_INFINITY,
-	});
+  return withCache(() => generatedSymbol(options), {
+    cacheKey: `${options.contract.chain.id}:${options.contract.address}:symbol`,
+    // can never change, so cache forever
+    cacheTime: Number.POSITIVE_INFINITY,
+  });
 }

@@ -24,259 +24,259 @@ import { AnyWalletConnectUI } from "./AnyWalletConnectUI.js";
  * @internal
  */
 export function SmartConnectUI(props: {
-	personalWallet: Wallet;
-	done: (smartWallet: Wallet) => void;
-	onBack?: () => void;
-	accountAbstraction: SmartWalletOptions;
-	setModalVisibility: (value: boolean) => void;
+  personalWallet: Wallet;
+  done: (smartWallet: Wallet) => void;
+  onBack?: () => void;
+  accountAbstraction: SmartWalletOptions;
+  setModalVisibility: (value: boolean) => void;
 }) {
-	const personalWalletInfo = useWalletInfo(props.personalWallet.id);
-	const [keyConnected, setKeyConnected] = useState(false);
+  const personalWalletInfo = useWalletInfo(props.personalWallet.id);
+  const [keyConnected, setKeyConnected] = useState(false);
 
-	if (!personalWalletInfo.data) {
-		return <LoadingScreen />;
-	}
+  if (!personalWalletInfo.data) {
+    return <LoadingScreen />;
+  }
 
-	// connect personal wallet
-	if (!keyConnected) {
-		return (
-			<AnyWalletConnectUI
-				wallet={props.personalWallet}
-				done={() => {
-					setKeyConnected(true);
-				}}
-				onBack={props.onBack}
-				setModalVisibility={props.setModalVisibility}
-			/>
-		);
-	}
+  // connect personal wallet
+  if (!keyConnected) {
+    return (
+      <AnyWalletConnectUI
+        wallet={props.personalWallet}
+        done={() => {
+          setKeyConnected(true);
+        }}
+        onBack={props.onBack}
+        setModalVisibility={props.setModalVisibility}
+      />
+    );
+  }
 
-	return (
-		<SmartWalletConnecting
-			done={props.done}
-			personalWallet={props.personalWallet}
-			accountAbstraction={props.accountAbstraction}
-			onBack={props.onBack}
-			personalWalletInfo={personalWalletInfo.data}
-		/>
-	);
+  return (
+    <SmartWalletConnecting
+      done={props.done}
+      personalWallet={props.personalWallet}
+      accountAbstraction={props.accountAbstraction}
+      onBack={props.onBack}
+      personalWalletInfo={personalWalletInfo.data}
+    />
+  );
 }
 
 function SmartWalletConnecting(props: {
-	done: (smartWallet: Wallet) => void;
-	personalWallet: Wallet;
-	accountAbstraction: SmartWalletOptions;
-	onBack?: () => void;
-	personalWalletInfo: WalletInfo;
+  done: (smartWallet: Wallet) => void;
+  personalWallet: Wallet;
+  accountAbstraction: SmartWalletOptions;
+  onBack?: () => void;
+  personalWalletInfo: WalletInfo;
 }) {
-	const localeId = useWalletConnectionCtx().locale;
-	const client = useWalletConnectionCtx().client;
-	const [locale, setLocale] = useState<SmartWalletLocale | undefined>();
-	const { modalSize } = useContext(ModalConfigCtx);
-	const { chain: smartWalletChain } = props.accountAbstraction;
+  const localeId = useWalletConnectionCtx().locale;
+  const client = useWalletConnectionCtx().client;
+  const [locale, setLocale] = useState<SmartWalletLocale | undefined>();
+  const { modalSize } = useContext(ModalConfigCtx);
+  const { chain: smartWalletChain } = props.accountAbstraction;
 
-	useEffect(() => {
-		getSmartWalletLocale(localeId).then(setLocale);
-	}, [localeId]);
+  useEffect(() => {
+    getSmartWalletLocale(localeId).then(setLocale);
+  }, [localeId]);
 
-	const { personalWallet } = props;
-	const { done } = props;
+  const { personalWallet } = props;
+  const { done } = props;
 
-	const [personalWalletChainId, setPersonalWalletChainId] = useState<
-		number | undefined
-	>(personalWallet.getChain()?.id);
+  const [personalWalletChainId, setPersonalWalletChainId] = useState<
+    number | undefined
+  >(personalWallet.getChain()?.id);
 
-	useEffect(() => {
-		const unsubChainChanged = personalWallet.subscribe(
-			"chainChanged",
-			(chain) => setPersonalWalletChainId(chain.id),
-		);
+  useEffect(() => {
+    const unsubChainChanged = personalWallet.subscribe(
+      "chainChanged",
+      (chain) => setPersonalWalletChainId(chain.id),
+    );
 
-		return () => {
-			unsubChainChanged();
-		};
-	}, [personalWallet]);
+    return () => {
+      unsubChainChanged();
+    };
+  }, [personalWallet]);
 
-	const wrongNetwork = personalWalletChainId !== smartWalletChain.id;
+  const wrongNetwork = personalWalletChainId !== smartWalletChain.id;
 
-	const [smartWalletConnectionStatus, setSmartWalletConnectionStatus] =
-		useState<"connecting" | "connect-error" | "idle">("idle");
-	const [personalWalletChainSwitchStatus, setPersonalWalletChainSwitchStatus] =
-		useState<"switching" | "switch-error" | "idle">("idle");
+  const [smartWalletConnectionStatus, setSmartWalletConnectionStatus] =
+    useState<"connecting" | "connect-error" | "idle">("idle");
+  const [personalWalletChainSwitchStatus, setPersonalWalletChainSwitchStatus] =
+    useState<"switching" | "switch-error" | "idle">("idle");
 
-	const handleConnect = useCallback(async () => {
-		if (!personalWallet) {
-			throw new Error("No personal wallet");
-		}
-		const personalAccount = personalWallet.getAccount();
-		if (!personalAccount) {
-			throw new Error("No personal account");
-		}
+  const handleConnect = useCallback(async () => {
+    if (!personalWallet) {
+      throw new Error("No personal wallet");
+    }
+    const personalAccount = personalWallet.getAccount();
+    if (!personalAccount) {
+      throw new Error("No personal account");
+    }
 
-		setSmartWalletConnectionStatus("connecting");
+    setSmartWalletConnectionStatus("connecting");
 
-		try {
-			const smartWallet = createWallet("smart", props.accountAbstraction);
-			await smartWallet.connect({
-				personalAccount,
-				client,
-			});
+    try {
+      const smartWallet = createWallet("smart", props.accountAbstraction);
+      await smartWallet.connect({
+        personalAccount,
+        client,
+      });
 
-			saveConnectParamsToStorage(asyncLocalStorage, "accountAbstraction", {
-				personalWalletId: personalWallet.id,
-			});
+      saveConnectParamsToStorage(asyncLocalStorage, "accountAbstraction", {
+        personalWalletId: personalWallet.id,
+      });
 
-			done(smartWallet);
-			setSmartWalletConnectionStatus("idle");
-		} catch (e) {
-			console.error(e);
-			setSmartWalletConnectionStatus("connect-error");
-		}
-	}, [client, done, personalWallet, props.accountAbstraction]);
+      done(smartWallet);
+      setSmartWalletConnectionStatus("idle");
+    } catch (e) {
+      console.error(e);
+      setSmartWalletConnectionStatus("connect-error");
+    }
+  }, [client, done, personalWallet, props.accountAbstraction]);
 
-	const connectStarted = useRef(false);
-	useEffect(() => {
-		if (!wrongNetwork && !connectStarted.current) {
-			handleConnect();
-			connectStarted.current = true;
-		}
-	}, [handleConnect, wrongNetwork]);
+  const connectStarted = useRef(false);
+  useEffect(() => {
+    if (!wrongNetwork && !connectStarted.current) {
+      handleConnect();
+      connectStarted.current = true;
+    }
+  }, [handleConnect, wrongNetwork]);
 
-	if (!locale) {
-		return <LoadingScreen />;
-	}
+  if (!locale) {
+    return <LoadingScreen />;
+  }
 
-	if (wrongNetwork) {
-		return (
-			<Container fullHeight animate="fadein" flex="column">
-				<Container p="lg">
-					<ModalHeader
-						title={props.personalWalletInfo.name}
-						onBack={props.onBack}
-					/>
-				</Container>
+  if (wrongNetwork) {
+    return (
+      <Container fullHeight animate="fadein" flex="column">
+        <Container p="lg">
+          <ModalHeader
+            title={props.personalWalletInfo.name}
+            onBack={props.onBack}
+          />
+        </Container>
 
-				{modalSize === "compact" && <Spacer y="lg" />}
+        {modalSize === "compact" && <Spacer y="lg" />}
 
-				<Container expand flex="column" center="both" p="lg">
-					<Container p={modalSize === "wide" ? "lg" : undefined}>
-						<Container flex="row" center="x" color="danger">
-							<ExclamationTriangleIcon
-								width={iconSize.lg}
-								height={iconSize.lg}
-							/>
-						</Container>
+        <Container expand flex="column" center="both" p="lg">
+          <Container p={modalSize === "wide" ? "lg" : undefined}>
+            <Container flex="row" center="x" color="danger">
+              <ExclamationTriangleIcon
+                width={iconSize.lg}
+                height={iconSize.lg}
+              />
+            </Container>
 
-						<Spacer y="md" />
+            <Spacer y="md" />
 
-						<Text size="lg" color="primaryText" center weight={500}>
-							{locale.wrongNetworkScreen.title}
-						</Text>
+            <Text size="lg" color="primaryText" center weight={500}>
+              {locale.wrongNetworkScreen.title}
+            </Text>
 
-						<Spacer y="lg" />
+            <Spacer y="lg" />
 
-						<Text multiline center>
-							{locale.wrongNetworkScreen.subtitle}
-						</Text>
+            <Text multiline center>
+              {locale.wrongNetworkScreen.subtitle}
+            </Text>
 
-						<Spacer y="xl" />
+            <Spacer y="xl" />
 
-						<Container flex="column" gap="md">
-							<Button
-								type="button"
-								fullWidth
-								variant="accent"
-								style={{
-									display: "flex",
-									alignItems: "center",
-									gap: spacing.sm,
-								}}
-								onClick={async () => {
-									if (!personalWallet.switchChain) {
-										setPersonalWalletChainSwitchStatus("switch-error");
-										throw new Error("No switchChain method");
-									}
+            <Container flex="column" gap="md">
+              <Button
+                type="button"
+                fullWidth
+                variant="accent"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: spacing.sm,
+                }}
+                onClick={async () => {
+                  if (!personalWallet.switchChain) {
+                    setPersonalWalletChainSwitchStatus("switch-error");
+                    throw new Error("No switchChain method");
+                  }
 
-									try {
-										setPersonalWalletChainSwitchStatus("switching");
-										await personalWallet.switchChain(smartWalletChain);
-										const newChain = personalWallet.getChain();
-										if (newChain) {
-											setPersonalWalletChainId(newChain.id);
-										}
-										setPersonalWalletChainSwitchStatus("idle");
-									} catch (e) {
-										console.error(e);
-										setPersonalWalletChainSwitchStatus("switch-error");
-									}
-								}}
-							>
-								{" "}
-								{personalWalletChainSwitchStatus === "switching"
-									? "Switching"
-									: "Switch Network"}
-								{personalWalletChainSwitchStatus === "switching" && (
-									<Spinner size="sm" color="accentButtonText" />
-								)}
-							</Button>
+                  try {
+                    setPersonalWalletChainSwitchStatus("switching");
+                    await personalWallet.switchChain(smartWalletChain);
+                    const newChain = personalWallet.getChain();
+                    if (newChain) {
+                      setPersonalWalletChainId(newChain.id);
+                    }
+                    setPersonalWalletChainSwitchStatus("idle");
+                  } catch (e) {
+                    console.error(e);
+                    setPersonalWalletChainSwitchStatus("switch-error");
+                  }
+                }}
+              >
+                {" "}
+                {personalWalletChainSwitchStatus === "switching"
+                  ? "Switching"
+                  : "Switch Network"}
+                {personalWalletChainSwitchStatus === "switching" && (
+                  <Spinner size="sm" color="accentButtonText" />
+                )}
+              </Button>
 
-							<Container
-								flex="row"
-								gap="sm"
-								center="both"
-								color="danger"
-								style={{
-									textAlign: "center",
-									fontSize: fontSize.sm,
-									opacity:
-										personalWalletChainSwitchStatus === "switch-error" ? 1 : 0,
-									transition: "opacity 200ms ease",
-								}}
-							>
-								<ExclamationTriangleIcon
-									width={iconSize.sm}
-									height={iconSize.sm}
-								/>
-								<span>{locale.wrongNetworkScreen.failedToSwitch}</span>
-							</Container>
-						</Container>
-					</Container>
-				</Container>
-			</Container>
-		);
-	}
+              <Container
+                flex="row"
+                gap="sm"
+                center="both"
+                color="danger"
+                style={{
+                  textAlign: "center",
+                  fontSize: fontSize.sm,
+                  opacity:
+                    personalWalletChainSwitchStatus === "switch-error" ? 1 : 0,
+                  transition: "opacity 200ms ease",
+                }}
+              >
+                <ExclamationTriangleIcon
+                  width={iconSize.sm}
+                  height={iconSize.sm}
+                />
+                <span>{locale.wrongNetworkScreen.failedToSwitch}</span>
+              </Container>
+            </Container>
+          </Container>
+        </Container>
+      </Container>
+    );
+  }
 
-	if (smartWalletConnectionStatus === "connect-error") {
-		return (
-			<Container
-				fullHeight
-				animate="fadein"
-				flex="column"
-				center="both"
-				p="lg"
-				style={{
-					minHeight: "300px",
-				}}
-			>
-				<Text color="danger">{locale.failedToConnect}</Text>
-			</Container>
-		);
-	}
+  if (smartWalletConnectionStatus === "connect-error") {
+    return (
+      <Container
+        fullHeight
+        animate="fadein"
+        flex="column"
+        center="both"
+        p="lg"
+        style={{
+          minHeight: "300px",
+        }}
+      >
+        <Text color="danger">{locale.failedToConnect}</Text>
+      </Container>
+    );
+  }
 
-	return (
-		<Container
-			fullHeight
-			flex="column"
-			center="both"
-			style={{
-				minHeight: "300px",
-			}}
-		>
-			<Text color="primaryText" multiline center>
-				{locale.connecting}
-			</Text>
-			<Spacer y="lg" />
-			<Spinner color="accentText" size="lg" />
-		</Container>
-	);
+  return (
+    <Container
+      fullHeight
+      flex="column"
+      center="both"
+      style={{
+        minHeight: "300px",
+      }}
+    >
+      <Text color="primaryText" multiline center>
+        {locale.connecting}
+      </Text>
+      <Spacer y="lg" />
+      <Spinner color="accentText" size="lg" />
+    </Container>
+  );
 }

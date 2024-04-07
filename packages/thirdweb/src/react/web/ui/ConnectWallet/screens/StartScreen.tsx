@@ -18,109 +18,109 @@ import { GlobeIcon } from "../icons/GlobalIcon.js";
  * @internal
  */
 export function StartScreen() {
-	const {
-		termsOfServiceUrl,
-		privacyPolicyUrl,
-		welcomeScreen: WelcomeScreen,
-		showThirdwebBranding,
-	} = useContext(ModalConfigCtx);
-	const locale = useWalletConnectionCtx().connectLocale;
+  const {
+    termsOfServiceUrl,
+    privacyPolicyUrl,
+    welcomeScreen: WelcomeScreen,
+    showThirdwebBranding,
+  } = useContext(ModalConfigCtx);
+  const locale = useWalletConnectionCtx().connectLocale;
 
-	if (WelcomeScreen) {
-		if (typeof WelcomeScreen === "function") {
-			return <WelcomeScreen />;
-		}
-	}
+  if (WelcomeScreen) {
+    if (typeof WelcomeScreen === "function") {
+      return <WelcomeScreen />;
+    }
+  }
 
-	const title =
-		(typeof WelcomeScreen === "object" ? WelcomeScreen?.title : undefined) ||
-		locale.welcomeScreen.defaultTitle;
+  const title =
+    (typeof WelcomeScreen === "object" ? WelcomeScreen?.title : undefined) ||
+    locale.welcomeScreen.defaultTitle;
 
-	const subtitle =
-		(typeof WelcomeScreen === "object" ? WelcomeScreen?.subtitle : undefined) ||
-		locale.welcomeScreen.defaultSubtitle;
+  const subtitle =
+    (typeof WelcomeScreen === "object" ? WelcomeScreen?.subtitle : undefined) ||
+    locale.welcomeScreen.defaultSubtitle;
 
-	const img =
-		typeof WelcomeScreen === "object" ? WelcomeScreen?.img : undefined;
+  const img =
+    typeof WelcomeScreen === "object" ? WelcomeScreen?.img : undefined;
 
-	const showTOS = termsOfServiceUrl || privacyPolicyUrl;
+  const showTOS = termsOfServiceUrl || privacyPolicyUrl;
 
-	return (
-		<Container fullHeight animate="fadein" flex="column">
-			<Container
-				expand
-				flex="column"
-				center="both"
-				style={{
-					minHeight: "300px",
-				}}
-				p="lg"
-			>
-				<Container flex="row" center="x">
-					{img ? (
-						<Img
-							src={img.src}
-							width={img.width ? String(img.width) : undefined}
-							height={img.height ? String(img.height) : undefined}
-						/>
-					) : (
-						<GlobalContainer>
-							<GlobeIcon size={"150"} />
-						</GlobalContainer>
-					)}
-				</Container>
+  return (
+    <Container fullHeight animate="fadein" flex="column">
+      <Container
+        expand
+        flex="column"
+        center="both"
+        style={{
+          minHeight: "300px",
+        }}
+        p="lg"
+      >
+        <Container flex="row" center="x">
+          {img ? (
+            <Img
+              src={img.src}
+              width={img.width ? String(img.width) : undefined}
+              height={img.height ? String(img.height) : undefined}
+            />
+          ) : (
+            <GlobalContainer>
+              <GlobeIcon size={"150"} />
+            </GlobalContainer>
+          )}
+        </Container>
 
-				<Spacer y="xxl" />
+        <Spacer y="xxl" />
 
-				<Text center color="primaryText" weight={600} multiline>
-					{title}
-				</Text>
+        <Text center color="primaryText" weight={600} multiline>
+          {title}
+        </Text>
 
-				<Spacer y="md" />
+        <Spacer y="md" />
 
-				<Text
-					color="secondaryText"
-					multiline
-					style={{
-						textAlign: "center",
-					}}
-				>
-					{subtitle}
-				</Text>
+        <Text
+          color="secondaryText"
+          multiline
+          style={{
+            textAlign: "center",
+          }}
+        >
+          {subtitle}
+        </Text>
 
-				<Spacer y="lg" />
+        <Spacer y="lg" />
 
-				<Link
-					target="_blank"
-					center
-					href="https://blog.thirdweb.com/web3-wallet/"
-				>
-					{locale.newToWallets}
-				</Link>
-			</Container>
+        <Link
+          target="_blank"
+          center
+          href="https://blog.thirdweb.com/web3-wallet/"
+        >
+          {locale.newToWallets}
+        </Link>
+      </Container>
 
-			<Container py="lg" flex="column" gap="lg">
-				<div>
-					{showTOS && (
-						<TOS
-							termsOfServiceUrl={termsOfServiceUrl}
-							privacyPolicyUrl={privacyPolicyUrl}
-						/>
-					)}
+      <Container py="lg" flex="column" gap="lg">
+        <div>
+          {showTOS && (
+            <TOS
+              termsOfServiceUrl={termsOfServiceUrl}
+              privacyPolicyUrl={privacyPolicyUrl}
+            />
+          )}
 
-					{showThirdwebBranding !== false && (
-						<Container
-							style={{
-								paddingTop: spacing.xl,
-							}}
-						>
-							<PoweredByThirdweb />
-						</Container>
-					)}
-				</div>
-			</Container>
-		</Container>
-	);
+          {showThirdwebBranding !== false && (
+            <Container
+              style={{
+                paddingTop: spacing.xl,
+              }}
+            >
+              <PoweredByThirdweb />
+            </Container>
+          )}
+        </div>
+      </Container>
+    </Container>
+  );
 }
 
 const floatingAnimation = keyframes`
@@ -133,10 +133,10 @@ const floatingAnimation = keyframes`
 `;
 
 const GlobalContainer = /* @__PURE__ */ StyledDiv(() => {
-	const theme = useCustomTheme();
-	return {
-		color: theme.colors.accentText,
-		filter: `drop-shadow(0px 6px 10px ${theme.colors.accentText})`,
-		animation: `${floatingAnimation} 2s ease infinite alternate`,
-	};
+  const theme = useCustomTheme();
+  return {
+    color: theme.colors.accentText,
+    filter: `drop-shadow(0px 6px 10px ${theme.colors.accentText})`,
+    animation: `${floatingAnimation} 2s ease infinite alternate`,
+  };
 });

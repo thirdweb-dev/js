@@ -5,9 +5,9 @@ import { getSaltHash } from "./get-salt-hash.js";
 import { keccakId } from "./keccak-id.js";
 
 type GetInitiBytecodeWithSaltOptions = {
-	bytecode: string;
-	encodedArgs: Hex | Uint8Array;
-	salt?: string;
+  bytecode: string;
+  encodedArgs: Hex | Uint8Array;
+  salt?: string;
 };
 
 /**
@@ -26,20 +26,20 @@ type GetInitiBytecodeWithSaltOptions = {
  * @utils
  */
 export function getInitBytecodeWithSalt(
-	options: GetInitiBytecodeWithSaltOptions,
+  options: GetInitiBytecodeWithSaltOptions,
 ): Hex {
-	const bytecode = ensureBytecodePrefix(options.bytecode);
-	const saltHash = options.salt
-		? keccakId(options.salt)
-		: getSaltHash(bytecode);
+  const bytecode = ensureBytecodePrefix(options.bytecode);
+  const saltHash = options.salt
+    ? keccakId(options.salt)
+    : getSaltHash(bytecode);
 
-	const encodedArgs =
-		typeof options.encodedArgs === "string"
-			? options.encodedArgs
-			: uint8ArrayToHex(options.encodedArgs);
+  const encodedArgs =
+    typeof options.encodedArgs === "string"
+      ? options.encodedArgs
+      : uint8ArrayToHex(options.encodedArgs);
 
-	return encodePacked(
-		["bytes32", "bytes", "bytes"],
-		[saltHash, bytecode, encodedArgs],
-	);
+  return encodePacked(
+    ["bytes32", "bytes", "bytes"],
+    [saltHash, bytecode, encodedArgs],
+  );
 }

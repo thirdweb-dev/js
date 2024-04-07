@@ -5,10 +5,10 @@ import type { WaitForReceiptOptions } from "./wait-for-tx-receipt.js";
 import { toSerializableTransaction } from "./to-serializable-transaction.js";
 
 export type SendTransactionOptions = {
-	account: Account;
-	// TODO: update this to `Transaction<"prepared">` once the type is available to ensure only prepared transactions are accepted
-	// biome-ignore lint/suspicious/noExplicitAny: library function that accepts any prepared transaction type
-	transaction: PreparedTransaction<any>;
+  account: Account;
+  // TODO: update this to `Transaction<"prepared">` once the type is available to ensure only prepared transactions are accepted
+  // biome-ignore lint/suspicious/noExplicitAny: library function that accepts any prepared transaction type
+  transaction: PreparedTransaction<any>;
 };
 
 /**
@@ -28,14 +28,14 @@ export type SendTransactionOptions = {
  * ```
  */
 export async function sendTransaction(
-	options: SendTransactionOptions,
+  options: SendTransactionOptions,
 ): Promise<WaitForReceiptOptions> {
-	const { account, transaction } = options;
+  const { account, transaction } = options;
 
-	const serializableTx = await toSerializableTransaction({
-		transaction: transaction,
-		from: account.address,
-	});
-	const result = await account.sendTransaction(serializableTx);
-	return { ...result, chain: transaction.chain, client: transaction.client };
+  const serializableTx = await toSerializableTransaction({
+    transaction: transaction,
+    from: account.address,
+  });
+  const result = await account.sendTransaction(serializableTx);
+  return { ...result, chain: transaction.chain, client: transaction.client };
 }

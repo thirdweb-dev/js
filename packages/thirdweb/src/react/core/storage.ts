@@ -12,11 +12,11 @@ let storage: AsyncStorage;
  * @returns The storage to use
  */
 export function getStorage(): AsyncStorage {
-	if (storage) {
-		return storage;
-	}
-	// default to localStorage
-	return asyncLocalStorage;
+  if (storage) {
+    return storage;
+  }
+  // default to localStorage
+  return asyncLocalStorage;
 }
 
 /**
@@ -28,5 +28,5 @@ export function getStorage(): AsyncStorage {
  * @param _storage - The storage to use
  */
 export function setStorage(_storage: AsyncStorage) {
-	storage = _storage;
+  storage = _storage;
 }

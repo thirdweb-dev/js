@@ -9,17 +9,17 @@
  * @internal
  */
 export function roundUpGas(value: bigint): bigint {
-	if (value === 0n || (value & (value - 1n)) === 0n) {
-		return value;
-	}
+  if (value === 0n || (value & (value - 1n)) === 0n) {
+    return value;
+  }
 
-	// Find the highest set bit by shifting until the value is 0.
-	let highestBit = 1n;
-	while (value > 0n) {
-		// biome-ignore lint/style/noParameterAssign: the whole point is that we modify the value in palce
-		value >>= 1n;
-		highestBit <<= 1n;
-	}
+  // Find the highest set bit by shifting until the value is 0.
+  let highestBit = 1n;
+  while (value > 0n) {
+    // biome-ignore lint/style/noParameterAssign: the whole point is that we modify the value in palce
+    value >>= 1n;
+    highestBit <<= 1n;
+  }
 
-	return highestBit;
+  return highestBit;
 }

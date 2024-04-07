@@ -14,8 +14,8 @@ import { connectionManager } from "../../connectionManager.js";
  * @walletConnection
  */
 export function useActiveAccount() {
-	const store = connectionManager.activeAccountStore;
-	return useSyncExternalStore(store.subscribe, store.getValue, store.getValue);
+  const store = connectionManager.activeAccountStore;
+  return useSyncExternalStore(store.subscribe, store.getValue, store.getValue);
 }
 
 /**
@@ -30,8 +30,8 @@ export function useActiveAccount() {
  * @walletConnection
  */
 export function useActiveWallet() {
-	const store = connectionManager.activeWalletStore;
-	return useSyncExternalStore(store.subscribe, store.getValue, store.getValue);
+  const store = connectionManager.activeWalletStore;
+  return useSyncExternalStore(store.subscribe, store.getValue, store.getValue);
 }
 
 /**
@@ -50,7 +50,7 @@ export function useActiveWallet() {
  * @walletConnection
  */
 export function useSwitchActiveWalletChain() {
-	return connectionManager.switchActiveWalletChain;
+  return connectionManager.switchActiveWalletChain;
 }
 
 /**
@@ -65,8 +65,8 @@ export function useSwitchActiveWalletChain() {
  * @walletConnection
  */
 export function useActiveWalletChain() {
-	const store = connectionManager.activeWalletChainStore;
-	return useSyncExternalStore(store.subscribe, store.getValue, store.getValue);
+  const store = connectionManager.activeWalletChainStore;
+  return useSyncExternalStore(store.subscribe, store.getValue, store.getValue);
 }
 
 /**
@@ -81,8 +81,8 @@ export function useActiveWalletChain() {
  * @walletConnection
  */
 export function useConnectedWallets() {
-	const store = connectionManager.connectedWallets;
-	return useSyncExternalStore(store.subscribe, store.getValue, store.getValue);
+  const store = connectionManager.connectedWallets;
+  return useSyncExternalStore(store.subscribe, store.getValue, store.getValue);
 }
 
 /**
@@ -100,7 +100,7 @@ export function useConnectedWallets() {
  * @walletConnection
  */
 export function useSetActiveWallet() {
-	return connectionManager.setActiveWallet;
+  return connectionManager.setActiveWallet;
 }
 
 /**
@@ -134,37 +134,37 @@ export function useSetActiveWallet() {
  * @walletConnection
  */
 export function useConnect() {
-	const { setActiveWallet } = connectionManager;
-	const [isConnecting, setIsConnecting] = useState(false);
-	const [error, setError] = useState<Error | null>(null);
+  const { setActiveWallet } = connectionManager;
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
 
-	const connect = useCallback(
-		async (options: Wallet | (() => Promise<Wallet>)) => {
-			// reset error state
-			setError(null);
-			if (typeof options !== "function") {
-				setActiveWallet(options);
-				return options;
-			}
+  const connect = useCallback(
+    async (options: Wallet | (() => Promise<Wallet>)) => {
+      // reset error state
+      setError(null);
+      if (typeof options !== "function") {
+        setActiveWallet(options);
+        return options;
+      }
 
-			setIsConnecting(true);
-			try {
-				const wallet = await options();
-				// add the uuid for this wallet
-				setActiveWallet(wallet);
-				return wallet;
-			} catch (e) {
-				console.error(e);
-				setError(e as Error);
-			} finally {
-				setIsConnecting(false);
-			}
-			return null;
-		},
-		[setActiveWallet],
-	);
+      setIsConnecting(true);
+      try {
+        const wallet = await options();
+        // add the uuid for this wallet
+        setActiveWallet(wallet);
+        return wallet;
+      } catch (e) {
+        console.error(e);
+        setError(e as Error);
+      } finally {
+        setIsConnecting(false);
+      }
+      return null;
+    },
+    [setActiveWallet],
+  );
 
-	return { connect, isConnecting, error } as const;
+  return { connect, isConnecting, error } as const;
 }
 
 /**
@@ -187,8 +187,8 @@ export function useConnect() {
  * @returns An object with a function to disconnect an account
  */
 export function useDisconnect() {
-	const disconnect = connectionManager.disconnectWallet;
-	return { disconnect };
+  const disconnect = connectionManager.disconnectWallet;
+  return { disconnect };
 }
 
 /**
@@ -207,8 +207,8 @@ export function useDisconnect() {
  * @walletConnection
  */
 export function useActiveWalletConnectionStatus() {
-	const store = connectionManager.activeWalletConnectionStatusStore;
-	return useSyncExternalStore(store.subscribe, store.getValue, store.getValue);
+  const store = connectionManager.activeWalletConnectionStatusStore;
+  return useSyncExternalStore(store.subscribe, store.getValue, store.getValue);
 }
 
 /**
@@ -226,7 +226,7 @@ export function useActiveWalletConnectionStatus() {
  * @internal
  */
 export function useSetActiveWalletConnectionStatus() {
-	return connectionManager.activeWalletConnectionStatusStore.setValue;
+  return connectionManager.activeWalletConnectionStatusStore.setValue;
 }
 
 /**
@@ -243,6 +243,6 @@ export function useSetActiveWalletConnectionStatus() {
  * @walletConnection
  */
 export function useIsAutoConnecting() {
-	const store = connectionManager.isAutoConnecting;
-	return useSyncExternalStore(store.subscribe, store.getValue, store.getValue);
+  const store = connectionManager.isAutoConnecting;
+  return useSyncExternalStore(store.subscribe, store.getValue, store.getValue);
 }

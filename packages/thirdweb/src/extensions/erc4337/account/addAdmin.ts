@@ -4,14 +4,14 @@ import { setPermissionsForSigner } from "../__generated__/IAccountPermissions/wr
 import { defaultPermissionsForAdmin, signPermissionRequest } from "./common.js";
 
 export type AddAdminOptions = {
-	/**
-	 * The admin account that will perform the operation.
-	 */
-	account: Account;
-	/**
-	 * The address to add as an admin.
-	 */
-	adminAddress: string;
+  /**
+   * The admin account that will perform the operation.
+   */
+  account: Account;
+  /**
+   * The address to add as an admin.
+   */
+  adminAddress: string;
 };
 
 /**
@@ -32,19 +32,19 @@ export type AddAdminOptions = {
  * @extension ERC4337
  */
 export function addAdmin(options: BaseTransactionOptions<AddAdminOptions>) {
-	const { contract, account, adminAddress } = options;
-	return setPermissionsForSigner({
-		contract,
-		async asyncParams() {
-			const { req, signature } = await signPermissionRequest({
-				account,
-				contract,
-				req: await defaultPermissionsForAdmin({
-					target: adminAddress,
-					action: "add-admin",
-				}),
-			});
-			return { signature, req };
-		},
-	});
+  const { contract, account, adminAddress } = options;
+  return setPermissionsForSigner({
+    contract,
+    async asyncParams() {
+      const { req, signature } = await signPermissionRequest({
+        account,
+        contract,
+        req: await defaultPermissionsForAdmin({
+          target: adminAddress,
+          action: "add-admin",
+        }),
+      });
+      return { signature, req };
+    },
+  });
 }
