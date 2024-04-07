@@ -1,6 +1,6 @@
+import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import { generateLoginPayload } from "./generate-login-payload.js";
-import { describe, test, expect, beforeAll, vi, afterAll } from "vitest";
 
 describe("generateLoginPayload", () => {
   beforeAll(() => {

@@ -23,17 +23,11 @@
     "url": "https://github.com/thirdweb-dev/js/issues"
   },
   "author": "thirdweb eng <eng@thirdweb.com>",
-  "files": [
-    "dist/"
-  ],
+  "files": ["dist/"],
   "preconstruct": {
-    "entrypoints": [
-      "index.ts"
-    ],
+    "entrypoints": ["index.ts"],
     "exports": {
-      "envConditions": [
-        "browser"
-      ]
+      "envConditions": ["browser"]
     }
   },
   "sideEffects": false,
@@ -41,10 +35,11 @@
     "ethers": "^5.7.2"
   },
   "devDependencies": {
+    "eslint": "8.57.0",
     "@preconstruct/cli": "2.7.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "eslint-config-thirdweb": "workspace:*",
-    "typescript": "5.4.3"
+    "typescript": "5.4.4"
   },
   "scripts": {
     "format": "prettier --write 'src/**/*'",

@@ -1,8 +1,6 @@
-/* eslint-disable better-tree-shaking/no-top-level-side-effects */
-
-import { writeFile } from "fs/promises";
-import { rm, mkdir, readFile } from "fs/promises";
-import { join } from "path";
+import { writeFile } from "node:fs/promises";
+import { rm, mkdir, readFile } from "node:fs/promises";
+import { join } from "node:path";
 import { format } from "prettier";
 import sharp from "sharp";
 
@@ -60,7 +58,11 @@ function rdns(wallet: Wallet) {
 }
 
 const allWalletsWithIds = allWalletsArray.map((wallet) => {
+  // biome-ignore lint/performance/noDelete: aware it's bad but it's OK in generate script
+  // biome-ignore lint/suspicious/noExplicitAny: aware it's bad but it's OK in generate script
   delete (wallet as any).order;
+  // biome-ignore lint/performance/noDelete: aware it's bad but it's OK in generate script
+  // biome-ignore lint/suspicious/noExplicitAny: aware it's bad but it's OK in generate script
   delete (wallet as any).injected;
   return { ...wallet, id: rdns(wallet) };
 });
@@ -156,7 +158,11 @@ export type MinimalWalletInfo = {
 /**
  * @internal
  */
-const ALL_MINIMAL_WALLET_INFOS = <const>${JSON.stringify([...walletInfos, ...customWalletInfos], null, 2)} satisfies MinimalWalletInfo[];
+const ALL_MINIMAL_WALLET_INFOS = <const>${JSON.stringify(
+      [...walletInfos, ...customWalletInfos],
+      null,
+      2,
+    )} satisfies MinimalWalletInfo[];
 
 export default ALL_MINIMAL_WALLET_INFOS;
 `,
@@ -168,6 +174,7 @@ export default ALL_MINIMAL_WALLET_INFOS;
 
 // for each wallet, generate a folder within the `src/wallets/__generated__` directory
 // and write a `index.ts` file with the wallet's information
+// biome-ignore lint/suspicious/noExplicitAny: is ok in this script
 const p: Promise<any>[] = [];
 for (const wallet of allSupportedWallets) {
   p.push(
@@ -198,7 +205,6 @@ export const wallet = ${JSON.stringify(wallet, null, 2)} as const;
       // arrayBuffer to base64 webp
 
       const base64Flag = "data:image/webp;base64,";
-      // eslint-disable-next-line no-restricted-globals
 
       // write the image to the wallet's folder in a typescript file
       await writeFile(

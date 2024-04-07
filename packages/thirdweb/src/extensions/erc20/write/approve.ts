@@ -1,7 +1,7 @@
 import type { Address } from "abitype";
-import { toUnits } from "../../../utils/units.js";
-import type { Prettify } from "../../../utils/type-utils.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
+import type { Prettify } from "../../../utils/type-utils.js";
+import { toUnits } from "../../../utils/units.js";
 import { approve as generatedApprove } from "../__generated__/IERC20/write/approve.js";
 
 /**

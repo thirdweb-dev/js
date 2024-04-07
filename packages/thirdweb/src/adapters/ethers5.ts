@@ -1,17 +1,17 @@
+import type { Abi } from "abitype";
+import * as universalethers from "ethers";
 import type * as ethers5 from "ethers5";
 import type * as ethers6 from "ethers6";
-import * as universalethers from "ethers";
-import type { Abi } from "abitype";
 import type { AccessList, Hex, TransactionSerializable } from "viem";
-import type { ThirdwebClient } from "../client/client.js";
-import type { Account } from "../wallets/interfaces/wallet.js";
-import { getRpcUrlForChain } from "../chains/utils.js";
 import type { Chain } from "../chains/types.js";
-import { getContract, type ThirdwebContract } from "../contract/contract.js";
-import { toHex, uint8ArrayToHex } from "../utils/encoding/hex.js";
+import { getRpcUrlForChain } from "../chains/utils.js";
+import type { ThirdwebClient } from "../client/client.js";
+import { type ThirdwebContract, getContract } from "../contract/contract.js";
+import { sendTransaction } from "../transaction/actions/send-transaction.js";
 import { waitForReceipt } from "../transaction/actions/wait-for-tx-receipt.js";
 import { prepareTransaction } from "../transaction/prepare-transaction.js";
-import { sendTransaction } from "../transaction/actions/send-transaction.js";
+import { toHex, uint8ArrayToHex } from "../utils/encoding/hex.js";
+import type { Account } from "../wallets/interfaces/wallet.js";
 
 type Ethers5 = typeof ethers5;
 
@@ -259,6 +259,7 @@ async function fromEthersSigner(signer: ethers5.Signer): Promise<Account> {
       return (await (signer as ethers5.providers.JsonRpcSigner)._signTypedData(
         data.domain as ethers5.TypedDataDomain,
         data.types as Record<string, ethers5.TypedDataField[]>,
+        // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
         data.message as Record<string, any>,
       )) as Hex;
     },
@@ -367,7 +368,7 @@ export async function toEthersSigner(
         nonce: alignedTx.nonce ?? -1,
         value: ethers.BigNumber.from(alignedTx.value ?? 0),
         gasLimit: ethers.BigNumber.from(alignedTx.gas ?? 0),
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        // biome-ignore lint/style/noNonNullAssertion: TODO: fix later
         hash: result.transactionHash!,
         confirmations: 0,
         wait: async () => {
@@ -405,10 +406,10 @@ export async function toEthersSigner(
       return response;
     }
 
-    // eslint-disable-next-line jsdoc/require-jsdoc
     async _signTypedData(
       domain: ethers5.ethers.TypedDataDomain,
       types: Record<string, ethers5.ethers.TypedDataField[]>,
+      // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
       value: Record<string, any>,
     ): Promise<string> {
       if (!account) {
@@ -543,7 +544,6 @@ async function alignTxFromEthers(
         accessList: accessList as AccessList,
       };
     }
-    case 0:
     default: {
       return {
         type: "legacy",

@@ -1,8 +1,8 @@
 import { sha256 as noble_sha256 } from "@noble/hashes/sha256";
 import {
-  isHex,
   type Hex,
   hexToUint8Array,
+  isHex,
   uint8ArrayToHex,
 } from "../encoding/hex.js";
 

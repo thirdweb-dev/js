@@ -20,7 +20,7 @@ export type LoginQuerierTypes = {
     otp: string;
     recoveryCode?: string;
   };
-  injectDeveloperClientId: void;
+  injectDeveloperClientId: undefined;
   getHeadlessOauthLoginLink: { authProvider: AuthProvider };
 };
 

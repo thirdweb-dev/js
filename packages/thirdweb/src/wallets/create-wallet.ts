@@ -1,19 +1,19 @@
-import type {
-  WalletId,
-  CreateWalletArgs,
-  InjectedConnectOptions,
-} from "./wallet-types.js";
-import type { Account, Wallet } from "./interfaces/wallet.js";
 import type { Chain } from "../chains/types.js";
-import { injectedProvider } from "./injected/mipdStore.js";
 import type {
   InjectedSupportedWalletIds,
   WCSupportedWalletIds,
 } from "./__generated__/wallet-ids.js";
+import { injectedProvider } from "./injected/mipdStore.js";
+import type { Account, Wallet } from "./interfaces/wallet.js";
+import type {
+  CreateWalletArgs,
+  InjectedConnectOptions,
+  WalletId,
+} from "./wallet-types.js";
 
-import { createWalletEmitter } from "./wallet-emitter.js";
 import { trackConnect } from "../analytics/track.js";
 import type { WCConnectOptions } from "./wallet-connect/types.js";
+import { createWalletEmitter } from "./wallet-emitter.js";
 
 // TODO: figure out how to define the type without tuple args type and using function overloads
 

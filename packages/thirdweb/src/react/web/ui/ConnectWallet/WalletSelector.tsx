@@ -1,40 +1,40 @@
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
-import { useContext, useState, useRef, useEffect, lazy, Suspense } from "react";
+import { Suspense, lazy, useContext, useEffect, useRef, useState } from "react";
+import type { InjectedSupportedWalletIds } from "../../../../wallets/__generated__/wallet-ids.js";
+import { createWallet } from "../../../../wallets/create-wallet.js";
+import { getMIPDStore } from "../../../../wallets/injected/mipdStore.js";
+import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
+import type { WalletId } from "../../../../wallets/wallet-types.js";
+// import { localWalletMetadata } from "../../../../wallets/local/index._ts";
+import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import {
   ModalConfigCtx,
   // SetModalConfigCtx,
 } from "../../providers/wallet-ui-states-provider.js";
+import { sortWallets } from "../../utils/sortWallets.js";
+import { LoadingScreen } from "../../wallets/shared/LoadingScreen.js";
 import { Img } from "../components/Img.js";
 import { Spacer } from "../components/Spacer.js";
 import { TextDivider } from "../components/TextDivider.js";
+import { WalletImage } from "../components/WalletImage.js";
 import {
   Container,
-  ScreenBottomContainer,
   Line,
   ModalHeader,
+  ScreenBottomContainer,
   noScrollBar,
 } from "../components/basic.js";
 import { Button, IconButton } from "../components/buttons.js";
 import { ModalTitle } from "../components/modalElements.js";
 import { Link } from "../components/text.js";
+import { Text } from "../components/text.js";
+import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 import { StyledDiv, StyledUl } from "../design-system/elements.js";
 import { fontSize, iconSize, radius, spacing } from "../design-system/index.js";
 import { TOS } from "./Modal/TOS.js";
-import { TWIcon } from "./icons/twIcon.js";
-import { Text } from "../components/text.js";
 import { PoweredByThirdweb } from "./PoweredByTW.js";
-// import { localWalletMetadata } from "../../../../wallets/local/index._ts";
-import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
-import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
-import { WalletImage } from "../components/WalletImage.js";
-import { getMIPDStore } from "../../../../wallets/injected/mipdStore.js";
-import { createWallet } from "../../../../wallets/create-wallet.js";
-import type { InjectedSupportedWalletIds } from "../../../../wallets/__generated__/wallet-ids.js";
-import type { WalletId } from "../../../../wallets/wallet-types.js";
-import { LoadingScreen } from "../../wallets/shared/LoadingScreen.js";
 import { WalletButton, WalletEntryButton } from "./WalletEntryButton.js";
-import { sortWallets } from "../../utils/sortWallets.js";
-import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
+import { TWIcon } from "./icons/twIcon.js";
 
 const InAppWalletSelectionUI = /* @__PURE__ */ lazy(
   () => import("../../wallets/in-app/InAppWalletSelectionUI.js"),
@@ -64,11 +64,11 @@ export const WalletSelector: React.FC<{
   const propsWallets = props.wallets;
   const _wallets: Wallet[] = [...propsWallets];
 
-  installedWallets.forEach((iW) => {
+  for (const iW of installedWallets) {
     if (!propsWallets.find((w) => w.id === iW.id)) {
       _wallets.push(iW);
     }
-  });
+  }
 
   // const disconnect = useDisconnect();
   // const connectionStatus = useActiveWalletConnectionStatus();
@@ -542,10 +542,10 @@ const WalletSelection: React.FC<{
         <ButtonContainer>
           <WalletButton onClick={props.onShowAll}>
             <ShowAllWalletsIcon>
-              <div data-dot></div>
-              <div data-dot></div>
-              <div data-dot></div>
-              <div data-dot></div>
+              <div data-dot />
+              <div data-dot />
+              <div data-dot />
+              <div data-dot />
             </ShowAllWalletsIcon>
             <Container flex="row" gap="xs">
               <Text color="primaryText">All Wallets</Text>
@@ -582,8 +582,8 @@ const ButtonContainer = /* @__PURE__ */ StyledDiv(() => {
 const ShowAllWalletsIcon = /* @__PURE__ */ StyledDiv(() => {
   const theme = useCustomTheme();
   return {
-    width: iconSize.xl + "px",
-    height: iconSize.xl + "px",
+    width: `${iconSize.xl}px`,
+    height: `${iconSize.xl}px`,
     backgroundColor: theme.colors.walletSelectorButtonHoverBg,
     border: `2px solid ${theme.colors.borderColor}`,
     borderRadius: radius.md,

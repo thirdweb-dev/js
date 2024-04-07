@@ -35,7 +35,8 @@ export function defineChain(
   }
   if (isViemChain(options)) {
     return convertViemChain(options);
-  } else if (isLegacyChain(options)) {
+  }
+  if (isLegacyChain(options)) {
     return convertLegacyChain(options);
   }
   // otherwise if it's not a viem chain, continue

@@ -24,17 +24,9 @@
     "url": "https://github.com/thirdweb-dev/js/issues"
   },
   "author": "thirdweb eng <eng@thirdweb.com>",
-  "files": [
-    "dist/",
-    "node/",
-    "cf-worker/"
-  ],
+  "files": ["dist/", "node/", "cf-worker/"],
   "preconstruct": {
-    "entrypoints": [
-      "index.ts",
-      "cf-worker/index.ts",
-      "node/index.ts"
-    ],
+    "entrypoints": ["index.ts", "cf-worker/index.ts", "node/index.ts"],
     "exports": true
   },
   "sideEffects": false,
@@ -43,18 +35,16 @@
     "zod": "3.22.4"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "4.20240329.0",
+    "@cloudflare/workers-types": "4.20240405.0",
     "@preconstruct/cli": "2.7.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
-    "@types/node": "20.12.2",
-    "eslint": "8.57.0",
-    "eslint-config-thirdweb": "workspace:*",
-    "typescript": "5.4.3"
+    "@types/node": "20.12.5",
+    "typescript": "5.4.4"
   },
   "scripts": {
-    "format": "prettier --write 'src/**/*'",
-    "lint": "eslint src/",
-    "fix": "eslint src/ --fix",
+    "format": "biome format --write 'src/**/*'",
+    "lint": "biome check src/",
+    "fix": "biome check src/ --apply",
     "clean": "rm -rf dist/",
     "build": "tsc && preconstruct build",
     "push": "yalc push",

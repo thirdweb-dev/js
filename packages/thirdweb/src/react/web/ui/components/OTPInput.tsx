@@ -1,9 +1,9 @@
+import styled from "@emotion/styled";
 import { useEffect, useRef } from "react";
 import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
-import { fontSize, spacing, media } from "../design-system/index.js";
+import { fontSize, media, spacing } from "../design-system/index.js";
 import { Container } from "./basic.js";
 import { Input } from "./formElements.js";
-import styled from "@emotion/styled";
 
 /**
  * @internal
@@ -38,7 +38,10 @@ export function OTPInput(props: {
         return (
           <OTPInputBox
             data-error={props.isInvalid}
-            ref={(e) => (boxEls.current[i] = e)}
+            ref={(e) => {
+              boxEls.current[i] = e;
+            }}
+            // biome-ignore lint/suspicious/noArrayIndexKey: in this case the index is static and has to be the key
             key={i}
             value={otp[i] ?? ""}
             type="text"

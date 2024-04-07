@@ -1,4 +1,4 @@
-import { isHex, type Hex } from "../encoding/hex.js";
+import { type Hex, isHex } from "../encoding/hex.js";
 
 /**
  * Ensures that the given bytecode has the correct prefix.

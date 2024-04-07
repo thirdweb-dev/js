@@ -24,6 +24,7 @@ export type InAppWalletConstructorType = ClientIdConstructorType & {
 };
 
 export type ClientIdWithQuerierType = ClientIdConstructorType & {
+  // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
   querier: InAppWalletIframeCommunicator<any>;
 };
 

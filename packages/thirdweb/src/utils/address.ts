@@ -23,7 +23,7 @@ const IS_ADDRESS_CACHE = new LruMap<boolean>(4096);
  */
 export function isAddress(address: string): address is Address {
   if (IS_ADDRESS_CACHE.has(address)) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    // biome-ignore lint/style/noNonNullAssertion: the `has` above ensures that this will always be set
     return IS_ADDRESS_CACHE.get(address)!;
   }
   const result = (() => {
@@ -59,14 +59,15 @@ export function checksumAddress(address: string): Address {
 
   const address_ = hexAddress.split("");
   for (let i = 0; i < 40; i += 2) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    // biome-ignore lint/style/noNonNullAssertion: <explanation>
     if (hash[i >> 1]! >> 4 >= 8 && address[i]) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      // biome-ignore lint/style/noNonNullAssertion: <explanation>
       address_[i] = address_[i]!.toUpperCase();
     }
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
+    // biome-ignore lint/style/noNonNullAssertion: <explanation>
     if ((hash[i >> 1]! & 0x0f) >= 8 && address[i + 1]) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      // biome-ignore lint/style/noNonNullAssertion: <explanation>
       address_[i + 1] = address_[i + 1]!.toUpperCase();
     }
   }

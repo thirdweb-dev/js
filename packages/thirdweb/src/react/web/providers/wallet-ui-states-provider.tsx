@@ -1,16 +1,17 @@
-import { useState, createContext, useContext } from "react";
+import { createContext, useContext, useState } from "react";
+import type { Chain } from "../../../chains/types.js";
+import type { Wallet } from "../../../wallets/interfaces/wallet.js";
+import { useWalletConnectionCtx } from "../../core/hooks/others/useWalletConnectionCtx.js";
 import type { WelcomeScreen } from "../ui/ConnectWallet/screens/types.js";
 import type { Theme } from "../ui/design-system/index.js";
 import { canFitWideModal } from "../utils/canFitWideModal.js";
-import type { Wallet } from "../../../wallets/interfaces/wallet.js";
-import type { Chain } from "../../../chains/types.js";
-import { useWalletConnectionCtx } from "../../core/hooks/others/useWalletConnectionCtx.js";
 
 type BoolSetter = (value: boolean) => void;
 
 type ModalConfig = {
   title: string;
   theme: "light" | "dark" | Theme;
+  // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
   data: any;
   modalSize: "wide" | "compact";
   termsOfServiceUrl?: string;

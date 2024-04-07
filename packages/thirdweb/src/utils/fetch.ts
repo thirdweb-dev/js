@@ -2,9 +2,9 @@ import type { ThirdwebClient } from "../client/client.js";
 import { version } from "../version.js";
 import { LruMap } from "./caching/lru.js";
 import {
+  type OperatingSystem,
   detectOS,
   detectPlatform,
-  type OperatingSystem,
 } from "./detect-platform.js";
 
 const DEFAULT_REQUEST_TIMEOUT = 60000;
@@ -19,7 +19,7 @@ const FETCH_CACHE = new WeakMap<
  */
 export function getClientFetch(client: ThirdwebClient) {
   if (FETCH_CACHE.has(client)) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    // biome-ignore lint/style/noNonNullAssertion: the `has` above ensures that this will always be set
     return FETCH_CACHE.get(client)!;
   }
 
@@ -40,15 +40,19 @@ export function getClientFetch(client: ThirdwebClient) {
       if (!headers) {
         headers = new Headers();
       }
-      if (client.secretKey) {
+      const authToken = getTWAuthToken();
+      // if we have an auth token set, use that (thirdweb.com/dashboard sets this for the user)
+      if (authToken) {
+        headers.set("authorization", `Bearer ${authToken}`);
+      } else if (client.secretKey) {
         headers.set("x-secret-key", client.secretKey);
       } else if (client.clientId) {
         headers.set("x-client-id", client.clientId);
       }
       // this already internally caches
-      getPlatformHeaders().forEach(([key, value]) => {
+      for (const [key, value] of getPlatformHeaders()) {
         (headers as Headers).set(key, value);
-      });
+      }
     }
 
     let controller: AbortController | undefined;
@@ -90,7 +94,7 @@ const IS_THIRDWEB_URL_CACHE = new LruMap<boolean>(4096);
  */
 export function isThirdwebUrl(url: string): boolean {
   if (IS_THIRDWEB_URL_CACHE.has(url)) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    // biome-ignore lint/style/noNonNullAssertion: the `has` above ensures that this will always be set
     return IS_THIRDWEB_URL_CACHE.get(url)!;
   }
   try {
@@ -122,7 +126,8 @@ export function getPlatformHeaders() {
 
   const bundleId =
     typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
-      ? ((globalThis as any).APP_BUNDLE_ID as string)
+      ? // biome-ignore lint/suspicious/noExplicitAny: get around globalThis typing
+        ((globalThis as any).APP_BUNDLE_ID as string)
       : undefined;
 
   previousPlatform = Object.entries({
@@ -156,4 +161,17 @@ function parseOs(os: OperatingSystem | NodeJS.Platform) {
       // if we somehow fall through here, just replace all spaces with underscores and send it
       return osLowerCased.replace(/\s/gi, "_");
   }
+}
+
+function getTWAuthToken(): string | null {
+  if (
+    typeof globalThis !== "undefined" &&
+    "TW_AUTH_TOKEN" in globalThis &&
+    // biome-ignore lint/suspicious/noExplicitAny: get around globalThis typing
+    typeof (globalThis as any).TW_AUTH_TOKEN === "string"
+  ) {
+    // biome-ignore lint/suspicious/noExplicitAny: get around globalThis typing
+    return (globalThis as any).TW_AUTH_TOKEN as string;
+  }
+  return null;
 }

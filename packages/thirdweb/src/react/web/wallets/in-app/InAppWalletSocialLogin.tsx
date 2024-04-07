@@ -1,17 +1,17 @@
-import { useState, useEffect, useContext, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import type { InAppWalletSocialAuth } from "../../../../wallets/in-app/core/wallet/index.js";
+import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
+import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import { ModalConfigCtx } from "../../providers/wallet-ui-states-provider.js";
 import { Spacer } from "../../ui/components/Spacer.js";
 import { Spinner } from "../../ui/components/Spinner.js";
 import { Container, ModalHeader } from "../../ui/components/basic.js";
 import { Button } from "../../ui/components/buttons.js";
+import { Text } from "../../ui/components/text.js";
 import { useCustomTheme } from "../../ui/design-system/CustomThemeProvider.js";
+import type { InAppWalletLocale } from "./locale/types.js";
 import { openOauthSignInWindow } from "./openOauthSignInWindow.js";
 import type { InAppWalletSelectUIState } from "./types.js";
-import { Text } from "../../ui/components/text.js";
-import type { InAppWalletLocale } from "./locale/types.js";
-import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
-import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
-import { ModalConfigCtx } from "../../providers/wallet-ui-states-provider.js";
-import type { InAppWalletSocialAuth } from "../../../../wallets/in-app/core/wallet/index.js";
 
 /**
  * @internal
@@ -55,11 +55,14 @@ export function InAppWalletSocialLogin(props: {
       });
       setStatus("connected");
       done();
-    } catch (e: any) {
+    } catch (e) {
       setStatus("error");
       // TODO this only happens on 'retry' button click, not on initial login
       // should pass auth error message to this component
-      if (e?.message?.includes("PAYMENT_METHOD_REQUIRED")) {
+      if (
+        e instanceof Error &&
+        e?.message?.includes("PAYMENT_METHOD_REQUIRED")
+      ) {
         setAuthError(ewLocale.maxAccountsExceeded);
       }
       console.error(`Error sign in with ${props.socialAuth}`, e);

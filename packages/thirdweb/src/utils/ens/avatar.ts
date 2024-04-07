@@ -1,9 +1,9 @@
-import { isAddress } from "../address.js";
+import { defineChain } from "../../chains/utils.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { getContract } from "../../contract/contract.js";
-import { defineChain } from "../../chains/utils.js";
-import { resolveScheme } from "../ipfs.js";
+import { isAddress } from "../address.js";
 import { getClientFetch } from "../fetch.js";
+import { resolveScheme } from "../ipfs.js";
 
 type AvatarOptions = {
   client: ThirdwebClient;
@@ -111,13 +111,14 @@ async function isImageUri(options: AvatarOptions): Promise<boolean> {
       return !!contentType?.startsWith("image/");
     }
     return false;
+    // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
   } catch (error: any) {
     // if error is not cors related then fail
     if (typeof error === "object" && typeof error.response !== "undefined") {
       return false;
     }
     // fail in NodeJS, since the error is not cors but any other network issue
-    if (!globalThis.hasOwnProperty("Image")) {
+    if (Object.hasOwn(globalThis, "Image")) {
       return false;
     }
     // in case of cors, use image api to validate if given url is an actual image

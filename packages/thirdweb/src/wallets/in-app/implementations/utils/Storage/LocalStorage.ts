@@ -23,17 +23,15 @@ export class LocalStorage {
   protected async getItem(key: string): Promise<string | null> {
     if (this.isSupported) {
       return window.localStorage.getItem(key);
-    } else {
-      return data.get(key) ?? null;
     }
+    return data.get(key) ?? null;
   }
 
   protected async setItem(key: string, value: string): Promise<void> {
     if (this.isSupported) {
       return window.localStorage.setItem(key, value);
-    } else {
-      data.set(key, value);
     }
+    data.set(key, value);
   }
 
   protected async removeItem(key: string): Promise<boolean> {

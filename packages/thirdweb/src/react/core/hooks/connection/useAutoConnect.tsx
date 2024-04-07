@@ -1,14 +1,6 @@
 import { useEffect } from "react";
-import { connectionManager } from "../../connectionManager.js";
-// import type { WalletConfig } from "../../types/wallets.js";
-import {
-  useConnect,
-  useSetActiveWalletConnectionStatus,
-} from "../wallets/wallet-hooks.js";
-import {
-  getStoredActiveWalletId,
-  getStoredConnectedWalletIds,
-} from "../../../../wallets/manager/index.js";
+import type { ThirdwebClient } from "../../../../client/client.js";
+import { createWallet } from "../../../../wallets/create-wallet.js";
 // import {
 //   getSavedConnectParamsFromStorage,
 //   type WithPersonalWalletConnectionOptions,
@@ -17,13 +9,21 @@ import type {
   Wallet,
   // WalletWithPersonalAccount,
 } from "../../../../wallets/interfaces/wallet.js";
-import type { ThirdwebClient } from "../../../../client/client.js";
-import type { AppMetadata } from "../../../../wallets/types.js";
-import { timeoutPromise } from "../../utils/timeoutPromise.js";
+import {
+  getStoredActiveWalletId,
+  getStoredConnectedWalletIds,
+} from "../../../../wallets/manager/index.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
-import { createWallet } from "../../../../wallets/create-wallet.js";
-import { getSavedConnectParamsFromStorage } from "../../../../wallets/storage/walletStorage.js";
 import { asyncLocalStorage } from "../../../../wallets/storage/asyncLocalStorage.js";
+import { getSavedConnectParamsFromStorage } from "../../../../wallets/storage/walletStorage.js";
+import type { AppMetadata } from "../../../../wallets/types.js";
+import { connectionManager } from "../../connectionManager.js";
+import { timeoutPromise } from "../../utils/timeoutPromise.js";
+// import type { WalletConfig } from "../../types/wallets.js";
+import {
+  useConnect,
+  useSetActiveWalletConnectionStatus,
+} from "../wallets/wallet-hooks.js";
 
 let autoConnectAttempted = false;
 
@@ -209,8 +209,7 @@ export function AutoConnect(props: AutoConnectProps) {
                 handleWalletConnection(personalWallet),
                 {
                   ms: timeout,
-                  message:
-                    "AutoConnect timeout : " + timeout + "ms limit exceeded.",
+                  message: `AutoConnect timeout : ${timeout}ms limit exceeded.`,
                 },
               );
 
@@ -235,8 +234,7 @@ export function AutoConnect(props: AutoConnectProps) {
           try {
             await timeoutPromise(handleWalletConnection(activeWallet), {
               ms: timeout,
-              message:
-                "AutoConnect timeout : " + timeout + "ms limit exceeded.",
+              message: `AutoConnect timeout : ${timeout}ms limit exceeded.`,
             });
 
             connect(activeWallet);
@@ -256,7 +254,7 @@ export function AutoConnect(props: AutoConnectProps) {
           w.id !== lastActiveWalletId && lastConnectedWalletIds.includes(w.id),
       );
 
-      otherWallets.forEach(async (wallet) => {
+      for (const wallet of otherWallets) {
         try {
           await handleWalletConnection(wallet);
           connectionManager.addConnectedWallet(wallet);
@@ -265,7 +263,7 @@ export function AutoConnect(props: AutoConnectProps) {
           console.error(e);
           setConnectionStatus("disconnected");
         }
-      });
+      }
     };
 
     (async () => {

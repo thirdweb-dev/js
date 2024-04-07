@@ -1,8 +1,8 @@
-/* eslint-disable better-tree-shaking/no-top-level-side-effects */
 import { createAnvil } from "@viem/anvil";
 import { $ } from "bun";
-import { readdir } from "fs/promises";
-import { join } from "path";
+
+import { readdir } from "node:fs/promises";
+import { join } from "node:path";
 
 const forkHeader = {};
 if (process.env.TW_SECRET_KEY) {
@@ -12,7 +12,7 @@ if (process.env.TW_SECRET_KEY) {
 const anvil = createAnvil({
   port: 8545,
   chainId: 1,
-  forkUrl: `https://1.rpc.thirdweb.com`,
+  forkUrl: "https://1.rpc.thirdweb.com",
   forkHeader,
   forkChainId: 1,
   forkBlockNumber: 19139495n,
@@ -20,7 +20,7 @@ const anvil = createAnvil({
   startTimeout: 20000,
 });
 
-console.log(`Starting Anvil...`);
+console.log("Starting Anvil...");
 await anvil.start();
 
 // find all the benchmark files in this directory
@@ -35,8 +35,8 @@ for (const benchmark of benchmarks) {
 Running benchmark: ${benchmark}
 -------------------${"-".repeat(benchmark.length)}\n`);
   await $`bun run ${join(__dirname, benchmark)}`;
-  console.log(`\n`);
+  console.log("\n");
 }
 
-console.log(`Stopping Anvil...`);
+console.log("Stopping Anvil...");
 await anvil.stop();

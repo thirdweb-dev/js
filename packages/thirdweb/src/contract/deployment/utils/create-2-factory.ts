@@ -1,18 +1,18 @@
 import { getContractAddress } from "viem";
-import { getContract } from "../../contract.js";
-import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed.js";
-import { isEIP155Enforced } from "../../../utils/any-evm/is-eip155-enforced.js";
-import { getKeylessTransaction } from "../../../utils/any-evm/keyless-transaction.js";
+import { eth_getBalance } from "../../../rpc/actions/eth_getBalance.js";
 import { eth_sendRawTransaction } from "../../../rpc/actions/eth_sendRawTransaction.js";
 import { getRpcClient } from "../../../rpc/rpc.js";
-import { eth_getBalance } from "../../../rpc/actions/eth_getBalance.js";
-import { prepareTransaction } from "../../../transaction/prepare-transaction.js";
 import { sendTransaction } from "../../../transaction/actions/send-transaction.js";
 import { waitForReceipt } from "../../../transaction/actions/wait-for-tx-receipt.js";
+import { prepareTransaction } from "../../../transaction/prepare-transaction.js";
+import { isEIP155Enforced } from "../../../utils/any-evm/is-eip155-enforced.js";
+import { getKeylessTransaction } from "../../../utils/any-evm/keyless-transaction.js";
+import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed.js";
 import type {
   ClientAndChain,
   ClientAndChainAndAccount,
 } from "../../../utils/types.js";
+import { getContract } from "../../contract.js";
 
 const COMMON_FACTORY_ADDRESS = "0x4e59b44847b379578588920cA78FbF26c0B4956C"; // for pre-eip-155 supporting chains
 

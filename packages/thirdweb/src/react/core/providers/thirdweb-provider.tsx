@@ -1,11 +1,11 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
-import { isObjectWithKeys } from "../../../utils/type-guards.js";
 import {
-  waitForReceipt,
   type WaitForReceiptOptions,
+  waitForReceipt,
 } from "../../../transaction/actions/wait-for-tx-receipt.js";
 import { isBaseTransactionOptions } from "../../../transaction/types.js";
+import { isObjectWithKeys } from "../../../utils/type-guards.js";
 
 /**
  * The ThirdwebProvider is component is a provider component that sets up the React Query client.

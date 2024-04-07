@@ -31,6 +31,7 @@ const isIframeLoaded = new Map<string, boolean>();
 /**
  * @internal
  */
+// biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
 export class IframeCommunicator<T extends { [key: string]: any }> {
   private iframe: HTMLIFrameElement;
   private POLLING_INTERVAL_SECONDS = 1.4;
@@ -71,7 +72,7 @@ export class IframeCommunicator<T extends { [key: string]: any }> {
       }
       iframe.src = hrefLink.href;
       // iframe.setAttribute("data-version", sdkVersion);
-
+      // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
       const onIframeLoaded = (event: MessageEvent<any>) => {
         if (event.data.eventType === "ewsIframeLoaded") {
           window.removeEventListener("message", onIframeLoaded);
@@ -87,6 +88,7 @@ export class IframeCommunicator<T extends { [key: string]: any }> {
     this.iframe = iframe;
   }
 
+  // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
   protected async onIframeLoadedInitVariables(): Promise<Record<string, any>> {
     return {};
   }
@@ -99,34 +101,37 @@ export class IframeCommunicator<T extends { [key: string]: any }> {
     onIframeInitialize?: () => void,
   ) {
     return async () => {
-      const promise = new Promise<boolean>(async (res, rej) => {
-        const channel = new MessageChannel();
+      const channel = new MessageChannel();
+
+      const promise = new Promise((res, rej) => {
+        // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
         channel.port1.onmessage = (event: any) => {
           const { data } = event;
           channel.port1.close();
           if (!data.success) {
-            return rej(new Error(data.error));
+            rej(new Error(data.error));
           }
           isIframeLoaded.set(iframe.src, true);
           if (onIframeInitialize) {
             onIframeInitialize();
           }
-          return res(true);
+          res(true);
         };
-
-        const INIT_IFRAME_EVENT = "initIframe";
-        iframe?.contentWindow?.postMessage(
-          // ? We initialise the iframe with a bunch
-          // of useful information so that we don't have to pass it
-          // through in each of the future call. This would be where we do it.
-          {
-            eventType: INIT_IFRAME_EVENT,
-            data: await this.onIframeLoadedInitVariables(),
-          },
-          this.iframeBaseUrl,
-          [channel.port2],
-        );
       });
+
+      const INIT_IFRAME_EVENT = "initIframe";
+      iframe?.contentWindow?.postMessage(
+        // ? We initialise the iframe with a bunch
+        // of useful information so that we don't have to pass it
+        // through in each of the future call. This would be where we do it.
+        {
+          eventType: INIT_IFRAME_EVENT,
+          data: await this.onIframeLoadedInitVariables(),
+        },
+        this.iframeBaseUrl,
+        [channel.port2],
+      );
+
       await promise;
     };
   }
@@ -151,8 +156,10 @@ export class IframeCommunicator<T extends { [key: string]: any }> {
       // magic number to let the display render before performing the animation of the modal in
       await sleep(0.005);
     }
+
+    const channel = new MessageChannel();
     const promise = new Promise<ReturnData>((res, rej) => {
-      const channel = new MessageChannel();
+      // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
       channel.port1.onmessage = async (event: any) => {
         const { data } = event;
         channel.port1.close();
@@ -167,12 +174,13 @@ export class IframeCommunicator<T extends { [key: string]: any }> {
           res(data.data);
         }
       };
-      this.iframe.contentWindow?.postMessage(
-        { eventType: procedureName, data: params },
-        this.iframeBaseUrl,
-        [channel.port2],
-      );
     });
+
+    this.iframe.contentWindow?.postMessage(
+      { eventType: procedureName, data: params },
+      this.iframeBaseUrl,
+      [channel.port2],
+    );
     return promise;
   }
 

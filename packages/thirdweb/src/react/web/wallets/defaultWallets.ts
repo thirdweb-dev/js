@@ -1,5 +1,5 @@
-import type { Wallet } from "../../../wallets/interfaces/wallet.js";
 import { createWallet } from "../../../wallets/create-wallet.js";
+import type { Wallet } from "../../../wallets/interfaces/wallet.js";
 
 /**
  * @internal

@@ -3,8 +3,8 @@ import { getRpcClient } from "../../../../rpc/rpc.js";
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 
 import {
-  getListing as getListingGenerated,
   type GetListingParams as GetListingParamsGenerated,
+  getListing as getListingGenerated,
 } from "../../__generated__/IDirectListings/read/getListing.js";
 import type { DirectListing } from "../../types.js";
 import { mapDirectListing } from "../../utils.js";

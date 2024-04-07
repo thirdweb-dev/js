@@ -26,19 +26,19 @@ describe("getAddress", () => {
 
   test("errors on invalid address", () => {
     expect(() => getAddress("0x0")).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Invalid address: 0x0]`,
+      "[Error: Invalid address: 0x0]",
     );
     expect(() => getAddress("0x")).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Invalid address: 0x]`,
+      "[Error: Invalid address: 0x]",
     );
     expect(() => getAddress("0x0x0")).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Invalid address: 0x0x0]`,
+      "[Error: Invalid address: 0x0x0]",
     );
     expect(() => getAddress("0x0x")).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Invalid address: 0x0x]`,
+      "[Error: Invalid address: 0x0x]",
     );
     expect(() => getAddress("0x0x0x")).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Invalid address: 0x0x0x]`,
+      "[Error: Invalid address: 0x0x0x]",
     );
   });
 });

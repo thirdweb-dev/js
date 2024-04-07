@@ -23,9 +23,7 @@
   },
   "author": "thirdweb eng <eng@thirdweb.com>",
   "sideEffects": false,
-  "files": [
-    "dist/"
-  ],
+  "files": ["dist/"],
   "scripts": {
     "push": "yalc push"
   }

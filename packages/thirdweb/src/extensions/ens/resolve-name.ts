@@ -1,13 +1,13 @@
+import type { Address } from "abitype";
 import { ethereum } from "../../chains/chain-definitions/ethereum.js";
+import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { getContract } from "../../contract/contract.js";
 import { toHex } from "../../utils/encoding/hex.js";
 import { packetToBytes } from "../../utils/ens/packetToBytes.js";
-import type { Chain } from "../../chains/types.js";
-import { UNIVERSAL_RESOLVER_ADDRESS } from "./constants.js";
 import { withCache } from "../../utils/promise/withCache.js";
 import { reverse } from "./__generated__/UniversalResolver/read/reverse.js";
-import type { Address } from "abitype";
+import { UNIVERSAL_RESOLVER_ADDRESS } from "./constants.js";
 
 export type ResolveNameOptions = {
   client: ThirdwebClient;

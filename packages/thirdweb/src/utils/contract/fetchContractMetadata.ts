@@ -1,5 +1,5 @@
-import { isBase64JSON, parseBase64String } from "../base64/base64.js";
 import type { ThirdwebClient } from "../../client/client.js";
+import { isBase64JSON, parseBase64String } from "../base64/base64.js";
 
 type FetchContractMetadata = {
   client: ThirdwebClient;
@@ -15,6 +15,7 @@ type FetchContractMetadata = {
  */
 export async function fetchContractMetadata(
   options: FetchContractMetadata,
+  // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
 ): Promise<{ [key: string]: any } | undefined> {
   const { client, uri } = options;
 

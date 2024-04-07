@@ -1,5 +1,6 @@
 import { keyframes } from "@emotion/react";
-import React, { Suspense, lazy } from "react";
+import type React from "react";
+import { Suspense, lazy } from "react";
 import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 import { fadeInAnimation } from "../design-system/animations.js";
 import { StyledDiv } from "../design-system/elements.js";

@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
+import type { ThirdwebClient } from "../../../../client/client.js";
 import { resolveScheme } from "../../../../utils/ipfs.js";
 import { resolveMimeType } from "../../utils/resolveMimeType.js";
-import type { ThirdwebClient } from "../../../../client/client.js";
 
 /**
  * @internal

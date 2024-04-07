@@ -1,9 +1,9 @@
-// slightly tweaked re-exports from viem for the moment
-import { assertSize } from "./helpers/assert-size.js";
 import { cachedTextDecoder } from "../text-decoder.js";
 import { cachedTextEncoder } from "../text-encoder.js";
-import type { Hex } from "./helpers/is-hex.js";
+// slightly tweaked re-exports from viem for the moment
+import { assertSize } from "./helpers/assert-size.js";
 import { charCodeToBase16 } from "./helpers/charcode-to-base-16.js";
+import type { Hex } from "./helpers/is-hex.js";
 
 export { type Hex, isHex, type IsHexOptions } from "./helpers/is-hex.js";
 
@@ -19,6 +19,7 @@ function trim<TValue extends Uint8Array | Hex>(
   options: TrimOptions = {},
 ): TrimReturnType<TValue> {
   const dir = options.dir || "left";
+  // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
   let data: any =
     typeof hexOrBytes === "string" ? hexOrBytes.replace("0x", "") : hexOrBytes;
 
@@ -193,6 +194,7 @@ export type HexToBoolOpts = {
 export function hexToBool(hex: Hex, opts: HexToBoolOpts = {}): boolean {
   if (opts.size) {
     assertSize(hex, { size: opts.size });
+    // biome-ignore lint/style/noParameterAssign: for perf
     hex = trim(hex);
   }
   if (trim(hex) === "0x00") {
@@ -228,6 +230,7 @@ export function hexToUint8Array(
 ): Uint8Array {
   if (opts.size) {
     assertSize(hex, { size: opts.size });
+    // biome-ignore lint/style/noParameterAssign: for perf
     hex = padHex(hex, { dir: "right", size: opts.size });
   }
 
@@ -362,7 +365,7 @@ export function uint8ArrayToHex(
 ): Hex {
   let string = "";
   for (let i = 0; i < value.length; i++) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    // biome-ignore lint/style/noNonNullAssertion: we know this is defined
     string += hexes[value[i]!];
   }
   const hex = `0x${string}` as const;

@@ -1,23 +1,23 @@
 import type { Chain } from "../chains/types.js";
+import type { ThirdwebClient } from "../client/client.js";
 import type {
-  WCConnectOptions,
-  WCAutoConnectOptions,
-} from "./wallet-connect/types.js";
-import type {
-  WCSupportedWalletIds,
   InjectedSupportedWalletIds,
+  WCSupportedWalletIds,
 } from "./__generated__/wallet-ids.js";
-import type {
-  SmartWalletConnectionOptions,
-  SmartWalletOptions,
-} from "./smart/types.js";
+import type { CoinbaseSDKWalletConnectionOptions } from "./coinbase/coinbaseSDKWallet.js";
 import type {
   InAppWalletAuth,
   InAppWalletAutoConnectOptions,
   InAppWalletConnectionOptions,
 } from "./in-app/core/wallet/index.js";
-import type { CoinbaseSDKWalletConnectionOptions } from "./coinbase/coinbaseSDKWallet.js";
-import type { ThirdwebClient } from "../client/client.js";
+import type {
+  SmartWalletConnectionOptions,
+  SmartWalletOptions,
+} from "./smart/types.js";
+import type {
+  WCAutoConnectOptions,
+  WCConnectOptions,
+} from "./wallet-connect/types.js";
 
 export type WalletId =
   | "walletConnect"

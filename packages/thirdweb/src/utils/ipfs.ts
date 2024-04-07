@@ -37,9 +37,9 @@ export function resolveScheme(options: ResolveSchemeOptions) {
     url =
       // purpusefully using SPLIT here and and not replace for CID to avoid cases where users don't know the schema
       // also only splitting on `/ipfs` to avoid cases where people pass non `/` terminated gateway urls
-      gateway.replace("{clientId}", clientId).split("/ipfs")[0] +
-      "/ipfs/" +
-      cid;
+      `${
+        gateway.replace("{clientId}", clientId).split("/ipfs")[0]
+      }/ipfs/${cid}`;
   } else if (options.uri.startsWith("http")) {
     url = options.uri;
   } else {
@@ -64,7 +64,8 @@ export async function uploadOrExtractURIs<
 >(files: T[], client: ThirdwebClient, startNumber?: number): Promise<string[]> {
   if (isUriList(files)) {
     return files;
-  } else if (isMetadataList(files)) {
+  }
+  if (isMetadataList(files)) {
     const { upload } = await import("../storage/upload.js");
     const uris = await upload({
       client,
@@ -74,11 +75,10 @@ export async function uploadOrExtractURIs<
       },
     });
     return uris;
-  } else {
-    throw new Error(
-      "Files must all be of the same type (all URI or all FileOrBufferOrString)",
-    );
   }
+  throw new Error(
+    "Files must all be of the same type (all URI or all FileOrBufferOrString)",
+  );
 }
 
 /**
@@ -105,7 +105,7 @@ export function getBaseUriFromBatch(uris: string[]): string {
   }
 
   // Ensure that baseUri ends with trailing slash
-  return baseUri.replace(/\/$/, "") + "/";
+  return `${baseUri.replace(/\/$/, "")}/`;
 }
 
 function isUriList<T extends FileOrBufferOrString | Record<string, unknown>>(

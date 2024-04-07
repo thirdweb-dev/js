@@ -1,10 +1,10 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 
+import { VITALIK_WALLET } from "../../test/src/addresses.js";
 import {
   DOODLES_CONTRACT,
   USDT_CONTRACT,
 } from "../../test/src/test-contracts.js";
-import { VITALIK_WALLET } from "../../test/src/addresses.js";
 import { readContract } from "./read-contract.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("transaction: read", () => {
@@ -14,7 +14,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("transaction: read", () => {
       method: "function balanceOf(address) returns (uint256)",
       params: [VITALIK_WALLET],
     });
-    expect(result).toMatchInlineSnapshot(`1544900798n`);
+    expect(result).toMatchInlineSnapshot("1544900798n");
   });
 
   it("should parse errors correctly", async () => {
@@ -24,8 +24,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("transaction: read", () => {
         method: "function tokenURI(uint256) returns (string)",
         params: [99999990n],
       });
-    } catch (e: any) {
-      expect(e.message).eq(
+    } catch (e) {
+      expect((e as Error).message).eq(
         "execution reverted: revert: ERC721Metadata: URI query for nonexistent token",
       );
     }

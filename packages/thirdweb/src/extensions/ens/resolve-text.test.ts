@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import { resolveText } from "./resolve-text.js";

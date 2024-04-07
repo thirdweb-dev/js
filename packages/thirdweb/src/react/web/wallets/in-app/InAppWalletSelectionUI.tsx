@@ -1,16 +1,16 @@
-import { useScreenContext } from "../../ui/ConnectWallet/Modal/screen.js";
-import { reservedScreens } from "../../ui/ConnectWallet/constants.js";
-import { LoadingScreen } from "../shared/LoadingScreen.js";
-import { InAppWalletFormUI } from "./InAppWalletFormUI.js";
-import { useInAppWalletLocale } from "./useInAppWalletLocale.js";
-import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { useContext } from "react";
+import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import {
   ModalConfigCtx,
   SetModalConfigCtx,
 } from "../../providers/wallet-ui-states-provider.js";
-import type { InAppWalletSelectUIState } from "./types.js";
+import { useScreenContext } from "../../ui/ConnectWallet/Modal/screen.js";
 import { WalletEntryButton } from "../../ui/ConnectWallet/WalletEntryButton.js";
+import { reservedScreens } from "../../ui/ConnectWallet/constants.js";
+import { LoadingScreen } from "../shared/LoadingScreen.js";
+import { InAppWalletFormUI } from "./InAppWalletFormUI.js";
+import type { InAppWalletSelectUIState } from "./types.js";
+import { useInAppWalletLocale } from "./useInAppWalletLocale.js";
 
 /**
  *

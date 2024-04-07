@@ -6,6 +6,7 @@ import { IframeCommunicator } from "./IframeCommunicator.js";
  * @internal
  */
 export class InAppWalletIframeCommunicator<
+  // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
   T extends { [key: string]: any },
 > extends IframeCommunicator<T> {
   clientId: string;

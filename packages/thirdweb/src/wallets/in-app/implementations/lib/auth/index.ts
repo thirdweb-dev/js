@@ -13,7 +13,7 @@ import type { InAppWalletIframeCommunicator } from "../../utils/iFrameCommunicat
 import { BaseLogin } from "./base-login.js";
 
 export type AuthQuerierTypes = {
-  logout: void;
+  logout: undefined;
   initIframe: {
     clientId: string;
     authCookie: string;

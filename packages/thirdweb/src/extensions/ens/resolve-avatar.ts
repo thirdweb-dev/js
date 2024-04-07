@@ -1,8 +1,8 @@
-import type { ThirdwebClient } from "../../client/client.js";
 import type { Chain } from "../../chains/types.js";
-import { resolveText } from "./resolve-text.js";
+import type { ThirdwebClient } from "../../client/client.js";
 import { parseAvatarRecord } from "../../utils/ens/avatar.js";
 import { withCache } from "../../utils/promise/withCache.js";
+import { resolveText } from "./resolve-text.js";
 
 export type ResolveAvatarOptions = {
   client: ThirdwebClient;

@@ -1,11 +1,11 @@
+import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
+import { StyledButton } from "../design-system/elements.js";
 import {
+  type Theme,
   fontSize,
   radius,
   spacing,
-  type Theme,
 } from "../design-system/index.js";
-import { StyledButton } from "../design-system/elements.js";
-import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 
 type ButtonProps = {
   variant: "primary" | "secondary" | "link" | "accent" | "outline";

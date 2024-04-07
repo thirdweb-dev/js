@@ -41,20 +41,11 @@
     },
     "./package.json": "./package.json"
   },
-  "files": [
-    "dist/",
-    "evm/"
-  ],
+  "files": ["dist/", "evm/"],
   "preconstruct": {
-    "entrypoints": [
-      "index.ts",
-      "evm/index.ts",
-      "evm/connectors/**/index.ts"
-    ],
+    "entrypoints": ["index.ts", "evm/index.ts", "evm/connectors/**/index.ts"],
     "exports": {
-      "envConditions": [
-        "browser"
-      ]
+      "envConditions": ["browser"]
     }
   },
   "private": false,
@@ -72,7 +63,7 @@
   },
   "sideEffects:": false,
   "devDependencies": {
-    "@babel/runtime": "^7.24.1",
+    "@babel/runtime": "^7.24.4",
     "@microsoft/api-documenter": "^7.24.1",
     "@microsoft/api-extractor": "^7.43.0",
     "@microsoft/tsdoc": "^0.14.2",
@@ -82,9 +73,9 @@
     "@thirdweb-dev/tsconfig": "workspace:*",
     "@types/qrcode": "^1.5.5",
     "@types/react": "18.2.17",
-    "@types/react-dom": "^18.2.23",
+    "@types/react-dom": "^18.2.24",
     "@types/uuid": "^9.0.8",
-    "eslint": "^8.57.0",
+    "eslint": "8.57.0",
     "eslint-config-thirdweb": "workspace:*",
     "eslint-plugin-better-tree-shaking": "0.0.4",
     "eslint-plugin-import": "^2.29.1",
@@ -97,7 +88,7 @@
     "react-dom": "^18.2.0",
     "stream": "npm:stream-browserify@^3.0.0",
     "typedoc-gen": "workspace:*",
-    "typescript": "5.4.3"
+    "typescript": "5.4.4"
   },
   "dependencies": {
     "@emotion/css": "11.10.5",

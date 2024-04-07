@@ -435,20 +435,14 @@
     "eslint-config-thirdweb": "workspace:*",
     "ethers": "^5.7.2",
     "typechain": "^8.3.2",
-    "typescript": "5.4.3"
+    "typescript": "5.4.4"
   },
   "peerDependencies": {
     "ethers": "^5"
   },
-  "files": [
-    "dist/",
-    "factories/"
-  ],
+  "files": ["dist/", "factories/"],
   "preconstruct": {
-    "entrypoints": [
-      "index.ts",
-      "./factories/TW*.ts"
-    ],
+    "entrypoints": ["index.ts", "./factories/TW*.ts"],
     "exports": {
       "extra": {}
     }

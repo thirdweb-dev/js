@@ -1,6 +1,6 @@
 import { secp256k1 } from "@noble/curves/secp256k1";
 import type { Signature } from "viem";
-import { hexToBigInt, type Hex } from "../encoding/hex.js";
+import { type Hex, hexToBigInt } from "../encoding/hex.js";
 
 /**
  * Converts a signature to a hex string.
@@ -35,5 +35,8 @@ export function signatureToHex(signature: Signature): Hex {
     throw new Error("Invalid v value");
   })();
 
-  return `0x${new secp256k1.Signature(hexToBigInt(r), hexToBigInt(s)).toCompactHex()}${vHex}`;
+  return `0x${new secp256k1.Signature(
+    hexToBigInt(r),
+    hexToBigInt(s),
+  ).toCompactHex()}${vHex}`;
 }

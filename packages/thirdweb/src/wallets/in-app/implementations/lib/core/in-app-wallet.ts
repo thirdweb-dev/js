@@ -1,3 +1,13 @@
+import type * as ethers5 from "ethers5";
+import type { Hex, TypedDataDefinition } from "viem";
+import { defineChain } from "../../../../../chains/utils.js";
+import type { ThirdwebClient } from "../../../../../client/client.js";
+import { eth_sendRawTransaction } from "../../../../../rpc/actions/eth_sendRawTransaction.js";
+import { getRpcClient } from "../../../../../rpc/rpc.js";
+import type {
+  Account,
+  SendTransactionOption,
+} from "../../../../interfaces/wallet.js";
 import type {
   ClientIdWithQuerierType,
   GetUser,
@@ -6,39 +16,29 @@ import type {
   WalletAddressObjectType,
 } from "../../interfaces/in-app-wallets/in-app-wallets.js";
 import { UserWalletStatus } from "../../interfaces/in-app-wallets/in-app-wallets.js";
-import { LocalStorage } from "../../utils/Storage/LocalStorage.js";
-import type { InAppWalletIframeCommunicator } from "../../utils/iFrameCommunication/InAppWalletIframeCommunicator.js";
 import type {
   GetAddressReturnType,
   SignMessageReturnType,
   SignTransactionReturnType,
   SignedTypedDataReturnType,
 } from "../../interfaces/in-app-wallets/signer.js";
-import { getRpcClient } from "../../../../../rpc/rpc.js";
-import { defineChain } from "../../../../../chains/utils.js";
-import type {
-  Account,
-  SendTransactionOption,
-} from "../../../../interfaces/wallet.js";
-import type { Hex, TypedDataDefinition } from "viem";
-import type * as ethers5 from "ethers5";
-import { eth_sendRawTransaction } from "../../../../../rpc/actions/eth_sendRawTransaction.js";
-import type { ThirdwebClient } from "../../../../../client/client.js";
+import { LocalStorage } from "../../utils/Storage/LocalStorage.js";
+import type { InAppWalletIframeCommunicator } from "../../utils/iFrameCommunication/InAppWalletIframeCommunicator.js";
 
 export type WalletManagementTypes = {
-  createWallet: void;
-  setUpNewDevice: void;
-  getUserStatus: void;
+  createWallet: undefined;
+  setUpNewDevice: undefined;
+  getUserStatus: undefined;
 };
 export type WalletManagementUiTypes = {
-  createWalletUi: void;
-  setUpNewDeviceUi: void;
+  createWalletUi: undefined;
+  setUpNewDeviceUi: undefined;
 };
 
 export type InAppWalletInternalHelperType = { showUi: boolean };
 
 export type SignerProcedureTypes = {
-  getAddress: void;
+  getAddress: undefined;
   signMessage: {
     message: string | Hex;
     chainId: number;
@@ -149,22 +149,21 @@ export class InAppWallet {
         ...userStatus.user,
         wallet: this,
       };
-    } else if (userStatus.status === UserWalletStatus.LOGGED_IN_NEW_DEVICE) {
-      return {
-        status: UserWalletStatus.LOGGED_IN_WALLET_UNINITIALIZED,
-        ...userStatus.user,
-      };
-    } else if (
-      userStatus.status === UserWalletStatus.LOGGED_IN_WALLET_UNINITIALIZED
-    ) {
-      return {
-        status: UserWalletStatus.LOGGED_IN_WALLET_UNINITIALIZED,
-        ...userStatus.user,
-      };
-    } else {
-      // Logged out
-      return { status: userStatus.status };
     }
+    if (userStatus.status === UserWalletStatus.LOGGED_IN_NEW_DEVICE) {
+      return {
+        status: UserWalletStatus.LOGGED_IN_WALLET_UNINITIALIZED,
+        ...userStatus.user,
+      };
+    }
+    if (userStatus.status === UserWalletStatus.LOGGED_IN_WALLET_UNINITIALIZED) {
+      return {
+        status: UserWalletStatus.LOGGED_IN_WALLET_UNINITIALIZED,
+        ...userStatus.user,
+      };
+    }
+    // Logged out
+    return { status: userStatus.status };
   }
 
   /**
@@ -234,6 +233,7 @@ export class InAppWallet {
         const { signedMessage } = await querier.call<SignMessageReturnType>({
           procedureName: "signMessage",
           params: {
+            // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
             message: messageDecoded as any, // wants Bytes or string
             chainId: 1, // TODO check if we need this
           },
@@ -243,15 +243,17 @@ export class InAppWallet {
       async signTypedData(_typedData) {
         // deleting EIP712 Domain as it results in ambiguous primary type on some cases
         // this happens when going from viem to ethers via the iframe
-        if (_typedData.types && _typedData.types.EIP712Domain) {
-          delete _typedData.types.EIP712Domain;
+        if (_typedData.types?.EIP712Domain) {
+          _typedData.types.EIP712Domain = undefined;
         }
+        // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
         const chainId = Number((_typedData.domain as any)?.chainId || 1);
 
         const { signedTypedData } =
           await querier.call<SignedTypedDataReturnType>({
             procedureName: "signTypedDataV4",
             params: {
+              // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
               domain: _typedData.domain as any,
               types:
                 _typedData.types as SignerProcedureTypes["signTypedDataV4"]["types"],

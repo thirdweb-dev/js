@@ -1,41 +1,41 @@
-import {
-  SetModalConfigCtx,
-  WalletUIStatesProvider,
-} from "../../../providers/wallet-ui-states-provider.js";
-import {
-  modalMaxWidthCompact,
-  defaultTheme,
-  modalMaxWidthWide,
-  wideModalMaxHeight,
-} from "../constants.js";
-import { useSetupScreen } from "./screen.js";
 import { type ComponentProps, useContext, useEffect, useState } from "react";
-import { radius, type Theme } from "../../design-system/index.js";
-import { StyledDiv } from "../../design-system/elements.js";
-import {
-  useCustomTheme,
-  CustomThemeProvider,
-} from "../../design-system/CustomThemeProvider.js";
-import { DynamicHeight } from "../../components/DynamicHeight.js";
+import type { Chain } from "../../../../../chains/types.js";
+import type { ThirdwebClient } from "../../../../../client/client.js";
+import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
+import type { SmartWalletOptions } from "../../../../../wallets/smart/types.js";
+import type { AppMetadata } from "../../../../../wallets/types.js";
+import { AutoConnect } from "../../../../core/hooks/connection/useAutoConnect.js";
+import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import {
   useActiveAccount,
   useIsAutoConnecting,
 } from "../../../../core/hooks/wallets/wallet-hooks.js";
-import { ConnectModalContent } from "./ConnectModalContent.js";
-import { canFitWideModal } from "../../../utils/canFitWideModal.js";
-import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
-import type { Chain } from "../../../../../chains/types.js";
-import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
-import type { ThirdwebClient } from "../../../../../client/client.js";
-import type { LocaleId } from "../../types.js";
 import { WalletConnectionContext } from "../../../../core/providers/wallet-connection.js";
+import {
+  SetModalConfigCtx,
+  WalletUIStatesProvider,
+} from "../../../providers/wallet-ui-states-provider.js";
+import { canFitWideModal } from "../../../utils/canFitWideModal.js";
 import { getDefaultWallets } from "../../../wallets/defaultWallets.js";
-import type { ConnectLocale } from "../locale/types.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
-import type { AppMetadata } from "../../../../../wallets/types.js";
+import { DynamicHeight } from "../../components/DynamicHeight.js";
+import {
+  CustomThemeProvider,
+  useCustomTheme,
+} from "../../design-system/CustomThemeProvider.js";
+import { StyledDiv } from "../../design-system/elements.js";
+import { type Theme, radius } from "../../design-system/index.js";
+import type { LocaleId } from "../../types.js";
+import {
+  defaultTheme,
+  modalMaxWidthCompact,
+  modalMaxWidthWide,
+  wideModalMaxHeight,
+} from "../constants.js";
 import { getConnectLocale } from "../locale/getConnectLocale.js";
-import { AutoConnect } from "../../../../core/hooks/connection/useAutoConnect.js";
-import type { SmartWalletOptions } from "../../../../../wallets/smart/types.js";
+import type { ConnectLocale } from "../locale/types.js";
+import { ConnectModalContent } from "./ConnectModalContent.js";
+import { useSetupScreen } from "./screen.js";
 
 export type ConnectEmbedProps = {
   /**

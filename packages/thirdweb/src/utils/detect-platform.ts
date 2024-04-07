@@ -1,5 +1,3 @@
-/* eslint-disable jsdoc/require-jsdoc */
-
 export type OperatingSystem =
   | "iOS"
   | "Android OS"

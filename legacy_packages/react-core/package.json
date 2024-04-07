@@ -27,19 +27,11 @@
     },
     "./package.json": "./package.json"
   },
-  "files": [
-    "dist/",
-    "evm/"
-  ],
+  "files": ["dist/", "evm/"],
   "preconstruct": {
-    "entrypoints": [
-      "index.ts",
-      "evm/index.ts"
-    ],
+    "entrypoints": ["index.ts", "evm/index.ts"],
     "exports": {
-      "envConditions": [
-        "browser"
-      ]
+      "envConditions": ["browser"]
     }
   },
   "private": false,
@@ -58,7 +50,7 @@
   "sideEffects:": false,
   "devDependencies": {
     "@babel/preset-react": "^7.24.1",
-    "@babel/runtime": "^7.24.1",
+    "@babel/runtime": "^7.24.4",
     "@microsoft/api-documenter": "^7.24.1",
     "@microsoft/api-extractor": "^7.43.0",
     "@microsoft/tsdoc": "^0.14.2",
@@ -68,7 +60,7 @@
     "@types/js-cookie": "^3.0.6",
     "@types/mime": "3.0.0",
     "@types/react": "18.2.17",
-    "eslint": "^8.57.0",
+    "eslint": "8.57.0",
     "eslint-config-thirdweb": "workspace:*",
     "eslint-plugin-better-tree-shaking": "0.0.4",
     "eslint-plugin-import": "^2.29.1",
@@ -78,7 +70,7 @@
     "ethers": "^5.7.2",
     "react": "18.2.0",
     "typedoc-gen": "workspace:*",
-    "typescript": "5.4.3"
+    "typescript": "5.4.4"
   },
   "dependencies": {
     "@tanstack/react-query": "^4.36.1",

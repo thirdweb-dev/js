@@ -1,10 +1,10 @@
-import { createContext, useState, useRef, useEffect, useContext } from "react";
-import { reservedScreens } from "../constants.js";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
+import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 // import type { WalletConfig } from "../../../../core/types/wallets.js";
 import { useActiveAccount } from "../../../../core/hooks/wallets/wallet-hooks.js";
 import { ModalConfigCtx } from "../../../providers/wallet-ui-states-provider.js";
-import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
+import { reservedScreens } from "../constants.js";
 
 type Screen = string | Wallet;
 

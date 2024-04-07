@@ -1,19 +1,19 @@
+import { concatHex } from "viem";
 import { ethereum } from "../../chains/chain-definitions/ethereum.js";
+import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { getContract } from "../../contract/contract.js";
-import { resolve } from "./__generated__/UniversalResolver/read/resolve.js";
+import { getAddress, isAddress } from "../../utils/address.js";
 import { toHex } from "../../utils/encoding/hex.js";
 import { namehash } from "../../utils/ens/namehash.js";
 import { packetToBytes } from "../../utils/ens/packetToBytes.js";
-import { getAddress, isAddress } from "../../utils/address.js";
-import type { Chain } from "../../chains/types.js";
-import {
-  encodeAddrParams,
-  FN_SELECTOR as addrFnSelector,
-} from "./__generated__/AddressResolver/read/addr.js";
-import { concatHex } from "viem";
-import { UNIVERSAL_RESOLVER_ADDRESS } from "./constants.js";
 import { withCache } from "../../utils/promise/withCache.js";
+import {
+  FN_SELECTOR as addrFnSelector,
+  encodeAddrParams,
+} from "./__generated__/AddressResolver/read/addr.js";
+import { resolve } from "./__generated__/UniversalResolver/read/resolve.js";
+import { UNIVERSAL_RESOLVER_ADDRESS } from "./constants.js";
 
 export type ResolveAddressOptions = {
   client: ThirdwebClient;

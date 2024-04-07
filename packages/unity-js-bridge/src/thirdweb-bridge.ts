@@ -1,35 +1,45 @@
 /// --- Thirdweb Brige ---
 import { ThirdwebAuth } from "@thirdweb-dev/auth";
-import { CoinbasePayIntegration, FundWalletOptions } from "@thirdweb-dev/pay";
-import {
-  ThirdwebSDK,
-  ChainIdOrName,
-  getChainProvider,
-} from "@thirdweb-dev/sdk";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import {
-  DAppMetaData,
-  EmbeddedWalletOauthStrategy,
-  SmartWalletConfig,
-  walletIds,
-} from "@thirdweb-dev/wallets";
-import type { AbstractClientWallet } from "@thirdweb-dev/wallets/evm/wallets/base";
-import { CoinbaseWallet } from "@thirdweb-dev/wallets/evm/wallets/coinbase-wallet";
-import { LocalWallet } from "@thirdweb-dev/wallets/evm/wallets/local-wallet";
-import { EthersWallet } from "@thirdweb-dev/wallets/evm/wallets/ethers";
-import { InjectedWallet } from "@thirdweb-dev/wallets/evm/wallets/injected";
-import { MetaMaskWallet } from "@thirdweb-dev/wallets/evm/wallets/metamask";
-import { SmartWallet } from "@thirdweb-dev/wallets/evm/wallets/smart-wallet";
-import { WalletConnect } from "@thirdweb-dev/wallets/evm/wallets/wallet-connect";
-import { EmbeddedWallet } from "@thirdweb-dev/wallets/evm/wallets/embedded-wallet";
-import { BigNumber, ethers } from "ethers";
 import {
   Ethereum,
   defaultChains,
   getChainByChainId,
 } from "@thirdweb-dev/chains";
+import {
+  CoinbasePayIntegration,
+  type FundWalletOptions,
+} from "@thirdweb-dev/pay";
+import {
+  type ChainIdOrName,
+  ThirdwebSDK,
+  getChainProvider,
+} from "@thirdweb-dev/sdk";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import {
+  type DAppMetaData,
+  type EmbeddedWalletOauthStrategy,
+  type SmartWalletConfig,
+  walletIds,
+} from "@thirdweb-dev/wallets";
+import type { AbstractClientWallet } from "@thirdweb-dev/wallets/evm/wallets/base";
+import { CoinbaseWallet } from "@thirdweb-dev/wallets/evm/wallets/coinbase-wallet";
+import { EmbeddedWallet } from "@thirdweb-dev/wallets/evm/wallets/embedded-wallet";
+import { EthersWallet } from "@thirdweb-dev/wallets/evm/wallets/ethers";
+import { InjectedWallet } from "@thirdweb-dev/wallets/evm/wallets/injected";
+import { LocalWallet } from "@thirdweb-dev/wallets/evm/wallets/local-wallet";
+import { MetaMaskWallet } from "@thirdweb-dev/wallets/evm/wallets/metamask";
+import { SmartWallet } from "@thirdweb-dev/wallets/evm/wallets/smart-wallet";
+import { WalletConnect } from "@thirdweb-dev/wallets/evm/wallets/wallet-connect";
+import {
+  type BotInfo,
+  type BrowserInfo,
+  type NodeInfo,
+  type ReactNativeInfo,
+  type SearchBotDeviceInfo,
+  detect,
+} from "detect-browser";
+import { BigNumber, ethers } from "ethers";
 import type { ContractInterface, Signer } from "ethers";
-import { detect } from "detect-browser";
 
 declare global {
   interface Window {
@@ -41,6 +51,7 @@ const SEPARATOR = "/";
 const SUB_SEPARATOR = "#";
 
 // big number transform
+// biome-ignore lint/suspicious/noExplicitAny: TODO: fix use of any
 const bigNumberReplacer = (_key: string, value: any) => {
   // if we find a BigNumber then make it into a string (since that is safe)
   if (
@@ -89,7 +100,9 @@ interface TWBridge {
     taskId: string,
     route: string,
     payload: string,
+    // biome-ignore lint/suspicious/noExplicitAny: TODO: fix use of any
     action: any,
+    // biome-ignore lint/suspicious/noExplicitAny: TODO: fix use of any
     callback: (jsAction: any, jsTaskId: string, jsResult: string) => void,
   ) => void;
   fundWallet: (options: string) => Promise<void>;
@@ -143,23 +156,35 @@ class ThirdwebBridge implements TWBridge {
 
   public initialize(chain: ChainIdOrName, options: string) {
     if (typeof globalThis !== "undefined") {
-      let browser;
+      let browser:
+        | BrowserInfo
+        | SearchBotDeviceInfo
+        | BotInfo
+        | NodeInfo
+        | ReactNativeInfo
+        | null;
       try {
         browser = detect();
       } catch {
         console.warn("Failed to detect browser");
-        browser = undefined;
+        browser = null;
       }
+      // biome-ignore lint/suspicious/noExplicitAny: TODO: fix use of any
       (globalThis as any).X_SDK_NAME = "UnitySDK_WebGL";
+      // biome-ignore lint/suspicious/noExplicitAny: TODO: fix use of any
       (globalThis as any).X_SDK_PLATFORM = "unity";
+      // biome-ignore lint/suspicious/noExplicitAny: TODO: fix use of any
       (globalThis as any).X_SDK_VERSION = "4.10.0";
+      // biome-ignore lint/suspicious/noExplicitAny: TODO: fix use of any
       (globalThis as any).X_SDK_OS = browser?.os ?? "unknown";
     }
     this.initializedChain = chain;
     const sdkOptions = JSON.parse(options);
-    let supportedChains;
+    // biome-ignore lint/suspicious/noExplicitAny: TODO: fix use of any
+    let supportedChains: any[];
     if (sdkOptions?.supportedChains) {
       try {
+        // biome-ignore lint/suspicious/noExplicitAny: TODO: fix use of any
         supportedChains = sdkOptions.supportedChains.map((chainData: any) => {
           return {
             ...getChainByChainId(BigNumber.from(chainData.chainId).toNumber()),
@@ -179,17 +204,16 @@ class ThirdwebBridge implements TWBridge {
     }
     sdkOptions.supportedChains = supportedChains;
 
-    const storage =
-      sdkOptions?.storage && sdkOptions?.storage?.ipfsGatewayUrl
-        ? new ThirdwebStorage({
-            gatewayUrls: {
-              "ipfs://": [sdkOptions.storage.ipfsGatewayUrl],
-            },
-            clientId: sdkOptions.clientId,
-          })
-        : new ThirdwebStorage({
-            clientId: sdkOptions.clientId,
-          });
+    const storage = sdkOptions?.storage?.ipfsGatewayUrl
+      ? new ThirdwebStorage({
+          gatewayUrls: {
+            "ipfs://": [sdkOptions.storage.ipfsGatewayUrl],
+          },
+          clientId: sdkOptions.clientId,
+        })
+      : new ThirdwebStorage({
+          clientId: sdkOptions.clientId,
+        });
     this.activeSDK = new ThirdwebSDK(chain, sdkOptions, storage);
     for (const possibleWallet of WALLETS) {
       let walletInstance: AbstractClientWallet;
@@ -251,7 +275,7 @@ class ThirdwebBridge implements TWBridge {
             clientId: sdkOptions.clientId,
           });
           break;
-        case walletIds.smartWallet:
+        case walletIds.smartWallet: {
           const config: SmartWalletConfig = {
             chain: chain,
             factoryAddress: sdkOptions.smartWalletConfig?.factoryAddress,
@@ -267,6 +291,7 @@ class ThirdwebBridge implements TWBridge {
           };
           walletInstance = new SmartWallet(config);
           break;
+        }
         case walletIds.embeddedWallet:
           walletInstance = new EmbeddedWallet({
             clientId: sdkOptions.clientId,
@@ -293,6 +318,7 @@ class ThirdwebBridge implements TWBridge {
   }
 
   public async connect(
+    // biome-ignore lint/style/useDefaultParameterLast: would change the order of parameters to fix this
     wallet: PossibleWallet = "injected",
     chainId: string,
     password?: string,
@@ -348,7 +374,7 @@ class ThirdwebBridge implements TWBridge {
               break;
             default:
               throw new Error(
-                "Invalid auth provider: " + authOptionsParsed.authProvider,
+                `Invalid auth provider: ${authOptionsParsed.authProvider}`,
               );
           }
           const popupWindow = this.openPopupWindow();
@@ -408,7 +434,7 @@ class ThirdwebBridge implements TWBridge {
           // });
         } else {
           throw new Error(
-            "Invalid auth provider: " + authOptionsParsed.authProvider,
+            `Invalid auth provider: ${authOptionsParsed.authProvider}`,
           );
         }
       } else if (walletInstance.walletId === walletIds.smartWallet) {
@@ -444,9 +470,8 @@ class ThirdwebBridge implements TWBridge {
       this.activeWallet = walletInstance;
       this.updateSDKSigner(await walletInstance.getSigner());
       return await this.activeSDK.wallet.getAddress();
-    } else {
-      throw new Error("Invalid Wallet");
     }
+    throw new Error("Invalid Wallet");
   }
 
   public async disconnect() {
@@ -497,13 +522,13 @@ class ThirdwebBridge implements TWBridge {
         // @ts-expect-error need to type-guard this properly
         const result = await this.activeSDK[prop][routeArgs[1]](...parsedArgs);
         return JSON.stringify({ result: result }, bigNumberReplacer);
-      } else if (routeArgs.length === 2) {
+      }
+      if (routeArgs.length === 2) {
         // @ts-expect-error need to type-guard this properly
         const result = await this.activeSDK[routeArgs[1]](...parsedArgs);
         return JSON.stringify({ result: result }, bigNumberReplacer);
-      } else {
-        throw new Error("Invalid Route");
       }
+      throw new Error("Invalid Route");
     }
 
     if (addrOrSDK.startsWith("auth")) {
@@ -517,7 +542,8 @@ class ThirdwebBridge implements TWBridge {
       if (prop === "login" && routeArgs.length === 1) {
         const result = await this.auth.login({ domain: parsedArgs[0] });
         return JSON.stringify({ result: result });
-      } else if (prop === "verify" && routeArgs.length === 1) {
+      }
+      if (prop === "verify" && routeArgs.length === 1) {
         const result = await this.auth.verify(parsedArgs[0]);
         return JSON.stringify({ result: result });
       }
@@ -559,7 +585,8 @@ class ThirdwebBridge implements TWBridge {
         if (routeArgs[2].includes("sign")) {
           const result = await tx.sign();
           return JSON.stringify({ result: result }, bigNumberReplacer);
-        } else if (routeArgs[2].includes("send")) {
+        }
+        if (routeArgs[2].includes("send")) {
           tx.setGaslessOptions(
             routeArgs[2] === "sendGasless"
               ? this.activeSDK.options.gasless
@@ -567,7 +594,8 @@ class ThirdwebBridge implements TWBridge {
           );
           const result = await tx.send();
           return JSON.stringify({ result: result.hash }, bigNumberReplacer);
-        } else if (routeArgs[2].includes("execute")) {
+        }
+        if (routeArgs[2].includes("execute")) {
           tx.setGaslessOptions(
             routeArgs[2] === "executeGasless"
               ? this.activeSDK.options.gasless
@@ -575,16 +603,20 @@ class ThirdwebBridge implements TWBridge {
           );
           const result = await tx.execute();
           return JSON.stringify({ result: result }, bigNumberReplacer);
-        } else if (routeArgs[2].includes("estimateGasLimit")) {
+        }
+        if (routeArgs[2].includes("estimateGasLimit")) {
           const result = await tx.estimateGasLimit();
           return JSON.stringify({ result: result }, bigNumberReplacer);
-        } else if (routeArgs[2].includes("estimateGasCosts")) {
+        }
+        if (routeArgs[2].includes("estimateGasCosts")) {
           const result = await tx.estimateGasCost();
           return JSON.stringify({ result: result }, bigNumberReplacer);
-        } else if (routeArgs[2].includes("simulate")) {
+        }
+        if (routeArgs[2].includes("simulate")) {
           const result = await tx.simulate();
           return JSON.stringify({ result: result }, bigNumberReplacer);
-        } else if (routeArgs[2].includes("getGasPrice")) {
+        }
+        if (routeArgs[2].includes("getGasPrice")) {
           const result = await tx.getGasPrice();
           return JSON.stringify({ result: result }, bigNumberReplacer);
         }
@@ -595,21 +627,22 @@ class ThirdwebBridge implements TWBridge {
         // @ts-expect-error need to type-guard this properly
         const result = await contract[routeArgs[1]](...parsedArgs);
         return JSON.stringify({ result: result }, bigNumberReplacer);
-      } else if (routeArgs.length === 3) {
+      }
+      if (routeArgs.length === 3) {
         // @ts-expect-error need to type-guard this properly
         const result = await contract[routeArgs[1]][routeArgs[2]](
           ...parsedArgs,
         );
         return JSON.stringify({ result: result }, bigNumberReplacer);
-      } else if (routeArgs.length === 4) {
+      }
+      if (routeArgs.length === 4) {
         // @ts-expect-error need to type-guard this properly
         const result = await contract[routeArgs[1]][routeArgs[2]][routeArgs[3]](
           ...parsedArgs,
         );
         return JSON.stringify({ result: result }, bigNumberReplacer);
-      } else {
-        throw new Error("Invalid Route");
       }
+      throw new Error("Invalid Route");
     }
   }
 
@@ -617,7 +650,9 @@ class ThirdwebBridge implements TWBridge {
     taskId: string,
     route: string,
     payload: string,
+    // biome-ignore lint/suspicious/noExplicitAny: TODO: fix use of any
     action: any,
+    // biome-ignore lint/suspicious/noExplicitAny: TODO: fix use of any
     callback: (jsAction: any, jsTaskId: string, jsResult: string) => void,
   ) {
     if (!this.activeSDK) {
@@ -656,6 +691,7 @@ class ThirdwebBridge implements TWBridge {
 
       if (routeArgs.length === 2) {
         // @ts-expect-error need to type-guard this properly
+        // biome-ignore lint/suspicious/noExplicitAny: TODO: fix use of any
         await contract[routeArgs[1]](...parsedFnArgs, (result: any) =>
           callback(action, taskId, JSON.stringify(result, bigNumberReplacer)),
         );
@@ -663,6 +699,7 @@ class ThirdwebBridge implements TWBridge {
         // @ts-expect-error need to type-guard this properly
         await contract[routeArgs[1]][routeArgs[2]](
           ...parsedFnArgs,
+          // biome-ignore lint/suspicious/noExplicitAny: TODO: fix use of any
           (result: any) =>
             callback(action, taskId, JSON.stringify(result, bigNumberReplacer)),
         );
@@ -670,6 +707,7 @@ class ThirdwebBridge implements TWBridge {
         // @ts-expect-error need to type-guard this properly
         await contract[routeArgs[1]][routeArgs[2]][routeArgs[3]](
           ...parsedFnArgs,
+          // biome-ignore lint/suspicious/noExplicitAny: TODO: fix use of any
           (result: any) =>
             callback(action, taskId, JSON.stringify(result, bigNumberReplacer)),
         );
@@ -909,7 +947,7 @@ class ThirdwebBridge implements TWBridge {
   }
 
   public async copyBuffer(text: string) {
-    navigator.clipboard.writeText(text).catch(function (err) {
+    navigator.clipboard.writeText(text).catch((err) => {
       console.error("Could not copy text: ", err);
     });
   }

@@ -1,12 +1,12 @@
-import { InAppWalletFormUIScreen } from "./InAppWalletFormUI.js";
-import type { InAppWalletSelectUIState } from "./types.js";
-import { LoadingScreen } from "../shared/LoadingScreen.js";
-import { useInAppWalletLocale } from "./useInAppWalletLocale.js";
 import { useContext } from "react";
-import { ModalConfigCtx } from "../../providers/wallet-ui-states-provider.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
+import { ModalConfigCtx } from "../../providers/wallet-ui-states-provider.js";
+import { LoadingScreen } from "../shared/LoadingScreen.js";
+import { InAppWalletFormUIScreen } from "./InAppWalletFormUI.js";
 import { InAppWalletOTPLoginUI } from "./InAppWalletOTPLoginUI.js";
 import { InAppWalletSocialLogin } from "./InAppWalletSocialLogin.js";
+import type { InAppWalletSelectUIState } from "./types.js";
+import { useInAppWalletLocale } from "./useInAppWalletLocale.js";
 
 /**
  *

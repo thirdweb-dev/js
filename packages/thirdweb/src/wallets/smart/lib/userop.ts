@@ -1,27 +1,27 @@
 import { concat } from "viem";
-import type { SmartWalletOptions, UserOperation } from "../types.js";
-import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed.js";
+import type { ThirdwebClient } from "../../../client/client.js";
 import type { ThirdwebContract } from "../../../contract/contract.js";
-import { encode } from "../../../transaction/actions/encode.js";
 import { getDefaultGasOverrides } from "../../../gas/fee-data.js";
+import { encode } from "../../../transaction/actions/encode.js";
+import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
+import { encodeAbiParameters } from "../../../utils/abi/encodeAbiParameters.js";
+import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed.js";
+import type { Hex } from "../../../utils/encoding/hex.js";
+import { hexToBytes } from "../../../utils/encoding/to-bytes.js";
+import { isThirdwebUrl } from "../../../utils/fetch.js";
+import { keccak256 } from "../../../utils/hashing/keccak256.js";
+import { resolvePromisedValue } from "../../../utils/promise/resolve-promised-value.js";
+import type { Account } from "../../interfaces/wallet.js";
+import type { SmartWalletOptions, UserOperation } from "../types.js";
+import { estimateUserOpGas, getUserOpGasPrice } from "./bundler.js";
+import { prepareCreateAccount } from "./calls.js";
 import {
   DUMMY_SIGNATURE,
   ENTRYPOINT_ADDRESS,
   getDefaultBundlerUrl,
 } from "./constants.js";
 import { getPaymasterAndData } from "./paymaster.js";
-import { estimateUserOpGas, getUserOpGasPrice } from "./bundler.js";
 import { randomNonce } from "./utils.js";
-import { prepareCreateAccount } from "./calls.js";
-import type { Account } from "../../interfaces/wallet.js";
-import { resolvePromisedValue } from "../../../utils/promise/resolve-promised-value.js";
-import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
-import { keccak256 } from "../../../utils/hashing/keccak256.js";
-import { hexToBytes } from "../../../utils/encoding/to-bytes.js";
-import type { Hex } from "../../../utils/encoding/hex.js";
-import { encodeAbiParameters } from "../../../utils/abi/encodeAbiParameters.js";
-import type { ThirdwebClient } from "../../../client/client.js";
-import { isThirdwebUrl } from "../../../utils/fetch.js";
 
 /**
  * Create an unsigned user operation
@@ -177,9 +177,8 @@ export async function signUserOp(args: {
       ...userOp,
       signature,
     };
-  } else {
-    throw new Error("signMessage not implemented in signingAccount");
   }
+  throw new Error("signMessage not implemented in signingAccount");
 }
 
 async function getAccountInitCode(args: {

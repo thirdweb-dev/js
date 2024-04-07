@@ -1,11 +1,11 @@
-import type { AuthArgsType, PreAuthArgsType } from "./type.js";
+import type { ThirdwebClient } from "../../../../client/client.js";
 import {
-  AuthProvider,
   type AuthLoginReturnType,
+  AuthProvider,
 } from "../../implementations/interfaces/auth.js";
 import { UserWalletStatus } from "../../implementations/interfaces/in-app-wallets/in-app-wallets.js";
 import type { InAppWalletSdk } from "../../implementations/lib/in-app-wallet.js";
-import type { ThirdwebClient } from "../../../../client/client.js";
+import type { AuthArgsType, PreAuthArgsType } from "./type.js";
 
 const ewsSDKCache = new WeakMap<ThirdwebClient, InAppWalletSdk>();
 
@@ -173,7 +173,7 @@ export async function authenticate(
 }
 
 function assertUnreachable(x: never): never {
-  throw new Error("Invalid param: " + x);
+  throw new Error(`Invalid param: ${x}`);
 }
 
 const oauthStrategyToAuthProvider: Record<

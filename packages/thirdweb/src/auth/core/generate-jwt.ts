@@ -4,9 +4,9 @@ import type { VerifiedLoginPayload } from "./verify-login-payload.js";
 
 export const DEFAULT_TOKEN_DURATION_SECONDS = 60 * 60 * 24;
 
-type GenerateJWTParams = {
+type GenerateJWTParams<Tctx = unknown> = {
   payload: VerifiedLoginPayload;
-  context?: Record<string, any>;
+  context?: Tctx;
 };
 
 /**
@@ -18,7 +18,7 @@ type GenerateJWTParams = {
  *
  */
 export function generateJWT(options: AuthOptions) {
-  return async function (params: GenerateJWTParams) {
+  return async (params: GenerateJWTParams) => {
     if (!options.adminAccount) {
       throw new Error("No admin account provided. Cannot generate JWT.");
     }

@@ -2,9 +2,9 @@ import type { Chain } from "../../../../chains/types.js";
 import { useChainQuery } from "../../../core/hooks/others/useChainQuery.js";
 import { genericTokenIcon } from "../ConnectWallet/icons/dataUris.js";
 import {
-  isNativeToken,
   type ERC20OrNativeToken,
   type NativeToken,
+  isNativeToken,
 } from "../ConnectWallet/screens/nativeToken.js";
 import { iconSize } from "../design-system/index.js";
 import { Img } from "./Img.js";

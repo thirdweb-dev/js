@@ -1,20 +1,20 @@
-import { useState, useCallback, useRef, useEffect, useContext } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { preAuthenticate } from "../../../../wallets/in-app/core/authentication/index.js";
 import type { SendEmailOtpReturnType } from "../../../../wallets/in-app/implementations/index.js";
+import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
+import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import { ModalConfigCtx } from "../../providers/wallet-ui-states-provider.js";
 import { FadeIn } from "../../ui/components/FadeIn.js";
 import { OTPInput } from "../../ui/components/OTPInput.js";
 import { Spacer } from "../../ui/components/Spacer.js";
 import { Spinner } from "../../ui/components/Spinner.js";
-import { Container, ModalHeader, Line } from "../../ui/components/basic.js";
+import { Container, Line, ModalHeader } from "../../ui/components/basic.js";
 import { Button } from "../../ui/components/buttons.js";
+import { Text } from "../../ui/components/text.js";
 import { useCustomTheme } from "../../ui/design-system/CustomThemeProvider.js";
 import { StyledButton } from "../../ui/design-system/elements.js";
 import { fontSize } from "../../ui/design-system/index.js";
-import { Text } from "../../ui/components/text.js";
 import type { InAppWalletLocale } from "./locale/types.js";
-import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
-import { ModalConfigCtx } from "../../providers/wallet-ui-states-provider.js";
-import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
-import { preAuthenticate } from "../../../../wallets/in-app/core/authentication/index.js";
 
 type VerificationStatus =
   | "verifying"
@@ -107,7 +107,7 @@ export function InAppWalletOTPLoginUI(props: {
               verificationCode: otp,
               client,
             });
-          } catch (e: any) {
+          } catch (e) {
             if (e instanceof Error && e.message.includes("encryption key")) {
               // TODO: do we need this?
               // setScreen("create-password");
@@ -125,7 +125,7 @@ export function InAppWalletOTPLoginUI(props: {
               verificationCode: otp,
               client,
             });
-          } catch (e: any) {
+          } catch (e) {
             if (e instanceof Error && e.message.includes("encryption key")) {
               // TODO: do we need this?
               // setScreen("enter-password-or-recovery-code");
@@ -153,8 +153,11 @@ export function InAppWalletOTPLoginUI(props: {
       }
 
       setVerifyStatus("valid");
-    } catch (e: any) {
-      if (e?.message?.includes("PAYMENT_METHOD_REQUIRED")) {
+    } catch (e) {
+      if (
+        e instanceof Error &&
+        e?.message?.includes("PAYMENT_METHOD_REQUIRED")
+      ) {
         setVerifyStatus("payment_required");
       } else {
         setVerifyStatus("invalid");

@@ -1,11 +1,11 @@
 import type { Hex } from "viem";
-import type { SendTransactionResult, TransactionReceipt } from "../types.js";
+import type { Chain } from "../../chains/types.js";
+import type { ThirdwebClient } from "../../client/client.js";
+import { eth_getTransactionReceipt } from "../../rpc/actions/eth_getTransactionReceipt.js";
 import { getRpcClient } from "../../rpc/rpc.js";
 import { watchBlockNumber } from "../../rpc/watchBlockNumber.js";
-import { eth_getTransactionReceipt } from "../../rpc/actions/eth_getTransactionReceipt.js";
 import type { Prettify } from "../../utils/type-utils.js";
-import type { ThirdwebClient } from "../../client/client.js";
-import type { Chain } from "../../chains/types.js";
+import type { SendTransactionResult, TransactionReceipt } from "../types.js";
 
 export const DEFAULT_MAX_BLOCKS_WAIT_TIME = 30;
 
@@ -48,7 +48,7 @@ export function waitForReceipt(
     options.maxBlocksWaitTime ?? DEFAULT_MAX_BLOCKS_WAIT_TIME;
 
   if (map.has(key)) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    // biome-ignore lint/style/noNonNullAssertion: the `has` above ensures that this will always be set
     return map.get(key)!;
   }
   const promise = new Promise<TransactionReceipt>((resolve, reject) => {

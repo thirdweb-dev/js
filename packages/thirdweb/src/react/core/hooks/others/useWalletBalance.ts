@@ -1,7 +1,7 @@
 import { queryOptions, useQuery } from "@tanstack/react-query";
 import {
-  getWalletBalance,
   type GetWalletBalanceOptions,
+  getWalletBalance,
 } from "../../../../wallets/utils/getWalletBalance.js";
 import { useWalletConnectionCtx } from "./useWalletConnectionCtx.js";
 
@@ -17,7 +17,6 @@ export function useWalletBalance(
   const { chain, address, tokenAddress } = options;
   const { client } = useWalletConnectionCtx();
   const query = queryOptions({
-    // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: [
       "walletBalance",
       chain?.id || -1,

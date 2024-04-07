@@ -1,7 +1,7 @@
-import type { InAppWalletLocale } from "./locale/types.js";
-import { getInAppWalletLocale } from "./locale/getInAppWalletLocale.js";
-import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { useEffect, useState } from "react";
+import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import { getInAppWalletLocale } from "./locale/getInAppWalletLocale.js";
+import type { InAppWalletLocale } from "./locale/types.js";
 
 /**
  * @internal
@@ -16,7 +16,7 @@ export function useInAppWalletLocale() {
     getInAppWalletLocale(localeId).then((l) => {
       setLocale(l);
     });
-  }, [locale, localeId]);
+  }, [localeId]);
 
   return locale;
 }

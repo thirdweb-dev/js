@@ -1,10 +1,10 @@
-import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed.js";
-import { getContract, type ThirdwebContract } from "../../contract.js";
 import { prepareTransaction } from "../../../transaction/prepare-transaction.js";
-import type { ClientAndChain } from "../../../utils/types.js";
-import type { Prettify } from "../../../utils/type-utils.js";
 import { computePublishedContractAddress } from "../../../utils/any-evm/compute-published-contract-address.js";
 import { computeDeploymentInfoFromContractId } from "../../../utils/any-evm/compute-published-contract-deploy-info.js";
+import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed.js";
+import type { Prettify } from "../../../utils/type-utils.js";
+import type { ClientAndChain } from "../../../utils/types.js";
+import { type ThirdwebContract, getContract } from "../../contract.js";
 import { computeCreate2FactoryAddress } from "./create-2-factory.js";
 
 export type InfraContractId =
@@ -12,7 +12,6 @@ export type InfraContractId =
   | "Forwarder"
   | "ForwarderEOAOnly"
   | "TWCloneFactory"
-  // eslint-disable-next-line @typescript-eslint/ban-types
   | (string & {});
 
 export type GetDeployedInfraParams = Prettify<
@@ -39,9 +38,8 @@ export async function getDeployedInfraContract(
   });
   if (await isContractDeployed(factory)) {
     return factory;
-  } else {
-    return null;
   }
+  return null;
 }
 
 /**

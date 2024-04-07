@@ -1,5 +1,11 @@
 import styled from "@emotion/styled";
 import { useContext } from "react";
+import type {
+  InAppWalletAuth,
+  InAppWalletSocialAuth,
+} from "../../../../wallets/in-app/core/wallet/index.js";
+import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
+import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import {
   ModalConfigCtx,
   SetModalConfigCtx,
@@ -13,18 +19,12 @@ import { TextDivider } from "../../ui/components/TextDivider.js";
 import { Container, ModalHeader } from "../../ui/components/basic.js";
 import { Button } from "../../ui/components/buttons.js";
 import { useCustomTheme } from "../../ui/design-system/CustomThemeProvider.js";
-import { iconSize, spacing, fontSize } from "../../ui/design-system/index.js";
+import { fontSize, iconSize, spacing } from "../../ui/design-system/index.js";
+import { InputSelectionUI } from "./InputSelectionUI.js";
+import type { InAppWalletLocale } from "./locale/types.js";
+import { openOauthSignInWindow } from "./openOauthSignInWindow.js";
 import { socialIcons } from "./socialIcons.js";
 import type { InAppWalletSelectUIState } from "./types.js";
-import { openOauthSignInWindow } from "./openOauthSignInWindow.js";
-import type { InAppWalletLocale } from "./locale/types.js";
-import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
-import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
-import { InputSelectionUI } from "./InputSelectionUI.js";
-import type {
-  InAppWalletAuth,
-  InAppWalletSocialAuth,
-} from "../../../../wallets/in-app/core/wallet/index.js";
 
 const defaultAuthOptions: InAppWalletAuth[] = [
   "email",

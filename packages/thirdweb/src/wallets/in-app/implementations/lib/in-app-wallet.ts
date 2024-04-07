@@ -1,9 +1,9 @@
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getThirdwebDomains } from "../../../../utils/domains.js";
 import {
-  UserWalletStatus,
-  type InAppWalletConstructorType,
   type GetUser,
+  type InAppWalletConstructorType,
+  UserWalletStatus,
 } from "../interfaces/in-app-wallets/in-app-wallets.js";
 import { InAppWalletIframeCommunicator } from "../utils/iFrameCommunication/InAppWalletIframeCommunicator.js";
 import { Auth, type AuthQuerierTypes } from "./auth/index.js";
@@ -25,9 +25,8 @@ export class InAppWalletSdk {
   private isClientIdLegacyPaper(clientId: string): boolean {
     if (clientId.indexOf("-") > 0 && clientId.length === 36) {
       return true;
-    } else {
-      return false;
     }
+    return false;
   }
 
   /**

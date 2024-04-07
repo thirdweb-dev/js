@@ -1,10 +1,10 @@
-import { min } from "../../../utils/bigint.js";
-import type { BaseTransactionOptions } from "../../../transaction/types.js";
-import { totalSupply } from "../__generated__/IERC721A/read/totalSupply.js";
-import { startTokenId } from "../__generated__/IERC721A/read/startTokenId.js";
-import { nextTokenIdToMint } from "../__generated__/IERC721Enumerable/read/nextTokenIdToMint.js";
-import { ownerOf } from "../__generated__/IERC721A/read/ownerOf.js";
 import { ADDRESS_ZERO } from "../../../constants/addresses.js";
+import type { BaseTransactionOptions } from "../../../transaction/types.js";
+import { min } from "../../../utils/bigint.js";
+import { ownerOf } from "../__generated__/IERC721A/read/ownerOf.js";
+import { startTokenId } from "../__generated__/IERC721A/read/startTokenId.js";
+import { totalSupply } from "../__generated__/IERC721A/read/totalSupply.js";
+import { nextTokenIdToMint } from "../__generated__/IERC721Enumerable/read/nextTokenIdToMint.js";
 
 const DEFAULT_QUERY_ALL_COUNT = 100n;
 
@@ -51,7 +51,7 @@ export async function getAllOwners(
     // default to 0 if startTokenId is not available
     const startTokenId__ =
       _startTokenId.status === "fulfilled" ? _startTokenId.value : 0n;
-    let maxSupply_;
+    let maxSupply_: bigint;
     // prioritize nextTokenIdToMint
     if (_next.status === "fulfilled") {
       // because we always default the startTokenId to 0 we can safely just always subtract here

@@ -1,7 +1,7 @@
-import { CoreServiceConfig } from "../api";
-import { AuthorizationResult } from "../authorize/types";
+import type { CoreServiceConfig } from "../api";
+import type { AuthorizationResult } from "../authorize/types";
 
-import { UsageLimitResult } from "./types";
+import type { UsageLimitResult } from "./types";
 
 export async function usageLimit(
   authzResult: AuthorizationResult,

@@ -4,9 +4,9 @@ import {
   type BlockTag,
   type EIP1193RequestFn,
   type EIP1474Methods,
+  type Hash,
   type LogTopic,
   type RpcLog,
-  type Hash,
   formatLog,
 } from "viem";
 import { numberToHex } from "../../utils/encoding/hex.js";

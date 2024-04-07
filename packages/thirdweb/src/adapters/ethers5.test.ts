@@ -1,10 +1,10 @@
-import { describe, test, expect } from "vitest";
-import { privateKeyAccount } from "../wallets/private-key.js";
-import { TEST_CLIENT } from "../../test/src/test-clients.js";
-import { toEthersSigner } from "./ethers5.js";
-import { ANVIL_CHAIN } from "../../test/src/chains.js";
 import * as ethers5 from "ethers5";
+import { describe, expect, test } from "vitest";
+import { ANVIL_CHAIN } from "../../test/src/chains.js";
+import { TEST_CLIENT } from "../../test/src/test-clients.js";
 import { ANVIL_PKEY_A, TEST_ACCOUNT_B } from "../../test/src/test-wallets.js";
+import { privateKeyAccount } from "../wallets/private-key.js";
+import { toEthersSigner } from "./ethers5.js";
 
 const account = privateKeyAccount({
   privateKey: ANVIL_PKEY_A,

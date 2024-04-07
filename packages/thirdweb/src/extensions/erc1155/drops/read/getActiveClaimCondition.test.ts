@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { DROP1155_CONTRACT } from "../../../../../test/src/test-contracts.js";
 import { getActiveClaimCondition } from "./getActiveClaimCondition.js";

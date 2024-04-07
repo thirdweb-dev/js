@@ -1,16 +1,16 @@
-import { Container } from "../../../../components/basic.js";
-import { Input } from "../../../../components/formElements.js";
-import type { Chain } from "../../../../../../../chains/types.js";
-import type { ERC20OrNativeToken } from "../../nativeToken.js";
-import { Skeleton } from "../../../../components/Skeleton.js";
-import { fontSize, iconSize } from "../../../../design-system/index.js";
-import { Spacer } from "../../../../components/Spacer.js";
-import { Button } from "../../../../components/buttons.js";
-import { TokenSelectorButton } from "./TokenSelector.js";
-import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
+import type { Chain } from "../../../../../../../chains/types.js";
+import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
 import { ChainIcon } from "../../../../components/ChainIcon.js";
+import { Skeleton } from "../../../../components/Skeleton.js";
+import { Spacer } from "../../../../components/Spacer.js";
+import { Container } from "../../../../components/basic.js";
+import { Button } from "../../../../components/buttons.js";
+import { Input } from "../../../../components/formElements.js";
 import { Text } from "../../../../components/text.js";
+import { fontSize, iconSize } from "../../../../design-system/index.js";
+import type { ERC20OrNativeToken } from "../../nativeToken.js";
+import { TokenSelectorButton } from "./TokenSelector.js";
 
 /**
  * @internal
@@ -48,11 +48,11 @@ export function BuyTokenInput(props: {
           let value = e.target.value;
 
           if (value.startsWith(".")) {
-            value = "0" + value;
+            value = `0${value}`;
           }
 
           const numValue = Number(value);
-          if (isNaN(numValue)) {
+          if (Number.isNaN(numValue)) {
             return;
           }
 
