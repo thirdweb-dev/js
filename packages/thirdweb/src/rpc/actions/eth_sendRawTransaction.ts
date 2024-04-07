@@ -14,11 +14,11 @@ import type { EIP1193RequestFn, EIP1474Methods, Hex } from "viem";
  * ```
  */
 export async function eth_sendRawTransaction(
-  request: EIP1193RequestFn<EIP1474Methods>,
-  signedTransaction: Hex,
+	request: EIP1193RequestFn<EIP1474Methods>,
+	signedTransaction: Hex,
 ) {
-  return await request({
-    method: "eth_sendRawTransaction",
-    params: [signedTransaction],
-  });
+	return await request({
+		method: "eth_sendRawTransaction",
+		params: [signedTransaction],
+	});
 }

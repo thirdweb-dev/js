@@ -1,22 +1,22 @@
 import type { Abi, AbiEvent } from "abitype";
 import {
-  getContractEvents,
-  type GetContractEventsOptionsDirect,
+	type GetContractEventsOptionsDirect,
+	getContractEvents,
 } from "./get-events.js";
 
-import type { Prettify } from "../../utils/type-utils.js";
-import type { ParseEventLogsResult } from "./parse-logs.js";
 import { watchBlockNumber } from "../../rpc/watchBlockNumber.js";
+import type { Prettify } from "../../utils/type-utils.js";
 import type { PreparedEvent } from "../prepare-event.js";
+import type { ParseEventLogsResult } from "./parse-logs.js";
 
 export type WatchContractEventsOptions<
-  abi extends Abi,
-  abiEvents extends PreparedEvent<AbiEvent>[],
-  TStrict extends boolean,
+	abi extends Abi,
+	abiEvents extends PreparedEvent<AbiEvent>[],
+	TStrict extends boolean,
 > = Prettify<
-  GetContractEventsOptionsDirect<abi, abiEvents, TStrict> & {
-    onEvents: (events: ParseEventLogsResult<abiEvents, TStrict>) => void;
-  }
+	GetContractEventsOptionsDirect<abi, abiEvents, TStrict> & {
+		onEvents: (events: ParseEventLogsResult<abiEvents, TStrict>) => void;
+	}
 >;
 
 /**
@@ -52,32 +52,32 @@ export type WatchContractEventsOptions<
  * @contract
  */
 export function watchContractEvents<
-  const abi extends Abi,
-  const abiEvents extends PreparedEvent<AbiEvent>[],
-  const TStrict extends boolean = true,
+	const abi extends Abi,
+	const abiEvents extends PreparedEvent<AbiEvent>[],
+	const TStrict extends boolean = true,
 >(options: WatchContractEventsOptions<abi, abiEvents, TStrict>) {
-  // returning this returns the underlying "unwatch" function
-  return watchBlockNumber({
-    ...options.contract,
+	// returning this returns the underlying "unwatch" function
+	return watchBlockNumber({
+		...options.contract,
 
-    /**
-     * This function is called every time a new block is mined.
-     * @param blockNumber - The block number of the new block.
-     * @returns A promise that resolves when the function is finished.
-     * @internal
-     */
-    onNewBlockNumber: async (blockNumber) => {
-      const logs = await getContractEvents({
-        ...options,
-        // fromBlock is inclusive
-        fromBlock: blockNumber,
-        // toBlock is exclusive
-        toBlock: blockNumber,
-      });
-      // if there were any logs associated with our event(s)
-      if (logs.length) {
-        options.onEvents(logs);
-      }
-    },
-  });
+		/**
+		 * This function is called every time a new block is mined.
+		 * @param blockNumber - The block number of the new block.
+		 * @returns A promise that resolves when the function is finished.
+		 * @internal
+		 */
+		onNewBlockNumber: async (blockNumber) => {
+			const logs = await getContractEvents({
+				...options,
+				// fromBlock is inclusive
+				fromBlock: blockNumber,
+				// toBlock is exclusive
+				toBlock: blockNumber,
+			});
+			// if there were any logs associated with our event(s)
+			if (logs.length) {
+				options.onEvents(logs);
+			}
+		},
+	});
 }

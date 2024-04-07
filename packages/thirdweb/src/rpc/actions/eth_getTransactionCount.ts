@@ -1,7 +1,7 @@
 import type {
-  EIP1193RequestFn,
-  EIP1474Methods,
-  GetTransactionCountParameters,
+	EIP1193RequestFn,
+	EIP1474Methods,
+	GetTransactionCountParameters,
 } from "viem";
 import { hexToNumber, numberToHex } from "../../utils/encoding/hex.js";
 
@@ -21,18 +21,18 @@ import { hexToNumber, numberToHex } from "../../utils/encoding/hex.js";
  * ```
  */
 export async function eth_getTransactionCount(
-  request: EIP1193RequestFn<EIP1474Methods>,
-  params: GetTransactionCountParameters,
+	request: EIP1193RequestFn<EIP1474Methods>,
+	params: GetTransactionCountParameters,
 ): Promise<number> {
-  const count = await request({
-    method: "eth_getTransactionCount",
-    params: [
-      params.address,
-      // makes sense to default to `pending` here, since we're asking for a transaction count (nonce)
-      params.blockNumber
-        ? numberToHex(params.blockNumber)
-        : params.blockTag || "pending",
-    ],
-  });
-  return hexToNumber(count);
+	const count = await request({
+		method: "eth_getTransactionCount",
+		params: [
+			params.address,
+			// makes sense to default to `pending` here, since we're asking for a transaction count (nonce)
+			params.blockNumber
+				? numberToHex(params.blockNumber)
+				: params.blockTag || "pending",
+		],
+	});
+	return hexToNumber(count);
 }

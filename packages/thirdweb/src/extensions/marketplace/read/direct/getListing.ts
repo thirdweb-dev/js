@@ -3,8 +3,8 @@ import { getRpcClient } from "../../../../rpc/rpc.js";
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 
 import {
-  getListing as getListingGenerated,
-  type GetListingParams as GetListingParamsGenerated,
+	type GetListingParams as GetListingParamsGenerated,
+	getListing as getListingGenerated,
 } from "../../__generated__/IDirectListings/read/getListing.js";
 import type { DirectListing } from "../../types.js";
 import { mapDirectListing } from "../../utils.js";
@@ -24,19 +24,19 @@ export type GetListingParams = GetListingParamsGenerated;
  * ```
  */
 export async function getListing(
-  options: BaseTransactionOptions<GetListingParams>,
+	options: BaseTransactionOptions<GetListingParams>,
 ): Promise<DirectListing> {
-  const rpcClient = getRpcClient(options.contract);
-  const [rawListing, latestBlock] = await Promise.all([
-    getListingGenerated(options),
-    eth_getBlockByNumber(rpcClient, {
-      blockTag: "latest",
-    }),
-  ]);
+	const rpcClient = getRpcClient(options.contract);
+	const [rawListing, latestBlock] = await Promise.all([
+		getListingGenerated(options),
+		eth_getBlockByNumber(rpcClient, {
+			blockTag: "latest",
+		}),
+	]);
 
-  return mapDirectListing({
-    contract: options.contract,
-    latestBlock,
-    rawListing,
-  });
+	return mapDirectListing({
+		contract: options.contract,
+		latestBlock,
+		rawListing,
+	});
 }

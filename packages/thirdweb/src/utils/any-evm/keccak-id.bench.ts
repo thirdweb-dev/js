@@ -4,5 +4,5 @@ import { keccakId } from "./keccak-id.js";
 const input = "Hello, World!";
 
 bench("keccakId", () => {
-  keccakId(input);
+	keccakId(input);
 });

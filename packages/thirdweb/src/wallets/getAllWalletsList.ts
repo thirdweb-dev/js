@@ -4,5 +4,5 @@
  * @internal
  */
 export async function getAllWalletsList() {
-  return (await import("./__generated__/wallet-infos.js")).default;
+	return (await import("./__generated__/wallet-infos.js")).default;
 }

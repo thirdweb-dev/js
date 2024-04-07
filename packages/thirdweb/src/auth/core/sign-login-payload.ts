@@ -3,8 +3,8 @@ import { createLoginMessage } from "./create-login-message.js";
 import type { LoginPayload } from "./types.js";
 
 export type SignLoginPayloadParams = {
-  payload: LoginPayload;
-  account: Account;
+	payload: LoginPayload;
+	account: Account;
 };
 
 /**
@@ -23,12 +23,12 @@ export type SignLoginPayloadParams = {
  * @auth
  */
 export async function signLoginPayload(options: SignLoginPayloadParams) {
-  const { payload, account } = options;
-  const signature = await account.signMessage({
-    message: createLoginMessage(payload),
-  });
-  return {
-    signature,
-    payload,
-  };
+	const { payload, account } = options;
+	const signature = await account.signMessage({
+		message: createLoginMessage(payload),
+	});
+	return {
+		signature,
+		payload,
+	};
 }

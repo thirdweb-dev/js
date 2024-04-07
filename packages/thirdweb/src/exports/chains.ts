@@ -2,9 +2,9 @@
 export type { Chain } from "../chains/types.js";
 // define chain, chainMetadata
 export {
-  defineChain,
-  getChainMetadata,
-  getRpcUrlForChain,
+	defineChain,
+	getChainMetadata,
+	getRpcUrlForChain,
 } from "../chains/utils.js";
 
 /**
@@ -24,8 +24,8 @@ export { optimismSepolia } from "../chains/chain-definitions/optimism-sepolia.js
 export { optimism } from "../chains/chain-definitions/optimism.js";
 // mumbai = alias for polygonMumbai
 export {
-  polygonMumbai,
-  mumbai,
+	polygonMumbai,
+	mumbai,
 } from "../chains/chain-definitions/polygon-mumbai.js";
 export { polygonAmoy } from "../chains/chain-definitions/polygon-amoy.js";
 export { polygon } from "../chains/chain-definitions/polygon.js";

@@ -1,16 +1,16 @@
-import { createStore, type Store } from "mipd";
+import { type Store, createStore } from "mipd";
 import type { Ethereum } from "../interfaces/ethereum.js";
 import type { WalletId } from "../wallet-types.js";
 
 declare module "mipd" {
-  export interface Register {
-    rdns: WalletId;
-  }
+	export interface Register {
+		rdns: WalletId;
+	}
 }
 
 // if we're in the browser -> create the store once immediately
 const mipdStore: Store | undefined = /* @__PURE__ */ (() =>
-  typeof window !== "undefined" ? createStore() : undefined)();
+	typeof window !== "undefined" ? createStore() : undefined)();
 
 /**
  * Get Injected Provider for given wallet by passing a wallet ID (rdns) using [EIP-6963](https://eips.ethereum.org/EIPS/eip-6963) Provider Discovery.
@@ -29,17 +29,17 @@ const mipdStore: Store | undefined = /* @__PURE__ */ (() =>
  * @walletUtils
  */
 export function injectedProvider(walletId: WalletId): Ethereum | undefined {
-  if (!mipdStore) {
-    throw new Error("store not initialized");
-  }
+	if (!mipdStore) {
+		throw new Error("store not initialized");
+	}
 
-  const store = getMIPDStore();
+	const store = getMIPDStore();
 
-  const injectedProviderDetail = store.findProvider({
-    rdns: walletId,
-  });
+	const injectedProviderDetail = store.findProvider({
+		rdns: walletId,
+	});
 
-  return injectedProviderDetail?.provider as Ethereum | undefined;
+	return injectedProviderDetail?.provider as Ethereum | undefined;
 }
 
 /**
@@ -47,8 +47,8 @@ export function injectedProvider(walletId: WalletId): Ethereum | undefined {
  * @internal
  */
 export function getMIPDStore() {
-  if (!mipdStore) {
-    throw new Error("MIPD store not initialized");
-  }
-  return mipdStore;
+	if (!mipdStore) {
+		throw new Error("MIPD store not initialized");
+	}
+	return mipdStore;
 }

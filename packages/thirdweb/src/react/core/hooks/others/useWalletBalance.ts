@@ -1,7 +1,7 @@
 import { queryOptions, useQuery } from "@tanstack/react-query";
 import {
-  getWalletBalance,
-  type GetWalletBalanceOptions,
+	type GetWalletBalanceOptions,
+	getWalletBalance,
 } from "../../../../wallets/utils/getWalletBalance.js";
 import { useWalletConnectionCtx } from "./useWalletConnectionCtx.js";
 
@@ -12,31 +12,30 @@ import { useWalletConnectionCtx } from "./useWalletConnectionCtx.js";
  * @internal
  */
 export function useWalletBalance(
-  options: Omit<Partial<GetWalletBalanceOptions>, "client">,
+	options: Omit<Partial<GetWalletBalanceOptions>, "client">,
 ) {
-  const { chain, address, tokenAddress } = options;
-  const { client } = useWalletConnectionCtx();
-  const query = queryOptions({
-    // eslint-disable-next-line @tanstack/query/exhaustive-deps
-    queryKey: [
-      "walletBalance",
-      chain?.id || -1,
-      address || "0x0",
-      { tokenAddress },
-    ] as const,
-    queryFn: async () => {
-      if (!chain) {
-        throw new Error("chain is required");
-      }
-      if (!client) {
-        throw new Error("client is required");
-      }
-      if (!address) {
-        throw new Error("address is required");
-      }
-      return getWalletBalance({ chain, client, address, tokenAddress });
-    },
-    enabled: !!chain && !!client && !!address,
-  });
-  return useQuery(query);
+	const { chain, address, tokenAddress } = options;
+	const { client } = useWalletConnectionCtx();
+	const query = queryOptions({
+		queryKey: [
+			"walletBalance",
+			chain?.id || -1,
+			address || "0x0",
+			{ tokenAddress },
+		] as const,
+		queryFn: async () => {
+			if (!chain) {
+				throw new Error("chain is required");
+			}
+			if (!client) {
+				throw new Error("client is required");
+			}
+			if (!address) {
+				throw new Error("address is required");
+			}
+			return getWalletBalance({ chain, client, address, tokenAddress });
+		},
+		enabled: !!chain && !!client && !!address,
+	});
+	return useQuery(query);
 }

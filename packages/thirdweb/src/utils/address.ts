@@ -22,22 +22,22 @@ const IS_ADDRESS_CACHE = new LruMap<boolean>(4096);
  * @utils
  */
 export function isAddress(address: string): address is Address {
-  if (IS_ADDRESS_CACHE.has(address)) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return IS_ADDRESS_CACHE.get(address)!;
-  }
-  const result = (() => {
-    if (!ADRESS_REGEX.test(address)) {
-      return false;
-    }
-    if (address.toLowerCase() === address) {
-      return true;
-    }
+	if (IS_ADDRESS_CACHE.has(address)) {
+		// biome-ignore lint/style/noNonNullAssertion: the `has` above ensures that this will always be set
+		return IS_ADDRESS_CACHE.get(address)!;
+	}
+	const result = (() => {
+		if (!ADRESS_REGEX.test(address)) {
+			return false;
+		}
+		if (address.toLowerCase() === address) {
+			return true;
+		}
 
-    return checksumAddress(address) === address;
-  })();
-  IS_ADDRESS_CACHE.set(address, result);
-  return result;
+		return checksumAddress(address) === address;
+	})();
+	IS_ADDRESS_CACHE.set(address, result);
+	return result;
 }
 
 /**
@@ -54,24 +54,25 @@ export function isAddress(address: string): address is Address {
  * @utils
  */
 export function checksumAddress(address: string): Address {
-  const hexAddress = address.substring(2).toLowerCase();
-  const hash = keccak256(stringToBytes(hexAddress), "bytes");
+	const hexAddress = address.substring(2).toLowerCase();
+	const hash = keccak256(stringToBytes(hexAddress), "bytes");
 
-  const address_ = hexAddress.split("");
-  for (let i = 0; i < 40; i += 2) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    if (hash[i >> 1]! >> 4 >= 8 && address[i]) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      address_[i] = address_[i]!.toUpperCase();
-    }
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    if ((hash[i >> 1]! & 0x0f) >= 8 && address[i + 1]) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      address_[i + 1] = address_[i + 1]!.toUpperCase();
-    }
-  }
+	const address_ = hexAddress.split("");
+	for (let i = 0; i < 40; i += 2) {
+		// biome-ignore lint/style/noNonNullAssertion: <explanation>
+		if (hash[i >> 1]! >> 4 >= 8 && address[i]) {
+			// biome-ignore lint/style/noNonNullAssertion: <explanation>
+			address_[i] = address_[i]!.toUpperCase();
+		}
 
-  return `0x${address_.join("")}`;
+		// biome-ignore lint/style/noNonNullAssertion: <explanation>
+		if ((hash[i >> 1]! & 0x0f) >= 8 && address[i + 1]) {
+			// biome-ignore lint/style/noNonNullAssertion: <explanation>
+			address_[i + 1] = address_[i + 1]!.toUpperCase();
+		}
+	}
+
+	return `0x${address_.join("")}`;
 }
 
 /**
@@ -89,8 +90,8 @@ export function checksumAddress(address: string): Address {
  * @utils
  */
 export function getAddress(address: string): Address {
-  if (!isAddress(address)) {
-    throw new Error(`Invalid address: ${address}`);
-  }
-  return checksumAddress(address);
+	if (!isAddress(address)) {
+		throw new Error(`Invalid address: ${address}`);
+	}
+	return checksumAddress(address);
 }

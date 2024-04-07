@@ -1,54 +1,55 @@
-// slightly tweaked re-exports from viem for the moment
-import { assertSize } from "./helpers/assert-size.js";
 import { cachedTextDecoder } from "../text-decoder.js";
 import { cachedTextEncoder } from "../text-encoder.js";
-import type { Hex } from "./helpers/is-hex.js";
+// slightly tweaked re-exports from viem for the moment
+import { assertSize } from "./helpers/assert-size.js";
 import { charCodeToBase16 } from "./helpers/charcode-to-base-16.js";
+import type { Hex } from "./helpers/is-hex.js";
 
 export { type Hex, isHex, type IsHexOptions } from "./helpers/is-hex.js";
 
 type TrimOptions = {
-  dir?: "left" | "right";
+	dir?: "left" | "right";
 };
 type TrimReturnType<TValue extends Uint8Array | Hex> = TValue extends Hex
-  ? Hex
-  : Uint8Array;
+	? Hex
+	: Uint8Array;
 
 function trim<TValue extends Uint8Array | Hex>(
-  hexOrBytes: TValue,
-  options: TrimOptions = {},
+	hexOrBytes: TValue,
+	options: TrimOptions = {},
 ): TrimReturnType<TValue> {
-  const dir = options.dir || "left";
-  let data: any =
-    typeof hexOrBytes === "string" ? hexOrBytes.replace("0x", "") : hexOrBytes;
+	const dir = options.dir || "left";
+	// biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
+	let data: any =
+		typeof hexOrBytes === "string" ? hexOrBytes.replace("0x", "") : hexOrBytes;
 
-  let sliceLength = 0;
-  for (let i = 0; i < data.length - 1; i++) {
-    if (data[dir === "left" ? i : data.length - i - 1].toString() === "0") {
-      sliceLength++;
-    } else {
-      break;
-    }
-  }
-  data =
-    dir === "left"
-      ? data.slice(sliceLength)
-      : data.slice(0, data.length - sliceLength);
+	let sliceLength = 0;
+	for (let i = 0; i < data.length - 1; i++) {
+		if (data[dir === "left" ? i : data.length - i - 1].toString() === "0") {
+			sliceLength++;
+		} else {
+			break;
+		}
+	}
+	data =
+		dir === "left"
+			? data.slice(sliceLength)
+			: data.slice(0, data.length - sliceLength);
 
-  if (typeof hexOrBytes === "string") {
-    if (data.length === 1 && dir === "right") {
-      data = `${data}0`;
-    }
-    return `0x${
-      data.length % 2 === 1 ? `0${data}` : data
-    }` as TrimReturnType<TValue>;
-  }
-  return data as TrimReturnType<TValue>;
+	if (typeof hexOrBytes === "string") {
+		if (data.length === 1 && dir === "right") {
+			data = `${data}0`;
+		}
+		return `0x${
+			data.length % 2 === 1 ? `0${data}` : data
+		}` as TrimReturnType<TValue>;
+	}
+	return data as TrimReturnType<TValue>;
 }
 
 type PadOptions = {
-  dir?: "left" | "right";
-  size?: number | null;
+	dir?: "left" | "right";
+	size?: number | null;
 };
 
 /**
@@ -66,19 +67,19 @@ type PadOptions = {
  * @utils
  */
 export function padHex(hex_: Hex, options: PadOptions = {}) {
-  const { dir, size = 32 } = options;
-  if (size === null) {
-    return hex_;
-  }
-  const hex = hex_.replace("0x", "");
-  if (hex.length > size * 2) {
-    throw new Error(`Size overflow: ${Math.ceil(hex.length / 2)} > ${size}`);
-  }
+	const { dir, size = 32 } = options;
+	if (size === null) {
+		return hex_;
+	}
+	const hex = hex_.replace("0x", "");
+	if (hex.length > size * 2) {
+		throw new Error(`Size overflow: ${Math.ceil(hex.length / 2)} > ${size}`);
+	}
 
-  return `0x${hex[dir === "right" ? "padEnd" : "padStart"](
-    size * 2,
-    "0",
-  )}` as Hex;
+	return `0x${hex[dir === "right" ? "padEnd" : "padStart"](
+		size * 2,
+		"0",
+	)}` as Hex;
 }
 
 //--------------------------------------------------------------------------
@@ -86,8 +87,8 @@ export function padHex(hex_: Hex, options: PadOptions = {}) {
 //--------------------------------------------------------------------------
 
 export type HexToStringOpts = {
-  /** Size (in bytes) of the hex value. */
-  size?: number;
+	/** Size (in bytes) of the hex value. */
+	size?: number;
 };
 
 /**
@@ -104,19 +105,19 @@ export type HexToStringOpts = {
  * @utils
  */
 export function hexToString(hex: Hex, opts: HexToStringOpts = {}): string {
-  let bytes = hexToUint8Array(hex);
-  if (opts.size) {
-    assertSize(bytes, { size: opts.size });
-    bytes = trim(bytes, { dir: "right" });
-  }
-  return cachedTextDecoder().decode(bytes);
+	let bytes = hexToUint8Array(hex);
+	if (opts.size) {
+		assertSize(bytes, { size: opts.size });
+		bytes = trim(bytes, { dir: "right" });
+	}
+	return cachedTextDecoder().decode(bytes);
 }
 
 export type HexToBigIntOpts = {
-  /** Whether or not the number of a signed representation. */
-  signed?: boolean;
-  /** Size (in bytes) of the hex value. */
-  size?: number;
+	/** Whether or not the number of a signed representation. */
+	signed?: boolean;
+	/** Size (in bytes) of the hex value. */
+	size?: number;
 };
 
 /**
@@ -133,24 +134,24 @@ export type HexToBigIntOpts = {
  * @utils
  */
 export function hexToBigInt(hex: Hex, opts: HexToBigIntOpts = {}): bigint {
-  const { signed } = opts;
+	const { signed } = opts;
 
-  if (opts.size) {
-    assertSize(hex, { size: opts.size });
-  }
+	if (opts.size) {
+		assertSize(hex, { size: opts.size });
+	}
 
-  const value = BigInt(hex);
-  if (!signed) {
-    return value;
-  }
+	const value = BigInt(hex);
+	if (!signed) {
+		return value;
+	}
 
-  const size = (hex.length - 2) / 2;
-  const max = (1n << (BigInt(size) * 8n - 1n)) - 1n;
-  if (value <= max) {
-    return value;
-  }
+	const size = (hex.length - 2) / 2;
+	const max = (1n << (BigInt(size) * 8n - 1n)) - 1n;
+	if (value <= max) {
+		return value;
+	}
 
-  return value - BigInt(`0x${"f".padStart(size * 2, "f")}`) - 1n;
+	return value - BigInt(`0x${"f".padStart(size * 2, "f")}`) - 1n;
 }
 
 export type HexToNumberOpts = HexToBigIntOpts;
@@ -168,12 +169,12 @@ export type HexToNumberOpts = HexToBigIntOpts;
  * @utils
  */
 export function hexToNumber(hex: Hex, opts: HexToNumberOpts = {}): number {
-  return Number(hexToBigInt(hex, opts));
+	return Number(hexToBigInt(hex, opts));
 }
 
 export type HexToBoolOpts = {
-  /** Size (in bytes) of the hex value. */
-  size?: number;
+	/** Size (in bytes) of the hex value. */
+	size?: number;
 };
 
 /**
@@ -191,22 +192,23 @@ export type HexToBoolOpts = {
  * @utils
  */
 export function hexToBool(hex: Hex, opts: HexToBoolOpts = {}): boolean {
-  if (opts.size) {
-    assertSize(hex, { size: opts.size });
-    hex = trim(hex);
-  }
-  if (trim(hex) === "0x00") {
-    return false;
-  }
-  if (trim(hex) === "0x01") {
-    return true;
-  }
-  throw new Error(`Invalid hex boolean: ${hex}`);
+	if (opts.size) {
+		assertSize(hex, { size: opts.size });
+		// biome-ignore lint/style/noParameterAssign: for perf
+		hex = trim(hex);
+	}
+	if (trim(hex) === "0x00") {
+		return false;
+	}
+	if (trim(hex) === "0x01") {
+		return true;
+	}
+	throw new Error(`Invalid hex boolean: ${hex}`);
 }
 
 export type HexToUint8ArrayOpts = {
-  /** Size of the output bytes. */
-  size?: number;
+	/** Size of the output bytes. */
+	size?: number;
 };
 
 /**
@@ -223,54 +225,55 @@ export type HexToUint8ArrayOpts = {
  * @utils
  */
 export function hexToUint8Array(
-  hex: Hex,
-  opts: HexToUint8ArrayOpts = {},
+	hex: Hex,
+	opts: HexToUint8ArrayOpts = {},
 ): Uint8Array {
-  if (opts.size) {
-    assertSize(hex, { size: opts.size });
-    hex = padHex(hex, { dir: "right", size: opts.size });
-  }
+	if (opts.size) {
+		assertSize(hex, { size: opts.size });
+		// biome-ignore lint/style/noParameterAssign: for perf
+		hex = padHex(hex, { dir: "right", size: opts.size });
+	}
 
-  let hexString = hex.slice(2) as string;
-  if (hexString.length % 2) {
-    hexString = `0${hexString}`;
-  }
+	let hexString = hex.slice(2) as string;
+	if (hexString.length % 2) {
+		hexString = `0${hexString}`;
+	}
 
-  const length = hexString.length / 2;
-  const bytes = new Uint8Array(length);
-  for (let index = 0, j = 0; index < length; index++) {
-    const nibbleLeft = charCodeToBase16(hexString.charCodeAt(j++));
-    const nibbleRight = charCodeToBase16(hexString.charCodeAt(j++));
-    if (nibbleLeft === undefined || nibbleRight === undefined) {
-      throw new Error(`Invalid hex character: ${hexString}`);
-    }
-    bytes[index] = nibbleLeft * 16 + nibbleRight;
-  }
-  return bytes;
+	const length = hexString.length / 2;
+	const bytes = new Uint8Array(length);
+	for (let index = 0, j = 0; index < length; index++) {
+		const nibbleLeft = charCodeToBase16(hexString.charCodeAt(j++));
+		const nibbleRight = charCodeToBase16(hexString.charCodeAt(j++));
+		if (nibbleLeft === undefined || nibbleRight === undefined) {
+			throw new Error(`Invalid hex character: ${hexString}`);
+		}
+		bytes[index] = nibbleLeft * 16 + nibbleRight;
+	}
+	return bytes;
 }
 
 export type FromHexParameters<
-  TTo extends "string" | "bigint" | "number" | "bytes" | "boolean",
+	TTo extends "string" | "bigint" | "number" | "bytes" | "boolean",
 > =
-  | TTo
-  | {
-      /** Size (in bytes) of the hex value. */
-      size?: number;
-      /** Type to convert to. */
-      to: TTo;
-    };
+	| TTo
+	| {
+			/** Size (in bytes) of the hex value. */
+			size?: number;
+			/** Type to convert to. */
+			to: TTo;
+	  };
 
 export type FromHexReturnType<TTo> = TTo extends "string"
-  ? string
-  : TTo extends "bigint"
-    ? bigint
-    : TTo extends "number"
-      ? number
-      : TTo extends "bytes"
-        ? Uint8Array
-        : TTo extends "boolean"
-          ? boolean
-          : never;
+	? string
+	: TTo extends "bigint"
+		? bigint
+		: TTo extends "number"
+			? number
+			: TTo extends "bytes"
+				? Uint8Array
+				: TTo extends "boolean"
+					? boolean
+					: never;
 
 /**
  * Converts a hexadecimal string to the specified type.
@@ -286,22 +289,22 @@ export type FromHexReturnType<TTo> = TTo extends "string"
  * @utils
  */
 export function fromHex<
-  TTo extends "string" | "bigint" | "number" | "bytes" | "boolean",
+	TTo extends "string" | "bigint" | "number" | "bytes" | "boolean",
 >(hex: Hex, toOrOpts: FromHexParameters<TTo>): FromHexReturnType<TTo> {
-  const opts = typeof toOrOpts === "string" ? { to: toOrOpts } : toOrOpts;
+	const opts = typeof toOrOpts === "string" ? { to: toOrOpts } : toOrOpts;
 
-  switch (opts.to) {
-    case "number":
-      return hexToNumber(hex, opts) as FromHexReturnType<TTo>;
-    case "bigint":
-      return hexToBigInt(hex, opts) as FromHexReturnType<TTo>;
-    case "string":
-      return hexToString(hex, opts) as FromHexReturnType<TTo>;
-    case "boolean":
-      return hexToBool(hex, opts) as FromHexReturnType<TTo>;
-    default:
-      return hexToUint8Array(hex, opts) as FromHexReturnType<TTo>;
-  }
+	switch (opts.to) {
+		case "number":
+			return hexToNumber(hex, opts) as FromHexReturnType<TTo>;
+		case "bigint":
+			return hexToBigInt(hex, opts) as FromHexReturnType<TTo>;
+		case "string":
+			return hexToString(hex, opts) as FromHexReturnType<TTo>;
+		case "boolean":
+			return hexToBool(hex, opts) as FromHexReturnType<TTo>;
+		default:
+			return hexToUint8Array(hex, opts) as FromHexReturnType<TTo>;
+	}
 }
 
 //--------------------------------------------------------------------------
@@ -309,11 +312,11 @@ export function fromHex<
 //--------------------------------------------------------------------------
 
 const hexes = /* @__PURE__ */ (() =>
-  Array.from({ length: 256 }, (_v, i) => i.toString(16).padStart(2, "0")))();
+	Array.from({ length: 256 }, (_v, i) => i.toString(16).padStart(2, "0")))();
 
 export type BoolToHexOpts = {
-  /** The size (in bytes) of the output hex value. */
-  size?: number;
+	/** The size (in bytes) of the output hex value. */
+	size?: number;
 };
 
 /**
@@ -330,17 +333,17 @@ export type BoolToHexOpts = {
  * @utils
  */
 export function boolToHex(value: boolean, opts: BoolToHexOpts = {}): Hex {
-  const hex = `0x${Number(value)}` as const;
-  if (typeof opts.size === "number") {
-    assertSize(hex, { size: opts.size });
-    return padHex(hex, { size: opts.size });
-  }
-  return hex;
+	const hex = `0x${Number(value)}` as const;
+	if (typeof opts.size === "number") {
+		assertSize(hex, { size: opts.size });
+		return padHex(hex, { size: opts.size });
+	}
+	return hex;
 }
 
 export type Uint8ArrayToHexOpts = {
-  /** The size (in bytes) of the output hex value. */
-  size?: number;
+	/** The size (in bytes) of the output hex value. */
+	size?: number;
 };
 
 /**
@@ -357,35 +360,35 @@ export type Uint8ArrayToHexOpts = {
  * @utils
  */
 export function uint8ArrayToHex(
-  value: Uint8Array,
-  opts: Uint8ArrayToHexOpts = {},
+	value: Uint8Array,
+	opts: Uint8ArrayToHexOpts = {},
 ): Hex {
-  let string = "";
-  for (let i = 0; i < value.length; i++) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    string += hexes[value[i]!];
-  }
-  const hex = `0x${string}` as const;
+	let string = "";
+	for (let i = 0; i < value.length; i++) {
+		// biome-ignore lint/style/noNonNullAssertion: we know this is defined
+		string += hexes[value[i]!];
+	}
+	const hex = `0x${string}` as const;
 
-  if (typeof opts.size === "number") {
-    assertSize(hex, { size: opts.size });
-    return padHex(hex, { dir: "right", size: opts.size });
-  }
-  return hex;
+	if (typeof opts.size === "number") {
+		assertSize(hex, { size: opts.size });
+		return padHex(hex, { dir: "right", size: opts.size });
+	}
+	return hex;
 }
 
 export type NumberToHexOpts =
-  | {
-      /** Whether or not the number of a signed representation. */
-      signed?: boolean;
-      /** The size (in bytes) of the output hex value. */
-      size: number;
-    }
-  | {
-      signed?: never;
-      /** The size (in bytes) of the output hex value. */
-      size?: number;
-    };
+	| {
+			/** Whether or not the number of a signed representation. */
+			signed?: boolean;
+			/** The size (in bytes) of the output hex value. */
+			size: number;
+	  }
+	| {
+			signed?: never;
+			/** The size (in bytes) of the output hex value. */
+			size?: number;
+	  };
 
 /**
  * Converts a number or bigint to a hexadecimal string.
@@ -402,50 +405,50 @@ export type NumberToHexOpts =
  * @utils
  */
 export function numberToHex(
-  value_: number | bigint,
-  opts: NumberToHexOpts = {},
+	value_: number | bigint,
+	opts: NumberToHexOpts = {},
 ): Hex {
-  const { signed, size } = opts;
+	const { signed, size } = opts;
 
-  const value = BigInt(value_);
+	const value = BigInt(value_);
 
-  let maxValue: bigint | number | undefined;
-  if (size) {
-    if (signed) {
-      maxValue = (1n << (BigInt(size) * 8n - 1n)) - 1n;
-    } else {
-      maxValue = 2n ** (BigInt(size) * 8n) - 1n;
-    }
-  } else if (typeof value_ === "number") {
-    maxValue = BigInt(Number.MAX_SAFE_INTEGER);
-  }
+	let maxValue: bigint | number | undefined;
+	if (size) {
+		if (signed) {
+			maxValue = (1n << (BigInt(size) * 8n - 1n)) - 1n;
+		} else {
+			maxValue = 2n ** (BigInt(size) * 8n) - 1n;
+		}
+	} else if (typeof value_ === "number") {
+		maxValue = BigInt(Number.MAX_SAFE_INTEGER);
+	}
 
-  const minValue = typeof maxValue === "bigint" && signed ? -maxValue - 1n : 0;
+	const minValue = typeof maxValue === "bigint" && signed ? -maxValue - 1n : 0;
 
-  if ((maxValue && value > maxValue) || value < minValue) {
-    const suffix = typeof value_ === "bigint" ? "n" : "";
-    throw new Error(
-      `Number "${value_}${suffix}" is not in safe ${
-        size ? `${size * 8}-bit ${signed ? "signed" : "unsigned"} ` : ""
-      }integer range ${
-        maxValue ? `(${minValue} to ${maxValue})` : `(above ${minValue})`
-      }`,
-    );
-  }
+	if ((maxValue && value > maxValue) || value < minValue) {
+		const suffix = typeof value_ === "bigint" ? "n" : "";
+		throw new Error(
+			`Number "${value_}${suffix}" is not in safe ${
+				size ? `${size * 8}-bit ${signed ? "signed" : "unsigned"} ` : ""
+			}integer range ${
+				maxValue ? `(${minValue} to ${maxValue})` : `(above ${minValue})`
+			}`,
+		);
+	}
 
-  const hex = `0x${(signed && value < 0
-    ? (1n << BigInt(size * 8)) + BigInt(value)
-    : value
-  ).toString(16)}` as Hex;
-  if (size) {
-    return padHex(hex, { size }) as Hex;
-  }
-  return hex;
+	const hex = `0x${(signed && value < 0
+		? (1n << BigInt(size * 8)) + BigInt(value)
+		: value
+	).toString(16)}` as Hex;
+	if (size) {
+		return padHex(hex, { size }) as Hex;
+	}
+	return hex;
 }
 
 export type StringToHexOpts = {
-  /** The size (in bytes) of the output hex value. */
-  size?: number;
+	/** The size (in bytes) of the output hex value. */
+	size?: number;
 };
 
 /**
@@ -462,13 +465,13 @@ export type StringToHexOpts = {
  * @utils
  */
 export function stringToHex(value_: string, opts: StringToHexOpts = {}): Hex {
-  const value = cachedTextEncoder().encode(value_);
-  return uint8ArrayToHex(value, opts);
+	const value = cachedTextEncoder().encode(value_);
+	return uint8ArrayToHex(value, opts);
 }
 
 export type ToHexParameters = {
-  /** The size (in bytes) of the output hex value. */
-  size?: number;
+	/** The size (in bytes) of the output hex value. */
+	size?: number;
 };
 
 /**
@@ -485,18 +488,18 @@ export type ToHexParameters = {
  * @utils
  */
 export function toHex(
-  value: string | number | bigint | boolean | Uint8Array,
-  opts: ToHexParameters = {},
+	value: string | number | bigint | boolean | Uint8Array,
+	opts: ToHexParameters = {},
 ): Hex {
-  switch (typeof value) {
-    case "number":
-    case "bigint":
-      return numberToHex(value, opts);
-    case "string":
-      return stringToHex(value, opts);
-    case "boolean":
-      return boolToHex(value, opts);
-    default:
-      return uint8ArrayToHex(value, opts);
-  }
+	switch (typeof value) {
+		case "number":
+		case "bigint":
+			return numberToHex(value, opts);
+		case "string":
+			return stringToHex(value, opts);
+		case "boolean":
+			return boolToHex(value, opts);
+		default:
+			return uint8ArrayToHex(value, opts);
+	}
 }

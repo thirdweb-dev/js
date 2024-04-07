@@ -4,14 +4,14 @@ import { setPermissionsForSigner } from "../__generated__/IAccountPermissions/wr
 import { defaultPermissionsForAdmin, signPermissionRequest } from "./common.js";
 
 export type RemoveAdminOptions = {
-  /**
-   * The admin account that will perform the operation.
-   */
-  account: Account;
-  /**
-   * The address to remove as an admin.
-   */
-  adminAddress: string;
+	/**
+	 * The admin account that will perform the operation.
+	 */
+	account: Account;
+	/**
+	 * The address to remove as an admin.
+	 */
+	adminAddress: string;
 };
 
 /**
@@ -32,24 +32,24 @@ export type RemoveAdminOptions = {
  * @extension ERC4337
  */
 export function removeAdmin(
-  options: BaseTransactionOptions<RemoveAdminOptions>,
+	options: BaseTransactionOptions<RemoveAdminOptions>,
 ) {
-  const { contract, account, adminAddress } = options;
-  return setPermissionsForSigner({
-    contract,
-    async asyncParams() {
-      const { req, signature } = await signPermissionRequest({
-        account,
-        contract,
-        req: await defaultPermissionsForAdmin({
-          target: adminAddress,
-          action: "remove-admin",
-        }),
-      });
-      return {
-        signature,
-        req,
-      };
-    },
-  });
+	const { contract, account, adminAddress } = options;
+	return setPermissionsForSigner({
+		contract,
+		async asyncParams() {
+			const { req, signature } = await signPermissionRequest({
+				account,
+				contract,
+				req: await defaultPermissionsForAdmin({
+					target: adminAddress,
+					action: "remove-admin",
+				}),
+			});
+			return {
+				signature,
+				req,
+			};
+		},
+	});
 }

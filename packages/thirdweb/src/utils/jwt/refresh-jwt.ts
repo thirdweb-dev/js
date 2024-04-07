@@ -5,9 +5,9 @@ import { encodeJWT } from "./encode-jwt.js";
 const DEFAULT_EXPIRATION_TIME = 60 * 60 * 24;
 
 export type RefreshJWTParams = {
-  account: Account;
-  jwt: string;
-  expirationTime?: number;
+	account: Account;
+	jwt: string;
+	expirationTime?: number;
 };
 
 /**
@@ -26,18 +26,18 @@ export type RefreshJWTParams = {
  * ```
  */
 export async function refreshJWT(options: RefreshJWTParams): Promise<string> {
-  const { account, jwt, expirationTime = DEFAULT_EXPIRATION_TIME } = options;
-  const payload = deccodeJWT(jwt).payload;
-  return encodeJWT({
-    payload: {
-      iss: payload.iss,
-      sub: payload.sub,
-      aud: payload.aud,
-      nbf: new Date(),
-      exp: new Date(Date.now() + expirationTime),
-      iat: new Date(),
-      ctx: payload.ctx,
-    },
-    account,
-  });
+	const { account, jwt, expirationTime = DEFAULT_EXPIRATION_TIME } = options;
+	const payload = deccodeJWT(jwt).payload;
+	return encodeJWT({
+		payload: {
+			iss: payload.iss,
+			sub: payload.sub,
+			aud: payload.aud,
+			nbf: new Date(),
+			exp: new Date(Date.now() + expirationTime),
+			iat: new Date(),
+			ctx: payload.ctx,
+		},
+		account,
+	});
 }

@@ -12,34 +12,34 @@ const CONNECT_PARAMS_MAP_KEY = "tw:connected-wallet-params";
  * @internal
  */
 export async function saveConnectParamsToStorage<T extends object>(
-  storage: AsyncStorage,
-  walletId: string,
-  params: T,
+	storage: AsyncStorage,
+	walletId: string,
+	params: T,
 ) {
-  // params must be stringifiable
-  if (!isStringifiable(params)) {
-    throw new Error("given params are not stringifiable");
-  }
+	// params must be stringifiable
+	if (!isStringifiable(params)) {
+		throw new Error("given params are not stringifiable");
+	}
 
-  const currentValueStr = await storage.getItem(CONNECT_PARAMS_MAP_KEY);
+	const currentValueStr = await storage.getItem(CONNECT_PARAMS_MAP_KEY);
 
-  let value: Record<string, T>;
+	let value: Record<string, T>;
 
-  if (currentValueStr) {
-    try {
-      value = JSON.parse(currentValueStr);
-    } catch {
-      value = {};
-    }
+	if (currentValueStr) {
+		try {
+			value = JSON.parse(currentValueStr);
+		} catch {
+			value = {};
+		}
 
-    value[walletId] = params;
-  } else {
-    value = {
-      [walletId]: params,
-    };
-  }
+		value[walletId] = params;
+	} else {
+		value = {
+			[walletId]: params,
+		};
+	}
 
-  storage.setItem(CONNECT_PARAMS_MAP_KEY, JSON.stringify(value));
+	storage.setItem(CONNECT_PARAMS_MAP_KEY, JSON.stringify(value));
 }
 
 /**
@@ -52,23 +52,23 @@ export async function saveConnectParamsToStorage<T extends object>(
  * @internal
  */
 export async function deleteConnectParamsFromStorage(
-  storage: AsyncStorage,
-  walletId: string,
+	storage: AsyncStorage,
+	walletId: string,
 ) {
-  const currentValueStr = await storage.getItem(CONNECT_PARAMS_MAP_KEY);
+	const currentValueStr = await storage.getItem(CONNECT_PARAMS_MAP_KEY);
 
-  let value: Record<string, object>;
+	let value: Record<string, object>;
 
-  if (currentValueStr) {
-    try {
-      value = JSON.parse(currentValueStr);
-    } catch {
-      value = {};
-    }
+	if (currentValueStr) {
+		try {
+			value = JSON.parse(currentValueStr);
+		} catch {
+			value = {};
+		}
 
-    delete value[walletId];
-    storage.setItem(CONNECT_PARAMS_MAP_KEY, JSON.stringify(value));
-  }
+		delete value[walletId];
+		storage.setItem(CONNECT_PARAMS_MAP_KEY, JSON.stringify(value));
+	}
 }
 
 /**
@@ -76,41 +76,41 @@ export async function deleteConnectParamsFromStorage(
  * @internal
  */
 export async function getSavedConnectParamsFromStorage<T extends object>(
-  storage: AsyncStorage,
-  walletId: string,
+	storage: AsyncStorage,
+	walletId: string,
 ): Promise<T | null> {
-  const valueStr = await storage.getItem(CONNECT_PARAMS_MAP_KEY);
+	const valueStr = await storage.getItem(CONNECT_PARAMS_MAP_KEY);
 
-  if (!valueStr) {
-    return null;
-  }
+	if (!valueStr) {
+		return null;
+	}
 
-  try {
-    const value = JSON.parse(valueStr);
+	try {
+		const value = JSON.parse(valueStr);
 
-    if (value && value[walletId]) {
-      return value[walletId];
-    }
+		if (value?.[walletId]) {
+			return value[walletId];
+		}
 
-    return null;
-  } catch {
-    return null;
-  }
+		return null;
+	} catch {
+		return null;
+	}
 }
 
-function isStringifiable(value: any): boolean {
-  try {
-    JSON.stringify(value);
-    return true;
-  } catch {
-    return false;
-  }
+function isStringifiable(value: unknown): boolean {
+	try {
+		JSON.stringify(value);
+		return true;
+	} catch {
+		return false;
+	}
 }
 
 /**
  * Wallet that uses a personal wallet must save the connection params to storage of this type
  */
 export type WithPersonalWalletConnectionOptions = {
-  // last connected personal wallet's id
-  personalWalletId: string;
+	// last connected personal wallet's id
+	personalWalletId: string;
 };

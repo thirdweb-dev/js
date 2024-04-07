@@ -3,8 +3,8 @@ import type { ThirdwebClient } from "../client/client.js";
 import type { FileOrBufferOrString } from "../storage/upload/types.js";
 
 export type ResolveSchemeOptions = {
-  client: ThirdwebClient;
-  uri: string;
+	client: ThirdwebClient;
+	uri: string;
 };
 
 const DEFAULT_GATEWAY = "https://{clientId}.ipfscdn.io/ipfs/{cid}";
@@ -28,24 +28,24 @@ const DEFAULT_GATEWAY = "https://{clientId}.ipfscdn.io/ipfs/{cid}";
  * @storage
  */
 export function resolveScheme(options: ResolveSchemeOptions) {
-  let url: string;
-  if (options.uri.startsWith("ipfs://")) {
-    const gateway =
-      options.client.config?.storage?.gatewayUrl ?? DEFAULT_GATEWAY;
-    const clientId = options.client.clientId;
-    const cid = options.uri.slice(7);
-    url =
-      // purpusefully using SPLIT here and and not replace for CID to avoid cases where users don't know the schema
-      // also only splitting on `/ipfs` to avoid cases where people pass non `/` terminated gateway urls
-      gateway.replace("{clientId}", clientId).split("/ipfs")[0] +
-      "/ipfs/" +
-      cid;
-  } else if (options.uri.startsWith("http")) {
-    url = options.uri;
-  } else {
-    throw new Error(`Invalid URI scheme, expected "ipfs://" or "http(s)://"`);
-  }
-  return url;
+	let url: string;
+	if (options.uri.startsWith("ipfs://")) {
+		const gateway =
+			options.client.config?.storage?.gatewayUrl ?? DEFAULT_GATEWAY;
+		const clientId = options.client.clientId;
+		const cid = options.uri.slice(7);
+		url =
+			// purpusefully using SPLIT here and and not replace for CID to avoid cases where users don't know the schema
+			// also only splitting on `/ipfs` to avoid cases where people pass non `/` terminated gateway urls
+			`${
+				gateway.replace("{clientId}", clientId).split("/ipfs")[0]
+			}/ipfs/${cid}`;
+	} else if (options.uri.startsWith("http")) {
+		url = options.uri;
+	} else {
+		throw new Error(`Invalid URI scheme, expected "ipfs://" or "http(s)://"`);
+	}
+	return url;
 }
 
 /**
@@ -60,25 +60,25 @@ export function resolveScheme(options: ResolveSchemeOptions) {
  *
  */
 export async function uploadOrExtractURIs<
-  T extends FileOrBufferOrString | Record<string, unknown>,
+	T extends FileOrBufferOrString | Record<string, unknown>,
 >(files: T[], client: ThirdwebClient, startNumber?: number): Promise<string[]> {
-  if (isUriList(files)) {
-    return files;
-  } else if (isMetadataList(files)) {
-    const { upload } = await import("../storage/upload.js");
-    const uris = await upload({
-      client,
-      files,
-      rewriteFileNames: {
-        fileStartNumber: startNumber || 0,
-      },
-    });
-    return uris;
-  } else {
-    throw new Error(
-      "Files must all be of the same type (all URI or all FileOrBufferOrString)",
-    );
-  }
+	if (isUriList(files)) {
+		return files;
+	}
+	if (isMetadataList(files)) {
+		const { upload } = await import("../storage/upload.js");
+		const uris = await upload({
+			client,
+			files,
+			rewriteFileNames: {
+				fileStartNumber: startNumber || 0,
+			},
+		});
+		return uris;
+	}
+	throw new Error(
+		"Files must all be of the same type (all URI or all FileOrBufferOrString)",
+	);
 }
 
 /**
@@ -90,32 +90,32 @@ export async function uploadOrExtractURIs<
  * @internal
  */
 export function getBaseUriFromBatch(uris: string[]): string {
-  const baseUri = uris[0]?.substring(0, uris[0].lastIndexOf("/"));
-  for (let i = 0; i < uris.length; i++) {
-    const uri = uris[i]?.substring(0, uris[i]?.lastIndexOf("/"));
-    if (baseUri !== uri) {
-      throw new Error(
-        `Can only create batches with the same base URI for every entry in the batch. Expected '${baseUri}' but got '${uri}'`,
-      );
-    }
-  }
+	const baseUri = uris[0]?.substring(0, uris[0].lastIndexOf("/"));
+	for (let i = 0; i < uris.length; i++) {
+		const uri = uris[i]?.substring(0, uris[i]?.lastIndexOf("/"));
+		if (baseUri !== uri) {
+			throw new Error(
+				`Can only create batches with the same base URI for every entry in the batch. Expected '${baseUri}' but got '${uri}'`,
+			);
+		}
+	}
 
-  if (!baseUri) {
-    throw new Error("No base URI found in the batch");
-  }
+	if (!baseUri) {
+		throw new Error("No base URI found in the batch");
+	}
 
-  // Ensure that baseUri ends with trailing slash
-  return baseUri.replace(/\/$/, "") + "/";
+	// Ensure that baseUri ends with trailing slash
+	return `${baseUri.replace(/\/$/, "")}/`;
 }
 
 function isUriList<T extends FileOrBufferOrString | Record<string, unknown>>(
-  metadatas: (string | T)[],
+	metadatas: (string | T)[],
 ): metadatas is string[] {
-  return metadatas.every((m) => typeof m === "string");
+	return metadatas.every((m) => typeof m === "string");
 }
 
 function isMetadataList<
-  T extends FileOrBufferOrString | Record<string, unknown>,
+	T extends FileOrBufferOrString | Record<string, unknown>,
 >(metadatas: (string | T)[]): metadatas is T[] {
-  return metadatas.every((m) => typeof m !== "string");
+	return metadatas.every((m) => typeof m !== "string");
 }

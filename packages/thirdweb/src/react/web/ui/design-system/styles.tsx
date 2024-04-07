@@ -4,13 +4,13 @@ import { radius } from "./index.js";
  * @internal
  */
 export const scrollbar = ({
-  track,
-  thumb,
-  hover,
+	track,
+	thumb,
+	hover,
 }: {
-  track: string;
-  hover: string;
-  thumb: string;
+	track: string;
+	hover: string;
+	thumb: string;
 }) => `
 &::-webkit-scrollbar {
   width: 6px;

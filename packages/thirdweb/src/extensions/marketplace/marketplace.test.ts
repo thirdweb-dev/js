@@ -1,173 +1,174 @@
-import { describe, it, expect, beforeAll } from "vitest";
-import { getContract, type ThirdwebContract } from "../../contract/contract.js";
-import { deployMarketplaceContract } from "../prebuilts/deploy-marketplace.js";
-import { TEST_ACCOUNT_A } from "../../../test/src/test-wallets.js";
+import { beforeAll, describe, expect, it } from "vitest";
 import { ANVIL_CHAIN } from "../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
-import { getContractMetadata } from "../common/read/getContractMetadata.js";
-import { deployERC721Contract } from "../prebuilts/deploy-erc721.js";
-import { mintTo } from "../erc721/write/mintTo.js";
-import { createListing } from "./write/direct/createListing.js";
-import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
-import { approve } from "../erc721/__generated__/IERC721A/write/approve.js";
+import { TEST_ACCOUNT_A } from "../../../test/src/test-wallets.js";
+import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import { parseEventLogs } from "../../event/actions/parse-logs.js";
-import { newListingEvent } from "./__generated__/IDirectListings/events/NewListing.js";
+import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
+import { getContractMetadata } from "../common/read/getContractMetadata.js";
+import { approve } from "../erc721/__generated__/IERC721A/write/approve.js";
 import { tokensMintedEvent } from "../erc721/__generated__/IMintableERC721/events/TokensMinted.js";
+import { mintTo } from "../erc721/write/mintTo.js";
+import { deployERC721Contract } from "../prebuilts/deploy-erc721.js";
+import { deployMarketplaceContract } from "../prebuilts/deploy-marketplace.js";
+import { newListingEvent } from "./__generated__/IDirectListings/events/NewListing.js";
+import { totalListings } from "./__generated__/IDirectListings/read/totalListings.js";
+import { newAuctionEvent } from "./__generated__/IEnglishAuctions/events/NewAuction.js";
+import { totalAuctions } from "./__generated__/IEnglishAuctions/read/totalAuctions.js";
 import { getAllListings } from "./read/direct/getAllListings.js";
 import { getAllValidListings } from "./read/direct/getAllValidListings.js";
-import { totalListings } from "./__generated__/IDirectListings/read/totalListings.js";
 import { getListing } from "./read/direct/getListing.js";
-import { createAuction } from "./write/english-auction/createAuction.js";
-import { newAuctionEvent } from "./__generated__/IEnglishAuctions/events/NewAuction.js";
-import { getAuction } from "./read/english-auction/getAuction.js";
-import { totalAuctions } from "./__generated__/IEnglishAuctions/read/totalAuctions.js";
-import { getAllValidAuctions } from "./read/english-auction/getAllValidAuctions.js";
 import { getAllAuctions } from "./read/english-auction/getAllAuctions.js";
+import { getAllValidAuctions } from "./read/english-auction/getAllValidAuctions.js";
+import { getAuction } from "./read/english-auction/getAuction.js";
+import { createListing } from "./write/direct/createListing.js";
+import { createAuction } from "./write/english-auction/createAuction.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("Marketplace", () => {
-  let marketplaceContract: ThirdwebContract;
-  let erc721Contract: ThirdwebContract;
+	let marketplaceContract: ThirdwebContract;
+	let erc721Contract: ThirdwebContract;
 
-  beforeAll(async () => {
-    const marketplaceAddress = await deployMarketplaceContract({
-      account: TEST_ACCOUNT_A,
-      chain: ANVIL_CHAIN,
-      client: TEST_CLIENT,
-      params: {
-        name: "TestMarketPlace",
-      },
-    });
-    marketplaceContract = getContract({
-      address: marketplaceAddress,
-      client: TEST_CLIENT,
-      chain: ANVIL_CHAIN,
-    });
+	beforeAll(async () => {
+		const marketplaceAddress = await deployMarketplaceContract({
+			account: TEST_ACCOUNT_A,
+			chain: ANVIL_CHAIN,
+			client: TEST_CLIENT,
+			params: {
+				name: "TestMarketPlace",
+			},
+		});
+		marketplaceContract = getContract({
+			address: marketplaceAddress,
+			client: TEST_CLIENT,
+			chain: ANVIL_CHAIN,
+		});
 
-    // also deploy an ERC721 contract
-    const erc721Address = await deployERC721Contract({
-      type: "TokenERC721",
-      account: TEST_ACCOUNT_A,
-      chain: ANVIL_CHAIN,
-      client: TEST_CLIENT,
-      params: {
-        name: "TestERC721",
-      },
-    });
+		// also deploy an ERC721 contract
+		const erc721Address = await deployERC721Contract({
+			type: "TokenERC721",
+			account: TEST_ACCOUNT_A,
+			chain: ANVIL_CHAIN,
+			client: TEST_CLIENT,
+			params: {
+				name: "TestERC721",
+			},
+		});
 
-    erc721Contract = getContract({
-      address: erc721Address,
-      client: TEST_CLIENT,
-      chain: ANVIL_CHAIN,
-    });
+		erc721Contract = getContract({
+			address: erc721Address,
+			client: TEST_CLIENT,
+			chain: ANVIL_CHAIN,
+		});
 
-    // does a lot of stuff, this may take a while
-  }, 60_000);
+		// does a lot of stuff, this may take a while
+	}, 60_000);
 
-  describe("Deployment", () => {
-    it("should deploy marketplace contract", () => {
-      expect(marketplaceContract).toBeDefined();
-    });
-    it("should have the correct name", async () => {
-      const metadata = await getContractMetadata({
-        contract: marketplaceContract,
-      });
-      expect(metadata.name).toBe("TestMarketPlace");
-    });
-  });
+	describe("Deployment", () => {
+		it("should deploy marketplace contract", () => {
+			expect(marketplaceContract).toBeDefined();
+		});
+		it("should have the correct name", async () => {
+			const metadata = await getContractMetadata({
+				contract: marketplaceContract,
+			});
+			expect(metadata.name).toBe("TestMarketPlace");
+		});
+	});
 
-  describe("Direct Listings", () => {
-    let nftTokenId: bigint;
-    beforeAll(async () => {
-      const mintTransaction = mintTo({
-        contract: erc721Contract,
-        to: TEST_ACCOUNT_A.address,
-        nft: { name: "Test:ERC721:DirectListing" },
-      });
-      const receipt = await sendAndConfirmTransaction({
-        transaction: mintTransaction,
-        account: TEST_ACCOUNT_A,
-      });
+	describe("Direct Listings", () => {
+		let nftTokenId: bigint;
+		beforeAll(async () => {
+			const mintTransaction = mintTo({
+				contract: erc721Contract,
+				to: TEST_ACCOUNT_A.address,
+				nft: { name: "Test:ERC721:DirectListing" },
+			});
+			const receipt = await sendAndConfirmTransaction({
+				transaction: mintTransaction,
+				account: TEST_ACCOUNT_A,
+			});
 
-      const mintEvents = parseEventLogs({
-        events: [tokensMintedEvent()],
-        logs: receipt.logs,
-      });
+			const mintEvents = parseEventLogs({
+				events: [tokensMintedEvent()],
+				logs: receipt.logs,
+			});
 
-      expect(mintEvents.length).toBe(1);
-      expect(mintEvents[0]?.args.tokenIdMinted).toBeDefined();
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      nftTokenId = mintEvents[0]!.args.tokenIdMinted;
-    }, 30_000);
+			expect(mintEvents.length).toBe(1);
+			expect(mintEvents[0]?.args.tokenIdMinted).toBeDefined();
 
-    it("should work for basic listings (Native Currency)", async () => {
-      // listings should be 0 length to start
-      const listings = await getAllListings({
-        contract: marketplaceContract,
-      });
-      expect(listings.length).toBe(0);
-      // oh and so should totalListings
-      expect(await totalListings({ contract: marketplaceContract })).toBe(0n);
+			nftTokenId = mintEvents[0]?.args.tokenIdMinted as bigint;
+		}, 30_000);
 
-      // approve first
-      const approveTx = approve({
-        contract: erc721Contract,
-        to: marketplaceContract.address,
-        tokenId: nftTokenId,
-      });
+		it("should work for basic listings (Native Currency)", async () => {
+			// listings should be 0 length to start
+			const listings = await getAllListings({
+				contract: marketplaceContract,
+			});
+			expect(listings.length).toBe(0);
+			// oh and so should totalListings
+			expect(await totalListings({ contract: marketplaceContract })).toBe(0n);
 
-      await sendAndConfirmTransaction({
-        transaction: approveTx,
-        account: TEST_ACCOUNT_A,
-      });
+			// approve first
+			const approveTx = approve({
+				contract: erc721Contract,
+				to: marketplaceContract.address,
+				tokenId: nftTokenId,
+			});
 
-      const transaction = createListing({
-        contract: marketplaceContract,
-        assetContractAddress: erc721Contract.address,
-        tokenId: nftTokenId,
-        pricePerToken: "1",
-      });
-      const receipt = await sendAndConfirmTransaction({
-        transaction,
-        account: TEST_ACCOUNT_A,
-      });
+			await sendAndConfirmTransaction({
+				transaction: approveTx,
+				account: TEST_ACCOUNT_A,
+			});
 
-      const listingEvents = parseEventLogs({
-        events: [newListingEvent()],
-        logs: receipt.logs,
-      });
+			const transaction = createListing({
+				contract: marketplaceContract,
+				assetContractAddress: erc721Contract.address,
+				tokenId: nftTokenId,
+				pricePerToken: "1",
+			});
+			const receipt = await sendAndConfirmTransaction({
+				transaction,
+				account: TEST_ACCOUNT_A,
+			});
 
-      expect(listingEvents.length).toBe(1);
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const listingEvent = listingEvents[0]!;
+			const listingEvents = parseEventLogs({
+				events: [newListingEvent()],
+				logs: receipt.logs,
+			});
 
-      expect(listingEvent.args.listingCreator).toBe(TEST_ACCOUNT_A.address);
-      expect(listingEvent.args.assetContract).toBe(erc721Contract.address);
+			expect(listingEvents.length).toBe(1);
 
-      // at this point listings should be 1
-      const listingsAfter = await getAllListings({
-        contract: marketplaceContract,
-      });
-      expect(listingsAfter.length).toBe(1);
-      // valid listings should also be 1!
-      const validListings = await getAllValidListings({
-        contract: marketplaceContract,
-      });
-      expect(validListings.length).toBe(1);
-      // and totalListings should be 1
-      expect(await totalListings({ contract: marketplaceContract })).toBe(1n);
+			// biome-ignore lint/style/noNonNullAssertion: OK in tests
+			const listingEvent = listingEvents[0]!;
 
-      // explicitly retrieve the listing!
-      const listing = await getListing({
-        contract: marketplaceContract,
-        listingId: listingEvent.args.listingId,
-      });
+			expect(listingEvent.args.listingCreator).toBe(TEST_ACCOUNT_A.address);
+			expect(listingEvent.args.assetContract).toBe(erc721Contract.address);
 
-      expect(listing).toBeDefined();
-      expect(listing.status).toBe("ACTIVE");
-      expect(listing.creatorAddress).toBe(TEST_ACCOUNT_A.address);
-      expect(listing.assetContractAddress).toBe(erc721Contract.address);
-      expect(listing.tokenId).toBe(nftTokenId);
-      expect(listing.currencyValuePerToken).toMatchInlineSnapshot(`
+			// at this point listings should be 1
+			const listingsAfter = await getAllListings({
+				contract: marketplaceContract,
+			});
+			expect(listingsAfter.length).toBe(1);
+			// valid listings should also be 1!
+			const validListings = await getAllValidListings({
+				contract: marketplaceContract,
+			});
+			expect(validListings.length).toBe(1);
+			// and totalListings should be 1
+			expect(await totalListings({ contract: marketplaceContract })).toBe(1n);
+
+			// explicitly retrieve the listing!
+			const listing = await getListing({
+				contract: marketplaceContract,
+				listingId: listingEvent.args.listingId,
+			});
+
+			expect(listing).toBeDefined();
+			expect(listing.status).toBe("ACTIVE");
+			expect(listing.creatorAddress).toBe(TEST_ACCOUNT_A.address);
+			expect(listing.assetContractAddress).toBe(erc721Contract.address);
+			expect(listing.tokenId).toBe(nftTokenId);
+			expect(listing.currencyValuePerToken).toMatchInlineSnapshot(`
         {
           "decimals": 18,
           "displayValue": "1",
@@ -176,7 +177,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("Marketplace", () => {
           "value": 1000000000000000000n,
         }
       `);
-      expect(listing.asset).toMatchInlineSnapshot(`
+			expect(listing.asset).toMatchInlineSnapshot(`
         {
           "id": 0n,
           "metadata": {
@@ -187,103 +188,104 @@ describe.runIf(process.env.TW_SECRET_KEY)("Marketplace", () => {
           "type": "ERC721",
         }
       `);
-    });
-  });
+		});
+	});
 
-  describe("English Auctions", () => {
-    let nftTokenId: bigint;
-    beforeAll(async () => {
-      const mintTransaction = mintTo({
-        contract: erc721Contract,
-        to: TEST_ACCOUNT_A.address,
-        nft: { name: "Test:ERC721:EnglishAuction" },
-      });
-      const receipt = await sendAndConfirmTransaction({
-        transaction: mintTransaction,
-        account: TEST_ACCOUNT_A,
-      });
+	describe("English Auctions", () => {
+		let nftTokenId: bigint;
+		beforeAll(async () => {
+			const mintTransaction = mintTo({
+				contract: erc721Contract,
+				to: TEST_ACCOUNT_A.address,
+				nft: { name: "Test:ERC721:EnglishAuction" },
+			});
+			const receipt = await sendAndConfirmTransaction({
+				transaction: mintTransaction,
+				account: TEST_ACCOUNT_A,
+			});
 
-      const mintEvents = parseEventLogs({
-        events: [tokensMintedEvent()],
-        logs: receipt.logs,
-      });
+			const mintEvents = parseEventLogs({
+				events: [tokensMintedEvent()],
+				logs: receipt.logs,
+			});
 
-      expect(mintEvents.length).toBe(1);
-      expect(mintEvents[0]?.args.tokenIdMinted).toBeDefined();
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      nftTokenId = mintEvents[0]!.args.tokenIdMinted;
-    }, 30_000);
+			expect(mintEvents.length).toBe(1);
+			expect(mintEvents[0]?.args.tokenIdMinted).toBeDefined();
 
-    it("should work for basic auctions (Native Currency)", async () => {
-      // auctions should be 0 length to start
-      const auctions = await getAllAuctions({
-        contract: marketplaceContract,
-      });
-      expect(auctions.length).toBe(0);
-      // oh and so should totalAuctions
-      expect(await totalAuctions({ contract: marketplaceContract })).toBe(0n);
+			nftTokenId = mintEvents[0]?.args.tokenIdMinted as bigint;
+		}, 30_000);
 
-      // approve first
-      const approveTx = approve({
-        contract: erc721Contract,
-        to: marketplaceContract.address,
-        tokenId: nftTokenId,
-      });
+		it("should work for basic auctions (Native Currency)", async () => {
+			// auctions should be 0 length to start
+			const auctions = await getAllAuctions({
+				contract: marketplaceContract,
+			});
+			expect(auctions.length).toBe(0);
+			// oh and so should totalAuctions
+			expect(await totalAuctions({ contract: marketplaceContract })).toBe(0n);
 
-      await sendAndConfirmTransaction({
-        transaction: approveTx,
-        account: TEST_ACCOUNT_A,
-      });
+			// approve first
+			const approveTx = approve({
+				contract: erc721Contract,
+				to: marketplaceContract.address,
+				tokenId: nftTokenId,
+			});
 
-      const transaction = createAuction({
-        contract: marketplaceContract,
-        assetContractAddress: erc721Contract.address,
-        tokenId: nftTokenId,
-        minimumBidAmount: "1",
-        buyoutBidAmount: "10",
-      });
-      const receipt = await sendAndConfirmTransaction({
-        transaction,
-        account: TEST_ACCOUNT_A,
-      });
+			await sendAndConfirmTransaction({
+				transaction: approveTx,
+				account: TEST_ACCOUNT_A,
+			});
 
-      const listingEvents = parseEventLogs({
-        events: [newAuctionEvent()],
-        logs: receipt.logs,
-      });
+			const transaction = createAuction({
+				contract: marketplaceContract,
+				assetContractAddress: erc721Contract.address,
+				tokenId: nftTokenId,
+				minimumBidAmount: "1",
+				buyoutBidAmount: "10",
+			});
+			const receipt = await sendAndConfirmTransaction({
+				transaction,
+				account: TEST_ACCOUNT_A,
+			});
 
-      expect(listingEvents.length).toBe(1);
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const listingEvent = listingEvents[0]!;
+			const listingEvents = parseEventLogs({
+				events: [newAuctionEvent()],
+				logs: receipt.logs,
+			});
 
-      expect(listingEvent.args.auctionCreator).toBe(TEST_ACCOUNT_A.address);
-      expect(listingEvent.args.assetContract).toBe(erc721Contract.address);
+			expect(listingEvents.length).toBe(1);
 
-      // at this point auctions should be 1
-      const auctionsAfter = await getAllAuctions({
-        contract: marketplaceContract,
-      });
-      expect(auctionsAfter.length).toBe(1);
-      // valid auctions should also be 1!
-      const validAuctions = await getAllValidAuctions({
-        contract: marketplaceContract,
-      });
-      expect(validAuctions.length).toBe(1);
-      // and totalauctions should be 1
-      expect(await totalAuctions({ contract: marketplaceContract })).toBe(1n);
+			// biome-ignore lint/style/noNonNullAssertion: OK in tests
+			const listingEvent = listingEvents[0]!;
 
-      // explicitly retrieve the listing!
-      const listing = await getAuction({
-        contract: marketplaceContract,
-        auctionId: listingEvent.args.auctionId,
-      });
+			expect(listingEvent.args.auctionCreator).toBe(TEST_ACCOUNT_A.address);
+			expect(listingEvent.args.assetContract).toBe(erc721Contract.address);
 
-      expect(listing).toBeDefined();
-      expect(listing.status).toBe("ACTIVE");
-      expect(listing.creatorAddress).toBe(TEST_ACCOUNT_A.address);
-      expect(listing.assetContractAddress).toBe(erc721Contract.address);
-      expect(listing.tokenId).toBe(nftTokenId);
-      expect(listing.minimumBidCurrencyValue).toMatchInlineSnapshot(`
+			// at this point auctions should be 1
+			const auctionsAfter = await getAllAuctions({
+				contract: marketplaceContract,
+			});
+			expect(auctionsAfter.length).toBe(1);
+			// valid auctions should also be 1!
+			const validAuctions = await getAllValidAuctions({
+				contract: marketplaceContract,
+			});
+			expect(validAuctions.length).toBe(1);
+			// and totalauctions should be 1
+			expect(await totalAuctions({ contract: marketplaceContract })).toBe(1n);
+
+			// explicitly retrieve the listing!
+			const listing = await getAuction({
+				contract: marketplaceContract,
+				auctionId: listingEvent.args.auctionId,
+			});
+
+			expect(listing).toBeDefined();
+			expect(listing.status).toBe("ACTIVE");
+			expect(listing.creatorAddress).toBe(TEST_ACCOUNT_A.address);
+			expect(listing.assetContractAddress).toBe(erc721Contract.address);
+			expect(listing.tokenId).toBe(nftTokenId);
+			expect(listing.minimumBidCurrencyValue).toMatchInlineSnapshot(`
         {
           "decimals": 18,
           "displayValue": "1",
@@ -292,7 +294,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("Marketplace", () => {
           "value": 1000000000000000000n,
         }
       `);
-      expect(listing.buyoutCurrencyValue).toMatchInlineSnapshot(`
+			expect(listing.buyoutCurrencyValue).toMatchInlineSnapshot(`
         {
           "decimals": 18,
           "displayValue": "10",
@@ -301,7 +303,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("Marketplace", () => {
           "value": 10000000000000000000n,
         }
       `);
-      expect(listing.asset).toMatchInlineSnapshot(`
+			expect(listing.asset).toMatchInlineSnapshot(`
         {
           "id": 1n,
           "metadata": {
@@ -312,6 +314,6 @@ describe.runIf(process.env.TW_SECRET_KEY)("Marketplace", () => {
           "type": "ERC721",
         }
       `);
-    });
-  });
+		});
+	});
 });

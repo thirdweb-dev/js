@@ -1,17 +1,17 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 
-import { getAllOwners } from "./getAllOwners.js";
 import { AZUKI_CONTRACT, DOODLES_CONTRACT } from "~test/test-contracts.js";
+import { getAllOwners } from "./getAllOwners.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("erc721.getAllOwners", () => {
-  it("works for azuki", async () => {
-    const nfts = await getAllOwners({
-      contract: AZUKI_CONTRACT,
-      count: 5,
-    });
+	it("works for azuki", async () => {
+		const nfts = await getAllOwners({
+			contract: AZUKI_CONTRACT,
+			count: 5,
+		});
 
-    expect(nfts.length).toBe(5);
-    expect(nfts).toMatchInlineSnapshot(`
+		expect(nfts.length).toBe(5);
+		expect(nfts).toMatchInlineSnapshot(`
       [
         {
           "owner": "0x2aE6B0630EBb4D155C6e04fCB16840FFA77760AA",
@@ -35,16 +35,16 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc721.getAllOwners", () => {
         },
       ]
     `);
-  });
+	});
 
-  it("works for a contract with 0 indexed NFTs", async () => {
-    const nfts = await getAllOwners({
-      contract: DOODLES_CONTRACT,
-      count: 5,
-    });
+	it("works for a contract with 0 indexed NFTs", async () => {
+		const nfts = await getAllOwners({
+			contract: DOODLES_CONTRACT,
+			count: 5,
+		});
 
-    expect(nfts.length).toBe(5);
-    expect(nfts).toMatchInlineSnapshot(`
+		expect(nfts.length).toBe(5);
+		expect(nfts).toMatchInlineSnapshot(`
       [
         {
           "owner": "0x3010775D16E7B79AF280035c64a1Df5F705CfdDb",
@@ -68,19 +68,19 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc721.getAllOwners", () => {
         },
       ]
     `);
-  });
+	});
 
-  it("works for a contract with `1` indexed NFTs", async () => {
-    const nfts = await getAllOwners({
-      contract: {
-        ...DOODLES_CONTRACT,
-        address: "0x5D62Fb8dcD9b480960f55956fBDD8D9F07f2B402",
-      },
-      count: 5,
-    });
+	it("works for a contract with `1` indexed NFTs", async () => {
+		const nfts = await getAllOwners({
+			contract: {
+				...DOODLES_CONTRACT,
+				address: "0x5D62Fb8dcD9b480960f55956fBDD8D9F07f2B402",
+			},
+			count: 5,
+		});
 
-    expect(nfts.length).toBe(5);
-    expect(nfts).toMatchInlineSnapshot(`
+		expect(nfts.length).toBe(5);
+		expect(nfts).toMatchInlineSnapshot(`
       [
         {
           "owner": "0x0000000000000000000000000000000000000000",
@@ -104,5 +104,5 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc721.getAllOwners", () => {
         },
       ]
     `);
-  });
+	});
 });

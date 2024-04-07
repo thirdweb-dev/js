@@ -14,11 +14,11 @@ import type { Hex } from "./is-hex.js";
  * @internal
  */
 export function assertSize(
-  hexOrBytes: Hex | Uint8Array,
-  { size }: { size: number },
+	hexOrBytes: Hex | Uint8Array,
+	{ size }: { size: number },
 ): void {
-  const givenSize = byteSize(hexOrBytes);
-  if (givenSize > size) {
-    throw new Error(`Size overflow: ${givenSize} > ${size}`);
-  }
+	const givenSize = byteSize(hexOrBytes);
+	if (givenSize > size) {
+		throw new Error(`Size overflow: ${givenSize} > ${size}`);
+	}
 }

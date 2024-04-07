@@ -5,15 +5,15 @@ import { uuid } from "../uuid.js";
 import { PRECOMPILED_B64_ENCODED_JWT_HEADER } from "./jwt-header.js";
 import type { JWTPayload } from "./types.js";
 
-export type JWTPayloadInput = {
-  iss: string;
-  sub: string;
-  aud: string;
-  exp: Date;
-  nbf: Date;
-  iat: Date;
-  jti?: string;
-  ctx?: any;
+export type JWTPayloadInput<Tctx = unknown> = {
+	iss: string;
+	sub: string;
+	aud: string;
+	exp: Date;
+	nbf: Date;
+	iat: Date;
+	jti?: string;
+	ctx?: Tctx;
 };
 
 type EncodeJWTParams = { payload: JWTPayloadInput; account: Account };
@@ -45,34 +45,34 @@ type EncodeJWTParams = { payload: JWTPayloadInput; account: Account };
  * ```
  */
 export async function encodeJWT(options: EncodeJWTParams) {
-  const payload = await ensureJWTPayload(options.payload);
-  const message = JSON.stringify(payload);
+	const payload = await ensureJWTPayload(options.payload);
+	const message = JSON.stringify(payload);
 
-  const signature = await options.account.signMessage({ message });
+	const signature = await options.account.signMessage({ message });
 
-  const encodedData = uint8ArrayToBase64(
-    stringToBytes(JSON.stringify(payload)),
-    { urlSafe: true },
-  );
+	const encodedData = uint8ArrayToBase64(
+		stringToBytes(JSON.stringify(payload)),
+		{ urlSafe: true },
+	);
 
-  const encodedSignature = uint8ArrayToBase64(stringToBytes(signature), {
-    urlSafe: true,
-  });
+	const encodedSignature = uint8ArrayToBase64(stringToBytes(signature), {
+		urlSafe: true,
+	});
 
-  // Generate a JWT with base64 encoded header, payload, and signature
-  return `${PRECOMPILED_B64_ENCODED_JWT_HEADER}.${encodedData}.${encodedSignature}`;
+	// Generate a JWT with base64 encoded header, payload, and signature
+	return `${PRECOMPILED_B64_ENCODED_JWT_HEADER}.${encodedData}.${encodedSignature}`;
 }
 
 async function ensureJWTPayload(payload: JWTPayloadInput): Promise<JWTPayload> {
-  return {
-    iss: payload.iss,
-    sub: payload.sub,
-    aud: payload.aud,
-    exp: Math.floor(payload.exp.getTime() / 1000),
-    nbf: Math.floor(payload.nbf.getTime() / 1000),
-    iat: Math.floor(payload.iat.getTime() / 1000),
-    // default to uuid if jti is not provided
-    jti: payload.jti || (await uuid()),
-    ctx: payload.ctx,
-  };
+	return {
+		iss: payload.iss,
+		sub: payload.sub,
+		aud: payload.aud,
+		exp: Math.floor(payload.exp.getTime() / 1000),
+		nbf: Math.floor(payload.nbf.getTime() / 1000),
+		iat: Math.floor(payload.iat.getTime() / 1000),
+		// default to uuid if jti is not provided
+		jti: payload.jti || (await uuid()),
+		ctx: payload.ctx,
+	};
 }

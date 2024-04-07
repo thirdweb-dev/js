@@ -1,9 +1,9 @@
-import { waitForReceipt } from "./wait-for-tx-receipt.js";
 import type { TransactionReceipt } from "../types.js";
 import {
-  sendTransaction,
-  type SendTransactionOptions,
+	type SendTransactionOptions,
+	sendTransaction,
 } from "./send-transaction.js";
+import { waitForReceipt } from "./wait-for-tx-receipt.js";
 
 /**
  * Sends a transaction using the provided wallet.
@@ -22,8 +22,8 @@ import {
  * ```
  */
 export async function sendAndConfirmTransaction(
-  options: SendTransactionOptions,
+	options: SendTransactionOptions,
 ): Promise<TransactionReceipt> {
-  const submittedTx = await sendTransaction(options);
-  return waitForReceipt(submittedTx);
+	const submittedTx = await sendTransaction(options);
+	return waitForReceipt(submittedTx);
 }

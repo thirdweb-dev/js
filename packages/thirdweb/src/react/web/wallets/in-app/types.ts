@@ -2,11 +2,11 @@ import type { InAppWalletSocialAuth } from "../../../../wallets/in-app/core/wall
 import type { Account } from "../../../../wallets/interfaces/wallet.js";
 
 export type InAppWalletSelectUIState =
-  | undefined
-  | {
-      emailLogin?: string;
-      socialLogin?: {
-        type: InAppWalletSocialAuth;
-        connectionPromise: Promise<Account>;
-      };
-    };
+	| undefined
+	| {
+			emailLogin?: string;
+			socialLogin?: {
+				type: InAppWalletSocialAuth;
+				connectionPromise: Promise<Account>;
+			};
+	  };

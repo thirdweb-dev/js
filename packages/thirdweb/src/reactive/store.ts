@@ -1,7 +1,7 @@
 export type Store<T> = {
-  getValue(): T;
-  setValue(newValue: T): void;
-  subscribe(listener: () => void): () => void;
+	getValue(): T;
+	setValue(newValue: T): void;
+	subscribe(listener: () => void): () => void;
 };
 
 /**
@@ -15,30 +15,30 @@ export type Store<T> = {
  * @internal
  */
 export function createStore<T>(initialValue: T): Store<T> {
-  type Listener = () => void;
-  const listeners = new Set<Listener>();
+	type Listener = () => void;
+	const listeners = new Set<Listener>();
 
-  let value = initialValue;
+	let value = initialValue;
 
-  const notify = () => {
-    for (const listener of listeners) {
-      listener();
-    }
-  };
+	const notify = () => {
+		for (const listener of listeners) {
+			listener();
+		}
+	};
 
-  return {
-    getValue() {
-      return value;
-    },
-    setValue(newValue: T) {
-      value = newValue;
-      notify();
-    },
-    subscribe(listener: Listener) {
-      listeners.add(listener);
-      return () => {
-        listeners.delete(listener);
-      };
-    },
-  };
+	return {
+		getValue() {
+			return value;
+		},
+		setValue(newValue: T) {
+			value = newValue;
+			notify();
+		},
+		subscribe(listener: Listener) {
+			listeners.add(listener);
+			return () => {
+				listeners.delete(listener);
+			};
+		},
+	};
 }

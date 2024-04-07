@@ -7,8 +7,8 @@ const ConnectModal = /* @__PURE__ */ lazy(() => import("./ConnectModal.js"));
  * @internal
  */
 export function LazyConnectModal() {
-  const isWalletModalOpen = useIsWalletModalOpen();
-  return (
-    <Suspense fallback={null}>{isWalletModalOpen && <ConnectModal />}</Suspense>
-  );
+	const isWalletModalOpen = useIsWalletModalOpen();
+	return (
+		<Suspense fallback={null}>{isWalletModalOpen && <ConnectModal />}</Suspense>
+	);
 }

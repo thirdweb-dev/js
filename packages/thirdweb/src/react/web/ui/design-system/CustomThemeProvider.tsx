@@ -1,5 +1,5 @@
-import { type Theme, darkThemeObj, lightThemeObj } from "./index.js";
 import { createContext, useContext } from "react";
+import { type Theme, darkThemeObj, lightThemeObj } from "./index.js";
 
 const CustomThemeCtx = /* @__PURE__ */ createContext(darkThemeObj);
 
@@ -7,23 +7,23 @@ const CustomThemeCtx = /* @__PURE__ */ createContext(darkThemeObj);
  * @internal
  */
 export function CustomThemeProvider(props: {
-  children: React.ReactNode;
-  theme: "light" | "dark" | Theme;
+	children: React.ReactNode;
+	theme: "light" | "dark" | Theme;
 }) {
-  const { theme, children } = props;
-  let themeObj: Theme;
+	const { theme, children } = props;
+	let themeObj: Theme;
 
-  if (typeof theme === "string") {
-    themeObj = theme === "light" ? lightThemeObj : darkThemeObj;
-  } else {
-    themeObj = theme;
-  }
+	if (typeof theme === "string") {
+		themeObj = theme === "light" ? lightThemeObj : darkThemeObj;
+	} else {
+		themeObj = theme;
+	}
 
-  return (
-    <CustomThemeCtx.Provider value={themeObj}>
-      {children}
-    </CustomThemeCtx.Provider>
-  );
+	return (
+		<CustomThemeCtx.Provider value={themeObj}>
+			{children}
+		</CustomThemeCtx.Provider>
+	);
 }
 
 /**
@@ -31,5 +31,5 @@ export function CustomThemeProvider(props: {
  * @internal
  */
 export function useCustomTheme() {
-  return useContext(CustomThemeCtx);
+	return useContext(CustomThemeCtx);
 }

@@ -1,11 +1,11 @@
 import { secp256k1 } from "@noble/curves/secp256k1";
-import type { Account } from "../interfaces/wallet.js";
-import { toHex } from "../../utils/encoding/hex.js";
-import { privateKeyAccount } from "../private-key.js";
 import type { ThirdwebClient } from "../../client/client.js";
+import { toHex } from "../../utils/encoding/hex.js";
+import type { Account } from "../interfaces/wallet.js";
+import { privateKeyAccount } from "../private-key.js";
 
 export type GenerateAccountOptions = {
-  client: ThirdwebClient;
+	client: ThirdwebClient;
 };
 
 /**
@@ -21,8 +21,8 @@ export type GenerateAccountOptions = {
  * @walletUtils
  */
 export async function generateAccount(
-  options: GenerateAccountOptions,
+	options: GenerateAccountOptions,
 ): Promise<Account> {
-  const privateKey = toHex(secp256k1.utils.randomPrivateKey());
-  return privateKeyAccount({ privateKey, client: options.client });
+	const privateKey = toHex(secp256k1.utils.randomPrivateKey());
+	return privateKeyAccount({ privateKey, client: options.client });
 }

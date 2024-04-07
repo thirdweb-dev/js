@@ -1,30 +1,30 @@
 import { useQueries, useQuery } from "@tanstack/react-query";
-import { getChainMetadata } from "../../../../chains/utils.js";
-import type { Chain } from "../../../../chains/types.js";
 import { useMemo } from "react";
+import type { Chain } from "../../../../chains/types.js";
+import { getChainMetadata } from "../../../../chains/utils.js";
 import { pLimit } from "../../../../utils/promise/p-limit.js";
 
 function getQueryOptions(chain?: Chain) {
-  return {
-    queryKey: ["chain", chain],
-    enabled: !!chain,
-    staleTime: 1000 * 60 * 60, // 1 hour
-  } as const;
+	return {
+		queryKey: ["chain", chain],
+		enabled: !!chain,
+		staleTime: 1000 * 60 * 60, // 1 hour
+	} as const;
 }
 
 /**
  * @internal
  */
 export function useChainQuery(chain?: Chain) {
-  return useQuery({
-    ...getQueryOptions(chain),
-    queryFn: async () => {
-      if (!chain) {
-        throw new Error("chainId is required");
-      }
-      return getChainMetadata(chain);
-    },
-  });
+	return useQuery({
+		...getQueryOptions(chain),
+		queryFn: async () => {
+			if (!chain) {
+				throw new Error("chainId is required");
+			}
+			return getChainMetadata(chain);
+		},
+	});
 }
 
 /**
@@ -33,17 +33,17 @@ export function useChainQuery(chain?: Chain) {
  * @internal
  */
 export function useChainsQuery(chains: Chain[], maxConcurrency: number) {
-  const queryList = useMemo(() => {
-    const limit = pLimit(maxConcurrency);
-    return chains.map((chain) => {
-      return {
-        ...getQueryOptions(chain),
-        queryFn: () => limit(() => getChainMetadata(chain)),
-      };
-    });
-  }, [chains, maxConcurrency]);
+	const queryList = useMemo(() => {
+		const limit = pLimit(maxConcurrency);
+		return chains.map((chain) => {
+			return {
+				...getQueryOptions(chain),
+				queryFn: () => limit(() => getChainMetadata(chain)),
+			};
+		});
+	}, [chains, maxConcurrency]);
 
-  return useQueries({
-    queries: queryList,
-  });
+	return useQueries({
+		queries: queryList,
+	});
 }

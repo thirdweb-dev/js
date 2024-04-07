@@ -1,112 +1,110 @@
-/* eslint-disable better-tree-shaking/no-top-level-side-effects */
-/* eslint-disable jsdoc/require-jsdoc */
-
-import { createThirdwebClient } from "../../../client/client.js";
-import { getContract } from "../../../contract/contract.js";
-import { resolveAbiFromContractApi } from "../../../contract/actions/resolve-abi.js";
-import { defineChain } from "../../../chains/utils.js";
 import {
-  parseAbiItem,
-  type Abi,
-  type AbiEvent,
-  type AbiFunction,
-  formatAbiItem,
+	type Abi,
+	type AbiEvent,
+	type AbiFunction,
+	formatAbiItem,
+	parseAbiItem,
 } from "abitype";
+import { defineChain } from "../../../chains/utils.js";
+import { createThirdwebClient } from "../../../client/client.js";
+import { resolveAbiFromContractApi } from "../../../contract/actions/resolve-abi.js";
+import { getContract } from "../../../contract/contract.js";
 
-import { prepareMethod } from "../../../utils/abi/prepare-method.js";
-import { mkdir, writeFile } from "node:fs/promises";
-import { packageDirectory } from "./utils.js";
-import { join } from "node:path";
 import { existsSync } from "node:fs";
+import { mkdir, writeFile } from "node:fs/promises";
+import { join } from "node:path";
 import type { Options } from "prettier";
+import { prepareMethod } from "../../../utils/abi/prepare-method.js";
+import { packageDirectory } from "./utils.js";
 
 const client = createThirdwebClient({ clientId: "test" });
 
 export async function generate(input: ChainIdAndContract) {
-  const [chainId, contractAddress] = input.split("/");
-  if (!chainId || !contractAddress) {
-    throw new Error("Invalid chainId and contractAddress");
-  }
-  const contract = getContract({
-    client,
-    chain: defineChain(parseInt(chainId)),
-    address: contractAddress,
-  });
-  const abi = await resolveAbiFromContractApi(contract);
+	const [chainId, contractAddress] = input.split("/");
+	if (!chainId || !contractAddress) {
+		throw new Error("Invalid chainId and contractAddress");
+	}
+	const contract = getContract({
+		client,
+		chain: defineChain(Number.parseInt(chainId)),
+		address: contractAddress,
+	});
+	const abi = await resolveAbiFromContractApi(contract);
 
-  if (!abi) {
-    throw new Error("No ABI found for contract");
-  }
+	if (!abi) {
+		throw new Error("No ABI found for contract");
+	}
 
-  const generated = await generateFromAbi(abi);
+	const generated = await generateFromAbi(abi);
 
-  // find the root of the project
-  const root = await packageDirectory();
-  if (!root) {
-    throw new Error("No root found");
-  }
-  // create the chain directory
-  const hasSource = existsSync(join(root, "src"));
+	// find the root of the project
+	const root = await packageDirectory();
+	if (!root) {
+		throw new Error("No root found");
+	}
+	// create the chain directory
+	const hasSource = existsSync(join(root, "src"));
 
-  const path = hasSource ? `src/thirdweb` : `thirdweb`;
+	const path = hasSource ? "src/thirdweb" : "thirdweb";
 
-  const chainDirPath = join(root, path, chainId);
+	const chainDirPath = join(root, path, chainId);
 
-  await mkdir(chainDirPath, { recursive: true });
+	await mkdir(chainDirPath, { recursive: true });
 
-  await writeFile(
-    join(chainDirPath, `${contractAddress.toLowerCase()}.ts`),
-    generated,
-  );
+	await writeFile(
+		join(chainDirPath, `${contractAddress.toLowerCase()}.ts`),
+		generated,
+	);
 }
 
 type ChainIdAndContract = `${number}/0x${string}`;
 
 export function isValidChainIdAndContractAddress(
-  chainIdPlusContract: unknown,
+	chainIdPlusContract: unknown,
 ): chainIdPlusContract is ChainIdAndContract {
-  if (typeof chainIdPlusContract !== "string") {
-    return false;
-  }
-  const [chainId, contractAddress] = chainIdPlusContract.split("/");
-  if (!chainId || !contractAddress) {
-    return false;
-  }
-  return true;
+	if (typeof chainIdPlusContract !== "string") {
+		return false;
+	}
+	const [chainId, contractAddress] = chainIdPlusContract.split("/");
+	if (!chainId || !contractAddress) {
+		return false;
+	}
+	return true;
 }
 
 async function generateFromAbi(abi: Abi | string[]) {
-  // turn any human readable abi into a proper abi object
-  abi = abi.map((x) => (typeof x === "string" ? parseAbiItem(x) : x)) as Abi;
+	// turn any human readable abi into a proper abi object
+	// biome-ignore lint/style/noParameterAssign: TODO: fix later
+	abi = abi.map((x) => (typeof x === "string" ? parseAbiItem(x) : x)) as Abi;
 
-  const events = abi.filter((x) => x.type === "event") as AbiEvent[];
+	const events = abi.filter((x) => x.type === "event") as AbiEvent[];
 
-  const functions = abi.filter((x) => x.type === "function") as AbiFunction[];
+	const functions = abi.filter((x) => x.type === "function") as AbiFunction[];
 
-  const overloadedReads = new Set<string>();
-  const overloadedWrites = new Set<string>();
-  // split functions into read and write
-  const readFunctions: AbiFunction[] = [];
-  const writeFunctions: AbiFunction[] = [];
-  for (const f of functions) {
-    if (f.stateMutability === "view" || f.stateMutability === "pure") {
-      if (overloadedReads.has(f.name)) {
-        continue;
-      }
-      readFunctions.push(f);
-      overloadedReads.add(f.name);
-    } else {
-      if (overloadedWrites.has(f.name)) {
-        continue;
-      }
-      writeFunctions.push(f);
-      overloadedWrites.add(f.name);
-    }
-  }
+	const overloadedReads = new Set<string>();
+	const overloadedWrites = new Set<string>();
+	// split functions into read and write
+	const readFunctions: AbiFunction[] = [];
+	const writeFunctions: AbiFunction[] = [];
+	for (const f of functions) {
+		if (f.stateMutability === "view" || f.stateMutability === "pure") {
+			if (overloadedReads.has(f.name)) {
+				continue;
+			}
+			readFunctions.push(f);
+			overloadedReads.add(f.name);
+		} else {
+			if (overloadedWrites.has(f.name)) {
+				continue;
+			}
+			writeFunctions.push(f);
+			overloadedWrites.add(f.name);
+		}
+	}
 
-  // creat the file body
+	// creat the file body
 
-  let body = `import {
+	let body = `import {
   prepareEvent,
   prepareContractCall,
   readContract,
@@ -114,65 +112,67 @@ async function generateFromAbi(abi: Abi | string[]) {
   type AbiParameterToPrimitiveType,
 } from "thirdweb";\n\n`;
 
-  if (events.length) {
-    body += `/**
+	if (events.length) {
+		body += `/**
 * Contract events
 */\n\n`;
 
-    // process every event
-    await Promise.all(
-      events.map(async (e) => {
-        body += generateEvent(e) + "\n\n";
-      }),
-    );
-  }
-  if (readFunctions.length) {
-    body += `/**
+		// process every event
+		await Promise.all(
+			events.map(async (e) => {
+				body += `${generateEvent(e)}\n\n`;
+			}),
+		);
+	}
+	if (readFunctions.length) {
+		body += `/**
 * Contract read functions
 */\n\n`;
 
-    // process every read function
-    await Promise.all(
-      readFunctions.map(async (f) => {
-        body += generateReadFunction(f) + "\n\n";
-      }),
-    );
-  }
-  if (writeFunctions.length) {
-    body += `/**
+		// process every read function
+		await Promise.all(
+			readFunctions.map(async (f) => {
+				body += `${generateReadFunction(f)}\n\n`;
+			}),
+		);
+	}
+	if (writeFunctions.length) {
+		body += `/**
 * Contract write functions
 */\n\n`;
 
-    // process every write function
-    await Promise.all(
-      writeFunctions.map(async (f) => {
-        body += generateWriteFunction(f) + "\n\n";
-      }),
-    );
-  }
+		// process every write function
+		await Promise.all(
+			writeFunctions.map(async (f) => {
+				body += `${generateWriteFunction(f)}\n\n`;
+			}),
+		);
+	}
 
-  const prettified = await prettifyCode(body, {
-    parser: "babel-ts",
-  });
-  return prettified;
+	const prettified = await prettifyCode(body, {
+		parser: "babel-ts",
+	});
+	return prettified;
 }
 
 function generateWriteFunction(f: AbiFunction): string {
-  return `${
-    f.inputs.length > 0
-      ? `/**
+	return `${
+		f.inputs.length > 0
+			? `/**
  * Represents the parameters for the "${f.name}" function.
  */
 export type ${uppercaseFirstLetter(f.name)}Params = {
   ${f.inputs
-    .map(
-      (x, i) =>
-        `${removeLeadingUnderscore(x.name || `arg_${i}`)}: AbiParameterToPrimitiveType<${JSON.stringify(x)}>`,
-    )
-    .join("\n")}
+		.map(
+			(x, i) =>
+				`${removeLeadingUnderscore(
+					x.name || `arg_${i}`,
+				)}: AbiParameterToPrimitiveType<${JSON.stringify(x)}>`,
+		)
+		.join("\n")}
 };`
-      : ""
-  }
+			: ""
+	}
 
 /**
  * Calls the "${f.name}" function on the contract.
@@ -183,13 +183,13 @@ export type ${uppercaseFirstLetter(f.name)}Params = {
  * import { ${f.name} } from "TODO";
  * 
  * const transaction = ${f.name}(${
-   f.inputs.length > 0
-     ? `{\n * ${f.inputs
-         .map(
-           (x, i) => ` ${removeLeadingUnderscore(x.name || `arg_${i}`)}: ...,`,
-         )
-         .join("\n * ")}\n * }`
-     : ""
+		f.inputs.length > 0
+			? `{\n * ${f.inputs
+					.map(
+						(x, i) => ` ${removeLeadingUnderscore(x.name || `arg_${i}`)}: ...,`,
+					)
+					.join("\n * ")}\n * }`
+			: ""
  });
  * 
  * // Send the transaction
@@ -199,38 +199,38 @@ export type ${uppercaseFirstLetter(f.name)}Params = {
  */
 export function ${f.name}(
   options: BaseTransactionOptions${
-    f.inputs.length > 0 ? `<${uppercaseFirstLetter(f.name)}Params>` : ""
-  }
+		f.inputs.length > 0 ? `<${uppercaseFirstLetter(f.name)}Params>` : ""
+	}
 ) {
   return prepareContractCall({
     contract: options.contract,
     method: ${JSON.stringify(prepareMethod(f), null, 2)},
     params: [${f.inputs
-      .map((x, i) => `options.${removeLeadingUnderscore(x.name || `arg_${i}`)}`)
-      .join(", ")}]
+			.map((x, i) => `options.${removeLeadingUnderscore(x.name || `arg_${i}`)}`)
+			.join(", ")}]
   });
 };
 `;
 }
 
 function generateReadFunction(f: AbiFunction): string {
-  return `${
-    f.inputs.length > 0
-      ? `/**
+	return `${
+		f.inputs.length > 0
+			? `/**
  * Represents the parameters for the "${f.name}" function.
  */
 export type ${uppercaseFirstLetter(f.name)}Params = {
   ${f.inputs
-    .map(
-      (x, i) =>
-        `${removeLeadingUnderscore(
-          x.name || `arg_${i}`,
-        )}: AbiParameterToPrimitiveType<${JSON.stringify(x)}>`,
-    )
-    .join("\n")}
+		.map(
+			(x, i) =>
+				`${removeLeadingUnderscore(
+					x.name || `arg_${i}`,
+				)}: AbiParameterToPrimitiveType<${JSON.stringify(x)}>`,
+		)
+		.join("\n")}
 };`
-      : ""
-  }
+			: ""
+	}
 
 /**
  * Calls the "${f.name}" function on the contract.
@@ -241,51 +241,55 @@ export type ${uppercaseFirstLetter(f.name)}Params = {
  * import { ${f.name} } from "TODO";
  * 
  * const result = await ${f.name}(${
-   f.inputs.length > 0
-     ? `{\n * ${f.inputs
-         .map(
-           (x, i) => ` ${removeLeadingUnderscore(x.name || `arg_${i}`)}: ...,`,
-         )
-         .join("\n * ")}\n * }`
-     : ""
+		f.inputs.length > 0
+			? `{\n * ${f.inputs
+					.map(
+						(x, i) => ` ${removeLeadingUnderscore(x.name || `arg_${i}`)}: ...,`,
+					)
+					.join("\n * ")}\n * }`
+			: ""
  });
  * 
  * \`\`\`
  */
 export async function ${f.name}(
   options: BaseTransactionOptions${
-    f.inputs.length > 0 ? `<${uppercaseFirstLetter(f.name)}Params>` : ""
-  }
+		f.inputs.length > 0 ? `<${uppercaseFirstLetter(f.name)}Params>` : ""
+	}
 ) {
   return readContract({
     contract: options.contract,
     method: ${JSON.stringify(prepareMethod(f), null, 2)},
     params: [${f.inputs
-      .map((x, i) => `options.${removeLeadingUnderscore(x.name || `arg_${i}`)}`)
-      .join(", ")}]
+			.map((x, i) => `options.${removeLeadingUnderscore(x.name || `arg_${i}`)}`)
+			.join(", ")}]
   });
 };
 `;
 }
 
 function generateEvent(e: AbiEvent): string {
-  const indexedInputs = e.inputs.filter((x) => x.indexed);
+	const indexedInputs = e.inputs.filter((x) => x.indexed);
 
-  return `${
-    indexedInputs.length > 0
-      ? `/**
+	return `${
+		indexedInputs.length > 0
+			? `/**
  * Represents the filters for the "${e.name}" event.
  */
 export type ${uppercaseFirstLetter(e.name)}EventFilters = Partial<{
   ${indexedInputs
-    .map((x) => `${x.name}: AbiParameterToPrimitiveType<${JSON.stringify(x)}>`)
-    .join("\n")}
+		.map((x) => `${x.name}: AbiParameterToPrimitiveType<${JSON.stringify(x)}>`)
+		.join("\n")}
 }>;`
-      : ""
-  }
+			: ""
+	}
 
 /**
- * Creates an event object for the ${e.name} event.${indexedInputs.length > 0 ? `\n * @param filters - Optional filters to apply to the event.` : ""}
+ * Creates an event object for the ${e.name} event.${
+		indexedInputs.length > 0
+			? "\n * @param filters - Optional filters to apply to the event."
+			: ""
+ }
  * @returns The prepared event object.
  * @example
  * \`\`\`
@@ -296,19 +300,25 @@ export type ${uppercaseFirstLetter(e.name)}EventFilters = Partial<{
  * contract,
  * events: [
  *  ${eventNameToPreparedEventName(e.name)}(${
-   indexedInputs.length > 0
-     ? `{\n * ${indexedInputs
-         .map((x) => ` ${x.name}: ...,`)
-         .join("\n * ")}\n * }`
-     : ""
+		indexedInputs.length > 0
+			? `{\n * ${indexedInputs
+					.map((x) => ` ${x.name}: ...,`)
+					.join("\n * ")}\n * }`
+			: ""
  })
  * ],
  * });
  * \`\`\`
  */ 
-export function ${eventNameToPreparedEventName(e.name)}(${indexedInputs.length > 0 ? `filters: ${uppercaseFirstLetter(e.name)}EventFilters = {}` : ""}) {
+export function ${eventNameToPreparedEventName(e.name)}(${
+		indexedInputs.length > 0
+			? `filters: ${uppercaseFirstLetter(e.name)}EventFilters = {}`
+			: ""
+	}) {
   return prepareEvent({
-    signature: "${formatAbiItem(e)}",${indexedInputs.length > 0 ? `\n    filters,` : ""}
+    signature: "${formatAbiItem(e)}",${
+			indexedInputs.length > 0 ? "\n    filters," : ""
+		}
   });
 };
   `;
@@ -317,32 +327,32 @@ export function ${eventNameToPreparedEventName(e.name)}(${indexedInputs.length >
 // helpers
 
 function uppercaseFirstLetter(str: string) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
+	return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 function removeLeadingUnderscore(str = "") {
-  return str.replace(/^_/, "");
+	return str.replace(/^_/, "");
 }
 
 function lowercaseFirstLetter(str: string) {
-  return str.charAt(0).toLowerCase() + str.slice(1);
+	return str.charAt(0).toLowerCase() + str.slice(1);
 }
 
 function eventNameToPreparedEventName(name: string) {
-  return `${lowercaseFirstLetter(name)}Event`;
+	return `${lowercaseFirstLetter(name)}Event`;
 }
 
 const printedPrettierWarning = false;
 
 async function prettifyCode(code: string, options: Options) {
-  try {
-    const { format } = await import("prettier/standalone.js");
-    return await format(code, options);
-  } catch (e) {
-    if (!printedPrettierWarning) {
-      console.info("Prettier not found, skipping code formatting.");
-    }
-  }
+	try {
+		const { format } = await import("prettier/standalone.js");
+		return await format(code, options);
+	} catch (e) {
+		if (!printedPrettierWarning) {
+			console.info("Prettier not found, skipping code formatting.");
+		}
+	}
 
-  return code;
+	return code;
 }

@@ -18,7 +18,7 @@ import { nextTokenIdToClaim } from "../__generated__/IDrop/read/nextTokenIdToCla
  * ```
  */
 export async function getTotalClaimedSupply(
-  options: BaseTransactionOptions,
+	options: BaseTransactionOptions,
 ): Promise<bigint> {
-  return nextTokenIdToClaim(options);
+	return nextTokenIdToClaim(options);
 }

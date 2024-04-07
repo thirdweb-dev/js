@@ -1,6 +1,7 @@
 import { sha256 } from "@noble/hashes/sha256";
 import { uint8ArrayToHex } from "./encoding/hex.js";
 
+// biome-ignore lint/suspicious/noExplicitAny: the whoel point here is to accept anything
 type AnyFunction = (...args: any[]) => any;
 
 // WeakMap should be fine, if we de-reference the function, it should be garbage collected
@@ -15,11 +16,11 @@ const functionIdCache = new WeakMap<AnyFunction, string>();
  * @internal
  */
 export function getFunctionId(fn: AnyFunction) {
-  if (functionIdCache.has(fn)) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return functionIdCache.get(fn)!;
-  }
-  const id = uint8ArrayToHex(sha256(fn.toString()));
-  functionIdCache.set(fn, id);
-  return id;
+	if (functionIdCache.has(fn)) {
+		// biome-ignore lint/style/noNonNullAssertion: the `has` above ensures that this will always be set
+		return functionIdCache.get(fn)!;
+	}
+	const id = uint8ArrayToHex(sha256(fn.toString()));
+	functionIdCache.set(fn, id);
+	return id;
 }

@@ -1,7 +1,7 @@
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import {
-  balanceOf,
-  type BalanceOfParams,
+	type BalanceOfParams,
+	balanceOf,
 } from "../__generated__/IERC721A/read/balanceOf.js";
 import { tokenOfOwnerByIndex } from "../__generated__/IERC721Enumerable/read/tokenOfOwnerByIndex.js";
 
@@ -23,15 +23,15 @@ export type GetOwnedTokenIdsParams = BalanceOfParams;
  * ```
  */
 export async function getOwnedTokenIds(
-  options: BaseTransactionOptions<GetOwnedTokenIdsParams>,
+	options: BaseTransactionOptions<GetOwnedTokenIdsParams>,
 ): Promise<bigint[]> {
-  const balanceOfResult = await balanceOf(options);
+	const balanceOfResult = await balanceOf(options);
 
-  const promises: ReturnType<typeof tokenOfOwnerByIndex>[] = [];
+	const promises: ReturnType<typeof tokenOfOwnerByIndex>[] = [];
 
-  for (let i = 0n; i < balanceOfResult; i++) {
-    promises.push(tokenOfOwnerByIndex({ ...options, index: i }));
-  }
+	for (let i = 0n; i < balanceOfResult; i++) {
+		promises.push(tokenOfOwnerByIndex({ ...options, index: i }));
+	}
 
-  return Promise.all(promises);
+	return Promise.all(promises);
 }

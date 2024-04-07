@@ -1,25 +1,25 @@
 import { eth_getBlockByNumber } from "../../../../rpc/actions/eth_getBlockByNumber.js";
 import { getRpcClient } from "../../../../rpc/rpc.js";
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
-import { getAllValidAuctions as getAllValidAuctionsGenerated } from "../../__generated__/IEnglishAuctions/read/getAllValidAuctions.js";
-import type { EnglishAuction } from "../../types.js";
 import { min } from "../../../../utils/bigint.js";
-import { getAllInBatches, mapEnglishAuction } from "../../utils.js";
+import { getAllValidAuctions as getAllValidAuctionsGenerated } from "../../__generated__/IEnglishAuctions/read/getAllValidAuctions.js";
 import { totalAuctions } from "../../__generated__/IEnglishAuctions/read/totalAuctions.js";
+import type { EnglishAuction } from "../../types.js";
+import { getAllInBatches, mapEnglishAuction } from "../../utils.js";
 
 const DEFAULT_QUERY_ALL_COUNT = 100n;
 
 export type GetAllValidAuctionParams = {
-  /**
-   * The start index of the listings to retrieve.
-   * @default 0
-   */
-  start?: number;
-  /**
-   * The number of listings to retrieve.
-   * @default 100
-   */
-  count?: bigint;
+	/**
+	 * The start index of the listings to retrieve.
+	 * @default 0
+	 */
+	start?: number;
+	/**
+	 * The number of listings to retrieve.
+	 * @default 100
+	 */
+	count?: bigint;
 };
 
 /**
@@ -35,47 +35,47 @@ export type GetAllValidAuctionParams = {
  * ```
  */
 export async function getAllValidAuctions(
-  options: BaseTransactionOptions<GetAllValidAuctionParams>,
+	options: BaseTransactionOptions<GetAllValidAuctionParams>,
 ): Promise<EnglishAuction[]> {
-  const totalCount = await totalAuctions(options);
-  // if the totalListingCount is 0, return an empty array and skip all other work
-  if (totalCount === 0n) {
-    return [];
-  }
+	const totalCount = await totalAuctions(options);
+	// if the totalListingCount is 0, return an empty array and skip all other work
+	if (totalCount === 0n) {
+		return [];
+	}
 
-  const start = BigInt(options.start || 0);
-  const count = BigInt(options.count || DEFAULT_QUERY_ALL_COUNT);
-  const end = min(totalCount, start + count);
+	const start = BigInt(options.start || 0);
+	const count = BigInt(options.count || DEFAULT_QUERY_ALL_COUNT);
+	const end = min(totalCount, start + count);
 
-  const rpcClient = getRpcClient(options.contract);
-  const [rawAuctions, latestBlock] = await Promise.all([
-    getAllInBatches(
-      (startId, endId) =>
-        getAllValidAuctionsGenerated({
-          contract: options.contract,
-          startId,
-          endId,
-        }),
-      {
-        start,
-        end,
-        maxSize: DEFAULT_QUERY_ALL_COUNT,
-      },
-      // flatten the array of arrays
-    ).then((listings) => listings.flat()),
-    // get the latest block number once
-    eth_getBlockByNumber(rpcClient, {
-      blockTag: "latest",
-    }),
-  ]);
+	const rpcClient = getRpcClient(options.contract);
+	const [rawAuctions, latestBlock] = await Promise.all([
+		getAllInBatches(
+			(startId, endId) =>
+				getAllValidAuctionsGenerated({
+					contract: options.contract,
+					startId,
+					endId,
+				}),
+			{
+				start,
+				end,
+				maxSize: DEFAULT_QUERY_ALL_COUNT,
+			},
+			// flatten the array of arrays
+		).then((listings) => listings.flat()),
+		// get the latest block number once
+		eth_getBlockByNumber(rpcClient, {
+			blockTag: "latest",
+		}),
+	]);
 
-  return await Promise.all(
-    rawAuctions.map((rawAuction) =>
-      mapEnglishAuction({
-        contract: options.contract,
-        latestBlock,
-        rawAuction,
-      }),
-    ),
-  );
+	return await Promise.all(
+		rawAuctions.map((rawAuction) =>
+			mapEnglishAuction({
+				contract: options.contract,
+				latestBlock,
+				rawAuction,
+			}),
+		),
+	);
 }

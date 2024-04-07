@@ -9,7 +9,7 @@
  * // 1n
  */
 export function min(a: bigint, b: bigint) {
-  return a < b ? a : b;
+	return a < b ? a : b;
 }
 
 /**
@@ -23,7 +23,7 @@ export function min(a: bigint, b: bigint) {
  * // 2n
  */
 export function max(a: bigint, b: bigint) {
-  return a > b ? a : b;
+	return a > b ? a : b;
 }
 
 /**
@@ -36,14 +36,14 @@ export function max(a: bigint, b: bigint) {
  * // 2n
  */
 export function toBigInt(value: string | number | bigint): bigint {
-  if (
-    ["string", "number"].includes(typeof value) &&
-    !Number.isInteger(Number(value))
-  ) {
-    throw new Error(
-      `Expected value to be an integer to convert to a bigint, got ${value} of type ${typeof value}`,
-    );
-  }
+	if (
+		["string", "number"].includes(typeof value) &&
+		!Number.isInteger(Number(value))
+	) {
+		throw new Error(
+			`Expected value to be an integer to convert to a bigint, got ${value} of type ${typeof value}`,
+		);
+	}
 
-  return BigInt(value);
+	return BigInt(value);
 }

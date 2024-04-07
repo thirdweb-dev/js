@@ -7,14 +7,14 @@ import { zora } from "./chain-definitions/zora.js";
 import type { Chain } from "./types.js";
 
 const opChains = [
-  base.id,
-  baseSepolia.id,
-  optimism.id,
-  optimismSepolia.id,
-  zora.id,
-  zoraSepolia.id,
-  34443, // mode
-  919, // mode testnet
+	base.id,
+	baseSepolia.id,
+	optimism.id,
+	optimismSepolia.id,
+	zora.id,
+	zoraSepolia.id,
+	34443, // mode
+	919, // mode testnet
 ];
 
 /**
@@ -22,5 +22,5 @@ const opChains = [
  * @internal
  */
 export function isOpStackChain(chain: Chain) {
-  return opChains.includes(chain.id);
+	return opChains.includes(chain.id);
 }

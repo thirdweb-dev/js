@@ -6,6 +6,6 @@ export { rent } from "../../../extensions/farcaster/__generated__/IStorageRegist
 export { batchRent } from "../../../extensions/farcaster/__generated__/IStorageRegistry/write/batchRent.js";
 export { unitPrice } from "../../../extensions/farcaster/__generated__/IStorageRegistry/read/unitPrice.js";
 export {
-  type PriceParams,
-  price,
+	type PriceParams,
+	price,
 } from "../../../extensions/farcaster/__generated__/IStorageRegistry/read/price.js";

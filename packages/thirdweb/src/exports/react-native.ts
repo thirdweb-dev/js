@@ -2,17 +2,17 @@ export { ThirdwebProvider } from "../react/core/providers/thirdweb-provider.js";
 
 // react/core
 export {
-  useSetActiveWallet,
-  useActiveWalletChain,
-  useConnect,
-  useDisconnect,
-  useActiveAccount,
-  useActiveWallet,
-  useConnectedWallets,
-  useSwitchActiveWalletChain,
-  useActiveWalletConnectionStatus,
-  useSetActiveWalletConnectionStatus,
-  useIsAutoConnecting,
+	useSetActiveWallet,
+	useActiveWalletChain,
+	useConnect,
+	useDisconnect,
+	useActiveAccount,
+	useActiveWallet,
+	useConnectedWallets,
+	useSwitchActiveWalletChain,
+	useActiveWalletConnectionStatus,
+	useSetActiveWalletConnectionStatus,
+	useIsAutoConnecting,
 } from "../react/core/hooks/wallets/wallet-hooks.js";
 
 // contract related
@@ -24,8 +24,8 @@ export { useContractEvents } from "../react/core/hooks/contract/useContractEvent
 
 // rpc related
 export {
-  useBlockNumber,
-  type UseBlockNumberOptions,
+	useBlockNumber,
+	type UseBlockNumberOptions,
 } from "../react/core/hooks/rpc/useBlockNumber.js";
 
 // utils
@@ -34,14 +34,14 @@ export { useInvalidateContractQuery } from "../react/core/hooks/others/useInvali
 
 // Buy with crypto
 export {
-  useBuyWithCryptoQuote,
-  type BuyWithCryptoQuoteQueryParams,
+	useBuyWithCryptoQuote,
+	type BuyWithCryptoQuoteQueryParams,
 } from "../react/core/hooks/pay/useBuyWithCryptoQuote.js";
 export {
-  useBuyWithCryptoStatus,
-  type BuyWithCryptoStatusQueryParams,
+	useBuyWithCryptoStatus,
+	type BuyWithCryptoStatusQueryParams,
 } from "../react/core/hooks/pay/useBuyWithCryptoStatus.js";
 export {
-  useBuyWithCryptoHistory,
-  type BuyWithCryptoHistoryQueryParams,
+	useBuyWithCryptoHistory,
+	type BuyWithCryptoHistoryQueryParams,
 } from "../react/core/hooks/pay/useBuyWithCryptoHistory.js";

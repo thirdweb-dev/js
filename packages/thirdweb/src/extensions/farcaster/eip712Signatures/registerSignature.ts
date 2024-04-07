@@ -4,38 +4,38 @@ import type { Account } from "../../../wallets/interfaces/wallet.js";
 import { ID_GATEWAY_ADDRESS } from "../constants.js";
 
 export const ID_GATEWAY_EIP_712_DOMAIN = {
-  name: "Farcaster IdGateway",
-  version: "1",
-  chainId: 10,
-  verifyingContract: ID_GATEWAY_ADDRESS,
+	name: "Farcaster IdGateway",
+	version: "1",
+	chainId: 10,
+	verifyingContract: ID_GATEWAY_ADDRESS,
 } as const;
 
 export const ID_GATEWAY_REGISTER_TYPE = [
-  { name: "to", type: "address" },
-  { name: "recovery", type: "address" },
-  { name: "nonce", type: "uint256" },
-  { name: "deadline", type: "uint256" },
+	{ name: "to", type: "address" },
+	{ name: "recovery", type: "address" },
+	{ name: "nonce", type: "uint256" },
+	{ name: "deadline", type: "uint256" },
 ] as const;
 
 export const ID_GATEWAY_EIP_712_TYPES = {
-  domain: ID_GATEWAY_EIP_712_DOMAIN,
-  types: { Register: ID_GATEWAY_REGISTER_TYPE },
+	domain: ID_GATEWAY_EIP_712_DOMAIN,
+	types: { Register: ID_GATEWAY_REGISTER_TYPE },
 } as const;
 
 export type RegisterMessage = {
-  /** FID custody address */
-  to: Address;
-  /** FID recovery address */
-  recovery: Address;
-  /** IdGateway nonce for signer address */
-  nonce: bigint;
-  /** Unix timestamp when this message expires */
-  deadline: bigint;
+	/** FID custody address */
+	to: Address;
+	/** FID recovery address */
+	recovery: Address;
+	/** IdGateway nonce for signer address */
+	nonce: bigint;
+	/** Unix timestamp when this message expires */
+	deadline: bigint;
 };
 
 export type SignRegisterOptions = {
-  account: Account;
-  message: RegisterMessage;
+	account: Account;
+	message: RegisterMessage;
 };
 
 /**
@@ -52,11 +52,11 @@ export type SignRegisterOptions = {
  * ```
  */
 export function getRegisterData(message: RegisterMessage) {
-  return {
-    ...ID_GATEWAY_EIP_712_TYPES,
-    primaryType: "Register" as const,
-    message,
-  };
+	return {
+		...ID_GATEWAY_EIP_712_TYPES,
+		primaryType: "Register" as const,
+		message,
+	};
 }
 
 /**
@@ -72,9 +72,9 @@ export function getRegisterData(message: RegisterMessage) {
  * ```
  */
 export async function signRegister({
-  account,
-  message,
+	account,
+	message,
 }: SignRegisterOptions): Promise<Hex> {
-  const data = getRegisterData(message);
-  return account.signTypedData(data);
+	const data = getRegisterData(message);
+	return account.signTypedData(data);
 }

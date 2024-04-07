@@ -2,23 +2,23 @@ import type { InAppWalletSocialAuth } from "../../../../wallets/in-app/core/wall
 import type { Theme } from "../../ui/design-system/index.js";
 
 function getBodyTitle(authOption: InAppWalletSocialAuth) {
-  switch (authOption) {
-    case "google":
-      return "Sign In - Google Accounts";
-    default:
-      return `Sign In - ${authOption
-        .slice(0, 1)
-        .toUpperCase()}${authOption.slice(1)}`;
-  }
+	switch (authOption) {
+		case "google":
+			return "Sign In - Google Accounts";
+		default:
+			return `Sign In - ${authOption
+				.slice(0, 1)
+				.toUpperCase()}${authOption.slice(1)}`;
+	}
 }
 
 function getWidthAndHeight(authOption: InAppWalletSocialAuth) {
-  switch (authOption) {
-    case "facebook":
-      return { width: 715, height: 555 };
-    default:
-      return { width: 350, height: 500 };
-  }
+	switch (authOption) {
+		case "facebook":
+			return { width: 715, height: 555 };
+		default:
+			return { width: 350, height: 500 };
+	}
 }
 
 /**
@@ -26,35 +26,35 @@ function getWidthAndHeight(authOption: InAppWalletSocialAuth) {
  * @internal
  */
 export function openOauthSignInWindow(
-  authOption: InAppWalletSocialAuth,
-  themeObj: Theme,
+	authOption: InAppWalletSocialAuth,
+	themeObj: Theme,
 ) {
-  // open the popup in the center of the screen
-  const { height, width } = getWidthAndHeight(authOption);
-  const top = (window.innerHeight - height) / 2;
-  const left = (window.innerWidth - width) / 2;
+	// open the popup in the center of the screen
+	const { height, width } = getWidthAndHeight(authOption);
+	const top = (window.innerHeight - height) / 2;
+	const left = (window.innerWidth - width) / 2;
 
-  const win = window.open(
-    "",
-    undefined,
-    `width=${width}, height=${height}, top=${top}, left=${left}`,
-  );
-  if (win) {
-    const title = getBodyTitle(authOption);
-    win.document.title = title;
-    win.document.body.innerHTML = spinnerWindowHtml;
-    win.document.body.style.background = themeObj.colors.modalBg;
-    win.document.body.style.color = themeObj.colors.accentText;
-  }
+	const win = window.open(
+		"",
+		undefined,
+		`width=${width}, height=${height}, top=${top}, left=${left}`,
+	);
+	if (win) {
+		const title = getBodyTitle(authOption);
+		win.document.title = title;
+		win.document.body.innerHTML = spinnerWindowHtml;
+		win.document.body.style.background = themeObj.colors.modalBg;
+		win.document.body.style.color = themeObj.colors.accentText;
+	}
 
-  // close it when current window is closed or refreshed
-  if (win) {
-    window.addEventListener("beforeunload", () => {
-      win?.close();
-    });
-  }
+	// close it when current window is closed or refreshed
+	if (win) {
+		window.addEventListener("beforeunload", () => {
+			win?.close();
+		});
+	}
 
-  return win;
+	return win;
 }
 
 const spinnerWindowHtml = `

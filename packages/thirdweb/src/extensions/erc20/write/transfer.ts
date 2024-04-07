@@ -6,14 +6,14 @@ import { transfer as generatedTransfer } from "../__generated__/IERC20/write/tra
  * Represents the parameters for a transfer operation.
  */
 export type TransferParams = Prettify<
-  { to: string } & (
-    | {
-        amount: number | string;
-      }
-    | {
-        amountWei: bigint;
-      }
-  )
+	{ to: string } & (
+		| {
+				amount: number | string;
+		  }
+		| {
+				amountWei: bigint;
+		  }
+	)
 >;
 
 /**
@@ -32,24 +32,24 @@ export type TransferParams = Prettify<
  * ```
  */
 export function transfer(options: BaseTransactionOptions<TransferParams>) {
-  return generatedTransfer({
-    contract: options.contract,
-    asyncParams: async () => {
-      let amount: bigint;
-      if ("amount" in options) {
-        // if we need to parse the amount from ether to gwei then we pull in the decimals extension
-        const { decimals } = await import("../read/decimals.js");
-        // if this fails we fall back to `18` decimals
-        const d = await decimals(options).catch(() => 18);
-        // turn ether into gwei
-        amount = toUnits(options.amount.toString(), d);
-      } else {
-        amount = options.amountWei;
-      }
-      return {
-        to: options.to,
-        value: amount,
-      } as const;
-    },
-  });
+	return generatedTransfer({
+		contract: options.contract,
+		asyncParams: async () => {
+			let amount: bigint;
+			if ("amount" in options) {
+				// if we need to parse the amount from ether to gwei then we pull in the decimals extension
+				const { decimals } = await import("../read/decimals.js");
+				// if this fails we fall back to `18` decimals
+				const d = await decimals(options).catch(() => 18);
+				// turn ether into gwei
+				amount = toUnits(options.amount.toString(), d);
+			} else {
+				amount = options.amountWei;
+			}
+			return {
+				to: options.to,
+				value: amount,
+			} as const;
+		},
+	});
 }

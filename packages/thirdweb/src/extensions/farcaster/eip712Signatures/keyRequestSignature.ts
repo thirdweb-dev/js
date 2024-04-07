@@ -1,65 +1,65 @@
 import type { Address } from "abitype";
 import { encodeAbiParameters } from "../../../utils/abi/encodeAbiParameters.js";
 import type { Hex } from "../../../utils/encoding/hex.js";
+import type { Prettify } from "../../../utils/type-utils.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
 import { SIGNED_KEY_REQUEST_VALIDATOR_ADDRESS } from "../constants.js";
-import type { Prettify } from "../../../utils/type-utils.js";
 
 const SIGNED_KEY_REQUEST_VALIDATOR_EIP_712_DOMAIN = {
-  name: "Farcaster SignedKeyRequestValidator", // EIP-712 domain data for the SignedKeyRequestValidator.
-  version: "1",
-  chainId: 10,
-  verifyingContract: SIGNED_KEY_REQUEST_VALIDATOR_ADDRESS,
+	name: "Farcaster SignedKeyRequestValidator", // EIP-712 domain data for the SignedKeyRequestValidator.
+	version: "1",
+	chainId: 10,
+	verifyingContract: SIGNED_KEY_REQUEST_VALIDATOR_ADDRESS,
 } as const;
 
 const SIGNED_KEY_REQUEST_TYPE = [
-  { name: "requestFid", type: "uint256" },
-  { name: "key", type: "bytes" },
-  { name: "deadline", type: "uint256" },
+	{ name: "requestFid", type: "uint256" },
+	{ name: "key", type: "bytes" },
+	{ name: "deadline", type: "uint256" },
 ];
 
 export const SIGNED_KEY_REQUEST_VALIDATOR_EIP_712_TYPES = {
-  domain: SIGNED_KEY_REQUEST_VALIDATOR_EIP_712_DOMAIN,
-  types: { SignedKeyRequest: SIGNED_KEY_REQUEST_TYPE },
+	domain: SIGNED_KEY_REQUEST_VALIDATOR_EIP_712_DOMAIN,
+	types: { SignedKeyRequest: SIGNED_KEY_REQUEST_TYPE },
 } as const;
 
 export const SIGNED_KEY_REQUEST_METADATA_ABI = [
-  {
-    components: [
-      {
-        name: "requestFid",
-        type: "uint256",
-      },
-      {
-        name: "requestSigner",
-        type: "address",
-      },
-      {
-        name: "signature",
-        type: "bytes",
-      },
-      {
-        name: "deadline",
-        type: "uint256",
-      },
-    ],
-    name: "SignedKeyRequestMetadata",
-    type: "tuple",
-  },
+	{
+		components: [
+			{
+				name: "requestFid",
+				type: "uint256",
+			},
+			{
+				name: "requestSigner",
+				type: "address",
+			},
+			{
+				name: "signature",
+				type: "bytes",
+			},
+			{
+				name: "deadline",
+				type: "uint256",
+			},
+		],
+		name: "SignedKeyRequestMetadata",
+		type: "tuple",
+	},
 ] as const;
 
 export type SignedKeyRequestMessage = {
-  /** FID of user or app requesting key */
-  requestFid: bigint;
-  /** Signer public key */
-  key: Hex;
-  /** Unix timestamp when this message expires */
-  deadline: bigint;
+	/** FID of user or app requesting key */
+	requestFid: bigint;
+	/** Signer public key */
+	key: Hex;
+	/** Unix timestamp when this message expires */
+	deadline: bigint;
 };
 
 export type SignKeyRequestOptions = {
-  account: Account;
-  message: SignedKeyRequestMessage;
+	account: Account;
+	message: SignedKeyRequestMessage;
 };
 
 /**
@@ -79,11 +79,11 @@ export type SignKeyRequestOptions = {
  * ```
  */
 export function getKeyRequestData(message: SignedKeyRequestMessage) {
-  return {
-    ...SIGNED_KEY_REQUEST_VALIDATOR_EIP_712_TYPES,
-    primaryType: "SignedKeyRequest" as const,
-    message,
-  };
+	return {
+		...SIGNED_KEY_REQUEST_VALIDATOR_EIP_712_TYPES,
+		primaryType: "SignedKeyRequest" as const,
+		message,
+	};
 }
 
 /**
@@ -104,21 +104,21 @@ export function getKeyRequestData(message: SignedKeyRequestMessage) {
  * ```
  */
 export async function signKeyRequest(
-  options: SignKeyRequestOptions,
+	options: SignKeyRequestOptions,
 ): Promise<Hex> {
-  const data = getKeyRequestData(options.message);
-  return options.account.signTypedData(data);
+	const data = getKeyRequestData(options.message);
+	return options.account.signTypedData(data);
 }
 
 export type SignedKeyRequestMetadataOptions = Prettify<
-  {
-    message: SignedKeyRequestMessage;
-  } & (
-    | {
-        account: Account;
-      }
-    | { keyRequestSignature: Hex; accountAddress: Address }
-  )
+	{
+		message: SignedKeyRequestMessage;
+	} & (
+		| {
+				account: Account;
+		  }
+		| { keyRequestSignature: Hex; accountAddress: Address }
+	)
 >;
 
 /**
@@ -144,19 +144,19 @@ export type SignedKeyRequestMetadataOptions = Prettify<
  * ```
  */
 export function encodeSignedKeyRequestMetadata(options: {
-  requestSigner: Address;
-  keyRequestSignature: Hex;
-  requestFid: bigint;
-  deadline: bigint;
+	requestSigner: Address;
+	keyRequestSignature: Hex;
+	requestFid: bigint;
+	deadline: bigint;
 }): Hex {
-  return encodeAbiParameters(SIGNED_KEY_REQUEST_METADATA_ABI, [
-    {
-      requestFid: options.requestFid,
-      requestSigner: options.requestSigner,
-      signature: options.keyRequestSignature,
-      deadline: options.deadline,
-    },
-  ]);
+	return encodeAbiParameters(SIGNED_KEY_REQUEST_METADATA_ABI, [
+		{
+			requestFid: options.requestFid,
+			requestSigner: options.requestSigner,
+			signature: options.keyRequestSignature,
+			deadline: options.deadline,
+		},
+	]);
 }
 
 /**
@@ -191,27 +191,27 @@ export function encodeSignedKeyRequestMetadata(options: {
  * ```
  */
 export async function getSignedKeyRequestMetadata(
-  options: SignedKeyRequestMetadataOptions,
+	options: SignedKeyRequestMetadataOptions,
 ): Promise<Hex> {
-  let signature;
-  if ("keyRequestSignature" in options) {
-    signature = options.keyRequestSignature;
-  } else if ("account" in options) {
-    signature = await signKeyRequest({
-      account: options.account,
-      message: options.message,
-    });
-  } else {
-    throw new Error(
-      "Invalid options, expected an account or key request signature to be provided",
-    );
-  }
+	let signature: Hex;
+	if ("keyRequestSignature" in options) {
+		signature = options.keyRequestSignature;
+	} else if ("account" in options) {
+		signature = await signKeyRequest({
+			account: options.account,
+			message: options.message,
+		});
+	} else {
+		throw new Error(
+			"Invalid options, expected an account or key request signature to be provided",
+		);
+	}
 
-  return encodeSignedKeyRequestMetadata({
-    requestSigner:
-      "account" in options ? options.account.address : options.accountAddress,
-    keyRequestSignature: signature,
-    requestFid: options.message.requestFid,
-    deadline: options.message.deadline,
-  });
+	return encodeSignedKeyRequestMetadata({
+		requestSigner:
+			"account" in options ? options.account.address : options.accountAddress,
+		keyRequestSignature: signature,
+		requestFid: options.message.requestFid,
+		deadline: options.message.deadline,
+	});
 }

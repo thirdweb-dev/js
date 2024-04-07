@@ -14,43 +14,43 @@ export { idGateway } from "../../../extensions/farcaster/__generated__/IIdRegist
 export { gatewayFrozen } from "../../../extensions/farcaster/__generated__/IIdRegistry/read/gatewayFrozen.js";
 export { idCounter } from "../../../extensions/farcaster/__generated__/IIdRegistry/read/idCounter.js";
 export {
-  type IdOfParams,
-  idOf,
+	type IdOfParams,
+	idOf,
 } from "../../../extensions/farcaster/__generated__/IIdRegistry/read/idOf.js";
 export {
-  type CustodyOfParams,
-  custodyOf,
+	type CustodyOfParams,
+	custodyOf,
 } from "../../../extensions/farcaster/__generated__/IIdRegistry/read/custodyOf.js";
 export {
-  type RecoveryOfParams,
-  recoveryOf,
+	type RecoveryOfParams,
+	recoveryOf,
 } from "../../../extensions/farcaster/__generated__/IIdRegistry/read/recoveryOf.js";
 export {
-  type VerifyFidSignatureParams,
-  verifyFidSignature,
+	type VerifyFidSignatureParams,
+	verifyFidSignature,
 } from "../../../extensions/farcaster/__generated__/IIdRegistry/read/verifyFidSignature.js";
 
 export {
-  type TransferParams,
-  transfer,
+	type TransferParams,
+	transfer,
 } from "../../../extensions/farcaster/__generated__/IIdRegistry/write/transfer.js";
 export {
-  type TransferAndChangeRecoveryParams,
-  transferAndChangeRecovery,
+	type TransferAndChangeRecoveryParams,
+	transferAndChangeRecovery,
 } from "../../../extensions/farcaster/__generated__/IIdRegistry/write/transferAndChangeRecovery.js";
 export {
-  type TransferForParams,
-  transferFor,
+	type TransferForParams,
+	transferFor,
 } from "../../../extensions/farcaster/__generated__/IIdRegistry/write/transferFor.js";
 export {
-  type ChangeRecoveryAddressParams,
-  changeRecoveryAddress,
+	type ChangeRecoveryAddressParams,
+	changeRecoveryAddress,
 } from "../../../extensions/farcaster/__generated__/IIdRegistry/write/changeRecoveryAddress.js";
 export {
-  type RecoverParams,
-  recover,
+	type RecoverParams,
+	recover,
 } from "../../../extensions/farcaster/__generated__/IIdRegistry/write/recover.js";
 export {
-  type RecoverForParams,
-  recoverFor,
+	type RecoverForParams,
+	recoverFor,
 } from "../../../extensions/farcaster/__generated__/IIdRegistry/write/recoverFor.js";

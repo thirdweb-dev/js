@@ -1,14 +1,9 @@
-import type {
-  EIP1193RequestFn,
-  EIP1474Methods,
-  BlockTag,
-  Hex,
-} from "viem";
+import type { BlockTag, EIP1193RequestFn, EIP1474Methods, Hex } from "viem";
 
 type GetStorageAtParams = {
-  address: string;
-  position: Hex;
-  blockTag?: BlockTag;
+	address: string;
+	position: Hex;
+	blockTag?: BlockTag;
 };
 
 /**
@@ -28,11 +23,11 @@ type GetStorageAtParams = {
  * ```
  */
 export async function eth_getStorageAt(
-  request: EIP1193RequestFn<EIP1474Methods>,
-  params: GetStorageAtParams,
+	request: EIP1193RequestFn<EIP1474Methods>,
+	params: GetStorageAtParams,
 ): Promise<Hex> {
-  return await request({
-    method: "eth_getStorageAt",
-    params: [params.address, params.position, params.blockTag ?? "latest"],
-  });
+	return await request({
+		method: "eth_getStorageAt",
+		params: [params.address, params.position, params.blockTag ?? "latest"],
+	});
 }

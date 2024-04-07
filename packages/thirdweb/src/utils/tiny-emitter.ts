@@ -1,10 +1,10 @@
 type GenericEmitterType = {
-  [key: string]: unknown;
+	[key: string]: unknown;
 };
 
 export type Emitter<T extends GenericEmitterType> = {
-  subscribe<K extends keyof T>(event: K, cb: (data: T[K]) => void): () => void;
-  emit<K extends keyof T>(event: K, data: T[K]): void;
+	subscribe<K extends keyof T>(event: K, cb: (data: T[K]) => void): () => void;
+	emit<K extends keyof T>(event: K, data: T[K]): void;
 };
 
 /**
@@ -26,34 +26,36 @@ export type Emitter<T extends GenericEmitterType> = {
  * ```
  */
 export function createEmitter<
-  const TEmitter extends GenericEmitterType,
+	const TEmitter extends GenericEmitterType,
 >(): Emitter<TEmitter> {
-  const subsribers = new Map<
-    keyof TEmitter,
-    // TODO: fix internal type (no any)
-    Set<(data: any) => void>
-  >();
+	const subsribers = new Map<
+		keyof TEmitter,
+		// biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
+		Set<(data: any) => void>
+	>();
 
-  return {
-    subscribe(event, cb) {
-      if (!subsribers.has(event)) {
-        subsribers.set(event, new Set([cb]));
-      } else {
-        subsribers.get(event)?.add(cb);
-      }
+	return {
+		subscribe(event, cb) {
+			if (!subsribers.has(event)) {
+				subsribers.set(event, new Set([cb]));
+			} else {
+				subsribers.get(event)?.add(cb);
+			}
 
-      return () => {
-        const subscribers = subsribers.get(event);
-        if (subscribers) {
-          subscribers.delete(cb);
-        }
-      };
-    },
-    emit(event, data) {
-      const subscribers = subsribers.get(event);
-      if (subscribers) {
-        subscribers.forEach((cb) => cb(data));
-      }
-    },
-  };
+			return () => {
+				const subscribers = subsribers.get(event);
+				if (subscribers) {
+					subscribers.delete(cb);
+				}
+			};
+		},
+		emit(event, data) {
+			const subscribers = subsribers.get(event);
+			if (subscribers) {
+				for (const cb of subscribers) {
+					cb(data);
+				}
+			}
+		},
+	};
 }

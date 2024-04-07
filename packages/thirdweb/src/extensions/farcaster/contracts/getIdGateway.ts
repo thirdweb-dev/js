@@ -1,8 +1,8 @@
-import {
-  getContract,
-  type ThirdwebContract,
-} from "../../../contract/contract.js";
 import { optimism } from "../../../chains/chain-definitions/optimism.js";
+import {
+	type ThirdwebContract,
+	getContract,
+} from "../../../contract/contract.js";
 import { ID_GATEWAY_ADDRESS } from "../constants.js";
 import type { FarcasterContractOptions } from "./contractOptions.js";
 
@@ -21,11 +21,11 @@ import type { FarcasterContractOptions } from "./contractOptions.js";
  * ```
  */
 export function getIdGateway(
-  options: FarcasterContractOptions,
+	options: FarcasterContractOptions,
 ): ThirdwebContract {
-  return getContract({
-    client: options.client,
-    address: ID_GATEWAY_ADDRESS,
-    chain: options.chain ?? optimism,
-  });
+	return getContract({
+		client: options.client,
+		address: ID_GATEWAY_ADDRESS,
+		chain: options.chain ?? optimism,
+	});
 }

@@ -1,10 +1,10 @@
-import type { EIP1193RequestFn, EIP1474Methods, Hex, BlockTag } from "viem";
-import { hexToBigInt } from "../../utils/encoding/hex.js";
 import type { Address } from "abitype";
+import type { BlockTag, EIP1193RequestFn, EIP1474Methods, Hex } from "viem";
+import { hexToBigInt } from "../../utils/encoding/hex.js";
 
 type GetBalanceParams = {
-  address: Address;
-  blockTag?: BlockTag;
+	address: Address;
+	blockTag?: BlockTag;
 };
 
 /**
@@ -23,12 +23,12 @@ type GetBalanceParams = {
  * ```
  */
 export async function eth_getBalance(
-  request: EIP1193RequestFn<EIP1474Methods>,
-  params: GetBalanceParams,
+	request: EIP1193RequestFn<EIP1474Methods>,
+	params: GetBalanceParams,
 ): Promise<bigint> {
-  const hexBalance = await request({
-    method: "eth_getBalance",
-    params: [params.address as Hex, params.blockTag || "latest"],
-  });
-  return hexToBigInt(hexBalance);
+	const hexBalance = await request({
+		method: "eth_getBalance",
+		params: [params.address as Hex, params.blockTag || "latest"],
+	});
+	return hexToBigInt(hexBalance);
 }

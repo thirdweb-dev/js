@@ -1,7 +1,7 @@
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import {
-  getActiveClaimConditionId,
-  type GetActiveClaimConditionIdParams,
+	type GetActiveClaimConditionIdParams,
+	getActiveClaimConditionId,
 } from "../../__generated__/IDrop1155/read/getActiveClaimConditionId.js";
 import { getClaimConditionById } from "../../__generated__/IDrop1155/read/getClaimConditionById.js";
 
@@ -19,8 +19,8 @@ export type GetActiveClaimConditionParams = GetActiveClaimConditionIdParams;
  * ```
  */
 export async function getActiveClaimCondition(
-  options: BaseTransactionOptions<GetActiveClaimConditionParams>,
+	options: BaseTransactionOptions<GetActiveClaimConditionParams>,
 ) {
-  const conditionId = await getActiveClaimConditionId(options);
-  return getClaimConditionById({ ...options, conditionId });
+	const conditionId = await getActiveClaimConditionId(options);
+	return getClaimConditionById({ ...options, conditionId });
 }

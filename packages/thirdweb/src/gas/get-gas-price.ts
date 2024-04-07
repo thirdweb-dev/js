@@ -1,12 +1,12 @@
-import type { ThirdwebClient } from "../client/client.js";
-import { getRpcClient } from "../rpc/rpc.js";
-import { eth_gasPrice } from "../rpc/actions/eth_gasPrice.js";
 import type { Chain } from "../chains/types.js";
+import type { ThirdwebClient } from "../client/client.js";
+import { eth_gasPrice } from "../rpc/actions/eth_gasPrice.js";
+import { getRpcClient } from "../rpc/rpc.js";
 
 export type GetGasPriceOptions = {
-  client: ThirdwebClient;
-  chain: Chain;
-  percentMultiplier?: number;
+	client: ThirdwebClient;
+	chain: Chain;
+	percentMultiplier?: number;
 };
 
 /**
@@ -17,14 +17,14 @@ export type GetGasPriceOptions = {
  * @internal
  */
 export async function getGasPrice(
-  options: GetGasPriceOptions,
+	options: GetGasPriceOptions,
 ): Promise<bigint> {
-  const { client, chain, percentMultiplier } = options;
-  const rpcClient = getRpcClient({ client, chain });
-  const gasPrice_ = await eth_gasPrice(rpcClient);
-  const extraTip = percentMultiplier
-    ? (gasPrice_ / BigInt(100)) * BigInt(percentMultiplier)
-    : 0n;
-  const txGasPrice = gasPrice_ + extraTip;
-  return txGasPrice;
+	const { client, chain, percentMultiplier } = options;
+	const rpcClient = getRpcClient({ client, chain });
+	const gasPrice_ = await eth_gasPrice(rpcClient);
+	const extraTip = percentMultiplier
+		? (gasPrice_ / BigInt(100)) * BigInt(percentMultiplier)
+		: 0n;
+	const txGasPrice = gasPrice_ + extraTip;
+	return txGasPrice;
 }

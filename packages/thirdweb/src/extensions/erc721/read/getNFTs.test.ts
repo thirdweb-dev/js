@@ -1,17 +1,17 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 
-import { getNFTs } from "./getNFTs.js";
 import { AZUKI_CONTRACT, DOODLES_CONTRACT } from "~test/test-contracts.js";
+import { getNFTs } from "./getNFTs.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("erc721.getNFTs", () => {
-  it("works for azuki", async () => {
-    const nfts = await getNFTs({
-      contract: AZUKI_CONTRACT,
-      count: 5,
-    });
+	it("works for azuki", async () => {
+		const nfts = await getNFTs({
+			contract: AZUKI_CONTRACT,
+			count: 5,
+		});
 
-    expect(nfts.length).toBe(5);
-    expect(nfts).toMatchInlineSnapshot(`
+		expect(nfts.length).toBe(5);
+		expect(nfts).toMatchInlineSnapshot(`
       [
         {
           "id": 0n,
@@ -223,16 +223,16 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc721.getNFTs", () => {
         },
       ]
     `);
-  });
+	});
 
-  it("works for a contract with 0 indexed NFTs", async () => {
-    const nfts = await getNFTs({
-      contract: DOODLES_CONTRACT,
-      count: 5,
-    });
+	it("works for a contract with 0 indexed NFTs", async () => {
+		const nfts = await getNFTs({
+			contract: DOODLES_CONTRACT,
+			count: 5,
+		});
 
-    expect(nfts.length).toBe(5);
-    expect(nfts).toMatchInlineSnapshot(`
+		expect(nfts.length).toBe(5);
+		expect(nfts).toMatchInlineSnapshot(`
       [
         {
           "id": 0n,
@@ -401,19 +401,19 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc721.getNFTs", () => {
         },
       ]
     `);
-  });
+	});
 
-  it("works for a contract with `1` indexed NFTs", async () => {
-    const nfts = await getNFTs({
-      contract: {
-        ...DOODLES_CONTRACT,
-        address: "0x5D62Fb8dcD9b480960f55956fBDD8D9F07f2B402",
-      },
-      count: 5,
-    });
+	it("works for a contract with `1` indexed NFTs", async () => {
+		const nfts = await getNFTs({
+			contract: {
+				...DOODLES_CONTRACT,
+				address: "0x5D62Fb8dcD9b480960f55956fBDD8D9F07f2B402",
+			},
+			count: 5,
+		});
 
-    expect(nfts.length).toBe(5);
-    expect(nfts).toMatchInlineSnapshot(`
+		expect(nfts.length).toBe(5);
+		expect(nfts).toMatchInlineSnapshot(`
       [
         {
           "id": 0n,
@@ -580,5 +580,5 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc721.getNFTs", () => {
         },
       ]
     `);
-  });
+	});
 });

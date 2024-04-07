@@ -1,6 +1,6 @@
 import type { Address } from "abitype";
-import { toUnits } from "../../../utils/units.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
+import { toUnits } from "../../../utils/units.js";
 
 import type { Prettify } from "../../../utils/type-utils.js";
 import { transferFrom as generatedTransferFrom } from "../__generated__/IERC20/write/transferFrom.js";
@@ -8,14 +8,14 @@ import { transferFrom as generatedTransferFrom } from "../__generated__/IERC20/w
  * Represents the parameters for the `transferFrom` function.
  */
 export type TransferFromParams = Prettify<
-  { to: Address; from: Address } & (
-    | {
-        amount: number | string;
-      }
-    | {
-        amountWei: bigint;
-      }
-  )
+	{ to: Address; from: Address } & (
+		| {
+				amount: number | string;
+		  }
+		| {
+				amountWei: bigint;
+		  }
+	)
 >;
 
 /**
@@ -36,27 +36,27 @@ export type TransferFromParams = Prettify<
  * ```
  */
 export function transferFrom(
-  options: BaseTransactionOptions<TransferFromParams>,
+	options: BaseTransactionOptions<TransferFromParams>,
 ) {
-  return generatedTransferFrom({
-    contract: options.contract,
-    asyncParams: async () => {
-      let amount: bigint;
-      if ("amount" in options) {
-        // if we need to parse the amount from ether to gwei then we pull in the decimals extension
-        const { decimals } = await import("../read/decimals.js");
-        // if this fails we fall back to `18` decimals
-        const d = await decimals(options).catch(() => 18);
-        // turn ether into gwei
-        amount = toUnits(options.amount.toString(), d);
-      } else {
-        amount = options.amountWei;
-      }
-      return {
-        from: options.from,
-        to: options.to,
-        value: amount,
-      } as const;
-    },
-  });
+	return generatedTransferFrom({
+		contract: options.contract,
+		asyncParams: async () => {
+			let amount: bigint;
+			if ("amount" in options) {
+				// if we need to parse the amount from ether to gwei then we pull in the decimals extension
+				const { decimals } = await import("../read/decimals.js");
+				// if this fails we fall back to `18` decimals
+				const d = await decimals(options).catch(() => 18);
+				// turn ether into gwei
+				amount = toUnits(options.amount.toString(), d);
+			} else {
+				amount = options.amountWei;
+			}
+			return {
+				from: options.from,
+				to: options.to,
+				value: amount,
+			} as const;
+		},
+	});
 }

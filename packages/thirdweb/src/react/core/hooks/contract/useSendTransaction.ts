@@ -1,8 +1,8 @@
-import { useMutation, type UseMutationResult } from "@tanstack/react-query";
-import { useActiveAccount } from "../wallets/wallet-hooks.js";
-import type { WaitForReceiptOptions } from "../../../../transaction/actions/wait-for-tx-receipt.js";
+import { type UseMutationResult, useMutation } from "@tanstack/react-query";
 import { sendTransaction } from "../../../../transaction/actions/send-transaction.js";
+import type { WaitForReceiptOptions } from "../../../../transaction/actions/wait-for-tx-receipt.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
+import { useActiveAccount } from "../wallets/wallet-hooks.js";
 
 /**
  * A hook to send a transaction.
@@ -18,21 +18,21 @@ import type { PreparedTransaction } from "../../../../transaction/prepare-transa
  * @transaction
  */
 export function useSendTransaction(): UseMutationResult<
-  WaitForReceiptOptions,
-  Error,
-  PreparedTransaction
+	WaitForReceiptOptions,
+	Error,
+	PreparedTransaction
 > {
-  const account = useActiveAccount();
+	const account = useActiveAccount();
 
-  return useMutation({
-    mutationFn: async (transaction) => {
-      if (!account) {
-        throw new Error("No active account");
-      }
-      return await sendTransaction({
-        transaction,
-        account,
-      });
-    },
-  });
+	return useMutation({
+		mutationFn: async (transaction) => {
+			if (!account) {
+				throw new Error("No active account");
+			}
+			return await sendTransaction({
+				transaction,
+				account,
+			});
+		},
+	});
 }

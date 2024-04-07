@@ -1,9 +1,9 @@
-import { isBase64JSON, parseBase64String } from "../base64/base64.js";
 import type { ThirdwebClient } from "../../client/client.js";
+import { isBase64JSON, parseBase64String } from "../base64/base64.js";
 
 type FetchContractMetadata = {
-  client: ThirdwebClient;
-  uri: string;
+	client: ThirdwebClient;
+	uri: string;
 };
 
 /**
@@ -14,26 +14,27 @@ type FetchContractMetadata = {
  * @internal
  */
 export async function fetchContractMetadata(
-  options: FetchContractMetadata,
+	options: FetchContractMetadata,
+	// biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
 ): Promise<{ [key: string]: any } | undefined> {
-  const { client, uri } = options;
+	const { client, uri } = options;
 
-  // handle case where the URI is a base64 encoded JSON
-  if (isBase64JSON(uri)) {
-    try {
-      return JSON.parse(parseBase64String(uri));
-    } catch (e) {
-      console.error(
-        "Failed to decode base64 encoded contract metadata",
-        { uri },
-        e,
-      );
-      return undefined;
-    }
-  }
+	// handle case where the URI is a base64 encoded JSON
+	if (isBase64JSON(uri)) {
+		try {
+			return JSON.parse(parseBase64String(uri));
+		} catch (e) {
+			console.error(
+				"Failed to decode base64 encoded contract metadata",
+				{ uri },
+				e,
+			);
+			return undefined;
+		}
+	}
 
-  // in all other cases we will need the `download` function from storage
+	// in all other cases we will need the `download` function from storage
 
-  const { download } = await import("../../storage/download.js");
-  return await (await download({ client, uri })).json();
+	const { download } = await import("../../storage/download.js");
+	return await (await download({ client, uri })).json();
 }

@@ -53,6 +53,11 @@ jobs:
       - name: Setup & Install
         uses: ./.github/composite-actions/install
 
+      - name: Setup Biome
+        uses: biomejs/setup-biome@v2
+        with:
+          version: latest  
+
       - run: pnpm lint
 
   test:

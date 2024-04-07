@@ -1,8 +1,3 @@
-/* eslint-disable jsdoc/require-jsdoc */
-/* eslint-disable jsdoc/require-description */
-/* eslint-disable jsdoc/require-returns */
-/* eslint-disable jsdoc/require-param */
-
 import { cachedTextDecoder } from "./text-decoder.js";
 
 const uint8ArrayStringified = "[object Uint8Array]";
@@ -21,9 +16,9 @@ const uint8ArrayStringified = "[object Uint8Array]";
  * ```
  */
 function assertUint8Array(value: unknown): asserts value is Uint8Array {
-  if (!isUint8Array(value)) {
-    throw new TypeError(`Expected \`Uint8Array\`, got \`${typeof value}\``);
-  }
+	if (!isUint8Array(value)) {
+		throw new TypeError(`Expected \`Uint8Array\`, got \`${typeof value}\``);
+	}
 }
 
 /**
@@ -45,15 +40,15 @@ function assertUint8Array(value: unknown): asserts value is Uint8Array {
  * ```
  */
 export function isUint8Array(value: unknown): value is Uint8Array {
-  if (!value) {
-    return false;
-  }
+	if (!value) {
+		return false;
+	}
 
-  if (value.constructor === Uint8Array) {
-    return true;
-  }
+	if (value.constructor === Uint8Array) {
+		return true;
+	}
 
-  return Object.prototype.toString.call(value) === uint8ArrayStringified;
+	return Object.prototype.toString.call(value) === uint8ArrayStringified;
 }
 
 /**
@@ -76,24 +71,24 @@ export function isUint8Array(value: unknown): value is Uint8Array {
  * ```
  */
 export function areUint8ArraysEqual(a: Uint8Array, b: Uint8Array): boolean {
-  assertUint8Array(a);
-  assertUint8Array(b);
+	assertUint8Array(a);
+	assertUint8Array(b);
 
-  if (a === b) {
-    return true;
-  }
+	if (a === b) {
+		return true;
+	}
 
-  if (a.length !== b.length) {
-    return false;
-  }
+	if (a.length !== b.length) {
+		return false;
+	}
 
-  for (let index = 0; index < a.length; index++) {
-    if (a[index] !== b[index]) {
-      return false;
-    }
-  }
+	for (let index = 0; index < a.length; index++) {
+		if (a[index] !== b[index]) {
+			return false;
+		}
+	}
 
-  return true;
+	return true;
 }
 
 /**
@@ -111,18 +106,18 @@ export function areUint8ArraysEqual(a: Uint8Array, b: Uint8Array): boolean {
  * ```
  */
 function uint8ArrayToString(array: Uint8Array): string {
-  assertUint8Array(array);
-  return cachedTextDecoder().decode(array);
+	assertUint8Array(array);
+	return cachedTextDecoder().decode(array);
 }
 
-function assertString(value: any): asserts value is string {
-  if (typeof value !== "string") {
-    throw new TypeError(`Expected \`string\`, got \`${typeof value}\``);
-  }
+function assertString(value: unknown): asserts value is string {
+	if (typeof value !== "string") {
+		throw new TypeError(`Expected \`string\`, got \`${typeof value}\``);
+	}
 }
 
 function base64UrlToBase64(base64url: string) {
-  return base64url.replaceAll("-", "+").replaceAll("_", "/");
+	return base64url.replaceAll("-", "+").replaceAll("_", "/");
 }
 
 /**
@@ -138,12 +133,13 @@ function base64UrlToBase64(base64url: string) {
  * ```
  */
 export function base64ToUint8Array(base64String: string): Uint8Array {
-  assertString(base64String);
-  return Uint8Array.from(
-    globalThis.atob(base64UrlToBase64(base64String)),
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    (x) => x.codePointAt(0)!,
-  );
+	assertString(base64String);
+	return Uint8Array.from(
+		globalThis.atob(base64UrlToBase64(base64String)),
+
+		// biome-ignore lint/style/noNonNullAssertion: we know that the code points exist
+		(x) => x.codePointAt(0)!,
+	);
 }
 
 /**
@@ -159,61 +155,63 @@ export function base64ToUint8Array(base64String: string): Uint8Array {
  * ```
  */
 export function base64ToString(base64String: string): string {
-  assertString(base64String);
-  return uint8ArrayToString(base64ToUint8Array(base64String));
+	assertString(base64String);
+	return uint8ArrayToString(base64ToUint8Array(base64String));
 }
 
 function base64ToBase64Url(base64: string): string {
-  return base64.replaceAll("+", "-").replaceAll("/", "_").replace(/=+$/, "");
+	return base64.replaceAll("+", "-").replaceAll("/", "_").replace(/=+$/, "");
 }
 // Reference: https://phuoc.ng/collection/this-vs-that/concat-vs-push/
 const MAX_BLOCK_SIZE = 65_535;
 
 export function uint8ArrayToBase64(
-  array: Uint8Array,
-  { urlSafe = false } = {},
+	array: Uint8Array,
+	{ urlSafe = false } = {},
 ): string {
-  assertUint8Array(array);
+	assertUint8Array(array);
 
-  let base64;
+	let base64: string;
 
-  if (array.length < MAX_BLOCK_SIZE) {
-    // Required as `btoa` and `atob` don't properly support Unicode: https://developer.mozilla.org/en-US/docs/Glossary/Base64#the_unicode_problem
-    // @ts-expect-error - TS doesn't know about `String#fromCodePoint`
-    base64 = globalThis.btoa(String.fromCodePoint.apply(this, array));
-  } else {
-    base64 = "";
-    for (const value of array) {
-      base64 += String.fromCodePoint(value);
-    }
+	if (array.length < MAX_BLOCK_SIZE) {
+		// Required as `btoa` and `atob` don't properly support Unicode: https://developer.mozilla.org/en-US/docs/Glossary/Base64#the_unicode_problem
+		// @ts-expect-error - TS doesn't know about `String#fromCodePoint`
+		base64 = globalThis.btoa(String.fromCodePoint.apply(this, array));
+	} else {
+		base64 = "";
+		for (const value of array) {
+			base64 += String.fromCodePoint(value);
+		}
 
-    base64 = globalThis.btoa(base64);
-  }
+		base64 = globalThis.btoa(base64);
+	}
 
-  return urlSafe ? base64ToBase64Url(base64) : base64;
+	return urlSafe ? base64ToBase64Url(base64) : base64;
 }
 
 export function concatUint8Arrays(
-  arrays: Uint8Array[],
-  totalLength?: number,
+	arrays: Uint8Array[],
+	totalLength?: number,
 ): Uint8Array {
-  if (arrays.length === 0) {
-    return new Uint8Array(0);
-  }
+	if (arrays.length === 0) {
+		return new Uint8Array(0);
+	}
 
-  totalLength ??= arrays.reduce(
-    (accumulator, currentValue) => accumulator + currentValue.length,
-    0,
-  );
+	const calculatedTotalLength =
+		totalLength ??
+		arrays.reduce(
+			(accumulator, currentValue) => accumulator + currentValue.length,
+			0,
+		);
 
-  const returnValue = new Uint8Array(totalLength);
+	const returnValue = new Uint8Array(calculatedTotalLength);
 
-  let offset = 0;
-  for (const array of arrays) {
-    assertUint8Array(array);
-    returnValue.set(array, offset);
-    offset += array.length;
-  }
+	let offset = 0;
+	for (const array of arrays) {
+		assertUint8Array(array);
+		returnValue.set(array, offset);
+		offset += array.length;
+	}
 
-  return returnValue;
+	return returnValue;
 }

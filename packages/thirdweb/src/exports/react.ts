@@ -1,28 +1,28 @@
 export { darkTheme, lightTheme } from "../react/web/ui/design-system/index.js";
 export type {
-  Theme,
-  ThemeOverrides,
+	Theme,
+	ThemeOverrides,
 } from "../react/web/ui/design-system/index.js";
 
 export { ConnectButton } from "../react/web/ui/ConnectWallet/ConnectWallet.js";
 export {
-  ConnectEmbed,
-  type ConnectEmbedProps,
+	ConnectEmbed,
+	type ConnectEmbedProps,
 } from "../react/web/ui/ConnectWallet/Modal/ConnectEmbed.js";
 
 export type {
-  ConnectButtonProps,
-  ConnectButton_connectButtonOptions,
-  ConnectButton_connectModalOptions,
-  ConnectButton_detailsButtonOptions,
-  ConnectButton_detailsModalOptions,
+	ConnectButtonProps,
+	ConnectButton_connectButtonOptions,
+	ConnectButton_connectModalOptions,
+	ConnectButton_detailsButtonOptions,
+	ConnectButton_detailsModalOptions,
 } from "../react/web/ui/ConnectWallet/ConnectWalletProps.js";
 export type { NetworkSelectorProps } from "../react/web/ui/ConnectWallet/NetworkSelector.js";
 export type { WelcomeScreen } from "../react/web/ui/ConnectWallet/screens/types.js";
 
 export {
-  TransactionButton,
-  type TransactionButtonProps,
+	TransactionButton,
+	type TransactionButtonProps,
 } from "../react/web/ui/TransactionButton/index.js";
 
 export { ThirdwebProvider } from "../react/core/providers/thirdweb-provider.js";
@@ -37,17 +37,17 @@ export type { MediaRendererProps } from "../react/web/ui/MediaRenderer/types.js"
 
 // react/core
 export {
-  useSetActiveWallet,
-  useActiveWalletChain,
-  useConnect,
-  useDisconnect,
-  useActiveAccount,
-  useActiveWallet,
-  useConnectedWallets,
-  useSwitchActiveWalletChain,
-  useActiveWalletConnectionStatus,
-  useSetActiveWalletConnectionStatus,
-  useIsAutoConnecting,
+	useSetActiveWallet,
+	useActiveWalletChain,
+	useConnect,
+	useDisconnect,
+	useActiveAccount,
+	useActiveWallet,
+	useConnectedWallets,
+	useSwitchActiveWalletChain,
+	useActiveWalletConnectionStatus,
+	useSetActiveWalletConnectionStatus,
+	useIsAutoConnecting,
 } from "../react/core/hooks/wallets/wallet-hooks.js";
 
 // contract related
@@ -61,8 +61,8 @@ export { useContractEvents } from "../react/core/hooks/contract/useContractEvent
 
 // rpc related
 export {
-  useBlockNumber,
-  type UseBlockNumberOptions,
+	useBlockNumber,
+	type UseBlockNumberOptions,
 } from "../react/core/hooks/rpc/useBlockNumber.js";
 
 // utils
@@ -71,20 +71,20 @@ export { useInvalidateContractQuery } from "../react/core/hooks/others/useInvali
 
 // Buy with crypto
 export {
-  useBuyWithCryptoQuote,
-  type BuyWithCryptoQuoteQueryParams,
+	useBuyWithCryptoQuote,
+	type BuyWithCryptoQuoteQueryParams,
 } from "../react/core/hooks/pay/useBuyWithCryptoQuote.js";
 
 export {
-  useBuyWithCryptoStatus,
-  type BuyWithCryptoStatusQueryParams,
+	useBuyWithCryptoStatus,
+	type BuyWithCryptoStatusQueryParams,
 } from "../react/core/hooks/pay/useBuyWithCryptoStatus.js";
 export {
-  useBuyWithCryptoHistory,
-  type BuyWithCryptoHistoryQueryParams,
+	useBuyWithCryptoHistory,
+	type BuyWithCryptoHistoryQueryParams,
 } from "../react/core/hooks/pay/useBuyWithCryptoHistory.js";
 
 export {
-  AutoConnect,
-  type AutoConnectProps,
+	AutoConnect,
+	type AutoConnectProps,
 } from "../react/core/hooks/connection/useAutoConnect.js";

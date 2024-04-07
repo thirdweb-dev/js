@@ -1,17 +1,17 @@
 import {
-  useQuery,
-  type UseQueryOptions,
-  type UseQueryResult,
+	type UseQueryOptions,
+	type UseQueryResult,
+	useQuery,
 } from "@tanstack/react-query";
 import {
-  getBuyWithCryptoQuote,
-  type BuyWithCryptoQuote,
-  type GetBuyWithCryptoQuoteParams,
+	type BuyWithCryptoQuote,
+	type GetBuyWithCryptoQuoteParams,
+	getBuyWithCryptoQuote,
 } from "../../../../pay/buyWithCrypto/actions/getQuote.js";
 
 export type BuyWithCryptoQuoteQueryOptions = Omit<
-  UseQueryOptions<BuyWithCryptoQuote>,
-  "queryFn" | "queryKey" | "enabled"
+	UseQueryOptions<BuyWithCryptoQuote>,
+	"queryFn" | "queryKey" | "enabled"
 >;
 export type BuyWithCryptoQuoteQueryParams = GetBuyWithCryptoQuoteParams;
 /**
@@ -62,26 +62,26 @@ export type BuyWithCryptoQuoteQueryParams = GetBuyWithCryptoQuoteParams;
  * @buyCrypto
  */
 export function useBuyWithCryptoQuote(
-  buyWithCryptoParams?: BuyWithCryptoQuoteQueryParams,
-  queryParams?: BuyWithCryptoQuoteQueryOptions,
+	buyWithCryptoParams?: BuyWithCryptoQuoteQueryParams,
+	queryParams?: BuyWithCryptoQuoteQueryOptions,
 ): UseQueryResult<BuyWithCryptoQuote> {
-  return useQuery({
-    ...queryParams,
-    // eslint-disable-next-line @tanstack/query/exhaustive-deps
-    queryKey: ["buyWithCryptoQuote", buyWithCryptoParams],
-    queryFn: () => {
-      if (!buyWithCryptoParams) {
-        throw new Error("Swap params are required");
-      }
-      if (!buyWithCryptoParams?.client) {
-        throw new Error("Client is required in swap params");
-      }
-      return getBuyWithCryptoQuote({
-        // typescript limitation with discriminated unions are collapsed
-        ...(buyWithCryptoParams as GetBuyWithCryptoQuoteParams),
-        client: buyWithCryptoParams.client,
-      });
-    },
-    enabled: !!buyWithCryptoParams,
-  });
+	return useQuery({
+		...queryParams,
+
+		queryKey: ["buyWithCryptoQuote", buyWithCryptoParams],
+		queryFn: () => {
+			if (!buyWithCryptoParams) {
+				throw new Error("Swap params are required");
+			}
+			if (!buyWithCryptoParams?.client) {
+				throw new Error("Client is required in swap params");
+			}
+			return getBuyWithCryptoQuote({
+				// typescript limitation with discriminated unions are collapsed
+				...(buyWithCryptoParams as GetBuyWithCryptoQuoteParams),
+				client: buyWithCryptoParams.client,
+			});
+		},
+		enabled: !!buyWithCryptoParams,
+	});
 }

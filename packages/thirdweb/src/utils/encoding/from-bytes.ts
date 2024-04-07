@@ -4,27 +4,27 @@ import { trim } from "./helpers/trim.js";
 import { hexToBigInt, hexToNumber, uint8ArrayToHex } from "./hex.js";
 
 export type FromBytesParameters<
-  TTo extends "string" | "hex" | "bigint" | "number" | "boolean",
+	TTo extends "string" | "hex" | "bigint" | "number" | "boolean",
 > =
-  | TTo
-  | {
-      /** Size of the bytes. */
-      size?: number;
-      /** Type to convert to. */
-      to: TTo;
-    };
+	| TTo
+	| {
+			/** Size of the bytes. */
+			size?: number;
+			/** Type to convert to. */
+			to: TTo;
+	  };
 
 export type FromBytesReturnType<TTo> = TTo extends "string"
-  ? string
-  : TTo extends "hex"
-    ? Hex
-    : TTo extends "bigint"
-      ? bigint
-      : TTo extends "number"
-        ? number
-        : TTo extends "boolean"
-          ? boolean
-          : never;
+	? string
+	: TTo extends "hex"
+		? Hex
+		: TTo extends "bigint"
+			? bigint
+			: TTo extends "number"
+				? number
+				: TTo extends "boolean"
+					? boolean
+					: never;
 
 /**
  * Converts a Uint8Array to the specified type.
@@ -41,31 +41,31 @@ export type FromBytesReturnType<TTo> = TTo extends "string"
  * @utils
  */
 export function fromBytes<
-  TTo extends "string" | "hex" | "bigint" | "number" | "boolean",
+	TTo extends "string" | "hex" | "bigint" | "number" | "boolean",
 >(
-  bytes: Uint8Array,
-  toOrOpts: FromBytesParameters<TTo>,
+	bytes: Uint8Array,
+	toOrOpts: FromBytesParameters<TTo>,
 ): FromBytesReturnType<TTo> {
-  const opts = typeof toOrOpts === "string" ? { to: toOrOpts } : toOrOpts;
-  switch (opts.to) {
-    case "number":
-      return bytesToNumber(bytes, opts) as FromBytesReturnType<TTo>;
-    case "bigint":
-      return bytesToBigInt(bytes, opts) as FromBytesReturnType<TTo>;
-    case "boolean":
-      return bytesToBool(bytes, opts) as FromBytesReturnType<TTo>;
-    case "string":
-      return bytesToString(bytes, opts) as FromBytesReturnType<TTo>;
-    default:
-      return uint8ArrayToHex(bytes, opts) as FromBytesReturnType<TTo>;
-  }
+	const opts = typeof toOrOpts === "string" ? { to: toOrOpts } : toOrOpts;
+	switch (opts.to) {
+		case "number":
+			return bytesToNumber(bytes, opts) as FromBytesReturnType<TTo>;
+		case "bigint":
+			return bytesToBigInt(bytes, opts) as FromBytesReturnType<TTo>;
+		case "boolean":
+			return bytesToBool(bytes, opts) as FromBytesReturnType<TTo>;
+		case "string":
+			return bytesToString(bytes, opts) as FromBytesReturnType<TTo>;
+		default:
+			return uint8ArrayToHex(bytes, opts) as FromBytesReturnType<TTo>;
+	}
 }
 
 export type BytesToBigIntOpts = {
-  /** Whether or not the number of a signed representation. */
-  signed?: boolean;
-  /** Size of the bytes. */
-  size?: number;
+	/** Whether or not the number of a signed representation. */
+	signed?: boolean;
+	/** Size of the bytes. */
+	size?: number;
 };
 
 /**
@@ -83,19 +83,19 @@ export type BytesToBigIntOpts = {
  * @utils
  */
 export function bytesToBigInt(
-  bytes: Uint8Array,
-  opts: BytesToBigIntOpts = {},
+	bytes: Uint8Array,
+	opts: BytesToBigIntOpts = {},
 ): bigint {
-  if (typeof opts.size !== "undefined") {
-    assertSize(bytes, { size: opts.size });
-  }
-  const hex = uint8ArrayToHex(bytes, opts);
-  return hexToBigInt(hex, opts);
+	if (typeof opts.size !== "undefined") {
+		assertSize(bytes, { size: opts.size });
+	}
+	const hex = uint8ArrayToHex(bytes, opts);
+	return hexToBigInt(hex, opts);
 }
 
 export type BytesToBoolOpts = {
-  /** Size of the bytes. */
-  size?: number;
+	/** Size of the bytes. */
+	size?: number;
 };
 
 /**
@@ -114,19 +114,19 @@ export type BytesToBoolOpts = {
  * @utils
  */
 export function bytesToBool(
-  bytes_: Uint8Array,
-  opts: BytesToBoolOpts = {},
+	bytes_: Uint8Array,
+	opts: BytesToBoolOpts = {},
 ): boolean {
-  let bytes = bytes_;
-  if (typeof opts.size !== "undefined") {
-    assertSize(bytes, { size: opts.size });
-    bytes = trim(bytes);
-  }
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  if (bytes.length > 1 || bytes[0]! > 1) {
-    throw new Error(`Invalid boolean representation: ${bytes}`);
-  }
-  return Boolean(bytes[0]);
+	let bytes = bytes_;
+	if (typeof opts.size !== "undefined") {
+		assertSize(bytes, { size: opts.size });
+		bytes = trim(bytes);
+	}
+
+	if (bytes.length > 1 || (bytes[0] && bytes[0] > 1)) {
+		throw new Error(`Invalid boolean representation: ${bytes}`);
+	}
+	return Boolean(bytes[0]);
 }
 
 export type BytesToNumberOpts = BytesToBigIntOpts;
@@ -146,19 +146,19 @@ export type BytesToNumberOpts = BytesToBigIntOpts;
  * @utils
  */
 export function bytesToNumber(
-  bytes: Uint8Array,
-  opts: BytesToNumberOpts = {},
+	bytes: Uint8Array,
+	opts: BytesToNumberOpts = {},
 ): number {
-  if (typeof opts.size !== "undefined") {
-    assertSize(bytes, { size: opts.size });
-  }
-  const hex = uint8ArrayToHex(bytes, opts);
-  return hexToNumber(hex, opts);
+	if (typeof opts.size !== "undefined") {
+		assertSize(bytes, { size: opts.size });
+	}
+	const hex = uint8ArrayToHex(bytes, opts);
+	return hexToNumber(hex, opts);
 }
 
 export type BytesToStringOpts = {
-  /** Size of the bytes. */
-  size?: number;
+	/** Size of the bytes. */
+	size?: number;
 };
 
 /**
@@ -176,13 +176,13 @@ export type BytesToStringOpts = {
  * @utils
  */
 export function bytesToString(
-  bytes_: Uint8Array,
-  opts: BytesToStringOpts = {},
+	bytes_: Uint8Array,
+	opts: BytesToStringOpts = {},
 ): string {
-  let bytes = bytes_;
-  if (typeof opts.size !== "undefined") {
-    assertSize(bytes, { size: opts.size });
-    bytes = trim(bytes, { dir: "right" });
-  }
-  return new TextDecoder().decode(bytes);
+	let bytes = bytes_;
+	if (typeof opts.size !== "undefined") {
+		assertSize(bytes, { size: opts.size });
+		bytes = trim(bytes, { dir: "right" });
+	}
+	return new TextDecoder().decode(bytes);
 }

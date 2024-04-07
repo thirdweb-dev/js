@@ -2,4 +2,4 @@
  * @internal
  */
 export const wait = (ms: number) =>
-  new Promise((resolve) => setTimeout(resolve, ms));
+	new Promise((resolve) => setTimeout(resolve, ms));

@@ -1,15 +1,15 @@
+import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import { toBigInt } from "../../../utils/bigint.js";
 import { withCache } from "../../../utils/promise/withCache.js";
-import type { Chain } from "../../../chains/types.js";
-import { getIdGateway } from "../contracts/getIdGateway.js";
 import { price } from "../__generated__/IIdGateway/read/price.js";
+import { getIdGateway } from "../contracts/getIdGateway.js";
 
 export type GetRegistrationPriceParams = {
-  client: ThirdwebClient;
-  chain?: Chain;
-  extraStorage?: bigint | number | string;
-  disableCache?: boolean;
+	client: ThirdwebClient;
+	chain?: Chain;
+	extraStorage?: bigint | number | string;
+	disableCache?: boolean;
 };
 
 /**
@@ -27,25 +27,25 @@ export type GetRegistrationPriceParams = {
  * ```
  */
 export async function getRegistrationPrice(
-  options: GetRegistrationPriceParams,
+	options: GetRegistrationPriceParams,
 ): Promise<bigint> {
-  const extraStorage = toBigInt(options.extraStorage ?? 0);
-  if (extraStorage < 0n) {
-    throw new Error(
-      `Expected extraStorage to be greater than or equal to 0, got ${options.extraStorage}`,
-    );
-  }
+	const extraStorage = toBigInt(options.extraStorage ?? 0);
+	if (extraStorage < 0n) {
+		throw new Error(
+			`Expected extraStorage to be greater than or equal to 0, got ${options.extraStorage}`,
+		);
+	}
 
-  const fetch = () => {
-    const contract = getIdGateway({
-      client: options.client,
-      chain: options.chain,
-    });
-    return price({ contract, extraStorage: toBigInt(extraStorage) });
-  };
+	const fetch = () => {
+		const contract = getIdGateway({
+			client: options.client,
+			chain: options.chain,
+		});
+		return price({ contract, extraStorage: toBigInt(extraStorage) });
+	};
 
-  return withCache(fetch, {
-    cacheKey: `${toBigInt(extraStorage)}:getRegistrationPrice`,
-    cacheTime: options.disableCache ? 0 : 5 * 60 * 1000, // 5 minutes
-  });
+	return withCache(fetch, {
+		cacheKey: `${toBigInt(extraStorage)}:getRegistrationPrice`,
+		cacheTime: options.disableCache ? 0 : 5 * 60 * 1000, // 5 minutes
+	});
 }

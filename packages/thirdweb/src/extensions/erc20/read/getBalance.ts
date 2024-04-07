@@ -6,21 +6,21 @@ import { getCurrencyMetadata } from "./getCurrencyMetadata.js";
  * Represents the parameters for retrieving the balance of an address.
  */
 export type GetBalanceParams = {
-  /**
-   * The address for which to retrieve the balance.
-   */
-  address: string;
+	/**
+	 * The address for which to retrieve the balance.
+	 */
+	address: string;
 };
 
 /**
  * Represents the result of a balance query for an ERC20 token.
  */
 export type GetBalanceResult = {
-  value: bigint;
-  decimals: number;
-  displayValue: string;
-  symbol: string;
-  name: string;
+	value: bigint;
+	decimals: number;
+	displayValue: string;
+	symbol: string;
+	name: string;
 };
 
 /**
@@ -36,15 +36,15 @@ export type GetBalanceResult = {
  * ```
  */
 export async function getBalance(
-  options: BaseTransactionOptions<GetBalanceParams>,
+	options: BaseTransactionOptions<GetBalanceParams>,
 ): Promise<GetBalanceResult> {
-  const [balanceWei, currencyMetadata] = await Promise.all([
-    balanceOf(options),
-    getCurrencyMetadata(options),
-  ]);
-  return {
-    ...currencyMetadata,
-    value: balanceWei,
-    displayValue: toTokens(balanceWei, currencyMetadata.decimals),
-  };
+	const [balanceWei, currencyMetadata] = await Promise.all([
+		balanceOf(options),
+		getCurrencyMetadata(options),
+	]);
+	return {
+		...currencyMetadata,
+		value: balanceWei,
+		displayValue: toTokens(balanceWei, currencyMetadata.decimals),
+	};
 }

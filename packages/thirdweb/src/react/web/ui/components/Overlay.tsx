@@ -12,13 +12,13 @@ const overlayEnter = keyframes`
 `;
 
 export const Overlay = /* @__PURE__ */ StyledDiv(() => {
-  const theme = useCustomTheme();
-  return {
-    backgroundColor: theme.colors.modalOverlayBg,
-    zIndex: 9999,
-    position: "fixed",
-    inset: 0,
-    animation: `${overlayEnter} 400ms cubic-bezier(0.16, 1, 0.3, 1)`,
-    backdropFilter: "blur(10px)",
-  };
+	const theme = useCustomTheme();
+	return {
+		backgroundColor: theme.colors.modalOverlayBg,
+		zIndex: 9999,
+		position: "fixed",
+		inset: 0,
+		animation: `${overlayEnter} 400ms cubic-bezier(0.16, 1, 0.3, 1)`,
+		backdropFilter: "blur(10px)",
+	};
 });

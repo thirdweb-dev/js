@@ -5,23 +5,23 @@ import { useState } from "react";
  * @internal
  */
 export function usePassword() {
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [isWrongPassword, setIsWrongPassword] = useState(false);
-  const passwordMismatch = confirmPassword
-    ? password !== confirmPassword
-    : false;
+	const [password, setPassword] = useState("");
+	const [confirmPassword, setConfirmPassword] = useState("");
+	const [showPassword, setShowPassword] = useState(false);
+	const [isWrongPassword, setIsWrongPassword] = useState(false);
+	const passwordMismatch = confirmPassword
+		? password !== confirmPassword
+		: false;
 
-  return {
-    password,
-    setPassword,
-    confirmPassword,
-    setConfirmPassword,
-    showPassword,
-    setShowPassword,
-    passwordMismatch,
-    isWrongPassword,
-    setIsWrongPassword,
-  };
+	return {
+		password,
+		setPassword,
+		confirmPassword,
+		setConfirmPassword,
+		showPassword,
+		setShowPassword,
+		passwordMismatch,
+		isWrongPassword,
+		setIsWrongPassword,
+	};
 }

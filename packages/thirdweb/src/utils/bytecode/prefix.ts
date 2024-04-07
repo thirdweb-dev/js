@@ -1,4 +1,4 @@
-import { isHex, type Hex } from "../encoding/hex.js";
+import { type Hex, isHex } from "../encoding/hex.js";
 
 /**
  * Ensures that the given bytecode has the correct prefix.
@@ -16,8 +16,8 @@ import { isHex, type Hex } from "../encoding/hex.js";
  * @utils
  */
 export function ensureBytecodePrefix(bytecode: string): Hex {
-  if (isHex(bytecode, { strict: false })) {
-    return bytecode;
-  }
-  return `0x${bytecode}`;
+	if (isHex(bytecode, { strict: false })) {
+		return bytecode;
+	}
+	return `0x${bytecode}`;
 }

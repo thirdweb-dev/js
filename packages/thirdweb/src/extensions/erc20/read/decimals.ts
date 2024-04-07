@@ -15,11 +15,11 @@ import { decimals as generatedDecimals } from "../__generated__/IERC20/read/deci
  * ```
  */
 export async function decimals(
-  options: BaseTransactionOptions,
+	options: BaseTransactionOptions,
 ): Promise<number> {
-  return withCache(() => generatedDecimals(options), {
-    cacheKey: `${options.contract.chain.id}:${options.contract.address}:decimals`,
-    // can never change, so cache forever
-    cacheTime: Infinity,
-  });
+	return withCache(() => generatedDecimals(options), {
+		cacheKey: `${options.contract.chain.id}:${options.contract.address}:decimals`,
+		// can never change, so cache forever
+		cacheTime: Number.POSITIVE_INFINITY,
+	});
 }

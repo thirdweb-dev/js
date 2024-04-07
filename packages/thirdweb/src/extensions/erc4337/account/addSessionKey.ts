@@ -5,18 +5,18 @@ import { signPermissionRequest, toContractPermissions } from "./common.js";
 import type { AccountPermissions } from "./types.js";
 
 export type AddSessionKeyOptions = {
-  /**
-   * The adming account that will perform the operation.
-   */
-  account: Account;
-  /**
-   * The address to add as a session key.
-   */
-  sessionKeyAddress: string;
-  /**
-   * The permissions to assign to the session key.
-   */
-  permissions: AccountPermissions;
+	/**
+	 * The adming account that will perform the operation.
+	 */
+	account: Account;
+	/**
+	 * The address to add as a session key.
+	 */
+	sessionKeyAddress: string;
+	/**
+	 * The permissions to assign to the session key.
+	 */
+	permissions: AccountPermissions;
 };
 
 /**
@@ -43,21 +43,21 @@ export type AddSessionKeyOptions = {
  * @extension ERC4337
  */
 export function addSessionKey(
-  options: BaseTransactionOptions<AddSessionKeyOptions>,
+	options: BaseTransactionOptions<AddSessionKeyOptions>,
 ) {
-  const { contract, sessionKeyAddress, account, permissions } = options;
-  return setPermissionsForSigner({
-    contract,
-    async asyncParams() {
-      const { req, signature } = await signPermissionRequest({
-        account,
-        contract,
-        req: await toContractPermissions({
-          target: sessionKeyAddress,
-          permissions,
-        }),
-      });
-      return { signature, req };
-    },
-  });
+	const { contract, sessionKeyAddress, account, permissions } = options;
+	return setPermissionsForSigner({
+		contract,
+		async asyncParams() {
+			const { req, signature } = await signPermissionRequest({
+				account,
+				contract,
+				req: await toContractPermissions({
+					target: sessionKeyAddress,
+					permissions,
+				}),
+			});
+			return { signature, req };
+		},
+	});
 }
