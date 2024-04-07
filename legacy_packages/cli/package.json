@@ -1,7 +1,7 @@
 {
   "name": "@thirdweb-dev/cli",
   "main": "dist/cli/index.js",
-  "version": "0.13.64",
+  "version": "0.13.65",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/legacy_packages/cli",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
@@ -68,9 +68,15 @@
     "generate-thirdweb-package": "node scripts/generate-thirdweb-package.js",
     "push": "yalc push"
   },
-  "files": ["src/", "dist/"],
+  "files": [
+    "src/",
+    "dist/"
+  ],
   "tsup": {
-    "entry": ["src/cli/index.ts", "src/helpers/hardhat-config-extractor.ts"],
+    "entry": [
+      "src/cli/index.ts",
+      "src/helpers/hardhat-config-extractor.ts"
+    ],
     "splitting": false,
     "sourcemap": true,
     "clean": true

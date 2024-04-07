@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/react-core",
-  "version": "4.4.32",
+  "version": "4.4.33",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/legacy_packages/react-core",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
@@ -27,11 +27,19 @@
     },
     "./package.json": "./package.json"
   },
-  "files": ["dist/", "evm/"],
+  "files": [
+    "dist/",
+    "evm/"
+  ],
   "preconstruct": {
-    "entrypoints": ["index.ts", "evm/index.ts"],
+    "entrypoints": [
+      "index.ts",
+      "evm/index.ts"
+    ],
     "exports": {
-      "envConditions": ["browser"]
+      "envConditions": [
+        "browser"
+      ]
     }
   },
   "private": false,
