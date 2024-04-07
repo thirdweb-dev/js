@@ -21,3 +21,6 @@ playwright-report/
 
 # Artifacts
 legacy_packages/cli/artifacts/
+
+# codecov binary
+codecov

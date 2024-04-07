@@ -29,7 +29,7 @@
     "db:sync": "bun scripts/sync-db.ts",
     "build": "tsc && preconstruct build",
     "push": "yalc push",
-    "test": "vitest"
+    "test": "vitest run"
   },
   "engines": {
     "node": ">=18"
