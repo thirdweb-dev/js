@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/chains",
-  "version": "0.1.89",
+  "version": "0.1.90",
   "main": "dist/thirdweb-dev-chains.cjs.js",
   "module": "dist/thirdweb-dev-chains.esm.js",
   "exports": {
@@ -20,7 +20,9 @@
     "typescript": "5.4.4"
   },
   "preconstruct": {
-    "entrypoints": ["index.ts"],
+    "entrypoints": [
+      "index.ts"
+    ],
     "exports": true
   },
   "sideEffects": false,
