@@ -239,6 +239,12 @@ function redirects() {
       destination: "/dashboard/connect/pay?tab=checkouts",
       permanent: false,
     },
+    //Redirecting as ambassadors lives in community now
+    {
+      source: "/ambassadors",
+      destination: "/community/ambassadors",
+      permanent: false,
+    },
   ];
 }
 

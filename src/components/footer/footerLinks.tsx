@@ -11,7 +11,7 @@ export const COMMUNITY: FooterLinkInfo[] = [
     link: "/events",
   },
   {
-    link: "/ambassadors",
+    link: "/community/ambassadors",
     name: "Ambassadors",
     label: "ambassadors",
   },
