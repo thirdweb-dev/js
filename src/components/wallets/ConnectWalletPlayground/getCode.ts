@@ -1,8 +1,9 @@
 type WalletSetupOptions = {
   imports: string[];
+  wallets?: string;
+  recommendedWallets?: string;
   thirdwebProvider: {
     locale: string;
-    supportedWallets?: string;
     authConfig?: string;
   };
   smartWalletOptions?: {
@@ -10,11 +11,11 @@ type WalletSetupOptions = {
   };
   connectWallet: {
     theme?: string;
-    btnTitle?: string;
+    connectButton?: string;
+    connectModal?: string;
     auth?: string;
     modalTitle?: string;
-    switchToActiveChain?: string;
-    modalSize?: string;
+    chain?: string;
     modalTitleIconUrl?: string;
     welcomeScreen?: string;
     termsOfServiceUrl?: string;
@@ -42,34 +43,39 @@ export function getCode(options: WalletSetupOptions) {
   }
 
   return `\
-import {
-  ThirdwebProvider,
-  ConnectWallet
-  ${options.imports.length > 0 ? `, ${options.imports.join(",")}` : ""},
-} from "@thirdweb-dev/react";
+import { ThirdwebProvider, ConnectButton } from "thirdweb/react";
+import { sepolia } from "thirdweb/chains";
+${options.imports.length > 0 ? `import { ${options.imports.join(",")} } from "thirdweb/wallets";` : ""}
+
+const client = createThirdwebClient({
+  clientId: "YOUR_CLIENT_ID",
+});
+
+export const wallets = ${options.wallets};
 
 ${
   options.smartWalletOptions
-    ? `const smartWalletOptions = {
+    ? `const accountAbstraction = {
+  chain: sepolia,
   factoryAddress: 'YOUR_FACTORY_ADDRESS',
   gasless: ${options.smartWalletOptions.gasless},
 }`
     : ""
 }
 
-
-
 export default function App() {
   return (
-    <ThirdwebProvider activeChain="sepolia" clientId="YOUR_CLIENT_ID" ${renderProps(
-      options.thirdwebProvider,
-    )} >
-      <ConnectWallet ${renderProps(options.connectWallet)}   />
+    <ThirdwebProvider>
+      <ConnectButton client={client} wallets={wallets} ${
+        options.smartWalletOptions
+          ? `accountAbstraction={accountAbstraction}`
+          : ""
+      } ${renderProps(options.connectWallet)} />
     </ThirdwebProvider>
   );
 }`;
 }
-function renderProps(obj: Record<string, string | undefined>) {
+function renderProps(obj: Record<string, string | undefined>): string {
   return Object.entries(obj)
     .filter((x) => x[1] !== undefined)
     .map(([key, value]) => {

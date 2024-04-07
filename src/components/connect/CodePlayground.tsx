@@ -7,9 +7,7 @@ import {
   TabPanels,
   Tabs,
 } from "@chakra-ui/react";
-import { defaultChains } from "@thirdweb-dev/chains";
 import { CodeEnvironment } from "components/contract-tabs/code/types";
-import { DASHBOARD_THIRDWEB_CLIENT_ID } from "constants/rpc";
 import { themes } from "prism-react-renderer";
 import { useState } from "react";
 import { Button, Card, CodeBlock } from "tw-components";
@@ -20,174 +18,10 @@ import { connectPlaygroundData } from "components/product-pages/common/connect/d
 import ConnectPlaygroundTab from "./ConnectPlaygroundTab";
 import { ChakraNextImage } from "components/Image";
 import { Aurora } from "components/homepage/Aurora";
-
-const COMMANDS = {
-  read: {
-    javascript: `const data = await contract.call("{{function}}", [{{args}}])`,
-    react: `import { useContract, useContractRead } from "@thirdweb-dev/react";
-
-export default function Component() {
-  const { contract } = useContract("{{contract_address}}");
-  const { data, isLoading } = useContractRead(contract, "{{function}}", [{{args}}])
-}`,
-    "react-native": `import { useContract, useContractRead } from "@thirdweb-dev/react-native";
-
-export default function Component() {
-  const { contract } = useContract("{{contract_address}}");
-  const { data, isLoading } = useContractRead(contract, "{{function}}", [{{args}}])
-}`,
-  },
-  write: {
-    javascript: `const data = await contract.call("{{function}}", [{{args}}])`,
-    react: `import { useContract, useContractWrite } from "@thirdweb-dev/react";
-
-export default function Component() {
-  const { contract } = useContract("{{contract_address}}");
-  const { mutateAsync: {{function}}, isLoading } = useContractWrite(contract, "{{function}}")
-
-  const call = async () => {
-    try {
-      const data = await {{function}}({ args: [{{args}}] });
-      console.info("contract call successs", data);
-    } catch (err) {
-      console.error("contract call failure", err);
-    }
-  }
-}`,
-    "react-native": `import { useContract, useContractWrite } from "@thirdweb-dev/react-native";
-
-export default function Component() {
-  const { contract } = useContract("{{contract_address}}");
-  const { mutateAsync: {{function}}, isLoading } = useContractWrite(contract, "{{function}}")
-
-  const call = async () => {
-    try {
-      const data = await {{function}}({ args: [{{args}}] });
-      console.info("contract call successs", data);
-    } catch (err) {
-      console.error("contract call failure", err);
-    }
-  }
-}`,
-  },
-  events: {
-    javascript: `// You can get a specific event
-const events = await contract.events.getEvents("{{function}}")
-// All events
-const allEvents = await contract.events.getAllEvents();
-// Or set up a listener for all events
-const listener = await contract.events.listenToAllEvents();`,
-    react: `import { useContract, useContractEvents } from "@thirdweb-dev/react";
-
-export default function Component() {
-  const { contract } = useContract("{{contract_address}}");
-  // You can get a specific event
-  const { data: event } = useContractEvents(contract, "{{function}}")
-  // All events
-  const { data: allEvents } = useContractEvents(contract)
-  // By default, you set up a listener for all events, but you can disable it
-  const { data: eventWithoutListener } = useContractEvents(contract, undefined, { subscribe: false })
-}`,
-    "react-native": `import { useContract, useContractEvents } from "@thirdweb-dev/react-native";
-
-export default function Component() {
-  const { contract } = useContract("{{contract_address}}");
-  // You can get a specific event
-  const { data: event } = useContractEvents(contract, "{{function}}")
-  // All events
-  const { data: allEvents } = useContractEvents(contract)
-  // By default, you set up a listener for all events, but you can disable it
-  const { data: eventWithoutListener } = useContractEvents(contract, undefined, { subscribe: false })
-}`,
-  },
-} as Record<"read" | "write" | "events", Record<CodeOptions, string>>;
-
-function getExportName(slug: string) {
-  let exportName = slug
-    .split("-")
-    .map((s) => s[0].toUpperCase() + s.slice(1))
-    .join("");
-
-  // if chainName starts with a number, prepend an underscore
-  if (exportName.match(/^[0-9]/)) {
-    exportName = `_${exportName}`;
-  }
-  return exportName;
-}
-
-interface SnippetOptions {
-  contractAddress?: string;
-  fn?: string;
-  args?: string[];
-  chainName?: string;
-  rpcUrl?: string;
-  address?: string;
-  clientId?: string;
-}
-
-function formatSnippet(
-  snippet: Record<CodeEnvironment, any>,
-  {
-    contractAddress,
-    fn,
-    args,
-    chainName,
-    rpcUrl,
-    address,
-    clientId,
-  }: SnippetOptions,
-) {
-  const code = { ...snippet };
-  const preSupportedSlugs = defaultChains.map((chain) => chain.slug);
-  for (const key of Object.keys(code)) {
-    const env = key as CodeEnvironment;
-
-    code[env] = code[env]
-      ?.replace(/{{contract_address}}/gm, contractAddress || "0x...")
-      ?.replace(/{{factory_address}}/gm, contractAddress || "0x...")
-      ?.replace(/{{wallet_address}}/gm, address)
-      ?.replace("YOUR_CLIENT_ID", clientId || "YOUR_CLIENT_ID")
-      ?.replace(
-        'import {{chainName}} from "@thirdweb-dev/chains";',
-        preSupportedSlugs.includes(chainName as any)
-          ? ""
-          : `import ${
-              env === "javascript" ? "{ {{chainName}} }" : "{{chainName}}"
-            } from "@thirdweb-dev/chains";`,
-      )
-      ?.replace(
-        /{{chainName}}/gm,
-        !chainName || chainName?.startsWith("0x") || chainName?.endsWith(".eth")
-          ? '"ethereum"'
-          : preSupportedSlugs.includes(chainName as any)
-            ? `"${chainName}"`
-            : env === "javascript"
-              ? getExportName(chainName)
-              : `{ ${getExportName(chainName)} }`,
-      )
-      ?.replace(/{{function}}/gm, fn || "")
-      ?.replace(
-        /{{chainNameOrRpc}}/gm,
-        preSupportedSlugs.includes(chainName as any)
-          ? chainName
-          : rpcUrl?.replace(
-              // eslint-disable-next-line no-template-curly-in-string
-              "${THIRDWEB_API_KEY}",
-              DASHBOARD_THIRDWEB_CLIENT_ID,
-            ) || "",
-      );
-
-    if (args && args?.some((arg) => arg)) {
-      code[env] = code[env]?.replace(/{{args}}/gm, args?.join(", ") || "");
-    } else {
-      code[env] = code[env]
-        ?.replace(", {{args}}", "")
-        ?.replace("{{args}}, ", "");
-    }
-  }
-
-  return code;
-}
+import {
+  COMMANDS,
+  formatSnippet,
+} from "../../contract-ui/tabs/code/components/code-overview";
 
 const CodePlayground = ({
   TRACKING_CATEGORY,

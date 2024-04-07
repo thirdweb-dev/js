@@ -61,7 +61,7 @@ interface CodeOverviewProps {
 
 // TODO replace `resolveMethod` with the fn actual signatures
 
-const COMMANDS = {
+export const COMMANDS = {
   install: {
     javascript: "npm i thirdweb",
     react: "npm i thirdweb",
@@ -210,21 +210,21 @@ export default function Component() {
     const { transactionHash } = await sendTransaction(transaction);
   }
 }`,
-    web3button: `import { TransactionButton } from "thirdweb/react";
+    //     web3button: `import { TransactionButton } from "thirdweb/react";
 
-export default function Component() {
-  return (
-    <TransactionButton
-      transaction={() => prepareContractCall({ 
-        contract, 
-        method: resolveMethod("{{function}}"), 
-        params: [{{args}}] 
-      })}
-    >
-      {{function}}
-    </TransactionButton>
-  )
-}`,
+    // export default function Component() {
+    //   return (
+    //     <TransactionButton
+    //       transaction={() => prepareContractCall({
+    //         contract,
+    //         method: resolveMethod("{{function}}"),
+    //         params: [{{args}}]
+    //       })}
+    //     >
+    //       {{function}}
+    //     </TransactionButton>
+    //   )
+    // }`,
   },
   events: {
     javascript: `import { prepareEvent, getContractEvents } from "thirdweb";
@@ -349,7 +349,7 @@ interface SnippetOptions {
   chainId?: number;
 }
 
-function formatSnippet(
+export function formatSnippet(
   snippet: Record<CodeEnvironment, any>,
   {
     contractAddress,
@@ -402,9 +402,7 @@ function formatSnippet(
     if (args && args?.some((arg) => arg)) {
       code[env] = code[env]?.replace(/{{args}}/gm, args?.join(", ") || "");
     } else {
-      code[env] = code[env]
-        ?.replace(", {{args}}", "")
-        ?.replace("{{args}}, ", "");
+      code[env] = code[env]?.replace(/{{args}}/gm, "");
     }
   }
 

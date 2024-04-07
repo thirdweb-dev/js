@@ -128,14 +128,14 @@ export const ConnectWalletPlayground: React.FC<{
     MetaMask: true,
     Coinbase: "recommended",
     WalletConnect: true,
-    Safe: false,
-    "Guest Mode": true,
+    // Safe: false,
+    // "Guest Mode": true,
     "Email Wallet": true,
     Trust: false,
     Zerion: false,
-    Blocto: false,
-    "Magic Link": false,
-    Frame: false,
+    // Blocto: false,
+    // "Magic Link": false,
+    // Frame: false,
     Rainbow: false,
     Phantom: false,
   });
@@ -145,48 +145,44 @@ export const ConnectWalletPlayground: React.FC<{
       return `[${walletIds
         .map((walletId) => {
           const recommended = walletInfoRecord[walletId].component.recommended;
+          const wcId = walletInfoRecord[walletId].id;
           let walletCode = walletInfoRecord[walletId].code(recommended);
 
-          if (walletId === "Safe") {
-            const personalWalletIds = walletIds.filter((w) => w !== "Safe");
-            if (personalWalletIds.length === 0) {
-              return recommended
-                ? `safeWallet({ recommended: true })`
-                : `safeWallet()`;
-            }
-            return `safeWallet({
-              ${recommended ? "recommended: true," : ""}
-              personalWallets: ${getSupportedWalletsCode(
-                walletIds.filter((w) => w !== "Safe"),
-              )}
-            })`;
-          }
+          // if (walletId === "Safe") {
+          //   const personalWalletIds = walletIds.filter((w) => w !== "Safe");
+          //   if (personalWalletIds.length === 0) {
+          //     return recommended
+          //       ? `safeWallet({ recommended: true })`
+          //       : `safeWallet()`;
+          //   }
+          //   return `safeWallet({
+          //     ${recommended ? "recommended: true," : ""}
+          //     personalWallets: ${getSupportedWalletsCode(
+          //       walletIds.filter((w) => w !== "Safe"),
+          //     )}
+          //   })`;
+          // }
 
           if (walletId === "Email Wallet") {
-            if (!recommended && !socialOptions.length) {
-              walletCode = `embeddedWallet()`;
+            if (!socialOptions.length) {
+              walletCode = `inAppWallet()`;
             } else {
               const options: Record<string, any> = {};
-              if (recommended) {
-                options.recommended = true;
-              }
               if (socialOptions.length) {
                 options.auth = {
                   options: socialOptions,
                 };
               }
 
-              walletCode = `embeddedWallet(${JSON.stringify(
-                options,
-                null,
-                2,
-              )})`;
+              walletCode = `inAppWallet(${JSON.stringify(options, null, 2)})`;
             }
           }
 
-          return smartWalletOptions.enabled
-            ? `smartWallet(${walletCode}, smartWalletOptions)`
-            : walletCode;
+          if (wcId) {
+            walletCode = `createWallet("${wcId}")`;
+          }
+
+          return walletCode;
         })
         .join(",")}]`;
     };
@@ -198,6 +194,7 @@ export const ConnectWalletPlayground: React.FC<{
       imports: enabledWallets.map(
         (walletId) => walletInfoRecord[walletId].import,
       ),
+      wallets: getSupportedWalletsCode(enabledWallets),
       smartWalletOptions: smartWalletOptions.enabled
         ? {
             gasless: smartWalletOptions.gasless,
@@ -205,33 +202,31 @@ export const ConnectWalletPlayground: React.FC<{
         : undefined,
       thirdwebProvider: {
         locale: `${locale}()`,
-        supportedWallets:
-          enabledWallets.length > 0
-            ? getSupportedWalletsCode(enabledWallets)
-            : undefined,
         authConfig: authEnabled
           ? `{ authUrl: "/api/auth", domain: "https://example.com" }`
           : undefined,
       },
       connectWallet: {
         theme: `"${selectedTheme}"`,
-        btnTitle: btnTitle ? `"${btnTitle}"` : undefined,
-        modalTitle: modalTitle ? `"${modalTitle}"` : undefined,
+        connectButton: btnTitle ? `{ label: "${btnTitle}" }` : undefined,
+        connectModal: JSON.stringify({
+          size: modalSize,
+          title: modalTitle ? modalTitle : undefined,
+          titleIcon: modalTitleIconUrl.enabled
+            ? modalTitleIconUrl.url
+            : undefined,
+          welcomeScreen: welcomeScreen
+            ? Object.keys(welcomeScreen).length > 0
+              ? welcomeScreen
+              : undefined
+            : undefined,
+          termsOfServiceUrl: tosUrl.enabled ? tosUrl.url : undefined,
+          privacyPolicyUrl: privacyPolicyUrl.enabled
+            ? privacyPolicyUrl.url
+            : undefined,
+        }),
         auth: authEnabled ? "{ loginOptional: false }" : undefined,
-        switchToActiveChain: switchToActiveChain ? "true" : undefined,
-        modalSize: `"${modalSize}"`,
-        welcomeScreen: welcomeScreen
-          ? Object.keys(welcomeScreen).length > 0
-            ? JSON.stringify(welcomeScreen)
-            : undefined
-          : undefined,
-        modalTitleIconUrl: modalTitleIconUrl.enabled
-          ? `"${modalTitleIconUrl.url}"`
-          : undefined,
-        termsOfServiceUrl: tosUrl.enabled ? `"${tosUrl.url}"` : undefined,
-        privacyPolicyUrl: privacyPolicyUrl.enabled
-          ? `"${privacyPolicyUrl.url}"`
-          : undefined,
+        chain: switchToActiveChain ? "sepolia" : undefined,
         showThirdwebBranding:
           showThirdwebBranding === false ? "false" : undefined,
       },
@@ -763,7 +758,7 @@ export const ConnectWalletPlayground: React.FC<{
       <Spacer height={5} />
 
       {/* Guest Mode */}
-      <SwitchFormItem
+      {/* <SwitchFormItem
         label="Continue as Guest"
         description="Access your app with a guest account"
         onCheck={(_isChecked) => {
@@ -776,7 +771,7 @@ export const ConnectWalletPlayground: React.FC<{
           });
         }}
         isChecked={!!walletSelection["Guest Mode"]}
-      />
+      /> */}
 
       <Spacer height={5} />
       <Box borderTop="1px solid" borderColor="borderColor" />

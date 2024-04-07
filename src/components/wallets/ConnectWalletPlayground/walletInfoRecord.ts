@@ -2,18 +2,16 @@ import {
   metamaskWallet,
   coinbaseWallet,
   walletConnect,
-  safeWallet,
-  localWallet,
   embeddedWallet,
   trustWallet,
   zerionWallet,
-  magicLink,
   phantomWallet,
   bloctoWallet,
   frameWallet,
   rainbowWallet,
   WalletConfig,
 } from "@thirdweb-dev/react";
+import type { WalletId as AnyWalletId } from "thirdweb/wallets";
 
 const metamaskWalletConfig = metamaskWallet();
 const walletConnectConfig = walletConnect();
@@ -45,20 +43,21 @@ type WalletInfo = {
   component: WalletConfig<any>;
   import: string;
   type?: "social" | "eoa" | "guest";
+  id?: AnyWalletId;
 };
 
 export type WalletId =
   | "MetaMask"
   | "Coinbase"
   | "WalletConnect"
-  | "Safe"
-  | "Guest Mode"
+  // | "Safe"
+  // | "Guest Mode"
   | "Email Wallet"
   | "Trust"
   | "Zerion"
-  | "Magic Link"
-  | "Blocto"
-  | "Frame"
+  // | "Magic Link"
+  // | "Blocto"
+  // | "Frame"
   | "Rainbow"
   | "Phantom";
 
@@ -73,6 +72,7 @@ export const walletInfoRecord: WalletInfoRecord = {
     component: metamaskWalletConfig,
     import: "metamaskWallet",
     type: "eoa",
+    id: "io.metamask",
   },
   Coinbase: {
     code: (isReccomended) =>
@@ -82,6 +82,7 @@ export const walletInfoRecord: WalletInfoRecord = {
     component: coinbaseWalletConfig,
     import: "coinbaseWallet",
     type: "eoa",
+    id: "com.coinbase.wallet",
   },
   WalletConnect: {
     code: (isReccomended) =>
@@ -98,6 +99,7 @@ export const walletInfoRecord: WalletInfoRecord = {
     component: trustWalletConfig,
     import: "trustWallet",
     type: "eoa",
+    id: "com.trustwallet.app",
   },
   Rainbow: {
     code: (isReccomended) =>
@@ -107,6 +109,7 @@ export const walletInfoRecord: WalletInfoRecord = {
     component: rainbowWalletConfig,
     import: "rainbowWallet",
     type: "eoa",
+    id: "me.rainbow",
   },
   Zerion: {
     code: (isReccomended) =>
@@ -114,6 +117,7 @@ export const walletInfoRecord: WalletInfoRecord = {
     component: zerionWalletConfig,
     import: "zerionWallet",
     type: "eoa",
+    id: "io.zerion.wallet",
   },
   Phantom: {
     code: (isReccomended) =>
@@ -123,63 +127,63 @@ export const walletInfoRecord: WalletInfoRecord = {
     component: phantomConfig,
     import: "phantomWallet",
     type: "eoa",
+    id: "app.phantom",
   },
-  "Guest Mode": {
-    code: () => `localWallet()`,
-    component: localWallet(),
-    import: "localWallet",
-    type: "guest",
-  },
+  // "Guest Mode": {
+  //   code: () => `localWallet()`,
+  //   component: localWallet(),
+  //   import: "localWallet",
+  //   type: "guest",
+  // },
   "Email Wallet": {
     code: (isReccomended) =>
-      isReccomended
-        ? "embeddedWallet({ recommended: true })"
-        : "embeddedWallet()",
+      isReccomended ? "inAppWallet({ recommended: true })" : "inAppWallet()",
     component: embeddedWallet(),
-    import: "embeddedWallet",
+    import: "inAppWallet",
     type: "social",
   },
-  Safe: {
-    code: () => "safeWallet()",
-    component: safeWallet({
-      personalWallets: [metamaskWallet(), coinbaseWallet(), walletConnect()],
-    }),
-    import: "safeWallet",
-    type: "eoa",
-  },
-  "Magic Link": {
-    code(isReccomended) {
-      return isReccomended
-        ? `magicLink({ recommended: true, apiKey: "YOUR_MAGIC_API_KEY", oauthOptions: { providers: ["google", "facebook", "twitter", "apple"] }})`
-        : `magicLink({ apiKey: "YOUR_MAGIC_API_KEY", oauthOptions: { providers: ["google", "facebook", "twitter", "apple"] }})`;
-    },
-    component: magicLink({
-      apiKey: "pk_live_3EFC32B01A29985C",
-      oauthOptions: {
-        providers: ["google", "facebook", "twitter", "apple"],
-      },
-    }),
-    import: "magicLink",
-    type: "social",
-  },
-  Blocto: {
-    code(isReccomended) {
-      return isReccomended
-        ? "bloctoWallet({ recommended: true })"
-        : "bloctoWallet()";
-    },
-    component: bloctoWalletConfig,
-    import: "bloctoWallet",
-    type: "eoa",
-  },
-  Frame: {
-    code(isReccomended) {
-      return isReccomended
-        ? "frameWallet({ recommended: true })"
-        : "frameWallet()";
-    },
-    component: frameWalletConfig,
-    import: "frameWallet",
-    type: "eoa",
-  },
+  // Safe: {
+  //   code: () => "safeWallet()",
+  //   component: safeWallet({
+  //     personalWallets: [metamaskWallet(), coinbaseWallet(), walletConnect()],
+  //   }),
+  //   import: "safeWallet",
+  //   type: "eoa",
+  //   id: "global.safe",
+  // },
+  // "Magic Link": {
+  //   code(isReccomended) {
+  //     return isReccomended
+  //       ? `magicLink({ recommended: true, apiKey: "YOUR_MAGIC_API_KEY", oauthOptions: { providers: ["google", "facebook", "twitter", "apple"] }})`
+  //       : `magicLink({ apiKey: "YOUR_MAGIC_API_KEY", oauthOptions: { providers: ["google", "facebook", "twitter", "apple"] }})`;
+  //   },
+  //   component: magicLink({
+  //     apiKey: "pk_live_3EFC32B01A29985C",
+  //     oauthOptions: {
+  //       providers: ["google", "facebook", "twitter", "apple"],
+  //     },
+  //   }),
+  //   import: "magicLink",
+  //   type: "social",
+  // },
+  // Blocto: {
+  //   code(isReccomended) {
+  //     return isReccomended
+  //       ? "bloctoWallet({ recommended: true })"
+  //       : "bloctoWallet()";
+  //   },
+  //   component: bloctoWalletConfig,
+  //   import: "bloctoWallet",
+  //   type: "eoa",
+  // },
+  // Frame: {
+  //   code(isReccomended) {
+  //     return isReccomended
+  //       ? "frameWallet({ recommended: true })"
+  //       : "frameWallet()";
+  //   },
+  //   component: frameWalletConfig,
+  //   import: "frameWallet",
+  //   type: "eoa",
+  // },
 };
