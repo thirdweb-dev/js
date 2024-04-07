@@ -39,9 +39,14 @@ export default {
   },
   "networkId": 2031,
   "rpc": [
-    "wss://fullnode.parachain.centrifuge.io",
+    "https://2031.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://fullnode.centrifuge.io",
+    "wss://fullnode.centrifuge.io",
+    "https://centrifuge-parachain.api.onfinality.io/public",
     "wss://centrifuge-parachain.api.onfinality.io/public-ws",
+    "https://centrifuge-rpc.dwellir.com",
     "wss://centrifuge-rpc.dwellir.com",
+    "https://rpc-centrifuge.luckyfriday.io",
     "wss://rpc-centrifuge.luckyfriday.io"
   ],
   "shortName": "cfg",
