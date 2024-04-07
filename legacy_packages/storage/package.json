@@ -20,7 +20,7 @@
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/",
     "build": "tsc && preconstruct build",
-    "test": "vitest",
+    "test": "vitest run",
     "push": "yalc push",
     "typedoc": "node scripts/typedoc.mjs"
   },

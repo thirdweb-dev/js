@@ -612,7 +612,7 @@
     "preconstruct:fix": "preconstruct fix",
     "push": "yalc push",
     "typedoc": "node scripts/typedoc.mjs",
-    "test": "vitest"
+    "test": "vitest run"
   },
   "engines": {
     "node": ">=18"
