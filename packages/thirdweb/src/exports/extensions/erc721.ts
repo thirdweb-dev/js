@@ -89,6 +89,10 @@ export {
   transferEvent,
   type TransferEventFilters,
 } from "../../extensions/erc721/__generated__/IERC721A/events/Transfer.js";
+export {
+  tokensLazyMintedEvent,
+  type TokensLazyMintedEventFilters,
+} from "../../extensions/erc721/__generated__/ILazyMint/events/TokensLazyMinted.js";
 
 /**
  * DROPS extension for ERC721
