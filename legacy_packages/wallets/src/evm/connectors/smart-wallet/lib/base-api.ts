@@ -183,14 +183,6 @@ export abstract class BaseAccountAPI {
     info: TransactionDetailsForUserOp,
     options?: UserOpOptions,
   ): Promise<UserOperationStruct> {
-    // construct the userOp without gasLimit or preVerifictaionGas
-    const initCode = await this.getInitCode();
-    const value = parseNumber(info.value) ?? BigNumber.from(0);
-    const callData = options?.batchData
-      ? info.data
-      : await this.prepareExecute(info.target, value, info.data).then((tx) =>
-          tx.encode(),
-        );
     let { maxFeePerGas, maxPriorityFeePerGas } = info;
     // get fees from bundler if available
     if (isTwUrl(httpRpcClient.bundlerUrl)) {
@@ -232,6 +224,23 @@ export abstract class BaseAccountAPI {
       this.getAccountAddress(),
       info.nonce ? Promise.resolve(info.nonce) : this.getNonce(),
     ]);
+    const initCode = await this.getInitCode();
+    const value = parseNumber(info.value) ?? BigNumber.from(0);
+    const callData = options?.batchData
+      ? info.data
+      : await this.prepareExecute(info.target, value, info.data).then(
+          async (tx) => {
+            // estimate gas on the inner transactions to simulate
+            // bundler would not revert otherwise
+            await this.provider.estimateGas({
+              from: sender,
+              to: info.target,
+              data: info.data,
+              value: value,
+            });
+            return tx.encode();
+          },
+        );
     const partialOp: UserOperationStruct = {
       sender,
       nonce,
