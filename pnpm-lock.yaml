@@ -1013,8 +1013,8 @@ importers:
         specifier: 5.8.3
         version: 5.8.3(expo@50.0.14)
       expo-clipboard:
-        specifier: ^4.8.0
-        version: 4.8.0(expo@50.0.14)
+        specifier: ^5.0.1
+        version: 5.0.1(expo@50.0.14)
       expo-document-picker:
         specifier: ^11.10.1
         version: 11.10.1(expo@50.0.14)
@@ -16576,7 +16576,6 @@ packages:
     dependencies:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
-    bundledDependencies: false
 
   /event-emitter@0.3.5:
     resolution: {integrity: sha512-D9rRn9y7kLPnJ+hMq7S/nhvoKwwvVJahBi2BPmx3bvbsEdK3W9ii8cBSGjP+72/LnM4n6fo3+dkCX5FeTQruXA==}
@@ -16720,8 +16719,8 @@ packages:
       - supports-color
     dev: false
 
-  /expo-clipboard@4.8.0(expo@50.0.14):
-    resolution: {integrity: sha512-+ge2eRiOdcAlkwWyGbRTj7Wh43568mrh/zd7121Audkn3Gl0+m5CmAhJYpmuRLTdYzgOOc/JyZTWhsRav80P6Q==}
+  /expo-clipboard@5.0.1(expo@50.0.14):
+    resolution: {integrity: sha512-JH853QJPr5W3h87If3aDTnMK+ESSIrwzU2TdfZrqZttVDY2pMIf/w37mVHHNYodXM4ATHXadtOkjKbAa0DWwUg==}
     peerDependencies:
       expo: '*'
     dependencies:
