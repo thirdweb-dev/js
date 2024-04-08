@@ -103,7 +103,7 @@
     "@emotion/css": "11.10.5",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "11.11.0",
-    "@google/model-viewer": "^2.1.1",
+    "@google/model-viewer": "^3.4.0",
     "@headlessui/react": "1.7.18",
     "@radix-ui/colors": "^0.1.9",
     "@radix-ui/react-dialog": "^1.0.5",

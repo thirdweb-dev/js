@@ -732,8 +732,8 @@ importers:
         specifier: 11.11.0
         version: 11.11.0(@emotion/react@11.11.4)(@types/react@18.2.17)(react@18.2.0)
       '@google/model-viewer':
-        specifier: ^2.1.1
-        version: 2.1.1
+        specifier: ^3.4.0
+        version: 3.4.0(three@0.160.1)
       '@headlessui/react':
         specifier: 1.7.18
         version: 1.7.18(react-dom@18.2.0)(react@18.2.0)
@@ -1599,8 +1599,8 @@ importers:
         specifier: 11.11.0
         version: 11.11.0(@emotion/react@11.11.4)(@types/react@18.2.17)(react@18.2.0)
       '@google/model-viewer':
-        specifier: 2.1.1
-        version: 2.1.1
+        specifier: 3.4.0
+        version: 3.4.0(three@0.160.1)
       '@noble/curves':
         specifier: 1.4.0
         version: 1.4.0
@@ -7415,12 +7415,15 @@ packages:
       - supports-color
     dev: false
 
-  /@google/model-viewer@2.1.1:
-    resolution: {integrity: sha512-5umyLoD5vMxlSVQwtmUXeNCNWs9dzmWykGm1qrHe/pCYrj/1lyJIgJRw+IxoMNodGqtcHEtfDhdNjRDM9yo/TA==}
+  /@google/model-viewer@3.4.0(three@0.160.1):
+    resolution: {integrity: sha512-ZGZktE+uy7CiNOSrFdR1bTZDe9nfel2h8gWiRY6D5Eit77RAzIRYnPlkdQBoLSo8nnYS0faL/Z1tKP7nntvoGg==}
     engines: {node: '>=6.0.0'}
+    peerDependencies:
+      three: ^0.160.0
     dependencies:
+      '@monogrid/gainmap-js': 3.0.5(three@0.160.1)
       lit: 2.8.0
-      three: 0.146.0
+      three: 0.160.1
     dev: false
 
   /@graphql-typed-document-node/core@3.2.0(graphql@15.8.0):
@@ -8052,6 +8055,15 @@ packages:
       got: 11.8.6
       os-filter-obj: 2.0.0
     dev: true
+
+  /@monogrid/gainmap-js@3.0.5(three@0.160.1):
+    resolution: {integrity: sha512-53sCTG4FaJBaAq/tcufARtVYDMDGqyBT9i7F453pWGhZ5LqubDHDWtYoHo9VhQqMcHTEexdJqSsR58y+9HVmQA==}
+    peerDependencies:
+      three: '>= 0.159.0'
+    dependencies:
+      promise-worker-transferable: 1.0.4
+      three: 0.160.1
+    dev: false
 
   /@motionone/animation@10.17.0:
     resolution: {integrity: sha512-ANfIN9+iq1kGgsZxs+Nz96uiNcPLGTXwfNo2Xz/fcJXniPYpaz/Uyrfa+7I5BPLxCP82sh7quVDudf1GABqHbg==}
@@ -16576,7 +16588,6 @@ packages:
     dependencies:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
-    bundledDependencies: false
 
   /event-emitter@0.3.5:
     resolution: {integrity: sha512-D9rRn9y7kLPnJ+hMq7S/nhvoKwwvVJahBi2BPmx3bvbsEdK3W9ii8cBSGjP+72/LnM4n6fo3+dkCX5FeTQruXA==}
@@ -18730,6 +18741,10 @@ packages:
     engines: {node: '>=0.10.0'}
     dependencies:
       isobject: 3.0.1
+
+  /is-promise@2.2.2:
+    resolution: {integrity: sha512-+lP4/6lKUBfQjZ2pdxThZvLUAafmZb8OAxFb8XXtiQmS35INgr85hdOGoEs124ez1FCnZJt6jau/T+alh58QFQ==}
+    dev: false
 
   /is-reference@1.2.1:
     resolution: {integrity: sha512-U82MsXXiFIrjCK4otLT+o2NA2Cd2g5MLoOVXUZjIOhLurrRxpEXzI8O0KZHr3IjLvlAH1kTPYSuqer5T9ZVBKQ==}
@@ -22158,6 +22173,13 @@ packages:
       retry: 0.12.0
     dev: true
 
+  /promise-worker-transferable@1.0.4:
+    resolution: {integrity: sha512-bN+0ehEnrXfxV2ZQvU2PetO0n4gqBD4ulq3MI1WOPLgr7/Mg9yRQkX5+0v1vagr74ZTsl7XtzlaYDo2EuCeYJw==}
+    dependencies:
+      is-promise: 2.2.2
+      lie: 3.1.1
+    dev: false
+
   /promise@7.3.1:
     resolution: {integrity: sha512-nolQXZ/4L+bP/UGlkfaIujX9BKxGwmQ9OT4mOt5yvy8iK1h3wqTEJCijzGANTCCl9nWjY41juyAn2K3Q1hLLTg==}
     dependencies:
@@ -24434,8 +24456,8 @@ packages:
     dependencies:
       real-require: 0.2.0
 
-  /three@0.146.0:
-    resolution: {integrity: sha512-1lvNfLezN6OJ9NaFAhfX4sm5e9YCzHtaRgZ1+B4C+Hv6TibRMsuBAM5/wVKzxjpYIlMymvgsHEFrrigEfXnb2A==}
+  /three@0.160.1:
+    resolution: {integrity: sha512-Bgl2wPJypDOZ1stAxwfWAcJ0WQf7QzlptsxkjYiURPz+n5k4RBDLsq+6f9Y75TYxn6aHLcWz+JNmwTOXWrQTBQ==}
     dev: false
 
   /throat@5.0.0:
