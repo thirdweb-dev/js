@@ -6,6 +6,7 @@ import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import { balanceOf } from "../../extensions/erc1155/__generated__/IERC1155/read/balanceOf.js";
 import { claimTo } from "../../extensions/erc1155/drops/write/claimTo.js";
 import { checkContractWalletSignature } from "../../extensions/erc1271/checkContractWalletSignature.js";
+import { setContractURI } from "../../extensions/marketplace/__generated__/IMarketplace/write/setContractURI.js";
 import { estimateGasCost } from "../../transaction/actions/estimate-gas-cost.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { sendBatchTransaction } from "../../transaction/actions/send-batch-transaction.js";
@@ -58,6 +59,23 @@ describe.runIf(process.env.TW_SECRET_KEY)(
     });
     it("can connect", async () => {
       expect(smartWalletAddress).toHaveLength(42);
+    });
+
+    it("should revert on unsuccessful transactions", async () => {
+      const tx = sendAndConfirmTransaction({
+        transaction: setContractURI({
+          contract,
+          uri: "https://example.com",
+        }),
+        account: smartAccount,
+      });
+
+      await expect(tx).rejects.toMatchInlineSnapshot(`
+        [TransactionError: Error - Not authorized
+
+        contract: 0x6A7a26c9a595E6893C255C9dF0b593e77518e0c3
+        chainId: 421614]
+      `);
     });
 
     it("can execute a tx", async () => {
