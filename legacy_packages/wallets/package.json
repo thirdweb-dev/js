@@ -587,7 +587,7 @@
     "@babel/plugin-transform-flow-strip-types": "^7.24.1",
     "@babel/plugin-transform-private-methods": "^7.24.1",
     "@microsoft/api-extractor": "^7.43.0",
-    "@noble/ed25519": "^1.7.3",
+    "@noble/ed25519": "^2.1.0",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@preconstruct/cli": "2.7.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
