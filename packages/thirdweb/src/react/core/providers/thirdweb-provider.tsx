@@ -31,7 +31,6 @@ export function ThirdwebProvider(props: React.PropsWithChildren) {
         defaultOptions: {
           mutations: {
             onSettled: (data, error, variables) => {
-              console.log("Mutation settled", data, error, variables);
               if (error) {
                 // TODO: remove - but useful for debug now
                 console.error("[Mutation Error]", error);
