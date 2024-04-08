@@ -26,9 +26,10 @@ export default {
   "networkId": 77001,
   "rpc": [
     "https://77001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://public-node.api.boraportal.io/bora/mainnet"
+    "https://public-node.api.boraportal.com/bora/mainnet"
   ],
   "shortName": "BORAchain",
+  "slip44": 8217,
   "slug": "borachain",
   "testnet": false
 } as const satisfies Chain;

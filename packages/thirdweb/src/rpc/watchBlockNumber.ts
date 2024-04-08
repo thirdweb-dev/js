@@ -49,6 +49,8 @@ function createBlockNumberPoller(
   async function poll() {
     // stop polling if there are no more subscriptions
     if (!isActive) {
+      lastBlockNumber = undefined;
+      lastBlockAt = undefined;
       return;
     }
     const blockNumber = await eth_blockNumber(rpcRequest);
@@ -112,6 +114,8 @@ function createBlockNumberPoller(
       subscribers = subscribers.filter((fn) => fn !== callBack);
       // if the new subscribers Array is empty (aka we were the last subscriber) -> stop polling
       if (subscribers.length === 0) {
+        lastBlockNumber = undefined;
+        lastBlockAt = undefined;
         isActive = false;
       }
     };
