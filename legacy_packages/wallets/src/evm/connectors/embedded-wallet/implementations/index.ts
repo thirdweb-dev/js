@@ -10,8 +10,8 @@ export type {
   AuthAndWalletRpcReturnType,
   AuthLoginReturnType,
   AuthStoredTokenWithCookieReturnType,
-  StoredTokenType,
   GetHeadlessLoginLinkReturnType,
+  StoredTokenType,
 } from "./interfaces/auth";
 export { UserWalletStatus } from "./interfaces/embedded-wallets/embedded-wallets";
 export type {
@@ -32,3 +32,5 @@ export type {
   SignedTypedDataReturnType,
 } from "./interfaces/embedded-wallets/signer";
 export { EmbeddedWalletSdk } from "./lib/embedded-wallet";
+
+export { supportedSmsCountries } from "./lib/auth/supported-sms-countries";

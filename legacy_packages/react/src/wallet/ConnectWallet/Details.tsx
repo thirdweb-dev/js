@@ -1,76 +1,79 @@
+import styled from "@emotion/styled";
+import {
+  ChevronRightIcon,
+  EnterIcon,
+  ExitIcon,
+  PaperPlaneIcon,
+  PinBottomIcon,
+  ShuffleIcon,
+  TextAlignJustifyIcon,
+} from "@radix-ui/react-icons";
+import { Localhost } from "@thirdweb-dev/chains";
+import {
+  WalletInstance,
+  shortenString,
+  useAddress,
+  useBalance,
+  useChain,
+  useChainId,
+  useDisconnect,
+  useENS,
+  useSDK,
+  useSupportedChains,
+  useWallet,
+  useWalletConfig,
+  useWalletContext,
+} from "@thirdweb-dev/react-core";
+import {
+  MetaMaskWallet,
+  walletIds,
+  type EmbeddedWallet,
+  type SmartWallet,
+} from "@thirdweb-dev/wallets";
+import { useEffect, useState } from "react";
 import { ChainIcon } from "../../components/ChainIcon";
 import { CopyIcon } from "../../components/CopyIcon";
 import { Img } from "../../components/Img";
 import { Modal } from "../../components/Modal";
 import { Skeleton } from "../../components/Skeleton";
 import { Spacer } from "../../components/Spacer";
+import { Container, Line } from "../../components/basic";
 import { Button, IconButton } from "../../components/buttons";
+import { Link, Text } from "../../components/text";
 import {
+  Theme,
   fontSize,
   iconSize,
   media,
   radius,
   spacing,
-  Theme,
 } from "../../design-system";
+import { useCustomTheme } from "../../design-system/CustomThemeProvider";
+import { fadeInAnimation } from "../../design-system/animations";
+import { StyledButton, StyledDiv } from "../../design-system/elements";
+import {
+  useEmbeddedWalletUserEmail,
+  useEmbeddedWalletUserPhoneNumber,
+} from "../../evm/hooks/wallets/useEmbeddedWallet";
+import { useTWLocale } from "../../evm/providers/locale-provider";
 import { isMobile } from "../../evm/utils/isMobile";
+import { ExportLocalWallet } from "../wallets/localWallet/ExportLocalWallet";
+import type { LocalWalletConfig } from "../wallets/localWallet/types";
 import {
   NetworkSelectorContent,
   type NetworkSelectorProps,
 } from "./NetworkSelector";
-import styled from "@emotion/styled";
-import {
-  ChevronRightIcon,
-  EnterIcon,
-  PaperPlaneIcon,
-  PinBottomIcon,
-  ShuffleIcon,
-  TextAlignJustifyIcon,
-  ExitIcon,
-} from "@radix-ui/react-icons";
-import { Localhost } from "@thirdweb-dev/chains";
-import {
-  useChain,
-  useAddress,
-  useBalance,
-  useChainId,
-  useDisconnect,
-  useSDK,
-  useSupportedChains,
-  useWallet,
-  WalletInstance,
-  useENS,
-} from "@thirdweb-dev/react-core";
-import { useEffect, useState } from "react";
-import {
-  MetaMaskWallet,
-  type SmartWallet,
-  walletIds,
-  type EmbeddedWallet,
-} from "@thirdweb-dev/wallets";
-import { Container, Line } from "../../components/basic";
-import { FundsIcon } from "./icons/FundsIcon";
-import { ExportLocalWallet } from "../wallets/localWallet/ExportLocalWallet";
-import { useWalletContext } from "@thirdweb-dev/react-core";
-import { useWalletConfig } from "@thirdweb-dev/react-core";
-import type { LocalWalletConfig } from "../wallets/localWallet/types";
-import { fadeInAnimation } from "../../design-system/animations";
-import { Link, Text } from "../../components/text";
-import { SendFunds } from "./SendFunds";
-import { SupportedTokens } from "./defaultTokens";
 import { ReceiveFunds } from "./ReceiveFunds";
+import { SendFunds } from "./SendFunds";
+import { onModalUnmount } from "./constants";
+import { SupportedTokens } from "./defaultTokens";
+import { FundsIcon } from "./icons/FundsIcon";
 import { smartWalletIcon } from "./icons/dataUris";
-import { useTWLocale } from "../../evm/providers/locale-provider";
-import { shortenString } from "@thirdweb-dev/react-core";
-import { StyledButton, StyledDiv } from "../../design-system/elements";
-import { useCustomTheme } from "../../design-system/CustomThemeProvider";
 import {
   appleIconUri,
   facebookIconUri,
   googleIconUri,
 } from "./icons/socialLogins";
-import { useEmbeddedWalletUserEmail } from "../../evm/hooks/wallets/useEmbeddedWallet";
-import { onModalUnmount } from "./constants";
 
 const TW_CONNECTED_WALLET = "tw-connected-wallet";
 
@@ -354,7 +357,7 @@ export const ConnectedWalletDetails: React.FC<{
 
       <Container px="lg">
         <ConnectedToSmartWallet />
-        <EmbeddedWalletEmail />
+        <EmbeddedWalletDetails />
 
         {/* Send and Receive */}
         <Container
@@ -813,10 +816,11 @@ function ConnectedToSmartWallet() {
   return null;
 }
 
-function EmbeddedWalletEmail() {
+function EmbeddedWalletDetails() {
   const emailQuery = useEmbeddedWalletUserEmail();
+  const phoneNumberQuery = useEmbeddedWalletUserPhoneNumber();
 
-  if (emailQuery.data) {
+  if (emailQuery.data || phoneNumberQuery.data) {
     return (
       <Container
         flex="row"
@@ -825,7 +829,7 @@ function EmbeddedWalletEmail() {
           paddingBottom: spacing.md,
         }}
       >
-        <Text size="sm">{emailQuery.data}</Text>
+        <Text size="sm">{emailQuery.data || phoneNumberQuery.data}</Text>
       </Container>
     );
   }

@@ -4,23 +4,25 @@ import {
   EmbeddedWallet,
   EmbeddedWalletOauthStrategy,
 } from "@thirdweb-dev/wallets";
+import { useCallback, useContext, useState } from "react";
 import { Img } from "../../../components/Img";
 import { Spacer } from "../../../components/Spacer";
 import { TextDivider } from "../../../components/TextDivider";
 import { Container, ModalHeader } from "../../../components/basic";
 import { Button } from "../../../components/buttons";
 import { fontSize, iconSize, spacing } from "../../../design-system";
-import { useTWLocale } from "../../../evm/providers/locale-provider";
-import { openOauthSignInWindow } from "../../utils/openOauthSignInWindow";
-import { InputSelectionUI } from "../InputSelectionUI";
-import { socialIcons } from "./socialIcons";
-import type { AuthOption, EmbeddedWalletLoginType } from "./types";
 import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
-import { useScreenContext } from "../../ConnectWallet/Modal/screen";
-import { PoweredByThirdweb } from "../../ConnectWallet/PoweredByTW";
-import { useContext } from "react";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
 import { TOS } from "../../ConnectWallet/Modal/TOS";
+import { useScreenContext } from "../../ConnectWallet/Modal/screen";
+import { PoweredByThirdweb } from "../../ConnectWallet/PoweredByTW";
+import { openOauthSignInWindow } from "../../utils/openOauthSignInWindow";
+import { validateEmail } from "../../utils/validateEmail";
+import { InputSelectionUI } from "../InputSelectionUI";
+import { LinkButton } from "./LinkButton";
+import { socialIcons } from "./socialIcons";
+import type { AuthOption, EmbeddedWalletLoginType } from "./types";
 
 export const EmbeddedWalletFormUI = (props: {
   onSelect: (loginType: EmbeddedWalletLoginType) => void;
@@ -45,10 +47,46 @@ export const EmbeddedWalletFormUI = (props: {
     apple: locale.signInWithApple,
   };
 
-  const enableEmailLogin = props.authOptions.includes("email");
+  const emailIndex = props.authOptions.indexOf("email");
+  const isEmailEnabled = emailIndex !== -1;
+  const phoneIndex = props.authOptions.indexOf("phone");
+  const isPhoneEnabled = phoneIndex !== -1;
+
+  const selectDefaultInputMode = () => {
+    if (isEmailEnabled && isPhoneEnabled) {
+      return emailIndex < phoneIndex ? "email" : "phone";
+    } else if (isEmailEnabled) {
+      return "email";
+    } else if (isPhoneEnabled) {
+      return "phone";
+    }
+    return "none";
+  };
+  const [inputMode, setInputMode] = useState<"email" | "phone" | "none">(
+    selectDefaultInputMode(),
+  );
+
+  const placeholder =
+    inputMode === "email" ? locale.emailPlaceholder : locale.phonePlaceholder;
+  const emptyErrorMessage =
+    inputMode === "email" ? locale.emailRequired : locale.phoneRequired;
+
+  let type = "text";
+  if (inputMode === "email") {
+    type = "email";
+  } else if (inputMode === "phone") {
+    type = "tel";
+  }
+
+  const switchInputModeText =
+    inputMode === "email" ? locale.signInWithPhone : locale.signInWithEmail;
+  const switchInputMode = useCallback(() => {
+    setInputMode((prev) => (prev === "email" ? "phone" : "email"));
+  }, []);
+  const allowSwitchInputMode = isEmailEnabled && isPhoneEnabled;
 
   const socialLogins = props.authOptions.filter(
-    (x) => x !== "email",
+    (x) => x !== "email" && x !== "phone",
   ) as EmbeddedWalletOauthStrategy[];
 
   const hasSocialLogins = socialLogins.length > 0;
@@ -83,7 +121,13 @@ export const EmbeddedWalletFormUI = (props: {
   const showOnlyIcons = socialLogins.length > 1;
 
   return (
-    <Container flex="column" gap="lg">
+    <Container
+      flex="column"
+      gap="lg"
+      style={{
+        position: "relative",
+      }}
+    >
       {/* Social Login */}
       {hasSocialLogins && (
         <Container
@@ -120,29 +164,62 @@ export const EmbeddedWalletFormUI = (props: {
         </Container>
       )}
 
-      {props.modalSize === "wide" && hasSocialLogins && enableEmailLogin && (
+      {props.modalSize === "wide" && hasSocialLogins && isEmailEnabled && (
         <TextDivider text={twLocale.connectWallet.or} />
       )}
 
       {/* Email Login */}
-      {enableEmailLogin && (
-        <InputSelectionUI
-          onSelect={(email) => props.onSelect({ email })}
-          placeholder={locale.emailPlaceholder}
-          name="email"
-          type="email"
-          errorMessage={(_input) => {
-            const input = _input.replace(/\+/g, "").toLowerCase();
-            const emailRegex =
-              /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,})$/g;
-            const isValidEmail = emailRegex.test(input);
-            if (!isValidEmail) {
-              return locale.invalidEmail;
-            }
-          }}
-          emptyErrorMessage={locale.emailRequired}
-          submitButtonText={locale.submitEmail}
-        />
+      {inputMode !== "none" && (
+        <Container>
+          {inputMode === "email" ? (
+            <InputSelectionUI
+              type={type}
+              onSelect={(value) => {
+                props.onSelect({ email: value });
+              }}
+              placeholder={placeholder}
+              name="email"
+              errorMessage={(input) => {
+                const isValidEmail = validateEmail(input.toLowerCase());
+                if (!isValidEmail) {
+                  return locale.invalidEmail;
+                }
+              }}
+              emptyErrorMessage={emptyErrorMessage}
+              submitButtonText={locale.submitEmail}
+            />
+          ) : (
+            <InputSelectionUI
+              format="phone"
+              type={type}
+              onSelect={(value) => {
+                // removes white spaces and special characters
+                props.onSelect({ phone: value.replace(/[-\(\) ]/g, "") });
+              }}
+              placeholder={placeholder}
+              name="phone"
+              errorMessage={(_input) => {
+                // removes white spaces and special characters
+                const input = _input.replace(/[-\(\) ]/g, "");
+                const isPhone = /^[0-9]+$/.test(input);
+
+                if (!isPhone && isPhoneEnabled) {
+                  return locale.invalidPhone;
+                }
+              }}
+              emptyErrorMessage={emptyErrorMessage}
+              submitButtonText={locale.submitEmail}
+            />
+          )}
+          {allowSwitchInputMode && (
+            <>
+              <Spacer y="md" />
+              <LinkButton onClick={switchInputMode} type="button">
+                {switchInputModeText}
+              </LinkButton>
+            </>
+          )}
+        </Container>
       )}
     </Container>
   );
@@ -158,7 +235,7 @@ export const EmbeddedWalletFormUIScreen: React.FC<{
   setConnectionStatus: ConnectUIProps<EmbeddedWallet>["setConnectionStatus"];
   setConnectedWallet: ConnectUIProps<EmbeddedWallet>["setConnectedWallet"];
 }> = (props) => {
-  const locale = useTWLocale().wallets.embeddedWallet.emailLoginScreen;
+  const locale = useTWLocale().wallets.embeddedWallet.otpLoginScreen;
   const isCompact = props.modalSize === "compact";
   const { initialScreen, screen } = useScreenContext();
   const modalConfig = useContext(ModalConfigCtx);
