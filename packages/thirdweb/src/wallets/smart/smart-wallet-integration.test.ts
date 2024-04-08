@@ -6,6 +6,7 @@ import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import { balanceOf } from "../../extensions/erc1155/__generated__/IERC1155/read/balanceOf.js";
 import { claimTo } from "../../extensions/erc1155/drops/write/claimTo.js";
 import { checkContractWalletSignature } from "../../extensions/erc1271/checkContractWalletSignature.js";
+import { setContractURI } from "../../extensions/marketplace/__generated__/IMarketplace/write/setContractURI.js";
 import { estimateGasCost } from "../../transaction/actions/estimate-gas-cost.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { sendBatchTransaction } from "../../transaction/actions/send-batch-transaction.js";
@@ -13,7 +14,6 @@ import { isContractDeployed } from "../../utils/bytecode/is-contract-deployed.js
 import { smartWallet } from "../create-wallet.js";
 import type { Account } from "../interfaces/wallet.js";
 import { generateAccount } from "../utils/generateAccount.js";
-import { setContractURI } from "../../extensions/marketplace/__generated__/IMarketplace/write/setContractURI.js";
 
 let smartAccount: Account;
 let smartWalletAddress: string;
