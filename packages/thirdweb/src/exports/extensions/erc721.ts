@@ -112,3 +112,8 @@ export {
   type GenerateMintSignatureOptions,
   generateMintSignature,
 } from "../../extensions/erc721/write/sigMint.js";
+
+/**
+ * SHARED METADATA extension for ERC721
+ */
+export { sharedMetadata } from "../../extensions/erc721/__generated__/ISharedMetadata/read/sharedMetadata.js";
