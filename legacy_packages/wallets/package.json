@@ -592,7 +592,7 @@
     "@preconstruct/cli": "2.7.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "@types/bn.js": "^5.1.5",
-    "abitype": "1.0.0",
+    "abitype": "1.0.2",
     "babel-plugin-transform-inline-environment-variables": "^0.4.4",
     "bs58": "^5.0.0",
     "cross-env": "^7.0.3",

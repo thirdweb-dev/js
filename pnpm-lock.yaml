@@ -1001,8 +1001,8 @@ importers:
         specifier: workspace:*
         version: link:../wallets
       abitype:
-        specifier: 1.0.0
-        version: 1.0.0(typescript@5.4.4)(zod@3.22.4)
+        specifier: 1.0.2
+        version: 1.0.2(typescript@5.4.4)(zod@3.22.4)
       aws-amplify:
         specifier: ^5.3.18
         version: 5.3.18(react-native@0.71.17)
@@ -1187,8 +1187,8 @@ importers:
         specifier: workspace:*
         version: link:../storage
       abitype:
-        specifier: 1.0.0
-        version: 1.0.0(typescript@5.4.4)(zod@3.22.4)
+        specifier: 1.0.2
+        version: 1.0.2(typescript@5.4.4)(zod@3.22.4)
       bn.js:
         specifier: 5.2.1
         version: 5.2.1
@@ -1517,8 +1517,8 @@ importers:
         specifier: ^5.1.5
         version: 5.1.5
       abitype:
-        specifier: 1.0.0
-        version: 1.0.0(typescript@5.4.4)(zod@3.22.4)
+        specifier: 1.0.2
+        version: 1.0.2(typescript@5.4.4)(zod@3.22.4)
       babel-plugin-transform-inline-environment-variables:
         specifier: ^0.4.4
         version: 0.4.4
@@ -1626,8 +1626,8 @@ importers:
         specifier: 2.12.1
         version: 2.12.1(@types/react@18.2.17)(react@18.2.0)
       abitype:
-        specifier: 1.0.0
-        version: 1.0.0(typescript@5.4.4)(zod@3.22.4)
+        specifier: 1.0.2
+        version: 1.0.2(typescript@5.4.4)(zod@3.22.4)
       ethers:
         specifier: ^5 || ^6
         version: 6.11.1
@@ -12896,6 +12896,20 @@ packages:
       typescript: 5.4.4
       zod: 3.22.4
 
+  /abitype@1.0.2(typescript@5.4.4)(zod@3.22.4):
+    resolution: {integrity: sha512-aFt4k2H+eiAKy/zxtnORa9iIb10BMBeWL18l8v4+QuwYEBXPxxjSB1bFZCzQmKPoj8m7j68K705l3uY+E2gAjg==}
+    peerDependencies:
+      typescript: '>=5.0.4'
+      zod: ^3 >=3.22.0
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+      zod:
+        optional: true
+    dependencies:
+      typescript: 5.4.4
+      zod: 3.22.4
+
   /abort-controller@3.0.0:
     resolution: {integrity: sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==}
     engines: {node: '>=6.5'}
@@ -16576,7 +16590,6 @@ packages:
     dependencies:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
-    bundledDependencies: false
 
   /event-emitter@0.3.5:
     resolution: {integrity: sha512-D9rRn9y7kLPnJ+hMq7S/nhvoKwwvVJahBi2BPmx3bvbsEdK3W9ii8cBSGjP+72/LnM4n6fo3+dkCX5FeTQruXA==}
