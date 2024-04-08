@@ -12,6 +12,12 @@ export default {
   "faucets": [
     "https://t.me/BerylBit"
   ],
+  "icon": {
+    "url": "ipfs://QmeDXHkpranzqGN1BmQqZSrFp4vGXf4JfaB5iq8WHHiwDi",
+    "width": 162,
+    "height": 162,
+    "format": "png"
+  },
   "infoURL": "https://www.beryl-bit.com",
   "name": "BerylBit Mainnet",
   "nativeCurrency": {
