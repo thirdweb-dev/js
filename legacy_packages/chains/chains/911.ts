@@ -6,22 +6,10 @@ export default {
     {
       "name": "TAPROOT Scan",
       "url": "https://scan.taprootchain.io",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmeucqvcreQk8nnSRUiHo3QTvLoYYB7shJTKXj5Tk6BtWi",
-        "width": 100,
-        "height": 100,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmeucqvcreQk8nnSRUiHo3QTvLoYYB7shJTKXj5Tk6BtWi",
-    "width": 100,
-    "height": 100,
-    "format": "png"
-  },
   "infoURL": "https://taprootchain.io",
   "name": "TAPROOT Mainnet",
   "nativeCurrency": {
