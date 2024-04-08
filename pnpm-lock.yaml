@@ -205,8 +205,8 @@ dependencies:
     specifier: ^1.3.3
     version: 1.3.3
   zksync-ethers:
-    specifier: ^5.6.0
-    version: 5.6.0(ethers@5.7.2)
+    specifier: ^5.7.0
+    version: 5.7.0(ethers@5.7.2)
   zod:
     specifier: ^3.19.1
     version: 3.22.4
@@ -19458,8 +19458,8 @@ packages:
     resolution: {integrity: sha512-jEA1znR7b4C/NnaycInCU6h/d15ZzCd1jmsruqOKnZP6WXQSMH3W2GL+OXbkruslU4h+Tzuos0HdswzRUk/Vgg==}
     dev: false
 
-  /zksync-ethers@5.6.0(ethers@5.7.2):
-    resolution: {integrity: sha512-+lw1dhURpVZos6+g82HdXVw2i/OI+S2nTqyNvBK2xwnQYv8vqxv0Ux/cMPV2AflswTG1/zrMmseRp+UJUCaw9g==}
+  /zksync-ethers@5.7.0(ethers@5.7.2):
+    resolution: {integrity: sha512-X99c5APICTlRzyXXjfwkEjRzOPp3Jwo62+z2DVGaZbe+b9Apbizcd2UGV4NGomoAR2GXPbeiSqi1cf3Hbo3cQw==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       ethers: ~5.7.0
