@@ -17,7 +17,7 @@ export function CountrySelector({
     queryKey: ["supported-sms-countries"],
     queryFn: async () => {
       const { supportedSmsCountries } = await import(
-        "@thirdweb-dev/wallets/evm/wallets/embedded-wallet"
+        "@thirdweb-dev/wallets/evm/connectors/embedded-wallet/implementations"
       );
       return supportedSmsCountries;
     },

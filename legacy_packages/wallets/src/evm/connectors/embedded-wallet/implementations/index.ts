@@ -32,3 +32,5 @@ export type {
   SignedTypedDataReturnType,
 } from "./interfaces/embedded-wallets/signer";
 export { EmbeddedWalletSdk } from "./lib/embedded-wallet";
+
+export { supportedSmsCountries } from "./lib/auth/supported-sms-countries";
