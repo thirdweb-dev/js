@@ -1,19 +1,19 @@
-import { ethers, BigNumber, BigNumberish, providers } from "ethers";
+import { ethers, BigNumber, type BigNumberish, type providers } from "ethers";
 import {
-  EntryPoint,
+  type EntryPoint,
   EntryPoint__factory,
-  UserOperationStruct,
+  type UserOperationStruct,
 } from "@account-abstraction/contracts";
 
-import { TransactionDetailsForUserOp } from "./transaction-details";
+import type { TransactionDetailsForUserOp } from "./transaction-details";
 import { getUserOpHashV06 } from "./utils";
 import {
   CeloAlfajoresTestnet,
   CeloBaklavaTestnet,
   Celo,
 } from "@thirdweb-dev/chains";
-import { Transaction, getDynamicFeeData } from "@thirdweb-dev/sdk";
-import { HttpRpcClient } from "./http-rpc-client";
+import { type Transaction, getDynamicFeeData } from "@thirdweb-dev/sdk";
+import type { HttpRpcClient } from "./http-rpc-client";
 import type { BaseApiParams, PaymasterAPI, UserOpOptions } from "../types";
 import { isTwUrl } from "../../../utils/url";
 
@@ -230,14 +230,16 @@ export abstract class BaseAccountAPI {
       ? info.data
       : await this.prepareExecute(info.target, value, info.data).then(
           async (tx) => {
-            // estimate gas on the inner transactions to simulate
-            // bundler would not revert otherwise
-            await this.provider.estimateGas({
-              from: sender,
-              to: info.target,
-              data: info.data,
-              value: value,
-            });
+            if (!info.gasLimit) {
+              // estimate gas on the inner transactions to simulate
+              // bundler would not revert otherwise
+              await this.provider.estimateGas({
+                from: sender,
+                to: info.target,
+                data: info.data,
+                value: value,
+              });
+            }
             return tx.encode();
           },
         );
