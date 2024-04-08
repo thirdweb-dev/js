@@ -13,6 +13,7 @@ import { isContractDeployed } from "../../utils/bytecode/is-contract-deployed.js
 import { smartWallet } from "../create-wallet.js";
 import type { Account } from "../interfaces/wallet.js";
 import { generateAccount } from "../utils/generateAccount.js";
+import { setContractURI } from "../../extensions/marketplace/__generated__/IMarketplace/write/setContractURI.js";
 
 let smartAccount: Account;
 let smartWalletAddress: string;
@@ -58,6 +59,23 @@ describe.runIf(process.env.TW_SECRET_KEY)(
     });
     it("can connect", async () => {
       expect(smartWalletAddress).toHaveLength(42);
+    });
+
+    it("should revert on unsuccessful transactions", async () => {
+      const tx = sendAndConfirmTransaction({
+        transaction: setContractURI({
+          contract,
+          uri: "https://example.com",
+        }),
+        account: smartAccount,
+      });
+
+      await expect(tx).rejects.toMatchInlineSnapshot(`
+        [TransactionError: Error - Not authorized
+
+        contract: 0x6A7a26c9a595E6893C255C9dF0b593e77518e0c3
+        chainId: 421614]
+      `);
     });
 
     it("can execute a tx", async () => {

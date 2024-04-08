@@ -217,10 +217,6 @@ async function createSmartAccount(
     async signTypedData(typedData: any) {
       return options.personalAccount.signTypedData(typedData);
     },
-    async estimateGas(tx: PreparedTransaction): Promise<bigint> {
-      void tx; // linter
-      return 0n;
-    },
   };
   return account;
 }
