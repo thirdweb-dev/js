@@ -723,8 +723,8 @@ importers:
   legacy_packages/react:
     dependencies:
       '@emotion/css':
-        specifier: 11.10.5
-        version: 11.10.5(@babel/core@7.24.4)
+        specifier: 11.11.2
+        version: 11.11.2
       '@emotion/react':
         specifier: ^11.11.4
         version: 11.11.4(@types/react@18.2.17)(react@18.2.0)
@@ -4423,7 +4423,7 @@ packages:
     engines: {node: '>=6.0.0'}
     hasBin: true
     dependencies:
-      '@babel/types': 7.17.0
+      '@babel/types': 7.24.0
 
   /@babel/plugin-bugfix-firefox-class-in-computed-class-key@7.24.4(@babel/core@7.24.4):
     resolution: {integrity: sha512-qpl6vOOEEzTLLcsuqYYo8yDtrTocmu2xkGvgNebvPjT9DTtfFYGmgDqY+rBYXNlqL4s9qLDn6xkrJv4RxAPiTA==}
@@ -5542,13 +5542,6 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /@babel/types@7.17.0:
-    resolution: {integrity: sha512-TmKSNO4D5rzhL5bjWFcVHHLETzfQ/AmbKpKPOSjlP0WoHZ6L911fgoOKY4Alp/emzG4cHJdyN49zpgkbXFEHHw==}
-    engines: {node: '>=6.9.0'}
-    dependencies:
-      '@babel/helper-validator-identifier': 7.22.20
-      to-fast-properties: 2.0.0
-
   /@babel/types@7.24.0:
     resolution: {integrity: sha512-+j7a5c253RfKh8iABBhywc8NSfP5LURe7Uh4qpsh6jc+aLJguvmIUBdjSdEMQv2bENrCR5MfRdjGo7vzS/ob7w==}
     engines: {node: '>=6.9.0'}
@@ -6007,15 +6000,9 @@ packages:
       stylis: 4.2.0
     dev: false
 
-  /@emotion/css@11.10.5(@babel/core@7.24.4):
-    resolution: {integrity: sha512-maJy0wG82hWsiwfJpc3WrYsyVwUbdu+sdIseKUB+/OLjB8zgc3tqkT6eO0Yt0AhIkJwGGnmMY/xmQwEAgQ4JHA==}
-    peerDependencies:
-      '@babel/core': ^7.0.0
-    peerDependenciesMeta:
-      '@babel/core':
-        optional: true
+  /@emotion/css@11.11.2:
+    resolution: {integrity: sha512-VJxe1ucoMYMS7DkiMdC2T7PWNbrEI0a39YRiyDvK2qq4lXwjRbVP/z4lpG+odCsRzadlR+1ywwrTzhdm5HNdew==}
     dependencies:
-      '@babel/core': 7.24.4
       '@emotion/babel-plugin': 11.11.0
       '@emotion/cache': 11.11.0
       '@emotion/serialize': 1.1.4
@@ -16576,7 +16563,6 @@ packages:
     dependencies:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
-    bundledDependencies: false
 
   /event-emitter@0.3.5:
     resolution: {integrity: sha512-D9rRn9y7kLPnJ+hMq7S/nhvoKwwvVJahBi2BPmx3bvbsEdK3W9ii8cBSGjP+72/LnM4n6fo3+dkCX5FeTQruXA==}
