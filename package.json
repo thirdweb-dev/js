@@ -97,7 +97,7 @@
     "@graphql-codegen/typescript-react-apollo": "^4.3.0",
     "@next/bundle-analyzer": "^14.1.4",
     "@next/eslint-plugin-next": "^14.1.4",
-    "@playwright/test": "^1.42.1",
+    "@playwright/test": "^1.43.0",
     "@types/color": "^3.0.6",
     "@types/node": "^20.12.2",
     "@types/papaparse": "^5.3.14",
