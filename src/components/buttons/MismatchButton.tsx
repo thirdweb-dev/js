@@ -330,9 +330,9 @@ const UpsellTestnetNotice: React.FC<{
       label: "switch-to-testnet",
     });
     if (actuallyCanAttemptSwitch && chain) {
-      await switchNetwork(80001);
+      await switchNetwork(80002);
     }
-    onChainSelect(80001);
+    onChainSelect(80002);
     onClose();
   }, [
     chain,
@@ -372,10 +372,9 @@ const UpsellTestnetNotice: React.FC<{
         // isLoading={network.loading}
         isDisabled={!actuallyCanAttemptSwitch}
         colorScheme="orange"
-        textTransform="capitalize"
         noOfLines={1}
       >
-        Switch wallet to Mumbai
+        Switch wallet to Polygon Amoy Testnet
       </Button>
 
       {!actuallyCanAttemptSwitch && (
