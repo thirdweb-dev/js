@@ -1,9 +1,6 @@
+import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import {
-  UseQueryResult,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
-import {
+  useAddress,
   useCreateWalletInstance,
   useSetConnectedWallet,
   useSetConnectionStatus,
@@ -16,7 +13,7 @@ import {
   walletIds,
   type AuthParams,
 } from "@thirdweb-dev/wallets";
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { embeddedWallet } from "../../../wallet/wallets/embeddedWallet/embeddedWallet";
 
 /**
@@ -194,10 +191,10 @@ export function useEmbeddedWalletUserEmail(): UseQueryResult<
   string | undefined
 > {
   const wallet = useWallet();
-  const queryClient = useQueryClient();
+  const address = useAddress();
 
   const emailQuery = useQuery<string | undefined, string>(
-    [wallet?.walletId, "embeddedWallet-email"],
+    [wallet?.walletId, address, "embeddedWallet-email"],
     () => {
       if (wallet && wallet.walletId === walletIds.embeddedWallet) {
         return (wallet as EmbeddedWallet).getEmail() ?? "";
@@ -209,11 +206,6 @@ export function useEmbeddedWalletUserEmail(): UseQueryResult<
       enabled: wallet?.walletId === walletIds.embeddedWallet,
     },
   );
-
-  // Invalidate the query when the wallet changes
-  useEffect(() => {
-    queryClient.invalidateQueries([wallet?.walletId, "embeddedWallet-email"]);
-  }, [wallet, queryClient]);
 
   return emailQuery;
 }
@@ -243,10 +235,10 @@ export function useEmbeddedWalletUserPhoneNumber(): UseQueryResult<
   string | undefined
 > {
   const wallet = useWallet();
-  const queryClient = useQueryClient();
+  const address = useAddress();
 
   const emailQuery = useQuery<string | undefined, string>(
-    [wallet?.walletId, "embeddedWallet-phone-number"],
+    [wallet?.walletId, address, "embeddedWallet-phone-number"],
     () => {
       if (wallet && wallet.walletId === walletIds.embeddedWallet) {
         return (wallet as EmbeddedWallet).getPhoneNumber() ?? "";
@@ -258,11 +250,6 @@ export function useEmbeddedWalletUserPhoneNumber(): UseQueryResult<
       enabled: wallet?.walletId === walletIds.embeddedWallet,
     },
   );
-
-  // Invalidate the query when the wallet changes
-  useEffect(() => {
-    queryClient.invalidateQueries([wallet?.walletId, "embeddedWallet-email"]);
-  }, [wallet, queryClient]);
 
   return emailQuery;
 }

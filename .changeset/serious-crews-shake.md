@@ -2,7 +2,11 @@
 "@thirdweb-dev/wallets": minor
 ---
 
-feat: add phone number verification to embedded wallets
+Adds Login with SMS in EmbeddedWallet.
+
+Note that the `phoneNumber` requires the `+` symbol along with the IsoCountry code before the actual phone number.
+
+For a list of supported country code, you can use the `supportedSmsCountries` object which contains a list of all support country information.
 
 Usage:
 
