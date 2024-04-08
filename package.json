@@ -42,7 +42,7 @@
     "@thirdweb-dev/chains": "0.1.86",
     "@thirdweb-dev/react": "4.4.29",
     "@thirdweb-dev/sdk": "4.0.55",
-    "@thirdweb-dev/service-utils": "0.4.25",
+    "@thirdweb-dev/service-utils": "0.4.26",
     "@thirdweb-dev/storage": "2.0.13",
     "@thirdweb-dev/wallets": "2.4.31",
     "@vercel/og": "^0.6.2",

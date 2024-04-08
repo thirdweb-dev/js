@@ -73,8 +73,8 @@ dependencies:
     specifier: 4.0.55
     version: 4.0.55(ethers@5.7.2)(typescript@5.4.3)
   '@thirdweb-dev/service-utils':
-    specifier: 0.4.25
-    version: 0.4.25
+    specifier: 0.4.26
+    version: 0.4.26
   '@thirdweb-dev/storage':
     specifier: 2.0.13
     version: 2.0.13
@@ -6794,8 +6794,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@thirdweb-dev/service-utils@0.4.25:
-    resolution: {integrity: sha512-dsCVllsWYMqAF5nKPc0vtWxQNYNY+yZf7iSRVwtWtD6k5A6ZqVtnUl9/w7fhzY5OZw6UaiPL12Rrcb6qyMNfmw==}
+  /@thirdweb-dev/service-utils@0.4.26:
+    resolution: {integrity: sha512-TBZpB/bhg9ICKk147o+2TBllLgIlFG+pXsK5ncRLupY/xfGUTE4P2P2QiSnNq8kYWsvoF2dKN8nntKqopoTPkg==}
     dependencies:
       aws4fetch: 1.0.18
       zod: 3.22.4
