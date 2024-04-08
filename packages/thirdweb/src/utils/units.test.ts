@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { toTokens, toEther, toUnits, toWei } from "./units.js";
+import { toEther, toTokens, toUnits, toWei } from "./units.js";
 
 describe("toTokens", () => {
   it("converts value to number", () => {

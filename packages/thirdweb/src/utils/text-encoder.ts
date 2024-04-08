@@ -7,5 +7,8 @@ let textEncoder: TextEncoder;
  * @internal
  */
 export function cachedTextEncoder(): TextEncoder {
-  return textEncoder || (textEncoder = new TextEncoder());
+  if (!textEncoder) {
+    textEncoder = new TextEncoder();
+  }
+  return textEncoder;
 }

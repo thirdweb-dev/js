@@ -1,10 +1,10 @@
 import { keyframes } from "@emotion/react";
+import type { WalletId } from "../../../../../wallets/wallet-types.js";
+import { WalletImage } from "../../components/WalletImage.js";
 import { useCustomTheme } from "../../design-system/CustomThemeProvider.js";
 import { fadeInAnimation } from "../../design-system/animations.js";
 import { StyledDiv } from "../../design-system/elements.js";
 import { radius, spacing } from "../../design-system/index.js";
-import type { WalletId } from "../../../../../wallets/wallet-types.js";
-import { WalletImage } from "../../components/WalletImage.js";
 
 /**
  *
@@ -34,6 +34,7 @@ export function WalletLogoSpinner(props: { error: boolean; id: WalletId }) {
             style={{
               display: props.error ? "none" : "block",
             }}
+            role="presentation"
           >
             <rect
               x="2"

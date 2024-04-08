@@ -20,7 +20,7 @@ export type SetSharedMetadataParams = {
   }>;
 };
 
-const FN_SELECTOR = "0xa7d27d9d" as const;
+export const FN_SELECTOR = "0xa7d27d9d" as const;
 const FN_INPUTS = [
   {
     type: "tuple",

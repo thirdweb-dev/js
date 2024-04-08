@@ -53,6 +53,11 @@ jobs:
       - name: Setup & Install
         uses: ./.github/composite-actions/install
 
+      - name: Setup Biome
+        uses: biomejs/setup-biome@v2
+        with:
+          version: latest  
+
       - run: pnpm lint
 
   test:
@@ -74,8 +79,9 @@ jobs:
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4
         with:
-          directory: ./packages
+          directory: packages/
           flags: packages
+          verbose: true
 
   e2e:
     timeout-minutes: 15

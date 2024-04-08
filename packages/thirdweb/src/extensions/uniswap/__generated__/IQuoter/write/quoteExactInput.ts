@@ -12,7 +12,7 @@ export type QuoteExactInputParams = {
   amountIn: AbiParameterToPrimitiveType<{ type: "uint256"; name: "amountIn" }>;
 };
 
-const FN_SELECTOR = "0xcdca1753" as const;
+export const FN_SELECTOR = "0xcdca1753" as const;
 const FN_INPUTS = [
   {
     type: "bytes",

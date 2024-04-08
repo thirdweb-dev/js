@@ -1,8 +1,8 @@
 import { serializeTransaction } from "viem";
 import { getContract } from "../contract/contract.js";
+import { toSerializableTransaction } from "../transaction/actions/to-serializable-transaction.js";
 import type { PreparedTransaction } from "../transaction/prepare-transaction.js";
 import { readContract } from "../transaction/read-contract.js";
-import { toSerializableTransaction } from "../transaction/actions/to-serializable-transaction.js";
 
 export type EstimateL1FeeOptions = {
   transaction: PreparedTransaction;
@@ -24,7 +24,7 @@ export async function estimateL1Fee(options: EstimateL1FeeOptions) {
   });
 
   // purposefully remove gasPrice from the transaction
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
   const { gasPrice, ...serializableTx } = await toSerializableTransaction({
     transaction,
   });

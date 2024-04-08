@@ -13,7 +13,7 @@ export type GetNonceParams = {
   key: AbiParameterToPrimitiveType<{ type: "uint192"; name: "key" }>;
 };
 
-const FN_SELECTOR = "0x35567e1a" as const;
+export const FN_SELECTOR = "0x35567e1a" as const;
 const FN_INPUTS = [
   {
     type: "address",

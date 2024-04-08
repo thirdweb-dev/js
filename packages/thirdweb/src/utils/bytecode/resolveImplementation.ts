@@ -1,10 +1,10 @@
-import { extractMinimalProxyImplementationAddress } from "./extractMnimalProxyImplementationAddress.js";
 import { getBytecode } from "../../contract/actions/get-bytecode.js";
 import type { ThirdwebContract } from "../../contract/contract.js";
-import { readContract } from "../../transaction/read-contract.js";
-import { getRpcClient } from "../../rpc/rpc.js";
 import { eth_getStorageAt } from "../../rpc/actions/eth_getStorageAt.js";
+import { getRpcClient } from "../../rpc/rpc.js";
+import { readContract } from "../../transaction/read-contract.js";
 import { isAddress } from "../address.js";
+import { extractMinimalProxyImplementationAddress } from "./extractMnimalProxyImplementationAddress.js";
 
 // TODO: move to const exports
 const AddressZero = "0x0000000000000000000000000000000000000000";
@@ -21,6 +21,7 @@ const AddressZero = "0x0000000000000000000000000000000000000000";
  * @contract
  */
 export async function resolveImplementation(
+  // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
   contract: ThirdwebContract<any>,
 ): Promise<{ address: string; bytecode: string }> {
   const [originalBytecode, beacon] = await Promise.all([
@@ -44,6 +45,7 @@ export async function resolveImplementation(
   if (beacon && beacon !== AddressZero) {
     // In case of a BeaconProxy, it is setup as BeaconProxy --> Beacon --> Implementation
     // Hence we replace the proxy address with Beacon address, and continue further resolving below
+    // biome-ignore lint/style/noParameterAssign: we purposefully mutate the contract object here
     contract = { ...contract, address: beacon };
   }
   const implementations = await Promise.all([
@@ -80,6 +82,7 @@ export async function resolveImplementation(
 }
 
 async function getBeaconFromStorageSlot(
+  // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
   contract: ThirdwebContract<any>,
 ): Promise<string | undefined> {
   /**
@@ -106,6 +109,7 @@ async function getBeaconFromStorageSlot(
 }
 
 async function getImplementationFromStorageSlot(
+  // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
   contract: ThirdwebContract<any>,
 ): Promise<string | undefined> {
   const rpcRequest = getRpcClient({
@@ -140,6 +144,7 @@ const UPGRADEABLE_PROXY_ABI = {
 } as const;
 
 async function getImplementationFromContractCall(
+  // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
   contract: ThirdwebContract<any>,
 ): Promise<string | undefined> {
   try {

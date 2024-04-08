@@ -18,7 +18,7 @@ export type BidInAuctionParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x0858e5ad" as const;
+export const FN_SELECTOR = "0x0858e5ad" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

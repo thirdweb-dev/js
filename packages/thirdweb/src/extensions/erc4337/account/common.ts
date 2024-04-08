@@ -5,7 +5,7 @@ import { toWei } from "../../../utils/units.js";
 import { randomBytes32 } from "../../../utils/uuid.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
 import type { SetPermissionsForSignerParams } from "../__generated__/IAccountPermissions/write/setPermissionsForSigner.js";
-import { SignerPermissionRequest, type AccountPermissions } from "./types.js";
+import { type AccountPermissions, SignerPermissionRequest } from "./types.js";
 
 /**
  * @internal

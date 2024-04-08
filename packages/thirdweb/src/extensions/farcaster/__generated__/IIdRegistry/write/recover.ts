@@ -14,7 +14,7 @@ export type RecoverParams = {
   sig: AbiParameterToPrimitiveType<{ type: "bytes"; name: "sig" }>;
 };
 
-const FN_SELECTOR = "0x2a42ede3" as const;
+export const FN_SELECTOR = "0x2a42ede3" as const;
 const FN_INPUTS = [
   {
     type: "address",

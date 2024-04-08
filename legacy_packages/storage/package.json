@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/storage",
-  "version": "2.0.13",
+  "version": "2.0.14",
   "main": "dist/thirdweb-dev-storage.cjs.js",
   "module": "dist/thirdweb-dev-storage.esm.js",
   "exports": {
@@ -20,7 +20,7 @@
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/",
     "build": "tsc && preconstruct build",
-    "test": "vitest",
+    "test": "vitest run",
     "push": "yalc push",
     "typedoc": "node scripts/typedoc.mjs"
   },
@@ -38,13 +38,13 @@
     "@swc-node/register": "^1.9.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "@types/uuid": "^9.0.8",
-    "eslint": "^8.57.0",
+    "eslint": "8.57.0",
     "eslint-config-thirdweb": "workspace:*",
     "eslint-plugin-tsdoc": "^0.2.17",
     "esm": "^3.2.25",
     "rimraf": "5.0.5",
     "typedoc-gen": "workspace:*",
-    "typescript": "5.4.3"
+    "typescript": "5.4.4"
   },
   "dependencies": {
     "@thirdweb-dev/crypto": "workspace:*",

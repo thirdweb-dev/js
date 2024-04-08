@@ -2,7 +2,7 @@
 // heavily modified to remove all non-essential code
 
 // TODO: re-enable typescript and properly type this
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
 // @ts-nocheck
 
 let src;
@@ -11,9 +11,8 @@ let position = 0;
 
 const EMPTY_ARRAY = [];
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 let strings = EMPTY_ARRAY;
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 let stringPosition = 0;
 let currentDecoder = {};
 let currentStructures;
@@ -25,7 +24,7 @@ let referenceMap;
 const currentExtensions = [];
 
 let packedValues;
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 let dataView;
 
 const defaultOptions = {
@@ -42,7 +41,7 @@ class Decoder {
     return key;
   }
 
-  decode(source, end?: number = -1) {
+  decode(source, end? = -1) {
     srcEnd = end > -1 ? end : source.length;
     position = 0;
     stringPosition = 0;
@@ -69,10 +68,9 @@ class Decoder {
         throw error;
       }
       throw new Error(
-        "Source must be a Uint8Array or Buffer but was a " +
-          (source && typeof source === "object"
+        `Source must be a Uint8Array or Buffer but was a ${source && typeof source === "object"
             ? source.constructor.name
-            : typeof source),
+            : typeof source}`,
       );
     }
     if (this instanceof Decoder) {
@@ -152,7 +150,7 @@ function read() {
         break;
 
       default:
-        throw new Error("Unknown token " + token);
+        throw new Error(`Unknown token ${token}`);
     }
   }
   switch (majorType) {
@@ -178,26 +176,28 @@ function read() {
         }
       }
       return readFixedString(token);
-    case 4: // array
+    case 4: { // array
       const array = new Array(token);
       for (let i = 0; i < token; i++) {
         array[i] = read();
       }
       return array;
+    }
 
-    case 5: // map
+    case 5: { // map
       const object = {};
       for (let i = 0; i < token; i++) {
         object[safeKey(read())] = read();
       }
       return object;
+    }
     default: // negative int
-      if (isNaN(token)) {
+      if (Number.isNaN(token)) {
         const error = new Error("Unexpected end of CBOR data");
         error.incomplete = true;
         throw error;
       }
-      throw new Error("Unknown CBOR token " + token);
+      throw new Error(`Unknown CBOR token ${token}`);
   }
 }
 
@@ -210,7 +210,7 @@ function safeKey(key) {
     return key.toString();
   }
   // protect against expensive (DoS) string conversions
-  throw new Error("Invalid property name type " + typeof key);
+  throw new Error(`Invalid property name type ${typeof key}`);
 }
 
 const fromCharCode = String.fromCharCode;
@@ -232,15 +232,14 @@ function shortStringInJS(length) {
     if (length < 2) {
       if (length === 0) {
         return "";
-      } else {
+      }
         const a = src[position++];
         if ((a & 0x80) > 1) {
           position -= 1;
           return;
         }
         return fromCharCode(a);
-      }
-    } else {
+    }
       const a = src[position++];
       const b = src[position++];
       if ((a & 0x80) > 0 || (b & 0x80) > 0) {
@@ -256,8 +255,7 @@ function shortStringInJS(length) {
         return;
       }
       return fromCharCode(a, b, c);
-    }
-  } else {
+  }
     const a = src[position++];
     const b = src[position++];
     const c = src[position++];
@@ -269,15 +267,14 @@ function shortStringInJS(length) {
     if (length < 6) {
       if (length === 4) {
         return fromCharCode(a, b, c, d);
-      } else {
+      }
         const e = src[position++];
         if ((e & 0x80) > 0) {
           position -= 5;
           return;
         }
         return fromCharCode(a, b, c, d, e);
-      }
-    } else if (length < 8) {
+    }if (length < 8) {
       const e = src[position++];
       const f = src[position++];
       if ((e & 0x80) > 0 || (f & 0x80) > 0) {
@@ -293,7 +290,7 @@ function shortStringInJS(length) {
         return;
       }
       return fromCharCode(a, b, c, d, e, f, g);
-    } else {
+    }
       const e = src[position++];
       const f = src[position++];
       const g = src[position++];
@@ -310,15 +307,14 @@ function shortStringInJS(length) {
       if (length < 10) {
         if (length === 8) {
           return fromCharCode(a, b, c, d, e, f, g, h);
-        } else {
+        }
           const i = src[position++];
           if ((i & 0x80) > 0) {
             position -= 9;
             return;
           }
           return fromCharCode(a, b, c, d, e, f, g, h, i);
-        }
-      } else if (length < 12) {
+      }if (length < 12) {
         const i = src[position++];
         const j = src[position++];
         if ((i & 0x80) > 0 || (j & 0x80) > 0) {
@@ -334,7 +330,7 @@ function shortStringInJS(length) {
           return;
         }
         return fromCharCode(a, b, c, d, e, f, g, h, i, j, k);
-      } else {
+      }
         const i = src[position++];
         const j = src[position++];
         const k = src[position++];
@@ -351,15 +347,14 @@ function shortStringInJS(length) {
         if (length < 14) {
           if (length === 12) {
             return fromCharCode(a, b, c, d, e, f, g, h, i, j, k, l);
-          } else {
+          }
             const m = src[position++];
             if ((m & 0x80) > 0) {
               position -= 13;
               return;
             }
             return fromCharCode(a, b, c, d, e, f, g, h, i, j, k, l, m);
-          }
-        } else {
+        }
           const m = src[position++];
           const n = src[position++];
           if ((m & 0x80) > 0 || (n & 0x80) > 0) {
@@ -375,10 +370,6 @@ function shortStringInJS(length) {
             return;
           }
           return fromCharCode(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o);
-        }
-      }
-    }
-  }
 }
 
 function readBin(length) {
@@ -457,7 +448,7 @@ function clearSource() {
 const mult10 = new Array(147); // this is a table matching binary exponents to the multiplier to determine significant digit rounding
 for (let i = 0; i < 256; i++) {
   mult10[i] = /* @__PURE__ */ (() =>
-    Number("1e" + Math.floor(45.15 - i * 0.30103)))();
+    Number(`1e${Math.floor(45.15 - i * 0.30103)}`))();
 }
 const defaultDecoder = new Decoder();
 export const decode = defaultDecoder.decode;

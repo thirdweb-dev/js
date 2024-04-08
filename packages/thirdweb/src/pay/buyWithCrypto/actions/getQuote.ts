@@ -3,8 +3,8 @@ import { defineChain } from "../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import { getContract } from "../../../contract/contract.js";
 import {
-  approve,
   type ApproveParams,
+  approve,
 } from "../../../extensions/erc20/write/approve.js";
 import type { PrepareTransactionOptions } from "../../../transaction/prepare-transaction.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
@@ -259,9 +259,8 @@ export async function getBuyWithCryptoQuote(
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data: BuyWithCryptoQuoteRouteResponse = (await response.json())[
-      "result"
-    ];
+    const data: BuyWithCryptoQuoteRouteResponse = (await response.json())
+      .result;
 
     const swapRoute: BuyWithCryptoQuote = {
       transactionRequest: {

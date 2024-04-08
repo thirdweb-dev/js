@@ -25,7 +25,7 @@ export function createLoginMessage(payload: LoginPayload): string {
   suffixArray.push(versionField);
 
   if (payload.chain_id) {
-    const chainField = `Chain ID: ` + payload.chain_id || "1";
+    const chainField = `Chain ID: ${payload.chain_id}` || "1";
     suffixArray.push(chainField);
   }
 
@@ -45,7 +45,7 @@ export function createLoginMessage(payload: LoginPayload): string {
 
   if (payload.resources) {
     suffixArray.push(
-      [`Resources:`, ...payload.resources.map((x) => `- ${x}`)].join("\n"),
+      ["Resources:", ...payload.resources.map((x) => `- ${x}`)].join("\n"),
     );
   }
 

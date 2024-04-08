@@ -21,11 +21,11 @@ export async function getWalletInfo<TImage extends boolean>(
           : import("../custom/smart/index.js").then((w) => w.wallet)
       ) as Promise<[TImage] extends [true] ? string : any>;
     }
-    case "embedded": {
+    case "inApp": {
       return (
         image
-          ? import("../custom/embedded/image.js").then((img) => img.default)
-          : import("../custom/embedded/index.js").then((w) => w.wallet)
+          ? import("../custom/in-app/image.js").then((img) => img.default)
+          : import("../custom/in-app/index.js").then((w) => w.wallet)
       ) as Promise<[TImage] extends [true] ? string : any>;
     }
     case "walletConnect": {

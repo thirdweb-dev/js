@@ -1,13 +1,13 @@
 import type { Abi, AbiEvent } from "abitype";
 import {
-  getContractEvents,
   type GetContractEventsOptionsDirect,
+  getContractEvents,
 } from "./get-events.js";
 
-import type { Prettify } from "../../utils/type-utils.js";
-import type { ParseEventLogsResult } from "./parse-logs.js";
 import { watchBlockNumber } from "../../rpc/watchBlockNumber.js";
+import type { Prettify } from "../../utils/type-utils.js";
 import type { PreparedEvent } from "../prepare-event.js";
+import type { ParseEventLogsResult } from "./parse-logs.js";
 
 export type WatchContractEventsOptions<
   abi extends Abi,

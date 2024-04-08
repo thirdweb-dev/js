@@ -13,7 +13,7 @@ export type ResolveParams = {
   data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "data" }>;
 };
 
-const FN_SELECTOR = "0x9061b923" as const;
+export const FN_SELECTOR = "0x9061b923" as const;
 const FN_INPUTS = [
   {
     type: "bytes",

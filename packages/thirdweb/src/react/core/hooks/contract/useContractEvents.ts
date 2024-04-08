@@ -1,19 +1,19 @@
-import { useEffect, useMemo } from "react";
-import type { Abi, AbiEvent } from "abitype";
 import {
+  type UseQueryResult,
   useQuery,
   useQueryClient,
-  type UseQueryResult,
 } from "@tanstack/react-query";
-import {
-  watchContractEvents,
-  type WatchContractEventsOptions,
-} from "../../../../event/actions/watch-events.js";
+import type { Abi, AbiEvent } from "abitype";
+import { useEffect, useMemo } from "react";
 import { getContractEvents } from "../../../../event/actions/get-events.js";
 import type { ParseEventLogsResult } from "../../../../event/actions/parse-logs.js";
-import { getRpcClient } from "../../../../rpc/rpc.js";
-import { eth_blockNumber } from "../../../../rpc/actions/eth_blockNumber.js";
+import {
+  type WatchContractEventsOptions,
+  watchContractEvents,
+} from "../../../../event/actions/watch-events.js";
 import type { PreparedEvent } from "../../../../event/prepare-event.js";
+import { eth_blockNumber } from "../../../../rpc/actions/eth_blockNumber.js";
+import { getRpcClient } from "../../../../rpc/rpc.js";
 
 type UseContractEventsOptions<
   abi extends Abi,
@@ -55,7 +55,7 @@ export function useContractEvents<
     () =>
       events?.reduce((acc, curr) => {
         // we can use the event hash as a unique identifier?
-        return acc + `${curr.hash}_`;
+        return `${acc}${curr.hash}_`;
       }, "") || "__all__",
     [events],
   );
@@ -66,7 +66,6 @@ export function useContractEvents<
   );
 
   const query = useQuery({
-    // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey,
     queryFn: async () => {
       const rpcRequest = getRpcClient(contract);
@@ -90,6 +89,7 @@ export function useContractEvents<
     return watchContractEvents<abi, abiEvents>({
       contract,
       onEvents: (newEvents) => {
+        // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
         queryClient.setQueryData(queryKey, (oldEvents: any = []) => {
           const newLogs = [...oldEvents, ...newEvents];
           return newLogs;
@@ -97,7 +97,7 @@ export function useContractEvents<
       },
       events,
     });
-  }, [contract, enabled, events, blockRange, queryClient, queryKey, watch]);
+  }, [contract, enabled, events, queryClient, queryKey, watch]);
 
   return query;
 }

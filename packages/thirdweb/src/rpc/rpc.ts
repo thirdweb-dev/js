@@ -1,9 +1,9 @@
 import type { EIP1193RequestFn, EIP1474Methods } from "viem";
 import type { ThirdwebClient } from "../client/client.js";
 
-import { getRpcUrlForChain } from "../chains/utils.js";
 import type { Chain } from "../chains/types.js";
-import { fetchRpc, fetchSingleRpc, type RpcRequest } from "./fetch-rpc.js";
+import { getRpcUrlForChain } from "../chains/utils.js";
+import { type RpcRequest, fetchRpc, fetchSingleRpc } from "./fetch-rpc.js";
 
 const RPC_CLIENT_MAP = new WeakMap();
 
@@ -66,7 +66,7 @@ export function getRpcClient(
     return rpcClientMap.get(chainId) as EIP1193RequestFn<EIP1474Methods>;
   }
 
-  const rpcClient: EIP1193RequestFn<EIP1474Methods> = (function () {
+  const rpcClient: EIP1193RequestFn<EIP1474Methods> = (() => {
     // we can do this upfront because it cannot change later
     const rpcUrl = getRpcUrlForChain({
       client: options.client,
@@ -88,6 +88,7 @@ export function getRpcClient(
       DEFAULT_BATCH_TIMEOUT_MS;
 
     // inflight requests
+    // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
     const inflightRequests = new Map<string, Promise<any>>();
 
     let pendingBatch: Array<{
@@ -97,7 +98,9 @@ export function getRpcClient(
         id: number;
         jsonrpc: "2.0";
       };
+      // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
       resolve: (value: any) => void;
+      // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
       reject: (reason?: any) => void;
       requestKey: string;
     }> = [];
@@ -168,20 +171,22 @@ export function getRpcClient(
         })
         .catch((err) => {
           // http call failed, reject all inflight requests
-          activeBatch.forEach((inflight) => {
+          for (const inflight of activeBatch) {
             inflight.reject(err);
             // remove the inflight request from the inflightRequests map
             inflightRequests.delete(inflight.requestKey);
-          });
+          }
         });
     }
 
     // shortcut everything if we do not need to batch
     if (batchSize === 1) {
-      return async function (request) {
+      return async (request) => {
         // we can hard-code the id and jsonrpc version
         // we also mutate the request object here to avoid copying it
+        // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
         (request as any).id = 1;
+        // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
         (request as any).jsonrpc = "2.0";
         const rpcResponse = await fetchSingleRpc(rpcUrl, options.client, {
           request: request,
@@ -198,16 +203,19 @@ export function getRpcClient(
       };
     }
 
-    return async function (request) {
+    return async (request) => {
       const requestKey = rpcRequestKey(request);
 
       // if the request for this key is already inflight, return the promise directly
       if (inflightRequests.has(requestKey)) {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        // biome-ignore lint/style/noNonNullAssertion: the `has` check ensures this is defined
         return inflightRequests.get(requestKey)!;
       }
+      // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
       let resolve: (value: any) => void;
+      // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
       let reject: (reason?: any) => void;
+      // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
       const promise = new Promise<any>((resolve_, reject_) => {
         resolve = resolve_;
         reject = reject_;

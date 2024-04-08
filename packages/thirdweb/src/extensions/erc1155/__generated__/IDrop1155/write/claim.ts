@@ -29,7 +29,7 @@ export type ClaimParams = {
   data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "data" }>;
 };
 
-const FN_SELECTOR = "0x57bc3d78" as const;
+export const FN_SELECTOR = "0x57bc3d78" as const;
 const FN_INPUTS = [
   {
     type: "address",

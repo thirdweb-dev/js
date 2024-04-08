@@ -1,6 +1,6 @@
-import { USDT_CONTRACT } from "~test/test-contracts.js";
+import { expect, it } from "vitest";
 import { TEST_WALLET_A, TEST_WALLET_B } from "~test/addresses.js";
-import { it, expect } from "vitest";
+import { USDT_CONTRACT } from "~test/test-contracts.js";
 import { prepareContractCall } from "../prepare-contract-call.js";
 import { simulateTransaction } from "./simulate.js";
 
@@ -16,6 +16,6 @@ it.runIf(process.env.TW_SECRET_KEY)(
       transaction: tx,
       from: TEST_WALLET_A,
     });
-    expect(result).toMatchInlineSnapshot(`[]`);
+    expect(result).toMatchInlineSnapshot("[]");
   },
 );

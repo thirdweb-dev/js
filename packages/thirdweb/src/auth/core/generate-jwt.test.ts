@@ -1,12 +1,12 @@
-import { describe, test, expect, vi, beforeAll, afterAll } from "vitest";
-import { generateJWT } from "./generate-jwt.js";
-import type { AuthOptions } from "./types.js";
+import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
 import {
   TEST_ACCOUNT_A,
   TEST_ACCOUNT_B,
 } from "../../../test/src/test-wallets.js";
+import { generateJWT } from "./generate-jwt.js";
 import { generateLoginPayload } from "./generate-login-payload.js";
 import { signLoginPayload } from "./sign-login-payload.js";
+import type { AuthOptions } from "./types.js";
 import { verifyLoginPayload } from "./verify-login-payload.js";
 
 const options: AuthOptions = {
@@ -97,7 +97,7 @@ describe("generateJWT", async () => {
       throw new Error("Expected an error to be thrown");
     } catch (error) {
       expect(error).toMatchInlineSnapshot(
-        `[Error: No admin account provided. Cannot generate JWT.]`,
+        "[Error: No admin account provided. Cannot generate JWT.]",
       );
     }
   });

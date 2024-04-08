@@ -77,6 +77,7 @@ export async function resolveSignature(hexSig: string): Promise<{
   event: EventString | null;
 }> {
   if (hexSig.startsWith("0x")) {
+    // biome-ignore lint/style/noParameterAssign: modifying in-place for performance
     hexSig = hexSig.slice(2);
   }
   const all = await Promise.all([
@@ -106,6 +107,7 @@ export async function resolveSignatures(hexSigs: string[]): Promise<{
   events: EventString[];
 }> {
   // dedupe hexSigs
+  // biome-ignore lint/style/noParameterAssign: modifying in-place for performance
   hexSigs = Array.from(new Set(hexSigs));
   const all = await Promise.all(
     hexSigs.map((hexSig) => resolveSignature(hexSig)),

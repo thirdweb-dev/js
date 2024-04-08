@@ -13,7 +13,7 @@ export type IsApprovedForAllParams = {
   operator: AbiParameterToPrimitiveType<{ type: "address"; name: "_operator" }>;
 };
 
-const FN_SELECTOR = "0xe985e9c5" as const;
+export const FN_SELECTOR = "0xe985e9c5" as const;
 const FN_INPUTS = [
   {
     type: "address",

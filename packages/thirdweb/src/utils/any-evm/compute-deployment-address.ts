@@ -1,8 +1,8 @@
-import { encodePacked, type Hex } from "viem";
+import { type Hex, encodePacked } from "viem";
 import { ensureBytecodePrefix } from "../bytecode/prefix.js";
+import { keccak256 } from "../hashing/keccak256.js";
 import { getSaltHash } from "./get-salt-hash.js";
 import { keccakId } from "./keccak-id.js";
-import { keccak256 } from "../hashing/keccak256.js";
 
 type ComputeDeploymentAddressOptions = {
   bytecode: string;

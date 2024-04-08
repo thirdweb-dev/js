@@ -2,12 +2,12 @@ import { getContract } from "../../contract/contract.js";
 import type { BaseTransactionOptions } from "../../transaction/types.js";
 import type { NFT } from "../../utils/nft/parseNft.js";
 import { toTokens } from "../../utils/units.js";
-import { isERC1155 } from "../erc1155/read/isERC1155.js";
 import { getCurrencyMetadata } from "../erc20/read/getCurrencyMetadata.js";
 import { isERC721 } from "../erc721/read/isERC721.js";
+import { isERC1155 } from "../erc1155/read/isERC1155.js";
 import type { getListing } from "./__generated__/IDirectListings/read/getListing.js";
 import type { getAuction } from "./__generated__/IEnglishAuctions/read/getAuction.js";
-import type { DirectListing, ListingStatus, EnglishAuction } from "./types.js";
+import type { DirectListing, EnglishAuction, ListingStatus } from "./types.js";
 
 type GetAssetParams = {
   tokenId: bigint;
@@ -56,7 +56,8 @@ function computeStatus(options: {
     case 1: {
       if (options.startTimestamp > options.blockTimeStamp) {
         return "CREATED";
-      } else if (options.endTimestamp < options.blockTimeStamp) {
+      }
+      if (options.endTimestamp < options.blockTimeStamp) {
         return "EXPIRED";
       }
       return "ACTIVE";

@@ -16,7 +16,7 @@ export type MaxWithdrawParams = {
   }>;
 };
 
-const FN_SELECTOR = "0xce96cb77" as const;
+export const FN_SELECTOR = "0xce96cb77" as const;
 const FN_INPUTS = [
   {
     name: "owner",

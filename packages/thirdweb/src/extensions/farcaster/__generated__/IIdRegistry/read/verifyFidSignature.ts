@@ -18,7 +18,7 @@ export type VerifyFidSignatureParams = {
   sig: AbiParameterToPrimitiveType<{ type: "bytes"; name: "sig" }>;
 };
 
-const FN_SELECTOR = "0x32faac70" as const;
+export const FN_SELECTOR = "0x32faac70" as const;
 const FN_INPUTS = [
   {
     type: "address",

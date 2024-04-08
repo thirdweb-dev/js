@@ -12,7 +12,7 @@ export type GetRoyaltyInfoForTokenParams = {
   tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
 };
 
-const FN_SELECTOR = "0x4cc157df" as const;
+export const FN_SELECTOR = "0x4cc157df" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

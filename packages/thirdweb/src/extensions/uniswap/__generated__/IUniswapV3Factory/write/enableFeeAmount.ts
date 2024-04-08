@@ -15,7 +15,7 @@ export type EnableFeeAmountParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x8a7c195f" as const;
+export const FN_SELECTOR = "0x8a7c195f" as const;
 const FN_INPUTS = [
   {
     type: "uint24",

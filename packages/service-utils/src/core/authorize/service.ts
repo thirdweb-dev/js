@@ -1,5 +1,5 @@
-import { ApiKeyMetadata, CoreServiceConfig } from "../api";
-import { AuthorizationResult } from "./types";
+import type { ApiKeyMetadata, CoreServiceConfig } from "../api";
+import type { AuthorizationResult } from "./types";
 
 export type ServiceAuthorizationPayload = { targetAddress?: string | string[] };
 

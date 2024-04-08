@@ -11,7 +11,7 @@ export type DepositRewardTokensParams = {
   amount: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_amount" }>;
 };
 
-const FN_SELECTOR = "0x16c621e0" as const;
+export const FN_SELECTOR = "0x16c621e0" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

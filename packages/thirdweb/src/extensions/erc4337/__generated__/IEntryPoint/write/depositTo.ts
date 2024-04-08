@@ -11,7 +11,7 @@ export type DepositToParams = {
   account: AbiParameterToPrimitiveType<{ type: "address"; name: "account" }>;
 };
 
-const FN_SELECTOR = "0xb760faf9" as const;
+export const FN_SELECTOR = "0xb760faf9" as const;
 const FN_INPUTS = [
   {
     type: "address",

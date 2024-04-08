@@ -15,6 +15,7 @@ export const ArrowTopBottom: IconFC = (props) => {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
+      role="presentation"
     >
       <path d="m3 16 4 4 4-4" />
       <path d="M7 20V4" />

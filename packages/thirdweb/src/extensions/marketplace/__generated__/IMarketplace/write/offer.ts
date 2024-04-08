@@ -27,7 +27,7 @@ export type OfferParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x5fef45e7" as const;
+export const FN_SELECTOR = "0x5fef45e7" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

@@ -26,7 +26,7 @@ export type CreateAuctionParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x16654d40" as const;
+export const FN_SELECTOR = "0x16654d40" as const;
 const FN_INPUTS = [
   {
     type: "tuple",

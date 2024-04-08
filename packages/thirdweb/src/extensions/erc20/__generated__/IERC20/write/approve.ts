@@ -12,7 +12,7 @@ export type ApproveParams = {
   value: AbiParameterToPrimitiveType<{ type: "uint256"; name: "value" }>;
 };
 
-const FN_SELECTOR = "0x095ea7b3" as const;
+export const FN_SELECTOR = "0x095ea7b3" as const;
 const FN_INPUTS = [
   {
     type: "address",

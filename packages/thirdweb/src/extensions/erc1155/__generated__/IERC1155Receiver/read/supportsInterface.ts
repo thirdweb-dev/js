@@ -15,7 +15,7 @@ export type SupportsInterfaceParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x01ffc9a7" as const;
+export const FN_SELECTOR = "0x01ffc9a7" as const;
 const FN_INPUTS = [
   {
     type: "bytes4",

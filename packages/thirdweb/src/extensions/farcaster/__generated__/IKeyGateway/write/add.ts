@@ -17,7 +17,7 @@ export type AddParams = {
   metadata: AbiParameterToPrimitiveType<{ type: "bytes"; name: "metadata" }>;
 };
 
-const FN_SELECTOR = "0x22b1a414" as const;
+export const FN_SELECTOR = "0x22b1a414" as const;
 const FN_INPUTS = [
   {
     type: "uint32",

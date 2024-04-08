@@ -21,7 +21,7 @@ export type ExactOutputParams = {
   }>;
 };
 
-const FN_SELECTOR = "0xf28c0498" as const;
+export const FN_SELECTOR = "0xf28c0498" as const;
 const FN_INPUTS = [
   {
     type: "tuple",

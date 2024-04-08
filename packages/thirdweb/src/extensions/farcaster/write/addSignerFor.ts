@@ -1,14 +1,14 @@
-import { toBigInt } from "../../../utils/bigint.js";
-import { prepareContractCall } from "../../../transaction/prepare-contract-call.js";
-import type { ThirdwebClient } from "../../../client/client.js";
-import type { Account } from "../../../wallets/interfaces/wallet.js";
+import type { Address } from "abitype";
 import type { Chain } from "../../../chains/types.js";
-import { getKeyGateway } from "../contracts/getKeyGateway.js";
+import type { ThirdwebClient } from "../../../client/client.js";
+import { prepareContractCall } from "../../../transaction/prepare-contract-call.js";
+import { toBigInt } from "../../../utils/bigint.js";
 import type { Hex } from "../../../utils/encoding/hex.js";
 import type { Prettify } from "../../../utils/type-utils.js";
-import { getFid } from "../read/getFid.js";
+import type { Account } from "../../../wallets/interfaces/wallet.js";
 import { nonces } from "../__generated__/IKeyGateway/read/nonces.js";
-import type { Address } from "abitype";
+import { getKeyGateway } from "../contracts/getKeyGateway.js";
+import { getFid } from "../read/getFid.js";
 
 /**
  * Represents the parameters for the `addSignerFor` function.
@@ -132,7 +132,7 @@ export function addSignerFor(options: AddSignerForParams) {
       }
 
       // Set the signedKeyRequestMetadata if provided, otherwise generate using the app account
-      let signedKeyRequestMetadata;
+      let signedKeyRequestMetadata: Hex;
       if ("signedKeyRequestMetadata" in options) {
         signedKeyRequestMetadata = options.signedKeyRequestMetadata;
       } else if ("appAccount" in options) {
@@ -160,7 +160,7 @@ export function addSignerFor(options: AddSignerForParams) {
       });
 
       // Set the addSignature if provided, otherwise generate one using the user account
-      let addSignature;
+      let addSignature: Hex;
       if ("addSignature" in options) {
         addSignature = options.addSignature;
       } else if ("userAccount" in options) {

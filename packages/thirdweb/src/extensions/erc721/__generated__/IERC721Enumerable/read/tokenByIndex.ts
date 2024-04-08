@@ -12,7 +12,7 @@ export type TokenByIndexParams = {
   index: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_index" }>;
 };
 
-const FN_SELECTOR = "0x4f6ccce7" as const;
+export const FN_SELECTOR = "0x4f6ccce7" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

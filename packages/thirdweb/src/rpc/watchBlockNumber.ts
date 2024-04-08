@@ -1,7 +1,7 @@
-import { getRpcClient } from "./rpc.js";
-import { eth_blockNumber } from "./actions/eth_blockNumber.js";
-import type { ThirdwebClient } from "../client/client.js";
 import type { Chain } from "../chains/types.js";
+import type { ThirdwebClient } from "../client/client.js";
+import { eth_blockNumber } from "./actions/eth_blockNumber.js";
+import { getRpcClient } from "./rpc.js";
 
 const MAX_POLL_DELAY = 5000; // 5 seconds
 const DEFAULT_POLL_DELAY = 1000; // 1 second
@@ -73,10 +73,12 @@ function createBlockNumberPoller(
       }
       lastBlockAt = currentTime;
       // for all new blockNumbers...
-      newBlockNumbers.forEach((b) => {
+      for (const b of newBlockNumbers) {
         // ... call all current subscribers
-        subscribers.forEach((subscriberCallback) => subscriberCallback(b));
-      });
+        for (const subscriberCallback of subscribers) {
+          subscriberCallback(b);
+        }
+      }
     }
     const currentApproximateBlockTime = getAverageBlockTime(blockTimesWindow);
 

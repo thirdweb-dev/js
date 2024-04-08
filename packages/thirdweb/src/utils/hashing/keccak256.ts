@@ -1,8 +1,8 @@
 import { keccak_256 } from "@noble/hashes/sha3";
 import {
-  isHex,
   type Hex,
   hexToUint8Array,
+  isHex,
   uint8ArrayToHex,
 } from "../encoding/hex.js";
 

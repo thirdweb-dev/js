@@ -16,7 +16,7 @@ export type GetMetadataUriParams = {
   }>;
 };
 
-const FN_SELECTOR = "0xf4c2012d" as const;
+export const FN_SELECTOR = "0xf4c2012d" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

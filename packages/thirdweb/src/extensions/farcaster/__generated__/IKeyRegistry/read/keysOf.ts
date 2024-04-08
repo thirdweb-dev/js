@@ -13,7 +13,7 @@ export type KeysOfParams = {
   state: AbiParameterToPrimitiveType<{ type: "uint8"; name: "state" }>;
 };
 
-const FN_SELECTOR = "0x1f64222f" as const;
+export const FN_SELECTOR = "0x1f64222f" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

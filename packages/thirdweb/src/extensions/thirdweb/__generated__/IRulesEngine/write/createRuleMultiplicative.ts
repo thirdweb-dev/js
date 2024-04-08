@@ -20,7 +20,7 @@ export type CreateRuleMultiplicativeParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x1e2e9cb5" as const;
+export const FN_SELECTOR = "0x1e2e9cb5" as const;
 const FN_INPUTS = [
   {
     type: "tuple",

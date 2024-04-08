@@ -1,27 +1,27 @@
 import {
-  parseAbiItem,
   type Abi,
   type AbiFunction,
   type ExtractAbiFunctionNames,
+  parseAbiItem,
 } from "abitype";
 import { type TransactionRequest, concatHex } from "viem";
-import { isAbiFunction } from "./utils.js";
+import type { ThirdwebContract } from "../contract/contract.js";
+import { encodeAbiParameters } from "../utils/abi/encodeAbiParameters.js";
 import {
-  prepareTransaction,
+  type PreparedMethod,
+  prepareMethod,
+} from "../utils/abi/prepare-method.js";
+import { resolvePromisedValue } from "../utils/promise/resolve-promised-value.js";
+import {
   type PrepareTransactionOptions,
+  prepareTransaction,
 } from "./prepare-transaction.js";
 import type {
   BaseTransactionOptions,
   ParamsOption,
   ParseMethod,
 } from "./types.js";
-import { resolvePromisedValue } from "../utils/promise/resolve-promised-value.js";
-import type { ThirdwebContract } from "../contract/contract.js";
-import {
-  prepareMethod,
-  type PreparedMethod,
-} from "../utils/abi/prepare-method.js";
-import { encodeAbiParameters } from "../utils/abi/encodeAbiParameters.js";
+import { isAbiFunction } from "./utils.js";
 
 export type PrepareContractCallOptions<
   TAbi extends Abi = [],

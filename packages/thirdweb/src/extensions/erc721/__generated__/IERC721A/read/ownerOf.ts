@@ -12,7 +12,7 @@ export type OwnerOfParams = {
   tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
 };
 
-const FN_SELECTOR = "0x6352211e" as const;
+export const FN_SELECTOR = "0x6352211e" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

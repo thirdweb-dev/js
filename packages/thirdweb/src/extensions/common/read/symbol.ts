@@ -18,6 +18,6 @@ export async function symbol(options: BaseTransactionOptions): Promise<string> {
   return withCache(() => generatedSymbol(options), {
     cacheKey: `${options.contract.chain.id}:${options.contract.address}:symbol`,
     // can never change, so cache forever
-    cacheTime: Infinity,
+    cacheTime: Number.POSITIVE_INFINITY,
   });
 }

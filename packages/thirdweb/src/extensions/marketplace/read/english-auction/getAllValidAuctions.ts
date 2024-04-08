@@ -1,11 +1,11 @@
 import { eth_getBlockByNumber } from "../../../../rpc/actions/eth_getBlockByNumber.js";
 import { getRpcClient } from "../../../../rpc/rpc.js";
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
-import { getAllValidAuctions as getAllValidAuctionsGenerated } from "../../__generated__/IEnglishAuctions/read/getAllValidAuctions.js";
-import type { EnglishAuction } from "../../types.js";
 import { min } from "../../../../utils/bigint.js";
-import { getAllInBatches, mapEnglishAuction } from "../../utils.js";
+import { getAllValidAuctions as getAllValidAuctionsGenerated } from "../../__generated__/IEnglishAuctions/read/getAllValidAuctions.js";
 import { totalAuctions } from "../../__generated__/IEnglishAuctions/read/totalAuctions.js";
+import type { EnglishAuction } from "../../types.js";
+import { getAllInBatches, mapEnglishAuction } from "../../utils.js";
 
 const DEFAULT_QUERY_ALL_COUNT = 100n;
 

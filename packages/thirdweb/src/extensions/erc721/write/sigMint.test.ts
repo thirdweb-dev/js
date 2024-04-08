@@ -1,20 +1,20 @@
 import { beforeAll, describe, expect, it } from "vitest";
-import { generateMintSignature, mintWithSignature } from "./sigMint.js";
+import { ANVIL_CHAIN } from "../../../../test/src/chains.js";
+import { TEST_CLIENT } from "../../../../test/src/test-clients.js";
+import { USDT_CONTRACT_ADDRESS } from "../../../../test/src/test-contracts.js";
 import {
   TEST_ACCOUNT_A,
   TEST_ACCOUNT_B,
 } from "../../../../test/src/test-wallets.js";
-import { deployERC721Contract } from "../../prebuilts/deploy-erc721.js";
-import { ANVIL_CHAIN } from "../../../../test/src/chains.js";
-import { TEST_CLIENT } from "../../../../test/src/test-clients.js";
-import {
-  getContract,
-  type ThirdwebContract,
-} from "../../../contract/contract.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/addresses.js";
-import { USDT_CONTRACT_ADDRESS } from "../../../../test/src/test-contracts.js";
-import { toHex } from "../../../utils/encoding/hex.js";
+import {
+  type ThirdwebContract,
+  getContract,
+} from "../../../contract/contract.js";
 import { sendTransaction } from "../../../transaction/actions/send-transaction.js";
+import { toHex } from "../../../utils/encoding/hex.js";
+import { deployERC721Contract } from "../../prebuilts/deploy-erc721.js";
+import { generateMintSignature, mintWithSignature } from "./sigMint.js";
 
 // skip this test suite if there is no secret key available to test with
 // TODO: remove reliance on secret key during unit tests entirely

@@ -20,7 +20,7 @@ export type AcceptOfferParams = {
   }>;
 };
 
-const FN_SELECTOR = "0xb13c0e63" as const;
+export const FN_SELECTOR = "0xb13c0e63" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

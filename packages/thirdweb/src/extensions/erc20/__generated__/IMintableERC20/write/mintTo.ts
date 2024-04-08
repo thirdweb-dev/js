@@ -12,7 +12,7 @@ export type MintToParams = {
   amount: AbiParameterToPrimitiveType<{ type: "uint256"; name: "amount" }>;
 };
 
-const FN_SELECTOR = "0x449a52f8" as const;
+export const FN_SELECTOR = "0x449a52f8" as const;
 const FN_INPUTS = [
   {
     type: "address",

@@ -1,11 +1,11 @@
-import { describe, test, expect, beforeAll } from "vitest";
-import { privateKeyAccount } from "../wallets/private-key.js";
-import { TEST_CLIENT } from "../../test/src/test-clients.js";
-import { viemAdapter } from "./viem.js";
 import { zeroAddress } from "viem";
+import { beforeAll, describe, expect, test } from "vitest";
+import { TEST_CLIENT } from "../../test/src/test-clients.js";
+import { privateKeyAccount } from "../wallets/private-key.js";
+import { viemAdapter } from "./viem.js";
 
-import { typedData } from "~test/typed-data.js";
 import { ANVIL_PKEY_A } from "~test/test-wallets.js";
+import { typedData } from "~test/typed-data.js";
 import { ANVIL_CHAIN } from "../../test/src/chains.js";
 import { mainnet } from "../chains/chain-definitions/ethereum.js";
 

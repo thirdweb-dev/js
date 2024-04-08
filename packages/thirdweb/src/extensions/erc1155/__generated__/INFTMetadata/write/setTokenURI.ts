@@ -12,7 +12,7 @@ export type SetTokenURIParams = {
   uri: AbiParameterToPrimitiveType<{ type: "string"; name: "_uri" }>;
 };
 
-const FN_SELECTOR = "0x162094c4" as const;
+export const FN_SELECTOR = "0x162094c4" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

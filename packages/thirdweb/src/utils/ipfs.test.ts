@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
-import { resolveScheme } from "./ipfs.js";
+import { describe, expect, it } from "vitest";
 import { createThirdwebClient } from "../client/client.js";
+import { resolveScheme } from "./ipfs.js";
 
 describe("resolveScheme", () => {
   it("should resolve ipfs scheme when not passing a gateway override", () => {

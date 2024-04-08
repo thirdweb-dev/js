@@ -12,7 +12,7 @@ export type MintToParams = {
   uri: AbiParameterToPrimitiveType<{ type: "string"; name: "uri" }>;
 };
 
-const FN_SELECTOR = "0x0075a317" as const;
+export const FN_SELECTOR = "0x0075a317" as const;
 const FN_INPUTS = [
   {
     type: "address",

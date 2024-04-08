@@ -1,7 +1,7 @@
-import { parseAbiItem, type AbiEvent, type ParseAbiItem } from "abitype";
-import { isAbiEvent } from "./utils.js";
-import { toEventHash, type Hex, encodeEventTopics } from "viem";
+import { type AbiEvent, type ParseAbiItem, parseAbiItem } from "abitype";
+import { type Hex, encodeEventTopics, toEventHash } from "viem";
 import type { AbiEventParametersToPrimitiveTypes } from "./types.js";
+import { isAbiEvent } from "./utils.js";
 
 type ParseEvent<event extends AbiEvent | string> =
   // if the method IS an AbiEvent, return it

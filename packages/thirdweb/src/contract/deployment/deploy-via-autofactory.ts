@@ -1,19 +1,19 @@
+import { parseEventLogs } from "../../event/actions/parse-logs.js";
+import { proxyDeployedEvent } from "../../extensions/thirdweb/__generated__/IContractFactory/events/ProxyDeployed.js";
+import { deployProxyByImplementation } from "../../extensions/thirdweb/__generated__/IContractFactory/write/deployProxyByImplementation.js";
 import { eth_blockNumber } from "../../rpc/actions/eth_blockNumber.js";
 import { getRpcClient } from "../../rpc/rpc.js";
+import { encode } from "../../transaction/actions/encode.js";
+import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
+import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
 import { keccakId } from "../../utils/any-evm/keccak-id.js";
 import { toHex } from "../../utils/encoding/hex.js";
-import type { ThirdwebContract } from "../contract.js";
-import { deployProxyByImplementation } from "../../extensions/thirdweb/__generated__/IContractFactory/write/deployProxyByImplementation.js";
+import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import type {
   ClientAndChain,
   ClientAndChainAndAccount,
 } from "../../utils/types.js";
-import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
-import { encode } from "../../transaction/actions/encode.js";
-import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
-import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
-import { parseEventLogs } from "../../event/actions/parse-logs.js";
-import { proxyDeployedEvent } from "../../extensions/thirdweb/__generated__/IContractFactory/events/ProxyDeployed.js";
+import type { ThirdwebContract } from "../contract.js";
 
 /**
  * @internal
@@ -85,7 +85,7 @@ export async function deployViaAutoFactory(
   });
   if (decodedEvent.length === 0 || !decodedEvent[0]) {
     throw new Error(
-      "No ProxyDeployed event found in transaction: " + receipt.transactionHash,
+      `No ProxyDeployed event found in transaction: ${receipt.transactionHash}`,
     );
   }
   return decodedEvent[0]?.args.proxy;

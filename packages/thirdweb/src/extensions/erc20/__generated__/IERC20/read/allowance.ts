@@ -13,7 +13,7 @@ export type AllowanceParams = {
   spender: AbiParameterToPrimitiveType<{ type: "address"; name: "spender" }>;
 };
 
-const FN_SELECTOR = "0xdd62ed3e" as const;
+export const FN_SELECTOR = "0xdd62ed3e" as const;
 const FN_INPUTS = [
   {
     type: "address",

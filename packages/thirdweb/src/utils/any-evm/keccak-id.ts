@@ -1,6 +1,6 @@
-import { keccak256 } from "../hashing/keccak256.js";
 import type { Hex } from "../encoding/hex.js";
 import { stringToBytes } from "../encoding/to-bytes.js";
+import { keccak256 } from "../hashing/keccak256.js";
 
 /**
  * Calculates the keccak ID of the given input.

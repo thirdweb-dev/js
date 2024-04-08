@@ -12,7 +12,7 @@ export type DelegatesParams = {
   account: AbiParameterToPrimitiveType<{ type: "address"; name: "account" }>;
 };
 
-const FN_SELECTOR = "0x587cde1e" as const;
+export const FN_SELECTOR = "0x587cde1e" as const;
 const FN_INPUTS = [
   {
     type: "address",

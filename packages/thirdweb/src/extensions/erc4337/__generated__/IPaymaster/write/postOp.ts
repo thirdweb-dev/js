@@ -16,7 +16,7 @@ export type PostOpParams = {
   }>;
 };
 
-const FN_SELECTOR = "0xa9a23409" as const;
+export const FN_SELECTOR = "0xa9a23409" as const;
 const FN_INPUTS = [
   {
     type: "uint8",

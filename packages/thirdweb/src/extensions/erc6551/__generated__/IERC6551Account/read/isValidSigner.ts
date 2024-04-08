@@ -13,7 +13,7 @@ export type IsValidSignerParams = {
   context: AbiParameterToPrimitiveType<{ type: "bytes"; name: "context" }>;
 };
 
-const FN_SELECTOR = "0x523e3260" as const;
+export const FN_SELECTOR = "0x523e3260" as const;
 const FN_INPUTS = [
   {
     type: "address",

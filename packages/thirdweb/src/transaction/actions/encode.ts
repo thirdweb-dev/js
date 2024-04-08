@@ -1,6 +1,6 @@
+import type { Abi, AbiFunction } from "abitype";
 import type { Hex } from "../../utils/encoding/hex.js";
 import type { PreparedTransaction } from "../prepare-transaction.js";
-import type { Abi, AbiFunction } from "abitype";
 
 const encodeWeakMap = new WeakMap<
   PreparedTransaction<Abi, AbiFunction>,
@@ -22,7 +22,7 @@ export async function encode<abi extends Abi, abiFn extends AbiFunction>(
   transaction: PreparedTransaction<abi, abiFn>,
 ): Promise<Hex> {
   if (encodeWeakMap.has(transaction)) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    // biome-ignore lint/style/noNonNullAssertion: the `has` above ensures that this will always be set
     return encodeWeakMap.get(transaction)!;
   }
   const promise = (async () => {

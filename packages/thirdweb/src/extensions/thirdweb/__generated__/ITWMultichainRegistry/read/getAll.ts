@@ -12,7 +12,7 @@ export type GetAllParams = {
   deployer: AbiParameterToPrimitiveType<{ type: "address"; name: "_deployer" }>;
 };
 
-const FN_SELECTOR = "0xeb077342" as const;
+export const FN_SELECTOR = "0xeb077342" as const;
 const FN_INPUTS = [
   {
     type: "address",

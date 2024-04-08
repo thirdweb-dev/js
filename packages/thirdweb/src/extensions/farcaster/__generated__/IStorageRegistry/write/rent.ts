@@ -12,7 +12,7 @@ export type RentParams = {
   units: AbiParameterToPrimitiveType<{ type: "uint256"; name: "units" }>;
 };
 
-const FN_SELECTOR = "0x783a112b" as const;
+export const FN_SELECTOR = "0x783a112b" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

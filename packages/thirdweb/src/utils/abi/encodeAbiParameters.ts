@@ -3,16 +3,16 @@ import type {
   AbiParameterToPrimitiveType,
   AbiParametersToPrimitiveTypes,
 } from "abitype";
-import {
-  numberToHex,
-  type Hex,
-  padHex,
-  stringToHex,
-  boolToHex,
-} from "../encoding/hex.js";
-import { byteSize } from "../encoding/helpers/byte-size.js";
 import { concat, slice } from "viem/utils";
 import { isAddress } from "../address.js";
+import { byteSize } from "../encoding/helpers/byte-size.js";
+import {
+  type Hex,
+  boolToHex,
+  numberToHex,
+  padHex,
+  stringToHex,
+} from "../encoding/hex.js";
 
 /**
  * Encodes the given ABI parameters and values into a hexadecimal string.
@@ -74,7 +74,7 @@ function prepareParams<const TParams extends readonly AbiParameter[]>({
 }) {
   const preparedParams: PreparedParam[] = [];
   for (let i = 0; i < params.length; i++) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    // biome-ignore lint/style/noNonNullAssertion: we know the value is not `undefined`.
     preparedParams.push(prepareParam({ param: params[i]!, value: values[i] }));
   }
   return preparedParams;
@@ -120,7 +120,7 @@ function encodeParams(preparedParams: PreparedParam[]): Hex {
   // 1. Compute the size of the static part of the parameters.
   let staticSize = 0;
   for (let i = 0; i < preparedParams.length; i++) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    // biome-ignore lint/style/noNonNullAssertion: we know the value is not `undefined`.
     const { dynamic, encoded } = preparedParams[i]!;
     if (dynamic) {
       staticSize += 32;
@@ -134,7 +134,7 @@ function encodeParams(preparedParams: PreparedParam[]): Hex {
   const dynamicParams: Hex[] = [];
   let dynamicSize = 0;
   for (let i = 0; i < preparedParams.length; i++) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    // biome-ignore lint/style/noNonNullAssertion: we know the value is not `undefined`.
     const { dynamic, encoded } = preparedParams[i]!;
     if (dynamic) {
       staticParams.push(numberToHex(staticSize + dynamicSize, { size: 32 }));
@@ -227,7 +227,7 @@ function encodeBytes<const TParam extends AbiParameter>(
       encoded: concat([padHex(numberToHex(bytesSize, { size: 32 })), value_]),
     };
   }
-  if (bytesSize !== parseInt(paramSize)) {
+  if (bytesSize !== Number.parseInt(paramSize)) {
     throw new Error(`Invalid bytes${paramSize} size: ${bytesSize}`);
   }
   return { dynamic: false, encoded: padHex(value, { dir: "right" }) };
@@ -279,12 +279,13 @@ function encodeTuple<
   let dynamic = false;
   const preparedParams: PreparedParam[] = [];
   for (let i = 0; i < param.components.length; i++) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    // biome-ignore lint/style/noNonNullAssertion: we know the value is not `undefined`.
     const param_ = param.components[i]!;
     const index = Array.isArray(value) ? i : param_.name;
     const preparedParam = prepareParam({
       param: param_,
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      // biome-ignore lint/style/noNonNullAssertion: we know the value is not `undefined`.
+      // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
       value: (value as any)[index!] as readonly unknown[],
     });
     preparedParams.push(preparedParam);
@@ -306,7 +307,7 @@ function getArrayComponents(
   const matches = type.match(/^(.*)\[(\d+)?\]$/);
   return matches
     ? // Return `null` if the array is dynamic.
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      // biome-ignore lint/style/noNonNullAssertion: we know the value is not `undefined`.
       [matches[2] ? Number(matches[2]) : null, matches[1]!]
     : undefined;
 }

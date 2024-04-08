@@ -1,8 +1,8 @@
 import { cachedTextEncoder } from "../text-encoder.js";
 import { assertSize } from "./helpers/assert-size.js";
 import { charCodeToBase16 } from "./helpers/charcode-to-base-16.js";
-import { isHex, type Hex } from "./helpers/is-hex.js";
-import { numberToHex, padHex, type NumberToHexOpts } from "./hex.js";
+import { type Hex, isHex } from "./helpers/is-hex.js";
+import { type NumberToHexOpts, numberToHex, padHex } from "./hex.js";
 
 type PadOptions = {
   dir?: "left" | "right";
@@ -20,7 +20,7 @@ function padBytes(bytes: Uint8Array, { dir, size = 32 }: PadOptions = {}) {
   for (let i = 0; i < size; i++) {
     const padEnd = dir === "right";
     paddedBytes[padEnd ? i : size - i - 1] =
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      // biome-ignore lint/style/noNonNullAssertion: we know its there
       bytes[padEnd ? i : bytes.length - i - 1]!;
   }
   return paddedBytes;

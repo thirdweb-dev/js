@@ -20,7 +20,7 @@ export type MintParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x94bf804d" as const;
+export const FN_SELECTOR = "0x94bf804d" as const;
 const FN_INPUTS = [
   {
     name: "shares",

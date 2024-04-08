@@ -14,7 +14,7 @@ export type CollectAuctionPayoutParams = {
   }>;
 };
 
-const FN_SELECTOR = "0xebf05a62" as const;
+export const FN_SELECTOR = "0xebf05a62" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

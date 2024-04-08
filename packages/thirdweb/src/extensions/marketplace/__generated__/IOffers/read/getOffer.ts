@@ -12,7 +12,7 @@ export type GetOfferParams = {
   offerId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_offerId" }>;
 };
 
-const FN_SELECTOR = "0x4579268a" as const;
+export const FN_SELECTOR = "0x4579268a" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

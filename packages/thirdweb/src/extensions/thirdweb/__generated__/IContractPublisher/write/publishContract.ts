@@ -34,7 +34,7 @@ export type PublishContractParams = {
   }>;
 };
 
-const FN_SELECTOR = "0xd50299e6" as const;
+export const FN_SELECTOR = "0xd50299e6" as const;
 const FN_INPUTS = [
   {
     type: "address",

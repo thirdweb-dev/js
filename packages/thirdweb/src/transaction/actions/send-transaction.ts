@@ -1,11 +1,13 @@
-import type { WaitForReceiptOptions } from "./wait-for-tx-receipt.js";
 import type { Account } from "../../wallets/interfaces/wallet.js";
 import type { PreparedTransaction } from "../prepare-transaction.js";
+import type { WaitForReceiptOptions } from "./wait-for-tx-receipt.js";
 
 import { toSerializableTransaction } from "./to-serializable-transaction.js";
 
 export type SendTransactionOptions = {
   account: Account;
+  // TODO: update this to `Transaction<"prepared">` once the type is available to ensure only prepared transactions are accepted
+  // biome-ignore lint/suspicious/noExplicitAny: library function that accepts any prepared transaction type
   transaction: PreparedTransaction<any>;
 };
 

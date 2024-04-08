@@ -1,9 +1,9 @@
-import { waitForReceipt } from "./wait-for-tx-receipt.js";
 import type { TransactionReceipt } from "../types.js";
 import {
-  sendTransaction,
   type SendTransactionOptions,
+  sendTransaction,
 } from "./send-transaction.js";
+import { waitForReceipt } from "./wait-for-tx-receipt.js";
 
 /**
  * Sends a transaction using the provided wallet.

@@ -1,8 +1,8 @@
 import { download } from "../../storage/download.js";
 import { extractIPFSUri } from "../../utils/bytecode/extractIPFS.js";
 import { resolveImplementation } from "../../utils/bytecode/resolveImplementation.js";
-import type { ThirdwebContract } from "../contract.js";
 import { formatCompilerMetadata } from "../actions/compiler-metadata.js";
+import type { ThirdwebContract } from "../contract.js";
 import { fetchConstructorParams } from "./constructor-params.js";
 import { fetchSourceFilesFromMetadata } from "./source-files.js";
 
@@ -136,9 +136,8 @@ export async function verifyContract(
   const data = await result.json();
   if (data.status === RequestStatus.OK) {
     return data.result;
-  } else {
-    throw new Error(`${data.result}`);
   }
+  throw new Error(`${data.result}`);
 }
 
 const VerificationStatus = {

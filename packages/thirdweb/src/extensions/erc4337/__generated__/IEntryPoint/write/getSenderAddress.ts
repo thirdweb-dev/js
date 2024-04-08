@@ -11,7 +11,7 @@ export type GetSenderAddressParams = {
   initCode: AbiParameterToPrimitiveType<{ type: "bytes"; name: "initCode" }>;
 };
 
-const FN_SELECTOR = "0x9b249f69" as const;
+export const FN_SELECTOR = "0x9b249f69" as const;
 const FN_INPUTS = [
   {
     type: "bytes",

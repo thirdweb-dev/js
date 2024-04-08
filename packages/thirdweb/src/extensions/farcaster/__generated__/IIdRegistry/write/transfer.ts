@@ -13,7 +13,7 @@ export type TransferParams = {
   sig: AbiParameterToPrimitiveType<{ type: "bytes"; name: "sig" }>;
 };
 
-const FN_SELECTOR = "0xbe45fd62" as const;
+export const FN_SELECTOR = "0xbe45fd62" as const;
 const FN_INPUTS = [
   {
     type: "address",
