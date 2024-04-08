@@ -2,4 +2,4 @@
 "thirdweb": patch
 ---
 
-Export useSendBatchTransaction() for smart accounts
+Export `useSendBatchTransaction()` for smart accounts
