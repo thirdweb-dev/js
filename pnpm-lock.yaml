@@ -81,8 +81,8 @@ importers:
         specifier: npm:ethers@6.11.1
         version: /ethers@6.11.1
       knip:
-        specifier: 5.8.0
-        version: 5.8.0(@types/node@20.12.5)(typescript@5.4.4)
+        specifier: 5.9.1
+        version: 5.9.1(@types/node@20.12.5)(typescript@5.4.4)
       mitata:
         specifier: 0.1.11
         version: 0.1.11
@@ -16569,7 +16569,6 @@ packages:
     dependencies:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
-    bundledDependencies: false
 
   /event-emitter@0.3.5:
     resolution: {integrity: sha512-D9rRn9y7kLPnJ+hMq7S/nhvoKwwvVJahBi2BPmx3bvbsEdK3W9ii8cBSGjP+72/LnM4n6fo3+dkCX5FeTQruXA==}
@@ -19446,8 +19445,8 @@ packages:
     engines: {node: '>=6'}
     dev: false
 
-  /knip@5.8.0(@types/node@20.12.5)(typescript@5.4.4):
-    resolution: {integrity: sha512-q7/3eULypxgjT2EWWt3lly7hbQteKpRj04mfqPMjPb8CPWnF1GzyQtXr++eO0r6pAvSegLlhi/NFmG56sM6pfw==}
+  /knip@5.9.1(@types/node@20.12.5)(typescript@5.4.4):
+    resolution: {integrity: sha512-OiUSEtLubLpJ2OH/kcwrB+SmPiRXHoFhSOIG8B6HDzeFPm8hDWipscKlrC5nSYSi9ix2igD7zhfC+qpbrO3zRQ==}
     engines: {node: '>=18.6.0'}
     hasBin: true
     peerDependencies:
