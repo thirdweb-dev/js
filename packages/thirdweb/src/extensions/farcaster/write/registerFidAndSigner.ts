@@ -1,14 +1,14 @@
 import type { Address } from "abitype";
-import { toBigInt } from "../../../utils/bigint.js";
-import { prepareContractCall } from "../../../transaction/prepare-contract-call.js";
-import type { ThirdwebClient } from "../../../client/client.js";
-import type { Account } from "../../../wallets/interfaces/wallet.js";
 import type { Chain } from "../../../chains/types.js";
-import { getBundler } from "../contracts/getBundler.js";
+import type { ThirdwebClient } from "../../../client/client.js";
+import { prepareContractCall } from "../../../transaction/prepare-contract-call.js";
+import { toBigInt } from "../../../utils/bigint.js";
 import type { Hex } from "../../../utils/encoding/hex.js";
 import type { Prettify } from "../../../utils/type-utils.js";
-import { getFid } from "../read/getFid.js";
+import type { Account } from "../../../wallets/interfaces/wallet.js";
+import { getBundler } from "../contracts/getBundler.js";
 import { getKeyGateway } from "../contracts/getKeyGateway.js";
+import { getFid } from "../read/getFid.js";
 
 /**
  * Represents the parameters for the `registerFidAndSigner` function.
@@ -203,7 +203,7 @@ export function registerFidAndSigner(options: RegisterFidAndSignerParams) {
       });
 
       // Set the registerSignature if provided, otherwise sign the register operation using the userAccount
-      let registerSignature;
+      let registerSignature: Hex;
       if ("registerSignature" in options) {
         registerSignature = options.registerSignature;
       } else if ("userAccount" in options) {
@@ -237,7 +237,7 @@ export function registerFidAndSigner(options: RegisterFidAndSignerParams) {
       }
 
       // Set the signedKeyRequestMetadata if provided, otherwise use the app account to generate one
-      let signedKeyRequestMetadata;
+      let signedKeyRequestMetadata: Hex;
       if ("signedKeyRequestMetadata" in options) {
         signedKeyRequestMetadata = options.signedKeyRequestMetadata;
       } else if ("appAccount" in options) {
@@ -259,7 +259,7 @@ export function registerFidAndSigner(options: RegisterFidAndSignerParams) {
       }
 
       // Set the addSignature if provided, otherwise sign the add operation using the userAccount
-      let addSignature;
+      let addSignature: Hex;
       if ("addSignature" in options) {
         addSignature = options.addSignature;
       } else if ("userAccount" in options) {

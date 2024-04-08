@@ -1,7 +1,7 @@
-import { concat, type ByteArray, type SignableMessage } from "viem";
+import { type ByteArray, type SignableMessage, concat } from "viem";
+import type { Hex } from "../encoding/hex.js";
 import { stringToBytes, toBytes } from "../encoding/to-bytes.js";
 import { keccak256 } from "./keccak256.js";
-import type { Hex } from "../encoding/hex.js";
 
 const presignMessagePrefix = "\x19Ethereum Signed Message:\n";
 type To = "hex" | "bytes";

@@ -1,10 +1,10 @@
 import { recoverAddress } from "viem";
-import { hashMessage } from "../utils/hashing/hashMessage.js";
-import { isHex } from "../utils/encoding/hex.js";
 import type { Chain } from "../chains/types.js";
 import type { ThirdwebClient } from "../client/client.js";
 import { getContract } from "../contract/contract.js";
 import { isValidSignature } from "../extensions/erc1271/__generated__/isValidSignature/read/isValidSignature.js";
+import { isHex } from "../utils/encoding/hex.js";
+import { hashMessage } from "../utils/hashing/hashMessage.js";
 import type { Prettify } from "../utils/type-utils.js";
 
 export type VerifyEOASignatureParams = {

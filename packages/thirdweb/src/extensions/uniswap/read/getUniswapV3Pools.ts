@@ -1,7 +1,7 @@
 import type { Address } from "abitype";
-import { UniswapFee } from "../types.js";
 import { ADDRESS_ZERO } from "../../../constants/addresses.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
+import { UniswapFee } from "../types.js";
 
 /**
  * Represents the parameters for the `findUniswapV3Pool` function.

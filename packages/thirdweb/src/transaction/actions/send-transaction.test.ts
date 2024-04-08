@@ -1,10 +1,10 @@
-import { describe, it, expect } from "vitest";
-import { sendTransaction } from "./send-transaction.js";
-import { prepareTransaction } from "../prepare-transaction.js";
+import { describe, expect, it } from "vitest";
 import { TEST_WALLET_B } from "../../../test/src/addresses.js";
 import { ANVIL_CHAIN } from "../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import { TEST_ACCOUNT_A } from "../../../test/src/test-wallets.js";
+import { prepareTransaction } from "../prepare-transaction.js";
+import { sendTransaction } from "./send-transaction.js";
 
 describe("sendTransaction", () => {
   it("should send transaction", async () => {

@@ -23,7 +23,7 @@ export type TransferAndChangeRecoveryForParams = {
   toSig: AbiParameterToPrimitiveType<{ type: "bytes"; name: "toSig" }>;
 };
 
-const FN_SELECTOR = "0x4c5cbb34" as const;
+export const FN_SELECTOR = "0x4c5cbb34" as const;
 const FN_INPUTS = [
   {
     type: "address",

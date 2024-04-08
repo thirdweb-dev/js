@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "@swc/cli": "0.3.10",
-    "@swc/core": "^1.4.11",
+    "@swc/core": "^1.4.12",
     "ora": "^6.3.1"
   }
 }

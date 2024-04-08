@@ -13,7 +13,7 @@ export type GetStakeInfoForTokenParams = {
   staker: AbiParameterToPrimitiveType<{ type: "address"; name: "staker" }>;
 };
 
-const FN_SELECTOR = "0x168fb5c5" as const;
+export const FN_SELECTOR = "0x168fb5c5" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

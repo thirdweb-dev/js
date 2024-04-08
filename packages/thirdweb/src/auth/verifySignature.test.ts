@@ -1,6 +1,6 @@
+import { describe, expect, test } from "vitest";
 import { TEST_ACCOUNT_A } from "../../test/src/test-wallets.js";
 import { verifyEOASignature } from "./verifySignature.js";
-import { describe, test, expect } from "vitest";
 
 describe("verifyEOASignature", () => {
   test("should return true for a valid signature", async () => {

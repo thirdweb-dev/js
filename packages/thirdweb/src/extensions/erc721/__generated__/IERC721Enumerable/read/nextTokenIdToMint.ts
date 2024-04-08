@@ -4,7 +4,7 @@ import type { BaseTransactionOptions } from "../../../../../transaction/types.js
 import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
 
-const FN_SELECTOR = "0x3b1475a7" as const;
+export const FN_SELECTOR = "0x3b1475a7" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {

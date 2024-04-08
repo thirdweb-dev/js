@@ -16,7 +16,7 @@ export type GetPastVotesParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x3a46b1a8" as const;
+export const FN_SELECTOR = "0x3a46b1a8" as const;
 const FN_INPUTS = [
   {
     type: "address",

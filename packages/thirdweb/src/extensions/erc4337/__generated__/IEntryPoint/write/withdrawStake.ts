@@ -14,7 +14,7 @@ export type WithdrawStakeParams = {
   }>;
 };
 
-const FN_SELECTOR = "0xc23a5cea" as const;
+export const FN_SELECTOR = "0xc23a5cea" as const;
 const FN_INPUTS = [
   {
     type: "address",

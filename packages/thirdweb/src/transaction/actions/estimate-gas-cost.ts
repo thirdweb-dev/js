@@ -2,7 +2,7 @@ import { isOpStackChain } from "../../chains/constants.js";
 import { getGasPrice } from "../../gas/get-gas-price.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import { toEther } from "../../utils/units.js";
-import { estimateGas, type EstimateGasOptions } from "./estimate-gas.js";
+import { type EstimateGasOptions, estimateGas } from "./estimate-gas.js";
 
 export type EstimateGasCostResult = {
   ether: string;

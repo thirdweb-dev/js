@@ -1,9 +1,9 @@
-import { type Abi, parseAbi, formatAbi } from "abitype";
-import { getClientFetch } from "../../utils/fetch.js";
-import { getBytecode } from "./get-bytecode.js";
+import { type Abi, formatAbi, parseAbi } from "abitype";
 import { download } from "../../storage/download.js";
 import { extractIPFSUri } from "../../utils/bytecode/extractIPFS.js";
+import { getClientFetch } from "../../utils/fetch.js";
 import type { ThirdwebContract } from "../contract.js";
+import { getBytecode } from "./get-bytecode.js";
 
 const ABI_RESOLUTION_CACHE = new WeakMap<ThirdwebContract<Abi>, Promise<Abi>>();
 
@@ -48,7 +48,7 @@ export function resolveContractAbi<abi extends Abi>(
       return await resolveAbiFromContractApi(contract, contractApiBaseUrl);
     } catch (e) {
       // if that fails, try to resolve it from the bytecode
-      return await resolveCompositeAbi(contract as ThirdwebContract<any>);
+      return await resolveCompositeAbi(contract as ThirdwebContract);
     }
   })();
   ABI_RESOLUTION_CACHE.set(contract, prom);
@@ -76,6 +76,7 @@ export function resolveContractAbi<abi extends Abi>(
  * @contract
  */
 export async function resolveAbiFromContractApi(
+  // biome-ignore lint/suspicious/noExplicitAny: library function that accepts any contract type
   contract: ThirdwebContract<any>,
   contractApiBaseUrl = "https://contract.thirdweb.com/abi",
 ): Promise<Abi> {
@@ -112,6 +113,7 @@ export async function resolveAbiFromContractApi(
  * @contract
  */
 export async function resolveAbiFromBytecode(
+  // biome-ignore lint/suspicious/noExplicitAny: library function that accepts any contract type
   contract: ThirdwebContract<any>,
 ): Promise<Abi> {
   const bytecode = await getBytecode(contract);
@@ -367,6 +369,7 @@ async function resolveDiamondFacetAddresses(
 }
 
 type GetAbisForPluginsOptions = {
+  // biome-ignore lint/suspicious/noExplicitAny: library function that accepts any contract type
   contract: ThirdwebContract<any>;
   plugins: string[];
   resolveSubAbi?: (contract: ThirdwebContract) => Promise<Abi>;
@@ -384,10 +387,9 @@ async function getAbisForPlugins(
       // if we have a method passed in that tells us how to resove the sub-api, use that
       if (options.resolveSubAbi) {
         return options.resolveSubAbi(newContract);
-      } else {
-        // otherwise default logic
-        return resolveAbiFromBytecode(newContract);
       }
+      // otherwise default logic
+      return resolveAbiFromBytecode(newContract);
     }),
   );
 }

@@ -19,6 +19,7 @@ export function trim<TValue extends Uint8Array | Hex>(
   hexOrBytes: TValue,
   { dir = "left" }: TrimOptions = {},
 ): TrimReturnType<TValue> {
+  // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
   let data: any =
     typeof hexOrBytes === "string" ? hexOrBytes.replace("0x", "") : hexOrBytes;
 

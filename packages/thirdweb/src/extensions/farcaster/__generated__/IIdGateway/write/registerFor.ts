@@ -18,7 +18,7 @@ export type RegisterForParams = {
   }>;
 };
 
-const FN_SELECTOR = "0xa0c7529c" as const;
+export const FN_SELECTOR = "0xa0c7529c" as const;
 const FN_INPUTS = [
   {
     type: "address",

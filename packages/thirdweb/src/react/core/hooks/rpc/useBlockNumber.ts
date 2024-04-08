@@ -1,9 +1,9 @@
-import { useEffect, useMemo } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import type { ThirdwebClient } from "../../../../client/client.js";
-import { getRpcClient } from "../../../../rpc/rpc.js";
-import { eth_blockNumber } from "../../../../rpc/actions/eth_blockNumber.js";
+import { useEffect, useMemo } from "react";
 import type { Chain } from "../../../../chains/types.js";
+import type { ThirdwebClient } from "../../../../client/client.js";
+import { eth_blockNumber } from "../../../../rpc/actions/eth_blockNumber.js";
+import { getRpcClient } from "../../../../rpc/rpc.js";
 import { watchBlockNumber } from "../../../../rpc/watchBlockNumber.js";
 
 export type UseBlockNumberOptions = {
@@ -31,7 +31,7 @@ export function useBlockNumber(options: UseBlockNumberOptions) {
   const queryKey = useMemo(() => [chain.id, "blockNumber"] as const, [chain]);
   const query = useQuery({
     // TODO: technically client should be part of the queryKey here...
-    // eslint-disable-next-line @tanstack/query/exhaustive-deps
+
     queryKey: queryKey,
     queryFn: async () => {
       const rpcRequest = getRpcClient({ client, chain });

@@ -4,11 +4,11 @@ import type {
   AbiParametersToPrimitiveTypes,
 } from "abitype";
 import { concatHex } from "viem";
-import type { Prettify } from "../../utils/type-utils.js";
 import { prepareTransaction } from "../../transaction/prepare-transaction.js";
 import { encodeAbiParameters } from "../../utils/abi/encodeAbiParameters.js";
-import { isHex, type Hex } from "../../utils/encoding/hex.js";
 import { ensureBytecodePrefix } from "../../utils/bytecode/prefix.js";
+import { type Hex, isHex } from "../../utils/encoding/hex.js";
+import type { Prettify } from "../../utils/type-utils.js";
 import type { ClientAndChain } from "../../utils/types.js";
 
 export type PrepareDirectDeployTransactionOptions<

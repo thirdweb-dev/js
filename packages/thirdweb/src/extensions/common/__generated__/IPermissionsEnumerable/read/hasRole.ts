@@ -13,7 +13,7 @@ export type HasRoleParams = {
   account: AbiParameterToPrimitiveType<{ type: "address"; name: "account" }>;
 };
 
-const FN_SELECTOR = "0x91d14854" as const;
+export const FN_SELECTOR = "0x91d14854" as const;
 const FN_INPUTS = [
   {
     type: "bytes32",

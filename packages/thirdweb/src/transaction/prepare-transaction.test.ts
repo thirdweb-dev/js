@@ -1,12 +1,12 @@
-import { describe, test as it, expect } from "vitest";
+import { describe, expect, test as it } from "vitest";
 
-import { TEST_CLIENT } from "../../test/src/test-clients.js";
 import { TEST_WALLET_A, TEST_WALLET_B } from "../../test/src/addresses.js";
+import { TEST_CLIENT } from "../../test/src/test-clients.js";
 
-import { estimateGas } from "./actions/estimate-gas.js";
-import { prepareTransaction } from "./prepare-transaction.js";
 import { ethereum } from "../chains/chain-definitions/ethereum.js";
 import { toWei } from "../utils/units.js";
+import { estimateGas } from "./actions/estimate-gas.js";
+import { prepareTransaction } from "./prepare-transaction.js";
 
 describe("prepareTransaction", () => {
   it("should prepare a transaction", () => {
@@ -17,7 +17,7 @@ describe("prepareTransaction", () => {
       value: toWei("0.1"),
     });
     expect(preparedTx.to).toBe(TEST_WALLET_B);
-    expect(preparedTx.value).toMatchInlineSnapshot(`100000000000000000n`);
+    expect(preparedTx.value).toMatchInlineSnapshot("100000000000000000n");
   });
 
   // skip this test if there is no secret key available to test with
@@ -37,7 +37,7 @@ describe("prepareTransaction", () => {
       });
       // TODO: figure out why this is not `21000n`?
       // - a raw transfer SHOULD be 21000gwei always?
-      expect(estimate).toMatchInlineSnapshot(`21060n`);
+      expect(estimate).toMatchInlineSnapshot("21060n");
     },
   );
 });

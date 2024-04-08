@@ -12,7 +12,7 @@ export type GetStakeInfoParams = {
   staker: AbiParameterToPrimitiveType<{ type: "address"; name: "staker" }>;
 };
 
-const FN_SELECTOR = "0xc3453153" as const;
+export const FN_SELECTOR = "0xc3453153" as const;
 const FN_INPUTS = [
   {
     type: "address",

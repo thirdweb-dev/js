@@ -14,7 +14,7 @@ export type CancelListingParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x305a67a8" as const;
+export const FN_SELECTOR = "0x305a67a8" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

@@ -5,20 +5,25 @@ import {
 } from "@radix-ui/react-icons";
 import { useState } from "react";
 import type { Chain } from "../../../../../../../chains/types.js";
+import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/actions/getQuote.js";
+import { waitForReceipt } from "../../../../../../../transaction/actions/wait-for-tx-receipt.js";
+import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import type { Account } from "../../../../../../../wallets/interfaces/wallet.js";
 import { useSendTransaction } from "../../../../../../core/hooks/contract/useSendTransaction.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
 import {
-  useBuyWithCryptoStatus,
   type BuyWithCryptoStatusQueryParams,
+  useBuyWithCryptoStatus,
 } from "../../../../../../core/hooks/pay/useBuyWithCryptoStatus.js";
+import { useActiveWallet } from "../../../../../../core/hooks/wallets/wallet-hooks.js";
 // import { useActiveWallet } from "../../../../../../core/hooks/wallets/wallet-hooks.js";
 import { shortenString } from "../../../../../../core/utils/addresses.js";
-import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
+import { TokenIcon } from "../../../../components/TokenIcon.js";
+import { WalletImage } from "../../../../components/WalletImage.js";
 import { Container, ModalHeader } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
@@ -30,15 +35,10 @@ import {
   radius,
   spacing,
 } from "../../../../design-system/index.js";
-import { isNativeToken, type ERC20OrNativeToken } from "../../nativeToken.js";
+import { AccentFailIcon } from "../../../icons/AccentFailIcon.js";
+import { type ERC20OrNativeToken, isNativeToken } from "../../nativeToken.js";
 import { SwapFees } from "./SwapFees.js";
 import { addPendingSwapTransaction } from "./pendingSwapTx.js";
-import { TokenIcon } from "../../../../components/TokenIcon.js";
-import { waitForReceipt } from "../../../../../../../transaction/actions/wait-for-tx-receipt.js";
-import { AccentFailIcon } from "../../../icons/AccentFailIcon.js";
-import type { ThirdwebClient } from "../../../../../../../client/client.js";
-import { WalletImage } from "../../../../components/WalletImage.js";
-import { useActiveWallet } from "../../../../../../core/hooks/wallets/wallet-hooks.js";
 
 /**
  * @internal
@@ -299,7 +299,7 @@ function Step(props: { isDone: boolean; label: string; isActive: boolean }) {
 
 const Circle = /* @__PURE__ */ StyledDiv(() => {
   return {
-    border: `1px solid currentColor`,
+    border: "1px solid currentColor",
     width: "20px",
     height: "20px",
     borderRadius: "50%",

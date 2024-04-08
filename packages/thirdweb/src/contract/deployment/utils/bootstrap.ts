@@ -6,9 +6,9 @@ import {
   getDeployedCreate2Factory,
 } from "./create-2-factory.js";
 import {
+  type InfraContractId,
   getDeployedInfraContract,
   prepareInfraContractDeployTransaction,
-  type InfraContractId,
 } from "./infra.js";
 
 /**

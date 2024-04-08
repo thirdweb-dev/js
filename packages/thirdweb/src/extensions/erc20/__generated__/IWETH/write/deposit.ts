@@ -1,7 +1,7 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 
-const FN_SELECTOR = "0xd0e30db0" as const;
+export const FN_SELECTOR = "0xd0e30db0" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [] as const;
 

@@ -3,6 +3,7 @@ import type { Abi } from "abitype";
 export type PublishedMetadata = {
   name: string;
   abi: Abi;
+  // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
   metadata: Record<string, any>;
   info: {
     title?: string;
@@ -20,6 +21,7 @@ export type PublishedMetadata = {
  * @returns The formatted metadata.
  * @internal
  */
+// biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
 export function formatCompilerMetadata(metadata: any): PublishedMetadata {
   const compilationTarget = metadata.settings.compilationTarget;
   const targets = Object.keys(compilationTarget);
@@ -32,6 +34,7 @@ export function formatCompilerMetadata(metadata: any): PublishedMetadata {
   };
   const licenses: string[] = [
     ...new Set(
+      // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
       Object.entries(metadata.sources).map(([, src]) => (src as any).license),
     ),
   ];

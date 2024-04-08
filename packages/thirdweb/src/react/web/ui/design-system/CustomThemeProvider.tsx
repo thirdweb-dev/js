@@ -1,5 +1,5 @@
-import { type Theme, darkThemeObj, lightThemeObj } from "./index.js";
 import { createContext, useContext } from "react";
+import { type Theme, darkThemeObj, lightThemeObj } from "./index.js";
 
 const CustomThemeCtx = /* @__PURE__ */ createContext(darkThemeObj);
 

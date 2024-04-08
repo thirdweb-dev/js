@@ -15,7 +15,7 @@ export type GetScoreParams = {
   }>;
 };
 
-const FN_SELECTOR = "0xd47875d0" as const;
+export const FN_SELECTOR = "0xd47875d0" as const;
 const FN_INPUTS = [
   {
     type: "address",

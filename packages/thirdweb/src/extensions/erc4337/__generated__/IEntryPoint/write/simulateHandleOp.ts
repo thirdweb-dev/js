@@ -32,7 +32,7 @@ export type SimulateHandleOpParams = {
   }>;
 };
 
-const FN_SELECTOR = "0xd6383f94" as const;
+export const FN_SELECTOR = "0xd6383f94" as const;
 const FN_INPUTS = [
   {
     type: "tuple",

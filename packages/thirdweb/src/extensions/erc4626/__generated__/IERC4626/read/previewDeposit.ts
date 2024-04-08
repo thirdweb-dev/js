@@ -16,7 +16,7 @@ export type PreviewDepositParams = {
   }>;
 };
 
-const FN_SELECTOR = "0xef8b30f7" as const;
+export const FN_SELECTOR = "0xef8b30f7" as const;
 const FN_INPUTS = [
   {
     name: "assets",

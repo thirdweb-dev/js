@@ -1,13 +1,13 @@
 import type { ThirdwebContract } from "../../../contract/contract.js";
-import type { SmartWalletOptions } from "../types.ts";
+import { prepareContractCall } from "../../../transaction/prepare-contract-call.js";
+import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
 import { readContract } from "../../../transaction/read-contract.js";
+import { stringToHex } from "../../../utils/encoding/hex.js";
 import type {
   Account,
   SendTransactionOption,
 } from "../../interfaces/wallet.js";
-import { prepareContractCall } from "../../../transaction/prepare-contract-call.js";
-import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
-import { stringToHex } from "../../../utils/encoding/hex.js";
+import type { SmartWalletOptions } from "../types.ts";
 
 /**
  * @internal

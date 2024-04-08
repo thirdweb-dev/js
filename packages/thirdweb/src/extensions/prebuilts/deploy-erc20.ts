@@ -1,13 +1,13 @@
+import type { ThirdwebClient } from "../../client/client.js";
 import type { ThirdwebContract } from "../../contract/contract.js";
 import { deployViaAutoFactory } from "../../contract/deployment/deploy-via-autofactory.js";
+import { getOrDeployInfraForPublishedContract } from "../../contract/deployment/utils/bootstrap.js";
+import { upload } from "../../storage/upload.js";
+import type { FileOrBufferOrString } from "../../storage/upload/types.js";
+import type { Prettify } from "../../utils/type-utils.js";
 import type { ClientAndChainAndAccount } from "../../utils/types.js";
 import { initialize as initDropERC20 } from "./__generated__/DropERC20/write/initialize.js";
 import { initialize as initTokenERC20 } from "./__generated__/TokenERC20/write/initialize.js";
-import type { FileOrBufferOrString } from "../../storage/upload/types.js";
-import { upload } from "../../storage/upload.js";
-import type { ThirdwebClient } from "../../client/client.js";
-import { getOrDeployInfraForPublishedContract } from "../../contract/deployment/utils/bootstrap.js";
-import type { Prettify } from "../../utils/type-utils.js";
 
 export type ERC20ContractType = "DropERC20" | "TokenERC20";
 

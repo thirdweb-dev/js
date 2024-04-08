@@ -14,7 +14,7 @@ export function getDefaultAppMetadata(): Required<AppMetadata> {
   }
 
   const domain = window.location.hostname;
-  const faviconUrlFullPath = domain + "/favicon.ico";
+  const faviconUrlFullPath = `${domain}/favicon.ico`;
 
   return {
     name: window.document.title,

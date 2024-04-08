@@ -1,27 +1,27 @@
 import { Suspense, lazy, useEffect, useState } from "react";
-import { getMIPDStore } from "../../../../../wallets/injected/mipdStore.js";
 import type {
   InjectedSupportedWalletIds,
   WCSupportedWalletIds,
 } from "../../../../../wallets/__generated__/wallet-ids.js";
+import { getMIPDStore } from "../../../../../wallets/injected/mipdStore.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
-import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
-import { useWalletInfo } from "../../hooks/useWalletInfo.js";
-import { InjectedConnectUI } from "./InjectedConnectUI.js";
-import type { InjectedWalletLocale } from "../../../wallets/injected/locale/types.js";
-import { getInjectedWalletLocale } from "../../../wallets/injected/locale/getInjectedWalletLocale.js";
 import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
+import { getInjectedWalletLocale } from "../../../wallets/injected/locale/getInjectedWalletLocale.js";
+import type { InjectedWalletLocale } from "../../../wallets/injected/locale/types.js";
 import { GetStartedScreen } from "../../../wallets/shared/GetStartedScreen.js";
+import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
 import {
   WalletConnectConnection,
   WalletConnectStandaloneConnection,
 } from "../../../wallets/shared/WalletConnectConnection.js";
+import { useWalletInfo } from "../../hooks/useWalletInfo.js";
+import { InjectedConnectUI } from "./InjectedConnectUI.js";
 
 const CoinbaseSDKWalletConnectUI = /* @__PURE__ */ lazy(
   () => import("../../../wallets/shared/CoinbaseSDKConnection.js"),
 );
-const EmbeddedWalletConnectUI = /* @__PURE__ */ lazy(
-  () => import("../../../wallets/embedded/EmbeddedWalletConnectUI.js"),
+const InAppWalletConnectUI = /* @__PURE__ */ lazy(
+  () => import("../../../wallets/in-app/InAppWalletConnectUI.js"),
 );
 
 /**
@@ -132,11 +132,11 @@ export function AnyWalletConnectUI(props: {
     );
   }
 
-  if (props.wallet.id === "embedded") {
+  if (props.wallet.id === "inApp") {
     return (
       <Suspense fallback={<LoadingScreen />}>
-        <EmbeddedWalletConnectUI
-          wallet={props.wallet as Wallet<"embedded">}
+        <InAppWalletConnectUI
+          wallet={props.wallet as Wallet<"inApp">}
           done={props.done}
           goBack={props.onBack}
         />

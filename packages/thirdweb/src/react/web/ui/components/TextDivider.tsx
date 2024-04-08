@@ -1,6 +1,6 @@
 import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 import { StyledDiv } from "../design-system/elements.js";
-import { spacing, fontSize } from "../design-system/index.js";
+import { fontSize, spacing } from "../design-system/index.js";
 
 /**
  *

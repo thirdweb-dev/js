@@ -25,6 +25,7 @@ export async function fetchSourceFilesFromMetadata(
   return Promise.all(
     Object.entries(options.publishedMetadata.metadata.sources).map(
       ([path, info]) => {
+        // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
         const urls = (info as any).urls as string[];
         const ipfsLink = urls
           ? urls.find((url) => url.includes("ipfs"))
@@ -34,6 +35,7 @@ export async function fetchSourceFilesFromMetadata(
           return {
             filename: path,
             source:
+              // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
               (info as any).content ||
               "Could not find source for this contract",
           };

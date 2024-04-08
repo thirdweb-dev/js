@@ -1,11 +1,11 @@
-import { describe, it, expect } from "vitest";
-import { getContractEvents } from "./get-events.js";
+import { describe, expect, it } from "vitest";
 import {
   DOODLES_CONTRACT,
   USDT_CONTRACT,
 } from "../../../test/src/test-contracts.js";
 import { transferEvent } from "../../extensions/erc721/__generated__/IERC721A/events/Transfer.js";
 import { prepareEvent } from "../prepare-event.js";
+import { getContractEvents } from "./get-events.js";
 
 // skip this test suite if there is no secret key available to test with
 // TODO: remove reliance on secret key during unit tests entirely
@@ -28,7 +28,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("getEvents", () => {
         }),
       ],
     });
-    expect(events.length).toMatchInlineSnapshot(`0`);
+    expect(events.length).toMatchInlineSnapshot("0");
   });
 
   it("should get specified events", async () => {
@@ -68,7 +68,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("getEvents", () => {
         }),
       ],
     });
-    expect(events.length).toMatchInlineSnapshot(`9`);
+    expect(events.length).toMatchInlineSnapshot("9");
   });
 
   it("should get individual events with extension", async () => {

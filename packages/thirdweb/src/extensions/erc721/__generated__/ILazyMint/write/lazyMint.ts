@@ -16,7 +16,7 @@ export type LazyMintParams = {
   extraData: AbiParameterToPrimitiveType<{ type: "bytes"; name: "extraData" }>;
 };
 
-const FN_SELECTOR = "0xd37c353b" as const;
+export const FN_SELECTOR = "0xd37c353b" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

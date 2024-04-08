@@ -1,5 +1,10 @@
+import { decodeErrorResult } from "viem";
+import type { ThirdwebClient } from "../../../client/client.js";
+import { parseEventLogs } from "../../../event/actions/parse-logs.js";
+import { userOperationRevertReasonEvent } from "../../../extensions/erc4337/__generated__/IEntryPoint/events/UserOperationRevertReason.js";
+import type { TransactionReceipt } from "../../../transaction/types.js";
+import { type Hex, hexToBigInt } from "../../../utils/encoding/hex.js";
 import { getClientFetch } from "../../../utils/fetch.js";
-import { hexToBigInt, type Hex } from "../../../utils/encoding/hex.js";
 import type {
   EstimationResult,
   GasPriceResult,
@@ -13,11 +18,6 @@ import {
   getDefaultBundlerUrl,
 } from "./constants.js";
 import { hexlifyUserOp } from "./utils.js";
-import type { TransactionReceipt } from "../../../transaction/types.js";
-import type { ThirdwebClient } from "../../../client/client.js";
-import { decodeErrorResult } from "viem";
-import { parseEventLogs } from "../../../event/actions/parse-logs.js";
-import { userOperationRevertReasonEvent } from "../../../extensions/erc4337/__generated__/IEntryPoint/events/UserOperationRevertReason.js";
 
 /**
  * @internal
@@ -108,7 +108,9 @@ export async function getUserOpReceipt(args: {
       data: revertReason,
     });
     throw new Error(
-      `UserOp failed with reason: '${revertMsg.args.join(",")}' at txHash: ${res.transactionHash}`,
+      `UserOp failed with reason: '${revertMsg.args.join(",")}' at txHash: ${
+        res.transactionHash
+      }`,
     );
   }
   return res.receipt;
@@ -121,6 +123,7 @@ async function sendBundlerRequest(args: {
     | "eth_sendUserOperation"
     | "eth_getUserOperationReceipt"
     | "thirdweb_getUserOperationGasPrice";
+  // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
   params: any[];
 }) {
   const { options, operation, params } = args;

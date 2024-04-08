@@ -1,24 +1,24 @@
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
-import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
-import { AnyWalletConnectUI } from "./AnyWalletConnectUI.js";
-import type { SmartWalletLocale } from "../../../wallets/smartWallet/locale/types.js";
-import { getSmartWalletLocale } from "../../../wallets/smartWallet/locale/getSmartWalletLocale.js";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { createWallet } from "../../../../../wallets/create-wallet.js";
+import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
+import type { SmartWalletOptions } from "../../../../../wallets/smart/types.js";
+import { asyncLocalStorage } from "../../../../../wallets/storage/asyncLocalStorage.js";
+import { saveConnectParamsToStorage } from "../../../../../wallets/storage/walletStorage.js";
+import type { WalletInfo } from "../../../../../wallets/wallet-info.js";
+import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
+import { ModalConfigCtx } from "../../../providers/wallet-ui-states-provider.js";
+import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
+import { getSmartWalletLocale } from "../../../wallets/smartWallet/locale/getSmartWalletLocale.js";
+import type { SmartWalletLocale } from "../../../wallets/smartWallet/locale/types.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Spinner } from "../../components/Spinner.js";
 import { Container, ModalHeader } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
-import { iconSize, spacing, fontSize } from "../../design-system/index.js";
-import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
-import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
 import { Text } from "../../components/text.js";
-import type { SmartWalletOptions } from "../../../../../wallets/smart/types.js";
-import { ModalConfigCtx } from "../../../providers/wallet-ui-states-provider.js";
-import { createWallet } from "../../../../../wallets/create-wallet.js";
+import { fontSize, iconSize, spacing } from "../../design-system/index.js";
 import { useWalletInfo } from "../../hooks/useWalletInfo.js";
-import type { WalletInfo } from "../../../../../wallets/wallet-info.js";
-import { saveConnectParamsToStorage } from "../../../../../wallets/storage/walletStorage.js";
-import { asyncLocalStorage } from "../../../../../wallets/storage/asyncLocalStorage.js";
+import { AnyWalletConnectUI } from "./AnyWalletConnectUI.js";
 
 /**
  * @internal

@@ -11,7 +11,7 @@ export type DeleteRuleParams = {
   ruleId: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "ruleId" }>;
 };
 
-const FN_SELECTOR = "0x9d907761" as const;
+export const FN_SELECTOR = "0x9d907761" as const;
 const FN_INPUTS = [
   {
     type: "bytes32",

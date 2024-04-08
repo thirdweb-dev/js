@@ -1,8 +1,8 @@
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 import type { Abi } from "abitype";
+import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { getFunctionId } from "../../../utils/function-id.js";
 import { stringify } from "../../../utils/json.js";
-import type { BaseTransactionOptions } from "../../../transaction/types.js";
 
 const CONTRACT_QUERY_CACHE = new WeakMap();
 

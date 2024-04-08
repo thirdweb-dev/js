@@ -19,7 +19,7 @@ export type GetPublishedContractVersionsParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x80251dac" as const;
+export const FN_SELECTOR = "0x80251dac" as const;
 const FN_INPUTS = [
   {
     type: "address",

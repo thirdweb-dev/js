@@ -1,7 +1,7 @@
-import { sign } from "../../utils/signatures/sign.js";
+import { type TransactionSerializable, serializeTransaction } from "viem";
 import type { Hex } from "../../utils/encoding/hex.js";
 import { keccak256 } from "../../utils/hashing/keccak256.js";
-import { serializeTransaction, type TransactionSerializable } from "viem";
+import { sign } from "../../utils/signatures/sign.js";
 
 export type SignTransactionOptions = {
   transaction: TransactionSerializable;

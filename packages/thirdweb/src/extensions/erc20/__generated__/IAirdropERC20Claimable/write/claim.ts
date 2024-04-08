@@ -17,7 +17,7 @@ export type ClaimParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x3b4b57b0" as const;
+export const FN_SELECTOR = "0x3b4b57b0" as const;
 const FN_INPUTS = [
   {
     type: "address",

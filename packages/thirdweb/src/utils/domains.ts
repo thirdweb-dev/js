@@ -5,10 +5,10 @@ type DomainOverrides = {
    */
   rpc?: string;
   /**
-   * The base URL for the embedded wallet service
+   * The base URL for the in-app wallet service
    * @default "embedded-wallet.thirdweb.com"
    */
-  embeddedWallet?: string;
+  inAppWallet?: string;
   /**
    * The base URL for the payment server.
    * @default "interstate.thirdweb.com"
@@ -22,13 +22,13 @@ type DomainOverrides = {
 };
 
 export const DEFAULT_RPC_URL = "rpc.thirdweb.com";
-const DEFAULT_EMBEDDED_WALLET_URL = "embedded-wallet.thirdweb.com";
+const DEFAULT_IN_APP_WALLET_URL = "embedded-wallet.thirdweb.com";
 const DEFAULT_PAY_URL = "pay.thirdweb.com";
 const DEFAULT_STORAGE_URL = "storage.thirdweb.com";
 
 let domains: { [k in keyof DomainOverrides]-?: string } = {
   rpc: DEFAULT_RPC_URL,
-  embeddedWallet: DEFAULT_EMBEDDED_WALLET_URL,
+  inAppWallet: DEFAULT_IN_APP_WALLET_URL,
   pay: DEFAULT_PAY_URL,
   storage: DEFAULT_STORAGE_URL,
 };
@@ -39,8 +39,7 @@ let domains: { [k in keyof DomainOverrides]-?: string } = {
 export const setThirdwebDomains = (DomainOverrides: DomainOverrides) => {
   domains = {
     rpc: DomainOverrides.rpc ?? DEFAULT_RPC_URL,
-    embeddedWallet:
-      DomainOverrides.embeddedWallet ?? DEFAULT_EMBEDDED_WALLET_URL,
+    inAppWallet: DomainOverrides.inAppWallet ?? DEFAULT_IN_APP_WALLET_URL,
     pay: DomainOverrides.pay ?? DEFAULT_PAY_URL,
     storage: DomainOverrides.storage ?? DEFAULT_STORAGE_URL,
   };

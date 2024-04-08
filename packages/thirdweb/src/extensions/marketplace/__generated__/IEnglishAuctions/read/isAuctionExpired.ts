@@ -15,7 +15,7 @@ export type IsAuctionExpiredParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x1389b117" as const;
+export const FN_SELECTOR = "0x1389b117" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

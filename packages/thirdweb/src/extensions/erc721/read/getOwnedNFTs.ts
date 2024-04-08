@@ -2,8 +2,8 @@ import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import type { NFT } from "../../../utils/nft/parseNft.js";
 import { getNFT } from "./getNFT.js";
 import {
-  getOwnedTokenIds,
   type GetOwnedTokenIdsParams,
+  getOwnedTokenIds,
 } from "./getOwnedTokenIds.js";
 
 export type GetOwnedNFTsParams = GetOwnedTokenIdsParams;

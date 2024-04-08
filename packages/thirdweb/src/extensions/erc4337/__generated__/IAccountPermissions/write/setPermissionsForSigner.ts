@@ -26,7 +26,7 @@ export type SetPermissionsForSignerParams = {
   signature: AbiParameterToPrimitiveType<{ type: "bytes"; name: "signature" }>;
 };
 
-const FN_SELECTOR = "0x5892e236" as const;
+export const FN_SELECTOR = "0x5892e236" as const;
 const FN_INPUTS = [
   {
     type: "tuple",

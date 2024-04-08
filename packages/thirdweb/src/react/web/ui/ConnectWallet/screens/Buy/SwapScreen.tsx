@@ -2,13 +2,15 @@ import { CrossCircledIcon } from "@radix-ui/react-icons";
 import { useMemo, useState } from "react";
 import { polygon } from "../../../../../../chains/chain-definitions/polygon.js";
 import type { Chain } from "../../../../../../chains/types.js";
+import type { ThirdwebClient } from "../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../constants/addresses.js";
+import type { BuyWithCryptoQuote } from "../../../../../../pay/buyWithCrypto/actions/getQuote.js";
 import type { Account } from "../../../../../../wallets/interfaces/wallet.js";
 import { useChainsQuery } from "../../../../../core/hooks/others/useChainQuery.js";
 import { useWalletBalance } from "../../../../../core/hooks/others/useWalletBalance.js";
 import {
-  useBuyWithCryptoQuote,
   type BuyWithCryptoQuoteQueryParams,
+  useBuyWithCryptoQuote,
 } from "../../../../../core/hooks/pay/useBuyWithCryptoQuote.js";
 import {
   useActiveAccount,
@@ -26,18 +28,16 @@ import { ChainButton, NetworkSelectorContent } from "../../NetworkSelector.js";
 import type { SupportedTokens } from "../../defaultTokens.js";
 import { TokenSelector } from "../TokenSelector.js";
 import {
+  type ERC20OrNativeToken,
   NATIVE_TOKEN,
   isNativeToken,
-  type ERC20OrNativeToken,
 } from "../nativeToken.js";
 import { PaymentSelection } from "./PaymentSelection.js";
 import { BuyTokenInput } from "./swap/BuyTokenInput.js";
 import { ConfirmationScreen } from "./swap/ConfirmationScreen.js";
 import { PayWithCrypto } from "./swap/PayWithCrypto.js";
 import { SwapFees } from "./swap/SwapFees.js";
-import type { BuyWithCryptoQuote } from "../../../../../../pay/buyWithCrypto/actions/getQuote.js";
 import { useSwapSupportedChains } from "./swap/useSwapSupportedChains.js";
-import type { ThirdwebClient } from "../../../../../../client/client.js";
 
 /**
  * @internal

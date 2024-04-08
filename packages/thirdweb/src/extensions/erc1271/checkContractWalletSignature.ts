@@ -1,7 +1,7 @@
-import { hashMessage, type SignableMessage } from "viem";
+import { type SignableMessage, hashMessage } from "viem";
 import type { ThirdwebContract } from "../../contract/contract.js";
-import { isValidSignature } from "./__generated__/isValidSignature/read/isValidSignature.js";
 import { isHex } from "../../utils/encoding/hex.js";
+import { isValidSignature } from "./__generated__/isValidSignature/read/isValidSignature.js";
 
 export type CheckContractWalletSignatureOptions = {
   contract: ThirdwebContract;

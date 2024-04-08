@@ -19,7 +19,7 @@ export type OpenPackAndClaimRewardsParams = {
   }>;
 };
 
-const FN_SELECTOR = "0xac296b3f" as const;
+export const FN_SELECTOR = "0xac296b3f" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

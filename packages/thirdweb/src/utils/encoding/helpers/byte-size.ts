@@ -1,4 +1,4 @@
-import { isHex, type Hex } from "./is-hex.js";
+import { type Hex, isHex } from "./is-hex.js";
 
 /**
  * Calculates the byte size of a Hex string or Uint8Array.

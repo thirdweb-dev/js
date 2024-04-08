@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import { useState } from "react";
 import { resolveScheme } from "../../../../utils/ipfs.js";
 import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
@@ -23,8 +22,8 @@ export const Img: React.FC<{
 
   const propSrc = props.src;
 
-  const widthPx = props.width + "px";
-  const heightPx = (props.height || props.width) + "px";
+  const widthPx = `${props.width}px`;
+  const heightPx = `${props.height || props.width}px`;
 
   if (!propSrc) {
     return <Skeleton width={widthPx} height={heightPx} />;
@@ -69,9 +68,9 @@ export const Img: React.FC<{
           height: !isLoaded
             ? 0
             : props.height
-              ? props.height + "px"
+              ? `${props.height}px`
               : undefined,
-          width: !isLoaded ? 0 : props.width ? props.width + "px" : undefined,
+          width: !isLoaded ? 0 : props.width ? `${props.width}px` : undefined,
           userSelect: "none",
           visibility: isLoaded ? "visible" : "hidden",
           opacity: isLoaded ? 1 : 0,

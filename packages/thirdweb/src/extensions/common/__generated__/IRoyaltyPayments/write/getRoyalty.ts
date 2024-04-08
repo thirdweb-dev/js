@@ -16,7 +16,7 @@ export type GetRoyaltyParams = {
   value: AbiParameterToPrimitiveType<{ type: "uint256"; name: "value" }>;
 };
 
-const FN_SELECTOR = "0xf533b802" as const;
+export const FN_SELECTOR = "0xf533b802" as const;
 const FN_INPUTS = [
   {
     type: "address",

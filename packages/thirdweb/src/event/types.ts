@@ -28,7 +28,7 @@ export type AbiEventParametersToPrimitiveTypes<
       > extends infer Filtered extends readonly AbiParameter[]
     ? _HasUnnamedAbiParameter<Filtered> extends true
       ? // Has unnamed tuple parameters so return as array
-        | readonly [
+          | readonly [
               ...{
                 [K in keyof Filtered]: AbiEventParameterToPrimitiveType<
                   Filtered[K],
@@ -42,7 +42,6 @@ export type AbiEventParametersToPrimitiveTypes<
               : // Distribute over tuple to represent optional parameters
                 Filtered extends readonly [
                     ...infer Head extends readonly AbiParameter[],
-                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     infer _,
                   ]
                 ? AbiEventParametersToPrimitiveTypes<

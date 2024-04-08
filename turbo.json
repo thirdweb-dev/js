@@ -78,13 +78,13 @@
       "outputs": ["src/version.ts"]
     },
     "test": {
-      "outputs": ["codecov/**"],
+      "outputs": ["coverage/**"],
       "inputs": ["src/**", "test/**"],
       "dependsOn": ["^build"],
       "env": ["TW_SECRET_KEY", "CI"]
     },
     "test:legacy": {
-      "outputs": ["codecov/**"],
+      "outputs": ["coverage/**"],
       "inputs": ["src/**", "test/**"],
       "dependsOn": ["^build"],
       "env": ["TW_SECRET_KEY", "CI"]

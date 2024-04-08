@@ -198,7 +198,7 @@ export const iconSize = {
 
 // desktop first style media query
 export const media = {
-  mobile: `@media (max-width: 640px)`,
+  mobile: "@media (max-width: 640px)",
 };
 
 // TODO - move to theme

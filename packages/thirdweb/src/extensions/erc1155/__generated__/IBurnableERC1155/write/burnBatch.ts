@@ -13,7 +13,7 @@ export type BurnBatchParams = {
   values: AbiParameterToPrimitiveType<{ type: "uint256[]"; name: "values" }>;
 };
 
-const FN_SELECTOR = "0x6b20c454" as const;
+export const FN_SELECTOR = "0x6b20c454" as const;
 const FN_INPUTS = [
   {
     type: "address",
