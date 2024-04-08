@@ -1,8 +1,8 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { watchBlockNumber } from "./watchBlockNumber.js";
-import { baseSepolia } from "../chains/chain-definitions/base-sepolia.js";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TEST_CLIENT } from "../../test/src/test-clients.js";
+import { baseSepolia } from "../chains/chain-definitions/base-sepolia.js";
 import { wait } from "../utils/promise/wait.js";
+import { watchBlockNumber } from "./watchBlockNumber.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("watch block number", () => {
   const onNewBlockNumber = vi.fn();
