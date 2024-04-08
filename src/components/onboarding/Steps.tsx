@@ -55,7 +55,6 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
   const isMobile = useBreakpointValue({ base: true, md: false });
   const { isLoggedIn } = useLoggedInUser();
   const meQuery = useAccount();
-  const { data: account } = meQuery;
   const apiKeysQuery = useApiKeys();
   const router = useRouter();
   const trackEvent = useTrack();
@@ -206,7 +205,7 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
         description:
           "Add your payment method to ensure no disruption to thirdweb services when you exceed free monthly limits.",
         cta: "Add payment",
-        href: `/dashboard/settings/billing${account && !account.trialPeriodEndedAt ? "?claimGrowth" : ""}`,
+        href: `/dashboard/settings/billing`,
         canSkip: true,
       },
       {
@@ -253,7 +252,7 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
         canSkip: true,
       },
     ],
-    [onClaimCreditsOpen, trackEvent, account],
+    [onClaimCreditsOpen, trackEvent],
   );
 
   if (!currentStep) {

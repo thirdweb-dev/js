@@ -90,8 +90,10 @@ export const OnboardingChoosePlan: React.FC<OnboardingChoosePlanProps> = ({
 
         <PricingCard
           size="sm"
+          ctaTitle={"Claim your 1-month free"}
           name={AccountPlan.Growth}
-          ctaTitle={"Get started"}
+          ctaHint={`Your free trial will end in 30 days.`}
+          canTrialGrowth={true}
           ctaProps={{
             category: "account",
             label: "growthPlan",

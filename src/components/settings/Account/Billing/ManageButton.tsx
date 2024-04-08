@@ -1,5 +1,5 @@
 import { TrackedLinkButton } from "tw-components";
-import { MouseEvent, useEffect, useState } from "react";
+import { MouseEvent, useMemo } from "react";
 import {
   Account,
   AccountStatus,
@@ -24,59 +24,59 @@ export const ManageBillingButton: React.FC<ManageBillingButtonProps> = ({
   buttonProps = { variant: "outline", color: loading ? "gray" : "blue.500" },
   onClick,
 }) => {
-  const [sessionUrl, setSessionUrl] = useState();
-  const mutation = useCreateBillingSession();
-  const validPayment = account.status === AccountStatus.ValidPayment;
-  const paymentVerification =
-    account.status === AccountStatus.PaymentVerification;
-  const invalidPayment = [
-    AccountStatus.InvalidPayment,
-    AccountStatus.InvalidPaymentMethod,
-  ].includes(account.status);
-
-  const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
-    if (onClick || loading || !sessionUrl) {
-      e.preventDefault();
-      if (onClick) {
-        onClick();
+  const [buttonLabel, buttonText] = useMemo(() => {
+    switch (account.status) {
+      case AccountStatus.InvalidPayment:
+      case AccountStatus.ValidPayment: {
+        return ["manage", "Manage billing"];
+      }
+      case AccountStatus.PaymentVerification: {
+        return ["verifyPaymentMethod", "Verify your payment method →"];
+      }
+      case AccountStatus.InvalidPaymentMethod: {
+        return ["addAnotherPayment", "Add another payment method →"];
+      }
+      default: {
+        return ["addPayment", "Add payment method"];
       }
     }
-  };
+  }, [account.status]);
 
-  useEffect(() => {
-    if (!onClick) {
-      mutation.mutate(undefined, {
-        onSuccess: (data) => {
-          setSessionUrl(data.url);
-        },
-      });
+  const query = useCreateBillingSession(buttonLabel === "manage");
+  const url = useMemo(() => {
+    switch (buttonLabel) {
+      case "verifyPaymentMethod":
+        return account.stripePaymentActionUrl;
+      case "manage":
+        return query.data?.url;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [onClick]);
+  }, [query.data, buttonLabel, account.stripePaymentActionUrl]);
+
+  const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
+    if (loading) {
+      e.preventDefault();
+      return;
+    }
+
+    if (!["verifyPaymentMethod", "manage"].includes(buttonLabel)) {
+      e.preventDefault();
+      onClick?.();
+    }
+  };
 
   return (
     <TrackedLinkButton
       {...buttonProps}
-      isDisabled={loading || (!onClick && !sessionUrl)}
-      href={sessionUrl || ""}
+      isDisabled={loading || (!onClick && !url)}
+      href={url ?? ""}
       isLoading={loading}
       category="billingAccount"
-      label={
-        paymentVerification || invalidPayment
-          ? "addAnotherPayment"
-          : onClick
-            ? "addPayment"
-            : "manage"
-      }
+      label={buttonLabel}
       loadingText={loadingText}
       onClick={handleClick}
       fontSize="small"
     >
-      {validPayment
-        ? "Manage billing"
-        : paymentVerification || invalidPayment
-          ? "Add another payment method →"
-          : "Add payment method →"}
+      {buttonText}
     </TrackedLinkButton>
   );
 };

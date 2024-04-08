@@ -1,10 +1,18 @@
 import { useCreatePaymentMethod } from "@3rdweb-sdk/react/hooks/useApi";
-import { Center, Flex, Spinner } from "@chakra-ui/react";
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  Center,
+  Flex,
+  Spinner,
+} from "@chakra-ui/react";
 import {
   useElements,
   useStripe,
   PaymentElement,
 } from "@stripe/react-stripe-js";
+import { PaymentVerificationFailureAlert } from "components/settings/Account/Billing/alerts/PaymentVerificationFailureAlert";
 import { useErrorHandler } from "contexts/error-handler";
 import { useTrack } from "hooks/analytics/useTrack";
 import { FormEvent, useState } from "react";
@@ -23,6 +31,7 @@ export const OnboardingPaymentForm: React.FC<OnboardingPaymentForm> = ({
   const elements = useElements();
   const trackEvent = useTrack();
   const { onError } = useErrorHandler();
+  const [paymentFailureCode, setPaymentFailureCode] = useState("");
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -32,16 +41,20 @@ export const OnboardingPaymentForm: React.FC<OnboardingPaymentForm> = ({
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    setSaving(true);
-
     if (!stripe || !elements) {
       return;
     }
 
+    setSaving(true);
+
     const { error: submitError } = await elements.submit();
     if (submitError) {
       setSaving(false);
-      return onError(submitError);
+      if (submitError.code) {
+        return setPaymentFailureCode(submitError.code);
+      } else {
+        return onError(submitError);
+      }
     }
 
     const { error: createError, paymentMethod } =
@@ -51,7 +64,7 @@ export const OnboardingPaymentForm: React.FC<OnboardingPaymentForm> = ({
 
     if (createError) {
       setSaving(false);
-      return onError(submitError);
+      return onError(createError);
     }
 
     trackEvent({
@@ -63,6 +76,7 @@ export const OnboardingPaymentForm: React.FC<OnboardingPaymentForm> = ({
     mutation.mutate(paymentMethod.id, {
       onSuccess: () => {
         onSave();
+        setPaymentFailureCode("");
         setSaving(false);
 
         trackEvent({
@@ -72,18 +86,15 @@ export const OnboardingPaymentForm: React.FC<OnboardingPaymentForm> = ({
         });
       },
       onError: (error: any) => {
-        const message =
-          "message" in error
-            ? error.message
-            : "Couldn't add a payment method. Try later!";
-        onError(message);
+        const failureCode = error?.message;
+        setPaymentFailureCode(failureCode || "generic_decline");
         setSaving(false);
 
         trackEvent({
           category: "account",
           action: "addPaymentMethod",
           label: "error",
-          error: message,
+          error: failureCode,
         });
       },
     });
@@ -92,14 +103,43 @@ export const OnboardingPaymentForm: React.FC<OnboardingPaymentForm> = ({
   return (
     <form id="payment-form" onSubmit={handleSubmit}>
       <Flex flexDir="column" gap={8}>
-        <PaymentElement onLoaderStart={() => setLoading(false)} />
+        <PaymentElement
+          onLoaderStart={() => setLoading(false)}
+          options={{ terms: { card: "never" } }}
+        />
 
         {loading ? (
           <Center pb={16}>
             <Spinner size="sm" />
           </Center>
         ) : (
-          <Flex flexDir="column" gap={3}>
+          <Flex flexDir="column" gap={4}>
+            {paymentFailureCode ? (
+              <PaymentVerificationFailureAlert
+                paymentFailureCode={paymentFailureCode}
+              />
+            ) : (
+              <Alert
+                status={"info"}
+                borderRadius="md"
+                as={Flex}
+                alignItems="start"
+                justifyContent="space-between"
+                variant="left-accent"
+                bg="inputBg"
+              >
+                <Flex>
+                  <AlertIcon boxSize={4} mt={1} ml={1} />
+                  <Flex flexDir="column" gap={1} pl={1}>
+                    <AlertDescription as={Text} fontSize="body.md">
+                      A temporary hold will be placed and immediately released
+                      on your payment method.
+                    </AlertDescription>
+                  </Flex>
+                </Flex>
+              </Alert>
+            )}
+
             <Button
               w="full"
               size="lg"
@@ -115,6 +155,7 @@ export const OnboardingPaymentForm: React.FC<OnboardingPaymentForm> = ({
               size="lg"
               fontSize="sm"
               variant="link"
+              mt="4"
               onClick={onCancel}
               isDisabled={saving}
               colorScheme="blue"

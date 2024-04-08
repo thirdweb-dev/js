@@ -1,7 +1,6 @@
 import { AppLayout } from "components/app-layouts/app";
 import { SettingsSidebar } from "core-ui/sidebar/settings";
 import { PageId } from "page-id";
-import { ConnectWalletPrompt } from "components/settings/ConnectWalletPrompt";
 import { ThirdwebNextPage } from "utils/types";
 import { AccountStatus, useAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { useEffect } from "react";
@@ -9,7 +8,6 @@ import { useRouter } from "next/router";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { Billing } from "components/settings/Account/Billing";
 import { BillingConnectWalletPrompt } from "components/settings/Account/Billing/ConnectWallet";
-import { useLocalStorage } from "hooks/useLocalStorage";
 
 const SettingsBillingPage: ThirdwebNextPage = () => {
   const { isLoggedIn, isLoading } = useLoggedInUser();
@@ -25,20 +23,6 @@ const SettingsBillingPage: ThirdwebNextPage = () => {
 
   const router = useRouter();
   const { data: account } = meQuery;
-  const { claimGrowth: claimGrowthQuery } = router.query;
-  const [claimedGrowth, setClaimedGrowth] = useLocalStorage(
-    "claim-growth-trial",
-    false,
-    true,
-  );
-
-  useEffect(() => {
-    if (claimGrowthQuery !== undefined && !account?.trialPeriodEndedAt) {
-      setClaimedGrowth(true);
-    } else {
-      setClaimedGrowth(false);
-    }
-  }, [account?.trialPeriodEndedAt, claimGrowthQuery, router, setClaimedGrowth]);
 
   useEffect(() => {
     const { payment_intent, source_redirect_slug } = router.query;
@@ -50,11 +34,7 @@ const SettingsBillingPage: ThirdwebNextPage = () => {
   }, [router]);
 
   if (!isLoading && !isLoggedIn) {
-    return claimedGrowth ? (
-      <BillingConnectWalletPrompt />
-    ) : (
-      <ConnectWalletPrompt />
-    );
+    return <BillingConnectWalletPrompt />;
   }
 
   if (!account) {

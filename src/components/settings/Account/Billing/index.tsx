@@ -19,7 +19,6 @@ import { BillingPricing } from "./Pricing";
 import { OnboardingBilling } from "components/onboarding/Billing";
 import { OnboardingModal } from "components/onboarding/Modal";
 import { FiExternalLink } from "react-icons/fi";
-import { useLocalStorage } from "hooks/useLocalStorage";
 import { BillingPlanCard } from "./PlanCard";
 
 interface BillingProps {
@@ -27,7 +26,6 @@ interface BillingProps {
 }
 
 export const Billing: React.FC<BillingProps> = ({ account }) => {
-  const [claimedGrowth] = useLocalStorage("claim-growth-trial", false, true);
   const updatePlanMutation = useUpdateAccountPlan(
     account?.plan === AccountPlan.Free,
   );
@@ -74,7 +72,7 @@ export const Billing: React.FC<BillingProps> = ({ account }) => {
       {
         plan,
         feedback,
-        useTrial: !!claimedGrowth && validPayment,
+        useTrial: !account?.trialPeriodEndedAt,
       },
       {
         onSuccess: () => {
@@ -255,14 +253,12 @@ export const Billing: React.FC<BillingProps> = ({ account }) => {
 
       <BillingPricing
         plan={account.plan}
+        trialPeriodEndedAt={account.trialPeriodEndedAt}
+        canTrialGrowth={!!account.trialPeriodEndedAt}
         validPayment={validPayment}
         paymentVerification={paymentVerification}
         invalidPayment={invalidPayment}
         loading={paymentMethodSaving || updatePlanMutation.isLoading}
-        canTrialGrowth={
-          !!claimedGrowth && account && !account?.trialPeriodEndedAt
-        }
-        trialPeriodEndedAt={account.trialPeriodEndedAt}
         onSelect={handlePlanSelect}
       />
 

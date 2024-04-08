@@ -63,6 +63,12 @@ export type Account = {
     billing: "email" | "none";
     updates: "email" | "none";
   };
+  recurringPaymentFailures: {
+    subscriptionId: string;
+    subscriptionDescription: string;
+    paymentFailureCode: string;
+    serviceCutoffDate: string;
+  }[];
 };
 
 interface UpdateAccountInput {
@@ -496,27 +502,34 @@ export function useUpdateNotifications() {
   );
 }
 
-export function useCreateBillingSession() {
+export function useCreateBillingSession(enabled: boolean = false) {
   const { user } = useLoggedInUser();
 
-  return useMutationWithInvalidate(async () => {
-    invariant(user?.address, "walletAddress is required");
+  return useQuery(
+    accountKeys.billingSession(user?.address as string),
+    async () => {
+      invariant(user?.address, "walletAddress is required");
 
-    const res = await fetch(`${THIRDWEB_API_HOST}/v1/account/billingSession`, {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const json = await res.json();
+      const res = await fetch(
+        `${THIRDWEB_API_HOST}/v1/account/billingSession`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+      const json = await res.json();
 
-    if (json.error) {
-      throw new Error(json.error.message);
-    }
+      if (json.error) {
+        throw new Error(json.error.message);
+      }
 
-    return json.data;
-  });
+      return json.data;
+    },
+    { enabled },
+  );
 }
 
 export function useConfirmEmail() {
