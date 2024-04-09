@@ -7,7 +7,7 @@ Adds "buy with crypto" Hooks, Here's an example of how you can use it to build a
 ```tsx
 function Component() {
   const signer = useSigner();
-  // step 1: get a quote for swapping tokens
+  // 1. get a quote for swapping tokens
   const quoteQuery = useBuyWithCryptoQuote(swapParams);
 
   const [buyTxHash, setBuyTxHash] = useState<string | undefined>();
@@ -25,14 +25,13 @@ function Component() {
       return;
     }
 
-    // if approval is required
+    // 2. if approval is required
     if (quoteQuery.data.approval) {
       const approveTx = await signer.sendTransaction(quoteQuery.data.approval);
       await approveTx.wait();
     }
 
-    // send the transaction to buy crypto
-    // this promise is resolved when user confirms the transaction in the wallet and the transaction is sent to the blockchain
+    // 3. send the transaction to buy crypto
     const buyTx = await signer.sendTransaction(
       quoteQuery.data.transactionRequest,
     );
@@ -42,6 +41,7 @@ function Component() {
     setBuyTxHash(buyTx.hash);
   }
 
+  // 4. wait for the status of the transaction
   if (statusQuery.data) {
     console.log("swap status:", statusQuery.data);
   }

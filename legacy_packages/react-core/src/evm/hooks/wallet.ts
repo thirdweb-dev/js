@@ -42,7 +42,6 @@ import { BigNumber } from "ethers";
  * ```
  *
  * @param tokenAddress - The address of the token contract, if not provided, it defaults to the native token
- * @param chainId - The chain ID of the network you want to get the balance from. If not provided, it defaults to `activeChain` set in the `ThirdwebProvider`
  *
  * @returns
  * The hook's `data` property contains the token's balance in the `value` property as a `BigNumber` object.

@@ -8,17 +8,17 @@ Adds "buy with crypto" APIs, Here's an example of how you can use it for swappin
 // 1. get a quote for swapping tokens
 const quote = await getBuyWithCryptoQuote(quoteParams);
 
-// if approval is required, send the approval transaction
+// 2. if approval is required, send the approval transaction
 if (quote.approval) {
   const approvalTx = await signer.sendTransaction(quote.approval);
   await approvalTx.wait();
 }
 
-// send the quoted transaction
+// 3. send the quoted transaction
 const buyTx = await signer.sendTransaction(quote.transactionRequest);
 await buyTx.wait();
 
-// keep polling the status of the quoted transaction until it * returns a success or failure status
+// 4. keep polling the status of the quoted transaction until it * returns a success or failure status
 const status = await getBuyWithCryptoStatus({
   clientId: "YOUR_CLIENT_ID",
   transactionHash: transactionResult.hash,
