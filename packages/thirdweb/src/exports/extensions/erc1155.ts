@@ -48,6 +48,10 @@ export {
   burnBatch,
   type BurnBatchParams,
 } from "../../extensions/erc1155/__generated__/IBurnableERC1155/write/burnBatch.js";
+export {
+  setApprovalForAll,
+  type SetApprovalForAllParams,
+} from "../../extensions/erc1155/__generated__/IERC1155/write/setApprovalForAll.js";
 
 /**
  * DROPS extension for ERC1155
