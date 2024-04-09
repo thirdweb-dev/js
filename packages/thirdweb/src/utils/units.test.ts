@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { toEther, toTokens, toUnits, toWei } from "./units.js";
+import { fromGwei, toEther, toTokens, toUnits, toWei } from "./units.js";
 
 describe("toTokens", () => {
   it("converts value to number", () => {
@@ -266,5 +266,48 @@ describe("toWei", () => {
     expect(toWei("-1.2345678000000000912345222")).toMatchInlineSnapshot(
       "-1234567800000000091n",
     );
+  });
+});
+
+describe("fromGwei", () => {
+  it("converts gwei to wei correctly", () => {
+    expect(fromGwei("1")).toMatchInlineSnapshot("1000000000n");
+    expect(fromGwei("10")).toMatchInlineSnapshot("10000000000n");
+    expect(fromGwei("100")).toMatchInlineSnapshot("100000000000n");
+    expect(fromGwei("1000")).toMatchInlineSnapshot("1000000000000n");
+    expect(fromGwei("12345")).toMatchInlineSnapshot("12345000000000n");
+    expect(fromGwei("0")).toMatchInlineSnapshot("0n");
+    expect(fromGwei("-1")).toMatchInlineSnapshot("-1000000000n");
+    expect(fromGwei("-10")).toMatchInlineSnapshot("-10000000000n");
+    expect(fromGwei("-100")).toMatchInlineSnapshot("-100000000000n");
+    expect(fromGwei("-1000")).toMatchInlineSnapshot("-1000000000000n");
+    expect(fromGwei("-12345")).toMatchInlineSnapshot("-12345000000000n");
+  });
+
+  it("handles fractional gwei inputs", () => {
+    expect(fromGwei("1.2345")).toMatchInlineSnapshot("1234500000n");
+    expect(fromGwei("10.6789")).toMatchInlineSnapshot("10678900000n");
+    expect(fromGwei("0.0001")).toMatchInlineSnapshot("100000n");
+    expect(fromGwei("0.9999")).toMatchInlineSnapshot("999900000n");
+    expect(fromGwei("-1.2345")).toMatchInlineSnapshot("-1234500000n");
+    expect(fromGwei("-10.6789")).toMatchInlineSnapshot("-10678900000n");
+    expect(fromGwei("-0.0001")).toMatchInlineSnapshot("-100000n");
+    expect(fromGwei("-0.9999")).toMatchInlineSnapshot("-999900000n");
+  });
+
+  // I'm not sure there is any case that gwei would be fractional, but just in case someone tries it
+  it("rounds fractional gwei inputs correctly and trims excessive decimals", () => {
+    expect(fromGwei("1.000000000000008")).toMatchInlineSnapshot("1000000000n");
+    expect(fromGwei("1.000000000000004")).toMatchInlineSnapshot("1000000000n");
+    expect(fromGwei("0.0000000000000001")).toMatchInlineSnapshot("0n");
+    expect(fromGwei("0.0000000000000009")).toMatchInlineSnapshot("0n");
+    expect(fromGwei("-1.000000000000008")).toMatchInlineSnapshot(
+      "-1000000000n",
+    );
+    expect(fromGwei("-1.000000000000004")).toMatchInlineSnapshot(
+      "-1000000000n",
+    );
+    expect(fromGwei("-0.0000000000000001")).toMatchInlineSnapshot("0n");
+    expect(fromGwei("-0.0000000000000009")).toMatchInlineSnapshot("0n");
   });
 });

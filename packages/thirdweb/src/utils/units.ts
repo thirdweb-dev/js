@@ -130,3 +130,19 @@ export function toUnits(tokens: string, decimals: number): bigint {
 export function toWei(tokens: string) {
   return toUnits(tokens, 18);
 }
+
+/**
+ * Converts the specified number from gwei to wei.
+ * @param gwei The number of gwei to convert.
+ * @returns The converted value in wei.
+ * @example
+ * ```ts
+ * import { fromGwei } from "thirdweb/utils";
+ * fromGwei('1')
+ * // 1000000000n
+ * ```
+ * @utils
+ */
+export function fromGwei(gwei: string) {
+  return toUnits(gwei, 9);
+}
