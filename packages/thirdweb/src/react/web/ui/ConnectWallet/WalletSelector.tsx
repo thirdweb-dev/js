@@ -2,7 +2,7 @@ import { ChevronLeftIcon } from "@radix-ui/react-icons";
 import { Suspense, lazy, useContext, useEffect, useRef, useState } from "react";
 import type { InjectedSupportedWalletIds } from "../../../../wallets/__generated__/wallet-ids.js";
 import { createWallet } from "../../../../wallets/create-wallet.js";
-import { getMIPDStore } from "../../../../wallets/injected/mipdStore.js";
+import { getInstalledWalletProviders } from "../../../../wallets/injected/mipdStore.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
 // import { localWalletMetadata } from "../../../../wallets/local/index._ts";
@@ -467,7 +467,7 @@ let _installedWallets: Wallet[] = [];
 
 function getInstalledWallets() {
   if (_installedWallets.length === 0) {
-    const providers = getMIPDStore().getProviders();
+    const providers = getInstalledWalletProviders();
     const walletIds = providers.map((provider) => provider.info.rdns);
     _installedWallets = walletIds.map((w) =>
       createWallet(w as InjectedSupportedWalletIds),
