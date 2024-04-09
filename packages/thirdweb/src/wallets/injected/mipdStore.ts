@@ -51,8 +51,7 @@ export function getInstalledWalletProviders() {
   const providers = getMIPDStore().getProviders();
 
   providers.forEach((p) => {
-    // Map io.metamask.mobile to io.metamask rdns
-    // o.metamask.mobile is used in by MetaMask in-app browser's injected provider
+    // Map io.metamask.mobile to io.metamask rdns to fix double entry issue in MetaMask mobile browser
     if ((p.info.rdns as string) === "io.metamask.mobile") {
       p.info.rdns = "io.metamask";
     }
