@@ -144,8 +144,6 @@ export async function deployCreate2Factory(options: ClientAndChainAndAccount) {
 
   const gasPriceFetched = await getGasPrice(options);
   const bin = _getNearestGasPriceBin(gasPriceFetched);
-    
-
   const deploymentInfo = await _getCreate2FactoryDeploymentInfo(eipChain, {
     gasPrice: bin,
   });
