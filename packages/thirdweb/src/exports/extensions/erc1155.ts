@@ -61,6 +61,21 @@ export {
   type SafeBatchTransferFromParams,
 } from "../../extensions/erc1155/__generated__/IERC1155/write/safeBatchTransferFrom.js";
 
+// EVENTS
+
+export {
+  transferSingleEvent,
+  type TransferSingleEventFilters,
+} from "../../extensions/erc1155/__generated__/IERC1155/events/TransferSingle.js";
+export {
+  transferBatchEvent,
+  type TransferBatchEventFilters,
+} from "../../extensions/erc1155/__generated__/IERC1155/events/TransferBatch.js";
+export {
+  approvalForAllEvent,
+  type ApprovalForAllEventFilters,
+} from "../../extensions/erc1155/__generated__/IERC1155/events/ApprovalForAll.js";
+
 /**
  * DROPS extension for ERC1155
  */
