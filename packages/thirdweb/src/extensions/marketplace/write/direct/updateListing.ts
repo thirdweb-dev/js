@@ -72,6 +72,7 @@ export type UpdateListingParams = {
  * Updates an existing direct listing.
  * @param options The options for updating the direct listing.
  * @returns The result of updating the direct listing.
+ * @extension MARKETPLACE
  * @example
  * ```typescript
  * import { updateListing } from "thirdweb/extensions/marketplace";

@@ -67,6 +67,7 @@ export type CreateListingParams = {
  * Creates a direct listing.
  * @param options The options for creating the direct listing.
  * @returns The result of creating the direct listing.
+ * @extension MARKETPLACE
  * @example
  * ```typescript
  * import { createListing } from "thirdweb/extensions/marketplace";

@@ -14,6 +14,7 @@ export type CurrencyPriceForListingParams = {
  * @param options - The options for retrieving the currency price.
  * @returns A promise that resolves to the currency price as a bigint.
  * @throws An error if the currency is not approved for the listing.
+ * @extension MARKETPLACE
  * @example
  * ```ts
  * import { currencyPriceForListing } from "thirdweb/extensions/marketplace";

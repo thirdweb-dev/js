@@ -12,7 +12,7 @@ export type IsBuyerApprovedForListingParams = {
  *
  * @param options - The options for checking buyer approval.
  * @returns A promise that resolves to a boolean indicating whether the buyer is approved for the listing.
- *
+ * @extension MARKETPLACE
  * @example
  * ```ts
  * import { isBuyerApprovedForListing } from "thirdweb/extensions/marketplace";

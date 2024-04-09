@@ -26,6 +26,7 @@ export type GetAllValidAuctionParams = {
  * Retrieves all valid auctions based on the provided options.
  * @param options - The options for retrieving the listing.
  * @returns A promise that resolves to the valid auctions array.
+ * @extension MARKETPLACE
  * @example
  *
  * ```ts
