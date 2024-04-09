@@ -1,11 +1,8 @@
-import { concat } from "viem";
 import { describe, expect, it as test } from "vitest";
 import { keccakId } from "../utils/any-evm/keccak-id.js";
-import { hexToUint8Array, uint8ArrayToHex } from "../utils/encoding/hex.js";
+import { uint8ArrayToHex } from "../utils/encoding/hex.js";
 import { stringToBytes } from "../utils/encoding/to-bytes.js";
-import { keccak256 } from "../utils/hashing/keccak256.js";
 import { sha256 } from "../utils/hashing/sha256.js";
-import { concatUint8Arrays } from "../utils/uint8-array.js";
 import { MerkleTree } from "./MerkleTree.js";
 
 describe("MerkleTree", () => {
@@ -80,9 +77,7 @@ describe("MerkleTree", () => {
 
     expect(
       tree.verify(
-        // TODO: accept Uint8Array as input
         tree.getHexProof(leaves[1]!, 1),
-        // TODO: accept Uint8Array as input
         leaves[1]!,
         tree.getHexRoot(),
       ),
@@ -168,12 +163,14 @@ describe("MerkleTree", () => {
 
     const layers = tree.getHexLayers().slice(1); // no leaves
 
-    const layer_1 = "0xa823e1adfad5920f542db402eb9598f9c0464220fe0293df1a007424061cd1df"
+    const layer_1 =
+      "0xa823e1adfad5920f542db402eb9598f9c0464220fe0293df1a007424061cd1df";
 
     expect(layers[0]![0]!).toEqual(layer_1);
     expect(layers[0]![1]!).toEqual(c_hash);
 
-    const root = "0x3c0f3e5eaffaf5aa01e231c75b30139492d251862c4716b24d2bbb39deea4f6e";
+    const root =
+      "0x3c0f3e5eaffaf5aa01e231c75b30139492d251862c4716b24d2bbb39deea4f6e";
     expect(tree.getHexRoot()).toEqual(root);
 
     const proof_0 = tree.getProof(leaves[0]!);

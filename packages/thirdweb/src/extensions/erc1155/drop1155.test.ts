@@ -5,6 +5,7 @@ import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import { TEST_ACCOUNT_A } from "../../../test/src/test-wallets.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../constants/addresses.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
+import { baseSepolia } from "../../exports/chains.js";
 import { sendAndConfirmTransaction } from "../../exports/transaction.js";
 import { getContractMetadata } from "../common/read/getContractMetadata.js";
 import { deployERC1155Contract } from "../prebuilts/deploy-erc1155.js";
@@ -111,5 +112,24 @@ describe.runIf(process.env.TW_SECRET_KEY)("DropERC1155", () => {
     await expect(
       balanceOf({ contract, owner: TEST_ACCOUNT_A.address, tokenId: 1n }),
     ).resolves.toBe(0n);
+  });
+
+  describe("Allowlists", () => {
+    it("should allow to claim tokens with an allowlist", async () => {
+      const contract = getContract({
+        address: "0x1320Cafa93fb53Ed9068E3272cb270adbBEf149C",
+        chain: baseSepolia,
+        client: TEST_CLIENT,
+      });
+      await sendAndConfirmTransaction({
+        account: TEST_ACCOUNT_A,
+        transaction: claimTo({
+          contract,
+          to: TEST_ACCOUNT_A.address,
+          tokenId: 0n,
+          quantity: 1n,
+        }),
+      });
+    });
   });
 });

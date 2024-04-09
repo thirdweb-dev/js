@@ -100,10 +100,8 @@ export class MerkleTree extends Base {
         typeof options.fillDefaultHash === "string"
       ) {
         this.fillDefaultHash = (
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          idx?: number,
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-shadow
-          hashFn?: THashFn,
+          _idx?: number,
+          _hashFn?: THashFn,
         ): THashFnResult => options.fillDefaultHash as THashFnResult;
       } else {
         throw new Error(
@@ -525,7 +523,7 @@ export class MerkleTree extends Base {
    *const root = tree.getHexRoot()
    *```
    */
-  getHexRoot(): string {
+  getHexRoot(): `0x${string}` {
     return uint8ArrayToHex(this.getRoot());
   }
 
@@ -619,7 +617,7 @@ export class MerkleTree extends Base {
    *const proof = tree.getHexProof(leaves[2])
    *```
    */
-  getHexProof(leaf: Uint8Array | string, index?: number): string[] {
+  getHexProof(leaf: Uint8Array | string, index?: number): `0x${string}`[] {
     return this.getProof(leaf, index).map((item) => uint8ArrayToHex(item.data));
   }
 
