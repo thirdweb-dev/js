@@ -25,6 +25,10 @@ export {
   getAllValidListings,
   type GetAllValidListingParams,
 } from "../../extensions/marketplace/read/direct/getAllValidListings.js";
+export {
+  isBuyerApprovedForListing,
+  type IsBuyerApprovedForListingParams,
+} from "../../extensions/marketplace/read/direct/isBuyerApprovedForListing.js";
 
 // WRITE
 export {
