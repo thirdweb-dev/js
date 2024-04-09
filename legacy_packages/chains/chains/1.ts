@@ -70,7 +70,11 @@ export default {
     "https://mainnet.gateway.tenderly.co",
     "wss://mainnet.gateway.tenderly.co",
     "https://rpc.blocknative.com/boost",
+    "https://rpc.flashbots.net",
     "https://rpc.flashbots.net/fast",
+    "https://rpc.mevblocker.io",
+    "https://rpc.mevblocker.io/fast",
+    "https://rpc.mevblocker.io/noreverts",
     "https://rpc.mevblocker.io/fullprivacy",
     "https://eth.drpc.org",
     "wss://eth.drpc.org"

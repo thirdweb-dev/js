@@ -5,11 +5,17 @@ export default {
   "explorers": [
     {
       "name": "Frame Testnet Explorer",
+      "url": "https://explorer.testnet.frame.xyz",
+      "standard": "EIP3091"
+    },
+    {
+      "name": "Frame Testnet Explorer",
       "url": "https://explorer.testnet.frame.xyz/",
       "standard": "EIP3091"
     }
   ],
   "faucets": [
+    "https://faucet.triangleplatform.com/frame/testnet",
     "https://faucet.triangleplatform.com/frame"
   ],
   "features": [],
