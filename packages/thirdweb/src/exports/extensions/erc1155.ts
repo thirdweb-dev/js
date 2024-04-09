@@ -60,6 +60,14 @@ export {
   safeBatchTransferFrom,
   type SafeBatchTransferFromParams,
 } from "../../extensions/erc1155/__generated__/IERC1155/write/safeBatchTransferFrom.js";
+export {
+  mintTo,
+  type MintToParams,
+} from "../../extensions/erc1155/write/mintTo.js";
+export {
+  mintAdditionalSupplyTo,
+  type MintAdditionalSupplyToParams,
+} from "../../extensions/erc1155/write/mintAdditionalSupplyTo.js";
 
 // EVENTS
 
