@@ -1,5 +1,47 @@
 # @thirdweb-dev/wallets
 
+## 2.5.0
+
+### Minor Changes
+
+- [#2366](https://github.com/thirdweb-dev/js/pull/2366) [`f6a30c0`](https://github.com/thirdweb-dev/js/commit/f6a30c037197391ef0a514570931775b18927f17) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - Adds Login with SMS in EmbeddedWallet.
+
+  Note that the `phoneNumber` requires the `+` symbol along with the IsoCountry code before the actual phone number.
+
+  For a list of supported country code, you can use the `supportedSmsCountries` object which contains a list of all support country information.
+
+  Usage:
+
+  ```typescript
+  const embeddedWalletSdk = new EmbeddedWalletConnector({
+    clientId: "YOUR_THIRDWEB_CLIENT_ID",
+    // ...
+  });
+
+  // phone number needs to have the country code as prefix
+  await embeddedWalletSdk.sendVerificationSms({ phoneNumber: "+11234567890" });
+
+  const authResult = await embeddedWalletSdk.authenticate({
+    strategy: "phone_number_verification",
+    verificationCode: "123456",
+  });
+
+  const walletAddress = await embeddedWalletSdk.connect({
+    authResult,
+  });
+  const signer = await embeddedWalletSdk.getSigner();
+  ```
+
+### Patch Changes
+
+- [#2714](https://github.com/thirdweb-dev/js/pull/2714) [`6961e09`](https://github.com/thirdweb-dev/js/commit/6961e09a4cec4c276b233285e721dc0505792be5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Simulate inner transaction before bundling user ops
+
+- [#2726](https://github.com/thirdweb-dev/js/pull/2726) [`5150259`](https://github.com/thirdweb-dev/js/commit/51502596d9f165a5316ce08da8a04b3e5c5e4eba) Thanks [@jnsdls](https://github.com/jnsdls)! - remove unused dependency
+
+- Updated dependencies [[`53e56f4`](https://github.com/thirdweb-dev/js/commit/53e56f4bf8d3fbe7e2d5252b561bcef5927762e6)]:
+  - @thirdweb-dev/chains@0.1.91
+  - @thirdweb-dev/sdk@4.0.60
+
 ## 2.4.35
 
 ### Patch Changes
