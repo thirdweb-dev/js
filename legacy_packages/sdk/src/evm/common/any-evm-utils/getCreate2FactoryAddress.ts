@@ -82,10 +82,13 @@ export async function computeCreate2FactoryTransaction(
   ]);
   const chainId = enforceEip155 ? networkId : 0;
   const gasPriceBigInt = gasPriceFetched.toBigInt();
-  const bin =
-    CUSTOM_GAS_BINS.find((e) => e >= gasPriceBigInt) || gasPriceBigInt;
+  const bin = _getNearestGasPriceBin(gasPriceBigInt);
 
   return getCreate2FactoryDeploymentInfo(chainId, {
     gasPrice: bin,
   });
+}
+
+function _getNearestGasPriceBin(gasPrice: bigint): bigint {
+  return CUSTOM_GAS_BINS.find((e) => e >= gasPrice) || gasPrice;
 }

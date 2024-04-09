@@ -102,8 +102,7 @@ export async function computeCreate2FactoryAddress(
     getGasPrice(options),
   ]);
   const eipChain = enforceEip155 ? chainId : 0;
-  const bin =
-    CUSTOM_GAS_BINS.find((e) => e >= gasPriceFetched) || gasPriceFetched;
+  const bin = _getNearestGasPriceBin(gasPriceFetched);
 
   const deploymentInfo = await _getCreate2FactoryDeploymentInfo(eipChain, {
     gasPrice: bin,
@@ -144,8 +143,8 @@ export async function deployCreate2Factory(options: ClientAndChainAndAccount) {
   });
 
   const gasPriceFetched = await getGasPrice(options);
-  const bin =
-    CUSTOM_GAS_BINS.find((e) => e >= gasPriceFetched) || gasPriceFetched;
+  const bin = _getNearestGasPriceBin(gasPriceFetched);
+    
 
   const deploymentInfo = await _getCreate2FactoryDeploymentInfo(eipChain, {
     gasPrice: bin,
@@ -206,6 +205,10 @@ async function _getCreate2FactoryDeploymentInfo(
     valueToSend: gasPrice * gas,
     predictedAddress: create2FactoryAddress,
   };
+}
+
+function _getNearestGasPriceBin(gasPrice: bigint): bigint {
+  return CUSTOM_GAS_BINS.find((e) => e >= gasPrice) || gasPrice;
 }
 
 // TODO: move this somewhere else
