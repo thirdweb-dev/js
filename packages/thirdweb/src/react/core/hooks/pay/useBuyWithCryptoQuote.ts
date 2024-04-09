@@ -67,12 +67,20 @@ export function useBuyWithCryptoQuote(
 ): UseQueryResult<BuyWithCryptoQuote> {
   return useQuery({
     ...queryParams,
+
     queryKey: ["buyWithCryptoQuote", buyWithCryptoParams],
     queryFn: () => {
       if (!buyWithCryptoParams) {
         throw new Error("Swap params are required");
       }
-      return getBuyWithCryptoQuote(buyWithCryptoParams);
+      if (!buyWithCryptoParams?.client) {
+        throw new Error("Client is required in swap params");
+      }
+      return getBuyWithCryptoQuote({
+        // typescript limitation with discriminated unions are collapsed
+        ...(buyWithCryptoParams as GetBuyWithCryptoQuoteParams),
+        client: buyWithCryptoParams.client,
+      });
     },
     enabled: !!buyWithCryptoParams,
   });

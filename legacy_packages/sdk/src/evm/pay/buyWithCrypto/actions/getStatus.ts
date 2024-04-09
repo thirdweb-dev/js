@@ -33,7 +33,7 @@ export { type BuyWithCryptoStatus } from "thirdweb/pay";
  *   transactionHash: transactionResult.hash,
  * });
  * ```
- * @returns Object of type [`BuyWithCryptoStatus`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoStatus)
+ * @returns Object of type [`BuyWithCryptoStatus`](https://portal.thirdweb.com/references/typescript/v4/BuyWithCryptoStatus)
  */
 export async function getBuyWithCryptoStatus(
   buyWithCryptoTransaction: BuyWithCryptoTransaction,

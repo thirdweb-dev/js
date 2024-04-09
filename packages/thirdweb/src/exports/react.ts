@@ -89,5 +89,3 @@ export {
   AutoConnect,
   type AutoConnectProps,
 } from "../react/core/hooks/connection/useAutoConnect.js";
-
-export { useChainQuery } from "../react/core/hooks/others/useChainQuery.js";
