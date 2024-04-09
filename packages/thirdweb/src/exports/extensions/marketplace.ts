@@ -47,6 +47,10 @@ export {
   updateListing,
   type UpdateListingParams,
 } from "../../extensions/marketplace/write/direct/updateListing.js";
+export {
+  cancelListing,
+  type CancelListingParams,
+} from "../../extensions/marketplace/__generated__/IDirectListings/write/cancelListing.js";
 
 // EVENTS
 export {
