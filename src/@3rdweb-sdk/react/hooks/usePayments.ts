@@ -8,6 +8,7 @@ import {
   AvalancheFuji,
   Base,
   BaseGoerli,
+  BaseSepoliaTestnet,
   Binance,
   BinanceTestnet,
   Ethereum,
@@ -86,14 +87,13 @@ export const validPaymentsChainIdsMainnets: number[] = [
 ];
 
 const validPaymentsChainIdsTestnets: number[] = [
-  Goerli.chainId,
   Sepolia.chainId,
   Mumbai.chainId,
   AvalancheFuji.chainId,
   OptimismGoerli.chainId,
   ArbitrumGoerli.chainId,
   BinanceTestnet.chainId,
-  BaseGoerli.chainId,
+  BaseSepoliaTestnet.chainId,
   ZoraTestnet.chainId,
   ArbitrumSepolia.chainId,
   FrameTestnet.chainId,
