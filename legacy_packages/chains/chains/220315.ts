@@ -18,6 +18,12 @@ export default {
       "name": "EIP1559"
     }
   ],
+  "icon": {
+    "url": "ipfs://QmZ9njQhhKkpJKGnoYy6XTuDtk5CYiDFUd8atqWthqUT3Q",
+    "width": 1024,
+    "height": 1024,
+    "format": "png"
+  },
   "infoURL": "https://masterbank.org",
   "name": "Mas Mainnet",
   "nativeCurrency": {

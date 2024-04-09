@@ -4,6 +4,11 @@ export default {
   "chainId": 308,
   "explorers": [
     {
+      "name": "furthscan",
+      "url": "http://furthscan.com",
+      "standard": "EIP3091"
+    },
+    {
       "name": "Furthscan Network Explorer",
       "url": "http://furthscan.com/",
       "standard": "standard",
@@ -34,6 +39,7 @@ export default {
   "redFlags": [],
   "rpc": [
     "https://308.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.furtheon.org/",
     "https://rpc.furtheon.org"
   ],
   "shortName": "FTH",

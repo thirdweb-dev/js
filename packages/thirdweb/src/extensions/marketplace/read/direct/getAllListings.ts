@@ -26,6 +26,7 @@ export type GetAllListingParams = {
  * Retrieves all direct listings based on the provided options.
  * @param options - The options for retrieving the listing.
  * @returns A promise that resolves to the direct listings array.
+ * @extension MARKETPLACE
  * @example
  *
  * ```ts

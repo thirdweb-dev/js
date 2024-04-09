@@ -15,6 +15,7 @@ export type GetAuctionParams = GetAuctionParamsGenerated;
  * Retrieves an auction listing based on the provided options.
  * @param options - The options for retrieving the listing.
  * @returns A promise that resolves to the direct listing.
+ * @extension MARKETPLACE
  * @example
  *
  * ```ts
