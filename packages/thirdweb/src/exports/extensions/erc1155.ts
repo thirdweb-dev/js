@@ -52,6 +52,14 @@ export {
   setApprovalForAll,
   type SetApprovalForAllParams,
 } from "../../extensions/erc1155/__generated__/IERC1155/write/setApprovalForAll.js";
+export {
+  safeTransferFrom,
+  type SafeTransferFromParams,
+} from "../../extensions/erc1155/__generated__/IERC1155/write/safeTransferFrom.js";
+export {
+  safeBatchTransferFrom,
+  type SafeBatchTransferFromParams,
+} from "../../extensions/erc1155/__generated__/IERC1155/write/safeBatchTransferFrom.js";
 
 /**
  * DROPS extension for ERC1155
