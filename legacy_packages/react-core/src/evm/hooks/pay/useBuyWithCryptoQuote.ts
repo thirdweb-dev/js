@@ -14,7 +14,6 @@ type BuyWithCryptoQuoteQueryOptions = Omit<
   "queryFn" | "queryKey" | "enabled"
 >;
 
-export type BuyWithCryptoQuoteQueryParams = GetBuyWithCryptoQuoteParams;
 /**
  * Hook to get a quote of type [`BuyWithCryptoQuote`](https://portal.thirdweb.com/references/typescript/v4/BuyWithCryptoQuote) for buying tokens with crypto.
  * This quote contains the information about the purchase such as token amounts, processing fees, estimated time etc.
@@ -23,12 +22,12 @@ export type BuyWithCryptoQuoteQueryParams = GetBuyWithCryptoQuoteParams;
  * You can also use that function directly
  *
  * Once you have the quote, you can use the [`useBuyWithCryptoStatus`](https://portal.thirdweb.com/references/react/v4/useBuyWithCryptoStatus) function to get the status of the swap transaction.
- * @param buyWithCryptoParams - object of type [`BuyWithCryptoQuoteQueryParams`](https://portal.thirdweb.com/references/react/v4/BuyWithCryptoQuoteQueryParams)
+ * @param params - object of type [`GetBuyWithCryptoQuoteParams`](https://portal.thirdweb.com/references/react/v4/GetBuyWithCryptoQuoteParams)
  * @param queryParams - options to configure the react query
- * @returns A React Query object which contains the data of type [`GetBuyWithCryptoQuoteParams`](https://portal.thirdweb.com/references/typescript/v4/GetBuyWithCryptoQuoteParams)
+ * @returns A React Query object which contains the data of type [`BuyWithCryptoQuote`](https://portal.thirdweb.com/references/typescript/v4/BuyWithCryptoQuote)
  * @example
  * ```tsx
- * import { useSigner, useBuyWithCryptoQuote, useBuyWithCryptoStatus } from "@thirdweb-dev/react-core";
+ * import { useSigner, useBuyWithCryptoQuote, useBuyWithCryptoStatus } from "@thirdweb-dev/react";
  *
  * function Component() {
  *   const buyWithCryptoQuoteQuery = useBuyWithCryptoQuote* (swapParams);
@@ -67,21 +66,21 @@ export type BuyWithCryptoQuoteQueryParams = GetBuyWithCryptoQuoteParams;
  * ```
  */
 export function useBuyWithCryptoQuote(
-  buyWithCryptoParams?: BuyWithCryptoQuoteQueryParams,
+  params?: GetBuyWithCryptoQuoteParams,
   queryParams?: BuyWithCryptoQuoteQueryOptions,
 ): UseQueryResult<BuyWithCryptoQuote> {
   return useQuery<BuyWithCryptoQuote>({
     ...queryParams,
-    queryKey: ["buyWithCryptoQuote", buyWithCryptoParams],
+    queryKey: ["buyWithCryptoQuote", params],
     queryFn: () => {
-      if (!buyWithCryptoParams) {
+      if (!params) {
         throw new Error("Swap params are required");
       }
-      if (!buyWithCryptoParams?.clientId) {
+      if (!params?.clientId) {
         throw new Error("Client ID is required in swap params");
       }
-      return getBuyWithCryptoQuote(buyWithCryptoParams);
+      return getBuyWithCryptoQuote(params);
     },
-    enabled: !!buyWithCryptoParams,
+    enabled: !!params,
   });
 }

@@ -247,7 +247,20 @@ export type { EnglishAuctionInputParams } from "./schema/marketplacev3/english-a
 //#endregion @r/legacy_packages/sdk/src/evm/schema
 
 //#region @r/legacy_packages/sdk/src/evm/pay
-export * from "./pay/buyWithCrypto/actions/getHistory";
-export * from "./pay/buyWithCrypto/actions/getQuote";
-export * from "./pay/buyWithCrypto/actions/getStatus";
+export {
+  type BuyWithCryptoHistoryData,
+  type BuyWithCryptoHistoryParams,
+  getBuyWithCryptoHistory,
+} from "./pay/buyWithCrypto/actions/getHistory";
+export {
+  type BuyWithCryptoQuote,
+  type GetBuyWithCryptoQuoteParams,
+  type QuoteTokenInfo,
+  getBuyWithCryptoQuote,
+} from "./pay/buyWithCrypto/actions/getQuote";
+export {
+  type BuyWithCryptoStatus,
+  type BuyWithCryptoTransaction,
+  getBuyWithCryptoStatus,
+} from "./pay/buyWithCrypto/actions/getStatus";
 //#endregion @r/legacy_packages/sdk/src/evm/pay

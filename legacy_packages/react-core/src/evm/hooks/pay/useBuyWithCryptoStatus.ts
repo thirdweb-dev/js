@@ -9,21 +9,19 @@ import { useState } from "react";
 // TODO: use the estimate to vary the polling interval
 const DEFAULT_POLL_INTERVAL = 5000;
 
-export type BuyWithCryptoStatusQueryParams = BuyWithCryptoTransaction;
-
 /**
- * A hook to get a status of swap transaction.
+ * A hook to get a status of Buy with Crypto transaction.
  *
  * This hook is a React Query wrapper of the [`getBuyWithCryptoStatus`](https://portal.thirdweb.com/references/typescript/v4/getBuyWithCryptoStatus) function.
  * You can also use that function directly.
- * @param buyWithCryptoStatusParams - object of type [`BuyWithCryptoStatusQueryParams`](https://portal.thirdweb.com/references/react/v4/BuyWithCryptoStatusQueryParams)
- * @returns A react query object which contains the data of type [`BuyWithCryptoStatus`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoStatus)
+ * @param params - object of type [`BuyWithCryptoTransaction`](https://portal.thirdweb.com/references/react/v4/BuyWithCryptoTransaction)
+ * @returns A react query object which contains the data of type [`BuyWithCryptoStatus`](https://portal.thirdweb.com/references/typescript/v4/BuyWithCryptoStatus)
  * @example
  * ```tsx
- * import { useSigner, useBuyWithCryptoQuote, useBuyWithCryptoStatus } from "@thirdweb-dev/react-core";
+ * import { useSigner, useBuyWithCryptoQuote, useBuyWithCryptoStatus } from "@thirdweb-dev/react";
  *
  * function Component() {
- *   const buyWithCryptoQuoteQuery = useBuyWithCryptoQuote* (swapParams);
+ *   const buyWithCryptoQuoteQuery = useBuyWithCryptoQuote(swapParams);
  *   const signer = useSigner();
  *   const [buyTxHash, setBuyTxHash] = useState<string | undefined>();
  *   const buyWithCryptoStatusQuery = useBuyWithCryptoStatus* (buyTxHash ? {
@@ -38,12 +36,14 @@ export type BuyWithCryptoStatusQueryParams = BuyWithCryptoTransaction;
  *
  *     // if approval is required
  *     if (buyWithCryptoQuoteQuery.data.approval) {
- *       const approveTx = await signer.sendTransaction* (buyWithCryptoQuoteQuery.data.approval);
+ *       const approveTx = await signer.sendTransaction(buyWithCryptoQuoteQuery.data.approval);
+ *       await approveTx.wait();
  *     }
  *
  *     // send the transaction to buy crypto
  *     // this promise is resolved when user confirms the transaction * in the wallet and the transaction is sent to the blockchain
- *     const buyTx = await signer.sendTransaction* (buyWithCryptoQuoteQuery.data.transactionRequest);
+ *     const buyTx = await signer.sendTransaction(buyWithCryptoQuoteQuery.data.transactionRequest);
+ *     await buyTx.wait();
  *
  *     // set buyTx.transactionHash to poll the status of the swap * transaction
  *     setBuyTxHash(buyTx.hash);
@@ -56,29 +56,24 @@ export type BuyWithCryptoStatusQueryParams = BuyWithCryptoTransaction;
  *  }
  * ```
  */
-export function useBuyWithCryptoStatus(
-  buyWithCryptoStatusParams?: BuyWithCryptoStatusQueryParams,
-) {
+export function useBuyWithCryptoStatus(params?: BuyWithCryptoTransaction) {
   const [refetchInterval, setRefetchInterval] = useState<number>(
     DEFAULT_POLL_INTERVAL,
   );
 
   return useQuery<BuyWithCryptoStatus, Error>({
-    queryKey: [
-      "swapStatus",
-      buyWithCryptoStatusParams?.transactionHash,
-    ] as const,
+    queryKey: ["swapStatus", params?.transactionHash] as const,
     queryFn: async () => {
-      if (!buyWithCryptoStatusParams) {
+      if (!params) {
         throw new Error("Missing swap status params");
       }
-      if (!buyWithCryptoStatusParams?.clientId) {
+      if (!params?.clientId) {
         throw new Error("Missing clientId in swap status params");
       }
 
       const swapStatus_ = await getBuyWithCryptoStatus({
-        ...buyWithCryptoStatusParams,
-        clientId: buyWithCryptoStatusParams.clientId,
+        ...params,
+        clientId: params.clientId,
       });
       if (
         swapStatus_.status === "COMPLETED" ||
@@ -88,7 +83,7 @@ export function useBuyWithCryptoStatus(
       }
       return swapStatus_;
     },
-    enabled: !!buyWithCryptoStatusParams,
+    enabled: !!params,
     refetchInterval: refetchInterval,
     refetchIntervalInBackground: true,
     retry: true,
