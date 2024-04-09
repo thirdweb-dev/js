@@ -50,12 +50,13 @@ function getMIPDStore() {
 export function getInstalledWalletProviders() {
   const providers = getMIPDStore().getProviders();
 
-  providers.forEach((p) => {
+  for (const provider of providers) {
     // Map io.metamask.mobile to io.metamask rdns to fix double entry issue in MetaMask mobile browser
-    if ((p.info.rdns as string) === "io.metamask.mobile") {
-      p.info.rdns = "io.metamask";
+    if ((provider.info.rdns as string) === "io.metamask.mobile") {
+      provider.info.rdns = "io.metamask";
+      break;
     }
-  });
+  }
 
   return providers;
 }
