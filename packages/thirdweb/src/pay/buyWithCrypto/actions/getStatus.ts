@@ -136,7 +136,7 @@ export async function getBuyWithCryptoStatus(
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data: BuyWithCryptoStatus = (await response.json())["result"];
+    const data: BuyWithCryptoStatus = (await response.json()).result;
     return data;
   } catch (error) {
     console.error("Fetch error:", error);

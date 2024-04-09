@@ -1,7 +1,7 @@
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
 import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 import { StyledH2 } from "../design-system/elements.js";
-import { fontSize, media, iconSize } from "../design-system/index.js";
+import { fontSize, iconSize, media } from "../design-system/index.js";
 import { IconButton } from "./buttons.js";
 
 export const ModalTitle = /* @__PURE__ */ StyledH2(

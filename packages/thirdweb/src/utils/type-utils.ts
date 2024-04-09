@@ -39,5 +39,4 @@ export type MaybeRequired<T, TRequired extends boolean> = TRequired extends true
  */
 export type Prettify<T> = {
   [K in keyof T]: T[K];
-  // eslint-disable-next-line @typescript-eslint/ban-types
 } & {};

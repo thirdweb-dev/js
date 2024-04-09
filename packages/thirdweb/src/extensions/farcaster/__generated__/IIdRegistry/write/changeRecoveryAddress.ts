@@ -11,7 +11,7 @@ export type ChangeRecoveryAddressParams = {
   recovery: AbiParameterToPrimitiveType<{ type: "address"; name: "recovery" }>;
 };
 
-const FN_SELECTOR = "0xf1f0b224" as const;
+export const FN_SELECTOR = "0xf1f0b224" as const;
 const FN_INPUTS = [
   {
     type: "address",

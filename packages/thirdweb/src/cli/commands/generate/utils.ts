@@ -1,6 +1,5 @@
-/* eslint-disable jsdoc/require-jsdoc */
-import process from "node:process";
 import fsPromises from "node:fs/promises";
+import process from "node:process";
 import { fileURLToPath } from "node:url";
 
 import path from "node:path";
@@ -42,7 +41,7 @@ async function findUp(
     const filePath = path.isAbsolute(name) ? name : path.join(directory, name);
 
     try {
-      const stats = await fsPromises.stat(filePath); // eslint-disable-line no-await-in-loop
+      const stats = await fsPromises.stat(filePath);
       if (
         (type === "file" && stats.isFile()) ||
         (type === "directory" && stats.isDirectory())

@@ -14,7 +14,7 @@ export type TokensOfOwnerInParams = {
   stop: AbiParameterToPrimitiveType<{ type: "uint256"; name: "stop" }>;
 };
 
-const FN_SELECTOR = "0x99a2557a" as const;
+export const FN_SELECTOR = "0x99a2557a" as const;
 const FN_INPUTS = [
   {
     type: "address",

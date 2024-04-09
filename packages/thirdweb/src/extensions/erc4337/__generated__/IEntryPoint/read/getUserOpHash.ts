@@ -28,7 +28,7 @@ export type GetUserOpHashParams = {
   }>;
 };
 
-const FN_SELECTOR = "0xa6193531" as const;
+export const FN_SELECTOR = "0xa6193531" as const;
 const FN_INPUTS = [
   {
     type: "tuple",

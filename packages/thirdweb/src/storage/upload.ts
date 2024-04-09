@@ -82,15 +82,11 @@ export async function upload(options: UploadOptions) {
   const { fileNames, form } = buildFormData(form_, uris, options);
 
   const platform = detectPlatform();
-  if (platform === "browser") {
-    const { uploadBatchBrowser } = await import("./upload/browser.js");
-    return await uploadBatchBrowser(options.client, form, fileNames, options);
-  } else if (platform === "node") {
-    const { uploadBatchNode } = await import("./upload/node.js");
-    return uploadBatchNode(options.client, form, fileNames, options);
-  } else {
-    throw new Error(
-      `Please, use the uploadMobile function in mobile environments.`,
-    );
+  if (platform === "browser" || platform === "node") {
+    const { uploadBatch } = await import("./upload/web-node.js");
+    return await uploadBatch(options.client, form, fileNames, options);
   }
+  throw new Error(
+    "Please, use the uploadMobile function in mobile environments.",
+  );
 }

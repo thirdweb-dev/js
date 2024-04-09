@@ -1,15 +1,15 @@
-/* eslint-disable better-tree-shaking/no-top-level-side-effects */
 import { run, bench, group } from "mitata";
+
 import { getRpcClient } from "../src/rpc/rpc.js";
 import { createThirdwebClient } from "../src/client/client.js";
 import { eth_blockNumber } from "../src/rpc/actions/eth_blockNumber.js";
 import { defineChain } from "../src/chains/utils.js";
-// eslint-disable-next-line no-restricted-imports
+
 import * as viem from "viem";
 import * as ethers from "ethers6";
-import assert from "assert";
+import assert from "node:assert";
 
-const LOCAL_RPC = `http://127.0.0.1:8545`;
+const LOCAL_RPC = "http://127.0.0.1:8545";
 
 const clientNoBatching = createThirdwebClient({
   clientId: "BENCH",

@@ -1,27 +1,27 @@
 import { beforeAll, describe, expect, it } from "vitest";
-import { TEST_CLIENT } from "../../../../test/src/test-clients.js";
 import { ANVIL_CHAIN } from "../../../../test/src/chains.js";
+import { TEST_CLIENT } from "../../../../test/src/test-clients.js";
 import {
   TEST_ACCOUNT_A,
   TEST_ACCOUNT_B,
 } from "../../../../test/src/test-wallets.js";
-import { ENTRYPOINT_ADDRESS } from "../../../wallets/smart/lib/constants.js";
-import { getOrDeployInfraContract } from "../../../contract/deployment/utils/bootstrap.js";
-import { createAccount } from "../__generated__/IAccountFactory/write/createAccount.js";
-import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and-confirm-transaction.js";
+import { ADDRESS_ZERO } from "../../../constants/addresses.js";
 import {
-  getContract,
   type ThirdwebContract,
+  getContract,
 } from "../../../contract/contract.js";
-import { simulateTransaction } from "../../../transaction/actions/simulate.js";
-import { addAdmin } from "./addAdmin.js";
-import { getAllAdmins } from "../__generated__/IAccountPermissions/read/getAllAdmins.js";
-import { removeAdmin } from "./removeAdmin.js";
-import { addSessionKey } from "./addSessionKey.js";
+import { getOrDeployInfraContract } from "../../../contract/deployment/utils/bootstrap.js";
 import { parseEventLogs } from "../../../event/actions/parse-logs.js";
+import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and-confirm-transaction.js";
+import { simulateTransaction } from "../../../transaction/actions/simulate.js";
+import { ENTRYPOINT_ADDRESS } from "../../../wallets/smart/lib/constants.js";
+import { createAccount } from "../__generated__/IAccountFactory/write/createAccount.js";
 import { adminUpdatedEvent } from "../__generated__/IAccountPermissions/events/AdminUpdated.js";
 import { signerPermissionsUpdatedEvent } from "../__generated__/IAccountPermissions/events/SignerPermissionsUpdated.js";
-import { ADDRESS_ZERO } from "../../../constants/addresses.js";
+import { getAllAdmins } from "../__generated__/IAccountPermissions/read/getAllAdmins.js";
+import { addAdmin } from "./addAdmin.js";
+import { addSessionKey } from "./addSessionKey.js";
+import { removeAdmin } from "./removeAdmin.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("Account Permissions", () => {
   let accountFactoryContract: ThirdwebContract;

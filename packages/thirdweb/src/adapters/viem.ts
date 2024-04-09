@@ -1,25 +1,25 @@
+import type { Abi } from "abitype";
 import {
-  createPublicClient,
   http,
   type GetContractReturnType,
   type PublicClient,
+  type TransactionSerializableEIP1559,
   type Chain as ViemChain,
   type WalletClient,
+  createPublicClient,
   createWalletClient,
   custom,
-  type TransactionSerializableEIP1559,
 } from "viem";
-import { getContract, type ThirdwebContract } from "../contract/contract.js";
-import type { Abi } from "abitype";
 import type { Chain } from "../chains/types.js";
+import { getRpcUrlForChain } from "../chains/utils.js";
 import type { ThirdwebClient } from "../client/client.js";
 import { resolveContractAbi } from "../contract/actions/resolve-abi.js";
-import { getRpcUrlForChain } from "../chains/utils.js";
-import type { Account } from "../wallets/interfaces/wallet.js";
+import { type ThirdwebContract, getContract } from "../contract/contract.js";
 import { getRpcClient } from "../rpc/rpc.js";
+import { estimateGas } from "../transaction/actions/estimate-gas.js";
 import { sendTransaction } from "../transaction/actions/send-transaction.js";
 import { prepareTransaction } from "../transaction/prepare-transaction.js";
-import { estimateGas } from "../transaction/actions/estimate-gas.js";
+import type { Account } from "../wallets/interfaces/wallet.js";
 
 export const viemAdapter = {
   contract: {
@@ -270,7 +270,11 @@ function fromViemWalletClient(options: {
       };
     },
     signTypedData(_typedData) {
-      return options.walletClient.signTypedData(_typedData as any); // TODO fix types
+      if (!_typedData) {
+        throw new Error("Typed data is required to signTypedData");
+      }
+      // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
+      return options.walletClient.signTypedData(_typedData as any);
     },
   };
 }

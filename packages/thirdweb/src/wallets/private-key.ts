@@ -1,20 +1,20 @@
+import { secp256k1 } from "@noble/curves/secp256k1";
 import type {
+  SignableMessage,
   TransactionSerializable,
   TypedData,
   TypedDataDefinition,
-  SignableMessage,
 } from "viem";
 import { publicKeyToAddress } from "viem/utils";
-import type { ThirdwebClient } from "../client/client.js";
 import { defineChain } from "../chains/utils.js";
-import { getRpcClient } from "../rpc/rpc.js";
+import type { ThirdwebClient } from "../client/client.js";
 import { eth_sendRawTransaction } from "../rpc/actions/eth_sendRawTransaction.js";
-import type { Account } from "./interfaces/wallet.js";
-import { toHex, type Hex } from "../utils/encoding/hex.js";
-import { secp256k1 } from "@noble/curves/secp256k1";
+import { getRpcClient } from "../rpc/rpc.js";
 import { signTransaction } from "../transaction/actions/sign-transaction.js";
+import { type Hex, toHex } from "../utils/encoding/hex.js";
 import { signMessage } from "../utils/signatures/sign-message.js";
 import { signTypedData } from "../utils/signatures/sign-typed-data.js";
+import type { Account } from "./interfaces/wallet.js";
 
 export type PrivateKeyAccountOptions = {
   /**

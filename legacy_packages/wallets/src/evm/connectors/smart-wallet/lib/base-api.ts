@@ -1,19 +1,19 @@
-import { ethers, BigNumber, BigNumberish, providers } from "ethers";
+import { ethers, BigNumber, type BigNumberish, type providers } from "ethers";
 import {
-  EntryPoint,
+  type EntryPoint,
   EntryPoint__factory,
-  UserOperationStruct,
+  type UserOperationStruct,
 } from "@account-abstraction/contracts";
 
-import { TransactionDetailsForUserOp } from "./transaction-details";
+import type { TransactionDetailsForUserOp } from "./transaction-details";
 import { getUserOpHashV06 } from "./utils";
 import {
   CeloAlfajoresTestnet,
   CeloBaklavaTestnet,
   Celo,
 } from "@thirdweb-dev/chains";
-import { Transaction, getDynamicFeeData } from "@thirdweb-dev/sdk";
-import { HttpRpcClient } from "./http-rpc-client";
+import { type Transaction, getDynamicFeeData } from "@thirdweb-dev/sdk";
+import type { HttpRpcClient } from "./http-rpc-client";
 import type { BaseApiParams, PaymasterAPI, UserOpOptions } from "../types";
 import { isTwUrl } from "../../../utils/url";
 
@@ -183,14 +183,6 @@ export abstract class BaseAccountAPI {
     info: TransactionDetailsForUserOp,
     options?: UserOpOptions,
   ): Promise<UserOperationStruct> {
-    // construct the userOp without gasLimit or preVerifictaionGas
-    const initCode = await this.getInitCode();
-    const value = parseNumber(info.value) ?? BigNumber.from(0);
-    const callData = options?.batchData
-      ? info.data
-      : await this.prepareExecute(info.target, value, info.data).then((tx) =>
-          tx.encode(),
-        );
     let { maxFeePerGas, maxPriorityFeePerGas } = info;
     // get fees from bundler if available
     if (isTwUrl(httpRpcClient.bundlerUrl)) {
@@ -232,6 +224,25 @@ export abstract class BaseAccountAPI {
       this.getAccountAddress(),
       info.nonce ? Promise.resolve(info.nonce) : this.getNonce(),
     ]);
+    const initCode = await this.getInitCode();
+    const value = parseNumber(info.value) ?? BigNumber.from(0);
+    const callData = options?.batchData
+      ? info.data
+      : await this.prepareExecute(info.target, value, info.data).then(
+          async (tx) => {
+            if (!info.gasLimit) {
+              // estimate gas on the inner transactions to simulate
+              // bundler would not revert otherwise
+              await this.provider.estimateGas({
+                from: sender,
+                to: info.target,
+                data: info.data,
+                value: value,
+              });
+            }
+            return tx.encode();
+          },
+        );
     const partialOp: UserOperationStruct = {
       sender,
       nonce,

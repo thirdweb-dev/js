@@ -13,7 +13,7 @@ export type GetAllListingsParams = {
   endId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_endId" }>;
 };
 
-const FN_SELECTOR = "0xc5275fb0" as const;
+export const FN_SELECTOR = "0xc5275fb0" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

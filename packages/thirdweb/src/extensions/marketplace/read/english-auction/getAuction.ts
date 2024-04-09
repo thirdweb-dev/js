@@ -3,8 +3,8 @@ import { getRpcClient } from "../../../../rpc/rpc.js";
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 
 import {
-  getAuction as getAuctionGenerated,
   type GetAuctionParams as GetAuctionParamsGenerated,
+  getAuction as getAuctionGenerated,
 } from "../../__generated__/IEnglishAuctions/read/getAuction.js";
 import type { EnglishAuction } from "../../types.js";
 import { mapEnglishAuction } from "../../utils.js";
@@ -15,6 +15,7 @@ export type GetAuctionParams = GetAuctionParamsGenerated;
  * Retrieves an auction listing based on the provided options.
  * @param options - The options for retrieving the listing.
  * @returns A promise that resolves to the direct listing.
+ * @extension MARKETPLACE
  * @example
  *
  * ```ts

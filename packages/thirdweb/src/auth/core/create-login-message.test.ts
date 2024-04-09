@@ -1,5 +1,5 @@
+import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
 import { createLoginMessage } from "./create-login-message.js";
-import { describe, test, expect, beforeAll, afterAll, vi } from "vitest";
 
 describe("createLoginMessage", () => {
   beforeAll(() => {

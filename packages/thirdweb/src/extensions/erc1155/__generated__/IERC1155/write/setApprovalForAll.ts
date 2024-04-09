@@ -12,7 +12,7 @@ export type SetApprovalForAllParams = {
   approved: AbiParameterToPrimitiveType<{ type: "bool"; name: "_approved" }>;
 };
 
-const FN_SELECTOR = "0xa22cb465" as const;
+export const FN_SELECTOR = "0xa22cb465" as const;
 const FN_INPUTS = [
   {
     type: "address",

@@ -12,7 +12,7 @@ export type RenounceRoleParams = {
   account: AbiParameterToPrimitiveType<{ type: "address"; name: "account" }>;
 };
 
-const FN_SELECTOR = "0x36568abe" as const;
+export const FN_SELECTOR = "0x36568abe" as const;
 const FN_INPUTS = [
   {
     type: "bytes32",

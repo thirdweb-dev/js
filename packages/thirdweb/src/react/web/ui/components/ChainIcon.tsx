@@ -1,8 +1,7 @@
-/* eslint-disable @next/next/no-img-element */
 import type { ChainMetadata } from "../../../../chains/types.js";
 import { resolveScheme } from "../../../../utils/ipfs.js";
-import { StyledDiv } from "../design-system/elements.js";
 import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import { StyledDiv } from "../design-system/elements.js";
 import { Img } from "./Img.js";
 
 export const fallbackChainIcon =
@@ -64,5 +63,5 @@ const ActiveDot = /* @__PURE__ */ StyledDiv({
   top: "60%",
   right: 0,
   backgroundColor: "#00d395",
-  boxShadow: `0 0 0 2px var(--bg)`,
+  boxShadow: "0 0 0 2px var(--bg)",
 });

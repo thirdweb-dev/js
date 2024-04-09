@@ -13,7 +13,7 @@ export type BalanceOfParams = {
   tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
 };
 
-const FN_SELECTOR = "0x00fdd58e" as const;
+export const FN_SELECTOR = "0x00fdd58e" as const;
 const FN_INPUTS = [
   {
     type: "address",

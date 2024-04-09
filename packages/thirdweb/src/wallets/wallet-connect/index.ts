@@ -1,40 +1,40 @@
+import type { EthereumProvider } from "@walletconnect/ethereum-provider";
+import type { Address } from "abitype";
 import {
-  ProviderRpcError,
+  type ProviderRpcError,
+  type SignTypedDataParameters,
   SwitchChainError,
   UserRejectedRequestError,
-  type SignTypedDataParameters,
   getTypesForEIP712Domain,
   validateTypedData,
 } from "viem";
-import type { Address } from "abitype";
-import { normalizeChainId } from "../utils/normalizeChainId.js";
-import type { Account, SendTransactionOption } from "../interfaces/wallet.js";
-import type { WCAutoConnectOptions, WCConnectOptions } from "./types.js";
-import { getValidPublicRPCUrl } from "../utils/chains.js";
-import { stringify } from "../../utils/json.js";
-import type { EthereumProvider } from "@walletconnect/ethereum-provider";
+import type { Chain } from "../../chains/types.js";
 import {
   defineChain,
   getChainMetadata,
   getRpcUrlForChain,
 } from "../../chains/utils.js";
-import type { Chain } from "../../chains/types.js";
-import { isHex, numberToHex, type Hex } from "../../utils/encoding/hex.js";
-import { getDefaultAppMetadata } from "../utils/defaultDappMetadata.js";
-import type { WCSupportedWalletIds } from "../__generated__/wallet-ids.js";
-import type { DisconnectFn, SwitchChainFn } from "../types.js";
-import type { WalletEmitter } from "../wallet-emitter.js";
+import { type Hex, isHex, numberToHex } from "../../utils/encoding/hex.js";
+import { stringify } from "../../utils/json.js";
 import { isAndroid, isIOS, isMobile } from "../../utils/web/isMobile.js";
 import { openWindow } from "../../utils/web/openWindow.js";
 import { getWalletInfo } from "../__generated__/getWalletInfo.js";
+import type { WCSupportedWalletIds } from "../__generated__/wallet-ids.js";
+import type { Account, SendTransactionOption } from "../interfaces/wallet.js";
 import { asyncLocalStorage as _asyncLocalStorage } from "../storage/asyncLocalStorage.js";
+import type { DisconnectFn, SwitchChainFn } from "../types.js";
+import { getValidPublicRPCUrl } from "../utils/chains.js";
+import { getDefaultAppMetadata } from "../utils/defaultDappMetadata.js";
+import { normalizeChainId } from "../utils/normalizeChainId.js";
+import type { WalletEmitter } from "../wallet-emitter.js";
+import type { WCAutoConnectOptions, WCConnectOptions } from "./types.js";
 
+import type { ThirdwebClient } from "../../client/client.js";
+import { getAddress } from "../../utils/address.js";
 import {
   getSavedConnectParamsFromStorage,
   saveConnectParamsToStorage,
 } from "../storage/walletStorage.js";
-import type { ThirdwebClient } from "../../client/client.js";
-import { getAddress } from "../../utils/address.js";
 
 const asyncLocalStorage =
   typeof window !== "undefined" ? _asyncLocalStorage : undefined;
@@ -208,7 +208,7 @@ async function initProvider(
     disableProviderPing: true,
   });
 
-  provider.events.setMaxListeners(Infinity);
+  provider.events.setMaxListeners(Number.POSITIVE_INFINITY);
 
   // disconnect the provider if chains are stale when (if not auto connecting)
   if (!isAutoConnect) {
@@ -369,7 +369,7 @@ function getNamespaceMethods(provider: WCProvider) {
 
 function getNamespaceChainsIds(provider: WCProvider): number[] {
   const chainIds = provider.session?.namespaces[NAMESPACE]?.chains?.map(
-    (chain) => parseInt(chain.split(":")[1] || ""),
+    (chain) => Number.parseInt(chain.split(":")[1] || ""),
   );
 
   return chainIds ?? [];
@@ -384,7 +384,7 @@ async function switchChainWC(provider: WCProvider, chain: Chain) {
 
     if (!isChainApproved && namespaceMethods.includes(ADD_ETH_CHAIN_METHOD)) {
       const apiChain = await getChainMetadata(chain);
-      const firstExplorer = apiChain.explorers && apiChain.explorers[0];
+      const firstExplorer = apiChain.explorers?.[0];
       const blockExplorerUrls = firstExplorer
         ? { blockExplorerUrls: [firstExplorer.url] }
         : {};
@@ -408,14 +408,14 @@ async function switchChainWC(provider: WCProvider, chain: Chain) {
       method: "wallet_switchEthereumChain",
       params: [{ chainId: numberToHex(chainId) }],
     });
-  } catch (error: any) {
+  } catch (error) {
     const message =
       typeof error === "string" ? error : (error as ProviderRpcError)?.message;
     if (/user rejected request/i.test(message)) {
-      throw new UserRejectedRequestError(error);
+      throw new UserRejectedRequestError(error as Error);
     }
 
-    throw new SwitchChainError(error);
+    throw new SwitchChainError(error as Error);
   }
 }
 
@@ -457,12 +457,12 @@ function getChainsToRequest(options: {
   // limit optional chains to 10
   const optionalChains = (options?.optionalChains || []).slice(0, 10);
 
-  optionalChains.forEach((chain) => {
+  for (const chain of optionalChains) {
     rpcMap[chain.id] = getRpcUrlForChain({
       chain: chain,
       client: options.client,
     });
-  });
+  }
 
   const optionalChainIds = optionalChains.map((c) => c.id) || [];
 

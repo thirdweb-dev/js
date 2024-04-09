@@ -1,9 +1,4 @@
-import type {
-  EIP1193RequestFn,
-  EIP1474Methods,
-  BlockTag,
-  Hex,
-} from "viem";
+import type { BlockTag, EIP1193RequestFn, EIP1474Methods, Hex } from "viem";
 
 type GetStorageAtParams = {
   address: string;

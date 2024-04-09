@@ -27,7 +27,7 @@ export type SimulateValidationParams = {
   }>;
 };
 
-const FN_SELECTOR = "0xee219423" as const;
+export const FN_SELECTOR = "0xee219423" as const;
 const FN_INPUTS = [
   {
     type: "tuple",

@@ -5,7 +5,7 @@ import { uuid } from "../uuid.js";
 import { PRECOMPILED_B64_ENCODED_JWT_HEADER } from "./jwt-header.js";
 import type { JWTPayload } from "./types.js";
 
-export type JWTPayloadInput = {
+export type JWTPayloadInput<Tctx = unknown> = {
   iss: string;
   sub: string;
   aud: string;
@@ -13,7 +13,7 @@ export type JWTPayloadInput = {
   nbf: Date;
   iat: Date;
   jti?: string;
-  ctx?: any;
+  ctx?: Tctx;
 };
 
 type EncodeJWTParams = { payload: JWTPayloadInput; account: Account };

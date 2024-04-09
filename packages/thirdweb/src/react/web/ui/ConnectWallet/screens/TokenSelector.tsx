@@ -1,26 +1,26 @@
+import styled from "@emotion/styled";
 import { CrossCircledIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
+import type { Chain } from "../../../../../chains/types.js";
 import { useWalletBalance } from "../../../../core/hooks/others/useWalletBalance.js";
+import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import { useActiveAccount } from "../../../../core/hooks/wallets/wallet-hooks.js";
 import { Skeleton } from "../../components/Skeleton.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Spinner } from "../../components/Spinner.js";
+import { TokenIcon } from "../../components/TokenIcon.js";
 import { Container, ModalHeader } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
 import { Input } from "../../components/formElements.js";
-import { useCustomTheme } from "../../design-system/CustomThemeProvider.js";
-import { spacing, iconSize, fontSize } from "../../design-system/index.js";
 import { Text } from "../../components/text.js";
-import styled from "@emotion/styled";
-import type { Chain } from "../../../../../chains/types.js";
+import { useCustomTheme } from "../../design-system/CustomThemeProvider.js";
+import { fontSize, iconSize, spacing } from "../../design-system/index.js";
+import type { TokenInfo } from "../defaultTokens.js";
 import {
-  NATIVE_TOKEN,
   type ERC20OrNativeToken,
+  NATIVE_TOKEN,
   isNativeToken,
 } from "./nativeToken.js";
-import { TokenIcon } from "../../components/TokenIcon.js";
-import type { TokenInfo } from "../defaultTokens.js";
-import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 
 /**
  *
@@ -234,6 +234,6 @@ export function formatTokenBalance(
 ) {
   return (
     Number(balanceData.displayValue).toFixed(3) +
-    (showSymbol ? " " + balanceData.symbol : "")
+    (showSymbol ? ` ${balanceData.symbol}` : "")
   );
 }

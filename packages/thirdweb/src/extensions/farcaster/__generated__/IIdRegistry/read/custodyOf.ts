@@ -12,7 +12,7 @@ export type CustodyOfParams = {
   fid: AbiParameterToPrimitiveType<{ type: "uint256"; name: "fid" }>;
 };
 
-const FN_SELECTOR = "0x65269e47" as const;
+export const FN_SELECTOR = "0x65269e47" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

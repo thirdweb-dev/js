@@ -1,4 +1,3 @@
-/* eslint-disable jsdoc/require-jsdoc */
 import type { ThirdwebClient } from "../../client/client.js";
 import { getThirdwebDomains } from "../../utils/domains.js";
 import { getPlatformHeaders } from "../../utils/fetch.js";
@@ -8,7 +7,7 @@ import type { UploadFile } from "./types.js";
 
 const METADATA_NAME = "Storage React Native SDK";
 
-export function uploadBatchMobile(
+export async function uploadBatchMobile(
   client: ThirdwebClient,
   data: (UploadFile | Record<string, unknown>)[],
   options?: UploadMobileOptions,
@@ -24,7 +23,7 @@ export function uploadBatchMobile(
     "name" in data[0]
   ) {
     // then it's an array of files
-    return new Promise(async (resolve, reject) => {
+    return new Promise((resolve, reject) => {
       const formData = new FormData();
 
       const { form, fileNames } = buildFormData(
@@ -74,7 +73,8 @@ export function uploadBatchMobile(
         clearTimeout(timer);
 
         if (xhr.status >= 200 && xhr.status < 300) {
-          let body;
+          // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
+          let body: any;
           try {
             body = JSON.parse(xhr.responseText);
           } catch (err) {
@@ -90,9 +90,8 @@ export function uploadBatchMobile(
 
           if (options?.uploadWithoutDirectory) {
             return resolve([`ipfs://${cid}`]);
-          } else {
-            return resolve(fileNames.map((name) => `ipfs://${cid}/${name}`));
           }
+          return resolve(fileNames.map((name) => `ipfs://${cid}/${name}`));
         }
 
         return reject(
@@ -125,58 +124,58 @@ export function uploadBatchMobile(
         xhr.setRequestHeader("x-client-id", client.clientId);
       }
 
-      getPlatformHeaders().forEach(([key, value]) => {
+      for (const [key, value] of getPlatformHeaders()) {
         xhr.setRequestHeader(key, value);
-      });
+      }
 
       xhr.send(form);
     });
-  } else {
-    // assume an array of things
-    return new Promise(async (resolve, reject) => {
-      const metadata = {
-        name: METADATA_NAME,
-        keyvalues: { ...options?.metadata },
-      };
-
-      const fetchBody = JSON.stringify({
-        metadata: metadata,
-        content: data,
-      });
-
-      try {
-        const res = await fetch(
-          `https://${getThirdwebDomains().storage}/ipfs/batch-pin-json`,
-          {
-            method: "POST",
-            headers: {
-              ...(client.clientId ? { "x-client-id": client.clientId } : {}),
-              "Content-Type": "application/json",
-              ...getPlatformHeaders(),
-            },
-            body: fetchBody,
-          },
-        );
-
-        if (res.ok) {
-          const ipfsResults = await res.json();
-
-          const results = ipfsResults.results.map(
-            (ipfs: { IpfsHash: string; PinSize: number }) => {
-              const cid = ipfs.IpfsHash;
-
-              return `ipfs://${cid}`;
-            },
-          );
-
-          return resolve(results);
-        }
-      } catch (error) {
-        console.error("[IPFS] Error uploading JSON to IPFS", error);
-        reject(error);
-      }
-    });
   }
+  // assume an array of things
+
+  const metadata = {
+    name: METADATA_NAME,
+    keyvalues: { ...options?.metadata },
+  };
+
+  const fetchBody = JSON.stringify({
+    metadata: metadata,
+    content: data,
+  });
+
+  try {
+    const res = await fetch(
+      `https://${getThirdwebDomains().storage}/ipfs/batch-pin-json`,
+      {
+        method: "POST",
+        headers: {
+          ...(client.clientId ? { "x-client-id": client.clientId } : {}),
+          "Content-Type": "application/json",
+          ...getPlatformHeaders(),
+        },
+        body: fetchBody,
+      },
+    );
+
+    if (res.ok) {
+      const ipfsResults = await res.json();
+
+      const results = ipfsResults.results.map(
+        (ipfs: { IpfsHash: string; PinSize: number }) => {
+          const cid = ipfs.IpfsHash;
+
+          return `ipfs://${cid}`;
+        },
+      );
+
+      return results;
+    }
+  } catch (error) {
+    console.error("[IPFS] Error uploading JSON to IPFS", error);
+    throw error;
+  }
+
+  throw new Error("Failed to upload JSON to IPFS");
 }
 
 /**
@@ -193,7 +192,7 @@ function buildFormData(
   >();
   const fileNames: string[] = [];
   for (let i = 0; i < files.length; i++) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    // biome-ignore lint/style/noNonNullAssertion: <explanation>
     const file = files[i]!;
     let fileName = "";
 
@@ -234,7 +233,6 @@ function buildFormData(
     // add it to the filenames array so that we can return the correct number of urls
     fileNames.push(fileName);
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore - ReactNative does not support Blob and takes any here.
     form.append("file", file);
   }

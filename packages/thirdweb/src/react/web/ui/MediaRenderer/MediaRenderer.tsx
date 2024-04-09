@@ -1,12 +1,11 @@
-/* eslint-disable @next/next/no-img-element */
 import React, { useState, useRef, useEffect, Suspense, lazy } from "react";
-import type { MediaRendererProps } from "./types.js";
 import {
-  CarbonPlayFilledAlt,
-  CarbonPauseFilled,
   CarbonDocumentAudio,
   CarbonDocumentUnknown,
+  CarbonPauseFilled,
+  CarbonPlayFilledAlt,
 } from "./icons.js";
+import type { MediaRendererProps } from "./types.js";
 import { useResolvedMediaType } from "./useResolvedMediaType.js";
 
 /**
@@ -102,11 +101,12 @@ export const MediaRenderer = /* @__PURE__ */ (() =>
         }
 
         // 3d model
-        else if (mediaInfo.mimeType.startsWith("model")) {
+        if (mediaInfo.mimeType.startsWith("model")) {
           return (
             <Suspense
               fallback={
                 poster ? (
+                  // biome-ignore lint/a11y/useAltText: alt is there
                   <img
                     style={mergedStyle}
                     src={poster}
@@ -129,7 +129,7 @@ export const MediaRenderer = /* @__PURE__ */ (() =>
         }
 
         //  video
-        else if (mediaInfo.mimeType.startsWith("video")) {
+        if (mediaInfo.mimeType.startsWith("video")) {
           return (
             <VideoPlayer
               style={mergedStyle}
@@ -142,7 +142,7 @@ export const MediaRenderer = /* @__PURE__ */ (() =>
         }
 
         // audio
-        else if (mediaInfo.mimeType.startsWith("audio")) {
+        if (mediaInfo.mimeType.startsWith("audio")) {
           return (
             <AudioPlayer
               style={mergedStyle}
@@ -155,7 +155,7 @@ export const MediaRenderer = /* @__PURE__ */ (() =>
         }
 
         // image
-        else if (mediaInfo.mimeType.startsWith("image/")) {
+        if (mediaInfo.mimeType.startsWith("image/")) {
           return (
             <ImageRenderer
               style={mergedStyle}
@@ -201,6 +201,7 @@ const PlayButton: React.FC<PlayButtonProps> = ({ onClick, isPlaying }) => {
   const onMouseUp = () => setIsHovering(true);
   return (
     <button
+      type="button"
       style={{
         position: "absolute",
         bottom: 0,
@@ -254,9 +255,10 @@ const ImageRenderer = /* @__PURE__ */ (() =>
       }
 
       return (
+        // biome-ignore lint/a11y/useAltText: we do set the alt text
         <img
           style={style}
-          src={src as any}
+          src={src ?? undefined}
           alt={alt}
           ref={ref}
           {...restProps}
@@ -390,7 +392,7 @@ const AudioPlayer = /* @__PURE__ */ (() =>
       style,
       height,
       width,
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
       requireInteraction,
       ...restProps
     },
@@ -496,6 +498,7 @@ const IframePlayer = /* @__PURE__ */ (() =>
       return (
         <div style={{ position: "relative", ...style }} {...restProps}>
           <iframe
+            title={alt || "thirdweb iframe player"}
             src={playing ? src ?? undefined : undefined}
             ref={ref}
             style={{
@@ -593,17 +596,17 @@ const LinkPlayer = /* @__PURE__ */ (() =>
     );
   }))();
 
+// biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
 function mergeRefs<T = any>(
   refs: Array<React.MutableRefObject<T> | React.LegacyRef<T>>,
 ): React.RefCallback<T> {
   return (value) => {
-    refs.forEach((ref) => {
+    for (const ref of refs) {
       if (typeof ref === "function") {
         ref(value);
-        // eslint-disable-next-line eqeqeq
       } else if (ref != null) {
         (ref as React.MutableRefObject<T | null>).current = value;
       }
-    });
+    }
   };
 }

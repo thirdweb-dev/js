@@ -1,16 +1,16 @@
-import { Container } from "../components/basic.js";
-import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
-import { StyledButton } from "../design-system/elements.js";
-import { iconSize, spacing, radius, fontSize } from "../design-system/index.js";
-import { Text } from "../components/text.js";
-import { useScreenContext } from "./Modal/screen.js";
-// import { localWalletMetadata } from "../../../../wallets/local/index._ts";
-import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
-import { useWalletInfo } from "../hooks/useWalletInfo.js";
-import { Skeleton } from "../components/Skeleton.js";
-import { WalletImage } from "../components/WalletImage.js";
 import { getMIPDStore } from "../../../../wallets/injected/mipdStore.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
+// import { localWalletMetadata } from "../../../../wallets/local/index._ts";
+import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import { Skeleton } from "../components/Skeleton.js";
+import { WalletImage } from "../components/WalletImage.js";
+import { Container } from "../components/basic.js";
+import { Text } from "../components/text.js";
+import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
+import { StyledButton } from "../design-system/elements.js";
+import { fontSize, iconSize, radius, spacing } from "../design-system/index.js";
+import { useWalletInfo } from "../hooks/useWalletInfo.js";
+import { useScreenContext } from "./Modal/screen.js";
 
 /**
  * @internal

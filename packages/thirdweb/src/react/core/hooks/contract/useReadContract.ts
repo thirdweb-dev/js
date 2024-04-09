@@ -1,23 +1,23 @@
 import {
-  useQuery,
-  queryOptions as defineQuery,
-  type UseQueryResult,
   type UseQueryOptions,
+  type UseQueryResult,
+  queryOptions as defineQuery,
+  useQuery,
 } from "@tanstack/react-query";
 import type { Abi, AbiFunction, ExtractAbiFunctionNames } from "abitype";
-import { getFunctionId } from "../../../../utils/function-id.js";
-import { stringify } from "../../../../utils/json.js";
+import type { ThirdwebContract } from "../../../../contract/contract.js";
+import type { PrepareContractCallOptions } from "../../../../transaction/prepare-contract-call.js";
+import {
+  type ReadContractResult,
+  readContract,
+} from "../../../../transaction/read-contract.js";
 import type {
   BaseTransactionOptions,
   ParseMethod,
 } from "../../../../transaction/types.js";
-import type { PrepareContractCallOptions } from "../../../../transaction/prepare-contract-call.js";
-import {
-  readContract,
-  type ReadContractResult,
-} from "../../../../transaction/read-contract.js";
-import type { ThirdwebContract } from "../../../../contract/contract.js";
 import type { PreparedMethod } from "../../../../utils/abi/prepare-method.js";
+import { getFunctionId } from "../../../../utils/function-id.js";
+import { stringify } from "../../../../utils/json.js";
 
 type PickedQueryOptions = Pick<UseQueryOptions, "enabled">;
 
@@ -66,7 +66,7 @@ export function useReadContract<
     queryOptions?: PickedQueryOptions;
   },
 ): UseQueryResult<result>;
-// eslint-disable-next-line jsdoc/require-jsdoc
+
 export function useReadContract<
   const abi extends Abi,
   const method extends abi extends {
@@ -111,7 +111,6 @@ export function useReadContract<
       ...queryOptions,
     });
 
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     return useQuery(query);
   }
   // raw tx case
@@ -119,7 +118,6 @@ export function useReadContract<
     const { queryOptions, ...tx } = extensionOrOptions;
 
     const query = defineQuery({
-      // eslint-disable-next-line @tanstack/query/exhaustive-deps
       queryKey: [
         "readContract",
         tx.contract.chain.id,
@@ -130,7 +128,7 @@ export function useReadContract<
       queryFn: () => readContract(extensionOrOptions),
       ...queryOptions,
     });
-    // eslint-disable-next-line react-hooks/rules-of-hooks
+
     return useQuery(query);
   }
 

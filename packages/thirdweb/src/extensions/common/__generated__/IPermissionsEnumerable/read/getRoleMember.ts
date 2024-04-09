@@ -13,7 +13,7 @@ export type GetRoleMemberParams = {
   index: AbiParameterToPrimitiveType<{ type: "uint256"; name: "index" }>;
 };
 
-const FN_SELECTOR = "0x9010d07c" as const;
+export const FN_SELECTOR = "0x9010d07c" as const;
 const FN_INPUTS = [
   {
     type: "bytes32",

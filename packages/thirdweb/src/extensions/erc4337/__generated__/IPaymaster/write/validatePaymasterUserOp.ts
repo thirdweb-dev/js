@@ -32,7 +32,7 @@ export type ValidatePaymasterUserOpParams = {
   maxCost: AbiParameterToPrimitiveType<{ type: "uint256"; name: "maxCost" }>;
 };
 
-const FN_SELECTOR = "0xf465c77e" as const;
+export const FN_SELECTOR = "0xf465c77e" as const;
 const FN_INPUTS = [
   {
     type: "tuple",

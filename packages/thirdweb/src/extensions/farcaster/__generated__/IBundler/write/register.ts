@@ -36,7 +36,7 @@ export type RegisterParams = {
   }>;
 };
 
-const FN_SELECTOR = "0xa44c9ce7" as const;
+export const FN_SELECTOR = "0xa44c9ce7" as const;
 const FN_INPUTS = [
   {
     type: "tuple",

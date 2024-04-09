@@ -14,7 +14,7 @@ export type WithdrawParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x983d95ce" as const;
+export const FN_SELECTOR = "0x983d95ce" as const;
 const FN_INPUTS = [
   {
     type: "uint256[]",

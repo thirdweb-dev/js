@@ -16,7 +16,7 @@ export type MaxMintParams = {
   }>;
 };
 
-const FN_SELECTOR = "0xc63d75b6" as const;
+export const FN_SELECTOR = "0xc63d75b6" as const;
 const FN_INPUTS = [
   {
     name: "receiver",

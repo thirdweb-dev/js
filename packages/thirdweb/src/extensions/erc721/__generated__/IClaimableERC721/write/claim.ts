@@ -12,7 +12,7 @@ export type ClaimParams = {
   quantity: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_quantity" }>;
 };
 
-const FN_SELECTOR = "0xaad3ec96" as const;
+export const FN_SELECTOR = "0xaad3ec96" as const;
 const FN_INPUTS = [
   {
     type: "address",

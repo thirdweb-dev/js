@@ -12,7 +12,7 @@ export type GetRoleAdminParams = {
   role: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "role" }>;
 };
 
-const FN_SELECTOR = "0x248a9ca3" as const;
+export const FN_SELECTOR = "0x248a9ca3" as const;
 const FN_INPUTS = [
   {
     type: "bytes32",

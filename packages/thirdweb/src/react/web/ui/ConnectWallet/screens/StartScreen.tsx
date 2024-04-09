@@ -1,18 +1,18 @@
 import { keyframes } from "@emotion/react";
 import { useContext } from "react";
+import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
+import { ModalConfigCtx } from "../../../providers/wallet-ui-states-provider.js";
 import { Img } from "../../components/Img.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Container } from "../../components/basic.js";
 import { Link } from "../../components/text.js";
+import { Text } from "../../components/text.js";
 import { useCustomTheme } from "../../design-system/CustomThemeProvider.js";
 import { StyledDiv } from "../../design-system/elements.js";
-import { TOS } from "../Modal/TOS.js";
-import { Text } from "../../components/text.js";
-import { GlobeIcon } from "../icons/GlobalIcon.js";
-import { ModalConfigCtx } from "../../../providers/wallet-ui-states-provider.js";
 import { spacing } from "../../design-system/index.js";
+import { TOS } from "../Modal/TOS.js";
 import { PoweredByThirdweb } from "../PoweredByTW.js";
-import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
+import { GlobeIcon } from "../icons/GlobalIcon.js";
 
 /**
  * @internal

@@ -1,6 +1,6 @@
-import { labelhash, type ByteArray } from "viem";
-import { encodeLabelhash } from "./encodeLabelhash.js";
+import { type ByteArray, labelhash } from "viem";
 import { stringToBytes } from "../encoding/to-bytes.js";
+import { encodeLabelhash } from "./encodeLabelhash.js";
 
 /**
  * Encodes a DNS packet into a ByteArray containing a UDP payload.

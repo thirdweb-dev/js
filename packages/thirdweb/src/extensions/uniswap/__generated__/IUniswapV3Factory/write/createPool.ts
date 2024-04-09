@@ -13,7 +13,7 @@ export type CreatePoolParams = {
   fee: AbiParameterToPrimitiveType<{ type: "uint24"; name: "fee" }>;
 };
 
-const FN_SELECTOR = "0xa1671295" as const;
+export const FN_SELECTOR = "0xa1671295" as const;
 const FN_INPUTS = [
   {
     type: "address",

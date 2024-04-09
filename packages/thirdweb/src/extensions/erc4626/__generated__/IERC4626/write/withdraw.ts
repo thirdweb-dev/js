@@ -25,7 +25,7 @@ export type WithdrawParams = {
   }>;
 };
 
-const FN_SELECTOR = "0xb460af94" as const;
+export const FN_SELECTOR = "0xb460af94" as const;
 const FN_INPUTS = [
   {
     name: "assets",

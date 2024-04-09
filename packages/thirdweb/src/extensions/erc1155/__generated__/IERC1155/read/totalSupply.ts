@@ -12,7 +12,7 @@ export type TotalSupplyParams = {
   id: AbiParameterToPrimitiveType<{ type: "uint256"; name: "id" }>;
 };
 
-const FN_SELECTOR = "0xbd85b039" as const;
+export const FN_SELECTOR = "0xbd85b039" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

@@ -12,7 +12,7 @@ export type IsActiveSignerParams = {
   signer: AbiParameterToPrimitiveType<{ type: "address"; name: "signer" }>;
 };
 
-const FN_SELECTOR = "0x7dff5a79" as const;
+export const FN_SELECTOR = "0x7dff5a79" as const;
 const FN_INPUTS = [
   {
     type: "address",

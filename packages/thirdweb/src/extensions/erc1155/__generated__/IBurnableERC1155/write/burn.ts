@@ -13,7 +13,7 @@ export type BurnParams = {
   value: AbiParameterToPrimitiveType<{ type: "uint256"; name: "value" }>;
 };
 
-const FN_SELECTOR = "0xf5298aca" as const;
+export const FN_SELECTOR = "0xf5298aca" as const;
 const FN_INPUTS = [
   {
     type: "address",

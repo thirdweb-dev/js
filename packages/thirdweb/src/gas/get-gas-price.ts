@@ -1,7 +1,7 @@
-import type { ThirdwebClient } from "../client/client.js";
-import { getRpcClient } from "../rpc/rpc.js";
-import { eth_gasPrice } from "../rpc/actions/eth_gasPrice.js";
 import type { Chain } from "../chains/types.js";
+import type { ThirdwebClient } from "../client/client.js";
+import { eth_gasPrice } from "../rpc/actions/eth_gasPrice.js";
+import { getRpcClient } from "../rpc/rpc.js";
 
 export type GetGasPriceOptions = {
   client: ThirdwebClient;

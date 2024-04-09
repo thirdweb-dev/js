@@ -1,8 +1,8 @@
-import { useMutation, type UseMutationResult } from "@tanstack/react-query";
-import { useActiveAccount } from "../wallets/wallet-hooks.js";
+import { type UseMutationResult, useMutation } from "@tanstack/react-query";
+import { sendAndConfirmTransaction } from "../../../../transaction/actions/send-and-confirm-transaction.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
 import type { TransactionReceipt } from "../../../../transaction/types.js";
-import { sendAndConfirmTransaction } from "../../../../transaction/actions/send-and-confirm-transaction.js";
+import { useActiveAccount } from "../wallets/wallet-hooks.js";
 
 /**
  * A hook to send a transaction.

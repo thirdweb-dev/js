@@ -1,19 +1,19 @@
-import { ModalConfigCtx } from "../../../providers/wallet-ui-states-provider.js";
 import { Suspense, lazy, useCallback, useContext } from "react";
-import { reservedScreens, onModalUnmount } from "../constants.js";
-import { ScreenSetupContext, type ScreenSetup } from "./screen.js";
-import { StartScreen } from "../screens/StartScreen.js";
+import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
+import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
+import { useConnect } from "../../../../core/hooks/wallets/wallet-hooks.js";
+import { ModalConfigCtx } from "../../../providers/wallet-ui-states-provider.js";
+import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
 import { WalletSelector } from "../WalletSelector.js";
+import { onModalUnmount, reservedScreens } from "../constants.js";
+import { StartScreen } from "../screens/StartScreen.js";
+import { AnyWalletConnectUI } from "./AnyWalletConnectUI.js";
 import {
   ConnectModalCompactLayout,
   ConnectModalWideLayout,
 } from "./ConnectModalSkeleton.js";
-import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
-import { useConnect } from "../../../../core/hooks/wallets/wallet-hooks.js";
-import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
-import { AnyWalletConnectUI } from "./AnyWalletConnectUI.js";
 import { SmartConnectUI } from "./SmartWalletConnectUI.js";
-import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
+import { type ScreenSetup, ScreenSetupContext } from "./screen.js";
 
 const AllWalletsUI = /* @__PURE__ */ lazy(() => import("./AllWalletsUI.js"));
 
@@ -173,7 +173,7 @@ export const ConnectModalContent = (props: {
           right={
             <>
               {/* {screen === reservedScreens.signIn && signatureScreen} */}
-              {screen === reservedScreens.main && <>{getStarted}</>}
+              {screen === reservedScreens.main && getStarted}
               {screen === reservedScreens.getStarted && getStarted}
               {screen === reservedScreens.showAll && showAll}
               {typeof screen !== "string" && getWalletUI(screen)}

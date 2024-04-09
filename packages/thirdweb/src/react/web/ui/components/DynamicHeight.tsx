@@ -1,4 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
+import type React from "react";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * @internal
@@ -52,7 +53,7 @@ function useHeightObserver() {
     return () => {
       resizeObserver.disconnect();
     };
-  }, [elementRef]);
+  }, []);
 
   return { height, elementRef: elementRef };
 }

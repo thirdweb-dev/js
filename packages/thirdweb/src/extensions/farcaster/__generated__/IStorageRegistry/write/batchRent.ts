@@ -12,7 +12,7 @@ export type BatchRentParams = {
   units: AbiParameterToPrimitiveType<{ type: "uint256[]"; name: "units" }>;
 };
 
-const FN_SELECTOR = "0xa82c356e" as const;
+export const FN_SELECTOR = "0xa82c356e" as const;
 const FN_INPUTS = [
   {
     type: "uint256[]",

@@ -21,7 +21,7 @@ export type CreateRuleThresholdParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x1022a25e" as const;
+export const FN_SELECTOR = "0x1022a25e" as const;
 const FN_INPUTS = [
   {
     type: "tuple",

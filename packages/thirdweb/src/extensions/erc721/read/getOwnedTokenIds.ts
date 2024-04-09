@@ -1,7 +1,7 @@
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import {
-  balanceOf,
   type BalanceOfParams,
+  balanceOf,
 } from "../__generated__/IERC721A/read/balanceOf.js";
 import { tokenOfOwnerByIndex } from "../__generated__/IERC721Enumerable/read/tokenOfOwnerByIndex.js";
 

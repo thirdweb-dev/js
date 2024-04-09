@@ -1,7 +1,7 @@
-import { parseAbiItem, type AbiFunction, type ParseAbiItem } from "abitype";
-import type { Hex } from "../encoding/hex.js";
+import { type AbiFunction, type ParseAbiItem, parseAbiItem } from "abitype";
 import { toFunctionSelector } from "viem";
 import { LruMap } from "../caching/lru.js";
+import type { Hex } from "../encoding/hex.js";
 import { stringify } from "../json.js";
 
 type ParseMethod<method extends AbiFunction | `function ${string}`> =

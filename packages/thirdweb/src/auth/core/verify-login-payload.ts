@@ -33,10 +33,10 @@ export type VerifyLoginPayloadResult =
  * @internal
  */
 export function verifyLoginPayload(options: AuthOptions) {
-  return async function ({
+  return async ({
     payload,
     signature,
-  }: VerifyLoginPayloadParams): Promise<VerifyLoginPayloadResult> {
+  }: VerifyLoginPayloadParams): Promise<VerifyLoginPayloadResult> => {
     // check that the intended domain matches the domain of the payload
     if (payload.domain !== options.domain) {
       return {
@@ -93,14 +93,14 @@ export function verifyLoginPayload(options: AuthOptions) {
     if (currentDate < new Date(payload.invalid_before)) {
       return {
         valid: false,
-        error: `Payload is not yet valid`,
+        error: "Payload is not yet valid",
       };
     }
 
     if (currentDate > new Date(payload.expiration_time)) {
       return {
         valid: false,
-        error: `Payload has expired`,
+        error: "Payload has expired",
       };
     }
 
@@ -126,7 +126,7 @@ export function verifyLoginPayload(options: AuthOptions) {
       signature: signature,
       address: payload.address,
       chain: payload.chain_id
-        ? defineChain(parseInt(payload.chain_id))
+        ? defineChain(Number.parseInt(payload.chain_id))
         : undefined,
       client: options.client,
     });
@@ -134,7 +134,7 @@ export function verifyLoginPayload(options: AuthOptions) {
     if (!signatureIsValid) {
       return {
         valid: false,
-        error: `Invalid signature`,
+        error: "Invalid signature",
       };
     }
 

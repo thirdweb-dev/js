@@ -1,4 +1,4 @@
-import { createStore, type Store } from "mipd";
+import { type Store, createStore } from "mipd";
 import type { Ethereum } from "../interfaces/ethereum.js";
 import type { WalletId } from "../wallet-types.js";
 

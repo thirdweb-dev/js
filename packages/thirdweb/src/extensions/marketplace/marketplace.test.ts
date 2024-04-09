@@ -1,28 +1,34 @@
-import { describe, it, expect, beforeAll } from "vitest";
-import { getContract, type ThirdwebContract } from "../../contract/contract.js";
-import { deployMarketplaceContract } from "../prebuilts/deploy-marketplace.js";
-import { TEST_ACCOUNT_A } from "../../../test/src/test-wallets.js";
+import { beforeAll, describe, expect, it } from "vitest";
 import { ANVIL_CHAIN } from "../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
-import { getContractMetadata } from "../common/read/getContractMetadata.js";
-import { deployERC721Contract } from "../prebuilts/deploy-erc721.js";
-import { mintTo } from "../erc721/write/mintTo.js";
-import { createListing } from "./write/direct/createListing.js";
-import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
-import { approve } from "../erc721/__generated__/IERC721A/write/approve.js";
+import {
+  TEST_ACCOUNT_A,
+  TEST_ACCOUNT_B,
+} from "../../../test/src/test-wallets.js";
+import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import { parseEventLogs } from "../../event/actions/parse-logs.js";
-import { newListingEvent } from "./__generated__/IDirectListings/events/NewListing.js";
+import { balanceOf } from "../../exports/extensions/erc721.js";
+import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
+import { getContractMetadata } from "../common/read/getContractMetadata.js";
+import { approve } from "../erc721/__generated__/IERC721A/write/approve.js";
 import { tokensMintedEvent } from "../erc721/__generated__/IMintableERC721/events/TokensMinted.js";
+import { mintTo } from "../erc721/write/mintTo.js";
+import { deployERC721Contract } from "../prebuilts/deploy-erc721.js";
+import { deployMarketplaceContract } from "../prebuilts/deploy-marketplace.js";
+import { newListingEvent } from "./__generated__/IDirectListings/events/NewListing.js";
+import { totalListings } from "./__generated__/IDirectListings/read/totalListings.js";
+import { newAuctionEvent } from "./__generated__/IEnglishAuctions/events/NewAuction.js";
+import { totalAuctions } from "./__generated__/IEnglishAuctions/read/totalAuctions.js";
 import { getAllListings } from "./read/direct/getAllListings.js";
 import { getAllValidListings } from "./read/direct/getAllValidListings.js";
-import { totalListings } from "./__generated__/IDirectListings/read/totalListings.js";
 import { getListing } from "./read/direct/getListing.js";
-import { createAuction } from "./write/english-auction/createAuction.js";
-import { newAuctionEvent } from "./__generated__/IEnglishAuctions/events/NewAuction.js";
-import { getAuction } from "./read/english-auction/getAuction.js";
-import { totalAuctions } from "./__generated__/IEnglishAuctions/read/totalAuctions.js";
-import { getAllValidAuctions } from "./read/english-auction/getAllValidAuctions.js";
 import { getAllAuctions } from "./read/english-auction/getAllAuctions.js";
+import { getAllValidAuctions } from "./read/english-auction/getAllValidAuctions.js";
+import { getAuction } from "./read/english-auction/getAuction.js";
+import { isListingValid } from "./utils.js";
+import { buyFromListing } from "./write/direct/buyFromListing.js";
+import { createListing } from "./write/direct/createListing.js";
+import { createAuction } from "./write/english-auction/createAuction.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("Marketplace", () => {
   let marketplaceContract: ThirdwebContract;
@@ -95,8 +101,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("Marketplace", () => {
 
       expect(mintEvents.length).toBe(1);
       expect(mintEvents[0]?.args.tokenIdMinted).toBeDefined();
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      nftTokenId = mintEvents[0]!.args.tokenIdMinted;
+
+      nftTokenId = mintEvents[0]?.args.tokenIdMinted as bigint;
     }, 30_000);
 
     it("should work for basic listings (Native Currency)", async () => {
@@ -137,7 +143,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("Marketplace", () => {
       });
 
       expect(listingEvents.length).toBe(1);
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
+      // biome-ignore lint/style/noNonNullAssertion: OK in tests
       const listingEvent = listingEvents[0]!;
 
       expect(listingEvent.args.listingCreator).toBe(TEST_ACCOUNT_A.address);
@@ -187,6 +194,54 @@ describe.runIf(process.env.TW_SECRET_KEY)("Marketplace", () => {
           "type": "ERC721",
         }
       `);
+
+      // check the listing is valid
+      const listingValidity = await isListingValid({
+        listing,
+        contract: marketplaceContract,
+        quantity: 1n,
+      });
+
+      expect(listingValidity).toMatchInlineSnapshot(`
+        {
+          "valid": true,
+        }
+      `);
+
+      // expect the buyer to have an initial balance of 0
+      await expect(
+        balanceOf({
+          contract: erc721Contract,
+          owner: TEST_ACCOUNT_B.address,
+        }),
+      ).resolves.toBe(0n);
+
+      const buyTx = buyFromListing({
+        contract: marketplaceContract,
+        listingId: listingEvent.args.listingId,
+        recipient: TEST_ACCOUNT_B.address,
+        quantity: 1n,
+      });
+
+      await sendAndConfirmTransaction({
+        transaction: buyTx,
+        account: TEST_ACCOUNT_B,
+      });
+
+      // expect the buyer to have a new balance of 1
+      await expect(
+        balanceOf({
+          contract: erc721Contract,
+          owner: TEST_ACCOUNT_B.address,
+        }),
+      ).resolves.toBe(1n);
+      // expect the seller to no longer have the token
+      await expect(
+        balanceOf({
+          contract: erc721Contract,
+          owner: TEST_ACCOUNT_A.address,
+        }),
+      ).resolves.toBe(0n);
     });
   });
 
@@ -210,8 +265,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("Marketplace", () => {
 
       expect(mintEvents.length).toBe(1);
       expect(mintEvents[0]?.args.tokenIdMinted).toBeDefined();
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      nftTokenId = mintEvents[0]!.args.tokenIdMinted;
+
+      nftTokenId = mintEvents[0]?.args.tokenIdMinted as bigint;
     }, 30_000);
 
     it("should work for basic auctions (Native Currency)", async () => {
@@ -253,7 +308,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("Marketplace", () => {
       });
 
       expect(listingEvents.length).toBe(1);
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
+      // biome-ignore lint/style/noNonNullAssertion: OK in tests
       const listingEvent = listingEvents[0]!;
 
       expect(listingEvent.args.auctionCreator).toBe(TEST_ACCOUNT_A.address);

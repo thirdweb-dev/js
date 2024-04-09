@@ -1,6 +1,6 @@
 import { useCallback, useState, useSyncExternalStore } from "react";
-import { connectionManager } from "../../connectionManager.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
+import { connectionManager } from "../../connectionManager.js";
 
 /**
  * A hook that returns the active account
@@ -139,7 +139,7 @@ export function useConnect() {
   const [error, setError] = useState<Error | null>(null);
 
   const connect = useCallback(
-    async function (options: Wallet | (() => Promise<Wallet>)) {
+    async (options: Wallet | (() => Promise<Wallet>)) => {
       // reset error state
       setError(null);
       if (typeof options !== "function") {

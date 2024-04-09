@@ -1,5 +1,14 @@
 # @thirdweb-dev/storage
 
+## 2.0.14
+
+### Patch Changes
+
+- [#2701](https://github.com/thirdweb-dev/js/pull/2701) [`703cb6a`](https://github.com/thirdweb-dev/js/commit/703cb6ae3cc51fa4b0ba7c87f09f8e84dab8ed3f) Thanks [@jnsdls](https://github.com/jnsdls)! - updated dependencies
+
+- Updated dependencies [[`703cb6a`](https://github.com/thirdweb-dev/js/commit/703cb6ae3cc51fa4b0ba7c87f09f8e84dab8ed3f)]:
+  - @thirdweb-dev/crypto@0.2.5
+
 ## 2.0.13
 
 ### Patch Changes

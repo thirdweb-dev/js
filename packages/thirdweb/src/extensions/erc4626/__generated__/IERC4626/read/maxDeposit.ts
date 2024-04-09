@@ -16,7 +16,7 @@ export type MaxDepositParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x402d267d" as const;
+export const FN_SELECTOR = "0x402d267d" as const;
 const FN_INPUTS = [
   {
     name: "receiver",

@@ -1,11 +1,11 @@
-import { describe, it, expect } from "vitest";
-import {
-  resolveAbiFromContractApi,
-  resolveContractAbi,
-  resolveAbiFromBytecode,
-} from "./resolve-abi.js";
+import { describe, expect, it } from "vitest";
 import { DOODLES_CONTRACT } from "~test/test-contracts.js";
 import { DOODLES_ABI } from "../../../test/src/abis/doodles.js";
+import {
+  resolveAbiFromBytecode,
+  resolveAbiFromContractApi,
+  resolveContractAbi,
+} from "./resolve-abi.js";
 
 describe("resolveContractAbi", () => {
   it("should use the abi on the contract if it exists", async () => {

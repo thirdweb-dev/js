@@ -1,9 +1,9 @@
+import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import { toBigInt } from "../../../utils/bigint.js";
 import { withCache } from "../../../utils/promise/withCache.js";
-import type { Chain } from "../../../chains/types.js";
-import { getIdGateway } from "../contracts/getIdGateway.js";
 import { price } from "../__generated__/IIdGateway/read/price.js";
+import { getIdGateway } from "../contracts/getIdGateway.js";
 
 export type GetRegistrationPriceParams = {
   client: ThirdwebClient;

@@ -1,15 +1,15 @@
+import type { AbiParameterToPrimitiveType } from "abitype";
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/addresses.js";
 import type { ThirdwebContract } from "../../../contract/contract.js";
+import { upload } from "../../../storage/upload.js";
 import { toBigInt } from "../../../utils/bigint.js";
+import { dateToSeconds, tenYearsFromNow } from "../../../utils/date.js";
 import type { NFTInput } from "../../../utils/nft/parseNft.js";
 import { toUnits } from "../../../utils/units.js";
-import { decimals } from "../../erc20/read/decimals.js";
-import type { AbiParameterToPrimitiveType } from "abitype";
-import { mintWithSignature as generatedMintWithSignature } from "../__generated__/ISignatureMintERC721/write/mintWithSignature.js";
-import { upload } from "../../../storage/upload.js";
-import type { Account } from "../../../wallets/interfaces/wallet.js";
 import { randomBytes32 } from "../../../utils/uuid.js";
-import { dateToSeconds, tenYearsFromNow } from "../../../utils/date.js";
+import type { Account } from "../../../wallets/interfaces/wallet.js";
+import { decimals } from "../../erc20/read/decimals.js";
+import { mintWithSignature as generatedMintWithSignature } from "../__generated__/ISignatureMintERC721/write/mintWithSignature.js";
 
 /**
  * Mints a new ERC721 token with the given minter signature

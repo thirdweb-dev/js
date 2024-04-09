@@ -16,7 +16,7 @@ export type GetAddressParams = {
   data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "data" }>;
 };
 
-const FN_SELECTOR = "0x8878ed33" as const;
+export const FN_SELECTOR = "0x8878ed33" as const;
 const FN_INPUTS = [
   {
     type: "address",

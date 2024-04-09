@@ -15,7 +15,7 @@ export type PriceParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x26a49e37" as const;
+export const FN_SELECTOR = "0x26a49e37" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

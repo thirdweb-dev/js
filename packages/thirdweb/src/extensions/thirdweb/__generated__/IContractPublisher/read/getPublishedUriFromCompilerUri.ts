@@ -15,7 +15,7 @@ export type GetPublishedUriFromCompilerUriParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x819e992f" as const;
+export const FN_SELECTOR = "0x819e992f" as const;
 const FN_INPUTS = [
   {
     type: "string",

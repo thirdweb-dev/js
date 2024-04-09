@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/crypto",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "main": "dist/thirdweb-dev-crypto.cjs.js",
   "module": "dist/thirdweb-dev-crypto.esm.js",
   "exports": {
@@ -31,6 +31,7 @@
     "js-sha3": "^0.9.3"
   },
   "devDependencies": {
+    "eslint": "8.57.0",
     "@preconstruct/cli": "2.7.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "@types/crypto-js": "^4.2.2",
@@ -39,8 +40,8 @@
     "ethers": "^5.7.2",
     "js-awe": "^1.0.65",
     "tinybench": "^2.6.0",
-    "typescript": "5.4.3",
-    "viem": "2.9.6"
+    "typescript": "5.4.4",
+    "viem": "2.9.9"
   },
   "scripts": {
     "format": "prettier --write 'src/**/*'",
@@ -49,7 +50,7 @@
     "clean": "rm -rf dist/",
     "build": "tsc && preconstruct build",
     "push": "yalc push",
-    "test": "vitest",
+    "test": "vitest run",
     "benchmark:aes-encrypt": "bun benchmark/aes-encrypt.ts",
     "benchmark:aes-decrypt": "bun benchmark/aes-decrypt.ts",
     "benchmark:sha256": "bun benchmark/sha256.ts",

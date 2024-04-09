@@ -16,7 +16,7 @@ export type DeployProxyByImplementationParams = {
   salt: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "salt" }>;
 };
 
-const FN_SELECTOR = "0x11b804ab" as const;
+export const FN_SELECTOR = "0x11b804ab" as const;
 const FN_INPUTS = [
   {
     type: "address",

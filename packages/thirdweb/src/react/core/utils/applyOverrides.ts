@@ -1,3 +1,4 @@
+// biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
 export type DeepPartial<T extends Record<string, any>> = {
   [P in keyof T]?: DeepPartial<T[P]>;
 };
@@ -10,6 +11,7 @@ export type DeepPartial<T extends Record<string, any>> = {
  *
  * @internal
  */
+// biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
 export function immutableOverride<T extends Record<string, any>>(
   defaultObj: T,
   overrides: DeepPartial<T>,

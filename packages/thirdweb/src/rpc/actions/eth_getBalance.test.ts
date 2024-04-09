@@ -1,15 +1,15 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
-import { FORKED_ETHEREUM_CHAIN } from "~test/chains.js";
-import { TEST_CLIENT } from "~test/test-clients.js";
-import { eth_getBalance } from "./eth_getBalance.js";
 import {
   UNCLAIMED_ADDRESS,
   VITALIK_WALLET,
   ZERO_ADDRESS,
 } from "~test/addresses.js";
-import { getRpcClient } from "../rpc.js";
+import { FORKED_ETHEREUM_CHAIN } from "~test/chains.js";
+import { TEST_CLIENT } from "~test/test-clients.js";
 import * as fetchRpc from "../fetch-rpc.js";
+import { getRpcClient } from "../rpc.js";
+import { eth_getBalance } from "./eth_getBalance.js";
 
 const fetchSpy = vi.spyOn(fetchRpc, "fetchRpc");
 
@@ -23,7 +23,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("eth_getBalance", () => {
     const vitalikBalance = await eth_getBalance(rpcClient, {
       address: VITALIK_WALLET,
     });
-    expect(vitalikBalance).toMatchInlineSnapshot(`24828863746828747877n`);
+    expect(vitalikBalance).toMatchInlineSnapshot("24828863746828747877n");
     expect(fetchSpy).toHaveBeenCalledTimes(1);
   });
 
@@ -35,10 +35,10 @@ describe.runIf(process.env.TW_SECRET_KEY)("eth_getBalance", () => {
       address: VITALIK_WALLET,
     });
     expect(await vitalikBalance1).toMatchInlineSnapshot(
-      `24828863746828747877n`,
+      "24828863746828747877n",
     );
     expect(await vitalikBalance2).toMatchInlineSnapshot(
-      `24828863746828747877n`,
+      "24828863746828747877n",
     );
     // should only have been called once
     expect(fetchSpy).toHaveBeenCalledTimes(1);
@@ -75,16 +75,16 @@ describe.runIf(process.env.TW_SECRET_KEY)("eth_getBalance", () => {
       address: UNCLAIMED_ADDRESS,
     });
     expect(await vitalikBalance1).toMatchInlineSnapshot(
-      `24828863746828747877n`,
+      "24828863746828747877n",
     );
     expect(await vitalikBalance2).toMatchInlineSnapshot(
-      `24828863746828747877n`,
+      "24828863746828747877n",
     );
     expect(await zeroAddressBalance).toMatchInlineSnapshot(
-      `13347884805299021451868n`,
+      "13347884805299021451868n",
     );
     expect(await unknownAddressBalance).toMatchInlineSnapshot(
-      `1234500000000000000n`,
+      "1234500000000000000n",
     );
     // should only have been called once
     expect(fetchSpy).toHaveBeenCalledTimes(1);

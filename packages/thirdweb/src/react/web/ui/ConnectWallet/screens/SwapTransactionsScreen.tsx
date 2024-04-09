@@ -1,36 +1,36 @@
+import { ArrowRightIcon, CrossCircledIcon } from "@radix-ui/react-icons";
 import { useMemo, useState, useSyncExternalStore } from "react";
-import { Container, Line, ModalHeader } from "../../components/basic.js";
+import { defineChain } from "../../../../../chains/utils.js";
+import type { ThirdwebClient } from "../../../../../client/client.js";
+import type {
+  BuyWithCryptoStatuses,
+  BuyWithCryptoSubStatuses,
+} from "../../../../../pay/buyWithCrypto/actions/getStatus.js";
+import { formatNumber } from "../../../../../utils/formatNumber.js";
+import { useChainQuery } from "../../../../core/hooks/others/useChainQuery.js";
+import { useBuyWithCryptoHistory } from "../../../../core/hooks/pay/useBuyWithCryptoHistory.js";
+import {
+  useActiveAccount,
+  useActiveWalletChain,
+} from "../../../../core/hooks/wallets/wallet-hooks.js";
+import { Skeleton } from "../../components/Skeleton.js";
 import { Spacer } from "../../components/Spacer.js";
+import { Spinner } from "../../components/Spinner.js";
+import { Container, Line, ModalHeader } from "../../components/basic.js";
+import { Button } from "../../components/buttons.js";
+import { Text } from "../../components/text.js";
+import { useCustomTheme } from "../../design-system/CustomThemeProvider.js";
+import { fadeInAnimation } from "../../design-system/animations.js";
+import { StyledAnchor, StyledDiv } from "../../design-system/elements.js";
 import {
   fontSize,
   iconSize,
   radius,
   spacing,
 } from "../../design-system/index.js";
-import { StyledAnchor, StyledDiv } from "../../design-system/elements.js";
-import { useCustomTheme } from "../../design-system/CustomThemeProvider.js";
-import { Text } from "../../components/text.js";
-import { ArrowRightIcon, CrossCircledIcon } from "@radix-ui/react-icons";
-import { fadeInAnimation } from "../../design-system/animations.js";
-import { Spinner } from "../../components/Spinner.js";
-import { Button } from "../../components/buttons.js";
-import { useChainQuery } from "../../../../core/hooks/others/useChainQuery.js";
-import {
-  useActiveAccount,
-  useActiveWalletChain,
-} from "../../../../core/hooks/wallets/wallet-hooks.js";
-import { useBuyWithCryptoHistory } from "../../../../core/hooks/pay/useBuyWithCryptoHistory.js";
 import { BuyIcon } from "../icons/BuyIcon.js";
 import { CryptoIcon } from "../icons/CryptoIcon.js";
-import { Skeleton } from "../../components/Skeleton.js";
-import type {
-  BuyWithCryptoStatuses,
-  BuyWithCryptoSubStatuses,
-} from "../../../../../pay/buyWithCrypto/actions/getStatus.js";
-import { defineChain } from "../../../../../chains/utils.js";
 import { swapTransactionsStore } from "./Buy/swap/pendingSwapTx.js";
-import { formatNumber } from "../../../../../utils/formatNumber.js";
-import type { ThirdwebClient } from "../../../../../client/client.js";
 
 type TxStatusInfo = {
   fromChainId: number;
@@ -61,19 +61,19 @@ export function SwapTransactionsScreen(props: {
   const txInfosToShow: TxStatusInfo[] = [];
 
   const txHashSet = new Set<string>();
-  _historyQuery.data?.page.forEach((tx) => {
+  for (const tx of _historyQuery.data?.page || []) {
     txHashSet.add(tx.source.transactionHash);
-  });
+  }
 
   // add in-memory pending transactions
-  inMemoryPendingTxs.forEach((tx) => {
+  for (const tx of inMemoryPendingTxs) {
     if (pageIndex > 0) {
-      return;
+      continue;
     }
 
     // if tx is already in history endpoint, don't add it
     if (txHashSet.has(tx.transactionHash)) {
-      return;
+      continue;
     }
 
     txInfosToShow.push({
@@ -83,10 +83,10 @@ export function SwapTransactionsScreen(props: {
       boughtTokenSymbol: tx.to.symbol,
       status: "PENDING",
     });
-  });
+  }
 
   // Add data from endpoint
-  _historyQuery.data?.page.forEach((tx) => {
+  for (const tx of _historyQuery.data?.page || []) {
     txInfosToShow.push({
       fromChainId: tx.source.token.chainId,
       transactionHash: tx.source.transactionHash,
@@ -96,7 +96,7 @@ export function SwapTransactionsScreen(props: {
       status: tx.status,
       subStatus: tx.subStatus,
     });
-  });
+  }
 
   const activeChain = useActiveWalletChain();
   const chainQuery = useChainQuery(activeChain);
@@ -223,11 +223,7 @@ export function SwapTransactionsScreen(props: {
         <ButtonLink
           fullWidth
           variant="accent"
-          href={
-            chainQuery.data?.explorers?.[0]?.url +
-            "/address/" +
-            activeAccount?.address
-          }
+          href={`${chainQuery.data?.explorers?.[0]?.url}/address/${activeAccount?.address}`}
           target="_blank"
           as="a"
           style={{
@@ -279,7 +275,9 @@ function TransactionInfo(props: { txInfo: TxStatusInfo }) {
 
   return (
     <TxHashLink
-      href={`${chainQuery.data?.explorers?.[0]?.url || ""}/tx/${transactionHash}`}
+      href={`${
+        chainQuery.data?.explorers?.[0]?.url || ""
+      }/tx/${transactionHash}`}
       target="_blank"
     >
       <Container flex="row" center="y" gap="md">

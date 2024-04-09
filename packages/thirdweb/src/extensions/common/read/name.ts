@@ -18,6 +18,6 @@ export async function name(options: BaseTransactionOptions): Promise<string> {
   return withCache(() => generatedName(options), {
     cacheKey: `${options.contract.chain.id}:${options.contract.address}:name`,
     // can never change, so cache forever
-    cacheTime: Infinity,
+    cacheTime: Number.POSITIVE_INFINITY,
   });
 }

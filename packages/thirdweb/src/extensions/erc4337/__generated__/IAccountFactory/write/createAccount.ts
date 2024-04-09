@@ -12,7 +12,7 @@ export type CreateAccountParams = {
   data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "_data" }>;
 };
 
-const FN_SELECTOR = "0xd8fd8f44" as const;
+export const FN_SELECTOR = "0xd8fd8f44" as const;
 const FN_INPUTS = [
   {
     type: "address",

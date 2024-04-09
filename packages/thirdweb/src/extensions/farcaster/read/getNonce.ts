@@ -1,9 +1,9 @@
+import type { Address } from "abitype";
+import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import { withCache } from "../../../utils/promise/withCache.js";
-import type { Chain } from "../../../chains/types.js";
-import { getKeyGateway } from "../contracts/getKeyGateway.js";
 import { nonces } from "../__generated__/IKeyGateway/read/nonces.js";
-import type { Address } from "abitype";
+import { getKeyGateway } from "../contracts/getKeyGateway.js";
 
 export type GetNonceParams = {
   client: ThirdwebClient;

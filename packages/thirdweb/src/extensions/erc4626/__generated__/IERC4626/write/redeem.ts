@@ -25,7 +25,7 @@ export type RedeemParams = {
   }>;
 };
 
-const FN_SELECTOR = "0xba087652" as const;
+export const FN_SELECTOR = "0xba087652" as const;
 const FN_INPUTS = [
   {
     name: "shares",

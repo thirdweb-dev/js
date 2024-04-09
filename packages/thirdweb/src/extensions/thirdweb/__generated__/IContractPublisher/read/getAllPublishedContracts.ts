@@ -15,7 +15,7 @@ export type GetAllPublishedContractsParams = {
   }>;
 };
 
-const FN_SELECTOR = "0xaf8db690" as const;
+export const FN_SELECTOR = "0xaf8db690" as const;
 const FN_INPUTS = [
   {
     type: "address",

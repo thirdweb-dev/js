@@ -14,7 +14,7 @@ export type SetPrimarySaleRecipientParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x6f4f2837" as const;
+export const FN_SELECTOR = "0x6f4f2837" as const;
 const FN_INPUTS = [
   {
     type: "address",

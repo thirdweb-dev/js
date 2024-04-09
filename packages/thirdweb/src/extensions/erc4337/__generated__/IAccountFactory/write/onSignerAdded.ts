@@ -16,7 +16,7 @@ export type OnSignerAddedParams = {
   data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "data" }>;
 };
 
-const FN_SELECTOR = "0x9ddbb9d8" as const;
+export const FN_SELECTOR = "0x9ddbb9d8" as const;
 const FN_INPUTS = [
   {
     type: "address",

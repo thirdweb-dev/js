@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { getWalletInfo } from "../../../../wallets/__generated__/getWalletInfo.js";
-import type { WalletId } from "../../../../wallets/wallet-types.js";
 import type { WalletInfo } from "../../../../wallets/wallet-info.js";
+import type { WalletId } from "../../../../wallets/wallet-types.js";
 
 /**
  * @internal

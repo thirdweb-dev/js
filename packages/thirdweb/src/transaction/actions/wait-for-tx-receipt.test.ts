@@ -1,14 +1,14 @@
-import { describe, it, expect, vi, beforeEach, afterAll } from "vitest";
+import type { TransactionReceipt } from "viem";
+import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { TEST_WALLET_B } from "../../../test/src/addresses.js";
+import { USDT_CONTRACT } from "../../../test/src/test-contracts.js";
+import { transfer } from "../../extensions/erc20/write/transfer.js";
+import * as ethGetTransactionReceiptExports from "../../rpc/actions/eth_getTransactionReceipt.js";
+import * as watchBlockNumberExports from "../../rpc/watchBlockNumber.js";
 import {
   DEFAULT_MAX_BLOCKS_WAIT_TIME,
   waitForReceipt,
 } from "./wait-for-tx-receipt.js";
-import type { TransactionReceipt } from "viem";
-import { TEST_WALLET_B } from "../../../test/src/addresses.js";
-import { USDT_CONTRACT } from "../../../test/src/test-contracts.js";
-import * as watchBlockNumberExports from "../../rpc/watchBlockNumber.js";
-import * as ethGetTransactionReceiptExports from "../../rpc/actions/eth_getTransactionReceipt.js";
-import { transfer } from "../../extensions/erc20/write/transfer.js";
 
 const MOCK_TX_HASH = "0x1234567890abcdef";
 

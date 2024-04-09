@@ -12,7 +12,7 @@ export type TokenURIParams = {
   tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_tokenId" }>;
 };
 
-const FN_SELECTOR = "0xc87b56dd" as const;
+export const FN_SELECTOR = "0xc87b56dd" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

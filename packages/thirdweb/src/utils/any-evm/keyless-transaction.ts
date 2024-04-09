@@ -1,9 +1,9 @@
 import {
+  type Signature,
+  type TransactionSerializable,
   recoverAddress,
   serializeTransaction,
   signatureToHex,
-  type Signature,
-  type TransactionSerializable,
 } from "viem";
 import { keccak256 } from "../hashing/keccak256.js";
 

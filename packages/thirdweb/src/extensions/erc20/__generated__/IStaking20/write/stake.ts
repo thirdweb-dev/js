@@ -11,7 +11,7 @@ export type StakeParams = {
   amount: AbiParameterToPrimitiveType<{ type: "uint256"; name: "amount" }>;
 };
 
-const FN_SELECTOR = "0xa694fc3a" as const;
+export const FN_SELECTOR = "0xa694fc3a" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

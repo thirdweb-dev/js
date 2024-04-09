@@ -1,12 +1,12 @@
 import {
-  useQuery,
   type UseQueryOptions,
   type UseQueryResult,
+  useQuery,
 } from "@tanstack/react-query";
 import {
-  getBuyWithCryptoHistory,
   type BuyWithCryptoHistoryData,
   type BuyWithCryptoHistoryParams,
+  getBuyWithCryptoHistory,
 } from "../../../../pay/buyWithCrypto/actions/getHistory.js";
 
 export type BuyWithCryptoHistoryQueryParams = BuyWithCryptoHistoryParams;
@@ -40,7 +40,7 @@ export function useBuyWithCryptoHistory(
 ): UseQueryResult<BuyWithCryptoHistoryData> {
   return useQuery({
     ...queryParams,
-    // eslint-disable-next-line @tanstack/query/exhaustive-deps
+
     queryKey: ["buyWithCryptoHistory", buyWithCryptoHistoryParams],
     queryFn: () => {
       if (!buyWithCryptoHistoryParams) {

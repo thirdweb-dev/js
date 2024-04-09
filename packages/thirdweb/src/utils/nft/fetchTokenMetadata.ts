@@ -1,5 +1,5 @@
-import { isBase64JSON, parseBase64String } from "../base64/base64.js";
 import type { ThirdwebClient } from "../../client/client.js";
+import { isBase64JSON, parseBase64String } from "../base64/base64.js";
 import { numberToHex } from "../encoding/hex.js";
 import type { NFTMetadata } from "./parseNft.js";
 

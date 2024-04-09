@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { authorize } from "../core/authorize";
 
-import type { ServerResponse } from "http";
+import type { ServerResponse } from "node:http";
 import type { IncomingHttpHeaders, IncomingMessage } from "node:http";
 import type { CoreServiceConfig } from "../core/api";
 import type { AuthorizationInput } from "../core/authorize";
@@ -76,7 +76,7 @@ function getHeader(
 export function extractAuthorizationData(
   authInput: AuthInput,
 ): AuthorizationInput {
-  let requestUrl;
+  let requestUrl: URL;
 
   try {
     requestUrl = new URL(

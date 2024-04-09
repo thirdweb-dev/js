@@ -1,0 +1,30 @@
+coverage:
+  status:
+    project:
+      default:
+        target: auto
+    patch:
+      packages:
+        target: auto
+        flags:
+          - packages
+      legacy_packages:
+        target: auto
+        flags:
+          - legacy_packages 
+      
+
+github_checks:
+    annotations: true
+
+flag_management:
+  default_rules:
+    carryforward: true
+
+comment:
+  layout: "newheader, diff, flags, files"
+  require_changes: false  # if true: only post the comment if coverage changes
+  require_base: false        # [yes :: must have a base report to post]
+  require_head: true       # [yes :: must have a head report to post]
+  show_carryforward_flags: true 
+  hide_comment_details: true #collapse all the "detailed info" for the PR comment

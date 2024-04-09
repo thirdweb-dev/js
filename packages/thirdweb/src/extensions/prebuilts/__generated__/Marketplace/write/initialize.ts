@@ -30,7 +30,7 @@ export type InitializeParams = {
   }>;
 };
 
-const FN_SELECTOR = "0xaaae5633" as const;
+export const FN_SELECTOR = "0xaaae5633" as const;
 const FN_INPUTS = [
   {
     type: "address",

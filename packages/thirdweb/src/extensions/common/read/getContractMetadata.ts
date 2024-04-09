@@ -1,5 +1,5 @@
-import { fetchContractMetadata } from "../../../utils/contract/fetchContractMetadata.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
+import { fetchContractMetadata } from "../../../utils/contract/fetchContractMetadata.js";
 import { contractURI } from "../__generated__/IContractMetadata/read/contractURI.js";
 import { name } from "./name.js";
 import { symbol } from "./symbol.js";
@@ -20,6 +20,7 @@ export async function getContractMetadata(
 ): Promise<{
   name: string;
   symbol: string;
+  // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
   [key: string]: any;
 }> {
   const [resolvedMetadata, resolvedName, resolvedSymbol] = await Promise.all([

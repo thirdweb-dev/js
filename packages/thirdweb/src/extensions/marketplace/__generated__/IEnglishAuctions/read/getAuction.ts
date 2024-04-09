@@ -15,7 +15,7 @@ export type GetAuctionParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x78bd7935" as const;
+export const FN_SELECTOR = "0x78bd7935" as const;
 const FN_INPUTS = [
   {
     type: "uint256",
