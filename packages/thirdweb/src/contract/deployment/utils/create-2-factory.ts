@@ -191,7 +191,7 @@ async function _getCreate2FactoryDeploymentInfo(
       gas,
       nonce: 0,
       data: CREATE2_FACTORY_BYTECODE,
-      chainId: Number(chainId),
+      chainId: chainId !== 0 ? Number(chainId) : undefined,
     },
     signature: SIGNATURE,
   });
