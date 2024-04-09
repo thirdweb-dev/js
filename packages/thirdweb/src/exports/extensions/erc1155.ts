@@ -33,6 +33,10 @@ export {
   balanceOf,
   type BalanceOfParams,
 } from "../../extensions/erc1155/__generated__/IERC1155/read/balanceOf.js";
+export {
+  isApprovedForAll,
+  type IsApprovedForAllParams,
+} from "../../extensions/erc1155/__generated__/IERC1155/read/isApprovedForAll.js";
 
 //WRITE
 
