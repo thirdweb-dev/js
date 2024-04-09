@@ -14,6 +14,9 @@ export function getCreate2FactoryDeploymentInfo(
   gasOptions: { gasPrice?: bigint; gasLimit?: bigint },
 ): KeylessDeploymentInfo {
   const signature = utils.joinSignature(SIGNATURE);
+  
+  // 100000 is default deployment gas limit and 100 gwei is default gas price for create2 factory deployment
+  // (See: https://github.com/Arachnid/deterministic-deployment-proxy?tab=readme-ov-file#deployment-gas-limit)
   const gasPrice = gasOptions.gasPrice ? gasOptions.gasPrice : 100n * 10n ** 9n;
   const gasLimit = gasOptions.gasLimit ? gasOptions.gasLimit : 100000n;
 

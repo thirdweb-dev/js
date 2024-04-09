@@ -24,7 +24,9 @@ export async function deployCreate2Factory(
   if (deploymentInfo.transaction.length > 0) {
     // send balance to the keyless signer
     const valueToSend = BigNumber.from(deploymentInfo.valueToSend).mul(
-      100_000n,
+      // 100_000 is set as default deployment gas limit for create2 factory
+      // (See: https://github.com/Arachnid/deterministic-deployment-proxy?tab=readme-ov-file#deployment-gas-limit) 
+      100_000n, 
     );
 
     if (
