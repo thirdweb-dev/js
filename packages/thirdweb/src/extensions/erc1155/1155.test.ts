@@ -1,21 +1,21 @@
-import { describe, it, expect, beforeAll } from "vitest";
-import { getContract, type ThirdwebContract } from "../../contract/contract.js";
-import { deployERC1155Contract } from "../prebuilts/deploy-erc1155.js";
+import { beforeAll, describe, expect, it } from "vitest";
+import { ANVIL_CHAIN } from "../../../test/src/chains.js";
+import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import {
   TEST_ACCOUNT_A,
   TEST_ACCOUNT_B,
 } from "../../../test/src/test-wallets.js";
-import { ANVIL_CHAIN } from "../../../test/src/chains.js";
-import { TEST_CLIENT } from "../../../test/src/test-clients.js";
-import { getContractMetadata } from "../common/read/getContractMetadata.js";
-import { nextTokenIdToMint } from "./__generated__/IERC1155Enumerable/read/nextTokenIdToMint.js";
-import { mintTo } from "./write/mintTo.js";
+import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import { sendAndConfirmTransaction } from "../../exports/transaction.js";
-import { getNFT } from "./read/getNFT.js";
+import { getContractMetadata } from "../common/read/getContractMetadata.js";
+import { deployERC1155Contract } from "../prebuilts/deploy-erc1155.js";
 import { balanceOf } from "./__generated__/IERC1155/read/balanceOf.js";
-import { mintAdditionalSupplyTo } from "./write/mintAdditionalSupplyTo.js";
 import { totalSupply } from "./__generated__/IERC1155/read/totalSupply.js";
+import { nextTokenIdToMint } from "./__generated__/IERC1155Enumerable/read/nextTokenIdToMint.js";
+import { getNFT } from "./read/getNFT.js";
 import { getNFTs } from "./read/getNFTs.js";
+import { mintAdditionalSupplyTo } from "./write/mintAdditionalSupplyTo.js";
+import { mintTo } from "./write/mintTo.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("TokenERC1155", () => {
   let contract: ThirdwebContract;
