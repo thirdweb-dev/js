@@ -7,7 +7,6 @@ import {
   PinBottomIcon,
   ShuffleIcon,
   TextAlignJustifyIcon,
-  ExitIcon,
   PlusIcon,
 } from "@radix-ui/react-icons";
 import { Localhost } from "@thirdweb-dev/chains";
@@ -33,7 +32,6 @@ import {
   type EmbeddedWallet,
   type SmartWallet,
 } from "@thirdweb-dev/wallets";
-import { useEffect, useState } from "react";
 import { ChainIcon } from "../../components/ChainIcon";
 import { CopyIcon } from "../../components/CopyIcon";
 import { Img } from "../../components/Img";
@@ -58,7 +56,7 @@ import {
   useEmbeddedWalletUserEmail,
   useEmbeddedWalletUserPhoneNumber,
 } from "../../evm/hooks/wallets/useEmbeddedWallet";
-import { useTWLocale, useTWLocale } from "../../evm/providers/locale-provider";
+import { useTWLocale } from "../../evm/providers/locale-provider";
 import { isMobile } from "../../evm/utils/isMobile";
 import { ExportLocalWallet } from "../wallets/localWallet/ExportLocalWallet";
 import type { LocalWalletConfig } from "../wallets/localWallet/types";
@@ -77,8 +75,6 @@ import {
   facebookIconUri,
   googleIconUri,
 } from "./icons/socialLogins";
-import { useEmbeddedWalletUserEmail } from "../../evm/hooks/wallets/useEmbeddedWallet";
-import { onModalUnmount } from "./constants";
 import { useChainQuery } from "../hooks/useChainQuery";
 import { SwapScreen } from "./screens/Buy/swap/SwapScreen";
 import { SwapTransactionsScreen } from "./screens/SwapTransactionsScreen";

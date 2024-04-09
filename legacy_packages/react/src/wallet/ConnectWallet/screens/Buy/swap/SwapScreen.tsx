@@ -6,7 +6,6 @@ import {
   CrossCircledIcon,
 } from "@radix-ui/react-icons";
 import {
-  type BuyWithCryptoQuoteQueryParams,
   useBuyWithCryptoQuote,
   shortenString,
   useChainId,
@@ -22,6 +21,7 @@ import {
 import {
   type BuyWithCryptoQuote,
   NATIVE_TOKEN_ADDRESS,
+  type GetBuyWithCryptoQuoteParams,
 } from "@thirdweb-dev/sdk";
 import { isAddress } from "ethers/lib/utils";
 import { useMemo, useState } from "react";
@@ -183,7 +183,7 @@ export function SwapScreenContent(props: {
     BuyWithCryptoQuote | undefined
   >();
 
-  const buyWithCryptoParams: BuyWithCryptoQuoteQueryParams | undefined =
+  const buyWithCryptoParams: GetBuyWithCryptoQuoteParams | undefined =
     deferredTokenAmount &&
     !finalizedQuote &&
     !(fromChainId === toChainId && fromToken === toToken)

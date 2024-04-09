@@ -8,12 +8,14 @@ import { useState } from "react";
 import { formatSeconds } from "./formatSeconds";
 import { keyframes } from "@emotion/react";
 import {
-  type BuyWithCryptoStatusQueryParams,
   shortenString,
   useBuyWithCryptoStatus,
   useSigner,
 } from "@thirdweb-dev/react-core";
-import { type BuyWithCryptoQuote } from "@thirdweb-dev/sdk";
+import {
+  type BuyWithCryptoQuote,
+  type BuyWithCryptoTransaction,
+} from "@thirdweb-dev/sdk";
 import { Skeleton } from "../../../../../components/Skeleton";
 import { Spacer } from "../../../../../components/Spacer";
 import { Spinner } from "../../../../../components/Spinner";
@@ -50,9 +52,7 @@ export function ConfirmationScreen(props: {
 }) {
   const signer = useSigner();
 
-  const [swapTx, setSwapTx] = useState<
-    BuyWithCryptoStatusQueryParams | undefined
-  >();
+  const [swapTx, setSwapTx] = useState<BuyWithCryptoTransaction | undefined>();
 
   const isApprovalRequired = props.buyWithCryptoQuote.approval !== undefined;
 
@@ -385,7 +385,7 @@ function ConfirmItem(props: { label: string; children: React.ReactNode }) {
 function WaitingForConfirmation(props: {
   onBack: () => void;
   onViewPendingTx: () => void;
-  swapTx: BuyWithCryptoStatusQueryParams;
+  swapTx: BuyWithCryptoTransaction;
   destinationToken: ERC20OrNativeToken;
   destinationChainId: number;
   sourceAmount: string;
