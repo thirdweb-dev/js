@@ -1,4 +1,5 @@
 import { getContractAddress } from "viem";
+import { getGasPrice } from "../../../gas/get-gas-price.js";
 import { eth_getBalance } from "../../../rpc/actions/eth_getBalance.js";
 import { eth_sendRawTransaction } from "../../../rpc/actions/eth_sendRawTransaction.js";
 import { getRpcClient } from "../../../rpc/rpc.js";
@@ -12,9 +13,7 @@ import type {
   ClientAndChain,
   ClientAndChainAndAccount,
 } from "../../../utils/types.js";
-import { getGasPrice } from "../../../gas/get-gas-price.js";
 import { getContract } from "../../contract.js";
-
 
 const COMMON_FACTORY_ADDRESS = "0x4e59b44847b379578588920cA78FbF26c0B4956C"; // for pre-eip-155 supporting chains
 
