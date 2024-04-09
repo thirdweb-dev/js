@@ -1,4 +1,4 @@
-import { getMIPDStore } from "../../../../wallets/injected/mipdStore.js";
+import { getInstalledWalletProviders } from "../../../../wallets/injected/mipdStore.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
 // import { localWalletMetadata } from "../../../../wallets/local/index._ts";
 import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
@@ -26,14 +26,12 @@ export function WalletEntryButton(props: {
   const walletInfo = useWalletInfo(walletId);
 
   const walletName =
-    getMIPDStore()
-      .getProviders()
-      .find((p) => p.info.rdns === walletId)?.info.name ||
-    walletInfo.data?.name;
+    getInstalledWalletProviders().find((p) => p.info.rdns === walletId)?.info
+      .name || walletInfo.data?.name;
 
-  const isInstalled = getMIPDStore()
-    .getProviders()
-    .find((p) => p.info.rdns === walletId);
+  const isInstalled = getInstalledWalletProviders().find(
+    (p) => p.info.rdns === walletId,
+  );
 
   return (
     <WalletButton
