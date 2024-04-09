@@ -10,17 +10,22 @@ import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import { toUnits } from "../../../../utils/units.js";
 import { isERC721 } from "../../../erc721/read/isERC721.js";
 import { isERC1155 } from "../../../erc1155/read/isERC1155.js";
-import { createListing as generatedCreateListing } from "../../__generated__/IDirectListings/write/createListing.js";
+import { updateListing as generatedUpdateListing } from "../../__generated__/IDirectListings/write/updateListing.js";
+import { getListing } from "../../read/direct/getListing.js";
 
-export type CreateListingParams = {
+export type UpdateListingParams = {
+  /**
+   * The ID of the listing to update
+   */
+  listingId: bigint;
   /**
    * The contract address of the asset being listed
    */
-  assetContractAddress: Address;
+  assetContractAddress?: Address;
   /**
    * The ID of the token being listed
    */
-  tokenId: bigint;
+  tokenId?: bigint;
   /**
    * The quantity of tokens to list
    *
@@ -64,31 +69,40 @@ export type CreateListingParams = {
 );
 
 /**
- * Creates a direct listing.
- * @param options The options for creating the direct listing.
- * @returns The result of creating the direct listing.
+ * Updates an existing direct listing.
+ * @param options The options for updating the direct listing.
+ * @returns The result of updating the direct listing.
  * @extension MARKETPLACE
  * @example
  * ```typescript
- * import { createListing } from "thirdweb/extensions/marketplace";
+ * import { updateListing } from "thirdweb/extensions/marketplace";
  *
- * const transaction = createListing({...});
+ * const transaction = updateListing({...});
  *
  * const { transactionHash } = await sendTransaction({ transaction, account });
  * ```
  */
-export function createListing(
-  options: BaseTransactionOptions<CreateListingParams>,
+export function updateListing(
+  options: BaseTransactionOptions<UpdateListingParams>,
 ) {
-  return generatedCreateListing({
+  return generatedUpdateListing({
     contract: options.contract,
     asyncParams: async () => {
-      const assetContract = getContract({
-        ...options.contract,
-        address: options.assetContractAddress,
+      const { contract, listingId, ...updateParams } = options;
+
+      const existingListing = await getListing({
+        contract: options.contract,
+        listingId: options.listingId,
       });
 
-      const rpcClient = getRpcClient(options.contract);
+      const mergedOptions = { ...existingListing, ...updateParams };
+
+      const assetContract = getContract({
+        ...contract,
+        address: mergedOptions.assetContractAddress,
+      });
+
+      const rpcClient = getRpcClient(contract);
 
       const [assetIsERC721, assetIsERC1155, lastestBlock] = await Promise.all([
         isERC721({ contract: assetContract }),
@@ -103,12 +117,14 @@ export function createListing(
 
       // validate the timestamps
       let startTimestamp = BigInt(
-        Math.floor((options.startTimestamp ?? new Date()).getTime() / 1000),
+        Math.floor(
+          (mergedOptions.startTimestamp ?? new Date()).getTime() / 1000,
+        ),
       );
       const endTimestamp = BigInt(
         Math.floor(
           (
-            options.endTimestamp ??
+            mergedOptions.endTimestamp ??
             new Date(Date.now() + 10 * 365 * 24 * 60 * 60 * 1000)
           ).getTime() / 1000,
         ),
@@ -129,13 +145,14 @@ export function createListing(
         quantity = 1n;
       } else {
         // otherwise use the provided quantity or default to 1
-        quantity = options.quantity ?? 1n;
+        quantity = mergedOptions.quantity ?? 1n;
       }
 
       // validate price
       const currencyAddress =
-        options.currencyContractAddress ?? NATIVE_TOKEN_ADDRESS;
+        mergedOptions.currencyContractAddress ?? NATIVE_TOKEN_ADDRESS;
       let pricePerToken: bigint;
+      // if we have a pricePerToken, we use that
       if ("pricePerToken" in options) {
         // for native token, we know decimals are 18
         if (isNativeTokenAddress(currencyAddress)) {
@@ -143,7 +160,7 @@ export function createListing(
         } else {
           // otherwise get the decimals of the currency
           const currencyContract = getContract({
-            ...options.contract,
+            ...contract,
             address: currencyAddress,
           });
           const { decimals } = await import("../../../erc20/read/decimals.js");
@@ -152,20 +169,26 @@ export function createListing(
           });
           pricePerToken = toUnits(options.pricePerToken, currencyDecimals);
         }
-      } else {
+        // if we have a pricePerTokenWei, we use that
+      } else if ("pricePerTokenWei" in options) {
         pricePerToken = BigInt(options.pricePerTokenWei);
+      } else {
+        // otherwise use the existing price
+        pricePerToken = existingListing.pricePerToken;
       }
 
       return {
+        listingId,
         params: {
-          assetContract: options.assetContractAddress,
-          tokenId: options.tokenId,
-          currency: options.currencyContractAddress ?? NATIVE_TOKEN_ADDRESS,
+          assetContract: mergedOptions.assetContractAddress,
+          tokenId: mergedOptions.tokenId,
+          currency:
+            mergedOptions.currencyContractAddress ?? NATIVE_TOKEN_ADDRESS,
           quantity,
           pricePerToken,
           startTimestamp,
           endTimestamp,
-          reserved: options.isReservedListing ?? false,
+          reserved: mergedOptions.isReservedListing ?? false,
         },
       } as const;
     },

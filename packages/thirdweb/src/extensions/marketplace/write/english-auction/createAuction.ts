@@ -96,6 +96,7 @@ export type CreateAuctionParams = {
  * Creates an auction.
  * @param options The options for creating the auction.
  * @returns The result of creating the auction.
+ * @extension MARKETPLACE
  * @example
  * ```typescript
  * import { createAuction } from "thirdweb/extensions/marketplace";
