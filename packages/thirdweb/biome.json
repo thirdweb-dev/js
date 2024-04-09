@@ -6,7 +6,8 @@
       "src/crypto/aes/lib/md5.ts",
       "src/utils/promise/p-limit.ts",
       "src/utils/bytecode/cbor-decode.ts",
-      "src/**/__generated__/**"
+      "src/**/__generated__/**",
+      "src/merkletree/MerkleTree.ts"
     ]
   }
 }
