@@ -55,6 +55,14 @@ export {
   buyFromListing,
   type BuyFromListingParams,
 } from "../../extensions/marketplace/write/direct/buyFromListing.js";
+export {
+  approveBuyerForListing,
+  type ApproveBuyerForListingParams,
+} from "../../extensions/marketplace/__generated__/IDirectListings/write/approveBuyerForListing.js";
+export {
+  approveCurrencyForListing,
+  type ApproveCurrencyForListingParams,
+} from "../../extensions/marketplace/__generated__/IDirectListings/write/approveCurrencyForListing.js";
 
 // EVENTS
 export {
