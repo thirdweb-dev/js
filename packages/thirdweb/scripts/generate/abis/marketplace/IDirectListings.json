@@ -16,5 +16,6 @@
   "function totalListings() view returns (uint256)",
   "function updateListing(uint256 _listingId, (address assetContract, uint256 tokenId, uint256 quantity, address currency, uint256 pricePerToken, uint128 startTimestamp, uint128 endTimestamp, bool reserved) _params)",
   "function isBuyerApprovedForListing(uint256 _listingId, address _buyer) view returns (bool)",
-  "function isCurrencyApprovedForListing(uint256 _listingId, address _currency) view returns (bool)"
+  "function isCurrencyApprovedForListing(uint256 _listingId, address _currency) view returns (bool)",
+  "function currencyPriceForListing(uint256 _listingId, address _currency) view returns (uint256)"
 ]

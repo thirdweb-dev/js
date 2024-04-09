@@ -33,6 +33,10 @@ export {
   isCurrencyApprovedForListing,
   type IsCurrencyApprovedForListingParams,
 } from "../../extensions/marketplace/__generated__/IDirectListings/read/isCurrencyApprovedForListing.js";
+export {
+  currencyPriceForListing,
+  type CurrencyPriceForListingParams,
+} from "../../extensions/marketplace/read/direct/currencyPriceForListing.js";
 
 // WRITE
 export {
