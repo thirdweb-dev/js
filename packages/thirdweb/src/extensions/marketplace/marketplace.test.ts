@@ -1,9 +1,13 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import { ANVIL_CHAIN } from "../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
-import { TEST_ACCOUNT_A } from "../../../test/src/test-wallets.js";
+import {
+  TEST_ACCOUNT_A,
+  TEST_ACCOUNT_B,
+} from "../../../test/src/test-wallets.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import { parseEventLogs } from "../../event/actions/parse-logs.js";
+import { balanceOf } from "../../exports/extensions/erc721.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { getContractMetadata } from "../common/read/getContractMetadata.js";
 import { approve } from "../erc721/__generated__/IERC721A/write/approve.js";
@@ -21,6 +25,8 @@ import { getListing } from "./read/direct/getListing.js";
 import { getAllAuctions } from "./read/english-auction/getAllAuctions.js";
 import { getAllValidAuctions } from "./read/english-auction/getAllValidAuctions.js";
 import { getAuction } from "./read/english-auction/getAuction.js";
+import { isListingValid } from "./utils.js";
+import { buyFromListing } from "./write/direct/buyFromListing.js";
 import { createListing } from "./write/direct/createListing.js";
 import { createAuction } from "./write/english-auction/createAuction.js";
 
@@ -188,6 +194,54 @@ describe.runIf(process.env.TW_SECRET_KEY)("Marketplace", () => {
           "type": "ERC721",
         }
       `);
+
+      // check the listing is valid
+      const listingValidity = await isListingValid({
+        listing,
+        contract: marketplaceContract,
+        quantity: 1n,
+      });
+
+      expect(listingValidity).toMatchInlineSnapshot(`
+        {
+          "valid": true,
+        }
+      `);
+
+      // expect the buyer to have an initial balance of 0
+      await expect(
+        balanceOf({
+          contract: erc721Contract,
+          owner: TEST_ACCOUNT_B.address,
+        }),
+      ).resolves.toBe(0n);
+
+      const buyTx = buyFromListing({
+        contract: marketplaceContract,
+        listingId: listingEvent.args.listingId,
+        recipient: TEST_ACCOUNT_B.address,
+        quantity: 1n,
+      });
+
+      await sendAndConfirmTransaction({
+        transaction: buyTx,
+        account: TEST_ACCOUNT_B,
+      });
+
+      // expect the buyer to have a new balance of 1
+      await expect(
+        balanceOf({
+          contract: erc721Contract,
+          owner: TEST_ACCOUNT_B.address,
+        }),
+      ).resolves.toBe(1n);
+      // expect the seller to no longer have the token
+      await expect(
+        balanceOf({
+          contract: erc721Contract,
+          owner: TEST_ACCOUNT_A.address,
+        }),
+      ).resolves.toBe(0n);
     });
   });
 

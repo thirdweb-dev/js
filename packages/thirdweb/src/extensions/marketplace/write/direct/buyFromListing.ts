@@ -1,7 +1,9 @@
 import type { Address } from "abitype";
+import { isNativeTokenAddress } from "../../../../constants/addresses.js";
+import { prepareContractCall } from "../../../../transaction/prepare-contract-call.js";
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
-import { buyFromListing as buyFromListingGenerated } from "../../__generated__/IDirectListings/write/buyFromListing.js";
 import { getListing } from "../../read/direct/getListing.js";
+import type { DirectListing } from "../../types.js";
 import { isListingValid } from "../../utils.js";
 
 export type BuyFromListingParams = {
@@ -31,30 +33,77 @@ export type BuyFromListingParams = {
 export function buyFromListing(
   options: BaseTransactionOptions<BuyFromListingParams>,
 ) {
-  return buyFromListingGenerated({
+  // TODO: we need a better way to pass async value etc to prepareContractCall to avoid this!
+  // trick to only resolve the listing once per transaction even though we access it multiple times
+  let resolveListingPromise: Promise<DirectListing>;
+  async function resolveListing() {
+    if (!resolveListingPromise) {
+      resolveListingPromise = (async () => {
+        const listing = await getListing({
+          contract: options.contract,
+          listingId: options.listingId,
+        });
+        const listingValidity = await isListingValid({
+          contract: options.contract,
+          listing: listing,
+          quantity: options.quantity,
+        });
+
+        if (!listingValidity.valid) {
+          throw new Error(listingValidity.reason);
+        }
+        return listing;
+      })();
+    }
+    return resolveListingPromise;
+  }
+
+  return prepareContractCall({
     contract: options.contract,
-    asyncParams: async () => {
-      const listing = await getListing({
-        contract: options.contract,
-        listingId: options.listingId,
-      });
-      const listingValidity = await isListingValid({
-        contract: options.contract,
-        listing: listing,
-        quantity: options.quantity,
-      });
+    method: [
+      "0x704232dc",
+      [
+        {
+          type: "uint256",
+          name: "_listingId",
+        },
+        {
+          type: "address",
+          name: "_buyFor",
+        },
+        {
+          type: "uint256",
+          name: "_quantity",
+        },
+        {
+          type: "address",
+          name: "_currency",
+        },
+        {
+          type: "uint256",
+          name: "_expectedTotalPrice",
+        },
+      ] as const,
+      [] as const,
+    ] as const,
+    value: async () => {
+      const listing = await resolveListing();
 
-      if (!listingValidity.valid) {
-        throw new Error(listingValidity.reason);
+      if (isNativeTokenAddress(listing.currencyContractAddress)) {
+        return listing.pricePerToken * options.quantity;
       }
+      return undefined;
+    },
+    params: async () => {
+      const listing = await resolveListing();
 
-      return {
-        listingId: options.listingId,
-        buyFor: options.recipient,
-        quantity: options.quantity,
-        currency: listing.currencyContractAddress,
-        expectedTotalPrice: listing.pricePerToken * options.quantity,
-      };
+      return [
+        options.listingId,
+        options.recipient,
+        options.quantity,
+        listing.currencyContractAddress,
+        listing.pricePerToken * options.quantity,
+      ] as const;
     },
   });
 }
