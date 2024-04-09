@@ -1,7 +1,7 @@
 import type { Address } from "abitype";
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
-import { getListing } from "./getListing.js";
 import { isCurrencyApprovedForListing } from "../../__generated__/IDirectListings/read/isCurrencyApprovedForListing.js";
+import { getListing } from "./getListing.js";
 
 export type CurrencyPriceForListingParams = {
   listingId: bigint;
