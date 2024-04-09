@@ -21,7 +21,7 @@ import {
   Zksync,
   ZksyncEraGoerliTestnetDeprecated,
   ZksyncSepoliaTestnet,
-  getChainByChainId,
+  getChainByChainIdAsync,
 } from "@thirdweb-dev/chains";
 import {
   useAddress,
@@ -941,9 +941,8 @@ export function useCustomFactoryAbi(contractAddress: string, chainId: number) {
   return useQuery(
     ["custom-factory-abi", { contractAddress, chainId }],
     async () => {
-      const chain = getChainByChainId(chainId);
+      const chain = await getChainByChainIdAsync(chainId);
       const sdk = getThirdwebSDK(chainId, getDashboardChainRpc(chain));
-      invariant(sdk, "sdk is not defined");
 
       return (await sdk.getContract(contractAddress)).abi;
     },

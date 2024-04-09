@@ -1,11 +1,13 @@
 import { createColumnHelper } from "@tanstack/react-table";
-import { getChainByChainId } from "@thirdweb-dev/chains";
+import { getChainByChainIdAsync } from "@thirdweb-dev/chains";
 import { TWTable } from "components/shared/TWTable";
 import { Text } from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
 import { AsyncFactoryAccountCell } from "components/smart-wallets/AccountFactories/account-cell";
 import { AsyncContractNameCell } from "components/contract-components/tables/cells";
 import { BasicContract } from "contract-ui/types/types";
+import { useQuery } from "@tanstack/react-query";
+import { Skeleton } from "@chakra-ui/react";
 
 interface FactoryContractsProps {
   contracts: BasicContract[];
@@ -22,7 +24,9 @@ const columns = [
   }),
   columnHelper.accessor("chainId", {
     header: "Network",
-    cell: (cell) => <Text>{getChainByChainId(cell.getValue()).name}</Text>,
+    cell: (cell) => {
+      return <NetworkName id={cell.getValue()} />;
+    },
   }),
   columnHelper.accessor("address", {
     header: "Contract address",
@@ -35,6 +39,19 @@ const columns = [
     },
   }),
 ];
+
+function NetworkName(props: { id: number }) {
+  const chainQuery = useQuery({
+    queryKey: ["getChainByChainIdAsync", props.id],
+    queryFn: () => getChainByChainIdAsync(props.id),
+  });
+
+  return (
+    <Skeleton isLoaded={!!chainQuery.data}>
+      <Text>{chainQuery.data?.name || "..."}</Text>
+    </Skeleton>
+  );
+}
 
 export const FactoryContracts: React.FC<FactoryContractsProps> = ({
   contracts,
