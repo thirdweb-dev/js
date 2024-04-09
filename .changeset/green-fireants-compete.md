@@ -3,4 +3,4 @@
 "thirdweb": patch
 ---
 
-Custom gas settings for morph testnet
+Custom gas settings for any evm deployments
