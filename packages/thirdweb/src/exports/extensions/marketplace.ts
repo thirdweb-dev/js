@@ -43,6 +43,10 @@ export {
   createListing,
   type CreateListingParams,
 } from "../../extensions/marketplace/write/direct/createListing.js";
+export {
+  updateListing,
+  type UpdateListingParams,
+} from "../../extensions/marketplace/write/direct/updateListing.js";
 
 // EVENTS
 export {
