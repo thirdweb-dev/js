@@ -29,15 +29,9 @@ const mipdStore: Store | undefined = /* @__PURE__ */ (() =>
  * @walletUtils
  */
 export function injectedProvider(walletId: WalletId): Ethereum | undefined {
-  if (!mipdStore) {
-    throw new Error("store not initialized");
-  }
-
-  const store = getMIPDStore();
-
-  const injectedProviderDetail = store.findProvider({
-    rdns: walletId,
-  });
+  const injectedProviderDetail = getInstalledWalletProviders().find(
+    (p) => p.info.rdns === walletId,
+  );
 
   return injectedProviderDetail?.provider as Ethereum | undefined;
 }
@@ -46,9 +40,23 @@ export function injectedProvider(walletId: WalletId): Ethereum | undefined {
  * Get Injected Provider Details for given wallet ID (rdns)
  * @internal
  */
-export function getMIPDStore() {
+function getMIPDStore() {
   if (!mipdStore) {
     throw new Error("MIPD store not initialized");
   }
   return mipdStore;
+}
+
+export function getInstalledWalletProviders() {
+  const providers = getMIPDStore().getProviders();
+
+  for (const provider of providers) {
+    // Map io.metamask.mobile to io.metamask rdns to fix double entry issue in MetaMask mobile browser
+    if ((provider.info.rdns as string) === "io.metamask.mobile") {
+      provider.info.rdns = "io.metamask";
+      break;
+    }
+  }
+
+  return providers;
 }

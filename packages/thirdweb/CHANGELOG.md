@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.4.1
+
+### Patch Changes
+
+- [#2741](https://github.com/thirdweb-dev/js/pull/2741) [`900e7d0`](https://github.com/thirdweb-dev/js/commit/900e7d0324f6cd762f5f231096f4ecd4372baccc) Thanks [@MananTank](https://github.com/MananTank)! - Remove duplicated entry for MetaMask in MM browser
+
 ## 5.4.0
 
 ### Minor Changes
