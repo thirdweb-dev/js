@@ -149,7 +149,7 @@ const Carousel = ({ TRACKING_CATEGORY }: { TRACKING_CATEGORY: string }) => {
           );
         })}
       </SimpleGrid>
-      <Flex width="full" maxW="686px">
+      <Flex width="full" maxW="786px">
         {showcaseImages.map((img, idx) => (
           <ChakraNextImage
             key={idx}
