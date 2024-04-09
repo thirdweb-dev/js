@@ -12,7 +12,7 @@ export type GrantRoleParams = {
   account: AbiParameterToPrimitiveType<{ type: "address"; name: "account" }>;
 };
 
-const FN_SELECTOR = "0x2f2ff15d" as const;
+export const FN_SELECTOR = "0x2f2ff15d" as const;
 const FN_INPUTS = [
   {
     type: "bytes32",

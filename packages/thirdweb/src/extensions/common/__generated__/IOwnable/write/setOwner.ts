@@ -11,7 +11,7 @@ export type SetOwnerParams = {
   newOwner: AbiParameterToPrimitiveType<{ type: "address"; name: "_newOwner" }>;
 };
 
-const FN_SELECTOR = "0x13af4035" as const;
+export const FN_SELECTOR = "0x13af4035" as const;
 const FN_INPUTS = [
   {
     type: "address",

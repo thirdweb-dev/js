@@ -18,6 +18,7 @@ export type ReadonlyStore<T> = {
 export function computedStore<T>(
   // pass the values of the dependencies to the computation function
   computation: () => T,
+  // biome-ignore lint/suspicious/noExplicitAny: library function that accepts any store type
   dependencies: (Store<any> | ReadonlyStore<any>)[],
 ): ReadonlyStore<T> {
   type Listener = () => void;
@@ -37,11 +38,11 @@ export function computedStore<T>(
   };
 
   // when any of the dependencies change, recompute the value and set it
-  dependencies.forEach((store) => {
+  for (const store of dependencies) {
     store.subscribe(() => {
       setValue(computation());
     });
-  });
+  }
 
   return {
     getValue() {

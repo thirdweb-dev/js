@@ -14,7 +14,7 @@ export type OnERC721ReceivedParams = {
   data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "data" }>;
 };
 
-const FN_SELECTOR = "0x150b7a02" as const;
+export const FN_SELECTOR = "0x150b7a02" as const;
 const FN_INPUTS = [
   {
     type: "address",

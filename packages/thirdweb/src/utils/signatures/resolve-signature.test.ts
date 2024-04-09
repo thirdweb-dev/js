@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import {
-  resolveSignature,
   clearCache,
+  resolveSignature,
   resolveSignatures,
 } from "./resolve-signature.js";
 

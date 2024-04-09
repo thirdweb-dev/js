@@ -36,7 +36,7 @@ export type InitializeParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x49c5c5b6" as const;
+export const FN_SELECTOR = "0x49c5c5b6" as const;
 const FN_INPUTS = [
   {
     type: "address",

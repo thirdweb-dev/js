@@ -1,5 +1,3 @@
-/* eslint-disable better-tree-shaking/no-top-level-side-effects */
-
 // @ts-check
 import { typedoc } from "typedoc-gen";
 

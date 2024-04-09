@@ -20,7 +20,7 @@ export type DepositParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x6e553f65" as const;
+export const FN_SELECTOR = "0x6e553f65" as const;
 const FN_INPUTS = [
   {
     name: "assets",

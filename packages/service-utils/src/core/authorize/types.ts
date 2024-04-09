@@ -1,4 +1,4 @@
-import { AccountMetadata, ApiKeyMetadata } from "../api";
+import type { AccountMetadata, ApiKeyMetadata } from "../api";
 
 export type AuthorizationResult =
   | {

@@ -1,9 +1,9 @@
 import type { Address } from "abitype";
-import type { BaseTransactionOptions } from "../../../../transaction/types.js";
-import { prepareContractCall } from "../../../../transaction/prepare-contract-call.js";
-import { getActiveClaimCondition } from "../read/getActiveClaimCondition.js";
-import { padHex } from "../../../../utils/encoding/hex.js";
 import { isNativeTokenAddress } from "../../../../constants/addresses.js";
+import { prepareContractCall } from "../../../../transaction/prepare-contract-call.js";
+import type { BaseTransactionOptions } from "../../../../transaction/types.js";
+import { padHex } from "../../../../utils/encoding/hex.js";
+import { getActiveClaimCondition } from "../read/getActiveClaimCondition.js";
 
 const CLAIM_ABI = {
   inputs: [
@@ -132,9 +132,8 @@ export function claimTo(options: BaseTransactionOptions<ClaimToParams>) {
       });
       if (isNativeTokenAddress(cc.currency)) {
         return cc.pricePerToken * BigInt(options.quantity);
-      } else {
-        return 0n;
       }
+      return 0n;
     },
   });
 }

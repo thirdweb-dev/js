@@ -1,12 +1,12 @@
+import type { Chain } from "../../../../../chains/types.js";
 import { useChainQuery } from "../../../../core/hooks/others/useChainQuery.js";
 import {
-  isNativeToken,
   type ERC20OrNativeToken,
+  isNativeToken,
 } from "../../ConnectWallet/screens/nativeToken.js";
-import { Text } from "../text.js";
-import type { Chain } from "../../../../../chains/types.js";
 import { fontSize } from "../../design-system/index.js";
 import { Skeleton } from "../Skeleton.js";
+import { Text } from "../text.js";
 
 /**
  * @internal

@@ -14,7 +14,7 @@ export type SetRoyaltyEngineParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x21ede032" as const;
+export const FN_SELECTOR = "0x21ede032" as const;
 const FN_INPUTS = [
   {
     type: "address",

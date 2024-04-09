@@ -1,3 +1,4 @@
+import styled from "@emotion/styled";
 import { Spacer } from "../../../components/Spacer.js";
 import { Container } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
@@ -5,7 +6,6 @@ import { Text } from "../../../components/text.js";
 import { useCustomTheme } from "../../../design-system/CustomThemeProvider.js";
 import { StyledDiv } from "../../../design-system/elements.js";
 import { fontSize, radius, spacing } from "../../../design-system/index.js";
-import styled from "@emotion/styled";
 
 /**
  * @internal
@@ -49,21 +49,23 @@ export function PaymentSelection() {
   );
 }
 
-const CheckButton = /* @__PURE__ */ styled(Button)((props: {
-  isChecked: boolean;
-}) => {
-  const theme = useCustomTheme();
-  return {
-    fontSize: fontSize.sm,
-    borderColor: props.isChecked
-      ? theme.colors.accentText
-      : theme.colors.borderColor,
-    gap: spacing.xs,
-    paddingInline: spacing.xxs,
-    paddingBlock: spacing.sm,
-    width: "100%",
-  };
-});
+const CheckButton = /* @__PURE__ */ styled(Button)(
+  (props: {
+    isChecked: boolean;
+  }) => {
+    const theme = useCustomTheme();
+    return {
+      fontSize: fontSize.sm,
+      borderColor: props.isChecked
+        ? theme.colors.accentText
+        : theme.colors.borderColor,
+      gap: spacing.xs,
+      paddingInline: spacing.xxs,
+      paddingBlock: spacing.sm,
+      width: "100%",
+    };
+  },
+);
 
 const FloatingBadge = /* @__PURE__ */ StyledDiv(() => {
   const theme = useCustomTheme();

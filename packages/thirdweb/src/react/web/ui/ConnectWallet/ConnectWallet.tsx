@@ -1,35 +1,35 @@
 import styled from "@emotion/styled";
-import { useContext, useState, useMemo, useEffect } from "react";
-import { Spinner } from "../components/Spinner.js";
-import { Button } from "../components/buttons.js";
-import {
-  useCustomTheme,
-  CustomThemeProvider,
-} from "../design-system/CustomThemeProvider.js";
-import { fadeInAnimation } from "../design-system/animations.js";
-import { ConnectedWalletDetails } from "./Details.js";
-import { defaultTokens } from "./defaultTokens.js";
+import { useContext, useEffect, useMemo, useState } from "react";
+import type { Chain } from "../../../../chains/types.js";
+import { AutoConnect } from "../../../core/hooks/connection/useAutoConnect.js";
+import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import {
   useActiveAccount,
   useActiveWalletChain,
   useActiveWalletConnectionStatus,
   useSwitchActiveWalletChain,
 } from "../../../core/hooks/wallets/wallet-hooks.js";
+import { WalletConnectionContext } from "../../../core/providers/wallet-connection.js";
 import {
-  useSetIsWalletModalOpen,
   SetModalConfigCtx,
   WalletUIStatesProvider,
+  useSetIsWalletModalOpen,
 } from "../../providers/wallet-ui-states-provider.js";
-import type { ConnectButtonProps } from "./ConnectWalletProps.js";
 import { canFitWideModal } from "../../utils/canFitWideModal.js";
-import type { Chain } from "../../../../chains/types.js";
-import type { ConnectLocale } from "./locale/types.js";
-import { WalletConnectionContext } from "../../../core/providers/wallet-connection.js";
 import { getDefaultWallets } from "../../wallets/defaultWallets.js";
-import { AutoConnect } from "../../../core/hooks/connection/useAutoConnect.js";
+import { Spinner } from "../components/Spinner.js";
+import { Button } from "../components/buttons.js";
+import {
+  CustomThemeProvider,
+  useCustomTheme,
+} from "../design-system/CustomThemeProvider.js";
+import { fadeInAnimation } from "../design-system/animations.js";
+import type { ConnectButtonProps } from "./ConnectWalletProps.js";
+import { ConnectedWalletDetails } from "./Details.js";
 import ConnectModal from "./Modal/ConnectModal.js";
-import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import { defaultTokens } from "./defaultTokens.js";
 import { getConnectLocale } from "./locale/getConnectLocale.js";
+import type { ConnectLocale } from "./locale/types.js";
 
 const TW_CONNECT_WALLET = "tw-connect-wallet";
 

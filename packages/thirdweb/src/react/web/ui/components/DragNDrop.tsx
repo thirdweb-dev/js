@@ -1,14 +1,14 @@
-import { useState } from "react";
-import { UploadIcon } from "@radix-ui/react-icons";
-import { iconSize, radius, spacing } from "../design-system/index.js";
 import styled from "@emotion/styled";
-import { Spacer } from "./Spacer.js";
+import { UploadIcon } from "@radix-ui/react-icons";
+import { useState } from "react";
+import { isMobile } from "../../../../utils/web/isMobile.js";
+import type { IconFC } from "../ConnectWallet/icons/types.js";
 import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 import { StyledDiv } from "../design-system/elements.js";
+import { iconSize, radius, spacing } from "../design-system/index.js";
+import { Spacer } from "./Spacer.js";
 import { Container } from "./basic.js";
 import { Text } from "./text.js";
-import type { IconFC } from "../ConnectWallet/icons/types.js";
-import { isMobile } from "../../../../utils/web/isMobile.js";
 
 /**
  * @internal
@@ -77,7 +77,7 @@ export const DragNDrop: React.FC<{
         e.preventDefault();
         e.stopPropagation();
       }}
-      onClick={() => {
+      onMouseDown={() => {
         setError(false);
       }}
       onDrop={drop}
@@ -95,7 +95,7 @@ export const DragNDrop: React.FC<{
             display: "none",
           }}
           onChange={(e) => {
-            if (e.target.files && e.target.files[0]) {
+            if (e.target.files?.[0]) {
               handleFileUpload(e.target.files[0]);
             }
           }}
@@ -180,6 +180,7 @@ const CheckCircleIcon: IconFC = (props) => (
     viewBox="0 0 38 38"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
+    role="presentation"
   >
     <path
       d="M35.6666 17.4671V19.0004C35.6645 22.5945 34.5008 26.0916 32.3488 28.9701C30.1969 31.8487 27.1721 33.9546 23.7255 34.9736C20.279 35.9926 16.5954 35.8703 13.224 34.6247C9.85272 33.3792 6.97434 31.0773 5.01819 28.0622C3.06203 25.0472 2.1329 21.4805 2.36938 17.8943C2.60586 14.308 3.99526 10.8943 6.33039 8.16221C8.66551 5.43012 11.8212 3.52606 15.3269 2.734C18.8326 1.94194 22.5004 2.30432 25.7833 3.76709"

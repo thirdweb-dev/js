@@ -1,10 +1,10 @@
+import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import { toBigInt } from "../../../utils/bigint.js";
-import { toTokens } from "../../../utils/units.js";
 import { withCache } from "../../../utils/promise/withCache.js";
-import type { Chain } from "../../../chains/types.js";
-import { getStorageRegistry } from "../contracts/getStorageRegistry.js";
+import { toTokens } from "../../../utils/units.js";
 import { usdUnitPrice } from "../__generated__/IStorageRegistry/read/usdUnitPrice.js";
+import { getStorageRegistry } from "../contracts/getStorageRegistry.js";
 
 export type GetUsdStoragePriceParams = {
   client: ThirdwebClient;

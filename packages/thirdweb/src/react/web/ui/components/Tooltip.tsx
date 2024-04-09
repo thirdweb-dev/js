@@ -1,8 +1,8 @@
-import { fontSize, radius, shadow, spacing } from "../design-system/index.js";
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import * as RadixTooltip from "@radix-ui/react-tooltip";
 import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
+import { fontSize, radius, shadow, spacing } from "../design-system/index.js";
 
 /**
  * @internal

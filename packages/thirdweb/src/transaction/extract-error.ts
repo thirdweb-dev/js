@@ -1,6 +1,6 @@
-import { decodeErrorResult, type Hex } from "viem";
-import { resolveContractAbi } from "../contract/actions/resolve-abi.js";
 import type { Abi } from "abitype";
+import { type Hex, decodeErrorResult } from "viem";
+import { resolveContractAbi } from "../contract/actions/resolve-abi.js";
 import type { ThirdwebContract } from "../contract/contract.js";
 
 /**
@@ -30,19 +30,17 @@ export async function extractError<abi extends Abi>(args: {
         });
         return new TransactionError(
           `${parsedError.errorName}${
-            parsedError.args ? " - " + parsedError.args : ""
+            parsedError.args ? ` - ${parsedError.args}` : ""
           }`,
           contract,
         );
-      } else {
-        return new TransactionError("Execution Reverted", contract);
       }
+      return new TransactionError("Execution Reverted", contract);
     }
   }
   return error;
 }
 
-// eslint-disable-next-line turbo/no-undeclared-env-vars, better-tree-shaking/no-top-level-side-effects
 export const __DEV__ = process.env.NODE_ENV !== "production";
 
 class TransactionError<abi extends Abi> extends Error {

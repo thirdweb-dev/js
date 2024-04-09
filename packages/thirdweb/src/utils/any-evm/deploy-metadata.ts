@@ -1,8 +1,8 @@
 import type { Abi } from "abitype";
-import { download } from "../../storage/download.js";
-import type { Prettify } from "../type-utils.js";
 import type { ThirdwebClient } from "../../client/client.js";
+import { download } from "../../storage/download.js";
 import type { Hex } from "../encoding/hex.js";
+import type { Prettify } from "../type-utils.js";
 
 export type FetchDeployMetadataOptions = {
   uri: string;
@@ -89,6 +89,7 @@ async function fetchAndParseCompilerMetadata(
   return formatCompilerMetadata(metadata);
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
 function formatCompilerMetadata(metadata: any): ParsedCompilerMetadata {
   const abi = metadata.output.abi;
   const compilationTarget = metadata.settings.compilationTarget;
@@ -102,6 +103,7 @@ function formatCompilerMetadata(metadata: any): ParsedCompilerMetadata {
   };
   const licenses: string[] = [
     ...new Set(
+      // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
       Object.entries(metadata.sources).map(([, src]) => (src as any).license),
     ),
   ];
@@ -121,7 +123,9 @@ type RawCompilerMetadata = {
   name: string;
   metadataUri: string;
   bytecodeUri: string;
+  // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
   analytics?: any;
+  // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
   [key: string]: any;
 };
 

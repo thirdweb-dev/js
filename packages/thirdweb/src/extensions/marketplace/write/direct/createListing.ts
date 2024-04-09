@@ -1,16 +1,16 @@
 import type { Address } from "abitype";
-import { createListing as generatedCreateListing } from "../../__generated__/IDirectListings/write/createListing.js";
-import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import {
   NATIVE_TOKEN_ADDRESS,
   isNativeTokenAddress,
 } from "../../../../constants/addresses.js";
+import { getContract } from "../../../../contract/contract.js";
+import { eth_getBlockByNumber } from "../../../../rpc/actions/eth_getBlockByNumber.js";
+import { getRpcClient } from "../../../../rpc/rpc.js";
+import type { BaseTransactionOptions } from "../../../../transaction/types.js";
+import { toUnits } from "../../../../utils/units.js";
 import { isERC721 } from "../../../erc721/read/isERC721.js";
 import { isERC1155 } from "../../../erc1155/read/isERC1155.js";
-import { getContract } from "../../../../contract/contract.js";
-import { getRpcClient } from "../../../../rpc/rpc.js";
-import { toUnits } from "../../../../utils/units.js";
-import { eth_getBlockByNumber } from "../../../../rpc/actions/eth_getBlockByNumber.js";
+import { createListing as generatedCreateListing } from "../../__generated__/IDirectListings/write/createListing.js";
 
 export type CreateListingParams = {
   /**
@@ -67,6 +67,7 @@ export type CreateListingParams = {
  * Creates a direct listing.
  * @param options The options for creating the direct listing.
  * @returns The result of creating the direct listing.
+ * @extension MARKETPLACE
  * @example
  * ```typescript
  * import { createListing } from "thirdweb/extensions/marketplace";
@@ -80,7 +81,7 @@ export function createListing(
   options: BaseTransactionOptions<CreateListingParams>,
 ) {
   return generatedCreateListing({
-    ...options,
+    contract: options.contract,
     asyncParams: async () => {
       const assetContract = getContract({
         ...options.contract,

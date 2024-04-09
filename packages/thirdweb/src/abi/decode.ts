@@ -1,5 +1,5 @@
 import type { AbiFunction } from "abitype";
-import { decodeAbiParameters, type Hex } from "viem";
+import { type Hex, decodeAbiParameters } from "viem";
 
 /**
  * Decodes the result of a function call based on the provided ABI function definition.

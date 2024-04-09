@@ -1,9 +1,9 @@
-import { concatHex, toFunctionSelector } from "viem";
 import type {
   AbiFunction,
   AbiParameter,
   AbiParametersToPrimitiveTypes,
 } from "abitype";
+import { concatHex, toFunctionSelector } from "viem";
 import { encodeAbiParameters } from "../utils/abi/encodeAbiParameters.js";
 
 /**

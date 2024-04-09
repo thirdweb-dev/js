@@ -3,13 +3,13 @@ import type { ThirdwebClient } from "../../client/client.js";
 import { download } from "../../storage/download.js";
 import { readContract } from "../../transaction/read-contract.js";
 import {
-  fetchDeployMetadata,
   type FetchDeployMetadataResult,
+  fetchDeployMetadata,
 } from "../../utils/any-evm/deploy-metadata.js";
 import { extractIPFSUri } from "../../utils/bytecode/extractIPFS.js";
 import { resolveImplementation } from "../../utils/bytecode/resolveImplementation.js";
 
-import { getContract, type ThirdwebContract } from "../contract.js";
+import { type ThirdwebContract, getContract } from "../contract.js";
 
 const CONTRACT_PUBLISHER_ADDRESS = "0xf5b896Ddb5146D5dA77efF4efBb3Eae36E300808"; // Polygon only
 export const THIRDWEB_DEPLOYER = "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024";
@@ -226,48 +226,46 @@ export async function fetchPublishedContract(
       method: GET_PUBLISHED_CONTRACT_ABI,
       params: [options.publisherAddress, options.contractId],
     });
-  } else {
-    const allVersions = await readContract({
-      contract: contractPublisher,
-      method: GET_PUBLISHED_CONTRACT_VERSIONS_ABI,
-      params: [options.publisherAddress, options.contractId],
-    });
-
-    const versionsMetadata = (
-      await Promise.all(
-        allVersions.map((version) => {
-          return download({
-            uri: version.publishMetadataUri,
-            client: options.client,
-          }).then((res) => res.json());
-        }),
-      )
-    ).map((item, index) => {
-      return {
-        name: allVersions[index]?.contractId,
-        publishedTimestamp: allVersions[index]?.publishTimestamp,
-        publishedMetadata: item,
-      };
-    });
-
-    // find the version that matches the version string
-    const versionMatch = versionsMetadata.find(
-      (metadata) =>
-        metadata.publishedMetadata.extendedMetadata?.version ===
-        options.version,
-    );
-    if (!versionMatch) {
-      throw Error(`Contract version not found`);
-    }
-    // match the version back to the contract based on the published timestamp
-    const publishedContract = allVersions.find(
-      (c) => c.publishTimestamp === versionMatch.publishedTimestamp,
-    );
-    if (!publishedContract) {
-      throw Error(
-        `No published contract found for ${options.contractId} at version by '${options.publisherAddress}'`,
-      );
-    }
-    return publishedContract;
   }
+  const allVersions = await readContract({
+    contract: contractPublisher,
+    method: GET_PUBLISHED_CONTRACT_VERSIONS_ABI,
+    params: [options.publisherAddress, options.contractId],
+  });
+
+  const versionsMetadata = (
+    await Promise.all(
+      allVersions.map((version) => {
+        return download({
+          uri: version.publishMetadataUri,
+          client: options.client,
+        }).then((res) => res.json());
+      }),
+    )
+  ).map((item, index) => {
+    return {
+      name: allVersions[index]?.contractId,
+      publishedTimestamp: allVersions[index]?.publishTimestamp,
+      publishedMetadata: item,
+    };
+  });
+
+  // find the version that matches the version string
+  const versionMatch = versionsMetadata.find(
+    (metadata) =>
+      metadata.publishedMetadata.extendedMetadata?.version === options.version,
+  );
+  if (!versionMatch) {
+    throw Error("Contract version not found");
+  }
+  // match the version back to the contract based on the published timestamp
+  const publishedContract = allVersions.find(
+    (c) => c.publishTimestamp === versionMatch.publishedTimestamp,
+  );
+  if (!publishedContract) {
+    throw Error(
+      `No published contract found for ${options.contractId} at version by '${options.publisherAddress}'`,
+    );
+  }
+  return publishedContract;
 }

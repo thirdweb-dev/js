@@ -16,7 +16,7 @@ export type ConvertToAssetsParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x07a2d13a" as const;
+export const FN_SELECTOR = "0x07a2d13a" as const;
 const FN_INPUTS = [
   {
     name: "shares",

@@ -1,5 +1,5 @@
 import { getClientFetch } from "../utils/fetch.js";
-import { resolveScheme, type ResolveSchemeOptions } from "../utils/ipfs.js";
+import { type ResolveSchemeOptions, resolveScheme } from "../utils/ipfs.js";
 import type { Prettify } from "../utils/type-utils.js";
 
 export type DownloadOptions = Prettify<

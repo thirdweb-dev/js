@@ -4,7 +4,7 @@ import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConn
 
 import type { InjectedWalletLocale } from "../injected/locale/types.js";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ScanScreen } from "./ScanScreen.js";
 
 /**

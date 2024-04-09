@@ -16,7 +16,7 @@ export type PreviewRedeemParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x4cdad506" as const;
+export const FN_SELECTOR = "0x4cdad506" as const;
 const FN_INPUTS = [
   {
     name: "shares",

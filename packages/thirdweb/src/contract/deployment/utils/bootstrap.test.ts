@@ -1,11 +1,11 @@
-import { describe, it, expect } from "vitest";
-import { deployCloneFactory } from "./bootstrap.js";
+import { fail } from "node:assert";
+import { describe, expect, it } from "vitest";
 import { ANVIL_CHAIN } from "../../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../../test/src/test-clients.js";
 import { TEST_ACCOUNT_A } from "../../../../test/src/test-wallets.js";
+import { deployCloneFactory } from "./bootstrap.js";
 import { getDeployedCreate2Factory } from "./create-2-factory.js";
 import { getDeployedInfraContract } from "./infra.js";
-import { fail } from "assert";
 
 // skip this test suite if there is no secret key available to test with
 // TODO: remove reliance on secret key during unit tests entirely

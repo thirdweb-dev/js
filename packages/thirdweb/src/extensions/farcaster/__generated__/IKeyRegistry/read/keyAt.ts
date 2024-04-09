@@ -14,7 +14,7 @@ export type KeyAtParams = {
   index: AbiParameterToPrimitiveType<{ type: "uint256"; name: "index" }>;
 };
 
-const FN_SELECTOR = "0x0ea9442c" as const;
+export const FN_SELECTOR = "0x0ea9442c" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

@@ -16,7 +16,7 @@ export type GetClaimConditionByIdParams = {
   }>;
 };
 
-const FN_SELECTOR = "0xd45b28d7" as const;
+export const FN_SELECTOR = "0xd45b28d7" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

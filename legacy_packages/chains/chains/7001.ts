@@ -39,7 +39,9 @@ export default {
   "networkId": 7001,
   "rpc": [
     "https://7001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.ankr.com/zetachain_evm_athens_testnet"
+    "https://zetachain-athens-evm.blockpi.network/v1/rpc/public",
+    "wss://zetachain-athens.blockpi.network/rpc/v1/public/websocket",
+    "https://zetachain-testnet-archive.allthatnode.com:8545"
   ],
   "shortName": "zetachain-athens",
   "slip44": 1,

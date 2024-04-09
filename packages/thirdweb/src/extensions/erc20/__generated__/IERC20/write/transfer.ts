@@ -12,7 +12,7 @@ export type TransferParams = {
   value: AbiParameterToPrimitiveType<{ type: "uint256"; name: "value" }>;
 };
 
-const FN_SELECTOR = "0xa9059cbb" as const;
+export const FN_SELECTOR = "0xa9059cbb" as const;
 const FN_INPUTS = [
   {
     type: "address",

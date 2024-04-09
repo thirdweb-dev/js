@@ -1,6 +1,6 @@
+import { ed25519 } from "@noble/curves/ed25519";
 import { fromBytes } from "../../utils/encoding/from-bytes.js";
 import type { Hex } from "../../utils/encoding/hex.js";
-import { ed25519 } from "@noble/curves/ed25519";
 
 export type Ed25519Keypair = {
   publicKey: Hex;

@@ -1,21 +1,21 @@
 import { useState } from "react";
-import { QRCode } from "../../ui/components/QRCode.js";
-import { Spacer } from "../../ui/components/Spacer.js";
-import { Container, ModalHeader } from "../../ui/components/basic.js";
-import { useCustomTheme } from "../../ui/design-system/CustomThemeProvider.js";
-import { StyledButton } from "../../ui/design-system/elements.js";
-import { iconSize, spacing, radius } from "../../ui/design-system/index.js";
+import { isMobile } from "../../../../utils/web/isMobile.js";
+import { openWindow } from "../../../../utils/web/openWindow.js";
+import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
+import type { WalletInfo } from "../../../../wallets/wallet-info.js";
+import type { WalletId } from "../../../../wallets/wallet-types.js";
 import { AppleIcon } from "../../ui/ConnectWallet/icons/AppleIcon.js";
 import { ChromeIcon } from "../../ui/ConnectWallet/icons/ChromeIcon.js";
 import { PlayStoreIcon } from "../../ui/ConnectWallet/icons/PlayStoreIcon.js";
-import { Text } from "../../ui/components/text.js";
-import type { InjectedWalletLocale } from "../injected/locale/types.js";
-import type { WalletInfo } from "../../../../wallets/wallet-info.js";
+import { QRCode } from "../../ui/components/QRCode.js";
+import { Spacer } from "../../ui/components/Spacer.js";
 import { WalletImage } from "../../ui/components/WalletImage.js";
-import type { WalletId } from "../../../../wallets/wallet-types.js";
-import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
-import { isMobile } from "../../../../utils/web/isMobile.js";
-import { openWindow } from "../../../../utils/web/openWindow.js";
+import { Container, ModalHeader } from "../../ui/components/basic.js";
+import { Text } from "../../ui/components/text.js";
+import { useCustomTheme } from "../../ui/design-system/CustomThemeProvider.js";
+import { StyledButton } from "../../ui/design-system/elements.js";
+import { iconSize, radius, spacing } from "../../ui/design-system/index.js";
+import type { InjectedWalletLocale } from "../injected/locale/types.js";
 
 /**
  * @internal

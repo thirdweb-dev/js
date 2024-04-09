@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useCallback, useState } from "react";
 
 /**
  *
@@ -18,7 +18,7 @@ export function useShowMore<T extends HTMLElement>(
 
       const observer = new IntersectionObserver(
         (entries) => {
-          if (entries[0] && entries[0].isIntersecting) {
+          if (entries[0]?.isIntersecting) {
             setItemsToShow((prev) => prev + itemsToAdd); // show 10 more items
           }
         },

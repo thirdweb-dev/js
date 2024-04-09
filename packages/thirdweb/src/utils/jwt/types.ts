@@ -1,4 +1,4 @@
-export type JWTPayload = {
+export type JWTPayload<Tctx = unknown> = {
   iss: string;
   sub: string;
   aud: string;
@@ -6,5 +6,5 @@ export type JWTPayload = {
   nbf: number;
   iat: number;
   jti: string;
-  ctx?: any;
+  ctx?: Tctx;
 };

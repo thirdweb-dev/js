@@ -14,7 +14,7 @@ export type SetRulesEngineOverrideParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x0eb0adb6" as const;
+export const FN_SELECTOR = "0x0eb0adb6" as const;
 const FN_INPUTS = [
   {
     type: "address",

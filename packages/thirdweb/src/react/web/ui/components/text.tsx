@@ -1,6 +1,6 @@
 import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
-import { StyledSpan, StyledAnchor } from "../design-system/elements.js";
-import { fontSize, type Theme } from "../design-system/index.js";
+import { StyledAnchor, StyledSpan } from "../design-system/elements.js";
+import { type Theme, fontSize } from "../design-system/index.js";
 
 type TextProps = {
   theme?: Theme;

@@ -104,6 +104,10 @@ export {
 } from "../transaction/actions/send-transaction.js";
 export { sendAndConfirmTransaction } from "../transaction/actions/send-and-confirm-transaction.js";
 export {
+  sendBatchTransaction,
+  type SendBatchTransactionOptions,
+} from "../transaction/actions/send-batch-transaction.js";
+export {
   simulateTransaction,
   type SimulateOptions,
 } from "../transaction/actions/simulate.js";
@@ -143,7 +147,7 @@ export type { NFT } from "../utils/nft/parseNft.js";
 /**
  * UNITS
  */
-export { toEther, toTokens, toUnits, toWei } from "../utils/units.js";
+export { toEther, toTokens, toUnits, toWei, fromGwei } from "../utils/units.js";
 
 export {
   getBuyWithCryptoQuote,

@@ -7,7 +7,7 @@ export { ensureBytecodePrefix } from "../utils/bytecode/prefix.js";
 export { resolveImplementation } from "../utils/bytecode/resolveImplementation.js";
 
 // units
-export { toEther, toTokens, toUnits, toWei } from "../utils/units.js";
+export { toEther, toTokens, toUnits, toWei, fromGwei } from "../utils/units.js";
 
 // any-evm utils
 export {

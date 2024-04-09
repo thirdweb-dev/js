@@ -1,6 +1,6 @@
-import { USDT_CONTRACT } from "~test/test-contracts.js";
+import { describe, expect, it } from "vitest";
 import { TEST_WALLET_A, TEST_WALLET_B } from "~test/addresses.js";
-import { describe, it, expect } from "vitest";
+import { USDT_CONTRACT } from "~test/test-contracts.js";
 import { prepareContractCall } from "../prepare-contract-call.js";
 import { estimateGasCost } from "./estimate-gas-cost.js";
 

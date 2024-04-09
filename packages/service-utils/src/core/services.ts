@@ -57,7 +57,7 @@ export const SERVICE_DEFINITIONS = {
     description: "Pay for a blockchain transaction with any currency",
     // all actions allowed
     actions: [],
-  }
+  },
 } as const;
 
 export const SERVICE_NAMES = Object.keys(

@@ -11,7 +11,7 @@ export type VerifyClaimParams = {
   quantity: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_quantity" }>;
 };
 
-const FN_SELECTOR = "0x2f92023a" as const;
+export const FN_SELECTOR = "0x2f92023a" as const;
 const FN_INPUTS = [
   {
     type: "address",

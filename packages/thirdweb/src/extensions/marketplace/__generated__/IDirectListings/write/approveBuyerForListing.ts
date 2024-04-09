@@ -16,7 +16,7 @@ export type ApproveBuyerForListingParams = {
   toApprove: AbiParameterToPrimitiveType<{ type: "bool"; name: "_toApprove" }>;
 };
 
-const FN_SELECTOR = "0x48dd77df" as const;
+export const FN_SELECTOR = "0x48dd77df" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

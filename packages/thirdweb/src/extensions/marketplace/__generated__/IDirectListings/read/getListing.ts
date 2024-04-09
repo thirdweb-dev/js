@@ -15,7 +15,7 @@ export type GetListingParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x107a274a" as const;
+export const FN_SELECTOR = "0x107a274a" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

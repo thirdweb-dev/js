@@ -1,5 +1,9 @@
 import { ConnectUIProps } from "@thirdweb-dev/react-core";
-import { EmbeddedWallet, SendEmailOtpReturnType } from "@thirdweb-dev/wallets";
+import {
+  EmbeddedWallet,
+  SendEmailOtpReturnType,
+  type AuthResult,
+} from "@thirdweb-dev/wallets";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FadeIn } from "../../../components/FadeIn";
 import { OTPInput } from "../../../components/OTPInput";
@@ -8,12 +12,10 @@ import { Spinner } from "../../../components/Spinner";
 import { Container, Line, ModalHeader } from "../../../components/basic";
 import { Button } from "../../../components/buttons";
 import { Text } from "../../../components/text";
-import { fontSize } from "../../../design-system";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
+import { LinkButton } from "./LinkButton";
 import { CreatePassword } from "./USER_MANAGED/CreatePassword";
 import { EnterPasswordOrRecovery } from "./USER_MANAGED/EnterPassword";
-import { useTWLocale } from "../../../evm/providers/locale-provider";
-import { StyledButton } from "../../../design-system/elements";
-import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
 
 type EmbeddedWalletOTPLoginUIProps = ConnectUIProps<EmbeddedWallet>;
 
@@ -23,16 +25,20 @@ type VerificationStatus =
   | "valid"
   | "idle"
   | "payment_required";
-type EmailStatus = "sending" | SendEmailOtpReturnType | "error";
+
+type AccountStatus = "sending" | SendEmailOtpReturnType | "error";
+
 type ScreenToShow =
   | "base"
   | "create-password"
   | "enter-password-or-recovery-code";
 
 export const EmbeddedWalletOTPLoginUI: React.FC<
-  EmbeddedWalletOTPLoginUIProps
+  EmbeddedWalletOTPLoginUIProps & {
+    userInfo: { email: string } | { phone: string };
+  }
 > = (props) => {
-  const email = props.selectionData;
+  const { userInfo } = props;
   const isWideModal = props.modalSize === "wide";
   const locale = useTWLocale().wallets.embeddedWallet;
 
@@ -42,35 +48,45 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
 
   const [wallet, setWallet] = useState<EmbeddedWallet | null>(null);
   const [verifyStatus, setVerifyStatus] = useState<VerificationStatus>("idle");
-  const [emailStatus, setEmailStatus] = useState<EmailStatus>("sending");
+  const [accountStatus, setAccountStatus] = useState<AccountStatus>("sending");
 
   const [screen, setScreen] = useState<ScreenToShow>("base");
 
-  const sendEmail = useCallback(async () => {
+  const sendEmailOrSms = useCallback(async () => {
     setOtpInput("");
     setVerifyStatus("idle");
-    setEmailStatus("sending");
+    setAccountStatus("sending");
 
     try {
       const _wallet = createWalletInstance();
       setWallet(_wallet);
-      const status = await _wallet.sendVerificationEmail({ email });
-      setEmailStatus(status);
+      if ("email" in userInfo) {
+        const status = await _wallet.sendVerificationEmail({
+          email: userInfo.email,
+        });
+        setAccountStatus(status);
+      } else {
+        const status = await _wallet.sendVerificationSms({
+          phoneNumber: userInfo.phone,
+        });
+
+        setAccountStatus(status);
+      }
     } catch (e) {
       console.error(e);
       setVerifyStatus("idle");
-      setEmailStatus("error");
+      setAccountStatus("error");
     }
-  }, [createWalletInstance, email]);
+  }, [createWalletInstance, userInfo]);
 
   const verify = async (otp: string) => {
-    if (typeof emailStatus !== "object" || otp.length !== 6) {
+    if (typeof accountStatus !== "object" || otp.length !== 6) {
       return;
     }
 
     setVerifyStatus("idle");
 
-    if (typeof emailStatus !== "object") {
+    if (typeof accountStatus !== "object") {
       return;
     }
 
@@ -83,20 +99,28 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
       setConnectionStatus("connecting");
 
       const needsRecoveryCode =
-        emailStatus.recoveryShareManagement === "USER_MANAGED" &&
-        (emailStatus.isNewUser || emailStatus.isNewDevice);
+        accountStatus.recoveryShareManagement === "USER_MANAGED" &&
+        (accountStatus.isNewUser || accountStatus.isNewDevice);
 
       // USER_MANAGED
       if (needsRecoveryCode) {
-        if (emailStatus.isNewUser) {
+        if (accountStatus.isNewUser) {
           try {
             // verifies otp for UI feedback
             // TODO (ews) tweak the UI flow to avoid verifying otp twice - needs new endpoint or new UI
-            await wallet.authenticate({
-              strategy: "email_verification",
-              email,
-              verificationCode: otp,
-            });
+            if ("email" in userInfo) {
+              await wallet.authenticate({
+                strategy: "email_verification",
+                email: userInfo.email,
+                verificationCode: otp,
+              });
+            } else {
+              await wallet.authenticate({
+                strategy: "phone_number_verification",
+                phoneNumber: userInfo.phone,
+                verificationCode: otp,
+              });
+            }
           } catch (e: any) {
             if (e instanceof Error && e.message.includes("encryption key")) {
               setScreen("create-password");
@@ -107,11 +131,19 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
         } else {
           try {
             // verifies otp for UI feedback
-            await wallet.authenticate({
-              strategy: "email_verification",
-              email,
-              verificationCode: otp,
-            });
+            if ("email" in userInfo) {
+              await wallet.authenticate({
+                strategy: "email_verification",
+                email: userInfo.email,
+                verificationCode: otp,
+              });
+            } else {
+              await wallet.authenticate({
+                strategy: "phone_number_verification",
+                phoneNumber: userInfo.phone,
+                verificationCode: otp,
+              });
+            }
           } catch (e: any) {
             if (e instanceof Error && e.message.includes("encryption key")) {
               setScreen("enter-password-or-recovery-code");
@@ -124,11 +156,21 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
 
       // AWS_MANAGED
       else {
-        const authResult = await wallet.authenticate({
-          strategy: "email_verification",
-          email,
-          verificationCode: otp,
-        });
+        let authResult: AuthResult;
+        if ("email" in userInfo) {
+          authResult = await wallet.authenticate({
+            strategy: "email_verification",
+            email: userInfo.email,
+            verificationCode: otp,
+          });
+        } else {
+          authResult = await wallet.authenticate({
+            strategy: "phone_number_verification",
+            phoneNumber: userInfo.phone,
+            verificationCode: otp,
+          });
+        }
+
         if (!authResult) {
           throw new Error("Failed to verify OTP");
         }
@@ -155,26 +197,37 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
   useEffect(() => {
     if (!emailSentOnMount.current) {
       emailSentOnMount.current = true;
-      sendEmail();
+      sendEmailOrSms();
     }
-  }, [sendEmail]);
+  }, [sendEmailOrSms]);
 
   if (screen === "create-password") {
     return (
       <CreatePassword
         modalSize={props.modalSize}
-        email={email}
         goBack={props.goBack}
         onPassword={async (password) => {
-          if (!wallet || typeof emailStatus !== "object") {
+          if (!wallet || typeof accountStatus !== "object") {
             return;
           }
-          const authResult = await wallet.authenticate({
-            strategy: "email_verification",
-            email,
-            verificationCode: otpInput,
-            recoveryCode: password,
-          });
+
+          let authResult: AuthResult;
+          if ("email" in userInfo) {
+            authResult = await wallet.authenticate({
+              strategy: "email_verification",
+              email: userInfo.email,
+              verificationCode: otpInput,
+              recoveryCode: password,
+            });
+          } else {
+            authResult = await wallet.authenticate({
+              strategy: "phone_number_verification",
+              phoneNumber: userInfo.phone,
+              verificationCode: otpInput,
+              recoveryCode: password,
+            });
+          }
+
           if (!authResult) {
             throw new Error("Failed to verify recovery code");
           }
@@ -193,17 +246,29 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
       <EnterPasswordOrRecovery
         modalSize={props.modalSize}
         goBack={props.goBack}
-        email={email}
+        emailOrPhone={"email" in userInfo ? userInfo.email : userInfo.phone}
         onVerify={async (passwordOrRecoveryCode) => {
-          if (!wallet || typeof emailStatus !== "object") {
+          if (!wallet || typeof accountStatus !== "object") {
             return;
           }
-          const authResult = await wallet.authenticate({
-            strategy: "email_verification",
-            email,
-            verificationCode: otpInput,
-            recoveryCode: passwordOrRecoveryCode,
-          });
+
+          let authResult: AuthResult;
+          if ("email" in userInfo) {
+            authResult = await wallet.authenticate({
+              strategy: "email_verification",
+              email: userInfo.email,
+              verificationCode: otpInput,
+              recoveryCode: passwordOrRecoveryCode,
+            });
+          } else {
+            authResult = await wallet.authenticate({
+              strategy: "phone_number_verification",
+              phoneNumber: userInfo.phone,
+              verificationCode: otpInput,
+              recoveryCode: passwordOrRecoveryCode,
+            });
+          }
+
           if (!authResult) {
             throw new Error("Failed to verify recovery code");
           }
@@ -233,9 +298,11 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
           >
             <Container flex="column" center="x" px="lg">
               {!isWideModal && <Spacer y="xl" />}
-              <Text>{locale.emailLoginScreen.enterCodeSendTo}</Text>
+              <Text>{locale.otpLoginScreen.enterCodeSendTo}</Text>
               <Spacer y="sm" />
-              <Text color="primaryText">{email}</Text>
+              <Text color="primaryText">
+                {"email" in userInfo ? userInfo.email : userInfo.phone}
+              </Text>
               <Spacer y="xl" />
             </Container>
 
@@ -257,7 +324,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
               <FadeIn>
                 <Spacer y="md" />
                 <Text size="sm" color="danger" center>
-                  {locale.emailLoginScreen.invalidCode}
+                  {locale.otpLoginScreen.invalidCode}
                 </Text>
               </FadeIn>
             )}
@@ -290,7 +357,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
                       width: "100%",
                     }}
                   >
-                    {locale.emailLoginScreen.verify}
+                    {locale.otpLoginScreen.verify}
                   </Button>
                 </Container>
               )}
@@ -301,15 +368,15 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
             {!isWideModal && <Line />}
 
             <Container p={isWideModal ? undefined : "lg"}>
-              {emailStatus === "error" && (
+              {accountStatus === "error" && (
                 <>
                   <Text size="sm" center color="danger">
-                    {locale.emailLoginScreen.failedToSendCode}
+                    {locale.otpLoginScreen.failedToSendCode}
                   </Text>
                 </>
               )}
 
-              {emailStatus === "sending" && (
+              {accountStatus === "sending" && (
                 <Container
                   flex="row"
                   center="both"
@@ -318,14 +385,14 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
                     textAlign: "center",
                   }}
                 >
-                  <Text size="sm">{locale.emailLoginScreen.sendingCode}</Text>
+                  <Text size="sm">{locale.otpLoginScreen.sendingCode}</Text>
                   <Spinner size="xs" color="secondaryText" />
                 </Container>
               )}
 
-              {typeof emailStatus === "object" && (
-                <LinkButton onClick={sendEmail} type="button">
-                  {locale.emailLoginScreen.resendCode}
+              {typeof accountStatus === "object" && (
+                <LinkButton onClick={sendEmailOrSms} type="button">
+                  {locale.otpLoginScreen.resendCode}
                 </LinkButton>
               )}
             </Container>
@@ -337,19 +404,3 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
 
   return null;
 };
-
-const LinkButton = /* @__PURE__ */ StyledButton(() => {
-  const theme = useCustomTheme();
-  return {
-    all: "unset",
-    color: theme.colors.accentText,
-    fontSize: fontSize.sm,
-    cursor: "pointer",
-    textAlign: "center",
-    fontWeight: 500,
-    width: "100%",
-    "&:hover": {
-      color: theme.colors.primaryText,
-    },
-  };
-});

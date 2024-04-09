@@ -20,6 +20,6 @@ export async function decimals(
   return withCache(() => generatedDecimals(options), {
     cacheKey: `${options.contract.chain.id}:${options.contract.address}:decimals`,
     // can never change, so cache forever
-    cacheTime: Infinity,
+    cacheTime: Number.POSITIVE_INFINITY,
   });
 }

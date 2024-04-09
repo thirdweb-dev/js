@@ -89,10 +89,15 @@ export {
   transferEvent,
   type TransferEventFilters,
 } from "../../extensions/erc721/__generated__/IERC721A/events/Transfer.js";
+export {
+  tokensLazyMintedEvent,
+  type TokensLazyMintedEventFilters,
+} from "../../extensions/erc721/__generated__/ILazyMint/events/TokensLazyMinted.js";
 
 /**
  * DROPS extension for ERC721
  */
+export { getClaimConditionById } from "../../extensions/erc721/__generated__/IDrop/read/getClaimConditionById.js";
 export { getActiveClaimCondition } from "../../extensions/erc721/drops/read/getActiveClaimCondition.js";
 export {
   claimTo,
@@ -107,3 +112,12 @@ export {
   type GenerateMintSignatureOptions,
   generateMintSignature,
 } from "../../extensions/erc721/write/sigMint.js";
+
+/**
+ * SHARED METADATA extension for ERC721
+ */
+export { sharedMetadata } from "../../extensions/erc721/__generated__/ISharedMetadata/read/sharedMetadata.js";
+export {
+  setSharedMetadata,
+  type SetSharedMetadataParams,
+} from "../../extensions/erc721/write/setSharedMetadata.js";

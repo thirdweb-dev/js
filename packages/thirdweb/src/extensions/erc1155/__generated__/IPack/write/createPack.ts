@@ -37,7 +37,7 @@ export type CreatePackParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x092e6075" as const;
+export const FN_SELECTOR = "0x092e6075" as const;
 const FN_INPUTS = [
   {
     type: "tuple[]",

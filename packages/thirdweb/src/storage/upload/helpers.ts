@@ -1,4 +1,4 @@
-/* eslint-disable jsdoc/require-jsdoc */
+import { isObjectWithKeys } from "../../utils/type-guards.js";
 import { areUint8ArraysEqual, isUint8Array } from "../../utils/uint8-array.js";
 import type {
   BufferOrStringWithName,
@@ -10,24 +10,32 @@ import type {
 /**
  * @internal
  */
-function isFileInstance(data: any): data is File {
+function isFileInstance(data: unknown): data is File {
   return globalThis.File && data instanceof File;
 }
 
 /**
  * @internal
  */
-function isBufferOrStringWithName(data: any): data is BufferOrStringWithName {
+function isBufferOrStringWithName(
+  data: unknown,
+): data is BufferOrStringWithName {
+  if (!data) {
+    return false;
+  }
+  if (!isObjectWithKeys(data, ["data", "name"])) {
+    return false;
+  }
   return !!(
-    data &&
-    data.name &&
-    data.data &&
     typeof data.name === "string" &&
     (typeof data.data === "string" || isUint8Array(data.data))
   );
 }
 
-export function isFileBufferOrStringEqual(input1: any, input2: any): boolean {
+export function isFileBufferOrStringEqual(
+  input1: unknown,
+  input2: unknown,
+): boolean {
   if (isFileInstance(input1) && isFileInstance(input2)) {
     // if both are File types, compare the name, size, and last modified date (best guess that these are the same files)
     if (
@@ -50,7 +58,8 @@ export function isFileBufferOrStringEqual(input1: any, input2: any): boolean {
       // if the data for both is a string, compare the strings
       if (typeof input1.data === "string" && typeof input2.data === "string") {
         return input1.data === input2.data;
-      } else if (isUint8Array(input1.data) && isUint8Array(input2.data)) {
+      }
+      if (isUint8Array(input1.data) && isUint8Array(input2.data)) {
         // otherwise we know it's buffers, so compare the buffers
         return areUint8ArraysEqual(input1.data, input2.data);
       }
@@ -68,7 +77,7 @@ export function buildFormData(
   const fileNameToFileMap = new Map<string, FileOrBufferOrString>();
   const fileNames: string[] = [];
   for (let i = 0; i < files.length; i++) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    // biome-ignore lint/style/noNonNullAssertion: we know that files[i] is not null or undefined because we are iterating over the array
     const file = files[i]!;
     let fileName = "";
     let fileData = file;
@@ -105,7 +114,7 @@ export function buildFormData(
 
     // If we don't want to wrap with directory, adjust the filepath
     const filepath = options?.uploadWithoutDirectory
-      ? `files`
+      ? "files"
       : `files/${fileName}`;
 
     if (fileNameToFileMap.has(fileName)) {
@@ -126,11 +135,11 @@ export function buildFormData(
     fileNameToFileMap.set(fileName, file);
     // add it to the filenames array so that we can return the correct number of urls
     fileNames.push(fileName);
-    form.append("file", new Blob([fileData as any]), filepath);
+    form.append("file", new Blob([fileData as BlobPart]), filepath);
   }
 
   const metadata = {
-    name: `Storage SDK`,
+    name: "Storage SDK",
     keyvalues: { ...options?.metadata },
   };
   form.append("pinataMetadata", JSON.stringify(metadata));
@@ -152,7 +161,7 @@ export function buildFormData(
 }
 
 export function isFileOrUint8Array(
-  data: any,
+  data: unknown,
 ): data is File | Uint8Array | BufferOrStringWithName {
   return (
     isFileInstance(data) || isUint8Array(data) || isBufferOrStringWithName(data)
@@ -178,7 +187,9 @@ export function extractObjectFiles(
     }
 
     if (Array.isArray(data)) {
-      data.forEach((entry) => extractObjectFiles(entry, files));
+      for (const entry of data) {
+        extractObjectFiles(entry, files);
+      }
     } else {
       Object.keys(data).map((key) =>
         extractObjectFiles(data[key as keyof typeof data], files),
@@ -198,11 +209,9 @@ export function replaceObjectFilesWithUris(
 ): unknown {
   if (isFileOrUint8Array(data)) {
     if (uris.length) {
-      data = uris.shift() as string;
-      return data;
-    } else {
-      console.warn("Not enough URIs to replace all files in object.");
+      return uris.shift() as string;
     }
+    console.warn("Not enough URIs to replace all files in object.");
   }
 
   if (typeof data === "object") {
@@ -212,14 +221,13 @@ export function replaceObjectFilesWithUris(
 
     if (Array.isArray(data)) {
       return data.map((entry) => replaceObjectFilesWithUris(entry, uris));
-    } else {
-      return Object.fromEntries(
-        Object.entries(data).map(([key, value]) => [
-          key,
-          replaceObjectFilesWithUris(value, uris),
-        ]),
-      );
     }
+    return Object.fromEntries(
+      Object.entries(data).map(([key, value]) => [
+        key,
+        replaceObjectFilesWithUris(value, uris),
+      ]),
+    );
   }
 
   return data;

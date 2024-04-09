@@ -21,7 +21,7 @@ export type SetSharedMetadataParams = {
   id: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "id" }>;
 };
 
-const FN_SELECTOR = "0x696b0c1a" as const;
+export const FN_SELECTOR = "0x696b0c1a" as const;
 const FN_INPUTS = [
   {
     type: "tuple",

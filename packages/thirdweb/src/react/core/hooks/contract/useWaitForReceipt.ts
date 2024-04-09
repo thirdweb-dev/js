@@ -1,8 +1,8 @@
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 import type { TransactionReceipt } from "viem";
 import {
-  waitForReceipt,
   type WaitForReceiptOptions,
+  waitForReceipt,
 } from "../../../../transaction/actions/wait-for-tx-receipt.js";
 
 /**
@@ -20,7 +20,6 @@ export function useWaitForReceipt(
   options: WaitForReceiptOptions | undefined,
 ): UseQueryResult<TransactionReceipt> {
   return useQuery({
-    // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: [
       "waitForReceipt",
       // TODO: here chain can be undfined so we go to a `-1` chain but this feels wrong

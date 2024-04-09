@@ -16,7 +16,7 @@ export type RoyaltyInfoParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x2a55205a" as const;
+export const FN_SELECTOR = "0x2a55205a" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

@@ -11,7 +11,7 @@ export type BurnParams = {
   tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
 };
 
-const FN_SELECTOR = "0x42966c68" as const;
+export const FN_SELECTOR = "0x42966c68" as const;
 const FN_INPUTS = [
   {
     type: "uint256",

@@ -11,6 +11,7 @@ export const AccentFailIcon: IconFC = (props) => {
       viewBox="0 0 109 109"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      role="presentation"
     >
       <g clipPath="url(#clip0_4036_4155)">
         <path

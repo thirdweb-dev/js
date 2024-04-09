@@ -1,35 +1,35 @@
-import type { Account } from "../interfaces/wallet.js";
-import type { AppMetadata, DisconnectFn, SwitchChainFn } from "../types.js";
 import {
-  CoinbaseWalletSDK,
   type CoinbaseWalletProvider,
+  CoinbaseWalletSDK,
 } from "@coinbase/wallet-sdk";
-import { normalizeChainId } from "../utils/normalizeChainId.js";
+import type { Address } from "abitype";
 import {
   type SignTypedDataParameters,
   getTypesForEIP712Domain,
   validateTypedData,
 } from "viem";
-import { getValidPublicRPCUrl } from "../utils/chains.js";
-import type { SendTransactionOption } from "../interfaces/wallet.js";
-import type { Address } from "abitype";
 import { stringify } from "../../utils/json.js";
 import type { Ethereum } from "../interfaces/ethereum.js";
+import type { Account } from "../interfaces/wallet.js";
+import type { SendTransactionOption } from "../interfaces/wallet.js";
+import type { AppMetadata, DisconnectFn, SwitchChainFn } from "../types.js";
+import { getValidPublicRPCUrl } from "../utils/chains.js";
+import { normalizeChainId } from "../utils/normalizeChainId.js";
 
-import { defineChain, getChainMetadata } from "../../chains/utils.js";
-import type { Chain } from "../../chains/types.js";
 import { ethereum } from "../../chains/chain-definitions/ethereum.js";
+import type { Chain } from "../../chains/types.js";
+import { defineChain, getChainMetadata } from "../../chains/utils.js";
+import type { ThirdwebClient } from "../../client/client.js";
+import { getAddress } from "../../utils/address.js";
 import {
+  type Hex,
   isHex,
   numberToHex,
-  type Hex,
   stringToHex,
   uint8ArrayToHex,
 } from "../../utils/encoding/hex.js";
-import { getAddress } from "../../utils/address.js";
 import { getDefaultAppMetadata } from "../utils/defaultDappMetadata.js";
 import type { WalletEmitter } from "../wallet-emitter.js";
-import type { ThirdwebClient } from "../../client/client.js";
 
 /**
  * Options for connecting to the CoinbaseSDK Wallet
@@ -338,7 +338,8 @@ async function switchChainCoinbaseWalletSDK(
     const apiChain = await getChainMetadata(chain);
 
     // Indicates chain is not added to provider
-    if ((error as any).code === 4902) {
+    // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
+    if ((error as any)?.code === 4902) {
       // try to add the chain
       await provider.request({
         method: "wallet_addEthereumChain",

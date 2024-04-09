@@ -15,7 +15,7 @@ export type QuoteExactOutputParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x2f80bb1d" as const;
+export const FN_SELECTOR = "0x2f80bb1d" as const;
 const FN_INPUTS = [
   {
     type: "bytes",

@@ -1,9 +1,9 @@
 import type { Address } from "abitype";
-import { prepareContractCall } from "../../../transaction/prepare-contract-call.js";
+import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
+import { prepareContractCall } from "../../../transaction/prepare-contract-call.js";
 import { toBigInt } from "../../../utils/bigint.js";
 import { getIdGateway } from "../contracts/getIdGateway.js";
-import type { Chain } from "../../../chains/types.js";
 import { getRegistrationPrice } from "../read/getRegistrationPrice.js";
 /**
  * Represents the parameters for the `registerFid` function.

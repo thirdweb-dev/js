@@ -39,7 +39,7 @@ export type HandleAggregatedOpsParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x4b1d7cf5" as const;
+export const FN_SELECTOR = "0x4b1d7cf5" as const;
 const FN_INPUTS = [
   {
     type: "tuple[]",

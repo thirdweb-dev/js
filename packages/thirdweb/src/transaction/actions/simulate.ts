@@ -1,15 +1,15 @@
-import { decodeAbiParameters, formatTransactionRequest } from "viem";
-import type { Account } from "../../wallets/interfaces/wallet.js";
-import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
-import type { PreparedTransaction } from "../prepare-transaction.js";
 import type { Abi, AbiFunction } from "abitype";
-import type { ReadContractResult } from "../read-contract.js";
-import { extractError } from "../extract-error.js";
-import type { Prettify } from "../../utils/type-utils.js";
-import { getRpcClient } from "../../rpc/rpc.js";
+import { decodeAbiParameters, formatTransactionRequest } from "viem";
 import { eth_call } from "../../rpc/actions/eth_call.js";
-import { encode } from "./encode.js";
+import { getRpcClient } from "../../rpc/rpc.js";
 import type { PreparedMethod } from "../../utils/abi/prepare-method.js";
+import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
+import type { Prettify } from "../../utils/type-utils.js";
+import type { Account } from "../../wallets/interfaces/wallet.js";
+import { extractError } from "../extract-error.js";
+import type { PreparedTransaction } from "../prepare-transaction.js";
+import type { ReadContractResult } from "../read-contract.js";
+import { encode } from "./encode.js";
 
 export type SimulateOptions<
   abi extends Abi,

@@ -18,7 +18,7 @@ export type SafeBatchTransferFromParams = {
   data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "_data" }>;
 };
 
-const FN_SELECTOR = "0x2eb2c2d6" as const;
+export const FN_SELECTOR = "0x2eb2c2d6" as const;
 const FN_INPUTS = [
   {
     type: "address",

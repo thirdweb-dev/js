@@ -1,7 +1,7 @@
 import type { TransactionSerializableBase } from "viem";
-import { signTransaction } from "./sign-transaction.js";
 import { describe, expect, test } from "vitest";
 import { ANVIL_PKEY_A } from "~test/test-wallets.js";
+import { signTransaction } from "./sign-transaction.js";
 
 const BASE_TRANSACTION = {
   gas: 21000n,

@@ -1,14 +1,14 @@
+import type { ThirdwebClient } from "../../client/client.js";
 import type { ThirdwebContract } from "../../contract/contract.js";
 import { deployViaAutoFactory } from "../../contract/deployment/deploy-via-autofactory.js";
+import { getOrDeployInfraForPublishedContract } from "../../contract/deployment/utils/bootstrap.js";
+import { upload } from "../../storage/upload.js";
+import type { FileOrBufferOrString } from "../../storage/upload/types.js";
+import type { Prettify } from "../../utils/type-utils.js";
 import type { ClientAndChainAndAccount } from "../../utils/types.js";
 import { initialize as initDropERC721 } from "./__generated__/DropERC721/write/initialize.js";
-import { initialize as initTokenERC721 } from "./__generated__/TokenERC721/write/initialize.js";
 import { initialize as initOpenEditionERC721 } from "./__generated__/OpenEditionERC721/write/initialize.js";
-import type { FileOrBufferOrString } from "../../storage/upload/types.js";
-import { upload } from "../../storage/upload.js";
-import type { ThirdwebClient } from "../../client/client.js";
-import { getOrDeployInfraForPublishedContract } from "../../contract/deployment/utils/bootstrap.js";
-import type { Prettify } from "../../utils/type-utils.js";
+import { initialize as initTokenERC721 } from "./__generated__/TokenERC721/write/initialize.js";
 
 export type ERC721ContractType =
   | "DropERC721"

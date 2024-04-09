@@ -122,8 +122,8 @@ export function bytesToBool(
     assertSize(bytes, { size: opts.size });
     bytes = trim(bytes);
   }
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  if (bytes.length > 1 || bytes[0]! > 1) {
+
+  if (bytes.length > 1 || (bytes[0] && bytes[0] > 1)) {
     throw new Error(`Invalid boolean representation: ${bytes}`);
   }
   return Boolean(bytes[0]);

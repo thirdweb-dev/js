@@ -1,18 +1,15 @@
-/* eslint-disable better-tree-shaking/no-top-level-side-effects */
 import { run, bench, group } from "mitata";
 
-// local imports
 import { createThirdwebClient } from "../src/client/client";
 import { getContract } from "../src/contract/contract";
 import { defineChain } from "../src/chains/utils";
 import { balanceOf } from "../src/extensions/erc20/__generated__/IERC20/read/balanceOf";
-// ethers
-import { ethers } from "ethers6";
-// eslint-disable-next-line no-restricted-imports
-import * as viem from "viem";
-import assert from "assert";
 
-const LOCAL_RPC = `http://127.0.0.1:8545`;
+import { ethers } from "ethers6";
+import * as viem from "viem";
+import assert from "node:assert";
+
+const LOCAL_RPC = "http://127.0.0.1:8545";
 const USDC_CONTRACT_ADDRESS = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48";
 const VITALIK_WALLET = "0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B";
 

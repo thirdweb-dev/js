@@ -12,7 +12,7 @@ export type CountParams = {
   deployer: AbiParameterToPrimitiveType<{ type: "address"; name: "_deployer" }>;
 };
 
-const FN_SELECTOR = "0x05d85eda" as const;
+export const FN_SELECTOR = "0x05d85eda" as const;
 const FN_INPUTS = [
   {
     type: "address",

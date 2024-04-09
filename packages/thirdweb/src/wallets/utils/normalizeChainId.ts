@@ -13,5 +13,5 @@ export function normalizeChainId(chainId: string | number | bigint): number {
   if (typeof chainId === "bigint") {
     return Number(chainId);
   }
-  return parseInt(chainId, 10);
+  return Number.parseInt(chainId, 10);
 }

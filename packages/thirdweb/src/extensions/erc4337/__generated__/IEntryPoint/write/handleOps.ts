@@ -31,7 +31,7 @@ export type HandleOpsParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x1fad948c" as const;
+export const FN_SELECTOR = "0x1fad948c" as const;
 const FN_INPUTS = [
   {
     type: "tuple[]",

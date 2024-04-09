@@ -4,8 +4,8 @@ import type {
   Response,
 } from "@cloudflare/workers-types";
 import type {
-  ApiKeyMetadata,
   AccountMetadata,
+  ApiKeyMetadata,
   CoreServiceConfig,
 } from "../core/api";
 import { authorize } from "../core/authorize";
@@ -36,7 +36,7 @@ export async function authorizeWorker(
   authInput: AuthInput,
   serviceConfig: WorkerServiceConfig,
 ): Promise<AuthorizationResult> {
-  let authData;
+  let authData: AuthorizationInput;
   try {
     authData = await extractAuthorizationData(authInput);
   } catch (e) {

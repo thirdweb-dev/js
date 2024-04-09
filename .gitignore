@@ -16,8 +16,10 @@ public/dist
 yalc.lock
 build/
 playwright-report/
-.vscode/
 .env/
 
 # Artifacts
 legacy_packages/cli/artifacts/
+
+# codecov binary
+codecov

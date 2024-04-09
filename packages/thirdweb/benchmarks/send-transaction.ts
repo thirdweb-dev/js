@@ -1,17 +1,17 @@
-/* eslint-disable better-tree-shaking/no-top-level-side-effects */
 import { run, bench, group } from "mitata";
+
 import { prepareTransaction } from "../src/transaction/prepare-transaction";
 import { createThirdwebClient } from "../src/client/client";
 import { defineChain } from "../src/chains/utils";
 import { privateKeyAccount } from "../src/wallets/private-key";
 import { sendTransaction } from "../src/transaction/actions/send-transaction";
-// eslint-disable-next-line no-restricted-imports
+
 import * as viem from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { mainnet } from "viem/chains";
 import * as ethers from "ethers6";
 
-const LOCAL_RPC = `http://127.0.0.1:8545`;
+const LOCAL_RPC = "http://127.0.0.1:8545";
 const VITALIK_WALLET = "0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B";
 
 const client = createThirdwebClient({

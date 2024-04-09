@@ -88,7 +88,7 @@ export async function getSavedConnectParamsFromStorage<T extends object>(
   try {
     const value = JSON.parse(valueStr);
 
-    if (value && value[walletId]) {
+    if (value?.[walletId]) {
       return value[walletId];
     }
 
@@ -98,7 +98,7 @@ export async function getSavedConnectParamsFromStorage<T extends object>(
   }
 }
 
-function isStringifiable(value: any): boolean {
+function isStringifiable(value: unknown): boolean {
   try {
     JSON.stringify(value);
     return true;

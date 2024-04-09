@@ -1,11 +1,11 @@
 import { eth_getBlockByNumber } from "../../../../rpc/actions/eth_getBlockByNumber.js";
 import { getRpcClient } from "../../../../rpc/rpc.js";
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
-import { getAllAuctions as getAllAuctionsGenerated } from "../../__generated__/IEnglishAuctions/read/getAllAuctions.js";
-import type { EnglishAuction } from "../../types.js";
 import { min } from "../../../../utils/bigint.js";
-import { getAllInBatches, mapEnglishAuction } from "../../utils.js";
+import { getAllAuctions as getAllAuctionsGenerated } from "../../__generated__/IEnglishAuctions/read/getAllAuctions.js";
 import { totalAuctions } from "../../__generated__/IEnglishAuctions/read/totalAuctions.js";
+import type { EnglishAuction } from "../../types.js";
+import { getAllInBatches, mapEnglishAuction } from "../../utils.js";
 
 const DEFAULT_QUERY_ALL_COUNT = 100n;
 
@@ -26,6 +26,7 @@ export type GetAllAuctionParams = {
  * Retrieves all auctions based on the provided options.
  * @param options - The options for retrieving the auctions.
  * @returns A promise that resolves to the auctions array.
+ * @extension MARKETPLACE
  * @example
  *
  * ```ts

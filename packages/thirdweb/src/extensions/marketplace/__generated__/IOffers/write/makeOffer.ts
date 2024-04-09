@@ -22,7 +22,7 @@ export type MakeOfferParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x016767fa" as const;
+export const FN_SELECTOR = "0x016767fa" as const;
 const FN_INPUTS = [
   {
     type: "tuple",

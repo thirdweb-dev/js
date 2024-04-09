@@ -24,7 +24,7 @@ export type CreateListingParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x746415b5" as const;
+export const FN_SELECTOR = "0x746415b5" as const;
 const FN_INPUTS = [
   {
     type: "tuple",

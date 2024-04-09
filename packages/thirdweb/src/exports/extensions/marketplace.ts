@@ -25,12 +25,44 @@ export {
   getAllValidListings,
   type GetAllValidListingParams,
 } from "../../extensions/marketplace/read/direct/getAllValidListings.js";
+export {
+  isBuyerApprovedForListing,
+  type IsBuyerApprovedForListingParams,
+} from "../../extensions/marketplace/read/direct/isBuyerApprovedForListing.js";
+export {
+  isCurrencyApprovedForListing,
+  type IsCurrencyApprovedForListingParams,
+} from "../../extensions/marketplace/__generated__/IDirectListings/read/isCurrencyApprovedForListing.js";
+export {
+  currencyPriceForListing,
+  type CurrencyPriceForListingParams,
+} from "../../extensions/marketplace/read/direct/currencyPriceForListing.js";
 
 // WRITE
 export {
   createListing,
   type CreateListingParams,
 } from "../../extensions/marketplace/write/direct/createListing.js";
+export {
+  updateListing,
+  type UpdateListingParams,
+} from "../../extensions/marketplace/write/direct/updateListing.js";
+export {
+  cancelListing,
+  type CancelListingParams,
+} from "../../extensions/marketplace/__generated__/IDirectListings/write/cancelListing.js";
+export {
+  buyFromListing,
+  type BuyFromListingParams,
+} from "../../extensions/marketplace/write/direct/buyFromListing.js";
+export {
+  approveBuyerForListing,
+  type ApproveBuyerForListingParams,
+} from "../../extensions/marketplace/__generated__/IDirectListings/write/approveBuyerForListing.js";
+export {
+  approveCurrencyForListing,
+  type ApproveCurrencyForListingParams,
+} from "../../extensions/marketplace/__generated__/IDirectListings/write/approveCurrencyForListing.js";
 
 // EVENTS
 export {

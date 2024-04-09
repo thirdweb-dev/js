@@ -11,18 +11,18 @@ import type {
   ExtractAbiEvent,
   ExtractAbiEventNames,
 } from "abitype";
-import { prepareEvent, type PreparedEvent } from "../prepare-event.js";
+import { resolveContractAbi } from "../../contract/actions/resolve-abi.js";
+import type { ThirdwebContract } from "../../contract/contract.js";
 import {
-  eth_getLogs,
   type GetLogsBlockParams,
   type GetLogsParams,
+  eth_getLogs,
 } from "../../rpc/actions/eth_getLogs.js";
 import { getRpcClient } from "../../rpc/rpc.js";
-import { parseEventLogs, type ParseEventLogsResult } from "./parse-logs.js";
-import { isAbiEvent } from "../utils.js";
 import type { Prettify } from "../../utils/type-utils.js";
-import type { ThirdwebContract } from "../../contract/contract.js";
-import { resolveContractAbi } from "../../contract/actions/resolve-abi.js";
+import { type PreparedEvent, prepareEvent } from "../prepare-event.js";
+import { isAbiEvent } from "../utils.js";
+import { type ParseEventLogsResult, parseEventLogs } from "./parse-logs.js";
 
 export type GetContractEventsOptionsDirect<
   abi extends Abi,
@@ -79,7 +79,7 @@ export async function getContractEvents<
   // if we have an abi on the contract, we can encode the topics with it
   if (!events?.length && !!contract) {
     // if we have a contract *WITH* an abi we can use that
-    if (!!contract.abi?.length) {
+    if (contract.abi?.length) {
       // @ts-expect-error - we can't make typescript happy here, but we know this is an abi event
       resolvedEvents = contract.abi
         .filter(isAbiEvent)

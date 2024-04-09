@@ -1,8 +1,8 @@
 import type { AbiEvent } from "abitype";
 import {
-  parseEventLogs as viem_parseEventLogs,
   type Log,
   type RpcLog,
+  parseEventLogs as viem_parseEventLogs,
 } from "viem";
 import type { PreparedEvent } from "../prepare-event.js";
 
