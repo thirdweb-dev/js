@@ -1,4 +1,4 @@
-import { getMIPDStore } from "../../../wallets/injected/mipdStore.js";
+import { getInstalledWalletProviders } from "../../../wallets/injected/mipdStore.js";
 import type { WalletId } from "../../../wallets/wallet-types.js";
 
 /**
@@ -9,7 +9,7 @@ export function sortWallets<T extends { id: string }>(
   wallets: T[],
   recommendedWallets?: { id: WalletId }[],
 ): T[] {
-  const providers = getMIPDStore().getProviders();
+  const providers = getInstalledWalletProviders();
   return (
     wallets
       // show the installed wallets first
