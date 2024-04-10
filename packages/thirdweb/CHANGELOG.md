@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.4.2
+
+### Patch Changes
+
+- [#2579](https://github.com/thirdweb-dev/js/pull/2579) [`d836889`](https://github.com/thirdweb-dev/js/commit/d836889f464a4fc9617839f30e2cc780b3bcca78) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - Export `resolvePromisedValue` from `thirdweb/utils`
+
 ## 5.4.1
 
 ### Patch Changes
