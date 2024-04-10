@@ -88,6 +88,8 @@ export function Container(props: {
   scrollY?: boolean;
   color?: keyof Theme["colors"];
   debug?: boolean;
+  bg?: keyof Theme["colors"];
+  borderColor?: keyof Theme["colors"];
 }) {
   const styles: React.CSSProperties = {};
 
@@ -160,7 +162,9 @@ export function Container(props: {
     <Box
       data-scrolly={props.scrollY}
       data-animate={props.animate}
+      bg={props.bg}
       color={props.color}
+      borderColor={props.borderColor}
       style={{
         ...styles,
         ...props.style,
@@ -173,12 +177,18 @@ export function Container(props: {
 
 type BoxProps = {
   color?: keyof Theme["colors"];
+  bg?: keyof Theme["colors"] | undefined;
+  borderColor?: keyof Theme["colors"] | undefined;
 };
 
 const Box = /* @__PURE__ */ StyledDiv((props: BoxProps) => {
   const theme = useCustomTheme();
   return {
     color: props.color ? theme.colors[props.color] : "inherit",
+    background: props.bg ? theme.colors[props.bg] : undefined,
+    borderColor: props.borderColor
+      ? theme.colors[props.borderColor]
+      : undefined,
     "&[data-animate='fadein']": {
       opacity: 0,
       animation: `${fadeInAnimation} 350ms ease forwards`,
