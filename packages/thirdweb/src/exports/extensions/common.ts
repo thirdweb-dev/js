@@ -57,3 +57,12 @@ export {
   setPlatformFeeInfo,
   type SetPlatformFeeInfoParams,
 } from "../../extensions/common/__generated__/IPlatformFee/write/setPlatformFeeInfo.js";
+
+// --------------------------------------------------------
+// Primary Sale
+// --------------------------------------------------------
+export { primarySaleRecipient } from "../../extensions/common/__generated__/IPrimarySale/read/primarySaleRecipient.js";
+export {
+  setPrimarySaleRecipient,
+  type SetPrimarySaleRecipientParams,
+} from "../../extensions/common/__generated__/IPrimarySale/write/setPrimarySaleRecipient.js";
