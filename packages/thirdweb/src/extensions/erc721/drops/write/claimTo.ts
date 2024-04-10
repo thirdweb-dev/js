@@ -54,10 +54,12 @@ export function claimTo(options: BaseTransactionOptions<ClaimToParams>) {
         data: "0x",
 
         // also set the value
-        value: isNativeTokenAddress(cc.currency)
-          ? cc.pricePerToken * BigInt(options.quantity)
-          : 0n,
-      } as const;
+        overrides: {
+          value: isNativeTokenAddress(cc.currency)
+            ? cc.pricePerToken * BigInt(options.quantity)
+            : 0n,
+        },
+      };
     },
   });
 }

@@ -1,7 +1,7 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type {
   BaseTransactionOptions,
-  WithValue,
+  WithOverrides,
 } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
@@ -10,7 +10,7 @@ import { once } from "../../../../../utils/promise/once.js";
 /**
  * Represents the parameters for the "deleteSharedMetadata" function.
  */
-export type DeleteSharedMetadataParams = WithValue<{
+export type DeleteSharedMetadataParams = WithOverrides<{
   id: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "id" }>;
 }>;
 
@@ -77,9 +77,9 @@ export function deleteSharedMetadata(
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params: async () => {
-      const resolvedParams = await asyncOptions();
-      return [resolvedParams.id] as const;
+      const resolvedOptions = await asyncOptions();
+      return [resolvedOptions.id] as const;
     },
-    value: async () => (await asyncOptions()).value,
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

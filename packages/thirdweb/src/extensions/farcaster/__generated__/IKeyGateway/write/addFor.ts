@@ -1,7 +1,7 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type {
   BaseTransactionOptions,
-  WithValue,
+  WithOverrides,
 } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
@@ -10,7 +10,7 @@ import { once } from "../../../../../utils/promise/once.js";
 /**
  * Represents the parameters for the "addFor" function.
  */
-export type AddForParams = WithValue<{
+export type AddForParams = WithOverrides<{
   fidOwner: AbiParameterToPrimitiveType<{ type: "address"; name: "fidOwner" }>;
   keyType: AbiParameterToPrimitiveType<{ type: "uint32"; name: "keyType" }>;
   key: AbiParameterToPrimitiveType<{ type: "bytes"; name: "key" }>;
@@ -128,17 +128,17 @@ export function addFor(
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params: async () => {
-      const resolvedParams = await asyncOptions();
+      const resolvedOptions = await asyncOptions();
       return [
-        resolvedParams.fidOwner,
-        resolvedParams.keyType,
-        resolvedParams.key,
-        resolvedParams.metadataType,
-        resolvedParams.metadata,
-        resolvedParams.deadline,
-        resolvedParams.sig,
+        resolvedOptions.fidOwner,
+        resolvedOptions.keyType,
+        resolvedOptions.key,
+        resolvedOptions.metadataType,
+        resolvedOptions.metadata,
+        resolvedOptions.deadline,
+        resolvedOptions.sig,
       ] as const;
     },
-    value: async () => (await asyncOptions()).value,
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

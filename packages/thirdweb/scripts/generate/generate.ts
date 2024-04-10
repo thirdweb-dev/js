@@ -110,7 +110,9 @@ function generateWriteFunction(f: AbiFunction, extensionName: string): string {
     needsAbiParamToPrimitiveType
       ? `import type { AbiParameterToPrimitiveType } from "abitype";\n`
       : ""
-  }import type { BaseTransactionOptions${f.inputs.length ? ", WithValue" : ""} } from "../../../../../transaction/types.js";
+  }import type { BaseTransactionOptions${
+    f.inputs.length ? ", WithOverrides" : ""
+  } } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 ${
   f.inputs.length > 0
@@ -125,7 +127,7 @@ ${
     ? `/**
  * Represents the parameters for the "${f.name}" function.
  */
-export type ${inputTypeName} = WithValue<{
+export type ${inputTypeName} = WithOverrides<{
   ${f.inputs
     .map(
       (x) =>
@@ -219,12 +221,12 @@ export function ${f.name}(
     ${
       f.inputs.length
         ? `params: async () => {
-        const resolvedParams = await asyncOptions();
+        const resolvedOptions = await asyncOptions();
         return [${f.inputs
-          .map((x) => `resolvedParams.${removeLeadingUnderscore(x.name)}`)
+          .map((x) => `resolvedOptions.${removeLeadingUnderscore(x.name)}`)
           .join(", ")}] as const;
       },
-      value: async () => (await asyncOptions()).value,
+      value: async () => (await asyncOptions()).overrides?.value,
       `
         : ""
     }

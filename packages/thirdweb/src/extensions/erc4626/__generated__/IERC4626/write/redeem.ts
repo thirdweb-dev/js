@@ -1,7 +1,7 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type {
   BaseTransactionOptions,
-  WithValue,
+  WithOverrides,
 } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
@@ -10,7 +10,7 @@ import { once } from "../../../../../utils/promise/once.js";
 /**
  * Represents the parameters for the "redeem" function.
  */
-export type RedeemParams = WithValue<{
+export type RedeemParams = WithOverrides<{
   shares: AbiParameterToPrimitiveType<{
     name: "shares";
     type: "uint256";
@@ -114,13 +114,13 @@ export function redeem(
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params: async () => {
-      const resolvedParams = await asyncOptions();
+      const resolvedOptions = await asyncOptions();
       return [
-        resolvedParams.shares,
-        resolvedParams.receiver,
-        resolvedParams.owner,
+        resolvedOptions.shares,
+        resolvedOptions.receiver,
+        resolvedOptions.owner,
       ] as const;
     },
-    value: async () => (await asyncOptions()).value,
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

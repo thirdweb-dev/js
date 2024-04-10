@@ -1,7 +1,7 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type {
   BaseTransactionOptions,
-  WithValue,
+  WithOverrides,
 } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
@@ -10,7 +10,7 @@ import { once } from "../../../../../utils/promise/once.js";
 /**
  * Represents the parameters for the "delegateBySig" function.
  */
-export type DelegateBySigParams = WithValue<{
+export type DelegateBySigParams = WithOverrides<{
   delegatee: AbiParameterToPrimitiveType<{
     type: "address";
     name: "delegatee";
@@ -120,16 +120,16 @@ export function delegateBySig(
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params: async () => {
-      const resolvedParams = await asyncOptions();
+      const resolvedOptions = await asyncOptions();
       return [
-        resolvedParams.delegatee,
-        resolvedParams.nonce,
-        resolvedParams.expiry,
-        resolvedParams.v,
-        resolvedParams.r,
-        resolvedParams.s,
+        resolvedOptions.delegatee,
+        resolvedOptions.nonce,
+        resolvedOptions.expiry,
+        resolvedOptions.v,
+        resolvedOptions.r,
+        resolvedOptions.s,
       ] as const;
     },
-    value: async () => (await asyncOptions()).value,
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

@@ -1,7 +1,7 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type {
   BaseTransactionOptions,
-  WithValue,
+  WithOverrides,
 } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
@@ -10,7 +10,7 @@ import { once } from "../../../../../utils/promise/once.js";
 /**
  * Represents the parameters for the "transferFor" function.
  */
-export type TransferForParams = WithValue<{
+export type TransferForParams = WithOverrides<{
   from: AbiParameterToPrimitiveType<{ type: "address"; name: "from" }>;
   to: AbiParameterToPrimitiveType<{ type: "address"; name: "to" }>;
   fromDeadline: AbiParameterToPrimitiveType<{
@@ -123,16 +123,16 @@ export function transferFor(
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params: async () => {
-      const resolvedParams = await asyncOptions();
+      const resolvedOptions = await asyncOptions();
       return [
-        resolvedParams.from,
-        resolvedParams.to,
-        resolvedParams.fromDeadline,
-        resolvedParams.fromSig,
-        resolvedParams.toDeadline,
-        resolvedParams.toSig,
+        resolvedOptions.from,
+        resolvedOptions.to,
+        resolvedOptions.fromDeadline,
+        resolvedOptions.fromSig,
+        resolvedOptions.toDeadline,
+        resolvedOptions.toSig,
       ] as const;
     },
-    value: async () => (await asyncOptions()).value,
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

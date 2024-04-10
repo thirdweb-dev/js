@@ -1,7 +1,7 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type {
   BaseTransactionOptions,
-  WithValue,
+  WithOverrides,
 } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
@@ -10,7 +10,7 @@ import { once } from "../../../../../utils/promise/once.js";
 /**
  * Represents the parameters for the "depositRewardTokens" function.
  */
-export type DepositRewardTokensParams = WithValue<{
+export type DepositRewardTokensParams = WithOverrides<{
   amount: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_amount" }>;
 }>;
 
@@ -77,9 +77,9 @@ export function depositRewardTokens(
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params: async () => {
-      const resolvedParams = await asyncOptions();
-      return [resolvedParams.amount] as const;
+      const resolvedOptions = await asyncOptions();
+      return [resolvedOptions.amount] as const;
     },
-    value: async () => (await asyncOptions()).value,
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

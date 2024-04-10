@@ -1,7 +1,7 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type {
   BaseTransactionOptions,
-  WithValue,
+  WithOverrides,
 } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
@@ -10,7 +10,7 @@ import { once } from "../../../../../utils/promise/once.js";
 /**
  * Represents the parameters for the "register" function.
  */
-export type RegisterParams = WithValue<{
+export type RegisterParams = WithOverrides<{
   recovery: AbiParameterToPrimitiveType<{ type: "address"; name: "recovery" }>;
   extraStorage: AbiParameterToPrimitiveType<{
     type: "uint256";
@@ -97,9 +97,9 @@ export function register(
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params: async () => {
-      const resolvedParams = await asyncOptions();
-      return [resolvedParams.recovery, resolvedParams.extraStorage] as const;
+      const resolvedOptions = await asyncOptions();
+      return [resolvedOptions.recovery, resolvedOptions.extraStorage] as const;
     },
-    value: async () => (await asyncOptions()).value,
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

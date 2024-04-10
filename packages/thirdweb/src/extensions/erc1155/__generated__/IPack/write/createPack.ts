@@ -1,7 +1,7 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type {
   BaseTransactionOptions,
-  WithValue,
+  WithOverrides,
 } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
@@ -10,7 +10,7 @@ import { once } from "../../../../../utils/promise/once.js";
 /**
  * Represents the parameters for the "createPack" function.
  */
-export type CreatePackParams = WithValue<{
+export type CreatePackParams = WithOverrides<{
   contents: AbiParameterToPrimitiveType<{
     type: "tuple[]";
     name: "contents";
@@ -165,16 +165,16 @@ export function createPack(
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params: async () => {
-      const resolvedParams = await asyncOptions();
+      const resolvedOptions = await asyncOptions();
       return [
-        resolvedParams.contents,
-        resolvedParams.numOfRewardUnits,
-        resolvedParams.packUri,
-        resolvedParams.openStartTimestamp,
-        resolvedParams.amountDistributedPerOpen,
-        resolvedParams.recipient,
+        resolvedOptions.contents,
+        resolvedOptions.numOfRewardUnits,
+        resolvedOptions.packUri,
+        resolvedOptions.openStartTimestamp,
+        resolvedOptions.amountDistributedPerOpen,
+        resolvedOptions.recipient,
       ] as const;
     },
-    value: async () => (await asyncOptions()).value,
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

@@ -1,7 +1,7 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type {
   BaseTransactionOptions,
-  WithValue,
+  WithOverrides,
 } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
@@ -10,7 +10,7 @@ import { once } from "../../../../../utils/promise/once.js";
 /**
  * Represents the parameters for the "mintWithSignature" function.
  */
-export type MintWithSignatureParams = WithValue<{
+export type MintWithSignatureParams = WithOverrides<{
   payload: AbiParameterToPrimitiveType<{
     type: "tuple";
     name: "payload";
@@ -146,9 +146,9 @@ export function mintWithSignature(
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params: async () => {
-      const resolvedParams = await asyncOptions();
-      return [resolvedParams.payload, resolvedParams.signature] as const;
+      const resolvedOptions = await asyncOptions();
+      return [resolvedOptions.payload, resolvedOptions.signature] as const;
     },
-    value: async () => (await asyncOptions()).value,
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

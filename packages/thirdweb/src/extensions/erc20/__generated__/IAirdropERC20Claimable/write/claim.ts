@@ -1,7 +1,7 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type {
   BaseTransactionOptions,
-  WithValue,
+  WithOverrides,
 } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
@@ -10,7 +10,7 @@ import { once } from "../../../../../utils/promise/once.js";
 /**
  * Represents the parameters for the "claim" function.
  */
-export type ClaimParams = WithValue<{
+export type ClaimParams = WithOverrides<{
   receiver: AbiParameterToPrimitiveType<{ type: "address"; name: "receiver" }>;
   quantity: AbiParameterToPrimitiveType<{ type: "uint256"; name: "quantity" }>;
   proofs: AbiParameterToPrimitiveType<{ type: "bytes32[]"; name: "proofs" }>;
@@ -104,14 +104,14 @@ export function claim(
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params: async () => {
-      const resolvedParams = await asyncOptions();
+      const resolvedOptions = await asyncOptions();
       return [
-        resolvedParams.receiver,
-        resolvedParams.quantity,
-        resolvedParams.proofs,
-        resolvedParams.proofMaxQuantityForWallet,
+        resolvedOptions.receiver,
+        resolvedOptions.quantity,
+        resolvedOptions.proofs,
+        resolvedOptions.proofMaxQuantityForWallet,
       ] as const;
     },
-    value: async () => (await asyncOptions()).value,
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

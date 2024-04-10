@@ -1,7 +1,7 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type {
   BaseTransactionOptions,
-  WithValue,
+  WithOverrides,
 } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
@@ -10,7 +10,7 @@ import { once } from "../../../../../utils/promise/once.js";
 /**
  * Represents the parameters for the "onERC1155Received" function.
  */
-export type OnERC1155ReceivedParams = WithValue<{
+export type OnERC1155ReceivedParams = WithOverrides<{
   operator: AbiParameterToPrimitiveType<{ type: "address"; name: "operator" }>;
   from: AbiParameterToPrimitiveType<{ type: "address"; name: "from" }>;
   id: AbiParameterToPrimitiveType<{ type: "uint256"; name: "id" }>;
@@ -115,15 +115,15 @@ export function onERC1155Received(
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params: async () => {
-      const resolvedParams = await asyncOptions();
+      const resolvedOptions = await asyncOptions();
       return [
-        resolvedParams.operator,
-        resolvedParams.from,
-        resolvedParams.id,
-        resolvedParams.value,
-        resolvedParams.data,
+        resolvedOptions.operator,
+        resolvedOptions.from,
+        resolvedOptions.id,
+        resolvedOptions.value,
+        resolvedOptions.data,
       ] as const;
     },
-    value: async () => (await asyncOptions()).value,
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

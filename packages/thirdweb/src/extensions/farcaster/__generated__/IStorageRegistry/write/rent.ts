@@ -1,7 +1,7 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type {
   BaseTransactionOptions,
-  WithValue,
+  WithOverrides,
 } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
@@ -10,7 +10,7 @@ import { once } from "../../../../../utils/promise/once.js";
 /**
  * Represents the parameters for the "rent" function.
  */
-export type RentParams = WithValue<{
+export type RentParams = WithOverrides<{
   fid: AbiParameterToPrimitiveType<{ type: "uint256"; name: "fid" }>;
   units: AbiParameterToPrimitiveType<{ type: "uint256"; name: "units" }>;
 }>;
@@ -87,9 +87,9 @@ export function rent(
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params: async () => {
-      const resolvedParams = await asyncOptions();
-      return [resolvedParams.fid, resolvedParams.units] as const;
+      const resolvedOptions = await asyncOptions();
+      return [resolvedOptions.fid, resolvedOptions.units] as const;
     },
-    value: async () => (await asyncOptions()).value,
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

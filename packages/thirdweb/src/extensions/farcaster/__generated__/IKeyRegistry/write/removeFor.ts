@@ -1,7 +1,7 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type {
   BaseTransactionOptions,
-  WithValue,
+  WithOverrides,
 } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
@@ -10,7 +10,7 @@ import { once } from "../../../../../utils/promise/once.js";
 /**
  * Represents the parameters for the "removeFor" function.
  */
-export type RemoveForParams = WithValue<{
+export type RemoveForParams = WithOverrides<{
   fidOwner: AbiParameterToPrimitiveType<{ type: "address"; name: "fidOwner" }>;
   key: AbiParameterToPrimitiveType<{ type: "bytes"; name: "key" }>;
   deadline: AbiParameterToPrimitiveType<{ type: "uint256"; name: "deadline" }>;
@@ -101,14 +101,14 @@ export function removeFor(
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params: async () => {
-      const resolvedParams = await asyncOptions();
+      const resolvedOptions = await asyncOptions();
       return [
-        resolvedParams.fidOwner,
-        resolvedParams.key,
-        resolvedParams.deadline,
-        resolvedParams.sig,
+        resolvedOptions.fidOwner,
+        resolvedOptions.key,
+        resolvedOptions.deadline,
+        resolvedOptions.sig,
       ] as const;
     },
-    value: async () => (await asyncOptions()).value,
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

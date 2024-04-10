@@ -1,7 +1,7 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type {
   BaseTransactionOptions,
-  WithValue,
+  WithOverrides,
 } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
@@ -10,7 +10,7 @@ import { once } from "../../../../../utils/promise/once.js";
 /**
  * Represents the parameters for the "onSignerAdded" function.
  */
-export type OnSignerAddedParams = WithValue<{
+export type OnSignerAddedParams = WithOverrides<{
   signer: AbiParameterToPrimitiveType<{ type: "address"; name: "signer" }>;
   creatorAdmin: AbiParameterToPrimitiveType<{
     type: "address";
@@ -96,13 +96,13 @@ export function onSignerAdded(
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params: async () => {
-      const resolvedParams = await asyncOptions();
+      const resolvedOptions = await asyncOptions();
       return [
-        resolvedParams.signer,
-        resolvedParams.creatorAdmin,
-        resolvedParams.data,
+        resolvedOptions.signer,
+        resolvedOptions.creatorAdmin,
+        resolvedOptions.data,
       ] as const;
     },
-    value: async () => (await asyncOptions()).value,
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

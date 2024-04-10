@@ -55,9 +55,11 @@ export function buyFromListing(
         buyFor: options.recipient,
         currency: listing.currencyContractAddress,
         expectedTotalPrice: listing.pricePerToken * options.quantity,
-        value: isNativeTokenAddress(listing.currencyContractAddress)
-          ? listing.pricePerToken * options.quantity
-          : 0n,
+        overrides: {
+          value: isNativeTokenAddress(listing.currencyContractAddress)
+            ? listing.pricePerToken * options.quantity
+            : 0n,
+        },
       };
     },
   });

@@ -1,7 +1,7 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type {
   BaseTransactionOptions,
-  WithValue,
+  WithOverrides,
 } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
@@ -10,7 +10,7 @@ import { once } from "../../../../../utils/promise/once.js";
 /**
  * Represents the parameters for the "quoteExactOutputSingle" function.
  */
-export type QuoteExactOutputSingleParams = WithValue<{
+export type QuoteExactOutputSingleParams = WithOverrides<{
   tokenIn: AbiParameterToPrimitiveType<{ type: "address"; name: "tokenIn" }>;
   tokenOut: AbiParameterToPrimitiveType<{ type: "address"; name: "tokenOut" }>;
   fee: AbiParameterToPrimitiveType<{ type: "uint24"; name: "fee" }>;
@@ -122,15 +122,15 @@ export function quoteExactOutputSingle(
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params: async () => {
-      const resolvedParams = await asyncOptions();
+      const resolvedOptions = await asyncOptions();
       return [
-        resolvedParams.tokenIn,
-        resolvedParams.tokenOut,
-        resolvedParams.fee,
-        resolvedParams.amountOut,
-        resolvedParams.sqrtPriceLimitX96,
+        resolvedOptions.tokenIn,
+        resolvedOptions.tokenOut,
+        resolvedOptions.fee,
+        resolvedOptions.amountOut,
+        resolvedOptions.sqrtPriceLimitX96,
       ] as const;
     },
-    value: async () => (await asyncOptions()).value,
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

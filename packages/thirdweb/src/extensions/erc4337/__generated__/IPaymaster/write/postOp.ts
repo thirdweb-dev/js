@@ -1,7 +1,7 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type {
   BaseTransactionOptions,
-  WithValue,
+  WithOverrides,
 } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
@@ -10,7 +10,7 @@ import { once } from "../../../../../utils/promise/once.js";
 /**
  * Represents the parameters for the "postOp" function.
  */
-export type PostOpParams = WithValue<{
+export type PostOpParams = WithOverrides<{
   mode: AbiParameterToPrimitiveType<{ type: "uint8"; name: "mode" }>;
   context: AbiParameterToPrimitiveType<{ type: "bytes"; name: "context" }>;
   actualGasCost: AbiParameterToPrimitiveType<{
@@ -96,13 +96,13 @@ export function postOp(
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params: async () => {
-      const resolvedParams = await asyncOptions();
+      const resolvedOptions = await asyncOptions();
       return [
-        resolvedParams.mode,
-        resolvedParams.context,
-        resolvedParams.actualGasCost,
+        resolvedOptions.mode,
+        resolvedOptions.context,
+        resolvedOptions.actualGasCost,
       ] as const;
     },
-    value: async () => (await asyncOptions()).value,
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

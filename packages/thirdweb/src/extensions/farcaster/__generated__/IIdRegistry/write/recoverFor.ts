@@ -1,7 +1,7 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type {
   BaseTransactionOptions,
-  WithValue,
+  WithOverrides,
 } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
@@ -10,7 +10,7 @@ import { once } from "../../../../../utils/promise/once.js";
 /**
  * Represents the parameters for the "recoverFor" function.
  */
-export type RecoverForParams = WithValue<{
+export type RecoverForParams = WithOverrides<{
   from: AbiParameterToPrimitiveType<{ type: "address"; name: "from" }>;
   to: AbiParameterToPrimitiveType<{ type: "address"; name: "to" }>;
   recoveryDeadline: AbiParameterToPrimitiveType<{
@@ -126,16 +126,16 @@ export function recoverFor(
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params: async () => {
-      const resolvedParams = await asyncOptions();
+      const resolvedOptions = await asyncOptions();
       return [
-        resolvedParams.from,
-        resolvedParams.to,
-        resolvedParams.recoveryDeadline,
-        resolvedParams.recoverySig,
-        resolvedParams.toDeadline,
-        resolvedParams.toSig,
+        resolvedOptions.from,
+        resolvedOptions.to,
+        resolvedOptions.recoveryDeadline,
+        resolvedOptions.recoverySig,
+        resolvedOptions.toDeadline,
+        resolvedOptions.toSig,
       ] as const;
     },
-    value: async () => (await asyncOptions()).value,
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

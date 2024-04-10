@@ -1,7 +1,7 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type {
   BaseTransactionOptions,
-  WithValue,
+  WithOverrides,
 } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
@@ -10,7 +10,7 @@ import { once } from "../../../../../utils/promise/once.js";
 /**
  * Represents the parameters for the "setApprovalForAll" function.
  */
-export type SetApprovalForAllParams = WithValue<{
+export type SetApprovalForAllParams = WithOverrides<{
   operator: AbiParameterToPrimitiveType<{ type: "address"; name: "_operator" }>;
   approved: AbiParameterToPrimitiveType<{ type: "bool"; name: "_approved" }>;
 }>;
@@ -84,9 +84,9 @@ export function setApprovalForAll(
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params: async () => {
-      const resolvedParams = await asyncOptions();
-      return [resolvedParams.operator, resolvedParams.approved] as const;
+      const resolvedOptions = await asyncOptions();
+      return [resolvedOptions.operator, resolvedOptions.approved] as const;
     },
-    value: async () => (await asyncOptions()).value,
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

@@ -1,7 +1,7 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type {
   BaseTransactionOptions,
-  WithValue,
+  WithOverrides,
 } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
@@ -10,7 +10,7 @@ import { once } from "../../../../../utils/promise/once.js";
 /**
  * Represents the parameters for the "offer" function.
  */
-export type OfferParams = WithValue<{
+export type OfferParams = WithOverrides<{
   listingId: AbiParameterToPrimitiveType<{
     type: "uint256";
     name: "_listingId";
@@ -121,15 +121,15 @@ export function offer(
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params: async () => {
-      const resolvedParams = await asyncOptions();
+      const resolvedOptions = await asyncOptions();
       return [
-        resolvedParams.listingId,
-        resolvedParams.quantityWanted,
-        resolvedParams.currency,
-        resolvedParams.pricePerToken,
-        resolvedParams.expirationTimestamp,
+        resolvedOptions.listingId,
+        resolvedOptions.quantityWanted,
+        resolvedOptions.currency,
+        resolvedOptions.pricePerToken,
+        resolvedOptions.expirationTimestamp,
       ] as const;
     },
-    value: async () => (await asyncOptions()).value,
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

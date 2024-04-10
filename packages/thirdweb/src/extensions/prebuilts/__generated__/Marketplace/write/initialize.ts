@@ -1,7 +1,7 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type {
   BaseTransactionOptions,
-  WithValue,
+  WithOverrides,
 } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
@@ -10,7 +10,7 @@ import { once } from "../../../../../utils/promise/once.js";
 /**
  * Represents the parameters for the "initialize" function.
  */
-export type InitializeParams = WithValue<{
+export type InitializeParams = WithOverrides<{
   defaultAdmin: AbiParameterToPrimitiveType<{
     type: "address";
     name: "_defaultAdmin";
@@ -124,15 +124,15 @@ export function initialize(
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params: async () => {
-      const resolvedParams = await asyncOptions();
+      const resolvedOptions = await asyncOptions();
       return [
-        resolvedParams.defaultAdmin,
-        resolvedParams.contractURI,
-        resolvedParams.trustedForwarders,
-        resolvedParams.platformFeeRecipient,
-        resolvedParams.platformFeeBps,
+        resolvedOptions.defaultAdmin,
+        resolvedOptions.contractURI,
+        resolvedOptions.trustedForwarders,
+        resolvedOptions.platformFeeRecipient,
+        resolvedOptions.platformFeeBps,
       ] as const;
     },
-    value: async () => (await asyncOptions()).value,
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

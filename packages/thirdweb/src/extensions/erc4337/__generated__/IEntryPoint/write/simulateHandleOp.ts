@@ -1,7 +1,7 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type {
   BaseTransactionOptions,
-  WithValue,
+  WithOverrides,
 } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
@@ -10,7 +10,7 @@ import { once } from "../../../../../utils/promise/once.js";
 /**
  * Represents the parameters for the "simulateHandleOp" function.
  */
-export type SimulateHandleOpParams = WithValue<{
+export type SimulateHandleOpParams = WithOverrides<{
   op: AbiParameterToPrimitiveType<{
     type: "tuple";
     name: "op";
@@ -158,13 +158,13 @@ export function simulateHandleOp(
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params: async () => {
-      const resolvedParams = await asyncOptions();
+      const resolvedOptions = await asyncOptions();
       return [
-        resolvedParams.op,
-        resolvedParams.target,
-        resolvedParams.targetCallData,
+        resolvedOptions.op,
+        resolvedOptions.target,
+        resolvedOptions.targetCallData,
       ] as const;
     },
-    value: async () => (await asyncOptions()).value,
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

@@ -1,7 +1,7 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type {
   BaseTransactionOptions,
-  WithValue,
+  WithOverrides,
 } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
@@ -10,7 +10,7 @@ import { once } from "../../../../../utils/promise/once.js";
 /**
  * Represents the parameters for the "withdraw" function.
  */
-export type WithdrawParams = WithValue<{
+export type WithdrawParams = WithOverrides<{
   assets: AbiParameterToPrimitiveType<{
     name: "assets";
     type: "uint256";
@@ -114,13 +114,13 @@ export function withdraw(
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params: async () => {
-      const resolvedParams = await asyncOptions();
+      const resolvedOptions = await asyncOptions();
       return [
-        resolvedParams.assets,
-        resolvedParams.receiver,
-        resolvedParams.owner,
+        resolvedOptions.assets,
+        resolvedOptions.receiver,
+        resolvedOptions.owner,
       ] as const;
     },
-    value: async () => (await asyncOptions()).value,
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

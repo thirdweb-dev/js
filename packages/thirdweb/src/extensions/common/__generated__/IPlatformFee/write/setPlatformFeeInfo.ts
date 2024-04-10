@@ -1,7 +1,7 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type {
   BaseTransactionOptions,
-  WithValue,
+  WithOverrides,
 } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
@@ -10,7 +10,7 @@ import { once } from "../../../../../utils/promise/once.js";
 /**
  * Represents the parameters for the "setPlatformFeeInfo" function.
  */
-export type SetPlatformFeeInfoParams = WithValue<{
+export type SetPlatformFeeInfoParams = WithOverrides<{
   platformFeeRecipient: AbiParameterToPrimitiveType<{
     type: "address";
     name: "_platformFeeRecipient";
@@ -93,12 +93,12 @@ export function setPlatformFeeInfo(
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params: async () => {
-      const resolvedParams = await asyncOptions();
+      const resolvedOptions = await asyncOptions();
       return [
-        resolvedParams.platformFeeRecipient,
-        resolvedParams.platformFeeBps,
+        resolvedOptions.platformFeeRecipient,
+        resolvedOptions.platformFeeBps,
       ] as const;
     },
-    value: async () => (await asyncOptions()).value,
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }
