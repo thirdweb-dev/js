@@ -1,67 +1,72 @@
-import { toHex } from "viem";
 import { beforeAll, describe, expect, it } from "vitest";
 import { ANVIL_CHAIN } from "../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
-import { TEST_ACCOUNT_A } from "../../../test/src/test-wallets.js";
-import { NATIVE_TOKEN_ADDRESS } from "../../constants/addresses.js";
+import {
+  TEST_ACCOUNT_A,
+  TEST_ACCOUNT_B,
+} from "../../../test/src/test-wallets.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
-import { baseSepolia } from "../../exports/chains.js";
 import { sendAndConfirmTransaction } from "../../exports/transaction.js";
 import { getContractMetadata } from "../common/read/getContractMetadata.js";
 import { deployERC1155Contract } from "../prebuilts/deploy-erc1155.js";
-import { setClaimConditions } from "./__generated__/IDrop1155/write/setClaimConditions.js";
 import { balanceOf } from "./__generated__/IERC1155/read/balanceOf.js";
 import { nextTokenIdToMint } from "./__generated__/IERC1155Enumerable/read/nextTokenIdToMint.js";
 import { claimTo } from "./drops/write/claimTo.js";
+import { setClaimConditions } from "./drops/write/setClaimConditions.js";
 import { getNFT } from "./read/getNFT.js";
 import { lazyMint } from "./write/lazyMint.js";
 
-describe.runIf(process.env.TW_SECRET_KEY)("DropERC1155", () => {
-  let contract: ThirdwebContract;
+describe.runIf(process.env.TW_SECRET_KEY)(
+  "DropERC1155",
+  {
+    retry: 0,
+  },
+  () => {
+    let contract: ThirdwebContract;
 
-  beforeAll(async () => {
-    const contractAddress = await deployERC1155Contract({
-      account: TEST_ACCOUNT_A,
-      chain: ANVIL_CHAIN,
-      client: TEST_CLIENT,
-      params: {
-        name: "Test DropERC1155",
-      },
-      type: "DropERC1155",
-    });
+    beforeAll(async () => {
+      const contractAddress = await deployERC1155Contract({
+        account: TEST_ACCOUNT_A,
+        chain: ANVIL_CHAIN,
+        client: TEST_CLIENT,
+        params: {
+          name: "Test DropERC1155",
+        },
+        type: "DropERC1155",
+      });
 
-    contract = getContract({
-      address: contractAddress,
-      chain: ANVIL_CHAIN,
-      client: TEST_CLIENT,
-    });
-    // this deploys a contract, it may take some time
-  }, 60_000);
+      contract = getContract({
+        address: contractAddress,
+        chain: ANVIL_CHAIN,
+        client: TEST_CLIENT,
+      });
+      // this deploys a contract, it may take some time
+    }, 60_000);
 
-  describe("Deployment", () => {
-    it("should deploy", async () => {
-      expect(contract).toBeDefined();
-    });
-    it("should have the correct name", async () => {
-      const metadata = await getContractMetadata({ contract });
-      expect(metadata.name).toBe("Test DropERC1155");
-    });
-  });
-
-  it("should allow for lazy minting tokens", async () => {
-    const mintTx = lazyMint({
-      contract,
-      nfts: [{ name: "Test NFT" }, { name: "Test NFT 2" }],
-    });
-    await sendAndConfirmTransaction({
-      transaction: mintTx,
-      account: TEST_ACCOUNT_A,
+    describe("Deployment", () => {
+      it("should deploy", async () => {
+        expect(contract).toBeDefined();
+      });
+      it("should have the correct name", async () => {
+        const metadata = await getContractMetadata({ contract });
+        expect(metadata.name).toBe("Test DropERC1155");
+      });
     });
 
-    await expect(nextTokenIdToMint({ contract })).resolves.toBe(2n);
-    await expect(
-      getNFT({ contract, tokenId: 0n }),
-    ).resolves.toMatchInlineSnapshot(`
+    it("should allow for lazy minting tokens", async () => {
+      const mintTx = lazyMint({
+        contract,
+        nfts: [{ name: "Test NFT" }, { name: "Test NFT 2" }],
+      });
+      await sendAndConfirmTransaction({
+        transaction: mintTx,
+        account: TEST_ACCOUNT_A,
+      });
+
+      await expect(nextTokenIdToMint({ contract })).resolves.toBe(2n);
+      await expect(
+        getNFT({ contract, tokenId: 0n }),
+      ).resolves.toMatchInlineSnapshot(`
       {
         "id": 0n,
         "metadata": {
@@ -73,63 +78,81 @@ describe.runIf(process.env.TW_SECRET_KEY)("DropERC1155", () => {
         "type": "ERC1155",
       }
     `);
-  });
+    });
 
-  it("should allow to claim tokens", async () => {
-    await expect(
-      balanceOf({ contract, owner: TEST_ACCOUNT_A.address, tokenId: 0n }),
-    ).resolves.toBe(0n);
-    await sendAndConfirmTransaction({
-      transaction: setClaimConditions({
+    it("should allow to claim tokens", async () => {
+      await expect(
+        balanceOf({ contract, owner: TEST_ACCOUNT_A.address, tokenId: 0n }),
+      ).resolves.toBe(0n);
+      await sendAndConfirmTransaction({
+        transaction: setClaimConditions({
+          contract,
+          phases: [{}],
+          tokenId: 0n,
+        }),
+        account: TEST_ACCOUNT_A,
+      });
+      const claimTx = claimTo({
         contract,
-        phases: [
-          {
-            currency: NATIVE_TOKEN_ADDRESS,
-            maxClaimableSupply: 100n,
-            merkleRoot: toHex("", { size: 32 }),
-            metadata: "",
-            pricePerToken: 1n,
-            quantityLimitPerWallet: 1n,
-            startTimestamp: 0n,
-            supplyClaimed: 0n,
-          },
-        ],
-        resetClaimEligibility: true,
+        to: TEST_ACCOUNT_A.address,
         tokenId: 0n,
-      }),
-      account: TEST_ACCOUNT_A,
-    });
-    const claimTx = claimTo({
-      contract,
-      to: TEST_ACCOUNT_A.address,
-      tokenId: 0n,
-      quantity: 1n,
-    });
-    await sendAndConfirmTransaction({
-      transaction: claimTx,
-      account: TEST_ACCOUNT_A,
-    });
-    await expect(
-      balanceOf({ contract, owner: TEST_ACCOUNT_A.address, tokenId: 1n }),
-    ).resolves.toBe(0n);
-  });
-
-  describe("Allowlists", () => {
-    it("should allow to claim tokens with an allowlist", async () => {
-      const contract = getContract({
-        address: "0x1320Cafa93fb53Ed9068E3272cb270adbBEf149C",
-        chain: baseSepolia,
-        client: TEST_CLIENT,
+        quantity: 1n,
       });
       await sendAndConfirmTransaction({
+        transaction: claimTx,
         account: TEST_ACCOUNT_A,
-        transaction: claimTo({
-          contract,
-          to: TEST_ACCOUNT_A.address,
-          tokenId: 0n,
-          quantity: 1n,
-        }),
+      });
+      await expect(
+        balanceOf({ contract, owner: TEST_ACCOUNT_A.address, tokenId: 1n }),
+      ).resolves.toBe(0n);
+    });
+
+    describe("Allowlists", () => {
+      it("should allow to claim tokens with an allowlist", async () => {
+        await sendAndConfirmTransaction({
+          transaction: setClaimConditions({
+            contract,
+            phases: [
+              {
+                allowlist: [
+                  { address: TEST_ACCOUNT_A.address, maxClaimable: "100" },
+                ],
+                maxClaimablePerWallet: 0n,
+              },
+            ],
+            tokenId: 0n,
+          }),
+          account: TEST_ACCOUNT_A,
+        });
+        await expect(
+          sendAndConfirmTransaction({
+            account: TEST_ACCOUNT_A,
+            transaction: claimTo({
+              contract,
+              from: TEST_ACCOUNT_A.address,
+              to: TEST_ACCOUNT_B.address,
+              tokenId: 0n,
+              quantity: 1n,
+            }),
+          }),
+        ).resolves.toBeDefined();
+        await expect(
+          sendAndConfirmTransaction({
+            account: TEST_ACCOUNT_B,
+            transaction: claimTo({
+              contract,
+              to: TEST_ACCOUNT_B.address,
+              tokenId: 0n,
+              quantity: 1n,
+            }),
+          }),
+        ).rejects.toThrowErrorMatchingInlineSnapshot(`
+          [TransactionError: Error - !Qty
+
+          contract: 0xd91A47278829a0128D7212225FE74BC153A7FAF8
+          chainId: 31337]
+        `);
       });
     });
-  });
-});
+  },
+);
