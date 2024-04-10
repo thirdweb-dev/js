@@ -1,5 +1,21 @@
 # @thirdweb-dev/react
 
+## 4.6.0
+
+### Minor Changes
+
+- [#2579](https://github.com/thirdweb-dev/js/pull/2579) [`d836889`](https://github.com/thirdweb-dev/js/commit/d836889f464a4fc9617839f30e2cc780b3bcca78) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - Adds `Buy` button in `ConnectWallet` component's details Modal to allow users to Swap tokens. Setting `clientId` on `ThirdWebProvider` is required to enable this feature.
+
+  A new prop `hideBuyButton` is added to `ConnectWallet` component to hide the `Buy` button in the details Modal. By default, the `Buy` button is visible.
+
+### Patch Changes
+
+- Updated dependencies [[`d836889`](https://github.com/thirdweb-dev/js/commit/d836889f464a4fc9617839f30e2cc780b3bcca78), [`d836889`](https://github.com/thirdweb-dev/js/commit/d836889f464a4fc9617839f30e2cc780b3bcca78), [`d65713a`](https://github.com/thirdweb-dev/js/commit/d65713a7af67bf20e5b88b72f5d43dfba9172b3b)]:
+  - @thirdweb-dev/react-core@4.6.0
+  - @thirdweb-dev/sdk@4.0.61
+  - @thirdweb-dev/chains@0.1.92
+  - @thirdweb-dev/wallets@2.5.1
+
 ## 4.5.0
 
 ### Minor Changes

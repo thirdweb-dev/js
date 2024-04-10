@@ -1,5 +1,69 @@
 # @thirdweb-dev/react-core
 
+## 4.6.0
+
+### Minor Changes
+
+- [#2579](https://github.com/thirdweb-dev/js/pull/2579) [`d836889`](https://github.com/thirdweb-dev/js/commit/d836889f464a4fc9617839f30e2cc780b3bcca78) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - Adds "buy with crypto" Hooks, Here's an example of how you can use it to build a UI for Swapping tokens
+
+  ```tsx
+  function Component() {
+    const signer = useSigner();
+    // 1. get a quote for swapping tokens
+    const quoteQuery = useBuyWithCryptoQuote(swapParams);
+
+    const [buyTxHash, setBuyTxHash] = useState<string | undefined>();
+    const statusQuery = useBuyWithCryptoStatus(
+      buyTxHash
+        ? {
+            clientId: "YOUR_CLIENT_ID",
+            transactionHash: buyTxHash,
+          }
+        : undefined,
+    );
+
+    async function handleBuyWithCrypto() {
+      if (!quoteQuery.data || !signer) {
+        return;
+      }
+
+      // 2. if approval is required
+      if (quoteQuery.data.approval) {
+        const approveTx = await signer.sendTransaction(
+          quoteQuery.data.approval,
+        );
+        await approveTx.wait();
+      }
+
+      // 3. send the transaction to buy crypto
+      const buyTx = await signer.sendTransaction(
+        quoteQuery.data.transactionRequest,
+      );
+      await buyTx.wait();
+
+      // set buyTx.transactionHash to poll the status of the swap transaction
+      setBuyTxHash(buyTx.hash);
+    }
+
+    // 4. wait for the status of the transaction
+    if (statusQuery.data) {
+      console.log("swap status:", statusQuery.data);
+    }
+
+    return <button onClick={handleBuyWithCrypto}>Swap</button>;
+  }
+  ```
+
+  For more information, check out the [pay documentation](https://portal.thirdweb.com/connect/pay/buy-with-crypto) for purchases with crypto
+
+### Patch Changes
+
+- Updated dependencies [[`d836889`](https://github.com/thirdweb-dev/js/commit/d836889f464a4fc9617839f30e2cc780b3bcca78), [`d65713a`](https://github.com/thirdweb-dev/js/commit/d65713a7af67bf20e5b88b72f5d43dfba9172b3b)]:
+  - @thirdweb-dev/sdk@4.0.61
+  - @thirdweb-dev/chains@0.1.92
+  - @thirdweb-dev/wallets@2.5.1
+  - @thirdweb-dev/auth@4.1.59
+
 ## 4.5.0
 
 ### Patch Changes
