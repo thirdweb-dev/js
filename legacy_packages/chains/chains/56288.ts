@@ -5,7 +5,7 @@ export default {
   "explorers": [
     {
       "name": "Boba BNB block explorer",
-      "url": "https://blockexplorer.bnb.boba.network",
+      "url": "https://bobascan.com",
       "standard": "none"
     }
   ],
