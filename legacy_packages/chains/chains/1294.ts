@@ -27,5 +27,6 @@ export default {
   ],
   "shortName": "Bobabeam",
   "slug": "bobabeam",
+  "status": "deprecated",
   "testnet": false
 } as const satisfies Chain;

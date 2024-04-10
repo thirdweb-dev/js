@@ -5,7 +5,7 @@ export default {
   "explorers": [
     {
       "name": "Boba BNB Testnet block explorer",
-      "url": "https://blockexplorer.testnet.bnb.boba.network",
+      "url": "https://testnet.bobascan.com",
       "standard": "none"
     }
   ],

@@ -28,5 +28,6 @@ export default {
   "shortName": "Bobabase",
   "slip44": 1,
   "slug": "bobabase-testnet",
+  "status": "deprecated",
   "testnet": true
 } as const satisfies Chain;

@@ -27,5 +27,6 @@ export default {
   ],
   "shortName": "bobaavax",
   "slug": "boba-avax",
+  "status": "deprecated",
   "testnet": false
 } as const satisfies Chain;
