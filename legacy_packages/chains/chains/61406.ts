@@ -4,6 +4,11 @@ export default {
   "chainId": 61406,
   "explorers": [
     {
+      "name": "KaiChain Explorer",
+      "url": "https://explorer.kaichain.net",
+      "standard": "EIP3091"
+    },
+    {
       "name": "KEC SCAN",
       "url": "https://explorer.kaichain.net/",
       "standard": "EIP3091",

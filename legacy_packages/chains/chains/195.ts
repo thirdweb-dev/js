@@ -1,34 +1,34 @@
 import type { Chain } from "../src/types";
 export default {
-  "chain": "X1",
+  "chain": "X Layer",
   "chainId": 195,
   "explorers": [
     {
       "name": "OKLink",
-      "url": "https://www.oklink.com/x1-test",
+      "url": "https://www.oklink.com/xlayer-test",
       "standard": "EIP3091"
     }
   ],
   "faucets": [
-    "https://www.okx.com/x1/faucet"
+    "https://www.okx.com/xlayer/faucet"
   ],
   "features": [],
-  "infoURL": "https://www.okx.com/x1",
-  "name": "X1 Testnet",
+  "infoURL": "https://www.okx.com/xlayer",
+  "name": "X Layer Testnet",
   "nativeCurrency": {
-    "name": "X1 Global Utility Token in testnet",
+    "name": "X Layer Global Utility Token in testnet",
     "symbol": "OKB",
     "decimals": 18
   },
   "networkId": 195,
   "rpc": [
     "https://195.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testrpc.x1.tech",
-    "https://x1testrpc.okx.com"
+    "https://testrpc.xlayer.tech",
+    "https://xlayertestrpc.okx.com"
   ],
   "shortName": "tokb",
   "slip44": 1,
-  "slug": "x1-testnet",
+  "slug": "x-layer-testnet",
   "status": "active",
   "testnet": true
 } as const satisfies Chain;

@@ -1,11 +1,11 @@
 import type { Chain } from "../src/types";
 export default {
-  "chain": "$HYB",
+  "chain": "HYB",
   "chainId": 1224,
   "explorers": [
     {
       "name": "Hybrid Testnet",
-      "url": "https://alphatestnet.buildonhybrid.com",
+      "url": "https://explorer.buildonhybrid.com",
       "standard": "EIP3091"
     }
   ],
@@ -20,7 +20,7 @@ export default {
   "name": "Hybrid Testnet",
   "nativeCurrency": {
     "name": "Hybrid",
-    "symbol": "$HYB",
+    "symbol": "HYB",
     "decimals": 18
   },
   "networkId": 1224,

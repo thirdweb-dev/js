@@ -36,5 +36,6 @@ export default {
   "shortName": "BobaFujiTestnet",
   "slip44": 1,
   "slug": "bobafuji-testnet",
+  "status": "deprecated",
   "testnet": true
 } as const satisfies Chain;
