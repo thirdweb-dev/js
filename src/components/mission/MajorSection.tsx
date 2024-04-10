@@ -43,11 +43,12 @@ const MajorSection = () => {
             />
             <Flex flexDir="column" gap={4}>
               <Text size="body.xl" color="white" fontWeight="bold">
-                Developer complexity
+                User experience
               </Text>
-              To build a web3 app, developers need to piece together 10+
-              different tools that don&apos;t natively talk to each other —
-              creating a messy, fragmented DX that stifles innovation.
+              To interact with an onchain app, users must create a wallet, store
+              their private keys, purchase & transfer crypto, pay gas, and sign
+              a transaction for every action — creating a daunting onboarding
+              process that stifles adoption.
             </Flex>
           </Flex>
         </LandingGridSection>
