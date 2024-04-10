@@ -96,7 +96,7 @@ export async function estimateGas(
           to: toAddress,
           data: encodedData,
           from,
-          // value,
+          value,
         }),
       );
       if (options.transaction.chain.experimental?.increaseZeroByteCount) {
