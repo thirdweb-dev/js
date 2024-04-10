@@ -1,13 +1,16 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
 
 /**
  * Represents the parameters for the "offer" function.
  */
-
-export type OfferParams = {
+export type OfferParams = WithOverrides<{
   listingId: AbiParameterToPrimitiveType<{
     type: "uint256";
     name: "_listingId";
@@ -25,7 +28,7 @@ export type OfferParams = {
     type: "uint256";
     name: "_expirationTimestamp";
   }>;
-};
+}>;
 
 export const FN_SELECTOR = "0x5fef45e7" as const;
 const FN_INPUTS = [
@@ -110,27 +113,23 @@ export function offer(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [
-              resolvedParams.listingId,
-              resolvedParams.quantityWanted,
-              resolvedParams.currency,
-              resolvedParams.pricePerToken,
-              resolvedParams.expirationTimestamp,
-            ] as const;
-          }
-        : [
-            options.listingId,
-            options.quantityWanted,
-            options.currency,
-            options.pricePerToken,
-            options.expirationTimestamp,
-          ],
+    params: async () => {
+      const resolvedOptions = await asyncOptions();
+      return [
+        resolvedOptions.listingId,
+        resolvedOptions.quantityWanted,
+        resolvedOptions.currency,
+        resolvedOptions.pricePerToken,
+        resolvedOptions.expirationTimestamp,
+      ] as const;
+    },
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

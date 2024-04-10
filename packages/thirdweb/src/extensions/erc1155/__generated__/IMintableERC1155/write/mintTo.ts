@@ -1,18 +1,21 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
 
 /**
  * Represents the parameters for the "mintTo" function.
  */
-
-export type MintToParams = {
+export type MintToParams = WithOverrides<{
   to: AbiParameterToPrimitiveType<{ type: "address"; name: "to" }>;
   tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
   uri: AbiParameterToPrimitiveType<{ type: "string"; name: "uri" }>;
   amount: AbiParameterToPrimitiveType<{ type: "uint256"; name: "amount" }>;
-};
+}>;
 
 export const FN_SELECTOR = "0xb03f4528" as const;
 const FN_INPUTS = [
@@ -90,20 +93,22 @@ export function mintTo(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [
-              resolvedParams.to,
-              resolvedParams.tokenId,
-              resolvedParams.uri,
-              resolvedParams.amount,
-            ] as const;
-          }
-        : [options.to, options.tokenId, options.uri, options.amount],
+    params: async () => {
+      const resolvedOptions = await asyncOptions();
+      return [
+        resolvedOptions.to,
+        resolvedOptions.tokenId,
+        resolvedOptions.uri,
+        resolvedOptions.amount,
+      ] as const;
+    },
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

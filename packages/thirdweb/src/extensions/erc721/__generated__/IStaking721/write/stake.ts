@@ -1,18 +1,21 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
 
 /**
  * Represents the parameters for the "stake" function.
  */
-
-export type StakeParams = {
+export type StakeParams = WithOverrides<{
   tokenIds: AbiParameterToPrimitiveType<{
     type: "uint256[]";
     name: "tokenIds";
   }>;
-};
+}>;
 
 export const FN_SELECTOR = "0x0fbf0a93" as const;
 const FN_INPUTS = [
@@ -67,15 +70,17 @@ export function stake(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [resolvedParams.tokenIds] as const;
-          }
-        : [options.tokenIds],
+    params: async () => {
+      const resolvedOptions = await asyncOptions();
+      return [resolvedOptions.tokenIds] as const;
+    },
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

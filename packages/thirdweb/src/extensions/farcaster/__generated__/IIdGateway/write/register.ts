@@ -1,19 +1,22 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
 
 /**
  * Represents the parameters for the "register" function.
  */
-
-export type RegisterParams = {
+export type RegisterParams = WithOverrides<{
   recovery: AbiParameterToPrimitiveType<{ type: "address"; name: "recovery" }>;
   extraStorage: AbiParameterToPrimitiveType<{
     type: "uint256";
     name: "extraStorage";
   }>;
-};
+}>;
 
 export const FN_SELECTOR = "0x6d705ebb" as const;
 const FN_INPUTS = [
@@ -86,18 +89,17 @@ export function register(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [
-              resolvedParams.recovery,
-              resolvedParams.extraStorage,
-            ] as const;
-          }
-        : [options.recovery, options.extraStorage],
+    params: async () => {
+      const resolvedOptions = await asyncOptions();
+      return [resolvedOptions.recovery, resolvedOptions.extraStorage] as const;
+    },
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

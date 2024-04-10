@@ -1,13 +1,16 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
 
 /**
  * Represents the parameters for the "add" function.
  */
-
-export type AddParams = {
+export type AddParams = WithOverrides<{
   keyType: AbiParameterToPrimitiveType<{ type: "uint32"; name: "keyType" }>;
   key: AbiParameterToPrimitiveType<{ type: "bytes"; name: "key" }>;
   metadataType: AbiParameterToPrimitiveType<{
@@ -15,7 +18,7 @@ export type AddParams = {
     name: "metadataType";
   }>;
   metadata: AbiParameterToPrimitiveType<{ type: "bytes"; name: "metadata" }>;
-};
+}>;
 
 export const FN_SELECTOR = "0x22b1a414" as const;
 const FN_INPUTS = [
@@ -93,25 +96,22 @@ export function add(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [
-              resolvedParams.keyType,
-              resolvedParams.key,
-              resolvedParams.metadataType,
-              resolvedParams.metadata,
-            ] as const;
-          }
-        : [
-            options.keyType,
-            options.key,
-            options.metadataType,
-            options.metadata,
-          ],
+    params: async () => {
+      const resolvedOptions = await asyncOptions();
+      return [
+        resolvedOptions.keyType,
+        resolvedOptions.key,
+        resolvedOptions.metadataType,
+        resolvedOptions.metadata,
+      ] as const;
+    },
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

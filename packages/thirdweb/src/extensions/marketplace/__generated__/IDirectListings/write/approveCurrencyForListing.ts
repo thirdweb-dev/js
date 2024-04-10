@@ -1,13 +1,16 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
 
 /**
  * Represents the parameters for the "approveCurrencyForListing" function.
  */
-
-export type ApproveCurrencyForListingParams = {
+export type ApproveCurrencyForListingParams = WithOverrides<{
   listingId: AbiParameterToPrimitiveType<{
     type: "uint256";
     name: "_listingId";
@@ -17,7 +20,7 @@ export type ApproveCurrencyForListingParams = {
     type: "uint256";
     name: "_pricePerTokenInCurrency";
   }>;
-};
+}>;
 
 export const FN_SELECTOR = "0xea8f9a3c" as const;
 const FN_INPUTS = [
@@ -90,23 +93,21 @@ export function approveCurrencyForListing(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [
-              resolvedParams.listingId,
-              resolvedParams.currency,
-              resolvedParams.pricePerTokenInCurrency,
-            ] as const;
-          }
-        : [
-            options.listingId,
-            options.currency,
-            options.pricePerTokenInCurrency,
-          ],
+    params: async () => {
+      const resolvedOptions = await asyncOptions();
+      return [
+        resolvedOptions.listingId,
+        resolvedOptions.currency,
+        resolvedOptions.pricePerTokenInCurrency,
+      ] as const;
+    },
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

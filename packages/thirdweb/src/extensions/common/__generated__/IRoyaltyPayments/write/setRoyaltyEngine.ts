@@ -1,18 +1,21 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
 
 /**
  * Represents the parameters for the "setRoyaltyEngine" function.
  */
-
-export type SetRoyaltyEngineParams = {
+export type SetRoyaltyEngineParams = WithOverrides<{
   royaltyEngineAddress: AbiParameterToPrimitiveType<{
     type: "address";
     name: "_royaltyEngineAddress";
   }>;
-};
+}>;
 
 export const FN_SELECTOR = "0x21ede032" as const;
 const FN_INPUTS = [
@@ -67,15 +70,17 @@ export function setRoyaltyEngine(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [resolvedParams.royaltyEngineAddress] as const;
-          }
-        : [options.royaltyEngineAddress],
+    params: async () => {
+      const resolvedOptions = await asyncOptions();
+      return [resolvedOptions.royaltyEngineAddress] as const;
+    },
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

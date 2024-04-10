@@ -1,15 +1,18 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
 
 /**
  * Represents the parameters for the "setOwner" function.
  */
-
-export type SetOwnerParams = {
+export type SetOwnerParams = WithOverrides<{
   newOwner: AbiParameterToPrimitiveType<{ type: "address"; name: "newOwner" }>;
-};
+}>;
 
 export const FN_SELECTOR = "0x13af4035" as const;
 const FN_INPUTS = [
@@ -64,15 +67,17 @@ export function setOwner(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [resolvedParams.newOwner] as const;
-          }
-        : [options.newOwner],
+    params: async () => {
+      const resolvedOptions = await asyncOptions();
+      return [resolvedOptions.newOwner] as const;
+    },
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

@@ -1,13 +1,16 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
 
 /**
  * Represents the parameters for the "mintWithSignature" function.
  */
-
-export type MintWithSignatureParams = {
+export type MintWithSignatureParams = WithOverrides<{
   req: AbiParameterToPrimitiveType<{
     type: "tuple";
     name: "req";
@@ -23,7 +26,7 @@ export type MintWithSignatureParams = {
     ];
   }>;
   signature: AbiParameterToPrimitiveType<{ type: "bytes"; name: "signature" }>;
-};
+}>;
 
 export const FN_SELECTOR = "0x8f0fefbb" as const;
 const FN_INPUTS = [
@@ -125,15 +128,17 @@ export function mintWithSignature(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [resolvedParams.req, resolvedParams.signature] as const;
-          }
-        : [options.req, options.signature],
+    params: async () => {
+      const resolvedOptions = await asyncOptions();
+      return [resolvedOptions.req, resolvedOptions.signature] as const;
+    },
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

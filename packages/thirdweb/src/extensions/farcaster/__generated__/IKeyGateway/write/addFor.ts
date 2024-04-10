@@ -1,13 +1,16 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
 
 /**
  * Represents the parameters for the "addFor" function.
  */
-
-export type AddForParams = {
+export type AddForParams = WithOverrides<{
   fidOwner: AbiParameterToPrimitiveType<{ type: "address"; name: "fidOwner" }>;
   keyType: AbiParameterToPrimitiveType<{ type: "uint32"; name: "keyType" }>;
   key: AbiParameterToPrimitiveType<{ type: "bytes"; name: "key" }>;
@@ -18,7 +21,7 @@ export type AddForParams = {
   metadata: AbiParameterToPrimitiveType<{ type: "bytes"; name: "metadata" }>;
   deadline: AbiParameterToPrimitiveType<{ type: "uint256"; name: "deadline" }>;
   sig: AbiParameterToPrimitiveType<{ type: "bytes"; name: "sig" }>;
-};
+}>;
 
 export const FN_SELECTOR = "0xa005d3d2" as const;
 const FN_INPUTS = [
@@ -117,31 +120,25 @@ export function addFor(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [
-              resolvedParams.fidOwner,
-              resolvedParams.keyType,
-              resolvedParams.key,
-              resolvedParams.metadataType,
-              resolvedParams.metadata,
-              resolvedParams.deadline,
-              resolvedParams.sig,
-            ] as const;
-          }
-        : [
-            options.fidOwner,
-            options.keyType,
-            options.key,
-            options.metadataType,
-            options.metadata,
-            options.deadline,
-            options.sig,
-          ],
+    params: async () => {
+      const resolvedOptions = await asyncOptions();
+      return [
+        resolvedOptions.fidOwner,
+        resolvedOptions.keyType,
+        resolvedOptions.key,
+        resolvedOptions.metadataType,
+        resolvedOptions.metadata,
+        resolvedOptions.deadline,
+        resolvedOptions.sig,
+      ] as const;
+    },
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

@@ -1,13 +1,16 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
 
 /**
  * Represents the parameters for the "openPackAndClaimRewards" function.
  */
-
-export type OpenPackAndClaimRewardsParams = {
+export type OpenPackAndClaimRewardsParams = WithOverrides<{
   packId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_packId" }>;
   amountToOpen: AbiParameterToPrimitiveType<{
     type: "uint256";
@@ -17,7 +20,7 @@ export type OpenPackAndClaimRewardsParams = {
     type: "uint32";
     name: "_callBackGasLimit";
   }>;
-};
+}>;
 
 export const FN_SELECTOR = "0xac296b3f" as const;
 const FN_INPUTS = [
@@ -94,19 +97,21 @@ export function openPackAndClaimRewards(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [
-              resolvedParams.packId,
-              resolvedParams.amountToOpen,
-              resolvedParams.callBackGasLimit,
-            ] as const;
-          }
-        : [options.packId, options.amountToOpen, options.callBackGasLimit],
+    params: async () => {
+      const resolvedOptions = await asyncOptions();
+      return [
+        resolvedOptions.packId,
+        resolvedOptions.amountToOpen,
+        resolvedOptions.callBackGasLimit,
+      ] as const;
+    },
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

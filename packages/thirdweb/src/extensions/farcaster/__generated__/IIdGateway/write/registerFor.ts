@@ -1,13 +1,16 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
 
 /**
  * Represents the parameters for the "registerFor" function.
  */
-
-export type RegisterForParams = {
+export type RegisterForParams = WithOverrides<{
   to: AbiParameterToPrimitiveType<{ type: "address"; name: "to" }>;
   recovery: AbiParameterToPrimitiveType<{ type: "address"; name: "recovery" }>;
   deadline: AbiParameterToPrimitiveType<{ type: "uint256"; name: "deadline" }>;
@@ -16,7 +19,7 @@ export type RegisterForParams = {
     type: "uint256";
     name: "extraStorage";
   }>;
-};
+}>;
 
 export const FN_SELECTOR = "0xa0c7529c" as const;
 const FN_INPUTS = [
@@ -110,27 +113,23 @@ export function registerFor(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [
-              resolvedParams.to,
-              resolvedParams.recovery,
-              resolvedParams.deadline,
-              resolvedParams.sig,
-              resolvedParams.extraStorage,
-            ] as const;
-          }
-        : [
-            options.to,
-            options.recovery,
-            options.deadline,
-            options.sig,
-            options.extraStorage,
-          ],
+    params: async () => {
+      const resolvedOptions = await asyncOptions();
+      return [
+        resolvedOptions.to,
+        resolvedOptions.recovery,
+        resolvedOptions.deadline,
+        resolvedOptions.sig,
+        resolvedOptions.extraStorage,
+      ] as const;
+    },
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

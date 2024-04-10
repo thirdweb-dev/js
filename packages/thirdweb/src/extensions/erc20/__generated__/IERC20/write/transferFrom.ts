@@ -1,17 +1,20 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
 
 /**
  * Represents the parameters for the "transferFrom" function.
  */
-
-export type TransferFromParams = {
+export type TransferFromParams = WithOverrides<{
   from: AbiParameterToPrimitiveType<{ type: "address"; name: "from" }>;
   to: AbiParameterToPrimitiveType<{ type: "address"; name: "to" }>;
   value: AbiParameterToPrimitiveType<{ type: "uint256"; name: "value" }>;
-};
+}>;
 
 export const FN_SELECTOR = "0x23b872dd" as const;
 const FN_INPUTS = [
@@ -86,19 +89,21 @@ export function transferFrom(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [
-              resolvedParams.from,
-              resolvedParams.to,
-              resolvedParams.value,
-            ] as const;
-          }
-        : [options.from, options.to, options.value],
+    params: async () => {
+      const resolvedOptions = await asyncOptions();
+      return [
+        resolvedOptions.from,
+        resolvedOptions.to,
+        resolvedOptions.value,
+      ] as const;
+    },
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

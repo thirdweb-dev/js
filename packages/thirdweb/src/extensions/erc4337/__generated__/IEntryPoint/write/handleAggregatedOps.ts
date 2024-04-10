@@ -1,13 +1,16 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
 
 /**
  * Represents the parameters for the "handleAggregatedOps" function.
  */
-
-export type HandleAggregatedOpsParams = {
+export type HandleAggregatedOpsParams = WithOverrides<{
   opsPerAggregator: AbiParameterToPrimitiveType<{
     type: "tuple[]";
     name: "opsPerAggregator";
@@ -37,7 +40,7 @@ export type HandleAggregatedOpsParams = {
     type: "address";
     name: "beneficiary";
   }>;
-};
+}>;
 
 export const FN_SELECTOR = "0x4b1d7cf5" as const;
 const FN_INPUTS = [
@@ -163,18 +166,20 @@ export function handleAggregatedOps(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [
-              resolvedParams.opsPerAggregator,
-              resolvedParams.beneficiary,
-            ] as const;
-          }
-        : [options.opsPerAggregator, options.beneficiary],
+    params: async () => {
+      const resolvedOptions = await asyncOptions();
+      return [
+        resolvedOptions.opsPerAggregator,
+        resolvedOptions.beneficiary,
+      ] as const;
+    },
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

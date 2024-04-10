@@ -1,20 +1,23 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
 
 /**
  * Represents the parameters for the "setRoyaltyInfoForToken" function.
  */
-
-export type SetRoyaltyInfoForTokenParams = {
+export type SetRoyaltyInfoForTokenParams = WithOverrides<{
   tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
   recipient: AbiParameterToPrimitiveType<{
     type: "address";
     name: "recipient";
   }>;
   bps: AbiParameterToPrimitiveType<{ type: "uint256"; name: "bps" }>;
-};
+}>;
 
 export const FN_SELECTOR = "0x9bcf7a15" as const;
 const FN_INPUTS = [
@@ -87,19 +90,21 @@ export function setRoyaltyInfoForToken(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [
-              resolvedParams.tokenId,
-              resolvedParams.recipient,
-              resolvedParams.bps,
-            ] as const;
-          }
-        : [options.tokenId, options.recipient, options.bps],
+    params: async () => {
+      const resolvedOptions = await asyncOptions();
+      return [
+        resolvedOptions.tokenId,
+        resolvedOptions.recipient,
+        resolvedOptions.bps,
+      ] as const;
+    },
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

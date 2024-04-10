@@ -1,13 +1,16 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
 
 /**
  * Represents the parameters for the "transferFor" function.
  */
-
-export type TransferForParams = {
+export type TransferForParams = WithOverrides<{
   from: AbiParameterToPrimitiveType<{ type: "address"; name: "from" }>;
   to: AbiParameterToPrimitiveType<{ type: "address"; name: "to" }>;
   fromDeadline: AbiParameterToPrimitiveType<{
@@ -20,7 +23,7 @@ export type TransferForParams = {
     name: "toDeadline";
   }>;
   toSig: AbiParameterToPrimitiveType<{ type: "bytes"; name: "toSig" }>;
-};
+}>;
 
 export const FN_SELECTOR = "0x16f72842" as const;
 const FN_INPUTS = [
@@ -112,29 +115,24 @@ export function transferFor(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [
-              resolvedParams.from,
-              resolvedParams.to,
-              resolvedParams.fromDeadline,
-              resolvedParams.fromSig,
-              resolvedParams.toDeadline,
-              resolvedParams.toSig,
-            ] as const;
-          }
-        : [
-            options.from,
-            options.to,
-            options.fromDeadline,
-            options.fromSig,
-            options.toDeadline,
-            options.toSig,
-          ],
+    params: async () => {
+      const resolvedOptions = await asyncOptions();
+      return [
+        resolvedOptions.from,
+        resolvedOptions.to,
+        resolvedOptions.fromDeadline,
+        resolvedOptions.fromSig,
+        resolvedOptions.toDeadline,
+        resolvedOptions.toSig,
+      ] as const;
+    },
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

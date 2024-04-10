@@ -1,13 +1,16 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
 
 /**
  * Represents the parameters for the "claim" function.
  */
-
-export type ClaimParams = {
+export type ClaimParams = WithOverrides<{
   receiver: AbiParameterToPrimitiveType<{ type: "address"; name: "receiver" }>;
   quantity: AbiParameterToPrimitiveType<{ type: "uint256"; name: "quantity" }>;
   currency: AbiParameterToPrimitiveType<{ type: "address"; name: "currency" }>;
@@ -26,7 +29,7 @@ export type ClaimParams = {
     ];
   }>;
   data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "data" }>;
-};
+}>;
 
 export const FN_SELECTOR = "0x84bb1e42" as const;
 const FN_INPUTS = [
@@ -136,29 +139,24 @@ export function claim(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [
-              resolvedParams.receiver,
-              resolvedParams.quantity,
-              resolvedParams.currency,
-              resolvedParams.pricePerToken,
-              resolvedParams.allowlistProof,
-              resolvedParams.data,
-            ] as const;
-          }
-        : [
-            options.receiver,
-            options.quantity,
-            options.currency,
-            options.pricePerToken,
-            options.allowlistProof,
-            options.data,
-          ],
+    params: async () => {
+      const resolvedOptions = await asyncOptions();
+      return [
+        resolvedOptions.receiver,
+        resolvedOptions.quantity,
+        resolvedOptions.currency,
+        resolvedOptions.pricePerToken,
+        resolvedOptions.allowlistProof,
+        resolvedOptions.data,
+      ] as const;
+    },
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

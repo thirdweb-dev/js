@@ -1,13 +1,16 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
 
 /**
  * Represents the parameters for the "setPlatformFeeInfo" function.
  */
-
-export type SetPlatformFeeInfoParams = {
+export type SetPlatformFeeInfoParams = WithOverrides<{
   platformFeeRecipient: AbiParameterToPrimitiveType<{
     type: "address";
     name: "_platformFeeRecipient";
@@ -16,7 +19,7 @@ export type SetPlatformFeeInfoParams = {
     type: "uint256";
     name: "_platformFeeBps";
   }>;
-};
+}>;
 
 export const FN_SELECTOR = "0x1e7ac488" as const;
 const FN_INPUTS = [
@@ -82,18 +85,20 @@ export function setPlatformFeeInfo(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [
-              resolvedParams.platformFeeRecipient,
-              resolvedParams.platformFeeBps,
-            ] as const;
-          }
-        : [options.platformFeeRecipient, options.platformFeeBps],
+    params: async () => {
+      const resolvedOptions = await asyncOptions();
+      return [
+        resolvedOptions.platformFeeRecipient,
+        resolvedOptions.platformFeeBps,
+      ] as const;
+    },
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }
