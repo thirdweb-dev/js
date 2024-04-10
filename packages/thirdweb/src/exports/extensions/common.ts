@@ -16,6 +16,11 @@ export {
   type SetOwnerParams,
 } from "../../extensions/common/__generated__/IOwnable/write/setOwner.js";
 
+export {
+  setContractMetadata,
+  type SetContractMetadataParams,
+} from "../../extensions/common/write/setContractMetadata.js";
+
 // events
 
 export {
