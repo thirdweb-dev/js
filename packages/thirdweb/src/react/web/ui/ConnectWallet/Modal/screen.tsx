@@ -1,14 +1,11 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
-// import type { WalletConfig } from "../../../../core/types/wallets.js";
 import { useActiveAccount } from "../../../../core/hooks/wallets/wallet-hooks.js";
 import { ModalConfigCtx } from "../../../providers/wallet-ui-states-provider.js";
 import { reservedScreens } from "../constants.js";
 
 type Screen = string | Wallet;
-
-const inAppWalletId = "inApp";
 
 export type ScreenSetup = {
   screen: Screen;
@@ -29,7 +26,9 @@ export function useSetupScreen() {
 
   let initialScreen: Screen = reservedScreens.main;
 
-  const socialLogin = wallets.find((w) => w.id === inAppWalletId);
+  const socialLogin = wallets.find(
+    (w) => w.id === "embedded" || w.id === "inApp",
+  );
 
   if (wallets.length === 1 && wallets[0]) {
     initialScreen = wallets[0];

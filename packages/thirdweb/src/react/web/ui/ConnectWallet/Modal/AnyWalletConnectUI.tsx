@@ -132,7 +132,7 @@ export function AnyWalletConnectUI(props: {
     );
   }
 
-  if (props.wallet.id === "inApp") {
+  if (props.wallet.id === "inApp" || props.wallet.id === "embedded") {
     return (
       <Suspense fallback={<LoadingScreen />}>
         <InAppWalletConnectUI
