@@ -2,9 +2,9 @@ import type { Address } from "abitype";
 import { isNativeTokenAddress } from "../../../../constants/addresses.js";
 import { prepareContractCall } from "../../../../transaction/prepare-contract-call.js";
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
+import { fetchProofsForClaimer } from "../../../../utils/drops/utils.js";
 import { padHex } from "../../../../utils/encoding/hex.js";
 import { getActiveClaimCondition } from "../read/getActiveClaimCondition.js";
-import { fetchProofsForClaimer } from "../utils.js";
 
 const CLAIM_ABI = {
   inputs: [
