@@ -90,7 +90,6 @@ export async function estimateGas(
     // 3. the passed in wallet's account address
     const from = options.from ?? options.account?.address ?? undefined;
     try {
-      console.log(value);
       let gas = await eth_estimateGas(
         rpcRequest,
         formatTransactionRequest({
@@ -105,7 +104,6 @@ export async function estimateGas(
       }
       return gas;
     } catch (error) {
-      console.log("error", error);
       throw await parseEstimationError({
         error,
         contract: options.transaction.__contract,
