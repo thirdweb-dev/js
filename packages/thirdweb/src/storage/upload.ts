@@ -11,21 +11,31 @@ import {
 import type {
   FileOrBufferOrString,
   UploadOptions as InternalUploadOptions,
+  UploadableFile,
 } from "./upload/types.js";
 
-export type UploadOptions = InternalUploadOptions & {
-  client: ThirdwebClient;
-};
+export type UploadOptions<TFiles extends UploadableFile[]> =
+  InternalUploadOptions<TFiles> & {
+    client: ThirdwebClient;
+  };
+
+type UploadReturnType<TFiles extends UploadableFile[]> = TFiles extends {
+  length: 0;
+}
+  ? null
+  : TFiles extends { length: 1 }
+    ? string
+    : string[];
 
 /**
  * Uploads files based on the provided options.
  * @param options - The upload options.
- * @returns A promise that resolves to an array of uploaded file URIs.
+ * @returns A promise that resolves to the uploaded file URI or URIs (when passing multiple files).
  * @throws An error if the upload fails.
  * @example
  * ```ts
  * import { upload } from "thirdweb/storage";
- * const uris = await upload({
+ * const uri = await upload({
  *  client,
  *  files: [
  *    new File(["hello world"], "hello.txt"),
@@ -34,12 +44,14 @@ export type UploadOptions = InternalUploadOptions & {
  * ```
  * @storage
  */
-export async function upload(options: UploadOptions) {
+export async function upload<const TFiles extends UploadableFile[]>(
+  options: UploadOptions<TFiles>,
+): Promise<UploadReturnType<TFiles>> {
   // deal with the differnt file types
 
   // if there are no files, return an empty array immediately
-  if (!options.files.length) {
-    return [];
+  if (options.files.length === 0) {
+    return null as UploadReturnType<TFiles>;
   }
   // handle file arrays
   const isFileArray = options.files
@@ -65,7 +77,11 @@ export async function upload(options: UploadOptions) {
       const uris_ = await upload({ ...options, files });
 
       // Recurse through data and replace files with hashes
-      cleaned = replaceObjectFilesWithUris(cleaned, uris_) as unknown[];
+      cleaned = replaceObjectFilesWithUris(
+        cleaned,
+        // always pass an array even if the underlying upload returns a single uri
+        Array.isArray(uris_) ? uris_ : [uris_],
+      ) as unknown[];
     }
 
     uris = cleaned.map((item) => {
@@ -84,7 +100,12 @@ export async function upload(options: UploadOptions) {
   const platform = detectPlatform();
   if (platform === "browser" || platform === "node") {
     const { uploadBatch } = await import("./upload/web-node.js");
-    return await uploadBatch(options.client, form, fileNames, options);
+    const uris = await uploadBatch(options.client, form, fileNames, options);
+    // if we only passed a single file, return its URI directly
+    if (options.files.length === 1) {
+      return uris[0] as UploadReturnType<TFiles>;
+    }
+    return uris as UploadReturnType<TFiles>;
   }
   throw new Error(
     "Please, use the uploadMobile function in mobile environments.",

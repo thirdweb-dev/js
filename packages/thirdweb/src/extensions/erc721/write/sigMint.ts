@@ -85,12 +85,10 @@ export async function generateMintSignature(
 
   let uri: string;
   if (typeof mintRequest.metadata === "object") {
-    uri = (
-      await upload({
-        client: options.contract.client,
-        files: [mintRequest.metadata],
-      })
-    )[0] as string;
+    uri = await upload({
+      client: options.contract.client,
+      files: [mintRequest.metadata],
+    });
   } else {
     uri = mintRequest.metadata;
   }
