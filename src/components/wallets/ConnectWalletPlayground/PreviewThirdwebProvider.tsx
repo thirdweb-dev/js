@@ -11,9 +11,9 @@ import { defaultChains } from "@thirdweb-dev/chains";
 import { StorageSingleton } from "lib/sdk";
 
 const localeIdToObj = {
-  en: en(),
-  ja: ja(),
-  es: es(),
+  "en-US": en(),
+  "ja-JP": ja(),
+  "es-ES": es(),
 };
 
 export function PreviewThirdwebProvider(props: {

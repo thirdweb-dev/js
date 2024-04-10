@@ -55,6 +55,8 @@ import { usePlaygroundWallets } from "./usePlaygroundWallets";
 import { usePlaygroundTheme } from "./usePlaygroundTheme";
 import { useTrack } from "hooks/analytics/useTrack";
 
+type LocaleId = "en-US" | "ja-JP" | "es-ES";
+
 type OptionalUrl = { url: string; enabled: boolean };
 export const ConnectWalletPlayground: React.FC<{
   trackingCategory: string;
@@ -107,9 +109,7 @@ export const ConnectWalletPlayground: React.FC<{
 
   const { colorMode, toggleColorMode } = useColorMode();
   const selectedTheme = colorMode === "light" ? "light" : "dark";
-  const [authEnabled, setAuthEnabled] = useState(false);
-  const [switchToActiveChain, setSwitchToActiveChain] = useState(false);
-  const [locale, setLocale] = useState<"en" | "ja" | "es">("en");
+  const [locale, setLocale] = useState<LocaleId>("en-US");
   const [code, setCode] = useState("");
 
   const { colorOverrides, themeObj, setColorOverrides } =
@@ -128,40 +128,24 @@ export const ConnectWalletPlayground: React.FC<{
     MetaMask: true,
     Coinbase: "recommended",
     WalletConnect: true,
-    // Safe: false,
-    // "Guest Mode": true,
     "Email Wallet": true,
     Trust: false,
     Zerion: false,
-    // Blocto: false,
-    // "Magic Link": false,
-    // Frame: false,
     Rainbow: false,
     Phantom: false,
   });
 
   useEffect(() => {
-    const getSupportedWalletsCode = (walletIds: WalletId[]): string => {
+    const getSupportedWalletsCode = (
+      walletIds: WalletId[],
+    ): string | undefined => {
+      if (!walletIds.length) {
+        return undefined;
+      }
+
       return `[${walletIds
         .map((walletId) => {
-          const recommended = walletInfoRecord[walletId].component.recommended;
-          const wcId = walletInfoRecord[walletId].id;
-          let walletCode = walletInfoRecord[walletId].code(recommended);
-
-          // if (walletId === "Safe") {
-          //   const personalWalletIds = walletIds.filter((w) => w !== "Safe");
-          //   if (personalWalletIds.length === 0) {
-          //     return recommended
-          //       ? `safeWallet({ recommended: true })`
-          //       : `safeWallet()`;
-          //   }
-          //   return `safeWallet({
-          //     ${recommended ? "recommended: true," : ""}
-          //     personalWallets: ${getSupportedWalletsCode(
-          //       walletIds.filter((w) => w !== "Safe"),
-          //     )}
-          //   })`;
-          // }
+          let walletCode = walletInfoRecord[walletId].code;
 
           if (walletId === "Email Wallet") {
             if (!socialOptions.length) {
@@ -176,10 +160,6 @@ export const ConnectWalletPlayground: React.FC<{
 
               walletCode = `inAppWallet(${JSON.stringify(options, null, 2)})`;
             }
-          }
-
-          if (wcId) {
-            walletCode = `createWallet("${wcId}")`;
           }
 
           return walletCode;
@@ -200,13 +180,8 @@ export const ConnectWalletPlayground: React.FC<{
             gasless: smartWalletOptions.gasless,
           }
         : undefined,
-      thirdwebProvider: {
-        locale: `${locale}()`,
-        authConfig: authEnabled
-          ? `{ authUrl: "/api/auth", domain: "https://example.com" }`
-          : undefined,
-      },
       connectWallet: {
+        locale: locale !== "en-US" ? `"${locale}"` : undefined,
         theme: `"${selectedTheme}"`,
         connectButton: btnTitle ? `{ label: "${btnTitle}" }` : undefined,
         connectModal: JSON.stringify({
@@ -224,11 +199,10 @@ export const ConnectWalletPlayground: React.FC<{
           privacyPolicyUrl: privacyPolicyUrl.enabled
             ? privacyPolicyUrl.url
             : undefined,
+          showThirdwebBranding:
+            showThirdwebBranding === false ? false : undefined,
         }),
-        auth: authEnabled ? "{ loginOptional: false }" : undefined,
-        chain: switchToActiveChain ? "sepolia" : undefined,
-        showThirdwebBranding:
-          showThirdwebBranding === false ? "false" : undefined,
+        chain: undefined,
       },
     });
 
@@ -250,12 +224,10 @@ export const ConnectWalletPlayground: React.FC<{
 
     formatCodeAndSetState(_code);
   }, [
-    authEnabled,
     btnTitle,
     enabledWallets,
     modalTitle,
     selectedTheme,
-    switchToActiveChain,
     modalSize,
     smartWalletOptions,
     modalTitleIconUrl,
@@ -562,25 +534,6 @@ export const ConnectWalletPlayground: React.FC<{
             );
           })}
       </Grid>
-      <Spacer height={3} />
-
-      <TrackedLink
-        category={trackingCategory}
-        label="build-wallet"
-        href="https://portal.thirdweb.com/wallet-sdk/latest/build"
-        alignItems="center"
-        color="blue.500"
-        gap={1}
-        isExternal
-        fontSize={14}
-        _hover={{
-          color: "heading",
-          textDecor: "none",
-        }}
-      >
-        Don{`'t`} see the wallet you are looking for? <br />
-        Integrate it with ConnectWallet
-      </TrackedLink>
     </>
   );
 
@@ -606,7 +559,7 @@ export const ConnectWalletPlayground: React.FC<{
         <Box>
           <PreviewThirdwebProvider
             locale={locale}
-            authEnabled={authEnabled}
+            authEnabled={false}
             supportedWallets={supportedWallets}
           >
             <ConnectWallet
@@ -617,8 +570,7 @@ export const ConnectWalletPlayground: React.FC<{
               modalTitleIconUrl={
                 modalTitleIconUrl.enabled ? modalTitleIconUrl.url : undefined
               }
-              auth={{ loginOptional: !authEnabled }}
-              switchToActiveChain={switchToActiveChain}
+              switchToActiveChain={true}
               welcomeScreen={welcomeScreen}
               termsOfServiceUrl={tosUrl.enabled ? tosUrl.url : undefined}
               privacyPolicyUrl={
@@ -638,7 +590,7 @@ export const ConnectWalletPlayground: React.FC<{
         <Box height={2} />
         <PreviewThirdwebProvider
           locale={locale}
-          authEnabled={authEnabled}
+          authEnabled={false}
           supportedWallets={supportedWallets}
         >
           <ClientOnly
@@ -737,12 +689,12 @@ export const ConnectWalletPlayground: React.FC<{
             }}
             value={locale}
             onChange={(e) => {
-              setLocale(e.target.value as "en" | "ja" | "es");
+              setLocale(e.target.value as LocaleId);
             }}
           >
-            <option value="en">English </option>
-            <option value="ja">Japanese </option>
-            <option value="es">Spanish </option>
+            <option value="en-US">English </option>
+            <option value="ja-JP">Japanese </option>
+            <option value="es-ES">Spanish </option>
           </Select>
         </FormControl>
       </Grid>
@@ -752,26 +704,6 @@ export const ConnectWalletPlayground: React.FC<{
       {eoalWallets}
       <Spacer height={8} />
       {socialLogins}
-
-      <Spacer height={5} />
-      <Box borderTop="1px solid" borderColor="borderColor" />
-      <Spacer height={5} />
-
-      {/* Guest Mode */}
-      {/* <SwitchFormItem
-        label="Continue as Guest"
-        description="Access your app with a guest account"
-        onCheck={(_isChecked) => {
-          if (_isChecked) {
-            trackCustomize("continue-as-guest");
-          }
-          setWalletSelection({
-            ...walletSelection,
-            "Guest Mode": _isChecked,
-          });
-        }}
-        isChecked={!!walletSelection["Guest Mode"]}
-      /> */}
 
       <Spacer height={5} />
       <Box borderTop="1px solid" borderColor="borderColor" />
@@ -835,38 +767,6 @@ export const ConnectWalletPlayground: React.FC<{
           </Flex>
         </>
       )}
-
-      <Spacer height={5} />
-      <Box borderTop="1px solid" borderColor="borderColor" />
-      <Spacer height={5} />
-
-      <SwitchFormItem
-        label="Auth"
-        description="Enforce signatures (SIWE) after wallet connection"
-        onCheck={(_isChecked) => {
-          if (_isChecked) {
-            trackCustomize("auth");
-          }
-          setAuthEnabled(_isChecked);
-        }}
-        isChecked={authEnabled}
-      />
-
-      <Spacer height={5} />
-      <Box borderTop="1px solid" borderColor="borderColor" />
-      <Spacer height={5} />
-
-      <SwitchFormItem
-        label="Switch to Active Chain"
-        description="Prompt user to switch to activeChain set in ThirdwebProvider after wallet connection"
-        onCheck={(_isChecked) => {
-          if (_isChecked) {
-            trackCustomize("switch-to-active-chain");
-          }
-          setSwitchToActiveChain(_isChecked);
-        }}
-        isChecked={switchToActiveChain}
-      />
 
       <Spacer height={5} />
       <Box borderTop="1px solid" borderColor="borderColor" />

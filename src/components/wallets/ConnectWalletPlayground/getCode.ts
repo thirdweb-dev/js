@@ -2,18 +2,15 @@ type WalletSetupOptions = {
   imports: string[];
   wallets?: string;
   recommendedWallets?: string;
-  thirdwebProvider: {
-    locale: string;
-    authConfig?: string;
-  };
   smartWalletOptions?: {
     gasless: boolean;
   };
   connectWallet: {
+    locale?: string;
     theme?: string;
     connectButton?: string;
     connectModal?: string;
-    auth?: string;
+    // auth?: string;
     modalTitle?: string;
     chain?: string;
     modalTitleIconUrl?: string;
@@ -28,6 +25,8 @@ type WalletSetupOptions = {
 
 export function getCode(options: WalletSetupOptions) {
   const hasThemeOverrides = Object.keys(options.colorOverrides).length > 0;
+  const reactImports = [];
+
   if (hasThemeOverrides) {
     const themeFn = options.baseTheme === "dark" ? "darkTheme" : "lightTheme";
 
@@ -35,40 +34,31 @@ export function getCode(options: WalletSetupOptions) {
       colors: options.colorOverrides,
     })})`;
 
-    options.imports.push(themeFn);
+    reactImports.push(themeFn);
   }
 
-  if (options.thirdwebProvider.locale !== "en()") {
-    options.imports.push(options.thirdwebProvider.locale.slice(0, -2));
-  }
+  const imports = [...new Set(options.imports)];
 
   return `\
-import { ThirdwebProvider, ConnectButton } from "thirdweb/react";
-import { sepolia } from "thirdweb/chains";
-${options.imports.length > 0 ? `import { ${options.imports.join(",")} } from "thirdweb/wallets";` : ""}
+import { ThirdwebProvider, ConnectButton, ${reactImports.join(", ")} } from "thirdweb/react";${options.smartWalletOptions ? `\nimport { sepolia } from "thirdweb/chains"` : ""}
+${imports.length > 0 ? `import { ${imports.join(",")} } from "thirdweb/wallets";` : ""}
 
 const client = createThirdwebClient({
   clientId: "YOUR_CLIENT_ID",
 });
 
-export const wallets = ${options.wallets};
-
-${
-  options.smartWalletOptions
-    ? `const accountAbstraction = {
-  chain: sepolia,
-  factoryAddress: 'YOUR_FACTORY_ADDRESS',
-  gasless: ${options.smartWalletOptions.gasless},
-}`
-    : ""
-}
+${options.wallets ? `const wallets = ${options.wallets};` : ""}
 
 export default function App() {
   return (
     <ThirdwebProvider>
-      <ConnectButton client={client} wallets={wallets} ${
+      <ConnectButton client={client} ${options.wallets ? `wallets={wallets}` : ""}   ${
         options.smartWalletOptions
-          ? `accountAbstraction={accountAbstraction}`
+          ? `accountAbstraction={{
+            chain: sepolia,
+            factoryAddress: 'YOUR_FACTORY_ADDRESS',
+            gasless: ${options.smartWalletOptions.gasless},
+          }}`
           : ""
       } ${renderProps(options.connectWallet)} />
     </ThirdwebProvider>
