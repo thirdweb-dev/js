@@ -6,4 +6,5 @@ Added 1155 extensions:
 
 - `claimTo` with allowlist support
 - `lazyMint`
+- `setClaimConditions`
 
