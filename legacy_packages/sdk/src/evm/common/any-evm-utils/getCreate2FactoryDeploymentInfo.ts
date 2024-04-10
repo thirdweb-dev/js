@@ -1,4 +1,4 @@
-import { utils } from "ethers";
+import { BigNumber, utils } from "ethers";
 import { KeylessDeploymentInfo } from "../../types/any-evm/deploy-data";
 import { SIGNATURE, CREATE2_FACTORY_BYTECODE } from "./constants";
 import { getKeylessTxn } from "./getKeylessTxn";
@@ -11,14 +11,14 @@ import { getKeylessTxn } from "./getKeylessTxn";
  */
 export function getCreate2FactoryDeploymentInfo(
   chainId: number,
-  gasOptions: { gasPrice?: bigint; gasLimit?: bigint },
+  gasOptions: { gasPrice?: BigNumber; gasLimit?: BigNumber },
 ): KeylessDeploymentInfo {
   const signature = utils.joinSignature(SIGNATURE);
   
   // 100000 is default deployment gas limit and 100 gwei is default gas price for create2 factory deployment
   // (See: https://github.com/Arachnid/deterministic-deployment-proxy?tab=readme-ov-file#deployment-gas-limit)
-  const gasPrice = gasOptions.gasPrice ? gasOptions.gasPrice : 100n * 10n ** 9n;
-  const gasLimit = gasOptions.gasLimit ? gasOptions.gasLimit : 100000n;
+  const gasPrice = gasOptions.gasPrice ? gasOptions.gasPrice : 100 * 10 ** 9;
+  const gasLimit = gasOptions.gasLimit ? gasOptions.gasLimit : 100000;
 
   const deploymentTransaction = getKeylessTxn(
     {
@@ -38,6 +38,6 @@ export function getCreate2FactoryDeploymentInfo(
   return {
     ...deploymentTransaction,
     deployment: create2FactoryAddress,
-    valueToSend: gasPrice * gasLimit,
+    valueToSend: BigNumber.from(gasPrice).mul(gasLimit),
   };
 }

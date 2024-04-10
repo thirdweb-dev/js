@@ -1,4 +1,4 @@
-import { providers } from "ethers";
+import { BigNumber, providers } from "ethers";
 import { CUSTOM_GAS_BINS, CUSTOM_GAS_FOR_CHAIN } from "../any-evm-constants";
 import { COMMON_FACTORY } from "./constants";
 import { isContractDeployed } from "./isContractDeployed";
@@ -37,8 +37,8 @@ export async function computeCreate2FactoryTransaction(
     const gasLimit = CUSTOM_GAS_FOR_CHAIN[networkId]?.gasLimit;
 
     const deploymentInfo = getCreate2FactoryDeploymentInfo(chainId, {
-      gasPrice,
-      gasLimit,
+      gasPrice: gasPrice ? BigNumber.from(gasPrice) : undefined,
+      gasLimit: gasLimit ? BigNumber.from(gasLimit) : undefined,
     });
 
     if (await isContractDeployed(deploymentInfo.deployment, provider)) {
@@ -52,11 +52,11 @@ export async function computeCreate2FactoryTransaction(
   const allBinsInfo = [
     ...CUSTOM_GAS_BINS.map((b) =>
       // to generate EIP-155 transaction
-      getCreate2FactoryDeploymentInfo(networkId, { gasPrice: b }),
+      getCreate2FactoryDeploymentInfo(networkId, { gasPrice: BigNumber.from(b) }),
     ),
     // to generate pre-EIP-155 transaction, hence chainId 0
     ...CUSTOM_GAS_BINS.map((b) =>
-      getCreate2FactoryDeploymentInfo(0, { gasPrice: b }),
+      getCreate2FactoryDeploymentInfo(0, { gasPrice: BigNumber.from(b) }),
     ),
   ];
 
@@ -81,14 +81,14 @@ export async function computeCreate2FactoryTransaction(
     provider.getGasPrice(),
   ]);
   const chainId = enforceEip155 ? networkId : 0;
-  const gasPriceBigInt = gasPriceFetched.toBigInt();
-  const bin = _getNearestGasPriceBin(gasPriceBigInt);
+  const bin = _getNearestGasPriceBin(gasPriceFetched);
 
   return getCreate2FactoryDeploymentInfo(chainId, {
     gasPrice: bin,
   });
 }
 
-function _getNearestGasPriceBin(gasPrice: bigint): bigint {
-  return CUSTOM_GAS_BINS.find((e) => e >= gasPrice) || gasPrice;
+function _getNearestGasPriceBin(gasPrice: BigNumber): BigNumber {
+  const bin = CUSTOM_GAS_BINS.find((e) => BigNumber.from(e).gte(gasPrice));
+  return bin ? BigNumber.from(bin) : gasPrice;
 }

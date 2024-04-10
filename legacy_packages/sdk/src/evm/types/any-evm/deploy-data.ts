@@ -1,4 +1,4 @@
-import { BytesLike } from "ethers";
+import { BigNumber, BytesLike } from "ethers";
 import { PreDeployMetadataFetched } from "../../schema/contracts/custom";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 
@@ -24,7 +24,7 @@ export type KeylessDeploymentInfo = {
   signer: string;
   transaction: string;
   deployment: string;
-  valueToSend: bigint;
+  valueToSend: BigNumber;
 };
 
 export type DeployedContractType =

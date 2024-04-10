@@ -20,80 +20,80 @@ export const ERROR_SUBSTRINGS_COMPOSITE = [
 ];
 
 export const CUSTOM_GAS_BINS = [
-  1n,
-  1n * 10n ** 9n,
-  100n * 10n ** 9n,
-  500n * 10n ** 9n,
-  1000n * 10n ** 9n,
-  2500n * 10n ** 9n,
-  5000n * 10n ** 9n,
-  7500n * 10n ** 9n,
-  10_000n * 10n ** 9n,
-  25_000n * 10n ** 9n,
-  50_000n * 10n ** 9n,
-  75_000n * 10n ** 9n,
-  100_000n * 10n ** 9n,
-  250_000n * 10n ** 9n,
-  500_000n * 10n ** 9n,
-  750_000n * 10n ** 9n,
-  1_000_000n * 10n ** 9n,
+  1,
+  1 * 10 ** 9,
+  100 * 10 ** 9,
+  500 * 10 ** 9,
+  1000 * 10 ** 9,
+  2500 * 10 ** 9,
+  5000 * 10 ** 9,
+  7500 * 10 ** 9,
+  10_000 * 10 ** 9,
+  25_000 * 10 ** 9,
+  50_000 * 10 ** 9,
+  75_000 * 10 ** 9,
+  100_000 * 10 ** 9,
+  250_000 * 10 ** 9,
+  500_000 * 10 ** 9,
+  750_000 * 10 ** 9,
+  1_000_000 * 10 ** 9,
 ];
 
 /* eslint-disable no-useless-computed-key */
 export const CUSTOM_GAS_FOR_CHAIN: Record<number, CustomChain> = {
   [5001]: {
     name: "Mantle Testnet",
-    gasPrice: 1n,
+    gasPrice: 1,
   },
   [71402]: {
     name: "Godwoken Mainnet",
-    gasPrice: 40000n * 10n ** 9n,
+    gasPrice: 40000 * 10 ** 9,
   },
   [1351057110]: {
     name: "Chaos (SKALE Testnet)",
-    gasPrice: 100000n,
+    gasPrice: 100000,
   },
   [361]: {
     name: "Theta Mainnet",
-    gasPrice: 4000n * 10n ** 9n,
+    gasPrice: 4000 * 10 ** 9,
   },
   [365]: {
     name: "Theta Testnet",
-    gasPrice: 4000n * 10n ** 9n,
+    gasPrice: 4000 * 10 ** 9,
   },
   [7700]: {
     name: "Canto",
-    gasPrice: 1000n * 10n ** 9n,
+    gasPrice: 1000 * 10 ** 9,
   },
   [7701]: {
     name: "Canto Testnet",
-    gasPrice: 1000n * 10n ** 9n,
+    gasPrice: 1000 * 10 ** 9,
   },
   [338]: {
     name: "Cronos Testnet",
-    gasPrice: 2000n * 10n ** 9n,
+    gasPrice: 2000 * 10 ** 9,
   },
   [47]: {
     name: "Xpla Testnet",
-    gasPrice: 850n * 10n ** 9n,
+    gasPrice: 850 * 10 ** 9,
   },
   [37]: {
     name: "Xpla Mainnet",
-    gasPrice: 5100n * 10n ** 9n,
+    gasPrice: 5100 * 10 ** 9,
   },
   [199]: {
     name: "BitTorrent Chain",
-    gasPrice: 300000n * 10n ** 9n,
+    gasPrice: 300000 * 10 ** 9,
   },
   [88882]: {
     name: "Spicy Chain",
-    gasPrice: 2500n * 10n ** 9n,
-    gasLimit: 200000n,
+    gasPrice: 2500 * 10 ** 9,
+    gasLimit: 200000,
   },
   [88888]: {
     name: "Chiliz Chain",
-    gasPrice: 2500n * 10n ** 9n,
-    gasLimit: 200000n,
+    gasPrice: 2500 * 10 ** 9,
+    gasLimit: 200000,
   },
 };
 
