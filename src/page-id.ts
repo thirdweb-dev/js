@@ -17,10 +17,7 @@ export enum PageId {
   // thirdweb.com/templates
   Templates = "templates-page",
 
-  // thirdweb.com/templates/tag/[tagId]
-  TemplateTagPage = "template-tag-page",
-
-  // thirdweb.com/templates/[templateId]
+  // thirdweb.com/template/[templateId]
   Template = "template-page",
 
   // thirdweb.com

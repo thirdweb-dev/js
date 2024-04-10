@@ -110,6 +110,11 @@ function redirects() {
       permanent: false,
     },
     {
+      source: "/template/nft-drop",
+      destination: "/template/erc721",
+      permanent: false,
+    },
+    {
       source: "/abuse",
       destination: "https://forms.gle/v9UJtHbVw8fXypcd7",
       permanent: false,
@@ -232,16 +237,6 @@ function redirects() {
     {
       source: "/dashboard/payments/contracts",
       destination: "/dashboard/connect/pay?tab=checkouts",
-      permanent: false,
-    },
-    {
-      source: "/template/:match*",
-      destination: "/templates/:match*",
-      permanent: false,
-    },
-    {
-      source: "/templates/nft-drop",
-      destination: "/templates/erc721",
       permanent: false,
     },
     //Redirecting as ambassadors lives in community now
