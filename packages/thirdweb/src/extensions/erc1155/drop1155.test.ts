@@ -49,7 +49,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("DropERC1155", () => {
   });
 
   it("should allow for lazy minting tokens", async () => {
-    const mintTx = await lazyMint({
+    const mintTx = lazyMint({
       contract,
       nfts: [{ name: "Test NFT" }, { name: "Test NFT 2" }],
     });

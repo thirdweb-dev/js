@@ -49,9 +49,7 @@ export type LazyMintParams = {
  * });
  * ```
  */
-export async function lazyMint(
-  options: BaseTransactionOptions<LazyMintParams>,
-) {
+export function lazyMint(options: BaseTransactionOptions<LazyMintParams>) {
   return generatedLazyMint({
     contract: options.contract,
     asyncParams: async () => {
