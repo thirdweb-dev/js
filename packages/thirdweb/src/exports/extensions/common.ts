@@ -22,3 +22,12 @@ export {
   ownerUpdatedEvent,
   type OwnerUpdatedEventFilters,
 } from "../../extensions/common/__generated__/IOwnable/events/OwnerUpdated.js";
+
+// --------------------------------------------------------
+// Royalty
+// --------------------------------------------------------
+export { getDefaultRoyaltyInfo } from "../../extensions/common/__generated__/IRoyalty/read/getDefaultRoyaltyInfo.js";
+export {
+  getRoyaltyInfoForToken,
+  type GetRoyaltyInfoForTokenParams,
+} from "../../extensions/common/__generated__/IRoyalty/read/getRoyaltyInfoForToken.js";
