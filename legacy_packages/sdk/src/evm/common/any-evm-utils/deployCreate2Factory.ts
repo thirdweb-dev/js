@@ -1,4 +1,4 @@
-import { BigNumber, Signer } from "ethers";
+import { Signer } from "ethers";
 import invariant from "tiny-invariant";
 import type { DeployOptions } from "../../types/deploy/deploy-options";
 import { computeCreate2FactoryTransaction } from "./getCreate2FactoryAddress";
