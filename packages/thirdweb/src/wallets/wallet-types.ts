@@ -5,7 +5,6 @@ import type {
   WCSupportedWalletIds,
 } from "./__generated__/wallet-ids.js";
 import type { CoinbaseSDKWalletConnectionOptions } from "./coinbase/coinbaseSDKWallet.js";
-import { createWallet } from "./create-wallet.js";
 import type {
   InAppWalletAuth,
   InAppWalletAutoConnectOptions,
