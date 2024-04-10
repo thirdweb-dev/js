@@ -47,3 +47,13 @@ export {
   setRoyaltyInfoForToken,
   type SetRoyaltyInfoForTokenParams,
 } from "../../extensions/common/__generated__/IRoyalty/write/setRoyaltyInfoForToken.js";
+
+// --------------------------------------------------------
+// Platform Fees
+// --------------------------------------------------------
+
+export { getPlatformFeeInfo } from "../../extensions/common/__generated__/IPlatformFee/read/getPlatformFeeInfo.js";
+export {
+  setPlatformFeeInfo,
+  type SetPlatformFeeInfoParams,
+} from "../../extensions/common/__generated__/IPlatformFee/write/setPlatformFeeInfo.js";
