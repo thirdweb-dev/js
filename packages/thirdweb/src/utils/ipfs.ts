@@ -74,7 +74,7 @@ export async function uploadOrExtractURIs<
         fileStartNumber: startNumber || 0,
       },
     });
-    return uris;
+    return Array.isArray(uris) ? uris : [uris];
   }
   throw new Error(
     "Files must all be of the same type (all URI or all FileOrBufferOrString)",

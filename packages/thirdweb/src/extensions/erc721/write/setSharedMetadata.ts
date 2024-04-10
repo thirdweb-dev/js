@@ -26,12 +26,10 @@ export function setSharedMetadata(
             return options.nft.image;
           }
           const { upload } = await import("../../../storage/upload.js");
-          return (
-            await upload({
-              client: options.contract.client,
-              files: [options.nft.image],
-            })
-          )[0] as string;
+          return await upload({
+            client: options.contract.client,
+            files: [options.nft.image],
+          });
         })(),
         // animation URI resolution
         (async () => {
@@ -42,12 +40,10 @@ export function setSharedMetadata(
             return options.nft.animation_url;
           }
           const { upload } = await import("../../../storage/upload.js");
-          return (
-            await upload({
-              client: options.contract.client,
-              files: [options.nft.animation_url],
-            })
-          )[0] as string;
+          return await upload({
+            client: options.contract.client,
+            files: [options.nft.animation_url],
+          });
         })(),
       ];
 
