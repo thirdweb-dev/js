@@ -1,13 +1,16 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithValue,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
 
 /**
  * Represents the parameters for the "acceptOffer" function.
  */
-
-export type AcceptOfferParams = {
+export type AcceptOfferParams = WithValue<{
   listingId: AbiParameterToPrimitiveType<{
     type: "uint256";
     name: "_listingId";
@@ -18,7 +21,7 @@ export type AcceptOfferParams = {
     type: "uint256";
     name: "_totalPrice";
   }>;
-};
+}>;
 
 export const FN_SELECTOR = "0xb13c0e63" as const;
 const FN_INPUTS = [
@@ -96,25 +99,22 @@ export function acceptOffer(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [
-              resolvedParams.listingId,
-              resolvedParams.offeror,
-              resolvedParams.currency,
-              resolvedParams.totalPrice,
-            ] as const;
-          }
-        : [
-            options.listingId,
-            options.offeror,
-            options.currency,
-            options.totalPrice,
-          ],
+    params: async () => {
+      const resolvedParams = await asyncOptions();
+      return [
+        resolvedParams.listingId,
+        resolvedParams.offeror,
+        resolvedParams.currency,
+        resolvedParams.totalPrice,
+      ] as const;
+    },
+    value: async () => (await asyncOptions()).value,
   });
 }

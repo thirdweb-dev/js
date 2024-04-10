@@ -1,13 +1,16 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithValue,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
 
 /**
  * Represents the parameters for the "airdropERC721" function.
  */
-
-export type AirdropERC721Params = {
+export type AirdropERC721Params = WithValue<{
   tokenAddress: AbiParameterToPrimitiveType<{
     type: "address";
     name: "tokenAddress";
@@ -24,7 +27,7 @@ export type AirdropERC721Params = {
       { type: "uint256"; name: "tokenId" },
     ];
   }>;
-};
+}>;
 
 export const FN_SELECTOR = "0x7c2c059d" as const;
 const FN_INPUTS = [
@@ -105,19 +108,21 @@ export function airdropERC721(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [
-              resolvedParams.tokenAddress,
-              resolvedParams.tokenOwner,
-              resolvedParams.contents,
-            ] as const;
-          }
-        : [options.tokenAddress, options.tokenOwner, options.contents],
+    params: async () => {
+      const resolvedParams = await asyncOptions();
+      return [
+        resolvedParams.tokenAddress,
+        resolvedParams.tokenOwner,
+        resolvedParams.contents,
+      ] as const;
+    },
+    value: async () => (await asyncOptions()).value,
   });
 }

@@ -1,13 +1,16 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithValue,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
 
 /**
  * Represents the parameters for the "withdrawTo" function.
  */
-
-export type WithdrawToParams = {
+export type WithdrawToParams = WithValue<{
   withdrawAddress: AbiParameterToPrimitiveType<{
     type: "address";
     name: "withdrawAddress";
@@ -16,7 +19,7 @@ export type WithdrawToParams = {
     type: "uint256";
     name: "withdrawAmount";
   }>;
-};
+}>;
 
 export const FN_SELECTOR = "0x205c2878" as const;
 const FN_INPUTS = [
@@ -80,18 +83,20 @@ export function withdrawTo(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [
-              resolvedParams.withdrawAddress,
-              resolvedParams.withdrawAmount,
-            ] as const;
-          }
-        : [options.withdrawAddress, options.withdrawAmount],
+    params: async () => {
+      const resolvedParams = await asyncOptions();
+      return [
+        resolvedParams.withdrawAddress,
+        resolvedParams.withdrawAmount,
+      ] as const;
+    },
+    value: async () => (await asyncOptions()).value,
   });
 }

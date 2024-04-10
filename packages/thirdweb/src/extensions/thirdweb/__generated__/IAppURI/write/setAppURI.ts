@@ -1,15 +1,18 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithValue,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
 
 /**
  * Represents the parameters for the "setAppURI" function.
  */
-
-export type SetAppURIParams = {
+export type SetAppURIParams = WithValue<{
   uri: AbiParameterToPrimitiveType<{ type: "string"; name: "_uri" }>;
-};
+}>;
 
 export const FN_SELECTOR = "0xfea18082" as const;
 const FN_INPUTS = [
@@ -64,15 +67,17 @@ export function setAppURI(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [resolvedParams.uri] as const;
-          }
-        : [options.uri],
+    params: async () => {
+      const resolvedParams = await asyncOptions();
+      return [resolvedParams.uri] as const;
+    },
+    value: async () => (await asyncOptions()).value,
   });
 }

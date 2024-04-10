@@ -1,16 +1,19 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithValue,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
 
 /**
  * Represents the parameters for the "approve" function.
  */
-
-export type ApproveParams = {
+export type ApproveParams = WithValue<{
   to: AbiParameterToPrimitiveType<{ type: "address"; name: "to" }>;
   tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
-};
+}>;
 
 export const FN_SELECTOR = "0x095ea7b3" as const;
 const FN_INPUTS = [
@@ -71,15 +74,17 @@ export function approve(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [resolvedParams.to, resolvedParams.tokenId] as const;
-          }
-        : [options.to, options.tokenId],
+    params: async () => {
+      const resolvedParams = await asyncOptions();
+      return [resolvedParams.to, resolvedParams.tokenId] as const;
+    },
+    value: async () => (await asyncOptions()).value,
   });
 }

@@ -1,13 +1,16 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithValue,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
 
 /**
  * Represents the parameters for the "createPack" function.
  */
-
-export type CreatePackParams = {
+export type CreatePackParams = WithValue<{
   contents: AbiParameterToPrimitiveType<{
     type: "tuple[]";
     name: "contents";
@@ -35,7 +38,7 @@ export type CreatePackParams = {
     type: "address";
     name: "recipient";
   }>;
-};
+}>;
 
 export const FN_SELECTOR = "0x092e6075" as const;
 const FN_INPUTS = [
@@ -154,29 +157,24 @@ export function createPack(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [
-              resolvedParams.contents,
-              resolvedParams.numOfRewardUnits,
-              resolvedParams.packUri,
-              resolvedParams.openStartTimestamp,
-              resolvedParams.amountDistributedPerOpen,
-              resolvedParams.recipient,
-            ] as const;
-          }
-        : [
-            options.contents,
-            options.numOfRewardUnits,
-            options.packUri,
-            options.openStartTimestamp,
-            options.amountDistributedPerOpen,
-            options.recipient,
-          ],
+    params: async () => {
+      const resolvedParams = await asyncOptions();
+      return [
+        resolvedParams.contents,
+        resolvedParams.numOfRewardUnits,
+        resolvedParams.packUri,
+        resolvedParams.openStartTimestamp,
+        resolvedParams.amountDistributedPerOpen,
+        resolvedParams.recipient,
+      ] as const;
+    },
+    value: async () => (await asyncOptions()).value,
   });
 }

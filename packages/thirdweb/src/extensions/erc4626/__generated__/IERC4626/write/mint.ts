@@ -1,13 +1,16 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithValue,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
 
 /**
  * Represents the parameters for the "mint" function.
  */
-
-export type MintParams = {
+export type MintParams = WithValue<{
   shares: AbiParameterToPrimitiveType<{
     name: "shares";
     type: "uint256";
@@ -18,7 +21,7 @@ export type MintParams = {
     type: "address";
     internalType: "address";
   }>;
-};
+}>;
 
 export const FN_SELECTOR = "0x94bf804d" as const;
 const FN_INPUTS = [
@@ -87,15 +90,17 @@ export function mint(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [resolvedParams.shares, resolvedParams.receiver] as const;
-          }
-        : [options.shares, options.receiver],
+    params: async () => {
+      const resolvedParams = await asyncOptions();
+      return [resolvedParams.shares, resolvedParams.receiver] as const;
+    },
+    value: async () => (await asyncOptions()).value,
   });
 }

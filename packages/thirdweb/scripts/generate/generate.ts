@@ -1,14 +1,14 @@
-import { mkdir, rmdir, readdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, readdir, rmdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import {
   type Abi,
-  type AbiFunction,
   type AbiEvent,
+  type AbiFunction,
   formatAbiItem,
   parseAbiItem,
 } from "abitype";
-import { prepareMethod } from "../../src/utils/abi/prepare-method";
 import { format } from "prettier";
+import { prepareMethod } from "../../src/utils/abi/prepare-method";
 
 export async function generateFromAbi(
   abi: Abi | string[],
@@ -110,21 +110,22 @@ function generateWriteFunction(f: AbiFunction, extensionName: string): string {
     needsAbiParamToPrimitiveType
       ? `import type { AbiParameterToPrimitiveType } from "abitype";\n`
       : ""
-  }import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+  }import type { BaseTransactionOptions${f.inputs.length ? ", WithValue" : ""} } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 ${
   f.inputs.length > 0
-    ? `import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";`
+    ? `import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";`
     : ""
 }
+
 
 ${
   f.inputs.length > 0
     ? `/**
  * Represents the parameters for the "${f.name}" function.
  */
-
-export type ${inputTypeName} = {
+export type ${inputTypeName} = WithValue<{
   ${f.inputs
     .map(
       (x) =>
@@ -132,7 +133,7 @@ export type ${inputTypeName} = {
           x.name,
         )}: AbiParameterToPrimitiveType<${JSON.stringify(x)}>`,
     )
-    .join("\n")}}
+    .join("\n")}}>
 
     `
     : ""
@@ -203,20 +204,28 @@ export function ${f.name}(
       : ""
   }
 ) {
+
+  ${
+    f.inputs.length
+      ? `const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  })`
+      : ""
+  };
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     ${
       f.inputs.length
-        ? `params: "asyncParams" in options ? async () => {
-      
-        const resolvedParams = await options.asyncParams();
+        ? `params: async () => {
+        const resolvedParams = await asyncOptions();
         return [${f.inputs
           .map((x) => `resolvedParams.${removeLeadingUnderscore(x.name)}`)
           .join(", ")}] as const;
-      } : [${f.inputs
-        .map((x) => `options.${removeLeadingUnderscore(x.name)}`)
-        .join(", ")}]`
+      },
+      value: async () => (await asyncOptions()).value,
+      `
         : ""
     }
   });

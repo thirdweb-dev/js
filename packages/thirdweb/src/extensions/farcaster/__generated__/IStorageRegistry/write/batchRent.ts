@@ -1,16 +1,19 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithValue,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
 
 /**
  * Represents the parameters for the "batchRent" function.
  */
-
-export type BatchRentParams = {
+export type BatchRentParams = WithValue<{
   fids: AbiParameterToPrimitiveType<{ type: "uint256[]"; name: "fids" }>;
   units: AbiParameterToPrimitiveType<{ type: "uint256[]"; name: "units" }>;
-};
+}>;
 
 export const FN_SELECTOR = "0xa82c356e" as const;
 const FN_INPUTS = [
@@ -71,15 +74,17 @@ export function batchRent(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [resolvedParams.fids, resolvedParams.units] as const;
-          }
-        : [options.fids, options.units],
+    params: async () => {
+      const resolvedParams = await asyncOptions();
+      return [resolvedParams.fids, resolvedParams.units] as const;
+    },
+    value: async () => (await asyncOptions()).value,
   });
 }

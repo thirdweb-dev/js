@@ -1,13 +1,16 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithValue,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
 
 /**
  * Represents the parameters for the "makeOffer" function.
  */
-
-export type MakeOfferParams = {
+export type MakeOfferParams = WithValue<{
   params: AbiParameterToPrimitiveType<{
     type: "tuple";
     name: "_params";
@@ -20,7 +23,7 @@ export type MakeOfferParams = {
       { type: "uint256"; name: "expirationTimestamp" },
     ];
   }>;
-};
+}>;
 
 export const FN_SELECTOR = "0x016767fa" as const;
 const FN_INPUTS = [
@@ -106,15 +109,17 @@ export function makeOffer(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [resolvedParams.params] as const;
-          }
-        : [options.params],
+    params: async () => {
+      const resolvedParams = await asyncOptions();
+      return [resolvedParams.params] as const;
+    },
+    value: async () => (await asyncOptions()).value,
   });
 }

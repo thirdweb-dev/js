@@ -1,13 +1,16 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithValue,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
 
 /**
  * Represents the parameters for the "permit" function.
  */
-
-export type PermitParams = {
+export type PermitParams = WithValue<{
   owner: AbiParameterToPrimitiveType<{ type: "address"; name: "owner" }>;
   spender: AbiParameterToPrimitiveType<{ type: "address"; name: "spender" }>;
   value: AbiParameterToPrimitiveType<{ type: "uint256"; name: "value" }>;
@@ -15,7 +18,7 @@ export type PermitParams = {
   v: AbiParameterToPrimitiveType<{ type: "uint8"; name: "v" }>;
   r: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "r" }>;
   s: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "s" }>;
-};
+}>;
 
 export const FN_SELECTOR = "0xd505accf" as const;
 const FN_INPUTS = [
@@ -114,31 +117,25 @@ export function permit(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [
-              resolvedParams.owner,
-              resolvedParams.spender,
-              resolvedParams.value,
-              resolvedParams.deadline,
-              resolvedParams.v,
-              resolvedParams.r,
-              resolvedParams.s,
-            ] as const;
-          }
-        : [
-            options.owner,
-            options.spender,
-            options.value,
-            options.deadline,
-            options.v,
-            options.r,
-            options.s,
-          ],
+    params: async () => {
+      const resolvedParams = await asyncOptions();
+      return [
+        resolvedParams.owner,
+        resolvedParams.spender,
+        resolvedParams.value,
+        resolvedParams.deadline,
+        resolvedParams.v,
+        resolvedParams.r,
+        resolvedParams.s,
+      ] as const;
+    },
+    value: async () => (await asyncOptions()).value,
   });
 }

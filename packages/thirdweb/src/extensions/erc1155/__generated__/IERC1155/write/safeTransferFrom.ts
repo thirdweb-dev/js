@@ -1,19 +1,22 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithValue,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
 
 /**
  * Represents the parameters for the "safeTransferFrom" function.
  */
-
-export type SafeTransferFromParams = {
+export type SafeTransferFromParams = WithValue<{
   from: AbiParameterToPrimitiveType<{ type: "address"; name: "_from" }>;
   to: AbiParameterToPrimitiveType<{ type: "address"; name: "_to" }>;
   tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
   value: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_value" }>;
   data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "_data" }>;
-};
+}>;
 
 export const FN_SELECTOR = "0xf242432a" as const;
 const FN_INPUTS = [
@@ -98,27 +101,23 @@ export function safeTransferFrom(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [
-              resolvedParams.from,
-              resolvedParams.to,
-              resolvedParams.tokenId,
-              resolvedParams.value,
-              resolvedParams.data,
-            ] as const;
-          }
-        : [
-            options.from,
-            options.to,
-            options.tokenId,
-            options.value,
-            options.data,
-          ],
+    params: async () => {
+      const resolvedParams = await asyncOptions();
+      return [
+        resolvedParams.from,
+        resolvedParams.to,
+        resolvedParams.tokenId,
+        resolvedParams.value,
+        resolvedParams.data,
+      ] as const;
+    },
+    value: async () => (await asyncOptions()).value,
   });
 }

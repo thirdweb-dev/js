@@ -1,20 +1,23 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithValue,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
 
 /**
  * Represents the parameters for the "approveBuyerForListing" function.
  */
-
-export type ApproveBuyerForListingParams = {
+export type ApproveBuyerForListingParams = WithValue<{
   listingId: AbiParameterToPrimitiveType<{
     type: "uint256";
     name: "_listingId";
   }>;
   buyer: AbiParameterToPrimitiveType<{ type: "address"; name: "_buyer" }>;
   toApprove: AbiParameterToPrimitiveType<{ type: "bool"; name: "_toApprove" }>;
-};
+}>;
 
 export const FN_SELECTOR = "0x48dd77df" as const;
 const FN_INPUTS = [
@@ -87,19 +90,21 @@ export function approveBuyerForListing(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [
-              resolvedParams.listingId,
-              resolvedParams.buyer,
-              resolvedParams.toApprove,
-            ] as const;
-          }
-        : [options.listingId, options.buyer, options.toApprove],
+    params: async () => {
+      const resolvedParams = await asyncOptions();
+      return [
+        resolvedParams.listingId,
+        resolvedParams.buyer,
+        resolvedParams.toApprove,
+      ] as const;
+    },
+    value: async () => (await asyncOptions()).value,
   });
 }

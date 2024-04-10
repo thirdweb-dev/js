@@ -1,13 +1,16 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithValue,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
 
 /**
  * Represents the parameters for the "validatePaymasterUserOp" function.
  */
-
-export type ValidatePaymasterUserOpParams = {
+export type ValidatePaymasterUserOpParams = WithValue<{
   userOp: AbiParameterToPrimitiveType<{
     type: "tuple";
     name: "userOp";
@@ -30,7 +33,7 @@ export type ValidatePaymasterUserOpParams = {
     name: "userOpHash";
   }>;
   maxCost: AbiParameterToPrimitiveType<{ type: "uint256"; name: "maxCost" }>;
-};
+}>;
 
 export const FN_SELECTOR = "0xf465c77e" as const;
 const FN_INPUTS = [
@@ -158,19 +161,21 @@ export function validatePaymasterUserOp(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [
-              resolvedParams.userOp,
-              resolvedParams.userOpHash,
-              resolvedParams.maxCost,
-            ] as const;
-          }
-        : [options.userOp, options.userOpHash, options.maxCost],
+    params: async () => {
+      const resolvedParams = await asyncOptions();
+      return [
+        resolvedParams.userOp,
+        resolvedParams.userOpHash,
+        resolvedParams.maxCost,
+      ] as const;
+    },
+    value: async () => (await asyncOptions()).value,
   });
 }

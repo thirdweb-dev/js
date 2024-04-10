@@ -1,13 +1,16 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithValue,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
 
 /**
  * Represents the parameters for the "recoverFor" function.
  */
-
-export type RecoverForParams = {
+export type RecoverForParams = WithValue<{
   from: AbiParameterToPrimitiveType<{ type: "address"; name: "from" }>;
   to: AbiParameterToPrimitiveType<{ type: "address"; name: "to" }>;
   recoveryDeadline: AbiParameterToPrimitiveType<{
@@ -23,7 +26,7 @@ export type RecoverForParams = {
     name: "toDeadline";
   }>;
   toSig: AbiParameterToPrimitiveType<{ type: "bytes"; name: "toSig" }>;
-};
+}>;
 
 export const FN_SELECTOR = "0xba656434" as const;
 const FN_INPUTS = [
@@ -115,29 +118,24 @@ export function recoverFor(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [
-              resolvedParams.from,
-              resolvedParams.to,
-              resolvedParams.recoveryDeadline,
-              resolvedParams.recoverySig,
-              resolvedParams.toDeadline,
-              resolvedParams.toSig,
-            ] as const;
-          }
-        : [
-            options.from,
-            options.to,
-            options.recoveryDeadline,
-            options.recoverySig,
-            options.toDeadline,
-            options.toSig,
-          ],
+    params: async () => {
+      const resolvedParams = await asyncOptions();
+      return [
+        resolvedParams.from,
+        resolvedParams.to,
+        resolvedParams.recoveryDeadline,
+        resolvedParams.recoverySig,
+        resolvedParams.toDeadline,
+        resolvedParams.toSig,
+      ] as const;
+    },
+    value: async () => (await asyncOptions()).value,
   });
 }

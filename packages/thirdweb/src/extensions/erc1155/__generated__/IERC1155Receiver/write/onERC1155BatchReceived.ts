@@ -1,19 +1,22 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithValue,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
 
 /**
  * Represents the parameters for the "onERC1155BatchReceived" function.
  */
-
-export type OnERC1155BatchReceivedParams = {
+export type OnERC1155BatchReceivedParams = WithValue<{
   operator: AbiParameterToPrimitiveType<{ type: "address"; name: "operator" }>;
   from: AbiParameterToPrimitiveType<{ type: "address"; name: "from" }>;
   ids: AbiParameterToPrimitiveType<{ type: "uint256[]"; name: "ids" }>;
   values: AbiParameterToPrimitiveType<{ type: "uint256[]"; name: "values" }>;
   data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "data" }>;
-};
+}>;
 
 export const FN_SELECTOR = "0xbc197c81" as const;
 const FN_INPUTS = [
@@ -104,27 +107,23 @@ export function onERC1155BatchReceived(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [
-              resolvedParams.operator,
-              resolvedParams.from,
-              resolvedParams.ids,
-              resolvedParams.values,
-              resolvedParams.data,
-            ] as const;
-          }
-        : [
-            options.operator,
-            options.from,
-            options.ids,
-            options.values,
-            options.data,
-          ],
+    params: async () => {
+      const resolvedParams = await asyncOptions();
+      return [
+        resolvedParams.operator,
+        resolvedParams.from,
+        resolvedParams.ids,
+        resolvedParams.values,
+        resolvedParams.data,
+      ] as const;
+    },
+    value: async () => (await asyncOptions()).value,
   });
 }
