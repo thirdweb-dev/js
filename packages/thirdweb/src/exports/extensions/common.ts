@@ -31,8 +31,19 @@ export {
 // --------------------------------------------------------
 // Royalty
 // --------------------------------------------------------
+// read
 export { getDefaultRoyaltyInfo } from "../../extensions/common/__generated__/IRoyalty/read/getDefaultRoyaltyInfo.js";
 export {
   getRoyaltyInfoForToken,
   type GetRoyaltyInfoForTokenParams,
 } from "../../extensions/common/__generated__/IRoyalty/read/getRoyaltyInfoForToken.js";
+
+// write
+export {
+  setDefaultRoyaltyInfo,
+  type SetDefaultRoyaltyInfoParams,
+} from "../../extensions/common/__generated__/IRoyalty/write/setDefaultRoyaltyInfo.js";
+export {
+  setRoyaltyInfoForToken,
+  type SetRoyaltyInfoForTokenParams,
+} from "../../extensions/common/__generated__/IRoyalty/write/setRoyaltyInfoForToken.js";
