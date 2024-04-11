@@ -8,10 +8,10 @@ import {
 
 import { keccak256 } from "../../hashing/keccak256.js";
 import { convertQuantity } from "./convert-quantity.js";
-import type { AllowlistEntry } from "./types.js";
+import type { OverrideEntry } from "./types.js";
 
 export async function hashEntry(options: {
-  entry: AllowlistEntry;
+  entry: OverrideEntry;
   chain: Chain;
   client: ThirdwebClient;
   tokenDecimals: number;

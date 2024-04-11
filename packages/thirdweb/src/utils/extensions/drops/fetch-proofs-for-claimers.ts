@@ -10,7 +10,7 @@ import type { Address } from "../../address.js";
 import { convertQuantity } from "./convert-quantity.js";
 import { hashEntry } from "./hash-entry.js";
 import type {
-  ALlowlistProof,
+  OverrideProof,
   ShardData,
   ShardedMerkleTreeInfo,
 } from "./types.js";
@@ -20,7 +20,7 @@ export async function fetchProofsForClaimer(options: {
   claimer: string;
   merkleRoot: string;
   tokenDecimals: number;
-}): Promise<ALlowlistProof | null> {
+}): Promise<OverrideProof | null> {
   const { contract, merkleRoot, claimer } = options;
   // 1. fetch merkle data from contract URI
   const metadata = await getContractMetadata({

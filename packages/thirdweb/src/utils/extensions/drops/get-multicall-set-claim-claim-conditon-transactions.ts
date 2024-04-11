@@ -6,7 +6,7 @@ import { upload } from "../../../storage/upload.js";
 import { dateToSeconds } from "../../date.js";
 import { type Hex, toHex } from "../../encoding/hex.js";
 import { convertErc20Amount } from "../convert-erc20-amount.js";
-import { processAllowlist } from "./process-allow-list.js";
+import { processOverrideList } from "./process-override-list.js";
 import type { ClaimConditionsInput } from "./types.js";
 
 export async function getMulticallSetClaimConditionTransactions(options: {
@@ -20,9 +20,9 @@ export async function getMulticallSetClaimConditionTransactions(options: {
     options.phases.map(async (phase) => {
       // allowlist
       let merkleRoot: string = phase.merkleRootHash || toHex("", { size: 32 });
-      if (phase.allowlist) {
-        const { shardedMerkleInfo, uri } = await processAllowlist({
-          allowlist: phase.allowlist,
+      if (phase.overrideList) {
+        const { shardedMerkleInfo, uri } = await processOverrideList({
+          allowlist: phase.overrideList,
           client: options.contract.client,
           chain: options.contract.chain,
           tokenDecimals: 0,

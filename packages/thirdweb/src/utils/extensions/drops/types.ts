@@ -12,17 +12,17 @@ export type ShardedMerkleTreeInfo = {
 
 export type ShardData = {
   proofs: Hex[];
-  entries: AllowlistEntry[];
+  entries: OverrideEntry[];
 };
 
-export type AllowlistEntry = {
+export type OverrideEntry = {
   address: string;
   maxClaimable?: string;
   price?: string;
   currencyAddress?: string;
 };
 
-export type ALlowlistProof = {
+export type OverrideProof = {
   proof: Hex[];
   quantityLimitPerWallet: bigint;
   pricePerToken: bigint;
@@ -36,7 +36,7 @@ export type ClaimConditionsInput = {
   maxClaimableSupply?: bigint;
   maxClaimablePerWallet?: bigint;
   merkleRootHash?: string;
-  allowlist?: string[] | AllowlistEntry[];
+  overrideList?: OverrideEntry[];
   metadata?: string | Record<string, unknown>;
 } & (
   | {

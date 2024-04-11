@@ -5,7 +5,7 @@ import {
 } from "../../../../constants/addresses.js";
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import { padHex } from "../../../../utils/encoding/hex.js";
-import type { ALlowlistProof } from "../../../../utils/extensions/drops/types.js";
+import type { OverrideProof } from "../../../../utils/extensions/drops/types.js";
 import { claim } from "../../__generated__/IDrop1155/write/claim.js";
 import { getActiveClaimCondition } from "../read/getActiveClaimCondition.js";
 
@@ -51,7 +51,7 @@ export function claimTo(options: BaseTransactionOptions<ClaimToParams>) {
             proof: [],
             quantityLimitPerWallet: 0n,
             pricePerToken: 0n,
-          } satisfies ALlowlistProof;
+          } satisfies OverrideProof;
         }
         // lazy-load the fetchProofsForClaimer function if we need it
         const { fetchProofsForClaimer } = await import(
@@ -71,7 +71,7 @@ export function claimTo(options: BaseTransactionOptions<ClaimToParams>) {
             proof: [],
             quantityLimitPerWallet: 0n,
             pricePerToken: 0n,
-          } satisfies ALlowlistProof;
+          } satisfies OverrideProof;
         }
         // otherwise return the proof
         return allowListProof;

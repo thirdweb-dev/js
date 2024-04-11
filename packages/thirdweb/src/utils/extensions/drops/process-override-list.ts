@@ -5,21 +5,21 @@ import { upload } from "../../../storage/upload.js";
 import type { Hex } from "../../encoding/hex.js";
 import { hashEntry } from "./hash-entry.js";
 import type {
-  AllowlistEntry,
+  OverrideEntry,
   ShardData,
   ShardedMerkleTreeInfo,
 } from "./types.js";
 
-export async function processAllowlist(options: {
+export async function processOverrideList(options: {
   client: ThirdwebClient;
   chain: Chain;
-  allowlist: string[] | AllowlistEntry[];
+  allowlist: string[] | OverrideEntry[];
   tokenDecimals: number;
   shardNybbles?: number;
 }) {
   const shardNybbles = options.shardNybbles || 2;
   // 1. convert to fully populated allowlist
-  const entries: AllowlistEntry[] = options.allowlist.map((entry) => {
+  const entries: OverrideEntry[] = options.allowlist.map((entry) => {
     if (typeof entry === "string") {
       return {
         address: entry,
@@ -28,7 +28,7 @@ export async function processAllowlist(options: {
     return entry;
   });
   // 2. shard them into a map where the key is the first n digits of the address
-  const shards: Record<string, AllowlistEntry[]> = {};
+  const shards: Record<string, OverrideEntry[]> = {};
   for (const snapshotEntry of entries) {
     const shard = snapshotEntry.address
       .slice(2, 2 + shardNybbles)
