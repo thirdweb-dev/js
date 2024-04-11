@@ -1,7 +1,7 @@
 import { getInstalledWalletProviders } from "../../../../wallets/injected/mipdStore.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
 // import { localWalletMetadata } from "../../../../wallets/local/index._ts";
-import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { Skeleton } from "../components/Skeleton.js";
 import { WalletImage } from "../components/WalletImage.js";
 import { Container } from "../components/basic.js";
@@ -20,7 +20,7 @@ export function WalletEntryButton(props: {
   selectWallet: () => void;
 }) {
   const { walletId, selectWallet } = props;
-  const { connectLocale, recommendedWallets } = useWalletConnectionCtx();
+  const { connectLocale, recommendedWallets } = useConnectUI();
   const isRecommended = recommendedWallets?.find((w) => w.id === walletId);
   const { screen } = useScreenContext();
   const walletInfo = useWalletInfo(walletId);

@@ -1,6 +1,6 @@
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { WalletInfo } from "../../../../wallets/wallet-info.js";
-import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 
 import type { InjectedWalletLocale } from "../injected/locale/types.js";
 
@@ -20,7 +20,7 @@ function CoinbaseSDKWalletConnectUI(props: {
 }) {
   const { onBack, done, wallet, walletInfo, onGetStarted, locale } = props;
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>();
-  const { client, chain } = useWalletConnectionCtx();
+  const { client, chain } = useConnectUI();
 
   const connect = useCallback(() => {
     wallet

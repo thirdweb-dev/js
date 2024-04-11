@@ -1,9 +1,8 @@
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { preAuthenticate } from "../../../../wallets/in-app/core/authentication/index.js";
 import type { SendEmailOtpReturnType } from "../../../../wallets/in-app/implementations/index.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
-import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
-import { ModalConfigCtx } from "../../providers/wallet-ui-states-provider.js";
+import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { FadeIn } from "../../ui/components/FadeIn.js";
 import { OTPInput } from "../../ui/components/OTPInput.js";
 import { Spacer } from "../../ui/components/Spacer.js";
@@ -40,16 +39,10 @@ export function InAppWalletOTPLoginUI(props: {
 }) {
   const { wallet, done, goBack } = props;
   const email = props.email;
-  const { modalSize } = useContext(ModalConfigCtx);
-  const isWideModal = modalSize === "wide";
+  const { client, chain, connectModal } = useConnectUI();
+  const isWideModal = connectModal.size === "wide";
   const locale = props.locale;
   const [otpInput, setOtpInput] = useState("");
-  const { client, chain } = useWalletConnectionCtx();
-
-  // const { createInstance, done, chain } = props.connectUIProps.connection;
-  // const { goBack } = props.connectUIProps.screenConfig;
-
-  // const [wallet, setWallet] = useState<InAppWallet | null>(null);
   const [verifyStatus, setVerifyStatus] = useState<VerificationStatus>("idle");
   const [emailStatus, setEmailStatus] = useState<EmailStatus>("sending");
 
@@ -174,66 +167,6 @@ export function InAppWalletOTPLoginUI(props: {
       sendEmail();
     }
   }, [sendEmail]);
-
-  // if (screen === "create-password") {
-  //   return (
-  //     <CreatePassword
-  //       modalSize={size}
-  //       email={email}
-  //       goBack={goBack}
-  //       onPassword={async (password) => {
-  //         if (!wallet || typeof emailStatus !== "object") {
-  //           return;
-  //         }
-  //         const authResult = await wallet.connect({
-  //          chain,
-  //           strategy: "email",
-  //           email,
-  //           verificationCode: otpInput,
-  //           // recoveryCode: password,
-  //         });
-  //         if (!authResult) {
-  //           throw new Error("Failed to verify recovery code");
-  //         }
-  //         await wallet.connect({
-  //           authResult,
-  //         });
-  //         setConnectedWallet(wallet);
-  //         props.connected();
-  //       }}
-  //     />
-  //   );
-  // }
-
-  // if (screen === "enter-password-or-recovery-code") {
-  //   return (
-  //     <EnterPasswordOrRecovery
-  //       modalSize={size}
-  //       goBack={goBack}
-  //       email={email}
-  //       onVerify={async (passwordOrRecoveryCode) => {
-  //         if (!wallet || typeof emailStatus !== "object") {
-  //           return;
-  //         }
-  //         const authResult = await wallet.authenticate({
-  //           strategy: "email_verification",
-  //           email,
-  //           verificationCode: otpInput,
-  //           recoveryCode: passwordOrRecoveryCode,
-  //         });
-  //         if (!authResult) {
-  //           throw new Error("Failed to verify recovery code");
-  //         }
-  //         await wallet.connect({
-  //           authResult,
-  //         });
-
-  //         setConnectedWallet(wallet);
-  //         props.connected();
-  //       }}
-  //     />
-  //   );
-  // }
 
   if (screen === "base") {
     return (

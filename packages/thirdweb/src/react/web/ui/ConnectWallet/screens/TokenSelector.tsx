@@ -4,7 +4,7 @@ import { useState } from "react";
 import type { Chain } from "../../../../../chains/types.js";
 import { useChainQuery } from "../../../../core/hooks/others/useChainQuery.js";
 import { useWalletBalance } from "../../../../core/hooks/others/useWalletBalance.js";
-import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
+import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import { useActiveAccount } from "../../../../core/hooks/wallets/wallet-hooks.js";
 import { ChainIcon, fallbackChainIcon } from "../../components/ChainIcon.js";
 import { Skeleton } from "../../components/Skeleton.js";
@@ -53,7 +53,7 @@ export function TokenSelector(props: {
     tokenAddress: input,
   });
 
-  const locale = useWalletConnectionCtx().connectLocale.sendFundsScreen;
+  const locale = useConnectUI().connectLocale.sendFundsScreen;
 
   let tokenList = props.tokenList;
 

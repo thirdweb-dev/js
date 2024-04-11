@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { getInAppWalletLocale } from "./locale/getInAppWalletLocale.js";
 import type { InAppWalletLocale } from "./locale/types.js";
 
@@ -7,7 +7,7 @@ import type { InAppWalletLocale } from "./locale/types.js";
  * @internal
  */
 export function useInAppWalletLocale() {
-  const localeId = useWalletConnectionCtx().locale;
+  const localeId = useConnectUI().locale;
   const [locale, setLocale] = useState<InAppWalletLocale | undefined>(
     undefined,
   );

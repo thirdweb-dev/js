@@ -2,7 +2,7 @@ import { CheckCircledIcon, CrossCircledIcon } from "@radix-ui/react-icons";
 import { useMemo, useState } from "react";
 import { isAddress } from "../../../../../utils/address.js";
 import { useWalletBalance } from "../../../../core/hooks/others/useWalletBalance.js";
-import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
+import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import {
   useActiveAccount,
   useActiveWalletChain,
@@ -105,7 +105,7 @@ function SendFundsForm(props: {
   setAmount: (value: string) => void;
   onBack: () => void;
 }) {
-  const locale = useWalletConnectionCtx().connectLocale.sendFundsScreen;
+  const locale = useConnectUI().connectLocale.sendFundsScreen;
   const tokenAddress =
     props.token && "address" in props.token ? props.token.address : undefined;
 

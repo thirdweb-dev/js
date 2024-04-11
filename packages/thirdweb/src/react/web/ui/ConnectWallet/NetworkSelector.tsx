@@ -9,7 +9,7 @@ import {
   useChainQuery,
   useChainsQuery,
 } from "../../../core/hooks/others/useChainQuery.js";
-import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import {
   useActiveWalletChain,
   useSwitchActiveWalletChain,
@@ -241,7 +241,7 @@ function NetworkSelectorContentInner(
     return _chainMap;
   }, [props.chains]);
 
-  const locale = useWalletConnectionCtx().connectLocale.networkSelector;
+  const locale = useConnectUI().connectLocale.networkSelector;
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTab, setSelectedTab] = useState<"all" | "mainnet" | "testnet">(
     "all",
@@ -499,8 +499,7 @@ const NetworkTabContent = (props: {
   renderChain?: React.FC<NetworkSelectorChainProps>;
   close?: () => void;
 }) => {
-  const locale =
-    useWalletConnectionCtx().connectLocale.networkSelector.categoryLabel;
+  const locale = useConnectUI().connectLocale.networkSelector.categoryLabel;
 
   const { recentChainIds, popularChainIds, allChainIds } = props;
 
@@ -662,7 +661,7 @@ export const ChainButton = /* @__PURE__ */ memo(function ChainButton(props: {
   confirming: boolean;
   switchingFailed: boolean;
 }) {
-  const locale = useWalletConnectionCtx().connectLocale;
+  const locale = useConnectUI().connectLocale;
   const { chain, confirming, switchingFailed } = props;
 
   const activeChain = useActiveWalletChain();

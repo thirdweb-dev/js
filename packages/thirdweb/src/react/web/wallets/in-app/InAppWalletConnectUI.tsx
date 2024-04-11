@@ -1,6 +1,5 @@
-import { useContext } from "react";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
-import { ModalConfigCtx } from "../../providers/wallet-ui-states-provider.js";
+import { useSelectionData } from "../../providers/wallet-ui-states-provider.js";
 import { LoadingScreen } from "../shared/LoadingScreen.js";
 import { InAppWalletFormUIScreen } from "./InAppWalletFormUI.js";
 import { InAppWalletOTPLoginUI } from "./InAppWalletOTPLoginUI.js";
@@ -17,7 +16,7 @@ function InAppWalletConnectUI(props: {
   done: () => void;
   goBack?: () => void;
 }) {
-  const { data } = useContext(ModalConfigCtx);
+  const data = useSelectionData();
   const state = data as InAppWalletSelectUIState;
   const locale = useInAppWalletLocale();
 

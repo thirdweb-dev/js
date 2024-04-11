@@ -22,7 +22,7 @@ import {
   useChainsQuery,
 } from "../../../core/hooks/others/useChainQuery.js";
 import { useWalletBalance } from "../../../core/hooks/others/useWalletBalance.js";
-import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import {
   useActiveAccount,
   useActiveWallet,
@@ -96,7 +96,7 @@ export const ConnectedWalletDetails: React.FC<{
   chain?: Chain;
   switchButton: ConnectButtonProps["switchButton"];
 }> = (props) => {
-  const { connectLocale: locale, client } = useWalletConnectionCtx();
+  const { connectLocale: locale, client } = useConnectUI();
   const activeWallet = useActiveWallet();
   const activeAccount = useActiveAccount();
   const walletChain = useActiveWalletChain();
@@ -808,9 +808,8 @@ function ConnectedToSmartWallet() {
   const activeAccount = useActiveAccount();
   const activeWallet = useActiveWallet();
   const chain = useActiveWalletChain();
-  const locale = useWalletConnectionCtx().connectLocale;
   const isSmartWallet = activeWallet?.id === "smart";
-  const { client } = useWalletConnectionCtx();
+  const { client, connectLocale: locale } = useConnectUI();
 
   const [isSmartWalletDeployed, setIsSmartWalletDeployed] = useState(false);
 
@@ -863,7 +862,7 @@ function ConnectedToSmartWallet() {
 }
 
 function InAppWalletEmail() {
-  const { client } = useWalletConnectionCtx();
+  const { client } = useConnectUI();
   const emailQuery = useQuery({
     queryKey: ["in-app-wallet-user", client],
     queryFn: async () => {
@@ -903,7 +902,7 @@ function SwitchNetworkButton(props: {
 }) {
   const switchChain = useSwitchActiveWalletChain();
   const [switching, setSwitching] = useState(false);
-  const locale = useWalletConnectionCtx().connectLocale;
+  const locale = useConnectUI().connectLocale;
 
   const switchNetworkBtnTitle =
     props.switchNetworkBtnTitle ?? locale.switchNetwork;
