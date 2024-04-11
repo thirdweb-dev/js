@@ -1,11 +1,11 @@
 import type { AbiConstructor } from "abitype";
-import type { ThirdwebClient } from "../../client/client.js";
-import { getInitBytecodeWithSalt } from "./get-init-bytecode-with-salt.js";
 import type { Chain } from "../../chains/types.js";
-import { encodeAbiParameters } from "../abi/encodeAbiParameters.js";
+import type { ThirdwebClient } from "../../client/client.js";
 import { fetchPublishedContractMetadata } from "../../contract/deployment/publisher.js";
-import type { FetchDeployMetadataResult } from "./deploy-metadata.js";
 import { computeCreate2FactoryAddress } from "../../contract/deployment/utils/create-2-factory.js";
+import { encodeAbiParameters } from "../abi/encodeAbiParameters.js";
+import type { FetchDeployMetadataResult } from "./deploy-metadata.js";
+import { getInitBytecodeWithSalt } from "./get-init-bytecode-with-salt.js";
 
 /**
  * @internal

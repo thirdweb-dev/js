@@ -1,27 +1,27 @@
+import styled from "@emotion/styled";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
+import type { Chain } from "../../../../../../../chains/types.js";
+import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
 import { useWalletBalance } from "../../../../../../core/hooks/others/useWalletBalance.js";
 import { useActiveAccount } from "../../../../../../core/hooks/wallets/wallet-hooks.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
+import { TokenIcon } from "../../../../components/TokenIcon.js";
 import { Container } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
+import { Text } from "../../../../components/text.js";
+import { TokenSymbol } from "../../../../components/token/TokenSymbol.js";
 import { useCustomTheme } from "../../../../design-system/CustomThemeProvider.js";
 import {
-  spacing,
   fontSize,
   iconSize,
   radius,
+  spacing,
 } from "../../../../design-system/index.js";
 import type { TokenInfo } from "../../../defaultTokens.js";
-import { formatTokenBalance } from "../../TokenSelector.js";
-import type { Chain } from "../../../../../../../chains/types.js";
-import { Text } from "../../../../components/text.js";
-import { isNativeToken, type NativeToken } from "../../nativeToken.js";
 import { WalletIcon } from "../../../icons/WalletIcon.js";
-import { formatNumber } from "../../../../../../../utils/formatNumber.js";
-import { TokenIcon } from "../../../../components/TokenIcon.js";
-import { TokenSymbol } from "../../../../components/token/TokenSymbol.js";
-import styled from "@emotion/styled";
+import { formatTokenBalance } from "../../TokenSelector.js";
+import { type NativeToken, isNativeToken } from "../../nativeToken.js";
 
 /**
  * Shows an amount "value" and renders the selected token and chain

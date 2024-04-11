@@ -1,13 +1,13 @@
+import styled from "@emotion/styled";
 import { Button } from "../../../components/buttons.js";
 import { useCustomTheme } from "../../../design-system/CustomThemeProvider.js";
-import { spacing, radius } from "../../../design-system/index.js";
-import styled from "@emotion/styled";
+import { radius, spacing } from "../../../design-system/index.js";
 
 export const FeesButton = /* @__PURE__ */ styled(Button)(() => {
   const theme = useCustomTheme();
   return {
     background: "transparent",
-    border: `1px solid transparent`,
+    border: "1px solid transparent",
     "&:hover": {
       background: "transparent",
       borderColor: theme.colors.accentText,

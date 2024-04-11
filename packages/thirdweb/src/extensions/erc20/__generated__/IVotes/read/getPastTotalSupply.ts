@@ -4,6 +4,8 @@ import type { BaseTransactionOptions } from "../../../../../transaction/types.js
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "getPastTotalSupply" function.
@@ -15,7 +17,7 @@ export type GetPastTotalSupplyParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x8e539e8c" as const;
+export const FN_SELECTOR = "0x8e539e8c" as const;
 const FN_INPUTS = [
   {
     type: "uint256",
@@ -27,6 +29,27 @@ const FN_OUTPUTS = [
     type: "uint256",
   },
 ] as const;
+
+/**
+ * Checks if the `getPastTotalSupply` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `getPastTotalSupply` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isGetPastTotalSupplySupported } from "thirdweb/extensions/erc20";
+ *
+ * const supported = await isGetPastTotalSupplySupported(contract);
+ * ```
+ */
+export async function isGetPastTotalSupplySupported(
+  contract: ThirdwebContract<any>,
+) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
 
 /**
  * Encodes the parameters for the "getPastTotalSupply" function.
@@ -45,6 +68,28 @@ export function encodeGetPastTotalSupplyParams(
   options: GetPastTotalSupplyParams,
 ) {
   return encodeAbiParameters(FN_INPUTS, [options.blockNumber]);
+}
+
+/**
+ * Encodes the "getPastTotalSupply" function into a Hex string with its parameters.
+ * @param options - The options for the getPastTotalSupply function.
+ * @returns The encoded hexadecimal string.
+ * @extension ERC20
+ * @example
+ * ```ts
+ * import { encodeGetPastTotalSupply } "thirdweb/extensions/erc20";
+ * const result = encodeGetPastTotalSupply({
+ *  blockNumber: ...,
+ * });
+ * ```
+ */
+export function encodeGetPastTotalSupply(options: GetPastTotalSupplyParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeGetPastTotalSupplyParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**

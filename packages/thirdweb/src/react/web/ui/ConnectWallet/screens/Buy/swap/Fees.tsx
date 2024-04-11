@@ -22,6 +22,7 @@ export function SwapFees(props: {
         const feeAmount = formatNumber(Number(fee.amount), 4);
         return (
           <>
+            {/* biome-ignore lint/suspicious/noArrayIndexKey: <explanation> */}
             <Container key={i} flex="row" gap="xxs">
               <Text color="primaryText" size="sm">
                 {feeAmount === 0 ? "~" : ""}

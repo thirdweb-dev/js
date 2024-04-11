@@ -1,23 +1,23 @@
+import { keyframes } from "@emotion/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { FocusScope } from "@radix-ui/react-focus-scope";
-import { keyframes } from "@emotion/react";
 import { Cross2Icon } from "@radix-ui/react-icons";
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
+  compactModalMaxHeight,
   modalCloseFadeOutDuration,
-  wideModalMaxHeight,
   modalMaxWidthCompact,
   modalMaxWidthWide,
-  compactModalMaxHeight,
+  wideModalMaxHeight,
 } from "../ConnectWallet/constants.js";
 import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 import { StyledDiv } from "../design-system/elements.js";
 import {
   iconSize,
-  spacing,
   media,
   radius,
   shadow,
+  spacing,
 } from "../design-system/index.js";
 import { DynamicHeight } from "./DynamicHeight.js";
 import { Overlay } from "./Overlay.js";

@@ -1,10 +1,10 @@
 import type { Abi } from "abitype";
+import { decodeAbiParameters } from "viem";
+import { eth_getTransactionByHash } from "../../rpc/actions/eth_getTransactionByHash.js";
+import { getRpcClient } from "../../rpc/rpc.js";
 import type { ThirdwebContract } from "../contract.js";
 import { fetchDeployBytecodeFromPublishedContractMetadata } from "../deployment/publisher.js";
 import { computeCreate2FactoryAddress } from "../deployment/utils/create-2-factory.js";
-import { decodeAbiParameters } from "viem";
-import { getRpcClient } from "../../rpc/rpc.js";
-import { eth_getTransactionByHash } from "../../rpc/actions/eth_getTransactionByHash.js";
 
 type FetchConstructorParamsOptions = {
   contract: ThirdwebContract;
@@ -97,7 +97,7 @@ export async function fetchConstructorParams(
     // regex finds the LAST occurence of solc metadata bytes, result always in same position
     // TODO: we currently don't handle error string embedded in the bytecode, need to strip ascii (upgradeableProxy) in patterns[2]
     // https://etherscan.io/address/0xee6a57ec80ea46401049e92587e52f5ec1c24785#code
-    if (matches && matches[0] && matches[0][2]) {
+    if (matches?.[0]?.[2]) {
       constructorArgs = matches[0][2];
     }
   }

@@ -1,14 +1,14 @@
-import { type Theme, iconSize, spacing } from "../design-system/index.js";
-import { BackButton, ModalTitle } from "./modalElements.js";
-import { Img } from "./Img.js";
+import type { CSSObject } from "@emotion/react";
+import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 import {
   fadeInAnimation,
   floatDownAnimation,
   floatUpAnimation,
 } from "../design-system/animations.js";
 import { StyledDiv } from "../design-system/elements.js";
-import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
-import type { CSSObject } from "@emotion/react";
+import { type Theme, iconSize, spacing } from "../design-system/index.js";
+import { Img } from "./Img.js";
+import { BackButton, ModalTitle } from "./modalElements.js";
 
 export const ScreenBottomContainer = /* @__PURE__ */ StyledDiv(() => {
   const theme = useCustomTheme();

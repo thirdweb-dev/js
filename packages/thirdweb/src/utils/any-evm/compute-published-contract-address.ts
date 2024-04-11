@@ -1,6 +1,6 @@
+import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { computeDeploymentAddress } from "./compute-deployment-address.js";
-import type { Chain } from "../../chains/types.js";
 import {
   computeDeploymentInfoFromContractId,
   computeDeploymentInfoFromMetadata,

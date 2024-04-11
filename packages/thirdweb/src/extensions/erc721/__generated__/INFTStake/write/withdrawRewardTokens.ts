@@ -1,17 +1,22 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "withdrawRewardTokens" function.
  */
-
-export type WithdrawRewardTokensParams = {
+export type WithdrawRewardTokensParams = WithOverrides<{
   amount: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_amount" }>;
-};
+}>;
 
-const FN_SELECTOR = "0xcb43b2dd" as const;
+export const FN_SELECTOR = "0xcb43b2dd" as const;
 const FN_INPUTS = [
   {
     type: "uint256",
@@ -19,6 +24,27 @@ const FN_INPUTS = [
   },
 ] as const;
 const FN_OUTPUTS = [] as const;
+
+/**
+ * Checks if the `withdrawRewardTokens` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `withdrawRewardTokens` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isWithdrawRewardTokensSupported } from "thirdweb/extensions/erc721";
+ *
+ * const supported = await isWithdrawRewardTokensSupported(contract);
+ * ```
+ */
+export async function isWithdrawRewardTokensSupported(
+  contract: ThirdwebContract<any>,
+) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
 
 /**
  * Encodes the parameters for the "withdrawRewardTokens" function.
@@ -37,6 +63,30 @@ export function encodeWithdrawRewardTokensParams(
   options: WithdrawRewardTokensParams,
 ) {
   return encodeAbiParameters(FN_INPUTS, [options.amount]);
+}
+
+/**
+ * Encodes the "withdrawRewardTokens" function into a Hex string with its parameters.
+ * @param options - The options for the withdrawRewardTokens function.
+ * @returns The encoded hexadecimal string.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { encodeWithdrawRewardTokens } "thirdweb/extensions/erc721";
+ * const result = encodeWithdrawRewardTokens({
+ *  amount: ...,
+ * });
+ * ```
+ */
+export function encodeWithdrawRewardTokens(
+  options: WithdrawRewardTokensParams,
+) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeWithdrawRewardTokensParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**
@@ -66,15 +116,17 @@ export function withdrawRewardTokens(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [resolvedParams.amount] as const;
-          }
-        : [options.amount],
+    params: async () => {
+      const resolvedOptions = await asyncOptions();
+      return [resolvedOptions.amount] as const;
+    },
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

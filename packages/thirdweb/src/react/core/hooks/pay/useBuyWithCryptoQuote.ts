@@ -1,12 +1,12 @@
 import {
-  useQuery,
   type UseQueryOptions,
   type UseQueryResult,
+  useQuery,
 } from "@tanstack/react-query";
 import {
-  getBuyWithCryptoQuote,
   type BuyWithCryptoQuote,
   type GetBuyWithCryptoQuoteParams,
+  getBuyWithCryptoQuote,
 } from "../../../../pay/buyWithCrypto/actions/getQuote.js";
 
 export type BuyWithCryptoQuoteQueryOptions = Omit<
@@ -67,7 +67,7 @@ export function useBuyWithCryptoQuote(
 ): UseQueryResult<BuyWithCryptoQuote> {
   return useQuery({
     ...queryParams,
-    // eslint-disable-next-line @tanstack/query/exhaustive-deps
+
     queryKey: ["buyWithCryptoQuote", buyWithCryptoParams],
     queryFn: () => {
       if (!buyWithCryptoParams) {

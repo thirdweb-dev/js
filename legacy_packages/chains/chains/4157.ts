@@ -4,6 +4,11 @@ export default {
   "chainId": 4157,
   "explorers": [
     {
+      "name": "CrossFi Testnet Scan",
+      "url": "https://scan.testnet.ms",
+      "standard": "EIP3091"
+    },
+    {
       "name": "Scan Testnet",
       "url": "https://scan.testnet.ms/",
       "standard": "EIP1559"
@@ -22,6 +27,7 @@ export default {
   "redFlags": [],
   "rpc": [
     "https://4157.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.testnet.ms/",
     "https://rpc.testnet.ms"
   ],
   "shortName": "XFI",

@@ -1,30 +1,30 @@
 import { Cross2Icon } from "@radix-ui/react-icons";
+import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
+import { WalletUIStatesProvider } from "../../../providers/wallet-ui-states-provider.js";
+import { canFitWideModal } from "../../../utils/canFitWideModal.js";
 import { DynamicHeight } from "../../components/DynamicHeight.js";
 import { CrossContainer } from "../../components/Modal.js";
 import { IconButton } from "../../components/buttons.js";
 import {
-  useCustomTheme,
   CustomThemeProvider,
+  useCustomTheme,
 } from "../../design-system/CustomThemeProvider.js";
 import { StyledDiv } from "../../design-system/elements.js";
 import {
+  type Theme,
   iconSize,
   radius,
   shadow,
-  type Theme,
 } from "../../design-system/index.js";
 import {
-  wideModalMaxHeight,
   modalMaxWidthCompact,
   modalMaxWidthWide,
+  wideModalMaxHeight,
 } from "../constants.js";
 import type { WelcomeScreen } from "../screens/types.js";
 import { SyncedWalletUIStates } from "./ConnectEmbed.js";
-import { useSetupScreen } from "./screen.js";
-import { WalletUIStatesProvider } from "../../../providers/wallet-ui-states-provider.js";
 import { ConnectModalContent } from "./ConnectModalContent.js";
-import { canFitWideModal } from "../../../utils/canFitWideModal.js";
-import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
+import { useSetupScreen } from "./screen.js";
 
 /**
  * @internal

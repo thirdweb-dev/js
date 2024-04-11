@@ -1,4 +1,6 @@
+import styled from "@emotion/styled";
 import { useMemo, useState } from "react";
+import { isAddress } from "../../../../../../utils/address.js";
 import type {
   Account,
   Wallet,
@@ -6,13 +8,10 @@ import type {
 import { Spacer } from "../../../components/Spacer.js";
 import { Container } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
-import { Text } from "../../../components/text.js";
-// import { SwapFees } from "./swap/SwapFees.js";
-import { isAddress } from "../../../../../../utils/address.js";
-import { AccountSelectorButton } from "./AccountSelectorButton.js";
 import { Input } from "../../../components/formElements.js";
+import { Text } from "../../../components/text.js";
 import { useCustomTheme } from "../../../design-system/CustomThemeProvider.js";
-import styled from "@emotion/styled";
+import { AccountSelectorButton } from "./AccountSelectorButton.js";
 
 /**
  * @internal

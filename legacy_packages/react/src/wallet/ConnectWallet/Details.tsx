@@ -1,76 +1,84 @@
+import styled from "@emotion/styled";
+import {
+  ChevronRightIcon,
+  EnterIcon,
+  ExitIcon,
+  PaperPlaneIcon,
+  PinBottomIcon,
+  ShuffleIcon,
+  TextAlignJustifyIcon,
+  PlusIcon,
+} from "@radix-ui/react-icons";
+import { Localhost } from "@thirdweb-dev/chains";
+import {
+  WalletInstance,
+  shortenString,
+  useAddress,
+  useBalance,
+  useChain,
+  useChainId,
+  useDisconnect,
+  useENS,
+  useSDK,
+  useSupportedChains,
+  useWallet,
+  useWalletConfig,
+  useWalletContext,
+} from "@thirdweb-dev/react-core";
+import { useEffect, useState, useSyncExternalStore } from "react";
+import {
+  MetaMaskWallet,
+  walletIds,
+  type EmbeddedWallet,
+  type SmartWallet,
+} from "@thirdweb-dev/wallets";
 import { ChainIcon } from "../../components/ChainIcon";
 import { CopyIcon } from "../../components/CopyIcon";
 import { Img } from "../../components/Img";
 import { Modal } from "../../components/Modal";
 import { Skeleton } from "../../components/Skeleton";
 import { Spacer } from "../../components/Spacer";
+import { Container, Line } from "../../components/basic";
 import { Button, IconButton } from "../../components/buttons";
+import { Link, Text } from "../../components/text";
 import {
+  Theme,
   fontSize,
   iconSize,
   media,
   radius,
   spacing,
-  Theme,
 } from "../../design-system";
+import { useCustomTheme } from "../../design-system/CustomThemeProvider";
+import { fadeInAnimation } from "../../design-system/animations";
+import { StyledButton, StyledDiv } from "../../design-system/elements";
+import {
+  useEmbeddedWalletUserEmail,
+  useEmbeddedWalletUserPhoneNumber,
+} from "../../evm/hooks/wallets/useEmbeddedWallet";
+import { useTWLocale } from "../../evm/providers/locale-provider";
 import { isMobile } from "../../evm/utils/isMobile";
+import { ExportLocalWallet } from "../wallets/localWallet/ExportLocalWallet";
+import type { LocalWalletConfig } from "../wallets/localWallet/types";
 import {
   NetworkSelectorContent,
   type NetworkSelectorProps,
 } from "./NetworkSelector";
-import styled from "@emotion/styled";
-import {
-  ChevronRightIcon,
-  EnterIcon,
-  PaperPlaneIcon,
-  PinBottomIcon,
-  ShuffleIcon,
-  TextAlignJustifyIcon,
-  ExitIcon,
-} from "@radix-ui/react-icons";
-import { Localhost } from "@thirdweb-dev/chains";
-import {
-  useChain,
-  useAddress,
-  useBalance,
-  useChainId,
-  useDisconnect,
-  useSDK,
-  useSupportedChains,
-  useWallet,
-  WalletInstance,
-  useENS,
-} from "@thirdweb-dev/react-core";
-import { useEffect, useState } from "react";
-import {
-  MetaMaskWallet,
-  type SmartWallet,
-  walletIds,
-  type EmbeddedWallet,
-} from "@thirdweb-dev/wallets";
-import { Container, Line } from "../../components/basic";
-import { FundsIcon } from "./icons/FundsIcon";
-import { ExportLocalWallet } from "../wallets/localWallet/ExportLocalWallet";
-import { useWalletContext } from "@thirdweb-dev/react-core";
-import { useWalletConfig } from "@thirdweb-dev/react-core";
-import type { LocalWalletConfig } from "../wallets/localWallet/types";
-import { fadeInAnimation } from "../../design-system/animations";
-import { Link, Text } from "../../components/text";
-import { SendFunds } from "./SendFunds";
-import { SupportedTokens } from "./defaultTokens";
 import { ReceiveFunds } from "./ReceiveFunds";
+import { SendFunds } from "./SendFunds";
+import { onModalUnmount } from "./constants";
+import { SupportedTokens } from "./defaultTokens";
+import { FundsIcon } from "./icons/FundsIcon";
 import { smartWalletIcon } from "./icons/dataUris";
-import { useTWLocale } from "../../evm/providers/locale-provider";
-import { shortenString } from "@thirdweb-dev/react-core";
-import { StyledButton, StyledDiv } from "../../design-system/elements";
-import { useCustomTheme } from "../../design-system/CustomThemeProvider";
 import {
   appleIconUri,
   facebookIconUri,
   googleIconUri,
 } from "./icons/socialLogins";
-import { useEmbeddedWalletUserEmail } from "../../evm/hooks/wallets/useEmbeddedWallet";
-import { onModalUnmount } from "./constants";
+import { useChainQuery } from "../hooks/useChainQuery";
+import { SwapScreen } from "./screens/Buy/swap/SwapScreen";
+import { SwapTransactionsScreen } from "./screens/SwapTransactionsScreen";
+import { swapTransactionsStore } from "./screens/Buy/swap/pendingSwapTx";
 
 const TW_CONNECTED_WALLET = "tw-connected-wallet";
 
@@ -78,8 +86,10 @@ type WalletDetailsModalScreen =
   | "main"
   | "export"
   | "send"
+  | "buy"
   | "receive"
-  | "network-switcher";
+  | "network-switcher"
+  | "pending-tx";
 
 export const ConnectedWalletDetails: React.FC<{
   onDisconnect: () => void;
@@ -99,10 +109,18 @@ export const ConnectedWalletDetails: React.FC<{
   detailsModalFooter?: (props: { close: () => void }) => JSX.Element;
   hideSendButton?: boolean;
   hideReceiveButton?: boolean;
+  hideBuyButton?: boolean;
 }> = (props) => {
   const locale = useTWLocale().connectWallet;
   const chain = useChain();
   const walletChainId = useChainId();
+  const chainQuery = useChainQuery(walletChainId);
+
+  const swapTxs = useSyncExternalStore(
+    swapTransactionsStore.subscribe,
+    swapTransactionsStore.getValue,
+  );
+  const pendingSwapTxs = swapTxs.filter((tx) => tx.status === "PENDING");
 
   const disconnect = useDisconnect();
   const chains = useSupportedChains();
@@ -269,10 +287,10 @@ export const ConnectedWalletDetails: React.FC<{
           position: "relative",
         }}
       >
-        <ChainIcon chain={chain} size={iconSize.md} active />
+        <ChainIcon chain={chain || chainQuery.data} size={iconSize.md} active />
       </div>
       <Text color="primaryText" multiline>
-        {chain?.name || `Unknown chain #${walletChainId}`}
+        {chain?.name || chainQuery.data?.name || `chain #${walletChainId}`}
       </Text>
       <StyledChevronRightIcon
         width={iconSize.sm}
@@ -289,8 +307,17 @@ export const ConnectedWalletDetails: React.FC<{
   const showFaucet =
     props.hideTestnetFaucet === undefined ? false : !props.hideTestnetFaucet;
 
-  const showBothButtons =
-    props.hideSendButton !== true && props.hideReceiveButton !== true;
+  let buttonsToShow = 3;
+
+  if (props.hideReceiveButton) {
+    buttonsToShow -= 1;
+  }
+  if (props.hideSendButton) {
+    buttonsToShow -= 1;
+  }
+  if (props.hideBuyButton) {
+    buttonsToShow -= 1;
+  }
 
   let content = (
     <div>
@@ -354,21 +381,15 @@ export const ConnectedWalletDetails: React.FC<{
 
       <Container px="lg">
         <ConnectedToSmartWallet />
-        <EmbeddedWalletEmail />
+        <EmbeddedWalletDetails />
 
         {/* Send and Receive */}
         <Container
-          style={
-            showBothButtons
-              ? {
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: spacing.sm,
-                }
-              : {
-                  display: "grid",
-                }
-          }
+          style={{
+            display: "grid",
+            gridTemplateColumns: `repeat(${buttonsToShow}, 1fr)`,
+            gap: spacing.sm,
+          }}
         >
           {props.hideSendButton !== true && (
             <Button
@@ -413,12 +434,31 @@ export const ConnectedWalletDetails: React.FC<{
               {locale.receive}{" "}
             </Button>
           )}
+
+          {props.hideBuyButton !== true && (
+            <Button
+              variant="outline"
+              style={{
+                fontSize: fontSize.sm,
+                display: "flex",
+                gap: spacing.xs,
+                alignItems: "center",
+                padding: spacing.sm,
+              }}
+              onClick={() => {
+                setScreen("buy");
+              }}
+            >
+              <Container color="secondaryText" flex="row" center="both">
+                <PlusIcon width={iconSize.sm} height={iconSize.sm} />
+              </Container>
+              {"Buy"}
+            </Button>
+          )}
         </Container>
       </Container>
 
-      {props.hideSendButton && props.hideReceiveButton ? null : (
-        <Spacer y="md" />
-      )}
+      {buttonsToShow === 0 ? null : <Spacer y="md" />}
 
       <Container px="md">
         {/* Network Switcher */}
@@ -429,6 +469,24 @@ export const ConnectedWalletDetails: React.FC<{
           }}
         >
           {networkSwitcherButton}
+
+          {/* Transactions */}
+          <MenuButton
+            onClick={() => {
+              setScreen("pending-tx");
+            }}
+            style={{
+              fontSize: fontSize.sm,
+            }}
+          >
+            <TextAlignJustifyIcon width={iconSize.md} height={iconSize.md} />
+            <Container flex="row" gap="xs" center="y">
+              <Text color="primaryText">{"Transactions"}</Text>
+              {pendingSwapTxs && pendingSwapTxs.length > 0 && (
+                <BadgeCount>{pendingSwapTxs.length}</BadgeCount>
+              )}
+            </Container>
+          </MenuButton>
 
           {/* Switch to Personal Wallet for Safe */}
           {personalWallet &&
@@ -497,27 +555,6 @@ export const ConnectedWalletDetails: React.FC<{
                 {locale.requestTestnetFunds}
               </MenuLink>
             )}
-
-          {/* Explorer link */}
-          {chain?.explorers && chain.explorers[0]?.url && (
-            <MenuLink
-              href={chain.explorers[0].url + "/address/" + address}
-              target="_blank"
-              as="a"
-              style={{
-                textDecoration: "none",
-                color: "inherit",
-              }}
-            >
-              <Container flex="row" center="y" color="secondaryText">
-                <TextAlignJustifyIcon
-                  width={iconSize.md}
-                  height={iconSize.md}
-                />
-              </Container>
-              {locale.transactionHistory}
-            </MenuLink>
-          )}
 
           {/* Export  Wallet */}
           {activeWallet?.walletId === walletIds.localWallet && (
@@ -608,13 +645,27 @@ export const ConnectedWalletDetails: React.FC<{
         }}
       />
     );
-  } else if (screen === "send") {
+  } else if (screen === "send" && walletChainId) {
     content = (
       <SendFunds
         supportedTokens={props.supportedTokens}
         onBack={() => {
           setScreen("main");
         }}
+        chainId={walletChainId}
+      />
+    );
+  } else if (screen === "pending-tx") {
+    content = <SwapTransactionsScreen onBack={() => setScreen("main")} />;
+  }
+
+  // swap tokens
+  else if (screen === "buy") {
+    content = (
+      <SwapScreen
+        onBack={() => setScreen("main")}
+        supportedTokens={props.supportedTokens}
+        onViewPendingTx={() => setScreen("pending-tx")}
       />
     );
   } else if (screen === "receive") {
@@ -813,10 +864,11 @@ function ConnectedToSmartWallet() {
   return null;
 }
 
-function EmbeddedWalletEmail() {
+function EmbeddedWalletDetails() {
   const emailQuery = useEmbeddedWalletUserEmail();
+  const phoneNumberQuery = useEmbeddedWalletUserPhoneNumber();
 
-  if (emailQuery.data) {
+  if (emailQuery.data || phoneNumberQuery.data) {
     return (
       <Container
         flex="row"
@@ -825,10 +877,26 @@ function EmbeddedWalletEmail() {
           paddingBottom: spacing.md,
         }}
       >
-        <Text size="sm">{emailQuery.data}</Text>
+        <Text size="sm">{emailQuery.data || phoneNumberQuery.data}</Text>
       </Container>
     );
   }
 
   return undefined;
 }
+
+const BadgeCount = /* @__PURE__ */ StyledDiv(() => {
+  const theme = useCustomTheme();
+  return {
+    background: theme.colors.primaryButtonBg,
+    color: theme.colors.primaryButtonText,
+    fontSize: fontSize.sm,
+    fontWeight: 500,
+    borderRadius: "50%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    minWidth: "22px",
+    minHeight: "22px",
+  };
+});

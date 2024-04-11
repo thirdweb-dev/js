@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { getPayChainsEndpoint } from "../../../../../../../pay/buyWithCrypto/utils/definitions.js";
-import { getClientFetch } from "../../../../../../../utils/fetch.js";
 import { defineChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
+import { getPayChainsEndpoint } from "../../../../../../../pay/buyWithCrypto/utils/definitions.js";
+import { getClientFetch } from "../../../../../../../utils/fetch.js";
 
 /**
  * @internal

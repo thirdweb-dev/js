@@ -73,8 +73,9 @@ jobs:
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4
         with:
-          directory: ./legacy_packages
+          directory: legacy_packages/
           flags: legacy_packages
+          verbose: true
 
   e2e:
     timeout-minutes: 15

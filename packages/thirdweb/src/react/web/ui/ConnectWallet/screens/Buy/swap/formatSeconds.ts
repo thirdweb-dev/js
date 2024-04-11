@@ -10,7 +10,7 @@ export function formatSeconds(seconds: number) {
   }
 
   // minutes only
-  else if (seconds > 60) {
+  if (seconds > 60) {
     const minutes = Math.ceil(seconds / 60);
     return `${minutes} Minutes`;
   }

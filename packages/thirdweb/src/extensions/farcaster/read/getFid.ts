@@ -1,9 +1,9 @@
+import type { Address } from "abitype";
+import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import { withCache } from "../../../utils/promise/withCache.js";
-import type { Chain } from "../../../chains/types.js";
-import { getIdRegistry } from "../contracts/getIdRegistry.js";
 import { idOf } from "../__generated__/IIdRegistry/read/idOf.js";
-import type { Address } from "abitype";
+import { getIdRegistry } from "../contracts/getIdRegistry.js";
 
 export type GetFidParams = {
   client: ThirdwebClient;

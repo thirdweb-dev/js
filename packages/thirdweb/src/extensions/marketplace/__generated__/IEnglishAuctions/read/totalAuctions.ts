@@ -3,14 +3,37 @@ import type { BaseTransactionOptions } from "../../../../../transaction/types.js
 
 import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
-const FN_SELECTOR = "0x16002f4a" as const;
+export const FN_SELECTOR = "0x16002f4a" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
     type: "uint256",
   },
 ] as const;
+
+/**
+ * Checks if the `totalAuctions` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `totalAuctions` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isTotalAuctionsSupported } from "thirdweb/extensions/marketplace";
+ *
+ * const supported = await isTotalAuctionsSupported(contract);
+ * ```
+ */
+export async function isTotalAuctionsSupported(
+  contract: ThirdwebContract<any>,
+) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
 
 /**
  * Decodes the result of the totalAuctions function call.

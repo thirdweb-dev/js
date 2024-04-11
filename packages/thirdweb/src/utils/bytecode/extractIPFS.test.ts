@@ -1,10 +1,10 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import {
   DOODLES_CONTRACT,
   USDT_CONTRACT,
 } from "../../../test/src/test-contracts.js";
-import { extractIPFSUri } from "./extractIPFS.js";
 import { getBytecode } from "../../contract/actions/get-bytecode.js";
+import { extractIPFSUri } from "./extractIPFS.js";
 
 // skip this test suite if there is no secret key available to test with
 // TODO: remove reliance on secret key during unit tests entirely
@@ -28,6 +28,6 @@ describe.runIf(process.env.TW_SECRET_KEY)("extractIPFSUri", () => {
     const ipfsHash = extractIPFSUri(bytecode);
 
     // USDC bytecode does not contain an IPFS hash
-    expect(ipfsHash).toMatchInlineSnapshot(`undefined`);
+    expect(ipfsHash).toMatchInlineSnapshot("undefined");
   });
 });

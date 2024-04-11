@@ -1,14 +1,14 @@
 import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 import {
-  StyledLabel,
-  StyledInput,
   StyledDiv,
+  StyledInput,
+  StyledLabel,
 } from "../design-system/elements.js";
 import {
-  fontSize,
-  spacing,
-  radius,
   type Theme,
+  fontSize,
+  radius,
+  spacing,
 } from "../design-system/index.js";
 
 type LabelProps = {

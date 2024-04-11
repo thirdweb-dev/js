@@ -1,8 +1,8 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 
+import { FORKED_OPTIMISM_CHAIN } from "~test/chains.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
 import { getUsdRegistrationPrice } from "./getUsdRegistrationPrice.js";
-import { FORKED_OPTIMISM_CHAIN } from "~test/chains.js";
 
 describe("farcaster.getRegistrationPrice", () => {
   it("should return the price to register a new fid in USD", async () => {

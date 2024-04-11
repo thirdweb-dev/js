@@ -83,7 +83,7 @@ export function toUnits(tokens: string, decimals: number): bigint {
 
   if (decimals === 0) {
     // Check if there's any fraction part that would necessitate rounding up the integer part.
-    if (fractionPart[0] && parseInt(fractionPart[0]) >= 5) {
+    if (fractionPart[0] && Number.parseInt(fractionPart[0]) >= 5) {
       integerPart = (BigInt(integerPart) + 1n).toString();
     }
     fractionPart = ""; // No fraction part is needed when decimals === 0.
@@ -91,7 +91,7 @@ export function toUnits(tokens: string, decimals: number): bigint {
     // When decimals > 0, handle potential rounding based on the digit right after the specified decimal places.
     if (fractionPart.length > decimals) {
       const roundingDigit = fractionPart[decimals];
-      if (roundingDigit && parseInt(roundingDigit, 10) >= 5) {
+      if (roundingDigit && Number.parseInt(roundingDigit, 10) >= 5) {
         // If rounding is needed, add 1 to the last included digit of the fraction part.
         const roundedFraction =
           BigInt(fractionPart.substring(0, decimals)) + 1n;
@@ -129,4 +129,20 @@ export function toUnits(tokens: string, decimals: number): bigint {
  */
 export function toWei(tokens: string) {
   return toUnits(tokens, 18);
+}
+
+/**
+ * Converts the specified number from gwei to wei.
+ * @param gwei The number of gwei to convert.
+ * @returns The converted value in wei.
+ * @example
+ * ```ts
+ * import { fromGwei } from "thirdweb/utils";
+ * fromGwei('1')
+ * // 1000000000n
+ * ```
+ * @utils
+ */
+export function fromGwei(gwei: string) {
+  return toUnits(gwei, 9);
 }

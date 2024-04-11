@@ -2,7 +2,9 @@ import { ClockIcon, CrossCircledIcon } from "@radix-ui/react-icons";
 import { useMemo, useState } from "react";
 import { polygon } from "../../../../../../chains/chain-definitions/polygon.js";
 import type { Chain } from "../../../../../../chains/types.js";
+import type { ThirdwebClient } from "../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../constants/addresses.js";
+import type { BuyWithCryptoQuote } from "../../../../../../pay/buyWithCrypto/actions/getQuote.js";
 import type {
   Account,
   Wallet,
@@ -10,8 +12,8 @@ import type {
 import { useChainsQuery } from "../../../../../core/hooks/others/useChainQuery.js";
 import { useWalletBalance } from "../../../../../core/hooks/others/useWalletBalance.js";
 import {
-  useBuyWithCryptoQuote,
   type BuyWithCryptoQuoteQueryParams,
+  useBuyWithCryptoQuote,
 } from "../../../../../core/hooks/pay/useBuyWithCryptoQuote.js";
 import {
   useActiveAccount,
@@ -19,6 +21,14 @@ import {
   useActiveWalletChain,
   useSwitchActiveWalletChain,
 } from "../../../../../core/hooks/wallets/wallet-hooks.js";
+import { LoadingScreen } from "../../../../wallets/shared/LoadingScreen.js";
+import {
+  Drawer,
+  DrawerOverlay,
+  useDrawer,
+} from "../../../components/Drawer.js";
+import { DynamicHeight } from "../../../components/DynamicHeight.js";
+import { Skeleton } from "../../../components/Skeleton.js";
 import { Spacer } from "../../../components/Spacer.js";
 import { Spinner } from "../../../components/Spinner.js";
 import { Container, ModalHeader } from "../../../components/basic.js";
@@ -27,33 +37,23 @@ import { Text } from "../../../components/text.js";
 import { fontSize, iconSize, radius } from "../../../design-system/index.js";
 import { useDebouncedValue } from "../../../hooks/useDebouncedValue.js";
 import type { SupportedTokens } from "../../defaultTokens.js";
+import type { IconFC } from "../../icons/types.js";
 import { TokenSelector } from "../TokenSelector.js";
 import {
+  type ERC20OrNativeToken,
   NATIVE_TOKEN,
   isNativeToken,
-  type ERC20OrNativeToken,
 } from "../nativeToken.js";
-import { PaymentSelection } from "./PaymentSelection.js";
-import { BuyTokenInput } from "./swap/BuyTokenInput.js";
-import { SwapConfirmationScreen } from "./swap/ConfirmationScreen.js";
-import { PayWithCrypto } from "./swap/PayWithCrypto.js";
-import type { BuyWithCryptoQuote } from "../../../../../../pay/buyWithCrypto/actions/getQuote.js";
-import { useSwapSupportedChains } from "./swap/useSwapSupportedChains.js";
-import type { ThirdwebClient } from "../../../../../../client/client.js";
-import { Skeleton } from "../../../components/Skeleton.js";
-import type { IconFC } from "../../icons/types.js";
-import {
-  Drawer,
-  DrawerOverlay,
-  useDrawer,
-} from "../../../components/Drawer.js";
-import { SwapFees } from "./swap/Fees.js";
-import { DynamicHeight } from "../../../components/DynamicHeight.js";
-import { formatSeconds } from "./swap/formatSeconds.js";
-import { LoadingScreen } from "../../../../wallets/shared/LoadingScreen.js";
 import { AccountSelectionScreen } from "./AccountSelectionScreen.js";
 import { AccountSelectorButton } from "./AccountSelectorButton.js";
+import { PaymentSelection } from "./PaymentSelection.js";
 import { FeesButton } from "./buttons.js";
+import { BuyTokenInput } from "./swap/BuyTokenInput.js";
+import { SwapConfirmationScreen } from "./swap/ConfirmationScreen.js";
+import { SwapFees } from "./swap/Fees.js";
+import { PayWithCrypto } from "./swap/PayWithCrypto.js";
+import { formatSeconds } from "./swap/formatSeconds.js";
+import { useSwapSupportedChains } from "./swap/useSwapSupportedChains.js";
 
 /**
  * @internal
@@ -111,7 +111,7 @@ export function BuyScreenContent(props: {
   const { activeChain, account, client, activeWallet, supportedChains } = props;
   const [isSwitching, setIsSwitching] = useState(false);
   const switchActiveWalletChain = useSwitchActiveWalletChain();
-  const [method, setMethod] = useState<"crypto" | "creditCard">("crypto");
+  const [method] = useState<"crypto" | "creditCard">("crypto");
 
   // prefetch chains metadata
   useChainsQuery(supportedChains || [], 50);

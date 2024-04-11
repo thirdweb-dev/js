@@ -6,16 +6,16 @@ import type {
   TypedData,
   TypedDataDefinition,
 } from "viem";
+import type { Chain } from "../../chains/types.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
 import type { SendTransactionResult } from "../../transaction/types.js";
-import type { Chain } from "../../chains/types.js";
+import type { WalletEmitter } from "../wallet-emitter.js";
 import type {
   CreateWalletArgs,
   WalletAutoConnectionOption,
   WalletConnectionOption,
   WalletId,
 } from "../wallet-types.js";
-import type { WalletEmitter } from "../wallet-emitter.js";
 
 // TODO: add generic ID on wallet class, creation options, connect options etc
 

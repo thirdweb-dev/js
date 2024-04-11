@@ -1,3 +1,4 @@
+import { keyframes } from "@emotion/react";
 import {
   CheckCircledIcon,
   CheckIcon,
@@ -5,35 +6,33 @@ import {
 } from "@radix-ui/react-icons";
 import { useState } from "react";
 import type { Chain } from "../../../../../../../chains/types.js";
+import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/actions/getQuote.js";
+import { waitForReceipt } from "../../../../../../../transaction/actions/wait-for-tx-receipt.js";
+import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import type { Account } from "../../../../../../../wallets/interfaces/wallet.js";
 import { useSendTransaction } from "../../../../../../core/hooks/contract/useSendTransaction.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
 import {
-  useBuyWithCryptoStatus,
   type BuyWithCryptoStatusQueryParams,
+  useBuyWithCryptoStatus,
 } from "../../../../../../core/hooks/pay/useBuyWithCryptoStatus.js";
-// import { useActiveWallet } from "../../../../../../core/hooks/wallets/wallet-hooks.js";
 import { shortenString } from "../../../../../../core/utils/addresses.js";
-import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
+import { TokenIcon } from "../../../../components/TokenIcon.js";
 import { Container, Line, ModalHeader } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { useCustomTheme } from "../../../../design-system/CustomThemeProvider.js";
 import { StyledDiv } from "../../../../design-system/elements.js";
 import { fontSize, iconSize } from "../../../../design-system/index.js";
-import { isNativeToken, type ERC20OrNativeToken } from "../../nativeToken.js";
-import { SwapFees } from "./Fees.js";
-import { addPendingSwapTransaction } from "./pendingSwapTx.js";
-import { TokenIcon } from "../../../../components/TokenIcon.js";
-import { waitForReceipt } from "../../../../../../../transaction/actions/wait-for-tx-receipt.js";
 import { AccentFailIcon } from "../../../icons/AccentFailIcon.js";
-import type { ThirdwebClient } from "../../../../../../../client/client.js";
+import { type ERC20OrNativeToken, isNativeToken } from "../../nativeToken.js";
+import { SwapFees } from "./Fees.js";
 import { formatSeconds } from "./formatSeconds.js";
-import { keyframes } from "@emotion/react";
+import { addPendingSwapTransaction } from "./pendingSwapTx.js";
 
 /**
  * @internal
@@ -87,8 +86,12 @@ export function SwapConfirmationScreen(props: {
         onViewPendingTx={props.onViewPendingTx}
         destinationChain={props.toChain}
         destinationToken={props.toToken}
-        sourceAmount={`${formatNumber(Number(props.fromAmount), 4)} ${fromTokenSymbol || ""}`}
-        destinationAmount={`${formatNumber(Number(props.toAmount), 4)} ${toTokenSymbol || ""}`}
+        sourceAmount={`${formatNumber(Number(props.fromAmount), 4)} ${
+          fromTokenSymbol || ""
+        }`}
+        destinationAmount={`${formatNumber(Number(props.toAmount), 4)} ${
+          toTokenSymbol || ""
+        }`}
         swapTx={swapTx}
       />
     );

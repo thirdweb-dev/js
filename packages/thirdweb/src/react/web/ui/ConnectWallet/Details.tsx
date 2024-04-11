@@ -1,14 +1,25 @@
+import styled from "@emotion/styled";
 import {
-  ExitIcon,
   ChevronRightIcon,
-  TextAlignJustifyIcon,
+  ExitIcon,
   // EnterIcon,
   PaperPlaneIcon,
   PinBottomIcon,
   PlusIcon,
+  TextAlignJustifyIcon,
 } from "@radix-ui/react-icons";
-import styled from "@emotion/styled";
-import { useState, useEffect, useSyncExternalStore } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState, useSyncExternalStore } from "react";
+import type { Chain } from "../../../../chains/types.js";
+import { getContract } from "../../../../contract/contract.js";
+import { isContractDeployed } from "../../../../utils/bytecode/is-contract-deployed.js";
+import { getUserEmail } from "../../../../wallets/in-app/core/authentication/index.js";
+import {
+  useChainQuery,
+  useChainsQuery,
+} from "../../../core/hooks/others/useChainQuery.js";
+import { useWalletBalance } from "../../../core/hooks/others/useWalletBalance.js";
+import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import {
   useActiveAccount,
   useActiveWallet,
@@ -17,65 +28,42 @@ import {
   useDisconnect,
   useSwitchActiveWalletChain,
 } from "../../../core/hooks/wallets/wallet-hooks.js";
+import { shortenString } from "../../../core/utils/addresses.js";
+import { ChainIcon } from "../components/ChainIcon.js";
+import { CopyIcon } from "../components/CopyIcon.js";
 import { Modal } from "../components/Modal.js";
 import { Skeleton } from "../components/Skeleton.js";
 import { Spacer } from "../components/Spacer.js";
+import { Spinner } from "../components/Spinner.js";
+import { WalletImage } from "../components/WalletImage.js";
 import { Container, Line } from "../components/basic.js";
 import { Button, IconButton } from "../components/buttons.js";
+import { Link, Text } from "../components/text.js";
 import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 import { fadeInAnimation } from "../design-system/animations.js";
 import { StyledButton, StyledDiv } from "../design-system/elements.js";
 import {
   type Theme,
-  iconSize,
-  radius,
   fontSize,
-  spacing,
+  iconSize,
   media,
+  radius,
+  spacing,
 } from "../design-system/index.js";
-import { NetworkSelectorContent } from "./NetworkSelector.js";
-import { onModalUnmount } from "./constants.js";
-import type { SupportedTokens } from "./defaultTokens.js";
-import { Link, Text } from "../components/text.js";
-import { CopyIcon } from "../components/CopyIcon.js";
-import { shortenString } from "../../../core/utils/addresses.js";
-import {
-  useChainQuery,
-  useChainsQuery,
-} from "../../../core/hooks/others/useChainQuery.js";
-import { ChainIcon } from "../components/ChainIcon.js";
-import { useWalletBalance } from "../../../core/hooks/others/useWalletBalance.js";
-import { FundsIcon } from "./icons/FundsIcon.js";
 import type {
   ConnectButtonProps,
   ConnectButton_detailsButtonOptions,
   ConnectButton_detailsModalOptions,
 } from "./ConnectWalletProps.js";
-// import { connectionManager } from "../../../core/connectionManager.js";
-import { SendFunds } from "./screens/SendFunds.js";
-import { ReceiveFunds } from "./screens/ReceiveFunds.js";
-import type { Chain } from "../../../../chains/types.js";
-// import type {
-//   Wallet,
-//   WalletWithPersonalAccount,
-// } from "../../../../wallets/interfaces/wallet.js";
-// import {
-//   // personalAccountToSmartAccountMap,
-//   smartWalletMetadata,
-// } from "../../../../wallets/smart/index._ts";
-// import type { EmbeddedWallet } from "../../../../wallets/embedded/core/wallet/index._ts";
-// import { localWalletMetadata } from "../../../../wallets/local/index._ts";
-// import { ExportLocalWallet } from "./screens/ExportLocalWallet._tsx";
-import { swapTransactionsStore } from "./screens/Buy/swap/pendingSwapTx.js";
+import { NetworkSelectorContent } from "./NetworkSelector.js";
+import { onModalUnmount } from "./constants.js";
+import type { SupportedTokens } from "./defaultTokens.js";
+import { FundsIcon } from "./icons/FundsIcon.js";
 import { BuyScreen } from "./screens/Buy/SwapScreen.js";
+import { swapTransactionsStore } from "./screens/Buy/swap/pendingSwapTx.js";
+import { ReceiveFunds } from "./screens/ReceiveFunds.js";
+import { SendFunds } from "./screens/SendFunds.js";
 import { SwapTransactionsScreen } from "./screens/SwapTransactionsScreen.js";
-import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
-import { WalletImage } from "../components/WalletImage.js";
-import { getUserEmail } from "../../../../wallets/embedded/core/authentication/index.js";
-import { useQuery } from "@tanstack/react-query";
-import { getContract } from "../../../../contract/contract.js";
-import { isContractDeployed } from "../../../../utils/bytecode/is-contract-deployed.js";
-import { Spinner } from "../components/Spinner.js";
 
 const TW_CONNECTED_WALLET = "tw-connected-wallet";
 
@@ -339,7 +327,7 @@ export const ConnectedWalletDetails: React.FC<{
 
       <Container px="lg">
         <ConnectedToSmartWallet />
-        <EmbeddedWalletEmail />
+        <InAppWalletEmail />
 
         {/* Send, Receive, Swap */}
         <Container
@@ -699,10 +687,10 @@ const MenuButton = /* @__PURE__ */ StyledButton(() => {
       transition: "color 200ms ease",
     },
     "&[data-variant='danger']:hover svg": {
-      color: theme.colors.danger + "!important",
+      color: `${theme.colors.danger}!important`,
     },
     "&[data-variant='primary']:hover svg": {
-      color: theme.colors.primaryText + "!important",
+      color: `${theme.colors.primaryText}!important`,
     },
   };
 });
@@ -796,7 +784,7 @@ function ConnectedToSmartWallet() {
     } else {
       setIsSmartWalletDeployed(false);
     }
-  }, [activeAccount, activeWallet, chain, client, isSmartWallet]);
+  }, [activeAccount, chain, client, isSmartWallet]);
 
   const content = (
     <Container flex="row" gap="xxs" center="both">
@@ -830,10 +818,10 @@ function ConnectedToSmartWallet() {
   return null;
 }
 
-function EmbeddedWalletEmail() {
+function InAppWalletEmail() {
   const { client } = useWalletConnectionCtx();
   const emailQuery = useQuery({
-    queryKey: ["embedded-wallet-user", client],
+    queryKey: ["in-app-wallet-user", client],
     queryFn: async () => {
       const data = await getUserEmail({
         client: client,

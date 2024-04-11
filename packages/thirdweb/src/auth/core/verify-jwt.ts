@@ -25,7 +25,7 @@ export type VerifyJWTResult =
  * @internal
  */
 export function verifyJWT(options: AuthOptions) {
-  return async function (params: VerifyJWTParams): Promise<VerifyJWTResult> {
+  return async (params: VerifyJWTParams): Promise<VerifyJWTResult> => {
     const { payload, signature } = deccodeJWT(params.jwt);
 
     if (!options.adminAccount) {

@@ -4,6 +4,8 @@ import type { BaseTransactionOptions } from "../../../../../transaction/types.js
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "getDepositInfo" function.
@@ -12,7 +14,7 @@ export type GetDepositInfoParams = {
   account: AbiParameterToPrimitiveType<{ type: "address"; name: "account" }>;
 };
 
-const FN_SELECTOR = "0x5287ce12" as const;
+export const FN_SELECTOR = "0x5287ce12" as const;
 const FN_INPUTS = [
   {
     type: "address",
@@ -49,6 +51,27 @@ const FN_OUTPUTS = [
 ] as const;
 
 /**
+ * Checks if the `getDepositInfo` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `getDepositInfo` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isGetDepositInfoSupported } from "thirdweb/extensions/erc4337";
+ *
+ * const supported = await isGetDepositInfoSupported(contract);
+ * ```
+ */
+export async function isGetDepositInfoSupported(
+  contract: ThirdwebContract<any>,
+) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
  * Encodes the parameters for the "getDepositInfo" function.
  * @param options - The options for the getDepositInfo function.
  * @returns The encoded ABI parameters.
@@ -63,6 +86,28 @@ const FN_OUTPUTS = [
  */
 export function encodeGetDepositInfoParams(options: GetDepositInfoParams) {
   return encodeAbiParameters(FN_INPUTS, [options.account]);
+}
+
+/**
+ * Encodes the "getDepositInfo" function into a Hex string with its parameters.
+ * @param options - The options for the getDepositInfo function.
+ * @returns The encoded hexadecimal string.
+ * @extension ERC4337
+ * @example
+ * ```ts
+ * import { encodeGetDepositInfo } "thirdweb/extensions/erc4337";
+ * const result = encodeGetDepositInfo({
+ *  account: ...,
+ * });
+ * ```
+ */
+export function encodeGetDepositInfo(options: GetDepositInfoParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeGetDepositInfoParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**

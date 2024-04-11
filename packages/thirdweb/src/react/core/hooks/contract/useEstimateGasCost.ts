@@ -1,10 +1,10 @@
-import { useMutation, type UseMutationResult } from "@tanstack/react-query";
+import { type UseMutationResult, useMutation } from "@tanstack/react-query";
+import {
+  type EstimateGasCostResult,
+  estimateGasCost,
+} from "../../../../transaction/actions/estimate-gas-cost.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
 import { useActiveAccount } from "../wallets/wallet-hooks.js";
-import {
-  estimateGasCost,
-  type EstimateGasCostResult,
-} from "../../../../transaction/actions/estimate-gas-cost.js";
 
 /**
  * A hook to estimate the gas cost in ether and wei for a given transaction.

@@ -34,7 +34,7 @@ export default {
     "wss://testnet-ws.bitlayer-rpc.com",
     "https://rpc.ankr.com/bitlayer_testnet"
   ],
-  "shortName": "Bitlayer",
+  "shortName": "btrt",
   "slip44": 1,
   "slug": "bitlayer-testnet",
   "testnet": true

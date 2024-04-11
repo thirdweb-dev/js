@@ -4,6 +4,8 @@ import type { BaseTransactionOptions } from "../../../../../transaction/types.js
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "price" function.
@@ -12,7 +14,7 @@ export type PriceParams = {
   units: AbiParameterToPrimitiveType<{ type: "uint256"; name: "units" }>;
 };
 
-const FN_SELECTOR = "0x26a49e37" as const;
+export const FN_SELECTOR = "0x26a49e37" as const;
 const FN_INPUTS = [
   {
     type: "uint256",
@@ -24,6 +26,25 @@ const FN_OUTPUTS = [
     type: "uint256",
   },
 ] as const;
+
+/**
+ * Checks if the `price` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `price` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isPriceSupported } from "thirdweb/extensions/farcaster";
+ *
+ * const supported = await isPriceSupported(contract);
+ * ```
+ */
+export async function isPriceSupported(contract: ThirdwebContract<any>) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
 
 /**
  * Encodes the parameters for the "price" function.
@@ -40,6 +61,26 @@ const FN_OUTPUTS = [
  */
 export function encodePriceParams(options: PriceParams) {
   return encodeAbiParameters(FN_INPUTS, [options.units]);
+}
+
+/**
+ * Encodes the "price" function into a Hex string with its parameters.
+ * @param options - The options for the price function.
+ * @returns The encoded hexadecimal string.
+ * @extension FARCASTER
+ * @example
+ * ```ts
+ * import { encodePrice } "thirdweb/extensions/farcaster";
+ * const result = encodePrice({
+ *  units: ...,
+ * });
+ * ```
+ */
+export function encodePrice(options: PriceParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodePriceParams(options).slice(2)) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**

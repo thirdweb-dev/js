@@ -39,7 +39,7 @@ export default {
   "shortName": "maticmum",
   "slip44": 1,
   "slug": "mumbai",
-  "status": "active",
+  "status": "deprecated",
   "testnet": true,
   "title": "Polygon Testnet Mumbai"
 } as const satisfies Chain;

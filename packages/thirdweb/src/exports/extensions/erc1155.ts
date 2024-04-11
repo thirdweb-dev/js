@@ -33,6 +33,10 @@ export {
   balanceOf,
   type BalanceOfParams,
 } from "../../extensions/erc1155/__generated__/IERC1155/read/balanceOf.js";
+export {
+  isApprovedForAll,
+  type IsApprovedForAllParams,
+} from "../../extensions/erc1155/__generated__/IERC1155/read/isApprovedForAll.js";
 
 //WRITE
 
@@ -44,6 +48,41 @@ export {
   burnBatch,
   type BurnBatchParams,
 } from "../../extensions/erc1155/__generated__/IBurnableERC1155/write/burnBatch.js";
+export {
+  setApprovalForAll,
+  type SetApprovalForAllParams,
+} from "../../extensions/erc1155/__generated__/IERC1155/write/setApprovalForAll.js";
+export {
+  safeTransferFrom,
+  type SafeTransferFromParams,
+} from "../../extensions/erc1155/__generated__/IERC1155/write/safeTransferFrom.js";
+export {
+  safeBatchTransferFrom,
+  type SafeBatchTransferFromParams,
+} from "../../extensions/erc1155/__generated__/IERC1155/write/safeBatchTransferFrom.js";
+export {
+  mintTo,
+  type MintToParams,
+} from "../../extensions/erc1155/write/mintTo.js";
+export {
+  mintAdditionalSupplyTo,
+  type MintAdditionalSupplyToParams,
+} from "../../extensions/erc1155/write/mintAdditionalSupplyTo.js";
+
+// EVENTS
+
+export {
+  transferSingleEvent,
+  type TransferSingleEventFilters,
+} from "../../extensions/erc1155/__generated__/IERC1155/events/TransferSingle.js";
+export {
+  transferBatchEvent,
+  type TransferBatchEventFilters,
+} from "../../extensions/erc1155/__generated__/IERC1155/events/TransferBatch.js";
+export {
+  approvalForAllEvent,
+  type ApprovalForAllEventFilters,
+} from "../../extensions/erc1155/__generated__/IERC1155/events/ApprovalForAll.js";
 
 /**
  * DROPS extension for ERC1155

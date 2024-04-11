@@ -1,13 +1,18 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "transferAndChangeRecoveryFor" function.
  */
-
-export type TransferAndChangeRecoveryForParams = {
+export type TransferAndChangeRecoveryForParams = WithOverrides<{
   from: AbiParameterToPrimitiveType<{ type: "address"; name: "from" }>;
   to: AbiParameterToPrimitiveType<{ type: "address"; name: "to" }>;
   recovery: AbiParameterToPrimitiveType<{ type: "address"; name: "recovery" }>;
@@ -21,9 +26,9 @@ export type TransferAndChangeRecoveryForParams = {
     name: "toDeadline";
   }>;
   toSig: AbiParameterToPrimitiveType<{ type: "bytes"; name: "toSig" }>;
-};
+}>;
 
-const FN_SELECTOR = "0x4c5cbb34" as const;
+export const FN_SELECTOR = "0x4c5cbb34" as const;
 const FN_INPUTS = [
   {
     type: "address",
@@ -55,6 +60,27 @@ const FN_INPUTS = [
   },
 ] as const;
 const FN_OUTPUTS = [] as const;
+
+/**
+ * Checks if the `transferAndChangeRecoveryFor` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `transferAndChangeRecoveryFor` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isTransferAndChangeRecoveryForSupported } from "thirdweb/extensions/farcaster";
+ *
+ * const supported = await isTransferAndChangeRecoveryForSupported(contract);
+ * ```
+ */
+export async function isTransferAndChangeRecoveryForSupported(
+  contract: ThirdwebContract<any>,
+) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
 
 /**
  * Encodes the parameters for the "transferAndChangeRecoveryFor" function.
@@ -90,6 +116,36 @@ export function encodeTransferAndChangeRecoveryForParams(
 }
 
 /**
+ * Encodes the "transferAndChangeRecoveryFor" function into a Hex string with its parameters.
+ * @param options - The options for the transferAndChangeRecoveryFor function.
+ * @returns The encoded hexadecimal string.
+ * @extension FARCASTER
+ * @example
+ * ```ts
+ * import { encodeTransferAndChangeRecoveryFor } "thirdweb/extensions/farcaster";
+ * const result = encodeTransferAndChangeRecoveryFor({
+ *  from: ...,
+ *  to: ...,
+ *  recovery: ...,
+ *  fromDeadline: ...,
+ *  fromSig: ...,
+ *  toDeadline: ...,
+ *  toSig: ...,
+ * });
+ * ```
+ */
+export function encodeTransferAndChangeRecoveryFor(
+  options: TransferAndChangeRecoveryForParams,
+) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeTransferAndChangeRecoveryForParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
+}
+
+/**
  * Calls the "transferAndChangeRecoveryFor" function on the contract.
  * @param options - The options for the "transferAndChangeRecoveryFor" function.
  * @returns A prepared transaction object.
@@ -122,31 +178,25 @@ export function transferAndChangeRecoveryFor(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [
-              resolvedParams.from,
-              resolvedParams.to,
-              resolvedParams.recovery,
-              resolvedParams.fromDeadline,
-              resolvedParams.fromSig,
-              resolvedParams.toDeadline,
-              resolvedParams.toSig,
-            ] as const;
-          }
-        : [
-            options.from,
-            options.to,
-            options.recovery,
-            options.fromDeadline,
-            options.fromSig,
-            options.toDeadline,
-            options.toSig,
-          ],
+    params: async () => {
+      const resolvedOptions = await asyncOptions();
+      return [
+        resolvedOptions.from,
+        resolvedOptions.to,
+        resolvedOptions.recovery,
+        resolvedOptions.fromDeadline,
+        resolvedOptions.fromSig,
+        resolvedOptions.toDeadline,
+        resolvedOptions.toSig,
+      ] as const;
+    },
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

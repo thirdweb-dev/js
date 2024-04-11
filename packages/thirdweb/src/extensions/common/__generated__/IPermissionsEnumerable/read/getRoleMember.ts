@@ -4,6 +4,8 @@ import type { BaseTransactionOptions } from "../../../../../transaction/types.js
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "getRoleMember" function.
@@ -13,7 +15,7 @@ export type GetRoleMemberParams = {
   index: AbiParameterToPrimitiveType<{ type: "uint256"; name: "index" }>;
 };
 
-const FN_SELECTOR = "0x9010d07c" as const;
+export const FN_SELECTOR = "0x9010d07c" as const;
 const FN_INPUTS = [
   {
     type: "bytes32",
@@ -31,6 +33,27 @@ const FN_OUTPUTS = [
 ] as const;
 
 /**
+ * Checks if the `getRoleMember` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `getRoleMember` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isGetRoleMemberSupported } from "thirdweb/extensions/common";
+ *
+ * const supported = await isGetRoleMemberSupported(contract);
+ * ```
+ */
+export async function isGetRoleMemberSupported(
+  contract: ThirdwebContract<any>,
+) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
  * Encodes the parameters for the "getRoleMember" function.
  * @param options - The options for the getRoleMember function.
  * @returns The encoded ABI parameters.
@@ -46,6 +69,29 @@ const FN_OUTPUTS = [
  */
 export function encodeGetRoleMemberParams(options: GetRoleMemberParams) {
   return encodeAbiParameters(FN_INPUTS, [options.role, options.index]);
+}
+
+/**
+ * Encodes the "getRoleMember" function into a Hex string with its parameters.
+ * @param options - The options for the getRoleMember function.
+ * @returns The encoded hexadecimal string.
+ * @extension COMMON
+ * @example
+ * ```ts
+ * import { encodeGetRoleMember } "thirdweb/extensions/common";
+ * const result = encodeGetRoleMember({
+ *  role: ...,
+ *  index: ...,
+ * });
+ * ```
+ */
+export function encodeGetRoleMember(options: GetRoleMemberParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeGetRoleMemberParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**

@@ -2,10 +2,10 @@ import type {
   BlockTag,
   EIP1193RequestFn,
   EIP1474Methods,
-  RpcTransactionRequest,
   Hex,
-  RpcStateOverride,
   RpcStateMapping,
+  RpcStateOverride,
+  RpcTransactionRequest,
 } from "viem";
 import { numberToHex } from "../../utils/encoding/hex.js";
 

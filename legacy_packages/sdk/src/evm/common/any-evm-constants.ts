@@ -19,6 +19,26 @@ export const ERROR_SUBSTRINGS_COMPOSITE = [
   ["wrong", "chainid"],
 ];
 
+export const CUSTOM_GAS_BINS = [
+  1,
+  1 * 10 ** 9,
+  100 * 10 ** 9,
+  500 * 10 ** 9,
+  1000 * 10 ** 9,
+  2500 * 10 ** 9,
+  5000 * 10 ** 9,
+  7500 * 10 ** 9,
+  10_000 * 10 ** 9,
+  25_000 * 10 ** 9,
+  50_000 * 10 ** 9,
+  75_000 * 10 ** 9,
+  100_000 * 10 ** 9,
+  250_000 * 10 ** 9,
+  500_000 * 10 ** 9,
+  750_000 * 10 ** 9,
+  1_000_000 * 10 ** 9,
+];
+
 /* eslint-disable no-useless-computed-key */
 export const CUSTOM_GAS_FOR_CHAIN: Record<number, CustomChain> = {
   [5001]: {

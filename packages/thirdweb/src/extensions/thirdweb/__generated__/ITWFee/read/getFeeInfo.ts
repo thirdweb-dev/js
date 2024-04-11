@@ -4,6 +4,8 @@ import type { BaseTransactionOptions } from "../../../../../transaction/types.js
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "getFeeInfo" function.
@@ -13,7 +15,7 @@ export type GetFeeInfoParams = {
   type: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_type" }>;
 };
 
-const FN_SELECTOR = "0x85b49ad0" as const;
+export const FN_SELECTOR = "0x85b49ad0" as const;
 const FN_INPUTS = [
   {
     type: "address",
@@ -36,6 +38,25 @@ const FN_OUTPUTS = [
 ] as const;
 
 /**
+ * Checks if the `getFeeInfo` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `getFeeInfo` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isGetFeeInfoSupported } from "thirdweb/extensions/thirdweb";
+ *
+ * const supported = await isGetFeeInfoSupported(contract);
+ * ```
+ */
+export async function isGetFeeInfoSupported(contract: ThirdwebContract<any>) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
  * Encodes the parameters for the "getFeeInfo" function.
  * @param options - The options for the getFeeInfo function.
  * @returns The encoded ABI parameters.
@@ -51,6 +72,29 @@ const FN_OUTPUTS = [
  */
 export function encodeGetFeeInfoParams(options: GetFeeInfoParams) {
   return encodeAbiParameters(FN_INPUTS, [options.proxy, options.type]);
+}
+
+/**
+ * Encodes the "getFeeInfo" function into a Hex string with its parameters.
+ * @param options - The options for the getFeeInfo function.
+ * @returns The encoded hexadecimal string.
+ * @extension THIRDWEB
+ * @example
+ * ```ts
+ * import { encodeGetFeeInfo } "thirdweb/extensions/thirdweb";
+ * const result = encodeGetFeeInfo({
+ *  proxy: ...,
+ *  type: ...,
+ * });
+ * ```
+ */
+export function encodeGetFeeInfo(options: GetFeeInfoParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeGetFeeInfoParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**

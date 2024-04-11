@@ -4,6 +4,8 @@ import type { BaseTransactionOptions } from "../../../../../transaction/types.js
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "isApprovedForAll" function.
@@ -13,7 +15,7 @@ export type IsApprovedForAllParams = {
   operator: AbiParameterToPrimitiveType<{ type: "address"; name: "_operator" }>;
 };
 
-const FN_SELECTOR = "0xe985e9c5" as const;
+export const FN_SELECTOR = "0xe985e9c5" as const;
 const FN_INPUTS = [
   {
     type: "address",
@@ -31,6 +33,27 @@ const FN_OUTPUTS = [
 ] as const;
 
 /**
+ * Checks if the `isApprovedForAll` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `isApprovedForAll` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isIsApprovedForAllSupported } from "thirdweb/extensions/erc1155";
+ *
+ * const supported = await isIsApprovedForAllSupported(contract);
+ * ```
+ */
+export async function isIsApprovedForAllSupported(
+  contract: ThirdwebContract<any>,
+) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
  * Encodes the parameters for the "isApprovedForAll" function.
  * @param options - The options for the isApprovedForAll function.
  * @returns The encoded ABI parameters.
@@ -46,6 +69,29 @@ const FN_OUTPUTS = [
  */
 export function encodeIsApprovedForAllParams(options: IsApprovedForAllParams) {
   return encodeAbiParameters(FN_INPUTS, [options.owner, options.operator]);
+}
+
+/**
+ * Encodes the "isApprovedForAll" function into a Hex string with its parameters.
+ * @param options - The options for the isApprovedForAll function.
+ * @returns The encoded hexadecimal string.
+ * @extension ERC1155
+ * @example
+ * ```ts
+ * import { encodeIsApprovedForAll } "thirdweb/extensions/erc1155";
+ * const result = encodeIsApprovedForAll({
+ *  owner: ...,
+ *  operator: ...,
+ * });
+ * ```
+ */
+export function encodeIsApprovedForAll(options: IsApprovedForAllParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeIsApprovedForAllParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**

@@ -4,17 +4,17 @@ import type {
   AbiParametersToPrimitiveTypes,
   Address,
 } from "abitype";
+import { toFunctionSelector, toFunctionSignature, zeroAddress } from "viem";
+import type { ThirdwebClient } from "../../client/client.js";
+import { resolveContractAbi } from "../../contract/actions/resolve-abi.js";
+import type { ThirdwebContract } from "../../contract/contract.js";
+import { deployViaAutoFactory } from "../../contract/deployment/deploy-via-autofactory.js";
 import { getOrDeployInfraForPublishedContract } from "../../contract/deployment/utils/bootstrap.js";
+import { upload } from "../../storage/upload.js";
 import type { FileOrBufferOrString } from "../../storage/upload/types.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import type { ClientAndChainAndAccount } from "../../utils/types.js";
-import { upload } from "../../storage/upload.js";
-import type { ThirdwebClient } from "../../client/client.js";
-import type { ThirdwebContract } from "../../contract/contract.js";
 import { initialize as initMarketplace } from "./__generated__/Marketplace/write/initialize.js";
-import { deployViaAutoFactory } from "../../contract/deployment/deploy-via-autofactory.js";
-import { toFunctionSelector, toFunctionSignature, zeroAddress } from "viem";
-import { resolveContractAbi } from "../../contract/actions/resolve-abi.js";
 
 export type MarketplaceContractParams = {
   name: string;
@@ -152,20 +152,18 @@ async function getInitializeTransaction(options: {
   const { client, implementationContract, params, accountAddress } = options;
   const contractURI =
     options.params.contractURI ||
-    (
-      await upload({
-        client,
-        files: [
-          {
-            name: params.name,
-            description: params.description,
-            image: params.image,
-            external_link: params.external_link,
-            social_urls: params.social_urls,
-          },
-        ],
-      })
-    )[0] ||
+    (await upload({
+      client,
+      files: [
+        {
+          name: params.name,
+          description: params.description,
+          image: params.image,
+          external_link: params.external_link,
+          social_urls: params.social_urls,
+        },
+      ],
+    })) ||
     "";
   return initMarketplace({
     contract: implementationContract,

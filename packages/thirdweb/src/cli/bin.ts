@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* eslint-disable better-tree-shaking/no-top-level-side-effects */
+
 import { execSync, spawn } from "node:child_process";
 import {
   generate,
@@ -54,7 +54,6 @@ async function main() {
         ? ["--yes", "@thirdweb-dev/cli@latest", command, ...rest]
         : ["--yes", "@thirdweb-dev/cli@latest", ...rest];
 
-      // eslint-disable-next-line better-tree-shaking/no-top-level-side-effects
       spawn(runner, args, {
         stdio: "inherit",
       });

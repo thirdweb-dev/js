@@ -5,7 +5,7 @@ import { stringify } from "../utils/json.js";
 export type RpcRequest = {
   jsonrpc?: "2.0";
   method: string;
-  params?: any;
+  params?: unknown;
   id?: number;
 };
 
@@ -42,7 +42,7 @@ type Subscription<TResult, TError> = {
   );
 };
 
-type RpcResponse<TResult = any, TError = any> = {
+type RpcResponse<TResult = unknown, TError = unknown> = {
   jsonrpc: `${number}`;
   id: number;
 } & (
@@ -78,15 +78,16 @@ export async function fetchRpc(
     );
   }
 
-  let result;
-
   if (response.headers.get("Content-Type")?.startsWith("application/json")) {
-    result = await response.json();
-  } else {
-    result = await response.text();
+    return await response.json();
   }
-
-  return result;
+  const text = await response.text();
+  try {
+    return JSON.parse(text);
+  } catch (err) {
+    console.error("Error parsing response", err, text);
+    throw err;
+  }
 }
 
 type FetchSingleRpcOptions = {
@@ -118,14 +119,14 @@ export async function fetchSingleRpc(
     response.body?.cancel();
     throw new Error(`RPC request failed with status ${response.status}`);
   }
-
-  let result;
-
   if (response.headers.get("Content-Type")?.startsWith("application/json")) {
-    result = await response.json();
-  } else {
-    result = await response.text();
+    return await response.json();
   }
-
-  return result;
+  const text = await response.text();
+  try {
+    return JSON.parse(text);
+  } catch (err) {
+    console.error("Error parsing response", err, text);
+    throw err;
+  }
 }

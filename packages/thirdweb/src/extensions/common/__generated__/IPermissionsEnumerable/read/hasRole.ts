@@ -4,6 +4,8 @@ import type { BaseTransactionOptions } from "../../../../../transaction/types.js
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "hasRole" function.
@@ -13,7 +15,7 @@ export type HasRoleParams = {
   account: AbiParameterToPrimitiveType<{ type: "address"; name: "account" }>;
 };
 
-const FN_SELECTOR = "0x91d14854" as const;
+export const FN_SELECTOR = "0x91d14854" as const;
 const FN_INPUTS = [
   {
     type: "bytes32",
@@ -31,6 +33,25 @@ const FN_OUTPUTS = [
 ] as const;
 
 /**
+ * Checks if the `hasRole` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `hasRole` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isHasRoleSupported } from "thirdweb/extensions/common";
+ *
+ * const supported = await isHasRoleSupported(contract);
+ * ```
+ */
+export async function isHasRoleSupported(contract: ThirdwebContract<any>) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
  * Encodes the parameters for the "hasRole" function.
  * @param options - The options for the hasRole function.
  * @returns The encoded ABI parameters.
@@ -46,6 +67,27 @@ const FN_OUTPUTS = [
  */
 export function encodeHasRoleParams(options: HasRoleParams) {
   return encodeAbiParameters(FN_INPUTS, [options.role, options.account]);
+}
+
+/**
+ * Encodes the "hasRole" function into a Hex string with its parameters.
+ * @param options - The options for the hasRole function.
+ * @returns The encoded hexadecimal string.
+ * @extension COMMON
+ * @example
+ * ```ts
+ * import { encodeHasRole } "thirdweb/extensions/common";
+ * const result = encodeHasRole({
+ *  role: ...,
+ *  account: ...,
+ * });
+ * ```
+ */
+export function encodeHasRole(options: HasRoleParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeHasRoleParams(options).slice(2)) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**

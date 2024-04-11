@@ -1,9 +1,31 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 
-const FN_SELECTOR = "0xd0e30db0" as const;
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+
+export const FN_SELECTOR = "0xd0e30db0" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [] as const;
+
+/**
+ * Checks if the `deposit` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `deposit` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isDepositSupported } from "thirdweb/extensions/erc20";
+ *
+ * const supported = await isDepositSupported(contract);
+ * ```
+ */
+export async function isDepositSupported(contract: ThirdwebContract<any>) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
 
 /**
  * Calls the "deposit" function on the contract.

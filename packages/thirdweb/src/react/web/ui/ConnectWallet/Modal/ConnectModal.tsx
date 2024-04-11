@@ -1,15 +1,15 @@
+import { useCallback, useContext, useEffect, useState } from "react";
+import { useActiveAccount } from "../../../../core/hooks/wallets/wallet-hooks.js";
 import {
   ModalConfigCtx,
   useIsWalletModalOpen,
   useSetIsWalletModalOpen,
 } from "../../../providers/wallet-ui-states-provider.js";
-import { useCallback, useEffect, useContext, useState } from "react";
-import { reservedScreens, onModalUnmount } from "../constants.js";
-import { useSetupScreen } from "./screen.js";
-import { CustomThemeProvider } from "../../design-system/CustomThemeProvider.js";
-import { useActiveAccount } from "../../../../core/hooks/wallets/wallet-hooks.js";
 import { Modal } from "../../components/Modal.js";
+import { CustomThemeProvider } from "../../design-system/CustomThemeProvider.js";
+import { onModalUnmount, reservedScreens } from "../constants.js";
 import { ConnectModalContent } from "./ConnectModalContent.js";
+import { useSetupScreen } from "./screen.js";
 
 /**
  * @internal
@@ -72,7 +72,7 @@ const ConnectModal = () => {
         setHideModal(false);
       });
     }
-  }, [isWalletModalOpen, setIsWalletModalOpen, screen]);
+  }, [isWalletModalOpen]);
 
   const setModalVisibility = useCallback(
     (value: boolean) => setHideModal(!value),

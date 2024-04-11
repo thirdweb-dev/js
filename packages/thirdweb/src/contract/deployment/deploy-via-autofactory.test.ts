@@ -1,15 +1,15 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import {
   ANVIL_CHAIN,
   FORKED_ETHEREUM_CHAIN,
 } from "../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import { TEST_ACCOUNT_A } from "../../../test/src/test-wallets.js";
-import { sendTransaction } from "../../transaction/actions/send-transaction.js";
-import { getDeployedCloneFactoryContract } from "./utils/clone-factory.js";
-import { deployImplementation, deployCloneFactory } from "./utils/bootstrap.js";
-import { prepareAutoFactoryDeployTransaction } from "./deploy-via-autofactory.js";
 import { initialize } from "../../extensions/prebuilts/__generated__/DropERC721/write/initialize.js";
+import { sendTransaction } from "../../transaction/actions/send-transaction.js";
+import { prepareAutoFactoryDeployTransaction } from "./deploy-via-autofactory.js";
+import { deployCloneFactory, deployImplementation } from "./utils/bootstrap.js";
+import { getDeployedCloneFactoryContract } from "./utils/clone-factory.js";
 import { getDeployedInfraContract } from "./utils/infra.js";
 
 // skip this test suite if there is no secret key available to test with

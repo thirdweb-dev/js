@@ -1,5 +1,6 @@
-import { getClientFetch } from "../../../utils/fetch.js";
+import type { ThirdwebClient } from "../../../client/client.js";
 import { hexToBigInt } from "../../../utils/encoding/hex.js";
+import { getClientFetch } from "../../../utils/fetch.js";
 import type {
   PaymasterResult,
   SmartWalletOptions,
@@ -11,7 +12,6 @@ import {
   getDefaultPaymasterUrl,
 } from "./constants.js";
 import { hexlifyUserOp } from "./utils.js";
-import type { ThirdwebClient } from "../../../client/client.js";
 
 /**
  * TODO Docs
@@ -70,23 +70,21 @@ Code: ${code}`,
       return {
         paymasterAndData: res.result,
       };
-    } else {
-      return {
-        paymasterAndData: res.result.paymasterAndData,
-        verificationGasLimit: res.result.verificationGasLimit
-          ? hexToBigInt(res.result.verificationGasLimit)
-          : undefined,
-        preVerificationGas: res.result.preVerificationGas
-          ? hexToBigInt(res.result.preVerificationGas)
-          : undefined,
-        callGasLimit: res.result.callGasLimit
-          ? hexToBigInt(res.result.callGasLimit)
-          : undefined,
-      };
     }
-  } else {
-    const error =
-      res.error?.message || res.error || response.statusText || "unknown error";
-    throw new Error(`Paymaster error from ${paymasterUrl}: ${error}`);
+    return {
+      paymasterAndData: res.result.paymasterAndData,
+      verificationGasLimit: res.result.verificationGasLimit
+        ? hexToBigInt(res.result.verificationGasLimit)
+        : undefined,
+      preVerificationGas: res.result.preVerificationGas
+        ? hexToBigInt(res.result.preVerificationGas)
+        : undefined,
+      callGasLimit: res.result.callGasLimit
+        ? hexToBigInt(res.result.callGasLimit)
+        : undefined,
+    };
   }
+  const error =
+    res.error?.message || res.error || response.statusText || "unknown error";
+  throw new Error(`Paymaster error from ${paymasterUrl}: ${error}`);
 }

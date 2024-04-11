@@ -34,14 +34,14 @@ function getValidChainRPCs(
 ): string[] {
   const processedRPCs: string[] = [];
 
-  chain.rpc.forEach((rpc) => {
+  for (const rpc of chain.rpc) {
     // exclude RPC if mode mismatch
     if (mode === "http" && !rpc.startsWith("http")) {
-      return;
+      continue;
     }
 
     if (mode === "ws" && !rpc.startsWith("ws")) {
-      return;
+      continue;
     }
 
     // Replace API_KEY placeholder with value
@@ -50,8 +50,7 @@ function getValidChainRPCs(
         processedRPCs.push(
           rpc.replace("${THIRDWEB_API_KEY}", clientId) +
             (typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
-              ? // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-expect-error
+              ? // @ts-expect-error
                 `/?bundleId=${globalThis.APP_BUNDLE_ID}`
               : ""),
         );
@@ -65,14 +64,14 @@ function getValidChainRPCs(
 
     // exclude RPCs with unknown placeholder
     else if (rpc.includes("${")) {
-      return;
+      // do nothing (just don't add it to the list)
     }
 
     // add as is
     else {
       processedRPCs.push(rpc);
     }
-  });
+  }
 
   if (processedRPCs.length === 0) {
     throw new Error(

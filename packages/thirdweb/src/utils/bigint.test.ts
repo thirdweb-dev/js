@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { min, max, toBigInt } from "./bigint.js";
+import { max, min, toBigInt } from "./bigint.js";
 
 describe("min", () => {
   it("should return the smaller value when a is smaller than b", () => {

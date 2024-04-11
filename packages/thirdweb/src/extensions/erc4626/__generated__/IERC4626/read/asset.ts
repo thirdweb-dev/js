@@ -3,8 +3,10 @@ import type { BaseTransactionOptions } from "../../../../../transaction/types.js
 
 import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
-const FN_SELECTOR = "0x38d52e0f" as const;
+export const FN_SELECTOR = "0x38d52e0f" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
@@ -13,6 +15,25 @@ const FN_OUTPUTS = [
     internalType: "contract ERC20",
   },
 ] as const;
+
+/**
+ * Checks if the `asset` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `asset` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isAssetSupported } from "thirdweb/extensions/erc4626";
+ *
+ * const supported = await isAssetSupported(contract);
+ * ```
+ */
+export async function isAssetSupported(contract: ThirdwebContract<any>) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
 
 /**
  * Decodes the result of the asset function call.

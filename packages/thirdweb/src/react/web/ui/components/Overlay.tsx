@@ -1,6 +1,6 @@
 import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
-import { StyledDiv } from "../design-system/elements.js";
 import { fadeInAnimation } from "../design-system/animations.js";
+import { StyledDiv } from "../design-system/elements.js";
 
 export const Overlay = /* @__PURE__ */ StyledDiv(() => {
   const theme = useCustomTheme();

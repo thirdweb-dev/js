@@ -44,6 +44,7 @@ export async function isEIP155Enforced(
       rpcRequest,
       "0xf8a58085174876e800830186a08080b853604580600e600039806000f350fe7fffffffffffffffafffffffffffffffffffffffffffffffffffffffffffffffe03601600081602082378035828234f58015156039578182fd5b8082525050506014600cf31ba02222222222222222222222222222222222222222222222222222222222222222a02222222222222222222222222222222222222222222222222222222222222222",
     );
+    // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
   } catch (e: any) {
     const errorMsg = e.toString().toLowerCase();
     const errorJson = JSON.stringify(e).toLowerCase();

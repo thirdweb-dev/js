@@ -1,26 +1,26 @@
+import type { Address } from "abitype";
 import {
+  type SignTypedDataParameters,
   getTypesForEIP712Domain,
   validateTypedData,
-  type SignTypedDataParameters,
 } from "viem";
-import type { Address } from "abitype";
-import type { Ethereum } from "../interfaces/ethereum.js";
-import { normalizeChainId } from "../utils/normalizeChainId.js";
-import { injectedProvider } from "./mipdStore.js";
-import type { SendTransactionOption, Account } from "../interfaces/wallet.js";
-import { getValidPublicRPCUrl } from "../utils/chains.js";
-import { stringify } from "../../utils/json.js";
-import { defineChain, getChainMetadata } from "../../chains/utils.js";
 import type { Chain } from "../../chains/types.js";
+import { defineChain, getChainMetadata } from "../../chains/utils.js";
+import { getAddress } from "../../utils/address.js";
 import {
+  type Hex,
   isHex,
   numberToHex,
   stringToHex,
   uint8ArrayToHex,
-  type Hex,
 } from "../../utils/encoding/hex.js";
-import { getAddress } from "../../utils/address.js";
+import { stringify } from "../../utils/json.js";
+import type { Ethereum } from "../interfaces/ethereum.js";
+import type { Account, SendTransactionOption } from "../interfaces/wallet.js";
+import { getValidPublicRPCUrl } from "../utils/chains.js";
+import { normalizeChainId } from "../utils/normalizeChainId.js";
 import type { InjectedConnectOptions, WalletId } from "../wallet-types.js";
+import { injectedProvider } from "./mipdStore.js";
 
 import type { InjectedSupportedWalletIds } from "../__generated__/wallet-ids.js";
 import type { DisconnectFn, SwitchChainFn } from "../types.js";
@@ -239,6 +239,7 @@ async function switchChain(provider: Ethereum, chain: Chain) {
       method: "wallet_switchEthereumChain",
       params: [{ chainId: hexChainId }],
     });
+    // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
   } catch (e: any) {
     // if chain does not exist, add the chain
     if (e?.code === 4902 || e?.data?.originalError?.code === 4902) {

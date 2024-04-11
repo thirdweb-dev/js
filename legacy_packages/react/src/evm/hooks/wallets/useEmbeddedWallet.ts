@@ -1,4 +1,6 @@
+import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import {
+  useAddress,
   useCreateWalletInstance,
   useSetConnectedWallet,
   useSetConnectionStatus,
@@ -7,17 +9,13 @@ import {
   useWallets,
 } from "@thirdweb-dev/react-core";
 import {
+  EmbeddedWallet,
   walletIds,
   type AuthParams,
-  EmbeddedWallet,
 } from "@thirdweb-dev/wallets";
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { embeddedWallet } from "../../../wallet/wallets/embeddedWallet/embeddedWallet";
-import {
-  UseQueryResult,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { openOauthSignInWindow } from "../../../wallet/utils/openOauthSignInWindow";
 
 /**
  * Hook to connect `EmbeddedWallet` which allows users to login via Email or social logins
@@ -133,6 +131,18 @@ export function useEmbeddedWallet() {
       }
       const wallet = create(embeddedWallet());
       try {
+        // open window immediately to fix issue in iOS Safari
+        // if not opened immediately, it adds a bit of delay between user click and opening the window which causes the popup to be blocked
+        if (
+          authParams.strategy === "apple" ||
+          authParams.strategy === "facebook" ||
+          authParams.strategy === "google"
+        ) {
+          const win = openOauthSignInWindow(authParams.strategy);
+          if (win) {
+            authParams.openedWindow = win;
+          }
+        }
         const authResult = await wallet.authenticate(authParams);
         await wallet.connect({ authResult });
         setWallet(wallet);
@@ -194,14 +204,15 @@ export function useEmbeddedWalletUserEmail(): UseQueryResult<
   string | undefined
 > {
   const wallet = useWallet();
-  const queryClient = useQueryClient();
+  const address = useAddress();
 
   const emailQuery = useQuery<string | undefined, string>(
-    [wallet?.walletId, "embeddedWallet-email"],
+    [wallet?.walletId, address, "embeddedWallet-email"],
     () => {
       if (wallet && wallet.walletId === walletIds.embeddedWallet) {
-        return (wallet as EmbeddedWallet).getEmail();
+        return (wallet as EmbeddedWallet).getEmail() ?? "";
       }
+      return "";
     },
     {
       retry: false,
@@ -209,10 +220,49 @@ export function useEmbeddedWalletUserEmail(): UseQueryResult<
     },
   );
 
-  // Invalidate the query when the wallet changes
-  useEffect(() => {
-    queryClient.invalidateQueries([wallet?.walletId, "embeddedWallet-email"]);
-  }, [wallet, queryClient]);
+  return emailQuery;
+}
+
+/**
+ * Hook to get the user's phone number from connected `EmbeddedWallet`
+ *
+ * @example
+ * ```ts
+ * const phoneNumberQuery = useEmbeddedWalletUserPhoneNumber();
+ *
+ * if (phoneNumberQuery.isFetching) {
+ *  return <div> Loading... </div>;
+ * }
+ *
+ * if (phoneNumberQuery.data) {
+ *  return <div> Connected with {phoneNumberQuery.data} </div>;
+ * }
+ *
+ * return <div> Not connected </div>;
+ * ```
+ *
+ * @walletConnection
+ * @returns Hook's `data` property contains the `string` email if `EmbeddedWallet` is connected, otherwise `undefined`
+ */
+export function useEmbeddedWalletUserPhoneNumber(): UseQueryResult<
+  string | undefined
+> {
+  const wallet = useWallet();
+  const address = useAddress();
+
+  const emailQuery = useQuery<string | undefined, string>(
+    [wallet?.walletId, address, "embeddedWallet-phone-number"],
+    () => {
+      if (wallet && wallet.walletId === walletIds.embeddedWallet) {
+        return (wallet as EmbeddedWallet).getPhoneNumber() ?? "";
+      }
+      return "";
+    },
+    {
+      retry: false,
+      enabled: wallet?.walletId === walletIds.embeddedWallet,
+    },
+  );
 
   return emailQuery;
 }

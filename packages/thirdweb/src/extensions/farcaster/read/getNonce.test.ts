@@ -1,8 +1,8 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 
+import { FORKED_OPTIMISM_CHAIN } from "~test/chains.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
 import { getNonce } from "./getNonce.js";
-import { FORKED_OPTIMISM_CHAIN } from "~test/chains.js";
 
 describe("farcaster.getNonce", () => {
   it("should return the address's current nonce", async () => {

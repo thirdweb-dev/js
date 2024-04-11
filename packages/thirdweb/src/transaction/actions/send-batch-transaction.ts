@@ -1,11 +1,11 @@
-import type { WaitForReceiptOptions } from "./wait-for-tx-receipt.js";
+import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import type {
   Account,
   SendTransactionOption,
 } from "../../wallets/interfaces/wallet.js";
 import type { PreparedTransaction } from "../prepare-transaction.js";
-import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import { encode } from "./encode.js";
+import type { WaitForReceiptOptions } from "./wait-for-tx-receipt.js";
 
 export type SendBatchTransactionOptions = {
   transactions: PreparedTransaction[];
@@ -68,7 +68,6 @@ export async function sendBatchTransaction(
       chain: firstTx.chain,
       client: firstTx.client,
     };
-  } else {
-    throw new Error("Account doesn't implement sendBatchTransaction");
   }
+  throw new Error("Account doesn't implement sendBatchTransaction");
 }

@@ -1,12 +1,12 @@
-import { describe, test, vi, beforeAll, afterAll, expect } from "vitest";
+import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
-import { generateLoginPayload } from "./generate-login-payload.js";
 import {
   TEST_ACCOUNT_A,
   TEST_ACCOUNT_B,
 } from "../../../test/src/test-wallets.js";
-import { verifyLoginPayload } from "./verify-login-payload.js";
+import { generateLoginPayload } from "./generate-login-payload.js";
 import { signLoginPayload } from "./sign-login-payload.js";
+import { verifyLoginPayload } from "./verify-login-payload.js";
 
 describe("verifyLoginPayload", () => {
   beforeAll(() => {

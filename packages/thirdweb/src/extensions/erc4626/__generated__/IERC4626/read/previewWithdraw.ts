@@ -4,6 +4,8 @@ import type { BaseTransactionOptions } from "../../../../../transaction/types.js
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "previewWithdraw" function.
@@ -16,7 +18,7 @@ export type PreviewWithdrawParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x0a28a477" as const;
+export const FN_SELECTOR = "0x0a28a477" as const;
 const FN_INPUTS = [
   {
     name: "assets",
@@ -33,6 +35,27 @@ const FN_OUTPUTS = [
 ] as const;
 
 /**
+ * Checks if the `previewWithdraw` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `previewWithdraw` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isPreviewWithdrawSupported } from "thirdweb/extensions/erc4626";
+ *
+ * const supported = await isPreviewWithdrawSupported(contract);
+ * ```
+ */
+export async function isPreviewWithdrawSupported(
+  contract: ThirdwebContract<any>,
+) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
  * Encodes the parameters for the "previewWithdraw" function.
  * @param options - The options for the previewWithdraw function.
  * @returns The encoded ABI parameters.
@@ -47,6 +70,28 @@ const FN_OUTPUTS = [
  */
 export function encodePreviewWithdrawParams(options: PreviewWithdrawParams) {
   return encodeAbiParameters(FN_INPUTS, [options.assets]);
+}
+
+/**
+ * Encodes the "previewWithdraw" function into a Hex string with its parameters.
+ * @param options - The options for the previewWithdraw function.
+ * @returns The encoded hexadecimal string.
+ * @extension ERC4626
+ * @example
+ * ```ts
+ * import { encodePreviewWithdraw } "thirdweb/extensions/erc4626";
+ * const result = encodePreviewWithdraw({
+ *  assets: ...,
+ * });
+ * ```
+ */
+export function encodePreviewWithdraw(options: PreviewWithdrawParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodePreviewWithdrawParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**

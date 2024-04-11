@@ -1,5 +1,65 @@
 # @thirdweb-dev/sdk
 
+## 4.0.61
+
+### Patch Changes
+
+- [#2579](https://github.com/thirdweb-dev/js/pull/2579) [`d836889`](https://github.com/thirdweb-dev/js/commit/d836889f464a4fc9617839f30e2cc780b3bcca78) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - Adds "buy with crypto" APIs, Here's an example of how you can use it for swapping tokens
+
+  ```ts
+  // 1. get a quote for swapping tokens
+  const quote = await getBuyWithCryptoQuote(quoteParams);
+
+  // 2. if approval is required, send the approval transaction
+  if (quote.approval) {
+    const approvalTx = await signer.sendTransaction(quote.approval);
+    await approvalTx.wait();
+  }
+
+  // 3. send the quoted transaction
+  const buyTx = await signer.sendTransaction(quote.transactionRequest);
+  await buyTx.wait();
+
+  // 4. keep polling the status of the quoted transaction until it * returns a success or failure status
+  const status = await getBuyWithCryptoStatus({
+    clientId: "YOUR_CLIENT_ID",
+    transactionHash: transactionResult.hash,
+  });
+  ```
+
+  For more information, check out the [pay documentation](https://portal.thirdweb.com/connect/pay/buy-with-crypto) for purchases with crypto
+
+- Updated dependencies [[`d836889`](https://github.com/thirdweb-dev/js/commit/d836889f464a4fc9617839f30e2cc780b3bcca78), [`d65713a`](https://github.com/thirdweb-dev/js/commit/d65713a7af67bf20e5b88b72f5d43dfba9172b3b)]:
+  - thirdweb@5.4.2
+  - @thirdweb-dev/chains@0.1.92
+
+## 4.0.60
+
+### Patch Changes
+
+- Updated dependencies [[`53e56f4`](https://github.com/thirdweb-dev/js/commit/53e56f4bf8d3fbe7e2d5252b561bcef5927762e6)]:
+  - @thirdweb-dev/chains@0.1.91
+
+## 4.0.59
+
+### Patch Changes
+
+- [#2701](https://github.com/thirdweb-dev/js/pull/2701) [`703cb6a`](https://github.com/thirdweb-dev/js/commit/703cb6ae3cc51fa4b0ba7c87f09f8e84dab8ed3f) Thanks [@jnsdls](https://github.com/jnsdls)! - updated dependencies
+
+- Updated dependencies [[`703cb6a`](https://github.com/thirdweb-dev/js/commit/703cb6ae3cc51fa4b0ba7c87f09f8e84dab8ed3f), [`48c1d60`](https://github.com/thirdweb-dev/js/commit/48c1d6038272284f8942e1fb3635283b48945a68)]:
+  - @thirdweb-dev/contracts-js@1.3.21
+  - @thirdweb-dev/merkletree@0.2.5
+  - @thirdweb-dev/storage@2.0.14
+  - @thirdweb-dev/chains@0.1.90
+  - @thirdweb-dev/crypto@0.2.5
+
+## 4.0.58
+
+### Patch Changes
+
+- Updated dependencies [[`83ecf67`](https://github.com/thirdweb-dev/js/commit/83ecf67c4b973b17fbc57eeaa03d7a8176ff5d39)]:
+  - @thirdweb-dev/chains@0.1.89
+
 ## 4.0.57
 
 ### Patch Changes

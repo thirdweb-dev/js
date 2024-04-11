@@ -1,37 +1,37 @@
 import styled from "@emotion/styled";
 import { CrossCircledIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { useState, useMemo, useCallback, memo, useEffect } from "react";
-import { ChainIcon } from "../components/ChainIcon.js";
-import { Skeleton } from "../components/Skeleton.js";
-import { Spacer } from "../components/Spacer.js";
-import { Spinner } from "../components/Spinner.js";
-import { Container, ModalHeader, Line } from "../components/basic.js";
-import { Button } from "../components/buttons.js";
-import { Input } from "../components/formElements.js";
-import { ModalTitle } from "../components/modalElements.js";
-import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
-import { StyledP, StyledUl, StyledButton } from "../design-system/elements.js";
-import {
-  spacing,
-  iconSize,
-  fontSize,
-  radius,
-  media,
-} from "../design-system/index.js";
 import Fuse from "fuse.js";
-import {
-  useActiveWalletChain,
-  useSwitchActiveWalletChain,
-} from "../../../core/hooks/wallets/wallet-hooks.js";
-import { Text } from "../components/text.js";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
+import type React from "react";
+import type { Chain, ChainMetadata } from "../../../../chains/types.js";
+import { convertApiChainToChain } from "../../../../chains/utils.js";
 import {
   useChainQuery,
   useChainsQuery,
 } from "../../../core/hooks/others/useChainQuery.js";
-import type React from "react";
-import type { ChainMetadata, Chain } from "../../../../chains/types.js";
-import { convertApiChainToChain } from "../../../../chains/utils.js";
 import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import {
+  useActiveWalletChain,
+  useSwitchActiveWalletChain,
+} from "../../../core/hooks/wallets/wallet-hooks.js";
+import { ChainIcon } from "../components/ChainIcon.js";
+import { Skeleton } from "../components/Skeleton.js";
+import { Spacer } from "../components/Spacer.js";
+import { Spinner } from "../components/Spinner.js";
+import { Container, Line, ModalHeader } from "../components/basic.js";
+import { Button } from "../components/buttons.js";
+import { Input } from "../components/formElements.js";
+import { ModalTitle } from "../components/modalElements.js";
+import { Text } from "../components/text.js";
+import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
+import { StyledButton, StyledP, StyledUl } from "../design-system/elements.js";
+import {
+  fontSize,
+  iconSize,
+  media,
+  radius,
+  spacing,
+} from "../design-system/index.js";
 import { useDebouncedValue } from "../hooks/useDebouncedValue.js";
 import { useShowMore } from "../hooks/useShowMore.js";
 
@@ -608,7 +608,7 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(
     try {
       await switchChain(chain);
       props.onSwitch(chain);
-    } catch (e: any) {
+    } catch (e) {
       setErrorSwitchingChainId(chain.id);
       console.error(e);
     } finally {
@@ -686,7 +686,7 @@ export const ChainButton = /* @__PURE__ */ memo(function ChainButton(props: {
           loading="lazy"
         />
       ) : (
-        <Skeleton width={iconSize.lg + "px"} height={iconSize.lg + "px"} />
+        <Skeleton width={`${iconSize.lg}px`} height={`${iconSize.lg}px`} />
       )}
 
       {confirming || switchingFailed ? (

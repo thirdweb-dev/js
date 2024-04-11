@@ -1,29 +1,30 @@
 import {
-  parseAbiItem,
   type Abi,
   type AbiFunction,
+  type AbiParameter,
   type AbiParametersToPrimitiveTypes,
   type ExtractAbiFunctionNames,
-  type AbiParameter,
+  parseAbiItem,
 } from "abitype";
-import { concatHex, decodeAbiParameters, type TransactionRequest } from "viem";
+import { type TransactionRequest, decodeAbiParameters } from "viem";
 import type { ThirdwebContract } from "../contract/contract.js";
 import { isAbiFunction } from "./utils.js";
 
+import type { PrepareTransactionOptions } from "./prepare-transaction.js";
 import type {
   BaseTransactionOptions,
   ParamsOption,
   ParseMethod,
 } from "./types.js";
-import type { PrepareTransactionOptions } from "./prepare-transaction.js";
 
-import { getRpcClient } from "../rpc/rpc.js";
 import { eth_call } from "../rpc/actions/eth_call.js";
-import {
-  prepareMethod,
-  type PreparedMethod,
-} from "../utils/abi/prepare-method.js";
+import { getRpcClient } from "../rpc/rpc.js";
 import { encodeAbiParameters } from "../utils/abi/encodeAbiParameters.js";
+import {
+  type PreparedMethod,
+  prepareMethod,
+} from "../utils/abi/prepare-method.js";
+import type { Hex } from "../utils/encoding/hex.js";
 
 export type ReadContractResult<outputs extends readonly AbiParameter[]> = // if the outputs are 0 length, return never, invalid case
   outputs extends { length: 0 }
@@ -132,17 +133,20 @@ export async function readContract<
     typeof params === "function" ? params() : params,
   ]);
 
-  let encodedData;
+  let encodedData: Hex;
 
   // if we have no inputs, we know it's just the signature
   if (resolvedPreparedMethod[1].length === 0) {
     encodedData = resolvedPreparedMethod[0];
   } else {
-    encodedData = concatHex([
-      resolvedPreparedMethod[0],
-      // @ts-expect-error - we're sure it's an array
-      encodeAbiParameters(resolvedPreparedMethod[1], resolvedParams ?? []),
-    ]);
+    // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+    // we can do this because we know the specific formats of the values
+    encodedData = (resolvedPreparedMethod[0] +
+      encodeAbiParameters(
+        resolvedPreparedMethod[1],
+        // @ts-expect-error - TODO: fix this type issue
+        resolvedParams,
+      ).slice(2)) as `${(typeof resolvedPreparedMethod)[0]}${string}`;
   }
 
   const rpcRequest = getRpcClient({

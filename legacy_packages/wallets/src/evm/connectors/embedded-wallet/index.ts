@@ -208,6 +208,11 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     return user.authDetails.email;
   }
 
+  async getPhoneNumber() {
+    const user = await this.getUser();
+    return user.authDetails.phoneNumber;
+  }
+
   async getRecoveryInformation() {
     const user = await this.getUser();
     return user.authDetails;
@@ -222,6 +227,15 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     return ewSDK.auth.sendEmailLoginOtp({ email });
   }
 
+  async sendVerificationSms({
+    phoneNumber,
+  }: {
+    phoneNumber: string;
+  }): Promise<SendEmailOtpReturnType> {
+    const ewSDK = this.getEmbeddedWalletSDK();
+    return ewSDK.auth.sendSmsLoginOtp({ phoneNumber });
+  }
+
   async authenticate(params: AuthParams): Promise<AuthResult> {
     const ewSDK = this.getEmbeddedWalletSDK();
     const strategy = params.strategy;
@@ -229,6 +243,13 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
       case "email_verification": {
         return await ewSDK.auth.verifyEmailLoginOtp({
           email: params.email,
+          otp: params.verificationCode,
+          recoveryCode: params.recoveryCode,
+        });
+      }
+      case "phone_number_verification": {
+        return await ewSDK.auth.verifySmsLoginOtp({
+          phoneNumber: params.phoneNumber,
           otp: params.verificationCode,
           recoveryCode: params.recoveryCode,
         });

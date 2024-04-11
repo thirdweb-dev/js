@@ -4,6 +4,8 @@ import type { BaseTransactionOptions } from "../../../../../transaction/types.js
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "getVotes" function.
@@ -12,7 +14,7 @@ export type GetVotesParams = {
   account: AbiParameterToPrimitiveType<{ type: "address"; name: "account" }>;
 };
 
-const FN_SELECTOR = "0x9ab24eb0" as const;
+export const FN_SELECTOR = "0x9ab24eb0" as const;
 const FN_INPUTS = [
   {
     type: "address",
@@ -24,6 +26,25 @@ const FN_OUTPUTS = [
     type: "uint256",
   },
 ] as const;
+
+/**
+ * Checks if the `getVotes` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `getVotes` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isGetVotesSupported } from "thirdweb/extensions/erc20";
+ *
+ * const supported = await isGetVotesSupported(contract);
+ * ```
+ */
+export async function isGetVotesSupported(contract: ThirdwebContract<any>) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
 
 /**
  * Encodes the parameters for the "getVotes" function.
@@ -40,6 +61,26 @@ const FN_OUTPUTS = [
  */
 export function encodeGetVotesParams(options: GetVotesParams) {
   return encodeAbiParameters(FN_INPUTS, [options.account]);
+}
+
+/**
+ * Encodes the "getVotes" function into a Hex string with its parameters.
+ * @param options - The options for the getVotes function.
+ * @returns The encoded hexadecimal string.
+ * @extension ERC20
+ * @example
+ * ```ts
+ * import { encodeGetVotes } "thirdweb/extensions/erc20";
+ * const result = encodeGetVotes({
+ *  account: ...,
+ * });
+ * ```
+ */
+export function encodeGetVotes(options: GetVotesParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeGetVotesParams(options).slice(2)) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**

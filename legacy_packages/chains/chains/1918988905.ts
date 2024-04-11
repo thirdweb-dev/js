@@ -2,7 +2,13 @@ import type { Chain } from "../src/types";
 export default {
   "chain": "RARI-T",
   "chainId": 1918988905,
-  "explorers": [],
+  "explorers": [
+    {
+      "name": "rarichain-testnet-explorer",
+      "url": "https://explorer.rarichain.org",
+      "standard": "EIP3091"
+    }
+  ],
   "faucets": [],
   "features": [],
   "infoURL": "https://rarichain.org/",

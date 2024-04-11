@@ -11,7 +11,6 @@ const responseCache = /*#__PURE__*/ new Map();
  *@internal
  */
 export function getCache<TData>(cacheKey: string) {
-  // eslint-disable-next-line @typescript-eslint/no-shadow
   const buildCache = <TData>(cacheKey_: string, cache: Map<string, TData>) => ({
     clear: () => cache.delete(cacheKey_),
     get: () => cache.get(cacheKey_),
@@ -48,7 +47,7 @@ type WithCacheParameters = {
  */
 export async function withCache<TData>(
   fn: () => Promise<TData>,
-  { cacheKey, cacheTime = Infinity }: WithCacheParameters,
+  { cacheKey, cacheTime = Number.POSITIVE_INFINITY }: WithCacheParameters,
 ) {
   const cache = getCache<TData>(cacheKey);
 

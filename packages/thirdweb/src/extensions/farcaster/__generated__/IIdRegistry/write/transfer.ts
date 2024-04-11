@@ -1,19 +1,24 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "transfer" function.
  */
-
-export type TransferParams = {
+export type TransferParams = WithOverrides<{
   to: AbiParameterToPrimitiveType<{ type: "address"; name: "to" }>;
   deadline: AbiParameterToPrimitiveType<{ type: "uint256"; name: "deadline" }>;
   sig: AbiParameterToPrimitiveType<{ type: "bytes"; name: "sig" }>;
-};
+}>;
 
-const FN_SELECTOR = "0xbe45fd62" as const;
+export const FN_SELECTOR = "0xbe45fd62" as const;
 const FN_INPUTS = [
   {
     type: "address",
@@ -29,6 +34,25 @@ const FN_INPUTS = [
   },
 ] as const;
 const FN_OUTPUTS = [] as const;
+
+/**
+ * Checks if the `transfer` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `transfer` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isTransferSupported } from "thirdweb/extensions/farcaster";
+ *
+ * const supported = await isTransferSupported(contract);
+ * ```
+ */
+export async function isTransferSupported(contract: ThirdwebContract<any>) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
 
 /**
  * Encodes the parameters for the "transfer" function.
@@ -51,6 +75,28 @@ export function encodeTransferParams(options: TransferParams) {
     options.deadline,
     options.sig,
   ]);
+}
+
+/**
+ * Encodes the "transfer" function into a Hex string with its parameters.
+ * @param options - The options for the transfer function.
+ * @returns The encoded hexadecimal string.
+ * @extension FARCASTER
+ * @example
+ * ```ts
+ * import { encodeTransfer } "thirdweb/extensions/farcaster";
+ * const result = encodeTransfer({
+ *  to: ...,
+ *  deadline: ...,
+ *  sig: ...,
+ * });
+ * ```
+ */
+export function encodeTransfer(options: TransferParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeTransferParams(options).slice(2)) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**
@@ -82,19 +128,21 @@ export function transfer(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [
-              resolvedParams.to,
-              resolvedParams.deadline,
-              resolvedParams.sig,
-            ] as const;
-          }
-        : [options.to, options.deadline, options.sig],
+    params: async () => {
+      const resolvedOptions = await asyncOptions();
+      return [
+        resolvedOptions.to,
+        resolvedOptions.deadline,
+        resolvedOptions.sig,
+      ] as const;
+    },
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

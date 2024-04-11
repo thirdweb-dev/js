@@ -1,18 +1,23 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "quoteExactInput" function.
  */
-
-export type QuoteExactInputParams = {
+export type QuoteExactInputParams = WithOverrides<{
   path: AbiParameterToPrimitiveType<{ type: "bytes"; name: "path" }>;
   amountIn: AbiParameterToPrimitiveType<{ type: "uint256"; name: "amountIn" }>;
-};
+}>;
 
-const FN_SELECTOR = "0xcdca1753" as const;
+export const FN_SELECTOR = "0xcdca1753" as const;
 const FN_INPUTS = [
   {
     type: "bytes",
@@ -31,6 +36,27 @@ const FN_OUTPUTS = [
 ] as const;
 
 /**
+ * Checks if the `quoteExactInput` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `quoteExactInput` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isQuoteExactInputSupported } from "thirdweb/extensions/uniswap";
+ *
+ * const supported = await isQuoteExactInputSupported(contract);
+ * ```
+ */
+export async function isQuoteExactInputSupported(
+  contract: ThirdwebContract<any>,
+) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
  * Encodes the parameters for the "quoteExactInput" function.
  * @param options - The options for the quoteExactInput function.
  * @returns The encoded ABI parameters.
@@ -46,6 +72,29 @@ const FN_OUTPUTS = [
  */
 export function encodeQuoteExactInputParams(options: QuoteExactInputParams) {
   return encodeAbiParameters(FN_INPUTS, [options.path, options.amountIn]);
+}
+
+/**
+ * Encodes the "quoteExactInput" function into a Hex string with its parameters.
+ * @param options - The options for the quoteExactInput function.
+ * @returns The encoded hexadecimal string.
+ * @extension UNISWAP
+ * @example
+ * ```ts
+ * import { encodeQuoteExactInput } "thirdweb/extensions/uniswap";
+ * const result = encodeQuoteExactInput({
+ *  path: ...,
+ *  amountIn: ...,
+ * });
+ * ```
+ */
+export function encodeQuoteExactInput(options: QuoteExactInputParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeQuoteExactInputParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**
@@ -76,15 +125,17 @@ export function quoteExactInput(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [resolvedParams.path, resolvedParams.amountIn] as const;
-          }
-        : [options.path, options.amountIn],
+    params: async () => {
+      const resolvedOptions = await asyncOptions();
+      return [resolvedOptions.path, resolvedOptions.amountIn] as const;
+    },
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

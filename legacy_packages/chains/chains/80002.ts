@@ -30,7 +30,10 @@ export default {
   "redFlags": [],
   "rpc": [
     "https://80002.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-amoy.polygon.technology"
+    "https://rpc-amoy.polygon.technology",
+    "https://https://rpc-amoy.polygon.technology",
+    "https://polygon-amoy-bor-rpc.publicnode.com",
+    "wss://polygon-amoy-bor-rpc.publicnode.com"
   ],
   "shortName": "polygonamoy",
   "slip44": 1,

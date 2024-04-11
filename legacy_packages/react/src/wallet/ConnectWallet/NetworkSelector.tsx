@@ -181,6 +181,7 @@ export function NetworkSelector(props: NetworkSelectorProps) {
 export function NetworkSelectorContent(
   props: NetworkSelectorProps & {
     onBack?: () => void;
+    showTabs?: boolean;
   },
 ) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -261,28 +262,33 @@ export function NetworkSelectorContent(
       </Container>
 
       <Tabs.Root className="TabsRoot" defaultValue="all">
-        <Container px="lg">
-          <Tabs.List
-            className="TabsList"
-            aria-label="Manage your account"
-            style={{
-              display: "flex",
-              gap: spacing.xxs,
-            }}
-          >
-            <TabButton className="TabsTrigger" value="all">
-              {locale.allNetworks}
-            </TabButton>
-            <TabButton className="TabsTrigger" value="mainnet">
-              {locale.mainnets}
-            </TabButton>
-            <TabButton className="TabsTrigger" value="testnet">
-              {locale.testnets}
-            </TabButton>
-          </Tabs.List>
-        </Container>
+        {props.showTabs !== false && (
+          <>
+            <Container px="lg">
+              <Tabs.List
+                className="TabsList"
+                aria-label="Manage your account"
+                style={{
+                  display: "flex",
+                  gap: spacing.xxs,
+                }}
+              >
+                <TabButton className="TabsTrigger" value="all">
+                  {locale.allNetworks}
+                </TabButton>
+                <TabButton className="TabsTrigger" value="mainnet">
+                  {locale.mainnets}
+                </TabButton>
+                <TabButton className="TabsTrigger" value="testnet">
+                  {locale.testnets}
+                </TabButton>
+              </Tabs.List>
+            </Container>
+            <Spacer y="lg" />
+          </>
+        )}
 
-        <Spacer y="lg" />
+        {props.showTabs === false && <Spacer y="xxs" />}
 
         {chains.length > 10 && (
           <>
@@ -517,8 +523,6 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(props: {
   const activeChainId = useChainId();
   const [switchingChainId, setSwitchingChainId] = useState(-1);
   const [errorSwitchingChainId, setErrorSwitchingChainId] = useState(-1);
-  const twLocale = useTWLocale();
-  const locale = twLocale.connectWallet.networkSelector;
 
   const close = props.close;
 
@@ -577,11 +581,9 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(props: {
         const confirming = switchingChainId === chain.chainId;
         const switchingFailed = errorSwitchingChainId === chain.chainId;
 
-        const chainName = <span>{chain.name} </span>;
-
-        if (RenderChain) {
-          return (
-            <li key={chain.chainId}>
+        return (
+          <li key={chain.chainId}>
+            {RenderChain ? (
               <RenderChain
                 switchChain={() => {
                   handleSwitch(chain);
@@ -591,61 +593,77 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(props: {
                 switchFailed={errorSwitchingChainId === chain.chainId}
                 close={props.close}
               />
-            </li>
-          );
-        }
-
-        return (
-          <li key={chain.chainId}>
-            <NetworkButton
-              data-active={activeChainId === chain.chainId}
-              onClick={() => {
-                handleSwitch(chain);
-              }}
-            >
-              <ChainIcon
+            ) : (
+              <ChainButton
                 chain={chain}
-                size={iconSize.lg}
-                active={activeChainId === chain.chainId}
-                loading="lazy"
+                confirming={confirming}
+                onClick={() => handleSwitch(chain)}
+                switchingFailed={switchingFailed}
               />
-
-              {confirming || switchingFailed ? (
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: spacing.xs,
-                  }}
-                >
-                  {chainName}
-                  <Container animate="fadein" flex="row" gap="xs">
-                    {confirming && (
-                      <>
-                        <Text size="xs" color="accentText">
-                          {twLocale.connectWallet.confirmInWallet}
-                        </Text>
-                        <Spinner size="xs" color="accentText" />
-                      </>
-                    )}
-
-                    {switchingFailed && (
-                      <Container animate="fadein">
-                        <Text size="xs" color="danger">
-                          {locale.failedToSwitch}
-                        </Text>
-                      </Container>
-                    )}
-                  </Container>
-                </div>
-              ) : (
-                chainName
-              )}
-            </NetworkButton>
+            )}
           </li>
         );
       })}
     </NetworkListUl>
+  );
+});
+
+export const ChainButton = /* @__PURE__ */ memo(function ChainButton(props: {
+  confirming: boolean;
+  switchingFailed: boolean;
+  onClick: () => void;
+  chain: Chain;
+}) {
+  const twLocale = useTWLocale();
+  const { confirming, onClick, switchingFailed, chain } = props;
+  const locale = twLocale.connectWallet.networkSelector;
+  const activeChainId = useChainId();
+  const chainName = <span>{chain.name} </span>;
+
+  return (
+    <NetworkButton
+      data-active={activeChainId === chain.chainId}
+      onClick={onClick}
+    >
+      <ChainIcon
+        chain={chain}
+        size={iconSize.lg}
+        active={activeChainId === chain.chainId}
+        loading="lazy"
+      />
+
+      {confirming || switchingFailed ? (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: spacing.xs,
+          }}
+        >
+          {chainName}
+          <Container animate="fadein" flex="row" gap="xs">
+            {confirming && (
+              <>
+                <Text size="xs" color="accentText">
+                  {twLocale.connectWallet.confirmInWallet}
+                </Text>
+                <Spinner size="xs" color="accentText" />
+              </>
+            )}
+
+            {switchingFailed && (
+              <Container animate="fadein">
+                <Text size="xs" color="danger">
+                  {locale.failedToSwitch}
+                </Text>
+              </Container>
+            )}
+          </Container>
+        </div>
+      ) : (
+        chainName
+      )}
+    </NetworkButton>
   );
 });
 

@@ -7,11 +7,6 @@ export default {
       "name": "Bobascan",
       "url": "https://bobascan.com",
       "standard": "none"
-    },
-    {
-      "name": "Blockscout",
-      "url": "https://blockexplorer.boba.network",
-      "standard": "none"
     }
   ],
   "faucets": [],

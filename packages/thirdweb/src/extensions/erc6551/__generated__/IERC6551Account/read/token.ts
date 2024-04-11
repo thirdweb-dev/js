@@ -3,8 +3,10 @@ import type { BaseTransactionOptions } from "../../../../../transaction/types.js
 
 import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
-const FN_SELECTOR = "0xfc0c546a" as const;
+export const FN_SELECTOR = "0xfc0c546a" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
@@ -20,6 +22,25 @@ const FN_OUTPUTS = [
     name: "tokenId",
   },
 ] as const;
+
+/**
+ * Checks if the `token` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `token` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isTokenSupported } from "thirdweb/extensions/erc6551";
+ *
+ * const supported = await isTokenSupported(contract);
+ * ```
+ */
+export async function isTokenSupported(contract: ThirdwebContract<any>) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
 
 /**
  * Decodes the result of the token function call.

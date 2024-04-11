@@ -1,9 +1,9 @@
 import {
-  formatTransactionReceipt,
   type EIP1193RequestFn,
-  type GetTransactionReceiptParameters,
   type EIP1474Methods,
+  type GetTransactionReceiptParameters,
   type TransactionReceipt,
+  formatTransactionReceipt,
 } from "viem";
 
 /**

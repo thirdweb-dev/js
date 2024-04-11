@@ -26,6 +26,13 @@ type EmailVerificationAuthParams = {
   recoveryCode?: string;
 };
 
+type SmsVerificationAuthParams = {
+  strategy: "phone_number_verification";
+  phoneNumber: string;
+  verificationCode: string;
+  recoveryCode?: string;
+};
+
 export type EmbeddedWalletOauthStrategy = "google" | "apple" | "facebook";
 
 type OauthAuthParams = {
@@ -60,6 +67,7 @@ type IframeAuthParams = {
 // this is the input to 'authenticate'
 export type AuthParams =
   | EmailVerificationAuthParams
+  | SmsVerificationAuthParams
   | OauthAuthParams
   | JwtAuthParams
   | AuthEndpointParams
