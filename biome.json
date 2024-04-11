@@ -4,7 +4,10 @@
     "enabled": true
   },
   "linter": {
-    "enabled": true
+    "enabled": true,
+    "rules": {
+      "recommended": true
+    }
   },
   "formatter": {
     "enabled": true,
