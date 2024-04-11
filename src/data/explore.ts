@@ -89,14 +89,7 @@ const AIRDROP = {
   displayName: "Airdrops",
   description:
     "Efficiently transfer large numbers of on-chain assets to a large number of recipients.",
-  contracts: [
-    "thirdweb.eth/AirdropERC20",
-    "thirdweb.eth/AirdropERC721",
-    "thirdweb.eth/AirdropERC1155",
-    "thirdweb.eth/AirdropERC20Claimable",
-    "thirdweb.eth/AirdropERC721Claimable",
-    "thirdweb.eth/AirdropERC1155Claimable",
-  ],
+  contracts: ["thirdweb.eth/Airdrop"],
 } as const;
 
 const GAMING = {
