@@ -29,7 +29,21 @@ export { AbstractClientWallet } from "./wallets/base";
 export type { WalletOptions } from "./wallets/base";
 export { type BloctoOptions, BloctoWallet } from "./wallets/blocto";
 export * from "./wallets/coinbase-wallet";
-export * from "./wallets/embedded-wallet";
+export {
+  EmbeddedWallet, 
+  EmbeddedWallet as InAppWallet, 
+  type AuthParams, 
+  type AuthResult, 
+  type EmbeddedWalletAdditionalOptions, 
+  type EmbeddedWalletAdditionalOptions as InAppWalletWalletAdditionalOptions, 
+  type EmbeddedWalletConnectionArgs,
+  type EmbeddedWalletConnectionArgs as InAppWalletConnectionArgs, 
+  type EmbeddedWalletOauthStrategy,
+  type EmbeddedWalletOauthStrategy as InAppWalletOauthStrategy, 
+  type EmbeddedWalletOptions,
+  type EmbeddedWalletOptions as InAppWalletWalletOptions,
+  supportedSmsCountries
+} from "./wallets/embedded-wallet";
 export * from "./wallets/ethers";
 export * from "./wallets/frame";
 export * from "./wallets/imtoken";

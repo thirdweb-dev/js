@@ -61,6 +61,12 @@ export {
   useEmbeddedWalletUserEmail,
 } from "./hooks/wallets/useEmbeddedWallet";
 export { useEmbeddedWalletSendVerificationEmail } from "./hooks/useEmbeddedWalletSendVerificationEmail";
+export {
+  useEmbeddedWallet as useInAppWallet,
+  useEmbeddedWalletUserEmail as useInAppWalletUserEmail,
+} from "./hooks/wallets/useEmbeddedWallet";
+export { useEmbeddedWalletSendVerificationEmail as useInAppWalletSendVerificationEmail } from "./hooks/useEmbeddedWalletSendVerificationEmail";
+
 
 export {
   usePaperWalletUserEmail,
