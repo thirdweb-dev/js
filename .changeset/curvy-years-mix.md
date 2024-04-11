@@ -2,4 +2,4 @@
 "thirdweb": patch
 ---
 
-Swap UI updates
+Improved Swap UI in ConnectButton Details Modal
