@@ -15,6 +15,7 @@ import {
 } from "@thirdweb-dev/wallets";
 import { useCallback } from "react";
 import { embeddedWallet } from "../../../wallet/wallets/embeddedWallet/embeddedWallet";
+import { openOauthSignInWindow } from "../../../wallet/utils/openOauthSignInWindow";
 
 /**
  * Hook to connect `EmbeddedWallet` which allows users to login via Email or social logins
@@ -130,6 +131,18 @@ export function useEmbeddedWallet() {
       }
       const wallet = create(embeddedWallet());
       try {
+        // open window immediately to fix issue in iOS Safari
+        // if not opened immediately, it adds a bit of delay between user click and opening the window which causes the popup to be blocked
+        if (
+          authParams.strategy === "apple" ||
+          authParams.strategy === "facebook" ||
+          authParams.strategy === "google"
+        ) {
+          const win = openOauthSignInWindow(authParams.strategy);
+          if (win) {
+            authParams.openedWindow = win;
+          }
+        }
         const authResult = await wallet.authenticate(authParams);
         await wallet.connect({ authResult });
         setWallet(wallet);

@@ -23,7 +23,7 @@ function getWidthAndHeight(authOption: EmbeddedWalletOauthStrategy) {
 
 export function openOauthSignInWindow(
   authOption: EmbeddedWalletOauthStrategy,
-  themeObj: Theme,
+  themeObj?: Theme,
 ) {
   // open the popup in the center of the screen
   const { height, width } = getWidthAndHeight(authOption);
@@ -39,8 +39,8 @@ export function openOauthSignInWindow(
     const title = getBodyTitle(authOption);
     win.document.title = title;
     win.document.body.innerHTML = spinnerWindowHtml;
-    win.document.body.style.background = themeObj.colors.modalBg;
-    win.document.body.style.color = themeObj.colors.accentText;
+    win.document.body.style.background = themeObj?.colors.modalBg || "black";
+    win.document.body.style.color = themeObj?.colors.accentText || "white";
   }
 
   // close it when current window is closed or refreshed
