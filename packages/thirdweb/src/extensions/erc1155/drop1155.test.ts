@@ -225,5 +225,47 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         ).resolves.toBe(1n);
       });
     });
+
+    it("should respect price", async () => {
+      const tokenId = 3n;
+      await sendAndConfirmTransaction({
+        transaction: setClaimConditions({
+          contract,
+          phases: [
+            {
+              overrideList: [
+                {
+                  address: TEST_ACCOUNT_A.address,
+                  maxClaimable: "10",
+                  price: "0",
+                },
+              ],
+              maxClaimablePerWallet: 0n,
+              price: "1000",
+            },
+          ],
+          tokenId,
+        }),
+        account: TEST_ACCOUNT_A,
+      });
+
+      await expect(
+        balanceOf({ contract, owner: TEST_ACCOUNT_A.address, tokenId }),
+      ).resolves.toBe(0n);
+
+      await sendAndConfirmTransaction({
+        account: TEST_ACCOUNT_A,
+        transaction: claimTo({
+          contract,
+          to: TEST_ACCOUNT_A.address,
+          tokenId,
+          quantity: 1n,
+        }),
+      });
+
+      await expect(
+        balanceOf({ contract, owner: TEST_ACCOUNT_A.address, tokenId }),
+      ).resolves.toBe(1n);
+    });
   },
 );

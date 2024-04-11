@@ -85,7 +85,7 @@ export function claimTo(options: BaseTransactionOptions<ClaimToParams>) {
           ? allowlistProof.currency
           : cc.currency;
       const pricePerToken =
-        allowlistProof.pricePerToken &&
+        allowlistProof.pricePerToken !== undefined &&
         allowlistProof.pricePerToken !== maxUint256
           ? allowlistProof.pricePerToken
           : cc.pricePerToken;
