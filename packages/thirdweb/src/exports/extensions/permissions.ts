@@ -45,7 +45,15 @@ export {
 // --------------------------------------------------------
 
 // READ
-// ...TODO
-
-// WRITE
-// ...TODO
+export {
+  getRoleMember,
+  type GetRoleMemberParams,
+} from "../../extensions/permissions/read/getRoleMember.js";
+export {
+  getRoleMemberCount,
+  type GetRoleMemberCountParams,
+} from "../../extensions/permissions/read/getRoleMemberCount.js";
+export {
+  getAllRoleMembers,
+  type GetAllRoleMembersParams,
+} from "../../extensions/permissions/read/getAllMembers.js";
