@@ -4,10 +4,7 @@
     "enabled": true
   },
   "linter": {
-    "enabled": true,
-    "rules": {
-      "recommended": true
-    }
+    "enabled": true
   },
   "formatter": {
     "enabled": true,
@@ -21,5 +18,20 @@
       "packages/thirdweb/src/utils/bytecode/cbor-decode.ts",
       "packages/thirdweb/src/**/__generated__/**"
     ]
-  }
+  },
+  "overrides": [
+    {
+      "include": ["packages/thirdweb/src/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedGlobals": {
+              "options": { "deniedGlobals": ["Buffer"] },
+              "level": "error"
+            }
+          }
+        }
+      }
+    }
+  ]
 }
