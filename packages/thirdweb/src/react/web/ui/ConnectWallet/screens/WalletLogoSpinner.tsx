@@ -62,10 +62,13 @@ export function WalletLogoSpinner(props: { error: boolean; id: WalletId }) {
 const WalletBg = /* @__PURE__ */ StyledDiv(() => {
   const theme = useCustomTheme();
   return {
-    background: theme.colors.walletSelectorButtonHoverBg,
-    borderRadius: "15px",
+    background: theme.colors.tertiaryBg,
+    borderRadius: "13px",
     border: `1px solid ${theme.colors.borderColor}`,
     padding: spacing.xs,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   };
 });
 

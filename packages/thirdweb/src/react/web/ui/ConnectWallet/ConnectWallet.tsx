@@ -1,13 +1,9 @@
 import styled from "@emotion/styled";
 import { useContext, useEffect, useMemo, useState } from "react";
-import type { Chain } from "../../../../chains/types.js";
 import { AutoConnect } from "../../../core/hooks/connection/useAutoConnect.js";
-import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import {
   useActiveAccount,
-  useActiveWalletChain,
   useActiveWalletConnectionStatus,
-  useSwitchActiveWalletChain,
 } from "../../../core/hooks/wallets/wallet-hooks.js";
 import { WalletConnectionContext } from "../../../core/providers/wallet-connection.js";
 import {
@@ -122,7 +118,6 @@ function ConnectButtonInner(
   },
 ) {
   const activeAccount = useActiveAccount();
-  const activeWalletChain = useActiveWalletChain();
   const contextTheme = useCustomTheme();
   const theme = props.theme || contextTheme || "dark";
   const connectionStatus = useActiveWalletConnectionStatus();
@@ -140,10 +135,6 @@ function ConnectButtonInner(
   // const authConfig = useThirdwebAuthContext();
   // const { logout } = useLogout();
   // const isNetworkMismatch = useNetworkMismatch();
-  const isNetworkMismatch =
-    activeWalletChain?.id !== undefined &&
-    props.chain?.id &&
-    activeWalletChain.id !== props.chain.id;
 
   // const [showSignatureModal, setShowSignatureModal] = useState(false);
   // const address = useActiveWalletAddress();
@@ -263,16 +254,6 @@ function ConnectButtonInner(
         }
 
         // switch network button
-        if (props.chain && isNetworkMismatch) {
-          return (
-            <SwitchNetworkButton
-              style={props.switchButton?.style}
-              className={props.switchButton?.className}
-              switchNetworkBtnTitle={props.switchButton?.label}
-              targetChain={props.chain}
-            />
-          );
-        }
 
         // sign in button
         // else if (requiresSignIn) {
@@ -316,60 +297,12 @@ function ConnectButtonInner(
               // }
             }}
             chains={props?.chains || []}
+            chain={props.chain}
+            switchButton={props.switchButton}
           />
         );
       })()}
     </CustomThemeProvider>
-  );
-}
-
-/**
- * @internal
- */
-function SwitchNetworkButton(props: {
-  style?: React.CSSProperties;
-  className?: string;
-  switchNetworkBtnTitle?: string;
-  targetChain: Chain;
-}) {
-  const switchChain = useSwitchActiveWalletChain();
-  const [switching, setSwitching] = useState(false);
-  const locale = useWalletConnectionCtx().connectLocale;
-
-  const switchNetworkBtnTitle =
-    props.switchNetworkBtnTitle ?? locale.switchNetwork;
-
-  return (
-    <AnimatedButton
-      className={`${TW_CONNECT_WALLET}--switch-network ${
-        props.className || ""
-      }`}
-      variant="primary"
-      type="button"
-      data-is-loading={switching}
-      data-test="switch-network-button"
-      disabled={switching}
-      onClick={async () => {
-        setSwitching(true);
-        try {
-          await switchChain(props.targetChain);
-        } catch (e) {
-          console.error(e);
-        }
-        setSwitching(false);
-      }}
-      style={{
-        minWidth: "140px",
-        ...props.style,
-      }}
-      aria-label={switching ? locale.switchingNetwork : undefined}
-    >
-      {switching ? (
-        <Spinner size="sm" color="primaryButtonText" />
-      ) : (
-        switchNetworkBtnTitle
-      )}
-    </AnimatedButton>
   );
 }
 

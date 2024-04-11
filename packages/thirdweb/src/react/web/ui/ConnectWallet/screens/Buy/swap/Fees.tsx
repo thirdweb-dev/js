@@ -18,11 +18,12 @@ export function SwapFees(props: {
         alignItems: props.align === "right" ? "flex-end" : "flex-start",
       }}
     >
-      {props.quote.processingFees.map((fee) => {
+      {props.quote.processingFees.map((fee, i) => {
         const feeAmount = formatNumber(Number(fee.amount), 4);
         return (
           <>
-            <Container key={fee.token.symbol} flex="row" gap="xxs">
+            {/* biome-ignore lint/suspicious/noArrayIndexKey: <explanation> */}
+            <Container key={i} flex="row" gap="xxs">
               <Text color="primaryText" size="sm">
                 {feeAmount === 0 ? "~" : ""}
                 {feeAmount} {fee.token.symbol}

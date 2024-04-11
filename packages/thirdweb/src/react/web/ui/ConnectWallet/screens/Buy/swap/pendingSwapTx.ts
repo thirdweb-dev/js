@@ -1,7 +1,6 @@
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import {
-  type BuyWithCryptoStatuses,
-  type BuyWithCryptoSubStatuses,
+  type BuyWithCryptoStatus,
   getBuyWithCryptoStatus,
 } from "../../../../../../../pay/buyWithCrypto/actions/getStatus.js";
 import { createStore } from "../../../../../../../reactive/store.js";
@@ -9,16 +8,17 @@ import { wait } from "../../../../../../../utils/promise/wait.js";
 
 type SwapTxInfo = {
   transactionHash: string;
-  status: BuyWithCryptoStatuses;
-  subStatus?: BuyWithCryptoSubStatuses;
-  from: {
+  status: BuyWithCryptoStatus["status"];
+  subStatus?: BuyWithCryptoStatus["subStatus"];
+  source: {
     symbol: string;
     value: string;
     chainId: number;
   };
-  to: {
+  destination: {
     symbol: string;
     value: string;
+    chainId: number;
   };
 };
 
@@ -68,9 +68,10 @@ export const addPendingSwapTransaction = (
 
           // in case - the destination token is different ( happens when tx is partially successful )
           if (res.destination) {
-            newValue.to = {
+            newValue.destination = {
               symbol: res.destination.token.symbol || "",
               value: res.destination.amount,
+              chainId: res.destination.token.chainId,
             };
           }
 

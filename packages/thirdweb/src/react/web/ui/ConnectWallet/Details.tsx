@@ -29,6 +29,7 @@ import {
   useActiveWalletChain,
   // useConnect,
   useDisconnect,
+  useSwitchActiveWalletChain,
 } from "../../../core/hooks/wallets/wallet-hooks.js";
 import { shortenString } from "../../../core/utils/addresses.js";
 import { ChainIcon } from "../components/ChainIcon.js";
@@ -37,6 +38,7 @@ import { Img } from "../components/Img.js";
 import { Modal } from "../components/Modal.js";
 import { Skeleton } from "../components/Skeleton.js";
 import { Spacer } from "../components/Spacer.js";
+import { Spinner } from "../components/Spinner.js";
 import { WalletImage } from "../components/WalletImage.js";
 import { Container, Line } from "../components/basic.js";
 import { Button, IconButton } from "../components/buttons.js";
@@ -53,6 +55,7 @@ import {
   spacing,
 } from "../design-system/index.js";
 import type {
+  ConnectButtonProps,
   ConnectButton_detailsButtonOptions,
   ConnectButton_detailsModalOptions,
 } from "./ConnectWalletProps.js";
@@ -61,7 +64,7 @@ import { onModalUnmount } from "./constants.js";
 import type { SupportedTokens } from "./defaultTokens.js";
 import { FundsIcon } from "./icons/FundsIcon.js";
 import { WalletIcon } from "./icons/WalletIcon.js";
-import { SwapScreen } from "./screens/Buy/SwapScreen.js";
+import { BuyScreen } from "./screens/Buy/SwapScreen.js";
 import { swapTransactionsStore } from "./screens/Buy/swap/pendingSwapTx.js";
 import { ReceiveFunds } from "./screens/ReceiveFunds.js";
 import { SendFunds } from "./screens/SendFunds.js";
@@ -90,6 +93,8 @@ export const ConnectedWalletDetails: React.FC<{
   theme: "light" | "dark" | Theme;
   supportedTokens: SupportedTokens;
   chains: Chain[];
+  chain?: Chain;
+  switchButton: ConnectButtonProps["switchButton"];
 }> = (props) => {
   const { connectLocale: locale, client } = useWalletConnectionCtx();
   const activeWallet = useActiveWallet();
@@ -176,10 +181,20 @@ export const ConnectedWalletDetails: React.FC<{
   //   avatarOrWalletIconUrl = smartWalletMetadata.iconUrl;
   // }
 
+  const isNetworkMismatch =
+    props.chain && walletChain && walletChain.id !== props.chain.id;
+
   const trigger = props.detailsButton?.render ? (
     <div>
       <props.detailsButton.render />
     </div>
+  ) : props.chain && isNetworkMismatch ? (
+    <SwitchNetworkButton
+      style={props.switchButton?.style}
+      className={props.switchButton?.className}
+      switchNetworkBtnTitle={props.switchButton?.label}
+      targetChain={props.chain}
+    />
   ) : (
     <WalletInfoButton
       type="button"
@@ -630,7 +645,7 @@ export const ConnectedWalletDetails: React.FC<{
   // swap tokens
   else if (screen === "buy") {
     content = (
-      <SwapScreen
+      <BuyScreen
         client={client}
         onBack={() => setScreen("main")}
         supportedTokens={props.supportedTokens}
@@ -699,7 +714,7 @@ const MenuButton = /* @__PURE__ */ StyledButton(() => {
     lineHeight: 1.3,
     transition: "background-color 200ms ease, transform 200ms ease",
     "&:hover": {
-      backgroundColor: theme.colors.walletSelectorButtonHoverBg,
+      backgroundColor: theme.colors.tertiaryBg,
       transform: "scale(1.01)",
       svg: {
         color: theme.colors.accentText,
@@ -875,4 +890,52 @@ function InAppWalletEmail() {
   }
 
   return null;
+}
+
+/**
+ * @internal
+ */
+function SwitchNetworkButton(props: {
+  style?: React.CSSProperties;
+  className?: string;
+  switchNetworkBtnTitle?: string;
+  targetChain: Chain;
+}) {
+  const switchChain = useSwitchActiveWalletChain();
+  const [switching, setSwitching] = useState(false);
+  const locale = useWalletConnectionCtx().connectLocale;
+
+  const switchNetworkBtnTitle =
+    props.switchNetworkBtnTitle ?? locale.switchNetwork;
+
+  return (
+    <Button
+      className={`tw-connect-wallet--switch-network ${props.className || ""}`}
+      variant="primary"
+      type="button"
+      data-is-loading={switching}
+      data-test="switch-network-button"
+      disabled={switching}
+      onClick={async () => {
+        setSwitching(true);
+        try {
+          await switchChain(props.targetChain);
+        } catch (e) {
+          console.error(e);
+        }
+        setSwitching(false);
+      }}
+      style={{
+        minWidth: "140px",
+        ...props.style,
+      }}
+      aria-label={switching ? locale.switchingNetwork : undefined}
+    >
+      {switching ? (
+        <Spinner size="sm" color="primaryButtonText" />
+      ) : (
+        switchNetworkBtnTitle
+      )}
+    </Button>
+  );
 }
