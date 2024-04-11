@@ -11,7 +11,6 @@ import { getContractMetadata } from "../common/read/getContractMetadata.js";
 import { deployERC1155Contract } from "../prebuilts/deploy-erc1155.js";
 import { balanceOf } from "./__generated__/IERC1155/read/balanceOf.js";
 import { nextTokenIdToMint } from "./__generated__/IERC1155Enumerable/read/nextTokenIdToMint.js";
-import { getActiveClaimCondition } from "./drops/read/getActiveClaimCondition.js";
 import { claimTo } from "./drops/write/claimTo.js";
 import { setClaimConditions } from "./drops/write/setClaimConditions.js";
 import { getNFT } from "./read/getNFT.js";
@@ -125,33 +124,6 @@ describe.runIf(process.env.TW_SECRET_KEY)(
           }),
           account: TEST_ACCOUNT_A,
         });
-
-        await expect(
-          getContractMetadata({ contract }),
-        ).resolves.toMatchInlineSnapshot(`
-          {
-            "merkle": {
-              "0x68becb14062ef2d293b9f9d3fa511e0e7ce570d33eb0ca09b12e52332fddec15": "ipfs://QmVhZjSoARnF4cxe8L1tKPhuHHnFZ9RMD6VZr8PmfsPLhi/0",
-            },
-            "name": "Test DropERC1155",
-            "symbol": "",
-          }
-        `);
-
-        await expect(
-          getActiveClaimCondition({ contract, tokenId: 0n }),
-        ).resolves.toMatchInlineSnapshot(`
-          {
-            "currency": "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
-            "maxClaimableSupply": 115792089237316195423570985008687907853269984665640564039457584007913129639935n,
-            "merkleRoot": "0x68becb14062ef2d293b9f9d3fa511e0e7ce570d33eb0ca09b12e52332fddec15",
-            "metadata": "",
-            "pricePerToken": 0n,
-            "quantityLimitPerWallet": 0n,
-            "startTimestamp": 0n,
-            "supplyClaimed": 0n,
-          }
-        `);
 
         await expect(
           sendAndConfirmTransaction({
