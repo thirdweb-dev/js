@@ -53,7 +53,6 @@ export async function fetchProofsForClaimer(options: {
     });
     shardData = await shard.json();
   } catch (e) {
-    console.error("Error fetching shard data", e);
     // if the file can't be fetched it means claimer not in merkle tree
     return null;
   }
