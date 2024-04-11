@@ -26,7 +26,7 @@ import { useCustomTheme } from "../../../../design-system/CustomThemeProvider.js
 import { StyledDiv } from "../../../../design-system/elements.js";
 import { fontSize, iconSize } from "../../../../design-system/index.js";
 import { isNativeToken, type ERC20OrNativeToken } from "../../nativeToken.js";
-import { SwapFees } from "./SwapFees.js";
+import { SwapFees } from "./Fees.js";
 import { addPendingSwapTransaction } from "./pendingSwapTx.js";
 import { TokenIcon } from "../../../../components/TokenIcon.js";
 import { waitForReceipt } from "../../../../../../../transaction/actions/wait-for-tx-receipt.js";
@@ -38,7 +38,7 @@ import { keyframes } from "@emotion/react";
 /**
  * @internal
  */
-export function ConfirmationScreen(props: {
+export function SwapConfirmationScreen(props: {
   onBack: () => void;
   buyWithCryptoQuote: BuyWithCryptoQuote;
   fromAmount: string;
@@ -87,14 +87,8 @@ export function ConfirmationScreen(props: {
         onViewPendingTx={props.onViewPendingTx}
         destinationChain={props.toChain}
         destinationToken={props.toToken}
-        sourceAmount={
-          formatNumber(Number(props.fromAmount), 4) +
-          " " +
-          (fromTokenSymbol || "")
-        }
-        destinationAmount={
-          formatNumber(Number(props.toAmount), 4) + " " + (toTokenSymbol || "")
-        }
+        sourceAmount={`${formatNumber(Number(props.fromAmount), 4)} ${fromTokenSymbol || ""}`}
+        destinationAmount={`${formatNumber(Number(props.toAmount), 4)} ${toTokenSymbol || ""}`}
         swapTx={swapTx}
       />
     );
@@ -320,7 +314,7 @@ const PulsingDot = /* @__PURE__ */ StyledDiv(() => {
 
 const Circle = /* @__PURE__ */ StyledDiv(() => {
   return {
-    border: `1px solid currentColor`,
+    border: "1px solid currentColor",
     width: "20px",
     height: "20px",
     borderRadius: "50%",
