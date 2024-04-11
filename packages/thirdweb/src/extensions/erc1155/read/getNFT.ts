@@ -36,7 +36,8 @@ export async function getNFT(
     totalSupply({
       contract: options.contract,
       id: options.tokenId,
-    }),
+      // in cases where the supply is not available -> fall back to 0
+    }).catch(() => 0n),
   ]);
   return parseNFT(
     await fetchTokenMetadata({
