@@ -14,6 +14,7 @@ export function removeEmptyValues(data: NFTMetadataInput["attributes"]) {
   }
   if (Array.isArray(data)) {
     const parsedArray = data
+      .flat()
       .filter(({ value }) => value !== "")
       .map(({ value, trait_type }) => ({
         ...(!!trait_type && { trait_type }),
