@@ -5,7 +5,7 @@ import {
   uploadOrExtractURIs,
 } from "../../../utils/ipfs.js";
 import type { Prettify } from "../../../utils/type-utils.js";
-import { nextTokenIdToMint } from "../__generated__/IERC721Enumerable/read/nextTokenIdToMint.js";
+import { nextTokenIdToMint } from "../__generated__/IERC1155Enumerable/read/nextTokenIdToMint.js";
 import { lazyMint as generatedLazyMint } from "../__generated__/ILazyMint/write/lazyMint.js";
 
 /**
@@ -29,13 +29,13 @@ export type LazyMintParams = {
 };
 
 /**
- * Lazily mints ERC721 tokens.
+ * Lazily mints ERC1155 tokens.
  * @param options - The options for the lazy minting process.
  * @returns A promise that resolves to the prepared contract call.
- * @extension ERC721
+ * @extension ERC1155
  * @example
  * ```ts
- * import { lazyMint } from "thirdweb/extensions/erc721";
+ * import { lazyMint } from "thirdweb/extensions/erc1155";
  *
  * const tx = await lazyMint({
  * contract,
