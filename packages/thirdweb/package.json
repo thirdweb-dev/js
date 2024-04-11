@@ -109,54 +109,22 @@
   },
   "typesVersions": {
     "*": {
-      "adapters/*": [
-        "./dist/types/exports/adapters/*.d.ts"
-      ],
-      "auth": [
-        "./dist/types/exports/auth.d.ts"
-      ],
-      "chains": [
-        "./dist/types/exports/chains.d.ts"
-      ],
-      "contract": [
-        "./dist/types/exports/contract.d.ts"
-      ],
-      "deploys": [
-        "./dist/types/exports/deploys.d.ts"
-      ],
-      "event": [
-        "./dist/types/exports/event.d.ts"
-      ],
-      "extensions/*": [
-        "./dist/types/exports/extensions/*.d.ts"
-      ],
-      "pay": [
-        "./dist/types/exports/pay.d.ts"
-      ],
-      "react": [
-        "./dist/types/exports/react.d.ts"
-      ],
-      "react-native": [
-        "./dist/types/exports/react-native.d.ts"
-      ],
-      "rpc": [
-        "./dist/types/exports/rpc.d.ts"
-      ],
-      "storage": [
-        "./dist/types/exports/storage.d.ts"
-      ],
-      "transaction": [
-        "./dist/types/exports/transaction.d.ts"
-      ],
-      "utils": [
-        "./dist/types/exports/utils.d.ts"
-      ],
-      "wallets": [
-        "./dist/types/exports/wallets.d.ts"
-      ],
-      "wallets/*": [
-        "./dist/types/exports/wallets/*.d.ts"
-      ]
+      "adapters/*": ["./dist/types/exports/adapters/*.d.ts"],
+      "auth": ["./dist/types/exports/auth.d.ts"],
+      "chains": ["./dist/types/exports/chains.d.ts"],
+      "contract": ["./dist/types/exports/contract.d.ts"],
+      "deploys": ["./dist/types/exports/deploys.d.ts"],
+      "event": ["./dist/types/exports/event.d.ts"],
+      "extensions/*": ["./dist/types/exports/extensions/*.d.ts"],
+      "pay": ["./dist/types/exports/pay.d.ts"],
+      "react": ["./dist/types/exports/react.d.ts"],
+      "react-native": ["./dist/types/exports/react-native.d.ts"],
+      "rpc": ["./dist/types/exports/rpc.d.ts"],
+      "storage": ["./dist/types/exports/storage.d.ts"],
+      "transaction": ["./dist/types/exports/transaction.d.ts"],
+      "utils": ["./dist/types/exports/utils.d.ts"],
+      "wallets": ["./dist/types/exports/wallets.d.ts"],
+      "wallets/*": ["./dist/types/exports/wallets/*.d.ts"]
     }
   },
   "browser": {
@@ -184,15 +152,15 @@
     "@radix-ui/react-focus-scope": "1.0.4",
     "@radix-ui/react-icons": "1.3.0",
     "@radix-ui/react-tooltip": "1.0.7",
-    "@tanstack/react-query": "5.29.0",
-    "@walletconnect/ethereum-provider": "2.12.1",
+    "@tanstack/react-query": "5.29.2",
+    "@walletconnect/ethereum-provider": "2.12.2",
     "abitype": "1.0.0",
     "fast-text-encoding": "^1.0.6",
     "fuse.js": "7.0.0",
     "mipd": "0.0.7",
     "node-libs-browser": "2.2.1",
     "uqr": "0.1.2",
-    "viem": "2.9.9"
+    "viem": "2.9.16"
   },
   "peerDependencies": {
     "ethers": "^5 || ^6",

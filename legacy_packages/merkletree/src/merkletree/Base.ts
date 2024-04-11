@@ -1,3 +1,4 @@
+// @ts-nocheck
 // ADAPTED FROM https://github.com/merkletreejs/merkletreejs
 
 import { Buffer } from "buffer";
