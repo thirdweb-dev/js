@@ -1,4 +1,5 @@
 import type { Address } from "abitype";
+import { maxUint256 } from "viem";
 import {
   ADDRESS_ZERO,
   isNativeTokenAddress,
@@ -77,17 +78,29 @@ export function claimTo(options: BaseTransactionOptions<ClaimToParams>) {
         return allowListProof;
       })();
 
+      // currency and price need to match the allowlist proof if set
+      // if default values in the allowlist proof, fallback to the claim condition
+      const currency =
+        allowlistProof.currency && allowlistProof.currency !== ADDRESS_ZERO
+          ? allowlistProof.currency
+          : cc.currency;
+      const pricePerToken =
+        allowlistProof.pricePerToken &&
+        allowlistProof.pricePerToken !== maxUint256
+          ? allowlistProof.pricePerToken
+          : cc.pricePerToken;
+
       return {
         receiver: options.to,
         tokenId: options.tokenId,
         quantity: options.quantity,
-        currency: cc.currency,
-        pricePerToken: cc.pricePerToken,
+        currency,
+        pricePerToken,
         allowlistProof,
         data: "0x",
         overrides: {
-          value: isNativeTokenAddress(cc.currency)
-            ? cc.pricePerToken * BigInt(options.quantity)
+          value: isNativeTokenAddress(currency)
+            ? pricePerToken * BigInt(options.quantity)
             : 0n,
         },
       };
