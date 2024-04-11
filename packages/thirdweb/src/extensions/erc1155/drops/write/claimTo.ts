@@ -1,6 +1,8 @@
 import type { Address } from "abitype";
-import { ZERO_ADDRESS } from "../../../../../test/src/addresses.js";
-import { isNativeTokenAddress } from "../../../../constants/addresses.js";
+import {
+  ADDRESS_ZERO,
+  isNativeTokenAddress,
+} from "../../../../constants/addresses.js";
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import { padHex } from "../../../../utils/encoding/hex.js";
 import type { ALlowlistProof } from "../../../../utils/extensions/drops/types.js";
@@ -45,7 +47,7 @@ export function claimTo(options: BaseTransactionOptions<ClaimToParams>) {
         // early exit if no merkle root is set
         if (!cc.merkleRoot || cc.merkleRoot === padHex("0x", { size: 32 })) {
           return {
-            currency: ZERO_ADDRESS,
+            currency: ADDRESS_ZERO,
             proof: [],
             quantityLimitPerWallet: 0n,
             pricePerToken: 0n,
@@ -60,11 +62,12 @@ export function claimTo(options: BaseTransactionOptions<ClaimToParams>) {
           contract: options.contract,
           claimer: options.from || options.to, // receiver and claimer can be different, always prioritize the claimer for allowlists
           merkleRoot: cc.merkleRoot,
+          tokenDecimals: 0, // nfts have no decimals
         });
         // if no proof is found, we'll try the empty proof
         if (!allowListProof) {
           return {
-            currency: ZERO_ADDRESS,
+            currency: ADDRESS_ZERO,
             proof: [],
             quantityLimitPerWallet: 0n,
             pricePerToken: 0n,

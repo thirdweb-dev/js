@@ -50,6 +50,7 @@ export async function processAllowlist(options: {
               entry,
               chain: options.chain,
               client: options.client,
+              tokenDecimals: options.tokenDecimals,
             });
           }),
         ),

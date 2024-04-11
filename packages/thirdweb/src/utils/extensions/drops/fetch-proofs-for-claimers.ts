@@ -1,5 +1,7 @@
-import { ZERO_ADDRESS } from "../../../../test/src/addresses.js";
-import { isNativeTokenAddress } from "../../../constants/addresses.js";
+import {
+  ADDRESS_ZERO,
+  isNativeTokenAddress,
+} from "../../../constants/addresses.js";
 import type { ThirdwebContract } from "../../../contract/contract.js";
 import { getContractMetadata } from "../../../extensions/common/read/getContractMetadata.js";
 import { MerkleTree } from "../../../merkletree/MerkleTree.js";
@@ -17,6 +19,7 @@ export async function fetchProofsForClaimer(options: {
   contract: ThirdwebContract;
   claimer: string;
   merkleRoot: string;
+  tokenDecimals: number;
 }): Promise<ALlowlistProof | null> {
   const { contract, merkleRoot, claimer } = options;
   // 1. fetch merkle data from contract URI
@@ -62,6 +65,7 @@ export async function fetchProofsForClaimer(options: {
         entry,
         chain: contract.chain,
         client: contract.client,
+        tokenDecimals: options.tokenDecimals,
       });
     }),
   );
@@ -79,15 +83,16 @@ export async function fetchProofsForClaimer(options: {
         entry,
         chain: contract.chain,
         client: contract.client,
+        tokenDecimals: options.tokenDecimals,
       }),
     )
     .concat(shardData.proofs);
   // 6. return the proof and the entry data for the contract call
-  const currencyAddress = (entry.currencyAddress || ZERO_ADDRESS) as Address;
-  const tokenDecimals = await (async () => {
+  const currencyAddress = (entry.currencyAddress || ADDRESS_ZERO) as Address;
+  const currencyDecimals = await (async () => {
     if (
       isNativeTokenAddress(currencyAddress) ||
-      currencyAddress === ZERO_ADDRESS
+      currencyAddress === ADDRESS_ZERO
     ) {
       return 18;
     }
@@ -107,11 +112,11 @@ export async function fetchProofsForClaimer(options: {
     proof,
     quantityLimitPerWallet: convertQuantity({
       quantity: entry.maxClaimable || "unlimited",
-      tokenDecimals: 0,
+      tokenDecimals: options.tokenDecimals,
     }),
     pricePerToken: convertQuantity({
       quantity: entry.price || "unlimited",
-      tokenDecimals,
+      tokenDecimals: currencyDecimals,
     }),
     currency: currencyAddress,
   };
