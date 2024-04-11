@@ -4,6 +4,8 @@ import type { BaseTransactionOptions } from "../../../../../transaction/types.js
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "verify" function.
@@ -93,6 +95,25 @@ const FN_OUTPUTS = [
 ] as const;
 
 /**
+ * Checks if the `verify` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `verify` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isVerifySupported } from "thirdweb/extensions/erc721";
+ *
+ * const supported = await isVerifySupported(contract);
+ * ```
+ */
+export async function isVerifySupported(contract: ThirdwebContract<any>) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
  * Encodes the parameters for the "verify" function.
  * @param options - The options for the verify function.
  * @returns The encoded ABI parameters.
@@ -108,6 +129,27 @@ const FN_OUTPUTS = [
  */
 export function encodeVerifyParams(options: VerifyParams) {
   return encodeAbiParameters(FN_INPUTS, [options.payload, options.signature]);
+}
+
+/**
+ * Encodes the "verify" function into a Hex string with its parameters.
+ * @param options - The options for the verify function.
+ * @returns The encoded hexadecimal string.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { encodeVerify } "thirdweb/extensions/erc721";
+ * const result = encodeVerify({
+ *  payload: ...,
+ *  signature: ...,
+ * });
+ * ```
+ */
+export function encodeVerify(options: VerifyParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeVerifyParams(options).slice(2)) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**

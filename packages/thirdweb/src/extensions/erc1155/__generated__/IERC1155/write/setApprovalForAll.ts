@@ -6,6 +6,8 @@ import type {
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 import { once } from "../../../../../utils/promise/once.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "setApprovalForAll" function.
@@ -29,6 +31,27 @@ const FN_INPUTS = [
 const FN_OUTPUTS = [] as const;
 
 /**
+ * Checks if the `setApprovalForAll` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `setApprovalForAll` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isSetApprovalForAllSupported } from "thirdweb/extensions/erc1155";
+ *
+ * const supported = await isSetApprovalForAllSupported(contract);
+ * ```
+ */
+export async function isSetApprovalForAllSupported(
+  contract: ThirdwebContract<any>,
+) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
  * Encodes the parameters for the "setApprovalForAll" function.
  * @param options - The options for the setApprovalForAll function.
  * @returns The encoded ABI parameters.
@@ -46,6 +69,29 @@ export function encodeSetApprovalForAllParams(
   options: SetApprovalForAllParams,
 ) {
   return encodeAbiParameters(FN_INPUTS, [options.operator, options.approved]);
+}
+
+/**
+ * Encodes the "setApprovalForAll" function into a Hex string with its parameters.
+ * @param options - The options for the setApprovalForAll function.
+ * @returns The encoded hexadecimal string.
+ * @extension ERC1155
+ * @example
+ * ```ts
+ * import { encodeSetApprovalForAll } "thirdweb/extensions/erc1155";
+ * const result = encodeSetApprovalForAll({
+ *  operator: ...,
+ *  approved: ...,
+ * });
+ * ```
+ */
+export function encodeSetApprovalForAll(options: SetApprovalForAllParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeSetApprovalForAllParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**

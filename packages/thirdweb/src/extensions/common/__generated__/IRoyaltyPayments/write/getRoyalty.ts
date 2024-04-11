@@ -6,6 +6,8 @@ import type {
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 import { once } from "../../../../../utils/promise/once.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "getRoyalty" function.
@@ -46,6 +48,25 @@ const FN_OUTPUTS = [
 ] as const;
 
 /**
+ * Checks if the `getRoyalty` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `getRoyalty` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isGetRoyaltySupported } from "thirdweb/extensions/common";
+ *
+ * const supported = await isGetRoyaltySupported(contract);
+ * ```
+ */
+export async function isGetRoyaltySupported(contract: ThirdwebContract<any>) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
  * Encodes the parameters for the "getRoyalty" function.
  * @param options - The options for the getRoyalty function.
  * @returns The encoded ABI parameters.
@@ -66,6 +87,30 @@ export function encodeGetRoyaltyParams(options: GetRoyaltyParams) {
     options.tokenId,
     options.value,
   ]);
+}
+
+/**
+ * Encodes the "getRoyalty" function into a Hex string with its parameters.
+ * @param options - The options for the getRoyalty function.
+ * @returns The encoded hexadecimal string.
+ * @extension COMMON
+ * @example
+ * ```ts
+ * import { encodeGetRoyalty } "thirdweb/extensions/common";
+ * const result = encodeGetRoyalty({
+ *  tokenAddress: ...,
+ *  tokenId: ...,
+ *  value: ...,
+ * });
+ * ```
+ */
+export function encodeGetRoyalty(options: GetRoyaltyParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeGetRoyaltyParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**

@@ -6,6 +6,8 @@ import type {
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 import { once } from "../../../../../utils/promise/once.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "handleOps" function.
@@ -94,6 +96,25 @@ const FN_INPUTS = [
 const FN_OUTPUTS = [] as const;
 
 /**
+ * Checks if the `handleOps` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `handleOps` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isHandleOpsSupported } from "thirdweb/extensions/erc4337";
+ *
+ * const supported = await isHandleOpsSupported(contract);
+ * ```
+ */
+export async function isHandleOpsSupported(contract: ThirdwebContract<any>) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
  * Encodes the parameters for the "handleOps" function.
  * @param options - The options for the handleOps function.
  * @returns The encoded ABI parameters.
@@ -109,6 +130,29 @@ const FN_OUTPUTS = [] as const;
  */
 export function encodeHandleOpsParams(options: HandleOpsParams) {
   return encodeAbiParameters(FN_INPUTS, [options.ops, options.beneficiary]);
+}
+
+/**
+ * Encodes the "handleOps" function into a Hex string with its parameters.
+ * @param options - The options for the handleOps function.
+ * @returns The encoded hexadecimal string.
+ * @extension ERC4337
+ * @example
+ * ```ts
+ * import { encodeHandleOps } "thirdweb/extensions/erc4337";
+ * const result = encodeHandleOps({
+ *  ops: ...,
+ *  beneficiary: ...,
+ * });
+ * ```
+ */
+export function encodeHandleOps(options: HandleOpsParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeHandleOpsParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**

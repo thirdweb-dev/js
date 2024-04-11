@@ -6,6 +6,8 @@ import type {
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 import { once } from "../../../../../utils/promise/once.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "closeAuction" function.
@@ -32,6 +34,25 @@ const FN_INPUTS = [
 const FN_OUTPUTS = [] as const;
 
 /**
+ * Checks if the `closeAuction` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `closeAuction` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isCloseAuctionSupported } from "thirdweb/extensions/marketplace";
+ *
+ * const supported = await isCloseAuctionSupported(contract);
+ * ```
+ */
+export async function isCloseAuctionSupported(contract: ThirdwebContract<any>) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
  * Encodes the parameters for the "closeAuction" function.
  * @param options - The options for the closeAuction function.
  * @returns The encoded ABI parameters.
@@ -47,6 +68,29 @@ const FN_OUTPUTS = [] as const;
  */
 export function encodeCloseAuctionParams(options: CloseAuctionParams) {
   return encodeAbiParameters(FN_INPUTS, [options.listingId, options.closeFor]);
+}
+
+/**
+ * Encodes the "closeAuction" function into a Hex string with its parameters.
+ * @param options - The options for the closeAuction function.
+ * @returns The encoded hexadecimal string.
+ * @extension MARKETPLACE
+ * @example
+ * ```ts
+ * import { encodeCloseAuction } "thirdweb/extensions/marketplace";
+ * const result = encodeCloseAuction({
+ *  listingId: ...,
+ *  closeFor: ...,
+ * });
+ * ```
+ */
+export function encodeCloseAuction(options: CloseAuctionParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeCloseAuctionParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**

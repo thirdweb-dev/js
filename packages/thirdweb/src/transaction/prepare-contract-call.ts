@@ -4,7 +4,7 @@ import {
   type ExtractAbiFunctionNames,
   parseAbiItem,
 } from "abitype";
-import { type TransactionRequest, concatHex } from "viem";
+import type { TransactionRequest } from "viem";
 import type { ThirdwebContract } from "../contract/contract.js";
 import { encodeAbiParameters } from "../utils/abi/encodeAbiParameters.js";
 import {
@@ -172,14 +172,14 @@ export function prepareContractCall<
           return preparedM[0];
         }
 
-        return concatHex([
-          preparedM[0],
+        // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+        // we can do this because we know the specific formats of the values
+        return (preparedM[0] +
           encodeAbiParameters(
             preparedM[1],
-            // @ts-expect-error - trust
+            // @ts-expect-error - TODO: fix this type issue
             await resolvePromisedValue(params ?? []),
-          ),
-        ]);
+          ).slice(2)) as `${(typeof preparedM)[0]}${string}`;
       },
     },
     {

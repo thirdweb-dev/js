@@ -6,6 +6,8 @@ import type {
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 import { once } from "../../../../../utils/promise/once.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "buyFromListing" function.
@@ -50,6 +52,27 @@ const FN_INPUTS = [
 const FN_OUTPUTS = [] as const;
 
 /**
+ * Checks if the `buyFromListing` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `buyFromListing` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isBuyFromListingSupported } from "thirdweb/extensions/marketplace";
+ *
+ * const supported = await isBuyFromListingSupported(contract);
+ * ```
+ */
+export async function isBuyFromListingSupported(
+  contract: ThirdwebContract<any>,
+) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
  * Encodes the parameters for the "buyFromListing" function.
  * @param options - The options for the buyFromListing function.
  * @returns The encoded ABI parameters.
@@ -74,6 +97,32 @@ export function encodeBuyFromListingParams(options: BuyFromListingParams) {
     options.currency,
     options.expectedTotalPrice,
   ]);
+}
+
+/**
+ * Encodes the "buyFromListing" function into a Hex string with its parameters.
+ * @param options - The options for the buyFromListing function.
+ * @returns The encoded hexadecimal string.
+ * @extension MARKETPLACE
+ * @example
+ * ```ts
+ * import { encodeBuyFromListing } "thirdweb/extensions/marketplace";
+ * const result = encodeBuyFromListing({
+ *  listingId: ...,
+ *  buyFor: ...,
+ *  quantity: ...,
+ *  currency: ...,
+ *  expectedTotalPrice: ...,
+ * });
+ * ```
+ */
+export function encodeBuyFromListing(options: BuyFromListingParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeBuyFromListingParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**

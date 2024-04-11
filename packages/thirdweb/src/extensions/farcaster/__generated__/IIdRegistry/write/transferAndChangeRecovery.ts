@@ -6,6 +6,8 @@ import type {
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 import { once } from "../../../../../utils/promise/once.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "transferAndChangeRecovery" function.
@@ -39,6 +41,27 @@ const FN_INPUTS = [
 const FN_OUTPUTS = [] as const;
 
 /**
+ * Checks if the `transferAndChangeRecovery` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `transferAndChangeRecovery` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isTransferAndChangeRecoverySupported } from "thirdweb/extensions/farcaster";
+ *
+ * const supported = await isTransferAndChangeRecoverySupported(contract);
+ * ```
+ */
+export async function isTransferAndChangeRecoverySupported(
+  contract: ThirdwebContract<any>,
+) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
  * Encodes the parameters for the "transferAndChangeRecovery" function.
  * @param options - The options for the transferAndChangeRecovery function.
  * @returns The encoded ABI parameters.
@@ -63,6 +86,33 @@ export function encodeTransferAndChangeRecoveryParams(
     options.deadline,
     options.sig,
   ]);
+}
+
+/**
+ * Encodes the "transferAndChangeRecovery" function into a Hex string with its parameters.
+ * @param options - The options for the transferAndChangeRecovery function.
+ * @returns The encoded hexadecimal string.
+ * @extension FARCASTER
+ * @example
+ * ```ts
+ * import { encodeTransferAndChangeRecovery } "thirdweb/extensions/farcaster";
+ * const result = encodeTransferAndChangeRecovery({
+ *  to: ...,
+ *  recovery: ...,
+ *  deadline: ...,
+ *  sig: ...,
+ * });
+ * ```
+ */
+export function encodeTransferAndChangeRecovery(
+  options: TransferAndChangeRecoveryParams,
+) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeTransferAndChangeRecoveryParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**

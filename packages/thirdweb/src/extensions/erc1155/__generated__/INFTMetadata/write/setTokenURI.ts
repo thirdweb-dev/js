@@ -6,6 +6,8 @@ import type {
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 import { once } from "../../../../../utils/promise/once.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "setTokenURI" function.
@@ -29,6 +31,25 @@ const FN_INPUTS = [
 const FN_OUTPUTS = [] as const;
 
 /**
+ * Checks if the `setTokenURI` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `setTokenURI` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isSetTokenURISupported } from "thirdweb/extensions/erc1155";
+ *
+ * const supported = await isSetTokenURISupported(contract);
+ * ```
+ */
+export async function isSetTokenURISupported(contract: ThirdwebContract<any>) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
  * Encodes the parameters for the "setTokenURI" function.
  * @param options - The options for the setTokenURI function.
  * @returns The encoded ABI parameters.
@@ -44,6 +65,29 @@ const FN_OUTPUTS = [] as const;
  */
 export function encodeSetTokenURIParams(options: SetTokenURIParams) {
   return encodeAbiParameters(FN_INPUTS, [options.tokenId, options.uri]);
+}
+
+/**
+ * Encodes the "setTokenURI" function into a Hex string with its parameters.
+ * @param options - The options for the setTokenURI function.
+ * @returns The encoded hexadecimal string.
+ * @extension ERC1155
+ * @example
+ * ```ts
+ * import { encodeSetTokenURI } "thirdweb/extensions/erc1155";
+ * const result = encodeSetTokenURI({
+ *  tokenId: ...,
+ *  uri: ...,
+ * });
+ * ```
+ */
+export function encodeSetTokenURI(options: SetTokenURIParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeSetTokenURIParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**
