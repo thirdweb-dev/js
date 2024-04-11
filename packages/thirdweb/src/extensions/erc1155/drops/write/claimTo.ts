@@ -18,12 +18,13 @@ export type ClaimToParams = {
 };
 
 /**
- * Claim ERC721 NFTs to a specified address
+ * Claim ERC1155 NFTs to a specified address
  * @param options - The options for the transaction
- * @extension ERC721
+ * @extension ERC1155
  * @example
  * ```ts
  * import { claimTo } from "thirdweb/extensions/erc1155";
+ *
  * const tx = await claimTo({
  *   contract,
  *   to: "0x...",
@@ -32,7 +33,7 @@ export type ClaimToParams = {
  * });
  * ```
  * @throws If no claim condition is set
- * @returns A promise that resolves with the submitted transaction hash.
+ * @returns The prepared transaction
  */
 export function claimTo(options: BaseTransactionOptions<ClaimToParams>) {
   return claim({

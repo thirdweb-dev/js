@@ -9,6 +9,30 @@ export type SetClaimConditionsParams = {
   resetClaimEligibility?: boolean;
 };
 
+/**
+ * Set the claim conditions for a ERC1155 drop
+ * @param options
+ * @returns the prepared transaction
+ * @extension ERC1155
+ * @example
+ * ```ts
+ * import { setClaimConditions } from "thirdweb/extensions/erc1155";
+ *
+ * const tx = await setClaimConditions({
+ *  contract,
+ *  tokenId: 0n,
+ *  phases: [
+ *    {
+ *      maxClaimableSupply: 100n,
+ *      maxClaimablePerWallet: 1n,
+ *      currencyAddress: "0x...",
+ *      price: 0.1,
+ *      startTime: new Date(),
+ *    },
+ *   ],
+ * });
+ * ```
+ */
 export function setClaimConditions(
   options: BaseTransactionOptions<SetClaimConditionsParams>,
 ) {
