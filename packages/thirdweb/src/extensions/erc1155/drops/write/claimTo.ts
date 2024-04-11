@@ -1,4 +1,5 @@
 import type { Address } from "abitype";
+import { ZERO_ADDRESS } from "../../../../../test/src/addresses.js";
 import { isNativeTokenAddress } from "../../../../constants/addresses.js";
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import { padHex } from "../../../../utils/encoding/hex.js";
@@ -44,10 +45,10 @@ export function claimTo(options: BaseTransactionOptions<ClaimToParams>) {
         // early exit if no merkle root is set
         if (!cc.merkleRoot || cc.merkleRoot === padHex("0x", { size: 32 })) {
           return {
-            currency: cc.currency as `0x${string}`,
+            currency: ZERO_ADDRESS,
             proof: [],
-            quantityLimitPerWallet: cc.quantityLimitPerWallet,
-            pricePerToken: cc.pricePerToken,
+            quantityLimitPerWallet: 0n,
+            pricePerToken: 0n,
           } satisfies ALlowlistProof;
         }
         // lazy-load the fetchProofsForClaimer function if we need it
@@ -63,10 +64,10 @@ export function claimTo(options: BaseTransactionOptions<ClaimToParams>) {
         // if no proof is found, we'll try the empty proof
         if (!allowListProof) {
           return {
-            currency: cc.currency as `0x${string}`,
+            currency: ZERO_ADDRESS,
             proof: [],
-            quantityLimitPerWallet: cc.quantityLimitPerWallet,
-            pricePerToken: cc.pricePerToken,
+            quantityLimitPerWallet: 0n,
+            pricePerToken: 0n,
           } satisfies ALlowlistProof;
         }
         // otherwise return the proof

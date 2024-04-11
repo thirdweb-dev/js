@@ -1,7 +1,5 @@
-import {
-  NATIVE_TOKEN_ADDRESS,
-  isNativeTokenAddress,
-} from "../../../constants/addresses.js";
+import { ZERO_ADDRESS } from "../../../../test/src/addresses.js";
+import { isNativeTokenAddress } from "../../../constants/addresses.js";
 import type { ThirdwebContract } from "../../../contract/contract.js";
 import { getContractMetadata } from "../../../extensions/common/read/getContractMetadata.js";
 import { MerkleTree } from "../../../merkletree/MerkleTree.js";
@@ -85,10 +83,12 @@ export async function fetchProofsForClaimer(options: {
     )
     .concat(shardData.proofs);
   // 6. return the proof and the entry data for the contract call
-  const currencyAddress = (entry.currencyAddress ||
-    NATIVE_TOKEN_ADDRESS) as Address;
+  const currencyAddress = (entry.currencyAddress || ZERO_ADDRESS) as Address;
   const tokenDecimals = await (async () => {
-    if (isNativeTokenAddress(currencyAddress)) {
+    if (
+      isNativeTokenAddress(currencyAddress) ||
+      currencyAddress === ZERO_ADDRESS
+    ) {
       return 18;
     }
     const [{ getContract }, { decimals: getDecimals }] = await Promise.all([
@@ -107,7 +107,7 @@ export async function fetchProofsForClaimer(options: {
     proof,
     quantityLimitPerWallet: convertQuantity({
       quantity: entry.maxClaimable || "unlimited",
-      tokenDecimals,
+      tokenDecimals: 0,
     }),
     pricePerToken: convertQuantity({
       quantity: entry.price || "unlimited",

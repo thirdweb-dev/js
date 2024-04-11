@@ -1,11 +1,9 @@
 import { encodePacked } from "viem";
 import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
-import {
-  NATIVE_TOKEN_ADDRESS,
-  isNativeTokenAddress,
-} from "../../../constants/addresses.js";
+import { isNativeTokenAddress } from "../../../constants/addresses.js";
 
+import { ZERO_ADDRESS } from "../../../../test/src/addresses.js";
 import { keccak256 } from "../../hashing/keccak256.js";
 import { convertQuantity } from "./convert-quantity.js";
 import type { AllowlistEntry } from "./types.js";
@@ -15,9 +13,12 @@ export async function hashEntry(options: {
   chain: Chain;
   client: ThirdwebClient;
 }) {
-  const currencyAddress = options.entry.currencyAddress || NATIVE_TOKEN_ADDRESS;
+  const currencyAddress = options.entry.currencyAddress || ZERO_ADDRESS;
   const tokenDecimals = await (async () => {
-    if (isNativeTokenAddress(currencyAddress)) {
+    if (
+      isNativeTokenAddress(currencyAddress) ||
+      currencyAddress === ZERO_ADDRESS
+    ) {
       return 18;
     }
     const [{ getContract }, { decimals: getDecimals }] = await Promise.all([
@@ -39,7 +40,7 @@ export async function hashEntry(options: {
         options.entry.address,
         convertQuantity({
           quantity: options.entry.maxClaimable || "unlimited",
-          tokenDecimals,
+          tokenDecimals: 0,
         }),
         convertQuantity({
           quantity: options.entry.price || "unlimited",

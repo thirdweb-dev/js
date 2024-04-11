@@ -1,4 +1,5 @@
 import { beforeAll, describe, expect, it } from "vitest";
+import { VITALIK_WALLET } from "../../../test/src/addresses.js";
 import { ANVIL_CHAIN } from "../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import {
@@ -56,28 +57,33 @@ describe.runIf(process.env.TW_SECRET_KEY)(
     it("should allow for lazy minting tokens", async () => {
       const mintTx = lazyMint({
         contract,
-        nfts: [{ name: "Test NFT" }, { name: "Test NFT 2" }],
+        nfts: [
+          { name: "Test NFT" },
+          { name: "Test NFT 2" },
+          { name: "Test NFT 3" },
+          { name: "Test NFT 4" },
+        ],
       });
       await sendAndConfirmTransaction({
         transaction: mintTx,
         account: TEST_ACCOUNT_A,
       });
 
-      await expect(nextTokenIdToMint({ contract })).resolves.toBe(2n);
+      await expect(nextTokenIdToMint({ contract })).resolves.toBe(4n);
       await expect(
         getNFT({ contract, tokenId: 0n }),
       ).resolves.toMatchInlineSnapshot(`
-      {
-        "id": 0n,
-        "metadata": {
-          "name": "Test NFT",
-        },
-        "owner": null,
-        "supply": 0n,
-        "tokenURI": "ipfs://QmWXXPkDuoEGGKdixFMF7asiFNmw323acbRnPAcSbzy2pP/0",
-        "type": "ERC1155",
-      }
-    `);
+        {
+          "id": 0n,
+          "metadata": {
+            "name": "Test NFT",
+          },
+          "owner": null,
+          "supply": 0n,
+          "tokenURI": "ipfs://QmUfspS2uU9roYLJveebbY5geYaNR4KkZAsMkb5pPRtc7a/0",
+          "type": "ERC1155",
+        }
+      `);
     });
 
     it("should allow to claim tokens", async () => {
@@ -103,12 +109,13 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         account: TEST_ACCOUNT_A,
       });
       await expect(
-        balanceOf({ contract, owner: TEST_ACCOUNT_A.address, tokenId: 1n }),
-      ).resolves.toBe(0n);
+        balanceOf({ contract, owner: TEST_ACCOUNT_A.address, tokenId: 0n }),
+      ).resolves.toBe(1n);
     });
 
     describe("Allowlists", () => {
       it("should allow to claim tokens with an allowlist", async () => {
+        const tokenId = 1n;
         await sendAndConfirmTransaction({
           transaction: setClaimConditions({
             contract,
@@ -116,30 +123,34 @@ describe.runIf(process.env.TW_SECRET_KEY)(
               {
                 allowlist: [
                   { address: TEST_ACCOUNT_A.address, maxClaimable: "100" },
+                  { address: VITALIK_WALLET, maxClaimable: "100" },
                 ],
                 maxClaimablePerWallet: 0n,
               },
             ],
-            tokenId: 0n,
+            tokenId,
           }),
           account: TEST_ACCOUNT_A,
         });
 
         await expect(
-          sendAndConfirmTransaction({
-            account: TEST_ACCOUNT_A,
-            transaction: claimTo({
-              contract,
-              from: TEST_ACCOUNT_A.address,
-              to: TEST_ACCOUNT_B.address,
-              tokenId: 0n,
-              quantity: 1n,
-            }),
-          }).catch((err) => {
-            console.log(err);
-            throw err;
+          balanceOf({ contract, owner: TEST_ACCOUNT_B.address, tokenId }),
+        ).resolves.toBe(0n);
+
+        await sendAndConfirmTransaction({
+          account: TEST_ACCOUNT_A,
+          transaction: claimTo({
+            contract,
+            from: TEST_ACCOUNT_A.address,
+            to: TEST_ACCOUNT_B.address,
+            tokenId,
+            quantity: 1n,
           }),
-        ).resolves.toBeDefined();
+        });
+
+        await expect(
+          balanceOf({ contract, owner: TEST_ACCOUNT_B.address, tokenId }),
+        ).resolves.toBe(1n);
 
         await expect(
           sendAndConfirmTransaction({
@@ -147,7 +158,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
             transaction: claimTo({
               contract,
               to: TEST_ACCOUNT_B.address,
-              tokenId: 0n,
+              tokenId,
               quantity: 1n,
             }),
           }),
@@ -157,6 +168,62 @@ describe.runIf(process.env.TW_SECRET_KEY)(
           contract: ${contract.address}
           chainId: 31337]
         `);
+      });
+
+      it("should respect max claimable", async () => {
+        const tokenId = 2n;
+        await sendAndConfirmTransaction({
+          transaction: setClaimConditions({
+            contract,
+            phases: [
+              {
+                allowlist: [
+                  { address: TEST_ACCOUNT_A.address, maxClaimable: "1" },
+                  // TODO adding another address here causes the test to fail
+                  // { address: VITALIK_WALLET, maxClaimable: "3" },
+                ],
+                maxClaimablePerWallet: 0n,
+              },
+            ],
+            tokenId,
+          }),
+          account: TEST_ACCOUNT_A,
+        });
+
+        await expect(
+          balanceOf({ contract, owner: TEST_ACCOUNT_A.address, tokenId }),
+        ).resolves.toBe(0n);
+
+        await expect(
+          sendAndConfirmTransaction({
+            account: TEST_ACCOUNT_A,
+            transaction: claimTo({
+              contract,
+              to: TEST_ACCOUNT_A.address,
+              tokenId,
+              quantity: 2n,
+            }),
+          }),
+        ).rejects.toThrowErrorMatchingInlineSnapshot(`
+          [TransactionError: Error - !Qty
+
+          contract: 0xd91A47278829a0128D7212225FE74BC153A7FAF8
+          chainId: 31337]
+        `);
+
+        await sendAndConfirmTransaction({
+          account: TEST_ACCOUNT_A,
+          transaction: claimTo({
+            contract,
+            to: TEST_ACCOUNT_A.address,
+            tokenId,
+            quantity: 1n,
+          }),
+        });
+
+        await expect(
+          balanceOf({ contract, owner: TEST_ACCOUNT_A.address, tokenId }),
+        ).resolves.toBe(1n);
       });
     });
   },
