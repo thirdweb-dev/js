@@ -1,6 +1,7 @@
 // ADAPTED FROM https://github.com/merkletreejs/merkletreejs
 import { uint8ArrayToHex } from "../exports/thirdweb.js";
-import { toBytes } from "../utils/encoding/to-bytes.js";
+import type { Hex } from "../utils/encoding/hex.js";
+import { hexToBytes } from "../utils/encoding/to-bytes.js";
 import { keccak256 } from "../utils/hashing/keccak256.js";
 import {
   areUint8ArraysEqual,
@@ -20,8 +21,10 @@ export class MerkleTree {
   private leaves: TLeaf[] = [];
   private layers: TLayer[] = [];
 
-  constructor(leaves: (Uint8Array | string)[]) {
-    this.leaves = leaves.map((el) => toBytes(el));
+  constructor(leaves: (Uint8Array | Hex)[]) {
+    this.leaves = leaves.map((el) =>
+      el instanceof Uint8Array ? el : hexToBytes(el),
+    );
 
     this.leaves = this.leaves.sort();
 
@@ -32,10 +35,7 @@ export class MerkleTree {
     return uint8ArrayToHex(this.getRoot());
   }
 
-  public getHexProof(
-    leaf: Uint8Array | string,
-    index?: number,
-  ): `0x${string}`[] {
+  public getHexProof(leaf: Uint8Array | Hex, index?: number): `0x${string}`[] {
     return this.getProof(leaf, index).map((item) => uint8ArrayToHex(item.data));
   }
 
@@ -94,14 +94,14 @@ export class MerkleTree {
   }
 
   private getProof(
-    leaf: Uint8Array | string,
+    leaf: Uint8Array | Hex,
     index?: number,
   ): { position: "left" | "right"; data: Uint8Array }[] {
     if (typeof leaf === "undefined") {
       throw new Error("leaf is required");
     }
     // biome-ignore lint/style/noParameterAssign: part of the functionality
-    leaf = toBytes(leaf);
+    leaf = leaf instanceof Uint8Array ? leaf : hexToBytes(leaf);
     const proof = [];
 
     if (!Number.isInteger(index)) {
