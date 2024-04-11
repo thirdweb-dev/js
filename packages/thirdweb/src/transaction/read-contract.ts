@@ -6,7 +6,7 @@ import {
   type ExtractAbiFunctionNames,
   parseAbiItem,
 } from "abitype";
-import { type TransactionRequest, concatHex, decodeAbiParameters } from "viem";
+import { type TransactionRequest, decodeAbiParameters } from "viem";
 import type { ThirdwebContract } from "../contract/contract.js";
 import { isAbiFunction } from "./utils.js";
 
@@ -139,11 +139,14 @@ export async function readContract<
   if (resolvedPreparedMethod[1].length === 0) {
     encodedData = resolvedPreparedMethod[0];
   } else {
-    encodedData = concatHex([
-      resolvedPreparedMethod[0],
-      // @ts-expect-error - we're sure it's an array
-      encodeAbiParameters(resolvedPreparedMethod[1], resolvedParams ?? []),
-    ]);
+    // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+    // we can do this because we know the specific formats of the values
+    encodedData = (resolvedPreparedMethod[0] +
+      encodeAbiParameters(
+        resolvedPreparedMethod[1],
+        // @ts-expect-error - TODO: fix this type issue
+        resolvedParams,
+      ).slice(2)) as `${(typeof resolvedPreparedMethod)[0]}${string}`;
   }
 
   const rpcRequest = getRpcClient({

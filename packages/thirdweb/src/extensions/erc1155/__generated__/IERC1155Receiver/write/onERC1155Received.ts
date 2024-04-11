@@ -6,6 +6,8 @@ import type {
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 import { once } from "../../../../../utils/promise/once.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "onERC1155Received" function.
@@ -48,6 +50,27 @@ const FN_OUTPUTS = [
 ] as const;
 
 /**
+ * Checks if the `onERC1155Received` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `onERC1155Received` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isOnERC1155ReceivedSupported } from "thirdweb/extensions/erc1155";
+ *
+ * const supported = await isOnERC1155ReceivedSupported(contract);
+ * ```
+ */
+export async function isOnERC1155ReceivedSupported(
+  contract: ThirdwebContract<any>,
+) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
  * Encodes the parameters for the "onERC1155Received" function.
  * @param options - The options for the onERC1155Received function.
  * @returns The encoded ABI parameters.
@@ -74,6 +97,32 @@ export function encodeOnERC1155ReceivedParams(
     options.value,
     options.data,
   ]);
+}
+
+/**
+ * Encodes the "onERC1155Received" function into a Hex string with its parameters.
+ * @param options - The options for the onERC1155Received function.
+ * @returns The encoded hexadecimal string.
+ * @extension ERC1155
+ * @example
+ * ```ts
+ * import { encodeOnERC1155Received } "thirdweb/extensions/erc1155";
+ * const result = encodeOnERC1155Received({
+ *  operator: ...,
+ *  from: ...,
+ *  id: ...,
+ *  value: ...,
+ *  data: ...,
+ * });
+ * ```
+ */
+export function encodeOnERC1155Received(options: OnERC1155ReceivedParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeOnERC1155ReceivedParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**

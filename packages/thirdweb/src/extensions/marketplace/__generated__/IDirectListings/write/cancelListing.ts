@@ -6,6 +6,8 @@ import type {
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 import { once } from "../../../../../utils/promise/once.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "cancelListing" function.
@@ -27,6 +29,27 @@ const FN_INPUTS = [
 const FN_OUTPUTS = [] as const;
 
 /**
+ * Checks if the `cancelListing` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `cancelListing` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isCancelListingSupported } from "thirdweb/extensions/marketplace";
+ *
+ * const supported = await isCancelListingSupported(contract);
+ * ```
+ */
+export async function isCancelListingSupported(
+  contract: ThirdwebContract<any>,
+) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
  * Encodes the parameters for the "cancelListing" function.
  * @param options - The options for the cancelListing function.
  * @returns The encoded ABI parameters.
@@ -41,6 +64,28 @@ const FN_OUTPUTS = [] as const;
  */
 export function encodeCancelListingParams(options: CancelListingParams) {
   return encodeAbiParameters(FN_INPUTS, [options.listingId]);
+}
+
+/**
+ * Encodes the "cancelListing" function into a Hex string with its parameters.
+ * @param options - The options for the cancelListing function.
+ * @returns The encoded hexadecimal string.
+ * @extension MARKETPLACE
+ * @example
+ * ```ts
+ * import { encodeCancelListing } "thirdweb/extensions/marketplace";
+ * const result = encodeCancelListing({
+ *  listingId: ...,
+ * });
+ * ```
+ */
+export function encodeCancelListing(options: CancelListingParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeCancelListingParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**

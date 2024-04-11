@@ -6,6 +6,8 @@ import type {
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 import { once } from "../../../../../utils/promise/once.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "deleteRule" function.
@@ -24,6 +26,25 @@ const FN_INPUTS = [
 const FN_OUTPUTS = [] as const;
 
 /**
+ * Checks if the `deleteRule` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `deleteRule` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isDeleteRuleSupported } from "thirdweb/extensions/thirdweb";
+ *
+ * const supported = await isDeleteRuleSupported(contract);
+ * ```
+ */
+export async function isDeleteRuleSupported(contract: ThirdwebContract<any>) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
  * Encodes the parameters for the "deleteRule" function.
  * @param options - The options for the deleteRule function.
  * @returns The encoded ABI parameters.
@@ -38,6 +59,28 @@ const FN_OUTPUTS = [] as const;
  */
 export function encodeDeleteRuleParams(options: DeleteRuleParams) {
   return encodeAbiParameters(FN_INPUTS, [options.ruleId]);
+}
+
+/**
+ * Encodes the "deleteRule" function into a Hex string with its parameters.
+ * @param options - The options for the deleteRule function.
+ * @returns The encoded hexadecimal string.
+ * @extension THIRDWEB
+ * @example
+ * ```ts
+ * import { encodeDeleteRule } "thirdweb/extensions/thirdweb";
+ * const result = encodeDeleteRule({
+ *  ruleId: ...,
+ * });
+ * ```
+ */
+export function encodeDeleteRule(options: DeleteRuleParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeDeleteRuleParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**

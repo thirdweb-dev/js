@@ -6,6 +6,8 @@ import type {
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 import { once } from "../../../../../utils/promise/once.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "exactInput" function.
@@ -61,6 +63,25 @@ const FN_OUTPUTS = [
 ] as const;
 
 /**
+ * Checks if the `exactInput` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `exactInput` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isExactInputSupported } from "thirdweb/extensions/uniswap";
+ *
+ * const supported = await isExactInputSupported(contract);
+ * ```
+ */
+export async function isExactInputSupported(contract: ThirdwebContract<any>) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
  * Encodes the parameters for the "exactInput" function.
  * @param options - The options for the exactInput function.
  * @returns The encoded ABI parameters.
@@ -75,6 +96,28 @@ const FN_OUTPUTS = [
  */
 export function encodeExactInputParams(options: ExactInputParams) {
   return encodeAbiParameters(FN_INPUTS, [options.params]);
+}
+
+/**
+ * Encodes the "exactInput" function into a Hex string with its parameters.
+ * @param options - The options for the exactInput function.
+ * @returns The encoded hexadecimal string.
+ * @extension UNISWAP
+ * @example
+ * ```ts
+ * import { encodeExactInput } "thirdweb/extensions/uniswap";
+ * const result = encodeExactInput({
+ *  params: ...,
+ * });
+ * ```
+ */
+export function encodeExactInput(options: ExactInputParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeExactInputParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**

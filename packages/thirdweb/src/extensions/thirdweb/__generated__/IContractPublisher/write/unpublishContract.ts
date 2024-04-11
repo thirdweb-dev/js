@@ -6,6 +6,8 @@ import type {
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 import { once } from "../../../../../utils/promise/once.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "unpublishContract" function.
@@ -35,6 +37,27 @@ const FN_INPUTS = [
 const FN_OUTPUTS = [] as const;
 
 /**
+ * Checks if the `unpublishContract` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `unpublishContract` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isUnpublishContractSupported } from "thirdweb/extensions/thirdweb";
+ *
+ * const supported = await isUnpublishContractSupported(contract);
+ * ```
+ */
+export async function isUnpublishContractSupported(
+  contract: ThirdwebContract<any>,
+) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
  * Encodes the parameters for the "unpublishContract" function.
  * @param options - The options for the unpublishContract function.
  * @returns The encoded ABI parameters.
@@ -55,6 +78,29 @@ export function encodeUnpublishContractParams(
     options.publisher,
     options.contractId,
   ]);
+}
+
+/**
+ * Encodes the "unpublishContract" function into a Hex string with its parameters.
+ * @param options - The options for the unpublishContract function.
+ * @returns The encoded hexadecimal string.
+ * @extension THIRDWEB
+ * @example
+ * ```ts
+ * import { encodeUnpublishContract } "thirdweb/extensions/thirdweb";
+ * const result = encodeUnpublishContract({
+ *  publisher: ...,
+ *  contractId: ...,
+ * });
+ * ```
+ */
+export function encodeUnpublishContract(options: UnpublishContractParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeUnpublishContractParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**

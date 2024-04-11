@@ -1,4 +1,3 @@
-import { concatHex } from "viem";
 import { ethereum } from "../../chains/chain-definitions/ethereum.js";
 import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
@@ -9,8 +8,7 @@ import { packetToBytes } from "../../utils/ens/packetToBytes.js";
 import { withCache } from "../../utils/promise/withCache.js";
 import {
   decodeTextResult,
-  encodeTextParams,
-  FN_SELECTOR as textFnSelector,
+  encodeText,
 } from "./__generated__/AddressResolver/read/text.js";
 import { resolve } from "./__generated__/UniversalResolver/read/resolve.js";
 import { UNIVERSAL_RESOLVER_ADDRESS } from "./constants.js";
@@ -48,10 +46,7 @@ export async function resolveText(options: ResolveTextOptions) {
         address: resolverAddress || UNIVERSAL_RESOLVER_ADDRESS,
       });
 
-      const data = concatHex([
-        textFnSelector,
-        encodeTextParams({ name: namehash(name), key }),
-      ]);
+      const data = encodeText({ name: namehash(name), key });
 
       const result = await resolve({
         contract,

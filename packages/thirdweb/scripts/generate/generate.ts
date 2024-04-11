@@ -120,6 +120,8 @@ ${
 import { once } from "../../../../../utils/promise/once.js";`
     : ""
 }
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 
 ${
@@ -144,6 +146,24 @@ export type ${inputTypeName} = WithOverrides<{
 export const FN_SELECTOR = "${preparedMethod[0]}" as const;
 const FN_INPUTS = ${JSON.stringify(preparedMethod[1], null, 2)} as const;
 const FN_OUTPUTS = ${JSON.stringify(preparedMethod[2], null, 2)} as const;
+
+/**
+ * Checks if the \`${f.name}\` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the \`${f.name}\` method is supported.
+ * @extension ERC721
+ * @example
+ * \`\`\`ts
+ * import { is${uppercaseFirstLetter(
+   f.name,
+ )}Supported } from "thirdweb/extensions/${extensionName}";
+ * 
+ * const supported = await is${uppercaseFirstLetter(f.name)}Supported(contract);
+ * \`\`\`
+ */
+export async function is${uppercaseFirstLetter(f.name)}Supported(contract: ThirdwebContract<any>) {
+  return detectMethod({contract, method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const});
+}
 
 ${
   f.inputs.length > 0
@@ -172,9 +192,31 @@ export function encode${uppercaseFirstLetter(
 `
     : ""
 }
-
-
-
+${
+  f.inputs.length > 0
+    ? `/**
+ * Encodes the "${f.name}" function into a Hex string with its parameters.
+ * @param options - The options for the ${f.name} function.
+ * @returns The encoded hexadecimal string.
+ * @extension ${extensionName.toUpperCase()}
+ * @example
+ * \`\`\`ts
+ * import { encode${uppercaseFirstLetter(
+   f.name,
+ )} } "thirdweb/extensions/${extensionName}";
+ * const result = encode${uppercaseFirstLetter(f.name)}({\n * ${f.inputs
+   .map((x) => ` ${removeLeadingUnderscore(x.name)}: ...,`)
+   .join("\n * ")}\n * });
+ * \`\`\`
+ */
+export function encode${uppercaseFirstLetter(f.name)}(options: ${inputTypeName}) {
+  \/\/ we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  \/\/ we can do this because we know the specific formats of the values
+  return FN_SELECTOR + encode${uppercaseFirstLetter(f.name)}Params(options).slice(2) as \`\${typeof FN_SELECTOR}\${string}\`;
+}
+`
+    : ""
+}
 /**
  * Calls the "${f.name}" function on the contract.
  * @param options - The options for the "${f.name}" function.
@@ -255,6 +297,8 @@ ${
 import type { Hex } from "../../../../../utils/encoding/hex.js";`
     : ""
 }
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 ${
   f.inputs.length > 0
@@ -277,6 +321,24 @@ export type ${uppercaseFirstLetter(f.name)}Params = {
 export const FN_SELECTOR = "${preparedMethod[0]}" as const;
 const FN_INPUTS = ${JSON.stringify(preparedMethod[1], null, 2)} as const;
 const FN_OUTPUTS = ${JSON.stringify(preparedMethod[2], null, 2)} as const;
+
+/**
+ * Checks if the \`${f.name}\` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the \`${f.name}\` method is supported.
+ * @extension ERC721
+ * @example
+ * \`\`\`ts
+ * import { is${uppercaseFirstLetter(
+   f.name,
+ )}Supported } from "thirdweb/extensions/${extensionName}";
+ * 
+ * const supported = await is${uppercaseFirstLetter(f.name)}Supported(contract);
+ * \`\`\`
+ */
+export async function is${uppercaseFirstLetter(f.name)}Supported(contract: ThirdwebContract<any>) {
+  return detectMethod({contract, method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const});
+}
 
 ${
   f.inputs.length > 0
@@ -305,7 +367,33 @@ export function encode${uppercaseFirstLetter(
 `
     : ""
 }
-
+${
+  f.inputs.length > 0
+    ? `/**
+ * Encodes the "${f.name}" function into a Hex string with its parameters.
+ * @param options - The options for the ${f.name} function.
+ * @returns The encoded hexadecimal string.
+ * @extension ${extensionName.toUpperCase()}
+ * @example
+ * \`\`\`ts
+ * import { encode${uppercaseFirstLetter(
+   f.name,
+ )} } "thirdweb/extensions/${extensionName}";
+ * const result = encode${uppercaseFirstLetter(f.name)}({\n * ${f.inputs
+   .map((x) => ` ${removeLeadingUnderscore(x.name)}: ...,`)
+   .join("\n * ")}\n * });
+ * \`\`\`
+ */
+export function encode${uppercaseFirstLetter(
+        f.name,
+      )}(options: ${uppercaseFirstLetter(f.name)}Params) {
+  \/\/ we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  \/\/ we can do this because we know the specific formats of the values
+  return FN_SELECTOR + encode${uppercaseFirstLetter(f.name)}Params(options).slice(2) as \`\${typeof FN_SELECTOR}\${string}\`;
+}
+`
+    : ""
+}
 ${
   f.outputs.length > 0
     ? `/**

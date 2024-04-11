@@ -6,6 +6,8 @@ import type {
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 import { once } from "../../../../../utils/promise/once.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "validateUserOp" function.
@@ -107,6 +109,27 @@ const FN_OUTPUTS = [
 ] as const;
 
 /**
+ * Checks if the `validateUserOp` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `validateUserOp` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isValidateUserOpSupported } from "thirdweb/extensions/erc4337";
+ *
+ * const supported = await isValidateUserOpSupported(contract);
+ * ```
+ */
+export async function isValidateUserOpSupported(
+  contract: ThirdwebContract<any>,
+) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
  * Encodes the parameters for the "validateUserOp" function.
  * @param options - The options for the validateUserOp function.
  * @returns The encoded ABI parameters.
@@ -127,6 +150,30 @@ export function encodeValidateUserOpParams(options: ValidateUserOpParams) {
     options.userOpHash,
     options.missingAccountFunds,
   ]);
+}
+
+/**
+ * Encodes the "validateUserOp" function into a Hex string with its parameters.
+ * @param options - The options for the validateUserOp function.
+ * @returns The encoded hexadecimal string.
+ * @extension ERC4337
+ * @example
+ * ```ts
+ * import { encodeValidateUserOp } "thirdweb/extensions/erc4337";
+ * const result = encodeValidateUserOp({
+ *  userOp: ...,
+ *  userOpHash: ...,
+ *  missingAccountFunds: ...,
+ * });
+ * ```
+ */
+export function encodeValidateUserOp(options: ValidateUserOpParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeValidateUserOpParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**

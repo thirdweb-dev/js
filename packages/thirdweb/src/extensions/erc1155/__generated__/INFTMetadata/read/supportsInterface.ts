@@ -4,6 +4,8 @@ import type { BaseTransactionOptions } from "../../../../../transaction/types.js
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "supportsInterface" function.
@@ -29,6 +31,27 @@ const FN_OUTPUTS = [
 ] as const;
 
 /**
+ * Checks if the `supportsInterface` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `supportsInterface` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isSupportsInterfaceSupported } from "thirdweb/extensions/erc1155";
+ *
+ * const supported = await isSupportsInterfaceSupported(contract);
+ * ```
+ */
+export async function isSupportsInterfaceSupported(
+  contract: ThirdwebContract<any>,
+) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
  * Encodes the parameters for the "supportsInterface" function.
  * @param options - The options for the supportsInterface function.
  * @returns The encoded ABI parameters.
@@ -45,6 +68,28 @@ export function encodeSupportsInterfaceParams(
   options: SupportsInterfaceParams,
 ) {
   return encodeAbiParameters(FN_INPUTS, [options.interfaceId]);
+}
+
+/**
+ * Encodes the "supportsInterface" function into a Hex string with its parameters.
+ * @param options - The options for the supportsInterface function.
+ * @returns The encoded hexadecimal string.
+ * @extension ERC1155
+ * @example
+ * ```ts
+ * import { encodeSupportsInterface } "thirdweb/extensions/erc1155";
+ * const result = encodeSupportsInterface({
+ *  interfaceId: ...,
+ * });
+ * ```
+ */
+export function encodeSupportsInterface(options: SupportsInterfaceParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeSupportsInterfaceParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**

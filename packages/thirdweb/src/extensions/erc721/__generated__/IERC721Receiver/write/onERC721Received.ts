@@ -6,6 +6,8 @@ import type {
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 import { once } from "../../../../../utils/promise/once.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "onERC721Received" function.
@@ -43,6 +45,27 @@ const FN_OUTPUTS = [
 ] as const;
 
 /**
+ * Checks if the `onERC721Received` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `onERC721Received` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isOnERC721ReceivedSupported } from "thirdweb/extensions/erc721";
+ *
+ * const supported = await isOnERC721ReceivedSupported(contract);
+ * ```
+ */
+export async function isOnERC721ReceivedSupported(
+  contract: ThirdwebContract<any>,
+) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
  * Encodes the parameters for the "onERC721Received" function.
  * @param options - The options for the onERC721Received function.
  * @returns The encoded ABI parameters.
@@ -65,6 +88,31 @@ export function encodeOnERC721ReceivedParams(options: OnERC721ReceivedParams) {
     options.tokenId,
     options.data,
   ]);
+}
+
+/**
+ * Encodes the "onERC721Received" function into a Hex string with its parameters.
+ * @param options - The options for the onERC721Received function.
+ * @returns The encoded hexadecimal string.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { encodeOnERC721Received } "thirdweb/extensions/erc721";
+ * const result = encodeOnERC721Received({
+ *  operator: ...,
+ *  from: ...,
+ *  tokenId: ...,
+ *  data: ...,
+ * });
+ * ```
+ */
+export function encodeOnERC721Received(options: OnERC721ReceivedParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeOnERC721ReceivedParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**

@@ -4,6 +4,8 @@ import type { BaseTransactionOptions } from "../../../../../transaction/types.js
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "totalKeys" function.
@@ -31,6 +33,25 @@ const FN_OUTPUTS = [
 ] as const;
 
 /**
+ * Checks if the `totalKeys` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `totalKeys` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isTotalKeysSupported } from "thirdweb/extensions/farcaster";
+ *
+ * const supported = await isTotalKeysSupported(contract);
+ * ```
+ */
+export async function isTotalKeysSupported(contract: ThirdwebContract<any>) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
  * Encodes the parameters for the "totalKeys" function.
  * @param options - The options for the totalKeys function.
  * @returns The encoded ABI parameters.
@@ -46,6 +67,29 @@ const FN_OUTPUTS = [
  */
 export function encodeTotalKeysParams(options: TotalKeysParams) {
   return encodeAbiParameters(FN_INPUTS, [options.fid, options.state]);
+}
+
+/**
+ * Encodes the "totalKeys" function into a Hex string with its parameters.
+ * @param options - The options for the totalKeys function.
+ * @returns The encoded hexadecimal string.
+ * @extension FARCASTER
+ * @example
+ * ```ts
+ * import { encodeTotalKeys } "thirdweb/extensions/farcaster";
+ * const result = encodeTotalKeys({
+ *  fid: ...,
+ *  state: ...,
+ * });
+ * ```
+ */
+export function encodeTotalKeys(options: TotalKeysParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeTotalKeysParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**

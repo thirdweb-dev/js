@@ -6,6 +6,8 @@ import type {
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 import { once } from "../../../../../utils/promise/once.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "batchRent" function.
@@ -29,6 +31,25 @@ const FN_INPUTS = [
 const FN_OUTPUTS = [] as const;
 
 /**
+ * Checks if the `batchRent` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `batchRent` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isBatchRentSupported } from "thirdweb/extensions/farcaster";
+ *
+ * const supported = await isBatchRentSupported(contract);
+ * ```
+ */
+export async function isBatchRentSupported(contract: ThirdwebContract<any>) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
  * Encodes the parameters for the "batchRent" function.
  * @param options - The options for the batchRent function.
  * @returns The encoded ABI parameters.
@@ -44,6 +65,29 @@ const FN_OUTPUTS = [] as const;
  */
 export function encodeBatchRentParams(options: BatchRentParams) {
   return encodeAbiParameters(FN_INPUTS, [options.fids, options.units]);
+}
+
+/**
+ * Encodes the "batchRent" function into a Hex string with its parameters.
+ * @param options - The options for the batchRent function.
+ * @returns The encoded hexadecimal string.
+ * @extension FARCASTER
+ * @example
+ * ```ts
+ * import { encodeBatchRent } "thirdweb/extensions/farcaster";
+ * const result = encodeBatchRent({
+ *  fids: ...,
+ *  units: ...,
+ * });
+ * ```
+ */
+export function encodeBatchRent(options: BatchRentParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeBatchRentParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**
