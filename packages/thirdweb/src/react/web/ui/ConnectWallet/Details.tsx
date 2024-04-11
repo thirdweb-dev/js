@@ -61,6 +61,11 @@ import { swapTransactionsStore } from "./screens/Buy/swap/pendingSwapTx.js";
 import { ReceiveFunds } from "./screens/ReceiveFunds.js";
 import { SendFunds } from "./screens/SendFunds.js";
 import { SwapTransactionsScreen } from "./screens/SwapTransactionsScreen.js";
+import { resolveName } from "../../../../extensions/ens/resolve-name.js";
+import { resolveAvatar } from "../../../../extensions/ens/resolve-avatar.js";
+import { Img } from "../components/Img.js";
+import { WalletIcon } from "./icons/WalletIcon.js";
+import { ethereum } from "../../../../exports/chains.js";
 
 const TW_CONNECTED_WALLET = "tw-connected-wallet";
 
@@ -115,7 +120,26 @@ export const ConnectedWalletDetails: React.FC<{
   const [screen, setScreen] = useState<WalletDetailsModalScreen>("main");
   const [isOpen, setIsOpen] = useState(false);
 
-  // const ensQuery = useENS();
+  const ensNameQuery = useQuery({
+    queryKey: ["ens-name", activeAccount?.address],
+    enabled: !!activeAccount?.address,
+    queryFn: () =>
+      resolveName({
+        client,
+        address: activeAccount?.address || "",
+        resolverChain: ethereum,
+      }),
+  });
+
+  const ensAvatarQuery = useQuery({
+    queryKey: ["ens-avatar", ensNameQuery.data],
+    enabled: !!ensNameQuery.data,
+    queryFn: async () =>
+      resolveAvatar({
+        client,
+        name: ensNameQuery.data || "",
+      }),
+  });
 
   // const [overrideWalletIconUrl, setOverrideWalletIconUrl] = useState<
   //   string | undefined
@@ -138,7 +162,7 @@ export const ConnectedWalletDetails: React.FC<{
     ? shortenString(activeAccount.address, false)
     : "";
 
-  const addressOrENS = shortAddress;
+  const addressOrENS = ensNameQuery.data || shortAddress;
 
   useEffect(() => {
     if (!isOpen) {
@@ -165,9 +189,19 @@ export const ConnectedWalletDetails: React.FC<{
       style={props.detailsButton?.style}
       data-test="connected-wallet-details"
     >
-      {/* TODO: render a placeholder if we don't have an active wallet? */}
-      {activeWallet?.id && (
+      {ensAvatarQuery.data ? (
+        <Img
+          src={ensAvatarQuery.data}
+          width={iconSize.lg}
+          height={iconSize.lg}
+          style={{
+            borderRadius: radius.sm,
+          }}
+        />
+      ) : activeWallet?.id ? (
         <WalletImage size={iconSize.lg} id={activeWallet.id} />
+      ) : (
+        <WalletIcon size={iconSize.lg} />
       )}
 
       <Container flex="column" gap="xxs">
@@ -260,9 +294,19 @@ export const ConnectedWalletDetails: React.FC<{
     <div>
       <Spacer y="xl" />
       <Container px="lg" flex="column" center="x">
-        {/* TODO: render a placeholder if we don't have an active wallet? */}
-        {activeWallet?.id && (
-          <WalletImage id={activeWallet.id} size={iconSize.xxl} />
+        {ensAvatarQuery.data ? (
+          <Img
+            src={ensAvatarQuery.data}
+            width={iconSize.xxl}
+            height={iconSize.xxl}
+            style={{
+              borderRadius: radius.lg,
+            }}
+          />
+        ) : activeWallet?.id ? (
+          <WalletImage size={iconSize.xxl} id={activeWallet.id} />
+        ) : (
+          <WalletIcon size={iconSize.xxl} />
         )}
 
         <Spacer y="md" />
