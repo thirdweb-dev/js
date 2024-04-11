@@ -12,6 +12,9 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import type { Chain } from "../../../../chains/types.js";
 import { getContract } from "../../../../contract/contract.js";
+import { ethereum } from "../../../../exports/chains.js";
+import { resolveAvatar } from "../../../../extensions/ens/resolve-avatar.js";
+import { resolveName } from "../../../../extensions/ens/resolve-name.js";
 import { isContractDeployed } from "../../../../utils/bytecode/is-contract-deployed.js";
 import { getUserEmail } from "../../../../wallets/in-app/core/authentication/index.js";
 import {
@@ -30,6 +33,7 @@ import {
 import { shortenString } from "../../../core/utils/addresses.js";
 import { ChainIcon } from "../components/ChainIcon.js";
 import { CopyIcon } from "../components/CopyIcon.js";
+import { Img } from "../components/Img.js";
 import { Modal } from "../components/Modal.js";
 import { Skeleton } from "../components/Skeleton.js";
 import { Spacer } from "../components/Spacer.js";
@@ -56,16 +60,12 @@ import { NetworkSelectorContent } from "./NetworkSelector.js";
 import { onModalUnmount } from "./constants.js";
 import type { SupportedTokens } from "./defaultTokens.js";
 import { FundsIcon } from "./icons/FundsIcon.js";
+import { WalletIcon } from "./icons/WalletIcon.js";
 import { SwapScreen } from "./screens/Buy/SwapScreen.js";
 import { swapTransactionsStore } from "./screens/Buy/swap/pendingSwapTx.js";
 import { ReceiveFunds } from "./screens/ReceiveFunds.js";
 import { SendFunds } from "./screens/SendFunds.js";
 import { SwapTransactionsScreen } from "./screens/SwapTransactionsScreen.js";
-import { resolveName } from "../../../../extensions/ens/resolve-name.js";
-import { resolveAvatar } from "../../../../extensions/ens/resolve-avatar.js";
-import { Img } from "../components/Img.js";
-import { WalletIcon } from "./icons/WalletIcon.js";
-import { ethereum } from "../../../../exports/chains.js";
 
 const TW_CONNECTED_WALLET = "tw-connected-wallet";
 
