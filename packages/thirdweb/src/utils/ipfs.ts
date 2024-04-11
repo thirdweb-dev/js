@@ -28,26 +28,35 @@ const DEFAULT_GATEWAY = "https://{clientId}.ipfscdn.io/ipfs/{cid}";
  * @storage
  */
 export function resolveScheme(options: ResolveSchemeOptions) {
-  let url: string;
   if (options.uri.startsWith("ipfs://")) {
     const gateway =
       options.client.config?.storage?.gatewayUrl ?? DEFAULT_GATEWAY;
     const clientId = options.client.clientId;
-    const cid = options.uri.slice(7);
-    url =
-      // purpusefully using SPLIT here and and not replace for CID to avoid cases where users don't know the schema
-      // also only splitting on `/ipfs` to avoid cases where people pass non `/` terminated gateway urls
-      `${
-        gateway.replace("{clientId}", clientId).split("/ipfs")[0]
-      }/ipfs/${cid}`;
-  } else if (options.uri.startsWith("http")) {
-    url = options.uri;
-  } else {
-    throw new Error(`Invalid URI scheme, expected "ipfs://" or "http(s)://"`);
+    const cid = findIPFSCidFromUri(options.uri);
+
+    // purpusefully using SPLIT here and and not replace for CID to avoid cases where users don't know the schema
+    // also only splitting on `/ipfs` to avoid cases where people pass non `/` terminated gateway urls
+    return `${
+      gateway.replace("{clientId}", clientId).split("/ipfs")[0]
+    }/ipfs/${cid}`;
   }
-  return url;
+  if (options.uri.startsWith("http")) {
+    return options.uri;
+  }
+  throw new Error(`Invalid URI scheme, expected "ipfs://" or "http(s)://"`);
 }
 
+function findIPFSCidFromUri(uri: string) {
+  if (!uri.startsWith("ipfs://")) {
+    // do not touch URIs that are not ipfs URIs
+    return uri;
+  }
+
+  // first index of `/Qm` or `/bafy` in the uri (case insensitive)
+  const firstIndex = uri.search(/\/(Qm|bafy)/i);
+  // we start one character after the first `/` to avoid including it in the CID
+  return uri.slice(firstIndex + 1);
+}
 /**
  * Uploads or extracts URIs from the given files.
  * @template T - The type of the files (File, Buffer, String).
