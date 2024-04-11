@@ -2,7 +2,7 @@ import type { Address } from "abitype";
 import { isNativeTokenAddress } from "../../../../constants/addresses.js";
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import { padHex } from "../../../../utils/encoding/hex.js";
-import { fetchProofsForClaimer } from "../../../../utils/extensions/drops/fetch-proofs-for-claimers.js";
+import type { ALlowlistProof } from "../../../../utils/extensions/drops/types.js";
 import { claim } from "../../__generated__/IDrop1155/write/claim.js";
 import { getActiveClaimCondition } from "../read/getActiveClaimCondition.js";
 
@@ -38,23 +38,40 @@ export function claimTo(options: BaseTransactionOptions<ClaimToParams>) {
         contract: options.contract,
         tokenId: options.tokenId,
       });
-      let proofData = {
-        currency: cc.currency,
-        proof: [] as `0x${string}`[],
-        quantityLimitPerWallet: cc.quantityLimitPerWallet,
-        pricePerToken: cc.pricePerToken,
-      };
-      if (cc.merkleRoot !== padHex("0x", { size: 32 })) {
-        const claimerProof = await fetchProofsForClaimer({
+
+      // compute the allowListProof in an iife
+      const allowlistProof = await (async () => {
+        // early exit if no merkle root is set
+        if (!cc.merkleRoot || cc.merkleRoot === padHex("0x", { size: 32 })) {
+          return {
+            currency: cc.currency as `0x${string}`,
+            proof: [],
+            quantityLimitPerWallet: cc.quantityLimitPerWallet,
+            pricePerToken: cc.pricePerToken,
+          } satisfies ALlowlistProof;
+        }
+        // lazy-load the fetchProofsForClaimer function if we need it
+        const { fetchProofsForClaimer } = await import(
+          "../../../../utils/extensions/drops/fetch-proofs-for-claimers.js"
+        );
+
+        const allowListProof = await fetchProofsForClaimer({
           contract: options.contract,
           claimer: options.from || options.to, // receiver and claimer can be different, always prioritize the claimer for allowlists
           merkleRoot: cc.merkleRoot,
         });
-
-        if (claimerProof) {
-          proofData = claimerProof;
+        // if no proof is found, we'll try the empty proof
+        if (!allowListProof) {
+          return {
+            currency: cc.currency as `0x${string}`,
+            proof: [],
+            quantityLimitPerWallet: cc.quantityLimitPerWallet,
+            pricePerToken: cc.pricePerToken,
+          } satisfies ALlowlistProof;
         }
-      }
+        // otherwise return the proof
+        return allowListProof;
+      })();
 
       return {
         receiver: options.to,
@@ -62,7 +79,7 @@ export function claimTo(options: BaseTransactionOptions<ClaimToParams>) {
         quantity: options.quantity,
         currency: cc.currency,
         pricePerToken: cc.pricePerToken,
-        allowlistProof: proofData,
+        allowlistProof,
         data: "0x",
         overrides: {
           value: isNativeTokenAddress(cc.currency)

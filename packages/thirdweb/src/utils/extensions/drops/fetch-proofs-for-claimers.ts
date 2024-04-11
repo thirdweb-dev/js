@@ -6,16 +6,21 @@ import type { ThirdwebContract } from "../../../contract/contract.js";
 import { getContractMetadata } from "../../../extensions/common/read/getContractMetadata.js";
 import { MerkleTree } from "../../../merkletree/MerkleTree.js";
 import { download } from "../../../storage/download.js";
+import type { Address } from "../../address.js";
 import { keccak256 } from "../../hashing/keccak256.js";
 import { convertQuantity } from "./convert-quantity.js";
 import { hashEntry } from "./hash-entry.js";
-import type { ShardData, ShardedMerkleTreeInfo } from "./types.js";
+import type {
+  ALlowlistProof,
+  ShardData,
+  ShardedMerkleTreeInfo,
+} from "./types.js";
 
 export async function fetchProofsForClaimer(options: {
   contract: ThirdwebContract;
   claimer: string;
   merkleRoot: string;
-}) {
+}): Promise<ALlowlistProof | null> {
   const { contract, merkleRoot, claimer } = options;
   // 1. fetch merkle data from contract URI
   const metadata = await getContractMetadata({
@@ -72,7 +77,7 @@ export async function fetchProofsForClaimer(options: {
     (i) => i.address.toLowerCase() === claimer.toLowerCase(),
   );
   if (!entry) {
-    return undefined;
+    return null;
   }
   const proof = tree
     .getHexProof(
@@ -84,7 +89,8 @@ export async function fetchProofsForClaimer(options: {
     )
     .concat(shardData.proofs);
   // 6. return the proof and the entry data for the contract call
-  const currencyAddress = entry.currencyAddress || NATIVE_TOKEN_ADDRESS;
+  const currencyAddress = (entry.currencyAddress ||
+    NATIVE_TOKEN_ADDRESS) as Address;
   const tokenDecimals = await (async () => {
     if (isNativeTokenAddress(currencyAddress)) {
       return 18;

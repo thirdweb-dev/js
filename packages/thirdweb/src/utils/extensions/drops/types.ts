@@ -1,3 +1,4 @@
+import type { Address } from "../../address.js";
 import type { Hex } from "../../encoding/hex.js";
 
 export type ShardedMerkleTreeInfo = {
@@ -19,6 +20,13 @@ export type AllowlistEntry = {
   maxClaimable?: string;
   price?: string;
   currencyAddress?: string;
+};
+
+export type ALlowlistProof = {
+  proof: Hex[];
+  quantityLimitPerWallet: bigint;
+  pricePerToken: bigint;
+  currency: Address;
 };
 
 export type ClaimConditionsInput = {
