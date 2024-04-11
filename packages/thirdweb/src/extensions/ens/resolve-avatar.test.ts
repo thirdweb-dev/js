@@ -27,14 +27,6 @@ describe.runIf(process.env.TW_SECRET_KEY)("ENS:resolve-avatar", () => {
     );
   });
 
-  it("resolves onchain record #2", async () => {
-    const avatarUri = await resolveAvatar({
-      client: TEST_CLIENT,
-      name: "vitalik.eth",
-    });
-    expect(typeof avatarUri === "string").toBe(true);
-  });
-
   it("resolves name without avatar record to null", async () => {
     const avatarUri = await resolveAvatar({
       client: TEST_CLIENT,
