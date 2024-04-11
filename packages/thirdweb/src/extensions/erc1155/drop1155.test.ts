@@ -121,7 +121,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
             contract,
             phases: [
               {
-                allowlist: [
+                overrideList: [
                   { address: TEST_ACCOUNT_A.address, maxClaimable: "100" },
                   { address: VITALIK_WALLET, maxClaimable: "100" },
                 ],
@@ -177,7 +177,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
             contract,
             phases: [
               {
-                allowlist: [
+                overrideList: [
                   { address: TEST_ACCOUNT_A.address, maxClaimable: "1" },
                   { address: VITALIK_WALLET, maxClaimable: "3" },
                 ],
@@ -224,44 +224,6 @@ describe.runIf(process.env.TW_SECRET_KEY)(
           balanceOf({ contract, owner: TEST_ACCOUNT_A.address, tokenId }),
         ).resolves.toBe(1n);
       });
-    });
-
-    it("should allow just a list of addresses", async () => {
-      const tokenId = 3n;
-      await sendAndConfirmTransaction({
-        transaction: setClaimConditions({
-          contract,
-          phases: [
-            {
-              allowlist: [TEST_ACCOUNT_A.address, VITALIK_WALLET],
-              maxClaimablePerWallet: 0n,
-            },
-          ],
-          tokenId,
-        }),
-        account: TEST_ACCOUNT_A,
-      });
-
-      await expect(
-        balanceOf({ contract, owner: TEST_ACCOUNT_A.address, tokenId }),
-      ).resolves.toBe(0n);
-
-      await expect(
-        sendAndConfirmTransaction({
-          account: TEST_ACCOUNT_A,
-          transaction: claimTo({
-            contract,
-            to: TEST_ACCOUNT_A.address,
-            tokenId,
-            quantity: 2n,
-          }),
-        }),
-      ).rejects.toThrowErrorMatchingInlineSnapshot(`
-        [TransactionError: Error - !Qty
-
-        contract: 0xd91A47278829a0128D7212225FE74BC153A7FAF8
-        chainId: 31337]
-      `);
     });
   },
 );

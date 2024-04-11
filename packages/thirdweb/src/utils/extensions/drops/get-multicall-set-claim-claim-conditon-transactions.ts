@@ -22,7 +22,7 @@ export async function getMulticallSetClaimConditionTransactions(options: {
       let merkleRoot: string = phase.merkleRootHash || toHex("", { size: 32 });
       if (phase.overrideList) {
         const { shardedMerkleInfo, uri } = await processOverrideList({
-          allowlist: phase.overrideList,
+          overrides: phase.overrideList,
           client: options.contract.client,
           chain: options.contract.chain,
           tokenDecimals: 0,

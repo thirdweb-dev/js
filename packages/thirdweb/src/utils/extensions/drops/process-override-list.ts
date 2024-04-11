@@ -13,23 +13,14 @@ import type {
 export async function processOverrideList(options: {
   client: ThirdwebClient;
   chain: Chain;
-  allowlist: string[] | OverrideEntry[];
+  overrides: OverrideEntry[];
   tokenDecimals: number;
   shardNybbles?: number;
 }) {
   const shardNybbles = options.shardNybbles || 2;
-  // 1. convert to fully populated allowlist
-  const entries: OverrideEntry[] = options.allowlist.map((entry) => {
-    if (typeof entry === "string") {
-      return {
-        address: entry,
-      };
-    }
-    return entry;
-  });
   // 2. shard them into a map where the key is the first n digits of the address
   const shards: Record<string, OverrideEntry[]> = {};
-  for (const snapshotEntry of entries) {
+  for (const snapshotEntry of options.overrides) {
     const shard = snapshotEntry.address
       .slice(2, 2 + shardNybbles)
       .toLowerCase();
@@ -89,7 +80,7 @@ export async function processOverrideList(options: {
   // 6. Also upload the original entries for retrieving all entries
   const originalEntriesUri = await upload({
     client: options.client,
-    files: [JSON.stringify(entries)],
+    files: [JSON.stringify(options.overrides)],
   });
   // 7. assmeble the final sharded merkle tree info
   const shardedMerkleInfo: ShardedMerkleTreeInfo = {
