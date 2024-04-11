@@ -39,9 +39,7 @@ export function waitForReceipt(
   options: WaitForReceiptOptions,
 ): Promise<TransactionReceipt> {
   const { transactionHash, chain, client } = options;
-  if (!chain) {
-    console.log(options);
-  }
+
   const chainId = chain.id;
   const key = `${chainId}:tx_${transactionHash}`;
   const maxBlocksWaitTime =

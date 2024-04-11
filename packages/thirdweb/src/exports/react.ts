@@ -19,6 +19,7 @@ export type {
 } from "../react/web/ui/ConnectWallet/ConnectWalletProps.js";
 export type { NetworkSelectorProps } from "../react/web/ui/ConnectWallet/NetworkSelector.js";
 export type { WelcomeScreen } from "../react/web/ui/ConnectWallet/screens/types.js";
+export type { LocaleId } from "../react/web/ui/types.js";
 
 export {
   TransactionButton,

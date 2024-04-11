@@ -1,16 +1,17 @@
+import styled from "@emotion/styled";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import type { Chain } from "../../../../../../../chains/types.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
 import { useWalletBalance } from "../../../../../../core/hooks/others/useWalletBalance.js";
 import { useActiveAccount } from "../../../../../../core/hooks/wallets/wallet-hooks.js";
-import { ChainIcon } from "../../../../components/ChainIcon.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
-import { Container, Line } from "../../../../components/basic.js";
+import { TokenIcon } from "../../../../components/TokenIcon.js";
+import { Container } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
+import { TokenSymbol } from "../../../../components/token/TokenSymbol.js";
 import { useCustomTheme } from "../../../../design-system/CustomThemeProvider.js";
-import { StyledDiv } from "../../../../design-system/elements.js";
 import {
   fontSize,
   iconSize,
@@ -21,7 +22,6 @@ import type { TokenInfo } from "../../../defaultTokens.js";
 import { WalletIcon } from "../../../icons/WalletIcon.js";
 import { formatTokenBalance } from "../../TokenSelector.js";
 import { type NativeToken, isNativeToken } from "../../nativeToken.js";
-import { TokenSelectorButton } from "./TokenSelector.js";
 
 /**
  * Shows an amount "value" and renders the selected token and chain
@@ -31,8 +31,7 @@ import { TokenSelectorButton } from "./TokenSelector.js";
  */
 export function PayWithCrypto(props: {
   value: string;
-  onTokenClick: () => void;
-  onChainClick: () => void;
+  onSelectToken: () => void;
   chain: Chain;
   token: TokenInfo | NativeToken;
   isLoading: boolean;
@@ -47,115 +46,98 @@ export function PayWithCrypto(props: {
   });
 
   return (
-    <div>
-      <BorderBox>
-        {/* Row 1 */}
-        <Container
-          px="sm"
-          flex="row"
-          style={{
-            flexWrap: "nowrap",
-            justifyContent: "space-between",
-          }}
-        >
-          {/* Left */}
-
-          <TokenSelectorButton
-            onClick={props.onTokenClick}
-            style={{
-              border: "none",
-              paddingInline: 0,
-            }}
-            token={props.token}
-            chain={props.chain}
-          />
-
-          {/* Right */}
-
-          <div
-            style={{
-              flexGrow: 1,
-              flexShrink: 1,
-              display: "flex",
-              alignItems: "center",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-              justifyContent: "flex-end",
-            }}
-          >
-            {props.isLoading ? (
-              <Skeleton width="120px" height={fontSize.md} />
-            ) : (
-              <Text
-                size="lg"
-                color={props.value ? "primaryText" : "secondaryText"}
-                style={{}}
-              >
-                {formatNumber(Number(props.value), 4) || "--"}
-              </Text>
-            )}
-          </div>
-        </Container>
-
-        <Line />
-
-        {/* Row 2 */}
-        <Container flex="row" px="sm" center="y">
-          {/* right */}
-          <Container
-            flex="row"
-            style={{
-              flexGrow: 1,
-              flexWrap: "nowrap",
-            }}
-          >
-            <Button
-              variant="outline"
-              style={{
-                fontSize: fontSize.sm,
-                border: "none",
-                paddingInline: 0,
-                paddingBlock: spacing.sm,
-              }}
-              gap="xs"
-              onClick={props.onChainClick}
-            >
-              <ChainIcon chain={chainQuery.data} size={iconSize.sm} />
-              <Container color="secondaryText" flex="row" center="y" gap="xxs">
-                {chainQuery.data?.name ? (
-                  <Text color="secondaryText" size="sm">
-                    {chainQuery.data.name}
-                  </Text>
-                ) : (
-                  <Skeleton width="90px" height={fontSize.xs} />
-                )}
-
-                <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
-              </Container>
-            </Button>
+    <Container
+      bg="tertiaryBg"
+      borderColor="borderColor"
+      flex="row"
+      style={{
+        borderRadius: radius.md,
+        borderBottomRightRadius: 0,
+        borderBottomLeftRadius: 0,
+        borderWidth: "1px",
+        borderStyle: "solid",
+        borderBottom: "none",
+        flexWrap: "nowrap",
+        justifyContent: "space-between",
+        minHeight: "64px",
+        alignItems: "center",
+      }}
+    >
+      {/* Left */}
+      <TokenButton variant="secondary" onClick={props.onSelectToken}>
+        <TokenIcon token={props.token} chain={props.chain} size="md" />
+        <Container flex="column" gap="xxs">
+          <Container flex="row" gap="xs" center="y">
+            <TokenSymbol token={props.token} chain={props.chain} size="sm" />
+            <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
           </Container>
-
-          <Container flex="row" gap="xxs" center="y" color="secondaryText">
-            <WalletIcon size={iconSize.xs} />
-            {balanceQuery.data ? (
-              <Text size="xs" color="secondaryText">
-                {formatTokenBalance(balanceQuery.data, true)}
-              </Text>
-            ) : (
-              <Skeleton width="70px" height={fontSize.xs} />
-            )}
-          </Container>
+          {chainQuery.data?.name ? (
+            <Text size="xs"> {chainQuery.data.name}</Text>
+          ) : (
+            <Skeleton width="90px" height={fontSize.xs} />
+          )}
         </Container>
-      </BorderBox>
-    </div>
+      </TokenButton>
+
+      {/* Right */}
+      <div
+        style={{
+          flexGrow: 1,
+          flexShrink: 1,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-end",
+          gap: spacing.xxs,
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap",
+          justifyContent: "center",
+          paddingRight: spacing.sm,
+        }}
+      >
+        {props.isLoading ? (
+          <Skeleton width="120px" height={fontSize.md} />
+        ) : (
+          <Text
+            size="md"
+            color={props.value ? "primaryText" : "secondaryText"}
+            style={{}}
+          >
+            {formatNumber(Number(props.value), 4) || "--"}
+          </Text>
+        )}
+
+        <Container flex="row" gap="xxs" center="y" color="secondaryText">
+          <WalletIcon size={fontSize.xs} />
+          {balanceQuery.data ? (
+            <Text size="xs" color="secondaryText" weight={500}>
+              {formatTokenBalance(balanceQuery.data, true)}
+            </Text>
+          ) : (
+            <Skeleton width="70px" height={fontSize.xs} />
+          )}
+        </Container>
+      </div>
+    </Container>
   );
 }
 
-const BorderBox = /* @__PURE__ */ StyledDiv(() => {
+const TokenButton = /* @__PURE__ */ styled(Button)(() => {
   const theme = useCustomTheme();
   return {
-    border: `1px solid ${theme.colors.borderColor}`,
-    borderRadius: radius.lg,
+    background: "transparent",
+    border: "1px solid transparent",
+    "&:hover": {
+      background: "transparent",
+      borderColor: theme.colors.accentText,
+    },
+    justifyContent: "flex-start",
+    transition: "background 0.3s, border-color 0.3s",
+    gap: spacing.sm,
+    paddingInline: spacing.sm,
+    paddingBlock: spacing.sm,
+    color: theme.colors.primaryText,
+    borderRadius: radius.md,
+    minWidth: "50%",
   };
 });

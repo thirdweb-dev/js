@@ -92,3 +92,17 @@ export {
   claimTo,
   type ClaimToParams,
 } from "../../extensions/erc1155/drops/write/claimTo.js";
+
+export {
+  lazyMint,
+  type LazyMintParams,
+} from "../../extensions/erc1155/write/lazyMint.js";
+
+export {
+  setClaimConditions,
+  type SetClaimConditionsParams,
+} from "../../extensions/erc1155/drops/write/setClaimConditions.js";
+
+// EVENTS
+export { tokensLazyMintedEvent } from "../../extensions/erc1155/__generated__/ILazyMint/events/TokensLazyMinted.js";
+export { tokensClaimedEvent } from "../../extensions/erc1155/__generated__/IDrop1155/events/TokensClaimed.js";

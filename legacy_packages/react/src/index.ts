@@ -16,7 +16,9 @@ export {
   type CoinbaseWalletConfigOptions,
 } from "./wallet/wallets/coinbase/coinbaseWallet";
 export { embeddedWallet } from "./wallet/wallets/embeddedWallet/embeddedWallet";
+export { embeddedWallet as inAppWallet } from "./wallet/wallets/embeddedWallet/embeddedWallet";
 export type { EmbeddedWalletConfigOptions } from "./wallet/wallets/embeddedWallet/types";
+export type { EmbeddedWalletConfigOptions as InAppWalletConfigOptions } from "./wallet/wallets/embeddedWallet/types";
 
 export {
   frameWallet,

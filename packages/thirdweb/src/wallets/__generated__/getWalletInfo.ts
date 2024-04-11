@@ -24,8 +24,8 @@ export async function getWalletInfo<TImage extends boolean>(
     case "inApp": {
       return (
         image
-          ? import("../custom/in-app/image.js").then((img) => img.default)
-          : import("../custom/in-app/index.js").then((w) => w.wallet)
+          ? import("../custom/inApp/image.js").then((img) => img.default)
+          : import("../custom/inApp/index.js").then((w) => w.wallet)
       ) as Promise<[TImage] extends [true] ? string : any>;
     }
     case "walletConnect": {
@@ -35,6 +35,13 @@ export async function getWalletInfo<TImage extends boolean>(
               (img) => img.default,
             )
           : import("../custom/walletConnect/index.js").then((w) => w.wallet)
+      ) as Promise<[TImage] extends [true] ? string : any>;
+    }
+    case "embedded": {
+      return (
+        image
+          ? import("../custom/embedded/image.js").then((img) => img.default)
+          : import("../custom/embedded/index.js").then((w) => w.wallet)
       ) as Promise<[TImage] extends [true] ? string : any>;
     }
     case "io.metamask": {

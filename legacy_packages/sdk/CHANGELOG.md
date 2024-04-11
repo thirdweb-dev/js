@@ -1,5 +1,17 @@
 # @thirdweb-dev/sdk
 
+## 4.0.62
+
+### Patch Changes
+
+- [#2678](https://github.com/thirdweb-dev/js/pull/2678) [`9453f74`](https://github.com/thirdweb-dev/js/commit/9453f74bbfd53372fcfd942bcce6c6bfc8c00a2c) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Custom gas settings for any evm deployments
+
+- [#2754](https://github.com/thirdweb-dev/js/pull/2754) [`c4d51e0`](https://github.com/thirdweb-dev/js/commit/c4d51e0b80e2d66fb85b8032dcc286f9cd164cd1) Thanks [@jnsdls](https://github.com/jnsdls)! - handle `[[{}]]` values for `properties` / `attributes` fields of NFTs
+
+- Updated dependencies [[`007770c`](https://github.com/thirdweb-dev/js/commit/007770cd635fba5d38eca5efccc55592c85a106f), [`07f98a5`](https://github.com/thirdweb-dev/js/commit/07f98a5b923166f2e16c9f1759970af2032dbb54), [`e6b5d9c`](https://github.com/thirdweb-dev/js/commit/e6b5d9cc5d1907cbce3aaa895239e0f45b7e880c), [`9453f74`](https://github.com/thirdweb-dev/js/commit/9453f74bbfd53372fcfd942bcce6c6bfc8c00a2c), [`39c6fbc`](https://github.com/thirdweb-dev/js/commit/39c6fbc5521a816c7d9a23933cb41ad76a925d14), [`db05717`](https://github.com/thirdweb-dev/js/commit/db0571780304a7b631646b046522fa15352b5467), [`eb919ed`](https://github.com/thirdweb-dev/js/commit/eb919ed49d57589614ac959cb6cbd7c9c19cac07), [`bf6a8e0`](https://github.com/thirdweb-dev/js/commit/bf6a8e0cab2a02a34d2ca8fbdf9d034ac176b61e)]:
+  - thirdweb@5.5.0
+  - @thirdweb-dev/chains@0.1.93
+
 ## 4.0.61
 
 ### Patch Changes

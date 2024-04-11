@@ -3,6 +3,7 @@ import { useMemo, useState, useSyncExternalStore } from "react";
 import { defineChain } from "../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import type {
+  BuyWithCryptoStatus,
   BuyWithCryptoStatuses,
   BuyWithCryptoSubStatuses,
 } from "../../../../../pay/buyWithCrypto/actions/getStatus.js";
@@ -33,12 +34,12 @@ import { CryptoIcon } from "../icons/CryptoIcon.js";
 import { swapTransactionsStore } from "./Buy/swap/pendingSwapTx.js";
 
 type TxStatusInfo = {
-  fromChainId: number;
+  boughChainId: number;
   transactionHash: string;
   boughtTokenAmount: string;
   boughtTokenSymbol: string;
-  status: BuyWithCryptoStatuses;
-  subStatus?: BuyWithCryptoSubStatuses;
+  status: BuyWithCryptoStatus["status"];
+  subStatus?: BuyWithCryptoStatus["subStatus"];
 };
 
 const PAGE_SIZE = 10;
@@ -77,10 +78,10 @@ export function SwapTransactionsScreen(props: {
     }
 
     txInfosToShow.push({
-      fromChainId: tx.from.chainId,
+      boughChainId: tx.destination.chainId,
       transactionHash: tx.transactionHash,
-      boughtTokenAmount: tx.to.value,
-      boughtTokenSymbol: tx.to.symbol,
+      boughtTokenAmount: tx.destination.value,
+      boughtTokenSymbol: tx.destination.symbol,
       status: "PENDING",
     });
   }
@@ -88,7 +89,7 @@ export function SwapTransactionsScreen(props: {
   // Add data from endpoint
   for (const tx of _historyQuery.data?.page || []) {
     txInfosToShow.push({
-      fromChainId: tx.source.token.chainId,
+      boughChainId: tx.destination?.token.chainId || tx.quote.toToken.chainId,
       transactionHash: tx.source.transactionHash,
       boughtTokenAmount: tx.destination?.amount || tx.quote.toAmount,
       boughtTokenSymbol:
@@ -261,14 +262,14 @@ export function useSwapTransactions(pageIndex: number, client: ThirdwebClient) {
 
 function TransactionInfo(props: { txInfo: TxStatusInfo }) {
   const {
-    fromChainId,
+    boughChainId,
     transactionHash,
     boughtTokenAmount,
     boughtTokenSymbol,
     status,
   } = props.txInfo;
 
-  const fromChain = useMemo(() => defineChain(fromChainId), [fromChainId]);
+  const fromChain = useMemo(() => defineChain(boughChainId), [boughChainId]);
 
   const chainQuery = useChainQuery(fromChain);
   const statusMeta = getStatusMeta(status, props.txInfo.subStatus);
@@ -369,7 +370,7 @@ const TxHashLink = /* @__PURE__ */ StyledAnchor(() => {
     borderRadius: radius.lg,
     cursor: "pointer",
     animation: `${fadeInAnimation} 300ms ease`,
-    background: theme.colors.walletSelectorButtonHoverBg,
+    background: theme.colors.tertiaryBg,
     "&:hover": {
       transition: "background 250ms ease",
       background: theme.colors.secondaryButtonBg,
