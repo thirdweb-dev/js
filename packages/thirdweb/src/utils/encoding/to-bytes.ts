@@ -45,9 +45,13 @@ export type ToBytesParameters = {
  * @utils
  */
 export function toBytes(
-  value: string | bigint | number | boolean | Hex,
+  value: Uint8Array | string | bigint | number | boolean | Hex,
   opts: ToBytesParameters = {},
 ): Uint8Array {
+  // If it's already a Uint8Array, return it.
+  if (value instanceof Uint8Array) {
+    return value;
+  }
   switch (typeof value) {
     case "number":
     case "bigint":

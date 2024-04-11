@@ -7,7 +7,6 @@ import { getContractMetadata } from "../../../extensions/common/read/getContract
 import { MerkleTree } from "../../../merkletree/MerkleTree.js";
 import { download } from "../../../storage/download.js";
 import type { Address } from "../../address.js";
-import { keccak256 } from "../../hashing/keccak256.js";
 import { convertQuantity } from "./convert-quantity.js";
 import { hashEntry } from "./hash-entry.js";
 import type {
@@ -69,9 +68,7 @@ export async function fetchProofsForClaimer(options: {
       });
     }),
   );
-  const tree = new MerkleTree(hashedEntries, keccak256, {
-    sort: true,
-  });
+  const tree = new MerkleTree(hashedEntries);
   // 5. get the proof for the claimer + the sub merkle tree root
   const entry = shardData.entries.find(
     (i) => i.address.toLowerCase() === claimer.toLowerCase(),

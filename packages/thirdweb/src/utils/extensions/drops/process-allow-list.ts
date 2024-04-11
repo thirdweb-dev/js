@@ -2,7 +2,6 @@ import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import { MerkleTree } from "../../../merkletree/MerkleTree.js";
 import { upload } from "../../../storage/upload.js";
-import { keccak256 } from "../../hashing/keccak256.js";
 import { hashEntry } from "./hash-entry.js";
 import type {
   AllowlistEntry,
@@ -53,18 +52,12 @@ export async function processAllowlist(options: {
             });
           }),
         ),
-        keccak256,
-        {
-          sort: true,
-        },
       ).getHexRoot(),
     ]),
   );
   // 4. create the master merkle tree from all the subtrees
   const roots = Object.fromEntries(subTrees);
-  const tree = new MerkleTree(Object.values(roots), keccak256, {
-    sort: true,
-  });
+  const tree = new MerkleTree(Object.values(roots));
   // 5. upload all the shards with filename <shardId>.json to easily retrieve
   const shardsToUpload = [];
   for (const [shardId, entries] of Object.entries(shards)) {
