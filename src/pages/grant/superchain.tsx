@@ -6,7 +6,6 @@ import { LandingGridSection } from "components/landing-pages/grid-section";
 import { LandingIconSectionItem } from "components/landing-pages/icon-section-item";
 import { HomepageTopNav } from "components/product-pages/common/Topnav";
 import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
-import { superchainFrameChains } from "lib/superchain-frames";
 import { getAbsoluteUrl } from "lib/vercel-utils";
 import { NextSeo } from "next-seo";
 import Head from "next/head";
@@ -112,29 +111,13 @@ const GrantSuperChain = () => {
         <meta property="fc:frame" content="vNext" />
         <meta
           property="fc:frame:image"
-          content={`${getAbsoluteUrl()}/assets/dashboard/superchain-app-accelerator.png`}
+          content={`${getAbsoluteUrl()}/assets/superchain/frame-1.png`}
         />
+        <meta property="fc:frame:button:1" content="Apply" />
         <meta
           property="fc:frame:post_url"
-          content={`${getAbsoluteUrl()}/api/frame/superchain?action=check`}
+          content={`${getAbsoluteUrl()}/api/superchain/frame?type=apply`}
         />
-        <meta
-          property="fc:frame:button:1"
-          content={`${superchainFrameChains.optimism.frameContentText}`}
-        />
-        <meta
-          property="fc:frame:button:2"
-          content={`${superchainFrameChains.base.frameContentText}`}
-        />
-        <meta
-          property="fc:frame:button:3"
-          content={`${superchainFrameChains.zora.frameContentText}`}
-        />
-        <meta
-          property="fc:frame:button:4"
-          content={`${superchainFrameChains.other.frameContentText}`}
-        />
-        <meta name="fc:frame:button:4:action" content="post_redirect" />
       </Head>
 
       <Flex
