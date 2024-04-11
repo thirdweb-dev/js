@@ -4,9 +4,9 @@ import { FORKED_OPTIMISM_CHAIN } from "~test/chains.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
 import { getFid } from "./getFid.js";
 
-describe("farcaster.getFid", () => {
-  // skipping for a moment to test in CI
-  it.skip("should return the address's fid", async () => {
+// skipping for a moment to test CI
+describe.skip("farcaster.getFid", () => {
+  it("should return the address's fid", async () => {
     const fid = await getFid({
       client: TEST_CLIENT,
       chain: FORKED_OPTIMISM_CHAIN,
