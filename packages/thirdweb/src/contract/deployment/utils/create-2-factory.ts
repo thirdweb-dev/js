@@ -1,4 +1,5 @@
 import { getContractAddress } from "viem";
+import { getGasPrice } from "../../../gas/get-gas-price.js";
 import { eth_getBalance } from "../../../rpc/actions/eth_getBalance.js";
 import { eth_sendRawTransaction } from "../../../rpc/actions/eth_sendRawTransaction.js";
 import { getRpcClient } from "../../../rpc/rpc.js";
@@ -39,27 +40,73 @@ const SIGNATURE = {
 export async function computeCreate2FactoryAddress(
   options: ClientAndChain,
 ): Promise<string> {
-  // TODO add LRU cache
-  const commonFactory = getContract({
-    ...options,
-    address: COMMON_FACTORY_ADDRESS,
-  });
-  // if the common factory is deployed, return the address
-  if (await isContractDeployed(commonFactory)) {
+  const chainId = options.chain.id;
+
+  // special handling for chains with hardcoded gasPrice and gasLimit
+  if (CUSTOM_GAS_FOR_CHAIN[chainId]) {
+    const enforceEip155 = await isEIP155Enforced(options);
+    const eipChain = enforceEip155 ? chainId : 0;
+    const gasPrice = CUSTOM_GAS_FOR_CHAIN[chainId.toString()]?.gasPrice;
+    const gasLimit = CUSTOM_GAS_FOR_CHAIN[chainId.toString()]?.gasLimit;
+
+    const deploymentInfo = await _getCreate2FactoryDeploymentInfo(eipChain, {
+      gasPrice,
+      gasLimit,
+    });
+
+    return deploymentInfo.predictedAddress;
+  }
+
+  // default flow
+  const allBinsInfo = await Promise.all([
+    // to generate EIP-155 transaction
+    ...CUSTOM_GAS_BINS.map((b) => {
+      return _getCreate2FactoryDeploymentInfo(chainId, { gasPrice: b });
+    }),
+
+    // to generate pre EIP-155 transaction, hence chainId 0
+    ...CUSTOM_GAS_BINS.map((b) => {
+      return _getCreate2FactoryDeploymentInfo(0, { gasPrice: b });
+    }),
+  ]);
+
+  const allFactories = await Promise.all(
+    allBinsInfo.map((b) => {
+      const tempFactory = getContract({
+        ...options,
+        address: b.predictedAddress,
+      });
+      return isContractDeployed(tempFactory);
+    }),
+  );
+
+  const indexOfCommonFactory = allBinsInfo.findIndex(
+    (b) => b.predictedAddress === COMMON_FACTORY_ADDRESS,
+  );
+  if (indexOfCommonFactory && allFactories[indexOfCommonFactory]) {
     return COMMON_FACTORY_ADDRESS;
   }
 
-  const enforceEip155 = await isEIP155Enforced(options);
-  const chainId = options.chain.id;
-  const custom = CUSTOM_GAS_FOR_CHAIN[chainId.toString()];
-  const eipChain = enforceEip155 ? chainId : 0;
+  const indexOfExistingDeployment = allFactories.findIndex((b) => b);
+  if (
+    indexOfExistingDeployment &&
+    allBinsInfo &&
+    allBinsInfo[indexOfExistingDeployment]?.predictedAddress
+  ) {
+    // TODO: cleanup
+    return allBinsInfo[indexOfExistingDeployment]?.predictedAddress as string;
+  }
 
-  const deploymentInfo = custom
-    ? await _getCreate2FactoryDeploymentInfo(eipChain, {
-        gasPrice: custom.gasPrice,
-        gasLimit: custom.gasLimit,
-      })
-    : await _getCreate2FactoryDeploymentInfo(eipChain, {});
+  const [enforceEip155, gasPriceFetched] = await Promise.all([
+    isEIP155Enforced(options),
+    getGasPrice(options),
+  ]);
+  const eipChain = enforceEip155 ? chainId : 0;
+  const bin = _getNearestGasPriceBin(gasPriceFetched);
+
+  const deploymentInfo = await _getCreate2FactoryDeploymentInfo(eipChain, {
+    gasPrice: bin,
+  });
 
   return deploymentInfo.predictedAddress;
 }
@@ -88,18 +135,17 @@ export async function deployCreate2Factory(options: ClientAndChainAndAccount) {
   const { client, chain, account } = options;
   const enforceEip155 = await isEIP155Enforced(options);
   const chainId = options.chain.id;
-  const custom = CUSTOM_GAS_FOR_CHAIN[chainId.toString()];
   const eipChain = enforceEip155 ? chainId : 0;
 
-  const deploymentInfo = custom
-    ? await _getCreate2FactoryDeploymentInfo(eipChain, {
-        gasPrice: custom.gasPrice,
-        gasLimit: custom.gasLimit,
-      })
-    : await _getCreate2FactoryDeploymentInfo(eipChain, {});
   const rpcRequest = getRpcClient({
     client: client,
     chain,
+  });
+
+  const gasPriceFetched = await getGasPrice(options);
+  const bin = _getNearestGasPriceBin(gasPriceFetched);
+  const deploymentInfo = await _getCreate2FactoryDeploymentInfo(eipChain, {
+    gasPrice: bin,
   });
 
   const balance = await eth_getBalance(rpcRequest, {
@@ -135,6 +181,8 @@ async function _getCreate2FactoryDeploymentInfo(
   chainId: number,
   gasOptions: { gasPrice?: bigint; gasLimit?: bigint },
 ) {
+  // 100000 is default deployment gas limit and 100 gwei is default gas price for create2 factory deployment
+  // (See: https://github.com/Arachnid/deterministic-deployment-proxy?tab=readme-ov-file#deployment-gas-limit)
   const gasPrice = gasOptions.gasPrice ? gasOptions.gasPrice : 100n * 10n ** 9n;
   const gas = gasOptions.gasLimit ? gasOptions.gasLimit : 100000n;
   const deploymentTransaction = await getKeylessTransaction({
@@ -143,7 +191,7 @@ async function _getCreate2FactoryDeploymentInfo(
       gas,
       nonce: 0,
       data: CREATE2_FACTORY_BYTECODE,
-      chainId: Number(chainId),
+      chainId: chainId !== 0 ? Number(chainId) : undefined,
     },
     signature: SIGNATURE,
   });
@@ -157,6 +205,10 @@ async function _getCreate2FactoryDeploymentInfo(
     valueToSend: gasPrice * gas,
     predictedAddress: create2FactoryAddress,
   };
+}
+
+function _getNearestGasPriceBin(gasPrice: bigint): bigint {
+  return CUSTOM_GAS_BINS.find((e) => e >= gasPrice) || gasPrice;
 }
 
 // TODO: move this somewhere else
@@ -214,3 +266,23 @@ const CUSTOM_GAS_FOR_CHAIN: Record<string, CustomChain> = {
     gasLimit: 200000n,
   },
 };
+
+const CUSTOM_GAS_BINS = [
+  1n,
+  1n * 10n ** 9n,
+  100n * 10n ** 9n,
+  500n * 10n ** 9n,
+  1000n * 10n ** 9n,
+  2500n * 10n ** 9n,
+  5000n * 10n ** 9n,
+  7500n * 10n ** 9n,
+  10_000n * 10n ** 9n,
+  25_000n * 10n ** 9n,
+  50_000n * 10n ** 9n,
+  75_000n * 10n ** 9n,
+  100_000n * 10n ** 9n,
+  250_000n * 10n ** 9n,
+  500_000n * 10n ** 9n,
+  750_000n * 10n ** 9n,
+  1_000_000n * 10n ** 9n,
+];

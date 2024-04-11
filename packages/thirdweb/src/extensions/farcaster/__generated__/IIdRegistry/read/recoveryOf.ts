@@ -4,6 +4,8 @@ import type { BaseTransactionOptions } from "../../../../../transaction/types.js
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "recoveryOf" function.
@@ -27,6 +29,25 @@ const FN_OUTPUTS = [
 ] as const;
 
 /**
+ * Checks if the `recoveryOf` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `recoveryOf` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isRecoveryOfSupported } from "thirdweb/extensions/farcaster";
+ *
+ * const supported = await isRecoveryOfSupported(contract);
+ * ```
+ */
+export async function isRecoveryOfSupported(contract: ThirdwebContract<any>) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
  * Encodes the parameters for the "recoveryOf" function.
  * @param options - The options for the recoveryOf function.
  * @returns The encoded ABI parameters.
@@ -41,6 +62,28 @@ const FN_OUTPUTS = [
  */
 export function encodeRecoveryOfParams(options: RecoveryOfParams) {
   return encodeAbiParameters(FN_INPUTS, [options.fid]);
+}
+
+/**
+ * Encodes the "recoveryOf" function into a Hex string with its parameters.
+ * @param options - The options for the recoveryOf function.
+ * @returns The encoded hexadecimal string.
+ * @extension FARCASTER
+ * @example
+ * ```ts
+ * import { encodeRecoveryOf } "thirdweb/extensions/farcaster";
+ * const result = encodeRecoveryOf({
+ *  fid: ...,
+ * });
+ * ```
+ */
+export function encodeRecoveryOf(options: RecoveryOfParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeRecoveryOfParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**

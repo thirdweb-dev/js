@@ -96,23 +96,21 @@ async function getInitializeTransaction(options: {
     options;
   const contractURI =
     options.params.contractURI ||
-    (
-      await upload({
-        client,
-        files: [
-          {
-            name: params.name,
-            description: params.description,
-            symbol: params.symbol,
-            image: params.image,
-            external_link: params.external_link,
-            social_urls: params.social_urls,
-            seller_fee_basis_points: params.royaltyBps,
-            fee_recipient: params.royaltyRecipient,
-          },
-        ],
-      })
-    )[0] ||
+    (await upload({
+      client,
+      files: [
+        {
+          name: params.name,
+          description: params.description,
+          symbol: params.symbol,
+          image: params.image,
+          external_link: params.external_link,
+          social_urls: params.social_urls,
+          seller_fee_basis_points: params.royaltyBps,
+          fee_recipient: params.royaltyRecipient,
+        },
+      ],
+    })) ||
     "";
   switch (type) {
     case "DropERC1155":

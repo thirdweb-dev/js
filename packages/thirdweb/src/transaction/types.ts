@@ -18,6 +18,8 @@ export type SendTransactionResult = {
 
 export type TransactionReceipt = ViemTransactionReceipt;
 
+export type WithOverrides<T> = T & { overrides?: { value?: bigint } };
+
 export type ParamsOption<inputs extends readonly AbiParameter[]> =
   inputs extends {
     length: 0;

@@ -1,13 +1,13 @@
 import type { ThirdwebClient } from "../../client/client.js";
 import { getThirdwebDomains } from "../../utils/domains.js";
 import { getClientFetch } from "../../utils/fetch.js";
-import type { UploadOptions } from "./types.js";
+import type { UploadOptions, UploadableFile } from "./types.js";
 
-export async function uploadBatch(
+export async function uploadBatch<const TFiles extends UploadableFile[]>(
   client: ThirdwebClient,
   form: FormData,
   fileNames: string[],
-  options?: UploadOptions,
+  options?: UploadOptions<TFiles>,
 ) {
   const headers: HeadersInit = {};
 

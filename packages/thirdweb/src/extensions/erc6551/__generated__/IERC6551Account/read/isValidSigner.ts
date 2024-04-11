@@ -4,6 +4,8 @@ import type { BaseTransactionOptions } from "../../../../../transaction/types.js
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "isValidSigner" function.
@@ -32,6 +34,27 @@ const FN_OUTPUTS = [
 ] as const;
 
 /**
+ * Checks if the `isValidSigner` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `isValidSigner` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isIsValidSignerSupported } from "thirdweb/extensions/erc6551";
+ *
+ * const supported = await isIsValidSignerSupported(contract);
+ * ```
+ */
+export async function isIsValidSignerSupported(
+  contract: ThirdwebContract<any>,
+) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
  * Encodes the parameters for the "isValidSigner" function.
  * @param options - The options for the isValidSigner function.
  * @returns The encoded ABI parameters.
@@ -47,6 +70,29 @@ const FN_OUTPUTS = [
  */
 export function encodeIsValidSignerParams(options: IsValidSignerParams) {
   return encodeAbiParameters(FN_INPUTS, [options.signer, options.context]);
+}
+
+/**
+ * Encodes the "isValidSigner" function into a Hex string with its parameters.
+ * @param options - The options for the isValidSigner function.
+ * @returns The encoded hexadecimal string.
+ * @extension ERC6551
+ * @example
+ * ```ts
+ * import { encodeIsValidSigner } "thirdweb/extensions/erc6551";
+ * const result = encodeIsValidSigner({
+ *  signer: ...,
+ *  context: ...,
+ * });
+ * ```
+ */
+export function encodeIsValidSigner(options: IsValidSignerParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeIsValidSignerParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**

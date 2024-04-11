@@ -206,6 +206,7 @@ export {
   type ToHexParameters,
   type Uint8ArrayToHexOpts,
 } from "../utils/encoding/hex.js";
+export { concatHex } from "../utils/encoding/helpers/concat-hex.js";
 
 // bytes
 // to
