@@ -1,76 +1,10 @@
 import type { Address } from "abitype";
 import { isNativeTokenAddress } from "../../../../constants/addresses.js";
-import { prepareContractCall } from "../../../../transaction/prepare-contract-call.js";
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
-import { fetchProofsForClaimer } from "../../../../utils/drops/utils.js";
 import { padHex } from "../../../../utils/encoding/hex.js";
+import { fetchProofsForClaimer } from "../../../../utils/extensions/drops/fetch-proofs-for-claimers.js";
+import { claim } from "../../__generated__/IDrop1155/write/claim.js";
 import { getActiveClaimCondition } from "../read/getActiveClaimCondition.js";
-
-const CLAIM_ABI = {
-  inputs: [
-    {
-      internalType: "address",
-      name: "receiver",
-      type: "address",
-    },
-    {
-      internalType: "uint256",
-      name: "tokenId",
-      type: "uint256",
-    },
-    {
-      internalType: "uint256",
-      name: "quantity",
-      type: "uint256",
-    },
-    {
-      internalType: "address",
-      name: "currency",
-      type: "address",
-    },
-    {
-      internalType: "uint256",
-      name: "pricePerToken",
-      type: "uint256",
-    },
-    {
-      components: [
-        {
-          internalType: "bytes32[]",
-          name: "proof",
-          type: "bytes32[]",
-        },
-        {
-          internalType: "uint256",
-          name: "quantityLimitPerWallet",
-          type: "uint256",
-        },
-        {
-          internalType: "uint256",
-          name: "pricePerToken",
-          type: "uint256",
-        },
-        {
-          internalType: "address",
-          name: "currency",
-          type: "address",
-        },
-      ],
-      internalType: "struct IDrop.AllowlistProof",
-      name: "allowlistProof",
-      type: "tuple",
-    },
-    {
-      internalType: "bytes",
-      name: "data",
-      type: "bytes",
-    },
-  ],
-  name: "claim",
-  outputs: [],
-  stateMutability: "payable",
-  type: "function",
-} as const;
 
 export type ClaimToParams = {
   to: Address;
@@ -97,10 +31,9 @@ export type ClaimToParams = {
  * @returns A promise that resolves with the submitted transaction hash.
  */
 export function claimTo(options: BaseTransactionOptions<ClaimToParams>) {
-  return prepareContractCall({
+  return claim({
     contract: options.contract,
-    method: CLAIM_ABI,
-    params: async () => {
+    async asyncParams() {
       const cc = await getActiveClaimCondition({
         contract: options.contract,
         tokenId: options.tokenId,
@@ -117,32 +50,26 @@ export function claimTo(options: BaseTransactionOptions<ClaimToParams>) {
           claimer: options.from || options.to, // receiver and claimer can be different, always prioritize the claimer for allowlists
           merkleRoot: cc.merkleRoot,
         });
+
         if (claimerProof) {
           proofData = claimerProof;
         }
       }
-      return [
-        options.to, //receiver
-        options.tokenId, //tokenId
-        options.quantity, //quantity
-        cc.currency, //currency
-        cc.pricePerToken, //pricePerToken
-        // proof
-        proofData,
-        // end proof
-        "0x", //data
-      ] as const;
-    },
-    value: async () => {
-      // TODO this should not be refetched
-      const cc = await getActiveClaimCondition({
-        contract: options.contract,
+
+      return {
+        receiver: options.to,
         tokenId: options.tokenId,
-      });
-      if (isNativeTokenAddress(cc.currency)) {
-        return cc.pricePerToken * BigInt(options.quantity);
-      }
-      return 0n;
+        quantity: options.quantity,
+        currency: cc.currency,
+        pricePerToken: cc.pricePerToken,
+        allowlistProof: proofData,
+        data: "0x",
+        overrides: {
+          value: isNativeTokenAddress(cc.currency)
+            ? cc.pricePerToken * BigInt(options.quantity)
+            : 0n,
+        },
+      };
     },
   });
 }

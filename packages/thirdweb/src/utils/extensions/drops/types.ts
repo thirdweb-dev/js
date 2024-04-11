@@ -1,4 +1,4 @@
-import type { Hex } from "../encoding/hex.js";
+import type { Hex } from "../../encoding/hex.js";
 
 export type ShardedMerkleTreeInfo = {
   merkleRoot: string;

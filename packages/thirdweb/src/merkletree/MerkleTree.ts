@@ -727,7 +727,7 @@ export class MerkleTree extends Base {
    * @return {(string | number)[][]} - Proof array as hex strings. position at index 0
    * @example
    * ```js
-   *const proof = tree.getPositionalHexProof(leaves[2])
+   * const proof = tree.getPositionalHexProof(leaves[2])
    *```
    */
   getPositionalHexProof(
@@ -747,8 +747,8 @@ export class MerkleTree extends Base {
    * @return {Number[]} - Proof indices
    * @example
    * ```js
-   *const proofIndices = tree.getProofIndices([2,5,6], 4)
-   *console.log(proofIndices) // [ 23, 20, 19, 8, 3 ]
+   * const proofIndices = tree.getProofIndices([2,5,6], 4)
+   * console.log(proofIndices) // [ 23, 20, 19, 8, 3 ]
    *```
    */
   getProofIndices(treeIndices: number[], depth: number): number[] {

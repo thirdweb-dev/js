@@ -1,6 +1,6 @@
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
-import type { ClaimConditionsInput } from "../../../../utils/drops/types.js";
-import { getMulticallSetClaimConditionTransactions } from "../../../../utils/drops/utils.js";
+import { getMulticallSetClaimConditionTransactions } from "../../../../utils/extensions/drops/get-multicall-set-claim-claim-conditon-transactions.js";
+import type { ClaimConditionsInput } from "../../../../utils/extensions/drops/types.js";
 import { multicall } from "../../../common/__generated__/IMulticall/write/multicall.js";
 
 export type SetClaimConditionsParams = {
