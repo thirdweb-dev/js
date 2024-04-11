@@ -50,6 +50,7 @@ export function createWallet<const ID extends WalletId>(
     /**
      * IN-APP WALLET
      */
+    case "embedded":
     case "inApp": {
       return inAppWallet(
         creationOptions as CreateWalletArgs<"inApp">[1],

@@ -22,6 +22,7 @@ import type {
 export type WalletId =
   | "walletConnect"
   | "inApp"
+  | "embedded" // deprecated
   | "smart"
   | WCSupportedWalletIds
   | InjectedSupportedWalletIds;
@@ -67,7 +68,7 @@ export type WalletConnectionOption<T extends WalletId> =
     : T extends "smart"
       ? SmartWalletConnectionOptions
       : // inApp wallet
-        T extends "inApp"
+        T extends "inApp" | "embedded"
         ? InAppWalletConnectionOptions
         : // coinbase wallet (inhected + coinbaseWallet)
           T extends "com.coinbase.wallet"
@@ -93,7 +94,7 @@ export type WalletAutoConnectionOption<T extends WalletId> =
     ? WCAutoConnectOptions
     : T extends "smart"
       ? SmartWalletConnectionOptions
-      : T extends "inApp"
+      : T extends "inApp" | "embedded"
         ? InAppWalletAutoConnectOptions
         : // coinbase wallet (inhected + coinbaseWallet)
           T extends "com.coinbase.wallet"
@@ -115,7 +116,7 @@ export type WalletAutoConnectionOption<T extends WalletId> =
  */
 export type WalletCreationOptions<T extends WalletId> = T extends "smart"
   ? SmartWalletOptions
-  : T extends "inApp"
+  : T extends "inApp" | "embedded"
     ? InAppWalletCreationOptions
     : undefined;
 
