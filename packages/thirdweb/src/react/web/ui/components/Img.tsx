@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { resolveScheme } from "../../../../utils/ipfs.js";
-import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { Skeleton } from "./Skeleton.js";
 
 /**
@@ -16,7 +16,7 @@ export const Img: React.FC<{
   style?: React.CSSProperties;
   fallbackImage?: string;
 }> = (props) => {
-  const { client } = useWalletConnectionCtx();
+  const { client } = useConnectUI();
 
   const [isLoaded, setIsLoaded] = useState(false);
 

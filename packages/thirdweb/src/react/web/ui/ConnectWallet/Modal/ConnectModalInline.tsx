@@ -1,14 +1,11 @@
 import { Cross2Icon } from "@radix-ui/react-icons";
-import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
+import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import { WalletUIStatesProvider } from "../../../providers/wallet-ui-states-provider.js";
 import { canFitWideModal } from "../../../utils/canFitWideModal.js";
 import { DynamicHeight } from "../../components/DynamicHeight.js";
 import { CrossContainer } from "../../components/Modal.js";
 import { IconButton } from "../../components/buttons.js";
-import {
-  CustomThemeProvider,
-  useCustomTheme,
-} from "../../design-system/CustomThemeProvider.js";
+import { useCustomTheme } from "../../design-system/CustomThemeProvider.js";
 import { StyledDiv } from "../../design-system/elements.js";
 import {
   type Theme,
@@ -22,7 +19,6 @@ import {
   wideModalMaxHeight,
 } from "../constants.js";
 import type { WelcomeScreen } from "../screens/types.js";
-import { SyncedWalletUIStates } from "./ConnectEmbed.js";
 import { ConnectModalContent } from "./ConnectModalContent.js";
 import { useSetupScreen } from "./screen.js";
 
@@ -48,33 +44,18 @@ export type ConnectModalInlineProps = {
  * @internal
  */
 export const ConnectModalInline = (props: ConnectModalInlineProps) => {
-  const walletConfigs = useWalletConnectionCtx().wallets;
+  const walletConfigs = useConnectUI().wallets;
   const modalSize =
     !canFitWideModal() || walletConfigs.length === 1
       ? "compact"
       : props.modalSize;
-  const ctxTheme = useCustomTheme();
-
-  const walletUIStatesProps = {
-    theme: props.theme || ctxTheme,
-    modalSize: modalSize,
-    title: props.modalTitle,
-    termsOfServiceUrl: props.termsOfServiceUrl,
-    privacyPolicyUrl: props.privacyPolicyUrl,
-    welcomeScreen: props.welcomeScreen,
-    titleIconUrl: props.modalTitleIconUrl,
-    showThirdwebBranding: props.showThirdwebBranding,
-  };
 
   return (
-    <WalletUIStatesProvider {...walletUIStatesProps}>
-      <CustomThemeProvider theme={walletUIStatesProps.theme}>
-        <ConnectModalInlineContent
-          className={props.className}
-          modalSize={modalSize}
-        />
-        <SyncedWalletUIStates {...walletUIStatesProps} />
-      </CustomThemeProvider>
+    <WalletUIStatesProvider theme={props.theme}>
+      <ConnectModalInlineContent
+        className={props.className}
+        modalSize={modalSize}
+      />
     </WalletUIStatesProvider>
   );
 };

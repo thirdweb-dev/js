@@ -5,7 +5,7 @@ import type {
 } from "../../../../../wallets/__generated__/wallet-ids.js";
 import { getInstalledWalletProviders } from "../../../../../wallets/injected/mipdStore.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
-import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
+import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import { getInjectedWalletLocale } from "../../../wallets/injected/locale/getInjectedWalletLocale.js";
 import type { InjectedWalletLocale } from "../../../wallets/injected/locale/types.js";
 import { GetStartedScreen } from "../../../wallets/shared/GetStartedScreen.js";
@@ -35,7 +35,7 @@ export function AnyWalletConnectUI(props: {
 }) {
   const [screen, setScreen] = useState<"main" | "get-started">("main");
   const walletInfo = useWalletInfo(props.wallet.id);
-  const localeId = useWalletConnectionCtx().locale;
+  const localeId = useConnectUI().locale;
   const [locale, setLocale] = useState<InjectedWalletLocale | null>(null);
 
   useEffect(() => {

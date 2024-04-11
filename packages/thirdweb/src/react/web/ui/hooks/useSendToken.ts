@@ -5,7 +5,7 @@ import { waitForReceipt } from "../../../../transaction/actions/wait-for-tx-rece
 import { prepareTransaction } from "../../../../transaction/prepare-transaction.js";
 import { toWei } from "../../../../utils/units.js";
 import { useSendTransaction } from "../../../core/hooks/contract/useSendTransaction.js";
-import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { useActiveWalletChain } from "../../../core/hooks/wallets/wallet-hooks.js";
 
 // Q: Should we expose this hook?
@@ -17,7 +17,7 @@ import { useActiveWalletChain } from "../../../core/hooks/wallets/wallet-hooks.j
 export function useSendToken() {
   const sendTransaction = useSendTransaction();
   const activeChain = useActiveWalletChain();
-  const { client } = useWalletConnectionCtx();
+  const { client } = useConnectUI();
 
   return useMutation({
     async mutationFn(option: {

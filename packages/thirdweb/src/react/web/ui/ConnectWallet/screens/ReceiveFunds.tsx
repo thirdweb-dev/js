@@ -1,5 +1,5 @@
 import type { WalletId } from "../../../../../wallets/wallet-types.js";
-import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
+import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import { useActiveAccount } from "../../../../core/hooks/wallets/wallet-hooks.js";
 import { shortenString } from "../../../../core/utils/addresses.js";
 import { CopyIcon } from "../../components/CopyIcon.js";
@@ -24,7 +24,7 @@ export function ReceiveFunds(props: {
   const account = useActiveAccount();
   const address = account?.address;
   const { hasCopied, onCopy } = useClipboard(address || "");
-  const locale = useWalletConnectionCtx().connectLocale.receiveFundsScreen;
+  const locale = useConnectUI().connectLocale.receiveFundsScreen;
 
   return (
     <Container p="lg">

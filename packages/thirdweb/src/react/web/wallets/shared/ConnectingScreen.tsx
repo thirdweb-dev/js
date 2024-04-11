@@ -1,7 +1,6 @@
 import { ReloadIcon } from "@radix-ui/react-icons";
-import { useContext } from "react";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
-import { ModalConfigCtx } from "../../providers/wallet-ui-states-provider.js";
+import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { WalletLogoSpinner } from "../../ui/ConnectWallet/screens/WalletLogoSpinner.js";
 import { Spacer } from "../../ui/components/Spacer.js";
 import { Container, Line, ModalHeader } from "../../ui/components/basic.js";
@@ -28,7 +27,7 @@ export const ConnectingScreen: React.FC<{
   };
 }> = (props) => {
   const { locale } = props;
-  const modalConfig = useContext(ModalConfigCtx);
+  const { connectModal } = useConnectUI();
   return (
     <Container animate="fadein" fullHeight flex="column">
       <Container
@@ -44,7 +43,7 @@ export const ConnectingScreen: React.FC<{
         flex="column"
         center="y"
         expand
-        px={modalConfig.modalSize === "compact" ? "lg" : "xxl"}
+        px={connectModal.size === "compact" ? "lg" : "xxl"}
         relative
         style={{
           paddingTop: 0,

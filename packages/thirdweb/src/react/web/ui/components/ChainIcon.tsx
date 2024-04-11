@@ -1,6 +1,6 @@
 import type { ChainMetadata } from "../../../../chains/types.js";
 import { resolveScheme } from "../../../../utils/ipfs.js";
-import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { StyledDiv } from "../design-system/elements.js";
 import { Img } from "./Img.js";
 
@@ -18,7 +18,7 @@ export const ChainIcon: React.FC<{
   loading?: "lazy" | "eager";
   fallbackImage?: string;
 }> = (props) => {
-  const { client } = useWalletConnectionCtx();
+  const { client } = useConnectUI();
 
   const getSrc = () => {
     const url = props.chain?.icon?.url;
