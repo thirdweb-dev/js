@@ -96,7 +96,7 @@ export const getStaticProps: GetStaticProps<PublishPageProps> = async (ctx) => {
       ["all-releases", address, contractName],
       () => fetchAllVersions(polygonSdk, address, contractName),
     );
-  } catch (error) {
+  } catch {
     return {
       notFound: true,
     } as const;
