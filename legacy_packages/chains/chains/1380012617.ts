@@ -2,7 +2,13 @@ import type { Chain } from "../src/types";
 export default {
   "chain": "Rari",
   "chainId": 1380012617,
-  "explorers": [],
+  "explorers": [
+    {
+      "name": "rarichain-explorer",
+      "url": "https://mainnet.explorer.rarichain.org",
+      "standard": "EIP3091"
+    }
+  ],
   "faucets": [],
   "features": [],
   "icon": {
@@ -31,7 +37,8 @@ export default {
   "redFlags": [],
   "rpc": [
     "https://1380012617.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet.rpc.rarichain.org/http"
+    "https://mainnet.rpc.rarichain.org/http",
+    "https://rari.calderachain.xyz/http"
   ],
   "shortName": "rari",
   "slug": "rari",

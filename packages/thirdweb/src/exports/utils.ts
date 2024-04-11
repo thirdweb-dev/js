@@ -74,6 +74,7 @@ export {
   type ToHexParameters,
   type Uint8ArrayToHexOpts,
 } from "../utils/encoding/hex.js";
+export { concatHex } from "../utils/encoding/helpers/concat-hex.js";
 
 // bytes
 // to
@@ -132,7 +133,9 @@ export {
 // ------------------------------------------------
 export { encodeAbiParameters } from "../utils/abi/encodeAbiParameters.js";
 
+// Useful helpers
 export { setThirdwebDomains } from "../utils/domains.js";
+export { resolvePromisedValue } from "../utils/promise/resolve-promised-value.js";
 
 // ------------------------------------------------
 // json

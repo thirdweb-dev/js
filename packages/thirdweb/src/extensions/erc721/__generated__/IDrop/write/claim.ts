@@ -1,13 +1,18 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "claim" function.
  */
-
-export type ClaimParams = {
+export type ClaimParams = WithOverrides<{
   receiver: AbiParameterToPrimitiveType<{ type: "address"; name: "receiver" }>;
   quantity: AbiParameterToPrimitiveType<{ type: "uint256"; name: "quantity" }>;
   currency: AbiParameterToPrimitiveType<{ type: "address"; name: "currency" }>;
@@ -26,7 +31,7 @@ export type ClaimParams = {
     ];
   }>;
   data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "data" }>;
-};
+}>;
 
 export const FN_SELECTOR = "0x84bb1e42" as const;
 const FN_INPUTS = [
@@ -76,6 +81,25 @@ const FN_INPUTS = [
 const FN_OUTPUTS = [] as const;
 
 /**
+ * Checks if the `claim` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `claim` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isClaimSupported } from "thirdweb/extensions/erc721";
+ *
+ * const supported = await isClaimSupported(contract);
+ * ```
+ */
+export async function isClaimSupported(contract: ThirdwebContract<any>) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
  * Encodes the parameters for the "claim" function.
  * @param options - The options for the claim function.
  * @returns The encoded ABI parameters.
@@ -102,6 +126,31 @@ export function encodeClaimParams(options: ClaimParams) {
     options.allowlistProof,
     options.data,
   ]);
+}
+
+/**
+ * Encodes the "claim" function into a Hex string with its parameters.
+ * @param options - The options for the claim function.
+ * @returns The encoded hexadecimal string.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { encodeClaim } "thirdweb/extensions/erc721";
+ * const result = encodeClaim({
+ *  receiver: ...,
+ *  quantity: ...,
+ *  currency: ...,
+ *  pricePerToken: ...,
+ *  allowlistProof: ...,
+ *  data: ...,
+ * });
+ * ```
+ */
+export function encodeClaim(options: ClaimParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeClaimParams(options).slice(2)) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**
@@ -136,29 +185,24 @@ export function claim(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [
-              resolvedParams.receiver,
-              resolvedParams.quantity,
-              resolvedParams.currency,
-              resolvedParams.pricePerToken,
-              resolvedParams.allowlistProof,
-              resolvedParams.data,
-            ] as const;
-          }
-        : [
-            options.receiver,
-            options.quantity,
-            options.currency,
-            options.pricePerToken,
-            options.allowlistProof,
-            options.data,
-          ],
+    params: async () => {
+      const resolvedOptions = await asyncOptions();
+      return [
+        resolvedOptions.receiver,
+        resolvedOptions.quantity,
+        resolvedOptions.currency,
+        resolvedOptions.pricePerToken,
+        resolvedOptions.allowlistProof,
+        resolvedOptions.data,
+      ] as const;
+    },
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

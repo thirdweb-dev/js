@@ -195,6 +195,9 @@ const DialogContent = /* @__PURE__ */ StyledDiv(() => {
       backgroundColor: theme.colors.selectedTextBg,
       color: theme.colors.selectedTextColor,
     },
+    "& *": {
+      boxSizing: "border-box",
+    },
     ...noScrollBar,
   };
 });

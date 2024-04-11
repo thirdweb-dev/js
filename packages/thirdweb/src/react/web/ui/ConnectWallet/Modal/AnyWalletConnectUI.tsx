@@ -3,7 +3,7 @@ import type {
   InjectedSupportedWalletIds,
   WCSupportedWalletIds,
 } from "../../../../../wallets/__generated__/wallet-ids.js";
-import { getMIPDStore } from "../../../../../wallets/injected/mipdStore.js";
+import { getInstalledWalletProviders } from "../../../../../wallets/injected/mipdStore.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import { getInjectedWalletLocale } from "../../../wallets/injected/locale/getInjectedWalletLocale.js";
@@ -52,9 +52,9 @@ export function AnyWalletConnectUI(props: {
   }
 
   // if wallet can connect to injected wallet + wallet is injected
-  const isInstalled = getMIPDStore()
-    .getProviders()
-    .find((w) => w.info.rdns === walletInfo.data.rdns);
+  const isInstalled = getInstalledWalletProviders().find(
+    (w) => w.info.rdns === walletInfo.data.rdns,
+  );
 
   if (screen === "get-started") {
     return (

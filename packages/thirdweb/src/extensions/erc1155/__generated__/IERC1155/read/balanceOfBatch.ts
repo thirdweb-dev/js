@@ -4,6 +4,8 @@ import type { BaseTransactionOptions } from "../../../../../transaction/types.js
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "balanceOfBatch" function.
@@ -34,6 +36,27 @@ const FN_OUTPUTS = [
 ] as const;
 
 /**
+ * Checks if the `balanceOfBatch` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `balanceOfBatch` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isBalanceOfBatchSupported } from "thirdweb/extensions/erc1155";
+ *
+ * const supported = await isBalanceOfBatchSupported(contract);
+ * ```
+ */
+export async function isBalanceOfBatchSupported(
+  contract: ThirdwebContract<any>,
+) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
  * Encodes the parameters for the "balanceOfBatch" function.
  * @param options - The options for the balanceOfBatch function.
  * @returns The encoded ABI parameters.
@@ -49,6 +72,29 @@ const FN_OUTPUTS = [
  */
 export function encodeBalanceOfBatchParams(options: BalanceOfBatchParams) {
   return encodeAbiParameters(FN_INPUTS, [options.owners, options.tokenIds]);
+}
+
+/**
+ * Encodes the "balanceOfBatch" function into a Hex string with its parameters.
+ * @param options - The options for the balanceOfBatch function.
+ * @returns The encoded hexadecimal string.
+ * @extension ERC1155
+ * @example
+ * ```ts
+ * import { encodeBalanceOfBatch } "thirdweb/extensions/erc1155";
+ * const result = encodeBalanceOfBatch({
+ *  owners: ...,
+ *  tokenIds: ...,
+ * });
+ * ```
+ */
+export function encodeBalanceOfBatch(options: BalanceOfBatchParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeBalanceOfBatchParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**

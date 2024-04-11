@@ -28,5 +28,6 @@ export default {
   "shortName": "BobaoperaTestnet",
   "slip44": 1,
   "slug": "bobaopera-testnet",
+  "status": "deprecated",
   "testnet": true
 } as const satisfies Chain;

@@ -245,3 +245,22 @@ export * from "./schema/tokens/pack";
 export type { DirectListingInputParams } from "./schema/marketplacev3/direct-listings";
 export type { EnglishAuctionInputParams } from "./schema/marketplacev3/english-auctions";
 //#endregion @r/legacy_packages/sdk/src/evm/schema
+
+//#region @r/legacy_packages/sdk/src/evm/pay
+export {
+  type BuyWithCryptoHistoryData,
+  type BuyWithCryptoHistoryParams,
+  getBuyWithCryptoHistory,
+} from "./pay/buyWithCrypto/actions/getHistory";
+export {
+  type BuyWithCryptoQuote,
+  type GetBuyWithCryptoQuoteParams,
+  type QuoteTokenInfo,
+  getBuyWithCryptoQuote,
+} from "./pay/buyWithCrypto/actions/getQuote";
+export {
+  type BuyWithCryptoStatus,
+  type BuyWithCryptoTransaction,
+  getBuyWithCryptoStatus,
+} from "./pay/buyWithCrypto/actions/getStatus";
+//#endregion @r/legacy_packages/sdk/src/evm/pay
