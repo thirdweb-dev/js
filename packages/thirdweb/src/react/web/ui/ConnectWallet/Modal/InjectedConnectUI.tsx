@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { InjectedSupportedWalletIds } from "../../../../../wallets/__generated__/wallet-ids.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import type { WalletInfo } from "../../../../../wallets/wallet-info.js";
-import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
+import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import { wait } from "../../../../core/utils/wait.js";
 import type { InjectedWalletLocale } from "../../../wallets/injected/locale/types.js";
 import { ConnectingScreen } from "../../../wallets/shared/ConnectingScreen.js";
@@ -19,7 +19,7 @@ export const InjectedConnectUI = (props: {
   done: () => void;
 }) => {
   const { wallet, done } = props;
-  const { client, chain } = useWalletConnectionCtx();
+  const { client, chain } = useConnectUI();
   const [errorConnecting, setErrorConnecting] = useState(false);
   const locale = props.locale;
 

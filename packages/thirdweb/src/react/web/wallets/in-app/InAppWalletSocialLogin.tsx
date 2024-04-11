@@ -1,8 +1,7 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { InAppWalletSocialAuth } from "../../../../wallets/in-app/core/wallet/index.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
-import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
-import { ModalConfigCtx } from "../../providers/wallet-ui-states-provider.js";
+import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { Spacer } from "../../ui/components/Spacer.js";
 import { Spinner } from "../../ui/components/Spinner.js";
 import { Container, ModalHeader } from "../../ui/components/basic.js";
@@ -27,13 +26,13 @@ export function InAppWalletSocialLogin(props: {
   const ewLocale = props.locale;
   const locale = ewLocale.socialLoginScreen;
   const themeObj = useCustomTheme();
-  const { modalSize } = useContext(ModalConfigCtx);
+  const { connectModal } = useConnectUI();
   const [authError, setAuthError] = useState<string | undefined>(undefined);
   const { done, wallet } = props;
   const [status, setStatus] = useState<"connecting" | "connected" | "error">(
     "connecting",
   );
-  const { client, chain } = useWalletConnectionCtx();
+  const { client, chain } = useConnectUI();
 
   const handleSocialLogin = async () => {
     try {
@@ -104,7 +103,7 @@ export function InAppWalletSocialLogin(props: {
       >
         <ModalHeader title={locale.title} onBack={props.goBack} />
 
-        {modalSize === "compact" ? <Spacer y="xl" /> : null}
+        {connectModal.size === "compact" ? <Spacer y="xl" /> : null}
 
         <Container
           flex="column"

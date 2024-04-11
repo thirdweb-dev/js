@@ -1,14 +1,14 @@
 import { useContext } from "react";
-import { WalletConnectionContext } from "../../providers/wallet-connection.js";
+import { ConnectUIContext } from "../../providers/wallet-connection.js";
 
 /**
  * @internal
  */
-export function useWalletConnectionCtx() {
-  const val = useContext(WalletConnectionContext);
+export function useConnectUI() {
+  const val = useContext(ConnectUIContext);
   if (!val) {
     throw new Error(
-      "useWalletConnectionCtx must be used within a <ConnectWallet /> or <AutoConnect /> component.",
+      "useConnectUI must be used within a <ConnectButton /> or <ConnectEmbed />",
     );
   }
   return val;

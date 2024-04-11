@@ -1,6 +1,5 @@
-import { useContext } from "react";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
-import { ModalConfigCtx } from "../../providers/wallet-ui-states-provider.js";
+import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { QRCode } from "../../ui/components/QRCode.js";
 import { Spacer } from "../../ui/components/Spacer.js";
 import { WalletImage } from "../../ui/components/WalletImage.js";
@@ -25,7 +24,7 @@ export const ScanScreen: React.FC<{
   qrScanInstruction: string;
   getStartedLink: string;
 }> = (props) => {
-  const modalConfig = useContext(ModalConfigCtx);
+  const { connectModal } = useConnectUI();
   return (
     <Container fullHeight flex="column" animate="fadein">
       <Container p="lg">
@@ -65,7 +64,7 @@ export const ScanScreen: React.FC<{
       {props.onGetStarted && (
         <ScreenBottomContainer
           style={{
-            border: modalConfig.modalSize === "compact" ? undefined : "none",
+            border: connectModal.size === "compact" ? undefined : "none",
           }}
         >
           <Button

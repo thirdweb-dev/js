@@ -1,4 +1,4 @@
-import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
+import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import { Container } from "../../components/basic.js";
 import { Link } from "../../components/text.js";
 import { Text } from "../../components/text.js";
@@ -11,7 +11,7 @@ export function TOS(props: {
   privacyPolicyUrl?: string;
 }) {
   const { termsOfServiceUrl, privacyPolicyUrl } = props;
-  const locale = useWalletConnectionCtx().connectLocale.agreement;
+  const locale = useConnectUI().connectLocale.agreement;
 
   if (!termsOfServiceUrl && !privacyPolicyUrl) {
     return null;
