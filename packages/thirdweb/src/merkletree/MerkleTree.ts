@@ -5,6 +5,7 @@ import { hexToBytes } from "../utils/encoding/to-bytes.js";
 import { keccak256 } from "../utils/hashing/keccak256.js";
 import {
   areUint8ArraysEqual,
+  compareUint8Arrays,
   concatUint8Arrays,
 } from "../utils/uint8-array.js";
 
@@ -71,7 +72,7 @@ export class MerkleTree {
         const right = i + 1 === nodes.length ? left : nodes[i + 1]!;
         const combined = [left, right];
 
-        combined.sort();
+        combined.sort(compareUint8Arrays);
 
         const hash = keccak256(concatUint8Arrays(combined), "bytes");
 

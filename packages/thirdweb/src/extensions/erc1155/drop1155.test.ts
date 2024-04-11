@@ -179,8 +179,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
               {
                 allowlist: [
                   { address: TEST_ACCOUNT_A.address, maxClaimable: "1" },
-                  // TODO adding another address here causes the test to fail
-                  // { address: VITALIK_WALLET, maxClaimable: "3" },
+                  { address: VITALIK_WALLET, maxClaimable: "3" },
                 ],
                 maxClaimablePerWallet: 0n,
               },
