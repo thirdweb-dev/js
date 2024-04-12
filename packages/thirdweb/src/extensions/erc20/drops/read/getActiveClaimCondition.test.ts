@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { NFT_DROP_CONTRACT } from "../../../../../test/src/test-contracts.js";
 import { getActiveClaimCondition } from "./getActiveClaimCondition.js";
 
-describe.runIf(process.env.TW_SECRET_KEY)("erc721.getClaimConditions", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("erc20.getClaimConditions", () => {
   it("should return the correct claim conditions", async () => {
     const cc = await getActiveClaimCondition({
       contract: NFT_DROP_CONTRACT,

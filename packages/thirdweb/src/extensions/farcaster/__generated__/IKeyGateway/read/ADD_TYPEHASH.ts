@@ -18,7 +18,7 @@ const FN_OUTPUTS = [
  * Checks if the `ADD_TYPEHASH` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `ADD_TYPEHASH` method is supported.
- * @extension ERC721
+ * @extension FARCASTER
  * @example
  * ```ts
  * import { isADD_TYPEHASHSupported } from "thirdweb/extensions/farcaster";

@@ -32,7 +32,7 @@ const FN_OUTPUTS = [
  * Checks if the `count` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `count` method is supported.
- * @extension ERC721
+ * @extension THIRDWEB
  * @example
  * ```ts
  * import { isCountSupported } from "thirdweb/extensions/thirdweb";

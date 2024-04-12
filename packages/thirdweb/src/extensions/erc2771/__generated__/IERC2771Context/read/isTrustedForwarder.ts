@@ -34,7 +34,7 @@ const FN_OUTPUTS = [
  * Checks if the `isTrustedForwarder` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `isTrustedForwarder` method is supported.
- * @extension ERC721
+ * @extension ERC2771
  * @example
  * ```ts
  * import { isIsTrustedForwarderSupported } from "thirdweb/extensions/erc2771";

@@ -34,7 +34,7 @@ const FN_OUTPUTS = [
  * Checks if the `multicall` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `multicall` method is supported.
- * @extension ERC721
+ * @extension COMMON
  * @example
  * ```ts
  * import { isMulticallSupported } from "thirdweb/extensions/common";
