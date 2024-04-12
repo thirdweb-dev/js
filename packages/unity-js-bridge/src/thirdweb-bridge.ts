@@ -16,8 +16,8 @@ import {
 } from "@thirdweb-dev/sdk";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
-  InAppWallet,
   type DAppMetaData,
+  InAppWallet,
   type InAppWalletOauthStrategy,
   type SmartWalletConfig,
 } from "@thirdweb-dev/wallets";
@@ -730,9 +730,7 @@ class ThirdwebBridge implements TWBridge {
   }
 
   public async exportWallet(password: string): Promise<string> {
-    const localWallet = this.walletMap.get(
-      "localWallet",
-    ) as LocalWallet;
+    const localWallet = this.walletMap.get("localWallet") as LocalWallet;
     return await localWallet.export({
       strategy: "encryptedJson",
       password: password,
@@ -756,9 +754,7 @@ class ThirdwebBridge implements TWBridge {
   }
 
   public async initializeLocalWallet(password: string): Promise<LocalWallet> {
-    const localWallet = this.walletMap.get(
-      "localWallet",
-    ) as LocalWallet;
+    const localWallet = this.walletMap.get("localWallet") as LocalWallet;
     try {
       await localWallet.loadOrCreate({
         strategy: "encryptedJson",
@@ -874,9 +870,7 @@ class ThirdwebBridge implements TWBridge {
     if (!this.activeWallet) {
       throw new Error("No wallet connected");
     }
-    const embeddedWallet = this.walletMap.get(
-      "inAppWallet",
-    ) as InAppWallet;
+    const embeddedWallet = this.walletMap.get("inAppWallet") as InAppWallet;
     const email = await embeddedWallet.getEmail();
     return JSON.stringify({ result: email });
   }
