@@ -36,7 +36,7 @@ import { useDebouncedValue } from "../hooks/useDebouncedValue.js";
 import { useShowMore } from "../hooks/useShowMore.js";
 import type { ConnectLocale } from "./locale/types.js";
 
-// Note: Must not use useConnectUI here
+// Note: Must not use useConnectUI here, because this component is also used outside of Connect UI context
 
 type NetworkSelectorChainProps = {
   /**

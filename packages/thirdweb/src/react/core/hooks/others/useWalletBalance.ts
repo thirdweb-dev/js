@@ -4,7 +4,7 @@ import {
   getWalletBalance,
 } from "../../../../wallets/utils/getWalletBalance.js";
 
-// NOTE: Do not use useConnectUI here
+// NOTE: Do not use useConnectUI here - because this hook is also used outside of Connect UI context
 
 /**
  * Custom hook to fetch the balance of a wallet for a specific token.

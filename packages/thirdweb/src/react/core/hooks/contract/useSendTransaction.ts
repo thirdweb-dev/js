@@ -1,8 +1,22 @@
 import { type UseMutationResult, useMutation } from "@tanstack/react-query";
+import { estimateGasCost } from "../../../../exports/transaction.js";
+import { resolvePromisedValue } from "../../../../exports/utils.js";
+import { getWalletBalance } from "../../../../exports/wallets.js";
 import { sendTransaction } from "../../../../transaction/actions/send-transaction.js";
 import type { WaitForReceiptOptions } from "../../../../transaction/actions/wait-for-tx-receipt.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
+import { toEther } from "../../../../utils/units.js";
+import type { GetWalletBalanceResult } from "../../../../wallets/utils/getWalletBalance.js";
+import { fetchSwapSupportedChains } from "../../../web/ui/ConnectWallet/screens/Buy/swap/useSwapSupportedChains.js";
 import { useActiveAccount } from "../wallets/wallet-hooks.js";
+
+type ShowModalData = {
+  tx: PreparedTransaction;
+  sendTx: () => void;
+  rejectTx: () => void;
+  totalCostWei: bigint;
+  walletBalance: GetWalletBalanceResult;
+};
 
 /**
  * A hook to send a transaction.
@@ -17,21 +31,101 @@ import { useActiveAccount } from "../wallets/wallet-hooks.js";
  * ```
  * @internal
  */
-export function useSendTransactionCore(): UseMutationResult<
-  WaitForReceiptOptions,
-  Error,
-  PreparedTransaction
-> {
+export function useSendTransactionCore(
+  showBuyModal?: (data: ShowModalData) => void,
+): UseMutationResult<WaitForReceiptOptions, Error, PreparedTransaction> {
   const account = useActiveAccount();
 
   return useMutation({
-    mutationFn: async (transaction) => {
+    mutationFn: async (tx) => {
       if (!account) {
         throw new Error("No active account");
       }
-      return await sendTransaction({
-        transaction,
-        account,
+
+      if (!showBuyModal) {
+        return sendTransaction({
+          transaction: tx,
+          account,
+        });
+      }
+
+      return new Promise<WaitForReceiptOptions>((resolve, reject) => {
+        const sendTx = async () => {
+          try {
+            const res = await sendTransaction({
+              transaction: tx,
+              account,
+            });
+
+            resolve(res);
+          } catch (e) {
+            reject(e);
+          }
+        };
+
+        (async () => {
+          try {
+            const swapSupportedChains = await fetchSwapSupportedChains(
+              tx.client,
+            );
+
+            const isBuySupported = swapSupportedChains.find(
+              (c) => c.id === tx.chain.id,
+            );
+
+            // buy not supported, can't show modal - send tx directly
+            if (!isBuySupported) {
+              sendTx();
+              return;
+            }
+
+            //  buy supported, check if there is enouch balance - if not show modal to buy tokens
+
+            const [walletBalance, gasCost] = await Promise.all([
+              getWalletBalance({
+                address: account.address,
+                chain: tx.chain,
+                client: tx.client,
+              }),
+              estimateGasCost({
+                transaction: tx,
+              }),
+            ]);
+
+            // Note: get tx.value AFTER estimateGasCost
+            const txValue = await resolvePromisedValue(tx.value);
+
+            const totalCostWei = gasCost.wei + (txValue || 0n);
+            const walletBalanceWei = walletBalance.value;
+
+            // TODO: remove after testing
+            console.debug({
+              txCost: toEther(totalCostWei),
+              balance: walletBalanceWei,
+            });
+
+            // if enough balance, send tx
+            if (totalCostWei < walletBalanceWei) {
+              sendTx();
+              return;
+            }
+
+            // if not enough balance - show modal
+            showBuyModal({
+              tx,
+              sendTx,
+              rejectTx: () => {
+                reject(new Error("Not enough balance"));
+              },
+              totalCostWei,
+              walletBalance,
+            });
+          } catch (e) {
+            console.error("Failed to estimate cost", e);
+            // send it anyway?
+            sendTx();
+          }
+        })();
       });
     },
   });

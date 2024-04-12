@@ -677,15 +677,15 @@ function BuyForTxUI(props: {
           }}
         >
           <Container flex="row" gap="xs">
+            <Text color="primaryText" size="sm">
+              {props.buyAmount} {props.buyForTx.tokenSymbol}
+            </Text>
             <TokenIcon
               chain={props.buyForTx.tx.chain}
               client={props.client}
               size="sm"
               token={NATIVE_TOKEN}
             />
-            <Text color="primaryText" size="sm">
-              {props.buyAmount} {props.buyForTx.tokenSymbol}
-            </Text>
           </Container>
           <Spacer y="xxs" />
           {chainQuery.data ? (
@@ -708,16 +708,16 @@ function BuyForTxUI(props: {
       >
         <Text size="sm">Your Balance</Text>
         <Container flex="row" gap="xs">
+          <Text color="primaryText" size="sm">
+            {formatNumber(Number(toEther(props.buyForTx.balance)), 4)}{" "}
+            {props.buyForTx.tokenSymbol}
+          </Text>
           <TokenIcon
             chain={props.buyForTx.tx.chain}
             client={props.client}
             size="sm"
             token={NATIVE_TOKEN}
           />
-          <Text color="primaryText" size="sm">
-            {formatNumber(Number(toEther(props.buyForTx.balance)), 4)}{" "}
-            {props.buyForTx.tokenSymbol}
-          </Text>
         </Container>
       </Container>
 
