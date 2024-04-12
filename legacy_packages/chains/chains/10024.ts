@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmPtiJGaApbW3ATZhPW3pKJpw3iGVrRGsZLWhrDKF9ZK18",
-    "width": 1024,
-    "height": 1024,
-    "format": "png"
-  },
   "name": "Gon Chain",
   "nativeCurrency": {
     "name": "Gon Token",
