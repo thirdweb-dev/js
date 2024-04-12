@@ -1387,6 +1387,46 @@ importers:
         specifier: 5.4.4
         version: 5.4.4
 
+  legacy_packages/unity-js-bridge:
+    dependencies:
+      '@thirdweb-dev/auth':
+        specifier: workspace:*
+        version: link:../auth
+      '@thirdweb-dev/chains':
+        specifier: workspace:*
+        version: link:../chains
+      '@thirdweb-dev/pay':
+        specifier: workspace:*
+        version: link:../pay
+      '@thirdweb-dev/sdk':
+        specifier: workspace:*
+        version: link:../sdk
+      '@thirdweb-dev/storage':
+        specifier: workspace:*
+        version: link:../storage
+      '@thirdweb-dev/wallets':
+        specifier: workspace:*
+        version: link:../wallets
+      detect-browser:
+        specifier: ^5.3.0
+        version: 5.3.0
+      ethers:
+        specifier: ^5.7.2
+        version: 5.7.2
+    devDependencies:
+      '@thirdweb-dev/tsconfig':
+        specifier: workspace:*
+        version: link:../../packages/tw-tsconfig
+      esbuild:
+        specifier: 0.20.2
+        version: 0.20.2
+      node-stdlib-browser:
+        specifier: ^1.2.0
+        version: 1.2.0
+      typescript:
+        specifier: 5.4.4
+        version: 5.4.4
+
   legacy_packages/wallets:
     dependencies:
       '@account-abstraction/contracts':
@@ -1667,46 +1707,6 @@ importers:
       tsup:
         specifier: 8.0.2
         version: 8.0.2(typescript@5.4.5)
-
-  packages/unity-js-bridge:
-    dependencies:
-      '@thirdweb-dev/auth':
-        specifier: workspace:*
-        version: link:../../legacy_packages/auth
-      '@thirdweb-dev/chains':
-        specifier: workspace:*
-        version: link:../../legacy_packages/chains
-      '@thirdweb-dev/pay':
-        specifier: workspace:*
-        version: link:../../legacy_packages/pay
-      '@thirdweb-dev/sdk':
-        specifier: workspace:*
-        version: link:../../legacy_packages/sdk
-      '@thirdweb-dev/storage':
-        specifier: workspace:*
-        version: link:../../legacy_packages/storage
-      '@thirdweb-dev/wallets':
-        specifier: workspace:*
-        version: link:../../legacy_packages/wallets
-      detect-browser:
-        specifier: ^5.3.0
-        version: 5.3.0
-      ethers:
-        specifier: ^5.7.2
-        version: 5.7.2
-    devDependencies:
-      '@thirdweb-dev/tsconfig':
-        specifier: workspace:*
-        version: link:../tw-tsconfig
-      esbuild:
-        specifier: 0.20.2
-        version: 0.20.2
-      node-stdlib-browser:
-        specifier: ^1.2.0
-        version: 1.2.0
-      typescript:
-        specifier: 5.4.4
-        version: 5.4.4
 
 packages:
 
