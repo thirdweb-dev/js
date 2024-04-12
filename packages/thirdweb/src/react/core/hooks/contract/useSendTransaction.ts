@@ -81,21 +81,15 @@ export function useSendTransactionCore(
 
             //  buy supported, check if there is enouch balance - if not show modal to buy tokens
 
-            const [walletBalance, gasCost] = await Promise.all([
+            const [walletBalance, totalCostWei] = await Promise.all([
               getWalletBalance({
                 address: account.address,
                 chain: tx.chain,
                 client: tx.client,
               }),
-              estimateGasCost({
-                transaction: tx,
-              }),
+              getTotalTxCostForBuy(tx),
             ]);
 
-            // Note: get tx.value AFTER estimateGasCost
-            const txValue = await resolvePromisedValue(tx.value);
-
-            const totalCostWei = gasCost.wei + (txValue || 0n);
             const walletBalanceWei = walletBalance.value;
 
             // TODO: remove after testing
@@ -129,4 +123,18 @@ export function useSendTransactionCore(
       });
     },
   });
+}
+
+export async function getTotalTxCostForBuy(tx: PreparedTransaction) {
+  const gasCost = await estimateGasCost({
+    transaction: tx,
+  });
+
+  const bufferCost = gasCost.wei / 10n;
+
+  // Note: get tx.value AFTER estimateGasCost
+  const txValue = await resolvePromisedValue(tx.value);
+
+  // add 10% extra gas cost to the estimate to ensure user buys enough to cover the tx cost
+  return gasCost.wei + bufferCost + (txValue || 0n);
 }

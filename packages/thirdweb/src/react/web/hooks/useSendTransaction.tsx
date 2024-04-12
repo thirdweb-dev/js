@@ -41,8 +41,7 @@ type SendTransactionConfig = {
  */
 export function useSendTransaction(config?: SendTransactionConfig) {
   const setRootEl = useContext(SetRootElementContext);
-
-  const sendTxCore = useSendTransactionCore((data) => {
+  return useSendTransactionCore((data) => {
     setRootEl(
       <TxModal
         tx={data.tx}
@@ -61,8 +60,6 @@ export function useSendTransaction(config?: SendTransactionConfig) {
       />,
     );
   });
-
-  return sendTxCore;
 }
 
 type ModalProps = {

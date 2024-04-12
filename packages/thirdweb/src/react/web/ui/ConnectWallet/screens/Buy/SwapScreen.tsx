@@ -1,5 +1,5 @@
 import { ClockIcon, CrossCircledIcon } from "@radix-ui/react-icons";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { polygon } from "../../../../../../chains/chain-definitions/polygon.js";
 import type { Chain } from "../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../client/client.js";
@@ -12,6 +12,7 @@ import type {
   Account,
   Wallet,
 } from "../../../../../../wallets/interfaces/wallet.js";
+import { getTotalTxCostForBuy } from "../../../../../core/hooks/contract/useSendTransaction.js";
 import {
   useChainQuery,
   useChainsQuery,
@@ -156,20 +157,51 @@ export function BuyScreenContent(props: {
     });
   };
 
-  const defaultBuyAmount = props.buyForTx
-    ? String(
-        formatNumber(
-          Number(toEther(props.buyForTx.cost - props.buyForTx.balance)),
-          4,
-        ),
+  const initialAmountNeeded = props.buyForTx
+    ? formatNumber(
+        Number(toEther(props.buyForTx.cost - props.buyForTx.balance)),
+        4,
       )
-    : "";
+    : 0;
 
   // token amount
-  const [tokenAmount, setTokenAmount] = useState<string>(defaultBuyAmount);
-  const [hasEditedAmount, setHasEditedAmount] = useState(
-    props.buyForTx ? true : false,
+  const [tokenAmount, setTokenAmount] = useState<string>(
+    initialAmountNeeded === 0 ? "" : String(initialAmountNeeded),
   );
+
+  // once the user edits the tokenInput or confirms the Buy - stop updating the token amount
+  const [stopUpdatingTokenAmount, setStopUpdatingTokenAmount] = useState(
+    props.buyForTx ? false : true,
+  );
+
+  const [amountNeeded, setAmountNeeded] = useState<bigint | undefined>(
+    undefined,
+  );
+
+  // update amount needed every 30 seconds
+  // also update the token amount if allowed
+  // ( Can't use useQuery because tx can't be added to queryKey )
+  useEffect(() => {
+    const buyTx = props.buyForTx;
+    if (!buyTx) {
+      return;
+    }
+    const id = setInterval(() => {
+      getTotalTxCostForBuy(buyTx.tx).then((totalCost) => {
+        setAmountNeeded(totalCost);
+        if (!stopUpdatingTokenAmount && totalCost > buyTx.balance) {
+          const _tokenAmount = String(
+            formatNumber(Number(toEther(totalCost - buyTx.balance)), 4),
+          );
+          setTokenAmount(_tokenAmount);
+        }
+      });
+    }, 30000);
+    return () => clearInterval(id);
+  }, [props.buyForTx, stopUpdatingTokenAmount]);
+
+  const [hasEditedAmount, setHasEditedAmount] = useState(false);
+  const isMiniScreen = props.buyForTx ? false : !hasEditedAmount;
 
   const isChainSupported = useMemo(
     () => supportedChains?.find((c) => c.id === activeChain.id),
@@ -316,6 +348,7 @@ export function BuyScreenContent(props: {
         onBack={() => {
           // remove finalized quote when going back
           setFinalizedQuote(undefined);
+          setStopUpdatingTokenAmount(true);
           setScreen("main");
         }}
         buyWithCryptoQuote={quoteToConfirm}
@@ -412,11 +445,15 @@ export function BuyScreenContent(props: {
             onBack={props.onBack}
           />
           <Spacer y="lg" />
-          {!hasEditedAmount && <Spacer y="xl" />}
+          {isMiniScreen && <Spacer y="xl" />}
 
           {props.buyForTx && (
             <BuyForTxUI
-              buyAmount={defaultBuyAmount}
+              amountNeeded={String(
+                amountNeeded
+                  ? formatNumber(Number(toEther(amountNeeded)), 4)
+                  : initialAmountNeeded,
+              )}
               buyForTx={props.buyForTx}
               client={client}
             />
@@ -427,6 +464,7 @@ export function BuyScreenContent(props: {
             value={tokenAmount}
             onChange={async (value) => {
               setHasEditedAmount(true);
+              setStopUpdatingTokenAmount(true);
               setTokenAmount(value);
             }}
             token={toToken}
@@ -439,7 +477,7 @@ export function BuyScreenContent(props: {
 
         <Spacer y="md" />
         <Container px="lg">
-          {hasEditedAmount && (
+          {!isMiniScreen && (
             <div>
               <PaymentSelection />
               <Spacer y="md" />
@@ -496,7 +534,12 @@ export function BuyScreenContent(props: {
               <Container flex="column" gap="md">
                 {method === "crypto" && isSwapQuoteError && (
                   <div>
-                    <Container flex="row" gap="xs" center="both" color="danger">
+                    <Container
+                      flex="row"
+                      gap="xxs"
+                      center="both"
+                      color="danger"
+                    >
                       <CrossCircledIcon
                         width={iconSize.sm}
                         height={iconSize.sm}
@@ -518,8 +561,8 @@ export function BuyScreenContent(props: {
                 <Button
                   fullWidth
                   variant="accent"
-                  disabled={!hasEditedAmount}
-                  data-disabled={!hasEditedAmount}
+                  disabled={isMiniScreen}
+                  data-disabled={isMiniScreen}
                   gap="sm"
                   onClick={async () => {
                     setIsSwitching(true);
@@ -529,7 +572,7 @@ export function BuyScreenContent(props: {
                     setIsSwitching(false);
                   }}
                 >
-                  {hasEditedAmount ? (
+                  {!isMiniScreen ? (
                     <>
                       {isSwitching && (
                         <Spinner size="sm" color="accentButtonText" />
@@ -654,7 +697,7 @@ function SecondaryInfo(props: {
 }
 
 function BuyForTxUI(props: {
-  buyAmount: string;
+  amountNeeded: string;
   buyForTx: BuyForTx;
   client: ThirdwebClient;
 }) {
@@ -676,9 +719,9 @@ function BuyForTxUI(props: {
             alignItems: "flex-end",
           }}
         >
-          <Container flex="row" gap="xs">
+          <Container flex="row" gap="xs" center="y">
             <Text color="primaryText" size="sm">
-              {props.buyAmount} {props.buyForTx.tokenSymbol}
+              {props.amountNeeded} {props.buyForTx.tokenSymbol}
             </Text>
             <TokenIcon
               chain={props.buyForTx.tx.chain}
