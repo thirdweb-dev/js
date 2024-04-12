@@ -74,7 +74,7 @@ const SolutionsChains: ThirdwebNextPage = () => {
         >
           <LandingCardWithImage
             title="Connect"
-            description="The complete web3 wallet toolkit — with Connect Wallet UI components, embedded wallets, auth, and account abstraction out of the box.​"
+            description="The complete web3 wallet toolkit — with Connect Wallet UI components, in-app wallets, auth, and account abstraction out of the box.​"
             image={require("../../../public/assets/landingpage/account-abstraction-desktop.png")}
             mobileImage={require("../../../public/assets/landingpage/account-abstraction-mobile.png")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}

@@ -96,11 +96,11 @@ export const PRODUCTS: SectionItemProps[] = [
     inLandingPage: true,
   },
   {
-    name: "Embedded Wallets",
+    name: "In-App Wallets",
     label: "embedded-wallets",
     description: "Email & social login wallets for your customers",
     link: "/embedded-wallets",
-    dashboardLink: "/dashboard/connect/embedded-wallets",
+    dashboardLink: "/dashboard/connect/in-app-wallets",
     icon: require("../../../../../public/assets/product-icons/embedded-wallet.png"),
     section: "connect",
     inLandingPage: true,

@@ -16,17 +16,17 @@ const TRACKING_CATEGORY = "embedded-wallets-landing";
 
 const GUIDES = [
   {
-    title: "Docs: Embedded Wallets Overview",
+    title: "Docs: In-App Wallets Overview",
     image: require("/public/assets/product-pages/embedded-wallets/embedded-wallet.png"),
-    link: "https://portal.thirdweb.com/wallets/embedded-wallet/overview",
+    link: "https://portal.thirdweb.com/connect/in-app-wallet/overview",
   },
   {
-    title: "Live Demo: Embedded Wallets",
+    title: "Live Demo: In-App Wallets",
     image: require("/public/assets/product-pages/embedded-wallets/paper.png"),
     link: "https://catattack.thirdweb.com",
   },
   {
-    title: "Quick-Start Template: Embedded Wallet + Account Abstraction",
+    title: "Quick-Start Template: In-App Wallet + Account Abstraction",
     image: require("/public/assets/product-pages/smart-wallet/get-started.png"),
     link: "https://github.com/thirdweb-example/embedded-smart-wallet",
   },
@@ -37,7 +37,7 @@ const EmbeddedWalletsLanding: ThirdwebNextPage = () => {
     <LandingLayout
       bgColor="#0F0F0F"
       seo={{
-        title: "Embedded Wallets: Onboard Everyone to your App",
+        title: "In-App Wallets: Onboard Everyone to your App",
         description:
           "Onboard anyone with an email or Google account—with 1-click login flows, flexible auth options, & secure account recovery. Learn more.",
         openGraph: {
@@ -46,7 +46,7 @@ const EmbeddedWalletsLanding: ThirdwebNextPage = () => {
               url: `${getAbsoluteUrl()}/assets/og-image/embedded-wallets.png`,
               width: 1200,
               height: 630,
-              alt: "Embedded Wallets: Onboard Everyone to your App",
+              alt: "In-App Wallets: Onboard Everyone to your App",
             },
           ],
         },
@@ -59,12 +59,12 @@ const EmbeddedWalletsLanding: ThirdwebNextPage = () => {
         gap={{ base: "80px", md: "240px" }}
       >
         <LandingHeroWithSideImage
-          miniTitle="Embedded Wallets"
+          miniTitle="In-App Wallets"
           title="The power of web3, "
           titleWithGradient="with web2 UX"
           subtitle="Onboard anyone with an email or Google account — with 1-click login flows, flexible auth options, and secure account recovery. Free up to 10k users."
           trackingCategory={TRACKING_CATEGORY}
-          ctaLink="https://portal.thirdweb.com/wallets/embedded-wallet/overview"
+          ctaLink="https://portal.thirdweb.com/connect/in-app-wallet/overview"
           contactUsTitle="Book Demo"
           gradient="linear(to-r, #4490FF, #4490FF)"
           image={require("../../public/assets/product-pages/hero/desktop-hero-embedded-wallets.png")}
@@ -96,7 +96,7 @@ const EmbeddedWalletsLanding: ThirdwebNextPage = () => {
             {
               title: "Integrate with your own custom auth",
               description:
-                "Spin up embedded wallets for your users with your app or game's existing auth system.",
+                "Spin up in-app wallets for your users with your app or game's existing auth system.",
               Component: (
                 <ChakraNextImage
                   src={require("/public/assets/product-pages/embedded-wallets/auth.png")}
@@ -136,7 +136,7 @@ const EmbeddedWalletsLanding: ThirdwebNextPage = () => {
             image={require("../../public/assets/landingpage/desktop/onboard.png")}
             mobileImage={require("../../public/assets/landingpage/mobile/onboard.png")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}
-            href="https://portal.thirdweb.com/wallets/embedded-wallet/overview"
+            href="https://portal.thirdweb.com/connect/in-app-wallet/overview"
             direction="horizontal"
           />
 
@@ -146,7 +146,7 @@ const EmbeddedWalletsLanding: ThirdwebNextPage = () => {
             image={require("../../public/assets/landingpage/desktop/cross-platform.png")}
             mobileImage={require("../../public/assets/landingpage/mobile/cross-platform.png")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}
-            href="https://portal.thirdweb.com/wallets/embedded-wallet/overview"
+            href="https://portal.thirdweb.com/connect/in-app-wallet/overview"
           />
 
           <LandingCardWithImage
@@ -155,7 +155,7 @@ const EmbeddedWalletsLanding: ThirdwebNextPage = () => {
             image={require("../../public/assets/landingpage/desktop/enterprise-security.png")}
             mobileImage={require("../../public/assets/landingpage/mobile/enterprise-security.png")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}
-            href="https://portal.thirdweb.com/wallets/embedded-wallet/how-it-works"
+            href="https://portal.thirdweb.com/connect/in-app-wallet/how-it-works"
             colSpan={1}
           />
 
@@ -165,7 +165,7 @@ const EmbeddedWalletsLanding: ThirdwebNextPage = () => {
             image={require("../../public/assets/landingpage/desktop/magic.png")}
             mobileImage={require("../../public/assets/landingpage/mobile/magic.png")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}
-            href="https://portal.thirdweb.com/wallets/embedded-wallet/how-to/enable-gasless"
+            href="https://portal.thirdweb.com/connect/in-app-wallet/how-to/enable-gasless"
           />
 
           <LandingCardWithImage
@@ -180,11 +180,11 @@ const EmbeddedWalletsLanding: ThirdwebNextPage = () => {
 
           <LandingCardWithImage
             title="Bring your own auth"
-            description="Integrate your authentication system and spin up embedded wallets for your users — new and existing."
+            description="Integrate your authentication system and spin up in-app wallets for your users — new and existing."
             image={require("../../public/assets/landingpage/desktop/auth.png")}
             mobileImage={require("../../public/assets/landingpage/mobile/auth.png")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}
-            href="https://portal.thirdweb.com/wallets/embedded-wallet/custom-auth/configuration"
+            href="https://portal.thirdweb.com/connect/in-app-wallet/custom-auth/configuration"
           />
 
           <LandingCardWithImage
@@ -193,17 +193,17 @@ const EmbeddedWalletsLanding: ThirdwebNextPage = () => {
             image={require("../../public/assets/landingpage/desktop/wallet.png")}
             mobileImage={require("../../public/assets/landingpage/mobile/wallet.png")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}
-            href="https://portal.thirdweb.com/wallets/embedded-wallet/how-to/connect-users"
+            href="https://portal.thirdweb.com/connect/in-app-wallet/how-to/connect-users"
             direction="horizontal"
           />
 
           <LandingCardWithImage
             title="Powerful hooks"
-            description="Flexible hooks, functions, and low-level tools for fully custom Embedded Wallet experiences."
+            description="Flexible hooks, functions, and low-level tools for fully custom In-App Wallet experiences."
             image={require("../../public/assets/landingpage/desktop/powerful.png")}
             mobileImage={require("../../public/assets/landingpage/mobile/powerful.png")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}
-            href="https://portal.thirdweb.com/wallets/embedded-wallet/how-to/build-your-own-ui"
+            href="https://portal.thirdweb.com/connect/in-app-wallet/how-to/build-your-own-ui"
             colSpan={1}
           />
 
@@ -229,12 +229,12 @@ const EmbeddedWalletsLanding: ThirdwebNextPage = () => {
         </LandingGridSection>
 
         <LandingGuidesShowcase
-          title="Get started with Embedded Wallets"
+          title="Get started with In-App Wallets"
           category={TRACKING_CATEGORY}
-          description="Read the docs, see the live demo, and use the quick-start template to build with Embedded Wallets."
+          description="Read the docs, see the live demo, and use the quick-start template to build with In-App Wallets."
           guides={GUIDES}
-          customSolution="See the full Embedded Wallet docs"
-          customSolutionHref="https://portal.thirdweb.com/wallets/embedded-wallet/overview"
+          customSolution="See the full In-App Wallet docs"
+          customSolutionHref="https://portal.thirdweb.com/wallets/in-app-wallet/overview"
           py={0}
         />
 
@@ -242,7 +242,7 @@ const EmbeddedWalletsLanding: ThirdwebNextPage = () => {
           title="Integrate in"
           titleWithGradient="a few lines of code."
           trackingCategory={TRACKING_CATEGORY}
-          ctaLink="https://portal.thirdweb.com/wallets/embedded-wallet/overview"
+          ctaLink="https://portal.thirdweb.com/wallets/in-app-wallet/overview"
           gradient="linear(to-r, #3385FF, #7BB0FF)"
         />
       </Container>

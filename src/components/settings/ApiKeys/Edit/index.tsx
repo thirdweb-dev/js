@@ -79,7 +79,7 @@ export const EditApiKey: React.FC<EditApiKeyProps> = ({ apiKey, onCancel }) => {
           return toast({
             title: "Custom JSON Web Token configuration is invalid",
             description:
-              "To use Embedded Wallets with Custom JSON Web Token, provide JWKS URI and AUD.",
+              "To use In-App Wallets with Custom JSON Web Token, provide JWKS URI and AUD.",
             position: "bottom",
             variant: "solid",
             status: "error",

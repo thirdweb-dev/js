@@ -128,7 +128,7 @@ const SolutionsMinting: ThirdwebNextPage = () => {
                   API configurations including as an{" "}
                   <TrackedLink
                     category={TRACKING_CATEGORY}
-                    href="https://portal.thirdweb.com/wallets/embedded-wallet/overview"
+                    href="https://portal.thirdweb.com/connect/in-app-wallet/overview"
                     color="primary.500"
                   >
                     distributing NFTs

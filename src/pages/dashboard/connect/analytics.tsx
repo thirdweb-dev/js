@@ -228,7 +228,7 @@ const DashboardConnectAnalytics: ThirdwebNextPage = () => {
   return (
     <GatedFeature
       title="Wallet Analytics is an advanced feature."
-      description="Dive into user analytics and gather user insights on connect, smart and embedded wallet."
+      description="Dive into user analytics and gather user insights on connect, smart and in-app wallets."
       trackingLabel="analytics"
       imgSrc="/assets/dashboard/features/analytics.png"
       imgWidth={576}

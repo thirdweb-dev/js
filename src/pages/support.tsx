@@ -27,7 +27,7 @@ const helpProducts = [
         url: "https://support.thirdweb.com/wallets/dwWCB7ZD5sNcHEAj4rFFui/smart-wallet-faqs/64y68nzTQkUZw6r6FryFgK",
       },
       {
-        title: "Embedded Wallet FAQ",
+        title: "In-App Wallet FAQ",
         url: "https://support.thirdweb.com/wallets/dwWCB7ZD5sNcHEAj4rFFui/embedded-wallet-faqs/rhkKeknMUEdyDbRPnLFz1s",
       },
     ],

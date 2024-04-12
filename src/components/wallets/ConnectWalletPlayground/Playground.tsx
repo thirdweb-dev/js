@@ -416,7 +416,7 @@ export const ConnectWalletPlayground: React.FC<{
 
               if (newState === "recommended") {
                 trackCustomize("recommend-wallet", {
-                  walletName: "Embedded Wallet",
+                  walletName: "In-App Wallet",
                 });
               }
 
@@ -435,7 +435,7 @@ export const ConnectWalletPlayground: React.FC<{
           isChecked={!!walletSelection["Email Wallet"]}
           onChange={() => {
             trackCustomize("wallet", {
-              walletName: "Embedded Wallet",
+              walletName: "In-App Wallet",
             });
 
             setWalletSelection({

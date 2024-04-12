@@ -177,7 +177,7 @@ function RelevantGuides() {
         </GuideLink>
 
         <GuideLink
-          href="https://portal.thirdweb.com/wallets/embedded-wallet/how-to/enable-gasless"
+          href="https://portal.thirdweb.com/connect/in-app-wallet/how-to/enable-gasless"
           label="gasless-tx"
         >
           Enable Gasless Transactions

@@ -128,7 +128,7 @@ export const Users: React.FC<UsersProps> = ({
         </Flex>
 
         <TWTable
-          title="active embedded wallets"
+          title="active in-app wallets"
           data={theWalletsWeWant}
           columns={columns}
           isLoading={isLoading}

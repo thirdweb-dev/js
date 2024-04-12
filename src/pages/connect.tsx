@@ -223,7 +223,7 @@ const ConnectLanding: ThirdwebNextPage = () => {
           titleWithGradient="instantly"
           subtitle="Onboard anyone with an email or social account in 1 click — with flexible auth options, secure account recovery, and account abstraction integration."
           trackingCategory={TRACKING_CATEGORY}
-          ctaLink="https://portal.thirdweb.com/connect/embedded-wallet/overview"
+          ctaLink="https://portal.thirdweb.com/connect/in-app-wallet/overview"
           gradient="linear(to-r, #4490FF, #4490FF)"
           image={require("../../public/assets/product-pages/hero/desktop-hero-embedded-wallets.png")}
           mobileImage={require("../../public/assets/product-pages/hero/mobile-hero-embedded-wallets.png")}

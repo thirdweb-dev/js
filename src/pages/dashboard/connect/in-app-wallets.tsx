@@ -60,7 +60,7 @@ const DashboardConnectEmbeddedWallets: ThirdwebNextPage = () => {
   }, [apiKeys, selectedKey, defaultClientId]);
 
   if (!isLoggedIn) {
-    return <ConnectWalletPrompt description="manage embedded wallets" />;
+    return <ConnectWalletPrompt description="manage in-app wallets" />;
   }
 
   return (
@@ -72,7 +72,7 @@ const DashboardConnectEmbeddedWallets: ThirdwebNextPage = () => {
           gap={4}
         >
           <Heading size="title.lg" as="h1">
-            Embedded Wallets
+            In-App Wallets
           </Heading>
           {hasApiKeys && (
             <HStack gap={3}>
@@ -93,7 +93,7 @@ const DashboardConnectEmbeddedWallets: ThirdwebNextPage = () => {
           bring-your-own auth supported.{" "}
           <TrackedLink
             isExternal
-            href="https://portal.thirdweb.com/wallets/embedded-wallet/overview"
+            href="https://portal.thirdweb.com/connect/in-app-wallet/overview"
             label="learn-more"
             category={TRACKING_CATEGORY}
             color="primary.500"
@@ -103,7 +103,7 @@ const DashboardConnectEmbeddedWallets: ThirdwebNextPage = () => {
         </Text>
       </Flex>
 
-      {!hasApiKeys && <NoApiKeys service="embedded wallets" />}
+      {!hasApiKeys && <NoApiKeys service="in-app wallets" />}
 
       {hasApiKeys && selectedKey && (
         <EmbeddedWallets
@@ -152,7 +152,7 @@ function ViewDocs() {
           size="md"
           noBorder
           platform="React"
-          href="https://portal.thirdweb.com/references/react/latest/embeddedWallet"
+          href="https://portal.thirdweb.com/connect/in-app-wallet/overview"
         />
 
         <SupportedPlatformLink
@@ -167,14 +167,14 @@ function ViewDocs() {
           noBorder
           size="md"
           platform="React Native"
-          href="https://portal.thirdweb.com/react-native/latest/wallets/embedded-wallet"
+          href="https://portal.thirdweb.com/react-native/latest/connect/in-app-wallet"
         />
         <SupportedPlatformLink
           trackingCategory={TRACKING_CATEGORY}
           noBorder
           size="md"
           platform="TypeScript"
-          href="https://portal.thirdweb.com/references/wallets/latest/EmbeddedWallet"
+          href="https://portal.thirdweb.com/connect/in-app-wallet/overview"
         />
       </Grid>
 
@@ -194,32 +194,32 @@ function ViewDocs() {
           href="https://blog.thirdweb.com/what-are-embedded-wallets/"
           label="what-is-an-embedded-wallet"
         >
-          What is an embedded wallet?
+          What is an in-app wallet?
         </GuideLink>
 
         <GuideLink
-          href="https://portal.thirdweb.com/wallets/embedded-wallet/get-started"
+          href="https://portal.thirdweb.com/connect/in-app-wallet/get-started"
           label="sdks-get-started"
         >
-          Get started with Embedded Wallets
+          Get started with In-App Wallets
         </GuideLink>
 
         <GuideLink
-          href="https://portal.thirdweb.com/wallets/embedded-wallet/how-to/connect-users"
+          href="https://portal.thirdweb.com/connect/in-app-wallet/how-to/connect-users"
           label="how-to-connect-your-users"
         >
-          Using Embedded Wallets with Connect
+          Using In-App Wallets with Connect
         </GuideLink>
 
         <GuideLink
-          href="https://portal.thirdweb.com/wallets/embedded-wallet/how-to/build-your-own-ui"
+          href="https://portal.thirdweb.com/connect/in-app-wallet/how-to/build-your-own-ui"
           label="how-to-build-your-own-ui"
         >
           How to Build Your Own UI
         </GuideLink>
 
         <GuideLink
-          href="https://portal.thirdweb.com/wallets/embedded-wallet/custom-auth/custom-auth-server"
+          href="https://portal.thirdweb.com/connect/in-app-wallet/custom-auth/custom-auth-server"
           label="how-to-custom-auth-server"
         >
           Create a custom auth server
@@ -270,7 +270,7 @@ function Templates() {
           href="https://github.com/thirdweb-example/embedded-smart-wallet"
           label="embedded-smart-wallet"
         >
-          Embedded Wallet + Account Abstraction Starter Kit
+          In-App Wallet + Account Abstraction Starter Kit
         </GuideLink>
 
         <GuideLink
@@ -284,14 +284,14 @@ function Templates() {
           href="https://github.com/thirdweb-example/embedded-wallet-custom-ui"
           label="embedded-wallet-with-custom-ui-react"
         >
-          Embedded Wallet With Custom UI [React]
+          In-App Wallet With Custom UI [React]
         </GuideLink>
 
         <GuideLink
           href="https://github.com/thirdweb-example/embedded-wallet-custom-ui-react-native"
           label="embedded-wallet-with-custom-ui-react-native"
         >
-          Embedded Wallet With Custom UI [ReactNative]
+          In-App Wallet With Custom UI [ReactNative]
         </GuideLink>
       </Flex>
     </Card>

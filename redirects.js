@@ -239,10 +239,20 @@ function redirects() {
       destination: "/dashboard/connect/pay?tab=checkouts",
       permanent: false,
     },
-    //Redirecting as ambassadors lives in community now
+    // Redirecting as ambassadors lives in community now
     {
       source: "/ambassadors",
       destination: "/community/ambassadors",
+      permanent: false,
+    },
+    {
+      source: "/dashboard/connect/embedded-wallets",
+      destination: "/dashboard/connect/in-app-wallets",
+      permanent: false,
+    },
+    {
+      source: "/embedded-wallets",
+      destination: "/in-app-wallets",
       permanent: false,
     },
   ];

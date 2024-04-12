@@ -67,12 +67,12 @@ export const slides: Slide[] = [
           <ListItem>
             <TrackedLink
               category={TRACK_CATEGORY}
-              href="/dashboard/connect/embedded-wallets"
+              href="/dashboard/connect/in-app-wallets"
               isExternal
               label="auth"
               color="blue.500"
             >
-              App wallets
+              In-App wallets
             </TrackedLink>{" "}
             with different key management structures.
           </ListItem>

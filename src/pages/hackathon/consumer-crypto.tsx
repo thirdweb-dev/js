@@ -211,7 +211,7 @@ const Hackathon = () => {
                   <List color="white">
                     <ListItem>
                       • Built using any of the following thirdweb products:
-                      Engine, Embedded Wallets, and/or Account Abstraction
+                      Engine, In-App Wallets, and/or Account Abstraction
                     </ListItem>
                     <ListItem>• Code must be open-source</ListItem>
                     <ListItem>

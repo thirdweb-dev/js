@@ -362,7 +362,7 @@ const SolutionsGaming: ThirdwebNextPage = () => {
           >
             <LandingIconSectionItem
               icon={require("../../../public/assets/solutions-pages/icons/icon-email-signin.svg")}
-              title="Embedded Wallet"
+              title="In-App Wallet"
               description="Give any user the keys to web3 with familiar web2 login flows. Choose from non-custodial or custodial solutions & enable users to sign in with an email, phone number, or social account."
             />
           </SolutionsGamingCard>

@@ -45,7 +45,7 @@ const SELECTOR_ITEMS = [
     description:
       "Give any user the keys to web3 with familiar web2 login flows. Choose from non-custodial or custodial solutions & enable users to sign in with an email, phone number, or social account (without having to see or deal with complex key management).",
     steps: [
-      "Dev uses the SDK to enable email and social based authentication in their web3 apps using Embedded Wallets or Account Abstraction.",
+      "Dev uses the SDK to enable email and social based authentication in their web3 apps using In-App Wallets or Account Abstraction.",
       "User authenticates using just their email address and one-time passcode, or their Google account.",
       "A wallet is created on the user behalf without the user having to see or deal with complex key management.",
     ],
@@ -89,7 +89,7 @@ const SELECTOR_ITEMS = [
       "Connect existing auth systems so that users don't need to authenticate twice.",
     steps: [
       "A Developer implements any authentication system, to handle user identities.",
-      "After authentication, create a wallet for the user using Smart or Embedded Wallets",
+      "After authentication, create a wallet for the user using Smart or In-App Wallets",
       "Associate the newly created wallet with the user's profile.",
     ],
     products: ["smart-wallet", "embedded-wallets"],
@@ -101,7 +101,7 @@ const SELECTOR_ITEMS = [
     steps: [
       "Developer integrates local wallet into a game so that user can enjoy uninterrupted game play.",
       "User onboards onto app without being aware that local wallet is created on backend.",
-      "After reaching a level playing game, the user has acquired enough in-game assets to justify exporting wallet. Developer displays a pop-up outlining what a local wallet is and how the Player can upgrade wallet into an embedded wallet.",
+      "After reaching a level playing game, the user has acquired enough in-game assets to justify exporting wallet. Developer displays a pop-up outlining what a local wallet is and how the Player can upgrade wallet into an in-app wallet.",
     ],
     products: ["smart-wallet", "embedded-wallets"],
   },
@@ -141,7 +141,7 @@ const SolutionsWeb2Onboarding: ThirdwebNextPage = () => {
           gradient="linear(to-r, #4830A4, #9786DF)"
           image={require("../../../public/assets/product-pages/hero/desktop-hero-web2-onboarding.png")}
           mobileImage={require("../../../public/assets/product-pages/hero/mobile-hero-web2-onboarding.png")}
-          ctaLink="https://portal.thirdweb.com/wallets/embedded-wallet/overview"
+          ctaLink="https://portal.thirdweb.com/connect/in-app-wallet/overview"
           contactUsTitle="Book Demo"
         />
 
@@ -174,7 +174,7 @@ const SolutionsWeb2Onboarding: ThirdwebNextPage = () => {
           <Card p={8}>
             <LandingIconSectionItem
               icon={require("../../../public/assets/solutions-pages/icons/icon-email-signin.svg")}
-              title="Embedded Wallets"
+              title="In-App Wallets"
               description="Give any user the keys to web3 with familiar web2 login flows. Choose from non-custodial or custodial solutions & enable users to sign in with an email, phone number, or social account."
             />
           </Card>
@@ -212,7 +212,7 @@ const SolutionsWeb2Onboarding: ThirdwebNextPage = () => {
           title="Start building"
           titleWithGradient="today."
           trackingCategory={TRACKING_CATEGORY}
-          ctaLink="https://portal.thirdweb.com/wallets/embedded-wallet/overview"
+          ctaLink="https://portal.thirdweb.com/connect/in-app-wallet/overview"
           contactUsTitle="Book Demo"
           gradient="linear(to-r, #4830A4, #9786DF)"
         />

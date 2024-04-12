@@ -147,7 +147,7 @@ const CheckoutLanding: ThirdwebNextPage = () => {
             image={require("../../public/assets/landingpage/desktop/wallet-no-problem.png")}
             mobileImage={require("../../public/assets/landingpage/mobile/wallet-no-problem.png")}
             TRACKING_CATEGORY={TRACKING_CATEGORY}
-            href="https://portal.thirdweb.com/wallets/embedded-wallet/overview"
+            href="https://portal.thirdweb.com/connect/in-app-wallet/overview"
           />
           <LandingCardWithImage
             title="Built-in analytics"

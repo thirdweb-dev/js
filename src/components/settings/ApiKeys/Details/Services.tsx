@@ -68,7 +68,7 @@ export const ServicesDetails: React.FC<ServicesDetailsProps> = ({ apiKey }) => {
                 {service.name === "embeddedWallets" && (
                   <LinkButton
                     colorScheme="primary"
-                    href={`/dashboard/connect/embedded-wallets?tab=1&clientId=${key}`}
+                    href={`/dashboard/connect/in-app-wallets?tab=1&clientId=${key}`}
                   >
                     Go to configuration
                   </LinkButton>

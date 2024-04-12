@@ -104,7 +104,7 @@ export const Configure: React.FC<ConfigureProps> = ({
   }, [config, form, hasCustomBranding]);
 
   const { onSuccess, onError } = useTxNotifications(
-    "Embedded Wallet API Key configuration updated",
+    "In-App Wallet API Key configuration updated",
     "Failed to update an API Key",
   );
 
@@ -119,7 +119,7 @@ export const Configure: React.FC<ConfigureProps> = ({
       return toast({
         title: "Custom JSON Web Token configuration is invalid",
         description:
-          "To use Embedded Wallets with Custom JSON Web Token, provide JWKS URI and AUD.",
+          "To use In-App Wallets with Custom JSON Web Token, provide JWKS URI and AUD.",
         position: "bottom",
         variant: "solid",
         status: "error",
@@ -132,7 +132,7 @@ export const Configure: React.FC<ConfigureProps> = ({
       return toast({
         title: "Custom Authentication Endpoint configuration is invalid",
         description:
-          "To use Embedded Wallets with Custom Authentication Endpoint, provide a valid URL.",
+          "To use In-App Wallets with Custom Authentication Endpoint, provide a valid URL.",
         position: "bottom",
         variant: "solid",
         status: "error",
@@ -327,7 +327,7 @@ export const Configure: React.FC<ConfigureProps> = ({
                     Optionally allow users to authenticate with a custom JWT.{" "}
                     <TrackedLink
                       isExternal
-                      href="https://portal.thirdweb.com/wallets/embedded-wallet/custom-auth/custom-jwt-auth-server"
+                      href="https://portal.thirdweb.com/connect/in-app-wallet/custom-auth/custom-jwt-auth-server"
                       label="learn-more"
                       category={TRACKING_CATEGORY}
                       color="primary.500"
@@ -440,7 +440,7 @@ export const Configure: React.FC<ConfigureProps> = ({
                     payload that you provide.{" "}
                     <TrackedLink
                       isExternal
-                      href="https://portal.thirdweb.com/wallets/embedded-wallet/custom-auth/custom-auth-server"
+                      href="https://portal.thirdweb.com/connect/in-app-wallet/custom-auth/custom-auth-server"
                       label="learn-more"
                       category={TRACKING_CATEGORY}
                       color="primary.500"

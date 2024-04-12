@@ -24,8 +24,8 @@ const links: Route[] = [
     name: "analytics",
   },
   {
-    path: "/dashboard/connect/embedded-wallets",
-    title: "Embedded Wallets",
+    path: "/dashboard/connect/in-app-wallets",
+    title: "In-App Wallets",
     name: "embedded-wallets",
   },
   {

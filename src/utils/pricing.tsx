@@ -136,7 +136,7 @@ export const PRICING_SECTIONS: PricingSection[] = [
         pro: "checkmark",
       },
       {
-        title: "Custom auth for embedded wallets",
+        title: "Custom auth for in-app wallets",
         starter: "N/A",
         growth: "checkmark",
         pro: "checkmark",
@@ -232,10 +232,10 @@ export const FAQ_GENERAL = [
     ),
   },
   {
-    title: "How is pricing calculated for embedded wallets?",
+    title: "How is pricing calculated for in-app wallets?",
     description: (
       <Text>
-        Embedded wallets are billed based on &quot;Monthly active wallets&quot;.
+        In-App wallets are billed based on &quot;Monthly active wallets&quot;.
       </Text>
     ),
   },
@@ -291,7 +291,7 @@ export const FAQ_PRICING = [
     title: "Monthly Active Wallet",
     description: (
       <Text>
-        When a user logs in during a 30-day period in using the embedded wallet
+        When a user logs in during a 30-day period in using the in-app wallet
         service, they are counted as a monthly active wallet.
       </Text>
     ),
