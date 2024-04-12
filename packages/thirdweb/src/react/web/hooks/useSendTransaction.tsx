@@ -19,6 +19,7 @@ import { getConnectLocale } from "../ui/ConnectWallet/locale/getConnectLocale.js
 import type { ConnectLocale } from "../ui/ConnectWallet/locale/types.js";
 import { BuyScreen } from "../ui/ConnectWallet/screens/Buy/SwapScreen.js";
 import { fetchSwapSupportedChains } from "../ui/ConnectWallet/screens/Buy/swap/useSwapSupportedChains.js";
+import { SwapTransactionsScreen } from "../ui/ConnectWallet/screens/SwapTransactionsScreen.js";
 import { Modal } from "../ui/components/Modal.js";
 import { CustomThemeProvider } from "../ui/design-system/CustomThemeProvider.js";
 import type { Theme } from "../ui/design-system/index.js";
@@ -181,6 +182,7 @@ function TxModal(props: ModalProps) {
 
 function ModalContent(props: ModalProps) {
   const [locale, setLocale] = useState<ConnectLocale | undefined>();
+  const [screen, setScreen] = useState<"buy" | "tx-history">("buy");
 
   useEffect(() => {
     getConnectLocale(props.localeId).then(setLocale);
@@ -190,6 +192,17 @@ function ModalContent(props: ModalProps) {
     return <LoadingScreen />;
   }
 
+  if (screen === "tx-history") {
+    return (
+      <SwapTransactionsScreen
+        client={props.client}
+        onBack={() => {
+          props.onClose();
+        }}
+      />
+    );
+  }
+
   return (
     <BuyScreen
       client={props.client}
@@ -197,7 +210,7 @@ function ModalContent(props: ModalProps) {
         props.onClose();
       }}
       onViewPendingTx={() => {
-        // TODO
+        setScreen("tx-history");
       }}
       supportedTokens={props.supportedTokens}
       connectLocale={locale}

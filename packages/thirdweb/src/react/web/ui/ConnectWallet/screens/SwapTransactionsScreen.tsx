@@ -42,6 +42,8 @@ type TxStatusInfo = {
   subStatus?: BuyWithCryptoStatus["subStatus"];
 };
 
+// Note: Do not use useConnectUI here
+
 const PAGE_SIZE = 10;
 
 /**
