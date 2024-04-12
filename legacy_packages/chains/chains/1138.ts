@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://Qmd4TMQdnYxaUZqnVddh5S37NGH72g2kkK38ccCEgdZz1C",
-    "width": 599,
-    "height": 563,
-    "format": "png"
-  },
   "infoURL": "https://sinso.io",
   "name": "AmStar Testnet",
   "nativeCurrency": {
