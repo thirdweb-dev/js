@@ -1,15 +1,7 @@
 import type { Address } from "abitype";
-import { maxUint256 } from "viem";
-import {
-  ADDRESS_ZERO,
-  isNativeTokenAddress,
-} from "../../../../constants/addresses.js";
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
-import { padHex } from "../../../../utils/encoding/hex.js";
 import { getClaimParams } from "../../../../utils/extensions/drops/get-claim-params.js";
-import type { OverrideProof } from "../../../../utils/extensions/drops/types.js";
 import { claim } from "../../__generated__/IDrop1155/write/claim.js";
-import { getActiveClaimCondition } from "../read/getActiveClaimCondition.js";
 
 export type ClaimToParams = {
   to: Address;
