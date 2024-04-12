@@ -6,13 +6,7 @@ export default {
     {
       "name": "movoscan",
       "url": "https://movoscan.com",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://QmdFJMdnTvu4adiMERMP7B5ZZDwgiPmU3kU1qrUFdvHmUY",
-        "width": 800,
-        "height": 800,
-        "format": "png"
-      }
+      "standard": "none"
     }
   ],
   "faucets": [],
