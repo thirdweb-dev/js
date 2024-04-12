@@ -30,14 +30,13 @@ export type ClaimToParams = {
 export function claimTo(options: BaseTransactionOptions<ClaimToParams>) {
   return claim({
     contract: options.contract,
-    asyncParams: async () => {
-      const params = await getClaimParams({
+    asyncParams: () =>
+      getClaimParams({
         type: "erc721",
-        ...options,
-      });
-      return {
-        ...params,
-      };
-    },
+        contract: options.contract,
+        to: options.to,
+        quantity: options.quantity,
+        from: options.from,
+      }),
   });
 }

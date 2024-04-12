@@ -34,14 +34,16 @@ export function claimTo(options: BaseTransactionOptions<ClaimToParams>) {
     async asyncParams() {
       const params = await getClaimParams({
         type: "erc1155",
-        ...options,
+        contract: options.contract,
+        to: options.to,
+        quantity: options.quantity,
+        from: options.from,
+        tokenId: options.tokenId,
       });
-      if (!params.tokenId) {
-        throw new Error("tokenId required for 1155 claims");
-      }
+
       return {
         ...params,
-        tokenId: params.tokenId,
+        tokenId: options.tokenId,
       };
     },
   });

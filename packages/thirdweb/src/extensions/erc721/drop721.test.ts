@@ -72,7 +72,17 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       await expect(nextTokenIdToMint({ contract })).resolves.toBe(4n);
       await expect(
         getNFT({ contract, tokenId: 0n }),
-      ).resolves.toMatchInlineSnapshot();
+      ).resolves.toMatchInlineSnapshot(`
+        {
+          "id": 0n,
+          "metadata": {
+            "name": "Test NFT",
+          },
+          "owner": null,
+          "tokenURI": "ipfs://QmUfspS2uU9roYLJveebbY5geYaNR4KkZAsMkb5pPRtc7a/0",
+          "type": "ERC721",
+        }
+      `);
     });
 
     it("should allow to claim tokens", async () => {
@@ -160,7 +170,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
             phases: [
               {
                 overrideList: [
-                  { address: TEST_ACCOUNT_A.address, maxClaimable: "1" },
+                  { address: TEST_ACCOUNT_A.address, maxClaimable: "3" },
                   { address: VITALIK_WALLET, maxClaimable: "3" },
                 ],
                 maxClaimablePerWallet: 0n,
@@ -174,6 +184,10 @@ describe.runIf(process.env.TW_SECRET_KEY)(
           balanceOf({ contract, owner: TEST_ACCOUNT_A.address }),
         ).resolves.toBe(1n);
 
+        // we try to claim an extra `2` tokens
+        // this should faile bcause the max claimable is `3` and we have previously already claimed 2 tokens (one for ourselves, one for the other wallet)
+        // NOTE: this relies on the previous tests, we should extract this and properly re-set tests every time
+        // this probably requires re-deploying contracts for every test => clean slate
         await expect(
           sendAndConfirmTransaction({
             account: TEST_ACCOUNT_A,
@@ -186,10 +200,13 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         ).rejects.toThrowErrorMatchingInlineSnapshot(`
           [TransactionError: Error - !Qty
 
-          contract: 0xd91A47278829a0128D7212225FE74BC153A7FAF8
+          contract: ${contract.address}
           chainId: 31337]
         `);
 
+        // we now try to claim just ONE more token
+        // this should work because we have only claimed `2` tokens so far (one for ourselves, one for the other wallet)
+        // this should work because the max claimable is `3` and so we **can** claim `1` more token
         await sendAndConfirmTransaction({
           account: TEST_ACCOUNT_A,
           transaction: claimTo({

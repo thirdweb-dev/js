@@ -4,8 +4,6 @@ import {
   isNativeTokenAddress,
 } from "../../../constants/addresses.js";
 import type { ThirdwebContract } from "../../../contract/contract.js";
-import { getActiveClaimCondition as get721CC } from "../../../exports/extensions/erc721.js";
-import { getActiveClaimCondition as get1155CC } from "../../../exports/extensions/erc1155.js";
 import type { Hex } from "../../encoding/hex.js";
 import type { OverrideProof } from "./types.js";
 
@@ -28,17 +26,29 @@ export type GetClaimParamsOptions = {
 );
 
 export async function getClaimParams(options: GetClaimParamsOptions) {
-  let cc: { merkleRoot?: Hex; currency: string; pricePerToken: bigint };
-  if (options.type === "erc1155") {
-    cc = await get1155CC({
-      contract: options.contract,
-      tokenId: options.tokenId,
-    });
-  } else {
-    cc = await get721CC({
-      contract: options.contract,
-    });
-  }
+  const cc = await (async () => {
+    if (options.type === "erc1155") {
+      // lazy-load the getActiveClaimCondition function
+      const { getActiveClaimCondition } = await import(
+        "../../../extensions/erc1155/drops/read/getActiveClaimCondition.js"
+      );
+      return await getActiveClaimCondition({
+        contract: options.contract,
+        tokenId: options.tokenId,
+      });
+    }
+    if (options.type === "erc721") {
+      // lazy-load the getActiveClaimCondition function
+      const { getActiveClaimCondition } = await import(
+        "../../../extensions/erc721/drops/read/getActiveClaimCondition.js"
+      );
+      return await getActiveClaimCondition({
+        contract: options.contract,
+      });
+    }
+    // erc20 not implemented yet
+    throw new Error("ERC20 not implemented yet");
+  })();
 
   // compute the allowListProof in an iife
   const allowlistProof = await (async () => {
