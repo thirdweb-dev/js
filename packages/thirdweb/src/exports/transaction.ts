@@ -47,6 +47,10 @@ export {
   signTransaction,
   type SignTransactionOptions,
 } from "../transaction/actions/sign-transaction.js";
+export {
+  serializeTransaction,
+  type SerializeTransactionOptions,
+} from "../transaction/serialize-transaction.js";
 
 //types & utils
 export {

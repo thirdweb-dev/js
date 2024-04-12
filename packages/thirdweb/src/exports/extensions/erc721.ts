@@ -78,10 +78,7 @@ export {
   setTokenURI,
   type SetTokenURIParams,
 } from "../../extensions/erc721/__generated__/INFTMetadata/write/setTokenURI.js";
-export {
-  lazyMint,
-  type LazyMintParams,
-} from "../../extensions/erc721/write/lazyMint.js";
+
 /**
  * EVENTS extension for ERC721
  */
@@ -103,6 +100,14 @@ export {
   claimTo,
   type ClaimToParams,
 } from "../../extensions/erc721/drops/write/claimTo.js";
+export {
+  lazyMint,
+  type LazyMintParams,
+} from "../../extensions/erc721/write/lazyMint.js";
+export {
+  setClaimConditions,
+  type SetClaimConditionsParams,
+} from "../../extensions/erc721/drops/write/setClaimConditions.js";
 
 /**
  * SIGNATURE extension for ERC721

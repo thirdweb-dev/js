@@ -31,7 +31,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("Permissions", () => {
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
     });
-  });
+    // this deploys a contract, it may take some time
+  }, 60_000);
 
   it("should check if the target account has the role", async () => {
     // after deployment the deployer should have the admin role
