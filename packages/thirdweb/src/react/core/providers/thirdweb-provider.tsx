@@ -77,8 +77,6 @@ export function ThirdwebProvider(props: React.PropsWithChildren) {
       }),
   );
 
-  console.log("root el", el);
-
   return (
     <QueryClientProvider client={queryClient}>
       <SetRootElementContext.Provider value={setEl}>
