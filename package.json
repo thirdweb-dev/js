@@ -56,19 +56,19 @@
     "@types/bun": "1.0.12",
     "@types/react": "18.2.17",
     "@viem/anvil": "0.0.9",
-    "@vitest/coverage-v8": "1.4.0",
+    "@vitest/coverage-v8": "1.5.0",
     "dotenv-mono": "1.3.14",
     "ethers5": "npm:ethers@5.7.2",
     "ethers6": "npm:ethers@6.11.1",
-    "knip": "5.9.1",
+    "knip": "5.9.4",
     "mitata": "0.1.11",
     "react": "18.2.0",
     "rimraf": "5.0.5",
     "sharp": "^0.33.3",
     "size-limit": "11.1.2",
     "typedoc-gen": "workspace:*",
-    "typescript": "5.4.4",
-    "vitest": "1.4.0"
+    "typescript": "5.4.5",
+    "vitest": "1.5.0"
   },
   "manypkg": {
     "defaultBranch": "main"
