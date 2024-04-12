@@ -30,8 +30,6 @@ export const EngineRelayer: React.FC<EngineRelayerProps> = ({
           </Link>
           .
         </Text>
-
-        <Text>This feature is enabled on v0.0.8 and above.</Text>
       </Flex>
 
       <RelayersTable

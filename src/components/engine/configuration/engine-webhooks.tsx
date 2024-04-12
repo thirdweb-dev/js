@@ -5,11 +5,13 @@ import { WebhooksTable } from "./webhooks-table";
 import { AddWebhookButton } from "./add-webhook-button";
 
 interface EngineWebhooksProps {
-  instance: string;
+  instanceUrl: string;
 }
 
-export const EngineWebhooks: React.FC<EngineWebhooksProps> = ({ instance }) => {
-  const webhooks = useEngineWebhooks(instance);
+export const EngineWebhooks: React.FC<EngineWebhooksProps> = ({
+  instanceUrl,
+}) => {
+  const webhooks = useEngineWebhooks(instanceUrl);
 
   return (
     <Flex flexDir="column" gap={4}>
@@ -29,12 +31,12 @@ export const EngineWebhooks: React.FC<EngineWebhooksProps> = ({ instance }) => {
         </Text>
       </Flex>
       <WebhooksTable
-        instance={instance}
+        instanceUrl={instanceUrl}
         webhooks={webhooks.data || []}
         isLoading={webhooks.isLoading}
         isFetched={webhooks.isFetched}
       />
-      <AddWebhookButton instance={instance} />
+      <AddWebhookButton instanceUrl={instanceUrl} />
     </Flex>
   );
 };

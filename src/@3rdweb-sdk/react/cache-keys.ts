@@ -60,6 +60,8 @@ export const engineKeys = {
     [...engineKeys.all, instance, "permissions"] as const,
   accessTokens: (instance: string) =>
     [...engineKeys.all, instance, "accessTokens"] as const,
+  keypairs: (instance: string) =>
+    [...engineKeys.all, instance, "keypairs"] as const,
   relayers: (instance: string) =>
     [...engineKeys.all, instance, "relayers"] as const,
   webhooks: (instance: string) =>
@@ -72,8 +74,10 @@ export const engineKeys = {
     ["backendWallet", address, chainId] as const,
   backendWalletBalance: (address: string, chainId: number) =>
     [...engineKeys.backendWallet(address, chainId), "balance"] as const,
-  currentVersion: (instance: string) =>
-    [...engineKeys.all, instance, "version"] as const,
+  corsUrls: (instance: string) =>
+    [...engineKeys.all, instance, "corsUrls"] as const,
+  health: (instance: string) =>
+    [...engineKeys.all, instance, "health"] as const,
   latestVersion: () => [...engineKeys.all, "latestVersion"] as const,
 };
 

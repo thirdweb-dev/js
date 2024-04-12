@@ -8,13 +8,13 @@ import { useEngineWalletConfig } from "@3rdweb-sdk/react/hooks/useEngine";
 import { MdRadioButtonChecked, MdRadioButtonUnchecked } from "react-icons/md";
 
 interface EngineWalletConfigProps {
-  instance: string;
+  instanceUrl: string;
 }
 
 export const EngineWalletConfig: React.FC<EngineWalletConfigProps> = ({
-  instance,
+  instanceUrl,
 }) => {
-  const { data: localConfig } = useEngineWalletConfig(instance);
+  const { data: localConfig } = useEngineWalletConfig(instanceUrl);
   const [selected, setSelected] = useState<"aws-kms" | "gcp-kms" | "local">(
     localConfig?.type || "local",
   );
@@ -93,9 +93,9 @@ export const EngineWalletConfig: React.FC<EngineWalletConfigProps> = ({
           </Button>
         </ButtonGroup>
 
-        {selected === "local" && <LocalConfig instance={instance} />}
-        {selected === "aws-kms" && <KmsAwsConfig instance={instance} />}
-        {selected === "gcp-kms" && <KmsGcpConfig instance={instance} />}
+        {selected === "local" && <LocalConfig instanceUrl={instanceUrl} />}
+        {selected === "aws-kms" && <KmsAwsConfig instanceUrl={instanceUrl} />}
+        {selected === "gcp-kms" && <KmsGcpConfig instanceUrl={instanceUrl} />}
       </Flex>
     </Flex>
   );

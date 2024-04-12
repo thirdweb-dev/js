@@ -23,16 +23,16 @@ import { useForm } from "react-hook-form";
 import { Button, FormLabel, Text } from "tw-components";
 
 interface CreateBackendWalletButtonProps {
-  instance: string;
+  instanceUrl: string;
 }
 
 export const CreateBackendWalletButton: React.FC<
   CreateBackendWalletButtonProps
-> = ({ instance }) => {
+> = ({ instanceUrl }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { data: walletConfig } = useEngineWalletConfig(instance);
+  const { data: walletConfig } = useEngineWalletConfig(instanceUrl);
   const { mutate: createBackendWallet } =
-    useEngineCreateBackendWallet(instance);
+    useEngineCreateBackendWallet(instanceUrl);
   const { onSuccess, onError } = useTxNotifications(
     "Wallet created successfully.",
     "Failed to create wallet.",
@@ -49,7 +49,7 @@ export const CreateBackendWalletButton: React.FC<
           category: "engine",
           action: "create-backend-wallet",
           label: "success",
-          instance,
+          instance: instanceUrl,
         });
       },
       onError: (error) => {
@@ -58,7 +58,7 @@ export const CreateBackendWalletButton: React.FC<
           category: "engine",
           action: "create-backend-wallet",
           label: "error",
-          instance,
+          instance: instanceUrl,
           error,
         });
       },

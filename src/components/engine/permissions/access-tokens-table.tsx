@@ -4,19 +4,19 @@ import {
   useEngineUpdateAccessToken,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
   Flex,
-  useDisclosure,
-  UseDisclosureReturn,
-  Stack,
   FormControl,
   Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Stack,
+  UseDisclosureReturn,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
@@ -92,7 +92,7 @@ export const AccessTokensTable: React.FC<AccessTokensTableProps> = ({
   return (
     <>
       <TWTable
-        title="Access Tokens"
+        title="access tokens"
         data={accessTokens}
         columns={columns}
         isLoading={isLoading}

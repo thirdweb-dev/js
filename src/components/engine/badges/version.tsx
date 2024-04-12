@@ -1,7 +1,7 @@
 import {
   EngineInstance,
-  useEngineCurrentVersion,
   useEngineLatestVersion,
+  useEngineSystemHealth,
   useEngineUpdateVersion,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import {
@@ -28,11 +28,11 @@ export const EngineVersionBadge = ({
 }: {
   instance: EngineInstance;
 }) => {
-  const currentVersionQuery = useEngineCurrentVersion(instance.url);
+  const healthQuery = useEngineSystemHealth(instance.url);
   const latestVersionQuery = useEngineLatestVersion();
   const disclosure = useDisclosure();
 
-  const current = currentVersionQuery.data ?? "...";
+  const current = healthQuery.data?.engineVersion ?? "...";
   const latest = latestVersionQuery.data ?? "...";
   const isStale = current !== latest;
 

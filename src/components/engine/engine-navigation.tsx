@@ -1,21 +1,16 @@
 import { EngineInstance } from "@3rdweb-sdk/react/hooks/useEngine";
-import {
-  Box,
-  ButtonGroup,
-  Divider,
-  Flex,
-  Stack,
-  Tooltip,
-} from "@chakra-ui/react";
+import { Box, ButtonGroup, Divider, Flex, Stack } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { FiArrowLeft } from "react-icons/fi";
-import { Button, Card, Heading, Text } from "tw-components";
+import { Button, Heading, Text } from "tw-components";
 import { EngineVersionBadge } from "./badges/version";
 import { EngineConfiguration } from "./configuration/engine-configuration";
+import { EngineWebhooks } from "./configuration/engine-webhooks";
 import { EngineExplorer } from "./explorer/engine-explorer";
 import { EngineOverview } from "./overview/engine-overview";
-import { EnginePermissions } from "./permissions/engine-permissions";
+import { EngineAccessTokens } from "./permissions/engine-access-tokens";
+import { EngineAdmins } from "./permissions/engine-admins";
 import { EngineRelayer } from "./relayer/engine-relayer";
 
 interface EngineNavigationProps {
@@ -30,33 +25,31 @@ export const EngineNavigation: React.FC<EngineNavigationProps> = ({
   const tabs = [
     {
       title: "Overview",
-      isDisabled: false,
-      disabledText: "",
-      children: <EngineOverview instance={instance.url} />,
+      children: <EngineOverview instanceUrl={instance.url} />,
     },
     {
       title: "Explorer",
-      isDisabled: false,
-      disabledText: "",
-      children: <EngineExplorer instance={instance.url} />,
+      children: <EngineExplorer instanceUrl={instance.url} />,
     },
     {
-      title: "Relayer",
-      isDisabled: false,
-      disabledText: "",
+      title: "Relayers",
       children: <EngineRelayer instanceUrl={instance.url} />,
     },
     {
-      title: "Permissions",
-      isDisabled: false,
-      disabledText: "",
-      children: <EnginePermissions instance={instance.url} />,
+      title: "Admins",
+      children: <EngineAdmins instanceUrl={instance.url} />,
+    },
+    {
+      title: "Access Tokens",
+      children: <EngineAccessTokens instanceUrl={instance.url} />,
+    },
+    {
+      title: "Webhooks",
+      children: <EngineWebhooks instanceUrl={instance.url} />,
     },
     {
       title: "Configuration",
-      isDisabled: false,
-      disabledText: "",
-      children: <EngineConfiguration instance={instance.url} />,
+      children: <EngineConfiguration instanceUrl={instance.url} />,
     },
   ];
 
@@ -103,49 +96,22 @@ export const EngineNavigation: React.FC<EngineNavigationProps> = ({
       </Stack>
 
       <Flex flexDir="column" gap={{ base: 0, md: 4 }} mb={4} mt={4}>
-        <Box
-          w="full"
-          overflow={{ base: "auto", md: "hidden" }}
-          pb={{ base: 4, md: 0 }}
-        >
-          <ButtonGroup
-            size="sm"
-            variant="ghost"
-            spacing={2}
-            w={(tabs.length + 1) * 95}
-          >
+        <Box w="full" overflowX="auto" pb={{ base: 4, md: 0 }}>
+          <ButtonGroup size="sm" variant="ghost" spacing={2}>
             {tabs.map((tb) => (
-              <Tooltip
+              <Button
                 key={tb.title}
-                p={0}
-                bg="transparent"
-                boxShadow={"none"}
-                label={
-                  tb.isDisabled ? (
-                    <Card py={2} px={4} bgColor="backgroundHighlight">
-                      <Text size="label.sm">
-                        {tb?.disabledText || "Coming Soon"}
-                      </Text>
-                    </Card>
-                  ) : (
-                    ""
-                  )
-                }
+                type="button"
+                isActive={tab === tb.title}
+                _active={{
+                  bg: "bgBlack",
+                  color: "bgWhite",
+                }}
+                rounded="lg"
+                onClick={() => setTab(tb.title)}
               >
-                <Button
-                  isDisabled={tb.isDisabled}
-                  type="button"
-                  isActive={tab === tb.title}
-                  _active={{
-                    bg: "bgBlack",
-                    color: "bgWhite",
-                  }}
-                  rounded="lg"
-                  onClick={() => setTab(tb.title)}
-                >
-                  {tb.title}
-                </Button>
-              </Tooltip>
+                {tb.title}
+              </Button>
             ))}
           </ButtonGroup>
         </Box>

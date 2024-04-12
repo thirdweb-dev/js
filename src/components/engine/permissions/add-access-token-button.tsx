@@ -18,20 +18,20 @@ import { AiOutlinePlusCircle } from "react-icons/ai";
 import { useState } from "react";
 
 interface AddAccessTokenButtonProps {
-  instance: string;
+  instanceUrl: string;
 }
 
 export const AddAccessTokenButton: React.FC<AddAccessTokenButtonProps> = ({
-  instance,
+  instanceUrl,
 }) => {
   const [accessToken, setAccessToken] = useState<string>("");
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { mutate: createAccessToken } = useEngineCreateAccessToken(instance);
+  const { mutate: createAccessToken } = useEngineCreateAccessToken(instanceUrl);
   const trackEvent = useTrack();
   const [hasStoredToken, setHasStoredToken] = useState<boolean>(false);
 
   const { onSuccess, onError } = useTxNotifications(
-    "Access Token created successfully.",
+    "Access token created successfully.",
     "Failed to create Access Token.",
   );
 
@@ -46,7 +46,7 @@ export const AddAccessTokenButton: React.FC<AddAccessTokenButtonProps> = ({
                 category: "engine",
                 action: "create-access-token",
                 label: "success",
-                instance,
+                instance: instanceUrl,
               });
               setAccessToken(response.accessToken);
               onOpen();
@@ -57,7 +57,7 @@ export const AddAccessTokenButton: React.FC<AddAccessTokenButtonProps> = ({
                 category: "engine",
                 action: "create-access-token",
                 label: "error",
-                instance,
+                instance: instanceUrl,
                 error,
               });
             },
@@ -76,6 +76,7 @@ export const AddAccessTokenButton: React.FC<AddAccessTokenButtonProps> = ({
         isOpen={isOpen}
         onClose={onClose}
         closeOnOverlayClick={false}
+        closeOnEsc={false}
         isCentered
       >
         <ModalOverlay />

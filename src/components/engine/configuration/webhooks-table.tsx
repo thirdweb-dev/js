@@ -34,7 +34,7 @@ export function beautifyString(str: string): string {
 }
 
 interface WebhooksTableProps {
-  instance: string;
+  instanceUrl: string;
   webhooks: Webhook[];
   isLoading: boolean;
   isFetched: boolean;
@@ -107,14 +107,14 @@ const columns = [
 ];
 
 export const WebhooksTable: React.FC<WebhooksTableProps> = ({
-  instance,
+  instanceUrl,
   webhooks,
   isLoading,
   isFetched,
 }) => {
   const [webhookToRevoke, setWebhookToRevoke] = useState<Webhook>();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { mutate: revokeWebhook } = useEngineRevokeWebhook(instance);
+  const { mutate: revokeWebhook } = useEngineRevokeWebhook(instanceUrl);
   const trackEvent = useTrack();
   const { onSuccess, onError } = useTxNotifications(
     "Successfully deleted webhook",
@@ -143,7 +143,7 @@ export const WebhooksTable: React.FC<WebhooksTableProps> = ({
             category: "engine",
             action: "revoke-webhook",
             label: "success",
-            instance,
+            instance: instanceUrl,
           });
         },
         onError: (error) => {
@@ -152,7 +152,7 @@ export const WebhooksTable: React.FC<WebhooksTableProps> = ({
             category: "engine",
             action: "revoke-webhook",
             label: "error",
-            instance,
+            instance: instanceUrl,
             error,
           });
         },

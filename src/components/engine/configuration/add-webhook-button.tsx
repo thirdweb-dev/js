@@ -26,15 +26,15 @@ import { AiOutlinePlusCircle } from "react-icons/ai";
 import { beautifyString } from "./webhooks-table";
 
 interface AddWebhookButtonProps {
-  instance: string;
+  instanceUrl: string;
 }
 
 export const AddWebhookButton: React.FC<AddWebhookButtonProps> = ({
-  instance,
+  instanceUrl,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { mutate: createWebhook } = useEngineCreateWebhook(instance);
-  const { data: webhookEventTypes } = useEngineWebhooksEventTypes(instance);
+  const { mutate: createWebhook } = useEngineCreateWebhook(instanceUrl);
+  const { data: webhookEventTypes } = useEngineWebhooksEventTypes(instanceUrl);
   const trackEvent = useTrack();
   const form = useForm<CreateWebhookInput>();
 
@@ -69,7 +69,7 @@ export const AddWebhookButton: React.FC<AddWebhookButtonProps> = ({
                   category: "engine",
                   action: "create-webhook",
                   label: "success",
-                  instance,
+                  instance: instanceUrl,
                 });
               },
               onError: (error) => {
@@ -78,7 +78,7 @@ export const AddWebhookButton: React.FC<AddWebhookButtonProps> = ({
                   category: "engine",
                   action: "create-webhook",
                   label: "error",
-                  instance,
+                  instance: instanceUrl,
                   error,
                 });
               },

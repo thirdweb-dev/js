@@ -105,7 +105,7 @@ const setColumns = (instanceUrl: string) => [
     cell: (cell) => {
       const address = cell.getValue();
       return (
-        <BackendWalletBalanceCell instance={instanceUrl} address={address} />
+        <BackendWalletBalanceCell instanceUrl={instanceUrl} address={address} />
       );
     },
     id: "balance",
@@ -113,16 +113,16 @@ const setColumns = (instanceUrl: string) => [
 ];
 
 interface BackendWalletBalanceCellProps {
-  instance: string;
+  instanceUrl: string;
   address: string;
 }
 
 const BackendWalletBalanceCell: React.FC<BackendWalletBalanceCellProps> = ({
-  instance,
+  instanceUrl,
   address,
 }) => {
   const { data: backendWalletBalance } = useEngineBackendWalletBalance(
-    instance,
+    instanceUrl,
     address,
   );
   const chain = useChain();

@@ -22,16 +22,16 @@ import { useForm } from "react-hook-form";
 import { Button, FormLabel } from "tw-components";
 
 interface ImportBackendWalletButtonProps {
-  instance: string;
+  instanceUrl: string;
 }
 
 export const ImportBackendWalletButton: React.FC<
   ImportBackendWalletButtonProps
-> = ({ instance }) => {
+> = ({ instanceUrl }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { data: walletConfig } = useEngineWalletConfig(instance);
+  const { data: walletConfig } = useEngineWalletConfig(instanceUrl);
   const { mutate: importBackendWallet } =
-    useEngineImportBackendWallet(instance);
+    useEngineImportBackendWallet(instanceUrl);
   const { onSuccess, onError } = useTxNotifications(
     "Wallet imported successfully.",
     "Failed to import wallet.",
@@ -65,7 +65,7 @@ export const ImportBackendWalletButton: React.FC<
                   action: "import-backend-wallet",
                   label: "success",
                   type: walletConfig?.type,
-                  instance,
+                  instance: instanceUrl,
                 });
               },
               onError: (error) => {
@@ -75,7 +75,7 @@ export const ImportBackendWalletButton: React.FC<
                   action: "import-backend-wallet",
                   label: "error",
                   type: walletConfig?.type,
-                  instance,
+                  instance: instanceUrl,
                   error,
                 });
               },

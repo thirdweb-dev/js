@@ -10,12 +10,12 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 
 interface KmsGcpConfigProps {
-  instance: string;
+  instanceUrl: string;
 }
 
-export const KmsGcpConfig: React.FC<KmsGcpConfigProps> = ({ instance }) => {
-  const { mutate: setGcpKmsConfig } = useEngineSetWalletConfig(instance);
-  const { data: gcpConfig } = useEngineWalletConfig(instance);
+export const KmsGcpConfig: React.FC<KmsGcpConfigProps> = ({ instanceUrl }) => {
+  const { mutate: setGcpKmsConfig } = useEngineSetWalletConfig(instanceUrl);
+  const { data: gcpConfig } = useEngineWalletConfig(instanceUrl);
   const trackEvent = useTrack();
   const { onSuccess, onError } = useTxNotifications(
     "Configuration set successfully.",
@@ -157,7 +157,7 @@ export const KmsGcpConfig: React.FC<KmsGcpConfigProps> = ({ instance }) => {
           px={12}
           type="submit"
         >
-          {form.formState.isSubmitting ? "Saving..." : "Save Changes"}
+          {form.formState.isSubmitting ? "Saving..." : "Save"}
         </Button>
       </Flex>
     </Flex>

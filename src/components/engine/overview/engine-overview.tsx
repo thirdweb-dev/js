@@ -13,14 +13,16 @@ import { useState } from "react";
 import { NetworkSelectorButton } from "components/selects/NetworkSelectorButton";
 
 interface EngineOverviewProps {
-  instance: string;
+  instanceUrl: string;
 }
 
-export const EngineOverview: React.FC<EngineOverviewProps> = ({ instance }) => {
-  const backendWallets = useEngineBackendWallets(instance);
-  const { data: walletConfig } = useEngineWalletConfig(instance);
+export const EngineOverview: React.FC<EngineOverviewProps> = ({
+  instanceUrl,
+}) => {
+  const backendWallets = useEngineBackendWallets(instanceUrl);
+  const { data: walletConfig } = useEngineWalletConfig(instanceUrl);
   const [autoUpdate, setAutoUpdate] = useState<boolean>(true);
-  const transactionsQuery = useEngineTransactions(instance, autoUpdate);
+  const transactionsQuery = useEngineTransactions(instanceUrl, autoUpdate);
 
   return (
     <Flex flexDir="column" gap={12}>
@@ -80,8 +82,8 @@ export const EngineOverview: React.FC<EngineOverviewProps> = ({ instance }) => {
             </Flex>
 
             <Flex gap={2}>
-              <ImportBackendWalletButton instance={instance} />
-              <CreateBackendWalletButton instance={instance} />
+              <ImportBackendWalletButton instanceUrl={instanceUrl} />
+              <CreateBackendWalletButton instanceUrl={instanceUrl} />
             </Flex>
           </Flex>
 
@@ -96,7 +98,7 @@ export const EngineOverview: React.FC<EngineOverviewProps> = ({ instance }) => {
         </Flex>
 
         <BackendWalletsTable
-          instanceUrl={instance}
+          instanceUrl={instanceUrl}
           wallets={backendWallets.data ?? []}
           isLoading={backendWallets.isLoading}
           isFetched={backendWallets.isFetched}
@@ -129,7 +131,7 @@ export const EngineOverview: React.FC<EngineOverviewProps> = ({ instance }) => {
           transactions={transactionsQuery.data?.transactions ?? []}
           isLoading={transactionsQuery.isLoading}
           isFetched={transactionsQuery.isFetched}
-          instanceUrl={instance}
+          instanceUrl={instanceUrl}
         />
       </Flex>
     </Flex>

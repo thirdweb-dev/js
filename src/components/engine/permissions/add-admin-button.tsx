@@ -24,12 +24,14 @@ import { Button, FormLabel } from "tw-components";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 
 interface AddAdminButtonProps {
-  instance: string;
+  instanceUrl: string;
 }
 
-export const AddAdminButton: React.FC<AddAdminButtonProps> = ({ instance }) => {
+export const AddAdminButton: React.FC<AddAdminButtonProps> = ({
+  instanceUrl,
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { mutate: grantPermissions } = useEngineGrantPermissions(instance);
+  const { mutate: grantPermissions } = useEngineGrantPermissions(instanceUrl);
   const trackEvent = useTrack();
   const form = useForm<EngineAdmin>({
     defaultValues: {
@@ -67,7 +69,7 @@ export const AddAdminButton: React.FC<AddAdminButtonProps> = ({ instance }) => {
                   category: "engine",
                   action: "add-admin",
                   label: "success",
-                  instance,
+                  instance: instanceUrl,
                 });
               },
               onError: (error) => {
@@ -76,7 +78,7 @@ export const AddAdminButton: React.FC<AddAdminButtonProps> = ({ instance }) => {
                   category: "engine",
                   action: "add-admin",
                   label: "error",
-                  instance,
+                  instance: instanceUrl,
                   error,
                 });
               },

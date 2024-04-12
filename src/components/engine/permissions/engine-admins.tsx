@@ -4,14 +4,12 @@ import { AddAdminButton } from "./add-admin-button";
 import { Heading, Link, Text } from "tw-components";
 import { AdminsTable } from "./admins-table";
 
-interface PermissionsAdminProps {
-  instance: string;
+interface EngineAdminsProps {
+  instanceUrl: string;
 }
 
-export const PermissionsAdmin: React.FC<PermissionsAdminProps> = ({
-  instance,
-}) => {
-  const admins = useEnginePermissions(instance);
+export const EngineAdmins: React.FC<EngineAdminsProps> = ({ instanceUrl }) => {
+  const admins = useEnginePermissions(instanceUrl);
 
   return (
     <Flex flexDir="column" gap={4}>
@@ -20,7 +18,7 @@ export const PermissionsAdmin: React.FC<PermissionsAdminProps> = ({
         <Text>
           Admins are allowed to manage your Engine instance from the dashboard.{" "}
           <Link
-            href="https://portal.thirdweb.com/engine/features/permissions"
+            href="https://portal.thirdweb.com/engine/features/admins"
             color="primary.500"
             isExternal
           >
@@ -31,12 +29,12 @@ export const PermissionsAdmin: React.FC<PermissionsAdminProps> = ({
         </Text>
       </Flex>
       <AdminsTable
-        instanceUrl={instance}
+        instanceUrl={instanceUrl}
         admins={admins.data || []}
         isLoading={admins.isLoading}
         isFetched={admins.isFetched}
       />
-      <AddAdminButton instance={instance} />
+      <AddAdminButton instanceUrl={instanceUrl} />
     </Flex>
   );
 };
