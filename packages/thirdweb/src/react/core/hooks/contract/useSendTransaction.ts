@@ -15,9 +15,9 @@ import { useActiveAccount } from "../wallets/wallet-hooks.js";
  * // later
  * sendTx(tx);
  * ```
- * @transaction
+ * @internal
  */
-export function useSendTransaction(): UseMutationResult<
+export function useSendTransactionCore(): UseMutationResult<
   WaitForReceiptOptions,
   Error,
   PreparedTransaction

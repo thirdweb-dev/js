@@ -5,11 +5,11 @@ import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import type React from "react";
 import type { Chain, ChainMetadata } from "../../../../chains/types.js";
 import { convertApiChainToChain } from "../../../../chains/utils.js";
+import type { ThirdwebClient } from "../../../../client/client.js";
 import {
   useChainQuery,
   useChainsQuery,
 } from "../../../core/hooks/others/useChainQuery.js";
-import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import {
   useActiveWalletChain,
   useSwitchActiveWalletChain,
@@ -34,6 +34,9 @@ import {
 } from "../design-system/index.js";
 import { useDebouncedValue } from "../hooks/useDebouncedValue.js";
 import { useShowMore } from "../hooks/useShowMore.js";
+import type { ConnectLocale } from "./locale/types.js";
+
+// Note: Must not use useConnectUI here
 
 type NetworkSelectorChainProps = {
   /**
@@ -209,6 +212,8 @@ type NetworkSelectorContentProps = {
   chains: Chain[];
   networkSelector?: NetworkSelectorProps;
   showTabs?: boolean;
+  connectLocale: ConnectLocale;
+  client: ThirdwebClient;
 };
 
 /**
@@ -229,9 +234,11 @@ export function NetworkSelectorContent(props: NetworkSelectorContentProps) {
 function NetworkSelectorContentInner(
   props: NetworkSelectorContentProps & {
     chainsData: ChainData;
+    connectLocale: ConnectLocale;
+    client: ThirdwebClient;
   },
 ) {
-  const { chainsData } = props;
+  const { chainsData, connectLocale } = props;
 
   const chainMap = useMemo(() => {
     const _chainMap = new Map<number, Chain>();
@@ -241,7 +248,7 @@ function NetworkSelectorContentInner(
     return _chainMap;
   }, [props.chains]);
 
-  const locale = useConnectUI().connectLocale.networkSelector;
+  const locale = connectLocale.networkSelector;
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTab, setSelectedTab] = useState<"all" | "mainnet" | "testnet">(
     "all",
@@ -441,6 +448,8 @@ function NetworkSelectorContentInner(
           recentChainIds={recentChainsToShow}
           onSwitch={handleSwitch}
           renderChain={props.networkSelector?.renderChain}
+          connectLocale={connectLocale}
+          client={props.client}
         />
       </Container>
       {onCustomClick && (
@@ -498,8 +507,10 @@ const NetworkTabContent = (props: {
   onSwitch: (chain: Chain) => void;
   renderChain?: React.FC<NetworkSelectorChainProps>;
   close?: () => void;
+  connectLocale: ConnectLocale;
+  client: ThirdwebClient;
 }) => {
-  const locale = useConnectUI().connectLocale.networkSelector.categoryLabel;
+  const locale = props.connectLocale.networkSelector.categoryLabel;
 
   const { recentChainIds, popularChainIds, allChainIds } = props;
 
@@ -526,6 +537,8 @@ const NetworkTabContent = (props: {
             onSwitch={props.onSwitch}
             renderChain={props.renderChain}
             close={props.close}
+            client={props.client}
+            connectLocale={props.connectLocale}
           />
           <Spacer y="lg" />
         </div>
@@ -540,6 +553,8 @@ const NetworkTabContent = (props: {
             onSwitch={props.onSwitch}
             renderChain={props.renderChain}
             close={props.close}
+            client={props.client}
+            connectLocale={props.connectLocale}
           />
           <Spacer y="lg" />
         </div>
@@ -559,6 +574,8 @@ const NetworkTabContent = (props: {
         onSwitch={props.onSwitch}
         renderChain={props.renderChain}
         close={props.close}
+        client={props.client}
+        connectLocale={props.connectLocale}
       />
 
       {noChainsToShow && (
@@ -577,6 +594,8 @@ type NetworkListProps = {
   onSwitch: (chain: Chain) => void;
   renderChain?: React.FC<NetworkSelectorChainProps>;
   close?: () => void;
+  client: ThirdwebClient;
+  connectLocale: ConnectLocale;
 };
 
 const NetworkList = /* @__PURE__ */ memo(function NetworkList(
@@ -646,6 +665,8 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(
                 confirming={confirming}
                 onClick={() => handleSwitch(chain)}
                 switchingFailed={switchingFailed}
+                client={props.client}
+                connectLocale={props.connectLocale}
               />
             )}
           </li>
@@ -660,8 +681,10 @@ export const ChainButton = /* @__PURE__ */ memo(function ChainButton(props: {
   onClick: () => void;
   confirming: boolean;
   switchingFailed: boolean;
+  client: ThirdwebClient;
+  connectLocale: ConnectLocale;
 }) {
-  const locale = useConnectUI().connectLocale;
+  const locale = props.connectLocale;
   const { chain, confirming, switchingFailed } = props;
 
   const activeChain = useActiveWalletChain();
@@ -683,6 +706,7 @@ export const ChainButton = /* @__PURE__ */ memo(function ChainButton(props: {
           size={iconSize.lg}
           active={activeChain?.id === chain.id}
           loading="lazy"
+          client={props.client}
         />
       ) : (
         <Skeleton width={`${iconSize.lg}px`} height={`${iconSize.lg}px`} />

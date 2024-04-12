@@ -4,6 +4,7 @@ import { openWindow } from "../../../../utils/web/openWindow.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { WalletInfo } from "../../../../wallets/wallet-info.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
+import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { AppleIcon } from "../../ui/ConnectWallet/icons/AppleIcon.js";
 import { ChromeIcon } from "../../ui/ConnectWallet/icons/ChromeIcon.js";
 import { PlayStoreIcon } from "../../ui/ConnectWallet/icons/PlayStoreIcon.js";
@@ -164,6 +165,7 @@ const InstallScanScreen: React.FC<{
     scanToDownload: string;
   };
 }> = (props) => {
+  const { client } = useConnectUI();
   return (
     <Container animate="fadein" expand>
       <ModalHeader title={props.walletName} onBack={props.onBack} />
@@ -179,7 +181,13 @@ const InstallScanScreen: React.FC<{
       >
         <QRCode
           qrCodeUri={props.url}
-          QRIcon={<WalletImage id={props.walletId} size={iconSize.xxl} />}
+          QRIcon={
+            <WalletImage
+              id={props.walletId}
+              size={iconSize.xxl}
+              client={client}
+            />
+          }
         />
 
         <Spacer y="xl" />

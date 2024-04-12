@@ -53,7 +53,7 @@ export {
 
 // contract related
 export { useReadContract } from "../react/core/hooks/contract/useReadContract.js";
-export { useSendTransaction } from "../react/core/hooks/contract/useSendTransaction.js";
+export { useSendTransaction } from "../react/web/hooks/useSendTransaction.js";
 export { useSendBatchTransaction } from "../react/core/hooks/contract/useSendBatchTransaction.js";
 export { useSendAndConfirmTransaction } from "../react/core/hooks/contract/useSendAndConfirmTransaction.js";
 export { useEstimateGas } from "../react/core/hooks/contract/useEstimateGas.js";

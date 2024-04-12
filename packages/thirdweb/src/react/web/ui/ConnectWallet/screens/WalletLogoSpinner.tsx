@@ -1,5 +1,6 @@
 import { keyframes } from "@emotion/react";
 import type { WalletId } from "../../../../../wallets/wallet-types.js";
+import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import { WalletImage } from "../../components/WalletImage.js";
 import { useCustomTheme } from "../../design-system/CustomThemeProvider.js";
 import { fadeInAnimation } from "../../design-system/animations.js";
@@ -11,6 +12,7 @@ import { radius, spacing } from "../../design-system/index.js";
  * @internal
  */
 export function WalletLogoSpinner(props: { error: boolean; id: WalletId }) {
+  const { client } = useConnectUI();
   const loaderRadius = 20;
   const radiusFactor = 36 - loaderRadius;
   const dashArrayStart = 116 + radiusFactor;
@@ -51,7 +53,7 @@ export function WalletLogoSpinner(props: { error: boolean; id: WalletId }) {
           </svg>
 
           <WalletBg>
-            <WalletImage id={props.id} size={"68"} />
+            <WalletImage id={props.id} size={"68"} client={client} />
           </WalletBg>
         </div>
       </div>

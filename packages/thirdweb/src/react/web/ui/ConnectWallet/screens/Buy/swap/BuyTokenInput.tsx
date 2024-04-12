@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import type { Chain } from "../../../../../../../chains/types.js";
+import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
 import { Spacer } from "../../../../components/Spacer.js";
@@ -27,6 +28,7 @@ export function BuyTokenInput(props: {
   value: string;
   onChange: (value: string) => void;
   onSelectToken: () => void;
+  client: ThirdwebClient;
 }) {
   const chainQuery = useChainQuery(props.chain);
 
@@ -132,7 +134,12 @@ export function BuyTokenInput(props: {
           onClick={props.onSelectToken}
         >
           <Container flex="row" center="y" gap="sm">
-            <TokenIcon token={props.token} chain={props.chain} size="md" />
+            <TokenIcon
+              token={props.token}
+              chain={props.chain}
+              size="md"
+              client={props.client}
+            />
 
             <Container
               flex="column"

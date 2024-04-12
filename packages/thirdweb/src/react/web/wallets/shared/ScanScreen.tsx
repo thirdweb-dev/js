@@ -24,7 +24,7 @@ export const ScanScreen: React.FC<{
   qrScanInstruction: string;
   getStartedLink: string;
 }> = (props) => {
-  const { connectModal } = useConnectUI();
+  const { connectModal, client } = useConnectUI();
   return (
     <Container fullHeight flex="column" animate="fadein">
       <Container p="lg">
@@ -41,7 +41,13 @@ export const ScanScreen: React.FC<{
         >
           <QRCode
             qrCodeUri={props.qrCodeUri}
-            QRIcon={<WalletImage size={iconSize.xxl} id={props.walletId} />}
+            QRIcon={
+              <WalletImage
+                size={iconSize.xxl}
+                id={props.walletId}
+                client={client}
+              />
+            }
           />
 
           <Spacer y="lg" />

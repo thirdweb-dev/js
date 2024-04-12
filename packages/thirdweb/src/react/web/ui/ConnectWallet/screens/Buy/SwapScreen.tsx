@@ -38,6 +38,7 @@ import { fontSize, iconSize, radius } from "../../../design-system/index.js";
 import { useDebouncedValue } from "../../../hooks/useDebouncedValue.js";
 import type { SupportedTokens } from "../../defaultTokens.js";
 import type { IconFC } from "../../icons/types.js";
+import type { ConnectLocale } from "../../locale/types.js";
 import { TokenSelector } from "../TokenSelector.js";
 import {
   type ERC20OrNativeToken,
@@ -55,6 +56,8 @@ import { PayWithCrypto } from "./swap/PayWithCrypto.js";
 import { formatSeconds } from "./swap/formatSeconds.js";
 import { useSwapSupportedChains } from "./swap/useSwapSupportedChains.js";
 
+// NOTE: Must not use useConnectUI here because this UI can be used outside connect ui
+
 /**
  * @internal
  */
@@ -63,6 +66,7 @@ export function BuyScreen(props: {
   supportedTokens: SupportedTokens;
   onViewPendingTx: () => void;
   client: ThirdwebClient;
+  connectLocale: ConnectLocale;
 }) {
   const activeChain = useActiveWalletChain();
   const activeWallet = useActiveWallet();
@@ -107,8 +111,16 @@ export function BuyScreenContent(props: {
   account: Account;
   onViewPendingTx: () => void;
   supportedChains: Chain[];
+  connectLocale: ConnectLocale;
 }) {
-  const { activeChain, account, client, activeWallet, supportedChains } = props;
+  const {
+    activeChain,
+    account,
+    client,
+    activeWallet,
+    supportedChains,
+    connectLocale,
+  } = props;
   const [isSwitching, setIsSwitching] = useState(false);
   const switchActiveWalletChain = useSwitchActiveWalletChain();
   const [method] = useState<"crypto" | "creditCard">("crypto");
@@ -154,6 +166,7 @@ export function BuyScreenContent(props: {
     address: account.address,
     chain: fromChain,
     tokenAddress: isNativeToken(fromToken) ? undefined : fromToken.address,
+    client: client,
   });
 
   // when a quote is finalized ( approve sent if required or swap sent )
@@ -208,6 +221,8 @@ export function BuyScreenContent(props: {
           chains: supportedChains,
           select: (c) => setFromChain(c),
         }}
+        connectLocale={connectLocale}
+        client={client}
       />
     );
   }
@@ -228,6 +243,8 @@ export function BuyScreenContent(props: {
           chains: supportedChains,
           select: (c) => setToChain(c),
         }}
+        connectLocale={connectLocale}
+        client={client}
       />
     );
   }
@@ -320,6 +337,7 @@ export function BuyScreenContent(props: {
                     }}
                     activeAccount={account}
                     activeWallet={props.activeWallet}
+                    client={client}
                   />
                 )}
 
@@ -364,6 +382,7 @@ export function BuyScreenContent(props: {
             token={toToken}
             chain={toChain}
             onSelectToken={() => setScreen("select-to-token")}
+            client={props.client}
           />
         </Container>
 
@@ -386,6 +405,7 @@ export function BuyScreenContent(props: {
                     isLoading={
                       buyWithCryptoQuoteQuery.isLoading && !sourceTokenAmount
                     }
+                    client={client}
                   />
                   <SecondaryInfo
                     quoteIsLoading={buyWithCryptoQuoteQuery.isLoading}
@@ -412,6 +432,7 @@ export function BuyScreenContent(props: {
                     setDrawerScreen("address");
                   }}
                   chevron
+                  client={client}
                 />
               </Container>
 

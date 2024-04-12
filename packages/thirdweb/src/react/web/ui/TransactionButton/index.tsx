@@ -5,7 +5,7 @@ import {
 } from "../../../../transaction/actions/wait-for-tx-receipt.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
 import type { TransactionReceipt } from "../../../../transaction/types.js";
-import { useSendTransaction } from "../../../core/hooks/contract/useSendTransaction.js";
+import { useSendTransactionCore } from "../../../core/hooks/contract/useSendTransaction.js";
 import {
   useActiveAccount,
   useActiveWallet,
@@ -91,7 +91,7 @@ export function TransactionButton(props: TransactionButtonProps) {
   const wallet = useActiveWallet();
   const [isPending, setIsPending] = useState(false);
 
-  const sendTransaction = useSendTransaction();
+  const sendTransaction = useSendTransactionCore();
 
   if (!isPending) {
     return (

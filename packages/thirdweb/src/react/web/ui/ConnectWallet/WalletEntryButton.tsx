@@ -20,7 +20,7 @@ export function WalletEntryButton(props: {
   selectWallet: () => void;
 }) {
   const { walletId, selectWallet } = props;
-  const { connectLocale, recommendedWallets } = useConnectUI();
+  const { connectLocale, recommendedWallets, client } = useConnectUI();
   const isRecommended = recommendedWallets?.find((w) => w.id === walletId);
   const { screen } = useScreenContext();
   const walletInfo = useWalletInfo(walletId);
@@ -41,7 +41,7 @@ export function WalletEntryButton(props: {
         screen && typeof screen === "object" && screen.id === walletId
       }
     >
-      <WalletImage id={walletId} size={iconSize.xl} />
+      <WalletImage id={walletId} size={iconSize.xl} client={client} />
 
       <Container flex="column" gap="xxs" expand>
         {walletName ? (

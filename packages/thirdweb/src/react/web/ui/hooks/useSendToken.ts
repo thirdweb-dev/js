@@ -4,7 +4,7 @@ import { transfer } from "../../../../extensions/erc20/write/transfer.js";
 import { waitForReceipt } from "../../../../transaction/actions/wait-for-tx-receipt.js";
 import { prepareTransaction } from "../../../../transaction/prepare-transaction.js";
 import { toWei } from "../../../../utils/units.js";
-import { useSendTransaction } from "../../../core/hooks/contract/useSendTransaction.js";
+import { useSendTransactionCore } from "../../../core/hooks/contract/useSendTransaction.js";
 import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { useActiveWalletChain } from "../../../core/hooks/wallets/wallet-hooks.js";
 
@@ -15,7 +15,7 @@ import { useActiveWalletChain } from "../../../core/hooks/wallets/wallet-hooks.j
  * @internal
  */
 export function useSendToken() {
-  const sendTransaction = useSendTransaction();
+  const sendTransaction = useSendTransactionCore();
   const activeChain = useActiveWalletChain();
   const { client } = useConnectUI();
 

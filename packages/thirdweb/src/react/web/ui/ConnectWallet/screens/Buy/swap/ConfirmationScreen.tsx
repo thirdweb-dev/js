@@ -11,7 +11,7 @@ import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/
 import { waitForReceipt } from "../../../../../../../transaction/actions/wait-for-tx-receipt.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import type { Account } from "../../../../../../../wallets/interfaces/wallet.js";
-import { useSendTransaction } from "../../../../../../core/hooks/contract/useSendTransaction.js";
+import { useSendTransactionCore } from "../../../../../../core/hooks/contract/useSendTransaction.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
 import {
   type BuyWithCryptoStatusQueryParams,
@@ -51,7 +51,7 @@ export function SwapConfirmationScreen(props: {
   onQuoteFinalized: (quote: BuyWithCryptoQuote) => void;
   client: ThirdwebClient;
 }) {
-  const sendTransactionMutation = useSendTransaction();
+  const sendTransactionMutation = useSendTransactionCore();
 
   const [swapTx, setSwapTx] = useState<
     BuyWithCryptoStatusQueryParams | undefined
@@ -93,6 +93,7 @@ export function SwapConfirmationScreen(props: {
           toTokenSymbol || ""
         }`}
         swapTx={swapTx}
+        client={props.client}
       />
     );
   }
@@ -109,6 +110,7 @@ export function SwapConfirmationScreen(props: {
           amount={String(formatNumber(Number(props.toAmount), 4))}
           symbol={toTokenSymbol || ""}
           token={props.toToken}
+          client={props.client}
         />
       </ConfirmItem>
 
@@ -118,6 +120,7 @@ export function SwapConfirmationScreen(props: {
           amount={String(formatNumber(Number(props.fromAmount), 4))}
           symbol={fromTokenSymbol || ""}
           token={props.fromToken}
+          client={props.client}
         />
       </ConfirmItem>
 
@@ -332,6 +335,7 @@ function TokenInfo(props: {
   token: ERC20OrNativeToken;
   amount: string;
   symbol: string;
+  client: ThirdwebClient;
 }) {
   const chainQuery = useChainQuery(props.chain);
   return (
@@ -346,7 +350,12 @@ function TokenInfo(props: {
         <Text color="primaryText" size="md">
           {props.amount} {props.symbol}
         </Text>
-        <TokenIcon token={props.token} chain={props.chain} size="sm" />
+        <TokenIcon
+          token={props.token}
+          chain={props.chain}
+          size="sm"
+          client={props.client}
+        />
       </Container>
 
       {chainQuery.data ? (
@@ -387,6 +396,7 @@ function WaitingForConfirmation(props: {
   destinationChain: Chain;
   sourceAmount: string;
   destinationAmount: string;
+  client: ThirdwebClient;
 }) {
   const swapStatus = useBuyWithCryptoStatus(props.swapTx);
   const isSuccess = swapStatus.data?.status === "COMPLETED";
@@ -433,6 +443,7 @@ function WaitingForConfirmation(props: {
                   chain={props.destinationChain}
                   token={props.destinationToken}
                   size="xxl"
+                  client={props.client}
                 />
               </div>
             </div>

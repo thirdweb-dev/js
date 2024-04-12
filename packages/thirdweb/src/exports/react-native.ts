@@ -17,7 +17,7 @@ export {
 
 // contract related
 export { useReadContract } from "../react/core/hooks/contract/useReadContract.js";
-export { useSendTransaction } from "../react/core/hooks/contract/useSendTransaction.js";
+export { useSendTransactionCore as useSendTransaction } from "../react/core/hooks/contract/useSendTransaction.js";
 export { useEstimateGas } from "../react/core/hooks/contract/useEstimateGas.js";
 export { useWaitForReceipt } from "../react/core/hooks/contract/useWaitForReceipt.js";
 export { useContractEvents } from "../react/core/hooks/contract/useContractEvents.js";
