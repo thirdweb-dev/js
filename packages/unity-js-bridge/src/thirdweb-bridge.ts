@@ -442,14 +442,14 @@ class ThirdwebBridge implements TWBridge {
         const smartWallet = walletInstance as SmartWallet;
         // Connect flow for EOA first
         await this.connect(
-          wallet = personalWallet,
-          chainId = chainId,
-          password = password,
-          email = email,
-          phoneNumber = phoneNumber,
-          personalWallet = undefined,
-          authOptions = authOptions,
-          smartWalletAccountOverride = undefined,
+          personalWallet,
+          chainId,
+          password,
+          email,
+          phoneNumber,
+          undefined,
+          authOptions,
+          undefined,
         );
         await this.switchNetwork(chainId); // workaround for polygon/mumbai
         if (this.activeWallet) {
@@ -473,7 +473,7 @@ class ThirdwebBridge implements TWBridge {
       this.updateSDKSigner(await walletInstance.getSigner());
       return await this.activeSDK.wallet.getAddress();
     }
-    throw new Error("This wallet is not supported in WebGL: " + wallet);
+    throw new Error(`This wallet is not supported in WebGL: ${wallet}`);
   }
 
   public async disconnect() {
