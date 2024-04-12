@@ -25,13 +25,15 @@ export type ClaimParams = WithOverrides<{
     name: "allowlistProof";
     components: [
       { type: "bytes32[]"; name: "proof" },
-      { type: "uint256"; name: "maxQuantityInAllowlist" },
+      { type: "uint256"; name: "quantityLimitPerWallet" },
+      { type: "uint256"; name: "pricePerToken" },
+      { type: "address"; name: "currency" },
     ];
   }>;
   data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "data" }>;
 }>;
 
-export const FN_SELECTOR = "0x5ab31c1a" as const;
+export const FN_SELECTOR = "0x84bb1e42" as const;
 const FN_INPUTS = [
   {
     type: "address",
@@ -59,7 +61,15 @@ const FN_INPUTS = [
       },
       {
         type: "uint256",
-        name: "maxQuantityInAllowlist",
+        name: "quantityLimitPerWallet",
+      },
+      {
+        type: "uint256",
+        name: "pricePerToken",
+      },
+      {
+        type: "address",
+        name: "currency",
       },
     ],
   },
