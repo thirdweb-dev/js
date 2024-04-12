@@ -104,7 +104,7 @@ export function PayWithCrypto(props: {
         }}
       >
         {props.isLoading ? (
-          <Skeleton width="120px" height={fontSize.md} />
+          <Skeleton width="120px" height={fontSize.md} color="borderColor" />
         ) : (
           <Text
             size="md"

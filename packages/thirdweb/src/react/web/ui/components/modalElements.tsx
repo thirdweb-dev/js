@@ -1,25 +1,20 @@
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
 import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 import { StyledH2 } from "../design-system/elements.js";
-import { fontSize, iconSize, media } from "../design-system/index.js";
+import { fontSize, iconSize } from "../design-system/index.js";
 import { IconButton } from "./buttons.js";
 
-export const ModalTitle = /* @__PURE__ */ StyledH2(
-  (props: { centerOnMobile?: boolean }) => {
-    const theme = useCustomTheme();
-    return {
-      margin: 0,
-      fontWeight: 600,
-      fontSize: fontSize.lg,
-      color: theme.colors.primaryText,
-      lineHeight: 1.3,
-      textAlign: "left",
-      [media.mobile]: {
-        textAlign: props.centerOnMobile ? "center" : "left",
-      },
-    };
-  },
-);
+export const ModalTitle = /* @__PURE__ */ StyledH2(() => {
+  const theme = useCustomTheme();
+  return {
+    margin: 0,
+    fontWeight: 600,
+    fontSize: fontSize.lg,
+    color: theme.colors.primaryText,
+    lineHeight: 1.3,
+    textAlign: "left",
+  };
+});
 
 /**
  * @internal
@@ -38,26 +33,3 @@ export const BackButton: React.FC<{
     </IconButton>
   );
 };
-
-// UNUSED
-// const HelperLink = /* @__PURE__ */ StyledAnchor(
-//   (props: { md?: boolean }) => {
-//     const theme = useCustomTheme();
-//     return {
-//       all: "unset",
-//       cursor: "pointer",
-//       color: theme.colors.accentText,
-//       fontSize: props.md ? fontSize.md : fontSize.sm,
-//       textDecoration: "none",
-//       display: "block",
-//       lineHeight: 1.5,
-//       [media.mobile]: {
-//         textAlign: "center",
-//       },
-//       "&:hover": {
-//         color: theme.colors.primaryText,
-//         textDecoration: "none",
-//       },
-//     };
-//   },
-// );

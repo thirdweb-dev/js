@@ -18,20 +18,18 @@ import {
 import { getConnectLocale } from "../ui/ConnectWallet/locale/getConnectLocale.js";
 import type { ConnectLocale } from "../ui/ConnectWallet/locale/types.js";
 import { BuyScreen } from "../ui/ConnectWallet/screens/Buy/SwapScreen.js";
+import { fetchSwapSupportedChains } from "../ui/ConnectWallet/screens/Buy/swap/useSwapSupportedChains.js";
 import { Modal } from "../ui/components/Modal.js";
-import { Spacer } from "../ui/components/Spacer.js";
-import { Container, ModalHeader } from "../ui/components/basic.js";
-import { Text } from "../ui/components/text.js";
 import { CustomThemeProvider } from "../ui/design-system/CustomThemeProvider.js";
 import type { Theme } from "../ui/design-system/index.js";
 import type { LocaleId } from "../ui/types.js";
 import { LoadingScreen } from "../wallets/shared/LoadingScreen.js";
 
 type SendTransactionConfig = {
-  buyModal: {
-    locale: LocaleId;
-    supportedTokens: SupportedTokens;
-    theme: Theme | "light" | "dark";
+  buyModal?: {
+    locale?: LocaleId;
+    supportedTokens?: SupportedTokens;
+    theme?: Theme | "light" | "dark";
   };
 };
 
@@ -74,16 +72,35 @@ export function useSendTransaction(config?: SendTransactionConfig) {
 
         (async () => {
           try {
-            const walletBalance = await getWalletBalance({
-              address: address,
-              chain: tx.chain,
-              client: tx.client,
-            });
+            const swapSupportedChains = await fetchSwapSupportedChains(
+              tx.client,
+            );
 
+            const isBuySupported = swapSupportedChains.find(
+              (c) => c.id === tx.chain.id,
+            );
+
+            // buy not supported, can't show modal - send tx directly
+            if (!isBuySupported) {
+              sendTx();
+              return;
+            }
+
+            //  buy supported, check if there is enouch balance - if not show modal to buy tokens
+
+            const [walletBalance, gasCost] = await Promise.all([
+              getWalletBalance({
+                address: address,
+                chain: tx.chain,
+                client: tx.client,
+              }),
+              estimateGasCost({
+                transaction: tx,
+              }),
+            ]);
+
+            // Note: get tx.value AFTER estimateGasCost
             const txValue = await resolvePromisedValue(tx.value);
-            const gasCost = await estimateGasCost({
-              transaction: tx,
-            });
 
             const totalCostWei = gasCost.wei + (txValue || 0n);
             const walletBalanceWei = walletBalance.value;
@@ -103,17 +120,18 @@ export function useSendTransaction(config?: SendTransactionConfig) {
             // if not enough balance - show modal
             setRootEl(
               <TxModal
+                tx={tx}
                 onComplete={sendTx}
                 onClose={() => {
                   setRootEl(null);
                   reject(new Error("Not enough balance"));
                 }}
                 client={tx.client}
-                localeId={config?.buyModal.locale || "en_US"}
+                localeId={config?.buyModal?.locale || "en_US"}
                 supportedTokens={
-                  config?.buyModal.supportedTokens || defaultTokens
+                  config?.buyModal?.supportedTokens || defaultTokens
                 }
-                theme={config?.buyModal.theme || "dark"}
+                theme={config?.buyModal?.theme || "dark"}
                 txCostWei={totalCostWei}
                 walletBalanceWei={walletBalanceWei}
                 nativeTokenSymbol={walletBalance.symbol}
@@ -140,6 +158,7 @@ type ModalProps = {
   txCostWei: bigint;
   walletBalanceWei: bigint;
   nativeTokenSymbol: string;
+  tx: PreparedTransaction;
 };
 
 function TxModal(props: ModalProps) {
@@ -162,7 +181,6 @@ function TxModal(props: ModalProps) {
 
 function ModalContent(props: ModalProps) {
   const [locale, setLocale] = useState<ConnectLocale | undefined>();
-  const [screen] = useState<"base" | "buy">("base");
 
   useEffect(() => {
     getConnectLocale(props.localeId).then(setLocale);
@@ -170,25 +188,6 @@ function ModalContent(props: ModalProps) {
 
   if (!locale) {
     return <LoadingScreen />;
-  }
-
-  if (screen === "base") {
-    return (
-      <Container p="lg">
-        <ModalHeader title="Not enough balance" />
-        <Text>
-          Required: {toEther(props.txCostWei)} {props.nativeTokenSymbol}{" "}
-        </Text>
-
-        <Spacer y="lg" />
-
-        <Text>
-          Balance: {toEther(props.walletBalanceWei)} {
-            props.nativeTokenSymbol
-          }{" "}
-        </Text>
-      </Container>
-    );
   }
 
   return (
@@ -202,6 +201,12 @@ function ModalContent(props: ModalProps) {
       }}
       supportedTokens={props.supportedTokens}
       connectLocale={locale}
+      buyForTx={{
+        balance: props.walletBalanceWei,
+        cost: props.txCostWei,
+        tx: props.tx,
+        tokenSymbol: props.nativeTokenSymbol,
+      }}
     />
   );
 }
