@@ -32,5 +32,6 @@ export function sign({ hash, privateKey }: SignOptions): Signature {
     r: toHex(r),
     s: toHex(s),
     v: recovery ? 28n : 27n,
+    yParity: recovery,
   };
 }
