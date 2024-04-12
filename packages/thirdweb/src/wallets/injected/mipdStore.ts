@@ -1,4 +1,4 @@
-import { type Store, createStore } from "mipd";
+import { type EIP6963ProviderDetail, type Store, createStore } from "mipd";
 import type { Ethereum } from "../interfaces/ethereum.js";
 import type { WalletId } from "../wallet-types.js";
 
@@ -47,7 +47,7 @@ function getMIPDStore() {
   return mipdStore;
 }
 
-export function getInstalledWalletProviders() {
+export function getInstalledWalletProviders(): readonly EIP6963ProviderDetail[] {
   const providers = getMIPDStore().getProviders();
 
   for (const provider of providers) {

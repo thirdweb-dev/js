@@ -1,13 +1,12 @@
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { createWallet } from "../../../../../wallets/create-wallet.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../../wallets/smart/types.js";
 import { asyncLocalStorage } from "../../../../../wallets/storage/asyncLocalStorage.js";
 import { saveConnectParamsToStorage } from "../../../../../wallets/storage/walletStorage.js";
 import type { WalletInfo } from "../../../../../wallets/wallet-info.js";
-import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
-import { ModalConfigCtx } from "../../../providers/wallet-ui-states-provider.js";
+import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
 import { getSmartWalletLocale } from "../../../wallets/smartWallet/locale/getSmartWalletLocale.js";
 import type { SmartWalletLocale } from "../../../wallets/smartWallet/locale/types.js";
@@ -69,10 +68,10 @@ function SmartWalletConnecting(props: {
   onBack?: () => void;
   personalWalletInfo: WalletInfo;
 }) {
-  const localeId = useWalletConnectionCtx().locale;
-  const client = useWalletConnectionCtx().client;
+  const { locale: localeId, connectModal } = useConnectUI();
+  const client = useConnectUI().client;
   const [locale, setLocale] = useState<SmartWalletLocale | undefined>();
-  const { modalSize } = useContext(ModalConfigCtx);
+  const modalSize = connectModal.size;
   const { chain: smartWalletChain } = props.accountAbstraction;
 
   useEffect(() => {

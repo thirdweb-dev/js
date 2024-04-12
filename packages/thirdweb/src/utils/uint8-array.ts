@@ -215,3 +215,22 @@ export function concatUint8Arrays(
 
   return returnValue;
 }
+
+export function compareUint8Arrays(a: Uint8Array, b: Uint8Array): number {
+  assertUint8Array(a);
+  assertUint8Array(b);
+
+  const length = Math.min(a.length, b.length);
+
+  for (let index = 0; index < length; index++) {
+    // biome-ignore lint/style/noNonNullAssertion: we check the length above so the index is always in bounds
+    const diff = a[index]! - b[index]!;
+    if (diff !== 0) {
+      return Math.sign(diff);
+    }
+  }
+
+  // At this point, all the compared elements are equal.
+  // The shorter array should come first if the arrays are of different lengths.
+  return Math.sign(a.length - b.length);
+}

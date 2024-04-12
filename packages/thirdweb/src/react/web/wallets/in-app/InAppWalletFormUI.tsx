@@ -1,15 +1,11 @@
 import styled from "@emotion/styled";
-import { useContext } from "react";
 import type {
   InAppWalletAuth,
   InAppWalletSocialAuth,
 } from "../../../../wallets/in-app/core/wallet/index.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
-import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
-import {
-  ModalConfigCtx,
-  SetModalConfigCtx,
-} from "../../providers/wallet-ui-states-provider.js";
+import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import { useSetSelectionData } from "../../providers/wallet-ui-states-provider.js";
 import { TOS } from "../../ui/ConnectWallet/Modal/TOS.js";
 import { useScreenContext } from "../../ui/ConnectWallet/Modal/screen.js";
 import { PoweredByThirdweb } from "../../ui/ConnectWallet/PoweredByTW.js";
@@ -24,7 +20,6 @@ import { InputSelectionUI } from "./InputSelectionUI.js";
 import type { InAppWalletLocale } from "./locale/types.js";
 import { openOauthSignInWindow } from "./openOauthSignInWindow.js";
 import { socialIcons } from "./socialIcons.js";
-import type { InAppWalletSelectUIState } from "./types.js";
 
 const defaultAuthOptions: InAppWalletAuth[] = [
   "email",
@@ -34,7 +29,6 @@ const defaultAuthOptions: InAppWalletAuth[] = [
 ];
 
 export type InAppWalletFormUIProps = {
-  // authOptions: InAppWalletAuth[];
   select: () => void;
   locale: InAppWalletLocale;
   done: () => void;
@@ -47,17 +41,9 @@ export type InAppWalletFormUIProps = {
  */
 export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
   const locale = props.locale;
-  const { chain, client } = useWalletConnectionCtx();
+  const { chain, client, connectModal } = useConnectUI();
   const { done, wallet } = props;
-  const { modalSize } = useContext(ModalConfigCtx);
-  const setModalConfig = useContext(SetModalConfigCtx);
-
-  function saveState(data: InAppWalletSelectUIState) {
-    setModalConfig((p) => ({
-      ...p,
-      data,
-    }));
-  }
+  const setData = useSetSelectionData();
 
   const themeObj = useCustomTheme();
 
@@ -96,7 +82,7 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
         },
       });
 
-      saveState({
+      setData({
         socialLogin: {
           type: strategy,
           connectionPromise: connectPromise,
@@ -150,7 +136,7 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
         </Container>
       )}
 
-      {modalSize === "wide" && hasSocialLogins && enableEmailLogin && (
+      {connectModal.size === "wide" && hasSocialLogins && enableEmailLogin && (
         <TextDivider text={locale.or} />
       )}
 
@@ -158,7 +144,7 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
       {enableEmailLogin && (
         <InputSelectionUI
           onSelect={(email) => {
-            saveState({
+            setData({
               emailLogin: email,
             });
             props.select();
@@ -190,8 +176,8 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
  */
 export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
   const locale = props.locale.emailLoginScreen;
-  const modalConfig = useContext(ModalConfigCtx);
-  const isCompact = modalConfig.modalSize === "compact";
+  const { connectModal } = useConnectUI();
+  const isCompact = connectModal.size === "compact";
   const { initialScreen, screen } = useScreenContext();
 
   return (
@@ -224,17 +210,17 @@ export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
       </Container>
 
       {isCompact &&
-        (modalConfig.showThirdwebBranding !== false ||
-          modalConfig.termsOfServiceUrl ||
-          modalConfig.privacyPolicyUrl) && <Spacer y="xl" />}
+        (connectModal.showThirdwebBranding !== false ||
+          connectModal.termsOfServiceUrl ||
+          connectModal.privacyPolicyUrl) && <Spacer y="xl" />}
 
       <Container flex="column" gap="lg">
         <TOS
-          termsOfServiceUrl={modalConfig.termsOfServiceUrl}
-          privacyPolicyUrl={modalConfig.privacyPolicyUrl}
+          termsOfServiceUrl={connectModal.termsOfServiceUrl}
+          privacyPolicyUrl={connectModal.privacyPolicyUrl}
         />
 
-        {modalConfig.showThirdwebBranding !== false && <PoweredByThirdweb />}
+        {connectModal.showThirdwebBranding !== false && <PoweredByThirdweb />}
       </Container>
     </Container>
   );
