@@ -31,7 +31,6 @@ export async function download(options: DownloadOptions) {
   });
   if (!res.ok) {
     res.body?.cancel();
-    console.error("failed to download file", res.status, res.statusText);
     throw new Error(`Failed to download file: ${res.statusText}`);
   }
   return res;

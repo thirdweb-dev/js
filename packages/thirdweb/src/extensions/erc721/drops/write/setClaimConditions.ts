@@ -4,23 +4,21 @@ import type { ClaimConditionsInput } from "../../../../utils/extensions/drops/ty
 import { multicall } from "../../../common/__generated__/IMulticall/write/multicall.js";
 
 export type SetClaimConditionsParams = {
-  tokenId: bigint;
   phases: ClaimConditionsInput[];
   resetClaimEligibility?: boolean;
 };
 
 /**
- * Set the claim conditions for a ERC1155 drop
+ * Set the claim conditions for a ERC721 drop
  * @param options
  * @returns the prepared transaction
- * @extension ERC1155
+ * @extension ERC721
  * @example
  * ```ts
- * import { setClaimConditions } from "thirdweb/extensions/erc1155";
+ * import { setClaimConditions } from "thirdweb/extensions/erc721";
  *
- * const tx = await setClaimConditions({
+ * const tx = setClaimConditions({
  *  contract,
- *  tokenId: 0n,
  *  phases: [
  *    {
  *      maxClaimableSupply: 100n,
@@ -44,7 +42,6 @@ export function setClaimConditions(
           contract: options.contract,
           phases: options.phases,
           resetClaimEligibility: options.resetClaimEligibility,
-          tokenId: options.tokenId,
           tokenDecimals: 0,
         }),
       };
