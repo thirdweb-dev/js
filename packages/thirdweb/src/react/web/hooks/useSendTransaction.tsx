@@ -162,7 +162,7 @@ function TxModal(props: ModalProps) {
 
 function ModalContent(props: ModalProps) {
   const [locale, setLocale] = useState<ConnectLocale | undefined>();
-  const [screen, setScreen] = useState<"base" | "buy">("base");
+  const [screen] = useState<"base" | "buy">("base");
 
   useEffect(() => {
     getConnectLocale(props.localeId).then(setLocale);
