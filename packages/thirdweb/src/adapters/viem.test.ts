@@ -1,13 +1,11 @@
 import { zeroAddress } from "viem";
 import { beforeAll, describe, expect, test } from "vitest";
+import { ANVIL_PKEY_A } from "~test/test-wallets.js";
+import { typedData } from "~test/typed-data.js";
+import { ANVIL_CHAIN, FORKED_ETHEREUM_CHAIN } from "../../test/src/chains.js";
 import { TEST_CLIENT } from "../../test/src/test-clients.js";
 import { privateKeyAccount } from "../wallets/private-key.js";
 import { viemAdapter } from "./viem.js";
-
-import { ANVIL_PKEY_A } from "~test/test-wallets.js";
-import { typedData } from "~test/typed-data.js";
-import { ANVIL_CHAIN } from "../../test/src/chains.js";
-import { mainnet } from "../chains/chain-definitions/ethereum.js";
 
 const account = privateKeyAccount({
   privateKey: ANVIL_PKEY_A,
@@ -68,7 +66,7 @@ describe("walletClient.toViem", () => {
     walletClient = viemAdapter.walletClient.toViem({
       client: TEST_CLIENT,
       account,
-      chain: mainnet,
+      chain: FORKED_ETHEREUM_CHAIN,
     });
 
     const address = await walletClient.getAddresses();
