@@ -37,7 +37,7 @@ const FN_OUTPUTS = [] as const;
  * Checks if the `enableFeeAmount` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `enableFeeAmount` method is supported.
- * @extension ERC721
+ * @extension UNISWAP
  * @example
  * ```ts
  * import { isEnableFeeAmountSupported } from "thirdweb/extensions/uniswap";

@@ -41,7 +41,7 @@ const FN_OUTPUTS = [
  * Checks if the `getAllSigners` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `getAllSigners` method is supported.
- * @extension ERC721
+ * @extension ERC4337
  * @example
  * ```ts
  * import { isGetAllSignersSupported } from "thirdweb/extensions/erc4337";

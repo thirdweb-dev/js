@@ -151,7 +151,7 @@ const FN_OUTPUTS = ${JSON.stringify(preparedMethod[2], null, 2)} as const;
  * Checks if the \`${f.name}\` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the \`${f.name}\` method is supported.
- * @extension ERC721
+ * @extension ${extensionName.toUpperCase()}
  * @example
  * \`\`\`ts
  * import { is${uppercaseFirstLetter(
@@ -326,7 +326,7 @@ const FN_OUTPUTS = ${JSON.stringify(preparedMethod[2], null, 2)} as const;
  * Checks if the \`${f.name}\` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the \`${f.name}\` method is supported.
- * @extension ERC721
+ * @extension ${extensionName.toUpperCase()}
  * @example
  * \`\`\`ts
  * import { is${uppercaseFirstLetter(

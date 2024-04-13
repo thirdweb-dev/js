@@ -44,7 +44,7 @@ const FN_OUTPUTS = [] as const;
  * Checks if the `transferAndChangeRecovery` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `transferAndChangeRecovery` method is supported.
- * @extension ERC721
+ * @extension FARCASTER
  * @example
  * ```ts
  * import { isTransferAndChangeRecoverySupported } from "thirdweb/extensions/farcaster";

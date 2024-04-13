@@ -32,7 +32,7 @@ const FN_OUTPUTS = [] as const;
  * Checks if the `setRulesEngineOverride` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `setRulesEngineOverride` method is supported.
- * @extension ERC721
+ * @extension THIRDWEB
  * @example
  * ```ts
  * import { isSetRulesEngineOverrideSupported } from "thirdweb/extensions/thirdweb";

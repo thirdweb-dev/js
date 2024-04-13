@@ -1,17 +1,15 @@
 import { describe, expect, test as it } from "vitest";
-
 import { TEST_WALLET_A, TEST_WALLET_B } from "../../test/src/addresses.js";
+import { FORKED_ETHEREUM_CHAIN } from "../../test/src/chains.js";
 import { TEST_CLIENT } from "../../test/src/test-clients.js";
-
-import { ethereum } from "../chains/chain-definitions/ethereum.js";
 import { toWei } from "../utils/units.js";
 import { estimateGas } from "./actions/estimate-gas.js";
 import { prepareTransaction } from "./prepare-transaction.js";
 
-describe("prepareTransaction", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("prepareTransaction", () => {
   it("should prepare a transaction", () => {
     const preparedTx = prepareTransaction({
-      chain: ethereum,
+      chain: FORKED_ETHEREUM_CHAIN,
       client: TEST_CLIENT,
       to: TEST_WALLET_B,
       value: toWei("0.1"),
@@ -26,7 +24,7 @@ describe("prepareTransaction", () => {
     "should estimate the gas correctly",
     async () => {
       const preparedTx = prepareTransaction({
-        chain: ethereum,
+        chain: FORKED_ETHEREUM_CHAIN,
         client: TEST_CLIENT,
         to: TEST_WALLET_B,
         value: toWei("0.1"),

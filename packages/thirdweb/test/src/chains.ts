@@ -10,21 +10,21 @@ export const FORKED_OPTIMISM_RPC = `http://127.0.0.1:8646/${poolId}`;
 export const ANVIL_RPC = `http://127.0.0.1:8647/${poolId}`;
 
 export const FORKED_ETHEREUM_CHAIN = defineChain({
-	...ethereum,
-	// override the rpc url
-	rpc: FORKED_ETHEREUM_RPC,
+  ...ethereum,
+  // override the rpc url
+  rpc: FORKED_ETHEREUM_RPC,
 });
 
 export const FORKED_OPTIMISM_CHAIN = defineChain({
-	...optimism,
-	// override the rpc url
-	rpc: FORKED_OPTIMISM_RPC,
+  ...optimism,
+  // override the rpc url
+  rpc: FORKED_OPTIMISM_RPC,
 });
 
 export const ANVIL_CHAIN = defineChain({
-	...anvil,
-	// override the rpc url
-	rpc: ANVIL_RPC,
+  ...anvil,
+  // override the rpc url
+  rpc: ANVIL_RPC,
 });
 
 export const FORK_BLOCK_NUMBER = 19139495n;

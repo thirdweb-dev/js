@@ -31,7 +31,7 @@ const FN_OUTPUTS = [
  * Checks if the `uri` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `uri` method is supported.
- * @extension ERC721
+ * @extension ERC1155
  * @example
  * ```ts
  * import { isUriSupported } from "thirdweb/extensions/erc1155";

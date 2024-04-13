@@ -43,7 +43,7 @@ const FN_OUTPUTS = [
  * Checks if the `transferFrom` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `transferFrom` method is supported.
- * @extension ERC721
+ * @extension ERC20
  * @example
  * ```ts
  * import { isTransferFromSupported } from "thirdweb/extensions/erc20";

@@ -72,7 +72,7 @@ const FN_OUTPUTS = [] as const;
  * Checks if the `publishContract` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `publishContract` method is supported.
- * @extension ERC721
+ * @extension THIRDWEB
  * @example
  * ```ts
  * import { isPublishContractSupported } from "thirdweb/extensions/thirdweb";

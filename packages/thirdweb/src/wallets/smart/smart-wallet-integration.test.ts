@@ -73,7 +73,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       await expect(tx).rejects.toMatchInlineSnapshot(`
         [TransactionError: Error - Not authorized
 
-        contract: 0x6A7a26c9a595E6893C255C9dF0b593e77518e0c3
+        contract: ${contract.address}
         chainId: 421614]
       `);
     });

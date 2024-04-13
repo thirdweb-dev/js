@@ -53,7 +53,7 @@ const FN_OUTPUTS = [
  * Checks if the `getAllExtensions` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `getAllExtensions` method is supported.
- * @extension ERC721
+ * @extension ERC7504
  * @example
  * ```ts
  * import { isGetAllExtensionsSupported } from "thirdweb/extensions/erc7504";

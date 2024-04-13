@@ -38,7 +38,7 @@ const FN_OUTPUTS = [
  * Checks if the `approve` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `approve` method is supported.
- * @extension ERC721
+ * @extension ERC20
  * @example
  * ```ts
  * import { isApproveSupported } from "thirdweb/extensions/erc20";

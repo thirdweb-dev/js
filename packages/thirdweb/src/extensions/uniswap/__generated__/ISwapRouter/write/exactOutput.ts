@@ -66,7 +66,7 @@ const FN_OUTPUTS = [
  * Checks if the `exactOutput` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `exactOutput` method is supported.
- * @extension ERC721
+ * @extension UNISWAP
  * @example
  * ```ts
  * import { isExactOutputSupported } from "thirdweb/extensions/uniswap";

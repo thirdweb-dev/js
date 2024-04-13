@@ -50,7 +50,7 @@ const FN_OUTPUTS = [] as const;
  * Checks if the `acceptOffer` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `acceptOffer` method is supported.
- * @extension ERC721
+ * @extension MARKETPLACE
  * @example
  * ```ts
  * import { isAcceptOfferSupported } from "thirdweb/extensions/marketplace";

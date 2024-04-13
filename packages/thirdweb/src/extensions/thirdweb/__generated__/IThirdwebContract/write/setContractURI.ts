@@ -29,7 +29,7 @@ const FN_OUTPUTS = [] as const;
  * Checks if the `setContractURI` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `setContractURI` method is supported.
- * @extension ERC721
+ * @extension THIRDWEB
  * @example
  * ```ts
  * import { isSetContractURISupported } from "thirdweb/extensions/thirdweb";

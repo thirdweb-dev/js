@@ -12,7 +12,7 @@ const FN_OUTPUTS = [] as const;
  * Checks if the `deposit` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `deposit` method is supported.
- * @extension ERC721
+ * @extension ERC20
  * @example
  * ```ts
  * import { isDepositSupported } from "thirdweb/extensions/erc20";

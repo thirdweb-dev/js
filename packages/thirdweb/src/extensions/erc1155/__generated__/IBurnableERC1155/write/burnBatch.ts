@@ -39,7 +39,7 @@ const FN_OUTPUTS = [] as const;
  * Checks if the `burnBatch` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `burnBatch` method is supported.
- * @extension ERC721
+ * @extension ERC1155
  * @example
  * ```ts
  * import { isBurnBatchSupported } from "thirdweb/extensions/erc1155";

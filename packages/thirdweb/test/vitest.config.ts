@@ -1,7 +1,7 @@
 import { join } from "node:path";
-import { defineConfig } from "vitest/config";
 // @ts-expect-error - no types
 import codspeedPlugin from "@codspeed/vitest-plugin";
+import { defineConfig } from "vitest/config";
 
 const plugins = process.env.CI ? [codspeedPlugin()] : [];
 
@@ -13,7 +13,7 @@ export default defineConfig({
     },
     benchmark: {},
     coverage: {
-      all: true,
+      all: false,
       provider: "v8",
       reporter: process.env.CI ? ["lcov"] : ["text", "json", "html"],
       exclude: [
@@ -34,11 +34,11 @@ export default defineConfig({
     include: ["src/**/*.test.ts"],
     // setupFiles: [join(__dirname, "./setup.ts")],
     globalSetup: [join(__dirname, "./globalSetup.ts")],
-    testTimeout: 30_000,
-    retry: process.env.CI ? 0 : 3,
+    testTimeout: 60_000,
+    retry: 0,
+    bail: 1,
     // clear any mocks between any tests
     clearMocks: true,
     pool: "forks",
-    cache: false,
   },
 });

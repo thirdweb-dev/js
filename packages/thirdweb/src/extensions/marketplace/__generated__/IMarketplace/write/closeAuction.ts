@@ -37,7 +37,7 @@ const FN_OUTPUTS = [] as const;
  * Checks if the `closeAuction` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `closeAuction` method is supported.
- * @extension ERC721
+ * @extension MARKETPLACE
  * @example
  * ```ts
  * import { isCloseAuctionSupported } from "thirdweb/extensions/marketplace";

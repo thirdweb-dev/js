@@ -34,7 +34,7 @@ const FN_OUTPUTS = [] as const;
  * Checks if the `grantRole` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `grantRole` method is supported.
- * @extension ERC721
+ * @extension PERMISSIONS
  * @example
  * ```ts
  * import { isGrantRoleSupported } from "thirdweb/extensions/permissions";

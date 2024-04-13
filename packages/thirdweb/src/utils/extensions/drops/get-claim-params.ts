@@ -18,6 +18,7 @@ export type GetClaimParamsOptions = {
     }
   | {
       type: "erc20";
+      tokenDecimals: number;
     }
   | {
       type: "erc1155";
@@ -46,8 +47,16 @@ export async function getClaimParams(options: GetClaimParamsOptions) {
         contract: options.contract,
       });
     }
-    // erc20 not implemented yet
-    throw new Error("ERC20 not implemented yet");
+
+    // otherwise erc20 case!
+
+    // lazy-load the getActiveClaimCondition function
+    const { getActiveClaimCondition } = await import(
+      "../../../extensions/erc721/drops/read/getActiveClaimCondition.js"
+    );
+    return await getActiveClaimCondition({
+      contract: options.contract,
+    });
   })();
 
   // compute the allowListProof in an iife
@@ -70,7 +79,7 @@ export async function getClaimParams(options: GetClaimParamsOptions) {
       contract: options.contract,
       claimer: options.from || options.to, // receiver and claimer can be different, always prioritize the claimer for allowlists
       merkleRoot: cc.merkleRoot,
-      tokenDecimals: 0, // nfts have no decimals
+      tokenDecimals: options.type === "erc20" ? options.tokenDecimals : 0, // nfts have no decimals
     });
     // if no proof is found, we'll try the empty proof
     if (!allowListProof) {

@@ -34,7 +34,7 @@ const FN_OUTPUTS = [
  * Checks if the `price` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `price` method is supported.
- * @extension ERC721
+ * @extension FARCASTER
  * @example
  * ```ts
  * import { isPriceSupported } from "thirdweb/extensions/farcaster";

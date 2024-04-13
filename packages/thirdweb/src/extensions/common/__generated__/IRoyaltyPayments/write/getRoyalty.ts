@@ -51,7 +51,7 @@ const FN_OUTPUTS = [
  * Checks if the `getRoyalty` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `getRoyalty` method is supported.
- * @extension ERC721
+ * @extension COMMON
  * @example
  * ```ts
  * import { isGetRoyaltySupported } from "thirdweb/extensions/common";

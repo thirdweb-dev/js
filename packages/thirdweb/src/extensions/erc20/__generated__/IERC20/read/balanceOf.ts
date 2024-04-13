@@ -31,7 +31,7 @@ const FN_OUTPUTS = [
  * Checks if the `balanceOf` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `balanceOf` method is supported.
- * @extension ERC721
+ * @extension ERC20
  * @example
  * ```ts
  * import { isBalanceOfSupported } from "thirdweb/extensions/erc20";
