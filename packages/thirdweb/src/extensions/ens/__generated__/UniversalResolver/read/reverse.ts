@@ -43,7 +43,7 @@ const FN_OUTPUTS = [
  * Checks if the `reverse` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `reverse` method is supported.
- * @extension ERC721
+ * @extension ENS
  * @example
  * ```ts
  * import { isReverseSupported } from "thirdweb/extensions/ens";

@@ -104,7 +104,7 @@ const FN_OUTPUTS = [] as const;
  * Checks if the `simulateHandleOp` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `simulateHandleOp` method is supported.
- * @extension ERC721
+ * @extension ERC4337
  * @example
  * ```ts
  * import { isSimulateHandleOpSupported } from "thirdweb/extensions/erc4337";

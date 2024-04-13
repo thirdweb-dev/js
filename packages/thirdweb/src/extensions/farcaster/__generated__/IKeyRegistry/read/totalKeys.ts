@@ -36,7 +36,7 @@ const FN_OUTPUTS = [
  * Checks if the `totalKeys` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `totalKeys` method is supported.
- * @extension ERC721
+ * @extension FARCASTER
  * @example
  * ```ts
  * import { isTotalKeysSupported } from "thirdweb/extensions/farcaster";

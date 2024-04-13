@@ -34,7 +34,7 @@ const FN_OUTPUTS = [
  * Checks if the `supportsInterface` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `supportsInterface` method is supported.
- * @extension ERC721
+ * @extension ERC165
  * @example
  * ```ts
  * import { isSupportsInterfaceSupported } from "thirdweb/extensions/erc165";

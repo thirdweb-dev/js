@@ -86,7 +86,7 @@ const FN_OUTPUTS = [
  * Checks if the `mintWithSignature` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `mintWithSignature` method is supported.
- * @extension ERC721
+ * @extension ERC20
  * @example
  * ```ts
  * import { isMintWithSignatureSupported } from "thirdweb/extensions/erc20";

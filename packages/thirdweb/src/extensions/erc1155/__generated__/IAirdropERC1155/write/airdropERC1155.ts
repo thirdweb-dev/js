@@ -67,7 +67,7 @@ const FN_OUTPUTS = [] as const;
  * Checks if the `airdropERC1155` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `airdropERC1155` method is supported.
- * @extension ERC721
+ * @extension ERC1155
  * @example
  * ```ts
  * import { isAirdropERC1155Supported } from "thirdweb/extensions/erc1155";

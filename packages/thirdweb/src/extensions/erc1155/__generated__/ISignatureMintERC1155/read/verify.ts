@@ -108,7 +108,7 @@ const FN_OUTPUTS = [
  * Checks if the `verify` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `verify` method is supported.
- * @extension ERC721
+ * @extension ERC1155
  * @example
  * ```ts
  * import { isVerifySupported } from "thirdweb/extensions/erc1155";

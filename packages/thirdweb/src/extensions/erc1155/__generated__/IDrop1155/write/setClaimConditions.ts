@@ -89,7 +89,7 @@ const FN_OUTPUTS = [] as const;
  * Checks if the `setClaimConditions` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `setClaimConditions` method is supported.
- * @extension ERC721
+ * @extension ERC1155
  * @example
  * ```ts
  * import { isSetClaimConditionsSupported } from "thirdweb/extensions/erc1155";

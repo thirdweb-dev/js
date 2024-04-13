@@ -18,7 +18,7 @@ const FN_OUTPUTS = [
  * Checks if the `rentedUnits` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `rentedUnits` method is supported.
- * @extension ERC721
+ * @extension FARCASTER
  * @example
  * ```ts
  * import { isRentedUnitsSupported } from "thirdweb/extensions/farcaster";

@@ -18,7 +18,7 @@ const FN_OUTPUTS = [
  * Checks if the `DOMAIN_SEPARATOR` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `DOMAIN_SEPARATOR` method is supported.
- * @extension ERC721
+ * @extension ERC20
  * @example
  * ```ts
  * import { isDOMAIN_SEPARATORSupported } from "thirdweb/extensions/erc20";

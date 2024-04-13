@@ -20,7 +20,7 @@ const FN_OUTPUTS = [
  * Checks if the `asset` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `asset` method is supported.
- * @extension ERC721
+ * @extension ERC4626
  * @example
  * ```ts
  * import { isAssetSupported } from "thirdweb/extensions/erc4626";
