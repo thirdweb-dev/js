@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmQqhH28QpUrreoRw5Gj8YShzdHxxVGMjfVrx3TqJNLSLv",
+    "width": 1067,
+    "height": 1067,
+    "format": "png"
+  },
   "infoURL": "https://bearnetwork.net",
   "name": "Bear Network Chain Mainnet",
   "nativeCurrency": {
