@@ -36,6 +36,8 @@ export default defineConfig({
     globalSetup: [join(__dirname, "./globalSetup.ts")],
     testTimeout: 30_000,
     retry: 0,
+    fileParallelism: false,
+    bail: 1,
     // clear any mocks between any tests
     clearMocks: true,
     pool: "forks",
