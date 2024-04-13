@@ -12,6 +12,7 @@ import type { ClaimConditionsInput } from "./types.js";
 export async function getMulticallSetClaimConditionTransactions(options: {
   phases: ClaimConditionsInput[];
   contract: ThirdwebContract;
+  tokenDecimals: number;
   tokenId?: bigint;
   resetClaimEligibility?: boolean;
 }): Promise<Hex[]> {
@@ -25,7 +26,7 @@ export async function getMulticallSetClaimConditionTransactions(options: {
           overrides: phase.overrideList,
           client: options.contract.client,
           chain: options.contract.chain,
-          tokenDecimals: 0,
+          tokenDecimals: options.tokenDecimals,
         });
         merkleInfos[shardedMerkleInfo.merkleRoot] = uri;
         merkleRoot = shardedMerkleInfo.merkleRoot;

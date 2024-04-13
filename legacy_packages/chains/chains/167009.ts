@@ -7,6 +7,11 @@ export default {
       "name": "blockscout",
       "url": "https://blockscoutapi.hekla.taiko.xyz",
       "standard": "EIP3091"
+    },
+    {
+      "name": "routescan",
+      "url": "https://hekla.taikoscan.network",
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
