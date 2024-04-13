@@ -109,6 +109,9 @@ jobs:
       - name: Setup & Install
         uses: ./.github/composite-actions/install
 
+      - name: Set up foundry
+        uses: foundry-rs/foundry-toolchain@v1
+
       - name: Run benchmarks
         uses: CodSpeedHQ/action@v2
         with:
