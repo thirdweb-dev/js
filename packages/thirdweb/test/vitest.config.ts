@@ -13,7 +13,7 @@ export default defineConfig({
     },
     benchmark: {},
     coverage: {
-      all: true,
+      all: false,
       provider: "v8",
       reporter: process.env.CI ? ["lcov"] : ["text", "json", "html"],
       exclude: [
@@ -36,10 +36,7 @@ export default defineConfig({
     globalSetup: [join(__dirname, "./globalSetup.ts")],
     testTimeout: 30_000,
     retry: process.env.CI ? 0 : 3,
-    fileParallelism: process.env.CI ? false : true,
     // clear any mocks between any tests
     clearMocks: true,
-    pool: "forks",
-    cache: false,
   },
 });
