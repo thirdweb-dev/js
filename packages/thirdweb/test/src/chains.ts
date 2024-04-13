@@ -5,9 +5,9 @@ import { defineChain } from "../../src/chains/utils.js";
 
 export const poolId = Number(process.env.VITEST_POOL_ID ?? 1);
 
-export const FORKED_ETHEREUM_RPC = "http://127.0.0.1:8645/";
-export const FORKED_OPTIMISM_RPC = "http://127.0.0.1:8646/";
-export const ANVIL_RPC = "http://127.0.0.1:8647/";
+export const FORKED_ETHEREUM_RPC = `http://127.0.0.1:8645/${poolId}`;
+export const FORKED_OPTIMISM_RPC = `http://127.0.0.1:8646/${poolId}`;
+export const ANVIL_RPC = `http://127.0.0.1:8647/${poolId}`;
 
 export const FORKED_ETHEREUM_CHAIN = defineChain({
   ...ethereum,

@@ -114,6 +114,9 @@ jobs:
 
       - name: Set up foundry
         uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly-440ec525deb00b4dca138794865c27d1e8ea4d01
+          cache: false
 
       - name: Run benchmarks
         uses: CodSpeedHQ/action@v2
