@@ -4,7 +4,7 @@ import { FORK_BLOCK_NUMBER, OPTIMISM_FORK_BLOCK_NUMBER } from "./src/chains.js";
 
 require("dotenv-mono").load();
 
-const SECRET_KEY = ""; //process.env.TW_SECRET_KEY as string;
+const SECRET_KEY = process.env.TW_SECRET_KEY as string;
 
 const clientId = SECRET_KEY
   ? Buffer.from(sha256(SECRET_KEY)).toString("hex").slice(0, 32)
