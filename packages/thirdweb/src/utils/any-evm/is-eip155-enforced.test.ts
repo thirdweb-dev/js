@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
+import { ANVIL_CHAIN } from "../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
-import { ethereum } from "../../chains/chain-definitions/ethereum.js";
 import { optimism } from "../../chains/chain-definitions/optimism.js";
 import { isEIP155Enforced } from "./is-eip155-enforced.js";
 
@@ -22,8 +22,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("isEIP155Enforced", () => {
   it("should return false if EIP-155 is not enforced", async () => {
     // Call the isEIP155Enforced function with a chain that does not enforce EIP-155
     const result = await isEIP155Enforced({
-      // ethereum does not enforce eip155
-      chain: ethereum,
+      // localhost does not enforce eip155
+      chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
     });
 
