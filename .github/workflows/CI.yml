@@ -73,6 +73,9 @@ jobs:
 
       - name: Set up foundry
         uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly-d369d2486f85576eec4ca41d277391dfdae21ba7
+          cache: false
 
       - run: pnpm test
 
