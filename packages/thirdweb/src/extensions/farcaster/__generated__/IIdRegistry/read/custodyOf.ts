@@ -32,7 +32,7 @@ const FN_OUTPUTS = [
  * Checks if the `custodyOf` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `custodyOf` method is supported.
- * @extension ERC721
+ * @extension FARCASTER
  * @example
  * ```ts
  * import { isCustodyOfSupported } from "thirdweb/extensions/farcaster";

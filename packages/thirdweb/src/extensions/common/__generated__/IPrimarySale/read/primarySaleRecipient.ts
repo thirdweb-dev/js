@@ -18,7 +18,7 @@ const FN_OUTPUTS = [
  * Checks if the `primarySaleRecipient` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `primarySaleRecipient` method is supported.
- * @extension ERC721
+ * @extension COMMON
  * @example
  * ```ts
  * import { isPrimarySaleRecipientSupported } from "thirdweb/extensions/common";

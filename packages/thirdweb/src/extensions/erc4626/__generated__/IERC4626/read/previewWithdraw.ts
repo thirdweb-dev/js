@@ -38,7 +38,7 @@ const FN_OUTPUTS = [
  * Checks if the `previewWithdraw` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `previewWithdraw` method is supported.
- * @extension ERC721
+ * @extension ERC4626
  * @example
  * ```ts
  * import { isPreviewWithdrawSupported } from "thirdweb/extensions/erc4626";

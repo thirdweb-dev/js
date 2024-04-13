@@ -46,7 +46,7 @@ const FN_OUTPUTS = [
  * Checks if the `deployProxyByImplementation` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `deployProxyByImplementation` method is supported.
- * @extension ERC721
+ * @extension THIRDWEB
  * @example
  * ```ts
  * import { isDeployProxyByImplementationSupported } from "thirdweb/extensions/thirdweb";

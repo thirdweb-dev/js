@@ -61,7 +61,7 @@ const FN_OUTPUTS = [
  * Checks if the `createRuleMultiplicative` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `createRuleMultiplicative` method is supported.
- * @extension ERC721
+ * @extension THIRDWEB
  * @example
  * ```ts
  * import { isCreateRuleMultiplicativeSupported } from "thirdweb/extensions/thirdweb";

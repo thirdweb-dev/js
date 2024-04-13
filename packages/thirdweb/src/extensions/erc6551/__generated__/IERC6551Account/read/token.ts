@@ -27,7 +27,7 @@ const FN_OUTPUTS = [
  * Checks if the `token` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `token` method is supported.
- * @extension ERC721
+ * @extension ERC6551
  * @example
  * ```ts
  * import { isTokenSupported } from "thirdweb/extensions/erc6551";

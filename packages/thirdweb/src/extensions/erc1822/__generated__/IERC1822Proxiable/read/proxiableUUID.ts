@@ -18,7 +18,7 @@ const FN_OUTPUTS = [
  * Checks if the `proxiableUUID` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `proxiableUUID` method is supported.
- * @extension ERC721
+ * @extension ERC1822
  * @example
  * ```ts
  * import { isProxiableUUIDSupported } from "thirdweb/extensions/erc1822";
