@@ -95,7 +95,7 @@ const FN_OUTPUTS = [
  * Checks if the `getAllAuctions` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `getAllAuctions` method is supported.
- * @extension ERC721
+ * @extension MARKETPLACE
  * @example
  * ```ts
  * import { isGetAllAuctionsSupported } from "thirdweb/extensions/marketplace";

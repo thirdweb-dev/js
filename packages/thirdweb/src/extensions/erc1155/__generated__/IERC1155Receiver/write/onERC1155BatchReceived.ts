@@ -53,7 +53,7 @@ const FN_OUTPUTS = [
  * Checks if the `onERC1155BatchReceived` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `onERC1155BatchReceived` method is supported.
- * @extension ERC721
+ * @extension ERC1155
  * @example
  * ```ts
  * import { isOnERC1155BatchReceivedSupported } from "thirdweb/extensions/erc1155";

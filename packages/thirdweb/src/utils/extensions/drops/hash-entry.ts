@@ -5,7 +5,6 @@ import {
   ADDRESS_ZERO,
   isNativeTokenAddress,
 } from "../../../constants/addresses.js";
-
 import { keccak256 } from "../../hashing/keccak256.js";
 import { convertQuantity } from "./convert-quantity.js";
 import type { OverrideEntry } from "./types.js";

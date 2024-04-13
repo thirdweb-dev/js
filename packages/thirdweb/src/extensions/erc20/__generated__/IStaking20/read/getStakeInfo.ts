@@ -36,7 +36,7 @@ const FN_OUTPUTS = [
  * Checks if the `getStakeInfo` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `getStakeInfo` method is supported.
- * @extension ERC721
+ * @extension ERC20
  * @example
  * ```ts
  * import { isGetStakeInfoSupported } from "thirdweb/extensions/erc20";

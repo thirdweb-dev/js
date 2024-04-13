@@ -40,7 +40,7 @@ const FN_OUTPUTS = [] as const;
  * Checks if the `unpublishContract` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `unpublishContract` method is supported.
- * @extension ERC721
+ * @extension THIRDWEB
  * @example
  * ```ts
  * import { isUnpublishContractSupported } from "thirdweb/extensions/thirdweb";

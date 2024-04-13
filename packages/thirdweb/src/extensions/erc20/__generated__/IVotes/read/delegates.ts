@@ -31,7 +31,7 @@ const FN_OUTPUTS = [
  * Checks if the `delegates` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `delegates` method is supported.
- * @extension ERC721
+ * @extension ERC20
  * @example
  * ```ts
  * import { isDelegatesSupported } from "thirdweb/extensions/erc20";

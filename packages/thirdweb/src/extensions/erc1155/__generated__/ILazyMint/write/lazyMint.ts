@@ -47,7 +47,7 @@ const FN_OUTPUTS = [
  * Checks if the `lazyMint` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `lazyMint` method is supported.
- * @extension ERC721
+ * @extension ERC1155
  * @example
  * ```ts
  * import { isLazyMintSupported } from "thirdweb/extensions/erc1155";

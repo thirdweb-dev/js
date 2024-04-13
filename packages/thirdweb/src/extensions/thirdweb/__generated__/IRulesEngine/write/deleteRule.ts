@@ -29,7 +29,7 @@ const FN_OUTPUTS = [] as const;
  * Checks if the `deleteRule` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `deleteRule` method is supported.
- * @extension ERC721
+ * @extension THIRDWEB
  * @example
  * ```ts
  * import { isDeleteRuleSupported } from "thirdweb/extensions/thirdweb";

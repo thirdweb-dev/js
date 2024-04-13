@@ -50,7 +50,7 @@ const FN_OUTPUTS = [
  * Checks if the `verifyFidSignature` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `verifyFidSignature` method is supported.
- * @extension ERC721
+ * @extension FARCASTER
  * @example
  * ```ts
  * import { isVerifyFidSignatureSupported } from "thirdweb/extensions/farcaster";

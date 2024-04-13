@@ -35,7 +35,7 @@ const FN_OUTPUTS = [
  * Checks if the `claimRewards` method is supported by the given contract.
  * @param contract The ThirdwebContract.
  * @returns A promise that resolves to a boolean indicating if the `claimRewards` method is supported.
- * @extension ERC721
+ * @extension ERC1155
  * @example
  * ```ts
  * import { isClaimRewardsSupported } from "thirdweb/extensions/erc1155";
