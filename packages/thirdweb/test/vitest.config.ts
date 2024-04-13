@@ -36,8 +36,7 @@ export default defineConfig({
     globalSetup: [join(__dirname, "./globalSetup.ts")],
     testTimeout: 30_000,
     retry: process.env.CI ? 0 : 3,
-    minWorkers: process.env.CI ? 2 : undefined,
-    maxWorkers: process.env.CI ? 8 : undefined,
+    fileParallelism: process.env.CI ? false : true,
     // clear any mocks between any tests
     clearMocks: true,
     pool: "forks",
