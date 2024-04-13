@@ -206,7 +206,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         ).rejects.toThrowErrorMatchingInlineSnapshot(`
           [TransactionError: Error - !Qty
 
-          contract: 0xd91A47278829a0128D7212225FE74BC153A7FAF8
+          contract: ${contract.address}
           chainId: 31337]
         `);
 
