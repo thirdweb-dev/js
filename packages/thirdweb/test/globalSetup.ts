@@ -12,6 +12,7 @@ const clientId = SECRET_KEY
 
 export default async function globalSetup() {
   const shutdownMainnet = await startProxy({
+    host: "127.0.0.1",
     port: 8645,
     options: {
       chainId: 1,
@@ -27,6 +28,7 @@ export default async function globalSetup() {
   });
 
   const shutdownOptimism = await startProxy({
+    host: "127.0.0.1",
     port: 8646,
     options: {
       chainId: 10,
@@ -42,6 +44,7 @@ export default async function globalSetup() {
   });
 
   const shutdownAnvil = await startProxy({
+    host: "127.0.0.1",
     port: 8647,
     options: {
       startTimeout: 20000,
