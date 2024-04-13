@@ -1,53 +1,62 @@
-import { startProxy } from "@viem/anvil";
-import { FORK_BLOCK_NUMBER, OPTIMISM_FORK_BLOCK_NUMBER } from "./src/chains.js";
 import { sha256 } from "@noble/hashes/sha256";
+import { createAnvil } from "@viem/anvil";
+import { FORK_BLOCK_NUMBER, OPTIMISM_FORK_BLOCK_NUMBER } from "./src/chains.js";
 
 require("dotenv-mono").load();
 
 const SECRET_KEY = process.env.TW_SECRET_KEY as string;
 
 const clientId = SECRET_KEY
-	? Buffer.from(sha256(SECRET_KEY)).toString("hex").slice(0, 32)
-	: "";
+  ? Buffer.from(sha256(SECRET_KEY)).toString("hex").slice(0, 32)
+  : "";
 
 export default async function globalSetup() {
-	const shutdownMainnet = await startProxy({
-		port: 8645,
-		options: {
-			chainId: 1,
-			forkUrl: SECRET_KEY
-				? `https://1.rpc.thirdweb.com/${clientId}`
-				: "https://mainnet.gateway.tenderly.co",
-			forkHeader: SECRET_KEY ? { "x-secret-key": SECRET_KEY } : {},
-			forkChainId: 1,
-			forkBlockNumber: FORK_BLOCK_NUMBER,
-			noMining: true,
-			startTimeout: 20000,
-		},
-	});
+  const mainnetInstance = createAnvil({
+    port: 8645,
+    // options: {
+    chainId: 1,
+    forkUrl: SECRET_KEY
+      ? `https://1.rpc.thirdweb.com/${clientId}`
+      : "https://mainnet.gateway.tenderly.co",
+    forkHeader: SECRET_KEY ? { "x-secret-key": SECRET_KEY } : {},
+    forkChainId: 1,
+    forkBlockNumber: FORK_BLOCK_NUMBER,
+    noMining: true,
+    startTimeout: 20000,
+    // },
+  });
+  await mainnetInstance.start();
 
-	const shutdownOptimism = await startProxy({
-		port: 8646,
-		options: {
-			chainId: 10,
-			forkUrl: SECRET_KEY
-				? `https://10.rpc.thirdweb.com/${clientId}`
-				: "https://mainnet.optimism.io/",
-			forkHeader: SECRET_KEY ? { "x-secret-key": SECRET_KEY } : {},
-			forkChainId: 10,
-			forkBlockNumber: OPTIMISM_FORK_BLOCK_NUMBER,
-			noMining: true,
-			startTimeout: 20000,
-		},
-	});
+  const optimismInstance = createAnvil({
+    port: 8646,
+    // options: {
+    chainId: 10,
+    forkUrl: SECRET_KEY
+      ? `https://10.rpc.thirdweb.com/${clientId}`
+      : "https://mainnet.optimism.io/",
+    forkHeader: SECRET_KEY ? { "x-secret-key": SECRET_KEY } : {},
+    forkChainId: 10,
+    forkBlockNumber: OPTIMISM_FORK_BLOCK_NUMBER,
+    noMining: true,
+    startTimeout: 20000,
+    // },
+  });
+  await optimismInstance.start();
 
-	const shutdownAnvil = await startProxy({
-		port: 8647,
-	});
+  const anvilInstance = createAnvil({
+    port: 8647,
+    // options: {
+    startTimeout: 20000,
+    // },
+  });
+  await anvilInstance.start();
 
-	return () => {
-		shutdownMainnet();
-		shutdownOptimism();
-		shutdownAnvil();
-	};
+  return async () => {
+    // shutdownMainnet();
+    // shutdownOptimism();
+    // shutdownAnvil();
+    await mainnetInstance.stop();
+    await optimismInstance.stop();
+    await anvilInstance.stop();
+  };
 }
