@@ -38,5 +38,6 @@ export default defineConfig({
     retry: process.env.CI ? 0 : 3,
     // clear any mocks between any tests
     clearMocks: true,
+    pool: "forks",
   },
 });

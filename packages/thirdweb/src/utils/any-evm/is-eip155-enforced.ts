@@ -49,8 +49,6 @@ export async function isEIP155Enforced(
     const errorMsg = e.toString().toLowerCase();
     const errorJson = JSON.stringify(e).toLowerCase();
 
-    console.log(e);
-
     if (matchError(errorMsg) || matchError(errorJson)) {
       result = true;
     }
