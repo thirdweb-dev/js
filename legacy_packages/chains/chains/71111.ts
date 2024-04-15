@@ -6,22 +6,10 @@ export default {
     {
       "name": "GuapcoinX Explorer",
       "url": "http://explorer.guapcoinx.com",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://QmcDTR7982VQKDDz2Mh4fZbnE9hn67MuFPWQv1MimCqPvB",
-        "width": 800,
-        "height": 800,
-        "format": "png"
-      }
+      "standard": "none"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmcDTR7982VQKDDz2Mh4fZbnE9hn67MuFPWQv1MimCqPvB",
-    "width": 800,
-    "height": 800,
-    "format": "png"
-  },
   "infoURL": "https://guapcoin.org/",
   "name": "GuapcoinX",
   "nativeCurrency": {

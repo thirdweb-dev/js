@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmPMqjf5XKZ4Cxa1u8qc8Zj9mmVLBoqK7N5h2zFr3Rsyzw",
+    "width": 260,
+    "height": 260,
+    "format": "png"
+  },
   "infoURL": "https://seamoon.dmm.com",
   "name": "DM2 Verse Mainnet",
   "nativeCurrency": {
