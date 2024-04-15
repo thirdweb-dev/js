@@ -1,5 +1,17 @@
 # @thirdweb-dev/unity-js-bridge
 
+## 0.6.12
+
+### Patch Changes
+
+- [#2765](https://github.com/thirdweb-dev/js/pull/2765) [`f0fe1fd`](https://github.com/thirdweb-dev/js/commit/f0fe1fdb1bd55fd7d16fc6380be000011d3682a0) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Unity 4.11.0, EmbeddedWallet -> InAppWallet + fix 4.10 regression
+
+- Updated dependencies [[`6574e4d`](https://github.com/thirdweb-dev/js/commit/6574e4da9938fe7eb862a0ae779b02561967abf1)]:
+  - @thirdweb-dev/chains@0.1.94
+  - @thirdweb-dev/sdk@4.0.63
+  - @thirdweb-dev/wallets@2.5.3
+  - @thirdweb-dev/auth@4.1.61
+
 ## 0.6.11
 
 ### Patch Changes
