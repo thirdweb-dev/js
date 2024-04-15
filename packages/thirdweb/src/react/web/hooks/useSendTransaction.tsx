@@ -16,7 +16,30 @@ import type { Theme } from "../ui/design-system/index.js";
 import type { LocaleId } from "../ui/types.js";
 import { LoadingScreen } from "../wallets/shared/LoadingScreen.js";
 
-type SendTransactionConfig = {
+/**
+ * Configuration for the `useSendTransaction` hook.
+ */
+export type SendTransactionConfig = {
+  /**
+   * Configuration for the "Buy Modal" that opens when the user doesn't have enough funds to send a transaction.
+   *
+   * This configuration object includes the following properties to configure the "Buy Modal" UI:
+   *
+   *
+   * ### `locale`
+   * The language to use for the "Buy Modal" UI. Defaults to `"en_US"`.
+   *
+   * ### `supportedTokens`
+   * An object of type [`SupportedTokens`](https://portal.thirdweb.com/references/typescript/v5/SupportedTokens) to configure the tokens to show for a chain.
+   *
+   * ### `theme`
+   * The theme to use for the "Buy Modal" UI. Defaults to `"dark"`.
+   *
+   * It can be set to `"light"` or `"dark"` or an object of type [`Theme`](https://portal.thirdweb.com/references/typescript/v5/Theme) for a custom theme.
+   *
+   * Refer to [`lightTheme`](https://portal.thirdweb.com/references/typescript/v5/lightTheme)
+   * or [`darkTheme`](https://portal.thirdweb.com/references/typescript/v5/darkTheme) helper functions to use the default light or dark theme and customize it.
+   */
   buyModal?: {
     locale?: LocaleId;
     supportedTokens?: SupportedTokens;
@@ -27,8 +50,10 @@ type SendTransactionConfig = {
 /**
  * A hook to send a transaction.
  * @returns A mutation object to send a transaction.
+ * @param config Configuration for the `useSendTransaction` hook.
+ * Refer to [`SendTransactionConfig`](https://portal.thirdweb.com/references/typescript/v5/SendTransactionConfig) for more details.
  * @example
- * ```jsx
+ * ```tsx
  * import { useSendTransaction } from "thirdweb/react";
  * const { mutate: sendTx, data: transactionResult } = useSendTransaction();
  *

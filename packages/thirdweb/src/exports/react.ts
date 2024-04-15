@@ -29,7 +29,7 @@ export {
 export { ThirdwebProvider } from "../react/core/providers/thirdweb-provider.js";
 
 // tokens
-export type { SupportedTokens } from "../react/web/ui/ConnectWallet/defaultTokens.js";
+export type { SupportedTokens, TokenInfo } from "../react/web/ui/ConnectWallet/defaultTokens.js";
 export { defaultTokens } from "../react/web/ui/ConnectWallet/defaultTokens.js";
 
 // Media Renderer
@@ -53,7 +53,7 @@ export {
 
 // contract related
 export { useReadContract } from "../react/core/hooks/contract/useReadContract.js";
-export { useSendTransaction } from "../react/web/hooks/useSendTransaction.js";
+export { useSendTransaction, type SendTransactionConfig  } from "../react/web/hooks/useSendTransaction.js";
 export { useSendBatchTransaction } from "../react/core/hooks/contract/useSendBatchTransaction.js";
 export { useSendAndConfirmTransaction } from "../react/core/hooks/contract/useSendAndConfirmTransaction.js";
 export { useEstimateGas } from "../react/core/hooks/contract/useEstimateGas.js";
