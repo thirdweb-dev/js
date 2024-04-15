@@ -234,7 +234,7 @@ export function SwapTransactionsScreen(props: {
             color: "inherit",
           }}
         >
-          View on Explorer
+          View all transactions
         </ButtonLink>
       </Container>
     </Container>
