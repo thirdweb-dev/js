@@ -4,14 +4,18 @@ import type {
   AbiParametersToPrimitiveTypes,
   Address,
 } from "abitype";
-import { toFunctionSelector, toFunctionSignature, zeroAddress } from "viem";
+import { toFunctionSelector, toFunctionSignature } from "viem";
 import type { ThirdwebClient } from "../../client/client.js";
 import { resolveContractAbi } from "../../contract/actions/resolve-abi.js";
 import type { ThirdwebContract } from "../../contract/contract.js";
 import { deployViaAutoFactory } from "../../contract/deployment/deploy-via-autofactory.js";
-import { getOrDeployInfraForPublishedContract } from "../../contract/deployment/utils/bootstrap.js";
+import {
+  getOrDeployInfraContract,
+  getOrDeployInfraForPublishedContract,
+} from "../../contract/deployment/utils/bootstrap.js";
 import { upload } from "../../storage/upload.js";
 import type { FileOrBufferOrString } from "../../storage/upload/types.js";
+import { getRoyaltyEngineV1ByChainId } from "../../utils/royalty-engine.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import type { ClientAndChainAndAccount } from "../../utils/types.js";
 import { initialize as initMarketplace } from "./__generated__/Marketplace/write/initialize.js";
@@ -42,15 +46,19 @@ export async function deployMarketplaceContract(
   options: DeployMarketplaceContractOptions,
 ) {
   const { chain, client, account, params } = options;
+  const WETH = await getOrDeployInfraContract({
+    chain,
+    client,
+    account,
+    contractId: "WETH9",
+    constructorParams: [],
+  });
   const direct = await getOrDeployInfraForPublishedContract({
     chain,
     client,
     account,
     contractId: "DirectListingsLogic",
-    constructorParams: [
-      // TODO - actually determine ... "weth"?
-      zeroAddress, // _weth
-    ],
+    constructorParams: [WETH.address],
   });
 
   const english = await getOrDeployInfraForPublishedContract({
@@ -58,10 +66,7 @@ export async function deployMarketplaceContract(
     client,
     account,
     contractId: "EnglishAuctionsLogic",
-    constructorParams: [
-      // TODO - actually determine ... "weth"?
-      zeroAddress, // _weth
-    ],
+    constructorParams: [WETH.address],
   });
 
   const offers = await getOrDeployInfraForPublishedContract({
@@ -119,10 +124,8 @@ export async function deployMarketplaceContract(
               functions: offersFunctions,
             },
           ],
-          // TODO - actually determine ... "royaltyEngineAddress"?
-          royaltyEngineAddress: zeroAddress,
-          // TODO - actually determine ... "weth"?
-          nativeTokenWrapper: zeroAddress,
+          royaltyEngineAddress: getRoyaltyEngineV1ByChainId(chain.id),
+          nativeTokenWrapper: WETH.address,
         },
       ] as MarketplaceConstructorParams,
     });
