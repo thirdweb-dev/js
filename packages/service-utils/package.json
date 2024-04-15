@@ -46,7 +46,7 @@
     "@cloudflare/workers-types": "4.20240405.0",
     "@preconstruct/cli": "2.7.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
-    "@types/node": "20.12.5",
+    "@types/node": "20.12.7",
     "typescript": "5.4.4"
   },
   "scripts": {
