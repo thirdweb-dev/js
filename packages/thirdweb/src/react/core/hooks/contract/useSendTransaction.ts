@@ -92,12 +92,6 @@ export function useSendTransactionCore(
 
             const walletBalanceWei = walletBalance.value;
 
-            // TODO: remove after testing
-            console.debug({
-              txCost: toEther(totalCostWei),
-              balance: walletBalanceWei,
-            });
-
             // if enough balance, send tx
             if (totalCostWei < walletBalanceWei) {
               sendTx();
