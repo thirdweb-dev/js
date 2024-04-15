@@ -1326,8 +1326,8 @@ importers:
         specifier: 5.4.4
         version: 5.4.4
       zksync-ethers:
-        specifier: ^5.7.0
-        version: 5.7.0(ethers@5.7.2)
+        specifier: ^6.7.0
+        version: 6.7.0(ethers@5.7.2)
 
   legacy_packages/storage:
     dependencies:
@@ -16873,7 +16873,6 @@ packages:
     dependencies:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
-    bundledDependencies: false
 
   /event-emitter@0.3.5:
     resolution: {integrity: sha512-D9rRn9y7kLPnJ+hMq7S/nhvoKwwvVJahBi2BPmx3bvbsEdK3W9ii8cBSGjP+72/LnM4n6fo3+dkCX5FeTQruXA==}
@@ -26848,11 +26847,11 @@ packages:
       zen-observable: 0.7.1
     dev: false
 
-  /zksync-ethers@5.7.0(ethers@5.7.2):
-    resolution: {integrity: sha512-X99c5APICTlRzyXXjfwkEjRzOPp3Jwo62+z2DVGaZbe+b9Apbizcd2UGV4NGomoAR2GXPbeiSqi1cf3Hbo3cQw==}
-    engines: {node: '>=16.0.0'}
+  /zksync-ethers@6.7.0(ethers@5.7.2):
+    resolution: {integrity: sha512-9kiWRmL4O6SH2WRzpglIqh7+UFbVFjnounRNr1CGymmHCC6ygg9Pamr8SCuvQLAxlYkEwCuDUphNTKkGtvh/Kg==}
+    engines: {node: '>=18.9.0'}
     peerDependencies:
-      ethers: ~5.7.0
+      ethers: ^6.7.1
     dependencies:
       ethers: 5.7.2
     dev: true

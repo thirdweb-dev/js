@@ -109,7 +109,7 @@
     "rimraf": "5.0.5",
     "typedoc-gen": "workspace:*",
     "typescript": "5.4.4",
-    "zksync-ethers": "^5.7.0"
+    "zksync-ethers": "^6.7.0"
   },
   "peerDependencies": {
     "@aws-sdk/client-secrets-manager": "^3.215.0",
