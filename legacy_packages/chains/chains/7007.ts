@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmPko9BJhR5FWTsThcwUFnnnjgLjrXVDm1n98dCuaQNW59",
-    "width": 506,
-    "height": 652,
-    "format": "png"
-  },
   "infoURL": "https://bstchain.io",
   "name": "BST Chain",
   "nativeCurrency": {
