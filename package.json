@@ -50,7 +50,7 @@
   },
   "_______ALL_PACKAGE_DEV_DEPENDENCIES_GO_IN_HERE_SO_CONSUMERS_DONT_END_UP_INSTALLING_THEM______": "_______ALL_PACKAGE_DEV_DEPENDENCIES_GO_IN_HERE_SO_CONSUMERS_DONT_END_UP_INSTALLING_THEM______",
   "devDependencies": {
-    "@biomejs/biome": "1.6.4",
+    "@biomejs/biome": "1.7.0",
     "@codspeed/vitest-plugin": "3.1.0",
     "@size-limit/preset-big-lib": "11.1.2",
     "@types/bun": "1.0.12",
