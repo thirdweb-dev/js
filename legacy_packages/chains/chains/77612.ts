@@ -12,6 +12,12 @@ export default {
   "faucets": [
     "https://faucet.vention.network"
   ],
+  "icon": {
+    "url": "ipfs://QmcNepHmbmHW1BZYM3MFqJW4awwhmDqhUPRXXmRnXwg1U4",
+    "width": 250,
+    "height": 250,
+    "format": "png"
+  },
   "infoURL": "https://ventionscan.io",
   "name": "Vention Smart Chain Mainnet",
   "nativeCurrency": {

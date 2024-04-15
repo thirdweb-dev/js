@@ -18,12 +18,6 @@ export default {
   "faucets": [
     "https://faucet.aternoschain.com"
   ],
-  "icon": {
-    "url": "ipfs://QmUgfhv3rEsS6t9g6Lsf3TJ1mbnJqBrb8YUFPDiNG59QvT",
-    "width": 1000,
-    "height": 1000,
-    "format": "png"
-  },
   "infoURL": "https://aternoschain.com",
   "name": "Aternos",
   "nativeCurrency": {
