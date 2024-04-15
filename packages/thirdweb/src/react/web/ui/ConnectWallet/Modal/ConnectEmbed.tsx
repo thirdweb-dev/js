@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import type { Chain } from "../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
@@ -24,8 +23,7 @@ import {
   modalMaxWidthWide,
   wideModalMaxHeight,
 } from "../constants.js";
-import { getConnectLocale } from "../locale/getConnectLocale.js";
-import type { ConnectLocale } from "../locale/types.js";
+import { useConnectLocale } from "../locale/getConnectLocale.js";
 import { ConnectModalContent } from "./ConnectModalContent.js";
 import { useSetupScreen } from "./screen.js";
 
@@ -336,11 +334,7 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
 
   const wallets = props.wallets || getDefaultWallets();
   const localeId = props.locale || "en_US";
-  const [locale, setLocale] = useState<ConnectLocale | undefined>();
-
-  useEffect(() => {
-    getConnectLocale(localeId).then(setLocale);
-  }, [localeId]);
+  const localeQuery = useConnectLocale(localeId);
 
   const modalSize =
     !canFitWideModal() || wallets.length === 1
@@ -361,7 +355,7 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
   );
 
   if (show) {
-    if (!locale) {
+    if (!localeQuery.data) {
       return (
         <>
           {autoConnectComp}
@@ -379,7 +373,7 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
           client: props.client,
           wallets: wallets,
           locale: localeId,
-          connectLocale: locale,
+          connectLocale: localeQuery.data,
           chain: props.chain,
           chains: props.chains,
           walletConnect: props.walletConnect,

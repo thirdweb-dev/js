@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import type { ThirdwebClient } from "../../../client/client.js";
 import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
 import { useSendTransactionCore } from "../../core/hooks/contract/useSendTransaction.js";
@@ -7,8 +7,7 @@ import {
   type SupportedTokens,
   defaultTokens,
 } from "../ui/ConnectWallet/defaultTokens.js";
-import { getConnectLocale } from "../ui/ConnectWallet/locale/getConnectLocale.js";
-import type { ConnectLocale } from "../ui/ConnectWallet/locale/types.js";
+import { useConnectLocale } from "../ui/ConnectWallet/locale/getConnectLocale.js";
 import { BuyScreen } from "../ui/ConnectWallet/screens/Buy/SwapScreen.js";
 import { SwapTransactionsScreen } from "../ui/ConnectWallet/screens/SwapTransactionsScreen.js";
 import { Modal } from "../ui/components/Modal.js";
@@ -94,14 +93,10 @@ function TxModal(props: ModalProps) {
 }
 
 function ModalContent(props: ModalProps) {
-  const [locale, setLocale] = useState<ConnectLocale | undefined>();
+  const localeQuery = useConnectLocale(props.localeId);
   const [screen, setScreen] = useState<"buy" | "tx-history">("buy");
 
-  useEffect(() => {
-    getConnectLocale(props.localeId).then(setLocale);
-  }, [props.localeId]);
-
-  if (!locale) {
+  if (!localeQuery.data) {
     return <LoadingScreen />;
   }
 
@@ -126,7 +121,7 @@ function ModalContent(props: ModalProps) {
         setScreen("tx-history");
       }}
       supportedTokens={props.supportedTokens}
-      connectLocale={locale}
+      connectLocale={localeQuery.data}
       buyForTx={{
         balance: props.walletBalanceWei,
         cost: props.txCostWei,
