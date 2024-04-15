@@ -126,10 +126,9 @@ export function useSendTransactionCore(
 }
 
 export async function getTotalTxCostForBuy(tx: PreparedTransaction) {
-
   // Must pass 0 otherwise it will throw on some chains
   const gasCost = await estimateGasCost({
-    transaction: {...tx, value: 0n },
+    transaction: { ...tx, value: 0n },
   });
 
   const bufferCost = gasCost.wei / 10n;
