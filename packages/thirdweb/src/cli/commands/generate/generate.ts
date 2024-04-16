@@ -185,10 +185,10 @@ export type ${uppercaseFirstLetter(f.name)}Params = {
  * const transaction = ${f.name}(${
    f.inputs.length > 0
      ? `{\n * ${f.inputs
-          .map(
-            (x, i) => ` ${removeLeadingUnderscore(x.name || `arg_${i}`)}: ...,`,
-          )
-          .join("\n * ")}\n * }`
+         .map(
+           (x, i) => ` ${removeLeadingUnderscore(x.name || `arg_${i}`)}: ...,`,
+         )
+         .join("\n * ")}\n * }`
      : ""
  });
  * 
@@ -243,10 +243,10 @@ export type ${uppercaseFirstLetter(f.name)}Params = {
  * const result = await ${f.name}(${
    f.inputs.length > 0
      ? `{\n * ${f.inputs
-          .map(
-            (x, i) => ` ${removeLeadingUnderscore(x.name || `arg_${i}`)}: ...,`,
-          )
-          .join("\n * ")}\n * }`
+         .map(
+           (x, i) => ` ${removeLeadingUnderscore(x.name || `arg_${i}`)}: ...,`,
+         )
+         .join("\n * ")}\n * }`
      : ""
  });
  * 
@@ -302,8 +302,8 @@ export type ${uppercaseFirstLetter(e.name)}EventFilters = Partial<{
  *  ${eventNameToPreparedEventName(e.name)}(${
    indexedInputs.length > 0
      ? `{\n * ${indexedInputs
-          .map((x) => ` ${x.name}: ...,`)
-          .join("\n * ")}\n * }`
+         .map((x) => ` ${x.name}: ...,`)
+         .join("\n * ")}\n * }`
      : ""
  })
  * ],
