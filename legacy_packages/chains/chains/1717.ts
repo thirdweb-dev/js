@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmdFEozqneC8abhpfgtGpvfKpWVEbL8eMZjJKtUPuBTanK",
+    "width": 988,
+    "height": 901,
+    "format": "png"
+  },
   "infoURL": "https://doric.network",
   "name": "Doric Network",
   "nativeCurrency": {
