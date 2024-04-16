@@ -44,13 +44,13 @@
     "@manypkg/cli": "0.21.3",
     "@manypkg/get-packages": "2.2.1",
     "@playwright/test": "1.31.2",
-    "@types/node": "20.12.5",
+    "@types/node": "20.12.7",
     "turbo": "1.13.2",
     "yalc": "1.0.0-pre.53"
   },
   "_______ALL_PACKAGE_DEV_DEPENDENCIES_GO_IN_HERE_SO_CONSUMERS_DONT_END_UP_INSTALLING_THEM______": "_______ALL_PACKAGE_DEV_DEPENDENCIES_GO_IN_HERE_SO_CONSUMERS_DONT_END_UP_INSTALLING_THEM______",
   "devDependencies": {
-    "@biomejs/biome": "1.6.4",
+    "@biomejs/biome": "1.7.0",
     "@codspeed/vitest-plugin": "3.1.0",
     "@size-limit/preset-big-lib": "11.1.2",
     "@types/bun": "1.0.12",

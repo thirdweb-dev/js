@@ -34,5 +34,6 @@ export default {
   ],
   "shortName": "karak-sepolia",
   "slug": "karak-sepolia",
-  "testnet": false
+  "testnet": true,
+  "title": "Karak Testnet Sepolia"
 } as const satisfies Chain;
