@@ -6,10 +6,22 @@ export default {
     {
       "name": "DSC Scan",
       "url": "https://explore.doken.dev",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://bafkreifms4eio6v56oyeemnnu5luq3sc44hptan225lr45itgzu3u372iu",
+        "width": 200,
+        "height": 200,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://bafkreifms4eio6v56oyeemnnu5luq3sc44hptan225lr45itgzu3u372iu",
+    "width": 200,
+    "height": 200,
+    "format": "png"
+  },
   "infoURL": "https://doken.dev/",
   "name": "DoKEN Super Chain Mainnet",
   "nativeCurrency": {

@@ -16,6 +16,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmSpwp3RAVhZsErAQrCQxEmjnGqJQMigarzZbfqr9Ktakb",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "name": "Orderly Sepolia Testnet",
   "nativeCurrency": {
     "name": "Sepolia Ether",
