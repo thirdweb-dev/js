@@ -24,7 +24,7 @@ import { Text, Button, Link, Heading, TrackedLink } from "tw-components";
 import { MdOutlineElectricBolt } from "react-icons/md";
 import {
   walletInfoRecord,
-  WalletId,
+  type WalletId,
 } from "../ConnectWalletPlayground/walletInfoRecord";
 import { replaceIpfsUrl } from "lib/sdk";
 import {
@@ -120,19 +120,23 @@ export const MiniPlayground: React.FC<{
         backgroundSize="150px, cover"
         backgroundRepeat="no-repeat"
         backgroundPosition="left, center"
-      ></Box>
+      />
     );
   }
 
   let gradientBg = "none";
   if (selectedBrand === "default") {
-    const darkGradient = `linear-gradient(45deg, hsl(240, 91%, 65%), hsl(280, 91%, 45%) )`;
-    const lightGradient = `linear-gradient(45deg, hsl(240, 91%, 75%), hsl(280, 91%, 65%) )`;
+    const darkGradient =
+      "linear-gradient(45deg, hsl(240, 91%, 65%), hsl(280, 91%, 45%) )";
+    const lightGradient =
+      "linear-gradient(45deg, hsl(240, 91%, 75%), hsl(280, 91%, 65%) )";
     gradientBg = selectedTheme === "light" ? lightGradient : darkGradient;
   } else if (selectedBrand === "nouns-dao") {
-    gradientBg = `linear-gradient(45deg, hsl(45, 86%, 54%) , hsl(45, 86%, 84%), hsl(45, 86%, 64%) )`;
+    gradientBg =
+      "linear-gradient(45deg, hsl(45, 86%, 54%) , hsl(45, 86%, 84%), hsl(45, 86%, 64%) )";
   } else if (selectedBrand === "web3-warriors") {
-    gradientBg = `linear-gradient(45deg, hsl(188, 79%, 15%), hsl(208, 56%, 13%), hsl(188, 79%, 15%) )`;
+    gradientBg =
+      "linear-gradient(45deg, hsl(188, 79%, 15%), hsl(208, 56%, 13%), hsl(188, 79%, 15%) )";
   }
 
   let fontClassName: string | undefined = undefined;
@@ -148,6 +152,10 @@ export const MiniPlayground: React.FC<{
     {
       name: "Sign in with Email",
       key: "email",
+    },
+    {
+      name: "Sign in with phone number",
+      key: "phone",
     },
     {
       name: "Sign in with Google",
@@ -468,7 +476,7 @@ export const MiniPlayground: React.FC<{
               left={0}
               right={0}
               bottom={0}
-              bg={`hsl(0deg 0% 0% / 70%)`}
+              bg={"hsl(0deg 0% 0% / 70%)"}
               zIndex={100}
               opacity={0}
               transition="opacity 200ms ease"
