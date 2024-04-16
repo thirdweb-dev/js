@@ -14,8 +14,8 @@ overrides:
 
 dependencies:
   '@apollo/client':
-    specifier: ^3.9.9
-    version: 3.9.9(@types/react@18.2.73)(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)
+    specifier: ^3.9.11
+    version: 3.9.11(@types/react@18.2.73)(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)
   '@chakra-ui/react':
     specifier: ^2.8.2
     version: 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.2.73)(framer-motion@11.0.24)(react-dom@18.2.0)(react@18.2.0)
@@ -346,8 +346,8 @@ packages:
       '@jridgewell/gen-mapping': 0.3.3
       '@jridgewell/trace-mapping': 0.3.22
 
-  /@apollo/client@3.9.9(@types/react@18.2.73)(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-/sMecU/M0WK9knrguts1lSLV8xFKzIgOMVb4mi6MOxgJXjliDB8PvOtmXhTqh2cVMMR4TzXgOnb+af/690zlQw==}
+  /@apollo/client@3.9.11(@types/react@18.2.73)(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-H7e9m7cRcFO93tokwzqrsbnfKorkpV24xU30hFH5u2g6B+c1DMo/ouyF/YrBPdrTzqxQCjTUmds/FLmJ7626GA==}
     peerDependencies:
       graphql: ^15.0.0 || ^16.0.0
       graphql-ws: ^5.5.5
