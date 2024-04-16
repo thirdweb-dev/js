@@ -3,7 +3,10 @@ import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { getContract } from "../../contract/contract.js";
 import { deployViaAutoFactory } from "../../contract/deployment/deploy-via-autofactory.js";
-import { prepareDirectDeployTransaction } from "../../contract/deployment/deploy-with-abi.js";
+import {
+  deployContract,
+  prepareDirectDeployTransaction,
+} from "../../contract/deployment/deploy-with-abi.js";
 import { fetchPublishedContractMetadata } from "../../contract/deployment/publisher.js";
 import { getOrDeployInfraForPublishedContract } from "../../contract/deployment/utils/bootstrap.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
@@ -63,7 +66,8 @@ export async function deployPublishedContract(
       version,
     });
   if (extendedMetadata?.deployType === "standard") {
-    const deployTx = prepareDirectDeployTransaction({
+    return deployContract({
+      account,
       client,
       chain,
       bytecode: compilerMetadata.bytecode,
@@ -73,14 +77,6 @@ export async function deployPublishedContract(
         ) as AbiConstructor) || [],
       constructorParams: contractParams,
     });
-    const receipt = await sendAndConfirmTransaction({
-      transaction: deployTx,
-      account,
-    });
-    if (!receipt.contractAddress) {
-      throw new Error("Couldn't deploy contract");
-    }
-    return receipt.contractAddress;
   }
 
   if (extendedMetadata?.deployType === "autoFactory") {
