@@ -28,6 +28,7 @@ import {
   useActiveWalletChain,
   useSwitchActiveWalletChain,
 } from "../../../../../core/hooks/wallets/wallet-hooks.js";
+import { wait } from "../../../../../core/utils/wait.js";
 import { LoadingScreen } from "../../../../wallets/shared/LoadingScreen.js";
 import {
   Drawer,
@@ -157,16 +158,16 @@ export function BuyScreenContent(props: {
     });
   };
 
-  const initialAmountNeeded = props.buyForTx
+  const initialTokenAmount = props.buyForTx
     ? formatNumber(
         Number(toEther(props.buyForTx.cost - props.buyForTx.balance)),
         4,
       )
-    : 0;
+    : undefined;
 
   // token amount
   const [tokenAmount, setTokenAmount] = useState<string>(
-    initialAmountNeeded === 0 ? "" : String(initialAmountNeeded),
+    initialTokenAmount ? String(initialTokenAmount) : "",
   );
 
   // once the user edits the tokenInput or confirms the Buy - stop updating the token amount
@@ -175,7 +176,7 @@ export function BuyScreenContent(props: {
   );
 
   const [amountNeeded, setAmountNeeded] = useState<bigint | undefined>(
-    undefined,
+    props.buyForTx?.cost,
   );
 
   // update amount needed every 30 seconds
@@ -183,21 +184,45 @@ export function BuyScreenContent(props: {
   // ( Can't use useQuery because tx can't be added to queryKey )
   useEffect(() => {
     const buyTx = props.buyForTx;
-    if (!buyTx) {
+    if (!buyTx || stopUpdatingTokenAmount) {
       return;
     }
-    const id = setInterval(() => {
-      getTotalTxCostForBuy(buyTx.tx).then((totalCost) => {
+
+    let mounted = true;
+
+    async function pollTxCost() {
+      if (!buyTx || !mounted) {
+        return;
+      }
+
+      try {
+        const totalCost = await getTotalTxCostForBuy(buyTx.tx);
+
+        if (!mounted) {
+          return;
+        }
+
         setAmountNeeded(totalCost);
-        if (!stopUpdatingTokenAmount && totalCost > buyTx.balance) {
+
+        if (totalCost > buyTx.balance) {
           const _tokenAmount = String(
             formatNumber(Number(toEther(totalCost - buyTx.balance)), 4),
           );
           setTokenAmount(_tokenAmount);
         }
-      });
-    }, 30000);
-    return () => clearInterval(id);
+      } catch {
+        // no op
+      }
+
+      await wait(30000);
+      pollTxCost();
+    }
+
+    pollTxCost();
+
+    return () => {
+      mounted = false;
+    };
   }, [props.buyForTx, stopUpdatingTokenAmount]);
 
   const [hasEditedAmount, setHasEditedAmount] = useState(false);
@@ -237,7 +262,7 @@ export function BuyScreenContent(props: {
     address: account.address,
     chain: fromChain,
     tokenAddress: isNativeToken(fromToken) ? undefined : fromToken.address,
-    client: client,
+    client,
   });
 
   // when a quote is finalized ( approve sent if required or swap sent )
@@ -447,17 +472,15 @@ export function BuyScreenContent(props: {
           <Spacer y="lg" />
           {isMiniScreen && <Spacer y="xl" />}
 
-          {props.buyForTx && (
+          {amountNeeded && props.buyForTx ? (
             <BuyForTxUI
               amountNeeded={String(
-                amountNeeded
-                  ? formatNumber(Number(toEther(amountNeeded)), 4)
-                  : initialAmountNeeded,
+                formatNumber(Number(toEther(amountNeeded)), 4),
               )}
               buyForTx={props.buyForTx}
               client={client}
             />
-          )}
+          ) : null}
 
           {/* To */}
           <BuyTokenInput

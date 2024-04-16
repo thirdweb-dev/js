@@ -22,9 +22,9 @@ import { LoadingScreen } from "../wallets/shared/LoadingScreen.js";
 export type SendTransactionConfig = {
   /**
    * Configuration for the "Buy Modal" that opens when the user doesn't have enough funds to send a transaction.
+   * Set `buyModal: false` to disable the "Buy Modal" popup
    *
    * This configuration object includes the following properties to configure the "Buy Modal" UI:
-   *
    *
    * ### `locale`
    * The language to use for the "Buy Modal" UI. Defaults to `"en_US"`.
@@ -40,11 +40,13 @@ export type SendTransactionConfig = {
    * Refer to [`lightTheme`](https://portal.thirdweb.com/references/typescript/v5/lightTheme)
    * or [`darkTheme`](https://portal.thirdweb.com/references/typescript/v5/darkTheme) helper functions to use the default light or dark theme and customize it.
    */
-  buyModal?: {
-    locale?: LocaleId;
-    supportedTokens?: SupportedTokens;
-    theme?: Theme | "light" | "dark";
-  };
+  buyModal?:
+    | {
+        locale?: LocaleId;
+        supportedTokens?: SupportedTokens;
+        theme?: Theme | "light" | "dark";
+      }
+    | false;
 };
 
 /**
@@ -63,27 +65,33 @@ export type SendTransactionConfig = {
  *
  * @transaction
  */
-export function useSendTransaction(config?: SendTransactionConfig) {
+export function useSendTransaction(config: SendTransactionConfig = {}) {
+  const buyModal = config.buyModal;
+
   const setRootEl = useContext(SetRootElementContext);
-  return useSendTransactionCore((data) => {
-    setRootEl(
-      <TxModal
-        tx={data.tx}
-        onComplete={data.sendTx}
-        onClose={() => {
-          setRootEl(null);
-          data.rejectTx();
-        }}
-        client={data.tx.client}
-        localeId={config?.buyModal?.locale || "en_US"}
-        supportedTokens={config?.buyModal?.supportedTokens || defaultTokens}
-        theme={config?.buyModal?.theme || "dark"}
-        txCostWei={data.totalCostWei}
-        walletBalanceWei={data.walletBalance.value}
-        nativeTokenSymbol={data.walletBalance.symbol}
-      />,
-    );
-  });
+  return useSendTransactionCore(
+    typeof buyModal === "object"
+      ? (data) => {
+          setRootEl(
+            <TxModal
+              tx={data.tx}
+              onComplete={data.sendTx}
+              onClose={() => {
+                setRootEl(null);
+                data.rejectTx();
+              }}
+              client={data.tx.client}
+              localeId={buyModal?.locale || "en_US"}
+              supportedTokens={buyModal?.supportedTokens || defaultTokens}
+              theme={buyModal?.theme || "dark"}
+              txCostWei={data.totalCostWei}
+              walletBalanceWei={data.walletBalance.value}
+              nativeTokenSymbol={data.walletBalance.symbol}
+            />,
+          );
+        }
+      : undefined,
+  );
 }
 
 type ModalProps = {
