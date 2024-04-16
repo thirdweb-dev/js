@@ -26,6 +26,6 @@ export default {
   ],
   "shortName": "okb",
   "slug": "x-layer",
-  "status": "incubating",
+  "status": "active",
   "testnet": false
 } as const satisfies Chain;

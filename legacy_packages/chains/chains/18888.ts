@@ -5,7 +5,7 @@ export default {
   "explorers": [
     {
       "name": "Titan Explorer",
-      "url": "https://titan-explorer-light.titanlab.io/Titan",
+      "url": "https://tkxscan.io/Titan",
       "standard": "none",
       "icon": {
         "url": "ipfs://bafkreicyvc7t55zsejv6vwaxbmhvea5vdfkkbgqkmn65rhyyifpg3mq3ua",
@@ -32,7 +32,10 @@ export default {
   "networkId": 18888,
   "rpc": [
     "https://18888.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://titan-json-rpc.titanlab.io"
+    "https://titan-json-rpc.titanlab.io",
+    "https://titan-json-rpc-tokyo.titanlab.io",
+    "https://titan-json-rpc-seoul.titanlab.io",
+    "https://titan-json-rpc-hongkong.titanlab.io"
   ],
   "shortName": "titan_tkx",
   "slip44": 1,
