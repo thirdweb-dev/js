@@ -23,8 +23,8 @@ import {
 } from "./types";
 
 const DEFAULT_AUTH_OPTIONS: AuthOption[] = [
-  "phone",
   "email",
+  "phone",
   "google",
   "apple",
   "facebook",
