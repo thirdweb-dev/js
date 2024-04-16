@@ -1,5 +1,5 @@
 ---
-"thirdweb": patch
+"thirdweb": minor
 ---
 
 Open "Buy Modal" UI when sending transaction using the `useSendTransaction` hook if the user does not have enough funds to execute the transaction to prompt the user to buy tokens
