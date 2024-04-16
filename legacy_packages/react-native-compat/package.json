@@ -35,7 +35,7 @@
   },
   "devDependencies": {
     "@thirdweb-dev/tsconfig": "workspace:*",
-    "@types/node": "20.12.5",
+    "@types/node": "20.12.7",
     "babel-plugin-module-resolver": "^5.0.0",
     "eslint-config-thirdweb": "workspace:*",
     "ethers": "^5.7.2",
