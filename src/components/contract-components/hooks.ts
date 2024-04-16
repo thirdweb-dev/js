@@ -520,6 +520,7 @@ interface ContractDeployMutationParams {
 
 export function useCustomContractDeployMutation(
   ipfsHash: string,
+  version?: string,
   forceDirectDeploy?: boolean,
   {
     hasContractURI,
@@ -661,7 +662,8 @@ export function useCustomContractDeployMutation(
                 fullPublishMetadata.data?.name as string,
                 Object.values(data.deployParams),
                 fullPublishMetadata.data?.publisher as string,
-                "latest",
+                // this is either the contract version or it falls back to "latest"
+                version,
                 salt,
               );
           } else {

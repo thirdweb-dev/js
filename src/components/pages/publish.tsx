@@ -152,7 +152,10 @@ export const PublishWithVersionPage: React.FC<PublishWithVersionPageProps> = ({
               ))}
             </Select>
             {deployContractId && (
-              <DeployFormDrawer contractId={deployContractId} />
+              <DeployFormDrawer
+                contractId={deployContractId}
+                version={publishedContract?.version || "latest"}
+              />
             )}
           </Flex>
         </GridItem>

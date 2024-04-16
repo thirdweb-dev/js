@@ -55,6 +55,7 @@ import { verifyContract } from "contract-ui/tabs/sources/page";
 
 interface CustomContractFormProps {
   ipfsHash: string;
+  version?: string;
   selectedChain: number | undefined;
   onChainSelect: (chainId: number) => void;
   isImplementationDeploy?: true;
@@ -64,6 +65,7 @@ interface CustomContractFormProps {
 
 const CustomContractForm: React.FC<CustomContractFormProps> = ({
   ipfsHash,
+  version,
   selectedChain,
   onChainSelect,
   isImplementationDeploy,
@@ -247,6 +249,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
 
   const deploy = useCustomContractDeployMutation(
     ipfsHash,
+    version,
     isImplementationDeploy,
     {
       hasContractURI,

@@ -94,7 +94,7 @@ const ConsoleAppWrapper: React.FC<AppPropsWithLayout> = ({
         "phc_oXH0qpLTaotkIQP5MdaWhtoOXvh1Iba7yNSQrLgWbLN",
       {
         api_host: "https://pg.paper.xyz",
-        autocapture: true,
+        autocapture: false,
         debug: false,
         capture_pageview: false,
         disable_session_recording: true,

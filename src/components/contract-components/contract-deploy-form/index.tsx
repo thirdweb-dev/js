@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 
 interface ContractDeployFormProps {
   contractId: ContractId;
+  version?: string;
   chainId?: number;
   onSuccessCallback?: (contractAddress: string) => void;
   isImplementationDeploy?: true;
@@ -14,6 +15,7 @@ interface ContractDeployFormProps {
 
 export const ContractDeployForm: React.FC<ContractDeployFormProps> = ({
   contractId,
+  version,
   chainId: chainIdProp,
   onSuccessCallback,
   isImplementationDeploy,
@@ -50,6 +52,7 @@ export const ContractDeployForm: React.FC<ContractDeployFormProps> = ({
   return (
     <CustomSDKContext desiredChainId={selectedChain}>
       <CustomContractForm
+        version={version}
         ipfsHash={contractId}
         selectedChain={selectedChain}
         onChainSelect={setSelectedChain}

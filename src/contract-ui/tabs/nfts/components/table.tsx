@@ -30,6 +30,7 @@ import { CellProps, Column, usePagination, useTable } from "react-table";
 import type { NFT, ThirdwebContract } from "thirdweb";
 import {
   getNFTs as getErc721NFTs,
+  nextTokenIdToMint as erc721NextTokenIdToMint,
   totalSupply as erc721TotalSupply,
 } from "thirdweb/extensions/erc721";
 import { getNFTs as getErc1155NFTs } from "thirdweb/extensions/erc1155";
@@ -131,19 +132,37 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
   );
 
   // TODO: Add support for ERC1155 total circulating supply
-  const totalCountQuery = useReadContract(erc721TotalSupply, {
+  const nextTokenIdToMintQuery = useReadContract(erc721NextTokenIdToMint, {
+    contract,
+  });
+  const totalSupplyQuery = useReadContract(erc721TotalSupply, {
     contract,
   });
   // Anything bigger and the table breaks
-  const safeTotalCount = useMemo(
-    () =>
-      totalCountQuery?.data
-        ? totalCountQuery?.data > 1_000_000n
-          ? 1_000_000
-          : Number(totalCountQuery.data)
-        : 0,
-    [totalCountQuery?.data],
-  );
+  const safeTotalCount = useMemo(() => {
+    const computedSupply = (() => {
+      const nextTokenIdToMint = nextTokenIdToMintQuery.data;
+      const totalSupply = totalSupplyQuery.data;
+      if (nextTokenIdToMint === undefined || totalSupply === undefined) {
+        return 0n;
+      }
+      if (nextTokenIdToMint > totalSupply) {
+        return nextTokenIdToMint;
+      }
+
+      return totalSupply;
+    })();
+
+    if (computedSupply > 1_000_000n) {
+      return 1_000_000;
+    }
+    return Number(computedSupply);
+  }, [totalSupplyQuery?.data, nextTokenIdToMintQuery?.data]);
+
+  const querySuccess =
+    nextTokenIdToMintQuery.isSuccess || totalSupplyQuery.isSuccess;
+  const queryLoading =
+    nextTokenIdToMintQuery.isLoading || totalSupplyQuery.isLoading;
 
   const {
     getTableProps,
@@ -289,35 +308,31 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
       <Center w="100%">
         <Flex gap={2} direction="row" align="center">
           <IconButton
-            isDisabled={!canPreviousPage || totalCountQuery.isLoading}
+            isDisabled={!canPreviousPage || queryLoading}
             aria-label="first page"
             icon={<Icon as={MdFirstPage} />}
             onClick={() => gotoPage(0)}
           />
           <IconButton
-            isDisabled={!canPreviousPage || totalCountQuery.isLoading}
+            isDisabled={!canPreviousPage || queryLoading}
             aria-label="previous page"
             icon={<Icon as={MdNavigateBefore} />}
             onClick={() => previousPage()}
           />
           <Text whiteSpace="nowrap">
             Page <strong>{pageIndex + 1}</strong> of{" "}
-            <Skeleton
-              as="span"
-              display="inline"
-              isLoaded={totalCountQuery.isSuccess}
-            >
+            <Skeleton as="span" display="inline" isLoaded={querySuccess}>
               <strong>{pageCount}</strong>
             </Skeleton>
           </Text>
           <IconButton
-            isDisabled={!canNextPage || totalCountQuery.isLoading}
+            isDisabled={!canNextPage || queryLoading}
             aria-label="next page"
             icon={<Icon as={MdNavigateNext} />}
             onClick={() => nextPage()}
           />
           <IconButton
-            isDisabled={!canNextPage || totalCountQuery.isLoading}
+            isDisabled={!canNextPage || queryLoading}
             aria-label="last page"
             icon={<Icon as={MdLastPage} />}
             onClick={() => gotoPage(pageCount - 1)}
@@ -328,7 +343,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
               setPageSize(parseInt(e.target.value as string, 10));
             }}
             value={pageSize}
-            isDisabled={totalCountQuery.isLoading}
+            isDisabled={queryLoading}
           >
             <option value="25">25</option>
             <option value="50">50</option>
