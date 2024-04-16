@@ -38,9 +38,10 @@ export const templates: TemplateCardProps[] = [
   {
     id: "unity-pioneer",
     title: "Pioneer",
-    homepage: "https://thirdweb-example.github.io/unity-take-flight/",
-    repo: "https://github.com/thirdweb-example/unity-take-flight",
-    description: "Unity template with seamless onboarding experience",
+    homepage: "https://thirdweb-example.github.io/unity-pioneer/",
+    repo: "https://github.com/thirdweb-example/unity-pioneer",
+    description:
+      "Unity template featuring Account Abstraction, Session Keys, and Storage",
     img: "/assets/templates/unity-pioneer.png",
     hoverBorderColor: "hsl(248deg 89% 79% / 15%)",
     tags: ["Unity"],
@@ -50,10 +51,10 @@ export const templates: TemplateCardProps[] = [
   {
     id: "unity-take-flight",
     title: "Take Flight",
-    homepage: "https://thirdweb-example.github.io/unity-pioneer/",
-    repo: "https://github.com/thirdweb-example/unity-pioneer",
+    homepage: "https://thirdweb-example.github.io/unity-take-flight/",
+    repo: "https://github.com/thirdweb-example/unity-take-flight",
     description:
-      "Unity template featuring Account Abstraction, Session Keys, and Storage",
+      "Unity template with Account Abstraction, Social Logins, and Onchain Scoring",
     img: "/assets/templates/unity-take-flight.png",
     hoverBorderColor: "hsl(248deg 89% 79% / 15%)",
     tags: ["Unity"],
