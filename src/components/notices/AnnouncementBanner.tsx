@@ -46,7 +46,7 @@ export const AnnouncementBanner = () => {
                 color="white"
                 fontWeight={500}
               >
-                Get started with Connect SDK v5 now on stable release.
+                Get started with Connect SDK v5.
               </Heading>
               <Icon display={{ base: "none", md: "block" }} as={FiArrowRight} />
             </Flex>
