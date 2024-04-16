@@ -5,7 +5,6 @@ import { getWalletBalance } from "../../../../exports/wallets.js";
 import { sendTransaction } from "../../../../transaction/actions/send-transaction.js";
 import type { WaitForReceiptOptions } from "../../../../transaction/actions/wait-for-tx-receipt.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
-import { toEther } from "../../../../utils/units.js";
 import type { GetWalletBalanceResult } from "../../../../wallets/utils/getWalletBalance.js";
 import { fetchSwapSupportedChains } from "../../../web/ui/ConnectWallet/screens/Buy/swap/useSwapSupportedChains.js";
 import { useActiveAccount } from "../wallets/wallet-hooks.js";

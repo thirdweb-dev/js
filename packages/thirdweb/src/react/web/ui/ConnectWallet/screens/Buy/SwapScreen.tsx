@@ -171,7 +171,7 @@ export function BuyScreenContent(props: {
 
   // once the user edits the tokenInput or confirms the Buy - stop updating the token amount
   const [stopUpdatingTokenAmount, setStopUpdatingTokenAmount] = useState(
-    props.buyForTx ? false : true,
+    !props.buyForTx,
   );
 
   const [amountNeeded, setAmountNeeded] = useState<bigint | undefined>(
@@ -471,7 +471,7 @@ export function BuyScreenContent(props: {
             chain={toChain}
             onSelectToken={() => setScreen("select-to-token")}
             client={props.client}
-            hideTokenSelector={props.buyForTx ? true : false}
+            hideTokenSelector={!!props.buyForTx}
           />
         </Container>
 
