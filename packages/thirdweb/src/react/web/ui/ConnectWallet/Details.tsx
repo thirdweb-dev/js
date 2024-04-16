@@ -120,6 +120,7 @@ export const ConnectedWalletDetails: React.FC<{
     chain: walletChain ? walletChain : undefined,
     tokenAddress,
     address: activeAccount?.address,
+    client,
   });
 
   const [screen, setScreen] = useState<WalletDetailsModalScreen>("main");
@@ -212,9 +213,10 @@ export const ConnectedWalletDetails: React.FC<{
           style={{
             borderRadius: radius.sm,
           }}
+          client={client}
         />
       ) : activeWallet?.id ? (
-        <WalletImage size={iconSize.lg} id={activeWallet.id} />
+        <WalletImage size={iconSize.lg} id={activeWallet.id} client={client} />
       ) : (
         <WalletIcon size={iconSize.lg} />
       )}
@@ -280,7 +282,12 @@ export const ConnectedWalletDetails: React.FC<{
         }}
       >
         {chainQuery.data ? (
-          <ChainIcon chain={chainQuery.data} size={iconSize.md} active />
+          <ChainIcon
+            chain={chainQuery.data}
+            size={iconSize.md}
+            active
+            client={client}
+          />
         ) : (
           <Skeleton height={iconSize.md} width={iconSize.md} />
         )}
@@ -317,9 +324,14 @@ export const ConnectedWalletDetails: React.FC<{
             style={{
               borderRadius: radius.lg,
             }}
+            client={client}
           />
         ) : activeWallet?.id ? (
-          <WalletImage size={iconSize.xxl} id={activeWallet.id} />
+          <WalletImage
+            size={iconSize.xxl}
+            id={activeWallet.id}
+            client={client}
+          />
         ) : (
           <WalletIcon size={iconSize.xxl} />
         )}
@@ -600,6 +612,8 @@ export const ConnectedWalletDetails: React.FC<{
         onBack={() => {
           setScreen("main");
         }}
+        connectLocale={locale}
+        client={client}
       />
     );
   }
@@ -650,6 +664,7 @@ export const ConnectedWalletDetails: React.FC<{
         onBack={() => setScreen("main")}
         supportedTokens={props.supportedTokens}
         onViewPendingTx={() => setScreen("pending-tx")}
+        connectLocale={locale}
       />
     );
   }

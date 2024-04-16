@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import type { Chain } from "../../../../../../../chains/types.js";
+import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
 import { Spacer } from "../../../../components/Spacer.js";
@@ -27,6 +28,8 @@ export function BuyTokenInput(props: {
   value: string;
   onChange: (value: string) => void;
   onSelectToken: () => void;
+  client: ThirdwebClient;
+  hideTokenSelector?: boolean;
 }) {
   const chainQuery = useChainQuery(props.chain);
 
@@ -99,7 +102,7 @@ export function BuyTokenInput(props: {
                   ? "26px"
                   : props.value.length > 6
                     ? "34px"
-                    : "50px",
+                    : "45px",
               boxShadow: "none",
               padding: "0",
               paddingBlock: "2px",
@@ -118,51 +121,64 @@ export function BuyTokenInput(props: {
         </Container>
       </div>
 
-      <Spacer y="md" />
+      {!props.hideTokenSelector && (
+        <>
+          <Spacer y="sm" />
 
-      {/* Token / Chain selector */}
-      <Container flex="row" center="x">
-        <TokenButton
-          variant="secondary"
-          fullWidth
-          style={{
-            fontSize: fontSize.sm,
-          }}
-          gap="xxs"
-          onClick={props.onSelectToken}
-        >
-          <Container flex="row" center="y" gap="sm">
-            <TokenIcon token={props.token} chain={props.chain} size="md" />
-
-            <Container
-              flex="column"
+          {/* Token / Chain selector */}
+          <Container flex="row" center="x">
+            <TokenButton
+              variant="secondary"
+              fullWidth
               style={{
-                gap: "4px",
+                fontSize: fontSize.sm,
               }}
+              gap="xxs"
+              onClick={props.onSelectToken}
             >
-              {/* Token Symbol */}
-              <TokenSymbol token={props.token} chain={props.chain} size="sm" />
+              <Container flex="row" center="y" gap="sm">
+                <TokenIcon
+                  token={props.token}
+                  chain={props.chain}
+                  size="md"
+                  client={props.client}
+                />
 
-              {/* Network Name */}
-              {chainQuery.data?.name ? (
-                <Text size="xs" color="secondaryText">
-                  {chainQuery.data.name}
-                </Text>
-              ) : (
-                <Skeleton width="90px" height={fontSize.xs} />
-              )}
-            </Container>
+                <Container
+                  flex="column"
+                  style={{
+                    gap: "4px",
+                  }}
+                >
+                  {/* Token Symbol */}
+                  <TokenSymbol
+                    token={props.token}
+                    chain={props.chain}
+                    size="sm"
+                  />
+
+                  {/* Network Name */}
+                  {chainQuery.data?.name ? (
+                    <Text size="xs" color="secondaryText">
+                      {chainQuery.data.name}
+                    </Text>
+                  ) : (
+                    <Skeleton width="90px" height={fontSize.xs} />
+                  )}
+                </Container>
+              </Container>
+
+              <ChevronDownIcon
+                width={iconSize.sm}
+                height={iconSize.sm}
+                style={{
+                  marginLeft: "auto",
+                }}
+              />
+            </TokenButton>
           </Container>
-
-          <ChevronDownIcon
-            width={iconSize.sm}
-            height={iconSize.sm}
-            style={{
-              marginLeft: "auto",
-            }}
-          />
-        </TokenButton>
-      </Container>
+        </>
+      )}
     </Container>
   );
 }

@@ -2,9 +2,9 @@ import styled from "@emotion/styled";
 import { ChevronDownIcon, CrossCircledIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import type { Chain } from "../../../../../chains/types.js";
+import type { ThirdwebClient } from "../../../../../client/client.js";
 import { useChainQuery } from "../../../../core/hooks/others/useChainQuery.js";
 import { useWalletBalance } from "../../../../core/hooks/others/useWalletBalance.js";
-import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import { useActiveAccount } from "../../../../core/hooks/wallets/wallet-hooks.js";
 import { ChainIcon, fallbackChainIcon } from "../../components/ChainIcon.js";
 import { Skeleton } from "../../components/Skeleton.js";
@@ -19,11 +19,14 @@ import { useCustomTheme } from "../../design-system/CustomThemeProvider.js";
 import { fontSize, iconSize, spacing } from "../../design-system/index.js";
 import { ChainButton, NetworkSelectorContent } from "../NetworkSelector.js";
 import type { TokenInfo } from "../defaultTokens.js";
+import type { ConnectLocale } from "../locale/types.js";
 import {
   type ERC20OrNativeToken,
   NATIVE_TOKEN,
   isNativeToken,
 } from "./nativeToken.js";
+
+// NOTE: MUST NOT USE useConnectUI here because this UI can be used outside connect ui
 
 /**
  *
@@ -38,6 +41,8 @@ export function TokenSelector(props: {
     chains: Chain[];
     select: (chain: Chain) => void;
   };
+  connectLocale: ConnectLocale;
+  client: ThirdwebClient;
 }) {
   const [screen, setScreen] = useState<"base" | "select-chain">("base");
   const [input, setInput] = useState("");
@@ -51,9 +56,10 @@ export function TokenSelector(props: {
     address: activeAccount?.address,
     chain: chain,
     tokenAddress: input,
+    client: props.client,
   });
 
-  const locale = useConnectUI().connectLocale.sendFundsScreen;
+  const locale = props.connectLocale.sendFundsScreen;
 
   let tokenList = props.tokenList;
 
@@ -84,6 +90,8 @@ export function TokenSelector(props: {
   if (screen === "select-chain" && chainSelection) {
     return (
       <NetworkSelectorContent
+        client={props.client}
+        connectLocale={props.connectLocale}
         showTabs={false}
         onBack={() => setScreen("base")}
         // pass swap supported chains
@@ -100,6 +108,8 @@ export function TokenSelector(props: {
                   chainSelection.select(renderChainProps.chain);
                   setScreen("base");
                 }}
+                client={props.client}
+                connectLocale={props.connectLocale}
               />
             );
           },
@@ -145,6 +155,7 @@ export function TokenSelector(props: {
                   chain={chainQuery.data}
                   size={iconSize.lg}
                   fallbackImage={fallbackChainIcon}
+                  client={props.client}
                 />
 
                 {chainQuery.data ? (
@@ -203,6 +214,7 @@ export function TokenSelector(props: {
                 }}
                 chain={props.chain}
                 token={NATIVE_TOKEN}
+                client={props.client}
               />
             )}
 
@@ -213,6 +225,7 @@ export function TokenSelector(props: {
                   token={token}
                   key={token.address}
                   chain={props.chain}
+                  client={props.client}
                 />
               );
             })}
@@ -265,12 +278,14 @@ function SelectTokenButton(props: {
   token: ERC20OrNativeToken;
   chain: Chain;
   onClick: () => void;
+  client: ThirdwebClient;
 }) {
   const account = useActiveAccount();
   const tokenBalanceQuery = useWalletBalance({
     address: account?.address,
     chain: props.chain,
     tokenAddress: isNativeToken(props.token) ? undefined : props.token.address,
+    client: props.client,
   });
 
   const tokenName = isNativeToken(props.token)
@@ -279,7 +294,12 @@ function SelectTokenButton(props: {
 
   return (
     <SelectTokenBtn fullWidth variant="secondary" onClick={props.onClick}>
-      <TokenIcon token={props.token} chain={props.chain} size="lg" />
+      <TokenIcon
+        token={props.token}
+        chain={props.chain}
+        size="lg"
+        client={props.client}
+      />
 
       <Container flex="column" gap="xxs">
         {tokenName ? (

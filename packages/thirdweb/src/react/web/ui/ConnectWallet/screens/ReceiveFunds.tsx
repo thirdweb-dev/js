@@ -24,7 +24,8 @@ export function ReceiveFunds(props: {
   const account = useActiveAccount();
   const address = account?.address;
   const { hasCopied, onCopy } = useClipboard(address || "");
-  const locale = useConnectUI().connectLocale.receiveFundsScreen;
+  const { connectLocale, client } = useConnectUI();
+  const locale = connectLocale.receiveFundsScreen;
 
   return (
     <Container p="lg">
@@ -38,7 +39,11 @@ export function ReceiveFunds(props: {
           size={310}
           QRIcon={
             props.walletId && (
-              <WalletImage id={props.walletId} size={iconSize.xxl} />
+              <WalletImage
+                id={props.walletId}
+                size={iconSize.xxl}
+                client={client}
+              />
             )
           }
         />
