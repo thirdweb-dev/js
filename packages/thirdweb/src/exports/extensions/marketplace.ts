@@ -142,6 +142,10 @@ export {
   collectAuctionTokens,
   type CollectAuctionTokensParams,
 } from "../../extensions/marketplace/__generated__/IEnglishAuctions/write/collectAuctionTokens.js";
+export {
+  executeSale,
+  type ExecuteSaleParams,
+} from "../../extensions/marketplace/write/english-auction/executeSale.js";
 
 // EVENTS
 export {

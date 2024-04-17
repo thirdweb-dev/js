@@ -30,7 +30,9 @@ import { isListingValid } from "./utils.js";
 import { buyFromListing } from "./write/direct/buyFromListing.js";
 import { createListing } from "./write/direct/createListing.js";
 import { bidInAuction } from "./write/english-auction/bidInAuction.js";
+import { buyoutAuction } from "./write/english-auction/buyoutAuction.js";
 import { createAuction } from "./write/english-auction/createAuction.js";
+// import { executeSale } from "./write/english-auction/executeSale.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)(
   "Marketplace",
@@ -436,26 +438,26 @@ describe.runIf(process.env.TW_SECRET_KEY)(
           }),
         ).resolves.toBeDefined();
 
-        // check for a winning bid
-        const winningBid = await getWinningBid({
-          contract: marketplaceContract,
-          auctionId: listing.id,
-        });
-        expect(winningBid).toBeDefined();
-        expect(winningBid).toMatchInlineSnapshot(`
-        {
-          "bidAmountWei": 2000000000000000000n,
-          "bidderAddress": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
-          "currencyAddress": "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
-          "currencyValue": {
-            "decimals": 18,
-            "displayValue": "2",
-            "name": "Anvil Ether",
-            "symbol": "ETH",
-            "value": 2000000000000000000n,
-          },
-        }
-      `);
+        // check for a new winning bid
+        await expect(
+          getWinningBid({
+            contract: marketplaceContract,
+            auctionId: listing.id,
+          }),
+        ).resolves.toMatchInlineSnapshot(`
+          {
+            "bidAmountWei": 2000000000000000000n,
+            "bidderAddress": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+            "currencyAddress": "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+            "currencyValue": {
+              "decimals": 18,
+              "displayValue": "2",
+              "name": "Anvil Ether",
+              "symbol": "ETH",
+              "value": 2000000000000000000n,
+            },
+          }
+        `);
 
         // invalid bid amount, above minimum but below existing winning bid
         await expect(
@@ -499,25 +501,68 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         ).resolves.toBeDefined();
 
         // check for a new winning bid
-        const newWinningBid = await getWinningBid({
-          contract: marketplaceContract,
-          auctionId: listing.id,
-        });
-        expect(newWinningBid).toBeDefined();
-        expect(newWinningBid).toMatchInlineSnapshot(`
-        {
-          "bidAmountWei": 3000000000000000000n,
-          "bidderAddress": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
-          "currencyAddress": "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
-          "currencyValue": {
-            "decimals": 18,
-            "displayValue": "3",
-            "name": "Anvil Ether",
-            "symbol": "ETH",
-            "value": 3000000000000000000n,
-          },
-        }
-      `);
+        await expect(
+          getWinningBid({
+            contract: marketplaceContract,
+            auctionId: listing.id,
+          }),
+        ).resolves.toMatchInlineSnapshot(`
+          {
+            "bidAmountWei": 3000000000000000000n,
+            "bidderAddress": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+            "currencyAddress": "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+            "currencyValue": {
+              "decimals": 18,
+              "displayValue": "3",
+              "name": "Anvil Ether",
+              "symbol": "ETH",
+              "value": 3000000000000000000n,
+            },
+          }
+        `);
+
+        // buyout auction
+        await expect(
+          sendAndConfirmTransaction({
+            account: TEST_ACCOUNT_B,
+            transaction: buyoutAuction({
+              contract: marketplaceContract,
+              auctionId: listing.id,
+            }),
+          }),
+        ).resolves.toBeDefined();
+
+        // check for a new winning bid
+        await expect(
+          getWinningBid({
+            contract: marketplaceContract,
+            auctionId: listing.id,
+          }),
+        ).resolves.toMatchInlineSnapshot(`
+          {
+            "bidAmountWei": 10000000000000000000n,
+            "bidderAddress": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+            "currencyAddress": "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+            "currencyValue": {
+              "decimals": 18,
+              "displayValue": "10",
+              "name": "Anvil Ether",
+              "symbol": "ETH",
+              "value": 10000000000000000000n,
+            },
+          }
+        `);
+
+        // // execute the sale
+        // await expect(
+        //   sendAndConfirmTransaction({
+        //     account: TEST_ACCOUNT_A,
+        //     transaction: executeSale({
+        //       contract: marketplaceContract,
+        //       auctionId: listing.id,
+        //     }),
+        //   }),
+        // ).resolves.toBeDefined();
       });
     });
   },
