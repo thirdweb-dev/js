@@ -44,3 +44,17 @@ export type EnglishAuction = {
   asset: NFT;
   status: ListingStatus;
 };
+
+export type Offer = {
+  id: bigint;
+  offerorAddress: Address;
+  assetContractAddress: Address;
+  tokenId: bigint;
+  quantity: bigint;
+  currencyContractAddress: Address;
+  currencyValue: GetBalanceResult;
+  totalPrice: bigint;
+  asset: NFT;
+  endTimeInSeconds: bigint;
+  status: ListingStatus;
+};

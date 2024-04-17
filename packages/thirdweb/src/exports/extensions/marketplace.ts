@@ -171,6 +171,10 @@ export {
 
 // READ
 export { totalOffers } from "../../extensions/marketplace/__generated__/IOffers/read/totalOffers.js";
+export {
+  getAllOffers,
+  type GetAllOffersParams,
+} from "../../extensions/marketplace/read/offers/getAllOffers.js";
 
 // WRITE
 

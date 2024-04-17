@@ -7,7 +7,13 @@ import { isERC721 } from "../erc721/read/isERC721.js";
 import { isERC1155 } from "../erc1155/read/isERC1155.js";
 import type { getListing } from "./__generated__/IDirectListings/read/getListing.js";
 import type { getAuction } from "./__generated__/IEnglishAuctions/read/getAuction.js";
-import type { DirectListing, EnglishAuction, ListingStatus } from "./types.js";
+import type { getOffer } from "./__generated__/IOffers/read/getOffer.js";
+import type {
+  DirectListing,
+  EnglishAuction,
+  ListingStatus,
+  Offer,
+} from "./types.js";
 
 type GetAssetParams = {
   tokenId: bigint;
@@ -199,6 +205,64 @@ export async function mapEnglishAuction(
     },
     timeBufferInSeconds: rawAuction.timeBufferInSeconds,
     bidBufferBps: rawAuction.bidBufferBps,
+  };
+}
+
+/**
+ * @internal
+ */
+export async function mapOffer(
+  options: BaseTransactionOptions<{
+    latestBlock: { timestamp: bigint };
+    rawOffer: Awaited<ReturnType<typeof getOffer>>;
+  }>,
+): Promise<Offer> {
+  const { latestBlock, rawOffer } = options;
+  // process the listing
+  const status = computeStatus({
+    listingStatus: rawOffer.status,
+    blockTimeStamp: latestBlock.timestamp,
+    // startTimestamp is always 0 for offers
+    startTimestamp: 0n,
+    endTimestamp: rawOffer.expirationTimestamp,
+  });
+
+  const [currencyValuePerToken, nftAsset] = await Promise.all([
+    getCurrencyMetadata({
+      contract: getContract({
+        ...options.contract,
+        address: rawOffer.currency,
+      }),
+    }),
+    getNFTAsset({
+      ...options,
+      contract: getContract({
+        ...options.contract,
+        address: rawOffer.assetContract,
+      }),
+      tokenId: rawOffer.tokenId,
+    }),
+  ]);
+
+  return {
+    id: rawOffer.offerId,
+    offerorAddress: rawOffer.offeror,
+    assetContractAddress: rawOffer.assetContract,
+    tokenId: rawOffer.tokenId,
+    quantity: rawOffer.quantity,
+    currencyContractAddress: rawOffer.currency,
+    currencyValue: {
+      ...currencyValuePerToken,
+      value: rawOffer.totalPrice,
+      displayValue: toTokens(
+        rawOffer.totalPrice,
+        currencyValuePerToken.decimals,
+      ),
+    },
+    totalPrice: rawOffer.totalPrice,
+    asset: nftAsset,
+    endTimeInSeconds: rawOffer.expirationTimestamp,
+    status,
   };
 }
 
