@@ -164,3 +164,26 @@ export {
   newBidEvent,
   type NewBidEventFilters,
 } from "../../extensions/marketplace/__generated__/IEnglishAuctions/events/NewBid.js";
+
+// ----------------------------
+// OFFERS
+// ----------------------------
+
+// READ
+export { totalOffers } from "../../extensions/marketplace/__generated__/IOffers/read/totalOffers.js";
+
+// WRITE
+
+// EVENTS
+export {
+  acceptedOfferEvent,
+  type AcceptedOfferEventFilters,
+} from "../../extensions/marketplace/__generated__/IOffers/events/AcceptedOffer.js";
+export {
+  cancelledOfferEvent,
+  type CancelledOfferEventFilters,
+} from "../../extensions/marketplace/__generated__/IOffers/events/CancelledOffer.js";
+export {
+  newOfferEvent,
+  type NewOfferEventFilters,
+} from "../../extensions/marketplace/__generated__/IOffers/events/NewOffer.js";
