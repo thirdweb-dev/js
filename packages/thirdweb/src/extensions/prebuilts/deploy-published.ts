@@ -2,10 +2,7 @@ import type { AbiConstructor } from "abitype";
 import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { getContract } from "../../contract/contract.js";
-import { deployViaAutoFactory } from "../../contract/deployment/deploy-via-autofactory.js";
-import { deployContract } from "../../contract/deployment/deploy-with-abi.js";
 import { fetchPublishedContractMetadata } from "../../contract/deployment/publisher.js";
-import { getOrDeployInfraForPublishedContract } from "../../contract/deployment/utils/bootstrap.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { simulateTransaction } from "../../transaction/actions/simulate.js";
 import { prepareContractCall } from "../../transaction/prepare-contract-call.js";
@@ -62,85 +59,98 @@ export async function deployPublishedContract(
       publisher,
       version,
     });
-  if (extendedMetadata?.deployType === "standard") {
-    return deployContract({
-      account,
-      client,
-      chain,
-      bytecode: compilerMetadata.bytecode,
-      constructorAbi:
-        (compilerMetadata.abi.find(
-          (i) => i.type === "constructor",
-        ) as AbiConstructor) || [],
-      constructorParams: contractParams,
-    });
-  }
 
-  if (extendedMetadata?.deployType === "autoFactory") {
-    const { cloneFactoryContract, implementationContract } =
-      await getOrDeployInfraForPublishedContract({
-        chain,
-        client,
+  switch (extendedMetadata?.deployType) {
+    case "standard": {
+      const { deployContract } = await import(
+        "../../contract/deployment/deploy-with-abi.js"
+      );
+      return deployContract({
         account,
-        contractId,
-        constructorParams: implementationConstructorParams || [],
-      });
-    const initializeTransaction = prepareContractCall({
-      contract: getContract({
         client,
         chain,
-        address: implementationContract.address,
-      }),
-      method: resolveMethod(
-        extendedMetadata.factoryDeploymentData
-          ?.implementationInitializerFunction || "initialize",
-      ),
-      params: contractParams,
-    });
-
-    return deployViaAutoFactory({
-      client,
-      chain,
-      account,
-      cloneFactoryContract,
-      initializeTransaction,
-    });
-  }
-
-  if (extendedMetadata?.deployType === "customFactory") {
-    if (!extendedMetadata?.factoryDeploymentData?.customFactoryInput) {
-      throw new Error("No custom factory info found");
+        bytecode: compilerMetadata.bytecode,
+        constructorAbi:
+          (compilerMetadata.abi.find(
+            (i) => i.type === "constructor",
+          ) as AbiConstructor) || [],
+        constructorParams: contractParams,
+      });
     }
-    const factoryAddress =
-      extendedMetadata?.factoryDeploymentData?.customFactoryInput
-        ?.customFactoryAddresses?.[chain.id];
-    const factoryFunction =
-      extendedMetadata.factoryDeploymentData?.customFactoryInput
-        ?.factoryFunction;
-    if (!factoryAddress || !factoryFunction) {
-      throw new Error(`No factory address found on chain ${chain.id}`);
+    case "autoFactory": {
+      const [
+        { deployViaAutoFactory },
+        { getOrDeployInfraForPublishedContract },
+      ] = await Promise.all([
+        import("../../contract/deployment/deploy-via-autofactory.js"),
+        import("../../contract/deployment/utils/bootstrap.js"),
+      ]);
+      const { cloneFactoryContract, implementationContract } =
+        await getOrDeployInfraForPublishedContract({
+          chain,
+          client,
+          account,
+          contractId,
+          constructorParams: implementationConstructorParams || [],
+        });
+      const initializeTransaction = prepareContractCall({
+        contract: getContract({
+          client,
+          chain,
+          address: implementationContract.address,
+        }),
+        method: resolveMethod(
+          extendedMetadata.factoryDeploymentData
+            ?.implementationInitializerFunction || "initialize",
+        ),
+        params: contractParams,
+      });
+
+      return deployViaAutoFactory({
+        client,
+        chain,
+        account,
+        cloneFactoryContract,
+        initializeTransaction,
+      });
     }
+    case "customFactory": {
+      if (!extendedMetadata?.factoryDeploymentData?.customFactoryInput) {
+        throw new Error("No custom factory info found");
+      }
+      const factoryAddress =
+        extendedMetadata?.factoryDeploymentData?.customFactoryInput
+          ?.customFactoryAddresses?.[chain.id];
+      const factoryFunction =
+        extendedMetadata.factoryDeploymentData?.customFactoryInput
+          ?.factoryFunction;
+      if (!factoryAddress || !factoryFunction) {
+        throw new Error(`No factory address found on chain ${chain.id}`);
+      }
 
-    const factory = getContract({
-      client,
-      chain,
-      address: factoryAddress,
-    });
-    const deployTx = prepareContractCall({
-      contract: factory,
-      method: resolveMethod(factoryFunction),
-      params: contractParams,
-    });
-    // asumption here is that the factory address returns the deployed proxy address
-    const address = simulateTransaction({
-      transaction: deployTx,
-    });
-    await sendAndConfirmTransaction({
-      transaction: deployTx,
-      account,
-    });
-    return address;
+      const factory = getContract({
+        client,
+        chain,
+        address: factoryAddress,
+      });
+      const deployTx = prepareContractCall({
+        contract: factory,
+        method: resolveMethod(factoryFunction),
+        params: contractParams,
+      });
+      // asumption here is that the factory address returns the deployed proxy address
+      const address = simulateTransaction({
+        transaction: deployTx,
+      });
+      await sendAndConfirmTransaction({
+        transaction: deployTx,
+        account,
+      });
+      return address;
+    }
+    default:
+      throw new Error(
+        `Unsupported deploy type: ${extendedMetadata?.deployType}`,
+      );
   }
-
-  throw new Error(`Unsupported deploy type: ${extendedMetadata?.deployType}`);
 }

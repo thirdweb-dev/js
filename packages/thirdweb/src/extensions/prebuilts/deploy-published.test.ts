@@ -31,7 +31,6 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         contractId: "Airdrop",
         contractParams: [TEST_ACCOUNT_A.address],
       });
-      console.log(address);
       expect(address).toBeDefined();
       expect(address.length).toBe(42);
     });
