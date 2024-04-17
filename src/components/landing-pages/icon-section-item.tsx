@@ -1,4 +1,4 @@
-import { Flex } from "@chakra-ui/react";
+import { Flex, FlexProps } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { StaticImageData } from "next/image";
 import { ReactNode } from "react";
@@ -7,7 +7,9 @@ import { Text } from "tw-components";
 interface LandingIconSectionItemProps {
   icon: StaticImageData;
   title: string;
+  bg?: FlexProps["bg"];
   description?: ReactNode;
+  descriptionColor?: string;
   customDescription?: ReactNode;
   shouldShowNoBorder?: boolean;
   iconWidth?: string;
@@ -16,7 +18,9 @@ interface LandingIconSectionItemProps {
 export const LandingIconSectionItem: React.FC<LandingIconSectionItemProps> = ({
   icon,
   title,
+  bg,
   description,
+  descriptionColor,
   customDescription,
   shouldShowNoBorder,
   iconWidth,
@@ -33,6 +37,7 @@ export const LandingIconSectionItem: React.FC<LandingIconSectionItemProps> = ({
               borderRadius: "lg",
             })}
         w={iconWidth ?? 14}
+        bg={bg}
       >
         <ChakraNextImage src={icon} width={iconWidth ?? "32px"} alt="" />
       </Flex>
@@ -41,7 +46,11 @@ export const LandingIconSectionItem: React.FC<LandingIconSectionItemProps> = ({
           {title}
         </Text>
         {customDescription && customDescription}
-        {description && <Text size="body.lg">{description}</Text>}
+        {description && (
+          <Text size="body.lg" color={descriptionColor}>
+            {description}
+          </Text>
+        )}
       </Flex>
     </Flex>
   );

@@ -1,7 +1,7 @@
 import { Flex, GridItem, LinkBox, LinkOverlay } from "@chakra-ui/react";
 import { StaticImageData } from "next/image";
 import { ReactNode } from "react";
-import { Card, Text, TrackedLink } from "tw-components";
+import { Card, CardProps, Text, TrackedLink } from "tw-components";
 import { LandingDesktopMobileImage } from "./desktop-mobile-image";
 import { ChakraNextImage } from "components/Image";
 
@@ -11,6 +11,7 @@ interface LandingCardWithImageProps {
   image: StaticImageData;
   mobileImage?: StaticImageData;
   direction?: "vertical" | "horizontal";
+  cardBg?: CardProps["bg"];
   colSpan?: number;
   href: string;
   TRACKING_CATEGORY: string;
@@ -22,6 +23,7 @@ export const LandingCardWithImage: React.FC<LandingCardWithImageProps> = ({
   image,
   mobileImage,
   direction = "vertical",
+  cardBg,
   colSpan = 2,
   href,
   TRACKING_CATEGORY,
@@ -32,6 +34,7 @@ export const LandingCardWithImage: React.FC<LandingCardWithImageProps> = ({
         <Card
           as={Flex}
           gap={6}
+          bg={cardBg}
           p={0}
           h="full"
           flexDir={{
