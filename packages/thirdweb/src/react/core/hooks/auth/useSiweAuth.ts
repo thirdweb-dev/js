@@ -96,11 +96,11 @@ export function useSiweAuth(authOptions?: SiweAuthOptions) {
     requiresAuth,
 
     // login
-    doLogin: loginMutation.mutate,
+    doLogin: loginMutation.mutateAsync,
     isLoggingIn: loginMutation.isPending,
 
     // logout
-    doLogout: logoutMutation.mutate,
+    doLogout: logoutMutation.mutateAsync,
     isLoggingOut: logoutMutation.isPending,
 
     // checking if logged in

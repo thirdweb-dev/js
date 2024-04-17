@@ -496,6 +496,23 @@ export type ConnectButtonProps = {
     className?: string;
   };
 
+  signInButton?: {
+    /**
+     * Set a custom label for the sign-in button
+     */
+    label?: string;
+
+    /**
+     * CSS styles to apply to the sign-in button element
+     */
+    style?: React.CSSProperties;
+
+    /**
+     * CSS class to apply to the sign-in button element
+     */
+    className?: string;
+  };
+
   /**
    * Configurations for the `ConnectButton`'s Modal that is shown for connecting a wallet
    * Refer to the [`ConnectButton_connectModalOptions`](https://portal.thirdweb.com/references/typescript/v5/ConnectButton_connectModalOptions) type for more details
