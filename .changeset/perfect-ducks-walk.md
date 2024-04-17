@@ -2,7 +2,7 @@
 "thirdweb": minor
 ---
 
-Open "Buy Modal" UI when sending transaction using the `useSendTransaction` hook if the user does not have enough funds to execute the transaction to prompt the user to buy tokens
+Open "Pay Modal" UI when sending transaction using the `useSendTransaction` hook if the user does not have enough funds to execute the transaction to prompt the user to buy tokens
 
 `useSendTransaction` now takes an optional `config` option to customize the "Pay Modal" UI
 
