@@ -16,7 +16,7 @@ export type MintAdditionalSupplyToParams = {
  * @example
  * ```ts
  * import { mintAdditionalSupplyTo } from "thirdweb/extensions/erc1155";
- * const transaction = mintTo({
+ * const transaction = mintAdditionalSupplyTo({
  *  contract,
  *  to: "0x...",
  *  tokenId: 1n,

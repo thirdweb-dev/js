@@ -21,7 +21,7 @@ import { generateMintSignature, mintWithSignature } from "./sigMint.js";
 describe.runIf(process.env.TW_SECRET_KEY)(
   "generateMintSignature",
   {
-    timeout: 60000,
+    timeout: 120000,
   },
   () => {
     let erc721Contract: ThirdwebContract;
@@ -42,7 +42,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
       });
-    });
+    }, 60000);
 
     it("should generate a mint signature and mint an NFT", async () => {
       const { payload, signature } = await generateMintSignature({

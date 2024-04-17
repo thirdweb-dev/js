@@ -21,26 +21,26 @@ import { LoadingScreen } from "../wallets/shared/LoadingScreen.js";
  */
 export type SendTransactionConfig = {
   /**
-   * Configuration for the "Buy Modal" that opens when the user doesn't have enough funds to send a transaction.
-   * Set `buyModal: false` to disable the "Buy Modal" popup
+   * Configuration for the "Pay Modal" that opens when the user doesn't have enough funds to send a transaction.
+   * Set `payModal: false` to disable the "Pay Modal" popup
    *
-   * This configuration object includes the following properties to configure the "Buy Modal" UI:
+   * This configuration object includes the following properties to configure the "Pay Modal" UI:
    *
    * ### `locale`
-   * The language to use for the "Buy Modal" UI. Defaults to `"en_US"`.
+   * The language to use for the "Pay Modal" UI. Defaults to `"en_US"`.
    *
    * ### `supportedTokens`
    * An object of type [`SupportedTokens`](https://portal.thirdweb.com/references/typescript/v5/SupportedTokens) to configure the tokens to show for a chain.
    *
    * ### `theme`
-   * The theme to use for the "Buy Modal" UI. Defaults to `"dark"`.
+   * The theme to use for the "Pay Modal" UI. Defaults to `"dark"`.
    *
    * It can be set to `"light"` or `"dark"` or an object of type [`Theme`](https://portal.thirdweb.com/references/typescript/v5/Theme) for a custom theme.
    *
    * Refer to [`lightTheme`](https://portal.thirdweb.com/references/typescript/v5/lightTheme)
    * or [`darkTheme`](https://portal.thirdweb.com/references/typescript/v5/darkTheme) helper functions to use the default light or dark theme and customize it.
    */
-  buyModal?:
+  payModal?:
     | {
         locale?: LocaleId;
         supportedTokens?: SupportedTokens;
@@ -66,11 +66,11 @@ export type SendTransactionConfig = {
  * @transaction
  */
 export function useSendTransaction(config: SendTransactionConfig = {}) {
-  const buyModal = config.buyModal;
+  const payModal = config.payModal;
 
   const setRootEl = useContext(SetRootElementContext);
   return useSendTransactionCore(
-    typeof buyModal === "object"
+    typeof payModal === "object"
       ? (data) => {
           setRootEl(
             <TxModal
@@ -81,9 +81,9 @@ export function useSendTransaction(config: SendTransactionConfig = {}) {
                 data.rejectTx();
               }}
               client={data.tx.client}
-              localeId={buyModal?.locale || "en_US"}
-              supportedTokens={buyModal?.supportedTokens || defaultTokens}
-              theme={buyModal?.theme || "dark"}
+              localeId={payModal?.locale || "en_US"}
+              supportedTokens={payModal?.supportedTokens || defaultTokens}
+              theme={payModal?.theme || "dark"}
               txCostWei={data.totalCostWei}
               walletBalanceWei={data.walletBalance.value}
               nativeTokenSymbol={data.walletBalance.symbol}

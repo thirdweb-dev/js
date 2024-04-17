@@ -108,12 +108,44 @@ export {
   getAllValidAuctions,
   type GetAllValidAuctionParams,
 } from "../../extensions/marketplace/read/english-auction/getAllValidAuctions.js";
+export {
+  getWinningBid,
+  type GetWinningBidParams,
+} from "../../extensions/marketplace/read/english-auction/getWinningBid.js";
+export {
+  isNewWinningBid,
+  type IsNewWinningBidParams,
+} from "../../extensions/marketplace/__generated__/IEnglishAuctions/read/isNewWinningBid.js";
 
 // WRITE
 export {
   createAuction,
   type CreateAuctionParams,
 } from "../../extensions/marketplace/write/english-auction/createAuction.js";
+export {
+  bidInAuction,
+  type BidInAuctionParams,
+} from "../../extensions/marketplace/write/english-auction/bidInAuction.js";
+export {
+  cancelAuction,
+  type CancelAuctionParams,
+} from "../../extensions/marketplace/__generated__/IEnglishAuctions/write/cancelAuction.js";
+export {
+  buyoutAuction,
+  type BuyoutAuctionParams,
+} from "../../extensions/marketplace/write/english-auction/buyoutAuction.js";
+export {
+  collectAuctionPayout,
+  type CollectAuctionPayoutParams,
+} from "../../extensions/marketplace/__generated__/IEnglishAuctions/write/collectAuctionPayout.js";
+export {
+  collectAuctionTokens,
+  type CollectAuctionTokensParams,
+} from "../../extensions/marketplace/__generated__/IEnglishAuctions/write/collectAuctionTokens.js";
+export {
+  executeSale,
+  type ExecuteSaleParams,
+} from "../../extensions/marketplace/write/english-auction/executeSale.js";
 
 // EVENTS
 export {

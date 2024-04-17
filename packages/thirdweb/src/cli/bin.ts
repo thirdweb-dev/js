@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
-import { execSync, spawn } from "node:child_process";
+import { execSync } from "node:child_process";
+import { spawn } from "cross-spawn";
 import {
   generate,
   isValidChainIdAndContractAddress,
@@ -24,25 +25,24 @@ async function main() {
 
     default: {
       const isWindows = /^win/.test(process.platform);
-      let bunAvailable = false;
-      // bun has no windows support yet anyways
-      if (!isWindows) {
+
+      const isBunAvailable = (() => {
         try {
           const res = execSync("bun --version", {
             stdio: "ignore",
             encoding: "utf-8",
           });
           if (typeof res === "string" && res.indexOf(".") > -1) {
-            bunAvailable = true;
+            return true;
           }
-        } catch {
-          bunAvailable = false;
-        }
-      }
+        } catch {}
+        return false;
+      })();
+
       let runner = "npx";
 
       switch (true) {
-        case bunAvailable:
+        case isBunAvailable:
           runner = "bun";
           break;
         case isWindows:
