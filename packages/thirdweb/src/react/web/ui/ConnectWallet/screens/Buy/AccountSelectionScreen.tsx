@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import { useMemo, useState } from "react";
+import type { ThirdwebClient } from "../../../../../../client/client.js";
 import { isAddress } from "../../../../../../utils/address.js";
 import type {
   Account,
@@ -20,6 +21,7 @@ export function AccountSelectionScreen(props: {
   activeWallet: Wallet;
   activeAccount: Account;
   onSelect: (address: string) => void;
+  client: ThirdwebClient;
 }) {
   const [address, setAddress] = useState<string>("");
   const isValidAddress = useMemo(() => isAddress(address), [address]);
@@ -76,6 +78,7 @@ export function AccountSelectionScreen(props: {
       <Text size="sm">Connected</Text>
       <Spacer y="xs" />
       <AccountSelectorButton
+        client={props.client}
         address={props.activeAccount.address}
         activeAccount={props.activeAccount}
         activeWallet={props.activeWallet}

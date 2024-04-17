@@ -51,7 +51,7 @@ export const WalletSelector: React.FC<{
   goBack?: () => void;
   onShowAll: () => void;
 }> = (props) => {
-  const { connectModal, isEmbed } = useConnectUI();
+  const { connectModal, isEmbed, client } = useConnectUI();
   const isCompact = connectModal.size === "compact";
   const [isWalletGroupExpanded, setIsWalletGroupExpanded] = useState(false);
 
@@ -134,6 +134,7 @@ export const WalletSelector: React.FC<{
           src={connectModal.titleIcon}
           width={iconSize.md}
           height={iconSize.md}
+          client={client}
         />
       )}
 
@@ -164,7 +165,12 @@ export const WalletSelector: React.FC<{
     >
       <Container flex="row" gap="xxs">
         {eoaWallets.slice(0, 2).map((w) => (
-          <WalletImage key={w.id} id={w.id} size={iconSize.sm} />
+          <WalletImage
+            key={w.id}
+            id={w.id}
+            size={iconSize.sm}
+            client={client}
+          />
         ))}
       </Container>
       {locale.connectAWallet}

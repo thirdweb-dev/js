@@ -1,4 +1,5 @@
 import { ChevronDownIcon } from "@radix-ui/react-icons";
+import type { ThirdwebClient } from "../../../../../../client/client.js";
 import type {
   Account,
   Wallet,
@@ -21,11 +22,16 @@ export function AccountSelectorButton(props: {
   activeAccount: Account;
   address: string;
   chevron?: boolean;
+  client: ThirdwebClient;
 }) {
   return (
     <SecondaryButton variant="secondary" fullWidth onClick={props.onClick}>
       {props.activeAccount.address === props.address ? (
-        <WalletImage id={props.activeWallet.id} size={iconSize.md} />
+        <WalletImage
+          id={props.activeWallet.id}
+          size={iconSize.md}
+          client={props.client}
+        />
       ) : (
         <Container color="secondaryText" flex="row" center="both">
           <WalletIcon size={iconSize.md} />

@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { AutoConnect } from "../../../core/hooks/connection/useAutoConnect.js";
 import {
   useActiveAccount,
@@ -19,7 +19,7 @@ import type { ConnectButtonProps } from "./ConnectWalletProps.js";
 import { ConnectedWalletDetails } from "./Details.js";
 import ConnectModal from "./Modal/ConnectModal.js";
 import { defaultTokens } from "./defaultTokens.js";
-import { getConnectLocale } from "./locale/getConnectLocale.js";
+import { useConnectLocale } from "./locale/getConnectLocale.js";
 import type { ConnectLocale } from "./locale/types.js";
 
 const TW_CONNECT_WALLET = "tw-connect-wallet";
@@ -41,12 +41,7 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  */
 export function ConnectButton(props: ConnectButtonProps) {
   const wallets = props.wallets || getDefaultWallets();
-  const localeId = props.locale || "en_US";
-  const [locale, setLocale] = useState<ConnectLocale | undefined>();
-
-  useEffect(() => {
-    getConnectLocale(localeId).then(setLocale);
-  }, [localeId]);
+  const localeQuery = useConnectLocale(props.locale || "en_US");
 
   const autoConnectComp = props.autoConnect !== false && (
     <AutoConnect
@@ -62,7 +57,7 @@ export function ConnectButton(props: ConnectButtonProps) {
     />
   );
 
-  if (!locale) {
+  if (!localeQuery.data) {
     return (
       <AnimatedButton
         disabled={true}
@@ -89,7 +84,7 @@ export function ConnectButton(props: ConnectButtonProps) {
         client: props.client,
         wallets: wallets,
         locale: props.locale || "en_US",
-        connectLocale: locale,
+        connectLocale: localeQuery.data,
         chain: props.chain,
         chains: props.chains,
         walletConnect: props.walletConnect,
@@ -108,7 +103,7 @@ export function ConnectButton(props: ConnectButtonProps) {
       }}
     >
       <WalletUIStatesProvider theme={props.theme}>
-        <ConnectButtonInner {...props} connectLocale={locale} />
+        <ConnectButtonInner {...props} connectLocale={localeQuery.data} />
         <ConnectModal />
         {autoConnectComp}
       </WalletUIStatesProvider>

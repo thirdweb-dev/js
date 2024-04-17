@@ -20,7 +20,7 @@ export type GetWalletBalanceOptions = {
   tokenAddress?: string;
 };
 
-type GetWalletBalanceResult = {
+export type GetWalletBalanceResult = {
   value: bigint;
   decimals: number;
   displayValue: string;

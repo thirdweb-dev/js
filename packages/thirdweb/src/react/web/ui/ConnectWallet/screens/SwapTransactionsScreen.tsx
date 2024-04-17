@@ -42,6 +42,8 @@ type TxStatusInfo = {
   subStatus?: BuyWithCryptoStatus["subStatus"];
 };
 
+// Note: Do not use useConnectUI here
+
 const PAGE_SIZE = 10;
 
 /**
@@ -232,7 +234,7 @@ export function SwapTransactionsScreen(props: {
             color: "inherit",
           }}
         >
-          View on Explorer
+          View all transactions
         </ButtonLink>
       </Container>
     </Container>

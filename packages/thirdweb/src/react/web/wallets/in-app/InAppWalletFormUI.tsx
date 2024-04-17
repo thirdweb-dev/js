@@ -128,6 +128,7 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
                   src={socialIcons[loginMethod]}
                   width={imgIconSize}
                   height={imgIconSize}
+                  client={client}
                 />
                 {!showOnlyIcons && loginMethodsLabel[loginMethod]}
               </SocialButton>

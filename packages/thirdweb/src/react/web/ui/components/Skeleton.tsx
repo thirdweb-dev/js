@@ -1,4 +1,5 @@
 import { keyframes } from "@emotion/react";
+import type { Theme } from "../../../../exports/react.js";
 import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 import { StyledDiv } from "../design-system/elements.js";
 import { radius } from "../design-system/index.js";
@@ -9,9 +10,11 @@ import { radius } from "../design-system/index.js";
 export const Skeleton: React.FC<{
   height: string;
   width?: string;
+  color?: keyof Theme["colors"];
 }> = (props) => {
   return (
     <SkeletonDiv
+      color={props.color}
       style={{
         height: props.height,
         width: props.width || "auto",
@@ -29,12 +32,16 @@ const skeletonAnimation = keyframes`
   }
 `;
 
-const SkeletonDiv = /* @__PURE__ */ StyledDiv(() => {
-  const theme = useCustomTheme();
-  return {
-    backgroundSize: "200% 200%",
-    backgroundColor: theme.colors.skeletonBg,
-    animation: `${skeletonAnimation} 500ms ease-in-out infinite alternate`,
-    borderRadius: radius.sm,
-  };
-});
+const SkeletonDiv = /* @__PURE__ */ StyledDiv(
+  (props: {
+    color?: keyof Theme["colors"];
+  }) => {
+    const theme = useCustomTheme();
+    return {
+      backgroundSize: "200% 200%",
+      backgroundColor: theme.colors[props.color || "skeletonBg"],
+      animation: `${skeletonAnimation} 500ms ease-in-out infinite alternate`,
+      borderRadius: radius.sm,
+    };
+  },
+);
