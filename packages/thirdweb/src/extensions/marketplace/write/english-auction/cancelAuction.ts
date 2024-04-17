@@ -10,8 +10,8 @@ export type CancelAuctionParams = {
  * Cancels an auction by providing the necessary options.
  *
  * @param options - The options for canceling the auction.
- * @returns A promise that resolves when the auction is canceled.
- * @throws An error if the auction has an existing bid and cannot be canceled.
+ * @returns A transaction that can be sent to cancel the auction.
+ * @throws An error when sending the transaction if the auction has an existing bid and cannot be canceled.
  * @extension MARKETPLACE
  * @example
  * ```ts

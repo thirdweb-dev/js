@@ -130,6 +130,10 @@ export {
   cancelAuction,
   type CancelAuctionParams,
 } from "../../extensions/marketplace/__generated__/IEnglishAuctions/write/cancelAuction.js";
+export {
+  buyoutAuction,
+  type BuyoutAuctionParams,
+} from "../../extensions/marketplace/write/english-auction/buyoutAuction.js";
 
 // EVENTS
 export {

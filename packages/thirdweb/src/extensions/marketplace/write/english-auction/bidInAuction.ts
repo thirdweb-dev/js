@@ -17,7 +17,7 @@ export type BidInAuctionParams = {
 /**
  * Places a bid in an English auction.
  * @param options - The options for placing the bid.
- * @returns A promise that resolves to the result of the bid transaction.
+ * @returns A transaction that can be sent to place the bid.
  * @extension MARKETPLACE
  * @example
  * ```ts
