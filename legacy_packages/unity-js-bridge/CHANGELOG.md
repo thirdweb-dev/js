@@ -1,5 +1,17 @@
 # @thirdweb-dev/unity-js-bridge
 
+## 0.6.13
+
+### Patch Changes
+
+- [#2792](https://github.com/thirdweb-dev/js/pull/2792) [`bf0509e`](https://github.com/thirdweb-dev/js/commit/bf0509e7466ab41bdcfe3acffee3ed3af38cb71e) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Unity 4.12 - Engine Relayer Support
+
+- Updated dependencies [[`4c7153c`](https://github.com/thirdweb-dev/js/commit/4c7153c95df1962d1e530a3d8227960cd87f6a61), [`76f93a4`](https://github.com/thirdweb-dev/js/commit/76f93a4346bc7627a6b0e4e49d212e245ad91be0)]:
+  - @thirdweb-dev/sdk@4.0.64
+  - @thirdweb-dev/chains@0.1.95
+  - @thirdweb-dev/wallets@2.5.4
+  - @thirdweb-dev/auth@4.1.62
+
 ## 0.6.12
 
 ### Patch Changes
