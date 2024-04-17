@@ -34,7 +34,7 @@ export const metrics = [
         colSpan: 4,
       },
     ],
-    href: "https://ztx.io",
+    href: "https://twitter.com/thirdweb/status/1734307574357389326",
     hoverBackground: "#622AFF",
   },
   {
@@ -50,7 +50,7 @@ export const metrics = [
         colSpan: 4,
       },
     ],
-    href: "https://torquemotorsport.io",
+    href: "https://twitter.com/thirdweb/status/1761054053650542863",
     hoverBackground: "#0053FF",
   },
   {
