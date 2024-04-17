@@ -126,6 +126,10 @@ export {
   bidInAuction,
   type BidInAuctionParams,
 } from "../../extensions/marketplace/write/english-auction/bidInAuction.js";
+export {
+  cancelAuction,
+  type CancelAuctionParams,
+} from "../../extensions/marketplace/__generated__/IEnglishAuctions/write/cancelAuction.js";
 
 // EVENTS
 export {
