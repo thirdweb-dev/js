@@ -67,7 +67,7 @@ export async function getClaimParams(options: GetClaimParamsOptions) {
         currency: ADDRESS_ZERO,
         proof: [],
         quantityLimitPerWallet: 0n,
-        pricePerToken: 0n,
+        pricePerToken: maxUint256,
       } satisfies OverrideProof;
     }
     // lazy-load the fetchProofsForClaimer function if we need it
@@ -87,7 +87,7 @@ export async function getClaimParams(options: GetClaimParamsOptions) {
         currency: ADDRESS_ZERO,
         proof: [],
         quantityLimitPerWallet: 0n,
-        pricePerToken: 0n,
+        pricePerToken: maxUint256,
       } satisfies OverrideProof;
     }
     // otherwise return the proof
