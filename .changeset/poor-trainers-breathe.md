@@ -1,0 +1,5 @@
+---
+"thirdweb": minor
+---
+
+Added `deployPublishedContract`

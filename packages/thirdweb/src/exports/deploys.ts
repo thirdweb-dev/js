@@ -19,5 +19,15 @@ export {
   deployERC1155Contract,
 } from "../extensions/prebuilts/deploy-erc1155.js";
 
+export {
+  deployPublishedContract,
+  type DeployPublishedContractOptions,
+} from "../extensions/prebuilts/deploy-published.js";
+
 export { prepareDirectDeployTransaction } from "../contract/deployment/deploy-with-abi.js";
+export { prepareAutoFactoryDeployTransaction } from "../contract/deployment/deploy-via-autofactory.js";
 export { deployViaAutoFactory } from "../contract/deployment/deploy-via-autofactory.js";
+export {
+  deployContract,
+  type PrepareDirectDeployTransactionOptions,
+} from "../contract/deployment/deploy-with-abi.js";
