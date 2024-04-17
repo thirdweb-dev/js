@@ -1,0 +1,117 @@
+import type { ThirdwebClient } from "../../client/client.js";
+import { getClientFetch } from "../../utils/fetch.js";
+import { getPayBuyWithFiatQuoteEndpoint } from "../buyWithCrypto/utils/definitions.js";
+
+// TODO: VERIFY THE TYPES !!!!
+
+// TODO: add JSDoc description for all properties
+
+/**
+ * TODO
+ */
+export type GetBuyWithFiatQuoteParams = {
+  client: ThirdwebClient;
+  // required
+  fromAddress: string;
+  toAddress: string;
+  toChainId: number;
+  toTokenAddress: string;
+  fromCurrencySymbol: string;
+
+  // optional
+  maxSlippageBPS?: number | undefined;
+  fromAmount?: string | undefined;
+  toAmount?: string | undefined;
+};
+
+export type BuyWithFiatQuote = {
+  estimatedDurationSeconds: number;
+  estimatedToAmountMin: string;
+  estimatedToAmountMinWei: string;
+  fromCurrency: {
+    amount: string;
+    amountUnits: string;
+    decimals: number;
+    currencySymbol: string;
+  };
+  toToken: {
+    symbol?: string | undefined;
+    priceUSDCents?: number | undefined;
+    name?: string | undefined;
+    chainId: number;
+    tokenAddress: string;
+    decimals: number;
+  };
+  toAddress: string;
+  maxSlippageBPS: number;
+  quoteId: string;
+  toAmountMinWei: string;
+  toAmountMin: string;
+  processingFees: {
+    amount: string;
+    amountUnits: string;
+    decimals: number;
+    currencySymbol: string;
+    feeType: "ON_RAMP" | "NETWORK";
+  }[];
+
+  onRampLink: string;
+};
+
+/**
+ * TODO
+ * @buyFiat
+ */
+export async function getBuyWithFiatQuote(
+  params: GetBuyWithFiatQuoteParams,
+): Promise<BuyWithFiatQuote> {
+  try {
+    const queryParams = new URLSearchParams({
+      fromAddress: params.fromAddress,
+      toAddress: params.toAddress,
+      fromCurrencySymbol: params.fromCurrencySymbol,
+      toChainId: params.toChainId.toString(),
+      toTokenAddress: params.toTokenAddress.toLowerCase(),
+    });
+
+    if (params.fromAmount) {
+      queryParams.append("fromAmount", params.fromAmount);
+    }
+
+    if (params.toAmount) {
+      queryParams.append("toAmount", params.toAmount);
+    }
+
+    if (params.maxSlippageBPS) {
+      queryParams.append("maxSlippageBPS", params.maxSlippageBPS.toString());
+    }
+
+    const queryString = queryParams.toString();
+    const url = `${getPayBuyWithFiatQuoteEndpoint()}?${queryString}`;
+
+    const response = await getClientFetch(params.client)(url);
+
+    // Assuming the response directly matches the SwapResponse interface
+    if (!response.ok) {
+      const errorObj = await response.json();
+      if (
+        errorObj &&
+        "error" in errorObj &&
+        typeof errorObj.error === "object" &&
+        "message" in errorObj.error
+      ) {
+        throw new Error(errorObj.error.message);
+      }
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = (await response.json()).result;
+
+    console.log(data);
+
+    return data;
+  } catch (error) {
+    console.error("Fetch error:", error);
+    throw new Error(`Fetch failed: ${error}`);
+  }
+}

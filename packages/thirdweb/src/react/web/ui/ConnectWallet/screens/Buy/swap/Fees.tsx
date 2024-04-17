@@ -1,4 +1,5 @@
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/actions/getQuote.js";
+import type { BuyWithFiatQuote } from "../../../../../../../pay/buyWithFiat/getQuote.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { Container } from "../../../../components/basic.js";
 import { Text } from "../../../../components/text.js";
@@ -34,6 +35,37 @@ export function SwapFees(props: {
               (${(fee.amountUSDCents / 100).toFixed(2)})
             </Text>
           </Container>
+        );
+      })}
+    </Container>
+  );
+}
+
+/**
+ * @internal
+ */
+export function FiatFees(props: {
+  quote: BuyWithFiatQuote;
+  align: "left" | "right";
+}) {
+  return (
+    <Container
+      flex="column"
+      gap="xs"
+      style={{
+        alignItems: props.align === "right" ? "flex-end" : "flex-start",
+      }}
+    >
+      {props.quote.processingFees.map((fee, i) => {
+        const feeAmount = formatNumber(Number(fee.amount), 4);
+
+        return (
+          // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+          <Text color="primaryText" size="sm" key={i}>
+            {feeAmount === 0 ? "~" : ""}
+            {fee.currencySymbol} {feeAmount}{" "}
+            {fee.feeType === "NETWORK" ? "(Gas)" : ""}
+          </Text>
         );
       })}
     </Container>

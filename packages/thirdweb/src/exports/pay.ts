@@ -18,3 +18,11 @@ export {
   type BuyWithCryptoHistoryData,
   type BuyWithCryptoHistoryParams,
 } from "../pay/buyWithCrypto/actions/getHistory.js";
+
+// fiat ------------------------------------------------
+
+export {
+  getBuyWithFiatQuote,
+  type BuyWithFiatQuote,
+  type GetBuyWithFiatQuoteParams,
+} from "../pay/buyWithFiat/getQuote.js";

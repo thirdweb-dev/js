@@ -16,6 +16,14 @@ export const getPayBuyWithCryptoQuoteEndpoint = () =>
   `https://${getThirdwebDomains().pay}/buy-with-crypto/quote/v1`;
 
 /**
+ * Constructs the endpoint to get a pay quote.
+ * @param client - The Thirdweb client containing the baseUrl config
+ * @internal
+ */
+export const getPayBuyWithFiatQuoteEndpoint = () =>
+  `https://${getThirdwebDomains().pay}/buy-with-fiat/quote/v1`;
+
+/**
  * Constructs the endpoint to get a wallet address swap history.
  * @param client - The Thirdweb client containing the baseUrl config
  * @internal
@@ -29,3 +37,10 @@ export const getPayBuyWithCryptoHistoryEndpoint = () =>
  */
 export const getPayChainsEndpoint = () =>
   `https://${getThirdwebDomains().pay}/chains`;
+
+/**
+ * Constructs the endpoint to get the pay endpoint
+ * @internal
+ */
+export const getFiatCurrenciesEndpoint = () =>
+  `https://${getThirdwebDomains().pay}/buy-with-fiat/currency/v1`;

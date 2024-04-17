@@ -96,3 +96,5 @@ export {
   AutoConnect,
   type AutoConnectProps,
 } from "../react/core/hooks/connection/useAutoConnect.js";
+
+export { useBuyWithFiatQuote } from "../react/core/hooks/pay/useBuyWithFiatQuote.js";

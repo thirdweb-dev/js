@@ -22,6 +22,7 @@ import {
   type BuyWithCryptoQuoteQueryParams,
   useBuyWithCryptoQuote,
 } from "../../../../../core/hooks/pay/useBuyWithCryptoQuote.js";
+import { useBuyWithFiatQuote } from "../../../../../core/hooks/pay/useBuyWithFiatQuote.js";
 import {
   useActiveAccount,
   useActiveWallet,
@@ -54,16 +55,16 @@ import {
   NATIVE_TOKEN,
   isNativeToken,
 } from "../nativeToken.js";
-import { AccountSelectionScreen } from "./AccountSelectionScreen.js";
-import { AccountSelectorButton } from "./AccountSelectorButton.js";
+import { KadoScreen } from "./KadoScreen.js";
+import { PayWithCreditCard } from "./PayWIthCreditCard.js";
 import { PaymentSelection } from "./PaymentSelection.js";
 import { FeesButton } from "./buttons.js";
 import { BuyTokenInput } from "./swap/BuyTokenInput.js";
 import { SwapConfirmationScreen } from "./swap/ConfirmationScreen.js";
-import { SwapFees } from "./swap/Fees.js";
+import { FiatFees, SwapFees } from "./swap/Fees.js";
 import { PayWithCrypto } from "./swap/PayWithCrypto.js";
 import { formatSeconds } from "./swap/formatSeconds.js";
-import { useSwapSupportedChains } from "./swap/useSwapSupportedChains.js";
+import { useBuySupportedChains } from "./swap/useSwapSupportedChains.js";
 
 // NOTE: Must not use useConnectUI here because this UI can be used outside connect ui
 
@@ -88,7 +89,7 @@ export function BuyScreen(props: {
   const activeChain = useActiveWalletChain();
   const activeWallet = useActiveWallet();
   const account = useActiveAccount();
-  const supportedChainsQuery = useSwapSupportedChains(props.client);
+  const supportedChainsQuery = useBuySupportedChains(props.client);
 
   if (!activeChain || !account || !activeWallet || !supportedChainsQuery.data) {
     return <LoadingScreen />;
@@ -112,9 +113,8 @@ type Screen =
   | "select-from-token"
   | "select-to-token"
   | "confirmation"
-  | "usd-confirmation"
   | "kado-iframe";
-type DrawerScreen = "fees" | "address" | undefined;
+type DrawerScreen = "fees" | undefined;
 
 /**
  *
@@ -132,17 +132,11 @@ export function BuyScreenContent(props: {
   connectLocale: ConnectLocale;
   buyForTx?: BuyForTx;
 }) {
-  const {
-    activeChain,
-    account,
-    client,
-    activeWallet,
-    supportedChains,
-    connectLocale,
-  } = props;
+  const { activeChain, account, client, supportedChains, connectLocale } =
+    props;
   const [isSwitching, setIsSwitching] = useState(false);
   const switchActiveWalletChain = useSwitchActiveWalletChain();
-  const [method] = useState<"crypto" | "creditCard">("crypto");
+  const [method, setMethod] = useState<"crypto" | "creditCard">("crypto");
 
   // prefetch chains metadata
   useChainsQuery(supportedChains || [], 50);
@@ -242,7 +236,6 @@ export function BuyScreenContent(props: {
   const [toChain, setToChain] = useState<Chain>(
     props.buyForTx ? props.buyForTx.tx.chain : defaultChain,
   );
-  const [address, setAddress] = useState<string>(account.address);
 
   // selected tokens
   const [fromToken, setFromToken] = useState<ERC20OrNativeToken>(
@@ -277,7 +270,7 @@ export function BuyScreenContent(props: {
     !(fromChain.id === toChain.id && fromToken === toToken)
       ? {
           // wallet
-          fromAddress: address,
+          fromAddress: account.address,
           // from token
           fromChainId: fromChain.id,
           fromTokenAddress: isNativeToken(fromToken)
@@ -299,6 +292,33 @@ export function BuyScreenContent(props: {
     refetchInterval: 30 * 1000,
     gcTime: 30 * 1000,
   });
+
+  const onRampQuoteQuery = useBuyWithFiatQuote(
+    method === "creditCard"
+      ? {
+          fromCurrencySymbol: "USD", // TODO
+          toChainId: toChain.id,
+          fromAddress: account.address,
+          toAddress: account.address,
+          toTokenAddress: isNativeToken(toToken)
+            ? NATIVE_TOKEN_ADDRESS
+            : toToken.address,
+          toAmount: deferredTokenAmount,
+          client,
+        }
+      : undefined,
+  );
+
+  if (screen === "kado-iframe" && onRampQuoteQuery.data) {
+    return (
+      <KadoScreen
+        quote={onRampQuoteQuery.data}
+        onBack={() => {
+          setScreen("main");
+        }}
+      />
+    );
+  }
 
   if (screen === "select-from-token") {
     return (
@@ -346,14 +366,13 @@ export function BuyScreenContent(props: {
   }
 
   const swapQuote = buyWithCryptoQuoteQuery.data;
-  const isSwapQuoteError = buyWithCryptoQuoteQuery.isError;
 
-  const getErrorMessage = () => {
+  const getErrorMessage = (err: Error) => {
     const defaultMessage = "Unable to get price quote";
     try {
-      if (buyWithCryptoQuoteQuery.error instanceof Error) {
-        if (buyWithCryptoQuoteQuery.error.message.includes("Minimum")) {
-          const msg = buyWithCryptoQuoteQuery.error.message;
+      if (err instanceof Error) {
+        if (err.message.includes("Minimum")) {
+          const msg = err.message;
           return msg.replace("Fetch failed: Error: ", "");
         }
       }
@@ -397,8 +416,13 @@ export function BuyScreenContent(props: {
     !!fromTokenBalanceQuery.data &&
     Number(fromTokenBalanceQuery.data.displayValue) < Number(sourceTokenAmount);
 
-  const disableContinue = !swapQuote || isNotEnoughBalance;
+  const disableSwapContinue = !swapQuote || isNotEnoughBalance;
+  const disableCreditCardContinue = !onRampQuoteQuery.data;
   const switchChainRequired = props.activeChain.id !== fromChain.id;
+
+  const errorToShow =
+    (method === "crypto" && buyWithCryptoQuoteQuery.error) ||
+    (method === "creditCard" && onRampQuoteQuery.error);
 
   return (
     <Container animate="fadein">
@@ -422,18 +446,6 @@ export function BuyScreenContent(props: {
             <DrawerOverlay ref={drawerOverlayRef} />
             <Drawer ref={drawerRef} close={closeDrawer}>
               <DynamicHeight>
-                {drawerScreen === "address" && (
-                  <AccountSelectionScreen
-                    onSelect={(v) => {
-                      setAddress(v);
-                      closeDrawer();
-                    }}
-                    activeAccount={account}
-                    activeWallet={props.activeWallet}
-                    client={client}
-                  />
-                )}
-
                 {method === "crypto" && (
                   <>
                     {drawerScreen === "fees" && (
@@ -445,6 +457,26 @@ export function BuyScreenContent(props: {
                         <Spacer y="lg" />
                         {swapQuote && (
                           <SwapFees quote={swapQuote} align="left" />
+                        )}
+                      </div>
+                    )}
+                  </>
+                )}
+
+                {method === "creditCard" && (
+                  <>
+                    {drawerScreen === "fees" && (
+                      <div>
+                        <Text size="lg" color="primaryText">
+                          Fees
+                        </Text>
+
+                        <Spacer y="lg" />
+                        {onRampQuoteQuery.data && (
+                          <FiatFees
+                            quote={onRampQuoteQuery.data}
+                            align="left"
+                          />
                         )}
                       </div>
                     )}
@@ -498,11 +530,14 @@ export function BuyScreenContent(props: {
           />
         </Container>
 
+        <Spacer y="lg" />
+        <Line />
         <Spacer y="md" />
+
         <Container px="lg">
           {!isMiniScreen && (
             <div>
-              <PaymentSelection />
+              <PaymentSelection selected={method} onSelect={setMethod} />
               <Spacer y="md" />
 
               {method === "crypto" && (
@@ -530,32 +565,27 @@ export function BuyScreenContent(props: {
                 </>
               )}
 
-              <Spacer y="md" />
-
-              {/* Send To */}
-              {!props.buyForTx && (
+              {method === "creditCard" && (
                 <>
-                  <Container>
-                    <Text size="sm">Send To</Text>
-                    <Spacer y="xxs" />
-                    <AccountSelectorButton
-                      address={address}
-                      activeAccount={account}
-                      activeWallet={activeWallet}
-                      onClick={() => {
-                        setDrawerScreen("address");
-                      }}
-                      chevron
-                      client={client}
-                    />
-                  </Container>
-
-                  <Spacer y="md" />
+                  <PayWithCreditCard
+                    isLoading={onRampQuoteQuery.isLoading}
+                    value={onRampQuoteQuery.data?.fromCurrency.amount}
+                    client={client}
+                  />
+                  <SecondaryInfo
+                    quoteIsLoading={onRampQuoteQuery.isLoading}
+                    estimatedSeconds={
+                      onRampQuoteQuery.data?.estimatedDurationSeconds
+                    }
+                    onViewFees={() => setDrawerScreen("fees")}
+                  />
                 </>
               )}
 
+              <Spacer y="md" />
+
               <Container flex="column" gap="md">
-                {method === "crypto" && isSwapQuoteError && (
+                {errorToShow && (
                   <div>
                     <Container
                       flex="row"
@@ -568,7 +598,7 @@ export function BuyScreenContent(props: {
                         height={iconSize.sm}
                       />
                       <Text color="danger" size="sm">
-                        {getErrorMessage()}
+                        {getErrorMessage(errorToShow)}
                       </Text>
                     </Container>
                     <Spacer y="md" />
@@ -610,12 +640,12 @@ export function BuyScreenContent(props: {
 
               {!switchChainRequired && (
                 <Button
-                  variant={disableContinue ? "outline" : "accent"}
+                  variant={disableSwapContinue ? "outline" : "accent"}
                   fullWidth
-                  data-disabled={disableContinue}
-                  disabled={disableContinue}
+                  data-disabled={disableSwapContinue}
+                  disabled={disableSwapContinue}
                   onClick={async () => {
-                    if (!disableContinue) {
+                    if (!disableSwapContinue) {
                       setScreen("confirmation");
                     }
                   }}
@@ -629,7 +659,8 @@ export function BuyScreenContent(props: {
 
           {method === "creditCard" && (
             <Button
-              variant="accent"
+              variant={disableCreditCardContinue ? "outline" : "accent"}
+              data-disabled={disableCreditCardContinue}
               fullWidth
               onClick={async () => {
                 setScreen("kado-iframe");

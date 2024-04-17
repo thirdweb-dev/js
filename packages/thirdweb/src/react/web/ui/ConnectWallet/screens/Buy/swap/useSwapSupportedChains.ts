@@ -5,7 +5,7 @@ import { getPayChainsEndpoint } from "../../../../../../../pay/buyWithCrypto/uti
 import { getClientFetch } from "../../../../../../../utils/fetch.js";
 import { withCache } from "../../../../../../../utils/promise/withCache.js";
 
-export async function fetchSwapSupportedChains(client: ThirdwebClient) {
+export async function fetchBuySupportedChains(client: ThirdwebClient) {
   return withCache(
     async () => {
       const fetchWithHeaders = getClientFetch(client);
@@ -15,7 +15,7 @@ export async function fetchSwapSupportedChains(client: ThirdwebClient) {
       return chainIds.map(defineChain);
     },
     {
-      cacheKey: "swapSupportedChains",
+      cacheKey: "buy-supported-chains",
       cacheTime: 5 * 60 * 1000,
     },
   );
@@ -24,11 +24,11 @@ export async function fetchSwapSupportedChains(client: ThirdwebClient) {
 /**
  * @internal
  */
-export function useSwapSupportedChains(client: ThirdwebClient) {
+export function useBuySupportedChains(client: ThirdwebClient) {
   return useQuery({
-    queryKey: ["swapSupportedChains", client],
+    queryKey: ["buy-supported-chains", client],
     queryFn: async () => {
-      return fetchSwapSupportedChains(client);
+      return fetchBuySupportedChains(client);
     },
   });
 }

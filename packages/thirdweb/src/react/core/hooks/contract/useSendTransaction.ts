@@ -6,7 +6,7 @@ import { sendTransaction } from "../../../../transaction/actions/send-transactio
 import type { WaitForReceiptOptions } from "../../../../transaction/actions/wait-for-tx-receipt.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
 import type { GetWalletBalanceResult } from "../../../../wallets/utils/getWalletBalance.js";
-import { fetchSwapSupportedChains } from "../../../web/ui/ConnectWallet/screens/Buy/swap/useSwapSupportedChains.js";
+import { fetchBuySupportedChains } from "../../../web/ui/ConnectWallet/screens/Buy/swap/useSwapSupportedChains.js";
 import { useActiveAccount } from "../wallets/wallet-hooks.js";
 
 type ShowModalData = {
@@ -64,11 +64,9 @@ export function useSendTransactionCore(
 
         (async () => {
           try {
-            const swapSupportedChains = await fetchSwapSupportedChains(
-              tx.client,
-            );
+            const buySupportedChains = await fetchBuySupportedChains(tx.client);
 
-            const isBuySupported = swapSupportedChains.find(
+            const isBuySupported = buySupportedChains.find(
               (c) => c.id === tx.chain.id,
             );
 
