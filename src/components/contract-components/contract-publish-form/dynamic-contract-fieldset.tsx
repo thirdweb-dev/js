@@ -1,5 +1,4 @@
 import { Box, Flex, Icon } from "@chakra-ui/react";
-import { useEffect } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { FiPlus } from "react-icons/fi";
 import { Heading, Text, Button } from "tw-components";
@@ -12,19 +11,6 @@ export const DynamicContractsFieldset = () => {
     name: "defaultExtensions",
     control: form.control,
   });
-
-  useEffect(() => {
-    if (fields.length === 0) {
-      append(
-        {
-          extensionName: "",
-          extensionVersion: "",
-          publisherAddress: "",
-        },
-        { shouldFocus: false },
-      );
-    }
-  }, [fields, append, form]);
 
   return (
     <Flex gap={8} direction="column" as="fieldset">
