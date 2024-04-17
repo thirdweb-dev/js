@@ -36,12 +36,10 @@ export function bidInAuction(
   return generatedBidInAuction({
     contract: options.contract,
     asyncParams: async () => {
-      const [auction] = await Promise.all([
-        getAuction({
-          contract: options.contract,
-          auctionId: options.auctionId,
-        }),
-      ]);
+      const auction = await getAuction({
+        contract: options.contract,
+        auctionId: options.auctionId,
+      });
 
       const resolvedBidAmountWei = await (async () => {
         // if we already have the bid amount in wei, use that
