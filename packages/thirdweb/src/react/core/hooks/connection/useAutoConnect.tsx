@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { createWallet } from "../../../../wallets/create-wallet.js";
 // import {
@@ -17,7 +17,7 @@ import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import { asyncLocalStorage } from "../../../../wallets/storage/asyncLocalStorage.js";
 import { getSavedConnectParamsFromStorage } from "../../../../wallets/storage/walletStorage.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
-import { connectionManager } from "../../connectionManager.js";
+import { ConnectionManagerContext } from "../../providers/RootElementContext.js";
 import { timeoutPromise } from "../../utils/timeoutPromise.js";
 // import type { WalletConfig } from "../../types/wallets.js";
 import {
@@ -152,6 +152,10 @@ export type AutoConnectProps = {
  * @component
  */
 export function AutoConnect(props: AutoConnectProps) {
+  const connectionManager = useContext(ConnectionManagerContext);
+  if (!connectionManager) {
+    throw new Error("AutoConnect must be used within a ThirdwebProvider");
+  }
   const setConnectionStatus = useSetActiveWalletConnectionStatus();
   const { connect } = useConnect();
   const { isAutoConnecting } = connectionManager;

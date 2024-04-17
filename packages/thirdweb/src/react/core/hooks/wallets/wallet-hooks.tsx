@@ -1,6 +1,6 @@
-import { useCallback, useState, useSyncExternalStore } from "react";
+import { useCallback, useContext, useState, useSyncExternalStore } from "react";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
-import { connectionManager } from "../../connectionManager.js";
+import { ConnectionManagerContext } from "../../providers/RootElementContext.js";
 
 /**
  * A hook that returns the active account
@@ -14,6 +14,10 @@ import { connectionManager } from "../../connectionManager.js";
  * @walletConnection
  */
 export function useActiveAccount() {
+  const connectionManager = useContext(ConnectionManagerContext);
+  if (!connectionManager) {
+    throw new Error("useActiveAccount must be used within a ThirdwebProvider");
+  }
   const store = connectionManager.activeAccountStore;
   return useSyncExternalStore(store.subscribe, store.getValue, store.getValue);
 }
@@ -30,6 +34,10 @@ export function useActiveAccount() {
  * @walletConnection
  */
 export function useActiveWallet() {
+  const connectionManager = useContext(ConnectionManagerContext);
+  if (!connectionManager) {
+    throw new Error("useActiveWallet must be used within a ThirdwebProvider");
+  }
   const store = connectionManager.activeWalletStore;
   return useSyncExternalStore(store.subscribe, store.getValue, store.getValue);
 }
@@ -50,6 +58,12 @@ export function useActiveWallet() {
  * @walletConnection
  */
 export function useSwitchActiveWalletChain() {
+  const connectionManager = useContext(ConnectionManagerContext);
+  if (!connectionManager) {
+    throw new Error(
+      "useSwitchActiveWalletChain must be used within a ThirdwebProvider",
+    );
+  }
   return connectionManager.switchActiveWalletChain;
 }
 
@@ -65,6 +79,12 @@ export function useSwitchActiveWalletChain() {
  * @walletConnection
  */
 export function useActiveWalletChain() {
+  const connectionManager = useContext(ConnectionManagerContext);
+  if (!connectionManager) {
+    throw new Error(
+      "useActiveWalletChain must be used within a ThirdwebProvider",
+    );
+  }
   const store = connectionManager.activeWalletChainStore;
   return useSyncExternalStore(store.subscribe, store.getValue, store.getValue);
 }
@@ -81,6 +101,12 @@ export function useActiveWalletChain() {
  * @walletConnection
  */
 export function useConnectedWallets() {
+  const connectionManager = useContext(ConnectionManagerContext);
+  if (!connectionManager) {
+    throw new Error(
+      "useConnectedWallets must be used within a ThirdwebProvider",
+    );
+  }
   const store = connectionManager.connectedWallets;
   return useSyncExternalStore(store.subscribe, store.getValue, store.getValue);
 }
@@ -100,6 +126,12 @@ export function useConnectedWallets() {
  * @walletConnection
  */
 export function useSetActiveWallet() {
+  const connectionManager = useContext(ConnectionManagerContext);
+  if (!connectionManager) {
+    throw new Error(
+      "useSetActiveWallet must be used within a ThirdwebProvider",
+    );
+  }
   return connectionManager.setActiveWallet;
 }
 
@@ -134,6 +166,10 @@ export function useSetActiveWallet() {
  * @walletConnection
  */
 export function useConnect() {
+  const connectionManager = useContext(ConnectionManagerContext);
+  if (!connectionManager) {
+    throw new Error("useConnect must be used within a ThirdwebProvider");
+  }
   const { setActiveWallet } = connectionManager;
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState<Error | null>(null);
@@ -187,6 +223,10 @@ export function useConnect() {
  * @returns An object with a function to disconnect an account
  */
 export function useDisconnect() {
+  const connectionManager = useContext(ConnectionManagerContext);
+  if (!connectionManager) {
+    throw new Error("useDisconnect must be used within a ThirdwebProvider");
+  }
   const disconnect = connectionManager.disconnectWallet;
   return { disconnect };
 }
@@ -207,6 +247,12 @@ export function useDisconnect() {
  * @walletConnection
  */
 export function useActiveWalletConnectionStatus() {
+  const connectionManager = useContext(ConnectionManagerContext);
+  if (!connectionManager) {
+    throw new Error(
+      "useActiveWalletConnectionStatus must be used within a ThirdwebProvider",
+    );
+  }
   const store = connectionManager.activeWalletConnectionStatusStore;
   return useSyncExternalStore(store.subscribe, store.getValue, store.getValue);
 }
@@ -226,6 +272,12 @@ export function useActiveWalletConnectionStatus() {
  * @internal
  */
 export function useSetActiveWalletConnectionStatus() {
+  const connectionManager = useContext(ConnectionManagerContext);
+  if (!connectionManager) {
+    throw new Error(
+      "useSetActiveWalletConnectionStatus must be used within a ThirdwebProvider",
+    );
+  }
   return connectionManager.activeWalletConnectionStatusStore.setValue;
 }
 
@@ -243,6 +295,12 @@ export function useSetActiveWalletConnectionStatus() {
  * @walletConnection
  */
 export function useIsAutoConnecting() {
+  const connectionManager = useContext(ConnectionManagerContext);
+  if (!connectionManager) {
+    throw new Error(
+      "useIsAutoConnecting must be used within a ThirdwebProvider",
+    );
+  }
   const store = connectionManager.isAutoConnecting;
   return useSyncExternalStore(store.subscribe, store.getValue, store.getValue);
 }

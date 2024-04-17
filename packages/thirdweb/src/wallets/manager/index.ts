@@ -24,7 +24,7 @@ export type ConnectionManager = ReturnType<typeof createConnectionManager>;
  * @returns A connection manager object
  * @walletUtils
  */
-export function createConnectionManager(storage: AsyncStorage) {
+export function createConnectionManager(storage?: AsyncStorage) {
   // stores
 
   // active wallet/account
@@ -61,7 +61,9 @@ export function createConnectionManager(storage: AsyncStorage) {
 
   const onWalletDisconnect = (wallet: Wallet) => {
     const currentMap = walletIdToConnectedWalletMap.getValue();
-    deleteConnectParamsFromStorage(storage, wallet.id);
+    if (storage) {
+      deleteConnectParamsFromStorage(storage, wallet.id);
+    }
 
     const newMap = new Map(currentMap);
     newMap.delete(wallet.id);
@@ -132,7 +134,7 @@ export function createConnectionManager(storage: AsyncStorage) {
       const accounts = connectedWallets.getValue();
       const ids = accounts.map((acc) => acc?.id).filter((c) => !!c) as string[];
 
-      storage.setItem(CONNECTED_WALLET_IDS, JSON.stringify(ids));
+      storage?.setItem(CONNECTED_WALLET_IDS, JSON.stringify(ids));
     },
     [connectedWallets],
     false,
@@ -143,9 +145,9 @@ export function createConnectionManager(storage: AsyncStorage) {
     () => {
       const value = activeWalletStore.getValue()?.id;
       if (value) {
-        storage.setItem(ACTIVE_WALLET_ID, value);
+        storage?.setItem(ACTIVE_WALLET_ID, value);
       } else {
-        storage.removeItem(ACTIVE_WALLET_ID);
+        storage?.removeItem(ACTIVE_WALLET_ID);
       }
     },
     [activeWalletStore],

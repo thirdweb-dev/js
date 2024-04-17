@@ -1,12 +1,17 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import {
   type WaitForReceiptOptions,
   waitForReceipt,
 } from "../../../transaction/actions/wait-for-tx-receipt.js";
 import { isBaseTransactionOptions } from "../../../transaction/types.js";
 import { isObjectWithKeys } from "../../../utils/type-guards.js";
-import { SetRootElementContext } from "./RootElementContext.js";
+import { createConnectionManager } from "../../../wallets/manager/index.js";
+import { getStorage } from "../storage.js";
+import {
+  ConnectionManagerContext,
+  SetRootElementContext,
+} from "./RootElementContext.js";
 
 /**
  * The ThirdwebProvider is component is a provider component that sets up the React Query client.
@@ -27,6 +32,18 @@ import { SetRootElementContext } from "./RootElementContext.js";
  */
 export function ThirdwebProvider(props: React.PropsWithChildren) {
   const [el, setEl] = useState<React.ReactNode>(null);
+  const parentConnectionManager = useContext(ConnectionManagerContext);
+
+  // if This ThirdwebProvider is nested inside another ThirdwebProvider - don't store stuff in storage to avoid overwriting the parent's state
+
+  const connectionManager = useMemo(
+    () =>
+      createConnectionManager(
+        parentConnectionManager ? undefined : getStorage(),
+      ),
+    [parentConnectionManager],
+  );
+
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -79,9 +96,11 @@ export function ThirdwebProvider(props: React.PropsWithChildren) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <SetRootElementContext.Provider value={setEl}>
-        {props.children}
-      </SetRootElementContext.Provider>
+      <ConnectionManagerContext.Provider value={connectionManager}>
+        <SetRootElementContext.Provider value={setEl}>
+          {props.children}
+        </SetRootElementContext.Provider>
+      </ConnectionManagerContext.Provider>
       {el}
     </QueryClientProvider>
   );
