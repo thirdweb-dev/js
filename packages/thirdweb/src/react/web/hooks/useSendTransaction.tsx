@@ -21,19 +21,19 @@ import { LoadingScreen } from "../wallets/shared/LoadingScreen.js";
  */
 export type SendTransactionConfig = {
   /**
-   * Configuration for the "Buy Modal" that opens when the user doesn't have enough funds to send a transaction.
-   * Set `payModal: false` to disable the "Buy Modal" popup
+   * Configuration for the "Pay Modal" that opens when the user doesn't have enough funds to send a transaction.
+   * Set `payModal: false` to disable the "Pay Modal" popup
    *
-   * This configuration object includes the following properties to configure the "Buy Modal" UI:
+   * This configuration object includes the following properties to configure the "Pay Modal" UI:
    *
    * ### `locale`
-   * The language to use for the "Buy Modal" UI. Defaults to `"en_US"`.
+   * The language to use for the "Pay Modal" UI. Defaults to `"en_US"`.
    *
    * ### `supportedTokens`
    * An object of type [`SupportedTokens`](https://portal.thirdweb.com/references/typescript/v5/SupportedTokens) to configure the tokens to show for a chain.
    *
    * ### `theme`
-   * The theme to use for the "Buy Modal" UI. Defaults to `"dark"`.
+   * The theme to use for the "Pay Modal" UI. Defaults to `"dark"`.
    *
    * It can be set to `"light"` or `"dark"` or an object of type [`Theme`](https://portal.thirdweb.com/references/typescript/v5/Theme) for a custom theme.
    *
