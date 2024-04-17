@@ -108,6 +108,14 @@ export {
   getAllValidAuctions,
   type GetAllValidAuctionParams,
 } from "../../extensions/marketplace/read/english-auction/getAllValidAuctions.js";
+export {
+  getWinningBid,
+  type GetWinningBidParams,
+} from "../../extensions/marketplace/read/english-auction/getWinningBid.js";
+export {
+  isNewWinningBid,
+  type IsNewWinningBidParams,
+} from "../../extensions/marketplace/__generated__/IEnglishAuctions/read/isNewWinningBid.js";
 
 // WRITE
 export {

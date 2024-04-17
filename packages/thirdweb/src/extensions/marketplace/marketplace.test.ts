@@ -25,6 +25,7 @@ import { getListing } from "./read/direct/getListing.js";
 import { getAllAuctions } from "./read/english-auction/getAllAuctions.js";
 import { getAllValidAuctions } from "./read/english-auction/getAllValidAuctions.js";
 import { getAuction } from "./read/english-auction/getAuction.js";
+import { getWinningBid } from "./read/english-auction/getWinningBid.js";
 import { isListingValid } from "./utils.js";
 import { buyFromListing } from "./write/direct/buyFromListing.js";
 import { createListing } from "./write/direct/createListing.js";
@@ -368,6 +369,11 @@ describe.runIf(process.env.TW_SECRET_KEY)("Marketplace", () => {
           "type": "ERC721",
         }
       `);
+
+      // check for a winning bid
+      await expect(
+        getWinningBid({ contract: marketplaceContract, auctionId: listing.id }),
+      ).resolves.toBeUndefined();
     });
   });
 });
