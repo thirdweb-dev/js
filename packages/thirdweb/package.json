@@ -202,5 +202,9 @@
   },
   "engines": {
     "node": ">=18"
+  },
+  "devDependencies": {
+    "@types/cross-spawn": "^6.0.6",
+    "cross-spawn": "7.0.3"
   }
 }
