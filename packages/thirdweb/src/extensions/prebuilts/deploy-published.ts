@@ -3,10 +3,7 @@ import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { getContract } from "../../contract/contract.js";
 import { deployViaAutoFactory } from "../../contract/deployment/deploy-via-autofactory.js";
-import {
-  deployContract,
-  prepareDirectDeployTransaction,
-} from "../../contract/deployment/deploy-with-abi.js";
+import { deployContract } from "../../contract/deployment/deploy-with-abi.js";
 import { fetchPublishedContractMetadata } from "../../contract/deployment/publisher.js";
 import { getOrDeployInfraForPublishedContract } from "../../contract/deployment/utils/bootstrap.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
@@ -27,7 +24,7 @@ export type DeployPublishedContractOptions = {
 };
 
 /**
- * Deploy an instance of a publish contract on a given chain
+ * Deploy an instance of a published contract on a given chain
  * @param options - the deploy options
  * @returns a promise that resolves to the deployed contract address
  * @example
