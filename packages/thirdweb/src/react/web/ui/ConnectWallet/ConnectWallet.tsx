@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import { useMemo } from "react";
+import { useSiweAuth } from "../../../core/hooks/auth/useSiweAuth.js";
 import { AutoConnect } from "../../../core/hooks/connection/useAutoConnect.js";
 import {
   useActiveAccount,
@@ -39,9 +40,10 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  * Refer to [ConnectButtonProps](https://portal.thirdweb.com/references/typescript/v5/ConnectButtonProps) to see the available props.
  * @component
  */
-export function ConnectButton(props: ConnectButtonProps) {
+export function ConnectButton({ auth, ...props }: ConnectButtonProps) {
   const wallets = props.wallets || getDefaultWallets();
   const localeQuery = useConnectLocale(props.locale || "en_US");
+  const siweAuth = useSiweAuth(auth);
 
   const autoConnectComp = props.autoConnect !== false && (
     <AutoConnect
@@ -57,7 +59,7 @@ export function ConnectButton(props: ConnectButtonProps) {
     />
   );
 
-  if (!localeQuery.data) {
+  if (!localeQuery.data || (siweAuth.requiresAuth && siweAuth.isLoading)) {
     return (
       <AnimatedButton
         disabled={true}
@@ -103,7 +105,11 @@ export function ConnectButton(props: ConnectButtonProps) {
       }}
     >
       <WalletUIStatesProvider theme={props.theme}>
-        <ConnectButtonInner {...props} connectLocale={localeQuery.data} />
+        <ConnectButtonInner
+          {...props}
+          siweAuth={siweAuth}
+          connectLocale={localeQuery.data}
+        />
         <ConnectModal />
         {autoConnectComp}
       </WalletUIStatesProvider>
@@ -112,11 +118,13 @@ export function ConnectButton(props: ConnectButtonProps) {
 }
 
 function ConnectButtonInner(
-  props: ConnectButtonProps & {
+  props: Omit<ConnectButtonProps, "auth"> & {
     connectLocale: ConnectLocale;
+    siweAuth: ReturnType<typeof useSiweAuth>;
   },
 ) {
   const activeAccount = useActiveAccount();
+
   const theme = props.theme || "dark";
   const connectionStatus = useActiveWalletConnectionStatus();
   const locale = props.connectLocale;
@@ -180,6 +188,14 @@ function ConnectButtonInner(
     );
   }
 
+  if (props.siweAuth.requiresAuth && !props.siweAuth.isLoggedIn) {
+    return (
+      <button type="button" onClick={() => props.siweAuth.doLogin()}>
+        {props.siweAuth.isLoggingIn ? "Logging in..." : "Login"}
+      </button>
+    );
+  }
+
   return (
     <ConnectedWalletDetails
       theme={theme}
@@ -187,7 +203,10 @@ function ConnectButtonInner(
       detailsModal={props.detailsModal}
       supportedTokens={supportedTokens}
       onDisconnect={() => {
-        // no op
+        // logout on explicit disconnect!
+        if (props.siweAuth.requiresAuth) {
+          props.siweAuth.doLogout();
+        }
       }}
       chains={props?.chains || []}
       chain={props.chain}

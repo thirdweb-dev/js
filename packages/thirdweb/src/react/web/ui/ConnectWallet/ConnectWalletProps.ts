@@ -3,6 +3,7 @@ import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
+import type { SiweAuthOptions } from "../../../core/hooks/auth/useSiweAuth.js";
 import type { Theme } from "../design-system/index.js";
 import type { LocaleId } from "../types.js";
 import type { NetworkSelectorProps } from "./NetworkSelector.js";
@@ -622,4 +623,7 @@ export type ConnectButtonProps = {
    * You can disable this button by setting `showAllWallets` prop to `false`
    */
   showAllWallets?: boolean;
+
+  // TODO: document this
+  auth?: SiweAuthOptions;
 };
