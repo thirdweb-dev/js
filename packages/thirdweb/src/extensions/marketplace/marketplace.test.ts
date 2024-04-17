@@ -25,10 +25,14 @@ import { getListing } from "./read/direct/getListing.js";
 import { getAllAuctions } from "./read/english-auction/getAllAuctions.js";
 import { getAllValidAuctions } from "./read/english-auction/getAllValidAuctions.js";
 import { getAuction } from "./read/english-auction/getAuction.js";
+import { getWinningBid } from "./read/english-auction/getWinningBid.js";
 import { isListingValid } from "./utils.js";
 import { buyFromListing } from "./write/direct/buyFromListing.js";
 import { createListing } from "./write/direct/createListing.js";
+import { bidInAuction } from "./write/english-auction/bidInAuction.js";
+import { buyoutAuction } from "./write/english-auction/buyoutAuction.js";
 import { createAuction } from "./write/english-auction/createAuction.js";
+// import { executeSale } from "./write/english-auction/executeSale.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)(
   "Marketplace",
@@ -183,7 +187,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         {
           "decimals": 18,
           "displayValue": "1",
-          "name": "Ether",
+          "name": "Anvil Ether",
           "symbol": "ETH",
           "value": 1000000000000000000n,
         }
@@ -348,7 +352,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         {
           "decimals": 18,
           "displayValue": "1",
-          "name": "Ether",
+          "name": "Anvil Ether",
           "symbol": "ETH",
           "value": 1000000000000000000n,
         }
@@ -357,7 +361,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         {
           "decimals": 18,
           "displayValue": "10",
-          "name": "Ether",
+          "name": "Anvil Ether",
           "symbol": "ETH",
           "value": 10000000000000000000n,
         }
@@ -373,6 +377,192 @@ describe.runIf(process.env.TW_SECRET_KEY)(
           "type": "ERC721",
         }
       `);
+
+        // check for a winning bid
+        await expect(
+          getWinningBid({
+            contract: marketplaceContract,
+            auctionId: listing.id,
+          }),
+        ).resolves.toBeUndefined();
+
+        // invalid bid amount 1: 0 bid (0 is not allowed)
+        await expect(
+          sendAndConfirmTransaction({
+            account: TEST_ACCOUNT_B,
+            transaction: bidInAuction({
+              auctionId: listing.id,
+              contract: marketplaceContract,
+              bidAmount: "0",
+            }),
+          }),
+        ).rejects.toThrowErrorMatchingInlineSnapshot(
+          "[Error: Bid amount is zero]",
+        );
+        // invalid bid amount 2: 11 bid (over buyout)
+        await expect(
+          sendAndConfirmTransaction({
+            account: TEST_ACCOUNT_B,
+            transaction: bidInAuction({
+              auctionId: listing.id,
+              contract: marketplaceContract,
+              bidAmount: "11",
+            }),
+          }),
+        ).rejects.toThrowErrorMatchingInlineSnapshot(
+          "[Error: Bid amount is above the buyout amount]",
+        );
+        // invalid bid amount 3: below minimum bid (but not 0)
+        await expect(
+          sendAndConfirmTransaction({
+            account: TEST_ACCOUNT_B,
+            transaction: bidInAuction({
+              auctionId: listing.id,
+              contract: marketplaceContract,
+              bidAmount: "0.5",
+            }),
+          }),
+        ).rejects.toThrowErrorMatchingInlineSnapshot(
+          "[Error: Bid amount is below the minimum bid amount]",
+        );
+
+        // valid bid amount: "2"
+        await expect(
+          sendAndConfirmTransaction({
+            account: TEST_ACCOUNT_B,
+            transaction: bidInAuction({
+              auctionId: listing.id,
+              contract: marketplaceContract,
+              bidAmount: "2",
+            }),
+          }),
+        ).resolves.toBeDefined();
+
+        // check for a new winning bid
+        await expect(
+          getWinningBid({
+            contract: marketplaceContract,
+            auctionId: listing.id,
+          }),
+        ).resolves.toMatchInlineSnapshot(`
+          {
+            "bidAmountWei": 2000000000000000000n,
+            "bidderAddress": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+            "currencyAddress": "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+            "currencyValue": {
+              "decimals": 18,
+              "displayValue": "2",
+              "name": "Anvil Ether",
+              "symbol": "ETH",
+              "value": 2000000000000000000n,
+            },
+          }
+        `);
+
+        // invalid bid amount, above minimum but below existing winning bid
+        await expect(
+          sendAndConfirmTransaction({
+            account: TEST_ACCOUNT_B,
+            transaction: bidInAuction({
+              auctionId: listing.id,
+              contract: marketplaceContract,
+              bidAmount: "1.5",
+            }),
+          }),
+        ).rejects.toThrowErrorMatchingInlineSnapshot(
+          "[Error: Bid amount is too low to outbid the existing winning bid]",
+        );
+
+        // invalid bid amount, above winning bit but below bid + bidBuffer (default 500bps)
+        await expect(
+          sendAndConfirmTransaction({
+            account: TEST_ACCOUNT_B,
+            transaction: bidInAuction({
+              auctionId: listing.id,
+              contract: marketplaceContract,
+              // 2 * 1.05 = 2.1, so 2.05 is invalid
+              bidAmount: "2.05",
+            }),
+          }),
+        ).rejects.toThrowErrorMatchingInlineSnapshot(
+          "[Error: Bid amount is too low to outbid the existing winning bid]",
+        );
+
+        // actually outbid the winning bid
+        await expect(
+          sendAndConfirmTransaction({
+            account: TEST_ACCOUNT_B,
+            transaction: bidInAuction({
+              auctionId: listing.id,
+              contract: marketplaceContract,
+              bidAmount: "3",
+            }),
+          }),
+        ).resolves.toBeDefined();
+
+        // check for a new winning bid
+        await expect(
+          getWinningBid({
+            contract: marketplaceContract,
+            auctionId: listing.id,
+          }),
+        ).resolves.toMatchInlineSnapshot(`
+          {
+            "bidAmountWei": 3000000000000000000n,
+            "bidderAddress": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+            "currencyAddress": "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+            "currencyValue": {
+              "decimals": 18,
+              "displayValue": "3",
+              "name": "Anvil Ether",
+              "symbol": "ETH",
+              "value": 3000000000000000000n,
+            },
+          }
+        `);
+
+        // buyout auction
+        await expect(
+          sendAndConfirmTransaction({
+            account: TEST_ACCOUNT_B,
+            transaction: buyoutAuction({
+              contract: marketplaceContract,
+              auctionId: listing.id,
+            }),
+          }),
+        ).resolves.toBeDefined();
+
+        // check for a new winning bid
+        await expect(
+          getWinningBid({
+            contract: marketplaceContract,
+            auctionId: listing.id,
+          }),
+        ).resolves.toMatchInlineSnapshot(`
+          {
+            "bidAmountWei": 10000000000000000000n,
+            "bidderAddress": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+            "currencyAddress": "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+            "currencyValue": {
+              "decimals": 18,
+              "displayValue": "10",
+              "name": "Anvil Ether",
+              "symbol": "ETH",
+              "value": 10000000000000000000n,
+            },
+          }
+        `);
+
+        // // execute the sale
+        // await expect(
+        //   sendAndConfirmTransaction({
+        //     account: TEST_ACCOUNT_A,
+        //     transaction: executeSale({
+        //       contract: marketplaceContract,
+        //       auctionId: listing.id,
+        //     }),
+        //   }),
+        // ).resolves.toBeDefined();
       });
     });
   },
