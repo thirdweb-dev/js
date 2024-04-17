@@ -31,7 +31,7 @@ type ShowModalData = {
  * @internal
  */
 export function useSendTransactionCore(
-  showBuyModal?: (data: ShowModalData) => void,
+  showPayModal?: (data: ShowModalData) => void,
 ): UseMutationResult<WaitForReceiptOptions, Error, PreparedTransaction> {
   const account = useActiveAccount();
 
@@ -41,7 +41,7 @@ export function useSendTransactionCore(
         throw new Error("No active account");
       }
 
-      if (!showBuyModal) {
+      if (!showPayModal) {
         return sendTransaction({
           transaction: tx,
           account,
@@ -98,7 +98,7 @@ export function useSendTransactionCore(
             }
 
             // if not enough balance - show modal
-            showBuyModal({
+            showPayModal({
               tx,
               sendTx,
               rejectTx: () => {
