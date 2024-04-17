@@ -262,6 +262,12 @@ export type ConnectButton_connectModalOptions = {
    *```
    */
   showThirdwebBranding?: boolean;
+
+  pay?: {
+    fiat?: {
+      testMode?: boolean;
+    };
+  };
 };
 
 /**

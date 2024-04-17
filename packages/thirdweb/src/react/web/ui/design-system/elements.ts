@@ -11,3 +11,4 @@ export const StyledInput = /* @__PURE__ */ styled.input;
 export const StyledH2 = /* @__PURE__ */ styled.h2;
 export const StyledP = /* @__PURE__ */ styled.p;
 export const StyledUl = /* @__PURE__ */ styled.ul;
+export const StyledIframe = /* @__PURE__ */ styled.iframe;

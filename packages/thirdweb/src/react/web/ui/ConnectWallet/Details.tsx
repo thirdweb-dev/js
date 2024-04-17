@@ -96,7 +96,7 @@ export const ConnectedWalletDetails: React.FC<{
   chain?: Chain;
   switchButton: ConnectButtonProps["switchButton"];
 }> = (props) => {
-  const { connectLocale: locale, client } = useConnectUI();
+  const { connectLocale: locale, client, connectModal } = useConnectUI();
   const activeWallet = useActiveWallet();
   const activeAccount = useActiveAccount();
   const walletChain = useActiveWalletChain();
@@ -665,6 +665,7 @@ export const ConnectedWalletDetails: React.FC<{
         supportedTokens={props.supportedTokens}
         onViewPendingTx={() => setScreen("pending-tx")}
         connectLocale={locale}
+        fiatTestMode={connectModal.pay?.fiat?.testMode}
       />
     );
   }

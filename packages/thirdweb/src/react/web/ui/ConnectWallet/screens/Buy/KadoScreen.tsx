@@ -1,7 +1,13 @@
 import { useEffect } from "react";
 import type { BuyWithFiatQuote } from "../../../../../../pay/buyWithFiat/getQuote.js";
 import { Spinner } from "../../../components/Spinner.js";
-import { Container, Line, ModalHeader } from "../../../components/basic.js";
+import {
+  Container,
+  Line,
+  ModalHeader,
+  noScrollBar,
+} from "../../../components/basic.js";
+import { StyledDiv, StyledIframe } from "../../../design-system/elements.js";
 import { radius } from "../../../design-system/index.js";
 
 /**
@@ -10,9 +16,16 @@ import { radius } from "../../../design-system/index.js";
 export function KadoScreen(props: {
   quote: BuyWithFiatQuote;
   onBack: () => void;
+  testMode?: boolean;
 }) {
-  const iframeSrc = props.quote.onRampLink;
+  let iframeSrc = props.quote.onRampLink;
   const iframeOrigin = new URL(iframeSrc).origin;
+
+  // TODO - probably remove this after testing
+  if (props.testMode) {
+    const kadoSandbox = "https://sandbox--kado.netlify.app";
+    iframeSrc = iframeSrc.replace(iframeOrigin, kadoSandbox);
+  }
 
   useEffect(() => {
     function handlePostMessage(event: MessageEvent) {
@@ -52,7 +65,7 @@ export function KadoScreen(props: {
         >
           <Spinner size="lg" color="accentText" />
         </div>
-        <iframe
+        <Iframe
           title="Buy token with Kado"
           height={550}
           src={iframeSrc}
@@ -70,3 +83,9 @@ export function KadoScreen(props: {
     </Container>
   );
 }
+
+const Iframe = StyledIframe(() => {
+  return {
+    ...noScrollBar,
+  };
+});

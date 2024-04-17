@@ -59,6 +59,7 @@ import { KadoScreen } from "./KadoScreen.js";
 import { PayWithCreditCard } from "./PayWIthCreditCard.js";
 import { PaymentSelection } from "./PaymentSelection.js";
 import { FeesButton } from "./buttons.js";
+import { FiatConfirmation } from "./fiat/FiatConfirmation.js";
 import { BuyTokenInput } from "./swap/BuyTokenInput.js";
 import { SwapConfirmationScreen } from "./swap/ConfirmationScreen.js";
 import { FiatFees, SwapFees } from "./swap/Fees.js";
@@ -85,6 +86,7 @@ export function BuyScreen(props: {
   client: ThirdwebClient;
   connectLocale: ConnectLocale;
   buyForTx?: BuyForTx;
+  fiatTestMode?: boolean;
 }) {
   const activeChain = useActiveWalletChain();
   const activeWallet = useActiveWallet();
@@ -113,6 +115,7 @@ type Screen =
   | "select-from-token"
   | "select-to-token"
   | "confirmation"
+  | "fiat-confirmation"
   | "kado-iframe";
 type DrawerScreen = "fees" | undefined;
 
@@ -131,6 +134,7 @@ export function BuyScreenContent(props: {
   supportedChains: Chain[];
   connectLocale: ConnectLocale;
   buyForTx?: BuyForTx;
+  fiatTestMode?: boolean;
 }) {
   const { activeChain, account, client, supportedChains, connectLocale } =
     props;
@@ -315,6 +319,26 @@ export function BuyScreenContent(props: {
         quote={onRampQuoteQuery.data}
         onBack={() => {
           setScreen("main");
+        }}
+        testMode={props.fiatTestMode}
+      />
+    );
+  }
+
+  if (screen === "fiat-confirmation" && onRampQuoteQuery.data) {
+    return (
+      <FiatConfirmation
+        quote={onRampQuoteQuery.data}
+        onBack={() => {
+          setScreen("main");
+        }}
+        step={1}
+        toChain={toChain}
+        toToken={toToken}
+        toTokenAmount={deferredTokenAmount}
+        client={client}
+        onContinue={() => {
+          setScreen("kado-iframe");
         }}
       />
     );
@@ -663,7 +687,7 @@ export function BuyScreenContent(props: {
               data-disabled={disableCreditCardContinue}
               fullWidth
               onClick={async () => {
-                setScreen("kado-iframe");
+                setScreen("fiat-confirmation");
               }}
               gap="sm"
             >

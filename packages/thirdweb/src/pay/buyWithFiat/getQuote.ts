@@ -54,6 +54,19 @@ export type BuyWithFiatQuote = {
     currencySymbol: string;
     feeType: "ON_RAMP" | "NETWORK";
   }[];
+  onRampToken: {
+    amount: string;
+    amountWei: string;
+    amountUSDCents: number;
+    token: {
+      chainId: number;
+      decimals: number;
+      name: string;
+      priceUSDCents: number;
+      symbol: string;
+      tokenAddress: string;
+    };
+  };
 
   onRampLink: string;
 };
@@ -107,7 +120,7 @@ export async function getBuyWithFiatQuote(
 
     const data = (await response.json()).result;
 
-    console.log(data);
+    console.log("quote is", data);
 
     return data;
   } catch (error) {
