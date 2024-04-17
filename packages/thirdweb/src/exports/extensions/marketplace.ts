@@ -175,6 +175,10 @@ export {
   getAllOffers,
   type GetAllOffersParams,
 } from "../../extensions/marketplace/read/offers/getAllOffers.js";
+export {
+  getAllValidOffers,
+  type GetAllValidOffersParams,
+} from "../../extensions/marketplace/read/offers/getAllValidOffers.js";
 
 // WRITE
 
