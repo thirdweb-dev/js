@@ -113,6 +113,37 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       ).resolves.toBe(1n);
     });
 
+    it("should allow to claim tokens with price", async () => {
+      await expect(
+        balanceOf({ contract, owner: TEST_ACCOUNT_A.address, tokenId: 0n }),
+      ).resolves.toBe(1n);
+      await sendAndConfirmTransaction({
+        transaction: setClaimConditions({
+          contract,
+          phases: [
+            {
+              price: "0.001",
+            },
+          ],
+          tokenId: 0n,
+        }),
+        account: TEST_ACCOUNT_A,
+      });
+      const claimTx = claimTo({
+        contract,
+        to: TEST_ACCOUNT_A.address,
+        tokenId: 0n,
+        quantity: 1n,
+      });
+      await sendAndConfirmTransaction({
+        transaction: claimTx,
+        account: TEST_ACCOUNT_A,
+      });
+      await expect(
+        balanceOf({ contract, owner: TEST_ACCOUNT_A.address, tokenId: 0n }),
+      ).resolves.toBe(2n);
+    });
+
     describe("Allowlists", () => {
       it("should allow to claim tokens with an allowlist", async () => {
         const tokenId = 1n;
