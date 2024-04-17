@@ -16,7 +16,7 @@ import { signMessage } from "../utils/signatures/sign-message.js";
 import { signTypedData } from "../utils/signatures/sign-typed-data.js";
 import type { Account } from "./interfaces/wallet.js";
 
-export type PrivateKeyAccountOptions = {
+export type PrivateKeyToAccountOptions = {
   /**
    * A client is the entry point to the thirdweb SDK.
    * It is required for all other actions.
@@ -46,25 +46,25 @@ export type PrivateKeyAccountOptions = {
   privateKey: string;
 };
 
-export const privateKeyToAccount = privateKeyAccount;
-
 /**
  * Get an `Account` object from a private key.
- * @param options - The options for `privateKeyAccount`
- * Refer to the type [`PrivateKeyAccountOptions`](https://portal.thirdweb.com/references/typescript/v5/PrivateKeyAccountOptions)
+ * @param options - The options for `privateKeyToAccount`
+ * Refer to the type [`PrivateKeyToAccountOptions`](https://portal.thirdweb.com/references/typescript/v5/PrivateKeyToAccountOptions)
  * @returns The `Account` object that represents the private key
  * @example
  * ```ts
- * import { privateKeyAccount } from "thirdweb/wallets"
+ * import { privateKeyToAccount } from "thirdweb/wallets"
  *
- * const wallet = privateKeyAccount({
+ * const wallet = privateKeyToAccount({
  *  client,
  *  privateKey: "...",
  * });
  * ```
  * @wallet
  */
-export function privateKeyAccount(options: PrivateKeyAccountOptions): Account {
+export function privateKeyToAccount(
+  options: PrivateKeyToAccountOptions,
+): Account {
   const { client } = options;
   const privateKey = `0x${options.privateKey.replace(/^0x/, "")}` satisfies Hex;
 

@@ -4,10 +4,10 @@ import { ANVIL_PKEY_A } from "~test/test-wallets.js";
 import { typedData } from "~test/typed-data.js";
 import { ANVIL_CHAIN, FORKED_ETHEREUM_CHAIN } from "../../test/src/chains.js";
 import { TEST_CLIENT } from "../../test/src/test-clients.js";
-import { privateKeyAccount } from "../wallets/private-key.js";
+import { privateKeyToAccount } from "../wallets/private-key.js";
 import { viemAdapter } from "./viem.js";
 
-const account = privateKeyAccount({
+const account = privateKeyToAccount({
   privateKey: ANVIL_PKEY_A,
   client: TEST_CLIENT,
 });

@@ -22,7 +22,7 @@ import { LoadingScreen } from "../wallets/shared/LoadingScreen.js";
 export type SendTransactionConfig = {
   /**
    * Configuration for the "Buy Modal" that opens when the user doesn't have enough funds to send a transaction.
-   * Set `buyModal: false` to disable the "Buy Modal" popup
+   * Set `payModal: false` to disable the "Buy Modal" popup
    *
    * This configuration object includes the following properties to configure the "Buy Modal" UI:
    *
@@ -40,7 +40,7 @@ export type SendTransactionConfig = {
    * Refer to [`lightTheme`](https://portal.thirdweb.com/references/typescript/v5/lightTheme)
    * or [`darkTheme`](https://portal.thirdweb.com/references/typescript/v5/darkTheme) helper functions to use the default light or dark theme and customize it.
    */
-  buyModal?:
+  payModal?:
     | {
         locale?: LocaleId;
         supportedTokens?: SupportedTokens;
@@ -66,11 +66,11 @@ export type SendTransactionConfig = {
  * @transaction
  */
 export function useSendTransaction(config: SendTransactionConfig = {}) {
-  const buyModal = config.buyModal;
+  const payModal = config.payModal;
 
   const setRootEl = useContext(SetRootElementContext);
   return useSendTransactionCore(
-    typeof buyModal === "object"
+    typeof payModal === "object"
       ? (data) => {
           setRootEl(
             <TxModal
@@ -81,9 +81,9 @@ export function useSendTransaction(config: SendTransactionConfig = {}) {
                 data.rejectTx();
               }}
               client={data.tx.client}
-              localeId={buyModal?.locale || "en_US"}
-              supportedTokens={buyModal?.supportedTokens || defaultTokens}
-              theme={buyModal?.theme || "dark"}
+              localeId={payModal?.locale || "en_US"}
+              supportedTokens={payModal?.supportedTokens || defaultTokens}
+              theme={payModal?.theme || "dark"}
               txCostWei={data.totalCostWei}
               walletBalanceWei={data.walletBalance.value}
               nativeTokenSymbol={data.walletBalance.symbol}
