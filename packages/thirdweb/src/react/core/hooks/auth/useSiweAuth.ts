@@ -26,7 +26,7 @@ export function useSiweAuth(authOptions?: SiweAuthOptions) {
   const queryClient = useQueryClient();
 
   const isLoggedInQuery = useQuery({
-    queryKey: ["isLoggedIn", activeAccount?.address],
+    queryKey: ["siwe_auth", "isLoggedIn", activeAccount?.address],
     enabled: requiresAuth && !!activeAccount?.address,
     queryFn: () => {
       // these cases should never be hit but just in case...
@@ -70,7 +70,9 @@ export function useSiweAuth(authOptions?: SiweAuthOptions) {
       return await authOptions.doLogin(signedPayload);
     },
     onSettled: () => {
-      return queryClient.invalidateQueries({ queryKey: ["isLoggedIn"] });
+      return queryClient.invalidateQueries({
+        queryKey: ["siwe_auth", "isLoggedIn"],
+      });
     },
   });
 
@@ -83,7 +85,9 @@ export function useSiweAuth(authOptions?: SiweAuthOptions) {
       return await authOptions.doLogout();
     },
     onSettled: () => {
-      return queryClient.invalidateQueries({ queryKey: ["isLoggedIn"] });
+      return queryClient.invalidateQueries({
+        queryKey: ["siwe_auth", "isLoggedIn"],
+      });
     },
   });
 
