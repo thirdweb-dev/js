@@ -1,4 +1,5 @@
 import { Box, Container, Flex } from "@chakra-ui/react";
+import { ChakraNextImage } from "components/Image";
 import { LandingCardWithImage } from "components/landing-pages/card-with-image";
 import { LandingEndCTA } from "components/landing-pages/end-cta";
 import { LandingGridSection } from "components/landing-pages/grid-section";
@@ -257,6 +258,17 @@ const SolutionsChains: ThirdwebNextPage = () => {
               colSpan={1}
             />
           </LandingGridSection>
+
+          <Flex width="full" flexDir="column" gap="80px">
+            <LandingSectionHeading
+              title="thirdweb drives transactions"
+              blackToWhiteTitle=""
+            />
+            <ChakraNextImage
+              src={require("../../../public/assets/landingpage/transactions.png")}
+              alt="test"
+            />
+          </Flex>
 
           <Flex flexDirection="column" alignItems="center">
             <LandingEndCTA
