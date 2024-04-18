@@ -11,7 +11,7 @@ import { toUnits } from "../../../../utils/units.js";
 import { isERC721 } from "../../../erc721/read/isERC721.js";
 import { isERC1155 } from "../../../erc1155/read/isERC1155.js";
 import { updateListing as generatedUpdateListing } from "../../__generated__/IDirectListings/write/updateListing.js";
-import { getListing } from "../../read/direct/getListing.js";
+import { getListing } from "../read/getListing.js";
 
 export type UpdateListingParams = {
   /**

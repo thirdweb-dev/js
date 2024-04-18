@@ -77,3 +77,15 @@ export {
   setClaimConditions,
   type SetClaimConditionsParams,
 } from "../../extensions/erc20/drops/write/setClaimConditions.js";
+
+// ----------------------------
+// WETH
+// ----------------------------
+export {
+  deposit,
+  type DepositParams,
+} from "../../extensions/erc20/write/deposit.js";
+export {
+  withdraw,
+  type WithdrawParams,
+} from "../../extensions/erc20/__generated__/IWETH/write/withdraw.js";

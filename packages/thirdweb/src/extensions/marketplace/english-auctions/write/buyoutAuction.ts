@@ -1,7 +1,7 @@
 import { isNativeTokenAddress } from "../../../../constants/addresses.js";
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import { bidInAuction as generatedBidInAuction } from "../../__generated__/IEnglishAuctions/write/bidInAuction.js";
-import { getAuction } from "../../read/english-auction/getAuction.js";
+import { getAuction } from "../read/getAuction.js";
 
 export type BuyoutAuctionParams = {
   auctionId: bigint;

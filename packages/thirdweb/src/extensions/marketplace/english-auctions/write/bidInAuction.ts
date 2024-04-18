@@ -2,8 +2,8 @@ import { isNativeTokenAddress } from "../../../../constants/addresses.js";
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import { isNewWinningBid } from "../../__generated__/IEnglishAuctions/read/isNewWinningBid.js";
 import { bidInAuction as generatedBidInAuction } from "../../__generated__/IEnglishAuctions/write/bidInAuction.js";
-import { getAuction } from "../../read/english-auction/getAuction.js";
-import { getWinningBid } from "../../read/english-auction/getWinningBid.js";
+import { getAuction } from "../read/getAuction.js";
+import { getWinningBid } from "../read/getWinningBid.js";
 
 export type BidInAuctionParams = {
   auctionId: bigint;

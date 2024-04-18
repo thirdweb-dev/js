@@ -6,8 +6,8 @@ import {
   type GetListingParams as GetListingParamsGenerated,
   getListing as getListingGenerated,
 } from "../../__generated__/IDirectListings/read/getListing.js";
-import type { DirectListing } from "../../types.js";
-import { mapDirectListing } from "../../utils.js";
+import type { DirectListing } from "../types.js";
+import { mapDirectListing } from "../utils.js";
 
 export type GetListingParams = GetListingParamsGenerated;
 

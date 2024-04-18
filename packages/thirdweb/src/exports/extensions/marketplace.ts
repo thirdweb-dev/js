@@ -1,34 +1,27 @@
 // ----------------------------
-// COMMON
-// ----------------------------
-
-export type {
-  DirectListing,
-  ListingStatus,
-} from "../../extensions/marketplace/types.js";
-
-// ----------------------------
 // DIRECT LISTINGS
 // ----------------------------
+
+export type { DirectListing } from "../../extensions/marketplace/direct-listings/types.js";
 
 // READ
 export { totalListings } from "../../extensions/marketplace/__generated__/IDirectListings/read/totalListings.js";
 export {
   getListing,
   type GetListingParams,
-} from "../../extensions/marketplace/read/direct/getListing.js";
+} from "../../extensions/marketplace/direct-listings/read/getListing.js";
 export {
   getAllListings,
   type GetAllListingParams,
-} from "../../extensions/marketplace/read/direct/getAllListings.js";
+} from "../../extensions/marketplace/direct-listings/read/getAllListings.js";
 export {
   getAllValidListings,
   type GetAllValidListingParams,
-} from "../../extensions/marketplace/read/direct/getAllValidListings.js";
+} from "../../extensions/marketplace/direct-listings/read/getAllValidListings.js";
 export {
   isBuyerApprovedForListing,
   type IsBuyerApprovedForListingParams,
-} from "../../extensions/marketplace/read/direct/isBuyerApprovedForListing.js";
+} from "../../extensions/marketplace/direct-listings/read/isBuyerApprovedForListing.js";
 export {
   isCurrencyApprovedForListing,
   type IsCurrencyApprovedForListingParams,
@@ -36,17 +29,17 @@ export {
 export {
   currencyPriceForListing,
   type CurrencyPriceForListingParams,
-} from "../../extensions/marketplace/read/direct/currencyPriceForListing.js";
+} from "../../extensions/marketplace/direct-listings/read/currencyPriceForListing.js";
 
 // WRITE
 export {
   createListing,
   type CreateListingParams,
-} from "../../extensions/marketplace/write/direct/createListing.js";
+} from "../../extensions/marketplace/direct-listings/write/createListing.js";
 export {
   updateListing,
   type UpdateListingParams,
-} from "../../extensions/marketplace/write/direct/updateListing.js";
+} from "../../extensions/marketplace/direct-listings/write/updateListing.js";
 export {
   cancelListing,
   type CancelListingParams,
@@ -54,7 +47,7 @@ export {
 export {
   buyFromListing,
   type BuyFromListingParams,
-} from "../../extensions/marketplace/write/direct/buyFromListing.js";
+} from "../../extensions/marketplace/direct-listings/write/buyFromListing.js";
 export {
   approveBuyerForListing,
   type ApproveBuyerForListingParams,
@@ -94,24 +87,26 @@ export {
 // ENGLISH AUCTIONS
 // ----------------------------
 
+export type { EnglishAuction } from "../../extensions/marketplace/english-auctions/types.js";
+
 // READ
 export { totalAuctions } from "../../extensions/marketplace/__generated__/IEnglishAuctions/read/totalAuctions.js";
 export {
   getAuction,
   type GetAuctionParams,
-} from "../../extensions/marketplace/read/english-auction/getAuction.js";
+} from "../../extensions/marketplace/english-auctions/read/getAuction.js";
 export {
   getAllAuctions,
   type GetAllAuctionParams,
-} from "../../extensions/marketplace/read/english-auction/getAllAuctions.js";
+} from "../../extensions/marketplace/english-auctions/read/getAllAuctions.js";
 export {
   getAllValidAuctions,
   type GetAllValidAuctionParams,
-} from "../../extensions/marketplace/read/english-auction/getAllValidAuctions.js";
+} from "../../extensions/marketplace/english-auctions/read/getAllValidAuctions.js";
 export {
   getWinningBid,
   type GetWinningBidParams,
-} from "../../extensions/marketplace/read/english-auction/getWinningBid.js";
+} from "../../extensions/marketplace/english-auctions/read/getWinningBid.js";
 export {
   isNewWinningBid,
   type IsNewWinningBidParams,
@@ -121,11 +116,11 @@ export {
 export {
   createAuction,
   type CreateAuctionParams,
-} from "../../extensions/marketplace/write/english-auction/createAuction.js";
+} from "../../extensions/marketplace/english-auctions/write/createAuction.js";
 export {
   bidInAuction,
   type BidInAuctionParams,
-} from "../../extensions/marketplace/write/english-auction/bidInAuction.js";
+} from "../../extensions/marketplace/english-auctions/write/bidInAuction.js";
 export {
   cancelAuction,
   type CancelAuctionParams,
@@ -133,7 +128,7 @@ export {
 export {
   buyoutAuction,
   type BuyoutAuctionParams,
-} from "../../extensions/marketplace/write/english-auction/buyoutAuction.js";
+} from "../../extensions/marketplace/english-auctions/write/buyoutAuction.js";
 export {
   collectAuctionPayout,
   type CollectAuctionPayoutParams,
@@ -145,7 +140,7 @@ export {
 export {
   executeSale,
   type ExecuteSaleParams,
-} from "../../extensions/marketplace/write/english-auction/executeSale.js";
+} from "../../extensions/marketplace/english-auctions/write/executeSale.js";
 
 // EVENTS
 export {
@@ -164,3 +159,52 @@ export {
   newBidEvent,
   type NewBidEventFilters,
 } from "../../extensions/marketplace/__generated__/IEnglishAuctions/events/NewBid.js";
+
+// ----------------------------
+// OFFERS
+// ----------------------------
+
+export type { Offer } from "../../extensions/marketplace/offers/types.js";
+
+// READ
+export { totalOffers } from "../../extensions/marketplace/__generated__/IOffers/read/totalOffers.js";
+export {
+  getAllOffers,
+  type GetAllOffersParams,
+} from "../../extensions/marketplace/offers/read/getAllOffers.js";
+export {
+  getAllValidOffers,
+  type GetAllValidOffersParams,
+} from "../../extensions/marketplace/offers/read/getAllValidOffers.js";
+export {
+  getOffer,
+  type GetOfferParams,
+} from "../../extensions/marketplace/offers/read/getOffer.js";
+
+// WRITE
+export {
+  makeOffer,
+  type MakeOfferParams,
+} from "../../extensions/marketplace/offers/write/makeOffer.js";
+export {
+  cancelOffer,
+  type CancelOfferParams,
+} from "../../extensions/marketplace/__generated__/IOffers/write/cancelOffer.js";
+export {
+  acceptOffer,
+  type AcceptOfferParams,
+} from "../../extensions/marketplace/offers/write/acceptOffer.js";
+
+// EVENTS
+export {
+  acceptedOfferEvent,
+  type AcceptedOfferEventFilters,
+} from "../../extensions/marketplace/__generated__/IOffers/events/AcceptedOffer.js";
+export {
+  cancelledOfferEvent,
+  type CancelledOfferEventFilters,
+} from "../../extensions/marketplace/__generated__/IOffers/events/CancelledOffer.js";
+export {
+  newOfferEvent,
+  type NewOfferEventFilters,
+} from "../../extensions/marketplace/__generated__/IOffers/events/NewOffer.js";

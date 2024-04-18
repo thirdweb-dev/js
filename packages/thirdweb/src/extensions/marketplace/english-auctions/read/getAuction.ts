@@ -6,8 +6,8 @@ import {
   type GetAuctionParams as GetAuctionParamsGenerated,
   getAuction as getAuctionGenerated,
 } from "../../__generated__/IEnglishAuctions/read/getAuction.js";
-import type { EnglishAuction } from "../../types.js";
-import { mapEnglishAuction } from "../../utils.js";
+import type { EnglishAuction } from "../types.js";
+import { mapEnglishAuction } from "../utils.js";
 
 export type GetAuctionParams = GetAuctionParamsGenerated;
 

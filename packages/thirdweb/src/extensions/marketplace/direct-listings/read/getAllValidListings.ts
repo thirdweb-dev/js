@@ -2,14 +2,15 @@ import { eth_getBlockByNumber } from "../../../../rpc/actions/eth_getBlockByNumb
 import { getRpcClient } from "../../../../rpc/rpc.js";
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import { min } from "../../../../utils/bigint.js";
-import { getAllAuctions as getAllAuctionsGenerated } from "../../__generated__/IEnglishAuctions/read/getAllAuctions.js";
-import { totalAuctions } from "../../__generated__/IEnglishAuctions/read/totalAuctions.js";
-import type { EnglishAuction } from "../../types.js";
-import { getAllInBatches, mapEnglishAuction } from "../../utils.js";
+import { getAllValidListings as getAllValidListingGenerated } from "../../__generated__/IDirectListings/read/getAllValidListings.js";
+import { totalListings } from "../../__generated__/IDirectListings/read/totalListings.js";
+import { getAllInBatches } from "../../utils.js";
+import type { DirectListing } from "../types.js";
+import { mapDirectListing } from "../utils.js";
 
 const DEFAULT_QUERY_ALL_COUNT = 100n;
 
-export type GetAllAuctionParams = {
+export type GetAllValidListingParams = {
   /**
    * The start index of the listings to retrieve.
    * @default 0
@@ -23,22 +24,22 @@ export type GetAllAuctionParams = {
 };
 
 /**
- * Retrieves all auctions based on the provided options.
- * @param options - The options for retrieving the auctions.
- * @returns A promise that resolves to the auctions array.
+ * Retrieves all valid direct listings based on the provided options.
+ * @param options - The options for retrieving the valid listing.
+ * @returns A promise that resolves to the direct listings array.
  * @extension MARKETPLACE
  * @example
  *
  * ```ts
- * import { getAllAuctions } from "thirdweb/extensions/marketplace";
+ * import { getAllValidListings } from "thirdweb/extensions/marketplace";
  *
- * const listings = await getAllAuctions({ contract, start: 0, count: 10 });
+ * const validListings = await getAllValidListings({ contract, start: 0, count: 10 });
  * ```
  */
-export async function getAllAuctions(
-  options: BaseTransactionOptions<GetAllAuctionParams>,
-): Promise<EnglishAuction[]> {
-  const totalCount = await totalAuctions(options);
+export async function getAllValidListings(
+  options: BaseTransactionOptions<GetAllValidListingParams>,
+): Promise<DirectListing[]> {
+  const totalCount = await totalListings(options);
   // if the totalListingCount is 0, return an empty array and skip all other work
   if (totalCount === 0n) {
     return [];
@@ -49,10 +50,14 @@ export async function getAllAuctions(
   const end = min(totalCount, start + count);
 
   const rpcClient = getRpcClient(options.contract);
-  const [rawAuctions, latestBlock] = await Promise.all([
+  const [rawListings, latestBlock] = await Promise.all([
     getAllInBatches(
       (startId, endId) =>
-        getAllAuctionsGenerated({ contract: options.contract, startId, endId }),
+        getAllValidListingGenerated({
+          contract: options.contract,
+          startId,
+          endId,
+        }),
       {
         start,
         end,
@@ -67,11 +72,11 @@ export async function getAllAuctions(
   ]);
 
   return await Promise.all(
-    rawAuctions.map((rawAuction) =>
-      mapEnglishAuction({
+    rawListings.map((rawListing) =>
+      mapDirectListing({
         contract: options.contract,
         latestBlock,
-        rawAuction,
+        rawListing,
       }),
     ),
   );
