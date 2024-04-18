@@ -78,6 +78,15 @@ export {
   type SetClaimConditionsParams,
 } from "../../extensions/erc20/drops/write/setClaimConditions.js";
 
+/**
+ * SIGNATURE extension for ERC20
+ */
+export {
+  mintWithSignature,
+  type GenerateMintSignatureOptions,
+  generateMintSignature,
+} from "../../extensions/erc20/write/sigMint.js";
+
 // ----------------------------
 // WETH
 // ----------------------------

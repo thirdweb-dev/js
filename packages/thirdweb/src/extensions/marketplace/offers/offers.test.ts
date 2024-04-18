@@ -12,11 +12,11 @@ import {
 } from "../../../contract/contract.js";
 import { getDeployedInfraContract } from "../../../contract/deployment/utils/infra.js";
 import { parseEventLogs } from "../../../event/actions/parse-logs.js";
-import { ownerOf } from "../../../exports/extensions/erc721.js";
 import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and-confirm-transaction.js";
 import { getBalance } from "../../erc20/read/getBalance.js";
 import { approve as approveErc20 } from "../../erc20/write/approve.js";
 import { deposit } from "../../erc20/write/deposit.js";
+import { ownerOf } from "../../erc721/__generated__/IERC721A/read/ownerOf.js";
 import { approve as approveErc721 } from "../../erc721/__generated__/IERC721A/write/approve.js";
 import { tokensMintedEvent } from "../../erc721/__generated__/IMintableERC721/events/TokensMinted.js";
 import { mintTo } from "../../erc721/write/mintTo.js";

@@ -25,7 +25,7 @@ export async function hashEntry(options: {
     }
     const [{ getContract }, { decimals: getDecimals }] = await Promise.all([
       import("../../../contract/contract.js"),
-      import("../../../exports/extensions/erc20.js"),
+      import("../../../extensions/erc20/read/decimals.js"),
     ]);
     const currencyContract = getContract({
       address: currencyAddress,

@@ -7,7 +7,7 @@ import {
   TEST_ACCOUNT_B,
 } from "../../../test/src/test-wallets.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
-import { sendAndConfirmTransaction } from "../../exports/transaction.js";
+import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { getContractMetadata } from "../common/read/getContractMetadata.js";
 import { deployERC20Contract } from "../prebuilts/deploy-erc20.js";
 import { claimTo } from "./drops/write/claimTo.js";

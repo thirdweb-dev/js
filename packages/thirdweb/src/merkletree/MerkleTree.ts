@@ -1,6 +1,5 @@
 // ADAPTED FROM https://github.com/merkletreejs/merkletreejs
-import { uint8ArrayToHex } from "../exports/thirdweb.js";
-import type { Hex } from "../utils/encoding/hex.js";
+import { type Hex, uint8ArrayToHex } from "../utils/encoding/hex.js";
 import { hexToBytes } from "../utils/encoding/to-bytes.js";
 import { keccak256 } from "../utils/hashing/keccak256.js";
 import {
