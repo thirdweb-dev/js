@@ -68,6 +68,11 @@ export {
   mintAdditionalSupplyTo,
   type MintAdditionalSupplyToParams,
 } from "../../extensions/erc1155/write/mintAdditionalSupplyTo.js";
+export {
+  setTokenURI,
+  type SetTokenURIParams,
+} from "../../extensions/erc1155/__generated__/INFTMetadata/write/setTokenURI.js";
+export { freezeMetadata } from "../../extensions/erc1155/__generated__/INFTMetadata/write/freezeMetadata.js";
 
 // EVENTS
 
@@ -83,6 +88,9 @@ export {
   approvalForAllEvent,
   type ApprovalForAllEventFilters,
 } from "../../extensions/erc1155/__generated__/IERC1155/events/ApprovalForAll.js";
+export { metadataUpdateEvent } from "../../extensions/erc1155/__generated__/INFTMetadata/events/MetadataUpdate.js";
+export { metadataFrozenEvent } from "../../extensions/erc1155/__generated__/INFTMetadata/events/MetadataFrozen.js";
+export { batchMetadataUpdateEvent } from "../../extensions/erc1155/__generated__/INFTMetadata/events/BatchMetadataUpdate.js";
 
 /**
  * DROPS extension for ERC1155
