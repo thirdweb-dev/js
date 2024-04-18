@@ -1,8 +1,7 @@
 import { keyframes } from "@emotion/react";
-import type { Theme } from "../../../../exports/react.js";
 import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 import { StyledDiv } from "../design-system/elements.js";
-import { radius } from "../design-system/index.js";
+import { type Theme, radius } from "../design-system/index.js";
 
 /**
  * @internal

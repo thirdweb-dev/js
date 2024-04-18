@@ -10,9 +10,9 @@ import {
 } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState, useSyncExternalStore } from "react";
+import { ethereum } from "../../../../chains/chain-definitions/ethereum.js";
 import type { Chain } from "../../../../chains/types.js";
 import { getContract } from "../../../../contract/contract.js";
-import { ethereum } from "../../../../exports/chains.js";
 import { resolveAvatar } from "../../../../extensions/ens/resolve-avatar.js";
 import { resolveName } from "../../../../extensions/ens/resolve-name.js";
 import { isContractDeployed } from "../../../../utils/bytecode/is-contract-deployed.js";
