@@ -1,9 +1,4 @@
-import { keyframes } from "@emotion/react";
-import {
-  CheckCircledIcon,
-  CheckIcon,
-  CrossCircledIcon,
-} from "@radix-ui/react-icons";
+import { CheckCircledIcon, CrossCircledIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
@@ -30,6 +25,7 @@ import { StyledDiv } from "../../../../design-system/elements.js";
 import { fontSize, iconSize } from "../../../../design-system/index.js";
 import { AccentFailIcon } from "../../../icons/AccentFailIcon.js";
 import { type ERC20OrNativeToken, isNativeToken } from "../../nativeToken.js";
+import { Step } from "../Stepper.js";
 import { SwapFees } from "./Fees.js";
 import { formatSeconds } from "./formatSeconds.js";
 import { addPendingSwapTransaction } from "./pendingSwapTx.js";
@@ -263,70 +259,6 @@ const ConnectorLine = /* @__PURE__ */ StyledDiv(() => {
     height: "4px",
     background: theme.colors.borderColor,
     flex: 1,
-  };
-});
-
-function Step(props: { isDone: boolean; label: string; isActive: boolean }) {
-  return (
-    <Container
-      flex="row"
-      center="y"
-      gap="xs"
-      style={{
-        fontSize: fontSize.sm,
-      }}
-      color={
-        props.isDone
-          ? "success"
-          : props.isActive
-            ? "accentText"
-            : "secondaryText"
-      }
-    >
-      <Circle>
-        {props.isDone ? (
-          <CheckIcon width={iconSize.sm} height={iconSize.sm} />
-        ) : (
-          <PulsingDot data-active={props.isActive} />
-        )}
-      </Circle>
-      {props.label}
-    </Container>
-  );
-}
-
-const pulseAnimation = keyframes`
-0% {
-  opacity: 1;
-  transform: scale(0.5);
-}
-100% {
-  opacity: 0;
-  transform: scale(1.5);
-}
-`;
-
-const PulsingDot = /* @__PURE__ */ StyledDiv(() => {
-  return {
-    background: "currentColor",
-    width: "9px",
-    height: "9px",
-    borderRadius: "50%",
-    '&[data-active="true"]': {
-      animation: `${pulseAnimation} 1s infinite`,
-    },
-  };
-});
-
-const Circle = /* @__PURE__ */ StyledDiv(() => {
-  return {
-    border: "1px solid currentColor",
-    width: "20px",
-    height: "20px",
-    borderRadius: "50%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
   };
 });
 
