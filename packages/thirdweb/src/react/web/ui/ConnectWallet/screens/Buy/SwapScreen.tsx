@@ -61,6 +61,7 @@ import { PaymentSelection } from "./PaymentSelection.js";
 import { FeesButton } from "./buttons.js";
 import { CurrencySelection } from "./fiat/CurrencySelection.js";
 import { FiatConfirmation } from "./fiat/FiatConfirmation.js";
+import { FiatStatusScreen } from "./fiat/FiatStatusScreen.js";
 import {
   type CurrencyMeta,
   defaultSelectedCurrency,
@@ -119,6 +120,7 @@ type Screen =
   | "main"
   | "select-from-token"
   | "select-to-token"
+  | "fiat-status"
   | "confirmation"
   | "fiat-confirmation"
   | "select-currency"
@@ -317,6 +319,16 @@ export function BuyScreenContent(props: {
       : undefined,
   );
 
+  if (screen === "fiat-status" && fiatQuoteQuery.data) {
+    return (
+      <FiatStatusScreen
+        client={client}
+        onBack={props.onBack}
+        quoteId={fiatQuoteQuery.data?.quoteId}
+      />
+    );
+  }
+
   if (screen === "select-currency") {
     return (
       <CurrencySelection
@@ -339,6 +351,9 @@ export function BuyScreenContent(props: {
           setScreen("main");
         }}
         testMode={props.fiatTestMode}
+        onComplete={() => {
+          setScreen("fiat-status");
+        }}
       />
     );
   }

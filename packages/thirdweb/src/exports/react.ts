@@ -98,3 +98,4 @@ export {
 } from "../react/core/hooks/connection/useAutoConnect.js";
 
 export { useBuyWithFiatQuote } from "../react/core/hooks/pay/useBuyWithFiatQuote.js";
+export { useBuyWithFiatStatus } from "../react/core/hooks/pay/useBuyWithFiatStatus.js";

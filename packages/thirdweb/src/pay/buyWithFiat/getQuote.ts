@@ -118,11 +118,7 @@ export async function getBuyWithFiatQuote(
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data = (await response.json()).result;
-
-    console.log("quote is", data);
-
-    return data;
+    return (await response.json()).result;
   } catch (error) {
     console.error("Fetch error:", error);
     throw new Error(`Fetch failed: ${error}`);

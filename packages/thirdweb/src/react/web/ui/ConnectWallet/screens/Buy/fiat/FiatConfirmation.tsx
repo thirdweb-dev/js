@@ -83,7 +83,7 @@ export function FiatConfirmation(props: {
             {formatNumber(Number(props.quote.onRampToken.amount), 4)}
           </Text>{" "}
           <TokenSymbol
-            token={props.toToken}
+            token={NATIVE_TOKEN}
             chain={props.toChain}
             size="md"
             inline

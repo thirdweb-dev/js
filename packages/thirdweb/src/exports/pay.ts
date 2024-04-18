@@ -26,3 +26,9 @@ export {
   type BuyWithFiatQuote,
   type GetBuyWithFiatQuoteParams,
 } from "../pay/buyWithFiat/getQuote.js";
+
+export {
+  getBuyWithFiatStatus,
+  type BuyWithFiatStatus,
+  type GetBuyWithFiatStatusParams,
+} from "../pay/buyWithFiat/getStatus.js";

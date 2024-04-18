@@ -17,32 +17,38 @@ export function KadoScreen(props: {
   quote: BuyWithFiatQuote;
   onBack: () => void;
   testMode?: boolean;
+  onComplete: () => void;
 }) {
   let iframeSrc = props.quote.onRampLink;
-  const iframeOrigin = new URL(iframeSrc).origin;
+  let iframeOrigin = new URL(iframeSrc).origin;
 
   // TODO - probably remove this after testing
   if (props.testMode) {
     const kadoSandbox = "https://sandbox--kado.netlify.app";
     iframeSrc = iframeSrc.replace(iframeOrigin, kadoSandbox);
+    iframeOrigin = kadoSandbox;
   }
+
+  const { onComplete } = props;
 
   useEffect(() => {
     function handlePostMessage(event: MessageEvent) {
       if (event.origin !== iframeOrigin) {
+        // TODO remove
         console.log("ignore:", event);
         return;
       }
 
-      // TODO
+      // TODO remove
       console.log("got from kado", event);
+      onComplete();
     }
 
     window.addEventListener("message", handlePostMessage);
     return () => {
       window.removeEventListener("message", handlePostMessage);
     };
-  }, [iframeOrigin]);
+  }, [iframeOrigin, onComplete]);
 
   return (
     <Container>
