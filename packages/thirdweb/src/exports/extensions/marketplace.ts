@@ -189,6 +189,10 @@ export {
   makeOffer,
   type MakeOfferParams,
 } from "../../extensions/marketplace/write/offers/makeOffer.js";
+export {
+  cancelOffer,
+  type CancelOfferParams,
+} from "../../extensions/marketplace/__generated__/IOffers/write/cancelOffer.js";
 
 // EVENTS
 export {
