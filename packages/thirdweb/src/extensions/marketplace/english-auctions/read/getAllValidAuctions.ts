@@ -4,8 +4,9 @@ import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import { min } from "../../../../utils/bigint.js";
 import { getAllValidAuctions as getAllValidAuctionsGenerated } from "../../__generated__/IEnglishAuctions/read/getAllValidAuctions.js";
 import { totalAuctions } from "../../__generated__/IEnglishAuctions/read/totalAuctions.js";
-import type { EnglishAuction } from "../../types.js";
-import { getAllInBatches, mapEnglishAuction } from "../../utils.js";
+import { getAllInBatches } from "../../utils.js";
+import type { EnglishAuction } from "../types.js";
+import { mapEnglishAuction } from "../utils.js";
 
 const DEFAULT_QUERY_ALL_COUNT = 100n;
 

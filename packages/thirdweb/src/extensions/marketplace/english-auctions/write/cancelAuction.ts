@@ -1,6 +1,6 @@
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import { cancelAuction as generatedCancelAuction } from "../../__generated__/IEnglishAuctions/write/cancelAuction.js";
-import { getWinningBid } from "../../read/english-auction/getWinningBid.js";
+import { getWinningBid } from "../read/getWinningBid.js";
 
 export type CancelAuctionParams = {
   auctionId: bigint;

@@ -4,8 +4,9 @@ import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import { min } from "../../../../utils/bigint.js";
 import { getAllListings as getAllListingGenerated } from "../../__generated__/IDirectListings/read/getAllListings.js";
 import { totalListings } from "../../__generated__/IDirectListings/read/totalListings.js";
-import type { DirectListing } from "../../types.js";
-import { getAllInBatches, mapDirectListing } from "../../utils.js";
+import { getAllInBatches } from "../../utils.js";
+import type { DirectListing } from "../types.js";
+import { mapDirectListing } from "../utils.js";
 
 const DEFAULT_QUERY_ALL_COUNT = 100n;
 

@@ -2,7 +2,7 @@ import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import { multicall } from "../../../common/__generated__/IMulticall/write/multicall.js";
 import { encodeCollectAuctionPayout } from "../../__generated__/IEnglishAuctions/write/collectAuctionPayout.js";
 import { encodeCollectAuctionTokens } from "../../__generated__/IEnglishAuctions/write/collectAuctionTokens.js";
-import { getWinningBid } from "../../read/english-auction/getWinningBid.js";
+import { getWinningBid } from "../read/getWinningBid.js";
 
 export type ExecuteSaleParams = {
   auctionId: bigint;
