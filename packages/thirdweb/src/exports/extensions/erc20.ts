@@ -81,7 +81,10 @@ export {
 // ----------------------------
 // WETH
 // ----------------------------
-export { deposit } from "../../extensions/erc20/__generated__/IWETH/write/deposit.js";
+export {
+  deposit,
+  type DepositParams,
+} from "../../extensions/erc20/write/deposit.js";
 export {
   withdraw,
   type WithdrawParams,
