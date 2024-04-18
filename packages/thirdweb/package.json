@@ -1,6 +1,6 @@
 {
   "name": "thirdweb",
-  "version": "5.6.0",
+  "version": "5.7.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"
@@ -194,7 +194,7 @@
     "push": "yalc push",
     "size": "size-limit",
     "test:watch": "vitest -c ./test/vitest.config.ts dev",
-    "test": "vitest run -c ./test/vitest.config.ts",
+    "test": "vitest run -c ./test/vitest.config.ts --coverage",
     "test:cov": "vitest dev -c ./test/vitest.config.ts --coverage",
     "test:dev": "vitest run -c ./test/vitest.config.ts",
     "typedoc": "node scripts/typedoc.mjs",
@@ -202,5 +202,9 @@
   },
   "engines": {
     "node": ">=18"
+  },
+  "devDependencies": {
+    "@types/cross-spawn": "^6.0.6",
+    "cross-spawn": "7.0.3"
   }
 }

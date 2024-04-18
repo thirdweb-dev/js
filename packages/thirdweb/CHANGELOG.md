@@ -1,5 +1,49 @@
 # thirdweb
 
+## 5.7.0
+
+### Minor Changes
+
+- [#2803](https://github.com/thirdweb-dev/js/pull/2803) [`a54c745`](https://github.com/thirdweb-dev/js/commit/a54c745977e7806c0339633486eef55f92b02832) Thanks [@jnsdls](https://github.com/jnsdls)! - Added new extensions for "English Auctions" in `thirdweb/extensions/marketplace` module:
+
+  - `bidInAuction`
+  - `cancelAuction`
+  - `buyoutAuction`
+  - `collectAuctionPayout`
+  - `collectAuctionTokens`
+  - `executeSale`
+
+- [#2767](https://github.com/thirdweb-dev/js/pull/2767) [`300e4c8`](https://github.com/thirdweb-dev/js/commit/300e4c8a51581156acdfac431655510f0cdbca21) Thanks [@MananTank](https://github.com/MananTank)! - Open "Pay Modal" UI when sending transaction using the `useSendTransaction` hook if the user does not have enough funds to execute the transaction to prompt the user to buy tokens
+
+  `useSendTransaction` now takes an optional `config` option to customize the "Pay Modal" UI
+
+  ```tsx
+  const sendTransaction = useSendTransaction({
+    payModal: {
+      locale: "en_US",
+      theme: "light",
+    },
+  });
+  ```
+
+  You may also explicitly disable the "Pay Modal" UI by setting the `payModal` option to `false`
+
+  ```tsx
+  const sendTransaction = useSendTransaction({
+    payModal: false,
+  });
+  ```
+
+- [#2788](https://github.com/thirdweb-dev/js/pull/2788) [`f5abbe8`](https://github.com/thirdweb-dev/js/commit/f5abbe8b54fbd68188c40268ae5707c72f39441f) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Added `deployPublishedContract`
+
+### Patch Changes
+
+- [#2795](https://github.com/thirdweb-dev/js/pull/2795) [`7c17892`](https://github.com/thirdweb-dev/js/commit/7c178923f9072d8f43b0d23f3888fdedae540005) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix claiming drops with prices and no allowlists
+
+- [#2785](https://github.com/thirdweb-dev/js/pull/2785) [`4c7153c`](https://github.com/thirdweb-dev/js/commit/4c7153c95df1962d1e530a3d8227960cd87f6a61) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
+
+- [#2799](https://github.com/thirdweb-dev/js/pull/2799) [`37bd0e4`](https://github.com/thirdweb-dev/js/commit/37bd0e42a58cdbe5b04a9871b5fd413ec293d96c) Thanks [@jnsdls](https://github.com/jnsdls)! - fix `npx thirdweb` on windows when `thirdweb` is installed locally
+
 ## 5.6.0
 
 ### Minor Changes

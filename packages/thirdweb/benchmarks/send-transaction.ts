@@ -1,15 +1,15 @@
-import { run, bench, group } from "mitata";
+import { bench, group, run } from "mitata";
 
-import { prepareTransaction } from "../src/transaction/prepare-transaction";
-import { createThirdwebClient } from "../src/client/client";
 import { defineChain } from "../src/chains/utils";
-import { privateKeyAccount } from "../src/wallets/private-key";
+import { createThirdwebClient } from "../src/client/client";
 import { sendTransaction } from "../src/transaction/actions/send-transaction";
+import { prepareTransaction } from "../src/transaction/prepare-transaction";
+import { privateKeyToAccount } from "../src/wallets/private-key";
 
-import * as viem from "viem";
-import { privateKeyToAccount } from "viem/accounts";
-import { mainnet } from "viem/chains";
 import * as ethers from "ethers6";
+import * as viem from "viem";
+import { privateKeyToAccount as viemPrivateKeyToAccount } from "viem/accounts";
+import { mainnet } from "viem/chains";
 
 const LOCAL_RPC = "http://127.0.0.1:8545";
 const VITALIK_WALLET = "0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B";
@@ -27,13 +27,13 @@ const TEST_CHAIN = defineChain({
 const PKEY =
   "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 
-const account = privateKeyAccount({
+const account = privateKeyToAccount({
   privateKey: PKEY,
   client,
 });
 
 // viem setup
-const privateKeyAccountViem = privateKeyToAccount(PKEY);
+const privateKeyAccountViem = viemPrivateKeyToAccount(PKEY);
 const walletClient = viem.createWalletClient({
   account: privateKeyAccountViem,
   transport: viem.http(LOCAL_RPC),
