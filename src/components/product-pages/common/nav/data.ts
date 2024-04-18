@@ -27,6 +27,36 @@ export const PRODUCT_SECTIONS: SectionProps[] = [
   },
 ];
 
+export const MOBILE_PRODUCTS_SECTIONS: SectionItemProps[] = [
+  {
+    name: "Connect",
+    label: "connect",
+    description: "Onboard, authenticate and manage users",
+    link: "/connect",
+    dashboardLink: "/connect",
+    icon: require("../../../../../public/assets/landingpage/connect-icon.png"),
+    section: "connect",
+    inLandingPage: true,
+  },
+  {
+    name: "Contracts",
+    label: "contracts",
+    description: "Create, deploy, and interact with smart contracts",
+    link: "/contracts",
+    icon: require("../../../../../public/assets/landingpage/contracts-icon.png"),
+    section: "contracts",
+  },
+  {
+    name: "Engine",
+    label: "engine",
+    description: "Connect your application to decentralized networks",
+    link: "/engine",
+    dashboardLink: "/engine",
+    icon: require("../../../../../public/assets/product-icons/engine.png"),
+    section: "infrastructure",
+  },
+];
+
 export const PRODUCTS: SectionItemProps[] = [
   {
     name: "Deploy",

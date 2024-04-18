@@ -1,4 +1,8 @@
-import { DEVELOPER_RESOURCES, PRODUCTS, SOLUTIONS } from "./data";
+import {
+  DEVELOPER_RESOURCES,
+  MOBILE_PRODUCTS_SECTIONS,
+  SOLUTIONS,
+} from "./data";
 import type { SectionItemProps } from "./types";
 import {
   Flex,
@@ -49,17 +53,17 @@ export const MobileMenu: React.FC<FlexProps> = (props) => {
         <Flex gap={6} direction="column">
           <MobileNavSection
             title="Products"
-            links={PRODUCTS}
-            onItemClick={disclosure.onClose}
-          />
-          <MobileNavSection
-            title="Developer"
-            links={DEVELOPER_RESOURCES}
+            links={MOBILE_PRODUCTS_SECTIONS}
             onItemClick={disclosure.onClose}
           />
           <MobileNavSection
             title="Solutions"
             links={SOLUTIONS}
+            onItemClick={disclosure.onClose}
+          />
+          <MobileNavSection
+            title="Developer"
+            links={DEVELOPER_RESOURCES}
             onItemClick={disclosure.onClose}
           />
         </Flex>
