@@ -9,8 +9,7 @@ export type EmbeddedWalletUser = {
   client_id: string;
   created_at: string;
   last_accessed_at: string;
-
-  embedded_wallet: {
+  embedded_wallet?: {
     id: string;
     address: string;
     chain: string;
