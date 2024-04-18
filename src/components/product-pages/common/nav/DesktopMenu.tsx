@@ -12,9 +12,9 @@ import {
 
 export const DesktopMenu: React.FC = () => {
   return (
-    <Flex gap={8}>
+    <Flex gap={8} display={{ base: "none", xl: "flex" }}>
       <Stack
-        display={["none", "none", "flex"]}
+        display="flex"
         direction="row"
         alignItems="center"
         color="gray.50"
@@ -45,7 +45,7 @@ export const DesktopMenu: React.FC = () => {
         />
         <HoverMenu title="Company" items={COMPANY} />
         <TrackedLinkButton
-          display={{ base: "none", xl: "flex" }}
+          display="flex"
           bgColor="white"
           _hover={{
             bgColor: "white",
