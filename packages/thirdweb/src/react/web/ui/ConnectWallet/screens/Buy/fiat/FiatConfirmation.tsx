@@ -9,8 +9,8 @@ import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { TokenSymbol } from "../../../../components/token/TokenSymbol.js";
 import { iconSize } from "../../../../design-system/index.js";
-import { USDIcon } from "../../../icons/USDIcon.js";
 import { type ERC20OrNativeToken, NATIVE_TOKEN } from "../../nativeToken.js";
+import type { CurrencyMeta } from "./currencies.js";
 
 export function FiatConfirmation(props: {
   quote: BuyWithFiatQuote;
@@ -21,6 +21,7 @@ export function FiatConfirmation(props: {
   client: ThirdwebClient;
   toTokenAmount: string;
   onContinue: () => void;
+  currency: CurrencyMeta;
 }) {
   return (
     <Container p="lg">
@@ -60,7 +61,7 @@ export function FiatConfirmation(props: {
 
       {/* Fiat */}
       <Container flex="row" gap="sm" center="y">
-        <USDIcon size={iconSize.md} />
+        <props.currency.icon size={iconSize.md} />
         <Text color="primaryText">
           {props.quote.fromCurrency.amount}{" "}
           {props.quote.fromCurrency.currencySymbol}

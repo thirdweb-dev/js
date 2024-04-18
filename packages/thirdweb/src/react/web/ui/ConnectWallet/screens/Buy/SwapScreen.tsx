@@ -59,7 +59,12 @@ import { KadoScreen } from "./KadoScreen.js";
 import { PayWithCreditCard } from "./PayWIthCreditCard.js";
 import { PaymentSelection } from "./PaymentSelection.js";
 import { FeesButton } from "./buttons.js";
+import { CurrencySelection } from "./fiat/CurrencySelection.js";
 import { FiatConfirmation } from "./fiat/FiatConfirmation.js";
+import {
+  type CurrencyMeta,
+  defaultSelectedCurrency,
+} from "./fiat/currencies.js";
 import { BuyTokenInput } from "./swap/BuyTokenInput.js";
 import { SwapConfirmationScreen } from "./swap/ConfirmationScreen.js";
 import { FiatFees, SwapFees } from "./swap/Fees.js";
@@ -116,6 +121,7 @@ type Screen =
   | "select-to-token"
   | "confirmation"
   | "fiat-confirmation"
+  | "select-currency"
   | "kado-iframe";
 type DrawerScreen = "fees" | undefined;
 
@@ -247,6 +253,9 @@ export function BuyScreenContent(props: {
   );
 
   const [toToken, setToToken] = useState<ERC20OrNativeToken>(NATIVE_TOKEN);
+  const [selectedCurrency, setSelectedCurrency] = useState<CurrencyMeta>(
+    defaultSelectedCurrency,
+  );
 
   const deferredTokenAmount = useDebouncedValue(tokenAmount, 300);
 
@@ -292,10 +301,10 @@ export function BuyScreenContent(props: {
     gcTime: 30 * 1000,
   });
 
-  const onRampQuoteQuery = useBuyWithFiatQuote(
+  const fiatQuoteQuery = useBuyWithFiatQuote(
     method === "creditCard"
       ? {
-          fromCurrencySymbol: "USD", // TODO
+          fromCurrencySymbol: selectedCurrency.shorthand,
           toChainId: toChain.id,
           fromAddress: account.address,
           toAddress: account.address,
@@ -308,10 +317,24 @@ export function BuyScreenContent(props: {
       : undefined,
   );
 
-  if (screen === "kado-iframe" && onRampQuoteQuery.data) {
+  if (screen === "select-currency") {
+    return (
+      <CurrencySelection
+        onSelect={(c) => {
+          setSelectedCurrency(c);
+          setScreen("main");
+        }}
+        onBack={() => {
+          setScreen("main");
+        }}
+      />
+    );
+  }
+
+  if (screen === "kado-iframe" && fiatQuoteQuery.data) {
     return (
       <KadoScreen
-        quote={onRampQuoteQuery.data}
+        quote={fiatQuoteQuery.data}
         onBack={() => {
           setScreen("main");
         }}
@@ -320,10 +343,10 @@ export function BuyScreenContent(props: {
     );
   }
 
-  if (screen === "fiat-confirmation" && onRampQuoteQuery.data) {
+  if (screen === "fiat-confirmation" && fiatQuoteQuery.data) {
     return (
       <FiatConfirmation
-        quote={onRampQuoteQuery.data}
+        quote={fiatQuoteQuery.data}
         onBack={() => {
           setScreen("main");
         }}
@@ -335,6 +358,7 @@ export function BuyScreenContent(props: {
         onContinue={() => {
           setScreen("kado-iframe");
         }}
+        currency={selectedCurrency}
       />
     );
   }
@@ -436,12 +460,12 @@ export function BuyScreenContent(props: {
     Number(fromTokenBalanceQuery.data.displayValue) < Number(sourceTokenAmount);
 
   const disableSwapContinue = !swapQuote || isNotEnoughBalance;
-  const disableCreditCardContinue = !onRampQuoteQuery.data;
+  const disableCreditCardContinue = !fiatQuoteQuery.data;
   const switchChainRequired = props.activeChain.id !== fromChain.id;
 
   const errorToShow =
     (method === "crypto" && buyWithCryptoQuoteQuery.error) ||
-    (method === "creditCard" && onRampQuoteQuery.error);
+    (method === "creditCard" && fiatQuoteQuery.error);
 
   return (
     <Container animate="fadein">
@@ -491,11 +515,8 @@ export function BuyScreenContent(props: {
                         </Text>
 
                         <Spacer y="lg" />
-                        {onRampQuoteQuery.data && (
-                          <FiatFees
-                            quote={onRampQuoteQuery.data}
-                            align="left"
-                          />
+                        {fiatQuoteQuery.data && (
+                          <FiatFees quote={fiatQuoteQuery.data} align="left" />
                         )}
                       </div>
                     )}
@@ -587,14 +608,16 @@ export function BuyScreenContent(props: {
               {method === "creditCard" && (
                 <>
                   <PayWithCreditCard
-                    isLoading={onRampQuoteQuery.isLoading}
-                    value={onRampQuoteQuery.data?.fromCurrency.amount}
+                    isLoading={fiatQuoteQuery.isLoading}
+                    value={fiatQuoteQuery.data?.fromCurrency.amount}
                     client={client}
+                    currency={selectedCurrency}
+                    onSelectCurrency={() => setScreen("select-currency")}
                   />
                   <SecondaryInfo
-                    quoteIsLoading={onRampQuoteQuery.isLoading}
+                    quoteIsLoading={fiatQuoteQuery.isLoading}
                     estimatedSeconds={
-                      onRampQuoteQuery.data?.estimatedDurationSeconds
+                      fiatQuoteQuery.data?.estimatedDurationSeconds
                     }
                     onViewFees={() => setDrawerScreen("fees")}
                   />

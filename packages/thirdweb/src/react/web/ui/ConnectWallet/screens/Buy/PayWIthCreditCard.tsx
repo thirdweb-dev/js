@@ -1,15 +1,18 @@
+import styled from "@emotion/styled";
+import { ChevronDownIcon } from "@radix-ui/react-icons";
 import type { ThirdwebClient } from "../../../../../../client/client.js";
 import { Skeleton } from "../../../components/Skeleton.js";
 import { Container } from "../../../components/basic.js";
+import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
+import { useCustomTheme } from "../../../design-system/CustomThemeProvider.js";
 import {
   fontSize,
   iconSize,
   radius,
   spacing,
 } from "../../../design-system/index.js";
-import { USDIcon } from "../../icons/USDIcon.js";
-import { useBuyWithFiatSupportedCurrencies } from "./swap/useBuyWithFiatSupportedCurrencies.js";
+import type { CurrencyMeta } from "./fiat/currencies.js";
 
 /**
  * Shows an amount "value" and renders the selected token and chain
@@ -21,20 +24,13 @@ export function PayWithCreditCard(props: {
   value?: string;
   isLoading: boolean;
   client: ThirdwebClient;
+  currency: CurrencyMeta;
+  onSelectCurrency: () => void;
 }) {
-  const supportedCurrencies = useBuyWithFiatSupportedCurrencies(props.client);
-
-  // TODO: fix this
-  console.log({
-    supportedCurrencies: supportedCurrencies.data,
-  });
-
   return (
     <Container
       bg="tertiaryBg"
       borderColor="borderColor"
-      py="md"
-      px="sm"
       flex="row"
       style={{
         borderRadius: radius.md,
@@ -45,15 +41,23 @@ export function PayWithCreditCard(props: {
         borderBottom: "none",
         flexWrap: "nowrap",
         justifyContent: "space-between",
-        minHeight: "64px",
         alignItems: "center",
       }}
     >
       {/* Left */}
-      <Container flex="row" center="y" gap="sm">
-        <USDIcon size={iconSize.md} />
-        <Text color="primaryText">USD</Text>
-      </Container>
+      <CurrencyButton
+        variant="secondary"
+        onClick={props.onSelectCurrency}
+        style={{
+          minHeight: "64px",
+        }}
+      >
+        <props.currency.icon size={iconSize.md} />
+        <Container flex="row" center="y" gap="xxs">
+          <Text color="primaryText">{props.currency.shorthand}</Text>
+          <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
+        </Container>
+      </CurrencyButton>
 
       {/* Right */}
       <div
@@ -75,10 +79,28 @@ export function PayWithCreditCard(props: {
           <Skeleton width="100px" height={fontSize.lg} />
         ) : (
           <Text size="lg" color={props.value ? "primaryText" : "secondaryText"}>
-            {props.value ? `$${props.value}` : "--"}
+            {props.value ? `${props.value}` : "--"}
           </Text>
         )}
       </div>
     </Container>
   );
 }
+
+const CurrencyButton = /* @__PURE__ */ styled(Button)(() => {
+  const theme = useCustomTheme();
+  return {
+    background: "transparent",
+    border: "1px solid transparent",
+    "&:hover": {
+      background: "transparent",
+      borderColor: theme.colors.accentText,
+    },
+    justifyContent: "flex-start",
+    transition: "background 0.3s, border-color 0.3s",
+    gap: spacing.sm,
+    color: theme.colors.primaryText,
+    borderRadius: radius.md,
+    minWidth: "50%",
+  };
+});
