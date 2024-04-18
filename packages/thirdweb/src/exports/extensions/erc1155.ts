@@ -103,6 +103,15 @@ export {
   type SetClaimConditionsParams,
 } from "../../extensions/erc1155/drops/write/setClaimConditions.js";
 
+/**
+ * SIGNATURE extension for ERC1155
+ */
+export {
+  mintWithSignature,
+  type GenerateMintSignatureOptions,
+  generateMintSignature,
+} from "../../extensions/erc1155/write/sigMint.js";
+
 // EVENTS
 export { tokensLazyMintedEvent } from "../../extensions/erc1155/__generated__/ILazyMint/events/TokensLazyMinted.js";
 export { tokensClaimedEvent } from "../../extensions/erc1155/__generated__/IDrop1155/events/TokensClaimed.js";
