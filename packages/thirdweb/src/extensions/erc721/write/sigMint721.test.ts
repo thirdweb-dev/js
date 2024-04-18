@@ -19,7 +19,7 @@ import { generateMintSignature, mintWithSignature } from "./sigMint.js";
 // skip this test suite if there is no secret key available to test with
 // TODO: remove reliance on secret key during unit tests entirely
 describe.runIf(process.env.TW_SECRET_KEY)(
-  "generateMintSignature",
+  "generateMintSignature721",
   {
     timeout: 120000,
   },
@@ -94,6 +94,17 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       expect(payload.validityEndTimestamp).toBeGreaterThan(0n);
       expect(payload.uid).toBeDefined();
       expect(signature.length).toBe(132);
+
+      const transaction = mintWithSignature({
+        contract: erc721Contract,
+        payload,
+        signature,
+      });
+      const { transactionHash } = await sendTransaction({
+        transaction,
+        account: TEST_ACCOUNT_A,
+      });
+      expect(transactionHash.length).toBe(66);
     });
 
     it("should generate a mint signature with custom values", async () => {
@@ -106,8 +117,8 @@ describe.runIf(process.env.TW_SECRET_KEY)(
           metadata: "https://example.com/token",
           price: 0.2,
           currency: USDT_CONTRACT_ADDRESS,
-          validityStartTimestamp: new Date(1635724800), // October 31, 2021 00:00:00 UTC
-          validityEndTimestamp: new Date(1667260800), // October 31, 2022 00:00:00 UTC
+          validityStartTimestamp: new Date(1635724800),
+          validityEndTimestamp: new Date(1867260800),
           uid: toHex("abcdef1234567890", { size: 32 }),
         },
         account: TEST_ACCOUNT_A,
@@ -126,7 +137,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       expect(payload.price).toBe(200000000000000000n);
       expect(payload.currency).toBe(USDT_CONTRACT_ADDRESS);
       expect(payload.validityStartTimestamp).toBe(1635724n);
-      expect(payload.validityEndTimestamp).toBe(1667260n);
+      expect(payload.validityEndTimestamp).toBe(1867260n);
       expect(payload.uid).toBe(
         "0x6162636465663132333435363738393000000000000000000000000000000000",
       );
