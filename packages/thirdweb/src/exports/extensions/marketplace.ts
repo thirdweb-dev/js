@@ -185,6 +185,10 @@ export {
 } from "../../extensions/marketplace/read/offers/getOffer.js";
 
 // WRITE
+export {
+  makeOffer,
+  type MakeOfferParams,
+} from "../../extensions/marketplace/write/offers/makeOffer.js";
 
 // EVENTS
 export {
