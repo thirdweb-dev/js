@@ -7,7 +7,7 @@ import {
   ModalHeader,
   noScrollBar,
 } from "../../../components/basic.js";
-import { StyledDiv, StyledIframe } from "../../../design-system/elements.js";
+import { StyledIframe } from "../../../design-system/elements.js";
 import { radius } from "../../../design-system/index.js";
 
 /**
@@ -30,6 +30,7 @@ export function KadoScreen(props: {
   useEffect(() => {
     function handlePostMessage(event: MessageEvent) {
       if (event.origin !== iframeOrigin) {
+        console.log("ignore:", event);
         return;
       }
 

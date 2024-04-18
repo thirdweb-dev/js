@@ -63,7 +63,7 @@ export function FiatFees(props: {
           // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
           <Text color="primaryText" size="sm" key={i}>
             {feeAmount === 0 ? "~" : ""}
-            {fee.currencySymbol} {feeAmount}{" "}
+            {feeAmount} {fee.currencySymbol}{" "}
             {fee.feeType === "NETWORK" ? "(Gas)" : ""}
           </Text>
         );

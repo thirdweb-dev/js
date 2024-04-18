@@ -243,15 +243,10 @@ export function BuyScreenContent(props: {
 
   // selected tokens
   const [fromToken, setFromToken] = useState<ERC20OrNativeToken>(
-    (props.buyForTx ? props.supportedTokens[toChain.id]?.[0] : undefined) ||
-      NATIVE_TOKEN,
+    props.supportedTokens[toChain.id]?.[0] || NATIVE_TOKEN,
   );
 
-  const [toToken, setToToken] = useState<ERC20OrNativeToken>(
-    props.buyForTx
-      ? NATIVE_TOKEN
-      : props.supportedTokens[toChain.id]?.[0] || NATIVE_TOKEN,
-  );
+  const [toToken, setToToken] = useState<ERC20OrNativeToken>(NATIVE_TOKEN);
 
   const deferredTokenAmount = useDebouncedValue(tokenAmount, 300);
 
@@ -687,7 +682,11 @@ export function BuyScreenContent(props: {
               data-disabled={disableCreditCardContinue}
               fullWidth
               onClick={async () => {
-                setScreen("fiat-confirmation");
+                if (isNativeToken(toToken)) {
+                  setScreen("kado-iframe");
+                } else {
+                  setScreen("fiat-confirmation");
+                }
               }}
               gap="sm"
             >

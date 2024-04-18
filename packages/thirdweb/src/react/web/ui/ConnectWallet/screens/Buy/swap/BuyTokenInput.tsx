@@ -102,7 +102,7 @@ export function BuyTokenInput(props: {
                   ? "26px"
                   : props.value.length > 6
                     ? "34px"
-                    : "45px",
+                    : "50px",
               boxShadow: "none",
               padding: "0",
               paddingBlock: "2px",
