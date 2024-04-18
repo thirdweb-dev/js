@@ -1,11 +1,13 @@
 import { type UseMutationResult, useMutation } from "@tanstack/react-query";
-import { estimateGasCost } from "../../../../exports/transaction.js";
-import { resolvePromisedValue } from "../../../../exports/utils.js";
-import { getWalletBalance } from "../../../../exports/wallets.js";
+import { estimateGasCost } from "../../../../transaction/actions/estimate-gas-cost.js";
 import { sendTransaction } from "../../../../transaction/actions/send-transaction.js";
 import type { WaitForReceiptOptions } from "../../../../transaction/actions/wait-for-tx-receipt.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
-import type { GetWalletBalanceResult } from "../../../../wallets/utils/getWalletBalance.js";
+import { resolvePromisedValue } from "../../../../utils/promise/resolve-promised-value.js";
+import {
+  type GetWalletBalanceResult,
+  getWalletBalance,
+} from "../../../../wallets/utils/getWalletBalance.js";
 import { fetchSwapSupportedChains } from "../../../web/ui/ConnectWallet/screens/Buy/swap/useSwapSupportedChains.js";
 import { useActiveAccount } from "../wallets/wallet-hooks.js";
 
