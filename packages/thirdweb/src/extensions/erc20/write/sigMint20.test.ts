@@ -13,21 +13,21 @@ import {
 } from "../../../contract/contract.js";
 import { sendTransaction } from "../../../transaction/actions/send-transaction.js";
 import { toHex } from "../../../utils/encoding/hex.js";
-import { deployERC1155Contract } from "../../prebuilts/deploy-erc1155.js";
+import { deployERC20Contract } from "../../prebuilts/deploy-erc20.js";
 import { generateMintSignature, mintWithSignature } from "./sigMint.js";
 
 // skip this test suite if there is no secret key available to test with
 // TODO: remove reliance on secret key during unit tests entirely
 describe.runIf(process.env.TW_SECRET_KEY)(
-  "generateMintSignature1155",
+  "generateMintSignature20",
   {
     timeout: 120000,
   },
   () => {
-    let erc1155Contract: ThirdwebContract;
+    let erc20Contract: ThirdwebContract;
 
     beforeAll(async () => {
-      const contractAddress = await deployERC1155Contract({
+      const contractAddress = await deployERC20Contract({
         account: TEST_ACCOUNT_A,
         chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
@@ -35,9 +35,9 @@ describe.runIf(process.env.TW_SECRET_KEY)(
           name: "Test",
           symbol: "TST",
         },
-        type: "TokenERC1155",
+        type: "TokenERC20",
       });
-      erc1155Contract = getContract({
+      erc20Contract = getContract({
         address: contractAddress,
         chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
@@ -48,18 +48,13 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       const { payload, signature } = await generateMintSignature({
         mintRequest: {
           to: TEST_ACCOUNT_B.address,
-          quantity: 10n,
-          metadata: {
-            name: "My NFT",
-            description: "This is my NFT",
-            image: "https://example.com/image.png",
-          },
+          quantity: "0.1",
         },
         account: TEST_ACCOUNT_A,
-        contract: erc1155Contract,
+        contract: erc20Contract,
       });
       const transaction = mintWithSignature({
-        contract: erc1155Contract,
+        contract: erc20Contract,
         payload,
         signature,
       });
@@ -74,24 +69,18 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       const { payload, signature } = await generateMintSignature({
         mintRequest: {
           to: TEST_ACCOUNT_B.address,
-          quantity: 10n,
-          metadata: "https://example.com/token",
+          quantity: 0.1,
         },
         account: TEST_ACCOUNT_A,
-        contract: erc1155Contract,
+        contract: erc20Contract,
       });
 
       expect(payload.to).toBe("0x70997970C51812dc3A010C7d01b50e0d17dc79C8");
-      expect(payload.royaltyRecipient).toBe(
-        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-      );
-      expect(payload.royaltyBps).toBe(0n);
       expect(payload.primarySaleRecipient).toBe(
         "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
       );
-      expect(payload.uri).toBe("https://example.com/token");
-      expect(payload.pricePerToken).toBe(0n);
-      expect(payload.quantity).toBe(10n);
+      expect(payload.quantity).toBe(100000000000000000n);
+      expect(payload.price).toBe(0n);
       expect(payload.currency).toBe(NATIVE_TOKEN_ADDRESS);
       expect(payload.validityStartTimestamp).toBe(0n);
       expect(payload.validityEndTimestamp).toBeGreaterThan(0n);
@@ -99,7 +88,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       expect(signature.length).toBe(132);
 
       const transaction = mintWithSignature({
-        contract: erc1155Contract,
+        contract: erc20Contract,
         payload,
         signature,
       });
@@ -114,11 +103,8 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       const { payload, signature } = await generateMintSignature({
         mintRequest: {
           to: TEST_ACCOUNT_B.address,
-          quantity: 10n,
-          royaltyRecipient: TEST_ACCOUNT_B.address,
-          royaltyBps: 500,
+          quantity: "0.005",
           primarySaleRecipient: TEST_ACCOUNT_A.address,
-          metadata: "https://example.com/token",
           price: 0.2,
           currency: USDT_CONTRACT_ADDRESS,
           validityStartTimestamp: new Date(1635724800),
@@ -126,20 +112,15 @@ describe.runIf(process.env.TW_SECRET_KEY)(
           uid: toHex("abcdef1234567890", { size: 32 }),
         },
         account: TEST_ACCOUNT_A,
-        contract: erc1155Contract,
+        contract: erc20Contract,
       });
 
       expect(payload.to).toBe("0x70997970C51812dc3A010C7d01b50e0d17dc79C8");
-      expect(payload.royaltyRecipient).toBe(
-        "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
-      );
-      expect(payload.royaltyBps).toBe(500n);
       expect(payload.primarySaleRecipient).toBe(
         "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
       );
-      expect(payload.uri).toBe("https://example.com/token");
-      expect(payload.pricePerToken).toBe(200000000000000000n);
-      expect(payload.quantity).toBe(10n);
+      expect(payload.quantity).toBe(5000000000000000n);
+      expect(payload.price).toBe(200000000000000000n);
       expect(payload.currency).toBe(USDT_CONTRACT_ADDRESS);
       expect(payload.validityStartTimestamp).toBe(1635724n);
       expect(payload.validityEndTimestamp).toBe(1867260n);

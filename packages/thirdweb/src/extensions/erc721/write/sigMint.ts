@@ -1,4 +1,5 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
+import type { Hex } from "viem";
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/addresses.js";
 import type { ThirdwebContract } from "../../../contract/contract.js";
 import { upload } from "../../../storage/upload.js";
@@ -93,7 +94,7 @@ export async function generateMintSignature(
     uri = mintRequest.metadata;
   }
 
-  const payload = {
+  const payload: PayloadType = {
     to: mintRequest.to,
     royaltyRecipient: mintRequest.royaltyRecipient || account.address,
     royaltyBps: toBigInt(mintRequest.royaltyBps || 0),
@@ -103,8 +104,8 @@ export async function generateMintSignature(
     currency: mintRequest.currency || NATIVE_TOKEN_ADDRESS,
     validityStartTimestamp: dateToSeconds(startTime),
     validityEndTimestamp: dateToSeconds(endTime),
-    uid,
-  } as PayloadType;
+    uid: uid as Hex,
+  };
 
   const signature = await account.signTypedData({
     domain: {

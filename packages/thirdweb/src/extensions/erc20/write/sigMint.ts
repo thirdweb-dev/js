@@ -1,24 +1,21 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import { maxUint256 } from "viem";
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/addresses.js";
 import type { ThirdwebContract } from "../../../contract/contract.js";
-import { upload } from "../../../storage/upload.js";
-import { toBigInt } from "../../../utils/bigint.js";
 import { dateToSeconds, tenYearsFromNow } from "../../../utils/date.js";
 import type { Hex } from "../../../utils/encoding/hex.js";
-import type { NFTInput } from "../../../utils/nft/parseNft.js";
 import { toUnits } from "../../../utils/units.js";
 import { randomBytes32 } from "../../../utils/uuid.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
+import { name } from "../../common/read/name.js";
 import { decimals } from "../../erc20/read/decimals.js";
-import { mintWithSignature as generatedMintWithSignature } from "../__generated__/ISignatureMintERC1155/write/mintWithSignature.js";
+import { mintWithSignature as generatedMintWithSignature } from "../__generated__/ISignatureMintERC20/write/mintWithSignature.js";
 
 /**
- * Mints a new ERC1155 token with the given minter signature
+ * Mints a new ERC20 token with the given minter signature
  * @param options - The transaction options.
  * @example
  * ```ts
- * import { mintWithSignature, generateMintSignature } from "thirdweb/extensions/erc1155";
+ * import { mintWithSignature, generateMintSignature } from "thirdweb/extensions/erc20";
  *
  * const { payload, signature } = await generateMintSignature(...)
  *
@@ -29,7 +26,7 @@ import { mintWithSignature as generatedMintWithSignature } from "../__generated_
  * });
  * await sendTransaction({ transaction, account });
  * ```
- * @extension ERC1155
+ * @extension ERC20
  * @returns A promise that resolves to the transaction result.
  */
 export const mintWithSignature = generatedMintWithSignature;
@@ -41,11 +38,11 @@ export type GenerateMintSignatureOptions = {
 };
 
 /**
- * Generates the payload and signature for minting an ERC1155 token.
+ * Generates the payload and signature for minting an ERC20 token.
  * @param options - The options for the minting process.
  * @example
  * ```ts
- * import { mintWithSignature, generateMintSignature } from "thirdweb/extensions/erc1155";
+ * import { mintWithSignature, generateMintSignature } from "thirdweb/extensions/erc20";
  *
  * const { payload, signature } = await generateMintSignature({
  *   account,
@@ -53,11 +50,6 @@ export type GenerateMintSignatureOptions = {
  *   mintRequest: {
  *     to: "0x...",
  *     quantity: 10n,
- *     metadata: {
- *       name: "My NFT",
- *       description: "This is my NFT",
- *       image: "https://example.com/image.png",
- *     },
  *   },
  * });
  *
@@ -68,7 +60,7 @@ export type GenerateMintSignatureOptions = {
  * });
  * await sendTransaction({ transaction, account });
  * ```
- * @extension ERC1155
+ * @extension ERC20
  * @returns A promise that resolves to the payload and signature.
  */
 export async function generateMintSignature(
@@ -76,8 +68,8 @@ export async function generateMintSignature(
 ) {
   const { mintRequest, account, contract } = options;
   let priceInWei = 0n;
+  const d = await decimals(options).catch(() => 18);
   if (mintRequest.price) {
-    const d = await decimals(options).catch(() => 18);
     priceInWei = toUnits(mintRequest.price.toString(), d);
   }
 
@@ -85,43 +77,33 @@ export async function generateMintSignature(
   const endTime = mintRequest.validityEndTimestamp || tenYearsFromNow();
 
   const uid = mintRequest.uid || (await randomBytes32());
-
-  let uri = "";
-  if ("metadata" in mintRequest) {
-    if (typeof mintRequest.metadata === "object") {
-      uri = await upload({
-        client: options.contract.client,
-        files: [mintRequest.metadata],
-      });
-    } else {
-      uri = mintRequest.metadata;
-    }
-  }
+  const amountWithDecimals = toUnits(mintRequest.quantity.toString(), d);
 
   const payload: PayloadType = {
-    tokenId:
-      "tokenId" in mintRequest ? mintRequest.tokenId || maxUint256 : maxUint256,
-    quantity: mintRequest.quantity,
+    quantity: amountWithDecimals,
     to: mintRequest.to,
-    royaltyRecipient: mintRequest.royaltyRecipient || account.address,
-    royaltyBps: toBigInt(mintRequest.royaltyBps || 0),
     primarySaleRecipient: mintRequest.primarySaleRecipient || account.address,
-    uri: uri || "",
-    pricePerToken: priceInWei,
+    price: priceInWei,
     currency: mintRequest.currency || NATIVE_TOKEN_ADDRESS,
     validityStartTimestamp: dateToSeconds(startTime),
     validityEndTimestamp: dateToSeconds(endTime),
     uid: uid as Hex,
   };
 
+  // ERC20Permit (EIP-712) spec differs from signature mint 721, 1155.
+  // it uses the token name in the domain separator
+  const tokenName = await name({
+    contract,
+  });
+
   const signature = await account.signTypedData({
     domain: {
-      name: "TokenERC1155",
+      name: tokenName,
       version: "1",
       chainId: contract.chain.id,
       verifyingContract: contract.address as Hex,
     },
-    types: { MintRequest: MintRequest1155 },
+    types: { MintRequest: MintRequest20 },
     primaryType: "MintRequest",
     message: payload,
   });
@@ -131,36 +113,25 @@ export async function generateMintSignature(
 type PayloadType = AbiParameterToPrimitiveType<{
   type: "tuple";
   name: "payload";
-  components: typeof MintRequest1155;
+  components: typeof MintRequest20;
 }>;
 
 type GeneratePayloadInput = {
   to: string;
-  quantity: bigint;
-  royaltyRecipient?: string;
-  royaltyBps?: number;
+  quantity: string | number;
   primarySaleRecipient?: string;
   price?: number | string;
   currency?: string;
   validityStartTimestamp?: Date;
   validityEndTimestamp?: Date;
   uid?: string;
-} & (
-  | {
-      metadata: NFTInput | string;
-    }
-  | { tokenId: bigint }
-);
+};
 
-const MintRequest1155 = [
+export const MintRequest20 = [
   { name: "to", type: "address" },
-  { name: "royaltyRecipient", type: "address" },
-  { name: "royaltyBps", type: "uint256" },
   { name: "primarySaleRecipient", type: "address" },
-  { name: "tokenId", type: "uint256" },
-  { name: "uri", type: "string" },
   { name: "quantity", type: "uint256" },
-  { name: "pricePerToken", type: "uint256" },
+  { name: "price", type: "uint256" },
   { name: "currency", type: "address" },
   { name: "validityStartTimestamp", type: "uint128" },
   { name: "validityEndTimestamp", type: "uint128" },
