@@ -17,8 +17,9 @@ import { tokensMintedEvent as tokensMintedEventErc721 } from "../../erc721/__gen
 import { mintTo as mintToErc721 } from "../../erc721/write/mintTo.js";
 import { balanceOf as balanceOfErc1155 } from "../../erc1155/__generated__/IERC1155/read/balanceOf.js";
 import { setApprovalForAll } from "../../erc1155/__generated__/IERC1155/write/setApprovalForAll.js";
-import { tokensMintedEvent as tokensMintedEventErc1155 } from "../../erc1155/__generated__/IMintableERC1155/events/TokensMinted.js";
-import { mintTo as mintToErc1155 } from "../../erc1155/write/mintTo.js";
+import { claimTo } from "../../erc1155/drops/write/claimTo.js";
+import { setClaimConditions } from "../../erc1155/drops/write/setClaimConditions.js";
+import { lazyMint } from "../../erc1155/write/lazyMint.js";
 import { deployERC721Contract } from "../../prebuilts/deploy-erc721.js";
 import { deployERC1155Contract } from "../../prebuilts/deploy-erc1155.js";
 import { deployMarketplaceContract } from "../../prebuilts/deploy-marketplace.js";
@@ -226,7 +227,7 @@ describe("Marketplace: Direct Listings", () => {
     });
   });
 
-  describe("ERC1155", () => {
+  describe("ERC1155 Drop", () => {
     let nftTokenId: bigint;
     let marketplaceContract: ThirdwebContract;
     let erc1155Contract: ThirdwebContract;
@@ -247,7 +248,7 @@ describe("Marketplace: Direct Listings", () => {
       // also deploy an ERC721 contract
       erc1155Contract = getContract({
         address: await deployERC1155Contract({
-          type: "TokenERC1155",
+          type: "DropERC1155",
           account: TEST_ACCOUNT_A,
           chain: ANVIL_CHAIN,
           client: TEST_CLIENT,
@@ -259,25 +260,43 @@ describe("Marketplace: Direct Listings", () => {
         chain: ANVIL_CHAIN,
       });
 
-      const receipt = await sendAndConfirmTransaction({
-        transaction: mintToErc1155({
-          contract: erc1155Contract,
-          to: TEST_ACCOUNT_A.address,
-          nft: { name: "Test:ERC1155:DirectListing" },
-          supply: 10n,
+      // lazy mint 10 tokens
+      await expect(
+        sendAndConfirmTransaction({
+          transaction: lazyMint({
+            contract: erc1155Contract,
+            nfts: [{ name: "Test:ERC1155:DirectListing" }],
+          }),
+          account: TEST_ACCOUNT_A,
         }),
-        account: TEST_ACCOUNT_A,
-      });
+      ).resolves.toBeDefined();
 
-      const mintEvents = parseEventLogs({
-        events: [tokensMintedEventErc1155()],
-        logs: receipt.logs,
-      });
+      // set claim condition (just public is fine)
+      await expect(
+        sendAndConfirmTransaction({
+          transaction: setClaimConditions({
+            contract: erc1155Contract,
+            tokenId: 0n,
+            phases: [{}],
+          }),
+          account: TEST_ACCOUNT_A,
+        }),
+      ).resolves.toBeDefined();
 
-      expect(mintEvents.length).toBe(1);
-      expect(mintEvents[0]?.args.tokenIdMinted).toBeDefined();
+      // claim 10 tokens
+      await expect(
+        sendAndConfirmTransaction({
+          transaction: claimTo({
+            contract: erc1155Contract,
+            tokenId: 0n,
+            to: TEST_ACCOUNT_A.address,
+            quantity: 10n,
+          }),
+          account: TEST_ACCOUNT_A,
+        }),
+      ).resolves.toBeDefined();
 
-      nftTokenId = mintEvents[0]?.args.tokenIdMinted as bigint;
+      nftTokenId = 0n;
       // does a lot of stuff, this may take a while
     }, 120_000);
 
@@ -316,7 +335,7 @@ describe("Marketplace: Direct Listings", () => {
       ).rejects.toThrowErrorMatchingInlineSnapshot(`
         [TransactionError: Error - Marketplace: not owner or approved tokens.
 
-        contract: 0xE329bf952b8DbF6b0AAB912D0bCfF5c9d0901A75
+        contract: ${marketplaceContract.address}
         chainId: 31337]
       `);
 
