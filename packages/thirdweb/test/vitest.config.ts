@@ -13,7 +13,7 @@ export default defineConfig({
     },
     benchmark: {},
     coverage: {
-      all: true,
+      all: false,
       provider: "v8",
       reporter: process.env.CI ? ["lcov"] : ["text", "json", "html"],
       exclude: [
