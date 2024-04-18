@@ -87,6 +87,8 @@ export {
 // ENGLISH AUCTIONS
 // ----------------------------
 
+export type { EnglishAuction } from "../../extensions/marketplace/english-auctions/types.js";
+
 // READ
 export { totalAuctions } from "../../extensions/marketplace/__generated__/IEnglishAuctions/read/totalAuctions.js";
 export {
@@ -161,6 +163,8 @@ export {
 // ----------------------------
 // OFFERS
 // ----------------------------
+
+export type { Offer } from "../../extensions/marketplace/offers/types.js";
 
 // READ
 export { totalOffers } from "../../extensions/marketplace/__generated__/IOffers/read/totalOffers.js";
