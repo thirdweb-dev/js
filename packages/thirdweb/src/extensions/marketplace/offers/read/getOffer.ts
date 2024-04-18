@@ -5,8 +5,8 @@ import {
   type GetOfferParams as GetOfferParamsGenerated,
   getOffer as getOfferGenerated,
 } from "../../__generated__/IOffers/read/getOffer.js";
-import type { Offer } from "../../types.js";
-import { mapOffer } from "../../utils.js";
+import type { Offer } from "../types.js";
+import { mapOffer } from "../utils.js";
 
 export type GetOfferParams = GetOfferParamsGenerated;
 

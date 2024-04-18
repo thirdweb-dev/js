@@ -4,8 +4,9 @@ import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import { min } from "../../../../utils/bigint.js";
 import { getAllValidOffers as getAllValidOffersGenerated } from "../../__generated__/IOffers/read/getAllValidOffers.js";
 import { totalOffers } from "../../__generated__/IOffers/read/totalOffers.js";
-import type { Offer } from "../../types.js";
-import { getAllInBatches, mapOffer } from "../../utils.js";
+import { getAllInBatches } from "../../utils.js";
+import type { Offer } from "../types.js";
+import { mapOffer } from "../utils.js";
 
 const DEFAULT_QUERY_ALL_COUNT = 100n;
 

@@ -2,8 +2,8 @@ import type { Address } from "abitype";
 import { isNativeTokenAddress } from "../../../../constants/addresses.js";
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import { buyFromListing as generatedBuyFromListing } from "../../__generated__/IDirectListings/write/buyFromListing.js";
-import { getListing } from "../../read/direct/getListing.js";
-import { isListingValid } from "../../utils.js";
+import { getListing } from "../read/getListing.js";
+import { isListingValid } from "../utils.js";
 
 export type BuyFromListingParams = {
   listingId: bigint;

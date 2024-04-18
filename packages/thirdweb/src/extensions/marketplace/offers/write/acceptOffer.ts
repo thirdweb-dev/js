@@ -6,7 +6,7 @@ import {
   type AcceptOfferParams as GeneratedAcceptOfferParams,
   acceptOffer as generatedAcceptOffer,
 } from "../../__generated__/IOffers/write/acceptOffer.js";
-import { getOffer } from "../../read/offers/getOffer.js";
+import { getOffer } from "../read/getOffer.js";
 
 export type AcceptOfferParams = GeneratedAcceptOfferParams;
 
