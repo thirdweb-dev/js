@@ -46,10 +46,11 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  * @component
  */
 export function ConnectButton(props: ConnectButtonProps) {
-  const wallets = props.wallets || getDefaultWallets();
-  const activeAccount = useActiveAccount();
+  const wallets = useMemo(
+    () => props.wallets || getDefaultWallets(),
+    [props.wallets],
+  );
   const localeQuery = useConnectLocale(props.locale || "en_US");
-  const [showSignatureModal, setShowSignatureModal] = useState(false);
 
   const autoConnectComp = props.autoConnect !== false && (
     <AutoConnect
@@ -64,13 +65,6 @@ export function ConnectButton(props: ConnectButtonProps) {
       accountAbstraction={props.accountAbstraction}
     />
   );
-
-  // if wallet gets disconnected suddently, close the signature modal if it's open
-  useEffect(() => {
-    if (!activeAccount) {
-      setShowSignatureModal(false);
-    }
-  }, [activeAccount]);
 
   if (!localeQuery.data) {
     return (
@@ -119,27 +113,8 @@ export function ConnectButton(props: ConnectButtonProps) {
       }}
     >
       <WalletUIStatesProvider theme={props.theme}>
-        <ConnectButtonInner
-          {...props}
-          connectLocale={localeQuery.data}
-          setShowSignatureModal={setShowSignatureModal}
-        />
+        <ConnectButtonInner {...props} connectLocale={localeQuery.data} />
         <ConnectModal />
-        <Modal
-          size="compact"
-          open={showSignatureModal}
-          setOpen={setShowSignatureModal}
-        >
-          <SignatureScreen
-            client={props.client}
-            connectLocale={localeQuery.data}
-            modalSize="compact"
-            termsOfServiceUrl={props.connectModal?.termsOfServiceUrl}
-            privacyPolicyUrl={props.connectModal?.privacyPolicyUrl}
-            onDone={() => setShowSignatureModal(false)}
-            auth={props.auth}
-          />
-        </Modal>
         {autoConnectComp}
       </WalletUIStatesProvider>
     </ConnectUIContext.Provider>
@@ -149,11 +124,18 @@ export function ConnectButton(props: ConnectButtonProps) {
 function ConnectButtonInner(
   props: ConnectButtonProps & {
     connectLocale: ConnectLocale;
-    setShowSignatureModal: (value: boolean) => void;
   },
 ) {
-  const siweAuth = useSiweAuth(props.auth);
   const activeAccount = useActiveAccount();
+  const siweAuth = useSiweAuth(props.auth);
+  const [showSignatureModal, setShowSignatureModal] = useState(false);
+
+  // if wallet gets disconnected suddently, close the signature modal if it's open
+  useEffect(() => {
+    if (!activeAccount) {
+      setShowSignatureModal(false);
+    }
+  }, [activeAccount]);
 
   const theme = props.theme || "dark";
   const connectionStatus = useActiveWalletConnectionStatus();
@@ -218,30 +200,71 @@ function ConnectButtonInner(
     );
   }
 
-  if (siweAuth.requiresAuth && !siweAuth.isLoggedIn) {
-    return (
-      <Button
-        variant="primary"
-        type="button"
-        onClick={() => {
-          props.setShowSignatureModal(true);
-        }}
-        className={props.signInButton?.className}
-        style={{
-          minWidth: "140px",
-          ...props.signInButton?.style,
-        }}
-      >
-        {siweAuth.isLoggingIn ? (
+  if (siweAuth.requiresAuth) {
+    // loading state if loading
+    // TODO: figure out a way to consolidate the loading states with the ones from locale loading
+    if (siweAuth.isLoading) {
+      return (
+        <AnimatedButton
+          disabled={true}
+          className={`${
+            props.connectButton?.className || ""
+          } ${TW_CONNECT_WALLET}`}
+          variant="primary"
+          type="button"
+          style={{
+            minWidth: "140px",
+            ...props.connectButton?.style,
+          }}
+        >
           <Spinner size="sm" color="primaryButtonText" />
-        ) : (
-          <Container flex="row" center="y" gap="sm">
-            <LockIcon size={iconSize.sm} />
-            <span> {props.signInButton?.label || locale.signIn} </span>
-          </Container>
-        )}
-      </Button>
-    );
+        </AnimatedButton>
+      );
+    }
+    // sign in button + modal if *not* loading and *not* logged in
+    if (!siweAuth.isLoggedIn) {
+      return (
+        <>
+          <Button
+            variant="primary"
+            type="button"
+            onClick={() => {
+              setShowSignatureModal(true);
+            }}
+            className={props.signInButton?.className}
+            style={{
+              minWidth: "140px",
+              ...props.signInButton?.style,
+            }}
+          >
+            {siweAuth.isLoggingIn ? (
+              <Spinner size="sm" color="primaryButtonText" />
+            ) : (
+              <Container flex="row" center="y" gap="sm">
+                <LockIcon size={iconSize.sm} />
+                <span> {props.signInButton?.label || locale.signIn} </span>
+              </Container>
+            )}
+          </Button>
+          <Modal
+            size="compact"
+            open={showSignatureModal}
+            setOpen={setShowSignatureModal}
+          >
+            <SignatureScreen
+              client={props.client}
+              connectLocale={locale}
+              modalSize="compact"
+              termsOfServiceUrl={props.connectModal?.termsOfServiceUrl}
+              privacyPolicyUrl={props.connectModal?.privacyPolicyUrl}
+              onDone={() => setShowSignatureModal(false)}
+              auth={props.auth}
+            />
+          </Modal>
+        </>
+      );
+    }
+    // otherwise, show the details button
   }
 
   return (
