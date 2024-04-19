@@ -47,22 +47,25 @@ export function ThirdwebProvider(props: React.PropsWithChildren) {
                       console.error("[Transaction Error]", e);
                     })
                     .then(() => {
-                      return queryClient.invalidateQueries({
-                        queryKey: [
-                          // invalidate any readContract queries for this chainId:contractAddress
-                          [
-                            "readContract",
-                            variables.__contract?.chain.id,
-                            variables.__contract?.address,
-                          ] as const,
+                      return Promise.all([
+                        queryClient.invalidateQueries({
+                          queryKey:
+                            // invalidate any readContract queries for this chainId:contractAddress
+                            [
+                              "readContract",
+                              variables.__contract?.chain.id,
+                              variables.__contract?.address,
+                            ] as const,
+                        }),
+                        queryClient.invalidateQueries({
                           // invalidate any walletBalance queries for this chainId
                           // TODO: add wallet address in here if we can get it somehow
-                          [
+                          queryKey: [
                             "walletBalance",
                             variables.__contract?.chain.id,
                           ] as const,
-                        ],
-                      });
+                        }),
+                      ]);
                     });
                 }
               }
