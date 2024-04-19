@@ -58,34 +58,7 @@ export const PartnerCarousel: React.FC = () => {
       pt={20}
       mb={{ base: 20, md: 24 }}
     >
-      {/* desktop - 1 row with all logos */}
-      <Marquee display={{ base: "none", lg: "flex" }}>
-        <PartnerLogo partner="coinbase" />
-        <PartnerLogo partner="polygon" />
-        <PartnerLogo partner="aws" />
-        <PartnerLogo partner="rarible" />
-        <PartnerLogo partner="treasure" />
-        <PartnerLogo partner="pixels" />
-        <PartnerLogo partner="shopify" />
-        <PartnerLogo partner="avacloud" />
-        <PartnerLogo partner="animoca" />
-        <PartnerLogo partner="mcfarlane" />
-        <PartnerLogo partner="coolcats" />
-        <PartnerLogo partner="xai" />
-        <PartnerLogo partner="courtyard" />
-        <PartnerLogo partner="aavegotchi" />
-        <PartnerLogo partner="infinigods" />
-        <PartnerLogo partner="nyfw" />
-        <PartnerLogo partner="fractal" />
-        <PartnerLogo partner="ztx" />
-        <PartnerLogo partner="torque" />
-        <PartnerLogo partner="gala_games" />
-        <PartnerLogo partner="mirror" />
-        <PartnerLogo partner="layer3" />
-      </Marquee>
-
-      {/* mobile - 2 rows with logos split in two rows */}
-      <Marquee display={{ base: "flex", lg: "none" }}>
+      <Marquee display="flex">
         <PartnerLogo partner="coinbase" />
         <PartnerLogo partner="polygon" />
         <PartnerLogo partner="aws" />
@@ -100,10 +73,7 @@ export const PartnerCarousel: React.FC = () => {
         <PartnerLogo partner="paradigm" />
       </Marquee>
 
-      <Marquee
-        animationDirection="reverse"
-        display={{ base: "flex", lg: "none" }}
-      >
+      <Marquee animationDirection="reverse" display="flex">
         <PartnerLogo partner="animoca" />
         <PartnerLogo partner="treasure" />
         <PartnerLogo partner="pixels" />
