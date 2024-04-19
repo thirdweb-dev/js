@@ -96,4 +96,9 @@ export {
   AutoConnect,
   type AutoConnectProps,
 } from "../react/core/hooks/connection/useAutoConnect.js";
-export type { SiweAuthOptions } from "../react/core/hooks/auth/useSiweAuth.js";
+
+// auth
+export {
+  useSiweAuth,
+  type SiweAuthOptions,
+} from "../react/core/hooks/auth/useSiweAuth.js";

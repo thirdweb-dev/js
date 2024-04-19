@@ -3,20 +3,71 @@ import type { LoginPayload } from "../../../../auth/core/types.js";
 import type { VerifyLoginPayloadParams } from "../../../../auth/core/verify-login-payload.js";
 import { useActiveWallet } from "../../../core/hooks/wallets/wallet-hooks.js";
 
+/**
+ * Options for Setting up SIWE (Sign in with Ethereum) Authentication
+ * @auth
+ */
 export type SiweAuthOptions = {
   // we pass address and chainId and retrieve a login payload (we do not care how)
+
+  /**
+   * Method to get the login payload for given address and chainId
+   * @param params - The parameters to get the login payload for.
+   */
   getLoginPayload: (params: {
     address: string;
     chainId: number;
   }) => Promise<LoginPayload>;
+
   // we pass the login payload and signature and the developer passes this to the auth server however they want
+
+  /**
+   * Method to login with the signed login payload
+   * @param params
+   */
   doLogin: (params: VerifyLoginPayloadParams) => Promise<void>;
+
   // we call this internally when a user explicitly disconnects their wallet
+
+  /**
+   * Method to logout the user
+   */
   doLogout: () => Promise<void>;
+
   // the developer specifies how to check if the user is logged in, this is called internally by the component
+
+  /**
+   * Method to check if the user is logged in or not
+   * @param address
+   */
   isLoggedIn: (address: string) => Promise<boolean>;
 };
 
+/**
+ * This hook allows you to implement SIWE (Sign in with Ethererum) to
+ * enforce the users to sign a message with their wallet to authenticate themselves.
+ *
+ * @param authOptions - The options to configure the SIWE authentication.
+ * Refer to the [`SiweAuthOptions`](https://portal.thirdweb.com/references/typescript/v5/SiweAuthOptions) for more details
+ *
+ * @example
+ * ```ts
+ * const siweAuth = useSiweAuth(authOptions);
+ *
+ * console.log(siweAuth.isLoggedIn);
+ * console.log(siweAuth.isLoggingOut);
+ *
+ * async function login() {
+ *   await siweAuth.doLogin();
+ * }
+ *
+ * async function logout() {
+ *  await siweAuth.doLogout();
+ * }
+ * ```
+ *
+ * @auth
+ */
 export function useSiweAuth(authOptions?: SiweAuthOptions) {
   const activeWallet = useActiveWallet();
   const activeAccount = activeWallet?.getAccount();

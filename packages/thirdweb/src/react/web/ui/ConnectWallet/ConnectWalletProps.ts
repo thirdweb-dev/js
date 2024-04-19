@@ -641,6 +641,11 @@ export type ConnectButtonProps = {
    */
   showAllWallets?: boolean;
 
-  // TODO: document this
+  /**
+   * Enable SIWE (Sign in with Ethererum) by passing an object of type `SiweAuthOptions` to
+   * enforce the users to sign a message after connecting their wallet to authenticate themselves.
+   *
+   * Refer to the [`SiweAuthOptions`](https://portal.thirdweb.com/references/typescript/v5/SiweAuthOptions) for more details
+   */
   auth?: SiweAuthOptions;
 };

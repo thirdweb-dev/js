@@ -290,7 +290,7 @@ function HeadlessSignIn({
   );
 }
 
-const plusAnimation = keyframes`
+const pulseAnimation = keyframes`
 0% {
   transform: scale(0.9);
 }
@@ -313,7 +313,7 @@ const PulsatingContainer = /* @__PURE__ */ StyledDiv(() => {
       bottom: 0,
       right: 0,
       background: theme.colors.accentText,
-      animation: `${plusAnimation} 2s cubic-bezier(0.175, 0.885, 0.32, 1.1) infinite`,
+      animation: `${pulseAnimation} 2s cubic-bezier(0.175, 0.885, 0.32, 1.1) infinite`,
       zIndex: -1,
       borderRadius: radius.xl,
     },
