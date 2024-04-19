@@ -44,29 +44,7 @@ export type SiweAuthOptions = {
 };
 
 /**
- * This hook allows you to implement SIWE (Sign in with Ethererum) to
- * enforce the users to sign a message with their wallet to authenticate themselves.
- *
- * @param authOptions - The options to configure the SIWE authentication.
- * Refer to the [`SiweAuthOptions`](https://portal.thirdweb.com/references/typescript/v5/SiweAuthOptions) for more details
- *
- * @example
- * ```ts
- * const siweAuth = useSiweAuth(authOptions);
- *
- * console.log(siweAuth.isLoggedIn);
- * console.log(siweAuth.isLoggingOut);
- *
- * async function login() {
- *   await siweAuth.doLogin();
- * }
- *
- * async function logout() {
- *  await siweAuth.doLogout();
- * }
- * ```
- *
- * @auth
+ * @internal
  */
 export function useSiweAuth(authOptions?: SiweAuthOptions) {
   const activeWallet = useActiveWallet();
