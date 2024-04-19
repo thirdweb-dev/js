@@ -262,7 +262,7 @@ export const DEVELOPER_RESOURCES: SectionItemProps[] = [
     label: "docs",
     description: "Complete thirdweb documentation",
     link: "https://portal.thirdweb.com",
-    icon: require("../../../../../public/assets/tw-icons/pack.png"),
+    icon: require("../../../../../public/assets/tw-icons/docs.svg"),
     section: "resources",
   },
   {
@@ -270,7 +270,7 @@ export const DEVELOPER_RESOURCES: SectionItemProps[] = [
     label: "templates",
     description: "Ready-to-ship repositories",
     link: "/templates",
-    icon: require("../../../../../public/assets/tw-icons/dynamic-nft.png"),
+    icon: require("../../../../../public/assets/tw-icons/templates.svg"),
     section: "resources",
   },
   {
@@ -278,7 +278,7 @@ export const DEVELOPER_RESOURCES: SectionItemProps[] = [
     label: "guides",
     description: "Learn how to build with thirdweb",
     link: "https://blog.thirdweb.com/guides",
-    icon: require("../../../../../public/assets/tw-icons/edition.png"),
+    icon: require("../../../../../public/assets/tw-icons/guides.svg"),
     section: "resources",
   },
   {
@@ -286,7 +286,7 @@ export const DEVELOPER_RESOURCES: SectionItemProps[] = [
     label: "open-source",
     description: "Learn how to contribute to thirdweb",
     link: "/open-source",
-    icon: require("../../../../../public/assets/tw-icons/advanced-nfts.png"),
+    icon: require("../../../../../public/assets/tw-icons/opensource.svg"),
     section: "resources",
   },
   {
@@ -294,16 +294,31 @@ export const DEVELOPER_RESOURCES: SectionItemProps[] = [
     label: "typescript",
     description: "Integrate web3 into your app",
     link: "https://portal.thirdweb.com/typescript/v5",
-    icon: require("../../../../../public/assets/product-icons/sdks.png"),
+    icon: require("../../../../../public/assets/product-icons/typescript.svg"),
     section: "sdks",
   },
-
+  {
+    name: "React",
+    label: "react",
+    description: "Components and Hooks for wallets and contracts",
+    link: "https://portal.thirdweb.com/typescript/v5/react",
+    icon: require("../../../../../public/assets/product-icons/react.svg"),
+    section: "sdks",
+  },
   {
     name: "Unity",
     label: "unity",
     description: "Build games with blockchain and web3 capabilities",
     link: "https://portal.thirdweb.com/unity",
-    icon: require("../../../../../public/assets/product-icons/sdks.png"),
+    icon: require("../../../../../public/assets/product-icons/unity.svg"),
+    section: "sdks",
+  },
+  {
+    name: ".NET",
+    label: ".net",
+    description: "Build .NET apps and Godot games",
+    link: "https://portal.thirdweb.com/dotnet",
+    icon: require("../../../../../public/assets/product-icons/net.svg"),
     section: "sdks",
   },
   {
@@ -311,7 +326,7 @@ export const DEVELOPER_RESOURCES: SectionItemProps[] = [
     label: "dashboard",
     description: "Manage and analyze contract activity",
     link: "/dashboards",
-    icon: require("../../../../../public/assets/product-icons/dashboards.png"),
+    icon: require("../../../../../public/assets/product-icons/dashboard.svg"),
     section: "tools",
   },
   {
@@ -319,7 +334,7 @@ export const DEVELOPER_RESOURCES: SectionItemProps[] = [
     label: "solidity",
     description: "Build custom smart contracts efficiently",
     link: "https://portal.thirdweb.com/contracts/build/overview",
-    icon: require("../../../../../public/assets/product-icons/ui-components.png"),
+    icon: require("../../../../../public/assets/product-icons/solidity.svg"),
     section: "sdks",
   },
   {
@@ -327,16 +342,8 @@ export const DEVELOPER_RESOURCES: SectionItemProps[] = [
     label: "cli",
     description: "Tools to create, build, and deploy web3 applications",
     link: "https://portal.thirdweb.com/cli",
-    icon: require("../../../../../public/assets/product-icons/support.png"),
+    icon: require("../../../../../public/assets/product-icons/cli.svg"),
     section: "tools",
-  },
-  {
-    name: "React",
-    label: "react",
-    description: "Components and Hooks for wallets and contracts",
-    link: "https://portal.thirdweb.com/typescript/v5/react",
-    icon: require("../../../../../public/assets/product-icons/wallet-sdk.png"),
-    section: "sdks",
   },
 ];
 
