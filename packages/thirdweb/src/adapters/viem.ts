@@ -170,7 +170,7 @@ type ToViemWalletClientOptions = {
   chain: Chain;
 };
 
-function toViemWalletClient(options: ToViemWalletClientOptions) {
+function toViemWalletClient(options: ToViemWalletClientOptions): WalletClient {
   const { account, chain, client } = options;
   if (!account) {
     throw new Error("Wallet not connected.");
