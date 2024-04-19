@@ -47,6 +47,11 @@ function redirects() {
       permanent: false,
     },
     {
+      source: "/checkout",
+      destination: "/connect",
+      permanent: false,
+    },
+    {
       source: "/extensions",
       destination: "/build",
       permanent: false,

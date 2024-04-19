@@ -160,16 +160,6 @@ export const PRODUCTS: SectionItemProps[] = [
     section: "infrastructure",
   },
   {
-    name: "NFT Checkout",
-    label: "nft-checkout",
-    description: "Credit card checkout for NFTs",
-    link: "/checkout",
-    dashboardLink: "/dashboard/payments/contracts",
-    icon: require("../../../../../public/assets/product-icons/payments.png"),
-    section: "payments",
-    inLandingPage: true,
-  },
-  {
     name: "Sponsored Transactions",
     label: "sponsored-transactions",
     description: "Remove all user friction with invisible transactions",
