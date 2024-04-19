@@ -36,7 +36,7 @@ export const ContactSupportModal = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const form = useForm<CreateTicketInput>();
   const { onSuccess, onError } = useTxNotifications(
-    "Successfully sent ticket. Our team will be in touch shortly.",
+    "Successfuly sent support ticket. Our team will be in touch using your account email shortly.",
     "Failed to send ticket. Please try again.",
   );
   const { isLoggedIn } = useLoggedInUser();
