@@ -52,10 +52,10 @@ export const SignatureScreen: React.FC<{
   const signIn = useCallback(async () => {
     try {
       setStatus("signing");
-      await wait(1000);
       await siweAuth.doLogin();
       onDone();
     } catch (err) {
+      await wait(1000);
       setStatus("failed");
       console.error("failed to log in", err);
     }
