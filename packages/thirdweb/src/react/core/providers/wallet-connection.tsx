@@ -7,6 +7,7 @@ import type { AppMetadata } from "../../../wallets/types.js";
 import type { ConnectButton_connectModalOptions } from "../../web/ui/ConnectWallet/ConnectWalletProps.js";
 import type { ConnectLocale } from "../../web/ui/ConnectWallet/locale/types.js";
 import type { LocaleId } from "../../web/ui/types.js";
+import type { SiweAuthOptions } from "../hooks/auth/useSiweAuth.js";
 
 export const ConnectUIContext = /* @__PURE__ */ createContext<{
   wallets: Wallet[];
@@ -27,4 +28,5 @@ export const ConnectUIContext = /* @__PURE__ */ createContext<{
   connectModal: Omit<ConnectButton_connectModalOptions, "size"> & {
     size: "compact" | "wide";
   };
+  auth?: SiweAuthOptions;
 } | null>(null);
