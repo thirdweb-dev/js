@@ -74,6 +74,7 @@ export function KadoScreen(props: {
         </div>
         <Iframe
           title="Buy token with Kado"
+          allow="clipboard-write; payment; accelerometer; gyroscope; camera; geolocation; autoplay; fullscreen;"
           height={550}
           src={iframeSrc}
           style={{
