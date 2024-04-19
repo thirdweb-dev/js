@@ -1,4 +1,4 @@
-import { Flex, Icon } from "@chakra-ui/react";
+import { Flex, FlexProps, Icon } from "@chakra-ui/react";
 import { Text, TrackedLink } from "tw-components";
 import { IconType } from "react-icons/lib";
 import { SiReact } from "@react-icons/all-files/si/SiReact";
@@ -11,6 +11,7 @@ export function SupportedPlatformLink(props: {
   noBorder?: boolean;
   size: "sm" | "md";
   trackingCategory: string;
+  bg?: FlexProps["bg"];
 }) {
   let icon: IconType = SiReact;
   if (props.platform === "Unity") {
@@ -32,6 +33,7 @@ export function SupportedPlatformLink(props: {
       role="group"
     >
       <Flex
+        bg={props.bg}
         gap={props.size === "sm" ? 2 : 3}
         alignItems="center"
         border={props.noBorder ? undefined : "1px solid"}

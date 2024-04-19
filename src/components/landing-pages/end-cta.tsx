@@ -1,14 +1,14 @@
 import { LandingCTAButtons } from "./cta-buttons";
 import { Box, Container, ContainerProps, Flex } from "@chakra-ui/react";
 import { ReactNode } from "react";
-import { Heading, Text } from "tw-components";
+import { Heading, Text, TrackedLinkProps } from "tw-components";
 
 interface LandingEndCTAProps {
   title: string;
   description?: string;
   colorDescription?: string;
   containerMaxW?: ContainerProps["maxW"];
-  titleWithGradient: string;
+  titleWithGradient?: string;
   customEndCta?: ReactNode;
   gradient: string;
   ctaText?: string;
@@ -18,6 +18,9 @@ interface LandingEndCTAProps {
   noContactUs?: boolean;
   contactUsTitle?: string;
   trackingCategory: string;
+  contactUsBg?: TrackedLinkProps["bg"];
+  contactUsHover?: TrackedLinkProps["_hover"];
+  contactUsBorder?: TrackedLinkProps["border"];
 }
 
 export const LandingEndCTA: React.FC<LandingEndCTAProps> = ({
@@ -35,6 +38,9 @@ export const LandingEndCTA: React.FC<LandingEndCTAProps> = ({
   noContactUs,
   contactUsTitle,
   trackingCategory,
+  contactUsBg,
+  contactUsHover,
+  contactUsBorder,
 }) => {
   return (
     <Container maxW={containerMaxW || "container.md"}>
@@ -69,6 +75,9 @@ export const LandingEndCTA: React.FC<LandingEndCTAProps> = ({
               noCta={noCta}
               contactUsLink={contactUsLink}
               contactUsTitle={contactUsTitle}
+              contactUsBg={contactUsBg}
+              contactUsHover={contactUsHover}
+              contactUsBorder={contactUsBorder}
             />
           </Flex>
         )}

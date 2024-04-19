@@ -2,6 +2,7 @@ import { Box, Container, Flex } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { LandingCardWithImage } from "components/landing-pages/card-with-image";
 import { LandingEndCTA } from "components/landing-pages/end-cta";
+import { Gradients } from "components/landing-pages/gradients";
 import { LandingGridSection } from "components/landing-pages/grid-section";
 import { LandingHeroWithSideImage } from "components/landing-pages/hero-with-side-image";
 import { LandingIconSectionItem } from "components/landing-pages/icon-section-item";
@@ -310,32 +311,25 @@ const SolutionsChains: ThirdwebNextPage = () => {
           </Flex>
         </Container>
 
-        <Box
-          position="absolute"
-          top={100}
-          left={0}
-          right={0}
-          height="2286px"
-          width="100vw"
-          background={`url("/assets/solutions-pages/chains/top-gradient.png")`}
-          backgroundPosition="center"
-          backgroundRepeat="no-repeat"
-          backgroundSize="cover"
-          zIndex={2}
-        />
-
-        <Box
-          position="absolute"
-          bottom={-200}
-          left={0}
-          right={0}
-          height="1386px"
-          width="100vw"
-          background={`url("/assets/solutions-pages/chains/bottom-gradient.png")`}
-          backgroundPosition="center"
-          backgroundRepeat="no-repeat"
-          backgroundSize="cover"
-          zIndex={2}
+        <Gradients
+          top={{
+            top: 100,
+            left: 0,
+            right: 0,
+            height: "2286px",
+            width: "100%",
+            background: `url("/assets/landingpage/top-gradient.svg")`,
+            backgroundSize: { base: "cover", lg: "100% 100%" },
+          }}
+          bottom={{
+            bottom: -200,
+            left: 0,
+            right: 0,
+            height: "1386px",
+            width: "100%",
+            background: `url("/assets/landingpage/bottom-gradient.png")`,
+            backgroundSize: { base: "cover", lg: "100% 100%" },
+          }}
         />
       </Flex>
     </LandingLayout>

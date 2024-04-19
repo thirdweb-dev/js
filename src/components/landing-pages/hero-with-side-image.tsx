@@ -3,7 +3,7 @@ import { LandingDesktopMobileImage } from "./desktop-mobile-image";
 import { Box, BoxProps, Flex, SimpleGrid } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { StaticImageData } from "next/image";
-import { Heading, Text } from "tw-components";
+import { Heading, Text, TrackedLinkProps } from "tw-components";
 
 interface LandingHeroWithSideImageProps {
   title: string;
@@ -21,6 +21,9 @@ interface LandingHeroWithSideImageProps {
   lottie?: {};
   miniImage?: StaticImageData;
   mt?: BoxProps["mt"];
+  contactUsBg?: TrackedLinkProps["bg"];
+  contactUsHover?: TrackedLinkProps["_hover"];
+  contactUsBorder?: TrackedLinkProps["border"];
 }
 
 export const LandingHeroWithSideImage: React.FC<
@@ -41,6 +44,9 @@ export const LandingHeroWithSideImage: React.FC<
   lottie,
   miniImage,
   mt,
+  contactUsBg,
+  contactUsHover,
+  contactUsBorder,
 }) => {
   return (
     <SimpleGrid
@@ -77,6 +83,9 @@ export const LandingHeroWithSideImage: React.FC<
           contactUsTitle={contactUsTitle}
           noContactUs={noContactUs}
           trackingCategory={trackingCategory}
+          contactUsBg={contactUsBg}
+          contactUsHover={contactUsHover}
+          contactUsBorder={contactUsBorder}
           alignLeft
         />
       </Flex>

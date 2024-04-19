@@ -1,6 +1,6 @@
 import { Flex, Icon } from "@chakra-ui/react";
 import { BsFillLightningChargeFill } from "react-icons/bs";
-import { TrackedLinkButton } from "tw-components";
+import { TrackedLinkButton, TrackedLinkProps } from "tw-components";
 
 interface LandingCTAButtonsProps {
   ctaLink?: string;
@@ -11,12 +11,18 @@ interface LandingCTAButtonsProps {
   contactUsLink?: string;
   trackingCategory: string;
   alignLeft?: boolean;
+  contactUsBg?: TrackedLinkProps["bg"];
+  contactUsHover?: TrackedLinkProps["_hover"];
+  contactUsBorder?: TrackedLinkProps["border"];
 }
 
 export const LandingCTAButtons: React.FC<LandingCTAButtonsProps> = ({
   ctaLink = "/dashboard",
   ctaText = "Get Started",
   contactUsTitle = "Contact Us",
+  contactUsBg,
+  contactUsHover,
+  contactUsBorder,
   noCta,
   noContactUs,
   contactUsLink,
@@ -53,6 +59,9 @@ export const LandingCTAButtons: React.FC<LandingCTAButtonsProps> = ({
           href={contactUsLink || "/contact-us"}
           category={trackingCategory}
           label="contact-us"
+          bg={contactUsBg}
+          border={contactUsBorder}
+          _hover={contactUsHover}
         >
           {contactUsTitle}
         </TrackedLinkButton>
