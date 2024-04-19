@@ -293,7 +293,7 @@ export const DEVELOPER_RESOURCES: SectionItemProps[] = [
     name: "TypeScript",
     label: "typescript",
     description: "Integrate web3 into your app",
-    link: "https://portal.thirdweb.com/typescript-sdks",
+    link: "https://portal.thirdweb.com/typescript/v5",
     icon: require("../../../../../public/assets/product-icons/sdks.png"),
     section: "sdks",
   },
