@@ -16,8 +16,8 @@ export default {
     },
     {
       "name": "ankrscan-neura",
-      "url": "https://testnet.neuraprotocol.io/explorer",
-      "standard": "none",
+      "url": "https://testnet.explorer.neuraprotocol.io",
+      "standard": "EIP3091",
       "icon": {
         "url": "ipfs://QmWdpK5WFKrosaCSpJRCvU7uXeKk2qVeCckTxh6Zw2JrK8",
         "width": 600,
