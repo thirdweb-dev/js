@@ -16,7 +16,7 @@ import { sendAndConfirmTransaction } from "../../send-and-confirm-transaction.js
 import { toSerializableTransaction } from "../../to-serializable-transaction.js";
 import { prepareBiconomyTransaction } from "./biconomy.js";
 
-describe("prepareBiconomyTransaction", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("prepareBiconomyTransaction", () => {
   let erc20Contract: ThirdwebContract;
   beforeAll(async () => {
     erc20Contract = getContract({
