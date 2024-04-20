@@ -43,5 +43,18 @@ export async function sendGaslessTransaction({
     });
   }
 
+  // openzeppelin
+  if (gasless.provider === "openzeppelin") {
+    const { sendOpenZeppelinTransaction } = await import(
+      "./providers/openzeppelin.js"
+    );
+    return sendOpenZeppelinTransaction({
+      account,
+      transaction,
+      serializableTransaction,
+      gasless,
+    });
+  }
+
   throw new Error(`Unsupported gasless provider: ${gasless.provider}`);
 }
