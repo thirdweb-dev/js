@@ -499,7 +499,7 @@ const ChainPage: ThirdwebNextPage = ({
         {!isDeprecated && (
           <>
             <Divider />
-            <CodeOverview onlyInstall chain={chain} noSidebar />
+            <CodeOverview onlyInstall chainId={chain.chainId} noSidebar />
           </>
         )}
       </Container>

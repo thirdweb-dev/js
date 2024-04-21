@@ -25,7 +25,6 @@ import {
   Tabs,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { useAddress } from "@thirdweb-dev/react";
 import {
   Abi,
@@ -44,7 +43,6 @@ import {
   CodeEnvironment,
   SnippetApiResponse,
 } from "components/contract-tabs/code/types";
-import { DASHBOARD_THIRDWEB_CLIENT_ID } from "constants/rpc";
 import { useSupportedChain } from "hooks/chains/configureChains";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useRouter } from "next/router";
@@ -55,7 +53,7 @@ interface CodeOverviewProps {
   abi?: Abi;
   contractAddress?: string;
   onlyInstall?: boolean;
-  chain?: Chain;
+  chainId?: number;
   noSidebar?: boolean;
 }
 
@@ -72,7 +70,7 @@ export const COMMANDS = {
   },
   setup: {
     javascript: `import { createThirdwebClient, getContract } from "thirdweb";
-import { {{chainName}} } from "thirdweb/chains";
+import { defineChain } from "thirdweb/chains";
 
 // create the client with your clientId, or secretKey if in a server environment
 const client = createThirdwebClient({ 
@@ -82,11 +80,11 @@ const client = createThirdwebClient({
 // connect to your contract
 const contract = getContract({ 
   client, 
-  chain: {{chainName}}, 
+  chain: defineChain({{chainId}}), 
   address: "{{contract_address}}"
 });`,
     react: `import { createThirdwebClient, getContract, resolveMethod } from "thirdweb";
-import { {{chainName}} } from "thirdweb/chains";
+import { defineChain } from "thirdweb/chains";
 import { ThirdwebProvider } from "thirdweb/react";
 
 // create the client with your clientId, or secretKey if in a server environment
@@ -97,7 +95,7 @@ export const client = createThirdwebClient({
 // connect to your contract
 export const contract = getContract({ 
   client, 
-  chain: {{chainName}}, 
+  chain: defineChain({{chainId}}), 
   address: "{{contract_address}}"
 });
 
@@ -109,7 +107,7 @@ function App() {
   )
 }`,
     "react-native": `import { createThirdwebClient, getContract, resolveMethod } from "thirdweb";
-import { {{chainName}} } from "thirdweb/chains";
+import { defineChain } from "thirdweb/chains";
 import { ThirdwebProvider } from "thirdweb/react";
 
 // create the client with your clientId, or secretKey if in a server environment
@@ -120,7 +118,7 @@ export const client = createThirdwebClient({
 // connect to your contract
 export const contract = getContract({ 
   client, 
-  chain: {{chainName}}, 
+  chain: defineChain({{chainId}}), 
   address: "{{contract_address}}",
 });
 
@@ -277,12 +275,14 @@ const WALLETS_SNIPPETS = [
       "ipfs://QmeAJVqn17aDNQhjEU3kcWVZCFBrfta8LzaDGkS8Egdiyk/smart-wallet.svg",
     link: "https://portal.thirdweb.com/references/wallets/latest/SmartWallet",
     supportedLanguages: {
-      javascript: `import {{chainName}} from "thirdweb/chains";
+      javascript: `import { defineChain } from "thirdweb";
 import { embeddedWallet, smartWallet } from "thirdweb/wallets";
+
+const chain = defineChain({{chainId}});
 
 // First, connect the personal wallet, which can be any wallet (metamask, embedded, etc.)
 const personalWallet = embeddedWallet();
-coonst peronalAccount = await personalWallet.connect({
+const peronalAccount = await personalWallet.connect({
   client,
   chain,
   strategy: "google",
@@ -290,7 +290,7 @@ coonst peronalAccount = await personalWallet.connect({
 
 // Then, connect the Smart Account
 const wallet = smartWallet({
-  chain: {{chainName}}, // the chain where your account will be or is deployed
+  chain, // the chain where your account will be or is deployed
   factoryAddress: "{{factory_address}}", // your own deployed account factory address
   gasless: true, // enable or disable gasless transactions
 });
@@ -298,7 +298,7 @@ const smartAccount = await wallet.connect({
   client,
   personalWallet,
 });`,
-      react: `import {{chainName}} from "thirdweb/chains";
+      react: `import { defineChain } from "thirdweb";
 import { ThirdwebProvider, ConnectButton } from "thirdweb/react";
 
 export default function App() {
@@ -307,7 +307,7 @@ return (
       <ConnectWallet 
         client={client}
         accountAbstraction={{
-          chain: {{chainName}},
+          chain: defineChain({{chainId}}),
           factoryAddress: "{{factory_address}}",
           gasless: true,
         }}
@@ -342,8 +342,6 @@ interface SnippetOptions {
   contractAddress?: string;
   fn?: string;
   args?: string[];
-  chainName?: string;
-  rpcUrl?: string;
   address?: string;
   clientId?: string;
   chainId?: number;
@@ -351,19 +349,10 @@ interface SnippetOptions {
 
 export function formatSnippet(
   snippet: Record<CodeEnvironment, any>,
-  {
-    contractAddress,
-    fn,
-    args,
-    chainName,
-    chainId,
-    rpcUrl,
-    address,
-    clientId,
-  }: SnippetOptions,
+  { contractAddress, fn, args, chainId, address, clientId }: SnippetOptions,
 ) {
   const code = { ...snippet };
-  const preSupportedSlugs = defaultChains.map((chain) => chain.slug);
+
   for (const key of Object.keys(code)) {
     const env = key as CodeEnvironment;
 
@@ -372,32 +361,8 @@ export function formatSnippet(
       ?.replace(/{{factory_address}}/gm, contractAddress || "0x...")
       ?.replace(/{{wallet_address}}/gm, address)
       ?.replace("YOUR_CLIENT_ID", clientId || "YOUR_CLIENT_ID")
-
-      ?.replace(
-        'import { {{chainName}} } from "thirdweb/chains";',
-        preSupportedSlugs.includes(chainName as any)
-          ? `import { {{chainName}} } from "thirdweb/chains";`
-          : `import { defineChain } from "thirdweb";`,
-      )
-      ?.replace(
-        /{{chainName}}/gm,
-        !chainName || chainName?.startsWith("0x") || chainName?.endsWith(".eth")
-          ? "ethereum"
-          : preSupportedSlugs.includes(chainName as any)
-            ? `${chainName}`
-            : `defineChain(${chainId})`,
-      )
       ?.replace(/{{function}}/gm, fn || "")
-      ?.replace(
-        /{{chainNameOrRpc}}/gm,
-        preSupportedSlugs.includes(chainName as any)
-          ? chainName
-          : rpcUrl?.replace(
-              // eslint-disable-next-line no-template-curly-in-string
-              "${THIRDWEB_API_KEY}",
-              DASHBOARD_THIRDWEB_CLIENT_ID,
-            ) || "",
-      );
+      ?.replace(/{{chainId}}/gm, chainId || 1);
 
     if (args && args?.some((arg) => arg)) {
       code[env] = code[env]?.replace(/{{args}}/gm, args?.join(", ") || "");
@@ -413,8 +378,8 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
   abi,
   contractAddress = "0x...",
   onlyInstall = false,
-  chain,
   noSidebar = false,
+  chainId: chainIdProp,
 }) => {
   const defaultEnvironment = useSingleQueryParam(
     "environment",
@@ -445,10 +410,8 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
     return Object.keys(filteredData || {}).sort();
   }, [filteredData]);
 
-  const chainId = useDashboardEVMChainId();
+  const chainId = useDashboardEVMChainId() || chainIdProp || 1;
   const chainInfo = useSupportedChain(chainId || -1);
-  const chainName = chain?.slug || chainInfo?.slug;
-  const rpc = chain?.rpc[0] || chainInfo?.rpc[0];
 
   const functions = useContractFunctions(abi as Abi);
   const events = useContractEvents(abi as Abi);
@@ -529,8 +492,8 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
                       ?.supportedLanguages || {}) as any,
                     {
                       contractAddress,
-                      chainName,
                       address,
+                      chainId,
                     },
                   )}
                   hideTabs
@@ -544,8 +507,8 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
             <Heading size="title.md">
               {isAccountFactory
                 ? "Direct contract interaction (advanced)"
-                : chain
-                  ? `Getting Started with ${chain.name}`
+                : chainInfo
+                  ? `Getting Started with ${chainInfo.name}`
                   : "Getting Started"}
             </Heading>
           </Flex>
@@ -597,9 +560,8 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
               setEnvironment={setEnvironment}
               snippet={formatSnippet(COMMANDS.setup as any, {
                 contractAddress,
-                chainName,
-                chainId: chain?.chainId,
-                rpcUrl: rpc,
+
+                chainId,
               })}
               hideTabs
             />
@@ -674,8 +636,8 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
                                       setEnvironment={setEnvironment}
                                       snippet={formatSnippet(ext.examples, {
                                         contractAddress,
-                                        chainName,
                                         address,
+                                        chainId,
                                       })}
                                     />
                                   </Flex>
@@ -884,8 +846,8 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
                                   : event?.name),
                           )
                           ?.inputs?.map((i) => i.name),
-                        chainName,
-                        chainId: chain?.chainId,
+
+                        chainId,
                       },
                     )}
                   />
@@ -909,7 +871,7 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
                 const val = e.target.value;
                 if (isValidEnvironment(val)) {
                   router.push(
-                    `/${chainName}/${contractAddress}/code?environment=${val}`,
+                    `/${chainInfo?.slug || chainId}/${contractAddress}/code?environment=${val}`,
                   );
                   setEnvironment(val);
                 }
