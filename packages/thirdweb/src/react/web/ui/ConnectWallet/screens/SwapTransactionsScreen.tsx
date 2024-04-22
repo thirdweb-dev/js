@@ -492,7 +492,16 @@ function getBuyWithCryptoStatusMeta(
 function getBuyWithFiatStatusMeta(
   status: BuyWithFiatStatus["status"],
 ): StatusMeta {
+  // TEMP fix - this needs to be fixed in server
+  if ((status as string) === "CRYPTO_SWAP_REQUIRED ") {
+    return {
+      status: "Incomplete",
+      color: "accentText",
+    };
+  }
+
   switch (status) {
+    case "CRYPTO_SWAP_IN_PROGRESS":
     case "PENDING_ON_RAMP_TRANSFER":
     case "ON_RAMP_TRANSFER_IN_PROGRESS":
     case "PENDING_PAYMENT":
@@ -513,9 +522,10 @@ function getBuyWithFiatStatusMeta(
       };
     }
 
+    case "CRYPTO_SWAP_FAILED":
     case "CRYPTO_SWAP_REQUIRED": {
       return {
-        status: "Action Required",
+        status: "Incomplete",
         color: "accentText",
       };
     }
