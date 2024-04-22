@@ -44,7 +44,7 @@ export type BuyWithFiatQuote = {
   };
   toAddress: string;
   maxSlippageBPS: number;
-  quoteId: string;
+  intentId: string;
   toAmountMinWei: string;
   toAmountMin: string;
   processingFees: {

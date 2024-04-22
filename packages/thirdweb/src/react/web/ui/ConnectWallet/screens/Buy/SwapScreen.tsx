@@ -326,7 +326,7 @@ export function BuyScreenContent(props: {
       <FiatStatusScreen
         client={client}
         onBack={props.onBack}
-        quoteId={fiatQuoteQuery.data?.quoteId}
+        intentId={fiatQuoteQuery.data?.intentId}
       />
     );
   }

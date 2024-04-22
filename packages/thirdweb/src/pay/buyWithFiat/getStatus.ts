@@ -11,7 +11,7 @@ import { getPayBuyWithFiatStatusEndpoint } from "../buyWithCrypto/utils/definiti
  */
 export type GetBuyWithFiatStatusParams = {
   client: ThirdwebClient;
-  quoteId: string;
+  intentId: string;
 };
 
 // convert the above JSON schema to TypeScript types
@@ -93,7 +93,7 @@ export async function getBuyWithFiatStatus(
 ): Promise<BuyWithFiatStatus> {
   try {
     const queryParams = new URLSearchParams({
-      transactionId: params.quoteId,
+      transactionId: params.intentId,
     });
 
     const queryString = queryParams.toString();

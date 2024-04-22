@@ -12,10 +12,10 @@ import { AccentFailIcon } from "../../../icons/AccentFailIcon.js";
 export function FiatStatusScreen(props: {
   client: ThirdwebClient;
   onBack: () => void;
-  quoteId: string;
+  intentId: string;
 }) {
   const statusQuery = useBuyWithFiatStatus({
-    quoteId: props.quoteId,
+    intentId: props.intentId,
     client: props.client,
   });
 
