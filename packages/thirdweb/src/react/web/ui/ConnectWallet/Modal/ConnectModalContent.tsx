@@ -89,6 +89,7 @@ export const ConnectModalContent = (props: {
       }}
       done={handleConnected}
       goBack={wallets.length > 1 ? handleBack : undefined}
+      setModalVisibility={setModalVisibility}
     />
   );
 
