@@ -93,7 +93,7 @@ export async function getBuyWithFiatStatus(
 ): Promise<BuyWithFiatStatus> {
   try {
     const queryParams = new URLSearchParams({
-      transactionId: params.intentId,
+      intentId: params.intentId,
     });
 
     const queryString = queryParams.toString();
