@@ -40,7 +40,7 @@ import invariant from "tiny-invariant";
 /**
  * @public
  */
-export class AirdropExtension implements DetectableFeature {
+export class AirdropExtension<T extends Airdrop> implements DetectableFeature {
   featureName = FEATURE_AIRDROP.name;
   protected contractWrapper: ContractWrapper<Airdrop>;
 

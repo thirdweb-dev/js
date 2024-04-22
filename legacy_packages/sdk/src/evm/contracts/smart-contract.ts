@@ -15,6 +15,7 @@ import type {
   OffersLogic,
   Ownable,
   BaseRouter,
+  Airdrop,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BaseContract, CallOverrides } from "ethers";
@@ -40,6 +41,7 @@ import {
   FEATURE_PRIMARY_SALE,
   FEATURE_ROYALTY,
   FEATURE_DYNAMIC_CONTRACT,
+  FEATURE_AIRDROP,
 } from "../constants/thirdweb-features";
 import { Account } from "../core/classes/account";
 import { AccountFactory } from "../core/classes/account-factory";
@@ -79,6 +81,7 @@ import { Address } from "../schema/shared/Address";
 import { BaseContractInterface } from "../types/contract";
 import { BaseERC1155, BaseERC20, BaseERC721 } from "../types/eips";
 import { ExtensionManager } from "../core/classes/extension-manager";
+import { AirdropExtension } from "../core/classes/airdrop";
 
 /**
  * Custom contract dynamic class with feature detection
@@ -323,6 +326,10 @@ export class SmartContract<
 
   get airdrop1155(): Airdrop1155<AirdropERC1155> {
     return assertEnabled(this.detectAirdrop1155(), FEATURE_AIRDROP_ERC1155);
+  }
+
+  get airdrop(): AirdropExtension<Airdrop> {
+    return assertEnabled(this.detectAirdrop(), FEATURE_AIRDROP);
   }
 
   /**
@@ -634,6 +641,18 @@ export class SmartContract<
       )
     ) {
       return new Airdrop1155(this.contractWrapper);
+    }
+    return undefined;
+  }
+
+  private detectAirdrop() {
+    if (
+      detectContractFeature<Airdrop>(
+        this.contractWrapper,
+        "Airdrop",
+      )
+    ) {
+      return new AirdropExtension(this.contractWrapper);
     }
     return undefined;
   }
