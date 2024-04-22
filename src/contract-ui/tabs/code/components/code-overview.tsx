@@ -179,7 +179,7 @@ const { transactionHash } = await sendTransaction({
   account 
 })`,
     react: `import { prepareContractCall, resolveMethod } from "thirdweb"
-import { useSendTransaction } from "@thirdweb-dev/react";
+import { useSendTransaction } from "thirdweb/react";
 
 export default function Component() {
   const { mutate: sendTransaction, isLoading, isError } = useSendTransaction();
@@ -194,7 +194,7 @@ export default function Component() {
   }
 }`,
     "react-native": `import { prepareContractCall } from "thirdweb"
-import { useSendTransaction } from "@thirdweb-dev/react";
+import { useSendTransaction } from "thirdweb/react";
     
 export default function Component() {
   const { mutate: sendTransaction, isLoading, isError } = useSendTransaction();
