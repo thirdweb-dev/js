@@ -65,7 +65,6 @@ export const PartnerCarousel: React.FC = () => {
         <PartnerLogo partner="rarible" />
         <PartnerLogo partner="coolcats" />
         <PartnerLogo partner="xai" />
-        <PartnerLogo partner="courtyard" />
         <PartnerLogo partner="aavegotchi" />
         <PartnerLogo partner="shopify" />
         <PartnerLogo partner="avacloud" />
@@ -81,8 +80,8 @@ export const PartnerCarousel: React.FC = () => {
         <PartnerLogo partner="nyfw" />
         <PartnerLogo partner="gala_games" />
         <PartnerLogo partner="mirror" />
-        <PartnerLogo partner="fractal" />
         <PartnerLogo partner="ztx" />
+        <PartnerLogo partner="paima" />
         <PartnerLogo partner="torque" />
         <PartnerLogo partner="layer3" />
       </Marquee>

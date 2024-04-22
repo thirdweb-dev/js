@@ -10,24 +10,12 @@ const PARTNER_LOGO_MAP = {
     img: require("./logos/aws.png"),
     filter: undefined,
   },
-  fractal: {
-    img: require("./logos/fractal.png"),
-    filter: "brightness(0) invert(1)",
-  },
-  buildspace: {
-    img: require("./logos/buildspace.png"),
-    filter: undefined,
-  },
   shopify: {
     img: require("./logos/shopify.png"),
     filter: "grayscale(1)",
   },
   paradigm: {
     img: require("./logos/paradigm.png"),
-    filter: undefined,
-  },
-  unlock: {
-    img: require("./logos/unlock.png"),
     filter: undefined,
   },
   nyfw: {
@@ -40,10 +28,6 @@ const PARTNER_LOGO_MAP = {
   },
   mirror: {
     img: require("./logos/mirror.png"),
-    filter: undefined,
-  },
-  heroic_story: {
-    img: require("./logos/heroic_story.png"),
     filter: undefined,
   },
   layer3: {
@@ -70,16 +54,8 @@ const PARTNER_LOGO_MAP = {
     img: require("./logos/avacloud.png"),
     filter: "grayscale(1)",
   },
-  courtyard: {
-    img: require("./logos/courtyard.png"),
-    filter: "brightness(0) invert(1)",
-  },
   infinigods: {
     img: require("./logos/infinigods.png"),
-    filter: "grayscale(1)",
-  },
-  revv: {
-    img: require("./logos/revv.png"),
     filter: "grayscale(1)",
   },
   torque: {
@@ -108,6 +84,10 @@ const PARTNER_LOGO_MAP = {
   },
   xai: {
     img: require("./logos/xai.png"),
+    filter: undefined,
+  },
+  paima: {
+    img: require("./logos/paima.png"),
     filter: undefined,
   },
 } as const;
