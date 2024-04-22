@@ -93,6 +93,7 @@ export function BuyScreen(props: {
   connectLocale: ConnectLocale;
   buyForTx?: BuyForTx;
   fiatTestMode?: boolean;
+  theme: "light" | "dark";
 }) {
   const activeChain = useActiveWalletChain();
   const activeWallet = useActiveWallet();
@@ -143,6 +144,7 @@ export function BuyScreenContent(props: {
   connectLocale: ConnectLocale;
   buyForTx?: BuyForTx;
   fiatTestMode?: boolean;
+  theme: "light" | "dark";
 }) {
   const { activeChain, account, client, supportedChains, connectLocale } =
     props;
@@ -354,6 +356,7 @@ export function BuyScreenContent(props: {
         onComplete={() => {
           setScreen("fiat-status");
         }}
+        theme={props.theme}
       />
     );
   }

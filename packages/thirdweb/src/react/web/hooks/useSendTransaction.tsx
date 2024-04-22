@@ -9,7 +9,7 @@ import {
 } from "../ui/ConnectWallet/defaultTokens.js";
 import { useConnectLocale } from "../ui/ConnectWallet/locale/getConnectLocale.js";
 import { BuyScreen } from "../ui/ConnectWallet/screens/Buy/SwapScreen.js";
-import { SwapTransactionsScreen } from "../ui/ConnectWallet/screens/SwapTransactionsScreen.js";
+import { BuyTxHistory } from "../ui/ConnectWallet/screens/SwapTransactionsScreen.js";
 import { Modal } from "../ui/components/Modal.js";
 import { CustomThemeProvider } from "../ui/design-system/CustomThemeProvider.js";
 import type { Theme } from "../ui/design-system/index.js";
@@ -135,7 +135,7 @@ function ModalContent(props: ModalProps) {
 
   if (screen === "tx-history") {
     return (
-      <SwapTransactionsScreen
+      <BuyTxHistory
         client={props.client}
         onBack={() => {
           props.onClose();

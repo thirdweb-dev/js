@@ -18,8 +18,9 @@ export function KadoScreen(props: {
   onBack: () => void;
   testMode?: boolean;
   onComplete: () => void;
+  theme: "light" | "dark";
 }) {
-  let iframeSrc = props.quote.onRampLink;
+  let iframeSrc = `${props.quote.onRampLink}&theme=${props.theme}`;
   let iframeOrigin = new URL(iframeSrc).origin;
 
   // TODO - probably remove this after testing

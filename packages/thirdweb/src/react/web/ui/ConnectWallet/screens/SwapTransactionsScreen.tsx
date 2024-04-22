@@ -49,12 +49,12 @@ const PAGE_SIZE = 10;
 /**
  * @internal
  */
-export function SwapTransactionsScreen(props: {
+export function BuyTxHistory(props: {
   onBack: () => void;
   client: ThirdwebClient;
 }) {
   const [pageIndex, setPageIndex] = useState(0);
-  const _historyQuery = useSwapTransactions(pageIndex, props.client);
+  const _historyQuery = useBuyTransactions(pageIndex, props.client);
 
   const inMemoryPendingTxs = useSyncExternalStore(
     swapTransactionsStore.subscribe,
@@ -244,7 +244,7 @@ export function SwapTransactionsScreen(props: {
 /**
  * @internal
  */
-export function useSwapTransactions(pageIndex: number, client: ThirdwebClient) {
+export function useBuyTransactions(pageIndex: number, client: ThirdwebClient) {
   const account = useActiveAccount();
   const historyQuery = useBuyWithCryptoHistory(
     {

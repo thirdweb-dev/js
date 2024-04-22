@@ -68,7 +68,7 @@ import { BuyScreen } from "./screens/Buy/SwapScreen.js";
 import { swapTransactionsStore } from "./screens/Buy/swap/pendingSwapTx.js";
 import { ReceiveFunds } from "./screens/ReceiveFunds.js";
 import { SendFunds } from "./screens/SendFunds.js";
-import { SwapTransactionsScreen } from "./screens/SwapTransactionsScreen.js";
+import { BuyTxHistory } from "./screens/SwapTransactionsScreen.js";
 
 const TW_CONNECTED_WALLET = "tw-connected-wallet";
 
@@ -96,7 +96,8 @@ export const ConnectedWalletDetails: React.FC<{
   chain?: Chain;
   switchButton: ConnectButtonProps["switchButton"];
 }> = (props) => {
-  const { connectLocale: locale, client, connectModal } = useConnectUI();
+  const { connectLocale: locale, client } = useConnectUI();
+
   const activeWallet = useActiveWallet();
   const activeAccount = useActiveAccount();
   const walletChain = useActiveWalletChain();
@@ -587,12 +588,7 @@ export const ConnectedWalletDetails: React.FC<{
   );
 
   if (screen === "pending-tx") {
-    content = (
-      <SwapTransactionsScreen
-        onBack={() => setScreen("main")}
-        client={client}
-      />
-    );
+    content = <BuyTxHistory onBack={() => setScreen("main")} client={client} />;
   }
 
   if (screen === "network-switcher") {
@@ -665,7 +661,8 @@ export const ConnectedWalletDetails: React.FC<{
         supportedTokens={props.supportedTokens}
         onViewPendingTx={() => setScreen("pending-tx")}
         connectLocale={locale}
-        fiatTestMode={connectModal.pay?.fiat?.testMode}
+        fiatTestMode={props.detailsModal?.pay?.fiat?.testMode}
+        theme={typeof props.theme === "string" ? props.theme : props.theme.type}
       />
     );
   }

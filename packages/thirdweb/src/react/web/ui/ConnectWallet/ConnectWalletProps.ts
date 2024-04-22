@@ -109,6 +109,12 @@ export type ConnectButton_detailsModalOptions = {
    * ```
    */
   footer?: (props: { close: () => void }) => JSX.Element;
+
+  pay?: {
+    fiat?: {
+      testMode?: boolean;
+    };
+  };
 };
 
 /**
@@ -263,12 +269,6 @@ export type ConnectButton_connectModalOptions = {
    *```
    */
   showThirdwebBranding?: boolean;
-
-  pay?: {
-    fiat?: {
-      testMode?: boolean;
-    };
-  };
 };
 
 /**
