@@ -25,7 +25,7 @@
     "android"
   ],
   "dependencies": {
-    "@aws-sdk/client-lambda": "3.549.0",
+    "@aws-sdk/client-lambda": "3.556.0",
     "@aws-sdk/credential-providers": "3.549.0",
     "@coinbase/wallet-mobile-sdk": "1.0.13",
     "@paperxyz/embedded-wallet-service-sdk": "^1.2.5",
