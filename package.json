@@ -39,12 +39,12 @@
     "@tanstack/react-query": "^4.36.1",
     "@tanstack/react-query-persist-client": "^4.36.1",
     "@tanstack/react-table": "^8.15.3",
-    "@thirdweb-dev/chains": "0.1.92",
-    "@thirdweb-dev/react": "4.6.0",
-    "@thirdweb-dev/sdk": "0.0.0-dev-38469bc3760145bd2a8a2aace1b65771bda476f9-20240411051025",
+    "@thirdweb-dev/chains": "0.1.97",
+    "@thirdweb-dev/react": "4.6.5",
+    "@thirdweb-dev/sdk": "4.0.66",
     "@thirdweb-dev/service-utils": "0.4.26",
     "@thirdweb-dev/storage": "2.0.14",
-    "@thirdweb-dev/wallets": "2.5.1",
+    "@thirdweb-dev/wallets": "2.5.6",
     "@vercel/og": "^0.6.2",
     "airtable": "^0.12.2",
     "chakra-react-select": "^4.7.6",
@@ -132,8 +132,7 @@
       "zod": "^3.19.1",
       "xml2js": "0.6.2",
       "axios@<0.28": "^0.28.0",
-      "es5-ext@^0.10.53": "0.10.53",
-      "@thirdweb-dev/sdk": "0.0.0-dev-38469bc3760145bd2a8a2aace1b65771bda476f9-20240411051025"
+      "es5-ext@^0.10.53": "0.10.53"
     }
   },
   "next-unused": {
