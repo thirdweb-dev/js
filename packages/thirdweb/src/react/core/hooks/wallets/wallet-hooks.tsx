@@ -109,7 +109,7 @@ export function useSetActiveWallet() {
  * @example
  * ```jsx
  * import { useConnect } from "thirdweb/react";
- * import { metamaskWallet } from "thirdweb/wallets";
+ * import { createWallet } from "thirdweb/wallets";
  *
  * function Example() {
  *   const { connect, isConnecting, error } = useConnect();
@@ -118,7 +118,7 @@ export function useSetActiveWallet() {
  *       onClick={() =>
  *         connect(async () => {
  *           // instantiate wallet
- *           const wallet = metamaskWallet();
+ *           const wallet = createWallet("io.metamask");
  *           // connect wallet
  *           await wallet.connect();
  *           // return the wallet
