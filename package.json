@@ -84,7 +84,7 @@
     "remark-gfm": "^4.0.0",
     "spdx-correct": "^3.2.0",
     "swagger-ui-react": "^5.13.0",
-    "thirdweb": "5.6.0",
+    "thirdweb": "5.9.0",
     "tiny-invariant": "^1.3.3",
     "zksync-ethers": "^5.7.0",
     "zod": "^3.22.4"
