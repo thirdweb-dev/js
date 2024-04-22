@@ -27,6 +27,7 @@ import { Text } from "../components/text.js";
 import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 import { StyledDiv, StyledUl } from "../design-system/elements.js";
 import { fontSize, iconSize, radius, spacing } from "../design-system/index.js";
+import { SmartConnectUI } from "./Modal/SmartWalletConnectUI.js";
 import { TOS } from "./Modal/TOS.js";
 import { PoweredByThirdweb } from "./PoweredByTW.js";
 import { WalletButton, WalletEntryButton } from "./WalletEntryButton.js";
@@ -39,10 +40,7 @@ const InAppWalletSelectionUI = /* @__PURE__ */ lazy(
 // const localWalletId = "local";
 const inAppWalletId: WalletId = "inApp";
 
-/**
- * @internal
- */
-export const WalletSelector: React.FC<{
+type WalletSelectorProps = {
   wallets: Wallet[];
   selectWallet: (wallet: Wallet) => void;
   onGetStarted: () => void;
@@ -50,7 +48,46 @@ export const WalletSelector: React.FC<{
   done: (wallet: Wallet) => void;
   goBack?: () => void;
   onShowAll: () => void;
-}> = (props) => {
+  setModalVisibility: (value: boolean) => void;
+};
+
+/**
+ * @internal
+ */
+export function WalletSelector(props: WalletSelectorProps) {
+  const { accountAbstraction } = useConnectUI();
+  const [personalWallet, setPersonalWallet] = useState<Wallet | null>(null);
+
+  if (!accountAbstraction) {
+    return <WalletSelectorInner {...props} />;
+  }
+
+  if (personalWallet) {
+    return (
+      <SmartConnectUI
+        accountAbstraction={accountAbstraction}
+        done={props.done}
+        personalWallet={personalWallet}
+        setModalVisibility={props.setModalVisibility}
+        onBack={props.goBack}
+      />
+    );
+  }
+
+  return (
+    <WalletSelectorInner
+      {...props}
+      done={(w) => {
+        setPersonalWallet(w);
+      }}
+    />
+  );
+}
+
+/**
+ * @internal
+ */
+const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
   const { connectModal, isEmbed, client } = useConnectUI();
   const isCompact = connectModal.size === "compact";
   const [isWalletGroupExpanded, setIsWalletGroupExpanded] = useState(false);
