@@ -26,7 +26,6 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./internal/contract-wrapper";
 import { Transaction } from "./transactions";
 import { TransactionReceipt } from "@ethersproject/abstract-provider";
-import { ContractEncoder } from "./contract-encoder";
 import {
   AirdropSignature1155PayloadInput,
   AirdropSignature1155PayloadOutput,
@@ -40,6 +39,7 @@ import invariant from "tiny-invariant";
 /**
  * @public
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- TODO: review Airdrop interface
 export class AirdropExtension<T extends Airdrop> implements DetectableFeature {
   featureName = FEATURE_AIRDROP.name;
   protected contractWrapper: ContractWrapper<Airdrop>;
@@ -95,7 +95,6 @@ export class AirdropExtension<T extends Airdrop> implements DetectableFeature {
       tokenAddress: string,
       contents: Airdrop20Content[],
     ): Promise<Transaction<Promise<TransactionReceipt>>> => {
-      const args = tokenAddress;
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "airdropERC20",
@@ -234,17 +233,11 @@ export class AirdropExtension<T extends Airdrop> implements DetectableFeature {
     async (signedPayload: SignedAirdropPayload20) => {
       const message = signedPayload.payload;
       const signature = signedPayload.signature;
-      const contractEncoder = new ContractEncoder(this.contractWrapper);
-
-      const encoded = contractEncoder.encode("airdropERC20WithSignature", [
-        message,
-        signature,
-      ]);
 
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "airdropERC20WithSignature",
-        args: [encoded],
+        args: [message, signature],
       });
     },
   );
@@ -253,17 +246,11 @@ export class AirdropExtension<T extends Airdrop> implements DetectableFeature {
     async (signedPayload: SignedAirdropPayload721) => {
       const message = signedPayload.payload;
       const signature = signedPayload.signature;
-      const contractEncoder = new ContractEncoder(this.contractWrapper);
-
-      const encoded = contractEncoder.encode("airdropERC721WithSignature", [
-        message,
-        signature,
-      ]);
 
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "airdropERC721WithSignature",
-        args: [encoded],
+        args: [message, signature],
       });
     },
   );
@@ -272,17 +259,11 @@ export class AirdropExtension<T extends Airdrop> implements DetectableFeature {
     async (signedPayload: SignedAirdropPayload1155) => {
       const message = signedPayload.payload;
       const signature = signedPayload.signature;
-      const contractEncoder = new ContractEncoder(this.contractWrapper);
-
-      const encoded = contractEncoder.encode("airdropERC1155WithSignature", [
-        message,
-        signature,
-      ]);
 
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "airdropERC1155WithSignature",
-        args: [encoded],
+        args: [message, signature],
       });
     },
   );
@@ -298,8 +279,9 @@ export class AirdropExtension<T extends Airdrop> implements DetectableFeature {
     const signer = this.contractWrapper.getSigner();
     invariant(signer, "No signer available");
 
-    const finalPayload =
-      await AirdropSignature20PayloadOutput.parseAsync(parsed);
+    const finalPayload = await AirdropSignature20PayloadOutput.parseAsync(
+      parsed,
+    );
     const signature = await this.contractWrapper.signTypedData(
       signer,
       {
@@ -308,7 +290,10 @@ export class AirdropExtension<T extends Airdrop> implements DetectableFeature {
         chainId,
         verifyingContract: this.contractWrapper.address,
       },
-      { AirdropRequestERC20, AirdropContentERC20 },
+      {
+        AirdropRequestERC20: AirdropRequestERC20,
+        AirdropContentERC20: AirdropContentERC20,
+      },
       finalPayload,
     );
 
@@ -329,8 +314,9 @@ export class AirdropExtension<T extends Airdrop> implements DetectableFeature {
     const signer = this.contractWrapper.getSigner();
     invariant(signer, "No signer available");
 
-    const finalPayload =
-      await AirdropSignature721PayloadOutput.parseAsync(parsed);
+    const finalPayload = await AirdropSignature721PayloadOutput.parseAsync(
+      parsed,
+    );
     const signature = await this.contractWrapper.signTypedData(
       signer,
       {
@@ -360,8 +346,9 @@ export class AirdropExtension<T extends Airdrop> implements DetectableFeature {
     const signer = this.contractWrapper.getSigner();
     invariant(signer, "No signer available");
 
-    const finalPayload =
-      await AirdropSignature1155PayloadOutput.parseAsync(parsed);
+    const finalPayload = await AirdropSignature1155PayloadOutput.parseAsync(
+      parsed,
+    );
     const signature = await this.contractWrapper.signTypedData(
       signer,
       {
