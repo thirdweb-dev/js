@@ -6,7 +6,7 @@ import type { ThirdwebClient } from "../../../../../client/client.js";
 import { useChainQuery } from "../../../../core/hooks/others/useChainQuery.js";
 import { useWalletBalance } from "../../../../core/hooks/others/useWalletBalance.js";
 import { useActiveAccount } from "../../../../core/hooks/wallets/wallet-hooks.js";
-import { ChainIcon, fallbackChainIcon } from "../../components/ChainIcon.js";
+import { ChainIcon } from "../../components/ChainIcon.js";
 import { Skeleton } from "../../components/Skeleton.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Spinner } from "../../components/Spinner.js";
@@ -154,7 +154,6 @@ export function TokenSelector(props: {
                 <ChainIcon
                   chain={chainQuery.data}
                   size={iconSize.lg}
-                  fallbackImage={fallbackChainIcon}
                   client={props.client}
                 />
 

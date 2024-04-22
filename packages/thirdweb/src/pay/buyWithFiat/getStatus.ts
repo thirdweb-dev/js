@@ -28,7 +28,11 @@ export type BuyWithFiatStatus =
         | "PAYMENT_FAILED"
         | "PENDING_ON_RAMP_TRANSFER"
         | "ON_RAMP_TRANSFER_IN_PROGRESS"
-        | "ON_RAMP_TRANSFER_FAILED";
+        | "ON_RAMP_TRANSFER_FAILED"
+        | "CRYPTO_SWAP_REQUIRED"
+        | "CRYPTO_SWAP_COMPLETED"
+        | "CRYPTO_SWAP_IN_PROGRESS"
+        | "CRYPTO_SWAP_FAILED";
       swapType: "SAME_CHAIN" | "CROSS_CHAIN" | "ON_RAMP";
       toAddress: string;
       bridge?: string;

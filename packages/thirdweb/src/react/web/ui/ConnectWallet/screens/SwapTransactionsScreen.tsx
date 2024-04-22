@@ -504,11 +504,19 @@ function getBuyWithFiatStatusMeta(
       };
     }
 
-    case "ON_RAMP_TRANSFER_COMPLETED": {
+    case "ON_RAMP_TRANSFER_COMPLETED":
+    case "CRYPTO_SWAP_COMPLETED": {
       return {
         status: "Completed", // Is this actually completed though?
         color: "success",
         loading: true,
+      };
+    }
+
+    case "CRYPTO_SWAP_REQUIRED": {
+      return {
+        status: "Action Required",
+        color: "accentText",
       };
     }
 

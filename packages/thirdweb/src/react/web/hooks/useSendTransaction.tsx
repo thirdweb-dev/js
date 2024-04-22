@@ -161,6 +161,7 @@ function ModalContent(props: ModalProps) {
         tx: props.tx,
         tokenSymbol: props.nativeTokenSymbol,
       }}
+      theme={typeof props.theme === "string" ? props.theme : props.theme.type}
     />
   );
 }

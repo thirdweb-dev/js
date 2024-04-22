@@ -19,15 +19,17 @@ export function FiatStatusScreen(props: {
     client: props.client,
   });
 
-  const isLoading = !statusQuery.data || statusQuery.data.status === "PENDING";
+  const isLoading =
+    !statusQuery.data ||
+    statusQuery.data.status === "ON_RAMP_TRANSFER_IN_PROGRESS";
 
   const isNotFound =
     statusQuery.data?.status === "NONE" ||
     statusQuery.data?.status === "NOT_FOUND";
 
-  const isFailed = statusQuery.data?.status === "FAILED";
+  const isFailed = statusQuery.data?.status === "ON_RAMP_TRANSFER_FAILED";
 
-  const isCompleted = statusQuery.data?.status === "COMPLETED";
+  const isCompleted = statusQuery.data?.status === "ON_RAMP_TRANSFER_COMPLETED";
 
   return (
     <Container p="lg">
