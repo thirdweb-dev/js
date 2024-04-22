@@ -35,7 +35,7 @@ dependencies:
     version: 11.11.5(@emotion/react@11.11.4)(@types/react@18.2.73)(react@18.2.0)
   '@hookform/resolvers':
     specifier: ^3.3.4
-    version: 3.3.4(react-hook-form@7.51.2)
+    version: 3.3.4(react-hook-form@7.51.3)
   '@n8tb1t/use-scroll-position':
     specifier: ^2.0.3
     version: 2.0.3(@types/react@18.2.73)(react@18.2.0)
@@ -166,8 +166,8 @@ dependencies:
     specifier: ^14.2.3
     version: 14.2.3(react@18.2.0)
   react-hook-form:
-    specifier: ^7.51.2
-    version: 7.51.2(react@18.2.0)
+    specifier: ^7.51.3
+    version: 7.51.3(react@18.2.0)
   react-icons:
     specifier: ^4.12.0
     version: 4.12.0(react@18.2.0)
@@ -3821,12 +3821,12 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /@hookform/resolvers@3.3.4(react-hook-form@7.51.2):
+  /@hookform/resolvers@3.3.4(react-hook-form@7.51.3):
     resolution: {integrity: sha512-o5cgpGOuJYrd+iMKvkttOclgwRW86EsWJZZRC23prf0uU2i48Htq4PuT73AVb9ionFyZrwYEITuOFGF+BydEtQ==}
     peerDependencies:
       react-hook-form: ^7.0.0
     dependencies:
-      react-hook-form: 7.51.2(react@18.2.0)
+      react-hook-form: 7.51.3(react@18.2.0)
     dev: false
 
   /@humanwhocodes/config-array@0.11.14:
@@ -16216,8 +16216,8 @@ packages:
       use-sidecar: 1.1.2(@types/react@18.2.73)(react@18.2.0)
     dev: false
 
-  /react-hook-form@7.51.2(react@18.2.0):
-    resolution: {integrity: sha512-y++lwaWjtzDt/XNnyGDQy6goHskFualmDlf+jzEZvjvz6KWDf7EboL7pUvRCzPTJd0EOPpdekYaQLEvvG6m6HA==}
+  /react-hook-form@7.51.3(react@18.2.0):
+    resolution: {integrity: sha512-cvJ/wbHdhYx8aviSWh28w9ImjmVsb5Y05n1+FW786vEZQJV5STNM0pW6ujS+oiBecb0ARBxJFyAnXj9+GHXACQ==}
     engines: {node: '>=12.22.0'}
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18
