@@ -1,5 +1,27 @@
 # @thirdweb-dev/unity-js-bridge
 
+## 0.6.15
+
+### Patch Changes
+
+- Updated dependencies [[`b4e7c74`](https://github.com/thirdweb-dev/js/commit/b4e7c74ce5ddc88a1aa3169ea89ff139d185a648)]:
+  - @thirdweb-dev/chains@0.1.97
+  - @thirdweb-dev/sdk@4.0.66
+  - @thirdweb-dev/wallets@2.5.6
+  - @thirdweb-dev/auth@4.1.64
+
+## 0.6.14
+
+### Patch Changes
+
+- [#2805](https://github.com/thirdweb-dev/js/pull/2805) [`ec35f32`](https://github.com/thirdweb-dev/js/commit/ec35f32d2baf5a8ff70531fc07a6b1ad57164db7) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Unity 4.12.1
+
+- Updated dependencies [[`ca2576f`](https://github.com/thirdweb-dev/js/commit/ca2576f8180b6b5b9fe47087a53d1f13665c5028)]:
+  - @thirdweb-dev/chains@0.1.96
+  - @thirdweb-dev/sdk@4.0.65
+  - @thirdweb-dev/wallets@2.5.5
+  - @thirdweb-dev/auth@4.1.63
+
 ## 0.6.13
 
 ### Patch Changes

@@ -35,7 +35,6 @@ export function executeSale(
         contract: options.contract,
         auctionId: options.auctionId,
       });
-      console.log("*** winning bid", winningBid);
       if (!winningBid) {
         throw new Error("Auction is still active");
       }

@@ -1,8 +1,11 @@
+import { useEffect } from "react";
 import type { Chain } from "../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
+import type { SiweAuthOptions } from "../../../../../exports/react.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../../wallets/types.js";
+import { useSiweAuth } from "../../../../core/hooks/auth/useSiweAuth.js";
 import { AutoConnect } from "../../../../core/hooks/connection/useAutoConnect.js";
 import {
   useActiveAccount,
@@ -21,6 +24,7 @@ import type { LocaleId } from "../../types.js";
 import {
   modalMaxWidthCompact,
   modalMaxWidthWide,
+  reservedScreens,
   wideModalMaxHeight,
 } from "../constants.js";
 import { useConnectLocale } from "../locale/getConnectLocale.js";
@@ -304,6 +308,14 @@ export type ConnectEmbedProps = {
    * Note that if the screen width can not fit the wide modal, the `compact` version will be shown regardless of this `modalSize` options provided
    */
   modalSize?: "compact" | "wide";
+
+  /**
+   * Enable SIWE (Sign in with Ethererum) by passing an object of type `SiweAuthOptions` to
+   * enforce the users to sign a message after connecting their wallet to authenticate themselves.
+   *
+   * Refer to the [`SiweAuthOptions`](https://portal.thirdweb.com/references/typescript/v5/SiweAuthOptions) for more details
+   */
+  auth?: SiweAuthOptions;
 };
 
 /**
@@ -330,7 +342,9 @@ export type ConnectEmbedProps = {
  */
 export function ConnectEmbed(props: ConnectEmbedProps) {
   const activeAccount = useActiveAccount();
-  const show = !activeAccount;
+  const siweAuth = useSiweAuth(props.auth);
+  const show =
+    !activeAccount || (siweAuth.requiresAuth && !siweAuth.isLoggedIn);
 
   const wallets = props.wallets || getDefaultWallets();
   const localeId = props.locale || "en_US";
@@ -346,6 +360,7 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
       appMetadata={props.appMetadata}
       client={props.client}
       wallets={wallets}
+      accountAbstraction={props.accountAbstraction}
       timeout={
         typeof props.autoConnect === "boolean"
           ? undefined
@@ -388,6 +403,7 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
             termsOfServiceUrl: props.termsOfServiceUrl,
           },
           onConnect: props.onConnect,
+          auth: props.auth,
         }}
       >
         <WalletUIStatesProvider theme={props.theme}>
@@ -412,10 +428,18 @@ const ConnectEmbedContent = (
   // const requiresSignIn = false;
   const screenSetup = useSetupScreen();
   const { setScreen, initialScreen } = screenSetup;
+  const siweAuth = useSiweAuth(props.auth);
+  const activeAccount = useActiveAccount();
 
   const isAutoConnecting = useIsAutoConnecting();
 
   let content = null;
+
+  useEffect(() => {
+    if (siweAuth.requiresAuth && !siweAuth.isLoggedIn && activeAccount) {
+      setScreen(reservedScreens.signIn);
+    }
+  }, [siweAuth, setScreen, activeAccount]);
 
   const modalSize = !canFitWideModal()
     ? "compact"

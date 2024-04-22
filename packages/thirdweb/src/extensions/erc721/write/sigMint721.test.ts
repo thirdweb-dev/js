@@ -1,7 +1,6 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import { ANVIL_CHAIN } from "../../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../../test/src/test-clients.js";
-import { USDT_CONTRACT_ADDRESS } from "../../../../test/src/test-contracts.js";
 import {
   TEST_ACCOUNT_A,
   TEST_ACCOUNT_B,
@@ -13,32 +12,46 @@ import {
 } from "../../../contract/contract.js";
 import { sendTransaction } from "../../../transaction/actions/send-transaction.js";
 import { toHex } from "../../../utils/encoding/hex.js";
+import { deployERC20Contract } from "../../prebuilts/deploy-erc20.js";
 import { deployERC721Contract } from "../../prebuilts/deploy-erc721.js";
 import { generateMintSignature, mintWithSignature } from "./sigMint.js";
 
 // skip this test suite if there is no secret key available to test with
 // TODO: remove reliance on secret key during unit tests entirely
 describe.runIf(process.env.TW_SECRET_KEY)(
-  "generateMintSignature",
-  {
-    timeout: 120000,
-  },
+  "generateMintSignature721",
+
   () => {
     let erc721Contract: ThirdwebContract;
+    let erc20TokenContract: ThirdwebContract;
 
     beforeAll(async () => {
-      const contractAddress = await deployERC721Contract({
-        account: TEST_ACCOUNT_A,
+      erc721Contract = getContract({
+        address: await deployERC721Contract({
+          account: TEST_ACCOUNT_A,
+          chain: ANVIL_CHAIN,
+          client: TEST_CLIENT,
+          params: {
+            name: "Test",
+            symbol: "TST",
+          },
+          type: "TokenERC721",
+        }),
         chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
-        params: {
-          name: "Test",
-          symbol: "TST",
-        },
-        type: "TokenERC721",
       });
-      erc721Contract = getContract({
-        address: contractAddress,
+
+      erc20TokenContract = getContract({
+        address: await deployERC20Contract({
+          account: TEST_ACCOUNT_A,
+          chain: ANVIL_CHAIN,
+          client: TEST_CLIENT,
+          params: {
+            name: "TestToken",
+            symbol: "TSTT",
+          },
+          type: "TokenERC20",
+        }),
         chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
       });
@@ -94,6 +107,17 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       expect(payload.validityEndTimestamp).toBeGreaterThan(0n);
       expect(payload.uid).toBeDefined();
       expect(signature.length).toBe(132);
+
+      const transaction = mintWithSignature({
+        contract: erc721Contract,
+        payload,
+        signature,
+      });
+      const { transactionHash } = await sendTransaction({
+        transaction,
+        account: TEST_ACCOUNT_A,
+      });
+      expect(transactionHash.length).toBe(66);
     });
 
     it("should generate a mint signature with custom values", async () => {
@@ -104,10 +128,10 @@ describe.runIf(process.env.TW_SECRET_KEY)(
           royaltyBps: 500,
           primarySaleRecipient: TEST_ACCOUNT_A.address,
           metadata: "https://example.com/token",
-          price: 0.2,
-          currency: USDT_CONTRACT_ADDRESS,
-          validityStartTimestamp: new Date(1635724800), // October 31, 2021 00:00:00 UTC
-          validityEndTimestamp: new Date(1667260800), // October 31, 2022 00:00:00 UTC
+          price: "0.2",
+          currency: erc20TokenContract.address,
+          validityStartTimestamp: new Date(1635724800),
+          validityEndTimestamp: new Date(1867260800),
           uid: toHex("abcdef1234567890", { size: 32 }),
         },
         account: TEST_ACCOUNT_A,
@@ -124,9 +148,9 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       );
       expect(payload.uri).toBe("https://example.com/token");
       expect(payload.price).toBe(200000000000000000n);
-      expect(payload.currency).toBe(USDT_CONTRACT_ADDRESS);
+      expect(payload.currency).toBe(erc20TokenContract.address);
       expect(payload.validityStartTimestamp).toBe(1635724n);
-      expect(payload.validityEndTimestamp).toBe(1667260n);
+      expect(payload.validityEndTimestamp).toBe(1867260n);
       expect(payload.uid).toBe(
         "0x6162636465663132333435363738393000000000000000000000000000000000",
       );

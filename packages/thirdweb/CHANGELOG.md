@@ -1,5 +1,61 @@
 # thirdweb
 
+## 5.9.0
+
+### Minor Changes
+
+- [#2793](https://github.com/thirdweb-dev/js/pull/2793) [`4dbcbd1`](https://github.com/thirdweb-dev/js/commit/4dbcbd13dbd388454993aee7e67b43bb9d9249aa) Thanks [@jnsdls](https://github.com/jnsdls)! - **thirdweb/react**
+
+  Add a new optional `auth` prop to `<ConnectButton />` to allow specifying a SIWE auth flow after users connect their wallets.
+
+  ```jsx
+  <ConnectButton
+    client={client}
+    auth={{
+      isLoggedIn: async (address) => {
+        // check if the user is logged in by calling your server, etc.
+        // then return a boolean value
+        return true || false;
+      },
+      getLoginPayload: async ({ address, chainId }) => {
+        // send the address (and optional chainId) to your server to generate the login payload for the user to sign
+        // you can use the `generatePayload` function from `thirdweb/auth` to generate the payload
+        // once you have retrieved the payload return it from this function
+
+        return; // <the login payload here>
+      },
+      doLogin: async (loginParams) => {
+        // send the login params to your server where you can validate them using the `verifyPayload` function
+        // from `thirdweb/auth`
+        // you can then set a cookie or return a token to save in local storage, etc
+        // `isLoggedIn` will automatically get called again after this function resolves
+      },
+      doLogout: async () => {
+        //  do anything you need to do such as clearing cookies, etc when the user should be logged out
+        // `isLoggedIn` will automatically get called again after this function resolves
+      },
+    }}
+  />
+  ```
+
+### Patch Changes
+
+- [#2816](https://github.com/thirdweb-dev/js/pull/2816) [`d664647`](https://github.com/thirdweb-dev/js/commit/d6646475e2715c666316174e1c035a035a075ab1) Thanks [@jnsdls](https://github.com/jnsdls)! - adapters(viem): explicitly type walletClient return type
+
+## 5.8.0
+
+### Minor Changes
+
+- [#2806](https://github.com/thirdweb-dev/js/pull/2806) [`94e354a`](https://github.com/thirdweb-dev/js/commit/94e354aad30fc94b4d4c379e01810b0f4e2087bf) Thanks [@jnsdls](https://github.com/jnsdls)! - Implement `Offers` in the Marketplace extensions, available via `thirdweb/extensions/marketplace`.
+
+- [#2814](https://github.com/thirdweb-dev/js/pull/2814) [`bebcf46`](https://github.com/thirdweb-dev/js/commit/bebcf46c3a900fcbff6d544b18c7f0140c5ca9be) Thanks [@jnsdls](https://github.com/jnsdls)! - Add support for updating metadata for ERC1155 contracts
+
+- [#2811](https://github.com/thirdweb-dev/js/pull/2811) [`1b2bfc8`](https://github.com/thirdweb-dev/js/commit/1b2bfc83d786d1c7b7d1fefa480dbab559e84c54) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Added ERC1155 and ERC20 signature mint extensions
+
+### Patch Changes
+
+- [#2815](https://github.com/thirdweb-dev/js/pull/2815) [`381b669`](https://github.com/thirdweb-dev/js/commit/381b669cd1b4c621519636211f47a6910ca048f0) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix query invalidation when using react hooks
+
 ## 5.7.0
 
 ### Minor Changes

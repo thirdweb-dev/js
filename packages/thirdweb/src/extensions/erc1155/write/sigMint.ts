@@ -1,20 +1,21 @@
 import type { AbiParameterToPrimitiveType, Address } from "abitype";
-import type { Hex } from "viem";
+import { maxUint256 } from "viem";
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/addresses.js";
 import type { ThirdwebContract } from "../../../contract/contract.js";
 import { toBigInt } from "../../../utils/bigint.js";
 import { dateToSeconds, tenYearsFromNow } from "../../../utils/date.js";
+import type { Hex } from "../../../utils/encoding/hex.js";
 import type { NFTInput } from "../../../utils/nft/parseNft.js";
 import { randomBytes32 } from "../../../utils/uuid.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
-import { mintWithSignature as generatedMintWithSignature } from "../__generated__/ISignatureMintERC721/write/mintWithSignature.js";
+import { mintWithSignature as generatedMintWithSignature } from "../__generated__/ISignatureMintERC1155/write/mintWithSignature.js";
 
 /**
- * Mints a new ERC721 token with the given minter signature
+ * Mints a new ERC1155 token with the given minter signature
  * @param options - The transaction options.
  * @example
  * ```ts
- * import { mintWithSignature, generateMintSignature } from "thirdweb/extensions/erc721";
+ * import { mintWithSignature, generateMintSignature } from "thirdweb/extensions/erc1155";
  *
  * const { payload, signature } = await generateMintSignature(...)
  *
@@ -25,7 +26,7 @@ import { mintWithSignature as generatedMintWithSignature } from "../__generated_
  * });
  * await sendTransaction({ transaction, account });
  * ```
- * @extension ERC721
+ * @extension ERC1155
  * @returns A promise that resolves to the transaction result.
  */
 export const mintWithSignature = generatedMintWithSignature;
@@ -37,17 +38,18 @@ export type GenerateMintSignatureOptions = {
 };
 
 /**
- * Generates the payload and signature for minting an ERC721 token.
+ * Generates the payload and signature for minting an ERC1155 token.
  * @param options - The options for the minting process.
  * @example
  * ```ts
- * import { mintWithSignature, generateMintSignature } from "thirdweb/extensions/erc721";
+ * import { mintWithSignature, generateMintSignature } from "thirdweb/extensions/erc1155";
  *
  * const { payload, signature } = await generateMintSignature({
  *   account,
  *   contract,
  *   mintRequest: {
  *     to: "0x...",
+ *     quantity: 10n,
  *     metadata: {
  *       name: "My NFT",
  *       description: "This is my NFT",
@@ -63,29 +65,28 @@ export type GenerateMintSignatureOptions = {
  * });
  * await sendTransaction({ transaction, account });
  * ```
- * @extension ERC721
+ * @extension ERC1155
  * @returns A promise that resolves to the payload and signature.
  */
 export async function generateMintSignature(
   options: GenerateMintSignatureOptions,
 ) {
   const { mintRequest, account, contract } = options;
-
   const currency = mintRequest.currency || NATIVE_TOKEN_ADDRESS;
-  const [price, uri, uid] = await Promise.all([
+  const [pricePerToken, uri, uid] = await Promise.all([
     // price per token in wei
     (async () => {
       // if priceInWei is provided, use it
-      if ("priceInWei" in mintRequest && mintRequest.priceInWei) {
-        return mintRequest.priceInWei;
+      if ("pricePerTokenWei" in mintRequest && mintRequest.pricePerTokenWei) {
+        return mintRequest.pricePerTokenWei;
       }
       // if price is provided, convert it to wei
-      if ("price" in mintRequest && mintRequest.price) {
+      if ("pricePerToken" in mintRequest && mintRequest.pricePerToken) {
         const { convertErc20Amount } = await import(
           "../../../utils/extensions/convert-erc20-amount.js"
         );
         return await convertErc20Amount({
-          amount: mintRequest.price,
+          amount: mintRequest.pricePerToken,
           client: contract.client,
           chain: contract.chain,
           erc20Address: currency,
@@ -120,7 +121,10 @@ export async function generateMintSignature(
     uri,
     currency,
     uid,
-    price,
+    pricePerToken,
+    tokenId:
+      "tokenId" in mintRequest ? mintRequest.tokenId || maxUint256 : maxUint256,
+    quantity: mintRequest.quantity,
     to: mintRequest.to,
     royaltyRecipient: mintRequest.royaltyRecipient || account.address,
     royaltyBps: toBigInt(mintRequest.royaltyBps || 0),
@@ -131,12 +135,12 @@ export async function generateMintSignature(
 
   const signature = await account.signTypedData({
     domain: {
-      name: "TokenERC721",
+      name: "TokenERC1155",
       version: "1",
       chainId: contract.chain.id,
-      verifyingContract: contract.address,
+      verifyingContract: contract.address as Hex,
     },
-    types: { MintRequest: MintRequest721 },
+    types: { MintRequest: MintRequest1155 },
     primaryType: "MintRequest",
     message: payload,
   });
@@ -146,30 +150,37 @@ export async function generateMintSignature(
 type PayloadType = AbiParameterToPrimitiveType<{
   type: "tuple";
   name: "payload";
-  components: typeof MintRequest721;
+  components: typeof MintRequest1155;
 }>;
 
 type GeneratePayloadInput = {
   to: string;
-  metadata: NFTInput | string;
+  quantity: bigint;
   royaltyRecipient?: Address;
   royaltyBps?: number;
   primarySaleRecipient?: Address;
-  price?: string;
-  priceInWei?: bigint;
+  pricePerToken?: string;
+  pricePerTokenWei?: bigint;
   currency?: Address;
   validityStartTimestamp?: Date;
   validityEndTimestamp?: Date;
   uid?: Hex;
-};
+} & (
+  | {
+      metadata: NFTInput | string;
+    }
+  | { tokenId: bigint }
+);
 
-const MintRequest721 = [
+const MintRequest1155 = [
   { name: "to", type: "address" },
   { name: "royaltyRecipient", type: "address" },
   { name: "royaltyBps", type: "uint256" },
   { name: "primarySaleRecipient", type: "address" },
+  { name: "tokenId", type: "uint256" },
   { name: "uri", type: "string" },
-  { name: "price", type: "uint256" },
+  { name: "quantity", type: "uint256" },
+  { name: "pricePerToken", type: "uint256" },
   { name: "currency", type: "address" },
   { name: "validityStartTimestamp", type: "uint128" },
   { name: "validityEndTimestamp", type: "uint128" },
