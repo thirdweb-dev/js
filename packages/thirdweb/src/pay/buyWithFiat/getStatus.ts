@@ -20,36 +20,31 @@ export type BuyWithFiatStatus =
       status: "NOT_FOUND";
     }
   | {
-      status: "NONE" | "PENDING" | "FAILED" | "COMPLETED";
-      subStatus:
+      status:
+        | "PENDING_CRYPTO_SWAP"
+        | "ON_RAMP_TRANSFER_COMPLETED"
         | "NONE"
-        | "WAITING_BRIDGE"
-        | "REVERTED_ON_CHAIN"
-        | "SUCCESS"
-        | "PARTIAL_SUCCESS"
-        | "UNKNOWN_ERROR";
-      fromAddress: string;
+        | "PENDING_PAYMENT"
+        | "PAYMENT_FAILED"
+        | "PENDING_ON_RAMP_TRANSFER"
+        | "ON_RAMP_TRANSFER_IN_PROGRESS"
+        | "ON_RAMP_TRANSFER_FAILED";
+      swapType: "SAME_CHAIN" | "CROSS_CHAIN" | "ON_RAMP";
       toAddress: string;
       bridge?: string;
       failureMessage?: string;
-      destination?: {
-        transactionHash: string;
-        token: {
-          chainId: number;
-          tokenAddress: string;
-          decimals: number;
-          priceUSDCents: number;
-          name: string;
-          symbol: string;
-        };
-        amount: string;
-        amountWei: string;
-        amountUSDCents: number;
-        completedAt: string;
-        explorerLink: string;
-      };
       quote: {
-        fromToken: {
+        estimatedToTokenAmount: string;
+        estimatedOnRampAmount: string;
+        estimatedOnRampAmountWei: string;
+        estimatedToTokenAmountWei: string;
+        fromCurrency: {
+          amount: string;
+          amountUnits: string;
+          decimals: number;
+          currencySymbol: string;
+        };
+        onRampToken: {
           chainId: number;
           tokenAddress: string;
           decimals: number;
@@ -65,24 +60,8 @@ export type BuyWithFiatStatus =
           name: string;
           symbol: string;
         };
-        fromAmountWei: string;
-        fromAmount: string;
-        toAmountWei: string;
-        toAmount: string;
-        toAmountMin: string;
-        toAmountMinWei: string;
-        estimated: {
-          fromAmountUSDCents: number;
-          toAmountMinUSDCents: number;
-          toAmountUSDCents: number;
-          slippageBPS: number;
-          feesUSDCents: number;
-          gasCostUSDCents: number;
-          durationSeconds: number;
-        };
         createdAt: string;
       };
-      swapType: "SAME_CHAIN" | "CROSS_CHAIN" | "ON_RAMP";
       source: {
         transactionHash: string;
         token: {

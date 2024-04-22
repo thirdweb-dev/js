@@ -102,3 +102,7 @@ export { type SiweAuthOptions } from "../react/core/hooks/auth/useSiweAuth.js";
 
 export { useBuyWithFiatQuote } from "../react/core/hooks/pay/useBuyWithFiatQuote.js";
 export { useBuyWithFiatStatus } from "../react/core/hooks/pay/useBuyWithFiatStatus.js";
+export {
+  useBuyHistory,
+  type BuyHistoryQueryOptions,
+} from "../react/core/hooks/pay/useBuyHistory.js";

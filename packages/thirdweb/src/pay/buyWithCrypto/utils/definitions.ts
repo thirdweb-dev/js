@@ -52,3 +52,11 @@ export const getPayChainsEndpoint = () =>
  */
 export const getFiatCurrenciesEndpoint = () =>
   `https://${getThirdwebDomains().pay}/buy-with-fiat/currency/v1`;
+
+/**
+ * Constructs the endpoint to get the Buy history that includes both buy with crypto and buy with fiat
+ * @param client - The Thirdweb client containing the baseUrl config
+ * @internal
+ */
+export const getPayBuyHistoryEndpoint = () =>
+  `https://${getThirdwebDomains().pay}/wallet/history/v1`;

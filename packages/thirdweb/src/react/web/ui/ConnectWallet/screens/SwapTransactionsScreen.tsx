@@ -2,6 +2,8 @@ import { ArrowRightIcon, CrossCircledIcon } from "@radix-ui/react-icons";
 import { useMemo, useState, useSyncExternalStore } from "react";
 import { defineChain } from "../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
+import type { BuyWithFiatStatus } from "../../../../../exports/pay.js";
+import { useBuyHistory } from "../../../../../exports/react.js";
 import type {
   BuyWithCryptoStatus,
   BuyWithCryptoStatuses,
@@ -9,11 +11,11 @@ import type {
 } from "../../../../../pay/buyWithCrypto/actions/getStatus.js";
 import { formatNumber } from "../../../../../utils/formatNumber.js";
 import { useChainQuery } from "../../../../core/hooks/others/useChainQuery.js";
-import { useBuyWithCryptoHistory } from "../../../../core/hooks/pay/useBuyWithCryptoHistory.js";
 import {
   useActiveAccount,
   useActiveWalletChain,
 } from "../../../../core/hooks/wallets/wallet-hooks.js";
+import { ChainIcon } from "../../components/ChainIcon.js";
 import { Skeleton } from "../../components/Skeleton.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Spinner } from "../../components/Spinner.js";
@@ -22,50 +24,70 @@ import { Button } from "../../components/buttons.js";
 import { Text } from "../../components/text.js";
 import { useCustomTheme } from "../../design-system/CustomThemeProvider.js";
 import { fadeInAnimation } from "../../design-system/animations.js";
-import { StyledAnchor, StyledDiv } from "../../design-system/elements.js";
+import { StyledAnchor } from "../../design-system/elements.js";
 import {
+  type Theme,
   fontSize,
   iconSize,
   radius,
   spacing,
 } from "../../design-system/index.js";
-import { BuyIcon } from "../icons/BuyIcon.js";
-import { CryptoIcon } from "../icons/CryptoIcon.js";
 import { swapTransactionsStore } from "./Buy/swap/pendingSwapTx.js";
 
-type TxStatusInfo = {
-  boughChainId: number;
-  transactionHash: string;
-  boughtTokenAmount: string;
-  boughtTokenSymbol: string;
-  status: BuyWithCryptoStatus["status"];
-  subStatus?: BuyWithCryptoStatus["subStatus"];
-};
+type TxStatusInfo =
+  | {
+      type: "buyWithCrypto";
+      boughtChainId: number;
+      transactionHash: string;
+      boughtTokenAmount: string;
+      boughtTokenSymbol: string;
+      status: BuyWithCryptoStatus["status"];
+      subStatus?: BuyWithCryptoStatus["subStatus"];
+    }
+  | {
+      type: "buyWithFiat";
+      boughtChainId: number;
+      transactionHash: string;
+      boughtTokenAmount: string;
+      boughtTokenSymbol: string;
+      status: BuyWithFiatStatus["status"];
+    };
 
 // Note: Do not use useConnectUI here
 
 const PAGE_SIZE = 10;
 
-/**
- * @internal
- */
-export function BuyTxHistory(props: {
-  onBack: () => void;
-  client: ThirdwebClient;
-}) {
+function useBuyTransactionsToShow(client: ThirdwebClient) {
   const [pageIndex, setPageIndex] = useState(0);
-  const _historyQuery = useBuyTransactions(pageIndex, props.client);
+  const txInfosToShow: TxStatusInfo[] = [];
+  const account = useActiveAccount();
+  const buyHistory = useBuyHistory(
+    {
+      walletAddress: account?.address || "",
+      start: pageIndex * PAGE_SIZE,
+      count: PAGE_SIZE,
+      client,
+    },
+    {
+      refetchInterval: 30 * 1000, // 30 seconds
+    },
+  );
 
   const inMemoryPendingTxs = useSyncExternalStore(
     swapTransactionsStore.subscribe,
     swapTransactionsStore.getValue,
   );
 
-  const txInfosToShow: TxStatusInfo[] = [];
-
+  // create txHash
   const txHashSet = new Set<string>();
-  for (const tx of _historyQuery.data?.page || []) {
-    txHashSet.add(tx.source.transactionHash);
+  for (const tx of buyHistory.data?.page || []) {
+    if ("buyWithCryptoStatus" in tx) {
+      txHashSet.add(tx.buyWithCryptoStatus.source.transactionHash);
+    } else {
+      if (tx.buyWithFiatStatus.status !== "NOT_FOUND") {
+        txHashSet.add(tx.buyWithFiatStatus.source.transactionHash);
+      }
+    }
   }
 
   // add in-memory pending transactions
@@ -80,7 +102,8 @@ export function BuyTxHistory(props: {
     }
 
     txInfosToShow.push({
-      boughChainId: tx.destination.chainId,
+      type: "buyWithCrypto",
+      boughtChainId: tx.destination.chainId,
       transactionHash: tx.transactionHash,
       boughtTokenAmount: tx.destination.value,
       boughtTokenSymbol: tx.destination.symbol,
@@ -89,27 +112,75 @@ export function BuyTxHistory(props: {
   }
 
   // Add data from endpoint
-  for (const tx of _historyQuery.data?.page || []) {
-    txInfosToShow.push({
-      boughChainId: tx.destination?.token.chainId || tx.quote.toToken.chainId,
-      transactionHash: tx.source.transactionHash,
-      boughtTokenAmount: tx.destination?.amount || tx.quote.toAmount,
-      boughtTokenSymbol:
-        tx.destination?.token.symbol || tx.quote.toToken.symbol || "",
-      status: tx.status,
-      subStatus: tx.subStatus,
-    });
+  for (const tx of buyHistory.data?.page || []) {
+    if ("buyWithCryptoStatus" in tx) {
+      const txInfo = tx.buyWithCryptoStatus;
+      txInfosToShow.push({
+        type: "buyWithCrypto",
+        boughtChainId:
+          txInfo.destination?.token.chainId || txInfo.quote.toToken.chainId,
+        transactionHash: txInfo.source.transactionHash,
+        boughtTokenAmount: txInfo.destination?.amount || txInfo.quote.toAmount,
+        boughtTokenSymbol:
+          txInfo.destination?.token.symbol || txInfo.quote.toToken.symbol || "",
+        status: txInfo.status,
+        subStatus: txInfo.subStatus,
+      });
+    } else {
+      const txInfo = tx.buyWithFiatStatus;
+      if (txInfo.status !== "NOT_FOUND") {
+        console.log("fiat status", txInfo);
+        txInfosToShow.push({
+          type: "buyWithFiat",
+          boughtChainId: txInfo.quote.toToken.chainId,
+          transactionHash: txInfo.source.transactionHash,
+          boughtTokenAmount: txInfo.quote.estimatedToTokenAmount,
+          boughtTokenSymbol: txInfo.quote.toToken.symbol,
+          status: txInfo.status,
+        });
+      }
+    }
   }
+
+  const hidePagination =
+    !buyHistory.data ||
+    (buyHistory.data && !buyHistory.data.hasNextPage && pageIndex === 0);
+
+  return {
+    pageIndex,
+    setPageIndex,
+    txInfosToShow,
+    hidePagination,
+    isLoading: buyHistory.isLoading,
+    pagination: buyHistory.data
+      ? {
+          hasNextPage: buyHistory.data.hasNextPage,
+        }
+      : undefined,
+  };
+}
+
+/**
+ * @internal
+ */
+export function BuyTxHistory(props: {
+  onBack: () => void;
+  client: ThirdwebClient;
+}) {
+  const {
+    pageIndex,
+    setPageIndex,
+    txInfosToShow,
+    hidePagination,
+    isLoading,
+    pagination,
+  } = useBuyTransactionsToShow(props.client);
 
   const activeChain = useActiveWalletChain();
   const chainQuery = useChainQuery(activeChain);
   const activeAccount = useActiveAccount();
 
   const noTransactions = txInfosToShow.length === 0;
-
-  const hidePagination =
-    !_historyQuery.data ||
-    (_historyQuery.data && !_historyQuery.data.hasNextPage && pageIndex === 0);
 
   return (
     <Container animate="fadein">
@@ -126,8 +197,8 @@ export function BuyTxHistory(props: {
           maxHeight: "370px",
         }}
       >
-        <Container flex="column" gap="sm" px="lg" expand>
-          {noTransactions && !_historyQuery.isLoading && (
+        <Container flex="column" gap="xs" px="lg" expand>
+          {noTransactions && !isLoading && (
             <Container
               flex="column"
               gap="md"
@@ -142,7 +213,7 @@ export function BuyTxHistory(props: {
             </Container>
           )}
 
-          {noTransactions && _historyQuery.isLoading && (
+          {noTransactions && isLoading && (
             <Container
               flex="row"
               center="both"
@@ -156,11 +227,15 @@ export function BuyTxHistory(props: {
 
           {txInfosToShow.map((txInfo) => {
             return (
-              <TransactionInfo key={txInfo.transactionHash} txInfo={txInfo} />
+              <TransactionInfo
+                key={txInfo.transactionHash}
+                txInfo={txInfo}
+                client={props.client}
+              />
             );
           })}
 
-          {_historyQuery.isLoading && txInfosToShow.length > 0 && (
+          {isLoading && txInfosToShow.length > 0 && (
             <>
               <Skeleton width="100%" height="68px" />
               <Skeleton width="100%" height="68px" />
@@ -170,7 +245,7 @@ export function BuyTxHistory(props: {
         </Container>
 
         <Container p="lg">
-          {_historyQuery.data && !hidePagination && (
+          {pagination && !hidePagination && (
             <div
               style={{
                 display: "grid",
@@ -203,8 +278,8 @@ export function BuyTxHistory(props: {
               <Button
                 variant="outline"
                 gap="xs"
-                disabled={!_historyQuery.data.hasNextPage}
-                data-disabled={!_historyQuery.data.hasNextPage}
+                disabled={!pagination.hasNextPage}
+                data-disabled={!pagination.hasNextPage}
                 style={{
                   fontSize: fontSize.sm,
                   paddingBlock: spacing.sm,
@@ -241,65 +316,56 @@ export function BuyTxHistory(props: {
   );
 }
 
-/**
- * @internal
- */
-export function useBuyTransactions(pageIndex: number, client: ThirdwebClient) {
-  const account = useActiveAccount();
-  const historyQuery = useBuyWithCryptoHistory(
-    {
-      walletAddress: account?.address || "",
-      start: pageIndex * PAGE_SIZE,
-      count: PAGE_SIZE,
-      client,
-    },
-    {
-      // 30 seconds
-      refetchInterval: 30 * 1000,
-    },
-  );
-
-  return historyQuery;
-}
-
-function TransactionInfo(props: { txInfo: TxStatusInfo }) {
+function TransactionInfo(props: {
+  txInfo: TxStatusInfo;
+  client: ThirdwebClient;
+}) {
   const {
-    boughChainId,
+    boughtChainId,
     transactionHash,
     boughtTokenAmount,
     boughtTokenSymbol,
-    status,
   } = props.txInfo;
 
-  const fromChain = useMemo(() => defineChain(boughChainId), [boughChainId]);
+  const boughtChain = useMemo(
+    () => defineChain(boughtChainId),
+    [boughtChainId],
+  );
 
-  const chainQuery = useChainQuery(fromChain);
-  const statusMeta = getStatusMeta(status, props.txInfo.subStatus);
+  const chainQuery = useChainQuery(boughtChain);
+  const statusMeta =
+    props.txInfo.type === "buyWithCrypto"
+      ? getBuyWithCryptoStatusMeta(props.txInfo.status, props.txInfo.subStatus)
+      : getBuyWithFiatStatusMeta(props.txInfo.status);
 
+  const isValidTxHash = transactionHash.startsWith("0x");
   return (
     <TxHashLink
       href={`${
         chainQuery.data?.explorers?.[0]?.url || ""
       }/tx/${transactionHash}`}
+      as={isValidTxHash ? "a" : "button"}
       target="_blank"
     >
-      <Container flex="row" center="y" gap="md">
-        <IconBox data-box>
-          <BuyIcon size={iconSize.sm} />
-          <div
-            style={{
-              position: "absolute",
-              bottom: 0,
-              right: 0,
-              transform: "translate(30%, 30%)",
-            }}
-          >
-            <CryptoIcon size={iconSize.sm} />
-          </div>
-        </IconBox>
+      <Container
+        flex="row"
+        center="y"
+        gap="sm"
+        style={{
+          flex: 1,
+        }}
+      >
+        <ChainIcon
+          client={props.client}
+          size={iconSize.md}
+          chain={chainQuery.data}
+        />
         <div
           style={{
             flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
           }}
         >
           {/* Row 1 */}
@@ -311,13 +377,12 @@ function TransactionInfo(props: { txInfo: TxStatusInfo }) {
               justifyContent: "space-between",
             }}
           >
-            <Text color="primaryText"> Buy</Text>
             <Text size="sm" color="primaryText">
               + {formatNumber(Number(boughtTokenAmount), 4)} {boughtTokenSymbol}
             </Text>{" "}
           </Container>
 
-          <Spacer y="xs" />
+          <Spacer y="xxs" />
 
           {/* Row 2 */}
           <Container
@@ -328,14 +393,6 @@ function TransactionInfo(props: { txInfo: TxStatusInfo }) {
               justifyContent: "space-between",
             }}
           >
-            {/* Status */}
-            <Container flex="row" gap="xxs" center="y">
-              <Text size="sm" color={statusMeta.color}>
-                {statusMeta.status}
-              </Text>
-              {statusMeta.loading && <Spinner size="xs" color="accentText" />}
-            </Container>
-
             {/* Network */}
             {chainQuery.data?.name ? (
               <Text size="sm"> {chainQuery.data.name}</Text>
@@ -345,34 +402,30 @@ function TransactionInfo(props: { txInfo: TxStatusInfo }) {
           </Container>
         </div>
       </Container>
+
+      {/* Status */}
+      <Container flex="row" gap="xxs" center="y">
+        <Text size="xs" color={statusMeta.color}>
+          {statusMeta.status}
+        </Text>
+      </Container>
     </TxHashLink>
   );
 }
 
 const ButtonLink = /* @__PURE__ */ (() => Button.withComponent("a"))();
 
-const IconBox = /* @__PURE__ */ StyledDiv(() => {
-  const theme = useCustomTheme();
-  return {
-    color: theme.colors.secondaryText,
-    padding: spacing.sm,
-    border: `2px solid ${theme.colors.borderColor}`,
-    borderRadius: radius.lg,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    position: "relative",
-  };
-});
-
 const TxHashLink = /* @__PURE__ */ StyledAnchor(() => {
   const theme = useCustomTheme();
   return {
+    border: "none",
     padding: spacing.sm,
     borderRadius: radius.lg,
     cursor: "pointer",
     animation: `${fadeInAnimation} 300ms ease`,
     background: theme.colors.tertiaryBg,
+    display: "flex",
+    alignItems: "center",
     "&:hover": {
       transition: "background 250ms ease",
       background: theme.colors.secondaryButtonBg,
@@ -381,24 +434,29 @@ const TxHashLink = /* @__PURE__ */ StyledAnchor(() => {
   };
 });
 
-function getStatusMeta(
+type StatusMeta = {
+  status: string;
+  color: keyof Theme["colors"];
+  loading?: true;
+};
+
+function getBuyWithCryptoStatusMeta(
   status: BuyWithCryptoStatuses,
   subStatus?: BuyWithCryptoSubStatuses,
-) {
+): StatusMeta {
   if (subStatus === "WAITING_BRIDGE") {
     return {
       status: "Bridging",
       color: "accentText",
       loading: true,
-    } as const;
+    };
   }
 
   if (subStatus === "PARTIAL_SUCCESS") {
     return {
       status: "Incomplete",
       color: "secondaryText",
-      loading: false,
-    } as const;
+    };
   }
 
   if (status === "PENDING") {
@@ -406,27 +464,65 @@ function getStatusMeta(
       status: "Pending",
       color: "accentText",
       loading: true,
-    } as const;
+    };
   }
 
   if (status === "FAILED") {
     return {
       status: "Failed",
       color: "danger",
-      loading: false,
-    } as const;
+    };
   }
 
   if (status === "COMPLETED") {
     return {
       status: "Completed",
       color: "success",
-      loading: false,
-    } as const;
+    };
   }
 
   return {
     status: "Unknown",
     color: "secondaryText",
-  } as const;
+  };
+}
+
+// TODO: get proper copy from Design/Product and confirm what these statuses mean
+
+function getBuyWithFiatStatusMeta(
+  status: BuyWithFiatStatus["status"],
+): StatusMeta {
+  switch (status) {
+    case "PENDING_ON_RAMP_TRANSFER":
+    case "ON_RAMP_TRANSFER_IN_PROGRESS":
+    case "PENDING_PAYMENT":
+    case "PENDING_CRYPTO_SWAP": {
+      return {
+        status: "Pending",
+        color: "accentText",
+        loading: true,
+      };
+    }
+
+    case "ON_RAMP_TRANSFER_COMPLETED": {
+      return {
+        status: "Completed", // Is this actually completed though?
+        color: "success",
+        loading: true,
+      };
+    }
+
+    case "PAYMENT_FAILED":
+    case "ON_RAMP_TRANSFER_FAILED": {
+      return {
+        status: "Failed",
+        color: "danger",
+      };
+    }
+  }
+
+  return {
+    status: "Unknown",
+    color: "secondaryText",
+  };
 }

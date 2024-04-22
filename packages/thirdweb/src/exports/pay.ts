@@ -32,3 +32,9 @@ export {
   type BuyWithFiatStatus,
   type GetBuyWithFiatStatusParams,
 } from "../pay/buyWithFiat/getStatus.js";
+
+export {
+  getBuyHistory,
+  type BuyHistoryData,
+  type BuyHistoryParams,
+} from "../pay/getBuyHistory.js";
