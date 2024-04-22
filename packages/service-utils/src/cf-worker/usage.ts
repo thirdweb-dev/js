@@ -70,7 +70,7 @@ const usageEventSchema = z.object({
   tokenAddress: z.string().optional(),
   amountWei: z.string().optional(),
   amountUSDCents: z.number().nonnegative().optional(),
-  httpMethod: z.enum(["GET", "POST", "PUT", "DELETE", "PATCH"]).optional(),
+  httpMethod: z.enum(["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "CONNECT", "OPTIONS", "TRACE" ]).optional(),
 });
 export type UsageEvent = z.infer<typeof usageEventSchema>;
 
