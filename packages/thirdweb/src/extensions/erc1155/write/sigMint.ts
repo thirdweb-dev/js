@@ -123,7 +123,9 @@ export async function generateMintSignature(
     uid,
     pricePerToken,
     tokenId:
-      "tokenId" in mintRequest ? mintRequest.tokenId || maxUint256 : maxUint256,
+      "tokenId" in mintRequest && mintRequest.tokenId !== undefined
+        ? mintRequest.tokenId
+        : maxUint256,
     quantity: mintRequest.quantity,
     to: mintRequest.to,
     royaltyRecipient: mintRequest.royaltyRecipient || account.address,
