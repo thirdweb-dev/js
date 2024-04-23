@@ -1,7 +1,4 @@
-import {
-  type CoinbaseWalletProvider,
-  CoinbaseWalletSDK,
-} from "@coinbase/wallet-sdk";
+import { CoinbaseWalletSDK } from "@coinbase/wallet-sdk";
 import type { Address } from "abitype";
 import {
   type SignTypedDataParameters,
@@ -16,7 +13,6 @@ import type { AppMetadata, DisconnectFn, SwitchChainFn } from "../types.js";
 import { getValidPublicRPCUrl } from "../utils/chains.js";
 import { normalizeChainId } from "../utils/normalizeChainId.js";
 
-import { ethereum } from "../../chains/chain-definitions/ethereum.js";
 import type { Chain } from "../../chains/types.js";
 import { defineChain, getChainMetadata } from "../../chains/utils.js";
 import type { ThirdwebClient } from "../../client/client.js";
@@ -128,19 +124,18 @@ async function initProvider(options: CoinbaseSDKWalletConnectionOptions) {
     appName: options.appMetadata?.name || getDefaultAppMetadata().name,
   });
 
-  if (options.onUri) {
-    options.onUri(client.getQrUrl() || undefined);
-  }
+  // if (options.onUri) {
+  //   options.onUri(client.getQrUrl() || undefined);
+  // }
 
-  const chain = options?.chain || ethereum;
-
-  return client.makeWeb3Provider(chain.rpc, chain.id);
+  return client.makeWeb3Provider();
 }
 
 function onConnect(
   address: string,
   chain: Chain,
-  provider: CoinbaseWalletProvider,
+  // biome-ignore lint/suspicious/noExplicitAny: beta SDK, type not exported
+  provider: any, // TODO types
   emitter: WalletEmitter<"com.coinbase.wallet">,
 ): [Account, Chain, DisconnectFn, SwitchChainFn] {
   const account: Account = {
@@ -217,7 +212,7 @@ function onConnect(
     provider.removeListener("chainChanged", onChainChanged);
     provider.removeListener("disconnect", onDisconnect);
     provider.disconnect();
-    await provider.close();
+    // await provider.close();
   }
 
   function onDisconnect() {
@@ -324,7 +319,8 @@ export async function autoConnectCoinbaseWalletSDK(
 }
 
 async function switchChainCoinbaseWalletSDK(
-  provider: CoinbaseWalletProvider,
+  // biome-ignore lint/suspicious/noExplicitAny: beta SDK, type not exported
+  provider: any, // TODO types
   chain: Chain,
 ) {
   const chainIdHex = numberToHex(chain.id);

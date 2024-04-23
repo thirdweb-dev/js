@@ -4,7 +4,7 @@ import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.
 
 import type { InjectedWalletLocale } from "../injected/locale/types.js";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { ScanScreen } from "./ScanScreen.js";
 
 /**
@@ -19,7 +19,7 @@ function CoinbaseSDKWalletConnectUI(props: {
   walletInfo: WalletInfo;
 }) {
   const { onBack, done, wallet, walletInfo, onGetStarted, locale } = props;
-  const [qrCodeUri, setQrCodeUri] = useState<string | undefined>();
+  // const [qrCodeUri, setQrCodeUri] = useState<string | undefined>();
   const { client, chain } = useConnectUI();
 
   const connect = useCallback(() => {
@@ -27,10 +27,6 @@ function CoinbaseSDKWalletConnectUI(props: {
       .connect({
         client,
         chain,
-        onUri: (uri) => {
-          setQrCodeUri(uri);
-        },
-        headlessMode: true,
         reloadOnDisconnect: false,
       })
       .then(() => {
@@ -55,7 +51,7 @@ function CoinbaseSDKWalletConnectUI(props: {
       qrScanInstruction={locale.scanScreen.instruction}
       onBack={onBack}
       onGetStarted={onGetStarted}
-      qrCodeUri={qrCodeUri}
+      // qrCodeUri={qrCodeUri}
       walletName={walletInfo.name}
       walletId="com.coinbase.wallet"
       getStartedLink={locale.getStartedLink}
