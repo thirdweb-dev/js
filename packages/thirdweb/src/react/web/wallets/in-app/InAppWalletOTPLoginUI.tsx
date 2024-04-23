@@ -21,60 +21,85 @@ type VerificationStatus =
   | "valid"
   | "idle"
   | "payment_required";
-type EmailStatus = "sending" | SendEmailOtpReturnType | "error";
-type ScreenToShow =
-  | "base"
-  | "create-password"
-  | "enter-password-or-recovery-code";
+type AccountStatus = "sending" | SendEmailOtpReturnType | "error";
+type ScreenToShow = "base" | "enter-password-or-recovery-code";
 
 /**
  * @internal
  */
 export function InAppWalletOTPLoginUI(props: {
+  userInfo: { email: string } | { phone: string };
   wallet: Wallet<"inApp">;
-  email: string;
   locale: InAppWalletLocale;
   done: () => void;
   goBack?: () => void;
 }) {
-  const { wallet, done, goBack } = props;
-  const email = props.email;
+  const { wallet, done, goBack, userInfo } = props;
   const { client, chain, connectModal } = useConnectUI();
   const isWideModal = connectModal.size === "wide";
   const locale = props.locale;
   const [otpInput, setOtpInput] = useState("");
   const [verifyStatus, setVerifyStatus] = useState<VerificationStatus>("idle");
-  const [emailStatus, setEmailStatus] = useState<EmailStatus>("sending");
+  const [accountStatus, setAccountStatus] = useState<AccountStatus>("sending");
 
   const [screen] = useState<ScreenToShow>("base");
 
-  const sendEmail = useCallback(async () => {
+  const sendEmailOrSms = useCallback(async () => {
     setOtpInput("");
     setVerifyStatus("idle");
-    setEmailStatus("sending");
+    setAccountStatus("sending");
 
     try {
-      const status = await preAuthenticate({
-        email,
-        strategy: "email",
-        client,
-      });
-      setEmailStatus(status);
+      if ("email" in userInfo) {
+        const status = await preAuthenticate({
+          email: userInfo.email,
+          strategy: "email",
+          client,
+        });
+        setAccountStatus(status);
+      } else {
+        const status = await preAuthenticate({
+          phoneNumber: userInfo.phone,
+          strategy: "phone",
+          client,
+        });
+        setAccountStatus(status);
+      }
     } catch (e) {
       console.error(e);
       setVerifyStatus("idle");
-      setEmailStatus("error");
+      setAccountStatus("error");
     }
-  }, [client, email]);
+  }, [client, userInfo]);
+
+  async function connect(otp: string) {
+    if ("email" in userInfo) {
+      await wallet.connect({
+        chain,
+        strategy: "email",
+        email: userInfo.email,
+        verificationCode: otp,
+        client,
+      });
+    } else {
+      await wallet.connect({
+        chain,
+        strategy: "phone",
+        phoneNumber: userInfo.phone,
+        verificationCode: otp,
+        client,
+      });
+    }
+  }
 
   const verify = async (otp: string) => {
-    if (typeof emailStatus !== "object" || otp.length !== 6) {
+    if (typeof accountStatus !== "object" || otp.length !== 6) {
       return;
     }
 
     setVerifyStatus("idle");
 
-    if (typeof emailStatus !== "object") {
+    if (typeof accountStatus !== "object") {
       return;
     }
 
@@ -86,23 +111,16 @@ export function InAppWalletOTPLoginUI(props: {
       setVerifyStatus("verifying");
 
       const needsRecoveryCode =
-        emailStatus.recoveryShareManagement === "USER_MANAGED" &&
-        (emailStatus.isNewUser || emailStatus.isNewDevice);
+        accountStatus.recoveryShareManagement === "USER_MANAGED" &&
+        (accountStatus.isNewUser || accountStatus.isNewDevice);
 
       // USER_MANAGED
       if (needsRecoveryCode) {
-        if (emailStatus.isNewUser) {
+        if (accountStatus.isNewUser) {
           try {
-            await wallet.connect({
-              chain,
-              strategy: "email",
-              email,
-              verificationCode: otp,
-              client,
-            });
+            await connect(otp);
           } catch (e) {
             if (e instanceof Error && e.message.includes("encryption key")) {
-              // TODO: do we need this?
               // setScreen("create-password");
             } else {
               throw e;
@@ -111,13 +129,7 @@ export function InAppWalletOTPLoginUI(props: {
         } else {
           try {
             // verifies otp for UI feedback
-            await wallet.connect({
-              chain,
-              strategy: "email",
-              email,
-              verificationCode: otp,
-              client,
-            });
+            await connect(otp);
           } catch (e) {
             if (e instanceof Error && e.message.includes("encryption key")) {
               // TODO: do we need this?
@@ -131,17 +143,8 @@ export function InAppWalletOTPLoginUI(props: {
 
       // AWS_MANAGED
       else {
-        const authResult = await wallet.connect({
-          chain,
-          strategy: "email",
-          email,
-          verificationCode: otp,
-          client,
-        });
-        if (!authResult) {
-          throw new Error("Failed to verify OTP");
-        }
-
+        // verifies otp for UI feedback
+        await connect(otp);
         done();
       }
 
@@ -164,9 +167,9 @@ export function InAppWalletOTPLoginUI(props: {
   useEffect(() => {
     if (!emailSentOnMount.current) {
       emailSentOnMount.current = true;
-      sendEmail();
+      sendEmailOrSms();
     }
-  }, [sendEmail]);
+  }, [sendEmailOrSms]);
 
   if (screen === "base") {
     return (
@@ -185,7 +188,9 @@ export function InAppWalletOTPLoginUI(props: {
               {!isWideModal && <Spacer y="xl" />}
               <Text>{locale.emailLoginScreen.enterCodeSendTo}</Text>
               <Spacer y="sm" />
-              <Text color="primaryText">{email}</Text>
+              <Text color="primaryText">
+                {"email" in userInfo ? userInfo.email : userInfo.phone}
+              </Text>
               <Spacer y="xl" />
             </Container>
 
@@ -251,7 +256,7 @@ export function InAppWalletOTPLoginUI(props: {
             {!isWideModal && <Line />}
 
             <Container p={isWideModal ? undefined : "lg"}>
-              {emailStatus === "error" && (
+              {accountStatus === "error" && (
                 <>
                   <Text size="sm" center color="danger">
                     {locale.emailLoginScreen.failedToSendCode}
@@ -259,7 +264,7 @@ export function InAppWalletOTPLoginUI(props: {
                 </>
               )}
 
-              {emailStatus === "sending" && (
+              {accountStatus === "sending" && (
                 <Container
                   flex="row"
                   center="both"
@@ -273,8 +278,8 @@ export function InAppWalletOTPLoginUI(props: {
                 </Container>
               )}
 
-              {typeof emailStatus === "object" && (
-                <LinkButton onClick={sendEmail} type="button">
+              {typeof accountStatus === "object" && (
+                <LinkButton onClick={sendEmailOrSms} type="button">
                   {locale.emailLoginScreen.resendCode}
                 </LinkButton>
               )}

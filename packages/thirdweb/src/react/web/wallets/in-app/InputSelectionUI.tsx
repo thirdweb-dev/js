@@ -3,10 +3,9 @@ import { Spacer } from "../../ui/components/Spacer.js";
 import { Button } from "../../ui/components/buttons.js";
 import { Input } from "../../ui/components/formElements.js";
 import { Text } from "../../ui/components/text.js";
+import { spacing } from "../../ui/design-system/index.js";
+import { CountrySelector } from "./CountrySelector.js";
 
-/**
- * @internal
- */
 export function InputSelectionUI(props: {
   onSelect: (data: string) => void;
   placeholder: string;
@@ -15,7 +14,9 @@ export function InputSelectionUI(props: {
   errorMessage?: (input: string) => string | undefined;
   emptyErrorMessage?: string;
   submitButtonText: string;
+  format?: "phone";
 }) {
+  const [countryCodeInfo, setCountryCodeInfo] = useState("US +1");
   const [input, setInput] = useState("");
   const [error, setError] = useState<string | undefined>();
   const [showError, setShowError] = useState(false);
@@ -26,7 +27,11 @@ export function InputSelectionUI(props: {
       return;
     }
 
-    props.onSelect(input);
+    props.onSelect(
+      props.format === "phone"
+        ? `+${countryCodeInfo.split("+")[1]}${input}`
+        : input,
+    );
   };
 
   const renderingError =
@@ -34,15 +39,31 @@ export function InputSelectionUI(props: {
     (!input && !!props.emptyErrorMessage && showError);
 
   return (
-    <div>
+    <div
+      style={{
+        width: "100%",
+      }}
+    >
       <div
         style={{
           position: "relative",
+          display: "flex",
+          flexDirection: "row",
+          gap: spacing.sm,
         }}
       >
+        {props.format === "phone" && (
+          <CountrySelector
+            countryCode={countryCodeInfo}
+            setCountryCode={setCountryCodeInfo}
+          />
+        )}
         <Input
           tabIndex={-1}
           placeholder={props.placeholder}
+          style={{
+            flexGrow: 1,
+          }}
           variant="outline"
           type={props.type}
           name={props.name}
