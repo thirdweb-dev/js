@@ -18,9 +18,10 @@ export async function getOrDeployInfraForPublishedContract(
   args: ClientAndChainAndAccount & {
     contractId: string;
     constructorParams: unknown[];
+    publisher?: string;
   },
 ) {
-  const { chain, client, account, contractId, constructorParams } = args;
+  const { chain, client, account, contractId, constructorParams, publisher } = args;
   let [cloneFactoryContract, implementationContract] = await Promise.all([
     getDeployedCloneFactoryContract({
       chain,
@@ -31,6 +32,7 @@ export async function getOrDeployInfraForPublishedContract(
       client,
       contractId,
       constructorParams,
+      publisher
     }),
   ]);
 
@@ -47,6 +49,7 @@ export async function getOrDeployInfraForPublishedContract(
       account,
       contractId,
       constructorParams,
+      publisher
     });
   }
   return { cloneFactoryContract, implementationContract };

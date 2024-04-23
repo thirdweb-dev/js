@@ -1,4 +1,6 @@
 [
+  "function tokenConditionId(address tokenAddress) view returns (uint256)",
+  "function tokenMerkleRoot(address tokenAddress) view returns (bytes32)",
   { "type": "constructor", "inputs": [], "stateMutability": "nonpayable" },
   {
     "type": "function",
