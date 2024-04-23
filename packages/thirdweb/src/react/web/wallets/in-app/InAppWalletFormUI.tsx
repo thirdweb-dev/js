@@ -68,7 +68,7 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
   const phoneIndex = authOptions.indexOf("phone");
   const isPhoneEnabled = phoneIndex !== -1;
 
-  const selectDefaultInputMode = () => {
+  const [inputMode, setInputMode] = useState<"email" | "phone" | "none">(() => {
     if (isEmailEnabled && isPhoneEnabled) {
       return emailIndex < phoneIndex ? "email" : "phone";
     }
@@ -79,11 +79,7 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
       return "phone";
     }
     return "none";
-  };
-
-  const [inputMode, setInputMode] = useState<"email" | "phone" | "none">(
-    selectDefaultInputMode(),
-  );
+  });
 
   const placeholder =
     inputMode === "email" ? locale.emailPlaceholder : locale.phonePlaceholder;
