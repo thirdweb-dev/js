@@ -35,7 +35,6 @@ describe.runIf(process.env.TW_SECRET_KEY)("generateAirdropSignature20", () => {
         chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
         contractId: "Airdrop",
-        publisher: "0xFD78F7E2dF2B8c3D5bff0413c96f3237500898B3",
         contractParams: [TEST_ACCOUNT_A.address],
       }),
       chain: ANVIL_CHAIN,
