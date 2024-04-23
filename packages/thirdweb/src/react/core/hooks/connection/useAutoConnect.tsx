@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { createWallet } from "../../../../wallets/create-wallet.js";
 // import {
@@ -118,6 +119,18 @@ export type AutoConnectProps = {
    * />
    */
   accountAbstraction?: SmartWalletOptions;
+
+  /**
+   * Specify the chain to connect to.
+   *
+   * ```tsx
+   * <AutoConnect
+   *  client={client}
+   *  chain={sepolia}
+   * />
+   * ```
+   */
+  chain?: Chain;
 };
 
 /**
@@ -182,6 +195,7 @@ export function AutoConnect(props: AutoConnectProps) {
         setConnectionStatus("connecting");
         return wallet.autoConnect({
           client: props.client,
+          chain: props.chain,
         });
       }
 

@@ -179,6 +179,11 @@ export type WCAutoConnectOptions = {
   client: ThirdwebClient;
 
   savedConnectParams?: SavedConnectParams;
+
+  /**
+   * Optional chain to connect to.
+   */
+  chain?: Chain;
 };
 
 type SavedConnectParams = {

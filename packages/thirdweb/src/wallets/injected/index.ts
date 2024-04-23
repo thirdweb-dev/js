@@ -66,8 +66,10 @@ export async function connectInjectedWallet(
   let connectedChain = defineChain(chainId);
 
   // if we want a specific chainId and it is not the same as the provider chainId, trigger switchChain
-  if (options.chain && options.chain.id !== chainId) {
-    await switchChain(provider, options.chain);
+  if (options.chain) {
+    if (options.chain.id !== chainId) {
+      await switchChain(provider, options.chain);
+    }
     connectedChain = options.chain;
   }
 
@@ -80,6 +82,7 @@ export async function connectInjectedWallet(
 export async function autoConnectInjectedWallet(
   id: InjectedSupportedWalletIds,
   emitter: WalletEmitter<InjectedSupportedWalletIds>,
+  chain?: Chain,
 ): Promise<ReturnType<typeof onConnect>> {
   const provider = getInjectedProvider(id);
 
@@ -101,7 +104,12 @@ export async function autoConnectInjectedWallet(
     .request({ method: "eth_chainId" })
     .then(normalizeChainId);
 
-  const connectedChain = defineChain(chainId);
+  let connectedChain = defineChain(chainId);
+
+  if (chain && chainId === chain.id) {
+    console.log("Connecting to custom chain", chain);
+    connectedChain = chain;
+  }
 
   return onConnect(provider, address, connectedChain, emitter);
 }

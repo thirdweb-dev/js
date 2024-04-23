@@ -119,6 +119,7 @@ export function createWallet<const ID extends WalletId>(
             ] = await autoConnectInjectedWallet(
               id as InjectedSupportedWalletIds,
               emitter,
+              options.chain,
             );
             // set the states
             account = connectedAccount;

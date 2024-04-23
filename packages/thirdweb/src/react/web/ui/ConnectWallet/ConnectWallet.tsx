@@ -62,6 +62,7 @@ export function ConnectButton(props: ConnectButtonProps) {
           ? undefined
           : props.autoConnect?.timeout
       }
+      chain={props.chain}
       accountAbstraction={props.accountAbstraction}
     />
   );
