@@ -61,6 +61,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("generateMintSignature1155", () => {
       mintRequest: {
         to: TEST_ACCOUNT_B.address,
         quantity: 10n,
+        pricePerToken: "0.1",
         metadata: {
           name: "My NFT",
           description: "This is my NFT",
