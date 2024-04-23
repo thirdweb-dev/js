@@ -1,5 +1,123 @@
 # thirdweb
 
+## 5.10.1
+
+### Patch Changes
+
+- [#2836](https://github.com/thirdweb-dev/js/pull/2836) [`3810df5`](https://github.com/thirdweb-dev/js/commit/3810df57aa9590b0a2fa14071a5c061bd94b1ec6) Thanks [@jnsdls](https://github.com/jnsdls)! - add missing events for `erc721`, `erc1155` and `erc20`
+
+## 5.10.0
+
+### Minor Changes
+
+- [#2822](https://github.com/thirdweb-dev/js/pull/2822) [`a919b27`](https://github.com/thirdweb-dev/js/commit/a919b27c7af41dc003ddb643eb0641eaa8aefc07) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add multicall3 extension
+
+### Patch Changes
+
+- [#2834](https://github.com/thirdweb-dev/js/pull/2834) [`be85410`](https://github.com/thirdweb-dev/js/commit/be8541054e392a12678ffee534284e7d1b203ad4) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - fix: erc1155 sigmint with additional supply
+
+- [#2831](https://github.com/thirdweb-dev/js/pull/2831) [`38f3b2e`](https://github.com/thirdweb-dev/js/commit/38f3b2eb21e74e5947f03cc594dee22c96099f8b) Thanks [@MananTank](https://github.com/MananTank)! - Fix In-App + Smart wallet Connection issue
+
+## 5.9.0
+
+### Minor Changes
+
+- [#2793](https://github.com/thirdweb-dev/js/pull/2793) [`4dbcbd1`](https://github.com/thirdweb-dev/js/commit/4dbcbd13dbd388454993aee7e67b43bb9d9249aa) Thanks [@jnsdls](https://github.com/jnsdls)! - **thirdweb/react**
+
+  Add a new optional `auth` prop to `<ConnectButton />` to allow specifying a SIWE auth flow after users connect their wallets.
+
+  ```jsx
+  <ConnectButton
+    client={client}
+    auth={{
+      isLoggedIn: async (address) => {
+        // check if the user is logged in by calling your server, etc.
+        // then return a boolean value
+        return true || false;
+      },
+      getLoginPayload: async ({ address, chainId }) => {
+        // send the address (and optional chainId) to your server to generate the login payload for the user to sign
+        // you can use the `generatePayload` function from `thirdweb/auth` to generate the payload
+        // once you have retrieved the payload return it from this function
+
+        return; // <the login payload here>
+      },
+      doLogin: async (loginParams) => {
+        // send the login params to your server where you can validate them using the `verifyPayload` function
+        // from `thirdweb/auth`
+        // you can then set a cookie or return a token to save in local storage, etc
+        // `isLoggedIn` will automatically get called again after this function resolves
+      },
+      doLogout: async () => {
+        //  do anything you need to do such as clearing cookies, etc when the user should be logged out
+        // `isLoggedIn` will automatically get called again after this function resolves
+      },
+    }}
+  />
+  ```
+
+### Patch Changes
+
+- [#2816](https://github.com/thirdweb-dev/js/pull/2816) [`d664647`](https://github.com/thirdweb-dev/js/commit/d6646475e2715c666316174e1c035a035a075ab1) Thanks [@jnsdls](https://github.com/jnsdls)! - adapters(viem): explicitly type walletClient return type
+
+## 5.8.0
+
+### Minor Changes
+
+- [#2806](https://github.com/thirdweb-dev/js/pull/2806) [`94e354a`](https://github.com/thirdweb-dev/js/commit/94e354aad30fc94b4d4c379e01810b0f4e2087bf) Thanks [@jnsdls](https://github.com/jnsdls)! - Implement `Offers` in the Marketplace extensions, available via `thirdweb/extensions/marketplace`.
+
+- [#2814](https://github.com/thirdweb-dev/js/pull/2814) [`bebcf46`](https://github.com/thirdweb-dev/js/commit/bebcf46c3a900fcbff6d544b18c7f0140c5ca9be) Thanks [@jnsdls](https://github.com/jnsdls)! - Add support for updating metadata for ERC1155 contracts
+
+- [#2811](https://github.com/thirdweb-dev/js/pull/2811) [`1b2bfc8`](https://github.com/thirdweb-dev/js/commit/1b2bfc83d786d1c7b7d1fefa480dbab559e84c54) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Added ERC1155 and ERC20 signature mint extensions
+
+### Patch Changes
+
+- [#2815](https://github.com/thirdweb-dev/js/pull/2815) [`381b669`](https://github.com/thirdweb-dev/js/commit/381b669cd1b4c621519636211f47a6910ca048f0) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix query invalidation when using react hooks
+
+## 5.7.0
+
+### Minor Changes
+
+- [#2803](https://github.com/thirdweb-dev/js/pull/2803) [`a54c745`](https://github.com/thirdweb-dev/js/commit/a54c745977e7806c0339633486eef55f92b02832) Thanks [@jnsdls](https://github.com/jnsdls)! - Added new extensions for "English Auctions" in `thirdweb/extensions/marketplace` module:
+
+  - `bidInAuction`
+  - `cancelAuction`
+  - `buyoutAuction`
+  - `collectAuctionPayout`
+  - `collectAuctionTokens`
+  - `executeSale`
+
+- [#2767](https://github.com/thirdweb-dev/js/pull/2767) [`300e4c8`](https://github.com/thirdweb-dev/js/commit/300e4c8a51581156acdfac431655510f0cdbca21) Thanks [@MananTank](https://github.com/MananTank)! - Open "Pay Modal" UI when sending transaction using the `useSendTransaction` hook if the user does not have enough funds to execute the transaction to prompt the user to buy tokens
+
+  `useSendTransaction` now takes an optional `config` option to customize the "Pay Modal" UI
+
+  ```tsx
+  const sendTransaction = useSendTransaction({
+    payModal: {
+      locale: "en_US",
+      theme: "light",
+    },
+  });
+  ```
+
+  You may also explicitly disable the "Pay Modal" UI by setting the `payModal` option to `false`
+
+  ```tsx
+  const sendTransaction = useSendTransaction({
+    payModal: false,
+  });
+  ```
+
+- [#2788](https://github.com/thirdweb-dev/js/pull/2788) [`f5abbe8`](https://github.com/thirdweb-dev/js/commit/f5abbe8b54fbd68188c40268ae5707c72f39441f) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Added `deployPublishedContract`
+
+### Patch Changes
+
+- [#2795](https://github.com/thirdweb-dev/js/pull/2795) [`7c17892`](https://github.com/thirdweb-dev/js/commit/7c178923f9072d8f43b0d23f3888fdedae540005) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix claiming drops with prices and no allowlists
+
+- [#2785](https://github.com/thirdweb-dev/js/pull/2785) [`4c7153c`](https://github.com/thirdweb-dev/js/commit/4c7153c95df1962d1e530a3d8227960cd87f6a61) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
+
+- [#2799](https://github.com/thirdweb-dev/js/pull/2799) [`37bd0e4`](https://github.com/thirdweb-dev/js/commit/37bd0e42a58cdbe5b04a9871b5fd413ec293d96c) Thanks [@jnsdls](https://github.com/jnsdls)! - fix `npx thirdweb` on windows when `thirdweb` is installed locally
+
 ## 5.6.0
 
 ### Minor Changes

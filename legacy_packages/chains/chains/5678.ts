@@ -1,11 +1,17 @@
 import type { Chain } from "../src/types";
 export default {
-  "chain": "EVMCC",
+  "chain": "TANGO",
   "chainId": 5678,
-  "explorers": [],
+  "explorers": [
+    {
+      "name": "BlockScout",
+      "url": "https://3001-blockscout.a.dancebox.tanssi.network",
+      "standard": "EIP3091"
+    }
+  ],
   "faucets": [],
-  "infoURL": "https://tanssi.network",
-  "name": "Tanssi EVM ContainerChain",
+  "infoURL": "https://docs.tanssi.network/builders/tanssi-network/networks/dancebox/demo-evm-containerchain",
+  "name": "Tanssi Demo",
   "nativeCurrency": {
     "name": "TANGO",
     "symbol": "TANGO",
@@ -17,7 +23,7 @@ export default {
     "https://fraa-dancebox-3001-rpc.a.dancebox.tanssi.network",
     "wss://fraa-dancebox-3001-rpc.a.dancebox.tanssi.network"
   ],
-  "shortName": "TanssiCC",
-  "slug": "tanssi-evm-containerchain",
+  "shortName": "tango",
+  "slug": "tanssi-demo",
   "testnet": false
 } as const satisfies Chain;

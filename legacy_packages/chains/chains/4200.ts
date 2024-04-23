@@ -4,7 +4,7 @@ export default {
   "chainId": 4200,
   "explorers": [
     {
-      "name": "blockscout",
+      "name": "L2scan",
       "url": "https://scan.merlinchain.io",
       "standard": "EIP3091",
       "icon": {
@@ -32,7 +32,8 @@ export default {
   "networkId": 4200,
   "rpc": [
     "https://4200.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.merlinchain.io"
+    "https://rpc.merlinchain.io",
+    "https://merlin-mainnet-enterprise.unifra.io"
   ],
   "shortName": "Merlin-Mainnet",
   "slug": "merlin",

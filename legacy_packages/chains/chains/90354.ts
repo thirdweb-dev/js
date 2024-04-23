@@ -2,29 +2,26 @@ import type { Chain } from "../src/types";
 export default {
   "chain": "ETH",
   "chainId": 90354,
-  "ens": {
-    "registry": "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e"
-  },
   "explorers": [
     {
       "name": "Block Explorer",
       "url": "https://explorerl2new-camp-network-4xje7wy105.t.conduit.xyz",
       "standard": "EIP3091",
       "icon": {
-        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
-        "width": 83,
-        "height": 82,
-        "format": "svg"
+        "url": "ipfs://Qmd5ux27W44fjxHP2opz7eLhJ6CJJm9WR6VcKNhbQBxiSd/QOyzwbO2_400x400.jpg",
+        "width": 400,
+        "height": 400,
+        "format": "jpg"
       }
     }
   ],
   "faucets": [],
   "features": [],
   "icon": {
-    "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
-    "width": 551,
-    "height": 540,
-    "format": "png"
+    "url": "ipfs://Qmd5ux27W44fjxHP2opz7eLhJ6CJJm9WR6VcKNhbQBxiSd/QOyzwbO2_400x400.jpg",
+    "width": 400,
+    "height": 400,
+    "format": "jpg"
   },
   "name": "Camp Network",
   "nativeCurrency": {

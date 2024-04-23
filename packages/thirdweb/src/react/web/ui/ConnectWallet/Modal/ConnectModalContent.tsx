@@ -1,10 +1,13 @@
 import { Suspense, lazy, useCallback } from "react";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
+import { useSiweAuth } from "../../../../core/hooks/auth/useSiweAuth.js";
 import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import { useConnect } from "../../../../core/hooks/wallets/wallet-hooks.js";
+import { useSetSelectionData } from "../../../providers/wallet-ui-states-provider.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
 import { WalletSelector } from "../WalletSelector.js";
 import { onModalUnmount, reservedScreens } from "../constants.js";
+import { SignatureScreen } from "../screens/SignatureScreen.js";
 import { StartScreen } from "../screens/StartScreen.js";
 import { AnyWalletConnectUI } from "./AnyWalletConnectUI.js";
 import {
@@ -27,9 +30,20 @@ export const ConnectModalContent = (props: {
 }) => {
   const { setModalVisibility, onClose } = props;
   const { screen, setScreen, initialScreen } = props.screenSetup;
-  const { wallets, accountAbstraction } = useConnectUI();
-  const { onConnect, connectModal, connectLocale } = useConnectUI();
+  const {
+    wallets,
+    accountAbstraction,
+    auth,
+    onConnect,
+    connectModal,
+    connectLocale,
+    client,
+  } = useConnectUI();
   const { connect } = useConnect();
+  const setSelectionData = useSetSelectionData();
+
+  const siweAuth = useSiweAuth(auth);
+  const showSignatureScreen = siweAuth.requiresAuth && !siweAuth.isLoggedIn;
 
   const handleConnected = useCallback(
     (wallet: Wallet) => {
@@ -40,12 +54,26 @@ export const ConnectModalContent = (props: {
       }
 
       onModalUnmount(() => {
+        setSelectionData({});
         setModalVisibility(true);
       });
 
-      onClose();
+      // show sign in screen if required
+      if (showSignatureScreen) {
+        setScreen(reservedScreens.signIn);
+      } else {
+        onClose();
+      }
     },
-    [setModalVisibility, onClose, onConnect, connect],
+    [
+      setModalVisibility,
+      onClose,
+      onConnect,
+      connect,
+      showSignatureScreen,
+      setScreen,
+      setSelectionData,
+    ],
   );
 
   const handleBack = useCallback(() => {
@@ -65,6 +93,7 @@ export const ConnectModalContent = (props: {
       }}
       done={handleConnected}
       goBack={wallets.length > 1 ? handleBack : undefined}
+      setModalVisibility={setModalVisibility}
     />
   );
 
@@ -107,6 +136,18 @@ export const ConnectModalContent = (props: {
     );
   };
 
+  const signatureScreen = (
+    <SignatureScreen
+      onDone={onClose}
+      modalSize={connectModal.size}
+      termsOfServiceUrl={connectModal.termsOfServiceUrl}
+      privacyPolicyUrl={connectModal.privacyPolicyUrl}
+      auth={auth}
+      client={client}
+      connectLocale={connectLocale}
+    />
+  );
+
   return (
     <ScreenSetupContext.Provider value={props.screenSetup}>
       {connectModal.size === "wide" ? (
@@ -114,7 +155,7 @@ export const ConnectModalContent = (props: {
           left={walletList}
           right={
             <>
-              {/* {screen === reservedScreens.signIn && signatureScreen} */}
+              {screen === reservedScreens.signIn && signatureScreen}
               {screen === reservedScreens.main && getStarted}
               {screen === reservedScreens.getStarted && getStarted}
               {screen === reservedScreens.showAll && showAll}
@@ -124,7 +165,7 @@ export const ConnectModalContent = (props: {
         />
       ) : (
         <ConnectModalCompactLayout>
-          {/* {screen === reservedScreens.signIn && signatureScreen} */}
+          {screen === reservedScreens.signIn && signatureScreen}
           {screen === reservedScreens.main && walletList}
           {screen === reservedScreens.getStarted && getStarted}
           {screen === reservedScreens.showAll && showAll}

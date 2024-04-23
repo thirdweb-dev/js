@@ -2,7 +2,6 @@ import styled from "@emotion/styled";
 import {
   ChevronRightIcon,
   ExitIcon,
-  // EnterIcon,
   PaperPlaneIcon,
   PinBottomIcon,
   PlusIcon,
@@ -10,13 +9,12 @@ import {
 } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState, useSyncExternalStore } from "react";
+import { ethereum } from "../../../../chains/chain-definitions/ethereum.js";
 import type { Chain } from "../../../../chains/types.js";
 import { getContract } from "../../../../contract/contract.js";
-import { ethereum } from "../../../../exports/chains.js";
 import { resolveAvatar } from "../../../../extensions/ens/resolve-avatar.js";
 import { resolveName } from "../../../../extensions/ens/resolve-name.js";
 import { isContractDeployed } from "../../../../utils/bytecode/is-contract-deployed.js";
-import { getUserEmail } from "../../../../wallets/in-app/core/authentication/index.js";
 import {
   useChainQuery,
   useChainsQuery,
@@ -27,7 +25,6 @@ import {
   useActiveAccount,
   useActiveWallet,
   useActiveWalletChain,
-  // useConnect,
   useDisconnect,
   useSwitchActiveWalletChain,
 } from "../../../core/hooks/wallets/wallet-hooks.js";
@@ -120,6 +117,7 @@ export const ConnectedWalletDetails: React.FC<{
     chain: walletChain ? walletChain : undefined,
     tokenAddress,
     address: activeAccount?.address,
+    client,
   });
 
   const [screen, setScreen] = useState<WalletDetailsModalScreen>("main");
@@ -212,9 +210,10 @@ export const ConnectedWalletDetails: React.FC<{
           style={{
             borderRadius: radius.sm,
           }}
+          client={client}
         />
       ) : activeWallet?.id ? (
-        <WalletImage size={iconSize.lg} id={activeWallet.id} />
+        <WalletImage size={iconSize.lg} id={activeWallet.id} client={client} />
       ) : (
         <WalletIcon size={iconSize.lg} />
       )}
@@ -280,7 +279,12 @@ export const ConnectedWalletDetails: React.FC<{
         }}
       >
         {chainQuery.data ? (
-          <ChainIcon chain={chainQuery.data} size={iconSize.md} active />
+          <ChainIcon
+            chain={chainQuery.data}
+            size={iconSize.md}
+            active
+            client={client}
+          />
         ) : (
           <Skeleton height={iconSize.md} width={iconSize.md} />
         )}
@@ -317,9 +321,14 @@ export const ConnectedWalletDetails: React.FC<{
             style={{
               borderRadius: radius.lg,
             }}
+            client={client}
           />
         ) : activeWallet?.id ? (
-          <WalletImage size={iconSize.xxl} id={activeWallet.id} />
+          <WalletImage
+            size={iconSize.xxl}
+            id={activeWallet.id}
+            client={client}
+          />
         ) : (
           <WalletIcon size={iconSize.xxl} />
         )}
@@ -371,7 +380,10 @@ export const ConnectedWalletDetails: React.FC<{
 
       <Container px="lg">
         <ConnectedToSmartWallet />
-        <InAppWalletEmail />
+
+        {(activeWallet?.id === "embedded" || activeWallet?.id === "inApp") && (
+          <InAppWalletUserInfo />
+        )}
 
         {/* Send, Receive, Swap */}
         <Container
@@ -600,6 +612,8 @@ export const ConnectedWalletDetails: React.FC<{
         onBack={() => {
           setScreen("main");
         }}
+        connectLocale={locale}
+        client={client}
       />
     );
   }
@@ -650,6 +664,7 @@ export const ConnectedWalletDetails: React.FC<{
         onBack={() => setScreen("main")}
         supportedTokens={props.supportedTokens}
         onViewPendingTx={() => setScreen("pending-tx")}
+        connectLocale={locale}
       />
     );
   }
@@ -861,20 +876,31 @@ function ConnectedToSmartWallet() {
   return null;
 }
 
-function InAppWalletEmail() {
+function InAppWalletUserInfo() {
   const { client } = useConnectUI();
-  const emailQuery = useQuery({
-    queryKey: ["in-app-wallet-user", client],
-    queryFn: async () => {
-      const data = await getUserEmail({
-        client: client,
-      });
+  const account = useActiveAccount();
 
-      return data || null;
+  const userInfoQuery = useQuery({
+    queryKey: ["in-app-wallet-user", client, account?.address],
+    queryFn: async () => {
+      const { getUserEmail, getUserPhoneNumber } = await import(
+        "../../../../wallets/in-app/core/authentication/index.js"
+      );
+
+      const [email, phone] = await Promise.all([
+        getUserEmail({
+          client: client,
+        }),
+        getUserPhoneNumber({
+          client: client,
+        }),
+      ]);
+
+      return email || phone || null;
     },
   });
 
-  if (emailQuery.data) {
+  if (userInfoQuery.data) {
     return (
       <Container
         flex="row"
@@ -883,7 +909,7 @@ function InAppWalletEmail() {
           paddingBottom: spacing.md,
         }}
       >
-        <Text size="sm">{emailQuery.data}</Text>
+        <Text size="sm">{userInfoQuery.data}</Text>
       </Container>
     );
   }

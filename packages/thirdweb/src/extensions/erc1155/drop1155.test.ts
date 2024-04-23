@@ -7,7 +7,7 @@ import {
   TEST_ACCOUNT_B,
 } from "../../../test/src/test-wallets.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
-import { sendAndConfirmTransaction } from "../../exports/transaction.js";
+import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { getContractMetadata } from "../common/read/getContractMetadata.js";
 import { deployERC1155Contract } from "../prebuilts/deploy-erc1155.js";
 import { balanceOf } from "./__generated__/IERC1155/read/balanceOf.js";
@@ -111,6 +111,37 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       await expect(
         balanceOf({ contract, owner: TEST_ACCOUNT_A.address, tokenId: 0n }),
       ).resolves.toBe(1n);
+    });
+
+    it("should allow to claim tokens with price", async () => {
+      await expect(
+        balanceOf({ contract, owner: TEST_ACCOUNT_A.address, tokenId: 0n }),
+      ).resolves.toBe(1n);
+      await sendAndConfirmTransaction({
+        transaction: setClaimConditions({
+          contract,
+          phases: [
+            {
+              price: "0.001",
+            },
+          ],
+          tokenId: 0n,
+        }),
+        account: TEST_ACCOUNT_A,
+      });
+      const claimTx = claimTo({
+        contract,
+        to: TEST_ACCOUNT_A.address,
+        tokenId: 0n,
+        quantity: 1n,
+      });
+      await sendAndConfirmTransaction({
+        transaction: claimTx,
+        account: TEST_ACCOUNT_A,
+      });
+      await expect(
+        balanceOf({ contract, owner: TEST_ACCOUNT_A.address, tokenId: 0n }),
+      ).resolves.toBe(2n);
     });
 
     describe("Allowlists", () => {

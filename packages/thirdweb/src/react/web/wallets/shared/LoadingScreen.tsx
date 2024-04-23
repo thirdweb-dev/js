@@ -14,7 +14,7 @@ export function LoadingScreen(props: { height?: string }) {
       flex="row"
       center="both"
     >
-      <Spinner size="lg" color="secondaryText" />
+      <Spinner size="xl" color="secondaryText" />
     </Container>
   );
 }

@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import type { Chain } from "../../../../../../../chains/types.js";
+import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
 import { useWalletBalance } from "../../../../../../core/hooks/others/useWalletBalance.js";
@@ -35,6 +36,7 @@ export function PayWithCrypto(props: {
   chain: Chain;
   token: TokenInfo | NativeToken;
   isLoading: boolean;
+  client: ThirdwebClient;
 }) {
   const chainQuery = useChainQuery(props.chain);
   const activeAccount = useActiveAccount();
@@ -43,6 +45,7 @@ export function PayWithCrypto(props: {
     address: activeAccount?.address,
     chain: props.chain,
     tokenAddress: isNativeToken(props.token) ? undefined : props.token.address,
+    client: props.client,
   });
 
   return (
@@ -65,7 +68,12 @@ export function PayWithCrypto(props: {
     >
       {/* Left */}
       <TokenButton variant="secondary" onClick={props.onSelectToken}>
-        <TokenIcon token={props.token} chain={props.chain} size="md" />
+        <TokenIcon
+          token={props.token}
+          chain={props.chain}
+          size="md"
+          client={props.client}
+        />
         <Container flex="column" gap="xxs">
           <Container flex="row" gap="xs" center="y">
             <TokenSymbol token={props.token} chain={props.chain} size="sm" />
@@ -96,7 +104,7 @@ export function PayWithCrypto(props: {
         }}
       >
         {props.isLoading ? (
-          <Skeleton width="120px" height={fontSize.md} />
+          <Skeleton width="120px" height={fontSize.md} color="borderColor" />
         ) : (
           <Text
             size="md"

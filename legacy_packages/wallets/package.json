@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/wallets",
-  "version": "2.5.3",
+  "version": "2.5.8",
   "main": "dist/thirdweb-dev-wallets.cjs.js",
   "module": "dist/thirdweb-dev-wallets.esm.js",
   "browser": {
@@ -537,7 +537,7 @@
     "@thirdweb-dev/crypto": "workspace:*",
     "@thirdweb-dev/sdk": "workspace:*",
     "@walletconnect/core": "^2.12.1",
-    "@walletconnect/ethereum-provider": "2.12.1",
+    "@walletconnect/ethereum-provider": "2.12.2",
     "@walletconnect/jsonrpc-utils": "^1.0.8",
     "@walletconnect/modal": "^2.6.2",
     "@walletconnect/types": "^2.12.1",

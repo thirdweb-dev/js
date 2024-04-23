@@ -5,4 +5,9 @@ export const anvil = /* @__PURE__ */ defineChain({
   name: "Anvil",
   rpc: "http://localhost:8545",
   testnet: true,
+  nativeCurrency: {
+    name: "Anvil Ether",
+    symbol: "ETH",
+    decimals: 18,
+  },
 });

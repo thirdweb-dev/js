@@ -13,9 +13,9 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "mintWithSignature" function.
  */
 export type MintWithSignatureParams = WithOverrides<{
-  req: AbiParameterToPrimitiveType<{
+  payload: AbiParameterToPrimitiveType<{
     type: "tuple";
-    name: "req";
+    name: "payload";
     components: [
       { type: "address"; name: "to" },
       { type: "address"; name: "royaltyRecipient" },
@@ -38,7 +38,7 @@ export const FN_SELECTOR = "0x98a6e993" as const;
 const FN_INPUTS = [
   {
     type: "tuple",
-    name: "req",
+    name: "payload",
     components: [
       {
         type: "address",
@@ -132,7 +132,7 @@ export async function isMintWithSignatureSupported(
  * ```ts
  * import { encodeMintWithSignatureParams } "thirdweb/extensions/erc1155";
  * const result = encodeMintWithSignatureParams({
- *  req: ...,
+ *  payload: ...,
  *  signature: ...,
  * });
  * ```
@@ -140,7 +140,7 @@ export async function isMintWithSignatureSupported(
 export function encodeMintWithSignatureParams(
   options: MintWithSignatureParams,
 ) {
-  return encodeAbiParameters(FN_INPUTS, [options.req, options.signature]);
+  return encodeAbiParameters(FN_INPUTS, [options.payload, options.signature]);
 }
 
 /**
@@ -152,7 +152,7 @@ export function encodeMintWithSignatureParams(
  * ```ts
  * import { encodeMintWithSignature } "thirdweb/extensions/erc1155";
  * const result = encodeMintWithSignature({
- *  req: ...,
+ *  payload: ...,
  *  signature: ...,
  * });
  * ```
@@ -177,7 +177,7 @@ export function encodeMintWithSignature(options: MintWithSignatureParams) {
  *
  * const transaction = mintWithSignature({
  *  contract,
- *  req: ...,
+ *  payload: ...,
  *  signature: ...,
  * });
  *
@@ -203,7 +203,7 @@ export function mintWithSignature(
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params: async () => {
       const resolvedOptions = await asyncOptions();
-      return [resolvedOptions.req, resolvedOptions.signature] as const;
+      return [resolvedOptions.payload, resolvedOptions.signature] as const;
     },
     value: async () => (await asyncOptions()).overrides?.value,
   });

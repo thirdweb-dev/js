@@ -16,7 +16,7 @@ import { GlobeIcon } from "../icons/GlobalIcon.js";
  * @internal
  */
 export function StartScreen() {
-  const { connectLocale: locale, connectModal } = useConnectUI();
+  const { connectLocale: locale, connectModal, client } = useConnectUI();
 
   const WelcomeScreen = connectModal.welcomeScreen;
   if (WelcomeScreen) {
@@ -56,6 +56,7 @@ export function StartScreen() {
               src={img.src}
               width={img.width ? String(img.width) : undefined}
               height={img.height ? String(img.height) : undefined}
+              client={client}
             />
           ) : (
             <GlobalContainer>

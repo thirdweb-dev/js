@@ -1,7 +1,9 @@
 import { useState } from "react";
+import type { ThirdwebClient } from "../../../../client/client.js";
 import { resolveScheme } from "../../../../utils/ipfs.js";
-import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { Skeleton } from "./Skeleton.js";
+
+// Note: Must not use useConnectUI here
 
 /**
  * @internal
@@ -15,9 +17,8 @@ export const Img: React.FC<{
   className?: string;
   style?: React.CSSProperties;
   fallbackImage?: string;
+  client: ThirdwebClient;
 }> = (props) => {
-  const { client } = useConnectUI();
-
   const [isLoaded, setIsLoaded] = useState(false);
 
   const propSrc = props.src;
@@ -33,7 +34,7 @@ export const Img: React.FC<{
     try {
       return resolveScheme({
         uri: propSrc,
-        client: client,
+        client: props.client,
       });
     } catch {
       return props.src;

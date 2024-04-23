@@ -272,7 +272,7 @@ export function AutoConnect(props: AutoConnectProps) {
 
     (async () => {
       isAutoConnecting.setValue(true);
-      startAutoConnect();
+      await startAutoConnect();
       isAutoConnecting.setValue(false);
     })();
   });

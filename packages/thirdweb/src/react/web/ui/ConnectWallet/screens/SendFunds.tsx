@@ -1,5 +1,6 @@
 import { CheckCircledIcon, CrossCircledIcon } from "@radix-ui/react-icons";
 import { useMemo, useState } from "react";
+import type { ThirdwebClient } from "../../../../../client/client.js";
 import { isAddress } from "../../../../../utils/address.js";
 import { useWalletBalance } from "../../../../core/hooks/others/useWalletBalance.js";
 import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
@@ -34,6 +35,7 @@ export function SendFunds(props: {
   const [screen, setScreen] = useState<"base" | "tokenSelector">("base");
   const activeChain = useActiveWalletChain();
   const chainId = activeChain?.id;
+  const { connectLocale, client } = useConnectUI();
 
   let defaultToken: ERC20OrNativeToken = NATIVE_TOKEN;
   if (
@@ -74,6 +76,8 @@ export function SendFunds(props: {
           setScreen("base");
         }}
         chain={chain}
+        connectLocale={connectLocale}
+        client={client}
       />
     );
   }
@@ -89,6 +93,7 @@ export function SendFunds(props: {
       amount={amount}
       setAmount={setAmount}
       onBack={props.onBack}
+      client={client}
     />
   );
 }
@@ -104,6 +109,7 @@ function SendFundsForm(props: {
   amount: string;
   setAmount: (value: string) => void;
   onBack: () => void;
+  client: ThirdwebClient;
 }) {
   const locale = useConnectUI().connectLocale.sendFundsScreen;
   const tokenAddress =
@@ -117,6 +123,7 @@ function SendFundsForm(props: {
     chain,
     tokenAddress: tokenAddress,
     address: activeAccount?.address,
+    client: props.client,
   });
 
   const { receiverAddress, setReceiverAddress, amount, setAmount } = props;
@@ -248,7 +255,12 @@ function SendFundsForm(props: {
           }}
           onClick={props.onTokenSelect}
         >
-          <TokenIcon token={props.token} chain={activeChain} size="lg" />
+          <TokenIcon
+            token={props.token}
+            chain={activeChain}
+            size="lg"
+            client={props.client}
+          />
 
           <Container flex="column" gap="xs">
             {tokenName ? (

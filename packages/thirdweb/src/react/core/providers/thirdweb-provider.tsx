@@ -6,6 +6,7 @@ import {
 } from "../../../transaction/actions/wait-for-tx-receipt.js";
 import { isBaseTransactionOptions } from "../../../transaction/types.js";
 import { isObjectWithKeys } from "../../../utils/type-guards.js";
+import { SetRootElementContext } from "./RootElementContext.js";
 
 /**
  * The ThirdwebProvider is component is a provider component that sets up the React Query client.
@@ -25,6 +26,7 @@ import { isObjectWithKeys } from "../../../utils/type-guards.js";
  * @component
  */
 export function ThirdwebProvider(props: React.PropsWithChildren) {
+  const [el, setEl] = useState<React.ReactNode>(null);
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -45,22 +47,25 @@ export function ThirdwebProvider(props: React.PropsWithChildren) {
                       console.error("[Transaction Error]", e);
                     })
                     .then(() => {
-                      return queryClient.invalidateQueries({
-                        queryKey: [
-                          // invalidate any readContract queries for this chainId:contractAddress
-                          [
-                            "readContract",
-                            variables.__contract?.chain.id,
-                            variables.__contract?.address,
-                          ] as const,
+                      return Promise.all([
+                        queryClient.invalidateQueries({
+                          queryKey:
+                            // invalidate any readContract queries for this chainId:contractAddress
+                            [
+                              "readContract",
+                              variables.__contract?.chain.id,
+                              variables.__contract?.address,
+                            ] as const,
+                        }),
+                        queryClient.invalidateQueries({
                           // invalidate any walletBalance queries for this chainId
                           // TODO: add wallet address in here if we can get it somehow
-                          [
+                          queryKey: [
                             "walletBalance",
                             variables.__contract?.chain.id,
                           ] as const,
-                        ],
-                      });
+                        }),
+                      ]);
                     });
                 }
               }
@@ -77,7 +82,10 @@ export function ThirdwebProvider(props: React.PropsWithChildren) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {props.children}
+      <SetRootElementContext.Provider value={setEl}>
+        {props.children}
+      </SetRootElementContext.Provider>
+      {el}
     </QueryClientProvider>
   );
 }

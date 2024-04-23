@@ -3,7 +3,8 @@ import {
   type GetWalletBalanceOptions,
   getWalletBalance,
 } from "../../../../wallets/utils/getWalletBalance.js";
-import { useConnectUI } from "./useWalletConnectionCtx.js";
+
+// NOTE: Do not use useConnectUI here - because this hook is also used outside of Connect UI context
 
 /**
  * Custom hook to fetch the balance of a wallet for a specific token.
@@ -11,11 +12,8 @@ import { useConnectUI } from "./useWalletConnectionCtx.js";
  * @returns The result of the query.
  * @internal
  */
-export function useWalletBalance(
-  options: Omit<Partial<GetWalletBalanceOptions>, "client">,
-) {
-  const { chain, address, tokenAddress } = options;
-  const { client } = useConnectUI();
+export function useWalletBalance(options: Partial<GetWalletBalanceOptions>) {
+  const { chain, address, tokenAddress, client } = options;
   const query = queryOptions({
     queryKey: [
       "walletBalance",

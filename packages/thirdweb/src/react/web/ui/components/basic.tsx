@@ -6,8 +6,7 @@ import {
   floatUpAnimation,
 } from "../design-system/animations.js";
 import { StyledDiv } from "../design-system/elements.js";
-import { type Theme, iconSize, spacing } from "../design-system/index.js";
-import { Img } from "./Img.js";
+import { type Theme, spacing } from "../design-system/index.js";
 import { BackButton, ModalTitle } from "./modalElements.js";
 
 export const ScreenBottomContainer = /* @__PURE__ */ StyledDiv(() => {
@@ -35,9 +34,8 @@ export const noScrollBar = /* @__PURE__ */ {
 export function ModalHeader(props: {
   onBack?: () => void;
   title: React.ReactNode;
-  imgSrc?: string;
 }) {
-  const { onBack, title, imgSrc } = props;
+  const { onBack, title } = props;
   return (
     <div
       style={{
@@ -58,9 +56,6 @@ export function ModalHeader(props: {
         />
       )}
       <Container flex="row" gap="xs" center="both">
-        {imgSrc && (
-          <Img src={imgSrc} width={iconSize.md} height={iconSize.md} />
-        )}
         {typeof title === "string" ? <ModalTitle>{title}</ModalTitle> : title}
       </Container>
     </div>
