@@ -1,7 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
   "chain": "Avalanche",
-  "chainId": 5042,
+  "chainId": 64643,
   "explorers": [],
   "faucets": [],
   "features": [],
@@ -12,19 +12,19 @@ export default {
     "format": "svg"
   },
   "infoURL": "https://avacloud.io",
-  "name": "OMOCHI",
+  "name": "qasim Testnet",
   "nativeCurrency": {
-    "name": "OMOCHI Token",
-    "symbol": "OMCH",
+    "name": "qasim Testnet Token",
+    "symbol": "SQJ",
     "decimals": 18
   },
-  "networkId": 5042,
+  "networkId": 64643,
   "redFlags": [],
   "rpc": [
-    "https://5042.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://subnets.avax.network/omochi/testnet/rpc"
+    "https://64643.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://subnets.avax.network/defi-kingdoms/dfk-chain/rpc"
   ],
-  "shortName": "OMOCHI",
-  "slug": "omochi-omochi",
+  "shortName": "qasim Testnet",
+  "slug": "qasim-testnet",
   "testnet": true
 } as const satisfies Chain;

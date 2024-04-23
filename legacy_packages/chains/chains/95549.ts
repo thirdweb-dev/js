@@ -1,7 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
   "chain": "Avalanche",
-  "chainId": 5042,
+  "chainId": 95549,
   "explorers": [],
   "faucets": [],
   "features": [],
@@ -12,19 +12,19 @@ export default {
     "format": "svg"
   },
   "infoURL": "https://avacloud.io",
-  "name": "OMOCHI",
+  "name": "Borne Testnet Testnet",
   "nativeCurrency": {
-    "name": "OMOCHI Token",
-    "symbol": "OMCH",
+    "name": "Borne Testnet Testnet Token",
+    "symbol": "BORNE",
     "decimals": 18
   },
-  "networkId": 5042,
+  "networkId": 95549,
   "redFlags": [],
   "rpc": [
-    "https://5042.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://subnets.avax.network/omochi/testnet/rpc"
+    "https://95549.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://subnets.avax.network/borne/testnet/rpc"
   ],
-  "shortName": "OMOCHI",
-  "slug": "omochi-omochi",
+  "shortName": "Borne Testnet Testnet",
+  "slug": "borne-testnet-testnet",
   "testnet": true
 } as const satisfies Chain;
