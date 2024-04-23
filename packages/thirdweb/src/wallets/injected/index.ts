@@ -107,7 +107,6 @@ export async function autoConnectInjectedWallet(
   let connectedChain = defineChain(chainId);
 
   if (chain && chainId === chain.id) {
-    console.log("Connecting to custom chain", chain);
     connectedChain = chain;
   }
 
