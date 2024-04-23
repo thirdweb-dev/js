@@ -1,3 +1,4 @@
+import { maxUint256 } from "viem";
 import { beforeAll, describe, expect, it } from "vitest";
 import { ANVIL_CHAIN } from "../../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../../test/src/test-clients.js";
@@ -14,6 +15,7 @@ import { sendTransaction } from "../../../transaction/actions/send-transaction.j
 import { toHex } from "../../../utils/encoding/hex.js";
 import { deployERC20Contract } from "../../prebuilts/deploy-erc20.js";
 import { deployERC1155Contract } from "../../prebuilts/deploy-erc1155.js";
+import { getNFT } from "../read/getNFT.js";
 import { generateMintSignature, mintWithSignature } from "./sigMint.js";
 
 // skip this test suite if there is no secret key available to test with
@@ -78,6 +80,46 @@ describe.runIf(process.env.TW_SECRET_KEY)("generateMintSignature1155", () => {
       account: TEST_ACCOUNT_A,
     });
     expect(transactionHash.length).toBe(66);
+    const nft = await getNFT({
+      contract: erc1155Contract,
+      tokenId: 0n,
+    });
+    if (nft.type !== "ERC1155") throw new Error("Expected ERC1155 NFT");
+    expect(nft.id).toBe(0n);
+    expect(nft.supply).toBe(10n);
+    expect(nft.metadata.name).toBe("My NFT");
+    expect(nft.metadata.description).toBe("This is my NFT");
+  });
+
+  it("should mint additional supply", async () => {
+    const { payload, signature } = await generateMintSignature({
+      mintRequest: {
+        to: TEST_ACCOUNT_B.address,
+        quantity: 5n,
+        tokenId: 0n,
+      },
+      account: TEST_ACCOUNT_A,
+      contract: erc1155Contract,
+    });
+    const transaction = mintWithSignature({
+      contract: erc1155Contract,
+      payload,
+      signature,
+    });
+    const { transactionHash } = await sendTransaction({
+      transaction,
+      account: TEST_ACCOUNT_A,
+    });
+    expect(transactionHash.length).toBe(66);
+    const nft = await getNFT({
+      contract: erc1155Contract,
+      tokenId: 0n,
+    });
+    if (nft.type !== "ERC1155") throw new Error("Expected ERC1155 NFT");
+    expect(nft.id).toBe(0n);
+    expect(nft.supply).toBe(15n);
+    expect(nft.metadata.name).toBe("My NFT");
+    expect(nft.metadata.description).toBe("This is my NFT");
   });
 
   it("should generate a mint signature with default values", async () => {
@@ -92,6 +134,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("generateMintSignature1155", () => {
     });
 
     expect(payload.to).toBe(TEST_ACCOUNT_B.address);
+    expect(payload.tokenId).toBe(maxUint256);
     expect(payload.royaltyRecipient).toBe(TEST_ACCOUNT_A.address);
     expect(payload.royaltyBps).toBe(0n);
     expect(payload.primarySaleRecipient).toBe(TEST_ACCOUNT_A.address);
@@ -125,7 +168,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("generateMintSignature1155", () => {
         royaltyRecipient: TEST_ACCOUNT_B.address,
         royaltyBps: 500,
         primarySaleRecipient: TEST_ACCOUNT_A.address,
-        metadata: "https://example.com/token",
+        tokenId: 0n,
         pricePerToken: "0.2",
         currency: erc20TokenContract.address,
         validityStartTimestamp: new Date(1635724800),
@@ -137,10 +180,11 @@ describe.runIf(process.env.TW_SECRET_KEY)("generateMintSignature1155", () => {
     });
 
     expect(payload.to).toBe(TEST_ACCOUNT_B.address);
+    expect(payload.tokenId).toBe(0n);
     expect(payload.royaltyRecipient).toBe(TEST_ACCOUNT_B.address);
     expect(payload.royaltyBps).toBe(500n);
     expect(payload.primarySaleRecipient).toBe(TEST_ACCOUNT_A.address);
-    expect(payload.uri).toBe("https://example.com/token");
+    expect(payload.uri).toBe("");
     expect(payload.pricePerToken).toBe(200000000000000000n);
     expect(payload.quantity).toBe(10n);
     expect(payload.currency).toBe(erc20TokenContract.address);
