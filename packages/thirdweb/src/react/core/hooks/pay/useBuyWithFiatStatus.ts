@@ -17,5 +17,8 @@ export function useBuyWithFiatStatus(params?: GetBuyWithFiatStatusParams) {
       return getBuyWithFiatStatus(params);
     },
     enabled: !!params,
+    refetchInterval: 5000,
+    refetchIntervalInBackground: true,
+    retry: true,
   });
 }

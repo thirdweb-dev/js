@@ -19,17 +19,17 @@ export function FiatStatusScreen(props: {
     client: props.client,
   });
 
-  const isLoading =
-    !statusQuery.data ||
-    statusQuery.data.status === "ON_RAMP_TRANSFER_IN_PROGRESS";
+  const isFailed =
+    statusQuery.data?.status === "ON_RAMP_TRANSFER_FAILED" ||
+    statusQuery.data?.status === "PAYMENT_FAILED";
 
-  const isNotFound =
-    statusQuery.data?.status === "NONE" ||
-    statusQuery.data?.status === "NOT_FOUND";
+  const isCompleted =
+    statusQuery.data?.status === "ON_RAMP_TRANSFER_COMPLETED" ||
+    statusQuery.data?.status === "CRYPTO_SWAP_COMPLETED";
 
-  const isFailed = statusQuery.data?.status === "ON_RAMP_TRANSFER_FAILED";
+  const isLoading = statusQuery.isLoading || (!isFailed && !isCompleted);
 
-  const isCompleted = statusQuery.data?.status === "ON_RAMP_TRANSFER_COMPLETED";
+  // TODO: show action required
 
   return (
     <Container p="lg">
@@ -49,14 +49,14 @@ export function FiatStatusScreen(props: {
         </>
       )}
 
-      {(isNotFound || isFailed) && (
+      {isFailed && (
         <>
           <Container flex="row" center="x">
             <AccentFailIcon size={iconSize["3xl"]} />
           </Container>
           <Spacer y="xl" />
           <Text color="primaryText" size="lg" center>
-            {isFailed ? "Buy Failed" : "Transaction Not Found"}
+            Buy Failed
           </Text>
         </>
       )}
