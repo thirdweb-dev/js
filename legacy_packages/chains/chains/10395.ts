@@ -17,7 +17,7 @@ export default {
     "format": "png"
   },
   "infoURL": "https://worldland.foundation",
-  "name": "Worldland Testnet",
+  "name": "WorldLand Testnet",
   "nativeCurrency": {
     "name": "Worldland",
     "symbol": "WLC",

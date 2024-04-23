@@ -1,7 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
   "chain": "Avalanche",
-  "chainId": 5042,
+  "chainId": 933039,
   "explorers": [],
   "faucets": [],
   "features": [],
@@ -12,19 +12,19 @@ export default {
     "format": "svg"
   },
   "infoURL": "https://avacloud.io",
-  "name": "OMOCHI",
+  "name": "QR0422T1TS Testnet",
   "nativeCurrency": {
-    "name": "OMOCHI Token",
-    "symbol": "OMCH",
+    "name": "QR0422T1TS Testnet Token",
+    "symbol": "DIF",
     "decimals": 18
   },
-  "networkId": 5042,
+  "networkId": 933039,
   "redFlags": [],
   "rpc": [
-    "https://5042.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://subnets.avax.network/omochi/testnet/rpc"
+    "https://933039.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://subnets.avax.network/qr0422t1ts/testnet/rpc"
   ],
-  "shortName": "OMOCHI",
-  "slug": "omochi-omochi",
+  "shortName": "QR0422T1TS Testnet",
+  "slug": "qr0422t1ts-testnet",
   "testnet": true
 } as const satisfies Chain;

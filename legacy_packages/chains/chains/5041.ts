@@ -1,7 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
   "chain": "Avalanche",
-  "chainId": 5042,
+  "chainId": 5041,
   "explorers": [],
   "faucets": [],
   "features": [],
@@ -18,13 +18,13 @@ export default {
     "symbol": "OMCH",
     "decimals": 18
   },
-  "networkId": 5042,
+  "networkId": 5041,
   "redFlags": [],
   "rpc": [
-    "https://5042.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://subnets.avax.network/omochi/testnet/rpc"
+    "https://5041.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://subnets.avax.network/omochi/mainnet/rpc"
   ],
   "shortName": "OMOCHI",
-  "slug": "omochi-omochi",
-  "testnet": true
+  "slug": "omochi",
+  "testnet": false
 } as const satisfies Chain;
