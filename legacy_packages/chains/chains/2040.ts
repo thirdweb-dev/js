@@ -2,7 +2,19 @@ import type { Chain } from "../src/types";
 export default {
   "chain": "VANAR",
   "chainId": 2040,
-  "explorers": [],
+  "explorers": [
+    {
+      "name": "Vanar Explorer",
+      "url": "https://explorer.vanarchain.com",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://Qmbx25iq4Vn4zLooPit9bbguXJzdiogwtVQWtSseyQPuSC",
+        "width": 1000,
+        "height": 1628,
+        "format": "png"
+      }
+    }
+  ],
   "faucets": [],
   "features": [
     {

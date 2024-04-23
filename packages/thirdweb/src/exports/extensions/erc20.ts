@@ -45,25 +45,6 @@ export {
   type BurnFromParams,
 } from "../../extensions/erc20/__generated__/IBurnableERC20/write/burnFrom.js";
 
-// EVENTS
-export {
-  transferEvent,
-  type TransferEventFilters,
-} from "../../extensions/erc20/__generated__/IERC20/events/Transfer.js";
-export {
-  approvalEvent,
-  type ApprovalEventFilters,
-} from "../../extensions/erc20/__generated__/IERC20/events/Approval.js";
-export {
-  tokensMintedEvent,
-  type TokensMintedEventFilters,
-} from "../../extensions/erc20/__generated__/IMintableERC20/events/TokensMinted.js";
-export {
-  tokensClaimedEvent,
-  type TokensClaimedEventFilters,
-} from "../../extensions/erc20/__generated__/IDropERC20/events/TokensClaimed.js";
-export { claimConditionsUpdatedEvent } from "../../extensions/erc20/__generated__/IDropERC20/events/ClaimConditionsUpdated.js";
-
 /**
  * DROPS extension for ERC20
  */
@@ -98,3 +79,26 @@ export {
   withdraw,
   type WithdrawParams,
 } from "../../extensions/erc20/__generated__/IWETH/write/withdraw.js";
+
+// EVENTS
+export {
+  transferEvent,
+  type TransferEventFilters,
+} from "../../extensions/erc20/__generated__/IERC20/events/Transfer.js";
+export {
+  approvalEvent,
+  type ApprovalEventFilters,
+} from "../../extensions/erc20/__generated__/IERC20/events/Approval.js";
+export {
+  tokensMintedEvent,
+  type TokensMintedEventFilters,
+} from "../../extensions/erc20/__generated__/IMintableERC20/events/TokensMinted.js";
+export {
+  tokensClaimedEvent,
+  type TokensClaimedEventFilters,
+} from "../../extensions/erc20/__generated__/IDropERC20/events/TokensClaimed.js";
+export { claimConditionsUpdatedEvent } from "../../extensions/erc20/__generated__/IDropERC20/events/ClaimConditionsUpdated.js";
+export {
+  tokensMintedWithSignatureEvent,
+  type TokensMintedWithSignatureEventFilters,
+} from "../../extensions/erc20/__generated__/ISignatureMintERC20/events/TokensMintedWithSignature.js";
