@@ -2,7 +2,6 @@ import styled from "@emotion/styled";
 import {
   ChevronRightIcon,
   ExitIcon,
-  // EnterIcon,
   PaperPlaneIcon,
   PinBottomIcon,
   PlusIcon,
@@ -16,7 +15,6 @@ import { getContract } from "../../../../contract/contract.js";
 import { resolveAvatar } from "../../../../extensions/ens/resolve-avatar.js";
 import { resolveName } from "../../../../extensions/ens/resolve-name.js";
 import { isContractDeployed } from "../../../../utils/bytecode/is-contract-deployed.js";
-import { getUserEmail } from "../../../../wallets/in-app/core/authentication/index.js";
 import {
   useChainQuery,
   useChainsQuery,
@@ -27,7 +25,6 @@ import {
   useActiveAccount,
   useActiveWallet,
   useActiveWalletChain,
-  // useConnect,
   useDisconnect,
   useSwitchActiveWalletChain,
 } from "../../../core/hooks/wallets/wallet-hooks.js";
@@ -383,7 +380,10 @@ export const ConnectedWalletDetails: React.FC<{
 
       <Container px="lg">
         <ConnectedToSmartWallet />
-        <InAppWalletEmail />
+
+        {(activeWallet?.id === "embedded" || activeWallet?.id === "inApp") && (
+          <InAppWalletUserInfo />
+        )}
 
         {/* Send, Receive, Swap */}
         <Container
@@ -876,20 +876,31 @@ function ConnectedToSmartWallet() {
   return null;
 }
 
-function InAppWalletEmail() {
+function InAppWalletUserInfo() {
   const { client } = useConnectUI();
-  const emailQuery = useQuery({
-    queryKey: ["in-app-wallet-user", client],
-    queryFn: async () => {
-      const data = await getUserEmail({
-        client: client,
-      });
+  const account = useActiveAccount();
 
-      return data || null;
+  const userInfoQuery = useQuery({
+    queryKey: ["in-app-wallet-user", client, account?.address],
+    queryFn: async () => {
+      const { getUserEmail, getUserPhoneNumber } = await import(
+        "../../../../wallets/in-app/core/authentication/index.js"
+      );
+
+      const [email, phone] = await Promise.all([
+        getUserEmail({
+          client: client,
+        }),
+        getUserPhoneNumber({
+          client: client,
+        }),
+      ]);
+
+      return email || phone || null;
     },
   });
 
-  if (emailQuery.data) {
+  if (userInfoQuery.data) {
     return (
       <Container
         flex="row"
@@ -898,7 +909,7 @@ function InAppWalletEmail() {
           paddingBottom: spacing.md,
         }}
       >
-        <Text size="sm">{emailQuery.data}</Text>
+        <Text size="sm">{userInfoQuery.data}</Text>
       </Container>
     );
   }

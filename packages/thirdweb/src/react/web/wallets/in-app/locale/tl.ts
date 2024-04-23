@@ -48,4 +48,9 @@ export default {
     submitButton: "Patunayan",
     wrongPassword: "Maling password",
   },
+  signInWithEmail: "Mag-sign in gamit ang email",
+  invalidPhone: "Hindi wastong numero ng telepono",
+  phonePlaceholder: "Ilagay ang iyong numero ng telepono",
+  signInWithPhone: "Mag-login gamit ang numero ng telepono",
+  phoneRequired: "Kinakailangan ang numero ng telepono",
 } satisfies InAppWalletLocale;

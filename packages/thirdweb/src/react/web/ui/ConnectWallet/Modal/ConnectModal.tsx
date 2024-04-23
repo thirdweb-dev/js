@@ -4,6 +4,7 @@ import { useActiveAccount } from "../../../../core/hooks/wallets/wallet-hooks.js
 import {
   useIsWalletModalOpen,
   useSetIsWalletModalOpen,
+  useSetSelectionData,
 } from "../../../providers/wallet-ui-states-provider.js";
 import { Modal } from "../../components/Modal.js";
 import { onModalUnmount, reservedScreens } from "../constants.js";
@@ -15,6 +16,7 @@ import { useSetupScreen } from "./screen.js";
  */
 const ConnectModal = () => {
   const screenSetup = useSetupScreen();
+  const setSelectionData = useSetSelectionData();
   const { screen, setScreen, initialScreen } = screenSetup;
   const isWalletModalOpen = useIsWalletModalOpen();
   const setIsWalletModalOpen = useSetIsWalletModalOpen();
@@ -25,8 +27,9 @@ const ConnectModal = () => {
     setIsWalletModalOpen(false);
     onModalUnmount(() => {
       setScreen(initialScreen);
+      setSelectionData({});
     });
-  }, [initialScreen, setIsWalletModalOpen, setScreen]);
+  }, [initialScreen, setIsWalletModalOpen, setScreen, setSelectionData]);
 
   const activeAccount = useActiveAccount();
 
@@ -72,16 +75,8 @@ const ConnectModal = () => {
           return;
         }
 
-        setIsWalletModalOpen(value);
-
         if (!value) {
-          onModalUnmount(() => {
-            // if (connectionStatus === "connecting") {
-            //   disconnect();
-            // }
-
-            setScreen(initialScreen);
-          });
+          closeModal();
         }
       }}
     >
