@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.28
+
+### Patch Changes
+
+- [#2832](https://github.com/thirdweb-dev/js/pull/2832) [`773b70a`](https://github.com/thirdweb-dev/js/commit/773b70aa1c113c775a1c44f3262b5de0547b5359) Thanks [@farhanW3](https://github.com/farhanW3)! - added httpMethod to usage-tracker
+
 ## 0.4.27
 
 ### Patch Changes

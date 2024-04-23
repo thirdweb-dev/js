@@ -1,5 +1,11 @@
 # @thirdweb-dev/chains
 
+## 0.1.99
+
+### Patch Changes
+
+- [#2821](https://github.com/thirdweb-dev/js/pull/2821) [`45677ad`](https://github.com/thirdweb-dev/js/commit/45677ad62012c63e3443f2e236311eb9a2bad094) Thanks [@github-actions](https://github.com/apps/github-actions)! - Synced Chains Package
+
 ## 0.1.98
 
 ### Patch Changes

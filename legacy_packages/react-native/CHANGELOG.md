@@ -1,5 +1,15 @@
 # @thirdweb-dev/react-native
 
+## 0.7.39
+
+### Patch Changes
+
+- Updated dependencies [[`45677ad`](https://github.com/thirdweb-dev/js/commit/45677ad62012c63e3443f2e236311eb9a2bad094)]:
+  - @thirdweb-dev/chains@0.1.99
+  - @thirdweb-dev/sdk@4.0.68
+  - @thirdweb-dev/react-core@4.6.7
+  - @thirdweb-dev/wallets@2.5.8
+
 ## 0.7.38
 
 ### Patch Changes
