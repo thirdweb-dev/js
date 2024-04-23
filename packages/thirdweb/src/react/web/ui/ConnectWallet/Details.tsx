@@ -16,10 +16,6 @@ import { resolveAvatar } from "../../../../extensions/ens/resolve-avatar.js";
 import { resolveName } from "../../../../extensions/ens/resolve-name.js";
 import { isContractDeployed } from "../../../../utils/bytecode/is-contract-deployed.js";
 import {
-  getUserEmail,
-  getUserPhoneNumber,
-} from "../../../../wallets/in-app/core/authentication/index.js";
-import {
   useChainQuery,
   useChainsQuery,
 } from "../../../core/hooks/others/useChainQuery.js";
@@ -384,7 +380,10 @@ export const ConnectedWalletDetails: React.FC<{
 
       <Container px="lg">
         <ConnectedToSmartWallet />
-        <InAppWalletEmail />
+
+        {(activeWallet?.id === "embedded" || activeWallet?.id === "inApp") && (
+          <InAppWalletUserInfo />
+        )}
 
         {/* Send, Receive, Swap */}
         <Container
@@ -877,33 +876,31 @@ function ConnectedToSmartWallet() {
   return null;
 }
 
-function InAppWalletEmail() {
+function InAppWalletUserInfo() {
   const { client } = useConnectUI();
-  const emailQuery = useQuery({
-    queryKey: ["in-app-wallet-email", client],
-    queryFn: async () => {
-      const data = await getUserEmail({
-        client: client,
-      });
+  const account = useActiveAccount();
 
-      return data || null;
+  const userInfoQuery = useQuery({
+    queryKey: ["in-app-wallet-user", client, account?.address],
+    queryFn: async () => {
+      const { getUserEmail, getUserPhoneNumber } = await import(
+        "../../../../wallets/in-app/core/authentication/index.js"
+      );
+
+      const [email, phone] = await Promise.all([
+        getUserEmail({
+          client: client,
+        }),
+        getUserPhoneNumber({
+          client: client,
+        }),
+      ]);
+
+      return email || phone || null;
     },
   });
 
-  const phoneQuery = useQuery({
-    queryKey: ["in-app-wallet-phone", client],
-    queryFn: async () => {
-      const data = await getUserPhoneNumber({
-        client: client,
-      });
-
-      return data || null;
-    },
-  });
-
-  const emailOrPhone = emailQuery.data || phoneQuery.data;
-
-  if (emailOrPhone) {
+  if (userInfoQuery.data) {
     return (
       <Container
         flex="row"
@@ -912,7 +909,7 @@ function InAppWalletEmail() {
           paddingBottom: spacing.md,
         }}
       >
-        <Text size="sm">{emailOrPhone}</Text>
+        <Text size="sm">{userInfoQuery.data}</Text>
       </Container>
     );
   }
