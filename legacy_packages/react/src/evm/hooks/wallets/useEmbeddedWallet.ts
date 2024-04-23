@@ -1,8 +1,4 @@
-import {
-  UseQueryResult,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import {
   useAddress,
   useCreateWalletInstance,
@@ -17,7 +13,7 @@ import {
   walletIds,
   type AuthParams,
 } from "@thirdweb-dev/wallets";
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { embeddedWallet } from "../../../wallet/wallets/embeddedWallet/embeddedWallet";
 import { openOauthSignInWindow } from "../../../wallet/utils/openOauthSignInWindow";
 
@@ -209,7 +205,6 @@ export function useEmbeddedWalletUserEmail(): UseQueryResult<
 > {
   const wallet = useWallet();
   const address = useAddress();
-  const queryClient = useQueryClient();
 
   const emailQuery = useQuery<string | undefined, string>(
     [wallet?.walletId, address, "embeddedWallet-email"],
@@ -224,11 +219,6 @@ export function useEmbeddedWalletUserEmail(): UseQueryResult<
       enabled: wallet?.walletId === walletIds.embeddedWallet,
     },
   );
-
-  // Invalidate the query when the wallet changes
-  useEffect(() => {
-    queryClient.invalidateQueries([wallet?.walletId, "embeddedWallet-email"]);
-  }, [wallet, queryClient]);
 
   return emailQuery;
 }
@@ -258,10 +248,10 @@ export function useEmbeddedWalletUserPhoneNumber(): UseQueryResult<
   string | undefined
 > {
   const wallet = useWallet();
-  const queryClient = useQueryClient();
+  const address = useAddress();
 
   const emailQuery = useQuery<string | undefined, string>(
-    [wallet?.walletId, "embeddedWallet-phone-number"],
+    [wallet?.walletId, address, "embeddedWallet-phone-number"],
     () => {
       if (wallet && wallet.walletId === walletIds.embeddedWallet) {
         return (wallet as EmbeddedWallet).getPhoneNumber() ?? "";

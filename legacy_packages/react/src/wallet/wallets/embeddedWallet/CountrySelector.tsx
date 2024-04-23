@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import React, { useRef } from "react";
-import { Theme, fontSize, spacing } from "../../../design-system";
+import { fontSize, spacing } from "../../../design-system";
 import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
 import { StyledSelect } from "../../../design-system/elements";
 
@@ -17,7 +17,7 @@ export function CountrySelector({
     queryKey: ["supported-sms-countries"],
     queryFn: async () => {
       const { supportedSmsCountries } = await import(
-        "@thirdweb-dev/wallets/evm/wallets/embedded-wallet"
+        "@thirdweb-dev/wallets/evm/connectors/embedded-wallet/implementations"
       );
       return supportedSmsCountries;
     },
@@ -26,6 +26,7 @@ export function CountrySelector({
   const supportedCountriesForSms = supportedCountries ?? [
     {
       countryIsoCode: "US",
+      countryName: "United States",
       phoneNumberCode: 1,
     },
   ];
@@ -41,13 +42,21 @@ export function CountrySelector({
           setCountryCode(e.target.value);
         }}
       >
+        <option
+          style={{
+            display: "none",
+          }}
+          value={countryCode}
+        >
+          {countryCode}
+        </option>
         {supportedCountriesForSms.map((country) => {
           return (
             <option
               key={country.countryIsoCode}
               value={`${country.countryIsoCode} +${country.phoneNumberCode}`}
             >
-              {country.countryIsoCode} +{country.phoneNumberCode}
+              {country.countryName} +{country.phoneNumberCode}{" "}
             </option>
           );
         })}
