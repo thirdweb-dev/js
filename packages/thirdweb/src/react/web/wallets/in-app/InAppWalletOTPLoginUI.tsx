@@ -57,13 +57,15 @@ export function InAppWalletOTPLoginUI(props: {
           client,
         });
         setAccountStatus(status);
-      } else {
+      } else if ("phone" in userInfo) {
         const status = await preAuthenticate({
           phoneNumber: userInfo.phone,
           strategy: "phone",
           client,
         });
         setAccountStatus(status);
+      } else {
+        throw new Error("Invalid userInfo");
       }
     } catch (e) {
       console.error(e);
@@ -81,7 +83,7 @@ export function InAppWalletOTPLoginUI(props: {
         verificationCode: otp,
         client,
       });
-    } else {
+    } else if ("phone" in userInfo) {
       await wallet.connect({
         chain,
         strategy: "phone",
@@ -89,6 +91,8 @@ export function InAppWalletOTPLoginUI(props: {
         verificationCode: otp,
         client,
       });
+    } else {
+      throw new Error("Invalid userInfo");
     }
   }
 
