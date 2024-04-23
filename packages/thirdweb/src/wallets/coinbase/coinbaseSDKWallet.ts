@@ -280,18 +280,19 @@ export async function connectCoinbaseWalletSDK(
   })) as string | number;
 
   const chainId = normalizeChainId(connectedChainId);
-  let chain = defineChain(chainId);
+  let connectedChain = defineChain(chainId);
+  
   // Switch to chain if provided
   if (
-    connectedChainId &&
-    options?.chain &&
-    connectedChainId !== options?.chain.id
+    options?.chain
   ) {
-    await switchChainCoinbaseWalletSDK(provider, options.chain);
-    chain = options.chain;
+    if (options.chain.id !== chainId) {
+      await switchChainCoinbaseWalletSDK(provider, options.chain);
+    }
+    connectedChain = options.chain;
   }
 
-  return onConnect(address, chain, provider, emitter);
+  return onConnect(address, connectedChain, provider, emitter);
 }
 
 /**
@@ -318,9 +319,13 @@ export async function autoConnectCoinbaseWalletSDK(
     method: "eth_chainId",
   })) as string | number;
   const chainId = normalizeChainId(connectedChainId);
-  const chain = defineChain(chainId);
+  let connectedChain = defineChain(chainId);
 
-  return onConnect(address, chain, provider, emitter);
+  if (options.chain && chainId === options.chain.id) {
+    connectedChain = options.chain;
+  }
+
+  return onConnect(address, connectedChain, provider, emitter);
 }
 
 async function switchChainCoinbaseWalletSDK(
