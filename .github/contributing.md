@@ -1,9 +1,5 @@
 # Contributing to thirdweb
 
-You can find a full video tutorial on how to contribute to thirdweb below:
-
-https://www.youtube.com/watch?v=TXsQ3qok3B0
-
 ## Getting Started
 
 To get started, read the [How this repo works](#how-this-repo-works) section below to learn about the structure of this repo.
@@ -12,23 +8,19 @@ From there, you can take a look at our [Good First Issues](https://github.com/th
 
 If you have any questions about the issue, feel free to ask on our [Discord server](https://discord.gg/thirdweb) in the `#contributors` channel; where you'll be able to get help from our team and other contributors.
 
-<br/>
+<br />
 
 ## How this repo works
 
-[@thirdweb-dev/js](https://github.com/thirdweb-dev/js) is a monorepo, meaning it contains many projects within it.
+We use [Turborepo](https://turbo.build/repo/docs) to manage the repository, and help speed up the [CI/CD](https://www.atlassian.com/continuous-delivery/principles/continuous-integration-vs-delivery-vs-deployment) pipeline to ship to production faster 🚢. Turborepo is a project dependency, and doesn't need to be installed separately.
 
-We use [Turborepo](https://turborepo.org/docs/getting-started) to manage the monorepo, and help speed up the [CI/CD](https://www.atlassian.com/continuous-delivery/principles/continuous-integration-vs-delivery-vs-deployment) pipeline to ship to production faster 🚢.
+We use [pnpm](https://pnpm.io) for package management across the repo. `pnpm` is similar to `npm` or `yarn` but with more efficient disk space usage.
 
-You can see a quick outline of each of the projects within this repo below, each living within the [/packages](/packages) directory:
+**With the v5 SDK, we've consolidated everything into a single project at [/packages/thirdweb](./packages/thirdweb). You can still find the legacy packages at [/legacy_packages](./legacy_packages).**
 
-| Package                               | Description                                                          | Latest Version                                                                                                                                                                   |
-| ------------------------------------- | -------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [/sdk](./legacy_packages/sdk)         | Best in class web3 SDK for Browser, Node and Mobile apps             | <a href="https://www.npmjs.com/package/@thirdweb-dev/sdk"><img src="https://img.shields.io/npm/v/@thirdweb-dev/sdk?color=red&label=npm&logo=npm" alt="npm version"/></a>         |
-| [/react](./legacy_packages/react)     | Ultimate collection of React hooks for your web3 apps                | <a href="https://www.npmjs.com/package/@thirdweb-dev/react"><img src="https://img.shields.io/npm/v/@thirdweb-dev/react?color=red&label=npm&logo=npm" alt="npm version"/></a>     |
-| [/auth](./legacy_packages/auth)       | Best in class wallet authentication for Node backends                | <a href="https://www.npmjs.com/package/@thirdweb-dev/auth"><img src="https://img.shields.io/npm/v/@thirdweb-dev/auth?color=red&label=npm&logo=npm" alt="npm version"/></a>       |
-| [/storage](./legacy_packages/storage) | Best in class decentralized storage SDK for Browser and Node         | <a href="https://www.npmjs.com/package/@thirdweb-dev/storage"><img src="https://img.shields.io/npm/v/@thirdweb-dev/storage?color=red&label=npm&logo=npm" alt="npm version"/></a> |
-| [/cli](./legacy_packages/cli)         | Publish and deploy smart contracts without dealing with private keys | <a href="https://www.npmjs.com/package/thirdweb"><img src="https://img.shields.io/npm/v/thirdweb?color=red&label=npm&logo=npm" alt="npm version"/></a>                           |
+This single package provides a performant & lightweight SDK to interact with any EVM chain across Node, React, and React Native. Learn more about how to use the thirdweb SDK in our [documentation](https://portal.thirdweb.com/typescript/v5).
+
+<br />
 
 ## How to contribute
 
@@ -36,7 +28,7 @@ Let's explore how you can set up the repo on your local machine and start contri
 
 This section requires some existing knowledge of [Git](https://git-scm.com/), [Node.js](https://nodejs.org/en/) and [pnpm](https://pnpm.io/).
 
-<br/>
+<br />
 
 ### Getting the repo
 
@@ -50,26 +42,50 @@ To begin:
 
 3. Create a new branch on your fork to start working on your changes:
 
-   ```
-   git checkout -b MY_BRANCH_NAME
+   ```bash
+   git checkout -b <YOUR BRANCH NAME>
    ```
 
 4. Install the dependencies:
-   ```
+   ```bash
    pnpm install
    ```
    If you are on windows, use the `--ignore-scripts` flag
-   ```
+   ```bash
    pnpm install --ignore-scripts
    ```
 
-Now you have got the repo on your local machine, and you're ready to start making your changes!
+Now you have the repo on your local machine, and you're ready to start making your changes!
 
 <br/>
 
 ### Test Your Changes
 
-We use [yalc](https://github.com/wclr/yalc) to test changes locally.
+#### Writing Unit Tests
+
+Try to include unit test coverage with your changes where appropriate. We use `vitest` for testing, look for files with the `.test.ts` extension for examples of how to structure your unit tests.
+
+To run your tests, run the following from the package directory (most likely /packages/thirdweb):
+
+```bash
+pnpm test <YOUR TEST FILE PATH>
+```
+
+> Specifying your test file path is optional, but will save time by only running specific tests each time. Before opening your PR, run `pnpm test` from the monorepo root (without specifying your test file) to ensure your changes didn't break any existing tests.
+
+#### Linting
+
+We use a linter to maintain best practices across projects. Once your changes are complete (or periodically while making changes), run the linter with the following command from the repo root:
+
+```bash
+pnpm lint
+```
+
+If there are errors, try running `pnpm fix` to auto-fix any basic errors. Other linter errors, like missing documentation, will need to be fixed manually. See existing files for examples of inline documentation.
+
+#### Creating a Local Test Project
+
+You can use [yalc](https://github.com/wclr/yalc) to test changes on a local project.
 
 Install the yalc CLI globally:
 
@@ -79,38 +95,36 @@ pnpm add yalc -g
 
 First, create a test project where you can experiment with your changes:
 
-You can create a basic starter project with the `sdk` and `react` packages installed using the CLI:
+You can create a basic starter project with the SDK installed using the [thirdweb CLI](https://portal.thirdweb.com/cli):
 
 ```bash
 npx thirdweb create --app
 ```
 
-Use `yalc` to link your local changes in the monorepo to the test project, by running the following command from your test repo:
-
-```bash
-yalc add @thirdweb-dev/react # Link the react package
-yalc add @thirdweb-dev/sdk # Link the sdk package
-# etc...
-```
-
-From the monorepo, run the following command to publish your local changes to the test project:
+Push your local version to your `yalc` store with:
 
 ```bash
 pnpm push
 ```
 
-Now, each time you make a change to the monorepo, you can run `pnpm push` to publish your changes to the test project.
+Link your local changes in the monorepo to the test project, by running the following command from your test repo:
 
-In your test project, you need to:
+```bash
+yalc add thirdweb
+```
 
-1. Delete the dependencies cache. If you're using Next.js, that is the `.next` directory, and if you're using CRA, that is the `node_modules/.cache` directory.
+Now, each time you make a change to the monorepo, you can run `pnpm push` from the monorepo then `yalc update thirdweb` from your test project to publish your latest changes to the test project.
+
+To make sure your latest changes are used, in your test project you may need to:
+
+1. Delete the dependencies cache. If you're using Next.js, that's the `.next` directory, and if you're using CRA, that's the `node_modules/.cache` directory.
 2. Restart the development server.
 
 #### Testing from npm
 
 You can also test your changes by publishing a dev package to npm and adding your package as you normally do in your projects.
 
-Once you have your PR up you can add a comment with the text: `/release-pr`. This will trigger a GitHub action that will publish a dev version to npm.
+**Once you have your PR up** you can add a comment with the text: `/release-pr`. This will trigger a GitHub action that will publish a dev version to npm.
 
 You can see the action progress in GitHub's `Actions` tab, look for the workflow: `release-pr`.
 
@@ -154,9 +168,8 @@ git commit -am "My commit message"
 3. Push your changes to the SDK:
 
 ```
-git push origin MY_BRANCH_NAME
+git push origin <YOUR BRANCH NAME>
 ```
 
 4. Create a [pull request](https://www.atlassian.com/git/tutorials/making-a-pull-request) to the `main` branch of the official (not your fork) SDK repo.
 
-It's helpful to tag PRs with `[SDK]`, `[REACT]`, `[AUTH]`, (the name of the package you're modifying) to indicate the package that you are engaging with.
