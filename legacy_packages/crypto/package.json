@@ -31,7 +31,7 @@
     "js-sha3": "^0.9.3"
   },
   "devDependencies": {
-    "eslint": "8.57.0",
+    "eslint": "9.1.1",
     "@preconstruct/cli": "2.7.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "@types/crypto-js": "^4.2.2",

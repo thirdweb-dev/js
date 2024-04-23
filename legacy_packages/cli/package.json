@@ -9,7 +9,7 @@
     "node": ">=18.0.0"
   },
   "devDependencies": {
-    "eslint": "8.57.0",
+    "eslint": "9.1.1",
     "@gmrchk/cli-testing-library": "^0.1.2",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "@types/async-retry": "^1.4.8",

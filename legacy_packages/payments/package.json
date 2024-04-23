@@ -41,7 +41,7 @@
     "ethers": "^5.7.2"
   },
   "devDependencies": {
-    "eslint": "8.57.0",
+    "eslint": "9.1.1",
     "@preconstruct/cli": "2.7.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "eslint-config-thirdweb": "workspace:*",
