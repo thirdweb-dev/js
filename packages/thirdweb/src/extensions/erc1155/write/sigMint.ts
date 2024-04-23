@@ -1,14 +1,21 @@
 import type { AbiParameterToPrimitiveType, Address } from "abitype";
 import { maxUint256 } from "viem";
-import { NATIVE_TOKEN_ADDRESS } from "../../../constants/addresses.js";
+import {
+  NATIVE_TOKEN_ADDRESS,
+  isNativeTokenAddress,
+} from "../../../constants/addresses.js";
 import type { ThirdwebContract } from "../../../contract/contract.js";
+import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { toBigInt } from "../../../utils/bigint.js";
 import { dateToSeconds, tenYearsFromNow } from "../../../utils/date.js";
 import type { Hex } from "../../../utils/encoding/hex.js";
 import type { NFTInput } from "../../../utils/nft/parseNft.js";
 import { randomBytes32 } from "../../../utils/uuid.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
-import { mintWithSignature as generatedMintWithSignature } from "../__generated__/ISignatureMintERC1155/write/mintWithSignature.js";
+import {
+  type MintWithSignatureParams,
+  mintWithSignature as generatedMintWithSignature,
+} from "../__generated__/ISignatureMintERC1155/write/mintWithSignature.js";
 
 /**
  * Mints a new ERC1155 token with the given minter signature
@@ -29,7 +36,19 @@ import { mintWithSignature as generatedMintWithSignature } from "../__generated_
  * @extension ERC1155
  * @returns A promise that resolves to the transaction result.
  */
-export const mintWithSignature = generatedMintWithSignature;
+export function mintWithSignature(
+  options: BaseTransactionOptions<MintWithSignatureParams>,
+) {
+  const value = isNativeTokenAddress(options.payload.currency)
+    ? options.payload.pricePerToken * options.payload.quantity
+    : 0n;
+  return generatedMintWithSignature({
+    ...options,
+    overrides: {
+      value,
+    },
+  });
+}
 
 export type GenerateMintSignatureOptions = {
   account: Account;
