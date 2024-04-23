@@ -12,7 +12,6 @@ import { PageId } from "page-id";
 import { Heading, Text } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
 import connectLottie from "../../public/assets/product-pages/connect/connect-lottie.json";
-import checkoutLottie from "../../public/assets/product-pages/checkout/checkout.json";
 import LandingCardWithMetrics from "components/landing-pages/card-with-metrics";
 import CodePlayground from "components/connect/CodePlayground";
 import Carousel from "components/connect/Carousel";
@@ -88,14 +87,12 @@ const GUIDES = [
   },
   {
     title: "Add a Connect Wallet Button to Your App or Website",
-    image:
-      "https://blog.thirdweb.com/content/images/size/w2000/2023/10/How-to-Add-a-Connect-Wallet-Button-to-your-App-or-Website.png",
+    image: require("/public/assets/product-pages/connect/connect-wallet.png"),
     link: "https://blog.thirdweb.com/guides/add-connectwallet-to-your-website/",
   },
   {
     title: "Create Your Own Custom Connect Wallet Button",
-    image:
-      "https://blog.thirdweb.com/content/images/size/w2000/2023/10/Create-a-Customizable-Connect-Wallet-Button.png",
+    image: require("/public/assets/product-pages/connect/custom-connect.png"),
     link: "https://blog.thirdweb.com/guides/create-a-custom-connect-wallet-button/",
   },
 ];
@@ -179,8 +176,12 @@ const ConnectLanding: ThirdwebNextPage = () => {
             flexDir="column"
             alignItems="center"
             justifyContent="center"
-            gap="24px"
+            gap="36px"
           >
+            <Heading fontSize={[30, 40]} color="white" textAlign="center">
+              The complete web3 frontend toolkit
+            </Heading>
+
             <Carousel TRACKING_CATEGORY={TRACKING_CATEGORY} />
           </Flex>
 
@@ -221,7 +222,7 @@ const ConnectLanding: ThirdwebNextPage = () => {
                 trackingCategory={TRACKING_CATEGORY}
                 size="sm"
                 platform="React"
-                href="https://portal.thirdweb.com/react/latest/components/ConnectWallet"
+                href="https://portal.thirdweb.com/typescript/v5/react/components/ConnectButton"
                 bg="#0E0E0E"
               />
               <SupportedPlatformLink
@@ -252,8 +253,8 @@ const ConnectLanding: ThirdwebNextPage = () => {
             trackingCategory={TRACKING_CATEGORY}
             ctaLink="https://portal.thirdweb.com/connect/in-app-wallet/overview"
             gradient="linear(to-r, #4490FF, #4490FF)"
-            image={require("../../public/assets/product-pages/hero/desktop-hero-embedded-wallets.png")}
-            mobileImage={require("../../public/assets/product-pages/hero/mobile-hero-embedded-wallets.png")}
+            image={require("../../public/assets/product-pages/hero/desktop-in-app-wallets-v2.png")}
+            mobileImage={require("../../public/assets/product-pages/hero/mobile-in-app-wallets-v2.png")}
             noContactUs
           />
 
@@ -266,8 +267,8 @@ const ConnectLanding: ThirdwebNextPage = () => {
             trackingCategory={TRACKING_CATEGORY}
             ctaLink="https://portal.thirdweb.com/connect/account-abstraction"
             gradient="linear(to-r, #4490FF, #4490FF)"
-            image={require("../../public/assets/product-pages/smart-wallet/desktop-hero.png")}
-            mobileImage={require("../../public/assets/product-pages/smart-wallet/mobile-hero.png")}
+            image={require("../../public/assets/product-pages/hero/desktop-aa.png")}
+            mobileImage={require("../../public/assets/product-pages/hero/mobile-aa.png")}
             noContactUs
           />
 
@@ -278,9 +279,10 @@ const ConnectLanding: ThirdwebNextPage = () => {
             titleWithGradient="made easy"
             subtitle="The easiest way for users to transact in your app — with automatic bridging & swapping built in."
             trackingCategory={TRACKING_CATEGORY}
-            ctaLink="https://portal.thirdweb.com/payments"
+            ctaLink="https://portal.thirdweb.com/connect/pay/buy-with-crypto"
             gradient="linear(to-r, #4490FF, #4490FF)"
-            lottie={checkoutLottie}
+            image={require("../../public/assets/product-pages/hero/desktop-pay.png")}
+            mobileImage={require("../../public/assets/product-pages/hero/mobile-pay.png")}
             noContactUs
           />
 
@@ -302,29 +304,29 @@ const ConnectLanding: ThirdwebNextPage = () => {
             >
               <LandingCardWithImage
                 title="Reliable connectors"
-                description="Integrate 200+ web3 wallets — including EOAs, in-app wallets, and smart accounts.​"
+                description="Integrate 350+ web3 wallets — including EOAs, in-app wallets, and smart accounts.​"
                 image={require("../../public/assets/product-pages/connect/desktop-rely.png")}
                 mobileImage={require("../../public/assets/product-pages/connect/mobile-rely.png")}
                 TRACKING_CATEGORY={TRACKING_CATEGORY}
-                href="/dashboard/connect/playground"
+                href="https://portal.thirdweb.com/typescript/v5/react/connecting-wallets"
               />
               <LandingCardWithImage
                 title="Build on any platform"
-                description="Best-in-class SDKs for mobile, web, and Unity."
+                description="Best-in-class SDKs for web, mobile, and Unity."
                 image={require("../../public/assets/product-pages/connect/desktop-pixel.png")}
                 mobileImage={require("../../public/assets/product-pages/connect/mobile-pixel.png")}
                 TRACKING_CATEGORY={TRACKING_CATEGORY}
-                href="https://portal.thirdweb.com/connect/connect/ConnectWallet"
+                href="https://portal.thirdweb.com/connect"
               />
             </LandingGridSection>
             <LandingGridSection desktopColumns={4}>
               <LandingCardWithImage
                 title="Infinite customizability"
-                description="Custom components with your branding, different modal styles, and everything else to build your app."
+                description="Pre-built UI components to get started quickly — and a powerful SDK to build custom flows."
                 image={require("../../public/assets/product-pages/connect/desktop-customizability.png")}
                 mobileImage={require("../../public/assets/product-pages/connect/mobile-customizability.png")}
                 TRACKING_CATEGORY={TRACKING_CATEGORY}
-                href="https://portal.thirdweb.com/react/v4/connecting-wallets/custom-ui"
+                href="https://portal.thirdweb.com/typescript/v5"
               />
               <LandingCardWithImage
                 title="Authenticate any user"
@@ -337,7 +339,7 @@ const ConnectLanding: ThirdwebNextPage = () => {
                 image={require("../../public/assets/product-pages/connect/desktop-authenticate.png")}
                 mobileImage={require("../../public/assets/product-pages/connect/mobile-authenticate.png")}
                 TRACKING_CATEGORY={TRACKING_CATEGORY}
-                href="/dashboard/connect/playground"
+                href="https://portal.thirdweb.com/typescript/v5/auth"
                 direction="horizontal"
               />
             </LandingGridSection>
@@ -374,7 +376,7 @@ const ConnectLanding: ThirdwebNextPage = () => {
               textAlign="center"
               maxW="900px"
             >
-              Plug smart contracts into your apps, seamlessly
+              Plug smart contracts into your apps
             </Heading>
             <Spacer h={1} />
             <Text
