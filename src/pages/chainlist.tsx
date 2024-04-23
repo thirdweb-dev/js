@@ -10,8 +10,10 @@ import {
   InputRightElement,
   LinkBox,
   LinkOverlay,
+  ListItem,
   SimpleGrid,
   Spinner,
+  UnorderedList,
   useColorMode,
 } from "@chakra-ui/react";
 import type { Chain } from "@thirdweb-dev/chains";
@@ -32,6 +34,7 @@ import {
   TrackedLink,
 } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
+import { useShowMore } from "../hooks/useShowMore";
 
 const TRACKING_CATEGORY = "chains";
 
@@ -208,12 +211,24 @@ export const PublishUpsellCard: React.FC = () => {
 export const SearchResults: React.FC<{
   chains: MinimalRPCChain[];
 }> = memo(function SearchResults(props) {
+  const { itemsToShow, lastItemRef } = useShowMore<HTMLLIElement>(15, 9);
+
+  const resultsToShow = props.chains.slice(0, itemsToShow);
+
   return (
-    <SimpleGrid columns={{ base: 1, md: 3 }} gap={6}>
-      {props.chains.map((chain) => (
-        <SearchResult chain={chain} key={`chain_${chain.chainId}`} />
-      ))}
-    </SimpleGrid>
+    <UnorderedList display="block" p={0} m={0}>
+      <SimpleGrid columns={{ base: 1, md: 3 }} gap={6}>
+        {resultsToShow.map((chain, i) => (
+          <ListItem
+            ref={i === resultsToShow.length - 1 ? lastItemRef : undefined}
+            listStyleType={"none"}
+            key={chain.chainId}
+          >
+            <SearchResult chain={chain} />
+          </ListItem>
+        ))}
+      </SimpleGrid>
+    </UnorderedList>
   );
 });
 
