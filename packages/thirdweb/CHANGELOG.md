@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.10.1
+
+### Patch Changes
+
+- [#2836](https://github.com/thirdweb-dev/js/pull/2836) [`3810df5`](https://github.com/thirdweb-dev/js/commit/3810df57aa9590b0a2fa14071a5c061bd94b1ec6) Thanks [@jnsdls](https://github.com/jnsdls)! - add missing events for `erc721`, `erc1155` and `erc20`
+
 ## 5.10.0
 
 ### Minor Changes
