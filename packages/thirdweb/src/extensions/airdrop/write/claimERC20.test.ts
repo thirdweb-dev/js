@@ -17,14 +17,15 @@ import { approve } from "../../erc20/write/approve.js";
 import { mintTo } from "../../erc20/write/mintTo.js";
 import { deployERC20Contract } from "../../prebuilts/deploy-erc20.js";
 import { deployPublishedContract } from "../../prebuilts/deploy-published.js";
-import {
-  airdropERC20WithSignature,
-  generateAirdropSignature,
-} from "./airdropERC20WithSignature.js";
+import { generateMerkleTreeInfoERC20, saveSnapshot } from "./merkleInfoERC20.js";
+import { claimERC20 } from "./claimERC20.js";
+import { contractURI } from "../__generated__/Airdrop/read/contractURI.js";
+import { fetchPublishedContractMetadata } from "../../../contract/deployment/publisher.js";
+import { setMerkleRoot } from "../__generated__/Airdrop/write/setMerkleRoot.js";
 
 // skip this test suite if there is no secret key available to test with
 // TODO: remove reliance on secret key during unit tests entirely
-describe.runIf(process.env.TW_SECRET_KEY)("generateAirdropSignature20", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("claimERC20", () => {
   let airdropContract: ThirdwebContract;
   let erc20TokenContract: ThirdwebContract;
 
@@ -36,7 +37,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("generateAirdropSignature20", () => {
         client: TEST_CLIENT,
         contractId: "Airdrop",
         publisher: "0xFD78F7E2dF2B8c3D5bff0413c96f3237500898B3",
-        contractParams: [TEST_ACCOUNT_A.address],
+        contractParams: [TEST_ACCOUNT_A.address, ""],
       }),
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
@@ -59,7 +60,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("generateAirdropSignature20", () => {
     const mintTx = mintTo({
       contract: erc20TokenContract,
       to: TEST_ACCOUNT_A.address,
-      amountWei: 1000n,
+      amount: 1000,
     });
     await sendTransaction({
       transaction: mintTx,
@@ -69,7 +70,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("generateAirdropSignature20", () => {
     const approvalTx = await approve({
       contract: erc20TokenContract,
       spender: airdropContract.address,
-      amountWei: 1000n,
+      amount: 1000,
     });
     await sendTransaction({
       transaction: approvalTx,
@@ -78,33 +79,45 @@ describe.runIf(process.env.TW_SECRET_KEY)("generateAirdropSignature20", () => {
   }, 60000);
 
   it("should send airdrop of ERC20 tokens with signature", async () => {
-    const contents = [
-      { recipient: TEST_ACCOUNT_B.address, amount: 10n },
-      { recipient: TEST_ACCOUNT_C.address, amount: 15n },
-      { recipient: TEST_ACCOUNT_D.address, amount: 20n },
+    const snapshot = [
+      { recipient: TEST_ACCOUNT_B.address, amount: 10 },
+      { recipient: TEST_ACCOUNT_C.address, amount: 15 },
+      { recipient: TEST_ACCOUNT_D.address, amount: 20 },
     ];
-    const { req, signature } = await generateAirdropSignature({
-      airdropRequest: {
-        tokenAddress: erc20TokenContract.address,
-        contents,
-      },
-      account: TEST_ACCOUNT_A,
+    const { merkleRoot, snapshotUri } = await generateMerkleTreeInfoERC20({
+      snapshot,
+      tokenAddress: erc20TokenContract.address,
       contract: airdropContract,
     });
 
-    console.log("req: ", req);
-    console.log("sig: ", signature);
+    const saveSnapshotTransaction = saveSnapshot({
+      merkleRoot,
+      snapshotUri,
+      contract: airdropContract
+    });
+    await sendTransaction({
+      transaction: saveSnapshotTransaction,
+      account: TEST_ACCOUNT_A,
+    });
 
-    console.log(erc20TokenContract.address);
-    console.log(airdropContract.address);
+    const setMerkleRootTransaction = setMerkleRoot({
+      token: erc20TokenContract.address,
+      tokenMerkleRoot: merkleRoot as `0x${string}`,
+      resetClaimStatus: true,
+      contract: airdropContract
+    });
+    await sendTransaction({
+      transaction: setMerkleRootTransaction,
+      account: TEST_ACCOUNT_A,
+    });
 
-    const transaction = airdropERC20WithSignature({
+    const claimTransaction = claimERC20({
+      tokenAddress: erc20TokenContract.address,
+      recipient: TEST_ACCOUNT_B.address,
       contract: airdropContract,
-      req,
-      signature,
     });
     const { transactionHash } = await sendTransaction({
-      transaction,
+      transaction: claimTransaction,
       account: TEST_ACCOUNT_A,
     });
 
@@ -115,33 +128,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("generateAirdropSignature20", () => {
       })
     ).value;
 
-    const balanceC = (
-      await getBalance({
-        contract: erc20TokenContract,
-        address: TEST_ACCOUNT_C.address,
-      })
-    ).value;
-
-    const balanceD = (
-      await getBalance({
-        contract: erc20TokenContract,
-        address: TEST_ACCOUNT_D.address,
-      })
-    ).value;
-
-    // admin balance
-    const balanceA = (
-      await getBalance({
-        contract: erc20TokenContract,
-        address: TEST_ACCOUNT_A.address,
-      })
-    ).value;
-
-    expect(balanceB).to.equal(10n);
-    expect(balanceC).to.equal(15n);
-    expect(balanceD).to.equal(20n);
-
-    expect(balanceA).to.equal(1000n - balanceB - balanceC - balanceD);
+    expect(balanceB).to.equal(10n * 10n ** 18n);
 
     expect(transactionHash.length).toBe(66);
   });
