@@ -4,9 +4,9 @@ import { upload } from "../../../storage/upload.js";
 import type { Hex } from "../../encoding/hex.js";
 import { hashEntryERC20 } from "./hash-entry-erc20.js";
 import type {
-  SnapshotEntryERC20,
   ShardDataERC20,
   ShardedMerkleTreeInfo,
+  SnapshotEntryERC20,
 } from "./types.js";
 
 export async function processSnapshotERC20(options: {

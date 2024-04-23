@@ -1,11 +1,11 @@
-import type { SnapshotEntryERC20 } from "../../../utils/extensions/airdrop/types.js";
-import type { BaseTransactionOptions } from "../../../transaction/types.js";
-import { processSnapshotERC20 } from "../../../utils/extensions/airdrop/process-snapshot-erc20.js";
 import {
   ADDRESS_ZERO,
   isNativeTokenAddress,
 } from "../../../constants/addresses.js";
 import { upload } from "../../../storage/upload.js";
+import type { BaseTransactionOptions } from "../../../transaction/types.js";
+import { processSnapshotERC20 } from "../../../utils/extensions/airdrop/process-snapshot-erc20.js";
+import type { SnapshotEntryERC20 } from "../../../utils/extensions/airdrop/types.js";
 import { setContractURI } from "../../common/__generated__/IContractMetadata/write/setContractURI.js";
 
 export type GenerateMerkleTreeInfoParams = {

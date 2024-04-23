@@ -19,16 +19,13 @@ export async function hashEntryERC20(options: {
         convertQuantity({
           quantity: options.entry.amount.toString(),
           tokenDecimals: decimals,
-        })
+        }),
       ],
     ),
   );
 }
 
-function convertQuantity(options: {
-  quantity: string;
-  tokenDecimals: number;
-}) {
+function convertQuantity(options: { quantity: string; tokenDecimals: number }) {
   const { quantity, tokenDecimals } = options;
   return toUnits(quantity, tokenDecimals);
 }

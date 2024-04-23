@@ -2,6 +2,7 @@ import type { ThirdwebContract } from "../../../contract/contract.js";
 import { getContractMetadata } from "../../../extensions/common/read/getContractMetadata.js";
 import { MerkleTree } from "../../../merkletree/MerkleTree.js";
 import { download } from "../../../storage/download.js";
+import type { Address } from "../../address.js";
 import { convertQuantity } from "../drops/convert-quantity.js";
 import { hashEntryERC20 } from "./hash-entry-erc20.js";
 import type {
@@ -9,7 +10,6 @@ import type {
   ShardDataERC20,
   ShardedMerkleTreeInfo,
 } from "./types.js";
-import type { Address } from "../../address.js";
 
 export async function fetchProofsrERC20(options: {
   contract: ThirdwebContract;
@@ -26,7 +26,7 @@ export async function fetchProofsrERC20(options: {
   const snapshotUri = merkleData[merkleRoot];
 
   if (!snapshotUri) {
-    console.log("no snapshot uri")
+    console.log("no snapshot uri");
     return null;
   }
   // 2. download snapshot data
@@ -81,14 +81,14 @@ export async function fetchProofsrERC20(options: {
     )
     .concat(shardData.proofs);
 
-    const quantity = convertQuantity({
-      quantity: entry.amount.toString(),
-      tokenDecimals: options.tokenDecimals,
-    });
+  const quantity = convertQuantity({
+    quantity: entry.amount.toString(),
+    tokenDecimals: options.tokenDecimals,
+  });
 
   return {
     proof,
     recipient: recipient as Address,
-    quantity
-  }
+    quantity,
+  };
 }

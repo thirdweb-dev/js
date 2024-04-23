@@ -1,9 +1,12 @@
+import {
+  ADDRESS_ZERO,
+  isNativeTokenAddress,
+} from "../../../constants/addresses.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
-import { claimERC20 as generatedClaimERC20 } from "../__generated__/Airdrop/write/claimERC20.js";
-import { tokenMerkleRoot } from "../__generated__/Airdrop/read/tokenMerkleRoot.js";
-import { fetchProofsrERC20 } from "../../../utils/extensions/airdrop/fetch-proofs-erc20.js";
-import { ADDRESS_ZERO, isNativeTokenAddress } from "../../../constants/addresses.js";
 import type { Address } from "../../../utils/address.js";
+import { fetchProofsrERC20 } from "../../../utils/extensions/airdrop/fetch-proofs-erc20.js";
+import { tokenMerkleRoot } from "../__generated__/Airdrop/read/tokenMerkleRoot.js";
+import { claimERC20 as generatedClaimERC20 } from "../__generated__/Airdrop/write/claimERC20.js";
 /**
  * Represents the parameters for claiming an ERC721 token.
  */
@@ -18,13 +21,18 @@ export function claimERC20(options: BaseTransactionOptions<ClaimERC20Params>) {
     asyncParams: async () => {
       const merkleRoot = await tokenMerkleRoot({
         contract: options.contract,
-        tokenAddress: options.tokenAddress
+        tokenAddress: options.tokenAddress,
       });
 
       const tokenAddress = options.tokenAddress;
       const tokenDecimals = await (async () => {
-        if (isNativeTokenAddress(tokenAddress) || tokenAddress === ADDRESS_ZERO) {
-          throw new Error("Token address can't be zero address or native token");
+        if (
+          isNativeTokenAddress(tokenAddress) ||
+          tokenAddress === ADDRESS_ZERO
+        ) {
+          throw new Error(
+            "Token address can't be zero address or native token",
+          );
         }
         const [{ getContract }, { decimals: getDecimals }] = await Promise.all([
           import("../../../contract/contract.js"),
@@ -42,10 +50,10 @@ export function claimERC20(options: BaseTransactionOptions<ClaimERC20Params>) {
         contract: options.contract,
         recipient: options.recipient,
         merkleRoot,
-        tokenDecimals
+        tokenDecimals,
       });
 
-      if(!merkleProof) {
+      if (!merkleProof) {
         throw new Error("Proof not found for recipient address");
       }
 
@@ -53,8 +61,8 @@ export function claimERC20(options: BaseTransactionOptions<ClaimERC20Params>) {
         token: tokenAddress as Address,
         receiver: merkleProof.recipient as Address,
         quantity: merkleProof.quantity,
-        proofs: merkleProof.proof
-      } as const
-    }
+        proofs: merkleProof.proof,
+      } as const;
+    },
   });
 }

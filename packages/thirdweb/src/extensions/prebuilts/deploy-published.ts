@@ -92,7 +92,7 @@ export async function deployPublishedContract(
           account,
           contractId,
           constructorParams: implementationConstructorParams || [],
-          publisher
+          publisher,
         });
       const initializeTransaction = prepareContractCall({
         contract: getContract({

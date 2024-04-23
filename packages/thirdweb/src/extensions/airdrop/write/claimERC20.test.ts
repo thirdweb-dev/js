@@ -17,11 +17,12 @@ import { approve } from "../../erc20/write/approve.js";
 import { mintTo } from "../../erc20/write/mintTo.js";
 import { deployERC20Contract } from "../../prebuilts/deploy-erc20.js";
 import { deployPublishedContract } from "../../prebuilts/deploy-published.js";
-import { generateMerkleTreeInfoERC20, saveSnapshot } from "./merkleInfoERC20.js";
-import { claimERC20 } from "./claimERC20.js";
-import { contractURI } from "../__generated__/Airdrop/read/contractURI.js";
-import { fetchPublishedContractMetadata } from "../../../contract/deployment/publisher.js";
 import { setMerkleRoot } from "../__generated__/Airdrop/write/setMerkleRoot.js";
+import { claimERC20 } from "./claimERC20.js";
+import {
+  generateMerkleTreeInfoERC20,
+  saveSnapshot,
+} from "./merkleInfoERC20.js";
 
 // skip this test suite if there is no secret key available to test with
 // TODO: remove reliance on secret key during unit tests entirely
@@ -93,7 +94,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("claimERC20", () => {
     const saveSnapshotTransaction = saveSnapshot({
       merkleRoot,
       snapshotUri,
-      contract: airdropContract
+      contract: airdropContract,
     });
     await sendTransaction({
       transaction: saveSnapshotTransaction,
@@ -104,7 +105,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("claimERC20", () => {
       token: erc20TokenContract.address,
       tokenMerkleRoot: merkleRoot as `0x${string}`,
       resetClaimStatus: true,
-      contract: airdropContract
+      contract: airdropContract,
     });
     await sendTransaction({
       transaction: setMerkleRootTransaction,
