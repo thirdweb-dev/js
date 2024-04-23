@@ -93,13 +93,8 @@ Install the yalc CLI globally:
 pnpm add yalc -g
 ```
 
-First, create a test project where you can experiment with your changes:
+First, create a test project where you can experiment with your changes. This can be any node project that uses your changes.
 
-You can create a basic starter project with the SDK installed using the [thirdweb CLI](https://portal.thirdweb.com/cli):
-
-```bash
-npx thirdweb create --app
-```
 
 Push your local version to your `yalc` store with:
 
