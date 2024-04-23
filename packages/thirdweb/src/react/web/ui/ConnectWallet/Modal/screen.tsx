@@ -1,14 +1,10 @@
-import { createContext, useState, useRef, useEffect, useContext } from "react";
-import { reservedScreens } from "../constants.js";
-import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
-// import type { WalletConfig } from "../../../../core/types/wallets.js";
-import { useActiveAccount } from "../../../../core/hooks/wallets/wallet-hooks.js";
-import { ModalConfigCtx } from "../../../providers/wallet-ui-states-provider.js";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
+import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
+import { useActiveAccount } from "../../../../core/hooks/wallets/wallet-hooks.js";
+import { reservedScreens } from "../constants.js";
 
 type Screen = string | Wallet;
-
-const embeddedWalletId = "embedded";
 
 export type ScreenSetup = {
   screen: Screen;
@@ -24,18 +20,19 @@ export const ScreenSetupContext = /* @__PURE__ */ createContext<
  * @internal
  */
 export function useSetupScreen() {
-  const wallets = useWalletConnectionCtx().wallets;
-  const modalConfig = useContext(ModalConfigCtx);
+  const { wallets, connectModal } = useConnectUI();
 
   let initialScreen: Screen = reservedScreens.main;
 
-  const socialLogin = wallets.find((w) => w.id === embeddedWalletId);
+  const socialLogin = wallets.find(
+    (w) => w.id === "embedded" || w.id === "inApp",
+  );
 
   if (wallets.length === 1 && wallets[0]) {
     initialScreen = wallets[0];
   } else if (
-    modalConfig.modalSize === "wide" &&
-    !modalConfig.welcomeScreen &&
+    connectModal.size === "wide" &&
+    !connectModal.welcomeScreen &&
     socialLogin
   ) {
     initialScreen = socialLogin;

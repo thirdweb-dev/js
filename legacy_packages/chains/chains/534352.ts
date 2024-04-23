@@ -7,11 +7,6 @@ export default {
       "name": "Scrollscan",
       "url": "https://scrollscan.com",
       "standard": "EIP3091"
-    },
-    {
-      "name": "Blockscout",
-      "url": "https://blockscout.scroll.io",
-      "standard": "EIP3091"
     }
   ],
   "faucets": [],
@@ -35,7 +30,6 @@ export default {
   "rpc": [
     "https://534352.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.scroll.io",
-    "https://rpc-scroll.icecreamswap.com",
     "https://rpc.ankr.com/scroll",
     "https://scroll-mainnet.chainstacklabs.com"
   ],

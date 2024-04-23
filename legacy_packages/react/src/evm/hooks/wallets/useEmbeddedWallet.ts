@@ -4,6 +4,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import {
+  useAddress,
   useCreateWalletInstance,
   useSetConnectedWallet,
   useSetConnectionStatus,
@@ -18,6 +19,7 @@ import {
 } from "@thirdweb-dev/wallets";
 import { useCallback, useEffect } from "react";
 import { embeddedWallet } from "../../../wallet/wallets/embeddedWallet/embeddedWallet";
+import { openOauthSignInWindow } from "../../../wallet/utils/openOauthSignInWindow";
 
 /**
  * Hook to connect `EmbeddedWallet` which allows users to login via Email or social logins
@@ -133,6 +135,18 @@ export function useEmbeddedWallet() {
       }
       const wallet = create(embeddedWallet());
       try {
+        // open window immediately to fix issue in iOS Safari
+        // if not opened immediately, it adds a bit of delay between user click and opening the window which causes the popup to be blocked
+        if (
+          authParams.strategy === "apple" ||
+          authParams.strategy === "facebook" ||
+          authParams.strategy === "google"
+        ) {
+          const win = openOauthSignInWindow(authParams.strategy);
+          if (win) {
+            authParams.openedWindow = win;
+          }
+        }
         const authResult = await wallet.authenticate(authParams);
         await wallet.connect({ authResult });
         setWallet(wallet);
@@ -194,10 +208,11 @@ export function useEmbeddedWalletUserEmail(): UseQueryResult<
   string | undefined
 > {
   const wallet = useWallet();
+  const address = useAddress();
   const queryClient = useQueryClient();
 
   const emailQuery = useQuery<string | undefined, string>(
-    [wallet?.walletId, "embeddedWallet-email"],
+    [wallet?.walletId, address, "embeddedWallet-email"],
     () => {
       if (wallet && wallet.walletId === walletIds.embeddedWallet) {
         return (wallet as EmbeddedWallet).getEmail() ?? "";
@@ -258,11 +273,6 @@ export function useEmbeddedWalletUserPhoneNumber(): UseQueryResult<
       enabled: wallet?.walletId === walletIds.embeddedWallet,
     },
   );
-
-  // Invalidate the query when the wallet changes
-  useEffect(() => {
-    queryClient.invalidateQueries([wallet?.walletId, "embeddedWallet-email"]);
-  }, [wallet, queryClient]);
 
   return emailQuery;
 }

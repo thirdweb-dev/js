@@ -1,19 +1,24 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "burn" function.
  */
-
-export type BurnParams = {
+export type BurnParams = WithOverrides<{
   account: AbiParameterToPrimitiveType<{ type: "address"; name: "account" }>;
   id: AbiParameterToPrimitiveType<{ type: "uint256"; name: "id" }>;
   value: AbiParameterToPrimitiveType<{ type: "uint256"; name: "value" }>;
-};
+}>;
 
-const FN_SELECTOR = "0xf5298aca" as const;
+export const FN_SELECTOR = "0xf5298aca" as const;
 const FN_INPUTS = [
   {
     type: "address",
@@ -29,6 +34,25 @@ const FN_INPUTS = [
   },
 ] as const;
 const FN_OUTPUTS = [] as const;
+
+/**
+ * Checks if the `burn` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `burn` method is supported.
+ * @extension ERC1155
+ * @example
+ * ```ts
+ * import { isBurnSupported } from "thirdweb/extensions/erc1155";
+ *
+ * const supported = await isBurnSupported(contract);
+ * ```
+ */
+export async function isBurnSupported(contract: ThirdwebContract<any>) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
 
 /**
  * Encodes the parameters for the "burn" function.
@@ -51,6 +75,28 @@ export function encodeBurnParams(options: BurnParams) {
     options.id,
     options.value,
   ]);
+}
+
+/**
+ * Encodes the "burn" function into a Hex string with its parameters.
+ * @param options - The options for the burn function.
+ * @returns The encoded hexadecimal string.
+ * @extension ERC1155
+ * @example
+ * ```ts
+ * import { encodeBurn } "thirdweb/extensions/erc1155";
+ * const result = encodeBurn({
+ *  account: ...,
+ *  id: ...,
+ *  value: ...,
+ * });
+ * ```
+ */
+export function encodeBurn(options: BurnParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeBurnParams(options).slice(2)) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**
@@ -82,19 +128,21 @@ export function burn(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [
-              resolvedParams.account,
-              resolvedParams.id,
-              resolvedParams.value,
-            ] as const;
-          }
-        : [options.account, options.id, options.value],
+    params: async () => {
+      const resolvedOptions = await asyncOptions();
+      return [
+        resolvedOptions.account,
+        resolvedOptions.id,
+        resolvedOptions.value,
+      ] as const;
+    },
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

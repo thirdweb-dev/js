@@ -1,17 +1,16 @@
-import { useContext } from "react";
-import { ModalConfigCtx } from "../../providers/wallet-ui-states-provider.js";
+import type { WalletId } from "../../../../wallets/wallet-types.js";
+import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { QRCode } from "../../ui/components/QRCode.js";
 import { Spacer } from "../../ui/components/Spacer.js";
+import { WalletImage } from "../../ui/components/WalletImage.js";
 import {
   Container,
   ModalHeader,
   ScreenBottomContainer,
 } from "../../ui/components/basic.js";
 import { Button } from "../../ui/components/buttons.js";
-import { iconSize, spacing, fontSize } from "../../ui/design-system/index.js";
 import { Text } from "../../ui/components/text.js";
-import type { WalletId } from "../../../../wallets/wallet-types.js";
-import { WalletImage } from "../../ui/components/WalletImage.js";
+import { fontSize, iconSize, spacing } from "../../ui/design-system/index.js";
 
 /**
  * @internal
@@ -25,7 +24,7 @@ export const ScanScreen: React.FC<{
   qrScanInstruction: string;
   getStartedLink: string;
 }> = (props) => {
-  const modalConfig = useContext(ModalConfigCtx);
+  const { connectModal, client } = useConnectUI();
   return (
     <Container fullHeight flex="column" animate="fadein">
       <Container p="lg">
@@ -42,7 +41,13 @@ export const ScanScreen: React.FC<{
         >
           <QRCode
             qrCodeUri={props.qrCodeUri}
-            QRIcon={<WalletImage size={iconSize.xxl} id={props.walletId} />}
+            QRIcon={
+              <WalletImage
+                size={iconSize.xxl}
+                id={props.walletId}
+                client={client}
+              />
+            }
           />
 
           <Spacer y="lg" />
@@ -65,7 +70,7 @@ export const ScanScreen: React.FC<{
       {props.onGetStarted && (
         <ScreenBottomContainer
           style={{
-            border: modalConfig.modalSize === "compact" ? undefined : "none",
+            border: connectModal.size === "compact" ? undefined : "none",
           }}
         >
           <Button

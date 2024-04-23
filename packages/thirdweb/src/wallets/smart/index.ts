@@ -1,28 +1,28 @@
+import type { SignableMessage } from "viem";
+import type { Chain } from "../../chains/types.js";
+import type { ThirdwebClient } from "../../client/client.js";
+import { type ThirdwebContract, getContract } from "../../contract/contract.js";
+import type { WaitForReceiptOptions } from "../../transaction/actions/wait-for-tx-receipt.js";
+import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
+import type { TransactionReceipt } from "../../transaction/types.js";
+import type { Hex } from "../../utils/encoding/hex.js";
 import type {
   Account,
   SendTransactionOption,
   Wallet,
 } from "../interfaces/wallet.js";
-import type { SmartWalletOptions } from "./types.js";
-import { createUnsignedUserOp, signUserOp } from "./lib/userop.js";
+import type {
+  CreateWalletArgs,
+  WalletConnectionOption,
+} from "../wallet-types.js";
 import { bundleUserOp, getUserOpReceipt } from "./lib/bundler.js";
-import { getContract, type ThirdwebContract } from "../../contract/contract.js";
 import {
   predictAddress,
   prepareBatchExecute,
   prepareExecute,
 } from "./lib/calls.js";
-import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
-import type { SignableMessage } from "viem";
-import type { WaitForReceiptOptions } from "../../transaction/actions/wait-for-tx-receipt.js";
-import type { Hex } from "../../utils/encoding/hex.js";
-import type {
-  CreateWalletArgs,
-  WalletConnectionOption,
-} from "../wallet-types.js";
-import type { Chain } from "../../chains/types.js";
-import type { ThirdwebClient } from "../../client/client.js";
-import type { TransactionReceipt } from "../../transaction/types.js";
+import { createUnsignedUserOp, signUserOp } from "./lib/userop.js";
+import type { SmartWalletOptions } from "./types.js";
 
 /**
  * We can get the personal account for given smart account but not the other way around - this map gives us the reverse lookup
@@ -208,18 +208,14 @@ async function createSmartAccount(
 
       if (isValid) {
         return sig;
-      } else {
-        throw new Error(
-          "Unable to verify signature on smart account, please make sure the smart account is deployed and the signature is valid.",
-        );
       }
+      throw new Error(
+        "Unable to verify signature on smart account, please make sure the smart account is deployed and the signature is valid.",
+      );
     },
+    // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
     async signTypedData(typedData: any) {
       return options.personalAccount.signTypedData(typedData);
-    },
-    async estimateGas(tx: PreparedTransaction): Promise<bigint> {
-      void tx; // linter
-      return 0n;
     },
   };
   return account;

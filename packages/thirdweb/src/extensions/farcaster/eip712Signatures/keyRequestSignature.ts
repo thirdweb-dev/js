@@ -1,9 +1,9 @@
 import type { Address } from "abitype";
 import { encodeAbiParameters } from "../../../utils/abi/encodeAbiParameters.js";
 import type { Hex } from "../../../utils/encoding/hex.js";
+import type { Prettify } from "../../../utils/type-utils.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
 import { SIGNED_KEY_REQUEST_VALIDATOR_ADDRESS } from "../constants.js";
-import type { Prettify } from "../../../utils/type-utils.js";
 
 const SIGNED_KEY_REQUEST_VALIDATOR_EIP_712_DOMAIN = {
   name: "Farcaster SignedKeyRequestValidator", // EIP-712 domain data for the SignedKeyRequestValidator.
@@ -193,7 +193,7 @@ export function encodeSignedKeyRequestMetadata(options: {
 export async function getSignedKeyRequestMetadata(
   options: SignedKeyRequestMetadataOptions,
 ): Promise<Hex> {
-  let signature;
+  let signature: Hex;
   if ("keyRequestSignature" in options) {
     signature = options.keyRequestSignature;
   } else if ("account" in options) {

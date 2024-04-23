@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/auth",
-  "version": "4.1.55",
+  "version": "4.1.65",
   "main": "dist/thirdweb-dev-auth.cjs.js",
   "module": "dist/thirdweb-dev-auth.esm.js",
   "browser": {
@@ -61,7 +61,7 @@
     "lint": "eslint src/",
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/ && rm -rf node_modules/",
-    "test": "vitest",
+    "test": "vitest run",
     "push": "yalc push"
   },
   "preconstruct": {
@@ -85,14 +85,14 @@
     "@microsoft/tsdoc": "^0.14.2",
     "@preconstruct/cli": "2.7.0",
     "@swc-node/register": "^1.9.0",
-    "@swc/core": "^1.4.11",
+    "@swc/core": "^1.4.12",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "@types/cookie": "^0.6.0",
     "@types/cookie-parser": "^1.4.7",
     "@types/express": "^4.17.21",
     "@types/uuid": "^9.0.8",
     "cookie-parser": "^1.4.6",
-    "eslint": "^8.57.0",
+    "eslint": "8.57.0",
     "eslint-config-thirdweb": "workspace:*",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-inclusive-language": "^2.2.1",
@@ -103,7 +103,7 @@
     "fastify": "^4.26.2",
     "next": "^13.5.6",
     "next-auth": "^4.24.7",
-    "typescript": "5.4.3"
+    "typescript": "5.4.4"
   },
   "peerDependencies": {
     "cookie-parser": "^1.4.6",

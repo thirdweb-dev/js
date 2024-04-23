@@ -1,22 +1,27 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "postOp" function.
  */
-
-export type PostOpParams = {
+export type PostOpParams = WithOverrides<{
   mode: AbiParameterToPrimitiveType<{ type: "uint8"; name: "mode" }>;
   context: AbiParameterToPrimitiveType<{ type: "bytes"; name: "context" }>;
   actualGasCost: AbiParameterToPrimitiveType<{
     type: "uint256";
     name: "actualGasCost";
   }>;
-};
+}>;
 
-const FN_SELECTOR = "0xa9a23409" as const;
+export const FN_SELECTOR = "0xa9a23409" as const;
 const FN_INPUTS = [
   {
     type: "uint8",
@@ -32,6 +37,25 @@ const FN_INPUTS = [
   },
 ] as const;
 const FN_OUTPUTS = [] as const;
+
+/**
+ * Checks if the `postOp` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `postOp` method is supported.
+ * @extension ERC4337
+ * @example
+ * ```ts
+ * import { isPostOpSupported } from "thirdweb/extensions/erc4337";
+ *
+ * const supported = await isPostOpSupported(contract);
+ * ```
+ */
+export async function isPostOpSupported(contract: ThirdwebContract<any>) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
 
 /**
  * Encodes the parameters for the "postOp" function.
@@ -54,6 +78,28 @@ export function encodePostOpParams(options: PostOpParams) {
     options.context,
     options.actualGasCost,
   ]);
+}
+
+/**
+ * Encodes the "postOp" function into a Hex string with its parameters.
+ * @param options - The options for the postOp function.
+ * @returns The encoded hexadecimal string.
+ * @extension ERC4337
+ * @example
+ * ```ts
+ * import { encodePostOp } "thirdweb/extensions/erc4337";
+ * const result = encodePostOp({
+ *  mode: ...,
+ *  context: ...,
+ *  actualGasCost: ...,
+ * });
+ * ```
+ */
+export function encodePostOp(options: PostOpParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodePostOpParams(options).slice(2)) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**
@@ -85,19 +131,21 @@ export function postOp(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [
-              resolvedParams.mode,
-              resolvedParams.context,
-              resolvedParams.actualGasCost,
-            ] as const;
-          }
-        : [options.mode, options.context, options.actualGasCost],
+    params: async () => {
+      const resolvedOptions = await asyncOptions();
+      return [
+        resolvedOptions.mode,
+        resolvedOptions.context,
+        resolvedOptions.actualGasCost,
+      ] as const;
+    },
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

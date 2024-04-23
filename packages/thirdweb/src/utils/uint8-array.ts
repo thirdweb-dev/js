@@ -1,8 +1,3 @@
-/* eslint-disable jsdoc/require-jsdoc */
-/* eslint-disable jsdoc/require-description */
-/* eslint-disable jsdoc/require-returns */
-/* eslint-disable jsdoc/require-param */
-
 import { cachedTextDecoder } from "./text-decoder.js";
 
 const uint8ArrayStringified = "[object Uint8Array]";
@@ -115,7 +110,7 @@ function uint8ArrayToString(array: Uint8Array): string {
   return cachedTextDecoder().decode(array);
 }
 
-function assertString(value: any): asserts value is string {
+function assertString(value: unknown): asserts value is string {
   if (typeof value !== "string") {
     throw new TypeError(`Expected \`string\`, got \`${typeof value}\``);
   }
@@ -141,7 +136,8 @@ export function base64ToUint8Array(base64String: string): Uint8Array {
   assertString(base64String);
   return Uint8Array.from(
     globalThis.atob(base64UrlToBase64(base64String)),
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
+    // biome-ignore lint/style/noNonNullAssertion: we know that the code points exist
     (x) => x.codePointAt(0)!,
   );
 }
@@ -175,7 +171,7 @@ export function uint8ArrayToBase64(
 ): string {
   assertUint8Array(array);
 
-  let base64;
+  let base64: string;
 
   if (array.length < MAX_BLOCK_SIZE) {
     // Required as `btoa` and `atob` don't properly support Unicode: https://developer.mozilla.org/en-US/docs/Glossary/Base64#the_unicode_problem
@@ -201,12 +197,14 @@ export function concatUint8Arrays(
     return new Uint8Array(0);
   }
 
-  totalLength ??= arrays.reduce(
-    (accumulator, currentValue) => accumulator + currentValue.length,
-    0,
-  );
+  const calculatedTotalLength =
+    totalLength ??
+    arrays.reduce(
+      (accumulator, currentValue) => accumulator + currentValue.length,
+      0,
+    );
 
-  const returnValue = new Uint8Array(totalLength);
+  const returnValue = new Uint8Array(calculatedTotalLength);
 
   let offset = 0;
   for (const array of arrays) {
@@ -216,4 +214,23 @@ export function concatUint8Arrays(
   }
 
   return returnValue;
+}
+
+export function compareUint8Arrays(a: Uint8Array, b: Uint8Array): number {
+  assertUint8Array(a);
+  assertUint8Array(b);
+
+  const length = Math.min(a.length, b.length);
+
+  for (let index = 0; index < length; index++) {
+    // biome-ignore lint/style/noNonNullAssertion: we check the length above so the index is always in bounds
+    const diff = a[index]! - b[index]!;
+    if (diff !== 0) {
+      return Math.sign(diff);
+    }
+  }
+
+  // At this point, all the compared elements are equal.
+  // The shorter array should come first if the arrays are of different lengths.
+  return Math.sign(a.length - b.length);
 }

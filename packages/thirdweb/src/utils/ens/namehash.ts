@@ -1,7 +1,7 @@
 import { bytesToHex, concat } from "viem/utils";
-import { encodedLabelToLabelhash } from "./encodeLabelToLabelhash.js";
 import { stringToBytes, toBytes } from "../encoding/to-bytes.js";
 import { keccak256 } from "../hashing/keccak256.js";
+import { encodedLabelToLabelhash } from "./encodeLabelToLabelhash.js";
 
 /**
  * @internal

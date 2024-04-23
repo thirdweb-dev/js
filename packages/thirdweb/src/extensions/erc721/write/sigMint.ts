@@ -1,15 +1,13 @@
+import type { AbiParameterToPrimitiveType, Address } from "abitype";
+import type { Hex } from "viem";
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/addresses.js";
 import type { ThirdwebContract } from "../../../contract/contract.js";
 import { toBigInt } from "../../../utils/bigint.js";
-import type { NFTInput } from "../../../utils/nft/parseNft.js";
-import { toUnits } from "../../../utils/units.js";
-import { decimals } from "../../erc20/read/decimals.js";
-import type { AbiParameterToPrimitiveType } from "abitype";
-import { mintWithSignature as generatedMintWithSignature } from "../__generated__/ISignatureMintERC721/write/mintWithSignature.js";
-import { upload } from "../../../storage/upload.js";
-import type { Account } from "../../../wallets/interfaces/wallet.js";
-import { randomBytes32 } from "../../../utils/uuid.js";
 import { dateToSeconds, tenYearsFromNow } from "../../../utils/date.js";
+import type { NFTInput } from "../../../utils/nft/parseNft.js";
+import { randomBytes32 } from "../../../utils/uuid.js";
+import type { Account } from "../../../wallets/interfaces/wallet.js";
+import { mintWithSignature as generatedMintWithSignature } from "../__generated__/ISignatureMintERC721/write/mintWithSignature.js";
 
 /**
  * Mints a new ERC721 token with the given minter signature
@@ -72,41 +70,64 @@ export async function generateMintSignature(
   options: GenerateMintSignatureOptions,
 ) {
   const { mintRequest, account, contract } = options;
-  let priceInWei = 0n;
-  if (mintRequest.price) {
-    const d = await decimals(options).catch(() => 18);
-    priceInWei = toUnits(mintRequest.price.toString(), d);
-  }
+
+  const currency = mintRequest.currency || NATIVE_TOKEN_ADDRESS;
+  const [price, uri, uid] = await Promise.all([
+    // price per token in wei
+    (async () => {
+      // if priceInWei is provided, use it
+      if ("priceInWei" in mintRequest && mintRequest.priceInWei) {
+        return mintRequest.priceInWei;
+      }
+      // if price is provided, convert it to wei
+      if ("price" in mintRequest && mintRequest.price) {
+        const { convertErc20Amount } = await import(
+          "../../../utils/extensions/convert-erc20-amount.js"
+        );
+        return await convertErc20Amount({
+          amount: mintRequest.price,
+          client: contract.client,
+          chain: contract.chain,
+          erc20Address: currency,
+        });
+      }
+      // if neither price nor priceInWei is provided, default to 0
+      return 0n;
+    })(),
+    // uri
+    (async () => {
+      if ("metadata" in mintRequest) {
+        if (typeof mintRequest.metadata === "object") {
+          // async import the upload function because it is not always required
+          const { upload } = await import("../../../storage/upload.js");
+          return await upload({
+            client: options.contract.client,
+            files: [mintRequest.metadata],
+          });
+        }
+        return mintRequest.metadata;
+      }
+      return "";
+    })(),
+    // uid computation
+    mintRequest.uid || (await randomBytes32()),
+  ]);
 
   const startTime = mintRequest.validityStartTimestamp || new Date(0);
   const endTime = mintRequest.validityEndTimestamp || tenYearsFromNow();
 
-  const uid = mintRequest.uid || (await randomBytes32());
-
-  let uri: string;
-  if (typeof mintRequest.metadata === "object") {
-    uri = (
-      await upload({
-        client: options.contract.client,
-        files: [mintRequest.metadata],
-      })
-    )[0] as string;
-  } else {
-    uri = mintRequest.metadata;
-  }
-
-  const payload = {
+  const payload: PayloadType = {
+    uri,
+    currency,
+    uid,
+    price,
     to: mintRequest.to,
     royaltyRecipient: mintRequest.royaltyRecipient || account.address,
     royaltyBps: toBigInt(mintRequest.royaltyBps || 0),
     primarySaleRecipient: mintRequest.primarySaleRecipient || account.address,
-    uri: uri || "",
-    price: priceInWei,
-    currency: mintRequest.currency || NATIVE_TOKEN_ADDRESS,
     validityStartTimestamp: dateToSeconds(startTime),
     validityEndTimestamp: dateToSeconds(endTime),
-    uid,
-  } as PayloadType;
+  };
 
   const signature = await account.signTypedData({
     domain: {
@@ -131,14 +152,15 @@ type PayloadType = AbiParameterToPrimitiveType<{
 type GeneratePayloadInput = {
   to: string;
   metadata: NFTInput | string;
-  royaltyRecipient?: string;
+  royaltyRecipient?: Address;
   royaltyBps?: number;
-  primarySaleRecipient?: string;
-  price?: number | string;
-  currency?: string;
+  primarySaleRecipient?: Address;
+  price?: string;
+  priceInWei?: bigint;
+  currency?: Address;
   validityStartTimestamp?: Date;
   validityEndTimestamp?: Date;
-  uid?: string;
+  uid?: Hex;
 };
 
 const MintRequest721 = [

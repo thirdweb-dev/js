@@ -3,14 +3,37 @@ import type { BaseTransactionOptions } from "../../../../../transaction/types.js
 
 import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
-const FN_SELECTOR = "0x4ec77b45" as const;
+export const FN_SELECTOR = "0x4ec77b45" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
     type: "address",
   },
 ] as const;
+
+/**
+ * Checks if the `storageRegistry` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `storageRegistry` method is supported.
+ * @extension FARCASTER
+ * @example
+ * ```ts
+ * import { isStorageRegistrySupported } from "thirdweb/extensions/farcaster";
+ *
+ * const supported = await isStorageRegistrySupported(contract);
+ * ```
+ */
+export async function isStorageRegistrySupported(
+  contract: ThirdwebContract<any>,
+) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
 
 /**
  * Decodes the result of the storageRegistry function call.

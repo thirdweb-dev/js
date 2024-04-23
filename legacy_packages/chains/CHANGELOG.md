@@ -1,5 +1,67 @@
 # @thirdweb-dev/chains
 
+## 0.1.98
+
+### Patch Changes
+
+- [#2819](https://github.com/thirdweb-dev/js/pull/2819) [`6d6e0ac`](https://github.com/thirdweb-dev/js/commit/6d6e0ac69453d5a448ab771084976928313662ab) Thanks [@github-actions](https://github.com/apps/github-actions)! - Synced Chains Package
+
+## 0.1.97
+
+### Patch Changes
+
+- [#2812](https://github.com/thirdweb-dev/js/pull/2812) [`b4e7c74`](https://github.com/thirdweb-dev/js/commit/b4e7c74ce5ddc88a1aa3169ea89ff139d185a648) Thanks [@github-actions](https://github.com/apps/github-actions)! - Synced Chains Package
+
+## 0.1.96
+
+### Patch Changes
+
+- [#2802](https://github.com/thirdweb-dev/js/pull/2802) [`ca2576f`](https://github.com/thirdweb-dev/js/commit/ca2576f8180b6b5b9fe47087a53d1f13665c5028) Thanks [@github-actions](https://github.com/apps/github-actions)! - Synced Chains Package
+
+## 0.1.95
+
+### Patch Changes
+
+- [#2777](https://github.com/thirdweb-dev/js/pull/2777) [`76f93a4`](https://github.com/thirdweb-dev/js/commit/76f93a4346bc7627a6b0e4e49d212e245ad91be0) Thanks [@github-actions](https://github.com/apps/github-actions)! - Synced Chains Package
+
+## 0.1.94
+
+### Patch Changes
+
+- [#2755](https://github.com/thirdweb-dev/js/pull/2755) [`6574e4d`](https://github.com/thirdweb-dev/js/commit/6574e4da9938fe7eb862a0ae779b02561967abf1) Thanks [@github-actions](https://github.com/apps/github-actions)! - Synced Chains Package
+
+## 0.1.93
+
+### Patch Changes
+
+- [#2746](https://github.com/thirdweb-dev/js/pull/2746) [`bf6a8e0`](https://github.com/thirdweb-dev/js/commit/bf6a8e0cab2a02a34d2ca8fbdf9d034ac176b61e) Thanks [@github-actions](https://github.com/apps/github-actions)! - Synced Chains Package
+
+## 0.1.92
+
+### Patch Changes
+
+- [#2740](https://github.com/thirdweb-dev/js/pull/2740) [`d65713a`](https://github.com/thirdweb-dev/js/commit/d65713a7af67bf20e5b88b72f5d43dfba9172b3b) Thanks [@github-actions](https://github.com/apps/github-actions)! - Synced Chains Package
+
+## 0.1.91
+
+### Patch Changes
+
+- [#2708](https://github.com/thirdweb-dev/js/pull/2708) [`53e56f4`](https://github.com/thirdweb-dev/js/commit/53e56f4bf8d3fbe7e2d5252b561bcef5927762e6) Thanks [@github-actions](https://github.com/apps/github-actions)! - Synced Chains Package
+
+## 0.1.90
+
+### Patch Changes
+
+- [#2701](https://github.com/thirdweb-dev/js/pull/2701) [`703cb6a`](https://github.com/thirdweb-dev/js/commit/703cb6ae3cc51fa4b0ba7c87f09f8e84dab8ed3f) Thanks [@jnsdls](https://github.com/jnsdls)! - updated dependencies
+
+- [#2702](https://github.com/thirdweb-dev/js/pull/2702) [`48c1d60`](https://github.com/thirdweb-dev/js/commit/48c1d6038272284f8942e1fb3635283b48945a68) Thanks [@github-actions](https://github.com/apps/github-actions)! - Synced Chains Package
+
+## 0.1.89
+
+### Patch Changes
+
+- [#2676](https://github.com/thirdweb-dev/js/pull/2676) [`83ecf67`](https://github.com/thirdweb-dev/js/commit/83ecf67c4b973b17fbc57eeaa03d7a8176ff5d39) Thanks [@github-actions](https://github.com/apps/github-actions)! - Synced Chains Package
+
 ## 0.1.88
 
 ### Patch Changes

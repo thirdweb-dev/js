@@ -1,19 +1,19 @@
-import type {
-  WalletId,
-  CreateWalletArgs,
-  InjectedConnectOptions,
-} from "./wallet-types.js";
-import type { Account, Wallet } from "./interfaces/wallet.js";
 import type { Chain } from "../chains/types.js";
-import { injectedProvider } from "./injected/mipdStore.js";
 import type {
   InjectedSupportedWalletIds,
   WCSupportedWalletIds,
 } from "./__generated__/wallet-ids.js";
+import { injectedProvider } from "./injected/mipdStore.js";
+import type { Account, Wallet } from "./interfaces/wallet.js";
+import type {
+  CreateWalletArgs,
+  InjectedConnectOptions,
+  WalletId,
+} from "./wallet-types.js";
 
-import { createWalletEmitter } from "./wallet-emitter.js";
 import { trackConnect } from "../analytics/track.js";
 import type { WCConnectOptions } from "./wallet-connect/types.js";
+import { createWalletEmitter } from "./wallet-emitter.js";
 
 // TODO: figure out how to define the type without tuple args type and using function overloads
 
@@ -48,11 +48,12 @@ export function createWallet<const ID extends WalletId>(
       ) as Wallet<ID>;
     }
     /**
-     * EMBEDDED WALLET
+     * IN-APP WALLET
      */
-    case "embedded": {
-      return embeddedWallet(
-        creationOptions as CreateWalletArgs<"embedded">[1],
+    case "embedded":
+    case "inApp": {
+      return inAppWallet(
+        creationOptions as CreateWalletArgs<"inApp">[1],
       ) as Wallet<ID>;
     }
 
@@ -290,7 +291,7 @@ export function walletConnect() {
 export function smartWallet(
   createOptions: CreateWalletArgs<"smart">[1],
 ): Wallet<"smart"> {
-  const emitter = createWalletEmitter<"embedded">();
+  const emitter = createWalletEmitter<"inApp">();
   let account: Account | undefined = undefined;
   let chain: Chain | undefined = undefined;
 
@@ -352,14 +353,14 @@ export function smartWallet(
 }
 
 /**
- * Creates an embedded wallet.
+ * Creates an in-app wallet.
  * @param createOptions - configuration options
- * @returns The created embedded wallet.
+ * @returns The created in-app wallet.
  * @example
  * ```ts
- * import { embeddedWallet } from "thirdweb/wallets";
+ * import { inAppWallet } from "thirdweb/wallets";
  *
- * const wallet = embeddedWallet();
+ * const wallet = inAppWallet();
  *
  * const account = await wallet.connect({
  *   client,
@@ -369,49 +370,49 @@ export function smartWallet(
  * ```
  * @wallet
  */
-export function embeddedWallet(
-  createOptions?: CreateWalletArgs<"embedded">[1],
-): Wallet<"embedded"> {
-  const emitter = createWalletEmitter<"embedded">();
+export function inAppWallet(
+  createOptions?: CreateWalletArgs<"inApp">[1],
+): Wallet<"inApp"> {
+  const emitter = createWalletEmitter<"inApp">();
   let account: Account | undefined = undefined;
   let chain: Chain | undefined = undefined;
   return {
-    id: "embedded",
+    id: "inApp",
     subscribe: emitter.subscribe,
     getChain: () => chain,
     getConfig: () => createOptions,
     getAccount: () => account,
     autoConnect: async (options) => {
-      const { autoConnectEmbeddedWallet } = await import(
-        "./embedded/core/wallet/index.js"
+      const { autoConnectInAppWallet } = await import(
+        "./in-app/core/wallet/index.js"
       );
 
       const [connectedAccount, connectedChain] =
-        await autoConnectEmbeddedWallet(options);
+        await autoConnectInAppWallet(options);
       // set the states
       account = connectedAccount;
       chain = connectedChain;
       trackConnect({
         client: options.client,
-        walletType: "embedded",
+        walletType: "inApp",
         walletAddress: account.address,
       });
       // return only the account
       return account;
     },
     connect: async (options) => {
-      const { connectEmbeddedWallet } = await import(
-        "./embedded/core/wallet/index.js"
+      const { connectInAppWallet } = await import(
+        "./in-app/core/wallet/index.js"
       );
 
       const [connectedAccount, connectedChain] =
-        await connectEmbeddedWallet(options);
+        await connectInAppWallet(options);
       // set the states
       account = connectedAccount;
       chain = connectedChain;
       trackConnect({
         client: options.client,
-        walletType: "embedded",
+        walletType: "inApp",
         walletAddress: account.address,
       });
       // return only the account

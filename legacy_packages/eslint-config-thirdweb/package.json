@@ -1,0 +1,18 @@
+{
+  "name": "eslint-config-thirdweb",
+  "version": "0.1.9",
+  "main": "index.js",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "7.5.0",
+    "@typescript-eslint/parser": "7.5.0",
+    "eslint-config-next": "14.2.1",
+    "eslint-config-prettier": "9.1.0",
+    "eslint-config-turbo": "1.13.2",
+    "eslint-plugin-react": "7.34.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/eslint-config-thirdweb"
+}

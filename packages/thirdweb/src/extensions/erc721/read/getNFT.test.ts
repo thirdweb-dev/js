@@ -1,7 +1,7 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 
-import { getNFT } from "./getNFT.js";
 import { DOODLES_CONTRACT } from "~test/test-contracts.js";
+import { getNFT } from "./getNFT.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("erc721.getNFT", () => {
   it("without owner", async () => {

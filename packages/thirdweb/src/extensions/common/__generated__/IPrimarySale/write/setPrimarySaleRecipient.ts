@@ -1,20 +1,25 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "setPrimarySaleRecipient" function.
  */
-
-export type SetPrimarySaleRecipientParams = {
+export type SetPrimarySaleRecipientParams = WithOverrides<{
   saleRecipient: AbiParameterToPrimitiveType<{
     type: "address";
     name: "_saleRecipient";
   }>;
-};
+}>;
 
-const FN_SELECTOR = "0x6f4f2837" as const;
+export const FN_SELECTOR = "0x6f4f2837" as const;
 const FN_INPUTS = [
   {
     type: "address",
@@ -22,6 +27,27 @@ const FN_INPUTS = [
   },
 ] as const;
 const FN_OUTPUTS = [] as const;
+
+/**
+ * Checks if the `setPrimarySaleRecipient` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `setPrimarySaleRecipient` method is supported.
+ * @extension COMMON
+ * @example
+ * ```ts
+ * import { isSetPrimarySaleRecipientSupported } from "thirdweb/extensions/common";
+ *
+ * const supported = await isSetPrimarySaleRecipientSupported(contract);
+ * ```
+ */
+export async function isSetPrimarySaleRecipientSupported(
+  contract: ThirdwebContract<any>,
+) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
 
 /**
  * Encodes the parameters for the "setPrimarySaleRecipient" function.
@@ -40,6 +66,30 @@ export function encodeSetPrimarySaleRecipientParams(
   options: SetPrimarySaleRecipientParams,
 ) {
   return encodeAbiParameters(FN_INPUTS, [options.saleRecipient]);
+}
+
+/**
+ * Encodes the "setPrimarySaleRecipient" function into a Hex string with its parameters.
+ * @param options - The options for the setPrimarySaleRecipient function.
+ * @returns The encoded hexadecimal string.
+ * @extension COMMON
+ * @example
+ * ```ts
+ * import { encodeSetPrimarySaleRecipient } "thirdweb/extensions/common";
+ * const result = encodeSetPrimarySaleRecipient({
+ *  saleRecipient: ...,
+ * });
+ * ```
+ */
+export function encodeSetPrimarySaleRecipient(
+  options: SetPrimarySaleRecipientParams,
+) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeSetPrimarySaleRecipientParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**
@@ -69,15 +119,17 @@ export function setPrimarySaleRecipient(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [resolvedParams.saleRecipient] as const;
-          }
-        : [options.saleRecipient],
+    params: async () => {
+      const resolvedOptions = await asyncOptions();
+      return [resolvedOptions.saleRecipient] as const;
+    },
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

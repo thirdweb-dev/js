@@ -1,6 +1,6 @@
 import { keyframes } from "@emotion/react";
 import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
-import { StyledSvg, StyledCircle } from "../design-system/elements.js";
+import { StyledCircle, StyledSvg } from "../design-system/elements.js";
 import { iconSize } from "../design-system/index.js";
 import type { Theme } from "../design-system/index.js";
 
@@ -15,8 +15,8 @@ export const Spinner: React.FC<{
   return (
     <Svg
       style={{
-        width: iconSize[props.size] + "px",
-        height: iconSize[props.size] + "px",
+        width: `${iconSize[props.size]}px`,
+        height: `${iconSize[props.size]}px`,
       }}
       viewBox="0 0 50 50"
     >

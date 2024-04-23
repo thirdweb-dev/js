@@ -4,6 +4,8 @@ import type { BaseTransactionOptions } from "../../../../../transaction/types.js
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "keysOf" function.
@@ -13,7 +15,7 @@ export type KeysOfParams = {
   state: AbiParameterToPrimitiveType<{ type: "uint8"; name: "state" }>;
 };
 
-const FN_SELECTOR = "0x1f64222f" as const;
+export const FN_SELECTOR = "0x1f64222f" as const;
 const FN_INPUTS = [
   {
     type: "uint256",
@@ -31,6 +33,25 @@ const FN_OUTPUTS = [
 ] as const;
 
 /**
+ * Checks if the `keysOf` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `keysOf` method is supported.
+ * @extension FARCASTER
+ * @example
+ * ```ts
+ * import { isKeysOfSupported } from "thirdweb/extensions/farcaster";
+ *
+ * const supported = await isKeysOfSupported(contract);
+ * ```
+ */
+export async function isKeysOfSupported(contract: ThirdwebContract<any>) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
  * Encodes the parameters for the "keysOf" function.
  * @param options - The options for the keysOf function.
  * @returns The encoded ABI parameters.
@@ -46,6 +67,27 @@ const FN_OUTPUTS = [
  */
 export function encodeKeysOfParams(options: KeysOfParams) {
   return encodeAbiParameters(FN_INPUTS, [options.fid, options.state]);
+}
+
+/**
+ * Encodes the "keysOf" function into a Hex string with its parameters.
+ * @param options - The options for the keysOf function.
+ * @returns The encoded hexadecimal string.
+ * @extension FARCASTER
+ * @example
+ * ```ts
+ * import { encodeKeysOf } "thirdweb/extensions/farcaster";
+ * const result = encodeKeysOf({
+ *  fid: ...,
+ *  state: ...,
+ * });
+ * ```
+ */
+export function encodeKeysOf(options: KeysOfParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeKeysOfParams(options).slice(2)) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**

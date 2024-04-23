@@ -9,6 +9,7 @@ export const ThirdwebTextIcon = (props: { height: number }) => {
       viewBox="0 0 74 11"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      role="presentation"
     >
       <path
         fillRule="evenodd"

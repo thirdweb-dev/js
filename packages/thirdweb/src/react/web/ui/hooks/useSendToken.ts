@@ -1,12 +1,12 @@
 import { useMutation } from "@tanstack/react-query";
-import { useSendTransaction } from "../../../core/hooks/contract/useSendTransaction.js";
-import { useActiveWalletChain } from "../../../core/hooks/wallets/wallet-hooks.js";
-import { toWei } from "../../../../utils/units.js";
 import { getContract } from "../../../../contract/contract.js";
-import { prepareTransaction } from "../../../../transaction/prepare-transaction.js";
-import { waitForReceipt } from "../../../../transaction/actions/wait-for-tx-receipt.js";
 import { transfer } from "../../../../extensions/erc20/write/transfer.js";
-import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import { waitForReceipt } from "../../../../transaction/actions/wait-for-tx-receipt.js";
+import { prepareTransaction } from "../../../../transaction/prepare-transaction.js";
+import { toWei } from "../../../../utils/units.js";
+import { useSendTransactionCore } from "../../../core/hooks/contract/useSendTransaction.js";
+import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import { useActiveWalletChain } from "../../../core/hooks/wallets/wallet-hooks.js";
 
 // Q: Should we expose this hook?
 
@@ -15,9 +15,9 @@ import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConn
  * @internal
  */
 export function useSendToken() {
-  const sendTransaction = useSendTransaction();
+  const sendTransaction = useSendTransactionCore();
   const activeChain = useActiveWalletChain();
-  const { client } = useWalletConnectionCtx();
+  const { client } = useConnectUI();
 
   return useMutation({
     async mutationFn(option: {

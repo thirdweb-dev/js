@@ -1,0 +1,40 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.6.4/schema.json",
+  "organizeImports": {
+    "enabled": true
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true
+    }
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space"
+  },
+  "files": {
+    "ignore": [
+      "legacy_packages/**",
+      "packages/thirdweb/src/crypto/aes/lib/md5.ts",
+      "packages/thirdweb/src/utils/promise/p-limit.ts",
+      "packages/thirdweb/src/utils/bytecode/cbor-decode.ts",
+      "packages/thirdweb/src/**/__generated__/**"
+    ]
+  },
+  "overrides": [
+    {
+      "include": ["packages/thirdweb/src/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedGlobals": {
+              "options": { "deniedGlobals": ["Buffer"] },
+              "level": "error"
+            }
+          }
+        }
+      }
+    }
+  ]
+}

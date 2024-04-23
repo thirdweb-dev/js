@@ -4,6 +4,8 @@ import type { BaseTransactionOptions } from "../../../../../transaction/types.js
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "getClaimConditionById" function.
@@ -16,7 +18,7 @@ export type GetClaimConditionByIdParams = {
   }>;
 };
 
-const FN_SELECTOR = "0xd45b28d7" as const;
+export const FN_SELECTOR = "0xd45b28d7" as const;
 const FN_INPUTS = [
   {
     type: "uint256",
@@ -69,6 +71,27 @@ const FN_OUTPUTS = [
 ] as const;
 
 /**
+ * Checks if the `getClaimConditionById` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `getClaimConditionById` method is supported.
+ * @extension ERC1155
+ * @example
+ * ```ts
+ * import { isGetClaimConditionByIdSupported } from "thirdweb/extensions/erc1155";
+ *
+ * const supported = await isGetClaimConditionByIdSupported(contract);
+ * ```
+ */
+export async function isGetClaimConditionByIdSupported(
+  contract: ThirdwebContract<any>,
+) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
  * Encodes the parameters for the "getClaimConditionById" function.
  * @param options - The options for the getClaimConditionById function.
  * @returns The encoded ABI parameters.
@@ -86,6 +109,31 @@ export function encodeGetClaimConditionByIdParams(
   options: GetClaimConditionByIdParams,
 ) {
   return encodeAbiParameters(FN_INPUTS, [options.tokenId, options.conditionId]);
+}
+
+/**
+ * Encodes the "getClaimConditionById" function into a Hex string with its parameters.
+ * @param options - The options for the getClaimConditionById function.
+ * @returns The encoded hexadecimal string.
+ * @extension ERC1155
+ * @example
+ * ```ts
+ * import { encodeGetClaimConditionById } "thirdweb/extensions/erc1155";
+ * const result = encodeGetClaimConditionById({
+ *  tokenId: ...,
+ *  conditionId: ...,
+ * });
+ * ```
+ */
+export function encodeGetClaimConditionById(
+  options: GetClaimConditionByIdParams,
+) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeGetClaimConditionByIdParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**

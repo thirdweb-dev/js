@@ -1,7 +1,7 @@
-import type { Signature } from "viem";
 import { secp256k1 } from "@noble/curves/secp256k1";
+import type { Signature } from "viem";
 
-import { toHex, type Hex } from "../encoding/hex.js";
+import { type Hex, toHex } from "../encoding/hex.js";
 
 /**
  * Options for signing a transaction hash.
@@ -32,5 +32,6 @@ export function sign({ hash, privateKey }: SignOptions): Signature {
     r: toHex(r),
     s: toHex(s),
     v: recovery ? 28n : 27n,
+    yParity: recovery,
   };
 }

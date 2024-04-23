@@ -1,15 +1,15 @@
-import { ScanScreen } from "./ScanScreen.js";
-import { useState, useRef, useEffect, useCallback } from "react";
-import { ConnectingScreen } from "./ConnectingScreen.js";
-import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
-import type { InjectedWalletLocale } from "../injected/locale/types.js";
-import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
-import type { WalletInfo } from "../../../../wallets/wallet-info.js";
-import type { WCSupportedWalletIds } from "../../../../wallets/__generated__/wallet-ids.js";
-import { isMobile, isAndroid, isIOS } from "../../../../utils/web/isMobile.js";
-import { openWindow } from "../../../../utils/web/openWindow.js";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { wait } from "../../../../utils/promise/wait.js";
 import { formatWalletConnectUrl } from "../../../../utils/url.js";
+import { isAndroid, isIOS, isMobile } from "../../../../utils/web/isMobile.js";
+import { openWindow } from "../../../../utils/web/openWindow.js";
+import type { WCSupportedWalletIds } from "../../../../wallets/__generated__/wallet-ids.js";
+import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
+import type { WalletInfo } from "../../../../wallets/wallet-info.js";
+import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import type { InjectedWalletLocale } from "../injected/locale/types.js";
+import { ConnectingScreen } from "./ConnectingScreen.js";
+import { ScanScreen } from "./ScanScreen.js";
 
 /**
  * QR Scan UI for connecting a specific wallet on desktop.
@@ -27,7 +27,7 @@ export const WalletConnectConnection: React.FC<{
   const { onBack, onGetStarted, wallet, walletInfo, locale, done } = props;
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>();
   const [errorConnecting, setErrorConnecting] = useState(false);
-  const { chain, chains, client, walletConnect } = useWalletConnectionCtx();
+  const { chain, chains, client, walletConnect } = useConnectUI();
 
   const connect = useCallback(() => {
     setErrorConnecting(false);
@@ -143,7 +143,7 @@ export const WalletConnectStandaloneConnection: React.FC<{
     props;
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>();
   const [errorConnecting, setErrorConnecting] = useState(false);
-  const { chain, chains, client, walletConnect } = useWalletConnectionCtx();
+  const { chain, chains, client, walletConnect } = useConnectUI();
 
   const connect = useCallback(() => {
     setErrorConnecting(false);

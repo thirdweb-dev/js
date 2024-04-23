@@ -1,39 +1,42 @@
 import styled from "@emotion/styled";
 import { CrossCircledIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { useState, useMemo, useCallback, memo, useEffect } from "react";
-import { ChainIcon } from "../components/ChainIcon.js";
-import { Skeleton } from "../components/Skeleton.js";
-import { Spacer } from "../components/Spacer.js";
-import { Spinner } from "../components/Spinner.js";
-import { Container, ModalHeader, Line } from "../components/basic.js";
-import { Button } from "../components/buttons.js";
-import { Input } from "../components/formElements.js";
-import { ModalTitle } from "../components/modalElements.js";
-import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
-import { StyledP, StyledUl, StyledButton } from "../design-system/elements.js";
-import {
-  spacing,
-  iconSize,
-  fontSize,
-  radius,
-  media,
-} from "../design-system/index.js";
 import Fuse from "fuse.js";
-import {
-  useActiveWalletChain,
-  useSwitchActiveWalletChain,
-} from "../../../core/hooks/wallets/wallet-hooks.js";
-import { Text } from "../components/text.js";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
+import type React from "react";
+import type { Chain, ChainMetadata } from "../../../../chains/types.js";
+import { convertApiChainToChain } from "../../../../chains/utils.js";
+import type { ThirdwebClient } from "../../../../client/client.js";
 import {
   useChainQuery,
   useChainsQuery,
 } from "../../../core/hooks/others/useChainQuery.js";
-import type React from "react";
-import type { ChainMetadata, Chain } from "../../../../chains/types.js";
-import { convertApiChainToChain } from "../../../../chains/utils.js";
-import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import {
+  useActiveWalletChain,
+  useSwitchActiveWalletChain,
+} from "../../../core/hooks/wallets/wallet-hooks.js";
+import { ChainIcon } from "../components/ChainIcon.js";
+import { Skeleton } from "../components/Skeleton.js";
+import { Spacer } from "../components/Spacer.js";
+import { Spinner } from "../components/Spinner.js";
+import { Container, Line, ModalHeader } from "../components/basic.js";
+import { Button } from "../components/buttons.js";
+import { Input } from "../components/formElements.js";
+import { ModalTitle } from "../components/modalElements.js";
+import { Text } from "../components/text.js";
+import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
+import { StyledButton, StyledP, StyledUl } from "../design-system/elements.js";
+import {
+  fontSize,
+  iconSize,
+  media,
+  radius,
+  spacing,
+} from "../design-system/index.js";
 import { useDebouncedValue } from "../hooks/useDebouncedValue.js";
 import { useShowMore } from "../hooks/useShowMore.js";
+import type { ConnectLocale } from "./locale/types.js";
+
+// Note: Must not use useConnectUI here, because this component is also used outside of Connect UI context
 
 type NetworkSelectorChainProps = {
   /**
@@ -209,6 +212,8 @@ type NetworkSelectorContentProps = {
   chains: Chain[];
   networkSelector?: NetworkSelectorProps;
   showTabs?: boolean;
+  connectLocale: ConnectLocale;
+  client: ThirdwebClient;
 };
 
 /**
@@ -229,9 +234,11 @@ export function NetworkSelectorContent(props: NetworkSelectorContentProps) {
 function NetworkSelectorContentInner(
   props: NetworkSelectorContentProps & {
     chainsData: ChainData;
+    connectLocale: ConnectLocale;
+    client: ThirdwebClient;
   },
 ) {
-  const { chainsData } = props;
+  const { chainsData, connectLocale } = props;
 
   const chainMap = useMemo(() => {
     const _chainMap = new Map<number, Chain>();
@@ -241,7 +248,7 @@ function NetworkSelectorContentInner(
     return _chainMap;
   }, [props.chains]);
 
-  const locale = useWalletConnectionCtx().connectLocale.networkSelector;
+  const locale = connectLocale.networkSelector;
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTab, setSelectedTab] = useState<"all" | "mainnet" | "testnet">(
     "all",
@@ -441,6 +448,8 @@ function NetworkSelectorContentInner(
           recentChainIds={recentChainsToShow}
           onSwitch={handleSwitch}
           renderChain={props.networkSelector?.renderChain}
+          connectLocale={connectLocale}
+          client={props.client}
         />
       </Container>
       {onCustomClick && (
@@ -498,9 +507,10 @@ const NetworkTabContent = (props: {
   onSwitch: (chain: Chain) => void;
   renderChain?: React.FC<NetworkSelectorChainProps>;
   close?: () => void;
+  connectLocale: ConnectLocale;
+  client: ThirdwebClient;
 }) => {
-  const locale =
-    useWalletConnectionCtx().connectLocale.networkSelector.categoryLabel;
+  const locale = props.connectLocale.networkSelector.categoryLabel;
 
   const { recentChainIds, popularChainIds, allChainIds } = props;
 
@@ -527,6 +537,8 @@ const NetworkTabContent = (props: {
             onSwitch={props.onSwitch}
             renderChain={props.renderChain}
             close={props.close}
+            client={props.client}
+            connectLocale={props.connectLocale}
           />
           <Spacer y="lg" />
         </div>
@@ -541,6 +553,8 @@ const NetworkTabContent = (props: {
             onSwitch={props.onSwitch}
             renderChain={props.renderChain}
             close={props.close}
+            client={props.client}
+            connectLocale={props.connectLocale}
           />
           <Spacer y="lg" />
         </div>
@@ -560,6 +574,8 @@ const NetworkTabContent = (props: {
         onSwitch={props.onSwitch}
         renderChain={props.renderChain}
         close={props.close}
+        client={props.client}
+        connectLocale={props.connectLocale}
       />
 
       {noChainsToShow && (
@@ -578,6 +594,8 @@ type NetworkListProps = {
   onSwitch: (chain: Chain) => void;
   renderChain?: React.FC<NetworkSelectorChainProps>;
   close?: () => void;
+  client: ThirdwebClient;
+  connectLocale: ConnectLocale;
 };
 
 const NetworkList = /* @__PURE__ */ memo(function NetworkList(
@@ -608,7 +626,7 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(
     try {
       await switchChain(chain);
       props.onSwitch(chain);
-    } catch (e: any) {
+    } catch (e) {
       setErrorSwitchingChainId(chain.id);
       console.error(e);
     } finally {
@@ -647,6 +665,8 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(
                 confirming={confirming}
                 onClick={() => handleSwitch(chain)}
                 switchingFailed={switchingFailed}
+                client={props.client}
+                connectLocale={props.connectLocale}
               />
             )}
           </li>
@@ -661,8 +681,10 @@ export const ChainButton = /* @__PURE__ */ memo(function ChainButton(props: {
   onClick: () => void;
   confirming: boolean;
   switchingFailed: boolean;
+  client: ThirdwebClient;
+  connectLocale: ConnectLocale;
 }) {
-  const locale = useWalletConnectionCtx().connectLocale;
+  const locale = props.connectLocale;
   const { chain, confirming, switchingFailed } = props;
 
   const activeChain = useActiveWalletChain();
@@ -684,9 +706,10 @@ export const ChainButton = /* @__PURE__ */ memo(function ChainButton(props: {
           size={iconSize.lg}
           active={activeChain?.id === chain.id}
           loading="lazy"
+          client={props.client}
         />
       ) : (
-        <Skeleton width={iconSize.lg + "px"} height={iconSize.lg + "px"} />
+        <Skeleton width={`${iconSize.lg}px`} height={`${iconSize.lg}px`} />
       )}
 
       {confirming || switchingFailed ? (

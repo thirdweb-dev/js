@@ -1,4 +1,5 @@
-import React, { type ReactElement, useMemo } from "react";
+import type React from "react";
+import { type ReactElement, useMemo } from "react";
 import { encode } from "uqr";
 
 type QRCodeRendererProps = {
@@ -34,7 +35,7 @@ function QRCodeRenderer({
       { x: 0, y: 1 },
     ];
 
-    qrList.forEach(({ x, y }) => {
+    for (const { x, y } of qrList) {
       const x1 = (matrix.length - 7) * cellSize * x;
       const y1 = (matrix.length - 7) * cellSize * y;
       for (let i = 0; i < 3; i++) {
@@ -55,7 +56,7 @@ function QRCodeRenderer({
           />,
         );
       }
-    });
+    }
 
     if (image) {
       const x1 = (matrix.length - 7) * cellSize * 1;
@@ -90,7 +91,7 @@ function QRCodeRenderer({
     const matrixMiddleEnd = matrix.length / 2 + clearArenaSize / 2 - 1;
 
     matrix.forEach((row, i: number) => {
-      row.forEach((_: any, j: number) => {
+      row.forEach((_: boolean, j: number) => {
         if (matrix[i]?.[j]) {
           // Do not render dots under position squares
           if (
@@ -112,7 +113,10 @@ function QRCodeRenderer({
             ) {
               dotsArray.push(
                 <circle
-                  key={`circle-${i}-${j}`}
+                  key={`circle-${i}-${
+                    // biome-ignore lint/suspicious/noArrayIndexKey: its the only thing available for the key here
+                    j
+                  }`}
                   cx={i * cellSize + cellSize / 2}
                   cy={j * cellSize + cellSize / 2}
                   fill="var(--ck-qr-dot-color)"
@@ -137,6 +141,7 @@ function QRCodeRenderer({
         width: size,
         height: size,
       }}
+      role="presentation"
     >
       <rect fill="transparent" height={size} width={size} />
       {dots}

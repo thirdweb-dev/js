@@ -1,19 +1,20 @@
-import { ModalConfigCtx } from "../../../providers/wallet-ui-states-provider.js";
-import { Suspense, lazy, useCallback, useContext } from "react";
-import { reservedScreens, onModalUnmount } from "../constants.js";
-import { ScreenSetupContext, type ScreenSetup } from "./screen.js";
-import { StartScreen } from "../screens/StartScreen.js";
+import { Suspense, lazy, useCallback } from "react";
+import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
+import { useSiweAuth } from "../../../../core/hooks/auth/useSiweAuth.js";
+import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
+import { useConnect } from "../../../../core/hooks/wallets/wallet-hooks.js";
+import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
 import { WalletSelector } from "../WalletSelector.js";
+import { onModalUnmount, reservedScreens } from "../constants.js";
+import { SignatureScreen } from "../screens/SignatureScreen.js";
+import { StartScreen } from "../screens/StartScreen.js";
+import { AnyWalletConnectUI } from "./AnyWalletConnectUI.js";
 import {
   ConnectModalCompactLayout,
   ConnectModalWideLayout,
 } from "./ConnectModalSkeleton.js";
-import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
-import { useConnect } from "../../../../core/hooks/wallets/wallet-hooks.js";
-import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
-import { AnyWalletConnectUI } from "./AnyWalletConnectUI.js";
 import { SmartConnectUI } from "./SmartWalletConnectUI.js";
-import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
+import { type ScreenSetup, ScreenSetupContext } from "./screen.js";
 
 const AllWalletsUI = /* @__PURE__ */ lazy(() => import("./AllWalletsUI.js"));
 
@@ -28,22 +29,19 @@ export const ConnectModalContent = (props: {
 }) => {
   const { setModalVisibility, onClose } = props;
   const { screen, setScreen, initialScreen } = props.screenSetup;
-  const { wallets, accountAbstraction } = useWalletConnectionCtx();
-  // const disconnect = useDisconnect();
-  const modalConfig = useContext(ModalConfigCtx);
-
-  // const setModalConfig = useContext(SetModalConfigCtx);
-  // const activeWalletConnectionStatus = useActiveWalletConnectionStatus();
-  // const activeWallet = useActiveWallet();
+  const {
+    wallets,
+    accountAbstraction,
+    auth,
+    onConnect,
+    connectModal,
+    connectLocale,
+    client,
+  } = useConnectUI();
   const { connect } = useConnect();
 
-  const title = modalConfig.title;
-  const modalSize = modalConfig.modalSize;
-  const onConnect = modalConfig.onConnect;
-  const isWideModal = modalSize === "wide";
-
-  // const { user } = useUser();
-  // const authConfig = useThirdwebAuthContext();
+  const siweAuth = useSiweAuth(auth);
+  const showSignatureScreen = siweAuth.requiresAuth && !siweAuth.isLoggedIn;
 
   const handleConnected = useCallback(
     (wallet: Wallet) => {
@@ -53,57 +51,34 @@ export const ConnectModalContent = (props: {
         onConnect(wallet);
       }
 
-      const requiresSignIn = false;
-      // const requiresSignIn = modalConfig.auth?.loginOptional
-      //   ? false
-      //   : !!authConfig?.authUrl && !user?.address;
-
       onModalUnmount(() => {
         setModalVisibility(true);
       });
 
       // show sign in screen if required
-      if (requiresSignIn) {
+      if (showSignatureScreen) {
         setScreen(reservedScreens.signIn);
-      }
-
-      // close modal and reset screen
-      else {
+      } else {
         onClose();
       }
     },
     [
-      // modalConfig.auth?.loginOptional,
-      // authConfig?.authUrl,
-      // user?.address,
-      setScreen,
       setModalVisibility,
       onClose,
       onConnect,
       connect,
+      showSignatureScreen,
+      setScreen,
     ],
   );
 
   const handleBack = useCallback(() => {
     setScreen(initialScreen);
-    // if (connectionStatus === "connecting") {
-    //   disconnect();
-    // }
-  }, [
-    setScreen,
-    initialScreen,
-    // connectionStatus,
-    // disconnect
-  ]);
-
-  // const address = useActiveWalletAddress();
-
-  // const { setConnectionStatus, createWalletInstance, activeWallet } =
-  //   useWalletContext();
+  }, [setScreen, initialScreen]);
 
   const walletList = (
     <WalletSelector
-      title={title}
+      title={connectModal.title || connectLocale.defaultModalTitle}
       wallets={wallets}
       onGetStarted={() => {
         setScreen(reservedScreens.getStarted);
@@ -114,6 +89,7 @@ export const ConnectModalContent = (props: {
       }}
       done={handleConnected}
       goBack={wallets.length > 1 ? handleBack : undefined}
+      setModalVisibility={setModalVisibility}
     />
   );
 
@@ -156,24 +132,27 @@ export const ConnectModalContent = (props: {
     );
   };
 
-  // const signatureScreen = (
-  //   <SignatureScreen
-  //     onDone={onClose}
-  //     modalSize={modalSize}
-  //     termsOfServiceUrl={modalConfig.termsOfServiceUrl}
-  //     privacyPolicyUrl={modalConfig.privacyPolicyUrl}
-  //   />
-  // );
+  const signatureScreen = (
+    <SignatureScreen
+      onDone={onClose}
+      modalSize={connectModal.size}
+      termsOfServiceUrl={connectModal.termsOfServiceUrl}
+      privacyPolicyUrl={connectModal.privacyPolicyUrl}
+      auth={auth}
+      client={client}
+      connectLocale={connectLocale}
+    />
+  );
 
   return (
     <ScreenSetupContext.Provider value={props.screenSetup}>
-      {isWideModal ? (
+      {connectModal.size === "wide" ? (
         <ConnectModalWideLayout
           left={walletList}
           right={
             <>
-              {/* {screen === reservedScreens.signIn && signatureScreen} */}
-              {screen === reservedScreens.main && <>{getStarted}</>}
+              {screen === reservedScreens.signIn && signatureScreen}
+              {screen === reservedScreens.main && getStarted}
               {screen === reservedScreens.getStarted && getStarted}
               {screen === reservedScreens.showAll && showAll}
               {typeof screen !== "string" && getWalletUI(screen)}
@@ -182,7 +161,7 @@ export const ConnectModalContent = (props: {
         />
       ) : (
         <ConnectModalCompactLayout>
-          {/* {screen === reservedScreens.signIn && signatureScreen} */}
+          {screen === reservedScreens.signIn && signatureScreen}
           {screen === reservedScreens.main && walletList}
           {screen === reservedScreens.getStarted && getStarted}
           {screen === reservedScreens.showAll && showAll}

@@ -1,6 +1,6 @@
 import type { Chain } from "../src/types";
 export default {
-  "chain": "FlowEVM",
+  "chain": "Flow",
   "chainId": 747,
   "explorers": [
     {
@@ -17,7 +17,7 @@ export default {
     "format": "png"
   },
   "infoURL": "https://developers.flow.com/evm/about",
-  "name": "FlowEVM Mainnet",
+  "name": "Mainnet",
   "nativeCurrency": {
     "name": "FLOW",
     "symbol": "FLOW",
@@ -28,7 +28,7 @@ export default {
     "https://747.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.evm.nodes.onflow.org"
   ],
-  "shortName": "flowevm-mainnet",
-  "slug": "flowevm",
+  "shortName": "flow-mainnet",
+  "slug": "flow-mainnet",
   "testnet": false
 } as const satisfies Chain;

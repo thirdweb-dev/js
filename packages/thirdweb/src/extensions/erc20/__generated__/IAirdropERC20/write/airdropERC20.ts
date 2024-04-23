@@ -1,13 +1,18 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "airdropERC20" function.
  */
-
-export type AirdropERC20Params = {
+export type AirdropERC20Params = WithOverrides<{
   tokenAddress: AbiParameterToPrimitiveType<{
     type: "address";
     name: "tokenAddress";
@@ -24,9 +29,9 @@ export type AirdropERC20Params = {
       { type: "uint256"; name: "amount" },
     ];
   }>;
-};
+}>;
 
-const FN_SELECTOR = "0x0670b2b3" as const;
+export const FN_SELECTOR = "0x0670b2b3" as const;
 const FN_INPUTS = [
   {
     type: "address",
@@ -54,6 +59,25 @@ const FN_INPUTS = [
 const FN_OUTPUTS = [] as const;
 
 /**
+ * Checks if the `airdropERC20` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `airdropERC20` method is supported.
+ * @extension ERC20
+ * @example
+ * ```ts
+ * import { isAirdropERC20Supported } from "thirdweb/extensions/erc20";
+ *
+ * const supported = await isAirdropERC20Supported(contract);
+ * ```
+ */
+export async function isAirdropERC20Supported(contract: ThirdwebContract<any>) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
  * Encodes the parameters for the "airdropERC20" function.
  * @param options - The options for the airdropERC20 function.
  * @returns The encoded ABI parameters.
@@ -74,6 +98,30 @@ export function encodeAirdropERC20Params(options: AirdropERC20Params) {
     options.tokenOwner,
     options.contents,
   ]);
+}
+
+/**
+ * Encodes the "airdropERC20" function into a Hex string with its parameters.
+ * @param options - The options for the airdropERC20 function.
+ * @returns The encoded hexadecimal string.
+ * @extension ERC20
+ * @example
+ * ```ts
+ * import { encodeAirdropERC20 } "thirdweb/extensions/erc20";
+ * const result = encodeAirdropERC20({
+ *  tokenAddress: ...,
+ *  tokenOwner: ...,
+ *  contents: ...,
+ * });
+ * ```
+ */
+export function encodeAirdropERC20(options: AirdropERC20Params) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeAirdropERC20Params(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**
@@ -105,19 +153,21 @@ export function airdropERC20(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [
-              resolvedParams.tokenAddress,
-              resolvedParams.tokenOwner,
-              resolvedParams.contents,
-            ] as const;
-          }
-        : [options.tokenAddress, options.tokenOwner, options.contents],
+    params: async () => {
+      const resolvedOptions = await asyncOptions();
+      return [
+        resolvedOptions.tokenAddress,
+        resolvedOptions.tokenOwner,
+        resolvedOptions.contents,
+      ] as const;
+    },
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

@@ -1,6 +1,6 @@
+import { CheckIcon, CopyIcon as CopyIconSVG } from "@radix-ui/react-icons";
 import { useClipboard } from "../hooks/useCopyClipboard.js";
 import { ToolTip } from "./Tooltip.js";
-import { CheckIcon, CopyIcon as CopyIconSVG } from "@radix-ui/react-icons";
 import { Container } from "./basic.js";
 
 /**
@@ -22,6 +22,11 @@ export const CopyIcon: React.FC<{
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+      }}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          onCopy();
+        }
       }}
     >
       <ToolTip tip={props.tip} side={props.side} align={props.align}>

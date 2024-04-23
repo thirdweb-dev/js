@@ -3,13 +3,15 @@ import type {
   AbiParameter,
   AbiParametersToPrimitiveTypes,
 } from "abitype";
-import { concatHex } from "viem";
-import type { Prettify } from "../../utils/type-utils.js";
+import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { prepareTransaction } from "../../transaction/prepare-transaction.js";
 import { encodeAbiParameters } from "../../utils/abi/encodeAbiParameters.js";
-import { isHex, type Hex } from "../../utils/encoding/hex.js";
 import { ensureBytecodePrefix } from "../../utils/bytecode/prefix.js";
+import { concatHex } from "../../utils/encoding/helpers/concat-hex.js";
+import { type Hex, isHex } from "../../utils/encoding/hex.js";
+import type { Prettify } from "../../utils/type-utils.js";
 import type { ClientAndChain } from "../../utils/types.js";
+import type { Account } from "../../wallets/interfaces/wallet.js";
 
 export type PrepareDirectDeployTransactionOptions<
   TConstructor extends AbiConstructor,
@@ -66,4 +68,43 @@ export function prepareDirectDeployTransaction<
       ),
     ]),
   });
+}
+
+/**
+ * Deploy a contract on a given chain
+ * @param options - the deploy options
+ * @returns - a promise that resolves to the deployed contract address
+ * @example
+ * ```ts
+ * import { deployContract } from "thirdweb/deployContract";
+ *
+ * const address = await deployContract({
+ *  client,
+ *  chain,
+ *  bytecode: "0x...",
+ *  constructorAbi: {
+ *    inputs: [{ type: "uint256", name: "value" }],
+ *    type: "constructor",
+ *  },
+ *  constructorParams: [123],
+ * });
+ * ```
+ * @extension DEPLOY
+ */
+export async function deployContract<const TConstructor extends AbiConstructor>(
+  options: PrepareDirectDeployTransactionOptions<TConstructor> & {
+    account: Account;
+  },
+) {
+  const deployTx = prepareDirectDeployTransaction(options);
+  const receipt = await sendAndConfirmTransaction({
+    account: options.account,
+    transaction: deployTx,
+  });
+  if (!receipt.contractAddress) {
+    throw new Error(
+      `Could not find deployed contract address in transaction: ${receipt.transactionHash}`,
+    );
+  }
+  return receipt.contractAddress;
 }

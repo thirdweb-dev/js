@@ -1,24 +1,23 @@
-import { useContext, useMemo, useRef, useState } from "react";
-import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
-import { Spacer } from "../../components/Spacer.js";
-import { Container, ModalHeader } from "../../components/basic.js";
-import { Input } from "../../components/formElements.js";
-import { useDebouncedValue } from "../../hooks/useDebouncedValue.js";
-import { Spinner } from "../../components/Spinner.js";
-import { iconSize, spacing } from "../../design-system/index.js";
-import { useCustomTheme } from "../../design-system/CustomThemeProvider.js";
 import styled from "@emotion/styled";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { WalletEntryButton } from "../WalletEntryButton.js";
-import { createWallet } from "../../../../../wallets/create-wallet.js";
-import { useShowMore } from "../../hooks/useShowMore.js";
-import { sortWallets } from "../../../utils/sortWallets.js";
-import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
-import { ModalConfigCtx } from "../../../providers/wallet-ui-states-provider.js";
-import Fuse from "fuse.js";
-import walletInfos from "../../../../../wallets/__generated__/wallet-infos.js";
-import { Text } from "../../components/text.js";
 import { CrossCircledIcon } from "@radix-ui/react-icons";
+import Fuse from "fuse.js";
+import { useMemo, useRef, useState } from "react";
+import walletInfos from "../../../../../wallets/__generated__/wallet-infos.js";
+import { createWallet } from "../../../../../wallets/create-wallet.js";
+import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
+import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
+import { sortWallets } from "../../../utils/sortWallets.js";
+import { Spacer } from "../../components/Spacer.js";
+import { Spinner } from "../../components/Spinner.js";
+import { Container, ModalHeader } from "../../components/basic.js";
+import { Input } from "../../components/formElements.js";
+import { Text } from "../../components/text.js";
+import { useCustomTheme } from "../../design-system/CustomThemeProvider.js";
+import { iconSize, spacing } from "../../design-system/index.js";
+import { useDebouncedValue } from "../../hooks/useDebouncedValue.js";
+import { useShowMore } from "../../hooks/useShowMore.js";
+import { WalletEntryButton } from "../WalletEntryButton.js";
 
 /**
  *
@@ -28,9 +27,11 @@ function AllWalletsUI(props: {
   onBack: () => void;
   onSelect: (wallet: Wallet) => void;
 }) {
-  const { recommendedWallets, wallets: specifiedWallets } =
-    useWalletConnectionCtx();
-  const { modalSize } = useContext(ModalConfigCtx);
+  const {
+    recommendedWallets,
+    wallets: specifiedWallets,
+    connectModal,
+  } = useConnectUI();
 
   const fuseInstance = useMemo(() => {
     return new Fuse(walletInfos, {
@@ -131,7 +132,8 @@ function AllWalletsUI(props: {
             <div
               ref={listContainer}
               style={{
-                maxHeight: modalSize === "compact" ? "400px" : undefined,
+                maxHeight:
+                  connectModal.size === "compact" ? "400px" : undefined,
                 paddingInline: spacing.md,
               }}
             >

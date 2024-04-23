@@ -1,18 +1,18 @@
+import type { Abi } from "abitype";
+import * as universalethers from "ethers";
 import type * as ethers5 from "ethers5";
 import type * as ethers6 from "ethers6";
-import * as universalethers from "ethers";
-import type { Abi } from "abitype";
 import type { AccessList, Hex, TransactionSerializable } from "viem";
-import type { ThirdwebClient } from "../client/client.js";
-import type { Account } from "../wallets/interfaces/wallet.js";
-import { normalizeChainId } from "../wallets/utils/normalizeChainId.js";
-import { resolvePromisedValue } from "../utils/promise/resolve-promised-value.js";
-import { getRpcUrlForChain } from "../chains/utils.js";
 import type { Chain } from "../chains/types.js";
-import { getContract, type ThirdwebContract } from "../contract/contract.js";
-import { toHex, uint8ArrayToHex } from "../utils/encoding/hex.js";
+import { getRpcUrlForChain } from "../chains/utils.js";
+import type { ThirdwebClient } from "../client/client.js";
+import { type ThirdwebContract, getContract } from "../contract/contract.js";
 import { toSerializableTransaction } from "../transaction/actions/to-serializable-transaction.js";
 import type { PreparedTransaction } from "../transaction/prepare-transaction.js";
+import { toHex, uint8ArrayToHex } from "../utils/encoding/hex.js";
+import { resolvePromisedValue } from "../utils/promise/resolve-promised-value.js";
+import type { Account } from "../wallets/interfaces/wallet.js";
+import { normalizeChainId } from "../wallets/utils/normalizeChainId.js";
 
 type Ethers6 = typeof ethers6;
 
@@ -263,6 +263,7 @@ async function fromEthersSigner(signer: ethers6.Signer): Promise<Account> {
       return (await signer.signTypedData(
         data.domain as ethers6.TypedDataDomain,
         data.types as Record<string, ethers6.ethers.TypedDataField[]>,
+        // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
         data.message as Record<string, any>,
       )) as Hex;
     },
@@ -289,23 +290,22 @@ async function toEthersSigner(
   class ThirdwebAdapterSigner extends ethers.AbstractSigner<ethers6.JsonRpcProvider> {
     private address: string;
     override provider: ethers6.ethers.JsonRpcProvider;
-    // eslint-disable-next-line jsdoc/require-jsdoc
+
     constructor(provider: ethers6.JsonRpcProvider, address: string) {
       super(provider);
       this.address = address;
       this.provider = provider;
     }
 
-    // eslint-disable-next-line jsdoc/require-jsdoc
     override async getAddress(): Promise<string> {
       // needs to be a promise because ethers6 returns a promise
       return this.address;
     }
-    // eslint-disable-next-line jsdoc/require-jsdoc
+
     override connect(): ethers6.ethers.Signer {
       return this;
     }
-    // eslint-disable-next-line jsdoc/require-jsdoc
+
     override async sendTransaction(
       tx: ethers6.ethers.TransactionRequest,
     ): Promise<ethers6.ethers.TransactionResponse> {
@@ -337,7 +337,7 @@ async function toEthersSigner(
 
       return new ethers.TransactionResponse(txResponseParams, this.provider);
     }
-    // eslint-disable-next-line jsdoc/require-jsdoc
+
     override async signTransaction(
       tx: ethers6.ethers.TransactionRequest,
     ): Promise<string> {
@@ -358,7 +358,7 @@ async function toEthersSigner(
       });
       return account.signTransaction(serializableTx);
     }
-    // eslint-disable-next-line jsdoc/require-jsdoc
+
     override signMessage(message: string | Uint8Array): Promise<string> {
       if (!account) {
         throw new Error("Account not found");
@@ -368,10 +368,11 @@ async function toEthersSigner(
           typeof message === "string" ? message : uint8ArrayToHex(message),
       });
     }
-    // eslint-disable-next-line jsdoc/require-jsdoc
+
     override signTypedData(
       domain: ethers6.ethers.TypedDataDomain,
       types: Record<string, ethers6.ethers.TypedDataField[]>,
+      // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
       value: Record<string, any>,
     ): Promise<string> {
       if (!account) {
@@ -502,7 +503,6 @@ async function alignTxFromEthers(options: {
           : undefined,
       };
     }
-    case 0:
     default: {
       // fall back to legacy
       return {
@@ -525,11 +525,14 @@ async function resolveEthers6Address(
   if (!address) {
     return address;
   }
-  address = await resolvePromisedValue(address);
-  if (typeof address === "string") {
-    return address;
+  let resolvedAddress = address;
+  if (resolvedAddress) {
+    resolvedAddress = await resolvePromisedValue(resolvedAddress);
   }
-  return address.getAddress();
+  if (typeof resolvedAddress === "string") {
+    return resolvedAddress;
+  }
+  return resolvedAddress?.getAddress();
 }
 
 function bigNumberIshToBigint(value: ethers6.BigNumberish): bigint {

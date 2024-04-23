@@ -17,10 +17,10 @@ export type GenerateLoginPayloadParams = {
  * @internal
  */
 export function generateLoginPayload(options: AuthOptions) {
-  return async function ({
+  return async ({
     address,
     chainId,
-  }: GenerateLoginPayloadParams): Promise<LoginPayload> {
+  }: GenerateLoginPayloadParams): Promise<LoginPayload> => {
     const now = Date.now();
     const expirationTime =
       (options.login?.payloadExpirationTimeSeconds ||

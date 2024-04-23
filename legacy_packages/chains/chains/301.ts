@@ -27,5 +27,6 @@ export default {
   ],
   "shortName": "Bobaopera",
   "slug": "bobaopera",
+  "status": "deprecated",
   "testnet": false
 } as const satisfies Chain;

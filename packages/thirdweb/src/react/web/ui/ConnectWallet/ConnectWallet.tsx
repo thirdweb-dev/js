@@ -1,35 +1,32 @@
 import styled from "@emotion/styled";
-import { useContext, useState, useMemo, useEffect } from "react";
-import { Spinner } from "../components/Spinner.js";
-import { Button } from "../components/buttons.js";
-import {
-  useCustomTheme,
-  CustomThemeProvider,
-} from "../design-system/CustomThemeProvider.js";
-import { fadeInAnimation } from "../design-system/animations.js";
-import { ConnectedWalletDetails } from "./Details.js";
-import { defaultTokens } from "./defaultTokens.js";
+import { useEffect, useMemo, useState } from "react";
+import { useSiweAuth } from "../../../core/hooks/auth/useSiweAuth.js";
+import { AutoConnect } from "../../../core/hooks/connection/useAutoConnect.js";
 import {
   useActiveAccount,
-  useActiveWalletChain,
   useActiveWalletConnectionStatus,
-  useSwitchActiveWalletChain,
 } from "../../../core/hooks/wallets/wallet-hooks.js";
+import { ConnectUIContext } from "../../../core/providers/wallet-connection.js";
 import {
-  useSetIsWalletModalOpen,
-  SetModalConfigCtx,
   WalletUIStatesProvider,
+  useSetIsWalletModalOpen,
 } from "../../providers/wallet-ui-states-provider.js";
-import type { ConnectButtonProps } from "./ConnectWalletProps.js";
 import { canFitWideModal } from "../../utils/canFitWideModal.js";
-import type { Chain } from "../../../../chains/types.js";
-import type { ConnectLocale } from "./locale/types.js";
-import { WalletConnectionContext } from "../../../core/providers/wallet-connection.js";
 import { getDefaultWallets } from "../../wallets/defaultWallets.js";
-import { AutoConnect } from "../../../core/hooks/connection/useAutoConnect.js";
+import { Modal } from "../components/Modal.js";
+import { Spinner } from "../components/Spinner.js";
+import { Container } from "../components/basic.js";
+import { Button } from "../components/buttons.js";
+import { fadeInAnimation } from "../design-system/animations.js";
+import { iconSize } from "../design-system/index.js";
+import type { ConnectButtonProps } from "./ConnectWalletProps.js";
+import { ConnectedWalletDetails } from "./Details.js";
 import ConnectModal from "./Modal/ConnectModal.js";
-import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
-import { getConnectLocale } from "./locale/getConnectLocale.js";
+import { defaultTokens } from "./defaultTokens.js";
+import { LockIcon } from "./icons/LockIcon.js";
+import { useConnectLocale } from "./locale/getConnectLocale.js";
+import type { ConnectLocale } from "./locale/types.js";
+import { SignatureScreen } from "./screens/SignatureScreen.js";
 
 const TW_CONNECT_WALLET = "tw-connect-wallet";
 
@@ -49,13 +46,11 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  * @component
  */
 export function ConnectButton(props: ConnectButtonProps) {
-  const wallets = props.wallets || getDefaultWallets();
-  const localeId = props.locale || "en_US";
-  const [locale, setLocale] = useState<ConnectLocale | undefined>();
-
-  useEffect(() => {
-    getConnectLocale(localeId).then(setLocale);
-  }, [localeId]);
+  const wallets = useMemo(
+    () => props.wallets || getDefaultWallets(),
+    [props.wallets],
+  );
+  const localeQuery = useConnectLocale(props.locale || "en_US");
 
   const autoConnectComp = props.autoConnect !== false && (
     <AutoConnect
@@ -71,7 +66,7 @@ export function ConnectButton(props: ConnectButtonProps) {
     />
   );
 
-  if (!locale) {
+  if (!localeQuery.data) {
     return (
       <AnimatedButton
         disabled={true}
@@ -92,27 +87,37 @@ export function ConnectButton(props: ConnectButtonProps) {
   }
 
   return (
-    <WalletConnectionContext.Provider
+    <ConnectUIContext.Provider
       value={{
         appMetadata: props.appMetadata,
         client: props.client,
         wallets: wallets,
         locale: props.locale || "en_US",
-        connectLocale: locale,
+        connectLocale: localeQuery.data,
         chain: props.chain,
         chains: props.chains,
         walletConnect: props.walletConnect,
         accountAbstraction: props.accountAbstraction,
         recommendedWallets: props.recommendedWallets,
         showAllWallets: props.showAllWallets,
+        isEmbed: false,
+        connectModal: {
+          ...props.connectModal,
+          size:
+            !canFitWideModal() || wallets.length === 1
+              ? "compact"
+              : props.connectModal?.size || "wide",
+        },
+        onConnect: props.onConnect,
+        auth: props.auth,
       }}
     >
-      <WalletUIStatesProvider theme="dark">
-        <ConnectButtonInner {...props} connectLocale={locale} />
+      <WalletUIStatesProvider theme={props.theme}>
+        <ConnectButtonInner {...props} connectLocale={localeQuery.data} />
         <ConnectModal />
         {autoConnectComp}
       </WalletUIStatesProvider>
-    </WalletConnectionContext.Provider>
+    </ConnectUIContext.Provider>
   );
 }
 
@@ -122,9 +127,17 @@ function ConnectButtonInner(
   },
 ) {
   const activeAccount = useActiveAccount();
-  const activeWalletChain = useActiveWalletChain();
-  const contextTheme = useCustomTheme();
-  const theme = props.theme || contextTheme || "dark";
+  const siweAuth = useSiweAuth(props.auth);
+  const [showSignatureModal, setShowSignatureModal] = useState(false);
+
+  // if wallet gets disconnected suddently, close the signature modal if it's open
+  useEffect(() => {
+    if (!activeAccount) {
+      setShowSignatureModal(false);
+    }
+  }, [activeAccount]);
+
+  const theme = props.theme || "dark";
   const connectionStatus = useActiveWalletConnectionStatus();
   const locale = props.connectLocale;
 
@@ -134,29 +147,6 @@ function ConnectButtonInner(
     props.connectButton?.label || locale.defaultButtonTitle;
 
   const setIsWalletModalOpen = useSetIsWalletModalOpen();
-
-  const setModalConfig = useContext(SetModalConfigCtx);
-
-  // const authConfig = useThirdwebAuthContext();
-  // const { logout } = useLogout();
-  // const isNetworkMismatch = useNetworkMismatch();
-  const isNetworkMismatch =
-    activeWalletChain?.id !== undefined &&
-    props.chain?.id &&
-    activeWalletChain.id !== props.chain.id;
-
-  // const [showSignatureModal, setShowSignatureModal] = useState(false);
-  // const address = useActiveWalletAddress();
-  // const { user } = useUser();
-
-  // const connectedButNotSignedIn =
-  //   !!authConfig?.authUrl &&
-  //   !!address &&
-  //   (!user?.address || address !== user?.address);
-
-  // const requiresSignIn = props.auth?.loginOptional
-  //   ? false
-  //   : connectedButNotSignedIn;
 
   const supportedTokens = useMemo(() => {
     if (!props.supportedTokens) {
@@ -175,201 +165,124 @@ function ConnectButtonInner(
     return tokens;
   }, [props.supportedTokens]);
 
-  // if wallet gets disconnected, close the signature modal
-  // useEffect(() => {
-  //   if (!activeWallet) {
-  //     setShowSignatureModal(false);
-  //   }
-  // }, [activeWallet]);
-
-  const wallets = props.wallets || getDefaultWallets();
-
-  return (
-    <CustomThemeProvider theme={theme}>
-      {/* <Modal
-        size="compact"
-        open={showSignatureModal}
-        setOpen={(value) => {
-          if (!value) {
-            setShowSignatureModal(false);
-          }
+  if (!activeAccount) {
+    // Connect Wallet button
+    return (
+      <AnimatedButton
+        disabled={isLoading}
+        className={`${
+          props.connectButton?.className || ""
+        } ${TW_CONNECT_WALLET}`}
+        data-theme={theme}
+        data-is-loading={isLoading}
+        variant="primary"
+        type="button"
+        style={{
+          minWidth: "140px",
+          ...props.connectButton?.style,
         }}
+        aria-label={
+          connectionStatus === "connecting"
+            ? locale.connecting
+            : connectButtonLabel
+        }
+        onClick={() => {
+          setIsWalletModalOpen(true);
+        }}
+        data-test="connect-wallet-button"
       >
-        <SignatureScreen
-          modalSize="compact"
-          termsOfServiceUrl={props.termsOfServiceUrl}
-          privacyPolicyUrl={props.privacyPolicyUrl}
-          onDone={() => setShowSignatureModal(false)}
-        />
-      </Modal> */}
+        {isLoading ? (
+          <Spinner size="sm" color="primaryButtonText" />
+        ) : (
+          connectButtonLabel
+        )}
+      </AnimatedButton>
+    );
+  }
 
-      {(() => {
-        // wallet is not connected
-        if (!activeAccount) {
-          // Connect Wallet button
-          return (
-            <AnimatedButton
-              disabled={isLoading}
-              className={`${
-                props.connectButton?.className || ""
-              } ${TW_CONNECT_WALLET}`}
-              data-theme={theme}
-              data-is-loading={isLoading}
-              variant="primary"
-              type="button"
-              style={{
-                minWidth: "140px",
-                ...props.connectButton?.style,
-              }}
-              aria-label={
-                connectionStatus === "connecting"
-                  ? locale.connecting
-                  : connectButtonLabel
-              }
-              onClick={() => {
-                let modalSize = props.connectModal?.size || "wide";
-
-                if (!canFitWideModal() || wallets.length === 1) {
-                  modalSize = "compact";
-                }
-
-                setModalConfig({
-                  title: props.connectModal?.title || locale.defaultModalTitle,
-                  theme,
-                  data: undefined,
-                  modalSize,
-                  termsOfServiceUrl: props.connectModal?.termsOfServiceUrl,
-                  privacyPolicyUrl: props.connectModal?.privacyPolicyUrl,
-                  welcomeScreen: props.connectModal?.welcomeScreen,
-                  titleIconUrl: props.connectModal?.titleIcon,
-                  // auth: props.auth,
-                  onConnect: props.onConnect,
-                  chain: props.chain ? props.chain : undefined,
-                  chains: props.chains,
-                  showThirdwebBranding:
-                    props.connectModal?.showThirdwebBranding,
-                });
-                setIsWalletModalOpen(true);
-              }}
-              data-test="connect-wallet-button"
-            >
-              {isLoading ? (
-                <Spinner size="sm" color="primaryButtonText" />
-              ) : (
-                connectButtonLabel
-              )}
-            </AnimatedButton>
-          );
-        }
-
-        // switch network button
-        if (props.chain && isNetworkMismatch) {
-          return (
-            <SwitchNetworkButton
-              style={props.switchButton?.style}
-              className={props.switchButton?.className}
-              switchNetworkBtnTitle={props.switchButton?.label}
-              targetChain={props.chain}
-            />
-          );
-        }
-
-        // sign in button
-        // else if (requiresSignIn) {
-        //   return (
-        //     <Button
-        //       variant="primary"
-        //       onClick={() => {
-        //         if (activeWallet) {
-        //           setShowSignatureModal(true);
-        //         }
-        //       }}
-        //       data-theme={theme}
-        //       className={`${TW_CONNECT_WALLET}--sign-in ${
-        //         props.className || ""
-        //       }`}
-        //       style={{
-        //         minWidth: "140px",
-        //         ...props.style,
-        //       }}
-        //       data-test="sign-in-button"
-        //     >
-        //       <Container flex="row" center="y" gap="sm">
-        //         <LockIcon size={iconSize.sm} />
-        //         <span> {locale.connectWallet.signIn} </span>
-        //       </Container>
-        //     </Button>
-        //   );
-        // }
-
-        // wallet details button
-        return (
-          <ConnectedWalletDetails
-            theme={theme}
-            detailsButton={props.detailsButton}
-            detailsModal={props.detailsModal}
-            supportedTokens={supportedTokens}
-            onDisconnect={() => {
-              // if (authConfig?.authUrl) {
-              //   logout();
-              //   props?.auth?.onLogout?.();
-              // }
+  if (siweAuth.requiresAuth) {
+    // loading state if loading
+    // TODO: figure out a way to consolidate the loading states with the ones from locale loading
+    if (siweAuth.isLoading) {
+      return (
+        <AnimatedButton
+          disabled={true}
+          className={`${
+            props.connectButton?.className || ""
+          } ${TW_CONNECT_WALLET}`}
+          variant="primary"
+          type="button"
+          style={{
+            minWidth: "140px",
+            ...props.connectButton?.style,
+          }}
+        >
+          <Spinner size="sm" color="primaryButtonText" />
+        </AnimatedButton>
+      );
+    }
+    // sign in button + modal if *not* loading and *not* logged in
+    if (!siweAuth.isLoggedIn) {
+      return (
+        <>
+          <Button
+            variant="primary"
+            type="button"
+            onClick={() => {
+              setShowSignatureModal(true);
             }}
-            chains={props?.chains || []}
-          />
-        );
-      })()}
-    </CustomThemeProvider>
-  );
-}
-
-/**
- * @internal
- */
-function SwitchNetworkButton(props: {
-  style?: React.CSSProperties;
-  className?: string;
-  switchNetworkBtnTitle?: string;
-  targetChain: Chain;
-}) {
-  const switchChain = useSwitchActiveWalletChain();
-  const [switching, setSwitching] = useState(false);
-  const locale = useWalletConnectionCtx().connectLocale;
-
-  const switchNetworkBtnTitle =
-    props.switchNetworkBtnTitle ?? locale.switchNetwork;
+            className={props.signInButton?.className}
+            style={{
+              minWidth: "140px",
+              ...props.signInButton?.style,
+            }}
+          >
+            {siweAuth.isLoggingIn ? (
+              <Spinner size="sm" color="primaryButtonText" />
+            ) : (
+              <Container flex="row" center="y" gap="sm">
+                <LockIcon size={iconSize.sm} />
+                <span> {props.signInButton?.label || locale.signIn} </span>
+              </Container>
+            )}
+          </Button>
+          <Modal
+            size="compact"
+            open={showSignatureModal}
+            setOpen={setShowSignatureModal}
+          >
+            <SignatureScreen
+              client={props.client}
+              connectLocale={locale}
+              modalSize="compact"
+              termsOfServiceUrl={props.connectModal?.termsOfServiceUrl}
+              privacyPolicyUrl={props.connectModal?.privacyPolicyUrl}
+              onDone={() => setShowSignatureModal(false)}
+              auth={props.auth}
+            />
+          </Modal>
+        </>
+      );
+    }
+    // otherwise, show the details button
+  }
 
   return (
-    <AnimatedButton
-      className={`${TW_CONNECT_WALLET}--switch-network ${
-        props.className || ""
-      }`}
-      variant="primary"
-      type="button"
-      data-is-loading={switching}
-      data-test="switch-network-button"
-      disabled={switching}
-      onClick={async () => {
-        setSwitching(true);
-        try {
-          await switchChain(props.targetChain);
-        } catch (e) {
-          console.error(e);
+    <ConnectedWalletDetails
+      theme={theme}
+      detailsButton={props.detailsButton}
+      detailsModal={props.detailsModal}
+      supportedTokens={supportedTokens}
+      onDisconnect={() => {
+        // logout on explicit disconnect!
+        if (siweAuth.requiresAuth) {
+          siweAuth.doLogout();
         }
-        setSwitching(false);
       }}
-      style={{
-        minWidth: "140px",
-        ...props.style,
-      }}
-      aria-label={switching ? locale.switchingNetwork : undefined}
-    >
-      {switching ? (
-        <Spinner size="sm" color="primaryButtonText" />
-      ) : (
-        switchNetworkBtnTitle
-      )}
-    </AnimatedButton>
+      chains={props?.chains || []}
+      chain={props.chain}
+      switchButton={props.switchButton}
+    />
   );
 }
 

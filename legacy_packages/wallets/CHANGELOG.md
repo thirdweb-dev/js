@@ -1,5 +1,129 @@
 # @thirdweb-dev/wallets
 
+## 2.5.7
+
+### Patch Changes
+
+- Updated dependencies [[`6d6e0ac`](https://github.com/thirdweb-dev/js/commit/6d6e0ac69453d5a448ab771084976928313662ab)]:
+  - @thirdweb-dev/chains@0.1.98
+  - @thirdweb-dev/sdk@4.0.67
+
+## 2.5.6
+
+### Patch Changes
+
+- Updated dependencies [[`b4e7c74`](https://github.com/thirdweb-dev/js/commit/b4e7c74ce5ddc88a1aa3169ea89ff139d185a648)]:
+  - @thirdweb-dev/chains@0.1.97
+  - @thirdweb-dev/sdk@4.0.66
+
+## 2.5.5
+
+### Patch Changes
+
+- Updated dependencies [[`ca2576f`](https://github.com/thirdweb-dev/js/commit/ca2576f8180b6b5b9fe47087a53d1f13665c5028)]:
+  - @thirdweb-dev/chains@0.1.96
+  - @thirdweb-dev/sdk@4.0.65
+
+## 2.5.4
+
+### Patch Changes
+
+- Updated dependencies [[`4c7153c`](https://github.com/thirdweb-dev/js/commit/4c7153c95df1962d1e530a3d8227960cd87f6a61), [`76f93a4`](https://github.com/thirdweb-dev/js/commit/76f93a4346bc7627a6b0e4e49d212e245ad91be0)]:
+  - @thirdweb-dev/sdk@4.0.64
+  - @thirdweb-dev/chains@0.1.95
+
+## 2.5.3
+
+### Patch Changes
+
+- Updated dependencies [[`6574e4d`](https://github.com/thirdweb-dev/js/commit/6574e4da9938fe7eb862a0ae779b02561967abf1)]:
+  - @thirdweb-dev/chains@0.1.94
+  - @thirdweb-dev/sdk@4.0.63
+
+## 2.5.2
+
+### Patch Changes
+
+- [#2745](https://github.com/thirdweb-dev/js/pull/2745) [`cb2a7e9`](https://github.com/thirdweb-dev/js/commit/cb2a7e964a78b9fc8670392f1b033936dae696dc) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Alias embedded wallet to in-app wallet
+
+- Updated dependencies [[`9453f74`](https://github.com/thirdweb-dev/js/commit/9453f74bbfd53372fcfd942bcce6c6bfc8c00a2c), [`c4d51e0`](https://github.com/thirdweb-dev/js/commit/c4d51e0b80e2d66fb85b8032dcc286f9cd164cd1), [`bf6a8e0`](https://github.com/thirdweb-dev/js/commit/bf6a8e0cab2a02a34d2ca8fbdf9d034ac176b61e)]:
+  - @thirdweb-dev/sdk@4.0.62
+  - @thirdweb-dev/chains@0.1.93
+
+## 2.5.1
+
+### Patch Changes
+
+- Updated dependencies [[`d836889`](https://github.com/thirdweb-dev/js/commit/d836889f464a4fc9617839f30e2cc780b3bcca78), [`d65713a`](https://github.com/thirdweb-dev/js/commit/d65713a7af67bf20e5b88b72f5d43dfba9172b3b)]:
+  - @thirdweb-dev/sdk@4.0.61
+  - @thirdweb-dev/chains@0.1.92
+
+## 2.5.0
+
+### Minor Changes
+
+- [#2366](https://github.com/thirdweb-dev/js/pull/2366) [`f6a30c0`](https://github.com/thirdweb-dev/js/commit/f6a30c037197391ef0a514570931775b18927f17) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - Adds Login with SMS in EmbeddedWallet.
+
+  Note that the `phoneNumber` requires the `+` symbol along with the IsoCountry code before the actual phone number.
+
+  For a list of supported country code, you can use the `supportedSmsCountries` object which contains a list of all support country information.
+
+  Usage:
+
+  ```typescript
+  const embeddedWalletSdk = new EmbeddedWalletConnector({
+    clientId: "YOUR_THIRDWEB_CLIENT_ID",
+    // ...
+  });
+
+  // phone number needs to have the country code as prefix
+  await embeddedWalletSdk.sendVerificationSms({ phoneNumber: "+11234567890" });
+
+  const authResult = await embeddedWalletSdk.authenticate({
+    strategy: "phone_number_verification",
+    verificationCode: "123456",
+  });
+
+  const walletAddress = await embeddedWalletSdk.connect({
+    authResult,
+  });
+  const signer = await embeddedWalletSdk.getSigner();
+  ```
+
+### Patch Changes
+
+- [#2714](https://github.com/thirdweb-dev/js/pull/2714) [`6961e09`](https://github.com/thirdweb-dev/js/commit/6961e09a4cec4c276b233285e721dc0505792be5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Simulate inner transaction before bundling user ops
+
+- [#2726](https://github.com/thirdweb-dev/js/pull/2726) [`5150259`](https://github.com/thirdweb-dev/js/commit/51502596d9f165a5316ce08da8a04b3e5c5e4eba) Thanks [@jnsdls](https://github.com/jnsdls)! - remove unused dependency
+
+- Updated dependencies [[`53e56f4`](https://github.com/thirdweb-dev/js/commit/53e56f4bf8d3fbe7e2d5252b561bcef5927762e6)]:
+  - @thirdweb-dev/chains@0.1.91
+  - @thirdweb-dev/sdk@4.0.60
+
+## 2.4.35
+
+### Patch Changes
+
+- [#2701](https://github.com/thirdweb-dev/js/pull/2701) [`703cb6a`](https://github.com/thirdweb-dev/js/commit/703cb6ae3cc51fa4b0ba7c87f09f8e84dab8ed3f) Thanks [@jnsdls](https://github.com/jnsdls)! - updated dependencies
+
+- Updated dependencies [[`703cb6a`](https://github.com/thirdweb-dev/js/commit/703cb6ae3cc51fa4b0ba7c87f09f8e84dab8ed3f), [`48c1d60`](https://github.com/thirdweb-dev/js/commit/48c1d6038272284f8942e1fb3635283b48945a68)]:
+  - @thirdweb-dev/contracts-js@1.3.21
+  - @thirdweb-dev/chains@0.1.90
+  - @thirdweb-dev/crypto@0.2.5
+  - @thirdweb-dev/sdk@4.0.59
+
+## 2.4.34
+
+### Patch Changes
+
+- [#2677](https://github.com/thirdweb-dev/js/pull/2677) [`0e479e2`](https://github.com/thirdweb-dev/js/commit/0e479e2082fd685c9b8cae7d1cad53cade65de18) Thanks [@farhanW3](https://github.com/farhanW3)! - added 50k overhead to userOp gas estimations
+
+- [#2683](https://github.com/thirdweb-dev/js/pull/2683) [`b3d0140`](https://github.com/thirdweb-dev/js/commit/b3d01402dd93c24f6b16aaa55674c2c10eb33be5) Thanks [@MananTank](https://github.com/MananTank)! - Always start new WalletConnect session when calling `connect` method for WalletConnect connector
+
+- Updated dependencies [[`83ecf67`](https://github.com/thirdweb-dev/js/commit/83ecf67c4b973b17fbc57eeaa03d7a8176ff5d39)]:
+  - @thirdweb-dev/chains@0.1.89
+  - @thirdweb-dev/sdk@4.0.58
+
 ## 2.4.33
 
 ### Patch Changes

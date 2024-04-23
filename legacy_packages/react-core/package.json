@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/react-core",
-  "version": "4.4.31",
+  "version": "4.6.6",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/legacy_packages/react-core",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
@@ -58,7 +58,7 @@
   "sideEffects:": false,
   "devDependencies": {
     "@babel/preset-react": "^7.24.1",
-    "@babel/runtime": "^7.24.1",
+    "@babel/runtime": "^7.24.4",
     "@microsoft/api-documenter": "^7.24.1",
     "@microsoft/api-extractor": "^7.43.0",
     "@microsoft/tsdoc": "^0.14.2",
@@ -68,7 +68,7 @@
     "@types/js-cookie": "^3.0.6",
     "@types/mime": "3.0.0",
     "@types/react": "18.2.17",
-    "eslint": "^8.57.0",
+    "eslint": "8.57.0",
     "eslint-config-thirdweb": "workspace:*",
     "eslint-plugin-better-tree-shaking": "0.0.4",
     "eslint-plugin-import": "^2.29.1",
@@ -78,7 +78,7 @@
     "ethers": "^5.7.2",
     "react": "18.2.0",
     "typedoc-gen": "workspace:*",
-    "typescript": "5.4.3"
+    "typescript": "5.4.4"
   },
   "dependencies": {
     "@tanstack/react-query": "^4.36.1",

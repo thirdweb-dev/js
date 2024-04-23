@@ -1,15 +1,13 @@
-import { describe, test, expect, beforeAll } from "vitest";
-import { privateKeyAccount } from "../wallets/private-key.js";
-import { TEST_CLIENT } from "../../test/src/test-clients.js";
-import { viemAdapter } from "./viem.js";
 import { zeroAddress } from "viem";
-
-import { typedData } from "~test/typed-data.js";
+import { beforeAll, describe, expect, test } from "vitest";
 import { ANVIL_PKEY_A } from "~test/test-wallets.js";
-import { ANVIL_CHAIN } from "../../test/src/chains.js";
-import { mainnet } from "../chains/chain-definitions/ethereum.js";
+import { typedData } from "~test/typed-data.js";
+import { ANVIL_CHAIN, FORKED_ETHEREUM_CHAIN } from "../../test/src/chains.js";
+import { TEST_CLIENT } from "../../test/src/test-clients.js";
+import { privateKeyToAccount } from "../wallets/private-key.js";
+import { viemAdapter } from "./viem.js";
 
-const account = privateKeyAccount({
+const account = privateKeyToAccount({
   privateKey: ANVIL_PKEY_A,
   client: TEST_CLIENT,
 });
@@ -57,6 +55,19 @@ describe("walletClient.toViem", () => {
       throw new Error("Account not found");
     }
     const txHash = await walletClient.sendTransaction({
+      account: walletClient.account,
+      chain: {
+        id: ANVIL_CHAIN.id,
+        name: ANVIL_CHAIN.name || "",
+        rpcUrls: {
+          default: { http: [ANVIL_CHAIN.rpc] },
+        },
+        nativeCurrency: {
+          name: ANVIL_CHAIN.nativeCurrency?.name || "Ether",
+          symbol: ANVIL_CHAIN.nativeCurrency?.symbol || "ETH",
+          decimals: ANVIL_CHAIN.nativeCurrency?.decimals || 18,
+        },
+      },
       to: zeroAddress,
       value: 0n,
     });
@@ -68,7 +79,7 @@ describe("walletClient.toViem", () => {
     walletClient = viemAdapter.walletClient.toViem({
       client: TEST_CLIENT,
       account,
-      chain: mainnet,
+      chain: FORKED_ETHEREUM_CHAIN,
     });
 
     const address = await walletClient.getAddresses();

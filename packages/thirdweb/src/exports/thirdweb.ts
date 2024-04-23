@@ -104,11 +104,16 @@ export {
 } from "../transaction/actions/send-transaction.js";
 export { sendAndConfirmTransaction } from "../transaction/actions/send-and-confirm-transaction.js";
 export {
+  sendBatchTransaction,
+  type SendBatchTransactionOptions,
+} from "../transaction/actions/send-batch-transaction.js";
+export {
   simulateTransaction,
   type SimulateOptions,
 } from "../transaction/actions/simulate.js";
 export { waitForReceipt } from "../transaction/actions/wait-for-tx-receipt.js";
 export { signTransaction } from "../transaction/actions/sign-transaction.js";
+export { serializeTransaction } from "../transaction/serialize-transaction.js";
 
 /**
  * EVENTS
@@ -143,7 +148,7 @@ export type { NFT } from "../utils/nft/parseNft.js";
 /**
  * UNITS
  */
-export { toEther, toTokens, toUnits, toWei } from "../utils/units.js";
+export { toEther, toTokens, toUnits, toWei, fromGwei } from "../utils/units.js";
 
 export {
   getBuyWithCryptoQuote,
@@ -202,6 +207,7 @@ export {
   type ToHexParameters,
   type Uint8ArrayToHexOpts,
 } from "../utils/encoding/hex.js";
+export { concatHex } from "../utils/encoding/helpers/concat-hex.js";
 
 // bytes
 // to

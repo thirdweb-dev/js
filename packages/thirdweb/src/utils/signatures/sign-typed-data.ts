@@ -1,5 +1,5 @@
 import type { TypedData } from "abitype";
-import { hashTypedData, type TypedDataDefinition } from "viem";
+import { type TypedDataDefinition, hashTypedData } from "viem";
 import type { Hex } from "../encoding/hex.js";
 import { sign } from "./sign.js";
 import { signatureToHex } from "./signature-to-hex.js";

@@ -1,13 +1,18 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "updateListing" function.
  */
-
-export type UpdateListingParams = {
+export type UpdateListingParams = WithOverrides<{
   listingId: AbiParameterToPrimitiveType<{
     type: "uint256";
     name: "_listingId";
@@ -36,9 +41,9 @@ export type UpdateListingParams = {
     type: "uint256";
     name: "_secondsUntilEndTime";
   }>;
-};
+}>;
 
-const FN_SELECTOR = "0xc4b5b15f" as const;
+export const FN_SELECTOR = "0xc4b5b15f" as const;
 const FN_INPUTS = [
   {
     type: "uint256",
@@ -72,6 +77,27 @@ const FN_INPUTS = [
 const FN_OUTPUTS = [] as const;
 
 /**
+ * Checks if the `updateListing` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `updateListing` method is supported.
+ * @extension MARKETPLACE
+ * @example
+ * ```ts
+ * import { isUpdateListingSupported } from "thirdweb/extensions/marketplace";
+ *
+ * const supported = await isUpdateListingSupported(contract);
+ * ```
+ */
+export async function isUpdateListingSupported(
+  contract: ThirdwebContract<any>,
+) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
  * Encodes the parameters for the "updateListing" function.
  * @param options - The options for the updateListing function.
  * @returns The encoded ABI parameters.
@@ -100,6 +126,34 @@ export function encodeUpdateListingParams(options: UpdateListingParams) {
     options.startTime,
     options.secondsUntilEndTime,
   ]);
+}
+
+/**
+ * Encodes the "updateListing" function into a Hex string with its parameters.
+ * @param options - The options for the updateListing function.
+ * @returns The encoded hexadecimal string.
+ * @extension MARKETPLACE
+ * @example
+ * ```ts
+ * import { encodeUpdateListing } "thirdweb/extensions/marketplace";
+ * const result = encodeUpdateListing({
+ *  listingId: ...,
+ *  quantityToList: ...,
+ *  reservePricePerToken: ...,
+ *  buyoutPricePerToken: ...,
+ *  currencyToAccept: ...,
+ *  startTime: ...,
+ *  secondsUntilEndTime: ...,
+ * });
+ * ```
+ */
+export function encodeUpdateListing(options: UpdateListingParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeUpdateListingParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**
@@ -135,31 +189,25 @@ export function updateListing(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [
-              resolvedParams.listingId,
-              resolvedParams.quantityToList,
-              resolvedParams.reservePricePerToken,
-              resolvedParams.buyoutPricePerToken,
-              resolvedParams.currencyToAccept,
-              resolvedParams.startTime,
-              resolvedParams.secondsUntilEndTime,
-            ] as const;
-          }
-        : [
-            options.listingId,
-            options.quantityToList,
-            options.reservePricePerToken,
-            options.buyoutPricePerToken,
-            options.currencyToAccept,
-            options.startTime,
-            options.secondsUntilEndTime,
-          ],
+    params: async () => {
+      const resolvedOptions = await asyncOptions();
+      return [
+        resolvedOptions.listingId,
+        resolvedOptions.quantityToList,
+        resolvedOptions.reservePricePerToken,
+        resolvedOptions.buyoutPricePerToken,
+        resolvedOptions.currencyToAccept,
+        resolvedOptions.startTime,
+        resolvedOptions.secondsUntilEndTime,
+      ] as const;
+    },
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

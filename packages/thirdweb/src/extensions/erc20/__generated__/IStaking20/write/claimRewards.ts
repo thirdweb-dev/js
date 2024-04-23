@@ -1,9 +1,31 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 
-const FN_SELECTOR = "0x372500ab" as const;
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+
+export const FN_SELECTOR = "0x372500ab" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [] as const;
+
+/**
+ * Checks if the `claimRewards` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `claimRewards` method is supported.
+ * @extension ERC20
+ * @example
+ * ```ts
+ * import { isClaimRewardsSupported } from "thirdweb/extensions/erc20";
+ *
+ * const supported = await isClaimRewardsSupported(contract);
+ * ```
+ */
+export async function isClaimRewardsSupported(contract: ThirdwebContract<any>) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
 
 /**
  * Calls the "claimRewards" function on the contract.

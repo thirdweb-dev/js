@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/service-utils",
-  "version": "0.4.25",
+  "version": "0.4.27",
   "main": "dist/thirdweb-dev-service-utils.cjs.js",
   "module": "dist/thirdweb-dev-service-utils.esm.js",
   "exports": {
@@ -43,21 +43,19 @@
     "zod": "3.22.4"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "4.20240329.0",
+    "@cloudflare/workers-types": "4.20240405.0",
     "@preconstruct/cli": "2.7.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
-    "@types/node": "20.12.2",
-    "eslint": "8.57.0",
-    "eslint-config-thirdweb": "workspace:*",
-    "typescript": "5.4.3"
+    "@types/node": "20.12.7",
+    "typescript": "5.4.4"
   },
   "scripts": {
-    "format": "prettier --write 'src/**/*'",
-    "lint": "eslint src/",
-    "fix": "eslint src/ --fix",
+    "format": "biome format --write 'src/**/*'",
+    "lint": "biome check src/",
+    "fix": "biome check src/ --apply",
     "clean": "rm -rf dist/",
     "build": "tsc && preconstruct build",
     "push": "yalc push",
-    "test": "vitest"
+    "test": "vitest run"
   }
 }

@@ -4,6 +4,8 @@ import type { BaseTransactionOptions } from "../../../../../transaction/types.js
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "getAllValidListings" function.
@@ -13,7 +15,7 @@ export type GetAllValidListingsParams = {
   endId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_endId" }>;
 };
 
-const FN_SELECTOR = "0x31654b4d" as const;
+export const FN_SELECTOR = "0x31654b4d" as const;
 const FN_INPUTS = [
   {
     type: "uint256",
@@ -82,6 +84,27 @@ const FN_OUTPUTS = [
 ] as const;
 
 /**
+ * Checks if the `getAllValidListings` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `getAllValidListings` method is supported.
+ * @extension MARKETPLACE
+ * @example
+ * ```ts
+ * import { isGetAllValidListingsSupported } from "thirdweb/extensions/marketplace";
+ *
+ * const supported = await isGetAllValidListingsSupported(contract);
+ * ```
+ */
+export async function isGetAllValidListingsSupported(
+  contract: ThirdwebContract<any>,
+) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
  * Encodes the parameters for the "getAllValidListings" function.
  * @param options - The options for the getAllValidListings function.
  * @returns The encoded ABI parameters.
@@ -99,6 +122,29 @@ export function encodeGetAllValidListingsParams(
   options: GetAllValidListingsParams,
 ) {
   return encodeAbiParameters(FN_INPUTS, [options.startId, options.endId]);
+}
+
+/**
+ * Encodes the "getAllValidListings" function into a Hex string with its parameters.
+ * @param options - The options for the getAllValidListings function.
+ * @returns The encoded hexadecimal string.
+ * @extension MARKETPLACE
+ * @example
+ * ```ts
+ * import { encodeGetAllValidListings } "thirdweb/extensions/marketplace";
+ * const result = encodeGetAllValidListings({
+ *  startId: ...,
+ *  endId: ...,
+ * });
+ * ```
+ */
+export function encodeGetAllValidListings(options: GetAllValidListingsParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeGetAllValidListingsParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**

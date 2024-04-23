@@ -1,4 +1,3 @@
-/* eslint-disable better-tree-shaking/no-top-level-side-effects */
 import { run, bench, group } from "mitata";
 import { createThirdwebClient } from "../src/client/client";
 import { defineChain } from "../src/chains/utils";
@@ -7,7 +6,6 @@ import { encode } from "../src/transaction/actions/encode";
 import { transfer } from "../src/extensions/erc20/__generated__/IERC20/write/transfer";
 // ethers
 import { ethers } from "ethers6";
-// eslint-disable-next-line no-restricted-imports
 import * as viem from "viem";
 
 const LOCAL_RPC = "http://localhost:8545";

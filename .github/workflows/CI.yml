@@ -30,7 +30,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest-16
+    runs-on: ubuntu-latest
     name: Build Packages
     steps:
       - name: Check out the code
@@ -53,12 +53,17 @@ jobs:
       - name: Setup & Install
         uses: ./.github/composite-actions/install
 
+      - name: Setup Biome
+        uses: biomejs/setup-biome@v2
+        with:
+          version: latest  
+
       - run: pnpm lint
 
   test:
     timeout-minutes: 15
     name: Unit Tests
-    runs-on: ubuntu-latest-16
+    runs-on: ubuntu-latest
     steps:
       - name: Check out the code
         uses: actions/checkout@v4
@@ -68,14 +73,17 @@ jobs:
 
       - name: Set up foundry
         uses: foundry-rs/foundry-toolchain@v1
+        with:
+          cache: false
 
       - run: pnpm test
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4
         with:
-          directory: ./packages
+          directory: packages/
           flags: packages
+          verbose: true
 
   e2e:
     timeout-minutes: 15
@@ -95,13 +103,18 @@ jobs:
     if: github.event_name != 'merge_group'
     timeout-minutes: 15
     name: "Benchmarks"
-    runs-on: ubuntu-latest-16
+    runs-on: ubuntu-latest
     steps:
       - name: Check out the code
         uses: actions/checkout@v4
 
       - name: Setup & Install
         uses: ./.github/composite-actions/install
+
+      - name: Set up foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          cache: false
 
       - name: Run benchmarks
         uses: CodSpeedHQ/action@v2
@@ -114,7 +127,7 @@ jobs:
     if: github.event_name == 'pull_request'
     timeout-minutes: 15
     name: "Size"
-    runs-on: ubuntu-latest-16
+    runs-on: ubuntu-latest
     steps:
       - name: Check out the code
         uses: actions/checkout@v4

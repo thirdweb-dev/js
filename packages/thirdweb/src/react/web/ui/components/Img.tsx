@@ -1,8 +1,9 @@
-/* eslint-disable @next/next/no-img-element */
 import { useState } from "react";
+import type { ThirdwebClient } from "../../../../client/client.js";
 import { resolveScheme } from "../../../../utils/ipfs.js";
-import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { Skeleton } from "./Skeleton.js";
+
+// Note: Must not use useConnectUI here
 
 /**
  * @internal
@@ -16,15 +17,14 @@ export const Img: React.FC<{
   className?: string;
   style?: React.CSSProperties;
   fallbackImage?: string;
+  client: ThirdwebClient;
 }> = (props) => {
-  const { client } = useWalletConnectionCtx();
-
   const [isLoaded, setIsLoaded] = useState(false);
 
   const propSrc = props.src;
 
-  const widthPx = props.width + "px";
-  const heightPx = (props.height || props.width) + "px";
+  const widthPx = `${props.width}px`;
+  const heightPx = `${props.height || props.width}px`;
 
   if (!propSrc) {
     return <Skeleton width={widthPx} height={heightPx} />;
@@ -34,7 +34,7 @@ export const Img: React.FC<{
     try {
       return resolveScheme({
         uri: propSrc,
-        client: client,
+        client: props.client,
       });
     } catch {
       return props.src;
@@ -69,9 +69,9 @@ export const Img: React.FC<{
           height: !isLoaded
             ? 0
             : props.height
-              ? props.height + "px"
+              ? `${props.height}px`
               : undefined,
-          width: !isLoaded ? 0 : props.width ? props.width + "px" : undefined,
+          width: !isLoaded ? 0 : props.width ? `${props.width}px` : undefined,
           userSelect: "none",
           visibility: isLoaded ? "visible" : "hidden",
           opacity: isLoaded ? 1 : 0,

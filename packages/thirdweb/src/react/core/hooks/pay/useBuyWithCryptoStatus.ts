@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import {
-  getBuyWithCryptoStatus,
   type BuyWithCryptoStatus,
   type BuyWithCryptoTransaction,
+  getBuyWithCryptoStatus,
 } from "../../../../pay/buyWithCrypto/actions/getStatus.js";
 
 // TODO: use the estimate to vary the polling interval
@@ -61,7 +61,6 @@ export function useBuyWithCryptoStatus(
   );
 
   return useQuery<BuyWithCryptoStatus, Error>({
-    // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: [
       "swapStatus",
       buyWithCryptoStatusParams?.transactionHash,

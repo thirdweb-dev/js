@@ -1,16 +1,21 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "mintWithSignature" function.
  */
-
-export type MintWithSignatureParams = {
-  req: AbiParameterToPrimitiveType<{
+export type MintWithSignatureParams = WithOverrides<{
+  payload: AbiParameterToPrimitiveType<{
     type: "tuple";
-    name: "req";
+    name: "payload";
     components: [
       { type: "address"; name: "to" },
       { type: "address"; name: "royaltyRecipient" },
@@ -27,13 +32,13 @@ export type MintWithSignatureParams = {
     ];
   }>;
   signature: AbiParameterToPrimitiveType<{ type: "bytes"; name: "signature" }>;
-};
+}>;
 
-const FN_SELECTOR = "0x98a6e993" as const;
+export const FN_SELECTOR = "0x98a6e993" as const;
 const FN_INPUTS = [
   {
     type: "tuple",
-    name: "req",
+    name: "payload",
     components: [
       {
         type: "address",
@@ -98,6 +103,27 @@ const FN_OUTPUTS = [
 ] as const;
 
 /**
+ * Checks if the `mintWithSignature` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `mintWithSignature` method is supported.
+ * @extension ERC1155
+ * @example
+ * ```ts
+ * import { isMintWithSignatureSupported } from "thirdweb/extensions/erc1155";
+ *
+ * const supported = await isMintWithSignatureSupported(contract);
+ * ```
+ */
+export async function isMintWithSignatureSupported(
+  contract: ThirdwebContract<any>,
+) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
  * Encodes the parameters for the "mintWithSignature" function.
  * @param options - The options for the mintWithSignature function.
  * @returns The encoded ABI parameters.
@@ -106,7 +132,7 @@ const FN_OUTPUTS = [
  * ```ts
  * import { encodeMintWithSignatureParams } "thirdweb/extensions/erc1155";
  * const result = encodeMintWithSignatureParams({
- *  req: ...,
+ *  payload: ...,
  *  signature: ...,
  * });
  * ```
@@ -114,7 +140,30 @@ const FN_OUTPUTS = [
 export function encodeMintWithSignatureParams(
   options: MintWithSignatureParams,
 ) {
-  return encodeAbiParameters(FN_INPUTS, [options.req, options.signature]);
+  return encodeAbiParameters(FN_INPUTS, [options.payload, options.signature]);
+}
+
+/**
+ * Encodes the "mintWithSignature" function into a Hex string with its parameters.
+ * @param options - The options for the mintWithSignature function.
+ * @returns The encoded hexadecimal string.
+ * @extension ERC1155
+ * @example
+ * ```ts
+ * import { encodeMintWithSignature } "thirdweb/extensions/erc1155";
+ * const result = encodeMintWithSignature({
+ *  payload: ...,
+ *  signature: ...,
+ * });
+ * ```
+ */
+export function encodeMintWithSignature(options: MintWithSignatureParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeMintWithSignatureParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**
@@ -128,7 +177,7 @@ export function encodeMintWithSignatureParams(
  *
  * const transaction = mintWithSignature({
  *  contract,
- *  req: ...,
+ *  payload: ...,
  *  signature: ...,
  * });
  *
@@ -145,15 +194,17 @@ export function mintWithSignature(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [resolvedParams.req, resolvedParams.signature] as const;
-          }
-        : [options.req, options.signature],
+    params: async () => {
+      const resolvedOptions = await asyncOptions();
+      return [resolvedOptions.payload, resolvedOptions.signature] as const;
+    },
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

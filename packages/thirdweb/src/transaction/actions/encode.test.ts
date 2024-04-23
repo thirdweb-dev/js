@@ -1,10 +1,10 @@
-import { USDT_CONTRACT, USDT_CONTRACT_WITH_ABI } from "~test/test-contracts.js";
+import { describe, expect, it } from "vitest";
 import { TEST_WALLET_A } from "~test/addresses.js";
+import { USDT_CONTRACT, USDT_CONTRACT_WITH_ABI } from "~test/test-contracts.js";
 import { encode } from "./encode.js";
-import { describe, it, expect } from "vitest";
 
-import { resolveMethod } from "../resolve-method.js";
 import { prepareContractCall } from "../prepare-contract-call.js";
+import { resolveMethod } from "../resolve-method.js";
 
 const USDC_TRANSFER_ENCODE_RESULT =
   "0xa9059cbb00000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000064";

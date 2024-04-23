@@ -48,7 +48,7 @@ export function base58Encode(source: Uint8Array): string {
       it1--, i++
     ) {
       carry += (256 * (b58[it1] || 0)) >>> 0;
-      b58[it1] = carry % BASE >>> 0;
+      b58[it1] = (carry % BASE) >>> 0;
       carry = (carry / BASE) >>> 0;
     }
     if (carry !== 0) {

@@ -1,5 +1,7 @@
 // chain type
 export type { Chain } from "../chains/types.js";
+// chain Metadata type
+export type { ChainMetadata } from "../chains/types.js";
 // define chain, chainMetadata
 export {
   defineChain,

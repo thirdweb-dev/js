@@ -23,7 +23,7 @@ import type { ThirdwebContract } from "../contract/contract.js";
  * @contract
  */
 export function resolveMethod<abiFn extends AbiFunction>(method: string) {
-  return async function (contract: ThirdwebContract) {
+  return async (contract: ThirdwebContract) => {
     const resolvedAbi = await resolveContractAbi<Abi>(contract);
     // we try to find the abiFunction in the abi
     const abiFunction = resolvedAbi.find((item) => {

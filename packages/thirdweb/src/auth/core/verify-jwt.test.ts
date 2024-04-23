@@ -1,14 +1,14 @@
-import { describe, test, expect, beforeAll, vi, afterAll } from "vitest";
-import { verifyJWT } from "./verify-jwt.js";
+import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
 import {
   TEST_ACCOUNT_A,
   TEST_ACCOUNT_B,
 } from "../../../test/src/test-wallets.js";
-import type { AuthOptions } from "./types.js";
+import { generateJWT } from "./generate-jwt.js";
 import { generateLoginPayload } from "./generate-login-payload.js";
 import { signLoginPayload } from "./sign-login-payload.js";
+import type { AuthOptions } from "./types.js";
+import { verifyJWT } from "./verify-jwt.js";
 import { verifyLoginPayload } from "./verify-login-payload.js";
-import { generateJWT } from "./generate-jwt.js";
 
 const options: AuthOptions = {
   domain: "example.com",
@@ -112,7 +112,9 @@ describe("verifyJWT", () => {
     const result = await verifyJWT(options)({ jwt });
     expect(result.valid).toBe(false);
     if (!result.valid) {
-      expect(result.error).toMatchInlineSnapshot(`"The expected issuer address '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266' did not match the token issuer address '0x70997970C51812dc3A010C7d01b50e0d17dc79C8'"`);
+      expect(result.error).toMatchInlineSnapshot(
+        `"The expected issuer address '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266' did not match the token issuer address '0x70997970C51812dc3A010C7d01b50e0d17dc79C8'"`,
+      );
     }
   });
 });

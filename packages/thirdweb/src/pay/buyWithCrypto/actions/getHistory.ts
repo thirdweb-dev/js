@@ -83,7 +83,7 @@ export async function getBuyWithCryptoHistory(
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data: BuyWithCryptoHistoryData = (await response.json())["result"];
+    const data: BuyWithCryptoHistoryData = (await response.json()).result;
     return data;
   } catch (error) {
     throw new Error(`Fetch failed: ${error}`);

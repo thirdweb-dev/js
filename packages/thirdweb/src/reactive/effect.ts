@@ -15,6 +15,7 @@ import type { Store } from "./store.js";
 export function effect<T>(
   // pass the values of the dependencies to the computation function
   effectFn: () => T,
+  // biome-ignore lint/suspicious/noExplicitAny: library function that accepts any store type
   dependencies: (Store<any> | ReadonlyStore<any>)[],
   runOnMount = true,
 ) {
@@ -30,6 +31,8 @@ export function effect<T>(
   });
 
   return () => {
-    unsubscribeList.forEach((fn) => fn());
+    for (const fn of unsubscribeList) {
+      fn();
+    }
   };
 }

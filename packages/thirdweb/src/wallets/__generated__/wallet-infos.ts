@@ -1318,8 +1318,12 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "Smart Wallet",
   },
   {
+    id: "inApp",
+    name: "In-App Wallet",
+  },
+  {
     id: "embedded",
-    name: "Embedded Wallet",
+    name: "In-App Wallet",
   },
   {
     id: "walletConnect",

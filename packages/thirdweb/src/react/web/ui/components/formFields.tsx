@@ -1,6 +1,6 @@
 import { Spacer } from "./Spacer.js";
 import { InputButton } from "./buttons.js";
-import { Label, InputContainer, Input } from "./formElements.js";
+import { Input, InputContainer, Label } from "./formElements.js";
 import { Text } from "./text.js";
 
 /**

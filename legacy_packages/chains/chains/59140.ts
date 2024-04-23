@@ -36,7 +36,7 @@ export default {
     "format": "svg"
   },
   "infoURL": "https://linea.build",
-  "name": "Linea Testnet",
+  "name": "Linea Goerli",
   "nativeCurrency": {
     "name": "Linea Ether",
     "symbol": "ETH",
@@ -59,9 +59,9 @@ export default {
     "https://linea-goerli.infura.io/v3/${INFURA_API_KEY}",
     "wss://linea-goerli.infura.io/ws/v3/${INFURA_API_KEY}"
   ],
-  "shortName": "linea-testnet",
+  "shortName": "linea-goerli",
   "slip44": 1,
-  "slug": "linea-testnet",
+  "slug": "linea-goerli",
   "status": "active",
   "testnet": true,
   "title": "Linea Goerli Testnet"

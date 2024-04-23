@@ -1,13 +1,18 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "exactOutputSingle" function.
  */
-
-export type ExactOutputSingleParams = {
+export type ExactOutputSingleParams = WithOverrides<{
   params: AbiParameterToPrimitiveType<{
     type: "tuple";
     name: "params";
@@ -22,9 +27,9 @@ export type ExactOutputSingleParams = {
       { type: "uint160"; name: "sqrtPriceLimitX96" },
     ];
   }>;
-};
+}>;
 
-const FN_SELECTOR = "0xdb3e2198" as const;
+export const FN_SELECTOR = "0xdb3e2198" as const;
 const FN_INPUTS = [
   {
     type: "tuple",
@@ -73,6 +78,27 @@ const FN_OUTPUTS = [
 ] as const;
 
 /**
+ * Checks if the `exactOutputSingle` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `exactOutputSingle` method is supported.
+ * @extension UNISWAP
+ * @example
+ * ```ts
+ * import { isExactOutputSingleSupported } from "thirdweb/extensions/uniswap";
+ *
+ * const supported = await isExactOutputSingleSupported(contract);
+ * ```
+ */
+export async function isExactOutputSingleSupported(
+  contract: ThirdwebContract<any>,
+) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
  * Encodes the parameters for the "exactOutputSingle" function.
  * @param options - The options for the exactOutputSingle function.
  * @returns The encoded ABI parameters.
@@ -89,6 +115,28 @@ export function encodeExactOutputSingleParams(
   options: ExactOutputSingleParams,
 ) {
   return encodeAbiParameters(FN_INPUTS, [options.params]);
+}
+
+/**
+ * Encodes the "exactOutputSingle" function into a Hex string with its parameters.
+ * @param options - The options for the exactOutputSingle function.
+ * @returns The encoded hexadecimal string.
+ * @extension UNISWAP
+ * @example
+ * ```ts
+ * import { encodeExactOutputSingle } "thirdweb/extensions/uniswap";
+ * const result = encodeExactOutputSingle({
+ *  params: ...,
+ * });
+ * ```
+ */
+export function encodeExactOutputSingle(options: ExactOutputSingleParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeExactOutputSingleParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**
@@ -118,15 +166,17 @@ export function exactOutputSingle(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [resolvedParams.params] as const;
-          }
-        : [options.params],
+    params: async () => {
+      const resolvedOptions = await asyncOptions();
+      return [resolvedOptions.params] as const;
+    },
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

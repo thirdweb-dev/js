@@ -1,27 +1,27 @@
 import {
-  parseAbiItem,
   type Abi,
   type AbiFunction,
   type ExtractAbiFunctionNames,
+  parseAbiItem,
 } from "abitype";
-import { type TransactionRequest, concatHex } from "viem";
-import { isAbiFunction } from "./utils.js";
+import type { TransactionRequest } from "viem";
+import type { ThirdwebContract } from "../contract/contract.js";
+import { encodeAbiParameters } from "../utils/abi/encodeAbiParameters.js";
 import {
-  prepareTransaction,
+  type PreparedMethod,
+  prepareMethod,
+} from "../utils/abi/prepare-method.js";
+import { resolvePromisedValue } from "../utils/promise/resolve-promised-value.js";
+import {
   type PrepareTransactionOptions,
+  prepareTransaction,
 } from "./prepare-transaction.js";
 import type {
   BaseTransactionOptions,
   ParamsOption,
   ParseMethod,
 } from "./types.js";
-import { resolvePromisedValue } from "../utils/promise/resolve-promised-value.js";
-import type { ThirdwebContract } from "../contract/contract.js";
-import {
-  prepareMethod,
-  type PreparedMethod,
-} from "../utils/abi/prepare-method.js";
-import { encodeAbiParameters } from "../utils/abi/encodeAbiParameters.js";
+import { isAbiFunction } from "./utils.js";
 
 export type PrepareContractCallOptions<
   TAbi extends Abi = [],
@@ -172,14 +172,14 @@ export function prepareContractCall<
           return preparedM[0];
         }
 
-        return concatHex([
-          preparedM[0],
+        // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+        // we can do this because we know the specific formats of the values
+        return (preparedM[0] +
           encodeAbiParameters(
             preparedM[1],
-            // @ts-expect-error - trust
+            // @ts-expect-error - TODO: fix this type issue
             await resolvePromisedValue(params ?? []),
-          ),
-        ]);
+          ).slice(2)) as `${(typeof preparedM)[0]}${string}`;
       },
     },
     {

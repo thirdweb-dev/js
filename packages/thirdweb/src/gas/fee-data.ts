@@ -1,13 +1,13 @@
-import type { ThirdwebClient } from "../client/client.js";
-import { toUnits } from "../utils/units.js";
-import type { PreparedTransaction } from "../transaction/prepare-transaction.js";
-import { resolvePromisedValue } from "../utils/promise/resolve-promised-value.js";
-import { roundUpGas } from "./op-gas-fee-reducer.js";
 import type { Chain } from "../chains/types.js";
-import { getRpcClient } from "../rpc/rpc.js";
+import type { ThirdwebClient } from "../client/client.js";
 import { eth_getBlockByNumber } from "../rpc/actions/eth_getBlockByNumber.js";
 import { eth_maxPriorityFeePerGas } from "../rpc/actions/eth_maxPriorityFeePerGas.js";
+import { getRpcClient } from "../rpc/rpc.js";
+import type { PreparedTransaction } from "../transaction/prepare-transaction.js";
+import { resolvePromisedValue } from "../utils/promise/resolve-promised-value.js";
+import { toUnits } from "../utils/units.js";
 import { getGasPrice } from "./get-gas-price.js";
+import { roundUpGas } from "./op-gas-fee-reducer.js";
 
 type FeeData = {
   maxFeePerGas: null | bigint;
@@ -69,7 +69,8 @@ export async function getGasOverridesForTransaction(
   // otherwise adjust each value
   if (defaultGasOverrides.gasPrice) {
     return { gasPrice: roundUpGas(defaultGasOverrides.gasPrice) };
-  } else if (
+  }
+  if (
     defaultGasOverrides.maxFeePerGas &&
     defaultGasOverrides.maxPriorityFeePerGas
   ) {
@@ -103,11 +104,10 @@ export async function getDefaultGasOverrides(
       maxFeePerGas: feeData.maxFeePerGas,
       maxPriorityFeePerGas: feeData.maxPriorityFeePerGas,
     };
-  } else {
-    return {
-      gasPrice: await getGasPrice({ client, chain, percentMultiplier: 10 }),
-    };
   }
+  return {
+    gasPrice: await getGasPrice({ client, chain, percentMultiplier: 10 }),
+  };
 }
 
 /**
@@ -131,8 +131,7 @@ async function getDynamicFeeData(
     eth_maxPriorityFeePerGas(rpcRequest).catch(() => null),
   ]);
 
-  const baseBlockFee =
-    block && block.baseFeePerGas ? block.baseFeePerGas : 100n;
+  const baseBlockFee = block?.baseFeePerGas ? block.baseFeePerGas : 100n;
 
   const chainId = chain.id;
   // flag chain testnet & flag chain
@@ -141,7 +140,8 @@ async function getDynamicFeeData(
     // return null because otherwise TX break
     return { maxFeePerGas: null, maxPriorityFeePerGas: null };
     // mumbai & polygon
-  } else if (chainId === 80001 || chainId === 137) {
+  }
+  if (chainId === 80001 || chainId === 137) {
     // for polygon, get fee data from gas station
     maxPriorityFeePerGas_ = await getPolygonGasPriorityFee(chainId);
   } else if (maxPriorityFeePerGas) {
@@ -180,7 +180,7 @@ async function getDynamicFeeData(
  */
 function getPreferredPriorityFee(
   defaultPriorityFeePerGas: bigint,
-  percentMultiplier: number = 10,
+  percentMultiplier = 10,
 ): bigint {
   const extraTip =
     (defaultPriorityFeePerGas / BigInt(100)) * BigInt(percentMultiplier);
@@ -226,9 +226,9 @@ async function getPolygonGasPriorityFee(chainId: 137 | 80001): Promise<bigint> {
   try {
     const data = await (await fetch(gasStationUrl)).json();
     // take the standard speed here, SDK options will define the extra tip
-    const priorityFee = data["fast"]["maxPriorityFee"];
+    const priorityFee = data.fast.maxPriorityFee;
     if (priorityFee > 0) {
-      const fixedFee = parseFloat(priorityFee).toFixed(9);
+      const fixedFee = Number.parseFloat(priorityFee).toFixed(9);
       return toUnits(fixedFee, 9);
     }
   } catch (e) {

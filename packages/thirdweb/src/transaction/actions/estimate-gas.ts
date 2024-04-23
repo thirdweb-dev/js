@@ -1,10 +1,10 @@
 import { formatTransactionRequest } from "viem";
-import type { Account } from "../../wallets/interfaces/wallet.js";
-import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
-import type { PreparedTransaction } from "../prepare-transaction.js";
-import { extractError as parseEstimationError } from "../extract-error.js";
-import type { Prettify } from "../../utils/type-utils.js";
 import { roundUpGas } from "../../gas/op-gas-fee-reducer.js";
+import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
+import type { Prettify } from "../../utils/type-utils.js";
+import type { Account } from "../../wallets/interfaces/wallet.js";
+import { extractError as parseEstimationError } from "../extract-error.js";
+import type { PreparedTransaction } from "../prepare-transaction.js";
 
 export type EstimateGasOptions = Prettify<
   {
@@ -42,7 +42,7 @@ export async function estimateGas(
   options: EstimateGasOptions,
 ): Promise<EstimateGasResult> {
   if (cache.has(options.transaction)) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    // biome-ignore lint/style/noNonNullAssertion: the `has` above ensures that this will always be set
     return cache.get(options.transaction)!;
   }
   const { account } = options;

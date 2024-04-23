@@ -7,11 +7,6 @@ export default {
       "name": "Scroll Sepolia Etherscan",
       "url": "https://sepolia.scrollscan.com",
       "standard": "EIP3091"
-    },
-    {
-      "name": "Scroll Sepolia Blockscout",
-      "url": "https://sepolia-blockscout.scroll.io",
-      "standard": "EIP3091"
     }
   ],
   "faucets": [],

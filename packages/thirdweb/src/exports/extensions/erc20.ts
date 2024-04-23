@@ -44,3 +44,57 @@ export {
   burnFrom,
   type BurnFromParams,
 } from "../../extensions/erc20/__generated__/IBurnableERC20/write/burnFrom.js";
+
+// EVENTS
+export {
+  transferEvent,
+  type TransferEventFilters,
+} from "../../extensions/erc20/__generated__/IERC20/events/Transfer.js";
+export {
+  approvalEvent,
+  type ApprovalEventFilters,
+} from "../../extensions/erc20/__generated__/IERC20/events/Approval.js";
+export {
+  tokensMintedEvent,
+  type TokensMintedEventFilters,
+} from "../../extensions/erc20/__generated__/IMintableERC20/events/TokensMinted.js";
+export {
+  tokensClaimedEvent,
+  type TokensClaimedEventFilters,
+} from "../../extensions/erc20/__generated__/IDropERC20/events/TokensClaimed.js";
+export { claimConditionsUpdatedEvent } from "../../extensions/erc20/__generated__/IDropERC20/events/ClaimConditionsUpdated.js";
+
+/**
+ * DROPS extension for ERC20
+ */
+export { getClaimConditionById } from "../../extensions/erc20/__generated__/IDropERC20/read/getClaimConditionById.js";
+export { getActiveClaimCondition } from "../../extensions/erc20/drops/read/getActiveClaimCondition.js";
+export {
+  claimTo,
+  type ClaimToParams,
+} from "../../extensions/erc20/drops/write/claimTo.js";
+export {
+  setClaimConditions,
+  type SetClaimConditionsParams,
+} from "../../extensions/erc20/drops/write/setClaimConditions.js";
+
+/**
+ * SIGNATURE extension for ERC20
+ */
+export {
+  mintWithSignature,
+  type GenerateMintSignatureOptions,
+  generateMintSignature,
+} from "../../extensions/erc20/write/sigMint.js";
+
+// ----------------------------
+// WETH
+// ----------------------------
+export {
+  deposit,
+  type DepositParams,
+} from "../../extensions/erc20/write/deposit.js";
+export {
+  withdraw,
+  type WithdrawParams,
+} from "../../extensions/erc20/__generated__/IWETH/write/withdraw.js";

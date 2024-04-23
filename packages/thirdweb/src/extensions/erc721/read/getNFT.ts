@@ -1,10 +1,10 @@
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { fetchTokenMetadata } from "../../../utils/nft/fetchTokenMetadata.js";
-import { parseNFT, type NFT } from "../../../utils/nft/parseNft.js";
+import { type NFT, parseNFT } from "../../../utils/nft/parseNft.js";
 import type { Prettify } from "../../../utils/type-utils.js";
 import {
-  tokenURI,
   type TokenURIParams,
+  tokenURI,
 } from "../__generated__/IERC721A/read/tokenURI.js";
 
 /**

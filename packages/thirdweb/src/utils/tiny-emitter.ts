@@ -30,7 +30,7 @@ export function createEmitter<
 >(): Emitter<TEmitter> {
   const subsribers = new Map<
     keyof TEmitter,
-    // TODO: fix internal type (no any)
+    // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
     Set<(data: any) => void>
   >();
 
@@ -52,7 +52,9 @@ export function createEmitter<
     emit(event, data) {
       const subscribers = subsribers.get(event);
       if (subscribers) {
-        subscribers.forEach((cb) => cb(data));
+        for (const cb of subscribers) {
+          cb(data);
+        }
       }
     },
   };

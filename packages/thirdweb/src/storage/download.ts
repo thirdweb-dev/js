@@ -1,5 +1,5 @@
 import { getClientFetch } from "../utils/fetch.js";
-import { resolveScheme, type ResolveSchemeOptions } from "../utils/ipfs.js";
+import { type ResolveSchemeOptions, resolveScheme } from "../utils/ipfs.js";
 import type { Prettify } from "../utils/type-utils.js";
 
 export type DownloadOptions = Prettify<
@@ -31,7 +31,6 @@ export async function download(options: DownloadOptions) {
   });
   if (!res.ok) {
     res.body?.cancel();
-    console.error("failed to download file", res.status, res.statusText);
     throw new Error(`Failed to download file: ${res.statusText}`);
   }
   return res;

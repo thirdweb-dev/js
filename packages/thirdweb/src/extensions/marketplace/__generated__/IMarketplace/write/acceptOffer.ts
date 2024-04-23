@@ -1,13 +1,18 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "acceptOffer" function.
  */
-
-export type AcceptOfferParams = {
+export type AcceptOfferParams = WithOverrides<{
   listingId: AbiParameterToPrimitiveType<{
     type: "uint256";
     name: "_listingId";
@@ -18,9 +23,9 @@ export type AcceptOfferParams = {
     type: "uint256";
     name: "_totalPrice";
   }>;
-};
+}>;
 
-const FN_SELECTOR = "0xb13c0e63" as const;
+export const FN_SELECTOR = "0xb13c0e63" as const;
 const FN_INPUTS = [
   {
     type: "uint256",
@@ -40,6 +45,25 @@ const FN_INPUTS = [
   },
 ] as const;
 const FN_OUTPUTS = [] as const;
+
+/**
+ * Checks if the `acceptOffer` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `acceptOffer` method is supported.
+ * @extension MARKETPLACE
+ * @example
+ * ```ts
+ * import { isAcceptOfferSupported } from "thirdweb/extensions/marketplace";
+ *
+ * const supported = await isAcceptOfferSupported(contract);
+ * ```
+ */
+export async function isAcceptOfferSupported(contract: ThirdwebContract<any>) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
 
 /**
  * Encodes the parameters for the "acceptOffer" function.
@@ -64,6 +88,31 @@ export function encodeAcceptOfferParams(options: AcceptOfferParams) {
     options.currency,
     options.totalPrice,
   ]);
+}
+
+/**
+ * Encodes the "acceptOffer" function into a Hex string with its parameters.
+ * @param options - The options for the acceptOffer function.
+ * @returns The encoded hexadecimal string.
+ * @extension MARKETPLACE
+ * @example
+ * ```ts
+ * import { encodeAcceptOffer } "thirdweb/extensions/marketplace";
+ * const result = encodeAcceptOffer({
+ *  listingId: ...,
+ *  offeror: ...,
+ *  currency: ...,
+ *  totalPrice: ...,
+ * });
+ * ```
+ */
+export function encodeAcceptOffer(options: AcceptOfferParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeAcceptOfferParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**
@@ -96,25 +145,22 @@ export function acceptOffer(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [
-              resolvedParams.listingId,
-              resolvedParams.offeror,
-              resolvedParams.currency,
-              resolvedParams.totalPrice,
-            ] as const;
-          }
-        : [
-            options.listingId,
-            options.offeror,
-            options.currency,
-            options.totalPrice,
-          ],
+    params: async () => {
+      const resolvedOptions = await asyncOptions();
+      return [
+        resolvedOptions.listingId,
+        resolvedOptions.offeror,
+        resolvedOptions.currency,
+        resolvedOptions.totalPrice,
+      ] as const;
+    },
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

@@ -10,6 +10,7 @@ export const ChromeIcon: IconFC = (props) => {
       width={props.size}
       height={props.size}
       viewBox="0 0 190.5 190.5"
+      role="presentation"
     >
       <g transform="translate(90.669 -507.469)">
         <path

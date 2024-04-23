@@ -1,16 +1,14 @@
-/* eslint-disable better-tree-shaking/no-top-level-side-effects */
-/* eslint-disable jsdoc/require-jsdoc */
-import { mkdir, rmdir, readdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, readdir, rmdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import {
-  Abi,
-  AbiFunction,
-  AbiEvent,
+  type Abi,
+  type AbiEvent,
+  type AbiFunction,
   formatAbiItem,
   parseAbiItem,
 } from "abitype";
-import { prepareMethod } from "../../src/utils/abi/prepare-method";
 import { format } from "prettier";
+import { prepareMethod } from "../../src/utils/abi/prepare-method";
 
 export async function generateFromAbi(
   abi: Abi | string[],
@@ -19,6 +17,7 @@ export async function generateFromAbi(
   extensionName: string,
 ) {
   // turn any human readable abi into a proper abi object
+  // biome-ignore lint/style/noParameterAssign: is ok
   abi = abi.map((x) => (typeof x === "string" ? parseAbiItem(x) : x)) as Abi;
 
   const events = abi.filter((x) => x.type === "event") as AbiEvent[];
@@ -107,35 +106,64 @@ function generateWriteFunction(f: AbiFunction, extensionName: string): string {
   const needsAbiParamToPrimitiveType = f.inputs.length > 0;
   const inputTypeName = `${uppercaseFirstLetter(f.name)}Params`;
 
-  return `${needsAbiParamToPrimitiveType ? `import type { AbiParameterToPrimitiveType } from "abitype";\n` : ""}import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+  return `${
+    needsAbiParamToPrimitiveType
+      ? `import type { AbiParameterToPrimitiveType } from "abitype";\n`
+      : ""
+  }import type { BaseTransactionOptions${
+    f.inputs.length ? ", WithOverrides" : ""
+  } } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 ${
   f.inputs.length > 0
-    ? `import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";`
+    ? `import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";`
     : ""
 }
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+
 
 ${
   f.inputs.length > 0
     ? `/**
  * Represents the parameters for the "${f.name}" function.
  */
-
-export type ${inputTypeName} = {
+export type ${inputTypeName} = WithOverrides<{
   ${f.inputs
     .map(
       (x) =>
-        `${removeLeadingUnderscore(x.name)}: AbiParameterToPrimitiveType<${JSON.stringify(x)}>`,
+        `${removeLeadingUnderscore(
+          x.name,
+        )}: AbiParameterToPrimitiveType<${JSON.stringify(x)}>`,
     )
-    .join("\n")}}
+    .join("\n")}}>
 
     `
     : ""
 };
 
-const FN_SELECTOR = "${preparedMethod[0]}" as const;
+export const FN_SELECTOR = "${preparedMethod[0]}" as const;
 const FN_INPUTS = ${JSON.stringify(preparedMethod[1], null, 2)} as const;
 const FN_OUTPUTS = ${JSON.stringify(preparedMethod[2], null, 2)} as const;
+
+/**
+ * Checks if the \`${f.name}\` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the \`${f.name}\` method is supported.
+ * @extension ${extensionName.toUpperCase()}
+ * @example
+ * \`\`\`ts
+ * import { is${uppercaseFirstLetter(
+   f.name,
+ )}Supported } from "thirdweb/extensions/${extensionName}";
+ * 
+ * const supported = await is${uppercaseFirstLetter(f.name)}Supported(contract);
+ * \`\`\`
+ */
+export async function is${uppercaseFirstLetter(f.name)}Supported(contract: ThirdwebContract<any>) {
+  return detectMethod({contract, method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const});
+}
 
 ${
   f.inputs.length > 0
@@ -146,13 +174,17 @@ ${
  * @extension ${extensionName.toUpperCase()}
  * @example
  * \`\`\`ts
- * import { encode${uppercaseFirstLetter(f.name)}Params } "thirdweb/extensions/${extensionName}";
+ * import { encode${uppercaseFirstLetter(
+   f.name,
+ )}Params } "thirdweb/extensions/${extensionName}";
  * const result = encode${uppercaseFirstLetter(f.name)}Params({\n * ${f.inputs
    .map((x) => ` ${removeLeadingUnderscore(x.name)}: ...,`)
    .join("\n * ")}\n * });
  * \`\`\`
  */
-export function encode${uppercaseFirstLetter(f.name)}Params(options: ${inputTypeName}) {
+export function encode${uppercaseFirstLetter(
+        f.name,
+      )}Params(options: ${inputTypeName}) {
   return encodeAbiParameters(FN_INPUTS, [${f.inputs
     .map((x) => `options.${removeLeadingUnderscore(x.name)}`)
     .join(", ")}]);
@@ -160,9 +192,31 @@ export function encode${uppercaseFirstLetter(f.name)}Params(options: ${inputType
 `
     : ""
 }
-
-
-
+${
+  f.inputs.length > 0
+    ? `/**
+ * Encodes the "${f.name}" function into a Hex string with its parameters.
+ * @param options - The options for the ${f.name} function.
+ * @returns The encoded hexadecimal string.
+ * @extension ${extensionName.toUpperCase()}
+ * @example
+ * \`\`\`ts
+ * import { encode${uppercaseFirstLetter(
+   f.name,
+ )} } "thirdweb/extensions/${extensionName}";
+ * const result = encode${uppercaseFirstLetter(f.name)}({\n * ${f.inputs
+   .map((x) => ` ${removeLeadingUnderscore(x.name)}: ...,`)
+   .join("\n * ")}\n * });
+ * \`\`\`
+ */
+export function encode${uppercaseFirstLetter(f.name)}(options: ${inputTypeName}) {
+  \/\/ we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  \/\/ we can do this because we know the specific formats of the values
+  return FN_SELECTOR + encode${uppercaseFirstLetter(f.name)}Params(options).slice(2) as \`\${typeof FN_SELECTOR}\${string}\`;
+}
+`
+    : ""
+}
 /**
  * Calls the "${f.name}" function on the contract.
  * @param options - The options for the "${f.name}" function.
@@ -175,8 +229,8 @@ export function encode${uppercaseFirstLetter(f.name)}Params(options: ${inputType
  * const transaction = ${f.name}(${
    f.inputs.length > 0
      ? `{\n *  contract,\n * ${f.inputs
-         .map((x) => ` ${removeLeadingUnderscore(x.name)}: ...,`)
-         .join("\n * ")}\n * }`
+          .map((x) => ` ${removeLeadingUnderscore(x.name)}: ...,`)
+          .join("\n * ")}\n * }`
      : ""
  });
  * 
@@ -194,20 +248,28 @@ export function ${f.name}(
       : ""
   }
 ) {
+
+  ${
+    f.inputs.length
+      ? `const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  })`
+      : ""
+  };
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     ${
       f.inputs.length
-        ? `params: "asyncParams" in options ? async () => {
-      
-        const resolvedParams = await options.asyncParams();
+        ? `params: async () => {
+        const resolvedOptions = await asyncOptions();
         return [${f.inputs
-          .map((x) => `resolvedParams.${removeLeadingUnderscore(x.name)}`)
+          .map((x) => `resolvedOptions.${removeLeadingUnderscore(x.name)}`)
           .join(", ")}] as const;
-      } : [${f.inputs
-        .map((x) => `options.${removeLeadingUnderscore(x.name)}`)
-        .join(", ")}]`
+      },
+      value: async () => (await asyncOptions()).overrides?.value,
+      `
         : ""
     }
   });
@@ -218,7 +280,11 @@ export function ${f.name}(
 function generateReadFunction(f: AbiFunction, extensionName: string): string {
   const preparedMethod = prepareMethod(f);
   const needsAbiParamToPrimitiveType = f.inputs.length > 0;
-  return `${needsAbiParamToPrimitiveType ? `import type { AbiParameterToPrimitiveType } from "abitype";\n` : ""}import { readContract } from "../../../../../transaction/read-contract.js";
+  return `${
+    needsAbiParamToPrimitiveType
+      ? `import type { AbiParameterToPrimitiveType } from "abitype";\n`
+      : ""
+  }import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 ${
   f.inputs.length > 0
@@ -231,6 +297,8 @@ ${
 import type { Hex } from "../../../../../utils/encoding/hex.js";`
     : ""
 }
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 ${
   f.inputs.length > 0
@@ -250,9 +318,27 @@ export type ${uppercaseFirstLetter(f.name)}Params = {
     : ""
 }
 
-const FN_SELECTOR = "${preparedMethod[0]}" as const;
+export const FN_SELECTOR = "${preparedMethod[0]}" as const;
 const FN_INPUTS = ${JSON.stringify(preparedMethod[1], null, 2)} as const;
 const FN_OUTPUTS = ${JSON.stringify(preparedMethod[2], null, 2)} as const;
+
+/**
+ * Checks if the \`${f.name}\` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the \`${f.name}\` method is supported.
+ * @extension ${extensionName.toUpperCase()}
+ * @example
+ * \`\`\`ts
+ * import { is${uppercaseFirstLetter(
+   f.name,
+ )}Supported } from "thirdweb/extensions/${extensionName}";
+ * 
+ * const supported = await is${uppercaseFirstLetter(f.name)}Supported(contract);
+ * \`\`\`
+ */
+export async function is${uppercaseFirstLetter(f.name)}Supported(contract: ThirdwebContract<any>) {
+  return detectMethod({contract, method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const});
+}
 
 ${
   f.inputs.length > 0
@@ -263,13 +349,17 @@ ${
  * @extension ${extensionName.toUpperCase()}
  * @example
  * \`\`\`ts
- * import { encode${uppercaseFirstLetter(f.name)}Params } "thirdweb/extensions/${extensionName}";
+ * import { encode${uppercaseFirstLetter(
+   f.name,
+ )}Params } "thirdweb/extensions/${extensionName}";
  * const result = encode${uppercaseFirstLetter(f.name)}Params({\n * ${f.inputs
    .map((x) => ` ${removeLeadingUnderscore(x.name)}: ...,`)
    .join("\n * ")}\n * });
  * \`\`\`
  */
-export function encode${uppercaseFirstLetter(f.name)}Params(options: ${uppercaseFirstLetter(f.name)}Params) {
+export function encode${uppercaseFirstLetter(
+        f.name,
+      )}Params(options: ${uppercaseFirstLetter(f.name)}Params) {
   return encodeAbiParameters(FN_INPUTS, [${f.inputs
     .map((x) => `options.${removeLeadingUnderscore(x.name)}`)
     .join(", ")}]);
@@ -277,7 +367,33 @@ export function encode${uppercaseFirstLetter(f.name)}Params(options: ${uppercase
 `
     : ""
 }
-
+${
+  f.inputs.length > 0
+    ? `/**
+ * Encodes the "${f.name}" function into a Hex string with its parameters.
+ * @param options - The options for the ${f.name} function.
+ * @returns The encoded hexadecimal string.
+ * @extension ${extensionName.toUpperCase()}
+ * @example
+ * \`\`\`ts
+ * import { encode${uppercaseFirstLetter(
+   f.name,
+ )} } "thirdweb/extensions/${extensionName}";
+ * const result = encode${uppercaseFirstLetter(f.name)}({\n * ${f.inputs
+   .map((x) => ` ${removeLeadingUnderscore(x.name)}: ...,`)
+   .join("\n * ")}\n * });
+ * \`\`\`
+ */
+export function encode${uppercaseFirstLetter(
+        f.name,
+      )}(options: ${uppercaseFirstLetter(f.name)}Params) {
+  \/\/ we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  \/\/ we can do this because we know the specific formats of the values
+  return FN_SELECTOR + encode${uppercaseFirstLetter(f.name)}Params(options).slice(2) as \`\${typeof FN_SELECTOR}\${string}\`;
+}
+`
+    : ""
+}
 ${
   f.outputs.length > 0
     ? `/**
@@ -287,12 +403,18 @@ ${
   * @extension ${extensionName.toUpperCase()}
   * @example
   * \`\`\`ts
-  * import { decode${uppercaseFirstLetter(f.name)}Result } from "thirdweb/extensions/${extensionName}";
+  * import { decode${uppercaseFirstLetter(
+    f.name,
+  )}Result } from "thirdweb/extensions/${extensionName}";
   * const result = decode${uppercaseFirstLetter(f.name)}Result("...");
   * \`\`\`
   */
 export function decode${uppercaseFirstLetter(f.name)}Result(result: Hex) {
-  ${preparedMethod[2].length > 1 ? "return decodeAbiParameters(FN_OUTPUTS, result)" : "return decodeAbiParameters(FN_OUTPUTS, result)[0]"};
+  ${
+    preparedMethod[2].length > 1
+      ? "return decodeAbiParameters(FN_OUTPUTS, result)"
+      : "return decodeAbiParameters(FN_OUTPUTS, result)[0]"
+  };
 }
 `
     : ""
@@ -311,8 +433,8 @@ export function decode${uppercaseFirstLetter(f.name)}Result(result: Hex) {
  * const result = await ${f.name}(${
    f.inputs.length > 0
      ? `{\n * ${f.inputs
-         .map((x) => ` ${removeLeadingUnderscore(x.name)}: ...,`)
-         .join("\n * ")}\n * }`
+          .map((x) => ` ${removeLeadingUnderscore(x.name)}: ...,`)
+          .join("\n * ")}\n * }`
      : ""
  });
  * 
@@ -358,13 +480,19 @@ export type ${uppercaseFirstLetter(e.name)}EventFilters = Partial<{
 }
 
 /**
- * Creates an event object for the ${e.name} event.${indexedInputs.length > 0 ? `\n * @param filters - Optional filters to apply to the event.` : ""}
+ * Creates an event object for the ${e.name} event.${
+   indexedInputs.length > 0
+     ? "\n * @param filters - Optional filters to apply to the event."
+     : ""
+ }
  * @returns The prepared event object.
  * @extension ${extensionName.toUpperCase()}
  * @example
  * \`\`\`ts
  * import { getContractEvents } from "thirdweb";
- * import { ${eventNameToPreparedEventName(e.name)} } from "thirdweb/extensions/${extensionName}";
+ * import { ${eventNameToPreparedEventName(
+   e.name,
+ )} } from "thirdweb/extensions/${extensionName}";
  * 
  * const events = await getContractEvents({
  * contract,
@@ -372,17 +500,23 @@ export type ${uppercaseFirstLetter(e.name)}EventFilters = Partial<{
  *  ${eventNameToPreparedEventName(e.name)}(${
    indexedInputs.length > 0
      ? `{\n * ${indexedInputs
-         .map((x) => ` ${x.name}: ...,`)
-         .join("\n * ")}\n * }`
+          .map((x) => ` ${x.name}: ...,`)
+          .join("\n * ")}\n * }`
      : ""
  })
  * ],
  * });
  * \`\`\`
  */ 
-export function ${eventNameToPreparedEventName(e.name)}(${indexedInputs.length > 0 ? `filters: ${uppercaseFirstLetter(e.name)}EventFilters = {}` : ""}) {
+export function ${eventNameToPreparedEventName(e.name)}(${
+    indexedInputs.length > 0
+      ? `filters: ${uppercaseFirstLetter(e.name)}EventFilters = {}`
+      : ""
+  }) {
   return prepareEvent({
-    signature: "${formatAbiItem(e)}",${indexedInputs.length > 0 ? `\n    filters,` : ""}
+    signature: "${formatAbiItem(e)}",${
+      indexedInputs.length > 0 ? "\n    filters," : ""
+    }
   });
 };
   `;

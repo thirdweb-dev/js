@@ -1,15 +1,13 @@
+import { sha256 } from "@noble/hashes/sha256";
 import { startProxy } from "@viem/anvil";
 import { FORK_BLOCK_NUMBER, OPTIMISM_FORK_BLOCK_NUMBER } from "./src/chains.js";
-import { sha256 } from "@noble/hashes/sha256";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 require("dotenv-mono").load();
 
 const SECRET_KEY = process.env.TW_SECRET_KEY as string;
 
 const clientId = SECRET_KEY
-  ? // eslint-disable-next-line no-restricted-globals
-    Buffer.from(sha256(SECRET_KEY)).toString("hex").slice(0, 32)
+  ? Buffer.from(sha256(SECRET_KEY)).toString("hex").slice(0, 32)
   : "";
 
 export default async function globalSetup() {
@@ -47,9 +45,9 @@ export default async function globalSetup() {
     port: 8647,
   });
 
-  return () => {
-    shutdownMainnet();
-    shutdownOptimism();
-    shutdownAnvil();
+  return async () => {
+    await shutdownMainnet();
+    await shutdownOptimism();
+    await shutdownAnvil();
   };
 }

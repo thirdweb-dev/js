@@ -16,7 +16,9 @@ export { smartWallet } from "./wallets/wallets/smart-wallet";
 export { localWallet } from "./wallets/wallets/local-wallet";
 export { LocalWallet } from "./wallets/wallets/LocalWallet";
 export { EmbeddedWallet } from "./wallets/wallets/embedded/EmbeddedWallet";
+export { EmbeddedWallet as InAppWallet } from "./wallets/wallets/embedded/EmbeddedWallet";
 export { embeddedWallet } from "./wallets/wallets/embedded/embedded-wallet";
+export { embeddedWallet as inAppWallet } from "./wallets/wallets/embedded/embedded-wallet";
 export * from "./wallets/wallets/wallet-connect/WalletConnectBase";
 export { WalletConnect } from "./wallets/wallets/wallet-connect/WalletConnect";
 export { walletConnect } from "./wallets/wallets/wallet-connect/wallet-connect";
@@ -27,6 +29,7 @@ export { useMetaMaskWallet } from "./wallets/hooks/useMetaMaskWallet";
 export { useRainbowWallet } from "./wallets/hooks/useRainbowWallet";
 export { useTrustWallet } from "./wallets/hooks/useTrustWallet";
 export { useEmbeddedWallet } from "./wallets/hooks/useEmbeddedWallet";
+export { useEmbeddedWallet as useInAppWallet } from "./wallets/hooks/useEmbeddedWallet";
 export { useSmartWallet } from "./wallets/hooks/useSmartWallet";
 export { useEmbeddedWalletSendVerificationEmail } from "./wallets/hooks/useEmbeddedWalletSendVerificationEmail";
 

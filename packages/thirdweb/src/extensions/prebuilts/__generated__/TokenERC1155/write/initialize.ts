@@ -1,13 +1,18 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "initialize" function.
  */
-
-export type InitializeParams = {
+export type InitializeParams = WithOverrides<{
   defaultAdmin: AbiParameterToPrimitiveType<{
     type: "address";
     name: "_defaultAdmin";
@@ -42,9 +47,9 @@ export type InitializeParams = {
     type: "address";
     name: "_platformFeeRecipient";
   }>;
-};
+}>;
 
-const FN_SELECTOR = "0xe1591634" as const;
+export const FN_SELECTOR = "0xe1591634" as const;
 const FN_INPUTS = [
   {
     type: "address",
@@ -90,6 +95,25 @@ const FN_INPUTS = [
 const FN_OUTPUTS = [] as const;
 
 /**
+ * Checks if the `initialize` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `initialize` method is supported.
+ * @extension PREBUILTS
+ * @example
+ * ```ts
+ * import { isInitializeSupported } from "thirdweb/extensions/prebuilts";
+ *
+ * const supported = await isInitializeSupported(contract);
+ * ```
+ */
+export async function isInitializeSupported(contract: ThirdwebContract<any>) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
  * Encodes the parameters for the "initialize" function.
  * @param options - The options for the initialize function.
  * @returns The encoded ABI parameters.
@@ -124,6 +148,37 @@ export function encodeInitializeParams(options: InitializeParams) {
     options.platformFeeBps,
     options.platformFeeRecipient,
   ]);
+}
+
+/**
+ * Encodes the "initialize" function into a Hex string with its parameters.
+ * @param options - The options for the initialize function.
+ * @returns The encoded hexadecimal string.
+ * @extension PREBUILTS
+ * @example
+ * ```ts
+ * import { encodeInitialize } "thirdweb/extensions/prebuilts";
+ * const result = encodeInitialize({
+ *  defaultAdmin: ...,
+ *  name: ...,
+ *  symbol: ...,
+ *  contractURI: ...,
+ *  trustedForwarders: ...,
+ *  primarySaleRecipient: ...,
+ *  royaltyRecipient: ...,
+ *  royaltyBps: ...,
+ *  platformFeeBps: ...,
+ *  platformFeeRecipient: ...,
+ * });
+ * ```
+ */
+export function encodeInitialize(options: InitializeParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeInitializeParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**
@@ -162,37 +217,28 @@ export function initialize(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [
-              resolvedParams.defaultAdmin,
-              resolvedParams.name,
-              resolvedParams.symbol,
-              resolvedParams.contractURI,
-              resolvedParams.trustedForwarders,
-              resolvedParams.primarySaleRecipient,
-              resolvedParams.royaltyRecipient,
-              resolvedParams.royaltyBps,
-              resolvedParams.platformFeeBps,
-              resolvedParams.platformFeeRecipient,
-            ] as const;
-          }
-        : [
-            options.defaultAdmin,
-            options.name,
-            options.symbol,
-            options.contractURI,
-            options.trustedForwarders,
-            options.primarySaleRecipient,
-            options.royaltyRecipient,
-            options.royaltyBps,
-            options.platformFeeBps,
-            options.platformFeeRecipient,
-          ],
+    params: async () => {
+      const resolvedOptions = await asyncOptions();
+      return [
+        resolvedOptions.defaultAdmin,
+        resolvedOptions.name,
+        resolvedOptions.symbol,
+        resolvedOptions.contractURI,
+        resolvedOptions.trustedForwarders,
+        resolvedOptions.primarySaleRecipient,
+        resolvedOptions.royaltyRecipient,
+        resolvedOptions.royaltyBps,
+        resolvedOptions.platformFeeBps,
+        resolvedOptions.platformFeeRecipient,
+      ] as const;
+    },
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

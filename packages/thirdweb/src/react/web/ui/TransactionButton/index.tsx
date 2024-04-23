@@ -1,17 +1,17 @@
+import { useState } from "react";
 import {
-  waitForReceipt as doWaitForReceipt,
   type WaitForReceiptOptions,
+  waitForReceipt as doWaitForReceipt,
 } from "../../../../transaction/actions/wait-for-tx-receipt.js";
-import { Button } from "../components/buttons.js";
-import { Spinner } from "../components/Spinner.js";
+import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
+import type { TransactionReceipt } from "../../../../transaction/types.js";
+import { useSendTransactionCore } from "../../../core/hooks/contract/useSendTransaction.js";
 import {
   useActiveAccount,
   useActiveWallet,
 } from "../../../core/hooks/wallets/wallet-hooks.js";
-import { useSendTransaction } from "../../../core/hooks/contract/useSendTransaction.js";
-import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
-import type { TransactionReceipt } from "../../../../transaction/types.js";
-import { useState } from "react";
+import { Spinner } from "../components/Spinner.js";
+import { Button } from "../components/buttons.js";
 
 /**
  * Props for the [`TransactionButton`](https://portal.thirdweb.com/references/typescript/v5/TransactionButton) component.
@@ -20,8 +20,9 @@ export type TransactionButtonProps = {
   /**
    * The a function returning a prepared transaction of type [`PreparedTransaction`](https://portal.thirdweb.com/references/typescript/v5/PreparedTransaction) to be sent when the button is clicked
    */
-  transaction: () =>
+  transaction: () => // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
     | PreparedTransaction<any>
+    // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
     | Promise<PreparedTransaction<any>>;
 
   /**
@@ -90,7 +91,7 @@ export function TransactionButton(props: TransactionButtonProps) {
   const wallet = useActiveWallet();
   const [isPending, setIsPending] = useState(false);
 
-  const sendTransaction = useSendTransaction();
+  const sendTransaction = useSendTransactionCore();
 
   if (!isPending) {
     return (

@@ -1,78 +1,74 @@
+import styled from "@emotion/styled";
 import {
-  ExitIcon,
   ChevronRightIcon,
-  TextAlignJustifyIcon,
+  ExitIcon,
   // EnterIcon,
   PaperPlaneIcon,
   PinBottomIcon,
   PlusIcon,
+  TextAlignJustifyIcon,
 } from "@radix-ui/react-icons";
-import styled from "@emotion/styled";
-import { useState, useEffect, useSyncExternalStore } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState, useSyncExternalStore } from "react";
+import { ethereum } from "../../../../chains/chain-definitions/ethereum.js";
+import type { Chain } from "../../../../chains/types.js";
+import { getContract } from "../../../../contract/contract.js";
+import { resolveAvatar } from "../../../../extensions/ens/resolve-avatar.js";
+import { resolveName } from "../../../../extensions/ens/resolve-name.js";
+import { isContractDeployed } from "../../../../utils/bytecode/is-contract-deployed.js";
+import { getUserEmail } from "../../../../wallets/in-app/core/authentication/index.js";
+import {
+  useChainQuery,
+  useChainsQuery,
+} from "../../../core/hooks/others/useChainQuery.js";
+import { useWalletBalance } from "../../../core/hooks/others/useWalletBalance.js";
+import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import {
   useActiveAccount,
   useActiveWallet,
   useActiveWalletChain,
   // useConnect,
   useDisconnect,
+  useSwitchActiveWalletChain,
 } from "../../../core/hooks/wallets/wallet-hooks.js";
+import { shortenString } from "../../../core/utils/addresses.js";
+import { ChainIcon } from "../components/ChainIcon.js";
+import { CopyIcon } from "../components/CopyIcon.js";
+import { Img } from "../components/Img.js";
 import { Modal } from "../components/Modal.js";
 import { Skeleton } from "../components/Skeleton.js";
 import { Spacer } from "../components/Spacer.js";
+import { Spinner } from "../components/Spinner.js";
+import { WalletImage } from "../components/WalletImage.js";
 import { Container, Line } from "../components/basic.js";
 import { Button, IconButton } from "../components/buttons.js";
+import { Link, Text } from "../components/text.js";
 import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 import { fadeInAnimation } from "../design-system/animations.js";
 import { StyledButton, StyledDiv } from "../design-system/elements.js";
 import {
   type Theme,
-  iconSize,
-  radius,
   fontSize,
-  spacing,
+  iconSize,
   media,
+  radius,
+  spacing,
 } from "../design-system/index.js";
-import { NetworkSelectorContent } from "./NetworkSelector.js";
-import { onModalUnmount } from "./constants.js";
-import type { SupportedTokens } from "./defaultTokens.js";
-import { Link, Text } from "../components/text.js";
-import { CopyIcon } from "../components/CopyIcon.js";
-import { shortenString } from "../../../core/utils/addresses.js";
-import {
-  useChainQuery,
-  useChainsQuery,
-} from "../../../core/hooks/others/useChainQuery.js";
-import { ChainIcon } from "../components/ChainIcon.js";
-import { useWalletBalance } from "../../../core/hooks/others/useWalletBalance.js";
-import { FundsIcon } from "./icons/FundsIcon.js";
 import type {
+  ConnectButtonProps,
   ConnectButton_detailsButtonOptions,
   ConnectButton_detailsModalOptions,
 } from "./ConnectWalletProps.js";
-// import { connectionManager } from "../../../core/connectionManager.js";
-import { SendFunds } from "./screens/SendFunds.js";
-import { ReceiveFunds } from "./screens/ReceiveFunds.js";
-import type { Chain } from "../../../../chains/types.js";
-// import type {
-//   Wallet,
-//   WalletWithPersonalAccount,
-// } from "../../../../wallets/interfaces/wallet.js";
-// import {
-//   // personalAccountToSmartAccountMap,
-//   smartWalletMetadata,
-// } from "../../../../wallets/smart/index._ts";
-// import type { EmbeddedWallet } from "../../../../wallets/embedded/core/wallet/index._ts";
-// import { localWalletMetadata } from "../../../../wallets/local/index._ts";
-// import { ExportLocalWallet } from "./screens/ExportLocalWallet._tsx";
+import { NetworkSelectorContent } from "./NetworkSelector.js";
+import { onModalUnmount } from "./constants.js";
+import type { SupportedTokens } from "./defaultTokens.js";
+import { FundsIcon } from "./icons/FundsIcon.js";
+import { WalletIcon } from "./icons/WalletIcon.js";
+import { BuyScreen } from "./screens/Buy/SwapScreen.js";
 import { swapTransactionsStore } from "./screens/Buy/swap/pendingSwapTx.js";
-import { SwapScreen } from "./screens/Buy/SwapScreen.js";
+import { ReceiveFunds } from "./screens/ReceiveFunds.js";
+import { SendFunds } from "./screens/SendFunds.js";
 import { SwapTransactionsScreen } from "./screens/SwapTransactionsScreen.js";
-import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
-import { WalletImage } from "../components/WalletImage.js";
-import { getUserEmail } from "../../../../wallets/embedded/core/authentication/index.js";
-import { useQuery } from "@tanstack/react-query";
-import { getContract } from "../../../../contract/contract.js";
-import { isContractDeployed } from "../../../../utils/bytecode/is-contract-deployed.js";
 
 const TW_CONNECTED_WALLET = "tw-connected-wallet";
 
@@ -97,8 +93,10 @@ export const ConnectedWalletDetails: React.FC<{
   theme: "light" | "dark" | Theme;
   supportedTokens: SupportedTokens;
   chains: Chain[];
+  chain?: Chain;
+  switchButton: ConnectButtonProps["switchButton"];
 }> = (props) => {
-  const { connectLocale: locale, client } = useWalletConnectionCtx();
+  const { connectLocale: locale, client } = useConnectUI();
   const activeWallet = useActiveWallet();
   const activeAccount = useActiveAccount();
   const walletChain = useActiveWalletChain();
@@ -122,12 +120,32 @@ export const ConnectedWalletDetails: React.FC<{
     chain: walletChain ? walletChain : undefined,
     tokenAddress,
     address: activeAccount?.address,
+    client,
   });
 
   const [screen, setScreen] = useState<WalletDetailsModalScreen>("main");
   const [isOpen, setIsOpen] = useState(false);
 
-  // const ensQuery = useENS();
+  const ensNameQuery = useQuery({
+    queryKey: ["ens-name", activeAccount?.address],
+    enabled: !!activeAccount?.address,
+    queryFn: () =>
+      resolveName({
+        client,
+        address: activeAccount?.address || "",
+        resolverChain: ethereum,
+      }),
+  });
+
+  const ensAvatarQuery = useQuery({
+    queryKey: ["ens-avatar", ensNameQuery.data],
+    enabled: !!ensNameQuery.data,
+    queryFn: async () =>
+      resolveAvatar({
+        client,
+        name: ensNameQuery.data || "",
+      }),
+  });
 
   // const [overrideWalletIconUrl, setOverrideWalletIconUrl] = useState<
   //   string | undefined
@@ -150,7 +168,7 @@ export const ConnectedWalletDetails: React.FC<{
     ? shortenString(activeAccount.address, false)
     : "";
 
-  const addressOrENS = shortAddress;
+  const addressOrENS = ensNameQuery.data || shortAddress;
 
   useEffect(() => {
     if (!isOpen) {
@@ -164,10 +182,20 @@ export const ConnectedWalletDetails: React.FC<{
   //   avatarOrWalletIconUrl = smartWalletMetadata.iconUrl;
   // }
 
+  const isNetworkMismatch =
+    props.chain && walletChain && walletChain.id !== props.chain.id;
+
   const trigger = props.detailsButton?.render ? (
     <div>
       <props.detailsButton.render />
     </div>
+  ) : props.chain && isNetworkMismatch ? (
+    <SwitchNetworkButton
+      style={props.switchButton?.style}
+      className={props.switchButton?.className}
+      switchNetworkBtnTitle={props.switchButton?.label}
+      targetChain={props.chain}
+    />
   ) : (
     <WalletInfoButton
       type="button"
@@ -177,9 +205,20 @@ export const ConnectedWalletDetails: React.FC<{
       style={props.detailsButton?.style}
       data-test="connected-wallet-details"
     >
-      {/* TODO: render a placeholder if we don't have an active wallet? */}
-      {activeWallet?.id && (
-        <WalletImage size={iconSize.lg} id={activeWallet.id} />
+      {ensAvatarQuery.data ? (
+        <Img
+          src={ensAvatarQuery.data}
+          width={iconSize.lg}
+          height={iconSize.lg}
+          style={{
+            borderRadius: radius.sm,
+          }}
+          client={client}
+        />
+      ) : activeWallet?.id ? (
+        <WalletImage size={iconSize.lg} id={activeWallet.id} client={client} />
+      ) : (
+        <WalletIcon size={iconSize.lg} />
       )}
 
       <Container flex="column" gap="xxs">
@@ -243,7 +282,12 @@ export const ConnectedWalletDetails: React.FC<{
         }}
       >
         {chainQuery.data ? (
-          <ChainIcon chain={chainQuery.data} size={iconSize.md} active />
+          <ChainIcon
+            chain={chainQuery.data}
+            size={iconSize.md}
+            active
+            client={client}
+          />
         ) : (
           <Skeleton height={iconSize.md} width={iconSize.md} />
         )}
@@ -272,9 +316,24 @@ export const ConnectedWalletDetails: React.FC<{
     <div>
       <Spacer y="xl" />
       <Container px="lg" flex="column" center="x">
-        {/* TODO: render a placeholder if we don't have an active wallet? */}
-        {activeWallet?.id && (
-          <WalletImage id={activeWallet.id} size={iconSize.xxl} />
+        {ensAvatarQuery.data ? (
+          <Img
+            src={ensAvatarQuery.data}
+            width={iconSize.xxl}
+            height={iconSize.xxl}
+            style={{
+              borderRadius: radius.lg,
+            }}
+            client={client}
+          />
+        ) : activeWallet?.id ? (
+          <WalletImage
+            size={iconSize.xxl}
+            id={activeWallet.id}
+            client={client}
+          />
+        ) : (
+          <WalletIcon size={iconSize.xxl} />
         )}
 
         <Spacer y="md" />
@@ -324,7 +383,7 @@ export const ConnectedWalletDetails: React.FC<{
 
       <Container px="lg">
         <ConnectedToSmartWallet />
-        <EmbeddedWalletEmail />
+        <InAppWalletEmail />
 
         {/* Send, Receive, Swap */}
         <Container
@@ -553,6 +612,8 @@ export const ConnectedWalletDetails: React.FC<{
         onBack={() => {
           setScreen("main");
         }}
+        connectLocale={locale}
+        client={client}
       />
     );
   }
@@ -598,11 +659,12 @@ export const ConnectedWalletDetails: React.FC<{
   // swap tokens
   else if (screen === "buy") {
     content = (
-      <SwapScreen
+      <BuyScreen
         client={client}
         onBack={() => setScreen("main")}
         supportedTokens={props.supportedTokens}
         onViewPendingTx={() => setScreen("pending-tx")}
+        connectLocale={locale}
       />
     );
   }
@@ -667,7 +729,7 @@ const MenuButton = /* @__PURE__ */ StyledButton(() => {
     lineHeight: 1.3,
     transition: "background-color 200ms ease, transform 200ms ease",
     "&:hover": {
-      backgroundColor: theme.colors.walletSelectorButtonHoverBg,
+      backgroundColor: theme.colors.tertiaryBg,
       transform: "scale(1.01)",
       svg: {
         color: theme.colors.accentText,
@@ -684,10 +746,10 @@ const MenuButton = /* @__PURE__ */ StyledButton(() => {
       transition: "color 200ms ease",
     },
     "&[data-variant='danger']:hover svg": {
-      color: theme.colors.danger + "!important",
+      color: `${theme.colors.danger}!important`,
     },
     "&[data-variant='primary']:hover svg": {
-      color: theme.colors.primaryText + "!important",
+      color: `${theme.colors.primaryText}!important`,
     },
   };
 });
@@ -761,9 +823,8 @@ function ConnectedToSmartWallet() {
   const activeAccount = useActiveAccount();
   const activeWallet = useActiveWallet();
   const chain = useActiveWalletChain();
-  const locale = useWalletConnectionCtx().connectLocale;
   const isSmartWallet = activeWallet?.id === "smart";
-  const { client } = useWalletConnectionCtx();
+  const { client, connectLocale: locale } = useConnectUI();
 
   const [isSmartWalletDeployed, setIsSmartWalletDeployed] = useState(false);
 
@@ -781,7 +842,7 @@ function ConnectedToSmartWallet() {
     } else {
       setIsSmartWalletDeployed(false);
     }
-  }, [activeAccount, activeWallet, chain, client, isSmartWallet]);
+  }, [activeAccount, chain, client, isSmartWallet]);
 
   const content = (
     <Container flex="row" gap="xxs" center="both">
@@ -815,10 +876,10 @@ function ConnectedToSmartWallet() {
   return null;
 }
 
-function EmbeddedWalletEmail() {
-  const { client } = useWalletConnectionCtx();
+function InAppWalletEmail() {
+  const { client } = useConnectUI();
   const emailQuery = useQuery({
-    queryKey: ["embedded-wallet-user", client],
+    queryKey: ["in-app-wallet-user", client],
     queryFn: async () => {
       const data = await getUserEmail({
         client: client,
@@ -843,4 +904,52 @@ function EmbeddedWalletEmail() {
   }
 
   return null;
+}
+
+/**
+ * @internal
+ */
+function SwitchNetworkButton(props: {
+  style?: React.CSSProperties;
+  className?: string;
+  switchNetworkBtnTitle?: string;
+  targetChain: Chain;
+}) {
+  const switchChain = useSwitchActiveWalletChain();
+  const [switching, setSwitching] = useState(false);
+  const locale = useConnectUI().connectLocale;
+
+  const switchNetworkBtnTitle =
+    props.switchNetworkBtnTitle ?? locale.switchNetwork;
+
+  return (
+    <Button
+      className={`tw-connect-wallet--switch-network ${props.className || ""}`}
+      variant="primary"
+      type="button"
+      data-is-loading={switching}
+      data-test="switch-network-button"
+      disabled={switching}
+      onClick={async () => {
+        setSwitching(true);
+        try {
+          await switchChain(props.targetChain);
+        } catch (e) {
+          console.error(e);
+        }
+        setSwitching(false);
+      }}
+      style={{
+        minWidth: "140px",
+        ...props.style,
+      }}
+      aria-label={switching ? locale.switchingNetwork : undefined}
+    >
+      {switching ? (
+        <Spinner size="sm" color="primaryButtonText" />
+      ) : (
+        switchNetworkBtnTitle
+      )}
+    </Button>
+  );
 }

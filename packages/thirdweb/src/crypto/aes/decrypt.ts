@@ -1,11 +1,11 @@
+import { cachedTextDecoder } from "../../utils/text-decoder.js";
+import { cachedTextEncoder } from "../../utils/text-encoder.js";
+import { base64ToUint8Array } from "../../utils/uint8-array.js";
+import { universalCrypto } from "./lib/universal-crypto.js";
 import {
   decryptCryptoJSCipherBase64,
   parseCryptoJSCipherBase64,
 } from "./utils/crypto-js-compat.js";
-import { cachedTextEncoder } from "../../utils/text-encoder.js";
-import { cachedTextDecoder } from "../../utils/text-decoder.js";
-import { base64ToUint8Array } from "../../utils/uint8-array.js";
-import { universalCrypto } from "./lib/universal-crypto.js";
 
 /**
  * Decrypts ciphertext encrypted with aesEncrypt() using supplied password.

@@ -1,12 +1,13 @@
 import { ChevronDownIcon } from "@radix-ui/react-icons";
+import type { Chain } from "../../../../../../../chains/types.js";
+import type { ThirdwebClient } from "../../../../../../../client/client.js";
+import { TokenIcon } from "../../../../components/TokenIcon.js";
 import { Container } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
+import { Text } from "../../../../components/text.js";
+import { TokenSymbol } from "../../../../components/token/TokenSymbol.js";
 import { iconSize } from "../../../../design-system/index.js";
 import type { ERC20OrNativeToken } from "../../nativeToken.js";
-import { Text } from "../../../../components/text.js";
-import { TokenIcon } from "../../../../components/TokenIcon.js";
-import type { Chain } from "../../../../../../../chains/types.js";
-import { TokenSymbol } from "../../../../components/token/TokenSymbol.js";
 
 /**
  * @internal
@@ -16,6 +17,7 @@ export function TokenSelectorButton(props: {
   chain: Chain;
   onClick: () => void;
   style?: React.CSSProperties;
+  client: ThirdwebClient;
 }) {
   return (
     <Button
@@ -27,7 +29,12 @@ export function TokenSelectorButton(props: {
       {props.token ? (
         <>
           <Container flex="row" center="y" gap="xs">
-            <TokenIcon token={props.token} chain={props.chain} size="sm" />
+            <TokenIcon
+              token={props.token}
+              chain={props.chain}
+              size="sm"
+              client={props.client}
+            />
             <TokenSymbol token={props.token} chain={props.chain} size="sm" />
           </Container>
           <Container color="secondaryText" flex="row" center="both">

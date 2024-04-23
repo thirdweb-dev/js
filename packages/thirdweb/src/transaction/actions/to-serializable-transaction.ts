@@ -1,12 +1,13 @@
+import type { TransactionSerializable } from "viem";
 import { getGasOverridesForTransaction } from "../../gas/fee-data.js";
 import { getRpcClient } from "../../rpc/rpc.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import type { PreparedTransaction } from "../prepare-transaction.js";
 import { encode } from "./encode.js";
 import { estimateGas } from "./estimate-gas.js";
-import type { TransactionSerializable } from "viem";
 
 export type ToSerialiableTransactionOptions = {
+  // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
   transaction: PreparedTransaction<any>;
   from?: string;
 };

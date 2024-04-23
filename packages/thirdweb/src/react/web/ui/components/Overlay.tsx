@@ -1,15 +1,6 @@
-import { keyframes } from "@emotion/react";
 import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
+import { fadeInAnimation } from "../design-system/animations.js";
 import { StyledDiv } from "../design-system/elements.js";
-
-const overlayEnter = keyframes`
- from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-`;
 
 export const Overlay = /* @__PURE__ */ StyledDiv(() => {
   const theme = useCustomTheme();
@@ -18,7 +9,7 @@ export const Overlay = /* @__PURE__ */ StyledDiv(() => {
     zIndex: 9999,
     position: "fixed",
     inset: 0,
-    animation: `${overlayEnter} 400ms cubic-bezier(0.16, 1, 0.3, 1)`,
+    animation: `${fadeInAnimation} 400ms cubic-bezier(0.16, 1, 0.3, 1)`,
     backdropFilter: "blur(10px)",
   };
 });

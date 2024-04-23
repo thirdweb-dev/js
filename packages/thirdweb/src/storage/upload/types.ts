@@ -24,12 +24,14 @@ export type BuildFormDataOptions = {
   metadata?: Record<string, string>;
 };
 
-export type UploadOptions = {
-  files: (FileOrBufferOrString | Record<string, unknown>)[];
+export type UploadableFile = FileOrBufferOrString | Record<string, unknown>;
+
+export type UploadOptions<TFiles extends UploadableFile[]> = {
+  files: TFiles;
 } & BuildFormDataOptions;
 
 export type UploadFile = { name?: string; type?: string; uri: string };
 
 export type InternalUploadMobileOptions = {
-  files: (UploadFile | any)[];
+  files: UploadFile[];
 } & BuildFormDataOptions;

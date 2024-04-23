@@ -1,9 +1,10 @@
 import { queryOptions, useQuery } from "@tanstack/react-query";
 import {
-  getWalletBalance,
   type GetWalletBalanceOptions,
+  getWalletBalance,
 } from "../../../../wallets/utils/getWalletBalance.js";
-import { useWalletConnectionCtx } from "./useWalletConnectionCtx.js";
+
+// NOTE: Do not use useConnectUI here - because this hook is also used outside of Connect UI context
 
 /**
  * Custom hook to fetch the balance of a wallet for a specific token.
@@ -11,13 +12,9 @@ import { useWalletConnectionCtx } from "./useWalletConnectionCtx.js";
  * @returns The result of the query.
  * @internal
  */
-export function useWalletBalance(
-  options: Omit<Partial<GetWalletBalanceOptions>, "client">,
-) {
-  const { chain, address, tokenAddress } = options;
-  const { client } = useWalletConnectionCtx();
+export function useWalletBalance(options: Partial<GetWalletBalanceOptions>) {
+  const { chain, address, tokenAddress, client } = options;
   const query = queryOptions({
-    // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: [
       "walletBalance",
       chain?.id || -1,

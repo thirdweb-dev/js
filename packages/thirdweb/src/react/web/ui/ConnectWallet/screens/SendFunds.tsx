@@ -1,26 +1,27 @@
-import { CrossCircledIcon, CheckCircledIcon } from "@radix-ui/react-icons";
-import { useState, useMemo } from "react";
-import { Skeleton } from "../../components/Skeleton.js";
-import { Spacer } from "../../components/Spacer.js";
-import { Spinner } from "../../components/Spinner.js";
-import { Container, ModalHeader } from "../../components/basic.js";
-import { Button } from "../../components/buttons.js";
-import { Label, Input } from "../../components/formElements.js";
-import { StyledDiv } from "../../design-system/elements.js";
-import { iconSize, spacing, fontSize } from "../../design-system/index.js";
-import { type SupportedTokens, defaultTokens } from "../defaultTokens.js";
+import { CheckCircledIcon, CrossCircledIcon } from "@radix-ui/react-icons";
+import { useMemo, useState } from "react";
+import type { ThirdwebClient } from "../../../../../client/client.js";
+import { isAddress } from "../../../../../utils/address.js";
+import { useWalletBalance } from "../../../../core/hooks/others/useWalletBalance.js";
+import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import {
   useActiveAccount,
   useActiveWalletChain,
 } from "../../../../core/hooks/wallets/wallet-hooks.js";
-import { useWalletBalance } from "../../../../core/hooks/others/useWalletBalance.js";
+import { Skeleton } from "../../components/Skeleton.js";
+import { Spacer } from "../../components/Spacer.js";
+import { Spinner } from "../../components/Spinner.js";
+import { TokenIcon } from "../../components/TokenIcon.js";
+import { Container, ModalHeader } from "../../components/basic.js";
+import { Button } from "../../components/buttons.js";
+import { Input, Label } from "../../components/formElements.js";
 import { Text } from "../../components/text.js";
+import { StyledDiv } from "../../design-system/elements.js";
+import { fontSize, iconSize, spacing } from "../../design-system/index.js";
 import { useSendToken } from "../../hooks/useSendToken.js";
-import { isAddress } from "../../../../../utils/address.js";
-import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
+import { type SupportedTokens, defaultTokens } from "../defaultTokens.js";
 import { TokenSelector, formatTokenBalance } from "./TokenSelector.js";
 import { type ERC20OrNativeToken, NATIVE_TOKEN } from "./nativeToken.js";
-import { TokenIcon } from "../../components/TokenIcon.js";
 
 type TXError = Error & { data?: { message?: string } };
 
@@ -34,6 +35,7 @@ export function SendFunds(props: {
   const [screen, setScreen] = useState<"base" | "tokenSelector">("base");
   const activeChain = useActiveWalletChain();
   const chainId = activeChain?.id;
+  const { connectLocale, client } = useConnectUI();
 
   let defaultToken: ERC20OrNativeToken = NATIVE_TOKEN;
   if (
@@ -46,7 +48,7 @@ export function SendFunds(props: {
   ) {
     // use the first token in the list as default selected
     const tokensForChain = props.supportedTokens[chainId];
-    const firstToken = tokensForChain && tokensForChain[0];
+    const firstToken = tokensForChain?.[0];
     if (firstToken) {
       defaultToken = firstToken;
     }
@@ -74,6 +76,8 @@ export function SendFunds(props: {
           setScreen("base");
         }}
         chain={chain}
+        connectLocale={connectLocale}
+        client={client}
       />
     );
   }
@@ -89,6 +93,7 @@ export function SendFunds(props: {
       amount={amount}
       setAmount={setAmount}
       onBack={props.onBack}
+      client={client}
     />
   );
 }
@@ -104,8 +109,9 @@ function SendFundsForm(props: {
   amount: string;
   setAmount: (value: string) => void;
   onBack: () => void;
+  client: ThirdwebClient;
 }) {
-  const locale = useWalletConnectionCtx().connectLocale.sendFundsScreen;
+  const locale = useConnectUI().connectLocale.sendFundsScreen;
   const tokenAddress =
     props.token && "address" in props.token ? props.token.address : undefined;
 
@@ -117,6 +123,7 @@ function SendFundsForm(props: {
     chain,
     tokenAddress: tokenAddress,
     address: activeAccount?.address,
+    client: props.client,
   });
 
   const { receiverAddress, setReceiverAddress, amount, setAmount } = props;
@@ -133,7 +140,7 @@ function SendFundsForm(props: {
     }
 
     return isENS || isAddress(receiverAddress);
-  }, [receiverAddress, isENSSupported]);
+  }, [receiverAddress]);
 
   const showInvalidAddressError = receiverAddress && !isValidReceiverAddress;
 
@@ -248,7 +255,12 @@ function SendFundsForm(props: {
           }}
           onClick={props.onTokenSelect}
         >
-          <TokenIcon token={props.token} chain={activeChain} size="lg" />
+          <TokenIcon
+            token={props.token}
+            chain={activeChain}
+            size="lg"
+            client={props.client}
+          />
 
           <Container flex="column" gap="xs">
             {tokenName ? (
@@ -278,7 +290,7 @@ function SendFundsForm(props: {
           data-error={showInvalidAddressError}
           required
           id="receiver"
-          placeholder={isENSSupported ? `0x... / ENS name` : "0x..."}
+          placeholder={isENSSupported ? "0x... / ENS name" : "0x..."}
           variant="outline"
           value={receiverAddress}
           onChange={(e) => {

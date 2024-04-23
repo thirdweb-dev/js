@@ -1,11 +1,11 @@
+import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
+import { StyledButton } from "../design-system/elements.js";
 import {
+  type Theme,
   fontSize,
   radius,
   spacing,
-  type Theme,
 } from "../design-system/index.js";
-import { StyledButton } from "../design-system/elements.js";
-import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 
 type ButtonProps = {
   variant: "primary" | "secondary" | "link" | "accent" | "outline";
@@ -70,7 +70,7 @@ export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
       cursor: "not-allowed",
     },
     "&[data-disabled='true']": {
-      background: theme.colors.walletSelectorButtonHoverBg,
+      background: theme.colors.tertiaryBg,
       color: theme.colors.secondaryText,
       borderColor: "transparent",
       boxShadow: "none",

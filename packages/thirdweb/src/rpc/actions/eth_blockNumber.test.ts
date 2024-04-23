@@ -1,8 +1,8 @@
-import { describe, it, expect } from "vitest";
-import { eth_blockNumber } from "./eth_blockNumber.js";
-import { getRpcClient } from "../rpc.js";
+import { describe, expect, it } from "vitest";
 import { FORKED_ETHEREUM_CHAIN } from "~test/chains.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
+import { getRpcClient } from "../rpc.js";
+import { eth_blockNumber } from "./eth_blockNumber.js";
 
 const rpcClient = getRpcClient({
   chain: FORKED_ETHEREUM_CHAIN,

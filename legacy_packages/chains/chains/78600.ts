@@ -33,7 +33,7 @@ export default {
   "name": "Vanguard",
   "nativeCurrency": {
     "name": "Vanguard Vanry",
-    "symbol": "VG",
+    "symbol": "VANRY",
     "decimals": 18
   },
   "networkId": 78600,

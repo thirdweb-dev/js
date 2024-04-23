@@ -26,8 +26,29 @@ import {
   englishAuctionsBytecode,
   englishAuctionsCompilerMetadata,
 } from "./mock/englishAuctionsMetadata";
+import { getCreate2FactoryAddress } from "../../src/evm/common/any-evm-utils/getCreate2FactoryAddress";
 
 const itIf = (condition: boolean) => (condition ? it : it.skip);
+
+describe("Create2 factory addresses", async () => {
+  it("should compute correct addresses for create2 factory", async () => {
+    // pre eip155
+    sdk.updateSignerOrProvider(1);
+    expect(await getCreate2FactoryAddress(sdk.getProvider())).to.equal("0x4e59b44847b379578588920cA78FbF26c0B4956C");
+
+    // eip155
+    sdk.updateSignerOrProvider(923018);
+    expect(await getCreate2FactoryAddress(sdk.getProvider())).to.equal("0x52329130FCBD4e15B0aC7C4505fBFB530b960AE8");
+
+    // eip155 with hardcoded custom gas
+    sdk.updateSignerOrProvider(47);
+    expect(await getCreate2FactoryAddress(sdk.getProvider())).to.equal("0x4F656d8f2e13D4980149940f4C962EC4f8aF31c5");
+
+    // eip155 with custom gas bin
+    sdk.updateSignerOrProvider(2710);
+    expect(await getCreate2FactoryAddress(sdk.getProvider())).to.equal("0x5Ffe7DeB88759a70B42bc12ABe16f72ce81F0459");
+  })
+})
 
 describe("Any EVM Keyless Deploy", async () => {
   let contract: SmartContract;

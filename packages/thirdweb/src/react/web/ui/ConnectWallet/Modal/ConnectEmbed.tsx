@@ -1,41 +1,35 @@
-import {
-  SetModalConfigCtx,
-  WalletUIStatesProvider,
-} from "../../../providers/wallet-ui-states-provider.js";
-import {
-  modalMaxWidthCompact,
-  defaultTheme,
-  modalMaxWidthWide,
-  wideModalMaxHeight,
-} from "../constants.js";
-import { useSetupScreen } from "./screen.js";
-import { type ComponentProps, useContext, useEffect, useState } from "react";
-import { radius, type Theme } from "../../design-system/index.js";
-import { StyledDiv } from "../../design-system/elements.js";
-import {
-  useCustomTheme,
-  CustomThemeProvider,
-} from "../../design-system/CustomThemeProvider.js";
-import { DynamicHeight } from "../../components/DynamicHeight.js";
+import { useEffect } from "react";
+import type { Chain } from "../../../../../chains/types.js";
+import type { ThirdwebClient } from "../../../../../client/client.js";
+import type { SiweAuthOptions } from "../../../../../exports/react.js";
+import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
+import type { SmartWalletOptions } from "../../../../../wallets/smart/types.js";
+import type { AppMetadata } from "../../../../../wallets/types.js";
+import { useSiweAuth } from "../../../../core/hooks/auth/useSiweAuth.js";
+import { AutoConnect } from "../../../../core/hooks/connection/useAutoConnect.js";
 import {
   useActiveAccount,
   useIsAutoConnecting,
 } from "../../../../core/hooks/wallets/wallet-hooks.js";
-import { ConnectModalContent } from "./ConnectModalContent.js";
+import { ConnectUIContext } from "../../../../core/providers/wallet-connection.js";
+import { WalletUIStatesProvider } from "../../../providers/wallet-ui-states-provider.js";
 import { canFitWideModal } from "../../../utils/canFitWideModal.js";
-import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
-import type { Chain } from "../../../../../chains/types.js";
-import { useWalletConnectionCtx } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
-import type { ThirdwebClient } from "../../../../../client/client.js";
-import type { LocaleId } from "../../types.js";
-import { WalletConnectionContext } from "../../../../core/providers/wallet-connection.js";
 import { getDefaultWallets } from "../../../wallets/defaultWallets.js";
-import type { ConnectLocale } from "../locale/types.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
-import type { AppMetadata } from "../../../../../wallets/types.js";
-import { getConnectLocale } from "../locale/getConnectLocale.js";
-import { AutoConnect } from "../../../../core/hooks/connection/useAutoConnect.js";
-import type { SmartWalletOptions } from "../../../../../wallets/smart/types.js";
+import { DynamicHeight } from "../../components/DynamicHeight.js";
+import { useCustomTheme } from "../../design-system/CustomThemeProvider.js";
+import { StyledDiv } from "../../design-system/elements.js";
+import { type Theme, radius } from "../../design-system/index.js";
+import type { LocaleId } from "../../types.js";
+import {
+  modalMaxWidthCompact,
+  modalMaxWidthWide,
+  reservedScreens,
+  wideModalMaxHeight,
+} from "../constants.js";
+import { useConnectLocale } from "../locale/getConnectLocale.js";
+import { ConnectModalContent } from "./ConnectModalContent.js";
+import { useSetupScreen } from "./screen.js";
 
 export type ConnectEmbedProps = {
   /**
@@ -85,10 +79,10 @@ export type ConnectEmbedProps = {
    * @example
    * ```tsx
    * import { AutoConnect } from "thirdweb/react";
-   * import { createWallet, embeddedWallet } from "thirdweb/wallets";
+   * import { createWallet, inAppWallet } from "thirdweb/wallets";
    *
    * const wallets = [
-   *   embeddedWallet(),
+   *   inAppWallet(),
    *   createWallet("io.metamask"),
    *   createWallet("com.coinbase.wallet"),
    *   createWallet("me.rainbow"),
@@ -108,7 +102,7 @@ export type ConnectEmbedProps = {
    *
    * ```tsx
    * const defaultWallets = [
-   *  embeddedWallet(),
+   *  inAppWallet(),
    *  createWallet("io.metamask"),
    *  createWallet("com.coinbase.wallet"),
    *  createWallet("me.rainbow"),
@@ -314,6 +308,14 @@ export type ConnectEmbedProps = {
    * Note that if the screen width can not fit the wide modal, the `compact` version will be shown regardless of this `modalSize` options provided
    */
   modalSize?: "compact" | "wide";
+
+  /**
+   * Enable SIWE (Sign in with Ethererum) by passing an object of type `SiweAuthOptions` to
+   * enforce the users to sign a message after connecting their wallet to authenticate themselves.
+   *
+   * Refer to the [`SiweAuthOptions`](https://portal.thirdweb.com/references/typescript/v5/SiweAuthOptions) for more details
+   */
+  auth?: SiweAuthOptions;
 };
 
 /**
@@ -340,39 +342,25 @@ export type ConnectEmbedProps = {
  */
 export function ConnectEmbed(props: ConnectEmbedProps) {
   const activeAccount = useActiveAccount();
-  const show = !activeAccount;
+  const siweAuth = useSiweAuth(props.auth);
+  const show =
+    !activeAccount || (siweAuth.requiresAuth && !siweAuth.isLoggedIn);
 
   const wallets = props.wallets || getDefaultWallets();
   const localeId = props.locale || "en_US";
-  const [locale, setLocale] = useState<ConnectLocale | undefined>();
+  const localeQuery = useConnectLocale(localeId);
 
-  useEffect(() => {
-    getConnectLocale(localeId).then(setLocale);
-  }, [localeId]);
-
-  const contextTheme = useCustomTheme();
-
-  const modalSize = !canFitWideModal()
-    ? "compact"
-    : props.modalSize || ("compact" as const);
-
-  const walletUIStatesProps = {
-    theme: props.theme || contextTheme || defaultTheme,
-    modalSize: modalSize,
-    title: undefined,
-    termsOfServiceUrl: props.termsOfServiceUrl,
-    privacyPolicyUrl: props.privacyPolicyUrl,
-    isEmbed: true,
-    // auth: props.auth,
-    onConnect: props.onConnect,
-    showThirdwebBranding: props.showThirdwebBranding,
-  };
+  const modalSize =
+    !canFitWideModal() || wallets.length === 1
+      ? "compact"
+      : props.modalSize || ("compact" as const);
 
   const autoConnectComp = props.autoConnect !== false && (
     <AutoConnect
       appMetadata={props.appMetadata}
       client={props.client}
       wallets={wallets}
+      accountAbstraction={props.accountAbstraction}
       timeout={
         typeof props.autoConnect === "boolean"
           ? undefined
@@ -382,7 +370,7 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
   );
 
   if (show) {
-    if (!locale) {
+    if (!localeQuery.data) {
       return (
         <>
           {autoConnectComp}
@@ -394,29 +382,35 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
     }
 
     return (
-      <WalletConnectionContext.Provider
+      <ConnectUIContext.Provider
         value={{
           appMetadata: props.appMetadata,
           client: props.client,
           wallets: wallets,
           locale: localeId,
-          connectLocale: locale,
+          connectLocale: localeQuery.data,
           chain: props.chain,
           chains: props.chains,
           walletConnect: props.walletConnect,
           accountAbstraction: props.accountAbstraction,
           recommendedWallets: props.recommendedWallets,
           showAllWallets: props.showAllWallets,
+          isEmbed: true,
+          connectModal: {
+            size: modalSize,
+            privacyPolicyUrl: props.privacyPolicyUrl,
+            showThirdwebBranding: props.showThirdwebBranding !== false,
+            termsOfServiceUrl: props.termsOfServiceUrl,
+          },
+          onConnect: props.onConnect,
+          auth: props.auth,
         }}
       >
-        <WalletUIStatesProvider {...walletUIStatesProps}>
-          <CustomThemeProvider theme={walletUIStatesProps.theme}>
-            <ConnectEmbedContent {...props} onConnect={props.onConnect} />
-            <SyncedWalletUIStates {...walletUIStatesProps} />
-            {autoConnectComp}
-          </CustomThemeProvider>
+        <WalletUIStatesProvider theme={props.theme}>
+          <ConnectEmbedContent {...props} onConnect={props.onConnect} />
+          {autoConnectComp}
         </WalletUIStatesProvider>
-      </WalletConnectionContext.Provider>
+      </ConnectUIContext.Provider>
     );
   }
 
@@ -434,10 +428,18 @@ const ConnectEmbedContent = (
   // const requiresSignIn = false;
   const screenSetup = useSetupScreen();
   const { setScreen, initialScreen } = screenSetup;
+  const siweAuth = useSiweAuth(props.auth);
+  const activeAccount = useActiveAccount();
 
   const isAutoConnecting = useIsAutoConnecting();
 
   let content = null;
+
+  useEffect(() => {
+    if (siweAuth.requiresAuth && !siweAuth.isLoggedIn && activeAccount) {
+      setScreen(reservedScreens.signIn);
+    }
+  }, [siweAuth, setScreen, activeAccount]);
 
   const modalSize = !canFitWideModal()
     ? "compact"
@@ -475,44 +477,6 @@ const ConnectEmbedContent = (
     </EmbedContainer>
   );
 };
-
-/**
- * @internal
- */
-export function SyncedWalletUIStates(
-  props: ComponentProps<typeof WalletUIStatesProvider>,
-) {
-  const setModalConfig = useContext(SetModalConfigCtx);
-  const locale = useWalletConnectionCtx().connectLocale;
-
-  // update modalConfig on props change
-  useEffect(() => {
-    setModalConfig((c) => ({
-      ...c,
-      title: props.title || locale.defaultModalTitle,
-      theme: props.theme || "dark",
-      modalSize: (!canFitWideModal() ? "compact" : props.modalSize) || "wide",
-      termsOfServiceUrl: props.termsOfServiceUrl,
-      privacyPolicyUrl: props.privacyPolicyUrl,
-      welcomeScreen: props.welcomeScreen,
-      titleIconUrl: props.titleIconUrl,
-      showThirdwebBranding: props.showThirdwebBranding,
-    }));
-  }, [
-    props.title,
-    props.theme,
-    props.modalSize,
-    props.termsOfServiceUrl,
-    props.privacyPolicyUrl,
-    props.welcomeScreen,
-    props.titleIconUrl,
-    setModalConfig,
-    locale.defaultModalTitle,
-    props.showThirdwebBranding,
-  ]);
-
-  return <WalletUIStatesProvider {...props} />;
-}
 
 const EmbedContainer = /* @__PURE__ */ StyledDiv(
   (props: { modalSize: "compact" | "wide" }) => {

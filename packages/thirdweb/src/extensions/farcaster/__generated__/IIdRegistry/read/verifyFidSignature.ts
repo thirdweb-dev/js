@@ -4,6 +4,8 @@ import type { BaseTransactionOptions } from "../../../../../transaction/types.js
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "verifyFidSignature" function.
@@ -18,7 +20,7 @@ export type VerifyFidSignatureParams = {
   sig: AbiParameterToPrimitiveType<{ type: "bytes"; name: "sig" }>;
 };
 
-const FN_SELECTOR = "0x32faac70" as const;
+export const FN_SELECTOR = "0x32faac70" as const;
 const FN_INPUTS = [
   {
     type: "address",
@@ -45,6 +47,27 @@ const FN_OUTPUTS = [
 ] as const;
 
 /**
+ * Checks if the `verifyFidSignature` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `verifyFidSignature` method is supported.
+ * @extension FARCASTER
+ * @example
+ * ```ts
+ * import { isVerifyFidSignatureSupported } from "thirdweb/extensions/farcaster";
+ *
+ * const supported = await isVerifyFidSignatureSupported(contract);
+ * ```
+ */
+export async function isVerifyFidSignatureSupported(
+  contract: ThirdwebContract<any>,
+) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
  * Encodes the parameters for the "verifyFidSignature" function.
  * @param options - The options for the verifyFidSignature function.
  * @returns The encoded ABI parameters.
@@ -69,6 +92,31 @@ export function encodeVerifyFidSignatureParams(
     options.digest,
     options.sig,
   ]);
+}
+
+/**
+ * Encodes the "verifyFidSignature" function into a Hex string with its parameters.
+ * @param options - The options for the verifyFidSignature function.
+ * @returns The encoded hexadecimal string.
+ * @extension FARCASTER
+ * @example
+ * ```ts
+ * import { encodeVerifyFidSignature } "thirdweb/extensions/farcaster";
+ * const result = encodeVerifyFidSignature({
+ *  custodyAddress: ...,
+ *  fid: ...,
+ *  digest: ...,
+ *  sig: ...,
+ * });
+ * ```
+ */
+export function encodeVerifyFidSignature(options: VerifyFidSignatureParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeVerifyFidSignatureParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**

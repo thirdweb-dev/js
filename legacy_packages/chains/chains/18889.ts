@@ -5,7 +5,7 @@ export default {
   "explorers": [
     {
       "name": "Titan Explorer",
-      "url": "https://titan-testnet-explorer-light.tokenize-dev.com",
+      "url": "https://titan-testnet-explorer-light.titanlab.io/Titan%20Testnet",
       "standard": "none",
       "icon": {
         "url": "ipfs://bafkreicyvc7t55zsejv6vwaxbmhvea5vdfkkbgqkmn65rhyyifpg3mq3ua",
@@ -22,7 +22,7 @@ export default {
     "height": 512,
     "format": "png"
   },
-  "infoURL": "https://tokenize.exchange",
+  "infoURL": "https://titanlab.io",
   "name": "Titan (TKX) Testnet",
   "nativeCurrency": {
     "name": "Titan tkx",
@@ -32,8 +32,9 @@ export default {
   "networkId": 18889,
   "rpc": [
     "https://18889.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://titan-testnet-json-rpc-1.tokenize-dev.com",
-    "https://titan-testnet-json-rpc-2.tokenize-dev.com"
+    "https://titan-testnet-json-rpc.titanlab.io",
+    "https://titan-testnet-json-rpc-1.titanlab.io",
+    "https://titan-testnet-json-rpc-2.titanlab.io"
   ],
   "shortName": "titan_tkx-testnet",
   "slip44": 1,

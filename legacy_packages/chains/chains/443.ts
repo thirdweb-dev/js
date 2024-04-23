@@ -10,6 +10,7 @@ export default {
     }
   ],
   "faucets": [],
+  "features": [],
   "infoURL": "https://ten.xyz",
   "name": "Ten Testnet",
   "nativeCurrency": {
@@ -27,8 +28,10 @@ export default {
       }
     ]
   },
+  "redFlags": [],
   "rpc": [
     "https://443.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet.ten.xyz/v1/",
     "https://testnet.ten.xyz"
   ],
   "shortName": "ten-testnet",

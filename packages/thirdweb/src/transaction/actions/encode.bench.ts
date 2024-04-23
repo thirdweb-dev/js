@@ -1,10 +1,10 @@
 import { bench } from "vitest";
-import { prepareContractCall } from "../prepare-contract-call.js";
+import { VITALIK_WALLET } from "../../../test/src/addresses.js";
 import {
   USDT_CONTRACT,
   USDT_CONTRACT_WITH_ABI,
 } from "../../../test/src/test-contracts.js";
-import { VITALIK_WALLET } from "../../../test/src/addresses.js";
+import { prepareContractCall } from "../prepare-contract-call.js";
 import { encode } from "./encode.js";
 
 import { prepareMethod } from "../../utils/abi/prepare-method.js";

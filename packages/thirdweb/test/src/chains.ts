@@ -3,7 +3,6 @@ import { ethereum } from "../../src/chains/chain-definitions/ethereum.js";
 import { optimism } from "../../src/chains/chain-definitions/optimism.js";
 import { defineChain } from "../../src/chains/utils.js";
 
-// eslint-disable-next-line turbo/no-undeclared-env-vars
 export const poolId = Number(process.env.VITEST_POOL_ID ?? 1);
 
 export const FORKED_ETHEREUM_RPC = `http://127.0.0.1:8645/${poolId}`;

@@ -1,13 +1,18 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "validatePaymasterUserOp" function.
  */
-
-export type ValidatePaymasterUserOpParams = {
+export type ValidatePaymasterUserOpParams = WithOverrides<{
   userOp: AbiParameterToPrimitiveType<{
     type: "tuple";
     name: "userOp";
@@ -30,9 +35,9 @@ export type ValidatePaymasterUserOpParams = {
     name: "userOpHash";
   }>;
   maxCost: AbiParameterToPrimitiveType<{ type: "uint256"; name: "maxCost" }>;
-};
+}>;
 
-const FN_SELECTOR = "0xf465c77e" as const;
+export const FN_SELECTOR = "0xf465c77e" as const;
 const FN_INPUTS = [
   {
     type: "tuple",
@@ -105,6 +110,27 @@ const FN_OUTPUTS = [
 ] as const;
 
 /**
+ * Checks if the `validatePaymasterUserOp` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `validatePaymasterUserOp` method is supported.
+ * @extension ERC4337
+ * @example
+ * ```ts
+ * import { isValidatePaymasterUserOpSupported } from "thirdweb/extensions/erc4337";
+ *
+ * const supported = await isValidatePaymasterUserOpSupported(contract);
+ * ```
+ */
+export async function isValidatePaymasterUserOpSupported(
+  contract: ThirdwebContract<any>,
+) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
  * Encodes the parameters for the "validatePaymasterUserOp" function.
  * @param options - The options for the validatePaymasterUserOp function.
  * @returns The encoded ABI parameters.
@@ -127,6 +153,32 @@ export function encodeValidatePaymasterUserOpParams(
     options.userOpHash,
     options.maxCost,
   ]);
+}
+
+/**
+ * Encodes the "validatePaymasterUserOp" function into a Hex string with its parameters.
+ * @param options - The options for the validatePaymasterUserOp function.
+ * @returns The encoded hexadecimal string.
+ * @extension ERC4337
+ * @example
+ * ```ts
+ * import { encodeValidatePaymasterUserOp } "thirdweb/extensions/erc4337";
+ * const result = encodeValidatePaymasterUserOp({
+ *  userOp: ...,
+ *  userOpHash: ...,
+ *  maxCost: ...,
+ * });
+ * ```
+ */
+export function encodeValidatePaymasterUserOp(
+  options: ValidatePaymasterUserOpParams,
+) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeValidatePaymasterUserOpParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**
@@ -158,19 +210,21 @@ export function validatePaymasterUserOp(
       }
   >,
 ) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params:
-      "asyncParams" in options
-        ? async () => {
-            const resolvedParams = await options.asyncParams();
-            return [
-              resolvedParams.userOp,
-              resolvedParams.userOpHash,
-              resolvedParams.maxCost,
-            ] as const;
-          }
-        : [options.userOp, options.userOpHash, options.maxCost],
+    params: async () => {
+      const resolvedOptions = await asyncOptions();
+      return [
+        resolvedOptions.userOp,
+        resolvedOptions.userOpHash,
+        resolvedOptions.maxCost,
+      ] as const;
+    },
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

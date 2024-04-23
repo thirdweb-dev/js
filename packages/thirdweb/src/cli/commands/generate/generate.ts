@@ -1,24 +1,21 @@
-/* eslint-disable better-tree-shaking/no-top-level-side-effects */
-/* eslint-disable jsdoc/require-jsdoc */
-
-import { createThirdwebClient } from "../../../client/client.js";
-import { getContract } from "../../../contract/contract.js";
-import { resolveAbiFromContractApi } from "../../../contract/actions/resolve-abi.js";
-import { defineChain } from "../../../chains/utils.js";
 import {
-  parseAbiItem,
   type Abi,
   type AbiEvent,
   type AbiFunction,
   formatAbiItem,
+  parseAbiItem,
 } from "abitype";
+import { defineChain } from "../../../chains/utils.js";
+import { createThirdwebClient } from "../../../client/client.js";
+import { resolveAbiFromContractApi } from "../../../contract/actions/resolve-abi.js";
+import { getContract } from "../../../contract/contract.js";
 
-import { prepareMethod } from "../../../utils/abi/prepare-method.js";
-import { mkdir, writeFile } from "node:fs/promises";
-import { packageDirectory } from "./utils.js";
-import { join } from "node:path";
 import { existsSync } from "node:fs";
+import { mkdir, writeFile } from "node:fs/promises";
+import { join } from "node:path";
 import type { Options } from "prettier";
+import { prepareMethod } from "../../../utils/abi/prepare-method.js";
+import { packageDirectory } from "./utils.js";
 
 const client = createThirdwebClient({ clientId: "test" });
 
@@ -29,7 +26,7 @@ export async function generate(input: ChainIdAndContract) {
   }
   const contract = getContract({
     client,
-    chain: defineChain(parseInt(chainId)),
+    chain: defineChain(Number.parseInt(chainId)),
     address: contractAddress,
   });
   const abi = await resolveAbiFromContractApi(contract);
@@ -48,7 +45,7 @@ export async function generate(input: ChainIdAndContract) {
   // create the chain directory
   const hasSource = existsSync(join(root, "src"));
 
-  const path = hasSource ? `src/thirdweb` : `thirdweb`;
+  const path = hasSource ? "src/thirdweb" : "thirdweb";
 
   const chainDirPath = join(root, path, chainId);
 
@@ -77,6 +74,7 @@ export function isValidChainIdAndContractAddress(
 
 async function generateFromAbi(abi: Abi | string[]) {
   // turn any human readable abi into a proper abi object
+  // biome-ignore lint/style/noParameterAssign: TODO: fix later
   abi = abi.map((x) => (typeof x === "string" ? parseAbiItem(x) : x)) as Abi;
 
   const events = abi.filter((x) => x.type === "event") as AbiEvent[];
@@ -122,7 +120,7 @@ async function generateFromAbi(abi: Abi | string[]) {
     // process every event
     await Promise.all(
       events.map(async (e) => {
-        body += generateEvent(e) + "\n\n";
+        body += `${generateEvent(e)}\n\n`;
       }),
     );
   }
@@ -134,7 +132,7 @@ async function generateFromAbi(abi: Abi | string[]) {
     // process every read function
     await Promise.all(
       readFunctions.map(async (f) => {
-        body += generateReadFunction(f) + "\n\n";
+        body += `${generateReadFunction(f)}\n\n`;
       }),
     );
   }
@@ -146,7 +144,7 @@ async function generateFromAbi(abi: Abi | string[]) {
     // process every write function
     await Promise.all(
       writeFunctions.map(async (f) => {
-        body += generateWriteFunction(f) + "\n\n";
+        body += `${generateWriteFunction(f)}\n\n`;
       }),
     );
   }
@@ -167,7 +165,9 @@ export type ${uppercaseFirstLetter(f.name)}Params = {
   ${f.inputs
     .map(
       (x, i) =>
-        `${removeLeadingUnderscore(x.name || `arg_${i}`)}: AbiParameterToPrimitiveType<${JSON.stringify(x)}>`,
+        `${removeLeadingUnderscore(
+          x.name || `arg_${i}`,
+        )}: AbiParameterToPrimitiveType<${JSON.stringify(x)}>`,
     )
     .join("\n")}
 };`
@@ -285,7 +285,11 @@ export type ${uppercaseFirstLetter(e.name)}EventFilters = Partial<{
   }
 
 /**
- * Creates an event object for the ${e.name} event.${indexedInputs.length > 0 ? `\n * @param filters - Optional filters to apply to the event.` : ""}
+ * Creates an event object for the ${e.name} event.${
+   indexedInputs.length > 0
+     ? "\n * @param filters - Optional filters to apply to the event."
+     : ""
+ }
  * @returns The prepared event object.
  * @example
  * \`\`\`
@@ -306,9 +310,15 @@ export type ${uppercaseFirstLetter(e.name)}EventFilters = Partial<{
  * });
  * \`\`\`
  */ 
-export function ${eventNameToPreparedEventName(e.name)}(${indexedInputs.length > 0 ? `filters: ${uppercaseFirstLetter(e.name)}EventFilters = {}` : ""}) {
+export function ${eventNameToPreparedEventName(e.name)}(${
+    indexedInputs.length > 0
+      ? `filters: ${uppercaseFirstLetter(e.name)}EventFilters = {}`
+      : ""
+  }) {
   return prepareEvent({
-    signature: "${formatAbiItem(e)}",${indexedInputs.length > 0 ? `\n    filters,` : ""}
+    signature: "${formatAbiItem(e)}",${
+      indexedInputs.length > 0 ? "\n    filters," : ""
+    }
   });
 };
   `;

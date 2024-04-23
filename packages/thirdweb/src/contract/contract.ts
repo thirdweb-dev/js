@@ -1,6 +1,6 @@
 import type { Abi } from "abitype";
-import type { ThirdwebClient } from "../client/client.js";
 import type { Chain } from "../chains/types.js";
+import type { ThirdwebClient } from "../client/client.js";
 
 export type ContractOptions<abi extends Abi = []> = {
   client: ThirdwebClient;

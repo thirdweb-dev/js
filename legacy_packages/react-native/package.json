@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/react-native",
-  "version": "0.7.28",
+  "version": "0.7.38",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/legacy_packages/react-native",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
@@ -25,8 +25,8 @@
     "android"
   ],
   "dependencies": {
-    "@aws-sdk/client-lambda": "3.350.0",
-    "@aws-sdk/credential-providers": "3.350.0",
+    "@aws-sdk/client-lambda": "3.549.0",
+    "@aws-sdk/credential-providers": "3.549.0",
     "@coinbase/wallet-mobile-sdk": "1.0.13",
     "@paperxyz/embedded-wallet-service-sdk": "^1.2.5",
     "@shopify/restyle": "^2.4.2",
@@ -55,7 +55,7 @@
     "@thirdweb-dev/tsconfig": "workspace:*",
     "@types/react": "18.2.17",
     "@types/react-native": "^0.71.13",
-    "eslint": "^8.57.0",
+    "eslint": "8.57.0",
     "eslint-config-thirdweb": "workspace:*",
     "eslint-plugin-i18next": "^6.0.3",
     "eslint-plugin-import": "^2.29.1",
@@ -68,14 +68,14 @@
     "react-native-camera": "^4.2.1",
     "rimraf": "5.0.5",
     "typedoc-gen": "workspace:*",
-    "typescript": "5.4.3"
+    "typescript": "5.4.4"
   },
   "optionalDependencies": {
     "amazon-cognito-identity-js": "^6.3.12",
     "react-native-aes-gcm-crypto": "^0.2.2",
     "react-native-camera": "^4.2.1",
     "react-native-inappbrowser-reborn": "^3.7.0",
-    "react-native-quick-base64": "^2.0.8",
+    "react-native-quick-base64": "^2.1.0",
     "react-native-quick-crypto": "^0.6.1"
   },
   "peerDependencies": {

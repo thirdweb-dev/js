@@ -1,14 +1,15 @@
 import { expect, test } from "vitest";
 
-import { privateKeyAccount } from "./private-key.js";
-import { ANVIL_PKEY_A } from "~test/test-wallets.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
+import { ANVIL_PKEY_A } from "~test/test-wallets.js";
 import { typedData } from "~test/typed-data.js";
 import { toUnits } from "../utils/units.js";
+import { privateKeyToAccount } from "./private-key.js";
 
 test("default", () => {
-  expect(privateKeyAccount({ privateKey: ANVIL_PKEY_A, client: TEST_CLIENT }))
-    .toMatchInlineSnapshot(`
+  expect(
+    privateKeyToAccount({ privateKey: ANVIL_PKEY_A, client: TEST_CLIENT }),
+  ).toMatchInlineSnapshot(`
     {
       "address": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
       "sendTransaction": [Function],
@@ -20,7 +21,7 @@ test("default", () => {
 });
 
 test("sign message", async () => {
-  const account = privateKeyAccount({
+  const account = privateKeyToAccount({
     privateKey: ANVIL_PKEY_A,
     client: TEST_CLIENT,
   });
@@ -32,7 +33,7 @@ test("sign message", async () => {
 });
 
 test("sign transaction", async () => {
-  const account = privateKeyAccount({
+  const account = privateKeyToAccount({
     privateKey: ANVIL_PKEY_A,
     client: TEST_CLIENT,
   });
@@ -56,7 +57,7 @@ test("sign transaction", async () => {
 });
 
 test("sign typed data", async () => {
-  const account = privateKeyAccount({
+  const account = privateKeyToAccount({
     privateKey: ANVIL_PKEY_A,
     client: TEST_CLIENT,
   });

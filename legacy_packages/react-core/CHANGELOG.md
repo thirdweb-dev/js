@@ -1,5 +1,162 @@
 # @thirdweb-dev/react-core
 
+## 4.6.6
+
+### Patch Changes
+
+- Updated dependencies [[`6d6e0ac`](https://github.com/thirdweb-dev/js/commit/6d6e0ac69453d5a448ab771084976928313662ab)]:
+  - @thirdweb-dev/chains@0.1.98
+  - @thirdweb-dev/sdk@4.0.67
+  - @thirdweb-dev/wallets@2.5.7
+  - @thirdweb-dev/auth@4.1.65
+
+## 4.6.5
+
+### Patch Changes
+
+- Updated dependencies [[`b4e7c74`](https://github.com/thirdweb-dev/js/commit/b4e7c74ce5ddc88a1aa3169ea89ff139d185a648)]:
+  - @thirdweb-dev/chains@0.1.97
+  - @thirdweb-dev/sdk@4.0.66
+  - @thirdweb-dev/wallets@2.5.6
+  - @thirdweb-dev/auth@4.1.64
+
+## 4.6.4
+
+### Patch Changes
+
+- Updated dependencies [[`ca2576f`](https://github.com/thirdweb-dev/js/commit/ca2576f8180b6b5b9fe47087a53d1f13665c5028)]:
+  - @thirdweb-dev/chains@0.1.96
+  - @thirdweb-dev/sdk@4.0.65
+  - @thirdweb-dev/wallets@2.5.5
+  - @thirdweb-dev/auth@4.1.63
+
+## 4.6.3
+
+### Patch Changes
+
+- Updated dependencies [[`4c7153c`](https://github.com/thirdweb-dev/js/commit/4c7153c95df1962d1e530a3d8227960cd87f6a61), [`76f93a4`](https://github.com/thirdweb-dev/js/commit/76f93a4346bc7627a6b0e4e49d212e245ad91be0)]:
+  - @thirdweb-dev/sdk@4.0.64
+  - @thirdweb-dev/chains@0.1.95
+  - @thirdweb-dev/wallets@2.5.4
+  - @thirdweb-dev/auth@4.1.62
+
+## 4.6.2
+
+### Patch Changes
+
+- Updated dependencies [[`6574e4d`](https://github.com/thirdweb-dev/js/commit/6574e4da9938fe7eb862a0ae779b02561967abf1)]:
+  - @thirdweb-dev/chains@0.1.94
+  - @thirdweb-dev/sdk@4.0.63
+  - @thirdweb-dev/wallets@2.5.3
+  - @thirdweb-dev/auth@4.1.61
+
+## 4.6.1
+
+### Patch Changes
+
+- Updated dependencies [[`cb2a7e9`](https://github.com/thirdweb-dev/js/commit/cb2a7e964a78b9fc8670392f1b033936dae696dc), [`9453f74`](https://github.com/thirdweb-dev/js/commit/9453f74bbfd53372fcfd942bcce6c6bfc8c00a2c), [`c4d51e0`](https://github.com/thirdweb-dev/js/commit/c4d51e0b80e2d66fb85b8032dcc286f9cd164cd1), [`bf6a8e0`](https://github.com/thirdweb-dev/js/commit/bf6a8e0cab2a02a34d2ca8fbdf9d034ac176b61e)]:
+  - @thirdweb-dev/wallets@2.5.2
+  - @thirdweb-dev/sdk@4.0.62
+  - @thirdweb-dev/chains@0.1.93
+  - @thirdweb-dev/auth@4.1.60
+
+## 4.6.0
+
+### Minor Changes
+
+- [#2579](https://github.com/thirdweb-dev/js/pull/2579) [`d836889`](https://github.com/thirdweb-dev/js/commit/d836889f464a4fc9617839f30e2cc780b3bcca78) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - Adds "buy with crypto" Hooks, Here's an example of how you can use it to build a UI for Swapping tokens
+
+  ```tsx
+  function Component() {
+    const signer = useSigner();
+    // 1. get a quote for swapping tokens
+    const quoteQuery = useBuyWithCryptoQuote(swapParams);
+
+    const [buyTxHash, setBuyTxHash] = useState<string | undefined>();
+    const statusQuery = useBuyWithCryptoStatus(
+      buyTxHash
+        ? {
+            clientId: "YOUR_CLIENT_ID",
+            transactionHash: buyTxHash,
+          }
+        : undefined,
+    );
+
+    async function handleBuyWithCrypto() {
+      if (!quoteQuery.data || !signer) {
+        return;
+      }
+
+      // 2. if approval is required
+      if (quoteQuery.data.approval) {
+        const approveTx = await signer.sendTransaction(
+          quoteQuery.data.approval,
+        );
+        await approveTx.wait();
+      }
+
+      // 3. send the transaction to buy crypto
+      const buyTx = await signer.sendTransaction(
+        quoteQuery.data.transactionRequest,
+      );
+      await buyTx.wait();
+
+      // set buyTx.transactionHash to poll the status of the swap transaction
+      setBuyTxHash(buyTx.hash);
+    }
+
+    // 4. wait for the status of the transaction
+    if (statusQuery.data) {
+      console.log("swap status:", statusQuery.data);
+    }
+
+    return <button onClick={handleBuyWithCrypto}>Swap</button>;
+  }
+  ```
+
+  For more information, check out the [pay documentation](https://portal.thirdweb.com/connect/pay/buy-with-crypto) for purchases with crypto
+
+### Patch Changes
+
+- Updated dependencies [[`d836889`](https://github.com/thirdweb-dev/js/commit/d836889f464a4fc9617839f30e2cc780b3bcca78), [`d65713a`](https://github.com/thirdweb-dev/js/commit/d65713a7af67bf20e5b88b72f5d43dfba9172b3b)]:
+  - @thirdweb-dev/sdk@4.0.61
+  - @thirdweb-dev/chains@0.1.92
+  - @thirdweb-dev/wallets@2.5.1
+  - @thirdweb-dev/auth@4.1.59
+
+## 4.5.0
+
+### Patch Changes
+
+- Updated dependencies [[`6961e09`](https://github.com/thirdweb-dev/js/commit/6961e09a4cec4c276b233285e721dc0505792be5), [`f6a30c0`](https://github.com/thirdweb-dev/js/commit/f6a30c037197391ef0a514570931775b18927f17), [`53e56f4`](https://github.com/thirdweb-dev/js/commit/53e56f4bf8d3fbe7e2d5252b561bcef5927762e6), [`5150259`](https://github.com/thirdweb-dev/js/commit/51502596d9f165a5316ce08da8a04b3e5c5e4eba)]:
+  - @thirdweb-dev/wallets@2.5.0
+  - @thirdweb-dev/chains@0.1.91
+  - @thirdweb-dev/auth@4.1.58
+  - @thirdweb-dev/sdk@4.0.60
+
+## 4.4.33
+
+### Patch Changes
+
+- [#2701](https://github.com/thirdweb-dev/js/pull/2701) [`703cb6a`](https://github.com/thirdweb-dev/js/commit/703cb6ae3cc51fa4b0ba7c87f09f8e84dab8ed3f) Thanks [@jnsdls](https://github.com/jnsdls)! - updated dependencies
+
+- Updated dependencies [[`703cb6a`](https://github.com/thirdweb-dev/js/commit/703cb6ae3cc51fa4b0ba7c87f09f8e84dab8ed3f), [`48c1d60`](https://github.com/thirdweb-dev/js/commit/48c1d6038272284f8942e1fb3635283b48945a68)]:
+  - @thirdweb-dev/storage@2.0.14
+  - @thirdweb-dev/wallets@2.4.35
+  - @thirdweb-dev/chains@0.1.90
+  - @thirdweb-dev/auth@4.1.57
+  - @thirdweb-dev/sdk@4.0.59
+
+## 4.4.32
+
+### Patch Changes
+
+- Updated dependencies [[`83ecf67`](https://github.com/thirdweb-dev/js/commit/83ecf67c4b973b17fbc57eeaa03d7a8176ff5d39), [`0e479e2`](https://github.com/thirdweb-dev/js/commit/0e479e2082fd685c9b8cae7d1cad53cade65de18), [`b3d0140`](https://github.com/thirdweb-dev/js/commit/b3d01402dd93c24f6b16aaa55674c2c10eb33be5)]:
+  - @thirdweb-dev/chains@0.1.89
+  - @thirdweb-dev/wallets@2.4.34
+  - @thirdweb-dev/sdk@4.0.58
+  - @thirdweb-dev/auth@4.1.56
+
 ## 4.4.31
 
 ### Patch Changes

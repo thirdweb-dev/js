@@ -4,6 +4,8 @@ import type { BaseTransactionOptions } from "../../../../../transaction/types.js
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "royaltyInfo" function.
@@ -16,7 +18,7 @@ export type RoyaltyInfoParams = {
   }>;
 };
 
-const FN_SELECTOR = "0x2a55205a" as const;
+export const FN_SELECTOR = "0x2a55205a" as const;
 const FN_INPUTS = [
   {
     type: "uint256",
@@ -39,6 +41,25 @@ const FN_OUTPUTS = [
 ] as const;
 
 /**
+ * Checks if the `royaltyInfo` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `royaltyInfo` method is supported.
+ * @extension COMMON
+ * @example
+ * ```ts
+ * import { isRoyaltyInfoSupported } from "thirdweb/extensions/common";
+ *
+ * const supported = await isRoyaltyInfoSupported(contract);
+ * ```
+ */
+export async function isRoyaltyInfoSupported(contract: ThirdwebContract<any>) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
  * Encodes the parameters for the "royaltyInfo" function.
  * @param options - The options for the royaltyInfo function.
  * @returns The encoded ABI parameters.
@@ -54,6 +75,29 @@ const FN_OUTPUTS = [
  */
 export function encodeRoyaltyInfoParams(options: RoyaltyInfoParams) {
   return encodeAbiParameters(FN_INPUTS, [options.tokenId, options.salePrice]);
+}
+
+/**
+ * Encodes the "royaltyInfo" function into a Hex string with its parameters.
+ * @param options - The options for the royaltyInfo function.
+ * @returns The encoded hexadecimal string.
+ * @extension COMMON
+ * @example
+ * ```ts
+ * import { encodeRoyaltyInfo } "thirdweb/extensions/common";
+ * const result = encodeRoyaltyInfo({
+ *  tokenId: ...,
+ *  salePrice: ...,
+ * });
+ * ```
+ */
+export function encodeRoyaltyInfo(options: RoyaltyInfoParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeRoyaltyInfoParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**

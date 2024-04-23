@@ -1,52 +1,46 @@
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
-import { useContext, useState, useRef, useEffect, lazy, Suspense } from "react";
-import {
-  ModalConfigCtx,
-  // SetModalConfigCtx,
-} from "../../providers/wallet-ui-states-provider.js";
+import { Suspense, lazy, useEffect, useRef, useState } from "react";
+import type { InjectedSupportedWalletIds } from "../../../../wallets/__generated__/wallet-ids.js";
+import { createWallet } from "../../../../wallets/create-wallet.js";
+import { getInstalledWalletProviders } from "../../../../wallets/injected/mipdStore.js";
+import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
+import type { WalletId } from "../../../../wallets/wallet-types.js";
+// import { localWalletMetadata } from "../../../../wallets/local/index._ts";
+import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import { sortWallets } from "../../utils/sortWallets.js";
+import { LoadingScreen } from "../../wallets/shared/LoadingScreen.js";
 import { Img } from "../components/Img.js";
 import { Spacer } from "../components/Spacer.js";
 import { TextDivider } from "../components/TextDivider.js";
+import { WalletImage } from "../components/WalletImage.js";
 import {
   Container,
-  ScreenBottomContainer,
   Line,
   ModalHeader,
+  ScreenBottomContainer,
   noScrollBar,
 } from "../components/basic.js";
 import { Button, IconButton } from "../components/buttons.js";
 import { ModalTitle } from "../components/modalElements.js";
 import { Link } from "../components/text.js";
+import { Text } from "../components/text.js";
+import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 import { StyledDiv, StyledUl } from "../design-system/elements.js";
 import { fontSize, iconSize, radius, spacing } from "../design-system/index.js";
+import { SmartConnectUI } from "./Modal/SmartWalletConnectUI.js";
 import { TOS } from "./Modal/TOS.js";
-import { TWIcon } from "./icons/twIcon.js";
-import { Text } from "../components/text.js";
 import { PoweredByThirdweb } from "./PoweredByTW.js";
-// import { localWalletMetadata } from "../../../../wallets/local/index._ts";
-import { useWalletConnectionCtx } from "../../../core/hooks/others/useWalletConnectionCtx.js";
-import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
-import { WalletImage } from "../components/WalletImage.js";
-import { getMIPDStore } from "../../../../wallets/injected/mipdStore.js";
-import { createWallet } from "../../../../wallets/create-wallet.js";
-import type { InjectedSupportedWalletIds } from "../../../../wallets/__generated__/wallet-ids.js";
-import type { WalletId } from "../../../../wallets/wallet-types.js";
-import { LoadingScreen } from "../../wallets/shared/LoadingScreen.js";
 import { WalletButton, WalletEntryButton } from "./WalletEntryButton.js";
-import { sortWallets } from "../../utils/sortWallets.js";
-import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
+import { TWIcon } from "./icons/twIcon.js";
 
-const EmbeddedWalletSelectionUI = /* @__PURE__ */ lazy(
-  () => import("../../wallets/embedded/EmbeddedWalletSelectionUI.js"),
+const InAppWalletSelectionUI = /* @__PURE__ */ lazy(
+  () => import("../../wallets/in-app/InAppWalletSelectionUI.js"),
 );
 
 // const localWalletId = "local";
-const embeddedWalletId: WalletId = "embedded";
+const inAppWalletId: WalletId = "inApp";
 
-/**
- * @internal
- */
-export const WalletSelector: React.FC<{
+type WalletSelectorProps = {
   wallets: Wallet[];
   selectWallet: (wallet: Wallet) => void;
   onGetStarted: () => void;
@@ -54,37 +48,72 @@ export const WalletSelector: React.FC<{
   done: (wallet: Wallet) => void;
   goBack?: () => void;
   onShowAll: () => void;
-}> = (props) => {
-  const modalConfig = useContext(ModalConfigCtx);
-  const isCompact = modalConfig.modalSize === "compact";
-  const { termsOfServiceUrl, privacyPolicyUrl } = modalConfig;
+  setModalVisibility: (value: boolean) => void;
+};
+
+/**
+ * @internal
+ */
+export function WalletSelector(props: WalletSelectorProps) {
+  const { accountAbstraction } = useConnectUI();
+  const [personalWallet, setPersonalWallet] = useState<Wallet | null>(null);
+
+  if (!accountAbstraction) {
+    return <WalletSelectorInner {...props} />;
+  }
+
+  if (personalWallet) {
+    return (
+      <SmartConnectUI
+        accountAbstraction={accountAbstraction}
+        done={props.done}
+        personalWallet={personalWallet}
+        setModalVisibility={props.setModalVisibility}
+        onBack={props.goBack}
+      />
+    );
+  }
+
+  return (
+    <WalletSelectorInner
+      {...props}
+      done={(w) => {
+        setPersonalWallet(w);
+      }}
+    />
+  );
+}
+
+/**
+ * @internal
+ */
+const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
+  const { connectModal, isEmbed, client } = useConnectUI();
+  const isCompact = connectModal.size === "compact";
   const [isWalletGroupExpanded, setIsWalletGroupExpanded] = useState(false);
 
   const installedWallets = getInstalledWallets();
   const propsWallets = props.wallets;
   const _wallets: Wallet[] = [...propsWallets];
 
-  installedWallets.forEach((iW) => {
+  for (const iW of installedWallets) {
     if (!propsWallets.find((w) => w.id === iW.id)) {
       _wallets.push(iW);
     }
-  });
+  }
 
-  // const disconnect = useDisconnect();
-  // const connectionStatus = useActiveWalletConnectionStatus();
-  const locale = useWalletConnectionCtx().connectLocale;
-  const recommendedWallets = useWalletConnectionCtx().recommendedWallets;
+  const { connectLocale: locale, recommendedWallets } = useConnectUI();
 
   const localWalletConfig = false; // _wallets.find((w) => w.id === localWalletId);
 
   const nonLocalWalletConfigs = _wallets; // _wallets.filter((w) => w.id !== localWalletId);
 
   const socialWallets = nonLocalWalletConfigs.filter(
-    (w) => w.id === embeddedWalletId,
+    (w) => w.id === inAppWalletId,
   );
 
   const eoaWallets = sortWallets(
-    nonLocalWalletConfigs.filter((w) => w.id !== embeddedWalletId),
+    nonLocalWalletConfigs.filter((w) => w.id !== inAppWalletId),
     recommendedWallets,
   );
 
@@ -119,7 +148,7 @@ export const WalletSelector: React.FC<{
 
   const twTitle = (
     <Container gap="xxs" center="y" flex="row">
-      {modalConfig.titleIconUrl === undefined ? (
+      {connectModal.titleIcon === undefined ? (
         <Link
           color="primaryText"
           hoverColor="accentText"
@@ -137,11 +166,12 @@ export const WalletSelector: React.FC<{
         >
           <TWIcon size={iconSize.md} />
         </Link>
-      ) : modalConfig.titleIconUrl === "" ? null : (
+      ) : connectModal.titleIcon === "" ? null : (
         <Img
-          src={modalConfig.titleIconUrl}
+          src={connectModal.titleIcon}
           width={iconSize.md}
           height={iconSize.md}
+          client={client}
         />
       )}
 
@@ -172,7 +202,12 @@ export const WalletSelector: React.FC<{
     >
       <Container flex="row" gap="xxs">
         {eoaWallets.slice(0, 2).map((w) => (
-          <WalletImage key={w.id} id={w.id} size={iconSize.sm} />
+          <WalletImage
+            key={w.id}
+            id={w.id}
+            size={iconSize.sm}
+            client={client}
+          />
         ))}
       </Container>
       {locale.connectAWallet}
@@ -201,10 +236,10 @@ export const WalletSelector: React.FC<{
   );
 
   const tos =
-    termsOfServiceUrl || privacyPolicyUrl ? (
+    connectModal.termsOfServiceUrl || connectModal.privacyPolicyUrl ? (
       <TOS
-        termsOfServiceUrl={termsOfServiceUrl}
-        privacyPolicyUrl={privacyPolicyUrl}
+        termsOfServiceUrl={connectModal.termsOfServiceUrl}
+        privacyPolicyUrl={connectModal.privacyPolicyUrl}
       />
     ) : undefined;
 
@@ -385,11 +420,11 @@ export const WalletSelector: React.FC<{
       animate="fadein"
       fullHeight
       style={{
-        maxHeight: modalConfig.modalSize === "compact" ? "550px" : undefined,
+        maxHeight: connectModal.size === "compact" ? "550px" : undefined,
       }}
     >
       {/* Header */}
-      {!modalConfig.isEmbed && (
+      {!isEmbed && (
         <Container
           p="lg"
           style={{
@@ -415,7 +450,7 @@ export const WalletSelector: React.FC<{
         scrollY
         px="md"
         style={
-          modalConfig.isEmbed
+          isEmbed
             ? {
                 paddingTop: spacing.lg,
               }
@@ -424,7 +459,7 @@ export const WalletSelector: React.FC<{
               }
         }
       >
-        {modalConfig.isEmbed && isWalletGroupExpanded && (
+        {isEmbed && isWalletGroupExpanded && (
           <Container
             flex="row"
             center="y"
@@ -454,7 +489,7 @@ export const WalletSelector: React.FC<{
       </Container>
 
       {bottomSection}
-      {isCompact && modalConfig.showThirdwebBranding !== false && (
+      {isCompact && connectModal.showThirdwebBranding !== false && (
         <Container py="md">
           <PoweredByThirdweb />
         </Container>
@@ -467,7 +502,7 @@ let _installedWallets: Wallet[] = [];
 
 function getInstalledWallets() {
   if (_installedWallets.length === 0) {
-    const providers = getMIPDStore().getProviders();
+    const providers = getInstalledWalletProviders();
     const walletIds = providers.map((provider) => provider.info.rdns);
     _installedWallets = walletIds.map((w) =>
       createWallet(w as InjectedSupportedWalletIds),
@@ -488,22 +523,8 @@ const WalletSelection: React.FC<{
   goBack?: () => void;
   onShowAll?: () => void;
 }> = (props) => {
-  const { recommendedWallets, showAllWallets } = useWalletConnectionCtx();
-  const { modalSize } = useContext(ModalConfigCtx);
+  const { recommendedWallets, showAllWallets, connectModal } = useConnectUI();
   const wallets = sortWallets(props.wallets, recommendedWallets);
-
-  // const modalConfig = useContext(ModalConfigCtx);
-  // const setModalConfig = useContext(SetModalConfigCtx);
-
-  // const saveData = useCallback(
-  //   (data: any) => {
-  //     setModalConfig({
-  //       ...modalConfig,
-  //       data,
-  //     });
-  //   },
-  //   [modalConfig, setModalConfig],
-  // );
 
   return (
     <WalletList
@@ -517,12 +538,12 @@ const WalletSelection: React.FC<{
             key={wallet.id}
             // data-full-width={!!walletConfig.selectUI}
           >
-            {wallet.id === "embedded" && modalSize === "compact" ? (
+            {wallet.id === "inApp" && connectModal.size === "compact" ? (
               <Suspense fallback={<LoadingScreen height="195px" />}>
-                <EmbeddedWalletSelectionUI
+                <InAppWalletSelectionUI
                   done={() => props.done(wallet)}
                   select={() => props.selectWallet(wallet)}
-                  wallet={wallet as Wallet<"embedded">}
+                  wallet={wallet as Wallet<"inApp">}
                   goBack={props.goBack}
                 />
               </Suspense>
@@ -542,10 +563,10 @@ const WalletSelection: React.FC<{
         <ButtonContainer>
           <WalletButton onClick={props.onShowAll}>
             <ShowAllWalletsIcon>
-              <div data-dot></div>
-              <div data-dot></div>
-              <div data-dot></div>
-              <div data-dot></div>
+              <div data-dot />
+              <div data-dot />
+              <div data-dot />
+              <div data-dot />
             </ShowAllWalletsIcon>
             <Container flex="row" gap="xs">
               <Text color="primaryText">All Wallets</Text>
@@ -582,9 +603,9 @@ const ButtonContainer = /* @__PURE__ */ StyledDiv(() => {
 const ShowAllWalletsIcon = /* @__PURE__ */ StyledDiv(() => {
   const theme = useCustomTheme();
   return {
-    width: iconSize.xl + "px",
-    height: iconSize.xl + "px",
-    backgroundColor: theme.colors.walletSelectorButtonHoverBg,
+    width: `${iconSize.xl}px`,
+    height: `${iconSize.xl}px`,
+    backgroundColor: theme.colors.tertiaryBg,
     border: `2px solid ${theme.colors.borderColor}`,
     borderRadius: radius.md,
     display: "grid",

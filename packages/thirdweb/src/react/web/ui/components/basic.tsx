@@ -1,14 +1,13 @@
-import { type Theme, iconSize, spacing } from "../design-system/index.js";
-import { BackButton, ModalTitle } from "./modalElements.js";
-import { Img } from "./Img.js";
+import type { CSSObject } from "@emotion/react";
+import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 import {
   fadeInAnimation,
   floatDownAnimation,
   floatUpAnimation,
 } from "../design-system/animations.js";
 import { StyledDiv } from "../design-system/elements.js";
-import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
-import type { CSSObject } from "@emotion/react";
+import { type Theme, spacing } from "../design-system/index.js";
+import { BackButton, ModalTitle } from "./modalElements.js";
 
 export const ScreenBottomContainer = /* @__PURE__ */ StyledDiv(() => {
   const theme = useCustomTheme();
@@ -35,9 +34,8 @@ export const noScrollBar = /* @__PURE__ */ {
 export function ModalHeader(props: {
   onBack?: () => void;
   title: React.ReactNode;
-  imgSrc?: string;
 }) {
-  const { onBack, title, imgSrc } = props;
+  const { onBack, title } = props;
   return (
     <div
       style={{
@@ -58,9 +56,6 @@ export function ModalHeader(props: {
         />
       )}
       <Container flex="row" gap="xs" center="both">
-        {imgSrc && (
-          <Img src={imgSrc} width={iconSize.md} height={iconSize.md} />
-        )}
         {typeof title === "string" ? <ModalTitle>{title}</ModalTitle> : title}
       </Container>
     </div>
@@ -94,6 +89,8 @@ export function Container(props: {
   scrollY?: boolean;
   color?: keyof Theme["colors"];
   debug?: boolean;
+  bg?: keyof Theme["colors"];
+  borderColor?: keyof Theme["colors"];
 }) {
   const styles: React.CSSProperties = {};
 
@@ -166,7 +163,9 @@ export function Container(props: {
     <Box
       data-scrolly={props.scrollY}
       data-animate={props.animate}
+      bg={props.bg}
       color={props.color}
+      borderColor={props.borderColor}
       style={{
         ...styles,
         ...props.style,
@@ -179,12 +178,18 @@ export function Container(props: {
 
 type BoxProps = {
   color?: keyof Theme["colors"] | undefined;
+  bg?: keyof Theme["colors"] | undefined;
+  borderColor?: keyof Theme["colors"] | undefined;
 };
 
 const Box = /* @__PURE__ */ StyledDiv((props: BoxProps) => {
   const theme = useCustomTheme();
   return {
     color: props.color ? theme.colors[props.color] : "inherit",
+    background: props.bg ? theme.colors[props.bg] : undefined,
+    borderColor: props.borderColor
+      ? theme.colors[props.borderColor]
+      : undefined,
     "&[data-animate='fadein']": {
       opacity: 0,
       animation: `${fadeInAnimation} 350ms ease forwards`,

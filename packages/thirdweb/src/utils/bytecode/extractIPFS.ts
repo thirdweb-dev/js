@@ -1,6 +1,6 @@
-import { decode } from "./cbor-decode.js";
 import { base58Encode } from "../base58/encode.js";
 import { hexToBytes } from "../encoding/to-bytes.js";
+import { decode } from "./cbor-decode.js";
 import { ensureBytecodePrefix } from "./prefix.js";
 
 /**
@@ -33,7 +33,7 @@ export function extractIPFSUri(bytecode: string): string | undefined {
 
   const cborData = decode(bytecodeBuffer);
   if ("ipfs" in cborData) {
-    return `ipfs://${base58Encode(cborData["ipfs"])}`;
+    return `ipfs://${base58Encode(cborData.ipfs)}`;
   }
 
   return undefined;

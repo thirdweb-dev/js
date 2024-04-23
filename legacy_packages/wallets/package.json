@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/wallets",
-  "version": "2.4.33",
+  "version": "2.5.7",
   "main": "dist/thirdweb-dev-wallets.cjs.js",
   "module": "dist/thirdweb-dev-wallets.esm.js",
   "browser": {
@@ -536,13 +536,13 @@
     "@thirdweb-dev/contracts-js": "workspace:*",
     "@thirdweb-dev/crypto": "workspace:*",
     "@thirdweb-dev/sdk": "workspace:*",
-    "@walletconnect/core": "^2.11.3",
-    "@walletconnect/ethereum-provider": "^2.11.3",
+    "@walletconnect/core": "^2.12.1",
+    "@walletconnect/ethereum-provider": "2.12.1",
     "@walletconnect/jsonrpc-utils": "^1.0.8",
     "@walletconnect/modal": "^2.6.2",
-    "@walletconnect/types": "^2.11.3",
-    "@walletconnect/utils": "^2.11.3",
-    "@walletconnect/web3wallet": "^1.10.3",
+    "@walletconnect/types": "^2.12.1",
+    "@walletconnect/utils": "^2.12.1",
+    "@walletconnect/web3wallet": "^1.11.1",
     "asn1.js": "5.4.1",
     "bn.js": "5.2.1",
     "buffer": "^6.0.3",
@@ -555,7 +555,6 @@
   },
   "peerDependencies": {
     "@aws-sdk/client-secrets-manager": "^3.256.0",
-    "@noble/ed25519": "^1.7.1",
     "bs58": "^5.0.0",
     "ethers": "^5.7.2",
     "ethers-aws-kms-signer": "^1.3.2",
@@ -571,9 +570,6 @@
     "ethers-aws-kms-signer": {
       "optional": true
     },
-    "@noble/ed25519": {
-      "optional": true
-    },
     "bs58": {
       "optional": true
     },
@@ -582,12 +578,11 @@
     }
   },
   "devDependencies": {
-    "@aws-sdk/client-secrets-manager": "^3.543.0",
+    "@aws-sdk/client-secrets-manager": "^3.549.0",
     "@babel/plugin-transform-class-properties": "^7.24.1",
     "@babel/plugin-transform-flow-strip-types": "^7.24.1",
     "@babel/plugin-transform-private-methods": "^7.24.1",
     "@microsoft/api-extractor": "^7.43.0",
-    "@noble/ed25519": "^1.7.3",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@preconstruct/cli": "2.7.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
@@ -606,7 +601,7 @@
     "rimraf": "5.0.5",
     "tweetnacl": "^1.0.3",
     "typedoc-gen": "workspace:*",
-    "typescript": "5.4.3"
+    "typescript": "5.4.4"
   },
   "scripts": {
     "format": "prettier --write 'src/**/*'",
@@ -617,7 +612,7 @@
     "preconstruct:fix": "preconstruct fix",
     "push": "yalc push",
     "typedoc": "node scripts/typedoc.mjs",
-    "test": "vitest"
+    "test": "vitest run"
   },
   "engines": {
     "node": ">=18"

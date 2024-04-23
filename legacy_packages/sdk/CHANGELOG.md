@@ -1,5 +1,119 @@
 # @thirdweb-dev/sdk
 
+## 4.0.67
+
+### Patch Changes
+
+- Updated dependencies [[`be85410`](https://github.com/thirdweb-dev/js/commit/be8541054e392a12678ffee534284e7d1b203ad4), [`a919b27`](https://github.com/thirdweb-dev/js/commit/a919b27c7af41dc003ddb643eb0641eaa8aefc07), [`38f3b2e`](https://github.com/thirdweb-dev/js/commit/38f3b2eb21e74e5947f03cc594dee22c96099f8b), [`6d6e0ac`](https://github.com/thirdweb-dev/js/commit/6d6e0ac69453d5a448ab771084976928313662ab)]:
+  - thirdweb@5.10.0
+  - @thirdweb-dev/chains@0.1.98
+
+## 4.0.66
+
+### Patch Changes
+
+- Updated dependencies [[`4dbcbd1`](https://github.com/thirdweb-dev/js/commit/4dbcbd13dbd388454993aee7e67b43bb9d9249aa), [`d664647`](https://github.com/thirdweb-dev/js/commit/d6646475e2715c666316174e1c035a035a075ab1), [`b4e7c74`](https://github.com/thirdweb-dev/js/commit/b4e7c74ce5ddc88a1aa3169ea89ff139d185a648)]:
+  - thirdweb@5.9.0
+  - @thirdweb-dev/chains@0.1.97
+
+## 4.0.65
+
+### Patch Changes
+
+- Updated dependencies [[`381b669`](https://github.com/thirdweb-dev/js/commit/381b669cd1b4c621519636211f47a6910ca048f0), [`94e354a`](https://github.com/thirdweb-dev/js/commit/94e354aad30fc94b4d4c379e01810b0f4e2087bf), [`bebcf46`](https://github.com/thirdweb-dev/js/commit/bebcf46c3a900fcbff6d544b18c7f0140c5ca9be), [`1b2bfc8`](https://github.com/thirdweb-dev/js/commit/1b2bfc83d786d1c7b7d1fefa480dbab559e84c54), [`ca2576f`](https://github.com/thirdweb-dev/js/commit/ca2576f8180b6b5b9fe47087a53d1f13665c5028)]:
+  - thirdweb@5.8.0
+  - @thirdweb-dev/chains@0.1.96
+
+## 4.0.64
+
+### Patch Changes
+
+- [#2785](https://github.com/thirdweb-dev/js/pull/2785) [`4c7153c`](https://github.com/thirdweb-dev/js/commit/4c7153c95df1962d1e530a3d8227960cd87f6a61) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
+
+- Updated dependencies [[`7c17892`](https://github.com/thirdweb-dev/js/commit/7c178923f9072d8f43b0d23f3888fdedae540005), [`a54c745`](https://github.com/thirdweb-dev/js/commit/a54c745977e7806c0339633486eef55f92b02832), [`300e4c8`](https://github.com/thirdweb-dev/js/commit/300e4c8a51581156acdfac431655510f0cdbca21), [`f5abbe8`](https://github.com/thirdweb-dev/js/commit/f5abbe8b54fbd68188c40268ae5707c72f39441f), [`4c7153c`](https://github.com/thirdweb-dev/js/commit/4c7153c95df1962d1e530a3d8227960cd87f6a61), [`37bd0e4`](https://github.com/thirdweb-dev/js/commit/37bd0e42a58cdbe5b04a9871b5fd413ec293d96c), [`76f93a4`](https://github.com/thirdweb-dev/js/commit/76f93a4346bc7627a6b0e4e49d212e245ad91be0)]:
+  - thirdweb@5.7.0
+  - @thirdweb-dev/chains@0.1.95
+
+## 4.0.63
+
+### Patch Changes
+
+- Updated dependencies [[`8197b3c`](https://github.com/thirdweb-dev/js/commit/8197b3ced288597979f27ab88abecadad5dac2cb), [`a18fc8e`](https://github.com/thirdweb-dev/js/commit/a18fc8e1b7d7f351e43367f6a6fd77674998e701), [`65e4ddc`](https://github.com/thirdweb-dev/js/commit/65e4ddc8e02467c170658d29d71dca53737548b7), [`df338f5`](https://github.com/thirdweb-dev/js/commit/df338f5f75545dcf717c39e045e2c7e9f64e5f9d), [`9d46fce`](https://github.com/thirdweb-dev/js/commit/9d46fce50fe7ef5750ddf9fefe8131cf190450db), [`6574e4d`](https://github.com/thirdweb-dev/js/commit/6574e4da9938fe7eb862a0ae779b02561967abf1)]:
+  - thirdweb@5.6.0
+  - @thirdweb-dev/chains@0.1.94
+
+## 4.0.62
+
+### Patch Changes
+
+- [#2678](https://github.com/thirdweb-dev/js/pull/2678) [`9453f74`](https://github.com/thirdweb-dev/js/commit/9453f74bbfd53372fcfd942bcce6c6bfc8c00a2c) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Custom gas settings for any evm deployments
+
+- [#2754](https://github.com/thirdweb-dev/js/pull/2754) [`c4d51e0`](https://github.com/thirdweb-dev/js/commit/c4d51e0b80e2d66fb85b8032dcc286f9cd164cd1) Thanks [@jnsdls](https://github.com/jnsdls)! - handle `[[{}]]` values for `properties` / `attributes` fields of NFTs
+
+- Updated dependencies [[`007770c`](https://github.com/thirdweb-dev/js/commit/007770cd635fba5d38eca5efccc55592c85a106f), [`07f98a5`](https://github.com/thirdweb-dev/js/commit/07f98a5b923166f2e16c9f1759970af2032dbb54), [`e6b5d9c`](https://github.com/thirdweb-dev/js/commit/e6b5d9cc5d1907cbce3aaa895239e0f45b7e880c), [`9453f74`](https://github.com/thirdweb-dev/js/commit/9453f74bbfd53372fcfd942bcce6c6bfc8c00a2c), [`39c6fbc`](https://github.com/thirdweb-dev/js/commit/39c6fbc5521a816c7d9a23933cb41ad76a925d14), [`db05717`](https://github.com/thirdweb-dev/js/commit/db0571780304a7b631646b046522fa15352b5467), [`eb919ed`](https://github.com/thirdweb-dev/js/commit/eb919ed49d57589614ac959cb6cbd7c9c19cac07), [`bf6a8e0`](https://github.com/thirdweb-dev/js/commit/bf6a8e0cab2a02a34d2ca8fbdf9d034ac176b61e)]:
+  - thirdweb@5.5.0
+  - @thirdweb-dev/chains@0.1.93
+
+## 4.0.61
+
+### Patch Changes
+
+- [#2579](https://github.com/thirdweb-dev/js/pull/2579) [`d836889`](https://github.com/thirdweb-dev/js/commit/d836889f464a4fc9617839f30e2cc780b3bcca78) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - Adds "buy with crypto" APIs, Here's an example of how you can use it for swapping tokens
+
+  ```ts
+  // 1. get a quote for swapping tokens
+  const quote = await getBuyWithCryptoQuote(quoteParams);
+
+  // 2. if approval is required, send the approval transaction
+  if (quote.approval) {
+    const approvalTx = await signer.sendTransaction(quote.approval);
+    await approvalTx.wait();
+  }
+
+  // 3. send the quoted transaction
+  const buyTx = await signer.sendTransaction(quote.transactionRequest);
+  await buyTx.wait();
+
+  // 4. keep polling the status of the quoted transaction until it * returns a success or failure status
+  const status = await getBuyWithCryptoStatus({
+    clientId: "YOUR_CLIENT_ID",
+    transactionHash: transactionResult.hash,
+  });
+  ```
+
+  For more information, check out the [pay documentation](https://portal.thirdweb.com/connect/pay/buy-with-crypto) for purchases with crypto
+
+- Updated dependencies [[`d836889`](https://github.com/thirdweb-dev/js/commit/d836889f464a4fc9617839f30e2cc780b3bcca78), [`d65713a`](https://github.com/thirdweb-dev/js/commit/d65713a7af67bf20e5b88b72f5d43dfba9172b3b)]:
+  - thirdweb@5.4.2
+  - @thirdweb-dev/chains@0.1.92
+
+## 4.0.60
+
+### Patch Changes
+
+- Updated dependencies [[`53e56f4`](https://github.com/thirdweb-dev/js/commit/53e56f4bf8d3fbe7e2d5252b561bcef5927762e6)]:
+  - @thirdweb-dev/chains@0.1.91
+
+## 4.0.59
+
+### Patch Changes
+
+- [#2701](https://github.com/thirdweb-dev/js/pull/2701) [`703cb6a`](https://github.com/thirdweb-dev/js/commit/703cb6ae3cc51fa4b0ba7c87f09f8e84dab8ed3f) Thanks [@jnsdls](https://github.com/jnsdls)! - updated dependencies
+
+- Updated dependencies [[`703cb6a`](https://github.com/thirdweb-dev/js/commit/703cb6ae3cc51fa4b0ba7c87f09f8e84dab8ed3f), [`48c1d60`](https://github.com/thirdweb-dev/js/commit/48c1d6038272284f8942e1fb3635283b48945a68)]:
+  - @thirdweb-dev/contracts-js@1.3.21
+  - @thirdweb-dev/merkletree@0.2.5
+  - @thirdweb-dev/storage@2.0.14
+  - @thirdweb-dev/chains@0.1.90
+  - @thirdweb-dev/crypto@0.2.5
+
+## 4.0.58
+
+### Patch Changes
+
+- Updated dependencies [[`83ecf67`](https://github.com/thirdweb-dev/js/commit/83ecf67c4b973b17fbc57eeaa03d7a8176ff5d39)]:
+  - @thirdweb-dev/chains@0.1.89
+
 ## 4.0.57
 
 ### Patch Changes
