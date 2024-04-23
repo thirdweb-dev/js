@@ -68,7 +68,7 @@ Try to include unit test coverage with your changes where appropriate. We use `v
 To run your tests, run the following from the package directory (most likely /packages/thirdweb):
 
 ```bash
-pnpm test <YOUR TEST FILE PATH>
+pnpm test:dev <YOUR TEST FILE PATH>
 ```
 
 > Specifying your test file path is optional, but will save time by only running specific tests each time. Before opening your PR, run `pnpm test` from the monorepo root (without specifying your test file) to ensure your changes didn't break any existing tests.
@@ -99,16 +99,18 @@ First, create a test project where you can experiment with your changes. This ca
 Push your local version to your `yalc` store with:
 
 ```bash
-pnpm push
+pnpm build && pnpm push
 ```
 
-Link your local changes in the monorepo to the test project, by running the following command from your test repo:
+Link your local changes in the monorepo to the test project by running the following command from your test repo:
 
 ```bash
 yalc add thirdweb
 ```
 
 Now, each time you make a change to the monorepo, you can run `pnpm push` from the monorepo then `yalc update thirdweb` from your test project to publish your latest changes to the test project.
+
+If your changes modify dependencies, you may need to reinstall dependencies on your test project with `pnpm install`
 
 To make sure your latest changes are used, in your test project you may need to:
 
