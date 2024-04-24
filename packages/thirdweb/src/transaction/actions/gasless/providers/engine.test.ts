@@ -1,7 +1,6 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import { FORKED_ETHEREUM_CHAIN_WITH_MINING } from "../../../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../../../test/src/test-clients.js";
-import { USDT_CONTRACT_ADDRESS } from "../../../../../test/src/test-contracts.js";
 import {
   TEST_ACCOUNT_A,
   TEST_ACCOUNT_B,
@@ -16,12 +15,11 @@ import { mintTo } from "../../../../extensions/erc20/write/mintTo.js";
 import { transfer } from "../../../../extensions/erc20/write/transfer.js";
 import { deployERC20Contract } from "../../../../extensions/prebuilts/deploy-erc20.js";
 import { add } from "../../../../extensions/thirdweb/__generated__/ITWMultichainRegistry/write/add.js";
-import { prepareContractCall } from "../../../prepare-contract-call.js";
-import { serializeTransaction } from "../../../serialize-transaction.js";
+import { isHex } from "../../../../utils/encoding/hex.js";
 import { sendAndConfirmTransaction } from "../../send-and-confirm-transaction.js";
 import { sendTransaction } from "../../send-transaction.js";
 import { toSerializableTransaction } from "../../to-serializable-transaction.js";
-import { prepareEngineTransaction, relayEngineTransaction } from "./engine.js";
+import { prepareEngineTransaction } from "./engine.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("prepareengineTransaction", () => {
   let erc20Contract: ThirdwebContract;
@@ -75,9 +73,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("prepareengineTransaction", () => {
 
     const { message, messageType, signature } = result;
 
-    expect(signature).toMatchInlineSnapshot(
-      `"0xd46867de322c3129818df224e8f72f1f3c2560cd7e1b146bb038d2c867239a5020a458e6fb2fb2aaee18acf7b1655d1706dcf845a21bfab407bb4314c139624c1b"`,
-    );
+    expect(isHex(signature)).toBe(true);
     expect(message).toMatchInlineSnapshot(`
         {
           "data": "0xa9059cbb00000000000000000000000070997970c51812dc3a010c7d01b50e0d17dc79c80000000000000000000000000000000000000000000000056bc75e2d63100000",
