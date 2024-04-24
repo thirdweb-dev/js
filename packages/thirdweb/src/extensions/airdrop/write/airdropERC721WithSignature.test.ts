@@ -21,12 +21,12 @@ import { deployERC721Contract } from "../../prebuilts/deploy-erc721.js";
 import { deployPublishedContract } from "../../prebuilts/deploy-published.js";
 import {
   airdropERC721WithSignature,
-  generateAirdropSignature,
+  generateAirdropSignatureERC721,
 } from "./airdropERC721WithSignature.js";
 
 // skip this test suite if there is no secret key available to test with
 // TODO: remove reliance on secret key during unit tests entirely
-describe.runIf(process.env.TW_SECRET_KEY)("generateAirdropSignature721", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("generateAirdropSignatureERC721721", () => {
   let airdropContract: ThirdwebContract;
   let erc721TokenContract: ThirdwebContract;
 
@@ -113,7 +113,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("generateAirdropSignature721", () => {
       { recipient: TEST_ACCOUNT_C.address, tokenId: 1n },
       { recipient: TEST_ACCOUNT_D.address, tokenId: 2n },
     ];
-    const { req, signature } = await generateAirdropSignature({
+    const { req, signature } = await generateAirdropSignatureERC721({
       airdropRequest: {
         tokenAddress: erc721TokenContract.address,
         contents,

@@ -6,6 +6,25 @@ import { randomBytes32 } from "../../../utils/uuid.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
 import { airdropERC1155WithSignature as generatedAirdropERC1155WithSignature } from "../__generated__/Airdrop/write/airdropERC1155WithSignature.js";
 
+/**
+ * Airdrops ERC1155 tokens to a list of recipients, with the request signed by admin
+ * @param options - The transaction options.
+ * @example
+ * ```ts
+ * import { airdropERC1155WithSignature, generateAirdropSignatureERC1155 } from "thirdweb/extensions/airdrop";
+ *
+ * const { req, signature } = await generateAirdropSignatureERC1155(...)
+ *
+ * const transaction = airdropERC1155WithSignature({
+ *   contract,
+ *   req,
+ *   signature,
+ * });
+ * await sendTransaction({ transaction, account });
+ * ```
+ * @extension Airdrop
+ * @returns A promise that resolves to the transaction result.
+ */
 export const airdropERC1155WithSignature = generatedAirdropERC1155WithSignature;
 
 export type GenerateAirdropSignatureOptions = {
@@ -14,7 +33,40 @@ export type GenerateAirdropSignatureOptions = {
   airdropRequest: GenerateReqInput;
 };
 
-export async function generateAirdropSignature(
+/**
+ * Generates the req and signature for sending ERC1155 airdrop.
+ * @param options - The options for the airdrop.
+ * @example
+ * ```ts
+ * import { airdropERC1155WithSignature, generateAirdropSignatureERC1155 } from "thirdweb/extensions/airdrop";
+ *
+ * // list of recipients, tokenIds and amounts to airdrop for each recipient
+ * const contents = [
+ *    { recipient: "0x...", tokenId: 0, amount: 10n }, 
+ *    { recipient: "0x...", tokenId: 0, amount: 15n }, 
+ *    { recipient: "0x...", tokenId: 0, amount: 20n }, 
+ *  ];
+ *
+ * const { req, signature } = await generateAirdropSignatureERC1155({
+ *   account,
+ *   contract,
+ *   airdropRequest: {
+ *     tokenAddress: "0x...", // address of the ERC1155 token to airdrop
+ *     contents
+ *   },
+ * });
+ *
+ * const transaction = airdropERC1155WithSignature({
+ *   contract,
+ *   req,
+ *   signature,
+ * });
+ * await sendTransaction({ transaction, account });
+ * ```
+ * @extension Airdrop
+ * @returns A promise that resolves to the req and signature.
+ */
+export async function generateAirdropSignatureERC1155(
   options: GenerateAirdropSignatureOptions,
 ) {
   const { airdropRequest, account, contract } = options;
