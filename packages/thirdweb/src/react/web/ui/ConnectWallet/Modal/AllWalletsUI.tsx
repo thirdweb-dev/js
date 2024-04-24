@@ -27,14 +27,17 @@ function AllWalletsUI(props: {
   onBack: () => void;
   onSelect: (wallet: Wallet) => void;
 }) {
-  const {
-    recommendedWallets,
-    wallets: specifiedWallets,
-    connectModal,
-  } = useConnectUI();
+  const { itemsToShow, lastItemRef } = useShowMore<HTMLLIElement>(10, 10);
+  const { wallets: specifiedWallets, connectModal } = useConnectUI();
+
+  const walletList = useMemo(() => {
+    return walletInfos.filter((wallet) => {
+      return specifiedWallets.findIndex((x) => x.id === wallet.id) === -1;
+    });
+  }, [specifiedWallets]);
 
   const fuseInstance = useMemo(() => {
-    return new Fuse(walletInfos, {
+    return new Fuse(walletList, {
       threshold: 0.4,
       keys: [
         {
@@ -43,39 +46,19 @@ function AllWalletsUI(props: {
         },
       ],
     });
-  }, []);
+  }, [walletList]);
 
   const listContainer = useRef<HTMLDivElement | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const deferredSearchTerm = useDebouncedValue(searchTerm, 300);
 
-  const walletInfosWithSearch = deferredSearchTerm
+  const searchResults = deferredSearchTerm
     ? fuseInstance.search(deferredSearchTerm).map((result) => result.item)
-    : walletInfos;
+    : walletList;
 
-  const installedWalletsFirst = sortWallets(
-    walletInfosWithSearch,
-    recommendedWallets,
-  );
-
-  // show specified wallets first
-  const sortedWallets = useMemo(() => {
-    return installedWalletsFirst.sort((a, b) => {
-      const aIsSpecified = specifiedWallets.find((w) => w.id === a.id);
-      const bIsSpecified = specifiedWallets.find((w) => w.id === b.id);
-      if (aIsSpecified && !bIsSpecified) {
-        return -1;
-      }
-      if (!aIsSpecified && bIsSpecified) {
-        return 1;
-      }
-      return 0;
-    });
-  }, [installedWalletsFirst, specifiedWallets]);
-
-  const { itemsToShow, lastItemRef } = useShowMore<HTMLLIElement>(10, 10);
-
-  const walletInfosToShow = sortedWallets.slice(0, itemsToShow);
+  const walletInfosToShow = useMemo(() => {
+    return sortWallets(searchResults.slice(0, itemsToShow));
+  }, [searchResults, itemsToShow]);
 
   return (
     <Container fullHeight flex="column" animate="fadein">
