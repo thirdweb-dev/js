@@ -137,8 +137,8 @@ dependencies:
     specifier: 1.128.3
     version: 1.128.3
   posthog-js-opensource:
-    specifier: npm:posthog-js@1.128.3
-    version: /posthog-js@1.128.3
+    specifier: npm:posthog-js@1.67.1
+    version: /posthog-js@1.67.1
   prettier:
     specifier: ^3.2.5
     version: 3.2.5
@@ -15605,6 +15605,12 @@ packages:
     dependencies:
       fflate: 0.4.8
       preact: 10.20.2
+    dev: false
+
+  /posthog-js@1.67.1:
+    resolution: {integrity: sha512-gvdCVrrxoRYbtNTCUt2/YdZ+tfSfzcl72ym/dtRVCYJpwlCUIKnNJ3E2g7Bbw1+Ki6CvGxdu9r7jHIWnvJAMuw==}
+    dependencies:
+      fflate: 0.4.8
     dev: false
 
   /preact@10.20.2:

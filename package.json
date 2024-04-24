@@ -64,7 +64,7 @@
     "papaparse": "^5.4.1",
     "pluralize": "^8.0.0",
     "posthog-js": "1.128.3",
-    "posthog-js-opensource": "npm:posthog-js@1.128.3",
+    "posthog-js-opensource": "npm:posthog-js@1.67.1",
     "prettier": "^3.2.5",
     "prism-react-renderer": "^2.3.1",
     "prismjs": "^1.29.0",
