@@ -4,7 +4,7 @@ import {
   type BuyWithCryptoStatus,
   type BuyWithCryptoTransaction,
   getBuyWithCryptoStatus,
-} from "../../../../pay/buyWithCrypto/actions/getStatus.js";
+} from "../../../../pay/buyWithCrypto/getStatus.js";
 
 // TODO: use the estimate to vary the polling interval
 const DEFAULT_POLL_INTERVAL = 5000;

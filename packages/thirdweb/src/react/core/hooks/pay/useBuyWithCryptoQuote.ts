@@ -7,7 +7,7 @@ import {
   type BuyWithCryptoQuote,
   type GetBuyWithCryptoQuoteParams,
   getBuyWithCryptoQuote,
-} from "../../../../pay/buyWithCrypto/actions/getQuote.js";
+} from "../../../../pay/buyWithCrypto/getQuote.js";
 
 export type BuyWithCryptoQuoteQueryOptions = Omit<
   UseQueryOptions<BuyWithCryptoQuote>,

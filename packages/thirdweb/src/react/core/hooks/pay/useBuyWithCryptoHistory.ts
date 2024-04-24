@@ -7,7 +7,7 @@ import {
   type BuyWithCryptoHistoryData,
   type BuyWithCryptoHistoryParams,
   getBuyWithCryptoHistory,
-} from "../../../../pay/buyWithCrypto/actions/getHistory.js";
+} from "../../../../pay/buyWithCrypto/getHistory.js";
 
 export type BuyWithCryptoHistoryQueryParams = BuyWithCryptoHistoryParams;
 export type BuyWithCryptoQuoteQueryOptions = Omit<
