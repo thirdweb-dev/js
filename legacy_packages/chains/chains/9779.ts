@@ -6,22 +6,10 @@ export default {
     {
       "name": "Pepe Explorer",
       "url": "https://explorer.pepenetwork.io",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://QmPX3uipdwd195z1MJff7uj8hpZdSuVvM5z47eiz2o7Gz5",
-        "width": 960,
-        "height": 944,
-        "format": "png"
-      }
+      "standard": "none"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmPX3uipdwd195z1MJff7uj8hpZdSuVvM5z47eiz2o7Gz5",
-    "width": 960,
-    "height": 944,
-    "format": "png"
-  },
   "infoURL": "https://pepenetwork.io",
   "name": "PepeNetwork Mainnet",
   "nativeCurrency": {

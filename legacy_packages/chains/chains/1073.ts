@@ -24,7 +24,7 @@ export default {
   "nativeCurrency": {
     "name": "SMR",
     "symbol": "SMR",
-    "decimals": 6
+    "decimals": 18
   },
   "networkId": 1073,
   "rpc": [
