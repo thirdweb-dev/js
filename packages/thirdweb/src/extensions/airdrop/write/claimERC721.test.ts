@@ -11,22 +11,24 @@ import {
   type ThirdwebContract,
   getContract,
 } from "../../../contract/contract.js";
+import {
+  ownerOf,
+  setApprovalForAll,
+} from "../../../exports/extensions/erc721.js";
 import { sendTransaction } from "../../../transaction/actions/send-transaction.js";
-import { getBalance } from "../../erc20/read/getBalance.js";
-import { approve } from "../../erc20/write/approve.js";
-import { mintTo } from "../../erc20/write/mintTo.js";
-import { deployERC20Contract } from "../../prebuilts/deploy-erc20.js";
+import { mintTo } from "../../erc721/write/mintTo.js";
+import { deployERC721Contract } from "../../prebuilts/deploy-erc721.js";
 import { deployPublishedContract } from "../../prebuilts/deploy-published.js";
 import { setMerkleRoot } from "../__generated__/Airdrop/write/setMerkleRoot.js";
-import { claimERC20 } from "./claimERC20.js";
-import { generateMerkleTreeInfoERC20 } from "./merkleInfoERC20.js";
+import { claimERC721 } from "./claimERC721.js";
+import { generateMerkleTreeInfoERC721 } from "./merkleInfoERC721.js";
 import { saveSnapshot } from "./saveSnapshot.js";
 
 // skip this test suite if there is no secret key available to test with
 // TODO: remove reliance on secret key during unit tests entirely
-describe.runIf(process.env.TW_SECRET_KEY)("claimERC20", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("claimERC721", () => {
   let airdropContract: ThirdwebContract;
-  let erc20TokenContract: ThirdwebContract;
+  let erc721TokenContract: ThirdwebContract;
 
   beforeAll(async () => {
     airdropContract = getContract({
@@ -41,35 +43,64 @@ describe.runIf(process.env.TW_SECRET_KEY)("claimERC20", () => {
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
     });
-    erc20TokenContract = getContract({
-      address: await deployERC20Contract({
+
+    erc721TokenContract = getContract({
+      address: await deployERC721Contract({
         account: TEST_ACCOUNT_A,
         chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
         params: {
-          name: "TestToken",
-          symbol: "TSTT",
+          name: "Test",
+          symbol: "TST",
         },
-        type: "TokenERC20",
+        type: "TokenERC721",
       }),
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
     });
 
-    const mintTx = mintTo({
-      contract: erc20TokenContract,
-      to: TEST_ACCOUNT_A.address,
-      amount: 1000,
-    });
-    await sendTransaction({
-      transaction: mintTx,
-      account: TEST_ACCOUNT_A,
-    });
+    const mintTransactions = [
+      mintTo({
+        contract: erc721TokenContract,
+        to: TEST_ACCOUNT_A.address,
+        nft: {
+          name: "Test 0",
+        },
+      }),
+      mintTo({
+        contract: erc721TokenContract,
+        to: TEST_ACCOUNT_A.address,
+        nft: {
+          name: "Test 1",
+        },
+      }),
+      mintTo({
+        contract: erc721TokenContract,
+        to: TEST_ACCOUNT_A.address,
+        nft: {
+          name: "Test 2",
+        },
+      }),
+      mintTo({
+        contract: erc721TokenContract,
+        to: TEST_ACCOUNT_A.address,
+        nft: {
+          name: "Test 3",
+        },
+      }),
+    ];
 
-    const approvalTx = await approve({
-      contract: erc20TokenContract,
-      spender: airdropContract.address,
-      amount: 1000,
+    for (const tx of mintTransactions) {
+      await sendTransaction({
+        transaction: tx,
+        account: TEST_ACCOUNT_A,
+      });
+    }
+
+    const approvalTx = setApprovalForAll({
+      contract: erc721TokenContract,
+      operator: airdropContract.address,
+      approved: true,
     });
     await sendTransaction({
       transaction: approvalTx,
@@ -77,18 +108,18 @@ describe.runIf(process.env.TW_SECRET_KEY)("claimERC20", () => {
     });
   }, 60000);
 
-  it("should send ERC20 tokens to allowlisted claimer", async () => {
+  it("should send ERC721 tokens to allowlisted claimer", async () => {
     const snapshot = [
-      { recipient: TEST_ACCOUNT_B.address, amount: 10 },
-      { recipient: TEST_ACCOUNT_C.address, amount: 15 },
-      { recipient: TEST_ACCOUNT_D.address, amount: 20 },
+      { recipient: TEST_ACCOUNT_B.address, tokenId: 0 },
+      { recipient: TEST_ACCOUNT_C.address, tokenId: 1 },
+      { recipient: TEST_ACCOUNT_D.address, tokenId: 2 },
     ];
-    const { merkleRoot, snapshotUri } = await generateMerkleTreeInfoERC20({
+
+    const { merkleRoot, snapshotUri } = await generateMerkleTreeInfoERC721({
       snapshot,
-      tokenAddress: erc20TokenContract.address,
+      tokenAddress: erc721TokenContract.address,
       contract: airdropContract,
     });
-
     const saveSnapshotTransaction = saveSnapshot({
       merkleRoot,
       snapshotUri,
@@ -100,7 +131,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("claimERC20", () => {
     });
 
     const setMerkleRootTransaction = setMerkleRoot({
-      token: erc20TokenContract.address,
+      token: erc721TokenContract.address,
       tokenMerkleRoot: merkleRoot as `0x${string}`,
       resetClaimStatus: true,
       contract: airdropContract,
@@ -110,8 +141,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("claimERC20", () => {
       account: TEST_ACCOUNT_A,
     });
 
-    const claimTransaction = claimERC20({
-      tokenAddress: erc20TokenContract.address,
+    const claimTransaction = claimERC721({
+      tokenAddress: erc721TokenContract.address,
       recipient: TEST_ACCOUNT_B.address,
       contract: airdropContract,
     });
@@ -120,14 +151,12 @@ describe.runIf(process.env.TW_SECRET_KEY)("claimERC20", () => {
       account: TEST_ACCOUNT_A,
     });
 
-    const balanceB = (
-      await getBalance({
-        contract: erc20TokenContract,
-        address: TEST_ACCOUNT_B.address,
-      })
-    ).value;
+    const ownerZero = await ownerOf({
+      contract: erc721TokenContract,
+      tokenId: 0n,
+    });
 
-    expect(balanceB).to.equal(10n * 10n ** 18n);
+    expect(ownerZero).to.equal(TEST_ACCOUNT_B.address);
 
     expect(transactionHash.length).toBe(66);
   });

@@ -1,6 +1,4 @@
 import { encodePacked } from "viem";
-import type { Chain } from "../../../chains/types.js";
-import type { ThirdwebClient } from "../../../client/client.js";
 import { keccak256 } from "../../hashing/keccak256.js";
 import { toUnits } from "../../units.js";
 import type { SnapshotEntryERC20 } from "./types.js";

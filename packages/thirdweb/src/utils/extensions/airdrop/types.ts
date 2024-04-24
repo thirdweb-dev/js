@@ -25,3 +25,19 @@ export type ClaimProofERC20 = {
   recipient: Address;
   quantity: bigint;
 };
+
+export type ShardDataERC721 = {
+  proofs: Hex[];
+  entries: SnapshotEntryERC721[];
+};
+
+export type SnapshotEntryERC721 = {
+  recipient: string;
+  tokenId: number | string;
+};
+
+export type ClaimProofERC721 = {
+  proof: Hex[];
+  recipient: Address;
+  tokenId: bigint;
+};
