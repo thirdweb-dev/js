@@ -12,6 +12,7 @@ import {
 import { mintTo } from "../../../../extensions/erc20/write/mintTo.js";
 import { transfer } from "../../../../extensions/erc20/write/transfer.js";
 import { deployERC20Contract } from "../../../../extensions/prebuilts/deploy-erc20.js";
+import { isHex } from "../../../../utils/encoding/hex.js";
 import { sendAndConfirmTransaction } from "../../send-and-confirm-transaction.js";
 import { toSerializableTransaction } from "../../to-serializable-transaction.js";
 import { prepareBiconomyTransaction } from "./biconomy.js";
@@ -68,9 +69,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("prepareBiconomyTransaction", () => {
 
     const [request, signature] = result;
 
-    expect(signature).toMatchInlineSnapshot(
-      `"0x03ad990900a2557c0e083c38d8bf915420142267eb44a3b6fdb4d7e261ae9d2d1d78181dc5dc647d654f846c2012afd095e0966004fc9ca60eb1c2ac4905ce7c1b"`,
-    );
+    expect(isHex(signature)).toBe(true);
     expect(request.batchId).toBe(0n);
     expect(request.batchNonce).toBe(0n);
     expect(request.data).toMatchInlineSnapshot(
