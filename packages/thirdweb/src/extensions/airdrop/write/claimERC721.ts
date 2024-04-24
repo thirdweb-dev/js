@@ -9,6 +9,28 @@ export type ClaimERC721Params = {
   recipient: string;
 };
 
+/**
+ * Claim airdrop of ERC721 tokens for allowlisted addresses. (Pull based airdrop)
+ * @param options - The transaction options.
+ * @example
+ * ```ts
+ * import { claimERC721 } from "thirdweb/extensions/airdrop";
+ * 
+ * const tokenAddress = "0x..." // Address of airdropped tokens to claim
+ * const recipient = "0x..."  // Address of the allowlisted recipient
+ * 
+ * const claimTransaction = claimERC721({
+ *    contract,
+ *    tokenAddress,
+ *    recipient
+ * });
+ * 
+ * await sendTransaction({ claimTransaction, account });
+ *
+ * ```
+ * @extension Airdrop
+ * @returns A promise that resolves to the transaction result.
+ */
 export function claimERC721(
   options: BaseTransactionOptions<ClaimERC721Params>,
 ) {

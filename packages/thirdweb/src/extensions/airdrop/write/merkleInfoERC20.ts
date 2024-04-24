@@ -11,6 +11,36 @@ export type GenerateMerkleTreeInfoParams = {
   tokenAddress: string;
 };
 
+/**
+ * Generate merkle tree for a given snapshot.
+ * @param options - The transaction options.
+ * @example
+ * ```ts
+ * import { generateMerkleTreeInfoERC20 } from "thirdweb/extensions/airdrop";
+ *
+ * // snapshot / allowlist of airdrop recipients and amounts
+ * const snapshot = [
+ *    { recipient: "0x...", amount: 10 },
+ *    { recipient: "0x...", amount: 15 },
+ *    { recipient: "0x...", amount: 20 },
+ * ];
+ * 
+ * const tokenAddress = "0x..." // Address of ERC20 airdrop token 
+ * 
+ * const { merkleRoot, snapshotUri } = await generateMerkleTreeInfoERC20({
+ *    contract,
+ *    tokenAddress,
+ *    snapshot
+ * });
+ * 
+ * // Optional next steps {See: saveSnapshot and setMerkleRoot functions}
+ * // - Save snapshot on-chain (on the airdrop contract uri)
+ * // - Set merkle root on the contract to enable claiming
+ *
+ * ```
+ * @extension Airdrop
+ * @returns A promise that resolves to the merkle-root and snapshot-uri.
+ */
 export async function generateMerkleTreeInfoERC20(
   options: BaseTransactionOptions<GenerateMerkleTreeInfoParams>,
 ) {

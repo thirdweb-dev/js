@@ -9,6 +9,28 @@ export type ClaimERC1155Params = {
   recipient: string;
 };
 
+/**
+ * Claim airdrop of ERC1155 tokens for allowlisted addresses. (Pull based airdrop)
+ * @param options - The transaction options.
+ * @example
+ * ```ts
+ * import { claimERC1155 } from "thirdweb/extensions/airdrop";
+ * 
+ * const tokenAddress = "0x..." // Address of airdropped tokens to claim
+ * const recipient = "0x..."  // Address of the allowlisted recipient
+ * 
+ * const claimTransaction = claimERC1155({
+ *    contract,
+ *    tokenAddress,
+ *    recipient
+ * });
+ * 
+ * await sendTransaction({ claimTransaction, account });
+ *
+ * ```
+ * @extension Airdrop
+ * @returns A promise that resolves to the transaction result.
+ */
 export function claimERC1155(
   options: BaseTransactionOptions<ClaimERC1155Params>,
 ) {

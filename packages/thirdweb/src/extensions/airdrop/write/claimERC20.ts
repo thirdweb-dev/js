@@ -7,14 +7,34 @@ import type { Address } from "../../../utils/address.js";
 import { fetchProofsrERC20 } from "../../../utils/extensions/airdrop/fetch-proofs-erc20.js";
 import { tokenMerkleRoot } from "../__generated__/Airdrop/read/tokenMerkleRoot.js";
 import { claimERC20 as generatedClaimERC20 } from "../__generated__/Airdrop/write/claimERC20.js";
-/**
- * Represents the parameters for claiming an ERC721 token.
- */
+
 export type ClaimERC20Params = {
   tokenAddress: string;
   recipient: string;
 };
 
+/**
+ * Claim airdrop of ERC20 tokens for allowlisted addresses. (Pull based airdrop)
+ * @param options - The transaction options.
+ * @example
+ * ```ts
+ * import { claimERC20 } from "thirdweb/extensions/airdrop";
+ * 
+ * const tokenAddress = "0x..." // Address of airdropped tokens to claim
+ * const recipient = "0x..."  // Address of the allowlisted recipient
+ * 
+ * const claimTransaction = claimERC20({
+ *    contract,
+ *    tokenAddress,
+ *    recipient
+ * });
+ * 
+ * await sendTransaction({ claimTransaction, account });
+ *
+ * ```
+ * @extension Airdrop
+ * @returns A promise that resolves to the transaction result.
+ */
 export function claimERC20(options: BaseTransactionOptions<ClaimERC20Params>) {
   return generatedClaimERC20({
     contract: options.contract,
