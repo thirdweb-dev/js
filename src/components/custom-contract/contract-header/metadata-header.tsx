@@ -42,6 +42,21 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
     ?.filter((e) => e.standard === "EIP3091")
     ?.slice(0, isMobile ? 1 : 2);
 
+  const validExternalLinks = externalLinks?.filter((e) => {
+    if (!e.url) {
+      return false;
+    }
+    if (!e.name) {
+      return false;
+    }
+    try {
+      new URL(e.url);
+      return true;
+    } catch {
+      return false;
+    }
+  });
+
   return (
     <Flex align={{ base: "flex-start", md: "center" }} gap={4}>
       {(data?.image || !isLoaded) && !isError ? (
@@ -151,8 +166,8 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
                 {validBlockExplorer.name}
               </LinkButton>
             ))}
-          {externalLinks &&
-            externalLinks.map((e) => (
+          {validExternalLinks &&
+            validExternalLinks.map((e) => (
               <LinkButton
                 key={e.name}
                 variant="ghost"
