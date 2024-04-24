@@ -93,12 +93,6 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         contract: airdropContract,
       });
 
-      console.log("req: ", req);
-      console.log("sig: ", signature);
-
-      console.log(erc20TokenContract.address);
-      console.log(airdropContract.address);
-
       const transaction = airdropERC20WithSignature({
         contract: airdropContract,
         req,
