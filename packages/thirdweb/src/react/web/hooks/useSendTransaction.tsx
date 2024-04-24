@@ -70,8 +70,9 @@ export function useSendTransaction(config: SendTransactionConfig = {}) {
 
   const setRootEl = useContext(SetRootElementContext);
   return useSendTransactionCore(
-    typeof payModal === "object"
-      ? (data) => {
+    payModal === false
+      ? undefined
+      : (data) => {
           setRootEl(
             <TxModal
               tx={data.tx}
@@ -89,8 +90,7 @@ export function useSendTransaction(config: SendTransactionConfig = {}) {
               nativeTokenSymbol={data.walletBalance.symbol}
             />,
           );
-        }
-      : undefined,
+        },
   );
 }
 

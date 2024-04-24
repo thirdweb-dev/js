@@ -1,9 +1,14 @@
 import type { ThirdwebClient } from "../../../../client/client.js";
 
-export type MultiStepAuthProviderType = {
-  strategy: "email";
-  email: string;
-};
+export type MultiStepAuthProviderType =
+  | {
+      strategy: "email";
+      email: string;
+    }
+  | {
+      strategy: "phone";
+      phoneNumber: string;
+    };
 export type PreAuthArgsType = MultiStepAuthProviderType & {
   client: ThirdwebClient;
 };

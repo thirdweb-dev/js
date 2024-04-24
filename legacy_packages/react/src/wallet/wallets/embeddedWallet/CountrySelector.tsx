@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import React, { useRef } from "react";
 import { fontSize, spacing } from "../../../design-system";
 import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
-import { StyledSelect } from "../../../design-system/elements";
+import { StyledOption, StyledSelect } from "../../../design-system/elements";
 
 export function CountrySelector({
   countryCode,
@@ -52,12 +52,12 @@ export function CountrySelector({
         </option>
         {supportedCountriesForSms.map((country) => {
           return (
-            <option
+            <Option
               key={country.countryIsoCode}
               value={`${country.countryIsoCode} +${country.phoneNumberCode}`}
             >
               {country.countryName} +{country.phoneNumberCode}{" "}
-            </option>
+            </Option>
           );
         })}
       </Select>
@@ -65,7 +65,20 @@ export function CountrySelector({
   );
 }
 
-export const Select = /* @__PURE__ */ StyledSelect(() => {
+
+const Option = /* @__PURE__ */ StyledOption(() => {
+  const theme = useCustomTheme();
+  return {
+    color: theme.colors.primaryText,
+    background: theme.colors.modalBg,
+    transition: "background 0.3s ease",
+    "&:hover": {
+      background: theme.colors.walletSelectorButtonHoverBg,
+    },
+  };
+});
+
+const Select = /* @__PURE__ */ StyledSelect(() => {
   const theme = useCustomTheme();
   return {
     fontSize: fontSize.sm,
