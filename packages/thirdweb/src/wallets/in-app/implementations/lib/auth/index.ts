@@ -194,6 +194,19 @@ export class Auth {
   }
 
   /**
+   * @internal
+   */
+  async sendSmsLoginOtp({
+    phoneNumber,
+  }: Parameters<
+    BaseLogin["sendSmsLoginOtp"]
+  >[0]): Promise<SendEmailOtpReturnType> {
+    return this.BaseLogin.sendSmsLoginOtp({
+      phoneNumber,
+    });
+  }
+
+  /**
    * Used to verify the otp that the user receives from thirdweb
    *
    * See {@link Auth.sendEmailLoginOtp} for how the headless call flow looks like. Simply swap out the calls to `loginWithThirdwebEmailOtp` with `verifyThirdwebEmailLoginOtp`
@@ -206,6 +219,13 @@ export class Auth {
     args: Parameters<BaseLogin["verifyEmailLoginOtp"]>[0],
   ) {
     return this.BaseLogin.verifyEmailLoginOtp(args);
+  }
+
+  /**
+   * @internal
+   */
+  async verifySmsLoginOtp(args: Parameters<BaseLogin["verifySmsLoginOtp"]>[0]) {
+    return this.BaseLogin.verifySmsLoginOtp(args);
   }
 
   /**

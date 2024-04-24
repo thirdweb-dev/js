@@ -24,10 +24,16 @@ function InAppWalletConnectUI(props: {
     return <LoadingScreen />;
   }
 
-  if (state?.emailLogin) {
+  const otpUserInfo = state?.emailLogin
+    ? { email: state.emailLogin }
+    : state?.phoneLogin
+      ? { phone: state.phoneLogin }
+      : undefined;
+
+  if (otpUserInfo) {
     return (
       <InAppWalletOTPLoginUI
-        email={state.emailLogin}
+        userInfo={otpUserInfo}
         locale={locale}
         done={props.done}
         goBack={props.goBack}

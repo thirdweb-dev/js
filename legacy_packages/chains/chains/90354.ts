@@ -2,9 +2,6 @@ import type { Chain } from "../src/types";
 export default {
   "chain": "ETH",
   "chainId": 90354,
-  "ens": {
-    "registry": "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e"
-  },
   "explorers": [
     {
       "name": "Block Explorer",
@@ -26,7 +23,7 @@ export default {
     "height": 400,
     "format": "jpg"
   },
-  "name": "Camp Network Testnet",
+  "name": "Camp Network",
   "nativeCurrency": {
     "name": "Ether",
     "symbol": "ETH",
@@ -38,7 +35,7 @@ export default {
     "https://90354.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-camp-network-4xje7wy105.t.conduit.xyz/"
   ],
-  "shortName": "campaign-l2-test",
-  "slug": "camp-network-testnet",
-  "testnet": true
+  "shortName": "campaign-l2",
+  "slug": "camp-network",
+  "testnet": false
 } as const satisfies Chain;

@@ -1,5 +1,23 @@
 # thirdweb
 
+## 5.10.1
+
+### Patch Changes
+
+- [#2836](https://github.com/thirdweb-dev/js/pull/2836) [`3810df5`](https://github.com/thirdweb-dev/js/commit/3810df57aa9590b0a2fa14071a5c061bd94b1ec6) Thanks [@jnsdls](https://github.com/jnsdls)! - add missing events for `erc721`, `erc1155` and `erc20`
+
+## 5.10.0
+
+### Minor Changes
+
+- [#2822](https://github.com/thirdweb-dev/js/pull/2822) [`a919b27`](https://github.com/thirdweb-dev/js/commit/a919b27c7af41dc003ddb643eb0641eaa8aefc07) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add multicall3 extension
+
+### Patch Changes
+
+- [#2834](https://github.com/thirdweb-dev/js/pull/2834) [`be85410`](https://github.com/thirdweb-dev/js/commit/be8541054e392a12678ffee534284e7d1b203ad4) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - fix: erc1155 sigmint with additional supply
+
+- [#2831](https://github.com/thirdweb-dev/js/pull/2831) [`38f3b2e`](https://github.com/thirdweb-dev/js/commit/38f3b2eb21e74e5947f03cc594dee22c96099f8b) Thanks [@MananTank](https://github.com/MananTank)! - Fix In-App + Smart wallet Connection issue
+
 ## 5.9.0
 
 ### Minor Changes
