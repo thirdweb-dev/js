@@ -4,20 +4,19 @@ export {
   type QuoteApprovalParams,
   type QuoteTokenInfo,
   type GetBuyWithCryptoQuoteParams,
-} from "../pay/buyWithCrypto/actions/getQuote.js";
+} from "../pay/buyWithCrypto/getQuote.js";
 
 export {
   getBuyWithCryptoStatus,
   type BuyWithCryptoStatus,
   type BuyWithCryptoTransaction,
-  type BuyWithCryptoTransactionDetails,
-} from "../pay/buyWithCrypto/actions/getStatus.js";
+} from "../pay/buyWithCrypto/getStatus.js";
 
 export {
   getBuyWithCryptoHistory,
   type BuyWithCryptoHistoryData,
   type BuyWithCryptoHistoryParams,
-} from "../pay/buyWithCrypto/actions/getHistory.js";
+} from "../pay/buyWithCrypto/getHistory.js";
 
 // fiat ------------------------------------------------
 
@@ -38,3 +37,10 @@ export {
   type BuyHistoryData,
   type BuyHistoryParams,
 } from "../pay/getBuyHistory.js";
+
+// types ------------------------------------------------
+
+export type {
+  PayTokenInfo,
+  PayOnChainTransactionDetails,
+} from "../pay/utils/commonTypes.js";
