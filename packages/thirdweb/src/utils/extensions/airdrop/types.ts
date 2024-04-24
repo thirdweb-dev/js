@@ -41,3 +41,21 @@ export type ClaimProofERC721 = {
   recipient: Address;
   tokenId: bigint;
 };
+
+export type ShardDataERC1155 = {
+  proofs: Hex[];
+  entries: SnapshotEntryERC1155[];
+};
+
+export type SnapshotEntryERC1155 = {
+  recipient: string;
+  tokenId: number | string;
+  amount: number | string;
+};
+
+export type ClaimProofERC1155 = {
+  proof: Hex[];
+  recipient: Address;
+  tokenId: bigint;
+  quantity: bigint;
+};
