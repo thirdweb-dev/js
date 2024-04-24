@@ -17,7 +17,7 @@ export type GetBuyWithFiatStatusParams = {
   intentId: string;
 };
 
-export const OnRampStatus = {
+export const BuyWithFiatTransactionStatus = {
   NONE: "NONE",
   PENDING_PAYMENT: "PENDING_PAYMENT",
   PAYMENT_FAILED: "PAYMENT_FAILED",
@@ -30,7 +30,8 @@ export const OnRampStatus = {
   CRYPTO_SWAP_IN_PROGRESS: "CRYPTO_SWAP_IN_PROGRESS",
   CRYPTO_SWAP_FAILED: "CRYPTO_SWAP_FAILED",
 };
-export type OnRampStatus = (typeof OnRampStatus)[keyof typeof OnRampStatus];
+export type BuyWithFiatTransactionStatus =
+  (typeof BuyWithFiatTransactionStatus)[keyof typeof BuyWithFiatTransactionStatus];
 
 export type FiatCurrencyInfo = {
   amount: string;
@@ -46,7 +47,7 @@ export type BuyWithFiatStatus =
     }
   | {
       intentId: string;
-      status: OnRampStatus;
+      status: BuyWithFiatTransactionStatus;
       toAddress: string;
       quote: {
         estimatedOnRampAmount: string;

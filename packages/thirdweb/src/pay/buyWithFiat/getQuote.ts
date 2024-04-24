@@ -1,6 +1,6 @@
 import type { ThirdwebClient } from "../../client/client.js";
 import { getClientFetch } from "../../utils/fetch.js";
-import { getPayBuyWithFiatQuoteEndpoint } from "../buyWithCrypto/utils/definitions.js";
+import { getPayBuyWithFiatQuoteEndpoint } from "../utils/definitions.js";
 
 // TODO: VERIFY THE TYPES !!!!
 

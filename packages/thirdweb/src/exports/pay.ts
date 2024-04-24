@@ -33,6 +33,17 @@ export {
 } from "../pay/buyWithFiat/getStatus.js";
 
 export {
+  getBuyWithFiatHistory,
+  type BuyWithFiatHistoryData,
+  type BuyWithFiatHistoryParams,
+} from "../pay/buyWithFiat/getHistory.js";
+
+export {
+  getPostOnRampQuote,
+  type GetPostOnRampQuoteParams,
+} from "../pay/buyWithFiat/getPostOnrampQuote.js";
+
+export {
   getBuyHistory,
   type BuyHistoryData,
   type BuyHistoryParams,
