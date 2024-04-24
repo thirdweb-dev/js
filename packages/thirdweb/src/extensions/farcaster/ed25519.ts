@@ -11,7 +11,7 @@ export type Ed25519Keypair = {
  * Generates an Ed25519 keypair to be used as an account signer.
  * @returns A promise resolving to the generated keypair.
  * @example
- * ```
+ * ```ts
  * createSigner()
  * ```
  * @extension FARCASTER

@@ -5,7 +5,7 @@ const uint8ArrayStringified = "[object Uint8Array]";
 /**
  * Throw a `TypeError` if the given value is not an instance of `Uint8Array`.
  * @example
- * ```
+ * ```ts
  * import {assertUint8Array} from 'uint8array-extras';
  *
  * try {
@@ -26,7 +26,7 @@ function assertUint8Array(value: unknown): asserts value is Uint8Array {
  *
  * Replacement for [`Buffer.isBuffer()`](https://nodejs.org/api/buffer.html#static-method-bufferisbufferobj).
  * @example
- * ```
+ * ```ts
  * import {isUint8Array} from 'uint8array-extras';
  *
  * console.log(isUint8Array(new Uint8Array()));
@@ -56,7 +56,7 @@ export function isUint8Array(value: unknown): value is Uint8Array {
  *
  * Replacement for [`Buffer#equals()`](https://nodejs.org/api/buffer.html#bufequalsotherbuffer).
  * @example
- * ```
+ * ```ts
  * import {areUint8ArraysEqual} from 'uint8array-extras';
  *
  * const a = new Uint8Array([1, 2, 3]);
@@ -96,7 +96,7 @@ export function areUint8ArraysEqual(a: Uint8Array, b: Uint8Array): boolean {
  *
  * Replacement for [`Buffer#toString()`](https://nodejs.org/api/buffer.html#buftostringencoding-start-end).
  * @example
- * ```
+ * ```ts
  * import {uint8ArrayToString} from 'uint8array-extras';
  *
  * const byteArray = new Uint8Array([72, 101, 108, 108, 111]);
@@ -125,7 +125,7 @@ function base64UrlToBase64(base64url: string) {
  *
  * Replacement for [`Buffer.from('SGVsbG8=', 'base64')`](https://nodejs.org/api/buffer.html#static-method-bufferfromstring-encoding).
  * @example
- * ```
+ * ```ts
  * import {base64ToUint8Array} from 'uint8array-extras';
  *
  * console.log(base64ToUint8Array('SGVsbG8='));
@@ -147,7 +147,7 @@ export function base64ToUint8Array(base64String: string): Uint8Array {
  *
  * Replacement for `Buffer.from('SGVsbG8=', 'base64').toString()` and [`atob()`](https://developer.mozilla.org/en-US/docs/Web/API/atob).
  * @example
- * ```
+ * ```ts
  * import {base64ToString} from 'uint8array-extras';
  *
  * console.log(base64ToString('SGVsbG8='));
