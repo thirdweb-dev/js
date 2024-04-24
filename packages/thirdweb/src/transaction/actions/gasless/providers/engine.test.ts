@@ -80,7 +80,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("prepareengineTransaction", () => {
           "from": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
           "gas": 64338n,
           "nonce": 0n,
-          "to": "0x98c3e25b7D41eaBAd1F94b76DD9abbE5460F5B7d",
+          "to": "${erc20Contract.address}",
           "value": 0n,
         }
       `);
