@@ -10,6 +10,7 @@ import type {
   // WalletWithPersonalAccount,
 } from "../../../../wallets/interfaces/wallet.js";
 import {
+  getLastConnectedChain,
   getStoredActiveWalletId,
   getStoredConnectedWalletIds,
 } from "../../../../wallets/manager/index.js";
@@ -178,10 +179,13 @@ export function AutoConnect(props: AutoConnectProps) {
         return;
       }
 
+      const lastConnectedChain = await getLastConnectedChain(asyncLocalStorage);
+
       async function handleWalletConnection(wallet: Wallet) {
         setConnectionStatus("connecting");
         return wallet.autoConnect({
           client: props.client,
+          chain: lastConnectedChain ?? undefined,
         });
       }
 

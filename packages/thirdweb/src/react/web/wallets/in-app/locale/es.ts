@@ -48,4 +48,9 @@ export default {
     submitButton: "Verificar",
     wrongPassword: "Contraseña incorrecta",
   },
+  invalidPhone: "Número de teléfono inválido",
+  phonePlaceholder: "Ingresa tu número de teléfono",
+  signInWithPhone: "Iniciar sesión con número de teléfono",
+  phoneRequired: "Se requiere número de teléfono",
+  signInWithEmail: "Iniciar sesión con correo electrónico",
 } satisfies InAppWalletLocale;

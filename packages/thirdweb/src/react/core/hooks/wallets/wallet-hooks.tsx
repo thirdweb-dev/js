@@ -171,13 +171,14 @@ export function useConnect() {
  * Disconnect from given account
  * @example
  * ```jsx
- * import { useDisconnect } from "thirdweb/react";
+ * import { useDisconnect, useActiveWallet } from "thirdweb/react";
  *
  * function Example() {
  *   const { disconnect } = useDisconnect();
+ *   const wallet = useActiveWallet();
  *
  *   return (
- *     <button onClick={() => disconnect(account)}>
+ *     <button onClick={() => disconnect(wallet)}>
  *       Disconnect
  *     </button>
  *   );

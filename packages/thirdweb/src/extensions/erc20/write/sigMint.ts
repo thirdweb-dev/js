@@ -1,12 +1,19 @@
 import type { AbiParameterToPrimitiveType, Address } from "abitype";
-import { NATIVE_TOKEN_ADDRESS } from "../../../constants/addresses.js";
+import {
+  NATIVE_TOKEN_ADDRESS,
+  isNativeTokenAddress,
+} from "../../../constants/addresses.js";
 import type { ThirdwebContract } from "../../../contract/contract.js";
+import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { dateToSeconds, tenYearsFromNow } from "../../../utils/date.js";
 import type { Hex } from "../../../utils/encoding/hex.js";
 import { randomBytes32 } from "../../../utils/uuid.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
 import { name } from "../../common/read/name.js";
-import { mintWithSignature as generatedMintWithSignature } from "../__generated__/ISignatureMintERC20/write/mintWithSignature.js";
+import {
+  type MintWithSignatureParams,
+  mintWithSignature as generatedMintWithSignature,
+} from "../__generated__/ISignatureMintERC20/write/mintWithSignature.js";
 
 /**
  * Mints a new ERC20 token with the given minter signature
@@ -27,7 +34,19 @@ import { mintWithSignature as generatedMintWithSignature } from "../__generated_
  * @extension ERC20
  * @returns A promise that resolves to the transaction result.
  */
-export const mintWithSignature = generatedMintWithSignature;
+export function mintWithSignature(
+  options: BaseTransactionOptions<MintWithSignatureParams>,
+) {
+  const value = isNativeTokenAddress(options.payload.currency)
+    ? options.payload.price
+    : 0n;
+  return generatedMintWithSignature({
+    ...options,
+    overrides: {
+      value,
+    },
+  });
+}
 
 export type GenerateMintSignatureOptions = {
   account: Account;

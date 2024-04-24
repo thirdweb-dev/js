@@ -280,7 +280,10 @@ export async function connectCoinbaseWalletSDK(
   })) as string | number;
 
   const chainId = normalizeChainId(connectedChainId);
-  let chain = defineChain(chainId);
+  let chain =
+    options.chain && options.chain.id === chainId
+      ? options.chain
+      : defineChain(chainId);
   // Switch to chain if provided
   if (
     connectedChainId &&
@@ -318,7 +321,10 @@ export async function autoConnectCoinbaseWalletSDK(
     method: "eth_chainId",
   })) as string | number;
   const chainId = normalizeChainId(connectedChainId);
-  const chain = defineChain(chainId);
+  const chain =
+    options.chain && options.chain.id === chainId
+      ? options.chain
+      : defineChain(chainId);
 
   return onConnect(address, chain, provider, emitter);
 }

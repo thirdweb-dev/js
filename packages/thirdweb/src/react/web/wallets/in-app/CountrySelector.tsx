@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import React, { useRef } from "react";
-import { fontSize, spacing } from "../../../design-system";
-import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
-import { StyledOption, StyledSelect } from "../../../design-system/elements";
+import { useRef } from "react";
+import { useCustomTheme } from "../../ui/design-system/CustomThemeProvider.js";
+import { StyledOption, StyledSelect } from "../../ui/design-system/elements.js";
+import { fontSize, spacing } from "../../ui/design-system/index.js";
 
 export function CountrySelector({
   countryCode,
@@ -17,7 +17,7 @@ export function CountrySelector({
     queryKey: ["supported-sms-countries"],
     queryFn: async () => {
       const { supportedSmsCountries } = await import(
-        "@thirdweb-dev/wallets/evm/connectors/embedded-wallet/implementations"
+        "./supported-sms-countries.js"
       );
       return supportedSmsCountries;
     },
@@ -42,14 +42,14 @@ export function CountrySelector({
           setCountryCode(e.target.value);
         }}
       >
-        <option
+        <Option
           style={{
             display: "none",
           }}
           value={countryCode}
         >
           {countryCode}
-        </option>
+        </Option>
         {supportedCountriesForSms.map((country) => {
           return (
             <Option
@@ -65,7 +65,6 @@ export function CountrySelector({
   );
 }
 
-
 const Option = /* @__PURE__ */ StyledOption(() => {
   const theme = useCustomTheme();
   return {
@@ -73,7 +72,7 @@ const Option = /* @__PURE__ */ StyledOption(() => {
     background: theme.colors.modalBg,
     transition: "background 0.3s ease",
     "&:hover": {
-      background: theme.colors.walletSelectorButtonHoverBg,
+      background: theme.colors.tertiaryBg,
     },
   };
 });

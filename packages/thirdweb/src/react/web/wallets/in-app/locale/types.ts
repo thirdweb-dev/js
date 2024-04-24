@@ -29,6 +29,11 @@ export type InAppWalletLocale = {
     title: string;
     wrongPassword: string;
   };
+  phonePlaceholder: string;
+  phoneRequired: string;
+  signInWithPhone: string;
+  signInWithEmail: string;
+  invalidPhone: string;
   or: string;
   invalidEmail: string;
   signIn: string;

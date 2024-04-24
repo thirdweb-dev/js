@@ -5,6 +5,7 @@ export type InAppWalletSelectUIState =
   | undefined
   | {
       emailLogin?: string;
+      phoneLogin?: string;
       socialLogin?: {
         type: InAppWalletSocialAuth;
         connectionPromise: Promise<Account>;

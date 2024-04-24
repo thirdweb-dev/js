@@ -11,6 +11,7 @@ export type ConnectionStatus = "connected" | "disconnected" | "connecting";
 
 const CONNECTED_WALLET_IDS = "thirdweb:connected-wallet-ids";
 const ACTIVE_WALLET_ID = "thirdweb:active-wallet-id";
+const LAST_ACTIVE_CHAIN = "thirdweb:active-chain";
 
 export type ConnectionManager = ReturnType<typeof createConnectionManager>;
 
@@ -126,6 +127,19 @@ export function createConnectionManager(storage: AsyncStorage) {
 
   // side effects
 
+  effect(
+    () => {
+      const _chain = activeWalletChainStore.getValue();
+      if (_chain) {
+        storage.setItem(LAST_ACTIVE_CHAIN, JSON.stringify(_chain));
+      } else {
+        storage.removeItem(LAST_ACTIVE_CHAIN);
+      }
+    },
+    [activeWalletChainStore],
+    false,
+  );
+
   // save last connected wallet ids to storage
   effect(
     () => {
@@ -211,6 +225,24 @@ export async function getStoredActiveWalletId(
     const value = await storage.getItem(ACTIVE_WALLET_ID);
     if (value) {
       return value;
+    }
+
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * @internal
+ */
+export async function getLastConnectedChain(
+  storage: AsyncStorage,
+): Promise<Chain | null> {
+  try {
+    const value = await storage.getItem(LAST_ACTIVE_CHAIN);
+    if (value) {
+      return JSON.parse(value) as Chain;
     }
 
     return null;

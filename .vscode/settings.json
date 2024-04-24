@@ -8,5 +8,8 @@
   "typescript.preferences.importModuleSpecifier": "relative",
   "[typescriptreact]": {
     "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   }
 }
