@@ -4,6 +4,12 @@ export default {
   "chainId": 1221,
   "explorers": [],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmeC4mKGbBpwmLfFxUSsareWkSWJomevUmex8ajjxo1zHx",
+    "width": 500,
+    "height": 500,
+    "format": "png"
+  },
   "infoURL": "https://www.cyclenetwork.io/",
   "name": "Cycle Network Testnet",
   "nativeCurrency": {

@@ -6,22 +6,10 @@ export default {
     {
       "name": "MEVerse Chain Testnet Explorer",
       "url": "https://testnet.meversescan.io",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://QmPuQ6gaCfUtNdRuaEDbdhot2m2KCy2ZHCJUvZXJAtdeyJ",
-        "width": 800,
-        "height": 800,
-        "format": "png"
-      }
+      "standard": "none"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmPuQ6gaCfUtNdRuaEDbdhot2m2KCy2ZHCJUvZXJAtdeyJ",
-    "width": 800,
-    "height": 800,
-    "format": "png"
-  },
   "infoURL": "https://www.meverse.sg",
   "name": "MEVerse Chain Testnet",
   "nativeCurrency": {
