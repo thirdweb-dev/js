@@ -1,4 +1,5 @@
 // read
+export { isERC20 } from "../../extensions/erc20/read/isERC20.js";
 export {
   getBalance,
   type GetBalanceParams,
