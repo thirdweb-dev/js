@@ -41,7 +41,7 @@ export {
 export {
   getPostOnRampQuote,
   type GetPostOnRampQuoteParams,
-} from "../pay/buyWithFiat/getPostOnrampQuote.js";
+} from "../pay/buyWithFiat/getPostOnRampQuote.js";
 
 export {
   getBuyHistory,

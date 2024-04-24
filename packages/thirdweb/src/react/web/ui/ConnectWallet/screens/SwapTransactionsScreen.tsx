@@ -84,7 +84,10 @@ function useBuyTransactionsToShow(client: ThirdwebClient) {
     if ("buyWithCryptoStatus" in tx) {
       txHashSet.add(tx.buyWithCryptoStatus.source.transactionHash);
     } else {
-      if (tx.buyWithFiatStatus.status !== "NOT_FOUND") {
+      if (
+        tx.buyWithFiatStatus.status !== "NOT_FOUND" &&
+        tx.buyWithFiatStatus.source
+      ) {
         txHashSet.add(tx.buyWithFiatStatus.source.transactionHash);
       }
     }
@@ -128,14 +131,14 @@ function useBuyTransactionsToShow(client: ThirdwebClient) {
       });
     } else {
       const txInfo = tx.buyWithFiatStatus;
-      if (txInfo.status !== "NOT_FOUND") {
+      if (txInfo.status !== "NOT_FOUND" && txInfo.source) {
         console.log("fiat status", txInfo);
         txInfosToShow.push({
           type: "buyWithFiat",
           boughtChainId: txInfo.quote.toToken.chainId,
           transactionHash: txInfo.source.transactionHash,
           boughtTokenAmount: txInfo.quote.estimatedToTokenAmount,
-          boughtTokenSymbol: txInfo.quote.toToken.symbol,
+          boughtTokenSymbol: txInfo.quote.toToken.symbol || "",
           status: txInfo.status,
         });
       }
@@ -492,20 +495,11 @@ function getBuyWithCryptoStatusMeta(
 function getBuyWithFiatStatusMeta(
   status: BuyWithFiatStatus["status"],
 ): StatusMeta {
-  // TEMP fix - this needs to be fixed in server
-  if ((status as string) === "CRYPTO_SWAP_REQUIRED ") {
-    return {
-      status: "Incomplete",
-      color: "accentText",
-    };
-  }
-
   switch (status) {
     case "CRYPTO_SWAP_IN_PROGRESS":
     case "PENDING_ON_RAMP_TRANSFER":
     case "ON_RAMP_TRANSFER_IN_PROGRESS":
-    case "PENDING_PAYMENT":
-    case "PENDING_CRYPTO_SWAP": {
+    case "PENDING_PAYMENT": {
       return {
         status: "Pending",
         color: "accentText",

@@ -1,13 +1,10 @@
 import type { ThirdwebClient } from "../../client/client.js";
 import { getClientFetch } from "../../utils/fetch.js";
-import { getPayBuyWithFiatStatusEndpoint } from "../utils/definitions.js";
 import type {
   PayOnChainTransactionDetails,
   PayTokenInfo,
 } from "../utils/commonTypes.js";
-// TODO: VERIFY THE TYPES !!!!
-
-// TODO: add JSDoc description for all properties
+import { getPayBuyWithFiatStatusEndpoint } from "../utils/definitions.js";
 
 /**
  * TODO
@@ -17,22 +14,6 @@ export type GetBuyWithFiatStatusParams = {
   intentId: string;
 };
 
-export const BuyWithFiatTransactionStatus = {
-  NONE: "NONE",
-  PENDING_PAYMENT: "PENDING_PAYMENT",
-  PAYMENT_FAILED: "PAYMENT_FAILED",
-  PENDING_ON_RAMP_TRANSFER: "PENDING_ON_RAMP_TRANSFER",
-  ON_RAMP_TRANSFER_IN_PROGRESS: "ON_RAMP_TRANSFER_IN_PROGRESS",
-  ON_RAMP_TRANSFER_COMPLETED: "ON_RAMP_TRANSFER_COMPLETED",
-  ON_RAMP_TRANSFER_FAILED: "ON_RAMP_TRANSFER_FAILED",
-  CRYPTO_SWAP_REQUIRED: "CRYPTO_SWAP_REQUIRED",
-  CRYPTO_SWAP_COMPLETED: "CRYPTO_SWAP_COMPLETED",
-  CRYPTO_SWAP_IN_PROGRESS: "CRYPTO_SWAP_IN_PROGRESS",
-  CRYPTO_SWAP_FAILED: "CRYPTO_SWAP_FAILED",
-};
-export type BuyWithFiatTransactionStatus =
-  (typeof BuyWithFiatTransactionStatus)[keyof typeof BuyWithFiatTransactionStatus];
-
 export type FiatCurrencyInfo = {
   amount: string;
   amountUnits: string;
@@ -40,14 +21,24 @@ export type FiatCurrencyInfo = {
   currencySymbol: string;
 };
 
-// convert the above JSON schema to TypeScript types
 export type BuyWithFiatStatus =
   | {
       status: "NOT_FOUND";
     }
   | {
       intentId: string;
-      status: BuyWithFiatTransactionStatus;
+      status:
+        | "NONE"
+        | "PENDING_PAYMENT"
+        | "PAYMENT_FAILED"
+        | "PENDING_ON_RAMP_TRANSFER"
+        | "ON_RAMP_TRANSFER_IN_PROGRESS"
+        | "ON_RAMP_TRANSFER_COMPLETED"
+        | "ON_RAMP_TRANSFER_FAILED"
+        | "CRYPTO_SWAP_REQUIRED"
+        | "CRYPTO_SWAP_COMPLETED"
+        | "CRYPTO_SWAP_IN_PROGRESS"
+        | "CRYPTO_SWAP_FAILED";
       toAddress: string;
       quote: {
         estimatedOnRampAmount: string;
