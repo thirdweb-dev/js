@@ -8,6 +8,7 @@ import type { Account, Wallet } from "./interfaces/wallet.js";
 import type {
   CreateWalletArgs,
   InjectedConnectOptions,
+  WalletAutoConnectionOption,
   WalletId,
 } from "./wallet-types.js";
 
@@ -104,7 +105,11 @@ export function createWallet<const ID extends WalletId>(
         getConfig: () => args[1],
         getChain: () => chain,
         getAccount: () => account,
-        autoConnect: async (options) => {
+        autoConnect: async (
+          options: WalletAutoConnectionOption<
+            WCSupportedWalletIds | InjectedSupportedWalletIds
+          >,
+        ) => {
           // injected wallet priority for autoConnect
           if (id !== "walletConnect" && injectedProvider(id)) {
             const { autoConnectInjectedWallet } = await import(
@@ -119,6 +124,7 @@ export function createWallet<const ID extends WalletId>(
             ] = await autoConnectInjectedWallet(
               id as InjectedSupportedWalletIds,
               emitter,
+              options.chain,
             );
             // set the states
             account = connectedAccount;
