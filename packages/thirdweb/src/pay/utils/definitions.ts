@@ -1,4 +1,4 @@
-import { getThirdwebDomains } from "../../../utils/domains.js";
+import { getThirdwebDomains } from "../../utils/domains.js";
 
 /**
  * Constructs the endpoint to get the status of a quote.
@@ -32,7 +32,15 @@ export const getPayBuyWithFiatStatusEndpoint = () =>
   `https://${getThirdwebDomains().pay}/buy-with-fiat/status/v1`;
 
 /**
- * Constructs the endpoint to get a wallet address swap history.
+ * Constructs the endpoint to get a wallet address BuyWithFiat history.
+ * @param client - The Thirdweb client containing the baseUrl config
+ * @internal
+ */
+export const getPayBuyWithFiatHistoryEndpoint = () =>
+  `https://${getThirdwebDomains().pay}/buy-with-fiat/history/v1`;
+
+/**
+ * Constructs the endpoint to get a wallet address BuyWithCrypto history.
  * @param client - The Thirdweb client containing the baseUrl config
  * @internal
  */

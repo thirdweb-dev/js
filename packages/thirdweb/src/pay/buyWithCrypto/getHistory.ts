@@ -1,14 +1,14 @@
-import type { ThirdwebClient } from "../client/client.js";
-import type { BuyWithCryptoStatus, BuyWithFiatStatus } from "../exports/pay.js";
-import { getClientFetch } from "../utils/fetch.js";
-import { getPayBuyHistoryEndpoint } from "./utils/definitions.js";
+import type { ThirdwebClient } from "../../client/client.js";
+import { getClientFetch } from "../../utils/fetch.js";
+import { getPayBuyWithCryptoHistoryEndpoint } from "../utils/definitions.js";
+import type { BuyWithCryptoStatus } from "./getStatus.js";
 
 /**
- * The parameters for [`getBuyHistory`](https://portal.thirdweb.com/references/typescript/v5/getBuyHistory) function
- * It takes the wallet history address and optional cursor and page size for paginated results.
- * @pay
+ * The parameters for [`getBuyWithCryptoHistory`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoHistory) function
+ * It takes the wallet history address and optional cursor and page size. for paginated results.
+ * @buyCrypto
  */
-export type BuyHistoryParams = {
+export type BuyWithCryptoHistoryParams = {
   /**
    * A client is the entry point to the thirdweb SDK. It is required for all other actions.
    *
@@ -32,25 +32,18 @@ export type BuyHistoryParams = {
 };
 
 /**
- * The result for [`getBuyHistory`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoHistory) function
+ * The results for [`getBuyWithCryptoHistory`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoHistory) function
  * It includes information about transactions that the wallet address has made through thirdweb buy with crypto.
  * @buyCrypto
  */
-export type BuyHistoryData = {
-  page: Array<
-    | {
-        buyWithFiatStatus: BuyWithFiatStatus;
-      }
-    | {
-        buyWithCryptoStatus: BuyWithCryptoStatus;
-      }
-  >;
+export type BuyWithCryptoHistoryData = {
+  page: BuyWithCryptoStatus[];
   hasNextPage: boolean;
 };
 
 /**
- * Gets the History of purchases for a given wallet address - This includes both "buy with crypto" and "buy with fiat" transactions
- * @param params Object of type [`BuyHistoryParams`](https://portal.thirdweb.com/references/typescript/v5/BuyHistoryParams)
+ * Gets the History of purchases for a given wallet address
+ * @param params Object of type [`BuyWithCryptoHistoryParams`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoHistoryParams)
  * @example
  *
  * ```ts
@@ -65,14 +58,14 @@ export type BuyHistoryData = {
  * };
  *
  * // grabs the history of purchase transactions for the wallet address
- * const status = await getBuyHistory(params)
+ * const status = await getBuyWithCryptoHistory(params)
  * ```
- * @returns Object of type [`BuyHistoryData`](https://portal.thirdweb.com/references/typescript/v5/BuyHistoryData)
- * @pay
+ * @returns Object of type [`BuyWithCryptoHistoryData`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoHistoryData)
+ * @buyCrypto
  */
-export async function getBuyHistory(
-  params: BuyHistoryParams,
-): Promise<BuyHistoryData> {
+export async function getBuyWithCryptoHistory(
+  params: BuyWithCryptoHistoryParams,
+): Promise<BuyWithCryptoHistoryData> {
   try {
     const queryParams = new URLSearchParams();
     queryParams.append("walletAddress", params.walletAddress);
@@ -80,7 +73,7 @@ export async function getBuyHistory(
     queryParams.append("count", params.count.toString());
 
     const queryString = queryParams.toString();
-    const url = `${getPayBuyHistoryEndpoint()}?${queryString}`;
+    const url = `${getPayBuyWithCryptoHistoryEndpoint()}?${queryString}`;
 
     const response = await getClientFetch(params.client)(url);
 
@@ -90,7 +83,7 @@ export async function getBuyHistory(
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data: BuyHistoryData = (await response.json()).result;
+    const data: BuyWithCryptoHistoryData = (await response.json()).result;
     return data;
   } catch (error) {
     throw new Error(`Fetch failed: ${error}`);

@@ -1,14 +1,14 @@
 import type { Hash } from "viem";
-import { defineChain } from "../../../chains/utils.js";
-import type { ThirdwebClient } from "../../../client/client.js";
-import { getContract } from "../../../contract/contract.js";
+import { defineChain } from "../../chains/utils.js";
+import type { ThirdwebClient } from "../../client/client.js";
+import { getContract } from "../../contract/contract.js";
 import {
   type ApproveParams,
   approve,
-} from "../../../extensions/erc20/write/approve.js";
-import type { PrepareTransactionOptions } from "../../../transaction/prepare-transaction.js";
-import type { BaseTransactionOptions } from "../../../transaction/types.js";
-import { getClientFetch } from "../../../utils/fetch.js";
+} from "../../extensions/erc20/write/approve.js";
+import type { PrepareTransactionOptions } from "../../transaction/prepare-transaction.js";
+import type { BaseTransactionOptions } from "../../transaction/types.js";
+import { getClientFetch } from "../../utils/fetch.js";
 import { getPayBuyWithCryptoQuoteEndpoint } from "../utils/definitions.js";
 
 // TODO: add JSDoc description for all properties

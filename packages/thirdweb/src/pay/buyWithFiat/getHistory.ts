@@ -1,14 +1,14 @@
-import type { ThirdwebClient } from "../../../client/client.js";
-import { getClientFetch } from "../../../utils/fetch.js";
-import { getPayBuyWithCryptoHistoryEndpoint } from "../utils/definitions.js";
-import type { BuyWithCryptoStatus } from "./getStatus.js";
+import type { ThirdwebClient } from "../../client/client.js";
+import { getClientFetch } from "../../utils/fetch.js";
+import { getPayBuyWithFiatHistoryEndpoint } from "../utils/definitions.js";
+import type { BuyWithFiatStatus } from "./getStatus.js";
 
 /**
- * The parameters for [`getBuyWithCryptoHistory`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoHistory) function
+ * The parameters for [`getBuyWithFiatHistory`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithFiatHistory) function
  * It takes the wallet history address and optional cursor and page size. for paginated results.
  * @buyCrypto
  */
-export type BuyWithCryptoHistoryParams = {
+export type BuyWithFiatHistoryParams = {
   /**
    * A client is the entry point to the thirdweb SDK. It is required for all other actions.
    *
@@ -32,23 +32,23 @@ export type BuyWithCryptoHistoryParams = {
 };
 
 /**
- * The results for [`getBuyWithCryptoHistory`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoHistory) function
+ * The results for [`getBuyWithFiatHistory`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithFiatHistory) function
  * It includes information about transactions that the wallet address has made through thirdweb buy with crypto.
  * @buyCrypto
  */
-export type BuyWithCryptoHistoryData = {
-  page: BuyWithCryptoStatus[];
+export type BuyWithFiatHistoryData = {
+  page: BuyWithFiatStatus[];
   hasNextPage: boolean;
 };
 
 /**
  * Gets the History of purchases for a given wallet address
- * @param params Object of type [`BuyWithCryptoHistoryParams`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoHistoryParams)
+ * @param params Object of type [`BuyWithFiatHistoryParams`](https://portal.thirdweb.com/references/typescript/v5/BuyWithFiatHistoryParams)
  * @example
  *
  * ```ts
  * import { createThirdwebClient } from "thirdweb";
- * import { BuyWithCryptoHistoryData } from "thirdweb/pay";
+ * import { BuyWithFiatHistoryData } from "thirdweb/pay";
  *
  * const client = createThirdwebClient({ clientId: "..." });
  * const walletAddress = "0x...";
@@ -58,14 +58,14 @@ export type BuyWithCryptoHistoryData = {
  * };
  *
  * // grabs the history of purchase transactions for the wallet address
- * const status = await getBuyWithCryptoHistory(params)
+ * const status = await getBuyWithFiatHistory(params)
  * ```
- * @returns Object of type [`BuyWithCryptoHistoryData`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoHistoryData)
+ * @returns Object of type [`BuyWithFiatHistoryData`](https://portal.thirdweb.com/references/typescript/v5/BuyWithFiatHistoryData)
  * @buyCrypto
  */
-export async function getBuyWithCryptoHistory(
-  params: BuyWithCryptoHistoryParams,
-): Promise<BuyWithCryptoHistoryData> {
+export async function getBuyWithFiatHistory(
+  params: BuyWithFiatHistoryParams,
+): Promise<BuyWithFiatHistoryData> {
   try {
     const queryParams = new URLSearchParams();
     queryParams.append("walletAddress", params.walletAddress);
@@ -73,17 +73,17 @@ export async function getBuyWithCryptoHistory(
     queryParams.append("count", params.count.toString());
 
     const queryString = queryParams.toString();
-    const url = `${getPayBuyWithCryptoHistoryEndpoint()}?${queryString}`;
+    const url = `${getPayBuyWithFiatHistoryEndpoint()}?${queryString}`;
 
     const response = await getClientFetch(params.client)(url);
 
-    // Assuming the response directly matches the SwapResponse interface
+    // Assuming the response directly matches the BuyWithFiatStatus response interface
     if (!response.ok) {
       response.body?.cancel();
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data: BuyWithCryptoHistoryData = (await response.json()).result;
+    const data: BuyWithFiatHistoryData = (await response.json()).result;
     return data;
   } catch (error) {
     throw new Error(`Fetch failed: ${error}`);

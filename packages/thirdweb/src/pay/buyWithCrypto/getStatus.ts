@@ -1,23 +1,16 @@
-import type { ThirdwebClient } from "../../../client/client.js";
-import { getClientFetch } from "../../../utils/fetch.js";
+import type { ThirdwebClient } from "../../client/client.js";
+import { getClientFetch } from "../../utils/fetch.js";
 import { getPayBuyWithCryptoStatusUrl } from "../utils/definitions.js";
-import type { QuoteTokenInfo } from "./getQuote.js";
+import type {
+  PayTokenInfo,
+  PayOnChainTransactionDetails,
+} from "../utils/commonTypes.js";
 
 // TODO: add JSDoc description for all properties
 
-export type BuyWithCryptoTransactionDetails = {
-  transactionHash: string;
-  token: QuoteTokenInfo;
-  amountWei: string;
-  amount: string;
-  amountUSDCents: number;
-  completedAt?: string; // ISO DATE
-  explorerLink?: string;
-};
-
 export type BuyWithCryptoQuoteSummary = {
-  fromToken: QuoteTokenInfo;
-  toToken: QuoteTokenInfo;
+  fromToken: PayTokenInfo;
+  toToken: PayTokenInfo;
 
   fromAmountWei: string;
   fromAmount: string;
@@ -70,8 +63,8 @@ export type SwapType = "SAME_CHAIN" | "CROSS_CHAIN";
 export type BuyWithCryptoStatus = {
   quote: BuyWithCryptoQuoteSummary;
   swapType: SwapType;
-  source: BuyWithCryptoTransactionDetails;
-  destination?: BuyWithCryptoTransactionDetails;
+  source: PayOnChainTransactionDetails;
+  destination?: PayOnChainTransactionDetails;
   status: BuyWithCryptoStatuses;
   subStatus: BuyWithCryptoSubStatuses;
   fromAddress: string;
@@ -130,7 +123,7 @@ export async function getBuyWithCryptoStatus(
 
     const response = await getClientFetch(buyWithCryptoTransaction.client)(url);
 
-    // Assuming the response directly matches the SwapResponse interface
+    // Assuming the response directly matches the BuyWithCryptoStatus interface
     if (!response.ok) {
       response.body?.cancel();
       throw new Error(`HTTP error! status: ${response.status}`);
