@@ -8,7 +8,7 @@ import type {
   BuyWithCryptoStatus,
   BuyWithCryptoStatuses,
   BuyWithCryptoSubStatuses,
-} from "../../../../../pay/buyWithCrypto/actions/getStatus.js";
+} from "../../../../../pay/buyWithCrypto/getStatus.js";
 import { formatNumber } from "../../../../../utils/formatNumber.js";
 import { useChainQuery } from "../../../../core/hooks/others/useChainQuery.js";
 import {

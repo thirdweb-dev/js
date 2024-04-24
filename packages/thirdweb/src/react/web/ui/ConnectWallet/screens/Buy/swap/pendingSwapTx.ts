@@ -2,7 +2,7 @@ import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import {
   type BuyWithCryptoStatus,
   getBuyWithCryptoStatus,
-} from "../../../../../../../pay/buyWithCrypto/actions/getStatus.js";
+} from "../../../../../../../pay/buyWithCrypto/getStatus.js";
 import { createStore } from "../../../../../../../reactive/store.js";
 import { wait } from "../../../../../../../utils/promise/wait.js";
 

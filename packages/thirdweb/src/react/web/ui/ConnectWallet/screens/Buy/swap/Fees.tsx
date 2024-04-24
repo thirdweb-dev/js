@@ -1,4 +1,4 @@
-import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/actions/getQuote.js";
+import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
 import type { BuyWithFiatQuote } from "../../../../../../../pay/buyWithFiat/getQuote.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { Container } from "../../../../components/basic.js";
