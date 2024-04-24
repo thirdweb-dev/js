@@ -34,8 +34,10 @@ export async function sendGaslessTransaction({
 
   // biconomy
   if (gasless.provider === "biconomy") {
-    const { sendBiconomyTransaction } = await import("./providers/biconomy.js");
-    return sendBiconomyTransaction({
+    const { relayBiconomyTransaction } = await import(
+      "./providers/biconomy.js"
+    );
+    return relayBiconomyTransaction({
       account,
       transaction,
       serializableTransaction,
@@ -45,10 +47,10 @@ export async function sendGaslessTransaction({
 
   // openzeppelin
   if (gasless.provider === "openzeppelin") {
-    const { sendOpenZeppelinTransaction } = await import(
+    const { relayOpenZeppelinTransaction } = await import(
       "./providers/openzeppelin.js"
     );
-    return sendOpenZeppelinTransaction({
+    return relayOpenZeppelinTransaction({
       account,
       transaction,
       serializableTransaction,
@@ -56,5 +58,15 @@ export async function sendGaslessTransaction({
     });
   }
 
-  throw new Error(`Unsupported gasless provider: ${gasless.provider}`);
+  if (gasless.provider === "engine") {
+    const { relayEngineTransaction } = await import("./providers/engine.js");
+    return relayEngineTransaction({
+      account,
+      transaction,
+      serializableTransaction,
+      gasless,
+    });
+  }
+
+  throw new Error("Unsupported gasless provider");
 }

@@ -110,7 +110,7 @@ export async function prepareBiconomyTransaction({
 /**
  * @internal
  */
-export async function sendBiconomyTransaction(
+export async function relayBiconomyTransaction(
   options: SendBiconomyTransactionOptions,
 ): Promise<WaitForReceiptOptions> {
   const [request, signature] = await prepareBiconomyTransaction(options);

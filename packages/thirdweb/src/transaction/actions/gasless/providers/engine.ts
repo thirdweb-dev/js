@@ -1,15 +1,17 @@
 import type { Address } from "abitype";
 import type { TransactionSerializable } from "viem";
 import { getContract } from "../../../../contract/contract.js";
-import { isHex } from "../../../../utils/encoding/helpers/is-hex.js";
 import { stringify } from "../../../../utils/json.js";
 import type { Account } from "../../../../wallets/interfaces/wallet.js";
 import type { PreparedTransaction } from "../../../prepare-transaction.js";
 import { readContract } from "../../../read-contract.js";
-import type { WaitForReceiptOptions } from "../../wait-for-tx-receipt.js";
+import {
+  type WaitForReceiptOptions,
+  waitForReceipt,
+} from "../../wait-for-tx-receipt.js";
 
-export type OpenZeppelinOptions = {
-  provider: "openzeppelin";
+export type EngineOptions = {
+  provider: "engine";
   relayerUrl: string;
   relayerForwarderAddress: Address;
   domainName?: string; // default: "GSNv2 Forwarder"
@@ -18,24 +20,24 @@ export type OpenZeppelinOptions = {
   experimentalChainlessSupport?: boolean; // default: false
 };
 
-type SendOpenZeppelinTransactionOptions = {
+type SendengineTransactionOptions = {
   account: Account;
   // TODO: update this to `Transaction<"prepared">` once the type is available to ensure only prepared transactions are accepted
   // biome-ignore lint/suspicious/noExplicitAny: library function that accepts any prepared transaction type
   transaction: PreparedTransaction<any>;
   serializableTransaction: TransactionSerializable;
-  gasless: OpenZeppelinOptions;
+  gasless: EngineOptions;
 };
 
 /**
  * @internal - only exported for testing
  */
-export async function prepareOpenZeppelinTransaction({
+export async function prepareEngineTransaction({
   account,
   serializableTransaction,
   transaction,
   gasless,
-}: SendOpenZeppelinTransactionOptions) {
+}: SendengineTransactionOptions) {
   const forrwaderContract = getContract({
     address: gasless.relayerForwarderAddress,
     chain: transaction.chain,
@@ -52,13 +54,13 @@ export async function prepareOpenZeppelinTransaction({
     // TODO: handle special case for `approve` -> `permit` transactions
 
     if (!serializableTransaction.to) {
-      throw new Error("OpenZeppelin transactions must have a 'to' address");
+      throw new Error("engine transactions must have a 'to' address");
     }
     if (!serializableTransaction.gas) {
-      throw new Error("OpenZeppelin transactions must have a 'gas' value");
+      throw new Error("engine transactions must have a 'gas' value");
     }
     if (!serializableTransaction.data) {
-      throw new Error("OpenZeppelin transactions must have a 'data' value");
+      throw new Error("engine transactions must have a 'data' value");
     }
     // chainless support!
     if (gasless.experimentalChainlessSupport) {
@@ -137,14 +139,17 @@ export const ChainAwareForwardRequest = [
 /**
  * @internal
  */
-export async function relayOpenZeppelinTransaction(
-  options: SendOpenZeppelinTransactionOptions,
+export async function relayEngineTransaction(
+  options: SendengineTransactionOptions,
 ): Promise<WaitForReceiptOptions> {
   const { message, messageType, signature } =
-    await prepareOpenZeppelinTransaction(options);
+    await prepareEngineTransaction(options);
 
   const response = await fetch(options.gasless.relayerUrl, {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: stringify({
       request: message,
       type: messageType,
@@ -154,21 +159,65 @@ export async function relayOpenZeppelinTransaction(
   });
 
   if (!response.ok) {
-    response.body?.cancel();
     throw new Error(`Failed to send transaction: ${await response.text()}`);
   }
   const json = await response.json();
   if (!json.result) {
     throw new Error(`Relay transaction failed: ${json.message}`);
   }
-  const transactionHash = JSON.parse(json.result).txHash;
-  if (isHex(transactionHash)) {
-    return {
-      transactionHash,
-      chain: options.transaction.chain,
-      client: options.transaction.client,
-    };
+  const queueId = json.result.queueId;
+  // poll for transactionHash
+  const timeout = 60000;
+  const interval = 1000;
+  const endtime = Date.now() + timeout;
+  while (Date.now() < endtime) {
+    const receipt = await fetchReceipt({ options, queueId });
+    if (receipt) {
+      return {
+        transactionHash: receipt.transactionHash,
+        chain: options.transaction.chain,
+        client: options.transaction.client,
+      };
+    }
+    await new Promise((resolve) => setTimeout(resolve, interval));
   }
+  throw new Error(`Failed to find relayed transaction after ${timeout}ms`);
+}
 
-  throw new Error(`Failed to send transaction: ${stringify(json)}`);
+async function fetchReceipt(args: {
+  options: SendengineTransactionOptions;
+  queueId: string;
+}) {
+  const { options, queueId } = args;
+  const url = options.gasless.relayerUrl.split("/relayer/")[0];
+  const res = await fetch(`${url}/transaction/status/${queueId}`, {
+    method: "GET",
+  });
+  const resJson = await res.json();
+  if (!res.ok) {
+    return null;
+  }
+  const result = resJson.result;
+  if (!result) {
+    return null;
+  }
+  switch (result.status) {
+    case "errored":
+      throw new Error(
+        `Transaction errored with reason: ${result.errorMessage}`,
+      );
+    case "cancelled":
+      throw new Error("Transaction execution cancelled.");
+    case "mined": {
+      const receipt = await waitForReceipt({
+        client: options.transaction.client,
+        chain: options.transaction.chain,
+        transactionHash: result.transactionHash,
+      });
+      return receipt;
+    }
+    default: {
+      return null;
+    }
+  }
 }
