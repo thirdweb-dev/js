@@ -24,6 +24,7 @@ export type WalletId =
   | "inApp"
   | "embedded" // deprecated
   | "smart"
+  | "frame" // frame wallet (desktop app)
   | WCSupportedWalletIds
   | InjectedSupportedWalletIds;
 
@@ -62,8 +63,9 @@ export type InAppWalletCreationOptions =
  * type X = WalletConnectionOption<'io.metamask'>
  * ````
  */
-export type WalletConnectionOption<T extends WalletId> =
-  T extends "walletConnect"
+export type WalletConnectionOption<T extends WalletId> = T extends "frame"
+  ? InjectedConnectOptions
+  : T extends "walletConnect"
     ? StandaloneWCConnectOptions
     : T extends "smart"
       ? SmartWalletConnectionOptions
@@ -89,8 +91,9 @@ export type WalletConnectionOption<T extends WalletId> =
  * type X = WalletAutoConnectionOption<'io.metamask'>
  * ````
  */
-export type WalletAutoConnectionOption<T extends WalletId> =
-  T extends "walletConnect"
+export type WalletAutoConnectionOption<T extends WalletId> = T extends "frame"
+  ? InjectedConnectOptions
+  : T extends "walletConnect"
     ? WCAutoConnectOptions
     : T extends "smart"
       ? SmartWalletConnectionOptions

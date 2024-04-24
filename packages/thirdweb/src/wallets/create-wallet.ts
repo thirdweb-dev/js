@@ -58,6 +58,13 @@ export function createWallet<const ID extends WalletId>(
     }
 
     /**
+     * FRAME WALLET
+     */
+    case "frame": {
+      return frameWallet() as Wallet<ID>;
+    }
+
+    /**
      * COINBASE WALLET VIA SDK
      * -> if no injected coinbase found, we'll use the coinbase SDK
      */
@@ -509,6 +516,90 @@ function coinbaseWalletSDK(): Wallet<"com.coinbase.wallet"> {
       trackConnect({
         client: options.client,
         walletType: "com.coinbase.wallet",
+        walletAddress: account.address,
+      });
+      // return account
+      return account;
+    },
+    disconnect: async () => {
+      reset();
+      await handleDisconnect();
+    },
+    switchChain: async (newChain) => {
+      await handleSwitchChain(newChain);
+    },
+  };
+}
+
+function frameWallet(): Wallet<"frame"> {
+  const emitter = createWalletEmitter<"frame">();
+  let account: Account | undefined = undefined;
+  let chain: Chain | undefined = undefined;
+
+  function reset() {
+    account = undefined;
+    chain = undefined;
+  }
+
+  let handleDisconnect = async () => {};
+
+  let handleSwitchChain = async (newChain: Chain) => {
+    chain = newChain;
+  };
+
+  const unsubscribeChainChanged = emitter.subscribe(
+    "chainChanged",
+    (newChain) => {
+      chain = newChain;
+    },
+  );
+
+  const unsubscribeDisconnect = emitter.subscribe("disconnect", () => {
+    reset();
+    unsubscribeChainChanged();
+    unsubscribeDisconnect();
+  });
+
+  emitter.subscribe("accountChanged", (_account) => {
+    account = _account;
+  });
+
+  return {
+    id: "frame",
+    subscribe: emitter.subscribe,
+    getChain: () => chain,
+    getConfig: () => undefined,
+    getAccount: () => account,
+    autoConnect: async (options) => {
+      const { autoConnectFrameWallet } = await import("./frame/index.js");
+      const [connectedAccount, connectedChain, doDisconnect, doSwitchChain] =
+        await autoConnectFrameWallet(emitter);
+      // set the states
+      account = connectedAccount;
+      chain = connectedChain;
+      handleDisconnect = doDisconnect;
+      handleSwitchChain = doSwitchChain;
+      trackConnect({
+        client: options.client,
+        walletType: "frame",
+        walletAddress: account.address,
+      });
+      // return account
+      return account;
+    },
+    connect: async (options) => {
+      const { connectFrameWallet } = await import("./frame/index.js");
+      const [connectedAccount, connectedChain, doDisconnect, doSwitchChain] =
+        await connectFrameWallet(options, emitter);
+
+      // set the states
+      account = connectedAccount;
+      chain = connectedChain;
+      handleDisconnect = doDisconnect;
+      handleSwitchChain = doSwitchChain;
+      trackConnect({
+        client: options.client,
+        walletType: "frame",
         walletAddress: account.address,
       });
       // return account
