@@ -1,5 +1,6 @@
 import { useContext, useState } from "react";
 import type { ThirdwebClient } from "../../../client/client.js";
+import type { GaslessOptions } from "../../../transaction/actions/gasless/types.js";
 import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
 import { useSendTransactionCore } from "../../core/hooks/contract/useSendTransaction.js";
 import { SetRootElementContext } from "../../core/providers/RootElementContext.js";
@@ -47,6 +48,12 @@ export type SendTransactionConfig = {
         theme?: Theme | "light" | "dark";
       }
     | false;
+
+  /**
+   * Configuration for gasless transactions.
+   * Refer to [`GaslessOptions`](https://portal.thirdweb.com/references/typescript/v5/GaslessOptions) for more details.
+   */
+  gasless?: GaslessOptions;
 };
 
 /**
@@ -91,6 +98,7 @@ export function useSendTransaction(config: SendTransactionConfig = {}) {
             />,
           );
         },
+    config.gasless,
   );
 }
 
