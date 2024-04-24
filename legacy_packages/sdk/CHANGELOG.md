@@ -1,5 +1,15 @@
 # @thirdweb-dev/sdk
 
+## 4.0.70
+
+### Patch Changes
+
+- [#2848](https://github.com/thirdweb-dev/js/pull/2848) [`41be954`](https://github.com/thirdweb-dev/js/commit/41be954bd0a92d49767d62a6fa02f1ee0effb469) Thanks [@jnsdls](https://github.com/jnsdls)! - add `celo` chains to known `op stack` chains
+
+- Updated dependencies [[`2ae9a13`](https://github.com/thirdweb-dev/js/commit/2ae9a13b01e7a436536b3d412690150f9f960c72), [`41be954`](https://github.com/thirdweb-dev/js/commit/41be954bd0a92d49767d62a6fa02f1ee0effb469), [`637c510`](https://github.com/thirdweb-dev/js/commit/637c510f59c2504bd29cedbdf4bda694719681dc), [`e8e3368`](https://github.com/thirdweb-dev/js/commit/e8e3368fdef1aa9aaefe6243486395b666b47137), [`aa0b8c4`](https://github.com/thirdweb-dev/js/commit/aa0b8c44650b9d0f45f6dff66ebbceb64cfd7be3)]:
+  - thirdweb@5.12.0
+  - @thirdweb-dev/chains@0.1.100
+
 ## 4.0.69
 
 ### Patch Changes
