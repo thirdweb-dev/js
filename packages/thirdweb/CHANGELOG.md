@@ -1,5 +1,129 @@
 # thirdweb
 
+## 5.11.0
+
+### Minor Changes
+
+- [#2679](https://github.com/thirdweb-dev/js/pull/2679) [`560d8ad`](https://github.com/thirdweb-dev/js/commit/560d8adafa011dc48e48e73d7eb6a36170d38cef) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - Add support for connecting in-app wallet using phone number
+
+  ## Usage in TypeScript
+
+  ```ts
+  import { createThirdwebClient, createWallet } from "thirdweb";
+  import { preAuthenticate } from "thirdweb/wallets/in-app";
+
+  const client = createThirdwebClient({ clientId: "..." });
+
+  const phoneNumber = '+123456789';
+
+  // Send OTP to given phone number
+  async function sendOTP() {
+    await preAuthenticate({
+      strategy: "phone",
+      phoneNumber,
+      client,
+    });
+  }
+
+  async function connect() {
+    // create a in-app wallet instance
+    const wallet = createWallet('inApp');
+    // if the OTP is correct, the wallet will be connected else an error will be thrown
+    const account = await wallet.connect({
+      client,
+      strategy: "phone";
+      phoneNumber,
+      verificationCode: '...' // Pass the OTP entered by the user
+    });
+
+    console.log('connected to', account);
+  }
+  ```
+
+  ## Usage in React
+
+  ```tsx
+  import { createThirdwebClient } from "thirdweb";
+  import { preAuthenticate } from "thirdweb/wallets/in-app";
+  import { useConnect } from "thirdweb/react";
+
+  const client = createThirdwebClient({ clientId: "..." });
+
+  function Component() {
+    const { connect } = useConnect();
+    const [phoneNumber, setPhoneNumber] = useState(''); // get phone number from user
+    const [otp, setOtp] = useState(''); // get OTP from user
+
+    // Send OTP to given phone number
+    async function sendOTP() {
+      await preAuthenticate({
+        strategy: "phone",
+        phoneNumber,
+        client,
+      });
+    }
+
+    async function connect() {
+      // create a in-app wallet instance
+      const wallet = createWallet('inApp');
+      // if the OTP is correct, the wallet will be connected else an error will be thrown
+      await wallet.connect({
+        client,
+        strategy: "phone";
+        phoneNumber,
+        verificationCode: otp
+      });
+
+      // set the wallet as active
+      connect(wallet)
+    }
+
+    // render UI to get OTP and phone number from user
+    return <div> ...  </div>
+  }
+  ```
+
+- [#2818](https://github.com/thirdweb-dev/js/pull/2818) [`948f155`](https://github.com/thirdweb-dev/js/commit/948f155e7c2406cc5a172a6c5abe18ba8da89e2a) Thanks [@jnsdls](https://github.com/jnsdls)! - **Gasless transactions in Typescript**
+
+  ```ts
+  import { sendTransaction } from "thirdweb";
+
+  const result = sendTransaction({
+    transaction,
+    account,
+    gasless: {
+      provider: "engine",
+      relayerUrl: "https://...",
+      relayerForwarderAddress: "0x...",
+    },
+  });
+  ```
+
+  **Gasless transactions in React**
+
+  ```jsx
+  import { useSendTransaction } from "thirdweb/react";
+
+  const { mutate } = useSendTransaction({
+    gasless: {
+      provider: "engine",
+      relayerUrl: "https://...",
+      relayerForwarderAddress: "0x...",
+    },
+  });
+
+  // Call mutate with the transaction object
+  mutate(transaction);
+  ```
+
+### Patch Changes
+
+- [#2842](https://github.com/thirdweb-dev/js/pull/2842) [`d7e6671`](https://github.com/thirdweb-dev/js/commit/d7e6671c0a34cc8a3523f397a45d754617c9fbb0) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - fix: handle signature minting with price and currency
+
+- [#2839](https://github.com/thirdweb-dev/js/pull/2839) [`3be61dd`](https://github.com/thirdweb-dev/js/commit/3be61ddc52cef168cda0bee13e93a926dedf479a) Thanks [@MananTank](https://github.com/MananTank)! - Enable Buy Modal by default with useSendTransaction hook
+
+- [#2768](https://github.com/thirdweb-dev/js/pull/2768) [`cfff7e8`](https://github.com/thirdweb-dev/js/commit/cfff7e838af1c464c9b5fbb547153eaae41e2c66) Thanks [@MananTank](https://github.com/MananTank)! - Fix custom chain not being used
+
 ## 5.10.1
 
 ### Patch Changes
