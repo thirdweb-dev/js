@@ -20,15 +20,15 @@ export type GenerateMerkleTreeInfoParams = {
  *    { recipient: "0x...", tokenId: 1, amount: 12 },
  *    { recipient: "0x...", tokenId: 2, amount: 15 },
  * ];
- * 
- * const tokenAddress = "0x..." // Address of ERC1155 airdrop token 
- * 
+ *
+ * const tokenAddress = "0x..." // Address of ERC1155 airdrop token
+ *
  * const { merkleRoot, snapshotUri } = await generateMerkleTreeInfoERC1155({
  *    contract,
  *    tokenAddress,
  *    snapshot
  * });
- * 
+ *
  * // Optional next steps {See: saveSnapshot and setMerkleRoot functions}
  * // - Save snapshot on-chain (on the airdrop contract uri)
  * // - Set merkle root on the contract to enable claiming

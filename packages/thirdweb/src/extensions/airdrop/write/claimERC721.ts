@@ -15,16 +15,16 @@ export type ClaimERC721Params = {
  * @example
  * ```ts
  * import { claimERC721 } from "thirdweb/extensions/airdrop";
- * 
+ *
  * const tokenAddress = "0x..." // Address of airdropped tokens to claim
  * const recipient = "0x..."  // Address of the allowlisted recipient
- * 
+ *
  * const claimTransaction = claimERC721({
  *    contract,
  *    tokenAddress,
  *    recipient
  * });
- * 
+ *
  * await sendTransaction({ claimTransaction, account });
  *
  * ```

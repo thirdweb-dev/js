@@ -15,16 +15,16 @@ export type ClaimERC1155Params = {
  * @example
  * ```ts
  * import { claimERC1155 } from "thirdweb/extensions/airdrop";
- * 
+ *
  * const tokenAddress = "0x..." // Address of airdropped tokens to claim
  * const recipient = "0x..."  // Address of the allowlisted recipient
- * 
+ *
  * const claimTransaction = claimERC1155({
  *    contract,
  *    tokenAddress,
  *    recipient
  * });
- * 
+ *
  * await sendTransaction({ claimTransaction, account });
  *
  * ```

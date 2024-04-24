@@ -42,9 +42,9 @@ export type GenerateAirdropSignatureOptions = {
  *
  * // list of recipients, tokenIds and amounts to airdrop for each recipient
  * const contents = [
- *    { recipient: "0x...", tokenId: 0, amount: 10n }, 
- *    { recipient: "0x...", tokenId: 0, amount: 15n }, 
- *    { recipient: "0x...", tokenId: 0, amount: 20n }, 
+ *    { recipient: "0x...", tokenId: 0, amount: 10n },
+ *    { recipient: "0x...", tokenId: 0, amount: 15n },
+ *    { recipient: "0x...", tokenId: 0, amount: 20n },
  *  ];
  *
  * const { req, signature } = await generateAirdropSignatureERC1155({
