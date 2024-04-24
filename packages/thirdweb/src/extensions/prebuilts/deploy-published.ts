@@ -92,6 +92,7 @@ export async function deployPublishedContract(
           account,
           contractId,
           constructorParams: implementationConstructorParams || [],
+          publisher,
         });
       const initializeTransaction = prepareContractCall({
         contract: getContract({
