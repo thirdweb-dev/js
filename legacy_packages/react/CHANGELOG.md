@@ -1,5 +1,16 @@
 # @thirdweb-dev/react
 
+## 4.6.8
+
+### Patch Changes
+
+- [#2679](https://github.com/thirdweb-dev/js/pull/2679) [`560d8ad`](https://github.com/thirdweb-dev/js/commit/560d8adafa011dc48e48e73d7eb6a36170d38cef) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - Fix In-App wallet country selector styles on windows
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@4.0.69
+  - @thirdweb-dev/react-core@4.6.8
+  - @thirdweb-dev/wallets@2.5.9
+
 ## 4.6.7
 
 ### Patch Changes
