@@ -69,7 +69,7 @@ export type SignKeyRequestOptions = {
  * @returns An object containing the domain, types, primary type, and the message for EIP-712 signing.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * const message = {
  *   requestFid: 123456789n,
  *   key: "0x04bfc...",
@@ -93,7 +93,7 @@ export function getKeyRequestData(message: SignedKeyRequestMessage) {
  * @returns A promise that resolves to the signature of the key request.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * const message = {
  *   requestFid: 123456789n,
  *   key: "0x04bfc...",
@@ -134,7 +134,7 @@ export type SignedKeyRequestMetadataOptions = Prettify<
  * @returns The encoded ABI parameters as a hexadecimal string.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * const encodedMetadata = encodeSignedKeyRequestMetadata({
  *   requestSigner: "0x123...",
  *   keyRequestSignature: "0xabcd...",
@@ -167,7 +167,7 @@ export function encodeSignedKeyRequestMetadata(options: {
  * @returns A promise that resolves to the hexadecimal string of the encoded ABI parameters.
  * @extension FARCASTER
  * @example
- * ```
+ * ```ts
  * import { getSignedKeyRequestMetadata } from "thirdweb/extensions/farcaster";
  *
  * // Using an existing signature
