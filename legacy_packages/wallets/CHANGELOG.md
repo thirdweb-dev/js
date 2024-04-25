@@ -1,5 +1,13 @@
 # @thirdweb-dev/wallets
 
+## 2.5.11
+
+### Patch Changes
+
+- Updated dependencies [[`dbdafa2`](https://github.com/thirdweb-dev/js/commit/dbdafa2b01148b13d05fd75803926d9d37396668)]:
+  - @thirdweb-dev/chains@0.1.101
+  - @thirdweb-dev/sdk@4.0.71
+
 ## 2.5.10
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @thirdweb-dev/chains
 
+## 0.1.101
+
+### Patch Changes
+
+- [#2852](https://github.com/thirdweb-dev/js/pull/2852) [`dbdafa2`](https://github.com/thirdweb-dev/js/commit/dbdafa2b01148b13d05fd75803926d9d37396668) Thanks [@github-actions](https://github.com/apps/github-actions)! - Synced Chains Package
+
 ## 0.1.100
 
 ### Patch Changes
