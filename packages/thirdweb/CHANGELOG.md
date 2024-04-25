@@ -1,5 +1,22 @@
 # thirdweb
 
+## 5.12.0
+
+### Minor Changes
+
+- [#2841](https://github.com/thirdweb-dev/js/pull/2841) [`2ae9a13`](https://github.com/thirdweb-dev/js/commit/2ae9a13b01e7a436536b3d412690150f9f960c72) Thanks [@kumaryash90](https://github.com/kumaryash90)! - SDK V5 extension for new Airdrop contract.
+
+- [#2846](https://github.com/thirdweb-dev/js/pull/2846) [`e8e3368`](https://github.com/thirdweb-dev/js/commit/e8e3368fdef1aa9aaefe6243486395b666b47137) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add isERC20 extension
+
+### Patch Changes
+
+- [#2848](https://github.com/thirdweb-dev/js/pull/2848) [`41be954`](https://github.com/thirdweb-dev/js/commit/41be954bd0a92d49767d62a6fa02f1ee0effb469) Thanks [@jnsdls](https://github.com/jnsdls)! - add `celo` chains to known `op stack` chains
+
+- [#2850](https://github.com/thirdweb-dev/js/pull/2850) [`aa0b8c4`](https://github.com/thirdweb-dev/js/commit/aa0b8c44650b9d0f45f6dff66ebbceb64cfd7be3) Thanks [@MananTank](https://github.com/MananTank)! - Fix "All wallets" UI in Connect
+
+  - Remove duplicated entry for "inApp"
+  - Remove wallets specified by developer
+
 ## 5.11.0
 
 ### Minor Changes
