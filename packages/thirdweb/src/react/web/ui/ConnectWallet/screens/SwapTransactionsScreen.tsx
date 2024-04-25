@@ -32,6 +32,7 @@ import {
   radius,
   spacing,
 } from "../../design-system/index.js";
+import { PostOnRampSwap } from "./Buy/fiat/PostOnRampSwap.js";
 import { swapTransactionsStore } from "./Buy/swap/pendingSwapTx.js";
 
 // TODO: handle the Complete Transaction button click and start the post-onramp swap flow
@@ -52,7 +53,7 @@ type TxStatusInfo =
       transactionHash: string;
       boughtTokenAmount: string;
       boughtTokenSymbol: string;
-      status: BuyWithFiatStatus["status"];
+      fiatStatus: BuyWithFiatStatus;
     };
 
 // Note: Do not use useConnectUI here
@@ -132,16 +133,15 @@ function useBuyTransactionsToShow(client: ThirdwebClient) {
         subStatus: txInfo.subStatus,
       });
     } else {
-      const txInfo = tx.buyWithFiatStatus;
-      if (txInfo.status !== "NOT_FOUND" && txInfo.source) {
-        console.log("fiat status", txInfo);
+      const fiatStatus = tx.buyWithFiatStatus;
+      if (fiatStatus.status !== "NOT_FOUND" && fiatStatus.source) {
         txInfosToShow.push({
           type: "buyWithFiat",
-          boughtChainId: txInfo.quote.toToken.chainId,
-          transactionHash: txInfo.source.transactionHash,
-          boughtTokenAmount: txInfo.quote.estimatedToTokenAmount,
-          boughtTokenSymbol: txInfo.quote.toToken.symbol || "",
-          status: txInfo.status,
+          boughtChainId: fiatStatus.quote.toToken.chainId,
+          transactionHash: fiatStatus.source.transactionHash,
+          boughtTokenAmount: fiatStatus.quote.estimatedToTokenAmount,
+          boughtTokenSymbol: fiatStatus.quote.toToken.symbol || "",
+          fiatStatus: fiatStatus,
         });
       }
     }
@@ -340,7 +340,7 @@ export function BuyTxHistory(props: {
 
 function TransactionDetailsScreen(props: {
   txInfo: TxStatusInfo;
-  onBack?: () => void;
+  onBack: () => void;
   client: ThirdwebClient;
 }) {
   const txInfo = props.txInfo;
@@ -349,7 +349,19 @@ function TransactionDetailsScreen(props: {
   const statusMeta =
     props.txInfo.type === "buyWithCrypto"
       ? getBuyWithCryptoStatusMeta(props.txInfo.status, props.txInfo.subStatus)
-      : getBuyWithFiatStatusMeta(props.txInfo.status);
+      : getBuyWithFiatStatusMeta(props.txInfo.fiatStatus.status);
+  const [screen, setScreen] = useState<"base" | "postonramp-swap">("base");
+
+  if (screen === "postonramp-swap" && txInfo.type === "buyWithFiat") {
+    return (
+      <PostOnRampSwap
+        client={props.client}
+        buyWithFiatStatus={txInfo.fiatStatus}
+        onBack={props.onBack}
+        onViewPendingTx={props.onBack}
+      />
+    );
+  }
 
   return (
     <Container>
@@ -386,10 +398,16 @@ function TransactionDetailsScreen(props: {
         <Spacer y="lg" />
 
         {txInfo.type === "buyWithFiat" &&
-          (txInfo.status === "CRYPTO_SWAP_REQUIRED" ||
-            txInfo.status === "PAYMENT_FAILED") && (
+          (txInfo.fiatStatus.status === "CRYPTO_SWAP_REQUIRED" ||
+            txInfo.fiatStatus.status === "PAYMENT_FAILED") && (
             <>
-              <Button fullWidth variant="primary">
+              <Button
+                fullWidth
+                variant="primary"
+                onClick={() => {
+                  setScreen("postonramp-swap");
+                }}
+              >
                 Complete Transaction
               </Button>
               <Spacer y="sm" />
@@ -427,7 +445,7 @@ function TransactionInfo(props: {
   const statusMeta =
     props.txInfo.type === "buyWithCrypto"
       ? getBuyWithCryptoStatusMeta(props.txInfo.status, props.txInfo.subStatus)
-      : getBuyWithFiatStatusMeta(props.txInfo.status);
+      : getBuyWithFiatStatusMeta(props.txInfo.fiatStatus.status);
 
   // const isValidTxHash = transactionHash.startsWith("0x");
   return (

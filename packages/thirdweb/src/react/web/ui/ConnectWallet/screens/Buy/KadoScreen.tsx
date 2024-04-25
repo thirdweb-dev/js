@@ -67,7 +67,7 @@ export function KadoScreen(props: {
             zIndex: 1,
           }}
         >
-          <Spinner size="lg" color="accentText" />
+          <Spinner size="xl" color="accentText" />
         </div>
         <Iframe
           title="Buy token with Kado"
