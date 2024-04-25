@@ -54,6 +54,7 @@ import { PreviewThirdwebProvider } from "./PreviewThirdwebProvider";
 import { usePlaygroundWallets } from "./usePlaygroundWallets";
 import { usePlaygroundTheme } from "./usePlaygroundTheme";
 import { useTrack } from "hooks/analytics/useTrack";
+import { FiChevronRight } from "react-icons/fi";
 
 type LocaleId = "en-US" | "ja-JP" | "es-ES";
 
@@ -538,6 +539,21 @@ export const ConnectWalletPlayground: React.FC<{
             );
           })}
       </Grid>
+
+      <Spacer height={3} />
+      <TrackedLink
+        isExternal
+        href="https://portal.thirdweb.com/typescript/v5/supported-wallets"
+        color="blue.500"
+        category={trackingCategory}
+        label="see-all-wallets"
+        display="flex"
+        alignItems="center"
+        gap={1}
+      >
+        See all wallets
+        <Icon as={FiChevronRight} w={4} h={4} color="blue.500" />
+      </TrackedLink>
     </>
   );
 
