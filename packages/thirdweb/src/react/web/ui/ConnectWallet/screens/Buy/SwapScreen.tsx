@@ -351,6 +351,7 @@ export function BuyScreenContent(props: {
         currency={selectedCurrency}
         testMode={props.fiatTestMode || false}
         theme={props.theme}
+        onViewPendingTx={props.onViewPendingTx}
       />
     );
   }

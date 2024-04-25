@@ -29,6 +29,7 @@ export function FiatFlow(props: {
   currency: CurrencyMeta;
   testMode: boolean;
   theme: "light" | "dark";
+  onViewPendingTx: () => void;
 }) {
   const hasTwoSteps = isSwapRequiredPostOnramp(props.quote);
   const [step, setStep] = useState(1);
@@ -79,6 +80,7 @@ export function FiatFlow(props: {
         client={props.client}
         intentId={props.quote.intentId}
         onBack={props.onBack}
+        onViewPendingTx={props.onViewPendingTx}
       />
     );
   }
