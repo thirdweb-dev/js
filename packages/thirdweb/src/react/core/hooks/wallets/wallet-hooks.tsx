@@ -1,5 +1,6 @@
 import { useCallback, useState, useSyncExternalStore } from "react";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
+import type { ConnectManagerOptions } from "../../../../wallets/manager/index.js";
 import { connectionManager } from "../../connectionManager.js";
 
 /**
@@ -95,7 +96,7 @@ export function useConnectedWallets() {
  * const setActiveAccount = useSetActiveWallet();
  *
  * // later in your code
- * setActiveAccount(account);
+ * await setActiveAccount(account);
  * ```
  * @walletConnection
  */
@@ -133,26 +134,23 @@ export function useSetActiveWallet() {
  * ```
  * @walletConnection
  */
-export function useConnect() {
-  const { setActiveWallet } = connectionManager;
+export function useConnect(options?: ConnectManagerOptions) {
+  const { connect } = connectionManager;
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
-  const connect = useCallback(
-    async (options: Wallet | (() => Promise<Wallet>)) => {
+  const handleConnection = useCallback(
+    async (walletOrFn: Wallet | (() => Promise<Wallet>)) => {
       // reset error state
       setError(null);
-      if (typeof options !== "function") {
-        setActiveWallet(options);
-        return options;
+      if (typeof walletOrFn !== "function") {
+        return connect(walletOrFn, options);
       }
 
       setIsConnecting(true);
       try {
-        const wallet = await options();
-        // add the uuid for this wallet
-        setActiveWallet(wallet);
-        return wallet;
+        const w = await walletOrFn();
+        return connect(w, options);
       } catch (e) {
         console.error(e);
         setError(e as Error);
@@ -161,10 +159,10 @@ export function useConnect() {
       }
       return null;
     },
-    [setActiveWallet],
+    [connect, options],
   );
 
-  return { connect, isConnecting, error } as const;
+  return { connect: handleConnection, isConnecting, error } as const;
 }
 
 /**
