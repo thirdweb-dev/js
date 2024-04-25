@@ -29,6 +29,7 @@ export function FiatStatusScreen(props: {
 
   const isLoading = statusQuery.isLoading || (!isFailed && !isCompleted);
 
+  // TODO: show Buy Pending or Converting based on the status
   // TODO: show action required
 
   return (
@@ -44,7 +45,7 @@ export function FiatStatusScreen(props: {
           </Container>
           <Spacer y="xl" />
           <Text color="primaryText" size="lg" center>
-            Buy Pending
+            In Progress
           </Text>
         </>
       )}
@@ -56,7 +57,7 @@ export function FiatStatusScreen(props: {
           </Container>
           <Spacer y="xl" />
           <Text color="primaryText" size="lg" center>
-            Buy Failed
+            Transaction Failed
           </Text>
         </>
       )}

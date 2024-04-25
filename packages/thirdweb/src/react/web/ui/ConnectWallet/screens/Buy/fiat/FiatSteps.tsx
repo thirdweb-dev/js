@@ -1,6 +1,8 @@
 import { ChevronRightIcon } from "@radix-ui/react-icons";
-import type { Chain } from "../../../../../../../chains/types.js";
+import { useMemo } from "react";
+import { defineChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
+import { NATIVE_TOKEN_ADDRESS } from "../../../../../../../constants/addresses.js";
 import type { BuyWithFiatQuote } from "../../../../../../../exports/pay.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { Spacer } from "../../../../components/Spacer.js";
@@ -10,71 +12,102 @@ import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { TokenSymbol } from "../../../../components/token/TokenSymbol.js";
 import { iconSize, radius, spacing } from "../../../../design-system/index.js";
+import type { TokenInfo } from "../../../defaultTokens.js";
 import { type ERC20OrNativeToken, NATIVE_TOKEN } from "../../nativeToken.js";
 import { StepIcon } from "../Stepper.js";
-import type { CurrencyMeta } from "./currencies.js";
+import { getCurrencyMeta } from "./currencies.js";
 
-export function FiatConfirmation(props: {
+export function FiatSteps(props: {
   quote: BuyWithFiatQuote;
   onBack: () => void;
-  step: 1 | 2;
-  toToken: ERC20OrNativeToken;
-  toChain: Chain;
   client: ThirdwebClient;
-  toTokenAmount: string;
+  step: number;
   onContinue: () => void;
-  currency: CurrencyMeta;
 }) {
+  const step = props.step;
+  const currency = getCurrencyMeta(props.quote.fromCurrency.currencySymbol);
+
+  const { toToken: toTokenMeta, onRampToken: onRampTokenMeta } = props.quote;
+
+  const toChain = useMemo(
+    () => defineChain(toTokenMeta.chainId),
+    [toTokenMeta.chainId],
+  );
+
+  const toToken: ERC20OrNativeToken = useMemo(() => {
+    if (toTokenMeta.tokenAddress === NATIVE_TOKEN_ADDRESS) {
+      return NATIVE_TOKEN;
+    }
+
+    const tokenInfo: TokenInfo = {
+      address: toTokenMeta.tokenAddress,
+      icon: "",
+      name: toTokenMeta.name || "",
+      symbol: toTokenMeta.symbol || "",
+    };
+    return tokenInfo;
+  }, [toTokenMeta]);
+
+  const onRampChain = useMemo(
+    () => defineChain(onRampTokenMeta.token.chainId),
+    [onRampTokenMeta.token.chainId],
+  );
+
+  const onRampToken: ERC20OrNativeToken = useMemo(() => {
+    if (onRampTokenMeta.token.tokenAddress === NATIVE_TOKEN_ADDRESS) {
+      return NATIVE_TOKEN;
+    }
+
+    const tokenInfo: TokenInfo = {
+      address: onRampTokenMeta.token.tokenAddress,
+      icon: "",
+      name: onRampTokenMeta.token.name || "",
+      symbol: onRampTokenMeta.token.symbol || "",
+    };
+    return tokenInfo;
+  }, [onRampTokenMeta]);
+
   const fiat = (
     <Container flex="row" gap="sm" center="y">
-      <props.currency.icon size={iconSize.md} />
-      <Text color="primaryText">
+      <currency.icon size={iconSize.sm} />
+      <Text color="primaryText" size="sm">
         {props.quote.fromCurrency.amount}{" "}
         {props.quote.fromCurrency.currencySymbol}
       </Text>
     </Container>
   );
 
-  const nativeToken = (
+  const onRampTokenInfo = (
     <Container flex="row" gap="sm" center="y">
       <TokenIcon
-        token={NATIVE_TOKEN}
-        chain={props.toChain}
-        size="md"
+        token={onRampToken}
+        chain={onRampChain}
+        size="sm"
         client={props.client}
       />
       <div>
-        <Text color="primaryText" inline>
-          {formatNumber(Number(props.quote.onRampToken.amount), 4)}
+        <Text color="primaryText" inline size="sm">
+          {formatNumber(Number(onRampTokenMeta.amount), 4)}
         </Text>{" "}
-        <TokenSymbol
-          token={NATIVE_TOKEN}
-          chain={props.toChain}
-          size="md"
-          inline
-        />
+        <TokenSymbol token={onRampToken} chain={onRampChain} size="sm" inline />
       </div>
     </Container>
   );
 
-  const finalToken = (
+  const toTokenInfo = (
     <Container flex="row" gap="sm" center="y">
       <TokenIcon
-        token={props.toToken}
-        chain={props.toChain}
-        size="md"
+        token={toToken}
+        chain={toChain}
+        size="sm"
         client={props.client}
       />
       <div>
         <Text color="primaryText" inline>
-          {props.toTokenAmount}{" "}
+          {/* TODO: check if toAmountMin should be used or estimatedToAmountMin  */}
+          {props.quote.toAmountMin}{" "}
         </Text>
-        <TokenSymbol
-          token={props.toToken}
-          chain={props.toChain}
-          size="md"
-          inline
-        />
+        <TokenSymbol token={toToken} chain={toChain} size="sm" inline />
       </div>
     </Container>
   );
@@ -86,15 +119,15 @@ export function FiatConfirmation(props: {
       <Spacer y="xl" />
 
       {/* Step 1 */}
-      <VerticalStepper isActive={props.step === 1} isDone={props.step === 2}>
+      <StepContainer isActive={step === 1} isDone={step === 2}>
         <Container>
           <Text size="sm">Step 1</Text>
           <Spacer y="xs" />
           <Text color="primaryText" size="md">
             Get{" "}
             <TokenSymbol
-              token={NATIVE_TOKEN}
-              chain={props.toChain}
+              token={onRampToken}
+              chain={onRampChain}
               size="md"
               inline
             />{" "}
@@ -109,33 +142,27 @@ export function FiatConfirmation(props: {
               {fiat}
               <ChevronRightIcon width={iconSize.sm} />
             </Container>
-            {nativeToken}
+            {onRampTokenInfo}
           </Container>
         </Container>
-      </VerticalStepper>
+      </StepContainer>
 
       <Spacer y="md" />
 
       {/* Step 2 */}
-      <VerticalStepper isActive={props.step === 2} isDone={false}>
+      <StepContainer isActive={step === 2} isDone={false}>
         <Container>
           <Text size="sm">Step 2</Text>
           <Spacer y="xs" />
           <Text color="primaryText" size="md">
             Convert{" "}
             <TokenSymbol
-              token={NATIVE_TOKEN}
-              chain={props.toChain}
+              token={onRampToken}
+              chain={onRampChain}
               size="md"
               inline
             />{" "}
-            to{" "}
-            <TokenSymbol
-              token={props.toToken}
-              chain={props.toChain}
-              size="md"
-              inline
-            />
+            to <TokenSymbol token={toToken} chain={toChain} size="md" inline />
           </Text>
 
           <Spacer y="sm" />
@@ -144,15 +171,15 @@ export function FiatConfirmation(props: {
 
           <Container flex="column" gap="xs">
             <Container flex="row" gap="xxs" center="y">
-              {nativeToken}
+              {onRampTokenInfo}
               <ChevronRightIcon width={iconSize.sm} />
             </Container>
-            {finalToken}
+            {toTokenInfo}
           </Container>
         </Container>
-      </VerticalStepper>
+      </StepContainer>
 
-      <Spacer y="md" />
+      <Spacer y="lg" />
 
       <Button variant="accent" onClick={props.onContinue} fullWidth>
         Continue
@@ -161,7 +188,7 @@ export function FiatConfirmation(props: {
   );
 }
 
-function VerticalStepper(props: {
+function StepContainer(props: {
   isActive: boolean;
   isDone: boolean;
   children: React.ReactNode;

@@ -35,13 +35,9 @@ export function KadoScreen(props: {
   useEffect(() => {
     function handlePostMessage(event: MessageEvent) {
       if (event.origin !== iframeOrigin) {
-        // TODO remove
-        console.log("ignore:", event);
         return;
       }
 
-      // TODO remove
-      console.log("got from kado", event);
       onComplete();
     }
 

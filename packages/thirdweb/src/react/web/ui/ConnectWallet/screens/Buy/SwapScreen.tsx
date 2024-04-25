@@ -56,13 +56,11 @@ import {
   NATIVE_TOKEN,
   isNativeToken,
 } from "../nativeToken.js";
-import { KadoScreen } from "./KadoScreen.js";
 import { PayWithCreditCard } from "./PayWIthCreditCard.js";
 import { PaymentSelection } from "./PaymentSelection.js";
 import { FeesButton } from "./buttons.js";
 import { CurrencySelection } from "./fiat/CurrencySelection.js";
-import { FiatConfirmation } from "./fiat/FiatConfirmation.js";
-import { FiatStatusScreen } from "./fiat/FiatStatusScreen.js";
+import { FiatFlow } from "./fiat/FiatFlow.js";
 import {
   type CurrencyMeta,
   defaultSelectedCurrency,
@@ -122,11 +120,9 @@ type Screen =
   | "main"
   | "select-from-token"
   | "select-to-token"
-  | "fiat-status"
   | "confirmation"
-  | "fiat-confirmation"
-  | "select-currency"
-  | "kado-iframe";
+  | "fiat-flow"
+  | "select-currency";
 type DrawerScreen = "fees" | undefined;
 
 /**
@@ -151,7 +147,7 @@ export function BuyScreenContent(props: {
     props;
   const [isSwitching, setIsSwitching] = useState(false);
   const switchActiveWalletChain = useSwitchActiveWalletChain();
-  const [method, setMethod] = useState<"crypto" | "creditCard">("crypto");
+  const [method, setMethod] = useState<"crypto" | "creditCard">("creditCard");
 
   // prefetch chains metadata
   useChainsQuery(supportedChains || [], 50);
@@ -326,16 +322,6 @@ export function BuyScreenContent(props: {
       : undefined,
   );
 
-  if (screen === "fiat-status" && confirmedFiatQuote) {
-    return (
-      <FiatStatusScreen
-        client={client}
-        onBack={props.onBack}
-        intentId={confirmedFiatQuote.intentId}
-      />
-    );
-  }
-
   if (screen === "select-currency") {
     return (
       <CurrencySelection
@@ -350,40 +336,21 @@ export function BuyScreenContent(props: {
     );
   }
 
-  if (screen === "kado-iframe" && confirmedFiatQuote) {
+  if (screen === "fiat-flow" && confirmedFiatQuote) {
     return (
-      <KadoScreen
+      <FiatFlow
         quote={confirmedFiatQuote}
         onBack={() => {
           setConfirmedFiatQuote(undefined);
           setScreen("main");
         }}
-        testMode={props.fiatTestMode}
-        onComplete={() => {
-          setScreen("fiat-status");
-        }}
-        theme={props.theme}
-      />
-    );
-  }
-
-  if (screen === "fiat-confirmation" && confirmedFiatQuote) {
-    return (
-      <FiatConfirmation
-        quote={confirmedFiatQuote}
-        onBack={() => {
-          setConfirmedFiatQuote(undefined);
-          setScreen("main");
-        }}
-        step={1}
         toChain={toChain}
         toToken={toToken}
         toTokenAmount={deferredTokenAmount}
         client={client}
-        onContinue={() => {
-          setScreen("kado-iframe");
-        }}
         currency={selectedCurrency}
+        testMode={props.fiatTestMode || false}
+        theme={props.theme}
       />
     );
   }
@@ -734,13 +701,9 @@ export function BuyScreenContent(props: {
               data-disabled={disableCreditCardContinue}
               fullWidth
               onClick={async () => {
-                // save the current quote
-                setConfirmedFiatQuote(fiatQuoteQuery.data);
-
-                if (isNativeToken(toToken)) {
-                  setScreen("kado-iframe");
-                } else {
-                  setScreen("fiat-confirmation");
+                if (fiatQuoteQuery.data) {
+                  setConfirmedFiatQuote(fiatQuoteQuery.data);
+                  setScreen("fiat-flow");
                 }
               }}
               gap="sm"

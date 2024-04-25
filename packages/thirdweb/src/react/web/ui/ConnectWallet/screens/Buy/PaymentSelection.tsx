@@ -25,6 +25,16 @@ export function PaymentSelection(props: {
         }}
       >
         <CheckButton
+          isChecked={props.selected === "creditCard"}
+          variant="outline"
+          onClick={() => {
+            props.onSelect("creditCard");
+          }}
+        >
+          Credit Card
+        </CheckButton>
+
+        <CheckButton
           isChecked={props.selected === "crypto"}
           variant="outline"
           onClick={() => {
@@ -35,21 +45,6 @@ export function PaymentSelection(props: {
             Crypto
           </Container>
         </CheckButton>
-        <div
-          style={{
-            position: "relative",
-          }}
-        >
-          <CheckButton
-            isChecked={props.selected === "creditCard"}
-            variant="outline"
-            onClick={() => {
-              props.onSelect("creditCard");
-            }}
-          >
-            Credit Card
-          </CheckButton>
-        </div>
       </Container>
     </div>
   );

@@ -1,3 +1,4 @@
+import { RadiobuttonIcon } from "@radix-ui/react-icons";
 import { CADIcon } from "../../../icons/currencies/CADIcon.js";
 import { EURIcon } from "../../../icons/currencies/EURIcon.js";
 import { GBPIcon } from "../../../icons/currencies/GBPIcon.js";
@@ -34,3 +35,21 @@ export const currencies = [
     icon: EURIcon,
   },
 ];
+
+export function getCurrencyMeta(shorthand: string): CurrencyMeta {
+  return (
+    currencies.find(
+      (currency) =>
+        currency.shorthand.toLowerCase() === shorthand.toLowerCase(),
+    ) ?? {
+      // This should never happen
+      icon: UnknownCurrencyIcon,
+      name: shorthand,
+      shorthand,
+    }
+  );
+}
+
+const UnknownCurrencyIcon: IconFC = (props) => {
+  return <RadiobuttonIcon width={props.size} height={props.size} />;
+};
