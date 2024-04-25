@@ -27,7 +27,7 @@ import { airdropERC721WithSignature as generatedAirdropERC721WithSignature } fro
  */
 export const airdropERC721WithSignature = generatedAirdropERC721WithSignature;
 
-export type GenerateAirdropSignatureOptions = {
+export type GenerateAirdropERC721SignatureOptions = {
   account: Account;
   contract: ThirdwebContract;
   airdropRequest: GenerateReqInput;
@@ -67,7 +67,7 @@ export type GenerateAirdropSignatureOptions = {
  * @returns A promise that resolves to the req and signature.
  */
 export async function generateAirdropSignatureERC721(
-  options: GenerateAirdropSignatureOptions,
+  options: GenerateAirdropERC721SignatureOptions,
 ) {
   const { airdropRequest, account, contract } = options;
   const tokenAddress = airdropRequest.tokenAddress;
