@@ -2,7 +2,7 @@ import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { processSnapshotERC721 } from "../../../utils/extensions/airdrop/process-snapshot-erc721.js";
 import type { SnapshotEntryERC721 } from "../../../utils/extensions/airdrop/types.js";
 
-export type GenerateMerkleTreeInfoParams = {
+export type GenerateMerkleTreeInfoERC721Params = {
   snapshot: SnapshotEntryERC721[];
   tokenAddress: string;
 };
@@ -38,7 +38,7 @@ export type GenerateMerkleTreeInfoParams = {
  * @returns A promise that resolves to the merkle-root and snapshot-uri.
  */
 export async function generateMerkleTreeInfoERC721(
-  options: BaseTransactionOptions<GenerateMerkleTreeInfoParams>,
+  options: BaseTransactionOptions<GenerateMerkleTreeInfoERC721Params>,
 ) {
   const { snapshot, contract } = options;
 
