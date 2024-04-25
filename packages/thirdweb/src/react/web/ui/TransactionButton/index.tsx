@@ -1,4 +1,5 @@
 import { useState } from "react";
+import type { GaslessOptions } from "../../../../transaction/actions/gasless/types.js";
 import {
   type WaitForReceiptOptions,
   waitForReceipt as doWaitForReceipt,
@@ -58,6 +59,12 @@ export type TransactionButtonProps = {
    * The `React.ReactNode` to be rendered inside the button
    */
   children: React.ReactNode;
+
+  /**
+   * Configuration for gasless transactions.
+   * Refer to [`GaslessOptions`](https://portal.thirdweb.com/references/typescript/v5/GaslessOptions) for more details.
+   */
+  gasless?: GaslessOptions;
 };
 
 /**
@@ -85,13 +92,14 @@ export function TransactionButton(props: TransactionButtonProps) {
     onTransactionConfirmed,
     onError,
     onClick,
+    gasless,
     ...buttonProps
   } = props;
   const account = useActiveAccount();
   const wallet = useActiveWallet();
   const [isPending, setIsPending] = useState(false);
 
-  const sendTransaction = useSendTransactionCore();
+  const sendTransaction = useSendTransactionCore(undefined, gasless);
 
   if (!isPending) {
     return (
