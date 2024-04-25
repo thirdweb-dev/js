@@ -30,9 +30,9 @@ export type GetBalanceResult = {
  * @extension ERC20
  * @example
  * ```ts
- * import { balanceOf } from "thirdweb/extensions/erc20";
+ * import { getBalance } from "thirdweb/extensions/erc20";
  *
- * const balance = await balanceOf({ contract, address: "0x..." });
+ * const balance = await getBalance({ contract, address: "0x..." });
  * ```
  */
 export async function getBalance(
