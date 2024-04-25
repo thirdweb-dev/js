@@ -1,5 +1,19 @@
 # thirdweb
 
+## 5.13.0
+
+### Minor Changes
+
+- [#2853](https://github.com/thirdweb-dev/js/pull/2853) [`56c139c`](https://github.com/thirdweb-dev/js/commit/56c139c5a2c1e702e038a8948fefd647b3695823) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add account abstraction options to `useConnect` and handle smart wallet autoconnection outside of UI components
+
+### Patch Changes
+
+- [#2859](https://github.com/thirdweb-dev/js/pull/2859) [`03d8d6c`](https://github.com/thirdweb-dev/js/commit/03d8d6c15b02fb6889680484daf40f6189ad6359) Thanks [@jnsdls](https://github.com/jnsdls)! - add `gasless` prop to `<TransactionButton />`
+
+- [#2861](https://github.com/thirdweb-dev/js/pull/2861) [`5b83353`](https://github.com/thirdweb-dev/js/commit/5b833532372dd6e96dd0aeda7a4b190e9f280d4f) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Export airdrop extensions
+
+- [#2857](https://github.com/thirdweb-dev/js/pull/2857) [`77c2a8a`](https://github.com/thirdweb-dev/js/commit/77c2a8ae0cdb49091bd961b60ef5c316ccd6e119) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Docs: update incorrect code snippets, fix typos
+
 ## 5.12.0
 
 ### Minor Changes
