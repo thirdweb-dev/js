@@ -54,6 +54,8 @@ export {
   useIsAutoConnecting,
 } from "../react/core/hooks/wallets/wallet-hooks.js";
 
+export { type ConnectManagerOptions } from "../wallets/manager/index.js";
+
 // contract related
 export { useReadContract } from "../react/core/hooks/contract/useReadContract.js";
 export {

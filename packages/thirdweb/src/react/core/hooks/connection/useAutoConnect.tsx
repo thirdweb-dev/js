@@ -1,14 +1,6 @@
 import { useEffect } from "react";
 import type { ThirdwebClient } from "../../../../client/client.js";
-import { createWallet } from "../../../../wallets/create-wallet.js";
-// import {
-//   getSavedConnectParamsFromStorage,
-//   type WithPersonalWalletConnectionOptions,
-// } from "../../../../wallets/storage/walletStorage.js";
-import type {
-  Wallet,
-  // WalletWithPersonalAccount,
-} from "../../../../wallets/interfaces/wallet.js";
+import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import {
   getLastConnectedChain,
   getStoredActiveWalletId,
@@ -16,11 +8,9 @@ import {
 } from "../../../../wallets/manager/index.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import { asyncLocalStorage } from "../../../../wallets/storage/asyncLocalStorage.js";
-import { getSavedConnectParamsFromStorage } from "../../../../wallets/storage/walletStorage.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
 import { connectionManager } from "../../connectionManager.js";
 import { timeoutPromise } from "../../utils/timeoutPromise.js";
-// import type { WalletConfig } from "../../types/wallets.js";
 import {
   useConnect,
   useSetActiveWalletConnectionStatus,
@@ -154,9 +144,12 @@ export type AutoConnectProps = {
  */
 export function AutoConnect(props: AutoConnectProps) {
   const setConnectionStatus = useSetActiveWalletConnectionStatus();
-  const { connect } = useConnect();
+  const { connect } = useConnect({
+    client: props.client,
+    accountAbstraction: props.accountAbstraction,
+  });
   const { isAutoConnecting } = connectionManager;
-  const { wallets, accountAbstraction } = props;
+  const { wallets } = props;
   const timeout = props.timeout ?? 15000;
   // get the supported wallets from thirdweb provider
   // check the storage for last connected wallets and connect them all
@@ -189,67 +182,23 @@ export function AutoConnect(props: AutoConnectProps) {
         });
       }
 
-      if (lastActiveWalletId === "smart") {
-        if (!accountAbstraction) {
-          return;
-        }
+      const activeWallet = wallets.find((w) => w.id === lastActiveWalletId);
 
-        const savedParams = await getSavedConnectParamsFromStorage(
-          asyncLocalStorage,
-          "accountAbstraction",
-        );
+      if (activeWallet) {
+        try {
+          await timeoutPromise(handleWalletConnection(activeWallet), {
+            ms: timeout,
+            message: `AutoConnect timeout : ${timeout}ms limit exceeded.`,
+          });
 
-        const personalWalletId =
-          savedParams && "personalWalletId" in savedParams
-            ? savedParams.personalWalletId
-            : null;
-
-        if (personalWalletId) {
-          const personalWallet = wallets.find((w) => w.id === personalWalletId);
-
-          if (personalWallet) {
-            try {
-              const account = await timeoutPromise(
-                handleWalletConnection(personalWallet),
-                {
-                  ms: timeout,
-                  message: `AutoConnect timeout : ${timeout}ms limit exceeded.`,
-                },
-              );
-
-              const smartWallet = createWallet("smart", accountAbstraction);
-              await smartWallet.connect({
-                personalAccount: account,
-                client: props.client,
-              });
-
-              connect(smartWallet);
-            } catch (e) {
-              console.error("Failed to auto connect personal wallet");
-              console.error(e);
-              setConnectionStatus("disconnected");
-            }
-          }
-        }
-      } else {
-        const activeWallet = wallets.find((w) => w.id === lastActiveWalletId);
-
-        if (activeWallet) {
-          try {
-            await timeoutPromise(handleWalletConnection(activeWallet), {
-              ms: timeout,
-              message: `AutoConnect timeout : ${timeout}ms limit exceeded.`,
-            });
-
-            connect(activeWallet);
-          } catch (e) {
-            console.error("Failed to auto connect last active wallet");
-            console.error(e);
-            setConnectionStatus("disconnected");
-          }
-        } else {
+          connect(activeWallet);
+        } catch (e) {
+          console.error("Failed to auto connect last active wallet");
+          console.error(e);
           setConnectionStatus("disconnected");
         }
+      } else {
+        setConnectionStatus("disconnected");
       }
 
       // then connect wallets that were last connected but were not set as active

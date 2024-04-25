@@ -1,8 +1,11 @@
 import type { Chain } from "../../chains/types.js";
+import type { ThirdwebClient } from "../../client/client.js";
 import { computedStore } from "../../reactive/computedStore.js";
 import { effect } from "../../reactive/effect.js";
 import { createStore } from "../../reactive/store.js";
+import { smartWallet } from "../create-wallet.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
+import type { SmartWalletOptions } from "../smart/types.js";
 import type { AsyncStorage } from "../storage/AsyncStorage.js";
 import { deleteConnectParamsFromStorage } from "../storage/walletStorage.js";
 
@@ -14,6 +17,10 @@ const ACTIVE_WALLET_ID = "thirdweb:active-wallet-id";
 const LAST_ACTIVE_CHAIN = "thirdweb:active-chain";
 
 export type ConnectionManager = ReturnType<typeof createConnectionManager>;
+export type ConnectManagerOptions = {
+  client: ThirdwebClient;
+  accountAbstraction?: SmartWalletOptions;
+};
 
 /**
  * Create a connection manager for Wallet connections
@@ -71,7 +78,7 @@ export function createConnectionManager(storage: AsyncStorage) {
 
     // if disconnecting the active wallet
     if (activeWalletStore.getValue() === wallet) {
-      activeWalletStore.setValue(undefined);
+      storage.removeItem(ACTIVE_WALLET_ID);
       activeAccountStore.setValue(undefined);
       activeWalletChainStore.setValue(undefined);
       activeWalletConnectionStatusStore.setValue("disconnected");
@@ -83,23 +90,39 @@ export function createConnectionManager(storage: AsyncStorage) {
     wallet.disconnect();
   };
 
-  const setActiveWallet = (wallet: Wallet) => {
-    const account = wallet.getAccount();
+  const setActiveWallet = async (
+    wallet: Wallet,
+    options?: ConnectManagerOptions,
+  ) => {
+    const personalWallet = wallet;
+    let activeWallet = personalWallet;
+    if (options?.accountAbstraction) {
+      activeWallet = smartWallet(options.accountAbstraction);
+      await activeWallet.connect({
+        personalAccount: wallet.getAccount(),
+        client: options.client,
+      });
+    }
+
+    const account = activeWallet.getAccount();
     if (!account) {
-      throw new Error("Can not a wallet without an account as active");
+      throw new Error("Can not set a wallet without an account as active");
     }
 
     // also add it to connected wallets if it's not already there
     const _connectedWalletsMap = walletIdToConnectedWalletMap.getValue();
-    if (!_connectedWalletsMap.has(wallet.id)) {
-      addConnectedWallet(wallet);
+    if (!_connectedWalletsMap.has(activeWallet.id)) {
+      addConnectedWallet(activeWallet);
     }
 
     // update active states
-    activeWalletStore.setValue(wallet);
+    activeWalletStore.setValue(activeWallet);
     activeAccountStore.setValue(account);
-    activeWalletChainStore.setValue(wallet.getChain());
+    activeWalletChainStore.setValue(activeWallet.getChain());
     activeWalletConnectionStatusStore.setValue("connected");
+
+    // persist last connected personal wallet
+    storage.setItem(ACTIVE_WALLET_ID, personalWallet.id);
 
     // setup listeners
 
@@ -149,20 +172,6 @@ export function createConnectionManager(storage: AsyncStorage) {
       storage.setItem(CONNECTED_WALLET_IDS, JSON.stringify(ids));
     },
     [connectedWallets],
-    false,
-  );
-
-  // save active wallet id to storage
-  effect(
-    () => {
-      const value = activeWalletStore.getValue()?.id;
-      if (value) {
-        storage.setItem(ACTIVE_WALLET_ID, value);
-      } else {
-        storage.removeItem(ACTIVE_WALLET_ID);
-      }
-    },
-    [activeWalletStore],
     false,
   );
 
