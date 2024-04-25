@@ -27,7 +27,7 @@ export type WatchContractEventsOptions<
  * ### Listen to all events for a contract
  * ```ts
  * import { watchContractEvents } from "thirdweb";
- * const unwatch = watchEvents({
+ * const unwatch = watchContractEvents({
  *  contract: myContract,
  *  onEvents: (events) => {
  *   // do something with the events
@@ -41,7 +41,7 @@ export type WatchContractEventsOptions<
  * const myEvent = prepareEvent({
  *  event: "event MyEvent(uint256 myArg)",
  * });
- * const events = await watchEvents({
+ * const events = await watchContractEvents({
  *  contract: myContract,
  *  events: [myEvent],
  *  onEvents: (events) => {
