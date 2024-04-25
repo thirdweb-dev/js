@@ -37,7 +37,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
           chain: ANVIL_CHAIN,
           client: TEST_CLIENT,
           contractId: "Airdrop",
-          contractParams: [TEST_ACCOUNT_A.address],
+          contractParams: [TEST_ACCOUNT_A.address, ""],
         }),
         chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
