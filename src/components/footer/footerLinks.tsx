@@ -55,11 +55,6 @@ export const NETWORKS: FooterLinkInfo[] = [
 
 export const COMPANY: FooterLinkInfo[] = [
   {
-    label: "about",
-    name: "About us",
-    link: "/about",
-  },
-  {
     name: "Mission",
     label: "mission",
     link: "/mission",
@@ -80,7 +75,7 @@ export const COMPANY: FooterLinkInfo[] = [
     link: "https://careers.thirdweb.com/",
   },
   {
-    name: "Press Kit",
+    name: "Brand Assets",
     label: "press-kit",
     link: "https://thirdweb.notion.site/00605c7c37a74141967cfe68262baefa?v=18a8db229e094fc2884e75be86825e7d&pvs=4",
   },
