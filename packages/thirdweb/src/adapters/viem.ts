@@ -31,7 +31,7 @@ export const viemAdapter = {
      * ```ts
      * import { viemAdapter } from "thirdweb/adapters";
      *
-     * const contract = viemmAdapter.contract.fromViem({
+     * const contract = viemAdapter.contract.fromViem({
      *  viemContract: viemContract,
      *  chain: ethereum,
      *  client,
@@ -246,7 +246,7 @@ function fromViemWalletClient(options: {
   const viemAccount = options.walletClient.account;
   if (!viemAccount) {
     throw new Error(
-      "Account not found in walletClient, please pass it explicitely.",
+      "Account not found in walletClient, please pass it explicitly.",
     );
   }
   return {
