@@ -29,7 +29,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         chain: ANVIL_CHAIN,
         account: TEST_ACCOUNT_A,
         contractId: "Airdrop",
-        contractParams: [TEST_ACCOUNT_A.address],
+        contractParams: [TEST_ACCOUNT_A.address, ""],
       });
       expect(address).toBeDefined();
       expect(address.length).toBe(42);
