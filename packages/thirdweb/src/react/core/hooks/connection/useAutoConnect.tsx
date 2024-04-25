@@ -175,17 +175,18 @@ export function AutoConnect(props: AutoConnectProps) {
       const lastConnectedChain = await getLastConnectedChain(asyncLocalStorage);
 
       async function handleWalletConnection(wallet: Wallet) {
-        setConnectionStatus("connecting");
         return wallet.autoConnect({
           client: props.client,
           chain: lastConnectedChain ?? undefined,
         });
       }
 
-      const activeWallet = wallets.find((w) => w.id === lastActiveWalletId);
+      const activeWallet =
+        lastActiveWalletId && wallets.find((w) => w.id === lastActiveWalletId);
 
       if (activeWallet) {
         try {
+          setConnectionStatus("connecting"); // only set connecting status if we are connecting the last active EOA
           await timeoutPromise(handleWalletConnection(activeWallet), {
             ms: timeout,
             message: `AutoConnect timeout : ${timeout}ms limit exceeded.`,
@@ -214,7 +215,6 @@ export function AutoConnect(props: AutoConnectProps) {
         } catch (e) {
           console.error("Failed to auto connect a non-active connected wallet");
           console.error(e);
-          setConnectionStatus("disconnected");
         }
       }
     };

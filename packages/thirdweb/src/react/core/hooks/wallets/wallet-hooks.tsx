@@ -135,25 +135,22 @@ export function useSetActiveWallet() {
  * @walletConnection
  */
 export function useConnect(options?: ConnectManagerOptions) {
-  const { setActiveWallet } = connectionManager;
+  const { connect } = connectionManager;
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
-  const connect = useCallback(
+  const handleConnection = useCallback(
     async (walletOrFn: Wallet | (() => Promise<Wallet>)) => {
       // reset error state
       setError(null);
       if (typeof walletOrFn !== "function") {
-        await setActiveWallet(walletOrFn, options);
-        return walletOrFn;
+        return connect(walletOrFn, options);
       }
 
       setIsConnecting(true);
       try {
         const w = await walletOrFn();
-        // add the uuid for this wallet
-        await setActiveWallet(w, options);
-        return w;
+        return connect(w, options);
       } catch (e) {
         console.error(e);
         setError(e as Error);
@@ -162,10 +159,10 @@ export function useConnect(options?: ConnectManagerOptions) {
       }
       return null;
     },
-    [setActiveWallet, options],
+    [connect, options],
   );
 
-  return { connect, isConnecting, error } as const;
+  return { connect: handleConnection, isConnecting, error } as const;
 }
 
 /**
