@@ -13,7 +13,7 @@ const ownedResponseSchema = z.object({
 const validAction = z.union([z.literal("mint"), z.literal("redirect")]);
 
 const thirdwebEngineUrl = process.env.THIRDWEB_ENGINE_URL;
-const thirdwebEngineWallet = process.env.THIRDWEB_ENGINE_WALLET;
+const thirdwebEngineWallet = process.env.DEGEN_THIRDWEB_ENGINE_WALLET;
 const thirdwebEngineAccessToken = process.env.THIRDWEB_ACCESS_TOKEN;
 
 const degenChainId = 666666666;
