@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmZTWoZ3LvivSinaJ4aSwqU8pCXw8oSZNnUCh4wwXxtAoQ",
+    "width": 500,
+    "height": 500,
+    "format": "png"
+  },
   "infoURL": "https://larissa.network",
   "name": "Larissa Chain",
   "nativeCurrency": {
