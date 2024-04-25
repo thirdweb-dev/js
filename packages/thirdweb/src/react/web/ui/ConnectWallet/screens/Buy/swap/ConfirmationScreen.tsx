@@ -1,7 +1,9 @@
 import { CheckCircledIcon, CrossCircledIcon } from "@radix-ui/react-icons";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { Chain } from "../../../../../../../chains/types.js";
+import { defineChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
+import { NATIVE_TOKEN_ADDRESS } from "../../../../../../../constants/addresses.js";
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
 import { waitForReceipt } from "../../../../../../../transaction/actions/wait-for-tx-receipt.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
@@ -23,8 +25,9 @@ import { Text } from "../../../../components/text.js";
 import { useCustomTheme } from "../../../../design-system/CustomThemeProvider.js";
 import { StyledDiv } from "../../../../design-system/elements.js";
 import { fontSize, iconSize } from "../../../../design-system/index.js";
+import type { TokenInfo } from "../../../defaultTokens.js";
 import { AccentFailIcon } from "../../../icons/AccentFailIcon.js";
-import { type ERC20OrNativeToken, isNativeToken } from "../../nativeToken.js";
+import { type ERC20OrNativeToken, NATIVE_TOKEN } from "../../nativeToken.js";
 import { Step } from "../Stepper.js";
 import { SwapFees } from "./Fees.js";
 import { formatSeconds } from "./formatSeconds.js";
@@ -36,13 +39,7 @@ import { addPendingSwapTransaction } from "./pendingSwapTx.js";
 export function SwapConfirmationScreen(props: {
   onBack: () => void;
   buyWithCryptoQuote: BuyWithCryptoQuote;
-  fromAmount: string;
-  toAmount: string;
-  fromChain: Chain;
-  toChain: Chain;
   account: Account;
-  fromToken: ERC20OrNativeToken;
-  toToken: ERC20OrNativeToken;
   onViewPendingTx: () => void;
   onQuoteFinalized: (quote: BuyWithCryptoQuote) => void;
   client: ThirdwebClient;
@@ -62,16 +59,54 @@ export function SwapConfirmationScreen(props: {
     "pending" | "success" | "error" | "idle"
   >("idle");
 
-  const fromChain = useChainQuery(props.fromChain);
-  const toChain = useChainQuery(props.toChain);
+  const quote = props.buyWithCryptoQuote;
 
-  const fromTokenSymbol = isNativeToken(props.fromToken)
-    ? fromChain.data?.nativeCurrency?.symbol
-    : props.fromToken?.symbol;
+  const fromChain = useMemo(
+    () => defineChain(quote.swapDetails.fromToken.chainId),
+    [quote],
+  );
 
-  const toTokenSymbol = isNativeToken(props.toToken)
-    ? toChain.data?.nativeCurrency?.symbol
-    : props.toToken?.symbol;
+  const toChain = useMemo(
+    () => defineChain(quote.swapDetails.toToken.chainId),
+    [quote],
+  );
+
+  const fromTokenSymbol = quote.swapDetails.fromToken.symbol || "";
+  const toTokenSymbol = quote.swapDetails.toToken.symbol || "";
+
+  const fromAmount = quote.swapDetails.fromAmount;
+  const toAmount = quote.swapDetails.toAmount;
+
+  const _toToken = quote.swapDetails.toToken;
+  const _fromToken = quote.swapDetails.toToken;
+
+  const toToken: ERC20OrNativeToken = useMemo(() => {
+    if (_toToken.tokenAddress === NATIVE_TOKEN_ADDRESS) {
+      return NATIVE_TOKEN;
+    }
+
+    const tokenInfo: TokenInfo = {
+      address: _toToken.tokenAddress,
+      icon: "",
+      name: _toToken.name || "",
+      symbol: _toToken.symbol || "",
+    };
+    return tokenInfo;
+  }, [_toToken]);
+
+  const fromToken: ERC20OrNativeToken = useMemo(() => {
+    if (_fromToken.tokenAddress === NATIVE_TOKEN_ADDRESS) {
+      return NATIVE_TOKEN;
+    }
+
+    const tokenInfo: TokenInfo = {
+      address: _fromToken.tokenAddress,
+      icon: "",
+      name: _fromToken.name || "",
+      symbol: _fromToken.symbol || "",
+    };
+    return tokenInfo;
+  }, [_fromToken]);
 
   if (swapTx) {
     return (
@@ -80,12 +115,12 @@ export function SwapConfirmationScreen(props: {
           props.onBack();
         }}
         onViewPendingTx={props.onViewPendingTx}
-        destinationChain={props.toChain}
-        destinationToken={props.toToken}
-        sourceAmount={`${formatNumber(Number(props.fromAmount), 4)} ${
+        destinationChain={toChain}
+        destinationToken={toToken}
+        sourceAmount={`${formatNumber(Number(fromAmount), 4)} ${
           fromTokenSymbol || ""
         }`}
-        destinationAmount={`${formatNumber(Number(props.toAmount), 4)} ${
+        destinationAmount={`${formatNumber(Number(toAmount), 4)} ${
           toTokenSymbol || ""
         }`}
         swapTx={swapTx}
@@ -101,21 +136,21 @@ export function SwapConfirmationScreen(props: {
 
       {/* You Receive */}
       <ConfirmItem label="Receive">
-        <TokenInfo
-          chain={props.toChain}
-          amount={String(formatNumber(Number(props.toAmount), 4))}
+        <RenderTokenInfo
+          chain={toChain}
+          amount={String(formatNumber(Number(toAmount), 4))}
           symbol={toTokenSymbol || ""}
-          token={props.toToken}
+          token={toToken}
           client={props.client}
         />
       </ConfirmItem>
 
       <ConfirmItem label="Pay">
-        <TokenInfo
-          chain={props.fromChain}
-          amount={String(formatNumber(Number(props.fromAmount), 4))}
+        <RenderTokenInfo
+          chain={fromChain}
+          amount={String(formatNumber(Number(fromAmount), 4))}
           symbol={fromTokenSymbol || ""}
-          token={props.fromToken}
+          token={fromToken}
           client={props.client}
         />
       </ConfirmItem>
@@ -217,17 +252,17 @@ export function SwapConfirmationScreen(props: {
               props.onQuoteFinalized(props.buyWithCryptoQuote);
 
               // these will be defined by this time
-              if (fromTokenSymbol && toTokenSymbol && fromChain.data) {
+              if (fromTokenSymbol && toTokenSymbol && fromChain) {
                 addPendingSwapTransaction(props.client, {
                   source: {
                     symbol: fromTokenSymbol,
-                    value: props.fromAmount,
-                    chainId: props.fromChain.id,
+                    value: fromAmount,
+                    chainId: fromChain.id,
                   },
                   destination: {
                     symbol: toTokenSymbol,
-                    value: props.toAmount,
-                    chainId: props.toChain.id,
+                    value: toAmount,
+                    chainId: toChain.id,
                   },
                   status: "PENDING",
                   transactionHash: _swapTx.transactionHash, // ?? _swapTx.userOpHash,
@@ -262,7 +297,7 @@ const ConnectorLine = /* @__PURE__ */ StyledDiv(() => {
   };
 });
 
-function TokenInfo(props: {
+function RenderTokenInfo(props: {
   chain: Chain;
   token: ERC20OrNativeToken;
   amount: string;

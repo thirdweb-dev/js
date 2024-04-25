@@ -24,7 +24,7 @@ import { Button } from "../../components/buttons.js";
 import { Text } from "../../components/text.js";
 import { useCustomTheme } from "../../design-system/CustomThemeProvider.js";
 import { fadeInAnimation } from "../../design-system/animations.js";
-import { StyledAnchor } from "../../design-system/elements.js";
+import { StyledButton } from "../../design-system/elements.js";
 import {
   type Theme,
   fontSize,
@@ -33,6 +33,8 @@ import {
   spacing,
 } from "../../design-system/index.js";
 import { swapTransactionsStore } from "./Buy/swap/pendingSwapTx.js";
+
+// TODO: handle the Complete Transaction button click and start the post-onramp swap flow
 
 type TxStatusInfo =
   | {
@@ -185,6 +187,20 @@ export function BuyTxHistory(props: {
 
   const noTransactions = txInfosToShow.length === 0;
 
+  const [selectedTx, setSelectedTx] = useState<TxStatusInfo | null>(null);
+
+  if (selectedTx) {
+    return (
+      <TransactionDetailsScreen
+        client={props.client}
+        txInfo={selectedTx}
+        onBack={() => {
+          setSelectedTx(null);
+        }}
+      />
+    );
+  }
+
   return (
     <Container animate="fadein">
       <Container p="lg">
@@ -234,6 +250,9 @@ export function BuyTxHistory(props: {
                 key={txInfo.transactionHash}
                 txInfo={txInfo}
                 client={props.client}
+                onClick={() => {
+                  setSelectedTx(txInfo);
+                }}
               />
             );
           })}
@@ -319,16 +338,85 @@ export function BuyTxHistory(props: {
   );
 }
 
+function TransactionDetailsScreen(props: {
+  txInfo: TxStatusInfo;
+  onBack?: () => void;
+  client: ThirdwebClient;
+}) {
+  const txInfo = props.txInfo;
+  const chainQuery = useChainQuery(defineChain(props.txInfo.boughtChainId));
+  const transactionHash = props.txInfo.transactionHash;
+  const statusMeta =
+    props.txInfo.type === "buyWithCrypto"
+      ? getBuyWithCryptoStatusMeta(props.txInfo.status, props.txInfo.subStatus)
+      : getBuyWithFiatStatusMeta(props.txInfo.status);
+
+  return (
+    <Container>
+      <Container p="lg">
+        <ModalHeader title="Transaction Details" onBack={props.onBack} />
+      </Container>
+
+      <Line />
+
+      <Container p="lg">
+        <Text>Buy</Text>
+        <Spacer y="xs" />
+        <Container flex="row" gap="xs" center="y">
+          <ChainIcon
+            chain={chainQuery.data}
+            size={iconSize.md}
+            client={props.client}
+          />
+          <Text color="primaryText">
+            {formatNumber(Number(props.txInfo.boughtTokenAmount), 4)}{" "}
+            {props.txInfo.boughtTokenSymbol}
+          </Text>
+        </Container>
+
+        <Spacer y="lg" />
+        <Line />
+        <Spacer y="lg" />
+        <Text>Status</Text>
+        <Spacer y="xs" />
+        <Text color={statusMeta.color}>{statusMeta.status}</Text>
+
+        <Spacer y="lg" />
+        <Line />
+        <Spacer y="lg" />
+
+        {txInfo.type === "buyWithFiat" &&
+          (txInfo.status === "CRYPTO_SWAP_REQUIRED" ||
+            txInfo.status === "PAYMENT_FAILED") && (
+            <>
+              <Button fullWidth variant="primary">
+                Complete Transaction
+              </Button>
+              <Spacer y="sm" />
+            </>
+          )}
+
+        <ButtonLink
+          fullWidth
+          variant="accent"
+          href={`${
+            chainQuery.data?.explorers?.[0]?.url || ""
+          }/tx/${transactionHash}`}
+          target="_blank"
+        >
+          View on Explorer
+        </ButtonLink>
+      </Container>
+    </Container>
+  );
+}
+
 function TransactionInfo(props: {
   txInfo: TxStatusInfo;
   client: ThirdwebClient;
+  onClick?: () => void;
 }) {
-  const {
-    boughtChainId,
-    transactionHash,
-    boughtTokenAmount,
-    boughtTokenSymbol,
-  } = props.txInfo;
+  const { boughtChainId, boughtTokenAmount, boughtTokenSymbol } = props.txInfo;
 
   const boughtChain = useMemo(
     () => defineChain(boughtChainId),
@@ -341,14 +429,15 @@ function TransactionInfo(props: {
       ? getBuyWithCryptoStatusMeta(props.txInfo.status, props.txInfo.subStatus)
       : getBuyWithFiatStatusMeta(props.txInfo.status);
 
-  const isValidTxHash = transactionHash.startsWith("0x");
+  // const isValidTxHash = transactionHash.startsWith("0x");
   return (
-    <TxHashLink
-      href={`${
-        chainQuery.data?.explorers?.[0]?.url || ""
-      }/tx/${transactionHash}`}
-      as={isValidTxHash ? "a" : "button"}
-      target="_blank"
+    <TXPreviewButton
+      // href={`${
+      //   chainQuery.data?.explorers?.[0]?.url || ""
+      // }/tx/${transactionHash}`}
+      // as={isValidTxHash ? "a" : "button"}
+      // target="_blank"
+      onClick={props.onClick}
     >
       <Container
         flex="row"
@@ -412,13 +501,13 @@ function TransactionInfo(props: {
           {statusMeta.status}
         </Text>
       </Container>
-    </TxHashLink>
+    </TXPreviewButton>
   );
 }
 
 const ButtonLink = /* @__PURE__ */ (() => Button.withComponent("a"))();
 
-const TxHashLink = /* @__PURE__ */ StyledAnchor(() => {
+const TXPreviewButton = /* @__PURE__ */ StyledButton(() => {
   const theme = useCustomTheme();
   return {
     border: "none",
@@ -519,7 +608,7 @@ function getBuyWithFiatStatusMeta(
     case "CRYPTO_SWAP_FAILED":
     case "CRYPTO_SWAP_REQUIRED": {
       return {
-        status: "Incomplete",
+        status: "Action Required",
         color: "accentText",
       };
     }

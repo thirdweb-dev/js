@@ -307,7 +307,7 @@ export function BuyScreenContent(props: {
   >();
 
   const fiatQuoteQuery = useBuyWithFiatQuote(
-    method === "creditCard" && !confirmedFiatQuote
+    method === "creditCard" && !confirmedFiatQuote && deferredTokenAmount
       ? {
           fromCurrencySymbol: selectedCurrency.shorthand,
           toChainId: toChain.id,
@@ -434,13 +434,7 @@ export function BuyScreenContent(props: {
         onQuoteFinalized={(_quote) => {
           setFinalizedQuote(_quote);
         }}
-        fromAmount={quoteToConfirm.swapDetails.fromAmount}
-        toAmount={tokenAmount}
-        fromChain={fromChain}
-        toChain={toChain}
         account={account}
-        fromToken={fromToken}
-        toToken={toToken}
         onViewPendingTx={props.onViewPendingTx}
       />
     );

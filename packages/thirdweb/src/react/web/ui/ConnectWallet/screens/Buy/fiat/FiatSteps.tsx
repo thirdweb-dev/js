@@ -104,8 +104,7 @@ export function FiatSteps(props: {
       />
       <div>
         <Text color="primaryText" inline>
-          {/* TODO: check if toAmountMin should be used or estimatedToAmountMin  */}
-          {props.quote.toAmountMin}{" "}
+          {props.quote.estimatedToAmountMin}{" "}
         </Text>
         <TokenSymbol token={toToken} chain={toChain} size="sm" inline />
       </div>
