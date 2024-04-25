@@ -17,6 +17,7 @@ import CodePlayground from "components/connect/CodePlayground";
 import Carousel from "components/connect/Carousel";
 import Head from "next/head";
 import { Gradients } from "components/landing-pages/gradients";
+import { connectFrames } from "lib/connect-frames";
 
 const TRACKING_CATEGORY = "connect-wallet-landing";
 
@@ -118,6 +119,20 @@ const ConnectLanding: ThirdwebNextPage = () => {
         },
       }}
     >
+      {/* Farcaster frames headers */}
+      <Head>
+        <meta property="fc:frame" content="vNext" />
+        <meta property="fc:frame:image" content={connectFrames["1"].imageUrl} />
+        <meta
+          property="fc:frame:post_url"
+          content={`${getAbsoluteUrl()}/api/frame/connect?step=1`}
+        />
+        <meta property="fc:frame:button:1" content="Features →" />
+        <meta property="fc:frame:button:2" content="Start building" />
+        <meta name="fc:frame:button:1:action" content="post" />
+        <meta name="fc:frame:button:2:action" content="post_redirect" />
+      </Head>
+
       <Head>
         <style>
           {`
