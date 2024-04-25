@@ -32,7 +32,7 @@ interface FormSchema {
   "0-2/website": string;
   jobtitle: string;
   "0-2/size_of_company": string;
-  "0-2/product_type": string;
+  company_vertical: string;
   products: string;
   "0-2/when_do_you_expect_to_launch_": string;
   how_did_you_hear_about_us_: string;
@@ -271,7 +271,7 @@ const ContactUs: ThirdwebNextPage = () => {
                     borderColor="gray.300"
                     placeholder="What industry best aligns with your business? *"
                     color="black"
-                    {...form.register("0-2/product_type", { required: true })}
+                    {...form.register("company_vertical", { required: true })}
                   >
                     <option value="Game">Game</option>
                     <option value="DeFi">DeFi</option>
