@@ -41,8 +41,10 @@ export default {
   },
   "rpc": [
     "https://223.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mainnet.b2-rpc.com",
     "https://rpc.bsquared.network",
-    "https://b2-mainnet.alt.technology"
+    "https://b2-mainnet.alt.technology",
+    "https://b2-mainnet-public.s.chainbase.com"
   ],
   "shortName": "B2-mainnet",
   "slug": "b2",
