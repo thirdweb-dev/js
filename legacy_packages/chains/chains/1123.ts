@@ -5,7 +5,7 @@ export default {
   "explorers": [
     {
       "name": "blockscout",
-      "url": "https://habitat-explorer.bsquared.network",
+      "url": "https://testnet-explorer.bsquared.network",
       "standard": "EIP3091",
       "icon": {
         "url": "ipfs://QmPV6ASrQDEkEW3g3ni7p2rJMPeciRLpEpvrAc1QfzVkx9",
@@ -23,7 +23,7 @@ export default {
     "format": "png"
   },
   "infoURL": "https://www.bsquared.network",
-  "name": "B2 Habitat Testnet",
+  "name": "B2 Testnet",
   "nativeCurrency": {
     "name": "Bitcoin",
     "symbol": "BTC",
@@ -36,12 +36,10 @@ export default {
   },
   "rpc": [
     "https://1123.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://b2habitat-testnet.alt.technology",
-    "https://habitat-rpc.bsquared.network",
-    "https://habitat-rpc-public.bsquared.network"
+    "https://b2-testnet.alt.technology"
   ],
   "shortName": "B2-testnet",
-  "slug": "b2-habitat-testnet",
+  "slug": "b2-testnet",
   "testnet": true,
-  "title": "B2 Habitat Testnet"
+  "title": "B2 Testnet"
 } as const satisfies Chain;
