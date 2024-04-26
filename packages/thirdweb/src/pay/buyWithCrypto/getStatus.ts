@@ -1,10 +1,10 @@
 import type { ThirdwebClient } from "../../client/client.js";
 import { getClientFetch } from "../../utils/fetch.js";
-import { getPayBuyWithCryptoStatusUrl } from "../utils/definitions.js";
 import type {
-  PayTokenInfo,
   PayOnChainTransactionDetails,
+  PayTokenInfo,
 } from "../utils/commonTypes.js";
+import { getPayBuyWithCryptoStatusUrl } from "../utils/definitions.js";
 
 // TODO: add JSDoc description for all properties
 

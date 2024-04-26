@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import type { BuyWithFiatQuote } from "../../../../../../../exports/pay.js";
 import { isSwapRequiredPostOnramp } from "../../../../../../../pay/buyWithFiat/isSwapRequiredPostOnramp.js";
-import { OnRampScreen } from "../OnRampScreen.js";
+import { openOnrampPopup } from "../openOnRamppopup.js";
 import { FiatStatusScreen } from "./FiatStatusScreen.js";
 import { FiatSteps } from "./FiatSteps.js";
 
@@ -25,8 +25,8 @@ export function FiatFlow(props: {
   onViewPendingTx: () => void;
 }) {
   const hasTwoSteps = isSwapRequiredPostOnramp(props.quote);
-  const [screen, setScreen] = useState<"step-1" | "onramp" | "status">(
-    hasTwoSteps ? "step-1" : "onramp",
+  const [screen, setScreen] = useState<"step-1" | "status">(
+    hasTwoSteps ? "step-1" : "status",
   );
 
   if (screen === "step-1") {
@@ -37,23 +37,9 @@ export function FiatFlow(props: {
         quote={props.quote}
         step={1}
         onContinue={() => {
-          setScreen("onramp");
-        }}
-      />
-    );
-  }
-
-  if (screen === "onramp") {
-    return (
-      <OnRampScreen
-        quote={props.quote}
-        onBack={props.onBack}
-        testMode={props.testMode}
-        onComplete={() => {
-          // start polling the onramp status and handle the rest
+          openOnrampPopup(props.quote.onRampLink, props.theme);
           setScreen("status");
         }}
-        theme={props.theme}
       />
     );
   }

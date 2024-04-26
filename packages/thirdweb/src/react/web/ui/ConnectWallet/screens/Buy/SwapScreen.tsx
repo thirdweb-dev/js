@@ -6,6 +6,7 @@ import type { ThirdwebClient } from "../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../constants/addresses.js";
 import type { BuyWithFiatQuote } from "../../../../../../exports/pay.js";
 import type { BuyWithCryptoQuote } from "../../../../../../pay/buyWithCrypto/getQuote.js";
+import { isSwapRequiredPostOnramp } from "../../../../../../pay/buyWithFiat/isSwapRequiredPostOnramp.js";
 import type { PreparedTransaction } from "../../../../../../transaction/prepare-transaction.js";
 import { formatNumber } from "../../../../../../utils/formatNumber.js";
 import { toEther } from "../../../../../../utils/units.js";
@@ -65,6 +66,7 @@ import {
   type CurrencyMeta,
   defaultSelectedCurrency,
 } from "./fiat/currencies.js";
+import { openOnrampPopup } from "./openOnRamppopup.js";
 import { BuyTokenInput } from "./swap/BuyTokenInput.js";
 import { FiatFees, SwapFees } from "./swap/Fees.js";
 import { PayWithCrypto } from "./swap/PayWithCrypto.js";
@@ -698,6 +700,15 @@ export function BuyScreenContent(props: {
               onClick={async () => {
                 if (fiatQuoteQuery.data) {
                   setConfirmedFiatQuote(fiatQuoteQuery.data);
+                  const hasTwoSteps = isSwapRequiredPostOnramp(
+                    fiatQuoteQuery.data,
+                  );
+                  if (!hasTwoSteps) {
+                    openOnrampPopup(
+                      fiatQuoteQuery.data.onRampLink,
+                      props.theme,
+                    );
+                  }
                   setScreen("fiat-flow");
                 }
               }}

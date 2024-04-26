@@ -1,6 +1,7 @@
 import { CheckCircledIcon } from "@radix-ui/react-icons";
 import { useEffect, useState } from "react";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
+import { isMobile } from "../../../../../../../utils/web/isMobile.js";
 import { useBuyWithFiatStatus } from "../../../../../../core/hooks/pay/useBuyWithFiatStatus.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
@@ -69,6 +70,8 @@ export function FiatStatusScreen(props: {
           <Text color="primaryText" size="lg" center>
             Buy Pending
           </Text>
+          <Spacer y="lg" />
+          {!isMobile() && <Text center>Complete the purchase in popup</Text>}
         </>
       )}
 
