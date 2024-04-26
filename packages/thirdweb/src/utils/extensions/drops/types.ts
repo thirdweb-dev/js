@@ -44,3 +44,14 @@ export type ClaimConditionsInput = {
     }
   | { priceInWei?: bigint }
 );
+
+export type ClaimCondition = {
+  startTimestamp: bigint;
+  maxClaimableSupply: bigint;
+  supplyClaimed: bigint;
+  quantityLimitPerWallet: bigint;
+  merkleRoot: string;
+  pricePerToken: bigint;
+  currency: string;
+  metadata: string;
+};

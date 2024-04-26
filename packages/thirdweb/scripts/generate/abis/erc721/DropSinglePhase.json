@@ -1,0 +1,431 @@
+[
+  {
+    "type": "function",
+    "name": "claim",
+    "inputs": [
+      {
+        "name": "_receiver",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "_quantity",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "_currency",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "_pricePerToken",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "_allowlistProof",
+        "type": "tuple",
+        "internalType": "struct IDropSinglePhase.AllowlistProof",
+        "components": [
+          {
+            "name": "proof",
+            "type": "bytes32[]",
+            "internalType": "bytes32[]"
+          },
+          {
+            "name": "quantityLimitPerWallet",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "pricePerToken",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "currency",
+            "type": "address",
+            "internalType": "address"
+          }
+        ]
+      },
+      {
+        "name": "_data",
+        "type": "bytes",
+        "internalType": "bytes"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "claimCondition",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "startTimestamp",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "maxClaimableSupply",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "supplyClaimed",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "quantityLimitPerWallet",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "merkleRoot",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "pricePerToken",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "currency",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "metadata",
+        "type": "string",
+        "internalType": "string"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getSupplyClaimedByWallet",
+    "inputs": [
+      {
+        "name": "_claimer",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "setClaimConditions",
+    "inputs": [
+      {
+        "name": "_condition",
+        "type": "tuple",
+        "internalType": "struct IClaimCondition.ClaimCondition",
+        "components": [
+          {
+            "name": "startTimestamp",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "maxClaimableSupply",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "supplyClaimed",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "quantityLimitPerWallet",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "merkleRoot",
+            "type": "bytes32",
+            "internalType": "bytes32"
+          },
+          {
+            "name": "pricePerToken",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "currency",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "metadata",
+            "type": "string",
+            "internalType": "string"
+          }
+        ]
+      },
+      {
+        "name": "_resetClaimEligibility",
+        "type": "bool",
+        "internalType": "bool"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "verifyClaim",
+    "inputs": [
+      {
+        "name": "_claimer",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "_quantity",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "_currency",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "_pricePerToken",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "_allowlistProof",
+        "type": "tuple",
+        "internalType": "struct IDropSinglePhase.AllowlistProof",
+        "components": [
+          {
+            "name": "proof",
+            "type": "bytes32[]",
+            "internalType": "bytes32[]"
+          },
+          {
+            "name": "quantityLimitPerWallet",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "pricePerToken",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "currency",
+            "type": "address",
+            "internalType": "address"
+          }
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "name": "isOverride",
+        "type": "bool",
+        "internalType": "bool"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "event",
+    "name": "ClaimConditionUpdated",
+    "inputs": [
+      {
+        "name": "condition",
+        "type": "tuple",
+        "indexed": false,
+        "internalType": "struct IClaimCondition.ClaimCondition",
+        "components": [
+          {
+            "name": "startTimestamp",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "maxClaimableSupply",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "supplyClaimed",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "quantityLimitPerWallet",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "merkleRoot",
+            "type": "bytes32",
+            "internalType": "bytes32"
+          },
+          {
+            "name": "pricePerToken",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "currency",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "metadata",
+            "type": "string",
+            "internalType": "string"
+          }
+        ]
+      },
+      {
+        "name": "resetEligibility",
+        "type": "bool",
+        "indexed": false,
+        "internalType": "bool"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "TokensClaimed",
+    "inputs": [
+      {
+        "name": "claimer",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "receiver",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "startTokenId",
+        "type": "uint256",
+        "indexed": true,
+        "internalType": "uint256"
+      },
+      {
+        "name": "quantityClaimed",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "error",
+    "name": "DropClaimExceedLimit",
+    "inputs": [
+      {
+        "name": "expected",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "actual",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "DropClaimExceedMaxSupply",
+    "inputs": [
+      {
+        "name": "expected",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "actual",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "DropClaimInvalidTokenPrice",
+    "inputs": [
+      {
+        "name": "expectedCurrency",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "expectedPricePerToken",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "actualCurrency",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "actualExpectedPricePerToken",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "DropClaimNotStarted",
+    "inputs": [
+      {
+        "name": "expected",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "actual",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "DropExceedMaxSupply",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "DropNoActiveCondition",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "DropUnauthorized",
+    "inputs": []
+  }
+]
