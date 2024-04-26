@@ -13,7 +13,7 @@ import { OnboardingBilling } from "./Billing";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { useWallet } from "@thirdweb-dev/react";
-import { GLOBAL_EWS_AUTH_TOKEN_KEY } from "constants/app";
+import { getLatestEWSToken } from "constants/app";
 import { walletIds } from "@thirdweb-dev/wallets";
 import { OnboardingChoosePlan } from "./ChoosePlan";
 import { OnboardingLinkWallet } from "./LinkWallet";
@@ -119,7 +119,7 @@ export const Onboarding: React.FC = () => {
   };
 
   const handleEmbeddedWalletConfirmation = () => {
-    const ewsJwt = (window as any)[GLOBAL_EWS_AUTH_TOKEN_KEY];
+    const ewsJwt = getLatestEWSToken();
 
     if (ewsJwt) {
       ewsConfirmMutation.mutate(
@@ -129,7 +129,6 @@ export const Onboarding: React.FC = () => {
             if (!skipBilling(data as Account)) {
               setState(data?.trialPeriodEndedAt ? "skipped" : "plan");
             }
-            (window as any)[GLOBAL_EWS_AUTH_TOKEN_KEY] = undefined;
           },
         },
       );

@@ -23,10 +23,7 @@ import {
   walletConnect,
   zerionWallet,
 } from "@thirdweb-dev/react";
-import {
-  GLOBAL_AUTH_TOKEN_KEY,
-  GLOBAL_EWS_AUTH_TOKEN_KEY,
-} from "constants/app";
+import { GLOBAL_AUTH_TOKEN_KEY, storeEWSToken } from "constants/app";
 import {
   DASHBOARD_THIRDWEB_CLIENT_ID,
   DASHBOARD_THIRDWEB_SECRET_KEY,
@@ -61,8 +58,8 @@ const personalWallets = [
   phantomWallet(),
   embeddedWallet({
     onAuthSuccess: ({ storedToken }) => {
-      // expose paper auth token for onboarding screens to pick up and clear up
-      (window as any)[GLOBAL_EWS_AUTH_TOKEN_KEY] = storedToken.cookieString;
+      // save authToken to localstorage
+      storeEWSToken(storedToken.cookieString);
     },
   }),
   localWallet(),
