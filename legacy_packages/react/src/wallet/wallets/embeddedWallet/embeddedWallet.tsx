@@ -124,6 +124,7 @@ export const embeddedWallet = (
       return new EmbeddedWallet({
         ...walletOptions,
         clientId: walletOptions?.clientId ?? "",
+        onAuthSuccess: options?.onAuthSuccess,
       });
     },
     selectUI(props) {
