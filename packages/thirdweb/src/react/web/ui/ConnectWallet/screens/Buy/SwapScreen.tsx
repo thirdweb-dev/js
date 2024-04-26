@@ -660,10 +660,10 @@ export function BuyScreenContent(props: {
                 >
                   {!isMiniScreen ? (
                     <>
+                      {isSwitching ? "Switching" : "Switch Network"}
                       {isSwitching && (
                         <Spinner size="sm" color="accentButtonText" />
                       )}
-                      {isSwitching ? "Switching" : "Switch Network"}
                     </>
                   ) : (
                     "Continue"

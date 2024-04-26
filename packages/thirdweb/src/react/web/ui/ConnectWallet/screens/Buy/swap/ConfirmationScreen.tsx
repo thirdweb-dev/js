@@ -4,6 +4,10 @@ import type { Chain } from "../../../../../../../chains/types.js";
 import { defineChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../../constants/addresses.js";
+import {
+  useActiveWalletChain,
+  useSwitchActiveWalletChain,
+} from "../../../../../../../exports/react-native.js";
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
 import { waitForReceipt } from "../../../../../../../transaction/actions/wait-for-tx-receipt.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
@@ -45,6 +49,9 @@ export function SwapConfirmationScreen(props: {
   client: ThirdwebClient;
 }) {
   const sendTransactionMutation = useSendTransactionCore();
+  const activeChain = useActiveWalletChain();
+  const [isSwitching, setIsSwitching] = useState(false);
+  const switchActiveWalletChain = useSwitchActiveWalletChain();
 
   const [swapTx, setSwapTx] = useState<
     BuyWithCryptoStatusQueryParams | undefined
@@ -217,73 +224,93 @@ export function SwapConfirmationScreen(props: {
         </>
       )}
 
-      <Button
-        variant="accent"
-        fullWidth
-        disabled={status === "pending"}
-        onClick={async () => {
-          if (step === "approval" && props.buyWithCryptoQuote.approval) {
+      {activeChain && activeChain.id !== fromChain.id ? (
+        <Button
+          fullWidth
+          variant="accent"
+          gap="sm"
+          onClick={async () => {
+            setIsSwitching(true);
             try {
-              setStatus("pending");
+              await switchActiveWalletChain(fromChain);
+            } catch {}
+            setIsSwitching(false);
+          }}
+        >
+          {isSwitching ? "Switching" : "Switch Network"}
+          {isSwitching && <Spinner size="sm" color="accentButtonText" />}
+        </Button>
+      ) : (
+        <Button
+          variant="accent"
+          fullWidth
+          disabled={status === "pending"}
+          onClick={async () => {
+            if (step === "approval" && props.buyWithCryptoQuote.approval) {
+              try {
+                setStatus("pending");
 
-              const tx = await sendTransactionMutation.mutateAsync(
-                props.buyWithCryptoQuote.approval,
-              );
+                const tx = await sendTransactionMutation.mutateAsync(
+                  props.buyWithCryptoQuote.approval,
+                );
 
-              await waitForReceipt({ ...tx, maxBlocksWaitTime: 50 });
-              props.onQuoteFinalized(props.buyWithCryptoQuote);
+                await waitForReceipt({ ...tx, maxBlocksWaitTime: 50 });
+                props.onQuoteFinalized(props.buyWithCryptoQuote);
 
-              setStep("swap");
-              setStatus("idle");
-            } catch (e) {
-              console.error(e);
-              setStatus("error");
-            }
-          }
-
-          if (step === "swap") {
-            setStatus("pending");
-            try {
-              const _swapTx = await sendTransactionMutation.mutateAsync(
-                props.buyWithCryptoQuote.transactionRequest,
-              );
-
-              await waitForReceipt({ ..._swapTx, maxBlocksWaitTime: 50 });
-              props.onQuoteFinalized(props.buyWithCryptoQuote);
-
-              // these will be defined by this time
-              if (fromTokenSymbol && toTokenSymbol && fromChain) {
-                addPendingSwapTransaction(props.client, {
-                  source: {
-                    symbol: fromTokenSymbol,
-                    value: fromAmount,
-                    chainId: fromChain.id,
-                  },
-                  destination: {
-                    symbol: toTokenSymbol,
-                    value: toAmount,
-                    chainId: toChain.id,
-                  },
-                  status: "PENDING",
-                  transactionHash: _swapTx.transactionHash, // ?? _swapTx.userOpHash,
-                });
+                setStep("swap");
+                setStatus("idle");
+              } catch (e) {
+                console.error(e);
+                setStatus("error");
               }
-
-              setSwapTx({
-                transactionHash: _swapTx.transactionHash, // ?? _swapTx.userOpHash,
-                client: props.client,
-              });
-            } catch (e) {
-              console.error(e);
-              setStatus("error");
             }
-          }
-        }}
-        gap="xs"
-      >
-        {step === "approval" ? "Approve" : "Confirm"}
-        {status === "pending" && <Spinner size="sm" color="accentButtonText" />}
-      </Button>
+
+            if (step === "swap") {
+              setStatus("pending");
+              try {
+                const _swapTx = await sendTransactionMutation.mutateAsync(
+                  props.buyWithCryptoQuote.transactionRequest,
+                );
+
+                await waitForReceipt({ ..._swapTx, maxBlocksWaitTime: 50 });
+                props.onQuoteFinalized(props.buyWithCryptoQuote);
+
+                // these will be defined by this time
+                if (fromTokenSymbol && toTokenSymbol && fromChain) {
+                  addPendingSwapTransaction(props.client, {
+                    source: {
+                      symbol: fromTokenSymbol,
+                      value: fromAmount,
+                      chainId: fromChain.id,
+                    },
+                    destination: {
+                      symbol: toTokenSymbol,
+                      value: toAmount,
+                      chainId: toChain.id,
+                    },
+                    status: "PENDING",
+                    transactionHash: _swapTx.transactionHash, // ?? _swapTx.userOpHash,
+                  });
+                }
+
+                setSwapTx({
+                  transactionHash: _swapTx.transactionHash, // ?? _swapTx.userOpHash,
+                  client: props.client,
+                });
+              } catch (e) {
+                console.error(e);
+                setStatus("error");
+              }
+            }
+          }}
+          gap="xs"
+        >
+          {step === "approval" ? "Approve" : "Confirm"}
+          {status === "pending" && (
+            <Spinner size="sm" color="accentButtonText" />
+          )}
+        </Button>
+      )}
     </Container>
   );
 }
