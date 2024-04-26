@@ -231,45 +231,29 @@ export function getChainMetadata(chain: Chain): Promise<ChainMetadata> {
   const chainId = chain.id;
   return withCache(
     async () => {
-      const res = await fetch(`https://api.thirdweb.com/v1/chains/${chainId}`);
-      if (!res.ok) {
-        res.body?.cancel();
-        throw new Error(`Failed to fetch chain data for chainId ${chainId}`);
-      }
+      try {
+        const res = await fetch(
+          `https://api.thirdweb.com/v1/chains/${chainId}`,
+        );
+        if (!res.ok) {
+          res.body?.cancel();
+          throw new Error(`Failed to fetch chain data for chainId ${chainId}`);
+        }
 
-      const response = (await res.json()) as FetchChainResponse;
-      if (response.error) {
-        throw new Error(`Failed to fetch chain data for chainId ${chainId}`);
-      }
-      if (!response.data) {
-        throw new Error(`Failed to fetch chain data for chainId ${chainId}`);
-      }
+        const response = (await res.json()) as FetchChainResponse;
+        if (response.error) {
+          throw new Error(`Failed to fetch chain data for chainId ${chainId}`);
+        }
+        if (!response.data) {
+          throw new Error(`Failed to fetch chain data for chainId ${chainId}`);
+        }
 
-      const data = response.data;
+        const data = response.data;
 
-      return {
-        ...data,
-        name: chain?.name || data.name,
-        chainId: chain?.id || data.chainId,
-        rpc: chain?.rpc ? [chain.rpc] : data.rpc,
-        testnet: chain?.testnet || data.testnet,
-        nativeCurrency: chain?.nativeCurrency
-          ? {
-              ...data.nativeCurrency,
-              ...chain.nativeCurrency,
-            }
-          : data.nativeCurrency,
-        // TODO: handle explorers - don't know what should be the standard
-        // explorers: chain?.blockExplorers
-        //   ? chain.blockExplorers.map((x) => {
-        //       return {
-        //         name: x.name,
-        //         url: x.url,
-        //         standard: '' /// ???
-        //       };
-        //     })
-        //   : result.data.explorers,
-      };
+        return createChainMetadata(chain, data);
+      } catch {
+        return createChainMetadata(chain);
+      }
     },
     {
       cacheKey: `chain:${chainId}`,
@@ -296,5 +280,33 @@ export function convertApiChainToChain(apiChain: ChainMetadata): Chain {
         apiUrl: explorer.url,
       };
     }),
+  };
+}
+
+function createChainMetadata(
+  chain: Chain,
+  data?: ChainMetadata,
+): ChainMetadata {
+  const nativeCurrency = chain.nativeCurrency
+    ? {
+        ...data?.nativeCurrency,
+        ...chain.nativeCurrency,
+      }
+    : data?.nativeCurrency;
+
+  return {
+    ...data,
+    name: chain.name || data?.name || "",
+    chainId: chain.id || data?.chainId || -1,
+    rpc: chain.rpc ? [chain.rpc] : data?.rpc || [""],
+    testnet: chain.testnet || data?.testnet || false,
+    nativeCurrency: {
+      name: nativeCurrency?.name || "",
+      symbol: nativeCurrency?.symbol || "",
+      decimals: nativeCurrency?.decimals || 18,
+    },
+    chain: data?.chain || chain.name || "",
+    shortName: data?.shortName || chain.name || "",
+    slug: data?.slug || chain.name || "",
   };
 }
