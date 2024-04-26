@@ -3,7 +3,6 @@ import { AccountPlan } from "@3rdweb-sdk/react/hooks/useApi";
 import { PricingCard } from "components/homepage/sections/PricingCard";
 import { useMemo } from "react";
 import { CONTACT_US_URL } from "utils/pricing";
-import { remainingDays } from "utils/date-utils";
 
 interface BillingPricingProps {
   plan: string;
@@ -37,6 +36,8 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
     if (plan !== AccountPlan.Free) {
       return "Downgrade";
     }
+
+    return undefined;
   }, [plan, validPayment]);
 
   const growthCtaTitle = useMemo(() => {
@@ -53,26 +54,9 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
     if (plan === AccountPlan.Free) {
       return canTrialGrowth ? trialTitle : "Upgrade";
     }
+
+    return undefined;
   }, [validPayment, isPro, plan, canTrialGrowth]);
-
-  const trialPeriodDays = useMemo(() => {
-    let days = undefined;
-
-    // can trial growth and not pro
-    if (canTrialGrowth && !isPro) {
-      days = 30;
-    }
-    // already has trial period
-    else if (trialPeriodEndedAt && plan === AccountPlan.Growth) {
-      days = remainingDays(trialPeriodEndedAt);
-    }
-
-    if (!days) {
-      return undefined;
-    }
-
-    return `Your free trial will end in ${days} days.`;
-  }, [canTrialGrowth, isPro, plan, trialPeriodEndedAt]);
 
   const handleSelect = (newPlan: AccountPlan) => {
     onSelect(newPlan);
@@ -100,11 +84,14 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
       />
 
       <PricingCard
+        activeTrialEndsAt={
+          plan === AccountPlan.Growth ? trialPeriodEndedAt : undefined
+        }
         current={plan === AccountPlan.Growth}
         size="sm"
         name={AccountPlan.Growth}
         ctaTitle={growthCtaTitle}
-        ctaHint={trialPeriodDays}
+        ctaHint="Your free trial will end after 30 days."
         canTrialGrowth={canTrialGrowth}
         ctaProps={{
           onClick: (e) => {

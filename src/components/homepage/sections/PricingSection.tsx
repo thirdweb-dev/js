@@ -64,7 +64,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
             name={AccountPlan.Growth}
             ctaHint={
               canTrialGrowth
-                ? `Your free trial will end in 30 days.`
+                ? `Your free trial will end after 30 days.`
                 : undefined
             }
             canTrialGrowth={canTrialGrowth}

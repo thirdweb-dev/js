@@ -11,6 +11,7 @@ import { PLANS } from "utils/pricing";
 import { AccountPlan } from "@3rdweb-sdk/react/hooks/useApi";
 import { FeatureItem } from "./FeatureItem";
 import { UpgradeModal } from "./UpgradeModal";
+import { remainingDays } from "../../../utils/date-utils";
 
 interface PricingCardProps {
   name: AccountPlan;
@@ -23,6 +24,7 @@ interface PricingCardProps {
   current?: boolean;
   canTrialGrowth?: boolean;
   size?: "sm" | "lg";
+  activeTrialEndsAt?: string;
 }
 
 export const PricingCard: React.FC<PricingCardProps> = ({
@@ -36,9 +38,13 @@ export const PricingCard: React.FC<PricingCardProps> = ({
   highlighted = false,
   current = false,
   canTrialGrowth = false,
+  activeTrialEndsAt,
 }) => {
   const plan = PLANS[name];
   const isCustomPrice = typeof plan.price === "string";
+
+  const remainingTrialDays =
+    (activeTrialEndsAt ? remainingDays(activeTrialEndsAt) : 0) || 0;
 
   const content = (
     <Card
@@ -79,16 +85,36 @@ export const PricingCard: React.FC<PricingCardProps> = ({
             {plan.description}
           </Text>
         </Flex>
-        <Flex alignItems={{ base: "center", md: "flex-end" }} gap={2}>
-          <Heading
-            size={size === "lg" ? "title.2xl" : "title.md"}
-            lineHeight={1}
-            textDecor={canTrialGrowth ? "line-through" : "none"}
-          >
-            {!isCustomPrice && "$"}
-            {plan.price}
-          </Heading>
-          {!isCustomPrice && <Text size="body.lg">/ month</Text>}
+        <Flex direction="column" gap={0.5}>
+          <Flex alignItems={{ base: "center", md: "flex-end" }} gap={2}>
+            <Heading
+              size={size === "lg" ? "title.2xl" : "title.md"}
+              lineHeight={1}
+            >
+              {isCustomPrice ? (
+                plan.price
+              ) : canTrialGrowth ? (
+                <>
+                  <Box as="span" textDecor="line-through" opacity={0.4}>
+                    ${plan.price}
+                  </Box>{" "}
+                  $0
+                </>
+              ) : (
+                `$${plan.price}`
+              )}
+            </Heading>
+
+            {!isCustomPrice && <Text size="body.lg">/ month</Text>}
+          </Flex>
+          {remainingTrialDays > 0 && (
+            <Text size="body.sm" fontStyle="italic">
+              Your free trial will{" "}
+              {remainingTrialDays > 1
+                ? `end in ${remainingTrialDays} days.`
+                : "end today."}
+            </Text>
+          )}
         </Flex>
       </Flex>
       <Flex
@@ -119,26 +145,28 @@ export const PricingCard: React.FC<PricingCardProps> = ({
       ) : (
         <Flex flexDir="column" gap={3} position="relative" mb={3}>
           {ctaTitle && (
-            <TrackedLinkButton
-              variant="outline"
-              py={6}
-              label={ctaProps.label ?? name}
-              size={size === "lg" ? "md" : "sm"}
-              {...ctaProps}
-            >
-              {ctaTitle}
-            </TrackedLinkButton>
-          )}
-          {ctaHint && (
-            <Text
-              textAlign="center"
-              size="body.sm"
-              w="full"
-              position={{ base: "static", xl: "absolute" }}
-              top={ctaTitle ? 14 : -9}
-            >
-              {ctaHint}
-            </Text>
+            <>
+              <TrackedLinkButton
+                variant="outline"
+                py={6}
+                label={ctaProps.label ?? name}
+                size={size === "lg" ? "md" : "sm"}
+                {...ctaProps}
+              >
+                {ctaTitle}
+              </TrackedLinkButton>
+              {ctaHint && (
+                <Text
+                  textAlign="center"
+                  size="body.sm"
+                  w="full"
+                  position={{ base: "static", xl: "absolute" }}
+                  top={ctaTitle ? 14 : -9}
+                >
+                  {ctaHint}
+                </Text>
+              )}
+            </>
           )}
         </Flex>
       )}
@@ -147,7 +175,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
 
   if (highlighted) {
     return (
-      <Center position="relative" p={0.5} mt={-0.5} mb={-0.5}>
+      <Center position="relative" p={2} m={-2}>
         <Box
           position="absolute"
           bgGradient="linear(to-b, #4DABEE, #692AC1)"
