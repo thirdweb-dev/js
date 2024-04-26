@@ -1,5 +1,160 @@
 # thirdweb
 
+## 5.13.0
+
+### Minor Changes
+
+- [#2853](https://github.com/thirdweb-dev/js/pull/2853) [`56c139c`](https://github.com/thirdweb-dev/js/commit/56c139c5a2c1e702e038a8948fefd647b3695823) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add account abstraction options to `useConnect` and handle smart wallet autoconnection outside of UI components
+
+### Patch Changes
+
+- [#2859](https://github.com/thirdweb-dev/js/pull/2859) [`03d8d6c`](https://github.com/thirdweb-dev/js/commit/03d8d6c15b02fb6889680484daf40f6189ad6359) Thanks [@jnsdls](https://github.com/jnsdls)! - add `gasless` prop to `<TransactionButton />`
+
+- [#2861](https://github.com/thirdweb-dev/js/pull/2861) [`5b83353`](https://github.com/thirdweb-dev/js/commit/5b833532372dd6e96dd0aeda7a4b190e9f280d4f) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Export airdrop extensions
+
+- [#2857](https://github.com/thirdweb-dev/js/pull/2857) [`77c2a8a`](https://github.com/thirdweb-dev/js/commit/77c2a8ae0cdb49091bd961b60ef5c316ccd6e119) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Docs: update incorrect code snippets, fix typos
+
+## 5.12.0
+
+### Minor Changes
+
+- [#2841](https://github.com/thirdweb-dev/js/pull/2841) [`2ae9a13`](https://github.com/thirdweb-dev/js/commit/2ae9a13b01e7a436536b3d412690150f9f960c72) Thanks [@kumaryash90](https://github.com/kumaryash90)! - SDK V5 extension for new Airdrop contract.
+
+- [#2846](https://github.com/thirdweb-dev/js/pull/2846) [`e8e3368`](https://github.com/thirdweb-dev/js/commit/e8e3368fdef1aa9aaefe6243486395b666b47137) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add isERC20 extension
+
+### Patch Changes
+
+- [#2848](https://github.com/thirdweb-dev/js/pull/2848) [`41be954`](https://github.com/thirdweb-dev/js/commit/41be954bd0a92d49767d62a6fa02f1ee0effb469) Thanks [@jnsdls](https://github.com/jnsdls)! - add `celo` chains to known `op stack` chains
+
+- [#2850](https://github.com/thirdweb-dev/js/pull/2850) [`aa0b8c4`](https://github.com/thirdweb-dev/js/commit/aa0b8c44650b9d0f45f6dff66ebbceb64cfd7be3) Thanks [@MananTank](https://github.com/MananTank)! - Fix "All wallets" UI in Connect
+
+  - Remove duplicated entry for "inApp"
+  - Remove wallets specified by developer
+
+## 5.11.0
+
+### Minor Changes
+
+- [#2679](https://github.com/thirdweb-dev/js/pull/2679) [`560d8ad`](https://github.com/thirdweb-dev/js/commit/560d8adafa011dc48e48e73d7eb6a36170d38cef) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - Add support for connecting in-app wallet using phone number
+
+  ## Usage in TypeScript
+
+  ```ts
+  import { createThirdwebClient, createWallet } from "thirdweb";
+  import { preAuthenticate } from "thirdweb/wallets/in-app";
+
+  const client = createThirdwebClient({ clientId: "..." });
+
+  const phoneNumber = '+123456789';
+
+  // Send OTP to given phone number
+  async function sendOTP() {
+    await preAuthenticate({
+      strategy: "phone",
+      phoneNumber,
+      client,
+    });
+  }
+
+  async function connect() {
+    // create a in-app wallet instance
+    const wallet = createWallet('inApp');
+    // if the OTP is correct, the wallet will be connected else an error will be thrown
+    const account = await wallet.connect({
+      client,
+      strategy: "phone";
+      phoneNumber,
+      verificationCode: '...' // Pass the OTP entered by the user
+    });
+
+    console.log('connected to', account);
+  }
+  ```
+
+  ## Usage in React
+
+  ```tsx
+  import { createThirdwebClient } from "thirdweb";
+  import { preAuthenticate } from "thirdweb/wallets/in-app";
+  import { useConnect } from "thirdweb/react";
+
+  const client = createThirdwebClient({ clientId: "..." });
+
+  function Component() {
+    const { connect } = useConnect();
+    const [phoneNumber, setPhoneNumber] = useState(''); // get phone number from user
+    const [otp, setOtp] = useState(''); // get OTP from user
+
+    // Send OTP to given phone number
+    async function sendOTP() {
+      await preAuthenticate({
+        strategy: "phone",
+        phoneNumber,
+        client,
+      });
+    }
+
+    async function connect() {
+      // create a in-app wallet instance
+      const wallet = createWallet('inApp');
+      // if the OTP is correct, the wallet will be connected else an error will be thrown
+      await wallet.connect({
+        client,
+        strategy: "phone";
+        phoneNumber,
+        verificationCode: otp
+      });
+
+      // set the wallet as active
+      connect(wallet)
+    }
+
+    // render UI to get OTP and phone number from user
+    return <div> ...  </div>
+  }
+  ```
+
+- [#2818](https://github.com/thirdweb-dev/js/pull/2818) [`948f155`](https://github.com/thirdweb-dev/js/commit/948f155e7c2406cc5a172a6c5abe18ba8da89e2a) Thanks [@jnsdls](https://github.com/jnsdls)! - **Gasless transactions in Typescript**
+
+  ```ts
+  import { sendTransaction } from "thirdweb";
+
+  const result = sendTransaction({
+    transaction,
+    account,
+    gasless: {
+      provider: "engine",
+      relayerUrl: "https://...",
+      relayerForwarderAddress: "0x...",
+    },
+  });
+  ```
+
+  **Gasless transactions in React**
+
+  ```jsx
+  import { useSendTransaction } from "thirdweb/react";
+
+  const { mutate } = useSendTransaction({
+    gasless: {
+      provider: "engine",
+      relayerUrl: "https://...",
+      relayerForwarderAddress: "0x...",
+    },
+  });
+
+  // Call mutate with the transaction object
+  mutate(transaction);
+  ```
+
+### Patch Changes
+
+- [#2842](https://github.com/thirdweb-dev/js/pull/2842) [`d7e6671`](https://github.com/thirdweb-dev/js/commit/d7e6671c0a34cc8a3523f397a45d754617c9fbb0) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - fix: handle signature minting with price and currency
+
+- [#2839](https://github.com/thirdweb-dev/js/pull/2839) [`3be61dd`](https://github.com/thirdweb-dev/js/commit/3be61ddc52cef168cda0bee13e93a926dedf479a) Thanks [@MananTank](https://github.com/MananTank)! - Enable Buy Modal by default with useSendTransaction hook
+
+- [#2768](https://github.com/thirdweb-dev/js/pull/2768) [`cfff7e8`](https://github.com/thirdweb-dev/js/commit/cfff7e838af1c464c9b5fbb547153eaae41e2c66) Thanks [@MananTank](https://github.com/MananTank)! - Fix custom chain not being used
+
 ## 5.10.1
 
 ### Patch Changes

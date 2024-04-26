@@ -24,7 +24,7 @@ export type AddSessionKeyOptions = {
  * @param options - The options for the removeSessionKey function.
  * @returns The transaction object to be sent.
  * @example
- * ```
+ * ```ts
  * import { addSessionKey } from 'thirdweb/extensions/erc4337';
  *
  * const transaction = addSessionKey({

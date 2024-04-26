@@ -19,7 +19,7 @@ export type RemoveAdminOptions = {
  * @param options - The options for the removeAdmin function.
  * @returns The transaction object to be sent.
  * @example
- * ```
+ * ```ts
  * import { removeAdmin } from 'thirdweb/extensions/erc4337';
  *
  * const transaction = removeAdmin({

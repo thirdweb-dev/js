@@ -18,7 +18,7 @@ const MAGIC_VALUE = "0x1626ba7e";
  * @param options.signature - The signature to check.
  * @extension ERC1271
  * @example
- * ```
+ * ```ts
  * import { checkContractWalletSignature } from "thirdweb/extensions/erc1271";
  * const isValid = await checkContractWalletSignature({
  *  contract: myContract,

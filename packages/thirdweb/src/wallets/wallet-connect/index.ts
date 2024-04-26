@@ -102,7 +102,12 @@ export async function connectWC(
     throw new Error("No accounts found on provider.");
   }
 
-  const chain = defineChain(normalizeChainId(provider.chainId));
+  const providerChainId = normalizeChainId(provider.chainId);
+
+  const chain =
+    options.chain && options.chain.id === providerChainId
+      ? options.chain
+      : defineChain(providerChainId);
 
   if (options) {
     const savedParams: SavedConnectParams = {
@@ -160,7 +165,12 @@ export async function autoConnectWC(
     throw new Error("No accounts found on provider.");
   }
 
-  const chain = defineChain(normalizeChainId(provider.chainId));
+  const providerChainId = normalizeChainId(provider.chainId);
+
+  const chain =
+    options.chain && options.chain.id === providerChainId
+      ? options.chain
+      : defineChain(providerChainId);
 
   return onConnect(address, chain, provider, emitter);
 }

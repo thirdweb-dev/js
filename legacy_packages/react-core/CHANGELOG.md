@@ -1,5 +1,34 @@
 # @thirdweb-dev/react-core
 
+## 4.6.10
+
+### Patch Changes
+
+- Updated dependencies [[`dbdafa2`](https://github.com/thirdweb-dev/js/commit/dbdafa2b01148b13d05fd75803926d9d37396668)]:
+  - @thirdweb-dev/chains@0.1.101
+  - @thirdweb-dev/sdk@4.0.71
+  - @thirdweb-dev/wallets@2.5.11
+  - @thirdweb-dev/auth@4.1.69
+
+## 4.6.9
+
+### Patch Changes
+
+- Updated dependencies [[`41be954`](https://github.com/thirdweb-dev/js/commit/41be954bd0a92d49767d62a6fa02f1ee0effb469), [`637c510`](https://github.com/thirdweb-dev/js/commit/637c510f59c2504bd29cedbdf4bda694719681dc)]:
+  - @thirdweb-dev/sdk@4.0.70
+  - @thirdweb-dev/chains@0.1.100
+  - @thirdweb-dev/wallets@2.5.10
+  - @thirdweb-dev/auth@4.1.68
+
+## 4.6.8
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@4.0.69
+  - @thirdweb-dev/wallets@2.5.9
+  - @thirdweb-dev/auth@4.1.67
+
 ## 4.6.7
 
 ### Patch Changes
