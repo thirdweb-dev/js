@@ -65,6 +65,11 @@ export type TransactionButtonProps = {
    * Refer to [`GaslessOptions`](https://portal.thirdweb.com/references/typescript/v5/GaslessOptions) for more details.
    */
   gasless?: GaslessOptions;
+
+  /**
+   * The button's disabled state
+   */
+  disabled?: boolean;
 };
 
 /**
@@ -93,6 +98,7 @@ export function TransactionButton(props: TransactionButtonProps) {
     onError,
     onClick,
     gasless,
+    disabled,
     ...buttonProps
   } = props;
   const account = useActiveAccount();
@@ -106,7 +112,7 @@ export function TransactionButton(props: TransactionButtonProps) {
       <Button
         gap="xs"
         {...buttonProps}
-        disabled={!account}
+        disabled={!account || disabled}
         variant={"primary"}
         data-is-loading={isPending}
         onClick={async (e) => {
@@ -141,7 +147,7 @@ export function TransactionButton(props: TransactionButtonProps) {
         }}
         style={{
           ...buttonProps.style,
-          opacity: !account ? 0.5 : 1,
+          opacity: !account || disabled ? 0.5 : 1,
         }}
       >
         {children}
