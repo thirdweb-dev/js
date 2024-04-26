@@ -164,11 +164,21 @@ export function TransactionButton(props: TransactionButtonProps) {
         opacity: !account || disabled ? 0.5 : 1,
         minWidth: "150px",
         position: "relative",
-        ...buttonProps.style
+        ...buttonProps.style,
       }}
       {...buttonProps}
     >
-      <div style={{ position: "absolute", display: "flex", alignItems: "center", height: "100%", top: 0, bottom: 0, margin: "auto" }}>
+      <div
+        style={{
+          position: "absolute",
+          display: "flex",
+          alignItems: "center",
+          height: "100%",
+          top: 0,
+          bottom: 0,
+          margin: "auto",
+        }}
+      >
         <Spinner size="md" color="primaryButtonText" />
       </div>
     </Button>
