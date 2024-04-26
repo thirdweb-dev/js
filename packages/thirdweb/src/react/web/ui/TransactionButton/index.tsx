@@ -158,7 +158,6 @@ export function TransactionButton(props: TransactionButtonProps) {
 
   return (
     <Button
-      {...buttonProps}
       disabled={true}
       variant={"primary"}
       style={{
@@ -167,6 +166,7 @@ export function TransactionButton(props: TransactionButtonProps) {
         position: "relative",
         ...buttonProps.style
       }}
+      {...buttonProps}
     >
       <div style={{ position: "absolute", display: "flex", alignItems: "center", height: "100%", top: 0, bottom: 0, margin: "auto" }}>
         <Spinner size="md" color="primaryButtonText" />
