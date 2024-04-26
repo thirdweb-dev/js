@@ -4,7 +4,7 @@ import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import type { BuyWithFiatQuote } from "../../../../../../../exports/pay.js";
 import { isSwapRequiredPostOnramp } from "../../../../../../../pay/buyWithFiat/isSwapRequiredPostOnramp.js";
 import type { ERC20OrNativeToken } from "../../nativeToken.js";
-import { KadoScreen } from "../KadoScreen.js";
+import { OnRampScreen } from "../OnRampScreen.js";
 import { FiatStatusScreen } from "./FiatStatusScreen.js";
 import { FiatSteps } from "./FiatSteps.js";
 import type { CurrencyMeta } from "./currencies.js";
@@ -33,8 +33,8 @@ export function FiatFlow(props: {
 }) {
   const hasTwoSteps = isSwapRequiredPostOnramp(props.quote);
   const [step, setStep] = useState(1);
-  const [screen, setScreen] = useState<"steps" | "kado" | "status">(
-    hasTwoSteps ? "steps" : "kado",
+  const [screen, setScreen] = useState<"steps" | "onramp" | "status">(
+    hasTwoSteps ? "steps" : "onramp",
   );
 
   if (screen === "steps") {
@@ -45,7 +45,7 @@ export function FiatFlow(props: {
         onContinue={() => {
           if (hasTwoSteps) {
             if (step === 1) {
-              setScreen("kado");
+              setScreen("onramp");
             } else {
               setScreen("status");
             }
@@ -57,9 +57,9 @@ export function FiatFlow(props: {
     );
   }
 
-  if (screen === "kado") {
+  if (screen === "onramp") {
     return (
-      <KadoScreen
+      <OnRampScreen
         quote={props.quote}
         onBack={props.onBack}
         testMode={props.testMode}

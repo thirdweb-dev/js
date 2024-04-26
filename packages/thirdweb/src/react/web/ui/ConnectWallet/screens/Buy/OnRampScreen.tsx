@@ -13,22 +13,22 @@ import { radius } from "../../../design-system/index.js";
 /**
  * @internal
  */
-export function KadoScreen(props: {
+export function OnRampScreen(props: {
   quote: BuyWithFiatQuote;
   onBack: () => void;
   testMode?: boolean;
   onComplete: () => void;
   theme: "light" | "dark";
 }) {
-  let iframeSrc = `${props.quote.onRampLink}&theme=${props.theme}`;
-  let iframeOrigin = new URL(iframeSrc).origin;
+  const iframeSrc = `${props.quote.onRampLink}&theme=${props.theme}`;
+  const iframeOrigin = new URL(iframeSrc).origin;
 
   // TODO - probably remove this after testing
-  if (props.testMode) {
-    const kadoSandbox = "https://sandbox--kado.netlify.app";
-    iframeSrc = iframeSrc.replace(iframeOrigin, kadoSandbox);
-    iframeOrigin = kadoSandbox;
-  }
+  // if (props.testMode) {
+  //   // const kadoSandbox = "https://sandbox--kado.netlify.app";
+  //   // iframeSrc = iframeSrc.replace(iframeOrigin, kadoSandbox);
+  //   // iframeOrigin = kadoSandbox;
+  // }
 
   const { onComplete } = props;
 

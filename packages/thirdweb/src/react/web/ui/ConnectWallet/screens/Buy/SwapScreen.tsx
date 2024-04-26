@@ -66,9 +66,9 @@ import {
   defaultSelectedCurrency,
 } from "./fiat/currencies.js";
 import { BuyTokenInput } from "./swap/BuyTokenInput.js";
-import { SwapConfirmationScreen } from "./swap/ConfirmationScreen.js";
 import { FiatFees, SwapFees } from "./swap/Fees.js";
 import { PayWithCrypto } from "./swap/PayWithCrypto.js";
+import { SwapFlow } from "./swap/SwapFlow.js";
 import { formatSeconds } from "./swap/formatSeconds.js";
 import { useBuySupportedChains } from "./swap/useSwapSupportedChains.js";
 
@@ -120,7 +120,7 @@ type Screen =
   | "main"
   | "select-from-token"
   | "select-to-token"
-  | "confirmation"
+  | "swap-flow"
   | "fiat-flow"
   | "select-currency";
 type DrawerScreen = "fees" | undefined;
@@ -421,9 +421,9 @@ export function BuyScreenContent(props: {
   const sourceTokenAmount = swapQuote?.swapDetails.fromAmount || "";
   const quoteToConfirm = finalizedQuote || buyWithCryptoQuoteQuery.data;
 
-  if (screen === "confirmation" && quoteToConfirm) {
+  if (screen === "swap-flow" && quoteToConfirm) {
     return (
-      <SwapConfirmationScreen
+      <SwapFlow
         client={client}
         onBack={() => {
           // remove finalized quote when going back
@@ -588,7 +588,7 @@ export function BuyScreenContent(props: {
                         .durationSeconds
                     }
                     onViewFees={() => {
-                      if (fiatQuoteQuery.data) {
+                      if (buyWithCryptoQuoteQuery.data) {
                         setDrawerScreen("fees");
                       }
                     }}
@@ -610,7 +610,11 @@ export function BuyScreenContent(props: {
                     estimatedSeconds={
                       fiatQuoteQuery.data?.estimatedDurationSeconds
                     }
-                    onViewFees={() => setDrawerScreen("fees")}
+                    onViewFees={() => {
+                      if (fiatQuoteQuery.data) {
+                        setDrawerScreen("fees");
+                      }
+                    }}
                   />
                 </>
               )}
@@ -679,7 +683,7 @@ export function BuyScreenContent(props: {
                   disabled={disableSwapContinue}
                   onClick={async () => {
                     if (!disableSwapContinue) {
-                      setScreen("confirmation");
+                      setScreen("swap-flow");
                     }
                   }}
                   gap="sm"

@@ -11,7 +11,7 @@ import { Container, ModalHeader } from "../../../../components/basic.js";
 import { Text } from "../../../../components/text.js";
 import { iconSize } from "../../../../design-system/index.js";
 import { AccentFailIcon } from "../../../icons/AccentFailIcon.js";
-import { SwapConfirmationScreen } from "../swap/ConfirmationScreen.js";
+import { SwapFlow } from "../swap/SwapFlow.js";
 
 export function PostOnRampSwap(props: {
   client: ThirdwebClient;
@@ -52,7 +52,7 @@ export function PostOnRampSwap(props: {
   }
 
   return (
-    <SwapConfirmationScreen
+    <SwapFlow
       account={account}
       buyWithCryptoQuote={postOnRampQuoteQuery.data}
       client={props.client}
