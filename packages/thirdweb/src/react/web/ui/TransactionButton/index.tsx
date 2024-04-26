@@ -162,6 +162,7 @@ export function TransactionButton(props: TransactionButtonProps) {
       disabled={true}
       variant={"primary"}
       style={{
+        opacity: !account || disabled ? 0.5 : 1,
         minWidth: "150px",
         position: "relative",
         ...buttonProps.style
