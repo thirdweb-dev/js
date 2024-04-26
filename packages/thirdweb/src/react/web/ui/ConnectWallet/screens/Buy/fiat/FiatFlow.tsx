@@ -1,13 +1,10 @@
 import { useState } from "react";
-import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import type { BuyWithFiatQuote } from "../../../../../../../exports/pay.js";
 import { isSwapRequiredPostOnramp } from "../../../../../../../pay/buyWithFiat/isSwapRequiredPostOnramp.js";
-import type { ERC20OrNativeToken } from "../../nativeToken.js";
 import { OnRampScreen } from "../OnRampScreen.js";
 import { FiatStatusScreen } from "./FiatStatusScreen.js";
 import { FiatSteps } from "./FiatSteps.js";
-import type { CurrencyMeta } from "./currencies.js";
 
 // Flow:
 // If a Swap is required after doing onramp
@@ -22,36 +19,25 @@ import type { CurrencyMeta } from "./currencies.js";
 export function FiatFlow(props: {
   quote: BuyWithFiatQuote;
   onBack: () => void;
-  toToken: ERC20OrNativeToken;
-  toChain: Chain;
   client: ThirdwebClient;
-  toTokenAmount: string;
-  currency: CurrencyMeta;
   testMode: boolean;
   theme: "light" | "dark";
   onViewPendingTx: () => void;
 }) {
   const hasTwoSteps = isSwapRequiredPostOnramp(props.quote);
-  const [step, setStep] = useState(1);
-  const [screen, setScreen] = useState<"steps" | "onramp" | "status">(
-    hasTwoSteps ? "steps" : "onramp",
+  const [screen, setScreen] = useState<"step-1" | "onramp" | "status">(
+    hasTwoSteps ? "step-1" : "onramp",
   );
 
-  if (screen === "steps") {
+  if (screen === "step-1") {
     return (
       <FiatSteps
-        {...props}
-        step={step}
+        client={props.client}
+        onBack={props.onBack}
+        quote={props.quote}
+        step={1}
         onContinue={() => {
-          if (hasTwoSteps) {
-            if (step === 1) {
-              setScreen("onramp");
-            } else {
-              setScreen("status");
-            }
-          } else {
-            setScreen("status");
-          }
+          setScreen("onramp");
         }}
       />
     );
@@ -64,10 +50,8 @@ export function FiatFlow(props: {
         onBack={props.onBack}
         testMode={props.testMode}
         onComplete={() => {
+          // start polling the onramp status and handle the rest
           setScreen("status");
-          if (hasTwoSteps) {
-            setStep(2);
-          }
         }}
         theme={props.theme}
       />

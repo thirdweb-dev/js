@@ -344,11 +344,7 @@ export function BuyScreenContent(props: {
           setConfirmedFiatQuote(undefined);
           setScreen("main");
         }}
-        toChain={toChain}
-        toToken={toToken}
-        toTokenAmount={deferredTokenAmount}
         client={client}
-        currency={selectedCurrency}
         testMode={props.fiatTestMode || false}
         theme={props.theme}
         onViewPendingTx={props.onViewPendingTx}
