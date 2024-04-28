@@ -76,12 +76,14 @@ export type CoinbaseSDKWalletConnectionOptions = {
   /**
    * Wallet configuration, choices are 'all' | 'smartWalletOnly' | 'eoaOnly'
    * @default 'all'
-   *
+   * @example
    * ```ts
    * {
    *  walletConfig: {
-   *   options: 'all'
+   *   options: 'all',
+   *  }
    * }
+   * ```
    */
   walletConfig?: Preference;
 };
@@ -94,6 +96,9 @@ async function initProvider(
     appChainIds: options.chain ? [options.chain.id] : undefined,
     appLogoUrl: options.appMetadata?.logoUrl,
   });
+
+  console.log("options", options);
+  console.log("created client", client);
 
   return client.makeWeb3Provider(options.walletConfig);
 }
@@ -224,10 +229,13 @@ export async function connectCoinbaseWalletSDK(
   emitter: WalletEmitter<"com.coinbase.wallet">,
 ): Promise<ReturnType<typeof onConnect>> {
   const provider = await initProvider(options);
+  console.log("provider", provider);
 
   const accounts = (await provider.request({
     method: "eth_requestAccounts",
   })) as string[];
+
+  console.log("accounts", accounts);
 
   if (!accounts[0]) {
     throw new Error("No accounts found");
