@@ -23,7 +23,7 @@ export type ResolveAddressOptions = {
  * @param options - The options for resolving an ENS address.
  * @example
  * ```ts
- * import { resolveAddress } from "thirdweb/ens";
+ * import { resolveAddress } from "thirdweb/extensions/ens";
  * const address = await resolveAddress({
  *    client,
  *    name: "vitalik.eth",
