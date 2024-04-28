@@ -1,4 +1,7 @@
-import { CoinbaseWalletSDK } from "@coinbase/wallet-sdk";
+import {
+  CoinbaseWalletSDK,
+  type ProviderInterface,
+} from "@coinbase/wallet-sdk";
 import type { Address } from "abitype";
 import {
   type SignTypedDataParameters,
@@ -13,6 +16,7 @@ import type { AppMetadata, DisconnectFn, SwitchChainFn } from "../types.js";
 import { getValidPublicRPCUrl } from "../utils/chains.js";
 import { normalizeChainId } from "../utils/normalizeChainId.js";
 
+import type { Preference } from "@coinbase/wallet-sdk/dist/core/provider/interface.js";
 import type { Chain } from "../../chains/types.js";
 import { defineChain, getChainMetadata } from "../../chains/utils.js";
 import type { ThirdwebClient } from "../../client/client.js";
@@ -37,35 +41,6 @@ export type CoinbaseSDKWalletConnectionOptions = {
   client: ThirdwebClient;
 
   /**
-   * Whether to use Dark theme in the Coinbase Wallet "Onboarding Overlay" popup.
-   *
-   * This popup is opened when `headlessMode` is set to `true`.
-   */
-  darkMode?: boolean;
-
-  /**
-   * Whether to open Coinbase "Onboarding Overlay" popup or not when connecting to the wallet.
-   * By default it is enabled if Coinbase Wallet extension is NOT installed and prompts the users to connect to the Coinbase Wallet mobile app by scanning a QR code
-   *
-   * If you want to render the QR code yourself, you should set this to `false` and use the `onUri` callback to get the QR code URI and render it in your app.
-   * ```ts
-   * const account = await wallet.connect({
-   *  headlessMode: false,
-   *  onUri: (uri) => {
-   *    // render the QR code with `uri`
-   *    // when user scans the QR code with Coinbase Wallet app, the promise will resolve with the connected account
-   *  }
-   * })
-   * ```
-   */
-  headlessMode?: boolean;
-
-  /**
-   * Whether or not to reload dapp automatically after disconnect, defaults to `true`
-   */
-  reloadOnDisconnect?: boolean;
-
-  /**
    * If you want the wallet to be connected to a specific blockchain, you can pass a `Chain` object to the `connect` method.
    * This will trigger a chain switch if the wallet provider is not already connected to the specified chain.
    *
@@ -74,31 +49,12 @@ export type CoinbaseSDKWalletConnectionOptions = {
    *
    * ```ts
    * import { defineChain } from "thirdweb";
-   * const mumbai = defineChain({
-   *  id: 80001,
-   * });
+   * const myChain = defineChain(myChainId);
    *
-   * const address = await wallet.connect({ chain: mumbai })
+   * const address = await wallet.connect({ chain: myChain })
    */
   chain?: Chain;
 
-  /**
-   * This is only relevant when the Coinbase Extension is not installed and you do not want to use the default Coinbase Wallet "Onboarding Overlay" popup.
-   *
-   * If you want to render the QR code yourself, you need to set `headlessMode` to `false` and use the `onUri` callback to get the QR code URI and render it in your app.
-   * ```ts
-   * const account = await wallet.connect({
-   *  headlessMode: false,
-   *  onUri: (uri) => {
-   *    // render the QR code with `uri`
-   *    // when user scans the QR code with Coinbase Wallet app, the promise will resolve with the connected account
-   *  }
-   * })
-   * ```
-   * Callback to be called with QR code URI
-   * @param uri - The URI for rendering QR code
-   */
-  onUri?: (uri: string | undefined) => void;
   /**
    * Metadata of the dApp that will be passed to connected wallet.
    *
@@ -116,26 +72,36 @@ export type CoinbaseSDKWalletConnectionOptions = {
    * ```
    */
   appMetadata?: AppMetadata;
+
+  /**
+   * Wallet configuration, choices are 'all' | 'smartWalletOnly' | 'eoaOnly'
+   * @default 'all'
+   *
+   * ```ts
+   * {
+   *  walletConfig: {
+   *   options: 'all'
+   * }
+   */
+  walletConfig?: Preference;
 };
 
-async function initProvider(options: CoinbaseSDKWalletConnectionOptions) {
+async function initProvider(
+  options: CoinbaseSDKWalletConnectionOptions,
+): Promise<ProviderInterface> {
   const client = new CoinbaseWalletSDK({
-    ...options,
     appName: options.appMetadata?.name || getDefaultAppMetadata().name,
+    appChainIds: options.chain ? [options.chain.id] : undefined,
+    appLogoUrl: options.appMetadata?.logoUrl,
   });
 
-  // if (options.onUri) {
-  //   options.onUri(client.getQrUrl() || undefined);
-  // }
-
-  return client.makeWeb3Provider();
+  return client.makeWeb3Provider(options.walletConfig);
 }
 
 function onConnect(
   address: string,
   chain: Chain,
-  // biome-ignore lint/suspicious/noExplicitAny: beta SDK, type not exported
-  provider: any, // TODO types
+  provider: ProviderInterface,
   emitter: WalletEmitter<"com.coinbase.wallet">,
 ): [Account, Chain, DisconnectFn, SwitchChainFn] {
   const account: Account = {
@@ -212,7 +178,6 @@ function onConnect(
     provider.removeListener("chainChanged", onChainChanged);
     provider.removeListener("disconnect", onDisconnect);
     provider.disconnect();
-    // await provider.close();
   }
 
   function onDisconnect() {
@@ -325,8 +290,7 @@ export async function autoConnectCoinbaseWalletSDK(
 }
 
 async function switchChainCoinbaseWalletSDK(
-  // biome-ignore lint/suspicious/noExplicitAny: beta SDK, type not exported
-  provider: any, // TODO types
+  provider: ProviderInterface,
   chain: Chain,
 ) {
   const chainIdHex = numberToHex(chain.id);

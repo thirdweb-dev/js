@@ -142,7 +142,7 @@
     "!tsconfig.build.json"
   ],
   "dependencies": {
-    "@coinbase/wallet-sdk": "4.0.0-beta.6",
+    "@coinbase/wallet-sdk": "4.0.0-rc.1",
     "@emotion/react": "11.11.4",
     "@emotion/styled": "11.11.0",
     "@google/model-viewer": "2.1.1",

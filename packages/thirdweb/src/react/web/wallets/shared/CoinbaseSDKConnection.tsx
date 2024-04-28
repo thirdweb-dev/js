@@ -27,7 +27,6 @@ function CoinbaseSDKWalletConnectUI(props: {
       .connect({
         client,
         chain,
-        reloadOnDisconnect: false,
       })
       .then(() => {
         done();
