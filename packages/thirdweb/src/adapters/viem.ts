@@ -80,7 +80,7 @@ export const viemAdapter = {
      * import { viemAdapter } from "thirdweb/adapters/viem";
      *
      * const walletClient = viemAdapter.walletClient.toViem({
-     *  account: wallet,
+     *  account,
      *  client,
      *  chain: ethereum,
      * });
