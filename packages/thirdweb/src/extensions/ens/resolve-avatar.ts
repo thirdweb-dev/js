@@ -16,7 +16,7 @@ export type ResolveAvatarOptions = {
  * @param options - The options for resolving an ENS address.
  * @example
  * ```ts
- * import { resolveAvatar } from "thirdweb/ens";
+ * import { resolveAvatar } from "thirdweb/extensions/ens";
  * const address = await resolveAvatar({
  *    client,
  *    name: "vitalik.eth",

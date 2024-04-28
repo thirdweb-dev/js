@@ -78,6 +78,7 @@ export { freezeMetadata } from "../../extensions/erc1155/__generated__/INFTMetad
  * DROPS extension for ERC1155
  */
 export { getActiveClaimCondition } from "../../extensions/erc1155/drops/read/getActiveClaimCondition.js";
+export { claimCondition } from "../../extensions/erc1155/__generated__/DropSinglePhase1155/read/claimCondition.js";
 export {
   claimTo,
   type ClaimToParams,

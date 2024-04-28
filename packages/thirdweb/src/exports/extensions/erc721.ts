@@ -83,6 +83,7 @@ export {
  * DROPS extension for ERC721
  */
 export { getClaimConditionById } from "../../extensions/erc721/__generated__/IDrop/read/getClaimConditionById.js";
+export { claimCondition } from "../../extensions/erc721/__generated__/DropSinglePhase/read/claimCondition.js";
 export { getActiveClaimCondition } from "../../extensions/erc721/drops/read/getActiveClaimCondition.js";
 export {
   claimTo,

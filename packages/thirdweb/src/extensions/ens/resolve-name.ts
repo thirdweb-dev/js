@@ -21,7 +21,7 @@ export type ResolveNameOptions = {
  * @param options - The options for resolving an ENS address.
  * @example
  * ```ts
- * import { resolveName } from "thirdweb/ens";
+ * import { resolveName } from "thirdweb/extensions/ens";
  * const name = await resolveName({
  *    client,
  *    address: "0x1234...",

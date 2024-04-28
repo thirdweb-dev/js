@@ -123,6 +123,7 @@ export const embeddedWallet = (
     create(walletOptions: WalletOptions) {
       return new EmbeddedWallet({
         ...walletOptions,
+        ...options,
         clientId: walletOptions?.clientId ?? "",
       });
     },

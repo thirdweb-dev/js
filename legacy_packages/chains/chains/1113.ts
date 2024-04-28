@@ -5,7 +5,7 @@ export default {
   "explorers": [
     {
       "name": "B2 Hub Habitat Testnet Explorer",
-      "url": "https://habitat-hub-explorer.bsquared.network",
+      "url": "https://testnet-hub-explorer.bsquared.network",
       "standard": "EIP3091",
       "icon": {
         "url": "ipfs://QmPV6ASrQDEkEW3g3ni7p2rJMPeciRLpEpvrAc1QfzVkx9",
@@ -23,18 +23,18 @@ export default {
     "format": "png"
   },
   "infoURL": "https://www.bsquared.network",
-  "name": "B2 Hub Habitat Testnet",
+  "name": "B2 Hub Testnet",
   "nativeCurrency": {
     "name": "BSquared Token",
-    "symbol": "BSQ",
+    "symbol": "B2",
     "decimals": 18
   },
   "networkId": 1113,
   "rpc": [
     "https://1113.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://habitat-hub-rpc.bsquared.network"
+    "https://testnet-hub-rpc.bsquared.network"
   ],
   "shortName": "B2Hub-testnet",
-  "slug": "b2-hub-habitat-testnet",
+  "slug": "b2-hub-testnet",
   "testnet": true
 } as const satisfies Chain;

@@ -1,4 +1,6 @@
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
+import type { ClaimCondition } from "../../../../utils/extensions/drops/types.js";
+import { claimCondition } from "../../__generated__/DropSinglePhase/read/claimCondition.js";
 import { getActiveClaimConditionId } from "../../__generated__/IDropERC20/read/getActiveClaimConditionId.js";
 import { getClaimConditionById } from "../../__generated__/IDropERC20/read/getClaimConditionById.js";
 
@@ -14,8 +16,45 @@ import { getClaimConditionById } from "../../__generated__/IDropERC20/read/getCl
  * const activeClaimCondition = await getActiveClaimCondition({ contract });
  * ```
  */
-export async function getActiveClaimCondition(options: BaseTransactionOptions) {
-  const conditionId = await getActiveClaimConditionId(options);
+export async function getActiveClaimCondition(
+  options: BaseTransactionOptions,
+): Promise<ClaimCondition> {
+  const getActiveClaimConditionMultiPhase = async () => {
+    const conditionId = await getActiveClaimConditionId(options);
+    return getClaimConditionById({ ...options, conditionId });
+  };
+  const getActiveClaimConditionSinglePhase = async () => {
+    const [
+      startTimestamp,
+      maxClaimableSupply,
+      supplyClaimed,
+      quantityLimitPerWallet,
+      merkleRoot,
+      pricePerToken,
+      currency,
+      metadata,
+    ] = await claimCondition(options);
+    return {
+      startTimestamp,
+      maxClaimableSupply,
+      supplyClaimed,
+      quantityLimitPerWallet,
+      merkleRoot,
+      pricePerToken,
+      currency,
+      metadata,
+    };
+  };
 
-  return getClaimConditionById({ ...options, conditionId });
+  // The contract's phase type is unknown, so try both options and return whichever resolves, prioritizing multi-phase
+  const results = await Promise.allSettled([
+    getActiveClaimConditionMultiPhase(),
+    getActiveClaimConditionSinglePhase(),
+  ]);
+
+  const condition = results.find((result) => result.status === "fulfilled");
+  if (condition?.status === "fulfilled") {
+    return condition.value;
+  }
+  throw new Error("Claim condition not found");
 }
