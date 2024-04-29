@@ -30,6 +30,57 @@ import {
 } from "../../utils/encoding/hex.js";
 import { getDefaultAppMetadata } from "../utils/defaultDappMetadata.js";
 import type { WalletEmitter } from "../wallet-emitter.js";
+import type {
+  CreateWalletArgs,
+  WalletConnectionOption,
+} from "../wallet-types.js";
+
+export type CoinbaseWalletCreationOptions =
+  | {
+      /**
+       * Metadata of the dApp that will be passed to connected wallet.
+       *
+       * Some wallets may display this information to the user.
+       *
+       * Setting this property is highly recommended. If this is not set, Below default metadata will be used:
+       *
+       * ```ts
+       * {
+       *   name: "thirdweb powered dApp",
+       *   url: "https://thirdweb.com",
+       *   description: "thirdweb powered dApp",
+       *   logoUrl: "https://thirdweb.com/favicon.ico",
+       * };
+       * ```
+       */
+      appMetadata?: AppMetadata;
+
+      /**
+       * Wallet configuration, choices are 'all' | 'smartWalletOnly' | 'eoaOnly'
+       * @default 'all'
+       * @example
+       * ```ts
+       * {
+       *  walletConfig: {
+       *   options: 'all',
+       *  }
+       * }
+       * ```
+       */
+      walletConfig?: Preference;
+
+      /**
+       * Chains that the wallet can switch chains to, will default to the first chain in this array on first connection.
+       * @default Ethereum mainnet
+       * @example
+       * ```ts
+       * {
+       *   chains: [base, optimisim]
+       * }
+       */
+      chains?: Chain[];
+    }
+  | undefined;
 
 /**
  * Options for connecting to the CoinbaseSDK Wallet
@@ -54,50 +105,19 @@ export type CoinbaseSDKWalletConnectionOptions = {
    * const address = await wallet.connect({ chain: myChain })
    */
   chain?: Chain;
-
-  /**
-   * Metadata of the dApp that will be passed to connected wallet.
-   *
-   * Some wallets may display this information to the user.
-   *
-   * Setting this property is highly recommended. If this is not set, Below default metadata will be used:
-   *
-   * ```ts
-   * {
-   *   name: "thirdweb powered dApp",
-   *   url: "https://thirdweb.com",
-   *   description: "thirdweb powered dApp",
-   *   logoUrl: "https://thirdweb.com/favicon.ico",
-   * };
-   * ```
-   */
-  appMetadata?: AppMetadata;
-
-  /**
-   * Wallet configuration, choices are 'all' | 'smartWalletOnly' | 'eoaOnly'
-   * @default 'all'
-   * @example
-   * ```ts
-   * {
-   *  walletConfig: {
-   *   options: 'all',
-   *  }
-   * }
-   * ```
-   */
-  walletConfig?: Preference;
 };
 
 async function initProvider(
-  options: CoinbaseSDKWalletConnectionOptions,
+  options?: CreateWalletArgs<"com.coinbase.wallet">[1],
 ): Promise<ProviderInterface> {
   const client = new CoinbaseWalletSDK({
-    appName: options.appMetadata?.name || getDefaultAppMetadata().name,
-    appChainIds: options.chain ? [options.chain.id] : undefined,
-    appLogoUrl: options.appMetadata?.logoUrl,
+    appName: options?.appMetadata?.name || getDefaultAppMetadata().name,
+    appChainIds: options?.chains ? options.chains.map((c) => c.id) : undefined,
+    appLogoUrl:
+      options?.appMetadata?.logoUrl || getDefaultAppMetadata().logoUrl,
   });
 
-  return client.makeWeb3Provider(options.walletConfig);
+  return client.makeWeb3Provider(options?.walletConfig);
 }
 
 function onConnect(
@@ -222,10 +242,11 @@ function onConnect(
  * @internal
  */
 export async function connectCoinbaseWalletSDK(
-  options: CoinbaseSDKWalletConnectionOptions,
+  options: WalletConnectionOption<"com.coinbase.wallet">,
+  createOptions: CreateWalletArgs<"com.coinbase.wallet">[1],
   emitter: WalletEmitter<"com.coinbase.wallet">,
 ): Promise<ReturnType<typeof onConnect>> {
-  const provider = await initProvider(options);
+  const provider = await initProvider(createOptions);
 
   const accounts = (await provider.request({
     method: "eth_requestAccounts",
@@ -263,10 +284,11 @@ export async function connectCoinbaseWalletSDK(
  * @internal
  */
 export async function autoConnectCoinbaseWalletSDK(
-  options: CoinbaseSDKWalletConnectionOptions,
+  options: WalletConnectionOption<"com.coinbase.wallet">,
+  createOptions: CreateWalletArgs<"com.coinbase.wallet">[1],
   emitter: WalletEmitter<"com.coinbase.wallet">,
 ): Promise<ReturnType<typeof onConnect>> {
-  const provider = await initProvider(options);
+  const provider = await initProvider(createOptions);
 
   // connected accounts
   const addresses = await (provider as Ethereum).request({

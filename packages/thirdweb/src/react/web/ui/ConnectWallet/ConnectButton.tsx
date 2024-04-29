@@ -19,7 +19,7 @@ import { Container } from "../components/basic.js";
 import { Button } from "../components/buttons.js";
 import { fadeInAnimation } from "../design-system/animations.js";
 import { iconSize } from "../design-system/index.js";
-import type { ConnectButtonProps } from "./ConnectWalletProps.js";
+import type { ConnectButtonProps } from "./ConnectButtonProps.js";
 import { ConnectedWalletDetails } from "./Details.js";
 import ConnectModal from "./Modal/ConnectModal.js";
 import { defaultTokens } from "./defaultTokens.js";
@@ -47,8 +47,13 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  */
 export function ConnectButton(props: ConnectButtonProps) {
   const wallets = useMemo(
-    () => props.wallets || getDefaultWallets(),
-    [props.wallets],
+    () =>
+      props.wallets ||
+      getDefaultWallets({
+        appMetadata: props.appMetadata,
+        chains: props.chains,
+      }),
+    [props.wallets, props.appMetadata, props.chains],
   );
   const localeQuery = useConnectLocale(props.locale || "en_US");
 

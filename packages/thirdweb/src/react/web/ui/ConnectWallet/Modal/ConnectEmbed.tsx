@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import type { Chain } from "../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import type { SiweAuthOptions } from "../../../../../exports/react.js";
@@ -346,7 +346,15 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
   const show =
     !activeAccount || (siweAuth.requiresAuth && !siweAuth.isLoggedIn);
 
-  const wallets = props.wallets || getDefaultWallets();
+  const wallets = useMemo(
+    () =>
+      props.wallets ||
+      getDefaultWallets({
+        appMetadata: props.appMetadata,
+        chains: props.chains,
+      }),
+    [props.wallets, props.appMetadata, props.chains],
+  );
   const localeId = props.locale || "en_US";
   const localeQuery = useConnectLocale(localeId);
 

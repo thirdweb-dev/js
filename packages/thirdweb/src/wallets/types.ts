@@ -8,7 +8,7 @@ export type AppMetadata = {
   /**
    * the url where your app is hosted
    */
-  url: string;
+  url?: string;
   /**
    * optional - a description of your app
    */

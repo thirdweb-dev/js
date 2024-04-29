@@ -55,7 +55,7 @@ import type {
   ConnectButtonProps,
   ConnectButton_detailsButtonOptions,
   ConnectButton_detailsModalOptions,
-} from "./ConnectWalletProps.js";
+} from "./ConnectButtonProps.js";
 import { NetworkSelectorContent } from "./NetworkSelector.js";
 import { onModalUnmount } from "./constants.js";
 import type { SupportedTokens } from "./defaultTokens.js";
