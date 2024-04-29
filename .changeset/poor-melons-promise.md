@@ -1,5 +1,5 @@
 ---
-"thirdweb": patch
+"thirdweb": minor
 ---
 
 Support for Coinbase Smart Wallet
