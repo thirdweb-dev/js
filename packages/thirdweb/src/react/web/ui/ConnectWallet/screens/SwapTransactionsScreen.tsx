@@ -169,7 +169,7 @@ function useBuyTransactionsToShow(client: ThirdwebClient) {
  * @internal
  */
 export function BuyTxHistory(props: {
-  onBack: () => void;
+  onBack?: () => void;
   client: ThirdwebClient;
 }) {
   const {

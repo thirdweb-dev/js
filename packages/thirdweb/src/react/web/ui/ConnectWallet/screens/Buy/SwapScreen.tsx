@@ -46,7 +46,12 @@ import { TokenIcon } from "../../../components/TokenIcon.js";
 import { Container, Line, ModalHeader } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
-import { fontSize, iconSize, radius } from "../../../design-system/index.js";
+import {
+  type Theme,
+  fontSize,
+  iconSize,
+  radius,
+} from "../../../design-system/index.js";
 import { useDebouncedValue } from "../../../hooks/useDebouncedValue.js";
 import type { PayUIOptions } from "../../ConnectWalletProps.js";
 import type { SupportedTokens } from "../../defaultTokens.js";
@@ -88,14 +93,14 @@ type BuyForTx = {
  * @internal
  */
 export function BuyScreen(props: {
-  onBack: () => void;
+  onBack?: () => void;
   supportedTokens: SupportedTokens;
   onViewPendingTx: () => void;
   client: ThirdwebClient;
   connectLocale: ConnectLocale;
   buyForTx?: BuyForTx;
   payOptions: PayUIOptions;
-  theme: "light" | "dark";
+  theme: "light" | "dark" | Theme;
 }) {
   const activeChain = useActiveWalletChain();
   const activeWallet = useActiveWallet();
@@ -134,7 +139,7 @@ type DrawerScreen = "fees" | undefined;
  */
 export function BuyScreenContent(props: {
   client: ThirdwebClient;
-  onBack: () => void;
+  onBack?: () => void;
   supportedTokens: SupportedTokens;
   activeChain: Chain;
   activeWallet: Wallet;
@@ -143,7 +148,7 @@ export function BuyScreenContent(props: {
   supportedChains: Chain[];
   connectLocale: ConnectLocale;
   buyForTx?: BuyForTx;
-  theme: "light" | "dark";
+  theme: "light" | "dark" | Theme;
   payOptions: PayUIOptions;
 }) {
   const { activeChain, account, client, supportedChains, connectLocale } =
@@ -371,7 +376,7 @@ export function BuyScreenContent(props: {
         }}
         client={client}
         testMode={buyWithFiatOptions?.testMode || false}
-        theme={props.theme}
+        theme={typeof props.theme === "string" ? props.theme : props.theme.type}
         onViewPendingTx={props.onViewPendingTx}
       />
     );
@@ -733,7 +738,9 @@ export function BuyScreenContent(props: {
                   if (!hasTwoSteps) {
                     openOnrampPopup(
                       fiatQuoteQuery.data.onRampLink,
-                      props.theme,
+                      typeof props.theme === "string"
+                        ? props.theme
+                        : props.theme.type,
                     );
                   }
                   setScreen("fiat-flow");
