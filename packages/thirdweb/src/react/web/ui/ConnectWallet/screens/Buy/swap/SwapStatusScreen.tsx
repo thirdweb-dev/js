@@ -55,6 +55,9 @@ export function SwapStatusScreen(props: {
             <div
               style={{
                 position: "relative",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
               <Spinner size="4xl" color="accentText" />
@@ -64,6 +67,9 @@ export function SwapStatusScreen(props: {
                   top: "50%",
                   left: "50%",
                   transform: "translate(-50%, -50%)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
                 <TokenIcon
