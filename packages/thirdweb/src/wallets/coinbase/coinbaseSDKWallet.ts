@@ -97,9 +97,6 @@ async function initProvider(
     appLogoUrl: options.appMetadata?.logoUrl,
   });
 
-  console.log("options", options);
-  console.log("created client", client);
-
   return client.makeWeb3Provider(options.walletConfig);
 }
 
@@ -229,13 +226,10 @@ export async function connectCoinbaseWalletSDK(
   emitter: WalletEmitter<"com.coinbase.wallet">,
 ): Promise<ReturnType<typeof onConnect>> {
   const provider = await initProvider(options);
-  console.log("provider", provider);
 
   const accounts = (await provider.request({
     method: "eth_requestAccounts",
   })) as string[];
-
-  console.log("accounts", accounts);
 
   if (!accounts[0]) {
     throw new Error("No accounts found");

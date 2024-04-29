@@ -17,9 +17,9 @@ export function getDefaultAppMetadata(): Required<AppMetadata> {
   const faviconUrlFullPath = `${domain}/favicon.ico`;
 
   return {
-    name: window.document.title,
+    name: window.document.title || "thirdweb powered dApp",
     url: domain,
-    description: window.document.title,
+    description: window.document.title || "thirdweb powered dApp",
     logoUrl: faviconUrlFullPath,
   };
 }
