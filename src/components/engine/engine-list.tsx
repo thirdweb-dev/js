@@ -2,13 +2,21 @@ import {
   EngineInstance,
   useEngineInstances,
 } from "@3rdweb-sdk/react/hooks/useEngine";
-import { Divider, Flex, Stack } from "@chakra-ui/react";
+import {
+  Divider,
+  Flex,
+  Icon,
+  ListItem,
+  Stack,
+  UnorderedList,
+} from "@chakra-ui/react";
+import { ChakraNextImage } from "components/Image";
 import { Dispatch, SetStateAction } from "react";
-import { Heading, Text, TrackedLink } from "tw-components";
+import { VscBook } from "react-icons/vsc";
+import { Card, Heading, Link, Text } from "tw-components";
 import { CreateEngineInstanceButton } from "./create-engine-instance";
 import { EngineInstancesTable } from "./engine-instances-table";
 import { ImportEngineInstanceButton } from "./import-engine-instance";
-import { EngineOverviewDescription } from "./overview/engine-description";
 
 interface EngineInstancesListProps {
   setConnectedInstance: Dispatch<SetStateAction<EngineInstance | undefined>>;
@@ -18,58 +26,52 @@ export const EngineInstancesList = ({
   setConnectedInstance,
 }: EngineInstancesListProps) => {
   const instancesQuery = useEngineInstances();
+  const instances = instancesQuery.data ?? [];
 
   return (
     <Stack spacing={8}>
-      <Stack>
-        <Heading size="title.lg" as="h1">
-          Engine
-        </Heading>
-        <Text>
-          Engine is a backend HTTP server that calls smart contracts with your
-          backend wallets. Reliably send blockchain transactions, manage smart
-          wallets, enable gasless transactions, and more.{" "}
-          <TrackedLink
-            href="https://portal.thirdweb.com/infrastructure/engine/overview"
-            isExternal
-            category="engine"
-            label="clicked-learn-more"
-            color="blue.500"
-          >
-            Learn more about Engine
-          </TrackedLink>
-          .
-        </Text>
-      </Stack>
+      {instances.length === 0 ? (
+        <>
+          <ChakraNextImage
+            alt="Engine hero image"
+            src={require("../../../public/assets/engine/empty-state-header.png")}
+            maxW={650}
+          />
+          <Heading size="title.lg" as="h1">
+            Your scalable web3 back-end server.
+          </Heading>
 
-      <Stack spacing={4}>
-        {instancesQuery.data && instancesQuery.data.length === 0 ? (
-          <>
-            <Divider />
+          <UnorderedList color="gray.600">
+            <ListItem>
+              Read, write, and deploy contracts at production scale
+            </ListItem>
+            <ListItem>
+              Reliably parallelize and retry transactions with gas &amp; nonce
+              management
+            </ListItem>
+            <ListItem>Securely manage backend wallets</ListItem>
+            <ListItem>
+              Built-in support for account abstraction, relayers, and more
+            </ListItem>
+          </UnorderedList>
 
-            <Flex
-              direction={{ base: "column", md: "row" }}
-              gap={3}
-              justify="space-between"
-            >
-              <Stack>
-                <Heading size="title.sm">Get Started</Heading>
-                <Text>
-                  Create or import an Engine instance to manage it from this
-                  dashboard.
-                </Text>
-              </Stack>
-              <Flex direction={{ base: "column-reverse", md: "row" }} gap={3}>
-                <ImportEngineInstanceButton refetch={instancesQuery.refetch} />
-                <CreateEngineInstanceButton refetch={instancesQuery.refetch} />
-              </Flex>
-            </Flex>
-            <EngineOverviewDescription />
-          </>
-        ) : (
-          <>
-            <Divider />
+          <Flex gap={4}>
+            <CreateEngineInstanceButton
+              ctaText="Get Started"
+              refetch={instancesQuery.refetch}
+            />
+            <ImportEngineInstanceButton refetch={instancesQuery.refetch} />
+          </Flex>
+        </>
+      ) : (
+        <>
+          <Stack>
+            <Heading size="title.lg" as="h1">
+              Engine
+            </Heading>
+          </Stack>
 
+          <Stack spacing={4}>
             <Flex
               direction={{ base: "column", md: "row" }}
               gap={3}
@@ -77,7 +79,10 @@ export const EngineInstancesList = ({
             >
               <Flex direction={{ base: "column-reverse", md: "row" }} gap={3}>
                 <ImportEngineInstanceButton refetch={instancesQuery.refetch} />
-                <CreateEngineInstanceButton refetch={instancesQuery.refetch} />
+                <CreateEngineInstanceButton
+                  ctaText="Create Engine Instance"
+                  refetch={instancesQuery.refetch}
+                />
               </Flex>
             </Flex>
 
@@ -88,9 +93,29 @@ export const EngineInstancesList = ({
               refetch={instancesQuery.refetch}
               setConnectedInstance={setConnectedInstance}
             />
-          </>
-        )}
-      </Stack>
+          </Stack>
+        </>
+      )}
+
+      <Divider />
+
+      <Card p={8}>
+        <Stack>
+          <Flex gap={2} align="center">
+            <Icon as={VscBook} />
+            <Heading size="title.xs">Learn more about Engine</Heading>
+          </Flex>
+          <Text>Dive into features and integration guides.</Text>
+          <Link
+            href="https://portal.thirdweb.com/engine"
+            isExternal
+            color="blue.500"
+            fontSize="small"
+          >
+            View Docs &rarr;
+          </Link>
+        </Stack>
+      </Card>
     </Stack>
   );
 };

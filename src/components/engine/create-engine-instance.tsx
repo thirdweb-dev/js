@@ -6,28 +6,29 @@ import {
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalHeader,
   ModalOverlay,
-  Tag,
+  Stack,
   UseDisclosureReturn,
-  VStack,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
+import { ChakraNextImage } from "components/Image";
 import { OnboardingBilling } from "components/onboarding/Billing";
 import { OnboardingModal } from "components/onboarding/Modal";
 import { THIRDWEB_API_HOST } from "constants/urls";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useSingleQueryParam } from "hooks/useQueryParam";
-import { FiPlus } from "react-icons/fi";
-import { IoCheckmarkCircle } from "react-icons/io5";
-import { Button, Card, Heading, Text } from "tw-components";
+import React from "react";
+import { FiCheck } from "react-icons/fi";
+import { Badge, Button, Card, Heading, Text } from "tw-components";
 
 interface CreateEngineInstanceButtonProps {
+  ctaText: string;
   refetch: () => void;
 }
 
 export const CreateEngineInstanceButton = ({
+  ctaText,
   refetch,
 }: CreateEngineInstanceButtonProps) => {
   const showModalOnLoad = useSingleQueryParam("requestCloudHosted");
@@ -47,19 +48,23 @@ export const CreateEngineInstanceButton = ({
     });
 
     try {
-      const res = await fetch(`${THIRDWEB_API_HOST}/v1/engine/request`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-type": "application/json",
+      const res = await fetch(
+        `${THIRDWEB_API_HOST}/v1/engine/add-cloud-hosted`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify({}),
         },
-        body: JSON.stringify({}),
-      });
+      );
       if (!res.ok) {
         if (res.status === 409) {
           toast({
             status: "warning",
-            description: `You already requested a cloud-hosted Engine. Please contact sales@thirdweb.com if you have questions.`,
+            description:
+              "There is a pending Engine deployment. Please contact support@thirdweb.com if this takes longer than 2 hours.",
           });
           return;
         }
@@ -68,7 +73,7 @@ export const CreateEngineInstanceButton = ({
 
       toast({
         status: "success",
-        description: "Thank you! Our team will reach out shortly.",
+        description: "Thank you! Your Engine deployment will begin shortly.",
       });
 
       // Refresh the engine list to show a pending cloud-hosted Engine instance.
@@ -76,8 +81,7 @@ export const CreateEngineInstanceButton = ({
     } catch (e) {
       toast({
         status: "error",
-        description:
-          "Error submitting your request. Please contact sales@thirdweb.com.",
+        description: "There was an error with your Engine deployment.",
       });
     }
   };
@@ -94,13 +98,13 @@ export const CreateEngineInstanceButton = ({
           disclosure.onOpen();
         }}
         colorScheme="blue"
-        leftIcon={<Icon as={FiPlus} boxSize={4} />}
+        px={6}
       >
-        Create instance
+        {ctaText}
       </Button>
 
       {disclosure.isOpen && (
-        <RequestCloudHostedEngineModal
+        <CreateCloudHostedEngineModal
           hasValidPayment={
             accountQuery.data?.status === AccountStatus.ValidPayment
           }
@@ -139,7 +143,7 @@ export const CreateEngineInstanceButton = ({
   );
 };
 
-const RequestCloudHostedEngineModal = ({
+const CreateCloudHostedEngineModal = ({
   hasValidPayment,
   disclosure,
   onConfirm,
@@ -150,86 +154,63 @@ const RequestCloudHostedEngineModal = ({
   onConfirm: () => void;
   onAddPaymentMethod: () => void;
 }) => {
+  const addToPlan = async () => {
+    if (hasValidPayment) {
+      await onConfirm();
+    } else {
+      await onAddPaymentMethod();
+    }
+  };
+
   return (
     <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
       <ModalOverlay />
       <ModalContent>
         <ModalCloseButton />
-
-        <ModalHeader>Create Engine Instance</ModalHeader>
         <ModalBody>
-          <Card
-            w="full"
-            as={Flex}
-            gap={10}
-            flexDir="column"
-            p={{ base: 6, md: 10 }}
-            h="full"
-            borderColor="gray.800"
-            mb={4}
-          >
-            <Flex flexDir="column" gap={6}>
-              <Flex flexDir="column" gap={3}>
-                <Tag colorScheme="green" w="fit-content">
-                  Add-on
-                </Tag>
-                <Heading as="h3" size="title.md">
-                  Cloud-Hosted Engine
-                </Heading>
-                <Text maxW={320}>Host Engine on thirdweb with no setup.</Text>
-              </Flex>
+          <Stack spacing={4} px={4} py={8}>
+            <Card p="6px" rounded="md" w="fit-content">
+              <ChakraNextImage
+                alt="Cloud icon"
+                src={require("../../../public/assets/engine/cloud-icon.png")}
+                w={6}
+              />
+            </Card>
 
-              <Flex alignItems="flex-end" gap={2}>
-                <Heading size="title.md" lineHeight={1}>
-                  $99
-                </Heading>
-                <Text size="body.lg">/ month</Text>
-              </Flex>
-            </Flex>
-            <Flex
-              flexDir="column"
-              gap={3}
-              grow={1}
-              alignItems="flex-start"
-              color="accent.900"
-            >
-              <Text color="accent.900" fontWeight="medium">
-                Includes:
-              </Text>
+            <Stack>
+              <Heading as="h3" size="title.md">
+                Cloud-Hosted Engine
+              </Heading>
+              <Badge colorScheme="green" w="fit-content">
+                $99 per month
+              </Badge>
+            </Stack>
 
+            <Stack spacing={2} py={4}>
+              <Text color="accent.500">Includes:</Text>
               {[
                 "Isolated server & database",
+                "APIs for contracts on all EVM chains",
+                "Secure backend wallets",
+                "Automated gas & nonce management",
                 "On-call monitoring from thirdweb",
-                "No long-term commitment",
-              ].map((f) => (
-                <Flex key={f} gap={2}>
-                  <Icon as={IoCheckmarkCircle} boxSize={5} mt={0.5} />
-                  <Text>{f}</Text>
+              ].map((feature) => (
+                <Flex key={feature} gap={3} align="center">
+                  <Icon as={FiCheck} boxSize={4} color="green.500" />
+                  <Text color="accent.900" fontWeight="medium">
+                    {feature}
+                  </Text>
                 </Flex>
               ))}
-            </Flex>
+            </Stack>
 
-            <VStack gap={3}>
-              <Button
-                onClick={async () => {
-                  if (hasValidPayment) {
-                    await onConfirm();
-                  } else {
-                    await onAddPaymentMethod();
-                  }
-                }}
-                colorScheme="blue"
-                py={6}
-                w="full"
-              >
-                Add to my plan
-              </Button>
-              <Text size="body.sm" textAlign="center">
-                We will reach out within 1 business day. You won&apos;t be
-                charged until your Engine instance is deployed.
-              </Text>
-            </VStack>
-          </Card>
+            <Button onClick={addToPlan} colorScheme="primary" py={6} w="full">
+              Add to my plan
+            </Button>
+            <Text color="accent.500" size="body.sm" textAlign="center">
+              Your payment method will be charged $99 per month.
+            </Text>
+          </Stack>
         </ModalBody>
       </ModalContent>
     </Modal>

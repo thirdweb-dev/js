@@ -46,6 +46,7 @@ export const ImportEngineInstanceButton = ({
           disclosure.onOpen();
         }}
         variant="outline"
+        px={6}
       >
         Import
       </Button>

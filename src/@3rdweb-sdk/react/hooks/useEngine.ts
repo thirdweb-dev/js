@@ -15,7 +15,13 @@ export type EngineInstance = {
   url: string;
   lastAccessedAt: string;
   cloudDeployedAt: string;
-  status: "active" | "pending" | "requested";
+  status:
+    | "active"
+    | "pending"
+    | "requested"
+    | "deploying"
+    | "paymentFailed"
+    | "deploymentFailed";
 };
 
 export function useEngineInstances() {

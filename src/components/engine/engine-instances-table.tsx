@@ -25,11 +25,11 @@ import { useAddress } from "@thirdweb-dev/react";
 import { TWTable } from "components/shared/TWTable";
 import { THIRDWEB_API_HOST } from "constants/urls";
 import { useTrack } from "hooks/analytics/useTrack";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, ReactNode, SetStateAction, useState } from "react";
 import { useForm } from "react-hook-form";
 import { BiPencil } from "react-icons/bi";
 import { FiArrowRight, FiTrash } from "react-icons/fi";
-import { Badge, Button, Card, FormLabel, Text } from "tw-components";
+import { Badge, Button, FormLabel, Link, Text } from "tw-components";
 
 interface EngineInstancesTableProps {
   instances: EngineInstance[];
@@ -129,25 +129,62 @@ export const EngineInstancesTable: React.FC<EngineInstancesTableProps> = ({
       cell: (cell) => {
         const { id, name, url, status } = cell.row.original;
 
+        let badge: ReactNode | undefined;
+        if (status === "requested") {
+          badge = (
+            <Tooltip label="Deployment will begin shortly.">
+              <Badge
+                borderRadius="full"
+                size="label.sm"
+                variant="subtle"
+                px={3}
+                py={1.5}
+                colorScheme="yellow"
+              >
+                Pending
+              </Badge>
+            </Tooltip>
+          );
+        } else if (status === "deploying") {
+          badge = (
+            <Tooltip label="This step may take up to 30 minutes.">
+              <Badge
+                borderRadius="full"
+                size="label.sm"
+                variant="subtle"
+                px={3}
+                py={1.5}
+                colorScheme="green"
+              >
+                Deploying
+              </Badge>
+            </Tooltip>
+          );
+        } else if (status === "paymentFailed") {
+          badge = (
+            <Tooltip label="There was an error charging your payment method. Please contact support@thirdweb.com.">
+              <Badge
+                borderRadius="full"
+                size="label.sm"
+                variant="subtle"
+                px={3}
+                py={1.5}
+                colorScheme="red"
+              >
+                Payment Failed
+              </Badge>
+            </Tooltip>
+          );
+        }
+
         return (
           <Stack py={2}>
-            {status === "requested" ? (
+            {badge ? (
               <HStack spacing={4}>
                 <Text fontWeight="600" size="body.lg">
                   {name}
                 </Text>
-                <Tooltip label="We will reach out within 1 business day.">
-                  <Badge
-                    borderRadius="full"
-                    size="label.sm"
-                    variant="subtle"
-                    px={3}
-                    py={1.5}
-                    colorScheme="black"
-                  >
-                    pending
-                  </Badge>
-                </Tooltip>
+                {badge}
               </HStack>
             ) : (
               <>
@@ -206,6 +243,7 @@ export const EngineInstancesTable: React.FC<EngineInstancesTableProps> = ({
               setInstanceToUpdate(instance);
               removeDisclosure.onOpen();
             },
+            isDestructive: true,
           },
         ]}
       />
@@ -365,29 +403,51 @@ const RemoveModal = ({
       <ModalContent>
         <ModalHeader>Remove Engine Instance</ModalHeader>
 
-        <ModalBody>
-          <Stack spacing={4}>
-            <Text>
-              Are you sure you want to remove <strong>{instance?.name}</strong>{" "}
-              from your dashboard?
-            </Text>
-            <Card>
+        {instance.cloudDeployedAt ? (
+          <>
+            <ModalBody>
               <Text>
-                This action will not modify your Engine infrastructure, and you
-                can import this Engine URL again later.
+                To cancel your Engine subscription, please contact{" "}
+                <Link
+                  href="mailto:support@thirdweb.com"
+                  isExternal
+                  color="primary.500"
+                >
+                  support@thirdweb.com
+                </Link>
+                .
               </Text>
-            </Card>
-          </Stack>
-        </ModalBody>
+            </ModalBody>
 
-        <ModalFooter as={Flex} gap={3}>
-          <Button onClick={onClose} variant="ghost">
-            Cancel
-          </Button>
-          <Button onClick={onClickRemove} colorScheme="red">
-            Remove
-          </Button>
-        </ModalFooter>
+            <ModalFooter>
+              <Button onClick={onClose} variant="ghost">
+                Close
+              </Button>
+            </ModalFooter>
+          </>
+        ) : (
+          <>
+            <ModalBody as={Flex} flexDir="column" gap={2}>
+              <Text>
+                Are you sure you want to remove{" "}
+                <strong>{instance?.name}</strong> from your dashboard?
+              </Text>
+              <Text>
+                This action does not modify your Engine infrastructure. You can
+                re-add it at any time.
+              </Text>
+            </ModalBody>
+
+            <ModalFooter as={Flex} gap={3}>
+              <Button onClick={onClose} variant="ghost">
+                Cancel
+              </Button>
+              <Button onClick={onClickRemove} colorScheme="red">
+                Remove
+              </Button>
+            </ModalFooter>
+          </>
+        )}
       </ModalContent>
     </Modal>
   );
