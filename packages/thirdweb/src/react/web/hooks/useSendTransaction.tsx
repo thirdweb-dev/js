@@ -158,7 +158,7 @@ function ModalContent(props: ModalProps) {
       <BuyTxHistory
         client={props.client}
         onBack={() => {
-          props.onClose();
+          setScreen("buy");
         }}
       />
     );

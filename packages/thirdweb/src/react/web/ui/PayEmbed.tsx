@@ -54,7 +54,14 @@ export function PayEmbed(props: {
       </div>
     );
   } else if (screen === "tx-history") {
-    content = <BuyTxHistory client={props.client} />;
+    content = (
+      <BuyTxHistory
+        client={props.client}
+        onBack={() => {
+          setScreen("buy");
+        }}
+      />
+    );
   } else {
     content = (
       <BuyScreen
