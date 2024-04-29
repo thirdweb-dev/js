@@ -48,6 +48,7 @@ import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
 import { fontSize, iconSize, radius } from "../../../design-system/index.js";
 import { useDebouncedValue } from "../../../hooks/useDebouncedValue.js";
+import type { PayUIOptions } from "../../ConnectWalletProps.js";
 import type { SupportedTokens } from "../../defaultTokens.js";
 import type { IconFC } from "../../icons/types.js";
 import type { ConnectLocale } from "../../locale/types.js";
@@ -93,7 +94,7 @@ export function BuyScreen(props: {
   client: ThirdwebClient;
   connectLocale: ConnectLocale;
   buyForTx?: BuyForTx;
-  fiatTestMode?: boolean;
+  payOptions: PayUIOptions;
   theme: "light" | "dark";
 }) {
   const activeChain = useActiveWalletChain();
@@ -142,14 +143,26 @@ export function BuyScreenContent(props: {
   supportedChains: Chain[];
   connectLocale: ConnectLocale;
   buyForTx?: BuyForTx;
-  fiatTestMode?: boolean;
   theme: "light" | "dark";
+  payOptions: PayUIOptions;
 }) {
   const { activeChain, account, client, supportedChains, connectLocale } =
     props;
+  const buyWithFiatOptions = props.payOptions.buyWithFiat;
+  const buyWithCryptoOptions = props.payOptions.buyWithCrypto;
+  const showPaymentSelection =
+    buyWithFiatOptions !== false && buyWithCryptoOptions !== false;
+
   const [isSwitching, setIsSwitching] = useState(false);
   const switchActiveWalletChain = useSwitchActiveWalletChain();
-  const [method, setMethod] = useState<"crypto" | "creditCard">("creditCard");
+
+  const [method, setMethod] = useState<"crypto" | "creditCard">(
+    buyWithCryptoOptions === false
+      ? "creditCard"
+      : buyWithFiatOptions === false
+        ? "crypto"
+        : "creditCard",
+  );
 
   // prefetch chains metadata
   useChainsQuery(supportedChains || [], 50);
@@ -276,6 +289,7 @@ export function BuyScreenContent(props: {
   >();
 
   const buyWithCryptoParams: BuyWithCryptoQuoteQueryParams | undefined =
+    buyWithCryptoOptions !== false &&
     deferredTokenAmount &&
     !finalizedQuote &&
     !(fromChain.id === toChain.id && fromToken === toToken)
@@ -309,7 +323,10 @@ export function BuyScreenContent(props: {
   >();
 
   const fiatQuoteQuery = useBuyWithFiatQuote(
-    method === "creditCard" && !confirmedFiatQuote && deferredTokenAmount
+    buyWithFiatOptions !== false &&
+      method === "creditCard" &&
+      !confirmedFiatQuote &&
+      deferredTokenAmount
       ? {
           fromCurrencySymbol: selectedCurrency.shorthand,
           toChainId: toChain.id,
@@ -320,6 +337,8 @@ export function BuyScreenContent(props: {
             : toToken.address,
           toAmount: deferredTokenAmount,
           client,
+          isTestMode: buyWithFiatOptions?.testMode,
+          provider: "STRIPE", // TODO - change when we have multiple providers
         }
       : undefined,
   );
@@ -338,7 +357,11 @@ export function BuyScreenContent(props: {
     );
   }
 
-  if (screen === "fiat-flow" && confirmedFiatQuote) {
+  if (
+    screen === "fiat-flow" &&
+    confirmedFiatQuote &&
+    buyWithFiatOptions !== false
+  ) {
     return (
       <FiatFlow
         quote={confirmedFiatQuote}
@@ -347,7 +370,7 @@ export function BuyScreenContent(props: {
           setScreen("main");
         }}
         client={client}
-        testMode={props.fiatTestMode || false}
+        testMode={buyWithFiatOptions?.testMode || false}
         theme={props.theme}
         onViewPendingTx={props.onViewPendingTx}
       />
@@ -562,8 +585,12 @@ export function BuyScreenContent(props: {
         <Container px="lg">
           {!isMiniScreen && (
             <div>
-              <PaymentSelection selected={method} onSelect={setMethod} />
-              <Spacer y="md" />
+              {showPaymentSelection && (
+                <>
+                  <PaymentSelection selected={method} onSelect={setMethod} />
+                  <Spacer y="md" />
+                </>
+              )}
 
               {method === "crypto" && (
                 <>

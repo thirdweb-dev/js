@@ -4,6 +4,7 @@ import type { GaslessOptions } from "../../../transaction/actions/gasless/types.
 import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
 import { useSendTransactionCore } from "../../core/hooks/contract/useSendTransaction.js";
 import { SetRootElementContext } from "../../core/providers/RootElementContext.js";
+import type { PayUIOptions } from "../ui/ConnectWallet/ConnectWalletProps.js";
 import {
   type SupportedTokens,
   defaultTokens,
@@ -46,6 +47,12 @@ export type SendTransactionConfig = {
         locale?: LocaleId;
         supportedTokens?: SupportedTokens;
         theme?: Theme | "light" | "dark";
+        buyWithCrypto?: false;
+        buyWithFiat?:
+          | false
+          | {
+              testMode?: boolean;
+            };
       }
     | false;
 
@@ -95,6 +102,10 @@ export function useSendTransaction(config: SendTransactionConfig = {}) {
               txCostWei={data.totalCostWei}
               walletBalanceWei={data.walletBalance.value}
               nativeTokenSymbol={data.walletBalance.symbol}
+              payOptions={{
+                buyWithCrypto: payModal?.buyWithCrypto,
+                buyWithFiat: payModal?.buyWithFiat,
+              }}
             />,
           );
         },
@@ -113,6 +124,7 @@ type ModalProps = {
   walletBalanceWei: bigint;
   nativeTokenSymbol: string;
   tx: PreparedTransaction;
+  payOptions: PayUIOptions;
 };
 
 function TxModal(props: ModalProps) {
@@ -170,6 +182,7 @@ function ModalContent(props: ModalProps) {
         tokenSymbol: props.nativeTokenSymbol,
       }}
       theme={typeof props.theme === "string" ? props.theme : props.theme.type}
+      payOptions={props.payOptions}
     />
   );
 }

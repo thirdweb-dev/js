@@ -661,7 +661,7 @@ export const ConnectedWalletDetails: React.FC<{
         supportedTokens={props.supportedTokens}
         onViewPendingTx={() => setScreen("pending-tx")}
         connectLocale={locale}
-        fiatTestMode={props.detailsModal?.pay?.fiat?.testMode}
+        payOptions={{ ...props.detailsModal?.pay }}
         theme={typeof props.theme === "string" ? props.theme : props.theme.type}
       />
     );

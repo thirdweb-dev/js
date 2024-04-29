@@ -10,6 +10,15 @@ import type { NetworkSelectorProps } from "./NetworkSelector.js";
 import type { SupportedTokens } from "./defaultTokens.js";
 import type { WelcomeScreen } from "./screens/types.js";
 
+export type PayUIOptions = {
+  buyWithCrypto?: false;
+  buyWithFiat?:
+    | {
+        testMode?: boolean;
+      }
+    | false;
+};
+
 /**
  * Options for configuring the `ConnectButton`'s Connect Button
  * @connectWallet
@@ -110,11 +119,10 @@ export type ConnectButton_detailsModalOptions = {
    */
   footer?: (props: { close: () => void }) => JSX.Element;
 
-  pay?: {
-    fiat?: {
-      testMode?: boolean;
-    };
-  };
+  /**
+   * Configure options for thirdweb Pay to allow users to buy tokens using fiat or crypto
+   */
+  pay?: PayUIOptions;
 };
 
 /**
