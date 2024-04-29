@@ -22,6 +22,7 @@ export type GetBuyWithFiatQuoteParams = {
   maxSlippageBPS?: number | undefined;
   fromAmount?: string | undefined;
   toAmount?: string | undefined;
+  isTestMode?: boolean | undefined; // defaults to false
 };
 
 export type BuyWithFiatQuote = {
@@ -97,6 +98,10 @@ export async function getBuyWithFiatQuote(
 
     if (params.maxSlippageBPS) {
       queryParams.append("maxSlippageBPS", params.maxSlippageBPS.toString());
+    }
+
+    if (params.isTestMode) {
+      queryParams.append("isTestMode", params.isTestMode.toString());
     }
 
     const queryString = queryParams.toString();
