@@ -63,7 +63,13 @@ export async function connectSmartWallet(
   const accountAddress = await predictAddress(factoryContract, {
     personalAccountAddress: personalAccount.address,
     ...options,
-  });
+  })
+    .then((address) => address)
+    .catch(() => {
+      throw new Error(
+        `Failed to get account address with factory contract ${factoryContract.address} on chain ID ${chain.id}. Are you on the right chain?`,
+      );
+    });
 
   const accountContract = getContract({
     client,

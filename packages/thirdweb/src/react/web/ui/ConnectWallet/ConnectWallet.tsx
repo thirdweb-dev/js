@@ -63,6 +63,7 @@ export function ConnectButton(props: ConnectButtonProps) {
           : props.autoConnect?.timeout
       }
       accountAbstraction={props.accountAbstraction}
+      onConnect={props.onConnect}
     />
   );
 

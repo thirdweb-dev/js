@@ -109,6 +109,19 @@ export type AutoConnectProps = {
    * />
    */
   accountAbstraction?: SmartWalletOptions;
+
+  /**
+   * Callback to be called on successful auto-connection of last active wallet. The callback is called with the connected wallet
+   *
+   * ```tsx
+   * <AutoConnect
+   *  onConnect={(wallet) => {
+   *    console.log("auto connected to", wallet)
+   *  }}
+   * />
+   * ```
+   */
+  onConnect?: (wallet: Wallet) => void;
 };
 
 /**
@@ -149,7 +162,7 @@ export function AutoConnect(props: AutoConnectProps) {
     accountAbstraction: props.accountAbstraction,
   });
   const { isAutoConnecting } = connectionManager;
-  const { wallets } = props;
+  const { wallets, onConnect } = props;
   const timeout = props.timeout ?? 15000;
   // get the supported wallets from thirdweb provider
   // check the storage for last connected wallets and connect them all
@@ -192,7 +205,20 @@ export function AutoConnect(props: AutoConnectProps) {
             message: `AutoConnect timeout : ${timeout}ms limit exceeded.`,
           });
 
-          connect(activeWallet);
+          // connected wallet could be activeWallet or smart wallet
+          const connectedWallet = await connect(activeWallet);
+
+          if (connectedWallet) {
+            if (onConnect) {
+              try {
+                onConnect(connectedWallet);
+              } catch {
+                // ignore
+              }
+            }
+          } else {
+            setConnectionStatus("disconnected");
+          }
         } catch (e) {
           console.error("Failed to auto connect last active wallet");
           console.error(e);

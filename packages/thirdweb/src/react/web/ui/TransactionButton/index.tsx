@@ -111,7 +111,6 @@ export function TransactionButton(props: TransactionButtonProps) {
     return (
       <Button
         gap="xs"
-        {...buttonProps}
         disabled={!account || disabled}
         variant={"primary"}
         data-is-loading={isPending}
@@ -146,9 +145,11 @@ export function TransactionButton(props: TransactionButtonProps) {
           }
         }}
         style={{
-          ...buttonProps.style,
           opacity: !account || disabled ? 0.5 : 1,
+          minWidth: "150px",
+          ...buttonProps.style,
         }}
+        {...buttonProps}
       >
         {children}
       </Button>
@@ -157,15 +158,29 @@ export function TransactionButton(props: TransactionButtonProps) {
 
   return (
     <Button
-      {...buttonProps}
       disabled={true}
       variant={"primary"}
       style={{
-        ...buttonProps.style,
+        opacity: !account || disabled ? 0.5 : 1,
         minWidth: "150px",
+        position: "relative",
+        ...buttonProps.style,
       }}
+      {...buttonProps}
     >
-      <Spinner size="md" color="primaryButtonText" />
+      <div
+        style={{
+          position: "absolute",
+          display: "flex",
+          alignItems: "center",
+          height: "100%",
+          top: 0,
+          bottom: 0,
+          margin: "auto",
+        }}
+      >
+        <Spinner size="md" color="primaryButtonText" />
+      </div>
     </Button>
   );
 }
