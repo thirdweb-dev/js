@@ -80,7 +80,7 @@ const EngineLanding: ThirdwebNextPage = () => {
           ctaText="Get started"
           contactUsTitle="Book a demo"
           gradient="linear(to-r, #9786DF, #9786DF)"
-          image={require("../../public/assets/product-pages/engine/desktop-hero.png")}
+          lottie={require("../../public/assets/product-pages/engine/lottie.json")}
           mobileImage={require("../../public/assets/product-pages/engine/mobile-hero.png")}
           miniImage={require("../../public/assets/product-icons/engine.png")}
         />
