@@ -19,7 +19,7 @@ import type { LocaleId } from "./types.js";
 // TODO - add `account` as prop and use that only in Buy UI so that it's clear to only render this component when you have a connected wallet
 
 export function PayEmbed(props: {
-  supportedTokens: SupportedTokens;
+  supportedTokens?: SupportedTokens;
   client: ThirdwebClient;
   buyWithCrypto?: false;
   locale?: LocaleId;
@@ -28,7 +28,7 @@ export function PayEmbed(props: {
         testMode?: boolean;
       }
     | false;
-  theme: "light" | "dark" | Theme;
+  theme?: "light" | "dark" | Theme;
 }) {
   const localeQuery = useConnectLocale(props.locale || "en_US");
   const [screen, setScreen] = useState<"buy" | "tx-history">("buy");
@@ -47,7 +47,7 @@ export function PayEmbed(props: {
   }
 
   return (
-    <CustomThemeProvider theme={props.theme}>
+    <CustomThemeProvider theme={props.theme || "dark"}>
       <Container
         bg="modalBg"
         style={{
@@ -61,7 +61,7 @@ export function PayEmbed(props: {
         <DynamicHeight>
           <BuyScreen
             supportedTokens={props.supportedTokens || defaultTokens}
-            theme={props.theme}
+            theme={props.theme || "dark"}
             client={props.client}
             connectLocale={localeQuery.data}
             onViewPendingTx={() => {
