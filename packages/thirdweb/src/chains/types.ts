@@ -6,6 +6,7 @@ export type ChainOptions = {
   id: number;
   name?: string;
   rpc?: string;
+  icon?: Icon;
   nativeCurrency?: {
     name?: string;
     symbol?: string;
