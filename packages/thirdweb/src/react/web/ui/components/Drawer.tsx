@@ -48,7 +48,7 @@ export const DrawerContainer = /* @__PURE__ */ StyledDiv(() => {
     borderTopLeftRadius: radius.xl,
     borderTopRightRadius: radius.xl,
     background: theme.colors.modalBg,
-    position: "fixed",
+    position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,

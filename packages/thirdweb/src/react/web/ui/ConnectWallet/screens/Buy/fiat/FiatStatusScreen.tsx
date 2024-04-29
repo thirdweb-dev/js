@@ -7,7 +7,6 @@ import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
 import { StepBar } from "../../../../components/StepBar.js";
 import { Container, ModalHeader } from "../../../../components/basic.js";
-import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { iconSize } from "../../../../design-system/index.js";
 import { AccentFailIcon } from "../../../icons/AccentFailIcon.js";
@@ -117,9 +116,6 @@ export function FiatStatusScreen(props: {
             Buy Complete
           </Text>
           <Spacer y="xl" />
-          <Button variant="accent" fullWidth onClick={props.onBack}>
-            Continue Buying
-          </Button>
         </>
       )}
 

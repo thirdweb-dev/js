@@ -109,4 +109,4 @@ export {
   type BuyHistoryQueryOptions,
 } from "../react/core/hooks/pay/useBuyHistory.js";
 
-export { PayEmbed } from "../react/web/ui/Pay.js";
+export { PayEmbed } from "../react/web/ui/PayEmbed.js";

@@ -55,6 +55,8 @@ export function PayEmbed(props: {
           minWidth: "360px",
           borderWidth: "1px",
           borderStyle: "solid",
+          position: "relative",
+          overflow: "hidden",
         }}
         borderColor="borderColor"
       >

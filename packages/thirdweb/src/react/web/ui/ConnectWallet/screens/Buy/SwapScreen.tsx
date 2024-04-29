@@ -729,6 +729,7 @@ export function BuyScreenContent(props: {
             <Button
               variant={disableCreditCardContinue ? "outline" : "accent"}
               data-disabled={disableCreditCardContinue}
+              disabled={disableCreditCardContinue}
               fullWidth
               onClick={async () => {
                 if (fiatQuoteQuery.data) {
