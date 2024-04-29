@@ -1496,8 +1496,8 @@ importers:
         specifier: ^2.12.1
         version: 2.12.1
       '@walletconnect/utils':
-        specifier: ^2.12.1
-        version: 2.12.1
+        specifier: ^2.12.2
+        version: 2.12.2
       '@walletconnect/web3wallet':
         specifier: ^1.11.2
         version: 1.11.2
