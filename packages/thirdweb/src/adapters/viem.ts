@@ -29,9 +29,9 @@ export const viemAdapter = {
      * @returns The ThirdwebContract.
      * @example
      * ```ts
-     * import { viemAdapter } from "thirdweb/adapters";
+     * import { viemAdapter } from "thirdweb/adapters/viem";
      *
-     * const contract = viemmAdapter.contract.fromViem({
+     * const contract = viemAdapter.contract.fromViem({
      *  viemContract: viemContract,
      *  chain: ethereum,
      *  client,
@@ -58,7 +58,7 @@ export const viemAdapter = {
    * @returns The Viem public client.
    * @example
    * ```ts
-   * import { viemAdapter } from "thirdweb/adapters";
+   * import { viemAdapter } from "thirdweb/adapters/viem";
    *
    *  const publicClient = viemAdapter.publicClient.toViem({
    *  chain: ethereum,
@@ -77,7 +77,7 @@ export const viemAdapter = {
      * @returns The Viem Wallet client.
      * @example
      * ```ts
-     * import { viemAdapter } from "thirdweb/adapters";
+     * import { viemAdapter } from "thirdweb/adapters/viem";
      *
      * const walletClient = viemAdapter.walletClient.toViem({
      *  wallet: wallet,
@@ -94,7 +94,7 @@ export const viemAdapter = {
      * @returns The Account.
      * @example
      * ```ts
-     * import { viemAdapter } from "thirdweb/adapters";
+     * import { viemAdapter } from "thirdweb/adapters/viem";
      *
      * const account = viemAdapter.walletClient.fromViem({
      *   walletClient,
@@ -246,7 +246,7 @@ function fromViemWalletClient(options: {
   const viemAccount = options.walletClient.account;
   if (!viemAccount) {
     throw new Error(
-      "Account not found in walletClient, please pass it explicitely.",
+      "Account not found in walletClient, please pass it explicitly.",
     );
   }
   return {

@@ -2,7 +2,13 @@ import type { Chain } from "../src/types";
 export default {
   "chain": "IOTA EVM",
   "chainId": 1075,
-  "explorers": [],
+  "explorers": [
+    {
+      "name": "explorer",
+      "url": "https://explorer.evm.testnet.iotaledger.net",
+      "standard": "EIP3091"
+    }
+  ],
   "faucets": [
     "https://evm-toolkit.evm.testnet.iotaledger.net"
   ],

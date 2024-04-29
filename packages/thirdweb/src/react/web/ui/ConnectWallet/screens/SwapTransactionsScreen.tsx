@@ -24,7 +24,7 @@ import { Button } from "../../components/buttons.js";
 import { Text } from "../../components/text.js";
 import { useCustomTheme } from "../../design-system/CustomThemeProvider.js";
 import { fadeInAnimation } from "../../design-system/animations.js";
-import { StyledAnchor } from "../../design-system/elements.js";
+import { StyledButton } from "../../design-system/elements.js";
 import {
   type Theme,
   fontSize,
@@ -32,7 +32,10 @@ import {
   radius,
   spacing,
 } from "../../design-system/index.js";
+import { PostOnRampSwap } from "./Buy/fiat/PostOnRampSwap.js";
 import { swapTransactionsStore } from "./Buy/swap/pendingSwapTx.js";
+
+// TODO: handle the Complete Transaction button click and start the post-onramp swap flow
 
 type TxStatusInfo =
   | {
@@ -50,7 +53,7 @@ type TxStatusInfo =
       transactionHash: string;
       boughtTokenAmount: string;
       boughtTokenSymbol: string;
-      status: BuyWithFiatStatus["status"];
+      fiatStatus: BuyWithFiatStatus;
     };
 
 // Note: Do not use useConnectUI here
@@ -84,7 +87,10 @@ function useBuyTransactionsToShow(client: ThirdwebClient) {
     if ("buyWithCryptoStatus" in tx) {
       txHashSet.add(tx.buyWithCryptoStatus.source.transactionHash);
     } else {
-      if (tx.buyWithFiatStatus.status !== "NOT_FOUND") {
+      if (
+        tx.buyWithFiatStatus.status !== "NOT_FOUND" &&
+        tx.buyWithFiatStatus.source
+      ) {
         txHashSet.add(tx.buyWithFiatStatus.source.transactionHash);
       }
     }
@@ -127,16 +133,15 @@ function useBuyTransactionsToShow(client: ThirdwebClient) {
         subStatus: txInfo.subStatus,
       });
     } else {
-      const txInfo = tx.buyWithFiatStatus;
-      if (txInfo.status !== "NOT_FOUND") {
-        console.log("fiat status", txInfo);
+      const fiatStatus = tx.buyWithFiatStatus;
+      if (fiatStatus.status !== "NOT_FOUND" && fiatStatus.source) {
         txInfosToShow.push({
           type: "buyWithFiat",
-          boughtChainId: txInfo.quote.toToken.chainId,
-          transactionHash: txInfo.source.transactionHash,
-          boughtTokenAmount: txInfo.quote.estimatedToTokenAmount,
-          boughtTokenSymbol: txInfo.quote.toToken.symbol,
-          status: txInfo.status,
+          boughtChainId: fiatStatus.quote.toToken.chainId,
+          transactionHash: fiatStatus.source.transactionHash,
+          boughtTokenAmount: fiatStatus.quote.estimatedToTokenAmount,
+          boughtTokenSymbol: fiatStatus.quote.toToken.symbol || "",
+          fiatStatus: fiatStatus,
         });
       }
     }
@@ -181,6 +186,20 @@ export function BuyTxHistory(props: {
   const activeAccount = useActiveAccount();
 
   const noTransactions = txInfosToShow.length === 0;
+
+  const [selectedTx, setSelectedTx] = useState<TxStatusInfo | null>(null);
+
+  if (selectedTx) {
+    return (
+      <TransactionDetailsScreen
+        client={props.client}
+        txInfo={selectedTx}
+        onBack={() => {
+          setSelectedTx(null);
+        }}
+      />
+    );
+  }
 
   return (
     <Container animate="fadein">
@@ -231,6 +250,9 @@ export function BuyTxHistory(props: {
                 key={txInfo.transactionHash}
                 txInfo={txInfo}
                 client={props.client}
+                onClick={() => {
+                  setSelectedTx(txInfo);
+                }}
               />
             );
           })}
@@ -316,16 +338,103 @@ export function BuyTxHistory(props: {
   );
 }
 
+function TransactionDetailsScreen(props: {
+  txInfo: TxStatusInfo;
+  onBack: () => void;
+  client: ThirdwebClient;
+}) {
+  const txInfo = props.txInfo;
+  const chainQuery = useChainQuery(defineChain(props.txInfo.boughtChainId));
+  const transactionHash = props.txInfo.transactionHash;
+  const statusMeta =
+    props.txInfo.type === "buyWithCrypto"
+      ? getBuyWithCryptoStatusMeta(props.txInfo.status, props.txInfo.subStatus)
+      : getBuyWithFiatStatusMeta(props.txInfo.fiatStatus.status);
+  const [screen, setScreen] = useState<"base" | "postonramp-swap">("base");
+
+  if (screen === "postonramp-swap" && txInfo.type === "buyWithFiat") {
+    return (
+      <PostOnRampSwap
+        client={props.client}
+        buyWithFiatStatus={txInfo.fiatStatus}
+        onBack={props.onBack}
+        onViewPendingTx={props.onBack}
+      />
+    );
+  }
+
+  return (
+    <Container>
+      <Container p="lg">
+        <ModalHeader title="Transaction Details" onBack={props.onBack} />
+      </Container>
+
+      <Line />
+
+      <Container p="lg">
+        <Text>Buy</Text>
+        <Spacer y="xs" />
+        <Container flex="row" gap="xs" center="y">
+          <ChainIcon
+            chain={chainQuery.data}
+            size={iconSize.md}
+            client={props.client}
+          />
+          <Text color="primaryText">
+            {formatNumber(Number(props.txInfo.boughtTokenAmount), 4)}{" "}
+            {props.txInfo.boughtTokenSymbol}
+          </Text>
+        </Container>
+
+        <Spacer y="lg" />
+        <Line />
+        <Spacer y="lg" />
+        <Text>Status</Text>
+        <Spacer y="xs" />
+        <Text color={statusMeta.color}>{statusMeta.status}</Text>
+
+        <Spacer y="lg" />
+        <Line />
+        <Spacer y="lg" />
+
+        {txInfo.type === "buyWithFiat" &&
+          (txInfo.fiatStatus.status === "CRYPTO_SWAP_REQUIRED" ||
+            txInfo.fiatStatus.status === "PAYMENT_FAILED") && (
+            <>
+              <Button
+                fullWidth
+                variant="primary"
+                onClick={() => {
+                  setScreen("postonramp-swap");
+                }}
+              >
+                Complete Transaction
+              </Button>
+              <Spacer y="sm" />
+            </>
+          )}
+
+        <ButtonLink
+          fullWidth
+          variant="accent"
+          href={`${
+            chainQuery.data?.explorers?.[0]?.url || ""
+          }/tx/${transactionHash}`}
+          target="_blank"
+        >
+          View on Explorer
+        </ButtonLink>
+      </Container>
+    </Container>
+  );
+}
+
 function TransactionInfo(props: {
   txInfo: TxStatusInfo;
   client: ThirdwebClient;
+  onClick?: () => void;
 }) {
-  const {
-    boughtChainId,
-    transactionHash,
-    boughtTokenAmount,
-    boughtTokenSymbol,
-  } = props.txInfo;
+  const { boughtChainId, boughtTokenAmount, boughtTokenSymbol } = props.txInfo;
 
   const boughtChain = useMemo(
     () => defineChain(boughtChainId),
@@ -336,16 +445,17 @@ function TransactionInfo(props: {
   const statusMeta =
     props.txInfo.type === "buyWithCrypto"
       ? getBuyWithCryptoStatusMeta(props.txInfo.status, props.txInfo.subStatus)
-      : getBuyWithFiatStatusMeta(props.txInfo.status);
+      : getBuyWithFiatStatusMeta(props.txInfo.fiatStatus.status);
 
-  const isValidTxHash = transactionHash.startsWith("0x");
+  // const isValidTxHash = transactionHash.startsWith("0x");
   return (
-    <TxHashLink
-      href={`${
-        chainQuery.data?.explorers?.[0]?.url || ""
-      }/tx/${transactionHash}`}
-      as={isValidTxHash ? "a" : "button"}
-      target="_blank"
+    <TXPreviewButton
+      // href={`${
+      //   chainQuery.data?.explorers?.[0]?.url || ""
+      // }/tx/${transactionHash}`}
+      // as={isValidTxHash ? "a" : "button"}
+      // target="_blank"
+      onClick={props.onClick}
     >
       <Container
         flex="row"
@@ -409,13 +519,13 @@ function TransactionInfo(props: {
           {statusMeta.status}
         </Text>
       </Container>
-    </TxHashLink>
+    </TXPreviewButton>
   );
 }
 
 const ButtonLink = /* @__PURE__ */ (() => Button.withComponent("a"))();
 
-const TxHashLink = /* @__PURE__ */ StyledAnchor(() => {
+const TXPreviewButton = /* @__PURE__ */ StyledButton(() => {
   const theme = useCustomTheme();
   return {
     border: "none",
@@ -492,20 +602,11 @@ function getBuyWithCryptoStatusMeta(
 function getBuyWithFiatStatusMeta(
   status: BuyWithFiatStatus["status"],
 ): StatusMeta {
-  // TEMP fix - this needs to be fixed in server
-  if ((status as string) === "CRYPTO_SWAP_REQUIRED ") {
-    return {
-      status: "Incomplete",
-      color: "accentText",
-    };
-  }
-
   switch (status) {
     case "CRYPTO_SWAP_IN_PROGRESS":
     case "PENDING_ON_RAMP_TRANSFER":
     case "ON_RAMP_TRANSFER_IN_PROGRESS":
-    case "PENDING_PAYMENT":
-    case "PENDING_CRYPTO_SWAP": {
+    case "PENDING_PAYMENT": {
       return {
         status: "Pending",
         color: "accentText",
@@ -525,7 +626,7 @@ function getBuyWithFiatStatusMeta(
     case "CRYPTO_SWAP_FAILED":
     case "CRYPTO_SWAP_REQUIRED": {
       return {
-        status: "Incomplete",
+        status: "Action Required",
         color: "accentText",
       };
     }

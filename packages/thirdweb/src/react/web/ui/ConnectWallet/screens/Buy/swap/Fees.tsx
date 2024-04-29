@@ -60,12 +60,18 @@ export function FiatFees(props: {
         const feeAmount = formatNumber(Number(fee.amount), 4);
 
         return (
-          // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-          <Text color="primaryText" size="sm" key={i}>
-            {feeAmount === 0 ? "~" : ""}
-            {feeAmount} {fee.currencySymbol}{" "}
-            {fee.feeType === "NETWORK" ? "(Gas)" : ""}
-          </Text>
+          // biome-ignore lint/suspicious/noArrayIndexKey: index is ok
+          <div key={i}>
+            <Text color="primaryText" inline>
+              {feeAmount === 0 ? "~" : ""}
+              {feeAmount} {fee.currencySymbol}{" "}
+            </Text>
+            {fee.feeType === "NETWORK" ? (
+              <Text inline color="secondaryText" size="sm">
+                (Network Fees)
+              </Text>
+            ) : null}
+          </div>
         );
       })}
     </Container>

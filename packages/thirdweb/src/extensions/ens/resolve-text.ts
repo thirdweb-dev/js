@@ -26,7 +26,7 @@ export type ResolveTextOptions = {
  * @param options - The options for resolving an ENS address.
  * @example
  * ```ts
- * import { resolveText } from "thirdweb/ens";
+ * import { resolveText } from "thirdweb/extensions/ens";
  * const twitterUsername = await resolveText({
  *    client,
  *    name: "vitalik.eth",

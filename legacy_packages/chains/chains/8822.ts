@@ -5,7 +5,7 @@ export default {
   "explorers": [
     {
       "name": "explorer",
-      "url": "https://iota-evm.blockscout.com",
+      "url": "https://explorer.evm.iota.org",
       "standard": "EIP3091",
       "icon": {
         "url": "ipfs://bafkreibky2sy6qhi6arktayvologkrgu5kudpgdxfkx4uosbvmstz7v4di",
@@ -32,7 +32,8 @@ export default {
   "networkId": 8822,
   "rpc": [
     "https://8822.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://json-rpc.evm.iotaledger.net"
+    "https://json-rpc.evm.iotaledger.net",
+    "https://ws.json-rpc.evm.iotaledger.net"
   ],
   "shortName": "iotaevm",
   "slug": "iota-evm",

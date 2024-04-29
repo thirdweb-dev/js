@@ -1,4 +1,5 @@
 import { useState } from "react";
+import type { GaslessOptions } from "../../../../transaction/actions/gasless/types.js";
 import {
   type WaitForReceiptOptions,
   waitForReceipt as doWaitForReceipt,
@@ -58,6 +59,17 @@ export type TransactionButtonProps = {
    * The `React.ReactNode` to be rendered inside the button
    */
   children: React.ReactNode;
+
+  /**
+   * Configuration for gasless transactions.
+   * Refer to [`GaslessOptions`](https://portal.thirdweb.com/references/typescript/v5/GaslessOptions) for more details.
+   */
+  gasless?: GaslessOptions;
+
+  /**
+   * The button's disabled state
+   */
+  disabled?: boolean;
 };
 
 /**
@@ -85,20 +97,22 @@ export function TransactionButton(props: TransactionButtonProps) {
     onTransactionConfirmed,
     onError,
     onClick,
+    gasless,
+    disabled,
     ...buttonProps
   } = props;
   const account = useActiveAccount();
   const wallet = useActiveWallet();
   const [isPending, setIsPending] = useState(false);
 
-  const sendTransaction = useSendTransactionCore();
+  const sendTransaction = useSendTransactionCore(undefined, gasless);
 
   if (!isPending) {
     return (
       <Button
         gap="xs"
         {...buttonProps}
-        disabled={!account}
+        disabled={!account || disabled}
         variant={"primary"}
         data-is-loading={isPending}
         onClick={async (e) => {
@@ -133,7 +147,7 @@ export function TransactionButton(props: TransactionButtonProps) {
         }}
         style={{
           ...buttonProps.style,
-          opacity: !account ? 0.5 : 1,
+          opacity: !account || disabled ? 0.5 : 1,
         }}
       >
         {children}

@@ -1,5 +1,7 @@
 import { CheckCircledIcon } from "@radix-ui/react-icons";
+import { useEffect, useState } from "react";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
+import { isMobile } from "../../../../../../../utils/web/isMobile.js";
 import { useBuyWithFiatStatus } from "../../../../../../core/hooks/pay/useBuyWithFiatStatus.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
@@ -8,11 +10,13 @@ import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { iconSize } from "../../../../design-system/index.js";
 import { AccentFailIcon } from "../../../icons/AccentFailIcon.js";
+import { PostOnRampSwap } from "./PostOnRampSwap.js";
 
 export function FiatStatusScreen(props: {
   client: ThirdwebClient;
   onBack: () => void;
   intentId: string;
+  onViewPendingTx: () => void;
 }) {
   const statusQuery = useBuyWithFiatStatus({
     intentId: props.intentId,
@@ -23,13 +27,33 @@ export function FiatStatusScreen(props: {
     statusQuery.data?.status === "ON_RAMP_TRANSFER_FAILED" ||
     statusQuery.data?.status === "PAYMENT_FAILED";
 
-  const isCompleted =
-    statusQuery.data?.status === "ON_RAMP_TRANSFER_COMPLETED" ||
-    statusQuery.data?.status === "CRYPTO_SWAP_COMPLETED";
+  // if no swap required - show success screen
+  const isCompleted = statusQuery.data?.status === "ON_RAMP_TRANSFER_COMPLETED";
 
   const isLoading = statusQuery.isLoading || (!isFailed && !isCompleted);
 
-  // TODO: show action required
+  // use state instead of directly using statusQuery.data to ensure if status changes it does not unmount the component
+  const [showPostOnRampSwap, setShowPostOnRampSwap] = useState(false);
+
+  useEffect(() => {
+    if (
+      statusQuery.data &&
+      statusQuery.data.status === "CRYPTO_SWAP_REQUIRED"
+    ) {
+      setShowPostOnRampSwap(true);
+    }
+  }, [statusQuery.data]);
+
+  if (showPostOnRampSwap && statusQuery.data) {
+    return (
+      <PostOnRampSwap
+        buyWithFiatStatus={statusQuery.data}
+        client={props.client}
+        onBack={props.onBack}
+        onViewPendingTx={props.onViewPendingTx}
+      />
+    );
+  }
 
   return (
     <Container p="lg">
@@ -46,6 +70,8 @@ export function FiatStatusScreen(props: {
           <Text color="primaryText" size="lg" center>
             Buy Pending
           </Text>
+          <Spacer y="lg" />
+          {!isMobile() && <Text center>Complete the purchase in popup</Text>}
         </>
       )}
 
@@ -56,7 +82,7 @@ export function FiatStatusScreen(props: {
           </Container>
           <Spacer y="xl" />
           <Text color="primaryText" size="lg" center>
-            Buy Failed
+            Transaction Failed
           </Text>
         </>
       )}

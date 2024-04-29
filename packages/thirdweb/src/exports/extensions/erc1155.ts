@@ -74,28 +74,11 @@ export {
 } from "../../extensions/erc1155/__generated__/INFTMetadata/write/setTokenURI.js";
 export { freezeMetadata } from "../../extensions/erc1155/__generated__/INFTMetadata/write/freezeMetadata.js";
 
-// EVENTS
-
-export {
-  transferSingleEvent,
-  type TransferSingleEventFilters,
-} from "../../extensions/erc1155/__generated__/IERC1155/events/TransferSingle.js";
-export {
-  transferBatchEvent,
-  type TransferBatchEventFilters,
-} from "../../extensions/erc1155/__generated__/IERC1155/events/TransferBatch.js";
-export {
-  approvalForAllEvent,
-  type ApprovalForAllEventFilters,
-} from "../../extensions/erc1155/__generated__/IERC1155/events/ApprovalForAll.js";
-export { metadataUpdateEvent } from "../../extensions/erc1155/__generated__/INFTMetadata/events/MetadataUpdate.js";
-export { metadataFrozenEvent } from "../../extensions/erc1155/__generated__/INFTMetadata/events/MetadataFrozen.js";
-export { batchMetadataUpdateEvent } from "../../extensions/erc1155/__generated__/INFTMetadata/events/BatchMetadataUpdate.js";
-
 /**
  * DROPS extension for ERC1155
  */
 export { getActiveClaimCondition } from "../../extensions/erc1155/drops/read/getActiveClaimCondition.js";
+export { claimCondition } from "../../extensions/erc1155/__generated__/DropSinglePhase1155/read/claimCondition.js";
 export {
   claimTo,
   type ClaimToParams,
@@ -123,3 +106,22 @@ export {
 // EVENTS
 export { tokensLazyMintedEvent } from "../../extensions/erc1155/__generated__/ILazyMint/events/TokensLazyMinted.js";
 export { tokensClaimedEvent } from "../../extensions/erc1155/__generated__/IDrop1155/events/TokensClaimed.js";
+export {
+  transferSingleEvent,
+  type TransferSingleEventFilters,
+} from "../../extensions/erc1155/__generated__/IERC1155/events/TransferSingle.js";
+export {
+  transferBatchEvent,
+  type TransferBatchEventFilters,
+} from "../../extensions/erc1155/__generated__/IERC1155/events/TransferBatch.js";
+export {
+  approvalForAllEvent,
+  type ApprovalForAllEventFilters,
+} from "../../extensions/erc1155/__generated__/IERC1155/events/ApprovalForAll.js";
+export { metadataUpdateEvent } from "../../extensions/erc1155/__generated__/INFTMetadata/events/MetadataUpdate.js";
+export { metadataFrozenEvent } from "../../extensions/erc1155/__generated__/INFTMetadata/events/MetadataFrozen.js";
+export { batchMetadataUpdateEvent } from "../../extensions/erc1155/__generated__/INFTMetadata/events/BatchMetadataUpdate.js";
+export {
+  tokensMintedWithSignatureEvent,
+  type TokensMintedWithSignatureEventFilters,
+} from "../../extensions/erc1155/__generated__/ISignatureMintERC1155/events/TokensMintedWithSignature.js";

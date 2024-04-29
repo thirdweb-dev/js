@@ -19,7 +19,7 @@ export type AddAdminOptions = {
  * @param options - The options for the addAdmin function.
  * @returns The transaction object to be sent.
  * @example
- * ```
+ * ```ts
  * import { addAdmin } from 'thirdweb/extensions/erc4337';
  *
  * const transaction = addAdmin({

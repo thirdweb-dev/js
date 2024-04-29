@@ -80,21 +80,10 @@ export {
 } from "../../extensions/erc721/__generated__/INFTMetadata/write/setTokenURI.js";
 
 /**
- * EVENTS extension for ERC721
- */
-export {
-  transferEvent,
-  type TransferEventFilters,
-} from "../../extensions/erc721/__generated__/IERC721A/events/Transfer.js";
-export {
-  tokensLazyMintedEvent,
-  type TokensLazyMintedEventFilters,
-} from "../../extensions/erc721/__generated__/ILazyMint/events/TokensLazyMinted.js";
-
-/**
  * DROPS extension for ERC721
  */
 export { getClaimConditionById } from "../../extensions/erc721/__generated__/IDrop/read/getClaimConditionById.js";
+export { claimCondition } from "../../extensions/erc721/__generated__/DropSinglePhase/read/claimCondition.js";
 export { getActiveClaimCondition } from "../../extensions/erc721/drops/read/getActiveClaimCondition.js";
 export {
   claimTo,
@@ -126,3 +115,37 @@ export {
   setSharedMetadata,
   type SetSharedMetadataParams,
 } from "../../extensions/erc721/write/setSharedMetadata.js";
+
+/**
+ * EVENTS extension for ERC721
+ */
+export {
+  transferEvent,
+  type TransferEventFilters,
+} from "../../extensions/erc721/__generated__/IERC721A/events/Transfer.js";
+export {
+  tokensLazyMintedEvent,
+  type TokensLazyMintedEventFilters,
+} from "../../extensions/erc721/__generated__/ILazyMint/events/TokensLazyMinted.js";
+export {
+  approvalEvent,
+  type ApprovalEventFilters,
+} from "../../extensions/erc721/__generated__/IERC721A/events/Approval.js";
+export {
+  approvalForAllEvent,
+  type ApprovalForAllEventFilters,
+} from "../../extensions/erc721/__generated__/IERC721A/events/ApprovalForAll.js";
+export {
+  tokensMintedWithSignatureEvent,
+  type TokensMintedWithSignatureEventFilters,
+} from "../../extensions/erc721/__generated__/ISignatureMintERC721/events/TokensMintedWithSignature.js";
+export { claimConditionsUpdatedEvent } from "../../extensions/erc721/__generated__/IDrop/events/ClaimConditionsUpdated.js";
+export {
+  tokensClaimedEvent,
+  type TokensClaimedEventFilters,
+} from "../../extensions/erc721/__generated__/IDrop/events/TokensClaimed.js";
+export { sharedMetadataUpdatedEvent } from "../../extensions/erc721/__generated__/ISharedMetadata/events/SharedMetadataUpdated.js";
+export {
+  tokenURIRevealedEvent,
+  type TokenURIRevealedEventFilters,
+} from "../../extensions/erc721/__generated__/IDelayedReveal/events/TokenURIRevealed.js";

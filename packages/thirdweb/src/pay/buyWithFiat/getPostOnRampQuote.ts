@@ -1,12 +1,9 @@
 import type { ThirdwebClient } from "../../client/client.js";
 import {
-  getBuyWithCryptoQuote,
   type BuyWithCryptoQuote,
+  getBuyWithCryptoQuote,
 } from "../buyWithCrypto/getQuote.js";
-import {
-  BuyWithFiatTransactionStatus,
-  type BuyWithFiatStatus,
-} from "./getStatus.js";
+import type { BuyWithFiatStatus } from "./getStatus.js";
 
 /**
  * The parameters for [`getPostOnRampQuote`](https://portal.thirdweb.com/references/typescript/v5/getPostOnRampQuote) function
@@ -62,10 +59,7 @@ export async function getPostOnRampQuote({
     return null;
   }
 
-  if (
-    buyWithFiatStatus.status ===
-    BuyWithFiatTransactionStatus.CRYPTO_SWAP_REQUIRED
-  ) {
+  if (buyWithFiatStatus.status === "CRYPTO_SWAP_REQUIRED") {
     return getBuyWithCryptoQuote({
       client,
       fromAddress: buyWithFiatStatus.toAddress,

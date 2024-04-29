@@ -1,18 +1,17 @@
-import { CheckCircledIcon, CrossCircledIcon } from "@radix-ui/react-icons";
+import { CrossCircledIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
+import {
+  useActiveWalletChain,
+  useSwitchActiveWalletChain,
+} from "../../../../../../../exports/react-native.js";
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
 import { waitForReceipt } from "../../../../../../../transaction/actions/wait-for-tx-receipt.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
-import type { Account } from "../../../../../../../wallets/interfaces/wallet.js";
 import { useSendTransactionCore } from "../../../../../../core/hooks/contract/useSendTransaction.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
-import {
-  type BuyWithCryptoStatusQueryParams,
-  useBuyWithCryptoStatus,
-} from "../../../../../../core/hooks/pay/useBuyWithCryptoStatus.js";
-import { shortenString } from "../../../../../../core/utils/addresses.js";
+import type { BuyWithCryptoStatusQueryParams } from "../../../../../../core/hooks/pay/useBuyWithCryptoStatus.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
@@ -23,8 +22,7 @@ import { Text } from "../../../../components/text.js";
 import { useCustomTheme } from "../../../../design-system/CustomThemeProvider.js";
 import { StyledDiv } from "../../../../design-system/elements.js";
 import { fontSize, iconSize } from "../../../../design-system/index.js";
-import { AccentFailIcon } from "../../../icons/AccentFailIcon.js";
-import { type ERC20OrNativeToken, isNativeToken } from "../../nativeToken.js";
+import type { ERC20OrNativeToken } from "../../nativeToken.js";
 import { Step } from "../Stepper.js";
 import { SwapFees } from "./Fees.js";
 import { formatSeconds } from "./formatSeconds.js";
@@ -34,65 +32,33 @@ import { addPendingSwapTransaction } from "./pendingSwapTx.js";
  * @internal
  */
 export function SwapConfirmationScreen(props: {
-  onBack: () => void;
-  buyWithCryptoQuote: BuyWithCryptoQuote;
-  fromAmount: string;
-  toAmount: string;
-  fromChain: Chain;
-  toChain: Chain;
-  account: Account;
-  fromToken: ERC20OrNativeToken;
-  toToken: ERC20OrNativeToken;
-  onViewPendingTx: () => void;
   onQuoteFinalized: (quote: BuyWithCryptoQuote) => void;
+  onBack: () => void;
   client: ThirdwebClient;
+  quote: BuyWithCryptoQuote;
+  setSwapTx: (value: BuyWithCryptoStatusQueryParams) => void;
+  onTryAgain: () => void;
+  toChain: Chain;
+  toAmount: string;
+  toTokenSymbol: string;
+  fromChain: Chain;
+  toToken: ERC20OrNativeToken;
+  fromAmount: string;
+  fromToken: ERC20OrNativeToken;
+  fromTokenSymbol: string;
 }) {
   const sendTransactionMutation = useSendTransactionCore();
+  const activeChain = useActiveWalletChain();
+  const [isSwitching, setIsSwitching] = useState(false);
+  const switchActiveWalletChain = useSwitchActiveWalletChain();
 
-  const [swapTx, setSwapTx] = useState<
-    BuyWithCryptoStatusQueryParams | undefined
-  >();
+  const isApprovalRequired = props.quote.approval !== undefined;
+  const initialStep = isApprovalRequired ? "approval" : "swap";
 
-  const isApprovalRequired = props.buyWithCryptoQuote.approval !== undefined;
-
-  const [step, setStep] = useState<"approval" | "swap">(
-    isApprovalRequired ? "approval" : "swap",
-  );
+  const [step, setStep] = useState<"approval" | "swap">(initialStep);
   const [status, setStatus] = useState<
     "pending" | "success" | "error" | "idle"
   >("idle");
-
-  const fromChain = useChainQuery(props.fromChain);
-  const toChain = useChainQuery(props.toChain);
-
-  const fromTokenSymbol = isNativeToken(props.fromToken)
-    ? fromChain.data?.nativeCurrency?.symbol
-    : props.fromToken?.symbol;
-
-  const toTokenSymbol = isNativeToken(props.toToken)
-    ? toChain.data?.nativeCurrency?.symbol
-    : props.toToken?.symbol;
-
-  if (swapTx) {
-    return (
-      <WaitingForConfirmation
-        onBack={() => {
-          props.onBack();
-        }}
-        onViewPendingTx={props.onViewPendingTx}
-        destinationChain={props.toChain}
-        destinationToken={props.toToken}
-        sourceAmount={`${formatNumber(Number(props.fromAmount), 4)} ${
-          fromTokenSymbol || ""
-        }`}
-        destinationAmount={`${formatNumber(Number(props.toAmount), 4)} ${
-          toTokenSymbol || ""
-        }`}
-        swapTx={swapTx}
-        client={props.client}
-      />
-    );
-  }
 
   return (
     <Container p="lg">
@@ -101,20 +67,20 @@ export function SwapConfirmationScreen(props: {
 
       {/* You Receive */}
       <ConfirmItem label="Receive">
-        <TokenInfo
+        <RenderTokenInfo
           chain={props.toChain}
           amount={String(formatNumber(Number(props.toAmount), 4))}
-          symbol={toTokenSymbol || ""}
+          symbol={props.toTokenSymbol}
           token={props.toToken}
           client={props.client}
         />
       </ConfirmItem>
 
       <ConfirmItem label="Pay">
-        <TokenInfo
+        <RenderTokenInfo
           chain={props.fromChain}
           amount={String(formatNumber(Number(props.fromAmount), 4))}
-          symbol={fromTokenSymbol || ""}
+          symbol={props.fromTokenSymbol || ""}
           token={props.fromToken}
           client={props.client}
         />
@@ -122,14 +88,7 @@ export function SwapConfirmationScreen(props: {
 
       {/* Fees  */}
       <ConfirmItem label="Fees">
-        <SwapFees quote={props.buyWithCryptoQuote} align="right" />
-      </ConfirmItem>
-
-      {/* Send to  */}
-      <ConfirmItem label="Send to">
-        <Text color="primaryText">
-          {shortenString(props.account.address, false)}
-        </Text>
+        <SwapFees quote={props.quote} align="right" />
       </ConfirmItem>
 
       {/* Time  */}
@@ -137,12 +96,12 @@ export function SwapConfirmationScreen(props: {
         <Text color="primaryText">
           ~
           {formatSeconds(
-            props.buyWithCryptoQuote.swapDetails.estimated.durationSeconds || 0,
+            props.quote.swapDetails.estimated.durationSeconds || 0,
           )}
         </Text>
       </ConfirmItem>
 
-      <Spacer y="lg" />
+      <Spacer y="xl" />
 
       {/* Show 2 steps  */}
       {isApprovalRequired && (
@@ -171,7 +130,7 @@ export function SwapConfirmationScreen(props: {
 
       {status === "error" && (
         <>
-          <Container flex="row" gap="xs" center="y" color="danger">
+          <Container flex="row" gap="xs" center="both" color="danger">
             <CrossCircledIcon width={iconSize.sm} height={iconSize.sm} />
             <Text color="danger" size="sm">
               {step === "approval" ? "Failed to Approve" : "Failed to Confirm"}
@@ -182,73 +141,99 @@ export function SwapConfirmationScreen(props: {
         </>
       )}
 
-      <Button
-        variant="accent"
-        fullWidth
-        disabled={status === "pending"}
-        onClick={async () => {
-          if (step === "approval" && props.buyWithCryptoQuote.approval) {
+      {activeChain && activeChain.id !== props.fromChain.id ? (
+        <Button
+          fullWidth
+          variant="accent"
+          gap="sm"
+          onClick={async () => {
+            setIsSwitching(true);
             try {
-              setStatus("pending");
+              await switchActiveWalletChain(props.fromChain);
+            } catch {}
+            setIsSwitching(false);
+          }}
+        >
+          {isSwitching ? "Switching" : "Switch Network"}
+          {isSwitching && <Spinner size="sm" color="accentButtonText" />}
+        </Button>
+      ) : (
+        <Button
+          variant="accent"
+          fullWidth
+          disabled={status === "pending"}
+          onClick={async () => {
+            if (step === "approval" && props.quote.approval) {
+              try {
+                setStatus("pending");
 
-              const tx = await sendTransactionMutation.mutateAsync(
-                props.buyWithCryptoQuote.approval,
-              );
+                const tx = await sendTransactionMutation.mutateAsync(
+                  props.quote.approval,
+                );
 
-              await waitForReceipt({ ...tx, maxBlocksWaitTime: 50 });
-              props.onQuoteFinalized(props.buyWithCryptoQuote);
+                await waitForReceipt({ ...tx, maxBlocksWaitTime: 50 });
+                props.onQuoteFinalized(props.quote);
 
-              setStep("swap");
-              setStatus("idle");
-            } catch (e) {
-              console.error(e);
-              setStatus("error");
-            }
-          }
-
-          if (step === "swap") {
-            setStatus("pending");
-            try {
-              const _swapTx = await sendTransactionMutation.mutateAsync(
-                props.buyWithCryptoQuote.transactionRequest,
-              );
-
-              await waitForReceipt({ ..._swapTx, maxBlocksWaitTime: 50 });
-              props.onQuoteFinalized(props.buyWithCryptoQuote);
-
-              // these will be defined by this time
-              if (fromTokenSymbol && toTokenSymbol && fromChain.data) {
-                addPendingSwapTransaction(props.client, {
-                  source: {
-                    symbol: fromTokenSymbol,
-                    value: props.fromAmount,
-                    chainId: props.fromChain.id,
-                  },
-                  destination: {
-                    symbol: toTokenSymbol,
-                    value: props.toAmount,
-                    chainId: props.toChain.id,
-                  },
-                  status: "PENDING",
-                  transactionHash: _swapTx.transactionHash, // ?? _swapTx.userOpHash,
-                });
+                setStep("swap");
+                setStatus("idle");
+              } catch (e) {
+                console.error(e);
+                setStatus("error");
               }
-
-              setSwapTx({
-                transactionHash: _swapTx.transactionHash, // ?? _swapTx.userOpHash,
-                client: props.client,
-              });
-            } catch (e) {
-              console.error(e);
-              setStatus("error");
             }
-          }
-        }}
-        gap="xs"
-      >
-        {step === "approval" ? "Approve" : "Confirm"}
-        {status === "pending" && <Spinner size="sm" color="accentButtonText" />}
-      </Button>
+
+            if (step === "swap") {
+              setStatus("pending");
+              try {
+                const _swapTx = await sendTransactionMutation.mutateAsync(
+                  props.quote.transactionRequest,
+                );
+
+                await waitForReceipt({ ..._swapTx, maxBlocksWaitTime: 50 });
+                props.onQuoteFinalized(props.quote);
+
+                // these will be defined by this time
+                if (
+                  props.fromTokenSymbol &&
+                  props.toTokenSymbol &&
+                  props.fromChain
+                ) {
+                  addPendingSwapTransaction(props.client, {
+                    source: {
+                      symbol: props.fromTokenSymbol,
+                      value: props.fromAmount,
+                      chainId: props.fromChain.id,
+                    },
+                    destination: {
+                      symbol: props.toTokenSymbol,
+                      value: props.toAmount,
+                      chainId: props.toChain.id,
+                    },
+                    status: "PENDING",
+                    transactionHash: _swapTx.transactionHash, // ?? _swapTx.userOpHash,
+                  });
+                }
+
+                props.setSwapTx({
+                  transactionHash: _swapTx.transactionHash, // ?? _swapTx.userOpHash,
+                  client: props.client,
+                });
+              } catch (e) {
+                console.error(e);
+                setStatus("error");
+              }
+            }
+          }}
+          gap="xs"
+        >
+          {step === "approval" &&
+            (status === "pending" ? "Approving" : "Approve")}
+          {step === "swap" && (status === "pending" ? "Confirming" : "Confirm")}
+          {status === "pending" && (
+            <Spinner size="sm" color="accentButtonText" />
+          )}
+        </Button>
+      )}
     </Container>
   );
 }
@@ -262,7 +247,7 @@ const ConnectorLine = /* @__PURE__ */ StyledDiv(() => {
   };
 });
 
-function TokenInfo(props: {
+function RenderTokenInfo(props: {
   chain: Chain;
   token: ERC20OrNativeToken;
   amount: string;
@@ -317,126 +302,5 @@ function ConfirmItem(props: { label: string; children: React.ReactNode }) {
       </Container>
       <Line />
     </>
-  );
-}
-
-function WaitingForConfirmation(props: {
-  onBack: () => void;
-  onViewPendingTx: () => void;
-  swapTx: BuyWithCryptoStatusQueryParams;
-  destinationToken: ERC20OrNativeToken;
-  destinationChain: Chain;
-  sourceAmount: string;
-  destinationAmount: string;
-  client: ThirdwebClient;
-}) {
-  const swapStatus = useBuyWithCryptoStatus(props.swapTx);
-  const isSuccess = swapStatus.data?.status === "COMPLETED";
-  const isFailed = swapStatus.data?.status === "FAILED";
-  // const isPending = !isSuccess && !isFailed;
-
-  return (
-    <Container animate="fadein">
-      <Container p="lg">
-        <ModalHeader title="Buy" onBack={props.onBack} />
-        <Spacer y="sm" />
-
-        <Container
-          flex="column"
-          animate="fadein"
-          center="both"
-          color={isSuccess ? "success" : isFailed ? "danger" : "accentText"}
-        >
-          <Spacer y="xxl" />
-          {/* Icon */}
-          {isSuccess ? (
-            <CheckCircledIcon
-              width={iconSize["4xl"]}
-              height={iconSize["4xl"]}
-            />
-          ) : isFailed ? (
-            <AccentFailIcon size={iconSize["4xl"]} />
-          ) : (
-            <div
-              style={{
-                position: "relative",
-              }}
-            >
-              <Spinner size="4xl" color="accentText" />
-              <div
-                style={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
-                }}
-              >
-                <TokenIcon
-                  chain={props.destinationChain}
-                  token={props.destinationToken}
-                  size="xxl"
-                  client={props.client}
-                />
-              </div>
-            </div>
-          )}
-
-          <Spacer y="xxl" />
-
-          <Text color={"primaryText"} size="lg">
-            {isSuccess
-              ? "Buy Success"
-              : isFailed
-                ? "Transaction Failed"
-                : "Buy Pending"}
-          </Text>
-
-          {/* Token info */}
-          {!isFailed && (
-            <>
-              <Spacer y="lg" />
-              <div>
-                <Text size="md" inline>
-                  {" "}
-                  {isSuccess ? "Bought" : "Buy"}{" "}
-                </Text>
-                <Text size="md" color="primaryText" inline>
-                  {props.destinationAmount}
-                </Text>
-
-                <Text size="md" inline>
-                  {" "}
-                  for{" "}
-                </Text>
-                <Text size="md" color="primaryText" inline>
-                  {props.sourceAmount}
-                </Text>
-              </div>
-            </>
-          )}
-
-          {isFailed && (
-            <>
-              <Spacer y="md" />
-              <Text size="sm">Your transaction {`couldn't`} be processed</Text>
-            </>
-          )}
-        </Container>
-
-        <Spacer y="xl" />
-
-        {!isFailed && (
-          <Button variant="accent" fullWidth onClick={props.onViewPendingTx}>
-            View Transactions
-          </Button>
-        )}
-
-        {isFailed && (
-          <Button variant="accent" fullWidth onClick={props.onBack}>
-            Try Again
-          </Button>
-        )}
-      </Container>
-    </Container>
   );
 }

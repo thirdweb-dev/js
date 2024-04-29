@@ -47,4 +47,9 @@ export default {
     submitButton: "確認",
     wrongPassword: "パスワードが違います",
   },
+  invalidPhone: "無効な電話番号",
+  signInWithEmail: "電子メールでサインインする",
+  phonePlaceholder: "電話番号を入力してください",
+  signInWithPhone: "電話番号でログイン",
+  phoneRequired: "電話番号が必要です",
 } satisfies InAppWalletLocale;

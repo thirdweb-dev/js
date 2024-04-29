@@ -1,11 +1,9 @@
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { createWallet } from "../../../../../wallets/create-wallet.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../../wallets/smart/types.js";
-import { asyncLocalStorage } from "../../../../../wallets/storage/asyncLocalStorage.js";
-import { saveConnectParamsToStorage } from "../../../../../wallets/storage/walletStorage.js";
 import type { WalletInfo } from "../../../../../wallets/wallet-info.js";
+import { connectionManager } from "../../../../core/connectionManager.js";
 import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
 import { getSmartWalletLocale } from "../../../wallets/smartWallet/locale/getSmartWalletLocale.js";
@@ -107,31 +105,24 @@ function SmartWalletConnecting(props: {
     if (!personalWallet) {
       throw new Error("No personal wallet");
     }
-    const personalAccount = personalWallet.getAccount();
-    if (!personalAccount) {
-      throw new Error("No personal account");
-    }
 
     setSmartWalletConnectionStatus("connecting");
 
     try {
-      const smartWallet = createWallet("smart", props.accountAbstraction);
-      await smartWallet.connect({
-        personalAccount,
-        client,
-      });
-
-      saveConnectParamsToStorage(asyncLocalStorage, "accountAbstraction", {
-        personalWalletId: personalWallet.id,
-      });
-
-      done(smartWallet);
+      const connected = await connectionManager.handleConnection(
+        personalWallet,
+        {
+          accountAbstraction: props.accountAbstraction,
+          client,
+        },
+      );
+      done(connected);
       setSmartWalletConnectionStatus("idle");
     } catch (e) {
       console.error(e);
       setSmartWalletConnectionStatus("connect-error");
     }
-  }, [client, done, personalWallet, props.accountAbstraction]);
+  }, [done, personalWallet, client, props.accountAbstraction]);
 
   const connectStarted = useRef(false);
   useEffect(() => {

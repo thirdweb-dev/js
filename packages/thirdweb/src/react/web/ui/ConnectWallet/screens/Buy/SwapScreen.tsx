@@ -6,6 +6,7 @@ import type { ThirdwebClient } from "../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../constants/addresses.js";
 import type { BuyWithFiatQuote } from "../../../../../../exports/pay.js";
 import type { BuyWithCryptoQuote } from "../../../../../../pay/buyWithCrypto/getQuote.js";
+import { isSwapRequiredPostOnramp } from "../../../../../../pay/buyWithFiat/isSwapRequiredPostOnramp.js";
 import type { PreparedTransaction } from "../../../../../../transaction/prepare-transaction.js";
 import { formatNumber } from "../../../../../../utils/formatNumber.js";
 import { toEther } from "../../../../../../utils/units.js";
@@ -56,21 +57,20 @@ import {
   NATIVE_TOKEN,
   isNativeToken,
 } from "../nativeToken.js";
-import { KadoScreen } from "./KadoScreen.js";
 import { PayWithCreditCard } from "./PayWIthCreditCard.js";
 import { PaymentSelection } from "./PaymentSelection.js";
 import { FeesButton } from "./buttons.js";
 import { CurrencySelection } from "./fiat/CurrencySelection.js";
-import { FiatConfirmation } from "./fiat/FiatConfirmation.js";
-import { FiatStatusScreen } from "./fiat/FiatStatusScreen.js";
+import { FiatFlow } from "./fiat/FiatFlow.js";
 import {
   type CurrencyMeta,
   defaultSelectedCurrency,
 } from "./fiat/currencies.js";
+import { openOnrampPopup } from "./openOnRamppopup.js";
 import { BuyTokenInput } from "./swap/BuyTokenInput.js";
-import { SwapConfirmationScreen } from "./swap/ConfirmationScreen.js";
 import { FiatFees, SwapFees } from "./swap/Fees.js";
 import { PayWithCrypto } from "./swap/PayWithCrypto.js";
+import { SwapFlow } from "./swap/SwapFlow.js";
 import { formatSeconds } from "./swap/formatSeconds.js";
 import { useBuySupportedChains } from "./swap/useSwapSupportedChains.js";
 
@@ -122,11 +122,9 @@ type Screen =
   | "main"
   | "select-from-token"
   | "select-to-token"
-  | "fiat-status"
-  | "confirmation"
-  | "fiat-confirmation"
-  | "select-currency"
-  | "kado-iframe";
+  | "swap-flow"
+  | "fiat-flow"
+  | "select-currency";
 type DrawerScreen = "fees" | undefined;
 
 /**
@@ -151,7 +149,7 @@ export function BuyScreenContent(props: {
     props;
   const [isSwitching, setIsSwitching] = useState(false);
   const switchActiveWalletChain = useSwitchActiveWalletChain();
-  const [method, setMethod] = useState<"crypto" | "creditCard">("crypto");
+  const [method, setMethod] = useState<"crypto" | "creditCard">("creditCard");
 
   // prefetch chains metadata
   useChainsQuery(supportedChains || [], 50);
@@ -311,7 +309,7 @@ export function BuyScreenContent(props: {
   >();
 
   const fiatQuoteQuery = useBuyWithFiatQuote(
-    method === "creditCard" && !confirmedFiatQuote
+    method === "creditCard" && !confirmedFiatQuote && deferredTokenAmount
       ? {
           fromCurrencySymbol: selectedCurrency.shorthand,
           toChainId: toChain.id,
@@ -325,16 +323,6 @@ export function BuyScreenContent(props: {
         }
       : undefined,
   );
-
-  if (screen === "fiat-status" && confirmedFiatQuote) {
-    return (
-      <FiatStatusScreen
-        client={client}
-        onBack={props.onBack}
-        intentId={confirmedFiatQuote.intentId}
-      />
-    );
-  }
 
   if (screen === "select-currency") {
     return (
@@ -350,40 +338,18 @@ export function BuyScreenContent(props: {
     );
   }
 
-  if (screen === "kado-iframe" && confirmedFiatQuote) {
+  if (screen === "fiat-flow" && confirmedFiatQuote) {
     return (
-      <KadoScreen
+      <FiatFlow
         quote={confirmedFiatQuote}
         onBack={() => {
           setConfirmedFiatQuote(undefined);
           setScreen("main");
         }}
-        testMode={props.fiatTestMode}
-        onComplete={() => {
-          setScreen("fiat-status");
-        }}
-        theme={props.theme}
-      />
-    );
-  }
-
-  if (screen === "fiat-confirmation" && confirmedFiatQuote) {
-    return (
-      <FiatConfirmation
-        quote={confirmedFiatQuote}
-        onBack={() => {
-          setConfirmedFiatQuote(undefined);
-          setScreen("main");
-        }}
-        step={1}
-        toChain={toChain}
-        toToken={toToken}
-        toTokenAmount={deferredTokenAmount}
         client={client}
-        onContinue={() => {
-          setScreen("kado-iframe");
-        }}
-        currency={selectedCurrency}
+        testMode={props.fiatTestMode || false}
+        theme={props.theme}
+        onViewPendingTx={props.onViewPendingTx}
       />
     );
   }
@@ -453,9 +419,9 @@ export function BuyScreenContent(props: {
   const sourceTokenAmount = swapQuote?.swapDetails.fromAmount || "";
   const quoteToConfirm = finalizedQuote || buyWithCryptoQuoteQuery.data;
 
-  if (screen === "confirmation" && quoteToConfirm) {
+  if (screen === "swap-flow" && quoteToConfirm) {
     return (
-      <SwapConfirmationScreen
+      <SwapFlow
         client={client}
         onBack={() => {
           // remove finalized quote when going back
@@ -467,13 +433,7 @@ export function BuyScreenContent(props: {
         onQuoteFinalized={(_quote) => {
           setFinalizedQuote(_quote);
         }}
-        fromAmount={quoteToConfirm.swapDetails.fromAmount}
-        toAmount={tokenAmount}
-        fromChain={fromChain}
-        toChain={toChain}
         account={account}
-        fromToken={fromToken}
-        toToken={toToken}
         onViewPendingTx={props.onViewPendingTx}
       />
     );
@@ -626,7 +586,7 @@ export function BuyScreenContent(props: {
                         .durationSeconds
                     }
                     onViewFees={() => {
-                      if (fiatQuoteQuery.data) {
+                      if (buyWithCryptoQuoteQuery.data) {
                         setDrawerScreen("fees");
                       }
                     }}
@@ -648,7 +608,11 @@ export function BuyScreenContent(props: {
                     estimatedSeconds={
                       fiatQuoteQuery.data?.estimatedDurationSeconds
                     }
-                    onViewFees={() => setDrawerScreen("fees")}
+                    onViewFees={() => {
+                      if (fiatQuoteQuery.data) {
+                        setDrawerScreen("fees");
+                      }
+                    }}
                   />
                 </>
               )}
@@ -698,10 +662,10 @@ export function BuyScreenContent(props: {
                 >
                   {!isMiniScreen ? (
                     <>
+                      {isSwitching ? "Switching" : "Switch Network"}
                       {isSwitching && (
                         <Spinner size="sm" color="accentButtonText" />
                       )}
-                      {isSwitching ? "Switching" : "Switch Network"}
                     </>
                   ) : (
                     "Continue"
@@ -717,7 +681,7 @@ export function BuyScreenContent(props: {
                   disabled={disableSwapContinue}
                   onClick={async () => {
                     if (!disableSwapContinue) {
-                      setScreen("confirmation");
+                      setScreen("swap-flow");
                     }
                   }}
                   gap="sm"
@@ -734,13 +698,18 @@ export function BuyScreenContent(props: {
               data-disabled={disableCreditCardContinue}
               fullWidth
               onClick={async () => {
-                // save the current quote
-                setConfirmedFiatQuote(fiatQuoteQuery.data);
-
-                if (isNativeToken(toToken)) {
-                  setScreen("kado-iframe");
-                } else {
-                  setScreen("fiat-confirmation");
+                if (fiatQuoteQuery.data) {
+                  setConfirmedFiatQuote(fiatQuoteQuery.data);
+                  const hasTwoSteps = isSwapRequiredPostOnramp(
+                    fiatQuoteQuery.data,
+                  );
+                  if (!hasTwoSteps) {
+                    openOnrampPopup(
+                      fiatQuoteQuery.data.onRampLink,
+                      props.theme,
+                    );
+                  }
+                  setScreen("fiat-flow");
                 }
               }}
               gap="sm"

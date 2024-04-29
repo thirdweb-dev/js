@@ -6,7 +6,7 @@ let storage: AsyncStorage;
 /**
  * Gets the storage to be used in react.
  * @example
- * ```
+ * ```ts
  * const storage = getStorage();
  * ```
  * @returns The storage to use
@@ -22,7 +22,7 @@ export function getStorage(): AsyncStorage {
 /**
  * Sets the storage to be used in react.
  * @example
- * ```
+ * ```ts
  * setStorage(storage);
  * ```
  * @param _storage - The storage to use

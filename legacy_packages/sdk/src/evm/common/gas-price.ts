@@ -11,6 +11,8 @@ import {
   BaseSepoliaTestnet,
   Zora,
   ZoraSepoliaTestnet,
+  Celo,
+  CeloAlfajoresTestnet,
 } from "@thirdweb-dev/chains";
 
 type FeeData = {
@@ -134,7 +136,9 @@ function isOpStackChain(chainId: number) {
     chainId === Base.chainId ||
     chainId === BaseSepoliaTestnet.chainId ||
     chainId === Zora.chainId ||
-    chainId === ZoraSepoliaTestnet.chainId
+    chainId === ZoraSepoliaTestnet.chainId ||
+    chainId === Celo.chainId ||
+    chainId === CeloAlfajoresTestnet.chainId
   );
 }
 
