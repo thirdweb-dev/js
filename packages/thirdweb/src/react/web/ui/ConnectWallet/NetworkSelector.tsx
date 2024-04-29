@@ -147,6 +147,7 @@ function useLoadChains(
 ): ChainData {
   // load all chains with react query
   const chainsQueries = useChainsQuery(allChainsInput, 50);
+
   const isLoading = chainsQueries.some((q) => q.isLoading);
 
   const { allChains, chainsMap } = useMemo(() => {
@@ -158,9 +159,11 @@ function useLoadChains(
     }
 
     for (const chainQuery of chainsQueries) {
-      _chains.push({
-        ...chainQuery.data,
-      } as ChainMetadata);
+      if (chainQuery.data) {
+        _chains.push({
+          ...chainQuery.data,
+        } as ChainMetadata);
+      }
     }
 
     for (const chain of _chains) {
