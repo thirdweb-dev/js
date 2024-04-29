@@ -1123,8 +1123,8 @@ importers:
         specifier: ^5.7.0
         version: 5.7.0
       '@walletconnect/react-native-compat':
-        specifier: 2.12.1
-        version: 2.12.1(@react-native-async-storage/async-storage@1.23.1)(@react-native-community/netinfo@11.3.1)(react-native-get-random-values@1.11.0)(react-native@0.71.17)
+        specifier: 2.12.2
+        version: 2.12.2(@react-native-async-storage/async-storage@1.23.1)(@react-native-community/netinfo@11.3.1)(react-native-get-random-values@1.11.0)(react-native@0.71.17)
       base-64:
         specifier: ^1.0.0
         version: 1.0.0
@@ -12564,8 +12564,8 @@ packages:
       - react
     dev: false
 
-  /@walletconnect/react-native-compat@2.12.1(@react-native-async-storage/async-storage@1.23.1)(@react-native-community/netinfo@11.3.1)(react-native-get-random-values@1.11.0)(react-native@0.71.17):
-    resolution: {integrity: sha512-my4bUA9E+4Lytr+NiSft5hAxYM/5k03Gxix214ScQ3FV+yFZccMRtvRgby94XuEN1U6CS9Htm/FpZQtziCrawA==}
+  /@walletconnect/react-native-compat@2.12.2(@react-native-async-storage/async-storage@1.23.1)(@react-native-community/netinfo@11.3.1)(react-native-get-random-values@1.11.0)(react-native@0.71.17):
+    resolution: {integrity: sha512-NChpoZwftMDSy6xH0hc1d2eCvlm0Tx8BQSMtHKFaOpbxxreB90UDmbubqNIPywAGinM/1isgen0i0yvLpHRLRg==}
     peerDependencies:
       '@react-native-async-storage/async-storage': '*'
       '@react-native-community/netinfo': '*'
