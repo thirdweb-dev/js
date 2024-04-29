@@ -205,9 +205,15 @@ export function AutoConnect(props: AutoConnectProps) {
             message: `AutoConnect timeout : ${timeout}ms limit exceeded.`,
           });
 
-          connect(activeWallet);
-          if (onConnect) {
-            onConnect(activeWallet);
+          // connected wallet could be activeWallet or smart wallet
+          const connectedWallet = await connect(activeWallet);
+
+          if (!connectedWallet) {
+            setConnectionStatus("disconnected");
+          }
+
+          if (onConnect && connectedWallet) {
+            onConnect(connectedWallet);
           }
         } catch (e) {
           console.error("Failed to auto connect last active wallet");
