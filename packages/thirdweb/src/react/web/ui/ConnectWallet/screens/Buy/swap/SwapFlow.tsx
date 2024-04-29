@@ -18,6 +18,7 @@ type SwapFlowProps = {
   onViewPendingTx: () => void;
   onQuoteFinalized: (quote: BuyWithCryptoQuote) => void;
   client: ThirdwebClient;
+  isFiatFlow: boolean;
 };
 
 export function SwapFlow(props: SwapFlowProps) {
@@ -112,6 +113,7 @@ export function SwapFlow(props: SwapFlowProps) {
       onQuoteFinalized={props.onQuoteFinalized}
       onTryAgain={props.onBack}
       quote={quote}
+      isFiatFlow={props.isFiatFlow}
     />
   );
 }

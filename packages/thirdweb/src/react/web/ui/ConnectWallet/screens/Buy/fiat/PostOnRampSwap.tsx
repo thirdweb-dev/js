@@ -5,8 +5,9 @@ import {
   getPostOnRampQuote,
 } from "../../../../../../../exports/pay.js";
 import { useActiveAccount } from "../../../../../../../exports/react-native.js";
-import { LoadingScreen } from "../../../../../wallets/shared/LoadingScreen.js";
 import { Spacer } from "../../../../components/Spacer.js";
+import { Spinner } from "../../../../components/Spinner.js";
+import { StepBar } from "../../../../components/StepBar.js";
 import { Container, ModalHeader } from "../../../../components/basic.js";
 import { Text } from "../../../../components/text.js";
 import { iconSize } from "../../../../design-system/index.js";
@@ -31,7 +32,30 @@ export function PostOnRampSwap(props: {
   });
 
   if (!postOnRampQuoteQuery.data || !account) {
-    return <LoadingScreen />;
+    return (
+      <Container fullHeight>
+        <Container p="lg">
+          <ModalHeader title="Buy" onBack={props.onBack} />
+        </Container>
+
+        <Container px="lg">
+          <StepBar steps={2} currentStep={2} />
+          <Spacer y="xs" />
+          <Text size="xs">Step 1/2</Text>
+        </Container>
+
+        <Container
+          style={{
+            minHeight: "300px",
+          }}
+          fullHeight
+          flex="row"
+          center="both"
+        >
+          <Spinner size="xl" color="accentText" />
+        </Container>
+      </Container>
+    );
   }
 
   if (postOnRampQuoteQuery.data === null) {
@@ -59,6 +83,7 @@ export function PostOnRampSwap(props: {
       onQuoteFinalized={() => {}}
       onBack={props.onBack}
       onViewPendingTx={props.onViewPendingTx}
+      isFiatFlow={true}
     />
   );
 }

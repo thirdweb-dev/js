@@ -463,6 +463,7 @@ export function BuyScreenContent(props: {
         }}
         account={account}
         onViewPendingTx={props.onViewPendingTx}
+        isFiatFlow={false}
       />
     );
   }

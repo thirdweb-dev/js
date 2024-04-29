@@ -5,6 +5,7 @@ import { isMobile } from "../../../../../../../utils/web/isMobile.js";
 import { useBuyWithFiatStatus } from "../../../../../../core/hooks/pay/useBuyWithFiatStatus.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
+import { StepBar } from "../../../../components/StepBar.js";
 import { Container, ModalHeader } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
@@ -35,6 +36,11 @@ export function FiatStatusScreen(props: {
   // use state instead of directly using statusQuery.data to ensure if status changes it does not unmount the component
   const [showPostOnRampSwap, setShowPostOnRampSwap] = useState(false);
 
+  const isStep2 =
+    statusQuery.data?.status === "CRYPTO_SWAP_REQUIRED" ||
+    statusQuery.data?.status === "CRYPTO_SWAP_FAILED" ||
+    statusQuery.data?.status === "CRYPTO_SWAP_IN_PROGRESS";
+
   useEffect(() => {
     if (
       statusQuery.data &&
@@ -58,6 +64,12 @@ export function FiatStatusScreen(props: {
   return (
     <Container p="lg">
       <ModalHeader title="Buy" onBack={props.onBack} />
+
+      <Spacer y="sm" />
+      <StepBar steps={2} currentStep={isStep2 ? 2 : 1} />
+      <Spacer y="xs" />
+      <Text size="xs">Step ${isStep2 ? 2 : 1}/2</Text>
+
       <Spacer y="xl" />
       <Spacer y="xl" />
 

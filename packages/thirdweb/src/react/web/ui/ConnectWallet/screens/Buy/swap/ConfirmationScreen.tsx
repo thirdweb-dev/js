@@ -15,6 +15,7 @@ import type { BuyWithCryptoStatusQueryParams } from "../../../../../../core/hook
 import { Skeleton } from "../../../../components/Skeleton.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
+import { StepBar } from "../../../../components/StepBar.js";
 import { TokenIcon } from "../../../../components/TokenIcon.js";
 import { Container, Line, ModalHeader } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
@@ -46,6 +47,7 @@ export function SwapConfirmationScreen(props: {
   fromAmount: string;
   fromToken: ERC20OrNativeToken;
   fromTokenSymbol: string;
+  isFiatFlow: boolean;
 }) {
   const sendTransactionMutation = useSendTransactionCore();
   const activeChain = useActiveWalletChain();
@@ -63,7 +65,18 @@ export function SwapConfirmationScreen(props: {
   return (
     <Container p="lg">
       <ModalHeader title="Confirm Buy" onBack={props.onBack} />
-      <Spacer y="lg" />
+
+      {props.isFiatFlow ? (
+        <>
+          <Spacer y="lg" />
+          <StepBar steps={2} currentStep={2} />
+          <Spacer y="xs" />
+          <Text size="xs">Step 2/2</Text>
+          <Spacer y="md" />
+        </>
+      ) : (
+        <Spacer y="lg" />
+      )}
 
       {/* You Receive */}
       <ConfirmItem label="Receive">
@@ -196,7 +209,8 @@ export function SwapConfirmationScreen(props: {
                 if (
                   props.fromTokenSymbol &&
                   props.toTokenSymbol &&
-                  props.fromChain
+                  props.fromChain &&
+                  !props.isFiatFlow
                 ) {
                   addPendingSwapTransaction(props.client, {
                     source: {
