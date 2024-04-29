@@ -208,12 +208,16 @@ export function AutoConnect(props: AutoConnectProps) {
           // connected wallet could be activeWallet or smart wallet
           const connectedWallet = await connect(activeWallet);
 
-          if (!connectedWallet) {
+          if (connectedWallet) {
+            if (onConnect) {
+              try {
+                onConnect(connectedWallet);
+              } catch {
+                // ignore
+              }
+            }
+          } else {
             setConnectionStatus("disconnected");
-          }
-
-          if (onConnect && connectedWallet) {
-            onConnect(connectedWallet);
           }
         } catch (e) {
           console.error("Failed to auto connect last active wallet");
