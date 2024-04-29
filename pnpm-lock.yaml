@@ -980,8 +980,8 @@ importers:
         specifier: ^1.2.5
         version: 1.2.5
       '@shopify/restyle':
-        specifier: ^2.4.2
-        version: 2.4.2(react-native@0.71.17)(react@18.2.0)
+        specifier: ^2.4.4
+        version: 2.4.4(react-native@0.71.17)(react@18.2.0)
       '@tanstack/react-query':
         specifier: ^4.36.1
         version: 4.36.1(react-native@0.71.17)(react@18.2.0)
@@ -10448,8 +10448,8 @@ packages:
       tslib: 1.14.1
     dev: true
 
-  /@shopify/restyle@2.4.2(react-native@0.71.17)(react@18.2.0):
-    resolution: {integrity: sha512-r01j9bbXkhZZkGkLnE6jsJvSCkcjwXBySfe8bQCB7duEfQn36mU6WumNc2pndzXpZhPSevppyXzFZ2jY3XUakw==}
+  /@shopify/restyle@2.4.4(react-native@0.71.17)(react@18.2.0):
+    resolution: {integrity: sha512-Y64T8pCSKZi7ChMMfCfe+EJJsqeF+lNLsxYDHbuU63ffLHN7wRwIALJY6VqzcJWZX3fhCztX7AqOkgc7CetfPg==}
     peerDependencies:
       react: '*'
       react-native: '*'
