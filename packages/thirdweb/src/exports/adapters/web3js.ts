@@ -1,0 +1,1 @@
+export { web3JsAdapter } from "../../adapters/web3js.js";
