@@ -15,6 +15,8 @@ const opChains = [
   zoraSepolia.id,
   34443, // mode
   919, // mode testnet
+  42220, // celo
+  44787, // celo testnet
 ];
 
 /**

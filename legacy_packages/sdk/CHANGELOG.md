@@ -1,5 +1,53 @@
 # @thirdweb-dev/sdk
 
+## 4.0.72
+
+### Patch Changes
+
+- Updated dependencies [[`5a87891`](https://github.com/thirdweb-dev/js/commit/5a87891d16f654b28779e76d23ea335bdb26718d)]:
+  - @thirdweb-dev/chains@0.1.102
+
+## 4.0.71
+
+### Patch Changes
+
+- Updated dependencies [[`03d8d6c`](https://github.com/thirdweb-dev/js/commit/03d8d6c15b02fb6889680484daf40f6189ad6359), [`5b83353`](https://github.com/thirdweb-dev/js/commit/5b833532372dd6e96dd0aeda7a4b190e9f280d4f), [`77c2a8a`](https://github.com/thirdweb-dev/js/commit/77c2a8ae0cdb49091bd961b60ef5c316ccd6e119), [`dbdafa2`](https://github.com/thirdweb-dev/js/commit/dbdafa2b01148b13d05fd75803926d9d37396668), [`56c139c`](https://github.com/thirdweb-dev/js/commit/56c139c5a2c1e702e038a8948fefd647b3695823)]:
+  - thirdweb@5.13.0
+  - @thirdweb-dev/chains@0.1.101
+
+## 4.0.70
+
+### Patch Changes
+
+- [#2848](https://github.com/thirdweb-dev/js/pull/2848) [`41be954`](https://github.com/thirdweb-dev/js/commit/41be954bd0a92d49767d62a6fa02f1ee0effb469) Thanks [@jnsdls](https://github.com/jnsdls)! - add `celo` chains to known `op stack` chains
+
+- Updated dependencies [[`2ae9a13`](https://github.com/thirdweb-dev/js/commit/2ae9a13b01e7a436536b3d412690150f9f960c72), [`41be954`](https://github.com/thirdweb-dev/js/commit/41be954bd0a92d49767d62a6fa02f1ee0effb469), [`637c510`](https://github.com/thirdweb-dev/js/commit/637c510f59c2504bd29cedbdf4bda694719681dc), [`e8e3368`](https://github.com/thirdweb-dev/js/commit/e8e3368fdef1aa9aaefe6243486395b666b47137), [`aa0b8c4`](https://github.com/thirdweb-dev/js/commit/aa0b8c44650b9d0f45f6dff66ebbceb64cfd7be3)]:
+  - thirdweb@5.12.0
+  - @thirdweb-dev/chains@0.1.100
+
+## 4.0.69
+
+### Patch Changes
+
+- Updated dependencies [[`560d8ad`](https://github.com/thirdweb-dev/js/commit/560d8adafa011dc48e48e73d7eb6a36170d38cef), [`d7e6671`](https://github.com/thirdweb-dev/js/commit/d7e6671c0a34cc8a3523f397a45d754617c9fbb0), [`948f155`](https://github.com/thirdweb-dev/js/commit/948f155e7c2406cc5a172a6c5abe18ba8da89e2a), [`3be61dd`](https://github.com/thirdweb-dev/js/commit/3be61ddc52cef168cda0bee13e93a926dedf479a), [`cfff7e8`](https://github.com/thirdweb-dev/js/commit/cfff7e838af1c464c9b5fbb547153eaae41e2c66)]:
+  - thirdweb@5.11.0
+
+## 4.0.68
+
+### Patch Changes
+
+- Updated dependencies [[`3810df5`](https://github.com/thirdweb-dev/js/commit/3810df57aa9590b0a2fa14071a5c061bd94b1ec6), [`45677ad`](https://github.com/thirdweb-dev/js/commit/45677ad62012c63e3443f2e236311eb9a2bad094)]:
+  - thirdweb@5.10.1
+  - @thirdweb-dev/chains@0.1.99
+
+## 4.0.67
+
+### Patch Changes
+
+- Updated dependencies [[`be85410`](https://github.com/thirdweb-dev/js/commit/be8541054e392a12678ffee534284e7d1b203ad4), [`a919b27`](https://github.com/thirdweb-dev/js/commit/a919b27c7af41dc003ddb643eb0641eaa8aefc07), [`38f3b2e`](https://github.com/thirdweb-dev/js/commit/38f3b2eb21e74e5947f03cc594dee22c96099f8b), [`6d6e0ac`](https://github.com/thirdweb-dev/js/commit/6d6e0ac69453d5a448ab771084976928313662ab)]:
+  - thirdweb@5.10.0
+  - @thirdweb-dev/chains@0.1.98
+
 ## 4.0.66
 
 ### Patch Changes

@@ -2,7 +2,8 @@ import { Suspense, lazy, useCallback } from "react";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import { useSiweAuth } from "../../../../core/hooks/auth/useSiweAuth.js";
 import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
-import { useConnect } from "../../../../core/hooks/wallets/wallet-hooks.js";
+import { useSetActiveWallet } from "../../../../core/hooks/wallets/wallet-hooks.js";
+import { useSetSelectionData } from "../../../providers/wallet-ui-states-provider.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
 import { WalletSelector } from "../WalletSelector.js";
 import { onModalUnmount, reservedScreens } from "../constants.js";
@@ -38,20 +39,22 @@ export const ConnectModalContent = (props: {
     connectLocale,
     client,
   } = useConnectUI();
-  const { connect } = useConnect();
+  const setActiveWallet = useSetActiveWallet();
+  const setSelectionData = useSetSelectionData();
 
   const siweAuth = useSiweAuth(auth);
   const showSignatureScreen = siweAuth.requiresAuth && !siweAuth.isLoggedIn;
 
   const handleConnected = useCallback(
     (wallet: Wallet) => {
-      connect(wallet);
+      setActiveWallet(wallet);
 
       if (onConnect) {
         onConnect(wallet);
       }
 
       onModalUnmount(() => {
+        setSelectionData({});
         setModalVisibility(true);
       });
 
@@ -66,9 +69,10 @@ export const ConnectModalContent = (props: {
       setModalVisibility,
       onClose,
       onConnect,
-      connect,
+      setActiveWallet,
       showSignatureScreen,
       setScreen,
+      setSelectionData,
     ],
   );
 
@@ -89,6 +93,7 @@ export const ConnectModalContent = (props: {
       }}
       done={handleConnected}
       goBack={wallets.length > 1 ? handleBack : undefined}
+      setModalVisibility={setModalVisibility}
     />
   );
 

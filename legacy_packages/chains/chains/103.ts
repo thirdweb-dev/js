@@ -17,7 +17,7 @@ export default {
     "format": "png"
   },
   "infoURL": "https://worldland.foundation",
-  "name": "Worldland Mainnet",
+  "name": "WorldLand Mainnet",
   "nativeCurrency": {
     "name": "Worldland",
     "symbol": "WLC",
@@ -26,7 +26,8 @@ export default {
   "networkId": 103,
   "rpc": [
     "https://103.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://seoul.worldland.foundation"
+    "https://seoul.worldland.foundation",
+    "https://seoul2.worldland.foundation"
   ],
   "shortName": "WLC",
   "slug": "worldland",

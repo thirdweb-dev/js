@@ -73,8 +73,28 @@ export async function getAuthenticatedUser(
  */
 export async function getUserEmail(options: GetAuthenticatedUserParams) {
   const user = await getAuthenticatedUser(options);
-  if (user) {
+  if (user && "email" in user.authDetails) {
     return user.authDetails.email;
+  }
+  return undefined;
+}
+
+/**
+ * Retrieves the authenticated user phone number for the active embedded wallet.
+ * @param options - The arguments for retrieving the authenticated user.
+ * @returns The authenticated user phone number if authenticated with phone number, otherwise undefined.
+ * @example
+ * ```ts
+ * import { getUserPhoneNumber } from "thirdweb/wallets/embedded";
+ *
+ * const phoneNumber = await getUserPhoneNumber({ client });
+ * console.log(phoneNumber);
+ * ```
+ */
+export async function getUserPhoneNumber(options: GetAuthenticatedUserParams) {
+  const user = await getAuthenticatedUser(options);
+  if (user && "phoneNumber" in user.authDetails) {
+    return user.authDetails.phoneNumber;
   }
   return undefined;
 }
@@ -102,8 +122,12 @@ export async function preAuthenticate(args: PreAuthArgsType) {
     case "email": {
       return ewSDK.auth.sendEmailLoginOtp({ email: args.email });
     }
+    case "phone": {
+      return ewSDK.auth.sendSmsLoginOtp({ phoneNumber: args.phoneNumber });
+    }
     default:
-      throw new Error(
+      assertUnreachable(
+        strategy,
         `Provider: ${strategy} doesnt require pre-authentication`,
       );
   }
@@ -135,6 +159,12 @@ export async function authenticate(
       return await ewSDK.auth.verifyEmailLoginOtp({
         email: args.email,
         otp: args.verificationCode,
+      });
+    }
+    case "phone": {
+      return await ewSDK.auth.verifySmsLoginOtp({
+        otp: args.verificationCode,
+        phoneNumber: args.phoneNumber,
       });
     }
     case "apple":
@@ -172,8 +202,8 @@ export async function authenticate(
   }
 }
 
-function assertUnreachable(x: never): never {
-  throw new Error(`Invalid param: ${x}`);
+function assertUnreachable(x: never, message?: string): never {
+  throw new Error(message ?? `Invalid param: ${x}`);
 }
 
 const oauthStrategyToAuthProvider: Record<

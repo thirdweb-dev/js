@@ -25,7 +25,7 @@ export type DeployPublishedContractOptions = {
  * @param options - the deploy options
  * @returns a promise that resolves to the deployed contract address
  * @example
- * ```
+ * ```ts
  * import { deployPublishedContract } from "thirdweb/deploys";
  *
  * const address = await deployedPublishedContract({
@@ -92,6 +92,7 @@ export async function deployPublishedContract(
           account,
           contractId,
           constructorParams: implementationConstructorParams || [],
+          publisher,
         });
       const initializeTransaction = prepareContractCall({
         contract: getContract({

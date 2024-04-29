@@ -25,6 +25,6 @@ export default {
     "https://subnets.avax.network/omochi/testnet/rpc"
   ],
   "shortName": "OMOCHI",
-  "slug": "omochi",
+  "slug": "omochi-omochi",
   "testnet": true
 } as const satisfies Chain;

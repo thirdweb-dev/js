@@ -31,7 +31,7 @@ export type GetWalletBalanceResult = {
 /**
  * Retrieves the balance of a token or native currency for a given wallet.
  * @param options - The options for retrieving the token balance.
- * @param options.account - The account for which to retrieve the balance.
+ * @param options.address - The address for which to retrieve the balance.
  * @param options.client - The Thirdweb client to use for the request.
  * @param options.chain - The chain for which to retrieve the balance.
  * @param options.tokenAddress - (Optional) The address of the token to retrieve the balance for. If not provided, the balance of the native token will be retrieved.

@@ -6,12 +6,12 @@ import { UniswapFee } from "../types.js";
 /**
  * Represents the parameters for the `findUniswapV3Pool` function.
  */
-export type GetUniswapV3PoolsParams = {
+export type GetUniswapV3PoolParams = {
   tokenA: Address;
   tokenB: Address;
 };
 
-export type GetUniswapV3PoolsResult = {
+export type GetUniswapV3PoolResult = {
   poolFee: UniswapFee;
   poolAddress: Address;
 };
@@ -24,16 +24,16 @@ export type GetUniswapV3PoolsResult = {
  * @example
  * ```ts
  * import { getUniswapV3Pool } from "thirdweb/extensions/uniswap";
- * const { poolFee, poolAddress } = await getUniswapV3Pool({
+ * const pools = await getUniswapV3Pool({
  *  tokenA: "0x...",
  *  tokenB: "0x...",
- *  factoryContract: contract
+ *  contract: factoryContract
  * });
  * ```
  */
-export async function getUniswapV3Pools(
-  options: BaseTransactionOptions<GetUniswapV3PoolsParams>,
-): Promise<GetUniswapV3PoolsResult[]> {
+export async function getUniswapV3Pool(
+  options: BaseTransactionOptions<GetUniswapV3PoolParams>,
+): Promise<GetUniswapV3PoolResult[]> {
   const { getPool } = await import(
     "../__generated__/IUniswapV3Factory/read/getPool.js"
   );

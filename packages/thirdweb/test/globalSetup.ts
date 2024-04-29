@@ -26,8 +26,24 @@ export default async function globalSetup() {
     },
   });
 
-  const shutdownOptimism = await startProxy({
+  const shutdownMainnetWithMining = await startProxy({
     port: 8646,
+    options: {
+      chainId: 1,
+      forkUrl: SECRET_KEY
+        ? `https://1.rpc.thirdweb.com/${clientId}`
+        : "https://mainnet.gateway.tenderly.co",
+      forkHeader: SECRET_KEY ? { "x-secret-key": SECRET_KEY } : {},
+      forkChainId: 1,
+      forkBlockNumber: FORK_BLOCK_NUMBER,
+      // ey, i'm mining here!
+      noMining: false,
+      startTimeout: 20000,
+    },
+  });
+
+  const shutdownOptimism = await startProxy({
+    port: 8647,
     options: {
       chainId: 10,
       forkUrl: SECRET_KEY
@@ -42,11 +58,12 @@ export default async function globalSetup() {
   });
 
   const shutdownAnvil = await startProxy({
-    port: 8647,
+    port: 8648,
   });
 
   return async () => {
     await shutdownMainnet();
+    await shutdownMainnetWithMining();
     await shutdownOptimism();
     await shutdownAnvil();
   };

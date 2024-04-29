@@ -18,7 +18,7 @@ export type SetClaimConditionsParams = {
  * ```ts
  * import { setClaimConditions } from "thirdweb/extensions/erc1155";
  *
- * const tx = await setClaimConditions({
+ * const tx = setClaimConditions({
  *  contract,
  *  tokenId: 0n,
  *  phases: [

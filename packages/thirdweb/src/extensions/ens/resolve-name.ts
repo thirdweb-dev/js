@@ -17,11 +17,11 @@ export type ResolveNameOptions = {
 };
 
 /**
- * Resolves the primary name for a specificed address.
+ * Resolves the primary name for a specified address.
  * @param options - The options for resolving an ENS address.
  * @example
  * ```ts
- * import { resolveName } from "thirdweb/ens";
+ * import { resolveName } from "thirdweb/extensions/ens";
  * const name = await resolveName({
  *    client,
  *    address: "0x1234...",

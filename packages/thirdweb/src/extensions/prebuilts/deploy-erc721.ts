@@ -46,7 +46,7 @@ export type DeployERC721ContractOptions = Prettify<
  * @returns The deployed contract address.
  * @extension DEPLOY
  * @example
- * ```
+ * ```ts
  * import { deployERC721Contract } from "thirdweb/deploys";
  * const contractAddress = await deployERC721Contract({
  *  chain,

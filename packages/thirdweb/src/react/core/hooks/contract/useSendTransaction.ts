@@ -1,5 +1,6 @@
 import { type UseMutationResult, useMutation } from "@tanstack/react-query";
 import { estimateGasCost } from "../../../../transaction/actions/estimate-gas-cost.js";
+import type { GaslessOptions } from "../../../../transaction/actions/gasless/types.js";
 import { sendTransaction } from "../../../../transaction/actions/send-transaction.js";
 import type { WaitForReceiptOptions } from "../../../../transaction/actions/wait-for-tx-receipt.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
@@ -34,6 +35,7 @@ type ShowModalData = {
  */
 export function useSendTransactionCore(
   showPayModal?: (data: ShowModalData) => void,
+  gasless?: GaslessOptions,
 ): UseMutationResult<WaitForReceiptOptions, Error, PreparedTransaction> {
   const account = useActiveAccount();
 
@@ -47,6 +49,7 @@ export function useSendTransactionCore(
         return sendTransaction({
           transaction: tx,
           account,
+          gasless,
         });
       }
 
@@ -56,6 +59,7 @@ export function useSendTransactionCore(
             const res = await sendTransaction({
               transaction: tx,
               account,
+              gasless,
             });
 
             resolve(res);

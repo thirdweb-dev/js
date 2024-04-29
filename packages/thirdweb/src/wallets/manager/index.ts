@@ -1,8 +1,11 @@
 import type { Chain } from "../../chains/types.js";
+import type { ThirdwebClient } from "../../client/client.js";
 import { computedStore } from "../../reactive/computedStore.js";
 import { effect } from "../../reactive/effect.js";
 import { createStore } from "../../reactive/store.js";
+import { smartWallet } from "../create-wallet.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
+import type { SmartWalletOptions } from "../smart/types.js";
 import type { AsyncStorage } from "../storage/AsyncStorage.js";
 import { deleteConnectParamsFromStorage } from "../storage/walletStorage.js";
 
@@ -10,9 +13,14 @@ type WalletIdToConnectedWalletMap = Map<string, Wallet>;
 export type ConnectionStatus = "connected" | "disconnected" | "connecting";
 
 const CONNECTED_WALLET_IDS = "thirdweb:connected-wallet-ids";
-const ACTIVE_WALLET_ID = "thirdweb:active-wallet-id";
+const LAST_ACTIVE_EOA_ID = "thirdweb:active-wallet-id";
+const LAST_ACTIVE_CHAIN = "thirdweb:active-chain";
 
 export type ConnectionManager = ReturnType<typeof createConnectionManager>;
+export type ConnectManagerOptions = {
+  client: ThirdwebClient;
+  accountAbstraction?: SmartWalletOptions;
+};
 
 /**
  * Create a connection manager for Wallet connections
@@ -47,6 +55,9 @@ export function createConnectionManager(storage: AsyncStorage) {
   // actions
   const addConnectedWallet = (wallet: Wallet) => {
     const oldValue = walletIdToConnectedWalletMap.getValue();
+    if (oldValue.has(wallet.id)) {
+      return;
+    }
     const newValue = new Map(oldValue);
     newValue.set(wallet.id, wallet);
     walletIdToConnectedWalletMap.setValue(newValue);
@@ -70,7 +81,7 @@ export function createConnectionManager(storage: AsyncStorage) {
 
     // if disconnecting the active wallet
     if (activeWalletStore.getValue() === wallet) {
-      activeWalletStore.setValue(undefined);
+      storage.removeItem(LAST_ACTIVE_EOA_ID);
       activeAccountStore.setValue(undefined);
       activeWalletChainStore.setValue(undefined);
       activeWalletConnectionStatusStore.setValue("disconnected");
@@ -82,22 +93,58 @@ export function createConnectionManager(storage: AsyncStorage) {
     wallet.disconnect();
   };
 
-  const setActiveWallet = (wallet: Wallet) => {
+  // handle the connection logic, but don't set the wallet as active
+  const handleConnection = async (
+    wallet: Wallet,
+    options?: ConnectManagerOptions,
+  ) => {
     const account = wallet.getAccount();
     if (!account) {
-      throw new Error("Can not a wallet without an account as active");
+      throw new Error("Can not set a wallet without an account as active");
+    }
+
+    const personalWallet = wallet;
+    let activeWallet = personalWallet;
+    if (options?.accountAbstraction) {
+      activeWallet = smartWallet(options.accountAbstraction);
+      await activeWallet.connect({
+        personalAccount: wallet.getAccount(),
+        client: options.client,
+      });
+    }
+
+    handleSetActiveWallet(activeWallet);
+
+    // add personal wallet to connected wallets list
+    addConnectedWallet(personalWallet);
+
+    if (personalWallet.id !== "smart") {
+      storage.setItem(LAST_ACTIVE_EOA_ID, personalWallet.id);
+    }
+
+    return activeWallet;
+  };
+
+  const connect = async (wallet: Wallet, options?: ConnectManagerOptions) => {
+    // connectedWallet can be either wallet or smartWallet based on
+    const connectedWallet = await handleConnection(wallet, options);
+    handleSetActiveWallet(connectedWallet);
+    return connectedWallet;
+  };
+
+  const handleSetActiveWallet = (activeWallet: Wallet) => {
+    const account = activeWallet.getAccount();
+    if (!account) {
+      throw new Error("Can not set a wallet without an account as active");
     }
 
     // also add it to connected wallets if it's not already there
-    const _connectedWalletsMap = walletIdToConnectedWalletMap.getValue();
-    if (!_connectedWalletsMap.has(wallet.id)) {
-      addConnectedWallet(wallet);
-    }
+    addConnectedWallet(activeWallet);
 
     // update active states
-    activeWalletStore.setValue(wallet);
+    activeWalletStore.setValue(activeWallet);
     activeAccountStore.setValue(account);
-    activeWalletChainStore.setValue(wallet.getChain());
+    activeWalletChainStore.setValue(activeWallet.getChain());
     activeWalletConnectionStatusStore.setValue("connected");
 
     // setup listeners
@@ -106,25 +153,48 @@ export function createConnectionManager(storage: AsyncStorage) {
       activeAccountStore.setValue(newAccount);
     };
 
-    const unsubAccounts = wallet.subscribe("accountChanged", onAccountsChanged);
+    const unsubAccounts = activeWallet.subscribe(
+      "accountChanged",
+      onAccountsChanged,
+    );
 
-    const unsubChainChanged = wallet.subscribe("chainChanged", (chain) =>
+    const unsubChainChanged = activeWallet.subscribe("chainChanged", (chain) =>
       activeWalletChainStore.setValue(chain),
     );
-    const unsubDisconnect = wallet.subscribe("disconnect", () => {
+    const unsubDisconnect = activeWallet.subscribe("disconnect", () => {
       handleDisconnect();
     });
 
     const handleDisconnect = () => {
-      onWalletDisconnect(wallet);
-
+      onWalletDisconnect(activeWallet);
       unsubAccounts();
       unsubChainChanged();
       unsubDisconnect();
     };
   };
 
+  const setActiveWallet = async (activeWallet: Wallet) => {
+    handleSetActiveWallet(activeWallet);
+    // do not set smart wallet as last active EOA
+    if (activeWallet.id !== "smart") {
+      storage.setItem(LAST_ACTIVE_EOA_ID, activeWallet.id);
+    }
+  };
+
   // side effects
+
+  effect(
+    () => {
+      const _chain = activeWalletChainStore.getValue();
+      if (_chain) {
+        storage.setItem(LAST_ACTIVE_CHAIN, JSON.stringify(_chain));
+      } else {
+        storage.removeItem(LAST_ACTIVE_CHAIN);
+      }
+    },
+    [activeWalletChainStore],
+    false,
+  );
 
   // save last connected wallet ids to storage
   effect(
@@ -135,20 +205,6 @@ export function createConnectionManager(storage: AsyncStorage) {
       storage.setItem(CONNECTED_WALLET_IDS, JSON.stringify(ids));
     },
     [connectedWallets],
-    false,
-  );
-
-  // save active wallet id to storage
-  effect(
-    () => {
-      const value = activeWalletStore.getValue()?.id;
-      if (value) {
-        storage.setItem(ACTIVE_WALLET_ID, value);
-      } else {
-        storage.removeItem(ACTIVE_WALLET_ID);
-      }
-    },
-    [activeWalletStore],
     false,
   );
 
@@ -175,6 +231,8 @@ export function createConnectionManager(storage: AsyncStorage) {
     addConnectedWallet,
     disconnectWallet,
     setActiveWallet,
+    connect,
+    handleConnection,
     activeWalletChainStore: activeWalletChainStore,
     switchActiveWalletChain,
     activeWalletConnectionStatusStore: activeWalletConnectionStatusStore,
@@ -208,9 +266,27 @@ export async function getStoredActiveWalletId(
   storage: AsyncStorage,
 ): Promise<string | null> {
   try {
-    const value = await storage.getItem(ACTIVE_WALLET_ID);
+    const value = await storage.getItem(LAST_ACTIVE_EOA_ID);
     if (value) {
       return value;
+    }
+
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * @internal
+ */
+export async function getLastConnectedChain(
+  storage: AsyncStorage,
+): Promise<Chain | null> {
+  try {
+    const value = await storage.getItem(LAST_ACTIVE_CHAIN);
+    if (value) {
+      return JSON.parse(value) as Chain;
     }
 
     return null;
