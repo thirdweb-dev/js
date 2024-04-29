@@ -51,6 +51,7 @@ export function FiatFlow(props: {
         intentId={props.quote.intentId}
         onBack={props.onBack}
         onViewPendingTx={props.onViewPendingTx}
+        hasTwoSteps={hasTwoSteps}
       />
     );
   }

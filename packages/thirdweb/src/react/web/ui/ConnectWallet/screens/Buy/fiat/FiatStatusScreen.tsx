@@ -18,6 +18,7 @@ export function FiatStatusScreen(props: {
   onBack: () => void;
   intentId: string;
   onViewPendingTx: () => void;
+  hasTwoSteps: boolean;
 }) {
   const statusQuery = useBuyWithFiatStatus({
     intentId: props.intentId,
@@ -65,10 +66,14 @@ export function FiatStatusScreen(props: {
     <Container p="lg">
       <ModalHeader title="Buy" onBack={props.onBack} />
 
-      <Spacer y="sm" />
-      <StepBar steps={2} currentStep={isStep2 ? 2 : 1} />
-      <Spacer y="xs" />
-      <Text size="xs">Step ${isStep2 ? 2 : 1}/2</Text>
+      {props.hasTwoSteps && (
+        <>
+          <Spacer y="lg" />
+          <StepBar steps={2} currentStep={isStep2 ? 2 : 1} />
+          <Spacer y="xs" />
+          <Text size="xs">Step {isStep2 ? 2 : 1}/2</Text>
+        </>
+      )}
 
       <Spacer y="xl" />
       <Spacer y="xl" />
@@ -76,13 +81,13 @@ export function FiatStatusScreen(props: {
       {isLoading && (
         <>
           <Container flex="row" center="x">
-            <Spinner size="3xl" color="accentText" />
+            <Spinner size="xxl" color="accentText" />
           </Container>
           <Spacer y="xl" />
           <Text color="primaryText" size="lg" center>
             Buy Pending
           </Text>
-          <Spacer y="lg" />
+          <Spacer y="md" />
           {!isMobile() && <Text center>Complete the purchase in popup</Text>}
         </>
       )}
