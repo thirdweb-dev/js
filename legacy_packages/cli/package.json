@@ -49,7 +49,7 @@
     "prompts": "^2.4.2",
     "rimraf": "5.0.5",
     "solc": "0.8.25",
-    "tar": "^6.2.1",
+    "tar": "^7.0.1",
     "update-notifier": "^6.0.2",
     "validate-npm-package-name": "^4.0.0",
     "xdg-app-paths": "^8.3.0",
