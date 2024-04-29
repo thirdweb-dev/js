@@ -50,6 +50,7 @@ export {
  * DROPS extension for ERC20
  */
 export { getClaimConditionById } from "../../extensions/erc20/__generated__/IDropERC20/read/getClaimConditionById.js";
+export { claimCondition } from "../../extensions/erc20/__generated__/DropSinglePhase/read/claimCondition.js";
 export { getActiveClaimCondition } from "../../extensions/erc20/drops/read/getActiveClaimCondition.js";
 export {
   claimTo,
