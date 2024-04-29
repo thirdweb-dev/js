@@ -717,9 +717,18 @@ export function BuyScreenContent(props: {
                       setScreen("swap-flow");
                     }
                   }}
-                  gap="sm"
+                  gap="xs"
                 >
-                  {isNotEnoughBalance ? "Not Enough Funds" : "Continue"}
+                  {isNotEnoughBalance ? (
+                    <Text color="danger">Not Enough Funds</Text>
+                  ) : buyWithCryptoQuoteQuery.isLoading ? (
+                    <>
+                      <Spinner size="sm" color="accentText" />
+                      Fetching price quote
+                    </>
+                  ) : (
+                    "Continue"
+                  )}
                 </Button>
               )}
             </>
@@ -748,9 +757,16 @@ export function BuyScreenContent(props: {
                   setScreen("fiat-flow");
                 }
               }}
-              gap="sm"
+              gap="xs"
             >
-              Continue
+              {fiatQuoteQuery.isLoading ? (
+                <>
+                  <Spinner size="sm" color="accentText" />
+                  Fetching price quote
+                </>
+              ) : (
+                "Continue"
+              )}
             </Button>
           )}
         </Container>
