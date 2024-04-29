@@ -107,7 +107,7 @@ export type VerifySignatureParams = Prettify<
 /**
  * Verifies the signature based on the provided options.
  * Handles smart contract wallet signatures and EOA signatures.
- * IMPORTANT: in order to check smart contract signatures, a chain and client must be provided.
+ * **IMPORTANT: in order to check smart contract signatures, a chain and client must be provided.**
  * @param options - The options for signature verification.
  * @returns A boolean indicating whether the signature is valid or not.
  * @example
@@ -115,9 +115,11 @@ export type VerifySignatureParams = Prettify<
  * import { verifySignature } from 'thirdweb/auth';
  *
  * const isValid = await verifySignature({
- *  message: '0x1234567890123456789012345678901234567890',
- *  signature: '0x1234567890123456789012345678901234567890',
- *  address: '0x1234567890123456789012345678901234567890'
+ *  message: 'Your message to sign',
+ *  signature: '0x91db0222ec371a8c18d3b187a6d2e77789bffca1b96826ef6b8708e0d4a66c80312fc3ae95b8fbc147265abf539bb6f360152be61a0e1411d7f5771a599e769a1c',
+ *  address: '0xda9C7A86AeE76701FC1c23ae548e8E93Ba3e42A5',
+ *  client: thirdwebClient,
+ *  chain: chain
  * });
  * ```
  * @auth
