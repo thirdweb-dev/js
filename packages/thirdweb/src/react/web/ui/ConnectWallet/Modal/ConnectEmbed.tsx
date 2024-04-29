@@ -225,26 +225,16 @@ export type ConnectEmbedProps = {
   privacyPolicyUrl?: string;
 
   /**
-   * Callback to be called on successful connection of wallet. The callback is called with the connected account
+   * Callback to be called on successful connection of wallet - including auto-connect.
+   * The callback is called with the connected wallet
    *
    * ```tsx
    * <ConnectEmbed
-   *  onConnect={(account) => {
-   *    console.log("connected to", account)
+   *  onConnect={(wallet) => {
+   *    console.log("connected to", wallet)
    *  }}
    * />
    * ```
-   *
-   * Note that this does not include the sign in, If you want to call a callback after user connects AND signs in with their wallet, use `auth.onLogin` prop instead
-   *
-   * ```tsx
-   * <ConnectEmbed
-   *  auth={{
-   *   onLogin: () => {
-   *     console.log("wallet connected and signed in")
-   *   }
-   *  }}
-   * />
    * ```
    */
   onConnect?: (wallet: Wallet) => void;
@@ -366,6 +356,7 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
           ? undefined
           : props.autoConnect?.timeout
       }
+      onConnect={props.onConnect}
     />
   );
 
