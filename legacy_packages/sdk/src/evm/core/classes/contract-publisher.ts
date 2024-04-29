@@ -406,11 +406,18 @@ export class ContractPublisher extends RPCConnectionHandler {
         "DynamicContract",
         features,
       );
+      const isModular = isFeatureEnabled(
+        compilerMetadata.abi,
+        "ModularCore",
+        features,
+      );
       extraMetadataCleaned.routerType = isPlugin
         ? "plugin"
         : isDynamic
           ? "dynamic"
-          : "none";
+          : isModular
+            ? "modular"
+            : "none";
 
       // For a dynamic contract Router, try to fetch plugin/extension metadata
       if (isDynamic || isPlugin) {
