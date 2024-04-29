@@ -116,6 +116,145 @@ export const getAllExtensionsAbi = [
   },
 ];
 
+export const coreContractAbi = [
+  {
+    type: "function",
+    name: "getInstalledExtensions",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "tuple[]",
+        internalType: "struct ICoreContract.InstalledExtension[]",
+        components: [
+          {
+            name: "implementation",
+            type: "address",
+            internalType: "address",
+          },
+          {
+            name: "config",
+            type: "tuple",
+            internalType: "struct IExtensionTypes.ExtensionConfig",
+            components: [
+              {
+                name: "callbackFunctions",
+                type: "bytes4[]",
+                internalType: "bytes4[]",
+              },
+              {
+                name: "extensionABI",
+                type: "tuple[]",
+                internalType: "struct IExtensionTypes.ExtensionFunction[]",
+                components: [
+                  {
+                    name: "selector",
+                    type: "bytes4",
+                    internalType: "bytes4",
+                  },
+                  {
+                    name: "callType",
+                    type: "uint8",
+                    internalType: "enum IExtensionTypes.CallType",
+                  },
+                  {
+                    name: "permissioned",
+                    type: "bool",
+                    internalType: "bool",
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "getSupportedCallbackFunctions",
+    inputs: [],
+    outputs: [{ name: "", type: "bytes4[]", internalType: "bytes4[]" }],
+    stateMutability: "pure",
+  },
+  {
+    type: "function",
+    name: "installExtension",
+    inputs: [
+      {
+        name: "_extensionContract",
+        type: "address",
+        internalType: "address",
+      },
+      { name: "_value", type: "uint256", internalType: "uint256" },
+      { name: "_data", type: "bytes", internalType: "bytes" },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "uninstallExtension",
+    inputs: [
+      {
+        name: "_extensionContract",
+        type: "address",
+        internalType: "address",
+      },
+      { name: "_value", type: "uint256", internalType: "uint256" },
+      { name: "_data", type: "bytes", internalType: "bytes" },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+];
+
+export const hookAbi = [
+  {
+    type: "function",
+    name: "getHookInfo",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "tuple",
+        internalType: "struct IHookInfo.HookInfo",
+        components: [
+          {
+            name: "hookFlags",
+            type: "uint256",
+            internalType: "uint256",
+          },
+          {
+            name: "hookFallbackFunctions",
+            type: "tuple[]",
+            internalType: "struct IHookInfo.HookFallbackFunction[]",
+            components: [
+              {
+                name: "functionSelector",
+                type: "bytes4",
+                internalType: "bytes4",
+              },
+              {
+                name: "callType",
+                type: "uint8",
+                internalType: "enum IHookInfo.CallType",
+              },
+              {
+                name: "permissioned",
+                type: "bool",
+                internalType: "bool",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+    stateMutability: "pure",
+  },
+];
+
 export const FEATURE_ROYALTY = {
   name: "Royalty",
   namespace: "royalty",
@@ -252,6 +391,30 @@ export const FEATURE_DYNAMIC_CONTRACT = {
     contracts: "IExtensionsManager",
   },
   abis: [getAllExtensionsAbi],
+  features: {},
+} as const;
+
+export const FEATURE_MODULAR_CORE = {
+  name: "ModularCore",
+  namespace: "modular.core",
+  docLinks: {
+    sdk: "",
+    //TODO
+    contracts: "",
+  },
+  abis: [coreContractAbi],
+  features: {},
+} as const;
+
+export const FEATURE_MODULAR_HOOK = {
+  name: "ModularHook",
+  namespace: "modular.hook",
+  docLinks: {
+    sdk: "",
+    //TODO
+    contracts: "",
+  },
+  abis: [hookAbi],
   features: {},
 } as const;
 
