@@ -9,7 +9,6 @@ import {
   validateTypedData,
 } from "viem";
 import { stringify } from "../../utils/json.js";
-import type { Ethereum } from "../interfaces/ethereum.js";
 import type { Account } from "../interfaces/wallet.js";
 import type { SendTransactionOption } from "../interfaces/wallet.js";
 import type { AppMetadata, DisconnectFn, SwitchChainFn } from "../types.js";
@@ -107,17 +106,28 @@ export type CoinbaseSDKWalletConnectionOptions = {
   chain?: Chain;
 };
 
+// Need to keep the provider around because it keeps a single popup window connection behind the scenes
+// this should be ok since all the creation options are provided at build time
+let _provider: ProviderInterface | undefined;
+
 async function initProvider(
   options?: CreateWalletArgs<"com.coinbase.wallet">[1],
 ): Promise<ProviderInterface> {
-  const client = new CoinbaseWalletSDK({
-    appName: options?.appMetadata?.name || getDefaultAppMetadata().name,
-    appChainIds: options?.chains ? options.chains.map((c) => c.id) : undefined,
-    appLogoUrl:
-      options?.appMetadata?.logoUrl || getDefaultAppMetadata().logoUrl,
-  });
+  if (!_provider) {
+    const client = new CoinbaseWalletSDK({
+      appName: options?.appMetadata?.name || getDefaultAppMetadata().name,
+      appChainIds: options?.chains
+        ? options.chains.map((c) => c.id)
+        : undefined,
+      appLogoUrl:
+        options?.appMetadata?.logoUrl || getDefaultAppMetadata().logoUrl,
+    });
 
-  return client.makeWeb3Provider(options?.walletConfig);
+    const provider = client.makeWeb3Provider(options?.walletConfig);
+    _provider = provider;
+    return provider;
+  }
+  return _provider;
 }
 
 function onConnect(
@@ -199,7 +209,7 @@ function onConnect(
     provider.removeListener("accountsChanged", onAccountsChanged);
     provider.removeListener("chainChanged", onChainChanged);
     provider.removeListener("disconnect", onDisconnect);
-    provider.disconnect();
+    await provider.disconnect();
   }
 
   function onDisconnect() {
@@ -247,7 +257,6 @@ export async function connectCoinbaseWalletSDK(
   emitter: WalletEmitter<"com.coinbase.wallet">,
 ): Promise<ReturnType<typeof onConnect>> {
   const provider = await initProvider(createOptions);
-
   const accounts = (await provider.request({
     method: "eth_requestAccounts",
   })) as string[];
@@ -291,9 +300,9 @@ export async function autoConnectCoinbaseWalletSDK(
   const provider = await initProvider(createOptions);
 
   // connected accounts
-  const addresses = await (provider as Ethereum).request({
+  const addresses = (await provider.request({
     method: "eth_accounts",
-  });
+  })) as string[];
 
   const address = addresses[0];
 
