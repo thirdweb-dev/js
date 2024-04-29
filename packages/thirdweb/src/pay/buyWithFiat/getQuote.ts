@@ -2,6 +2,13 @@ import type { ThirdwebClient } from "../../client/client.js";
 import { getClientFetch } from "../../utils/fetch.js";
 import { getPayBuyWithFiatQuoteEndpoint } from "../utils/definitions.js";
 
+export const OnRampProvider = {
+  STRIPE: "STRIPE",
+} as const;
+
+export type OnRampProvider =
+  (typeof OnRampProvider)[keyof typeof OnRampProvider];
+
 /**
  * TODO
  */
@@ -13,6 +20,7 @@ export type GetBuyWithFiatQuoteParams = {
   toChainId: number;
   toTokenAddress: string;
   fromCurrencySymbol: string;
+  provider: OnRampProvider;
 
   // optional
   maxSlippageBPS?: number | undefined;
@@ -82,6 +90,7 @@ export async function getBuyWithFiatQuote(
       fromCurrencySymbol: params.fromCurrencySymbol,
       toChainId: params.toChainId.toString(),
       toTokenAddress: params.toTokenAddress.toLowerCase(),
+      provider: params.provider,
     });
 
     if (params.fromAmount) {
