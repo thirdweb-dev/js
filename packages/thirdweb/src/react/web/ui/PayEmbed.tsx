@@ -1,7 +1,6 @@
 import { useState } from "react";
 import type { ThirdwebClient } from "../../../client/client.js";
 import { useActiveAccount } from "../../../exports/react-native.js";
-import { LoadingScreen } from "../wallets/shared/LoadingScreen.js";
 import {
   type SupportedTokens,
   defaultTokens,
@@ -10,6 +9,7 @@ import { useConnectLocale } from "./ConnectWallet/locale/getConnectLocale.js";
 import { BuyScreen } from "./ConnectWallet/screens/Buy/SwapScreen.js";
 import { BuyTxHistory } from "./ConnectWallet/screens/SwapTransactionsScreen.js";
 import { DynamicHeight } from "./components/DynamicHeight.js";
+import { Spinner } from "./components/Spinner.js";
 import { Container } from "./components/basic.js";
 import { CustomThemeProvider } from "./design-system/CustomThemeProvider.js";
 import { type Theme, radius } from "./design-system/index.js";
@@ -38,12 +38,39 @@ export function PayEmbed(props: {
     return null;
   }
 
-  if (!localeQuery.data) {
-    return <LoadingScreen />;
-  }
+  let content = null;
 
-  if (screen === "tx-history") {
-    return <BuyTxHistory client={props.client} />;
+  if (!localeQuery.data) {
+    content = (
+      <div
+        style={{
+          minHeight: "350px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Spinner size="xl" color="secondaryText" />
+      </div>
+    );
+  } else if (screen === "tx-history") {
+    content = <BuyTxHistory client={props.client} />;
+  } else {
+    content = (
+      <BuyScreen
+        supportedTokens={props.supportedTokens || defaultTokens}
+        theme={props.theme || "dark"}
+        client={props.client}
+        connectLocale={localeQuery.data}
+        onViewPendingTx={() => {
+          setScreen("tx-history");
+        }}
+        payOptions={{
+          buyWithCrypto: props.buyWithCrypto,
+          buyWithFiat: props.buyWithFiat,
+        }}
+      />
+    );
   }
 
   return (
@@ -60,21 +87,7 @@ export function PayEmbed(props: {
         }}
         borderColor="borderColor"
       >
-        <DynamicHeight>
-          <BuyScreen
-            supportedTokens={props.supportedTokens || defaultTokens}
-            theme={props.theme || "dark"}
-            client={props.client}
-            connectLocale={localeQuery.data}
-            onViewPendingTx={() => {
-              setScreen("tx-history");
-            }}
-            payOptions={{
-              buyWithCrypto: props.buyWithCrypto,
-              buyWithFiat: props.buyWithFiat,
-            }}
-          />
-        </DynamicHeight>
+        <DynamicHeight>{content}</DynamicHeight>
       </Container>
     </CustomThemeProvider>
   );
