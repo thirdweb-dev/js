@@ -515,7 +515,7 @@ async function alignTxFromEthers(
         chainId,
         to,
         data: (data ?? undefined) as Hex | undefined,
-        nonce: nonce ? ethers.BigNumber.from(gasPrice).toNumber() : undefined,
+        nonce: nonce ? ethers.BigNumber.from(nonce).toNumber() : undefined,
         value: value ? ethers.BigNumber.from(value).toBigInt() : undefined,
         gasPrice: gasPrice
           ? ethers.BigNumber.from(gasPrice).toBigInt()
@@ -533,7 +533,7 @@ async function alignTxFromEthers(
         chainId,
         to,
         data: (data ?? undefined) as Hex | undefined,
-        nonce: nonce ? ethers.BigNumber.from(gasPrice).toNumber() : undefined,
+        nonce: nonce ? ethers.BigNumber.from(nonce).toNumber() : undefined,
         value: value ? ethers.BigNumber.from(value).toBigInt() : undefined,
         gas: gasLimit ? ethers.BigNumber.from(gasLimit).toBigInt() : undefined,
         maxFeePerGas: maxFeePerGas
@@ -550,7 +550,7 @@ async function alignTxFromEthers(
         chainId,
         to,
         data: (data ?? undefined) as Hex | undefined,
-        nonce: nonce ? ethers.BigNumber.from(gasPrice).toNumber() : undefined,
+        nonce: nonce ? ethers.BigNumber.from(nonce).toNumber() : undefined,
         value: value ? ethers.BigNumber.from(value).toBigInt() : undefined,
         gasPrice: gasPrice
           ? ethers.BigNumber.from(gasPrice).toBigInt()
