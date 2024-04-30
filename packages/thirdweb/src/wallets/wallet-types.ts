@@ -4,7 +4,10 @@ import type {
   InjectedSupportedWalletIds,
   WCSupportedWalletIds,
 } from "./__generated__/wallet-ids.js";
-import type { CoinbaseSDKWalletConnectionOptions } from "./coinbase/coinbaseSDKWallet.js";
+import type {
+  CoinbaseSDKWalletConnectionOptions,
+  CoinbaseWalletCreationOptions,
+} from "./coinbase/coinbaseSDKWallet.js";
 import type {
   InAppWalletAuth,
   InAppWalletAutoConnectOptions,
@@ -118,7 +121,9 @@ export type WalletCreationOptions<T extends WalletId> = T extends "smart"
   ? SmartWalletOptions
   : T extends "inApp" | "embedded"
     ? InAppWalletCreationOptions
-    : undefined;
+    : T extends "com.coinbase.wallet"
+      ? CoinbaseWalletCreationOptions
+      : undefined;
 
 /**
  * Generic type for getting the tuple type of arguments that the `createWallet` function takes.

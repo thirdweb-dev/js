@@ -19,7 +19,7 @@ import { Text } from "../../components/text.js";
 import { useCustomTheme } from "../../design-system/CustomThemeProvider.js";
 import { StyledDiv } from "../../design-system/elements.js";
 import { iconSize, radius, spacing } from "../../design-system/index.js";
-import type { ConnectButtonProps } from "../ConnectWalletProps.js";
+import type { ConnectButtonProps } from "../ConnectButtonProps.js";
 import { TOS } from "../Modal/TOS.js";
 import type { ConnectLocale } from "../locale/types.js";
 import { WalletLogoSpinner } from "./WalletLogoSpinner.js";

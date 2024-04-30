@@ -4,7 +4,7 @@ export type {
   ThemeOverrides,
 } from "../react/web/ui/design-system/index.js";
 
-export { ConnectButton } from "../react/web/ui/ConnectWallet/ConnectWallet.js";
+export { ConnectButton } from "../react/web/ui/ConnectWallet/ConnectButton.js";
 export {
   ConnectEmbed,
   type ConnectEmbedProps,
@@ -16,7 +16,7 @@ export type {
   ConnectButton_connectModalOptions,
   ConnectButton_detailsButtonOptions,
   ConnectButton_detailsModalOptions,
-} from "../react/web/ui/ConnectWallet/ConnectWalletProps.js";
+} from "../react/web/ui/ConnectWallet/ConnectButtonProps.js";
 export type { NetworkSelectorProps } from "../react/web/ui/ConnectWallet/NetworkSelector.js";
 export type { WelcomeScreen } from "../react/web/ui/ConnectWallet/screens/types.js";
 export type { LocaleId } from "../react/web/ui/types.js";
