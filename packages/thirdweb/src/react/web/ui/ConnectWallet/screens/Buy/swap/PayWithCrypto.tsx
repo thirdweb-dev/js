@@ -73,6 +73,7 @@ export function PayWithCrypto(props: {
           paddingInline: spacing.sm,
           paddingBlock: spacing.sm,
           minWidth: "50%",
+          justifyContent: "flex-start",
         }}
       >
         <TokenIcon
