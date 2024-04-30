@@ -35,14 +35,16 @@ export default {
     "chain": "eip155-11155111",
     "bridges": [
       {
-        "url": "https://op-bridge.alt.technology/deposit?id=111557560"
+        "url": "https://cyber-testnet-bridge.alt.technology/deposit"
       }
     ]
   },
   "rpc": [
     "https://111557560.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://cyber-testnet.alt.technology/",
-    "wss://cyber-testnet.alt.technology/ws"
+    "wss://cyber-testnet.alt.technology/ws",
+    "https://rpc.testnet.cyber.co/",
+    "wss://rpc.testnet.cyber.co/"
   ],
   "shortName": "cysep",
   "slug": "cyber-testnet",
