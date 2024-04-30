@@ -17,8 +17,8 @@ describe.runIf(process.env.TW_SECRET_KEY)(
     let auth: ThirdwebAuth;
 
     beforeAll(async () => {
-      const factoryAddress = "0xbf1C9aA4B1A085f7DA890a44E82B0A1289A40052";
-      const chain = 421614;
+      const factoryAddress = "0x7b5ba9D46b53aae55e2c2E9b38d9AfF9a0b158F8";
+      const chain = 84532;
       const localWallet = new LocalWallet();
       await localWallet.generate();
       const smartWallet = new SmartWallet({
@@ -54,12 +54,12 @@ describe.runIf(process.env.TW_SECRET_KEY)(
     it("Should verify logged in wallet with chain ID and expiration", async () => {
       const payload = await auth.login({
         expirationTime: new Date(Date.now() + 1000 * 60 * 5),
-        chainId: "421614",
+        chainId: "84532",
       });
 
       auth.updateWallet(adminWallet);
       const address = await auth.verify(payload, {
-        chainId: "421614",
+        chainId: "84532",
       });
 
       expect(address).to.equal(await signerWallet.getAddress());
