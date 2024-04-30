@@ -12,7 +12,7 @@ import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { iconSize } from "../../../../design-system/index.js";
 import { AccentFailIcon } from "../../../icons/AccentFailIcon.js";
-import { FiatSteps } from "./FiatSteps.js";
+import { FiatSteps, fiatQuoteToPartialQuote } from "./FiatSteps.js";
 import { PostOnRampSwap } from "./PostOnRampSwap.js";
 
 export function FiatStatusScreen(props: {
@@ -87,7 +87,7 @@ export function FiatStatusScreen(props: {
       <FiatSteps
         client={props.client}
         onBack={props.onBack}
-        quote={props.quote}
+        partialQuote={fiatQuoteToPartialQuote(props.quote)}
         step={2}
         onContinue={() => {
           setShowStep2(false);

@@ -18,17 +18,70 @@ import { type ERC20OrNativeToken, NATIVE_TOKEN } from "../../nativeToken.js";
 import { StepIcon } from "../Stepper.js";
 import { getCurrencyMeta } from "./currencies.js";
 
+export type BuyWithFiatPartialQuote = {
+  fromCurrencySymbol: string;
+  fromCurrencyAmount: string;
+  onRampTokenAmount: string;
+  toTokenAmount: string;
+  onRampToken: {
+    tokenAddress: string;
+    name?: string;
+    symbol?: string;
+    chainId: number;
+  };
+  toToken: {
+    tokenAddress: string;
+    name?: string;
+    symbol?: string;
+    chainId: number;
+  };
+};
+
+export function fiatQuoteToPartialQuote(
+  quote: BuyWithFiatQuote,
+): BuyWithFiatPartialQuote {
+  const data: BuyWithFiatPartialQuote = {
+    fromCurrencyAmount: quote.fromCurrency.amount,
+    fromCurrencySymbol: quote.fromCurrency.currencySymbol,
+    onRampTokenAmount: quote.onRampToken.amount,
+    toTokenAmount: quote.estimatedToAmountMin,
+    onRampToken: {
+      chainId: quote.onRampToken.token.chainId,
+      tokenAddress: quote.onRampToken.token.tokenAddress,
+      name: quote.onRampToken.token.name,
+      symbol: quote.onRampToken.token.symbol,
+    },
+
+    toToken: {
+      chainId: quote.toToken.chainId,
+      tokenAddress: quote.toToken.tokenAddress,
+      name: quote.toToken.name,
+      symbol: quote.toToken.symbol,
+    },
+  };
+
+  return data;
+}
+
 export function FiatSteps(props: {
-  quote: BuyWithFiatQuote;
+  partialQuote: BuyWithFiatPartialQuote;
   onBack: () => void;
   client: ThirdwebClient;
   step: number;
   onContinue: () => void;
 }) {
   const step = props.step;
-  const currency = getCurrencyMeta(props.quote.fromCurrency.currencySymbol);
 
-  const { toToken: toTokenMeta, onRampToken: onRampTokenMeta } = props.quote;
+  const {
+    toToken: toTokenMeta,
+    onRampToken: onRampTokenMeta,
+    onRampTokenAmount,
+    fromCurrencySymbol,
+    fromCurrencyAmount,
+    toTokenAmount,
+  } = props.partialQuote;
+
+  const currency = getCurrencyMeta(fromCurrencySymbol);
 
   const toChain = useMemo(
     () => defineChain(toTokenMeta.chainId),
@@ -50,20 +103,20 @@ export function FiatSteps(props: {
   }, [toTokenMeta]);
 
   const onRampChain = useMemo(
-    () => defineChain(onRampTokenMeta.token.chainId),
-    [onRampTokenMeta.token.chainId],
+    () => defineChain(onRampTokenMeta.chainId),
+    [onRampTokenMeta.chainId],
   );
 
   const onRampToken: ERC20OrNativeToken = useMemo(() => {
-    if (onRampTokenMeta.token.tokenAddress === NATIVE_TOKEN_ADDRESS) {
+    if (onRampTokenMeta.tokenAddress === NATIVE_TOKEN_ADDRESS) {
       return NATIVE_TOKEN;
     }
 
     const tokenInfo: TokenInfo = {
-      address: onRampTokenMeta.token.tokenAddress,
+      address: onRampTokenMeta.tokenAddress,
       icon: "",
-      name: onRampTokenMeta.token.name || "",
-      symbol: onRampTokenMeta.token.symbol || "",
+      name: onRampTokenMeta.name || "",
+      symbol: onRampTokenMeta.symbol || "",
     };
     return tokenInfo;
   }, [onRampTokenMeta]);
@@ -74,7 +127,7 @@ export function FiatSteps(props: {
   const onRampTokenInfo = (
     <div>
       <Text color="primaryText" size="sm">
-        {formatNumber(Number(onRampTokenMeta.amount), 4)}{" "}
+        {formatNumber(Number(onRampTokenAmount), 4)}{" "}
         <TokenSymbol token={onRampToken} chain={onRampChain} size="sm" inline />
       </Text>
     </div>
@@ -105,7 +158,7 @@ export function FiatSteps(props: {
 
   const toTokenInfo = (
     <Text color="primaryText" size="sm">
-      {props.quote.estimatedToAmountMin}{" "}
+      {toTokenAmount}{" "}
       <TokenSymbol token={toToken} chain={toChain} size="sm" inline />
     </Text>
   );
@@ -129,7 +182,7 @@ export function FiatSteps(props: {
               size="md"
               inline
             />{" "}
-            with {props.quote.fromCurrency.currencySymbol}
+            with {props.partialQuote.fromCurrencySymbol}
           </Text>
         }
         step={1}
@@ -139,8 +192,7 @@ export function FiatSteps(props: {
           icon: fiatIcon,
           primaryText: (
             <Text color="primaryText" size="sm">
-              {props.quote.fromCurrency.amount}{" "}
-              {props.quote.fromCurrency.currencySymbol}
+              {fromCurrencyAmount} {fromCurrencySymbol}
             </Text>
           ),
         }}

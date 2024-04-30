@@ -32,6 +32,10 @@ import {
   radius,
   spacing,
 } from "../../design-system/index.js";
+import {
+  type BuyWithFiatPartialQuote,
+  FiatSteps,
+} from "./Buy/fiat/FiatSteps.js";
 import { PostOnRampSwap } from "./Buy/fiat/PostOnRampSwap.js";
 import { swapTransactionsStore } from "./Buy/swap/pendingSwapTx.js";
 
@@ -352,13 +356,36 @@ function TransactionDetailsScreen(props: {
       : getBuyWithFiatStatusMeta(props.txInfo.fiatStatus.status);
   const [screen, setScreen] = useState<"base" | "postonramp-swap">("base");
 
-  if (screen === "postonramp-swap" && txInfo.type === "buyWithFiat") {
+  if (
+    screen === "postonramp-swap" &&
+    txInfo.type === "buyWithFiat" &&
+    txInfo.fiatStatus.status !== "NOT_FOUND"
+  ) {
     return (
-      <PostOnRampSwap
+      <PostOnRampFlow
         client={props.client}
         buyWithFiatStatus={txInfo.fiatStatus}
         onBack={props.onBack}
         onViewPendingTx={props.onBack}
+        quote={{
+          fromCurrencyAmount: txInfo.fiatStatus.quote.fromCurrency.amount,
+          fromCurrencySymbol:
+            txInfo.fiatStatus.quote.fromCurrency.currencySymbol,
+          onRampTokenAmount: txInfo.fiatStatus.quote.estimatedOnRampAmount,
+          toTokenAmount: txInfo.fiatStatus.quote.estimatedToTokenAmount,
+          onRampToken: {
+            chainId: txInfo.fiatStatus.quote.onRampToken.chainId,
+            tokenAddress: txInfo.fiatStatus.quote.onRampToken.tokenAddress,
+            name: txInfo.fiatStatus.quote.onRampToken.name,
+            symbol: txInfo.fiatStatus.quote.onRampToken.symbol,
+          },
+          toToken: {
+            chainId: txInfo.fiatStatus.quote.toToken.chainId,
+            tokenAddress: txInfo.fiatStatus.quote.toToken.tokenAddress,
+            name: txInfo.fiatStatus.quote.toToken.name,
+            symbol: txInfo.fiatStatus.quote.toToken.symbol,
+          },
+        }}
       />
     );
   }
@@ -426,6 +453,39 @@ function TransactionDetailsScreen(props: {
         </ButtonLink>
       </Container>
     </Container>
+  );
+}
+
+function PostOnRampFlow(props: {
+  client: ThirdwebClient;
+  onBack: () => void;
+  quote: BuyWithFiatPartialQuote;
+  buyWithFiatStatus: BuyWithFiatStatus;
+  onViewPendingTx: () => void;
+}) {
+  const [screen, setScreen] = useState<"step-2" | "post-onramp">("step-2");
+
+  if (screen === "step-2") {
+    return (
+      <FiatSteps
+        step={2}
+        client={props.client}
+        onBack={props.onBack}
+        onContinue={() => {
+          setScreen("post-onramp");
+        }}
+        partialQuote={props.quote}
+      />
+    );
+  }
+
+  return (
+    <PostOnRampSwap
+      client={props.client}
+      buyWithFiatStatus={props.buyWithFiatStatus}
+      onBack={props.onBack}
+      onViewPendingTx={props.onViewPendingTx}
+    />
   );
 }
 

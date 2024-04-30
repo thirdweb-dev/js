@@ -4,7 +4,7 @@ import type { BuyWithFiatQuote } from "../../../../../../../exports/pay.js";
 import { isSwapRequiredPostOnramp } from "../../../../../../../pay/buyWithFiat/isSwapRequiredPostOnramp.js";
 import { openOnrampPopup } from "../openOnRamppopup.js";
 import { FiatStatusScreen } from "./FiatStatusScreen.js";
-import { FiatSteps } from "./FiatSteps.js";
+import { FiatSteps, fiatQuoteToPartialQuote } from "./FiatSteps.js";
 
 // Flow:
 // If a Swap is required after doing onramp
@@ -38,7 +38,7 @@ export function FiatFlow(props: {
       <FiatSteps
         client={props.client}
         onBack={props.onBack}
-        quote={props.quote}
+        partialQuote={fiatQuoteToPartialQuote(props.quote)}
         step={1}
         onContinue={() => {
           const popup = openOnrampPopup(props.quote.onRampLink, props.theme);
