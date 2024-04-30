@@ -59,7 +59,7 @@ export function SwapConfirmationScreen(props: {
 
   return (
     <Container p="lg">
-      <ModalHeader title="Confirm Buy" onBack={props.onBack} />
+      <ModalHeader title="Buy" onBack={props.onBack} />
 
       {props.isFiatFlow ? (
         <>

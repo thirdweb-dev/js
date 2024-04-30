@@ -58,6 +58,7 @@ export function FiatFlow(props: {
         onViewPendingTx={props.onViewPendingTx}
         hasTwoSteps={hasTwoSteps}
         openedWindow={popupWindow}
+        quote={props.quote}
       />
     );
   }

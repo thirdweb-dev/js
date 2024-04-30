@@ -1,6 +1,7 @@
 import { CheckCircledIcon } from "@radix-ui/react-icons";
 import { useEffect, useState } from "react";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
+import type { BuyWithFiatQuote } from "../../../../../../../exports/pay.js";
 import { isMobile } from "../../../../../../../utils/web/isMobile.js";
 import { useBuyWithFiatStatus } from "../../../../../../core/hooks/pay/useBuyWithFiatStatus.js";
 import { Spacer } from "../../../../components/Spacer.js";
@@ -11,6 +12,7 @@ import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { iconSize } from "../../../../design-system/index.js";
 import { AccentFailIcon } from "../../../icons/AccentFailIcon.js";
+import { FiatSteps } from "./FiatSteps.js";
 import { PostOnRampSwap } from "./PostOnRampSwap.js";
 
 export function FiatStatusScreen(props: {
@@ -20,6 +22,7 @@ export function FiatStatusScreen(props: {
   onViewPendingTx: () => void;
   hasTwoSteps: boolean;
   openedWindow: Window | null;
+  quote: BuyWithFiatQuote;
 }) {
   const { openedWindow } = props;
   const statusQuery = useBuyWithFiatStatus({
@@ -38,6 +41,8 @@ export function FiatStatusScreen(props: {
 
   // use state instead of directly using statusQuery.data to ensure if status changes it does not unmount the component
   const [showPostOnRampSwap, setShowPostOnRampSwap] = useState(false);
+
+  const [showStep2, setShowStep2] = useState(false);
 
   const isStep2 =
     statusQuery.data?.status === "CRYPTO_SWAP_REQUIRED" ||
@@ -62,7 +67,7 @@ export function FiatStatusScreen(props: {
       statusQuery.data &&
       statusQuery.data.status === "CRYPTO_SWAP_REQUIRED"
     ) {
-      setShowPostOnRampSwap(true);
+      setShowStep2(true);
     }
   }, [statusQuery.data]);
 
@@ -73,6 +78,21 @@ export function FiatStatusScreen(props: {
         client={props.client}
         onBack={props.onBack}
         onViewPendingTx={props.onViewPendingTx}
+      />
+    );
+  }
+
+  if (showStep2) {
+    return (
+      <FiatSteps
+        client={props.client}
+        onBack={props.onBack}
+        quote={props.quote}
+        step={2}
+        onContinue={() => {
+          setShowStep2(false);
+          setShowPostOnRampSwap(true);
+        }}
       />
     );
   }

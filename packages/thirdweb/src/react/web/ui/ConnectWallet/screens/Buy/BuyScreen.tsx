@@ -133,6 +133,19 @@ type BuyScreenContentProps = {
   payOptions: PayUIOptions;
 };
 
+type Screen =
+  | {
+      type: "node";
+      node: React.ReactNode;
+    }
+  | {
+      type: "screen-id";
+      name: "select-from-token" | "select-to-token" | "select-currency";
+    }
+  | {
+      type: "main";
+    };
+
 /**
  * @internal
  */
@@ -157,7 +170,9 @@ export function BuyScreenContent(props: BuyScreenContentProps) {
   useChainsQuery(supportedChains || [], 50);
 
   // screens
-  const [screen, setScreen] = useState<React.ReactNode>();
+  const [screen, setScreen] = useState<Screen>({
+    type: "main",
+  });
   const [drawerScreen, setDrawerScreen] = useState<React.ReactNode>();
 
   const { drawerRef, drawerOverlayRef, onClose } = useDrawer();
@@ -279,43 +294,53 @@ export function BuyScreenContent(props: BuyScreenContentProps) {
   //   );
   // }
 
-  if (screen) {
-    return screen;
+  if (screen.type === "node") {
+    return screen.node;
   }
 
-  function showToTokenSelector() {
-    setScreen(
+  function showMainScreen() {
+    setScreen({
+      type: "main",
+    });
+  }
+
+  if (screen.type === "screen-id" && screen.name === "select-to-token") {
+    return (
       <TokenSelector
-        onBack={() => setScreen(undefined)}
+        onBack={showMainScreen}
         tokenList={
           (toChain?.id ? props.supportedTokens[toChain.id] : undefined) || []
         }
         onTokenSelect={(tokenInfo) => {
           setToToken(tokenInfo);
-          setScreen(undefined);
+          showMainScreen();
         }}
         chain={toChain}
         chainSelection={{
           chains: supportedChains,
-          select: (c) => setToChain(c),
+          select: (c) => {
+            setToChain(c);
+          },
         }}
         connectLocale={connectLocale}
         client={client}
-      />,
+      />
     );
   }
 
-  function showFromTokenSelector() {
-    setScreen(
+  if (screen.type === "screen-id" && screen.name === "select-from-token") {
+    return (
       <TokenSelector
-        onBack={() => setScreen(undefined)}
+        onBack={showMainScreen}
         tokenList={
           (fromChain?.id ? props.supportedTokens[fromChain.id] : undefined) ||
           []
         }
         onTokenSelect={(tokenInfo) => {
           setFromToken(tokenInfo);
-          setScreen(undefined);
+          setScreen({
+            type: "main",
+          });
         }}
         chain={fromChain}
         chainSelection={{
@@ -324,7 +349,7 @@ export function BuyScreenContent(props: BuyScreenContentProps) {
         }}
         connectLocale={connectLocale}
         client={client}
-      />,
+      />
     );
   }
 
@@ -393,7 +418,12 @@ export function BuyScreenContent(props: BuyScreenContentProps) {
             }}
             token={toToken}
             chain={toChain}
-            onSelectToken={showToTokenSelector}
+            onSelectToken={() => {
+              setScreen({
+                type: "screen-id",
+                name: "select-to-token",
+              });
+            }}
             client={props.client}
             hideTokenSelector={!!props.buyForTx}
           />
@@ -423,7 +453,12 @@ export function BuyScreenContent(props: BuyScreenContentProps) {
                 setStopUpdatingTokenAmount={setStopUpdatingTokenAmount}
                 fromChain={fromChain}
                 fromToken={fromToken}
-                showFromTokenSelector={showFromTokenSelector}
+                showFromTokenSelector={() => {
+                  setScreen({
+                    type: "screen-id",
+                    name: "select-from-token",
+                  });
+                }}
               />
             )}
 
@@ -470,7 +505,7 @@ export function BuyScreenContent(props: BuyScreenContentProps) {
 function SwapScreenContent(
   props: BuyScreenContentProps & {
     setDrawerScreen: (screen: React.ReactNode) => void;
-    setScreen: (screen: React.ReactNode) => void;
+    setScreen: (screen: Screen) => void;
     tokenAmount: string;
     toToken: ERC20OrNativeToken;
     toChain: Chain;
@@ -558,19 +593,24 @@ function SwapScreenContent(
       return;
     }
 
-    setScreen(
-      <SwapFlow
-        client={client}
-        onBack={() => {
-          setStopUpdatingTokenAmount(true);
-          setScreen(undefined);
-        }}
-        buyWithCryptoQuote={buyWithCryptoQuoteQuery.data}
-        account={account}
-        onViewPendingTx={props.onViewPendingTx}
-        isFiatFlow={false}
-      />,
-    );
+    setScreen({
+      type: "node",
+      node: (
+        <SwapFlow
+          client={client}
+          onBack={() => {
+            setStopUpdatingTokenAmount(true);
+            setScreen({
+              type: "main",
+            });
+          }}
+          buyWithCryptoQuote={buyWithCryptoQuoteQuery.data}
+          account={account}
+          onViewPendingTx={props.onViewPendingTx}
+          isFiatFlow={false}
+        />
+      ),
+    });
   }
 
   const isNotEnoughBalance =
@@ -666,7 +706,7 @@ function SwapScreenContent(
 function FiatScreenContent(
   props: BuyScreenContentProps & {
     setDrawerScreen: (screen: React.ReactNode) => void;
-    setScreen: (screen: React.ReactNode) => void;
+    setScreen: (screen: Screen) => void;
     tokenAmount: string;
     toToken: ERC20OrNativeToken;
     toChain: Chain;
@@ -722,23 +762,30 @@ function FiatScreenContent(
       );
     }
 
-    setScreen(
-      <FiatFlow
-        quote={fiatQuoteQuery.data}
-        onBack={() => {
-          setScreen(undefined);
-        }}
-        client={client}
-        testMode={
-          buyWithFiatOptions !== false
-            ? buyWithFiatOptions?.testMode || false
-            : false
-        }
-        theme={typeof props.theme === "string" ? props.theme : props.theme.type}
-        onViewPendingTx={props.onViewPendingTx}
-        openedWindow={openedWindow}
-      />,
-    );
+    setScreen({
+      type: "node",
+      node: (
+        <FiatFlow
+          quote={fiatQuoteQuery.data}
+          onBack={() => {
+            setScreen({
+              type: "main",
+            });
+          }}
+          client={client}
+          testMode={
+            buyWithFiatOptions !== false
+              ? buyWithFiatOptions?.testMode || false
+              : false
+          }
+          theme={
+            typeof props.theme === "string" ? props.theme : props.theme.type
+          }
+          onViewPendingTx={props.onViewPendingTx}
+          openedWindow={openedWindow}
+        />
+      ),
+    });
   }
 
   function showFees() {
