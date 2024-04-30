@@ -5,7 +5,6 @@ import { Skeleton } from "../../../components/Skeleton.js";
 import { Container } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
-import { useCustomTheme } from "../../../design-system/CustomThemeProvider.js";
 import {
   fontSize,
   iconSize,
@@ -48,11 +47,14 @@ export function PayWithCreditCard(props: {
       {/* Left */}
       <CurrencyButton
         disabled={props.disableCurrencySelection}
-        variant="secondary"
+        variant="ghost"
         onClick={props.onSelectCurrency}
         style={{
           minHeight: "64px",
+          justifyContent: "flex-start",
+          minWidth: "50%",
         }}
+        gap="sm"
       >
         <props.currency.icon size={iconSize.md} />
         <Container flex="row" center="y" gap="xxs">
@@ -92,22 +94,9 @@ export function PayWithCreditCard(props: {
 }
 
 const CurrencyButton = /* @__PURE__ */ styled(Button)(() => {
-  const theme = useCustomTheme();
   return {
-    background: "transparent",
-    border: "1px solid transparent",
-    ":not([disabled]):hover": {
-      background: "transparent",
-      borderColor: theme.colors.accentText,
-    },
     "&[disabled]:hover": {
-      background: "transparent",
+      borderColor: "transparent",
     },
-    justifyContent: "flex-start",
-    transition: "background 0.3s, border-color 0.3s",
-    gap: spacing.sm,
-    color: theme.colors.primaryText,
-    borderRadius: radius.md,
-    minWidth: "50%",
   };
 });

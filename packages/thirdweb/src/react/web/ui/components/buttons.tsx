@@ -8,7 +8,7 @@ import {
 } from "../design-system/index.js";
 
 export type ButtonProps = {
-  variant: "primary" | "secondary" | "link" | "accent" | "outline";
+  variant: "primary" | "secondary" | "link" | "accent" | "outline" | "ghost";
   theme?: Theme;
   fullWidth?: boolean;
   gap?: keyof typeof spacing;
@@ -82,6 +82,15 @@ export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
       if (props.variant === "outline") {
         return {
           border: `1.5px solid ${theme.colors.borderColor}`,
+          "&:hover": {
+            borderColor: theme.colors.accentText,
+          },
+        };
+      }
+
+      if (props.variant === "ghost") {
+        return {
+          border: "1.5px solid transparent",
           "&:hover": {
             borderColor: theme.colors.accentText,
           },

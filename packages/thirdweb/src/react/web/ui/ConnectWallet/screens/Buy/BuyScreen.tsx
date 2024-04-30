@@ -1,4 +1,4 @@
-import { ClockIcon, CrossCircledIcon } from "@radix-ui/react-icons";
+import { CrossCircledIcon } from "@radix-ui/react-icons";
 import { useEffect, useMemo, useState } from "react";
 import { polygon } from "../../../../../../chains/chain-definitions/polygon.js";
 import type { Chain } from "../../../../../../chains/types.js";
@@ -48,12 +48,10 @@ import {
   type Theme,
   fontSize,
   iconSize,
-  radius,
 } from "../../../design-system/index.js";
 import { useDebouncedValue } from "../../../hooks/useDebouncedValue.js";
 import type { PayUIOptions } from "../../ConnectWalletProps.js";
 import type { SupportedTokens } from "../../defaultTokens.js";
-import type { IconFC } from "../../icons/types.js";
 import type { ConnectLocale } from "../../locale/types.js";
 import { TokenSelector } from "../TokenSelector.js";
 import {
@@ -61,9 +59,9 @@ import {
   NATIVE_TOKEN,
   isNativeToken,
 } from "../nativeToken.js";
+import { EstimatedTimeAndFees } from "./EstimatedTimeAndFees.js";
 import { PayWithCreditCard } from "./PayWIthCreditCard.js";
 import { PaymentSelection } from "./PaymentSelection.js";
-import { FeesButton } from "./buttons.js";
 import { FiatFlow } from "./fiat/FiatFlow.js";
 import {
   type CurrencyMeta,
@@ -74,7 +72,6 @@ import { BuyTokenInput } from "./swap/BuyTokenInput.js";
 import { FiatFees, SwapFees } from "./swap/Fees.js";
 import { PayWithCrypto } from "./swap/PayWithCrypto.js";
 import { SwapFlow } from "./swap/SwapFlow.js";
-import { formatSeconds } from "./swap/formatSeconds.js";
 import { useBuySupportedChains } from "./swap/useSwapSupportedChains.js";
 
 // NOTE: Must not use useConnectUI here because this UI can be used outside connect ui
@@ -587,6 +584,10 @@ function SwapScreenContent(
   const errorToShow = buyWithCryptoQuoteQuery.error;
 
   function showFees() {
+    if (!swapQuote) {
+      return;
+    }
+
     setDrawerScreen(
       <div>
         <Text size="lg" color="primaryText">
@@ -594,7 +595,7 @@ function SwapScreenContent(
         </Text>
 
         <Spacer y="lg" />
-        {swapQuote && <SwapFees quote={swapQuote} align="left" />}
+        <SwapFees quote={swapQuote} align="left" />
       </div>,
     );
   }
@@ -609,7 +610,7 @@ function SwapScreenContent(
         isLoading={buyWithCryptoQuoteQuery.isLoading && !sourceTokenAmount}
         client={client}
       />
-      <SecondaryInfo
+      <EstimatedTimeAndFees
         quoteIsLoading={buyWithCryptoQuoteQuery.isLoading}
         estimatedSeconds={
           buyWithCryptoQuoteQuery.data?.swapDetails.estimated.durationSeconds
@@ -786,7 +787,7 @@ function FiatScreenContent(
         disableCurrencySelection={true}
       />
       {/* Estimated time + View fees button */}
-      <SecondaryInfo
+      <EstimatedTimeAndFees
         quoteIsLoading={fiatQuoteQuery.isLoading}
         estimatedSeconds={fiatQuoteQuery.data?.estimatedDurationSeconds}
         onViewFees={showFees}
@@ -820,79 +821,6 @@ function FiatScreenContent(
           "Continue"
         )}
       </Button>
-    </Container>
-  );
-}
-
-const ViewFeeIcon: IconFC = (props) => {
-  return (
-    <svg
-      width={props.size}
-      height={props.size}
-      viewBox="0 0 12 12"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden="true"
-    >
-      <path
-        d="M9.5 1.5H2.5C1.94772 1.5 1.5 1.94772 1.5 2.5V9.5C1.5 10.0523 1.94772 10.5 2.5 10.5H9.5C10.0523 10.5 10.5 10.0523 10.5 9.5V2.5C10.5 1.94772 10.0523 1.5 9.5 1.5Z"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M4.5 7.5L7.5 4.5"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-};
-
-function SecondaryInfo(props: {
-  estimatedSeconds?: number | undefined;
-  quoteIsLoading: boolean;
-  onViewFees: () => void;
-}) {
-  const { estimatedSeconds, quoteIsLoading } = props;
-
-  return (
-    <Container
-      bg="tertiaryBg"
-      flex="row"
-      borderColor="borderColor"
-      style={{
-        borderRadius: radius.md,
-        borderTopLeftRadius: 0,
-        borderTopRightRadius: 0,
-        justifyContent: "space-between",
-        alignItems: "center",
-        borderWidth: "1px",
-        borderStyle: "solid",
-      }}
-    >
-      <Container flex="row" center="y" gap="xxs" color="accentText" p="sm">
-        <ClockIcon width={iconSize.sm} height={iconSize.sm} />
-        {quoteIsLoading ? (
-          <Skeleton height={fontSize.xs} width="50px" color="borderColor" />
-        ) : (
-          <Text size="xs" color="secondaryText">
-            {estimatedSeconds !== undefined
-              ? `~${formatSeconds(estimatedSeconds)}`
-              : "--"}
-          </Text>
-        )}
-      </Container>
-
-      <FeesButton variant="secondary" onClick={props.onViewFees}>
-        <Container color="accentText" flex="row" center="both">
-          <ViewFeeIcon size={iconSize.sm} />
-        </Container>
-        <Text size="xs" color="secondaryText">
-          View Fees
-        </Text>
-      </FeesButton>
     </Container>
   );
 }
