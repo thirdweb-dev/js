@@ -32,13 +32,12 @@ function createBlockNumberPoller(
   client: ThirdwebClient,
   chain: Chain,
   overPollRatio?: number,
-  latestBlockNumber?: bigint,
 ) {
   let subscribers: Array<(blockNumber: bigint) => void> = [];
   let blockTimesWindow: number[] = [];
 
   let isActive = false;
-  let lastBlockNumber: bigint | undefined = latestBlockNumber;
+  let lastBlockNumber: bigint | undefined;
   let lastBlockAt: number | undefined;
 
   const rpcRequest = getRpcClient({ client, chain });
@@ -99,10 +98,14 @@ function createBlockNumberPoller(
   }
 
   // return the "subscribe" function
-  return function subscribe(callBack: (blockNumber: bigint) => void) {
+  return function subscribe(
+    callBack: (blockNumber: bigint) => void,
+    initialBlockNumber?: bigint,
+  ) {
     subscribers.push(callBack);
     // if we are currently not active -> start polling
     if (!isActive) {
+      lastBlockNumber = initialBlockNumber;
       isActive = true;
       poll();
     }
@@ -113,6 +116,8 @@ function createBlockNumberPoller(
       subscribers = subscribers.filter((fn) => fn !== callBack);
       // if the new subscribers Array is empty (aka we were the last subscriber) -> stop polling
       if (subscribers.length === 0) {
+        lastBlockNumber = undefined;
+        lastBlockAt = undefined;
         isActive = false;
       }
     };
@@ -168,15 +173,10 @@ export function watchBlockNumber(opts: WatchBlockNumberOptions) {
   let poller = existingPollers.get(chainId);
   // otherwise create a new poller
   if (!poller) {
-    poller = createBlockNumberPoller(
-      client,
-      chain,
-      overPollRatio,
-      latestBlockNumber,
-    );
+    poller = createBlockNumberPoller(client, chain, overPollRatio);
     // and store it for later use
     existingPollers.set(chainId, poller);
   }
   // subscribe to the poller and return the unSubscribe function to the caller
-  return poller(onNewBlockNumber);
+  return poller(onNewBlockNumber, latestBlockNumber);
 }

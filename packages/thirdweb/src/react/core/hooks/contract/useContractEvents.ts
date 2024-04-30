@@ -32,7 +32,7 @@ type UseContractEventsOptions<
  * ```jsx
  * import { useContractEvents } from "thirdweb/react";
  * import { tokensClaimedEvent } from "thirdweb/extensions/erc721";
- * 
+ *
  * const account = useActiveAccount();
  * const contractEvents = useContractEvents({
  *  contract
