@@ -39,6 +39,12 @@ export type BuyWithFiatQuote = {
     decimals: number;
     currencySymbol: string;
   };
+  fromCurrencyWithFees: {
+    amount: string;
+    amountUnits: string;
+    decimals: number;
+    currencySymbol: string;
+  };
   toToken: {
     symbol?: string | undefined;
     priceUSDCents?: number | undefined;
