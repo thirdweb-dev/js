@@ -7,7 +7,7 @@ import {
   spacing,
 } from "../design-system/index.js";
 
-type ButtonProps = {
+export type ButtonProps = {
   variant: "primary" | "secondary" | "link" | "accent" | "outline";
   theme?: Theme;
   fullWidth?: boolean;

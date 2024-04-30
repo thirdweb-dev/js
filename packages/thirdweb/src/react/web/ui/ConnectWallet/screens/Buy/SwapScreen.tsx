@@ -29,7 +29,6 @@ import {
   useActiveAccount,
   useActiveWallet,
   useActiveWalletChain,
-  useSwitchActiveWalletChain,
 } from "../../../../../core/hooks/wallets/wallet-hooks.js";
 import { wait } from "../../../../../core/utils/wait.js";
 import { LoadingScreen } from "../../../../wallets/shared/LoadingScreen.js";
@@ -42,6 +41,7 @@ import { DynamicHeight } from "../../../components/DynamicHeight.js";
 import { Skeleton } from "../../../components/Skeleton.js";
 import { Spacer } from "../../../components/Spacer.js";
 import { Spinner } from "../../../components/Spinner.js";
+import { SwitchNetworkButton } from "../../../components/SwitchNetwork.js";
 import { TokenIcon } from "../../../components/TokenIcon.js";
 import { Container, Line, ModalHeader } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
@@ -157,9 +157,6 @@ export function BuyScreenContent(props: {
   const buyWithCryptoOptions = props.payOptions.buyWithCrypto;
   const showPaymentSelection =
     buyWithFiatOptions !== false && buyWithCryptoOptions !== false;
-
-  const [isSwitching, setIsSwitching] = useState(false);
-  const switchActiveWalletChain = useSwitchActiveWalletChain();
 
   const [method, setMethod] = useState<"crypto" | "creditCard">(
     buyWithCryptoOptions === false
@@ -473,9 +470,10 @@ export function BuyScreenContent(props: {
     !!fromTokenBalanceQuery.data &&
     Number(fromTokenBalanceQuery.data.displayValue) < Number(sourceTokenAmount);
 
-  const disableSwapContinue = !swapQuote || isNotEnoughBalance;
+  const disableSwapContinue = !swapQuote || isNotEnoughBalance || isMiniScreen;
   const disableCreditCardContinue = !fiatQuoteQuery.data;
-  const switchChainRequired = props.activeChain.id !== fromChain.id;
+  const switchChainRequired =
+    method === "crypto" && props.activeChain.id !== fromChain.id;
 
   const errorToShow =
     (method === "crypto" && buyWithCryptoQuoteQuery.error) ||
@@ -679,31 +677,11 @@ export function BuyScreenContent(props: {
           {method === "crypto" && (
             <>
               {switchChainRequired && (
-                <Button
-                  fullWidth
+                <SwitchNetworkButton
                   variant="accent"
-                  disabled={isMiniScreen}
-                  data-disabled={isMiniScreen}
-                  gap="sm"
-                  onClick={async () => {
-                    setIsSwitching(true);
-                    try {
-                      await switchActiveWalletChain(fromChain);
-                    } catch {}
-                    setIsSwitching(false);
-                  }}
-                >
-                  {!isMiniScreen ? (
-                    <>
-                      {isSwitching ? "Switching" : "Switch Network"}
-                      {isSwitching && (
-                        <Spinner size="sm" color="accentButtonText" />
-                      )}
-                    </>
-                  ) : (
-                    "Continue"
-                  )}
-                </Button>
+                  fullWidth
+                  chain={fromChain}
+                />
               )}
 
               {!switchChainRequired && (

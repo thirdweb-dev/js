@@ -16,6 +16,7 @@ import { Skeleton } from "../../../../components/Skeleton.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
 import { StepBar } from "../../../../components/StepBar.js";
+import { SwitchNetworkButton } from "../../../../components/SwitchNetwork.js";
 import { TokenIcon } from "../../../../components/TokenIcon.js";
 import { Container, Line, ModalHeader } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
@@ -51,8 +52,6 @@ export function SwapConfirmationScreen(props: {
 }) {
   const sendTransactionMutation = useSendTransactionCore();
   const activeChain = useActiveWalletChain();
-  const [isSwitching, setIsSwitching] = useState(false);
-  const switchActiveWalletChain = useSwitchActiveWalletChain();
 
   const isApprovalRequired = props.quote.approval !== undefined;
   const initialStep = isApprovalRequired ? "approval" : "swap";
@@ -155,21 +154,11 @@ export function SwapConfirmationScreen(props: {
       )}
 
       {activeChain && activeChain.id !== props.fromChain.id ? (
-        <Button
+        <SwitchNetworkButton
           fullWidth
+          chain={props.fromChain}
           variant="accent"
-          gap="sm"
-          onClick={async () => {
-            setIsSwitching(true);
-            try {
-              await switchActiveWalletChain(props.fromChain);
-            } catch {}
-            setIsSwitching(false);
-          }}
-        >
-          {isSwitching ? "Switching" : "Switch Network"}
-          {isSwitching && <Spinner size="sm" color="accentButtonText" />}
-        </Button>
+        />
       ) : (
         <Button
           variant="accent"

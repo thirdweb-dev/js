@@ -41,9 +41,7 @@ export function PaymentSelection(props: {
             props.onSelect("crypto");
           }}
         >
-          <Container gap="xxs" flex="row" center="y">
-            Crypto
-          </Container>
+          Crypto
         </CheckButton>
       </Container>
     </div>
@@ -60,6 +58,11 @@ const CheckButton = /* @__PURE__ */ styled(Button)(
       borderColor: props.isChecked
         ? theme.colors.accentText
         : theme.colors.borderColor,
+      "&:hover": {
+        borderColor: props.isChecked
+          ? theme.colors.accentText
+          : theme.colors.secondaryText,
+      },
       gap: spacing.xs,
       paddingInline: spacing.xxs,
       paddingBlock: spacing.sm,
