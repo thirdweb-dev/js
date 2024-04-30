@@ -80,7 +80,6 @@ export function PostOnRampSwap(props: {
       account={account}
       buyWithCryptoQuote={postOnRampQuoteQuery.data}
       client={props.client}
-      onQuoteFinalized={() => {}}
       onBack={props.onBack}
       onViewPendingTx={props.onViewPendingTx}
       isFiatFlow={true}

@@ -2,10 +2,7 @@ import { CrossCircledIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
-import {
-  useActiveWalletChain,
-  useSwitchActiveWalletChain,
-} from "../../../../../../../exports/react-native.js";
+import { useActiveWalletChain } from "../../../../../../../exports/react-native.js";
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
 import { waitForReceipt } from "../../../../../../../transaction/actions/wait-for-tx-receipt.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
@@ -34,7 +31,6 @@ import { addPendingSwapTransaction } from "./pendingSwapTx.js";
  * @internal
  */
 export function SwapConfirmationScreen(props: {
-  onQuoteFinalized: (quote: BuyWithCryptoQuote) => void;
   onBack: () => void;
   client: ThirdwebClient;
   quote: BuyWithCryptoQuote;
@@ -174,7 +170,7 @@ export function SwapConfirmationScreen(props: {
                 );
 
                 await waitForReceipt({ ...tx, maxBlocksWaitTime: 50 });
-                props.onQuoteFinalized(props.quote);
+                // props.onQuoteFinalized(props.quote);
 
                 setStep("swap");
                 setStatus("idle");
@@ -192,7 +188,7 @@ export function SwapConfirmationScreen(props: {
                 );
 
                 await waitForReceipt({ ..._swapTx, maxBlocksWaitTime: 50 });
-                props.onQuoteFinalized(props.quote);
+                // props.onQuoteFinalized(props.quote);
 
                 // these will be defined by this time
                 if (

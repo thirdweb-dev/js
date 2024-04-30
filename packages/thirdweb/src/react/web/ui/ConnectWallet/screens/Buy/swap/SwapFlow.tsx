@@ -16,7 +16,6 @@ type SwapFlowProps = {
   buyWithCryptoQuote: BuyWithCryptoQuote;
   account: Account;
   onViewPendingTx: () => void;
-  onQuoteFinalized: (quote: BuyWithCryptoQuote) => void;
   client: ThirdwebClient;
   isFiatFlow: boolean;
 };
@@ -110,7 +109,6 @@ export function SwapFlow(props: SwapFlowProps) {
       fromTokenSymbol={fromTokenSymbol}
       client={props.client}
       onBack={props.onBack}
-      onQuoteFinalized={props.onQuoteFinalized}
       onTryAgain={props.onBack}
       quote={quote}
       isFiatFlow={props.isFiatFlow}

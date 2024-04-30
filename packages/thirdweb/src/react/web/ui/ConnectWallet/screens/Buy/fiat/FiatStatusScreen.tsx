@@ -7,6 +7,7 @@ import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
 import { StepBar } from "../../../../components/StepBar.js";
 import { Container, ModalHeader } from "../../../../components/basic.js";
+import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { iconSize } from "../../../../design-system/index.js";
 import { AccentFailIcon } from "../../../icons/AccentFailIcon.js";
@@ -18,7 +19,9 @@ export function FiatStatusScreen(props: {
   intentId: string;
   onViewPendingTx: () => void;
   hasTwoSteps: boolean;
+  openedWindow: Window | null;
 }) {
+  const { openedWindow } = props;
   const statusQuery = useBuyWithFiatStatus({
     intentId: props.intentId,
     client: props.client,
@@ -40,6 +43,19 @@ export function FiatStatusScreen(props: {
     statusQuery.data?.status === "CRYPTO_SWAP_REQUIRED" ||
     statusQuery.data?.status === "CRYPTO_SWAP_FAILED" ||
     statusQuery.data?.status === "CRYPTO_SWAP_IN_PROGRESS";
+
+  useEffect(() => {
+    if (!openedWindow || !statusQuery.data) {
+      return;
+    }
+
+    if (
+      statusQuery.data.status === "CRYPTO_SWAP_REQUIRED" ||
+      statusQuery.data.status === "ON_RAMP_TRANSFER_COMPLETED"
+    ) {
+      openedWindow.close();
+    }
+  }, [statusQuery.data, openedWindow]);
 
   useEffect(() => {
     if (
@@ -115,7 +131,10 @@ export function FiatStatusScreen(props: {
           <Text color="primaryText" size="lg" center>
             Buy Complete
           </Text>
-          <Spacer y="xl" />
+          <Spacer y="xxl" />
+          <Button variant="accent" fullWidth onClick={props.onBack}>
+            Done
+          </Button>
         </>
       )}
 

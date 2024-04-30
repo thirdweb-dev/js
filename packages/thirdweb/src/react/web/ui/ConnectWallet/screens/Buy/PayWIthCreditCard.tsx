@@ -26,6 +26,7 @@ export function PayWithCreditCard(props: {
   client: ThirdwebClient;
   currency: CurrencyMeta;
   onSelectCurrency: () => void;
+  disableCurrencySelection?: boolean;
 }) {
   return (
     <Container
@@ -46,6 +47,7 @@ export function PayWithCreditCard(props: {
     >
       {/* Left */}
       <CurrencyButton
+        disabled={props.disableCurrencySelection}
         variant="secondary"
         onClick={props.onSelectCurrency}
         style={{
@@ -55,7 +57,9 @@ export function PayWithCreditCard(props: {
         <props.currency.icon size={iconSize.md} />
         <Container flex="row" center="y" gap="xxs">
           <Text color="primaryText">{props.currency.shorthand}</Text>
-          <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
+          {!props.disableCurrencySelection && (
+            <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
+          )}
         </Container>
       </CurrencyButton>
 
@@ -92,9 +96,12 @@ const CurrencyButton = /* @__PURE__ */ styled(Button)(() => {
   return {
     background: "transparent",
     border: "1px solid transparent",
-    "&:hover": {
+    ":not([disabled]):hover": {
       background: "transparent",
       borderColor: theme.colors.accentText,
+    },
+    "&[disabled]:hover": {
+      background: "transparent",
     },
     justifyContent: "flex-start",
     transition: "background 0.3s, border-color 0.3s",

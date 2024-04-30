@@ -23,10 +23,14 @@ export function FiatFlow(props: {
   testMode: boolean;
   theme: "light" | "dark";
   onViewPendingTx: () => void;
+  openedWindow: Window | null;
 }) {
   const hasTwoSteps = isSwapRequiredPostOnramp(props.quote);
   const [screen, setScreen] = useState<"step-1" | "status">(
     hasTwoSteps ? "step-1" : "status",
+  );
+  const [popupWindow, setPopupWindow] = useState<Window | null>(
+    props.openedWindow,
   );
 
   if (screen === "step-1") {
@@ -37,7 +41,8 @@ export function FiatFlow(props: {
         quote={props.quote}
         step={1}
         onContinue={() => {
-          openOnrampPopup(props.quote.onRampLink, props.theme);
+          const popup = openOnrampPopup(props.quote.onRampLink, props.theme);
+          setPopupWindow(popup);
           setScreen("status");
         }}
       />
@@ -52,6 +57,7 @@ export function FiatFlow(props: {
         onBack={props.onBack}
         onViewPendingTx={props.onViewPendingTx}
         hasTwoSteps={hasTwoSteps}
+        openedWindow={popupWindow}
       />
     );
   }
