@@ -82,7 +82,7 @@ export function PayWithCrypto(props: {
           client={props.client}
         />
         <Container flex="column" gap="xxs">
-          <Container flex="row" gap="xs" center="y">
+          <Container flex="row" gap="xs" center="y" color="primaryText">
             <TokenSymbol token={props.token} chain={props.chain} size="sm" />
             <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
           </Container>
