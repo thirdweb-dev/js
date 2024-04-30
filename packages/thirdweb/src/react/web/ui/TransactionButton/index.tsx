@@ -107,59 +107,42 @@ export function TransactionButton(props: TransactionButtonProps) {
 
   const sendTransaction = useSendTransactionCore(undefined, gasless);
 
-  if (!isPending) {
-    return (
-      <Button
-        gap="xs"
-        disabled={!account || disabled}
-        variant={"primary"}
-        data-is-loading={isPending}
-        onClick={async (e) => {
-          if (onClick) {
-            onClick(e);
-          }
-          try {
-            setIsPending(true);
-            const resolvedTx = await transaction();
-
-            if (wallet && wallet.getChain()?.id !== resolvedTx.chain.id) {
-              await wallet?.switchChain(resolvedTx.chain);
-            }
-
-            const result = await sendTransaction.mutateAsync(resolvedTx);
-
-            if (onTransactionSent) {
-              onTransactionSent(result);
-            }
-
-            if (onTransactionConfirmed) {
-              const receipt = await doWaitForReceipt(result);
-              onTransactionConfirmed(receipt);
-            }
-          } catch (error) {
-            if (onError) {
-              onError(error as Error);
-            }
-          } finally {
-            setIsPending(false);
-          }
-        }}
-        style={{
-          opacity: !account || disabled ? 0.5 : 1,
-          minWidth: "150px",
-          ...buttonProps.style,
-        }}
-        {...buttonProps}
-      >
-        {children}
-      </Button>
-    );
-  }
-
   return (
     <Button
-      disabled={true}
+      gap="xs"
+      disabled={!account || disabled || isPending}
       variant={"primary"}
+      data-is-loading={isPending}
+      onClick={async (e) => {
+        if (onClick) {
+          onClick(e);
+        }
+        try {
+          setIsPending(true);
+          const resolvedTx = await transaction();
+
+          if (wallet && wallet.getChain()?.id !== resolvedTx.chain.id) {
+            await wallet?.switchChain(resolvedTx.chain);
+          }
+
+          const result = await sendTransaction.mutateAsync(resolvedTx);
+
+          if (onTransactionSent) {
+            onTransactionSent(result);
+          }
+
+          if (onTransactionConfirmed) {
+            const receipt = await doWaitForReceipt(result);
+            onTransactionConfirmed(receipt);
+          }
+        } catch (error) {
+          if (onError) {
+            onError(error as Error);
+          }
+        } finally {
+          setIsPending(false);
+        }
+      }}
       style={{
         opacity: !account || disabled ? 0.5 : 1,
         minWidth: "150px",
@@ -168,19 +151,24 @@ export function TransactionButton(props: TransactionButtonProps) {
       }}
       {...buttonProps}
     >
-      <div
-        style={{
-          position: "absolute",
-          display: "flex",
-          alignItems: "center",
-          height: "100%",
-          top: 0,
-          bottom: 0,
-          margin: "auto",
-        }}
-      >
-        <Spinner size="md" color="primaryButtonText" />
-      </div>
+      <span style={{ visibility: isPending ? "hidden" : "visible" }}>
+        {children}
+      </span>
+      {isPending && (
+        <div
+          style={{
+            position: "absolute",
+            display: "flex",
+            alignItems: "center",
+            height: "100%",
+            top: 0,
+            bottom: 0,
+            margin: "auto",
+          }}
+        >
+          <Spinner size="md" color="primaryButtonText" />
+        </div>
+      )}
     </Button>
   );
 }
