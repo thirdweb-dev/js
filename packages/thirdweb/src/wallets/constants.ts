@@ -1,19 +1,5 @@
 // Constants for most common wallets
 export const COINBASE = "com.coinbase.wallet";
-export type Coinbase = typeof COINBASE;
 export const METAMASK = "io.metamask";
-export type Metamask = typeof METAMASK;
-export const TRUST_WALLET = "com.trustwallet.app";
-export type TrustWallet = typeof TRUST_WALLET;
-export const RABBY = "io.rabby";
-export type Rabby = typeof RABBY;
 export const RAINBOW = "me.rainbow";
-export type Rainbow = typeof RAINBOW;
-export const SAFE = "global.safe";
-export type Safe = typeof SAFE;
-export const UNISWAP = "org.uniswap";
-export type Uniswap = typeof UNISWAP;
 export const ZERION = "io.zerion.wallet";
-export type Zerion = typeof ZERION;
-export const ARGENT = "xyz.argent";
-export type Argent = typeof ARGENT;

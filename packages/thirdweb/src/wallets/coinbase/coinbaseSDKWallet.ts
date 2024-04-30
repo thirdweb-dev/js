@@ -27,7 +27,7 @@ import {
   stringToHex,
   uint8ArrayToHex,
 } from "../../utils/encoding/hex.js";
-import type { Coinbase } from "../constants.js";
+import type { COINBASE } from "../constants.js";
 import { getDefaultAppMetadata } from "../utils/defaultDappMetadata.js";
 import type { WalletEmitter } from "../wallet-emitter.js";
 import type {
@@ -112,7 +112,7 @@ export type CoinbaseSDKWalletConnectionOptions = {
 let _provider: ProviderInterface | undefined;
 
 async function initProvider(
-  options?: CreateWalletArgs<Coinbase>[1],
+  options?: CreateWalletArgs<typeof COINBASE>[1],
 ): Promise<ProviderInterface> {
   if (!_provider) {
     const client = new CoinbaseWalletSDK({
@@ -135,7 +135,7 @@ function onConnect(
   address: string,
   chain: Chain,
   provider: ProviderInterface,
-  emitter: WalletEmitter<Coinbase>,
+  emitter: WalletEmitter<typeof COINBASE>,
 ): [Account, Chain, DisconnectFn, SwitchChainFn] {
   const account: Account = {
     address,
@@ -253,9 +253,9 @@ function onConnect(
  * @internal
  */
 export async function connectCoinbaseWalletSDK(
-  options: WalletConnectionOption<Coinbase>,
-  createOptions: CreateWalletArgs<Coinbase>[1],
-  emitter: WalletEmitter<Coinbase>,
+  options: WalletConnectionOption<typeof COINBASE>,
+  createOptions: CreateWalletArgs<typeof COINBASE>[1],
+  emitter: WalletEmitter<typeof COINBASE>,
 ): Promise<ReturnType<typeof onConnect>> {
   const provider = await initProvider(createOptions);
   const accounts = (await provider.request({
@@ -294,9 +294,9 @@ export async function connectCoinbaseWalletSDK(
  * @internal
  */
 export async function autoConnectCoinbaseWalletSDK(
-  options: WalletConnectionOption<Coinbase>,
-  createOptions: CreateWalletArgs<Coinbase>[1],
-  emitter: WalletEmitter<Coinbase>,
+  options: WalletConnectionOption<typeof COINBASE>,
+  createOptions: CreateWalletArgs<typeof COINBASE>[1],
+  emitter: WalletEmitter<typeof COINBASE>,
 ): Promise<ReturnType<typeof onConnect>> {
   const provider = await initProvider(createOptions);
 

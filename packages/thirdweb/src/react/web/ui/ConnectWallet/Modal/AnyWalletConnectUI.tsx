@@ -3,7 +3,7 @@ import type {
   InjectedSupportedWalletIds,
   WCSupportedWalletIds,
 } from "../../../../../wallets/__generated__/wallet-ids.js";
-import { COINBASE, type Coinbase } from "../../../../../wallets/constants.js";
+import { COINBASE } from "../../../../../wallets/constants.js";
 import { getInstalledWalletProviders } from "../../../../../wallets/injected/mipdStore.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
@@ -96,7 +96,7 @@ export function AnyWalletConnectUI(props: {
           }}
           onBack={props.onBack}
           done={props.done}
-          wallet={props.wallet as Wallet<Coinbase>}
+          wallet={props.wallet as Wallet<typeof COINBASE>}
           walletInfo={walletInfo.data}
         />
       </Suspense>

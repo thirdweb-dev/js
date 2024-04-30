@@ -13,7 +13,7 @@ import type {
 } from "./wallet-types.js";
 
 import { trackConnect } from "../analytics/track.js";
-import { COINBASE, type Coinbase } from "./constants.js";
+import { COINBASE } from "./constants.js";
 import type { WCConnectOptions } from "./wallet-connect/types.js";
 import { createWalletEmitter } from "./wallet-emitter.js";
 
@@ -446,9 +446,9 @@ export function inAppWallet(
  */
 
 function coinbaseWalletSDK(
-  createOptions?: CreateWalletArgs<Coinbase>[1],
-): Wallet<Coinbase> {
-  const emitter = createWalletEmitter<Coinbase>();
+  createOptions?: CreateWalletArgs<typeof COINBASE>[1],
+): Wallet<typeof COINBASE> {
+  const emitter = createWalletEmitter<typeof COINBASE>();
   let account: Account | undefined = undefined;
   let chain: Chain | undefined = undefined;
 
