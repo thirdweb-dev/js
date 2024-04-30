@@ -40,7 +40,7 @@ const helpProducts = [
     helpArticles: [
       {
         title: "Contract Verification",
-        url: "https://support.thirdweb.com/other-faqs/tFbbEYCSbJ1GTeXoPs4QFw/how-to-verify-thirdweb-prebuilt-contracts/4VGyYhzjaSJ9JjmVQ6WNL6",
+        url: "https://support.thirdweb.com/how-to/vGcHXQ7tHXuSJf7jaL2y5Q/how-to-verify-a-contract-using-thirdweb-sdk/cTwpMSQveggnMSwXGRKzXv",
       },
       {
         title: "Batch Upload Troubleshooting",
@@ -60,33 +60,34 @@ const helpProducts = [
     helpArticles: [
       {
         title: "Storage FAQ",
-        url: "https://support.thirdweb.com/infrastructure/eRgkLPBdL1WJJLzAbuWrPZ/storage-faqs/6AX8F9vCWuiAhVGqttRo8E",
+        url: "https://support.thirdweb.com/other-faqs/tFbbEYCSbJ1GTeXoPs4QFw/storage-faqs/8nhnidc5B9K5js9pU2RBwa",
       },
       {
         title: "RPC Edge FAQ",
-        url: "https://support.thirdweb.com/infrastructure/eRgkLPBdL1WJJLzAbuWrPZ/rpc-edge-faqs/tfYpb77UP8c4qw83qGsjFY",
+        url: "https://support.thirdweb.com/other-faqs/tFbbEYCSbJ1GTeXoPs4QFw/rpc-edge-faqs/r3kJ3PK2UHUDJ1LWfM8a2D",
       },
       {
         title: "Add Custom RPC to your app",
-        url: "https://support.thirdweb.com/infrastructure/eRgkLPBdL1WJJLzAbuWrPZ/adding-a-custom-rpc-to-your-app/aQSJ8nDisLwUe49zY2KqrF",
+        url: "https://support.thirdweb.com/how-to/vGcHXQ7tHXuSJf7jaL2y5Q/how-to-add-a-custom-rpc-url-into-your-front-end-backend-or-dashboard/gWYPf4QhPd9M2qzuMnMf7o",
       },
     ],
   },
-  {
-    title: "Pay",
-    icon: require("../../public/assets/support/payments.svg"),
-    viewAllUrl: "https://support.thirdweb.com/payments/dsjpUFZYNivScVEb3PZGrj/",
-    helpArticles: [
-      {
-        title: "Checkout buyer FAQ",
-        url: "https://support.thirdweb.com/payments/dsjpUFZYNivScVEb3PZGrj/paper-buyer-faq/dejjmXeDPPAEJsA6n35pCi",
-      },
-      {
-        title: "NFT Checkout Buyer FAQ",
-        url: "https://support.thirdweb.com/payments/dsjpUFZYNivScVEb3PZGrj/nft-checkout-faqs/pC2JvfwLpXdeH9Dncv5dUm",
-      },
-    ],
-  },
+  // {
+  //   title: "Pay",
+  //   icon: require("../../public/assets/support/payments.svg"),
+  //   viewAllUrl: "https://support.thirdweb.com/payments/dsjpUFZYNivScVEb3PZGrj/",
+  //   helpArticles: [
+  //     {
+  //       title: "Checkout buyer FAQ",
+  //       url: "https://support.thirdweb.com/payments/dsjpUFZYNivScVEb3PZGrj/paper-buyer-faq/dejjmXeDPPAEJsA6n35pCi",
+  //     },
+  //     {
+  //       title: "NFT Checkout Buyer FAQ",
+  //       url: "https://support.thirdweb.com/payments/dsjpUFZYNivScVEb3PZGrj/nft-checkout-faqs/pC2JvfwLpXdeH9Dncv5dUm",
+  //     },
+  //   ],
+  // },
+
   {
     title: "Account",
     icon: require("../../public/assets/support/account.svg"),
