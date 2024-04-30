@@ -4,7 +4,7 @@ import type { ThirdwebClient } from "../../../client/client.js";
 import type { Wallet } from "../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../wallets/types.js";
-import type { ConnectButton_connectModalOptions } from "../../web/ui/ConnectWallet/ConnectWalletProps.js";
+import type { ConnectButton_connectModalOptions } from "../../web/ui/ConnectWallet/ConnectButtonProps.js";
 import type { ConnectLocale } from "../../web/ui/ConnectWallet/locale/types.js";
 import type { LocaleId } from "../../web/ui/types.js";
 import type { SiweAuthOptions } from "../hooks/auth/useSiweAuth.js";

@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/wallets",
-  "version": "2.5.12",
+  "version": "2.5.13",
   "main": "dist/thirdweb-dev-wallets.cjs.js",
   "module": "dist/thirdweb-dev-wallets.esm.js",
   "browser": {
@@ -541,8 +541,8 @@
     "@walletconnect/jsonrpc-utils": "^1.0.8",
     "@walletconnect/modal": "^2.6.2",
     "@walletconnect/types": "^2.12.1",
-    "@walletconnect/utils": "^2.12.1",
-    "@walletconnect/web3wallet": "^1.11.1",
+    "@walletconnect/utils": "^2.12.2",
+    "@walletconnect/web3wallet": "^1.11.2",
     "asn1.js": "5.4.1",
     "bn.js": "5.2.1",
     "buffer": "^6.0.3",

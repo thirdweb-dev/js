@@ -5,7 +5,7 @@ import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.
 import type { InjectedWalletLocale } from "../injected/locale/types.js";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ScanScreen } from "./ScanScreen.js";
+import { ConnectingScreen } from "./ConnectingScreen.js";
 
 /**
  * @internal
@@ -19,25 +19,22 @@ function CoinbaseSDKWalletConnectUI(props: {
   walletInfo: WalletInfo;
 }) {
   const { onBack, done, wallet, walletInfo, onGetStarted, locale } = props;
-  const [qrCodeUri, setQrCodeUri] = useState<string | undefined>();
+  const [errorConnecting, setErrorConnecting] = useState(false);
   const { client, chain } = useConnectUI();
 
   const connect = useCallback(() => {
+    setErrorConnecting(false);
     wallet
       .connect({
         client,
         chain,
-        onUri: (uri) => {
-          setQrCodeUri(uri);
-        },
-        headlessMode: true,
-        reloadOnDisconnect: false,
       })
       .then(() => {
         done();
       })
       .catch((e) => {
         console.error(e);
+        setErrorConnecting(true);
       });
   }, [client, wallet, chain, done]);
 
@@ -51,14 +48,20 @@ function CoinbaseSDKWalletConnectUI(props: {
   }, [connect]);
 
   return (
-    <ScanScreen
-      qrScanInstruction={locale.scanScreen.instruction}
+    <ConnectingScreen
+      locale={{
+        getStartedLink: locale.getStartedLink,
+        instruction: locale.connectionScreen.instruction,
+        tryAgain: locale.connectionScreen.retry,
+        inProgress: locale.connectionScreen.inProgress,
+        failed: locale.connectionScreen.failed,
+      }}
       onBack={onBack}
-      onGetStarted={onGetStarted}
-      qrCodeUri={qrCodeUri}
       walletName={walletInfo.name}
-      walletId="com.coinbase.wallet"
-      getStartedLink={locale.getStartedLink}
+      walletId={wallet.id}
+      errorConnecting={errorConnecting}
+      onRetry={connect}
+      onGetStarted={onGetStarted}
     />
   );
 }
