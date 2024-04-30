@@ -4,7 +4,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import type { Abi, AbiEvent } from "abitype";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { getContractEvents } from "../../../../event/actions/get-events.js";
 import type { ParseEventLogsResult } from "../../../../event/actions/parse-logs.js";
 import {
@@ -31,7 +31,13 @@ type UseContractEventsOptions<
  * @example
  * ```jsx
  * import { useContractEvents } from "thirdweb/react";
- * const contractEvents = useContractEvents({contract});
+ * import { tokensClaimedEvent } from "thirdweb/extensions/erc721";
+ * 
+ * const account = useActiveAccount();
+ * const contractEvents = useContractEvents({
+ *  contract
+ *  events: [tokensClaimedEvent({ claimer: account?.address })],
+ * });
  * ```
  * @contract
  */
@@ -48,6 +54,7 @@ export function useContractEvents<
     enabled = true,
     watch = true,
   } = options;
+  const latestBlockNumber = useRef<bigint>(); // We use this to keep track of the latest block number when new pollers are spawned
 
   const queryClient = useQueryClient();
 
@@ -70,6 +77,7 @@ export function useContractEvents<
     queryFn: async () => {
       const rpcRequest = getRpcClient(contract);
       const currentBlockNumber = await eth_blockNumber(rpcRequest);
+      latestBlockNumber.current = currentBlockNumber;
       const initialEvents = await getContractEvents({
         contract,
         events: events,
@@ -85,17 +93,22 @@ export function useContractEvents<
       // don't watch if not enabled or if watch is false
       return;
     }
+
     // the return is important here because it will unwatch the events
     return watchContractEvents<abi, abiEvents>({
       contract,
       onEvents: (newEvents) => {
+        if (newEvents.length > 0 && newEvents[0]) {
+          latestBlockNumber.current = newEvents[0].blockNumber; // Update the latest block number to avoid duplicate events if a new poller is spawned during this block
+        }
         // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
-        queryClient.setQueryData(queryKey, (oldEvents: any = []) => {
-          const newLogs = [...oldEvents, ...newEvents];
-          return newLogs;
-        });
+        queryClient.setQueryData(queryKey, (oldEvents: any = []) => [
+          ...oldEvents,
+          ...newEvents,
+        ]);
       },
       events,
+      latestBlockNumber: latestBlockNumber.current,
     });
   }, [contract, enabled, events, queryClient, queryKey, watch]);
 

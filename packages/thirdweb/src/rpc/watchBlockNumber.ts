@@ -32,12 +32,13 @@ function createBlockNumberPoller(
   client: ThirdwebClient,
   chain: Chain,
   overPollRatio?: number,
+  latestBlockNumber?: bigint,
 ) {
   let subscribers: Array<(blockNumber: bigint) => void> = [];
   let blockTimesWindow: number[] = [];
 
   let isActive = false;
-  let lastBlockNumber: bigint | undefined;
+  let lastBlockNumber: bigint | undefined = latestBlockNumber;
   let lastBlockAt: number | undefined;
 
   const rpcRequest = getRpcClient({ client, chain });
@@ -49,8 +50,6 @@ function createBlockNumberPoller(
   async function poll() {
     // stop polling if there are no more subscriptions
     if (!isActive) {
-      lastBlockNumber = undefined;
-      lastBlockAt = undefined;
       return;
     }
     const blockNumber = await eth_blockNumber(rpcRequest);
@@ -114,8 +113,6 @@ function createBlockNumberPoller(
       subscribers = subscribers.filter((fn) => fn !== callBack);
       // if the new subscribers Array is empty (aka we were the last subscriber) -> stop polling
       if (subscribers.length === 0) {
-        lastBlockNumber = undefined;
-        lastBlockAt = undefined;
         isActive = false;
       }
     };
@@ -140,6 +137,7 @@ export type WatchBlockNumberOptions = {
   chain: Chain;
   onNewBlockNumber: (blockNumber: bigint) => void;
   overPollRatio?: number;
+  latestBlockNumber?: bigint;
 };
 
 /**
@@ -163,13 +161,19 @@ export type WatchBlockNumberOptions = {
  * @rpc
  */
 export function watchBlockNumber(opts: WatchBlockNumberOptions) {
-  const { client, chain, onNewBlockNumber, overPollRatio } = opts;
+  const { client, chain, onNewBlockNumber, overPollRatio, latestBlockNumber } =
+    opts;
   const chainId = chain.id;
   // if we already have a poller for this chainId -> use it
   let poller = existingPollers.get(chainId);
   // otherwise create a new poller
   if (!poller) {
-    poller = createBlockNumberPoller(client, chain, overPollRatio);
+    poller = createBlockNumberPoller(
+      client,
+      chain,
+      overPollRatio,
+      latestBlockNumber,
+    );
     // and store it for later use
     existingPollers.set(chainId, poller);
   }
