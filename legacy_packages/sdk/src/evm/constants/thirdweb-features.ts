@@ -210,36 +210,36 @@ export const coreContractAbi = [
   },
 ];
 
-export const hookAbi = [
+export const extensionContractAbi = [
   {
     type: "function",
-    name: "getHookInfo",
+    name: "getExtensionConfig",
     inputs: [],
     outputs: [
       {
         name: "",
         type: "tuple",
-        internalType: "struct IHookInfo.HookInfo",
+        internalType: "struct IExtensionTypes.ExtensionConfig",
         components: [
           {
-            name: "hookFlags",
-            type: "uint256",
-            internalType: "uint256",
+            name: "callbackFunctions",
+            type: "bytes4[]",
+            internalType: "bytes4[]",
           },
           {
-            name: "hookFallbackFunctions",
+            name: "extensionABI",
             type: "tuple[]",
-            internalType: "struct IHookInfo.HookFallbackFunction[]",
+            internalType: "struct IExtensionTypes.ExtensionFunction[]",
             components: [
               {
-                name: "functionSelector",
+                name: "selector",
                 type: "bytes4",
                 internalType: "bytes4",
               },
               {
                 name: "callType",
                 type: "uint8",
-                internalType: "enum IHookInfo.CallType",
+                internalType: "enum IExtensionTypes.CallType",
               },
               {
                 name: "permissioned",
@@ -406,15 +406,15 @@ export const FEATURE_MODULAR_CORE = {
   features: {},
 } as const;
 
-export const FEATURE_MODULAR_HOOK = {
-  name: "ModularHook",
-  namespace: "modular.hook",
+export const FEATURE_MODULAR_EXTENSION = {
+  name: "ModularExtension",
+  namespace: "modular.extension",
   docLinks: {
     sdk: "",
     //TODO
     contracts: "",
   },
-  abis: [hookAbi],
+  abis: [extensionContractAbi],
   features: {},
 } as const;
 
