@@ -408,7 +408,7 @@ export const MiniPlayground: React.FC<{
         <Box
           background={["none", gradientBg]}
           p={10}
-          minH={["auto", "700px"]}
+          height={["auto", "700px"]}
           role="group"
           position="relative"
           borderRadius="lg"
