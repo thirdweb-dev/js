@@ -800,7 +800,7 @@ function FiatScreenContent(
         </Text>
 
         <Spacer y="lg" />
-        <FiatFees quote={fiatQuoteQuery.data} align="left" />
+        <FiatFees quote={fiatQuoteQuery.data} />
       </div>,
     );
   }
@@ -827,7 +827,7 @@ function FiatScreenContent(
       {/* Show Currency Selector + Calculated Amount */}
       <PayWithCreditCard
         isLoading={fiatQuoteQuery.isLoading}
-        value={fiatQuoteQuery.data?.fromCurrency.amount}
+        value={fiatQuoteQuery.data?.fromCurrencyWithFees.amount}
         client={client}
         currency={selectedCurrency}
         onSelectCurrency={showCurrencySelector}

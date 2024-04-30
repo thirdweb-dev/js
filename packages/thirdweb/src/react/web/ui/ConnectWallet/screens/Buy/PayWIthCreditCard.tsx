@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import type { ThirdwebClient } from "../../../../../../client/client.js";
+import { formatNumber } from "../../../../../../utils/formatNumber.js";
 import { Skeleton } from "../../../components/Skeleton.js";
 import { Container } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
@@ -85,7 +86,7 @@ export function PayWithCreditCard(props: {
           <Skeleton width="100px" height={fontSize.lg} />
         ) : (
           <Text size="lg" color={props.value ? "primaryText" : "secondaryText"}>
-            {props.value ? `${props.value}` : "--"}
+            {props.value ? `${formatNumber(Number(props.value), 4)}` : "--"}
           </Text>
         )}
       </div>

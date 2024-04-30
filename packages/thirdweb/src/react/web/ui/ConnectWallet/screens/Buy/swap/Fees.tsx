@@ -1,7 +1,8 @@
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
 import type { BuyWithFiatQuote } from "../../../../../../../pay/buyWithFiat/getQuote.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
-import { Container } from "../../../../components/basic.js";
+import { Spacer } from "../../../../components/Spacer.js";
+import { Container, Line } from "../../../../components/basic.js";
 import { Text } from "../../../../components/text.js";
 
 /**
@@ -46,34 +47,66 @@ export function SwapFees(props: {
  */
 export function FiatFees(props: {
   quote: BuyWithFiatQuote;
-  align: "left" | "right";
 }) {
   return (
-    <Container
-      flex="column"
-      gap="xs"
-      style={{
-        alignItems: props.align === "right" ? "flex-end" : "flex-start",
-      }}
-    >
+    <Container flex="column" gap="xs">
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
+        <Text inline color="secondaryText">
+          Amount
+        </Text>
+        <Text color="primaryText" inline>
+          {formatNumber(Number(props.quote.fromCurrency.amount), 4)}{" "}
+          {props.quote.fromCurrency.currencySymbol}
+        </Text>
+      </div>
+
       {props.quote.processingFees.map((fee, i) => {
         const feeAmount = formatNumber(Number(fee.amount), 4);
 
         return (
-          // biome-ignore lint/suspicious/noArrayIndexKey: index is ok
-          <div key={i}>
+          <div
+            // biome-ignore lint/suspicious/noArrayIndexKey: index is ok
+            key={i}
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            <Text inline color="secondaryText">
+              {fee.feeType === "NETWORK" ? "Network Fee" : "Processing Fee"}
+            </Text>
+
             <Text color="primaryText" inline>
               {feeAmount === 0 ? "~" : ""}
               {feeAmount} {fee.currencySymbol}{" "}
             </Text>
-            {fee.feeType === "NETWORK" ? (
-              <Text inline color="secondaryText" size="sm">
-                (Network Fees)
-              </Text>
-            ) : null}
           </div>
         );
       })}
+
+      <Spacer y="xxs" />
+      <Line />
+      <Spacer y="xxs" />
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
+        <Text inline color="secondaryText">
+          Total
+        </Text>
+        <Text color="primaryText" inline>
+          {formatNumber(Number(props.quote.fromCurrencyWithFees.amount), 4)}{" "}
+          {props.quote.fromCurrencyWithFees.currencySymbol}
+        </Text>
+      </div>
     </Container>
   );
 }
