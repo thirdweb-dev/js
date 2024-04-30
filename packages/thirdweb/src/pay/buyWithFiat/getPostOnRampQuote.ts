@@ -62,6 +62,7 @@ export async function getPostOnRampQuote({
   if (buyWithFiatStatus.status === "CRYPTO_SWAP_REQUIRED") {
     return getBuyWithCryptoQuote({
       client,
+      intentId: buyWithFiatStatus.intentId,
       fromAddress: buyWithFiatStatus.toAddress,
       fromChainId: buyWithFiatStatus.quote.onRampToken.chainId,
       fromTokenAddress: buyWithFiatStatus.quote.onRampToken.tokenAddress,

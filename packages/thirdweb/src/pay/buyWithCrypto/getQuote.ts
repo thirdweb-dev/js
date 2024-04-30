@@ -28,6 +28,11 @@ export type GetBuyWithCryptoQuoteParams = {
   client: ThirdwebClient;
 
   /**
+   * An optional intentId to link the BuyWithCrypto to an OnrampTransaction
+   */
+  intentId?: string;
+
+  /**
    * The address of the wallet from which the tokens will be sent.
    */
   fromAddress: string;
@@ -238,6 +243,10 @@ export async function getBuyWithCryptoQuote(
 
     if (params.maxSlippageBPS) {
       queryParams.append("maxSlippageBPS", params.maxSlippageBPS.toString());
+    }
+
+    if ("intentId" in params && params.intentId) {
+      queryParams.append("intentId", params.intentId);
     }
 
     const queryString = queryParams.toString();
