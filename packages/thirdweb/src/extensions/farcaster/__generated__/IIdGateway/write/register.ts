@@ -104,7 +104,7 @@ export function encodeRegister(options: RegisterParams) {
 }
 
 /**
- * Calls the "register" function on the contract.
+ * Prepares a transaction to call the "register" function on the contract.
  * @param options - The options for the "register" function.
  * @returns A prepared transaction object.
  * @extension FARCASTER
@@ -116,6 +116,9 @@ export function encodeRegister(options: RegisterParams) {
  *  contract,
  *  recovery: ...,
  *  extraStorage: ...,
+ *  overrides: {
+ *    ...
+ *  }
  * });
  *
  * // Send the transaction
@@ -143,5 +146,12 @@ export function register(
       return [resolvedOptions.recovery, resolvedOptions.extraStorage] as const;
     },
     value: async () => (await asyncOptions()).overrides?.value,
+    accessList: async () => (await asyncOptions()).overrides?.accessList,
+    gas: async () => (await asyncOptions()).overrides?.gas,
+    gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
+    maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
+    maxPriorityFeePerGas: async () =>
+      (await asyncOptions()).overrides?.maxPriorityFeePerGas,
+    nonce: async () => (await asyncOptions()).overrides?.nonce,
   });
 }

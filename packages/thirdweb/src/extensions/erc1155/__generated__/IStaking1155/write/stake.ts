@@ -89,7 +89,7 @@ export function encodeStake(options: StakeParams) {
 }
 
 /**
- * Calls the "stake" function on the contract.
+ * Prepares a transaction to call the "stake" function on the contract.
  * @param options - The options for the "stake" function.
  * @returns A prepared transaction object.
  * @extension ERC1155
@@ -101,6 +101,9 @@ export function encodeStake(options: StakeParams) {
  *  contract,
  *  tokenId: ...,
  *  amount: ...,
+ *  overrides: {
+ *    ...
+ *  }
  * });
  *
  * // Send the transaction
@@ -128,5 +131,12 @@ export function stake(
       return [resolvedOptions.tokenId, resolvedOptions.amount] as const;
     },
     value: async () => (await asyncOptions()).overrides?.value,
+    accessList: async () => (await asyncOptions()).overrides?.accessList,
+    gas: async () => (await asyncOptions()).overrides?.gas,
+    gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
+    maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
+    maxPriorityFeePerGas: async () =>
+      (await asyncOptions()).overrides?.maxPriorityFeePerGas,
+    nonce: async () => (await asyncOptions()).overrides?.nonce,
   });
 }

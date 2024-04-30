@@ -28,7 +28,7 @@ export async function isDepositSupported(contract: ThirdwebContract<any>) {
 }
 
 /**
- * Calls the "deposit" function on the contract.
+ * Prepares a transaction to call the "deposit" function on the contract.
  * @param options - The options for the "deposit" function.
  * @returns A prepared transaction object.
  * @extension ERC20

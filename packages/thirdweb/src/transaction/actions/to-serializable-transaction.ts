@@ -25,9 +25,11 @@ export async function toSerializableTransaction(
     encode(options.transaction),
     (async () => {
       // if the user has specified a nonce, use that
-      const resolvedNonce = await resolvePromisedValue(options.transaction.nonce)
+      const resolvedNonce = await resolvePromisedValue(
+        options.transaction.nonce,
+      );
       if (resolvedNonce) {
-        return resolvedNonce
+        return resolvedNonce;
       }
 
       return from // otherwise get the next nonce (import the method to do so)
@@ -38,7 +40,7 @@ export async function toSerializableTransaction(
                 blockTag: "pending",
               }),
           )
-        : undefined
+        : undefined;
     })(),
     // takes the same options as the sendTransaction function thankfully!
     estimateGas(options),

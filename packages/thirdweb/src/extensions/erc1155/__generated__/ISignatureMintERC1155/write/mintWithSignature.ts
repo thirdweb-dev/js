@@ -167,7 +167,7 @@ export function encodeMintWithSignature(options: MintWithSignatureParams) {
 }
 
 /**
- * Calls the "mintWithSignature" function on the contract.
+ * Prepares a transaction to call the "mintWithSignature" function on the contract.
  * @param options - The options for the "mintWithSignature" function.
  * @returns A prepared transaction object.
  * @extension ERC1155
@@ -179,6 +179,9 @@ export function encodeMintWithSignature(options: MintWithSignatureParams) {
  *  contract,
  *  payload: ...,
  *  signature: ...,
+ *  overrides: {
+ *    ...
+ *  }
  * });
  *
  * // Send the transaction
@@ -206,5 +209,12 @@ export function mintWithSignature(
       return [resolvedOptions.payload, resolvedOptions.signature] as const;
     },
     value: async () => (await asyncOptions()).overrides?.value,
+    accessList: async () => (await asyncOptions()).overrides?.accessList,
+    gas: async () => (await asyncOptions()).overrides?.gas,
+    gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
+    maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
+    maxPriorityFeePerGas: async () =>
+      (await asyncOptions()).overrides?.maxPriorityFeePerGas,
+    nonce: async () => (await asyncOptions()).overrides?.nonce,
   });
 }

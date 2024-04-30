@@ -82,7 +82,7 @@ export function encodeSetOwner(options: SetOwnerParams) {
 }
 
 /**
- * Calls the "setOwner" function on the contract.
+ * Prepares a transaction to call the "setOwner" function on the contract.
  * @param options - The options for the "setOwner" function.
  * @returns A prepared transaction object.
  * @extension COMMON
@@ -93,6 +93,9 @@ export function encodeSetOwner(options: SetOwnerParams) {
  * const transaction = setOwner({
  *  contract,
  *  newOwner: ...,
+ *  overrides: {
+ *    ...
+ *  }
  * });
  *
  * // Send the transaction
@@ -120,5 +123,12 @@ export function setOwner(
       return [resolvedOptions.newOwner] as const;
     },
     value: async () => (await asyncOptions()).overrides?.value,
+    accessList: async () => (await asyncOptions()).overrides?.accessList,
+    gas: async () => (await asyncOptions()).overrides?.gas,
+    gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
+    maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
+    maxPriorityFeePerGas: async () =>
+      (await asyncOptions()).overrides?.maxPriorityFeePerGas,
+    nonce: async () => (await asyncOptions()).overrides?.nonce,
   });
 }

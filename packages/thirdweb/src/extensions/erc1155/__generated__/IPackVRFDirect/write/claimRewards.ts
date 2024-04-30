@@ -51,7 +51,7 @@ export async function isClaimRewardsSupported(contract: ThirdwebContract<any>) {
 }
 
 /**
- * Calls the "claimRewards" function on the contract.
+ * Prepares a transaction to call the "claimRewards" function on the contract.
  * @param options - The options for the "claimRewards" function.
  * @returns A prepared transaction object.
  * @extension ERC1155
