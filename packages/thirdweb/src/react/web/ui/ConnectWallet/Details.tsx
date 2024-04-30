@@ -61,11 +61,13 @@ import { onModalUnmount } from "./constants.js";
 import type { SupportedTokens } from "./defaultTokens.js";
 import { FundsIcon } from "./icons/FundsIcon.js";
 import { WalletIcon } from "./icons/WalletIcon.js";
+import { genericTokenIcon } from "./icons/dataUris.js";
 import { BuyScreen } from "./screens/Buy/BuyScreen.js";
 import { swapTransactionsStore } from "./screens/Buy/swap/pendingSwapTx.js";
 import { ReceiveFunds } from "./screens/ReceiveFunds.js";
 import { SendFunds } from "./screens/SendFunds.js";
 import { BuyTxHistory } from "./screens/SwapTransactionsScreen.js";
+import { ViewFunds } from "./screens/ViewFunds.js";
 
 const TW_CONNECTED_WALLET = "tw-connected-wallet";
 
@@ -78,7 +80,8 @@ type WalletDetailsModalScreen =
   | "receive"
   | "buy"
   | "network-switcher"
-  | "pending-tx";
+  | "pending-tx"
+  | "view-funds";
 
 /**
  * @internal
@@ -490,6 +493,23 @@ export const ConnectedWalletDetails: React.FC<{
             </Container>
           </MenuButton>
 
+          <MenuButton
+            onClick={() => {
+              setScreen("view-funds");
+            }}
+            style={{
+              fontSize: fontSize.sm,
+            }}
+          >
+            <Img
+              width={iconSize.md}
+              height={iconSize.md}
+              src={genericTokenIcon}
+              client={client}
+            />
+            <Text color="primaryText">View Funds</Text>
+          </MenuButton>
+
           {/* Switch to Personal Wallet  */}
           {/* {personalWallet &&
             !props.detailsModal?.hideSwitchToPersonalWallet && (
@@ -627,6 +647,19 @@ export const ConnectedWalletDetails: React.FC<{
   //     />
   //   );
   // }
+
+  // send funds
+  else if (screen === "view-funds") {
+    content = (
+      <ViewFunds
+        supportedTokens={props.supportedTokens}
+        onBack={() => {
+          setScreen("main");
+        }}
+        client={client}
+      />
+    );
+  }
 
   // send funds
   else if (screen === "send") {

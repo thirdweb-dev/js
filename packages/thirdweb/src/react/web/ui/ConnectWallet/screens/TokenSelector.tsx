@@ -20,6 +20,7 @@ import { fontSize, iconSize, spacing } from "../../design-system/index.js";
 import { ChainButton, NetworkSelectorContent } from "../NetworkSelector.js";
 import type { TokenInfo } from "../defaultTokens.js";
 import type { ConnectLocale } from "../locale/types.js";
+import { formatTokenBalance } from "./formatTokenBalance.js";
 import {
   type ERC20OrNativeToken,
   NATIVE_TOKEN,
@@ -333,23 +334,3 @@ const SelectTokenBtn = /* @__PURE__ */ styled(Button)(() => {
     transition: "background 200ms ease, transform 150ms ease",
   };
 });
-
-/**
- * @internal
- * @param balanceData
- * @returns
- */
-export function formatTokenBalance(
-  balanceData: {
-    symbol: string;
-    name: string;
-    decimals: number;
-    displayValue: string;
-  },
-  showSymbol = true,
-) {
-  return (
-    Number(balanceData.displayValue).toFixed(3) +
-    (showSymbol ? ` ${balanceData.symbol}` : "")
-  );
-}

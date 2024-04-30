@@ -19,7 +19,7 @@ import {
 } from "../../../../design-system/index.js";
 import type { TokenInfo } from "../../../defaultTokens.js";
 import { WalletIcon } from "../../../icons/WalletIcon.js";
-import { formatTokenBalance } from "../../TokenSelector.js";
+import { formatTokenBalance } from "../../formatTokenBalance.js";
 import { type NativeToken, isNativeToken } from "../../nativeToken.js";
 
 /**

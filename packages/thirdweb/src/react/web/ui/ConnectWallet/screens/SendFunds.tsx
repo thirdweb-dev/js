@@ -20,7 +20,8 @@ import { StyledDiv } from "../../design-system/elements.js";
 import { fontSize, iconSize, spacing } from "../../design-system/index.js";
 import { useSendToken } from "../../hooks/useSendToken.js";
 import { type SupportedTokens, defaultTokens } from "../defaultTokens.js";
-import { TokenSelector, formatTokenBalance } from "./TokenSelector.js";
+import { TokenSelector } from "./TokenSelector.js";
+import { formatTokenBalance } from "./formatTokenBalance.js";
 import { type ERC20OrNativeToken, NATIVE_TOKEN } from "./nativeToken.js";
 
 type TXError = Error & { data?: { message?: string } };
