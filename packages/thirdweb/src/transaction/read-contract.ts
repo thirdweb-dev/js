@@ -49,7 +49,19 @@ export type ReadContractOptions<
     ParseMethod<TAbi, TMethod>
   > = PreparedMethod<ParseMethod<TAbi, TMethod>>,
 > = BaseTransactionOptions<
-  Omit<TransactionRequest, "from" | "to" | "data" | "value" | "accessList" | "gas" | "gasPrice" | "maxFeePerGas" | "maxPriorityFeePerGas" | "nonce"> & {
+  Omit<
+    TransactionRequest,
+    | "from"
+    | "to"
+    | "data"
+    | "value"
+    | "accessList"
+    | "gas"
+    | "gasPrice"
+    | "maxFeePerGas"
+    | "maxPriorityFeePerGas"
+    | "nonce"
+  > & {
     method: TMethod | TPreparedMethod;
   } & ParamsOption<TPreparedMethod[1]> &
     Omit<PrepareTransactionOptions, "to" | "data" | "chain" | "client">,

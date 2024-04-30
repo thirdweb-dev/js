@@ -24,7 +24,7 @@ export type TransactionReceipt = ViemTransactionReceipt;
 export type WithOverrides<T> = T & {
   overrides?: Omit<
     StaticPrepareTransactionOptions,
-    "to" | "from" | "data" | "maxFeePerBlobGas"
+    "to" | "from" | "data" | "maxFeePerBlobGas" | "chain" | "client"
   >;
 };
 
