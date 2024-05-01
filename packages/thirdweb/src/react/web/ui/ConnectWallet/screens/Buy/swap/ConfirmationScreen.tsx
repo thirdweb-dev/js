@@ -70,7 +70,10 @@ export function SwapConfirmationScreen(props: {
           <Spacer y="lg" />
           <StepBar steps={2} currentStep={2} />
           <Spacer y="xs" />
-          <Text size="xs">Step 2/2</Text>
+          <Text size="xs">
+            Step 2 of 2 - Converting {props.fromTokenSymbol} to{" "}
+            {props.toTokenSymbol}
+          </Text>
           <Spacer y="md" />
         </>
       ) : (

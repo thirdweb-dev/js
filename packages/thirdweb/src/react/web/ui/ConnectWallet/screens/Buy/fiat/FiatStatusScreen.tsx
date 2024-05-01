@@ -121,7 +121,21 @@ export function FiatStatusScreen(props: {
           <Spacer y="lg" />
           <StepBar steps={2} currentStep={isStep2 ? 2 : 1} />
           <Spacer y="xs" />
-          <Text size="xs">Step {isStep2 ? 2 : 1}/2</Text>
+          <Text size="xs">
+            Step {isStep2 ? 2 : 1} of 2 -
+            {isStep2 ? (
+              <>
+                Converting {props.quote.onRampToken.token.symbol} to{" "}
+                {props.quote.toToken.symbol}
+              </>
+            ) : (
+              <>
+                {" "}
+                Buying {props.quote.onRampToken.token.symbol} with{" "}
+                {props.quote.fromCurrency.currencySymbol}
+              </>
+            )}
+          </Text>
         </>
       )}
 

@@ -41,7 +41,7 @@ export function PostOnRampSwap(props: {
         <Container px="lg">
           <StepBar steps={2} currentStep={2} />
           <Spacer y="xs" />
-          <Text size="xs">Step 2/2</Text>
+          <Text size="xs">Step 2 of 2</Text>
         </Container>
 
         <Container
