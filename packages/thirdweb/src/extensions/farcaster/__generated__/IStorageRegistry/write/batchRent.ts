@@ -91,7 +91,7 @@ export function encodeBatchRent(options: BatchRentParams) {
 }
 
 /**
- * Calls the "batchRent" function on the contract.
+ * Prepares a transaction to call the "batchRent" function on the contract.
  * @param options - The options for the "batchRent" function.
  * @returns A prepared transaction object.
  * @extension FARCASTER
@@ -103,6 +103,9 @@ export function encodeBatchRent(options: BatchRentParams) {
  *  contract,
  *  fids: ...,
  *  units: ...,
+ *  overrides: {
+ *    ...
+ *  }
  * });
  *
  * // Send the transaction
@@ -130,5 +133,12 @@ export function batchRent(
       return [resolvedOptions.fids, resolvedOptions.units] as const;
     },
     value: async () => (await asyncOptions()).overrides?.value,
+    accessList: async () => (await asyncOptions()).overrides?.accessList,
+    gas: async () => (await asyncOptions()).overrides?.gas,
+    gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
+    maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
+    maxPriorityFeePerGas: async () =>
+      (await asyncOptions()).overrides?.maxPriorityFeePerGas,
+    nonce: async () => (await asyncOptions()).overrides?.nonce,
   });
 }

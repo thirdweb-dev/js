@@ -23,10 +23,16 @@ export async function toSerializableTransaction(
   const from = options.from;
   const [data, nonce, gas, feeData, to, accessList, value] = await Promise.all([
     encode(options.transaction),
-    // if the user has specified a nonce, use that
-    options.transaction.nonce
-      ? resolvePromisedValue(options.transaction.nonce)
-      : from // otherwise get the next nonce (import the method to do so)
+    (async () => {
+      // if the user has specified a nonce, use that
+      const resolvedNonce = await resolvePromisedValue(
+        options.transaction.nonce,
+      );
+      if (resolvedNonce) {
+        return resolvedNonce;
+      }
+
+      return from // otherwise get the next nonce (import the method to do so)
         ? await import("../../rpc/actions/eth_getTransactionCount.js").then(
             ({ eth_getTransactionCount }) =>
               eth_getTransactionCount(rpcRequest, {
@@ -34,7 +40,8 @@ export async function toSerializableTransaction(
                 blockTag: "pending",
               }),
           )
-        : undefined,
+        : undefined;
+    })(),
     // takes the same options as the sendTransaction function thankfully!
     estimateGas(options),
     getGasOverridesForTransaction(options.transaction),
@@ -42,6 +49,7 @@ export async function toSerializableTransaction(
     resolvePromisedValue(options.transaction.accessList),
     resolvePromisedValue(options.transaction.value),
   ]);
+
   return {
     to,
     chainId,

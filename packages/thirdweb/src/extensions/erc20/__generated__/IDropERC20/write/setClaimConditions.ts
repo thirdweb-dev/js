@@ -148,7 +148,7 @@ export function encodeSetClaimConditions(options: SetClaimConditionsParams) {
 }
 
 /**
- * Calls the "setClaimConditions" function on the contract.
+ * Prepares a transaction to call the "setClaimConditions" function on the contract.
  * @param options - The options for the "setClaimConditions" function.
  * @returns A prepared transaction object.
  * @extension ERC20
@@ -160,6 +160,9 @@ export function encodeSetClaimConditions(options: SetClaimConditionsParams) {
  *  contract,
  *  phases: ...,
  *  resetClaimEligibility: ...,
+ *  overrides: {
+ *    ...
+ *  }
  * });
  *
  * // Send the transaction
@@ -190,5 +193,12 @@ export function setClaimConditions(
       ] as const;
     },
     value: async () => (await asyncOptions()).overrides?.value,
+    accessList: async () => (await asyncOptions()).overrides?.accessList,
+    gas: async () => (await asyncOptions()).overrides?.gas,
+    gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
+    maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
+    maxPriorityFeePerGas: async () =>
+      (await asyncOptions()).overrides?.maxPriorityFeePerGas,
+    nonce: async () => (await asyncOptions()).overrides?.nonce,
   });
 }

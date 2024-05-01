@@ -30,7 +30,7 @@ export async function isFreezeMetadataSupported(
 }
 
 /**
- * Calls the "freezeMetadata" function on the contract.
+ * Prepares a transaction to call the "freezeMetadata" function on the contract.
  * @param options - The options for the "freezeMetadata" function.
  * @returns A prepared transaction object.
  * @extension ERC721

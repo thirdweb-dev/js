@@ -28,7 +28,7 @@ export async function isUnlockStakeSupported(contract: ThirdwebContract<any>) {
 }
 
 /**
- * Calls the "unlockStake" function on the contract.
+ * Prepares a transaction to call the "unlockStake" function on the contract.
  * @param options - The options for the "unlockStake" function.
  * @returns A prepared transaction object.
  * @extension ERC4337
