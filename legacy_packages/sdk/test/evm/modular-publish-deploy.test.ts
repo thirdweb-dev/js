@@ -25,6 +25,7 @@ import {
 } from "./mock/mockExtensionERC20Metadata";
 import { AddressZero } from "../../src/evm/constants/addresses/AddressZero";
 import { compatibleExtensions } from "../../src/evm/common/modular/compatibleExtensions";
+import { predictAddressDeterministic } from "../../src/evm";
 
 describe("Modular contract deployment", async () => {
   let contract: SmartContract;
@@ -101,7 +102,7 @@ describe("Modular contract deployment", async () => {
         defaultExtensions: [
           {
             extensionName: "DemoExtensionERC20",
-            extensionVersion: "latest",
+            extensionVersion: "",
             publisherAddress: await adminWallet.getAddress(),
           },
         ],
@@ -132,14 +133,14 @@ describe("Modular contract deployment", async () => {
         walletAddress,
         [],
         AddressZero,
-        "0x"
+        "0x",
       ],
       {
         forceDirectDeploy: false,
         hooks: [
           {
             extensionName: "DemoExtensionERC20",
-            extensionVersion: "latest",
+            extensionVersion: "",
             publisherAddress: "0xFD78F7E2dF2B8c3D5bff0413c96f3237500898B3",
           },
         ],
@@ -173,64 +174,82 @@ describe("Modular contract deployment", async () => {
     expect(extensions[0].implementation).to.not.equal(AddressZero);
   });
 
-    it("should check admin role for upgrade", async () => {
-      const upgradeCheckAbi = [
-        {
-          type: "function",
-          name: "upgradeToAndCall",
-          inputs: [
-            {
-              name: "newImplementation",
-              type: "address",
-              internalType: "address",
-            },
-            { name: "data", type: "bytes", internalType: "bytes" },
-          ],
-          outputs: [],
-          stateMutability: "payable",
-        },
-      ];
-      await mockPublishModularFactory();
-      await mockPublishExtension();
-      const erc20core = await mockPublishAndDeployERC20Core();
+  it("should check admin role for upgrade", async () => {
+    const upgradeCheckAbi = [
+      {
+        type: "function",
+        name: "upgradeToAndCall",
+        inputs: [
+          {
+            name: "newImplementation",
+            type: "address",
+            internalType: "address",
+          },
+          { name: "data", type: "bytes", internalType: "bytes" },
+        ],
+        outputs: [],
+        stateMutability: "payable",
+      },
+    ];
+    await mockPublishModularFactory();
+    await mockPublishExtension();
+    const erc20core = await mockPublishAndDeployERC20Core();
 
-      const extensions = await erc20core.call("getInstalledExtensions");
+    const extensions = await erc20core.call("getInstalledExtensions");
 
-      const extEthersContract = new hardhatEthers.Contract(
-        extensions[0].implementation,
-        upgradeCheckAbi,
-        sdk.getSigner(),
-      );
+    const extEthersContract = new hardhatEthers.Contract(
+      extensions[0].implementation,
+      upgradeCheckAbi,
+      sdk.getSigner(),
+    );
 
-      const publishUri = await mockPublishExtension();
-      const newExtensionImpl = await sdk.deployer.deployContractFromUri(
-        publishUri,
-        [],
-      );
+    const publishUri = await mockPublishExtension();
+    const newExtensionImpl = await sdk.deployer.deployContractFromUri(
+      publishUri,
+      [],
+    );
 
-      try {
-        await extEthersContract.upgradeToAndCall(newExtensionImpl, []);
-      } catch (e) {
-        expect(e.message.includes("0xd562cd03")).to.be.true;
-      }
-    });
+    try {
+      await extEthersContract.upgradeToAndCall(newExtensionImpl, []);
+    } catch (e) {
+      expect(e.message.includes("0xd562cd03")).to.be.true;
+    }
+  });
 
-    it("should check extension compatibility", async () => {
-        await mockPublishModularFactory();
-        const publishUri = await mockPublishExtension();
-  
-        const extension = await sdk.deployer.deployContractFromUri(
-          publishUri,
-          [],
-        );
+  it("should check extension compatibility", async () => {
+    await mockPublishModularFactory();
+    const publishUri = await mockPublishExtension();
 
-        const extensionDuplicate = await sdk.deployer.deployContractFromUri(
-            publishUri,
-            [],
-          );
+    const extension = await sdk.deployer.deployContractFromUri(publishUri, []);
 
-        const isCompatible = await compatibleExtensions([extension, extensionDuplicate], sdk.getProvider());
+    const extensionDuplicate = await sdk.deployer.deployContractFromUri(
+      publishUri,
+      [],
+    );
 
-        expect(isCompatible).to.be.true;
-      });
+    const provider = new ethers.providers.JsonRpcProvider(
+      "http://127.0.0.1:8545/",
+    );
+
+    predictAddressDeterministic(
+      mockExtensionERC20Bytecode,
+      mockExtensionERC20CompilerMetadata.output.abi,
+      sdk.getProvider(),
+      [],
+    );
+
+    provider.send("eth_call", [
+      {
+        to: "0x7b32Cab89cfB45187B7Ffbbc4Fe31EaE940A06Fc",
+        data: mockExtensionERC20Bytecode,
+      },
+    ]);
+
+    const isCompatible = await compatibleExtensions(
+      [extension, extensionDuplicate],
+      sdk.getProvider(),
+    );
+
+    expect(isCompatible).to.be.true;
+  });
 });

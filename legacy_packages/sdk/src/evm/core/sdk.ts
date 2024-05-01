@@ -1804,6 +1804,11 @@ export class ContractDeployer extends RPCConnectionHandler {
           implementationAbi,
         ).encodeFunctionData(initializerFunction, initializerArgs);
 
+        const blockNumber = await this.getProvider().getBlockNumber();
+        const salt = saltForProxyDeploy
+          ? utils.id(saltForProxyDeploy)
+          : utils.formatBytes32String(blockNumber.toString());
+
         // eslint-disable-next-line prefer-const
         let deployedProxyAddress: string;
         const deployTransaction = await Transaction.fromContractInfo({
@@ -1812,11 +1817,7 @@ export class ContractDeployer extends RPCConnectionHandler {
           provider: this.getProvider(),
           signer: this.getSigner() as Signer,
           method: "deployDeterministicERC1967",
-          args: [
-            implementationAddress,
-            encodedInitializer,
-            saltForProxyDeploy || utils.id(HOOK_PROXY_DEPLOYMENT_SALT),
-          ],
+          args: [implementationAddress, encodedInitializer, salt],
           parse: () => {
             return deployedProxyAddress;
           },
@@ -2054,23 +2055,21 @@ export class ContractDeployer extends RPCConnectionHandler {
       const hooksParam: string[] = [];
       for (const tx of transactionsForHookProxyDeploy) {
         if (tx.hooks) {
-          hooksParam.push(tx.hooks.proxy);
-          const isDeployed = await isContractDeployed(
-            tx.hooks.proxy,
-            this.getProvider(),
-          );
-          if (tx.hooks.impl && !isDeployed) {
+          if (tx.hooks.impl) {
             try {
-              await this.deployERC1967ViaModularFactory(
-                modularFactory,
-                tx.hooks.impl,
-                hookInitializerAbi,
-                "initialize",
-                [upgradeAdmin],
-              );
+              const hookProxyAddress =
+                await this.deployERC1967ViaModularFactory(
+                  modularFactory,
+                  tx.hooks.impl,
+                  hookInitializerAbi,
+                  "initialize",
+                  [upgradeAdmin],
+                );
+
+              hooksParam.push(hookProxyAddress);
             } catch (e) {
               console.debug(
-                `Error deploying contract at ${tx.hooks.proxy}`,
+                `Error deploying extension proxy`,
                 (e as any)?.message,
               );
               throw e;
@@ -2104,14 +2103,17 @@ export class ContractDeployer extends RPCConnectionHandler {
         (p) => p.name === hooksParamName,
       );
 
-      if (constructorParamValues[hookParamIndex].length === 0) {
+      if (
+        constructorParamValues[hookParamIndex].length === 0 ||
+        constructorParamValues[hookParamIndex] === "[]"
+      ) {
         constructorParamValues[hookParamIndex] = hooksParam;
       }
 
       const initializerParamTypes = extractFunctionParamsFromAbi(
         deployMetadata.compilerMetadata.abi,
         deployMetadata.extendedMetadata.factoryDeploymentData
-        .implementationInitializerFunction,
+          .implementationInitializerFunction,
       ).map((p) => p.type);
       const paramValues = convertParamValues(
         initializerParamTypes,
