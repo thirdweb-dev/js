@@ -36,8 +36,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("watch block number", () => {
 
     expect(onNewBlockNumber).toHaveBeenCalledTimes(0);
 
-    // wait for 5 seconds which should always be sufficient for a new block to be mined
-    await wait(5000);
+    // wait for 10 seconds which should always be sufficient for a new block to be mined
+    await wait(10000);
 
     expect(onNewBlockNumber).toHaveBeenCalled();
 
@@ -59,8 +59,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("watch block number", () => {
     expect(onNewBlockNumber).toHaveBeenCalledTimes(0);
     expect(onNewBlockNumber2).toHaveBeenCalledTimes(0);
 
-    // wait for 5 seconds which should always be sufficient for a new block to be mined
-    await wait(5000);
+    // wait for 10 seconds which should always be sufficient for a new block to be mined
+    await wait(10000);
 
     expect(onNewBlockNumber).toHaveBeenCalled();
     expect(onNewBlockNumber2).toHaveBeenCalled();
@@ -80,8 +80,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("watch block number", () => {
 
     expect(onNewBlockNumber).toHaveBeenCalledTimes(0);
 
-    // wait for 5 seconds which should always be sufficient for a new block to be mined
-    await wait(5000);
+    // wait for 10 seconds which should always be sufficient for a new block to be mined
+    await wait(10000);
 
     expect(onNewBlockNumber).toHaveBeenCalled();
 
@@ -89,8 +89,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("watch block number", () => {
 
     unwatch();
 
-    // wait for 5 seconds which should always be sufficient for a new block to be mined
-    await wait(5000);
+    // wait for 10 seconds which should always be sufficient for a new block to be mined
+    await wait(10000);
 
     expect(onNewBlockNumber).toHaveBeenCalledTimes(0);
   });
@@ -104,8 +104,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("watch block number", () => {
 
     expect(onNewBlockNumber).toHaveBeenCalledTimes(0);
 
-    // wait for 5 seconds which should always be sufficient for a new block to be mined
-    await wait(5000);
+    // wait for 10 seconds which should always be sufficient for a new block to be mined
+    await wait(10000);
 
     expect(onNewBlockNumber).toHaveBeenCalled();
 
@@ -115,8 +115,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("watch block number", () => {
 
     unwatch();
 
-    // wait for 5 seconds which should always be sufficient for a new block to be mined
-    await wait(5000);
+    // wait for 10 seconds which should always be sufficient for a new block to be mined
+    await wait(10000);
 
     expect(onNewBlockNumber).toHaveBeenCalledTimes(0);
 
@@ -126,8 +126,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("watch block number", () => {
       onNewBlockNumber,
     });
 
-    // wait for 5 seconds which should always be sufficient for a new block to be mined
-    await wait(5000);
+    // wait for 10 seconds which should always be sufficient for a new block to be mined
+    await wait(10000);
 
     expect(onNewBlockNumber).toHaveBeenCalled();
 
@@ -148,8 +148,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("watch block number", () => {
 
     expect(onNewBlockNumber).toHaveBeenCalledTimes(0);
 
-    // wait for 5 seconds which should always be sufficient for a new block to be mined
-    await wait(5000);
+    // wait for 10 seconds which should always be sufficient for a new block to be mined
+    await wait(10000);
 
     expect(onNewBlockNumber).toHaveBeenCalled();
 
@@ -159,8 +159,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("watch block number", () => {
 
     unwatch();
 
-    // wait for 5 seconds which should always be sufficient for a new block to be mined
-    await wait(5000);
+    // wait for 10 seconds which should always be sufficient for a new block to be mined
+    await wait(10000);
 
     expect(onNewBlockNumber).toHaveBeenCalledTimes(0);
 
@@ -171,8 +171,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("watch block number", () => {
       latestBlockNumber: lastBlockNumber,
     });
 
-    // wait for 5 seconds which should always be sufficient for a new block to be mined
-    await wait(5000);
+    // wait for 10 seconds which should always be sufficient for a new block to be mined
+    await wait(10000);
 
     expect(onNewBlockNumber).toHaveBeenCalled();
 
