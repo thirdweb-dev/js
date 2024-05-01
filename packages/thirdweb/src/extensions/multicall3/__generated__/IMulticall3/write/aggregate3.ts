@@ -129,7 +129,7 @@ export function encodeAggregate3(options: Aggregate3Params) {
 }
 
 /**
- * Calls the "aggregate3" function on the contract.
+ * Prepares a transaction to call the "aggregate3" function on the contract.
  * @param options - The options for the "aggregate3" function.
  * @returns A prepared transaction object.
  * @extension MULTICALL3
@@ -140,6 +140,9 @@ export function encodeAggregate3(options: Aggregate3Params) {
  * const transaction = aggregate3({
  *  contract,
  *  calls: ...,
+ *  overrides: {
+ *    ...
+ *  }
  * });
  *
  * // Send the transaction
@@ -167,5 +170,12 @@ export function aggregate3(
       return [resolvedOptions.calls] as const;
     },
     value: async () => (await asyncOptions()).overrides?.value,
+    accessList: async () => (await asyncOptions()).overrides?.accessList,
+    gas: async () => (await asyncOptions()).overrides?.gas,
+    gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
+    maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
+    maxPriorityFeePerGas: async () =>
+      (await asyncOptions()).overrides?.maxPriorityFeePerGas,
+    nonce: async () => (await asyncOptions()).overrides?.nonce,
   });
 }

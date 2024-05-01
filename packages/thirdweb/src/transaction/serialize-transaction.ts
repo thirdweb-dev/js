@@ -94,7 +94,13 @@ export function serializeTransaction<
     }) as SerializedTransactionReturnType<_transaction>;
   }
 
-  throw new Error("Invalid transaction to serialize.");
+  throw new Error(
+    `Invalid transaction to serialize.\n\n${JSON.stringify(
+      transaction,
+      (_, v) => (typeof v === "bigint" ? `${v.toString()}n` : v),
+      2,
+    )}`,
+  );
 }
 
 type SerializeEIP1559TransactionOptions = {

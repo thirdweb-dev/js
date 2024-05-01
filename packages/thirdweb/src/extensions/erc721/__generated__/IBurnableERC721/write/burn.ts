@@ -82,7 +82,7 @@ export function encodeBurn(options: BurnParams) {
 }
 
 /**
- * Calls the "burn" function on the contract.
+ * Prepares a transaction to call the "burn" function on the contract.
  * @param options - The options for the "burn" function.
  * @returns A prepared transaction object.
  * @extension ERC721
@@ -93,6 +93,9 @@ export function encodeBurn(options: BurnParams) {
  * const transaction = burn({
  *  contract,
  *  tokenId: ...,
+ *  overrides: {
+ *    ...
+ *  }
  * });
  *
  * // Send the transaction
@@ -120,5 +123,12 @@ export function burn(
       return [resolvedOptions.tokenId] as const;
     },
     value: async () => (await asyncOptions()).overrides?.value,
+    accessList: async () => (await asyncOptions()).overrides?.accessList,
+    gas: async () => (await asyncOptions()).overrides?.gas,
+    gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
+    maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
+    maxPriorityFeePerGas: async () =>
+      (await asyncOptions()).overrides?.maxPriorityFeePerGas,
+    nonce: async () => (await asyncOptions()).overrides?.nonce,
   });
 }

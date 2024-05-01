@@ -218,7 +218,7 @@ export function encode${uppercaseFirstLetter(f.name)}(options: ${inputTypeName})
     : ""
 }
 /**
- * Calls the "${f.name}" function on the contract.
+ * Prepares a transaction to call the "${f.name}" function on the contract.
  * @param options - The options for the "${f.name}" function.
  * @returns A prepared transaction object.
  * @extension ${extensionName.toUpperCase()}
@@ -229,8 +229,8 @@ export function encode${uppercaseFirstLetter(f.name)}(options: ${inputTypeName})
  * const transaction = ${f.name}(${
    f.inputs.length > 0
      ? `{\n *  contract,\n * ${f.inputs
-          .map((x) => ` ${removeLeadingUnderscore(x.name)}: ...,`)
-          .join("\n * ")}\n * }`
+         .map((x) => ` ${removeLeadingUnderscore(x.name)}: ...,`)
+         .join("\n * ")}\n*  overrides: {\n*    ...\n*  }\n * }`
      : ""
  });
  * 
@@ -269,6 +269,12 @@ export function ${f.name}(
           .join(", ")}] as const;
       },
       value: async () => (await asyncOptions()).overrides?.value,
+      accessList: async () => (await asyncOptions()).overrides?.accessList,
+      gas: async () => (await asyncOptions()).overrides?.gas,
+      gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
+      maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
+      maxPriorityFeePerGas: async () => (await asyncOptions()).overrides?.maxPriorityFeePerGas,
+      nonce: async () => (await asyncOptions()).overrides?.nonce,
       `
         : ""
     }
@@ -433,8 +439,8 @@ export function decode${uppercaseFirstLetter(f.name)}Result(result: Hex) {
  * const result = await ${f.name}(${
    f.inputs.length > 0
      ? `{\n * ${f.inputs
-          .map((x) => ` ${removeLeadingUnderscore(x.name)}: ...,`)
-          .join("\n * ")}\n * }`
+         .map((x) => ` ${removeLeadingUnderscore(x.name)}: ...,`)
+         .join("\n * ")}\n * }`
      : ""
  });
  * 
@@ -500,8 +506,8 @@ export type ${uppercaseFirstLetter(e.name)}EventFilters = Partial<{
  *  ${eventNameToPreparedEventName(e.name)}(${
    indexedInputs.length > 0
      ? `{\n * ${indexedInputs
-          .map((x) => ` ${x.name}: ...,`)
-          .join("\n * ")}\n * }`
+         .map((x) => ` ${x.name}: ...,`)
+         .join("\n * ")}\n * }`
      : ""
  })
  * ],

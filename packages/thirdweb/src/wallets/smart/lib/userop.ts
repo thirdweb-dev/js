@@ -61,18 +61,28 @@ export async function createUnsignedUserOp(args: {
     maxFeePerGas = bundlerGasPrice.maxFeePerGas;
     maxPriorityFeePerGas = bundlerGasPrice.maxPriorityFeePerGas;
   } else {
-    // otherwise fallback to RPC gas prices if not passed in explicitely
-    if (!maxFeePerGas || !maxPriorityFeePerGas) {
+    // Check for explicity values
+    const [resolvedMaxFeePerGas, resolvedMaxPriorityFeePerGas] =
+      await Promise.all([
+        resolvePromisedValue(maxFeePerGas),
+        resolvePromisedValue(maxPriorityFeePerGas),
+      ]);
+
+    if (resolvedMaxFeePerGas && resolvedMaxPriorityFeePerGas) {
+      // Save a network call if the values are provided
+      maxFeePerGas = resolvedMaxFeePerGas;
+      maxPriorityFeePerGas = resolvedMaxPriorityFeePerGas;
+    } else {
+      // Fallback to RPC gas prices if no explicit values provided
       const feeData = await getDefaultGasOverrides(
         factoryContract.client,
         factoryContract.chain,
       );
-      if (!maxPriorityFeePerGas) {
-        maxPriorityFeePerGas = feeData.maxPriorityFeePerGas ?? undefined;
-      }
-      if (!maxFeePerGas) {
-        maxFeePerGas = feeData.maxFeePerGas ?? undefined;
-      }
+
+      // Still check for explicit values in case one is provided and not the other
+      maxPriorityFeePerGas =
+        resolvedMaxPriorityFeePerGas ?? feeData.maxPriorityFeePerGas ?? 0n;
+      maxFeePerGas = resolvedMaxFeePerGas ?? feeData.maxFeePerGas ?? 0n;
     }
   }
 
@@ -84,9 +94,8 @@ export async function createUnsignedUserOp(args: {
     nonce,
     initCode,
     callData,
-    maxFeePerGas: (await resolvePromisedValue(maxFeePerGas)) ?? 0n,
-    maxPriorityFeePerGas:
-      (await resolvePromisedValue(maxPriorityFeePerGas)) ?? 0n,
+    maxFeePerGas,
+    maxPriorityFeePerGas,
     callGasLimit: 0n,
     verificationGasLimit: 0n,
     preVerificationGas: 0n,
