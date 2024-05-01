@@ -90,6 +90,10 @@ const PARTNER_LOGO_MAP = {
     img: require("./logos/paima.png"),
     filter: undefined,
   },
+  myna: {
+    img: require("./logos/myna.png"),
+    filter: undefined,
+  },
 } as const;
 
 type Partner = keyof typeof PARTNER_LOGO_MAP;
