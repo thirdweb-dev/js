@@ -6,7 +6,7 @@ import {
   defaultTokens,
 } from "./ConnectWallet/defaultTokens.js";
 import { useConnectLocale } from "./ConnectWallet/locale/getConnectLocale.js";
-import { BuyScreen } from "./ConnectWallet/screens/Buy/BuyScreen.js";
+import BuyScreen from "./ConnectWallet/screens/Buy/BuyScreen.js";
 import { BuyTxHistory } from "./ConnectWallet/screens/Buy/tx-history/BuyTxHistory.js";
 import { DynamicHeight } from "./components/DynamicHeight.js";
 import { Spinner } from "./components/Spinner.js";

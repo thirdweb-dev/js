@@ -87,10 +87,7 @@ type BuyForTx = {
   tokenSymbol: string;
 };
 
-/**
- * @internal
- */
-export function BuyScreen(props: {
+export type BuyScreenProps = {
   onBack?: () => void;
   supportedTokens: SupportedTokens;
   onViewPendingTx: () => void;
@@ -99,7 +96,12 @@ export function BuyScreen(props: {
   buyForTx?: BuyForTx;
   payOptions: PayUIOptions;
   theme: "light" | "dark" | Theme;
-}) {
+};
+
+/**
+ * @internal
+ */
+export default function BuyScreen(props: BuyScreenProps) {
   const activeChain = useActiveWalletChain();
   const activeWallet = useActiveWallet();
   const account = useActiveAccount();

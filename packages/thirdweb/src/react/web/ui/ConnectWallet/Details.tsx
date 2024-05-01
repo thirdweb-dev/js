@@ -62,7 +62,7 @@ import type { SupportedTokens } from "./defaultTokens.js";
 import { FundsIcon } from "./icons/FundsIcon.js";
 import { WalletIcon } from "./icons/WalletIcon.js";
 import { genericTokenIcon } from "./icons/dataUris.js";
-import { BuyScreen } from "./screens/Buy/BuyScreen.js";
+import { LazyBuyScreen } from "./screens/Buy/LazyBuyScreen.js";
 import { BuyTxHistory } from "./screens/Buy/tx-history/BuyTxHistory.js";
 import { ReceiveFunds } from "./screens/ReceiveFunds.js";
 import { SendFunds } from "./screens/SendFunds.js";
@@ -678,7 +678,7 @@ export const ConnectedWalletDetails: React.FC<{
   // swap tokens
   else if (screen === "buy") {
     content = (
-      <BuyScreen
+      <LazyBuyScreen
         client={client}
         onBack={() => setScreen("main")}
         supportedTokens={props.supportedTokens}

@@ -10,7 +10,7 @@ import {
   defaultTokens,
 } from "../ui/ConnectWallet/defaultTokens.js";
 import { useConnectLocale } from "../ui/ConnectWallet/locale/getConnectLocale.js";
-import { BuyScreen } from "../ui/ConnectWallet/screens/Buy/BuyScreen.js";
+import { LazyBuyScreen } from "../ui/ConnectWallet/screens/Buy/LazyBuyScreen.js";
 import { BuyTxHistory } from "../ui/ConnectWallet/screens/Buy/tx-history/BuyTxHistory.js";
 import { Modal } from "../ui/components/Modal.js";
 import { CustomThemeProvider } from "../ui/design-system/CustomThemeProvider.js";
@@ -165,7 +165,7 @@ function ModalContent(props: ModalProps) {
   }
 
   return (
-    <BuyScreen
+    <LazyBuyScreen
       client={props.client}
       onBack={() => {
         props.onClose();
