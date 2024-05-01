@@ -24,6 +24,7 @@ import {
   mockExtensionERC20CompilerMetadata,
 } from "./mock/mockExtensionERC20Metadata";
 import { AddressZero } from "../../src/evm/constants/addresses/AddressZero";
+import { compatibleExtensions } from "../../src/evm/common/modular/compatibleExtensions";
 
 describe("Modular contract deployment", async () => {
   let contract: SmartContract;
@@ -213,4 +214,23 @@ describe("Modular contract deployment", async () => {
         expect(e.message.includes("0xd562cd03")).to.be.true;
       }
     });
+
+    it("should check extension compatibility", async () => {
+        await mockPublishModularFactory();
+        const publishUri = await mockPublishExtension();
+  
+        const extension = await sdk.deployer.deployContractFromUri(
+          publishUri,
+          [],
+        );
+
+        const extensionDuplicate = await sdk.deployer.deployContractFromUri(
+            publishUri,
+            [],
+          );
+
+        const isCompatible = await compatibleExtensions([extension, extensionDuplicate], sdk.getProvider());
+
+        expect(isCompatible).to.be.true;
+      });
 });

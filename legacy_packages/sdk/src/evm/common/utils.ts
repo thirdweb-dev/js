@@ -33,6 +33,27 @@ export function unique<T>(a: T[], fn: (a: T, b: T) => boolean): T[] {
 /**
  * @internal
  */
+export function hasDuplicates<T>(a: T[], fn: (a: T, b: T) => boolean): boolean {
+  if (a.length === 0 || a.length === 1) {
+    return false;
+  }
+  if (!fn) {
+    throw new Error("Comparison function required");
+  }
+
+  for (let i = 0; i < a.length; i++) {
+    for (let j = i + 1; j < a.length; j++) {
+      if (fn(a[i], a[j])) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+/**
+ * @internal
+ */
 export function createLruCache<T>(
   maxEntries: number,
   store: Map<string, T> = new Map<string, T>(),
