@@ -1630,8 +1630,8 @@ importers:
   packages/thirdweb:
     dependencies:
       '@coinbase/wallet-sdk':
-        specifier: 4.0.0-rc.1
-        version: 4.0.0-rc.1
+        specifier: 4.0.0-rc.2
+        version: 4.0.0-rc.2
       '@emotion/react':
         specifier: 11.11.4
         version: 11.11.4(@types/react@18.2.17)(react@18.2.0)
@@ -5963,8 +5963,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@coinbase/wallet-sdk@4.0.0-rc.1:
-    resolution: {integrity: sha512-mKmPmYFJNjLkTHpIVUWi4ZISfMkGOmEJiRjiDNeF9azikvhWqj9Y4eglnVYT0GxkMBxXO9d+7UyRWkKnA/Z73w==}
+  /@coinbase/wallet-sdk@4.0.0-rc.2:
+    resolution: {integrity: sha512-1wrzKtgEhB5cr5z2xPUWw8BUs2+w6ddzWEkafYUh0+fKvXPWl8y5bgBvMiWpjnDa/n9rIliGW7Bs2QlLaRvmtA==}
     dependencies:
       buffer: 6.0.3
       clsx: 1.2.1
