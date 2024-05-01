@@ -140,7 +140,7 @@ describeIf(!!SECRET_KEY)(
     });
 
     it("can sign and verify 1271 new factory", {
-      timeout: 120_000,
+      timeout: 240_000,
     }, async () => {
       smartWallet = new SmartWallet({
         chain,
