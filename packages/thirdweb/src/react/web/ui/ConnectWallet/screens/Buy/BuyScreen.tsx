@@ -156,10 +156,11 @@ type Screen =
  * @internal
  */
 export function BuyScreenContent(props: BuyScreenContentProps) {
-  const { activeChain, client, supportedChains, connectLocale } = props;
+  const { activeChain, client, supportedChains, connectLocale, payOptions } =
+    props;
 
-  const buyWithFiatOptions = props.payOptions.buyWithFiat;
-  const buyWithCryptoOptions = props.payOptions.buyWithCrypto;
+  const buyWithFiatOptions = payOptions.buyWithFiat;
+  const buyWithCryptoOptions = payOptions.buyWithCrypto;
 
   const showPaymentSelection =
     buyWithFiatOptions !== false && buyWithCryptoOptions !== false;
@@ -268,15 +269,20 @@ export function BuyScreenContent(props: BuyScreenContentProps) {
   const defaultChain = isChainSupported ? activeChain : polygon;
 
   const [toChain, setToChain] = useState<Chain>(
-    props.buyForTx ? props.buyForTx.tx.chain : defaultChain,
+    payOptions.defaultSelection?.chain ||
+      props.buyForTx?.tx.chain ||
+      defaultChain,
   );
 
-  const [toToken, setToToken] = useState<ERC20OrNativeToken>(NATIVE_TOKEN);
+  const [toToken, setToToken] = useState<ERC20OrNativeToken>(
+    payOptions.defaultSelection?.token || NATIVE_TOKEN,
+  );
   const deferredTokenAmount = useDebouncedValue(tokenAmount, 300);
 
   const [fromChain, setFromChain] = useState<Chain>(
-    props.buyForTx ? props.buyForTx.tx.chain : defaultChain,
+    props.buyForTx?.tx.chain || defaultChain,
   );
+
   const [fromToken, setFromToken] = useState<ERC20OrNativeToken>(
     props.supportedTokens[toChain.id]?.[0] || NATIVE_TOKEN,
   );

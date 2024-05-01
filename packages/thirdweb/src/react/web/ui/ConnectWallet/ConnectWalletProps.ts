@@ -17,6 +17,21 @@ export type PayUIOptions = {
         testMode?: boolean;
       }
     | false;
+
+  /**
+   * If specified, the user will be prompted to buy the given token on given chain
+   *
+   * If no `token` object is specified, the user will be prompted to buy the native token of the given chain
+   */
+  defaultSelection?: {
+    chain: Chain;
+    token?: {
+      name: string;
+      symbol: string;
+      address: string;
+      icon: string;
+    }
+  };
 };
 
 /**

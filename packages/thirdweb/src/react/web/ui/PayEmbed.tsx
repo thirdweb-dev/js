@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { ThirdwebClient } from "../../../client/client.js";
 import { useActiveAccount } from "../../../exports/react-native.js";
+import type { PayUIOptions } from "./ConnectWallet/ConnectWalletProps.js";
 import {
   type SupportedTokens,
   defaultTokens,
@@ -21,13 +22,8 @@ import type { LocaleId } from "./types.js";
 export function PayEmbed(props: {
   supportedTokens?: SupportedTokens;
   client: ThirdwebClient;
-  buyWithCrypto?: false;
   locale?: LocaleId;
-  buyWithFiat?:
-    | {
-        testMode?: boolean;
-      }
-    | false;
+  payOptions?: PayUIOptions;
   theme?: "light" | "dark" | Theme;
 }) {
   const localeQuery = useConnectLocale(props.locale || "en_US");
@@ -73,8 +69,8 @@ export function PayEmbed(props: {
           setScreen("tx-history");
         }}
         payOptions={{
-          buyWithCrypto: props.buyWithCrypto,
-          buyWithFiat: props.buyWithFiat,
+          buyWithCrypto: props.payOptions?.buyWithCrypto,
+          buyWithFiat: props.payOptions?.buyWithFiat,
         }}
       />
     );
