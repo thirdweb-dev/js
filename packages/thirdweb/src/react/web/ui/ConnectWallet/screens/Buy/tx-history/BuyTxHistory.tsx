@@ -64,8 +64,7 @@ function useBuyTransactionsToShow(client: ThirdwebClient) {
 
   const buyHistory = useBuyHistory(
     {
-      walletAddress:
-        "0x55C2c599bE2ce16c58579A779625547DDBfD94f1" || account?.address || "",
+      walletAddress: account?.address || "",
       start: pageIndex * PAGE_SIZE,
       count: PAGE_SIZE,
       client,
