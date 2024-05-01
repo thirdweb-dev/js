@@ -21,6 +21,11 @@ export type FiatCurrencyInfo = {
   currencySymbol: string;
 };
 
+export type ValidBuyWithFiatStatus = Exclude<
+  BuyWithFiatStatus,
+  { status: "NOT_FOUND" }
+>;
+
 export type BuyWithFiatStatus =
   | {
       status: "NOT_FOUND";

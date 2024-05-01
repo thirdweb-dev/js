@@ -63,10 +63,10 @@ import { FundsIcon } from "./icons/FundsIcon.js";
 import { WalletIcon } from "./icons/WalletIcon.js";
 import { genericTokenIcon } from "./icons/dataUris.js";
 import { BuyScreen } from "./screens/Buy/BuyScreen.js";
-import { swapTransactionsStore } from "./screens/Buy/swap/pendingSwapTx.js";
+import { pendingTransactions } from "./screens/Buy/swap/pendingSwapTx.js";
+import { BuyTxHistory } from "./screens/Buy/tx-history/BuyTxHistory.js";
 import { ReceiveFunds } from "./screens/ReceiveFunds.js";
 import { SendFunds } from "./screens/SendFunds.js";
-import { BuyTxHistory } from "./screens/SwapTransactionsScreen.js";
 import { ViewFunds } from "./screens/ViewFunds.js";
 
 const TW_CONNECTED_WALLET = "tw-connected-wallet";
@@ -103,11 +103,10 @@ export const ConnectedWalletDetails: React.FC<{
   const walletChain = useActiveWalletChain();
   const chainQuery = useChainQuery(walletChain);
   const { disconnect } = useDisconnect();
-  const swapTxs = useSyncExternalStore(
-    swapTransactionsStore.subscribe,
-    swapTransactionsStore.getValue,
+  const pendingTxs = useSyncExternalStore(
+    pendingTransactions.subscribe,
+    pendingTransactions.getValue,
   );
-  const pendingSwapTxs = swapTxs.filter((tx) => tx.status === "PENDING");
 
   // prefetch chains metadata with low concurrency
   useChainsQuery(props.chains, 5);
@@ -487,8 +486,8 @@ export const ConnectedWalletDetails: React.FC<{
             <TextAlignJustifyIcon width={iconSize.md} height={iconSize.md} />
             <Container flex="row" gap="xs" center="y">
               <Text color="primaryText">{locale.transactions}</Text>
-              {pendingSwapTxs && pendingSwapTxs.length > 0 && (
-                <BadgeCount>{pendingSwapTxs.length}</BadgeCount>
+              {pendingTxs.length > 0 && (
+                <BadgeCount>{pendingTxs.length}</BadgeCount>
               )}
             </Container>
           </MenuButton>

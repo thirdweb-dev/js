@@ -8,7 +8,7 @@ export const NATIVE_TOKEN: NativeToken = { nativeToken: true };
  * @internal
  */
 export function isNativeToken(
-  token: TokenInfo | NativeToken,
+  token: Partial<TokenInfo> | NativeToken,
 ): token is NativeToken {
   return "nativeToken" in token;
 }

@@ -3,6 +3,7 @@ import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import type { BuyWithFiatQuote } from "../../../../../../../exports/pay.js";
 import { isSwapRequiredPostOnramp } from "../../../../../../../pay/buyWithFiat/isSwapRequiredPostOnramp.js";
 import { openOnrampPopup } from "../openOnRamppopup.js";
+import { addPendingTx } from "../swap/pendingSwapTx.js";
 import { FiatStatusScreen } from "./FiatStatusScreen.js";
 import { FiatSteps, fiatQuoteToPartialQuote } from "./FiatSteps.js";
 
@@ -42,6 +43,10 @@ export function FiatFlow(props: {
         step={1}
         onContinue={() => {
           const popup = openOnrampPopup(props.quote.onRampLink, props.theme);
+          addPendingTx({
+            type: "fiat",
+            intentId: props.quote.intentId,
+          });
           setPopupWindow(popup);
           setScreen("status");
         }}

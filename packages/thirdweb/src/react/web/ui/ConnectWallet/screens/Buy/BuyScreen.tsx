@@ -72,6 +72,7 @@ import { BuyTokenInput } from "./swap/BuyTokenInput.js";
 import { FiatFees, SwapFees } from "./swap/Fees.js";
 import { PayWithCrypto } from "./swap/PayWithCrypto.js";
 import { SwapFlow } from "./swap/SwapFlow.js";
+import { addPendingTx } from "./swap/pendingSwapTx.js";
 import { useBuySupportedChains } from "./swap/useSwapSupportedChains.js";
 
 // NOTE: Must not use useConnectUI here because this UI can be used outside connect ui
@@ -760,6 +761,11 @@ function FiatScreenContent(
         fiatQuoteQuery.data.onRampLink,
         typeof props.theme === "string" ? props.theme : props.theme.type,
       );
+
+      addPendingTx({
+        type: "fiat",
+        intentId: fiatQuoteQuery.data.intentId,
+      });
     }
 
     setScreen({

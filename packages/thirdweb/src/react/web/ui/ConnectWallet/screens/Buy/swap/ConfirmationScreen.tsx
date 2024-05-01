@@ -25,7 +25,7 @@ import type { ERC20OrNativeToken } from "../../nativeToken.js";
 import { Step } from "../Stepper.js";
 import { SwapFees } from "./Fees.js";
 import { formatSeconds } from "./formatSeconds.js";
-import { addPendingSwapTransaction } from "./pendingSwapTx.js";
+import { addPendingTx } from "./pendingSwapTx.js";
 
 /**
  * @internal
@@ -188,28 +188,12 @@ export function SwapConfirmationScreen(props: {
                 );
 
                 await waitForReceipt({ ..._swapTx, maxBlocksWaitTime: 50 });
-                // props.onQuoteFinalized(props.quote);
 
-                // these will be defined by this time
-                if (
-                  props.fromTokenSymbol &&
-                  props.toTokenSymbol &&
-                  props.fromChain &&
-                  !props.isFiatFlow
-                ) {
-                  addPendingSwapTransaction(props.client, {
-                    source: {
-                      symbol: props.fromTokenSymbol,
-                      value: props.fromAmount,
-                      chainId: props.fromChain.id,
-                    },
-                    destination: {
-                      symbol: props.toTokenSymbol,
-                      value: props.toAmount,
-                      chainId: props.toChain.id,
-                    },
-                    status: "PENDING",
-                    transactionHash: _swapTx.transactionHash, // ?? _swapTx.userOpHash,
+                // do not add pending tx if the swap is part of fiat flow
+                if (!props.isFiatFlow) {
+                  addPendingTx({
+                    type: "swap",
+                    txHash: _swapTx.transactionHash,
                   });
                 }
 

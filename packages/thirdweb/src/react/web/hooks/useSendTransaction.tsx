@@ -11,7 +11,7 @@ import {
 } from "../ui/ConnectWallet/defaultTokens.js";
 import { useConnectLocale } from "../ui/ConnectWallet/locale/getConnectLocale.js";
 import { BuyScreen } from "../ui/ConnectWallet/screens/Buy/BuyScreen.js";
-import { BuyTxHistory } from "../ui/ConnectWallet/screens/SwapTransactionsScreen.js";
+import { BuyTxHistory } from "../ui/ConnectWallet/screens/Buy/tx-history/BuyTxHistory.js";
 import { Modal } from "../ui/components/Modal.js";
 import { CustomThemeProvider } from "../ui/design-system/CustomThemeProvider.js";
 import type { Theme } from "../ui/design-system/index.js";

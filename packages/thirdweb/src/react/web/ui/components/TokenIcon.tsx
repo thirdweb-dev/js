@@ -3,7 +3,7 @@ import type { ThirdwebClient } from "../../../../client/client.js";
 import { useChainQuery } from "../../../core/hooks/others/useChainQuery.js";
 import { genericTokenIcon } from "../ConnectWallet/icons/dataUris.js";
 import {
-  type ERC20OrNativeToken,
+  type NativeToken,
   isNativeToken,
 } from "../ConnectWallet/screens/nativeToken.js";
 import { iconSize } from "../design-system/index.js";
@@ -15,7 +15,12 @@ import { Img } from "./Img.js";
  * @internal
  */
 export function TokenIcon(props: {
-  token: ERC20OrNativeToken;
+  token:
+    | {
+        address: string;
+        icon?: string;
+      }
+    | NativeToken;
   chain: Chain;
   size: keyof typeof iconSize;
   client: ThirdwebClient;
