@@ -295,7 +295,7 @@ async function waitForUserOpReceipt(args: {
   userOpHash: Hex;
 }): Promise<TransactionReceipt> {
   const { options, userOpHash } = args;
-  const timeout = 30000;
+  const timeout = 120000; // 2mins
   const interval = 1000;
   const endtime = Date.now() + timeout;
   while (Date.now() < endtime) {

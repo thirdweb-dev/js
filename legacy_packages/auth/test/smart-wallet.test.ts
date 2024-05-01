@@ -10,7 +10,7 @@ require("dotenv-mono").load();
 describe.runIf(process.env.TW_SECRET_KEY)(
   "Wallet Authentication - EVM - Smart Wallet",
   {
-    timeout: 60000,
+    timeout: 240000,
   },
   async () => {
     let adminWallet: any, signerWallet: any, attackerWallet: any;
