@@ -4,12 +4,6 @@ export default {
   "chainId": 7118,
   "explorers": [],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmNR4Y3cUxefV7KGpGxMkjp5ofeJvbaUkR1GavsmTtK248",
-    "width": 1000,
-    "height": 1000,
-    "format": "png"
-  },
   "infoURL": "https://hth.world",
   "name": "Help The Homeless",
   "nativeCurrency": {

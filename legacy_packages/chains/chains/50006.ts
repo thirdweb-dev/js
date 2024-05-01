@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmWvfA2usnYp1ktzLcqFS8eTLgdp4ifrxjiify46KyG9NZ",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
   "infoURL": "https://yooldo.gg/",
   "name": "Yooldo Verse Testnet",
   "nativeCurrency": {
