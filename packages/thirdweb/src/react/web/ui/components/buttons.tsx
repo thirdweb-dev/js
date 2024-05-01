@@ -119,6 +119,8 @@ export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
   };
 });
 
+export const ButtonLink = /* @__PURE__ */ (() => Button.withComponent("a"))();
+
 export const IconButton = /* @__PURE__ */ StyledButton(() => {
   const theme = useCustomTheme();
   return {

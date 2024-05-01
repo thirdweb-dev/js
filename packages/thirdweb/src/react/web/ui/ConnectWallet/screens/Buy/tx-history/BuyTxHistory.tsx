@@ -13,7 +13,7 @@ import {
 import { Skeleton } from "../../../../components/Skeleton.js";
 import { Spinner } from "../../../../components/Spinner.js";
 import { Container, Line, ModalHeader } from "../../../../components/basic.js";
-import { Button } from "../../../../components/buttons.js";
+import { Button, ButtonLink } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import {
   fontSize,
@@ -24,8 +24,7 @@ import {
   BuyTxHistoryButton,
   BuyTxHistoryButtonHeight,
 } from "./BuyTxHistoryButton.js";
-import { FiatDetailsScreen } from "./FiatDetailsScreen.js";
-import { SwapDetailsScreen } from "./SwapDetailsScreen.js";
+import { TxDetailsScreen } from "./TxDetailsScreen.js";
 import {
   type TxStatusInfo,
   useBuyTransactionsToShow,
@@ -56,31 +55,13 @@ export function BuyTxHistory(props: {
   const [selectedTx, setSelectedTx] = useState<TxStatusInfo | null>(null);
 
   if (selectedTx) {
-    if (selectedTx.type === "swap") {
-      return (
-        <SwapDetailsScreen
-          client={props.client}
-          status={selectedTx.status}
-          onBack={() => {
-            setSelectedTx(null);
-          }}
-        />
-      );
-    }
-
-    if (selectedTx.type === "fiat") {
-      return (
-        <FiatDetailsScreen
-          client={props.client}
-          status={selectedTx.status}
-          onBack={() => {
-            setSelectedTx(null);
-          }}
-        />
-      );
-    }
-
-    return null;
+    return (
+      <TxDetailsScreen
+        client={props.client}
+        statusInfo={selectedTx}
+        onBack={() => setSelectedTx(null)}
+      />
+    );
   }
 
   return (
@@ -225,5 +206,3 @@ export function BuyTxHistory(props: {
     </Container>
   );
 }
-
-const ButtonLink = /* @__PURE__ */ (() => Button.withComponent("a"))();

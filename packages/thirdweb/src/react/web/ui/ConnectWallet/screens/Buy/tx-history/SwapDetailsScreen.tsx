@@ -5,9 +5,10 @@ import type { BuyWithCryptoStatus } from "../../../../../../../exports/pay.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Container, Line, ModalHeader } from "../../../../components/basic.js";
-import { Button } from "../../../../components/buttons.js";
+import { ButtonLink } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { fontSize, iconSize } from "../../../../design-system/index.js";
+import { formatSeconds } from "../swap/formatSeconds.js";
 import { TokenInfoRow } from "./TokenInfoRow.js";
 import { getBuyWithCryptoStatusMeta } from "./statusMeta.js";
 
@@ -70,6 +71,24 @@ export function SwapDetailsScreen(props: {
 
         {lineSpacer}
 
+        {/* Duration */}
+        <Container
+          flex="row"
+          center="y"
+          style={{
+            justifyContent: "space-between",
+          }}
+        >
+          <Text> Time </Text>
+          <Container flex="row" gap="xs" center="y">
+            <Text color="primaryText">
+              ~{formatSeconds(status.quote.estimated.durationSeconds || 0)}
+            </Text>
+          </Container>
+        </Container>
+
+        {lineSpacer}
+
         {/* Status */}
         <Container
           flex="row"
@@ -84,9 +103,7 @@ export function SwapDetailsScreen(props: {
           </Container>
         </Container>
 
-        <Spacer y="md" />
-        <Line />
-        <Spacer y="md" />
+        {lineSpacer}
 
         <Spacer y="xl" />
 
@@ -130,5 +147,3 @@ export function SwapDetailsScreen(props: {
     </Container>
   );
 }
-
-const ButtonLink = /* @__PURE__ */ (() => Button.withComponent("a"))();

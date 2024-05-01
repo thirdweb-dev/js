@@ -1,21 +1,38 @@
-import { TriangleDownIcon } from "@radix-ui/react-icons";
+import {
+  Cross1Icon,
+  ExternalLinkIcon,
+  TriangleDownIcon,
+} from "@radix-ui/react-icons";
 import { useMemo } from "react";
 import { defineChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../../constants/addresses.js";
-import type { BuyWithFiatQuote } from "../../../../../../../exports/pay.js";
+import type {
+  BuyWithFiatQuote,
+  BuyWithFiatStatus,
+} from "../../../../../../../exports/pay.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
 import { Spacer } from "../../../../components/Spacer.js";
+import { Spinner } from "../../../../components/Spinner.js";
 import { TokenIcon } from "../../../../components/TokenIcon.js";
 import { Container, Line, ModalHeader } from "../../../../components/basic.js";
-import { Button } from "../../../../components/buttons.js";
+import { Button, ButtonLink } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { TokenSymbol } from "../../../../components/token/TokenSymbol.js";
-import { iconSize, radius, spacing } from "../../../../design-system/index.js";
+import {
+  fontSize,
+  iconSize,
+  radius,
+  spacing,
+} from "../../../../design-system/index.js";
 import type { TokenInfo } from "../../../defaultTokens.js";
 import { type ERC20OrNativeToken, NATIVE_TOKEN } from "../../nativeToken.js";
 import { StepIcon } from "../Stepper.js";
+import {
+  type FiatStatusMeta,
+  getBuyWithFiatStatusMeta,
+} from "../tx-history/statusMeta.js";
 import { getCurrencyMeta } from "./currencies.js";
 
 export type BuyWithFiatPartialQuote = {
@@ -29,6 +46,7 @@ export type BuyWithFiatPartialQuote = {
     symbol?: string;
     chainId: number;
   };
+
   toToken: {
     tokenAddress: string;
     name?: string;
@@ -65,12 +83,15 @@ export function fiatQuoteToPartialQuote(
 
 export function FiatSteps(props: {
   partialQuote: BuyWithFiatPartialQuote;
+  status?: BuyWithFiatStatus;
   onBack: () => void;
   client: ThirdwebClient;
   step: number;
   onContinue: () => void;
 }) {
-  const step = props.step;
+  const statusMeta = props.status
+    ? getBuyWithFiatStatusMeta(props.status)
+    : undefined;
 
   const {
     toToken: toTokenMeta,
@@ -165,11 +186,53 @@ export function FiatSteps(props: {
 
   const toTokehChainInfo = <Text size="xs">{toChainMetaQuery.data?.name}</Text>;
 
+  const onRampTxHash =
+    props.status?.status !== "NOT_FOUND"
+      ? props.status?.source?.transactionHash
+      : undefined;
+
+  const toTokenTxHash =
+    props.status?.status !== "NOT_FOUND"
+      ? props.status?.destination?.transactionHash
+      : undefined;
+
+  const showContinueBtn =
+    !props.status || props.status.status === "CRYPTO_SWAP_REQUIRED";
+
+  function getStep1State(): FiatStatusMeta["progressStatus"] {
+    if (!statusMeta) {
+      if (props.step === 2) {
+        return "completed";
+      }
+      return "actionRequired";
+    }
+
+    if (statusMeta.step === 2) {
+      return "completed";
+    }
+
+    return statusMeta.progressStatus;
+  }
+
+  function getStep2State(): FiatStatusMeta["progressStatus"] | undefined {
+    if (!statusMeta) {
+      if (props.step === 2) {
+        return "actionRequired";
+      }
+      return undefined;
+    }
+
+    if (statusMeta.step === 2) {
+      return statusMeta.progressStatus;
+    }
+
+    return undefined;
+  }
+
   return (
     <Container p="lg">
-      <ModalHeader title="Confirm Buy" onBack={props.onBack} />
-
-      <Spacer y="xl" />
+      <ModalHeader title="Buy" onBack={props.onBack} />
+      <Spacer y="lg" />
 
       {/* Step 1 */}
       <PaymentStep
@@ -186,8 +249,6 @@ export function FiatSteps(props: {
           </Text>
         }
         step={1}
-        isActive={step === 1}
-        isDone={step === 2}
         from={{
           icon: fiatIcon,
           primaryText: (
@@ -201,9 +262,18 @@ export function FiatSteps(props: {
           primaryText: onRampTokenInfo,
           secondaryText: onRampChainInfo,
         }}
+        state={getStep1State()}
+        explorer={
+          onRampChainMetaQuery.data?.explorers?.[0]?.url && onRampTxHash
+            ? {
+                label: "View on Explorer",
+                url: `${onRampChainMetaQuery.data.explorers[0].url}/tx/${onRampTxHash}`,
+              }
+            : undefined
+        }
       />
 
-      <Spacer y="sm" />
+      <Spacer y="md" />
 
       <PaymentStep
         title={
@@ -219,8 +289,6 @@ export function FiatSteps(props: {
           </Text>
         }
         step={2}
-        isActive={step === 2}
-        isDone={false}
         from={{
           icon: onRampTokenIcon,
           primaryText: onRampTokenInfo,
@@ -231,13 +299,25 @@ export function FiatSteps(props: {
           primaryText: toTokenInfo,
           secondaryText: toTokehChainInfo,
         }}
+        state={getStep2State()}
+        explorer={
+          toChainMetaQuery.data?.explorers?.[0]?.url && toTokenTxHash
+            ? {
+                label: "View on Explorer",
+                url: `${toChainMetaQuery.data.explorers[0].url}/tx/${toTokenTxHash}`,
+              }
+            : undefined
+        }
       />
 
-      <Spacer y="md" />
-
-      <Button variant="accent" onClick={props.onContinue} fullWidth>
-        Continue
-      </Button>
+      {showContinueBtn && (
+        <>
+          <Spacer y="md" />
+          <Button variant="accent" onClick={props.onContinue} fullWidth>
+            Continue
+          </Button>
+        </>
+      )}
     </Container>
   );
 }
@@ -245,8 +325,7 @@ export function FiatSteps(props: {
 function PaymentStep(props: {
   step: number;
   title: React.ReactNode;
-  isActive: boolean;
-  isDone: boolean;
+  state?: FiatStatusMeta["progressStatus"];
   from: {
     icon: React.ReactNode;
     primaryText: React.ReactNode;
@@ -257,11 +336,16 @@ function PaymentStep(props: {
     primaryText: React.ReactNode;
     secondaryText?: React.ReactNode;
   };
+  iconText?: string;
+  explorer?: {
+    label: string;
+    url: string;
+  };
 }) {
   return (
-    <StepContainer isActive={props.isActive} isDone={props.isDone}>
+    <StepContainer state={props.state}>
       <Text size="sm">Step {props.step}</Text>
-      <Spacer y="xs" />
+      <Spacer y="sm" />
       {props.title}
       <Spacer y="sm" />
       <Line />
@@ -298,6 +382,26 @@ function PaymentStep(props: {
       </Container>
 
       <PaymentSubStep {...props.to} />
+
+      {props.explorer && (
+        <>
+          <Spacer y="md" />
+          <ButtonLink
+            variant="outline"
+            fullWidth
+            href={props.explorer.url}
+            style={{
+              fontSize: fontSize.sm,
+              padding: spacing.xs,
+            }}
+            gap="xs"
+            target="_blank"
+          >
+            {props.explorer.label}{" "}
+            <ExternalLinkIcon width={iconSize.sm} height={iconSize.sm} />
+          </ButtonLink>
+        </>
+      )}
     </StepContainer>
   );
 }
@@ -332,14 +436,22 @@ function PaymentSubStep(props: {
 }
 
 function StepContainer(props: {
-  isActive: boolean;
-  isDone: boolean;
+  state?: FiatStatusMeta["progressStatus"];
   children: React.ReactNode;
 }) {
+  const color =
+    props.state === "actionRequired" || props.state === "pending"
+      ? "accentText"
+      : props.state === "completed"
+        ? "success"
+        : props.state === "failed"
+          ? "danger"
+          : "borderColor";
+
   return (
     <Container
       bg="tertiaryBg"
-      borderColor={props.isActive ? "accentText" : "borderColor"}
+      borderColor={color === "success" ? "borderColor" : color}
       p="md"
       style={{
         borderRadius: radius.lg,
@@ -353,11 +465,41 @@ function StepContainer(props: {
       <div
         style={{
           position: "absolute",
-          right: spacing.md,
-          top: spacing.md,
+          right: spacing.sm,
+          top: spacing.sm,
+          display: "flex",
+          gap: spacing.xs,
+          alignItems: "center",
         }}
       >
-        <StepIcon isActive={props.isActive} isDone={props.isDone} />
+        {props.state && (
+          <Text size="sm" color={color}>
+            {props.state === "completed"
+              ? "Completed"
+              : props.state === "failed"
+                ? "Failed"
+                : props.state === "pending"
+                  ? "Pending"
+                  : props.state === "actionRequired"
+                    ? ""
+                    : undefined}
+          </Text>
+        )}
+
+        {(props.state === "actionRequired" || props.state === "completed") && (
+          <StepIcon
+            isActive={props.state === "actionRequired"}
+            isDone={props.state === "completed"}
+          />
+        )}
+
+        {props.state === "pending" && <Spinner color="accentText" size="sm" />}
+
+        {props.state === "failed" && (
+          <Container color="danger" flex="row" center="both">
+            <Cross1Icon width={iconSize.sm} height={iconSize.sm} />
+          </Container>
+        )}
       </div>
     </Container>
   );

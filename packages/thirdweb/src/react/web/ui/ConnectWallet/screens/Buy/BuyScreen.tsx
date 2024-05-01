@@ -75,6 +75,7 @@ import { SwapFlow } from "./swap/SwapFlow.js";
 import { addPendingTx } from "./swap/pendingSwapTx.js";
 import { useBuySupportedChains } from "./swap/useSwapSupportedChains.js";
 import { BuyTxHistoryButton } from "./tx-history/BuyTxHistoryButton.js";
+import { TxDetailsScreen } from "./tx-history/TxDetailsScreen.js";
 import { useBuyTransactionsToShow } from "./tx-history/useBuyTransactionsToShow.js";
 
 // NOTE: Must not use useConnectUI here because this UI can be used outside connect ui
@@ -487,6 +488,7 @@ export function BuyScreenContent(props: BuyScreenContentProps) {
           <BuyScreenNonExpandedFooter
             client={client}
             onViewAllTransactions={props.onViewPendingTx}
+            setScreen={setScreen}
           />
         )}
 
@@ -499,6 +501,7 @@ export function BuyScreenContent(props: BuyScreenContentProps) {
 function BuyScreenNonExpandedFooter(props: {
   client: ThirdwebClient;
   onViewAllTransactions: () => void;
+  setScreen: (screen: Screen) => void;
 }) {
   const { txInfosToShow: allList } = useBuyTransactionsToShow(props.client);
   const txInfosToShow = allList.slice(0, 3);
@@ -535,6 +538,22 @@ function BuyScreenNonExpandedFooter(props: {
               }
               txInfo={txInfo}
               client={props.client}
+              onClick={() => {
+                props.setScreen({
+                  type: "node",
+                  node: (
+                    <TxDetailsScreen
+                      client={props.client}
+                      statusInfo={txInfo}
+                      onBack={() =>
+                        props.setScreen({
+                          type: "main",
+                        })
+                      }
+                    />
+                  ),
+                });
+              }}
             />
           );
         })}

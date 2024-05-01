@@ -1,7 +1,9 @@
 import type { BuyWithFiatQuote } from "./getQuote.js";
 
 // if the toToken is the same as the onRampToken, no swap is required
-export function isSwapRequiredPostOnramp(buyWithFiatQuote: BuyWithFiatQuote) {
+export function isSwapRequiredPostOnramp(
+  buyWithFiatQuote: Pick<BuyWithFiatQuote, "toToken" | "onRampToken">,
+) {
   const sameChain =
     buyWithFiatQuote.toToken.chainId ===
     buyWithFiatQuote.onRampToken.token.chainId;

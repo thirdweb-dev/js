@@ -6,15 +6,16 @@ import type { BuyWithFiatStatus } from "../../../../../../../exports/pay.js";
 import type { ValidBuyWithFiatStatus } from "../../../../../../../pay/buyWithFiat/getStatus.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
-import { ChainIcon } from "../../../../components/ChainIcon.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Container, Line, ModalHeader } from "../../../../components/basic.js";
-import { Button } from "../../../../components/buttons.js";
+import { ButtonLink } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { fontSize, iconSize } from "../../../../design-system/index.js";
+import { USDIcon } from "../../../icons/currencies/USDIcon.js";
 import { type BuyWithFiatPartialQuote, FiatSteps } from "../fiat/FiatSteps.js";
 import { PostOnRampSwap } from "../fiat/PostOnRampSwap.js";
-import { getBuyWithFiatStatusMeta } from "./statusMeta.js";
+import { TokenInfoRow } from "./TokenInfoRow.js";
+import { type FiatStatusMeta, getBuyWithFiatStatusMeta } from "./statusMeta.js";
 
 export function FiatDetailsScreen(props: {
   status: ValidBuyWithFiatStatus;
@@ -23,21 +24,23 @@ export function FiatDetailsScreen(props: {
 }) {
   const status = props.status;
 
-  const toChainQuery = useChainQuery(defineChain(status.quote.toToken.chainId));
   const onRampChainQuery = useChainQuery(
     defineChain(status.quote.onRampToken.chainId),
   );
 
   const onrampTxHash = status.source?.transactionHash;
-  const destinationTxHash = status.destination?.transactionHash;
 
   const statusMeta = getBuyWithFiatStatusMeta(status);
-  const [screen, setScreen] = useState<"base" | "postonramp-swap">("base");
 
-  if (screen === "postonramp-swap") {
+  const hasTwoSteps = isSwapRequiredAfterOnRamp(status);
+
+  console.log("FiatDetailsScreen", { status, hasTwoSteps });
+
+  if (hasTwoSteps) {
     const fiatQuote = status.quote;
     return (
-      <PostOnRampFlow
+      <TwoStepFlow
+        statusMeta={statusMeta}
         client={props.client}
         buyWithFiatStatus={status}
         onBack={props.onBack}
@@ -64,12 +67,13 @@ export function FiatDetailsScreen(props: {
     );
   }
 
-  const toTokenValue = status.quote.estimatedToTokenAmount;
-  const toTokenSymbol = status.quote.toToken.symbol;
-
-  const actionRequired =
-    status.status === "CRYPTO_SWAP_REQUIRED" ||
-    status.status === "PAYMENT_FAILED";
+  const lineSpacer = (
+    <>
+      <Spacer y="md" />
+      <Line />
+      <Spacer y="md" />
+    </>
+  );
 
   return (
     <Container>
@@ -80,30 +84,46 @@ export function FiatDetailsScreen(props: {
       <Line />
 
       <Container p="lg">
-        {/* Buy */}
+        {/* Receive - to token */}
+        <TokenInfoRow
+          chainId={status.quote.toToken.chainId}
+          client={props.client}
+          label="Receive"
+          tokenAmount={status.quote.estimatedToTokenAmount}
+          tokenSymbol={status.quote.toToken.symbol || ""}
+          tokenAddress={status.quote.toToken.tokenAddress}
+        />
+
+        {lineSpacer}
+
+        {/* Pay */}
         <Container
           flex="row"
-          center="y"
           style={{
             justifyContent: "space-between",
           }}
         >
-          <Text>Buy</Text>
-          <Container flex="row" gap="xs" center="y">
-            <ChainIcon
-              chain={toChainQuery.data}
-              size={iconSize.md}
-              client={props.client}
-            />
-            <Text color="primaryText">
-              {formatNumber(Number(toTokenValue), 4)} {toTokenSymbol}
-            </Text>
+          <Text>Pay</Text>
+          <Container
+            flex="column"
+            gap="xxs"
+            style={{
+              alignItems: "flex-end",
+            }}
+          >
+            <Container flex="row" gap="xs" center="y">
+              {status.quote.fromCurrency.currencySymbol === "USD" && (
+                <USDIcon size={iconSize.sm} />
+              )}
+              <Text color="primaryText">
+                {formatNumber(Number(status.quote.fromCurrency.amount), 4)}{" "}
+                {status.quote.fromCurrency.currencySymbol}
+              </Text>
+            </Container>
           </Container>
         </Container>
 
-        <Spacer y="md" />
-        <Line />
-        <Spacer y="md" />
+        {lineSpacer}
 
         {/* Status */}
         <Container
@@ -119,26 +139,9 @@ export function FiatDetailsScreen(props: {
           </Container>
         </Container>
 
-        <Spacer y="md" />
-        <Line />
-        <Spacer y="md" />
+        {lineSpacer}
 
         <Spacer y="xl" />
-
-        {actionRequired && (
-          <>
-            <Button
-              fullWidth
-              variant="accent"
-              onClick={() => {
-                setScreen("postonramp-swap");
-              }}
-            >
-              Complete Transaction
-            </Button>
-            <Spacer y="sm" />
-          </>
-        )}
 
         {onrampTxHash && onRampChainQuery.data?.explorers?.[0]?.url && (
           <ButtonLink
@@ -157,60 +160,63 @@ export function FiatDetailsScreen(props: {
             <ExternalLinkIcon width={iconSize.sm} height={iconSize.sm} />
           </ButtonLink>
         )}
-
-        {destinationTxHash && toChainQuery.data?.explorers?.[0]?.url && (
-          <ButtonLink
-            fullWidth
-            variant="outline"
-            href={`${
-              toChainQuery.data.explorers[0].url || ""
-            }/tx/${destinationTxHash}`}
-            target="_blank"
-            gap="xs"
-            style={{
-              fontSize: fontSize.sm,
-            }}
-          >
-            View on {toChainQuery.data.name} Explorer
-            <ExternalLinkIcon width={iconSize.sm} height={iconSize.sm} />
-          </ButtonLink>
-        )}
       </Container>
     </Container>
   );
 }
 
-function PostOnRampFlow(props: {
+// if the toToken is the same as the onRampToken, no swap is required
+export function isSwapRequiredAfterOnRamp(
+  buyWithFiatStatus: BuyWithFiatStatus,
+) {
+  if (buyWithFiatStatus.status === "NOT_FOUND") {
+    return false;
+  }
+
+  const sameChain =
+    buyWithFiatStatus.quote.toToken.chainId ===
+    buyWithFiatStatus.quote.onRampToken.chainId;
+
+  const sameToken =
+    buyWithFiatStatus.quote.toToken.tokenAddress ===
+    buyWithFiatStatus.quote.onRampToken.tokenAddress;
+
+  return !(sameChain && sameToken);
+}
+
+function TwoStepFlow(props: {
   client: ThirdwebClient;
   onBack: () => void;
   quote: BuyWithFiatPartialQuote;
   buyWithFiatStatus: BuyWithFiatStatus;
   onViewPendingTx: () => void;
+  onRampTxHash?: string;
+  toTokenTxHash?: string;
+  statusMeta: FiatStatusMeta;
 }) {
-  const [screen, setScreen] = useState<"step-2" | "post-onramp">("step-2");
+  const [screen, setScreen] = useState<"base" | "post-onramp">("base");
 
-  if (screen === "step-2") {
+  if (screen === "post-onramp") {
     return (
-      <FiatSteps
-        step={2}
+      <PostOnRampSwap
         client={props.client}
+        buyWithFiatStatus={props.buyWithFiatStatus}
         onBack={props.onBack}
-        onContinue={() => {
-          setScreen("post-onramp");
-        }}
-        partialQuote={props.quote}
+        onViewPendingTx={props.onViewPendingTx}
       />
     );
   }
 
   return (
-    <PostOnRampSwap
+    <FiatSteps
+      step={props.statusMeta.step}
       client={props.client}
-      buyWithFiatStatus={props.buyWithFiatStatus}
       onBack={props.onBack}
-      onViewPendingTx={props.onViewPendingTx}
+      onContinue={() => {
+        setScreen("post-onramp");
+      }}
+      partialQuote={props.quote}
+      status={props.buyWithFiatStatus}
     />
   );
 }
-
-const ButtonLink = /* @__PURE__ */ (() => Button.withComponent("a"))();

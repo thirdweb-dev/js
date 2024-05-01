@@ -59,9 +59,21 @@ export function getBuyWithCryptoStatusMeta(
   };
 }
 
+export type FiatStatusMeta = {
+  status: string;
+  color: keyof Theme["colors"];
+  loading?: true;
+  step: 1 | 2;
+  progressStatus:
+    | "pending"
+    | "completed"
+    | "failed"
+    | "actionRequired"
+    | "unknown";
+};
 export function getBuyWithFiatStatusMeta(
   fiatStatus: BuyWithFiatStatus,
-): StatusMeta {
+): FiatStatusMeta {
   const status = fiatStatus.status;
 
   switch (status) {
@@ -73,6 +85,8 @@ export function getBuyWithFiatStatusMeta(
         status: "Pending",
         color: "accentText",
         loading: true,
+        step: status === "CRYPTO_SWAP_IN_PROGRESS" ? 2 : 1,
+        progressStatus: "pending",
       };
     }
 
@@ -82,6 +96,8 @@ export function getBuyWithFiatStatusMeta(
         status: "Completed", // Is this actually completed though?
         color: "success",
         loading: true,
+        step: status === "CRYPTO_SWAP_COMPLETED" ? 2 : 1,
+        progressStatus: "completed",
       };
     }
 
@@ -90,6 +106,8 @@ export function getBuyWithFiatStatusMeta(
       return {
         status: "Action Required",
         color: "accentText",
+        step: 2,
+        progressStatus: "actionRequired",
       };
     }
 
@@ -98,6 +116,8 @@ export function getBuyWithFiatStatusMeta(
       return {
         status: "Failed",
         color: "danger",
+        step: 1,
+        progressStatus: "failed",
       };
     }
   }
@@ -105,5 +125,7 @@ export function getBuyWithFiatStatusMeta(
   return {
     status: "Unknown",
     color: "secondaryText",
+    step: 1,
+    progressStatus: "unknown",
   };
 }
