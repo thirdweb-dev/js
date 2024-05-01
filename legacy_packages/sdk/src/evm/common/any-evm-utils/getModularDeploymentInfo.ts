@@ -5,19 +5,12 @@ import {
   DeploymentPreset,
   HookOptions,
 } from "../../types/any-evm/deploy-data";
-import { Plugin } from "../../types/plugins";
 import { fetchAndCacheDeployMetadata } from "./fetchAndCacheDeployMetadata";
 import { getCreate2FactoryAddress } from "./getCreate2FactoryAddress";
 import { caches } from "./caches";
 import { computeDeploymentInfo } from "./computeDeploymentInfo";
-import {
-  generateExtensionFunctions,
-  generatePluginFunctions,
-} from "../plugin/generatePluginFunctions";
-import { Extension } from "../../types/extensions";
 import { fetchPublishedContractFromPolygon } from "./fetchPublishedContractFromPolygon";
 import invariant from "tiny-invariant";
-import { extractConstructorParamsFromAbi } from "../feature-detection/extractConstructorParamsFromAbi";
 import { isAddress } from "ethers/lib/utils";
 import { computeHookProxyAddress } from "./computeHookProxyAddress";
 /**
@@ -42,7 +35,7 @@ export async function getModularDeploymentInfo(
   hooks?: HookOptions[],
 ): Promise<DeploymentPreset[]> {
   caches.deploymentPresets = {};
-  const [create2FactoryAddress, { compilerMetadata, extendedMetadata }] =
+  const [create2FactoryAddress, { compilerMetadata }] =
   await Promise.all([
     create2Factory ? create2Factory : getCreate2FactoryAddress(provider),
     fetchAndCacheDeployMetadata(metadataUri, storage),
@@ -101,7 +94,7 @@ if (hooks) {
   finalDeploymentInfo.push(...hookImplDeployInfo);
 
   // with address of impl and factory above -> computeDeploymentInfo for hook proxy -> push into finalDeploymentInfo
-  hookImplDeployInfo.forEach((h, i) => {
+  hookImplDeployInfo.forEach((h) => {
     const proxy = computeHookProxyAddress(
         h.transaction.predictedAddress,
         factoryInfo.transaction.predictedAddress,
