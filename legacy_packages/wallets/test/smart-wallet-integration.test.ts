@@ -1,7 +1,7 @@
 /* eslint-disable better-tree-shaking/no-top-level-side-effects */
 import { SmartWallet } from "../src/evm/wallets/smart-wallet";
 import { LocalWallet } from "../src/evm/wallets/local-wallet";
-import { ArbitrumSepolia } from "@thirdweb-dev/chains";
+import { BaseSepoliaTestnet } from "@thirdweb-dev/chains";
 import { ThirdwebSDK, SmartContract } from "@thirdweb-dev/sdk";
 import { checkContractWalletSignature } from "../src/evm/connectors/smart-wallet/lib/check-contract-wallet-signature";
 import { describe, it, expect, beforeAll } from "vitest";
@@ -12,9 +12,9 @@ let smartWallet: SmartWallet;
 let smartWalletAddress: string;
 let personalWallet: LocalWallet;
 let contract: SmartContract;
-const factoryAddress = "0x564cf6453a1b0FF8DB603E92EA4BbD410dea45F3"; // pre 712
-const factoryAddressV2 = "0xbf1C9aA4B1A085f7DA890a44E82B0A1289A40052"; // post 712
-const chain = ArbitrumSepolia;
+const factoryAddress = "0x7b5ba9D46b53aae55e2c2E9b38d9AfF9a0b158F8"; // pre 712
+const factoryAddressV2 = "0xBCE06A6Dcd4dE8c6D8892E404b0a99A8812352b2"; // post 712
+const chain = BaseSepoliaTestnet;
 const SECRET_KEY = process.env.TW_SECRET_KEY;
 
 const describeIf = (condition: boolean) =>
@@ -34,21 +34,20 @@ beforeAll(async () => {
     secretKey: SECRET_KEY,
   });
   contract = await sdk.getContract(
-    "0x6A7a26c9a595E6893C255C9dF0b593e77518e0c3", // arb sep edition drop
+    "0x638263e3eAa3917a53630e61B1fBa685308024fa", // edition drop
   );
 });
 
 describeIf(!!SECRET_KEY)(
   "SmartWallet core tests",
-  {
-    timeout: 240_000,
-  },
   () => {
     it("can connect", async () => {
       expect(smartWalletAddress).toHaveLength(42);
     });
 
-    it("can execute a tx via SDK", async () => {
+    it("can execute a tx via SDK", {
+      timeout: 120_000,
+    }, async () => {
       const tx = await contract.erc1155.claim(0, 1);
       expect(tx.receipt.transactionHash).toHaveLength(66);
       const isDeployed = await smartWallet.isDeployed();
@@ -57,13 +56,17 @@ describeIf(!!SECRET_KEY)(
       expect(balance.toNumber()).toEqual(1);
     });
 
-    it("can estimate a tx", async () => {
+    it("can estimate a tx", {
+      timeout: 120_000,
+    }, async () => {
       const preparedTx = await contract.erc1155.claim.prepare(0, 1);
       const estimates = await smartWallet.estimate(preparedTx);
       expect(estimates.wei.toString()).not.toBe("0");
     });
 
-    it("can execute a tx", async () => {
+    it("can execute a tx", {
+      timeout: 120_000,
+    }, async () => {
       const preparedTx = await contract.erc1155.claim.prepare(0, 1);
       const tx = await smartWallet.execute(preparedTx);
       expect(tx.receipt.transactionHash).toHaveLength(66);
@@ -71,7 +74,9 @@ describeIf(!!SECRET_KEY)(
       expect(balance.toNumber()).toEqual(2);
     });
 
-    it("can execute a batched tx", async () => {
+    it("can execute a batched tx", {
+      timeout: 120_000,
+    }, async () => {
       const preparedTx = await contract.erc1155.claim.prepare(0, 1);
       const tx = await smartWallet.executeBatch([preparedTx, preparedTx]);
       expect(tx.receipt.transactionHash).toHaveLength(66);
@@ -79,7 +84,9 @@ describeIf(!!SECRET_KEY)(
       expect(balance.toNumber()).toEqual(4);
     });
 
-    it("can execute a raw tx", async () => {
+    it("can execute a raw tx", {
+      timeout: 120_000,
+    }, async () => {
       const preparedTx = await contract.erc1155.claim.prepare(0, 1);
       const tx = await smartWallet.executeRaw({
         to: preparedTx.getTarget(),
@@ -90,7 +97,9 @@ describeIf(!!SECRET_KEY)(
       expect(balance.toNumber()).toEqual(5);
     });
 
-    it("can execute a batched raw tx", async () => {
+    it("can execute a batched raw tx", {
+      timeout: 120_000,
+    }, async () => {
       const preparedTx = await contract.erc1155.claim.prepare(0, 1);
       const tx = await smartWallet.executeBatchRaw([
         {
@@ -107,7 +116,9 @@ describeIf(!!SECRET_KEY)(
       expect(balance.toNumber()).toEqual(7);
     });
 
-    it("can sign and verify 1271 old factory", async () => {
+    it("can sign and verify 1271 old factory", {
+      timeout: 240_000,
+    }, async () => {
       const message = "0x1234";
       const sig = await smartWallet.signMessage(message);
       const isValidV1 = await smartWallet.verifySignature(
@@ -128,7 +139,9 @@ describeIf(!!SECRET_KEY)(
       expect(isValidV2).toEqual(true);
     });
 
-    it("can sign and verify 1271 new factory", async () => {
+    it("can sign and verify 1271 new factory", {
+      timeout: 240_000,
+    }, async () => {
       smartWallet = new SmartWallet({
         chain,
         factoryAddress: factoryAddressV2,

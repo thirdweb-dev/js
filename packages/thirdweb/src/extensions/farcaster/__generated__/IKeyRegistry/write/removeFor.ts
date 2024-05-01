@@ -110,7 +110,7 @@ export function encodeRemoveFor(options: RemoveForParams) {
 }
 
 /**
- * Calls the "removeFor" function on the contract.
+ * Prepares a transaction to call the "removeFor" function on the contract.
  * @param options - The options for the "removeFor" function.
  * @returns A prepared transaction object.
  * @extension FARCASTER
@@ -124,6 +124,9 @@ export function encodeRemoveFor(options: RemoveForParams) {
  *  key: ...,
  *  deadline: ...,
  *  sig: ...,
+ *  overrides: {
+ *    ...
+ *  }
  * });
  *
  * // Send the transaction
@@ -156,5 +159,12 @@ export function removeFor(
       ] as const;
     },
     value: async () => (await asyncOptions()).overrides?.value,
+    accessList: async () => (await asyncOptions()).overrides?.accessList,
+    gas: async () => (await asyncOptions()).overrides?.gas,
+    gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
+    maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
+    maxPriorityFeePerGas: async () =>
+      (await asyncOptions()).overrides?.maxPriorityFeePerGas,
+    nonce: async () => (await asyncOptions()).overrides?.nonce,
   });
 }

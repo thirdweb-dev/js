@@ -89,7 +89,7 @@ export function encodeCancelAuction(options: CancelAuctionParams) {
 }
 
 /**
- * Calls the "cancelAuction" function on the contract.
+ * Prepares a transaction to call the "cancelAuction" function on the contract.
  * @param options - The options for the "cancelAuction" function.
  * @returns A prepared transaction object.
  * @extension MARKETPLACE
@@ -100,6 +100,9 @@ export function encodeCancelAuction(options: CancelAuctionParams) {
  * const transaction = cancelAuction({
  *  contract,
  *  auctionId: ...,
+ *  overrides: {
+ *    ...
+ *  }
  * });
  *
  * // Send the transaction
@@ -127,5 +130,12 @@ export function cancelAuction(
       return [resolvedOptions.auctionId] as const;
     },
     value: async () => (await asyncOptions()).overrides?.value,
+    accessList: async () => (await asyncOptions()).overrides?.accessList,
+    gas: async () => (await asyncOptions()).overrides?.gas,
+    gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
+    maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
+    maxPriorityFeePerGas: async () =>
+      (await asyncOptions()).overrides?.maxPriorityFeePerGas,
+    nonce: async () => (await asyncOptions()).overrides?.nonce,
   });
 }

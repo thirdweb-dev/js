@@ -84,7 +84,7 @@ export function encodeDepositTo(options: DepositToParams) {
 }
 
 /**
- * Calls the "depositTo" function on the contract.
+ * Prepares a transaction to call the "depositTo" function on the contract.
  * @param options - The options for the "depositTo" function.
  * @returns A prepared transaction object.
  * @extension ERC4337
@@ -95,6 +95,9 @@ export function encodeDepositTo(options: DepositToParams) {
  * const transaction = depositTo({
  *  contract,
  *  account: ...,
+ *  overrides: {
+ *    ...
+ *  }
  * });
  *
  * // Send the transaction
@@ -122,5 +125,12 @@ export function depositTo(
       return [resolvedOptions.account] as const;
     },
     value: async () => (await asyncOptions()).overrides?.value,
+    accessList: async () => (await asyncOptions()).overrides?.accessList,
+    gas: async () => (await asyncOptions()).overrides?.gas,
+    gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
+    maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
+    maxPriorityFeePerGas: async () =>
+      (await asyncOptions()).overrides?.maxPriorityFeePerGas,
+    nonce: async () => (await asyncOptions()).overrides?.nonce,
   });
 }

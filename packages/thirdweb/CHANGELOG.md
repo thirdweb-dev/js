@@ -1,5 +1,51 @@
 # thirdweb
 
+## 5.15.0
+
+### Minor Changes
+
+- [#2875](https://github.com/thirdweb-dev/js/pull/2875) [`7882b22`](https://github.com/thirdweb-dev/js/commit/7882b22306c1ccd4919fe088dfcd7c68bff954f9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Support for Coinbase Smart Wallet
+
+- [#2898](https://github.com/thirdweb-dev/js/pull/2898) [`88886ac`](https://github.com/thirdweb-dev/js/commit/88886acd762e637ac130bb7fa0eda12c6e5da4fc) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds overrides to extension functions
+
+### Patch Changes
+
+- [#2906](https://github.com/thirdweb-dev/js/pull/2906) [`75e66b1`](https://github.com/thirdweb-dev/js/commit/75e66b189d790778358edeacdd71965f248902c2) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix signTypedData external verification for smart accounts
+
+- [#2897](https://github.com/thirdweb-dev/js/pull/2897) [`f916d7a`](https://github.com/thirdweb-dev/js/commit/f916d7a453854bcb8c6f0b9c95b49d34eb865882) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fixes TransactionButton loading state layout shift
+
+- [#2905](https://github.com/thirdweb-dev/js/pull/2905) [`9a031bb`](https://github.com/thirdweb-dev/js/commit/9a031bb19fe9b39ff88a02c48c311ba5c3184aab) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Bump timeout for userOps receipts to 2mins
+
+- [#2899](https://github.com/thirdweb-dev/js/pull/2899) [`e6fce1f`](https://github.com/thirdweb-dev/js/commit/e6fce1f2e617c795377ef4de12e2112f1fa03ebb) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fixes useContractEvents duplicating events
+
+## 5.14.0
+
+### Minor Changes
+
+- [#2869](https://github.com/thirdweb-dev/js/pull/2869) [`fa4bd43`](https://github.com/thirdweb-dev/js/commit/fa4bd436e01041419b668379103abb2759dc702f) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds the disabled prop to TransactionButton component
+
+### Patch Changes
+
+- [#2881](https://github.com/thirdweb-dev/js/pull/2881) [`7f4caf0`](https://github.com/thirdweb-dev/js/commit/7f4caf06274ed9a0c753f034f5b8279e618a0644) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Fix nonce value for ethers5 adapter
+
+- [#2874](https://github.com/thirdweb-dev/js/pull/2874) [`d2aead4`](https://github.com/thirdweb-dev/js/commit/d2aead486e4335130b8fa8d3961c3a99da9a07b3) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Docs: update incorrect code snippet for viem adapter
+
+- [#2882](https://github.com/thirdweb-dev/js/pull/2882) [`bfdfc23`](https://github.com/thirdweb-dev/js/commit/bfdfc23e3aac6cf977774e3905dfe97c8b49d69a) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Better error message for failed smart wallet connections
+
+- [#2879](https://github.com/thirdweb-dev/js/pull/2879) [`597900b`](https://github.com/thirdweb-dev/js/commit/597900bdcc2c51e4623a3c196c5ccf9cc704e12c) Thanks [@MananTank](https://github.com/MananTank)! - - Add onConnect prop on `AutoConnect` component
+
+  - Call the `onConnect` callback passed to `ConnectButton` and `ConnectEmbed` when wallet is auto-connected
+
+- [#2866](https://github.com/thirdweb-dev/js/pull/2866) [`62c799d`](https://github.com/thirdweb-dev/js/commit/62c799d3484abe54a9c648148e5e207876f8bb46) Thanks [@MananTank](https://github.com/MananTank)! - Fix exception on passing chain with unknown chainId to ConnectButton
+
+- [#2872](https://github.com/thirdweb-dev/js/pull/2872) [`99298b3`](https://github.com/thirdweb-dev/js/commit/99298b397c2fa03e98d8a4a828a483e243815e1d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add optional `icon` in `ChainOptions` when defining a chain
+
+- [#2867](https://github.com/thirdweb-dev/js/pull/2867) [`674fcc7`](https://github.com/thirdweb-dev/js/commit/674fcc7e9510e85f67d6ab7b056612a15856e0df) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fixes single phase drop compatibility across erc20, erc721, and erc1155 contracts
+
+- [#2883](https://github.com/thirdweb-dev/js/pull/2883) [`48e6427`](https://github.com/thirdweb-dev/js/commit/48e6427d657ec202b8415d716411a6d6b194d185) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Improve docs for verifySignature
+
+- [#2870](https://github.com/thirdweb-dev/js/pull/2870) [`8ae8e6a`](https://github.com/thirdweb-dev/js/commit/8ae8e6a702d074890c145005a32450fe7ee44b27) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix TransactionButton layout shift while loading
+
 ## 5.13.0
 
 ### Minor Changes

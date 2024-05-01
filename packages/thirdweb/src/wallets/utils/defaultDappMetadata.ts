@@ -13,13 +13,20 @@ export function getDefaultAppMetadata(): Required<AppMetadata> {
     };
   }
 
-  const domain = window.location.hostname;
-  const faviconUrlFullPath = `${domain}/favicon.ico`;
+  const { protocol, hostname, port } = window.location;
+  let baseUrl = `${protocol}//${hostname}`;
+
+  // Add the port if it's not the default HTTP or HTTPS port
+  if (port && port !== "80" && port !== "443") {
+    baseUrl += `:${port}`;
+  }
+
+  const logoUrl = `${baseUrl}/favicon.ico`;
 
   return {
-    name: window.document.title,
-    url: domain,
-    description: window.document.title,
-    logoUrl: faviconUrlFullPath,
+    name: window.document.title || "thirdweb powered dApp",
+    url: baseUrl,
+    description: window.document.title || "thirdweb powered dApp",
+    logoUrl,
   };
 }

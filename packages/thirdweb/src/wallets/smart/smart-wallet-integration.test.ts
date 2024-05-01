@@ -1,8 +1,14 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
+import { typedData } from "../../../test/src/typed-data.js";
 import { verifySignature } from "../../auth/verifySignature.js";
 import { arbitrumSepolia } from "../../chains/chain-definitions/arbitrum-sepolia.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
+import { parseEventLogs } from "../../event/actions/parse-logs.js";
+import {
+  addAdmin,
+  adminUpdatedEvent,
+} from "../../exports/extensions/erc4337.js";
 import { balanceOf } from "../../extensions/erc1155/__generated__/IERC1155/read/balanceOf.js";
 import { claimTo } from "../../extensions/erc1155/drops/write/claimTo.js";
 import { checkContractWalletSignature } from "../../extensions/erc1271/checkContractWalletSignature.js";
@@ -156,6 +162,35 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         contract: accountContract,
       });
       expect(isValidV2).toEqual(true);
+
+      // sign typed data
+      const signatureTyped = await smartAccount.signTypedData({
+        ...typedData.basic,
+        primaryType: "Mail",
+      });
+      expect(signatureTyped.length).toBe(132);
+
+      // add admin
+      const newAdmin = await generateAccount({ client });
+      const receipt = await sendAndConfirmTransaction({
+        account: smartAccount,
+        transaction: addAdmin({
+          account: smartAccount,
+          adminAddress: newAdmin.address,
+          contract: getContract({
+            address: smartAccount.address,
+            chain,
+            client,
+          }),
+        }),
+      });
+      const logs = parseEventLogs({
+        events: [adminUpdatedEvent()],
+        logs: receipt.logs,
+      });
+      expect(logs.length).toBe(1);
+      expect(logs[0]?.args.signer).toBe(newAdmin.address);
+      expect(logs[0]?.args.isAdmin).toBe(true);
     });
 
     it("can sign and verify 1271 new factory", async () => {
@@ -185,6 +220,35 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         }),
       });
       expect(isValidV2).toEqual(true);
+
+      // sign typed data
+      const signatureTyped = await newAccount.signTypedData({
+        ...typedData.basic,
+        primaryType: "Mail",
+      });
+      expect(signatureTyped.length).toBe(132);
+
+      // add admin
+      const newAdmin = await generateAccount({ client });
+      const receipt = await sendAndConfirmTransaction({
+        account: newAccount,
+        transaction: addAdmin({
+          account: newAccount,
+          adminAddress: newAdmin.address,
+          contract: getContract({
+            address: newAccount.address,
+            chain,
+            client,
+          }),
+        }),
+      });
+      const logs = parseEventLogs({
+        events: [adminUpdatedEvent()],
+        logs: receipt.logs,
+      });
+      expect(logs.length).toBe(1);
+      expect(logs[0]?.args.signer).toBe(newAdmin.address);
+      expect(logs[0]?.args.isAdmin).toBe(true);
     });
   },
 );

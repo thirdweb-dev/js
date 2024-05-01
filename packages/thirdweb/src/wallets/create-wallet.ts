@@ -63,7 +63,9 @@ export function createWallet<const ID extends WalletId>(
      * -> if no injected coinbase found, we'll use the coinbase SDK
      */
     case "com.coinbase.wallet": {
-      return coinbaseWalletSDK() as Wallet<ID>;
+      return coinbaseWalletSDK(
+        creationOptions as CreateWalletArgs<"com.coinbase.wallet">[1],
+      ) as Wallet<ID>;
     }
 
     /**
@@ -442,7 +444,9 @@ export function inAppWallet(
  * internal helper functions
  */
 
-function coinbaseWalletSDK(): Wallet<"com.coinbase.wallet"> {
+function coinbaseWalletSDK(
+  createOptions?: CreateWalletArgs<"com.coinbase.wallet">[1],
+): Wallet<"com.coinbase.wallet"> {
   const emitter = createWalletEmitter<"com.coinbase.wallet">();
   let account: Account | undefined = undefined;
   let chain: Chain | undefined = undefined;
@@ -479,14 +483,14 @@ function coinbaseWalletSDK(): Wallet<"com.coinbase.wallet"> {
     id: "com.coinbase.wallet",
     subscribe: emitter.subscribe,
     getChain: () => chain,
-    getConfig: () => undefined,
+    getConfig: () => createOptions,
     getAccount: () => account,
     autoConnect: async (options) => {
       const { autoConnectCoinbaseWalletSDK } = await import(
         "./coinbase/coinbaseSDKWallet.js"
       );
       const [connectedAccount, connectedChain, doDisconnect, doSwitchChain] =
-        await autoConnectCoinbaseWalletSDK(options, emitter);
+        await autoConnectCoinbaseWalletSDK(options, createOptions, emitter);
       // set the states
       account = connectedAccount;
       chain = connectedChain;
@@ -505,7 +509,7 @@ function coinbaseWalletSDK(): Wallet<"com.coinbase.wallet"> {
         "./coinbase/coinbaseSDKWallet.js"
       );
       const [connectedAccount, connectedChain, doDisconnect, doSwitchChain] =
-        await connectCoinbaseWalletSDK(options, emitter);
+        await connectCoinbaseWalletSDK(options, createOptions, emitter);
 
       // set the states
       account = connectedAccount;

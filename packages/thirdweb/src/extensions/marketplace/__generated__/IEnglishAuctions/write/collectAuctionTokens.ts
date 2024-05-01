@@ -93,7 +93,7 @@ export function encodeCollectAuctionTokens(
 }
 
 /**
- * Calls the "collectAuctionTokens" function on the contract.
+ * Prepares a transaction to call the "collectAuctionTokens" function on the contract.
  * @param options - The options for the "collectAuctionTokens" function.
  * @returns A prepared transaction object.
  * @extension MARKETPLACE
@@ -104,6 +104,9 @@ export function encodeCollectAuctionTokens(
  * const transaction = collectAuctionTokens({
  *  contract,
  *  auctionId: ...,
+ *  overrides: {
+ *    ...
+ *  }
  * });
  *
  * // Send the transaction
@@ -131,5 +134,12 @@ export function collectAuctionTokens(
       return [resolvedOptions.auctionId] as const;
     },
     value: async () => (await asyncOptions()).overrides?.value,
+    accessList: async () => (await asyncOptions()).overrides?.accessList,
+    gas: async () => (await asyncOptions()).overrides?.gas,
+    gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
+    maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
+    maxPriorityFeePerGas: async () =>
+      (await asyncOptions()).overrides?.maxPriorityFeePerGas,
+    nonce: async () => (await asyncOptions()).overrides?.nonce,
   });
 }

@@ -1,4 +1,9 @@
-import type { SignableMessage } from "viem";
+import type {
+  SignableMessage,
+  TypedData,
+  TypedDataDefinition,
+  TypedDataDomain,
+} from "viem";
 import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
@@ -63,7 +68,13 @@ export async function connectSmartWallet(
   const accountAddress = await predictAddress(factoryContract, {
     personalAccountAddress: personalAccount.address,
     ...options,
-  });
+  })
+    .then((address) => address)
+    .catch(() => {
+      throw new Error(
+        `Failed to get account address with factory contract ${factoryContract.address} on chain ID ${chain.id}. Are you on the right chain?`,
+      );
+    });
 
   const accountContract = getContract({
     client,
@@ -213,9 +224,97 @@ async function createSmartAccount(
         "Unable to verify signature on smart account, please make sure the smart account is deployed and the signature is valid.",
       );
     },
-    // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
-    async signTypedData(typedData: any) {
-      return options.personalAccount.signTypedData(typedData);
+    async signTypedData<
+      const typedData extends TypedData | Record<string, unknown>,
+      primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,
+    >(_typedData: TypedDataDefinition<typedData, primaryType>) {
+      const [
+        { isContractDeployed },
+        { readContract },
+        { encodeAbiParameters },
+        { hashTypedData },
+        { checkContractWalletSignedTypedData },
+      ] = await Promise.all([
+        import("../../utils/bytecode/is-contract-deployed.js"),
+        import("../../transaction/read-contract.js"),
+        import("../../utils/abi/encodeAbiParameters.js"),
+        import("viem"),
+        import(
+          "../../extensions/erc1271/checkContractWalletSignedTypedData.js"
+        ),
+      ]);
+      const isSelfVerifyingContract =
+        (
+          _typedData.domain as TypedDataDomain
+        )?.verifyingContract?.toLowerCase() ===
+        accountContract.address?.toLowerCase();
+
+      if (isSelfVerifyingContract) {
+        // if the contract is self-verifying, we can just sign the message with the EOA (ie. adding a session key)
+        return options.personalAccount.signTypedData(_typedData);
+      }
+
+      const isDeployed = await isContractDeployed(accountContract);
+      if (!isDeployed) {
+        console.log(
+          "Account contract not deployed yet. Deploying account before signing message",
+        );
+        await _deployAccount({
+          options,
+          account,
+          accountContract,
+        });
+      }
+
+      const originalMsgHash = hashTypedData(_typedData);
+      // check if the account contract supports EIP721 domain separator based signing
+      let factorySupports712 = false;
+      try {
+        // this will throw if the contract does not support it (old factories)
+        await readContract({
+          contract: accountContract,
+          method:
+            "function getMessageHash(bytes32 _hash) public view returns (bytes32)",
+          params: [originalMsgHash],
+        });
+        factorySupports712 = true;
+      } catch (e) {
+        // ignore
+      }
+
+      let sig: `0x${string}`;
+      if (factorySupports712) {
+        const wrappedMessageHash = encodeAbiParameters(
+          [{ type: "bytes32" }],
+          [originalMsgHash],
+        );
+        sig = await options.personalAccount.signTypedData({
+          domain: {
+            name: "Account",
+            version: "1",
+            chainId: options.chain.id,
+            verifyingContract: accountContract.address,
+          },
+          primaryType: "AccountMessage",
+          types: { AccountMessage: [{ name: "message", type: "bytes" }] },
+          message: { message: wrappedMessageHash },
+        });
+      } else {
+        sig = await options.personalAccount.signTypedData(_typedData);
+      }
+
+      const isValid = await checkContractWalletSignedTypedData({
+        contract: accountContract,
+        data: _typedData,
+        signature: sig,
+      });
+
+      if (isValid) {
+        return sig;
+      }
+      throw new Error(
+        "Unable to verify signature on smart account, please make sure the smart account is deployed and the signature is valid.",
+      );
     },
   };
   return account;
@@ -289,7 +388,7 @@ async function waitForUserOpReceipt(args: {
   userOpHash: Hex;
 }): Promise<TransactionReceipt> {
   const { options, userOpHash } = args;
-  const timeout = 30000;
+  const timeout = 120000; // 2mins
   const interval = 1000;
   const endtime = Date.now() + timeout;
   while (Date.now() < endtime) {

@@ -16,6 +16,7 @@ export type WatchContractEventsOptions<
 > = Prettify<
   GetContractEventsOptionsDirect<abi, abiEvents, TStrict> & {
     onEvents: (events: ParseEventLogsResult<abiEvents, TStrict>) => void;
+    latestBlockNumber?: bigint;
   }
 >;
 
@@ -79,5 +80,6 @@ export function watchContractEvents<
         options.onEvents(logs);
       }
     },
+    latestBlockNumber: options.latestBlockNumber,
   });
 }

@@ -9,16 +9,13 @@ require("dotenv-mono").load();
 
 describe.runIf(process.env.TW_SECRET_KEY)(
   "Wallet Authentication - EVM - Smart Wallet",
-  {
-    timeout: 60000,
-  },
   async () => {
     let adminWallet: any, signerWallet: any, attackerWallet: any;
     let auth: ThirdwebAuth;
 
     beforeAll(async () => {
-      const factoryAddress = "0xbf1C9aA4B1A085f7DA890a44E82B0A1289A40052";
-      const chain = 421614;
+      const factoryAddress = "0x7b5ba9D46b53aae55e2c2E9b38d9AfF9a0b158F8";
+      const chain = 84532;
       const localWallet = new LocalWallet();
       await localWallet.generate();
       const smartWallet = new SmartWallet({
@@ -42,7 +39,9 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       auth.updateWallet(signerWallet);
     });
 
-    it("Should verify logged in wallet", async () => {
+    it("Should verify logged in wallet", {
+      timeout: 240000,
+    }, async () => {
       const payload = await auth.login();
 
       auth.updateWallet(adminWallet);
@@ -51,21 +50,25 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       expect(address).to.equal(await signerWallet.getAddress());
     });
 
-    it("Should verify logged in wallet with chain ID and expiration", async () => {
+    it("Should verify logged in wallet with chain ID and expiration", {
+      timeout: 240000,
+    }, async () => {
       const payload = await auth.login({
         expirationTime: new Date(Date.now() + 1000 * 60 * 5),
-        chainId: "421614",
+        chainId: "84532",
       });
 
       auth.updateWallet(adminWallet);
       const address = await auth.verify(payload, {
-        chainId: "421614",
+        chainId: "84532",
       });
 
       expect(address).to.equal(await signerWallet.getAddress());
     });
 
-    it("Should verify payload with resources", async () => {
+    it("Should verify payload with resources", {
+      timeout: 240000,
+    }, async () => {
       const payload = await auth.login({
         resources: ["https://example.com", "https://test.com"],
       });
@@ -78,7 +81,9 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       expect(address).to.equal(await signerWallet.getAddress());
     });
 
-    it("Should reject payload without necessary resources", async () => {
+    it("Should reject payload without necessary resources", {
+      timeout: 240000,
+    }, async () => {
       const payload = await auth.login({
         resources: ["https://example.com"],
       });
@@ -96,7 +101,9 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       }
     });
 
-    it("Should verify payload with customized statement", async () => {
+    it("Should verify payload with customized statement", {
+      timeout: 240000,
+    }, async () => {
       const payload = await auth.login({
         statement: "Please sign!",
       });
@@ -109,7 +116,9 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       expect(address).to.equal(await signerWallet.getAddress());
     });
 
-    it("Should reject payload with incorrect statement", async () => {
+    it("Should reject payload with incorrect statement", {
+      timeout: 240000,
+    }, async () => {
       const payload = await auth.login({
         statement: "Please sign!",
       });
@@ -127,7 +136,9 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       }
     });
 
-    it("Should reject invalid nonce", async () => {
+    it("Should reject invalid nonce", {
+      timeout: 240000,
+    }, async () => {
       const payload = await auth.login();
 
       auth.updateWallet(adminWallet);
@@ -145,7 +156,9 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       }
     });
 
-    it("Should accept valid nonce", async () => {
+    it("Should accept valid nonce", {
+      timeout: 240000,
+    }, async () => {
       const payload = await auth.login();
 
       auth.updateWallet(adminWallet);
@@ -160,7 +173,9 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       expect(address).to.equal(await signerWallet.getAddress());
     });
 
-    it("Should reject payload with incorrect domain", async () => {
+    it("Should reject payload with incorrect domain", {
+      timeout: 240000,
+    }, async () => {
       const payload = await auth.login();
 
       auth.updateWallet(adminWallet);
@@ -174,7 +189,9 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       }
     });
 
-    it("Should reject expired login payload", async () => {
+    it("Should reject expired login payload", {
+      timeout: 240000,
+    }, async () => {
       const payload = await auth.login({
         expirationTime: new Date(Date.now() - 1000 * 60 * 5),
       });
@@ -188,7 +205,9 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       }
     });
 
-    it("Should reject payload with incorrect chain ID", async () => {
+    it("Should reject payload with incorrect chain ID", {
+      timeout: 240000,
+    }, async () => {
       const payload = await auth.login({
         chainId: "1",
       });
@@ -206,7 +225,9 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       }
     });
 
-    it("Should reject payload with incorrect signer", async () => {
+    it("Should reject payload with incorrect signer", {
+      timeout: 240000,
+    }, async () => {
       const payload = await auth.login();
       payload.payload.address = await attackerWallet.getAddress();
 
@@ -219,7 +240,9 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       }
     });
 
-    it("Should generate valid authentication token", async () => {
+    it("Should generate valid authentication token", {
+      timeout: 240000,
+    }, async () => {
       const payload = await auth.login();
 
       auth.updateWallet(adminWallet);
@@ -229,7 +252,9 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       expect(user.address).to.equal(await signerWallet.getAddress());
     });
 
-    it("Should reject token with incorrect domain", async () => {
+    it("Should reject token with incorrect domain", {
+      timeout: 240000,
+    }, async () => {
       const payload = await auth.login();
 
       auth.updateWallet(adminWallet);
@@ -245,7 +270,9 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       }
     });
 
-    it("Should reject token before invalid before", async () => {
+    it("Should reject token before invalid before", {
+      timeout: 240000,
+    }, async () => {
       const payload = await auth.login();
 
       auth.updateWallet(adminWallet);
@@ -261,7 +288,9 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       }
     });
 
-    it("Should reject expired authentication token", async () => {
+    it("Should reject expired authentication token", {
+      timeout: 240000,
+    }, async () => {
       const payload = await auth.login();
 
       auth.updateWallet(adminWallet);
@@ -277,7 +306,9 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       }
     });
 
-    it("Should reject if admin address is not connected wallet address", async () => {
+    it("Should reject if admin address is not connected wallet address", {
+      timeout: 240000,
+    }, async () => {
       const payload = await auth.login();
 
       auth.updateWallet(adminWallet);
@@ -294,7 +325,9 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       }
     });
 
-    it("Should accept token with valid token ID", async () => {
+    it("Should accept token with valid token ID", {
+      timeout: 240000,
+    }, async () => {
       const payload = await auth.login();
 
       auth.updateWallet(adminWallet);
@@ -313,7 +346,9 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       expect(user.address).to.equal(await signerWallet.getAddress());
     });
 
-    it("Should reject token with invalid token ID", async () => {
+    it("Should reject token with invalid token ID", {
+      timeout: 240000,
+    }, async () => {
       const payload = await auth.login();
 
       auth.updateWallet(adminWallet);
@@ -335,7 +370,9 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       }
     });
 
-    it("Should propagate session on token", async () => {
+    it("Should propagate session on token", {
+      timeout: 240000,
+    },  async () => {
       const payload = await auth.login();
 
       auth.updateWallet(adminWallet);
@@ -349,7 +386,9 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       expect(user.session).to.deep.equal({ role: "admin" });
     });
 
-    it("Should call session callback function", async () => {
+    it("Should call session callback function", {
+      timeout: 240000,
+    }, async () => {
       const payload = await auth.login();
 
       auth.updateWallet(adminWallet);
@@ -368,7 +407,9 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       });
     });
 
-    it("Should authenticate with issuer address", async () => {
+    it("Should authenticate with issuer address", {
+      timeout: 240000,
+    }, async () => {
       const payload = await auth.login();
 
       auth.updateWallet(adminWallet);

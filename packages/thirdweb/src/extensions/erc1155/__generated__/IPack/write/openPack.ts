@@ -114,7 +114,7 @@ export function encodeOpenPack(options: OpenPackParams) {
 }
 
 /**
- * Calls the "openPack" function on the contract.
+ * Prepares a transaction to call the "openPack" function on the contract.
  * @param options - The options for the "openPack" function.
  * @returns A prepared transaction object.
  * @extension ERC1155
@@ -126,6 +126,9 @@ export function encodeOpenPack(options: OpenPackParams) {
  *  contract,
  *  packId: ...,
  *  amountToOpen: ...,
+ *  overrides: {
+ *    ...
+ *  }
  * });
  *
  * // Send the transaction
@@ -153,5 +156,12 @@ export function openPack(
       return [resolvedOptions.packId, resolvedOptions.amountToOpen] as const;
     },
     value: async () => (await asyncOptions()).overrides?.value,
+    accessList: async () => (await asyncOptions()).overrides?.accessList,
+    gas: async () => (await asyncOptions()).overrides?.gas,
+    gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
+    maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
+    maxPriorityFeePerGas: async () =>
+      (await asyncOptions()).overrides?.maxPriorityFeePerGas,
+    nonce: async () => (await asyncOptions()).overrides?.nonce,
   });
 }

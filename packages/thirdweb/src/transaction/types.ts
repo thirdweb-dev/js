@@ -10,7 +10,10 @@ import type { TransactionReceipt as ViemTransactionReceipt } from "viem";
 import type { ThirdwebContract } from "../contract/contract.js";
 import type { Hex } from "../utils/encoding/hex.js";
 import { isObjectWithKeys } from "../utils/type-guards.js";
-import type { PreparedTransaction } from "./prepare-transaction.js";
+import type {
+  PreparedTransaction,
+  StaticPrepareTransactionOptions,
+} from "./prepare-transaction.js";
 
 export type SendTransactionResult = {
   readonly transactionHash: Hex;
@@ -18,7 +21,12 @@ export type SendTransactionResult = {
 
 export type TransactionReceipt = ViemTransactionReceipt;
 
-export type WithOverrides<T> = T & { overrides?: { value?: bigint } };
+export type WithOverrides<T> = T & {
+  overrides?: Omit<
+    StaticPrepareTransactionOptions,
+    "to" | "from" | "data" | "maxFeePerBlobGas" | "chain" | "client"
+  >;
+};
 
 export type ParamsOption<inputs extends readonly AbiParameter[]> =
   inputs extends {

@@ -1,5 +1,22 @@
 # @thirdweb-dev/sdk
 
+## 4.0.74
+
+### Patch Changes
+
+- Updated dependencies [[`75e66b1`](https://github.com/thirdweb-dev/js/commit/75e66b189d790778358edeacdd71965f248902c2), [`f916d7a`](https://github.com/thirdweb-dev/js/commit/f916d7a453854bcb8c6f0b9c95b49d34eb865882), [`1d66954`](https://github.com/thirdweb-dev/js/commit/1d669547fb4f8a873194e0b843a9ca71e7e1504e), [`9a031bb`](https://github.com/thirdweb-dev/js/commit/9a031bb19fe9b39ff88a02c48c311ba5c3184aab), [`7882b22`](https://github.com/thirdweb-dev/js/commit/7882b22306c1ccd4919fe088dfcd7c68bff954f9), [`0bce535`](https://github.com/thirdweb-dev/js/commit/0bce5350946d0ce231a65dbad2493d1fbe0c1376), [`e6fce1f`](https://github.com/thirdweb-dev/js/commit/e6fce1f2e617c795377ef4de12e2112f1fa03ebb), [`88886ac`](https://github.com/thirdweb-dev/js/commit/88886acd762e637ac130bb7fa0eda12c6e5da4fc)]:
+  - thirdweb@5.15.0
+  - @thirdweb-dev/contracts-js@1.3.22
+  - @thirdweb-dev/chains@0.1.104
+
+## 4.0.73
+
+### Patch Changes
+
+- Updated dependencies [[`7f4caf0`](https://github.com/thirdweb-dev/js/commit/7f4caf06274ed9a0c753f034f5b8279e618a0644), [`d2aead4`](https://github.com/thirdweb-dev/js/commit/d2aead486e4335130b8fa8d3961c3a99da9a07b3), [`fa4bd43`](https://github.com/thirdweb-dev/js/commit/fa4bd436e01041419b668379103abb2759dc702f), [`bfdfc23`](https://github.com/thirdweb-dev/js/commit/bfdfc23e3aac6cf977774e3905dfe97c8b49d69a), [`597900b`](https://github.com/thirdweb-dev/js/commit/597900bdcc2c51e4623a3c196c5ccf9cc704e12c), [`62c799d`](https://github.com/thirdweb-dev/js/commit/62c799d3484abe54a9c648148e5e207876f8bb46), [`99298b3`](https://github.com/thirdweb-dev/js/commit/99298b397c2fa03e98d8a4a828a483e243815e1d), [`674fcc7`](https://github.com/thirdweb-dev/js/commit/674fcc7e9510e85f67d6ab7b056612a15856e0df), [`48e6427`](https://github.com/thirdweb-dev/js/commit/48e6427d657ec202b8415d716411a6d6b194d185), [`7f2ec9c`](https://github.com/thirdweb-dev/js/commit/7f2ec9c2dca528e736d94b65525aacc1e2f3f28c), [`8ae8e6a`](https://github.com/thirdweb-dev/js/commit/8ae8e6a702d074890c145005a32450fe7ee44b27)]:
+  - thirdweb@5.14.0
+  - @thirdweb-dev/chains@0.1.103
+
 ## 4.0.72
 
 ### Patch Changes
