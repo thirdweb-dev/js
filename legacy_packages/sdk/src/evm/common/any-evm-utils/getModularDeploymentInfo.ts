@@ -71,7 +71,7 @@ if (hooks) {
       return fetchPublishedContractFromPolygon(
         h.publisherAddress,
         h.extensionName,
-        h.extensionVersion, // TODO: get oldest version
+        h.extensionVersion,
         storage,
         clientId,
         secretKey,
@@ -101,7 +101,7 @@ if (hooks) {
   finalDeploymentInfo.push(...hookImplDeployInfo);
 
   // with address of impl and factory above -> computeDeploymentInfo for hook proxy -> push into finalDeploymentInfo
-  const hookAddressesComputed = hookImplDeployInfo.map((h, i) => {
+  hookImplDeployInfo.forEach((h, i) => {
     const proxy = computeHookProxyAddress(
         h.transaction.predictedAddress,
         factoryInfo.transaction.predictedAddress,
@@ -109,21 +109,20 @@ if (hooks) {
 
       finalDeploymentInfo.push({
         type: "hookProxy",
-        transaction: { predictedAddress: "", to: "", data: "" }, // empty transaction because we'll deploy ERC1967 proxy through a factory
+        transaction: { predictedAddress: "", to: "", data: "" }, // no direct transaction because we'll deploy ERC1967 proxy through a factory
         hooks: {
           impl: h.transaction.predictedAddress,
           proxy: proxy,
-          admin: publishedHooks[i].publisherAddress as string,
+          admin: "",
         },
       });
-
-      return proxy;
     });
 
+    // hook addresses specified by the deployer
     hookAddresses.forEach((h) => {
       finalDeploymentInfo.push({
         type: "hookProxy",
-        transaction: { predictedAddress: "", to: "", data: "" }, // empty transaction because we'll deploy ERC1967 proxy through a factory
+        transaction: { predictedAddress: "", to: "", data: "" }, 
         hooks: {
           impl: "",
           proxy: h.extensionName,

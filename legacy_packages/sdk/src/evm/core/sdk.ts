@@ -1815,7 +1815,7 @@ export class ContractDeployer extends RPCConnectionHandler {
           args: [
             implementationAddress,
             encodedInitializer,
-            utils.id(HOOK_PROXY_DEPLOYMENT_SALT),
+            saltForProxyDeploy || utils.id(HOOK_PROXY_DEPLOYMENT_SALT),
           ],
           parse: () => {
             return deployedProxyAddress;
@@ -1972,6 +1972,7 @@ export class ContractDeployer extends RPCConnectionHandler {
       signer: Signer,
       options?: DeployOptions,
     ): Promise<DeployTransaction> => {
+      const upgradeAdmin = await signer.getAddress();
       // any evm deployment flow
 
       // 1. Deploy CREATE2 factory (if not already exists)
@@ -1992,7 +1993,7 @@ export class ContractDeployer extends RPCConnectionHandler {
         (i) => i.type === "implementation",
       )?.transaction.predictedAddress as string;
 
-      // 3. deploy infra + plugins + implementation using a throwaway Deployer contract
+      // 3. direct deploy infra + plugins + implementation
 
       // filter out already deployed contracts (data is empty)
       const transactionsToSend = deploymentInfo.filter(
@@ -2065,7 +2066,7 @@ export class ContractDeployer extends RPCConnectionHandler {
                 tx.hooks.impl,
                 hookInitializerAbi,
                 "initialize",
-                [tx.hooks.admin],
+                [upgradeAdmin],
               );
             } catch (e) {
               console.debug(
@@ -2110,7 +2111,7 @@ export class ContractDeployer extends RPCConnectionHandler {
       const initializerParamTypes = extractFunctionParamsFromAbi(
         deployMetadata.compilerMetadata.abi,
         deployMetadata.extendedMetadata.factoryDeploymentData
-          .implementationInitializerFunction,
+        .implementationInitializerFunction,
       ).map((p) => p.type);
       const paramValues = convertParamValues(
         initializerParamTypes,
