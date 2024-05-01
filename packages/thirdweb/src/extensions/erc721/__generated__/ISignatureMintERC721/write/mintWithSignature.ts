@@ -87,8 +87,8 @@ const FN_INPUTS = [
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "address",
-    name: "signer",
+    type: "uint256",
+    name: "tokenIdMinted",
   },
 ] as const;
 
