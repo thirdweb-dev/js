@@ -14,8 +14,8 @@ export default {
   "networkId": 3100,
   "rpc": [
     "https://3100.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://fraa-dancebox-3043-rpc.a.dancebox.tanssi.network",
-    "wss://fraa-dancebox-3043-rpc.a.dancebox.tanssi.network"
+    "https://fraa-flashbox-2800-rpc.a.stagenet.tanssi.network",
+    "wss://fraa-flashbox-2800-rpc.a.stagenet.tanssi.network"
   ],
   "shortName": "Immu3",
   "slug": "immu3-evm",
