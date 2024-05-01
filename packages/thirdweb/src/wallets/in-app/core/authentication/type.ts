@@ -36,7 +36,13 @@ export type SingleStepAuthArgsType =
   | { strategy: "jwt"; jwt: string; encryptionKey: string }
   | { strategy: "auth_endpoint"; payload: string; encryptionKey: string }
   | { strategy: "iframe_email_verification"; email: string }
-  | { strategy: "iframe" };
+  | { strategy: "iframe" }
+  | {
+      strategy: "passkey";
+      type: "registration" | "login";
+      username?: string;
+      authenticatorType?: string;
+    };
 
 export type AuthArgsType = (MultiStepAuthArgsType | SingleStepAuthArgsType) & {
   client: ThirdwebClient;

@@ -4,6 +4,10 @@ import {
   AuthProvider,
 } from "../../implementations/interfaces/auth.js";
 import { UserWalletStatus } from "../../implementations/interfaces/in-app-wallets/in-app-wallets.js";
+import {
+  loginWithPasskey,
+  registerPasskey,
+} from "../../implementations/lib/auth/passkeys.js";
 import type { InAppWalletSdk } from "../../implementations/lib/in-app-wallet.js";
 import type { AuthArgsType, PreAuthArgsType } from "./type.js";
 
@@ -196,6 +200,18 @@ export async function authenticate(
     }
     case "iframe": {
       return ewSDK.auth.loginWithModal();
+    }
+    case "passkey": {
+      if (args.type === "registration") {
+        return registerPasskey({
+          client: args.client,
+          authenticatorType: args.authenticatorType,
+          username: args.username,
+        });
+      }
+      return loginWithPasskey({
+        client: args.client,
+      });
     }
     default:
       assertUnreachable(strategy);
