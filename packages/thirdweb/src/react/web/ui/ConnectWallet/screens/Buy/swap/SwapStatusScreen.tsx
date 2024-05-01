@@ -1,10 +1,13 @@
 import { CheckCircledIcon } from "@radix-ui/react-icons";
+import { useQueryClient } from "@tanstack/react-query";
+import { useEffect, useRef } from "react";
 import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import {
   type BuyWithCryptoStatusQueryParams,
   useBuyWithCryptoStatus,
 } from "../../../../../../core/hooks/pay/useBuyWithCryptoStatus.js";
+import { invalidateWalletBalance } from "../../../../../../core/providers/invalidateWalletBalance.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
 import { TokenIcon } from "../../../../components/TokenIcon.js";
@@ -29,6 +32,15 @@ export function SwapStatusScreen(props: {
   const swapStatus = useBuyWithCryptoStatus(props.swapTx);
   const isSuccess = swapStatus.data?.status === "COMPLETED";
   const isFailed = swapStatus.data?.status === "FAILED";
+
+  const queryClient = useQueryClient();
+  const balanceInvalidated = useRef(false);
+  useEffect(() => {
+    if (isSuccess && !balanceInvalidated.current) {
+      balanceInvalidated.current = true;
+      invalidateWalletBalance(queryClient);
+    }
+  }, [queryClient, isSuccess]);
 
   return (
     <Container animate="fadein">
@@ -126,7 +138,7 @@ export function SwapStatusScreen(props: {
 
         <Spacer y="xl" />
 
-        {!isFailed && (
+        {isSuccess && (
           <Button variant="accent" fullWidth onClick={props.onViewPendingTx}>
             View Transactions
           </Button>

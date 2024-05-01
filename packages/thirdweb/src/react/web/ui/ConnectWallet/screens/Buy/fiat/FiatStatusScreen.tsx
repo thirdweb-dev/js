@@ -1,9 +1,11 @@
 import { CheckCircledIcon } from "@radix-ui/react-icons";
-import { useEffect, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useEffect, useRef, useState } from "react";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import type { BuyWithFiatQuote } from "../../../../../../../exports/pay.js";
 import { isMobile } from "../../../../../../../utils/web/isMobile.js";
 import { useBuyWithFiatStatus } from "../../../../../../core/hooks/pay/useBuyWithFiatStatus.js";
+import { invalidateWalletBalance } from "../../../../../../core/providers/invalidateWalletBalance.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
 import { StepBar } from "../../../../components/StepBar.js";
@@ -37,6 +39,7 @@ export function FiatStatusScreen(props: {
   // if no swap required - show success screen
   const isCompleted = statusQuery.data?.status === "ON_RAMP_TRANSFER_COMPLETED";
 
+  const queryClient = useQueryClient();
   const isLoading = statusQuery.isLoading || (!isFailed && !isCompleted);
 
   // use state instead of directly using statusQuery.data to ensure if status changes it does not unmount the component
@@ -61,6 +64,18 @@ export function FiatStatusScreen(props: {
       openedWindow.close();
     }
   }, [statusQuery.data, openedWindow]);
+
+  const invalidatedBalance = useRef(false);
+  useEffect(() => {
+    if (
+      !invalidatedBalance.current &&
+      statusQuery.data &&
+      statusQuery.data.status === "ON_RAMP_TRANSFER_COMPLETED"
+    ) {
+      invalidatedBalance.current = true;
+      invalidateWalletBalance(queryClient);
+    }
+  }, [statusQuery.data, queryClient]);
 
   useEffect(() => {
     if (

@@ -2,7 +2,10 @@ import { CrossCircledIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
-import { useActiveWalletChain } from "../../../../../../../exports/react-native.js";
+import {
+  useActiveWallet,
+  useActiveWalletChain,
+} from "../../../../../../../exports/react-native.js";
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
 import { waitForReceipt } from "../../../../../../../transaction/actions/wait-for-tx-receipt.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
@@ -48,6 +51,7 @@ export function SwapConfirmationScreen(props: {
 }) {
   const sendTransactionMutation = useSendTransactionCore();
   const activeChain = useActiveWalletChain();
+  const activeWallet = useActiveWallet();
 
   const isApprovalRequired = props.quote.approval !== undefined;
   const initialStep = isApprovalRequired ? "approval" : "swap";
@@ -183,9 +187,21 @@ export function SwapConfirmationScreen(props: {
             if (step === "swap") {
               setStatus("pending");
               try {
-                const _swapTx = await sendTransactionMutation.mutateAsync(
-                  props.quote.transactionRequest,
-                );
+                let tx = props.quote.transactionRequest;
+
+                // Fix for inApp wallet
+                // Ideally - the pay server sends a non-legacy transaction to avoid this issue
+                if (
+                  activeWallet?.id === "inApp" ||
+                  activeWallet?.id === "embedded"
+                ) {
+                  tx = {
+                    ...props.quote.transactionRequest,
+                    gasPrice: undefined,
+                  };
+                }
+
+                const _swapTx = await sendTransactionMutation.mutateAsync(tx);
 
                 await waitForReceipt({ ..._swapTx, maxBlocksWaitTime: 50 });
 

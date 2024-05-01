@@ -8,7 +8,7 @@ import {
   TextAlignJustifyIcon,
 } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useState } from "react";
 import { ethereum } from "../../../../chains/chain-definitions/ethereum.js";
 import type { Chain } from "../../../../chains/types.js";
 import { getContract } from "../../../../contract/contract.js";
@@ -63,7 +63,6 @@ import { FundsIcon } from "./icons/FundsIcon.js";
 import { WalletIcon } from "./icons/WalletIcon.js";
 import { genericTokenIcon } from "./icons/dataUris.js";
 import { BuyScreen } from "./screens/Buy/BuyScreen.js";
-import { pendingTransactions } from "./screens/Buy/swap/pendingSwapTx.js";
 import { BuyTxHistory } from "./screens/Buy/tx-history/BuyTxHistory.js";
 import { ReceiveFunds } from "./screens/ReceiveFunds.js";
 import { SendFunds } from "./screens/SendFunds.js";
@@ -103,11 +102,6 @@ export const ConnectedWalletDetails: React.FC<{
   const walletChain = useActiveWalletChain();
   const chainQuery = useChainQuery(walletChain);
   const { disconnect } = useDisconnect();
-  const pendingTxs = useSyncExternalStore(
-    pendingTransactions.subscribe,
-    pendingTransactions.getValue,
-  );
-
   // prefetch chains metadata with low concurrency
   useChainsQuery(props.chains, 5);
 
@@ -486,9 +480,6 @@ export const ConnectedWalletDetails: React.FC<{
             <TextAlignJustifyIcon width={iconSize.md} height={iconSize.md} />
             <Container flex="row" gap="xs" center="y">
               <Text color="primaryText">{locale.transactions}</Text>
-              {pendingTxs.length > 0 && (
-                <BadgeCount>{pendingTxs.length}</BadgeCount>
-              )}
             </Container>
           </MenuButton>
 
@@ -781,22 +772,6 @@ const MenuButton = /* @__PURE__ */ StyledButton(() => {
     "&[data-variant='primary']:hover svg": {
       color: `${theme.colors.primaryText}!important`,
     },
-  };
-});
-
-const BadgeCount = /* @__PURE__ */ StyledDiv(() => {
-  const theme = useCustomTheme();
-  return {
-    background: theme.colors.primaryButtonBg,
-    color: theme.colors.primaryButtonText,
-    fontSize: fontSize.sm,
-    fontWeight: 500,
-    borderRadius: "50%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    minWidth: "22px",
-    minHeight: "22px",
   };
 });
 
