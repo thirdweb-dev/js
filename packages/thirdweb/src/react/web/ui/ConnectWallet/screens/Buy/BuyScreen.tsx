@@ -74,6 +74,8 @@ import { PayWithCrypto } from "./swap/PayWithCrypto.js";
 import { SwapFlow } from "./swap/SwapFlow.js";
 import { addPendingTx } from "./swap/pendingSwapTx.js";
 import { useBuySupportedChains } from "./swap/useSwapSupportedChains.js";
+import { BuyTxHistoryButton } from "./tx-history/BuyTxHistoryButton.js";
+import { useBuyTransactionsToShow } from "./tx-history/useBuyTransactionsToShow.js";
 
 // NOTE: Must not use useConnectUI here because this UI can be used outside connect ui
 
@@ -252,7 +254,7 @@ export function BuyScreenContent(props: BuyScreenContentProps) {
   }, [props.buyForTx, stopUpdatingTokenAmount]);
 
   const [hasEditedAmount, setHasEditedAmount] = useState(false);
-  const isNotExpanded = props.buyForTx ? false : !hasEditedAmount;
+  const isExpanded = props.buyForTx ? true : hasEditedAmount;
 
   const isChainSupported = useMemo(
     () => supportedChains?.find((c) => c.id === activeChain.id),
@@ -396,7 +398,7 @@ export function BuyScreenContent(props: BuyScreenContentProps) {
           />
 
           <Spacer y="lg" />
-          {isNotExpanded && <Spacer y="xl" />}
+          {!isExpanded && <Spacer y="xl" />}
 
           {/* Amount needed for Send Tx */}
           {amountNeeded && props.buyForTx ? (
@@ -434,7 +436,7 @@ export function BuyScreenContent(props: BuyScreenContentProps) {
         <Line />
         <Spacer y="md" />
 
-        {!isNotExpanded && (
+        {isExpanded && (
           <>
             {showPaymentSelection && (
               <Container px="lg">
@@ -481,21 +483,78 @@ export function BuyScreenContent(props: BuyScreenContentProps) {
           </>
         )}
 
-        {isNotExpanded && (
-          <Container px="lg">
-            <Button
-              variant="secondary"
-              fullWidth
-              disabled={true}
-              data-disable={true}
-            >
-              Continue
-            </Button>
-          </Container>
+        {!isExpanded && (
+          <BuyScreenNonExpandedFooter
+            client={client}
+            onViewAllTransactions={props.onViewPendingTx}
+          />
         )}
 
         <Spacer y="lg" />
       </div>
+    </Container>
+  );
+}
+
+function BuyScreenNonExpandedFooter(props: {
+  client: ThirdwebClient;
+  onViewAllTransactions: () => void;
+}) {
+  const { txInfosToShow: allList } = useBuyTransactionsToShow(props.client);
+  const txInfosToShow = allList.slice(0, 3);
+  const showMore = allList.length > 3;
+
+  if (txInfosToShow.length === 0) {
+    return (
+      <Container px="lg">
+        <Button
+          variant="secondary"
+          fullWidth
+          disabled={true}
+          data-disable={true}
+        >
+          Continue
+        </Button>
+      </Container>
+    );
+  }
+
+  return (
+    <Container px="lg">
+      <Spacer y="xs" />
+      <Text size="sm">Recent transactions</Text>
+      <Spacer y="sm" />
+      <Container flex="column" gap="xs">
+        {txInfosToShow.map((txInfo) => {
+          return (
+            <BuyTxHistoryButton
+              key={
+                txInfo.type === "swap"
+                  ? txInfo.status.source.transactionHash
+                  : txInfo.status.intentId
+              }
+              txInfo={txInfo}
+              client={props.client}
+            />
+          );
+        })}
+      </Container>
+
+      {showMore && (
+        <>
+          <Spacer y="sm" />
+          <Button
+            onClick={props.onViewAllTransactions}
+            variant="link"
+            fullWidth
+            style={{
+              fontSize: fontSize.sm,
+            }}
+          >
+            View all transactions
+          </Button>
+        </>
+      )}
     </Container>
   );
 }
