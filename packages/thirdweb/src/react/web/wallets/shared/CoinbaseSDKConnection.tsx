@@ -5,6 +5,7 @@ import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.
 import type { InjectedWalletLocale } from "../injected/locale/types.js";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import type { COINBASE } from "../../../../wallets/constants.js";
 import { ConnectingScreen } from "./ConnectingScreen.js";
 
 /**
@@ -15,7 +16,7 @@ function CoinbaseSDKWalletConnectUI(props: {
   onGetStarted: () => void;
   done: () => void;
   locale: InjectedWalletLocale;
-  wallet: Wallet<"com.coinbase.wallet">;
+  wallet: Wallet<typeof COINBASE>;
   walletInfo: WalletInfo;
 }) {
   const { onBack, done, wallet, walletInfo, onGetStarted, locale } = props;
