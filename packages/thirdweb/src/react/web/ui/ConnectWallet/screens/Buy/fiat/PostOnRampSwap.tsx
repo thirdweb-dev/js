@@ -41,7 +41,6 @@ export function PostOnRampSwap(props: {
           style={{
             minHeight: "300px",
           }}
-          fullHeight
           flex="row"
           center="both"
         >
