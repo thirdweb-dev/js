@@ -7,4 +7,4 @@ export type {
   PaymasterResult,
 } from "../../wallets/smart/types.js";
 
-// TODO: add exports for smart wallet utils here
+export { ENTRYPOINT_ADDRESS } from "../../wallets/smart/lib/constants.js";
