@@ -42,6 +42,7 @@ export type BuyWithFiatStatus =
         | "ON_RAMP_TRANSFER_FAILED"
         | "CRYPTO_SWAP_REQUIRED"
         | "CRYPTO_SWAP_COMPLETED"
+        | "CRYPTO_SWAP_FALLBACK"
         | "CRYPTO_SWAP_IN_PROGRESS"
         | "CRYPTO_SWAP_FAILED";
       toAddress: string;
