@@ -26,6 +26,7 @@ export {
 
 export { prepareDirectDeployTransaction } from "../contract/deployment/deploy-with-abi.js";
 export { prepareAutoFactoryDeployTransaction } from "../contract/deployment/deploy-via-autofactory.js";
+export { prepareDeterministicDeployTransaction } from "../contract/deployment/deploy-deterministic.js";
 export { deployViaAutoFactory } from "../contract/deployment/deploy-via-autofactory.js";
 export {
   deployContract,

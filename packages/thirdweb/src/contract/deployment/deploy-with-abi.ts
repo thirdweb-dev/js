@@ -33,7 +33,7 @@ export type PrepareDirectDeployTransactionOptions<
  * @returns - The prepared transaction.
  * @example
  * ```ts
- * import { prepareDirectDeployTransaction } from "thirdweb/contract";
+ * import { prepareDirectDeployTransaction } from "thirdweb/deploys";
  * import { ethereum } from "thirdweb/chains";
  * const tx = prepareDirectDeployTransaction({
  *  client,
