@@ -59,8 +59,8 @@ export function fiatQuoteToPartialQuote(
   quote: BuyWithFiatQuote,
 ): BuyWithFiatPartialQuote {
   const data: BuyWithFiatPartialQuote = {
-    fromCurrencyAmount: quote.fromCurrency.amount,
-    fromCurrencySymbol: quote.fromCurrency.currencySymbol,
+    fromCurrencyAmount: quote.fromCurrencyWithFees.amount,
+    fromCurrencySymbol: quote.fromCurrencyWithFees.currencySymbol,
     onRampTokenAmount: quote.onRampToken.amount,
     toTokenAmount: quote.estimatedToAmountMin,
     onRampToken: {
