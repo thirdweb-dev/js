@@ -76,6 +76,7 @@ export type FiatStatusMeta = {
     | "completed"
     | "failed"
     | "actionRequired"
+    | "partialSuccess"
     | "unknown";
 };
 export function getBuyWithFiatStatusMeta(
@@ -84,6 +85,15 @@ export function getBuyWithFiatStatusMeta(
   const status = fiatStatus.status;
 
   switch (status) {
+    case "CRYPTO_SWAP_FALLBACK": {
+      return {
+        status: "Incomplete",
+        color: "danger",
+        step: 2,
+        progressStatus: "partialSuccess",
+      };
+    }
+
     case "CRYPTO_SWAP_IN_PROGRESS":
     case "PENDING_ON_RAMP_TRANSFER":
     case "ON_RAMP_TRANSFER_IN_PROGRESS":

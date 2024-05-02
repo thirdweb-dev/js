@@ -21,7 +21,7 @@ import { FiatTxDetailsTable } from "../tx-history/FiatDetailsScreen.js";
 import { FiatSteps, fiatQuoteToPartialQuote } from "./FiatSteps.js";
 import { PostOnRampSwap } from "./PostOnRampSwap.js";
 
-type UIStatus = "loading" | "failed" | "completed";
+type UIStatus = "loading" | "failed" | "completed" | "partialSuccess";
 
 export function FiatStatusScreen(props: {
   client: ThirdwebClient;
@@ -48,6 +48,8 @@ export function FiatStatusScreen(props: {
     statusQuery.data?.status === "PAYMENT_FAILED"
   ) {
     uiStatus = "failed";
+  } else if (statusQuery.data?.status === "CRYPTO_SWAP_FALLBACK") {
+    uiStatus = "partialSuccess";
   } else if (statusQuery.data?.status === "ON_RAMP_TRANSFER_COMPLETED") {
     uiStatus = "completed";
   }
@@ -55,6 +57,7 @@ export function FiatStatusScreen(props: {
   // determine step
   let step = 1;
   if (
+    statusQuery.data?.status === "CRYPTO_SWAP_FALLBACK" ||
     statusQuery.data?.status === "CRYPTO_SWAP_REQUIRED" ||
     statusQuery.data?.status === "CRYPTO_SWAP_FAILED" ||
     statusQuery.data?.status === "CRYPTO_SWAP_IN_PROGRESS"
@@ -128,7 +131,7 @@ export function FiatStatusScreen(props: {
               <>
                 {" "}
                 Buying {props.quote.onRampToken.token.symbol} with{" "}
-                {props.quote.fromCurrency.currencySymbol}
+                {props.quote.fromCurrencyWithFees.currencySymbol}
               </>
             )}
           </Text>

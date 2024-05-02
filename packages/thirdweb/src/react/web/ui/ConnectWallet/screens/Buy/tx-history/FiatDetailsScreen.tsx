@@ -49,8 +49,8 @@ export function FiatDetailsScreen(props: {
         onBack={props.onBack}
         onViewPendingTx={props.onBack}
         quote={{
-          fromCurrencyAmount: fiatQuote.fromCurrency.amount,
-          fromCurrencySymbol: fiatQuote.fromCurrency.currencySymbol,
+          fromCurrencyAmount: fiatQuote.fromCurrencyWithFees.amount,
+          fromCurrencySymbol: fiatQuote.fromCurrencyWithFees.currencySymbol,
           onRampTokenAmount: fiatQuote.estimatedOnRampAmount,
           toTokenAmount: fiatQuote.estimatedToTokenAmount,
           onRampToken: {
@@ -138,12 +138,15 @@ export function FiatTxDetailsTable(props: {
           }}
         >
           <Container flex="row" gap="xs" center="y">
-            {status.quote.fromCurrency.currencySymbol === "USD" && (
+            {status.quote.fromCurrencyWithFees.currencySymbol === "USD" && (
               <USDIcon size={iconSize.sm} />
             )}
             <Text color="primaryText">
-              {formatNumber(Number(status.quote.fromCurrency.amount), 4)}{" "}
-              {status.quote.fromCurrency.currencySymbol}
+              {formatNumber(
+                Number(status.quote.fromCurrencyWithFees.amount),
+                4,
+              )}{" "}
+              {status.quote.fromCurrencyWithFees.currencySymbol}
             </Text>
           </Container>
         </Container>
