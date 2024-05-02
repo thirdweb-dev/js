@@ -3,6 +3,7 @@ import { useState } from "react";
 import { defineChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import type { BuyWithFiatStatus } from "../../../../../../../exports/pay.js";
+import { useBuyWithFiatStatus } from "../../../../../../../exports/react.js";
 import type { ValidBuyWithFiatStatus } from "../../../../../../../pay/buyWithFiat/getStatus.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
@@ -23,7 +24,17 @@ export function FiatDetailsScreen(props: {
   client: ThirdwebClient;
   closeModal: () => void;
 }) {
-  const status = props.status;
+  const initialStatus = props.status;
+
+  const statusQuery = useBuyWithFiatStatus({
+    client: props.client,
+    intentId: initialStatus.intentId,
+  });
+
+  const status: ValidBuyWithFiatStatus =
+    (statusQuery.data?.status === "NOT_FOUND" ? undefined : statusQuery.data) ||
+    initialStatus;
+
   const statusMeta = getBuyWithFiatStatusMeta(status);
 
   const hasTwoSteps = isSwapRequiredAfterOnRamp(status);
