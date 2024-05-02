@@ -12,12 +12,6 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "icon": {
-    "url": "ipfs://QmQXCm6w8xvWMkksTQYw3So14VCbwHP6chH41v6ysXdSwF",
-    "width": 608,
-    "height": 608,
-    "format": "svg"
-  },
   "infoURL": "https://saharalabs.ai",
   "name": "SaharaAI Network",
   "nativeCurrency": {

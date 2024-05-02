@@ -11,7 +11,7 @@ export default {
     "format": "png"
   },
   "infoURL": "https://kakarot.org",
-  "name": "Kakarot Sepolia",
+  "name": "Kakarot Sepolia Deprecated",
   "nativeCurrency": {
     "name": "Ether",
     "symbol": "ETH",
@@ -24,7 +24,7 @@ export default {
     "bridges": []
   },
   "rpc": [],
-  "shortName": "kkrt-sepolia",
-  "slug": "kakarot-sepolia",
+  "shortName": "kkrt-sepolia-deprecated",
+  "slug": "kakarot-sepolia-deprecated",
   "testnet": false
 } as const satisfies Chain;

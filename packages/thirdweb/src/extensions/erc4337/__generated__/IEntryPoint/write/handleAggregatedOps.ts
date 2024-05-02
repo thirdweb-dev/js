@@ -185,7 +185,7 @@ export function encodeHandleAggregatedOps(options: HandleAggregatedOpsParams) {
 }
 
 /**
- * Calls the "handleAggregatedOps" function on the contract.
+ * Prepares a transaction to call the "handleAggregatedOps" function on the contract.
  * @param options - The options for the "handleAggregatedOps" function.
  * @returns A prepared transaction object.
  * @extension ERC4337
@@ -197,6 +197,9 @@ export function encodeHandleAggregatedOps(options: HandleAggregatedOpsParams) {
  *  contract,
  *  opsPerAggregator: ...,
  *  beneficiary: ...,
+ *  overrides: {
+ *    ...
+ *  }
  * });
  *
  * // Send the transaction
@@ -227,5 +230,12 @@ export function handleAggregatedOps(
       ] as const;
     },
     value: async () => (await asyncOptions()).overrides?.value,
+    accessList: async () => (await asyncOptions()).overrides?.accessList,
+    gas: async () => (await asyncOptions()).overrides?.gas,
+    gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
+    maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
+    maxPriorityFeePerGas: async () =>
+      (await asyncOptions()).overrides?.maxPriorityFeePerGas,
+    nonce: async () => (await asyncOptions()).overrides?.nonce,
   });
 }

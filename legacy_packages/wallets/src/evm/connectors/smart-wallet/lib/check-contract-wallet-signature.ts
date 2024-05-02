@@ -74,7 +74,7 @@ export async function checkContractWalletSignature(
 
   const provider = new providers.StaticJsonRpcProvider(
     {
-      url: chainIdToThirdwebRpc(chainId),
+      url: rpcUrl,
       skipFetchSetup: _skipFetchSetup,
       headers,
     },

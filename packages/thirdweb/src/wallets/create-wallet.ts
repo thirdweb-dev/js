@@ -13,6 +13,7 @@ import type {
 } from "./wallet-types.js";
 
 import { trackConnect } from "../analytics/track.js";
+import { COINBASE } from "./constants.js";
 import type { WCConnectOptions } from "./wallet-connect/types.js";
 import { createWalletEmitter } from "./wallet-emitter.js";
 
@@ -62,8 +63,10 @@ export function createWallet<const ID extends WalletId>(
      * COINBASE WALLET VIA SDK
      * -> if no injected coinbase found, we'll use the coinbase SDK
      */
-    case "com.coinbase.wallet": {
-      return coinbaseWalletSDK() as Wallet<ID>;
+    case COINBASE: {
+      return coinbaseWalletSDK(
+        creationOptions as CreateWalletArgs<typeof COINBASE>[1],
+      ) as Wallet<ID>;
     }
 
     /**
@@ -442,8 +445,10 @@ export function inAppWallet(
  * internal helper functions
  */
 
-function coinbaseWalletSDK(): Wallet<"com.coinbase.wallet"> {
-  const emitter = createWalletEmitter<"com.coinbase.wallet">();
+function coinbaseWalletSDK(
+  createOptions?: CreateWalletArgs<typeof COINBASE>[1],
+): Wallet<typeof COINBASE> {
+  const emitter = createWalletEmitter<typeof COINBASE>();
   let account: Account | undefined = undefined;
   let chain: Chain | undefined = undefined;
 
@@ -476,17 +481,17 @@ function coinbaseWalletSDK(): Wallet<"com.coinbase.wallet"> {
   });
 
   return {
-    id: "com.coinbase.wallet",
+    id: COINBASE,
     subscribe: emitter.subscribe,
     getChain: () => chain,
-    getConfig: () => undefined,
+    getConfig: () => createOptions,
     getAccount: () => account,
     autoConnect: async (options) => {
       const { autoConnectCoinbaseWalletSDK } = await import(
         "./coinbase/coinbaseSDKWallet.js"
       );
       const [connectedAccount, connectedChain, doDisconnect, doSwitchChain] =
-        await autoConnectCoinbaseWalletSDK(options, emitter);
+        await autoConnectCoinbaseWalletSDK(options, createOptions, emitter);
       // set the states
       account = connectedAccount;
       chain = connectedChain;
@@ -494,7 +499,7 @@ function coinbaseWalletSDK(): Wallet<"com.coinbase.wallet"> {
       handleSwitchChain = doSwitchChain;
       trackConnect({
         client: options.client,
-        walletType: "com.coinbase.wallet",
+        walletType: COINBASE,
         walletAddress: account.address,
       });
       // return account
@@ -505,7 +510,7 @@ function coinbaseWalletSDK(): Wallet<"com.coinbase.wallet"> {
         "./coinbase/coinbaseSDKWallet.js"
       );
       const [connectedAccount, connectedChain, doDisconnect, doSwitchChain] =
-        await connectCoinbaseWalletSDK(options, emitter);
+        await connectCoinbaseWalletSDK(options, createOptions, emitter);
 
       // set the states
       account = connectedAccount;
@@ -514,7 +519,7 @@ function coinbaseWalletSDK(): Wallet<"com.coinbase.wallet"> {
       handleSwitchChain = doSwitchChain;
       trackConnect({
         client: options.client,
-        walletType: "com.coinbase.wallet",
+        walletType: COINBASE,
         walletAddress: account.address,
       });
       // return account

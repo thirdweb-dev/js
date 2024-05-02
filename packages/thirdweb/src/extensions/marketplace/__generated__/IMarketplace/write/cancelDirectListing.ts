@@ -91,7 +91,7 @@ export function encodeCancelDirectListing(options: CancelDirectListingParams) {
 }
 
 /**
- * Calls the "cancelDirectListing" function on the contract.
+ * Prepares a transaction to call the "cancelDirectListing" function on the contract.
  * @param options - The options for the "cancelDirectListing" function.
  * @returns A prepared transaction object.
  * @extension MARKETPLACE
@@ -102,6 +102,9 @@ export function encodeCancelDirectListing(options: CancelDirectListingParams) {
  * const transaction = cancelDirectListing({
  *  contract,
  *  listingId: ...,
+ *  overrides: {
+ *    ...
+ *  }
  * });
  *
  * // Send the transaction
@@ -129,5 +132,12 @@ export function cancelDirectListing(
       return [resolvedOptions.listingId] as const;
     },
     value: async () => (await asyncOptions()).overrides?.value,
+    accessList: async () => (await asyncOptions()).overrides?.accessList,
+    gas: async () => (await asyncOptions()).overrides?.gas,
+    gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
+    maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
+    maxPriorityFeePerGas: async () =>
+      (await asyncOptions()).overrides?.maxPriorityFeePerGas,
+    nonce: async () => (await asyncOptions()).overrides?.nonce,
   });
 }

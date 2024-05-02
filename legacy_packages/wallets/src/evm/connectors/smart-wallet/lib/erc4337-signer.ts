@@ -227,7 +227,7 @@ Code: ${errorCode}`;
     try {
       const provider = new providers.StaticJsonRpcProvider(
         {
-          url: chainIdToThirdwebRpc(chainId, this.config.clientId),
+          url: rpcUrl,
           headers,
         },
         chainId,

@@ -37,7 +37,19 @@ export type PrepareContractCallOptions<
     ParseMethod<TAbi, TMethod>
   > = PreparedMethod<ParseMethod<TAbi, TMethod>>,
 > = BaseTransactionOptions<
-  Omit<TransactionRequest, "from" | "to" | "data" | "value"> & {
+  Omit<
+    TransactionRequest,
+    | "from"
+    | "to"
+    | "data"
+    | "value"
+    | "accessList"
+    | "gas"
+    | "gasPrice"
+    | "maxFeePerGas"
+    | "maxPriorityFeePerGas"
+    | "nonce"
+  > & {
     contract: ThirdwebContract<TAbi>;
     method: TMethod | TPreparedMethod;
   } & ParamsOption<TPreparedMethod[1]> &
@@ -46,7 +58,7 @@ export type PrepareContractCallOptions<
 >;
 
 /**
- * Prepares a contract call by resolving the ABI function, parameters, and encoded data.
+ * Prepares a contract call by resolving the ABI function, parameters and encoded data. Optionally specify other properties such as value or gas price.
  * @param options - The options for preparing the contract call.
  * @returns A promise that resolves to the prepared transaction.
  * @transaction
@@ -59,6 +71,20 @@ export type PrepareContractCallOptions<
  *  contract,
  *  method: "function transfer(address to, uint256 value)",
  *  params: [to, value],
+ * });
+ * ```
+ * @example
+ * Usage with explicit gas price and/or value:
+ * ```ts
+ * import { prepareContractCall } from "thirdweb";
+ *
+ * const transaction = await prepareContractCall({
+ *  contract,
+ *  method: "function transfer(address to, uint256 value)",
+ *  params: [to, value],
+ *  maxFeePerGas: 30n,
+ *  maxPriorityFeePerGas: 1n,
+ *  value: 100000n,
  * });
  * ```
  * @example

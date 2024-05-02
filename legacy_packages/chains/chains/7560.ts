@@ -42,7 +42,9 @@ export default {
   "rpc": [
     "https://7560.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://cyber.alt.technology/",
-    "wss://cyber-ws.alt.technology/"
+    "wss://cyber-ws.alt.technology/",
+    "https://rpc.cyber.co/",
+    "wss://rpc.cyber.co/"
   ],
   "shortName": "cyeth",
   "slug": "cyber",

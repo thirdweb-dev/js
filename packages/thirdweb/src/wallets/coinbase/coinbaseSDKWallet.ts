@@ -1,6 +1,6 @@
 import {
-  type CoinbaseWalletProvider,
   CoinbaseWalletSDK,
+  type ProviderInterface,
 } from "@coinbase/wallet-sdk";
 import type { Address } from "abitype";
 import {
@@ -9,14 +9,13 @@ import {
   validateTypedData,
 } from "viem";
 import { stringify } from "../../utils/json.js";
-import type { Ethereum } from "../interfaces/ethereum.js";
 import type { Account } from "../interfaces/wallet.js";
 import type { SendTransactionOption } from "../interfaces/wallet.js";
 import type { AppMetadata, DisconnectFn, SwitchChainFn } from "../types.js";
 import { getValidPublicRPCUrl } from "../utils/chains.js";
 import { normalizeChainId } from "../utils/normalizeChainId.js";
 
-import { ethereum } from "../../chains/chain-definitions/ethereum.js";
+import type { Preference } from "@coinbase/wallet-sdk/dist/core/provider/interface.js";
 import type { Chain } from "../../chains/types.js";
 import { defineChain, getChainMetadata } from "../../chains/utils.js";
 import type { ThirdwebClient } from "../../client/client.js";
@@ -28,8 +27,60 @@ import {
   stringToHex,
   uint8ArrayToHex,
 } from "../../utils/encoding/hex.js";
+import type { COINBASE } from "../constants.js";
 import { getDefaultAppMetadata } from "../utils/defaultDappMetadata.js";
 import type { WalletEmitter } from "../wallet-emitter.js";
+import type {
+  CreateWalletArgs,
+  WalletConnectionOption,
+} from "../wallet-types.js";
+
+export type CoinbaseWalletCreationOptions =
+  | {
+      /**
+       * Metadata of the dApp that will be passed to connected wallet.
+       *
+       * Some wallets may display this information to the user.
+       *
+       * Setting this property is highly recommended. If this is not set, Below default metadata will be used:
+       *
+       * ```ts
+       * {
+       *   name: "thirdweb powered dApp",
+       *   url: "https://thirdweb.com",
+       *   description: "thirdweb powered dApp",
+       *   logoUrl: "https://thirdweb.com/favicon.ico",
+       * };
+       * ```
+       */
+      appMetadata?: AppMetadata;
+
+      /**
+       * Wallet configuration, choices are 'all' | 'smartWalletOnly' | 'eoaOnly'
+       * @default 'all'
+       * @example
+       * ```ts
+       * {
+       *  walletConfig: {
+       *   options: 'all',
+       *  }
+       * }
+       * ```
+       */
+      walletConfig?: Preference;
+
+      /**
+       * Chains that the wallet can switch chains to, will default to the first chain in this array on first connection.
+       * @default Ethereum mainnet
+       * @example
+       * ```ts
+       * {
+       *   chains: [base, optimisim]
+       * }
+       */
+      chains?: Chain[];
+    }
+  | undefined;
 
 /**
  * Options for connecting to the CoinbaseSDK Wallet
@@ -41,35 +92,6 @@ export type CoinbaseSDKWalletConnectionOptions = {
   client: ThirdwebClient;
 
   /**
-   * Whether to use Dark theme in the Coinbase Wallet "Onboarding Overlay" popup.
-   *
-   * This popup is opened when `headlessMode` is set to `true`.
-   */
-  darkMode?: boolean;
-
-  /**
-   * Whether to open Coinbase "Onboarding Overlay" popup or not when connecting to the wallet.
-   * By default it is enabled if Coinbase Wallet extension is NOT installed and prompts the users to connect to the Coinbase Wallet mobile app by scanning a QR code
-   *
-   * If you want to render the QR code yourself, you should set this to `false` and use the `onUri` callback to get the QR code URI and render it in your app.
-   * ```ts
-   * const account = await wallet.connect({
-   *  headlessMode: false,
-   *  onUri: (uri) => {
-   *    // render the QR code with `uri`
-   *    // when user scans the QR code with Coinbase Wallet app, the promise will resolve with the connected account
-   *  }
-   * })
-   * ```
-   */
-  headlessMode?: boolean;
-
-  /**
-   * Whether or not to reload dapp automatically after disconnect, defaults to `true`
-   */
-  reloadOnDisconnect?: boolean;
-
-  /**
    * If you want the wallet to be connected to a specific blockchain, you can pass a `Chain` object to the `connect` method.
    * This will trigger a chain switch if the wallet provider is not already connected to the specified chain.
    *
@@ -78,70 +100,42 @@ export type CoinbaseSDKWalletConnectionOptions = {
    *
    * ```ts
    * import { defineChain } from "thirdweb";
-   * const mumbai = defineChain({
-   *  id: 80001,
-   * });
+   * const myChain = defineChain(myChainId);
    *
-   * const address = await wallet.connect({ chain: mumbai })
+   * const address = await wallet.connect({ chain: myChain })
    */
   chain?: Chain;
-
-  /**
-   * This is only relevant when the Coinbase Extension is not installed and you do not want to use the default Coinbase Wallet "Onboarding Overlay" popup.
-   *
-   * If you want to render the QR code yourself, you need to set `headlessMode` to `false` and use the `onUri` callback to get the QR code URI and render it in your app.
-   * ```ts
-   * const account = await wallet.connect({
-   *  headlessMode: false,
-   *  onUri: (uri) => {
-   *    // render the QR code with `uri`
-   *    // when user scans the QR code with Coinbase Wallet app, the promise will resolve with the connected account
-   *  }
-   * })
-   * ```
-   * Callback to be called with QR code URI
-   * @param uri - The URI for rendering QR code
-   */
-  onUri?: (uri: string | undefined) => void;
-  /**
-   * Metadata of the dApp that will be passed to connected wallet.
-   *
-   * Some wallets may display this information to the user.
-   *
-   * Setting this property is highly recommended. If this is not set, Below default metadata will be used:
-   *
-   * ```ts
-   * {
-   *   name: "thirdweb powered dApp",
-   *   url: "https://thirdweb.com",
-   *   description: "thirdweb powered dApp",
-   *   logoUrl: "https://thirdweb.com/favicon.ico",
-   * };
-   * ```
-   */
-  appMetadata?: AppMetadata;
 };
 
-async function initProvider(options: CoinbaseSDKWalletConnectionOptions) {
-  const client = new CoinbaseWalletSDK({
-    ...options,
-    appName: options.appMetadata?.name || getDefaultAppMetadata().name,
-  });
+// Need to keep the provider around because it keeps a single popup window connection behind the scenes
+// this should be ok since all the creation options are provided at build time
+let _provider: ProviderInterface | undefined;
 
-  if (options.onUri) {
-    options.onUri(client.getQrUrl() || undefined);
+async function initProvider(
+  options?: CreateWalletArgs<typeof COINBASE>[1],
+): Promise<ProviderInterface> {
+  if (!_provider) {
+    const client = new CoinbaseWalletSDK({
+      appName: options?.appMetadata?.name || getDefaultAppMetadata().name,
+      appChainIds: options?.chains
+        ? options.chains.map((c) => c.id)
+        : undefined,
+      appLogoUrl:
+        options?.appMetadata?.logoUrl || getDefaultAppMetadata().logoUrl,
+    });
+
+    const provider = client.makeWeb3Provider(options?.walletConfig);
+    _provider = provider;
+    return provider;
   }
-
-  const chain = options?.chain || ethereum;
-
-  return client.makeWeb3Provider(chain.rpc, chain.id);
+  return _provider;
 }
 
 function onConnect(
   address: string,
   chain: Chain,
-  provider: CoinbaseWalletProvider,
-  emitter: WalletEmitter<"com.coinbase.wallet">,
+  provider: ProviderInterface,
+  emitter: WalletEmitter<typeof COINBASE>,
 ): [Account, Chain, DisconnectFn, SwitchChainFn] {
   const account: Account = {
     address,
@@ -216,8 +210,7 @@ function onConnect(
     provider.removeListener("accountsChanged", onAccountsChanged);
     provider.removeListener("chainChanged", onChainChanged);
     provider.removeListener("disconnect", onDisconnect);
-    provider.disconnect();
-    await provider.close();
+    await provider.disconnect();
   }
 
   function onDisconnect() {
@@ -260,11 +253,11 @@ function onConnect(
  * @internal
  */
 export async function connectCoinbaseWalletSDK(
-  options: CoinbaseSDKWalletConnectionOptions,
-  emitter: WalletEmitter<"com.coinbase.wallet">,
+  options: WalletConnectionOption<typeof COINBASE>,
+  createOptions: CreateWalletArgs<typeof COINBASE>[1],
+  emitter: WalletEmitter<typeof COINBASE>,
 ): Promise<ReturnType<typeof onConnect>> {
-  const provider = await initProvider(options);
-
+  const provider = await initProvider(createOptions);
   const accounts = (await provider.request({
     method: "eth_requestAccounts",
   })) as string[];
@@ -301,15 +294,16 @@ export async function connectCoinbaseWalletSDK(
  * @internal
  */
 export async function autoConnectCoinbaseWalletSDK(
-  options: CoinbaseSDKWalletConnectionOptions,
-  emitter: WalletEmitter<"com.coinbase.wallet">,
+  options: WalletConnectionOption<typeof COINBASE>,
+  createOptions: CreateWalletArgs<typeof COINBASE>[1],
+  emitter: WalletEmitter<typeof COINBASE>,
 ): Promise<ReturnType<typeof onConnect>> {
-  const provider = await initProvider(options);
+  const provider = await initProvider(createOptions);
 
   // connected accounts
-  const addresses = await (provider as Ethereum).request({
+  const addresses = (await provider.request({
     method: "eth_accounts",
-  });
+  })) as string[];
 
   const address = addresses[0];
 
@@ -330,7 +324,7 @@ export async function autoConnectCoinbaseWalletSDK(
 }
 
 async function switchChainCoinbaseWalletSDK(
-  provider: CoinbaseWalletProvider,
+  provider: ProviderInterface,
   chain: Chain,
 ) {
   const chainIdHex = numberToHex(chain.id);

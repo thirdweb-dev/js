@@ -36,8 +36,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("watch block number", () => {
 
     expect(onNewBlockNumber).toHaveBeenCalledTimes(0);
 
-    // wait for 5 seconds which should always be sufficient for a new block to be mined
-    await wait(5000);
+    // wait for 10 seconds which should always be sufficient for a new block to be mined
+    await wait(10000);
 
     expect(onNewBlockNumber).toHaveBeenCalled();
 
@@ -59,8 +59,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("watch block number", () => {
     expect(onNewBlockNumber).toHaveBeenCalledTimes(0);
     expect(onNewBlockNumber2).toHaveBeenCalledTimes(0);
 
-    // wait for 5 seconds which should always be sufficient for a new block to be mined
-    await wait(5000);
+    // wait for 10 seconds which should always be sufficient for a new block to be mined
+    await wait(10000);
 
     expect(onNewBlockNumber).toHaveBeenCalled();
     expect(onNewBlockNumber2).toHaveBeenCalled();
@@ -80,8 +80,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("watch block number", () => {
 
     expect(onNewBlockNumber).toHaveBeenCalledTimes(0);
 
-    // wait for 5 seconds which should always be sufficient for a new block to be mined
-    await wait(5000);
+    // wait for 10 seconds which should always be sufficient for a new block to be mined
+    await wait(10000);
 
     expect(onNewBlockNumber).toHaveBeenCalled();
 
@@ -89,8 +89,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("watch block number", () => {
 
     unwatch();
 
-    // wait for 5 seconds which should always be sufficient for a new block to be mined
-    await wait(5000);
+    // wait for 10 seconds which should always be sufficient for a new block to be mined
+    await wait(10000);
 
     expect(onNewBlockNumber).toHaveBeenCalledTimes(0);
   });
@@ -104,8 +104,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("watch block number", () => {
 
     expect(onNewBlockNumber).toHaveBeenCalledTimes(0);
 
-    // wait for 5 seconds which should always be sufficient for a new block to be mined
-    await wait(5000);
+    // wait for 10 seconds which should always be sufficient for a new block to be mined
+    await wait(10000);
 
     expect(onNewBlockNumber).toHaveBeenCalled();
 
@@ -115,8 +115,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("watch block number", () => {
 
     unwatch();
 
-    // wait for 5 seconds which should always be sufficient for a new block to be mined
-    await wait(5000);
+    // wait for 10 seconds which should always be sufficient for a new block to be mined
+    await wait(10000);
 
     expect(onNewBlockNumber).toHaveBeenCalledTimes(0);
 
@@ -126,8 +126,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("watch block number", () => {
       onNewBlockNumber,
     });
 
-    // wait for 5 seconds which should always be sufficient for a new block to be mined
-    await wait(5000);
+    // wait for 10 seconds which should always be sufficient for a new block to be mined
+    await wait(10000);
 
     expect(onNewBlockNumber).toHaveBeenCalled();
 
@@ -137,5 +137,64 @@ describe.runIf(process.env.TW_SECRET_KEY)("watch block number", () => {
     expect(firstBlockNumber).toBeGreaterThan(lastBlockNumber + 1n);
 
     unwatch2();
+  });
+
+  it("should re-start from latestBlockNumber if provided", async () => {
+    const unwatch = watchBlockNumber({
+      client: TEST_CLIENT,
+      chain: baseSepolia,
+      onNewBlockNumber,
+    });
+
+    expect(onNewBlockNumber).toHaveBeenCalledTimes(0);
+
+    // wait for 10 seconds which should always be sufficient for a new block to be mined
+    await wait(10000);
+
+    expect(onNewBlockNumber).toHaveBeenCalled();
+
+    const lastBlockNumber = onNewBlockNumber.mock.lastCall?.[0];
+
+    onNewBlockNumber.mockClear();
+
+    unwatch();
+
+    // wait for 10 seconds which should always be sufficient for a new block to be mined
+    await wait(10000);
+
+    expect(onNewBlockNumber).toHaveBeenCalledTimes(0);
+
+    const unwatch2 = watchBlockNumber({
+      client: TEST_CLIENT,
+      chain: baseSepolia,
+      onNewBlockNumber,
+      latestBlockNumber: lastBlockNumber,
+    });
+
+    // wait for 10 seconds which should always be sufficient for a new block to be mined
+    await wait(10000);
+
+    expect(onNewBlockNumber).toHaveBeenCalled();
+
+    const firstBlockNumber = onNewBlockNumber.mock.calls[0]?.[0];
+
+    expect(firstBlockNumber).toEqual(lastBlockNumber + 1n);
+
+    unwatch2();
+  });
+
+  it("should start from latestBlockNumber", async () => {
+    const unwatch = watchBlockNumber({
+      client: TEST_CLIENT,
+      chain: baseSepolia,
+      onNewBlockNumber,
+      latestBlockNumber: 9342233n,
+    });
+
+    await wait(500); // wait long enough to have called callback
+
+    expect(onNewBlockNumber.mock.calls[0]?.[0]).toEqual(9342234n);
+
+    unwatch();
   });
 });
