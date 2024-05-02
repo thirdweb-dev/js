@@ -63,7 +63,7 @@ export type SwapType = "SAME_CHAIN" | "CROSS_CHAIN";
 export type BuyWithCryptoStatus = {
   quote: BuyWithCryptoQuoteSummary;
   swapType: SwapType;
-  source: PayOnChainTransactionDetails;
+  source?: PayOnChainTransactionDetails;
   destination?: PayOnChainTransactionDetails;
   status: BuyWithCryptoStatuses;
   subStatus: BuyWithCryptoSubStatuses;
