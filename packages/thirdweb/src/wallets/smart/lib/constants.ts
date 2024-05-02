@@ -6,7 +6,8 @@ export const DEBUG = false;
 export const DUMMY_SIGNATURE =
   "0xfffffffffffffffffffffffffffffff0000000000000000000000000000000007aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1c";
 
-export const ENTRYPOINT_ADDRESS = "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789"; // v0.6
+export const ENTRYPOINT_ADDRESS_v0_6 =
+  "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789"; // v0.6
 export const MANAGED_ACCOUNT_GAS_BUFFER = 50000n;
 
 /**

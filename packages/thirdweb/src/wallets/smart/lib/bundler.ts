@@ -13,7 +13,7 @@ import type {
 } from "../types.js";
 import {
   DEBUG,
-  ENTRYPOINT_ADDRESS,
+  ENTRYPOINT_ADDRESS_v0_6,
   MANAGED_ACCOUNT_GAS_BUFFER,
   getDefaultBundlerUrl,
 } from "./constants.js";
@@ -31,7 +31,7 @@ export async function bundleUserOp(args: {
     operation: "eth_sendUserOperation",
     params: [
       hexlifyUserOp(args.userOp),
-      args.options.overrides?.entrypointAddress ?? ENTRYPOINT_ADDRESS,
+      args.options.overrides?.entrypointAddress ?? ENTRYPOINT_ADDRESS_v0_6,
     ],
   });
 }
@@ -48,7 +48,7 @@ export async function estimateUserOpGas(args: {
     operation: "eth_estimateUserOperationGas",
     params: [
       hexlifyUserOp(args.userOp),
-      args.options.overrides?.entrypointAddress ?? ENTRYPOINT_ADDRESS,
+      args.options.overrides?.entrypointAddress ?? ENTRYPOINT_ADDRESS_v0_6,
     ],
   });
 

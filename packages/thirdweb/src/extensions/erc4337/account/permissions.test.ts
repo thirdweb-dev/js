@@ -14,7 +14,7 @@ import { getOrDeployInfraContract } from "../../../contract/deployment/utils/boo
 import { parseEventLogs } from "../../../event/actions/parse-logs.js";
 import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and-confirm-transaction.js";
 import { simulateTransaction } from "../../../transaction/actions/simulate.js";
-import { ENTRYPOINT_ADDRESS } from "../../../wallets/smart/lib/constants.js";
+import { ENTRYPOINT_ADDRESS_v0_6 } from "../../../wallets/smart/lib/constants.js";
 import { createAccount } from "../__generated__/IAccountFactory/write/createAccount.js";
 import { adminUpdatedEvent } from "../__generated__/IAccountPermissions/events/AdminUpdated.js";
 import { signerPermissionsUpdatedEvent } from "../__generated__/IAccountPermissions/events/SignerPermissionsUpdated.js";
@@ -34,7 +34,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("Account Permissions", () => {
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
       contractId: "AccountFactory",
-      constructorParams: [TEST_ACCOUNT_A.address, ENTRYPOINT_ADDRESS],
+      constructorParams: [TEST_ACCOUNT_A.address, ENTRYPOINT_ADDRESS_v0_6],
     });
     const transaction = createAccount({
       contract: accountFactoryContract,
