@@ -76,6 +76,7 @@ export function FiatDetailsScreen(props: {
 export function FiatTxDetailsTable(props: {
   status: ValidBuyWithFiatStatus;
   client: ThirdwebClient;
+  hideStatus?: boolean;
 }) {
   const status = props.status;
   const statusMeta = getBuyWithFiatStatusMeta(status);
@@ -135,21 +136,25 @@ export function FiatTxDetailsTable(props: {
         </Container>
       </Container>
 
-      {lineSpacer}
+      {!props.hideStatus && (
+        <>
+          {lineSpacer}
 
-      {/* Status */}
-      <Container
-        flex="row"
-        center="y"
-        style={{
-          justifyContent: "space-between",
-        }}
-      >
-        <Text>Status</Text>
-        <Container flex="row" gap="xs" center="y">
-          <Text color={statusMeta.color}>{statusMeta.status}</Text>
-        </Container>
-      </Container>
+          {/* Status */}
+          <Container
+            flex="row"
+            center="y"
+            style={{
+              justifyContent: "space-between",
+            }}
+          >
+            <Text>Status</Text>
+            <Container flex="row" gap="xs" center="y">
+              <Text color={statusMeta.color}>{statusMeta.status}</Text>
+            </Container>
+          </Container>
+        </>
+      )}
 
       {lineSpacer}
 

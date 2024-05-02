@@ -243,6 +243,7 @@ function FiatStatusScreenUI(props: {
               <FiatTxDetailsTable
                 status={props.fiatStatus}
                 client={props.client}
+                hideStatus={true}
               />
               <Spacer y="sm" />
             </>
