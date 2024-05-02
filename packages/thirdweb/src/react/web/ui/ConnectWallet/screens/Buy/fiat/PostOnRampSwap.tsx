@@ -46,6 +46,8 @@ export function PostOnRampSwap(props: {
         >
           <Spinner size="xl" color="accentText" />
         </Container>
+
+        <Spacer y="xxl" />
       </Container>
     );
   }
@@ -56,6 +58,9 @@ export function PostOnRampSwap(props: {
         <Container p="lg">
           <ModalHeader title="Buy" onBack={props.onBack} />
         </Container>
+
+        <Spacer y="xxl" />
+
         <Container flex="row" center="x">
           <AccentFailIcon size={iconSize["3xl"]} />
         </Container>
@@ -63,6 +68,8 @@ export function PostOnRampSwap(props: {
         <Text color="primaryText" size="lg" center>
           No transaction found
         </Text>
+
+        <Spacer y="3xl" />
       </Container>
     );
   }
