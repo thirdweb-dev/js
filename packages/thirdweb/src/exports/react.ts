@@ -110,4 +110,4 @@ export {
 } from "../react/core/hooks/pay/useBuyHistory.js";
 
 export { PayEmbed } from "../react/web/ui/PayEmbed.js";
-export type { PayUIOptions } from "../react/web/ui/ConnectWallet/ConnectWalletProps.js";
+export type { PayUIOptions } from "../react/web/ui/ConnectWallet/ConnectButtonProps.js";

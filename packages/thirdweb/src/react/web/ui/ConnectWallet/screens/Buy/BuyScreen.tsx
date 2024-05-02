@@ -50,7 +50,7 @@ import {
   iconSize,
 } from "../../../design-system/index.js";
 import { useDebouncedValue } from "../../../hooks/useDebouncedValue.js";
-import type { PayUIOptions } from "../../ConnectWalletProps.js";
+import type { PayUIOptions } from "../../ConnectButtonProps.js";
 import type { SupportedTokens } from "../../defaultTokens.js";
 import type { ConnectLocale } from "../../locale/types.js";
 import { TokenSelector } from "../TokenSelector.js";

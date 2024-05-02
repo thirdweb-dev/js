@@ -4,7 +4,7 @@ import type { GaslessOptions } from "../../../transaction/actions/gasless/types.
 import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
 import { useSendTransactionCore } from "../../core/hooks/contract/useSendTransaction.js";
 import { SetRootElementContext } from "../../core/providers/RootElementContext.js";
-import type { PayUIOptions } from "../ui/ConnectWallet/ConnectWalletProps.js";
+import type { PayUIOptions } from "../ui/ConnectWallet/ConnectButtonProps.js";
 import {
   type SupportedTokens,
   defaultTokens,

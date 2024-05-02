@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { ThirdwebClient } from "../../../client/client.js";
 import { useActiveAccount } from "../../../exports/react-native.js";
-import type { PayUIOptions } from "./ConnectWallet/ConnectWalletProps.js";
+import type { PayUIOptions } from "./ConnectWallet/ConnectButtonProps.js";
 import {
   type SupportedTokens,
   defaultTokens,
