@@ -51,7 +51,9 @@ export function SwapTransactionsScreen(props: { onBack: () => void }) {
 
   const txHashSet = new Set<string>();
   _historyQuery.data?.page.forEach((tx) => {
-    txHashSet.add(tx.source.transactionHash);
+    if (tx.source?.transactionHash) {
+      txHashSet.add(tx.source?.transactionHash);
+    }
   });
 
   // add in-memory pending transactions
@@ -76,15 +78,17 @@ export function SwapTransactionsScreen(props: { onBack: () => void }) {
 
   // Add data from endpoint
   _historyQuery.data?.page.forEach((tx) => {
-    txInfosToShow.push({
-      boughChainId: tx.destination?.token.chainId || tx.quote.toToken.chainId,
-      transactionHash: tx.source.transactionHash,
-      boughtTokenAmount: tx.destination?.amount || tx.quote.toAmount,
-      boughtTokenSymbol:
-        tx.destination?.token.symbol || tx.quote.toToken.symbol || "",
-      status: tx.status,
-      subStatus: tx.subStatus,
-    });
+    if (tx.source?.transactionHash) {
+      txInfosToShow.push({
+        boughChainId: tx.destination?.token.chainId || tx.quote.toToken.chainId,
+        transactionHash: tx.source?.transactionHash,
+        boughtTokenAmount: tx.destination?.amount || tx.quote.toAmount,
+        boughtTokenSymbol:
+          tx.destination?.token.symbol || tx.quote.toToken.symbol || "",
+        status: tx.status,
+        subStatus: tx.subStatus,
+      });
+    }
   });
 
   const activeChainId = useChainId();
