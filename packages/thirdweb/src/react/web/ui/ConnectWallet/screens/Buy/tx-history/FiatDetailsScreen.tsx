@@ -23,18 +23,9 @@ export function FiatDetailsScreen(props: {
   client: ThirdwebClient;
 }) {
   const status = props.status;
-
-  const onRampChainQuery = useChainQuery(
-    defineChain(status.quote.onRampToken.chainId),
-  );
-
-  const onrampTxHash = status.source?.transactionHash;
-
   const statusMeta = getBuyWithFiatStatusMeta(status);
 
   const hasTwoSteps = isSwapRequiredAfterOnRamp(status);
-
-  console.log("FiatDetailsScreen", { status, hasTwoSteps });
 
   if (hasTwoSteps) {
     const fiatQuote = status.quote;
@@ -67,14 +58,6 @@ export function FiatDetailsScreen(props: {
     );
   }
 
-  const lineSpacer = (
-    <>
-      <Spacer y="md" />
-      <Line />
-      <Spacer y="md" />
-    </>
-  );
-
   return (
     <Container>
       <Container p="lg">
@@ -84,84 +67,112 @@ export function FiatDetailsScreen(props: {
       <Line />
 
       <Container p="lg">
-        {/* Receive - to token */}
-        <TokenInfoRow
-          chainId={status.quote.toToken.chainId}
-          client={props.client}
-          label="Receive"
-          tokenAmount={status.quote.estimatedToTokenAmount}
-          tokenSymbol={status.quote.toToken.symbol || ""}
-          tokenAddress={status.quote.toToken.tokenAddress}
-        />
-
-        {lineSpacer}
-
-        {/* Pay */}
-        <Container
-          flex="row"
-          style={{
-            justifyContent: "space-between",
-          }}
-        >
-          <Text>Pay</Text>
-          <Container
-            flex="column"
-            gap="xxs"
-            style={{
-              alignItems: "flex-end",
-            }}
-          >
-            <Container flex="row" gap="xs" center="y">
-              {status.quote.fromCurrency.currencySymbol === "USD" && (
-                <USDIcon size={iconSize.sm} />
-              )}
-              <Text color="primaryText">
-                {formatNumber(Number(status.quote.fromCurrency.amount), 4)}{" "}
-                {status.quote.fromCurrency.currencySymbol}
-              </Text>
-            </Container>
-          </Container>
-        </Container>
-
-        {lineSpacer}
-
-        {/* Status */}
-        <Container
-          flex="row"
-          center="y"
-          style={{
-            justifyContent: "space-between",
-          }}
-        >
-          <Text>Status</Text>
-          <Container flex="row" gap="xs" center="y">
-            <Text color={statusMeta.color}>{statusMeta.status}</Text>
-          </Container>
-        </Container>
-
-        {lineSpacer}
-
-        <Spacer y="xl" />
-
-        {onrampTxHash && onRampChainQuery.data?.explorers?.[0]?.url && (
-          <ButtonLink
-            fullWidth
-            variant="outline"
-            href={`${
-              onRampChainQuery.data.explorers[0].url || ""
-            }/tx/${onrampTxHash}`}
-            target="_blank"
-            gap="xs"
-            style={{
-              fontSize: fontSize.sm,
-            }}
-          >
-            View on Explorer
-            <ExternalLinkIcon width={iconSize.sm} height={iconSize.sm} />
-          </ButtonLink>
-        )}
+        <FiatTxDetailsTable status={status} client={props.client} />
       </Container>
     </Container>
+  );
+}
+
+export function FiatTxDetailsTable(props: {
+  status: ValidBuyWithFiatStatus;
+  client: ThirdwebClient;
+}) {
+  const status = props.status;
+  const statusMeta = getBuyWithFiatStatusMeta(status);
+
+  const onRampChainQuery = useChainQuery(
+    defineChain(status.quote.onRampToken.chainId),
+  );
+
+  const onrampTxHash = status.source?.transactionHash;
+
+  const lineSpacer = (
+    <>
+      <Spacer y="md" />
+      <Line />
+      <Spacer y="md" />
+    </>
+  );
+
+  return (
+    <div>
+      {/* Receive - to token */}
+      <TokenInfoRow
+        chainId={status.quote.toToken.chainId}
+        client={props.client}
+        label="Receive"
+        tokenAmount={status.quote.estimatedToTokenAmount}
+        tokenSymbol={status.quote.toToken.symbol || ""}
+        tokenAddress={status.quote.toToken.tokenAddress}
+      />
+
+      {lineSpacer}
+
+      {/* Pay */}
+      <Container
+        flex="row"
+        style={{
+          justifyContent: "space-between",
+        }}
+      >
+        <Text>Pay</Text>
+        <Container
+          flex="column"
+          gap="xxs"
+          style={{
+            alignItems: "flex-end",
+          }}
+        >
+          <Container flex="row" gap="xs" center="y">
+            {status.quote.fromCurrency.currencySymbol === "USD" && (
+              <USDIcon size={iconSize.sm} />
+            )}
+            <Text color="primaryText">
+              {formatNumber(Number(status.quote.fromCurrency.amount), 4)}{" "}
+              {status.quote.fromCurrency.currencySymbol}
+            </Text>
+          </Container>
+        </Container>
+      </Container>
+
+      {lineSpacer}
+
+      {/* Status */}
+      <Container
+        flex="row"
+        center="y"
+        style={{
+          justifyContent: "space-between",
+        }}
+      >
+        <Text>Status</Text>
+        <Container flex="row" gap="xs" center="y">
+          <Text color={statusMeta.color}>{statusMeta.status}</Text>
+        </Container>
+      </Container>
+
+      {lineSpacer}
+
+      <Spacer y="md" />
+
+      {onrampTxHash && onRampChainQuery.data?.explorers?.[0]?.url && (
+        <ButtonLink
+          fullWidth
+          variant="outline"
+          href={`${
+            onRampChainQuery.data.explorers[0].url || ""
+          }/tx/${onrampTxHash}`}
+          target="_blank"
+          gap="xs"
+          style={{
+            fontSize: fontSize.sm,
+          }}
+        >
+          View on Explorer
+          <ExternalLinkIcon width={iconSize.sm} height={iconSize.sm} />
+        </ButtonLink>
+      )}
+    </div>
   );
 }
 

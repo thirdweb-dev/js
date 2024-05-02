@@ -17,6 +17,7 @@ import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { iconSize } from "../../../../design-system/index.js";
 import { AccentFailIcon } from "../../../icons/AccentFailIcon.js";
+import { FiatTxDetailsTable } from "../tx-history/FiatDetailsScreen.js";
 import { FiatSteps, fiatQuoteToPartialQuote } from "./FiatSteps.js";
 import { PostOnRampSwap } from "./PostOnRampSwap.js";
 
@@ -40,14 +41,14 @@ export function FiatStatusScreen(props: {
   });
 
   // determine UI status
-  let status: UIStatus = "loading";
+  let uiStatus: UIStatus = "loading";
   if (
     statusQuery.data?.status === "ON_RAMP_TRANSFER_FAILED" ||
     statusQuery.data?.status === "PAYMENT_FAILED"
   ) {
-    status = "failed";
+    uiStatus = "failed";
   } else if (statusQuery.data?.status === "ON_RAMP_TRANSFER_COMPLETED") {
-    status = "completed";
+    uiStatus = "completed";
   }
 
   // determine step
@@ -132,7 +133,12 @@ export function FiatStatusScreen(props: {
         </>
       )}
 
-      <FiatStatusScreenUI status={status} onDone={props.onBack} />
+      <FiatStatusScreenUI
+        uiStatus={uiStatus}
+        onDone={props.onBack}
+        fiatStatus={statusQuery.data}
+        client={props.client}
+      />
     </Container>
   );
 }
@@ -175,16 +181,19 @@ function PostOnRampSwapFlow(props: {
 }
 
 function FiatStatusScreenUI(props: {
-  status: UIStatus;
+  uiStatus: UIStatus;
+  fiatStatus?: BuyWithFiatStatus;
   onDone: () => void;
+  client: ThirdwebClient;
 }) {
   return (
     <Container>
       <Spacer y="xl" />
-      <Spacer y="xxl" />
 
-      {props.status === "loading" && (
+      {props.uiStatus === "loading" && (
         <>
+          <Spacer y="xxl" />
+
           <Container flex="row" center="x">
             <Spinner size="xxl" color="accentText" />
           </Container>
@@ -199,8 +208,10 @@ function FiatStatusScreenUI(props: {
         </>
       )}
 
-      {props.status === "failed" && (
+      {props.uiStatus === "failed" && (
         <>
+          <Spacer y="xxl" />
+
           <Container flex="row" center="x">
             <AccentFailIcon size={iconSize["3xl"]} />
           </Container>
@@ -213,19 +224,29 @@ function FiatStatusScreenUI(props: {
         </>
       )}
 
-      {props.status === "completed" && (
+      {props.uiStatus === "completed" && (
         <>
           <Container flex="row" center="x" color="success">
+            <Spacer y="xl" />
             <CheckCircledIcon
               width={iconSize["3xl"]}
               height={iconSize["3xl"]}
             />
           </Container>
-          <Spacer y="xl" />
+          <Spacer y="md" />
           <Text color="primaryText" size="lg" center>
             Buy Complete
           </Text>
-          <Spacer y="xxl" />
+          {props.fiatStatus && props.fiatStatus.status !== "NOT_FOUND" && (
+            <>
+              <Spacer y="xxl" />
+              <FiatTxDetailsTable
+                status={props.fiatStatus}
+                client={props.client}
+              />
+              <Spacer y="sm" />
+            </>
+          )}
           <Button variant="accent" fullWidth onClick={props.onDone}>
             Done
           </Button>
