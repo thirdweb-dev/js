@@ -31,6 +31,7 @@ export function FiatStatusScreen(props: {
   hasTwoSteps: boolean;
   openedWindow: Window | null;
   quote: BuyWithFiatQuote;
+  closeModal: () => void;
 }) {
   const [screen, setScreen] = useState<"swap-flow" | "base">("base");
   const queryClient = useQueryClient();
@@ -102,6 +103,7 @@ export function FiatStatusScreen(props: {
         client={props.client}
         onBack={props.onBack}
         onViewPendingTx={props.onViewPendingTx}
+        closeModal={props.closeModal}
       />
     );
   }
@@ -135,7 +137,7 @@ export function FiatStatusScreen(props: {
 
       <FiatStatusScreenUI
         uiStatus={uiStatus}
-        onDone={props.onBack}
+        closeModal={props.closeModal}
         fiatStatus={statusQuery.data}
         client={props.client}
       />
@@ -149,6 +151,7 @@ function PostOnRampSwapFlow(props: {
   client: ThirdwebClient;
   onBack: () => void;
   onViewPendingTx: () => void;
+  closeModal: () => void;
 }) {
   const [screen, setScreen] = useState<"base" | "swap">("base");
 
@@ -162,6 +165,7 @@ function PostOnRampSwapFlow(props: {
           setScreen("base");
         }}
         onViewPendingTx={props.onViewPendingTx}
+        closeModal={props.closeModal}
       />
     );
   }
@@ -183,7 +187,7 @@ function PostOnRampSwapFlow(props: {
 function FiatStatusScreenUI(props: {
   uiStatus: UIStatus;
   fiatStatus?: BuyWithFiatStatus;
-  onDone: () => void;
+  closeModal: () => void;
   client: ThirdwebClient;
 }) {
   return (
@@ -248,7 +252,7 @@ function FiatStatusScreenUI(props: {
               <Spacer y="sm" />
             </>
           )}
-          <Button variant="accent" fullWidth onClick={props.onDone}>
+          <Button variant="accent" fullWidth onClick={props.closeModal}>
             Done
           </Button>
         </>

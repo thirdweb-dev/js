@@ -21,6 +21,7 @@ export function FiatDetailsScreen(props: {
   status: ValidBuyWithFiatStatus;
   onBack: () => void;
   client: ThirdwebClient;
+  closeModal: () => void;
 }) {
   const status = props.status;
   const statusMeta = getBuyWithFiatStatusMeta(status);
@@ -54,6 +55,7 @@ export function FiatDetailsScreen(props: {
             symbol: fiatQuote.toToken.symbol,
           },
         }}
+        closeModal={props.closeModal}
       />
     );
   }
@@ -209,6 +211,7 @@ function TwoStepFlow(props: {
   onRampTxHash?: string;
   toTokenTxHash?: string;
   statusMeta: FiatStatusMeta;
+  closeModal: () => void;
 }) {
   const [screen, setScreen] = useState<"base" | "post-onramp">("base");
 
@@ -219,6 +222,7 @@ function TwoStepFlow(props: {
         buyWithFiatStatus={props.buyWithFiatStatus}
         onBack={props.onBack}
         onViewPendingTx={props.onViewPendingTx}
+        closeModal={props.closeModal}
       />
     );
   }

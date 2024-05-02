@@ -18,6 +18,7 @@ type SwapFlowProps = {
   onViewPendingTx: () => void;
   client: ThirdwebClient;
   isFiatFlow: boolean;
+  closeModal: () => void;
 };
 
 export function SwapFlow(props: SwapFlowProps) {
@@ -92,6 +93,7 @@ export function SwapFlow(props: SwapFlowProps) {
         }`}
         swapTx={swapTx}
         client={props.client}
+        closeModal={props.closeModal}
       />
     );
   }

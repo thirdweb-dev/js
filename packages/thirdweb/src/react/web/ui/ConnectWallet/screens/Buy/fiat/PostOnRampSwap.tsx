@@ -18,6 +18,7 @@ export function PostOnRampSwap(props: {
   buyWithFiatStatus: BuyWithFiatStatus;
   onBack: () => void;
   onViewPendingTx: () => void;
+  closeModal: () => void;
 }) {
   const account = useActiveAccount();
   const postOnRampQuoteQuery = useQuery({
@@ -83,6 +84,7 @@ export function PostOnRampSwap(props: {
       onBack={props.onBack}
       onViewPendingTx={props.onViewPendingTx}
       isFiatFlow={true}
+      closeModal={props.closeModal}
     />
   );
 }

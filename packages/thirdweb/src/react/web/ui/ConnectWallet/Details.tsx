@@ -598,7 +598,15 @@ export const ConnectedWalletDetails: React.FC<{
   );
 
   if (screen === "pending-tx") {
-    content = <BuyTxHistory onBack={() => setScreen("main")} client={client} />;
+    content = (
+      <BuyTxHistory
+        onBack={() => setScreen("main")}
+        client={client}
+        closeModal={() => {
+          setIsOpen(false);
+        }}
+      />
+    );
   }
 
   if (screen === "network-switcher") {
@@ -686,6 +694,9 @@ export const ConnectedWalletDetails: React.FC<{
         connectLocale={locale}
         payOptions={{ ...props.detailsModal?.pay }}
         theme={typeof props.theme === "string" ? props.theme : props.theme.type}
+        closeModal={() => {
+          setIsOpen(false);
+        }}
       />
     );
   }

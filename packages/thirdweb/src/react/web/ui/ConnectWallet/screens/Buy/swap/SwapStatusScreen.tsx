@@ -31,6 +31,7 @@ export function SwapStatusScreen(props: {
   destinationAmount: string;
   client: ThirdwebClient;
   onTryAgain: () => void;
+  closeModal: () => void;
 }) {
   const swapStatus = useBuyWithCryptoStatus(props.swapTx);
   let uiStatus: UIStatus = "pending";
@@ -141,7 +142,7 @@ export function SwapStatusScreen(props: {
                 hideStatus={true}
               />
               <Spacer y="sm" />
-              <Button variant="accent" fullWidth onClick={props.onBack}>
+              <Button variant="accent" fullWidth onClick={props.closeModal}>
                 Done
               </Button>
             </>
