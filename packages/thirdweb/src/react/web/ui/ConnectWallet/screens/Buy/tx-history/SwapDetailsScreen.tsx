@@ -25,7 +25,7 @@ export function SwapDetailsScreen(props: {
   const fromChainQuery = useChainQuery(defineChain(fromChainId));
   const toChainQuery = useChainQuery(defineChain(toChainId));
 
-  const sourceTxHash = status.source.transactionHash;
+  const sourceTxHash = status.source?.transactionHash;
   const destinationTxHash = status.destination?.transactionHash;
 
   const statusMeta = getBuyWithCryptoStatusMeta(props.status);

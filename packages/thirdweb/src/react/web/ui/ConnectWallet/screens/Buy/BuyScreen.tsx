@@ -541,7 +541,7 @@ function BuyScreenNonExpandedFooter(props: {
             <BuyTxHistoryButton
               key={
                 txInfo.type === "swap"
-                  ? txInfo.status.source.transactionHash
+                  ? txInfo.status.quote.createdAt
                   : txInfo.status.intentId
               }
               txInfo={txInfo}
