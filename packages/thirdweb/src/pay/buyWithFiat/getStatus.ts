@@ -54,6 +54,7 @@ export type BuyWithFiatStatus =
         estimatedToTokenAmountWei: string;
 
         fromCurrency: FiatCurrencyInfo;
+        fromCurrencyWithFees: FiatCurrencyInfo;
         onRampToken: PayTokenInfo;
         toToken: PayTokenInfo;
         createdAt: string;
