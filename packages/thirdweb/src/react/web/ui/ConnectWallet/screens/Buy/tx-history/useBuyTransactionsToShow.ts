@@ -2,11 +2,11 @@ import { type UseQueryOptions, useQueries } from "@tanstack/react-query";
 import { useState, useSyncExternalStore } from "react";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import {
-  type BuyWithCryptoStatus,
   getBuyWithCryptoStatus,
   getBuyWithFiatStatus,
 } from "../../../../../../../exports/pay.js";
 import { useBuyHistory } from "../../../../../../../exports/react.js";
+import type { ValidBuyWithCryptoStatus } from "../../../../../../../pay/buyWithCrypto/getStatus.js";
 import type { ValidBuyWithFiatStatus } from "../../../../../../../pay/buyWithFiat/getStatus.js";
 import { useActiveAccount } from "../../../../../../core/hooks/wallets/wallet-hooks.js";
 import { pendingTransactions } from "../swap/pendingSwapTx.js";
@@ -14,7 +14,7 @@ import { pendingTransactions } from "../swap/pendingSwapTx.js";
 export type TxStatusInfo =
   | {
       type: "swap";
-      status: BuyWithCryptoStatus;
+      status: ValidBuyWithCryptoStatus;
     }
   | {
       type: "fiat";
@@ -57,6 +57,10 @@ export function useBuyTransactionsToShow(client: ThirdwebClient) {
               transactionHash: tx.txHash,
             });
 
+            if (swapStatus.status === "NOT_FOUND") {
+              return null;
+            }
+
             return {
               type: "swap",
               status: swapStatus,
@@ -91,7 +95,10 @@ export function useBuyTransactionsToShow(client: ThirdwebClient) {
         if (buyHistory.data) {
           if (txStatusInfo.type === "swap") {
             const isPresent = buyHistory.data.page.find((tx) => {
-              if ("buyWithCryptoStatus" in tx) {
+              if (
+                "buyWithCryptoStatus" in tx &&
+                tx.buyWithCryptoStatus.status !== "NOT_FOUND"
+              ) {
                 return (
                   tx.buyWithCryptoStatus.source?.transactionHash ===
                   txStatusInfo.status.source?.transactionHash
@@ -133,10 +140,12 @@ export function useBuyTransactionsToShow(client: ThirdwebClient) {
   if (buyHistory.data) {
     for (const tx of buyHistory.data.page) {
       if ("buyWithCryptoStatus" in tx) {
-        txStatusList.push({
-          type: "swap",
-          status: tx.buyWithCryptoStatus,
-        });
+        if (tx.buyWithCryptoStatus.status !== "NOT_FOUND") {
+          txStatusList.push({
+            type: "swap",
+            status: tx.buyWithCryptoStatus,
+          });
+        }
       } else {
         if (tx.buyWithFiatStatus.status !== "NOT_FOUND") {
           txStatusList.push({

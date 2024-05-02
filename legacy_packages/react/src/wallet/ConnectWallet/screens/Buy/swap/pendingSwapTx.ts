@@ -1,11 +1,11 @@
 import { getBuyWithCryptoStatus } from "@thirdweb-dev/sdk";
-import type { BuyWithCryptoStatus } from "@thirdweb-dev/sdk";
 import { wait } from "../../../../../utils/wait";
+import type { ValidBuyWithCryptoStatus } from "../../../../../../../../packages/thirdweb/dist/types/pay/buyWithCrypto/getStatus";
 
 type SwapTxInfo = {
   transactionHash: string;
-  status: BuyWithCryptoStatus["status"];
-  subStatus?: BuyWithCryptoStatus["subStatus"];
+  status: ValidBuyWithCryptoStatus["status"];
+  subStatus?: ValidBuyWithCryptoStatus["subStatus"];
   source: {
     symbol: string;
     value: string;

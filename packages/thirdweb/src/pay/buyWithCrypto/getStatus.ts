@@ -39,12 +39,7 @@ export type BuyWithCryptoTransaction = {
   transactionHash: string;
 };
 
-export type BuyWithCryptoStatuses =
-  | "NOT_FOUND"
-  | "NONE"
-  | "PENDING"
-  | "FAILED"
-  | "COMPLETED";
+export type BuyWithCryptoStatuses = "NONE" | "PENDING" | "FAILED" | "COMPLETED";
 
 export type BuyWithCryptoSubStatuses =
   | "NONE"
@@ -60,18 +55,27 @@ export type SwapType = "SAME_CHAIN" | "CROSS_CHAIN";
  * The object returned by the [`getBuyWithCryptoStatus`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoStatus) function to represent the status of a quoted transaction
  * @buyCrypto
  */
-export type BuyWithCryptoStatus = {
-  quote: BuyWithCryptoQuoteSummary;
-  swapType: SwapType;
-  source?: PayOnChainTransactionDetails;
-  destination?: PayOnChainTransactionDetails;
-  status: BuyWithCryptoStatuses;
-  subStatus: BuyWithCryptoSubStatuses;
-  fromAddress: string;
-  toAddress: string;
-  failureMessage?: string;
-  bridge?: string;
-};
+export type BuyWithCryptoStatus =
+  | {
+      status: "NOT_FOUND";
+    }
+  | {
+      quote: BuyWithCryptoQuoteSummary;
+      swapType: SwapType;
+      source?: PayOnChainTransactionDetails;
+      destination?: PayOnChainTransactionDetails;
+      status: BuyWithCryptoStatuses;
+      subStatus: BuyWithCryptoSubStatuses;
+      fromAddress: string;
+      toAddress: string;
+      failureMessage?: string;
+      bridge?: string;
+    };
+
+export type ValidBuyWithCryptoStatus = Exclude<
+  BuyWithCryptoStatus,
+  { status: "NOT_FOUND" }
+>;
 
 /**
  * Gets the status of a buy with crypto transaction

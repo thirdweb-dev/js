@@ -17,6 +17,7 @@ import { Text } from "../../../../components/text.js";
 import { iconSize } from "../../../../design-system/index.js";
 import { AccentFailIcon } from "../../../icons/AccentFailIcon.js";
 import type { ERC20OrNativeToken } from "../../nativeToken.js";
+import { SwapTxDetailsTable } from "../tx-history/SwapDetailsScreen.js";
 
 export function SwapStatusScreen(props: {
   onBack: () => void;
@@ -138,11 +139,19 @@ export function SwapStatusScreen(props: {
 
         <Spacer y="xl" />
 
-        {isSuccess && (
-          <Button variant="accent" fullWidth onClick={props.onViewPendingTx}>
-            View Transactions
-          </Button>
-        )}
+        {isSuccess &&
+          swapStatus.data &&
+          swapStatus.data.status !== "NOT_FOUND" && (
+            <>
+              <SwapTxDetailsTable
+                swapStatus={swapStatus.data}
+                client={props.client}
+              />
+              <Button variant="accent" fullWidth onClick={props.onBack}>
+                Done
+              </Button>
+            </>
+          )}
 
         {isFailed && (
           <Button variant="accent" fullWidth onClick={props.onTryAgain}>
