@@ -36,6 +36,7 @@ import {
 export function BuyTxHistory(props: {
   onBack?: () => void;
   client: ThirdwebClient;
+  closeModal: () => void;
 }) {
   const {
     pageIndex,
@@ -60,6 +61,7 @@ export function BuyTxHistory(props: {
         client={props.client}
         statusInfo={selectedTx}
         onBack={() => setSelectedTx(null)}
+        closeModal={props.closeModal}
       />
     );
   }

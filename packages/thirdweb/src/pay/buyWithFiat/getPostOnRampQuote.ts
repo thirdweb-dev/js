@@ -54,12 +54,7 @@ export async function getPostOnRampQuote({
   client,
   buyWithFiatStatus,
 }: GetPostOnRampQuoteParams): Promise<BuyWithCryptoQuote | null> {
-  if (!("intentId" in buyWithFiatStatus)) {
-    // transaction not found
-    return null;
-  }
-
-  if (buyWithFiatStatus.status === "CRYPTO_SWAP_REQUIRED") {
+  if (buyWithFiatStatus.status !== "NOT_FOUND" && buyWithFiatStatus.intentId) {
     return getBuyWithCryptoQuote({
       client,
       intentId: buyWithFiatStatus.intentId,

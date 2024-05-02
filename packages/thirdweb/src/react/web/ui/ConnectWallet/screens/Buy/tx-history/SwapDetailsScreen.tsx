@@ -1,6 +1,7 @@
 import { ExternalLinkIcon } from "@radix-ui/react-icons";
 import { defineChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
+import { useBuyWithCryptoStatus } from "../../../../../../../exports/react-native.js";
 import type { ValidBuyWithCryptoStatus } from "../../../../../../../pay/buyWithCrypto/getStatus.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
 import { Spacer } from "../../../../components/Spacer.js";
@@ -17,7 +18,19 @@ export function SwapDetailsScreen(props: {
   onBack: () => void;
   client: ThirdwebClient;
 }) {
-  const { status, client } = props;
+  const { status: initialStatus, client } = props;
+  const statusQuery = useBuyWithCryptoStatus(
+    initialStatus.source?.transactionHash
+      ? {
+          client: client,
+          transactionHash: initialStatus.source.transactionHash,
+        }
+      : undefined,
+  );
+
+  const status: ValidBuyWithCryptoStatus =
+    (statusQuery.data?.status !== "NOT_FOUND" ? statusQuery.data : undefined) ||
+    initialStatus;
 
   return (
     <Container>

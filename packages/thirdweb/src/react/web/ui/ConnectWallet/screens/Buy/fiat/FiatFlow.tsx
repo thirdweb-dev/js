@@ -25,6 +25,7 @@ export function FiatFlow(props: {
   theme: "light" | "dark";
   onViewPendingTx: () => void;
   openedWindow: Window | null;
+  closeModal: () => void;
 }) {
   const hasTwoSteps = isSwapRequiredPostOnramp(props.quote);
   const [screen, setScreen] = useState<"step-1" | "status">(
@@ -64,6 +65,7 @@ export function FiatFlow(props: {
         hasTwoSteps={hasTwoSteps}
         openedWindow={popupWindow}
         quote={props.quote}
+        closeModal={props.closeModal}
       />
     );
   }

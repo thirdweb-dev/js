@@ -96,6 +96,7 @@ export type BuyScreenProps = {
   buyForTx?: BuyForTx;
   payOptions: PayUIOptions;
   theme: "light" | "dark" | Theme;
+  closeModal: () => void;
 };
 
 /**
@@ -137,6 +138,7 @@ type BuyScreenContentProps = {
   buyForTx?: BuyForTx;
   theme: "light" | "dark" | Theme;
   payOptions: PayUIOptions;
+  closeModal: () => void;
 };
 
 type Screen =
@@ -497,6 +499,7 @@ export function BuyScreenContent(props: BuyScreenContentProps) {
             client={client}
             onViewAllTransactions={props.onViewPendingTx}
             setScreen={setScreen}
+            closeModal={props.closeModal}
           />
         )}
 
@@ -510,6 +513,7 @@ function BuyScreenNonExpandedFooter(props: {
   client: ThirdwebClient;
   onViewAllTransactions: () => void;
   setScreen: (screen: Screen) => void;
+  closeModal: () => void;
 }) {
   const { txInfosToShow: allList } = useBuyTransactionsToShow(props.client);
   const txInfosToShow = allList.slice(0, 3);
@@ -558,6 +562,7 @@ function BuyScreenNonExpandedFooter(props: {
                           type: "main",
                         })
                       }
+                      closeModal={props.closeModal}
                     />
                   ),
                 });
@@ -695,6 +700,7 @@ function SwapScreenContent(
           account={account}
           onViewPendingTx={props.onViewPendingTx}
           isFiatFlow={false}
+          closeModal={props.closeModal}
         />
       ),
     });
@@ -875,6 +881,7 @@ function FiatScreenContent(
           }
           onViewPendingTx={props.onViewPendingTx}
           openedWindow={openedWindow}
+          closeModal={props.closeModal}
         />
       ),
     });

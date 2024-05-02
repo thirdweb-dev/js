@@ -3,6 +3,7 @@ import { useState } from "react";
 import { defineChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import type { BuyWithFiatStatus } from "../../../../../../../exports/pay.js";
+import { useBuyWithFiatStatus } from "../../../../../../../exports/react.js";
 import type { ValidBuyWithFiatStatus } from "../../../../../../../pay/buyWithFiat/getStatus.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
@@ -21,8 +22,19 @@ export function FiatDetailsScreen(props: {
   status: ValidBuyWithFiatStatus;
   onBack: () => void;
   client: ThirdwebClient;
+  closeModal: () => void;
 }) {
-  const status = props.status;
+  const initialStatus = props.status;
+
+  const statusQuery = useBuyWithFiatStatus({
+    client: props.client,
+    intentId: initialStatus.intentId,
+  });
+
+  const status: ValidBuyWithFiatStatus =
+    (statusQuery.data?.status === "NOT_FOUND" ? undefined : statusQuery.data) ||
+    initialStatus;
+
   const statusMeta = getBuyWithFiatStatusMeta(status);
 
   const hasTwoSteps = isSwapRequiredAfterOnRamp(status);
@@ -54,6 +66,7 @@ export function FiatDetailsScreen(props: {
             symbol: fiatQuote.toToken.symbol,
           },
         }}
+        closeModal={props.closeModal}
       />
     );
   }
@@ -209,6 +222,7 @@ function TwoStepFlow(props: {
   onRampTxHash?: string;
   toTokenTxHash?: string;
   statusMeta: FiatStatusMeta;
+  closeModal: () => void;
 }) {
   const [screen, setScreen] = useState<"base" | "post-onramp">("base");
 
@@ -219,6 +233,7 @@ function TwoStepFlow(props: {
         buyWithFiatStatus={props.buyWithFiatStatus}
         onBack={props.onBack}
         onViewPendingTx={props.onViewPendingTx}
+        closeModal={props.closeModal}
       />
     );
   }

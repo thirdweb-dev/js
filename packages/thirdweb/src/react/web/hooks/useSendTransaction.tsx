@@ -160,6 +160,7 @@ function ModalContent(props: ModalProps) {
         onBack={() => {
           setScreen("buy");
         }}
+        closeModal={props.onClose}
       />
     );
   }
@@ -183,6 +184,7 @@ function ModalContent(props: ModalProps) {
       }}
       theme={typeof props.theme === "string" ? props.theme : props.theme.type}
       payOptions={props.payOptions}
+      closeModal={props.onClose}
     />
   );
 }

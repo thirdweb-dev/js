@@ -59,8 +59,8 @@ export function fiatQuoteToPartialQuote(
   quote: BuyWithFiatQuote,
 ): BuyWithFiatPartialQuote {
   const data: BuyWithFiatPartialQuote = {
-    fromCurrencyAmount: quote.fromCurrency.amount,
-    fromCurrencySymbol: quote.fromCurrency.currencySymbol,
+    fromCurrencyAmount: quote.fromCurrencyWithFees.amount,
+    fromCurrencySymbol: quote.fromCurrencyWithFees.currencySymbol,
     onRampTokenAmount: quote.onRampToken.amount,
     toTokenAmount: quote.estimatedToAmountMin,
     onRampToken: {
@@ -179,7 +179,7 @@ export function FiatSteps(props: {
 
   const toTokenInfo = (
     <Text color="primaryText" size="sm">
-      {toTokenAmount}{" "}
+      {formatNumber(Number(toTokenAmount), 4)}{" "}
       <TokenSymbol token={toToken} chain={toChain} size="sm" inline />
     </Text>
   );
@@ -253,7 +253,7 @@ export function FiatSteps(props: {
           icon: fiatIcon,
           primaryText: (
             <Text color="primaryText" size="sm">
-              {fromCurrencyAmount} {fromCurrencySymbol}
+              {formatNumber(Number(fromCurrencyAmount), 4)} {fromCurrencySymbol}
             </Text>
           ),
         }}

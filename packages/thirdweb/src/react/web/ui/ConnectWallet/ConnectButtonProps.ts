@@ -30,7 +30,7 @@ export type PayUIOptions = {
       symbol: string;
       address: string;
       icon: string;
-    }
+    };
   };
 };
 
