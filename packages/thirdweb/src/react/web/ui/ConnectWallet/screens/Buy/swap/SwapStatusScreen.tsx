@@ -19,6 +19,8 @@ import { AccentFailIcon } from "../../../icons/AccentFailIcon.js";
 import type { ERC20OrNativeToken } from "../../nativeToken.js";
 import { SwapTxDetailsTable } from "../tx-history/SwapDetailsScreen.js";
 
+type UIStatus = "pending" | "success" | "failed";
+
 export function SwapStatusScreen(props: {
   onBack: () => void;
   onViewPendingTx: () => void;
@@ -31,17 +33,24 @@ export function SwapStatusScreen(props: {
   onTryAgain: () => void;
 }) {
   const swapStatus = useBuyWithCryptoStatus(props.swapTx);
-  const isSuccess = swapStatus.data?.status === "COMPLETED";
-  const isFailed = swapStatus.data?.status === "FAILED";
+  let uiStatus: UIStatus = "pending";
+  if (swapStatus.data?.status === "COMPLETED") {
+    uiStatus = "success";
+  } else if (swapStatus.data?.status === "FAILED") {
+    uiStatus = "failed";
+  }
 
   const queryClient = useQueryClient();
   const balanceInvalidated = useRef(false);
   useEffect(() => {
-    if (isSuccess && !balanceInvalidated.current) {
+    if (uiStatus === "success" && !balanceInvalidated.current) {
       balanceInvalidated.current = true;
       invalidateWalletBalance(queryClient);
     }
-  }, [queryClient, isSuccess]);
+  }, [queryClient, uiStatus]);
+
+  const isSuccess = uiStatus === "success";
+  const isFailed = uiStatus === "failed";
 
   return (
     <Container animate="fadein">
@@ -53,17 +62,24 @@ export function SwapStatusScreen(props: {
           flex="column"
           animate="fadein"
           center="both"
-          color={isSuccess ? "success" : isFailed ? "danger" : "accentText"}
+          color={
+            uiStatus === "success"
+              ? "success"
+              : uiStatus === "failed"
+                ? "danger"
+                : "accentText"
+          }
         >
-          <Spacer y="xxl" />
+          {isSuccess ? <Spacer y="lg" /> : <Spacer y="xxl" />}
+
           {/* Icon */}
           {isSuccess ? (
             <CheckCircledIcon
-              width={iconSize["4xl"]}
-              height={iconSize["4xl"]}
+              width={iconSize["3xl"]}
+              height={iconSize["3xl"]}
             />
           ) : isFailed ? (
-            <AccentFailIcon size={iconSize["4xl"]} />
+            <AccentFailIcon size={iconSize["3xl"]} />
           ) : (
             <div
               style={{
@@ -95,7 +111,7 @@ export function SwapStatusScreen(props: {
             </div>
           )}
 
-          <Spacer y="xxl" />
+          {isSuccess ? <Spacer y="lg" /> : <Spacer y="xl" />}
 
           <Text color={"primaryText"} size="lg">
             {isSuccess
@@ -104,30 +120,6 @@ export function SwapStatusScreen(props: {
                 ? "Transaction Failed"
                 : "Buy Pending"}
           </Text>
-
-          {/* Token info */}
-          {!isFailed && (
-            <>
-              <Spacer y="lg" />
-              <div>
-                <Text size="md" inline>
-                  {" "}
-                  {isSuccess ? "Bought" : "Buy"}{" "}
-                </Text>
-                <Text size="md" color="primaryText" inline>
-                  {props.destinationAmount}
-                </Text>
-
-                <Text size="md" inline>
-                  {" "}
-                  for{" "}
-                </Text>
-                <Text size="md" color="primaryText" inline>
-                  {props.sourceAmount}
-                </Text>
-              </div>
-            </>
-          )}
 
           {isFailed && (
             <>
@@ -146,7 +138,9 @@ export function SwapStatusScreen(props: {
               <SwapTxDetailsTable
                 swapStatus={swapStatus.data}
                 client={props.client}
+                hideStatus={true}
               />
+              <Spacer y="sm" />
               <Button variant="accent" fullWidth onClick={props.onBack}>
                 Done
               </Button>

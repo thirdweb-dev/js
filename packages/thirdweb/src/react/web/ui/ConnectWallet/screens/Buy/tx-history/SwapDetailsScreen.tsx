@@ -37,6 +37,7 @@ export function SwapDetailsScreen(props: {
 export function SwapTxDetailsTable(props: {
   swapStatus: ValidBuyWithCryptoStatus;
   client: ThirdwebClient;
+  hideStatus?: boolean;
 }) {
   const { swapStatus, client } = props;
 
@@ -101,25 +102,29 @@ export function SwapTxDetailsTable(props: {
         </Container>
       </Container>
 
+      {!props.hideStatus && (
+        <>
+          {lineSpacer}
+
+          {/* Status */}
+          <Container
+            flex="row"
+            center="y"
+            style={{
+              justifyContent: "space-between",
+            }}
+          >
+            <Text>Status</Text>
+            <Container flex="row" gap="xs" center="y">
+              <Text color={statusMeta.color}>{statusMeta.status}</Text>
+            </Container>
+          </Container>
+        </>
+      )}
+
       {lineSpacer}
 
-      {/* Status */}
-      <Container
-        flex="row"
-        center="y"
-        style={{
-          justifyContent: "space-between",
-        }}
-      >
-        <Text>Status</Text>
-        <Container flex="row" gap="xs" center="y">
-          <Text color={statusMeta.color}>{statusMeta.status}</Text>
-        </Container>
-      </Container>
-
-      {lineSpacer}
-
-      <Spacer y="xl" />
+      <Spacer y="sm" />
 
       {fromChainQuery.data?.explorers?.[0]?.url && (
         <ButtonLink
