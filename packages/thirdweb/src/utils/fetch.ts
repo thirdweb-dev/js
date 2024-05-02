@@ -85,6 +85,7 @@ const THIRDWEB_DOMAINS = [
   // dev domains
   ".thirdweb.dev",
   ".thirdweb-dev.com",
+  ".chainsaw-dev.zeet.app", // FIXME remove
 ] as const;
 
 const IS_THIRDWEB_URL_CACHE = new LruMap<boolean>(4096);
@@ -99,7 +100,9 @@ export function isThirdwebUrl(url: string): boolean {
   }
   try {
     const { hostname } = new URL(url);
-    const is = THIRDWEB_DOMAINS.some((domain) => hostname.endsWith(domain));
+    const is =
+      THIRDWEB_DOMAINS.some((domain) => hostname.endsWith(domain)) ||
+      hostname === "localhost";
     IS_THIRDWEB_URL_CACHE.set(url, is);
     return is;
   } catch {

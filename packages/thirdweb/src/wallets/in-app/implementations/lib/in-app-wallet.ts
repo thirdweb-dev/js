@@ -40,7 +40,9 @@ export class InAppWalletSdk {
         "You are using a legacy clientId. Please use the clientId found on the thirdweb dashboard settings page",
       );
     }
-    const baseUrl = `https://${getThirdwebDomains().inAppWallet}`;
+    const domain = getThirdwebDomains().inAppWallet;
+    const scheme = domain.startsWith("localhost") ? "http" : "https";
+    const baseUrl = `${scheme}://${domain}`;
     this.client = client;
     this.querier = new InAppWalletIframeCommunicator({
       clientId: client.clientId,

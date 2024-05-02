@@ -203,15 +203,18 @@ export async function authenticate(
     }
     case "passkey": {
       if (args.type === "registration") {
-        return registerPasskey({
+        const authToken = await registerPasskey({
           client: args.client,
           authenticatorType: args.authenticatorType,
           username: args.username,
         });
+        return ewSDK.auth.loginWithAuthToken(authToken);
       }
-      return loginWithPasskey({
+      const authToken = await loginWithPasskey({
         client: args.client,
+        username: args.username,
       });
+      return ewSDK.auth.loginWithAuthToken(authToken);
     }
     default:
       assertUnreachable(strategy);

@@ -1,7 +1,9 @@
 import type { ThirdwebClient } from "../../../../../client/client.js";
-import type {
-  AuthAndWalletRpcReturnType,
-  AuthLoginReturnType,
+import {
+  type AuthAndWalletRpcReturnType,
+  type AuthLoginReturnType,
+  AuthProvider,
+  RecoveryShareManagement,
 } from "../../interfaces/auth.js";
 import type {
   ClientIdWithQuerierType,
@@ -84,6 +86,29 @@ export class Auth {
       walletDetails,
     });
     return initializedUser;
+  }
+
+  async loginWithAuthToken(authToken: string): Promise<AuthLoginReturnType> {
+    await this.preLogin();
+    return this.postLogin({
+      storedToken: {
+        cookieString: authToken,
+        shouldStoreCookieString: true,
+        authDetails: {
+          recoveryShareManagement: RecoveryShareManagement.CLOUD_MANAGED,
+          userWalletId: "", // FIXME pass user wallet id
+        },
+        authProvider: AuthProvider.PASSKEY,
+        developerClientId: this.client.clientId,
+        isNewUser: false,
+        jwtToken: authToken,
+      },
+      walletDetails: {
+        deviceShareStored: "",
+        isIframeStorageEnabled: false,
+        walletAddress: "",
+      },
+    });
   }
 
   /**
