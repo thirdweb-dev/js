@@ -42,10 +42,9 @@ export function FiatStatusScreen(props: {
   const queryClient = useQueryClient();
   const isLoading = statusQuery.isLoading || (!isFailed && !isCompleted);
 
-  // use state instead of directly using statusQuery.data to ensure if status changes it does not unmount the component
-  const [showPostOnRampSwap, setShowPostOnRampSwap] = useState(false);
-
-  const [showStep2, setShowStep2] = useState(false);
+  const [screen, setScreen] = useState<"step-2" | "post-on-ramp-swap" | "base">(
+    "base",
+  );
 
   const isStep2 =
     statusQuery.data?.status === "CRYPTO_SWAP_REQUIRED" ||
@@ -82,22 +81,24 @@ export function FiatStatusScreen(props: {
       statusQuery.data &&
       statusQuery.data.status === "CRYPTO_SWAP_REQUIRED"
     ) {
-      setShowStep2(true);
+      setScreen("step-2");
     }
   }, [statusQuery.data]);
 
-  if (showPostOnRampSwap && statusQuery.data) {
+  if (screen === "post-on-ramp-swap" && statusQuery.data) {
     return (
       <PostOnRampSwap
         buyWithFiatStatus={statusQuery.data}
         client={props.client}
-        onBack={props.onBack}
+        onBack={() => {
+          setScreen("step-2");
+        }}
         onViewPendingTx={props.onViewPendingTx}
       />
     );
   }
 
-  if (showStep2) {
+  if (screen === "step-2") {
     return (
       <FiatSteps
         client={props.client}
@@ -105,8 +106,7 @@ export function FiatStatusScreen(props: {
         partialQuote={fiatQuoteToPartialQuote(props.quote)}
         step={2}
         onContinue={() => {
-          setShowStep2(false);
-          setShowPostOnRampSwap(true);
+          setScreen("post-on-ramp-swap");
         }}
       />
     );
@@ -120,7 +120,7 @@ export function FiatStatusScreen(props: {
         <>
           <Spacer y="lg" />
           <StepBar steps={2} currentStep={isStep2 ? 2 : 1} />
-          <Spacer y="xs" />
+          <Spacer y="sm" />
           <Text size="xs">
             Step {isStep2 ? 2 : 1} of 2 -
             {isStep2 ? (
@@ -140,7 +140,7 @@ export function FiatStatusScreen(props: {
       )}
 
       <Spacer y="xl" />
-      <Spacer y="xl" />
+      <Spacer y="xxl" />
 
       {isLoading && (
         <>
@@ -189,7 +189,7 @@ export function FiatStatusScreen(props: {
 
       {!isCompleted && (
         <>
-          <Spacer y="lg" />
+          <Spacer y="xl" />
           <Spacer y="xl" />
         </>
       )}

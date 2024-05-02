@@ -112,7 +112,7 @@ export function BuyTxHistory(props: {
               <BuyTxHistoryButton
                 key={
                   txInfo.type === "swap"
-                    ? txInfo.status.source.transactionHash
+                    ? txInfo.status.source?.transactionHash
                     : txInfo.status.intentId
                 }
                 txInfo={txInfo}

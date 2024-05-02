@@ -7,7 +7,6 @@ import {
 import { useActiveAccount } from "../../../../../../../exports/react-native.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
-import { StepBar } from "../../../../components/StepBar.js";
 import { Container, ModalHeader } from "../../../../components/basic.js";
 import { Text } from "../../../../components/text.js";
 import { iconSize } from "../../../../design-system/index.js";
@@ -36,12 +35,6 @@ export function PostOnRampSwap(props: {
       <Container fullHeight>
         <Container p="lg">
           <ModalHeader title="Buy" onBack={props.onBack} />
-        </Container>
-
-        <Container px="lg">
-          <StepBar steps={2} currentStep={2} />
-          <Spacer y="xs" />
-          <Text size="xs">Step 2 of 2</Text>
         </Container>
 
         <Container

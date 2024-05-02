@@ -93,8 +93,8 @@ export function useBuyTransactionsToShow(client: ThirdwebClient) {
             const isPresent = buyHistory.data.page.find((tx) => {
               if ("buyWithCryptoStatus" in tx) {
                 return (
-                  tx.buyWithCryptoStatus.source.transactionHash ===
-                  txStatusInfo.status.source.transactionHash
+                  tx.buyWithCryptoStatus.source?.transactionHash ===
+                  txStatusInfo.status.source?.transactionHash
                 );
               }
               return false;

@@ -156,7 +156,7 @@ export function FiatDetailsScreen(props: {
               fontSize: fontSize.sm,
             }}
           >
-            View on {onRampChainQuery.data.name} Explorer
+            View on Explorer
             <ExternalLinkIcon width={iconSize.sm} height={iconSize.sm} />
           </ButtonLink>
         )}
