@@ -57,6 +57,7 @@ export type BuyWithFiatStatus =
         fromCurrencyWithFees: FiatCurrencyInfo;
         onRampToken: PayTokenInfo;
         toToken: PayTokenInfo;
+        estimatedDurationSeconds?: number;
         createdAt: string;
       };
       source?: PayOnChainTransactionDetails;
