@@ -95,12 +95,7 @@ const FN_INPUTS = [
     name: "signature",
   },
 ] as const;
-const FN_OUTPUTS = [
-  {
-    type: "address",
-    name: "signer",
-  },
-] as const;
+const FN_OUTPUTS = [] as const;
 
 /**
  * Checks if the `mintWithSignature` method is supported by the given contract.
