@@ -36,14 +36,19 @@ export async function getCurrencyMetadata(
     };
   }
 
-  const [name_, symbol_, decimals_] = await Promise.all([
-    name(options),
-    symbol(options),
-    decimals(options),
-  ]);
-  return {
-    name: name_,
-    symbol: symbol_,
-    decimals: decimals_,
-  };
+  try {
+    const [name_, symbol_, decimals_] = await Promise.all([
+      name(options),
+      symbol(options),
+      decimals(options),
+    ]);
+
+    return {
+      name: name_,
+      symbol: symbol_,
+      decimals: decimals_,
+    };
+  } catch (e) {
+    throw new Error("Invalid currency token");
+  }
 }
