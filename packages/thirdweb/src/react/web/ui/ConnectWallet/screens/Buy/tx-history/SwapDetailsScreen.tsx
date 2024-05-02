@@ -65,6 +65,10 @@ export function SwapTxDetailsTable(props: {
   const sourceTxHash = swapStatus.source?.transactionHash;
   const destinationTxHash = swapStatus.destination?.transactionHash;
 
+  const isPartialSuccess =
+    swapStatus.status === "COMPLETED" &&
+    swapStatus.subStatus === "PARTIAL_SUCCESS";
+
   const lineSpacer = (
     <>
       <Spacer y="md" />
@@ -76,18 +80,34 @@ export function SwapTxDetailsTable(props: {
   return (
     <div>
       {/* Receive - to token */}
-      <TokenInfoRow
-        chainId={swapStatus.quote.toToken.chainId}
-        client={client}
-        label="Receive"
-        tokenAmount={swapStatus.quote.toAmount}
-        tokenSymbol={swapStatus.quote.toToken.symbol || ""}
-        tokenAddress={swapStatus.quote.toToken.tokenAddress}
-      />
+      {swapStatus.destination && (
+        <TokenInfoRow
+          chainId={swapStatus.destination.token.chainId}
+          client={client}
+          label={isPartialSuccess ? "Expected" : "Receive"}
+          tokenAmount={swapStatus.destination.amount}
+          tokenSymbol={swapStatus.destination.token.symbol || ""}
+          tokenAddress={swapStatus.destination.token.tokenAddress}
+        />
+      )}
 
       {lineSpacer}
 
-      {/* Pay - from token */}
+      {isPartialSuccess && swapStatus.destination && (
+        <>
+          <TokenInfoRow
+            chainId={swapStatus.destination.token.chainId}
+            client={client}
+            label="Got"
+            tokenAmount={swapStatus.destination.amount}
+            tokenSymbol={swapStatus.destination.token.symbol || ""}
+            tokenAddress={swapStatus.destination.token.tokenAddress}
+          />
+
+          {lineSpacer}
+        </>
+      )}
+
       <TokenInfoRow
         chainId={swapStatus.quote.fromToken.chainId}
         client={client}
