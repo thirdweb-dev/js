@@ -28,6 +28,7 @@ export function PostOnRampSwap(props: {
         buyWithFiatStatus: props.buyWithFiatStatus,
       });
     },
+    refetchOnWindowFocus: false,
   });
 
   if (!postOnRampQuoteQuery.data || !account) {

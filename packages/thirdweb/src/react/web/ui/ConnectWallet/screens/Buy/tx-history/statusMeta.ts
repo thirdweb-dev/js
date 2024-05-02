@@ -13,7 +13,6 @@ export type StatusMeta = {
 export function getBuyWithCryptoStatusMeta(
   cryptoStatus: BuyWithCryptoStatus,
 ): StatusMeta {
-
   if (cryptoStatus.status === "NOT_FOUND") {
     return {
       status: "Unknown",
