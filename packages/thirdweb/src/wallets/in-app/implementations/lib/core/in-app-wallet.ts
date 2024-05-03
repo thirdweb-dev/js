@@ -178,23 +178,31 @@ export class InAppWallet {
       params: undefined,
     });
     const _signTransaction = async (tx: SendTransactionOption) => {
+      // biome-ignore lint/suspicious/noExplicitAny: ethers tx transformation
+      const transaction: Record<string, any> = {
+        to: tx.to ?? undefined,
+        data: tx.data,
+        value: tx.value,
+        gasLimit: tx.gas,
+        nonce: tx.nonce,
+        chainId: tx.chainId,
+      };
+      if (tx.maxFeePerGas) {
+        // ethers (in the iframe) rejects any type 0 trasaction with unknown keys
+        // TODO remove this once iframe is upgraded to v5
+        transaction.accessList = tx.accessList;
+        transaction.maxFeePerGas = tx.maxFeePerGas;
+        transaction.maxPriorityFeePerGas = tx.maxPriorityFeePerGas;
+        transaction.type = 2;
+      } else {
+        transaction.gasPrice = tx.gasPrice;
+        transaction.type = 0;
+      }
       const { signedTransaction } =
         await querier.call<SignTransactionReturnType>({
           procedureName: "signTransaction",
           params: {
-            transaction: {
-              to: tx.to ?? undefined,
-              data: tx.data,
-              value: tx.value,
-              gasLimit: tx.gas,
-              gasPrice: tx.gasPrice,
-              nonce: tx.nonce,
-              chainId: tx.chainId,
-              accessList: tx.accessList,
-              maxFeePerGas: tx.maxFeePerGas,
-              maxPriorityFeePerGas: tx.maxPriorityFeePerGas,
-              type: tx.maxFeePerGas ? 2 : 0,
-            },
+            transaction,
             chainId: tx.chainId,
             rpcEndpoint: `https://${tx.chainId}.rpc.thirdweb.com`, // TODO (ew) shouldnt be needed
           },

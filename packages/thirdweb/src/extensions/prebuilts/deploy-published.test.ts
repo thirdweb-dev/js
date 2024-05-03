@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { ANVIL_CHAIN } from "../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import { TEST_ACCOUNT_A } from "../../../test/src/test-wallets.js";
-import { ENTRYPOINT_ADDRESS } from "../../wallets/smart/lib/constants.js";
+import { ENTRYPOINT_ADDRESS_v0_6 } from "../../wallets/smart/lib/constants.js";
 import { deployPublishedContract } from "./deploy-published.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)(
@@ -17,7 +17,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         chain: ANVIL_CHAIN,
         account: TEST_ACCOUNT_A,
         contractId: "AccountFactory",
-        contractParams: [TEST_ACCOUNT_A.address, ENTRYPOINT_ADDRESS],
+        contractParams: [TEST_ACCOUNT_A.address, ENTRYPOINT_ADDRESS_v0_6],
       });
       expect(address).toBeDefined();
       expect(address.length).toBe(42);

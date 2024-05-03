@@ -17,7 +17,7 @@ import { estimateUserOpGas, getUserOpGasPrice } from "./bundler.js";
 import { prepareCreateAccount } from "./calls.js";
 import {
   DUMMY_SIGNATURE,
-  ENTRYPOINT_ADDRESS,
+  ENTRYPOINT_ADDRESS_v0_6,
   getDefaultBundlerUrl,
 } from "./constants.js";
 import { getPaymasterAndData } from "./paymaster.js";
@@ -173,7 +173,7 @@ export async function signUserOp(args: {
   const { userOp, options } = args;
   const userOpHash = getUserOpHash({
     userOp,
-    entryPoint: options.overrides?.entrypointAddress || ENTRYPOINT_ADDRESS,
+    entryPoint: options.overrides?.entrypointAddress || ENTRYPOINT_ADDRESS_v0_6,
     chainId: options.chain.id,
   });
   if (options.personalAccount.signMessage) {
