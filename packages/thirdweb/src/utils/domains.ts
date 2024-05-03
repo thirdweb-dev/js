@@ -61,4 +61,4 @@ export const getThirdwebBaseUrl = (service: keyof DomainOverrides) => {
     return `http://${origin}`;
   }
   return `https://${origin}`;
-}
+};

@@ -1,7 +1,7 @@
 import type { ThirdwebClient } from "../../../../client/client.js";
 import {
-  AuthProvider,
   type AuthLoginReturnType,
+  AuthProvider,
 } from "../../implementations/interfaces/auth.js";
 import { UserWalletStatus } from "../../implementations/interfaces/in-app-wallets/in-app-wallets.js";
 import {

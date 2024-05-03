@@ -6,10 +6,14 @@ import type { AuthStoredTokenWithCookieReturnType } from "../../interfaces/auth.
 import { LocalStorage } from "../../utils/Storage/LocalStorage.js";
 
 function getVerificationPath() {
-  return `${getThirdwebBaseUrl('inAppWallet')}/api/2024-05-05/login/passkey/callback`;
+  return `${getThirdwebBaseUrl(
+    "inAppWallet",
+  )}/api/2024-05-05/login/passkey/callback`;
 }
 function getChallengePath(type: "sign-in" | "sign-up", username?: string) {
-  return `${getThirdwebBaseUrl('inAppWallet')}/api/2024-05-05/login/passkey?type=${type}${
+  return `${getThirdwebBaseUrl(
+    "inAppWallet",
+  )}/api/2024-05-05/login/passkey?type=${type}${
     username ? `&username=${username}` : ""
   }`;
 }
@@ -80,7 +84,7 @@ export async function registerPasskey(options: {
 export async function loginWithPasskey(options: {
   client: ThirdwebClient;
   username?: string;
-}): Promise<AuthStoredTokenWithCookieReturnType > {
+}): Promise<AuthStoredTokenWithCookieReturnType> {
   if (!client.isAvailable()) {
     throw new Error("Passkeys are not available on this device");
   }
@@ -121,9 +125,8 @@ export async function loginWithPasskey(options: {
   });
   // 5. store the credentialId in local storage
   await storage.savePasskeyCredentialId(authentication.credentialId);
-  
-  const verifData = await verifRes.json();
 
+  const verifData = await verifRes.json();
 
   if (!verifData) {
     throw new Error("No token received");
