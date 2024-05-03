@@ -23,8 +23,10 @@ export default {
     "decimals": 18
   },
   "networkId": 25,
+  "redFlags": [],
   "rpc": [
     "https://25.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://cronos.blockpi.network/v1/rpc/public",
     "https://evm.cronos.org",
     "https://cronos-evm-rpc.publicnode.com",
     "wss://cronos-evm-rpc.publicnode.com",
