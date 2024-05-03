@@ -904,19 +904,28 @@ function FiatScreenContent(
     );
   }
 
-  function getErrorMessage(err: Error) {
+  type AmountTooLowError = {
+    code: "MINIMUM_PURCHASE_AMOUNT";
+    data: {
+      minimumAmountUSDCents: 250;
+      requestedAmountUSDCents: 7;
+    };
+  };
+
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  function getErrorMessage(err: any): string[] {
     const defaultMessage = "Unable to get price quote";
     try {
-      if (err instanceof Error) {
-        if (err.message.includes("Minimum")) {
-          const msg = err.message;
-          return msg.replace("Fetch failed: Error: ", "");
-        }
+      if (err.error.code === "MINIMUM_PURCHASE_AMOUNT") {
+        const obj = err.error as AmountTooLowError;
+        return [
+          `Minimum purchase amount is $${obj.data.minimumAmountUSDCents / 100}`,
+          `Requested amount is $${obj.data.requestedAmountUSDCents / 100}`,
+        ];
       }
-      return defaultMessage;
-    } catch {
-      return defaultMessage;
-    }
+    } catch {}
+
+    return [defaultMessage];
   }
 
   const disableSubmit = !fiatQuoteQuery.data;
@@ -944,7 +953,13 @@ function FiatScreenContent(
       {/* Error message */}
       {fiatQuoteQuery.error && (
         <>
-          <ErrorMessage message={getErrorMessage(fiatQuoteQuery.error)} />
+          {getErrorMessage(fiatQuoteQuery.error).map((msg) => {
+            return (
+              <Text color="danger" size="sm" center multiline key={msg}>
+                {msg}
+              </Text>
+            );
+          })}
           <Spacer y="md" />
         </>
       )}
@@ -1055,11 +1070,8 @@ function ErrorMessage(props: {
   message: string;
 }) {
   return (
-    <Container flex="row" gap="xxs" center="both" color="danger">
-      <CrossCircledIcon width={iconSize.sm} height={iconSize.sm} />
-      <Text color="danger" size="sm">
-        {props.message}
-      </Text>
-    </Container>
+    <Text color="danger" size="sm" center>
+      {props.message}
+    </Text>
   );
 }

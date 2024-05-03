@@ -123,13 +123,8 @@ export async function getBuyWithFiatQuote(
     // Assuming the response directly matches the SwapResponse interface
     if (!response.ok) {
       const errorObj = await response.json();
-      if (
-        errorObj &&
-        "error" in errorObj &&
-        typeof errorObj.error === "object" &&
-        "message" in errorObj.error
-      ) {
-        throw new Error(errorObj.error.message);
+      if (errorObj && "error" in errorObj) {
+        throw errorObj;
       }
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -137,6 +132,6 @@ export async function getBuyWithFiatQuote(
     return (await response.json()).result;
   } catch (error) {
     console.error("Fetch error:", error);
-    throw new Error(`Fetch failed: ${error}`);
+    throw error;
   }
 }
