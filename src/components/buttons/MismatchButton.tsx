@@ -361,7 +361,7 @@ const UpsellTestnetNotice: React.FC<{
       </Text>
       <Text>
         You can either get funds on this network or switch to a testnet like
-        Mumbai to test your contract.
+        Amoy to test your contract.
       </Text>
 
       <Button
