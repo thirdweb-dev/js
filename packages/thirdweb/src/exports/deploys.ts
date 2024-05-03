@@ -32,3 +32,4 @@ export {
   deployContract,
   type PrepareDirectDeployTransactionOptions,
 } from "../contract/deployment/deploy-with-abi.js";
+export { computePublishedContractAddress } from "../utils/any-evm/compute-published-contract-address.js";

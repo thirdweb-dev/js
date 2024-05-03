@@ -18,7 +18,7 @@ import type { FetchDeployMetadataResult } from "./deploy-metadata.js";
  * @param args.version - The version of the contract.
  * @example
  * ```ts
- * import { computePublishedContractAddress } from "thirdweb/contract";
+ * import { computePublishedContractAddress } from "thirdweb/deploys";
  *
  * const contractMetadata = await fetchPublishedContractMetadata({
  *  client,
@@ -27,7 +27,7 @@ import type { FetchDeployMetadataResult } from "./deploy-metadata.js";
  * const address = await computePublishedContractAddress({
  *   client,
  *   chain,
- *   contractId: "DropERC721",
+ *   contractId: "AccountFactory",
  *   constructorParams,
  * });
  * ```
@@ -40,6 +40,7 @@ export async function computePublishedContractAddress(args: {
   constructorParams: unknown[];
   publisher?: string;
   version?: string;
+  salt?: string;
 }): Promise<string> {
   const info = await computeDeploymentInfoFromContractId(args);
   return computeDeploymentAddress(info);
@@ -53,6 +54,7 @@ export async function computeContractAddress(args: {
   chain: Chain;
   contractMetadata: FetchDeployMetadataResult;
   constructorParams: unknown[];
+  salt?: string;
 }): Promise<string> {
   const info = await computeDeploymentInfoFromMetadata(args);
   return computeDeploymentAddress(info);
