@@ -8,7 +8,7 @@ import {
 } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
-import { ethers } from "ethers";
+import { ethers, providers, utils } from "ethers";
 import { mockUploadMetadataWithBytecode } from "./utils";
 import {
   modularFactoryBytecode,
@@ -22,6 +22,7 @@ import {
 import {
   mockExtensionERC20Bytecode,
   mockExtensionERC20CompilerMetadata,
+  mockExtensionERC20DeployedBytecode,
 } from "./mock/mockExtensionERC20Metadata";
 import { AddressZero } from "../../src/evm/constants/addresses/AddressZero";
 import { compatibleExtensions } from "../../src/evm/common/modular/compatibleExtensions";
@@ -217,37 +218,9 @@ describe("Modular contract deployment", async () => {
   });
 
   it("should check extension compatibility", async () => {
-    await mockPublishModularFactory();
-    const publishUri = await mockPublishExtension();
-
-    const extension = await sdk.deployer.deployContractFromUri(publishUri, []);
-
-    const extensionDuplicate = await sdk.deployer.deployContractFromUri(
-      publishUri,
-      [],
-    );
-
-    const provider = new ethers.providers.JsonRpcProvider(
-      "http://127.0.0.1:8545/",
-    );
-
-    predictAddressDeterministic(
-      mockExtensionERC20Bytecode,
-      mockExtensionERC20CompilerMetadata.output.abi,
-      sdk.getProvider(),
-      [],
-    );
-
-    provider.send("eth_call", [
-      {
-        to: "0x7b32Cab89cfB45187B7Ffbbc4Fe31EaE940A06Fc",
-        data: mockExtensionERC20Bytecode,
-      },
-    ]);
-
     const isCompatible = await compatibleExtensions(
-      [extension, extensionDuplicate],
-      sdk.getProvider(),
+      [mockExtensionERC20DeployedBytecode, mockExtensionERC20DeployedBytecode],
+      11155111,
     );
 
     expect(isCompatible).to.be.true;

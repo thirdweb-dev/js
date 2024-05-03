@@ -1,35 +1,51 @@
-import { providers } from "ethers";
+import { providers, utils } from "ethers";
 import { extensionContractAbi } from "../../constants/thirdweb-features";
-import { Contract as EthersContract } from "ethers";
 import { hasDuplicates } from "../utils";
+import { getChainByChainIdAsync, getChainRPC } from "@thirdweb-dev/chains";
 
 type ExtensionFunction = {
-    selector: string;
-    callType: number;
-    permissioned: string;
-}
+  selector: string;
+  callType: number;
+  permissioned: string;
+};
 
 type ExtensionConfig = {
-    callbackFunctions: string[];
-    extensionABI: ExtensionFunction[];
-}
+  callbackFunctions: string[];
+  extensionABI: ExtensionFunction[];
+};
 
 export async function compatibleExtensions(
-  extensionAddresses: string[],
-  provider: providers.Provider,
+  bytecodes: string[],
+  chainId: number,
 ): Promise<boolean> {
-  const configs = await Promise.all(
-    extensionAddresses.map((addr: string) => {
-      const contract = new EthersContract(addr, extensionContractAbi, provider);
+  const chain = await getChainByChainIdAsync(chainId);
+  const rpcUrl = getChainRPC(chain);
+  const iface = new utils.Interface(extensionContractAbi);
+  const calldata = iface.encodeFunctionData("getExtensionConfig", []);
 
-      return contract.getExtensionConfig();
+  const configs = await Promise.all(
+    bytecodes.map((b: string) => {
+      const addr = "0x0000000000000000000000000000000000000124";
+      const jsonRpcProvider = new providers.JsonRpcProvider(rpcUrl);
+      return jsonRpcProvider.send("eth_call", [
+        { to: addr, data: calldata },
+        "latest",
+        { [addr]: { code: b } },
+      ]);
     }),
   );
 
-  const selectors = configs.map((c: ExtensionConfig) => {
-    const extensionFunctionSelectors = c.extensionABI.map(a => a.selector);
-    return [...c.callbackFunctions, ...extensionFunctionSelectors];
+  const selectors = configs.map((c: any) => {
+    const decoded = iface.decodeFunctionResult("getExtensionConfig", c);
+    const extensionFunctionSelectors = decoded[0].extensionABI.map(
+      (a: any) => a.selector,
+    );
+
+    return [...decoded[0].callbackFunctions, ...extensionFunctionSelectors];
   });
 
-  return hasDuplicates(selectors.flat(), (a: string, b: string): boolean => a === b);
+  return hasDuplicates(
+    selectors.flat(),
+    (a: string, b: string): boolean => a === b,
+  );
 }
