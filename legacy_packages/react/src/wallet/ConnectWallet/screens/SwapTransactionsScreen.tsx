@@ -2,7 +2,6 @@
 import { CrossCircledIcon, ArrowRightIcon } from "@radix-ui/react-icons";
 import {
   useBuyWithCryptoHistory,
-  type BuyWithCryptoStatus,
   useAddress,
   useWalletContext,
   useChainId,
