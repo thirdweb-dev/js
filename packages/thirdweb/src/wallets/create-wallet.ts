@@ -357,7 +357,6 @@ export function smartWallet(
     disconnect: async () => {
       account = undefined;
       chain = undefined;
-      emitter.emit("disconnect", undefined);
       const { disconnectSmartWallet } = await import("./smart/index.js");
       await disconnectSmartWallet(_smartWallet);
       emitter.emit("disconnect", undefined);
