@@ -9,7 +9,6 @@ function getVerificationPath() {
   return `${getThirdwebBaseUrl('inAppWallet')}/api/2024-05-05/login/passkey/callback`;
 }
 function getChallengePath(type: "sign-in" | "sign-up", username?: string) {
-  console.log('updated')
   return `${getThirdwebBaseUrl('inAppWallet')}/api/2024-05-05/login/passkey?type=${type}${
     username ? `&username=${username}` : ""
   }`;
