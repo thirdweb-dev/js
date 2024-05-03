@@ -6,11 +6,14 @@ import {
 } from "../../../../transaction/actions/wait-for-tx-receipt.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
 import type { TransactionReceipt } from "../../../../transaction/types.js";
-import { useSendTransactionCore } from "../../../core/hooks/contract/useSendTransaction.js";
 import {
   useActiveAccount,
   useActiveWallet,
 } from "../../../core/hooks/wallets/wallet-hooks.js";
+import {
+  type SendTransactionPayModalConfig,
+  useSendTransaction,
+} from "../../hooks/useSendTransaction.js";
 import { Spinner } from "../components/Spinner.js";
 import { Button } from "../components/buttons.js";
 
@@ -70,6 +73,28 @@ export type TransactionButtonProps = {
    * The button's disabled state
    */
   disabled?: boolean;
+
+  /**
+   * Configuration for the "Pay Modal" that opens when the user doesn't have enough funds to send a transaction.
+   * Set `payModal: false` to disable the "Pay Modal" popup
+   *
+   * This configuration object includes the following properties to configure the "Pay Modal" UI:
+   *
+   * ### `locale`
+   * The language to use for the "Pay Modal" UI. Defaults to `"en_US"`.
+   *
+   * ### `supportedTokens`
+   * An object of type [`SupportedTokens`](https://portal.thirdweb.com/references/typescript/v5/SupportedTokens) to configure the tokens to show for a chain.
+   *
+   * ### `theme`
+   * The theme to use for the "Pay Modal" UI. Defaults to `"dark"`.
+   *
+   * It can be set to `"light"` or `"dark"` or an object of type [`Theme`](https://portal.thirdweb.com/references/typescript/v5/Theme) for a custom theme.
+   *
+   * Refer to [`lightTheme`](https://portal.thirdweb.com/references/typescript/v5/lightTheme)
+   * or [`darkTheme`](https://portal.thirdweb.com/references/typescript/v5/darkTheme) helper functions to use the default light or dark theme and customize it.
+   */
+  payModal?: SendTransactionPayModalConfig;
 };
 
 /**
@@ -105,7 +130,10 @@ export function TransactionButton(props: TransactionButtonProps) {
   const wallet = useActiveWallet();
   const [isPending, setIsPending] = useState(false);
 
-  const sendTransaction = useSendTransactionCore(undefined, gasless);
+  const sendTransaction = useSendTransaction({
+    gasless,
+    payModal: props.payModal,
+  });
 
   return (
     <Button

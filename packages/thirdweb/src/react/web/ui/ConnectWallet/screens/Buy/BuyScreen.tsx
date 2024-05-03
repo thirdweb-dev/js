@@ -413,7 +413,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
           />
         </Container>
 
-        <Spacer y="lg" />
+        <Spacer y="md" />
         <Line />
         <Spacer y="md" />
 
