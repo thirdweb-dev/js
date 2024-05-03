@@ -17,6 +17,7 @@ export enum AuthProvider {
   CUSTOM_AUTH_ENDPOINT = "CustomAuthEndpoint",
   FACEBOOK = "Facebook",
   APPLE = "Apple",
+  PASSKEY = "Passkey",
 }
 
 /**
