@@ -14,7 +14,10 @@ import type {
 } from "./wallet-types.js";
 
 import { trackConnect } from "../analytics/track.js";
+import { getContract } from "../contract/contract.js";
+import { isContractDeployed } from "../exports/utils.js";
 import { COINBASE } from "./constants.js";
+import { DEFAULT_ACCOUNT_FACTORY } from "./smart/lib/constants.js";
 import type { WCConnectOptions } from "./wallet-connect/types.js";
 import { createWalletEmitter } from "./wallet-emitter.js";
 
@@ -360,9 +363,20 @@ export function smartWallet(
       emitter.emit("disconnect", undefined);
     },
     switchChain: async (newChain: Chain) => {
-      console.log("switching chain", lastConnectOptions, newChain);
       if (!lastConnectOptions) {
         throw new Error("Cannot switch chain without a previous connection");
+      }
+      // check if factory is deployed
+      const factory = getContract({
+        address: createOptions.factoryAddress || DEFAULT_ACCOUNT_FACTORY,
+        chain: newChain,
+        client: lastConnectOptions.client,
+      });
+      const isDeployed = await isContractDeployed(factory);
+      if (!isDeployed) {
+        throw new Error(
+          `Factory contract not deployed on chain: ${newChain.id}`,
+        );
       }
       const { connectSmartWallet } = await import("./smart/index.js");
       const [connectedAccount, connectedChain] = await connectSmartWallet(
