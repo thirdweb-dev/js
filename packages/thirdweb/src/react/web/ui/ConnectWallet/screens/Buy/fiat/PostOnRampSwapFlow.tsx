@@ -45,6 +45,7 @@ export function PostOnRampSwapFlow(props: {
         props.onSwapFlowStarted();
         setStatusForSwap(props.status);
       }}
+      status={props.status}
     />
   );
 }
