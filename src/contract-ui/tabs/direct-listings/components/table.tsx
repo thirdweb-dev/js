@@ -1,11 +1,14 @@
-import {
-  useDirectListings,
-  useDirectListingsCount,
-  useValidDirectListings,
-} from "@thirdweb-dev/react";
 import { MarketplaceV3 } from "@thirdweb-dev/sdk";
 import { MarketplaceTable } from "contract-ui/tabs/shared-components/marketplace-table";
 import { useState } from "react";
+import { useReadContract } from "thirdweb/react";
+import {
+  getAllListings,
+  getAllValidListings,
+  totalListings,
+} from "thirdweb/extensions/marketplace";
+import { defineChain, getContract } from "thirdweb";
+import { thirdwebClient } from "../../../../lib/thirdweb-client";
 
 interface DirectListingsTableProps {
   contract: MarketplaceV3;
@@ -14,16 +17,29 @@ interface DirectListingsTableProps {
 const DEFAULT_QUERY_STATE = { count: 50, start: 0 };
 
 export const DirectListingsTable: React.FC<DirectListingsTableProps> = ({
-  contract,
+  contract: v4Contract,
 }) => {
+  const contract = getContract({
+    client: thirdwebClient,
+    address: v4Contract.getAddress(),
+    chain: defineChain(v4Contract.chainId),
+  });
   const [queryParams, setQueryParams] = useState(DEFAULT_QUERY_STATE);
-  const getAllQueryResult = useDirectListings(contract, queryParams);
-  const getValidQueryResult = useValidDirectListings(contract, queryParams);
-  const totalCountQuery = useDirectListingsCount(contract);
+  const getAllQueryResult = useReadContract(getAllListings, {
+    contract,
+    count: BigInt(queryParams.count),
+    start: queryParams.start,
+  });
+  const getValidQueryResult = useReadContract(getAllValidListings, {
+    contract,
+    count: BigInt(queryParams.count),
+    start: queryParams.start,
+  });
+  const totalCountQuery = useReadContract(totalListings, { contract });
 
   return (
     <MarketplaceTable
-      contract={contract}
+      contract={v4Contract}
       getAllQueryResult={getAllQueryResult}
       getValidQueryResult={getValidQueryResult}
       totalCountQuery={totalCountQuery}

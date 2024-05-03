@@ -17,12 +17,7 @@ import {
   Tr,
   usePrevious,
 } from "@chakra-ui/react";
-import { UseQueryResult } from "@tanstack/react-query";
-import type {
-  DirectListingV3,
-  EnglishAuction,
-  MarketplaceV3,
-} from "@thirdweb-dev/sdk";
+import type { MarketplaceV3 } from "@thirdweb-dev/sdk";
 import { MediaCell } from "components/contract-pages/table/table-columns/cells/media-cell";
 import { ListingDrawer } from "contract-ui/tabs/shared-components/listing-drawer";
 import { BigNumber } from "ethers";
@@ -35,22 +30,27 @@ import {
   MdNavigateNext,
 } from "react-icons/md";
 import { Cell, Column, usePagination, useTable } from "react-table";
-import { Button, Heading, Text } from "tw-components";
+import { Button, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
+import type {
+  EnglishAuction,
+  DirectListing,
+} from "thirdweb/extensions/marketplace";
+import type { UseQueryResult } from "react-query-v5";
 
-const tableColumns: Column<DirectListingV3 | EnglishAuction>[] = [
+const tableColumns: Column<DirectListing | EnglishAuction>[] = [
   {
     Header: "Listing Id",
     accessor: (row) => row.id.toString(),
   },
   {
     Header: "Media",
-    accessor: (row) => row.asset,
+    accessor: (row) => row.asset.metadata,
     Cell: (cell: any) => <MediaCell cell={cell} />,
   },
   {
     Header: "Name",
-    accessor: (row) => row.asset?.name,
+    accessor: (row) => row.asset.metadata.name ?? "N/A",
   },
   {
     Header: "Creator",
@@ -62,7 +62,7 @@ const tableColumns: Column<DirectListingV3 | EnglishAuction>[] = [
   {
     Header: "Price",
     accessor: (row) =>
-      (row as DirectListingV3)?.currencyValuePerToken ||
+      (row as DirectListing)?.currencyValuePerToken ||
       (row as EnglishAuction)?.buyoutCurrencyValue,
     Cell: ({ cell }: { cell: Cell<any, any> }) => {
       return (
@@ -80,15 +80,9 @@ const tableColumns: Column<DirectListingV3 | EnglishAuction>[] = [
 
 interface MarketplaceTableProps {
   contract: MarketplaceV3;
-  getAllQueryResult: UseQueryResult<
-    DirectListingV3[] | EnglishAuction[],
-    unknown
-  >;
-  getValidQueryResult: UseQueryResult<
-    DirectListingV3[] | EnglishAuction[],
-    unknown
-  >;
-  totalCountQuery: UseQueryResult<BigNumber, unknown>;
+  getAllQueryResult: UseQueryResult<DirectListing[] | EnglishAuction[]>;
+  getValidQueryResult: UseQueryResult<DirectListing[] | EnglishAuction[]>;
+  totalCountQuery: UseQueryResult<bigint>;
   queryParams: {
     count: number;
     start: number;
@@ -173,7 +167,7 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
   }, [pageIndex, pageSize, setQueryParams]);
 
   const [tokenRow, setTokenRow] = useState<
-    DirectListingV3 | EnglishAuction | null
+    DirectListing | EnglishAuction | null
   >(null);
 
   return (
@@ -262,30 +256,6 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
                 </Tr>
               );
             })}
-            {((listingsToShow === "all" && getAllQueryResult.isPreviousData) ||
-              (listingsToShow === "valid" &&
-                getValidQueryResult.isPreviousData)) && (
-              <Flex
-                zIndex="above"
-                position="absolute"
-                top={0}
-                bottom={0}
-                left={0}
-                right={0}
-                backdropFilter="blur(5px)"
-                bg="blackAlpha.100"
-                _dark={{ bg: "whiteAlpha.50" }}
-                borderRadius="md"
-                align="flex-end"
-                justify="center"
-                p={8}
-              >
-                <Flex align="center" gap={4}>
-                  <Spinner size="sm" />
-                  <Heading size="label.lg">Fetching new page</Heading>
-                </Flex>
-              </Flex>
-            )}
           </Tbody>
         </Table>
       </TableContainer>

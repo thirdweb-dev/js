@@ -13,22 +13,19 @@ import {
   usePrevious,
 } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
-import type {
-  DirectListingV3,
-  EnglishAuction,
-  MarketplaceV3,
-} from "@thirdweb-dev/sdk";
+import type { MarketplaceV3 } from "@thirdweb-dev/sdk";
 import { BigNumber } from "ethers";
 import { useMemo } from "react";
 import { Badge, Card, CodeBlock, Drawer, Heading, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
+import { EnglishAuction, DirectListing } from "thirdweb/extensions/marketplace";
 
 interface NFTDrawerProps {
   contract: MarketplaceV3;
   isOpen: boolean;
   onClose: () => void;
-  data: DirectListingV3 | EnglishAuction | null;
+  data: DirectListing | EnglishAuction | null;
   type: "direct-listings" | "english-auctions";
 }
 
@@ -100,16 +97,13 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
                 </GridItem>
               </SimpleGrid>
             </Card>
-            {data?.asset.attributes || data?.asset.properties ? (
+            {data?.asset.metadata.properties ? (
               <Card as={Flex} flexDir="column" gap={4}>
                 <Heading size="label.md">Properties</Heading>
                 <CodeBlock
                   code={
-                    JSON.stringify(
-                      data?.asset.attributes || data?.asset.properties,
-                      null,
-                      2,
-                    ) || ""
+                    JSON.stringify(data.asset.metadata.properties, null, 2) ||
+                    ""
                   }
                   language="json"
                   canCopy={false}
@@ -128,12 +122,12 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
           type === "direct-listings" ? (
             <CancelDirectListing
               contract={contract}
-              listingId={renderData?.id}
+              listingId={renderData.id.toString()}
             />
           ) : (
             <CancelEnglishAuction
               contract={contract}
-              auctionId={renderData?.id}
+              auctionId={renderData.id.toString()}
             />
           ),
       },
@@ -144,8 +138,7 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
     renderData,
     isOwner,
     tokenId,
-    data?.asset.attributes,
-    data?.asset.properties,
+    data?.asset.metadata.properties,
     type,
     contract,
   ]);
@@ -165,15 +158,16 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
       <Flex py={6} px={2} flexDir="column" gap={6}>
         <Flex gap={6}>
           <NFTMediaWithEmptyState
-            metadata={renderData.asset}
+            // @ts-expect-error types are not up to date
+            metadata={renderData.asset.metadata}
             requireInteraction
             width="150px"
             height="150px"
           />
           <Flex flexDir="column" gap={2} w="70%">
-            <Heading size="title.lg">{renderData.asset.name}</Heading>
+            <Heading size="title.lg">{renderData.asset.metadata.name}</Heading>
             <Text size="label.md" noOfLines={6}>
-              {renderData.asset.description}
+              {renderData.asset.metadata.name}
             </Text>
           </Flex>
         </Flex>

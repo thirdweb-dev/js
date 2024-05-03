@@ -1,8 +1,11 @@
-export const LISTING_STATUS: Record<number, string> = {
-  0: "Does not exist",
-  1: "Created",
-  2: "Completed",
-  3: "Cancelled",
-  4: "Active",
-  5: "Expired",
+// FIXME: export listing status type
+import type { ListingStatus } from "thirdweb/dist/types/extensions/marketplace/types";
+
+export const LISTING_STATUS: Record<ListingStatus, string> = {
+  UNSET: "Does not exist",
+  CREATED: "Created",
+  COMPLETED: "Completed",
+  CANCELLED: "Cancelled",
+  ACTIVE: "Active",
+  EXPIRED: "Expired",
 };
