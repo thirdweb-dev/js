@@ -17,8 +17,9 @@ export async function computeDeploymentInfoFromContractId(args: {
   constructorParams: unknown[];
   publisher?: string;
   version?: string;
+  salt?: string;
 }) {
-  const { client, chain, contractId, constructorParams } = args;
+  const { client, chain, contractId, constructorParams, salt } = args;
   const contractMetadata = await fetchPublishedContractMetadata({
     client,
     contractId,
@@ -29,6 +30,7 @@ export async function computeDeploymentInfoFromContractId(args: {
     chain,
     contractMetadata,
     constructorParams,
+    salt,
   });
 }
 
@@ -40,8 +42,9 @@ export async function computeDeploymentInfoFromMetadata(args: {
   chain: Chain;
   contractMetadata: FetchDeployMetadataResult;
   constructorParams: unknown[];
+  salt?: string;
 }) {
-  const { client, chain, contractMetadata, constructorParams } = args;
+  const { client, chain, contractMetadata, constructorParams, salt } = args;
   const { compilerMetadata } = contractMetadata;
   const create2FactoryAddress = await computeCreate2FactoryAddress({
     client,
@@ -59,6 +62,7 @@ export async function computeDeploymentInfoFromMetadata(args: {
   const initBytecodeWithsalt = getInitBytecodeWithSalt({
     bytecode,
     encodedArgs,
+    salt,
   });
   return {
     bytecode,
