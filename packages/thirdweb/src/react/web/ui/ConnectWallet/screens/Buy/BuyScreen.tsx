@@ -1,4 +1,3 @@
-import { CrossCircledIcon } from "@radix-ui/react-icons";
 import { useEffect, useMemo, useState } from "react";
 import { polygon } from "../../../../../../chains/chain-definitions/polygon.js";
 import type { Chain } from "../../../../../../chains/types.js";
@@ -44,11 +43,7 @@ import { TokenIcon } from "../../../components/TokenIcon.js";
 import { Container, Line, ModalHeader } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
-import {
-  type Theme,
-  fontSize,
-  iconSize,
-} from "../../../design-system/index.js";
+import { type Theme, fontSize } from "../../../design-system/index.js";
 import { useDebouncedValue } from "../../../hooks/useDebouncedValue.js";
 import type { PayUIOptions } from "../../ConnectButtonProps.js";
 import type { SupportedTokens } from "../../defaultTokens.js";
