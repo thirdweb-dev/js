@@ -34,6 +34,8 @@ export function FiatStatusScreen(props: {
   closeModal: () => void;
 }) {
   const [screen, setScreen] = useState<"swap-flow" | "base">("base");
+  const [confirmedFiatStatus, setConfirmedFiatStatus] =
+    useState<BuyWithFiatStatus | null>(null);
   const queryClient = useQueryClient();
   const { openedWindow } = props;
   const statusQuery = useBuyWithFiatStatus({
@@ -95,13 +97,14 @@ export function FiatStatusScreen(props: {
   useEffect(() => {
     if (statusQuery.data?.status === "CRYPTO_SWAP_REQUIRED") {
       setScreen("swap-flow");
+      setConfirmedFiatStatus(statusQuery.data);
     }
   }, [statusQuery.data]);
 
-  if (screen === "swap-flow" && statusQuery.data) {
+  if (screen === "swap-flow" && confirmedFiatStatus) {
     return (
       <PostOnRampSwapFlow
-        status={statusQuery.data}
+        status={confirmedFiatStatus}
         quote={props.quote}
         client={props.client}
         onBack={props.onBack}
