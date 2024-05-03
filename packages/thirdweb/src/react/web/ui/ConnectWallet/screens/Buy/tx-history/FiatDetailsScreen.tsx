@@ -111,14 +111,25 @@ export function FiatTxDetailsTable(props: {
   return (
     <div>
       {/* Receive - to token */}
-      <TokenInfoRow
-        chainId={status.quote.toToken.chainId}
-        client={props.client}
-        label="Receive"
-        tokenAmount={status.quote.estimatedToTokenAmount}
-        tokenSymbol={status.quote.toToken.symbol || ""}
-        tokenAddress={status.quote.toToken.tokenAddress}
-      />
+      {status.destination ? (
+        <TokenInfoRow
+          chainId={status.destination.token.chainId}
+          client={props.client}
+          label="Received"
+          tokenAmount={status.destination.amount}
+          tokenSymbol={status.destination.token.symbol || ""}
+          tokenAddress={status.destination.token.tokenAddress}
+        />
+      ) : (
+        <TokenInfoRow
+          chainId={status.quote.toToken.chainId}
+          client={props.client}
+          label="Receive"
+          tokenAmount={status.quote.estimatedToTokenAmount}
+          tokenSymbol={status.quote.toToken.symbol || ""}
+          tokenAddress={status.quote.toToken.tokenAddress}
+        />
+      )}
 
       {lineSpacer}
 

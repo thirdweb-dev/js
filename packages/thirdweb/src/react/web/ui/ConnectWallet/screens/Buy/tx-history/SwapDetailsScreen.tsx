@@ -80,14 +80,23 @@ export function SwapTxDetailsTable(props: {
   return (
     <div>
       {/* Receive - to token */}
-      {swapStatus.destination && (
+      {swapStatus.destination ? (
         <TokenInfoRow
           chainId={swapStatus.destination.token.chainId}
           client={client}
-          label={isPartialSuccess ? "Expected" : "Receive"}
+          label={isPartialSuccess ? "Expected" : "Received"}
           tokenAmount={swapStatus.destination.amount}
           tokenSymbol={swapStatus.destination.token.symbol || ""}
           tokenAddress={swapStatus.destination.token.tokenAddress}
+        />
+      ) : (
+        <TokenInfoRow
+          chainId={swapStatus.quote.toToken.chainId}
+          client={client}
+          label={"Receive"}
+          tokenAmount={swapStatus.quote.toAmount}
+          tokenSymbol={swapStatus.quote.toToken.symbol || ""}
+          tokenAddress={swapStatus.quote.toToken.tokenAddress}
         />
       )}
 
