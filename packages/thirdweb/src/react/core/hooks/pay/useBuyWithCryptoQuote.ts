@@ -78,5 +78,16 @@ export function useBuyWithCryptoQuote(
       return getBuyWithCryptoQuote(params);
     },
     enabled: !!params,
+    retry(failureCount, error) {
+      if (failureCount > 3) {
+        return false;
+      }
+
+      if (error.message.includes("Minimum purchase")) {
+        return false;
+      }
+
+      return true;
+    },
   });
 }
