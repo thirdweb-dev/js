@@ -413,9 +413,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
           />
         </Container>
 
-        <Spacer y="md" />
-        <Line />
-        <Spacer y="md" />
+        <Spacer y="lg" />
 
         {isExpanded && (
           <>

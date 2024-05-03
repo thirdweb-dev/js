@@ -112,24 +112,25 @@ export function FiatTxDetailsTable(props: {
 
       {lineSpacer}
 
-      <Spacer y="md" />
-
       {onrampTxHash && onRampChainQuery.data?.explorers?.[0]?.url && (
-        <ButtonLink
-          fullWidth
-          variant="outline"
-          href={`${
-            onRampChainQuery.data.explorers[0].url || ""
-          }/tx/${onrampTxHash}`}
-          target="_blank"
-          gap="xs"
-          style={{
-            fontSize: fontSize.sm,
-          }}
-        >
-          View on Explorer
-          <ExternalLinkIcon width={iconSize.sm} height={iconSize.sm} />
-        </ButtonLink>
+        <>
+          <Spacer y="md" />
+          <ButtonLink
+            fullWidth
+            variant="outline"
+            href={`${
+              onRampChainQuery.data.explorers[0].url || ""
+            }/tx/${onrampTxHash}`}
+            target="_blank"
+            gap="xs"
+            style={{
+              fontSize: fontSize.sm,
+            }}
+          >
+            View on Explorer
+            <ExternalLinkIcon width={iconSize.sm} height={iconSize.sm} />
+          </ButtonLink>
+        </>
       )}
     </div>
   );

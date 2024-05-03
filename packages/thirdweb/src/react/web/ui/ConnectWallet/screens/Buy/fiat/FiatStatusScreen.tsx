@@ -139,48 +139,67 @@ function FiatStatusScreenUI(props: {
   closeModal: () => void;
   client: ThirdwebClient;
 }) {
+  const { uiStatus } = props;
+
   return (
     <Container>
       <Spacer y="xl" />
 
-      {props.uiStatus === "loading" && (
+      {uiStatus === "loading" && (
         <>
-          <Spacer y="xxl" />
-
+          <Spacer y="md" />
           <Container flex="row" center="x">
-            <Spinner size="xxl" color="accentText" />
+            <Spinner size="3xl" color="accentText" />
           </Container>
-          <Spacer y="xl" />
+          <Spacer y="md" />
           <Text color="primaryText" size="lg" center>
             Buy Pending
           </Text>
-          <Spacer y="md" />
+          <Spacer y="sm" />
           {!isMobile() && <Text center>Complete the purchase in popup</Text>}
-          <Spacer y="xl" />
-          <Spacer y="xl" />
+          <Spacer y="xxl" />
+          {props.fiatStatus && props.fiatStatus.status !== "NOT_FOUND" && (
+            <FiatTxDetailsTable
+              status={props.fiatStatus}
+              client={props.client}
+              hideStatus={true}
+            />
+          )}
         </>
       )}
 
-      {props.uiStatus === "failed" && (
+      {uiStatus === "failed" && (
         <>
-          <Spacer y="xxl" />
-
+          <Spacer y="md" />
           <Container flex="row" center="x">
             <AccentFailIcon size={iconSize["3xl"]} />
           </Container>
-          <Spacer y="xl" />
+          <Spacer y="lg" />
           <Text color="primaryText" size="lg" center>
             Transaction Failed
           </Text>
-          <Spacer y="xl" />
-          <Spacer y="xl" />
+          {props.fiatStatus && props.fiatStatus.status !== "NOT_FOUND" ? (
+            <>
+              <Spacer y="xxl" />
+              <FiatTxDetailsTable
+                status={props.fiatStatus}
+                client={props.client}
+                hideStatus={true}
+              />
+            </>
+          ) : (
+            <>
+              <Spacer y="xl" />
+              <Spacer y="xl" />
+            </>
+          )}
         </>
       )}
 
-      {props.uiStatus === "completed" && (
+      {uiStatus === "completed" && (
         <>
+          <Spacer y="md" />
           <Container flex="row" center="x" color="success">
-            <Spacer y="xl" />
             <CheckCircledIcon
               width={iconSize["3xl"]}
               height={iconSize["3xl"]}
