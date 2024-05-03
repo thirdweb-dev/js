@@ -5,7 +5,7 @@ export const wallet = {
   id: "co.xellar",
   name: "Xellar",
   homepage: "https://xellar.co",
-  image_id: "89cf9926-00bf-4152-d98f-cac53d7cad00",
+  image_id: "67b5a91d-a9ce-4268-d73d-b2f924a0b400",
   app: {
     browser: null,
     ios: "https://apps.apple.com/us/app/xellar-crypto-wallet/id1671215861",

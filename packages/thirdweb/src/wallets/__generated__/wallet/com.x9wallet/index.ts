@@ -5,7 +5,7 @@ export const wallet = {
   id: "com.x9wallet",
   name: "X9Wallet",
   homepage: "https://x9wallet.com",
-  image_id: "ab278eaf-57ac-40dc-dfa6-42c813052100",
+  image_id: "f64f7bf8-62ea-4d1e-087b-82d374d04d00",
   app: {
     browser: null,
     ios: "https://expo.dev/accounts/teza8899x/projects/x9wallet/updates/d8aa245f-076d-4634-b2ba-e23489b04dde",

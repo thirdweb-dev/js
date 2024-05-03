@@ -167,7 +167,7 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
   },
   {
     id: "com.coin98",
-    name: "Coin98 Super App",
+    name: "Coin98 Super Wallet",
   },
   {
     id: "io.myabcwallet",
@@ -206,7 +206,7 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "Modular Wallet Prod",
   },
   {
-    id: "finance.kelp",
+    id: "org.kelp",
     name: "Kelp",
   },
   {
@@ -251,7 +251,7 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
   },
   {
     id: "com.burritowallet",
-    name: "Burrito Wallet",
+    name: "Burrito",
   },
   {
     id: "io.ancrypto",
@@ -298,8 +298,8 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "ISLAMIwallet",
   },
   {
-    id: "link.app.wwallet",
-    name: "Wirex Wallet",
+    id: "xyz.coca",
+    name: "COCA Wallet",
   },
   {
     id: "com.monarchwallet",
@@ -376,6 +376,10 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
   {
     id: "net.spatium",
     name: "Spatium",
+  },
+  {
+    id: "com.cryptnox",
+    name: "Cryptnox Wallet",
   },
   {
     id: "com.rktechworks",
@@ -606,7 +610,7 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "PREMA Wallet",
   },
   {
-    id: "so.onekey.wallet",
+    id: "so.onekey.app.wallet",
     name: "OneKey",
   },
   {
@@ -798,10 +802,6 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "Impact Wallet",
   },
   {
-    id: "com.wirexapp",
-    name: "Wirex Wallet",
-  },
-  {
     id: "io.zelcore",
     name: "Zelcore",
   },
@@ -834,7 +834,7 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "Konio",
   },
   {
-    id: "io.gate.wallet",
+    id: "net.gateweb3",
     name: "GateWeb3",
   },
   {
@@ -923,7 +923,7 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
   },
   {
     id: "com.secuxtech",
-    name: "SecuX",
+    name: "",
   },
   {
     id: "io.didwallet",
@@ -970,8 +970,8 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "Competence.id",
   },
   {
-    id: "ai.spotonchain",
-    name: "Spot On Chain Wallet",
+    id: "ai.spotonchain.platform",
+    name: "Spot On Chain App",
   },
   {
     id: "network.dgg",
@@ -996,6 +996,10 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
   {
     id: "net.newmoney",
     name: "New Money",
+  },
+  {
+    id: "app.zeal",
+    name: "Zeal",
   },
   {
     id: "com.ivirse",
@@ -1040,6 +1044,10 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
   {
     id: "world.qoin",
     name: "Qoin Wallet",
+  },
+  {
+    id: "com.meld.app",
+    name: "MELDapp",
   },
   {
     id: "com.bestwallet",
@@ -1138,6 +1146,10 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "Noone Wallet",
   },
   {
+    id: "io.gate.wallet",
+    name: "GateWallet",
+  },
+  {
     id: "com.bitso",
     name: "Bitso Web3 Wallet",
   },
@@ -1234,6 +1246,10 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "CyberWallet",
   },
   {
+    id: "com.dextrade",
+    name: "DexTrade",
+  },
+  {
     id: "org.thepulsewallet",
     name: "The Pulse Wallet",
   },
@@ -1259,7 +1275,7 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
   },
   {
     id: "com.mpcvault.broswerplugin",
-    name: "MPCVault",
+    name: "Solayer",
   },
   {
     id: "io.legacynetwork",
@@ -1272,6 +1288,86 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
   {
     id: "me.iopay",
     name: "ioPay",
+  },
+  {
+    id: "app.kabila",
+    name: "Kabila Wallet",
+  },
+  {
+    id: "one.mixin.messenger",
+    name: "Mixin Messenger",
+  },
+  {
+    id: "com.bettatrade",
+    name: "Bettatrade",
+  },
+  {
+    id: "com.kraken",
+    name: "Kraken Wallet ",
+  },
+  {
+    id: "io.scramberry",
+    name: "ScramberryWallet",
+  },
+  {
+    id: "io.earthwallet",
+    name: "Earth Wallet",
+  },
+  {
+    id: "xyz.nestwallet",
+    name: "Nest Wallet",
+  },
+  {
+    id: "xyz.echooo",
+    name: "Echooo Wallet",
+  },
+  {
+    id: "net.myrenegade",
+    name: "Renegade",
+  },
+  {
+    id: "io.ready",
+    name: "Ready",
+  },
+  {
+    id: "ai.hacken",
+    name: "hAI by Hacken",
+  },
+  {
+    id: "io.plutope",
+    name: "Plutope",
+  },
+  {
+    id: "io.trustasset",
+    name: "Trust Asset Wallet",
+  },
+  {
+    id: "app.dfinnwallet",
+    name: "Dfinn Wallet",
+  },
+  {
+    id: "com.bmawallet",
+    name: "BMA Wallet",
+  },
+  {
+    id: "net.spatium.wallet",
+    name: "Spatium",
+  },
+  {
+    id: "io.transi",
+    name: "Transi",
+  },
+  {
+    id: "com.dolletwallet",
+    name: "Dollet",
+  },
+  {
+    id: "app.wombat",
+    name: "Wombat",
+  },
+  {
+    id: "fi.dropmate",
+    name: "Dropmate",
   },
   {
     id: "io.rabby",
@@ -1288,10 +1384,6 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
   {
     id: "io.xdefi",
     name: "XDEFI Wallet",
-  },
-  {
-    id: "com.meld.app",
-    name: "MELDapp",
   },
   {
     id: "com.moongate.one",
@@ -1312,6 +1404,14 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
   {
     id: "app.backpack",
     name: "Backpack",
+  },
+  {
+    id: "io.finoa",
+    name: "FinoaConnect",
+  },
+  {
+    id: "com.lootrush",
+    name: "LootRush",
   },
   {
     id: "smart",

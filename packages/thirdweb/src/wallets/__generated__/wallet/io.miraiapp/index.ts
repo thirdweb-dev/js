@@ -22,7 +22,7 @@ export const wallet = {
   rdns: null,
   mobile: {
     native: "miraiapp://",
-    universal: null,
+    universal: "https://go.miraiapp.io",
   },
   desktop: {
     native: null,

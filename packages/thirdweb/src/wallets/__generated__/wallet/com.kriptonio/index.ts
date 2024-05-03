@@ -5,13 +5,13 @@ export const wallet = {
   id: "com.kriptonio",
   name: "Kriptonio",
   homepage: "https://kriptonio.com",
-  image_id: "363fae03-882a-4d81-a721-6e6f6e9ac500",
+  image_id: "331e57d3-d157-4bc3-8ea5-48a03f705e00",
   app: {
     browser: "https://kriptonio.com",
     ios: "https://apps.apple.com/hr/app/kriptonio/id6444807361",
     android:
       "https://play.google.com/store/apps/details?id=com.kriptonio.mobile.android",
-    mac: "",
+    mac: null,
     windows: null,
     linux: null,
     chrome: null,
