@@ -696,6 +696,12 @@ function SwapScreenContent(
           onViewPendingTx={props.onViewPendingTx}
           isFiatFlow={false}
           closeModal={props.closeModal}
+          onTryAgain={() => {
+            setScreen({
+              type: "main",
+            });
+            buyWithCryptoQuoteQuery.refetch();
+          }}
         />
       ),
     });

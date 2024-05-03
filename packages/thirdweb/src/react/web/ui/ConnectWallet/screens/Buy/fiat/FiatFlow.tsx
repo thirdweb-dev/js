@@ -1,11 +1,15 @@
 import { useState } from "react";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
-import type { BuyWithFiatQuote } from "../../../../../../../exports/pay.js";
+import type {
+  BuyWithFiatQuote,
+  BuyWithFiatStatus,
+} from "../../../../../../../exports/pay.js";
 import { isSwapRequiredPostOnramp } from "../../../../../../../pay/buyWithFiat/isSwapRequiredPostOnramp.js";
 import { openOnrampPopup } from "../openOnRamppopup.js";
 import { addPendingTx } from "../swap/pendingSwapTx.js";
 import { FiatStatusScreen } from "./FiatStatusScreen.js";
 import { FiatSteps, fiatQuoteToPartialQuote } from "./FiatSteps.js";
+import { PostOnRampSwapFlow } from "./PostOnRampSwapFlow.js";
 
 // Flow:
 // If a Swap is required after doing onramp
@@ -16,6 +20,21 @@ import { FiatSteps, fiatQuoteToPartialQuote } from "./FiatSteps.js";
 //  If a Swap is not required after doing onramp
 // - show Kado screen
 // - then go to status screen: once done, show success screen
+
+type Screen =
+  | {
+      id: "step-1";
+    }
+  | {
+      id: "fiat-status";
+    }
+  | {
+      id: "postonramp-swap";
+      data: BuyWithFiatStatus;
+    }
+  | {
+      id: "step-2";
+    };
 
 export function FiatFlow(props: {
   quote: BuyWithFiatQuote;
@@ -28,14 +47,22 @@ export function FiatFlow(props: {
   closeModal: () => void;
 }) {
   const hasTwoSteps = isSwapRequiredPostOnramp(props.quote);
-  const [screen, setScreen] = useState<"step-1" | "status">(
-    hasTwoSteps ? "step-1" : "status",
+  const [screen, setScreen] = useState<Screen>(
+    hasTwoSteps
+      ? {
+          id: "step-1",
+        }
+      : {
+          id: "fiat-status",
+        },
   );
+
   const [popupWindow, setPopupWindow] = useState<Window | null>(
     props.openedWindow,
   );
 
-  if (screen === "step-1") {
+  // 1.
+  if (screen.id === "step-1") {
     return (
       <FiatSteps
         client={props.client}
@@ -49,13 +76,14 @@ export function FiatFlow(props: {
             intentId: props.quote.intentId,
           });
           setPopupWindow(popup);
-          setScreen("status");
+          setScreen({ id: "fiat-status" });
         }}
       />
     );
   }
 
-  if (screen === "status") {
+  // 2.
+  if (screen.id === "fiat-status") {
     return (
       <FiatStatusScreen
         client={props.client}
@@ -66,6 +94,27 @@ export function FiatFlow(props: {
         openedWindow={popupWindow}
         quote={props.quote}
         closeModal={props.closeModal}
+        onShowSwapFlow={(_status) => {
+          // go to 3.
+          setScreen({ id: "postonramp-swap", data: _status });
+        }}
+      />
+    );
+  }
+
+  // 3.
+  if (screen.id === "postonramp-swap") {
+    return (
+      <PostOnRampSwapFlow
+        status={screen.data}
+        quote={fiatQuoteToPartialQuote(props.quote)}
+        client={props.client}
+        onBack={props.onBack}
+        onViewPendingTx={props.onViewPendingTx}
+        closeModal={props.closeModal}
+        onSwapFlowStarted={() => {
+          // no op
+        }}
       />
     );
   }

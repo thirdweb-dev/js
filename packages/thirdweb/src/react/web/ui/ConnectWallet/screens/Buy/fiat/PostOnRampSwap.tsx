@@ -10,6 +10,7 @@ import { useActiveAccount } from "../../../../../../../exports/react-native.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
 import { Container, ModalHeader } from "../../../../components/basic.js";
+import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { iconSize } from "../../../../design-system/index.js";
 import { AccentFailIcon } from "../../../icons/AccentFailIcon.js";
@@ -42,10 +43,54 @@ export function PostOnRampSwap(props: {
   });
 
   useEffect(() => {
-    if (postOnRampQuoteQuery.data && !lockedOnRampQuote) {
+    if (
+      postOnRampQuoteQuery.data &&
+      !lockedOnRampQuote &&
+      !postOnRampQuoteQuery.isRefetching
+    ) {
       setLockedOnRampQuote(postOnRampQuoteQuery.data);
     }
-  }, [postOnRampQuoteQuery.data, lockedOnRampQuote]);
+  }, [
+    postOnRampQuoteQuery.data,
+    lockedOnRampQuote,
+    postOnRampQuoteQuery.isRefetching,
+  ]);
+
+  if (postOnRampQuoteQuery.isError) {
+    return (
+      <Container fullHeight>
+        <Container p="lg">
+          <ModalHeader title="Buy" onBack={props.onBack} />
+        </Container>
+
+        <Container
+          style={{
+            minHeight: "300px",
+          }}
+          flex="column"
+          center="both"
+          p="lg"
+        >
+          <AccentFailIcon size={iconSize["3xl"]} />
+          <Spacer y="xl" />
+          <Text color="primaryText">Failed to get a price quote</Text>
+          <Spacer y="lg" />
+
+          <Button
+            fullWidth
+            variant="primary"
+            onClick={() => {
+              postOnRampQuoteQuery.refetch();
+            }}
+          >
+            Try Again
+          </Button>
+        </Container>
+
+        <Spacer y="xxl" />
+      </Container>
+    );
+  }
 
   if (!lockedOnRampQuote || !account) {
     return (
@@ -61,7 +106,7 @@ export function PostOnRampSwap(props: {
           flex="column"
           center="both"
         >
-          <Spinner size="xl" color="accentText" />
+          <Spinner size="xxl" color="accentText" />
           <Spacer y="xl" />
           <Text color="primaryText">Getting price quote</Text>
         </Container>
@@ -102,6 +147,10 @@ export function PostOnRampSwap(props: {
       onViewPendingTx={props.onViewPendingTx}
       isFiatFlow={true}
       closeModal={props.closeModal}
+      onTryAgain={() => {
+        setLockedOnRampQuote(undefined);
+        postOnRampQuoteQuery.refetch();
+      }}
     />
   );
 }

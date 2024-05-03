@@ -19,6 +19,7 @@ type SwapFlowProps = {
   client: ThirdwebClient;
   isFiatFlow: boolean;
   closeModal: () => void;
+  onTryAgain: () => void;
 };
 
 export function SwapFlow(props: SwapFlowProps) {
@@ -79,9 +80,7 @@ export function SwapFlow(props: SwapFlowProps) {
     return (
       <SwapStatusScreen
         onBack={props.onBack}
-        onTryAgain={() => {
-          setSwapTx(undefined);
-        }}
+        onTryAgain={props.onTryAgain}
         onViewPendingTx={props.onViewPendingTx}
         destinationChain={toChain}
         destinationToken={toToken}
@@ -111,7 +110,7 @@ export function SwapFlow(props: SwapFlowProps) {
       fromTokenSymbol={fromTokenSymbol}
       client={props.client}
       onBack={props.onBack}
-      onTryAgain={props.onBack}
+      onTryAgain={props.onTryAgain}
       quote={quote}
       isFiatFlow={props.isFiatFlow}
     />

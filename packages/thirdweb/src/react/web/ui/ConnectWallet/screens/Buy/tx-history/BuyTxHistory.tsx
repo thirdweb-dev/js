@@ -38,6 +38,31 @@ export function BuyTxHistory(props: {
   client: ThirdwebClient;
   closeModal: () => void;
 }) {
+  const [selectedTx, setSelectedTx] = useState<TxStatusInfo | null>(null);
+
+  if (selectedTx) {
+    return (
+      <TxDetailsScreen
+        client={props.client}
+        statusInfo={selectedTx}
+        onBack={() => setSelectedTx(null)}
+        closeModal={props.closeModal}
+      />
+    );
+  }
+
+  return <BuyTxHistoryList {...props} onSelectTx={setSelectedTx} />;
+}
+
+/**
+ * @internal
+ */
+export function BuyTxHistoryList(props: {
+  onBack?: () => void;
+  client: ThirdwebClient;
+  closeModal: () => void;
+  onSelectTx: (tx: TxStatusInfo) => void;
+}) {
   const {
     pageIndex,
     setPageIndex,
@@ -52,19 +77,6 @@ export function BuyTxHistory(props: {
   const activeAccount = useActiveAccount();
 
   const noTransactions = txInfosToShow.length === 0;
-
-  const [selectedTx, setSelectedTx] = useState<TxStatusInfo | null>(null);
-
-  if (selectedTx) {
-    return (
-      <TxDetailsScreen
-        client={props.client}
-        statusInfo={selectedTx}
-        onBack={() => setSelectedTx(null)}
-        closeModal={props.closeModal}
-      />
-    );
-  }
 
   return (
     <Container animate="fadein">
@@ -120,7 +132,7 @@ export function BuyTxHistory(props: {
                 txInfo={txInfo}
                 client={props.client}
                 onClick={() => {
-                  setSelectedTx(txInfo);
+                  props.onSelectTx(txInfo);
                 }}
               />
             );

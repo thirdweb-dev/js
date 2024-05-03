@@ -1,6 +1,6 @@
 import { CheckCircledIcon } from "@radix-ui/react-icons";
 import { useQueryClient } from "@tanstack/react-query";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import type {
   BuyWithFiatQuote,
@@ -17,49 +17,11 @@ import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { iconSize } from "../../../../design-system/index.js";
 import { AccentFailIcon } from "../../../icons/AccentFailIcon.js";
-import { FiatTxDetailsTable } from "../tx-history/FiatDetailsScreen.js";
-import { FiatSteps, fiatQuoteToPartialQuote } from "./FiatSteps.js";
-import { PostOnRampSwap } from "./PostOnRampSwap.js";
+import { FiatTxDetailsTable } from "./FiatTxDetailsTable.js";
 
 type UIStatus = "loading" | "failed" | "completed" | "partialSuccess";
 
 export function FiatStatusScreen(props: {
-  client: ThirdwebClient;
-  onBack: () => void;
-  intentId: string;
-  onViewPendingTx: () => void;
-  hasTwoSteps: boolean;
-  openedWindow: Window | null;
-  quote: BuyWithFiatQuote;
-  closeModal: () => void;
-}) {
-  const [statusForSwapFlow, setStatusForSwapFlow] =
-    useState<BuyWithFiatStatus | null>(null);
-
-  if (statusForSwapFlow) {
-    return (
-      <PostOnRampSwapFlow
-        status={statusForSwapFlow}
-        quote={props.quote}
-        client={props.client}
-        onBack={props.onBack}
-        onViewPendingTx={props.onViewPendingTx}
-        closeModal={props.closeModal}
-      />
-    );
-  }
-
-  return (
-    <FiatStatusScreenBase
-      {...props}
-      onShowSwapFlow={(status) => {
-        setStatusForSwapFlow(status);
-      }}
-    />
-  );
-}
-
-export function FiatStatusScreenBase(props: {
   client: ThirdwebClient;
   onBack: () => void;
   intentId: string;
@@ -168,45 +130,6 @@ export function FiatStatusScreenBase(props: {
         client={props.client}
       />
     </Container>
-  );
-}
-
-function PostOnRampSwapFlow(props: {
-  status: BuyWithFiatStatus;
-  quote: BuyWithFiatQuote;
-  client: ThirdwebClient;
-  onBack: () => void;
-  onViewPendingTx: () => void;
-  closeModal: () => void;
-}) {
-  const [screen, setScreen] = useState<"base" | "swap">("base");
-
-  // step 2 flow
-  if (screen === "swap") {
-    return (
-      <PostOnRampSwap
-        buyWithFiatStatus={props.status}
-        client={props.client}
-        onBack={() => {
-          setScreen("base");
-        }}
-        onViewPendingTx={props.onViewPendingTx}
-        closeModal={props.closeModal}
-      />
-    );
-  }
-
-  // show step 1 and step 2 details
-  return (
-    <FiatSteps
-      client={props.client}
-      onBack={props.onBack}
-      partialQuote={fiatQuoteToPartialQuote(props.quote)}
-      step={2}
-      onContinue={() => {
-        setScreen("swap");
-      }}
-    />
   );
 }
 
