@@ -37,7 +37,7 @@ import { TokenIcon } from "../../../components/TokenIcon.js";
 import { Container, Line, ModalHeader } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
-import { type Theme, fontSize } from "../../../design-system/index.js";
+import { type Theme, fontSize, spacing } from "../../../design-system/index.js";
 import { useDebouncedValue } from "../../../hooks/useDebouncedValue.js";
 import type { PayUIOptions } from "../../ConnectButtonProps.js";
 import type { SupportedTokens } from "../../defaultTokens.js";
@@ -63,9 +63,6 @@ import { PayWithCrypto } from "./swap/PayWithCrypto.js";
 import { SwapFlow } from "./swap/SwapFlow.js";
 import { addPendingTx } from "./swap/pendingSwapTx.js";
 import { useBuySupportedChains } from "./swap/useSwapSupportedChains.js";
-import { BuyTxHistoryButton } from "./tx-history/BuyTxHistoryButton.js";
-import { TxDetailsScreen } from "./tx-history/TxDetailsScreen.js";
-import { useBuyTransactionsToShow } from "./tx-history/useBuyTransactionsToShow.js";
 
 // NOTE: Must not use useConnectUI here because this UI can be used outside connect ui
 
@@ -467,112 +464,43 @@ function BuyScreenContent(props: BuyScreenContentProps) {
                 account={account}
               />
             )}
+
+            <Spacer y="sm" />
           </>
         )}
 
-        {!isExpanded && (
-          <>
-            {!account ? (
-              <Container px="lg">{props.connectButton}</Container>
-            ) : (
-              <BuyScreenNonExpandedFooter
-                client={client}
-                onViewAllTransactions={props.onViewPendingTx}
-                setScreen={setScreen}
-                closeModal={props.closeModal}
-              />
-            )}
-          </>
-        )}
-
-        <Spacer y="lg" />
-      </div>
-    </Container>
-  );
-}
-
-function BuyScreenNonExpandedFooter(props: {
-  client: ThirdwebClient;
-  onViewAllTransactions: () => void;
-  setScreen: (screen: Screen) => void;
-  closeModal: () => void;
-}) {
-  const { txInfosToShow: allList } = useBuyTransactionsToShow(props.client);
-  const txInfosToShow = allList.slice(0, 3);
-  const showMore = allList.length > 3;
-
-  if (txInfosToShow.length === 0) {
-    return (
-      <Container px="lg">
-        <Button
-          variant="secondary"
-          fullWidth
-          disabled={true}
-          data-disable={true}
-        >
-          Continue
-        </Button>
-      </Container>
-    );
-  }
-
-  return (
-    <Container px="lg">
-      {txInfosToShow.length > 0 && (
-        <>
-          <Spacer y="xs" />
-          <Text size="sm">Recent transactions</Text>
-          <Spacer y="sm" />
-          <Container flex="column" gap="xs">
-            {txInfosToShow.map((txInfo) => {
-              return (
-                <BuyTxHistoryButton
-                  key={
-                    txInfo.type === "swap"
-                      ? txInfo.status.quote.createdAt
-                      : txInfo.status.intentId
-                  }
-                  txInfo={txInfo}
-                  client={props.client}
-                  onClick={() => {
-                    props.setScreen({
-                      type: "node",
-                      node: (
-                        <TxDetailsScreen
-                          client={props.client}
-                          statusInfo={txInfo}
-                          onBack={() =>
-                            props.setScreen({
-                              type: "main",
-                            })
-                          }
-                          closeModal={props.closeModal}
-                        />
-                      ),
-                    });
-                  }}
-                />
-              );
-            })}
-          </Container>
-        </>
-      )}
-
-      {showMore && (
-        <>
-          <Spacer y="sm" />
+        <Container px="lg" flex="column" gap="sm">
           <Button
-            onClick={props.onViewAllTransactions}
-            variant="link"
+            variant="outline"
             fullWidth
             style={{
+              padding: spacing.xs,
               fontSize: fontSize.sm,
             }}
+            onClick={props.onViewPendingTx}
           >
             View all transactions
           </Button>
-        </>
-      )}
+          {!isExpanded && (
+            <>
+              {!account && props.connectButton ? (
+                <div>{props.connectButton}</div>
+              ) : (
+                <Button
+                  variant="accent"
+                  fullWidth
+                  disabled={true}
+                  data-disable={true}
+                >
+                  Continue
+                </Button>
+              )}
+            </>
+          )}
+        </Container>
+
+        <Spacer y="lg" />
+      </div>
     </Container>
   );
 }
