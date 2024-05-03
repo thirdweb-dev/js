@@ -1,13 +1,22 @@
-import { useQuery } from "@tanstack/react-query";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 import {
+  type BuyWithFiatStatus,
   type GetBuyWithFiatStatusParams,
   getBuyWithFiatStatus,
 } from "../../../../pay/buyWithFiat/getStatus.js";
 
 /**
- * TODO
+ * A hook to get a status of a "Buy with Fiat" transaction to determine if the transaction is completed, failed or pending.
+ *
+ * This hook is a React Query wrapper of the [`getBuyWithFiatStatus`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoStatus) function.
+ * You can also use that function directly.
+ * @param params - object of type [`GetBuyWithFiatStatusParams`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoTransaction)
+ * @returns A react query object which contains the data of type [`BuyWithFiatStatus`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoStatus)
+ * @buyFiat
  */
-export function useBuyWithFiatStatus(params?: GetBuyWithFiatStatusParams) {
+export function useBuyWithFiatStatus(
+  params?: GetBuyWithFiatStatusParams,
+): UseQueryResult<BuyWithFiatStatus> {
   return useQuery({
     queryKey: ["useBuyWithFiatStatus", params],
     queryFn: async () => {

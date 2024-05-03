@@ -8,7 +8,11 @@ import { Spacer } from "../../../../components/Spacer.js";
 import { Container, Line, ModalHeader } from "../../../../components/basic.js";
 import { ButtonLink } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
-import { fontSize, iconSize } from "../../../../design-system/index.js";
+import {
+  fontSize,
+  iconSize,
+  spacing,
+} from "../../../../design-system/index.js";
 import { formatSeconds } from "../swap/formatSeconds.js";
 import { TokenInfoRow } from "./TokenInfoRow.js";
 import { getBuyWithCryptoStatusMeta } from "./statusMeta.js";
@@ -166,8 +170,6 @@ export function SwapTxDetailsTable(props: {
 
       {lineSpacer}
 
-      <Spacer y="sm" />
-
       {fromChainQuery.data?.explorers?.[0]?.url && (
         <ButtonLink
           fullWidth
@@ -177,6 +179,7 @@ export function SwapTxDetailsTable(props: {
           gap="xs"
           style={{
             fontSize: fontSize.sm,
+            padding: spacing.sm,
           }}
         >
           View on {fromChainQuery.data.name} Explorer
@@ -197,6 +200,7 @@ export function SwapTxDetailsTable(props: {
               gap="xs"
               style={{
                 fontSize: fontSize.sm,
+                padding: spacing.sm,
               }}
             >
               View on {toChainQuery.data.name} Explorer

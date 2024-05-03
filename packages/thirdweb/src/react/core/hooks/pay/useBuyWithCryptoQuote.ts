@@ -13,9 +13,11 @@ export type BuyWithCryptoQuoteQueryOptions = Omit<
   UseQueryOptions<BuyWithCryptoQuote>,
   "queryFn" | "queryKey" | "enabled"
 >;
-export type BuyWithCryptoQuoteQueryParams = GetBuyWithCryptoQuoteParams;
+
 /**
- * Hook to get a quote of type [`BuyWithCryptoQuote`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoQuote) for buying tokens with crypto.
+ * Hook to get a price quote for performing a "Buy with crypto" transaction that allows users to buy a token with another token - aka a swap.
+ *
+ * The price quote is an object of type [`BuyWithCryptoQuote`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoQuote).
  * This quote contains the information about the purchase such as token amounts, processing fees, estimated time etc.
  *
  * This hook is a React Query wrapper of the [`getBuyWithCryptoQuote`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoQuote) function.
@@ -23,7 +25,7 @@ export type BuyWithCryptoQuoteQueryParams = GetBuyWithCryptoQuoteParams;
  *
  * Once you have the quote, you can use the [`useSendTransaction`](https://portal.thirdweb.com/references/typescript/v5/useSendTransaction) function to send the purchase
  * and [`useBuyWithCryptoStatus`](https://portal.thirdweb.com/references/typescript/v5/useBuyWithCryptoStatus) function to get the status of the swap transaction.
- * @param buyWithCryptoParams - object of type [`BuyWithCryptoQuoteQueryParams`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoQuoteQueryParams)
+ * @param params - object of type [`BuyWithCryptoQuoteQueryParams`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoQuoteQueryParams)
  * @param queryParams - options to configure the react query
  * @returns A React Query object which contains the data of type [`BuyWithCryptoQuote`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoQuote)
  * @example
@@ -62,26 +64,19 @@ export type BuyWithCryptoQuoteQueryParams = GetBuyWithCryptoQuoteParams;
  * @buyCrypto
  */
 export function useBuyWithCryptoQuote(
-  buyWithCryptoParams?: BuyWithCryptoQuoteQueryParams,
+  params?: GetBuyWithCryptoQuoteParams,
   queryParams?: BuyWithCryptoQuoteQueryOptions,
 ): UseQueryResult<BuyWithCryptoQuote> {
   return useQuery({
     ...queryParams,
-
-    queryKey: ["buyWithCryptoQuote", buyWithCryptoParams],
+    queryKey: ["buyWithCryptoQuote", params],
     queryFn: () => {
-      if (!buyWithCryptoParams) {
+      if (!params) {
         throw new Error("Swap params are required");
       }
-      if (!buyWithCryptoParams?.client) {
-        throw new Error("Client is required in swap params");
-      }
-      return getBuyWithCryptoQuote({
-        // typescript limitation with discriminated unions are collapsed
-        ...(buyWithCryptoParams as GetBuyWithCryptoQuoteParams),
-        client: buyWithCryptoParams.client,
-      });
+
+      return getBuyWithCryptoQuote(params);
     },
-    enabled: !!buyWithCryptoParams,
+    enabled: !!params,
   });
 }

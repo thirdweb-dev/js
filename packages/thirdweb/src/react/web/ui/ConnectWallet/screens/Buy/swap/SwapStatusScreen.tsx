@@ -4,38 +4,48 @@ import { useEffect, useRef } from "react";
 import type { Chain } from "../../../../../../../chains/types.js";
 import { defineChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
+import { NATIVE_TOKEN_ADDRESS } from "../../../../../../../constants/addresses.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
-import {
-  type BuyWithCryptoStatusQueryParams,
-  useBuyWithCryptoStatus,
-} from "../../../../../../core/hooks/pay/useBuyWithCryptoStatus.js";
+import { useBuyWithCryptoStatus } from "../../../../../../core/hooks/pay/useBuyWithCryptoStatus.js";
 import { invalidateWalletBalance } from "../../../../../../core/providers/invalidateWalletBalance.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
 import { TokenIcon } from "../../../../components/TokenIcon.js";
-import { Container, ModalHeader } from "../../../../components/basic.js";
+import { Container, Line, ModalHeader } from "../../../../components/basic.js";
 import { Button, ButtonLink } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { iconSize } from "../../../../design-system/index.js";
 import { AccentFailIcon } from "../../../icons/AccentFailIcon.js";
-import type { ERC20OrNativeToken } from "../../nativeToken.js";
+import { type ERC20OrNativeToken, isNativeToken } from "../../nativeToken.js";
 import { SwapTxDetailsTable } from "../tx-history/SwapDetailsScreen.js";
+import { TokenInfoRow } from "../tx-history/TokenInfoRow.js";
+import { formatSeconds } from "./formatSeconds.js";
 
 type UIStatus = "pending" | "success" | "failed" | "partialSuccess";
 
 export function SwapStatusScreen(props: {
   onBack: () => void;
   onViewPendingTx: () => void;
-  swapTx: BuyWithCryptoStatusQueryParams;
-  destinationToken: ERC20OrNativeToken;
-  destinationChain: Chain;
-  sourceAmount: string;
-  destinationAmount: string;
+  swapTxHash: string;
+  // tokens
+  toToken: ERC20OrNativeToken;
+  fromToken: ERC20OrNativeToken;
+  // chains
+  toChain: Chain;
+  fromChain: Chain;
+  // amounts
+  fromAmount: string;
+  toAmount: string;
   client: ThirdwebClient;
   onTryAgain: () => void;
   closeModal: () => void;
+  estimatedTimeSeconds: number;
 }) {
-  const swapStatus = useBuyWithCryptoStatus(props.swapTx);
+  const swapStatus = useBuyWithCryptoStatus({
+    client: props.client,
+    transactionHash: props.swapTxHash,
+  });
+
   let uiStatus: UIStatus = "pending";
   if (swapStatus.data?.status === "COMPLETED") {
     uiStatus = "success";
@@ -49,8 +59,6 @@ export function SwapStatusScreen(props: {
   ) {
     uiStatus = "partialSuccess";
   }
-
-  console.log("swapStatus", swapStatus.data);
 
   const queryClient = useQueryClient();
   const balanceInvalidated = useRef(false);
@@ -79,14 +87,13 @@ export function SwapStatusScreen(props: {
 
         {uiStatus === "success" && (
           <>
-            <Spacer y="lg" />
-
+            <Spacer y="md" />
             <Container color="success" flex="column" center="x">
               <CheckCircledIcon
                 width={iconSize["3xl"]}
                 height={iconSize["3xl"]}
               />
-              <Spacer y="lg" />
+              <Spacer y="sm" />
               <Text color={"primaryText"} size="lg">
                 Buy Success
               </Text>
@@ -187,8 +194,7 @@ export function SwapStatusScreen(props: {
 
         {uiStatus === "pending" && (
           <>
-            <Spacer y="3xl" />
-
+            <Spacer y="xl" />
             <Container flex="column" animate="fadein" center="both">
               <div
                 style={{
@@ -211,20 +217,73 @@ export function SwapStatusScreen(props: {
                   }}
                 >
                   <TokenIcon
-                    chain={props.destinationChain}
-                    token={props.destinationToken}
+                    chain={props.toChain}
+                    token={props.toToken}
                     size="xxl"
                     client={props.client}
                   />
                 </div>
               </div>
-              <Spacer y="xl" />
+              <Spacer y="lg" />
               <Text color={"primaryText"} size="lg">
                 Buy Pending
               </Text>
             </Container>
+            <Spacer y="xxl" />
+            <div>
+              <TokenInfoRow
+                chainId={props.toChain.id}
+                client={props.client}
+                label="Receive"
+                tokenAddress={
+                  isNativeToken(props.toToken)
+                    ? NATIVE_TOKEN_ADDRESS
+                    : props.toToken.address
+                }
+                tokenAmount={props.toAmount}
+                tokenSymbol={
+                  isNativeToken(props.toToken) ? "" : props.toToken.symbol
+                }
+              />
+            </div>
+            <Spacer y="md" />
+            <Line />
+            <Spacer y="md" />
+            <div>
+              <TokenInfoRow
+                chainId={props.fromChain.id}
+                client={props.client}
+                label="Buy"
+                tokenAddress={
+                  isNativeToken(props.fromToken)
+                    ? NATIVE_TOKEN_ADDRESS
+                    : props.fromToken.address
+                }
+                tokenAmount={props.fromAmount}
+                tokenSymbol={
+                  isNativeToken(props.fromToken) ? "" : props.fromToken.symbol
+                }
+              />
+            </div>
 
-            <Spacer y="3xl" />
+            <Spacer y="md" />
+            <Line />
+            <Spacer y="md" />
+
+            <Container
+              flex="row"
+              center="y"
+              style={{
+                justifyContent: "space-between",
+              }}
+            >
+              <Text> Time </Text>
+              <Container flex="row" gap="xs" center="y">
+                <Text color="primaryText">
+                  ~{formatSeconds(props.estimatedTimeSeconds || 0)}
+                </Text>
+              </Container>
+            </Container>
           </>
         )}
       </Container>

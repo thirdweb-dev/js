@@ -15,10 +15,11 @@ export type BuyHistoryQueryOptions = Omit<
 >;
 
 /**
- * Hook to get the history of Buy transaction a given wallet has performed - This includes both "buy with crypto" and "buy with fiat" transactions.
+ * Hook to get the history of Buy transactions for a given wallet - This includes both "buy with crypto" and "buy with fiat" transactions.
  *
  * This hook is a React Query wrapper of the [`getBuyHistory`](https://portal.thirdweb.com/references/typescript/v5/getBuyHistory) function.
  * You can also use that function directly
+ *
  * @param params - object of type [`BuyHistoryParams`](https://portal.thirdweb.com/references/typescript/v5/BuyHistoryParams)
  * @param queryParams - options to configure the react query
  * @returns A React Query object which contains the data of type [`BuyHistoryData`](https://portal.thirdweb.com/references/typescript/v5/BuyHistoryData)
@@ -28,7 +29,7 @@ export type BuyHistoryQueryOptions = Omit<
  *
  * function Component() {
  *  const buyWithCryptoHistory = useBuyHistory(params);
- *  return <pre>{JSON.stringify(buyWithCryptoHistory.data, null, 2)}</pre>
+ *  return <div> ... </div>
  * }
  * ```
  * @pay
@@ -39,7 +40,6 @@ export function useBuyHistory(
 ): UseQueryResult<BuyHistoryData> {
   return useQuery({
     ...queryParams,
-
     queryKey: ["buyHistory", params],
     queryFn: () => {
       if (!params) {
