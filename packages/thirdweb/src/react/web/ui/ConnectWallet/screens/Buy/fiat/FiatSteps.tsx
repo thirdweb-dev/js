@@ -271,7 +271,9 @@ export function FiatSteps(props: {
       : undefined;
 
   const showContinueBtn =
-    !props.status || props.status.status === "CRYPTO_SWAP_REQUIRED";
+    !props.status ||
+    props.status.status === "CRYPTO_SWAP_REQUIRED" ||
+    props.status.status === "CRYPTO_SWAP_FAILED";
 
   function getStep1State(): FiatStatusMeta["progressStatus"] {
     if (!statusMeta) {
