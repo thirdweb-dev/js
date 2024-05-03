@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import {
+  type BuyWithCryptoQuote,
   type BuyWithFiatStatus,
   getPostOnRampQuote,
 } from "../../../../../../../exports/pay.js";
@@ -8,6 +10,7 @@ import { useActiveAccount } from "../../../../../../../exports/react-native.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
 import { Container, ModalHeader } from "../../../../components/basic.js";
+import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { iconSize } from "../../../../design-system/index.js";
 import { AccentFailIcon } from "../../../icons/AccentFailIcon.js";
@@ -21,6 +24,11 @@ export function PostOnRampSwap(props: {
   closeModal: () => void;
 }) {
   const account = useActiveAccount();
+
+  const [lockedOnRampQuote, setLockedOnRampQuote] = useState<
+    BuyWithCryptoQuote | undefined | null
+  >(undefined);
+
   const postOnRampQuoteQuery = useQuery({
     queryKey: ["getPostOnRampQuote", props.buyWithFiatStatus],
     queryFn: async () => {
@@ -29,10 +37,26 @@ export function PostOnRampSwap(props: {
         buyWithFiatStatus: props.buyWithFiatStatus,
       });
     },
+    // stop fetching if a quote is already locked
+    enabled: !lockedOnRampQuote,
     refetchOnWindowFocus: false,
   });
 
-  if (!postOnRampQuoteQuery.data || !account) {
+  useEffect(() => {
+    if (
+      postOnRampQuoteQuery.data &&
+      !lockedOnRampQuote &&
+      !postOnRampQuoteQuery.isRefetching
+    ) {
+      setLockedOnRampQuote(postOnRampQuoteQuery.data);
+    }
+  }, [
+    postOnRampQuoteQuery.data,
+    lockedOnRampQuote,
+    postOnRampQuoteQuery.isRefetching,
+  ]);
+
+  if (postOnRampQuoteQuery.isError) {
     return (
       <Container fullHeight>
         <Container p="lg">
@@ -43,10 +67,24 @@ export function PostOnRampSwap(props: {
           style={{
             minHeight: "300px",
           }}
-          flex="row"
+          flex="column"
           center="both"
+          p="lg"
         >
-          <Spinner size="xl" color="accentText" />
+          <AccentFailIcon size={iconSize["3xl"]} />
+          <Spacer y="xl" />
+          <Text color="primaryText">Failed to get a price quote</Text>
+          <Spacer y="lg" />
+
+          <Button
+            fullWidth
+            variant="primary"
+            onClick={() => {
+              postOnRampQuoteQuery.refetch();
+            }}
+          >
+            Try Again
+          </Button>
         </Container>
 
         <Spacer y="xxl" />
@@ -54,7 +92,31 @@ export function PostOnRampSwap(props: {
     );
   }
 
-  if (postOnRampQuoteQuery.data === null) {
+  if (!lockedOnRampQuote || !account) {
+    return (
+      <Container fullHeight>
+        <Container p="lg">
+          <ModalHeader title="Buy" onBack={props.onBack} />
+        </Container>
+
+        <Container
+          style={{
+            minHeight: "300px",
+          }}
+          flex="column"
+          center="both"
+        >
+          <Spinner size="xxl" color="accentText" />
+          <Spacer y="xl" />
+          <Text color="primaryText">Getting price quote</Text>
+        </Container>
+
+        <Spacer y="xxl" />
+      </Container>
+    );
+  }
+
+  if (lockedOnRampQuote === null) {
     return (
       <Container>
         <Container p="lg">
@@ -79,12 +141,16 @@ export function PostOnRampSwap(props: {
   return (
     <SwapFlow
       account={account}
-      buyWithCryptoQuote={postOnRampQuoteQuery.data}
+      buyWithCryptoQuote={lockedOnRampQuote}
       client={props.client}
       onBack={props.onBack}
       onViewPendingTx={props.onViewPendingTx}
       isFiatFlow={true}
       closeModal={props.closeModal}
+      onTryAgain={() => {
+        setLockedOnRampQuote(undefined);
+        postOnRampQuoteQuery.refetch();
+      }}
     />
   );
 }

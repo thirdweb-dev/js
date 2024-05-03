@@ -8,7 +8,11 @@ import { Spacer } from "../../../../components/Spacer.js";
 import { Container, Line, ModalHeader } from "../../../../components/basic.js";
 import { ButtonLink } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
-import { fontSize, iconSize } from "../../../../design-system/index.js";
+import {
+  fontSize,
+  iconSize,
+  spacing,
+} from "../../../../design-system/index.js";
 import { formatSeconds } from "../swap/formatSeconds.js";
 import { TokenInfoRow } from "./TokenInfoRow.js";
 import { getBuyWithCryptoStatusMeta } from "./statusMeta.js";
@@ -65,6 +69,10 @@ export function SwapTxDetailsTable(props: {
   const sourceTxHash = swapStatus.source?.transactionHash;
   const destinationTxHash = swapStatus.destination?.transactionHash;
 
+  const isPartialSuccess =
+    swapStatus.status === "COMPLETED" &&
+    swapStatus.subStatus === "PARTIAL_SUCCESS";
+
   const lineSpacer = (
     <>
       <Spacer y="md" />
@@ -76,18 +84,43 @@ export function SwapTxDetailsTable(props: {
   return (
     <div>
       {/* Receive - to token */}
-      <TokenInfoRow
-        chainId={swapStatus.quote.toToken.chainId}
-        client={client}
-        label="Receive"
-        tokenAmount={swapStatus.quote.toAmount}
-        tokenSymbol={swapStatus.quote.toToken.symbol || ""}
-        tokenAddress={swapStatus.quote.toToken.tokenAddress}
-      />
+      {swapStatus.destination ? (
+        <TokenInfoRow
+          chainId={swapStatus.destination.token.chainId}
+          client={client}
+          label={isPartialSuccess ? "Expected" : "Received"}
+          tokenAmount={swapStatus.destination.amount}
+          tokenSymbol={swapStatus.destination.token.symbol || ""}
+          tokenAddress={swapStatus.destination.token.tokenAddress}
+        />
+      ) : (
+        <TokenInfoRow
+          chainId={swapStatus.quote.toToken.chainId}
+          client={client}
+          label={"Receive"}
+          tokenAmount={swapStatus.quote.toAmount}
+          tokenSymbol={swapStatus.quote.toToken.symbol || ""}
+          tokenAddress={swapStatus.quote.toToken.tokenAddress}
+        />
+      )}
 
       {lineSpacer}
 
-      {/* Pay - from token */}
+      {isPartialSuccess && swapStatus.destination && (
+        <>
+          <TokenInfoRow
+            chainId={swapStatus.destination.token.chainId}
+            client={client}
+            label="Got"
+            tokenAmount={swapStatus.destination.amount}
+            tokenSymbol={swapStatus.destination.token.symbol || ""}
+            tokenAddress={swapStatus.destination.token.tokenAddress}
+          />
+
+          {lineSpacer}
+        </>
+      )}
+
       <TokenInfoRow
         chainId={swapStatus.quote.fromToken.chainId}
         client={client}
@@ -137,8 +170,6 @@ export function SwapTxDetailsTable(props: {
 
       {lineSpacer}
 
-      <Spacer y="sm" />
-
       {fromChainQuery.data?.explorers?.[0]?.url && (
         <ButtonLink
           fullWidth
@@ -148,6 +179,7 @@ export function SwapTxDetailsTable(props: {
           gap="xs"
           style={{
             fontSize: fontSize.sm,
+            padding: spacing.sm,
           }}
         >
           View on {fromChainQuery.data.name} Explorer
@@ -168,6 +200,7 @@ export function SwapTxDetailsTable(props: {
               gap="xs"
               style={{
                 fontSize: fontSize.sm,
+                padding: spacing.sm,
               }}
             >
               View on {toChainQuery.data.name} Explorer

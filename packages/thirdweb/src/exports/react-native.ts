@@ -33,18 +33,9 @@ export { createContractQuery } from "../react/core/utils/createQuery.js";
 export { useInvalidateContractQuery } from "../react/core/hooks/others/useInvalidateQueries.js";
 
 // Buy with crypto
-export {
-  useBuyWithCryptoQuote,
-  type BuyWithCryptoQuoteQueryParams,
-} from "../react/core/hooks/pay/useBuyWithCryptoQuote.js";
-export {
-  useBuyWithCryptoStatus,
-  type BuyWithCryptoStatusQueryParams,
-} from "../react/core/hooks/pay/useBuyWithCryptoStatus.js";
-export {
-  useBuyWithCryptoHistory,
-  type BuyWithCryptoHistoryQueryParams,
-} from "../react/core/hooks/pay/useBuyWithCryptoHistory.js";
+export { useBuyWithCryptoQuote } from "../react/core/hooks/pay/useBuyWithCryptoQuote.js";
+export { useBuyWithCryptoStatus } from "../react/core/hooks/pay/useBuyWithCryptoStatus.js";
+export { useBuyWithCryptoHistory } from "../react/core/hooks/pay/useBuyWithCryptoHistory.js";
 
 import { useSendTransactionCore } from "../react/core/hooks/contract/useSendTransaction.js";
 

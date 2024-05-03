@@ -9,14 +9,12 @@ import {
 // TODO: use the estimate to vary the polling interval
 const DEFAULT_POLL_INTERVAL = 5000;
 
-export type BuyWithCryptoStatusQueryParams = BuyWithCryptoTransaction;
-
 /**
- * A hook to get a status of swap transaction.
+ * A hook to get a status of a "Buy with crypto" transaction to determine if the transaction is completed, failed or pending.
  *
  * This hook is a React Query wrapper of the [`getBuyWithCryptoStatus`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoStatus) function.
  * You can also use that function directly.
- * @param buyWithCryptoStatusParams - object of type [`BuyWithCryptoTransaction`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoTransaction)
+ * @param params - object of type [`BuyWithCryptoTransaction`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoTransaction)
  * @returns A react query object which contains the data of type [`BuyWithCryptoStatus`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoStatus)
  * @example
  * ```tsx
@@ -53,29 +51,24 @@ export type BuyWithCryptoStatusQueryParams = BuyWithCryptoTransaction;
  * ```
  * @buyCrypto
  */
-export function useBuyWithCryptoStatus(
-  buyWithCryptoStatusParams?: BuyWithCryptoStatusQueryParams,
-) {
+export function useBuyWithCryptoStatus(params?: BuyWithCryptoTransaction) {
   const [refetchInterval, setRefetchInterval] = useState<number>(
     DEFAULT_POLL_INTERVAL,
   );
 
   return useQuery<BuyWithCryptoStatus, Error>({
-    queryKey: [
-      "swapStatus",
-      buyWithCryptoStatusParams?.transactionHash,
-    ] as const,
+    queryKey: ["swapStatus", params?.transactionHash] as const,
     queryFn: async () => {
-      if (!buyWithCryptoStatusParams) {
+      if (!params) {
         throw new Error("Missing swap status params");
       }
-      if (!buyWithCryptoStatusParams?.client) {
+      if (!params?.client) {
         throw new Error("Missing client in swap status params");
       }
 
       const swapStatus_ = await getBuyWithCryptoStatus({
-        ...buyWithCryptoStatusParams,
-        client: buyWithCryptoStatusParams.client,
+        ...params,
+        client: params.client,
       });
       if (
         swapStatus_.status === "COMPLETED" ||
@@ -85,7 +78,7 @@ export function useBuyWithCryptoStatus(
       }
       return swapStatus_;
     },
-    enabled: !!buyWithCryptoStatusParams,
+    enabled: !!params,
     refetchInterval: refetchInterval,
     refetchIntervalInBackground: true,
     retry: true,

@@ -103,11 +103,20 @@ export function FiatSteps(props: {
   } = props.partialQuote;
 
   const currency = getCurrencyMeta(fromCurrencySymbol);
+  const isPartialSuccess = statusMeta?.progressStatus === "partialSuccess";
 
   const toChain = useMemo(
     () => defineChain(toTokenMeta.chainId),
     [toTokenMeta.chainId],
   );
+
+  const destinationChain = useMemo(() => {
+    if (props.status?.status !== "NOT_FOUND" && props.status?.destination) {
+      return defineChain(props.status?.destination.token.chainId);
+    }
+
+    return undefined;
+  }, [props.status]);
 
   const toToken: ERC20OrNativeToken = useMemo(() => {
     if (toTokenMeta.tokenAddress === NATIVE_TOKEN_ADDRESS) {
@@ -145,6 +154,8 @@ export function FiatSteps(props: {
   const onRampChainMetaQuery = useChainQuery(onRampChain);
   const toChainMetaQuery = useChainQuery(toChain);
 
+  const destinationChainMetaQuery = useChainQuery(destinationChain);
+
   const onRampTokenInfo = (
     <div>
       <Text color="primaryText" size="sm">
@@ -164,6 +175,7 @@ export function FiatSteps(props: {
       client={props.client}
     />
   );
+
   const toTokenIcon = (
     <TokenIcon
       token={toToken}
@@ -177,14 +189,76 @@ export function FiatSteps(props: {
     <Text size="xs">{onRampChainMetaQuery.data?.name}</Text>
   );
 
-  const toTokenInfo = (
+  const partialSuccessToTokenInfo =
+    props.status?.status === "CRYPTO_SWAP_FALLBACK" &&
+    props.status.destination ? (
+      <div>
+        <Text
+          color="secondaryText"
+          size="sm"
+          inline
+          style={{
+            textDecoration: "line-through",
+          }}
+        >
+          {formatNumber(Number(toTokenAmount), 4)}{" "}
+          <TokenSymbol
+            token={toToken}
+            chain={toChain}
+            size="sm"
+            inline
+            color="secondaryText"
+          />
+        </Text>{" "}
+        <Text color="danger" size="sm" inline>
+          {formatNumber(Number(props.status.destination.amount), 4)}{" "}
+          <TokenSymbol
+            token={{
+              address: props.status.destination.token.tokenAddress,
+              icon: "",
+              name: props.status.destination.token.name || "",
+              symbol: props.status.destination.token.symbol || "",
+            }}
+            chain={toChain}
+            size="sm"
+            inline
+            color="danger"
+          />
+        </Text>
+      </div>
+    ) : null;
+
+  const toTokenInfo = partialSuccessToTokenInfo || (
     <Text color="primaryText" size="sm">
       {formatNumber(Number(toTokenAmount), 4)}{" "}
       <TokenSymbol token={toToken} chain={toChain} size="sm" inline />
     </Text>
   );
 
-  const toTokehChainInfo = <Text size="xs">{toChainMetaQuery.data?.name}</Text>;
+  const partialSuccessToChainInfo =
+    props.status?.status === "CRYPTO_SWAP_FALLBACK" &&
+    props.status.destination &&
+    props.status.destination.token.chainId !==
+      props.status.quote.toToken.chainId ? (
+      <div>
+        <Text
+          size="xs"
+          inline
+          style={{
+            textDecoration: "line-through",
+          }}
+        >
+          {toChainMetaQuery.data?.name}
+        </Text>{" "}
+        <Text size="xs" inline>
+          {destinationChainMetaQuery.data?.name}
+        </Text>
+      </div>
+    ) : null;
+
+  const toTokehChainInfo = partialSuccessToChainInfo || (
+    <Text size="xs">{toChainMetaQuery.data?.name}</Text>
+  );
 
   const onRampTxHash =
     props.status?.status !== "NOT_FOUND"
@@ -197,7 +271,9 @@ export function FiatSteps(props: {
       : undefined;
 
   const showContinueBtn =
-    !props.status || props.status.status === "CRYPTO_SWAP_REQUIRED";
+    !props.status ||
+    props.status.status === "CRYPTO_SWAP_REQUIRED" ||
+    props.status.status === "CRYPTO_SWAP_FAILED";
 
   function getStep1State(): FiatStatusMeta["progressStatus"] {
     if (!statusMeta) {
@@ -310,6 +386,21 @@ export function FiatSteps(props: {
         }
       />
 
+      {isPartialSuccess &&
+        props.status &&
+        props.status.status !== "NOT_FOUND" &&
+        props.status.source &&
+        props.status.destination && (
+          <>
+            <Spacer y="md" />
+            <Text color="danger" size="sm" center>
+              Expected {props.status.source?.token.symbol}, Got{" "}
+              {props.status.destination?.token.symbol} instead
+            </Text>
+            <Spacer y="sm" />
+          </>
+        )}
+
       {showContinueBtn && (
         <>
           <Spacer y="md" />
@@ -391,14 +482,14 @@ function PaymentStep(props: {
             fullWidth
             href={props.explorer.url}
             style={{
-              fontSize: fontSize.sm,
+              fontSize: fontSize.xs,
               padding: spacing.xs,
             }}
-            gap="xs"
+            gap="xxs"
             target="_blank"
           >
             {props.explorer.label}{" "}
-            <ExternalLinkIcon width={iconSize.sm} height={iconSize.sm} />
+            <ExternalLinkIcon width={iconSize.xs} height={iconSize.xs} />
           </ButtonLink>
         </>
       )}
@@ -412,7 +503,14 @@ function PaymentSubStep(props: {
   secondaryText?: React.ReactNode;
 }) {
   return (
-    <Container flex="row" gap="sm" center="y">
+    <Container
+      flex="row"
+      gap="sm"
+      center="y"
+      style={{
+        flexWrap: "nowrap",
+      }}
+    >
       {/* icon */}
       <Container
         p="xs"
@@ -446,13 +544,16 @@ function StepContainer(props: {
         ? "success"
         : props.state === "failed"
           ? "danger"
-          : "borderColor";
+          : props.state === "partialSuccess"
+            ? "danger"
+            : "borderColor";
 
   return (
     <Container
       bg="tertiaryBg"
       borderColor={color === "success" ? "borderColor" : color}
-      p="md"
+      py="sm"
+      px="md"
       style={{
         borderRadius: radius.lg,
         alignItems: "flex-start",
@@ -482,7 +583,9 @@ function StepContainer(props: {
                   ? "Pending"
                   : props.state === "actionRequired"
                     ? ""
-                    : undefined}
+                    : props.state === "partialSuccess"
+                      ? "Incomplete"
+                      : undefined}
           </Text>
         )}
 

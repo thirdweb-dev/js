@@ -1,6 +1,6 @@
 import { CheckCircledIcon } from "@radix-ui/react-icons";
 import { useQueryClient } from "@tanstack/react-query";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import type {
   BuyWithFiatQuote,
@@ -17,11 +17,9 @@ import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { iconSize } from "../../../../design-system/index.js";
 import { AccentFailIcon } from "../../../icons/AccentFailIcon.js";
-import { FiatTxDetailsTable } from "../tx-history/FiatDetailsScreen.js";
-import { FiatSteps, fiatQuoteToPartialQuote } from "./FiatSteps.js";
-import { PostOnRampSwap } from "./PostOnRampSwap.js";
+import { FiatTxDetailsTable } from "./FiatTxDetailsTable.js";
 
-type UIStatus = "loading" | "failed" | "completed";
+type UIStatus = "loading" | "failed" | "completed" | "partialSuccess";
 
 export function FiatStatusScreen(props: {
   client: ThirdwebClient;
@@ -32,8 +30,8 @@ export function FiatStatusScreen(props: {
   openedWindow: Window | null;
   quote: BuyWithFiatQuote;
   closeModal: () => void;
+  onShowSwapFlow: (status: BuyWithFiatStatus) => void;
 }) {
-  const [screen, setScreen] = useState<"swap-flow" | "base">("base");
   const queryClient = useQueryClient();
   const { openedWindow } = props;
   const statusQuery = useBuyWithFiatStatus({
@@ -48,6 +46,8 @@ export function FiatStatusScreen(props: {
     statusQuery.data?.status === "PAYMENT_FAILED"
   ) {
     uiStatus = "failed";
+  } else if (statusQuery.data?.status === "CRYPTO_SWAP_FALLBACK") {
+    uiStatus = "partialSuccess";
   } else if (statusQuery.data?.status === "ON_RAMP_TRANSFER_COMPLETED") {
     uiStatus = "completed";
   }
@@ -55,6 +55,7 @@ export function FiatStatusScreen(props: {
   // determine step
   let step = 1;
   if (
+    statusQuery.data?.status === "CRYPTO_SWAP_FALLBACK" ||
     statusQuery.data?.status === "CRYPTO_SWAP_REQUIRED" ||
     statusQuery.data?.status === "CRYPTO_SWAP_FAILED" ||
     statusQuery.data?.status === "CRYPTO_SWAP_IN_PROGRESS"
@@ -91,22 +92,9 @@ export function FiatStatusScreen(props: {
   // show swap flow
   useEffect(() => {
     if (statusQuery.data?.status === "CRYPTO_SWAP_REQUIRED") {
-      setScreen("swap-flow");
+      props.onShowSwapFlow(statusQuery.data);
     }
-  }, [statusQuery.data]);
-
-  if (screen === "swap-flow" && statusQuery.data) {
-    return (
-      <PostOnRampSwapFlow
-        status={statusQuery.data}
-        quote={props.quote}
-        client={props.client}
-        onBack={props.onBack}
-        onViewPendingTx={props.onViewPendingTx}
-        closeModal={props.closeModal}
-      />
-    );
-  }
+  }, [statusQuery.data, props.onShowSwapFlow]);
 
   return (
     <Container p="lg">
@@ -128,7 +116,7 @@ export function FiatStatusScreen(props: {
               <>
                 {" "}
                 Buying {props.quote.onRampToken.token.symbol} with{" "}
-                {props.quote.fromCurrency.currencySymbol}
+                {props.quote.fromCurrencyWithFees.currencySymbol}
               </>
             )}
           </Text>
@@ -142,45 +130,6 @@ export function FiatStatusScreen(props: {
         client={props.client}
       />
     </Container>
-  );
-}
-
-function PostOnRampSwapFlow(props: {
-  status: BuyWithFiatStatus;
-  quote: BuyWithFiatQuote;
-  client: ThirdwebClient;
-  onBack: () => void;
-  onViewPendingTx: () => void;
-  closeModal: () => void;
-}) {
-  const [screen, setScreen] = useState<"base" | "swap">("base");
-
-  // step 2 flow
-  if (screen === "swap") {
-    return (
-      <PostOnRampSwap
-        buyWithFiatStatus={props.status}
-        client={props.client}
-        onBack={() => {
-          setScreen("base");
-        }}
-        onViewPendingTx={props.onViewPendingTx}
-        closeModal={props.closeModal}
-      />
-    );
-  }
-
-  // show step 1 and step 2 details
-  return (
-    <FiatSteps
-      client={props.client}
-      onBack={props.onBack}
-      partialQuote={fiatQuoteToPartialQuote(props.quote)}
-      step={2}
-      onContinue={() => {
-        setScreen("swap");
-      }}
-    />
   );
 }
 

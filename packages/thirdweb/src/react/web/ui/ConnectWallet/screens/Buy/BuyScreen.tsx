@@ -1,9 +1,9 @@
-import { CrossCircledIcon } from "@radix-ui/react-icons";
 import { useEffect, useMemo, useState } from "react";
 import { polygon } from "../../../../../../chains/chain-definitions/polygon.js";
 import type { Chain } from "../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../constants/addresses.js";
+import type { GetBuyWithCryptoQuoteParams } from "../../../../../../exports/pay.js";
 import { isSwapRequiredPostOnramp } from "../../../../../../pay/buyWithFiat/isSwapRequiredPostOnramp.js";
 import type { PreparedTransaction } from "../../../../../../transaction/prepare-transaction.js";
 import { formatNumber } from "../../../../../../utils/formatNumber.js";
@@ -18,10 +18,7 @@ import {
   useChainsQuery,
 } from "../../../../../core/hooks/others/useChainQuery.js";
 import { useWalletBalance } from "../../../../../core/hooks/others/useWalletBalance.js";
-import {
-  type BuyWithCryptoQuoteQueryParams,
-  useBuyWithCryptoQuote,
-} from "../../../../../core/hooks/pay/useBuyWithCryptoQuote.js";
+import { useBuyWithCryptoQuote } from "../../../../../core/hooks/pay/useBuyWithCryptoQuote.js";
 import { useBuyWithFiatQuote } from "../../../../../core/hooks/pay/useBuyWithFiatQuote.js";
 import {
   useActiveAccount,
@@ -44,11 +41,7 @@ import { TokenIcon } from "../../../components/TokenIcon.js";
 import { Container, Line, ModalHeader } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
-import {
-  type Theme,
-  fontSize,
-  iconSize,
-} from "../../../design-system/index.js";
+import { type Theme, fontSize } from "../../../design-system/index.js";
 import { useDebouncedValue } from "../../../hooks/useDebouncedValue.js";
 import type { PayUIOptions } from "../../ConnectButtonProps.js";
 import type { SupportedTokens } from "../../defaultTokens.js";
@@ -157,7 +150,7 @@ type Screen =
 /**
  * @internal
  */
-export function BuyScreenContent(props: BuyScreenContentProps) {
+function BuyScreenContent(props: BuyScreenContentProps) {
   const { activeChain, client, supportedChains, connectLocale, payOptions } =
     props;
 
@@ -289,24 +282,8 @@ export function BuyScreenContent(props: BuyScreenContentProps) {
     props.supportedTokens[toChain.id]?.[0] || NATIVE_TOKEN,
   );
 
-  // const [selectedCurrency, setSelectedCurrency] = useState<CurrencyMeta>(
-  //   defaultSelectedCurrency,
-  // );
+  // stipe onlu supports USD, so not using a state right now
   const selectedCurrency = defaultSelectedCurrency;
-  // function showCurrencySelector() {
-  //   setScreen(
-  //     <CurrencySelection
-  //       onSelect={(c) => {
-  //         console.log("selected currency", c);
-  //         setSelectedCurrency(c);
-  //         closeDrawer();
-  //       }}
-  //       onBack={() => {
-  //         setScreen(undefined);
-  //       }}
-  //     />,
-  //   );
-  // }
 
   if (screen.type === "node") {
     return screen.node;
@@ -591,9 +568,6 @@ function BuyScreenNonExpandedFooter(props: {
   );
 }
 
-/**
- * @internal
- */
 function SwapScreenContent(
   props: BuyScreenContentProps & {
     setDrawerScreen: (screen: React.ReactNode) => void;
@@ -628,13 +602,7 @@ function SwapScreenContent(
     client,
   });
 
-  // when a quote is finalized ( approve sent if required or swap sent )
-  // we save it here to stop refetching the quote query
-  // const [finalizedQuote, setFinalizedQuote] = useState<
-  //   BuyWithCryptoQuote | undefined
-  // >();
-
-  const buyWithCryptoParams: BuyWithCryptoQuoteQueryParams | undefined =
+  const quoteParams: GetBuyWithCryptoQuoteParams | undefined =
     tokenAmount && !(fromChain.id === toChain.id && fromToken === toToken)
       ? {
           // wallet
@@ -654,16 +622,24 @@ function SwapScreenContent(
         }
       : undefined;
 
-  const buyWithCryptoQuoteQuery = useBuyWithCryptoQuote(buyWithCryptoParams, {
+  const quoteQuery = useBuyWithCryptoQuote(quoteParams, {
     // refetch every 30 seconds
     staleTime: 30 * 1000,
     refetchInterval: 30 * 1000,
     gcTime: 30 * 1000,
   });
 
-  const swapQuote = buyWithCryptoQuoteQuery.data;
+  const sourceTokenAmount = quoteQuery.data?.swapDetails.fromAmount;
 
-  const getErrorMessage = (err: Error) => {
+  const isNotEnoughBalance =
+    !!sourceTokenAmount &&
+    !!fromTokenBalanceQuery.data &&
+    Number(fromTokenBalanceQuery.data.displayValue) < Number(sourceTokenAmount);
+
+  const disableContinue = !quoteQuery.data || isNotEnoughBalance;
+  const switchChainRequired = props.activeChain.id !== fromChain.id;
+
+  function getErrorMessage(err: Error) {
     const defaultMessage = "Unable to get price quote";
     try {
       if (err instanceof Error) {
@@ -676,12 +652,10 @@ function SwapScreenContent(
     } catch {
       return defaultMessage;
     }
-  };
-
-  const sourceTokenAmount = swapQuote?.swapDetails.fromAmount || "";
+  }
 
   function showSwapFlow() {
-    if (!buyWithCryptoQuoteQuery.data) {
+    if (!quoteQuery.data) {
       return;
     }
 
@@ -696,28 +670,24 @@ function SwapScreenContent(
               type: "main",
             });
           }}
-          buyWithCryptoQuote={buyWithCryptoQuoteQuery.data}
+          buyWithCryptoQuote={quoteQuery.data}
           account={account}
           onViewPendingTx={props.onViewPendingTx}
           isFiatFlow={false}
           closeModal={props.closeModal}
+          onTryAgain={() => {
+            setScreen({
+              type: "main",
+            });
+            quoteQuery.refetch();
+          }}
         />
       ),
     });
   }
 
-  const isNotEnoughBalance =
-    !!sourceTokenAmount &&
-    !!fromTokenBalanceQuery.data &&
-    Number(fromTokenBalanceQuery.data.displayValue) < Number(sourceTokenAmount);
-
-  const disableSwapContinue = !swapQuote || isNotEnoughBalance;
-  const switchChainRequired = props.activeChain.id !== fromChain.id;
-
-  const errorToShow = buyWithCryptoQuoteQuery.error;
-
   function showFees() {
-    if (!swapQuote) {
+    if (!quoteQuery.data) {
       return;
     }
 
@@ -726,52 +696,51 @@ function SwapScreenContent(
         <Text size="lg" color="primaryText">
           Fees
         </Text>
-
         <Spacer y="lg" />
-        <SwapFees quote={swapQuote} align="left" />
+        <SwapFees quote={quoteQuery.data} align="left" />
       </div>,
     );
   }
 
   return (
-    <Container px="lg">
-      <PayWithCrypto
-        value={sourceTokenAmount}
-        onSelectToken={showFromTokenSelector}
-        chain={fromChain}
-        token={fromToken}
-        isLoading={buyWithCryptoQuoteQuery.isLoading && !sourceTokenAmount}
-        client={client}
-      />
-      <EstimatedTimeAndFees
-        quoteIsLoading={buyWithCryptoQuoteQuery.isLoading}
-        estimatedSeconds={
-          buyWithCryptoQuoteQuery.data?.swapDetails.estimated.durationSeconds
-        }
-        onViewFees={showFees}
-      />
+    <Container px="lg" flex="column" gap="md">
+      {/* Quote info */}
+      <div>
+        <PayWithCrypto
+          value={sourceTokenAmount || ""}
+          onSelectToken={showFromTokenSelector}
+          chain={fromChain}
+          token={fromToken}
+          isLoading={quoteQuery.isLoading && !sourceTokenAmount}
+          client={client}
+        />
+        <EstimatedTimeAndFees
+          quoteIsLoading={quoteQuery.isLoading}
+          estimatedSeconds={
+            quoteQuery.data?.swapDetails.estimated.durationSeconds
+          }
+          onViewFees={showFees}
+        />
+      </div>
 
-      <Spacer y="md" />
-
-      {errorToShow && (
-        <>
-          <ErrorMessage message={getErrorMessage(errorToShow)} />
-          <Spacer y="md" />
-        </>
+      {/* Error */}
+      {quoteQuery.error && (
+        <Text color="danger" size="sm" center>
+          {getErrorMessage(quoteQuery.error)}
+        </Text>
       )}
 
-      {switchChainRequired && (
+      {/* Button */}
+      {switchChainRequired ? (
         <SwitchNetworkButton variant="accent" fullWidth chain={fromChain} />
-      )}
-
-      {!switchChainRequired && (
+      ) : (
         <Button
-          variant={disableSwapContinue ? "outline" : "accent"}
+          variant={disableContinue ? "outline" : "accent"}
           fullWidth
-          data-disabled={disableSwapContinue}
-          disabled={disableSwapContinue}
+          data-disabled={disableContinue}
+          disabled={disableContinue}
           onClick={async () => {
-            if (!disableSwapContinue) {
+            if (!disableContinue) {
               showSwapFlow();
             }
           }}
@@ -779,7 +748,7 @@ function SwapScreenContent(
         >
           {isNotEnoughBalance ? (
             <Text color="danger">Not Enough Funds</Text>
-          ) : buyWithCryptoQuoteQuery.isLoading ? (
+          ) : quoteQuery.isLoading ? (
             <>
               <Spinner size="sm" color="accentText" />
               Getting price quote
@@ -793,9 +762,6 @@ function SwapScreenContent(
   );
 }
 
-/**
- * @internal
- */
 function FiatScreenContent(
   props: BuyScreenContentProps & {
     setDrawerScreen: (screen: React.ReactNode) => void;
@@ -904,52 +870,64 @@ function FiatScreenContent(
     );
   }
 
-  function getErrorMessage(err: Error) {
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  function getErrorMessage(err: any): string[] {
+    type AmountTooLowError = {
+      code: "MINIMUM_PURCHASE_AMOUNT";
+      data: {
+        minimumAmountUSDCents: 250;
+        requestedAmountUSDCents: 7;
+      };
+    };
+
     const defaultMessage = "Unable to get price quote";
     try {
-      if (err instanceof Error) {
-        if (err.message.includes("Minimum")) {
-          const msg = err.message;
-          return msg.replace("Fetch failed: Error: ", "");
-        }
+      if (err.error.code === "MINIMUM_PURCHASE_AMOUNT") {
+        const obj = err.error as AmountTooLowError;
+        return [
+          `Minimum purchase amount is $${obj.data.minimumAmountUSDCents / 100}`,
+          `Requested amount is $${obj.data.requestedAmountUSDCents / 100}`,
+        ];
       }
-      return defaultMessage;
-    } catch {
-      return defaultMessage;
-    }
+    } catch {}
+
+    return [defaultMessage];
   }
 
   const disableSubmit = !fiatQuoteQuery.data;
 
   return (
-    <Container px="lg">
+    <Container px="lg" flex="column" gap="md">
       {/* Show Currency Selector + Calculated Amount */}
-      <PayWithCreditCard
-        isLoading={fiatQuoteQuery.isLoading}
-        value={fiatQuoteQuery.data?.fromCurrencyWithFees.amount}
-        client={client}
-        currency={selectedCurrency}
-        onSelectCurrency={showCurrencySelector}
-        disableCurrencySelection={true}
-      />
-      {/* Estimated time + View fees button */}
-      <EstimatedTimeAndFees
-        quoteIsLoading={fiatQuoteQuery.isLoading}
-        estimatedSeconds={fiatQuoteQuery.data?.estimatedDurationSeconds}
-        onViewFees={showFees}
-      />
-
-      <Spacer y="md" />
+      <div>
+        <PayWithCreditCard
+          isLoading={fiatQuoteQuery.isLoading}
+          value={fiatQuoteQuery.data?.fromCurrencyWithFees.amount}
+          client={client}
+          currency={selectedCurrency}
+          onSelectCurrency={showCurrencySelector}
+          disableCurrencySelection={true}
+        />
+        {/* Estimated time + View fees button */}
+        <EstimatedTimeAndFees
+          quoteIsLoading={fiatQuoteQuery.isLoading}
+          estimatedSeconds={fiatQuoteQuery.data?.estimatedDurationSeconds}
+          onViewFees={showFees}
+        />
+      </div>
 
       {/* Error message */}
       {fiatQuoteQuery.error && (
-        <>
-          <ErrorMessage message={getErrorMessage(fiatQuoteQuery.error)} />
-          <Spacer y="md" />
-        </>
+        <div>
+          {getErrorMessage(fiatQuoteQuery.error).map((msg) => (
+            <Text color="danger" size="sm" center multiline key={msg}>
+              {msg}
+            </Text>
+          ))}
+        </div>
       )}
 
-      {/* Submit */}
+      {/* Continue */}
       <Button
         variant={disableSubmit ? "outline" : "accent"}
         data-disabled={disableSubmit}
@@ -1047,19 +1025,6 @@ function BuyForTxUI(props: {
         Purchase
       </Text>
       <Spacer y="xxs" />
-    </Container>
-  );
-}
-
-function ErrorMessage(props: {
-  message: string;
-}) {
-  return (
-    <Container flex="row" gap="xxs" center="both" color="danger">
-      <CrossCircledIcon width={iconSize.sm} height={iconSize.sm} />
-      <Text color="danger" size="sm">
-        {props.message}
-      </Text>
     </Container>
   );
 }

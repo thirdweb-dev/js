@@ -11,7 +11,6 @@ import { waitForReceipt } from "../../../../../../../transaction/actions/wait-fo
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { useSendTransactionCore } from "../../../../../../core/hooks/contract/useSendTransaction.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
-import type { BuyWithCryptoStatusQueryParams } from "../../../../../../core/hooks/pay/useBuyWithCryptoStatus.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
@@ -37,7 +36,7 @@ export function SwapConfirmationScreen(props: {
   onBack: () => void;
   client: ThirdwebClient;
   quote: BuyWithCryptoQuote;
-  setSwapTx: (value: BuyWithCryptoStatusQueryParams) => void;
+  setSwapTxHash: (txHash: string) => void;
   onTryAgain: () => void;
   toChain: Chain;
   toAmount: string;
@@ -216,10 +215,7 @@ export function SwapConfirmationScreen(props: {
                   });
                 }
 
-                props.setSwapTx({
-                  transactionHash: _swapTx.transactionHash, // ?? _swapTx.userOpHash,
-                  client: props.client,
-                });
+                props.setSwapTxHash(_swapTx.transactionHash);
               } catch (e) {
                 console.error(e);
                 setStatus("error");

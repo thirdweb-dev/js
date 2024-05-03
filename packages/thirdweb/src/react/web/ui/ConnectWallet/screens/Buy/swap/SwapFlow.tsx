@@ -3,9 +3,7 @@ import { defineChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../../constants/addresses.js";
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
-import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import type { Account } from "../../../../../../../wallets/interfaces/wallet.js";
-import type { BuyWithCryptoStatusQueryParams } from "../../../../../../core/hooks/pay/useBuyWithCryptoStatus.js";
 import type { TokenInfo } from "../../../defaultTokens.js";
 import { type ERC20OrNativeToken, NATIVE_TOKEN } from "../../nativeToken.js";
 import { SwapConfirmationScreen } from "./ConfirmationScreen.js";
@@ -19,12 +17,11 @@ type SwapFlowProps = {
   client: ThirdwebClient;
   isFiatFlow: boolean;
   closeModal: () => void;
+  onTryAgain: () => void;
 };
 
 export function SwapFlow(props: SwapFlowProps) {
-  const [swapTx, setSwapTx] = useState<
-    BuyWithCryptoStatusQueryParams | undefined
-  >();
+  const [swapTxHash, setSwapTxHash] = useState<string | undefined>();
 
   const quote = props.buyWithCryptoQuote;
 
@@ -75,32 +72,29 @@ export function SwapFlow(props: SwapFlowProps) {
     return tokenInfo;
   }, [_fromToken]);
 
-  if (swapTx) {
+  if (swapTxHash) {
     return (
       <SwapStatusScreen
         onBack={props.onBack}
-        onTryAgain={() => {
-          setSwapTx(undefined);
-        }}
+        onTryAgain={props.onTryAgain}
         onViewPendingTx={props.onViewPendingTx}
-        destinationChain={toChain}
-        destinationToken={toToken}
-        sourceAmount={`${formatNumber(Number(fromAmount), 4)} ${
-          fromTokenSymbol || ""
-        }`}
-        destinationAmount={`${formatNumber(Number(toAmount), 4)} ${
-          toTokenSymbol || ""
-        }`}
-        swapTx={swapTx}
+        toChain={toChain}
+        toToken={toToken}
+        fromAmount={fromAmount}
+        toAmount={toAmount}
+        swapTxHash={swapTxHash}
         client={props.client}
         closeModal={props.closeModal}
+        fromChain={fromChain}
+        fromToken={fromToken}
+        estimatedTimeSeconds={quote.swapDetails.estimated.durationSeconds || 0}
       />
     );
   }
 
   return (
     <SwapConfirmationScreen
-      setSwapTx={setSwapTx}
+      setSwapTxHash={setSwapTxHash}
       toChain={toChain}
       toAmount={toAmount}
       toTokenSymbol={toTokenSymbol}
@@ -111,7 +105,7 @@ export function SwapFlow(props: SwapFlowProps) {
       fromTokenSymbol={fromTokenSymbol}
       client={props.client}
       onBack={props.onBack}
-      onTryAgain={props.onBack}
+      onTryAgain={props.onTryAgain}
       quote={quote}
       isFiatFlow={props.isFiatFlow}
     />
