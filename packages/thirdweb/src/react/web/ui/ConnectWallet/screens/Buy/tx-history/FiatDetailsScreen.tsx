@@ -238,13 +238,15 @@ function TwoStepFlow(props: {
   statusMeta: FiatStatusMeta;
   closeModal: () => void;
 }) {
-  const [screen, setScreen] = useState<"base" | "post-onramp">("base");
+  const [statusForSwap, setStatusForSwap] = useState<
+    BuyWithFiatStatus | undefined
+  >();
 
-  if (screen === "post-onramp") {
+  if (statusForSwap) {
     return (
       <PostOnRampSwap
         client={props.client}
-        buyWithFiatStatus={props.buyWithFiatStatus}
+        buyWithFiatStatus={statusForSwap}
         onBack={props.onBack}
         onViewPendingTx={props.onViewPendingTx}
         closeModal={props.closeModal}
@@ -258,7 +260,7 @@ function TwoStepFlow(props: {
       client={props.client}
       onBack={props.onBack}
       onContinue={() => {
-        setScreen("post-onramp");
+        setStatusForSwap(props.buyWithFiatStatus);
       }}
       partialQuote={props.quote}
       status={props.buyWithFiatStatus}
