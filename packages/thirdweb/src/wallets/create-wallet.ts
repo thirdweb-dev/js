@@ -9,6 +9,7 @@ import type {
   CreateWalletArgs,
   InjectedConnectOptions,
   WalletAutoConnectionOption,
+  WalletConnectionOption,
   WalletId,
 } from "./wallet-types.js";
 
@@ -300,9 +301,10 @@ export function walletConnect() {
 export function smartWallet(
   createOptions: CreateWalletArgs<"smart">[1],
 ): Wallet<"smart"> {
-  const emitter = createWalletEmitter<"inApp">();
+  const emitter = createWalletEmitter<"smart">();
   let account: Account | undefined = undefined;
   let chain: Chain | undefined = undefined;
+  let lastConnectOptions: WalletConnectionOption<"smart"> | undefined;
 
   const _smartWallet: Wallet<"smart"> = {
     id: "smart",
@@ -318,6 +320,7 @@ export function smartWallet(
         createOptions,
       );
       // set the states
+      lastConnectOptions = options;
       account = connectedAccount;
       chain = connectedChain;
       trackConnect({
@@ -336,6 +339,7 @@ export function smartWallet(
         createOptions,
       );
       // set the states
+      lastConnectOptions = options;
       account = connectedAccount;
       chain = connectedChain;
       trackConnect({
@@ -344,6 +348,7 @@ export function smartWallet(
         walletAddress: account.address,
       });
       // return account
+      emitter.emit("accountChanged", account);
       return account;
     },
     disconnect: async () => {
@@ -352,9 +357,23 @@ export function smartWallet(
       emitter.emit("disconnect", undefined);
       const { disconnectSmartWallet } = await import("./smart/index.js");
       await disconnectSmartWallet(_smartWallet);
+      emitter.emit("disconnect", undefined);
     },
-    switchChain: async () => {
-      throw new Error("Not implemented yet");
+    switchChain: async (newChain: Chain) => {
+      console.log("switching chain", lastConnectOptions, newChain);
+      if (!lastConnectOptions) {
+        throw new Error("Cannot switch chain without a previous connection");
+      }
+      const { connectSmartWallet } = await import("./smart/index.js");
+      const [connectedAccount, connectedChain] = await connectSmartWallet(
+        _smartWallet,
+        { ...lastConnectOptions, chain: newChain },
+        createOptions,
+      );
+      // set the states
+      account = connectedAccount;
+      chain = connectedChain;
+      emitter.emit("chainChanged", newChain);
     },
   };
 

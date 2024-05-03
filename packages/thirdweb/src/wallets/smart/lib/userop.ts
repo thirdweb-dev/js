@@ -103,7 +103,7 @@ export async function createUnsignedUserOp(args: {
     signature: DUMMY_SIGNATURE,
   };
 
-  const gasless = options.gasless;
+  const gasless = "gasless" in options ? options.gasless : options.sponsorGas;
   if (gasless) {
     const paymasterResult = await getPaymasterAndData({
       userOp: partialOp,

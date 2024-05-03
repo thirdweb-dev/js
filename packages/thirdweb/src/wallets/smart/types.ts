@@ -8,8 +8,7 @@ import type { Account, SendTransactionOption } from "../interfaces/wallet.js";
 
 export type SmartWalletOptions = {
   chain: Chain;
-  gasless: boolean;
-  factoryAddress: string; // TODO make this optional
+  factoryAddress?: string;
   overrides?: {
     bundlerUrl?: string;
     accountAddress?: string;
@@ -27,7 +26,17 @@ export type SmartWalletOptions = {
       transactions: SendTransactionOption[],
     ) => PreparedTransaction;
   };
-};
+} & (
+  | {
+      /**
+       * @deprecated use 'sponsorGas' instead
+       */
+      gasless: boolean;
+    }
+  | {
+      sponsorGas: boolean;
+    }
+);
 
 export type SmartWalletConnectionOptions = {
   personalAccount: Account;

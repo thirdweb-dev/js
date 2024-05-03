@@ -26,6 +26,7 @@ import {
   prepareBatchExecute,
   prepareExecute,
 } from "./lib/calls.js";
+import { DEFAULT_ACCOUNT_FACTORY } from "./lib/constants.js";
 import { createUnsignedUserOp, signUserOp } from "./lib/userop.js";
 import type { SmartWalletOptions } from "./types.js";
 
@@ -56,7 +57,7 @@ export async function connectSmartWallet(
 
   const options = creationOptions;
   const chain = connectChain ?? options.chain;
-  const factoryAddress = options.factoryAddress;
+  const factoryAddress = options.factoryAddress ?? DEFAULT_ACCOUNT_FACTORY;
 
   const factoryContract = getContract({
     client: client,
@@ -84,6 +85,7 @@ export async function connectSmartWallet(
 
   const account = await createSmartAccount({
     ...options,
+    chain,
     personalAccount,
     accountContract,
     factoryContract,

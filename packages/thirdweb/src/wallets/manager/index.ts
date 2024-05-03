@@ -218,7 +218,24 @@ export function createConnectionManager(storage: AsyncStorage) {
       throw new Error("wallet does not support switching chains");
     }
 
-    await wallet.switchChain(chain);
+    if (wallet.id === "smart") {
+      // also switch personal wallet
+      const personalWalletId = await getStoredActiveWalletId(storage);
+      if (personalWalletId) {
+        const personalWallet = connectedWallets
+          .getValue()
+          .find((w) => w.id === personalWalletId);
+        if (personalWallet) {
+          await personalWallet.switchChain(chain);
+        }
+      }
+      await wallet.switchChain(chain);
+      // reset the active wallet as switch chain recreates a new smart account
+      handleSetActiveWallet(wallet);
+    } else {
+      await wallet.switchChain(chain);
+    }
+
     // for wallets that dont implement events, just set it manually
     activeWalletChainStore.setValue(wallet.getChain());
   };
