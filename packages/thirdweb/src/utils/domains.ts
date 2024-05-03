@@ -51,3 +51,14 @@ export const setThirdwebDomains = (DomainOverrides: DomainOverrides) => {
 export const getThirdwebDomains = () => {
   return domains;
 };
+
+/**
+ * @internal
+ */
+export const getThirdwebBaseUrl = (service: keyof DomainOverrides) => {
+  const origin = domains[service];
+  if (origin.startsWith("localhost")) {
+    return `http://${origin}`;
+  }
+  return `https://${origin}`;
+}

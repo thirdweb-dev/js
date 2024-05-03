@@ -1,13 +1,16 @@
 import { client } from "@passwordless-id/webauthn";
 import type { ThirdwebClient } from "../../../../../client/client.js";
+import { getThirdwebBaseUrl } from "../../../../../utils/domains.js";
 import { getClientFetch } from "../../../../../utils/fetch.js";
+import type { AuthStoredTokenWithCookieReturnType } from "../../interfaces/auth.js";
 import { LocalStorage } from "../../utils/Storage/LocalStorage.js";
 
-//const SERVER_URL = "https://www-qxmw-winston-iframe-flow.chainsaw-dev.zeet.app";
-const SERVER_URL = "http://localhost:3001";
-const VERIFICATION_URL = `${SERVER_URL}/api/2024-05-05/login/passkey/callback`;
+function getVerificationPath() {
+  return `${getThirdwebBaseUrl('inAppWallet')}/api/2024-05-05/login/passkey/callback`;
+}
 function getChallengePath(type: "sign-in" | "sign-up", username?: string) {
-  return `${SERVER_URL}/api/2024-05-05/login/passkey?type=${type}${
+  console.log('updated')
+  return `${getThirdwebBaseUrl('inAppWallet')}/api/2024-05-05/login/passkey?type=${type}${
     username ? `&username=${username}` : ""
   }`;
 }
@@ -16,7 +19,7 @@ export async function registerPasskey(options: {
   client: ThirdwebClient;
   authenticatorType?: string;
   username?: string;
-}): Promise<string> {
+}): Promise<AuthStoredTokenWithCookieReturnType> {
   if (!client.isAvailable()) {
     throw new Error("Passkeys are not available on this device");
   }
@@ -42,7 +45,7 @@ export async function registerPasskey(options: {
   await storage.savePasskeyCredentialId(registration.credential.id);
 
   // 4. send the registration object to the server
-  const verifRes = await fetchWithId(VERIFICATION_URL, {
+  const verifRes = await fetchWithId(getVerificationPath(), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -62,11 +65,11 @@ export async function registerPasskey(options: {
   });
   const verifData = await verifRes.json();
 
-  if (!verifData.authToken) {
-    throw new Error("No auth token received");
+  if (!verifData) {
+    throw new Error("No token received");
   }
 
-  return verifData.authToken;
+  return verifData;
   // 5. returns back the IAW authentication token
   // 6. pass it to the iframe and call postLogin to store the auth token
   // 7. return the auth'd user type
@@ -78,7 +81,7 @@ export async function registerPasskey(options: {
 export async function loginWithPasskey(options: {
   client: ThirdwebClient;
   username?: string;
-}): Promise<string> {
+}): Promise<AuthStoredTokenWithCookieReturnType > {
   if (!client.isAvailable()) {
     throw new Error("Passkeys are not available on this device");
   }
@@ -103,7 +106,7 @@ export async function loginWithPasskey(options: {
   });
   // 3. send the authentication object to the server/iframe
   // 4. return the auth'd user type
-  const verifRes = await fetchWithId(VERIFICATION_URL, {
+  const verifRes = await fetchWithId(getVerificationPath(), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -117,10 +120,14 @@ export async function loginWithPasskey(options: {
       signature: authentication.signature,
     }),
   });
+  // 5. store the credentialId in local storage
+  await storage.savePasskeyCredentialId(authentication.credentialId);
+  
   const verifData = await verifRes.json();
 
-  if (!verifData.authToken) {
-    throw new Error("No auth token received");
+
+  if (!verifData) {
+    throw new Error("No token received");
   }
-  return verifData.authToken;
+  return verifData;
 }

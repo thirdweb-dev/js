@@ -42,6 +42,8 @@ export type SingleStepAuthArgsType =
       type: "registration" | "login";
       username?: string;
       authenticatorType?: string;
+      // FIXME: remove this before merging
+      recoveryCode?: string;
     };
 
 export type AuthArgsType = (MultiStepAuthArgsType | SingleStepAuthArgsType) & {

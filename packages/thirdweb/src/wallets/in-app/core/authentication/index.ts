@@ -1,7 +1,7 @@
 import type { ThirdwebClient } from "../../../../client/client.js";
 import {
-  type AuthLoginReturnType,
   AuthProvider,
+  type AuthLoginReturnType,
 } from "../../implementations/interfaces/auth.js";
 import { UserWalletStatus } from "../../implementations/interfaces/in-app-wallets/in-app-wallets.js";
 import {
@@ -208,13 +208,13 @@ export async function authenticate(
           authenticatorType: args.authenticatorType,
           username: args.username,
         });
-        return ewSDK.auth.loginWithAuthToken(authToken);
+        return ewSDK.auth.loginWithAuthToken(authToken, args.recoveryCode);
       }
       const authToken = await loginWithPasskey({
         client: args.client,
         username: args.username,
       });
-      return ewSDK.auth.loginWithAuthToken(authToken);
+      return ewSDK.auth.loginWithAuthToken(authToken, args.recoveryCode);
     }
     default:
       assertUnreachable(strategy);

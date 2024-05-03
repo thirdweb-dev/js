@@ -2,8 +2,7 @@ import type { ThirdwebClient } from "../../../../../client/client.js";
 import {
   type AuthAndWalletRpcReturnType,
   type AuthLoginReturnType,
-  AuthProvider,
-  RecoveryShareManagement,
+  type AuthStoredTokenWithCookieReturnType
 } from "../../interfaces/auth.js";
 import type {
   ClientIdWithQuerierType,
@@ -22,6 +21,10 @@ export type AuthQuerierTypes = {
     walletUserId: string;
     deviceShareStored: string;
   };
+  loginWithStoredTokenDetails: {
+    storedToken: AuthStoredTokenWithCookieReturnType["storedToken"];
+    recoveryCode?: string;
+  }
 };
 
 /**
@@ -88,27 +91,16 @@ export class Auth {
     return initializedUser;
   }
 
-  async loginWithAuthToken(authToken: string): Promise<AuthLoginReturnType> {
+  async loginWithAuthToken(authToken: AuthStoredTokenWithCookieReturnType, recoveryCode? : string): Promise<AuthLoginReturnType> {
     await this.preLogin();
-    return this.postLogin({
-      storedToken: {
-        cookieString: authToken,
-        shouldStoreCookieString: true,
-        authDetails: {
-          recoveryShareManagement: RecoveryShareManagement.CLOUD_MANAGED,
-          userWalletId: "", // FIXME pass user wallet id
-        },
-        authProvider: AuthProvider.PASSKEY,
-        developerClientId: this.client.clientId,
-        isNewUser: false,
-        jwtToken: authToken,
+    const result = await this.AuthQuerier.call<AuthAndWalletRpcReturnType>({
+      procedureName: "loginWithStoredTokenDetails",
+      params: {
+        storedToken: authToken.storedToken,
+        recoveryCode
       },
-      walletDetails: {
-        deviceShareStored: "",
-        isIframeStorageEnabled: false,
-        walletAddress: "",
-      },
-    });
+    })
+    return this.postLogin(result);
   }
 
   /**
