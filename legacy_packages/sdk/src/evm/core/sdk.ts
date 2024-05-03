@@ -120,7 +120,6 @@ import { DeployMetadata, DeployOptions } from "../types/deploy/deploy-options";
 import { getModularDeploymentInfo } from "../common/any-evm-utils/getModularDeploymentInfo";
 import { computeModularFactoryAddress } from "../common/any-evm-utils/computeModularFactoryAddress";
 import {
-  HOOK_PROXY_DEPLOYMENT_SALT,
   hookInitializerAbi,
   modularFactoryAbi,
 } from "../common/any-evm-utils/computeHookProxyAddress";

@@ -219,7 +219,7 @@ describe("Modular contract deployment", async () => {
 
   it("should check extension compatibility", async () => {
     const isCompatible = await compatibleExtensions(
-      [mockExtensionERC20DeployedBytecode, mockExtensionERC20DeployedBytecode],
+      [mockExtensionERC20Bytecode, mockExtensionERC20Bytecode],
       11155111,
     );
 
