@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { polygon } from "../../../../../../chains/chain-definitions/polygon.js";
 import type { Chain } from "../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../client/client.js";
@@ -8,10 +8,7 @@ import { isSwapRequiredPostOnramp } from "../../../../../../pay/buyWithFiat/isSw
 import type { PreparedTransaction } from "../../../../../../transaction/prepare-transaction.js";
 import { formatNumber } from "../../../../../../utils/formatNumber.js";
 import { toEther } from "../../../../../../utils/units.js";
-import type {
-  Account,
-  Wallet,
-} from "../../../../../../wallets/interfaces/wallet.js";
+import type { Account } from "../../../../../../wallets/interfaces/wallet.js";
 import { getTotalTxCostForBuy } from "../../../../../core/hooks/contract/useSendTransaction.js";
 import {
   useChainQuery,
@@ -22,7 +19,6 @@ import { useBuyWithCryptoQuote } from "../../../../../core/hooks/pay/useBuyWithC
 import { useBuyWithFiatQuote } from "../../../../../core/hooks/pay/useBuyWithFiatQuote.js";
 import {
   useActiveAccount,
-  useActiveWallet,
   useActiveWalletChain,
 } from "../../../../../core/hooks/wallets/wallet-hooks.js";
 import { wait } from "../../../../../core/utils/wait.js";
@@ -90,29 +86,27 @@ export type BuyScreenProps = {
   payOptions: PayUIOptions;
   theme: "light" | "dark" | Theme;
   closeModal: () => void;
+  connectButton?: React.ReactNode;
 };
 
 /**
  * @internal
  */
 export default function BuyScreen(props: BuyScreenProps) {
-  const activeChain = useActiveWalletChain();
-  const activeWallet = useActiveWallet();
-  const account = useActiveAccount();
   const supportedChainsQuery = useBuySupportedChains(props.client);
 
-  if (!activeChain || !account || !activeWallet || !supportedChainsQuery.data) {
+  console.log("chains", supportedChainsQuery.data);
+
+  if (!supportedChainsQuery.data) {
     return <LoadingScreen />;
   }
 
   return (
     <BuyScreenContent
       {...props}
-      activeChain={activeChain}
-      activeWallet={activeWallet}
-      account={account}
       onViewPendingTx={props.onViewPendingTx}
-      supportedChains={supportedChainsQuery.data}
+      supportedDestinationChains={supportedChainsQuery.data.destinationChains}
+      supportedSourceChains={supportedChainsQuery.data.sourceChains}
       buyForTx={props.buyForTx}
     />
   );
@@ -122,16 +116,15 @@ type BuyScreenContentProps = {
   client: ThirdwebClient;
   onBack?: () => void;
   supportedTokens: SupportedTokens;
-  activeChain: Chain;
-  activeWallet: Wallet;
-  account: Account;
   onViewPendingTx: () => void;
-  supportedChains: Chain[];
+  supportedSourceChains: Chain[];
+  supportedDestinationChains: Chain[];
   connectLocale: ConnectLocale;
   buyForTx?: BuyForTx;
   theme: "light" | "dark" | Theme;
   payOptions: PayUIOptions;
   closeModal: () => void;
+  connectButton?: React.ReactNode;
 };
 
 type Screen =
@@ -151,11 +144,18 @@ type Screen =
  * @internal
  */
 function BuyScreenContent(props: BuyScreenContentProps) {
-  const { activeChain, client, supportedChains, connectLocale, payOptions } =
-    props;
+  const {
+    client,
+    supportedSourceChains,
+    supportedDestinationChains,
+    connectLocale,
+    payOptions,
+  } = props;
 
   const buyWithFiatOptions = payOptions.buyWithFiat;
   const buyWithCryptoOptions = payOptions.buyWithCrypto;
+  const account = useActiveAccount();
+  const activeChain = useActiveWalletChain();
 
   const showPaymentSelection =
     buyWithFiatOptions !== false && buyWithCryptoOptions !== false;
@@ -169,7 +169,8 @@ function BuyScreenContent(props: BuyScreenContentProps) {
   );
 
   // prefetch chains metadata
-  useChainsQuery(supportedChains || [], 50);
+  useChainsQuery(supportedDestinationChains || [], 50);
+  useChainsQuery(supportedSourceChains || [], 50);
 
   // screens
   const [screen, setScreen] = useState<Screen>({
@@ -253,20 +254,13 @@ function BuyScreenContent(props: BuyScreenContentProps) {
   }, [props.buyForTx, stopUpdatingTokenAmount]);
 
   const [hasEditedAmount, setHasEditedAmount] = useState(false);
-  const isExpanded = props.buyForTx ? true : hasEditedAmount;
-
-  const isChainSupported = useMemo(
-    () => supportedChains?.find((c) => c.id === activeChain.id),
-    [activeChain.id, supportedChains],
-  );
-
-  // selected chain
-  const defaultChain = isChainSupported ? activeChain : polygon;
+  const isExpanded = props.buyForTx ? true : hasEditedAmount && activeChain;
 
   const [toChain, setToChain] = useState<Chain>(
     payOptions.defaultSelection?.chain ||
       props.buyForTx?.tx.chain ||
-      defaultChain,
+      supportedDestinationChains.find((x) => x.id === activeChain?.id) ||
+      polygon,
   );
 
   const [toToken, setToToken] = useState<ERC20OrNativeToken>(
@@ -275,7 +269,9 @@ function BuyScreenContent(props: BuyScreenContentProps) {
   const deferredTokenAmount = useDebouncedValue(tokenAmount, 300);
 
   const [fromChain, setFromChain] = useState<Chain>(
-    props.buyForTx?.tx.chain || defaultChain,
+    props.buyForTx?.tx.chain ||
+      supportedSourceChains.find((x) => x.id === activeChain?.id) ||
+      polygon,
   );
 
   const [fromToken, setFromToken] = useState<ERC20OrNativeToken>(
@@ -308,7 +304,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
         }}
         chain={toChain}
         chainSelection={{
-          chains: supportedChains,
+          chains: supportedDestinationChains,
           select: (c) => {
             setToChain(c);
           },
@@ -335,7 +331,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
         }}
         chain={fromChain}
         chainSelection={{
-          chains: supportedChains,
+          chains: supportedSourceChains,
           select: (c) => setFromChain(c),
         }}
         connectLocale={connectLocale}
@@ -433,7 +429,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
               </Container>
             )}
 
-            {method === "crypto" && (
+            {method === "crypto" && account && activeChain && (
               <SwapScreenContent
                 {...props}
                 setScreen={setScreen}
@@ -450,10 +446,12 @@ function BuyScreenContent(props: BuyScreenContentProps) {
                     name: "select-from-token",
                   });
                 }}
+                account={account}
+                activeChain={activeChain}
               />
             )}
 
-            {method === "creditCard" && (
+            {method === "creditCard" && account && (
               <FiatScreenContent
                 {...props}
                 setScreen={setScreen}
@@ -466,18 +464,25 @@ function BuyScreenContent(props: BuyScreenContentProps) {
                 showCurrencySelector={() => {
                   // currently disabled for Stripe
                 }}
+                account={account}
               />
             )}
           </>
         )}
 
         {!isExpanded && (
-          <BuyScreenNonExpandedFooter
-            client={client}
-            onViewAllTransactions={props.onViewPendingTx}
-            setScreen={setScreen}
-            closeModal={props.closeModal}
-          />
+          <>
+            {!account ? (
+              <Container px="lg">{props.connectButton}</Container>
+            ) : (
+              <BuyScreenNonExpandedFooter
+                client={client}
+                onViewAllTransactions={props.onViewPendingTx}
+                setScreen={setScreen}
+                closeModal={props.closeModal}
+              />
+            )}
+          </>
         )}
 
         <Spacer y="lg" />
@@ -513,41 +518,45 @@ function BuyScreenNonExpandedFooter(props: {
 
   return (
     <Container px="lg">
-      <Spacer y="xs" />
-      <Text size="sm">Recent transactions</Text>
-      <Spacer y="sm" />
-      <Container flex="column" gap="xs">
-        {txInfosToShow.map((txInfo) => {
-          return (
-            <BuyTxHistoryButton
-              key={
-                txInfo.type === "swap"
-                  ? txInfo.status.quote.createdAt
-                  : txInfo.status.intentId
-              }
-              txInfo={txInfo}
-              client={props.client}
-              onClick={() => {
-                props.setScreen({
-                  type: "node",
-                  node: (
-                    <TxDetailsScreen
-                      client={props.client}
-                      statusInfo={txInfo}
-                      onBack={() =>
-                        props.setScreen({
-                          type: "main",
-                        })
-                      }
-                      closeModal={props.closeModal}
-                    />
-                  ),
-                });
-              }}
-            />
-          );
-        })}
-      </Container>
+      {txInfosToShow.length > 0 && (
+        <>
+          <Spacer y="xs" />
+          <Text size="sm">Recent transactions</Text>
+          <Spacer y="sm" />
+          <Container flex="column" gap="xs">
+            {txInfosToShow.map((txInfo) => {
+              return (
+                <BuyTxHistoryButton
+                  key={
+                    txInfo.type === "swap"
+                      ? txInfo.status.quote.createdAt
+                      : txInfo.status.intentId
+                  }
+                  txInfo={txInfo}
+                  client={props.client}
+                  onClick={() => {
+                    props.setScreen({
+                      type: "node",
+                      node: (
+                        <TxDetailsScreen
+                          client={props.client}
+                          statusInfo={txInfo}
+                          onBack={() =>
+                            props.setScreen({
+                              type: "main",
+                            })
+                          }
+                          closeModal={props.closeModal}
+                        />
+                      ),
+                    });
+                  }}
+                />
+              );
+            })}
+          </Container>
+        </>
+      )}
 
       {showMore && (
         <>
@@ -579,6 +588,8 @@ function SwapScreenContent(
     fromChain: Chain;
     fromToken: ERC20OrNativeToken;
     showFromTokenSelector: () => void;
+    account: Account;
+    activeChain: Chain;
   },
 ) {
   const {
@@ -772,6 +783,7 @@ function FiatScreenContent(
     closeDrawer: () => void;
     selectedCurrency: CurrencyMeta;
     showCurrencySelector: () => void;
+    account: Account;
   },
 ) {
   const {

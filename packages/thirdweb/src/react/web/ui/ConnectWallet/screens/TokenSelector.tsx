@@ -232,7 +232,7 @@ export function TokenSelector(props: {
           </Container>
         )}
 
-        {filteredList.length === 0 && tokenQuery.isLoading && (
+        {filteredList.length === 0 && tokenQuery.isLoading && input && (
           <Container
             animate="fadein"
             p="lg"

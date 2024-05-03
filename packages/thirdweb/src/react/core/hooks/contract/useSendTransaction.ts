@@ -70,7 +70,8 @@ export function useSendTransactionCore(
 
         (async () => {
           try {
-            const buySupportedChains = await fetchBuySupportedChains(tx.client);
+            const { destinationChains: buySupportedChains } =
+              await fetchBuySupportedChains(tx.client);
 
             const isBuySupported = buySupportedChains.find(
               (c) => c.id === tx.chain.id,

@@ -52,7 +52,7 @@ export const getPayBuyWithCryptoHistoryEndpoint = () =>
  * @internal
  */
 export const getPayChainsEndpoint = () =>
-  `https://${getThirdwebDomains().pay}/chains`;
+  `https://${getThirdwebDomains().pay}/chains/v2`;
 
 /**
  * Constructs the endpoint to get the pay endpoint

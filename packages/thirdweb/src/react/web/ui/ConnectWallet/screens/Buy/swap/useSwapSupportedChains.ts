@@ -16,8 +16,8 @@ export interface PaySupportedChainsResponse {
       name: string;
       chain: string;
       chainId: number;
-    }[]
-  }
+    }[];
+  };
 }
 
 export async function fetchBuySupportedChains(client: ThirdwebClient) {
@@ -25,15 +25,19 @@ export async function fetchBuySupportedChains(client: ThirdwebClient) {
     async () => {
       const fetchWithHeaders = getClientFetch(client);
       const res = await fetchWithHeaders(getPayChainsEndpoint());
-      const data = await res.json() as PaySupportedChainsResponse;
+      const data = (await res.json()) as PaySupportedChainsResponse;
 
-      const sourceChains: number[] = data.result.sourceChains.map(chain => chain.chainId);
-      const destinationChains: number[] = data.result.destinationChains.map(chain => chain.chainId);
+      const sourceChains: number[] = data.result.sourceChains.map(
+        (chain) => chain.chainId,
+      );
+      const destinationChains: number[] = data.result.destinationChains.map(
+        (chain) => chain.chainId,
+      );
 
       return {
         sourceChains: sourceChains.map(defineChain),
-        destinationChains: destinationChains.map(defineChain);
-      }
+        destinationChains: destinationChains.map(defineChain),
+      };
     },
     {
       cacheKey: "buy-supported-chains",
