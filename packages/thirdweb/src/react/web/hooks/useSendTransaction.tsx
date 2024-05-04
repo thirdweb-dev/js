@@ -107,7 +107,8 @@ export function useSendTransaction(config: SendTransactionConfig = {}) {
   // if active wallet is smart wallet with gasless enabled, don't show the pay modal
   if (activeWallet && activeWallet.id === "smart") {
     const options = (activeWallet as Wallet<"smart">).getConfig();
-    if (options.gasless) {
+
+    if ("sponsorGas" in options && options.sponsorGas === true) {
       shouldShowPayModal = false;
     }
   }
