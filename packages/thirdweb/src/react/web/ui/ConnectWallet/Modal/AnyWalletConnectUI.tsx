@@ -1,3 +1,4 @@
+"use client";
 import { Suspense, lazy, useEffect, useState } from "react";
 import type {
   InjectedSupportedWalletIds,

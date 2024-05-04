@@ -34,6 +34,7 @@ export default {
   "networkId": 5424,
   "rpc": [
     "https://5424.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mainnet.edexa.network/rpc",
     "https://mainnet.edexa.com/rpc",
     "https://io-dataseed1.mainnet.edexa.io-market.com/rpc"
   ],

@@ -1,3 +1,4 @@
+"use client";
 import { Suspense, lazy, useCallback } from "react";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import { useSiweAuth } from "../../../../core/hooks/auth/useSiweAuth.js";

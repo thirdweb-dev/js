@@ -3,13 +3,13 @@
 
 export const wallet = {
   id: "io.gate.wallet",
-  name: "GateWeb3",
+  name: "GateWallet",
   homepage: "https://www.gateweb3.net/web3",
-  image_id: "6e528abf-7a7d-47bd-d84d-481f169b1200",
+  image_id: "aaf2193b-c4e4-4552-bb5b-dc1e1d2ff300",
   app: {
     browser: null,
-    ios: "https://www.gate.io/mobileapp",
-    android: "https://www.gate.io/mobileapp",
+    ios: "https://www.gateex.cc/zh/mobileapp",
+    android: "https://www.gateex.cc/zh/mobileapp",
     mac: null,
     windows: null,
     linux: null,
@@ -27,6 +27,6 @@ export const wallet = {
   },
   desktop: {
     native: "gtweb3wallet://",
-    universal: "https://www.gateweb3.net/web3",
+    universal: "https://www.gateex.cc/web3",
   },
 } as const;

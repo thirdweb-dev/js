@@ -1,3 +1,4 @@
+"use client";
 import type { Chain } from "../../../../../chains/types.js";
 import { useChainQuery } from "../../../../core/hooks/others/useChainQuery.js";
 import {

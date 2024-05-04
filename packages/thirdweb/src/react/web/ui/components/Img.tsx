@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { resolveScheme } from "../../../../utils/ipfs.js";

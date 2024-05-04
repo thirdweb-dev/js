@@ -5,7 +5,7 @@ export const wallet = {
   id: "app.sinum",
   name: "Sinum",
   homepage: "https://sinum.app/",
-  image_id: "382b3cb1-3aaa-466d-44fc-24007f6a3d00",
+  image_id: "560d5efa-3fd1-4ac4-9229-f720395ab500",
   app: {
     browser: "https://app.sinum.io",
     ios: "https://apps.apple.com/gb/app/sinumapp/id6466151819?mt=8",

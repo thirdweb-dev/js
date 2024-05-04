@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import type { GaslessOptions } from "../../../../transaction/actions/gasless/types.js";
 import {
@@ -9,6 +10,7 @@ import type { TransactionReceipt } from "../../../../transaction/types.js";
 import {
   useActiveAccount,
   useActiveWallet,
+  useSwitchActiveWalletChain,
 } from "../../../core/hooks/wallets/wallet-hooks.js";
 import {
   type SendTransactionPayModalConfig,
@@ -129,6 +131,7 @@ export function TransactionButton(props: TransactionButtonProps) {
   const account = useActiveAccount();
   const wallet = useActiveWallet();
   const [isPending, setIsPending] = useState(false);
+  const switchChain = useSwitchActiveWalletChain();
 
   const sendTransaction = useSendTransaction({
     gasless,
@@ -150,7 +153,7 @@ export function TransactionButton(props: TransactionButtonProps) {
           const resolvedTx = await transaction();
 
           if (wallet && wallet.getChain()?.id !== resolvedTx.chain.id) {
-            await wallet?.switchChain(resolvedTx.chain);
+            await switchChain(resolvedTx.chain);
           }
 
           const result = await sendTransaction.mutateAsync(resolvedTx);

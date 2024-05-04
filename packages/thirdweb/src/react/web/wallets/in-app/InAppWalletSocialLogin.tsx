@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useRef, useState } from "react";
 import type { InAppWalletSocialAuth } from "../../../../wallets/in-app/core/wallet/index.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
