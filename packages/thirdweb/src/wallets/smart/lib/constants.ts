@@ -1,4 +1,5 @@
 import type { Chain } from "../../../chains/types.js";
+import { getThirdwebDomains } from "../../../utils/domains.js";
 
 // dev only
 export const DEBUG = false;
@@ -17,12 +18,14 @@ export const MANAGED_ACCOUNT_GAS_BUFFER = 50000n;
  * @internal
  */
 export const getDefaultBundlerUrl = (chain: Chain) => {
-  return `https://${chain.id}.bundler.thirdweb.com/`;
+  const domain = getThirdwebDomains()["bundler"];
+  return `https://${chain.id}.${domain}/`;
 };
 
 /**
  * @internal
  */
 export const getDefaultPaymasterUrl = (chain: Chain) => {
-  return `https://${chain.id}.bundler.thirdweb.com/`;
+  const domain = getThirdwebDomains()["bundler"];
+  return `https://${chain.id}.${domain}/`;
 };
