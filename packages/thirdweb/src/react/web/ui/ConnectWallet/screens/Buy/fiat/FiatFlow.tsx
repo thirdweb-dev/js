@@ -44,7 +44,8 @@ export function FiatFlow(props: {
   theme: "light" | "dark";
   onViewPendingTx: () => void;
   openedWindow: Window | null;
-  closeModal: () => void;
+  onDone: () => void;
+  isBuyForTx: boolean;
 }) {
   const hasTwoSteps = isSwapRequiredPostOnramp(props.quote);
   const [screen, setScreen] = useState<Screen>(
@@ -93,11 +94,12 @@ export function FiatFlow(props: {
         hasTwoSteps={hasTwoSteps}
         openedWindow={popupWindow}
         quote={props.quote}
-        closeModal={props.closeModal}
+        onDone={props.onDone}
         onShowSwapFlow={(_status) => {
           // go to 3.
           setScreen({ id: "postonramp-swap", data: _status });
         }}
+        isBuyForTx={props.isBuyForTx}
       />
     );
   }
@@ -111,10 +113,11 @@ export function FiatFlow(props: {
         client={props.client}
         onBack={props.onBack}
         onViewPendingTx={props.onViewPendingTx}
-        closeModal={props.closeModal}
+        onDone={props.onDone}
         onSwapFlowStarted={() => {
           // no op
         }}
+        isBuyForTx={props.isBuyForTx}
       />
     );
   }

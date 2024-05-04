@@ -36,7 +36,8 @@ import {
 export function BuyTxHistory(props: {
   onBack?: () => void;
   client: ThirdwebClient;
-  closeModal: () => void;
+  onDone: () => void;
+  isBuyForTx: boolean;
 }) {
   const [selectedTx, setSelectedTx] = useState<TxStatusInfo | null>(null);
 
@@ -46,7 +47,8 @@ export function BuyTxHistory(props: {
         client={props.client}
         statusInfo={selectedTx}
         onBack={() => setSelectedTx(null)}
-        closeModal={props.closeModal}
+        onDone={props.onDone}
+        isBuyForTx={props.isBuyForTx}
       />
     );
   }
@@ -60,7 +62,7 @@ export function BuyTxHistory(props: {
 export function BuyTxHistoryList(props: {
   onBack?: () => void;
   client: ThirdwebClient;
-  closeModal: () => void;
+  onDone: () => void;
   onSelectTx: (tx: TxStatusInfo) => void;
 }) {
   const {

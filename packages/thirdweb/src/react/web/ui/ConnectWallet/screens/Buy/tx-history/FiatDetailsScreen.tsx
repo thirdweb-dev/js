@@ -11,7 +11,8 @@ export function FiatDetailsScreen(props: {
   status: ValidBuyWithFiatStatus;
   onBack: () => void;
   client: ThirdwebClient;
-  closeModal: () => void;
+  onDone: () => void;
+  isBuyForTx: boolean;
 }) {
   const initialStatus = props.status;
   const [stopPolling, setStopPolling] = useState(false);
@@ -39,6 +40,7 @@ export function FiatDetailsScreen(props: {
         status={status}
         onBack={props.onBack}
         onViewPendingTx={props.onBack}
+        isBuyForTx={props.isBuyForTx}
         quote={{
           fromCurrencyAmount: fiatQuote.fromCurrencyWithFees.amount,
           fromCurrencySymbol: fiatQuote.fromCurrencyWithFees.currencySymbol,
@@ -57,7 +59,7 @@ export function FiatDetailsScreen(props: {
             symbol: fiatQuote.toToken.symbol,
           },
         }}
-        closeModal={props.closeModal}
+        onDone={props.onDone}
         onSwapFlowStarted={() => {
           setStopPolling(true);
         }}

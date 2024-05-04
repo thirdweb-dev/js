@@ -82,7 +82,7 @@ export type BuyScreenProps = {
   buyForTx?: BuyForTx;
   payOptions: PayUIOptions;
   theme: "light" | "dark" | Theme;
-  closeModal: () => void;
+  onDone: () => void;
   connectButton?: React.ReactNode;
 };
 
@@ -120,7 +120,7 @@ type BuyScreenContentProps = {
   buyForTx?: BuyForTx;
   theme: "light" | "dark" | Theme;
   payOptions: PayUIOptions;
-  closeModal: () => void;
+  onDone: () => void;
   connectButton?: React.ReactNode;
 };
 
@@ -600,6 +600,7 @@ function SwapScreenContent(
       type: "node",
       node: (
         <SwapFlow
+          isBuyForTx={!!props.buyForTx}
           client={client}
           onBack={() => {
             setStopUpdatingTokenAmount(true);
@@ -611,7 +612,7 @@ function SwapScreenContent(
           account={account}
           onViewPendingTx={props.onViewPendingTx}
           isFiatFlow={false}
-          closeModal={props.closeModal}
+          onDone={props.onDone}
           onTryAgain={() => {
             setScreen({
               type: "main",
@@ -768,6 +769,7 @@ function FiatScreenContent(
       type: "node",
       node: (
         <FiatFlow
+          isBuyForTx={!!props.buyForTx}
           quote={fiatQuoteQuery.data}
           onBack={() => {
             setScreen({
@@ -785,7 +787,7 @@ function FiatScreenContent(
           }
           onViewPendingTx={props.onViewPendingTx}
           openedWindow={openedWindow}
-          closeModal={props.closeModal}
+          onDone={props.onDone}
         />
       ),
     });

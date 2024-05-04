@@ -600,9 +600,10 @@ export const ConnectedWalletDetails: React.FC<{
   if (screen === "pending-tx") {
     content = (
       <BuyTxHistory
+        isBuyForTx={false}
         onBack={() => setScreen("main")}
         client={client}
-        closeModal={() => {
+        onDone={() => {
           setIsOpen(false);
         }}
       />
@@ -694,7 +695,7 @@ export const ConnectedWalletDetails: React.FC<{
         connectLocale={locale}
         payOptions={{ ...props.detailsModal?.pay }}
         theme={typeof props.theme === "string" ? props.theme : props.theme.type}
-        closeModal={() => {
+        onDone={() => {
           setIsOpen(false);
         }}
       />

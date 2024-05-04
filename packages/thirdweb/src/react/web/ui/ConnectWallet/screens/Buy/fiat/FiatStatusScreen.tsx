@@ -29,8 +29,9 @@ export function FiatStatusScreen(props: {
   hasTwoSteps: boolean;
   openedWindow: Window | null;
   quote: BuyWithFiatQuote;
-  closeModal: () => void;
+  onDone: () => void;
   onShowSwapFlow: (status: BuyWithFiatStatus) => void;
+  isBuyForTx: boolean;
 }) {
   const queryClient = useQueryClient();
   const { openedWindow } = props;
@@ -125,9 +126,10 @@ export function FiatStatusScreen(props: {
 
       <FiatStatusScreenUI
         uiStatus={uiStatus}
-        closeModal={props.closeModal}
+        onDone={props.onDone}
         fiatStatus={statusQuery.data}
         client={props.client}
+        isBuyForTx={props.isBuyForTx}
       />
     </Container>
   );
@@ -136,8 +138,9 @@ export function FiatStatusScreen(props: {
 function FiatStatusScreenUI(props: {
   uiStatus: UIStatus;
   fiatStatus?: BuyWithFiatStatus;
-  closeModal: () => void;
+  onDone: () => void;
   client: ThirdwebClient;
+  isBuyForTx: boolean;
 }) {
   const { uiStatus } = props;
 
@@ -220,8 +223,8 @@ function FiatStatusScreenUI(props: {
               <Spacer y="sm" />
             </>
           )}
-          <Button variant="accent" fullWidth onClick={props.closeModal}>
-            Done
+          <Button variant="accent" fullWidth onClick={props.onDone}>
+            {props.isBuyForTx ? "Continue Transaction" : "Done"}
           </Button>
         </>
       )}

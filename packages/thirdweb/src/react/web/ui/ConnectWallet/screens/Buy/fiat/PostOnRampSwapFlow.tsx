@@ -12,8 +12,9 @@ export function PostOnRampSwapFlow(props: {
   client: ThirdwebClient;
   onBack: () => void;
   onViewPendingTx: () => void;
-  closeModal: () => void;
+  onDone: () => void;
   onSwapFlowStarted: () => void;
+  isBuyForTx: boolean;
 }) {
   const [statusForSwap, setStatusForSwap] = useState<
     BuyWithFiatStatus | undefined
@@ -29,7 +30,8 @@ export function PostOnRampSwapFlow(props: {
           setStatusForSwap(undefined);
         }}
         onViewPendingTx={props.onViewPendingTx}
-        closeModal={props.closeModal}
+        onDone={props.onDone}
+        isBuyForTx={props.isBuyForTx}
       />
     );
   }

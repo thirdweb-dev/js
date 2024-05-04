@@ -21,7 +21,8 @@ export function PostOnRampSwap(props: {
   buyWithFiatStatus: BuyWithFiatStatus;
   onBack: () => void;
   onViewPendingTx: () => void;
-  closeModal: () => void;
+  onDone: () => void;
+  isBuyForTx: boolean;
 }) {
   const account = useActiveAccount();
 
@@ -146,11 +147,12 @@ export function PostOnRampSwap(props: {
       onBack={props.onBack}
       onViewPendingTx={props.onViewPendingTx}
       isFiatFlow={true}
-      closeModal={props.closeModal}
+      onDone={props.onDone}
       onTryAgain={() => {
         setLockedOnRampQuote(undefined);
         postOnRampQuoteQuery.refetch();
       }}
+      isBuyForTx={props.isBuyForTx}
     />
   );
 }

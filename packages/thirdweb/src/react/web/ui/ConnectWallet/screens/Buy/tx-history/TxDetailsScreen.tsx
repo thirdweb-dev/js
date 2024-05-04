@@ -7,7 +7,8 @@ export function TxDetailsScreen(props: {
   client: ThirdwebClient;
   statusInfo: TxStatusInfo;
   onBack: () => void;
-  closeModal: () => void;
+  onDone: () => void;
+  isBuyForTx: boolean;
 }) {
   const { statusInfo } = props;
 
@@ -27,7 +28,8 @@ export function TxDetailsScreen(props: {
         client={props.client}
         status={statusInfo.status}
         onBack={props.onBack}
-        closeModal={props.closeModal}
+        onDone={props.onDone}
+        isBuyForTx={props.isBuyForTx}
       />
     );
   }

@@ -1,5 +1,8 @@
-import { useContext, useState } from "react";
+import { CheckCircledIcon } from "@radix-ui/react-icons";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import type { ThirdwebClient } from "../../../client/client.js";
+import { useActiveWallet } from "../../../exports/react-native.js";
+import type { Wallet } from "../../../exports/wallets.js";
 import type { GaslessOptions } from "../../../transaction/actions/gasless/types.js";
 import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
 import { useSendTransactionCore } from "../../core/hooks/contract/useSendTransaction.js";
@@ -9,12 +12,18 @@ import {
   type SupportedTokens,
   defaultTokens,
 } from "../ui/ConnectWallet/defaultTokens.js";
+import { AccentFailIcon } from "../ui/ConnectWallet/icons/AccentFailIcon.js";
 import { useConnectLocale } from "../ui/ConnectWallet/locale/getConnectLocale.js";
 import { LazyBuyScreen } from "../ui/ConnectWallet/screens/Buy/LazyBuyScreen.js";
 import { BuyTxHistory } from "../ui/ConnectWallet/screens/Buy/tx-history/BuyTxHistory.js";
 import { Modal } from "../ui/components/Modal.js";
+import { Spacer } from "../ui/components/Spacer.js";
+import { Spinner } from "../ui/components/Spinner.js";
+import { Container, ModalHeader } from "../ui/components/basic.js";
+import { Button } from "../ui/components/buttons.js";
+import { Text } from "../ui/components/text.js";
 import { CustomThemeProvider } from "../ui/design-system/CustomThemeProvider.js";
-import type { Theme } from "../ui/design-system/index.js";
+import { type Theme, iconSize } from "../ui/design-system/index.js";
 import type { LocaleId } from "../ui/types.js";
 import { LoadingScreen } from "../wallets/shared/LoadingScreen.js";
 
@@ -85,11 +94,27 @@ export type SendTransactionConfig = {
  * @transaction
  */
 export function useSendTransaction(config: SendTransactionConfig = {}) {
+  const activeWallet = useActiveWallet();
   const payModal = config.payModal;
+
+  let shouldShowPayModal = true;
+
+  // if payModal is disbabled or gasless is enabled, don't show the pay modal
+  if (payModal === false || config.gasless) {
+    shouldShowPayModal = false;
+  }
+
+  // if active wallet is smart wallet with gasless enabled, don't show the pay modal
+  if (activeWallet && activeWallet.id === "smart") {
+    const options = (activeWallet as Wallet<"smart">).getConfig();
+    if (options.gasless) {
+      shouldShowPayModal = false;
+    }
+  }
 
   const setRootEl = useContext(SetRootElementContext);
   return useSendTransactionCore(
-    payModal === false
+    !shouldShowPayModal || payModal === false
       ? undefined
       : (data) => {
           setRootEl(
@@ -152,10 +177,16 @@ function TxModal(props: ModalProps) {
 
 function ModalContent(props: ModalProps) {
   const localeQuery = useConnectLocale(props.localeId);
-  const [screen, setScreen] = useState<"buy" | "tx-history">("buy");
+  const [screen, setScreen] = useState<"buy" | "tx-history" | "execute-tx">(
+    "buy",
+  );
 
   if (!localeQuery.data) {
     return <LoadingScreen />;
+  }
+
+  if (screen === "execute-tx") {
+    return <ExecutingTxScreen tx={props.tx} closeModal={props.onClose} />;
   }
 
   if (screen === "tx-history") {
@@ -165,7 +196,10 @@ function ModalContent(props: ModalProps) {
         onBack={() => {
           setScreen("buy");
         }}
-        closeModal={props.onClose}
+        onDone={() => {
+          setScreen("execute-tx");
+        }}
+        isBuyForTx={true}
       />
     );
   }
@@ -173,9 +207,6 @@ function ModalContent(props: ModalProps) {
   return (
     <LazyBuyScreen
       client={props.client}
-      onBack={() => {
-        props.onClose();
-      }}
       onViewPendingTx={() => {
         setScreen("tx-history");
       }}
@@ -189,7 +220,84 @@ function ModalContent(props: ModalProps) {
       }}
       theme={typeof props.theme === "string" ? props.theme : props.theme.type}
       payOptions={props.payOptions}
-      closeModal={props.onClose}
+      onDone={() => {
+        setScreen("execute-tx");
+      }}
     />
+  );
+}
+
+function ExecutingTxScreen(props: {
+  tx: PreparedTransaction;
+  closeModal: () => void;
+}) {
+  const sendTxCore = useSendTransactionCore();
+  const [status, setStatus] = useState<"loading" | "failed" | "sent">(
+    "loading",
+  );
+
+  const sendTx = useCallback(async () => {
+    setStatus("loading");
+    try {
+      await sendTxCore.mutateAsync(props.tx);
+      setStatus("sent");
+    } catch (e) {
+      console.error(e);
+      setStatus("failed");
+    }
+  }, [sendTxCore, props.tx]);
+
+  const done = useRef(false);
+  useEffect(() => {
+    if (done.current) {
+      return;
+    }
+
+    done.current = true;
+    sendTx();
+  }, [sendTx]);
+
+  return (
+    <Container p="lg">
+      <ModalHeader title="Transaction" />
+      <Spacer y="xxl" />
+      <Spacer y="xxl" />
+
+      <Container flex="row" center="x">
+        {status === "loading" && <Spinner size="3xl" color="accentText" />}
+        {status === "failed" && <AccentFailIcon size={iconSize["3xl"]} />}
+        {status === "sent" && (
+          <Container color="success" flex="row" center="both">
+            <CheckCircledIcon
+              width={iconSize["3xl"]}
+              height={iconSize["3xl"]}
+            />
+          </Container>
+        )}
+      </Container>
+
+      <Spacer y="lg" />
+
+      <Text color="primaryText" center size="lg">
+        {status === "loading" && "Sending transaction"}
+        {status === "failed" && "Transaction failed"}
+        {status === "sent" && "Transaction sent"}
+      </Text>
+
+      <Spacer y="xxl" />
+      <Spacer y="xxl" />
+
+      {status === "failed" && (
+        <Button variant="accent" fullWidth onClick={sendTx}>
+          Try Again
+        </Button>
+      )}
+
+      {status === "sent" && (
+        <Button variant="accent" fullWidth onClick={props.closeModal}>
+          Done
+        </Button>
+      )}
+    </Container>
   );
 }

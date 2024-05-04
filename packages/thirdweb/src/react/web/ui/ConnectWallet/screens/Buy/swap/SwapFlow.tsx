@@ -16,8 +16,9 @@ type SwapFlowProps = {
   onViewPendingTx: () => void;
   client: ThirdwebClient;
   isFiatFlow: boolean;
-  closeModal: () => void;
+  onDone: () => void;
   onTryAgain: () => void;
+  isBuyForTx: boolean;
 };
 
 export function SwapFlow(props: SwapFlowProps) {
@@ -84,10 +85,11 @@ export function SwapFlow(props: SwapFlowProps) {
         toAmount={toAmount}
         swapTxHash={swapTxHash}
         client={props.client}
-        closeModal={props.closeModal}
+        onDone={props.onDone}
         fromChain={fromChain}
         fromToken={fromToken}
         estimatedTimeSeconds={quote.swapDetails.estimated.durationSeconds || 0}
+        isBuyForTx={props.isBuyForTx}
       />
     );
   }

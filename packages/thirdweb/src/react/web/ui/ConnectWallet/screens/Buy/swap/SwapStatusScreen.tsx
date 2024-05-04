@@ -38,8 +38,9 @@ export function SwapStatusScreen(props: {
   toAmount: string;
   client: ThirdwebClient;
   onTryAgain: () => void;
-  closeModal: () => void;
+  onDone: () => void;
   estimatedTimeSeconds: number;
+  isBuyForTx: boolean;
 }) {
   const swapStatus = useBuyWithCryptoStatus({
     client: props.client,
@@ -108,8 +109,8 @@ export function SwapStatusScreen(props: {
                   hideStatus={true}
                 />
                 <Spacer y="sm" />
-                <Button variant="accent" fullWidth onClick={props.closeModal}>
-                  Done
+                <Button variant="accent" fullWidth onClick={props.onDone}>
+                  {props.isBuyForTx ? "Continue Transaction" : "Done"}
                 </Button>
               </>
             )}
@@ -141,10 +142,6 @@ export function SwapStatusScreen(props: {
                 client={props.client}
                 hideStatus={true}
               />
-              <Spacer y="sm" />
-              <Button variant="accent" fullWidth onClick={props.closeModal}>
-                Done
-              </Button>
             </>
           )}
 

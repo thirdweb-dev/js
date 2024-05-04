@@ -59,9 +59,10 @@ export function PayEmbed(props: {
         onBack={() => {
           setScreen("buy");
         }}
-        closeModal={() => {
+        onDone={() => {
           // noop
         }}
+        isBuyForTx={false}
       />
     );
   } else {
@@ -78,7 +79,7 @@ export function PayEmbed(props: {
           buyWithCrypto: props.payOptions?.buyWithCrypto,
           buyWithFiat: props.payOptions?.buyWithFiat,
         }}
-        closeModal={() => {
+        onDone={() => {
           // noop
         }}
         connectButton={
