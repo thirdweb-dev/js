@@ -1,5 +1,28 @@
 # thirdweb
 
+## 5.16.0
+
+### Minor Changes
+
+- [#2917](https://github.com/thirdweb-dev/js/pull/2917) [`5b0c37a`](https://github.com/thirdweb-dev/js/commit/5b0c37a0d9b7ba3d7f38647bb41463e91cc91a49) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Factory address is now optional in `accountAbstraction` and `smartWallet` options.
+
+  - Defaults to a global permissionless factory deployed on all chains.
+  - Also enables switching chains for smart wallets, as long as the factory is deployed
+
+- [#2915](https://github.com/thirdweb-dev/js/pull/2915) [`664082e`](https://github.com/thirdweb-dev/js/commit/664082e5e613b8748713522353585839fe018fc2) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - New `prepareDeterministicDeployTransaction` extension for deploying published contracts with the same address on multiple chains
+
+- [#2921](https://github.com/thirdweb-dev/js/pull/2921) [`d77b6f6`](https://github.com/thirdweb-dev/js/commit/d77b6f67adc6eaf7c306ef738714e8d650ed5af3) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds the 'use client' directive to all client-only components
+
+- [#2919](https://github.com/thirdweb-dev/js/pull/2919) [`47de345`](https://github.com/thirdweb-dev/js/commit/47de345b604dbd9afbaaa95a76569b9029d69b00) Thanks [@jnsdls](https://github.com/jnsdls)! - Add support for several additional wallets
+
+### Patch Changes
+
+- [#2914](https://github.com/thirdweb-dev/js/pull/2914) [`24a3ee4`](https://github.com/thirdweb-dev/js/commit/24a3ee49d182a840c864a221eee4dd7d05c5c469) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix legacy transactions with in-app wallets
+
+- [#2913](https://github.com/thirdweb-dev/js/pull/2913) [`5525a0e`](https://github.com/thirdweb-dev/js/commit/5525a0e336177407d508da37058ca24a3abfae37) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Filter invalid auctions in getAllAuctions
+
+- [#2911](https://github.com/thirdweb-dev/js/pull/2911) [`35acbcd`](https://github.com/thirdweb-dev/js/commit/35acbcd10e146b886dfe8a83cd485e96b8c70928) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Updates mintWithSignature return types to properly parse
+
 ## 5.15.0
 
 ### Minor Changes
