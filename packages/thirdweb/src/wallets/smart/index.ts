@@ -5,7 +5,6 @@ import type {
   TypedDataDomain,
 } from "viem";
 import type { Chain } from "../../chains/types.js";
-import type { ThirdwebClient } from "../../client/client.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import type { WaitForReceiptOptions } from "../../transaction/actions/wait-for-tx-receipt.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
@@ -28,7 +27,7 @@ import {
 } from "./lib/calls.js";
 import { DEFAULT_ACCOUNT_FACTORY } from "./lib/constants.js";
 import { createUnsignedUserOp, signUserOp } from "./lib/userop.js";
-import type { SmartWalletOptions } from "./types.js";
+import type { SmartAccountOptions } from "./types.js";
 
 /**
  * We can get the personal account for given smart account but not the other way around - this map gives us the reverse lookup
@@ -56,8 +55,8 @@ export async function connectSmartWallet(
   }
 
   const options = creationOptions;
-  const chain = connectChain ?? options.chain;
   const factoryAddress = options.factoryAddress ?? DEFAULT_ACCOUNT_FACTORY;
+  const chain = connectChain ?? options.chain;
 
   const factoryContract = getContract({
     client: client,
@@ -83,9 +82,13 @@ export async function connectSmartWallet(
     chain,
   });
 
+  const sponsorGas =
+    "gasless" in options ? options.gasless : options.sponsorGas;
+
   const account = await createSmartAccount({
     ...options,
     chain,
+    sponsorGas,
     personalAccount,
     accountContract,
     factoryContract,
@@ -114,14 +117,9 @@ export async function disconnectSmartWallet(
 }
 
 async function createSmartAccount(
-  options: SmartWalletOptions & {
-    personalAccount: Account;
-    factoryContract: ThirdwebContract;
-    accountContract: ThirdwebContract;
-    client: ThirdwebClient;
-  },
+  options: SmartAccountOptions,
 ): Promise<Account> {
-  const { accountContract, factoryContract } = options;
+  const { accountContract } = options;
   const account = {
     address: accountContract.address,
     async sendTransaction(transaction: SendTransactionOption) {
@@ -131,8 +129,6 @@ async function createSmartAccount(
         transaction,
       });
       return _sendUserOp({
-        factoryContract,
-        accountContract,
         executeTx,
         options,
       });
@@ -144,8 +140,6 @@ async function createSmartAccount(
         transactions,
       });
       return _sendUserOp({
-        factoryContract,
-        accountContract,
         executeTx,
         options,
       });
@@ -323,7 +317,7 @@ async function createSmartAccount(
 }
 
 async function _deployAccount(args: {
-  options: SmartWalletOptions & { client: ThirdwebClient };
+  options: SmartAccountOptions;
   account: Account;
   accountContract: ThirdwebContract;
 }) {
@@ -346,18 +340,11 @@ async function _deployAccount(args: {
 }
 
 async function _sendUserOp(args: {
-  factoryContract: ThirdwebContract;
-  accountContract: ThirdwebContract;
   executeTx: PreparedTransaction;
-  options: SmartWalletOptions & {
-    personalAccount: Account;
-    client: ThirdwebClient;
-  };
+  options: SmartAccountOptions;
 }): Promise<WaitForReceiptOptions> {
-  const { factoryContract, accountContract, executeTx, options } = args;
+  const { executeTx, options } = args;
   const unsignedUserOp = await createUnsignedUserOp({
-    factoryContract,
-    accountContract,
     executeTx,
     options,
   });
@@ -383,10 +370,7 @@ async function _sendUserOp(args: {
 }
 
 async function waitForUserOpReceipt(args: {
-  options: SmartWalletOptions & {
-    personalAccount: Account;
-    client: ThirdwebClient;
-  };
+  options: SmartAccountOptions;
   userOpHash: Hex;
 }): Promise<TransactionReceipt> {
   const { options, userOpHash } = args;
