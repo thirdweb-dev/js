@@ -18,7 +18,7 @@ export const MANAGED_ACCOUNT_GAS_BUFFER = 50000n;
  * @internal
  */
 export const getDefaultBundlerUrl = (chain: Chain) => {
-  const domain = getThirdwebDomains()["bundler"];
+  const domain = getThirdwebDomains().bundler;
   return `https://${chain.id}.${domain}/`;
 };
 
@@ -26,6 +26,6 @@ export const getDefaultBundlerUrl = (chain: Chain) => {
  * @internal
  */
 export const getDefaultPaymasterUrl = (chain: Chain) => {
-  const domain = getThirdwebDomains()["bundler"];
+  const domain = getThirdwebDomains().bundler;
   return `https://${chain.id}.${domain}/`;
 };
