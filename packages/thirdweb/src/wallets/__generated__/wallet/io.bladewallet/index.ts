@@ -28,6 +28,6 @@ export const wallet = {
   },
   desktop: {
     native: null,
-    universal: null,
+    universal: "https://welcome.bladewallet.io/",
   },
 } as const;

@@ -10,7 +10,7 @@ export const wallet = {
     browser: null,
     ios: "https://apps.apple.com/gb/app/amazewallet/id1622941204",
     android:
-      "https://play.google.com/store/apps/details?id=com.walletamaze.nftwallet",
+      "https://play.google.com/store/apps/details?id=com.mining.amaze.wallet",
     mac: null,
     windows: null,
     linux: null,

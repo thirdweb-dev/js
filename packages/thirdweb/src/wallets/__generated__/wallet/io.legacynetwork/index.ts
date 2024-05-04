@@ -8,8 +8,9 @@ export const wallet = {
   image_id: "ed181b1b-e4c0-4a2e-4a4c-f380a9f13c00",
   app: {
     browser: null,
-    ios: null,
-    android: "https://play.google.com/store/search?q=legacy+wallet&c=apps",
+    ios: "https://apps.apple.com/us/app/legacy-wallet/id6443578674",
+    android:
+      "https://play.google.com/store/apps/details?id=io.legacynetwork.app",
     mac: null,
     windows: null,
     linux: null,

@@ -3,8 +3,8 @@
 
 export const wallet = {
   id: "com.mpcvault.broswerplugin",
-  name: "MPCVault",
-  homepage: "https://mpcvault.com",
+  name: "Solayer",
+  homepage: "https://app.solayer.org",
   image_id: "a3811374-9294-44b0-b5be-4202e01d6400",
   app: {
     browser: "https://console.mpcvault.com",
@@ -22,11 +22,11 @@ export const wallet = {
   },
   rdns: "com.mpcvault.broswerplugin",
   mobile: {
-    native: null,
+    native: "com.mpcvault.mobileapp://wccallback",
     universal: "https://ulink.mpcvault.com/wccallback",
   },
   desktop: {
-    native: null,
+    native: "com.mpcvault.mobileapp://wccallback",
     universal: null,
   },
 } as const;
