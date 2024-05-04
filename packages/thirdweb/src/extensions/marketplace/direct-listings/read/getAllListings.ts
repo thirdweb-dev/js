@@ -67,13 +67,17 @@ export async function getAllListings(
     }),
   ]);
 
-  return await Promise.all(
-    rawListings.map((rawListing) =>
-      mapDirectListing({
-        contract: options.contract,
-        latestBlock,
-        rawListing,
-      }),
-    ),
-  );
+  const listings = (
+    await Promise.all(
+      rawListings.map((rawListing) =>
+        mapDirectListing({
+          contract: options.contract,
+          latestBlock,
+          rawListing,
+        }).catch(() => null),
+      ),
+    )
+  ).filter((listing) => listing !== null);
+
+  return listings as DirectListing[]; // TODO: Fix when TS 5.5 is out
 }
