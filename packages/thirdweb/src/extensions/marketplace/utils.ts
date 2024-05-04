@@ -48,6 +48,9 @@ export function computeStatus(options: {
   endTimestamp: bigint;
 }): ListingStatus {
   switch (options.listingStatus) {
+    case 0: {
+      return "UNSET";
+    }
     case 1: {
       if (options.startTimestamp > options.blockTimeStamp) {
         return "CREATED";
@@ -80,6 +83,7 @@ export async function getAllInBatches<const T>(
     maxSize: bigint;
   },
 ): Promise<T[]> {
+  console.log("2", options);
   let start = options.start;
   const batches: Promise<T>[] = [];
   while (options.end - start > options.maxSize) {
@@ -87,6 +91,6 @@ export async function getAllInBatches<const T>(
     start += options.maxSize;
   }
   batches.push(fn(start, options.end - 1n));
-
+  console.log("3", batches);
   return await Promise.all(batches);
 }
