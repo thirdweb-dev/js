@@ -1,3 +1,4 @@
+"use client";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import { WalletUIStatesProvider } from "../../../providers/wallet-ui-states-provider.js";

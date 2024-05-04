@@ -1,3 +1,4 @@
+"use client";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";

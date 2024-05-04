@@ -1,3 +1,4 @@
+"use client";
 import styled from "@emotion/styled";
 import { useEffect, useRef } from "react";
 import { useCustomTheme } from "../design-system/CustomThemeProvider.js";

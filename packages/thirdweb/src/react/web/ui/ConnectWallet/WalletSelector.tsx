@@ -1,3 +1,4 @@
+"use client";
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
 import { Suspense, lazy, useEffect, useRef, useState } from "react";
 import type { InjectedSupportedWalletIds } from "../../../../wallets/__generated__/wallet-ids.js";

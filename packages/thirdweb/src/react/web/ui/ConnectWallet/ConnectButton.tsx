@@ -1,3 +1,5 @@
+"use client";
+
 import styled from "@emotion/styled";
 import { useEffect, useMemo, useState } from "react";
 import { useSiweAuth } from "../../../core/hooks/auth/useSiweAuth.js";

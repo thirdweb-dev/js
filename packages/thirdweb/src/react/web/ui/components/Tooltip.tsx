@@ -1,3 +1,4 @@
+"use client";
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import * as RadixTooltip from "@radix-ui/react-tooltip";

@@ -1,3 +1,4 @@
+"use client";
 import { CheckIcon, CopyIcon as CopyIconSVG } from "@radix-ui/react-icons";
 import { useClipboard } from "../hooks/useCopyClipboard.js";
 import { ToolTip } from "./Tooltip.js";

@@ -1,3 +1,4 @@
+"use client";
 import { getInstalledWalletProviders } from "../../../../wallets/injected/mipdStore.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
 // import { localWalletMetadata } from "../../../../wallets/local/index._ts";

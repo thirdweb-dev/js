@@ -1,3 +1,4 @@
+"use client";
 import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import { Container } from "../../components/basic.js";
 import { Link } from "../../components/text.js";

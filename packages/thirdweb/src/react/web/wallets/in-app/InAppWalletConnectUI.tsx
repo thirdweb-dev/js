@@ -1,3 +1,4 @@
+"use client";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { useSelectionData } from "../../providers/wallet-ui-states-provider.js";
 import { LoadingScreen } from "../shared/LoadingScreen.js";

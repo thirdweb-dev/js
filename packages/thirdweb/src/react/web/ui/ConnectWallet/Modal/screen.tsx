@@ -1,3 +1,4 @@
+"use client";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
