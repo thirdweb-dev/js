@@ -194,12 +194,20 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       expect(logs[0]?.args.isAdmin).toBe(true);
     });
 
-    it("can sign and verify 1271 without replay protectin", async () => {
+    it("can use a different factory without replay protectin", async () => {
       const wallet = smartWallet({
         chain,
         factoryAddress: factoryAddress,
         gasless: true,
       });
+
+      // should not be able to switch chains before connecting
+      await expect(
+        wallet.switchChain(baseSepolia),
+      ).rejects.toMatchInlineSnapshot(
+        "[Error: Cannot switch chain without a previous connection]",
+      );
+
       const newAccount = await wallet.connect({ client, personalAccount });
       const message = "hello world";
       const signature = await newAccount.signMessage({ message });
@@ -250,6 +258,17 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       expect(logs.length).toBe(1);
       expect(logs[0]?.args.signer).toBe(newAdmin.address);
       expect(logs[0]?.args.isAdmin).toBe(true);
+
+      // should not be able to switch chains since factory not deployed elsewhere
+      await expect(
+        wallet.switchChain(baseSepolia),
+      ).rejects.toMatchInlineSnapshot(
+        "[Error: Factory contract not deployed on chain: 84532]",
+      );
+
+      // check can disconnnect
+      await wallet.disconnect();
+      expect(wallet.getAccount()).toBeUndefined();
     });
 
     it("can switch chains", async () => {
