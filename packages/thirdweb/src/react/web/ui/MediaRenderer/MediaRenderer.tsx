@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useRef, useEffect, Suspense, lazy } from "react";
 import {
   CarbonDocumentAudio,

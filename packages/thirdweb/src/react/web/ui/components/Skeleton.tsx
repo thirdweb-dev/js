@@ -1,3 +1,4 @@
+"use client";
 import { keyframes } from "@emotion/react";
 import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 import { StyledDiv } from "../design-system/elements.js";

@@ -1,3 +1,4 @@
+"use client";
 import styled from "@emotion/styled";
 import { CrossCircledIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import Fuse from "fuse.js";

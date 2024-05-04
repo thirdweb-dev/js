@@ -1,3 +1,4 @@
+"use client";
 import { useCustomTheme } from "../../ui/design-system/CustomThemeProvider.js";
 import { StyledButton } from "../../ui/design-system/elements.js";
 import { fontSize } from "../../ui/design-system/index.js";

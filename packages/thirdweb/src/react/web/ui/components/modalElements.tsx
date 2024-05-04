@@ -1,3 +1,4 @@
+"use client";
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
 import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 import { StyledH2 } from "../design-system/elements.js";

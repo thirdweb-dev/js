@@ -1,3 +1,4 @@
+"use client";
 import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 import { StyledAnchor, StyledSpan } from "../design-system/elements.js";
 import { type Theme, fontSize } from "../design-system/index.js";

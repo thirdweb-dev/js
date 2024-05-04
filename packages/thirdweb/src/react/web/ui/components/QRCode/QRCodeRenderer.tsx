@@ -1,3 +1,4 @@
+"use client";
 import type React from "react";
 import { type ReactElement, useMemo } from "react";
 import { encode } from "uqr";

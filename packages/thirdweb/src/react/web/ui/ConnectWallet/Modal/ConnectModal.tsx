@@ -1,3 +1,4 @@
+"use client";
 import { useCallback, useEffect, useState } from "react";
 import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import { useActiveAccount } from "../../../../core/hooks/wallets/wallet-hooks.js";

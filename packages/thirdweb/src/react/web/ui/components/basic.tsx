@@ -1,3 +1,4 @@
+"use client";
 import type { CSSObject } from "@emotion/react";
 import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 import {

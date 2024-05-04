@@ -1,3 +1,4 @@
+"use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { InjectedSupportedWalletIds } from "../../../../../wallets/__generated__/wallet-ids.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";

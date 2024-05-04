@@ -1,3 +1,4 @@
+"use client";
 import { keyframes } from "@emotion/react";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { forwardRef, useRef } from "react";
