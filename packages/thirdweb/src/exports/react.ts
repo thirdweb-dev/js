@@ -1,5 +1,3 @@
-"use client";
-
 export { darkTheme, lightTheme } from "../react/web/ui/design-system/index.js";
 export type {
   Theme,
