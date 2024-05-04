@@ -1,3 +1,4 @@
+"use client";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { useChainQuery } from "../../../core/hooks/others/useChainQuery.js";

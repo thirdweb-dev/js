@@ -545,8 +545,8 @@ importers:
   legacy_packages/contracts-js:
     dependencies:
       '@thirdweb-dev/contracts':
-        specifier: 3.14.0
-        version: 3.14.0
+        specifier: 3.15.0
+        version: 3.15.0
     devDependencies:
       '@ethersproject/abi':
         specifier: ^5.7.0
@@ -1630,8 +1630,8 @@ importers:
   packages/thirdweb:
     dependencies:
       '@coinbase/wallet-sdk':
-        specifier: 4.0.0-rc.1
-        version: 4.0.0-rc.1
+        specifier: 4.0.0-rc.2
+        version: 4.0.0-rc.2
       '@emotion/react':
         specifier: 11.11.4
         version: 11.11.4(@types/react@18.2.17)(react@18.2.0)
@@ -5966,8 +5966,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@coinbase/wallet-sdk@4.0.0-rc.1:
-    resolution: {integrity: sha512-mKmPmYFJNjLkTHpIVUWi4ZISfMkGOmEJiRjiDNeF9azikvhWqj9Y4eglnVYT0GxkMBxXO9d+7UyRWkKnA/Z73w==}
+  /@coinbase/wallet-sdk@4.0.0-rc.2:
+    resolution: {integrity: sha512-1wrzKtgEhB5cr5z2xPUWw8BUs2+w6ddzWEkafYUh0+fKvXPWl8y5bgBvMiWpjnDa/n9rIliGW7Bs2QlLaRvmtA==}
     dependencies:
       buffer: 6.0.3
       clsx: 1.2.1
@@ -11396,14 +11396,15 @@ packages:
     resolution: {integrity: sha512-P5XgYoAw/vfW65byBbJQCw+cagdXDT/qH6wmABiLt4v4YBT2q2vqCOhihe+D1Nt325F/S/0Tkv6C5z0Lv+VBQQ==}
     dev: false
 
-  /@thirdweb-dev/contracts@3.14.0:
-    resolution: {integrity: sha512-4LxNj/RgcbVlHESUx/FTKA2AXb/LhWqSjUgmM4glBW6fyZysUKFZUuL+zvZwxY+zbVpMdPqDjMPF0mET2LF25Q==}
+  /@thirdweb-dev/contracts@3.15.0:
+    resolution: {integrity: sha512-sIXPy6zNqW9K9h8xgCnsRQVrqmmMdxoDqut4eAZj1CJzMax5TyrNBoSYCfAX0et8KApvBeCVeJQhUHSWpBNIVw==}
     engines: {node: '>=18.0.0'}
     dependencies:
       '@openzeppelin/contracts': 4.9.6
       '@openzeppelin/contracts-upgradeable': 4.9.6
       '@thirdweb-dev/dynamic-contracts': 1.2.5
       erc721a-upgradeable: 3.3.0
+      solady: 0.0.180
     dev: false
 
   /@thirdweb-dev/dynamic-contracts@1.2.5:
@@ -23892,6 +23893,10 @@ packages:
       ip-address: 9.0.5
       smart-buffer: 4.2.0
     dev: true
+
+  /solady@0.0.180:
+    resolution: {integrity: sha512-9QVCyMph+wk78Aq/GxtDAQg7dvNoVWx2dS2Zwf11XlwFKDZ+YJG2lrQsK9NEIth9NOebwjBXAYk4itdwOOE4aw==}
+    dev: false
 
   /solc@0.7.3(debug@4.3.4):
     resolution: {integrity: sha512-GAsWNAjGzIDg7VxzP6mPjdurby3IkGCjQcM8GFYZT6RyaoUZKmMU6Y7YwG+tFGhv7dwZ8rmR4iwFDrrD99JwqA==}

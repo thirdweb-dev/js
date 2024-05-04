@@ -49,8 +49,6 @@ function createBlockNumberPoller(
   async function poll() {
     // stop polling if there are no more subscriptions
     if (!isActive) {
-      lastBlockNumber = undefined;
-      lastBlockAt = undefined;
       return;
     }
     const blockNumber = await eth_blockNumber(rpcRequest);
@@ -100,10 +98,14 @@ function createBlockNumberPoller(
   }
 
   // return the "subscribe" function
-  return function subscribe(callBack: (blockNumber: bigint) => void) {
+  return function subscribe(
+    callBack: (blockNumber: bigint) => void,
+    initialBlockNumber?: bigint,
+  ) {
     subscribers.push(callBack);
     // if we are currently not active -> start polling
     if (!isActive) {
+      lastBlockNumber = initialBlockNumber;
       isActive = true;
       poll();
     }
@@ -140,6 +142,7 @@ export type WatchBlockNumberOptions = {
   chain: Chain;
   onNewBlockNumber: (blockNumber: bigint) => void;
   overPollRatio?: number;
+  latestBlockNumber?: bigint;
 };
 
 /**
@@ -163,7 +166,8 @@ export type WatchBlockNumberOptions = {
  * @rpc
  */
 export function watchBlockNumber(opts: WatchBlockNumberOptions) {
-  const { client, chain, onNewBlockNumber, overPollRatio } = opts;
+  const { client, chain, onNewBlockNumber, overPollRatio, latestBlockNumber } =
+    opts;
   const chainId = chain.id;
   // if we already have a poller for this chainId -> use it
   let poller = existingPollers.get(chainId);
@@ -174,5 +178,5 @@ export function watchBlockNumber(opts: WatchBlockNumberOptions) {
     existingPollers.set(chainId, poller);
   }
   // subscribe to the poller and return the unSubscribe function to the caller
-  return poller(onNewBlockNumber);
+  return poller(onNewBlockNumber, latestBlockNumber);
 }

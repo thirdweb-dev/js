@@ -4,23 +4,28 @@ import type { Chain } from "../chains/types.js";
 import type { ThirdwebClient } from "../client/client.js";
 import type { ThirdwebContract } from "../contract/contract.js";
 import type { PreparedMethod } from "../utils/abi/prepare-method.js";
-import type { PromisedValue } from "../utils/promise/resolve-promised-value.js";
+import type { PromisedObject } from "../utils/promise/resolve-promised-value.js";
 
-export type PrepareTransactionOptions = {
-  accessList?: PromisedValue<AccessList | undefined>;
-  to?: PromisedValue<Address | undefined>;
-  data?: PromisedValue<Hex | undefined>;
-  value?: PromisedValue<bigint | undefined>;
-  gas?: PromisedValue<bigint | undefined>;
-  gasPrice?: PromisedValue<bigint | undefined>;
-  maxFeePerGas?: PromisedValue<bigint | undefined>;
-  maxPriorityFeePerGas?: PromisedValue<bigint | undefined>;
-  maxFeePerBlobGas?: PromisedValue<bigint | undefined>;
-  nonce?: PromisedValue<number | undefined>;
+export type StaticPrepareTransactionOptions = {
+  accessList?: AccessList | undefined;
+  to?: Address | undefined;
+  data?: Hex | undefined;
+  value?: bigint | undefined;
+  gas?: bigint | undefined;
+  gasPrice?: bigint | undefined;
+  maxFeePerGas?: bigint | undefined;
+  maxPriorityFeePerGas?: bigint | undefined;
+  maxFeePerBlobGas?: bigint | undefined;
+  nonce?: number | undefined;
   // tw specific
   chain: Chain;
   client: ThirdwebClient;
 };
+
+export type PrepareTransactionOptions = {
+  chain: Chain;
+  client: ThirdwebClient;
+} & PromisedObject<Omit<StaticPrepareTransactionOptions, "chain" | "client">>;
 
 type Additional<
   abi extends Abi = [],
@@ -53,6 +58,7 @@ export type PreparedTransaction<
  *  chain: ethereum,
  *  client: thirdwebClient,
  *  value: toWei("1.0"),
+ *  gasPrice: 30n
  * });
  * ```
  */

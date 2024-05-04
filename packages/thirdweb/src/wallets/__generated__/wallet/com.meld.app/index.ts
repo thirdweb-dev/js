@@ -21,7 +21,7 @@ export const wallet = {
   },
   rdns: "com.meld.app",
   mobile: {
-    native: null,
+    native: "meld://walletconnect",
     universal: null,
   },
   desktop: {

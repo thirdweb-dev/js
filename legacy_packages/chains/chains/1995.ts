@@ -5,7 +5,7 @@ export default {
   "explorers": [
     {
       "name": "edexa-testnet",
-      "url": "https://explorer.testnet.edexa.com",
+      "url": "https://explorer.testnet.edexa.network",
       "standard": "EIP3091"
     }
   ],
@@ -18,7 +18,7 @@ export default {
     "height": 1042,
     "format": "png"
   },
-  "infoURL": "https://edexa.com/",
+  "infoURL": "https://edexa.network/",
   "name": "edeXa Testnet",
   "nativeCurrency": {
     "name": "EDEXA",
@@ -28,7 +28,7 @@ export default {
   "networkId": 1995,
   "rpc": [
     "https://1995.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet.edexa.com/rpc",
+    "https://testnet.edexa.network/rpc",
     "https://io-dataseed1.testnet.edexa.io-market.com/rpc"
   ],
   "shortName": "edx",

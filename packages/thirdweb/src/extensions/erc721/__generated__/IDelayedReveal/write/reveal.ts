@@ -97,7 +97,7 @@ export function encodeReveal(options: RevealParams) {
 }
 
 /**
- * Calls the "reveal" function on the contract.
+ * Prepares a transaction to call the "reveal" function on the contract.
  * @param options - The options for the "reveal" function.
  * @returns A prepared transaction object.
  * @extension ERC721
@@ -109,6 +109,9 @@ export function encodeReveal(options: RevealParams) {
  *  contract,
  *  identifier: ...,
  *  key: ...,
+ *  overrides: {
+ *    ...
+ *  }
  * });
  *
  * // Send the transaction
@@ -136,5 +139,12 @@ export function reveal(
       return [resolvedOptions.identifier, resolvedOptions.key] as const;
     },
     value: async () => (await asyncOptions()).overrides?.value,
+    accessList: async () => (await asyncOptions()).overrides?.accessList,
+    gas: async () => (await asyncOptions()).overrides?.gas,
+    gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
+    maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
+    maxPriorityFeePerGas: async () =>
+      (await asyncOptions()).overrides?.maxPriorityFeePerGas,
+    nonce: async () => (await asyncOptions()).overrides?.nonce,
   });
 }

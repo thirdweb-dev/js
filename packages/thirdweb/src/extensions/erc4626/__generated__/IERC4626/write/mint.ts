@@ -105,7 +105,7 @@ export function encodeMint(options: MintParams) {
 }
 
 /**
- * Calls the "mint" function on the contract.
+ * Prepares a transaction to call the "mint" function on the contract.
  * @param options - The options for the "mint" function.
  * @returns A prepared transaction object.
  * @extension ERC4626
@@ -117,6 +117,9 @@ export function encodeMint(options: MintParams) {
  *  contract,
  *  shares: ...,
  *  receiver: ...,
+ *  overrides: {
+ *    ...
+ *  }
  * });
  *
  * // Send the transaction
@@ -144,5 +147,12 @@ export function mint(
       return [resolvedOptions.shares, resolvedOptions.receiver] as const;
     },
     value: async () => (await asyncOptions()).overrides?.value,
+    accessList: async () => (await asyncOptions()).overrides?.accessList,
+    gas: async () => (await asyncOptions()).overrides?.gas,
+    gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
+    maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
+    maxPriorityFeePerGas: async () =>
+      (await asyncOptions()).overrides?.maxPriorityFeePerGas,
+    nonce: async () => (await asyncOptions()).overrides?.nonce,
   });
 }

@@ -33,56 +33,56 @@ type FeeDataParams =
 export async function getGasOverridesForTransaction(
   transaction: PreparedTransaction,
 ): Promise<FeeDataParams> {
-  // if we have a `gasPrice` param in the transaction, use that.
-  if ("gasPrice" in transaction) {
-    const resolvedGasPrice = await resolvePromisedValue(transaction.gasPrice);
-    // if the value ends up being "undefined" -> continue to getting the real data
-    if (resolvedGasPrice !== undefined) {
-      return { gasPrice: resolvedGasPrice };
-    }
+  // first check for explicit values
+  const [maxFeePerGas, maxPriorityFeePerGas, gasPrice] = await Promise.all([
+    resolvePromisedValue(transaction.maxFeePerGas),
+    resolvePromisedValue(transaction.maxPriorityFeePerGas),
+    resolvePromisedValue(transaction.gasPrice),
+  ]);
+
+  // Exit early if the user explicitly provided enough options
+  if (gasPrice) {
+    return { gasPrice };
   }
-  // if we have a maxFeePerGas and maxPriorityFeePerGas, use those
-  if (
-    "maxFeePerGas" in transaction &&
-    "maxPriorityFeePerGas" in transaction &&
-    transaction.maxFeePerGas &&
-    transaction.maxPriorityFeePerGas
-  ) {
-    const [resolvedMaxFee, resolvedMaxPriorityFee] = await Promise.all([
-      resolvePromisedValue(transaction.maxFeePerGas),
-      resolvePromisedValue(transaction.maxPriorityFeePerGas),
-    ]);
+  if (maxFeePerGas && maxPriorityFeePerGas) {
     return {
-      maxFeePerGas: resolvedMaxFee,
-      maxPriorityFeePerGas: resolvedMaxPriorityFee,
+      maxFeePerGas,
+      maxPriorityFeePerGas,
     };
   }
-  // otherwise call getDefaultGasOverrides
+
+  // If we don't have enough explicit values, get defaults
   const defaultGasOverrides = await getDefaultGasOverrides(
     transaction.client,
     transaction.chain,
   );
-  if (!transaction.chain.experimental?.increaseZeroByteCount) {
-    // return as is
-    return defaultGasOverrides;
-  }
-  // otherwise adjust each value
-  if (defaultGasOverrides.gasPrice) {
-    return { gasPrice: roundUpGas(defaultGasOverrides.gasPrice) };
-  }
-  if (
-    defaultGasOverrides.maxFeePerGas &&
-    defaultGasOverrides.maxPriorityFeePerGas
-  ) {
+
+  if (transaction.chain.experimental?.increaseZeroByteCount) {
+    // otherwise adjust each value
+    if (defaultGasOverrides.gasPrice) {
+      return { gasPrice: roundUpGas(defaultGasOverrides.gasPrice) };
+    }
+
     return {
-      maxFeePerGas: roundUpGas(defaultGasOverrides.maxFeePerGas),
-      maxPriorityFeePerGas: roundUpGas(
-        defaultGasOverrides.maxPriorityFeePerGas,
-      ),
+      maxFeePerGas:
+        maxFeePerGas ?? roundUpGas(defaultGasOverrides.maxFeePerGas ?? 0n),
+      maxPriorityFeePerGas:
+        maxPriorityFeePerGas ??
+        roundUpGas(defaultGasOverrides.maxPriorityFeePerGas ?? 0n),
     };
   }
-  // this should never happen
-  return defaultGasOverrides;
+
+  // return as is
+  if (defaultGasOverrides.gasPrice) {
+    return defaultGasOverrides;
+  }
+
+  // Still check for explicit values in case one is provided and not the other
+  return {
+    maxFeePerGas: maxFeePerGas ?? defaultGasOverrides.maxFeePerGas,
+    maxPriorityFeePerGas:
+      maxPriorityFeePerGas ?? defaultGasOverrides.maxPriorityFeePerGas,
+  };
 }
 
 /**

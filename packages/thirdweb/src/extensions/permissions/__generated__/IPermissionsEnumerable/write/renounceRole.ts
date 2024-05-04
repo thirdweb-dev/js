@@ -91,7 +91,7 @@ export function encodeRenounceRole(options: RenounceRoleParams) {
 }
 
 /**
- * Calls the "renounceRole" function on the contract.
+ * Prepares a transaction to call the "renounceRole" function on the contract.
  * @param options - The options for the "renounceRole" function.
  * @returns A prepared transaction object.
  * @extension PERMISSIONS
@@ -103,6 +103,9 @@ export function encodeRenounceRole(options: RenounceRoleParams) {
  *  contract,
  *  role: ...,
  *  account: ...,
+ *  overrides: {
+ *    ...
+ *  }
  * });
  *
  * // Send the transaction
@@ -130,5 +133,12 @@ export function renounceRole(
       return [resolvedOptions.role, resolvedOptions.account] as const;
     },
     value: async () => (await asyncOptions()).overrides?.value,
+    accessList: async () => (await asyncOptions()).overrides?.accessList,
+    gas: async () => (await asyncOptions()).overrides?.gas,
+    gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
+    maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
+    maxPriorityFeePerGas: async () =>
+      (await asyncOptions()).overrides?.maxPriorityFeePerGas,
+    nonce: async () => (await asyncOptions()).overrides?.nonce,
   });
 }

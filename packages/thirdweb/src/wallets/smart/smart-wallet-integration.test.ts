@@ -1,8 +1,15 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
+import { typedData } from "../../../test/src/typed-data.js";
 import { verifySignature } from "../../auth/verifySignature.js";
 import { arbitrumSepolia } from "../../chains/chain-definitions/arbitrum-sepolia.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
+import { parseEventLogs } from "../../event/actions/parse-logs.js";
+import { baseSepolia } from "../../exports/chains.js";
+import {
+  addAdmin,
+  adminUpdatedEvent,
+} from "../../exports/extensions/erc4337.js";
 import { balanceOf } from "../../extensions/erc1155/__generated__/IERC1155/read/balanceOf.js";
 import { claimTo } from "../../extensions/erc1155/drops/write/claimTo.js";
 import { checkContractWalletSignature } from "../../extensions/erc1271/checkContractWalletSignature.js";
@@ -12,9 +19,10 @@ import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-co
 import { sendBatchTransaction } from "../../transaction/actions/send-batch-transaction.js";
 import { isContractDeployed } from "../../utils/bytecode/is-contract-deployed.js";
 import { smartWallet } from "../create-wallet.js";
-import type { Account } from "../interfaces/wallet.js";
+import type { Account, Wallet } from "../interfaces/wallet.js";
 import { generateAccount } from "../utils/generateAccount.js";
 
+let wallet: Wallet;
 let smartAccount: Account;
 let smartWalletAddress: string;
 let personalAccount: Account;
@@ -28,7 +36,6 @@ const contract = getContract({
   address: "0x6A7a26c9a595E6893C255C9dF0b593e77518e0c3",
 });
 const factoryAddress = "0x564cf6453a1b0FF8DB603E92EA4BbD410dea45F3"; // pre 712
-const factoryAddressV2 = "0xbf1C9aA4B1A085f7DA890a44E82B0A1289A40052"; // post 712
 
 describe.runIf(process.env.TW_SECRET_KEY)(
   "SmartWallet core tests",
@@ -41,9 +48,8 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       personalAccount = await generateAccount({
         client,
       });
-      const wallet = smartWallet({
+      wallet = smartWallet({
         chain,
-        factoryAddress,
         gasless: true,
       });
       smartAccount = await wallet.connect({
@@ -57,6 +63,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         client,
       });
     });
+
     it("can connect", async () => {
       expect(smartWalletAddress).toHaveLength(42);
     });
@@ -139,7 +146,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       expect(balance).toEqual(3n);
     });
 
-    it("can sign and verify 1271 old factory", async () => {
+    it("can sign and verify 1271 with replay protection", async () => {
       const message = "hello world";
       const signature = await smartAccount.signMessage({ message });
       const isValidV1 = await verifySignature({
@@ -156,14 +163,51 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         contract: accountContract,
       });
       expect(isValidV2).toEqual(true);
+
+      // sign typed data
+      const signatureTyped = await smartAccount.signTypedData({
+        ...typedData.basic,
+        primaryType: "Mail",
+      });
+      expect(signatureTyped.length).toBe(132);
+
+      // add admin
+      const newAdmin = await generateAccount({ client });
+      const receipt = await sendAndConfirmTransaction({
+        account: smartAccount,
+        transaction: addAdmin({
+          account: smartAccount,
+          adminAddress: newAdmin.address,
+          contract: getContract({
+            address: smartAccount.address,
+            chain,
+            client,
+          }),
+        }),
+      });
+      const logs = parseEventLogs({
+        events: [adminUpdatedEvent()],
+        logs: receipt.logs,
+      });
+      expect(logs.length).toBe(1);
+      expect(logs[0]?.args.signer).toBe(newAdmin.address);
+      expect(logs[0]?.args.isAdmin).toBe(true);
     });
 
-    it("can sign and verify 1271 new factory", async () => {
+    it("can use a different factory without replay protectin", async () => {
       const wallet = smartWallet({
         chain,
-        factoryAddress: factoryAddressV2,
+        factoryAddress: factoryAddress,
         gasless: true,
       });
+
+      // should not be able to switch chains before connecting
+      await expect(
+        wallet.switchChain(baseSepolia),
+      ).rejects.toMatchInlineSnapshot(
+        "[Error: Cannot switch chain without a previous connection]",
+      );
+
       const newAccount = await wallet.connect({ client, personalAccount });
       const message = "hello world";
       const signature = await newAccount.signMessage({ message });
@@ -185,6 +229,72 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         }),
       });
       expect(isValidV2).toEqual(true);
+
+      // sign typed data
+      const signatureTyped = await newAccount.signTypedData({
+        ...typedData.basic,
+        primaryType: "Mail",
+      });
+      expect(signatureTyped.length).toBe(132);
+
+      // add admin
+      const newAdmin = await generateAccount({ client });
+      const receipt = await sendAndConfirmTransaction({
+        account: newAccount,
+        transaction: addAdmin({
+          account: newAccount,
+          adminAddress: newAdmin.address,
+          contract: getContract({
+            address: newAccount.address,
+            chain,
+            client,
+          }),
+        }),
+      });
+      const logs = parseEventLogs({
+        events: [adminUpdatedEvent()],
+        logs: receipt.logs,
+      });
+      expect(logs.length).toBe(1);
+      expect(logs[0]?.args.signer).toBe(newAdmin.address);
+      expect(logs[0]?.args.isAdmin).toBe(true);
+
+      // should not be able to switch chains since factory not deployed elsewhere
+      await expect(
+        wallet.switchChain(baseSepolia),
+      ).rejects.toMatchInlineSnapshot(
+        "[Error: Factory contract not deployed on chain: 84532]",
+      );
+
+      // check can disconnnect
+      await wallet.disconnect();
+      expect(wallet.getAccount()).toBeUndefined();
+    });
+
+    it("can switch chains", async () => {
+      const baseSepoliaEdition = getContract({
+        address: "0x638263e3eAa3917a53630e61B1fBa685308024fa",
+        chain: baseSepolia,
+        client: TEST_CLIENT,
+      });
+      await wallet.switchChain(baseSepolia);
+      const tx = await sendAndConfirmTransaction({
+        transaction: claimTo({
+          contract: baseSepoliaEdition,
+          quantity: 1n,
+          to: smartWalletAddress,
+          tokenId: 0n,
+        }),
+        // biome-ignore lint/style/noNonNullAssertion: should be set after switching chains
+        account: wallet.getAccount()!,
+      });
+      expect(tx.transactionHash).toHaveLength(66);
+      const balance = await balanceOf({
+        contract: baseSepoliaEdition,
+        owner: smartWalletAddress,
+        tokenId: 0n,
+      });
+      expect(balance).toEqual(1n);
     });
   },
 );

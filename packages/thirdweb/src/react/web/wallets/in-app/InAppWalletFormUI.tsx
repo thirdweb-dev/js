@@ -1,3 +1,4 @@
+"use client";
 import styled from "@emotion/styled";
 import { useCallback, useState } from "react";
 import type {

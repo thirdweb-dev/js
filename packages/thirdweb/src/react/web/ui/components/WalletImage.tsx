@@ -1,3 +1,4 @@
+"use client";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getInstalledWalletProviders } from "../../../../wallets/injected/mipdStore.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";

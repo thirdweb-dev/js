@@ -1,3 +1,4 @@
+"use client";
 import { useQuery } from "@tanstack/react-query";
 import { useRef } from "react";
 import { useCustomTheme } from "../../ui/design-system/CustomThemeProvider.js";

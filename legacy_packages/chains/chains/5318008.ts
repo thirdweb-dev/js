@@ -9,7 +9,9 @@ export default {
       "standard": "none"
     }
   ],
-  "faucets": [],
+  "faucets": [
+    "https://dev.reactive.network/docs/kopli-testnet#faucet"
+  ],
   "features": [
     {
       "name": "EIP155"
@@ -18,19 +20,27 @@ export default {
       "name": "EIP1559"
     }
   ],
+  "icon": {
+    "url": "ipfs://QmZewyubd3zC17pmmGbjix6gFsppYpLsP3ntu3aB7rCJmW",
+    "width": 800,
+    "height": 800,
+    "format": "png"
+  },
   "infoURL": "https://reactive.network",
-  "name": "Reactive Network Testnet Kopli",
+  "name": "Reactive Kopli",
   "nativeCurrency": {
-    "name": "React",
+    "name": "Kopli React",
     "symbol": "REACT",
     "decimals": 18
   },
   "networkId": 5318008,
   "rpc": [
     "https://5318008.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://kopli-rpc.reactive.network"
+    "https://kopli-rpc.reactive.network",
+    "http://kopli-rpc.rkt.ink"
   ],
-  "shortName": "react",
-  "slug": "reactive-network-testnet-kopli",
-  "testnet": true
+  "shortName": "kreact",
+  "slug": "reactive-kopli",
+  "testnet": true,
+  "title": "Reactive Network Testnet Kopli"
 } as const satisfies Chain;

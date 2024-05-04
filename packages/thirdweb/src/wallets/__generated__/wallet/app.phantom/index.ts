@@ -8,8 +8,8 @@ export const wallet = {
   image_id: "c38443bb-b3c1-4697-e569-408de3fcc100",
   app: {
     browser: null,
-    ios: "https://apps.apple.com/app/phantom-solana-wallet/1598432977",
-    android: "https://play.google.com/store/apps/details?id=app.phantom",
+    ios: null,
+    android: null,
     mac: null,
     windows: null,
     linux: null,

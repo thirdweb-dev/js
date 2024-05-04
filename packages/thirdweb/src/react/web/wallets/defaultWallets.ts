@@ -1,4 +1,10 @@
 import type { Chain } from "../../../chains/types.js";
+import {
+  COINBASE,
+  METAMASK,
+  RAINBOW,
+  ZERION,
+} from "../../../wallets/constants.js";
 import { createWallet } from "../../../wallets/create-wallet.js";
 import type { Wallet } from "../../../wallets/interfaces/wallet.js";
 import type { AppMetadata } from "../../../wallets/types.js";
@@ -12,12 +18,12 @@ export function getDefaultWallets(options?: {
 }): Wallet[] {
   return [
     createWallet("inApp"),
-    createWallet("io.metamask"),
-    createWallet("com.coinbase.wallet", {
+    createWallet(METAMASK),
+    createWallet(COINBASE, {
       appMetadata: options?.appMetadata,
       chains: options?.chains,
     }),
-    createWallet("me.rainbow"),
-    createWallet("io.zerion.wallet"),
+    createWallet(RAINBOW),
+    createWallet(ZERION),
   ];
 }
