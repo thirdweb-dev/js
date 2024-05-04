@@ -3,11 +3,8 @@ import { prepareContractCall } from "../../../transaction/prepare-contract-call.
 import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
 import { readContract } from "../../../transaction/read-contract.js";
 import { stringToHex } from "../../../utils/encoding/hex.js";
-import type {
-  Account,
-  SendTransactionOption,
-} from "../../interfaces/wallet.js";
-import type { SmartWalletOptions } from "../types.ts";
+import type { SendTransactionOption } from "../../interfaces/wallet.js";
+import type { SmartAccountOptions, SmartWalletOptions } from "../types.ts";
 
 /**
  * @internal
@@ -39,7 +36,7 @@ export async function predictAddress(
  */
 export function prepareCreateAccount(args: {
   factoryContract: ThirdwebContract;
-  options: SmartWalletOptions & { personalAccount: Account };
+  options: SmartAccountOptions;
 }): PreparedTransaction {
   const { factoryContract, options } = args;
   if (options.overrides?.createAccount) {
@@ -60,7 +57,7 @@ export function prepareCreateAccount(args: {
  */
 export function prepareExecute(args: {
   accountContract: ThirdwebContract;
-  options: SmartWalletOptions;
+  options: SmartAccountOptions;
   transaction: SendTransactionOption;
 }): PreparedTransaction {
   const { accountContract, options, transaction } = args;
@@ -83,7 +80,7 @@ export function prepareExecute(args: {
  */
 export function prepareBatchExecute(args: {
   accountContract: ThirdwebContract;
-  options: SmartWalletOptions;
+  options: SmartAccountOptions;
   transactions: SendTransactionOption[];
 }): PreparedTransaction {
   const { accountContract, options, transactions } = args;

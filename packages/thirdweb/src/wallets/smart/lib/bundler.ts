@@ -1,5 +1,4 @@
 import { decodeErrorResult } from "viem";
-import type { ThirdwebClient } from "../../../client/client.js";
 import { parseEventLogs } from "../../../event/actions/parse-logs.js";
 import { userOperationRevertReasonEvent } from "../../../extensions/erc4337/__generated__/IEntryPoint/events/UserOperationRevertReason.js";
 import type { TransactionReceipt } from "../../../transaction/types.js";
@@ -8,7 +7,7 @@ import { getClientFetch } from "../../../utils/fetch.js";
 import type {
   EstimationResult,
   GasPriceResult,
-  SmartWalletOptions,
+  SmartAccountOptions,
   UserOperation,
 } from "../types.js";
 import {
@@ -24,7 +23,7 @@ import { hexlifyUserOp } from "./utils.js";
  */
 export async function bundleUserOp(args: {
   userOp: UserOperation;
-  options: SmartWalletOptions & { client: ThirdwebClient };
+  options: SmartAccountOptions;
 }): Promise<Hex> {
   return sendBundlerRequest({
     ...args,
@@ -41,7 +40,7 @@ export async function bundleUserOp(args: {
  */
 export async function estimateUserOpGas(args: {
   userOp: UserOperation;
-  options: SmartWalletOptions & { client: ThirdwebClient };
+  options: SmartAccountOptions;
 }): Promise<EstimationResult> {
   const res = await sendBundlerRequest({
     ...args,
@@ -65,7 +64,7 @@ export async function estimateUserOpGas(args: {
  * @internal
  */
 export async function getUserOpGasPrice(args: {
-  options: SmartWalletOptions & { client: ThirdwebClient };
+  options: SmartAccountOptions;
 }): Promise<GasPriceResult> {
   const res = await sendBundlerRequest({
     ...args,
@@ -84,7 +83,7 @@ export async function getUserOpGasPrice(args: {
  */
 export async function getUserOpReceipt(args: {
   userOpHash: Hex;
-  options: SmartWalletOptions & { client: ThirdwebClient };
+  options: SmartAccountOptions;
 }): Promise<TransactionReceipt | undefined> {
   const res = await sendBundlerRequest({
     ...args,
@@ -117,7 +116,7 @@ export async function getUserOpReceipt(args: {
 }
 
 async function sendBundlerRequest(args: {
-  options: SmartWalletOptions & { client: ThirdwebClient };
+  options: SmartAccountOptions;
   operation:
     | "eth_estimateUserOperationGas"
     | "eth_sendUserOperation"

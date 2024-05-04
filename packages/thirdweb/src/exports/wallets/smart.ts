@@ -7,4 +7,7 @@ export type {
   PaymasterResult,
 } from "../../wallets/smart/types.js";
 
-export { ENTRYPOINT_ADDRESS_v0_6 } from "../../wallets/smart/lib/constants.js";
+export {
+  ENTRYPOINT_ADDRESS_v0_6,
+  DEFAULT_ACCOUNT_FACTORY,
+} from "../../wallets/smart/lib/constants.js";

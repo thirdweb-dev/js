@@ -1,9 +1,8 @@
-import type { ThirdwebClient } from "../../../client/client.js";
 import { hexToBigInt } from "../../../utils/encoding/hex.js";
 import { getClientFetch } from "../../../utils/fetch.js";
 import type {
   PaymasterResult,
-  SmartWalletOptions,
+  SmartAccountOptions,
   UserOperation,
 } from "../types.js";
 import {
@@ -19,7 +18,7 @@ import { hexlifyUserOp } from "./utils.js";
  */
 export async function getPaymasterAndData(args: {
   userOp: UserOperation;
-  options: SmartWalletOptions & { client: ThirdwebClient };
+  options: SmartAccountOptions;
 }): Promise<PaymasterResult> {
   const { userOp, options } = args;
 

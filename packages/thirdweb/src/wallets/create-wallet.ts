@@ -9,11 +9,15 @@ import type {
   CreateWalletArgs,
   InjectedConnectOptions,
   WalletAutoConnectionOption,
+  WalletConnectionOption,
   WalletId,
 } from "./wallet-types.js";
 
 import { trackConnect } from "../analytics/track.js";
+import { getContract } from "../contract/contract.js";
+import { isContractDeployed } from "../exports/utils.js";
 import { COINBASE } from "./constants.js";
+import { DEFAULT_ACCOUNT_FACTORY } from "./smart/lib/constants.js";
 import type { WCConnectOptions } from "./wallet-connect/types.js";
 import { createWalletEmitter } from "./wallet-emitter.js";
 
@@ -300,9 +304,10 @@ export function walletConnect() {
 export function smartWallet(
   createOptions: CreateWalletArgs<"smart">[1],
 ): Wallet<"smart"> {
-  const emitter = createWalletEmitter<"inApp">();
+  const emitter = createWalletEmitter<"smart">();
   let account: Account | undefined = undefined;
   let chain: Chain | undefined = undefined;
+  let lastConnectOptions: WalletConnectionOption<"smart"> | undefined;
 
   const _smartWallet: Wallet<"smart"> = {
     id: "smart",
@@ -318,6 +323,7 @@ export function smartWallet(
         createOptions,
       );
       // set the states
+      lastConnectOptions = options;
       account = connectedAccount;
       chain = connectedChain;
       trackConnect({
@@ -336,6 +342,7 @@ export function smartWallet(
         createOptions,
       );
       // set the states
+      lastConnectOptions = options;
       account = connectedAccount;
       chain = connectedChain;
       trackConnect({
@@ -344,17 +351,42 @@ export function smartWallet(
         walletAddress: account.address,
       });
       // return account
+      emitter.emit("accountChanged", account);
       return account;
     },
     disconnect: async () => {
       account = undefined;
       chain = undefined;
-      emitter.emit("disconnect", undefined);
       const { disconnectSmartWallet } = await import("./smart/index.js");
       await disconnectSmartWallet(_smartWallet);
+      emitter.emit("disconnect", undefined);
     },
-    switchChain: async () => {
-      throw new Error("Not implemented yet");
+    switchChain: async (newChain: Chain) => {
+      if (!lastConnectOptions) {
+        throw new Error("Cannot switch chain without a previous connection");
+      }
+      // check if factory is deployed
+      const factory = getContract({
+        address: createOptions.factoryAddress || DEFAULT_ACCOUNT_FACTORY,
+        chain: newChain,
+        client: lastConnectOptions.client,
+      });
+      const isDeployed = await isContractDeployed(factory);
+      if (!isDeployed) {
+        throw new Error(
+          `Factory contract not deployed on chain: ${newChain.id}`,
+        );
+      }
+      const { connectSmartWallet } = await import("./smart/index.js");
+      const [connectedAccount, connectedChain] = await connectSmartWallet(
+        _smartWallet,
+        { ...lastConnectOptions, chain: newChain },
+        createOptions,
+      );
+      // set the states
+      account = connectedAccount;
+      chain = connectedChain;
+      emitter.emit("chainChanged", newChain);
     },
   };
 

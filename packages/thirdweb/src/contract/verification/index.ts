@@ -33,7 +33,7 @@ type VerifyContractOptions = {
  * @example
  * ```ts
  * import { getContract } from "thirdweb/contract";
- * import { verifyContract } from "thirdweb/contract/verification";
+ * import { verifyContract } from "thirdweb/contract";
  *
  * const contract = getContract({ ... });
  * const verificationResult = await verifyContract({
@@ -162,7 +162,7 @@ type CheckVerificationStatusOptions = {
  * @throws An error if the verification status check fails.
  * @example
  * ```ts
- * import { checkVerificationStatus } from "thirdweb/contract/verification";
+ * import { checkVerificationStatus } from "thirdweb/contract";
  * const verificationStatus = await checkVerificationStatus({
  *  explorerApiUrl: "https://api.polygonscan.com/api",
  *  explorerApiKey: "YOUR_API_KEY",
