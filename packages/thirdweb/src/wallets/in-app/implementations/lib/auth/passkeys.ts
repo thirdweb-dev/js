@@ -71,14 +71,8 @@ export async function registerPasskey(options: {
   if (!verifData) {
     throw new Error("No token received");
   }
-
-  return verifData;
   // 5. returns back the IAW authentication token
-  // 6. pass it to the iframe and call postLogin to store the auth token
-  // 7. return the auth'd user type
-
-  //return registration;
-  // throw new Error("Not implemented");
+  return verifData;
 }
 
 export async function loginWithPasskey(options: {
@@ -108,7 +102,6 @@ export async function loginWithPasskey(options: {
     userVerification: "required",
   });
   // 3. send the authentication object to the server/iframe
-  // 4. return the auth'd user type
   const verifRes = await fetchWithId(getVerificationPath(), {
     method: "POST",
     headers: {
@@ -131,5 +124,6 @@ export async function loginWithPasskey(options: {
   if (!verifData) {
     throw new Error("No token received");
   }
+  // 6. return the auth'd user type
   return verifData;
 }
