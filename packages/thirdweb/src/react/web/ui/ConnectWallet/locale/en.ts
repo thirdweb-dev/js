@@ -26,7 +26,7 @@ const connectLocaleEn: ConnectLocale = {
   guestWalletWarning:
     "This is a temporary guest wallet. Backup wallet if you don't want to lose access to it",
   switchTo: "Switch to", // Used in "Switch to <Wallet-Name>"
-  connectedToSmartWallet: "Connected To Smart Wallet",
+  connectedToSmartWallet: "Smart Account",
   confirmInWallet: "Confirm in wallet",
   disconnectWallet: "Disconnect Wallet",
   copyAddress: "Copy Address",
