@@ -117,7 +117,7 @@ describeIf(!!SECRET_KEY)(
     });
 
     it("can sign and verify 1271 old factory", {
-      timeout: 240_000,
+      timeout: 300_000,
     }, async () => {
       const message = "0x1234";
       const sig = await smartWallet.signMessage(message);
@@ -140,7 +140,7 @@ describeIf(!!SECRET_KEY)(
     });
 
     it("can sign and verify 1271 new factory", {
-      timeout: 240_000,
+      timeout: 300_000,
     }, async () => {
       smartWallet = new SmartWallet({
         chain,
