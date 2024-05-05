@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useCallback, useState, useSyncExternalStore } from "react";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { ConnectManagerOptions } from "../../../../wallets/manager/index.js";
