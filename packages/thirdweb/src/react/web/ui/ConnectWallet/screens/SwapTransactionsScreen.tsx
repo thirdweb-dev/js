@@ -1,3 +1,4 @@
+"use client"
 import { ArrowRightIcon, CrossCircledIcon } from "@radix-ui/react-icons";
 import { useMemo, useState, useSyncExternalStore } from "react";
 import { defineChain } from "../../../../../chains/utils.js";
