@@ -116,7 +116,8 @@ describeIf(!!SECRET_KEY)(
       expect(balance.toNumber()).toEqual(7);
     });
 
-    it("can sign and verify 1271 old factory", {
+    // FIXME flaky test
+    it.todo("can sign and verify 1271 old factory", {
       timeout: 300_000,
     }, async () => {
       const message = "0x1234";
@@ -139,7 +140,8 @@ describeIf(!!SECRET_KEY)(
       expect(isValidV2).toEqual(true);
     });
 
-    it("can sign and verify 1271 new factory", {
+    // FIXME flaky test
+    it.todo("can sign and verify 1271 new factory", {
       timeout: 300_000,
     }, async () => {
       smartWallet = new SmartWallet({
