@@ -112,6 +112,10 @@ export function useSendTransaction(config: SendTransactionConfig = {}) {
     if ("sponsorGas" in options && options.sponsorGas === true) {
       payModalEnabled = false;
     }
+
+    if ("gasless" in options && options.gasless === true) {
+      payModalEnabled = false;
+    }
   }
 
   const setRootEl = useContext(SetRootElementContext);
