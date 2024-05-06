@@ -164,8 +164,8 @@ importers:
         version: link:../../../legacy_packages/wallets
     devDependencies:
       '@swc/cli':
-        specifier: 0.3.10
-        version: 0.3.10(@swc/core@1.4.12)
+        specifier: 0.3.12
+        version: 0.3.12(@swc/core@1.4.12)
       '@swc/core':
         specifier: ^1.4.12
         version: 1.4.12
@@ -8067,7 +8067,7 @@ packages:
       ext-name: 5.0.0
       file-type: 17.1.6
       filenamify: 5.1.1
-      got: 11.8.6
+      got: 11.8.5
       os-filter-obj: 2.0.0
     dev: true
 
@@ -11154,8 +11154,8 @@ packages:
       tslib: 2.6.2
     dev: true
 
-  /@swc/cli@0.3.10(@swc/core@1.4.12):
-    resolution: {integrity: sha512-YWfYo9kXdbmIuGwIPth9geKgb0KssCMTdZa44zAN5KoqcuCP2rTW9s60heQDSRNpbtCmUr7BKF1VivsoHXrvrQ==}
+  /@swc/cli@0.3.12(@swc/core@1.4.12):
+    resolution: {integrity: sha512-h7bvxT+4+UDrLWJLFHt6V+vNAcUNii2G4aGSSotKz1ECEk4MyEh5CWxmeSscwuz5K3i+4DWTgm4+4EyMCQKn+g==}
     engines: {node: '>= 16.14.0'}
     hasBin: true
     peerDependencies:
@@ -18093,24 +18093,6 @@ packages:
       lowercase-keys: 2.0.0
       p-cancelable: 2.1.1
       responselike: 2.0.1
-    dev: false
-
-  /got@11.8.6:
-    resolution: {integrity: sha512-6tfZ91bOr7bOXnK7PRDCGBLa1H4U080YHNaAQ2KsMGlLEzRbk44nsZF2E1IeRc3vtJHPVbKCYgdFbaGO2ljd8g==}
-    engines: {node: '>=10.19.0'}
-    dependencies:
-      '@sindresorhus/is': 4.6.0
-      '@szmarczak/http-timer': 4.0.6
-      '@types/cacheable-request': 6.0.3
-      '@types/responselike': 1.0.3
-      cacheable-lookup: 5.0.4
-      cacheable-request: 7.0.4
-      decompress-response: 6.0.0
-      http2-wrapper: 1.0.3
-      lowercase-keys: 2.0.0
-      p-cancelable: 2.1.1
-      responselike: 2.0.1
-    dev: true
 
   /got@12.6.1:
     resolution: {integrity: sha512-mThBblvlAF1d4O5oqyvN+ZxLAYwIJK7bpMxgYqPD9okW0C3qm5FFn7k811QrcuEBwaogR3ngOFoCfs6mRv7teQ==}
