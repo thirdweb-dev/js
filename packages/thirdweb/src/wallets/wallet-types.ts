@@ -56,7 +56,7 @@ export type InAppWalletCreationOptions =
       auth?: {
         options: InAppWalletAuth[];
       };
-      sponsorGas?: boolean;
+      accountAbstraction?: SmartWalletOptions;
     }
   | undefined;
 

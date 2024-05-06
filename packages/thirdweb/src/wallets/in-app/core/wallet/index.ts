@@ -1,9 +1,7 @@
 import { ethereum } from "../../../../chains/chain-definitions/ethereum.js";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
-import { smartWallet } from "../../../create-wallet.js";
 import type { Account } from "../../../interfaces/wallet.js";
-import { connectSmartWallet } from "../../../smart/index.js";
 import type {
   CreateWalletArgs,
   WalletAutoConnectionOption,
@@ -38,24 +36,12 @@ export async function connectInAppWallet(
   const authResult = await authenticate(options);
   const authAccount = await authResult.user.wallet.getAccount();
 
-  if (createOptions?.sponsorGas) {
-    if (!options.chain) {
-      throw new Error("chain is required when sponsorGas is enabled");
-    }
-    // convert to smart account
-    const createOptions = {
-      chain: options.chain,
-      sponsorGas: true,
-    };
-    const sa = smartWallet(createOptions);
-    return connectSmartWallet(
-      sa,
-      {
-        client: options.client,
-        personalAccount: authAccount,
-      },
-      createOptions,
-    );
+  if (createOptions?.accountAbstraction) {
+    return convertToSmartAccount({
+      chain: options.chain || createOptions.accountAbstraction.chain,
+      client: options.client,
+      authAccount,
+    });
   }
 
   return [authAccount, options.chain || ethereum] as const;
@@ -81,25 +67,38 @@ export async function autoConnectInAppWallet(
 
   const authAccount = await user.wallet.getAccount();
 
-  if (createOptions?.sponsorGas) {
-    if (!options.chain) {
-      throw new Error("chain is required when sponsorGas is enabled");
-    }
-    // convert to smart account
-    const createOptions = {
-      chain: options.chain,
-      sponsorGas: true,
-    };
-    const sa = smartWallet(createOptions);
-    return connectSmartWallet(
-      sa,
-      {
-        client: options.client,
-        personalAccount: authAccount,
-      },
-      createOptions,
-    );
+  if (createOptions?.accountAbstraction) {
+    return convertToSmartAccount({
+      chain: options.chain || createOptions.accountAbstraction.chain,
+      client: options.client,
+      authAccount,
+    });
   }
 
   return [authAccount, options.chain || ethereum] as const;
+}
+
+async function convertToSmartAccount(options: {
+  chain: Chain;
+  client: ThirdwebClient;
+  authAccount: Account;
+}) {
+  const [{ smartWallet }, { connectSmartWallet }] = await Promise.all([
+    import("../../../create-wallet.js"),
+    import("../../../smart/index.js"),
+  ]);
+
+  const createOptions = {
+    chain: options.chain,
+    sponsorGas: true,
+  };
+  const sa = smartWallet(createOptions);
+  return connectSmartWallet(
+    sa,
+    {
+      client: options.client,
+      personalAccount: options.authAccount,
+    },
+    createOptions,
+  );
 }

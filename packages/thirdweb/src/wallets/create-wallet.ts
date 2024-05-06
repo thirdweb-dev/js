@@ -14,6 +14,7 @@ import type {
 } from "./wallet-types.js";
 
 import { trackConnect } from "../analytics/track.js";
+import type { ThirdwebClient } from "../client/client.js";
 import { getContract } from "../contract/contract.js";
 import { isContractDeployed } from "../exports/utils.js";
 import { COINBASE } from "./constants.js";
@@ -417,6 +418,8 @@ export function inAppWallet(
   const emitter = createWalletEmitter<"inApp">();
   let account: Account | undefined = undefined;
   let chain: Chain | undefined = undefined;
+  let client: ThirdwebClient | undefined;
+
   return {
     id: "inApp",
     subscribe: emitter.subscribe,
@@ -433,6 +436,7 @@ export function inAppWallet(
         createOptions,
       );
       // set the states
+      client = options.client;
       account = connectedAccount;
       chain = connectedChain;
       trackConnect({
@@ -453,6 +457,7 @@ export function inAppWallet(
         createOptions,
       );
       // set the states
+      client = options.client;
       account = connectedAccount;
       chain = connectedChain;
       trackConnect({
@@ -470,8 +475,24 @@ export function inAppWallet(
       emitter.emit("disconnect", undefined);
     },
     switchChain: async (newChain) => {
-      // simply set the new chain
-      chain = newChain;
+      if (createOptions?.accountAbstraction && client && account) {
+        // if account abstraction is enabled, reconnect to smart account on the new chain
+        const { autoConnectInAppWallet } = await import(
+          "./in-app/core/wallet/index.js"
+        );
+        const [connectedAccount, connectedChain] = await autoConnectInAppWallet(
+          {
+            chain: newChain,
+            client,
+          },
+          createOptions,
+        );
+        account = connectedAccount;
+        chain = connectedChain;
+      } else {
+        // it not, simply set the new chain
+        chain = newChain;
+      }
       emitter.emit("chainChanged", newChain);
     },
   };
