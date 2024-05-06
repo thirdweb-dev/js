@@ -1,11 +1,11 @@
 import { CheckCircledIcon } from "@radix-ui/react-icons";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import type { ThirdwebClient } from "../../../client/client.js";
-import { useActiveWallet } from "../../../exports/react-native.js";
-import type { Wallet } from "../../../exports/wallets.js";
 import type { GaslessOptions } from "../../../transaction/actions/gasless/types.js";
 import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
+import type { Wallet } from "../../../wallets/interfaces/wallet.js";
 import { useSendTransactionCore } from "../../core/hooks/contract/useSendTransaction.js";
+import { useActiveWallet } from "../../core/hooks/wallets/wallet-hooks.js";
 import { SetRootElementContext } from "../../core/providers/RootElementContext.js";
 import type { PayUIOptions } from "../ui/ConnectWallet/ConnectButtonProps.js";
 import {
@@ -97,11 +97,10 @@ export function useSendTransaction(config: SendTransactionConfig = {}) {
   const activeWallet = useActiveWallet();
   const payModal = config.payModal;
 
-  let shouldShowPayModal = true;
+  let payModalEnabled = true;
 
-  // if payModal is disbabled or gasless is enabled, don't show the pay modal
   if (payModal === false || config.gasless) {
-    shouldShowPayModal = false;
+    payModalEnabled = false;
   }
 
   // if active wallet is smart wallet with gasless enabled, don't show the pay modal
@@ -109,13 +108,17 @@ export function useSendTransaction(config: SendTransactionConfig = {}) {
     const options = (activeWallet as Wallet<"smart">).getConfig();
 
     if ("sponsorGas" in options && options.sponsorGas === true) {
-      shouldShowPayModal = false;
+      payModalEnabled = false;
+    }
+
+    if ("gasless" in options && options.gasless === true) {
+      payModalEnabled = false;
     }
   }
 
   const setRootEl = useContext(SetRootElementContext);
   return useSendTransactionCore(
-    !shouldShowPayModal || payModal === false
+    !payModalEnabled || payModal === false
       ? undefined
       : (data) => {
           setRootEl(

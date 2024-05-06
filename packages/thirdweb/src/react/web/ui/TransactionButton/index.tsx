@@ -125,6 +125,7 @@ export function TransactionButton(props: TransactionButtonProps) {
     onError,
     onClick,
     gasless,
+    payModal,
     disabled,
     ...buttonProps
   } = props;
@@ -135,7 +136,7 @@ export function TransactionButton(props: TransactionButtonProps) {
 
   const sendTransaction = useSendTransaction({
     gasless,
-    payModal: props.payModal,
+    payModal,
   });
 
   return (
