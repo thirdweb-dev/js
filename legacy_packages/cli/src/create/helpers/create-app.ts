@@ -22,13 +22,11 @@ export async function createApp({
   appPath,
   packageManager,
   framework,
-  language,
   template,
 }: {
   appPath: string;
   packageManager: PackageManager;
   framework?: string;
-  language?: string;
   template?: string;
 }): Promise<void> {
   let frameworkPath = "";
@@ -45,7 +43,7 @@ export async function createApp({
       process.exit(1);
     }
   } else if (framework) {
-    frameworkPath = `${framework}-${language || "javascript"}-starter`;
+    frameworkPath = `${framework}-starter`;
     const found = await hasTemplate(frameworkPath);
 
     if (!found) {
@@ -63,7 +61,7 @@ export async function createApp({
   function isReactNativeCLI() {
     return (
       isReactNative &&
-      (language === "typescript" || (template && !template.includes("expo")))
+      (template && !template.includes("expo"))
     );
   }
 

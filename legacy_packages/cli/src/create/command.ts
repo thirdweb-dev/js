@@ -16,7 +16,6 @@ let contractName: string = "";
 let projectPath: string = "";
 let projectType: string = "";
 let framework: string = "";
-let language: string = "";
 let baseContract: string = "";
 let chain: string = "";
 let createExtension: boolean = false;
@@ -45,74 +44,57 @@ export async function twCreate(
 
   // case where users use `npx thirdweb create --option` directly
   if (!projectType && Object.keys(options).length > 0) {
-    if (options.react) {
+if (options.react) {
       projectType = "app";
-      language = "typescript";
       framework = "cra";
     }
 
     if (options.next) {
       projectType = "app";
-      language = "typescript";
       framework = "next";
     }
 
     if (options.vite) {
       projectType = "app";
-      language = "typescript";
       framework = "vite";
     }
 
     if (options.node) {
       projectType = "app";
-      language = "typescript";
       framework = "node";
     }
 
     if (options.express) {
       projectType = "app";
-      language = "typescript";
       framework = "express";
     }
 
     if (options.pwaVite) {
       projectType = "app";
-      language = "typescript";
       framework = "pwa-vite";
     }
 
     if (options.reactNative) {
       projectType = "app";
-      language = "typescript";
       framework = "react-native";
     }
   }
 
   if (projectType === "app") {
-    if (options.typescript) {
-      language = "typescript";
-    }
-    if (options.javascript) {
-      language = "javascript";
-    }
-
     if (options.next) {
       framework = "next";
     }
-    if (options.react) {
+if (options.react) {
       framework = "cra";
     }
     if (options.vite) {
       framework = "vite";
     }
-    if (options.node) {
+if (options.node) {
       framework = "node";
     }
     if (options.express) {
       framework = "express";
-    }
-    if (options.reactNative) {
-      framework = "react-native";
     }
     if (options.pwaVite) {
       framework = "pwa-vite";
@@ -258,10 +240,9 @@ export async function twCreate(
           message: CREATE_MESSAGES.framework,
           choices: [
             { title: "Next.js", value: "next" },
-            { title: "Create React App", value: "cra" },
+{ title: "Create React App", value: "cra" },
             { title: "Vite", value: "vite" },
-            { title: "PWA Vite", value: "pwa-vite" },
-            { title: "React Native", value: "react-native" },
+{ title: "PWA Vite", value: "pwa-vite" },
             { title: "Node.js", value: "node" },
             { title: "Express", value: "express" },
           ],
@@ -269,40 +250,6 @@ export async function twCreate(
 
         if (typeof res.framework === "string") {
           framework = res.framework.trim();
-        }
-      }
-
-      if (projectType === "app" && !language) {
-        if (framework === "react-native") {
-          const res = await prompts({
-            type: "select",
-            name: "project",
-            message: CREATE_MESSAGES.reactNative,
-            choices: [
-              { title: "Expo Project", value: "expo" },
-              { title: "React Native CLI", value: "typescript" },
-            ],
-          });
-
-          if (typeof res.project === "string") {
-            language = res.project.trim();
-          }
-        } else if (framework === "pwa-vite" || framework === "pwa-next") {
-          language = "typescript";
-        } else {
-          const res = await prompts({
-            type: "select",
-            name: "language",
-            message: CREATE_MESSAGES.language,
-            choices: [
-              { title: "JavaScript", value: "javascript" },
-              { title: "TypeScript", value: "typescript" },
-            ],
-          });
-
-          if (typeof res.language === "string") {
-            language = res.language.trim();
-          }
         }
       }
 
@@ -329,11 +276,6 @@ export async function twCreate(
       if (!framework) {
         console.log("Please specify a framework");
         process.exit(1);
-      }
-
-      if (!language) {
-        // Default = JavaScript
-        language = "javascript";
       }
     }
   }
@@ -483,7 +425,6 @@ export async function twCreate(
         appPath: projectPath,
         packageManager,
         framework,
-        language,
         template,
       });
     } else {
