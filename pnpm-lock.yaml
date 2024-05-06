@@ -45,10 +45,10 @@ dependencies:
     version: 7.111.0(next@14.2.2)(react@18.3.1)
   '@stripe/react-stripe-js':
     specifier: ^2.7.0
-    version: 2.7.0(@stripe/stripe-js@3.3.0)(react-dom@18.2.0)(react@18.3.1)
+    version: 2.7.0(@stripe/stripe-js@3.4.0)(react-dom@18.2.0)(react@18.3.1)
   '@stripe/stripe-js':
-    specifier: ^3.3.0
-    version: 3.3.0
+    specifier: ^3.4.0
+    version: 3.4.0
   '@tanstack/query-async-storage-persister':
     specifier: ^4.36.1
     version: 4.36.1
@@ -5956,21 +5956,21 @@ packages:
       '@stablelib/wipe': 1.0.1
     dev: false
 
-  /@stripe/react-stripe-js@2.7.0(@stripe/stripe-js@3.3.0)(react-dom@18.2.0)(react@18.3.1):
+  /@stripe/react-stripe-js@2.7.0(@stripe/stripe-js@3.4.0)(react-dom@18.2.0)(react@18.3.1):
     resolution: {integrity: sha512-kTkIZl2ZleBuDR9c6fDy/s4m33llII8a5al6BDAMSTrfVq/4gSZv3RBO5KS/xvnxS+fDapJ3bKvjD8Lqj+AKdQ==}
     peerDependencies:
       '@stripe/stripe-js': ^1.44.1 || ^2.0.0 || ^3.0.0
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
-      '@stripe/stripe-js': 3.3.0
+      '@stripe/stripe-js': 3.4.0
       prop-types: 15.8.1
       react: 18.3.1
       react-dom: 18.2.0(react@18.3.1)
     dev: false
 
-  /@stripe/stripe-js@3.3.0:
-    resolution: {integrity: sha512-dUgAsko9KoYC1U2TIawHzbkQJzPoApxCc1Qf6/j318d1ArViyh6ROHVYTxnU3RlOQL/utUD9I4/QoyiCowsgrw==}
+  /@stripe/stripe-js@3.4.0:
+    resolution: {integrity: sha512-a2kUP7OrsV0SSIk3UxWa+cnrW+PPIyuCbWIBH8vxfHIqmyeQN/d0lsplZJ2h7MlLsU/sB3EyhNBkhLLT+zHwKw==}
     engines: {node: '>=12.16'}
     dev: false
 
