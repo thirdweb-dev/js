@@ -44,7 +44,7 @@ export async function twCreate(
 
   // case where users use `npx thirdweb create --option` directly
   if (!projectType && Object.keys(options).length > 0) {
-if (options.react) {
+    if (options.react) {
       projectType = "app";
       framework = "cra";
     }
@@ -84,13 +84,13 @@ if (options.react) {
     if (options.next) {
       framework = "next";
     }
-if (options.react) {
+    if (options.react) {
       framework = "cra";
     }
     if (options.vite) {
       framework = "vite";
     }
-if (options.node) {
+    if (options.node) {
       framework = "node";
     }
     if (options.express) {
@@ -240,9 +240,9 @@ if (options.node) {
           message: CREATE_MESSAGES.framework,
           choices: [
             { title: "Next.js", value: "next" },
-{ title: "Create React App", value: "cra" },
+            { title: "Create React App", value: "cra" },
             { title: "Vite", value: "vite" },
-{ title: "PWA Vite", value: "pwa-vite" },
+            { title: "PWA Vite", value: "pwa-vite" },
             { title: "Node.js", value: "node" },
             { title: "Express", value: "express" },
           ],
