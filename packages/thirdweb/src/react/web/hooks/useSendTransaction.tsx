@@ -1,8 +1,8 @@
 import { useContext, useState } from "react";
 import type { ThirdwebClient } from "../../../client/client.js";
-import type { Wallet } from "../../../exports/wallets.js";
 import type { GaslessOptions } from "../../../transaction/actions/gasless/types.js";
 import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
+import type { Wallet } from "../../../wallets/interfaces/wallet.js";
 import { useSendTransactionCore } from "../../core/hooks/contract/useSendTransaction.js";
 import { useActiveWallet } from "../../core/hooks/wallets/wallet-hooks.js";
 import { SetRootElementContext } from "../../core/providers/RootElementContext.js";
