@@ -120,9 +120,9 @@ export function ConnectButton(props: ConnectButtonProps) {
         auth: props.auth,
       }}
     >
-      <WalletUIStatesProvider theme={props.theme}>
+      <WalletUIStatesProvider theme={props.theme} isOpen={false}>
         <ConnectButtonInner {...props} connectLocale={localeQuery.data} />
-        <ConnectModal />
+        <ConnectModal shouldSetActive={true} />
         {autoConnectComp}
       </WalletUIStatesProvider>
     </ConnectUIContext.Provider>

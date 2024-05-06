@@ -12,10 +12,15 @@ import { onModalUnmount, reservedScreens } from "../constants.js";
 import { ConnectModalContent } from "./ConnectModalContent.js";
 import { useSetupScreen } from "./screen.js";
 
+type ConnectModalOptions = {
+  onClose?: () => void;
+  shouldSetActive: boolean;
+};
+
 /**
  * @internal
  */
-const ConnectModal = () => {
+const ConnectModal = (props: ConnectModalOptions) => {
   const screenSetup = useSetupScreen();
   const setSelectionData = useSetSelectionData();
   const { screen, setScreen, initialScreen } = screenSetup;
@@ -25,12 +30,19 @@ const ConnectModal = () => {
   const { connectModal } = useConnectUI();
 
   const closeModal = useCallback(() => {
+    props.onClose?.();
     setIsWalletModalOpen(false);
     onModalUnmount(() => {
       setScreen(initialScreen);
       setSelectionData({});
     });
-  }, [initialScreen, setIsWalletModalOpen, setScreen, setSelectionData]);
+  }, [
+    initialScreen,
+    setIsWalletModalOpen,
+    setScreen,
+    setSelectionData,
+    props.onClose,
+  ]);
 
   const activeAccount = useActiveAccount();
 
@@ -82,6 +94,7 @@ const ConnectModal = () => {
       }}
     >
       <ConnectModalContent
+        shouldSetActive={props.shouldSetActive}
         screenSetup={screenSetup}
         setModalVisibility={setModalVisibility}
         isOpen={isWalletModalOpen}

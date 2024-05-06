@@ -34,6 +34,26 @@ import { useSetupScreen } from "./screen.js";
 
 export type ConnectEmbedProps = {
   /**
+   * Whether to set the Connected wallet as active wallet or not.
+   *
+   * By defaut it is set to `true`
+   *
+   * You can set it to `false` and use the `onConnect` callback to get the connected wallet and prevent it from being set as active wallet
+   *
+   * @example
+   * ```tsx
+   * <ConnectEmbed
+   *  client={client}
+   *  setActive={false}
+   *  onConnect={wallet => {
+   *    console.log("connected to", wallet)
+   *  }}
+   *  />
+   * ```
+   */
+  setActive?: boolean;
+
+  /**
    * A client is the entry point to the thirdweb SDK.
    * It is required for all other actions.
    * You can create a client using the `createThirdwebClient` function. Refer to the [Creating a Client](https://portal.thirdweb.com/typescript/v5/client) documentation for more information.
@@ -406,7 +426,7 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
           auth: props.auth,
         }}
       >
-        <WalletUIStatesProvider theme={props.theme}>
+        <WalletUIStatesProvider theme={props.theme} isOpen={false}>
           <ConnectEmbedContent {...props} onConnect={props.onConnect} />
           {autoConnectComp}
         </WalletUIStatesProvider>
@@ -451,6 +471,7 @@ const ConnectEmbedContent = (
   } else {
     content = (
       <ConnectModalContent
+        shouldSetActive={props.setActive !== false}
         screenSetup={screenSetup}
         isOpen={true}
         onClose={() => {

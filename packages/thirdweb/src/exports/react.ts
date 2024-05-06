@@ -102,3 +102,8 @@ export {
 
 // auth
 export { type SiweAuthOptions } from "../react/core/hooks/auth/useSiweAuth.js";
+
+export {
+  useConnectModal,
+  type UseConnectModalOptions,
+} from "../react/web/ui/ConnectWallet/useConnectModal.js";
