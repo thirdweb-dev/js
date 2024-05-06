@@ -42,23 +42,22 @@ export type BuyWithFiatHistoryData = {
 };
 
 /**
- * Gets the History of purchases for a given wallet address
+ * Get the transaction history of "Buy with fiat" for a given wallet address
  * @param params Object of type [`BuyWithFiatHistoryParams`](https://portal.thirdweb.com/references/typescript/v5/BuyWithFiatHistoryParams)
  * @example
  *
  * ```ts
  * import { createThirdwebClient } from "thirdweb";
- * import { BuyWithFiatHistoryData } from "thirdweb/pay";
+ * import { getBuyWithFiatHistory } from "thirdweb/pay";
  *
  * const client = createThirdwebClient({ clientId: "..." });
- * const walletAddress = "0x...";
- * const params = {
- *  client,
- *  walletAddress,
- * };
  *
- * // grabs the history of purchase transactions for the wallet address
- * const status = await getBuyWithFiatHistory(params)
+ * const history = await getBuyWithFiatHistory({
+ *  client: client,
+ *  walletAddress: '0x...',
+ *  start: 0,
+ *  count: 10,
+ * })
  * ```
  * @returns Object of type [`BuyWithFiatHistoryData`](https://portal.thirdweb.com/references/typescript/v5/BuyWithFiatHistoryData)
  * @buyCrypto

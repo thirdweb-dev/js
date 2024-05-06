@@ -730,9 +730,8 @@ function FiatScreenContent(
   const fiatQuoteQuery = useBuyWithFiatQuote(
     buyWithFiatOptions !== false && tokenAmount
       ? {
-          fromCurrencySymbol: selectedCurrency.shorthand,
+          fromCurrencySymbol: "USD", // STRIPE only supports USD
           toChainId: toChain.id,
-          fromAddress: account.address,
           toAddress: account.address,
           toTokenAddress: isNativeToken(toToken)
             ? NATIVE_TOKEN_ADDRESS
