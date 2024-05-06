@@ -26,7 +26,7 @@ const connectWalletLocalEs: ConnectLocale = {
   guestWalletWarning:
     "Esta es una cartera de invitado temporal. Haz una copia de seguridad si no quieres perder el acceso a ella",
   switchTo: "Cambiar a",
-  connectedToSmartWallet: "Conectado a la cartera inteligente",
+  connectedToSmartWallet: "cartera inteligente",
   confirmInWallet: "Confirmar en cartera",
   disconnectWallet: "Desconectar cartera",
   copyAddress: "Copiar dirección",

@@ -332,6 +332,11 @@ export const ConnectedWalletDetails: React.FC<{
         )}
 
         <Spacer y="md" />
+        <ConnectedToSmartWallet />
+
+        {(activeWallet?.id === "embedded" || activeWallet?.id === "inApp") && (
+          <InAppWalletUserInfo />
+        )}
 
         {/* Address */}
         <div
@@ -377,12 +382,6 @@ export const ConnectedWalletDetails: React.FC<{
       <Spacer y="lg" />
 
       <Container px="lg">
-        <ConnectedToSmartWallet />
-
-        {(activeWallet?.id === "embedded" || activeWallet?.id === "inApp") && (
-          <InAppWalletUserInfo />
-        )}
-
         {/* Send, Receive, Swap */}
         <Container
           style={{
@@ -886,7 +885,7 @@ function ConnectedToSmartWallet() {
           <Text size="sm"> {content}</Text>
         )}
 
-        <Spacer y="md" />
+        <Spacer y="xs" />
       </>
     );
   }
@@ -924,7 +923,7 @@ function InAppWalletUserInfo() {
         flex="row"
         center="x"
         style={{
-          paddingBottom: spacing.md,
+          paddingBottom: spacing.xs,
         }}
       >
         <Text size="sm">{userInfoQuery.data}</Text>
