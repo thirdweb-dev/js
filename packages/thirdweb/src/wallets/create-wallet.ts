@@ -428,8 +428,10 @@ export function inAppWallet(
         "./in-app/core/wallet/index.js"
       );
 
-      const [connectedAccount, connectedChain] =
-        await autoConnectInAppWallet(options);
+      const [connectedAccount, connectedChain] = await autoConnectInAppWallet(
+        options,
+        createOptions,
+      );
       // set the states
       account = connectedAccount;
       chain = connectedChain;
@@ -446,8 +448,10 @@ export function inAppWallet(
         "./in-app/core/wallet/index.js"
       );
 
-      const [connectedAccount, connectedChain] =
-        await connectInAppWallet(options);
+      const [connectedAccount, connectedChain] = await connectInAppWallet(
+        options,
+        createOptions,
+      );
       // set the states
       account = connectedAccount;
       chain = connectedChain;
