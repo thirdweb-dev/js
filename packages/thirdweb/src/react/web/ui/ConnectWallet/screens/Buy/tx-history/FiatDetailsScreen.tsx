@@ -4,7 +4,7 @@ import type { BuyWithFiatStatus } from "../../../../../../../exports/pay.js";
 import { useBuyWithFiatStatus } from "../../../../../../../exports/react.js";
 import type { ValidBuyWithFiatStatus } from "../../../../../../../pay/buyWithFiat/getStatus.js";
 import { Container, Line, ModalHeader } from "../../../../components/basic.js";
-import { FiatTxDetailsTable } from "../fiat/FiatTxDetailsTable.js";
+import { OnRampTxDetailsTable } from "../fiat/FiatTxDetailsTable.js";
 import { PostOnRampSwapFlow } from "../fiat/PostOnRampSwapFlow.js";
 
 export function FiatDetailsScreen(props: {
@@ -76,7 +76,7 @@ export function FiatDetailsScreen(props: {
       <Line />
 
       <Container p="lg">
-        <FiatTxDetailsTable status={status} client={props.client} />
+        <OnRampTxDetailsTable status={status} client={props.client} />
       </Container>
     </Container>
   );

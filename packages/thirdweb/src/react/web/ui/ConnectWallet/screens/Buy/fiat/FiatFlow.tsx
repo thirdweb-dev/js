@@ -7,26 +7,27 @@ import type {
 import { isSwapRequiredPostOnramp } from "../../../../../../../pay/buyWithFiat/isSwapRequiredPostOnramp.js";
 import { openOnrampPopup } from "../openOnRamppopup.js";
 import { addPendingTx } from "../swap/pendingSwapTx.js";
-import { FiatStatusScreen } from "./FiatStatusScreen.js";
+import { OnrampStatusScreen } from "./FiatStatusScreen.js";
 import { FiatSteps, fiatQuoteToPartialQuote } from "./FiatSteps.js";
 import { PostOnRampSwapFlow } from "./PostOnRampSwapFlow.js";
 
-// Flow:
+// Flows
+
 // If a Swap is required after doing onramp
-// - show the steps ui first
-// - then go to KadoScreen
-// - then go to status screen: if swap is required,status screen shows swap ui, once done, show success screen
+// 1. show the 2 steps ui first
+// 2. opwn provider window, show onramp status screen
+// 3. show the 2 steps ui with step 2 highlighted
+// 4. show swap flow
 
 //  If a Swap is not required after doing onramp
-// - show Kado screen
-// - then go to status screen: once done, show success screen
+//  1. open provider window, show onramp status screen
 
 type Screen =
   | {
       id: "step-1";
     }
   | {
-      id: "fiat-status";
+      id: "onramp-status";
     }
   | {
       id: "postonramp-swap";
@@ -54,7 +55,7 @@ export function FiatFlow(props: {
           id: "step-1",
         }
       : {
-          id: "fiat-status",
+          id: "onramp-status",
         },
   );
 
@@ -62,7 +63,6 @@ export function FiatFlow(props: {
     props.openedWindow,
   );
 
-  // 1.
   if (screen.id === "step-1") {
     return (
       <FiatSteps
@@ -77,16 +77,15 @@ export function FiatFlow(props: {
             intentId: props.quote.intentId,
           });
           setPopupWindow(popup);
-          setScreen({ id: "fiat-status" });
+          setScreen({ id: "onramp-status" });
         }}
       />
     );
   }
 
-  // 2.
-  if (screen.id === "fiat-status") {
+  if (screen.id === "onramp-status") {
     return (
-      <FiatStatusScreen
+      <OnrampStatusScreen
         client={props.client}
         intentId={props.quote.intentId}
         onBack={props.onBack}
@@ -96,7 +95,6 @@ export function FiatFlow(props: {
         quote={props.quote}
         onDone={props.onDone}
         onShowSwapFlow={(_status) => {
-          // go to 3.
           setScreen({ id: "postonramp-swap", data: _status });
         }}
         isBuyForTx={props.isBuyForTx}
@@ -104,7 +102,6 @@ export function FiatFlow(props: {
     );
   }
 
-  // 3.
   if (screen.id === "postonramp-swap") {
     return (
       <PostOnRampSwapFlow

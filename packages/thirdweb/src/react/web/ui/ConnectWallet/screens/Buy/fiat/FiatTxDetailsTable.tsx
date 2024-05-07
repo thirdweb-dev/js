@@ -13,7 +13,7 @@ import { USDIcon } from "../../../icons/currencies/USDIcon.js";
 import { TokenInfoRow } from "../tx-history/TokenInfoRow.js";
 import { getBuyWithFiatStatusMeta } from "../tx-history/statusMeta.js";
 
-export function FiatTxDetailsTable(props: {
+export function OnRampTxDetailsTable(props: {
   status: ValidBuyWithFiatStatus;
   client: ThirdwebClient;
   hideStatus?: boolean;
@@ -37,7 +37,6 @@ export function FiatTxDetailsTable(props: {
 
   return (
     <div>
-      {/* Receive - to token */}
       {status.destination ? (
         <TokenInfoRow
           chainId={status.destination.token.chainId}
@@ -49,12 +48,12 @@ export function FiatTxDetailsTable(props: {
         />
       ) : (
         <TokenInfoRow
-          chainId={status.quote.toToken.chainId}
+          chainId={status.quote.onRampToken.chainId}
           client={props.client}
           label="Receive"
-          tokenAmount={status.quote.estimatedToTokenAmount}
-          tokenSymbol={status.quote.toToken.symbol || ""}
-          tokenAddress={status.quote.toToken.tokenAddress}
+          tokenAmount={status.quote.estimatedOnRampAmount}
+          tokenSymbol={status.quote.onRampToken.symbol || ""}
+          tokenAddress={status.quote.onRampToken.tokenAddress}
         />
       )}
 

@@ -17,11 +17,11 @@ import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { iconSize } from "../../../../design-system/index.js";
 import { AccentFailIcon } from "../../../icons/AccentFailIcon.js";
-import { FiatTxDetailsTable } from "./FiatTxDetailsTable.js";
+import { OnRampTxDetailsTable } from "./FiatTxDetailsTable.js";
 
 type UIStatus = "loading" | "failed" | "completed" | "partialSuccess";
 
-export function FiatStatusScreen(props: {
+export function OnrampStatusScreen(props: {
   client: ThirdwebClient;
   onBack: () => void;
   intentId: string;
@@ -54,15 +54,6 @@ export function FiatStatusScreen(props: {
   }
 
   // determine step
-  let step = 1;
-  if (
-    statusQuery.data?.status === "CRYPTO_SWAP_FALLBACK" ||
-    statusQuery.data?.status === "CRYPTO_SWAP_REQUIRED" ||
-    statusQuery.data?.status === "CRYPTO_SWAP_FAILED" ||
-    statusQuery.data?.status === "CRYPTO_SWAP_IN_PROGRESS"
-  ) {
-    step = 2;
-  }
 
   // close the onramp popup if onramp is completed
   useEffect(() => {
@@ -104,27 +95,16 @@ export function FiatStatusScreen(props: {
       {props.hasTwoSteps && (
         <>
           <Spacer y="lg" />
-          <StepBar steps={2} currentStep={step} />
+          <StepBar steps={2} currentStep={1} />
           <Spacer y="sm" />
           <Text size="xs">
-            Step {step} of 2 -
-            {step === 2 ? (
-              <>
-                Converting {props.quote.onRampToken.token.symbol} to{" "}
-                {props.quote.toToken.symbol}
-              </>
-            ) : (
-              <>
-                {" "}
-                Buying {props.quote.onRampToken.token.symbol} with{" "}
-                {props.quote.fromCurrencyWithFees.currencySymbol}
-              </>
-            )}
+            Step 1 of 2 - Buying {props.quote.onRampToken.token.symbol} with{" "}
+            {props.quote.fromCurrencyWithFees.currencySymbol}
           </Text>
         </>
       )}
 
-      <FiatStatusScreenUI
+      <OnrampStatusScreenUI
         uiStatus={uiStatus}
         onDone={props.onDone}
         fiatStatus={statusQuery.data}
@@ -135,7 +115,7 @@ export function FiatStatusScreen(props: {
   );
 }
 
-function FiatStatusScreenUI(props: {
+function OnrampStatusScreenUI(props: {
   uiStatus: UIStatus;
   fiatStatus?: BuyWithFiatStatus;
   onDone: () => void;
@@ -162,7 +142,7 @@ function FiatStatusScreenUI(props: {
           {!isMobile() && <Text center>Complete the purchase in popup</Text>}
           <Spacer y="xxl" />
           {props.fiatStatus && props.fiatStatus.status !== "NOT_FOUND" && (
-            <FiatTxDetailsTable
+            <OnRampTxDetailsTable
               status={props.fiatStatus}
               client={props.client}
               hideStatus={true}
@@ -184,7 +164,7 @@ function FiatStatusScreenUI(props: {
           {props.fiatStatus && props.fiatStatus.status !== "NOT_FOUND" ? (
             <>
               <Spacer y="xxl" />
-              <FiatTxDetailsTable
+              <OnRampTxDetailsTable
                 status={props.fiatStatus}
                 client={props.client}
                 hideStatus={true}
@@ -215,7 +195,7 @@ function FiatStatusScreenUI(props: {
           {props.fiatStatus && props.fiatStatus.status !== "NOT_FOUND" && (
             <>
               <Spacer y="xxl" />
-              <FiatTxDetailsTable
+              <OnRampTxDetailsTable
                 status={props.fiatStatus}
                 client={props.client}
                 hideStatus={true}
