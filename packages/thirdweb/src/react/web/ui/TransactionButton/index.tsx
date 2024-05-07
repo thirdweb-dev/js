@@ -166,7 +166,7 @@ export function TransactionButton(props: TransactionButtonProps) {
 
           if (onTransactionConfirmed) {
             const receipt = await doWaitForReceipt(result);
-            if (receipt.status !== "success")
+            if (receipt.status === "reverted")
               throw new Error(
                 `Execution reverted: ${stringify(receipt, null, 2)}`,
               );
