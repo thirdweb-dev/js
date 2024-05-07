@@ -25,6 +25,7 @@ export type SignOptions = {
  *   hash: "0x",
  *   privateKey: "0x",
  * });
+ * ```
  */
 export function sign({ hash, privateKey }: SignOptions): Signature {
   const { r, s, recovery } = secp256k1.sign(hash.slice(2), privateKey.slice(2));
