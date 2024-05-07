@@ -7,6 +7,7 @@ import {
 } from "../../../../transaction/actions/wait-for-tx-receipt.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
 import type { TransactionReceipt } from "../../../../transaction/types.js";
+import { stringify } from "../../../../utils/json.js";
 import {
   useActiveAccount,
   useActiveWallet,
@@ -165,9 +166,9 @@ export function TransactionButton(props: TransactionButtonProps) {
 
           if (onTransactionConfirmed) {
             const receipt = await doWaitForReceipt(result);
-            if (receipt.status === "reverted")
+            if (receipt.status !== "success")
               throw new Error(
-                `Execution reverted: ${JSON.stringify(receipt, null, 2)}`,
+                `Execution reverted: ${stringify(receipt, null, 2)}`,
               );
             onTransactionConfirmed(receipt);
           }
