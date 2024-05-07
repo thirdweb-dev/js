@@ -253,7 +253,7 @@ export function SwapStatusScreen(props: {
               <TokenInfoRow
                 chainId={props.fromChain.id}
                 client={props.client}
-                label="Buy"
+                label="Pay"
                 tokenAddress={
                   isNativeToken(props.fromToken)
                     ? NATIVE_TOKEN_ADDRESS
