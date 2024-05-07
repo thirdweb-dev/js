@@ -49,6 +49,8 @@ export {
   type BuyHistoryParams,
 } from "../pay/getBuyHistory.js";
 
+export { isSwapRequiredPostOnramp } from "../pay/buyWithFiat/isSwapRequiredPostOnramp.js";
+
 // types ------------------------------------------------
 
 export type {

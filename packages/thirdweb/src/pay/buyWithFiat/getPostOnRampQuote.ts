@@ -29,22 +29,26 @@ export type GetPostOnRampQuoteParams = {
 };
 
 /**
- * When buying a token with fiat currency, It may be a 2 step process where the user first buys the token with fiat currency and then swaps the token with another token.
+ * When buying a token with fiat currency, It may be a 2 step process where the user is sent an intermediate token with fiat currency from the on-ramp provider ( known as "On-ramp" token )
+ * and then it is swapped to destination token.
  *
- * When you get a "Buy with Fiat" status of type "CRYPTO_SWAP_REQUIRED", you can use this function to get the quote of type [`BuyWithCryptoQuote`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoQuote) for swapping the token to complete the step-2 of the process.
+ * When you get a "Buy with Fiat" status of type "CRYPTO_SWAP_REQUIRED" from the [`getBuyWithFiatStatus`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithFiatStatus) function,
+ *  you can use `getPostOnRampQuote` function to get the quote of type [`BuyWithCryptoQuote`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoQuote) for swapping the on-ramp token to destination token to complete the step-2 of the process.
  *
- * Once you have the quote, you can use `prepareTransaction` and prepare the transaction for submission.
+ * Once you have the quote, you can start the Swap process by following the same steps as mentioned in the [`getBuyWithCryptoQuote`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoQuote) documentation.
+ *
  * @param params - object of type [`GetPostOnRampQuoteParams`](https://portal.thirdweb.com/references/typescript/v5/GetPostOnRampQuoteParams)
  * @returns Object of type [`BuyWithCryptoQuote`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoQuote) which contains the information about the quote such as processing fees, estimated time, converted token amounts, etc.
  * @example
  * ```ts
  * import { getPostOnRampQuote, getBuyWithFiatStatus } from "thirdweb/pay";
  *
- * const intentId = "abc-123";
+ * // previous steps
+ * const fiatQuote = await getBuyWithFiatQuote(fiatQuoteParams);
+ * window.open(fiatQuote.onRampLink, "_blank");
+ * const buyWithFiatStatus = await getBuyWithFiatStatus({ client, intentId }); // keep calling this until status is "settled" state
  *
- * const buyWithFiatStatus = await getBuyWithFiatStatus({ client, intentId });
- *
- * // if a swap is required after onramp
+ * // when a swap is required after onramp
  * if (buyWithFiatStatus.status === "CRYPTO_SWAP_REQUIRED") {
  *  const buyWithCryptoQuote = await getPostOnRampQuote({
  *    client,

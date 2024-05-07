@@ -72,7 +72,7 @@ export function BuyTxHistoryButton(props: {
             }}
           >
             <Text size="sm" color="primaryText">
-              +{" "}
+              Buy{" "}
               {formatNumber(
                 Number(
                   props.txInfo.type === "swap"
