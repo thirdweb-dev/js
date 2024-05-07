@@ -189,9 +189,9 @@ export function updateListing(
           startTimestamp,
           endTimestamp,
           reserved: mergedOptions.isReservedListing ?? false,
-          overrides: {
-            extraGas: 50_000n, // add extra gas to account for router call
-          },
+        },
+        overrides: {
+          extraGas: 50_000n, // add extra gas to account for router call
         },
       } as const;
     },
