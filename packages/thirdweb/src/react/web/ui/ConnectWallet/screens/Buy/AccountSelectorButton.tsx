@@ -31,6 +31,7 @@ export function AccountSelectorButton(props: {
           id={props.activeWallet.id}
           size={iconSize.md}
           client={props.client}
+          allowOverrides
         />
       ) : (
         <Container color="secondaryText" flex="row" center="both">

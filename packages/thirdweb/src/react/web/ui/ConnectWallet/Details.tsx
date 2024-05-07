@@ -145,10 +145,6 @@ export const ConnectedWalletDetails: React.FC<{
       }),
   });
 
-  // const [overrideWalletIconUrl, setOverrideWalletIconUrl] = useState<
-  //   string | undefined
-  // >(undefined);
-
   // const personalAccount = (activeWallet as WalletWithPersonalAccount)
   //   ?.personalAccount;
 
@@ -161,7 +157,6 @@ export const ConnectedWalletDetails: React.FC<{
   // const isActuallyMetaMask =
   //   activeWallet && activeWallet instanceof MetaMaskWallet;
 
-  // const shortAddress = "<address>";
   const shortAddress = activeAccount?.address
     ? shortenString(activeAccount.address, false)
     : "";
@@ -217,7 +212,12 @@ export const ConnectedWalletDetails: React.FC<{
           client={client}
         />
       ) : activeWallet?.id ? (
-        <WalletImage size={iconSize.lg} id={activeWallet.id} client={client} />
+        <WalletImage
+          size={iconSize.lg}
+          id={activeWallet.id}
+          client={client}
+          allowOverrides
+        />
       ) : (
         <WalletIcon size={iconSize.lg} />
       )}
@@ -332,6 +332,7 @@ export const ConnectedWalletDetails: React.FC<{
             size={iconSize.xxl}
             id={activeWallet.id}
             client={client}
+            allowOverrides
           />
         ) : (
           <WalletIcon size={iconSize.xxl} />
