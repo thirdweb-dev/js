@@ -40,7 +40,6 @@ export default defineConfig({
     include: ["src/**/*.test.{ts,tsx}"],
     setupFiles: [join(__dirname, "./reactSetup.ts")],
     globalSetup: [join(__dirname, "./globalSetup.ts")],
-    reporters: ["default"],
     testTimeout: 60_000,
     retry: 0,
     bail: 1,
