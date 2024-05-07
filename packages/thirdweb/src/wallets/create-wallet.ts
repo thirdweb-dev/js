@@ -410,6 +410,16 @@ export function smartWallet(
  *   strategy: "google",
  * });
  * ```
+ * Enable smart accounts and sponsor gas for you users:
+ * ```ts
+ * import { inAppWallet } from "thirdweb/wallets";
+ * const wallet = inAppWallet({
+ *  smartAccount: {
+ *   chain: sepolia,
+ *   sponsorGas: true,
+ * },
+ * });
+ * ```
  * @wallet
  */
 export function inAppWallet(
@@ -475,7 +485,7 @@ export function inAppWallet(
       emitter.emit("disconnect", undefined);
     },
     switchChain: async (newChain) => {
-      if (createOptions?.accountAbstraction && client && account) {
+      if (createOptions?.smartAccount && client && account) {
         // if account abstraction is enabled, reconnect to smart account on the new chain
         const { autoConnectInAppWallet } = await import(
           "./in-app/core/wallet/index.js"
@@ -490,7 +500,7 @@ export function inAppWallet(
         account = connectedAccount;
         chain = connectedChain;
       } else {
-        // it not, simply set the new chain
+        // if not, simply set the new chain
         chain = newChain;
       }
       emitter.emit("chainChanged", newChain);

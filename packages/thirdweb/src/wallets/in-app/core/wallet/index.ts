@@ -7,22 +7,6 @@ import type {
   WalletAutoConnectionOption,
   WalletConnectionOption,
 } from "../../../wallet-types.js";
-import type {
-  MultiStepAuthArgsType,
-  SingleStepAuthArgsType,
-} from "../authentication/type.js";
-
-export type InAppWalletConnectionOptions = (
-  | MultiStepAuthArgsType
-  | SingleStepAuthArgsType
-) & {
-  client: ThirdwebClient;
-  chain?: Chain;
-};
-
-export type InAppWalletSocialAuth = "google" | "apple" | "facebook";
-
-export type InAppWalletAuth = "email" | "phone" | InAppWalletSocialAuth;
 
 /**
  * @internal
@@ -36,9 +20,9 @@ export async function connectInAppWallet(
   const authResult = await authenticate(options);
   const authAccount = await authResult.user.wallet.getAccount();
 
-  if (createOptions?.accountAbstraction) {
+  if (createOptions?.smartAccount) {
     return convertToSmartAccount({
-      chain: options.chain || createOptions.accountAbstraction.chain,
+      chain: options.chain || createOptions.smartAccount.chain,
       client: options.client,
       authAccount,
     });
@@ -46,11 +30,6 @@ export async function connectInAppWallet(
 
   return [authAccount, options.chain || ethereum] as const;
 }
-
-export type InAppWalletAutoConnectOptions = {
-  client: ThirdwebClient;
-  chain?: Chain;
-};
 
 /**
  * @internal
@@ -67,9 +46,9 @@ export async function autoConnectInAppWallet(
 
   const authAccount = await user.wallet.getAccount();
 
-  if (createOptions?.accountAbstraction) {
+  if (createOptions?.smartAccount) {
     return convertToSmartAccount({
-      chain: options.chain || createOptions.accountAbstraction.chain,
+      chain: options.chain || createOptions.smartAccount.chain,
       client: options.client,
       authAccount,
     });

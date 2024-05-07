@@ -10,10 +10,10 @@ import type {
 } from "./coinbase/coinbaseSDKWallet.js";
 import type { COINBASE } from "./constants.js";
 import type {
-  InAppWalletAuth,
   InAppWalletAutoConnectOptions,
   InAppWalletConnectionOptions,
-} from "./in-app/core/wallet/index.js";
+  InAppWalletCreationOptions,
+} from "./in-app/core/wallet/types.js";
 import type {
   SmartWalletConnectionOptions,
   SmartWalletOptions,
@@ -50,15 +50,6 @@ export type InjectedConnectOptions = {
    */
   chain?: Chain;
 };
-
-export type InAppWalletCreationOptions =
-  | {
-      auth?: {
-        options: InAppWalletAuth[];
-      };
-      accountAbstraction?: SmartWalletOptions;
-    }
-  | undefined;
 
 /**
  * Generic type for getting the type of object that the `wallet.connect` method takes as the first argument.

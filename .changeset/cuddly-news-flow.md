@@ -1,11 +1,23 @@
 ---
-"thirdweb": patch
+"thirdweb": minor
 ---
 
-New `accountAbtraction` prop for `inAppWallet()`
+New `smartAccount` prop for `inAppWallet()`
 
-You can now convert an inAppWallet to a smart account simply by passing the `accountAbstraction` prop.
+You can now convert an inAppWallet to a smart account simply by passing the `smartAccount` prop.
 
-Requires `chain: Chain` and `sponsorGas: true | false`.
+```ts
+const wallet = inAppWallet({
+  smartAccount: {
+    chain: sepolia,
+    sponsorGas: true,
+  },
+});
+
+await wallet.connect({
+  client,
+  strategy: "google",
+});
+```
 
 Note: beware that when toggling this flag on and off, you will get a different address (admin EOA vs smart account).
