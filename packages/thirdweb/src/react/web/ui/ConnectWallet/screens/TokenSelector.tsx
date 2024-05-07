@@ -315,6 +315,9 @@ function SelectTokenButton(props: {
             account={account}
             chain={props.chain}
             client={props.client}
+            tokenAddress={
+              isNativeToken(props.token) ? undefined : props.token.address
+            }
           />
         )}
       </Container>
@@ -326,14 +329,16 @@ function TokenBalance(props: {
   account: Account;
   chain: Chain;
   client: ThirdwebClient;
+  tokenAddress?: string;
 }) {
   const tokenBalanceQuery = useQuery({
-    queryKey: ["tokenBalance", props.chain, props.account?.address],
+    queryKey: ["tokenBalance", props],
     queryFn: async () => {
       return getTokenBalance({
         account: props.account,
         chain: props.chain,
         client: props.client,
+        tokenAddress: props.tokenAddress,
       });
     },
   });

@@ -1,6 +1,7 @@
 import { ExternalLinkIcon } from "@radix-ui/react-icons";
 import { defineChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
+import type { BuyWithCryptoQuote } from "../../../../../../../exports/pay.js";
 import { useBuyWithCryptoStatus } from "../../../../../../../exports/react-native.js";
 import type { ValidBuyWithCryptoStatus } from "../../../../../../../pay/buyWithCrypto/getStatus.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
@@ -15,7 +16,7 @@ import {
 } from "../../../../design-system/index.js";
 import { formatSeconds } from "../swap/formatSeconds.js";
 import { TokenInfoRow } from "./TokenInfoRow.js";
-import { getBuyWithCryptoStatusMeta } from "./statusMeta.js";
+import { type StatusMeta, getBuyWithCryptoStatusMeta } from "./statusMeta.js";
 
 export function SwapDetailsScreen(props: {
   status: ValidBuyWithCryptoStatus;
@@ -45,33 +46,128 @@ export function SwapDetailsScreen(props: {
       <Line />
 
       <Container p="lg">
-        <SwapTxDetailsTable swapStatus={status} client={client} />
+        <SwapTxDetailsTable type="status" status={status} client={client} />
       </Container>
     </Container>
   );
 }
 
-export function SwapTxDetailsTable(props: {
-  swapStatus: ValidBuyWithCryptoStatus;
-  client: ThirdwebClient;
-  hideStatus?: boolean;
-}) {
-  const { swapStatus, client } = props;
+type SwapTxDetailsData = {
+  fromToken: {
+    chainId: number;
+    symbol: string;
+    address: string;
+    amount: string;
+  };
+  quotedToToken: {
+    chainId: number;
+    symbol: string;
+    address: string;
+    amount: string;
+  };
+  gotToken?: {
+    chainId: number;
+    symbol: string;
+    address: string;
+    amount: string;
+  };
+  statusMeta?: StatusMeta;
+  sourceTxHash?: string;
+  destinationTxHash?: string;
+  isPartialSuccess: boolean;
+  estimatedDuration: number;
+};
 
-  const statusMeta = getBuyWithCryptoStatusMeta(swapStatus);
+export function SwapTxDetailsTable(
+  props:
+    | {
+        type: "quote";
+        quote: BuyWithCryptoQuote;
+        client: ThirdwebClient;
+      }
+    | {
+        client: ThirdwebClient;
+        type: "status";
+        status: ValidBuyWithCryptoStatus;
+        hideStatusRow?: boolean;
+      },
+) {
+  let uiData: SwapTxDetailsData;
+  let showStatusRow = true;
+  if (props.type === "status") {
+    const status = props.status;
+    if (props.hideStatusRow) {
+      showStatusRow = false;
+    }
 
-  const fromChainId = swapStatus.quote.fromToken.chainId;
-  const toChainId = swapStatus.quote.toToken.chainId;
+    const isPartialSuccess =
+      status.status === "COMPLETED" && status.subStatus === "PARTIAL_SUCCESS";
+
+    uiData = {
+      fromToken: {
+        chainId: status.quote.fromToken.chainId,
+        symbol: status.quote.fromToken.symbol || "",
+        address: status.quote.fromToken.tokenAddress,
+        amount: status.quote.fromAmount,
+      },
+      quotedToToken: {
+        chainId: status.quote.toToken.chainId,
+        symbol: status.quote.toToken.symbol || "",
+        address: status.quote.toToken.tokenAddress,
+        amount: status.quote.toAmount,
+      },
+      gotToken: status.destination
+        ? {
+            chainId: status.destination.token.chainId,
+            symbol: status.destination.token.symbol || "",
+            address: status.destination.token.tokenAddress,
+            amount: status.destination.amount,
+          }
+        : undefined,
+      statusMeta: getBuyWithCryptoStatusMeta(status),
+      estimatedDuration: status.quote.estimated.durationSeconds || 0,
+      isPartialSuccess,
+      destinationTxHash: status.destination?.transactionHash,
+      sourceTxHash: status.source?.transactionHash,
+    };
+  } else {
+    const quote = props.quote;
+    uiData = {
+      fromToken: {
+        chainId: quote.swapDetails.fromToken.chainId,
+        symbol: quote.swapDetails.fromToken.symbol || "",
+        address: quote.swapDetails.fromToken.tokenAddress,
+        amount: quote.swapDetails.fromAmount,
+      },
+      quotedToToken: {
+        chainId: quote.swapDetails.toToken.chainId,
+        symbol: quote.swapDetails.toToken.symbol || "",
+        address: quote.swapDetails.toToken.tokenAddress,
+        amount: quote.swapDetails.toAmount,
+      },
+      isPartialSuccess: false,
+      estimatedDuration: quote.swapDetails.estimated.durationSeconds || 0,
+    };
+  }
+
+  const { client } = props;
+
+  const {
+    fromToken,
+    quotedToToken: toToken,
+    statusMeta,
+    sourceTxHash,
+    destinationTxHash,
+    isPartialSuccess,
+    gotToken,
+    estimatedDuration,
+  } = uiData;
+
+  const fromChainId = fromToken.chainId;
+  const toChainId = toToken.chainId;
 
   const fromChainQuery = useChainQuery(defineChain(fromChainId));
   const toChainQuery = useChainQuery(defineChain(toChainId));
-
-  const sourceTxHash = swapStatus.source?.transactionHash;
-  const destinationTxHash = swapStatus.destination?.transactionHash;
-
-  const isPartialSuccess =
-    swapStatus.status === "COMPLETED" &&
-    swapStatus.subStatus === "PARTIAL_SUCCESS";
 
   const lineSpacer = (
     <>
@@ -83,51 +179,49 @@ export function SwapTxDetailsTable(props: {
 
   return (
     <div>
-      {/* Receive - to token */}
-      {swapStatus.destination ? (
-        <TokenInfoRow
-          chainId={swapStatus.destination.token.chainId}
-          client={client}
-          label={isPartialSuccess ? "Expected" : "Received"}
-          tokenAmount={swapStatus.destination.amount}
-          tokenSymbol={swapStatus.destination.token.symbol || ""}
-          tokenAddress={swapStatus.destination.token.tokenAddress}
-        />
+      {isPartialSuccess && gotToken ? (
+        <>
+          {/* Expected */}
+          <TokenInfoRow
+            chainId={toToken.chainId}
+            client={client}
+            label={isPartialSuccess ? "Expected" : "Received"}
+            tokenAmount={toToken.amount}
+            tokenSymbol={toToken.symbol || ""}
+            tokenAddress={toToken.address}
+          />
+
+          {lineSpacer}
+
+          <TokenInfoRow
+            chainId={gotToken.chainId}
+            client={client}
+            label="Got"
+            tokenAmount={gotToken.amount}
+            tokenSymbol={gotToken.symbol || ""}
+            tokenAddress={gotToken.address}
+          />
+        </>
       ) : (
         <TokenInfoRow
-          chainId={swapStatus.quote.toToken.chainId}
+          chainId={toToken.chainId}
           client={client}
           label={"Receive"}
-          tokenAmount={swapStatus.quote.toAmount}
-          tokenSymbol={swapStatus.quote.toToken.symbol || ""}
-          tokenAddress={swapStatus.quote.toToken.tokenAddress}
+          tokenAmount={toToken.amount}
+          tokenSymbol={toToken.symbol || ""}
+          tokenAddress={toToken.address}
         />
       )}
 
       {lineSpacer}
 
-      {isPartialSuccess && swapStatus.destination && (
-        <>
-          <TokenInfoRow
-            chainId={swapStatus.destination.token.chainId}
-            client={client}
-            label="Got"
-            tokenAmount={swapStatus.destination.amount}
-            tokenSymbol={swapStatus.destination.token.symbol || ""}
-            tokenAddress={swapStatus.destination.token.tokenAddress}
-          />
-
-          {lineSpacer}
-        </>
-      )}
-
       <TokenInfoRow
-        chainId={swapStatus.quote.fromToken.chainId}
+        chainId={fromToken.chainId}
         client={client}
         label="Pay"
-        tokenAmount={swapStatus.quote.fromAmount}
-        tokenSymbol={swapStatus.quote.fromToken.symbol || ""}
-        tokenAddress={swapStatus.quote.fromToken.tokenAddress}
+        tokenAmount={fromToken.amount}
+        tokenSymbol={fromToken.symbol || ""}
+        tokenAddress={fromToken.address}
       />
 
       {lineSpacer}
@@ -143,12 +237,12 @@ export function SwapTxDetailsTable(props: {
         <Text> Time </Text>
         <Container flex="row" gap="xs" center="y">
           <Text color="primaryText">
-            ~{formatSeconds(swapStatus.quote.estimated.durationSeconds || 0)}
+            ~{formatSeconds(estimatedDuration || 0)}
           </Text>
         </Container>
       </Container>
 
-      {!props.hideStatus && (
+      {statusMeta && showStatusRow && (
         <>
           {lineSpacer}
 
@@ -170,7 +264,7 @@ export function SwapTxDetailsTable(props: {
 
       {lineSpacer}
 
-      {fromChainQuery.data?.explorers?.[0]?.url && (
+      {fromChainQuery.data?.explorers?.[0]?.url && sourceTxHash && (
         <ButtonLink
           fullWidth
           variant="outline"

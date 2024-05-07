@@ -44,7 +44,7 @@ export function SwapFlow(props: SwapFlowProps) {
   const toAmount = quote.swapDetails.toAmount;
 
   const _toToken = quote.swapDetails.toToken;
-  const _fromToken = quote.swapDetails.toToken;
+  const _fromToken = quote.swapDetails.fromToken;
 
   const toToken: ERC20OrNativeToken = useMemo(() => {
     if (_toToken.tokenAddress === NATIVE_TOKEN_ADDRESS) {
@@ -78,18 +78,12 @@ export function SwapFlow(props: SwapFlowProps) {
         onBack={props.onBack}
         onTryAgain={props.onTryAgain}
         onViewPendingTx={props.onViewPendingTx}
-        toChain={toChain}
-        toToken={toToken}
-        fromAmount={fromAmount}
-        toAmount={toAmount}
         swapTxHash={swapTxHash}
         client={props.client}
         onDone={props.onDone}
-        fromChain={fromChain}
-        fromToken={fromToken}
-        estimatedTimeSeconds={quote.swapDetails.estimated.durationSeconds || 0}
         isBuyForTx={props.isBuyForTx}
         isEmbed={props.isEmbed}
+        quote={quote}
       />
     );
   }
