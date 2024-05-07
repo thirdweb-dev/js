@@ -57,7 +57,10 @@ export function useBuyTransactionsToShow(client: ThirdwebClient) {
               transactionHash: tx.txHash,
             });
 
-            if (swapStatus.status === "NOT_FOUND") {
+            if (
+              swapStatus.status === "NOT_FOUND" ||
+              swapStatus.status === "NONE"
+            ) {
               return null;
             }
 
@@ -72,7 +75,10 @@ export function useBuyTransactionsToShow(client: ThirdwebClient) {
             intentId: tx.intentId,
           });
 
-          if (fiatStatus.status === "NOT_FOUND") {
+          if (
+            fiatStatus.status === "NOT_FOUND" ||
+            fiatStatus.status === "NONE"
+          ) {
             return null;
           }
 
