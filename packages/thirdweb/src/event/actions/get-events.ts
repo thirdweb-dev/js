@@ -13,6 +13,7 @@ import type {
 } from "abitype";
 import { resolveContractAbi } from "../../contract/actions/resolve-abi.js";
 import type { ThirdwebContract } from "../../contract/contract.js";
+import { eth_blockNumber } from "../../rpc/actions/eth_blockNumber.js";
 import {
   type GetLogsBlockParams,
   type GetLogsParams,
@@ -61,6 +62,37 @@ export type GetContractEventsResult<
  *  events: [preparedEvent, preparedEvent2],
  * });
  * ```
+ * @example
+ * Optionally specify a blockRange as the number of blocks to retrieve. toBlock will default to the current block number.
+ * ```ts
+ * import { getContractEvents } from "thirdweb";
+ * const events = await getContractEvents({
+ *  contract: myContract,
+ *  blockRange: 123456n,
+ *  events: [preparedEvent, preparedEvent2],
+ * });
+ * ```
+ * @example
+ * Use fromBlock with blockRange for pagination.
+ * ```ts
+ * import { getContractEvents } from "thirdweb";
+ * const events = await getContractEvents({
+ *  contract: myContract,
+ *  fromBlock: lastBlockFetched,
+ *  blockRange: 123456n,
+ *  events: [preparedEvent, preparedEvent2],
+ * });
+ * ```
+ * @example
+ * Retrieve events for a specific block hash.
+ * ```ts
+ * import { getContractEvents } from "thirdweb";
+ * const events = await getContractEvents({
+ *  contract: myContract,
+ *  blockHash: "0x...",
+ *  events: [preparedEvent, preparedEvent2],
+ * });
+ * ```
  * @contract
  */
 export async function getContractEvents<
@@ -72,7 +104,42 @@ export async function getContractEvents<
 >(
   options: GetContractEventsOptions<abi, abiEvents, TStrict>,
 ): Promise<GetContractEventsResult<abiEvents, TStrict>> {
-  const { contract, events, ...restParams } = options;
+  const { contract, events, blockRange, ...restParams } = options;
+
+  const rpcRequest = getRpcClient(contract);
+
+  if (
+    restParams.blockHash &&
+    (blockRange || restParams.fromBlock || restParams.toBlock)
+  ) {
+    throw new Error("Cannot specify blockHash and range simultaneously,");
+  }
+
+  // Compute toBlock and fromBlock if blockRange was passed
+  if (blockRange) {
+    const { fromBlock, toBlock } = restParams;
+
+    // Make sure the inputs were properly defined
+    if (
+      fromBlock &&
+      toBlock &&
+      BigInt(toBlock) - BigInt(fromBlock) !== BigInt(blockRange)
+    ) {
+      throw new Error(
+        "Incompatible blockRange with specified fromBlock and toBlock. Please only define fromBlock or toBlock when specifying blockRange.",
+      );
+    }
+
+    if (fromBlock) {
+      restParams.toBlock = BigInt(fromBlock) + BigInt(blockRange);
+    } else if (toBlock) {
+      restParams.fromBlock = BigInt(toBlock) - BigInt(blockRange);
+    } else {
+      // If no from or to block specified, use the latest block as the to block
+      restParams.toBlock = await eth_blockNumber(rpcRequest);
+      restParams.fromBlock = BigInt(restParams.toBlock) - BigInt(blockRange);
+    }
+  }
 
   let resolvedEvents = events ?? [];
 
@@ -104,7 +171,6 @@ export async function getContractEvents<
       : // otherwise we want "all" events (aka not pass any topics at all)
         [{ ...restParams, address: contract?.address }];
 
-  const rpcRequest = getRpcClient(contract);
   const logs = await Promise.all(
     logsParams.map((ethLogParams) => eth_getLogs(rpcRequest, ethLogParams)),
   );
