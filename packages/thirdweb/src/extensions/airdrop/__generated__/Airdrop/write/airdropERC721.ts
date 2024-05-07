@@ -171,5 +171,6 @@ export function airdropERC721(
     maxPriorityFeePerGas: async () =>
       (await asyncOptions()).overrides?.maxPriorityFeePerGas,
     nonce: async () => (await asyncOptions()).overrides?.nonce,
+    extraGas: async () => (await asyncOptions()).overrides?.extraGas,
   });
 }
