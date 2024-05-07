@@ -5,6 +5,5 @@ export {
   authenticate,
   getUserEmail,
   getUserPhoneNumber,
-  getAuthenticatedUser,
   type GetAuthenticatedUserParams,
 } from "../../wallets/in-app/core/authentication/index.js";
