@@ -61,6 +61,7 @@ export { useReadContract } from "../react/core/hooks/contract/useReadContract.js
 export {
   useSendTransaction,
   type SendTransactionConfig,
+  type SendTransactionPayModalConfig,
 } from "../react/web/hooks/useSendTransaction.js";
 export { useSendBatchTransaction } from "../react/core/hooks/contract/useSendBatchTransaction.js";
 export { useSendAndConfirmTransaction } from "../react/core/hooks/contract/useSendAndConfirmTransaction.js";

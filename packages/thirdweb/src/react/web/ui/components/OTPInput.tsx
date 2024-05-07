@@ -96,13 +96,11 @@ export function OTPInput(props: {
               }
             }}
             onChange={(e) => {
-              let value = e.target.value;
+              const value = e.target.value;
 
               if (value.length > 1) {
-                const lastValue = value[value.length - 1];
-                if (lastValue) {
-                  value = lastValue;
-                }
+                setOTP(value.split(""));
+                return;
               }
 
               if (!/\d/.test(value) && value !== "") {

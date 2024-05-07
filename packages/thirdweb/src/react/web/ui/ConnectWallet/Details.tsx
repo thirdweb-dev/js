@@ -145,10 +145,6 @@ export const ConnectedWalletDetails: React.FC<{
       }),
   });
 
-  // const [overrideWalletIconUrl, setOverrideWalletIconUrl] = useState<
-  //   string | undefined
-  // >(undefined);
-
   // const personalAccount = (activeWallet as WalletWithPersonalAccount)
   //   ?.personalAccount;
 
@@ -161,7 +157,6 @@ export const ConnectedWalletDetails: React.FC<{
   // const isActuallyMetaMask =
   //   activeWallet && activeWallet instanceof MetaMaskWallet;
 
-  // const shortAddress = "<address>";
   const shortAddress = activeAccount?.address
     ? shortenString(activeAccount.address, false)
     : "";
@@ -183,17 +178,20 @@ export const ConnectedWalletDetails: React.FC<{
   const isNetworkMismatch =
     props.chain && walletChain && walletChain.id !== props.chain.id;
 
+  // Note: Must wrap the `detailsButton.render` and `SwitchNetworkButton` in a fragment to avoid warning from radix-ui
   const trigger = props.detailsButton?.render ? (
-    <div>
+    <>
       <props.detailsButton.render />
-    </div>
+    </>
   ) : props.chain && isNetworkMismatch ? (
-    <SwitchNetworkButton
-      style={props.switchButton?.style}
-      className={props.switchButton?.className}
-      switchNetworkBtnTitle={props.switchButton?.label}
-      targetChain={props.chain}
-    />
+    <>
+      <SwitchNetworkButton
+        style={props.switchButton?.style}
+        className={props.switchButton?.className}
+        switchNetworkBtnTitle={props.switchButton?.label}
+        targetChain={props.chain}
+      />
+    </>
   ) : (
     <WalletInfoButton
       type="button"
@@ -214,7 +212,12 @@ export const ConnectedWalletDetails: React.FC<{
           client={client}
         />
       ) : activeWallet?.id ? (
-        <WalletImage size={iconSize.lg} id={activeWallet.id} client={client} />
+        <WalletImage
+          size={iconSize.lg}
+          id={activeWallet.id}
+          client={client}
+          allowOverrides
+        />
       ) : (
         <WalletIcon size={iconSize.lg} />
       )}
@@ -329,6 +332,7 @@ export const ConnectedWalletDetails: React.FC<{
             size={iconSize.xxl}
             id={activeWallet.id}
             client={client}
+            allowOverrides
           />
         ) : (
           <WalletIcon size={iconSize.xxl} />
