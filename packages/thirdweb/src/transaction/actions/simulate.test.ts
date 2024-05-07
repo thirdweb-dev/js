@@ -28,7 +28,6 @@ describe.runIf(process.env.TW_SECRET_KEY)("simulate", async () => {
       transaction: tx,
       from: TEST_WALLET_A,
     });
-    console.log(typeof result);
     expect(result).toMatchInlineSnapshot("1609000000n");
   });
 });
