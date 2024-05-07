@@ -9,7 +9,7 @@ import {
   type GetWalletBalanceResult,
   getWalletBalance,
 } from "../../../../wallets/utils/getWalletBalance.js";
-import { fetchBuySupportedChains } from "../../../web/ui/ConnectWallet/screens/Buy/swap/useSwapSupportedChains.js";
+import { fetchBuySupportedDestinations } from "../../../web/ui/ConnectWallet/screens/Buy/swap/useSwapSupportedChains.js";
 import { useActiveAccount } from "../wallets/wallet-hooks.js";
 
 type ShowModalData = {
@@ -70,11 +70,10 @@ export function useSendTransactionCore(
 
         (async () => {
           try {
-            const { destinationChains: buySupportedChains } =
-              await fetchBuySupportedChains(tx.client);
+            const destinations = await fetchBuySupportedDestinations(tx.client);
 
-            const isBuySupported = buySupportedChains.find(
-              (c) => c.id === tx.chain.id,
+            const isBuySupported = destinations.find(
+              (c) => c.chain.id === tx.chain.id,
             );
 
             // buy not supported, can't show modal - send tx directly

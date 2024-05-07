@@ -1,46 +1,56 @@
 import { useQuery } from "@tanstack/react-query";
+import type { Chain } from "../../../../../../../chains/types.js";
 import { defineChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
-import { getPayChainsEndpoint } from "../../../../../../../pay/utils/definitions.js";
+import {
+  getPaySupportedDestinations,
+  getPaySupportedSources,
+} from "../../../../../../../pay/utils/definitions.js";
 import { getClientFetch } from "../../../../../../../utils/fetch.js";
 import { withCache } from "../../../../../../../utils/promise/withCache.js";
 
-export interface PaySupportedChainsResponse {
-  result: {
-    sourceChains: {
+type Response = {
+  result: Array<{
+    chainId: number;
+    tokens: Array<{
+      address: string;
+      buyWithCryptoEnabled: boolean;
+      buyWithFiatEnabled: boolean;
       name: string;
-      chain: string;
-      chainId: number;
-    }[];
-    destinationChains: {
-      name: string;
-      chain: string;
-      chainId: number;
-    }[];
-  };
-}
+      symbol: string;
+    }>;
+  }>;
+};
 
-export async function fetchBuySupportedChains(client: ThirdwebClient) {
+export type SupportedChainAndTokens = Array<{
+  chain: Chain;
+  tokens: Array<{
+    address: string;
+    buyWithCryptoEnabled: boolean;
+    buyWithFiatEnabled: boolean;
+    name: string;
+    symbol: string;
+    icon?: string;
+  }>;
+}>;
+
+export async function fetchBuySupportedDestinations(
+  client: ThirdwebClient,
+): Promise<SupportedChainAndTokens> {
   return withCache(
     async () => {
       const fetchWithHeaders = getClientFetch(client);
-      const res = await fetchWithHeaders(getPayChainsEndpoint());
-      const data = (await res.json()) as PaySupportedChainsResponse;
-
-      const sourceChains: number[] = data.result.sourceChains.map(
-        (chain) => chain.chainId,
-      );
-      const destinationChains: number[] = data.result.destinationChains.map(
-        (chain) => chain.chainId,
-      );
-
-      return {
-        sourceChains: sourceChains.map(defineChain),
-        destinationChains: destinationChains.map(defineChain),
-      };
+      const res = await fetchWithHeaders(getPaySupportedDestinations());
+      const data = (await res.json()) as Response;
+      return data.result.map((item) => ({
+        chain: defineChain({
+          id: item.chainId,
+        }),
+        tokens: item.tokens,
+      }));
     },
     {
-      cacheKey: "buy-supported-chains",
+      cacheKey: "destination-tokens",
       cacheTime: 5 * 60 * 1000,
     },
   );
@@ -49,11 +59,44 @@ export async function fetchBuySupportedChains(client: ThirdwebClient) {
 /**
  * @internal
  */
-export function useBuySupportedChains(client: ThirdwebClient) {
+export function useBuySupportedDestinations(client: ThirdwebClient) {
   return useQuery({
-    queryKey: ["buy-supported-chains", client],
+    queryKey: ["destination-tokens", client],
     queryFn: async () => {
-      return fetchBuySupportedChains(client);
+      return fetchBuySupportedDestinations(client);
+    },
+  });
+}
+
+export function useBuySupportedSources(options: {
+  client: ThirdwebClient;
+  destinationChainId: number;
+  destinationTokenAddress: string;
+}) {
+  return useQuery({
+    queryKey: ["source-tokens", options],
+    queryFn: async () => {
+      const fetchWithHeaders = getClientFetch(options.client);
+      const baseUrl = getPaySupportedSources();
+
+      const url = new URL(baseUrl);
+      url.searchParams.append(
+        "destinationChainId",
+        options.destinationChainId.toString(),
+      );
+      url.searchParams.append(
+        "destinationTokenAddress",
+        options.destinationTokenAddress,
+      );
+
+      const res = await fetchWithHeaders(url.toString());
+      const data = (await res.json()) as Response;
+      return data.result.map((item) => ({
+        chain: defineChain({
+          id: item.chainId,
+        }),
+        tokens: item.tokens,
+      }));
     },
   });
 }

@@ -125,7 +125,6 @@ export function FiatSteps(props: {
 
     const tokenInfo: TokenInfo = {
       address: toTokenMeta.tokenAddress,
-      icon: "",
       name: toTokenMeta.name || "",
       symbol: toTokenMeta.symbol || "",
     };
@@ -144,7 +143,6 @@ export function FiatSteps(props: {
 
     const tokenInfo: TokenInfo = {
       address: onRampTokenMeta.tokenAddress,
-      icon: "",
       name: onRampTokenMeta.name || "",
       symbol: onRampTokenMeta.symbol || "",
     };
@@ -215,7 +213,6 @@ export function FiatSteps(props: {
           <TokenSymbol
             token={{
               address: props.status.destination.token.tokenAddress,
-              icon: "",
               name: props.status.destination.token.name || "",
               symbol: props.status.destination.token.symbol || "",
             }}

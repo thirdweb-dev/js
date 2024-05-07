@@ -8,10 +8,7 @@ import { useSendTransactionCore } from "../../core/hooks/contract/useSendTransac
 import { useActiveWallet } from "../../core/hooks/wallets/wallet-hooks.js";
 import { SetRootElementContext } from "../../core/providers/RootElementContext.js";
 import type { PayUIOptions } from "../ui/ConnectWallet/ConnectButtonProps.js";
-import {
-  type SupportedTokens,
-  defaultTokens,
-} from "../ui/ConnectWallet/defaultTokens.js";
+import type { SupportedTokens } from "../ui/ConnectWallet/defaultTokens.js";
 import { AccentFailIcon } from "../ui/ConnectWallet/icons/AccentFailIcon.js";
 import { useConnectLocale } from "../ui/ConnectWallet/locale/getConnectLocale.js";
 import { LazyBuyScreen } from "../ui/ConnectWallet/screens/Buy/LazyBuyScreen.js";
@@ -131,7 +128,7 @@ export function useSendTransaction(config: SendTransactionConfig = {}) {
               }}
               client={data.tx.client}
               localeId={payModal?.locale || "en_US"}
-              supportedTokens={payModal?.supportedTokens || defaultTokens}
+              supportedTokens={payModal?.supportedTokens}
               theme={payModal?.theme || "dark"}
               txCostWei={data.totalCostWei}
               walletBalanceWei={data.walletBalance.value}
@@ -152,7 +149,7 @@ type ModalProps = {
   onClose: () => void;
   client: ThirdwebClient;
   localeId: LocaleId;
-  supportedTokens: SupportedTokens;
+  supportedTokens?: SupportedTokens;
   theme: Theme | "light" | "dark";
   txCostWei: bigint;
   walletBalanceWei: bigint;

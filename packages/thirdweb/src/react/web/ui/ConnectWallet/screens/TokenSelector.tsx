@@ -68,7 +68,6 @@ export function TokenSelector(props: {
     tokenList = [
       {
         ...tokenQuery.data,
-        icon: "",
         address: input,
       },
       ...tokenList,

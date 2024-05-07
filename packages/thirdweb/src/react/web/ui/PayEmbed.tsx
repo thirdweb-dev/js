@@ -10,10 +10,7 @@ import type {
   ConnectButton_connectModalOptions,
   PayUIOptions,
 } from "./ConnectWallet/ConnectButtonProps.js";
-import {
-  type SupportedTokens,
-  defaultTokens,
-} from "./ConnectWallet/defaultTokens.js";
+import type { SupportedTokens } from "./ConnectWallet/defaultTokens.js";
 import { useConnectLocale } from "./ConnectWallet/locale/getConnectLocale.js";
 import BuyScreen from "./ConnectWallet/screens/Buy/BuyScreen.js";
 import { BuyTxHistory } from "./ConnectWallet/screens/Buy/tx-history/BuyTxHistory.js";
@@ -68,7 +65,7 @@ export function PayEmbed(props: {
   } else {
     content = (
       <BuyScreen
-        supportedTokens={props.supportedTokens || defaultTokens}
+        supportedTokens={props.supportedTokens}
         theme={props.theme || "dark"}
         client={props.client}
         connectLocale={localeQuery.data}

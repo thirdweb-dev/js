@@ -11,7 +11,7 @@ import { TokenIcon } from "../../components/TokenIcon.js";
 import { Container, Line, ModalHeader } from "../../components/basic.js";
 import { Text } from "../../components/text.js";
 import { fontSize } from "../../design-system/index.js";
-import type { SupportedTokens } from "../defaultTokens.js";
+import { type SupportedTokens, defaultTokens } from "../defaultTokens.js";
 import { formatTokenBalance } from "./formatTokenBalance.js";
 import {
   type ERC20OrNativeToken,
@@ -23,18 +23,19 @@ import {
  * @internal
  */
 export function ViewFunds(props: {
-  supportedTokens: SupportedTokens;
+  supportedTokens?: SupportedTokens;
   onBack: () => void;
   client: ThirdwebClient;
 }) {
   const activeChain = useActiveWalletChain();
+  const supportedTokens = props.supportedTokens || defaultTokens;
 
   if (!activeChain) {
     return null;
   }
 
   const tokenList =
-    (activeChain?.id ? props.supportedTokens[activeChain.id] : undefined) || [];
+    (activeChain?.id ? supportedTokens[activeChain.id] : undefined) || [];
 
   return (
     <Container

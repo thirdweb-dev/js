@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { polygon } from "../../../../../../chains/chain-definitions/polygon.js";
 import type { Chain } from "../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../client/client.js";
@@ -62,7 +62,11 @@ import { FiatFees, SwapFees } from "./swap/Fees.js";
 import { PayWithCrypto } from "./swap/PayWithCrypto.js";
 import { SwapFlow } from "./swap/SwapFlow.js";
 import { addPendingTx } from "./swap/pendingSwapTx.js";
-import { useBuySupportedChains } from "./swap/useSwapSupportedChains.js";
+import {
+  type SupportedChainAndTokens,
+  useBuySupportedDestinations,
+  useBuySupportedSources,
+} from "./swap/useSwapSupportedChains.js";
 
 // NOTE: Must not use useConnectUI here because this UI can be used outside connect ui
 
@@ -75,7 +79,7 @@ type BuyForTx = {
 
 export type BuyScreenProps = {
   onBack?: () => void;
-  supportedTokens: SupportedTokens;
+  supportedTokens?: SupportedTokens;
   onViewPendingTx: () => void;
   client: ThirdwebClient;
   connectLocale: ConnectLocale;
@@ -90,11 +94,9 @@ export type BuyScreenProps = {
  * @internal
  */
 export default function BuyScreen(props: BuyScreenProps) {
-  const supportedChainsQuery = useBuySupportedChains(props.client);
+  const supportedDestinationsQuery = useBuySupportedDestinations(props.client);
 
-  console.log("chains", supportedChainsQuery.data);
-
-  if (!supportedChainsQuery.data) {
+  if (!supportedDestinationsQuery.data) {
     return <LoadingScreen />;
   }
 
@@ -102,8 +104,7 @@ export default function BuyScreen(props: BuyScreenProps) {
     <BuyScreenContent
       {...props}
       onViewPendingTx={props.onViewPendingTx}
-      supportedDestinationChains={supportedChainsQuery.data.destinationChains}
-      supportedSourceChains={supportedChainsQuery.data.sourceChains}
+      destinationTokens={supportedDestinationsQuery.data}
       buyForTx={props.buyForTx}
     />
   );
@@ -112,10 +113,9 @@ export default function BuyScreen(props: BuyScreenProps) {
 type BuyScreenContentProps = {
   client: ThirdwebClient;
   onBack?: () => void;
-  supportedTokens: SupportedTokens;
+  supportedTokens?: SupportedTokens;
   onViewPendingTx: () => void;
-  supportedSourceChains: Chain[];
-  supportedDestinationChains: Chain[];
+  destinationTokens: SupportedChainAndTokens;
   connectLocale: ConnectLocale;
   buyForTx?: BuyForTx;
   theme: "light" | "dark" | Theme;
@@ -143,8 +143,7 @@ type Screen =
 function BuyScreenContent(props: BuyScreenContentProps) {
   const {
     client,
-    supportedSourceChains,
-    supportedDestinationChains,
+    destinationTokens: supportedDestinations,
     connectLocale,
     payOptions,
   } = props;
@@ -153,9 +152,6 @@ function BuyScreenContent(props: BuyScreenContentProps) {
   const buyWithCryptoOptions = payOptions.buyWithCrypto;
   const account = useActiveAccount();
   const activeChain = useActiveWalletChain();
-
-  const showPaymentSelection =
-    buyWithFiatOptions !== false && buyWithCryptoOptions !== false;
 
   const [method, setMethod] = useState<"crypto" | "creditCard">(
     buyWithCryptoOptions === false
@@ -166,8 +162,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
   );
 
   // prefetch chains metadata
-  useChainsQuery(supportedDestinationChains || [], 50);
-  useChainsQuery(supportedSourceChains || [], 50);
+  useChainsQuery(supportedDestinations.map((x) => x.chain) || [], 50);
 
   // screens
   const [screen, setScreen] = useState<Screen>({
@@ -256,31 +251,34 @@ function BuyScreenContent(props: BuyScreenContentProps) {
   const [toChain, setToChain] = useState<Chain>(
     payOptions.defaultSelection?.chain ||
       props.buyForTx?.tx.chain ||
-      supportedDestinationChains.find((x) => x.id === activeChain?.id) ||
+      supportedDestinations.find((x) => x.chain.id === activeChain?.id)
+        ?.chain ||
       polygon,
   );
 
   const [toToken, setToToken] = useState<ERC20OrNativeToken>(
     payOptions.defaultSelection?.token || NATIVE_TOKEN,
   );
+
+  // update supportedSources whenever toToken or toChain is updated
+  const supportedSourcesQuery = useBuySupportedSources({
+    client: props.client,
+    destinationChainId: toChain.id,
+    destinationTokenAddress: isNativeToken(toToken)
+      ? NATIVE_TOKEN_ADDRESS
+      : toToken.address,
+  });
+
   const deferredTokenAmount = useDebouncedValue(tokenAmount, 300);
 
   const [fromChain, setFromChain] = useState<Chain>(
-    props.buyForTx?.tx.chain ||
-      supportedSourceChains.find((x) => x.id === activeChain?.id) ||
-      polygon,
+    props.buyForTx?.tx.chain || polygon,
   );
 
-  const [fromToken, setFromToken] = useState<ERC20OrNativeToken>(
-    props.supportedTokens[toChain.id]?.[0] || NATIVE_TOKEN,
-  );
+  const [fromToken, setFromToken] = useState<ERC20OrNativeToken>(NATIVE_TOKEN);
 
   // stipe onlu supports USD, so not using a state right now
   const selectedCurrency = defaultSelectedCurrency;
-
-  if (screen.type === "node") {
-    return screen.node;
-  }
 
   function showMainScreen() {
     setScreen({
@@ -288,20 +286,91 @@ function BuyScreenContent(props: BuyScreenContentProps) {
     });
   }
 
+  const destinationSupportedTokens: SupportedTokens = useMemo(() => {
+    return createSupportedTokens(supportedDestinations, props.supportedTokens);
+  }, [props.supportedTokens, supportedDestinations]);
+
+  const sourceSupportedTokens: SupportedTokens | undefined = useMemo(() => {
+    if (!supportedSourcesQuery.data) {
+      return undefined;
+    }
+
+    return createSupportedTokens(
+      supportedSourcesQuery.data,
+      props.supportedTokens,
+    );
+  }, [props.supportedTokens, supportedSourcesQuery.data]);
+
+  function getEnabledPayMethodsForSelectedToken(): {
+    buyWithFiatEnabled: boolean;
+    buyWithCryptoEnabled: boolean;
+  } {
+    const chain = supportedDestinations.find((c) => c.chain.id === toChain.id);
+    if (!chain) {
+      return {
+        buyWithFiatEnabled: true,
+        buyWithCryptoEnabled: true,
+      };
+    }
+
+    const toTokenAddress = isNativeToken(toToken)
+      ? NATIVE_TOKEN_ADDRESS
+      : toToken.address;
+    const tokenInfo = chain.tokens.find((t) => t.address === toTokenAddress);
+
+    if (!tokenInfo) {
+      return {
+        buyWithFiatEnabled: true,
+        buyWithCryptoEnabled: true,
+      };
+    }
+
+    return {
+      buyWithFiatEnabled: tokenInfo.buyWithFiatEnabled,
+      buyWithCryptoEnabled: tokenInfo.buyWithCryptoEnabled,
+    };
+  }
+
+  const { buyWithFiatEnabled, buyWithCryptoEnabled } =
+    getEnabledPayMethodsForSelectedToken();
+
+  useEffect(() => {
+    if (method === "creditCard" && !buyWithFiatEnabled) {
+      setMethod("crypto");
+    }
+
+    if (method === "crypto" && !buyWithCryptoEnabled) {
+      setMethod("creditCard");
+    }
+  }, [buyWithFiatEnabled, buyWithCryptoEnabled, method]);
+
+  const showPaymentSelection =
+    buyWithFiatOptions !== false &&
+    buyWithCryptoOptions !== false &&
+    buyWithFiatEnabled &&
+    buyWithCryptoEnabled;
+
+  // screens ----------------------------
+
+  if (screen.type === "node") {
+    return screen.node;
+  }
+
   if (screen.type === "screen-id" && screen.name === "select-to-token") {
     return (
       <TokenSelector
         onBack={showMainScreen}
-        tokenList={
-          (toChain?.id ? props.supportedTokens[toChain.id] : undefined) || []
-        }
+        tokenList={(
+          (toChain?.id ? destinationSupportedTokens[toChain.id] : undefined) ||
+          []
+        ).filter((x) => x.address !== NATIVE_TOKEN_ADDRESS)}
         onTokenSelect={(tokenInfo) => {
           setToToken(tokenInfo);
           showMainScreen();
         }}
         chain={toChain}
         chainSelection={{
-          chains: supportedDestinationChains,
+          chains: supportedDestinations.map((x) => x.chain),
           select: (c) => {
             setToChain(c);
           },
@@ -312,14 +381,19 @@ function BuyScreenContent(props: BuyScreenContentProps) {
     );
   }
 
-  if (screen.type === "screen-id" && screen.name === "select-from-token") {
+  if (
+    screen.type === "screen-id" &&
+    screen.name === "select-from-token" &&
+    supportedSourcesQuery.data &&
+    sourceSupportedTokens
+  ) {
     return (
       <TokenSelector
         onBack={showMainScreen}
-        tokenList={
-          (fromChain?.id ? props.supportedTokens[fromChain.id] : undefined) ||
+        tokenList={(
+          (fromChain?.id ? sourceSupportedTokens[fromChain.id] : undefined) ||
           []
-        }
+        ).filter((x) => x.address !== NATIVE_TOKEN_ADDRESS)}
         onTokenSelect={(tokenInfo) => {
           setFromToken(tokenInfo);
           setScreen({
@@ -328,7 +402,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
         }}
         chain={fromChain}
         chainSelection={{
-          chains: supportedSourceChains,
+          chains: supportedSourcesQuery.data.map((x) => x.chain),
           select: (c) => setFromChain(c),
         }}
         connectLocale={connectLocale}
@@ -336,6 +410,8 @@ function BuyScreenContent(props: BuyScreenContentProps) {
       />
     );
   }
+
+  // check that buy-with-crypto or buy-with-fiat is enabled for the selected token
 
   return (
     <Container animate="fadein">
@@ -413,7 +489,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
           />
         </Container>
 
-        <Spacer y="lg" />
+        {showPaymentSelection ? <Spacer y="lg" /> : <Spacer y="md" />}
 
         {isExpanded && (
           <>
@@ -966,4 +1042,28 @@ function BuyForTxUI(props: {
       <Spacer y="xxs" />
     </Container>
   );
+}
+
+function createSupportedTokens(
+  data: SupportedChainAndTokens,
+  supportedTokensOverrides?: SupportedTokens,
+): SupportedTokens {
+  const tokens: SupportedTokens = {};
+
+  for (const x of data) {
+    tokens[x.chain.id] = x.tokens;
+  }
+
+  // override with props.supportedTokens
+  if (supportedTokensOverrides) {
+    for (const k in supportedTokensOverrides) {
+      const key = Number(k);
+      const tokenList = supportedTokensOverrides[key];
+      if (tokenList) {
+        tokens[key] = tokenList;
+      }
+    }
+  }
+
+  return tokens;
 }

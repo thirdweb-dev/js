@@ -51,8 +51,15 @@ export const getPayBuyWithCryptoHistoryEndpoint = () =>
  * Constructs the endpoint to get the pay endpoint
  * @internal
  */
-export const getPayChainsEndpoint = () =>
-  `https://${getThirdwebDomains().pay}/chains/v2`;
+export const getPaySupportedDestinations = () =>
+  `https://${getThirdwebDomains().pay}/destination-tokens/v1`;
+
+/**
+ * Constructs the endpoint to get the pay endpoint
+ * @internal
+ */
+export const getPaySupportedSources = () =>
+  `https://${getThirdwebDomains().pay}/buy-with-crypto/source-tokens/v1`;
 
 /**
  * Constructs the endpoint to get the pay endpoint

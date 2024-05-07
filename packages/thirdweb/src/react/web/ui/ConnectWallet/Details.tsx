@@ -91,7 +91,7 @@ export const ConnectedWalletDetails: React.FC<{
   detailsButton?: ConnectButton_detailsButtonOptions;
   detailsModal?: ConnectButton_detailsModalOptions;
   theme: "light" | "dark" | Theme;
-  supportedTokens: SupportedTokens;
+  supportedTokens?: SupportedTokens;
   chains: Chain[];
   chain?: Chain;
   switchButton: ConnectButtonProps["switchButton"];

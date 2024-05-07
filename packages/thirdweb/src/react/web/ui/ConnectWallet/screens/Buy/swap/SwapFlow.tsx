@@ -52,7 +52,6 @@ export function SwapFlow(props: SwapFlowProps) {
 
     const tokenInfo: TokenInfo = {
       address: _toToken.tokenAddress,
-      icon: "",
       name: _toToken.name || "",
       symbol: _toToken.symbol || "",
     };
@@ -66,7 +65,6 @@ export function SwapFlow(props: SwapFlowProps) {
 
     const tokenInfo: TokenInfo = {
       address: _fromToken.tokenAddress,
-      icon: "",
       name: _fromToken.name || "",
       symbol: _fromToken.symbol || "",
     };
