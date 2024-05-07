@@ -72,7 +72,7 @@ export function watchContractEvents<
         ...options,
         // fromBlock is inclusive
         fromBlock: blockNumber,
-        // toBlock is exclusive
+        // toBlock is inclusive
         toBlock: blockNumber,
       });
       // if there were any logs associated with our event(s)
