@@ -1,7 +1,6 @@
 import { ExternalLinkIcon } from "@radix-ui/react-icons";
 import { defineChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
-import type { ValidBuyWithFiatStatus } from "../../../../../../../pay/buyWithFiat/getStatus.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
 import { Spacer } from "../../../../components/Spacer.js";
@@ -11,21 +10,29 @@ import { Text } from "../../../../components/text.js";
 import { fontSize, iconSize } from "../../../../design-system/index.js";
 import { USDIcon } from "../../../icons/currencies/USDIcon.js";
 import { TokenInfoRow } from "../tx-history/TokenInfoRow.js";
-import { getBuyWithFiatStatusMeta } from "../tx-history/statusMeta.js";
+import type { FiatStatusMeta } from "../tx-history/statusMeta.js";
 
 export function OnRampTxDetailsTable(props: {
-  status: ValidBuyWithFiatStatus;
+  // status: ValidBuyWithFiatStatus;
   client: ThirdwebClient;
-  hideStatus?: boolean;
+  token: {
+    chainId: number;
+    address: string;
+    symbol: string;
+    amount: string;
+  };
+  fiat: {
+    currencySymbol: string;
+    amount: string;
+  };
+  statusMeta?: {
+    color: FiatStatusMeta["color"];
+    text: FiatStatusMeta["status"];
+    txHash?: string;
+  };
 }) {
-  const status = props.status;
-  const statusMeta = getBuyWithFiatStatusMeta(status);
-
-  const onRampChainQuery = useChainQuery(
-    defineChain(status.quote.onRampToken.chainId),
-  );
-
-  const onrampTxHash = status.source?.transactionHash;
+  const onRampChainQuery = useChainQuery(defineChain(props.token.chainId));
+  const onrampTxHash = props.statusMeta?.txHash;
 
   const lineSpacer = (
     <>
@@ -37,25 +44,14 @@ export function OnRampTxDetailsTable(props: {
 
   return (
     <div>
-      {status.destination ? (
-        <TokenInfoRow
-          chainId={status.destination.token.chainId}
-          client={props.client}
-          label="Received"
-          tokenAmount={status.destination.amount}
-          tokenSymbol={status.destination.token.symbol || ""}
-          tokenAddress={status.destination.token.tokenAddress}
-        />
-      ) : (
-        <TokenInfoRow
-          chainId={status.quote.onRampToken.chainId}
-          client={props.client}
-          label="Receive"
-          tokenAmount={status.quote.estimatedOnRampAmount}
-          tokenSymbol={status.quote.onRampToken.symbol || ""}
-          tokenAddress={status.quote.onRampToken.tokenAddress}
-        />
-      )}
+      <TokenInfoRow
+        chainId={props.token.chainId}
+        client={props.client}
+        label="Receive"
+        tokenAmount={props.token.amount}
+        tokenSymbol={props.token.symbol}
+        tokenAddress={props.token.address}
+      />
 
       {lineSpacer}
 
@@ -75,21 +71,18 @@ export function OnRampTxDetailsTable(props: {
           }}
         >
           <Container flex="row" gap="xs" center="y">
-            {status.quote.fromCurrencyWithFees.currencySymbol === "USD" && (
+            {props.fiat.currencySymbol === "USD" && (
               <USDIcon size={iconSize.sm} />
             )}
             <Text color="primaryText">
-              {formatNumber(
-                Number(status.quote.fromCurrencyWithFees.amount),
-                4,
-              )}{" "}
-              {status.quote.fromCurrencyWithFees.currencySymbol}
+              {formatNumber(Number(props.fiat.amount), 4)}{" "}
+              {props.fiat.currencySymbol}
             </Text>
           </Container>
         </Container>
       </Container>
 
-      {!props.hideStatus && (
+      {props.statusMeta && (
         <>
           {lineSpacer}
 
@@ -103,7 +96,9 @@ export function OnRampTxDetailsTable(props: {
           >
             <Text>Status</Text>
             <Container flex="row" gap="xs" center="y">
-              <Text color={statusMeta.color}>{statusMeta.status}</Text>
+              <Text color={props.statusMeta.color}>
+                {props.statusMeta.text}
+              </Text>
             </Container>
           </Container>
         </>

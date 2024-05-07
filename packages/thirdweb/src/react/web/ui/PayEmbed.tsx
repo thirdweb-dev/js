@@ -60,11 +60,13 @@ export function PayEmbed(props: {
           // noop
         }}
         isBuyForTx={false}
+        isEmbed={true}
       />
     );
   } else {
     content = (
       <BuyScreen
+        isEmbed={true}
         supportedTokens={props.supportedTokens}
         theme={props.theme || "dark"}
         client={props.client}

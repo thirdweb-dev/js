@@ -201,12 +201,14 @@ function ModalContent(props: ModalProps) {
           setScreen("execute-tx");
         }}
         isBuyForTx={true}
+        isEmbed={false}
       />
     );
   }
 
   return (
     <LazyBuyScreen
+      isEmbed={false}
       client={props.client}
       onViewPendingTx={() => {
         setScreen("tx-history");

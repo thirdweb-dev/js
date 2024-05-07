@@ -19,6 +19,7 @@ type SwapFlowProps = {
   onDone: () => void;
   onTryAgain: () => void;
   isBuyForTx: boolean;
+  isEmbed: boolean;
 };
 
 export function SwapFlow(props: SwapFlowProps) {
@@ -88,6 +89,7 @@ export function SwapFlow(props: SwapFlowProps) {
         fromToken={fromToken}
         estimatedTimeSeconds={quote.swapDetails.estimated.durationSeconds || 0}
         isBuyForTx={props.isBuyForTx}
+        isEmbed={props.isEmbed}
       />
     );
   }

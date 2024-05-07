@@ -23,6 +23,7 @@ export function PostOnRampSwap(props: {
   onViewPendingTx: () => void;
   onDone: () => void;
   isBuyForTx: boolean;
+  isEmbed: boolean;
 }) {
   const account = useActiveAccount();
 
@@ -153,6 +154,7 @@ export function PostOnRampSwap(props: {
         postOnRampQuoteQuery.refetch();
       }}
       isBuyForTx={props.isBuyForTx}
+      isEmbed={props.isEmbed}
     />
   );
 }

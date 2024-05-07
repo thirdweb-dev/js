@@ -6,6 +6,7 @@ import type { ValidBuyWithFiatStatus } from "../../../../../../../pay/buyWithFia
 import { Container, Line, ModalHeader } from "../../../../components/basic.js";
 import { OnRampTxDetailsTable } from "../fiat/FiatTxDetailsTable.js";
 import { PostOnRampSwapFlow } from "../fiat/PostOnRampSwapFlow.js";
+import { getBuyWithFiatStatusMeta } from "./statusMeta.js";
 
 export function FiatDetailsScreen(props: {
   status: ValidBuyWithFiatStatus;
@@ -13,6 +14,7 @@ export function FiatDetailsScreen(props: {
   client: ThirdwebClient;
   onDone: () => void;
   isBuyForTx: boolean;
+  isEmbed: boolean;
 }) {
   const initialStatus = props.status;
   const [stopPolling, setStopPolling] = useState(false);
@@ -31,6 +33,7 @@ export function FiatDetailsScreen(props: {
     initialStatus;
 
   const hasTwoSteps = isSwapRequiredAfterOnRamp(status);
+  const statusMeta = getBuyWithFiatStatusMeta(status);
 
   if (hasTwoSteps) {
     const fiatQuote = status.quote;
@@ -41,6 +44,7 @@ export function FiatDetailsScreen(props: {
         onBack={props.onBack}
         onViewPendingTx={props.onBack}
         isBuyForTx={props.isBuyForTx}
+        isEmbed={props.isEmbed}
         quote={{
           fromCurrencyAmount: fiatQuote.fromCurrencyWithFees.amount,
           fromCurrencySymbol: fiatQuote.fromCurrencyWithFees.currencySymbol,
@@ -76,7 +80,33 @@ export function FiatDetailsScreen(props: {
       <Line />
 
       <Container p="lg">
-        <OnRampTxDetailsTable status={status} client={props.client} />
+        <OnRampTxDetailsTable
+          client={props.client}
+          token={
+            status.source
+              ? {
+                  chainId: status.source.token.chainId,
+                  address: status.source.token.tokenAddress,
+                  symbol: status.source.token.symbol || "",
+                  amount: status.source.amount,
+                }
+              : {
+                  address: status.quote.onRampToken.tokenAddress,
+                  amount: status.quote.estimatedOnRampAmount,
+                  chainId: status.quote.onRampToken.chainId,
+                  symbol: status.quote.onRampToken.symbol || "",
+                }
+          }
+          fiat={{
+            amount: status.quote.fromCurrencyWithFees.amount,
+            currencySymbol: status.quote.fromCurrencyWithFees.currencySymbol,
+          }}
+          statusMeta={{
+            color: statusMeta.color,
+            text: statusMeta.status,
+            txHash: status.source?.transactionHash,
+          }}
+        />
       </Container>
     </Container>
   );

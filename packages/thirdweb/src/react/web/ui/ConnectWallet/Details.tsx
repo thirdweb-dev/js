@@ -605,6 +605,7 @@ export const ConnectedWalletDetails: React.FC<{
     content = (
       <BuyTxHistory
         isBuyForTx={false}
+        isEmbed={false}
         onBack={() => setScreen("main")}
         client={client}
         onDone={() => {
@@ -692,6 +693,7 @@ export const ConnectedWalletDetails: React.FC<{
   else if (screen === "buy") {
     content = (
       <LazyBuyScreen
+        isEmbed={false}
         client={client}
         onBack={() => setScreen("main")}
         supportedTokens={props.supportedTokens}

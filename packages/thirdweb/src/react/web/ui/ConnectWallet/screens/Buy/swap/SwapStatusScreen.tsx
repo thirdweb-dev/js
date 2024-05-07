@@ -41,6 +41,7 @@ export function SwapStatusScreen(props: {
   onDone: () => void;
   estimatedTimeSeconds: number;
   isBuyForTx: boolean;
+  isEmbed: boolean;
 }) {
   const swapStatus = useBuyWithCryptoStatus({
     client: props.client,
@@ -109,9 +110,11 @@ export function SwapStatusScreen(props: {
                   hideStatus={true}
                 />
                 <Spacer y="sm" />
-                <Button variant="accent" fullWidth onClick={props.onDone}>
-                  {props.isBuyForTx ? "Continue Transaction" : "Done"}
-                </Button>
+                {!props.isEmbed && (
+                  <Button variant="accent" fullWidth onClick={props.onDone}>
+                    {props.isBuyForTx ? "Continue Transaction" : "Done"}
+                  </Button>
+                )}
               </>
             )}
           </>

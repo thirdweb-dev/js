@@ -88,6 +88,7 @@ export type BuyScreenProps = {
   theme: "light" | "dark" | Theme;
   onDone: () => void;
   connectButton?: React.ReactNode;
+  isEmbed: boolean;
 };
 
 /**
@@ -122,6 +123,7 @@ type BuyScreenContentProps = {
   payOptions: PayUIOptions;
   onDone: () => void;
   connectButton?: React.ReactNode;
+  isEmbed: boolean;
 };
 
 type Screen =
@@ -677,6 +679,7 @@ function SwapScreenContent(
       node: (
         <SwapFlow
           isBuyForTx={!!props.buyForTx}
+          isEmbed={props.isEmbed}
           client={client}
           onBack={() => {
             setStopUpdatingTokenAmount(true);
@@ -863,6 +866,7 @@ function FiatScreenContent(
           onViewPendingTx={props.onViewPendingTx}
           openedWindow={openedWindow}
           onDone={props.onDone}
+          isEmbed={props.isEmbed}
         />
       ),
     });

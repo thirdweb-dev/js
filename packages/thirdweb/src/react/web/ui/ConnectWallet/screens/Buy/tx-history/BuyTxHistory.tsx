@@ -39,6 +39,7 @@ export function BuyTxHistory(props: {
   client: ThirdwebClient;
   onDone: () => void;
   isBuyForTx: boolean;
+  isEmbed: boolean;
 }) {
   const [selectedTx, setSelectedTx] = useState<TxStatusInfo | null>(null);
 
@@ -50,6 +51,7 @@ export function BuyTxHistory(props: {
         onBack={() => setSelectedTx(null)}
         onDone={props.onDone}
         isBuyForTx={props.isBuyForTx}
+        isEmbed={props.isEmbed}
       />
     );
   }

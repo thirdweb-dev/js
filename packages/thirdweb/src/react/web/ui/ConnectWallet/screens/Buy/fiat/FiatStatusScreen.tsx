@@ -6,6 +6,7 @@ import type {
   BuyWithFiatQuote,
   BuyWithFiatStatus,
 } from "../../../../../../../exports/pay.js";
+import type { ValidBuyWithFiatStatus } from "../../../../../../../pay/buyWithFiat/getStatus.js";
 import { isMobile } from "../../../../../../../utils/web/isMobile.js";
 import { useBuyWithFiatStatus } from "../../../../../../core/hooks/pay/useBuyWithFiatStatus.js";
 import { invalidateWalletBalance } from "../../../../../../core/providers/invalidateWalletBalance.js";
@@ -17,6 +18,7 @@ import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { iconSize } from "../../../../design-system/index.js";
 import { AccentFailIcon } from "../../../icons/AccentFailIcon.js";
+import { getBuyWithFiatStatusMeta } from "../tx-history/statusMeta.js";
 import { OnRampTxDetailsTable } from "./FiatTxDetailsTable.js";
 
 type UIStatus = "loading" | "failed" | "completed" | "partialSuccess";
@@ -32,6 +34,7 @@ export function OnrampStatusScreen(props: {
   onDone: () => void;
   onShowSwapFlow: (status: BuyWithFiatStatus) => void;
   isBuyForTx: boolean;
+  isEmbed: boolean;
 }) {
   const queryClient = useQueryClient();
   const { openedWindow } = props;
@@ -110,6 +113,8 @@ export function OnrampStatusScreen(props: {
         fiatStatus={statusQuery.data}
         client={props.client}
         isBuyForTx={props.isBuyForTx}
+        quote={props.quote}
+        isEmbed={props.isEmbed}
       />
     </Container>
   );
@@ -121,8 +126,55 @@ function OnrampStatusScreenUI(props: {
   onDone: () => void;
   client: ThirdwebClient;
   isBuyForTx: boolean;
+  isEmbed: boolean;
+  quote: BuyWithFiatQuote;
 }) {
   const { uiStatus } = props;
+
+  const statusMeta = props.fiatStatus
+    ? getBuyWithFiatStatusMeta(props.fiatStatus)
+    : undefined;
+
+  const fiatStatus: ValidBuyWithFiatStatus | undefined =
+    props.fiatStatus && props.fiatStatus.status !== "NOT_FOUND"
+      ? props.fiatStatus
+      : undefined;
+
+  const onRampTokenQuote = props.quote.onRampToken;
+
+  const txDetails = (
+    <OnRampTxDetailsTable
+      client={props.client}
+      token={
+        fiatStatus?.source // source tx is onRamp token
+          ? {
+              chainId: fiatStatus.source.token.chainId,
+              address: fiatStatus.source.token.tokenAddress,
+              symbol: fiatStatus.source.token.symbol || "",
+              amount: fiatStatus.source.amount,
+            }
+          : {
+              chainId: onRampTokenQuote.token.chainId,
+              address: onRampTokenQuote.token.tokenAddress,
+              symbol: onRampTokenQuote.token.symbol,
+              amount: onRampTokenQuote.amount,
+            }
+      }
+      fiat={{
+        amount: props.quote.fromCurrencyWithFees.amount,
+        currencySymbol: props.quote.fromCurrencyWithFees.currencySymbol,
+      }}
+      statusMeta={
+        fiatStatus?.source && statusMeta
+          ? {
+              color: statusMeta?.color,
+              text: statusMeta?.status,
+              txHash: fiatStatus.source.transactionHash,
+            }
+          : undefined
+      }
+    />
+  );
 
   return (
     <Container>
@@ -141,13 +193,7 @@ function OnrampStatusScreenUI(props: {
           <Spacer y="sm" />
           {!isMobile() && <Text center>Complete the purchase in popup</Text>}
           <Spacer y="xxl" />
-          {props.fiatStatus && props.fiatStatus.status !== "NOT_FOUND" && (
-            <OnRampTxDetailsTable
-              status={props.fiatStatus}
-              client={props.client}
-              hideStatus={true}
-            />
-          )}
+          {txDetails}
         </>
       )}
 
@@ -161,21 +207,8 @@ function OnrampStatusScreenUI(props: {
           <Text color="primaryText" size="lg" center>
             Transaction Failed
           </Text>
-          {props.fiatStatus && props.fiatStatus.status !== "NOT_FOUND" ? (
-            <>
-              <Spacer y="xxl" />
-              <OnRampTxDetailsTable
-                status={props.fiatStatus}
-                client={props.client}
-                hideStatus={true}
-              />
-            </>
-          ) : (
-            <>
-              <Spacer y="xl" />
-              <Spacer y="xl" />
-            </>
-          )}
+          <Spacer y="xxl" />
+          {txDetails}
         </>
       )}
 
@@ -195,17 +228,16 @@ function OnrampStatusScreenUI(props: {
           {props.fiatStatus && props.fiatStatus.status !== "NOT_FOUND" && (
             <>
               <Spacer y="xxl" />
-              <OnRampTxDetailsTable
-                status={props.fiatStatus}
-                client={props.client}
-                hideStatus={true}
-              />
+              {txDetails}
               <Spacer y="sm" />
             </>
           )}
-          <Button variant="accent" fullWidth onClick={props.onDone}>
-            {props.isBuyForTx ? "Continue Transaction" : "Done"}
-          </Button>
+
+          {!props.isEmbed && (
+            <Button variant="accent" fullWidth onClick={props.onDone}>
+              {props.isBuyForTx ? "Continue Transaction" : "Done"}
+            </Button>
+          )}
         </>
       )}
     </Container>

@@ -47,6 +47,7 @@ export function FiatFlow(props: {
   openedWindow: Window | null;
   onDone: () => void;
   isBuyForTx: boolean;
+  isEmbed: boolean;
 }) {
   const hasTwoSteps = isSwapRequiredPostOnramp(props.quote);
   const [screen, setScreen] = useState<Screen>(
@@ -98,6 +99,7 @@ export function FiatFlow(props: {
           setScreen({ id: "postonramp-swap", data: _status });
         }}
         isBuyForTx={props.isBuyForTx}
+        isEmbed={props.isEmbed}
       />
     );
   }
@@ -115,6 +117,7 @@ export function FiatFlow(props: {
           // no op
         }}
         isBuyForTx={props.isBuyForTx}
+        isEmbed={props.isEmbed}
       />
     );
   }

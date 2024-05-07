@@ -15,6 +15,7 @@ export function PostOnRampSwapFlow(props: {
   onDone: () => void;
   onSwapFlowStarted: () => void;
   isBuyForTx: boolean;
+  isEmbed: boolean;
 }) {
   const [statusForSwap, setStatusForSwap] = useState<
     BuyWithFiatStatus | undefined
@@ -32,6 +33,7 @@ export function PostOnRampSwapFlow(props: {
         onViewPendingTx={props.onViewPendingTx}
         onDone={props.onDone}
         isBuyForTx={props.isBuyForTx}
+        isEmbed={props.isEmbed}
       />
     );
   }

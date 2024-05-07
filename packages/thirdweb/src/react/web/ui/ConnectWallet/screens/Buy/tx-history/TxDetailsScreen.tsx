@@ -9,6 +9,7 @@ export function TxDetailsScreen(props: {
   onBack: () => void;
   onDone: () => void;
   isBuyForTx: boolean;
+  isEmbed: boolean;
 }) {
   const { statusInfo } = props;
 
@@ -30,6 +31,7 @@ export function TxDetailsScreen(props: {
         onBack={props.onBack}
         onDone={props.onDone}
         isBuyForTx={props.isBuyForTx}
+        isEmbed={props.isEmbed}
       />
     );
   }
