@@ -136,6 +136,7 @@
     "src/*",
     "!**/*.tsbuildinfo",
     "!**/*.test.ts",
+    "!**/*.test.tsx",
     "!**/*.test.ts.snap",
     "!**/*.test-d.ts",
     "!**/*.bench.ts",
