@@ -212,7 +212,6 @@ export async function twCreate(
           choices: [
             { title: "Next.js", value: "next" },
             { title: "Vite", value: "vite" },
-            { title: "Node.js", value: "node" },
           ],
         });
 
