@@ -94,6 +94,7 @@ export function bidInAuction(
           value: isNativeTokenAddress(auction.currencyContractAddress)
             ? resolvedBidAmountWei
             : undefined,
+          extraGas: 50_000n, // add extra gas to account for router call
         },
       };
     },

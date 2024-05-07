@@ -14,7 +14,7 @@ import { verifyLoginPayload } from "./core/verify-login-payload.js";
  *
  * const auth = createAuth({...});
  *
- * // 1. genererate a login payload for a client on the server side
+ * // 1. generate a login payload for a client on the server side
  * const loginPayload = await auth.generatePayload({ address: '0x123...' });
  *
  * // 2. send the login payload to the client

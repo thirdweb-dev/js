@@ -256,6 +256,47 @@ describe("toSerializableTransaction", () => {
     });
   });
 
+  describe("extraGas override", () => {
+    let gas: bigint;
+    beforeAll(() => {
+      gas = BigInt(Math.floor(Math.random() * 1000));
+    });
+
+    test("should be able to be set", async () => {
+      const serializableTransaction = await toSerializableTransaction({
+        transaction: {
+          ...transaction,
+          gas,
+          extraGas: BigInt(50_000),
+        },
+      });
+      expect(serializableTransaction.gas).toBe(gas + BigInt(50_000));
+    });
+
+    test("should be able to be a promised value", async () => {
+      const serializableTransaction = await toSerializableTransaction({
+        transaction: {
+          ...transaction,
+          gas,
+          extraGas: () => Promise.resolve(BigInt(50_000)),
+        },
+      });
+      expect(serializableTransaction.gas).toBe(gas + BigInt(50_000));
+    });
+
+    test("should not be overridden when set to an undefined promised value", async () => {
+      const serializableTransaction = await toSerializableTransaction({
+        transaction: {
+          ...transaction,
+          gas,
+          extraGas: () => Promise.resolve(undefined),
+        },
+      });
+
+      expect(serializableTransaction.gas).toBe(gas);
+    });
+  });
+
   describe("value override", () => {
     test("should be able to be set", async () => {
       const randomValue = BigInt(Math.floor(Math.random() * 1000));

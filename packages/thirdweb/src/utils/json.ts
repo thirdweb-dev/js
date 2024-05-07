@@ -1,5 +1,11 @@
 /**
- * @internal
+ * Stringify a JSON object and convert all bigint values to string
+ * @example
+ * ```ts
+ * import { stringify } from "thirdweb/utils";
+ * const obj = { tokenId: 0n };
+ * const str = stringify(obj); // "{"tokenId":"0"}"
+ * ```
  */
 export const stringify: typeof JSON.stringify = (value, replacer, space) => {
   const res = JSON.stringify(
