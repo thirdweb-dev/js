@@ -91,6 +91,9 @@ function convertViemChain(viemChain: ViemChain): Chain {
       symbol: viemChain.nativeCurrency.symbol,
       decimals: viemChain.nativeCurrency.decimals,
     },
+    rpc:
+      viemChain.rpcUrls.default.http[0] ??
+      `https://${viemChain.id}.rpc.thirdweb.com`,
     blockExplorers: viemChain?.blockExplorers
       ? Object.values(viemChain?.blockExplorers).map((explorer) => {
           return {
