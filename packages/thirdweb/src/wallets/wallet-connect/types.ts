@@ -117,7 +117,7 @@ export type WCConnectOptions = {
      */
     qrModalOptions?: WalletConnectQRCodeModalOptions;
     /**
-     * If you do not want to open the officia WalletConnect Modal and want to render the QR Code Modal yourself, you can set `showQrModal` to `false`
+     * If you do not want to open the official WalletConnect Modal and want to render the QR Code Modal yourself, you can set `showQrModal` to `false`
      * and pass the `onDisplayUri` prop to get the URI to render a custom QR Code Modal.
      *
      * ```tsx
