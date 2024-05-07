@@ -30,6 +30,7 @@ import {
   useSwitchActiveWalletChain,
 } from "../../../core/hooks/wallets/wallet-hooks.js";
 import { shortenString } from "../../../core/utils/addresses.js";
+import { hasSmartAccount } from "../../utils/isSmartWallet.js";
 import { ChainIcon } from "../components/ChainIcon.js";
 import { CopyIcon } from "../components/CopyIcon.js";
 import { Img } from "../components/Img.js";
@@ -212,12 +213,7 @@ export const ConnectedWalletDetails: React.FC<{
           client={client}
         />
       ) : activeWallet?.id ? (
-        <WalletImage
-          size={iconSize.lg}
-          id={activeWallet.id}
-          client={client}
-          allowOverrides
-        />
+        <WalletImage size={iconSize.lg} id={activeWallet.id} client={client} />
       ) : (
         <WalletIcon size={iconSize.lg} />
       )}
@@ -332,7 +328,6 @@ export const ConnectedWalletDetails: React.FC<{
             size={iconSize.xxl}
             id={activeWallet.id}
             client={client}
-            allowOverrides
           />
         ) : (
           <WalletIcon size={iconSize.xxl} />
@@ -385,9 +380,7 @@ export const ConnectedWalletDetails: React.FC<{
           {balanceQuery.data?.symbol}{" "}
         </Text>
       </Container>
-
       <Spacer y="lg" />
-
       <Container px="lg">
         {/* Send, Receive, Swap */}
         <Container
@@ -462,9 +455,7 @@ export const ConnectedWalletDetails: React.FC<{
           </Button>
         </Container>
       </Container>
-
       <Spacer y="md" />
-
       <Container px="md">
         {/* Network Switcher */}
         <Container
@@ -813,21 +804,22 @@ const StyledChevronRightIcon = /* @__PURE__ */ styled(
 //   );
 // }
 
-const ActiveDot = /* @__PURE__ */ StyledDiv(() => {
+const SmartBadge = /* @__PURE__ */ StyledDiv(() => {
   const theme = useCustomTheme();
   return {
-    width: "8px",
-    height: "8px",
-    borderRadius: "50%",
-    backgroundColor: theme.colors.success,
+    borderRadius: radius.md,
+    backgroundColor: theme.colors.secondaryButtonBg,
+    color: theme.colors.secondaryButtonText,
+    padding: `${spacing.xxs} ${spacing.xs}`,
+    fontSize: fontSize.xs,
   };
 });
 
 function ConnectedToSmartWallet() {
   const activeAccount = useActiveAccount();
   const activeWallet = useActiveWallet();
+  const isSmartWallet = hasSmartAccount(activeWallet);
   const chain = useActiveWalletChain();
-  const isSmartWallet = activeWallet?.id === "smart";
   const { client, connectLocale: locale } = useConnectUI();
 
   const [isSmartWalletDeployed, setIsSmartWalletDeployed] = useState(false);
@@ -848,12 +840,7 @@ function ConnectedToSmartWallet() {
     }
   }, [activeAccount, chain, client, isSmartWallet]);
 
-  const content = (
-    <Container flex="row" gap="xxs" center="both">
-      <ActiveDot />
-      {locale.connectedToSmartWallet}
-    </Container>
-  );
+  const content = <SmartBadge>{locale.connectedToSmartWallet}</SmartBadge>;
 
   if (chain && activeAccount && isSmartWallet) {
     return (

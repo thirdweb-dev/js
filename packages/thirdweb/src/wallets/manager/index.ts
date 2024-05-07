@@ -8,6 +8,7 @@ import type { Account, Wallet } from "../interfaces/wallet.js";
 import type { SmartWalletOptions } from "../smart/types.js";
 import type { AsyncStorage } from "../storage/AsyncStorage.js";
 import { deleteConnectParamsFromStorage } from "../storage/walletStorage.js";
+import type { WalletId } from "../wallet-types.js";
 
 type WalletIdToConnectedWalletMap = Map<string, Wallet>;
 export type ConnectionStatus = "connected" | "disconnected" | "connecting";
@@ -84,6 +85,7 @@ export function createConnectionManager(storage: AsyncStorage) {
       storage.removeItem(LAST_ACTIVE_EOA_ID);
       activeAccountStore.setValue(undefined);
       activeWalletChainStore.setValue(undefined);
+      activeWalletStore.setValue(undefined);
       activeWalletConnectionStatusStore.setValue("disconnected");
     }
   };
@@ -281,11 +283,11 @@ export async function getStoredConnectedWalletIds(
  */
 export async function getStoredActiveWalletId(
   storage: AsyncStorage,
-): Promise<string | null> {
+): Promise<WalletId | null> {
   try {
     const value = await storage.getItem(LAST_ACTIVE_EOA_ID);
     if (value) {
-      return value;
+      return value as WalletId;
     }
 
     return null;
