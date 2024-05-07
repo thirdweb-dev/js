@@ -62,6 +62,7 @@ import { NetworkSelectorContent } from "./NetworkSelector.js";
 import { onModalUnmount } from "./constants.js";
 import type { SupportedTokens } from "./defaultTokens.js";
 import { FundsIcon } from "./icons/FundsIcon.js";
+import { SmartWalletBadgeIcon } from "./icons/SmartAccountBadgeIcon.js";
 import { WalletIcon } from "./icons/WalletIcon.js";
 import { BuyScreen } from "./screens/Buy/SwapScreen.js";
 import { swapTransactionsStore } from "./screens/Buy/swap/pendingSwapTx.js";
@@ -804,17 +805,6 @@ const StyledChevronRightIcon = /* @__PURE__ */ styled(
 //   );
 // }
 
-const SmartBadge = /* @__PURE__ */ StyledDiv(() => {
-  const theme = useCustomTheme();
-  return {
-    borderRadius: radius.md,
-    backgroundColor: theme.colors.secondaryButtonBg,
-    color: theme.colors.secondaryButtonText,
-    padding: `${spacing.xxs} ${spacing.xs}`,
-    fontSize: fontSize.xs,
-  };
-});
-
 function ConnectedToSmartWallet() {
   const activeAccount = useActiveAccount();
   const activeWallet = useActiveWallet();
@@ -840,7 +830,25 @@ function ConnectedToSmartWallet() {
     }
   }, [activeAccount, chain, client, isSmartWallet]);
 
-  const content = <SmartBadge>{locale.connectedToSmartWallet}</SmartBadge>;
+  const content = (
+    <Container
+      flex="row"
+      bg="secondaryButtonBg"
+      gap="xxs"
+      style={{
+        borderRadius: radius.md,
+        padding: `${spacing.xxs} ${spacing.sm} ${spacing.xxs} ${spacing.xs}`,
+      }}
+      center="y"
+    >
+      <Container flex="row" color="accentText" center="both">
+        <SmartWalletBadgeIcon size={iconSize.xs} />
+      </Container>
+      <Text size="xs" color="secondaryButtonText">
+        {locale.connectedToSmartWallet}
+      </Text>
+    </Container>
+  );
 
   if (chain && activeAccount && isSmartWallet) {
     return (
