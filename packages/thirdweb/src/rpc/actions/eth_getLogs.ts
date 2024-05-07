@@ -16,11 +16,31 @@ export type GetLogsBlockParams =
       fromBlock?: BlockNumber | BlockTag;
       toBlock?: BlockNumber | BlockTag;
       blockHash?: never;
+      blockRange?: never;
     }
   | {
       fromBlock?: never;
       toBlock?: never;
       blockHash?: Hash;
+      blockRange?: never;
+    }
+  | {
+      fromBlock?: BlockNumber | "latest";
+      toBlock?: never;
+      blockRange: BlockNumber;
+      blockHash?: never;
+    }
+  | {
+      fromBlock?: never;
+      toBlock?: BlockNumber | "latest";
+      blockRange: BlockNumber;
+      blockHash?: never;
+    }
+  | {
+      fromBlock?: never;
+      toBlock?: never;
+      blockRange: BlockNumber;
+      blockHash?: never;
     };
 
 export type GetLogsParams = {
