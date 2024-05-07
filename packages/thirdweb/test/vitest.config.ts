@@ -20,6 +20,7 @@ export default defineConfig({
       exclude: [
         // test files do not count
         "**/*.test.ts",
+        "**/*.test.tsx",
         // benchmark files do not count
         "**/*.bench.ts",
         // anything inside /test/ does not count
