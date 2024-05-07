@@ -1,5 +1,113 @@
 # thirdweb
 
+## 5.16.1
+
+### Patch Changes
+
+- [#2936](https://github.com/thirdweb-dev/js/pull/2936) [`a692154`](https://github.com/thirdweb-dev/js/commit/a6921549244e3a0a959fa0611f3ab92328c06f4b) Thanks [@MananTank](https://github.com/MananTank)! - Fix OTP input entered by by clicking on “from messages” option in iOS safari
+
+- [#2934](https://github.com/thirdweb-dev/js/pull/2934) [`bdb919f`](https://github.com/thirdweb-dev/js/commit/bdb919f32ae459608b29dd1e4d511afc226470c6) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Updates the CLI `create` command to use the v5 templates for Next.js and Vite
+
+  Other templates will be updated in the future from within their existing repositories
+
+  Removes React Native starters from the CLI menu
+  Removes JS template support from the CLI
+
+- [#2941](https://github.com/thirdweb-dev/js/pull/2941) [`795a59e`](https://github.com/thirdweb-dev/js/commit/795a59e436d791fcfef093971d295622951c832c) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Can now optionally specify `blockRange` on `getContractEvents` in combination with `toBlock` and `fromBlock`.
+
+  ## Usage
+
+  Specify a `blockRange`, defaulting `toBlock` to the current block number.
+
+  ```ts
+  await getContractEvents({
+    contract: myContract,
+    blockRange: 123456n,
+    events: [preparedEvent, preparedEvent2],
+  });
+  ```
+
+  Specify a block range with `toBlock`.
+
+  ```ts
+  await getContractEvents({
+    contract: myContract,
+    toBlock: endBlock,
+    blockRange: 123456n,
+    events: [preparedEvent, preparedEvent2],
+  });
+  ```
+
+  Specify a block range starting from `fromBlock` (great for pagination).
+
+  ```ts
+  await getContractEvents({
+    contract: myContract,
+    fromBlock: lastBlockFetched,
+    blockRange: 123456n,
+    events: [preparedEvent, preparedEvent2],
+  });
+  ```
+
+- [#2945](https://github.com/thirdweb-dev/js/pull/2945) [`b64c8e7`](https://github.com/thirdweb-dev/js/commit/b64c8e7b6efaf09be2afc73b92624c5576a4b24e) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Removes deprecated template options from the CLI, specifically PWA Vite, Express, and React
+
+- [#2951](https://github.com/thirdweb-dev/js/pull/2951) [`49d4494`](https://github.com/thirdweb-dev/js/commit/49d44940084dc43fb48836f9d628b8e36dcb917a) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Increase gas on MarketplaceV3 writes
+
+- [#2948](https://github.com/thirdweb-dev/js/pull/2948) [`44680c6`](https://github.com/thirdweb-dev/js/commit/44680c65c1cb8aeb0643fff5084b3b013460c610) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds extraGas override to transactions. Useful when gas estimates are faulty or to ensure a transaction goes through.
+
+  ## Usage
+
+  ```ts
+  const transaction = prepareTransaction({
+    to: "0x1234567890123456789012345678901234567890",
+    chain: ethereum,
+    client: thirdwebClient,
+    value: toWei("1.0"),
+    gasPrice: 30n,
+    extraGas: 50_000n,
+  });
+  ```
+
+- [#2932](https://github.com/thirdweb-dev/js/pull/2932) [`86105c9`](https://github.com/thirdweb-dev/js/commit/86105c9d918852da86215ec0806aadbcf8eafdea) Thanks [@gregfromstl](https://github.com/gregfromstl)! - TransactionButton throws error on reverted transaction
+
+- [#2946](https://github.com/thirdweb-dev/js/pull/2946) [`ec149f3`](https://github.com/thirdweb-dev/js/commit/ec149f383415722d34e0de68b0807c84ad3dc55a) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Read RPC url from viem chain in viem chain adapter
+
+- [#2928](https://github.com/thirdweb-dev/js/pull/2928) [`cea736c`](https://github.com/thirdweb-dev/js/commit/cea736c7e4031b5eaebcd788488314f24d5cab83) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Filters invalid listings and auctions from marketplace
+
+- [#2949](https://github.com/thirdweb-dev/js/pull/2949) [`0e19911`](https://github.com/thirdweb-dev/js/commit/0e199116682727f72b87b81f027f67b223bccfad) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Docs update: fix typos and add code snippet
+
+- [#2944](https://github.com/thirdweb-dev/js/pull/2944) [`82e8911`](https://github.com/thirdweb-dev/js/commit/82e89116af8ef6e8c3c7faef1829e0e323e146ae) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Show auth provider icon in connect UI when connected to in app wallet
+
+- [#2933](https://github.com/thirdweb-dev/js/pull/2933) [`8e0a3ce`](https://github.com/thirdweb-dev/js/commit/8e0a3cea1e354f45e7aa107851909e7d57604f0d) Thanks [@MananTank](https://github.com/MananTank)! - ### Integrate Pay Modal with TransactionButton
+
+  By default, the Pay Modal is integrated with the `TransactionButton` component. If the user performs a transaction and does not have enough funds to execute it and if [thirdweb pay](https://portal.thirdweb.com/connect/pay/buy-with-crypto) is available for that blockchain, the Pay Modal will be displayed to allow user to buy the required amount of tokens
+
+  A new prop `payModal` is added to the `TransactionButton` component customize the Pay Modal UI or disable it entirely
+
+  Example: Disable Pay Modal
+
+  ```tsx
+  <TransactionButton payModal={false}> Example 1 </TransactionButton>
+  ```
+
+  Example: Customize Pay Modal UI
+
+  ```tsx
+  <TransactionButton
+    payModal={{
+      theme: "light",
+    }}
+  >
+    Example 2
+  </TransactionButton>
+  ```
+
+  ### Disable Pay Modal for certain configurations in `useSendTransaction` hook
+
+  If `useSendTransaction` hook is passed `gasless: true` configuration or if current active wallet is a smart wallet with `sponsorGas: true` configuration - the Pay Modal will be disabled
+
+- [#2929](https://github.com/thirdweb-dev/js/pull/2929) [`9f817cf`](https://github.com/thirdweb-dev/js/commit/9f817cf812e3fff6f64382778df1f99739fc3379) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Tweaked connected modal UI layout
+
 ## 5.16.0
 
 ### Minor Changes
