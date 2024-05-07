@@ -35,6 +35,7 @@ export default defineConfig({
     environmentMatchGlobs: [
       ["src/react/**/*.test.tsx", "jsdom"],
       ["src/**/*.test.ts", "node"],
+      ["src/**/*", "node"], // all other files use node
     ],
     include: ["src/**/*.test.{ts,tsx}"],
     setupFiles: [join(__dirname, "./reactSetup.ts")],
