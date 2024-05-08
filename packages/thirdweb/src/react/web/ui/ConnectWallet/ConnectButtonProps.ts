@@ -11,7 +11,39 @@ import type { SupportedTokens } from "./defaultTokens.js";
 import type { WelcomeScreen } from "./screens/types.js";
 
 export type PayUIOptions = {
-  buyWithCrypto?: false;
+  /**
+   * Configure options for buying tokens using other token ( aka Swap )
+   *
+   * By default, the "Crypto" option is enabled. You can disable it by setting `buyWithCrypto` to `false`
+   *
+   * You can also prefill the source token and chain for the swap to customize the default values.
+   * You can also disable the edits for the prefilled values by setting `allowEdits`
+   *
+   * For example, if you want to allow the selecting chain and but disable selecting token, you can set `allowEdits` to `{ token: false, chain: true }`
+   */
+  buyWithCrypto?:
+    | false
+    | {
+        prefillSource?: {
+          chain: Chain;
+          token?: {
+            name: string;
+            symbol: string;
+            address: string;
+            icon?: string;
+          };
+          allowEdits?: {
+            token: boolean;
+            chain: boolean;
+          };
+        };
+      };
+
+  /**
+   * By default "Credit card" option is enabled. you can disable it by setting `buyWithFiat` to `false`
+   *
+   * You can also enable the test mode for the "Buy with Fiat" option by setting `testMode` to `true`
+   */
   buyWithFiat?:
     | {
         testMode?: boolean;
@@ -19,17 +51,24 @@ export type PayUIOptions = {
     | false;
 
   /**
-   * If specified, the user will be prompted to buy the given token on given chain
+   * Prefill the Buy Token amount, chain and/or token.
+   * You can also disable the edits for the prefilled values using `allowEdits`
    *
-   * If no `token` object is specified, the user will be prompted to buy the native token of the given chain
+   * If no `token` object is not specified, native token will be prefilled by default
    */
-  defaultSelection?: {
+  prefillBuy?: {
     chain: Chain;
     token?: {
       name: string;
       symbol: string;
       address: string;
-      icon: string;
+      icon?: string;
+    };
+    amount?: string;
+    allowEdits?: {
+      amount: boolean;
+      token: boolean;
+      chain: boolean;
     };
   };
 };

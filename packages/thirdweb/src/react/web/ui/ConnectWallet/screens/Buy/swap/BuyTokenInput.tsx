@@ -30,6 +30,8 @@ export function BuyTokenInput(props: {
   onSelectToken: () => void;
   client: ThirdwebClient;
   hideTokenSelector?: boolean;
+  freezeAmount?: boolean;
+  freezeChainAndToken?: boolean;
 }) {
   const chainQuery = useChainQuery(props.chain);
 
@@ -68,6 +70,7 @@ export function BuyTokenInput(props: {
             type="text"
             data-placeholder={props.value === ""}
             value={props.value || "0"}
+            disabled={props.freezeAmount}
             onClick={(e) => {
               // put cursor at the end of the input
               if (props.value === "") {
@@ -135,6 +138,7 @@ export function BuyTokenInput(props: {
               }}
               gap="xxs"
               onClick={props.onSelectToken}
+              disabled={props.freezeChainAndToken}
             >
               <Container flex="row" center="y" gap="sm">
                 <TokenIcon

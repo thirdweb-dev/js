@@ -76,10 +76,7 @@ export function PayEmbed(props: PayEmbedProps) {
         onViewPendingTx={() => {
           setScreen("tx-history");
         }}
-        payOptions={{
-          buyWithCrypto: props.payOptions?.buyWithCrypto,
-          buyWithFiat: props.payOptions?.buyWithFiat,
-        }}
+        payOptions={props.payOptions || {}}
         onDone={() => {
           // noop
         }}

@@ -35,6 +35,7 @@ export function PayWithCrypto(props: {
   token: TokenInfo | NativeToken;
   isLoading: boolean;
   client: ThirdwebClient;
+  freezeChainAndTokenSelection?: boolean;
 }) {
   const chainQuery = useChainQuery(props.chain);
   const activeAccount = useActiveAccount();
@@ -75,6 +76,7 @@ export function PayWithCrypto(props: {
           minWidth: "50%",
           justifyContent: "flex-start",
         }}
+        disabled={props.freezeChainAndTokenSelection}
       >
         <TokenIcon
           token={props.token}

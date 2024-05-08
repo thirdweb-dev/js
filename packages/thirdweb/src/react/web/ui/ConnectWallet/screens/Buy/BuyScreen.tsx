@@ -1,15 +1,12 @@
-import { useEffect, useMemo, useState } from "react";
-import { polygon } from "../../../../../../chains/chain-definitions/polygon.js";
+import { useMemo, useState } from "react";
 import type { Chain } from "../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../constants/addresses.js";
 import type { GetBuyWithCryptoQuoteParams } from "../../../../../../exports/pay.js";
 import { isSwapRequiredPostOnramp } from "../../../../../../pay/buyWithFiat/isSwapRequiredPostOnramp.js";
-import type { PreparedTransaction } from "../../../../../../transaction/prepare-transaction.js";
 import { formatNumber } from "../../../../../../utils/formatNumber.js";
 import { toEther } from "../../../../../../utils/units.js";
 import type { Account } from "../../../../../../wallets/interfaces/wallet.js";
-import { getTotalTxCostForBuy } from "../../../../../core/hooks/contract/useSendTransaction.js";
 import {
   useChainQuery,
   useChainsQuery,
@@ -21,7 +18,6 @@ import {
   useActiveAccount,
   useActiveWalletChain,
 } from "../../../../../core/hooks/wallets/wallet-hooks.js";
-import { wait } from "../../../../../core/utils/wait.js";
 import { LoadingScreen } from "../../../../wallets/shared/LoadingScreen.js";
 import {
   Drawer,
@@ -38,8 +34,8 @@ import { Container, Line, ModalHeader } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
 import { type Theme, fontSize, spacing } from "../../../design-system/index.js";
-import { useDebouncedValue } from "../../../hooks/useDebouncedValue.js";
 import type { PayUIOptions } from "../../ConnectButtonProps.js";
+import { ChainButton, NetworkSelectorContent } from "../../NetworkSelector.js";
 import type { SupportedTokens } from "../../defaultTokens.js";
 import type { ConnectLocale } from "../../locale/types.js";
 import { TokenSelector } from "../TokenSelector.js";
@@ -52,10 +48,11 @@ import { EstimatedTimeAndFees } from "./EstimatedTimeAndFees.js";
 import { PayWithCreditCard } from "./PayWIthCreditCard.js";
 import { PaymentSelection } from "./PaymentSelection.js";
 import { FiatFlow } from "./fiat/FiatFlow.js";
-import {
-  type CurrencyMeta,
-  defaultSelectedCurrency,
-} from "./fiat/currencies.js";
+import type { CurrencyMeta } from "./fiat/currencies.js";
+import type { BuyForTx, SelectedScreen } from "./main/types.js";
+import { useBuyTxStates } from "./main/useBuyTxStates.js";
+import { useEnabledPaymentMethods } from "./main/useEnabledPaymentMethods.js";
+import { useUISelectionStates } from "./main/useUISelectionStates.js";
 import { openOnrampPopup } from "./openOnRamppopup.js";
 import { BuyTokenInput } from "./swap/BuyTokenInput.js";
 import { FiatFees, SwapFees } from "./swap/Fees.js";
@@ -69,13 +66,6 @@ import {
 } from "./swap/useSwapSupportedChains.js";
 
 // NOTE: Must not use useConnectUI here because this UI can be used outside connect ui
-
-type BuyForTx = {
-  cost: bigint;
-  balance: bigint;
-  tx: PreparedTransaction;
-  tokenSymbol: string;
-};
 
 export type BuyScreenProps = {
   onBack?: () => void;
@@ -105,7 +95,7 @@ export default function BuyScreen(props: BuyScreenProps) {
     <BuyScreenContent
       {...props}
       onViewPendingTx={props.onViewPendingTx}
-      destinationTokens={supportedDestinationsQuery.data}
+      supportedDestinations={supportedDestinationsQuery.data}
       buyForTx={props.buyForTx}
     />
   );
@@ -116,7 +106,7 @@ type BuyScreenContentProps = {
   onBack?: () => void;
   supportedTokens?: SupportedTokens;
   onViewPendingTx: () => void;
-  destinationTokens: SupportedChainAndTokens;
+  supportedDestinations: SupportedChainAndTokens;
   connectLocale: ConnectLocale;
   buyForTx?: BuyForTx;
   theme: "light" | "dark" | Theme;
@@ -126,141 +116,111 @@ type BuyScreenContentProps = {
   isEmbed: boolean;
 };
 
-type Screen =
-  | {
-      type: "node";
-      node: React.ReactNode;
-    }
-  | {
-      type: "screen-id";
-      name: "select-from-token" | "select-to-token" | "select-currency";
-    }
-  | {
-      type: "main";
-    };
+function useBuyScreenStates(options: {
+  payOptions: PayUIOptions;
+}) {
+  const { payOptions } = options;
+
+  const [method, setMethod] = useState<"crypto" | "creditCard">(
+    payOptions.buyWithCrypto === false
+      ? "creditCard"
+      : payOptions.buyWithFiat === false
+        ? "crypto"
+        : "creditCard",
+  );
+
+  const [screen, setScreen] = useState<SelectedScreen>({
+    type: "main",
+  });
+
+  const [drawerScreen, setDrawerScreen] = useState<React.ReactNode>();
+  const { drawerRef, drawerOverlayRef, onClose } = useDrawer();
+
+  function closeDrawer() {
+    onClose(() => {
+      setDrawerScreen(undefined);
+    });
+  }
+
+  function showMainScreen() {
+    setScreen({
+      type: "main",
+    });
+  }
+
+  return {
+    method,
+    setMethod,
+    screen,
+    setScreen,
+    drawerScreen,
+    setDrawerScreen,
+    drawerRef,
+    drawerOverlayRef,
+    closeDrawer,
+    showMainScreen,
+  };
+}
 
 /**
  * @internal
  */
 function BuyScreenContent(props: BuyScreenContentProps) {
-  const {
-    client,
-    destinationTokens: supportedDestinations,
-    connectLocale,
-    payOptions,
-  } = props;
+  const { client, supportedDestinations, connectLocale, payOptions, buyForTx } =
+    props;
 
-  const buyWithFiatOptions = payOptions.buyWithFiat;
-  const buyWithCryptoOptions = payOptions.buyWithCrypto;
   const account = useActiveAccount();
   const activeChain = useActiveWalletChain();
 
-  const [method, setMethod] = useState<"crypto" | "creditCard">(
-    buyWithCryptoOptions === false
-      ? "creditCard"
-      : buyWithFiatOptions === false
-        ? "crypto"
-        : "creditCard",
-  );
-
-  // prefetch chains metadata
+  // prefetch chains metadata for destination chains
   useChainsQuery(supportedDestinations.map((x) => x.chain) || [], 50);
 
-  // screens
-  const [screen, setScreen] = useState<Screen>({
-    type: "main",
+  // screen
+  const {
+    method,
+    setMethod,
+    screen,
+    setScreen,
+    drawerScreen,
+    setDrawerScreen,
+    drawerRef,
+    drawerOverlayRef,
+    closeDrawer,
+    showMainScreen,
+  } = useBuyScreenStates({ payOptions });
+
+  // UI selection
+  const {
+    tokenAmount,
+    setTokenAmount,
+    setHasEditedAmount,
+    hasEditedAmount,
+    toChain,
+    setToChain,
+    deferredTokenAmount,
+    fromChain,
+    setFromChain,
+    toToken,
+    setToToken,
+    fromToken,
+    setFromToken,
+    selectedCurrency,
+  } = useUISelectionStates({
+    payOptions,
+    buyForTx,
+    supportedDestinations,
   });
-  const [drawerScreen, setDrawerScreen] = useState<React.ReactNode>();
 
-  const { drawerRef, drawerOverlayRef, onClose } = useDrawer();
+  // Buy Transaction flow states
+  const { amountNeeded } = useBuyTxStates({
+    setTokenAmount,
+    buyForTx,
+    hasEditedAmount,
+    isMainScreen: screen.type === "main",
+  });
 
-  const closeDrawer = () => {
-    onClose(() => {
-      setDrawerScreen(undefined);
-    });
-  };
-
-  const initialTokenAmount = props.buyForTx
-    ? formatNumber(
-        Number(toEther(props.buyForTx.cost - props.buyForTx.balance)),
-        4,
-      )
-    : undefined;
-
-  // token amount
-  const [tokenAmount, setTokenAmount] = useState<string>(
-    initialTokenAmount ? String(initialTokenAmount) : "",
-  );
-
-  // once the user edits the tokenInput or confirms the Buy - stop updating the token amount
-  const [stopUpdatingTokenAmount, setStopUpdatingTokenAmount] = useState(
-    !props.buyForTx,
-  );
-
-  const [amountNeeded, setAmountNeeded] = useState<bigint | undefined>(
-    props.buyForTx?.cost,
-  );
-
-  // update amount needed every 30 seconds
-  // also update the token amount if allowed
-  // ( Can't use useQuery because tx can't be added to queryKey )
-  useEffect(() => {
-    const buyTx = props.buyForTx;
-    if (!buyTx || stopUpdatingTokenAmount) {
-      return;
-    }
-
-    let mounted = true;
-
-    async function pollTxCost() {
-      if (!buyTx || !mounted) {
-        return;
-      }
-
-      try {
-        const totalCost = await getTotalTxCostForBuy(buyTx.tx);
-
-        if (!mounted) {
-          return;
-        }
-
-        setAmountNeeded(totalCost);
-
-        if (totalCost > buyTx.balance) {
-          const _tokenAmount = String(
-            formatNumber(Number(toEther(totalCost - buyTx.balance)), 4),
-          );
-          setTokenAmount(_tokenAmount);
-        }
-      } catch {
-        // no op
-      }
-
-      await wait(30000);
-      pollTxCost();
-    }
-
-    pollTxCost();
-
-    return () => {
-      mounted = false;
-    };
-  }, [props.buyForTx, stopUpdatingTokenAmount]);
-
-  const [hasEditedAmount, setHasEditedAmount] = useState(false);
-  const isExpanded = props.buyForTx ? true : hasEditedAmount && activeChain;
-
-  const [toChain, setToChain] = useState<Chain>(
-    payOptions.defaultSelection?.chain ||
-      props.buyForTx?.tx.chain ||
-      supportedDestinations.find((x) => x.chain.id === activeChain?.id)
-        ?.chain ||
-      polygon,
-  );
-
-  const [toToken, setToToken] = useState<ERC20OrNativeToken>(
-    payOptions.defaultSelection?.token || NATIVE_TOKEN,
-  );
+  // check if the screen is expanded or not
+  const isExpanded = activeChain && tokenAmount;
 
   // update supportedSources whenever toToken or toChain is updated
   const supportedSourcesQuery = useBuySupportedSources({
@@ -271,26 +231,13 @@ function BuyScreenContent(props: BuyScreenContentProps) {
       : toToken.address,
   });
 
-  const deferredTokenAmount = useDebouncedValue(tokenAmount, 300);
-
-  const [fromChain, setFromChain] = useState<Chain>(
-    props.buyForTx?.tx.chain || polygon,
-  );
-
-  const [fromToken, setFromToken] = useState<ERC20OrNativeToken>(NATIVE_TOKEN);
-
-  // stipe onlu supports USD, so not using a state right now
-  const selectedCurrency = defaultSelectedCurrency;
-
-  function showMainScreen() {
-    setScreen({
-      type: "main",
-    });
-  }
-
   const destinationSupportedTokens: SupportedTokens = useMemo(() => {
-    return createSupportedTokens(supportedDestinations, props.supportedTokens);
-  }, [props.supportedTokens, supportedDestinations]);
+    return createSupportedTokens(
+      supportedDestinations,
+      payOptions,
+      props.supportedTokens,
+    );
+  }, [props.supportedTokens, supportedDestinations, payOptions]);
 
   const sourceSupportedTokens: SupportedTokens | undefined = useMemo(() => {
     if (!supportedSourcesQuery.data) {
@@ -299,58 +246,19 @@ function BuyScreenContent(props: BuyScreenContentProps) {
 
     return createSupportedTokens(
       supportedSourcesQuery.data,
+      payOptions,
       props.supportedTokens,
     );
-  }, [props.supportedTokens, supportedSourcesQuery.data]);
+  }, [props.supportedTokens, supportedSourcesQuery.data, payOptions]);
 
-  function getEnabledPayMethodsForSelectedToken(): {
-    buyWithFiatEnabled: boolean;
-    buyWithCryptoEnabled: boolean;
-  } {
-    const chain = supportedDestinations.find((c) => c.chain.id === toChain.id);
-    if (!chain) {
-      return {
-        buyWithFiatEnabled: true,
-        buyWithCryptoEnabled: true,
-      };
-    }
-
-    const toTokenAddress = isNativeToken(toToken)
-      ? NATIVE_TOKEN_ADDRESS
-      : toToken.address;
-    const tokenInfo = chain.tokens.find((t) => t.address === toTokenAddress);
-
-    if (!tokenInfo) {
-      return {
-        buyWithFiatEnabled: true,
-        buyWithCryptoEnabled: true,
-      };
-    }
-
-    return {
-      buyWithFiatEnabled: tokenInfo.buyWithFiatEnabled,
-      buyWithCryptoEnabled: tokenInfo.buyWithCryptoEnabled,
-    };
-  }
-
-  const { buyWithFiatEnabled, buyWithCryptoEnabled } =
-    getEnabledPayMethodsForSelectedToken();
-
-  useEffect(() => {
-    if (method === "creditCard" && !buyWithFiatEnabled) {
-      setMethod("crypto");
-    }
-
-    if (method === "crypto" && !buyWithCryptoEnabled) {
-      setMethod("creditCard");
-    }
-  }, [buyWithFiatEnabled, buyWithCryptoEnabled, method]);
-
-  const showPaymentSelection =
-    buyWithFiatOptions !== false &&
-    buyWithCryptoOptions !== false &&
-    buyWithFiatEnabled &&
-    buyWithCryptoEnabled;
+  const { showPaymentSelection } = useEnabledPaymentMethods({
+    payOptions,
+    supportedDestinations,
+    toChain,
+    toToken,
+    method,
+    setMethod,
+  });
 
   // screens ----------------------------
 
@@ -359,6 +267,20 @@ function BuyScreenContent(props: BuyScreenContentProps) {
   }
 
   if (screen.type === "screen-id" && screen.name === "select-to-token") {
+    const chains = supportedDestinations.map((x) => x.chain);
+    // if token selection is disabled - only show network selector screen
+    if (payOptions.prefillBuy?.allowEdits?.token === false) {
+      return (
+        <ChainSelectionScreen
+          chains={chains}
+          client={props.client}
+          connectLocale={props.connectLocale}
+          setChain={setToChain}
+          showMainScreen={showMainScreen}
+        />
+      );
+    }
+
     return (
       <TokenSelector
         onBack={showMainScreen}
@@ -371,12 +293,17 @@ function BuyScreenContent(props: BuyScreenContentProps) {
           showMainScreen();
         }}
         chain={toChain}
-        chainSelection={{
-          chains: supportedDestinations.map((x) => x.chain),
-          select: (c) => {
-            setToChain(c);
-          },
-        }}
+        chainSelection={
+          // hide chain selection if it's disabled
+          payOptions.prefillBuy?.allowEdits?.chain !== false
+            ? {
+                chains: chains,
+                select: (c) => {
+                  setToChain(c);
+                },
+              }
+            : undefined
+        }
         connectLocale={connectLocale}
         client={client}
       />
@@ -389,6 +316,23 @@ function BuyScreenContent(props: BuyScreenContentProps) {
     supportedSourcesQuery.data &&
     sourceSupportedTokens
   ) {
+    const chains = supportedSourcesQuery.data.map((x) => x.chain);
+    // if token selection is disabled - only show network selector screen
+    if (
+      payOptions.buyWithCrypto !== false &&
+      payOptions.buyWithCrypto?.prefillSource?.allowEdits?.token === false
+    ) {
+      return (
+        <ChainSelectionScreen
+          chains={chains}
+          client={props.client}
+          connectLocale={props.connectLocale}
+          setChain={setFromChain}
+          showMainScreen={showMainScreen}
+        />
+      );
+    }
+
     return (
       <TokenSelector
         onBack={showMainScreen}
@@ -403,17 +347,21 @@ function BuyScreenContent(props: BuyScreenContentProps) {
           });
         }}
         chain={fromChain}
-        chainSelection={{
-          chains: supportedSourcesQuery.data.map((x) => x.chain),
-          select: (c) => setFromChain(c),
-        }}
+        chainSelection={
+          // hide chain selection if it's disabled
+          payOptions.buyWithCrypto !== false &&
+          payOptions.buyWithCrypto?.prefillSource?.allowEdits?.chain !== false
+            ? {
+                chains: supportedSourcesQuery.data.map((x) => x.chain),
+                select: (c) => setFromChain(c),
+              }
+            : undefined
+        }
         connectLocale={connectLocale}
         client={client}
       />
     );
   }
-
-  // check that buy-with-crypto or buy-with-fiat is enabled for the selected token
 
   return (
     <Container animate="fadein">
@@ -475,9 +423,13 @@ function BuyScreenContent(props: BuyScreenContentProps) {
             value={tokenAmount}
             onChange={async (value) => {
               setHasEditedAmount(true);
-              setStopUpdatingTokenAmount(true);
               setTokenAmount(value);
             }}
+            freezeAmount={payOptions.prefillBuy?.allowEdits?.amount === false}
+            freezeChainAndToken={
+              payOptions.prefillBuy?.allowEdits?.chain === false &&
+              payOptions.prefillBuy?.allowEdits?.token === false
+            }
             token={toToken}
             chain={toChain}
             onSelectToken={() => {
@@ -510,7 +462,6 @@ function BuyScreenContent(props: BuyScreenContentProps) {
                 tokenAmount={deferredTokenAmount}
                 toChain={toChain}
                 toToken={toToken}
-                setStopUpdatingTokenAmount={setStopUpdatingTokenAmount}
                 fromChain={fromChain}
                 fromToken={fromToken}
                 showFromTokenSelector={() => {
@@ -584,11 +535,10 @@ function BuyScreenContent(props: BuyScreenContentProps) {
 function SwapScreenContent(
   props: BuyScreenContentProps & {
     setDrawerScreen: (screen: React.ReactNode) => void;
-    setScreen: (screen: Screen) => void;
+    setScreen: (screen: SelectedScreen) => void;
     tokenAmount: string;
     toToken: ERC20OrNativeToken;
     toChain: Chain;
-    setStopUpdatingTokenAmount: (value: boolean) => void;
     fromChain: Chain;
     fromToken: ERC20OrNativeToken;
     showFromTokenSelector: () => void;
@@ -598,7 +548,6 @@ function SwapScreenContent(
 ) {
   const {
     setDrawerScreen,
-    setStopUpdatingTokenAmount,
     setScreen,
     account,
     client,
@@ -608,6 +557,7 @@ function SwapScreenContent(
     fromChain,
     fromToken,
     showFromTokenSelector,
+    payOptions,
   } = props;
 
   const fromTokenBalanceQuery = useWalletBalance({
@@ -682,7 +632,6 @@ function SwapScreenContent(
           isEmbed={props.isEmbed}
           client={client}
           onBack={() => {
-            setStopUpdatingTokenAmount(true);
             setScreen({
               type: "main",
             });
@@ -719,6 +668,11 @@ function SwapScreenContent(
     );
   }
 
+  const prefillSource =
+    payOptions.buyWithCrypto !== false
+      ? payOptions.buyWithCrypto?.prefillSource
+      : undefined;
+
   return (
     <Container px="lg" flex="column" gap="md">
       {/* Quote info */}
@@ -730,6 +684,10 @@ function SwapScreenContent(
           token={fromToken}
           isLoading={quoteQuery.isLoading && !sourceTokenAmount}
           client={client}
+          freezeChainAndTokenSelection={
+            prefillSource?.allowEdits?.chain === false &&
+            prefillSource?.allowEdits?.token === false
+          }
         />
         <EstimatedTimeAndFees
           quoteIsLoading={quoteQuery.isLoading}
@@ -782,7 +740,7 @@ function SwapScreenContent(
 function FiatScreenContent(
   props: BuyScreenContentProps & {
     setDrawerScreen: (screen: React.ReactNode) => void;
-    setScreen: (screen: Screen) => void;
+    setScreen: (screen: SelectedScreen) => void;
     tokenAmount: string;
     toToken: ERC20OrNativeToken;
     toChain: Chain;
@@ -1050,12 +1008,33 @@ function BuyForTxUI(props: {
 
 function createSupportedTokens(
   data: SupportedChainAndTokens,
+  payOptions: PayUIOptions,
   supportedTokensOverrides?: SupportedTokens,
 ): SupportedTokens {
   const tokens: SupportedTokens = {};
 
+  const isBuyWithFiatDisabled = payOptions.buyWithFiat === false;
+  const isBuyWithCryptoDisabled = payOptions.buyWithCrypto === false;
+
   for (const x of data) {
-    tokens[x.chain.id] = x.tokens;
+    tokens[x.chain.id] = x.tokens.filter((t) => {
+      // it token supports both - include it
+      if (t.buyWithCryptoEnabled && t.buyWithFiatEnabled) {
+        return true;
+      }
+
+      // if buyWithFiat is disabled, and buyWithCrypto is not supported by token - exclude the token
+      if (!t.buyWithCryptoEnabled && isBuyWithFiatDisabled) {
+        return false;
+      }
+
+      // if buyWithCrypto is disabled, and buyWithFiat is not supported by token - exclude the token
+      if (!t.buyWithFiatEnabled && isBuyWithCryptoDisabled) {
+        return false;
+      }
+
+      return true; // include the token
+    });
   }
 
   // override with props.supportedTokens
@@ -1063,6 +1042,7 @@ function createSupportedTokens(
     for (const k in supportedTokensOverrides) {
       const key = Number(k);
       const tokenList = supportedTokensOverrides[key];
+
       if (tokenList) {
         tokens[key] = tokenList;
       }
@@ -1070,4 +1050,40 @@ function createSupportedTokens(
   }
 
   return tokens;
+}
+
+function ChainSelectionScreen(props: {
+  showMainScreen: () => void;
+  chains: Chain[];
+  client: ThirdwebClient;
+  connectLocale: ConnectLocale;
+  setChain: (chain: Chain) => void;
+}) {
+  return (
+    <NetworkSelectorContent
+      client={props.client}
+      connectLocale={props.connectLocale}
+      showTabs={false}
+      onBack={props.showMainScreen}
+      chains={props.chains}
+      closeModal={props.showMainScreen}
+      networkSelector={{
+        renderChain(renderChainProps) {
+          return (
+            <ChainButton
+              chain={renderChainProps.chain}
+              confirming={false}
+              switchingFailed={false}
+              onClick={() => {
+                props.setChain(renderChainProps.chain);
+                props.showMainScreen();
+              }}
+              client={props.client}
+              connectLocale={props.connectLocale}
+            />
+          );
+        },
+      }}
+    />
+  );
 }
