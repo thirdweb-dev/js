@@ -18,12 +18,6 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "icon": {
-    "url": "ipfs://bafkreifqpj5jkjazvh24muc7wv4r22tihzzl75cevgecxhvojm4ls6mzpq",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
   "infoURL": "https://gitshock.com",
   "name": "Gitshock Cartenz Testnet",
   "nativeCurrency": {
