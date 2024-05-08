@@ -55,6 +55,10 @@ export {
   useBuyHistory,
   type BuyHistoryQueryOptions,
 } from "../react/core/hooks/pay/useBuyHistory.js";
+export {
+  usePostOnRampQuote,
+  type PostOnRampQuoteQueryOptions,
+} from "../react/core/hooks/pay/usePostOnrampQuote.js";
 
 import { useSendTransactionCore } from "../react/core/hooks/contract/useSendTransaction.js";
 

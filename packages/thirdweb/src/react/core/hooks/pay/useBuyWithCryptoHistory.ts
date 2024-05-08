@@ -9,6 +9,9 @@ import {
   getBuyWithCryptoHistory,
 } from "../../../../pay/buyWithCrypto/getHistory.js";
 
+/**
+ * @internal
+ */
 export type BuyWithCryptoHistoryQueryOptions = Omit<
   UseQueryOptions<BuyWithCryptoHistoryData>,
   "queryFn" | "queryKey" | "enabled"
@@ -39,19 +42,12 @@ export function useBuyWithCryptoHistory(
 ): UseQueryResult<BuyWithCryptoHistoryData> {
   return useQuery({
     ...queryParams,
-
-    queryKey: ["buyWithCryptoHistory", params],
+    queryKey: ["getBuyWithCryptoHistory", params],
     queryFn: () => {
       if (!params) {
         throw new Error("Swap params are required");
       }
-      if (!params?.client) {
-        throw new Error("Client is required");
-      }
-      return getBuyWithCryptoHistory({
-        ...params,
-        client: params.client,
-      });
+      return getBuyWithCryptoHistory(params);
     },
     enabled: !!params,
   });

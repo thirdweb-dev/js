@@ -37,13 +37,6 @@ export type GetBuyWithFiatQuoteParams = {
   fromCurrencySymbol: "USD";
 
   /**
-   * On-ramp provider to use for buying the token.
-   *
-   * Currently, only "STRIPE" is supported.
-   */
-  provider: "STRIPE";
-
-  /**
    * The maximum slippage in basis points (bps) allowed for the swap.
    * For example, if you want to allow a maximum slippage of 0.5%, you should specify `50` bps.
    */
@@ -197,7 +190,6 @@ export async function getBuyWithFiatQuote(
       fromCurrencySymbol: params.fromCurrencySymbol,
       toChainId: params.toChainId.toString(),
       toTokenAddress: params.toTokenAddress.toLowerCase(),
-      provider: params.provider,
     });
 
     if (params.fromAmount) {

@@ -56,25 +56,24 @@ export type GetPostOnRampQuoteParams = {
  *  });
  * }
  * ```
- * @buyCrypto
+ * @buyFiat
  */
 export async function getPostOnRampQuote({
   client,
   buyWithFiatStatus,
-}: GetPostOnRampQuoteParams): Promise<BuyWithCryptoQuote | null> {
-  if (buyWithFiatStatus.status !== "NOT_FOUND" && buyWithFiatStatus.intentId) {
-    return getBuyWithCryptoQuote({
-      client,
-      intentId: buyWithFiatStatus.intentId,
-      fromAddress: buyWithFiatStatus.toAddress,
-      fromChainId: buyWithFiatStatus.quote.onRampToken.chainId,
-      fromTokenAddress: buyWithFiatStatus.quote.onRampToken.tokenAddress,
-      toChainId: buyWithFiatStatus.quote.toToken.chainId,
-      toTokenAddress: buyWithFiatStatus.quote.toToken.tokenAddress,
-      toAmount: buyWithFiatStatus.quote.estimatedToTokenAmount,
-    });
+}: GetPostOnRampQuoteParams): Promise<BuyWithCryptoQuote> {
+  if (buyWithFiatStatus.status === "NOT_FOUND") {
+    throw new Error("Invalid buyWithFiatStatus");
   }
 
-  // nothing to do yet
-  return null;
+  return getBuyWithCryptoQuote({
+    client,
+    intentId: buyWithFiatStatus.intentId,
+    fromAddress: buyWithFiatStatus.toAddress,
+    fromChainId: buyWithFiatStatus.quote.onRampToken.chainId,
+    fromTokenAddress: buyWithFiatStatus.quote.onRampToken.tokenAddress,
+    toChainId: buyWithFiatStatus.quote.toToken.chainId,
+    toTokenAddress: buyWithFiatStatus.quote.toToken.tokenAddress,
+    toAmount: buyWithFiatStatus.quote.estimatedToTokenAmount,
+  });
 }

@@ -9,6 +9,9 @@ import {
   getBuyHistory,
 } from "../../../../pay/getBuyHistory.js";
 
+/**
+ * @internal
+ */
 export type BuyHistoryQueryOptions = Omit<
   UseQueryOptions<BuyHistoryData>,
   "queryFn" | "queryKey" | "enabled"
@@ -40,7 +43,7 @@ export function useBuyHistory(
 ): UseQueryResult<BuyHistoryData> {
   return useQuery({
     ...queryParams,
-    queryKey: ["buyHistory", params],
+    queryKey: ["getBuyHistory", params],
     queryFn: () => {
       if (!params) {
         throw new Error("params are required");

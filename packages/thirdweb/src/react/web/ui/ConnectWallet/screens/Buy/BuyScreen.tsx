@@ -779,7 +779,6 @@ function FiatScreenContent(
           toAmount: tokenAmount,
           client,
           isTestMode: buyWithFiatOptions?.testMode,
-          provider: "STRIPE", // TODO - change when we have multiple providers
         }
       : undefined,
   );

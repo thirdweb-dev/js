@@ -9,6 +9,9 @@ import {
   getBuyWithFiatHistory,
 } from "../../../../pay/buyWithFiat/getHistory.js";
 
+/**
+ * @internal
+ */
 export type BuyWithFiatHistoryQueryOptions = Omit<
   UseQueryOptions<BuyWithFiatHistoryData>,
   "queryFn" | "queryKey" | "enabled"

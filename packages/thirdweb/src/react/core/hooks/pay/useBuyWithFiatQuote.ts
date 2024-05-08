@@ -9,6 +9,9 @@ import {
   getBuyWithFiatQuote,
 } from "../../../../pay/buyWithFiat/getQuote.js";
 
+/**
+ * @internal
+ */
 export type BuyWithFiatQuoteQueryOptions = Omit<
   UseQueryOptions<BuyWithFiatQuote>,
   "queryFn" | "queryKey" | "enabled"
@@ -29,6 +32,34 @@ export type BuyWithFiatQuoteQueryOptions = Omit<
  * @param params - object of type [`GetBuyWithFiatQuoteParams`](https://portal.thirdweb.com/references/typescript/v5/GetBuyWithFiatQuoteParams)
  * @param queryParams - options to configure the react query
  * @returns A React Query object which contains the data of type [`BuyWithFiatQuote`](https://portal.thirdweb.com/references/typescript/v5/BuyWithFiatQuote)
+ * @example
+ * ```ts
+ * import { NATIVE_TOKEN_ADDRESS } from "thirdweb";
+ * import { base } from "thirdweb/chains";
+ * import { useBuyWithFiatQuote } from "thirdweb/react";
+ *
+ * function Example() {
+ *   const quote = useBuyWithFiatQuote({
+ *     client: client, // thirdweb client
+ *     provider: "STRIPE", // on-ramp provider
+ *     fromCurrencySymbol: "USD", // fiat currency symbol
+ *     toChainId: base.id, // base chain id
+ *     toAmount: "10", // amount of token to buy
+ *     toTokenAddress: NATIVE_TOKEN_ADDRESS, // native token
+ *     toAddress: "0x...", // user's wallet address
+ *   });
+ *
+ *   return (
+ *     <div>
+ *       {quote.data && (
+ *         <a href={quote.data.onRampLink} target="_blank">
+ *           open onramp provider
+ *         </a>
+ *       )}
+ *     </div>
+ *   );
+ * }
+ * ```
  * @buyFiat
  */
 export function useBuyWithFiatQuote(

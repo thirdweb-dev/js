@@ -83,7 +83,7 @@ export type ValidBuyWithCryptoStatus = Exclude<
  * @example
  *
  * ```ts
- * import { sendTransaction, prepareTransaction } from "thirdweb";
+ * import { sendTransaction } from "thirdweb";
  * import { getBuyWithCryptoStatus, getBuyWithCryptoQuote } from "thirdweb/pay";
  *
  * // get a quote between two tokens
@@ -91,23 +91,26 @@ export type ValidBuyWithCryptoStatus = Exclude<
  *
  * // if approval is required, send the approval transaction
  * if (quote.approval) {
- *  const preparedApproval = prepareTransaction(quote.approval);
- *  await sendTransaction({
- *    transaction,
- *    wallet,
+ *  const txResult = await sendTransaction({
+ *    transaction: quote.approval,
+ *    account: account, // account from connected wallet
  *  });
+ *
+ *  await waitForReceipt(txResult);
  * }
  *
  * // send the quoted transaction
- * const preparedTransaction = prepareTransaction(quote.transactionRequest);
- * const transactionResult = await sendTransaction({
- *    transaction,
- *    wallet,
+ * const swapTxResult = await sendTransaction({
+ *    transaction: quote.transactionRequest,
+ *    account: account, // account from connected wallet
  *  });
+ *
+ * await waitForReceipt(swapTxResult);
+ *
  * // keep polling the status of the quoted transaction until it returns a success or failure status
  * const status = await getBuyWithCryptoStatus({
  *    client,
- *    transactionHash: transactionResult.transactionHash,
+ *    transactionHash: swapTxResult.transactionHash,
  * }});
  * ```
  * @returns Object of type [`BuyWithCryptoStatus`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoStatus)

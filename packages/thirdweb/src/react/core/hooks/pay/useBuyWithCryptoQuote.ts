@@ -9,6 +9,9 @@ import {
   getBuyWithCryptoQuote,
 } from "../../../../pay/buyWithCrypto/getQuote.js";
 
+/**
+ * @internal
+ */
 export type BuyWithCryptoQuoteQueryOptions = Omit<
   UseQueryOptions<BuyWithCryptoQuote>,
   "queryFn" | "queryKey" | "enabled"
@@ -30,11 +33,11 @@ export type BuyWithCryptoQuoteQueryOptions = Omit<
  * @returns A React Query object which contains the data of type [`BuyWithCryptoQuote`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoQuote)
  * @example
  * ```tsx
- * import { useSendTransaction, useBuyWithCryptoQuote, useBuyWithCryptoStatus, type BuyWithCryptoStatusQueryParams } from "thirdweb/react";
+ * import { useBuyWithCryptoQuote, useBuyWithCryptoStatus, type BuyWithCryptoStatusQueryParams, useActiveAccount } from "thirdweb/react";
+ * import { sendTransaction } from 'thirdweb';
  *
  * function Component() {
  *  const buyWithCryptoQuoteQuery = useBuyWithCryptoQuote(swapParams);
- *  const sendTransactionMutation = useSendTransaction();
  *  const [buyTxHash, setBuyTxHash] = useState<BuyWithCryptoStatusQueryParams | undefined>();
  *  const buyWithCryptoStatusQuery = useBuyWithCryptoStatus(buyTxHash ? {
  *    client,
@@ -42,16 +45,23 @@ export type BuyWithCryptoQuoteQueryOptions = Omit<
  *  }: undefined);
  *
  *  async function handleBuyWithCrypto() {
+ *    const account = useActiveAccount();
  *
  *    // if approval is required
  *    if (buyWithCryptoQuoteQuery.data.approval) {
- *      const approveTx = await sendTransactionMutation.mutateAsync(swapQuote.data.approval);
+ *      const approveTx = await sendTransaction({
+ *        transaction: swapQuote.data.approval,
+ *        account: account,
+ *      });
  *      await waitForApproval(approveTx);
  *    }
  *
  *    // send the transaction to buy crypto
  *    // this promise is resolved when user confirms the transaction in the wallet and the transaction is sent to the blockchain
- *    const buyTx = await sendTransactionMutation.mutateAsync(swapQuote.data.transactionRequest);
+ *    const buyTx = await sendTransaction({
+ *      transaction: swapQuote.data.transactionRequest,
+ *      account: account,
+ *    });
  *    await waitForApproval(buyTx);
  *
  *    // set buyTx.transactionHash to poll the status of the swap transaction
