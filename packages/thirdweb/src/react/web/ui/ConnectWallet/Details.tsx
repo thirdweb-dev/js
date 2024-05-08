@@ -178,11 +178,12 @@ export const ConnectedWalletDetails: React.FC<{
   const isNetworkMismatch =
     props.chain && walletChain && walletChain.id !== props.chain.id;
 
-  // Note: Must wrap the `detailsButton.render` and `SwitchNetworkButton` in a fragment to avoid warning from radix-ui
+  // Note: Must wrap the `SwitchNetworkButton` in a fragment to avoid warning from radix-ui
+  // Note: Must wrap the `detailsButton.render` in an container element
   const trigger = props.detailsButton?.render ? (
-    <>
+    <div>
       <props.detailsButton.render />
-    </>
+    </div>
   ) : props.chain && isNetworkMismatch ? (
     <>
       <SwitchNetworkButton
