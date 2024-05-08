@@ -2,6 +2,7 @@ const DEFAULT_GATEWAY = "https://arweave.net/{fileId}";
 
 export type ResolveArweaveSchemeOptions = {
   uri: string;
+  gatewayUrl?: string;
 };
 
 /**
@@ -18,6 +19,10 @@ export type ResolveArweaveSchemeOptions = {
 export function resolveArweaveScheme(options: ResolveArweaveSchemeOptions) {
   if (options.uri.startsWith("ar://")) {
     const fileId = options.uri.replace("ar://", "");
+    if (options.gatewayUrl) {
+      const separator = options.gatewayUrl.endsWith("/") ? "" : "/";
+      return `${options.gatewayUrl}${separator}${fileId}`;
+    }
     return DEFAULT_GATEWAY.replace("{fileId}", fileId);
   }
   if (options.uri.startsWith("http")) {
