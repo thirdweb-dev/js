@@ -14,6 +14,8 @@ export async function compatibleExtensions(
 
   const configs = await Promise.all(
     bytecodes.map((b: string) => {
+        // TODO: Upload deployed bytecode on publish metadata
+        
       if (!b.startsWith("0x6080604052")) {
         const index = b.indexOf("6080604052");
         b = `0x${b.substring(index)}`;
