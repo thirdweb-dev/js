@@ -6,10 +6,22 @@ export default {
     {
       "name": "Bronos Explorer",
       "url": "https://broscan.bronos.org",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://bafybeifkgtmhnq4sxu6jn22i7ass7aih6ubodr77k6ygtu4tjbvpmkw2ga",
+        "width": 500,
+        "height": 500,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://bafybeifkgtmhnq4sxu6jn22i7ass7aih6ubodr77k6ygtu4tjbvpmkw2ga",
+    "width": 500,
+    "height": 500,
+    "format": "png"
+  },
   "infoURL": "https://bronos.org",
   "name": "Bronos Mainnet",
   "nativeCurrency": {
