@@ -706,7 +706,10 @@ function SwapScreenContent(
       )}
 
       {/* Button */}
-      {switchChainRequired ? (
+      {switchChainRequired &&
+      !quoteQuery.isLoading &&
+      !isNotEnoughBalance &&
+      !quoteQuery.error ? (
         <SwitchNetworkButton variant="accent" fullWidth chain={fromChain} />
       ) : (
         <Button
