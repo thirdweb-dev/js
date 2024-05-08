@@ -63,7 +63,7 @@ export function prepareDirectDeployTransaction<
     data: concatHex([
       bytecode,
       encodeAbiParameters(
-        options.constructorAbi.inputs,
+        options.constructorAbi.inputs ?? [], // Leave an empty array if there's no constructor
         options.constructorParams,
       ),
     ]),
