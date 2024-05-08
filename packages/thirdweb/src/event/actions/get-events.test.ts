@@ -4,6 +4,8 @@ import {
   DOODLES_CONTRACT,
   USDT_CONTRACT,
 } from "../../../test/src/test-contracts.js";
+import { mineBlock } from "../../../test/src/utils.js";
+import { eth_blockNumber, getRpcClient } from "../../exports/rpc.js";
 import { transferEvent } from "../../extensions/erc721/__generated__/IERC721A/events/Transfer.js";
 import { prepareEvent } from "../prepare-event.js";
 import { getContractEvents } from "./get-events.js";
@@ -35,6 +37,9 @@ describe.runIf(process.env.TW_SECRET_KEY)("getEvents", () => {
       contract: USDT_CONTRACT,
       blockRange: 10n,
     });
+    const request = getRpcClient(USDT_CONTRACT);
+    const block = await eth_blockNumber(request);
+    console.log(block.toString());
     expect(events.length).toBe(241);
 
     const explicitEvents = await getContractEvents({
@@ -128,5 +133,24 @@ describe.runIf(process.env.TW_SECRET_KEY)("getEvents", () => {
       events: [transferEvent()],
     });
     expect(events.length).toBe(38);
+  });
+
+  it("should throw if fromBlock is excessively higher than the latest block number", async () => {
+    const shouldThrow = getContractEvents({
+      contract: USDT_CONTRACT,
+      fromBlock: FORK_BLOCK_NUMBER + 11n,
+    });
+    expect(shouldThrow).rejects.toThrow();
+  });
+
+  it("should wait for rpc to catch up if fromBlock is slightly higher than the latest block number", async () => {
+    const promise = getContractEvents({
+      contract: USDT_CONTRACT,
+      fromBlock: FORK_BLOCK_NUMBER + 1n,
+    });
+
+    mineBlock();
+
+    expect(promise).resolves.toBeTruthy();
   });
 });
