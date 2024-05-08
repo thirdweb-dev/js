@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  ANVIL_CHAIN,
   FORKED_ETHEREUM_CHAIN,
   FORKED_OPTIMISM_CHAIN,
 } from "../../../test/src/chains.js";
@@ -14,13 +15,13 @@ import { prepareDeterministicDeployTransaction } from "./deploy-deterministic.js
 describe.runIf(process.env.TW_SECRET_KEY)("deployFromMetadata", () => {
   it("should deploy contracts at the same address", async () => {
     const tx1 = prepareDeterministicDeployTransaction({
-      chain: FORKED_ETHEREUM_CHAIN,
+      chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
       contractId: "AccountFactory",
       constructorParams: [TEST_ACCOUNT_A.address, ENTRYPOINT_ADDRESS_v0_6],
     });
     const tx2 = prepareDeterministicDeployTransaction({
-      chain: FORKED_OPTIMISM_CHAIN,
+      chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
       contractId: "AccountFactory",
       constructorParams: [TEST_ACCOUNT_A.address, ENTRYPOINT_ADDRESS_v0_6],
@@ -51,5 +52,18 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployFromMetadata", () => {
       simulateTransaction({ transaction: tx2 }),
     ]);
     expect(tx1Result !== tx2Result).toBe(true);
+  });
+  // TODO: Replace these tests' live contracts with mocks
+  it("should deploy a published contract with no constructor", async () => {
+    const tx = prepareDeterministicDeployTransaction({
+      client: TEST_CLIENT,
+      chain: ANVIL_CHAIN,
+      contractId: "Counter",
+      publisher: "0x4a706de5CE9bfe2f9C37BA945805e396d1810824",
+      constructorParams: [],
+    });
+
+    const txResult = await simulateTransaction({ transaction: tx });
+    expect(txResult).toBeDefined();
   });
 });
