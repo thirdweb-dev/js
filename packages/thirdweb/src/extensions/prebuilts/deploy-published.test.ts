@@ -34,5 +34,32 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       expect(address).toBeDefined();
       expect(address.length).toBe(42);
     });
+
+    // TODO: Replace these tests' live contracts with mocks
+    it("should deploy a published contract with no constructor", async () => {
+      const address = await deployPublishedContract({
+        client: TEST_CLIENT,
+        chain: ANVIL_CHAIN,
+        account: TEST_ACCOUNT_A,
+        contractId: "Counter",
+        publisher: "0x4a706de5CE9bfe2f9C37BA945805e396d1810824",
+        contractParams: [],
+      });
+      expect(address).toBeDefined();
+      expect(address.length).toBe(42);
+    });
+
+    it("should deploy a published contract with no deploy type", async () => {
+      const address = await deployPublishedContract({
+        client: TEST_CLIENT,
+        chain: ANVIL_CHAIN,
+        account: TEST_ACCOUNT_A,
+        contractId: "MyToken",
+        publisher: "0xc77e556cd96235A7B72d46EAAf13405d698CB2C0",
+        contractParams: [],
+      });
+      expect(address).toBeDefined();
+      expect(address.length).toBe(42);
+    });
   },
 );
