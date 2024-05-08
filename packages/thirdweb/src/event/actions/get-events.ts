@@ -52,6 +52,7 @@ export type GetContractEventsResult<
  * Retrieves events from a contract based on the provided options.
  * @param options - The options for retrieving events.
  * @returns A promise that resolves to an array of parsed event logs.
+ * Note: toBlock and fromBlock are both inclusive.
  * @example
  * ```ts
  * import { getContractEvents } from "thirdweb";
@@ -115,6 +116,8 @@ export async function getContractEvents<
     throw new Error("Cannot specify blockHash and range simultaneously,");
   }
 
+  const latestBlockNumber = await eth_blockNumber(rpcRequest);
+
   // Compute toBlock and fromBlock if blockRange was passed
   if (blockRange) {
     const { fromBlock, toBlock } = restParams;
@@ -131,13 +134,13 @@ export async function getContractEvents<
     }
 
     if (fromBlock) {
-      restParams.toBlock = BigInt(fromBlock) + BigInt(blockRange);
+      restParams.toBlock = BigInt(fromBlock) + BigInt(blockRange) - 1n; // Subtract one because toBlock is inclusive
     } else if (toBlock) {
-      restParams.fromBlock = BigInt(toBlock) - BigInt(blockRange);
+      restParams.fromBlock = BigInt(toBlock) - BigInt(blockRange) + 1n; // Add one because fromBlock is inclusive
     } else {
       // If no from or to block specified, use the latest block as the to block
-      restParams.toBlock = await eth_blockNumber(rpcRequest);
-      restParams.fromBlock = BigInt(restParams.toBlock) - BigInt(blockRange);
+      restParams.toBlock = latestBlockNumber;
+      restParams.fromBlock = latestBlockNumber - BigInt(blockRange) + 1n; // Add one because fromBlock is inclusive
     }
   }
 
