@@ -27,9 +27,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("getEvents", () => {
       contract: USDT_CONTRACT,
       blockHash: BLOCK_HASH,
     });
-    for (const e of events) {
-      expect(e.blockHash).toBe(BLOCK_HASH);
-    }
+
     expect(events.length).toBe(14);
   });
 

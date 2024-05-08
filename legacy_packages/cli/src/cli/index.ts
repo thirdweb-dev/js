@@ -253,12 +253,9 @@ const main = async () => {
     .option("--forge", "Initialize as a Forge project.")
     .option("--hardhat", "Initialize as a Hardhat project.")
     .option("--extension", "Create a smart contract extension.")
-    .option("--react", "Initialize as a Create React App project.")
     .option("--next", "Initialize as a Next.js project.")
     .option("--vite", "Initialize as a Vite project.")
-    .option("--express", "Initialize as a Express project.")
     .option("--node", "Initialize as a Node project.")
-    .option("--pwaVite", "Initialize as a PWA project.")
     .option(
       "--use-npm",
       "Explicitly tell the CLI to bootstrap the app using npm",

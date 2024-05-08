@@ -229,6 +229,9 @@ export function createAuction(
           bidBufferBps: BigInt(options.bidBufferBps ?? 500),
           timeBufferInSeconds: BigInt(options.timeBufferInSeconds ?? 900),
         },
+        overrides: {
+          extraGas: 50_000n, // add extra gas to account for router call
+        },
       } as const;
     },
   });
