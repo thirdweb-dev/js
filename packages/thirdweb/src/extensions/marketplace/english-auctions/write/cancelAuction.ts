@@ -38,6 +38,9 @@ export function cancelAuction(
       }
       return {
         auctionId: options.auctionId,
+        overrides: {
+          extraGas: 50_000n, // add extra gas to account for router call
+        },
       };
     },
   });

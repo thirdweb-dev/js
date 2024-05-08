@@ -40,6 +40,7 @@ export function buyoutAuction(
           value: isNativeTokenAddress(auction.currencyContractAddress)
             ? auction.buyoutBidAmount
             : undefined,
+          extraGas: 50_000n, // add extra gas to account for router call
         },
       };
     },

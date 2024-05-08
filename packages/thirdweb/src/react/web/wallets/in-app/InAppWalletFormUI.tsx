@@ -23,6 +23,7 @@ import { LinkButton } from "./LinkButton.js";
 import type { InAppWalletLocale } from "./locale/types.js";
 import { openOauthSignInWindow } from "./openOauthSignInWindow.js";
 import { socialIcons } from "./socialIcons.js";
+import { setLastAuthProvider } from "./storage.js";
 import type { InAppWalletSelectUIState } from "./types.js";
 import { validateEmail } from "./validateEmail.js";
 
@@ -125,6 +126,8 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
           openedWindow.close();
         },
       });
+
+      await setLastAuthProvider(strategy);
 
       setData({
         socialLogin: {
