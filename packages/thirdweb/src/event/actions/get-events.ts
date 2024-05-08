@@ -116,7 +116,7 @@ export async function getContractEvents<
     throw new Error("Cannot specify blockHash and range simultaneously,");
   }
 
-  const latestBlockNumber = await eth_blockNumber(rpcRequest);
+  let latestBlockNumber = await eth_blockNumber(rpcRequest);
 
   // Compute toBlock and fromBlock if blockRange was passed
   if (blockRange) {
@@ -145,13 +145,32 @@ export async function getContractEvents<
   }
 
   /*
+   * If the fromBlock is greater than the latestBlockNumber (can happen when the poller is ahead),
+   * pause until we're caught up so we don't miss any blocks by setting to "latest".
+   */
+  if (
+    restParams.fromBlock &&
+    BigInt(restParams.fromBlock) > latestBlockNumber + 10n
+  ) {
+    throw new Error(
+      'fromBlock is significantly ahead of the latest block, please check fromBlock or set to "latest".',
+    );
+  }
+  while (
+    restParams.fromBlock &&
+    BigInt(restParams.fromBlock) > latestBlockNumber
+  ) {
+    latestBlockNumber = await eth_blockNumber(rpcRequest);
+  }
+
+  /*
    * If we want the latest block number, just ask for it.
-   * The > here is due to some weird inconsistencies when getting the latest blockNumber.
+   * The > here is due to a weird race condition when polling for the latest blockNumber.
    * We just let the node decide what "latest" is to avoid errors
    */
   if (
     restParams.fromBlock &&
-    BigInt(restParams.fromBlock) >= latestBlockNumber
+    BigInt(restParams.fromBlock) === latestBlockNumber
   ) {
     restParams.fromBlock = "latest";
   }
