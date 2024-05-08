@@ -27,9 +27,6 @@ export function PostOnRampSwapFlow(props: {
       <PostOnRampSwap
         buyWithFiatStatus={statusForSwap}
         client={props.client}
-        onBack={() => {
-          setStatusForSwap(undefined);
-        }}
         onViewPendingTx={props.onViewPendingTx}
         onDone={props.onDone}
         isBuyForTx={props.isBuyForTx}

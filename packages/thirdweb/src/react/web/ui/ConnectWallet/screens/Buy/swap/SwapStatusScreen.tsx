@@ -17,7 +17,7 @@ import { SwapTxDetailsTable } from "../tx-history/SwapDetailsScreen.js";
 type UIStatus = "pending" | "success" | "failed" | "partialSuccess";
 
 export function SwapStatusScreen(props: {
-  onBack: () => void;
+  onBack?: () => void;
   onViewPendingTx: () => void;
   swapTxHash: string;
   client: ThirdwebClient;

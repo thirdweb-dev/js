@@ -12,14 +12,39 @@ import type { WelcomeScreen } from "./screens/types.js";
 
 export type PayUIOptions = {
   /**
+   * Prefill the Buy Token amount, chain and/or token.
+   * You can also disable the edits for the prefilled values using `allowEdits` - By default all are editable
+   *
+   * For example, if you want to allow changing the amount, but disable changing the token and chain,
+   * you can set `allowEdits` to `{ amount: true, token: false, chain: false }`
+   *
+   * If no `token` object is not specified, native token will be prefilled by default
+   */
+  prefillBuy?: {
+    chain: Chain;
+    token?: {
+      name: string;
+      symbol: string;
+      address: string;
+      icon?: string;
+    };
+    amount?: string;
+    allowEdits?: {
+      amount: boolean;
+      token: boolean;
+      chain: boolean;
+    };
+  };
+
+  /**
    * Configure options for buying tokens using other token ( aka Swap )
    *
    * By default, the "Crypto" option is enabled. You can disable it by setting `buyWithCrypto` to `false`
    *
    * You can also prefill the source token and chain for the swap to customize the default values.
-   * You can also disable the edits for the prefilled values by setting `allowEdits`
+   * You can also disable the edits for the prefilled values by setting `allowEdits` - By default all are editable
    *
-   * For example, if you want to allow the selecting chain and but disable selecting token, you can set `allowEdits` to `{ token: false, chain: true }`
+   * For example, if you want to allow selecting chain and but disable selecting token, you can set `allowEdits` to `{ token: false, chain: true }`
    */
   buyWithCrypto?:
     | false
@@ -42,35 +67,13 @@ export type PayUIOptions = {
   /**
    * By default "Credit card" option is enabled. you can disable it by setting `buyWithFiat` to `false`
    *
-   * You can also enable the test mode for the "Buy with Fiat" option by setting `testMode` to `true`
+   * You can also enable the test mode for the on-ramp provider to test on-ramp without using real credit card.
    */
   buyWithFiat?:
     | {
         testMode?: boolean;
       }
     | false;
-
-  /**
-   * Prefill the Buy Token amount, chain and/or token.
-   * You can also disable the edits for the prefilled values using `allowEdits`
-   *
-   * If no `token` object is not specified, native token will be prefilled by default
-   */
-  prefillBuy?: {
-    chain: Chain;
-    token?: {
-      name: string;
-      symbol: string;
-      address: string;
-      icon?: string;
-    };
-    amount?: string;
-    allowEdits?: {
-      amount: boolean;
-      token: boolean;
-      chain: boolean;
-    };
-  };
 };
 
 /**

@@ -33,7 +33,7 @@ import { addPendingTx } from "./pendingSwapTx.js";
  * @internal
  */
 export function SwapConfirmationScreen(props: {
-  onBack: () => void;
+  onBack?: () => void;
   client: ThirdwebClient;
   quote: BuyWithCryptoQuote;
   setSwapTxHash: (txHash: string) => void;

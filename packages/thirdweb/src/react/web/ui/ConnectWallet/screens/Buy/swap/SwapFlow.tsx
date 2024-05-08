@@ -10,7 +10,7 @@ import { SwapConfirmationScreen } from "./ConfirmationScreen.js";
 import { SwapStatusScreen } from "./SwapStatusScreen.js";
 
 type SwapFlowProps = {
-  onBack: () => void;
+  onBack?: () => void;
   buyWithCryptoQuote: BuyWithCryptoQuote;
   account: Account;
   onViewPendingTx: () => void;

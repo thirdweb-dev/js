@@ -19,7 +19,7 @@ import { SwapFlow } from "../swap/SwapFlow.js";
 export function PostOnRampSwap(props: {
   client: ThirdwebClient;
   buyWithFiatStatus: BuyWithFiatStatus;
-  onBack: () => void;
+  onBack?: () => void;
   onViewPendingTx: () => void;
   onDone: () => void;
   isBuyForTx: boolean;
