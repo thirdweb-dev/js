@@ -6,22 +6,10 @@ export default {
     {
       "name": "OpTrust explorer",
       "url": "https://scan.optrust.io",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://QmYktPMo4tdQhMA9nRJBVckjzHcFLbpHbTVNSpGUUPEP8J",
-        "width": 500,
-        "height": 500,
-        "format": "png"
-      }
+      "standard": "none"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmYktPMo4tdQhMA9nRJBVckjzHcFLbpHbTVNSpGUUPEP8J",
-    "width": 500,
-    "height": 500,
-    "format": "png"
-  },
   "infoURL": "https://optrust.io",
   "name": "OpTrust Mainnet",
   "nativeCurrency": {
