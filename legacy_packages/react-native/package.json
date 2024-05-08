@@ -85,7 +85,7 @@
     "react-native": ">=0.71.0",
     "react-native-mmkv": ">=2.11.0",
     "react-native-svg": ">=15.1.0",
-    "react-native-qrcode-svg": "^6.3.0"
+    "react-native-qrcode-svg": ">=6.3.0"
   },
   "engines": {
     "node": ">=18"
