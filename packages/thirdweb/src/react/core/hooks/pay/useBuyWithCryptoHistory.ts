@@ -9,7 +9,7 @@ import {
   getBuyWithCryptoHistory,
 } from "../../../../pay/buyWithCrypto/getHistory.js";
 
-export type BuyWithCryptoQuoteQueryOptions = Omit<
+export type BuyWithCryptoHistoryQueryOptions = Omit<
   UseQueryOptions<BuyWithCryptoHistoryData>,
   "queryFn" | "queryKey" | "enabled"
 >;
@@ -35,7 +35,7 @@ export type BuyWithCryptoQuoteQueryOptions = Omit<
  */
 export function useBuyWithCryptoHistory(
   params?: BuyWithCryptoHistoryParams,
-  queryParams?: BuyWithCryptoQuoteQueryOptions,
+  queryParams?: BuyWithCryptoHistoryQueryOptions,
 ): UseQueryResult<BuyWithCryptoHistoryData> {
   return useQuery({
     ...queryParams,

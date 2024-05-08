@@ -23,14 +23,16 @@ import type { LocaleId } from "./types.js";
 
 // TODO - JS doc
 
-export function PayEmbed(props: {
+export type PayEmbedProps = {
   supportedTokens?: SupportedTokens;
   client: ThirdwebClient;
   locale?: LocaleId;
   payOptions?: PayUIOptions;
   theme?: "light" | "dark" | Theme;
   connectOptions?: PayEmbedConnectOptions;
-}) {
+};
+
+export function PayEmbed(props: PayEmbedProps) {
   const localeQuery = useConnectLocale(props.locale || "en_US");
   const [screen, setScreen] = useState<"buy" | "tx-history">("buy");
 

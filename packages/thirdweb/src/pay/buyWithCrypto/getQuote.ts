@@ -28,7 +28,11 @@ export type GetBuyWithCryptoQuoteParams = {
   client: ThirdwebClient;
 
   /**
-   * An optional intentId to link the BuyWithCrypto to an OnrampTransaction
+   * This is only relevant if the buy-with-crypto transaction is part of buy-with-fiat flow.
+   *
+   * When a swap is required after an onramp transaction, the intentId is used to link the buy-with-crypto transaction to the onramp transaction.
+   * Refer to [`getPostOnRampQuote`](https://portal.thirdweb.com/references/typescript/v5/getPostOnRampQuote) for more information.`
+   *
    */
   intentId?: string;
 
@@ -245,7 +249,7 @@ export async function getBuyWithCryptoQuote(
       queryParams.append("maxSlippageBPS", params.maxSlippageBPS.toString());
     }
 
-    if ("intentId" in params && params.intentId) {
+    if (params.intentId) {
       queryParams.append("intentId", params.intentId);
     }
 
