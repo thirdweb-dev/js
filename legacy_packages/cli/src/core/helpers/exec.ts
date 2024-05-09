@@ -17,7 +17,7 @@ export async function execute(
     });
 
     const timeoutId = setTimeout(() => {
-      process.kill();  // Attempt to kill the process
+      process.kill();
       reject(new Error('Command timeout'));
     }, timeout);
   });
