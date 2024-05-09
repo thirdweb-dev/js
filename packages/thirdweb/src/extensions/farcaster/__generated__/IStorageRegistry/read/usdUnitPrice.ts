@@ -57,7 +57,9 @@ export function decodeUsdUnitPriceResult(result: Hex) {
  * ```ts
  * import { usdUnitPrice } from "thirdweb/extensions/farcaster";
  *
- * const result = await usdUnitPrice();
+ * const result = await usdUnitPrice({
+ *  contract,
+ * });
  *
  * ```
  */

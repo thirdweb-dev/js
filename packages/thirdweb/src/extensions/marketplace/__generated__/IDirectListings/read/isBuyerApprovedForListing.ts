@@ -126,6 +126,7 @@ export function decodeIsBuyerApprovedForListingResult(result: Hex) {
  * import { isBuyerApprovedForListing } from "thirdweb/extensions/marketplace";
  *
  * const result = await isBuyerApprovedForListing({
+ *  contract,
  *  listingId: ...,
  *  buyer: ...,
  * });

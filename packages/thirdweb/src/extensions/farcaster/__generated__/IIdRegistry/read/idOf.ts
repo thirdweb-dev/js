@@ -109,6 +109,7 @@ export function decodeIdOfResult(result: Hex) {
  * import { idOf } from "thirdweb/extensions/farcaster";
  *
  * const result = await idOf({
+ *  contract,
  *  owner: ...,
  * });
  *

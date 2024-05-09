@@ -61,7 +61,9 @@ export function decodeGetCurrentBlockTimestampResult(result: Hex) {
  * ```ts
  * import { getCurrentBlockTimestamp } from "thirdweb/extensions/multicall3";
  *
- * const result = await getCurrentBlockTimestamp();
+ * const result = await getCurrentBlockTimestamp({
+ *  contract,
+ * });
  *
  * ```
  */

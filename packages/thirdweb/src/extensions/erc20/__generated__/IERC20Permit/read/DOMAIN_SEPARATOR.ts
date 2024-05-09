@@ -59,7 +59,9 @@ export function decodeDOMAIN_SEPARATORResult(result: Hex) {
  * ```ts
  * import { DOMAIN_SEPARATOR } from "thirdweb/extensions/erc20";
  *
- * const result = await DOMAIN_SEPARATOR();
+ * const result = await DOMAIN_SEPARATOR({
+ *  contract,
+ * });
  *
  * ```
  */

@@ -66,7 +66,9 @@ export function decodeTokenResult(result: Hex) {
  * ```ts
  * import { token } from "thirdweb/extensions/erc6551";
  *
- * const result = await token();
+ * const result = await token({
+ *  contract,
+ * });
  *
  * ```
  */

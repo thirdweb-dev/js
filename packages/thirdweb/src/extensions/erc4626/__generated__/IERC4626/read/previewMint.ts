@@ -117,6 +117,7 @@ export function decodePreviewMintResult(result: Hex) {
  * import { previewMint } from "thirdweb/extensions/erc4626";
  *
  * const result = await previewMint({
+ *  contract,
  *  shares: ...,
  * });
  *

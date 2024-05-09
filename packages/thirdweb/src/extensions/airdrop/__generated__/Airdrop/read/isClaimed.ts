@@ -145,6 +145,7 @@ export function decodeIsClaimedResult(result: Hex) {
  * import { isClaimed } from "thirdweb/extensions/airdrop";
  *
  * const result = await isClaimed({
+ *  contract,
  *  receiver: ...,
  *  token: ...,
  *  tokenId: ...,

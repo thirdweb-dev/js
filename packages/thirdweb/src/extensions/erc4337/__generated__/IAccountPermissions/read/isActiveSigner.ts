@@ -112,6 +112,7 @@ export function decodeIsActiveSignerResult(result: Hex) {
  * import { isActiveSigner } from "thirdweb/extensions/erc4337";
  *
  * const result = await isActiveSigner({
+ *  contract,
  *  signer: ...,
  * });
  *

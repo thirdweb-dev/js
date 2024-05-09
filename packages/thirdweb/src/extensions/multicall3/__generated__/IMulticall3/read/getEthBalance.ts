@@ -119,6 +119,7 @@ export function decodeGetEthBalanceResult(result: Hex) {
  * import { getEthBalance } from "thirdweb/extensions/multicall3";
  *
  * const result = await getEthBalance({
+ *  contract,
  *  addr: ...,
  * });
  *

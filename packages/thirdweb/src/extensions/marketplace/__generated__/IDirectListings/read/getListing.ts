@@ -164,6 +164,7 @@ export function decodeGetListingResult(result: Hex) {
  * import { getListing } from "thirdweb/extensions/marketplace";
  *
  * const result = await getListing({
+ *  contract,
  *  listingId: ...,
  * });
  *

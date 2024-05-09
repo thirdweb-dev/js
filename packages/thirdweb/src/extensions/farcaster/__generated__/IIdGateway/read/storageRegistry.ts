@@ -59,7 +59,9 @@ export function decodeStorageRegistryResult(result: Hex) {
  * ```ts
  * import { storageRegistry } from "thirdweb/extensions/farcaster";
  *
- * const result = await storageRegistry();
+ * const result = await storageRegistry({
+ *  contract,
+ * });
  *
  * ```
  */

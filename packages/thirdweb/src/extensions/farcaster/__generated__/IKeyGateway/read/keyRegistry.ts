@@ -57,7 +57,9 @@ export function decodeKeyRegistryResult(result: Hex) {
  * ```ts
  * import { keyRegistry } from "thirdweb/extensions/farcaster";
  *
- * const result = await keyRegistry();
+ * const result = await keyRegistry({
+ *  contract,
+ * });
  *
  * ```
  */

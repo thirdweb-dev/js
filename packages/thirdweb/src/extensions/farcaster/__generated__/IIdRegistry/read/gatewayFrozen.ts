@@ -59,7 +59,9 @@ export function decodeGatewayFrozenResult(result: Hex) {
  * ```ts
  * import { gatewayFrozen } from "thirdweb/extensions/farcaster";
  *
- * const result = await gatewayFrozen();
+ * const result = await gatewayFrozen({
+ *  contract,
+ * });
  *
  * ```
  */

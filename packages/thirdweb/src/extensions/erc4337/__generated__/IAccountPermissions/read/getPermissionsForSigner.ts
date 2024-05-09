@@ -139,6 +139,7 @@ export function decodeGetPermissionsForSignerResult(result: Hex) {
  * import { getPermissionsForSigner } from "thirdweb/extensions/erc4337";
  *
  * const result = await getPermissionsForSigner({
+ *  contract,
  *  signer: ...,
  * });
  *

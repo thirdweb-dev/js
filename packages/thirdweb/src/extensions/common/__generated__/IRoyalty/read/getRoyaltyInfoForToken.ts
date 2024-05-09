@@ -119,6 +119,7 @@ export function decodeGetRoyaltyInfoForTokenResult(result: Hex) {
  * import { getRoyaltyInfoForToken } from "thirdweb/extensions/common";
  *
  * const result = await getRoyaltyInfoForToken({
+ *  contract,
  *  tokenId: ...,
  * });
  *

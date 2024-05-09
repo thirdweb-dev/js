@@ -61,7 +61,9 @@ export function decodeGetCurrentBlockCoinbaseResult(result: Hex) {
  * ```ts
  * import { getCurrentBlockCoinbase } from "thirdweb/extensions/multicall3";
  *
- * const result = await getCurrentBlockCoinbase();
+ * const result = await getCurrentBlockCoinbase({
+ *  contract,
+ * });
  *
  * ```
  */

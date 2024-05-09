@@ -111,6 +111,7 @@ export function decodeRecoveryOfResult(result: Hex) {
  * import { recoveryOf } from "thirdweb/extensions/farcaster";
  *
  * const result = await recoveryOf({
+ *  contract,
  *  fid: ...,
  * });
  *
