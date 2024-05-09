@@ -986,7 +986,7 @@ importers:
         specifier: ^4.36.1
         version: 4.36.1(react-native@0.71.17)(react@18.2.0)
       '@thirdweb-dev/chains':
-        specifier: workspace:*
+        specifier: 0.1.105
         version: link:../chains
       '@thirdweb-dev/react-core':
         specifier: 4.5.0
@@ -1063,7 +1063,7 @@ importers:
         specifier: ^3.2.0
         version: 3.2.0(eslint@8.57.0)(prettier@3.2.5)(typescript@5.4.4)
       '@thirdweb-dev/tsconfig':
-        specifier: workspace:*
+        specifier: ^0.1.7
         version: link:../../packages/tw-tsconfig
       '@types/react':
         specifier: 18.2.17
@@ -1075,7 +1075,7 @@ importers:
         specifier: 8.57.0
         version: 8.57.0
       eslint-config-thirdweb:
-        specifier: workspace:*
+        specifier: ^0.1.9
         version: link:../eslint-config-thirdweb
       eslint-plugin-i18next:
         specifier: ^6.0.3
@@ -1111,7 +1111,7 @@ importers:
         specifier: 5.0.5
         version: 5.0.5
       typedoc-gen:
-        specifier: workspace:*
+        specifier: ^1.0.2
         version: link:../../packages/typedoc-gen
       typescript:
         specifier: 5.4.4

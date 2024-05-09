@@ -63,7 +63,8 @@ export default {
     "https://ethereum-holesky-rpc.publicnode.com",
     "wss://ethereum-holesky-rpc.publicnode.com",
     "https://holesky.drpc.org",
-    "wss://holesky.drpc.org"
+    "wss://holesky.drpc.org",
+    "https://rpc-holesky.rockx.com"
   ],
   "shortName": "holesky",
   "slip44": 1,
