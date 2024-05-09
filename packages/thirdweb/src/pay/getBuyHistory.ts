@@ -5,7 +5,6 @@ import { getPayBuyHistoryEndpoint } from "./utils/definitions.js";
 
 /**
  * The parameters for [`getBuyHistory`](https://portal.thirdweb.com/references/typescript/v5/getBuyHistory) function
- * It takes the wallet history address and optional cursor and page size for paginated results.
  */
 export type BuyHistoryParams = {
   /**
@@ -13,7 +12,6 @@ export type BuyHistoryParams = {
    *
    * You can create a client using the `createThirdwebClient` function.
    * Refer to the [Creating a Client](https://portal.thirdweb.com/typescript/v5/client) documentation for more information.
-   *
    */
   client: ThirdwebClient;
   /**
@@ -21,21 +19,26 @@ export type BuyHistoryParams = {
    */
   walletAddress: string;
   /**
-   * The number of results to return in a single page. The default value is 10.
+   * The number of results to return.
+   *
+   * The default value is `10`.
    */
   count: number;
   /**
-   * The cursor for the page of results to return. The default value is `undefined`.
+   * Index of the first result to return. The default value is `0`.
    */
   start: number;
 };
 
 /**
  * The result for [`getBuyHistory`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoHistory) function
- * It includes information about transactions that the wallet address has made through thirdweb buy with crypto.
- * @buyCrypto
+ *
+ * It includes both "Buy with Crypto" and "Buy with Fiat" transactions
  */
 export type BuyHistoryData = {
+  /**
+   * The list of buy transactions.
+   */
   page: Array<
     | {
         buyWithFiatStatus: BuyWithFiatStatus;
@@ -44,27 +47,30 @@ export type BuyHistoryData = {
         buyWithCryptoStatus: BuyWithCryptoStatus;
       }
   >;
+  /**
+   * Whether there are more pages of results.
+   */
   hasNextPage: boolean;
 };
 
 /**
- * Gets the "Buy with Cryto" and "Buy with Fiat" transaction history of given wallet address
+ * Get Buy transaction history for a given wallet address.
+ *
+ * This includes both "Buy with Cryto" and "Buy with Fiat" transactions
+ *
  * @param params Object of type [`BuyHistoryParams`](https://portal.thirdweb.com/references/typescript/v5/BuyHistoryParams)
  * @example
- *
  * ```ts
  * import { createThirdwebClient } from "thirdweb";
- * import { BuyWithCryptoHistoryData } from "thirdweb/pay";
+ * import { getBuyHistory } from "thirdweb/pay";
  *
  * const client = createThirdwebClient({ clientId: "..." });
  *
- * // grabs the history of purchase transactions for the wallet address
- * const status = await getBuyHistory({
+ * const history = await getBuyHistory({
  *  client,
  *  walletAddress: "0x...",
  * })
  * ```
- * @returns Object of type [`BuyHistoryData`](https://portal.thirdweb.com/references/typescript/v5/BuyHistoryData)
  */
 export async function getBuyHistory(
   params: BuyHistoryParams,

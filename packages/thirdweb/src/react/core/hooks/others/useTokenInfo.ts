@@ -3,16 +3,13 @@ import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getContract } from "../../../../contract/contract.js";
 
-export type GetTokenInfoOptions = {
+type GetTokenInfoOptions = {
   client: ThirdwebClient;
   chain: Chain;
-  /**
-   * (Optional) The address of the token to retrieve the balance for. If not provided, the balance of the native token will be retrieved.
-   */
   tokenAddress?: string;
 };
 
-export type GetTokenInfoResult = {
+type GetTokenInfoResult = {
   name: string;
   symbol: string;
   decimals: number;
@@ -26,13 +23,6 @@ export function useTokenInfo(options: GetTokenInfoOptions) {
   return useQuery({
     queryKey: ["tokenInfo", chain?.id || -1, { tokenAddress }] as const,
     queryFn: async () => {
-      if (!chain) {
-        throw new Error("chain is required");
-      }
-      if (!client) {
-        throw new Error("client is required");
-      }
-
       // erc20 case
       if (tokenAddress) {
         const { getCurrencyMetadata } = await import(
