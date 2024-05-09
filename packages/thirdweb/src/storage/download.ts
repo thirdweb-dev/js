@@ -24,7 +24,14 @@ export type DownloadOptions = Prettify<
  * @storage
  */
 export async function download(options: DownloadOptions) {
-  const res = await getClientFetch(options.client)(resolveScheme(options), {
+  let url: string;
+  if (options.uri.startsWith("ar://")) {
+    const { resolveArweaveScheme } = await import("../utils/arweave.js");
+    url = resolveArweaveScheme(options);
+  } else {
+    url = resolveScheme(options);
+  }
+  const res = await getClientFetch(options.client)(url, {
     keepalive: options.client.config?.storage?.fetch?.keepalive,
     headers: options.client.config?.storage?.fetch?.headers,
     requestTimeoutMs: options.client.config?.storage?.fetch?.requestTimeoutMs,

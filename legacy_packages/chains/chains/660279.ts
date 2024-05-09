@@ -2,7 +2,13 @@ import type { Chain } from "../src/types";
 export default {
   "chain": "Xai Mainnet",
   "chainId": 660279,
-  "explorers": [],
+  "explorers": [
+    {
+      "name": "Blockscout",
+      "url": "https://explorer.xai-chain.net",
+      "standard": "EIP3091"
+    }
+  ],
   "faucets": [],
   "features": [],
   "icon": {
@@ -22,7 +28,8 @@ export default {
   "redFlags": [],
   "rpc": [
     "https://660279.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://xai-chain.net/rpc/xai79df8614da076af58f199126a07db"
+    "https://xai-chain.net/rpc/xai79df8614da076af58f199126a07db",
+    "https://xai-chain.net/rpc"
   ],
   "shortName": "xai",
   "slug": "xai",

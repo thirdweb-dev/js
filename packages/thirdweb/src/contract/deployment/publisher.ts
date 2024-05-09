@@ -253,7 +253,10 @@ export async function fetchPublishedContract(
   // find the version that matches the version string
   const versionMatch = versionsMetadata.find(
     (metadata) =>
-      metadata.publishedMetadata.extendedMetadata?.version === options.version,
+      // Will probably only need metadata.publishedMetadata.version unless its an outdated contract
+      metadata.publishedMetadata.extendedMetadata?.version ===
+        options.version ||
+      metadata.publishedMetadata.version === options.version,
   );
   if (!versionMatch) {
     throw Error("Contract version not found");
