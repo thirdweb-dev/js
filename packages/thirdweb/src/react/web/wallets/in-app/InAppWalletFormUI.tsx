@@ -33,6 +33,7 @@ const defaultAuthOptions: InAppWalletAuth[] = [
   "google",
   "apple",
   "facebook",
+  "passkey",
 ];
 
 export type InAppWalletFormUIProps = {
@@ -64,6 +65,7 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
 
   const config = props.wallet.getConfig();
   const authOptions = config?.auth?.options || defaultAuthOptions;
+  const passKeyEnabled = authOptions.includes("passkey");
 
   const emailIndex = authOptions.indexOf("email");
   const isEmailEnabled = emailIndex !== -1;
@@ -104,7 +106,7 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
   const allowSwitchInputMode = isEmailEnabled && isPhoneEnabled;
 
   const socialLogins = authOptions.filter(
-    (x) => x !== "email" && x !== "phone",
+    (x) => x === "google" || x === "apple" || x === "facebook",
   ) as InAppWalletSocialAuth[];
 
   const hasSocialLogins = socialLogins.length > 0;
@@ -143,6 +145,13 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
       console.error(`Error sign in with ${strategy}`, e);
     }
   };
+
+  function handlePassKeyLogin() {
+    setData({
+      passkeyLogin: true,
+    });
+    props.select();
+  }
 
   const showOnlyIcons = socialLogins.length > 1;
 
@@ -194,64 +203,83 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
         hasSocialLogins &&
         (isEmailEnabled || isPhoneEnabled) && <TextDivider text={locale.or} />}
 
-      {/* Email Login */}
-      {inputMode !== "none" && (
-        <Container>
-          {inputMode === "email" ? (
-            <InputSelectionUI
-              type={type}
-              onSelect={(value) => {
-                setData({ emailLogin: value });
-                props.select();
-              }}
-              placeholder={placeholder}
-              name="email"
-              errorMessage={(input) => {
-                const isValidEmail = validateEmail(input.toLowerCase());
-                if (!isValidEmail) {
-                  return locale.invalidEmail;
-                }
-                return undefined;
-              }}
-              emptyErrorMessage={emptyErrorMessage}
-              submitButtonText={locale.submitEmail}
-            />
-          ) : (
-            <InputSelectionUI
-              format="phone"
-              type={type}
-              onSelect={(value) => {
-                // removes white spaces and special characters
-                setData({ phoneLogin: value.replace(/[-\(\) ]/g, "") });
-                props.select();
-              }}
-              placeholder={placeholder}
-              name="phone"
-              errorMessage={(_input) => {
-                // removes white spaces and special characters
-                const input = _input.replace(/[-\(\) ]/g, "");
-                const isPhone = /^[0-9]+$/.test(input);
+      <div>
+        {/* Email/Phone Login */}
+        {inputMode !== "none" && (
+          <Container>
+            {inputMode === "email" ? (
+              <InputSelectionUI
+                type={type}
+                onSelect={(value) => {
+                  setData({ emailLogin: value });
+                  props.select();
+                }}
+                placeholder={placeholder}
+                name="email"
+                errorMessage={(input) => {
+                  const isValidEmail = validateEmail(input.toLowerCase());
+                  if (!isValidEmail) {
+                    return locale.invalidEmail;
+                  }
+                  return undefined;
+                }}
+                emptyErrorMessage={emptyErrorMessage}
+                submitButtonText={locale.submitEmail}
+              />
+            ) : (
+              <InputSelectionUI
+                format="phone"
+                type={type}
+                onSelect={(value) => {
+                  // removes white spaces and special characters
+                  setData({ phoneLogin: value.replace(/[-\(\) ]/g, "") });
+                  props.select();
+                }}
+                placeholder={placeholder}
+                name="phone"
+                errorMessage={(_input) => {
+                  // removes white spaces and special characters
+                  const input = _input.replace(/[-\(\) ]/g, "");
+                  const isPhone = /^[0-9]+$/.test(input);
 
-                if (!isPhone && isPhoneEnabled) {
-                  return locale.invalidPhone;
-                }
+                  if (!isPhone && isPhoneEnabled) {
+                    return locale.invalidPhone;
+                  }
 
-                return undefined;
+                  return undefined;
+                }}
+                emptyErrorMessage={emptyErrorMessage}
+                submitButtonText={locale.submitEmail}
+              />
+            )}
+            {allowSwitchInputMode && (
+              <>
+                <Spacer y="md" />
+                <LinkButton onClick={switchInputMode} type="button">
+                  {switchInputModeText}
+                </LinkButton>
+              </>
+            )}
+          </Container>
+        )}
+
+        {passKeyEnabled && (
+          <>
+            <Spacer y="lg" />
+            <Button
+              onClick={handlePassKeyLogin}
+              fullWidth
+              variant="outline"
+              style={{
+                textAlign: "center",
+                fontSize: fontSize.sm,
               }}
-              emptyErrorMessage={emptyErrorMessage}
-              submitButtonText={locale.submitEmail}
-            />
-          )}
-          {allowSwitchInputMode && (
-            <>
-              <Spacer y="md" />
-              <LinkButton onClick={switchInputMode} type="button">
-                {switchInputModeText}
-              </LinkButton>
-            </>
-          )}
-        </Container>
-      )}
+            >
+              Sign in with passkey
+            </Button>
+          </>
+        )}
+      </div>
     </Container>
   );
 };

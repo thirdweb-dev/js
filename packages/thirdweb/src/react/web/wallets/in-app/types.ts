@@ -10,4 +10,5 @@ export type InAppWalletSelectUIState =
         type: InAppWalletSocialAuth;
         connectionPromise: Promise<Account>;
       };
+      passkeyLogin?: boolean;
     };

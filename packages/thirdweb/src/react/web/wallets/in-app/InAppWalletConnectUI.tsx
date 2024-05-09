@@ -4,6 +4,7 @@ import { useSelectionData } from "../../providers/wallet-ui-states-provider.js";
 import { LoadingScreen } from "../shared/LoadingScreen.js";
 import { InAppWalletFormUIScreen } from "./InAppWalletFormUI.js";
 import { InAppWalletOTPLoginUI } from "./InAppWalletOTPLoginUI.js";
+import { InAppWalletPassKeyLogin } from "./InAppWalletPassKeyLogin.js";
 import { InAppWalletSocialLogin } from "./InAppWalletSocialLogin.js";
 import type { InAppWalletSelectUIState } from "./types.js";
 import { useInAppWalletLocale } from "./useInAppWalletLocale.js";
@@ -39,6 +40,16 @@ function InAppWalletConnectUI(props: {
         done={props.done}
         goBack={props.goBack}
         wallet={props.wallet}
+      />
+    );
+  }
+
+  if (state?.passkeyLogin) {
+    return (
+      <InAppWalletPassKeyLogin
+        wallet={props.wallet}
+        done={props.done}
+        onBack={props.goBack}
       />
     );
   }

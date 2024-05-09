@@ -17,7 +17,11 @@ export type InAppWalletConnectionOptions = (
 
 export type InAppWalletSocialAuth = "google" | "apple" | "facebook";
 
-export type InAppWalletAuth = "email" | "phone" | InAppWalletSocialAuth;
+export type InAppWalletAuth =
+  | "email"
+  | "phone"
+  | InAppWalletSocialAuth
+  | "passkey";
 
 /**
  * @internal
