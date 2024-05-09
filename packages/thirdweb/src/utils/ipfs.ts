@@ -34,7 +34,7 @@ export function resolveScheme(options: ResolveSchemeOptions) {
     const clientId = options.client.clientId;
     const cid = findIPFSCidFromUri(options.uri);
 
-    // purpusefully using SPLIT here and and not replace for CID to avoid cases where users don't know the schema
+    // purposefully using SPLIT here and and not replace for CID to avoid cases where users don't know the schema
     // also only splitting on `/ipfs` to avoid cases where people pass non `/` terminated gateway urls
     return `${
       gateway.replace("{clientId}", clientId).split("/ipfs")[0]
