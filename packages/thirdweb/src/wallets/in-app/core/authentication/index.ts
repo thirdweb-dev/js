@@ -202,7 +202,7 @@ export async function authenticate(
       return ewSDK.auth.loginWithModal();
     }
     case "passkey": {
-      if (args.type === "registration") {
+      if (args.type === "sign-up") {
         const authToken = await registerPasskey({
           client: args.client,
           authenticatorType: args.authenticatorType,

@@ -39,7 +39,7 @@ export type SingleStepAuthArgsType =
   | { strategy: "iframe" }
   | {
       strategy: "passkey";
-      type: "registration" | "login";
+      type: "sign-up" | "sign-in";
       username?: string;
       authenticatorType?: string;
       // FIXME: remove this before merging

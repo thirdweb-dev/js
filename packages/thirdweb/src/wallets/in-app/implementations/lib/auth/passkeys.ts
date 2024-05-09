@@ -29,7 +29,7 @@ export async function registerPasskey(options: {
   // TODO inject this
   const storage = new LocalStorage({ clientId: options.client.clientId });
   const fetchWithId = getClientFetch(options.client);
-  const generatedName = options.username ?? `wallet-${options.client.clientId}`;
+  const generatedName = options.username ?? generateUsername();
   // 1. request challenge from  server
   const res = await fetchWithId(getChallengePath("sign-up", generatedName));
   const challengeData = await res.json();
@@ -85,9 +85,8 @@ export async function loginWithPasskey(options: {
   // TODO inject this
   const storage = new LocalStorage({ clientId: options.client.clientId });
   const fetchWithId = getClientFetch(options.client);
-  const generatedName = options.username ?? `wallet-${options.client.clientId}`;
   // 1. request challenge from  server/iframe
-  const res = await fetchWithId(getChallengePath("sign-in", generatedName));
+  const res = await fetchWithId(getChallengePath("sign-in"));
   const challengeData = await res.json();
   if (!challengeData.challenge) {
     throw new Error("No challenge received");
@@ -126,4 +125,19 @@ export async function loginWithPasskey(options: {
   }
   // 6. return the auth'd user type
   return verifData;
+}
+
+/**
+ * Returns whether this device has a stored passkey ready to be used for sign-in
+ * @param client - the thirdweb client
+ * @returns whether the device has a stored passkey
+ */
+export async function hasStoredPasskey(client: ThirdwebClient) {
+  const storage = new LocalStorage({ clientId: client.clientId });
+  const credId = await storage.getPasskeyCredentialId();
+  return !!credId;
+}
+
+function generateUsername() {
+  return `wallet-${new Date().toISOString()}`;
 }
