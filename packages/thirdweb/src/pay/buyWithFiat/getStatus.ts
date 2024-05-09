@@ -7,18 +7,20 @@ import type {
 import { getPayBuyWithFiatStatusEndpoint } from "../utils/definitions.js";
 
 /**
- * TODO
+ * Parameters for the [`getBuyWithFiatStatus`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithFiatStatus) function
  */
 export type GetBuyWithFiatStatusParams = {
+  /**
+   * A client is the entry point to the thirdweb SDK. It is required for all other actions.
+   *
+   * You can create a client using the `createThirdwebClient` function.
+   * Refer to the [Creating a Client](https://portal.thirdweb.com/typescript/v5/client) documentation for more information.
+   */
   client: ThirdwebClient;
+  /**
+   * Intent ID of the "Buy with fiat" transaction. You can get the intent ID from the quote object returned by the [`getBuyWithFiatQuote`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithFiatQuote) function
+   */
   intentId: string;
-};
-
-export type FiatCurrencyInfo = {
-  amount: string;
-  amountUnits: string;
-  decimals: number;
-  currencySymbol: string;
 };
 
 export type ValidBuyWithFiatStatus = Exclude<
@@ -26,12 +28,34 @@ export type ValidBuyWithFiatStatus = Exclude<
   { status: "NOT_FOUND" }
 >;
 
+/**
+ * The returned object from [`getBuyWithFiatStatus`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithFiatStatus) function
+ *
+ * If the in invalid intentId is provided, the object will have a status of "NOT_FOUND" and no other fields.
+ */
 export type BuyWithFiatStatus =
   | {
       status: "NOT_FOUND";
     }
   | {
+      /**
+       * Intent ID of the "Buy with fiat" transaction. You can get the intent ID from the quote object returned by the [`getBuyWithFiatQuote`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithFiatQuote) function
+       */
       intentId: string;
+      /**
+       * The status of the transaction
+       * - `NONE` - No status
+       * - `PENDING_PAYMENT` - Payment is not done yet in the on-ramp provider
+       * - `PAYMENT_FAILED` - Payment failed in the on-ramp provider
+       * - `PENDING_ON_RAMP_TRANSFER` - Payment is done but the on-ramp provider is yet to transfer the tokens to the user's wallet
+       * - `ON_RAMP_TRANSFER_IN_PROGRESS` - On-ramp provider is transferring the tokens to the user's wallet
+       * - `ON_RAMP_TRANSFER_COMPLETED` - On-ramp provider has transferred the tokens to the user's wallet
+       * - `ON_RAMP_TRANSFER_FAILED` - On-ramp provider failed to transfer the tokens to the user's wallet
+       * - `CRYPTO_SWAP_REQUIRED` - On-ramp provider has sent the tokens to the user's wallet but a swap is required to convert it to the desired token
+       * - `CRYPTO_SWAP_IN_PROGRESS` - Swap is in progress
+       * - `CRYPTO_SWAP_COMPLETED` - Swap is completed and the user has received the desired token
+       * - `CRYPTO_SWAP_FALLBACK` - Swap failed and the user has received a fallback token which is not the desired token
+       */
       status:
         | "NONE"
         | "PENDING_PAYMENT"
@@ -45,7 +69,13 @@ export type BuyWithFiatStatus =
         | "CRYPTO_SWAP_FALLBACK"
         | "CRYPTO_SWAP_IN_PROGRESS"
         | "CRYPTO_SWAP_FAILED";
+      /**
+       * The wallet address to which the tokens are sent to
+       */
       toAddress: string;
+      /**
+       * The quote object for the transaction
+       */
       quote: {
         estimatedOnRampAmount: string;
         estimatedOnRampAmountWei: string;
@@ -53,15 +83,38 @@ export type BuyWithFiatStatus =
         estimatedToTokenAmount: string;
         estimatedToTokenAmountWei: string;
 
-        fromCurrency: FiatCurrencyInfo;
-        fromCurrencyWithFees: FiatCurrencyInfo;
+        fromCurrency: {
+          amount: string;
+          amountUnits: string;
+          decimals: number;
+          currencySymbol: string;
+        };
+        fromCurrencyWithFees: {
+          amount: string;
+          amountUnits: string;
+          decimals: number;
+          currencySymbol: string;
+        };
         onRampToken: PayTokenInfo;
         toToken: PayTokenInfo;
         estimatedDurationSeconds?: number;
         createdAt: string;
       };
+      /**
+       * The on-ramp transaction details
+       *
+       * This field is only present when on-ramp transaction is completed or failed
+       */
       source?: PayOnChainTransactionDetails;
+      /**
+       * The destination transaction details
+       *
+       * This field is only present when swap transaction is completed or failed
+       */
       destination?: PayOnChainTransactionDetails;
+      /**
+       * Message indicating the reason for failure
+       */
       failureMessage?: string;
     };
 
@@ -121,15 +174,7 @@ export async function getBuyWithFiatStatus(
     const response = await getClientFetch(params.client)(url);
 
     if (!response.ok) {
-      const errorObj = await response.json();
-      if (
-        errorObj &&
-        "error" in errorObj &&
-        typeof errorObj.error === "object" &&
-        "message" in errorObj.error
-      ) {
-        throw new Error(errorObj.error.message);
-      }
+      response.body?.cancel();
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
