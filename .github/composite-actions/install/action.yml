@@ -22,7 +22,7 @@ runs:
         cache: "pnpm"
     - name: Install node-gyp globally
       shell: bash
-      run: pnpm install -g node-gyp
+      run: pnpm install -g node-gyp node-gyp-build
 
     - name: Install dependencies
       shell: bash
