@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
+import { resolveArweaveScheme } from "src/utils/arweave.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { resolveScheme } from "../../../../utils/ipfs.js";
 import { resolveMimeType } from "../../utils/resolveMimeType.js";
-import { resolveArweaveScheme } from "src/utils/arweave.js";
 
 /**
  * @internal
