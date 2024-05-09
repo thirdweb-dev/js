@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Wallet } from "../../../../exports/wallets.js";
 import { hasStoredPasskey } from "../../../../wallets/in-app/implementations/lib/auth/passkeys.js";
 import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
@@ -10,6 +11,12 @@ import { Container, ModalHeader } from "../../ui/components/basic.js";
 import { Button } from "../../ui/components/buttons.js";
 import { Text } from "../../ui/components/text.js";
 import { iconSize } from "../../ui/design-system/index.js";
+import { LoadingScreen } from "../shared/LoadingScreen.js";
+
+// is passkey stored?
+// - login
+// else
+// - show login or signup options
 
 export function InAppWalletPassKeyLogin(props: {
   wallet: Wallet<"inApp">;
@@ -18,33 +25,9 @@ export function InAppWalletPassKeyLogin(props: {
 }) {
   const { client, connectModal } = useConnectUI();
   const { wallet, done } = props;
-  const [status, setStatus] = useState<"loading" | "error">("loading");
-
-  const loginOrSignup = useCallback(async () => {
-    const isPassKeyStored = await hasStoredPasskey(client);
-    setStatus("loading");
-    try {
-      if (isPassKeyStored) {
-        // login
-        await wallet.connect({
-          client: client,
-          strategy: "passkey",
-          type: "sign-in",
-        });
-        done();
-      } else {
-        // signup
-        await wallet.connect({
-          client: client,
-          strategy: "passkey",
-          type: "sign-up",
-        });
-        done();
-      }
-    } catch {
-      setStatus("error");
-    }
-  }, [wallet, client, done]);
+  const [screen, setScreen] = useState<
+    "select" | "login" | "loading" | "signup"
+  >("loading");
 
   const triggered = useRef(false);
   useEffect(() => {
@@ -53,8 +36,22 @@ export function InAppWalletPassKeyLogin(props: {
     }
 
     triggered.current = true;
-    loginOrSignup();
-  }, [loginOrSignup]);
+    hasStoredPasskey(client)
+      .then((isStored) => {
+        if (isStored) {
+          setScreen("login");
+        } else {
+          setScreen("select");
+        }
+      })
+      .catch(() => {
+        setScreen("select");
+      });
+  }, [client]);
+
+  console.log({
+    screen,
+  });
 
   return (
     <Container animate="fadein" fullHeight flex="column">
@@ -69,62 +66,218 @@ export function InAppWalletPassKeyLogin(props: {
         center="y"
       >
         <div>
-          {status === "loading" && (
-            <Container animate="fadein">
+          {screen === "loading" && (
+            <>
+              <LoadingScreen />
               <Spacer y="xxl" />
-              <Container
-                flex="row"
-                center="x"
-                style={{
-                  position: "relative",
-                }}
-              >
-                <Spinner size="4xl" color="accentText" />
-                <Container
-                  color="accentText"
-                  style={{
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
-                  }}
-                >
-                  <FingerPrintIcon size={iconSize.xxl} />
-                </Container>
-              </Container>
-              <Spacer y="xl" />
-              <Text center color="primaryText" size="lg">
-                Requesting Passkey
-              </Text>
-              <Spacer y="md" />
-              <Text multiline center>
-                A pop-up prompt will appear to sign-in and verify your passkey.
-              </Text>
-              <Spacer y="xxl" />
-              <Spacer y="xxl" />
-            </Container>
+            </>
           )}
 
-          {status === "error" && (
-            <Container animate="fadein">
-              <Spacer y="xxl" />
-              <Container flex="row" center="x">
-                <AccentFailIcon size={iconSize["3xl"]} />
-              </Container>
-              <Spacer y="lg" />
-              <Text center color="primaryText" size="lg">
-                Failed to sign in
-              </Text>
-              <Spacer y="xl" />
-              <Spacer y="xxl" />
-              <Button variant="accent" fullWidth onClick={loginOrSignup}>
-                Try Again
-              </Button>
-              <Spacer y="lg" />
-            </Container>
+          {screen === "select" && (
+            <SelectLoginMethod
+              onSignin={() => {
+                setScreen("login");
+              }}
+              onSignup={() => {
+                setScreen("signup");
+              }}
+            />
+          )}
+
+          {screen === "login" && (
+            <LoginScreen wallet={wallet} client={client} done={done} />
+          )}
+
+          {screen === "signup" && (
+            <SignupScreen wallet={wallet} client={client} done={done} />
           )}
         </div>
       </Container>
+    </Container>
+  );
+}
+
+function LoginScreen(props: {
+  wallet: Wallet<"inApp">;
+  done: () => void;
+  client: ThirdwebClient;
+}) {
+  const { wallet, done, client } = props;
+  const [status, setStatus] = useState<"loading" | "error">("loading");
+
+  async function login() {
+    setStatus("loading");
+    try {
+      await wallet.connect({
+        client: client,
+        strategy: "passkey",
+        type: "sign-in",
+      });
+      done();
+    } catch {
+      setStatus("error");
+    }
+  }
+
+  const triggered = useRef(false);
+  useEffect(() => {
+    if (triggered.current) {
+      return;
+    }
+
+    triggered.current = true;
+    login();
+  });
+
+  if (status === "loading") {
+    return (
+      <LoadingState
+        title="Requesting Passkey"
+        subtitle="A pop-up prompt will appear to sign-in and verify your passkey"
+      />
+    );
+  }
+
+  if (status === "error") {
+    return <ErrorState onTryAgain={login} title="Failed to Login" />;
+  }
+
+  return null;
+}
+
+function SignupScreen(props: {
+  wallet: Wallet<"inApp">;
+  done: () => void;
+  client: ThirdwebClient;
+}) {
+  const { wallet, done, client } = props;
+  const [status, setStatus] = useState<"loading" | "error">("loading");
+
+  async function signup() {
+    setStatus("loading");
+    try {
+      await wallet.connect({
+        client: client,
+        strategy: "passkey",
+        type: "sign-up",
+      });
+      done();
+    } catch {
+      setStatus("error");
+    }
+  }
+
+  const triggered = useRef(false);
+  useEffect(() => {
+    if (triggered.current) {
+      return;
+    }
+
+    triggered.current = true;
+    signup();
+  });
+
+  if (status === "loading") {
+    return (
+      <LoadingState
+        title="Creating Passkey"
+        subtitle="A pop-up prompt will appear to sign-in and verify your passkey"
+      />
+    );
+  }
+
+  if (status === "error") {
+    return <ErrorState onTryAgain={signup} title="Failed to create passkey" />;
+  }
+
+  return null;
+}
+
+function SelectLoginMethod(props: {
+  onSignin: () => void;
+  onSignup: () => void;
+}) {
+  return (
+    <Container>
+      <Spacer y="xxl" />
+      <Container flex="row" center="x" color="accentText">
+        <FingerPrintIcon size={iconSize["3xl"]} />
+      </Container>
+      <Spacer y="xxl" />
+      <Button variant="outline" onClick={props.onSignin} fullWidth>
+        I have a Passkey
+      </Button>
+      <Spacer y="sm" />
+      <Button variant="outline" onClick={props.onSignup} fullWidth>
+        Create a Passkey
+      </Button>
+      <Spacer y="xxl" />
+      <Spacer y="lg" />
+    </Container>
+  );
+}
+
+function ErrorState(props: {
+  onTryAgain: () => void;
+  title: string;
+}) {
+  return (
+    <Container animate="fadein">
+      <Spacer y="xxl" />
+      <Container flex="row" center="x">
+        <AccentFailIcon size={iconSize["3xl"]} />
+      </Container>
+      <Spacer y="lg" />
+      <Text center color="primaryText" size="lg">
+        {props.title}
+      </Text>
+      <Spacer y="xl" />
+      <Spacer y="xxl" />
+      <Button variant="accent" fullWidth onClick={props.onTryAgain}>
+        Try Again
+      </Button>
+      <Spacer y="lg" />
+    </Container>
+  );
+}
+
+function LoadingState(props: {
+  title: string;
+  subtitle: string;
+}) {
+  return (
+    <Container animate="fadein">
+      <Spacer y="xxl" />
+      <Container
+        flex="row"
+        center="x"
+        style={{
+          position: "relative",
+        }}
+      >
+        <Spinner size="4xl" color="accentText" />
+        <Container
+          color="accentText"
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+          }}
+        >
+          <FingerPrintIcon size={iconSize.xxl} />
+        </Container>
+      </Container>
+      <Spacer y="xl" />
+      <Text center color="primaryText" size="lg">
+        {props.title}
+      </Text>
+      <Spacer y="md" />
+      <Text multiline center>
+        {props.subtitle}
+      </Text>
+      <Spacer y="xxl" />
+      <Spacer y="xxl" />
     </Container>
   );
 }
