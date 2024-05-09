@@ -3,6 +3,7 @@ import { useMemo } from "react";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { resolveScheme } from "../../../../utils/ipfs.js";
 import { resolveMimeType } from "../../utils/resolveMimeType.js";
+import { resolveArweaveScheme } from "src/utils/arweave.js";
 
 /**
  * @internal
@@ -16,6 +17,9 @@ export function useResolvedMediaType(
   const resolvedUrl = useMemo(() => {
     if (!uri) {
       return "";
+    }
+    if (uri.startsWith("ar://")) {
+      return resolveArweaveScheme({ uri, gatewayUrl });
     }
     if (gatewayUrl) {
       return uri.replace("ipfs://", gatewayUrl);
