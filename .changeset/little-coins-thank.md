@@ -2,40 +2,9 @@
 "thirdweb": minor
 ---
 
-#### Enable "Credit Card" option in Buy Screen in ConnectButton to allow users to buy crypto with credit card
+### "Credit Card" payment method added in thirdweb Pay for Fiat on-ramp
 
-By default - both "Credit Card" and "Crypto" options are enabled
-
-You can also disable "Credit Card" or "Crypto" option in `ConnectButton` as shown below:
-
-```tsx
-<ConnectButton
-  detailsModal={{
-    pay: {
-      buyWithCrypto: false, // disable "Crypto" option
-      buyWithFiat: true, // enable "Credit Card" option only
-    },
-  }}
-/>
-```
-
-You can also enable `testMode` for "Credit Card" option to test the Onramp without doing actual payment
-
-```tsx
-<ConnectButton
-  detailsModal={{
-    pay: {
-      buyWithFiat: {
-        testMode: true,
-      },
-    },
-  }}
-/>
-```
-
-#### Add `PayEmbed` component
-
-`PayEmbed` components allows embedding thirdweb pay UI directly in your app to allow users to buy tokens using other tokens or with credit card.
+### `PayEmbed` component added to embed thirdweb Pay UI
 
 ```tsx
 <PayEmbed
@@ -46,6 +15,36 @@ You can also enable `testMode` for "Credit Card" option to test the Onramp witho
 />
 ```
 
-#### Add Fiat onramp APIs `getBuyWithFiatQuote`, `getBuyWithFiatStatus`, `getBuyWithFiatHistory` and `getPostOnRampQuote` and their hook versions `useBuyWithFiatQuote`, `useBuyWithFiatStatus`, `useBuyWithFiatHistory`
+### thirdweb Pay UI customization available in `PayEmbed` and `ConnectButton`
 
-#### Add `getBuyHistory` and `useBuyHistory` API to get both "Buy with Fiat" and "Buy with Crypto" transaction history in a single list
+`payOptions` prop in `PayEmbed` and `ConnectButton > detailsModal` allows you custimize :
+
+- Enable/Disable payment methods
+- Set default amount for Buy token
+- Set Buy token+chain to be selected by default
+- Set Source token+chain to be selected by default for Crypto payment method
+- Disable editing for Buy token/chain/amount and Source token/chain
+
+```tsx
+<ConnectButton
+  client={client}
+  detailsModal={{
+    payOptions: yourOptions,
+  }}
+/>
+
+<PayEmbed
+  client={client}
+  detailsModal={{
+    payOptions: yourOptions,
+  }}
+/>
+```
+
+### Fiat on-ramp functions and hooks added
+
+- `getBuyWithFiatQuote`, `useBuyWithFiatQuote` to get quote for buying crypto with fiat currency
+- `getBuyWithFiatStatus`, `useBuyWithFiatStatus` to get status of buy with fiat transaction
+- `getBuyWithFiatHistory`, `useBuyWithFiatHistory` to get buy with fiat transaction history
+- `getPostOnRampQuote`, `usePostOnRampQuote` to get quote for buying swapping on-ramp token to destination token after doing on-ramp transaction
+- Add `getBuyHistory` and `useBuyHistory` to get both "Buy with Fiat" and "Buy with Crypto" transaction history in a single list
