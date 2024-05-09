@@ -1,14 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
-import { FORKED_ETHEREUM_CHAIN } from "../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
-import { ADDRESS_ZERO } from "../../constants/addresses.js";
-import { readContract } from "../../transaction/read-contract.js";
-import * as transactionsModule from "../../transaction/read-contract.js";
-import { getContract } from "../contract.js";
-import {
-  fetchPublishedContract,
-  fetchPublishedContractMetadata,
-} from "./publisher.js";
+import { fetchPublishedContractMetadata } from "./publisher.js";
 
 vi.mock("../../contract");
 vi.mock("../../../transaction/read-contract");
