@@ -5,7 +5,6 @@
     "quickfix.biome": "explicit",
     "source.organizeImports.biome": "explicit"
   },
-  "typescript.preferences.importModuleSpecifier": "relative",
   "[typescriptreact]": {
     "editor.defaultFormatter": "biomejs.biome"
   },
@@ -14,5 +13,7 @@
   },
   "[typescript]": {
     "editor.defaultFormatter": "biomejs.biome"
-  }
+  },
+  "typescript.preferences.autoImportFileExcludePatterns": ["/exports"],
+  "typescript.preferences.importModuleSpecifier": "relative"
 }

@@ -1,8 +1,10 @@
 import { useState } from "react";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
-import type { BuyWithFiatStatus } from "../../../../../../../exports/pay.js";
-import { useBuyWithFiatStatus } from "../../../../../../../exports/react.js";
-import type { ValidBuyWithFiatStatus } from "../../../../../../../pay/buyWithFiat/getStatus.js";
+import type {
+  BuyWithFiatStatus,
+  ValidBuyWithFiatStatus,
+} from "../../../../../../../pay/buyWithFiat/getStatus.js";
+import { useBuyWithFiatStatus } from "../../../../../../core/hooks/pay/useBuyWithFiatStatus.js";
 import { Container, Line, ModalHeader } from "../../../../components/basic.js";
 import { OnRampTxDetailsTable } from "../fiat/FiatTxDetailsTable.js";
 import { PostOnRampSwapFlow } from "../fiat/PostOnRampSwapFlow.js";

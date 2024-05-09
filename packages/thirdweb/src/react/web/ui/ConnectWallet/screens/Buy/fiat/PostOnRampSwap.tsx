@@ -1,12 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
-import {
-  type BuyWithCryptoQuote,
-  type BuyWithFiatStatus,
-  getPostOnRampQuote,
-} from "../../../../../../../exports/pay.js";
-import { useActiveAccount } from "../../../../../../../exports/react-native.js";
+import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
+import { getPostOnRampQuote } from "../../../../../../../pay/buyWithFiat/getPostOnRampQuote.js";
+import type { BuyWithFiatStatus } from "../../../../../../../pay/buyWithFiat/getStatus.js";
+import { useActiveAccount } from "../../../../../../core/hooks/wallets/wallet-hooks.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
 import { Container, ModalHeader } from "../../../../components/basic.js";

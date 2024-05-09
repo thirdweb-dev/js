@@ -3,11 +3,11 @@ import {
   type UseQueryResult,
   useQuery,
 } from "@tanstack/react-query";
+import type { BuyWithCryptoQuote } from "../../../../pay/buyWithCrypto/getQuote.js";
 import {
-  type BuyWithCryptoQuote,
   type GetPostOnRampQuoteParams,
   getPostOnRampQuote,
-} from "../../../../exports/pay.js";
+} from "../../../../pay/buyWithFiat/getPostOnRampQuote.js";
 
 /**
  * @internal

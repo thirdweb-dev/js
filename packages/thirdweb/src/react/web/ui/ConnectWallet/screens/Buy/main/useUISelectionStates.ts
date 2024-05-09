@@ -1,9 +1,9 @@
 import { useState } from "react";
+import { polygon } from "../../../../../../../chains/chain-definitions/polygon.js";
 import type { Chain } from "../../../../../../../chains/types.js";
-import { polygon } from "../../../../../../../exports/chains.js";
-import { useActiveWalletChain } from "../../../../../../../exports/react-native.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { toEther } from "../../../../../../../utils/units.js";
+import { useActiveWalletChain } from "../../../../../../core/hooks/wallets/wallet-hooks.js";
 import { useDebouncedValue } from "../../../../hooks/useDebouncedValue.js";
 import type { PayUIOptions } from "../../../ConnectButtonProps.js";
 import { type ERC20OrNativeToken, NATIVE_TOKEN } from "../../nativeToken.js";

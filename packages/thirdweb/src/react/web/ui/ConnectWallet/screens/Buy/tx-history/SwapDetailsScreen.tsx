@@ -1,10 +1,10 @@
 import { ExternalLinkIcon } from "@radix-ui/react-icons";
 import { defineChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
-import type { BuyWithCryptoQuote } from "../../../../../../../exports/pay.js";
-import { useBuyWithCryptoStatus } from "../../../../../../../exports/react-native.js";
+import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
 import type { ValidBuyWithCryptoStatus } from "../../../../../../../pay/buyWithCrypto/getStatus.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
+import { useBuyWithCryptoStatus } from "../../../../../../core/hooks/pay/useBuyWithCryptoStatus.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Container, Line, ModalHeader } from "../../../../components/basic.js";
 import { ButtonLink } from "../../../../components/buttons.js";

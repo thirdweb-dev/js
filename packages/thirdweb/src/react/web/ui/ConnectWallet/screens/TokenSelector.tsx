@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import type { Chain } from "../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
-import type { Account } from "../../../../../exports/wallets.js";
+import type { Account } from "../../../../../wallets/interfaces/wallet.js";
 import { getTokenBalance } from "../../../../../wallets/utils/getTokenBalance.js";
 import { useChainQuery } from "../../../../core/hooks/others/useChainQuery.js";
 import { useTokenInfo } from "../../../../core/hooks/others/useTokenInfo.js";

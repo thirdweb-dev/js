@@ -2,7 +2,7 @@ import { CheckCircledIcon } from "@radix-ui/react-icons";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
-import type { BuyWithCryptoQuote } from "../../../../../../../exports/pay.js";
+import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
 import { useBuyWithCryptoStatus } from "../../../../../../core/hooks/pay/useBuyWithCryptoStatus.js";
 import { invalidateWalletBalance } from "../../../../../../core/providers/invalidateWalletBalance.js";
 import { Spacer } from "../../../../components/Spacer.js";

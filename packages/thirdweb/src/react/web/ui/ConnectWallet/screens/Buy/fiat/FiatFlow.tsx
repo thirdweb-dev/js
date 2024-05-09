@@ -1,9 +1,7 @@
 import { useState } from "react";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
-import type {
-  BuyWithFiatQuote,
-  BuyWithFiatStatus,
-} from "../../../../../../../exports/pay.js";
+import type { BuyWithFiatQuote } from "../../../../../../../pay/buyWithFiat/getQuote.js";
+import type { BuyWithFiatStatus } from "../../../../../../../pay/buyWithFiat/getStatus.js";
 import { isSwapRequiredPostOnramp } from "../../../../../../../pay/buyWithFiat/isSwapRequiredPostOnramp.js";
 import { openOnrampPopup } from "../openOnRamppopup.js";
 import { addPendingTx } from "../swap/pendingSwapTx.js";

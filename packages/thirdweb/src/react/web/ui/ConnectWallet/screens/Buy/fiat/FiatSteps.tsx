@@ -7,10 +7,8 @@ import { useMemo } from "react";
 import { defineChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../../constants/addresses.js";
-import type {
-  BuyWithFiatQuote,
-  BuyWithFiatStatus,
-} from "../../../../../../../exports/pay.js";
+import type { BuyWithFiatQuote } from "../../../../../../../pay/buyWithFiat/getQuote.js";
+import type { BuyWithFiatStatus } from "../../../../../../../pay/buyWithFiat/getStatus.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
 import { Spacer } from "../../../../components/Spacer.js";

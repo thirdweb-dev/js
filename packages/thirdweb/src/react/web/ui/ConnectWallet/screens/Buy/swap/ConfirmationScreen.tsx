@@ -2,15 +2,15 @@ import { CrossCircledIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
-import {
-  useActiveWallet,
-  useActiveWalletChain,
-} from "../../../../../../../exports/react-native.js";
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
 import { waitForReceipt } from "../../../../../../../transaction/actions/wait-for-tx-receipt.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { useSendTransactionCore } from "../../../../../../core/hooks/contract/useSendTransaction.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
+import {
+  useActiveWallet,
+  useActiveWalletChain,
+} from "../../../../../../core/hooks/wallets/wallet-hooks.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";

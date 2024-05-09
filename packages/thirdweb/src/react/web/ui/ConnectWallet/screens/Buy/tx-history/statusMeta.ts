@@ -1,7 +1,5 @@
-import type {
-  BuyWithCryptoStatus,
-  BuyWithFiatStatus,
-} from "../../../../../../../exports/pay.js";
+import type { BuyWithCryptoStatus } from "../../../../../../../pay/buyWithCrypto/getStatus.js";
+import type { BuyWithFiatStatus } from "../../../../../../../pay/buyWithFiat/getStatus.js";
 import type { Theme } from "../../../../design-system/index.js";
 
 export type StatusMeta = {

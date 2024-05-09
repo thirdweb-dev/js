@@ -2,11 +2,11 @@ import { CheckCircledIcon } from "@radix-ui/react-icons";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
+import type { BuyWithFiatQuote } from "../../../../../../../pay/buyWithFiat/getQuote.js";
 import type {
-  BuyWithFiatQuote,
   BuyWithFiatStatus,
-} from "../../../../../../../exports/pay.js";
-import type { ValidBuyWithFiatStatus } from "../../../../../../../pay/buyWithFiat/getStatus.js";
+  ValidBuyWithFiatStatus,
+} from "../../../../../../../pay/buyWithFiat/getStatus.js";
 import { isMobile } from "../../../../../../../utils/web/isMobile.js";
 import { useBuyWithFiatStatus } from "../../../../../../core/hooks/pay/useBuyWithFiatStatus.js";
 import { invalidateWalletBalance } from "../../../../../../core/providers/invalidateWalletBalance.js";

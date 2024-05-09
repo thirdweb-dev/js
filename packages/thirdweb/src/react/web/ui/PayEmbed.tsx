@@ -1,10 +1,10 @@
 import { useState } from "react";
 import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
-import type { SiweAuthOptions } from "../../../exports/react.js";
-import type { SmartWalletOptions } from "../../../exports/wallets.js";
-import type { Wallet } from "../../../exports/wallets.js";
+import type { Wallet } from "../../../wallets/interfaces/wallet.js";
+import type { SmartWalletOptions } from "../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../wallets/types.js";
+import type { SiweAuthOptions } from "../../core/hooks/auth/useSiweAuth.js";
 import { ConnectButton } from "./ConnectWallet/ConnectButton.js";
 import type {
   ConnectButton_connectModalOptions,

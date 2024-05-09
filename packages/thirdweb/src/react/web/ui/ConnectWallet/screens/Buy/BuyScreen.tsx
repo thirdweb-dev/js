@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import type { Chain } from "../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../constants/addresses.js";
-import type { GetBuyWithCryptoQuoteParams } from "../../../../../../exports/pay.js";
+import type { GetBuyWithCryptoQuoteParams } from "../../../../../../pay/buyWithCrypto/getQuote.js";
 import { isSwapRequiredPostOnramp } from "../../../../../../pay/buyWithFiat/isSwapRequiredPostOnramp.js";
 import { formatNumber } from "../../../../../../utils/formatNumber.js";
 import { toEther } from "../../../../../../utils/units.js";

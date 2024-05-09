@@ -2,12 +2,14 @@ import { type UseQueryOptions, useQueries } from "@tanstack/react-query";
 import { useState, useSyncExternalStore } from "react";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import {
+  type ValidBuyWithCryptoStatus,
   getBuyWithCryptoStatus,
+} from "../../../../../../../pay/buyWithCrypto/getStatus.js";
+import {
+  type ValidBuyWithFiatStatus,
   getBuyWithFiatStatus,
-} from "../../../../../../../exports/pay.js";
-import { useBuyHistory } from "../../../../../../../exports/react.js";
-import type { ValidBuyWithCryptoStatus } from "../../../../../../../pay/buyWithCrypto/getStatus.js";
-import type { ValidBuyWithFiatStatus } from "../../../../../../../pay/buyWithFiat/getStatus.js";
+} from "../../../../../../../pay/buyWithFiat/getStatus.js";
+import { useBuyHistory } from "../../../../../../core/hooks/pay/useBuyHistory.js";
 import { useActiveAccount } from "../../../../../../core/hooks/wallets/wallet-hooks.js";
 import { pendingTransactions } from "../swap/pendingSwapTx.js";
 

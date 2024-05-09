@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
-import type { BuyWithFiatStatus } from "../../../../../../../exports/pay.js";
+import type { BuyWithFiatStatus } from "../../../../../../../pay/buyWithFiat/getStatus.js";
 import { type BuyWithFiatPartialQuote, FiatSteps } from "./FiatSteps.js";
 import { PostOnRampSwap } from "./PostOnRampSwap.js";
 
