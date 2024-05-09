@@ -1,10 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import type { Chain } from "../../../../chains/types.js";
-import {
-  getChainDecimals,
-  getChainNativeCurrencyName,
-  getChainSymbol,
-} from "../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getContract } from "../../../../contract/contract.js";
 
@@ -26,7 +21,7 @@ export type GetTokenInfoResult = {
 /**
  * @internal
  */
-export function useTokenInfo(options: Partial<GetTokenInfoOptions>) {
+export function useTokenInfo(options: GetTokenInfoOptions) {
   const { chain, tokenAddress, client } = options;
   return useQuery({
     queryKey: ["tokenInfo", chain?.id || -1, { tokenAddress }] as const,
@@ -49,6 +44,9 @@ export function useTokenInfo(options: Partial<GetTokenInfoOptions>) {
 
         return result;
       }
+
+      const { getChainDecimals, getChainNativeCurrencyName, getChainSymbol } =
+        await import("../../../../chains/utils.js");
 
       const [nativeSymbol, nativeDecimals, nativeName] = await Promise.all([
         getChainSymbol(chain),

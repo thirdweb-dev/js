@@ -1,3 +1,4 @@
+import { getAddress } from "../../utils/address.js";
 import type { BuyWithFiatQuote } from "./getQuote.js";
 
 /**
@@ -15,8 +16,8 @@ export function isSwapRequiredPostOnramp(
     buyWithFiatQuote.onRampToken.token.chainId;
 
   const sameToken =
-    buyWithFiatQuote.toToken.tokenAddress ===
-    buyWithFiatQuote.onRampToken.token.tokenAddress;
+    getAddress(buyWithFiatQuote.toToken.tokenAddress) ===
+    getAddress(buyWithFiatQuote.onRampToken.token.tokenAddress);
 
   return !(sameChain && sameToken);
 }

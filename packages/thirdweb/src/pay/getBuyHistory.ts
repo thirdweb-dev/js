@@ -6,7 +6,6 @@ import { getPayBuyHistoryEndpoint } from "./utils/definitions.js";
 /**
  * The parameters for [`getBuyHistory`](https://portal.thirdweb.com/references/typescript/v5/getBuyHistory) function
  * It takes the wallet history address and optional cursor and page size for paginated results.
- * @pay
  */
 export type BuyHistoryParams = {
   /**
@@ -49,7 +48,7 @@ export type BuyHistoryData = {
 };
 
 /**
- * Gets the History of purchases for a given wallet address - This includes both "buy with crypto" and "buy with fiat" transactions
+ * Gets the "Buy with Cryto" and "Buy with Fiat" transaction history of given wallet address
  * @param params Object of type [`BuyHistoryParams`](https://portal.thirdweb.com/references/typescript/v5/BuyHistoryParams)
  * @example
  *
@@ -58,17 +57,14 @@ export type BuyHistoryData = {
  * import { BuyWithCryptoHistoryData } from "thirdweb/pay";
  *
  * const client = createThirdwebClient({ clientId: "..." });
- * const walletAddress = "0x...";
- * const params = {
- *  client,
- *  walletAddress,
- * };
  *
  * // grabs the history of purchase transactions for the wallet address
- * const status = await getBuyHistory(params)
+ * const status = await getBuyHistory({
+ *  client,
+ *  walletAddress: "0x...",
+ * })
  * ```
  * @returns Object of type [`BuyHistoryData`](https://portal.thirdweb.com/references/typescript/v5/BuyHistoryData)
- * @pay
  */
 export async function getBuyHistory(
   params: BuyHistoryParams,

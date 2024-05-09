@@ -35,7 +35,6 @@ export type BuyHistoryQueryOptions = Omit<
  *  return <div> ... </div>
  * }
  * ```
- * @pay
  */
 export function useBuyHistory(
   params?: BuyHistoryParams,
