@@ -38,7 +38,7 @@ export const EngineInstancesList = ({
             maxW={650}
           />
           <Heading size="title.lg" as="h1">
-            Your scalable web3 back-end server.
+            Your scalable web3 backend server
           </Heading>
 
           <UnorderedList color="gray.600">

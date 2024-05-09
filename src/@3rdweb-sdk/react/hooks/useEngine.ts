@@ -7,6 +7,8 @@ import { useAddress, useChainId } from "@thirdweb-dev/react";
 import { THIRDWEB_API_HOST } from "constants/urls";
 import { useLoggedInUser } from "./useLoggedInUser";
 
+export type EngineTier = "STARTER" | "PREMIUM" | "ENTERPRISE";
+
 // Engine instances
 export type EngineInstance = {
   id: string;
