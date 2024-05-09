@@ -49,10 +49,6 @@ export function InAppWalletPassKeyLogin(props: {
       });
   }, [client]);
 
-  console.log({
-    screen,
-  });
-
   return (
     <Container animate="fadein" fullHeight flex="column">
       <Container p="lg">
