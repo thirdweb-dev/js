@@ -16,9 +16,11 @@ export async function predictAddress(
   if (options.overrides?.predictAddress) {
     return options.overrides.predictAddress(factoryContract);
   }
-  const accountAddress =
-    options.overrides?.accountAddress || options.personalAccountAddress;
-  if (!accountAddress) {
+  if (options.overrides?.accountAddress) {
+    return options.overrides.accountAddress;
+  }
+  const adminAddress = options.personalAccountAddress;
+  if (!adminAddress) {
     throw new Error(
       "Account address is required to predict the smart wallet address.",
     );
@@ -27,7 +29,7 @@ export async function predictAddress(
   return readContract({
     contract: factoryContract,
     method: "function getAddress(address, bytes) returns (address)",
-    params: [accountAddress, extraData],
+    params: [adminAddress, extraData],
   });
 }
 
@@ -46,7 +48,7 @@ export function prepareCreateAccount(args: {
     contract: factoryContract,
     method: "function createAccount(address, bytes) returns (address)",
     params: [
-      options.overrides?.accountAddress || options.personalAccount.address,
+      options.personalAccount.address,
       stringToHex(options.overrides?.accountSalt ?? ""),
     ],
   });

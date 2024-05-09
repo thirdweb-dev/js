@@ -1,4 +1,4 @@
-import type { InAppWalletSocialAuth } from "../../../../wallets/in-app/core/wallet/index.js";
+import type { InAppWalletSocialAuth } from "../../../../wallets/in-app/core/wallet/types.js";
 import type { Account } from "../../../../wallets/interfaces/wallet.js";
 
 export type InAppWalletSelectUIState =
