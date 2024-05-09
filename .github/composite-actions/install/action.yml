@@ -20,6 +20,8 @@ runs:
         check-latest: true
         registry-url: "https://registry.npmjs.org"
         cache: "pnpm"
+    - name: Install node-gyp globally
+      run: pnpm install -g node-gyp
 
     - name: Install dependencies
       shell: bash
