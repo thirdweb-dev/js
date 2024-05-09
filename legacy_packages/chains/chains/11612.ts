@@ -12,6 +12,12 @@ export default {
   "faucets": [
     "https://faucet.sardisnetwork.com"
   ],
+  "icon": {
+    "url": "ipfs://QmdR9QJjQEh1mBnf2WbJfehverxiP5RDPWMtEECbDP2rc3",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "infoURL": "https://mysardis.com",
   "name": "Sardis Testnet",
   "nativeCurrency": {
