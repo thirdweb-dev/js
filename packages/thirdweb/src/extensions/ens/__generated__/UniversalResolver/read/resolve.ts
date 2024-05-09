@@ -118,6 +118,7 @@ export function decodeResolveResult(result: Hex) {
  * import { resolve } from "thirdweb/extensions/ens";
  *
  * const result = await resolve({
+ *  contract,
  *  name: ...,
  *  data: ...,
  * });

@@ -108,6 +108,7 @@ export function decodeUriResult(result: Hex) {
  * import { uri } from "thirdweb/extensions/erc1155";
  *
  * const result = await uri({
+ *  contract,
  *  tokenId: ...,
  * });
  *

@@ -59,7 +59,9 @@ export function decodeOwnerResult(result: Hex) {
  * ```ts
  * import { owner } from "thirdweb/extensions/airdrop";
  *
- * const result = await owner();
+ * const result = await owner({
+ *  contract,
+ * });
  *
  * ```
  */

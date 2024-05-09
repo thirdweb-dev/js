@@ -117,6 +117,7 @@ export function decodeSupportsInterfaceResult(result: Hex) {
  * import { supportsInterface } from "thirdweb/extensions/erc165";
  *
  * const result = await supportsInterface({
+ *  contract,
  *  interfaceId: ...,
  * });
  *

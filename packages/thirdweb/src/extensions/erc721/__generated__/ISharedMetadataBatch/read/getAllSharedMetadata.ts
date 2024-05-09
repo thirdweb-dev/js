@@ -88,7 +88,9 @@ export function decodeGetAllSharedMetadataResult(result: Hex) {
  * ```ts
  * import { getAllSharedMetadata } from "thirdweb/extensions/erc721";
  *
- * const result = await getAllSharedMetadata();
+ * const result = await getAllSharedMetadata({
+ *  contract,
+ * });
  *
  * ```
  */

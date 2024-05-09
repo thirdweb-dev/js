@@ -172,6 +172,7 @@ export function decodeGetAuctionResult(result: Hex) {
  * import { getAuction } from "thirdweb/extensions/marketplace";
  *
  * const result = await getAuction({
+ *  contract,
  *  auctionId: ...,
  * });
  *

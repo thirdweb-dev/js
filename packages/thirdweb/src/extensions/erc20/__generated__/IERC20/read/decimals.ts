@@ -57,7 +57,9 @@ export function decodeDecimalsResult(result: Hex) {
  * ```ts
  * import { decimals } from "thirdweb/extensions/erc20";
  *
- * const result = await decimals();
+ * const result = await decimals({
+ *  contract,
+ * });
  *
  * ```
  */

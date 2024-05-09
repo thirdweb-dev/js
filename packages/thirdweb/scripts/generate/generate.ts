@@ -437,13 +437,14 @@ export function decode${uppercaseFirstLetter(f.name)}Result(result: Hex) {
  * \`\`\`ts
  * import { ${f.name} } from "thirdweb/extensions/${extensionName}";
  * 
- * const result = await ${f.name}(${
+ * const result = await ${f.name}({
+ *  contract, ${
    f.inputs.length > 0
-     ? `{\n * ${f.inputs
+     ? `\n * ${f.inputs
          .map((x) => ` ${removeLeadingUnderscore(x.name)}: ...,`)
-         .join("\n * ")}\n * }`
-     : ""
- });
+         .join("\n * ")}\n`
+     : "\n"
+ } * });
  * 
  * \`\`\`
  */

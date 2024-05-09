@@ -57,7 +57,9 @@ export function decodeKeyGatewayResult(result: Hex) {
  * ```ts
  * import { keyGateway } from "thirdweb/extensions/farcaster";
  *
- * const result = await keyGateway();
+ * const result = await keyGateway({
+ *  contract,
+ * });
  *
  * ```
  */

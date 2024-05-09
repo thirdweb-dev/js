@@ -59,7 +59,9 @@ export function decodeDeprecationTimestampResult(result: Hex) {
  * ```ts
  * import { deprecationTimestamp } from "thirdweb/extensions/farcaster";
  *
- * const result = await deprecationTimestamp();
+ * const result = await deprecationTimestamp({
+ *  contract,
+ * });
  *
  * ```
  */

@@ -94,7 +94,9 @@ export function decodeGetAllExtensionsResult(result: Hex) {
  * ```ts
  * import { getAllExtensions } from "thirdweb/extensions/erc7504";
  *
- * const result = await getAllExtensions();
+ * const result = await getAllExtensions({
+ *  contract,
+ * });
  *
  * ```
  */

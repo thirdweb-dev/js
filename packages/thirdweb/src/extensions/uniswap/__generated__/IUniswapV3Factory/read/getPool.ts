@@ -127,6 +127,7 @@ export function decodeGetPoolResult(result: Hex) {
  * import { getPool } from "thirdweb/extensions/uniswap";
  *
  * const result = await getPool({
+ *  contract,
  *  tokenA: ...,
  *  tokenB: ...,
  *  fee: ...,

@@ -115,6 +115,7 @@ export function decodeHasRoleResult(result: Hex) {
  * import { hasRole } from "thirdweb/extensions/permissions";
  *
  * const result = await hasRole({
+ *  contract,
  *  role: ...,
  *  account: ...,
  * });

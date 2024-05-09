@@ -62,7 +62,9 @@ export function decodeGetDefaultRoyaltyInfoResult(result: Hex) {
  * ```ts
  * import { getDefaultRoyaltyInfo } from "thirdweb/extensions/common";
  *
- * const result = await getDefaultRoyaltyInfo();
+ * const result = await getDefaultRoyaltyInfo({
+ *  contract,
+ * });
  *
  * ```
  */

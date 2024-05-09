@@ -108,6 +108,7 @@ export function decodeGetVotesResult(result: Hex) {
  * import { getVotes } from "thirdweb/extensions/erc20";
  *
  * const result = await getVotes({
+ *  contract,
  *  account: ...,
  * });
  *

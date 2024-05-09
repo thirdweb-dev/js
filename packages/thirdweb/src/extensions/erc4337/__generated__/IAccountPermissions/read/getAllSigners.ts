@@ -82,7 +82,9 @@ export function decodeGetAllSignersResult(result: Hex) {
  * ```ts
  * import { getAllSigners } from "thirdweb/extensions/erc4337";
  *
- * const result = await getAllSigners();
+ * const result = await getAllSigners({
+ *  contract,
+ * });
  *
  * ```
  */

@@ -115,6 +115,7 @@ export function decodeGetStakeInfoResult(result: Hex) {
  * import { getStakeInfo } from "thirdweb/extensions/erc721";
  *
  * const result = await getStakeInfo({
+ *  contract,
  *  staker: ...,
  * });
  *

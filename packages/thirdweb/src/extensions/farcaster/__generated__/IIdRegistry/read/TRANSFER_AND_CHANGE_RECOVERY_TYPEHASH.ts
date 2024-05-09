@@ -59,7 +59,9 @@ export function decodeTRANSFER_AND_CHANGE_RECOVERY_TYPEHASHResult(result: Hex) {
  * ```ts
  * import { TRANSFER_AND_CHANGE_RECOVERY_TYPEHASH } from "thirdweb/extensions/farcaster";
  *
- * const result = await TRANSFER_AND_CHANGE_RECOVERY_TYPEHASH();
+ * const result = await TRANSFER_AND_CHANGE_RECOVERY_TYPEHASH({
+ *  contract,
+ * });
  *
  * ```
  */

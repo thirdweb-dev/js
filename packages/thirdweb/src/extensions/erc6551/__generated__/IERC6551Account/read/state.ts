@@ -57,7 +57,9 @@ export function decodeStateResult(result: Hex) {
  * ```ts
  * import { state } from "thirdweb/extensions/erc6551";
  *
- * const result = await state();
+ * const result = await state({
+ *  contract,
+ * });
  *
  * ```
  */
