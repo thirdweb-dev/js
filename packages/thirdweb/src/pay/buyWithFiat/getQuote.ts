@@ -32,7 +32,7 @@ export type GetBuyWithFiatQuoteParams = {
   /**
    * Symbol of the fiat currency to buy the token with.
    *
-   * For "STRIPE" provider - only "USD" is supported.
+   * Currently, only `USD` is supported.
    */
   fromCurrencySymbol: "USD";
 
@@ -158,20 +158,19 @@ export type BuyWithFiatQuote = {
  * @returns Object of type [`BuyWithFiatQuote`](https://portal.thirdweb.com/references/typescript/v5/BuyWithFiatQuote) which contains the information about the quote such as processing fees, estimated time, converted token amounts, etc.
  * @example
  *
- * Assume that you want to get a quote for buying  10 USDC on polygon chain (chainId: 137) with USD fiat currency using the Stripe provider. To do this, you can use the following code:
+ * Get a quote for buying 10 USDC on polygon chain (chainId: 137) with USD fiat currency:
  *
  * ```ts
  * import { getBuyWithFiatQuote } from "thirdweb/pay";
  *
  * const quote = await getBuyWithFiatQuote({
  *  client: client, // thirdweb client
- *  provider: "STRIPE", // on-ramp provider
  *  fromCurrencySymbol: "USD", // fiat currency symbol
  *  toChainId: 137, // polygon chain id
  *  toAmount: "10", // amount of USDC to buy
  *  toTokenAddress: "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359" // USDC token address in polygon chain
  *  toAddress: "0x...", // user's wallet address
- *  isTestMode: false, // whether to use stripe in test mode for testing purpose (defaults to false)
+ *  isTestMode: false, // whether to use onramp in test mode for testing purpose (defaults to false)
  * });
  *
  * window.open(quote.onRampLink, "_blank");

@@ -19,7 +19,7 @@ You can also disable "Credit Card" or "Crypto" option in `ConnectButton` as show
 />
 ```
 
-You can also enable `testMode` for "Credit Card" option to test the Stripe onramp without doing actual payment
+You can also enable `testMode` for "Credit Card" option to test the Onramp without doing actual payment
 
 ```tsx
 <ConnectButton

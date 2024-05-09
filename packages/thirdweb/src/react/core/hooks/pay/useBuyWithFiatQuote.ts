@@ -41,7 +41,6 @@ export type BuyWithFiatQuoteQueryOptions = Omit<
  * function Example() {
  *   const quote = useBuyWithFiatQuote({
  *     client: client, // thirdweb client
- *     provider: "STRIPE", // on-ramp provider
  *     fromCurrencySymbol: "USD", // fiat currency symbol
  *     toChainId: base.id, // base chain id
  *     toAmount: "10", // amount of token to buy

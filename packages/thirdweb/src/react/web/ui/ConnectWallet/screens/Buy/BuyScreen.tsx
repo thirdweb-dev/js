@@ -486,7 +486,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
                 closeDrawer={closeDrawer}
                 selectedCurrency={selectedCurrency}
                 showCurrencySelector={() => {
-                  // currently disabled for Stripe
+                  // currently disabled because we are only using Stripe
                 }}
                 account={account}
               />
