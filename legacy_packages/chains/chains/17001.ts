@@ -34,8 +34,9 @@ export default {
     "https://17001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.holesky.redstone.xyz"
   ],
-  "shortName": "redstone",
+  "shortName": "redstone-holesky",
   "slip44": 1,
   "slug": "redstone-holesky-testnet",
+  "status": "deprecated",
   "testnet": true
 } as const satisfies Chain;

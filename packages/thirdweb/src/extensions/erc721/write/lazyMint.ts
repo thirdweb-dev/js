@@ -37,15 +37,15 @@ export type LazyMintParams = {
  * ```ts
  * import { lazyMint } from "thirdweb/extensions/erc721";
  *
- * const tx = await lazyMint({
- * contract,
- * nfts: [
- *    {
- *      name: "My NFT",
- *      description: "This is my NFT",
- *      image: "https://example.com/image.png",
- *    },
- *  ],
+ * const tx = lazyMint({
+ *   contract,
+ *   nfts: [
+ *     {
+ *       name: "My NFT",
+ *       description: "This is my NFT",
+ *       image: "https://example.com/image.png",
+ *     },
+ *   ],
  * });
  * ```
  */

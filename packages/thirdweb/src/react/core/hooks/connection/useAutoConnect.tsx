@@ -1,3 +1,4 @@
+"use client";
 import { useEffect } from "react";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";

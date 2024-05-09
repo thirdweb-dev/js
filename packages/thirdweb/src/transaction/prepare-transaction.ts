@@ -17,6 +17,7 @@ export type StaticPrepareTransactionOptions = {
   maxPriorityFeePerGas?: bigint | undefined;
   maxFeePerBlobGas?: bigint | undefined;
   nonce?: number | undefined;
+  extraGas?: bigint | undefined;
   // tw specific
   chain: Chain;
   client: ThirdwebClient;

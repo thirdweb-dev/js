@@ -15,7 +15,9 @@ export default {
       }
     }
   ],
-  "faucets": [],
+  "faucets": [
+    "https://aura.faucetme.pro"
+  ],
   "icon": {
     "url": "ipfs://QmbpQPpjKy1bkDmuzCSSE9iFTUK37AiWYgJbgN3Fr7MWYq",
     "width": 512,

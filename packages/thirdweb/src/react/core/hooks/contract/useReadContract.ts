@@ -52,8 +52,8 @@ export function useReadContract<
  * @example
  * ```jsx
  * import { useReadContract } from "thirdweb/react";
- * import { totalSupply } form "thirdweb/extensions/erc20"
- * const { data, isLoading } = useReadContract(totalSupply);
+ * import { getOwnedNFTs } form "thirdweb/extensions/erc721"
+ * const { data, isLoading } = useReadContract(getOwnedNFTs, { contract, owner: address });
  * ```
  */
 export function useReadContract<
