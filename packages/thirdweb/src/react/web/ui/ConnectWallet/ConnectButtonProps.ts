@@ -177,9 +177,11 @@ export type ConnectButton_detailsModalOptions = {
   footer?: (props: { close: () => void }) => JSX.Element;
 
   /**
-   * Configure options for thirdweb Pay to allow users to buy tokens using fiat or crypto
+   * Configure options for thirdweb Pay.
+   *
+   * thirdweb Pay allows users to buy tokens using crypto or fiat currency.
    */
-  pay?: PayUIOptions;
+  payOptions?: PayUIOptions;
 };
 
 /**

@@ -699,7 +699,7 @@ export const ConnectedWalletDetails: React.FC<{
         supportedTokens={props.supportedTokens}
         onViewPendingTx={() => setScreen("pending-tx")}
         connectLocale={locale}
-        payOptions={{ ...props.detailsModal?.pay }}
+        payOptions={props.detailsModal?.payOptions || {}}
         theme={typeof props.theme === "string" ? props.theme : props.theme.type}
         onDone={() => {
           setIsOpen(false);
