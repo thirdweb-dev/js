@@ -81,7 +81,14 @@ export function InAppWalletPassKeyLogin(props: {
           )}
 
           {screen === "login" && (
-            <LoginScreen wallet={wallet} client={client} done={done} />
+            <LoginScreen
+              wallet={wallet}
+              client={client}
+              done={done}
+              onCreate={() => {
+                setScreen("signup");
+              }}
+            />
           )}
 
           {screen === "signup" && (
@@ -97,6 +104,7 @@ function LoginScreen(props: {
   wallet: Wallet<"inApp">;
   done: () => void;
   client: ThirdwebClient;
+  onCreate: () => void;
 }) {
   const { wallet, done, client } = props;
   const [status, setStatus] = useState<"loading" | "error">("loading");
@@ -135,7 +143,16 @@ function LoginScreen(props: {
   }
 
   if (status === "error") {
-    return <ErrorState onTryAgain={login} title="Failed to Login" />;
+    return (
+      <>
+        <ErrorState onTryAgain={login} title="Failed to Login" />
+        <Spacer y="sm" />
+        <Button variant="outline" fullWidth onClick={props.onCreate}>
+          Create a new Passkey
+        </Button>
+        <Spacer y="lg" />
+      </>
+    );
   }
 
   return null;
@@ -183,7 +200,12 @@ function SignupScreen(props: {
   }
 
   if (status === "error") {
-    return <ErrorState onTryAgain={signup} title="Failed to create passkey" />;
+    return (
+      <>
+        <ErrorState onTryAgain={signup} title="Failed to create passkey" />
+        <Spacer y="lg" />
+      </>
+    );
   }
 
   return null;
@@ -197,17 +219,20 @@ function SelectLoginMethod(props: {
     <Container>
       <Spacer y="xxl" />
       <Container flex="row" center="x" color="accentText">
-        <FingerPrintIcon size={iconSize["3xl"]} />
+        <FingerPrintIcon size={iconSize["4xl"]} />
       </Container>
+      <Spacer y="xl" />
       <Spacer y="xxl" />
+
+      <Button variant="accent" onClick={props.onSignup} fullWidth>
+        Create a Passkey
+      </Button>
+
+      <Spacer y="sm" />
       <Button variant="outline" onClick={props.onSignin} fullWidth>
         I have a Passkey
       </Button>
-      <Spacer y="sm" />
-      <Button variant="outline" onClick={props.onSignup} fullWidth>
-        Create a Passkey
-      </Button>
-      <Spacer y="xxl" />
+
       <Spacer y="lg" />
     </Container>
   );
@@ -232,7 +257,6 @@ function ErrorState(props: {
       <Button variant="accent" fullWidth onClick={props.onTryAgain}>
         Try Again
       </Button>
-      <Spacer y="lg" />
     </Container>
   );
 }
