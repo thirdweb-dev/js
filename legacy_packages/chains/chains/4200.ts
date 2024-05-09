@@ -33,7 +33,8 @@ export default {
   "rpc": [
     "https://4200.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.merlinchain.io",
-    "https://merlin-mainnet-enterprise.unifra.io"
+    "https://merlin-mainnet-enterprise.unifra.io",
+    "https://rpc-merlin.rockx.com"
   ],
   "shortName": "Merlin-Mainnet",
   "slug": "merlin",

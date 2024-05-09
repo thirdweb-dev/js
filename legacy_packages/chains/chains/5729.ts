@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmW44FPm3CMM2JDs8BQxLNvUtykkUtrGkQkQsUDJSi3Gmp",
+    "width": 350,
+    "height": 84,
+    "format": "png"
+  },
   "infoURL": "https://hika.network/",
   "name": "Hika Network Testnet",
   "nativeCurrency": {
