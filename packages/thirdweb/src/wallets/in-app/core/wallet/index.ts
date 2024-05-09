@@ -22,9 +22,9 @@ export async function connectInAppWallet(
 
   if (createOptions?.smartAccount) {
     return convertToSmartAccount({
-      chain: options.chain || createOptions.smartAccount.chain,
       client: options.client,
       authAccount,
+      smartAccountOptions: createOptions.smartAccount,
     });
   }
 
@@ -48,9 +48,9 @@ export async function autoConnectInAppWallet(
 
   if (createOptions?.smartAccount) {
     return convertToSmartAccount({
-      chain: options.chain || createOptions.smartAccount.chain,
       client: options.client,
       authAccount,
+      smartAccountOptions: createOptions.smartAccount,
     });
   }
 
@@ -58,26 +58,22 @@ export async function autoConnectInAppWallet(
 }
 
 async function convertToSmartAccount(options: {
-  chain: Chain;
   client: ThirdwebClient;
   authAccount: Account;
+  smartAccountOptions: CreateWalletArgs<"smart">[1];
 }) {
   const [{ smartWallet }, { connectSmartWallet }] = await Promise.all([
     import("../../../create-wallet.js"),
     import("../../../smart/index.js"),
   ]);
 
-  const createOptions = {
-    chain: options.chain,
-    sponsorGas: true,
-  };
-  const sa = smartWallet(createOptions);
+  const sa = smartWallet(options.smartAccountOptions);
   return connectSmartWallet(
     sa,
     {
       client: options.client,
       personalAccount: options.authAccount,
     },
-    createOptions,
+    options.smartAccountOptions,
   );
 }
