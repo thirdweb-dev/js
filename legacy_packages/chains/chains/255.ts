@@ -44,7 +44,8 @@ export default {
   "rpc": [
     "https://255.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.kroma.network",
-    "https://1rpc.io/kroma"
+    "https://1rpc.io/kroma",
+    "https://rpc-kroma.rockx.com"
   ],
   "shortName": "kroma",
   "slug": "kroma",
