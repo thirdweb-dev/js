@@ -141,3 +141,8 @@ export { resolvePromisedValue } from "../utils/promise/resolve-promised-value.js
 // json
 // ------------------------------------------------
 export { stringify } from "../utils/json.js";
+
+// ------------------------------------------------
+// values
+// ------------------------------------------------
+export { maxUint256 } from "viem";

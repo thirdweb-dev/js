@@ -1,12 +1,13 @@
 import { join } from "node:path";
 // @ts-expect-error - no types
 import codspeedPlugin from "@codspeed/vitest-plugin";
+import react from "@vitejs/plugin-react";
 import { defineConfig } from "vitest/config";
 
 const plugins = process.env.CI ? [codspeedPlugin()] : [];
 
 export default defineConfig({
-  plugins,
+  plugins: [...plugins, react()],
   test: {
     alias: {
       "~test": join(__dirname, "./src"),
@@ -19,6 +20,7 @@ export default defineConfig({
       exclude: [
         // test files do not count
         "**/*.test.ts",
+        "**/*.test.tsx",
         // benchmark files do not count
         "**/*.bench.ts",
         // anything inside /test/ does not count
@@ -30,9 +32,13 @@ export default defineConfig({
       ],
       include: ["src/**"],
     },
-    environment: "node",
-    include: ["src/**/*.test.ts"],
-    // setupFiles: [join(__dirname, "./setup.ts")],
+    environmentMatchGlobs: [
+      ["src/react/**/*.test.tsx", "jsdom"],
+      ["src/**/*.test.ts", "node"],
+      ["src/**/*", "node"], // all other files use node
+    ],
+    include: ["src/**/*.test.{ts,tsx}"],
+    setupFiles: [join(__dirname, "./reactSetup.ts")],
     globalSetup: [join(__dirname, "./globalSetup.ts")],
     testTimeout: 60_000,
     retry: 0,

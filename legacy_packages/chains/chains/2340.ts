@@ -25,7 +25,7 @@ export default {
     "format": "png"
   },
   "infoURL": "https://atleta.network",
-  "name": "Atleta Testnet",
+  "name": "Atleta Olympia",
   "nativeCurrency": {
     "name": "Atla",
     "symbol": "ATLA",
@@ -33,10 +33,12 @@ export default {
   },
   "networkId": 2340,
   "rpc": [
-    "wss://testnet-rpc.atleta.network:9944"
+    "https://2340.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "wss://testnet-rpc.atleta.network:9944",
+    "https://testnet-rpc.atleta.network:9944"
   ],
   "shortName": "atla",
   "slip44": 1,
-  "slug": "atleta-testnet",
+  "slug": "atleta-olympia",
   "testnet": true
 } as const satisfies Chain;

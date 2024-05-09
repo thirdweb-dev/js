@@ -167,6 +167,9 @@ export function createListing(
           endTimestamp,
           reserved: options.isReservedListing ?? false,
         },
+        overrides: {
+          extraGas: 50_000n, // add extra gas to account for router call
+        },
       } as const;
     },
   });

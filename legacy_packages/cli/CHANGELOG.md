@@ -1,5 +1,33 @@
 # thirdweb
 
+## 0.13.82
+
+### Patch Changes
+
+- [#2934](https://github.com/thirdweb-dev/js/pull/2934) [`bdb919f`](https://github.com/thirdweb-dev/js/commit/bdb919f32ae459608b29dd1e4d511afc226470c6) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Updates the CLI `create` command to use the v5 templates for Next.js and Vite
+
+  Other templates will be updated in the future from within their existing repositories
+
+  Removes React Native starters from the CLI menu
+  Removes JS template support from the CLI
+
+- [#2945](https://github.com/thirdweb-dev/js/pull/2945) [`b64c8e7`](https://github.com/thirdweb-dev/js/commit/b64c8e7b6efaf09be2afc73b92624c5576a4b24e) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Removes deprecated template options from the CLI, specifically PWA Vite, Express, and React
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@4.0.76
+  - @thirdweb-dev/wallets@2.5.16
+  - @thirdweb-dev/auth@4.1.74
+
+## 0.13.81
+
+### Patch Changes
+
+- Updated dependencies [[`83d1d6f`](https://github.com/thirdweb-dev/js/commit/83d1d6f397982dfda87a835743a2ef1fecd5d919)]:
+  - @thirdweb-dev/chains@0.1.105
+  - @thirdweb-dev/sdk@4.0.75
+  - @thirdweb-dev/wallets@2.5.15
+  - @thirdweb-dev/auth@4.1.73
+
 ## 0.13.80
 
 ### Patch Changes

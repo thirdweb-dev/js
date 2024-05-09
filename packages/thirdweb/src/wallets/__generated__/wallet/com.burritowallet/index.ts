@@ -3,7 +3,7 @@
 
 export const wallet = {
   id: "com.burritowallet",
-  name: "Burrito Wallet",
+  name: "Burrito",
   homepage: "https://burritowallet.com",
   image_id: "7eec7187-3f48-4fda-53bb-b0ad55749a00",
   app: {

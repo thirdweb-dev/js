@@ -11,6 +11,7 @@ on:
     paths:
       - "packages/**"
       - "package.json"
+      - ".github/**"
   # trigger on merge group as well (merge queue)
   merge_group:
     types: [checks_requested]

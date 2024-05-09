@@ -59,6 +59,7 @@ export function buyFromListing(
           value: isNativeTokenAddress(listing.currencyContractAddress)
             ? listing.pricePerToken * options.quantity
             : 0n,
+          extraGas: 50_000n, // add extra gas to account for router call
         },
       };
     },

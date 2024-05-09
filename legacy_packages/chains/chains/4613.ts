@@ -19,9 +19,9 @@ export default {
     }
   ],
   "icon": {
-    "url": "ipfs://bafkreih6nnkha6t3oiy6qkqpgyb46p3ddg5nff5ayizpum2ljexlc3gc54",
-    "width": 128,
-    "height": 128,
+    "url": "ipfs://bafkreidyrvphfojaf7iev57trxk3sxbo6qikg26pdy66ke4n22dgm52wwa",
+    "width": 320,
+    "height": 320,
     "format": "png"
   },
   "infoURL": "https://www.verylabs.io/",

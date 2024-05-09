@@ -4,6 +4,11 @@ export default {
   "chainId": 37714555429,
   "explorers": [
     {
+      "name": "Blockscout",
+      "url": "https://testnet-explorer-v2.xai-chain.net",
+      "standard": "EIP3091"
+    },
+    {
       "name": "blockscout",
       "url": "https://testnet-explorer-v2.xai-chain.net/",
       "standard": "EIP3091"

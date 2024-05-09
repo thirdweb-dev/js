@@ -1,3 +1,4 @@
+"use client";
 import styled from "@emotion/styled";
 import { useEffect, useRef } from "react";
 import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
@@ -95,13 +96,11 @@ export function OTPInput(props: {
               }
             }}
             onChange={(e) => {
-              let value = e.target.value;
+              const value = e.target.value;
 
               if (value.length > 1) {
-                const lastValue = value[value.length - 1];
-                if (lastValue) {
-                  value = lastValue;
-                }
+                setOTP(value.split(""));
+                return;
               }
 
               if (!/\d/.test(value) && value !== "") {

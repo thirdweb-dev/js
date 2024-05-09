@@ -1,3 +1,4 @@
+"use client";
 import styled from "@emotion/styled";
 import {
   ChevronRightIcon,
@@ -144,10 +145,6 @@ export const ConnectedWalletDetails: React.FC<{
       }),
   });
 
-  // const [overrideWalletIconUrl, setOverrideWalletIconUrl] = useState<
-  //   string | undefined
-  // >(undefined);
-
   // const personalAccount = (activeWallet as WalletWithPersonalAccount)
   //   ?.personalAccount;
 
@@ -160,7 +157,6 @@ export const ConnectedWalletDetails: React.FC<{
   // const isActuallyMetaMask =
   //   activeWallet && activeWallet instanceof MetaMaskWallet;
 
-  // const shortAddress = "<address>";
   const shortAddress = activeAccount?.address
     ? shortenString(activeAccount.address, false)
     : "";
@@ -182,17 +178,21 @@ export const ConnectedWalletDetails: React.FC<{
   const isNetworkMismatch =
     props.chain && walletChain && walletChain.id !== props.chain.id;
 
+  // Note: Must wrap the `SwitchNetworkButton` in a fragment to avoid warning from radix-ui
+  // Note: Must wrap the `detailsButton.render` in an container element
   const trigger = props.detailsButton?.render ? (
     <div>
       <props.detailsButton.render />
     </div>
   ) : props.chain && isNetworkMismatch ? (
-    <SwitchNetworkButton
-      style={props.switchButton?.style}
-      className={props.switchButton?.className}
-      switchNetworkBtnTitle={props.switchButton?.label}
-      targetChain={props.chain}
-    />
+    <>
+      <SwitchNetworkButton
+        style={props.switchButton?.style}
+        className={props.switchButton?.className}
+        switchNetworkBtnTitle={props.switchButton?.label}
+        targetChain={props.chain}
+      />
+    </>
   ) : (
     <WalletInfoButton
       type="button"
@@ -213,7 +213,12 @@ export const ConnectedWalletDetails: React.FC<{
           client={client}
         />
       ) : activeWallet?.id ? (
-        <WalletImage size={iconSize.lg} id={activeWallet.id} client={client} />
+        <WalletImage
+          size={iconSize.lg}
+          id={activeWallet.id}
+          client={client}
+          allowOverrides
+        />
       ) : (
         <WalletIcon size={iconSize.lg} />
       )}
@@ -328,12 +333,18 @@ export const ConnectedWalletDetails: React.FC<{
             size={iconSize.xxl}
             id={activeWallet.id}
             client={client}
+            allowOverrides
           />
         ) : (
           <WalletIcon size={iconSize.xxl} />
         )}
 
         <Spacer y="md" />
+        <ConnectedToSmartWallet />
+
+        {(activeWallet?.id === "embedded" || activeWallet?.id === "inApp") && (
+          <InAppWalletUserInfo />
+        )}
 
         {/* Address */}
         <div
@@ -379,12 +390,6 @@ export const ConnectedWalletDetails: React.FC<{
       <Spacer y="lg" />
 
       <Container px="lg">
-        <ConnectedToSmartWallet />
-
-        {(activeWallet?.id === "embedded" || activeWallet?.id === "inApp") && (
-          <InAppWalletUserInfo />
-        )}
-
         {/* Send, Receive, Swap */}
         <Container
           style={{
@@ -868,7 +873,7 @@ function ConnectedToSmartWallet() {
           <Text size="sm"> {content}</Text>
         )}
 
-        <Spacer y="md" />
+        <Spacer y="xs" />
       </>
     );
   }
@@ -906,7 +911,7 @@ function InAppWalletUserInfo() {
         flex="row"
         center="x"
         style={{
-          paddingBottom: spacing.md,
+          paddingBottom: spacing.xs,
         }}
       >
         <Text size="sm">{userInfoQuery.data}</Text>

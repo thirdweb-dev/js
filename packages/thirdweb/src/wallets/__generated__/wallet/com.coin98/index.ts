@@ -3,7 +3,7 @@
 
 export const wallet = {
   id: "com.coin98",
-  name: "Coin98 Super App",
+  name: "Coin98 Super Wallet",
   homepage: "https://coin98.com/wallet",
   image_id: "fc460647-ea95-447a-99f0-1bff8fa4be00",
   app: {

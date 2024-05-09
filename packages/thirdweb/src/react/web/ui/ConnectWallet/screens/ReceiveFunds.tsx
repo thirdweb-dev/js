@@ -43,6 +43,7 @@ export function ReceiveFunds(props: {
                 id={props.walletId}
                 size={iconSize.xxl}
                 client={client}
+                allowOverrides
               />
             )
           }

@@ -25,8 +25,8 @@ export default {
   "infoURL": "https://www.dodochain.com",
   "name": "DODOchain testnet",
   "nativeCurrency": {
-    "name": "Berd",
-    "symbol": "BERD",
+    "name": "DODO",
+    "symbol": "DODO",
     "decimals": 18
   },
   "networkId": 53457,

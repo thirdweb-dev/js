@@ -1,14 +1,13 @@
-import type { ThirdwebClient } from "../../../client/client.js";
 import { hexToBigInt } from "../../../utils/encoding/hex.js";
 import { getClientFetch } from "../../../utils/fetch.js";
 import type {
   PaymasterResult,
-  SmartWalletOptions,
+  SmartAccountOptions,
   UserOperation,
 } from "../types.js";
 import {
   DEBUG,
-  ENTRYPOINT_ADDRESS,
+  ENTRYPOINT_ADDRESS_v0_6,
   getDefaultPaymasterUrl,
 } from "./constants.js";
 import { hexlifyUserOp } from "./utils.js";
@@ -19,7 +18,7 @@ import { hexlifyUserOp } from "./utils.js";
  */
 export async function getPaymasterAndData(args: {
   userOp: UserOperation;
-  options: SmartWalletOptions & { client: ThirdwebClient };
+  options: SmartAccountOptions;
 }): Promise<PaymasterResult> {
   const { userOp, options } = args;
 
@@ -33,7 +32,8 @@ export async function getPaymasterAndData(args: {
 
   const client = options.client;
   const paymasterUrl = getDefaultPaymasterUrl(options.chain);
-  const entrypoint = options.overrides?.entrypointAddress ?? ENTRYPOINT_ADDRESS;
+  const entrypoint =
+    options.overrides?.entrypointAddress ?? ENTRYPOINT_ADDRESS_v0_6;
 
   // Ask the paymaster to sign the transaction and return a valid paymasterAndData value.
   const fetchWithHeaders = getClientFetch(client);

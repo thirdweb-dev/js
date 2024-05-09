@@ -149,7 +149,25 @@ export async function deployPublishedContract(
       });
       return address;
     }
+    case undefined: {
+      // Default to standard deployment if none was specified
+      const { deployContract } = await import(
+        "../../contract/deployment/deploy-with-abi.js"
+      );
+      return deployContract({
+        account,
+        client,
+        chain,
+        bytecode: compilerMetadata.bytecode,
+        constructorAbi:
+          (compilerMetadata.abi.find(
+            (i) => i.type === "constructor",
+          ) as AbiConstructor) || [],
+        constructorParams: contractParams,
+      });
+    }
     default:
+      // If a deployType was specified but we don't support it, throw an error
       throw new Error(
         `Unsupported deploy type: ${extendedMetadata?.deployType}`,
       );

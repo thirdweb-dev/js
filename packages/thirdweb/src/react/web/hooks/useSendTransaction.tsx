@@ -2,7 +2,9 @@ import { useContext, useState } from "react";
 import type { ThirdwebClient } from "../../../client/client.js";
 import type { GaslessOptions } from "../../../transaction/actions/gasless/types.js";
 import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
+import type { Wallet } from "../../../wallets/interfaces/wallet.js";
 import { useSendTransactionCore } from "../../core/hooks/contract/useSendTransaction.js";
+import { useActiveWallet } from "../../core/hooks/wallets/wallet-hooks.js";
 import { SetRootElementContext } from "../../core/providers/RootElementContext.js";
 import {
   type SupportedTokens,
@@ -16,6 +18,34 @@ import { CustomThemeProvider } from "../ui/design-system/CustomThemeProvider.js"
 import type { Theme } from "../ui/design-system/index.js";
 import type { LocaleId } from "../ui/types.js";
 import { LoadingScreen } from "../wallets/shared/LoadingScreen.js";
+
+/**
+ * Configuration for the "Pay Modal" that opens when the user doesn't have enough funds to send a transaction.
+ * Set `payModal: false` to disable the "Pay Modal" popup
+ *
+ * This configuration object includes the following properties to configure the "Pay Modal" UI:
+ *
+ * ### `locale`
+ * The language to use for the "Pay Modal" UI. Defaults to `"en_US"`.
+ *
+ * ### `supportedTokens`
+ * An object of type [`SupportedTokens`](https://portal.thirdweb.com/references/typescript/v5/SupportedTokens) to configure the tokens to show for a chain.
+ *
+ * ### `theme`
+ * The theme to use for the "Pay Modal" UI. Defaults to `"dark"`.
+ *
+ * It can be set to `"light"` or `"dark"` or an object of type [`Theme`](https://portal.thirdweb.com/references/typescript/v5/Theme) for a custom theme.
+ *
+ * Refer to [`lightTheme`](https://portal.thirdweb.com/references/typescript/v5/lightTheme)
+ * or [`darkTheme`](https://portal.thirdweb.com/references/typescript/v5/darkTheme) helper functions to use the default light or dark theme and customize it.
+ */
+export type SendTransactionPayModalConfig =
+  | {
+      locale?: LocaleId;
+      supportedTokens?: SupportedTokens;
+      theme?: Theme | "light" | "dark";
+    }
+  | false;
 
 /**
  * Configuration for the `useSendTransaction` hook.
@@ -41,14 +71,7 @@ export type SendTransactionConfig = {
    * Refer to [`lightTheme`](https://portal.thirdweb.com/references/typescript/v5/lightTheme)
    * or [`darkTheme`](https://portal.thirdweb.com/references/typescript/v5/darkTheme) helper functions to use the default light or dark theme and customize it.
    */
-  payModal?:
-    | {
-        locale?: LocaleId;
-        supportedTokens?: SupportedTokens;
-        theme?: Theme | "light" | "dark";
-      }
-    | false;
-
+  payModal?: SendTransactionPayModalConfig;
   /**
    * Configuration for gasless transactions.
    * Refer to [`GaslessOptions`](https://portal.thirdweb.com/references/typescript/v5/GaslessOptions) for more details.
@@ -73,11 +96,31 @@ export type SendTransactionConfig = {
  * @transaction
  */
 export function useSendTransaction(config: SendTransactionConfig = {}) {
+  const activeWallet = useActiveWallet();
   const payModal = config.payModal;
+
+  let payModalEnabled = true;
+
+  if (payModal === false || config.gasless) {
+    payModalEnabled = false;
+  }
+
+  // if active wallet is smart wallet with gasless enabled, don't show the pay modal
+  if (activeWallet && activeWallet.id === "smart") {
+    const options = (activeWallet as Wallet<"smart">).getConfig();
+
+    if ("sponsorGas" in options && options.sponsorGas === true) {
+      payModalEnabled = false;
+    }
+
+    if ("gasless" in options && options.gasless === true) {
+      payModalEnabled = false;
+    }
+  }
 
   const setRootEl = useContext(SetRootElementContext);
   return useSendTransactionCore(
-    payModal === false
+    !payModalEnabled || payModal === false
       ? undefined
       : (data) => {
           setRootEl(

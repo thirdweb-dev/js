@@ -44,6 +44,9 @@ export function executeSale(
           encodeCollectAuctionTokens({ auctionId: options.auctionId }),
           encodeCollectAuctionPayout({ auctionId: options.auctionId }),
         ],
+        overrides: {
+          extraGas: 50_000n, // add extra gas to account for router call
+        },
       };
     },
   });

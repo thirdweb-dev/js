@@ -8,6 +8,7 @@ import type {
   CoinbaseSDKWalletConnectionOptions,
   CoinbaseWalletCreationOptions,
 } from "./coinbase/coinbaseSDKWallet.js";
+import type { COINBASE } from "./constants.js";
 import type {
   InAppWalletAuth,
   InAppWalletAutoConnectOptions,
@@ -74,7 +75,7 @@ export type WalletConnectionOption<T extends WalletId> =
         T extends "inApp" | "embedded"
         ? InAppWalletConnectionOptions
         : // coinbase wallet (inhected + coinbaseWallet)
-          T extends "com.coinbase.wallet"
+          T extends typeof COINBASE
           ? InjectedConnectOptions | CoinbaseSDKWalletConnectionOptions
           : // injected + wc both supported
             T extends InjectedSupportedWalletIds & WCSupportedWalletIds
@@ -100,7 +101,7 @@ export type WalletAutoConnectionOption<T extends WalletId> =
       : T extends "inApp" | "embedded"
         ? InAppWalletAutoConnectOptions
         : // coinbase wallet (inhected + coinbaseWallet)
-          T extends "com.coinbase.wallet"
+          T extends typeof COINBASE
           ? InjectedConnectOptions | CoinbaseSDKWalletConnectionOptions
           : // injected + wc both supported
             T extends InjectedSupportedWalletIds & WCSupportedWalletIds
@@ -121,7 +122,7 @@ export type WalletCreationOptions<T extends WalletId> = T extends "smart"
   ? SmartWalletOptions
   : T extends "inApp" | "embedded"
     ? InAppWalletCreationOptions
-    : T extends "com.coinbase.wallet"
+    : T extends typeof COINBASE
       ? CoinbaseWalletCreationOptions
       : undefined;
 
