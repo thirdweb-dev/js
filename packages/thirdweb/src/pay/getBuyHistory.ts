@@ -17,7 +17,7 @@ export type BuyHistoryParams = {
    */
   client: ThirdwebClient;
   /**
-   * The address of the wallet to get the wallet history for
+   * The wallet address to get the buy history for.
    */
   walletAddress: string;
   /**
