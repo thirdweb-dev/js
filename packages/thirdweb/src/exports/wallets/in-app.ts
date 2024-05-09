@@ -4,5 +4,6 @@ export {
   preAuthenticate,
   authenticate,
   getUserEmail,
+  getUserPhoneNumber,
   type GetAuthenticatedUserParams,
 } from "../../wallets/in-app/core/authentication/index.js";
