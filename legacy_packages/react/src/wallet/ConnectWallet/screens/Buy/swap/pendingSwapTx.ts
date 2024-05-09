@@ -1,6 +1,7 @@
-import { getBuyWithCryptoStatus } from "@thirdweb-dev/sdk";
+import { getBuyWithCryptoStatus, type BuyWithCryptoStatus } from "@thirdweb-dev/sdk";
 import { wait } from "../../../../../utils/wait";
-import type { ValidBuyWithCryptoStatus } from "../../../../../../../../packages/thirdweb/dist/types/pay/buyWithCrypto/getStatus";
+
+type ValidBuyWithCryptoStatus = Exclude<BuyWithCryptoStatus, { status: 'NOT_FOUND'}>
 
 type SwapTxInfo = {
   transactionHash: string;

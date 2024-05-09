@@ -2,6 +2,7 @@
 import { CrossCircledIcon, ArrowRightIcon } from "@radix-ui/react-icons";
 import {
   useBuyWithCryptoHistory,
+  type BuyWithCryptoStatus,
   useAddress,
   useWalletContext,
   useChainId,
@@ -22,7 +23,9 @@ import { swapTransactionsStore } from "./Buy/swap/pendingSwapTx";
 import { BuyIcon } from "../icons/BuyIcon";
 import { Text } from "../../../components/text";
 import { CryptoIcon } from "../icons/CryptoIcon";
-import type { ValidBuyWithCryptoStatus } from "../../../../../../packages/thirdweb/dist/types/pay/buyWithCrypto/getStatus";
+
+type ValidBuyWithCryptoStatus = Exclude<BuyWithCryptoStatus, { status: 'NOT_FOUND'}>
+
 
 type TxStatusInfo = {
   boughChainId: number;
