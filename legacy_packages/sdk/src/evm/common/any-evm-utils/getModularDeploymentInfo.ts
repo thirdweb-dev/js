@@ -35,111 +35,79 @@ export async function getModularDeploymentInfo(
   hooks?: HookOptions[],
 ): Promise<DeploymentPreset[]> {
   caches.deploymentPresets = {};
-  const [create2FactoryAddress, { compilerMetadata }] =
-  await Promise.all([
+  const [create2FactoryAddress, { compilerMetadata }] = await Promise.all([
     create2Factory ? create2Factory : getCreate2FactoryAddress(provider),
     fetchAndCacheDeployMetadata(metadataUri, storage),
   ]);
-const customParams: ConstructorParamMap = {};
-const finalDeploymentInfo: DeploymentPreset[] = [];
+  const customParams: ConstructorParamMap = {};
+  const finalDeploymentInfo: DeploymentPreset[] = [];
 
-// get modular factory
-const factoryInfo = await computeDeploymentInfo(
-  "infra",
-  provider,
-  storage,
-  create2FactoryAddress,
-  { contractName: "CloneFactory" },
-  clientId,
-  secretKey,
-);
-finalDeploymentInfo.push(factoryInfo);
-
-if (hooks) {
-  const hookAddresses = hooks.filter((h) => isAddress(h.extensionName));
-  const publishedHooks = hooks.filter((h) => !isAddress(h.extensionName));
-  const publishedHooksFetched = await Promise.all(
-    publishedHooks.map((h) => {
-      invariant(h.publisherAddress, "Require publisher address");
-      return fetchPublishedContractFromPolygon(
-        h.publisherAddress,
-        h.extensionName,
-        h.extensionVersion,
-        storage,
-        clientId,
-        secretKey,
-      );
-    }),
-  );
-  const publishedHooksMetadata = await Promise.all(
-    publishedHooksFetched.map((h) =>
-      fetchAndCacheDeployMetadata(h.metadataUri, storage),
-    ),
-  );
-
-  // computeDeploymentInfo for hook impl -> push into finalDeploymentInfo
-  const hookImplDeployInfo = await Promise.all(
-    publishedHooksMetadata.map((m) =>
-      computeDeploymentInfo(
-        "hookImpl",
-        provider,
-        storage,
-        create2FactoryAddress,
-        { metadata: m.compilerMetadata },
-        clientId,
-        secretKey,
-      ),
-    ),
-  );
-  finalDeploymentInfo.push(...hookImplDeployInfo);
-
-  // with address of impl and factory above -> computeDeploymentInfo for hook proxy -> push into finalDeploymentInfo
-  hookImplDeployInfo.forEach((h) => {
-    const proxy = computeHookProxyAddress(
-        h.transaction.predictedAddress,
-        factoryInfo.transaction.predictedAddress,
-      );
-
-      finalDeploymentInfo.push({
-        type: "hookProxy",
-        transaction: { predictedAddress: "", to: "", data: "" }, // no direct transaction because we'll deploy ERC1967 proxy through a factory
-        hooks: {
-          impl: h.transaction.predictedAddress,
-          proxy: proxy,
-          admin: "",
-        },
-      });
-    });
-
-    // hook addresses specified by the deployer
-    hookAddresses.forEach((h) => {
-      finalDeploymentInfo.push({
-        type: "hookProxy",
-        transaction: { predictedAddress: "", to: "", data: "" }, 
-        hooks: {
-          impl: "",
-          proxy: h.extensionName,
-          admin: "",
-        },
-      });
-    });
-  }
-
-  const implementationDeployInfo = await computeDeploymentInfo(
-    "implementation",
+  // get modular factory
+  const factoryInfo = await computeDeploymentInfo(
+    "infra",
     provider,
     storage,
     create2FactoryAddress,
-    {
-      metadata: compilerMetadata,
-      constructorParams: customParams,
-    },
+    { contractName: "CloneFactory" },
     clientId,
     secretKey,
   );
+  finalDeploymentInfo.push(factoryInfo);
 
-  finalDeploymentInfo.push(...Object.values(caches.deploymentPresets));
-  finalDeploymentInfo.push(implementationDeployInfo);
+  if (hooks) {
+    const hookAddresses = hooks.filter((h) => isAddress(h.extensionName));
+    const publishedHooks = hooks.filter((h) => !isAddress(h.extensionName));
+    const publishedHooksFetched = await Promise.all(
+      publishedHooks.map((h) => {
+        invariant(h.publisherAddress, "Require publisher address");
+        return fetchPublishedContractFromPolygon(
+          h.publisherAddress,
+          h.extensionName,
+          h.extensionVersion,
+          storage,
+          clientId,
+          secretKey,
+        );
+      }),
+    );
+    const publishedHooksMetadata = await Promise.all(
+      publishedHooksFetched.map((h) =>
+        fetchAndCacheDeployMetadata(h.metadataUri, storage),
+      ),
+    );
 
+    // computeDeploymentInfo for hook impl -> push into finalDeploymentInfo
+    const hookImplDeployInfo = await Promise.all(
+      publishedHooksMetadata.map((m) =>
+        computeDeploymentInfo(
+          "hookImpl",
+          provider,
+          storage,
+          create2FactoryAddress,
+          { metadata: m.compilerMetadata },
+          clientId,
+          secretKey,
+        ),
+      ),
+    );
+    finalDeploymentInfo.push(...hookImplDeployInfo);
+
+    const implementationDeployInfo = await computeDeploymentInfo(
+      "implementation",
+      provider,
+      storage,
+      create2FactoryAddress,
+      {
+        metadata: compilerMetadata,
+        constructorParams: customParams,
+      },
+      clientId,
+      secretKey,
+    );
+
+    finalDeploymentInfo.push(...Object.values(caches.deploymentPresets));
+    finalDeploymentInfo.push(implementationDeployInfo);
+
+  }
   return finalDeploymentInfo;
 }

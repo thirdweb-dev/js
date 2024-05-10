@@ -1789,45 +1789,6 @@ export class ContractDeployer extends RPCConnectionHandler {
     },
   );
 
-  deployERC1967ViaModularFactory =
-    /* @__PURE__ */ buildDeployTransactionFunction(
-      async (
-        factoryAddress: AddressOrEns,
-        implementationAddress: AddressOrEns,
-        implementationAbi: ContractInterface,
-        initializerFunction: string,
-        initializerArgs: any[],
-        saltForProxyDeploy?: string,
-      ): Promise<DeployTransaction> => {
-        const encodedInitializer = Contract.getInterface(
-          implementationAbi,
-        ).encodeFunctionData(initializerFunction, initializerArgs);
-
-        const blockNumber = await this.getProvider().getBlockNumber();
-        const salt = saltForProxyDeploy
-          ? utils.id(saltForProxyDeploy)
-          : utils.formatBytes32String(blockNumber.toString());
-
-        // eslint-disable-next-line prefer-const
-        let deployedProxyAddress: string;
-        const deployTransaction = await Transaction.fromContractInfo({
-          contractAddress: factoryAddress,
-          contractAbi: modularFactoryAbi,
-          provider: this.getProvider(),
-          signer: this.getSigner() as Signer,
-          method: "deployDeterministicERC1967",
-          args: [implementationAddress, encodedInitializer, salt],
-          parse: () => {
-            return deployedProxyAddress;
-          },
-          storage: this.storage,
-        });
-        deployedProxyAddress = await deployTransaction.simulate();
-
-        return deployTransaction as unknown as DeployTransaction;
-      },
-    );
-
   /**
    * Deploy a proxy contract of a given implementation directly
    * @param implementationAddress - the address of the implementation
@@ -1972,7 +1933,6 @@ export class ContractDeployer extends RPCConnectionHandler {
       signer: Signer,
       options?: DeployOptions,
     ): Promise<DeployTransaction> => {
-      const upgradeAdmin = await signer.getAddress();
       // any evm deployment flow
 
       // 1. Deploy CREATE2 factory (if not already exists)
@@ -1987,7 +1947,7 @@ export class ContractDeployer extends RPCConnectionHandler {
         this.options.clientId,
         this.options.secretKey,
         options?.hooks,
-      );
+      );      
 
       const implementationAddress = deploymentInfo.find(
         (i) => i.type === "implementation",
@@ -1997,13 +1957,11 @@ export class ContractDeployer extends RPCConnectionHandler {
 
       // filter out already deployed contracts (data is empty)
       const transactionsToSend = deploymentInfo.filter(
-        (i) =>
-          (i.transaction.data && i.transaction.data.length > 0) ||
-          i.type === "hookProxy",
+        (i) => i.transaction.data && i.transaction.data.length > 0,
       );
       const transactionsforDirectDeploy = transactionsToSend
         .filter((i) => {
-          return i.type !== "infra" && i.type !== "hookProxy";
+          return i.type !== "infra";
         })
         .map((i) => i.transaction);
       const transactionsForThrowawayDeployer = transactionsToSend
@@ -2011,10 +1969,6 @@ export class ContractDeployer extends RPCConnectionHandler {
           return i.type === "infra";
         })
         .map((i) => i.transaction);
-
-      const transactionsForHookProxyDeploy = transactionsToSend.filter((i) => {
-        return i.type === "hookProxy";
-      });
 
       // deploy via throwaway deployer, multiple infra contracts in one transaction
       await deployWithThrowawayDeployer(
@@ -2052,28 +2006,9 @@ export class ContractDeployer extends RPCConnectionHandler {
 
       // deploy hook proxies
       const hooksParam: string[] = [];
-      for (const tx of transactionsForHookProxyDeploy) {
-        if (tx.hooks) {
-          if (tx.hooks.impl) {
-            try {
-              const hookProxyAddress =
-                await this.deployERC1967ViaModularFactory(
-                  modularFactory,
-                  tx.hooks.impl,
-                  hookInitializerAbi,
-                  "initialize",
-                  [upgradeAdmin],
-                );
-
-              hooksParam.push(hookProxyAddress);
-            } catch (e) {
-              console.debug(
-                `Error deploying extension proxy`,
-                (e as any)?.message,
-              );
-              throw e;
-            }
-          }
+      for (const tx of transactionsToSend) {
+        if (tx.type === "hookImpl") {
+          hooksParam.push(tx.transaction.predictedAddress);
         }
       }
 
