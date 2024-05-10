@@ -111,8 +111,6 @@ export function getAddress(address: string): Address {
  * @utils
  */
 export function shortenAddress(address: Address, length = 4) {
-  if (!isAddress(address)) {
-    throw new Error(`Invalid address: ${address}`);
-  }
-  return `${address.slice(0, length)}...${address.slice(-length)}`;
+  const _address = getAddress(address);
+  return `${_address.slice(0, length)}...${_address.slice(-length)}`;
 }
