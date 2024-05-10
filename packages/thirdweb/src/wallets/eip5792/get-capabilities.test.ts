@@ -20,7 +20,7 @@ const SUPPORTED_RESPONSE = {
   },
 };
 
-const UNSUPPORTED_RESPONSE = {
+const RAW_UNSUPPORTED_ERROR = {
   code: -32601,
   message: "some nonsense the wallet sends us about not supporting",
 };
@@ -81,7 +81,7 @@ describe.sequential("injected wallet", async () => {
 
   describe("unsupported", () => {
     beforeAll(() => {
-      mocks.injectedRequest.mockRejectedValue(UNSUPPORTED_RESPONSE);
+      mocks.injectedRequest.mockRejectedValue(RAW_UNSUPPORTED_ERROR);
     });
 
     afterEach(() => {
