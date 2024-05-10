@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/generated-abis",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "dist/thirdweb-dev-generated-abis.cjs.js",
   "module": "dist/thirdweb-dev-generated-abis.esm.js",
   "browser": {
@@ -23,7 +23,9 @@
   },
   "author": "thirdweb eng <eng@thirdweb.com>",
   "sideEffects": false,
-  "files": ["dist/"],
+  "files": [
+    "dist/"
+  ],
   "scripts": {
     "push": "yalc push"
   }
