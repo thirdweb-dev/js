@@ -125,7 +125,7 @@ export const coreContractAbi = [
       {
         name: "",
         type: "tuple[]",
-        internalType: "struct ICoreContract.InstalledExtension[]",
+        internalType: "struct IModularCore.InstalledExtension[]",
         components: [
           {
             name: "implementation",
@@ -135,17 +135,32 @@ export const coreContractAbi = [
           {
             name: "config",
             type: "tuple",
-            internalType: "struct IExtensionTypes.ExtensionConfig",
+            internalType: "struct IExtensionConfig.ExtensionConfig",
             components: [
+              {
+                name: "requiredInterfaceId",
+                type: "bytes4",
+                internalType: "bytes4",
+              },
+              {
+                name: "registerInstallationCallback",
+                type: "bool",
+                internalType: "bool",
+              },
               {
                 name: "callbackFunctions",
                 type: "bytes4[]",
                 internalType: "bytes4[]",
               },
               {
-                name: "extensionABI",
+                name: "supportedInterfaces",
+                type: "bytes4[]",
+                internalType: "bytes4[]",
+              },
+              {
+                name: "extensionFunctions",
                 type: "tuple[]",
-                internalType: "struct IExtensionTypes.ExtensionFunction[]",
+                internalType: "struct IExtensionConfig.ExtensionFunction[]",
                 components: [
                   {
                     name: "selector",
@@ -155,12 +170,12 @@ export const coreContractAbi = [
                   {
                     name: "callType",
                     type: "uint8",
-                    internalType: "enum IExtensionTypes.CallType",
+                    internalType: "enum IExtensionConfig.CallType",
                   },
                   {
-                    name: "permissioned",
-                    type: "bool",
-                    internalType: "bool",
+                    name: "permissionBits",
+                    type: "uint256",
+                    internalType: "uint256",
                   },
                 ],
               },
@@ -175,7 +190,21 @@ export const coreContractAbi = [
     type: "function",
     name: "getSupportedCallbackFunctions",
     inputs: [],
-    outputs: [{ name: "", type: "bytes4[]", internalType: "bytes4[]" }],
+    outputs: [
+      {
+        name: "",
+        type: "tuple[]",
+        internalType: "struct IModularCore.SupportedCallbackFunction[]",
+        components: [
+          { name: "selector", type: "bytes4", internalType: "bytes4" },
+          {
+            name: "mode",
+            type: "uint8",
+            internalType: "enum IModularCore.CallbackMode",
+          },
+        ],
+      },
+    ],
     stateMutability: "pure",
   },
   {
@@ -187,11 +216,17 @@ export const coreContractAbi = [
         type: "address",
         internalType: "address",
       },
-      { name: "_value", type: "uint256", internalType: "uint256" },
       { name: "_data", type: "bytes", internalType: "bytes" },
     ],
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "payable",
+  },
+  {
+    type: "function",
+    name: "supportsInterface",
+    inputs: [{ name: "interfaceID", type: "bytes4", internalType: "bytes4" }],
+    outputs: [{ name: "", type: "bool", internalType: "bool" }],
+    stateMutability: "view",
   },
   {
     type: "function",
@@ -202,11 +237,10 @@ export const coreContractAbi = [
         type: "address",
         internalType: "address",
       },
-      { name: "_value", type: "uint256", internalType: "uint256" },
       { name: "_data", type: "bytes", internalType: "bytes" },
     ],
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "payable",
   },
 ];
 
@@ -219,17 +253,32 @@ export const extensionContractAbi = [
       {
         name: "",
         type: "tuple",
-        internalType: "struct IExtensionTypes.ExtensionConfig",
+        internalType: "struct IExtensionConfig.ExtensionConfig",
         components: [
+          {
+            name: "requiredInterfaceId",
+            type: "bytes4",
+            internalType: "bytes4",
+          },
+          {
+            name: "registerInstallationCallback",
+            type: "bool",
+            internalType: "bool",
+          },
           {
             name: "callbackFunctions",
             type: "bytes4[]",
             internalType: "bytes4[]",
           },
           {
-            name: "extensionABI",
+            name: "supportedInterfaces",
+            type: "bytes4[]",
+            internalType: "bytes4[]",
+          },
+          {
+            name: "extensionFunctions",
             type: "tuple[]",
-            internalType: "struct IExtensionTypes.ExtensionFunction[]",
+            internalType: "struct IExtensionConfig.ExtensionFunction[]",
             components: [
               {
                 name: "selector",
@@ -239,12 +288,12 @@ export const extensionContractAbi = [
               {
                 name: "callType",
                 type: "uint8",
-                internalType: "enum IExtensionTypes.CallType",
+                internalType: "enum IExtensionConfig.CallType",
               },
               {
-                name: "permissioned",
-                type: "bool",
-                internalType: "bool",
+                name: "permissionBits",
+                type: "uint256",
+                internalType: "uint256",
               },
             ],
           },
