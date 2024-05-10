@@ -3,7 +3,7 @@ import type { Wallet } from "../../../interfaces/wallet.js";
 /**
  * @internal
  */
-export function getInAppWalletCapabilities(args: {
+export function inAppWalletGetCapabilities(args: {
   wallet: Wallet<"inApp" | "embedded">;
 }) {
   const { wallet } = args;

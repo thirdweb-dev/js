@@ -3,7 +3,7 @@ import type { Wallet } from "../../interfaces/wallet.js";
 /**
  * @internal
  */
-export function getSmartWalletCapabilities(args: {
+export function smartWalletGetCapabilities(args: {
   wallet: Wallet<"smart">;
 }) {
   const { wallet } = args;

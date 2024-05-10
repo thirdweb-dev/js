@@ -27,24 +27,24 @@ export async function getCapabilities<const ID extends WalletId = WalletId>({
   }
 
   if (isSmartWallet(wallet)) {
-    const { getSmartWalletCapabilities } = await import(
+    const { smartWalletGetCapabilities } = await import(
       "../smart/lib/smart-wallet-capabilities.js"
     );
-    return getSmartWalletCapabilities({ wallet });
+    return smartWalletGetCapabilities({ wallet });
   }
 
   if (isInAppWallet(wallet)) {
-    const { getInAppWalletCapabilities } = await import(
+    const { inAppWalletGetCapabilities } = await import(
       "../in-app/core/lib/in-app-wallet-capabilities.js"
     );
-    return getInAppWalletCapabilities({ wallet });
+    return inAppWalletGetCapabilities({ wallet });
   }
 
   if (isCoinbaseSDKWallet(wallet)) {
-    const { getCoinbaseSDKWalletCapabilities } = await import(
+    const { coinbaseSDKWalletGetCapabilities } = await import(
       "../coinbase/coinbaseSDKWallet.js"
     );
-    return getCoinbaseSDKWalletCapabilities({ wallet });
+    return coinbaseSDKWalletGetCapabilities({ wallet });
   }
 
   // TODO: Add Wallet Connect support
