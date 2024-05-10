@@ -1,6 +1,9 @@
 packages:
   - "packages/*"
   - "legacy_packages/*"
+  # fully exclude react native for now
+  - "!legacy_packages/react-native"
+  - "!legacy_packages/react-native-compat"
   # e2e tests
 
   # include packages in subfolders (e.g. apps/ and packages/)
