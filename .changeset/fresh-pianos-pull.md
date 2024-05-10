@@ -4,7 +4,6 @@
 "@thirdweb-dev/cli": patch
 "@thirdweb-dev/contracts-js": patch
 "@thirdweb-dev/crypto": patch
-"eslint-config-thirdweb": patch
 "@thirdweb-dev/generated-abis": patch
 "@thirdweb-dev/merkletree": patch
 "@thirdweb-dev/pay": patch
@@ -17,8 +16,6 @@
 "@thirdweb-dev/wallets": patch
 "@thirdweb-dev/service-utils": patch
 "thirdweb": patch
-"@thirdweb-dev/tsconfig": patch
-"typedoc-gen": patch
 ---
 
 bump all to fix release
