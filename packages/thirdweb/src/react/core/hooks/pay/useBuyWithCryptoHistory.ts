@@ -18,7 +18,7 @@ export type BuyWithCryptoHistoryQueryOptions = Omit<
 >;
 
 /**
- * Hook to get the "Buy with crypto" transaction history for a given wallet.
+ * Hook to get the "Buy with crypto" transaction history for a given wallet address.
  *
  * This hook is a React Query wrapper of the [`getBuyWithCryptoHistory`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoHistory) function.
  * You can also use that function directly

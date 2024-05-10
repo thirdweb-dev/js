@@ -26,7 +26,7 @@ export type BuyWithFiatQuoteQueryOptions = Omit<
  * This hook is a React Query wrapper of the [`getBuyWithFiatQuote`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithFiatQuote) function.
  * You can also use that function directly
  *
- * Once you have the quote, you can open a new window with `onRampLink` as window location to allow the user to buy the token with fiat currency.
+ * Once you have the `quote`, you can open a new window with `quote.onRampLink` to allow the user to buy the token with fiat currency.
  * and [`useBuyWithFiatStatus`](https://portal.thirdweb.com/references/typescript/v5/useBuyWithFiatStatus) function to start polling for the status of this transaction.
  *
  * @param params - object of type [`GetBuyWithFiatQuoteParams`](https://portal.thirdweb.com/references/typescript/v5/GetBuyWithFiatQuoteParams)
@@ -38,12 +38,13 @@ export type BuyWithFiatQuoteQueryOptions = Omit<
  * import { base } from "thirdweb/chains";
  * import { useBuyWithFiatQuote } from "thirdweb/react";
  *
+ * // get a quote for buying 0.01 base native token with USD fiat currency
  * function Example() {
  *   const quote = useBuyWithFiatQuote({
  *     client: client, // thirdweb client
  *     fromCurrencySymbol: "USD", // fiat currency symbol
  *     toChainId: base.id, // base chain id
- *     toAmount: "10", // amount of token to buy
+ *     toAmount: "0.01", // amount of token to buy
  *     toTokenAddress: NATIVE_TOKEN_ADDRESS, // native token
  *     toAddress: "0x...", // user's wallet address
  *   });

@@ -99,7 +99,7 @@ export function useBuyTransactionsToShow(client: ThirdwebClient) {
       if (query.data) {
         const txStatusInfo = query.data;
 
-        // if already present - don't add it
+        // if already present in endpoint - don't add it
         if (buyHistory.data) {
           if (txStatusInfo.type === "swap") {
             const isPresent = buyHistory.data.page.find((tx) => {
@@ -138,7 +138,7 @@ export function useBuyTransactionsToShow(client: ThirdwebClient) {
             }
           }
         } else {
-          // if no history - add without duplicate check
+          // if no buy history available for this walllet - add without duplicate check
           txStatusList.push(txStatusInfo);
         }
       }
@@ -148,14 +148,20 @@ export function useBuyTransactionsToShow(client: ThirdwebClient) {
   if (buyHistory.data) {
     for (const tx of buyHistory.data.page) {
       if ("buyWithCryptoStatus" in tx) {
-        if (tx.buyWithCryptoStatus.status !== "NOT_FOUND") {
+        if (
+          tx.buyWithCryptoStatus.status !== "NOT_FOUND" &&
+          tx.buyWithCryptoStatus.status !== "NONE"
+        ) {
           txStatusList.push({
             type: "swap",
             status: tx.buyWithCryptoStatus,
           });
         }
       } else {
-        if (tx.buyWithFiatStatus.status !== "NOT_FOUND") {
+        if (
+          tx.buyWithFiatStatus.status !== "NOT_FOUND" &&
+          tx.buyWithFiatStatus.status !== "NONE"
+        ) {
           txStatusList.push({
             type: "fiat",
             status: tx.buyWithFiatStatus,

@@ -21,17 +21,131 @@ import { CustomThemeProvider } from "./design-system/CustomThemeProvider.js";
 import { type Theme, radius } from "./design-system/index.js";
 import type { LocaleId } from "./types.js";
 
-// TODO - JS doc
-
+/**
+ * Props of [`PayEmbed`](https://portal.thirdweb.com/references/typescript/v5/PayEmbed) component
+ */
 export type PayEmbedProps = {
+  /**
+   * Override the default tokens shown in PayEmbed uI
+   *
+   * By default, PayEmbed shows a few popular tokens for Pay supported chains
+   * @example
+   *
+   * `supportedTokens` prop allows you to override this list as shown below.
+   *
+   * ```tsx
+   * import { ConnectButton } from 'thirdweb/react';
+   * import { NATIVE_TOKEN_ADDRESS } from 'thirdweb';
+   *
+   * function Example() {
+   *   return (
+   * 		<ConnectButton
+   * 			supportedTokens={{
+   *        // Override the tokens for Base Mainnet ( chaid id 84532 )
+   * 				84532: [
+   * 					{
+   * 						address: NATIVE_TOKEN_ADDRESS, // use NATIVE_TOKEN_ADDRESS for native token
+   * 						name: 'Base ETH',
+   * 						symbol: 'ETH',
+   * 						icon: 'https://...',
+   * 					},
+   *          {
+   * 						address: '0x...', // token contract address
+   * 						name: 'Dai Stablecoin',
+   * 						symbol: 'DAI',
+   * 						icon: 'https://...',
+   * 					},
+   * 				],
+   * 			}}
+   * 		/>
+   * 	);
+   * }
+   * ```
+   */
   supportedTokens?: SupportedTokens;
+  /**
+   * A client is the entry point to the thirdweb SDK.
+   * It is required for all other actions.
+   * You can create a client using the `createThirdwebClient` function. Refer to the [Creating a Client](https://portal.thirdweb.com/typescript/v5/client) documentation for more information.
+   *
+   * You must provide a `clientId` or `secretKey` in order to initialize a client. Pass `clientId` if you want for client-side usage and `secretKey` for server-side usage.
+   *
+   * ```tsx
+   * import { createThirdwebClient } from "thirdweb";
+   *
+   * const client = createThirdwebClient({
+   *  clientId: "<your_client_id>",
+   * })
+   * ```
+   */
   client: ThirdwebClient;
+  /**
+   * By default - ConnectButton UI uses the `en-US` locale for english language users.
+   *
+   * You can customize the language used in the ConnectButton UI by setting the `locale` prop.
+   *
+   * Refer to the [`LocaleId`](https://portal.thirdweb.com/references/typescript/v5/LocaleId) type for supported locales.
+   */
   locale?: LocaleId;
+  /**
+   * Customize the Pay UI options. Refer to the [`PayUIOptions`](https://portal.thirdweb.com/references/typescript/v5/PayUIOptions) type for more details.
+   */
   payOptions?: PayUIOptions;
+
+  /**
+   * Set the theme for the `PayEmbed` component. By default it is set to `"dark"`
+   *
+   * theme can be set to either `"dark"`, `"light"` or a custom theme object.
+   * You can also import [`lightTheme`](https://portal.thirdweb.com/references/typescript/v5/lightTheme)
+   * or [`darkTheme`](https://portal.thirdweb.com/references/typescript/v5/darkTheme)
+   * functions from `thirdweb/react` to use the default themes as base and overrides parts of it.
+   * @example
+   * ```ts
+   * import { lightTheme } from "thirdweb/react";
+   *
+   * const customTheme = lightTheme({
+   *  colors: {
+   *    modalBg: 'red'
+   *  }
+   * })
+   *
+   * function Example() {
+   *  return <PayEmbed client={client} theme={customTheme} />
+   * }
+   * ```
+   */
   theme?: "light" | "dark" | Theme;
+
+  /**
+   * Customize the options for "Connect" Button showin in the PayEmbed UI when the user is not connected to a wallet.
+   *
+   * Refer to the [`PayEmbedConnectOptions`](https://portal.thirdweb.com/references/typescript/v5/PayEmbedConnectOptions) type for more details.
+   */
   connectOptions?: PayEmbedConnectOptions;
 };
 
+/**
+ * Embed thirdweb Pay UI for Buy tokens using Crypto or Credit Card.
+ *
+ * PayEmbed also renders a "Connect" button if the user is not connected to a wallet. You can customize the options for "Connect" button using the `connectOptions` prop.
+ *
+ * @param props - Props of type [`PayEmbedProps`](https://portal.thirdweb.com/references/typescript/v5/PayEmbedProps) to configure the PayEmbed component.
+ *
+ * @example
+ * ```tsx
+ * <PayEmbed
+ *   client={client}
+ *   connectOptions={{
+ *     connectModal: {
+ *       size: 'compact',
+ *     }
+ *   }}
+ *   payOptions={{
+ *     buyWithCrypto: false,
+ *   }}
+ *  />
+ * ```
+ */
 export function PayEmbed(props: PayEmbedProps) {
   const localeQuery = useConnectLocale(props.locale || "en_US");
   const [screen, setScreen] = useState<"buy" | "tx-history">("buy");
@@ -115,6 +229,20 @@ export function PayEmbed(props: PayEmbedProps) {
   );
 }
 
+/**
+ * Connection options for the `PayEmbed` component
+ *
+ * @example
+ * ```tsx
+ * <PayEmbed client={client} connectOptions={{
+ *    connectModal: {
+ *      size: 'compact',
+ *      title: "Sign in",
+ *    }
+ *  }}
+ * />
+ * ```
+ */
 export type PayEmbedConnectOptions = {
   /**
    * Configurations for the `ConnectButton`'s Modal that is shown for connecting a wallet

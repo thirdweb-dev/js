@@ -180,6 +180,7 @@ export function SwapTxDetailsTable(
   return (
     <div>
       {isPartialSuccess && gotToken ? (
+        // Expected + Got
         <>
           {/* Expected */}
           <TokenInfoRow
@@ -193,6 +194,7 @@ export function SwapTxDetailsTable(
 
           {lineSpacer}
 
+          {/* Got */}
           <TokenInfoRow
             chainId={gotToken.chainId}
             client={client}
@@ -203,6 +205,7 @@ export function SwapTxDetailsTable(
           />
         </>
       ) : (
+        // Receive
         <TokenInfoRow
           chainId={toToken.chainId}
           client={client}
@@ -215,6 +218,7 @@ export function SwapTxDetailsTable(
 
       {lineSpacer}
 
+      {/* Pay */}
       <TokenInfoRow
         chainId={fromToken.chainId}
         client={client}
@@ -242,11 +246,10 @@ export function SwapTxDetailsTable(
         </Container>
       </Container>
 
+      {/* Status */}
       {statusMeta && showStatusRow && (
         <>
           {lineSpacer}
-
-          {/* Status */}
           <Container
             flex="row"
             center="y"
@@ -264,6 +267,7 @@ export function SwapTxDetailsTable(
 
       {lineSpacer}
 
+      {/* source chain Tx hash link */}
       {fromChainQuery.data?.explorers?.[0]?.url && sourceTxHash && (
         <ButtonLink
           fullWidth
@@ -281,6 +285,7 @@ export function SwapTxDetailsTable(
         </ButtonLink>
       )}
 
+      {/* destination chain tx hash link */}
       {destinationTxHash &&
         sourceTxHash !== destinationTxHash &&
         toChainQuery.data?.explorers?.[0]?.url && (

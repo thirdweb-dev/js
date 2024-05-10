@@ -6,7 +6,7 @@ export function openOnrampPopup(link: string, theme: string) {
 
   return window.open(
     `${link}&theme=${theme}`,
-    "Buy",
+    "thirdweb Pay",
     `width=${width}, height=${height}, top=${top}, left=${left}`,
   );
 }
