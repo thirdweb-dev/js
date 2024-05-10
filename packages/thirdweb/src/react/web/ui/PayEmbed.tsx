@@ -34,12 +34,12 @@ export type PayEmbedProps = {
    * `supportedTokens` prop allows you to override this list as shown below.
    *
    * ```tsx
-   * import { ConnectButton } from 'thirdweb/react';
+   * import { PayEmbed } from 'thirdweb/react';
    * import { NATIVE_TOKEN_ADDRESS } from 'thirdweb';
    *
    * function Example() {
    *   return (
-   * 		<ConnectButton
+   * 		<PayEmbed
    * 			supportedTokens={{
    *        // Override the tokens for Base Mainnet ( chaid id 84532 )
    * 				84532: [
@@ -247,9 +247,6 @@ export type PayEmbedConnectOptions = {
   /**
    * Configurations for the `ConnectButton`'s Modal that is shown for connecting a wallet
    * Refer to the [`ConnectButton_connectModalOptions`](https://portal.thirdweb.com/references/typescript/v5/ConnectButton_connectModalOptions) type for more details
-   * @example
-   * ```tsx
-   * <ConnectButton connectModal={{ size: "compact" }} />
    */
   connectModal?: ConnectButton_connectModalOptions;
 
@@ -270,14 +267,6 @@ export type PayEmbedConnectOptions = {
    *
    * This allows to sponsor gas fees for your user's transaction using the thirdweb account abstraction infrastructure.
    *
-   * ```tsx
-   * <ConnectButton
-   *   accountAbstraction={{
-   *    factoryAddress: "0x123...",
-   *    chain: sepolia,
-   *    gasless: true;
-   *   }}
-   * />
    */
   accountAbstraction?: SmartWalletOptions;
 
@@ -293,8 +282,6 @@ export type PayEmbedConnectOptions = {
    * If you want to disable autoConnect, set this prop to `false`.
    *
    * If you want to customize the timeout, you can assign an object with a `timeout` key to this prop.
-   * ```tsx
-   * <ConnectButton client={client} autoConnect={{ timeout: 10000 }} />
    * ```
    */
   autoConnect?:
@@ -333,10 +320,6 @@ export type PayEmbedConnectOptions = {
    * Given list of chains will used in various ways:
    * - They will be displayed in the network selector in the `ConnectButton`'s details modal post connection
    * - They will be sent to wallet at the time of connection if the wallet supports requesting multiple chains ( example: WalletConnect ) so that users can switch between the chains post connection easily
-   *
-   * ```tsx
-   * <ConnectButton chains={[ethereum, polygon, optimism]} />
-   * ```
    *
    * You can create a `Chain` object using the [`defineChain`](https://portal.thirdweb.com/references/typescript/v5/defineChain) function.
    * At minimum, you need to pass the `id` of the blockchain to `defineChain` function to create a `Chain` object.
