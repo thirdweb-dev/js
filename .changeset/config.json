@@ -25,6 +25,10 @@
     "@thirdweb-dev/react-native",
     "@thirdweb-dev/react-native-compat"
   ],
+  "___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH": {
+    "updateInternalDependents": "always",
+    "onlyUpdatePeerDependentsWhenOutOfRange": true
+  },
   "snapshot": {
     "prereleaseTemplate": "{tag}-{commit}-{datetime}"
   }
