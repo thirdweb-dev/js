@@ -9,7 +9,7 @@ import {
   type GetWalletBalanceResult,
   getWalletBalance,
 } from "../../../../wallets/utils/getWalletBalance.js";
-import { fetchSwapSupportedChains } from "../../../web/ui/ConnectWallet/screens/Buy/swap/useSwapSupportedChains.js";
+import { fetchBuySupportedDestinations } from "../../../web/ui/ConnectWallet/screens/Buy/swap/useSwapSupportedChains.js";
 import { useActiveAccount } from "../wallets/wallet-hooks.js";
 
 type ShowModalData = {
@@ -70,12 +70,10 @@ export function useSendTransactionCore(
 
         (async () => {
           try {
-            const swapSupportedChains = await fetchSwapSupportedChains(
-              tx.client,
-            );
+            const destinations = await fetchBuySupportedDestinations(tx.client);
 
-            const isBuySupported = swapSupportedChains.find(
-              (c) => c.id === tx.chain.id,
+            const isBuySupported = destinations.find(
+              (c) => c.chain.id === tx.chain.id,
             );
 
             // buy not supported, can't show modal - send tx directly
@@ -125,9 +123,8 @@ export function useSendTransactionCore(
 }
 
 export async function getTotalTxCostForBuy(tx: PreparedTransaction) {
-  // Must pass 0 otherwise it will throw on some chains
   const gasCost = await estimateGasCost({
-    transaction: { ...tx, value: 0n },
+    transaction: tx,
   });
 
   const bufferCost = gasCost.wei / 10n;

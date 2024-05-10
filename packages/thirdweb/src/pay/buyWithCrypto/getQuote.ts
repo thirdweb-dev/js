@@ -1,14 +1,14 @@
 import type { Hash } from "viem";
-import { defineChain } from "../../../chains/utils.js";
-import type { ThirdwebClient } from "../../../client/client.js";
-import { getContract } from "../../../contract/contract.js";
+import { defineChain } from "../../chains/utils.js";
+import type { ThirdwebClient } from "../../client/client.js";
+import { getContract } from "../../contract/contract.js";
 import {
   type ApproveParams,
   approve,
-} from "../../../extensions/erc20/write/approve.js";
-import type { PrepareTransactionOptions } from "../../../transaction/prepare-transaction.js";
-import type { BaseTransactionOptions } from "../../../transaction/types.js";
-import { getClientFetch } from "../../../utils/fetch.js";
+} from "../../extensions/erc20/write/approve.js";
+import type { PrepareTransactionOptions } from "../../transaction/prepare-transaction.js";
+import type { BaseTransactionOptions } from "../../transaction/types.js";
+import { getClientFetch } from "../../utils/fetch.js";
 import { getPayBuyWithCryptoQuoteEndpoint } from "../utils/definitions.js";
 
 // TODO: add JSDoc description for all properties
@@ -26,6 +26,15 @@ export type GetBuyWithCryptoQuoteParams = {
    *
    */
   client: ThirdwebClient;
+
+  /**
+   * This is only relevant if the buy-with-crypto transaction is part of buy-with-fiat flow.
+   *
+   * When a swap is required after an onramp transaction, the intentId is used to link the buy-with-crypto transaction to the onramp transaction.
+   * Refer to [`getPostOnRampQuote`](https://portal.thirdweb.com/references/typescript/v5/getPostOnRampQuote) for more information.`
+   *
+   */
+  intentId?: string;
 
   /**
    * The address of the wallet from which the tokens will be sent.
@@ -238,6 +247,10 @@ export async function getBuyWithCryptoQuote(
 
     if (params.maxSlippageBPS) {
       queryParams.append("maxSlippageBPS", params.maxSlippageBPS.toString());
+    }
+
+    if (params.intentId) {
+      queryParams.append("intentId", params.intentId);
     }
 
     const queryString = queryParams.toString();

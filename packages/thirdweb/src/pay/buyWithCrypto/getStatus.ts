@@ -1,23 +1,16 @@
-import type { ThirdwebClient } from "../../../client/client.js";
-import { getClientFetch } from "../../../utils/fetch.js";
+import type { ThirdwebClient } from "../../client/client.js";
+import { getClientFetch } from "../../utils/fetch.js";
+import type {
+  PayOnChainTransactionDetails,
+  PayTokenInfo,
+} from "../utils/commonTypes.js";
 import { getPayBuyWithCryptoStatusUrl } from "../utils/definitions.js";
-import type { QuoteTokenInfo } from "./getQuote.js";
 
 // TODO: add JSDoc description for all properties
 
-export type BuyWithCryptoTransactionDetails = {
-  transactionHash: string;
-  token: QuoteTokenInfo;
-  amountWei: string;
-  amount: string;
-  amountUSDCents: number;
-  completedAt?: string; // ISO DATE
-  explorerLink?: string;
-};
-
 export type BuyWithCryptoQuoteSummary = {
-  fromToken: QuoteTokenInfo;
-  toToken: QuoteTokenInfo;
+  fromToken: PayTokenInfo;
+  toToken: PayTokenInfo;
 
   fromAmountWei: string;
   fromAmount: string;
@@ -46,12 +39,7 @@ export type BuyWithCryptoTransaction = {
   transactionHash: string;
 };
 
-export type BuyWithCryptoStatuses =
-  | "NOT_FOUND"
-  | "NONE"
-  | "PENDING"
-  | "FAILED"
-  | "COMPLETED";
+export type BuyWithCryptoStatuses = "NONE" | "PENDING" | "FAILED" | "COMPLETED";
 
 export type BuyWithCryptoSubStatuses =
   | "NONE"
@@ -67,18 +55,27 @@ export type SwapType = "SAME_CHAIN" | "CROSS_CHAIN";
  * The object returned by the [`getBuyWithCryptoStatus`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoStatus) function to represent the status of a quoted transaction
  * @buyCrypto
  */
-export type BuyWithCryptoStatus = {
-  quote: BuyWithCryptoQuoteSummary;
-  swapType: SwapType;
-  source: BuyWithCryptoTransactionDetails;
-  destination?: BuyWithCryptoTransactionDetails;
-  status: BuyWithCryptoStatuses;
-  subStatus: BuyWithCryptoSubStatuses;
-  fromAddress: string;
-  toAddress: string;
-  failureMessage?: string;
-  bridge?: string;
-};
+export type BuyWithCryptoStatus =
+  | {
+      status: "NOT_FOUND";
+    }
+  | {
+      quote: BuyWithCryptoQuoteSummary;
+      swapType: SwapType;
+      source?: PayOnChainTransactionDetails;
+      destination?: PayOnChainTransactionDetails;
+      status: BuyWithCryptoStatuses;
+      subStatus: BuyWithCryptoSubStatuses;
+      fromAddress: string;
+      toAddress: string;
+      failureMessage?: string;
+      bridge?: string;
+    };
+
+export type ValidBuyWithCryptoStatus = Exclude<
+  BuyWithCryptoStatus,
+  { status: "NOT_FOUND" }
+>;
 
 /**
  * Gets the status of a buy with crypto transaction
@@ -86,7 +83,7 @@ export type BuyWithCryptoStatus = {
  * @example
  *
  * ```ts
- * import { sendTransaction, prepareTransaction } from "thirdweb";
+ * import { sendTransaction } from "thirdweb";
  * import { getBuyWithCryptoStatus, getBuyWithCryptoQuote } from "thirdweb/pay";
  *
  * // get a quote between two tokens
@@ -94,23 +91,26 @@ export type BuyWithCryptoStatus = {
  *
  * // if approval is required, send the approval transaction
  * if (quote.approval) {
- *  const preparedApproval = prepareTransaction(quote.approval);
- *  await sendTransaction({
- *    transaction,
- *    wallet,
+ *  const txResult = await sendTransaction({
+ *    transaction: quote.approval,
+ *    account: account, // account from connected wallet
  *  });
+ *
+ *  await waitForReceipt(txResult);
  * }
  *
  * // send the quoted transaction
- * const preparedTransaction = prepareTransaction(quote.transactionRequest);
- * const transactionResult = await sendTransaction({
- *    transaction,
- *    wallet,
+ * const swapTxResult = await sendTransaction({
+ *    transaction: quote.transactionRequest,
+ *    account: account, // account from connected wallet
  *  });
+ *
+ * await waitForReceipt(swapTxResult);
+ *
  * // keep polling the status of the quoted transaction until it returns a success or failure status
  * const status = await getBuyWithCryptoStatus({
  *    client,
- *    transactionHash: transactionResult.transactionHash,
+ *    transactionHash: swapTxResult.transactionHash,
  * }});
  * ```
  * @returns Object of type [`BuyWithCryptoStatus`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoStatus)
@@ -130,7 +130,7 @@ export async function getBuyWithCryptoStatus(
 
     const response = await getClientFetch(buyWithCryptoTransaction.client)(url);
 
-    // Assuming the response directly matches the SwapResponse interface
+    // Assuming the response directly matches the BuyWithCryptoStatus interface
     if (!response.ok) {
       response.body?.cancel();
       throw new Error(`HTTP error! status: ${response.status}`);

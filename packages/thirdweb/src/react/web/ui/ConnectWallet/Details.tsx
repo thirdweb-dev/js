@@ -9,7 +9,7 @@ import {
   TextAlignJustifyIcon,
 } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useState } from "react";
 import { ethereum } from "../../../../chains/chain-definitions/ethereum.js";
 import type { Chain } from "../../../../chains/types.js";
 import { getContract } from "../../../../contract/contract.js";
@@ -44,7 +44,7 @@ import { Button, IconButton } from "../components/buttons.js";
 import { Link, Text } from "../components/text.js";
 import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 import { fadeInAnimation } from "../design-system/animations.js";
-import { StyledButton, StyledDiv } from "../design-system/elements.js";
+import { StyledButton } from "../design-system/elements.js";
 import {
   type Theme,
   fontSize,
@@ -64,11 +64,12 @@ import type { SupportedTokens } from "./defaultTokens.js";
 import { FundsIcon } from "./icons/FundsIcon.js";
 import { SmartWalletBadgeIcon } from "./icons/SmartAccountBadgeIcon.js";
 import { WalletIcon } from "./icons/WalletIcon.js";
-import { BuyScreen } from "./screens/Buy/SwapScreen.js";
-import { swapTransactionsStore } from "./screens/Buy/swap/pendingSwapTx.js";
+import { genericTokenIcon } from "./icons/dataUris.js";
+import { LazyBuyScreen } from "./screens/Buy/LazyBuyScreen.js";
+import { BuyTxHistory } from "./screens/Buy/tx-history/BuyTxHistory.js";
 import { ReceiveFunds } from "./screens/ReceiveFunds.js";
 import { SendFunds } from "./screens/SendFunds.js";
-import { SwapTransactionsScreen } from "./screens/SwapTransactionsScreen.js";
+import { ViewFunds } from "./screens/ViewFunds.js";
 
 const TW_CONNECTED_WALLET = "tw-connected-wallet";
 
@@ -81,7 +82,8 @@ type WalletDetailsModalScreen =
   | "receive"
   | "buy"
   | "network-switcher"
-  | "pending-tx";
+  | "pending-tx"
+  | "view-funds";
 
 /**
  * @internal
@@ -91,23 +93,18 @@ export const ConnectedWalletDetails: React.FC<{
   detailsButton?: ConnectButton_detailsButtonOptions;
   detailsModal?: ConnectButton_detailsModalOptions;
   theme: "light" | "dark" | Theme;
-  supportedTokens: SupportedTokens;
+  supportedTokens?: SupportedTokens;
   chains: Chain[];
   chain?: Chain;
   switchButton: ConnectButtonProps["switchButton"];
 }> = (props) => {
   const { connectLocale: locale, client } = useConnectUI();
+
   const activeWallet = useActiveWallet();
   const activeAccount = useActiveAccount();
   const walletChain = useActiveWalletChain();
   const chainQuery = useChainQuery(walletChain);
   const { disconnect } = useDisconnect();
-  const swapTxs = useSyncExternalStore(
-    swapTransactionsStore.subscribe,
-    swapTransactionsStore.getValue,
-  );
-  const pendingSwapTxs = swapTxs.filter((tx) => tx.status === "PENDING");
-
   // prefetch chains metadata with low concurrency
   useChainsQuery(props.chains, 5);
 
@@ -480,10 +477,24 @@ export const ConnectedWalletDetails: React.FC<{
             <TextAlignJustifyIcon width={iconSize.md} height={iconSize.md} />
             <Container flex="row" gap="xs" center="y">
               <Text color="primaryText">{locale.transactions}</Text>
-              {pendingSwapTxs && pendingSwapTxs.length > 0 && (
-                <BadgeCount>{pendingSwapTxs.length}</BadgeCount>
-              )}
             </Container>
+          </MenuButton>
+
+          <MenuButton
+            onClick={() => {
+              setScreen("view-funds");
+            }}
+            style={{
+              fontSize: fontSize.sm,
+            }}
+          >
+            <Img
+              width={iconSize.md}
+              height={iconSize.md}
+              src={genericTokenIcon}
+              client={client}
+            />
+            <Text color="primaryText">View Funds</Text>
           </MenuButton>
 
           {/* Switch to Personal Wallet  */}
@@ -585,9 +596,14 @@ export const ConnectedWalletDetails: React.FC<{
 
   if (screen === "pending-tx") {
     content = (
-      <SwapTransactionsScreen
+      <BuyTxHistory
+        isBuyForTx={false}
+        isEmbed={false}
         onBack={() => setScreen("main")}
         client={client}
+        onDone={() => {
+          setIsOpen(false);
+        }}
       />
     );
   }
@@ -630,6 +646,19 @@ export const ConnectedWalletDetails: React.FC<{
   // }
 
   // send funds
+  else if (screen === "view-funds") {
+    content = (
+      <ViewFunds
+        supportedTokens={props.supportedTokens}
+        onBack={() => {
+          setScreen("main");
+        }}
+        client={client}
+      />
+    );
+  }
+
+  // send funds
   else if (screen === "send") {
     content = (
       <SendFunds
@@ -656,12 +685,18 @@ export const ConnectedWalletDetails: React.FC<{
   // swap tokens
   else if (screen === "buy") {
     content = (
-      <BuyScreen
+      <LazyBuyScreen
+        isEmbed={false}
         client={client}
         onBack={() => setScreen("main")}
         supportedTokens={props.supportedTokens}
         onViewPendingTx={() => setScreen("pending-tx")}
         connectLocale={locale}
+        payOptions={props.detailsModal?.payOptions || {}}
+        theme={typeof props.theme === "string" ? props.theme : props.theme.type}
+        onDone={() => {
+          setIsOpen(false);
+        }}
       />
     );
   }
@@ -748,22 +783,6 @@ const MenuButton = /* @__PURE__ */ StyledButton(() => {
     "&[data-variant='primary']:hover svg": {
       color: `${theme.colors.primaryText}!important`,
     },
-  };
-});
-
-const BadgeCount = /* @__PURE__ */ StyledDiv(() => {
-  const theme = useCustomTheme();
-  return {
-    background: theme.colors.primaryButtonBg,
-    color: theme.colors.primaryButtonText,
-    fontSize: fontSize.sm,
-    fontWeight: 500,
-    borderRadius: "50%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    minWidth: "22px",
-    minHeight: "22px",
   };
 });
 

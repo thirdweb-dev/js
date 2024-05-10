@@ -2,7 +2,7 @@ export type TokenInfo = {
   name: string;
   symbol: string;
   address: string;
-  icon: string;
+  icon?: string;
 };
 
 const wrappedEthIcon =
