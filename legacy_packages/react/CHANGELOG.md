@@ -1,5 +1,17 @@
 # @thirdweb-dev/react
 
+## 4.6.17
+
+### Patch Changes
+
+- [#2985](https://github.com/thirdweb-dev/js/pull/2985) [`55081d8`](https://github.com/thirdweb-dev/js/commit/55081d833585b8c7c24690abd87cabeee95cde33) Thanks [@jnsdls](https://github.com/jnsdls)! - thirdweb Pay UI minor improvements
+
+- Updated dependencies [[`ef1b7cd`](https://github.com/thirdweb-dev/js/commit/ef1b7cdb90aaa4c33cf0c7f619cab0d4d4acfccf)]:
+  - @thirdweb-dev/chains@0.1.107
+  - @thirdweb-dev/sdk@4.0.78
+  - @thirdweb-dev/react-core@4.6.17
+  - @thirdweb-dev/wallets@2.5.18
+
 ## 4.6.16
 
 ### Patch Changes
