@@ -1511,7 +1511,7 @@ importers:
         version: 7.0.0
       mipd:
         specifier: 0.0.7
-        version: 0.0.7(typescript@5.4.4)
+        version: 0.0.7
       node-libs-browser:
         specifier: 2.2.1
         version: 2.2.1
@@ -1526,7 +1526,7 @@ importers:
         version: 0.1.2
       viem:
         specifier: 2.9.18
-        version: 2.9.18(typescript@5.4.4)(zod@3.22.4)
+        version: 2.9.18(zod@3.22.4)
     devDependencies:
       '@testing-library/jest-dom':
         specifier: ^6.4.5
@@ -12992,7 +12992,6 @@ packages:
     dependencies:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
-    bundledDependencies: false
 
   /event-emitter@0.3.5:
     resolution: {integrity: sha512-D9rRn9y7kLPnJ+hMq7S/nhvoKwwvVJahBi2BPmx3bvbsEdK3W9ii8cBSGjP+72/LnM4n6fo3+dkCX5FeTQruXA==}
@@ -15968,15 +15967,13 @@ packages:
       yallist: 4.0.0
     dev: false
 
-  /mipd@0.0.7(typescript@5.4.4):
+  /mipd@0.0.7:
     resolution: {integrity: sha512-aAPZPNDQ3uMTdKbuO2YmAw2TxLHO0moa4YKAyETM/DTj5FloZo+a+8tU+iv4GmW+sOxKLSRwcSFuczk+Cpt6fg==}
     peerDependencies:
       typescript: '>=5.0.4'
     peerDependenciesMeta:
       typescript:
         optional: true
-    dependencies:
-      typescript: 5.4.4
     dev: false
 
   /mitata@0.1.11:
@@ -20055,7 +20052,7 @@ packages:
       semver: 7.6.0
     dev: true
 
-  /viem@2.9.18(typescript@5.4.4)(zod@3.22.4):
+  /viem@2.9.18(zod@3.22.4):
     resolution: {integrity: sha512-QULuau6DWDVRjGDVIUPuUybqiYu8mxscvwkKQ7dqNRl6w/t8RWs92aJZSQpqEULoERlKYyFFlj7cz4mWFEchsg==}
     peerDependencies:
       typescript: '>=5.0.4'
@@ -20070,7 +20067,6 @@ packages:
       '@scure/bip39': 1.2.1
       abitype: 1.0.0(typescript@5.4.4)(zod@3.22.4)
       isows: 1.0.3(ws@8.13.0)
-      typescript: 5.4.4
       ws: 8.13.0
     transitivePeerDependencies:
       - bufferutil
