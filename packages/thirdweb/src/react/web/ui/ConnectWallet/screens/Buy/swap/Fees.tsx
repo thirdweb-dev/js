@@ -50,6 +50,7 @@ export function FiatFees(props: {
 }) {
   return (
     <Container flex="column" gap="xs">
+      {/* Amount ( without fees included ) */}
       <div
         style={{
           display: "flex",
@@ -65,6 +66,7 @@ export function FiatFees(props: {
         </Text>
       </div>
 
+      {/* Processing Fees */}
       {props.quote.processingFees.map((fee, i) => {
         const feeAmount = formatNumber(Number(fee.amount), 4);
 
@@ -93,6 +95,7 @@ export function FiatFees(props: {
       <Line />
       <Spacer y="xxs" />
 
+      {/* Total Amount  */}
       <div
         style={{
           display: "flex",

@@ -31,7 +31,7 @@ export type BuyHistoryQueryOptions = Omit<
  * import { useBuyHistory } from "thirdweb/react";
  *
  * function Component() {
- *  const buyWithCryptoHistory = useBuyHistory(params);
+ *  const buyHistoryQuery = useBuyHistory(params);
  *  return <div> ... </div>
  * }
  * ```
@@ -47,13 +47,7 @@ export function useBuyHistory(
       if (!params) {
         throw new Error("params are required");
       }
-      if (!params?.client) {
-        throw new Error("Client is required");
-      }
-      return getBuyHistory({
-        ...params,
-        client: params.client,
-      });
+      return getBuyHistory(params);
     },
     enabled: !!params,
   });

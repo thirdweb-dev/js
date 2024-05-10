@@ -1,6 +1,7 @@
 import type { ThirdwebClient } from "../client/client.js";
-import type { BuyWithCryptoStatus, BuyWithFiatStatus } from "../exports/pay.js";
 import { getClientFetch } from "../utils/fetch.js";
+import type { BuyWithCryptoStatus } from "./buyWithCrypto/getStatus.js";
+import type { BuyWithFiatStatus } from "./buyWithFiat/getStatus.js";
 import { getPayBuyHistoryEndpoint } from "./utils/definitions.js";
 
 /**

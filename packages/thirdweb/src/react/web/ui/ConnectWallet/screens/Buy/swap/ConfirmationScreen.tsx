@@ -79,7 +79,7 @@ export function SwapConfirmationScreen(props: {
         <Spacer y="lg" />
       )}
 
-      {/* You Receive */}
+      {/* Receive */}
       <ConfirmItem label="Receive">
         <RenderTokenInfo
           chain={props.toChain}
@@ -90,6 +90,7 @@ export function SwapConfirmationScreen(props: {
         />
       </ConfirmItem>
 
+      {/* Pay */}
       <ConfirmItem label="Pay">
         <RenderTokenInfo
           chain={props.fromChain}
@@ -117,7 +118,7 @@ export function SwapConfirmationScreen(props: {
 
       <Spacer y="xl" />
 
-      {/* Show 2 steps  */}
+      {/* Show 2 steps - Approve and confirm  */}
       {isApprovalRequired && (
         <>
           <Spacer y="sm" />

@@ -18,7 +18,7 @@ export type BuyWithFiatHistoryQueryOptions = Omit<
 >;
 
 /**
- * Hook to get the "Buy with Fiat" transaction history for a given wallet.
+ * Hook to get the "Buy with Fiat" transaction history for a given wallet address.
  *
  * This hook is a React Query wrapper of the [`getBuyWithFiatHistory`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithFiatHistory) function.
  * You can also use that function directly

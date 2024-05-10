@@ -682,7 +682,7 @@ export const ConnectedWalletDetails: React.FC<{
     );
   }
 
-  // swap tokens
+  // thirdweb pay
   else if (screen === "buy") {
     content = (
       <LazyBuyScreen
