@@ -1,5 +1,21 @@
 # @thirdweb-dev/react-native
 
+## 0.8.0
+
+### Minor Changes
+
+- [#2956](https://github.com/thirdweb-dev/js/pull/2956) [`5a39c04`](https://github.com/thirdweb-dev/js/commit/5a39c049c77e7ce3f1159e8201f5fc0612f17389) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Pin v4 dependencies, move react-native-svg to peer dependency
+
+### Patch Changes
+
+- [#2968](https://github.com/thirdweb-dev/js/pull/2968) [`3887b76`](https://github.com/thirdweb-dev/js/commit/3887b76689aa960be9be356bc1300b6d2798e24d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Pin all dependencies for RN v4
+
+- Updated dependencies [[`2bfaafc`](https://github.com/thirdweb-dev/js/commit/2bfaafcc10fcdff000025011a81e885b1a9fdef8), [`0e45f24`](https://github.com/thirdweb-dev/js/commit/0e45f24fd69e556e4364e38fd18e3eabb0498be8)]:
+  - @thirdweb-dev/chains@0.1.106
+  - @thirdweb-dev/sdk@4.0.77
+  - @thirdweb-dev/react-core@4.6.16
+  - @thirdweb-dev/wallets@2.5.17
+
 ## 0.7.47
 
 ### Patch Changes
