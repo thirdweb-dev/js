@@ -22,7 +22,7 @@ const SUPPORTED_RESPONSE = {
 
 const UNSUPPORTED_RESPONSE = {
   code: -32601,
-  message: "some nonsense the wallet sends us",
+  message: "some nonsense the wallet sends us about not supporting",
 };
 
 const UNSUPPORTED_RESPONSE_STRING = "does not support wallet_getCapabilities";
@@ -81,7 +81,7 @@ describe.sequential("injected wallet", async () => {
 
   describe("unsupported", () => {
     beforeAll(() => {
-      mocks.injectedRequest.mockResolvedValue(UNSUPPORTED_RESPONSE);
+      mocks.injectedRequest.mockRejectedValue(UNSUPPORTED_RESPONSE);
     });
 
     afterEach(() => {
@@ -104,7 +104,6 @@ describe.sequential("injected wallet", async () => {
       } else {
         throw new Error("capabilities does not contain message");
       }
-      expect(capabilities[ANVIL_CHAIN.id]).toEqual({});
     });
   });
 });
