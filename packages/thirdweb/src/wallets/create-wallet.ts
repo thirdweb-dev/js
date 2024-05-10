@@ -16,7 +16,7 @@ import type {
 import { trackConnect } from "../analytics/track.js";
 import type { ThirdwebClient } from "../client/client.js";
 import { getContract } from "../contract/contract.js";
-import { isContractDeployed } from "../exports/utils.js";
+import { isContractDeployed } from "../utils/bytecode/is-contract-deployed.js";
 import { COINBASE } from "./constants.js";
 import { DEFAULT_ACCOUNT_FACTORY } from "./smart/lib/constants.js";
 import type { WCConnectOptions } from "./wallet-connect/types.js";

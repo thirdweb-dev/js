@@ -1,5 +1,33 @@
 # @thirdweb-dev/wallets
 
+## 2.5.19
+
+### Patch Changes
+
+- [#2988](https://github.com/thirdweb-dev/js/pull/2988) [`02c0319`](https://github.com/thirdweb-dev/js/commit/02c03196ad38de888ff86311c68fa010018bda60) Thanks [@jnsdls](https://github.com/jnsdls)! - bump all to fix release
+
+- Updated dependencies [[`02c0319`](https://github.com/thirdweb-dev/js/commit/02c03196ad38de888ff86311c68fa010018bda60)]:
+  - @thirdweb-dev/chains@0.1.108
+  - @thirdweb-dev/contracts-js@1.3.23
+  - @thirdweb-dev/crypto@0.2.6
+  - @thirdweb-dev/sdk@4.0.79
+
+## 2.5.18
+
+### Patch Changes
+
+- Updated dependencies [[`ef1b7cd`](https://github.com/thirdweb-dev/js/commit/ef1b7cdb90aaa4c33cf0c7f619cab0d4d4acfccf)]:
+  - @thirdweb-dev/chains@0.1.107
+  - @thirdweb-dev/sdk@4.0.78
+
+## 2.5.17
+
+### Patch Changes
+
+- Updated dependencies [[`2bfaafc`](https://github.com/thirdweb-dev/js/commit/2bfaafcc10fcdff000025011a81e885b1a9fdef8), [`0e45f24`](https://github.com/thirdweb-dev/js/commit/0e45f24fd69e556e4364e38fd18e3eabb0498be8)]:
+  - @thirdweb-dev/chains@0.1.106
+  - @thirdweb-dev/sdk@4.0.77
+
 ## 2.5.16
 
 ### Patch Changes

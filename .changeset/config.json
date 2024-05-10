@@ -8,8 +8,7 @@
   ],
   "commit": false,
   "fixed": [
-    ["@thirdweb-dev/react-core", "@thirdweb-dev/react"],
-    ["@thirdweb-dev/react-native-compat", "@thirdweb-dev/react-native"]
+    ["@thirdweb-dev/react-core", "@thirdweb-dev/react"]
   ],
   "linked": [],
   "access": "public",

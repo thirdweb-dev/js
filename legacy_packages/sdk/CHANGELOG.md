@@ -1,5 +1,38 @@
 # @thirdweb-dev/sdk
 
+## 4.0.79
+
+### Patch Changes
+
+- [#2988](https://github.com/thirdweb-dev/js/pull/2988) [`02c0319`](https://github.com/thirdweb-dev/js/commit/02c03196ad38de888ff86311c68fa010018bda60) Thanks [@jnsdls](https://github.com/jnsdls)! - bump all to fix release
+
+- Updated dependencies [[`02c0319`](https://github.com/thirdweb-dev/js/commit/02c03196ad38de888ff86311c68fa010018bda60)]:
+  - @thirdweb-dev/chains@0.1.108
+  - @thirdweb-dev/contracts-js@1.3.23
+  - @thirdweb-dev/crypto@0.2.6
+  - @thirdweb-dev/generated-abis@0.0.2
+  - @thirdweb-dev/merkletree@0.2.6
+  - @thirdweb-dev/storage@2.0.15
+  - thirdweb@5.18.1
+
+## 4.0.78
+
+### Patch Changes
+
+- Updated dependencies [[`55081d8`](https://github.com/thirdweb-dev/js/commit/55081d833585b8c7c24690abd87cabeee95cde33), [`ef1b7cd`](https://github.com/thirdweb-dev/js/commit/ef1b7cdb90aaa4c33cf0c7f619cab0d4d4acfccf)]:
+  - thirdweb@5.18.0
+  - @thirdweb-dev/chains@0.1.107
+
+## 4.0.77
+
+### Patch Changes
+
+- [#2960](https://github.com/thirdweb-dev/js/pull/2960) [`0e45f24`](https://github.com/thirdweb-dev/js/commit/0e45f24fd69e556e4364e38fd18e3eabb0498be8) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Update zksync addresses
+
+- Updated dependencies [[`24c1670`](https://github.com/thirdweb-dev/js/commit/24c1670e7044ba55e8d0f0f6e9be6a19cca92b28), [`3377fc9`](https://github.com/thirdweb-dev/js/commit/3377fc98825a29abe58b87907165afe6a7dca946), [`fd1bd7e`](https://github.com/thirdweb-dev/js/commit/fd1bd7e7ef11285e103898df1d71f079da8ee06f), [`d4808fd`](https://github.com/thirdweb-dev/js/commit/d4808fd7e83e0ca9f0b0f78e4248a854ecfec710), [`b1ca05e`](https://github.com/thirdweb-dev/js/commit/b1ca05ec12dfa40784667b95944d64982d17b753), [`4de8802`](https://github.com/thirdweb-dev/js/commit/4de88024357cf8197ec78fb4fabaf5bddd47c605), [`5b6b241`](https://github.com/thirdweb-dev/js/commit/5b6b24133430db7953d14bbda21393c0f3fbfa74), [`ae10776`](https://github.com/thirdweb-dev/js/commit/ae1077656fe2cf7eb9848b7391c8edcdba0fe77a), [`2bfaafc`](https://github.com/thirdweb-dev/js/commit/2bfaafcc10fcdff000025011a81e885b1a9fdef8), [`d660b6c`](https://github.com/thirdweb-dev/js/commit/d660b6ce3249bdcd1ff57719ecee7db5c7d47718), [`02a0ca9`](https://github.com/thirdweb-dev/js/commit/02a0ca9727e1fabfaf1593dd8a3728ca9a32842d)]:
+  - thirdweb@5.17.0
+  - @thirdweb-dev/chains@0.1.106
+
 ## 4.0.76
 
 ### Patch Changes

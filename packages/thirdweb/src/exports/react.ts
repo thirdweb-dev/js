@@ -80,20 +80,33 @@ export {
 export { createContractQuery } from "../react/core/utils/createQuery.js";
 export { useInvalidateContractQuery } from "../react/core/hooks/others/useInvalidateQueries.js";
 
-// Buy with crypto
+// pay
 export {
   useBuyWithCryptoQuote,
-  type BuyWithCryptoQuoteQueryParams,
+  type BuyWithCryptoQuoteQueryOptions,
 } from "../react/core/hooks/pay/useBuyWithCryptoQuote.js";
-
-export {
-  useBuyWithCryptoStatus,
-  type BuyWithCryptoStatusQueryParams,
-} from "../react/core/hooks/pay/useBuyWithCryptoStatus.js";
+export { useBuyWithCryptoStatus } from "../react/core/hooks/pay/useBuyWithCryptoStatus.js";
 export {
   useBuyWithCryptoHistory,
-  type BuyWithCryptoHistoryQueryParams,
+  type BuyWithCryptoHistoryQueryOptions,
 } from "../react/core/hooks/pay/useBuyWithCryptoHistory.js";
+export {
+  useBuyWithFiatQuote,
+  type BuyWithFiatQuoteQueryOptions,
+} from "../react/core/hooks/pay/useBuyWithFiatQuote.js";
+export { useBuyWithFiatStatus } from "../react/core/hooks/pay/useBuyWithFiatStatus.js";
+export {
+  useBuyWithFiatHistory,
+  type BuyWithFiatHistoryQueryOptions,
+} from "../react/core/hooks/pay/useBuyWithFiatHistory.js";
+export {
+  useBuyHistory,
+  type BuyHistoryQueryOptions,
+} from "../react/core/hooks/pay/useBuyHistory.js";
+export {
+  usePostOnRampQuote,
+  type PostOnRampQuoteQueryOptions,
+} from "../react/core/hooks/pay/usePostOnrampQuote.js";
 
 export {
   AutoConnect,
@@ -102,3 +115,10 @@ export {
 
 // auth
 export { type SiweAuthOptions } from "../react/core/hooks/auth/useSiweAuth.js";
+
+export {
+  PayEmbed,
+  type PayEmbedProps,
+  type PayEmbedConnectOptions,
+} from "../react/web/ui/PayEmbed.js";
+export type { PayUIOptions } from "../react/web/ui/ConnectWallet/ConnectButtonProps.js";

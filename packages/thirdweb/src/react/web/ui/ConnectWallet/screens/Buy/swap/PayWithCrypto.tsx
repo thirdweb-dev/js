@@ -1,4 +1,3 @@
-import styled from "@emotion/styled";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
@@ -12,7 +11,6 @@ import { Container } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { TokenSymbol } from "../../../../components/token/TokenSymbol.js";
-import { useCustomTheme } from "../../../../design-system/CustomThemeProvider.js";
 import {
   fontSize,
   iconSize,
@@ -21,7 +19,7 @@ import {
 } from "../../../../design-system/index.js";
 import type { TokenInfo } from "../../../defaultTokens.js";
 import { WalletIcon } from "../../../icons/WalletIcon.js";
-import { formatTokenBalance } from "../../TokenSelector.js";
+import { formatTokenBalance } from "../../formatTokenBalance.js";
 import { type NativeToken, isNativeToken } from "../../nativeToken.js";
 
 /**
@@ -37,6 +35,7 @@ export function PayWithCrypto(props: {
   token: TokenInfo | NativeToken;
   isLoading: boolean;
   client: ThirdwebClient;
+  freezeChainAndTokenSelection?: boolean;
 }) {
   const chainQuery = useChainQuery(props.chain);
   const activeAccount = useActiveAccount();
@@ -67,7 +66,18 @@ export function PayWithCrypto(props: {
       }}
     >
       {/* Left */}
-      <TokenButton variant="secondary" onClick={props.onSelectToken}>
+      <Button
+        variant="ghost"
+        onClick={props.onSelectToken}
+        gap="sm"
+        style={{
+          paddingInline: spacing.sm,
+          paddingBlock: spacing.sm,
+          minWidth: "50%",
+          justifyContent: "flex-start",
+        }}
+        disabled={props.freezeChainAndTokenSelection}
+      >
         <TokenIcon
           token={props.token}
           chain={props.chain}
@@ -75,7 +85,7 @@ export function PayWithCrypto(props: {
           client={props.client}
         />
         <Container flex="column" gap="xxs">
-          <Container flex="row" gap="xs" center="y">
+          <Container flex="row" gap="xs" center="y" color="primaryText">
             <TokenSymbol token={props.token} chain={props.chain} size="sm" />
             <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
           </Container>
@@ -85,7 +95,7 @@ export function PayWithCrypto(props: {
             <Skeleton width="90px" height={fontSize.xs} />
           )}
         </Container>
-      </TokenButton>
+      </Button>
 
       {/* Right */}
       <div
@@ -129,23 +139,3 @@ export function PayWithCrypto(props: {
     </Container>
   );
 }
-
-const TokenButton = /* @__PURE__ */ styled(Button)(() => {
-  const theme = useCustomTheme();
-  return {
-    background: "transparent",
-    border: "1px solid transparent",
-    "&:hover": {
-      background: "transparent",
-      borderColor: theme.colors.accentText,
-    },
-    justifyContent: "flex-start",
-    transition: "background 0.3s, border-color 0.3s",
-    gap: spacing.sm,
-    paddingInline: spacing.sm,
-    paddingBlock: spacing.sm,
-    color: theme.colors.primaryText,
-    borderRadius: radius.md,
-    minWidth: "50%",
-  };
-});

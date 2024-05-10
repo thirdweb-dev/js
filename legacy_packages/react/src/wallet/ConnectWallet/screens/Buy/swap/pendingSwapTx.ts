@@ -1,11 +1,12 @@
-import { getBuyWithCryptoStatus } from "@thirdweb-dev/sdk";
-import type { BuyWithCryptoStatus } from "@thirdweb-dev/sdk";
+import { getBuyWithCryptoStatus, type BuyWithCryptoStatus } from "@thirdweb-dev/sdk";
 import { wait } from "../../../../../utils/wait";
+
+type ValidBuyWithCryptoStatus = Exclude<BuyWithCryptoStatus, { status: 'NOT_FOUND'}>
 
 type SwapTxInfo = {
   transactionHash: string;
-  status: BuyWithCryptoStatus["status"];
-  subStatus?: BuyWithCryptoStatus["subStatus"];
+  status: ValidBuyWithCryptoStatus["status"];
+  subStatus?: ValidBuyWithCryptoStatus["subStatus"];
   source: {
     symbol: string;
     value: string;
