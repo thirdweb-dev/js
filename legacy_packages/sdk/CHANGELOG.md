@@ -1,5 +1,20 @@
 # @thirdweb-dev/sdk
 
+## 4.0.79
+
+### Patch Changes
+
+- [#2988](https://github.com/thirdweb-dev/js/pull/2988) [`02c0319`](https://github.com/thirdweb-dev/js/commit/02c03196ad38de888ff86311c68fa010018bda60) Thanks [@jnsdls](https://github.com/jnsdls)! - bump all to fix release
+
+- Updated dependencies [[`02c0319`](https://github.com/thirdweb-dev/js/commit/02c03196ad38de888ff86311c68fa010018bda60)]:
+  - @thirdweb-dev/chains@0.1.108
+  - @thirdweb-dev/contracts-js@1.3.23
+  - @thirdweb-dev/crypto@0.2.6
+  - @thirdweb-dev/generated-abis@0.0.2
+  - @thirdweb-dev/merkletree@0.2.6
+  - @thirdweb-dev/storage@2.0.15
+  - thirdweb@5.18.1
+
 ## 4.0.78
 
 ### Patch Changes
