@@ -986,19 +986,19 @@ importers:
         specifier: ^4.36.1
         version: 4.36.1(react-native@0.71.17)(react@18.2.0)
       '@thirdweb-dev/chains':
-        specifier: 0.1.106
+        specifier: 0.1.107
         version: link:../chains
       '@thirdweb-dev/react-core':
-        specifier: 4.6.16
+        specifier: 4.6.17
         version: link:../react-core
       '@thirdweb-dev/sdk':
-        specifier: 4.0.77
+        specifier: 4.0.78
         version: link:../sdk
       '@thirdweb-dev/storage':
         specifier: 2.0.14
         version: link:../storage
       '@thirdweb-dev/wallets':
-        specifier: 2.5.17
+        specifier: 2.5.18
         version: link:../wallets
       abitype:
         specifier: 1.0.0
@@ -1679,7 +1679,7 @@ importers:
         version: 7.0.0
       mipd:
         specifier: 0.0.7
-        version: 0.0.7
+        version: 0.0.7(typescript@5.4.4)
       node-libs-browser:
         specifier: 2.2.1
         version: 2.2.1
@@ -1694,7 +1694,7 @@ importers:
         version: 0.1.2
       viem:
         specifier: 2.9.18
-        version: 2.9.18(zod@3.22.4)
+        version: 2.9.18(typescript@5.4.4)(zod@3.22.4)
     devDependencies:
       '@testing-library/jest-dom':
         specifier: ^6.4.5
@@ -20922,13 +20922,15 @@ packages:
       yallist: 4.0.0
     dev: false
 
-  /mipd@0.0.7:
+  /mipd@0.0.7(typescript@5.4.4):
     resolution: {integrity: sha512-aAPZPNDQ3uMTdKbuO2YmAw2TxLHO0moa4YKAyETM/DTj5FloZo+a+8tU+iv4GmW+sOxKLSRwcSFuczk+Cpt6fg==}
     peerDependencies:
       typescript: '>=5.0.4'
     peerDependenciesMeta:
       typescript:
         optional: true
+    dependencies:
+      typescript: 5.4.4
     dev: false
 
   /mitata@0.1.11:
@@ -25755,7 +25757,7 @@ packages:
       semver: 7.6.0
     dev: true
 
-  /viem@2.9.18(zod@3.22.4):
+  /viem@2.9.18(typescript@5.4.4)(zod@3.22.4):
     resolution: {integrity: sha512-QULuau6DWDVRjGDVIUPuUybqiYu8mxscvwkKQ7dqNRl6w/t8RWs92aJZSQpqEULoERlKYyFFlj7cz4mWFEchsg==}
     peerDependencies:
       typescript: '>=5.0.4'
@@ -25770,6 +25772,7 @@ packages:
       '@scure/bip39': 1.2.1
       abitype: 1.0.0(typescript@5.4.4)(zod@3.22.4)
       isows: 1.0.3(ws@8.13.0)
+      typescript: 5.4.4
       ws: 8.13.0
     transitivePeerDependencies:
       - bufferutil
