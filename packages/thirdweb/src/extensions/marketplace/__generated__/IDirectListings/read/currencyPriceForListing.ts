@@ -126,6 +126,7 @@ export function decodeCurrencyPriceForListingResult(result: Hex) {
  * import { currencyPriceForListing } from "thirdweb/extensions/marketplace";
  *
  * const result = await currencyPriceForListing({
+ *  contract,
  *  listingId: ...,
  *  currency: ...,
  * });

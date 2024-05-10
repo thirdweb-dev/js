@@ -120,6 +120,7 @@ export function decodeReverseResult(result: Hex) {
  * import { reverse } from "thirdweb/extensions/ens";
  *
  * const result = await reverse({
+ *  contract,
  *  reverseName: ...,
  * });
  *

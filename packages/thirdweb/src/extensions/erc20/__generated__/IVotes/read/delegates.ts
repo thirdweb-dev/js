@@ -110,6 +110,7 @@ export function decodeDelegatesResult(result: Hex) {
  * import { delegates } from "thirdweb/extensions/erc20";
  *
  * const result = await delegates({
+ *  contract,
  *  account: ...,
  * });
  *

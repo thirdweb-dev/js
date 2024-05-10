@@ -121,6 +121,7 @@ export function decodeABIResult(result: Hex) {
  * import { ABI } from "thirdweb/extensions/ens";
  *
  * const result = await ABI({
+ *  contract,
  *  name: ...,
  *  contentTypes: ...,
  * });

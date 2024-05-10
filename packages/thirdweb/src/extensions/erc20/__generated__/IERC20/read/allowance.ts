@@ -117,6 +117,7 @@ export function decodeAllowanceResult(result: Hex) {
  * import { allowance } from "thirdweb/extensions/erc20";
  *
  * const result = await allowance({
+ *  contract,
  *  owner: ...,
  *  spender: ...,
  * });

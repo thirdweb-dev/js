@@ -115,6 +115,7 @@ export function decodeIsAuctionExpiredResult(result: Hex) {
  * import { isAuctionExpired } from "thirdweb/extensions/marketplace";
  *
  * const result = await isAuctionExpired({
+ *  contract,
  *  auctionId: ...,
  * });
  *

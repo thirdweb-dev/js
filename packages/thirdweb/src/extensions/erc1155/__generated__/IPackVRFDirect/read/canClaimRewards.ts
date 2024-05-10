@@ -112,6 +112,7 @@ export function decodeCanClaimRewardsResult(result: Hex) {
  * import { canClaimRewards } from "thirdweb/extensions/erc1155";
  *
  * const result = await canClaimRewards({
+ *  contract,
  *  opener: ...,
  * });
  *

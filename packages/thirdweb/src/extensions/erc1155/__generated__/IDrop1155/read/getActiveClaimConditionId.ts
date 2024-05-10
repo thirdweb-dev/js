@@ -116,6 +116,7 @@ export function decodeGetActiveClaimConditionIdResult(result: Hex) {
  * import { getActiveClaimConditionId } from "thirdweb/extensions/erc1155";
  *
  * const result = await getActiveClaimConditionId({
+ *  contract,
  *  tokenId: ...,
  * });
  *

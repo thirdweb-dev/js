@@ -59,7 +59,9 @@ export function decodeNextTokenIdToMintResult(result: Hex) {
  * ```ts
  * import { nextTokenIdToMint } from "thirdweb/extensions/erc721";
  *
- * const result = await nextTokenIdToMint();
+ * const result = await nextTokenIdToMint({
+ *  contract,
+ * });
  *
  * ```
  */

@@ -57,7 +57,9 @@ export function decodeIdCounterResult(result: Hex) {
  * ```ts
  * import { idCounter } from "thirdweb/extensions/farcaster";
  *
- * const result = await idCounter();
+ * const result = await idCounter({
+ *  contract,
+ * });
  *
  * ```
  */

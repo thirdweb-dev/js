@@ -147,6 +147,7 @@ export function decodeVerifyResult(result: Hex) {
  * import { verify } from "thirdweb/extensions/thirdweb";
  *
  * const result = await verify({
+ *  contract,
  *  req: ...,
  *  signature: ...,
  * });

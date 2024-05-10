@@ -59,7 +59,9 @@ export function decodeCHANGE_RECOVERY_ADDRESS_TYPEHASHResult(result: Hex) {
  * ```ts
  * import { CHANGE_RECOVERY_ADDRESS_TYPEHASH } from "thirdweb/extensions/farcaster";
  *
- * const result = await CHANGE_RECOVERY_ADDRESS_TYPEHASH();
+ * const result = await CHANGE_RECOVERY_ADDRESS_TYPEHASH({
+ *  contract,
+ * });
  *
  * ```
  */

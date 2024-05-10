@@ -123,6 +123,7 @@ export function decodeGetAllResult(result: Hex) {
  * import { getAll } from "thirdweb/extensions/thirdweb";
  *
  * const result = await getAll({
+ *  contract,
  *  deployer: ...,
  * });
  *

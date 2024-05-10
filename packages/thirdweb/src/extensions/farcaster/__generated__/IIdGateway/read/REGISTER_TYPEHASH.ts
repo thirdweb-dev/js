@@ -59,7 +59,9 @@ export function decodeREGISTER_TYPEHASHResult(result: Hex) {
  * ```ts
  * import { REGISTER_TYPEHASH } from "thirdweb/extensions/farcaster";
  *
- * const result = await REGISTER_TYPEHASH();
+ * const result = await REGISTER_TYPEHASH({
+ *  contract,
+ * });
  *
  * ```
  */

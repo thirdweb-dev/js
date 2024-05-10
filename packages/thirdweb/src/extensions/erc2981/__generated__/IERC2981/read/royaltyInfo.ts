@@ -125,6 +125,7 @@ export function decodeRoyaltyInfoResult(result: Hex) {
  * import { royaltyInfo } from "thirdweb/extensions/erc2981";
  *
  * const result = await royaltyInfo({
+ *  contract,
  *  tokenId: ...,
  *  salePrice: ...,
  * });

@@ -113,6 +113,7 @@ export function decodePubkeyResult(result: Hex) {
  * import { pubkey } from "thirdweb/extensions/ens";
  *
  * const result = await pubkey({
+ *  contract,
  *  name: ...,
  * });
  *

@@ -108,6 +108,7 @@ export function decodePriceResult(result: Hex) {
  * import { price } from "thirdweb/extensions/farcaster";
  *
  * const result = await price({
+ *  contract,
  *  units: ...,
  * });
  *

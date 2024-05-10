@@ -109,6 +109,7 @@ export function decodeCountResult(result: Hex) {
  * import { count } from "thirdweb/extensions/thirdweb";
  *
  * const result = await count({
+ *  contract,
  *  deployer: ...,
  * });
  *

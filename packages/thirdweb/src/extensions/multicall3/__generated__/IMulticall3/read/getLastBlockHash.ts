@@ -61,7 +61,9 @@ export function decodeGetLastBlockHashResult(result: Hex) {
  * ```ts
  * import { getLastBlockHash } from "thirdweb/extensions/multicall3";
  *
- * const result = await getLastBlockHash();
+ * const result = await getLastBlockHash({
+ *  contract,
+ * });
  *
  * ```
  */
