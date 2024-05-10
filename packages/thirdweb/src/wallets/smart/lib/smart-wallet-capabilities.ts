@@ -16,29 +16,15 @@ export function getSmartWalletCapabilities(args: {
   }
 
   const account = wallet.getAccount();
-  if (account === undefined) {
-    return {
-      [chain.id]: {
-        paymasterService: {
-          supported: false,
-        },
-        atomicBatch: {
-          supported: false,
-        },
-      },
-      message: "No account connected",
-    };
-  }
 
   const config = wallet.getConfig() ?? {};
-
   return {
     [chain.id]: {
       paymasterService: {
         supported: "sponsorGas" in config ? config.sponsorGas : false,
       },
       atomicBatch: {
-        supported: account.sendBatchTransaction !== undefined,
+        supported: account?.sendBatchTransaction !== undefined,
       },
     },
   };

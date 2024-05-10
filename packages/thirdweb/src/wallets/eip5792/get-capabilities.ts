@@ -1,6 +1,7 @@
 import type { Prettify } from "../../utils/type-utils.js";
 import { isCoinbaseSDKWallet } from "../coinbase/coinbaseSDKWallet.js";
 import { isInAppWallet } from "../in-app/core/wallet/index.js";
+import { getInjectedProvider } from "../injected/index.js";
 import type { Wallet } from "../interfaces/wallet.js";
 import { isSmartWallet } from "../smart/index.js";
 import { isWalletConnect } from "../wallet-connect/index.js";
@@ -54,8 +55,19 @@ export async function getCapabilities<const ID extends WalletId = WalletId>({
   }
 
   // Default to injected wallet
-  const { getInjectedWalletCapabilities } = await import(
-    "../injected/lib/injected-wallet-capabilities.js"
-  );
-  return await getInjectedWalletCapabilities({ wallet });
+  const provider = getInjectedProvider(wallet.id);
+
+  try {
+    return await provider.request({
+      method: "wallet_getCapabilities",
+      params: [account.address],
+    });
+  } catch (error: unknown) {
+    if (/unsupport|not support/i.test((error as Error).message)) {
+      return {
+        message: `${wallet.id} does not support wallet_getCapabilities, reach out to them directly to request EIP-5792 support.`,
+      };
+    }
+    throw error;
+  }
 }
