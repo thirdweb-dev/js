@@ -150,7 +150,7 @@ export function isCoinbaseSDKWallet(
 /**
  * @internal
  */
-export async function getCoinbaseSDKWalletCapabilities(args: {
+export async function coinbaseSDKWalletGetCapabilities(args: {
   wallet: Wallet<typeof COINBASE>;
 }) {
   const { wallet } = args;
@@ -160,6 +160,38 @@ export async function getCoinbaseSDKWalletCapabilities(args: {
     return {
       message: `Can't get capabilities, no account connected for wallet: ${wallet.id}`,
     };
+  }
+
+  const config = wallet.getConfig();
+  const provider = await getCoinbaseProvider(config);
+  try {
+    return (await provider.request({
+      method: "wallet_getCapabilities",
+      params: [account.address],
+    })) as WalletCapabilitiesRecord<WalletCapabilities, number>;
+  } catch (error: unknown) {
+    if (/unsupport|not support/i.test((error as Error).message)) {
+      return {
+        message: `${wallet.id} does not support wallet_getCapabilities, reach out to them directly to request EIP-5792 support.`,
+      };
+    }
+    throw error;
+  }
+}
+
+/**
+ * @internal
+ */
+export async function coinbaseSDKWalletSendCalls(args: {
+  wallet: Wallet<typeof COINBASE>;
+}) {
+  const { wallet } = args;
+
+  const account = wallet.getAccount();
+  if (!account) {
+    throw new Error(
+      `Can't send calls, no account connected for wallet: ${wallet.id}`,
+    );
   }
 
   const config = wallet.getConfig();
