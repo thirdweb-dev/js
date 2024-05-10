@@ -1,5 +1,5 @@
-import type { ThirdwebClient } from "../../../client/client.js";
-import { getClientFetch } from "../../../utils/fetch.js";
+import type { ThirdwebClient } from "../../client/client.js";
+import { getClientFetch } from "../../utils/fetch.js";
 import { getPayBuyWithCryptoHistoryEndpoint } from "../utils/definitions.js";
 import type { BuyWithCryptoStatus } from "./getStatus.js";
 
