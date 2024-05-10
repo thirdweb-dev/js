@@ -97,7 +97,7 @@ export function getAddress(address: string): Address {
 }
 
 /**
- * Shortens an address if valid. Note this function does not check if the provided address is an ENS.
+ * Checksums and formats an address if valid. Note this function does not check if the provided address is an ENS.
  * @param address - The address to shorten.
  * @param length - The number of characters to keep from the start and end of the address.
  * @returns The shortened address.
