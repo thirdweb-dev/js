@@ -26,7 +26,7 @@ export function PostOnRampSwap(props: {
   const account = useActiveAccount();
 
   const [lockedOnRampQuote, setLockedOnRampQuote] = useState<
-    BuyWithCryptoQuote | undefined | null
+    BuyWithCryptoQuote | undefined
   >(undefined);
 
   const postOnRampQuoteQuery = useQuery({
@@ -112,28 +112,6 @@ export function PostOnRampSwap(props: {
         </Container>
 
         <Spacer y="xxl" />
-      </Container>
-    );
-  }
-
-  if (lockedOnRampQuote === null) {
-    return (
-      <Container>
-        <Container p="lg">
-          <ModalHeader title="Buy" onBack={props.onBack} />
-        </Container>
-
-        <Spacer y="xxl" />
-
-        <Container flex="row" center="x">
-          <AccentFailIcon size={iconSize["3xl"]} />
-        </Container>
-        <Spacer y="xl" />
-        <Text color="primaryText" size="lg" center>
-          No transaction found
-        </Text>
-
-        <Spacer y="3xl" />
       </Container>
     );
   }

@@ -116,5 +116,9 @@ export {
 // auth
 export { type SiweAuthOptions } from "../react/core/hooks/auth/useSiweAuth.js";
 
-export { PayEmbed, type PayEmbedProps } from "../react/web/ui/PayEmbed.js";
+export {
+  PayEmbed,
+  type PayEmbedProps,
+  type PayEmbedConnectOptions,
+} from "../react/web/ui/PayEmbed.js";
 export type { PayUIOptions } from "../react/web/ui/ConnectWallet/ConnectButtonProps.js";

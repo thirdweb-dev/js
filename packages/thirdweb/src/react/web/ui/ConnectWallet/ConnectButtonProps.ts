@@ -41,8 +41,8 @@ export type PayUIOptions = {
    *
    * By default, the "Crypto" option is enabled. You can disable it by setting `buyWithCrypto` to `false`
    *
-   * You can also prefill the source token and chain for the swap to customize the default values.
-   * You can also disable the edits for the prefilled values by setting `allowEdits` - By default all are editable
+   * You can prefill the source token and chain using `prefillSource`
+   * You can also disable the edits for the prefilled values by setting `prefillSource.allowEdits` - By default all are editable
    *
    * For example, if you want to allow selecting chain and but disable selecting token, you can set `allowEdits` to `{ token: false, chain: true }`
    */

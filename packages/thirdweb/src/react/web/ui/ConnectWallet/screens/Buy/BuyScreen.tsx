@@ -497,17 +497,20 @@ function BuyScreenContent(props: BuyScreenContentProps) {
         )}
 
         <Container px="lg" flex="column" gap="sm">
-          <Button
-            variant="outline"
-            fullWidth
-            style={{
-              padding: spacing.xs,
-              fontSize: fontSize.sm,
-            }}
-            onClick={props.onViewPendingTx}
-          >
-            View all transactions
-          </Button>
+          {account && (
+            <Button
+              variant="outline"
+              fullWidth
+              style={{
+                padding: spacing.xs,
+                fontSize: fontSize.sm,
+              }}
+              onClick={props.onViewPendingTx}
+            >
+              View all transactions
+            </Button>
+          )}
+
           {!isExpanded && (
             <>
               {!account && props.connectButton ? (
@@ -572,13 +575,13 @@ function SwapScreenContent(
       ? {
           // wallet
           fromAddress: account.address,
-          // from token
+          // from
           fromChainId: fromChain.id,
           fromTokenAddress: isNativeToken(fromToken)
             ? NATIVE_TOKEN_ADDRESS
             : fromToken.address,
-          toChainId: toChain.id,
           // to
+          toChainId: toChain.id,
           toTokenAddress: isNativeToken(toToken)
             ? NATIVE_TOKEN_ADDRESS
             : toToken.address,
@@ -854,8 +857,8 @@ function FiatScreenContent(
     type AmountTooLowError = {
       code: "MINIMUM_PURCHASE_AMOUNT";
       data: {
-        minimumAmountUSDCents: 250;
-        requestedAmountUSDCents: 7;
+        minimumAmountUSDCents: number;
+        requestedAmountUSDCents: number;
       };
     };
 
@@ -877,7 +880,7 @@ function FiatScreenContent(
 
   return (
     <Container px="lg" flex="column" gap="md">
-      {/* Show Currency Selector + Calculated Amount */}
+      {/* Show Calculated Fiat Amount */}
       <div>
         <PayWithCreditCard
           isLoading={fiatQuoteQuery.isLoading}
