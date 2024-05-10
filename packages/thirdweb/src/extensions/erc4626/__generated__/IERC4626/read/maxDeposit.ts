@@ -117,6 +117,7 @@ export function decodeMaxDepositResult(result: Hex) {
  * import { maxDeposit } from "thirdweb/extensions/erc4626";
  *
  * const result = await maxDeposit({
+ *  contract,
  *  receiver: ...,
  * });
  *

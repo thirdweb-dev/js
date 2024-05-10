@@ -117,6 +117,7 @@ export function decodeGetPastTotalSupplyResult(result: Hex) {
  * import { getPastTotalSupply } from "thirdweb/extensions/erc20";
  *
  * const result = await getPastTotalSupply({
+ *  contract,
  *  blockNumber: ...,
  * });
  *

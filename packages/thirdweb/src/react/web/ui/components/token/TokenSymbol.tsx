@@ -17,10 +17,15 @@ export function TokenSymbol(props: {
   chain: Chain;
   size: "sm" | "md" | "lg";
   color?: keyof Theme["colors"];
+  inline?: boolean;
 }) {
   if (!isNativeToken(props.token)) {
     return (
-      <Text size={props.size} color={props.color || "primaryText"}>
+      <Text
+        size={props.size}
+        color={props.color || "primaryText"}
+        inline={props.inline}
+      >
         {props.token.symbol}
       </Text>
     );
@@ -31,6 +36,7 @@ export function TokenSymbol(props: {
       chain={props.chain}
       size={props.size}
       color={props.color}
+      inline={props.inline}
     />
   );
 }
@@ -39,6 +45,7 @@ function NativeTokenSymbol(props: {
   chain: Chain;
   size: "sm" | "md" | "lg";
   color?: keyof Theme["colors"];
+  inline?: boolean;
 }) {
   const chainQuery = useChainQuery(props.chain);
   const data = chainQuery.data;
@@ -48,7 +55,11 @@ function NativeTokenSymbol(props: {
   }
 
   return (
-    <Text size={props.size} color={props.color || "primaryText"}>
+    <Text
+      size={props.size}
+      color={props.color || "primaryText"}
+      inline={props.inline}
+    >
       {data.nativeCurrency.symbol}
     </Text>
   );

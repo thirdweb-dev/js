@@ -108,6 +108,7 @@ export function decodeNoncesResult(result: Hex) {
  * import { nonces } from "thirdweb/extensions/farcaster";
  *
  * const result = await nonces({
+ *  contract,
  *  account: ...,
  * });
  *

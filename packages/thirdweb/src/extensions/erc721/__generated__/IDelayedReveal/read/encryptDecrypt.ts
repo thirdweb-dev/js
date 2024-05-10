@@ -120,6 +120,7 @@ export function decodeEncryptDecryptResult(result: Hex) {
  * import { encryptDecrypt } from "thirdweb/extensions/erc721";
  *
  * const result = await encryptDecrypt({
+ *  contract,
  *  data: ...,
  *  key: ...,
  * });

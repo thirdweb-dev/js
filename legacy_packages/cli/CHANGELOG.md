@@ -1,5 +1,17 @@
 # thirdweb
 
+## 0.13.83
+
+### Patch Changes
+
+- [#2966](https://github.com/thirdweb-dev/js/pull/2966) [`4de8802`](https://github.com/thirdweb-dev/js/commit/4de88024357cf8197ec78fb4fabaf5bddd47c605) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fixes issue with contract compilation in hardhat
+
+- Updated dependencies [[`2bfaafc`](https://github.com/thirdweb-dev/js/commit/2bfaafcc10fcdff000025011a81e885b1a9fdef8), [`0e45f24`](https://github.com/thirdweb-dev/js/commit/0e45f24fd69e556e4364e38fd18e3eabb0498be8)]:
+  - @thirdweb-dev/chains@0.1.106
+  - @thirdweb-dev/sdk@4.0.77
+  - @thirdweb-dev/wallets@2.5.17
+  - @thirdweb-dev/auth@4.1.75
+
 ## 0.13.82
 
 ### Patch Changes

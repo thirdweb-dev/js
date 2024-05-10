@@ -61,7 +61,9 @@ export function decodeGetCurrentBlockGasLimitResult(result: Hex) {
  * ```ts
  * import { getCurrentBlockGasLimit } from "thirdweb/extensions/multicall3";
  *
- * const result = await getCurrentBlockGasLimit();
+ * const result = await getCurrentBlockGasLimit({
+ *  contract,
+ * });
  *
  * ```
  */

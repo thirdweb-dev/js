@@ -119,6 +119,7 @@ export function decodePreviewDepositResult(result: Hex) {
  * import { previewDeposit } from "thirdweb/extensions/erc4626";
  *
  * const result = await previewDeposit({
+ *  contract,
  *  assets: ...,
  * });
  *

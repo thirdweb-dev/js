@@ -2,7 +2,10 @@
 import { useEffect, useState } from "react";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getInstalledWalletProviders } from "../../../../wallets/injected/mipdStore.js";
+import { getStoredActiveWalletId } from "../../../../wallets/manager/index.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
+import { useActiveWallet } from "../../../core/hooks/wallets/wallet-hooks.js";
+import { getStorage } from "../../../core/storage.js";
 import { getLastAuthProvider } from "../../wallets/in-app/storage.js";
 import { emailIcon, phoneIcon } from "../ConnectWallet/icons/dataUris.js";
 import {
@@ -23,18 +26,33 @@ export function WalletImage(props: {
   id: WalletId;
   size: string;
   client: ThirdwebClient;
-  allowOverrides?: boolean;
 }) {
   const [image, setImage] = useState<string | undefined>(undefined);
+  const activeWallet = useActiveWallet();
   useEffect(() => {
     async function fetchImage() {
+      // show EOA icon for external wallets
+      // show auth provider icon for in-app wallets
+      // show the admin EOA icon for smart
+      const storage = getStorage();
+      let activeEOAId = props.id;
+      if (props.id === "smart") {
+        const storedId = await getStoredActiveWalletId(storage);
+        if (storedId) {
+          activeEOAId = storedId;
+        }
+      }
       let mipdImage = getInstalledWalletProviders().find(
-        (provider) => provider.info.rdns === props.id,
+        (provider) => provider.info.rdns === activeEOAId,
       )?.info.icon;
 
-      if (props.allowOverrides && props.id === "inApp") {
-        // check last auth provider and override the IAW icon
-        const lastAuthProvider = await getLastAuthProvider();
+      if (
+        activeEOAId === "inApp" &&
+        activeWallet &&
+        (activeWallet.id === "inApp" || activeWallet.id === "smart")
+      ) {
+        // when showing an active wallet icon - check last auth provider and override the IAW icon
+        const lastAuthProvider = await getLastAuthProvider(storage);
         switch (lastAuthProvider) {
           case "google":
             mipdImage = googleIconUri;
@@ -57,7 +75,7 @@ export function WalletImage(props: {
       setImage(mipdImage);
     }
     fetchImage();
-  }, [props.id, props.allowOverrides]);
+  }, [props.id, activeWallet]);
 
   if (image) {
     return (

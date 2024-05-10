@@ -4,7 +4,7 @@ import { useCallback, useState } from "react";
 import type {
   InAppWalletAuth,
   InAppWalletSocialAuth,
-} from "../../../../wallets/in-app/core/wallet/index.js";
+} from "../../../../wallets/in-app/core/wallet/types.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { useSetSelectionData } from "../../providers/wallet-ui-states-provider.js";

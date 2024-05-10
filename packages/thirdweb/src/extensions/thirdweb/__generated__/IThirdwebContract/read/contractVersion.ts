@@ -59,7 +59,9 @@ export function decodeContractVersionResult(result: Hex) {
  * ```ts
  * import { contractVersion } from "thirdweb/extensions/thirdweb";
  *
- * const result = await contractVersion();
+ * const result = await contractVersion({
+ *  contract,
+ * });
  *
  * ```
  */

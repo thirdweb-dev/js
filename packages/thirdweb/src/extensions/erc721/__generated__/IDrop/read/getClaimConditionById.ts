@@ -154,6 +154,7 @@ export function decodeGetClaimConditionByIdResult(result: Hex) {
  * import { getClaimConditionById } from "thirdweb/extensions/erc721";
  *
  * const result = await getClaimConditionById({
+ *  contract,
  *  conditionId: ...,
  * });
  *

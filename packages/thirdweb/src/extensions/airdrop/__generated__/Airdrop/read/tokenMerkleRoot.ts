@@ -115,6 +115,7 @@ export function decodeTokenMerkleRootResult(result: Hex) {
  * import { tokenMerkleRoot } from "thirdweb/extensions/airdrop";
  *
  * const result = await tokenMerkleRoot({
+ *  contract,
  *  tokenAddress: ...,
  * });
  *

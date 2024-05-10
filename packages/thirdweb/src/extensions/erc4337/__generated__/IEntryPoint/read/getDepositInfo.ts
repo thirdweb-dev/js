@@ -135,6 +135,7 @@ export function decodeGetDepositInfoResult(result: Hex) {
  * import { getDepositInfo } from "thirdweb/extensions/erc4337";
  *
  * const result = await getDepositInfo({
+ *  contract,
  *  account: ...,
  * });
  *

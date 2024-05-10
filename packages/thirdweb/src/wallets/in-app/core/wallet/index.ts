@@ -3,46 +3,40 @@ import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Account } from "../../../interfaces/wallet.js";
 import type {
-  MultiStepAuthArgsType,
-  SingleStepAuthArgsType,
-} from "../authentication/type.js";
-
-export type InAppWalletConnectionOptions = (
-  | MultiStepAuthArgsType
-  | SingleStepAuthArgsType
-) & {
-  client: ThirdwebClient;
-  chain?: Chain;
-};
-
-export type InAppWalletSocialAuth = "google" | "apple" | "facebook";
-
-export type InAppWalletAuth = "email" | "phone" | InAppWalletSocialAuth;
+  CreateWalletArgs,
+  WalletAutoConnectionOption,
+  WalletConnectionOption,
+} from "../../../wallet-types.js";
 
 /**
  * @internal
  */
 export async function connectInAppWallet(
-  options: InAppWalletConnectionOptions,
+  options: WalletConnectionOption<"inApp">,
+  createOptions: CreateWalletArgs<"inApp">[1],
 ): Promise<[Account, Chain]> {
   const { authenticate } = await import("../authentication/index.js");
 
   const authResult = await authenticate(options);
   const authAccount = await authResult.user.wallet.getAccount();
 
+  if (createOptions?.smartAccount) {
+    return convertToSmartAccount({
+      client: options.client,
+      authAccount,
+      smartAccountOptions: createOptions.smartAccount,
+    });
+  }
+
   return [authAccount, options.chain || ethereum] as const;
 }
-
-export type InAppWalletAutoConnectOptions = {
-  client: ThirdwebClient;
-  chain?: Chain;
-};
 
 /**
  * @internal
  */
 export async function autoConnectInAppWallet(
-  options: InAppWalletAutoConnectOptions,
+  options: WalletAutoConnectionOption<"inApp">,
+  createOptions: CreateWalletArgs<"inApp">[1],
 ): Promise<[Account, Chain]> {
   const { getAuthenticatedUser } = await import("../authentication/index.js");
   const user = await getAuthenticatedUser({ client: options.client });
@@ -52,5 +46,34 @@ export async function autoConnectInAppWallet(
 
   const authAccount = await user.wallet.getAccount();
 
+  if (createOptions?.smartAccount) {
+    return convertToSmartAccount({
+      client: options.client,
+      authAccount,
+      smartAccountOptions: createOptions.smartAccount,
+    });
+  }
+
   return [authAccount, options.chain || ethereum] as const;
+}
+
+async function convertToSmartAccount(options: {
+  client: ThirdwebClient;
+  authAccount: Account;
+  smartAccountOptions: CreateWalletArgs<"smart">[1];
+}) {
+  const [{ smartWallet }, { connectSmartWallet }] = await Promise.all([
+    import("../../../create-wallet.js"),
+    import("../../../smart/index.js"),
+  ]);
+
+  const sa = smartWallet(options.smartAccountOptions);
+  return connectSmartWallet(
+    sa,
+    {
+      client: options.client,
+      personalAccount: options.authAccount,
+    },
+    options.smartAccountOptions,
+  );
 }

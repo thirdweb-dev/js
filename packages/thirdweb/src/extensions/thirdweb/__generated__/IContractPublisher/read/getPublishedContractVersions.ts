@@ -155,6 +155,7 @@ export function decodeGetPublishedContractVersionsResult(result: Hex) {
  * import { getPublishedContractVersions } from "thirdweb/extensions/thirdweb";
  *
  * const result = await getPublishedContractVersions({
+ *  contract,
  *  publisher: ...,
  *  contractId: ...,
  * });

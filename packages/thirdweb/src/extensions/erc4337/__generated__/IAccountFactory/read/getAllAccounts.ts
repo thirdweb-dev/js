@@ -59,7 +59,9 @@ export function decodeGetAllAccountsResult(result: Hex) {
  * ```ts
  * import { getAllAccounts } from "thirdweb/extensions/erc4337";
  *
- * const result = await getAllAccounts();
+ * const result = await getAllAccounts({
+ *  contract,
+ * });
  *
  * ```
  */

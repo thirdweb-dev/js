@@ -117,6 +117,7 @@ export function decodeGetBlockHashResult(result: Hex) {
  * import { getBlockHash } from "thirdweb/extensions/multicall3";
  *
  * const result = await getBlockHash({
+ *  contract,
  *  blockNumber: ...,
  * });
  *

@@ -57,7 +57,9 @@ export function decodeStartTokenIdResult(result: Hex) {
  * ```ts
  * import { startTokenId } from "thirdweb/extensions/erc721";
  *
- * const result = await startTokenId();
+ * const result = await startTokenId({
+ *  contract,
+ * });
  *
  * ```
  */

@@ -59,7 +59,9 @@ export function decodeGetActiveClaimConditionIdResult(result: Hex) {
  * ```ts
  * import { getActiveClaimConditionId } from "thirdweb/extensions/erc721";
  *
- * const result = await getActiveClaimConditionId();
+ * const result = await getActiveClaimConditionId({
+ *  contract,
+ * });
  *
  * ```
  */

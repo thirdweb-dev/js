@@ -57,7 +57,9 @@ export function decodeNameResult(result: Hex) {
  * ```ts
  * import { name } from "thirdweb/extensions/common";
  *
- * const result = await name();
+ * const result = await name({
+ *  contract,
+ * });
  *
  * ```
  */

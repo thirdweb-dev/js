@@ -57,7 +57,9 @@ export function decodeAppURIResult(result: Hex) {
  * ```ts
  * import { appURI } from "thirdweb/extensions/thirdweb";
  *
- * const result = await appURI();
+ * const result = await appURI({
+ *  contract,
+ * });
  *
  * ```
  */

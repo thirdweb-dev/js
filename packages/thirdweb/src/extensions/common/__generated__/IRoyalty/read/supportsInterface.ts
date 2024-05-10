@@ -117,6 +117,7 @@ export function decodeSupportsInterfaceResult(result: Hex) {
  * import { supportsInterface } from "thirdweb/extensions/common";
  *
  * const result = await supportsInterface({
+ *  contract,
  *  interfaceId: ...,
  * });
  *

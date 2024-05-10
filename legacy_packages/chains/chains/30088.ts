@@ -21,6 +21,12 @@ export default {
       "name": "EIP1559"
     }
   ],
+  "icon": {
+    "url": "ipfs://QmfP1QDK42B7EzYWsYN2PGfjkZUQtSjm1k5gNNT52ixsKL",
+    "width": 216,
+    "height": 216,
+    "format": "png"
+  },
   "infoURL": "https://www.miyou.io",
   "name": "MiYou Mainnet",
   "nativeCurrency": {

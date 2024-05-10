@@ -112,6 +112,7 @@ export function decodeGetScoreResult(result: Hex) {
  * import { getScore } from "thirdweb/extensions/thirdweb";
  *
  * const result = await getScore({
+ *  contract,
  *  tokenOwner: ...,
  * });
  *

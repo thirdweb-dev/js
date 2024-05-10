@@ -57,7 +57,9 @@ export function decodeADD_TYPEHASHResult(result: Hex) {
  * ```ts
  * import { ADD_TYPEHASH } from "thirdweb/extensions/farcaster";
  *
- * const result = await ADD_TYPEHASH();
+ * const result = await ADD_TYPEHASH({
+ *  contract,
+ * });
  *
  * ```
  */

@@ -110,6 +110,7 @@ export function decodeTokenByIndexResult(result: Hex) {
  * import { tokenByIndex } from "thirdweb/extensions/erc721";
  *
  * const result = await tokenByIndex({
+ *  contract,
  *  index: ...,
  * });
  *

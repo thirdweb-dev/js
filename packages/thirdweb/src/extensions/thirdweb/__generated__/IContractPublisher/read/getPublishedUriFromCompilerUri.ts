@@ -120,6 +120,7 @@ export function decodeGetPublishedUriFromCompilerUriResult(result: Hex) {
  * import { getPublishedUriFromCompilerUri } from "thirdweb/extensions/thirdweb";
  *
  * const result = await getPublishedUriFromCompilerUri({
+ *  contract,
  *  compilerMetadataUri: ...,
  * });
  *

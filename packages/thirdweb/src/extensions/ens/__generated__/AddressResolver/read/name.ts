@@ -108,6 +108,7 @@ export function decodeNameResult(result: Hex) {
  * import { name } from "thirdweb/extensions/ens";
  *
  * const result = await name({
+ *  contract,
  *  name: ...,
  * });
  *

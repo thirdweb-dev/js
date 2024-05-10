@@ -115,6 +115,7 @@ export function decodeTokenConditionIdResult(result: Hex) {
  * import { tokenConditionId } from "thirdweb/extensions/airdrop";
  *
  * const result = await tokenConditionId({
+ *  contract,
  *  tokenAddress: ...,
  * });
  *

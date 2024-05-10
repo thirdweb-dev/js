@@ -110,6 +110,7 @@ export function decodeTotalSupplyResult(result: Hex) {
  * import { totalSupply } from "thirdweb/extensions/erc1155";
  *
  * const result = await totalSupply({
+ *  contract,
  *  id: ...,
  * });
  *

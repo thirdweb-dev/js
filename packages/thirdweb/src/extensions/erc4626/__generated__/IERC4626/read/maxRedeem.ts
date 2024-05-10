@@ -117,6 +117,7 @@ export function decodeMaxRedeemResult(result: Hex) {
  * import { maxRedeem } from "thirdweb/extensions/erc4626";
  *
  * const result = await maxRedeem({
+ *  contract,
  *  owner: ...,
  * });
  *

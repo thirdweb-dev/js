@@ -120,6 +120,7 @@ export function decodeGetAddressResult(result: Hex) {
  * import { getAddress } from "thirdweb/extensions/erc4337";
  *
  * const result = await getAddress({
+ *  contract,
  *  adminSigner: ...,
  *  data: ...,
  * });

@@ -115,6 +115,7 @@ export function decodeMaxMintResult(result: Hex) {
  * import { maxMint } from "thirdweb/extensions/erc4626";
  *
  * const result = await maxMint({
+ *  contract,
  *  receiver: ...,
  * });
  *

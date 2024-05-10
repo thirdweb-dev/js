@@ -158,7 +158,7 @@ function ConnectButtonInner(
 
   const supportedTokens = useMemo(() => {
     if (!props.supportedTokens) {
-      return defaultTokens;
+      return undefined;
     }
 
     const tokens = { ...defaultTokens };

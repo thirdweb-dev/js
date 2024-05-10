@@ -59,7 +59,9 @@ export function decodeNextTokenIdToClaimResult(result: Hex) {
  * ```ts
  * import { nextTokenIdToClaim } from "thirdweb/extensions/erc721";
  *
- * const result = await nextTokenIdToClaim();
+ * const result = await nextTokenIdToClaim({
+ *  contract,
+ * });
  *
  * ```
  */

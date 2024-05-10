@@ -123,6 +123,7 @@ export function decodeGetMetadataUriResult(result: Hex) {
  * import { getMetadataUri } from "thirdweb/extensions/thirdweb";
  *
  * const result = await getMetadataUri({
+ *  contract,
  *  chainId: ...,
  *  deployment: ...,
  * });

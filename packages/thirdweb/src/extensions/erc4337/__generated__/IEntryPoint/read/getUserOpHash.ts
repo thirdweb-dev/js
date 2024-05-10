@@ -174,6 +174,7 @@ export function decodeGetUserOpHashResult(result: Hex) {
  * import { getUserOpHash } from "thirdweb/extensions/erc4337";
  *
  * const result = await getUserOpHash({
+ *  contract,
  *  userOp: ...,
  * });
  *

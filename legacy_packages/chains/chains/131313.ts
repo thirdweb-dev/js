@@ -11,6 +11,12 @@ export default {
       "name": "EIP155"
     }
   ],
+  "icon": {
+    "url": "ipfs://QmVt5Y585JqBSrkpZmYaEnX9FW7tDwfDLmUGNyDdyV2Pd2",
+    "width": 48,
+    "height": 48,
+    "format": "svg"
+  },
   "infoURL": "https://www.dioneprotocol.com/",
   "name": "Odyssey Chain (Testnet)",
   "nativeCurrency": {
