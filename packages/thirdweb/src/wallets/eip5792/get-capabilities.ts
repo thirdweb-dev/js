@@ -18,6 +18,13 @@ export type GetCapabilitiesResult = Prettify<
 export async function getCapabilities<const ID extends WalletId = WalletId>({
   wallet,
 }: GetCapabilitiesOptions<ID>): Promise<GetCapabilitiesResult> {
+  const account = wallet.getAccount();
+  if (!account) {
+    return {
+      message: `Can't get capabilities, no account connected for wallet: ${wallet.id}`,
+    };
+  }
+
   if (isSmartWallet(wallet)) {
     const { getSmartWalletCapabilities } = await import(
       "../smart/lib/smart-wallet-capabilities.js"
@@ -36,7 +43,7 @@ export async function getCapabilities<const ID extends WalletId = WalletId>({
     const { getCoinbaseSDKWalletCapabilities } = await import(
       "../coinbase/coinbaseSDKWallet.js"
     );
-    return await getCoinbaseSDKWalletCapabilities({ wallet });
+    return getCoinbaseSDKWalletCapabilities({ wallet });
   }
 
   // TODO: Add Wallet Connect support

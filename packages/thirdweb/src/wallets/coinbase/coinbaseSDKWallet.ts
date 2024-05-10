@@ -28,6 +28,10 @@ import {
   uint8ArrayToHex,
 } from "../../utils/encoding/hex.js";
 import { COINBASE } from "../constants.js";
+import type {
+  WalletCapabilities,
+  WalletCapabilitiesRecord,
+} from "../eip5792/types.js";
 import { getDefaultAppMetadata } from "../utils/defaultDappMetadata.js";
 import type { WalletEmitter } from "../wallet-emitter.js";
 import type {
@@ -153,7 +157,9 @@ export async function getCoinbaseSDKWalletCapabilities(args: {
 
   const account = wallet.getAccount();
   if (!account) {
-    return {};
+    return {
+      message: `Can't get capabilities, no account connected for wallet: ${wallet.id}`,
+    };
   }
 
   const config = wallet.getConfig();
@@ -163,7 +169,10 @@ export async function getCoinbaseSDKWalletCapabilities(args: {
     params: [account.address],
   });
 
-  return parseCapabilities(raw_capabilities);
+  return raw_capabilities as WalletCapabilitiesRecord<
+    WalletCapabilities,
+    number
+  >;
 }
 
 function onConnect(
