@@ -1,10 +1,10 @@
 import type { Address } from "abitype";
-import type { Hex } from "viem";
 import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import type { ThirdwebContract } from "../../contract/contract.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
-import type { Prettify } from "../../utils/type-utils.js";
+import type { Hex } from "../../utils/encoding/hex.js";
+import type { OneOf, Prettify } from "../../utils/type-utils.js";
 import type { Account, SendTransactionOption } from "../interfaces/wallet.js";
 
 export type SmartWalletOptions = Prettify<
@@ -30,7 +30,7 @@ export type SmartWalletOptions = Prettify<
         transactions: SendTransactionOption[],
       ) => PreparedTransaction;
     };
-  } & (
+  } & OneOf<
     | {
         /**
          * @deprecated use 'sponsorGas' instead
@@ -40,7 +40,7 @@ export type SmartWalletOptions = Prettify<
     | {
         sponsorGas: boolean;
       }
-  )
+  >
 >;
 
 // internal type
