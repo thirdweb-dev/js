@@ -59,7 +59,7 @@ describe.sequential("injected wallet", () => {
 
     const promise = sendCalls({ wallet, ...SEND_CALLS_OPTIONS });
     expect(promise).rejects.toMatchInlineSnapshot(
-      "[Error: Cannot send calls, no account found for wallet: io.metamask]",
+      "[Error: Cannot send calls, no account connected for wallet: io.metamask]",
     );
   });
 

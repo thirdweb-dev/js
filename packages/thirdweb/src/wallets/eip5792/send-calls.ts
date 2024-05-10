@@ -51,7 +51,7 @@ export async function sendCalls<const ID extends WalletId>(
   const account = wallet.getAccount();
   if (!account) {
     throw new Error(
-      `Cannot send calls, no account found for wallet: ${wallet.id}`,
+      `Cannot send calls, no account connected for wallet: ${wallet.id}`,
     );
   }
 
