@@ -9,7 +9,7 @@ import {
   validateTypedData,
 } from "viem";
 import { stringify } from "../../utils/json.js";
-import type { Account } from "../interfaces/wallet.js";
+import type { Account, Wallet } from "../interfaces/wallet.js";
 import type { SendTransactionOption } from "../interfaces/wallet.js";
 import type { AppMetadata, DisconnectFn, SwitchChainFn } from "../types.js";
 import { getValidPublicRPCUrl } from "../utils/chains.js";
@@ -27,7 +27,8 @@ import {
   stringToHex,
   uint8ArrayToHex,
 } from "../../utils/encoding/hex.js";
-import type { COINBASE } from "../constants.js";
+import { COINBASE } from "../constants.js";
+import { parseCapabilities } from "../eip5792/utils.js";
 import { getDefaultAppMetadata } from "../utils/defaultDappMetadata.js";
 import type { WalletEmitter } from "../wallet-emitter.js";
 import type {
@@ -111,7 +112,7 @@ export type CoinbaseSDKWalletConnectionOptions = {
 // this should be ok since all the creation options are provided at build time
 let _provider: ProviderInterface | undefined;
 
-async function initProvider(
+async function getCoinbaseProvider(
   options?: CreateWalletArgs<typeof COINBASE>[1],
 ): Promise<ProviderInterface> {
   if (!_provider) {
@@ -129,6 +130,41 @@ async function initProvider(
     return provider;
   }
   return _provider;
+}
+
+/**
+ * Checks if the provided wallet is a Coinbase SDK wallet.
+ *
+ * @param wallet - The wallet to check.
+ * @returns True if the wallet is a Coinbase SDK wallet, false otherwise.
+ */
+export function isCoinbaseSDKWallet(
+  wallet: Wallet,
+): wallet is Wallet<typeof COINBASE> {
+  return wallet.id === COINBASE;
+}
+
+/**
+ * @internal
+ */
+export async function getCoinbaseSDKWalletCapabilities(args: {
+  wallet: Wallet<typeof COINBASE>;
+}) {
+  const { wallet } = args;
+
+  const account = wallet.getAccount();
+  if (!account) {
+    return {};
+  }
+
+  const config = wallet.getConfig();
+  const provider = await getCoinbaseProvider(config);
+  const raw_capabilities = await provider.request({
+    method: "wallet_getCapabilities",
+    params: [account.address],
+  });
+
+  return parseCapabilities(raw_capabilities);
 }
 
 function onConnect(
@@ -257,7 +293,7 @@ export async function connectCoinbaseWalletSDK(
   createOptions: CreateWalletArgs<typeof COINBASE>[1],
   emitter: WalletEmitter<typeof COINBASE>,
 ): Promise<ReturnType<typeof onConnect>> {
-  const provider = await initProvider(createOptions);
+  const provider = await getCoinbaseProvider(createOptions);
   const accounts = (await provider.request({
     method: "eth_requestAccounts",
   })) as string[];
@@ -298,7 +334,7 @@ export async function autoConnectCoinbaseWalletSDK(
   createOptions: CreateWalletArgs<typeof COINBASE>[1],
   emitter: WalletEmitter<typeof COINBASE>,
 ): Promise<ReturnType<typeof onConnect>> {
-  const provider = await initProvider(createOptions);
+  const provider = await getCoinbaseProvider(createOptions);
 
   // connected accounts
   const addresses = (await provider.request({
