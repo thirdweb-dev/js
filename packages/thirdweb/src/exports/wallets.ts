@@ -99,3 +99,4 @@ export { getWalletInfo } from "../wallets/__generated__/getWalletInfo.js";
 
 // eip5792
 export { getCapabilities } from "../wallets/eip5792/get-capabilities.js";
+export { sendCalls } from "../wallets/eip5792/send-calls.js";

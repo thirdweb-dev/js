@@ -83,10 +83,9 @@ describe.sequential("injected wallet", () => {
             {
               to: "0x123456789abcdef",
               value: numberToHex(123n),
-              data: undefined,
             },
           ],
-          capabilities: {},
+          capabilities: undefined,
           chainId: numberToHex(ANVIL_CHAIN.id),
           from: TEST_ACCOUNT_A.address,
           version: "1.0",

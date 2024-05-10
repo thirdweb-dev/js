@@ -37,7 +37,7 @@ export async function sendCalls<const ID extends WalletId>(
   const {
     wallet,
     calls,
-    capabilities = {},
+    capabilities,
     version = "1.0",
     chain = wallet.getChain(),
   } = options;
@@ -63,22 +63,13 @@ export async function sendCalls<const ID extends WalletId>(
     throw new Error("Not implemented");
   }
 
-  if (isCoinbaseSDKWallet(wallet)) {
-    throw new Error("Not implemented");
-  }
-
-  if (isWalletConnect(wallet)) {
-    throw new Error("Not implemented");
-  }
-
   const params: WalletSendCallsParameters = [
     {
       from: getAddress(account.address),
       calls: calls.map((call) =>
         call.to
           ? {
-              to: call.to,
-              data: call.data,
+              ...call,
               value: call.value ? numberToHex(call.value) : undefined,
             }
           : {
@@ -90,10 +81,31 @@ export async function sendCalls<const ID extends WalletId>(
       chainId: numberToHex(chain.id),
     },
   ];
+
+  if (isCoinbaseSDKWallet(wallet)) {
+    const { coinbaseSDKWalletSendCalls } = await import(
+      "../coinbase/coinbaseSDKWallet.js"
+    );
+    return coinbaseSDKWalletSendCalls({ wallet, params });
+  }
+
+  if (isWalletConnect(wallet)) {
+    throw new Error("Not implemented");
+  }
+
   // Default to injected wallet
   const provider = getInjectedProvider(wallet.id);
-  return await provider.request({
-    method: "wallet_sendCalls",
-    params: params as ViemWalletSendCallsParameters, // The viem type definition is slightly different
-  });
+  try {
+    return await provider.request({
+      method: "wallet_sendCalls",
+      params: params as ViemWalletSendCallsParameters, // The viem type definition is slightly different
+    });
+  } catch (error) {
+    if (/unsupport|not support/i.test((error as Error).message)) {
+      throw new Error(
+        `${wallet.id} does not support wallet_sendCalls, reach out to them directly to request EIP-5792 support.`,
+      );
+    }
+    throw error;
+  }
 }
