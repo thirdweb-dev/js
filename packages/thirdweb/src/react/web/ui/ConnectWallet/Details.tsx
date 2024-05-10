@@ -44,7 +44,7 @@ import { Button, IconButton } from "../components/buttons.js";
 import { Link, Text } from "../components/text.js";
 import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 import { fadeInAnimation } from "../design-system/animations.js";
-import { StyledButton, StyledDiv } from "../design-system/elements.js";
+import { StyledButton } from "../design-system/elements.js";
 import {
   type Theme,
   fontSize,
