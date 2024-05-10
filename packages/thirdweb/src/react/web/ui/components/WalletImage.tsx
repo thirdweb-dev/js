@@ -1,10 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
 import type { ThirdwebClient } from "../../../../client/client.js";
-import { useActiveWallet } from "../../../../exports/react-native.js";
 import { getInstalledWalletProviders } from "../../../../wallets/injected/mipdStore.js";
 import { getStoredActiveWalletId } from "../../../../wallets/manager/index.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
+import { useActiveWallet } from "../../../core/hooks/wallets/wallet-hooks.js";
 import { getStorage } from "../../../core/storage.js";
 import { getLastAuthProvider } from "../../wallets/in-app/storage.js";
 import { emailIcon, phoneIcon } from "../ConnectWallet/icons/dataUris.js";
