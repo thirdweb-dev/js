@@ -95,3 +95,24 @@ export function getAddress(address: string): Address {
   }
   return checksumAddress(address);
 }
+
+/**
+ * Shortens an address if valid. Note this function does not check if the provided address is an ENS.
+ * @param address - The address to shorten.
+ * @param length - The number of characters to keep from the start and end of the address.
+ * @returns The shortened address.
+ * @example
+ * ```ts
+ * import { shortenAddress } from 'thirdweb/utils';
+ *
+ * shortenAddress('0x5aAeb6053F3E94C9b9A09f33669435E7Ef1BeAed');
+ * //=> '0x5aAe...Ef1BeAed'
+ * ```
+ * @utils
+ */
+export function shortenAddress(address: Address, length = 4) {
+  if (!isAddress(address)) {
+    throw new Error(`Invalid address: ${address}`);
+  }
+  return `${address.slice(0, length)}...${address.slice(-length)}`;
+}
