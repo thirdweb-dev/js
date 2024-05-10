@@ -57,7 +57,9 @@ export function decodeIdRegistryResult(result: Hex) {
  * ```ts
  * import { idRegistry } from "thirdweb/extensions/farcaster";
  *
- * const result = await idRegistry();
+ * const result = await idRegistry({
+ *  contract,
+ * });
  *
  * ```
  */

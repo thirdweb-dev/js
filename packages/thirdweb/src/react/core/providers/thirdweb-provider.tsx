@@ -8,6 +8,7 @@ import {
 import { isBaseTransactionOptions } from "../../../transaction/types.js";
 import { isObjectWithKeys } from "../../../utils/type-guards.js";
 import { SetRootElementContext } from "./RootElementContext.js";
+import { invalidateWalletBalance } from "./invalidateWalletBalance.js";
 
 /**
  * The ThirdwebProvider is component is a provider component that sets up the React Query client.
@@ -58,14 +59,10 @@ export function ThirdwebProvider(props: React.PropsWithChildren) {
                               variables.__contract?.address,
                             ] as const,
                         }),
-                        queryClient.invalidateQueries({
-                          // invalidate any walletBalance queries for this chainId
-                          // TODO: add wallet address in here if we can get it somehow
-                          queryKey: [
-                            "walletBalance",
-                            variables.__contract?.chain.id,
-                          ] as const,
-                        }),
+                        invalidateWalletBalance(
+                          queryClient,
+                          variables.__contract?.chain.id,
+                        ),
                       ]);
                     });
                 }

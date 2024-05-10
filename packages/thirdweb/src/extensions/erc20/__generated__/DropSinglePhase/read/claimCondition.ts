@@ -96,7 +96,9 @@ export function decodeClaimConditionResult(result: Hex) {
  * ```ts
  * import { claimCondition } from "thirdweb/extensions/erc20";
  *
- * const result = await claimCondition();
+ * const result = await claimCondition({
+ *  contract,
+ * });
  *
  * ```
  */

@@ -61,7 +61,9 @@ export function decodeGetBlockNumberResult(result: Hex) {
  * ```ts
  * import { getBlockNumber } from "thirdweb/extensions/multicall3";
  *
- * const result = await getBlockNumber();
+ * const result = await getBlockNumber({
+ *  contract,
+ * });
  *
  * ```
  */

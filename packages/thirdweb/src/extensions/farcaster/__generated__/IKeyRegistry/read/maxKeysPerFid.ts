@@ -59,7 +59,9 @@ export function decodeMaxKeysPerFidResult(result: Hex) {
  * ```ts
  * import { maxKeysPerFid } from "thirdweb/extensions/farcaster";
  *
- * const result = await maxKeysPerFid();
+ * const result = await maxKeysPerFid({
+ *  contract,
+ * });
  *
  * ```
  */

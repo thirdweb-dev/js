@@ -115,6 +115,7 @@ export function decodeTextResult(result: Hex) {
  * import { text } from "thirdweb/extensions/ens";
  *
  * const result = await text({
+ *  contract,
  *  name: ...,
  *  key: ...,
  * });

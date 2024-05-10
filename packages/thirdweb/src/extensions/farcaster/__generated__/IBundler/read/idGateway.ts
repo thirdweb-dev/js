@@ -57,7 +57,9 @@ export function decodeIdGatewayResult(result: Hex) {
  * ```ts
  * import { idGateway } from "thirdweb/extensions/farcaster";
  *
- * const result = await idGateway();
+ * const result = await idGateway({
+ *  contract,
+ * });
  *
  * ```
  */

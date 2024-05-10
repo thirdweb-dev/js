@@ -154,6 +154,7 @@ export function decodeClaimConditionResult(result: Hex) {
  * import { claimCondition } from "thirdweb/extensions/erc1155";
  *
  * const result = await claimCondition({
+ *  contract,
  *  tokenId: ...,
  * });
  *

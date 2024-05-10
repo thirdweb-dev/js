@@ -124,6 +124,7 @@ export function decodeGetWinningBidResult(result: Hex) {
  * import { getWinningBid } from "thirdweb/extensions/marketplace";
  *
  * const result = await getWinningBid({
+ *  contract,
  *  auctionId: ...,
  * });
  *

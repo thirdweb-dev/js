@@ -59,7 +59,9 @@ export function decodeGetChainIdResult(result: Hex) {
  * ```ts
  * import { getChainId } from "thirdweb/extensions/multicall3";
  *
- * const result = await getChainId();
+ * const result = await getChainId({
+ *  contract,
+ * });
  *
  * ```
  */

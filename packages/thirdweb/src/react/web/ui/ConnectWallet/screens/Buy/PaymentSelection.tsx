@@ -4,13 +4,15 @@ import { Container } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
 import { useCustomTheme } from "../../../design-system/CustomThemeProvider.js";
-import { StyledDiv } from "../../../design-system/elements.js";
-import { fontSize, radius, spacing } from "../../../design-system/index.js";
+import { fontSize, spacing } from "../../../design-system/index.js";
 
 /**
  * @internal
  */
-export function PaymentSelection() {
+export function PaymentSelection(props: {
+  selected: "crypto" | "creditCard";
+  onSelect: (method: "crypto" | "creditCard") => void;
+}) {
   return (
     <div>
       <Text size="sm">Pay with </Text>
@@ -22,28 +24,25 @@ export function PaymentSelection() {
           gridGap: spacing.sm,
         }}
       >
-        <CheckButton isChecked={true} variant="outline">
-          <Container gap="xxs" flex="row" center="y">
-            Crypto
-          </Container>
-        </CheckButton>
-        <div
-          style={{
-            position: "relative",
+        <CheckButton
+          isChecked={props.selected === "creditCard"}
+          variant="outline"
+          onClick={() => {
+            props.onSelect("creditCard");
           }}
         >
-          <CheckButton
-            variant="outline"
-            isChecked={false}
-            style={{
-              opacity: 0.5,
-            }}
-            disabled
-          >
-            Credit Card
-          </CheckButton>
-          <FloatingBadge> Coming Soon </FloatingBadge>
-        </div>
+          Credit Card
+        </CheckButton>
+
+        <CheckButton
+          isChecked={props.selected === "crypto"}
+          variant="outline"
+          onClick={() => {
+            props.onSelect("crypto");
+          }}
+        >
+          Crypto
+        </CheckButton>
       </Container>
     </div>
   );
@@ -59,6 +58,11 @@ const CheckButton = /* @__PURE__ */ styled(Button)(
       borderColor: props.isChecked
         ? theme.colors.accentText
         : theme.colors.borderColor,
+      "&:hover": {
+        borderColor: props.isChecked
+          ? theme.colors.accentText
+          : theme.colors.secondaryText,
+      },
       gap: spacing.xs,
       paddingInline: spacing.xxs,
       paddingBlock: spacing.sm,
@@ -66,19 +70,3 @@ const CheckButton = /* @__PURE__ */ styled(Button)(
     };
   },
 );
-
-const FloatingBadge = /* @__PURE__ */ StyledDiv(() => {
-  const theme = useCustomTheme();
-  return {
-    position: "absolute",
-    top: 0,
-    right: 0,
-    transform: "translate(10%, -60%)",
-    backgroundColor: theme.colors.secondaryButtonBg,
-    paddingBlock: "3px",
-    paddingInline: spacing.xs,
-    fontSize: fontSize.xs,
-    borderRadius: radius.sm,
-    color: theme.colors.accentText,
-  };
-});

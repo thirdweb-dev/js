@@ -59,7 +59,9 @@ export function decodeAccountImplementationResult(result: Hex) {
  * ```ts
  * import { accountImplementation } from "thirdweb/extensions/erc4337";
  *
- * const result = await accountImplementation();
+ * const result = await accountImplementation({
+ *  contract,
+ * });
  *
  * ```
  */

@@ -60,7 +60,9 @@ export function decodeGetRulesEngineOverrideResult(result: Hex) {
  * ```ts
  * import { getRulesEngineOverride } from "thirdweb/extensions/thirdweb";
  *
- * const result = await getRulesEngineOverride();
+ * const result = await getRulesEngineOverride({
+ *  contract,
+ * });
  *
  * ```
  */

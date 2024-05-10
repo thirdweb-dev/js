@@ -59,7 +59,9 @@ export function decodeGetBasefeeResult(result: Hex) {
  * ```ts
  * import { getBasefee } from "thirdweb/extensions/multicall3";
  *
- * const result = await getBasefee();
+ * const result = await getBasefee({
+ *  contract,
+ * });
  *
  * ```
  */

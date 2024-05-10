@@ -1,5 +1,55 @@
 # thirdweb
 
+## 5.17.0
+
+### Minor Changes
+
+- [#2931](https://github.com/thirdweb-dev/js/pull/2931) [`24c1670`](https://github.com/thirdweb-dev/js/commit/24c1670e7044ba55e8d0f0f6e9be6a19cca92b28) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - New `smartAccount` prop for `inAppWallet()`
+
+  You can now convert an inAppWallet to a smart account simply by passing the `smartAccount` prop.
+
+  ```ts
+  const wallet = inAppWallet({
+    smartAccount: {
+      chain: sepolia,
+      sponsorGas: true,
+    },
+  });
+
+  await wallet.connect({
+    client,
+    strategy: "google",
+  });
+  ```
+
+  Note: beware that when toggling this flag on and off, you will get a different address (admin EOA vs smart account).
+
+### Patch Changes
+
+- [#2959](https://github.com/thirdweb-dev/js/pull/2959) [`3377fc9`](https://github.com/thirdweb-dev/js/commit/3377fc98825a29abe58b87907165afe6a7dca946) Thanks [@MananTank](https://github.com/MananTank)! - Fix custom details button not opening the details modal in `ConnectButton`
+
+- [#2955](https://github.com/thirdweb-dev/js/pull/2955) [`fd1bd7e`](https://github.com/thirdweb-dev/js/commit/fd1bd7e7ef11285e103898df1d71f079da8ee06f) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add resolve method for Arweave URIs
+
+- [#2950](https://github.com/thirdweb-dev/js/pull/2950) [`d4808fd`](https://github.com/thirdweb-dev/js/commit/d4808fd7e83e0ca9f0b0f78e4248a854ecfec710) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Export getUserPhoneNumber and getAuthenticatedUser in-app wallet functions
+
+- [#2972](https://github.com/thirdweb-dev/js/pull/2972) [`b1ca05e`](https://github.com/thirdweb-dev/js/commit/b1ca05ec12dfa40784667b95944d64982d17b753) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix issue with nonce set to 0 on toSerializableTransaction
+
+- [#2966](https://github.com/thirdweb-dev/js/pull/2966) [`4de8802`](https://github.com/thirdweb-dev/js/commit/4de88024357cf8197ec78fb4fabaf5bddd47c605) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fixes issue with contract compilation in hardhat
+
+- [#2962](https://github.com/thirdweb-dev/js/pull/2962) [`5b6b241`](https://github.com/thirdweb-dev/js/commit/5b6b24133430db7953d14bbda21393c0f3fbfa74) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Makes multiple bugfixes on the deployPublishedContract code path
+
+  - Contracts with no constructor can now deploy as abi inputs defaults to `[]` when encoding the parameters
+  - Properly finds contract versions when specified
+  - Defaults to standard deployment if no deployType is specified
+
+- [#2965](https://github.com/thirdweb-dev/js/pull/2965) [`ae10776`](https://github.com/thirdweb-dev/js/commit/ae1077656fe2cf7eb9848b7391c8edcdba0fe77a) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add Arweave URI support to <MediaRenderer />
+
+- [#2969](https://github.com/thirdweb-dev/js/pull/2969) [`d660b6c`](https://github.com/thirdweb-dev/js/commit/d660b6ce3249bdcd1ff57719ecee7db5c7d47718) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fixes deterministic deploys of contracts with no constructor
+
+- [#2958](https://github.com/thirdweb-dev/js/pull/2958) [`02a0ca9`](https://github.com/thirdweb-dev/js/commit/02a0ca9727e1fabfaf1593dd8a3728ca9a32842d) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fixes inconsistent block numbers when fetching events.
+
+  `getContractEvents` will now properly handle `blockRange` interaction with `fromBlock` and `toBlock` given they are both inclusive (i.e. it will only return logs for the number of blocks specified in `blockRange`).
+
 ## 5.16.1
 
 ### Patch Changes

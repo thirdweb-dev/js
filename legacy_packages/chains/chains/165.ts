@@ -2,13 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "chain": "Omni",
   "chainId": 165,
-  "explorers": [
-    {
-      "name": "Omni Explorer",
-      "url": "https://testnet.explorer.omni.network",
-      "standard": "EIP3091"
-    }
-  ],
+  "explorers": [],
   "faucets": [],
   "features": [
     {
@@ -16,19 +10,17 @@ export default {
     }
   ],
   "infoURL": "https://docs.omni.network/",
-  "name": "Omni Testnet",
+  "name": "Omni Testnet (Deprecated)",
   "nativeCurrency": {
     "name": "Omni",
     "symbol": "OMNI",
     "decimals": 18
   },
   "networkId": 165,
-  "rpc": [
-    "https://165.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet.omni.network"
-  ],
-  "shortName": "omni_testnet",
+  "rpc": [],
+  "shortName": "omni_testnet_deprecated",
   "slip44": 1,
-  "slug": "omni-testnet",
+  "slug": "omni-testnet-deprecated",
+  "status": "deprecated",
   "testnet": true
 } as const satisfies Chain;

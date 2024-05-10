@@ -117,6 +117,7 @@ export function decodeMaxWithdrawResult(result: Hex) {
  * import { maxWithdraw } from "thirdweb/extensions/erc4626";
  *
  * const result = await maxWithdraw({
+ *  contract,
  *  owner: ...,
  * });
  *

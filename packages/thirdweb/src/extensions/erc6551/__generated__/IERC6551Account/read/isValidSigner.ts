@@ -120,6 +120,7 @@ export function decodeIsValidSignerResult(result: Hex) {
  * import { isValidSigner } from "thirdweb/extensions/erc6551";
  *
  * const result = await isValidSigner({
+ *  contract,
  *  signer: ...,
  *  context: ...,
  * });

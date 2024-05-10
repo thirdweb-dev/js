@@ -59,7 +59,9 @@ export function decodeTotalAuctionsResult(result: Hex) {
  * ```ts
  * import { totalAuctions } from "thirdweb/extensions/marketplace";
  *
- * const result = await totalAuctions();
+ * const result = await totalAuctions({
+ *  contract,
+ * });
  *
  * ```
  */

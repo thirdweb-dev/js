@@ -110,6 +110,7 @@ export function decodeContenthashResult(result: Hex) {
  * import { contenthash } from "thirdweb/extensions/ens";
  *
  * const result = await contenthash({
+ *  contract,
  *  name: ...,
  * });
  *

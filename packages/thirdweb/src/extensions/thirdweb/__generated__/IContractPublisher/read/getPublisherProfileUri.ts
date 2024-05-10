@@ -120,6 +120,7 @@ export function decodeGetPublisherProfileUriResult(result: Hex) {
  * import { getPublisherProfileUri } from "thirdweb/extensions/thirdweb";
  *
  * const result = await getPublisherProfileUri({
+ *  contract,
  *  publisher: ...,
  * });
  *

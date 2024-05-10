@@ -58,7 +58,9 @@ export function decodeGetAllAdminsResult(result: Hex) {
  * ```ts
  * import { getAllAdmins } from "thirdweb/extensions/erc4337";
  *
- * const result = await getAllAdmins();
+ * const result = await getAllAdmins({
+ *  contract,
+ * });
  *
  * ```
  */

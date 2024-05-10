@@ -110,6 +110,7 @@ export function decodeGetRoleAdminResult(result: Hex) {
  * import { getRoleAdmin } from "thirdweb/extensions/permissions";
  *
  * const result = await getRoleAdmin({
+ *  contract,
  *  role: ...,
  * });
  *

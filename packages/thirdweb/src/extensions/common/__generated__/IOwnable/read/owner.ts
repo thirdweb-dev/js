@@ -57,7 +57,9 @@ export function decodeOwnerResult(result: Hex) {
  * ```ts
  * import { owner } from "thirdweb/extensions/common";
  *
- * const result = await owner();
+ * const result = await owner({
+ *  contract,
+ * });
  *
  * ```
  */

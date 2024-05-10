@@ -337,6 +337,16 @@ describe("toSerializableTransaction", () => {
   });
 
   describe("nonce override", () => {
+    test("should be able to be set to 0", async () => {
+      const serializableTransaction = await toSerializableTransaction({
+        transaction: {
+          ...transaction,
+          nonce: 0,
+        },
+      });
+      expect(serializableTransaction.nonce).toBe(0);
+    });
+
     test("should be able to be set", async () => {
       const randomNonce = Math.floor(Math.random() * 1000);
       const serializableTransaction = await toSerializableTransaction({

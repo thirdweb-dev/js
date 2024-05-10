@@ -8,8 +8,8 @@ import {
   spacing,
 } from "../design-system/index.js";
 
-type ButtonProps = {
-  variant: "primary" | "secondary" | "link" | "accent" | "outline";
+export type ButtonProps = {
+  variant: "primary" | "secondary" | "link" | "accent" | "outline" | "ghost";
   theme?: Theme;
   fullWidth?: boolean;
   gap?: keyof typeof spacing;
@@ -89,6 +89,15 @@ export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
         };
       }
 
+      if (props.variant === "ghost") {
+        return {
+          border: "1.5px solid transparent",
+          "&:hover": {
+            borderColor: theme.colors.accentText,
+          },
+        };
+      }
+
       if (props.variant === "secondary") {
         return {
           "&:hover": {
@@ -110,6 +119,8 @@ export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
     })(),
   };
 });
+
+export const ButtonLink = /* @__PURE__ */ (() => Button.withComponent("a"))();
 
 export const IconButton = /* @__PURE__ */ StyledButton(() => {
   const theme = useCustomTheme();

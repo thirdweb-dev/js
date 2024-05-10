@@ -119,6 +119,7 @@ export function decodeIsApprovedForAllResult(result: Hex) {
  * import { isApprovedForAll } from "thirdweb/extensions/erc1155";
  *
  * const result = await isApprovedForAll({
+ *  contract,
  *  owner: ...,
  *  operator: ...,
  * });

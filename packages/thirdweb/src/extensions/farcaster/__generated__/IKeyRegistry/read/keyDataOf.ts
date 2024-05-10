@@ -117,6 +117,7 @@ export function decodeKeyDataOfResult(result: Hex) {
  * import { keyDataOf } from "thirdweb/extensions/farcaster";
  *
  * const result = await keyDataOf({
+ *  contract,
  *  fid: ...,
  *  key: ...,
  * });

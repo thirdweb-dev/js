@@ -59,7 +59,9 @@ export function decodeProxiableUUIDResult(result: Hex) {
  * ```ts
  * import { proxiableUUID } from "thirdweb/extensions/erc1822";
  *
- * const result = await proxiableUUID();
+ * const result = await proxiableUUID({
+ *  contract,
+ * });
  *
  * ```
  */

@@ -59,7 +59,9 @@ export function decodeTotalAssetsResult(result: Hex) {
  * ```ts
  * import { totalAssets } from "thirdweb/extensions/erc4626";
  *
- * const result = await totalAssets();
+ * const result = await totalAssets({
+ *  contract,
+ * });
  *
  * ```
  */

@@ -1,12 +1,15 @@
 import styled from "@emotion/styled";
 import { ChevronDownIcon, CrossCircledIcon } from "@radix-ui/react-icons";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import type { Chain } from "../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
+import type { Account } from "../../../../../wallets/interfaces/wallet.js";
+import { getTokenBalance } from "../../../../../wallets/utils/getTokenBalance.js";
 import { useChainQuery } from "../../../../core/hooks/others/useChainQuery.js";
-import { useWalletBalance } from "../../../../core/hooks/others/useWalletBalance.js";
+import { useTokenInfo } from "../../../../core/hooks/others/useTokenInfo.js";
 import { useActiveAccount } from "../../../../core/hooks/wallets/wallet-hooks.js";
-import { ChainIcon, fallbackChainIcon } from "../../components/ChainIcon.js";
+import { ChainIcon } from "../../components/ChainIcon.js";
 import { Skeleton } from "../../components/Skeleton.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Spinner } from "../../components/Spinner.js";
@@ -20,6 +23,7 @@ import { fontSize, iconSize, spacing } from "../../design-system/index.js";
 import { ChainButton, NetworkSelectorContent } from "../NetworkSelector.js";
 import type { TokenInfo } from "../defaultTokens.js";
 import type { ConnectLocale } from "../locale/types.js";
+import { formatTokenBalance } from "./formatTokenBalance.js";
 import {
   type ERC20OrNativeToken,
   NATIVE_TOKEN,
@@ -27,6 +31,7 @@ import {
 } from "./nativeToken.js";
 
 // NOTE: MUST NOT USE useConnectUI here because this UI can be used outside connect ui
+// Note: TokenSelector can be used when wallet may or may not be connected
 
 /**
  *
@@ -46,14 +51,12 @@ export function TokenSelector(props: {
 }) {
   const [screen, setScreen] = useState<"base" | "select-chain">("base");
   const [input, setInput] = useState("");
-  const activeAccount = useActiveAccount();
   const chain = props.chain;
   const chainQuery = useChainQuery(chain);
 
   // if input is undefined, it loads the native token
   // otherwise it loads the token with given address
-  const tokenQuery = useWalletBalance({
-    address: activeAccount?.address,
+  const tokenQuery = useTokenInfo({
     chain: chain,
     tokenAddress: input,
     client: props.client,
@@ -67,7 +70,6 @@ export function TokenSelector(props: {
     tokenList = [
       {
         ...tokenQuery.data,
-        icon: "",
         address: input,
       },
       ...tokenList,
@@ -154,7 +156,6 @@ export function TokenSelector(props: {
                 <ChainIcon
                   chain={chainQuery.data}
                   size={iconSize.lg}
-                  fallbackImage={fallbackChainIcon}
                   client={props.client}
                 />
 
@@ -232,7 +233,7 @@ export function TokenSelector(props: {
           </Container>
         )}
 
-        {filteredList.length === 0 && tokenQuery.isLoading && (
+        {filteredList.length === 0 && tokenQuery.isLoading && input && (
           <Container
             animate="fadein"
             p="lg"
@@ -281,15 +282,14 @@ function SelectTokenButton(props: {
   client: ThirdwebClient;
 }) {
   const account = useActiveAccount();
-  const tokenBalanceQuery = useWalletBalance({
-    address: account?.address,
+  const tokenInfoQuery = useTokenInfo({
     chain: props.chain,
     tokenAddress: isNativeToken(props.token) ? undefined : props.token.address,
     client: props.client,
   });
 
   const tokenName = isNativeToken(props.token)
-    ? tokenBalanceQuery.data?.name
+    ? tokenInfoQuery.data?.name
     : props.token.name;
 
   return (
@@ -310,14 +310,44 @@ function SelectTokenButton(props: {
           <Skeleton height={fontSize.md} width="150px" />
         )}
 
-        {tokenBalanceQuery.data ? (
-          <Text size="xs"> {formatTokenBalance(tokenBalanceQuery.data)}</Text>
-        ) : (
-          <Skeleton height={fontSize.xs} width="100px" />
+        {account && (
+          <TokenBalance
+            account={account}
+            chain={props.chain}
+            client={props.client}
+            tokenAddress={
+              isNativeToken(props.token) ? undefined : props.token.address
+            }
+          />
         )}
       </Container>
     </SelectTokenBtn>
   );
+}
+
+function TokenBalance(props: {
+  account: Account;
+  chain: Chain;
+  client: ThirdwebClient;
+  tokenAddress?: string;
+}) {
+  const tokenBalanceQuery = useQuery({
+    queryKey: ["tokenBalance", props],
+    queryFn: async () => {
+      return getTokenBalance({
+        account: props.account,
+        chain: props.chain,
+        client: props.client,
+        tokenAddress: props.tokenAddress,
+      });
+    },
+  });
+
+  if (tokenBalanceQuery.data) {
+    return <Text size="xs"> {formatTokenBalance(tokenBalanceQuery.data)}</Text>;
+  }
+
+  return <Skeleton height={fontSize.xs} width="100px" />;
 }
 
 const SelectTokenBtn = /* @__PURE__ */ styled(Button)(() => {
@@ -334,23 +364,3 @@ const SelectTokenBtn = /* @__PURE__ */ styled(Button)(() => {
     transition: "background 200ms ease, transform 150ms ease",
   };
 });
-
-/**
- * @internal
- * @param balanceData
- * @returns
- */
-export function formatTokenBalance(
-  balanceData: {
-    symbol: string;
-    name: string;
-    decimals: number;
-    displayValue: string;
-  },
-  showSymbol = true,
-) {
-  return (
-    Number(balanceData.displayValue).toFixed(3) +
-    (showSymbol ? ` ${balanceData.symbol}` : "")
-  );
-}

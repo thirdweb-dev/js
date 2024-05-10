@@ -57,7 +57,9 @@ export function decodeRentedUnitsResult(result: Hex) {
  * ```ts
  * import { rentedUnits } from "thirdweb/extensions/farcaster";
  *
- * const result = await rentedUnits();
+ * const result = await rentedUnits({
+ *  contract,
+ * });
  *
  * ```
  */

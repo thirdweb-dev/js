@@ -28,7 +28,7 @@ export async function toSerializableTransaction(
       const resolvedNonce = await resolvePromisedValue(
         options.transaction.nonce,
       );
-      if (resolvedNonce) {
+      if (resolvedNonce !== undefined) {
         return resolvedNonce;
       }
 

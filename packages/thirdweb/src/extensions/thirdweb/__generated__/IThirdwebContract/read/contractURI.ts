@@ -57,7 +57,9 @@ export function decodeContractURIResult(result: Hex) {
  * ```ts
  * import { contractURI } from "thirdweb/extensions/thirdweb";
  *
- * const result = await contractURI();
+ * const result = await contractURI({
+ *  contract,
+ * });
  *
  * ```
  */

@@ -112,6 +112,7 @@ export function decodeTokensOfOwnerResult(result: Hex) {
  * import { tokensOfOwner } from "thirdweb/extensions/erc721";
  *
  * const result = await tokensOfOwner({
+ *  contract,
  *  owner: ...,
  * });
  *

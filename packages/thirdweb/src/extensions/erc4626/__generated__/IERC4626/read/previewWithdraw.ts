@@ -119,6 +119,7 @@ export function decodePreviewWithdrawResult(result: Hex) {
  * import { previewWithdraw } from "thirdweb/extensions/erc4626";
  *
  * const result = await previewWithdraw({
+ *  contract,
  *  assets: ...,
  * });
  *
