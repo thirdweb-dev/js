@@ -1,3 +1,4 @@
+import type { AuthType } from "@passwordless-id/webauthn/dist/esm/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 
 export type MultiStepAuthProviderType =
@@ -40,10 +41,8 @@ export type SingleStepAuthArgsType =
   | {
       strategy: "passkey";
       type: "sign-up" | "sign-in";
-      username?: string;
-      authenticatorType?: string;
-      // FIXME: remove this before merging
-      recoveryCode?: string;
+      passkeyName?: string;
+      authenticatorType?: AuthType;
     };
 
 export type AuthArgsType = (MultiStepAuthArgsType | SingleStepAuthArgsType) & {

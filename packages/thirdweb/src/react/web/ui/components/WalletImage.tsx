@@ -7,6 +7,7 @@ import { getStoredActiveWalletId } from "../../../../wallets/manager/index.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
 import { getStorage } from "../../../core/storage.js";
 import { getLastAuthProvider } from "../../wallets/in-app/storage.js";
+import { FingerPrintIcon } from "../ConnectWallet/icons/FingerPrintIcon.js";
 import { emailIcon, phoneIcon } from "../ConnectWallet/icons/dataUris.js";
 import {
   appleIconUri,
@@ -69,6 +70,10 @@ export function WalletImage(props: {
           case "email":
             mipdImage = emailIcon;
             break;
+          case "passkey":
+            // biome-ignore lint/suspicious/noExplicitAny: FIXME refactor this
+            mipdImage = "passkey" as any;
+            break;
         }
       }
 
@@ -76,6 +81,11 @@ export function WalletImage(props: {
     }
     fetchImage();
   }, [props.id, activeWallet]);
+
+  // FIXME hack
+  if (image === "passkey") {
+    return <FingerPrintIcon size={props.size} />;
+  }
 
   if (image) {
     return (

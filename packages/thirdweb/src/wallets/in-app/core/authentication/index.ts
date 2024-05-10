@@ -206,15 +206,15 @@ export async function authenticate(
         const authToken = await registerPasskey({
           client: args.client,
           authenticatorType: args.authenticatorType,
-          username: args.username,
+          username: args.passkeyName,
         });
-        return ewSDK.auth.loginWithAuthToken(authToken, args.recoveryCode);
+        return ewSDK.auth.loginWithAuthToken(authToken);
       }
       const authToken = await loginWithPasskey({
         client: args.client,
-        username: args.username,
+        authenticatorType: args.authenticatorType,
       });
-      return ewSDK.auth.loginWithAuthToken(authToken, args.recoveryCode);
+      return ewSDK.auth.loginWithAuthToken(authToken);
     }
     default:
       assertUnreachable(strategy);

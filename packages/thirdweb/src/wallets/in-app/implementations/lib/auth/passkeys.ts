@@ -1,4 +1,5 @@
 import { client } from "@passwordless-id/webauthn";
+import type { AuthType } from "@passwordless-id/webauthn/dist/esm/types.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { getThirdwebBaseUrl } from "../../../../../utils/domains.js";
 import { getClientFetch } from "../../../../../utils/fetch.js";
@@ -20,7 +21,7 @@ function getChallengePath(type: "sign-in" | "sign-up", username?: string) {
 
 export async function registerPasskey(options: {
   client: ThirdwebClient;
-  authenticatorType?: string;
+  authenticatorType?: AuthType;
   username?: string;
 }): Promise<AuthStoredTokenWithCookieReturnType> {
   if (!client.isAvailable()) {
@@ -39,7 +40,7 @@ export async function registerPasskey(options: {
   const challenge = challengeData.challenge;
   // 2. initiate registration
   const registration = await client.register(generatedName, challenge, {
-    authenticatorType: "roaming",
+    authenticatorType: options.authenticatorType ?? "roaming",
     userVerification: "required",
     attestation: true,
     debug: false,
@@ -77,7 +78,7 @@ export async function registerPasskey(options: {
 
 export async function loginWithPasskey(options: {
   client: ThirdwebClient;
-  username?: string;
+  authenticatorType?: AuthType;
 }): Promise<AuthStoredTokenWithCookieReturnType> {
   if (!client.isAvailable()) {
     throw new Error("Passkeys are not available on this device");
@@ -97,7 +98,7 @@ export async function loginWithPasskey(options: {
   const credentials = credentialId ? [credentialId] : [];
   // 2. initiate login
   const authentication = await client.authenticate(credentials, challenge, {
-    authenticatorType: "roaming",
+    authenticatorType: options.authenticatorType ?? "roaming",
     userVerification: "required",
   });
   // 3. send the authentication object to the server/iframe
