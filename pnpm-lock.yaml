@@ -986,19 +986,19 @@ importers:
         specifier: ^4.36.1
         version: 4.36.1(react-native@0.71.17)(react@18.2.0)
       '@thirdweb-dev/chains':
-        specifier: 0.1.107
+        specifier: 0.1.106
         version: link:../chains
       '@thirdweb-dev/react-core':
-        specifier: 4.6.17
+        specifier: 4.6.16
         version: link:../react-core
       '@thirdweb-dev/sdk':
-        specifier: 4.0.78
+        specifier: 4.0.77
         version: link:../sdk
       '@thirdweb-dev/storage':
         specifier: 2.0.14
         version: link:../storage
       '@thirdweb-dev/wallets':
-        specifier: 2.5.18
+        specifier: 2.5.17
         version: link:../wallets
       abitype:
         specifier: 1.0.0
@@ -1063,7 +1063,7 @@ importers:
         specifier: ^3.2.0
         version: 3.2.0(eslint@8.57.0)(prettier@3.2.5)(typescript@5.4.4)
       '@thirdweb-dev/tsconfig':
-        specifier: ^0.1.7
+        specifier: workspace:*
         version: link:../../packages/tw-tsconfig
       '@types/react':
         specifier: 18.2.17
@@ -1075,7 +1075,7 @@ importers:
         specifier: 8.57.0
         version: 8.57.0
       eslint-config-thirdweb:
-        specifier: ^0.1.9
+        specifier: workspace:*
         version: link:../eslint-config-thirdweb
       eslint-plugin-i18next:
         specifier: ^6.0.3
@@ -16917,6 +16917,7 @@ packages:
     dependencies:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
+    bundledDependencies: false
 
   /event-emitter@0.3.5:
     resolution: {integrity: sha512-D9rRn9y7kLPnJ+hMq7S/nhvoKwwvVJahBi2BPmx3bvbsEdK3W9ii8cBSGjP+72/LnM4n6fo3+dkCX5FeTQruXA==}
