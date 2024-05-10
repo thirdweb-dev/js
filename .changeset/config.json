@@ -22,8 +22,8 @@
     "bundlers-swc",
     "runtimes-node-commonjs",
     "runtimes-node-module",
-    "react-native",
-    "react-native-compat"
+    "@thirdweb-dev/react-native",
+    "@thirdweb-dev/react-native-compat"
   ],
   "___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH": {
     "updateInternalDependents": "always",
