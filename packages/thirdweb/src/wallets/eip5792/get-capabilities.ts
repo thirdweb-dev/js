@@ -41,10 +41,8 @@ export async function getCapabilities<const ID extends WalletId>({
 
   // TODO: Add Wallet Connect support
   if (isWalletConnect(wallet)) {
-    const chain = wallet.getChain();
-    if (!chain) return {};
     return {
-      [chain.id]: {},
+      message: "getCapabilities is not yet supported with Wallet Connect",
     };
   }
 
