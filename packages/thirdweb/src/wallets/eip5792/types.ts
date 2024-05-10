@@ -22,7 +22,7 @@ export type WalletSendCallsParameters<
   {
     from: Address;
     calls: EIP5792Call[];
-    capabilities: capabilities;
+    capabilities?: capabilities | undefined;
     version: string;
     chainId: chainId;
   },
