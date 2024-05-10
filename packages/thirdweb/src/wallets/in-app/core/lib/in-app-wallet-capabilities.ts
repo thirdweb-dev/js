@@ -11,24 +11,11 @@ export function inAppWalletGetCapabilities(args: {
   const chain = wallet.getChain();
   if (chain === undefined) {
     return {
-      message: "No chain found",
+      message: `Can't get capabilities, no active chain found for wallet: ${wallet.id}`,
     };
   }
 
   const account = wallet.getAccount();
-  if (!account) {
-    return {
-      [chain.id]: {
-        paymasterService: {
-          supported: false,
-        },
-        atomicBatch: {
-          supported: false,
-        },
-      },
-      message: "No account connected",
-    };
-  }
 
   const config = wallet.getConfig();
   const sponsorGas =

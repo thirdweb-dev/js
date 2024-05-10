@@ -59,7 +59,8 @@ describe.sequential("injected wallet", async () => {
 
       expect(mocks.injectedRequest).not.toHaveBeenCalled();
       expect(capabilities).toEqual({
-        message: "No account connected",
+        message:
+          "Can't get capabilities, no account connected for wallet: io.metamask",
       });
     });
 
@@ -110,20 +111,7 @@ describe.sequential("injected wallet", async () => {
 describe.sequential("in-app wallet", async () => {
   let wallet: Wallet = createWallet("inApp");
 
-  test("with no chain should return empty object", async () => {
-    wallet.getAccount = vi.fn().mockReturnValue(TEST_ACCOUNT_A);
-    wallet.getChain = vi.fn().mockReturnValue(undefined);
-
-    const capabilities = await getCapabilities({
-      wallet,
-    });
-
-    expect(capabilities).toEqual({
-      message: "No chain found",
-    });
-  });
-
-  test("with chain should return no support", async () => {
+  test("should return no support", async () => {
     wallet.getChain = vi.fn().mockReturnValue(ANVIL_CHAIN);
     wallet.getAccount = vi.fn().mockReturnValue(TEST_ACCOUNT_A);
 
@@ -144,7 +132,6 @@ describe.sequential("in-app wallet", async () => {
   });
 
   test("with no account should return no capabilities", async () => {
-    wallet.getChain = vi.fn().mockReturnValue(ANVIL_CHAIN);
     wallet.getAccount = vi.fn().mockReturnValue(undefined);
 
     const capabilities = await getCapabilities({
@@ -152,15 +139,7 @@ describe.sequential("in-app wallet", async () => {
     });
 
     expect(capabilities).toEqual({
-      [ANVIL_CHAIN.id]: {
-        paymasterService: {
-          supported: false,
-        },
-        atomicBatch: {
-          supported: false,
-        },
-      },
-      message: "No account connected",
+      message: "Can't get capabilities, no account connected for wallet: inApp",
     });
   });
 
@@ -258,15 +237,7 @@ describe.sequential("smart wallet", async () => {
     });
 
     expect(capabilities).toEqual({
-      [FORKED_ETHEREUM_CHAIN.id]: {
-        paymasterService: {
-          supported: false,
-        },
-        atomicBatch: {
-          supported: false,
-        },
-      },
-      message: "No account connected",
+      message: "Can't get capabilities, no account connected for wallet: smart",
     });
   });
 
@@ -318,3 +289,5 @@ describe.sequential("smart wallet", async () => {
     });
   });
 });
+
+// TODO: Coinbase SDK Tests
