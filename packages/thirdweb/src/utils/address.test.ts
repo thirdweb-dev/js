@@ -1,6 +1,11 @@
 import { describe, expect, test } from "vitest";
 
-import { checksumAddress, getAddress, isAddress } from "./address.js";
+import {
+  checksumAddress,
+  getAddress,
+  isAddress,
+  shortenAddress,
+} from "./address.js";
 
 describe("getAddress", () => {
   test("checksums address", () => {
@@ -79,5 +84,13 @@ describe("checksumAddress", () => {
     expect(
       checksumAddress("0x15d34aaf54267db7d7c367839aaf71a00a2c6a65"),
     ).toMatchInlineSnapshot('"0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65"');
+  });
+});
+
+describe("shortenAddress", () => {
+  test("shortens address", () => {
+    expect(
+      shortenAddress("0xa0cf798816d4b9b9866b5330eea46a18382f251e"),
+    ).toMatchInlineSnapshot('"0xA0...251e"');
   });
 });
