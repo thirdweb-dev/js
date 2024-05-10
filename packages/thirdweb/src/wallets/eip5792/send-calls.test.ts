@@ -1,7 +1,12 @@
 import { afterEach } from "node:test";
-import { beforeAll, describe, expect, it, test, vi } from "vitest";
-import { ANVIL_CHAIN } from "../../../test/src/chains.js";
+import { beforeAll, describe, expect, test, vi } from "vitest";
+import {
+  ANVIL_CHAIN,
+  FORKED_ETHEREUM_CHAIN,
+} from "../../../test/src/chains.js";
+import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import { TEST_ACCOUNT_A } from "../../../test/src/test-wallets.js";
+import { sepolia } from "../../exports/chains.js";
 import { numberToHex } from "../../utils/encoding/hex.js";
 import { METAMASK } from "../constants.js";
 import { createWallet } from "../create-wallet.js";
@@ -9,13 +14,14 @@ import type { Wallet } from "../interfaces/wallet.js";
 import { type SendCallsOptions, sendCalls } from "./send-calls.js";
 
 const SEND_CALLS_OPTIONS: Omit<SendCallsOptions, "wallet"> = {
+  client: TEST_CLIENT,
   calls: [
     {
-      to: "0x123456789abcdef",
+      to: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
       data: "0xabcdef",
     },
     {
-      to: "0x123456789abcdef",
+      to: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0719",
       value: 123n,
     },
   ],
@@ -34,6 +40,8 @@ vi.mock("../injected/index.js", () => {
 });
 
 describe.sequential("injected wallet", () => {
+  const wallet: Wallet = createWallet(METAMASK);
+
   beforeAll(() => {
     mocks.injectedRequest.mockResolvedValue("0x123456");
   });
@@ -42,7 +50,6 @@ describe.sequential("injected wallet", () => {
     vi.clearAllMocks();
   });
 
-  const wallet: Wallet = createWallet(METAMASK);
   test("with no chain should fail to send calls", () => {
     wallet.getChain = vi.fn().mockReturnValue(undefined);
     wallet.getAccount = vi.fn().mockReturnValue(TEST_ACCOUNT_A);
@@ -76,12 +83,12 @@ describe.sequential("injected wallet", () => {
         {
           calls: [
             {
-              to: "0x123456789abcdef",
+              to: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
               data: "0xabcdef",
               value: undefined,
             },
             {
-              to: "0x123456789abcdef",
+              to: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0719",
               value: numberToHex(123n),
             },
           ],
@@ -93,4 +100,76 @@ describe.sequential("injected wallet", () => {
       ],
     });
   });
+
+  test("should override chainId", async () => {
+    wallet.getChain = vi.fn().mockReturnValue(ANVIL_CHAIN);
+    const result = await sendCalls({
+      wallet,
+      chain: sepolia,
+      ...SEND_CALLS_OPTIONS,
+    });
+
+    expect(result).toEqual("0x123456");
+    expect(mocks.injectedRequest).toHaveBeenCalledWith({
+      method: "wallet_sendCalls",
+      params: [
+        {
+          calls: [
+            {
+              to: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
+              data: "0xabcdef",
+              value: undefined,
+            },
+            {
+              to: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0719",
+              value: numberToHex(123n),
+            },
+          ],
+          capabilities: undefined,
+          chainId: numberToHex(sepolia.id),
+          from: TEST_ACCOUNT_A.address,
+          version: "1.0",
+        },
+      ],
+    });
+  });
 });
+
+describe.sequential("in-app wallet", () => {
+  const sendTransaction = vi.fn();
+  const sendBatchTransaction = vi.fn();
+  let wallet: Wallet = createWallet("inApp");
+
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  test("should send individual calls", async () => {
+    wallet.getChain = vi.fn().mockReturnValue(ANVIL_CHAIN);
+    wallet.getAccount = vi.fn().mockReturnValue({
+      ...TEST_ACCOUNT_A,
+      sendTransaction,
+    });
+
+    await sendCalls({ wallet, ...SEND_CALLS_OPTIONS });
+
+    expect(sendTransaction).toHaveBeenCalledTimes(2);
+  });
+
+  test("with smart account should send batch calls", async () => {
+    wallet = createWallet("inApp", {
+      smartAccount: { chain: FORKED_ETHEREUM_CHAIN, sponsorGas: true },
+    });
+    wallet.getChain = vi.fn().mockReturnValue(FORKED_ETHEREUM_CHAIN);
+    wallet.getAccount = vi.fn().mockReturnValue({
+      ...TEST_ACCOUNT_A,
+      sendBatchTransaction, // we have to mock this because it doesn't get set until the wallet is connected
+    });
+
+    await sendCalls({ wallet, ...SEND_CALLS_OPTIONS });
+
+    expect(sendBatchTransaction).toHaveBeenCalledTimes(1);
+  });
+});
+
+// TODO: Coinbase SDK tests

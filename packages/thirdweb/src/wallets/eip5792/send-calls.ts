@@ -1,5 +1,6 @@
 import type { WalletSendCallsParameters as ViemWalletSendCallsParameters } from "viem";
 import type { Chain } from "../../chains/types.js";
+import type { ThirdwebClient } from "../../client/client.js";
 import { getAddress } from "../../utils/address.js";
 import { type Hex, numberToHex } from "../../utils/encoding/hex.js";
 import type { OneOf } from "../../utils/type-utils.js";
@@ -14,6 +15,7 @@ import type { WalletSendCallsId, WalletSendCallsParameters } from "./types.js";
 
 export type SendCallsOptions<ID extends WalletId = WalletId> = {
   wallet: Wallet<ID>;
+  client: ThirdwebClient;
   calls: OneOf<
     | {
         to: Hex;
@@ -40,6 +42,7 @@ export async function sendCalls<const ID extends WalletId>(
     capabilities,
     version = "1.0",
     chain = wallet.getChain(),
+    client,
   } = options;
 
   if (!chain) {
@@ -59,11 +62,14 @@ export async function sendCalls<const ID extends WalletId>(
     throw new Error("Not implemented");
   }
 
-  if (isInAppWallet(wallet)) {
-    throw new Error("Not implemented");
+  if (isSmartWallet(wallet) || isInAppWallet(wallet)) {
+    const { inAppWalletSendCalls } = await import(
+      "../in-app/core/lib/in-app-wallet-send-calls.js"
+    );
+    return inAppWalletSendCalls({ wallet, chain, client, calls });
   }
 
-  const params: WalletSendCallsParameters = [
+  const injectedWalletCallParams: WalletSendCallsParameters = [
     {
       from: getAddress(account.address),
       calls: calls.map((call) =>
@@ -86,7 +92,10 @@ export async function sendCalls<const ID extends WalletId>(
     const { coinbaseSDKWalletSendCalls } = await import(
       "../coinbase/coinbaseSDKWallet.js"
     );
-    return coinbaseSDKWalletSendCalls({ wallet, params });
+    return coinbaseSDKWalletSendCalls({
+      wallet,
+      params: injectedWalletCallParams,
+    });
   }
 
   if (isWalletConnect(wallet)) {
@@ -98,7 +107,7 @@ export async function sendCalls<const ID extends WalletId>(
   try {
     return await provider.request({
       method: "wallet_sendCalls",
-      params: params as ViemWalletSendCallsParameters, // The viem type definition is slightly different
+      params: injectedWalletCallParams as ViemWalletSendCallsParameters, // The viem type definition is slightly different
     });
   } catch (error) {
     if (/unsupport|not support/i.test((error as Error).message)) {
