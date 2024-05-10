@@ -122,6 +122,7 @@ export function decodeBalanceOfBatchResult(result: Hex) {
  * import { balanceOfBatch } from "thirdweb/extensions/erc1155";
  *
  * const result = await balanceOfBatch({
+ *  contract,
  *  owners: ...,
  *  tokenIds: ...,
  * });

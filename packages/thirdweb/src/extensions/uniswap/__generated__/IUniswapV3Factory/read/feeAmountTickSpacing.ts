@@ -116,6 +116,7 @@ export function decodeFeeAmountTickSpacingResult(result: Hex) {
  * import { feeAmountTickSpacing } from "thirdweb/extensions/uniswap";
  *
  * const result = await feeAmountTickSpacing({
+ *  contract,
  *  fee: ...,
  * });
  *

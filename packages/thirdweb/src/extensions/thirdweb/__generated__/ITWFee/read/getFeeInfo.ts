@@ -122,6 +122,7 @@ export function decodeGetFeeInfoResult(result: Hex) {
  * import { getFeeInfo } from "thirdweb/extensions/thirdweb";
  *
  * const result = await getFeeInfo({
+ *  contract,
  *  proxy: ...,
  *  type: ...,
  * });

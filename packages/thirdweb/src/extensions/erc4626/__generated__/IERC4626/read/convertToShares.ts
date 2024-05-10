@@ -119,6 +119,7 @@ export function decodeConvertToSharesResult(result: Hex) {
  * import { convertToShares } from "thirdweb/extensions/erc4626";
  *
  * const result = await convertToShares({
+ *  contract,
  *  assets: ...,
  * });
  *

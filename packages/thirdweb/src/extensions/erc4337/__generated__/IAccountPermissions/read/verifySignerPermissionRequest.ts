@@ -180,6 +180,7 @@ export function decodeVerifySignerPermissionRequestResult(result: Hex) {
  * import { verifySignerPermissionRequest } from "thirdweb/extensions/erc4337";
  *
  * const result = await verifySignerPermissionRequest({
+ *  contract,
  *  req: ...,
  *  signature: ...,
  * });

@@ -108,6 +108,7 @@ export function decodeAddrResult(result: Hex) {
  * import { addr } from "thirdweb/extensions/ens";
  *
  * const result = await addr({
+ *  contract,
  *  name: ...,
  * });
  *

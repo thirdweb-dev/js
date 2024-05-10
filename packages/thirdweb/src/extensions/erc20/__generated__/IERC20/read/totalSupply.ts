@@ -57,7 +57,9 @@ export function decodeTotalSupplyResult(result: Hex) {
  * ```ts
  * import { totalSupply } from "thirdweb/extensions/erc20";
  *
- * const result = await totalSupply();
+ * const result = await totalSupply({
+ *  contract,
+ * });
  *
  * ```
  */

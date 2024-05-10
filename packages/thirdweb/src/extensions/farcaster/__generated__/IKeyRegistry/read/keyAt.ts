@@ -126,6 +126,7 @@ export function decodeKeyAtResult(result: Hex) {
  * import { keyAt } from "thirdweb/extensions/farcaster";
  *
  * const result = await keyAt({
+ *  contract,
  *  fid: ...,
  *  state: ...,
  *  index: ...,

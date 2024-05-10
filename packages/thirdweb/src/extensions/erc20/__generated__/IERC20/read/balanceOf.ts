@@ -110,6 +110,7 @@ export function decodeBalanceOfResult(result: Hex) {
  * import { balanceOf } from "thirdweb/extensions/erc20";
  *
  * const result = await balanceOf({
+ *  contract,
  *  address: ...,
  * });
  *

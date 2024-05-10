@@ -108,6 +108,7 @@ export function decodeNoncesResult(result: Hex) {
  * import { nonces } from "thirdweb/extensions/erc20";
  *
  * const result = await nonces({
+ *  contract,
  *  owner: ...,
  * });
  *

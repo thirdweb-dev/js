@@ -119,6 +119,7 @@ export function decodePreviewRedeemResult(result: Hex) {
  * import { previewRedeem } from "thirdweb/extensions/erc4626";
  *
  * const result = await previewRedeem({
+ *  contract,
  *  shares: ...,
  * });
  *

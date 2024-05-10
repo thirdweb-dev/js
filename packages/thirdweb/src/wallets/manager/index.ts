@@ -1,5 +1,6 @@
 import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
+import { hasSmartAccount } from "../../react/web/utils/isSmartWallet.js";
 import { computedStore } from "../../reactive/computedStore.js";
 import { effect } from "../../reactive/effect.js";
 import { createStore } from "../../reactive/store.js";
@@ -8,6 +9,7 @@ import type { Account, Wallet } from "../interfaces/wallet.js";
 import type { SmartWalletOptions } from "../smart/types.js";
 import type { AsyncStorage } from "../storage/AsyncStorage.js";
 import { deleteConnectParamsFromStorage } from "../storage/walletStorage.js";
+import type { WalletId } from "../wallet-types.js";
 
 type WalletIdToConnectedWalletMap = Map<string, Wallet>;
 export type ConnectionStatus = "connected" | "disconnected" | "connecting";
@@ -84,6 +86,7 @@ export function createConnectionManager(storage: AsyncStorage) {
       storage.removeItem(LAST_ACTIVE_EOA_ID);
       activeAccountStore.setValue(undefined);
       activeWalletChainStore.setValue(undefined);
+      activeWalletStore.setValue(undefined);
       activeWalletConnectionStatusStore.setValue("disconnected");
     }
   };
@@ -105,7 +108,8 @@ export function createConnectionManager(storage: AsyncStorage) {
 
     const personalWallet = wallet;
     let activeWallet = personalWallet;
-    if (options?.accountAbstraction) {
+    const isInAppSmartAccount = hasSmartAccount(wallet);
+    if (options?.accountAbstraction && !isInAppSmartAccount) {
       activeWallet = smartWallet(options.accountAbstraction);
       await activeWallet.connect({
         personalAccount: wallet.getAccount(),
@@ -281,11 +285,11 @@ export async function getStoredConnectedWalletIds(
  */
 export async function getStoredActiveWalletId(
   storage: AsyncStorage,
-): Promise<string | null> {
+): Promise<WalletId | null> {
   try {
     const value = await storage.getItem(LAST_ACTIVE_EOA_ID);
     if (value) {
-      return value;
+      return value as WalletId;
     }
 
     return null;

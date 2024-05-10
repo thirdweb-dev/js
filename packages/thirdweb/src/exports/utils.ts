@@ -132,6 +132,7 @@ export {
 // abi
 // ------------------------------------------------
 export { encodeAbiParameters } from "../utils/abi/encodeAbiParameters.js";
+export { encodePacked } from "viem";
 
 // Useful helpers
 export { setThirdwebDomains } from "../utils/domains.js";

@@ -144,6 +144,7 @@ export function decodeVerifyFidSignatureResult(result: Hex) {
  * import { verifyFidSignature } from "thirdweb/extensions/farcaster";
  *
  * const result = await verifyFidSignature({
+ *  contract,
  *  custodyAddress: ...,
  *  fid: ...,
  *  digest: ...,

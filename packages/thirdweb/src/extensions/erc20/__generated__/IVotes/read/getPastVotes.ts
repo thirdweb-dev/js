@@ -120,6 +120,7 @@ export function decodeGetPastVotesResult(result: Hex) {
  * import { getPastVotes } from "thirdweb/extensions/erc20";
  *
  * const result = await getPastVotes({
+ *  contract,
  *  account: ...,
  *  blockNumber: ...,
  * });

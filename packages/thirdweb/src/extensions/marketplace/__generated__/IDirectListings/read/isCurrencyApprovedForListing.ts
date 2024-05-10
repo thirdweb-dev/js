@@ -126,6 +126,7 @@ export function decodeIsCurrencyApprovedForListingResult(result: Hex) {
  * import { isCurrencyApprovedForListing } from "thirdweb/extensions/marketplace";
  *
  * const result = await isCurrencyApprovedForListing({
+ *  contract,
  *  listingId: ...,
  *  currency: ...,
  * });

@@ -18,7 +18,6 @@ export const ChainIcon: React.FC<{
   active?: boolean;
   className?: string;
   loading?: "lazy" | "eager";
-  fallbackImage?: string;
   client: ThirdwebClient;
 }> = (props) => {
   const getSrc = () => {

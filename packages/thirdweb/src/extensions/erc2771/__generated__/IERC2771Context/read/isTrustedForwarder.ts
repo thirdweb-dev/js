@@ -117,6 +117,7 @@ export function decodeIsTrustedForwarderResult(result: Hex) {
  * import { isTrustedForwarder } from "thirdweb/extensions/erc2771";
  *
  * const result = await isTrustedForwarder({
+ *  contract,
  *  forwarder: ...,
  * });
  *
