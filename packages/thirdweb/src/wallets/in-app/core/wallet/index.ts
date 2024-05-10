@@ -1,12 +1,29 @@
 import { ethereum } from "../../../../chains/chain-definitions/ethereum.js";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
-import type { Account } from "../../../interfaces/wallet.js";
+import type { Account, Wallet } from "../../../interfaces/wallet.js";
+import type { WalletId } from "../../../wallet-types.js";
 import type {
   CreateWalletArgs,
   WalletAutoConnectionOption,
   WalletConnectionOption,
 } from "../../../wallet-types.js";
+
+/**
+ * Checks if the provided wallet is an in-app wallet.
+ *
+ * @param wallet - The wallet to check.
+ * @returns True if the wallet is an in-app wallet, false otherwise.
+ */
+export function isInAppWallet(
+  wallet: Wallet<WalletId>,
+): wallet is Wallet<"inApp" | "embedded"> {
+  return wallet.id === "inApp" || wallet.id === "embedded";
+}
+
+export type InAppWalletSocialAuth = "google" | "apple" | "facebook";
+
+export type InAppWalletAuth = "email" | "phone" | InAppWalletSocialAuth;
 
 /**
  * @internal

@@ -18,6 +18,7 @@ import type {
 import type {
   CreateWalletArgs,
   WalletConnectionOption,
+  WalletId,
 } from "../wallet-types.js";
 import { bundleUserOp, getUserOpReceipt } from "./lib/bundler.js";
 import {
@@ -28,6 +29,18 @@ import {
 import { DEFAULT_ACCOUNT_FACTORY } from "./lib/constants.js";
 import { createUnsignedUserOp, signUserOp } from "./lib/userop.js";
 import type { SmartAccountOptions } from "./types.js";
+
+/**
+ * Checks if the provided wallet is a smart wallet.
+ *
+ * @param wallet - The wallet to check.
+ * @returns True if the wallet is a smart wallet, false otherwise.
+ */
+export function isSmartWallet(
+  wallet: Wallet<WalletId>,
+): wallet is Wallet<"smart"> {
+  return wallet.id === "smart";
+}
 
 /**
  * We can get the personal account for given smart account but not the other way around - this map gives us the reverse lookup
