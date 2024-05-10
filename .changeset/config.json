@@ -8,8 +8,7 @@
   ],
   "commit": false,
   "fixed": [
-    ["@thirdweb-dev/react-core", "@thirdweb-dev/react"],
-    ["@thirdweb-dev/react-native-compat", "@thirdweb-dev/react-native"]
+    ["@thirdweb-dev/react-core", "@thirdweb-dev/react"]
   ],
   "linked": [],
   "access": "public",
@@ -21,9 +20,7 @@
     "bundlers-webpack",
     "bundlers-swc",
     "runtimes-node-commonjs",
-    "runtimes-node-module",
-    "@thirdweb-dev/react-native",
-    "@thirdweb-dev/react-native-compat"
+    "runtimes-node-module"
   ],
   "___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH": {
     "updateInternalDependents": "always",
