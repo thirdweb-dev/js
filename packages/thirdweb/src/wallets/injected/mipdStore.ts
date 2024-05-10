@@ -1,4 +1,5 @@
 import { type EIP6963ProviderDetail, type Store, createStore } from "mipd";
+import { METAMASK } from "../constants.js";
 import type { Ethereum } from "../interfaces/ethereum.js";
 import type { WalletId } from "../wallet-types.js";
 
@@ -53,7 +54,7 @@ export function getInstalledWalletProviders(): readonly EIP6963ProviderDetail[] 
   for (const provider of providers) {
     // Map io.metamask.mobile to io.metamask rdns to fix double entry issue in MetaMask mobile browser
     if ((provider.info.rdns as string) === "io.metamask.mobile") {
-      provider.info.rdns = "io.metamask";
+      provider.info.rdns = METAMASK;
       break;
     }
   }

@@ -1,3 +1,4 @@
+"use client";
 import { keyframes } from "@emotion/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { FocusScope } from "@radix-ui/react-focus-scope";

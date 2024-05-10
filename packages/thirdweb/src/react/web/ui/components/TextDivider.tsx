@@ -1,3 +1,4 @@
+"use client";
 import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 import { StyledDiv } from "../design-system/elements.js";
 import { fontSize, spacing } from "../design-system/index.js";

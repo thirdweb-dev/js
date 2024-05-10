@@ -1,3 +1,4 @@
+"use client";
 import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 import { StyledButton } from "../design-system/elements.js";
 import {

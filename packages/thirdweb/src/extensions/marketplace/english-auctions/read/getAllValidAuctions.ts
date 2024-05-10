@@ -71,13 +71,17 @@ export async function getAllValidAuctions(
     }),
   ]);
 
-  return await Promise.all(
-    rawAuctions.map((rawAuction) =>
-      mapEnglishAuction({
-        contract: options.contract,
-        latestBlock,
-        rawAuction,
-      }),
-    ),
-  );
+  const auctions = (
+    await Promise.all(
+      rawAuctions.map((rawAuction) =>
+        mapEnglishAuction({
+          contract: options.contract,
+          latestBlock,
+          rawAuction,
+        }),
+      ),
+    )
+  ).filter((auction) => auction !== null);
+
+  return auctions as EnglishAuction[]; // TODO: Fix when TS 5.5 is out
 }

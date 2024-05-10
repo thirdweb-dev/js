@@ -6,22 +6,10 @@ export default {
     {
       "name": "stnscan",
       "url": "https://stnscan.com",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://QmRgZVpjik4cH3Sb6wLRpdnfv9kiMEZ8fugfkzTgk3bpRW",
-        "width": 500,
-        "height": 500,
-        "format": "png"
-      }
+      "standard": "none"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmRgZVpjik4cH3Sb6wLRpdnfv9kiMEZ8fugfkzTgk3bpRW",
-    "width": 500,
-    "height": 500,
-    "format": "png"
-  },
   "infoURL": "https://www.smarttradenetworks.com",
   "name": "Smart Trade Networks",
   "nativeCurrency": {

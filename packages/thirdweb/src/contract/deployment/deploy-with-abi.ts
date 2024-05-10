@@ -33,7 +33,7 @@ export type PrepareDirectDeployTransactionOptions<
  * @returns - The prepared transaction.
  * @example
  * ```ts
- * import { prepareDirectDeployTransaction } from "thirdweb/contract";
+ * import { prepareDirectDeployTransaction } from "thirdweb/deploys";
  * import { ethereum } from "thirdweb/chains";
  * const tx = prepareDirectDeployTransaction({
  *  client,
@@ -63,7 +63,7 @@ export function prepareDirectDeployTransaction<
     data: concatHex([
       bytecode,
       encodeAbiParameters(
-        options.constructorAbi.inputs,
+        options.constructorAbi.inputs ?? [], // Leave an empty array if there's no constructor
         options.constructorParams,
       ),
     ]),

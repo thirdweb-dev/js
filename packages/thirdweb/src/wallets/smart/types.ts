@@ -4,30 +4,56 @@ import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import type { ThirdwebContract } from "../../contract/contract.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
+import type { Prettify } from "../../utils/type-utils.js";
 import type { Account, SendTransactionOption } from "../interfaces/wallet.js";
 
-export type SmartWalletOptions = {
-  chain: Chain;
-  gasless: boolean;
-  factoryAddress: string; // TODO make this optional
-  overrides?: {
-    bundlerUrl?: string;
-    accountAddress?: string;
-    accountSalt?: string;
-    entrypointAddress?: string;
-    paymaster?: (userOp: UserOperation) => Promise<PaymasterResult>;
-    predictAddress?: (factoryContract: ThirdwebContract) => Promise<string>;
-    createAccount?: (factoryContract: ThirdwebContract) => PreparedTransaction;
-    execute?: (
-      accountContract: ThirdwebContract,
-      transaction: SendTransactionOption,
-    ) => PreparedTransaction;
-    executeBatch?: (
-      accountContract: ThirdwebContract,
-      transactions: SendTransactionOption[],
-    ) => PreparedTransaction;
-  };
-};
+export type SmartWalletOptions = Prettify<
+  {
+    chain: Chain; // TODO consider making default chain optional
+    factoryAddress?: string;
+    overrides?: {
+      bundlerUrl?: string;
+      accountAddress?: string;
+      accountSalt?: string;
+      entrypointAddress?: string;
+      paymaster?: (userOp: UserOperation) => Promise<PaymasterResult>;
+      predictAddress?: (factoryContract: ThirdwebContract) => Promise<string>;
+      createAccount?: (
+        factoryContract: ThirdwebContract,
+      ) => PreparedTransaction;
+      execute?: (
+        accountContract: ThirdwebContract,
+        transaction: SendTransactionOption,
+      ) => PreparedTransaction;
+      executeBatch?: (
+        accountContract: ThirdwebContract,
+        transactions: SendTransactionOption[],
+      ) => PreparedTransaction;
+    };
+  } & (
+    | {
+        /**
+         * @deprecated use 'sponsorGas' instead
+         */
+        gasless: boolean;
+      }
+    | {
+        sponsorGas: boolean;
+      }
+  )
+>;
+
+// internal type
+export type SmartAccountOptions = Prettify<
+  Omit<SmartWalletOptions, "chain" | "gasless" | "sponsorGas"> & {
+    chain: Chain;
+    sponsorGas: boolean;
+    personalAccount: Account;
+    factoryContract: ThirdwebContract;
+    accountContract: ThirdwebContract;
+    client: ThirdwebClient;
+  }
+>;
 
 export type SmartWalletConnectionOptions = {
   personalAccount: Account;

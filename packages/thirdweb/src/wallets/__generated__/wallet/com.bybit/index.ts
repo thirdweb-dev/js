@@ -11,17 +11,17 @@ export const wallet = {
     ios: "https://apps.apple.com/US/app/id1488296980",
     android:
       "https://play.google.com/store/apps/details?id=com.bybit.app&hl=en",
-    mac: "",
+    mac: null,
     windows: null,
     linux: null,
     chrome:
       "https://chrome.google.com/webstore/detail/bybit-wallet/pdliaogehgdbhbnmkklieghmmjkpigpa",
     firefox: null,
     safari: null,
-    edge: null,
+    edge: "https://chrome.google.com/webstore/detail/bybit-wallet/pdliaogehgdbhbnmkklieghmmjkpigpa",
     opera: null,
   },
-  rdns: null,
+  rdns: "com.bybit",
   mobile: {
     native: "bybitapp://open/route?targetUrl=by://web3/walletconnect",
     universal: null,

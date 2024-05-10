@@ -31,9 +31,7 @@ export async function uploadBatch<const TFiles extends UploadableFile[]>(
       );
     }
     throw new Error(
-      `Failed to upload files to IPFS - ${res.status} - ${
-        res.statusText
-      } - ${await res.text()}`,
+      `Failed to upload files to IPFS - ${res.status} - ${res.statusText}`,
     );
   }
 

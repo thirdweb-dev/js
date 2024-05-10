@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useRef, useState } from "react";
 import type { InAppWalletSocialAuth } from "../../../../wallets/in-app/core/wallet/index.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
@@ -10,6 +11,7 @@ import { Text } from "../../ui/components/text.js";
 import { useCustomTheme } from "../../ui/design-system/CustomThemeProvider.js";
 import type { InAppWalletLocale } from "./locale/types.js";
 import { openOauthSignInWindow } from "./openOauthSignInWindow.js";
+import { setLastAuthProvider } from "./storage.js";
 import type { InAppWalletSelectUIState } from "./types.js";
 
 /**
@@ -52,6 +54,7 @@ export function InAppWalletSocialLogin(props: {
         },
         client,
       });
+      await setLastAuthProvider(props.socialAuth);
       setStatus("connected");
       done();
     } catch (e) {

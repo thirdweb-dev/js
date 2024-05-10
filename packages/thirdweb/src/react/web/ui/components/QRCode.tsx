@@ -1,3 +1,4 @@
+"use client";
 import { keyframes } from "@emotion/react";
 import type React from "react";
 import { Suspense, lazy } from "react";

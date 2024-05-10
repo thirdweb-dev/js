@@ -87,8 +87,8 @@ const FN_INPUTS = [
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "address",
-    name: "signer",
+    type: "uint256",
+    name: "tokenIdMinted",
   },
 ] as const;
 
@@ -206,5 +206,6 @@ export function mintWithSignature(
     maxPriorityFeePerGas: async () =>
       (await asyncOptions()).overrides?.maxPriorityFeePerGas,
     nonce: async () => (await asyncOptions()).overrides?.nonce,
+    extraGas: async () => (await asyncOptions()).overrides?.extraGas,
   });
 }

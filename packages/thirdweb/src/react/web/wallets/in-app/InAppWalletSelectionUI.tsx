@@ -1,3 +1,4 @@
+"use client";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { useSetSelectionData } from "../../providers/wallet-ui-states-provider.js";

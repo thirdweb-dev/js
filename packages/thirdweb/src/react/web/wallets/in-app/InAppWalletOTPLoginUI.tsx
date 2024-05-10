@@ -1,3 +1,4 @@
+"use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { preAuthenticate } from "../../../../wallets/in-app/core/authentication/index.js";
 import type { SendEmailOtpReturnType } from "../../../../wallets/in-app/implementations/index.js";
@@ -14,6 +15,7 @@ import { useCustomTheme } from "../../ui/design-system/CustomThemeProvider.js";
 import { StyledButton } from "../../ui/design-system/elements.js";
 import { fontSize } from "../../ui/design-system/index.js";
 import type { InAppWalletLocale } from "./locale/types.js";
+import { setLastAuthProvider } from "./storage.js";
 
 type VerificationStatus =
   | "verifying"
@@ -83,6 +85,7 @@ export function InAppWalletOTPLoginUI(props: {
         verificationCode: otp,
         client,
       });
+      await setLastAuthProvider("email");
     } else if ("phone" in userInfo) {
       await wallet.connect({
         chain,
@@ -91,6 +94,7 @@ export function InAppWalletOTPLoginUI(props: {
         verificationCode: otp,
         client,
       });
+      await setLastAuthProvider("phone");
     } else {
       throw new Error("Invalid userInfo");
     }

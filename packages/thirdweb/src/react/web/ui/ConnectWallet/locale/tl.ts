@@ -26,7 +26,7 @@ const connectWalletLocalTl: ConnectLocale = {
   guestWalletWarning:
     "Ito ay isang pansamantalang guest wallet. I-download mo ang backup para hindi ka mawalan ng access dito.",
   switchTo: "Palitan ang", // Used in "Switch to <Wallet-Name>"
-  connectedToSmartWallet: "Nakakonekta sa Smart Wallet",
+  connectedToSmartWallet: "Smart Account",
   confirmInWallet: "Kumpirmahin sa wallet",
   disconnectWallet: "I-disconnect ang Wallet",
   copyAddress: "Kopyahin ang Address",

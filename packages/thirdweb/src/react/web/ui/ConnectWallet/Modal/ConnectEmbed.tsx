@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useMemo } from "react";
 import type { Chain } from "../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";

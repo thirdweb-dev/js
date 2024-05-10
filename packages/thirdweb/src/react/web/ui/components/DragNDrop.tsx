@@ -1,3 +1,4 @@
+"use client";
 import styled from "@emotion/styled";
 import { UploadIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
