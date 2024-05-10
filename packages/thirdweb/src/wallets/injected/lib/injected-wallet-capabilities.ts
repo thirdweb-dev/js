@@ -1,5 +1,4 @@
 import type { GetCapabilitiesResult } from "../../eip5792/get-capabilities.js";
-import { parseCapabilities } from "../../eip5792/utils.js";
 import type { Wallet } from "../../interfaces/wallet.js";
 import { getInjectedProvider } from "../index.js";
 
@@ -11,14 +10,14 @@ export async function getInjectedWalletCapabilities(args: {
 }): Promise<GetCapabilitiesResult> {
   const { wallet } = args;
 
-  const provider = getInjectedProvider(wallet.id);
-
   const account = wallet.getAccount();
   if (!account) {
     return {
       message: "No account connected",
     };
   }
+
+  const provider = getInjectedProvider(wallet.id);
 
   const raw_capabilities = await provider.request({
     method: "wallet_getCapabilities",
@@ -36,5 +35,5 @@ export async function getInjectedWalletCapabilities(args: {
     return response;
   }
 
-  return parseCapabilities(raw_capabilities);
+  return raw_capabilities;
 }

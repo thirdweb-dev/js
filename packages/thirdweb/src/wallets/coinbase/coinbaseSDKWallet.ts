@@ -28,7 +28,6 @@ import {
   uint8ArrayToHex,
 } from "../../utils/encoding/hex.js";
 import { COINBASE } from "../constants.js";
-import { parseCapabilities } from "../eip5792/utils.js";
 import { getDefaultAppMetadata } from "../utils/defaultDappMetadata.js";
 import type { WalletEmitter } from "../wallet-emitter.js";
 import type {

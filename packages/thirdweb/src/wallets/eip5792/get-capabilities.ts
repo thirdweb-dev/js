@@ -7,7 +7,7 @@ import { isWalletConnect } from "../wallet-connect/index.js";
 import type { WalletId } from "../wallet-types.js";
 import type { WalletCapabilities, WalletCapabilitiesRecord } from "./types.js";
 
-export type GetCapabilitiesOptions<ID extends WalletId> = {
+export type GetCapabilitiesOptions<ID extends WalletId = WalletId> = {
   wallet: Wallet<ID>;
 };
 
@@ -15,7 +15,7 @@ export type GetCapabilitiesResult = Prettify<
   WalletCapabilitiesRecord<WalletCapabilities, number>
 >;
 
-export async function getCapabilities<const ID extends WalletId>({
+export async function getCapabilities<const ID extends WalletId = WalletId>({
   wallet,
 }: GetCapabilitiesOptions<ID>): Promise<GetCapabilitiesResult> {
   if (isSmartWallet(wallet)) {

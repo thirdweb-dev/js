@@ -1,4 +1,6 @@
+import type { Address } from "../../utils/address.js";
 import type { Hex } from "../../utils/encoding/hex.js";
+import type { OneOf } from "../../utils/type-utils.js";
 
 export type WalletCapabilities = {
   [capability: string]: unknown;
@@ -12,3 +14,29 @@ export type WalletCapabilitiesRecord<
 } & {
   message?: string;
 };
+
+export type WalletSendCallsParameters<
+  capabilities extends WalletCapabilities = WalletCapabilities,
+  chainId extends Hex | number = Hex,
+> = [
+  {
+    from: Address;
+    calls: EIP5792Call[];
+    capabilities: capabilities;
+    version: string;
+    chainId: chainId;
+  },
+];
+
+export type WalletSendCallsId = string;
+
+type EIP5792Call = OneOf<
+  | {
+      to: Hex;
+      data?: Hex | undefined;
+      value?: Hex | undefined;
+    }
+  | {
+      data: Hex; // Contract creation case
+    }
+>;
