@@ -12,6 +12,7 @@ import { Skeleton } from "../../../../components/Skeleton.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
 import { StepBar } from "../../../../components/StepBar.js";
+import { SwitchNetworkButton } from "../../../../components/SwitchNetwork.js";
 import { TokenIcon } from "../../../../components/TokenIcon.js";
 import { Container, Line, ModalHeader } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
@@ -21,7 +22,6 @@ import { StyledDiv } from "../../../../design-system/elements.js";
 import { fontSize, iconSize } from "../../../../design-system/index.js";
 import type { ERC20OrNativeToken } from "../../nativeToken.js";
 import { Step } from "../Stepper.js";
-import { SwitchNetworkButtonNoCtx } from "../SwitchNetworkNoCtx.js";
 import { SwapFees } from "./Fees.js";
 import { formatSeconds } from "./formatSeconds.js";
 import { addPendingTx } from "./pendingSwapTx.js";
@@ -155,7 +155,7 @@ export function SwapConfirmationScreen(props: {
       )}
 
       {activeChain && activeChain.id !== props.fromChain.id ? (
-        <SwitchNetworkButtonNoCtx
+        <SwitchNetworkButton
           fullWidth
           chain={props.fromChain}
           variant="accent"

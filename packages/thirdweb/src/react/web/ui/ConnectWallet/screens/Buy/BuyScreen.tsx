@@ -24,6 +24,7 @@ import { DynamicHeight } from "../../../components/DynamicHeight.js";
 import { Skeleton } from "../../../components/Skeleton.js";
 import { Spacer } from "../../../components/Spacer.js";
 import { Spinner } from "../../../components/Spinner.js";
+import { SwitchNetworkButton } from "../../../components/SwitchNetwork.js";
 import { TokenIcon } from "../../../components/TokenIcon.js";
 import { Container, Line, ModalHeader } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
@@ -42,7 +43,6 @@ import {
 import { EstimatedTimeAndFees } from "./EstimatedTimeAndFees.js";
 import { PayWithCreditCard } from "./PayWIthCreditCard.js";
 import { PaymentSelection } from "./PaymentSelection.js";
-import { SwitchNetworkButtonNoCtx } from "./SwitchNetworkNoCtx.js";
 import { FiatFlow } from "./fiat/FiatFlow.js";
 import type { CurrencyMeta } from "./fiat/currencies.js";
 import type { BuyForTx, SelectedScreen } from "./main/types.js";
@@ -725,7 +725,7 @@ function SwapScreenContent(
       !quoteQuery.isLoading &&
       !isNotEnoughBalance &&
       !quoteQuery.error ? (
-        <SwitchNetworkButtonNoCtx
+        <SwitchNetworkButton
           variant="accent"
           fullWidth
           chain={fromChain}
