@@ -30,7 +30,7 @@ export type WalletSendCallsParameters<
 
 export type WalletSendCallsId = string;
 
-type EIP5792Call = OneOf<
+export type EIP5792Call = OneOf<
   | {
       to: Hex;
       data?: Hex | undefined;

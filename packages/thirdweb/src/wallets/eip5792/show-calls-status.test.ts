@@ -3,7 +3,7 @@ import type { InjectedSupportedWalletIds } from "../__generated__/wallet-ids.js"
 import { METAMASK } from "../constants.js";
 import { createWallet } from "../create-wallet.js";
 import type { Wallet } from "../interfaces/wallet.js";
-import showCallsStatus from "./show-calls-status.js";
+import { showCallsStatus } from "./show-calls-status.js";
 
 const RAW_UNSUPPORTED_ERROR = {
   code: -32601,
