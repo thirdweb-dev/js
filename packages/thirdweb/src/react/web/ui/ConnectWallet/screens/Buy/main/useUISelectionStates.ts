@@ -3,7 +3,6 @@ import { polygon } from "../../../../../../../chains/chain-definitions/polygon.j
 import type { Chain } from "../../../../../../../chains/types.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { toEther } from "../../../../../../../utils/units.js";
-import { useActiveWalletChain } from "../../../../../../core/hooks/wallets/wallet-hooks.js";
 import { useDebouncedValue } from "../../../../hooks/useDebouncedValue.js";
 import type { PayUIOptions } from "../../../ConnectButtonProps.js";
 import { type ERC20OrNativeToken, NATIVE_TOKEN } from "../../nativeToken.js";
@@ -17,8 +16,9 @@ export function useUISelectionStates(options: {
   payOptions: PayUIOptions;
   buyForTx?: BuyForTx;
   supportedDestinations: SupportedChainAndTokens;
+  activeChain?: Chain;
 }) {
-  const activeChain = useActiveWalletChain();
+  const { activeChain } = options;
   const { payOptions, buyForTx, supportedDestinations } = options;
 
   // buy token amount ---------------------------------------------------------

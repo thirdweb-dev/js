@@ -1,8 +1,10 @@
 import { useState } from "react";
+import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import type { BuyWithFiatQuote } from "../../../../../../../pay/buyWithFiat/getQuote.js";
 import type { BuyWithFiatStatus } from "../../../../../../../pay/buyWithFiat/getStatus.js";
 import { isSwapRequiredPostOnramp } from "../../../../../../../pay/buyWithFiat/isSwapRequiredPostOnramp.js";
+import type { Account } from "../../../../../../../wallets/interfaces/wallet.js";
 import { openOnrampPopup } from "../openOnRamppopup.js";
 import { addPendingTx } from "../swap/pendingSwapTx.js";
 import { OnrampStatusScreen } from "./FiatStatusScreen.js";
@@ -46,6 +48,9 @@ export function FiatFlow(props: {
   onDone: () => void;
   isBuyForTx: boolean;
   isEmbed: boolean;
+  account: Account;
+  activeChain: Chain;
+  switchChain: (chain: Chain) => Promise<void>;
 }) {
   const hasTwoSteps = isSwapRequiredPostOnramp(props.quote);
   const [screen, setScreen] = useState<Screen>(
@@ -116,6 +121,9 @@ export function FiatFlow(props: {
         }}
         isBuyForTx={props.isBuyForTx}
         isEmbed={props.isEmbed}
+        account={props.account}
+        activeChain={props.activeChain}
+        switchChain={props.switchChain}
       />
     );
   }

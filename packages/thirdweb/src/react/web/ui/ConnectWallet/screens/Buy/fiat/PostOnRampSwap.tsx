@@ -1,10 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
 import { getPostOnRampQuote } from "../../../../../../../pay/buyWithFiat/getPostOnRampQuote.js";
 import type { BuyWithFiatStatus } from "../../../../../../../pay/buyWithFiat/getStatus.js";
-import { useActiveAccount } from "../../../../../../core/hooks/wallets/wallet-hooks.js";
+import type { Account } from "../../../../../../../wallets/interfaces/wallet.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
 import { Container, ModalHeader } from "../../../../components/basic.js";
@@ -22,9 +23,11 @@ export function PostOnRampSwap(props: {
   onDone: () => void;
   isBuyForTx: boolean;
   isEmbed: boolean;
+  account: Account;
+  activeChain: Chain;
+  switchChain: (chain: Chain) => Promise<void>;
 }) {
-  const account = useActiveAccount();
-
+  const { account } = props;
   const [lockedOnRampQuote, setLockedOnRampQuote] = useState<
     BuyWithCryptoQuote | undefined
   >(undefined);
@@ -131,6 +134,8 @@ export function PostOnRampSwap(props: {
       }}
       isBuyForTx={props.isBuyForTx}
       isEmbed={props.isEmbed}
+      activeChain={props.activeChain}
+      switchChain={props.switchChain}
     />
   );
 }

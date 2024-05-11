@@ -1,10 +1,15 @@
 import { useState } from "react";
 import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
-import type { Wallet } from "../../../wallets/interfaces/wallet.js";
+import type { Account, Wallet } from "../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../wallets/types.js";
 import type { SiweAuthOptions } from "../../core/hooks/auth/useSiweAuth.js";
+import {
+  useActiveAccount,
+  useActiveWalletChain,
+  useSwitchActiveWalletChain,
+} from "../../core/hooks/wallets/wallet-hooks.js";
 import { ConnectButton } from "./ConnectWallet/ConnectButton.js";
 import type {
   ConnectButton_connectModalOptions,
@@ -124,6 +129,16 @@ export type PayEmbedProps = {
   connectOptions?: PayEmbedConnectOptions;
 };
 
+type EmbedScreen =
+  | { id: "buy" }
+  | {
+      id: "tx-history";
+      data: {
+        account: Account;
+        activeChain: Chain;
+      };
+    };
+
 /**
  * Embed thirdweb Pay UI for Buy tokens using Crypto or Credit Card.
  *
@@ -148,7 +163,10 @@ export type PayEmbedProps = {
  */
 export function PayEmbed(props: PayEmbedProps) {
   const localeQuery = useConnectLocale(props.locale || "en_US");
-  const [screen, setScreen] = useState<"buy" | "tx-history">("buy");
+  const [screen, setScreen] = useState<EmbedScreen>({ id: "buy" });
+  const account = useActiveAccount();
+  const activeChain = useActiveWalletChain();
+  const switchChain = useSwitchActiveWalletChain();
 
   let content = null;
 
@@ -165,35 +183,51 @@ export function PayEmbed(props: PayEmbedProps) {
         <Spinner size="xl" color="secondaryText" />
       </div>
     );
-  } else if (screen === "tx-history") {
+  } else if (screen.id === "tx-history") {
     content = (
       <BuyTxHistory
         client={props.client}
         onBack={() => {
-          setScreen("buy");
+          setScreen({
+            id: "buy",
+          });
         }}
         onDone={() => {
           // noop
         }}
         isBuyForTx={false}
         isEmbed={true}
+        account={screen.data.account}
+        activeChain={screen.data.activeChain}
+        switchChain={switchChain}
       />
     );
   } else {
     content = (
       <BuyScreen
         isEmbed={true}
+        account={account || null}
+        activeChain={activeChain || null}
         supportedTokens={props.supportedTokens}
         theme={props.theme || "dark"}
         client={props.client}
         connectLocale={localeQuery.data}
         onViewPendingTx={() => {
-          setScreen("tx-history");
+          if (account && activeChain) {
+            setScreen({
+              id: "tx-history",
+              data: {
+                account: account,
+                activeChain: activeChain,
+              },
+            });
+          }
         }}
         payOptions={props.payOptions || {}}
         onDone={() => {
           // noop
         }}
+        switchChain={switchChain}
         connectButton={
           <ConnectButton
             {...props.connectOptions}

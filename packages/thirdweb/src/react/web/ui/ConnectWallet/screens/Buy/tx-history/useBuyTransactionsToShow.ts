@@ -9,9 +9,11 @@ import {
   type ValidBuyWithFiatStatus,
   getBuyWithFiatStatus,
 } from "../../../../../../../pay/buyWithFiat/getStatus.js";
+import type { Account } from "../../../../../../../wallets/interfaces/wallet.js";
 import { useBuyHistory } from "../../../../../../core/hooks/pay/useBuyHistory.js";
-import { useActiveAccount } from "../../../../../../core/hooks/wallets/wallet-hooks.js";
 import { pendingTransactions } from "../swap/pendingSwapTx.js";
+
+// Note: Can not use hooks for getting active wallet/account/chain here
 
 export type TxStatusInfo =
   | {
@@ -23,8 +25,11 @@ export type TxStatusInfo =
       status: ValidBuyWithFiatStatus;
     };
 
-export function useBuyTransactionsToShow(client: ThirdwebClient) {
-  const account = useActiveAccount();
+export function useBuyTransactionsToShow(options: {
+  client: ThirdwebClient;
+  account: Account;
+}) {
+  const { client, account } = options;
   const [pageIndex, setPageIndex] = useState(0);
   const txStatusList: TxStatusInfo[] = [];
   const PAGE_SIZE = 10;

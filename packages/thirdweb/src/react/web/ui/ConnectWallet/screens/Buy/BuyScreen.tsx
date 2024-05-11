@@ -14,10 +14,6 @@ import {
 import { useWalletBalance } from "../../../../../core/hooks/others/useWalletBalance.js";
 import { useBuyWithCryptoQuote } from "../../../../../core/hooks/pay/useBuyWithCryptoQuote.js";
 import { useBuyWithFiatQuote } from "../../../../../core/hooks/pay/useBuyWithFiatQuote.js";
-import {
-  useActiveAccount,
-  useActiveWalletChain,
-} from "../../../../../core/hooks/wallets/wallet-hooks.js";
 import { LoadingScreen } from "../../../../wallets/shared/LoadingScreen.js";
 import {
   Drawer,
@@ -28,7 +24,6 @@ import { DynamicHeight } from "../../../components/DynamicHeight.js";
 import { Skeleton } from "../../../components/Skeleton.js";
 import { Spacer } from "../../../components/Spacer.js";
 import { Spinner } from "../../../components/Spinner.js";
-import { SwitchNetworkButton } from "../../../components/SwitchNetwork.js";
 import { TokenIcon } from "../../../components/TokenIcon.js";
 import { Container, Line, ModalHeader } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
@@ -47,6 +42,7 @@ import {
 import { EstimatedTimeAndFees } from "./EstimatedTimeAndFees.js";
 import { PayWithCreditCard } from "./PayWIthCreditCard.js";
 import { PaymentSelection } from "./PaymentSelection.js";
+import { SwitchNetworkButtonNoCtx } from "./SwitchNetworkNoCtx.js";
 import { FiatFlow } from "./fiat/FiatFlow.js";
 import type { CurrencyMeta } from "./fiat/currencies.js";
 import type { BuyForTx, SelectedScreen } from "./main/types.js";
@@ -65,7 +61,7 @@ import {
   useBuySupportedSources,
 } from "./swap/useSwapSupportedChains.js";
 
-// NOTE: Must not use useConnectUI here because this UI can be used outside connect ui
+// NOTE: Can not use any wallet hooks or Context
 
 export type BuyScreenProps = {
   onBack?: () => void;
@@ -79,6 +75,9 @@ export type BuyScreenProps = {
   onDone: () => void;
   connectButton?: React.ReactNode;
   isEmbed: boolean;
+  account: Account | null;
+  activeChain: Chain | null;
+  switchChain: (chain: Chain) => Promise<void>;
 };
 
 /**
@@ -114,6 +113,9 @@ type BuyScreenContentProps = {
   onDone: () => void;
   connectButton?: React.ReactNode;
   isEmbed: boolean;
+  account: Account | null;
+  activeChain: Chain | null;
+  switchChain: (chain: Chain) => Promise<void>;
 };
 
 function useBuyScreenStates(options: {
@@ -166,11 +168,15 @@ function useBuyScreenStates(options: {
  * @internal
  */
 function BuyScreenContent(props: BuyScreenContentProps) {
-  const { client, supportedDestinations, connectLocale, payOptions, buyForTx } =
-    props;
-
-  const account = useActiveAccount();
-  const activeChain = useActiveWalletChain();
+  const {
+    client,
+    supportedDestinations,
+    connectLocale,
+    payOptions,
+    buyForTx,
+    activeChain,
+    account,
+  } = props;
 
   // prefetch chains metadata for destination chains
   useChainsQuery(supportedDestinations.map((x) => x.chain) || [], 50);
@@ -489,6 +495,8 @@ function BuyScreenContent(props: BuyScreenContentProps) {
                   // currently disabled because we are only using Stripe
                 }}
                 account={account}
+                activeChain={activeChain}
+                switchChain={props.switchChain}
               />
             )}
 
@@ -547,6 +555,7 @@ function SwapScreenContent(
     showFromTokenSelector: () => void;
     account: Account;
     activeChain: Chain;
+    switchChain: (chain: Chain) => Promise<void>;
   },
 ) {
   const {
@@ -650,6 +659,8 @@ function SwapScreenContent(
             });
             quoteQuery.refetch();
           }}
+          activeChain={props.activeChain}
+          switchChain={props.switchChain}
         />
       ),
     });
@@ -691,6 +702,7 @@ function SwapScreenContent(
             prefillSource?.allowEdits?.chain === false &&
             prefillSource?.allowEdits?.token === false
           }
+          account={account}
         />
         <EstimatedTimeAndFees
           quoteIsLoading={quoteQuery.isLoading}
@@ -713,7 +725,12 @@ function SwapScreenContent(
       !quoteQuery.isLoading &&
       !isNotEnoughBalance &&
       !quoteQuery.error ? (
-        <SwitchNetworkButton variant="accent" fullWidth chain={fromChain} />
+        <SwitchNetworkButtonNoCtx
+          variant="accent"
+          fullWidth
+          chain={fromChain}
+          switchChain={props.switchChain}
+        />
       ) : (
         <Button
           variant={disableContinue ? "outline" : "accent"}
@@ -754,6 +771,8 @@ function FiatScreenContent(
     selectedCurrency: CurrencyMeta;
     showCurrencySelector: () => void;
     account: Account;
+    activeChain: Chain;
+    switchChain: (chain: Chain) => Promise<void>;
   },
 ) {
   const {
@@ -830,6 +849,9 @@ function FiatScreenContent(
           openedWindow={openedWindow}
           onDone={props.onDone}
           isEmbed={props.isEmbed}
+          account={account}
+          activeChain={props.activeChain}
+          switchChain={props.switchChain}
         />
       ),
     });

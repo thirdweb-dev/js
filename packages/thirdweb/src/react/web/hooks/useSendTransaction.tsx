@@ -5,7 +5,12 @@ import type { GaslessOptions } from "../../../transaction/actions/gasless/types.
 import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
 import type { Wallet } from "../../../wallets/interfaces/wallet.js";
 import { useSendTransactionCore } from "../../core/hooks/contract/useSendTransaction.js";
-import { useActiveWallet } from "../../core/hooks/wallets/wallet-hooks.js";
+import {
+  useActiveAccount,
+  useActiveWallet,
+  useActiveWalletChain,
+  useSwitchActiveWalletChain,
+} from "../../core/hooks/wallets/wallet-hooks.js";
 import { SetRootElementContext } from "../../core/providers/RootElementContext.js";
 import type { PayUIOptions } from "../ui/ConnectWallet/ConnectButtonProps.js";
 import type { SupportedTokens } from "../ui/ConnectWallet/defaultTokens.js";
@@ -182,7 +187,11 @@ function ModalContent(props: ModalProps) {
     "buy",
   );
 
-  if (!localeQuery.data) {
+  const account = useActiveAccount();
+  const activeChain = useActiveWalletChain();
+  const switchChain = useSwitchActiveWalletChain();
+
+  if (!localeQuery.data || !account || !activeChain) {
     return <LoadingScreen />;
   }
 
@@ -202,6 +211,9 @@ function ModalContent(props: ModalProps) {
         }}
         isBuyForTx={true}
         isEmbed={false}
+        account={account}
+        activeChain={activeChain}
+        switchChain={switchChain}
       />
     );
   }
@@ -226,6 +238,9 @@ function ModalContent(props: ModalProps) {
       onDone={() => {
         setScreen("execute-tx");
       }}
+      account={account}
+      activeChain={activeChain}
+      switchChain={switchChain}
     />
   );
 }

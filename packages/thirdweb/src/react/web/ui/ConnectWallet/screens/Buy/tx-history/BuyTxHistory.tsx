@@ -5,12 +5,10 @@ import {
   ExternalLinkIcon,
 } from "@radix-ui/react-icons";
 import { useState } from "react";
+import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
+import type { Account } from "../../../../../../../wallets/interfaces/wallet.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
-import {
-  useActiveAccount,
-  useActiveWalletChain,
-} from "../../../../../../core/hooks/wallets/wallet-hooks.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
 import { Spinner } from "../../../../components/Spinner.js";
 import { Container, Line, ModalHeader } from "../../../../components/basic.js";
@@ -31,6 +29,8 @@ import {
   useBuyTransactionsToShow,
 } from "./useBuyTransactionsToShow.js";
 
+// Note: Can not use hooks for getting ThirdwebProvider context or wallet manager hooks
+
 /**
  * @internal
  */
@@ -40,6 +40,9 @@ export function BuyTxHistory(props: {
   onDone: () => void;
   isBuyForTx: boolean;
   isEmbed: boolean;
+  account: Account;
+  activeChain: Chain;
+  switchChain: (chain: Chain) => Promise<void>;
 }) {
   const [selectedTx, setSelectedTx] = useState<TxStatusInfo | null>(null);
 
@@ -52,6 +55,9 @@ export function BuyTxHistory(props: {
         onDone={props.onDone}
         isBuyForTx={props.isBuyForTx}
         isEmbed={props.isEmbed}
+        account={props.account}
+        activeChain={props.activeChain}
+        switchChain={props.switchChain}
       />
     );
   }
@@ -67,6 +73,8 @@ export function BuyTxHistoryList(props: {
   client: ThirdwebClient;
   onDone: () => void;
   onSelectTx: (tx: TxStatusInfo) => void;
+  account: Account;
+  activeChain: Chain;
 }) {
   const {
     pageIndex,
@@ -75,11 +83,12 @@ export function BuyTxHistoryList(props: {
     hidePagination,
     isLoading,
     pagination,
-  } = useBuyTransactionsToShow(props.client);
+  } = useBuyTransactionsToShow({
+    client: props.client,
+    account: props.account,
+  });
 
-  const activeChain = useActiveWalletChain();
-  const chainQuery = useChainQuery(activeChain);
-  const activeAccount = useActiveAccount();
+  const chainQuery = useChainQuery(props.activeChain);
 
   const noTransactions = txInfosToShow.length === 0;
 
@@ -209,7 +218,7 @@ export function BuyTxHistoryList(props: {
         <ButtonLink
           fullWidth
           variant="outline"
-          href={`${chainQuery.data?.explorers?.[0]?.url}/address/${activeAccount?.address}`}
+          href={`${chainQuery.data?.explorers?.[0]?.url}/address/${props.account.address}`}
           target="_blank"
           as="a"
           gap="xs"

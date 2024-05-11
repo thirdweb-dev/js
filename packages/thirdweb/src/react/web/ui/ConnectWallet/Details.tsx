@@ -16,6 +16,7 @@ import { getContract } from "../../../../contract/contract.js";
 import { resolveAvatar } from "../../../../extensions/ens/resolve-avatar.js";
 import { resolveName } from "../../../../extensions/ens/resolve-name.js";
 import { isContractDeployed } from "../../../../utils/bytecode/is-contract-deployed.js";
+import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
 import {
   useChainQuery,
   useChainsQuery,
@@ -97,24 +98,26 @@ export const ConnectedWalletDetails: React.FC<{
   chains: Chain[];
   chain?: Chain;
   switchButton: ConnectButtonProps["switchButton"];
+  activeWallet: Wallet;
+  activeChain: Chain;
+  activeAccount: Account;
 }> = (props) => {
   const { connectLocale: locale, client } = useConnectUI();
+  const { activeChain, activeWallet, activeAccount } = props;
+  const switchChain = useSwitchActiveWalletChain();
 
-  const activeWallet = useActiveWallet();
-  const activeAccount = useActiveAccount();
-  const walletChain = useActiveWalletChain();
-  const chainQuery = useChainQuery(walletChain);
+  const chainQuery = useChainQuery(activeChain);
   const { disconnect } = useDisconnect();
   // prefetch chains metadata with low concurrency
   useChainsQuery(props.chains, 5);
 
   const tokenAddress =
-    walletChain && props.detailsButton?.displayBalanceToken
-      ? props.detailsButton.displayBalanceToken[Number(walletChain.id)]
+    activeChain && props.detailsButton?.displayBalanceToken
+      ? props.detailsButton.displayBalanceToken[Number(activeChain.id)]
       : undefined;
 
   const balanceQuery = useWalletBalance({
-    chain: walletChain ? walletChain : undefined,
+    chain: activeChain,
     tokenAddress,
     address: activeAccount?.address,
     client,
@@ -174,8 +177,7 @@ export const ConnectedWalletDetails: React.FC<{
   //   avatarOrWalletIconUrl = smartWalletMetadata.iconUrl;
   // }
 
-  const isNetworkMismatch =
-    props.chain && walletChain && walletChain.id !== props.chain.id;
+  const isNetworkMismatch = props.chain && activeChain.id !== props.chain.id;
 
   // Note: Must wrap the `SwitchNetworkButton` in a fragment to avoid warning from radix-ui
   // Note: Must wrap the `detailsButton.render` in an container element
@@ -293,7 +295,7 @@ export const ConnectedWalletDetails: React.FC<{
         <Skeleton height={"16px"} width={"200px"} />
       ) : (
         <Text color="primaryText" multiline>
-          {chainQuery.data?.name || `Unknown chain #${walletChain?.id}`}
+          {chainQuery.data?.name || `Unknown chain #${activeChain?.id}`}
         </Text>
       )}
 
@@ -604,6 +606,9 @@ export const ConnectedWalletDetails: React.FC<{
         onDone={() => {
           setIsOpen(false);
         }}
+        account={activeAccount}
+        activeChain={activeChain}
+        switchChain={switchChain}
       />
     );
   }
@@ -613,9 +618,8 @@ export const ConnectedWalletDetails: React.FC<{
       <NetworkSelectorContent
         // add currently connected chain to the list of chains if it's not already in the list
         chains={
-          walletChain &&
-          props.chains.find((c) => c.id === walletChain.id) === undefined
-            ? [walletChain, ...props.chains]
+          props.chains.find((c) => c.id === activeChain.id) === undefined
+            ? [activeChain, ...props.chains]
             : props.chains
         }
         closeModal={() => {
@@ -697,6 +701,9 @@ export const ConnectedWalletDetails: React.FC<{
         onDone={() => {
           setIsOpen(false);
         }}
+        account={activeAccount}
+        activeChain={activeChain}
+        switchChain={switchChain}
       />
     );
   }

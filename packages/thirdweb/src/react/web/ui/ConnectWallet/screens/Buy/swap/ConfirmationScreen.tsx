@@ -3,19 +3,15 @@ import { useState } from "react";
 import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
+import { sendTransaction } from "../../../../../../../transaction/actions/send-transaction.js";
 import { waitForReceipt } from "../../../../../../../transaction/actions/wait-for-tx-receipt.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
-import { useSendTransactionCore } from "../../../../../../core/hooks/contract/useSendTransaction.js";
+import type { Account } from "../../../../../../../wallets/interfaces/wallet.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
-import {
-  useActiveWallet,
-  useActiveWalletChain,
-} from "../../../../../../core/hooks/wallets/wallet-hooks.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
 import { StepBar } from "../../../../components/StepBar.js";
-import { SwitchNetworkButton } from "../../../../components/SwitchNetwork.js";
 import { TokenIcon } from "../../../../components/TokenIcon.js";
 import { Container, Line, ModalHeader } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
@@ -25,6 +21,7 @@ import { StyledDiv } from "../../../../design-system/elements.js";
 import { fontSize, iconSize } from "../../../../design-system/index.js";
 import type { ERC20OrNativeToken } from "../../nativeToken.js";
 import { Step } from "../Stepper.js";
+import { SwitchNetworkButtonNoCtx } from "../SwitchNetworkNoCtx.js";
 import { SwapFees } from "./Fees.js";
 import { formatSeconds } from "./formatSeconds.js";
 import { addPendingTx } from "./pendingSwapTx.js";
@@ -47,10 +44,11 @@ export function SwapConfirmationScreen(props: {
   fromToken: ERC20OrNativeToken;
   fromTokenSymbol: string;
   isFiatFlow: boolean;
+  activeChain: Chain;
+  account: Account;
+  switchChain: (chain: Chain) => Promise<void>;
 }) {
-  const sendTransactionMutation = useSendTransactionCore();
-  const activeChain = useActiveWalletChain();
-  const activeWallet = useActiveWallet();
+  const { activeChain } = props;
 
   const isApprovalRequired = props.quote.approval !== undefined;
   const initialStep = isApprovalRequired ? "approval" : "swap";
@@ -157,10 +155,11 @@ export function SwapConfirmationScreen(props: {
       )}
 
       {activeChain && activeChain.id !== props.fromChain.id ? (
-        <SwitchNetworkButton
+        <SwitchNetworkButtonNoCtx
           fullWidth
           chain={props.fromChain}
           variant="accent"
+          switchChain={props.switchChain}
         />
       ) : (
         <Button
@@ -172,9 +171,10 @@ export function SwapConfirmationScreen(props: {
               try {
                 setStatus("pending");
 
-                const tx = await sendTransactionMutation.mutateAsync(
-                  props.quote.approval,
-                );
+                const tx = await sendTransaction({
+                  account: props.account,
+                  transaction: props.quote.approval,
+                });
 
                 await waitForReceipt({ ...tx, maxBlocksWaitTime: 50 });
                 // props.onQuoteFinalized(props.quote);
@@ -190,21 +190,15 @@ export function SwapConfirmationScreen(props: {
             if (step === "swap") {
               setStatus("pending");
               try {
-                let tx = props.quote.transactionRequest;
+                const tx = {
+                  ...props.quote.transactionRequest,
+                  gasPrice: undefined,
+                };
 
-                // Fix for inApp wallet
-                // Ideally - the pay server sends a non-legacy transaction to avoid this issue
-                if (
-                  activeWallet?.id === "inApp" ||
-                  activeWallet?.id === "embedded"
-                ) {
-                  tx = {
-                    ...props.quote.transactionRequest,
-                    gasPrice: undefined,
-                  };
-                }
-
-                const _swapTx = await sendTransactionMutation.mutateAsync(tx);
+                const _swapTx = await sendTransaction({
+                  transaction: tx,
+                  account: props.account,
+                });
 
                 await waitForReceipt({ ..._swapTx, maxBlocksWaitTime: 50 });
 

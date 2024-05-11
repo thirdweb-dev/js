@@ -6,6 +6,8 @@ import { useSiweAuth } from "../../../core/hooks/auth/useSiweAuth.js";
 import { AutoConnect } from "../../../core/hooks/connection/useAutoConnect.js";
 import {
   useActiveAccount,
+  useActiveWallet,
+  useActiveWalletChain,
   useActiveWalletConnectionStatus,
 } from "../../../core/hooks/wallets/wallet-hooks.js";
 import { ConnectUIContext } from "../../../core/providers/wallet-connection.js";
@@ -135,6 +137,9 @@ function ConnectButtonInner(
   },
 ) {
   const activeAccount = useActiveAccount();
+  const activeChain = useActiveWalletChain();
+  const activeWallet = useActiveWallet();
+
   const siweAuth = useSiweAuth(props.auth);
   const [showSignatureModal, setShowSignatureModal] = useState(false);
 
@@ -173,7 +178,7 @@ function ConnectButtonInner(
     return tokens;
   }, [props.supportedTokens]);
 
-  if (!activeAccount) {
+  if (!activeAccount || !activeChain || !activeWallet) {
     // Connect Wallet button
     return (
       <AnimatedButton
@@ -290,6 +295,9 @@ function ConnectButtonInner(
       chains={props?.chains || []}
       chain={props.chain}
       switchButton={props.switchButton}
+      activeAccount={activeAccount}
+      activeChain={activeChain}
+      activeWallet={activeWallet}
     />
   );
 }

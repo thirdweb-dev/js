@@ -121,4 +121,10 @@ export {
   type PayEmbedProps,
   type PayEmbedConnectOptions,
 } from "../react/web/ui/PayEmbed.js";
+
+export {
+  PayEmbedUI,
+  type PayEmbedUIProps,
+} from "../react/web/ui/PayEmbedUI.js";
+
 export type { PayUIOptions } from "../react/web/ui/ConnectWallet/ConnectButtonProps.js";

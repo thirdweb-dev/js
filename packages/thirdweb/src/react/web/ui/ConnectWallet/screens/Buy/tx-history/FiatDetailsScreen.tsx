@@ -1,9 +1,11 @@
 import { useState } from "react";
+import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import type {
   BuyWithFiatStatus,
   ValidBuyWithFiatStatus,
 } from "../../../../../../../pay/buyWithFiat/getStatus.js";
+import type { Account } from "../../../../../../../wallets/interfaces/wallet.js";
 import { useBuyWithFiatStatus } from "../../../../../../core/hooks/pay/useBuyWithFiatStatus.js";
 import { Container, Line, ModalHeader } from "../../../../components/basic.js";
 import { OnRampTxDetailsTable } from "../fiat/FiatTxDetailsTable.js";
@@ -17,6 +19,9 @@ export function FiatDetailsScreen(props: {
   onDone: () => void;
   isBuyForTx: boolean;
   isEmbed: boolean;
+  account: Account;
+  activeChain: Chain;
+  switchChain: (chain: Chain) => Promise<void>;
 }) {
   const initialStatus = props.status;
   const [stopPolling, setStopPolling] = useState(false);
@@ -47,6 +52,7 @@ export function FiatDetailsScreen(props: {
         onViewPendingTx={props.onBack}
         isBuyForTx={props.isBuyForTx}
         isEmbed={props.isEmbed}
+        account={props.account}
         quote={{
           fromCurrencyAmount: fiatQuote.fromCurrencyWithFees.amount,
           fromCurrencySymbol: fiatQuote.fromCurrencyWithFees.currencySymbol,
@@ -69,6 +75,8 @@ export function FiatDetailsScreen(props: {
         onSwapFlowStarted={() => {
           setStopPolling(true);
         }}
+        activeChain={props.activeChain}
+        switchChain={props.switchChain}
       />
     );
   }

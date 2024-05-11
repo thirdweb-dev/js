@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import type { Chain } from "../../../../../../../chains/types.js";
 import { defineChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../../constants/addresses.js";
@@ -20,6 +21,8 @@ type SwapFlowProps = {
   onTryAgain: () => void;
   isBuyForTx: boolean;
   isEmbed: boolean;
+  activeChain: Chain;
+  switchChain: (chain: Chain) => Promise<void>;
 };
 
 export function SwapFlow(props: SwapFlowProps) {
@@ -104,6 +107,9 @@ export function SwapFlow(props: SwapFlowProps) {
       onTryAgain={props.onTryAgain}
       quote={quote}
       isFiatFlow={props.isFiatFlow}
+      activeChain={props.activeChain}
+      account={props.account}
+      switchChain={props.switchChain}
     />
   );
 }

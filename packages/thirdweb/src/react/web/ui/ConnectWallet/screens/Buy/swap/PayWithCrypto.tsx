@@ -2,9 +2,9 @@ import { ChevronDownIcon } from "@radix-ui/react-icons";
 import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
+import type { Account } from "../../../../../../../wallets/interfaces/wallet.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
 import { useWalletBalance } from "../../../../../../core/hooks/others/useWalletBalance.js";
-import { useActiveAccount } from "../../../../../../core/hooks/wallets/wallet-hooks.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
 import { TokenIcon } from "../../../../components/TokenIcon.js";
 import { Container } from "../../../../components/basic.js";
@@ -36,12 +36,11 @@ export function PayWithCrypto(props: {
   isLoading: boolean;
   client: ThirdwebClient;
   freezeChainAndTokenSelection?: boolean;
+  account: Account;
 }) {
   const chainQuery = useChainQuery(props.chain);
-  const activeAccount = useActiveAccount();
-
   const balanceQuery = useWalletBalance({
-    address: activeAccount?.address,
+    address: props.account.address,
     chain: props.chain,
     tokenAddress: isNativeToken(props.token) ? undefined : props.token.address,
     client: props.client,
