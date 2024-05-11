@@ -11,7 +11,7 @@ export type ShowCallsStatusOptions = {
   bundleId: WalletSendCallsId;
 };
 
-export default async function showCallsStatus({
+export async function showCallsStatus({
   wallet,
   bundleId,
 }: ShowCallsStatusOptions) {
