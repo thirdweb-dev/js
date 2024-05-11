@@ -96,6 +96,7 @@ export type {
 
 export { getAllWalletsList } from "../wallets/getAllWalletsList.js";
 export { getWalletInfo } from "../wallets/__generated__/getWalletInfo.js";
+export { createWalletAdapter } from "../adapters/wallet-adapter.js";
 
 // eip5792
 export { getCapabilities } from "../wallets/eip5792/get-capabilities.js";

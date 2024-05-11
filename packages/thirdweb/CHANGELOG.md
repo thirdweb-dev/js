@@ -1,5 +1,17 @@
 # thirdweb
 
+## 5.19.0
+
+### Minor Changes
+
+- [#2995](https://github.com/thirdweb-dev/js/pull/2995) [`523cd1e`](https://github.com/thirdweb-dev/js/commit/523cd1e16fd1194ffbf8970150ed6f09d4e01fe9) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds shortenAddress util
+
+- [#2997](https://github.com/thirdweb-dev/js/pull/2997) [`cf7b6fc`](https://github.com/thirdweb-dev/js/commit/cf7b6fc7bc1686f3b4c54515d569d799d5e3ceea) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - added `createWalletAdapter` helper for interop with diff libraries
+
+### Patch Changes
+
+- [#3000](https://github.com/thirdweb-dev/js/pull/3000) [`0ab1407`](https://github.com/thirdweb-dev/js/commit/0ab14075d37aec27167c5885155f48ea880c9574) Thanks [@MananTank](https://github.com/MananTank)! - Fix WalletImage fallback icon
+
 ## 5.18.1
 
 ### Patch Changes
