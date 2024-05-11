@@ -27,7 +27,7 @@ export const Img: React.FC<{
   const widthPx = `${props.width}px`;
   const heightPx = `${props.height || props.width}px`;
 
-  if (!propSrc) {
+  if (propSrc === undefined) {
     return <Skeleton width={widthPx} height={heightPx} />;
   }
 
