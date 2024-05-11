@@ -23,7 +23,7 @@ export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
     display: "inline-flex",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: radius.md,
+    borderRadius: radius.lg,
     padding: `${fontSize.sm} ${fontSize.sm}`,
     fontSize: fontSize.md,
     fontWeight: 500,

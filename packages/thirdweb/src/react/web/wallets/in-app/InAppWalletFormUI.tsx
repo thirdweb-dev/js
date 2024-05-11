@@ -11,6 +11,12 @@ import { useSetSelectionData } from "../../providers/wallet-ui-states-provider.j
 import { TOS } from "../../ui/ConnectWallet/Modal/TOS.js";
 import { useScreenContext } from "../../ui/ConnectWallet/Modal/screen.js";
 import { PoweredByThirdweb } from "../../ui/ConnectWallet/PoweredByTW.js";
+import { WalletTypeRowButton } from "../../ui/ConnectWallet/WalletTypeRowButton.js";
+import {
+  emailIcon,
+  passkeyIcon,
+  phoneIcon,
+} from "../../ui/ConnectWallet/icons/dataUris.js";
 import { Img } from "../../ui/components/Img.js";
 import { Spacer } from "../../ui/components/Spacer.js";
 import { TextDivider } from "../../ui/components/TextDivider.js";
@@ -18,14 +24,11 @@ import { Container, ModalHeader } from "../../ui/components/basic.js";
 import { Button } from "../../ui/components/buttons.js";
 import { useCustomTheme } from "../../ui/design-system/CustomThemeProvider.js";
 import { fontSize, iconSize, spacing } from "../../ui/design-system/index.js";
-import { InputSelectionUI } from "./InputSelectionUI.js";
-import { LinkButton } from "./LinkButton.js";
 import type { InAppWalletLocale } from "./locale/types.js";
 import { openOauthSignInWindow } from "./openOauthSignInWindow.js";
 import { socialIcons } from "./socialIcons.js";
 import { setLastAuthProvider } from "./storage.js";
 import type { InAppWalletSelectUIState } from "./types.js";
-import { validateEmail } from "./validateEmail.js";
 
 const defaultAuthOptions: InAppWalletAuth[] = [
   "email",
@@ -89,6 +92,8 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
     inputMode === "email" ? locale.emailPlaceholder : locale.phonePlaceholder;
   const emptyErrorMessage =
     inputMode === "email" ? locale.emailRequired : locale.phoneRequired;
+  void emptyErrorMessage; // FIXME
+  void placeholder; // FIXME
 
   let type = "text";
   if (inputMode === "email") {
@@ -96,6 +101,7 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
   } else if (inputMode === "phone") {
     type = "tel";
   }
+  void type; // FIXME
 
   const switchInputModeText =
     inputMode === "email" ? locale.signInWithPhone : locale.signInWithEmail;
@@ -104,6 +110,9 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
     setInputMode((prev) => (prev === "email" ? "phone" : "email"));
   }, []);
   const allowSwitchInputMode = isEmailEnabled && isPhoneEnabled;
+  void allowSwitchInputMode; // FIXME
+  void switchInputModeText; // FIXME
+  void switchInputMode; // FIXME
 
   const socialLogins = authOptions.filter(
     (x) => x === "google" || x === "apple" || x === "facebook",
@@ -158,7 +167,7 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
   return (
     <Container
       flex="column"
-      gap="lg"
+      gap="md"
       style={{
         position: "relative",
       }}
@@ -203,9 +212,36 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
         hasSocialLogins &&
         (isEmailEnabled || isPhoneEnabled) && <TextDivider text={locale.or} />}
 
-      <div>
-        {/* Email/Phone Login */}
-        {inputMode !== "none" && (
+      {/* Email/Phone Login */}
+      {isEmailEnabled && (
+        <>
+          <WalletTypeRowButton
+            client={client}
+            icon={emailIcon}
+            onClick={() => {
+              // TODO
+              console.log("email login");
+            }}
+            // TODO locale
+            title={"Email address"}
+          />
+        </>
+      )}
+      {isPhoneEnabled && (
+        <>
+          <WalletTypeRowButton
+            client={client}
+            icon={phoneIcon}
+            onClick={() => {
+              // TODO
+              console.log("phone login");
+            }}
+            // TODO locale
+            title={"Phone number"}
+          />
+        </>
+      )}
+      {/* {inputMode !== "none" && (
           <Container>
             {inputMode === "email" ? (
               <InputSelectionUI
@@ -261,25 +297,21 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
               </>
             )}
           </Container>
-        )}
+        )} */}
 
-        {passKeyEnabled && (
-          <>
-            <Spacer y="lg" />
-            <Button
-              onClick={handlePassKeyLogin}
-              fullWidth
-              variant="outline"
-              style={{
-                textAlign: "center",
-                fontSize: fontSize.sm,
-              }}
-            >
-              Sign in with passkey
-            </Button>
-          </>
-        )}
-      </div>
+      {passKeyEnabled && (
+        <>
+          <WalletTypeRowButton
+            client={client}
+            icon={passkeyIcon}
+            onClick={() => {
+              handlePassKeyLogin();
+            }}
+            // TODO locale
+            title="Passkey"
+          />
+        </>
+      )}
     </Container>
   );
 };

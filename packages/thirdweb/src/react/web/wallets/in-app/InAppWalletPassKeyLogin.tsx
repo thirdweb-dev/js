@@ -12,6 +12,7 @@ import { Button } from "../../ui/components/buttons.js";
 import { Text } from "../../ui/components/text.js";
 import { iconSize } from "../../ui/design-system/index.js";
 import { LoadingScreen } from "../shared/LoadingScreen.js";
+import { setLastAuthProvider } from "./storage.js";
 
 // is passkey stored?
 // - login
@@ -117,6 +118,7 @@ function LoginScreen(props: {
         strategy: "passkey",
         type: "sign-in",
       });
+      await setLastAuthProvider("passkey");
       done();
     } catch {
       setStatus("error");
@@ -174,6 +176,7 @@ function SignupScreen(props: {
         strategy: "passkey",
         type: "sign-up",
       });
+      await setLastAuthProvider("passkey");
       done();
     } catch {
       setStatus("error");

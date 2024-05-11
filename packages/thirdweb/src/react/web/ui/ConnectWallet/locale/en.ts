@@ -6,7 +6,7 @@ const connectLocaleEn: ConnectLocale = {
   connecting: "Connecting",
   switchNetwork: "Switch Network",
   switchingNetwork: "Switching Network",
-  defaultModalTitle: "Connect",
+  defaultModalTitle: "Sign in with",
   recommended: "Recommended",
   installed: "Installed",
   buy: "Buy",

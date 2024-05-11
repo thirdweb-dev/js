@@ -89,7 +89,6 @@ export function WalletImage(props: {
     return (
       <Img
         src={image}
-        fallbackImage={genericWalletIcon}
         width={props.size}
         height={props.size}
         loading="eager"
