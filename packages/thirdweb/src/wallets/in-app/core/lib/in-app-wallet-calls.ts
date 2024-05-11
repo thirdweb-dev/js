@@ -76,14 +76,14 @@ export async function inAppWalletGetCallsStatus(args: {
 }): Promise<GetCallsStatusResponse> {
   const { wallet, client, bundleId } = args;
 
-  const bundle = bundlesToTransactions.get(bundleId);
-  if (!bundle) {
-    throw new Error("Bundle identifier not found.");
-  }
-
   const chain = wallet.getChain();
   if (!chain) {
-    throw new Error("Can't get calls status, no active chain found.");
+    throw new Error("Failed to get calls status, no active chain found");
+  }
+
+  const bundle = bundlesToTransactions.get(bundleId);
+  if (!bundle) {
+    throw new Error("Failed to get calls status, unknown bundle id");
   }
 
   const request = getRpcClient({ client, chain });

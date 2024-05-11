@@ -175,6 +175,14 @@ describe.sequential("in-app wallet", () => {
     expect(sendTransaction).toHaveBeenCalledTimes(2);
   });
 
+  test("without account should fail", async () => {
+    wallet.getAccount = vi.fn().mockReturnValue(undefined);
+    const promise = sendCalls({ wallet, ...SEND_CALLS_OPTIONS });
+    expect(promise).rejects.toMatchInlineSnapshot(
+      "[Error: Cannot send calls, no account connected for wallet: inApp]",
+    );
+  });
+
   test("with smart account should send batch calls", async () => {
     wallet = createWallet("inApp", {
       smartAccount: { chain: FORKED_ETHEREUM_CHAIN, sponsorGas: true },

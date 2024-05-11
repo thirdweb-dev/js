@@ -208,4 +208,30 @@ describe.sequential("in-app wallet", async () => {
     expect(result.status).toEqual("PENDING");
     expect(result.receipts.length).toEqual(0);
   });
+
+  test("unknown bundle id should fail", async () => {
+    const promise = getCallsStatus({
+      wallet: wallet,
+      client: TEST_CLIENT,
+      bundleId: "unknown",
+    });
+
+    expect(promise).rejects.toMatchInlineSnapshot(
+      "[Error: Failed to get calls status, unknown bundle id]",
+    );
+  });
+
+  test("without chain should fail", async () => {
+    wallet.getChain = vi.fn().mockReturnValue(undefined);
+
+    const promise = getCallsStatus({
+      wallet: wallet,
+      client: TEST_CLIENT,
+      bundleId: "test",
+    });
+
+    expect(promise).rejects.toMatchInlineSnapshot(
+      "[Error: Failed to get calls status, no active chain found]",
+    );
+  });
 });
