@@ -19,6 +19,7 @@ import { Button, ButtonLink } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { TokenSymbol } from "../../../../components/token/TokenSymbol.js";
 import {
+  type Theme,
   fontSize,
   iconSize,
   radius,
@@ -67,7 +68,6 @@ export function fiatQuoteToPartialQuote(
       name: quote.onRampToken.token.name,
       symbol: quote.onRampToken.token.symbol,
     },
-
     toToken: {
       chainId: quote.toToken.chainId,
       tokenAddress: quote.toToken.tokenAddress,
@@ -532,16 +532,24 @@ function StepContainer(props: {
   state?: FiatStatusMeta["progressStatus"];
   children: React.ReactNode;
 }) {
-  const color =
-    props.state === "actionRequired" || props.state === "pending"
-      ? "accentText"
-      : props.state === "completed"
-        ? "success"
-        : props.state === "failed"
-          ? "danger"
-          : props.state === "partialSuccess"
-            ? "danger"
-            : "borderColor";
+  let color: keyof Theme["colors"] = "borderColor";
+  let text: string | undefined;
+
+  if (props.state === "pending") {
+    text = "Pending";
+    color = "accentText";
+  } else if (props.state === "actionRequired") {
+    color = "accentText";
+  } else if (props.state === "completed") {
+    text = "Completed";
+    color = "success";
+  } else if (props.state === "failed") {
+    color = "danger";
+    text = "Failed";
+  } else if (props.state === "partialSuccess") {
+    color = "danger";
+    text = "Incomplete";
+  }
 
   return (
     <Container
@@ -568,19 +576,9 @@ function StepContainer(props: {
           alignItems: "center",
         }}
       >
-        {props.state && (
+        {props.state && text && (
           <Text size="sm" color={color}>
-            {props.state === "completed"
-              ? "Completed"
-              : props.state === "failed"
-                ? "Failed"
-                : props.state === "pending"
-                  ? "Pending"
-                  : props.state === "actionRequired"
-                    ? ""
-                    : props.state === "partialSuccess"
-                      ? "Incomplete"
-                      : undefined}
+            {text}
           </Text>
         )}
 

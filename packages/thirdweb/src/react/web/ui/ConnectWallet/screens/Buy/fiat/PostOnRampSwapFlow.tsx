@@ -6,6 +6,10 @@ import { PostOnRampSwap } from "./PostOnRampSwap.js";
 
 // Note: It is necessary to lock in the fiat-status in state and only pass that to <PostOnRampSwap /> so it does not suddenly change during the swap process.
 
+/**
+ * - Show 2 steps UI with step 2 highlighted, on continue button click:
+ * - Show swap flow
+ */
 export function PostOnRampSwapFlow(props: {
   status: BuyWithFiatStatus;
   quote: BuyWithFiatPartialQuote;

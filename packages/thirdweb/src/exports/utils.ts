@@ -124,6 +124,7 @@ export {
   checksumAddress,
   getAddress,
   isAddress,
+  shortenAddress,
   type Address,
   type AddressInput,
 } from "../utils/address.js";

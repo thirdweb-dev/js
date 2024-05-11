@@ -50,11 +50,11 @@
   "devDependencies": {
     "@react-native-async-storage/async-storage": "^1.23.1",
     "@react-native-community/eslint-config": "^3.2.0",
-    "@thirdweb-dev/tsconfig": "^0.1.7",
+    "@thirdweb-dev/tsconfig": "workspace:*",
     "@types/react": "18.2.17",
     "@types/react-native": "^0.71.13",
     "eslint": "8.57.0",
-    "eslint-config-thirdweb": "^0.1.9",
+    "eslint-config-thirdweb": "workspace:*",
     "eslint-plugin-i18next": "^6.0.3",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-inclusive-language": "^2.2.1",

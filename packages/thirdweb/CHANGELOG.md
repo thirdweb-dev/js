@@ -1,5 +1,74 @@
 # thirdweb
 
+## 5.19.0
+
+### Minor Changes
+
+- [#2995](https://github.com/thirdweb-dev/js/pull/2995) [`523cd1e`](https://github.com/thirdweb-dev/js/commit/523cd1e16fd1194ffbf8970150ed6f09d4e01fe9) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds shortenAddress util
+
+- [#2997](https://github.com/thirdweb-dev/js/pull/2997) [`cf7b6fc`](https://github.com/thirdweb-dev/js/commit/cf7b6fc7bc1686f3b4c54515d569d799d5e3ceea) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - added `createWalletAdapter` helper for interop with diff libraries
+
+### Patch Changes
+
+- [#3000](https://github.com/thirdweb-dev/js/pull/3000) [`0ab1407`](https://github.com/thirdweb-dev/js/commit/0ab14075d37aec27167c5885155f48ea880c9574) Thanks [@MananTank](https://github.com/MananTank)! - Fix WalletImage fallback icon
+
+## 5.18.1
+
+### Patch Changes
+
+- [#2988](https://github.com/thirdweb-dev/js/pull/2988) [`02c0319`](https://github.com/thirdweb-dev/js/commit/02c03196ad38de888ff86311c68fa010018bda60) Thanks [@jnsdls](https://github.com/jnsdls)! - bump all to fix release
+
+## 5.18.0
+
+### Minor Changes
+
+- [#2985](https://github.com/thirdweb-dev/js/pull/2985) [`55081d8`](https://github.com/thirdweb-dev/js/commit/55081d833585b8c7c24690abd87cabeee95cde33) Thanks [@jnsdls](https://github.com/jnsdls)! - ### "Credit Card" payment method added in thirdweb Pay for Fiat on-ramp
+
+  ### `PayEmbed` component added to embed thirdweb Pay UI
+
+  ```tsx
+  <PayEmbed
+    client={client}
+    style={{
+      width: "360px",
+    }}
+  />
+  ```
+
+  ### thirdweb Pay UI customization available in `PayEmbed` and `ConnectButton`
+
+  `payOptions` prop in `PayEmbed` and `ConnectButton > detailsModal` allows you custimize :
+
+  - Enable/Disable payment methods
+  - Set default amount for Buy token
+  - Set Buy token/chain to be selected by default
+  - Set Source token/chain to be selected by default for Crypto payment method
+  - Disable editing for Buy token/chain/amount and Source token/chain
+
+  ```tsx
+  <ConnectButton
+    client={client}
+    detailsModal={{
+      payOptions: yourOptions,
+    }}
+  />
+
+  <PayEmbed
+    client={client}
+    detailsModal={{
+      payOptions: yourOptions,
+    }}
+  />
+  ```
+
+  ### Fiat on-ramp functions and hooks added
+
+  - `getBuyWithFiatQuote`, `useBuyWithFiatQuote` to get a quote for buying crypto with fiat currency
+  - `getBuyWithFiatStatus`, `useBuyWithFiatStatus` to get status of "Buy with fiat" transaction
+  - `getBuyWithFiatHistory`, `useBuyWithFiatHistory` to get "Buy with fiat" transaction history
+  - `getPostOnRampQuote`, `usePostOnRampQuote` to get quote for swapping on-ramp token to destination token after doing on-ramp
+  - Add `getBuyHistory` and `useBuyHistory` to get both "Buy with Fiat" and "Buy with Crypto" transaction history in a single list
+
 ## 5.17.0
 
 ### Minor Changes

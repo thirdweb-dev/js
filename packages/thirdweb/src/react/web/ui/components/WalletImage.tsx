@@ -1,14 +1,18 @@
 "use client";
 import { useEffect, useState } from "react";
 import type { ThirdwebClient } from "../../../../client/client.js";
-import { useActiveWallet } from "../../../../exports/react-native.js";
 import { getInstalledWalletProviders } from "../../../../wallets/injected/mipdStore.js";
 import { getStoredActiveWalletId } from "../../../../wallets/manager/index.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
+import { useActiveWallet } from "../../../core/hooks/wallets/wallet-hooks.js";
 import { getStorage } from "../../../core/storage.js";
 import { getLastAuthProvider } from "../../wallets/in-app/storage.js";
-import { FingerPrintIcon } from "../ConnectWallet/icons/FingerPrintIcon.js";
-import { emailIcon, phoneIcon } from "../ConnectWallet/icons/dataUris.js";
+import {
+  emailIcon,
+  genericWalletIcon,
+  passkeyIcon,
+  phoneIcon,
+} from "../ConnectWallet/icons/dataUris.js";
 import {
   appleIconUri,
   facebookIconUri,
@@ -71,8 +75,7 @@ export function WalletImage(props: {
             mipdImage = emailIcon;
             break;
           case "passkey":
-            // biome-ignore lint/suspicious/noExplicitAny: FIXME refactor this
-            mipdImage = "passkey" as any;
+            mipdImage = passkeyIcon;
             break;
         }
       }
@@ -82,15 +85,11 @@ export function WalletImage(props: {
     fetchImage();
   }, [props.id, activeWallet]);
 
-  // FIXME hack
-  if (image === "passkey") {
-    return <FingerPrintIcon size={props.size} />;
-  }
-
   if (image) {
     return (
       <Img
         src={image}
+        fallbackImage={genericWalletIcon}
         width={props.size}
         height={props.size}
         loading="eager"
@@ -117,7 +116,8 @@ function WalletImageQuery(props: {
   return (
     <Img
       client={props.client}
-      src={walletImage.data}
+      src={walletImage.isLoading ? undefined : walletImage.data || ""}
+      fallbackImage={genericWalletIcon}
       width={props.size}
       height={props.size}
       loading="eager"

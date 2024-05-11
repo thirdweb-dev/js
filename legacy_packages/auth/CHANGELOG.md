@@ -1,5 +1,28 @@
 # @thirdweb-dev/auth
 
+## 4.1.78
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/wallets@2.5.20
+
+## 4.1.77
+
+### Patch Changes
+
+- [#2988](https://github.com/thirdweb-dev/js/pull/2988) [`02c0319`](https://github.com/thirdweb-dev/js/commit/02c03196ad38de888ff86311c68fa010018bda60) Thanks [@jnsdls](https://github.com/jnsdls)! - bump all to fix release
+
+- Updated dependencies [[`02c0319`](https://github.com/thirdweb-dev/js/commit/02c03196ad38de888ff86311c68fa010018bda60)]:
+  - @thirdweb-dev/wallets@2.5.19
+
+## 4.1.76
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/wallets@2.5.18
+
 ## 4.1.75
 
 ### Patch Changes

@@ -9,16 +9,16 @@ import { OnrampStatusScreen } from "./FiatStatusScreen.js";
 import { FiatSteps, fiatQuoteToPartialQuote } from "./FiatSteps.js";
 import { PostOnRampSwapFlow } from "./PostOnRampSwapFlow.js";
 
-// Flows
+// 2 possible flows
 
 // If a Swap is required after doing onramp
-// 1. show the 2 steps ui first
-// 2. opwn provider window, show onramp status screen
-// 3. show the 2 steps ui with step 2 highlighted
+// 1. show the 2 steps ui with step 1 highlighted, on continue button click:
+// 2. open provider window, show onramp status screen, on onramp success:
+// 3. show the 2 steps ui with step 2 highlighted, on continue button click:
 // 4. show swap flow
 
 //  If a Swap is not required after doing onramp
-//  1. open provider window, show onramp status screen
+//  - window will already be opened before this component is mounted and `openedWindow` prop will be set, show onramp status screen
 
 type Screen =
   | {

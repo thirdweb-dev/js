@@ -23,6 +23,12 @@ import { OnRampTxDetailsTable } from "./FiatTxDetailsTable.js";
 
 type UIStatus = "loading" | "failed" | "completed" | "partialSuccess";
 
+/**
+ * Poll for "Buy with Fiat" status - when the on-ramp is in progress
+ * - Show success screen if swap is not required and on-ramp is completed
+ * - Show Failed screen if on-ramp failed
+ * - call `onShowSwapFlow` if on-ramp is completed and swap is required
+ */
 export function OnrampStatusScreen(props: {
   client: ThirdwebClient;
   onBack: () => void;
@@ -55,8 +61,6 @@ export function OnrampStatusScreen(props: {
   } else if (statusQuery.data?.status === "ON_RAMP_TRANSFER_COMPLETED") {
     uiStatus = "completed";
   }
-
-  // determine step
 
   // close the onramp popup if onramp is completed
   useEffect(() => {

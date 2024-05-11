@@ -12,8 +12,12 @@ import { USDIcon } from "../../../icons/currencies/USDIcon.js";
 import { TokenInfoRow } from "../tx-history/TokenInfoRow.js";
 import type { FiatStatusMeta } from "../tx-history/statusMeta.js";
 
+/**
+ * Show a table with the details of a "OnRamp" transaction step in the "Buy with Fiat" flow.
+ * - Show OnRamp token as "Receive"
+ * - Show fiat amount as "Pay"
+ */
 export function OnRampTxDetailsTable(props: {
-  // status: ValidBuyWithFiatStatus;
   client: ThirdwebClient;
   token: {
     chainId: number;
@@ -44,6 +48,7 @@ export function OnRampTxDetailsTable(props: {
 
   return (
     <div>
+      {/* Receive */}
       <TokenInfoRow
         chainId={props.token.chainId}
         client={props.client}
@@ -82,11 +87,10 @@ export function OnRampTxDetailsTable(props: {
         </Container>
       </Container>
 
+      {/* Status */}
       {props.statusMeta && (
         <>
           {lineSpacer}
-
-          {/* Status */}
           <Container
             flex="row"
             center="y"
@@ -106,6 +110,7 @@ export function OnRampTxDetailsTable(props: {
 
       {lineSpacer}
 
+      {/* Transaction Hash link */}
       {onrampTxHash && onRampChainQuery.data?.explorers?.[0]?.url && (
         <>
           <Spacer y="md" />
