@@ -8,37 +8,39 @@ import type { Prettify } from "../../utils/type-utils.js";
 import type { Account, SendTransactionOption } from "../interfaces/wallet.js";
 
 export type SmartWalletOptions = Prettify<
-  | ({
-      chain: Chain; // TODO consider making default chain optional
-      factoryAddress?: string;
-      overrides?: {
-        bundlerUrl?: string;
-        accountAddress?: string;
-        accountSalt?: string;
-        entrypointAddress?: string;
-        paymaster?: (userOp: UserOperation) => Promise<PaymasterResult>;
-        predictAddress?: (factoryContract: ThirdwebContract) => Promise<string>;
-        createAccount?: (
-          factoryContract: ThirdwebContract,
-        ) => PreparedTransaction;
-        execute?: (
-          accountContract: ThirdwebContract,
-          transaction: SendTransactionOption,
-        ) => PreparedTransaction;
-        executeBatch?: (
-          accountContract: ThirdwebContract,
-          transactions: SendTransactionOption[],
-        ) => PreparedTransaction;
-      };
-    } & {
-      /**
-       * @deprecated use 'sponsorGas' instead
-       */
-      gasless: boolean;
-    })
-  | {
-      sponsorGas: boolean;
-    }
+  {
+    chain: Chain; // TODO consider making default chain optional
+    factoryAddress?: string;
+    overrides?: {
+      bundlerUrl?: string;
+      accountAddress?: string;
+      accountSalt?: string;
+      entrypointAddress?: string;
+      paymaster?: (userOp: UserOperation) => Promise<PaymasterResult>;
+      predictAddress?: (factoryContract: ThirdwebContract) => Promise<string>;
+      createAccount?: (
+        factoryContract: ThirdwebContract,
+      ) => PreparedTransaction;
+      execute?: (
+        accountContract: ThirdwebContract,
+        transaction: SendTransactionOption,
+      ) => PreparedTransaction;
+      executeBatch?: (
+        accountContract: ThirdwebContract,
+        transactions: SendTransactionOption[],
+      ) => PreparedTransaction;
+    };
+  } & (
+    | {
+        /**
+         * @deprecated use 'sponsorGas' instead
+         */
+        gasless: boolean;
+      }
+    | {
+        sponsorGas: boolean;
+      }
+  )
 >;
 
 // internal type
