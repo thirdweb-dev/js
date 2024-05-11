@@ -13,19 +13,21 @@ import { isWalletConnect } from "../wallet-connect/index.js";
 import type { WalletId } from "../wallet-types.js";
 import type { WalletSendCallsId, WalletSendCallsParameters } from "./types.js";
 
+type Calls = OneOf<
+  | {
+      to: Hex;
+      data?: Hex | undefined;
+      value?: bigint | undefined;
+    }
+  | {
+      data: Hex; // Contract creation case
+    }
+>;
+
 export type SendCallsOptions<ID extends WalletId = WalletId> = {
   wallet: Wallet<ID>;
   client: ThirdwebClient;
-  calls: OneOf<
-    | {
-        to: Hex;
-        data?: Hex | undefined;
-        value?: bigint | undefined;
-      }
-    | {
-        data: Hex; // Contract creation case
-      }
-  >[];
+  calls: Calls[];
   capabilities?: WalletSendCallsParameters[number]["capabilities"];
   version?: WalletSendCallsParameters[number]["version"];
   chain?: Chain;
@@ -33,6 +35,41 @@ export type SendCallsOptions<ID extends WalletId = WalletId> = {
 
 export type SendCallsResult = WalletSendCallsId;
 
+/**
+ * Send [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) calls to a wallet.
+ * This function works with all Thirdweb wallets (in-app and smart) and certain injected wallets that already support EIP-5792.
+ * Transactions will be bundled and sponsored when those capabilities are supported, otherwise they will be sent as individual transactions.
+ *
+ * Note: This function is dependent on the wallet's support for EIP-5792 and could fail.
+ *
+ * @param {SendCallsOptions} options
+ * @param {Wallet} options.wallet - The wallet to send the calls to.
+ * @param {Calls[]} options.calls - An array of calls to send containing the to address, data, and value.
+ * @param {ThirdwebClient} options.client - A {@link ThirdwebClient} instance for RPC access.
+ * @param {WalletSendCallsParameters[number]["capabilities"]} options.capabilities - Capabilities objects to use, see the [EIP-5792 spec](https://eips.ethereum.org/EIPS/eip-5792) for details.
+ * @param {string} [options.version="1.0"] - The `wallet_sendCalls` version to use, defaults to "1.0".
+ * @param {Chain} [options.chain] - A {@link Chain} instance to override the wallet's current chain.
+ * @returns The ID of the bundle of the calls.
+ *
+ * @see getCallsStatus for how to retrieve the status of the bundle.
+ * @see getCapabilities for how to retrieve the capabilities of the wallet.
+ *
+ * @example
+ * ```ts
+ * import { createThirdwebClient } from "thirdweb";
+ * import { sendCalls } from "thirdweb/wallets";
+ *
+ * const client = createThirdwebClient({ clientId: ... });
+ * const wallet = createWallet("com.coinbase.wallet");
+ *
+ * const bundleId = await sendCalls({
+ *   wallet,
+ *   client,
+ *   calls: [{ to: ..., value: ... }, { to: ..., value: ... }],
+ * });
+ * ```
+ * @wallets
+ */
 export async function sendCalls<const ID extends WalletId>(
   options: SendCallsOptions<ID>,
 ): Promise<SendCallsResult> {
