@@ -112,7 +112,7 @@ function WalletImageQuery(props: {
   return (
     <Img
       client={props.client}
-      src={walletImage.data}
+      src={walletImage.isLoading ? undefined : walletImage.data || ""}
       fallbackImage={genericWalletIcon}
       width={props.size}
       height={props.size}
