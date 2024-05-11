@@ -1,5 +1,14 @@
 # @thirdweb-dev/react-core
 
+## 4.6.19
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@4.0.80
+  - @thirdweb-dev/wallets@2.5.20
+  - @thirdweb-dev/auth@4.1.78
+
 ## 4.6.18
 
 ### Patch Changes
