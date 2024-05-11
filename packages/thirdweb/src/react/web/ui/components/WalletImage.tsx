@@ -7,8 +7,11 @@ import type { WalletId } from "../../../../wallets/wallet-types.js";
 import { useActiveWallet } from "../../../core/hooks/wallets/wallet-hooks.js";
 import { getStorage } from "../../../core/storage.js";
 import { getLastAuthProvider } from "../../wallets/in-app/storage.js";
-import { FingerPrintIcon } from "../ConnectWallet/icons/FingerPrintIcon.js";
-import { emailIcon, phoneIcon } from "../ConnectWallet/icons/dataUris.js";
+import {
+  emailIcon,
+  genericWalletIcon,
+  phoneIcon,
+} from "../ConnectWallet/icons/dataUris.js";
 import {
   appleIconUri,
   facebookIconUri,
@@ -70,10 +73,6 @@ export function WalletImage(props: {
           case "email":
             mipdImage = emailIcon;
             break;
-          case "passkey":
-            // biome-ignore lint/suspicious/noExplicitAny: FIXME refactor this
-            mipdImage = "passkey" as any;
-            break;
         }
       }
 
@@ -82,15 +81,11 @@ export function WalletImage(props: {
     fetchImage();
   }, [props.id, activeWallet]);
 
-  // FIXME hack
-  if (image === "passkey") {
-    return <FingerPrintIcon size={props.size} />;
-  }
-
   if (image) {
     return (
       <Img
         src={image}
+        fallbackImage={genericWalletIcon}
         width={props.size}
         height={props.size}
         loading="eager"
@@ -118,6 +113,7 @@ function WalletImageQuery(props: {
     <Img
       client={props.client}
       src={walletImage.data}
+      fallbackImage={genericWalletIcon}
       width={props.size}
       height={props.size}
       loading="eager"
