@@ -1,5 +1,11 @@
 # @thirdweb-dev/pay
 
+## 0.1.8
+
+### Patch Changes
+
+- [#2988](https://github.com/thirdweb-dev/js/pull/2988) [`02c0319`](https://github.com/thirdweb-dev/js/commit/02c03196ad38de888ff86311c68fa010018bda60) Thanks [@jnsdls](https://github.com/jnsdls)! - bump all to fix release
+
 ## 0.1.7
 
 ### Patch Changes
