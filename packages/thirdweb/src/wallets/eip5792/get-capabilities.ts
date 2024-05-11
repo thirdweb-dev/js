@@ -16,6 +16,26 @@ export type GetCapabilitiesResult = Prettify<
   WalletCapabilitiesRecord<WalletCapabilities, number>
 >;
 
+/**
+ * Get the capabilities of a wallet based on the [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) specification.
+ *
+ * Note: This function is dependent on the wallet's support for EIP-5792, but will not throw.
+ * **The returned object contains a `message` field detailing any issues with the wallet's support for EIP-5792.**
+ *
+ * @param {GetCapabilitiesOptions} options
+ * @param {Wallet} options.wallet - The wallet to get the capabilities of.
+ * @returns {Promise<GetCapabilitiesResult>} - A promise that resolves to the capabilities of the wallet based on the [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) spec.
+ *
+ * @example
+ * ```ts
+ * import { getCapabilities } from "@thirdweb/wallets";
+ *
+ * const wallet = createWallet("com.coinbase.wallet");
+ * const capabilities = await getCapabilities({ wallet });
+ * ```
+ *
+ * @wallets
+ */
 export async function getCapabilities<const ID extends WalletId = WalletId>({
   wallet,
 }: GetCapabilitiesOptions<ID>): Promise<GetCapabilitiesResult> {

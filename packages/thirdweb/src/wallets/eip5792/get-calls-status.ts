@@ -16,18 +16,29 @@ export type GetCallsStatusOptions = {
 /**
  * Get the status of an [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) bundle.
  *
+ * Note: This function is dependent on the wallet's support for EIP-5792 and could fail.
+ *
  * @param {GetCallsStatusOptions} options
  * @param {Wallet} options.wallet - The wallet that send the original calls.
  * @param {ThirdwebClient} options.client - A {@link ThirdwebClient} instance.
  * @param {WalletSendCallsId} options.bundleId - The ID of the bundle to get the status of.
- * @returns {Promise<GetCallsStatusResponse>} A promise that resolves to the bundle's status and receipts (if available). {@link GetCallsStatusResponse}
+ * @returns {Promise<GetCallsStatusResponse>} - A promise that resolves to the bundle's status and receipts (if available). {@link GetCallsStatusResponse}
  *
  * @example
  * ```ts
- * import { sendCalls, getCallsStatus } from "thirdweb/wallets";
+ *  import { createThirdwebClient } from "thirdweb";
+ *  import { sendCalls, getCallsStatus } from "thirdweb/wallets";
  *
+ *  const client = createThirdwebClient({ clientId: ... });
  *
+ *  const bundleId = await sendCalls({ wallet, client, calls });
+ *
+ *  let result;
+ *  while (result.status !== "CONFIRMED") {
+ *    result = await getCallsStatus({ wallet, client, bundleId });
+ *  }
  * ```
+ * @wallets
  */
 export async function getCallsStatus({
   wallet,

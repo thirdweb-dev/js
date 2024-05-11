@@ -42,7 +42,7 @@ export type SendCallsResult = WalletSendCallsId;
  *
  * Note: This function is dependent on the wallet's support for EIP-5792 and could fail.
  *
- * @param options - The options to send the calls.
+ * @param {SendCallsOptions} options
  * @param {Wallet} options.wallet - The wallet to send the calls to.
  * @param {Calls[]} options.calls - An array of calls to send containing the to address, data, and value.
  * @param {ThirdwebClient} options.client - A {@link ThirdwebClient} instance for RPC access.
