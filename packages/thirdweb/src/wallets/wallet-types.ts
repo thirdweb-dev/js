@@ -1,3 +1,4 @@
+import type { AdapterWalletOptions } from "../adapters/wallet-adapter.js";
 import type { Chain } from "../chains/types.js";
 import type { ThirdwebClient } from "../client/client.js";
 import type {
@@ -28,6 +29,7 @@ export type WalletId =
   | "inApp"
   | "embedded" // deprecated
   | "smart"
+  | "adapter"
   | WCSupportedWalletIds
   | InjectedSupportedWalletIds;
 
@@ -116,7 +118,9 @@ export type WalletCreationOptions<T extends WalletId> = T extends "smart"
     ? InAppWalletCreationOptions
     : T extends typeof COINBASE
       ? CoinbaseWalletCreationOptions
-      : undefined;
+      : T extends "adapter"
+        ? AdapterWalletOptions
+        : undefined;
 
 /**
  * Generic type for getting the tuple type of arguments that the `createWallet` function takes.
