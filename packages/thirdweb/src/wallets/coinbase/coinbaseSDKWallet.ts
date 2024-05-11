@@ -29,6 +29,7 @@ import {
 } from "../../utils/encoding/hex.js";
 import { COINBASE } from "../constants.js";
 import type {
+  GetCallsStatusResponse,
   WalletCapabilities,
   WalletCapabilitiesRecord,
   WalletSendCallsId,
@@ -181,23 +182,32 @@ export async function coinbaseSDKWalletSendCalls(args: {
 }) {
   const { wallet, params } = args;
 
-  const account = wallet.getAccount();
-  if (!account) {
-    throw new Error(
-      `Can't send calls, no account connected for wallet: ${wallet.id}`,
-    );
-  }
+  const config = wallet.getConfig();
+  const provider = await getCoinbaseProvider(config);
+
+  // Coinbase SDK should support
+  return provider.request({
+    method: "wallet_sendCalls",
+    params,
+  }) as Promise<WalletSendCallsId>;
+}
+
+/**
+ * @internal
+ */
+export async function coinbaseSDKWalletGetCallsStatus(args: {
+  wallet: Wallet<typeof COINBASE>;
+  bundleId: string;
+}) {
+  const { wallet, bundleId } = args;
 
   const config = wallet.getConfig();
   const provider = await getCoinbaseProvider(config);
 
-  console.log(params);
-
-  // Coinbase SDK should support
-  return (await provider.request({
-    method: "wallet_sendCalls",
-    params,
-  })) as WalletSendCallsId;
+  return provider.request({
+    method: "wallet_getCallsStatus",
+    params: [bundleId],
+  }) as Promise<GetCallsStatusResponse>;
 }
 
 function onConnect(
