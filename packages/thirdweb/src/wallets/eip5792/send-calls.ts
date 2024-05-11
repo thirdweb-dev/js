@@ -13,7 +13,7 @@ import { isWalletConnect } from "../wallet-connect/index.js";
 import type { WalletId } from "../wallet-types.js";
 import type { WalletSendCallsId, WalletSendCallsParameters } from "./types.js";
 
-type Calls = OneOf<
+export type WalletCall = OneOf<
   | {
       to: Hex;
       data?: Hex | undefined;
@@ -27,7 +27,7 @@ type Calls = OneOf<
 export type SendCallsOptions<ID extends WalletId = WalletId> = {
   wallet: Wallet<ID>;
   client: ThirdwebClient;
-  calls: Calls[];
+  calls: WalletCall[];
   capabilities?: WalletSendCallsParameters[number]["capabilities"];
   version?: WalletSendCallsParameters[number]["version"];
   chain?: Chain;
@@ -44,7 +44,7 @@ export type SendCallsResult = WalletSendCallsId;
  *
  * @param {SendCallsOptions} options
  * @param {Wallet} options.wallet - The wallet to send the calls to.
- * @param {Calls[]} options.calls - An array of calls to send containing the to address, data, and value.
+ * @param {WalletCall[]} options.calls - An array of calls to send containing the to address, data, and value.
  * @param {ThirdwebClient} options.client - A {@link ThirdwebClient} instance for RPC access.
  * @param {WalletSendCallsParameters[number]["capabilities"]} options.capabilities - Capabilities objects to use, see the [EIP-5792 spec](https://eips.ethereum.org/EIPS/eip-5792) for details.
  * @param {string} [options.version="1.0"] - The `wallet_sendCalls` version to use, defaults to "1.0".

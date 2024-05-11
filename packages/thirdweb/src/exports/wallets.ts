@@ -107,6 +107,7 @@ export type {
 } from "../wallets/eip5792/get-capabilities.js";
 export { sendCalls } from "../wallets/eip5792/send-calls.js";
 export type {
+  WalletCall,
   SendCallsOptions,
   SendCallsResult,
 } from "../wallets/eip5792/send-calls.js";
