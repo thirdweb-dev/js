@@ -30,7 +30,7 @@ export type SmartWalletOptions = Prettify<
         transactions: SendTransactionOption[],
       ) => PreparedTransaction;
     };
-  } & (
+  } & OneOf<
     | {
         /**
          * @deprecated use 'sponsorGas' instead
@@ -40,7 +40,7 @@ export type SmartWalletOptions = Prettify<
     | {
         sponsorGas: boolean;
       }
-  )
+  >
 >;
 
 // internal type

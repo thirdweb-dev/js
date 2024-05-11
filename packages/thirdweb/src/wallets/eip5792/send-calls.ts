@@ -58,13 +58,10 @@ export async function sendCalls<const ID extends WalletId>(
     );
   }
 
-  if (isSmartWallet(wallet)) {
-    throw new Error("Not implemented");
-  }
-
+  // These conveniently operate the same
   if (isSmartWallet(wallet) || isInAppWallet(wallet)) {
     const { inAppWalletSendCalls } = await import(
-      "../in-app/core/lib/in-app-wallet-send-calls.js"
+      "../in-app/core/lib/in-app-wallet-calls.js"
     );
     return inAppWalletSendCalls({ wallet, chain, client, calls });
   }
@@ -99,7 +96,7 @@ export async function sendCalls<const ID extends WalletId>(
   }
 
   if (isWalletConnect(wallet)) {
-    throw new Error("Not implemented");
+    throw new Error("sendCalls is not yet supported for Wallet Connect");
   }
 
   // Default to injected wallet

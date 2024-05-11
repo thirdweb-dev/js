@@ -40,3 +40,21 @@ type EIP5792Call = OneOf<
       data: Hex; // Contract creation case
     }
 >;
+
+export type GetCallsStatusResponse = {
+  status: "PENDING" | "CONFIRMED";
+  receipts: WalletCallReceipt<bigint, "success" | "reverted">[];
+};
+
+export type WalletCallReceipt<quantity = Hex, status = Hex> = {
+  logs: {
+    address: string;
+    data: Hex;
+    topics: Hex[];
+  }[];
+  status: status;
+  blockHash: Hex;
+  blockNumber: quantity;
+  gasUsed: quantity;
+  transactionHash: Hex;
+};

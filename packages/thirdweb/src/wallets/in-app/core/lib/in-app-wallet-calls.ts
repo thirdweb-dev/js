@@ -108,7 +108,7 @@ export async function inAppWalletGetCallsStatus(args: {
         gasUsed: receipt.gasUsed,
         transactionHash: receipt.transactionHash,
       });
-    } catch (err) {
+    } catch {
       status = "PENDING";
     }
   }

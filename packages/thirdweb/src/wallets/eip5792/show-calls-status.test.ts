@@ -5,14 +5,10 @@ import { createWallet } from "../create-wallet.js";
 import type { Wallet } from "../interfaces/wallet.js";
 import showCallsStatus from "./show-calls-status.js";
 
-const SUPPORTED_RESPONSE = null;
-
 const RAW_UNSUPPORTED_ERROR = {
   code: -32601,
   message: "some nonsense the wallet sends us about not supporting",
 };
-
-const UNSUPPORTED_RESPONSE_STRING = "does not support wallet_showCallsStatus";
 
 const mocks = vi.hoisted(() => ({
   injectedRequest: vi.fn(),
@@ -29,7 +25,7 @@ vi.mock("../injected/index.js", () => {
 describe.sequential("injected wallet", async () => {
   const wallet: Wallet<typeof METAMASK> = createWallet(METAMASK);
 
-  test("runs", async () => {
+  test("should run", async () => {
     await showCallsStatus({ wallet, bundleId: "test" });
 
     expect(mocks.injectedRequest).toHaveBeenCalledWith({
@@ -54,7 +50,7 @@ describe.sequential("injected wallet", async () => {
 describe.sequential("other wallets", async () => {
   const wallet: Wallet = createWallet("inApp");
 
-  test("does not support", async () => {
+  test("do not support", async () => {
     const promise = showCallsStatus({
       wallet: wallet as Wallet<InjectedSupportedWalletIds>,
       bundleId: "test",

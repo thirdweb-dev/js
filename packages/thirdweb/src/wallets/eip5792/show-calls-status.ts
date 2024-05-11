@@ -4,10 +4,11 @@ import { getInjectedProvider } from "../injected/index.js";
 import type { Wallet } from "../interfaces/wallet.js";
 import { isSmartWallet } from "../smart/index.js";
 import { isWalletConnect } from "../wallet-connect/index.js";
+import type { WalletSendCallsId } from "./types.js";
 
 export type ShowCallsStatusOptions = {
   wallet: Wallet<InjectedSupportedWalletIds>;
-  bundleId: string;
+  bundleId: WalletSendCallsId;
 };
 
 export default async function showCallsStatus({
