@@ -34,12 +34,33 @@ const RAW_UNSUPPORTED_ERROR = {
 
 const mocks = vi.hoisted(() => ({
   injectedRequest: vi.fn(),
+  sendAndConfirmTransaction: vi.fn(),
+  sendBatchTransaction: vi.fn(),
 }));
 
 vi.mock("../injected/index.js", () => {
   return {
     getInjectedProvider: vi.fn().mockReturnValue({
       request: mocks.injectedRequest,
+    }),
+  };
+});
+
+vi.mock("../../transaction/actions/send-and-confirm-transaction.js", () => {
+  return {
+    sendAndConfirmTransaction:
+      mocks.sendAndConfirmTransaction.mockResolvedValue({
+        transactionHash:
+          "0x9b7bb827c2e5e3c1a0a44dc53e573aa0b3af3bd1f9f5ed03071b100bb039eaff",
+      }),
+  };
+});
+
+vi.mock("../../transaction/actions/send-batch-transaction.js", () => {
+  return {
+    sendBatchTransaction: mocks.sendBatchTransaction.mockResolvedValue({
+      transactionHash:
+        "0x9b7bb827c2e5e3c1a0a44dc53e573aa0b3af3bd1f9f5ed03071b100bb039eaff",
     }),
   };
 });
@@ -155,8 +176,6 @@ describe.sequential("injected wallet", () => {
 });
 
 describe.sequential("in-app wallet", () => {
-  const sendTransaction = vi.fn();
-  const sendBatchTransaction = vi.fn();
   let wallet: Wallet = createWallet("inApp");
 
   afterEach(() => {
@@ -165,14 +184,11 @@ describe.sequential("in-app wallet", () => {
 
   test("should send individual calls", async () => {
     wallet.getChain = vi.fn().mockReturnValue(ANVIL_CHAIN);
-    wallet.getAccount = vi.fn().mockReturnValue({
-      ...TEST_ACCOUNT_A,
-      sendTransaction,
-    });
+    wallet.getAccount = vi.fn().mockReturnValue(TEST_ACCOUNT_A);
 
     await sendCalls({ wallet, ...SEND_CALLS_OPTIONS });
 
-    expect(sendTransaction).toHaveBeenCalledTimes(2);
+    expect(mocks.sendAndConfirmTransaction).toHaveBeenCalledTimes(2);
   });
 
   test("without account should fail", async () => {
@@ -190,52 +206,35 @@ describe.sequential("in-app wallet", () => {
     wallet.getChain = vi.fn().mockReturnValue(FORKED_ETHEREUM_CHAIN);
     wallet.getAccount = vi.fn().mockReturnValue({
       ...TEST_ACCOUNT_A,
-      sendBatchTransaction, // we have to mock this because it doesn't get set until the wallet is connected
+      sendBatchTransaction: vi.fn(), // must specify this to make it behave like a smart account without connecting
     });
 
     await sendCalls({ wallet, ...SEND_CALLS_OPTIONS });
 
-    expect(sendBatchTransaction).toHaveBeenCalledTimes(1);
+    expect(mocks.sendBatchTransaction).toHaveBeenCalledTimes(1);
   });
 });
 
 describe.sequential("smart wallet", () => {
-  const sendTransaction = vi.fn();
-  const sendBatchTransaction = vi.fn();
-  let wallet: Wallet = createWallet("smart", {
+  const wallet: Wallet = createWallet("smart", {
     chain: FORKED_ETHEREUM_CHAIN,
     sponsorGas: true,
+  });
+  wallet.getAccount = vi.fn().mockReturnValue({
+    ...TEST_ACCOUNT_A,
+    sendBatchTransaction: vi.fn(), // must specify this to make it behave like a smart account without connecting
   });
 
   afterEach(() => {
     vi.clearAllMocks();
   });
 
-  test("should send individual calls", async () => {
+  test("should send batch calls", async () => {
     wallet.getChain = vi.fn().mockReturnValue(ANVIL_CHAIN);
-    wallet.getAccount = vi.fn().mockReturnValue({
-      ...TEST_ACCOUNT_A,
-      sendTransaction,
-    });
 
     await sendCalls({ wallet, ...SEND_CALLS_OPTIONS });
 
-    expect(sendTransaction).toHaveBeenCalledTimes(2);
-  });
-
-  test("with smart account should send batch calls", async () => {
-    wallet = createWallet("inApp", {
-      smartAccount: { chain: FORKED_ETHEREUM_CHAIN, sponsorGas: true },
-    });
-    wallet.getChain = vi.fn().mockReturnValue(FORKED_ETHEREUM_CHAIN);
-    wallet.getAccount = vi.fn().mockReturnValue({
-      ...TEST_ACCOUNT_A,
-      sendBatchTransaction, // we have to mock this because it doesn't get set until the wallet is connected
-    });
-
-    await sendCalls({ wallet, ...SEND_CALLS_OPTIONS });
-
-    expect(sendBatchTransaction).toHaveBeenCalledTimes(1);
+    expect(mocks.sendBatchTransaction).toHaveBeenCalledTimes(1);
   });
 });
 

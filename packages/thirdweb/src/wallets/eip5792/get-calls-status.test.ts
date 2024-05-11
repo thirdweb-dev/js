@@ -40,9 +40,36 @@ vi.mock("../injected/index.js", () => {
   };
 });
 
-vi.mock("../../exports/rpc.js", () => {
+vi.mock("../../rpc/actions/eth_getTransactionReceipt.js", () => {
   return {
-    eth_getTransactionReceipt: mocks.getTransactionReceipt,
+    eth_getTransactionReceipt: mocks.getTransactionReceipt.mockResolvedValue({
+      logs: [],
+      status: "success",
+      blockHash:
+        "0xf19bbafd9fd0124ec110b848e8de4ab4f62bf60c189524e54213285e7f540d4a",
+      blockNumber: 12345n,
+      transactionHash:
+        "0x9b7bb827c2e5e3c1a0a44dc53e573aa0b3af3bd1f9f5ed03071b100bb039eaff",
+      gasUsed: 12345n,
+    }),
+  };
+});
+
+vi.mock("../../transaction/actions/send-and-confirm-transaction.js", () => {
+  return {
+    sendAndConfirmTransaction: vi.fn().mockResolvedValue({
+      transactionHash:
+        "0x9b7bb827c2e5e3c1a0a44dc53e573aa0b3af3bd1f9f5ed03071b100bb039eaff",
+    }),
+  };
+});
+
+vi.mock("../../transaction/actions/send-batch-transaction.js", () => {
+  return {
+    sendBatchTransaction: vi.fn().mockResolvedValue({
+      transactionHash:
+        "0x9b7bb827c2e5e3c1a0a44dc53e573aa0b3af3bd1f9f5ed03071b100bb039eaff",
+    }),
   };
 });
 
@@ -116,17 +143,6 @@ describe.sequential("in-app wallet", async () => {
   });
 
   test("default", async () => {
-    mocks.getTransactionReceipt.mockResolvedValue({
-      logs: [],
-      status: "success",
-      blockHash:
-        "0xf19bbafd9fd0124ec110b848e8de4ab4f62bf60c189524e54213285e7f540d4a",
-      blockNumber: 12345n,
-      transactionHash:
-        "0x9b7bb827c2e5e3c1a0a44dc53e573aa0b3af3bd1f9f5ed03071b100bb039eaff",
-      gasUsed: 12345n,
-    });
-
     wallet.getAccount = vi.fn().mockReturnValue({
       ...TEST_ACCOUNT_A,
       sendTransaction,
@@ -149,17 +165,6 @@ describe.sequential("in-app wallet", async () => {
   });
 
   test("with smart account", async () => {
-    mocks.getTransactionReceipt.mockResolvedValue({
-      logs: [],
-      status: "success",
-      blockHash:
-        "0xf19bbafd9fd0124ec110b848e8de4ab4f62bf60c189524e54213285e7f540d4a",
-      blockNumber: 12345n,
-      transactionHash:
-        "0x9b7bb827c2e5e3c1a0a44dc53e573aa0b3af3bd1f9f5ed03071b100bb039eaff",
-      gasUsed: 12345n,
-    });
-
     wallet = createWallet("inApp", {
       smartAccount: { chain: ANVIL_CHAIN, sponsorGas: true },
     });

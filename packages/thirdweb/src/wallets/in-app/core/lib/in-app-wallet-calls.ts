@@ -1,9 +1,9 @@
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
-import { eth_getTransactionReceipt } from "../../../../exports/rpc.js";
+import { eth_getTransactionReceipt } from "../../../../rpc/actions/eth_getTransactionReceipt.js";
 import { getRpcClient } from "../../../../rpc/rpc.js";
+import { sendAndConfirmTransaction } from "../../../../transaction/actions/send-and-confirm-transaction.js";
 import { sendBatchTransaction } from "../../../../transaction/actions/send-batch-transaction.js";
-import { sendTransaction } from "../../../../transaction/actions/send-transaction.js";
 import {
   type PrepareTransactionOptions,
   prepareTransaction,
@@ -23,7 +23,7 @@ const bundlesToTransactions = new Map<string, Hex[]>();
  * @internal
  */
 export async function inAppWalletSendCalls(args: {
-  wallet: Wallet<"inApp" | "embedded" | "smart">;
+  wallet: Wallet;
   client: ThirdwebClient;
   chain: Chain;
   calls: SendCallsOptions["calls"];
@@ -45,24 +45,26 @@ export async function inAppWalletSendCalls(args: {
 
   const preparedTransactions = callsToPrepare.map((c) => prepareTransaction(c));
   const hashes: Hex[] = [];
+  const bundleId = generateRandomHex(65);
+  bundlesToTransactions.set(bundleId, hashes);
   if (account.sendBatchTransaction) {
     const receipt = await sendBatchTransaction({
       account,
       transactions: preparedTransactions,
     });
     hashes.push(receipt.transactionHash);
+    bundlesToTransactions.set(bundleId, hashes);
   } else {
     for (const tx of preparedTransactions) {
-      const receipt = await sendTransaction({
+      const receipt = await sendAndConfirmTransaction({
         account,
         transaction: tx,
       });
       hashes.push(receipt.transactionHash);
+      bundlesToTransactions.set(bundleId, hashes);
     }
   }
 
-  const bundleId = generateRandomHex(65);
-  bundlesToTransactions.set(bundleId, hashes);
   return bundleId;
 }
 
@@ -70,7 +72,7 @@ export async function inAppWalletSendCalls(args: {
  * @internal
  */
 export async function inAppWalletGetCallsStatus(args: {
-  wallet: Wallet<"inApp" | "embedded" | "smart">;
+  wallet: Wallet;
   client: ThirdwebClient;
   bundleId: string;
 }): Promise<GetCallsStatusResponse> {
@@ -106,7 +108,7 @@ export async function inAppWalletGetCallsStatus(args: {
         gasUsed: receipt.gasUsed,
         transactionHash: receipt.transactionHash,
       });
-    } catch {
+    } catch (err) {
       status = "PENDING";
     }
   }
