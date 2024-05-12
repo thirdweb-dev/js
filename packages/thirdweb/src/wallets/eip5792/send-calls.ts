@@ -49,6 +49,7 @@ export type SendCallsResult = WalletSendCallsId;
  * @param {WalletSendCallsParameters[number]["capabilities"]} options.capabilities - Capabilities objects to use, see the [EIP-5792 spec](https://eips.ethereum.org/EIPS/eip-5792) for details.
  * @param {string} [options.version="1.0"] - The `wallet_sendCalls` version to use, defaults to "1.0".
  * @param {Chain} [options.chain] - A {@link Chain} instance to override the wallet's current chain.
+ * @throws an error if the wallet does not support EIP-5792.
  * @returns The ID of the bundle of the calls.
  *
  * @see getCallsStatus for how to retrieve the status of the bundle.
