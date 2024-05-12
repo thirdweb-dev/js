@@ -14,10 +14,10 @@ type ThemeColors = {
 };
 
 const darkColors = {
-  base1: "hsl(230deg 11.63% 8.43%)",
-  base2: "hsl(230deg 11.63% 12%)",
-  base3: "hsl(230deg 11.63% 15%)",
-  base4: "hsl(230deg 11.63% 17%)",
+  base1: "hsl(228deg 12% 8%)",
+  base2: "hsl(228deg 12% 12%)",
+  base3: "hsl(228deg 12% 15%)",
+  base4: "hsl(228deg 12% 17%)",
   primaryText: "#eeeef0",
   secondaryText: "#7c7a85",
   danger: "#e5484D",

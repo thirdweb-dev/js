@@ -43,7 +43,7 @@ export const Input = /* @__PURE__ */ StyledInput((props: InputProps) => {
     width: "100%",
     outline: "none",
     border: "none",
-    borderRadius: "6px",
+    borderRadius: radius.lg,
     color: theme.colors.primaryText,
     WebkitAppearance: "none",
     appearance: "none",

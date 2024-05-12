@@ -1,10 +1,11 @@
 "use client";
+import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import { Spacer } from "../../ui/components/Spacer.js";
-import { Button } from "../../ui/components/buttons.js";
+import { IconButton } from "../../ui/components/buttons.js";
 import { Input } from "../../ui/components/formElements.js";
 import { Text } from "../../ui/components/text.js";
-import { spacing } from "../../ui/design-system/index.js";
+import { iconSize, spacing } from "../../ui/design-system/index.js";
 import { CountrySelector } from "./CountrySelector.js";
 
 export function InputSelectionUI(props: {
@@ -84,6 +85,14 @@ export function InputSelectionUI(props: {
             }
           }}
         />
+        <IconButton
+          onClick={handleSelect}
+          style={{
+            padding: spacing.sm,
+          }}
+        >
+          <ArrowRightIcon width={iconSize.sm} height={iconSize.sm} />
+        </IconButton>
       </div>
 
       {showError && error && (
@@ -107,10 +116,10 @@ export function InputSelectionUI(props: {
           </>
         )}
 
-      <Spacer y="md" />
+      {/* <Spacer y="md" />
       <Button variant="accent" onClick={handleSelect} fullWidth>
         {props.submitButtonText}
-      </Button>
+      </Button> */}
     </div>
   );
 }

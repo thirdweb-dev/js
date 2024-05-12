@@ -24,11 +24,13 @@ import { Container, ModalHeader } from "../../ui/components/basic.js";
 import { Button } from "../../ui/components/buttons.js";
 import { useCustomTheme } from "../../ui/design-system/CustomThemeProvider.js";
 import { fontSize, iconSize, spacing } from "../../ui/design-system/index.js";
+import { InputSelectionUI } from "./InputSelectionUI.js";
 import type { InAppWalletLocale } from "./locale/types.js";
 import { openOauthSignInWindow } from "./openOauthSignInWindow.js";
 import { socialIcons } from "./socialIcons.js";
 import { setLastAuthProvider } from "./storage.js";
 import type { InAppWalletSelectUIState } from "./types.js";
+import { validateEmail } from "./validateEmail.js";
 
 const defaultAuthOptions: InAppWalletAuth[] = [
   "email",
@@ -76,15 +78,15 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
   const isPhoneEnabled = phoneIndex !== -1;
 
   const [inputMode, setInputMode] = useState<"email" | "phone" | "none">(() => {
-    if (isEmailEnabled && isPhoneEnabled) {
-      return emailIndex < phoneIndex ? "email" : "phone";
-    }
-    if (isEmailEnabled) {
-      return "email";
-    }
-    if (isPhoneEnabled) {
-      return "phone";
-    }
+    // if (isEmailEnabled && isPhoneEnabled) {
+    //   return emailIndex < phoneIndex ? "email" : "phone";
+    // }
+    // if (isEmailEnabled) {
+    //   return "email";
+    // }
+    // if (isPhoneEnabled) {
+    //   return "phone";
+    // }
     return "none";
   });
 
@@ -215,30 +217,76 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
       {/* Email/Phone Login */}
       {isEmailEnabled && (
         <>
-          <WalletTypeRowButton
-            client={client}
-            icon={emailIcon}
-            onClick={() => {
-              // TODO
-              console.log("email login");
-            }}
-            // TODO locale
-            title={"Email address"}
-          />
+          {inputMode === "email" ? (
+            <InputSelectionUI
+              type={type}
+              onSelect={(value) => {
+                setData({ emailLogin: value });
+                props.select();
+              }}
+              placeholder={placeholder}
+              name="email"
+              errorMessage={(input) => {
+                const isValidEmail = validateEmail(input.toLowerCase());
+                if (!isValidEmail) {
+                  return locale.invalidEmail;
+                }
+                return undefined;
+              }}
+              emptyErrorMessage={emptyErrorMessage}
+              submitButtonText={locale.submitEmail}
+            />
+          ) : (
+            <WalletTypeRowButton
+              client={client}
+              icon={emailIcon}
+              onClick={() => {
+                setInputMode("email");
+              }}
+              // TODO locale
+              title={"Email address"}
+            />
+          )}
         </>
       )}
       {isPhoneEnabled && (
         <>
-          <WalletTypeRowButton
-            client={client}
-            icon={phoneIcon}
-            onClick={() => {
-              // TODO
-              console.log("phone login");
-            }}
-            // TODO locale
-            title={"Phone number"}
-          />
+          {inputMode === "phone" ? (
+            <InputSelectionUI
+              format="phone"
+              type={type}
+              onSelect={(value) => {
+                // removes white spaces and special characters
+                setData({ phoneLogin: value.replace(/[-\(\) ]/g, "") });
+                props.select();
+              }}
+              placeholder={placeholder}
+              name="phone"
+              errorMessage={(_input) => {
+                // removes white spaces and special characters
+                const input = _input.replace(/[-\(\) ]/g, "");
+                const isPhone = /^[0-9]+$/.test(input);
+
+                if (!isPhone && isPhoneEnabled) {
+                  return locale.invalidPhone;
+                }
+
+                return undefined;
+              }}
+              emptyErrorMessage={emptyErrorMessage}
+              submitButtonText={locale.submitEmail}
+            />
+          ) : (
+            <WalletTypeRowButton
+              client={client}
+              icon={phoneIcon}
+              onClick={() => {
+                setInputMode("phone");
+              }}
+              // TODO locale
+              title={"Phone number"}
+            />
+          )}
         </>
       )}
       {/* {inputMode !== "none" && (
