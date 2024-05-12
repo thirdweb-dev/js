@@ -106,7 +106,7 @@ export function getAddress(address: string): Address {
  * import { shortenAddress } from 'thirdweb/utils';
  *
  * shortenAddress('0x5aAeb6053F3E94C9b9A09f33669435E7Ef1BeAed');
- * //=> '0x5a...BeAed'
+ * //=> '0x5a...eAed'
  * ```
  * @utils
  */
