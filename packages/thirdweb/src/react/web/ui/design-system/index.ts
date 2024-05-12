@@ -126,7 +126,7 @@ function createThemeObj(colors: ThemeColors): Theme {
       tooltipBg: colors.primaryText,
       tooltipText: colors.base1,
 
-      inputAutofillBg: colors.base2,
+      inputAutofillBg: colors.base1,
       scrollbarBg: colors.base2,
       tertiaryBg: colors.base2,
 
