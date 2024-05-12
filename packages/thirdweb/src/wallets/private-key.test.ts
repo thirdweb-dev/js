@@ -1,10 +1,21 @@
-import { expect, test } from "vitest";
+import { expect, test, vi } from "vitest";
 
 import { TEST_CLIENT } from "~test/test-clients.js";
 import { ANVIL_PKEY_A } from "~test/test-wallets.js";
 import { typedData } from "~test/typed-data.js";
+import { ANVIL_CHAIN } from "../../test/src/chains.js";
+import { sendTransaction } from "../exports/thirdweb.js";
+import { prepareTransaction } from "../transaction/prepare-transaction.js";
 import { toUnits } from "../utils/units.js";
 import { privateKeyToAccount } from "./private-key.js";
+
+const mocks = vi.hoisted(() => ({
+  eth_sendRawTransaction: vi.fn(),
+}));
+
+vi.mock("../rpc/actions/eth_sendRawTransaction.js", () => ({
+  eth_sendRawTransaction: mocks.eth_sendRawTransaction,
+}));
 
 test("default", () => {
   expect(
@@ -65,5 +76,26 @@ test("sign typed data", async () => {
     await account.signTypedData({ ...typedData.basic, primaryType: "Mail" }),
   ).toMatchInlineSnapshot(
     '"0x32f3d5975ba38d6c2fba9b95d5cbed1febaa68003d3d588d51f2de522ad54117760cfc249470a75232552e43991f53953a3d74edf6944553c6bef2469bb9e5921b"',
+  );
+});
+
+test("send transaction", async () => {
+  const account = privateKeyToAccount({
+    privateKey: ANVIL_PKEY_A,
+    client: TEST_CLIENT,
+  });
+  const tx = prepareTransaction({
+    client: TEST_CLIENT,
+    chain: ANVIL_CHAIN,
+    to: "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+    value: toUnits("1", 18),
+  });
+  await sendTransaction({
+    account,
+    transaction: tx,
+  });
+  const secondParam = mocks.eth_sendRawTransaction.mock.calls[0][1];
+  expect(secondParam).toBe(
+    "0x02f874827a6980844190ab0084b8c63f008252099470997970c51812dc3a010c7d01b50e0d17dc79c8880de0b6b3a764000080c080a0a50e0cab21b8dfb0873646712cd45f66b06be4330775f98cc3fa07dfb96fb7ada026b9e2ac0b9623a025f677a3e7a58f862395db6b68fdf6975fa9043b6111d09c",
   );
 });
