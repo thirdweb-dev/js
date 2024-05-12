@@ -149,24 +149,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
 
   const twTitle = (
     <Container gap="xxs" center="y" flex="row">
-      {connectModal.titleIcon === undefined ? // <Link
-      //   color="primaryText"
-      //   hoverColor="accentText"
-      //   target="_blank"
-      //   href="https://thirdweb.com/connect?utm_source=cw"
-      //   style={{
-      //     display: "flex",
-      //     alignItems: "center",
-      //   }}
-      //   onClick={(e) => {
-      //     if (!enableTWIconLink.current) {
-      //       e.preventDefault();
-      //     }
-      //   }}
-      // >
-      //   <TWIcon size={iconSize.md} />
-      // </Link>
-      null : connectModal.titleIcon === "" ? null : (
+      {!connectModal.titleIcon ? null : (
         <Img
           src={connectModal.titleIcon}
           width={iconSize.md}

@@ -191,7 +191,7 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
                 aria-label={`Login with ${loginMethod}`}
                 data-variant={showOnlyIcons ? "icon" : "full"}
                 key={loginMethod}
-                variant={showOnlyIcons ? "outline" : "secondary"}
+                variant={"outline"}
                 fullWidth={!showOnlyIcons}
                 onClick={() => {
                   handleSocialLogin(loginMethod);
@@ -422,9 +422,11 @@ export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
 const SocialButton = /* @__PURE__ */ styled(Button)({
   "&[data-variant='full']": {
     display: "flex",
-    justifyContent: "center",
+    justifyContent: "flex-start",
+    padding: spacing.md,
     gap: spacing.md,
     fontSize: fontSize.md,
+    fontWeight: 500,
     transition: "background-color 0.2s ease",
     "&:active": {
       boxShadow: "none",
