@@ -10,7 +10,11 @@ import {
   getWalletBalance,
 } from "../../../../wallets/utils/getWalletBalance.js";
 import { fetchBuySupportedDestinations } from "../../../web/ui/ConnectWallet/screens/Buy/swap/useSwapSupportedChains.js";
-import { useActiveAccount } from "../wallets/wallet-hooks.js";
+import {
+  useActiveAccount,
+  useActiveWallet,
+  useSwitchActiveWalletChain,
+} from "../wallets/wallet-hooks.js";
 
 type ShowModalData = {
   tx: PreparedTransaction;
@@ -37,10 +41,21 @@ export function useSendTransactionCore(
   showPayModal?: (data: ShowModalData) => void,
   gasless?: GaslessOptions,
 ): UseMutationResult<WaitForReceiptOptions, Error, PreparedTransaction> {
-  const account = useActiveAccount();
+  let _account = useActiveAccount();
+  const wallet = useActiveWallet();
+  const switchChain = useSwitchActiveWalletChain();
 
   return useMutation({
     mutationFn: async (tx) => {
+      // switch chain if needed
+      if (wallet && tx.chain.id !== wallet.getChain()?.id) {
+        await switchChain(tx.chain);
+        // in smart wallet case, account may change after chain switch
+        _account = wallet.getAccount();
+      }
+
+      const account = _account;
+
       if (!account) {
         throw new Error("No active account");
       }
