@@ -167,10 +167,19 @@ export async function coinbaseSDKWalletGetCapabilities(args: {
 
   const config = wallet.getConfig();
   const provider = await getCoinbaseProvider(config);
-  return (await provider.request({
-    method: "wallet_getCapabilities",
-    params: [account.address],
-  })) as WalletCapabilitiesRecord<WalletCapabilities, number>;
+  try {
+    return (await provider.request({
+      method: "wallet_getCapabilities",
+      params: [account.address],
+    })) as WalletCapabilitiesRecord<WalletCapabilities, number>;
+  } catch (error: unknown) {
+    if (/unsupport|not support/i.test((error as Error).message)) {
+      return {
+        message: `${wallet.id} does not support wallet_getCapabilities, reach out to them directly to request EIP-5792 support.`,
+      };
+    }
+    throw error;
+  }
 }
 
 /**
