@@ -8,14 +8,7 @@ import { sendTransaction } from "../exports/thirdweb.js";
 import { prepareTransaction } from "../transaction/prepare-transaction.js";
 import { toUnits } from "../utils/units.js";
 import { privateKeyToAccount } from "./private-key.js";
-
-const mocks = vi.hoisted(() => ({
-  eth_sendRawTransaction: vi.fn(),
-}));
-
-vi.mock("../rpc/actions/eth_sendRawTransaction.js", () => ({
-  eth_sendRawTransaction: mocks.eth_sendRawTransaction,
-}));
+import { getWalletBalance } from "./utils/getWalletBalance.js";
 
 test("default", () => {
   expect(
@@ -84,18 +77,42 @@ test("send transaction", async () => {
     privateKey: ANVIL_PKEY_A,
     client: TEST_CLIENT,
   });
+  const startingBalance = await getWalletBalance({
+    address: account.address,
+    chain: ANVIL_CHAIN,
+    client: TEST_CLIENT,
+  });
+  const startingBalanceRecipient = await getWalletBalance({
+    address: "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+    chain: ANVIL_CHAIN,
+    client: TEST_CLIENT,
+  });
   const tx = prepareTransaction({
     client: TEST_CLIENT,
     chain: ANVIL_CHAIN,
     to: "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
     value: toUnits("1", 18),
   });
-  await sendTransaction({
-    account,
-    transaction: tx,
+
+  expect(
+    await sendTransaction({
+      account,
+      transaction: tx,
+    }),
+  ).toBeDefined();
+
+  const endingBalance = await getWalletBalance({
+    address: account.address,
+    client: TEST_CLIENT,
+    chain: ANVIL_CHAIN,
   });
-  const secondParam = mocks.eth_sendRawTransaction.mock.calls[0][1];
-  expect(secondParam).toEqual(
-    "0x02f874827a6980844190ab0084b8c63f008252099470997970c51812dc3a010c7d01b50e0d17dc79c8880de0b6b3a764000080c080a0a50e0cab21b8dfb0873646712cd45f66b06be4330775f98cc3fa07dfb96fb7ada026b9e2ac0b9623a025f677a3e7a58f862395db6b68fdf6975fa9043b6111d09c",
+  const endingBalanceRecipient = await getWalletBalance({
+    address: "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+    client: TEST_CLIENT,
+    chain: ANVIL_CHAIN,
+  });
+  expect(endingBalance.value).toBeLessThan(startingBalance.value);
+  expect(endingBalanceRecipient.value).toBeGreaterThan(
+    startingBalanceRecipient.value,
   );
 });
