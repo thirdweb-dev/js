@@ -105,12 +105,12 @@ export function getAddress(address: string): Address {
  * ```ts
  * import { shortenAddress } from 'thirdweb/utils';
  *
- * shortenAddress('0x5aAeb6053F3E94C9b9A09f33669435E7Ef1BeAed');
- * //=> '0x5a...eAed'
+ * shortenAddress('0xa0cf798816d4b9b9866b5330eea46a18382f251e');
+ * //=> '0xA0Cf...251e'
  * ```
  * @utils
  */
-export function shortenAddress(address: Address, length = 4) {
+export function shortenAddress(address: string, length = 4) {
   const _address = getAddress(address);
-  return `${_address.slice(0, length)}...${_address.slice(-length)}`;
+  return `${_address.slice(0, length + 2)}...${_address.slice(-length)}`;
 }

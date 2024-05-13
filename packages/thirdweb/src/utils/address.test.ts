@@ -91,6 +91,6 @@ describe("shortenAddress", () => {
   test("shortens address", () => {
     expect(
       shortenAddress("0xa0cf798816d4b9b9866b5330eea46a18382f251e"),
-    ).toMatchInlineSnapshot('"0xA0...251e"');
+    ).toMatchInlineSnapshot('"0xA0Cf...251e"');
   });
 });
