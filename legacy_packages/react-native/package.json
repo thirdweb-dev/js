@@ -39,7 +39,7 @@
     "abitype": "1.0.0",
     "aws-amplify": "^5.3.18",
     "expo-application": "5.8.3",
-    "expo-clipboard": "^4.8.0",
+    "expo-clipboard": "^6.0.3",
     "expo-document-picker": "^11.10.1",
     "expo-file-system": "^16.0.8",
     "expo-secure-store": "^12.8.1",
