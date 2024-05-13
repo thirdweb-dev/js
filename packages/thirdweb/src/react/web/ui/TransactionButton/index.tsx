@@ -8,11 +8,7 @@ import {
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
 import type { TransactionReceipt } from "../../../../transaction/types.js";
 import { stringify } from "../../../../utils/json.js";
-import {
-  useActiveAccount,
-  useActiveWallet,
-  useSwitchActiveWalletChain,
-} from "../../../core/hooks/wallets/wallet-hooks.js";
+import { useActiveAccount } from "../../../core/hooks/wallets/wallet-hooks.js";
 import {
   type SendTransactionPayModalConfig,
   useSendTransaction,
@@ -131,9 +127,7 @@ export function TransactionButton(props: TransactionButtonProps) {
     ...buttonProps
   } = props;
   const account = useActiveAccount();
-  const wallet = useActiveWallet();
   const [isPending, setIsPending] = useState(false);
-  const switchChain = useSwitchActiveWalletChain();
 
   const sendTransaction = useSendTransaction({
     gasless,
@@ -153,11 +147,6 @@ export function TransactionButton(props: TransactionButtonProps) {
         try {
           setIsPending(true);
           const resolvedTx = await transaction();
-
-          if (wallet && wallet.getChain()?.id !== resolvedTx.chain.id) {
-            await switchChain(resolvedTx.chain);
-          }
-
           const result = await sendTransaction.mutateAsync(resolvedTx);
 
           if (onTransactionSent) {

@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.19.1
+
+### Patch Changes
+
+- [#3005](https://github.com/thirdweb-dev/js/pull/3005) [`0006e54`](https://github.com/thirdweb-dev/js/commit/0006e547a4425406101ef85c635b83c5c6186d1d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - - useSendTransaction now switches chain if needed
+  - Fix chain switching with in-app smart accounts
+  - Fix tx simulation for pay modal
+
 ## 5.19.0
 
 ### Minor Changes

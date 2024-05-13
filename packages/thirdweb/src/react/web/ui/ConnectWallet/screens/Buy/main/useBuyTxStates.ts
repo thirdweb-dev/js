@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { toEther } from "../../../../../../../utils/units.js";
+import type { Account } from "../../../../../../../wallets/interfaces/wallet.js";
 import { getTotalTxCostForBuy } from "../../../../../../core/hooks/contract/useSendTransaction.js";
 import { wait } from "../../../../../../core/utils/wait.js";
 import type { BuyForTx } from "./types.js";
@@ -10,8 +11,10 @@ export function useBuyTxStates(options: {
   buyForTx?: BuyForTx;
   hasEditedAmount: boolean;
   isMainScreen: boolean;
+  account?: Account;
 }) {
-  const { buyForTx, hasEditedAmount, isMainScreen, setTokenAmount } = options;
+  const { buyForTx, hasEditedAmount, isMainScreen, setTokenAmount, account } =
+    options;
   const shouldRefreshTokenAmount = !hasEditedAmount && isMainScreen;
   const stopUpdatingAll = !isMainScreen;
 
@@ -35,7 +38,7 @@ export function useBuyTxStates(options: {
       }
 
       try {
-        const totalCost = await getTotalTxCostForBuy(buyForTx.tx);
+        const totalCost = await getTotalTxCostForBuy(buyForTx.tx, account);
 
         if (!mounted) {
           return;
@@ -64,7 +67,13 @@ export function useBuyTxStates(options: {
     return () => {
       mounted = false;
     };
-  }, [buyForTx, shouldRefreshTokenAmount, setTokenAmount, stopUpdatingAll]);
+  }, [
+    buyForTx,
+    shouldRefreshTokenAmount,
+    setTokenAmount,
+    stopUpdatingAll,
+    account,
+  ]);
 
   return {
     amountNeeded,
