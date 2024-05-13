@@ -27,9 +27,9 @@ export const AnnouncementBanner = () => {
       >
         <Box display={{ base: "none", md: "block" }} />
         <TrackedLink
-          href="https://portal.thirdweb.com/typescript/v5"
+          href="https://grtlfwnv13r.typeform.com/to/FTzFOPM2"
           category="announcement"
-          label="sdk-v5-banner"
+          label="chain-request"
         >
           <Container maxW="container.page" display="flex" px={0}>
             <Flex
@@ -46,8 +46,8 @@ export const AnnouncementBanner = () => {
                 color="white"
                 fontWeight={500}
               >
-                Our new Connect SDK v5 is now available. 10x faster, 30x
-                lighter. Get started
+                Don&apos;t see your preferred chain on thirdweb? Request to have
+                any chain added to our full stack web3 development kit.
               </Heading>
               <Icon display={{ base: "none", md: "block" }} as={FiArrowRight} />
             </Flex>
