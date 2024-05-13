@@ -24,12 +24,6 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "icon": {
-    "url": "ipfs://QmX3tsEoj7SdaBLLV8VyyCUAmymdEGiSGeuTbxMrEMVvth",
-    "width": 31,
-    "height": 31,
-    "format": "svg"
-  },
   "infoURL": "https://fusion.org",
   "name": "Fusion Testnet",
   "nativeCurrency": {
