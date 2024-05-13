@@ -114,7 +114,7 @@ export function ConnectButton(props: ConnectButtonProps) {
           size:
             !canFitWideModal() || wallets.length === 1
               ? "compact"
-              : props.connectModal?.size || "wide",
+              : props.connectModal?.size || "compact",
         },
         onConnect: props.onConnect,
         auth: props.auth,
