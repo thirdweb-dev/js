@@ -217,6 +217,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
     buyForTx,
     hasEditedAmount,
     isMainScreen: screen.type === "main",
+    account,
   });
 
   // check if the screen is expanded or not

@@ -389,7 +389,7 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
           wallets: wallets,
           locale: localeId,
           connectLocale: localeQuery.data,
-          chain: props.chain,
+          chain: props.chain || props.accountAbstraction?.chain,
           chains: props.chains,
           walletConnect: props.walletConnect,
           accountAbstraction: props.accountAbstraction,
