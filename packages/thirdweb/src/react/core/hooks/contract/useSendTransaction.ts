@@ -5,6 +5,7 @@ import { sendTransaction } from "../../../../transaction/actions/send-transactio
 import type { WaitForReceiptOptions } from "../../../../transaction/actions/wait-for-tx-receipt.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
 import { resolvePromisedValue } from "../../../../utils/promise/resolve-promised-value.js";
+import type { Account } from "../../../../wallets/interfaces/wallet.js";
 import {
   type GetWalletBalanceResult,
   getWalletBalance,
@@ -105,7 +106,7 @@ export function useSendTransactionCore(
                 chain: tx.chain,
                 client: tx.client,
               }),
-              getTotalTxCostForBuy(tx),
+              getTotalTxCostForBuy(tx, account),
             ]);
 
             const walletBalanceWei = walletBalance.value;
@@ -137,9 +138,13 @@ export function useSendTransactionCore(
   });
 }
 
-export async function getTotalTxCostForBuy(tx: PreparedTransaction) {
+export async function getTotalTxCostForBuy(
+  tx: PreparedTransaction,
+  account?: Account,
+) {
   const gasCost = await estimateGasCost({
     transaction: tx,
+    account,
   });
 
   const bufferCost = gasCost.wei / 10n;
