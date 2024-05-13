@@ -1,5 +1,12 @@
 # @thirdweb-dev/wallets
 
+## 2.5.21
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@4.0.81
+
 ## 2.5.20
 
 ### Patch Changes
