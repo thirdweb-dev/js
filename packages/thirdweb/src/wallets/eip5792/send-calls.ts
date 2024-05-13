@@ -126,12 +126,11 @@ export async function sendCalls<const ID extends WalletId>(
 
   const preparedCalls: EIP5792Call[] = await Promise.all(
     calls.map(async (call) => {
-      console.log("serializing...");
       const serializableTransaction = await toSerializableTransaction({
         transaction: call,
         from: account.address,
       });
-      console.log("serialized!");
+
       const { to, data, value } = serializableTransaction;
       if (to === undefined && data === undefined) {
         throw new Error("Cannot send call, `to` or `data` must be provided.");
