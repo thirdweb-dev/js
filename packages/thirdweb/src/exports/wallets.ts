@@ -107,9 +107,10 @@ export type {
 } from "../wallets/eip5792/get-capabilities.js";
 export { sendCalls } from "../wallets/eip5792/send-calls.js";
 export type {
-  WalletCall,
   SendCallsOptions,
   SendCallsResult,
+  PreparedSendCall,
+  PrepareCallOptions,
 } from "../wallets/eip5792/send-calls.js";
 export { showCallsStatus } from "../wallets/eip5792/show-calls-status.js";
 export type { ShowCallsStatusOptions } from "../wallets/eip5792/show-calls-status.js";

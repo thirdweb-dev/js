@@ -19,10 +19,16 @@ const capabilities = await getCapabilities({ wallet });
 Sends the given calls to the wallet for execution, and attempts to fallback to normal execution if the wallet does not support EIP-5792.
 
 ```ts
+const preparedTx = approve({
+  contract: USDT_CONTRACT,
+  amount: 100,
+  spender: TEST_ACCOUNT_B.address,
+});
+
 const bundleId = await sendCalls({
-   wallet,
-   client,
-   calls: [{ to: ..., value: ... }, { to: ..., value: ... }],
+  wallet,
+  client,
+  calls: [preparedTx],
 });
 ```
 
