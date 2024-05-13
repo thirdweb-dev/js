@@ -95,7 +95,7 @@ test("send transaction", async () => {
     transaction: tx,
   });
   const secondParam = mocks.eth_sendRawTransaction.mock.calls[0][1];
-  expect(secondParam).toBe(
+  expect(secondParam).toEqual(
     "0x02f874827a6980844190ab0084b8c63f008252099470997970c51812dc3a010c7d01b50e0d17dc79c8880de0b6b3a764000080c080a0a50e0cab21b8dfb0873646712cd45f66b06be4330775f98cc3fa07dfb96fb7ada026b9e2ac0b9623a025f677a3e7a58f862395db6b68fdf6975fa9043b6111d09c",
   );
 });
