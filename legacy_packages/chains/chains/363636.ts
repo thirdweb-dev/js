@@ -2,7 +2,13 @@ import type { Chain } from "../src/types";
 export default {
   "chain": "DS2",
   "chainId": 363636,
-  "explorers": [],
+  "explorers": [
+    {
+      "name": "Digit Soul Explorer",
+      "url": "https://dgs-exp.digitsoul.co.th",
+      "standard": "EIP3091"
+    }
+  ],
   "faucets": [],
   "icon": {
     "url": "ipfs://QmRiAUu3xV5uiX6Nk1iXD5w6qjki5ugGFETRVavzJ2h5QF",
