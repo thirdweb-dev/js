@@ -58,7 +58,7 @@
     "graphql": "^16.8.1",
     "idb-keyval": "^6.2.1",
     "lottie-react": "^2.4.0",
-    "next": "^14.2.2",
+    "next": "^14.2.3",
     "next-plausible": "^3.12.0",
     "next-seo": "^6.5.0",
     "papaparse": "^5.4.1",

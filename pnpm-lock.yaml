@@ -42,7 +42,7 @@ dependencies:
     version: 4.1.0(react@18.3.1)
   '@sentry/nextjs':
     specifier: ^7.111.0
-    version: 7.111.0(next@14.2.2)(react@18.3.1)
+    version: 7.111.0(next@14.2.3)(react@18.3.1)
   '@stripe/react-stripe-js':
     specifier: ^2.7.0
     version: 2.7.0(@stripe/stripe-js@3.4.0)(react-dom@18.2.0)(react@18.3.1)
@@ -66,7 +66,7 @@ dependencies:
     version: 0.1.106-nightly-4de88024357cf8197ec78fb4fabaf5bddd47c605-20240509062610
   '@thirdweb-dev/react':
     specifier: 4.6.16-nightly-4de88024357cf8197ec78fb4fabaf5bddd47c605-20240509062610
-    version: 4.6.16-nightly-4de88024357cf8197ec78fb4fabaf5bddd47c605-20240509062610(@babel/core@7.24.4)(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(@thirdweb-dev/sdk@4.0.77-nightly-4de88024357cf8197ec78fb4fabaf5bddd47c605-20240509062610)(@types/react-dom@18.2.25)(@types/react@18.3.1)(ethers@5.7.2)(fastify@4.26.2)(localforage@1.10.0)(next@14.2.2)(react-dom@18.2.0)(react@18.3.1)(typescript@5.4.5)(zksync-ethers@5.7.0)
+    version: 4.6.16-nightly-4de88024357cf8197ec78fb4fabaf5bddd47c605-20240509062610(@babel/core@7.24.4)(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(@thirdweb-dev/sdk@4.0.77-nightly-4de88024357cf8197ec78fb4fabaf5bddd47c605-20240509062610)(@types/react-dom@18.2.25)(@types/react@18.3.1)(ethers@5.7.2)(fastify@4.26.2)(localforage@1.10.0)(next@14.2.3)(react-dom@18.2.0)(react@18.3.1)(typescript@5.4.5)(zksync-ethers@5.7.0)
   '@thirdweb-dev/sdk':
     specifier: 4.0.77-nightly-4de88024357cf8197ec78fb4fabaf5bddd47c605-20240509062610
     version: 4.0.77-nightly-4de88024357cf8197ec78fb4fabaf5bddd47c605-20240509062610(@types/react-dom@18.2.25)(@types/react@18.3.1)(ethers@5.7.2)(react-dom@18.2.0)(react@18.3.1)(typescript@5.4.5)(zksync-ethers@5.7.0)
@@ -119,14 +119,14 @@ dependencies:
     specifier: ^2.4.0
     version: 2.4.0(react-dom@18.2.0)(react@18.3.1)
   next:
-    specifier: ^14.2.2
-    version: 14.2.2(@babel/core@7.24.4)(@playwright/test@1.43.1)(react-dom@18.2.0)(react@18.3.1)
+    specifier: ^14.2.3
+    version: 14.2.3(@babel/core@7.24.4)(@playwright/test@1.43.1)(react-dom@18.2.0)(react@18.3.1)
   next-plausible:
     specifier: ^3.12.0
-    version: 3.12.0(next@14.2.2)(react-dom@18.2.0)(react@18.3.1)
+    version: 3.12.0(next@14.2.3)(react-dom@18.2.0)(react@18.3.1)
   next-seo:
     specifier: ^6.5.0
-    version: 6.5.0(next@14.2.2)(react-dom@18.2.0)(react@18.3.1)
+    version: 6.5.0(next@14.2.3)(react-dom@18.2.0)(react@18.3.1)
   papaparse:
     specifier: ^5.4.1
     version: 5.4.1
@@ -308,7 +308,7 @@ devDependencies:
     version: 5.9.4(@types/node@20.12.7)(typescript@5.4.5)
   next-sitemap:
     specifier: ^4.2.3
-    version: 4.2.3(next@14.2.2)
+    version: 4.2.3(next@14.2.3)
   next-unused:
     specifier: ^0.0.6
     version: 0.0.6
@@ -4097,8 +4097,8 @@ packages:
     resolution: {integrity: sha512-Yac/bV5sBGkkEXmAX5FWPS9Mmo2rthrOPRQQNfycJPkjUAUclomCPH7QFVCDQ4Mp2k2K1SSM6m0zrxYrOwtFQw==}
     dev: true
 
-  /@next/env@14.2.2:
-    resolution: {integrity: sha512-sk72qRfM1Q90XZWYRoJKu/UWlTgihrASiYw/scb15u+tyzcze3bOuJ/UV6TBOQEeUaxOkRqGeuGUdiiuxc5oqw==}
+  /@next/env@14.2.3:
+    resolution: {integrity: sha512-W7fd7IbkfmeeY2gXrzJYDx8D2lWKbVoTIj1o1ScPHNzvp30s1AuoEFSdr39bC5sjxJaxTtq3OTCZboNp0lNWHA==}
 
   /@next/eslint-plugin-next@14.2.2:
     resolution: {integrity: sha512-q+Ec2648JtBpKiu/FSJm8HAsFXlNvioHeBCbTP12T1SGcHYwhqHULSfQgFkPgHDu3kzNp2Kem4J54bK4rPQ5SQ==}
@@ -4106,72 +4106,72 @@ packages:
       glob: 10.3.10
     dev: true
 
-  /@next/swc-darwin-arm64@14.2.2:
-    resolution: {integrity: sha512-3iPgMhzbalizGwHNFUcGnDhFPSgVBHQ8aqSTAMxB5BvJG0oYrDf1WOJZlbXBgunOEj/8KMVbejEur/FpvFsgFQ==}
+  /@next/swc-darwin-arm64@14.2.3:
+    resolution: {integrity: sha512-3pEYo/RaGqPP0YzwnlmPN2puaF2WMLM3apt5jLW2fFdXD9+pqcoTzRk+iZsf8ta7+quAe4Q6Ms0nR0SFGFdS1A==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
     optional: true
 
-  /@next/swc-darwin-x64@14.2.2:
-    resolution: {integrity: sha512-x7Afi/jt0ZBRUZHTi49yyej4o8znfIMHO4RvThuoc0P+uli8Jd99y5GKjxoYunPKsXL09xBXEM1+OQy2xEL0Ag==}
+  /@next/swc-darwin-x64@14.2.3:
+    resolution: {integrity: sha512-6adp7waE6P1TYFSXpY366xwsOnEXM+y1kgRpjSRVI2CBDOcbRjsJ67Z6EgKIqWIue52d2q/Mx8g9MszARj8IEA==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
     optional: true
 
-  /@next/swc-linux-arm64-gnu@14.2.2:
-    resolution: {integrity: sha512-zbfPtkk7L41ODMJwSp5VbmPozPmMMQrzAc0HAUomVeVIIwlDGs/UCqLJvLNDt4jpWgc21SjjyIn762lNGrMaUA==}
+  /@next/swc-linux-arm64-gnu@14.2.3:
+    resolution: {integrity: sha512-cuzCE/1G0ZSnTAHJPUT1rPgQx1w5tzSX7POXSLaS7w2nIUJUD+e25QoXD/hMfxbsT9rslEXugWypJMILBj/QsA==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
     optional: true
 
-  /@next/swc-linux-arm64-musl@14.2.2:
-    resolution: {integrity: sha512-wPbS3pI/JU16rm3XdLvvTmlsmm1nd+sBa2ohXgBZcShX4TgOjD4R+RqHKlI1cjo/jDZKXt6OxmcU0Iys0OC/yg==}
+  /@next/swc-linux-arm64-musl@14.2.3:
+    resolution: {integrity: sha512-0D4/oMM2Y9Ta3nGuCcQN8jjJjmDPYpHX9OJzqk42NZGJocU2MqhBq5tWkJrUQOQY9N+In9xOdymzapM09GeiZw==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
     optional: true
 
-  /@next/swc-linux-x64-gnu@14.2.2:
-    resolution: {integrity: sha512-NqWOHqqq8iC9tuHvZxjQ2tX+jWy2X9y8NX2mcB4sj2bIccuCxbIZrU/ThFPZZPauygajZuVQ6zediejQHwZHwQ==}
+  /@next/swc-linux-x64-gnu@14.2.3:
+    resolution: {integrity: sha512-ENPiNnBNDInBLyUU5ii8PMQh+4XLr4pG51tOp6aJ9xqFQ2iRI6IH0Ds2yJkAzNV1CfyagcyzPfROMViS2wOZ9w==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
     requiresBuild: true
     optional: true
 
-  /@next/swc-linux-x64-musl@14.2.2:
-    resolution: {integrity: sha512-lGepHhwb9sGhCcU7999+iK1ZZT+6rrIoVg40MP7DZski9GIZP80wORSbt5kJzh9v2x2ev2lxC6VgwMQT0PcgTA==}
+  /@next/swc-linux-x64-musl@14.2.3:
+    resolution: {integrity: sha512-BTAbq0LnCbF5MtoM7I/9UeUu/8ZBY0i8SFjUMCbPDOLv+un67e2JgyN4pmgfXBwy/I+RHu8q+k+MCkDN6P9ViQ==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
     requiresBuild: true
     optional: true
 
-  /@next/swc-win32-arm64-msvc@14.2.2:
-    resolution: {integrity: sha512-TZSh/48SfcLEQ4rD25VVn2kdIgUWmMflRX3OiyPwGNXn3NiyPqhqei/BaqCYXViIQ+6QsG9R0C8LftMqy8JPMA==}
+  /@next/swc-win32-arm64-msvc@14.2.3:
+    resolution: {integrity: sha512-AEHIw/dhAMLNFJFJIJIyOFDzrzI5bAjI9J26gbO5xhAKHYTZ9Or04BesFPXiAYXDNdrwTP2dQceYA4dL1geu8A==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [win32]
     requiresBuild: true
     optional: true
 
-  /@next/swc-win32-ia32-msvc@14.2.2:
-    resolution: {integrity: sha512-M0tBVNMEBJN2ZNQWlcekMn6pvLria7Sa2Fai5znm7CCJz4pP3lrvlSxhKdkCerk0D9E0bqx5yAo3o2Q7RrD4gA==}
+  /@next/swc-win32-ia32-msvc@14.2.3:
+    resolution: {integrity: sha512-vga40n1q6aYb0CLrM+eEmisfKCR45ixQYXuBXxOOmmoV8sYST9k7E3US32FsY+CkkF7NtzdcebiFT4CHuMSyZw==}
     engines: {node: '>= 10'}
     cpu: [ia32]
     os: [win32]
     requiresBuild: true
     optional: true
 
-  /@next/swc-win32-x64-msvc@14.2.2:
-    resolution: {integrity: sha512-a/20E/wtTJZ3Ykv3f/8F0l7TtgQa2LWHU2oNB9bsu0VjqGuGGHmm/q6waoUNQYTVPYrrlxxaHjJcDV6aiSTt/w==}
+  /@next/swc-win32-x64-msvc@14.2.3:
+    resolution: {integrity: sha512-Q1/zm43RWynxrO7lW4ehciQVj+5ePBhOK+/K2P7pLFX3JaJ/IZVC69SHidrmZSOkqz7ECIOhhy7XhAFG4JYyHA==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [win32]
@@ -5692,7 +5692,7 @@ packages:
       localforage: 1.10.0
     dev: false
 
-  /@sentry/nextjs@7.111.0(next@14.2.2)(react@18.3.1):
+  /@sentry/nextjs@7.111.0(next@14.2.3)(react@18.3.1):
     resolution: {integrity: sha512-Jvl/m9QoVw8KBG3pEswJH4YLf7W7o34WLcfomge5pKUcwrgWvhiQ7L0yOOQQxDaj0zTBQhnyEHXVdULRyn7nZA==}
     engines: {node: '>=8'}
     peerDependencies:
@@ -5713,7 +5713,7 @@ packages:
       '@sentry/vercel-edge': 7.111.0
       '@sentry/webpack-plugin': 1.21.0
       chalk: 3.0.0
-      next: 14.2.2(@babel/core@7.24.4)(@playwright/test@1.43.1)(react-dom@18.2.0)(react@18.3.1)
+      next: 14.2.3(@babel/core@7.24.4)(@playwright/test@1.43.1)(react-dom@18.2.0)(react@18.3.1)
       react: 18.3.1
       resolve: 1.22.8
       rollup: 2.78.0
@@ -6480,7 +6480,7 @@ packages:
     resolution: {integrity: sha512-75jXqXxqq5M5Veb9KP1STi8kA5u408uOOAefk2ftHDGCpUk3RP6zX++QqfbmHJTBiU72NQ+ghgCZVts/Wocz8Q==}
     dev: false
 
-  /@thirdweb-dev/auth@4.1.75-nightly-4de88024357cf8197ec78fb4fabaf5bddd47c605-20240509062610(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(@types/react-dom@18.2.25)(@types/react@18.3.1)(ethers@5.7.2)(fastify@4.26.2)(localforage@1.10.0)(next@14.2.2)(react-dom@18.2.0)(react@18.3.1)(typescript@5.4.5)(zksync-ethers@5.7.0):
+  /@thirdweb-dev/auth@4.1.75-nightly-4de88024357cf8197ec78fb4fabaf5bddd47c605-20240509062610(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(@types/react-dom@18.2.25)(@types/react@18.3.1)(ethers@5.7.2)(fastify@4.26.2)(localforage@1.10.0)(next@14.2.3)(react-dom@18.2.0)(react@18.3.1)(typescript@5.4.5)(zksync-ethers@5.7.0):
     resolution: {integrity: sha512-JeeDK24HiDuzJSqKkQrXRUOWXWgQgQiyXO7VmZRsIMW364Lj9qKf3LvOH1m7QaS3i1ylALcq+uzTRdc5OkkPyQ==}
     engines: {node: '>=18'}
     peerDependencies:
@@ -6510,7 +6510,7 @@ packages:
       ethers: 5.7.2
       fastify: 4.26.2
       fastify-type-provider-zod: 1.1.9(fastify@4.26.2)(zod@3.23.4)
-      next: 14.2.2(@babel/core@7.24.4)(@playwright/test@1.43.1)(react-dom@18.2.0)(react@18.3.1)
+      next: 14.2.3(@babel/core@7.24.4)(@playwright/test@1.43.1)(react-dom@18.2.0)(react@18.3.1)
       uuid: 9.0.1
       zod: 3.23.4
     transitivePeerDependencies:
@@ -6612,7 +6612,7 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@thirdweb-dev/react-core@4.6.16-nightly-4de88024357cf8197ec78fb4fabaf5bddd47c605-20240509062610(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(@types/react-dom@18.2.25)(@types/react@18.3.1)(ethers@5.7.2)(fastify@4.26.2)(localforage@1.10.0)(next@14.2.2)(react-dom@18.2.0)(react@18.3.1)(typescript@5.4.5)(zksync-ethers@5.7.0):
+  /@thirdweb-dev/react-core@4.6.16-nightly-4de88024357cf8197ec78fb4fabaf5bddd47c605-20240509062610(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(@types/react-dom@18.2.25)(@types/react@18.3.1)(ethers@5.7.2)(fastify@4.26.2)(localforage@1.10.0)(next@14.2.3)(react-dom@18.2.0)(react@18.3.1)(typescript@5.4.5)(zksync-ethers@5.7.0):
     resolution: {integrity: sha512-FDJvweDi4lwlhlsDF07gltPG5Twe7EUxLoOhUAjI4FpQ5YFmJKXH2k5UZMvLlzdqzz3cteUtVf4cvCgfom01kA==}
     engines: {node: '>=18'}
     peerDependencies:
@@ -6620,7 +6620,7 @@ packages:
       react: '>=18.0.0'
     dependencies:
       '@tanstack/react-query': 4.36.1(react-dom@18.2.0)(react@18.3.1)
-      '@thirdweb-dev/auth': 4.1.75-nightly-4de88024357cf8197ec78fb4fabaf5bddd47c605-20240509062610(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(@types/react-dom@18.2.25)(@types/react@18.3.1)(ethers@5.7.2)(fastify@4.26.2)(localforage@1.10.0)(next@14.2.2)(react-dom@18.2.0)(react@18.3.1)(typescript@5.4.5)(zksync-ethers@5.7.0)
+      '@thirdweb-dev/auth': 4.1.75-nightly-4de88024357cf8197ec78fb4fabaf5bddd47c605-20240509062610(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(@types/react-dom@18.2.25)(@types/react@18.3.1)(ethers@5.7.2)(fastify@4.26.2)(localforage@1.10.0)(next@14.2.3)(react-dom@18.2.0)(react@18.3.1)(typescript@5.4.5)(zksync-ethers@5.7.0)
       '@thirdweb-dev/chains': 0.1.106-nightly-4de88024357cf8197ec78fb4fabaf5bddd47c605-20240509062610
       '@thirdweb-dev/generated-abis': 0.0.1
       '@thirdweb-dev/sdk': 4.0.77-nightly-4de88024357cf8197ec78fb4fabaf5bddd47c605-20240509062610(@types/react-dom@18.2.25)(@types/react@18.3.1)(ethers@5.7.2)(react-dom@18.2.0)(react@18.3.1)(typescript@5.4.5)(zksync-ethers@5.7.0)
@@ -6674,7 +6674,7 @@ packages:
       - zksync-ethers
     dev: false
 
-  /@thirdweb-dev/react@4.6.16-nightly-4de88024357cf8197ec78fb4fabaf5bddd47c605-20240509062610(@babel/core@7.24.4)(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(@thirdweb-dev/sdk@4.0.77-nightly-4de88024357cf8197ec78fb4fabaf5bddd47c605-20240509062610)(@types/react-dom@18.2.25)(@types/react@18.3.1)(ethers@5.7.2)(fastify@4.26.2)(localforage@1.10.0)(next@14.2.2)(react-dom@18.2.0)(react@18.3.1)(typescript@5.4.5)(zksync-ethers@5.7.0):
+  /@thirdweb-dev/react@4.6.16-nightly-4de88024357cf8197ec78fb4fabaf5bddd47c605-20240509062610(@babel/core@7.24.4)(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(@thirdweb-dev/sdk@4.0.77-nightly-4de88024357cf8197ec78fb4fabaf5bddd47c605-20240509062610)(@types/react-dom@18.2.25)(@types/react@18.3.1)(ethers@5.7.2)(fastify@4.26.2)(localforage@1.10.0)(next@14.2.3)(react-dom@18.2.0)(react@18.3.1)(typescript@5.4.5)(zksync-ethers@5.7.0):
     resolution: {integrity: sha512-41yoiektxbWyHQ2p76IDZSCYZgf9BKjrzQQ2N2V962VGAOLttqf6iVZ7n3GeQwy51FxfgjsO4cYbULRGT+HH6Q==}
     engines: {node: '>=18'}
     peerDependencies:
@@ -6698,7 +6698,7 @@ packages:
       '@tanstack/react-query': 4.36.1(react-dom@18.2.0)(react@18.3.1)
       '@thirdweb-dev/chains': 0.1.106-nightly-4de88024357cf8197ec78fb4fabaf5bddd47c605-20240509062610
       '@thirdweb-dev/payments': 1.0.4
-      '@thirdweb-dev/react-core': 4.6.16-nightly-4de88024357cf8197ec78fb4fabaf5bddd47c605-20240509062610(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(@types/react-dom@18.2.25)(@types/react@18.3.1)(ethers@5.7.2)(fastify@4.26.2)(localforage@1.10.0)(next@14.2.2)(react-dom@18.2.0)(react@18.3.1)(typescript@5.4.5)(zksync-ethers@5.7.0)
+      '@thirdweb-dev/react-core': 4.6.16-nightly-4de88024357cf8197ec78fb4fabaf5bddd47c605-20240509062610(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(@types/react-dom@18.2.25)(@types/react@18.3.1)(ethers@5.7.2)(fastify@4.26.2)(localforage@1.10.0)(next@14.2.3)(react-dom@18.2.0)(react@18.3.1)(typescript@5.4.5)(zksync-ethers@5.7.0)
       '@thirdweb-dev/sdk': 4.0.77-nightly-4de88024357cf8197ec78fb4fabaf5bddd47c605-20240509062610(@types/react-dom@18.2.25)(@types/react@18.3.1)(ethers@5.7.2)(react-dom@18.2.0)(react@18.3.1)(typescript@5.4.5)(zksync-ethers@5.7.0)
       '@thirdweb-dev/wallets': 2.5.17-nightly-4de88024357cf8197ec78fb4fabaf5bddd47c605-20240509062610(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(@types/react-dom@18.2.25)(@types/react@18.3.1)(ethers@5.7.2)(localforage@1.10.0)(react-dom@18.2.0)(react@18.3.1)(typescript@5.4.5)(zksync-ethers@5.7.0)
       buffer: 6.0.3
@@ -8090,7 +8090,7 @@ packages:
     resolution: {integrity: sha512-NMeMah//6bJ56H5XRj8QCV4AwuW6hB6zqz2LnhhLdcWVQOsXki6/Pn3APeqxCma62nXIcmZWdu1DlHWS74umVQ==}
     peerDependencies:
       typescript: '>=5.0.4'
-      zod: ^3 >=3.22.0
+      zod: ^3.19.1
     peerDependenciesMeta:
       typescript:
         optional: true
@@ -11293,7 +11293,7 @@ packages:
     resolution: {integrity: sha512-Ztnu1ZWJEKJouZvdTyfgjuVqS+A4JLoCbWBvFqFhfnrg6YQvEvW+5cJvP98kNbuV5gjfpWmHSOTi3BpkidJPQg==}
     peerDependencies:
       fastify: ^4.0.0
-      zod: ^3.14.2
+      zod: ^3.19.1
     dependencies:
       fastify: 4.26.2
       zod: 3.23.4
@@ -14373,31 +14373,31 @@ packages:
       through2: 4.0.2
     dev: true
 
-  /next-plausible@3.12.0(next@14.2.2)(react-dom@18.2.0)(react@18.3.1):
+  /next-plausible@3.12.0(next@14.2.3)(react-dom@18.2.0)(react@18.3.1):
     resolution: {integrity: sha512-SSkEqKQ6PgR8fx3sYfIAT69k2xuCUXO5ngkSS19CjxY97lAoZxsfZpYednxB4zo0mHYv87JzhPynrdBPlCBVHg==}
     peerDependencies:
       next: ^11.1.0 || ^12.0.0 || ^13.0.0 || ^14.0.0
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
-      next: 14.2.2(@babel/core@7.24.4)(@playwright/test@1.43.1)(react-dom@18.2.0)(react@18.3.1)
+      next: 14.2.3(@babel/core@7.24.4)(@playwright/test@1.43.1)(react-dom@18.2.0)(react@18.3.1)
       react: 18.3.1
       react-dom: 18.2.0(react@18.3.1)
     dev: false
 
-  /next-seo@6.5.0(next@14.2.2)(react-dom@18.2.0)(react@18.3.1):
+  /next-seo@6.5.0(next@14.2.3)(react-dom@18.2.0)(react@18.3.1):
     resolution: {integrity: sha512-MfzUeWTN/x/rsKp/1n0213eojO97lIl0unxqbeCY+6pAucViHDA8GSLRRcXpgjsSmBxfCFdfpu7LXbt4ANQoNQ==}
     peerDependencies:
       next: ^8.1.1-canary.54 || >=9.0.0
       react: '>=16.0.0'
       react-dom: '>=16.0.0'
     dependencies:
-      next: 14.2.2(@babel/core@7.24.4)(@playwright/test@1.43.1)(react-dom@18.2.0)(react@18.3.1)
+      next: 14.2.3(@babel/core@7.24.4)(@playwright/test@1.43.1)(react-dom@18.2.0)(react@18.3.1)
       react: 18.3.1
       react-dom: 18.2.0(react@18.3.1)
     dev: false
 
-  /next-sitemap@4.2.3(next@14.2.2):
+  /next-sitemap@4.2.3(next@14.2.3):
     resolution: {integrity: sha512-vjdCxeDuWDzldhCnyFCQipw5bfpl4HmZA7uoo3GAaYGjGgfL4Cxb1CiztPuWGmS+auYs7/8OekRS8C2cjdAsjQ==}
     engines: {node: '>=14.18'}
     hasBin: true
@@ -14408,7 +14408,7 @@ packages:
       '@next/env': 13.5.6
       fast-glob: 3.3.2
       minimist: 1.2.8
-      next: 14.2.2(@babel/core@7.24.4)(@playwright/test@1.43.1)(react-dom@18.2.0)(react@18.3.1)
+      next: 14.2.3(@babel/core@7.24.4)(@playwright/test@1.43.1)(react-dom@18.2.0)(react@18.3.1)
     dev: true
 
   /next-tick@1.1.0:
@@ -14426,8 +14426,8 @@ packages:
       - supports-color
     dev: true
 
-  /next@14.2.2(@babel/core@7.24.4)(@playwright/test@1.43.1)(react-dom@18.2.0)(react@18.3.1):
-    resolution: {integrity: sha512-oGwUaa2bCs47FbuxWMpOoXtBMPYpvTPgdZr3UAo+pu7Ns00z9otmYpoeV1HEiYL06AlRQQIA/ypK526KjJfaxg==}
+  /next@14.2.3(@babel/core@7.24.4)(@playwright/test@1.43.1)(react-dom@18.2.0)(react@18.3.1):
+    resolution: {integrity: sha512-dowFkFTR8v79NPJO4QsBUtxv0g9BrS/phluVpMAt2ku7H+cbcBJlopXjkWlwxrk/xGqMemr7JkGPGemPrLLX7A==}
     engines: {node: '>=18.17.0'}
     hasBin: true
     peerDependencies:
@@ -14444,7 +14444,7 @@ packages:
       sass:
         optional: true
     dependencies:
-      '@next/env': 14.2.2
+      '@next/env': 14.2.3
       '@playwright/test': 1.43.1
       '@swc/helpers': 0.5.5
       busboy: 1.6.0
@@ -14455,15 +14455,15 @@ packages:
       react-dom: 18.2.0(react@18.3.1)
       styled-jsx: 5.1.1(@babel/core@7.24.4)(react@18.3.1)
     optionalDependencies:
-      '@next/swc-darwin-arm64': 14.2.2
-      '@next/swc-darwin-x64': 14.2.2
-      '@next/swc-linux-arm64-gnu': 14.2.2
-      '@next/swc-linux-arm64-musl': 14.2.2
-      '@next/swc-linux-x64-gnu': 14.2.2
-      '@next/swc-linux-x64-musl': 14.2.2
-      '@next/swc-win32-arm64-msvc': 14.2.2
-      '@next/swc-win32-ia32-msvc': 14.2.2
-      '@next/swc-win32-x64-msvc': 14.2.2
+      '@next/swc-darwin-arm64': 14.2.3
+      '@next/swc-darwin-x64': 14.2.3
+      '@next/swc-linux-arm64-gnu': 14.2.3
+      '@next/swc-linux-arm64-musl': 14.2.3
+      '@next/swc-linux-x64-gnu': 14.2.3
+      '@next/swc-linux-x64-musl': 14.2.3
+      '@next/swc-win32-arm64-msvc': 14.2.3
+      '@next/swc-win32-ia32-msvc': 14.2.3
+      '@next/swc-win32-x64-msvc': 14.2.3
     transitivePeerDependencies:
       - '@babel/core'
       - babel-plugin-macros
@@ -19228,7 +19228,7 @@ packages:
   /zod-to-json-schema@3.22.5(zod@3.23.4):
     resolution: {integrity: sha512-+akaPo6a0zpVCCseDed504KBJUQpEW5QZw7RMneNmKw+fGaML1Z9tUNLnHHAC8x6dzVRO1eB2oEMyZRnuBZg7Q==}
     peerDependencies:
-      zod: ^3.22.4
+      zod: ^3.19.1
     dependencies:
       zod: 3.23.4
     dev: false
@@ -19237,7 +19237,7 @@ packages:
     resolution: {integrity: sha512-zujS6HqJjMZCsvjfbnRs7WI3PXN39ovTcY1n8a+KTm4kOH0ZXYsNiJkH1odZf4xZKMkBDL7M2rmQ913FCS1p9w==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
-      zod: ^3.18.0
+      zod: ^3.19.1
     dependencies:
       zod: 3.23.4
     dev: true
