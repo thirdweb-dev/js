@@ -32,14 +32,6 @@ export type InAppWalletCreationOptions =
       auth?: {
         options: InAppWalletAuth[];
       };
-      metadata?: {
-        image?: {
-          src: string;
-          width: number;
-          height: number;
-          alt?: string;
-        };
-      };
       smartAccount?: SmartWalletOptions;
     }
   | undefined;

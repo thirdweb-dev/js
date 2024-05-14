@@ -1,4 +1,4 @@
-import { expect, test, vi } from "vitest";
+import { expect, test } from "vitest";
 
 import { TEST_CLIENT } from "~test/test-clients.js";
 import { ANVIL_PKEY_A } from "~test/test-wallets.js";
