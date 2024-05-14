@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Wallet } from "../../../../exports/wallets.js";
 import { hasStoredPasskey } from "../../../../wallets/in-app/implementations/lib/auth/passkeys.js";
@@ -12,6 +13,7 @@ import { Button } from "../../ui/components/buttons.js";
 import { Text } from "../../ui/components/text.js";
 import { iconSize } from "../../ui/design-system/index.js";
 import { LoadingScreen } from "../shared/LoadingScreen.js";
+import { setLastAuthProvider } from "./storage.js";
 
 // is passkey stored?
 // - login
@@ -23,7 +25,7 @@ export function InAppWalletPassKeyLogin(props: {
   done: () => void;
   onBack?: () => void;
 }) {
-  const { client, connectModal } = useConnectUI();
+  const { client, connectModal, chain } = useConnectUI();
   const { wallet, done } = props;
   const [screen, setScreen] = useState<
     "select" | "login" | "loading" | "signup"
@@ -88,11 +90,17 @@ export function InAppWalletPassKeyLogin(props: {
               onCreate={() => {
                 setScreen("signup");
               }}
+              chain={chain}
             />
           )}
 
           {screen === "signup" && (
-            <SignupScreen wallet={wallet} client={client} done={done} />
+            <SignupScreen
+              wallet={wallet}
+              client={client}
+              done={done}
+              chain={chain}
+            />
           )}
         </div>
       </Container>
@@ -105,8 +113,9 @@ function LoginScreen(props: {
   done: () => void;
   client: ThirdwebClient;
   onCreate: () => void;
+  chain?: Chain;
 }) {
-  const { wallet, done, client } = props;
+  const { wallet, done, client, chain } = props;
   const [status, setStatus] = useState<"loading" | "error">("loading");
 
   async function login() {
@@ -116,7 +125,9 @@ function LoginScreen(props: {
         client: client,
         strategy: "passkey",
         type: "sign-in",
+        chain,
       });
+      await setLastAuthProvider("passkey");
       done();
     } catch {
       setStatus("error");
@@ -162,8 +173,9 @@ function SignupScreen(props: {
   wallet: Wallet<"inApp">;
   done: () => void;
   client: ThirdwebClient;
+  chain?: Chain;
 }) {
-  const { wallet, done, client } = props;
+  const { wallet, done, client, chain } = props;
   const [status, setStatus] = useState<"loading" | "error">("loading");
 
   async function signup() {
@@ -173,7 +185,9 @@ function SignupScreen(props: {
         client: client,
         strategy: "passkey",
         type: "sign-up",
+        chain,
       });
+      await setLastAuthProvider("passkey");
       done();
     } catch {
       setStatus("error");

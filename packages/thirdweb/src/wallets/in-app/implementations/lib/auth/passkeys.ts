@@ -40,7 +40,7 @@ export async function registerPasskey(options: {
   const challenge = challengeData.challenge;
   // 2. initiate registration
   const registration = await client.register(generatedName, challenge, {
-    authenticatorType: options.authenticatorType ?? "roaming",
+    authenticatorType: options.authenticatorType ?? "auto",
     userVerification: "required",
     attestation: true,
     debug: false,
@@ -98,7 +98,7 @@ export async function loginWithPasskey(options: {
   const credentials = credentialId ? [credentialId] : [];
   // 2. initiate login
   const authentication = await client.authenticate(credentials, challenge, {
-    authenticatorType: options.authenticatorType ?? "roaming",
+    authenticatorType: options.authenticatorType ?? "auto",
     userVerification: "required",
   });
   // 3. send the authentication object to the server/iframe

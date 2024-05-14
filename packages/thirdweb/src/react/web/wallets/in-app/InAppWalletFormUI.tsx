@@ -1,6 +1,6 @@
 "use client";
 import styled from "@emotion/styled";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import type {
   InAppWalletAuth,
   InAppWalletSocialAuth,
@@ -11,6 +11,12 @@ import { useSetSelectionData } from "../../providers/wallet-ui-states-provider.j
 import { TOS } from "../../ui/ConnectWallet/Modal/TOS.js";
 import { useScreenContext } from "../../ui/ConnectWallet/Modal/screen.js";
 import { PoweredByThirdweb } from "../../ui/ConnectWallet/PoweredByTW.js";
+import { WalletTypeRowButton } from "../../ui/ConnectWallet/WalletTypeRowButton.js";
+import {
+  emailIcon,
+  passkeyIcon,
+  phoneIcon,
+} from "../../ui/ConnectWallet/icons/dataUris.js";
 import { Img } from "../../ui/components/Img.js";
 import { Spacer } from "../../ui/components/Spacer.js";
 import { TextDivider } from "../../ui/components/TextDivider.js";
@@ -19,7 +25,6 @@ import { Button } from "../../ui/components/buttons.js";
 import { useCustomTheme } from "../../ui/design-system/CustomThemeProvider.js";
 import { fontSize, iconSize, spacing } from "../../ui/design-system/index.js";
 import { InputSelectionUI } from "./InputSelectionUI.js";
-import { LinkButton } from "./LinkButton.js";
 import type { InAppWalletLocale } from "./locale/types.js";
 import { openOauthSignInWindow } from "./openOauthSignInWindow.js";
 import { socialIcons } from "./socialIcons.js";
@@ -97,14 +102,6 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
     type = "tel";
   }
 
-  const switchInputModeText =
-    inputMode === "email" ? locale.signInWithPhone : locale.signInWithEmail;
-
-  const switchInputMode = useCallback(() => {
-    setInputMode((prev) => (prev === "email" ? "phone" : "email"));
-  }, []);
-  const allowSwitchInputMode = isEmailEnabled && isPhoneEnabled;
-
   const socialLogins = authOptions.filter(
     (x) => x === "google" || x === "apple" || x === "facebook",
   ) as InAppWalletSocialAuth[];
@@ -158,7 +155,7 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
   return (
     <Container
       flex="column"
-      gap="lg"
+      gap="md"
       style={{
         position: "relative",
       }}
@@ -180,7 +177,7 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
                 aria-label={`Login with ${loginMethod}`}
                 data-variant={showOnlyIcons ? "icon" : "full"}
                 key={loginMethod}
-                variant={showOnlyIcons ? "outline" : "secondary"}
+                variant={"outline"}
                 fullWidth={!showOnlyIcons}
                 onClick={() => {
                   handleSocialLogin(loginMethod);
@@ -203,83 +200,95 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
         hasSocialLogins &&
         (isEmailEnabled || isPhoneEnabled) && <TextDivider text={locale.or} />}
 
-      <div>
-        {/* Email/Phone Login */}
-        {inputMode !== "none" && (
-          <Container>
-            {inputMode === "email" ? (
-              <InputSelectionUI
-                type={type}
-                onSelect={(value) => {
-                  setData({ emailLogin: value });
-                  props.select();
-                }}
-                placeholder={placeholder}
-                name="email"
-                errorMessage={(input) => {
-                  const isValidEmail = validateEmail(input.toLowerCase());
-                  if (!isValidEmail) {
-                    return locale.invalidEmail;
-                  }
-                  return undefined;
-                }}
-                emptyErrorMessage={emptyErrorMessage}
-                submitButtonText={locale.submitEmail}
-              />
-            ) : (
-              <InputSelectionUI
-                format="phone"
-                type={type}
-                onSelect={(value) => {
-                  // removes white spaces and special characters
-                  setData({ phoneLogin: value.replace(/[-\(\) ]/g, "") });
-                  props.select();
-                }}
-                placeholder={placeholder}
-                name="phone"
-                errorMessage={(_input) => {
-                  // removes white spaces and special characters
-                  const input = _input.replace(/[-\(\) ]/g, "");
-                  const isPhone = /^[0-9]+$/.test(input);
-
-                  if (!isPhone && isPhoneEnabled) {
-                    return locale.invalidPhone;
-                  }
-
-                  return undefined;
-                }}
-                emptyErrorMessage={emptyErrorMessage}
-                submitButtonText={locale.submitEmail}
-              />
-            )}
-            {allowSwitchInputMode && (
-              <>
-                <Spacer y="md" />
-                <LinkButton onClick={switchInputMode} type="button">
-                  {switchInputModeText}
-                </LinkButton>
-              </>
-            )}
-          </Container>
-        )}
-
-        {passKeyEnabled && (
-          <>
-            <Spacer y="lg" />
-            <Button
-              onClick={handlePassKeyLogin}
-              fullWidth
-              variant="outline"
-              style={{
-                textAlign: "center",
-                fontSize: fontSize.sm,
+      {/* Email/Phone Login */}
+      {isEmailEnabled && (
+        <>
+          {inputMode === "email" ? (
+            <InputSelectionUI
+              type={type}
+              onSelect={(value) => {
+                setData({ emailLogin: value });
+                props.select();
               }}
-            >
-              Sign in with passkey
-            </Button>
-          </>
-        )}
-      </div>
+              placeholder={placeholder}
+              name="email"
+              errorMessage={(input) => {
+                const isValidEmail = validateEmail(input.toLowerCase());
+                if (!isValidEmail) {
+                  return locale.invalidEmail;
+                }
+                return undefined;
+              }}
+              emptyErrorMessage={emptyErrorMessage}
+              submitButtonText={locale.submitEmail}
+            />
+          ) : (
+            <WalletTypeRowButton
+              client={client}
+              icon={emailIcon}
+              onClick={() => {
+                setInputMode("email");
+              }}
+              // TODO locale
+              title={"Email address"}
+            />
+          )}
+        </>
+      )}
+      {isPhoneEnabled && (
+        <>
+          {inputMode === "phone" ? (
+            <InputSelectionUI
+              format="phone"
+              type={type}
+              onSelect={(value) => {
+                // removes white spaces and special characters
+                setData({ phoneLogin: value.replace(/[-\(\) ]/g, "") });
+                props.select();
+              }}
+              placeholder={placeholder}
+              name="phone"
+              errorMessage={(_input) => {
+                // removes white spaces and special characters
+                const input = _input.replace(/[-\(\) ]/g, "");
+                const isPhone = /^[0-9]+$/.test(input);
+
+                if (!isPhone && isPhoneEnabled) {
+                  return locale.invalidPhone;
+                }
+
+                return undefined;
+              }}
+              emptyErrorMessage={emptyErrorMessage}
+              submitButtonText={locale.submitEmail}
+            />
+          ) : (
+            <WalletTypeRowButton
+              client={client}
+              icon={phoneIcon}
+              onClick={() => {
+                setInputMode("phone");
+              }}
+              // TODO locale
+              title={"Phone number"}
+            />
+          )}
+        </>
+      )}
+
+      {passKeyEnabled && (
+        <>
+          <WalletTypeRowButton
+            client={client}
+            icon={passkeyIcon}
+            onClick={() => {
+              handlePassKeyLogin();
+            }}
+            // TODO locale
+            title="Passkey"
+          />
+        </>
+      )}
     </Container>
   );
 };
@@ -293,6 +302,11 @@ export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
   const isCompact = connectModal.size === "compact";
   const { initialScreen, screen } = useScreenContext();
 
+  const onBack =
+    screen === props.wallet && initialScreen === props.wallet
+      ? undefined
+      : props.goBack;
+
   return (
     <Container
       fullHeight
@@ -303,15 +317,12 @@ export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
         minHeight: "250px",
       }}
     >
-      <ModalHeader
-        onBack={
-          screen === props.wallet && initialScreen === props.wallet
-            ? undefined
-            : props.goBack
-        }
-        title={locale.title}
-      />
-      {isCompact ? <Spacer y="xl" /> : null}
+      {isCompact ? (
+        <>
+          <ModalHeader onBack={onBack} title={locale.title} />
+          <Spacer y="xl" />
+        </>
+      ) : null}
 
       <Container
         expand
@@ -342,9 +353,11 @@ export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
 const SocialButton = /* @__PURE__ */ styled(Button)({
   "&[data-variant='full']": {
     display: "flex",
-    justifyContent: "center",
+    justifyContent: "flex-start",
+    padding: spacing.md,
     gap: spacing.md,
     fontSize: fontSize.md,
+    fontWeight: 500,
     transition: "background-color 0.2s ease",
     "&:active": {
       boxShadow: "none",
