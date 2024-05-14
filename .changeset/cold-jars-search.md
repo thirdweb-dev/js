@@ -9,18 +9,10 @@ Updated Connect Modal UI + Passkey support
 
 ```ts
 const wallet = inAppWallet();
-let type;
-if(hasStoredPasskey(client)) {
-  // sign in with las used passkey
-  type = "sign-in";
-} else {
-  // sign-up with new passkey
-  type = "sign-up";
-}
-
+const hasPasskey = await hasStoredPasskey(client);
 await wallet.connect({
     client,
     strategy: "passkey",
-    type,
+    type: hasPasskey ? "sign-in" : "sign-up",
 });
 ```
