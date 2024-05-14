@@ -105,37 +105,37 @@ describe("Edition sig minting", async () => {
       );
     });
 
-    // it("should generate a valid batch of signatures", async () => {
-    //   const input = [
-    //     {
-    //       ...meta,
-    //       metadata: {
-    //         name: "OUCH VOUCH 0",
-    //       },
-    //     },
-    //     {
-    //       ...meta,
-    //       metadata: {
-    //         name: "OUCH VOUCH 1",
-    //       },
-    //     },
-    //     {
-    //       ...meta,
-    //       metadata: {
-    //         name: "OUCH VOUCH 2",
-    //       },
-    //     },
-    //   ];
-    //   const batch = await editionContract.signature.generateBatch(input);
+    it("should generate a valid batch of signatures", async () => {
+      const input = [
+        {
+          ...meta,
+          metadata: {
+            name: "OUCH VOUCH 0",
+          },
+        },
+        {
+          ...meta,
+          metadata: {
+            name: "OUCH VOUCH 1",
+          },
+        },
+        {
+          ...meta,
+          metadata: {
+            name: "OUCH VOUCH 2",
+          },
+        },
+      ];
+      const batch = await editionContract.signature.generateBatch(input);
 
-    //   for (let i = 0; i < batch.length; i++) {
-    //     const entry = batch[i];
-    //     const tx = await editionContract.signature.mint(entry);
-    //     const mintedId = (await editionContract.get(tx.id)).metadata.id;
-    //     const nft = await editionContract.get(mintedId);
-    //     assert.equal(input[i].metadata.name, nft.metadata.name);
-    //   }
-    // });
+      for (let i = 0; i < batch.length; i++) {
+        const entry = batch[i];
+        const tx = await editionContract.signature.mint(entry);
+        const mintedId = (await editionContract.get(tx.id)).metadata.id;
+        const nft = await editionContract.get(mintedId);
+        assert.equal(input[i].metadata.name, nft.metadata.name);
+      }
+    });
   });
 
   describe("Claiming", async () => {
