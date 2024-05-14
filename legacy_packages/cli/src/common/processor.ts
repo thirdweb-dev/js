@@ -115,10 +115,24 @@ export async function processProject(
       if (
         compiledResult.contracts.length !== zkCompiledResult.contracts.length
       ) {
-        logger.error(
-          "Length mismatch: zksolc and solc compiled contracts differ.",
+        // Extract common filenames from both contract lists
+        const solcFileNames = new Set(
+          compiledResult.contracts.map((c) => c.fileName),
         );
-        process.exit(1);
+        const zkFileNames = new Set(
+          zkCompiledResult.contracts.map((c) => c.fileName),
+        );
+        const commonFileNames = new Set(
+          [...solcFileNames].filter((name) => zkFileNames.has(name)),
+        );
+
+        // Include only those contracts with filenames in the common set above
+        compiledResult.contracts = compiledResult.contracts.filter((c) =>
+          commonFileNames.has(c.fileName),
+        );
+        zkCompiledResult.contracts = zkCompiledResult.contracts.filter((c) =>
+          commonFileNames.has(c.fileName),
+        );
       }
     } else {
       zkCompiledResult = { contracts: [] };
