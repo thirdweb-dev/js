@@ -106,7 +106,6 @@ export async function zkDeployContractFromUri(
       storage,
       options?.compilerOptions,
     );
-
   let deterministicDeployment = false;
   if (options?.compilerOptions && extendedMetadata?.compilers) {
     if (options.compilerOptions.compilerType !== "zksolc") {
@@ -147,15 +146,19 @@ export async function zkDeployContractFromUri(
           `implementationInitializerFunction not set'`,
         );
 
-        implementationAddress = await zkDeployViaAutoFactory(
-          { compilerMetadata, extendedMetadata },
-          signer,
-          storage,
-          options,
-          clientId,
-          secretKey,
-        );
-      } else {
+        try {
+          implementationAddress = await zkDeployViaAutoFactory(
+            { compilerMetadata, extendedMetadata },
+            signer,
+            storage,
+            options,
+            clientId,
+            secretKey,
+          );
+        } catch (e) {}
+      }
+
+      if (!implementationAddress) {
         implementationAddress = getImplementation(
           chainId,
           compilerMetadata.name,
