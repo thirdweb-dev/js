@@ -48,9 +48,8 @@ function NativeTokenSymbol(props: {
   inline?: boolean;
 }) {
   const chainQuery = useChainQuery(props.chain);
-  const data = chainQuery.data;
 
-  if (!data) {
+  if (!chainQuery.isFetched) {
     return <Skeleton width="70px" height={fontSize[props.size]} />;
   }
 
@@ -60,7 +59,7 @@ function NativeTokenSymbol(props: {
       color={props.color || "primaryText"}
       inline={props.inline}
     >
-      {data.nativeCurrency.symbol}
+      {chainQuery.data?.nativeCurrency.symbol ?? "ETH"}
     </Text>
   );
 }

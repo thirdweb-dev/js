@@ -14,6 +14,8 @@ export const HEADLESS_GOOGLE_OAUTH_ROUTE =
  */
 export const BASE_IN_APP_WALLET_URL = "embedded-wallet.thirdweb.com";
 
+// STORAGE
+
 /**
  * @internal
  */
@@ -36,6 +38,13 @@ const AUTH_TOKEN_LOCAL_STORAGE_PREFIX = "walletToken";
  */
 export const AUTH_TOKEN_LOCAL_STORAGE_NAME = (clientId: string) => {
   return `${AUTH_TOKEN_LOCAL_STORAGE_PREFIX}-${clientId}`;
+};
+
+/**
+ * @internal
+ */
+export const PASSKEY_CREDENTIAL_ID_LOCAL_STORAGE_NAME = (clientId: string) => {
+  return `passkey-credential-id-${clientId}`;
 };
 
 /**

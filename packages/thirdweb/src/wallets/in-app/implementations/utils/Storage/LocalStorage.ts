@@ -1,6 +1,7 @@
 import {
   AUTH_TOKEN_LOCAL_STORAGE_NAME,
   DEVICE_SHARE_LOCAL_STORAGE_NAME,
+  PASSKEY_CREDENTIAL_ID_LOCAL_STORAGE_NAME,
   WALLET_USER_ID_LOCAL_STORAGE_NAME,
 } from "../../constants/settings.js";
 
@@ -41,6 +42,25 @@ export class LocalStorage {
       return true;
     }
     return false;
+  }
+
+  /**
+   * @internal
+   */
+  async savePasskeyCredentialId(id: string): Promise<void> {
+    await this.setItem(
+      PASSKEY_CREDENTIAL_ID_LOCAL_STORAGE_NAME(this.clientId),
+      id,
+    );
+  }
+
+  /**
+   * @internal
+   */
+  async getPasskeyCredentialId(): Promise<string | null> {
+    return this.getItem(
+      PASSKEY_CREDENTIAL_ID_LOCAL_STORAGE_NAME(this.clientId),
+    );
   }
 
   /**
