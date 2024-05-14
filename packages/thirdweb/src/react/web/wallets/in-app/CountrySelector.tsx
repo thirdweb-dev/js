@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useRef } from "react";
 import { useCustomTheme } from "../../ui/design-system/CustomThemeProvider.js";
 import { StyledOption, StyledSelect } from "../../ui/design-system/elements.js";
-import { fontSize, spacing } from "../../ui/design-system/index.js";
+import { fontSize, radius, spacing } from "../../ui/design-system/index.js";
 
 export function CountrySelector({
   countryCode,
@@ -41,6 +41,10 @@ export function CountrySelector({
         value={countryCode}
         onChange={(e) => {
           setCountryCode(e.target.value);
+        }}
+        style={{
+          paddingLeft: spacing.md,
+          paddingRight: "0",
         }}
       >
         <Option
@@ -87,7 +91,7 @@ const Select = /* @__PURE__ */ StyledSelect(() => {
     boxSizing: "border-box",
     outline: "none",
     border: "none",
-    borderRadius: "6px",
+    borderRadius: radius.lg,
     color: theme.colors.primaryText,
     WebkitAppearance: "none",
     appearance: "none",
@@ -95,10 +99,6 @@ const Select = /* @__PURE__ */ StyledSelect(() => {
     background: "transparent",
     "&::placeholder": {
       color: theme.colors.secondaryText,
-    },
-    boxShadow: `0 0 0 1.5px ${theme.colors.borderColor}`,
-    "&:focus, &:hover": {
-      boxShadow: `0 0 0 2px ${theme.colors.accentText}`,
     },
     "&[disabled]": {
       cursor: "not-allowed",

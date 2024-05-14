@@ -1,3 +1,4 @@
+import type { AuthType } from "@passwordless-id/webauthn/dist/esm/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 
 export type MultiStepAuthProviderType =
@@ -36,7 +37,13 @@ export type SingleStepAuthArgsType =
   | { strategy: "jwt"; jwt: string; encryptionKey: string }
   | { strategy: "auth_endpoint"; payload: string; encryptionKey: string }
   | { strategy: "iframe_email_verification"; email: string }
-  | { strategy: "iframe" };
+  | { strategy: "iframe" }
+  | {
+      strategy: "passkey";
+      type: "sign-up" | "sign-in";
+      passkeyName?: string;
+      authenticatorType?: AuthType;
+    };
 
 export type AuthArgsType = (MultiStepAuthArgsType | SingleStepAuthArgsType) & {
   client: ThirdwebClient;

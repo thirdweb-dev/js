@@ -1,9 +1,14 @@
 "use client";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
-import { useSelectionData } from "../../providers/wallet-ui-states-provider.js";
+import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import {
+  useSelectionData,
+  useSetSelectionData,
+} from "../../providers/wallet-ui-states-provider.js";
 import { LoadingScreen } from "../shared/LoadingScreen.js";
 import { InAppWalletFormUIScreen } from "./InAppWalletFormUI.js";
 import { InAppWalletOTPLoginUI } from "./InAppWalletOTPLoginUI.js";
+import { InAppWalletPassKeyLogin } from "./InAppWalletPassKeyLogin.js";
 import { InAppWalletSocialLogin } from "./InAppWalletSocialLogin.js";
 import type { InAppWalletSelectUIState } from "./types.js";
 import { useInAppWalletLocale } from "./useInAppWalletLocale.js";
@@ -18,12 +23,21 @@ function InAppWalletConnectUI(props: {
   goBack?: () => void;
 }) {
   const data = useSelectionData();
+  const setSelectionData = useSetSelectionData();
   const state = data as InAppWalletSelectUIState;
   const locale = useInAppWalletLocale();
+  const { connectModal } = useConnectUI();
 
   if (!locale) {
     return <LoadingScreen />;
   }
+
+  const goBackToMain =
+    connectModal.size === "compact"
+      ? props.goBack
+      : () => {
+          setSelectionData({});
+        };
 
   const otpUserInfo = state?.emailLogin
     ? { email: state.emailLogin }
@@ -37,8 +51,18 @@ function InAppWalletConnectUI(props: {
         userInfo={otpUserInfo}
         locale={locale}
         done={props.done}
-        goBack={props.goBack}
+        goBack={goBackToMain}
         wallet={props.wallet}
+      />
+    );
+  }
+
+  if (state?.passkeyLogin) {
+    return (
+      <InAppWalletPassKeyLogin
+        wallet={props.wallet}
+        done={props.done}
+        onBack={goBackToMain}
       />
     );
   }
@@ -49,7 +73,7 @@ function InAppWalletConnectUI(props: {
         socialAuth={state.socialLogin.type}
         locale={locale}
         done={props.done}
-        goBack={props.goBack}
+        goBack={goBackToMain}
         wallet={props.wallet}
         state={state}
       />
