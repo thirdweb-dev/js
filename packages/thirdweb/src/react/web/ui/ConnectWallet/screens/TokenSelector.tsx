@@ -154,7 +154,7 @@ export function TokenSelector(props: {
                 }}
               >
                 <ChainIcon
-                  chain={chainQuery.data}
+                  chainIcon={chainQuery.data?.icon}
                   size={iconSize.lg}
                   client={props.client}
                 />
