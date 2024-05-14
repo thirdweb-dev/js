@@ -692,21 +692,23 @@ export const ChainButton = /* @__PURE__ */ memo(function ChainButton(props: {
   const { chain, confirming, switchingFailed } = props;
 
   const activeChain = useActiveWalletChain();
-  const apiChainQuery = useChainQuery(chain);
+  const { data: fetchedChain } = useChainQuery(chain);
 
-  const chainName = apiChainQuery.data ? (
-    <span>{apiChainQuery.data.name} </span>
-  ) : (
-    <Skeleton width="150px" height="20px" />
-  );
+  let chainName: React.ReactNode;
+  if (fetchedChain) {
+    chainName = <span>{fetchedChain.name} </span>;
+  } else {
+    chainName = <Skeleton width="150px" height="20px" />;
+  }
+
   return (
     <NetworkButton
       data-active={activeChain?.id === chain.id}
       onClick={props.onClick}
     >
-      {apiChainQuery.data ? (
+      {fetchedChain ? (
         <ChainIcon
-          chain={apiChainQuery.data}
+          chainIcon={fetchedChain.icon}
           size={iconSize.lg}
           active={activeChain?.id === chain.id}
           loading="lazy"
