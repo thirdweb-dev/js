@@ -15,13 +15,13 @@ import { prepareDeterministicDeployTransaction } from "./deploy-deterministic.js
 describe.runIf(process.env.TW_SECRET_KEY)("deployFromMetadata", () => {
   it("should deploy contracts at the same address", async () => {
     const tx1 = prepareDeterministicDeployTransaction({
-      chain: ANVIL_CHAIN,
+      chain: FORKED_ETHEREUM_CHAIN,
       client: TEST_CLIENT,
       contractId: "AccountFactory",
       constructorParams: [TEST_ACCOUNT_A.address, ENTRYPOINT_ADDRESS_v0_6],
     });
     const tx2 = prepareDeterministicDeployTransaction({
-      chain: ANVIL_CHAIN,
+      chain: FORKED_ETHEREUM_CHAIN,
       client: TEST_CLIENT,
       contractId: "AccountFactory",
       constructorParams: [TEST_ACCOUNT_A.address, ENTRYPOINT_ADDRESS_v0_6],
