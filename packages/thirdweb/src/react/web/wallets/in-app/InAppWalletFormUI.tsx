@@ -339,6 +339,7 @@ export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
 
         <Container
           expand
+          fullHeight
           flex="column"
           center="y"
           p={isCompact ? undefined : "lg"}
@@ -356,33 +357,8 @@ export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
             termsOfServiceUrl={connectModal.termsOfServiceUrl}
             privacyPolicyUrl={connectModal.privacyPolicyUrl}
           />
-          {isCompact ? <Spacer y="xl" /> : null}
 
-          <Container
-            expand
-            fullHeight
-            flex="column"
-            center="y"
-            p={isCompact ? undefined : "lg"}
-          >
-            <InAppWalletFormUI {...props} />
-          </Container>
-
-          {isCompact &&
-            (connectModal.showThirdwebBranding !== false ||
-              connectModal.termsOfServiceUrl ||
-              connectModal.privacyPolicyUrl) && <Spacer y="xl" />}
-
-          <Container flex="column" gap="lg">
-            <TOS
-              termsOfServiceUrl={connectModal.termsOfServiceUrl}
-              privacyPolicyUrl={connectModal.privacyPolicyUrl}
-            />
-
-            {connectModal.showThirdwebBranding !== false && (
-              <PoweredByThirdweb />
-            )}
-          </Container>
+          {connectModal.showThirdwebBranding !== false && <PoweredByThirdweb />}
         </Container>
       </Container>
     </Container>
