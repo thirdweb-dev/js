@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmQnx3j1ZtQ9Br873FuS6612HQfosXsr4Whew8eN4ArYwE",
-    "width": 400,
-    "height": 400,
-    "format": "svg"
-  },
   "infoURL": "https://hydradx.io",
   "name": "HydraDX",
   "nativeCurrency": {
