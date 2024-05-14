@@ -353,7 +353,7 @@ export type WCSupportedWalletIds =
   | "app.wombat"
   | "fi.dropmate";
 
-// 40 wallets
+// 41 wallets
 export type InjectedSupportedWalletIds =
   | "io.metamask"
   | "com.trustwallet.app"
@@ -394,4 +394,5 @@ export type InjectedSupportedWalletIds =
   | "one.mixin.messenger"
   | "io.finoa"
   | "xyz.nestwallet"
-  | "com.lootrush";
+  | "com.lootrush"
+  | "app.core.extension";
