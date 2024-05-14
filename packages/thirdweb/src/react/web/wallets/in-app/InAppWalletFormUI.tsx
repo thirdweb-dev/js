@@ -154,6 +154,19 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
         position: "relative",
       }}
     >
+      {config?.metadata?.image && (
+        <Img
+          loading="eager"
+          style={{
+            margin: "0 auto",
+          }}
+          client={client}
+          src={config.metadata.image.src}
+          alt={config.metadata.image.alt}
+          width={config.metadata.image.width.toString()}
+          height={config.metadata.image.height.toString()}
+        />
+      )}
       {/* Social Login */}
       {hasSocialLogins && (
         <Container
@@ -299,7 +312,7 @@ export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
           connectModal.termsOfServiceUrl ||
           connectModal.privacyPolicyUrl) && <Spacer y="xl" />}
 
-      <Container flex="column" gap="lg">
+      <Container flex="column" gap="lg" pb="lg">
         <TOS
           termsOfServiceUrl={connectModal.termsOfServiceUrl}
           privacyPolicyUrl={connectModal.privacyPolicyUrl}

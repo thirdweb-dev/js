@@ -420,6 +420,21 @@ export function smartWallet(
  * },
  * });
  * ```
+ *
+ * Specify a logo for your login page
+ * ```ts
+ * import { inAppWallet } from "thirdweb/wallets";
+ * const wallet = inAppWallet({
+ *  metadata: {
+ *   image: {
+ *    src: "https://example.com/logo.png",
+ *    alt: "My logo",
+ *    width: 100,
+ *    height: 100,
+ *   },
+ *  },
+ * });
+ * ```
  * @wallet
  */
 export function inAppWallet(
