@@ -170,21 +170,22 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
         position: "relative",
       }}
     >
-      {config?.metadata?.image ? (
+      {config?.metadata?.image && (
         <Img
           loading="eager"
-          style={{ padding: `${spacing.md} 0`, margin: "auto" }}
+          style={{
+            padding: `${spacing.md} 0`,
+            margin: "auto",
+            maxHeight: "100px",
+          }}
           client={client}
           src={config.metadata.image.src}
           alt={config.metadata.image.alt}
           width={config.metadata.image.width?.toString() ?? "auto"}
           height={config.metadata.image.height?.toString() ?? "auto"}
         />
-      ) : connectModal.size === "compact" ? (
-        <Spacer y="xl" />
-      ) : (
-        <></>
       )}
+
       {/* Social Login */}
       {hasSocialLogins && (
         <Container
