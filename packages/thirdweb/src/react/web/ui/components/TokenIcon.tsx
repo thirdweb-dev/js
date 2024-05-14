@@ -1,4 +1,5 @@
 "use client";
+import { useMemo } from "react";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { useChainQuery } from "../../../core/hooks/others/useChainQuery.js";
@@ -28,12 +29,16 @@ export function TokenIcon(props: {
 }) {
   const chainQuery = useChainQuery(props.chain);
 
+  const tokenImage = useMemo(() => {
+    if (isNativeToken(props.token)) {
+      return chainQuery.data?.icon?.url;
+    }
+    return props.token.icon;
+  }, [props.token, chainQuery.data]);
+
   return (
     <Img
-      src={
-        (isNativeToken(props.token) ? undefined : props.token.icon) ||
-        chainQuery.data?.icon?.url
-      }
+      src={tokenImage}
       width={iconSize[props.size]}
       height={iconSize[props.size]}
       fallbackImage={genericTokenIcon}
