@@ -97,14 +97,14 @@ describe("NFT sig minting", async () => {
       );
     });
 
-    // it("should reject invalid vouchers", async () => {
-    //   goodPayload.payload.price = "0";
-    //   const invalidModified = await nftContract.signature.verify(goodPayload);
-    //   assert.isFalse(
-    //     invalidModified,
-    //     "This voucher should be invalid because the price was changed",
-    //   );
-    // });
+    it("should reject invalid vouchers", async () => {
+      goodPayload.payload.price = "0";
+      const invalidModified = await nftContract.signature.verify(goodPayload);
+      assert.isFalse(
+        invalidModified,
+        "This voucher should be invalid because the price was changed",
+      );
+    });
 
     it("should generate a valid batch of signatures", async () => {
       const input = [
