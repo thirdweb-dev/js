@@ -1479,6 +1479,9 @@ importers:
       '@noble/hashes':
         specifier: 1.4.0
         version: 1.4.0
+      '@passwordless-id/webauthn':
+        specifier: ^1.6.1
+        version: 1.6.1
       '@radix-ui/react-dialog':
         specifier: 1.0.5
         version: 1.0.5(@types/react-dom@18.2.24)(@types/react@18.2.17)(react-dom@18.2.0)(react@18.2.0)
@@ -6174,6 +6177,10 @@ packages:
       '@parcel/watcher-win32-arm64': 2.4.1
       '@parcel/watcher-win32-ia32': 2.4.1
       '@parcel/watcher-win32-x64': 2.4.1
+    dev: false
+
+  /@passwordless-id/webauthn@1.6.1:
+    resolution: {integrity: sha512-YQ1ZHU+exsqF1xAdQ1eBEQ3NZrMT4PSHKsaMSA5Oq38esursuH1hhOT2VHDfT/gimlipUfZr2VEs/cfriswT8w==}
     dev: false
 
   /@pedrouid/environment@1.0.1:

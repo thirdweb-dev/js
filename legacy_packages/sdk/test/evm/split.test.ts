@@ -59,14 +59,14 @@ describe("Splits Contract", async () => {
     );
   });
 
-  // it("should return the correct slip percentage for an address", async () => {
-  //   assert.equal(
-  //     (await splitsContract.getRecipientSplitPercentage(samWallet.address))
-  //       .splitPercentage,
-  //     33.33,
-  //     "Each wallet should have 1/3rd of the split",
-  //   );
-  // });
+  it("should return the correct slip percentage for an address", async () => {
+    assert.equal(
+      (await splitsContract.getRecipientSplitPercentage(samWallet.address))
+        .splitPercentage,
+      33.33,
+      "Each wallet should have 1/3rd of the split",
+    );
+  });
 
   it("should return all the recipients along with their balances", async () => {
     const balances = await splitsContract.balanceOfAllRecipients();

@@ -104,7 +104,9 @@ export function InAppWalletSocialLogin(props: {
           paddingBottom: 0,
         }}
       >
-        <ModalHeader title={locale.title} onBack={props.goBack} />
+        {props.goBack && (
+          <ModalHeader title={locale.title} onBack={props.goBack} />
+        )}
 
         {connectModal.size === "compact" ? <Spacer y="xl" /> : null}
 
