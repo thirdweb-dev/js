@@ -1,6 +1,6 @@
 "use client";
 import styled from "@emotion/styled";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import type {
   InAppWalletAuth,
   InAppWalletSocialAuth,
@@ -78,15 +78,15 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
   const isPhoneEnabled = phoneIndex !== -1;
 
   const [inputMode, setInputMode] = useState<"email" | "phone" | "none">(() => {
-    // if (isEmailEnabled && isPhoneEnabled) {
-    //   return emailIndex < phoneIndex ? "email" : "phone";
-    // }
-    // if (isEmailEnabled) {
-    //   return "email";
-    // }
-    // if (isPhoneEnabled) {
-    //   return "phone";
-    // }
+    if (isEmailEnabled && isPhoneEnabled) {
+      return emailIndex < phoneIndex ? "email" : "phone";
+    }
+    if (isEmailEnabled) {
+      return "email";
+    }
+    if (isPhoneEnabled) {
+      return "phone";
+    }
     return "none";
   });
 
@@ -94,8 +94,6 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
     inputMode === "email" ? locale.emailPlaceholder : locale.phonePlaceholder;
   const emptyErrorMessage =
     inputMode === "email" ? locale.emailRequired : locale.phoneRequired;
-  void emptyErrorMessage; // FIXME
-  void placeholder; // FIXME
 
   let type = "text";
   if (inputMode === "email") {
@@ -103,18 +101,6 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
   } else if (inputMode === "phone") {
     type = "tel";
   }
-  void type; // FIXME
-
-  const switchInputModeText =
-    inputMode === "email" ? locale.signInWithPhone : locale.signInWithEmail;
-
-  const switchInputMode = useCallback(() => {
-    setInputMode((prev) => (prev === "email" ? "phone" : "email"));
-  }, []);
-  const allowSwitchInputMode = isEmailEnabled && isPhoneEnabled;
-  void allowSwitchInputMode; // FIXME
-  void switchInputModeText; // FIXME
-  void switchInputMode; // FIXME
 
   const socialLogins = authOptions.filter(
     (x) => x === "google" || x === "apple" || x === "facebook",
@@ -373,6 +359,11 @@ export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
   const isCompact = connectModal.size === "compact";
   const { initialScreen, screen } = useScreenContext();
 
+  const onBack =
+    screen === props.wallet && initialScreen === props.wallet
+      ? undefined
+      : props.goBack;
+
   return (
     <Container
       fullHeight
@@ -383,14 +374,7 @@ export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
         minHeight: "250px",
       }}
     >
-      <ModalHeader
-        onBack={
-          screen === props.wallet && initialScreen === props.wallet
-            ? undefined
-            : props.goBack
-        }
-        title={locale.title}
-      />
+      {onBack ? <ModalHeader onBack={onBack} title={locale.title} /> : null}
       {isCompact ? <Spacer y="xl" /> : null}
 
       <Container
