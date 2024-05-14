@@ -6,33 +6,15 @@ export default {
     {
       "name": "Taycan Explorer(Blockscout)",
       "url": "https://taycan-evmscan.hupayx.io",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://bafkreidvjcc73v747lqlyrhgbnkvkdepdvepo6baj6hmjsmjtvdyhmzzmq",
-        "width": 1000,
-        "height": 1206,
-        "format": "png"
-      }
+      "standard": "none"
     },
     {
       "name": "Taycan Cosmos Explorer(BigDipper)",
       "url": "https://taycan-cosmoscan.hupayx.io",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://bafkreidvjcc73v747lqlyrhgbnkvkdepdvepo6baj6hmjsmjtvdyhmzzmq",
-        "width": 1000,
-        "height": 1206,
-        "format": "png"
-      }
+      "standard": "none"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://bafkreidvjcc73v747lqlyrhgbnkvkdepdvepo6baj6hmjsmjtvdyhmzzmq",
-    "width": 1000,
-    "height": 1206,
-    "format": "png"
-  },
   "infoURL": "https://hupayx.io",
   "name": "Taycan",
   "nativeCurrency": {
