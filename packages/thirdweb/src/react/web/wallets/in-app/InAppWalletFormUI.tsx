@@ -275,63 +275,6 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
           )}
         </>
       )}
-      {/* {inputMode !== "none" && (
-          <Container>
-            {inputMode === "email" ? (
-              <InputSelectionUI
-                type={type}
-                onSelect={(value) => {
-                  setData({ emailLogin: value });
-                  props.select();
-                }}
-                placeholder={placeholder}
-                name="email"
-                errorMessage={(input) => {
-                  const isValidEmail = validateEmail(input.toLowerCase());
-                  if (!isValidEmail) {
-                    return locale.invalidEmail;
-                  }
-                  return undefined;
-                }}
-                emptyErrorMessage={emptyErrorMessage}
-                submitButtonText={locale.submitEmail}
-              />
-            ) : (
-              <InputSelectionUI
-                format="phone"
-                type={type}
-                onSelect={(value) => {
-                  // removes white spaces and special characters
-                  setData({ phoneLogin: value.replace(/[-\(\) ]/g, "") });
-                  props.select();
-                }}
-                placeholder={placeholder}
-                name="phone"
-                errorMessage={(_input) => {
-                  // removes white spaces and special characters
-                  const input = _input.replace(/[-\(\) ]/g, "");
-                  const isPhone = /^[0-9]+$/.test(input);
-
-                  if (!isPhone && isPhoneEnabled) {
-                    return locale.invalidPhone;
-                  }
-
-                  return undefined;
-                }}
-                emptyErrorMessage={emptyErrorMessage}
-                submitButtonText={locale.submitEmail}
-              />
-            )}
-            {allowSwitchInputMode && (
-              <>
-                <Spacer y="md" />
-                <LinkButton onClick={switchInputMode} type="button">
-                  {switchInputModeText}
-                </LinkButton>
-              </>
-            )}
-          </Container>
-        )} */}
 
       {passKeyEnabled && (
         <>
@@ -374,8 +317,12 @@ export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
         minHeight: "250px",
       }}
     >
-      {onBack ? <ModalHeader onBack={onBack} title={locale.title} /> : null}
-      {isCompact ? <Spacer y="xl" /> : null}
+      {isCompact ? (
+        <>
+          <ModalHeader onBack={onBack} title={locale.title} />
+          <Spacer y="xl" />
+        </>
+      ) : null}
 
       <Container
         expand
