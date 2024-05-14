@@ -32,3 +32,5 @@ export { polygon } from "../chains/chain-definitions/polygon.js";
 export { sepolia } from "../chains/chain-definitions/sepolia.js";
 export { zoraSepolia } from "../chains/chain-definitions/zora-sepolia.js";
 export { zora } from "../chains/chain-definitions/zora.js";
+export { bsc } from "../chains/chain-definitions/bsc.js";
+export { bscTestnet } from "../chains/chain-definitions/bsc-testnet.js";
