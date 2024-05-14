@@ -171,7 +171,7 @@ class ThirdwebBridge implements TWBridge {
       // biome-ignore lint/suspicious/noExplicitAny: TODO: fix use of any
       (globalThis as any).X_SDK_PLATFORM = "unity";
       // biome-ignore lint/suspicious/noExplicitAny: TODO: fix use of any
-      (globalThis as any).X_SDK_VERSION = "4.13.0";
+      (globalThis as any).X_SDK_VERSION = "4.13.1";
       // biome-ignore lint/suspicious/noExplicitAny: TODO: fix use of any
       (globalThis as any).X_SDK_OS = browser?.os ?? "unknown";
     }
@@ -291,12 +291,17 @@ class ThirdwebBridge implements TWBridge {
           break;
         }
         case "inAppWallet":
-          walletInstance = new InAppWallet({
-            clientId: sdkOptions.clientId,
-            chain: Ethereum,
-            dappMetadata,
-            chains: supportedChains,
-          });
+          // if already initialized, skip
+          if (this.walletMap.has(walletId)) {
+            walletInstance = this.walletMap.get(walletId) as InAppWallet;
+          } else {
+            walletInstance = new InAppWallet({
+              clientId: sdkOptions.clientId,
+              chain: Ethereum,
+              dappMetadata,
+              chains: supportedChains,
+            });
+          }
           break;
         default:
           throw new Error(`Unknown wallet type: ${walletId}`);
@@ -340,100 +345,110 @@ class ThirdwebBridge implements TWBridge {
 
       if (wallet === "inAppWallet") {
         const embeddedWallet = walletInstance as InAppWallet;
-        const authOptionsParsed = JSON.parse(authOptions || "{}");
-        if (authOptionsParsed.authProvider === 0) {
-          // EmailOTP
-          if (!email) {
-            throw new Error("Email is required for EmailOTP auth provider");
-          }
-          const authResult = await embeddedWallet.authenticate({
-            strategy: "iframe_email_verification",
-            email,
-          });
-          await embeddedWallet.connect({
-            chainId: chainIdNumber,
-            authResult,
-          });
-        } else if (authOptionsParsed.authProvider < 4) {
-          // OAuth
-          let authProvider: InAppWalletOauthStrategy;
-          switch (authOptionsParsed.authProvider) {
-            // Google
-            case 1:
-              authProvider = "google";
-              break;
-            // Apple
-            case 2:
-              authProvider = "apple";
-              break;
-            // Facebook
-            case 3:
-              authProvider = "facebook";
-              break;
-            default:
-              throw new Error(
-                `Invalid auth provider: ${authOptionsParsed.authProvider}`,
-              );
-          }
-          const popupWindow = this.openPopupWindow();
-          if (!popupWindow) {
-            throw new Error("Failed to open login window");
-          }
-          const authResult = await embeddedWallet.authenticate({
-            strategy: authProvider,
-            openedWindow: popupWindow,
-            closeOpenedWindow: (openedWindow) => {
-              openedWindow.close();
-            },
-          });
-          await embeddedWallet.connect({
-            chainId: chainIdNumber,
-            authResult,
-          });
-        } else if (authOptionsParsed.authProvider === 4) {
-          // JWT
-          const authResult = await embeddedWallet.authenticate({
-            strategy: "jwt",
-            jwt: authOptionsParsed.jwtOrPayload,
-            encryptionKey: authOptionsParsed.encryptionKey,
-          });
-          await embeddedWallet.connect({
-            chainId: chainIdNumber,
-            authResult,
-          });
-        } else if (authOptionsParsed.authProvider === 5) {
-          // AuthEndpoint
-          const authResult = await embeddedWallet.authenticate({
-            strategy: "auth_endpoint",
-            payload: authOptionsParsed.jwtOrPayload,
-            encryptionKey: authOptionsParsed.encryptionKey,
-          });
-          await embeddedWallet.connect({
-            chainId: chainIdNumber,
-            authResult,
-          });
-        } else if (authOptionsParsed.authProvider === 6) {
-          // PhoneOTP
-          throw new Error(
-            "PhoneOTP auth provider not implemented yet for WebGL, stay tuned!",
+        if (
+          (await embeddedWallet.connector?.isConnected()) &&
+          ((await embeddedWallet.getEmail()) === email ||
+            (await embeddedWallet.getPhoneNumber()) === phoneNumber)
+        ) {
+          console.log(
+            "Already connected to InAppWallet, skipping auth. If you meant to re-authenticate, disconnect first.",
           );
-          // if (!phoneNumber) {
-          //   throw new Error(
-          //     "Phone number is required for PhoneOTP auth provider",
-          //   );
-          // }
-          // const authResult = await embeddedWallet.authenticate({
-          //   strategy: "iframe_phone_number_verification",
-          //   phoneNumber,
-          // });
-          // await embeddedWallet.connect({
-          //   chainId: chainIdNumber,
-          //   authResult,
-          // });
         } else {
-          throw new Error(
-            `Invalid auth provider: ${authOptionsParsed.authProvider}`,
-          );
+          const authOptionsParsed = JSON.parse(authOptions || "{}");
+          if (authOptionsParsed.authProvider === 0) {
+            // EmailOTP
+            if (!email) {
+              throw new Error("Email is required for EmailOTP auth provider");
+            }
+            const authResult = await embeddedWallet.authenticate({
+              strategy: "iframe_email_verification",
+              email,
+            });
+            await embeddedWallet.connect({
+              chainId: chainIdNumber,
+              authResult,
+            });
+          } else if (authOptionsParsed.authProvider < 4) {
+            // OAuth
+            let authProvider: InAppWalletOauthStrategy;
+            switch (authOptionsParsed.authProvider) {
+              // Google
+              case 1:
+                authProvider = "google";
+                break;
+              // Apple
+              case 2:
+                authProvider = "apple";
+                break;
+              // Facebook
+              case 3:
+                authProvider = "facebook";
+                break;
+              default:
+                throw new Error(
+                  `Invalid auth provider: ${authOptionsParsed.authProvider}`,
+                );
+            }
+            const popupWindow = this.openPopupWindow();
+            if (!popupWindow) {
+              throw new Error("Failed to open login window");
+            }
+            const authResult = await embeddedWallet.authenticate({
+              strategy: authProvider,
+              openedWindow: popupWindow,
+              closeOpenedWindow: (openedWindow) => {
+                openedWindow.close();
+              },
+            });
+            await embeddedWallet.connect({
+              chainId: chainIdNumber,
+              authResult,
+            });
+          } else if (authOptionsParsed.authProvider === 4) {
+            // JWT
+            const authResult = await embeddedWallet.authenticate({
+              strategy: "jwt",
+              jwt: authOptionsParsed.jwtOrPayload,
+              encryptionKey: authOptionsParsed.encryptionKey,
+            });
+            await embeddedWallet.connect({
+              chainId: chainIdNumber,
+              authResult,
+            });
+          } else if (authOptionsParsed.authProvider === 5) {
+            // AuthEndpoint
+            const authResult = await embeddedWallet.authenticate({
+              strategy: "auth_endpoint",
+              payload: authOptionsParsed.jwtOrPayload,
+              encryptionKey: authOptionsParsed.encryptionKey,
+            });
+            await embeddedWallet.connect({
+              chainId: chainIdNumber,
+              authResult,
+            });
+          } else if (authOptionsParsed.authProvider === 6) {
+            // PhoneOTP
+            throw new Error(
+              "PhoneOTP auth provider not implemented yet for WebGL, stay tuned!",
+            );
+            // if (!phoneNumber) {
+            //   throw new Error(
+            //     "Phone number is required for PhoneOTP auth provider",
+            //   );
+            // }
+            // const authResult = await embeddedWallet.authenticate({
+            //   strategy: "iframe_phone_number_verification",
+            //   phoneNumber,
+            // });
+            // await embeddedWallet.connect({
+            //   chainId: chainIdNumber,
+            //   authResult,
+            // });
+          } else {
+            throw new Error(
+              `Invalid auth provider: ${authOptionsParsed.authProvider}`,
+            );
+          }
         }
       } else if (wallet === "smartWallet") {
         if (!personalWallet) {
