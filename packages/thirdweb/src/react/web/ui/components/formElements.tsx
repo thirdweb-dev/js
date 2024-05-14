@@ -43,7 +43,7 @@ export const Input = /* @__PURE__ */ StyledInput((props: InputProps) => {
     width: "100%",
     outline: "none",
     border: "none",
-    borderRadius: "6px",
+    borderRadius: radius.lg,
     color: theme.colors.primaryText,
     WebkitAppearance: "none",
     appearance: "none",
@@ -61,8 +61,16 @@ export const Input = /* @__PURE__ */ StyledInput((props: InputProps) => {
       transition: "background-color 5000s ease-in-out 0s",
     },
     "&:-webkit-autofill:focus": {
-      WebkitBoxShadow: `0 0 0px 1000px ${theme.colors.inputAutofillBg} inset, 0 0 0 2px ${theme.colors.accentText} !important`,
-      boxShadow: `0 0 0px 1000px ${theme.colors.inputAutofillBg} inset, 0 0 0 2px ${theme.colors.accentText} !important`,
+      WebkitBoxShadow: `0 0 0px 1000px ${
+        theme.colors.inputAutofillBg
+      } inset, 0 0 0 2px ${
+        props.variant === "outline" ? theme.colors.accentText : "transparent"
+      } !important`,
+      boxShadow: `0 0 0px 1000px ${
+        theme.colors.inputAutofillBg
+      } inset, 0 0 0 2px ${
+        props.variant === "outline" ? theme.colors.accentText : "transparent"
+      } !important`,
     },
     "&[data-placeholder='true']": {
       color: theme.colors.secondaryText,
@@ -101,7 +109,7 @@ export const InputContainer = /* @__PURE__ */ StyledDiv(() => {
   const theme = useCustomTheme();
   return {
     display: "flex",
-    borderRadius: radius.sm,
+    borderRadius: radius.lg,
     boxShadow: `0 0 0px 1.5px ${theme.colors.borderColor}`,
     "&:focus-within": {
       boxShadow: `0 0 0px 2px ${theme.colors.accentText}`,

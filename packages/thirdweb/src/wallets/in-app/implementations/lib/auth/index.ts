@@ -2,6 +2,7 @@ import type { ThirdwebClient } from "../../../../../client/client.js";
 import type {
   AuthAndWalletRpcReturnType,
   AuthLoginReturnType,
+  AuthStoredTokenWithCookieReturnType,
 } from "../../interfaces/auth.js";
 import type {
   ClientIdWithQuerierType,
@@ -19,6 +20,10 @@ export type AuthQuerierTypes = {
     authCookie: string;
     walletUserId: string;
     deviceShareStored: string;
+  };
+  loginWithStoredTokenDetails: {
+    storedToken: AuthStoredTokenWithCookieReturnType["storedToken"];
+    recoveryCode?: string;
   };
 };
 
@@ -84,6 +89,21 @@ export class Auth {
       walletDetails,
     });
     return initializedUser;
+  }
+
+  async loginWithAuthToken(
+    authToken: AuthStoredTokenWithCookieReturnType,
+    recoveryCode?: string,
+  ): Promise<AuthLoginReturnType> {
+    await this.preLogin();
+    const result = await this.AuthQuerier.call<AuthAndWalletRpcReturnType>({
+      procedureName: "loginWithStoredTokenDetails",
+      params: {
+        storedToken: authToken.storedToken,
+        recoveryCode,
+      },
+    });
+    return this.postLogin(result);
   }
 
   /**
