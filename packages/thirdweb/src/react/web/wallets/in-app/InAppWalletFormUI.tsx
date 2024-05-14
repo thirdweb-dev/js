@@ -312,7 +312,7 @@ export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
           connectModal.termsOfServiceUrl ||
           connectModal.privacyPolicyUrl) && <Spacer y="xl" />}
 
-      <Container flex="column" gap="lg" pb="lg">
+      <Container flex="column" gap="lg">
         <TOS
           termsOfServiceUrl={connectModal.termsOfServiceUrl}
           privacyPolicyUrl={connectModal.privacyPolicyUrl}
