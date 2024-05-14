@@ -160,6 +160,19 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
         position: "relative",
       }}
     >
+      {config?.metadata?.image && (
+        <Img
+          loading="eager"
+          style={{
+            margin: "0 auto",
+          }}
+          client={client}
+          src={config.metadata.image.src}
+          alt={config.metadata.image.alt}
+          width={config.metadata.image.width.toString()}
+          height={config.metadata.image.height.toString()}
+        />
+      )}
       {/* Social Login */}
       {hasSocialLogins && (
         <Container
@@ -310,41 +323,43 @@ export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
   return (
     <Container
       fullHeight
-      flex="column"
-      p="lg"
+      px="lg"
       animate="fadein"
       style={{
         minHeight: "250px",
       }}
     >
-      {isCompact ? (
-        <>
-          <ModalHeader onBack={onBack} title={locale.title} />
-          <Spacer y="xl" />
-        </>
-      ) : null}
+      <Container flex="column" py="lg" style={{ minHeight: "100%" }}>
+        {isCompact ? (
+          <>
+            <ModalHeader onBack={onBack} title={locale.title} />
+            <Spacer y="xl" />
+          </>
+        ) : null}
 
-      <Container
-        expand
-        flex="column"
-        center="y"
-        p={isCompact ? undefined : "lg"}
-      >
-        <InAppWalletFormUI {...props} />
-      </Container>
+        <Container
+          expand
+          fullHeight
+          flex="column"
+          center="y"
+          p={isCompact ? undefined : "lg"}
+        >
+          <InAppWalletFormUI {...props} />
+        </Container>
 
-      {isCompact &&
-        (connectModal.showThirdwebBranding !== false ||
-          connectModal.termsOfServiceUrl ||
-          connectModal.privacyPolicyUrl) && <Spacer y="xl" />}
+        {isCompact &&
+          (connectModal.showThirdwebBranding !== false ||
+            connectModal.termsOfServiceUrl ||
+            connectModal.privacyPolicyUrl) && <Spacer y="xl" />}
 
-      <Container flex="column" gap="lg">
-        <TOS
-          termsOfServiceUrl={connectModal.termsOfServiceUrl}
-          privacyPolicyUrl={connectModal.privacyPolicyUrl}
-        />
+        <Container flex="column" gap="lg">
+          <TOS
+            termsOfServiceUrl={connectModal.termsOfServiceUrl}
+            privacyPolicyUrl={connectModal.privacyPolicyUrl}
+          />
 
-        {connectModal.showThirdwebBranding !== false && <PoweredByThirdweb />}
+          {connectModal.showThirdwebBranding !== false && <PoweredByThirdweb />}
+        </Container>
       </Container>
     </Container>
   );

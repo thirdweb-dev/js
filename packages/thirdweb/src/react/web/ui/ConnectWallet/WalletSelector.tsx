@@ -311,7 +311,23 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
           // social login + More than 1 eoa wallets
           if (eoaWallets.length > 1) {
             bottomSection = (
-              <Container flex="column" gap="sm">
+              <Container
+                flex="column"
+                style={{ position: "relative" }}
+                gap="sm"
+              >
+                <div
+                  style={{
+                    height: spacing.lg,
+                    position: "absolute",
+                    top: `-${spacing.lg}`,
+                    left: 0,
+                    width: "100%",
+                    background:
+                      "linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 80%)",
+                    pointerEvents: "none",
+                  }}
+                />
                 <Container px="lg" flex="column" gap="md">
                   {connectAWallet}
                   {continueAsGuest}
