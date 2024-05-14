@@ -281,44 +281,46 @@ export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
   return (
     <Container
       fullHeight
-      flex="column"
-      p="lg"
+      px="lg"
       animate="fadein"
       style={{
         minHeight: "250px",
       }}
     >
-      <ModalHeader
-        onBack={
-          screen === props.wallet && initialScreen === props.wallet
-            ? undefined
-            : props.goBack
-        }
-        title={locale.title}
-      />
-      {isCompact ? <Spacer y="xl" /> : null}
-
-      <Container
-        expand
-        flex="column"
-        center="y"
-        p={isCompact ? undefined : "lg"}
-      >
-        <InAppWalletFormUI {...props} />
-      </Container>
-
-      {isCompact &&
-        (connectModal.showThirdwebBranding !== false ||
-          connectModal.termsOfServiceUrl ||
-          connectModal.privacyPolicyUrl) && <Spacer y="xl" />}
-
-      <Container flex="column" gap="lg">
-        <TOS
-          termsOfServiceUrl={connectModal.termsOfServiceUrl}
-          privacyPolicyUrl={connectModal.privacyPolicyUrl}
+      <Container flex="column" py="lg" style={{ minHeight: "100%" }}>
+        <ModalHeader
+          onBack={
+            screen === props.wallet && initialScreen === props.wallet
+              ? undefined
+              : props.goBack
+          }
+          title={locale.title}
         />
+        {isCompact ? <Spacer y="xl" /> : null}
 
-        {connectModal.showThirdwebBranding !== false && <PoweredByThirdweb />}
+        <Container
+          expand
+          fullHeight
+          flex="column"
+          center="y"
+          p={isCompact ? undefined : "lg"}
+        >
+          <InAppWalletFormUI {...props} />
+        </Container>
+
+        {isCompact &&
+          (connectModal.showThirdwebBranding !== false ||
+            connectModal.termsOfServiceUrl ||
+            connectModal.privacyPolicyUrl) && <Spacer y="xl" />}
+
+        <Container flex="column" gap="lg">
+          <TOS
+            termsOfServiceUrl={connectModal.termsOfServiceUrl}
+            privacyPolicyUrl={connectModal.privacyPolicyUrl}
+          />
+
+          {connectModal.showThirdwebBranding !== false && <PoweredByThirdweb />}
+        </Container>
       </Container>
     </Container>
   );
