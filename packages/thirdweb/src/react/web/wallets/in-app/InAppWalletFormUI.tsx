@@ -152,6 +152,16 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
 
   const showOnlyIcons = socialLogins.length > 1;
 
+  if (
+    config?.metadata?.image &&
+    (!config.metadata.image.height || !config.metadata.image.width)
+  ) {
+    console.warn(
+      "Image is not properly configured. Please set height and width.",
+      config.metadata.image,
+    );
+  }
+
   return (
     <Container
       flex="column"
@@ -160,18 +170,20 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
         position: "relative",
       }}
     >
-      {config?.metadata?.image && (
+      {config?.metadata?.image ? (
         <Img
           loading="eager"
-          style={{
-            margin: "0 auto",
-          }}
+          style={{ padding: `${spacing.md} 0`, margin: "auto" }}
           client={client}
           src={config.metadata.image.src}
           alt={config.metadata.image.alt}
-          width={config.metadata.image.width.toString()}
-          height={config.metadata.image.height.toString()}
+          width={config.metadata.image.width?.toString() ?? "auto"}
+          height={config.metadata.image.height?.toString() ?? "auto"}
         />
+      ) : connectModal.size === "compact" ? (
+        <Spacer y="xl" />
+      ) : (
+        <></>
       )}
       {/* Social Login */}
       {hasSocialLogins && (
@@ -331,10 +343,7 @@ export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
     >
       <Container flex="column" py="lg" style={{ minHeight: "100%" }}>
         {isCompact ? (
-          <>
-            <ModalHeader onBack={onBack} title={locale.title} />
-            <Spacer y="xl" />
-          </>
+          <ModalHeader onBack={onBack} title={locale.title} />
         ) : null}
 
         <Container

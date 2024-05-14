@@ -32,6 +32,7 @@ import { TOS } from "./Modal/TOS.js";
 import { PoweredByThirdweb } from "./PoweredByTW.js";
 import { WalletButton, WalletEntryButton } from "./WalletEntryButton.js";
 import { WalletTypeRowButton } from "./WalletTypeRowButton.js";
+import { compactModalMaxHeight } from "./constants.js";
 import { genericWalletIcon } from "./icons/dataUris.js";
 
 const InAppWalletSelectionUI = /* @__PURE__ */ lazy(
@@ -316,18 +317,8 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
                 style={{ position: "relative" }}
                 gap="sm"
               >
-                <div
-                  style={{
-                    height: spacing.lg,
-                    position: "absolute",
-                    top: `-${spacing.lg}`,
-                    left: 0,
-                    width: "100%",
-                    background:
-                      "linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 80%)",
-                    pointerEvents: "none",
-                  }}
-                />
+                <GradientDiv />
+
                 <Container px="lg" flex="column" gap="md">
                   {connectAWallet}
                   {continueAsGuest}
@@ -402,7 +393,8 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
       animate="fadein"
       fullHeight
       style={{
-        maxHeight: connectModal.size === "compact" ? "550px" : undefined,
+        maxHeight:
+          connectModal.size === "compact" ? compactModalMaxHeight : undefined,
       }}
     >
       {/* Header */}
@@ -619,4 +611,18 @@ const WalletList = /* @__PURE__ */ StyledUl({
   margin: "-2px",
   marginBottom: 0,
   paddingBottom: spacing.lg,
+});
+
+const GradientDiv = /* @__PURE__ */ StyledDiv(() => {
+  const theme = useCustomTheme();
+  theme.colors.modalBg;
+  return {
+    height: spacing.lg,
+    position: "absolute",
+    top: `-${spacing.lg}`,
+    left: 0,
+    width: "100%",
+    background: `linear-gradient(to bottom, transparent 0%, ${theme.colors.modalBg} 80%)`,
+    pointerEvents: "none",
+  };
 });
