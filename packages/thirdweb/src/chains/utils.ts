@@ -308,8 +308,15 @@ function createChainMetadata(
       symbol: nativeCurrency?.symbol || "",
       decimals: nativeCurrency?.decimals || 18,
     },
+    icon: chain.icon || data?.icon,
     chain: data?.chain || chain.name || "",
     shortName: data?.shortName || chain.name || "",
     slug: data?.slug || chain.name || "",
+    explorers:
+      chain.blockExplorers?.map((e) => ({
+        name: e.name,
+        url: e.url,
+        standard: "EIP3091",
+      })) || data?.explorers,
   };
 }
