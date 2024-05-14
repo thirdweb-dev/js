@@ -1,5 +1,19 @@
 # @thirdweb-dev/sdk
 
+## 4.0.82
+
+### Patch Changes
+
+- [#3029](https://github.com/thirdweb-dev/js/pull/3029) [`cdfca2b`](https://github.com/thirdweb-dev/js/commit/cdfca2b56d6172e06173384ac608df14045bebfd) Thanks [@kumaryash90](https://github.com/kumaryash90)! - zksolc publish and deploy fixes
+
+- [#3025](https://github.com/thirdweb-dev/js/pull/3025) [`e89f36b`](https://github.com/thirdweb-dev/js/commit/e89f36b2b73f09d49bbffa2f707f8d8f32089237) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Latest versions of drop and token contracts on zksync
+
+- [#3019](https://github.com/thirdweb-dev/js/pull/3019) [`6d36a14`](https://github.com/thirdweb-dev/js/commit/6d36a1498a533c6184c90fff65699465f9786b2f) Thanks [@kumaryash90](https://github.com/kumaryash90)! - zksync prebuilt addresses
+
+- Updated dependencies [[`9caa9d7`](https://github.com/thirdweb-dev/js/commit/9caa9d7a8df173d06ddaf3a8fab929f65adab092), [`eb29adf`](https://github.com/thirdweb-dev/js/commit/eb29adf157103cc277d6787c8427403b2eba8472), [`5083464`](https://github.com/thirdweb-dev/js/commit/50834640af8a8c17483465f308642e266dbac290), [`145ff48`](https://github.com/thirdweb-dev/js/commit/145ff4890fa763288610b2e1af152e7827ec0d8e), [`c08a5f2`](https://github.com/thirdweb-dev/js/commit/c08a5f298d59f0b54b4b941d719911c294b8bf04), [`d34e21b`](https://github.com/thirdweb-dev/js/commit/d34e21bd060a2e9c9ee095742ae954a3eadc6a7c)]:
+  - thirdweb@5.20.0
+  - @thirdweb-dev/chains@0.1.109
+
 ## 4.0.81
 
 ### Patch Changes
