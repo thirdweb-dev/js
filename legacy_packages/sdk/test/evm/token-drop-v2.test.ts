@@ -42,38 +42,38 @@ describe("Token Drop Contract (v2)", async () => {
     dropContract = await sdk.getContract(address, "token-drop");
   });
 
-  // it("comprehensive test", async () => {
-  //   // claiming with default conditions
-  //   await dropContract.claimConditions.set([{}]);
-  //   await dropContract.claim(1);
-  //   // claiming with max supply
-  //   await dropContract.claimConditions.set([
-  //     {
-  //       maxClaimableSupply: 2,
-  //     },
-  //   ]);
-  //   try {
-  //     await dropContract.claim(2);
-  //     expect.fail("should not be able to claim 2 - maxSupply");
-  //   } catch (e) {
-  //     expectError(e, "exceed max mint supply");
-  //   }
-  //   await dropContract.claim(1);
-  //   // claiming with max per wallet
-  //   await dropContract.claimConditions.set([
-  //     {
-  //       maxClaimablePerWallet: 1,
-  //     },
-  //   ]);
-  //   try {
-  //     await dropContract.claim(2);
-  //     expect.fail("should not be able to claim 2 - maxClaimablePerWallet");
-  //   } catch (e) {
-  //     expectError(e, "invalid quantity");
-  //   }
-  //   await dropContract.claim(1);
-  //   expect((await dropContract.totalSupply()).displayValue).eq("3.0");
-  // });
+  it("comprehensive test", async () => {
+    // claiming with default conditions
+    await dropContract.claimConditions.set([{}]);
+    await dropContract.claim(1);
+    // claiming with max supply
+    await dropContract.claimConditions.set([
+      {
+        maxClaimableSupply: 2,
+      },
+    ]);
+    try {
+      await dropContract.claim(2);
+      expect.fail("should not be able to claim 2 - maxSupply");
+    } catch (e) {
+      expectError(e, "exceed max mint supply");
+    }
+    await dropContract.claim(1);
+    // claiming with max per wallet
+    await dropContract.claimConditions.set([
+      {
+        maxClaimablePerWallet: 1,
+      },
+    ]);
+    try {
+      await dropContract.claim(2);
+      expect.fail("should not be able to claim 2 - maxClaimablePerWallet");
+    } catch (e) {
+      expectError(e, "invalid quantity");
+    }
+    await dropContract.claim(1);
+    expect((await dropContract.totalSupply()).displayValue).eq("3.0");
+  });
 
   it("comprehensive test with allowlist", async () => {
     // claiming with default conditions

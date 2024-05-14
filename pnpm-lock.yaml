@@ -1479,6 +1479,9 @@ importers:
       '@noble/hashes':
         specifier: 1.4.0
         version: 1.4.0
+      '@passwordless-id/webauthn':
+        specifier: ^1.6.1
+        version: 1.6.1
       '@radix-ui/react-dialog':
         specifier: 1.0.5
         version: 1.0.5(@types/react-dom@18.2.24)(@types/react@18.2.17)(react-dom@18.2.0)(react@18.2.0)
@@ -1561,8 +1564,8 @@ importers:
   packages/typedoc-gen:
     dependencies:
       typedoc:
-        specifier: ^0.25.12
-        version: 0.25.12(typescript@5.4.5)
+        specifier: ^0.25.13
+        version: 0.25.13(typescript@5.4.5)
     devDependencies:
       tsup:
         specifier: 8.0.2
@@ -6174,6 +6177,10 @@ packages:
       '@parcel/watcher-win32-arm64': 2.4.1
       '@parcel/watcher-win32-ia32': 2.4.1
       '@parcel/watcher-win32-x64': 2.4.1
+    dev: false
+
+  /@passwordless-id/webauthn@1.6.1:
+    resolution: {integrity: sha512-YQ1ZHU+exsqF1xAdQ1eBEQ3NZrMT4PSHKsaMSA5Oq38esursuH1hhOT2VHDfT/gimlipUfZr2VEs/cfriswT8w==}
     dev: false
 
   /@pedrouid/environment@1.0.1:
@@ -15762,6 +15769,7 @@ packages:
   /marked@4.3.0:
     resolution: {integrity: sha512-PRsaiG84bK+AMvxziE/lCFss8juXjNaWzVbN5tXAm4XjeaS9NAHhop+PjQxz2A9h8Q4M/xGmzP8vqNwy6JeK0A==}
     engines: {node: '>= 12'}
+    hasBin: true
     dev: false
 
   /md5.js@1.3.5:
@@ -19650,8 +19658,8 @@ packages:
     dependencies:
       is-typedarray: 1.0.0
 
-  /typedoc@0.25.12(typescript@5.4.5):
-    resolution: {integrity: sha512-F+qhkK2VoTweDXd1c42GS/By2DvI2uDF4/EpG424dTexSHdtCH52C6IcAvMA6jR3DzAWZjHpUOW+E02kyPNUNw==}
+  /typedoc@0.25.13(typescript@5.4.5):
+    resolution: {integrity: sha512-pQqiwiJ+Z4pigfOnnysObszLiU3mVLWAExSPf+Mu06G/qsc3wzbuM56SZQvONhHLncLUhYzOVkjFFpFfL5AzhQ==}
     engines: {node: '>= 16'}
     hasBin: true
     peerDependencies:

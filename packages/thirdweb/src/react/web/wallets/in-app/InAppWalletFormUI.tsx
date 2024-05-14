@@ -1,6 +1,6 @@
 "use client";
 import styled from "@emotion/styled";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import type {
   InAppWalletAuth,
   InAppWalletSocialAuth,
@@ -11,6 +11,12 @@ import { useSetSelectionData } from "../../providers/wallet-ui-states-provider.j
 import { TOS } from "../../ui/ConnectWallet/Modal/TOS.js";
 import { useScreenContext } from "../../ui/ConnectWallet/Modal/screen.js";
 import { PoweredByThirdweb } from "../../ui/ConnectWallet/PoweredByTW.js";
+import { WalletTypeRowButton } from "../../ui/ConnectWallet/WalletTypeRowButton.js";
+import {
+  emailIcon,
+  passkeyIcon,
+  phoneIcon,
+} from "../../ui/ConnectWallet/icons/dataUris.js";
 import { Img } from "../../ui/components/Img.js";
 import { Spacer } from "../../ui/components/Spacer.js";
 import { TextDivider } from "../../ui/components/TextDivider.js";
@@ -19,7 +25,6 @@ import { Button } from "../../ui/components/buttons.js";
 import { useCustomTheme } from "../../ui/design-system/CustomThemeProvider.js";
 import { fontSize, iconSize, spacing } from "../../ui/design-system/index.js";
 import { InputSelectionUI } from "./InputSelectionUI.js";
-import { LinkButton } from "./LinkButton.js";
 import type { InAppWalletLocale } from "./locale/types.js";
 import { openOauthSignInWindow } from "./openOauthSignInWindow.js";
 import { socialIcons } from "./socialIcons.js";
@@ -33,6 +38,7 @@ const defaultAuthOptions: InAppWalletAuth[] = [
   "google",
   "apple",
   "facebook",
+  "passkey",
 ];
 
 export type InAppWalletFormUIProps = {
@@ -64,6 +70,7 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
 
   const config = props.wallet.getConfig();
   const authOptions = config?.auth?.options || defaultAuthOptions;
+  const passKeyEnabled = authOptions.includes("passkey");
 
   const emailIndex = authOptions.indexOf("email");
   const isEmailEnabled = emailIndex !== -1;
@@ -95,16 +102,8 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
     type = "tel";
   }
 
-  const switchInputModeText =
-    inputMode === "email" ? locale.signInWithPhone : locale.signInWithEmail;
-
-  const switchInputMode = useCallback(() => {
-    setInputMode((prev) => (prev === "email" ? "phone" : "email"));
-  }, []);
-  const allowSwitchInputMode = isEmailEnabled && isPhoneEnabled;
-
   const socialLogins = authOptions.filter(
-    (x) => x !== "email" && x !== "phone",
+    (x) => x === "google" || x === "apple" || x === "facebook",
   ) as InAppWalletSocialAuth[];
 
   const hasSocialLogins = socialLogins.length > 0;
@@ -144,16 +143,36 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
     }
   };
 
+  function handlePassKeyLogin() {
+    setData({
+      passkeyLogin: true,
+    });
+    props.select();
+  }
+
   const showOnlyIcons = socialLogins.length > 1;
 
   return (
     <Container
       flex="column"
-      gap="lg"
+      gap="md"
       style={{
         position: "relative",
       }}
     >
+      {config?.metadata?.image && (
+        <Img
+          loading="eager"
+          style={{
+            margin: "0 auto",
+          }}
+          client={client}
+          src={config.metadata.image.src}
+          alt={config.metadata.image.alt}
+          width={config.metadata.image.width.toString()}
+          height={config.metadata.image.height.toString()}
+        />
+      )}
       {/* Social Login */}
       {hasSocialLogins && (
         <Container
@@ -171,7 +190,7 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
                 aria-label={`Login with ${loginMethod}`}
                 data-variant={showOnlyIcons ? "icon" : "full"}
                 key={loginMethod}
-                variant={showOnlyIcons ? "outline" : "secondary"}
+                variant={"outline"}
                 fullWidth={!showOnlyIcons}
                 onClick={() => {
                   handleSocialLogin(loginMethod);
@@ -194,9 +213,9 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
         hasSocialLogins &&
         (isEmailEnabled || isPhoneEnabled) && <TextDivider text={locale.or} />}
 
-      {/* Email Login */}
-      {inputMode !== "none" && (
-        <Container>
+      {/* Email/Phone Login */}
+      {isEmailEnabled && (
+        <>
           {inputMode === "email" ? (
             <InputSelectionUI
               type={type}
@@ -217,6 +236,21 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
               submitButtonText={locale.submitEmail}
             />
           ) : (
+            <WalletTypeRowButton
+              client={client}
+              icon={emailIcon}
+              onClick={() => {
+                setInputMode("email");
+              }}
+              // TODO locale
+              title={"Email address"}
+            />
+          )}
+        </>
+      )}
+      {isPhoneEnabled && (
+        <>
+          {inputMode === "phone" ? (
             <InputSelectionUI
               format="phone"
               type={type}
@@ -241,16 +275,32 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
               emptyErrorMessage={emptyErrorMessage}
               submitButtonText={locale.submitEmail}
             />
+          ) : (
+            <WalletTypeRowButton
+              client={client}
+              icon={phoneIcon}
+              onClick={() => {
+                setInputMode("phone");
+              }}
+              // TODO locale
+              title={"Phone number"}
+            />
           )}
-          {allowSwitchInputMode && (
-            <>
-              <Spacer y="md" />
-              <LinkButton onClick={switchInputMode} type="button">
-                {switchInputModeText}
-              </LinkButton>
-            </>
-          )}
-        </Container>
+        </>
+      )}
+
+      {passKeyEnabled && (
+        <>
+          <WalletTypeRowButton
+            client={client}
+            icon={passkeyIcon}
+            onClick={() => {
+              handlePassKeyLogin();
+            }}
+            // TODO locale
+            title="Passkey"
+          />
+        </>
       )}
     </Container>
   );
@@ -265,47 +315,51 @@ export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
   const isCompact = connectModal.size === "compact";
   const { initialScreen, screen } = useScreenContext();
 
+  const onBack =
+    screen === props.wallet && initialScreen === props.wallet
+      ? undefined
+      : props.goBack;
+
   return (
     <Container
       fullHeight
-      flex="column"
-      p="lg"
+      px="lg"
       animate="fadein"
       style={{
         minHeight: "250px",
       }}
     >
-      <ModalHeader
-        onBack={
-          screen === props.wallet && initialScreen === props.wallet
-            ? undefined
-            : props.goBack
-        }
-        title={locale.title}
-      />
-      {isCompact ? <Spacer y="xl" /> : null}
+      <Container flex="column" py="lg" style={{ minHeight: "100%" }}>
+        {isCompact ? (
+          <>
+            <ModalHeader onBack={onBack} title={locale.title} />
+            <Spacer y="xl" />
+          </>
+        ) : null}
 
-      <Container
-        expand
-        flex="column"
-        center="y"
-        p={isCompact ? undefined : "lg"}
-      >
-        <InAppWalletFormUI {...props} />
-      </Container>
+        <Container
+          expand
+          fullHeight
+          flex="column"
+          center="y"
+          p={isCompact ? undefined : "lg"}
+        >
+          <InAppWalletFormUI {...props} />
+        </Container>
 
-      {isCompact &&
-        (connectModal.showThirdwebBranding !== false ||
-          connectModal.termsOfServiceUrl ||
-          connectModal.privacyPolicyUrl) && <Spacer y="xl" />}
+        {isCompact &&
+          (connectModal.showThirdwebBranding !== false ||
+            connectModal.termsOfServiceUrl ||
+            connectModal.privacyPolicyUrl) && <Spacer y="xl" />}
 
-      <Container flex="column" gap="lg">
-        <TOS
-          termsOfServiceUrl={connectModal.termsOfServiceUrl}
-          privacyPolicyUrl={connectModal.privacyPolicyUrl}
-        />
+        <Container flex="column" gap="lg">
+          <TOS
+            termsOfServiceUrl={connectModal.termsOfServiceUrl}
+            privacyPolicyUrl={connectModal.privacyPolicyUrl}
+          />
 
-        {connectModal.showThirdwebBranding !== false && <PoweredByThirdweb />}
+          {connectModal.showThirdwebBranding !== false && <PoweredByThirdweb />}
+        </Container>
       </Container>
     </Container>
   );
@@ -314,9 +368,11 @@ export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
 const SocialButton = /* @__PURE__ */ styled(Button)({
   "&[data-variant='full']": {
     display: "flex",
-    justifyContent: "center",
+    justifyContent: "flex-start",
+    padding: spacing.md,
     gap: spacing.md,
     fontSize: fontSize.md,
+    fontWeight: 500,
     transition: "background-color 0.2s ease",
     "&:active": {
       boxShadow: "none",

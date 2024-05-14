@@ -42,7 +42,7 @@ export function ModalHeader(props: {
       style={{
         display: "flex",
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: onBack ? "center" : "flex-start",
         position: "relative",
       }}
     >

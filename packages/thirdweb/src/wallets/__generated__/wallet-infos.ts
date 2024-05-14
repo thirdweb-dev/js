@@ -1414,6 +1414,10 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "LootRush",
   },
   {
+    id: "app.core.extension",
+    name: "Core",
+  },
+  {
     id: "smart",
     name: "Smart Wallet",
   },
