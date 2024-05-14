@@ -540,7 +540,7 @@
     "@walletconnect/ethereum-provider": "2.12.2",
     "@walletconnect/jsonrpc-utils": "^1.0.8",
     "@walletconnect/modal": "^2.6.2",
-    "@walletconnect/types": "^2.12.1",
+    "@walletconnect/types": "^2.13.0",
     "@walletconnect/utils": "^2.12.2",
     "@walletconnect/web3wallet": "^1.11.2",
     "asn1.js": "5.4.1",
