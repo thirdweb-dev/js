@@ -4,7 +4,7 @@ export async function execute(
   command: string,
   projectPath: string,
   options = { log: false, cwd: projectPath },
-  timeout = 300_000, // 5 minute timeout by default
+  timeout = 1_200_000, // 20 minute timeout by default
 ): Promise<{ stdout: string; stderr: string }> {
   return new Promise((resolve, reject) => {
     const process = exec(command, { ...options }, (err, stdout, stderr) => {
