@@ -181,12 +181,11 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
           }}
           src={config.metadata.image.src}
           alt={config.metadata.image.alt}
-          width={
-            Math.min(config.metadata.image.width, 300)?.toString() ?? "300"
-          }
-          height={
-            Math.min(config.metadata.image.height, 100)?.toString() ?? "100"
-          }
+          width={Math.min(config.metadata.image.width ?? 300, 300)?.toString()}
+          height={Math.min(
+            config.metadata.image.height ?? 100,
+            100,
+          )?.toString()}
         />
       )}
 
