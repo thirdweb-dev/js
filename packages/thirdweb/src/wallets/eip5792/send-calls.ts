@@ -70,11 +70,11 @@ export type SendCallsResult = WalletSendCallsId;
  *
  * @see getCallsStatus for how to retrieve the status of the bundle.
  * @see getCapabilities for how to retrieve the capabilities of the wallet.
- *
+ * @beta
  * @example
  * ```ts
  * import { createThirdwebClient } from "thirdweb";
- * import { sendCalls } from "thirdweb/wallets";
+ * import { sendCalls } from "thirdweb/wallets/eip5792";
  *
  * const client = createThirdwebClient({ clientId: ... });
  * const wallet = createWallet("com.coinbase.wallet");

@@ -24,11 +24,11 @@ export type GetCallsStatusOptions = {
  * @param {WalletSendCallsId} options.bundleId - The ID of the bundle to get the status of.
  * @throws an error if the wallet does not support EIP-5792.
  * @returns {Promise<GetCallsStatusResponse>} - A promise that resolves to the bundle's status and receipts (if available). {@link GetCallsStatusResponse}
- *
+ * @beta
  * @example
  * ```ts
  *  import { createThirdwebClient } from "thirdweb";
- *  import { sendCalls, getCallsStatus } from "thirdweb/wallets";
+ *  import { sendCalls, getCallsStatus } from "thirdweb/wallets/eip5792";
  *
  *  const client = createThirdwebClient({ clientId: ... });
  *

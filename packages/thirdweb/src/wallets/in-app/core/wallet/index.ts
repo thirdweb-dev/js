@@ -21,10 +21,6 @@ export function isInAppWallet(
   return wallet.id === "inApp" || wallet.id === "embedded";
 }
 
-export type InAppWalletSocialAuth = "google" | "apple" | "facebook";
-
-export type InAppWalletAuth = "email" | "phone" | InAppWalletSocialAuth;
-
 /**
  * @internal
  */

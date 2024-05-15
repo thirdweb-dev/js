@@ -25,10 +25,10 @@ export type GetCapabilitiesResult = Prettify<
  * @param {GetCapabilitiesOptions} options
  * @param {Wallet} options.wallet - The wallet to get the capabilities of.
  * @returns {Promise<GetCapabilitiesResult>} - A promise that resolves to the capabilities of the wallet based on the [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) spec.
- *
+ * @beta
  * @example
  * ```ts
- * import { getCapabilities } from "@thirdweb/wallets";
+ * import { getCapabilities } from "thirdweb/wallets/eip5792";
  *
  * const wallet = createWallet("com.coinbase.wallet");
  * const capabilities = await getCapabilities({ wallet });

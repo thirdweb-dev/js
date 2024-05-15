@@ -21,10 +21,11 @@ export type ShowCallsStatusOptions = {
  * @param {WalletSendCallsId} options.bundleId - The bundle ID of the calls to show the status of.
  * @returns {Promise<void>}
  *
+ * @beta
  * @example
  * ```ts
  *  import { createThirdwebClient } from "thirdweb";
- *  import { showCallsStatus } from "@thirdweb/wallets";
+ *  import { showCallsStatus } from "thirdweb/wallets/eip5792";
  *
  *  const client = createThirdwebClient({ clientId: ... });
  *

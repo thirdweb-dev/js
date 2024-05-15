@@ -60,7 +60,6 @@ export {
   // to
   toHex,
   uint8ArrayToHex,
-  generateRandomHex,
   type BoolToHexOpts,
   type FromHexParameters,
   type FromHexReturnType,

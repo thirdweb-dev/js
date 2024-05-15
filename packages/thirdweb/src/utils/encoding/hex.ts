@@ -1,4 +1,3 @@
-import { randomBytes } from "@noble/hashes/utils";
 import { cachedTextDecoder } from "../text-decoder.js";
 import { cachedTextEncoder } from "../text-encoder.js";
 // slightly tweaked re-exports from viem for the moment
@@ -503,20 +502,4 @@ export function toHex(
     default:
       return uint8ArrayToHex(value, opts);
   }
-}
-
-/**
- * Generates a random hexidecimal string.
- * @param length Length of the Hex to generate.
- * @returns The generated hexadecimal string.
- * @example
- * @example
- * ```ts
- * const randomHex = generateRandomHex(16);
- * console.log(randomHex); // Outputs a 16-character hexadecimal string, e.g., "a3f7b1c482e8f440"
- * ```
- * @util
- */
-export function generateRandomHex(length: number): string {
-  return toHex(randomBytes(Math.ceil(length / 2))).slice(0, length);
 }
