@@ -6,6 +6,13 @@ import { useApiAuthToken } from "./useApi";
 import { useAddress, useChainId } from "@thirdweb-dev/react";
 import { THIRDWEB_API_HOST } from "constants/urls";
 import { useLoggedInUser } from "./useLoggedInUser";
+import { useState } from "react";
+
+export function useEngineConnectedInstance() {
+  const [instance, setInstance] = useState<EngineInstance | null>(null);
+
+  return { instance, setInstance };
+}
 
 export type EngineTier = "STARTER" | "PREMIUM" | "ENTERPRISE";
 
@@ -641,7 +648,7 @@ export function useEngineUpdateRelayer(instance: string) {
   );
 }
 
-export type Webhook = {
+export interface EngineWebhook {
   url: string;
   name: string;
   secret?: string | null;
@@ -649,7 +656,7 @@ export type Webhook = {
   active: boolean;
   createdAt: string;
   id: number;
-};
+}
 
 export function useEngineWebhooks(instance: string) {
   const { token } = useApiAuthToken();
@@ -667,29 +674,7 @@ export function useEngineWebhooks(instance: string) {
 
       const json = await res.json();
 
-      return (json.result as Webhook[]) || [];
-    },
-    { enabled: !!instance && !!token },
-  );
-}
-
-export function useEngineWebhooksEventTypes(instance: string) {
-  const { token } = useApiAuthToken();
-
-  return useQuery(
-    engineKeys.webhookEventTypes(instance),
-    async () => {
-      const res = await fetch(`${instance}webhooks/event-types`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const json = await res.json();
-
-      return (json.result as string[]) || [];
+      return (json.result as EngineWebhook[]) || [];
     },
     { enabled: !!instance && !!token },
   );
@@ -1222,6 +1207,148 @@ export function useEngineSetCorsConfiguration(instance: string) {
       onSuccess: () => {
         return queryClient.invalidateQueries(engineKeys.corsUrls(instance));
       },
+    },
+  );
+}
+
+export interface EngineContractSubscription {
+  id: string;
+  chainId: number;
+  contractAddress: string;
+  webhook?: EngineWebhook;
+  createdAt: Date;
+
+  // Dummy field for the table.
+  lastIndexedBlock: string;
+}
+
+export function useEngineContractSubscription(instance: string) {
+  const { token } = useApiAuthToken();
+  return useQuery(
+    engineKeys.contractSubscriptions(instance),
+    async () => {
+      const res = await fetch(`${instance}contract-subscriptions/get-all`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const json = await res.json();
+      return json.result as EngineContractSubscription[];
+    },
+    {
+      enabled: !!instance && !!token,
+    },
+  );
+}
+
+export interface AddContractSubscriptionInput {
+  chain: string;
+  contractAddress: string;
+  webhookUrl?: string;
+}
+
+export function useEngineAddContractSubscription(instance: string) {
+  const queryClient = useQueryClient();
+  const { token } = useApiAuthToken();
+
+  return useMutation(
+    async (input: AddContractSubscriptionInput) => {
+      invariant(instance, "instance is required");
+
+      const res = await fetch(`${instance}contract-subscriptions/add`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(input),
+      });
+      const json = await res.json();
+
+      if (json.error) {
+        throw new Error(json.error.message);
+      }
+
+      return json.result;
+    },
+    {
+      onSuccess: () => {
+        return queryClient.invalidateQueries(
+          engineKeys.contractSubscriptions(instance),
+        );
+      },
+    },
+  );
+}
+
+export interface RemoveContractSubscriptionInput {
+  contractSubscriptionId: string;
+}
+
+export function useEngineRemoveContractSubscription(instance: string) {
+  const queryClient = useQueryClient();
+  const { token } = useApiAuthToken();
+
+  return useMutation(
+    async (input: RemoveContractSubscriptionInput) => {
+      invariant(instance, "instance is required");
+
+      const res = await fetch(`${instance}contract-subscriptions/remove`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(input),
+      });
+      const json = await res.json();
+
+      if (json.error) {
+        throw new Error(json.error.message);
+      }
+
+      return json.result;
+    },
+    {
+      onSuccess: () => {
+        return queryClient.invalidateQueries(
+          engineKeys.contractSubscriptions(instance),
+        );
+      },
+    },
+  );
+}
+
+export function useEngineSubscriptionsLastBlock(
+  instanceUrl: string,
+  chainId: number,
+  autoUpdate: boolean,
+) {
+  const { token } = useApiAuthToken();
+
+  return useQuery(
+    engineKeys.contractSubscriptionsLastBlock(instanceUrl, chainId),
+    async () => {
+      const response = await fetch(
+        `${instanceUrl}contract-subscriptions/last-block?chain=${chainId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      const json = await response.json();
+      return json.result.lastBlock as number;
+    },
+    {
+      enabled: !!instanceUrl && !!token,
+      refetchInterval: autoUpdate ? 5_000 : false,
     },
   );
 }

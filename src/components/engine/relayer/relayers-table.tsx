@@ -6,23 +6,24 @@ import {
   useEngineUpdateRelayer,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
   Flex,
-  useDisclosure,
-  Stack,
   FormControl,
-  UseDisclosureReturn,
   Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Select,
+  Stack,
   Textarea,
+  UseDisclosureReturn,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
+import { shortenString } from "@thirdweb-dev/react";
 import { NetworkDropdown } from "components/contract-components/contract-publish-form/NetworkDropdown";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { TWTable } from "components/shared/TWTable";
@@ -31,6 +32,8 @@ import { useAllChainsData } from "hooks/chains/allChains";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { BiPencil } from "react-icons/bi";
+import { FiTrash } from "react-icons/fi";
 import {
   Button,
   FormHelperText,
@@ -39,11 +42,7 @@ import {
   Text,
   TrackedCopyButton,
 } from "tw-components";
-import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { AddModalInput, parseAddressListRaw } from "./add-relayer-button";
-import { shortenString } from "@thirdweb-dev/react";
-import { BiPencil } from "react-icons/bi";
-import { FiTrash } from "react-icons/fi";
 
 interface RelayersTableProps {
   instanceUrl: string;
@@ -69,39 +68,38 @@ export const RelayersTable: React.FC<RelayersTableProps> = ({
     columnHelper.accessor("chainId", {
       header: "Chain",
       cell: (cell) => {
-        const { chainId, backendWalletAddress } = cell.row.original;
-        const chain = chainIdToChainRecord[parseInt(chainId)];
-        if (chain) {
-          const chainNameDisplay = (
-            <Flex align="center" gap={2}>
-              <ChainIcon size={12} ipfsSrc={chain?.icon?.url} />
-              <Text>{chain.name}</Text>
-            </Flex>
-          );
-
-          const explorer = chain.explorers?.[0];
-          if (!explorer) {
-            return chainNameDisplay;
-          }
-
-          return (
-            <LinkButton
-              key={explorer.name}
-              variant="ghost"
-              isExternal
-              size="xs"
-              href={`${explorer.url}/address/${backendWalletAddress}`}
-            >
-              {chainNameDisplay}
-            </LinkButton>
-          );
-        }
+        const chain = chainIdToChainRecord[parseInt(cell.getValue())];
+        return (
+          <Flex align="center" gap={2}>
+            <ChainIcon size={12} ipfsSrc={chain.icon?.url} />
+            <Text>{chain.name}</Text>
+          </Flex>
+        );
       },
     }),
     columnHelper.accessor("backendWalletAddress", {
       header: "Backend Wallet",
       cell: (cell) => {
-        return <AddressCopyButton size="xs" address={cell.getValue() ?? ""} />;
+        const { chainId, backendWalletAddress } = cell.row.original;
+        const chain = chainIdToChainRecord[parseInt(chainId)];
+
+        const explorer = chain.explorers?.[0];
+        if (!explorer) {
+          return backendWalletAddress;
+        }
+
+        return (
+          <LinkButton
+            key={explorer.name}
+            variant="ghost"
+            isExternal
+            size="xs"
+            href={`${explorer.url}/address/${backendWalletAddress}`}
+            fontFamily="mono"
+          >
+            {backendWalletAddress}
+          </LinkButton>
+        );
       },
     }),
     columnHelper.accessor("name", {

@@ -1,12 +1,22 @@
 import { EngineInstance } from "@3rdweb-sdk/react/hooks/useEngine";
-import { Box, ButtonGroup, Divider, Flex, Stack } from "@chakra-ui/react";
+import {
+  Flex,
+  Stack,
+  Tab,
+  TabIndicator,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+} from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { FiArrowLeft } from "react-icons/fi";
 import { Button, Heading, Text } from "tw-components";
 import { EngineVersionBadge } from "./badges/version";
 import { EngineConfiguration } from "./configuration/engine-configuration";
 import { EngineWebhooks } from "./configuration/engine-webhooks";
+import { EngineContractSubscriptions } from "./contract-subscription/engine-contract-subscription";
 import { EngineExplorer } from "./explorer/engine-explorer";
 import { EngineOverview } from "./overview/engine-overview";
 import { EngineAccessTokens } from "./permissions/engine-access-tokens";
@@ -36,6 +46,10 @@ export const EngineNavigation: React.FC<EngineNavigationProps> = ({
       children: <EngineRelayer instanceUrl={instance.url} />,
     },
     {
+      title: "Contract Subscriptions",
+      children: <EngineContractSubscriptions instanceUrl={instance.url} />,
+    },
+    {
       title: "Admins",
       children: <EngineAdmins instanceUrl={instance.url} />,
     },
@@ -53,19 +67,7 @@ export const EngineNavigation: React.FC<EngineNavigationProps> = ({
     },
   ];
 
-  const [tab, setTab] = useState(tabs[0].title);
   const trackEvent = useTrack();
-
-  useEffect(() => {
-    if (instance) {
-      trackEvent({
-        category: "engine",
-        action: "navigate-tab",
-        label: tab.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
-        url: instance.url,
-      });
-    }
-  }, [instance, tab, trackEvent]);
 
   const onClickBack = () => {
     setConnectedInstance(undefined);
@@ -95,30 +97,40 @@ export const EngineNavigation: React.FC<EngineNavigationProps> = ({
         </Flex>
       </Stack>
 
-      <Flex flexDir="column" gap={{ base: 0, md: 4 }} mb={4} mt={4}>
-        <Box w="full" overflowX="auto" pb={{ base: 4, md: 0 }}>
-          <ButtonGroup size="sm" variant="ghost" spacing={2}>
-            {tabs.map((tb) => (
-              <Button
-                key={tb.title}
-                type="button"
-                isActive={tab === tb.title}
-                _active={{
-                  bg: "bgBlack",
-                  color: "bgWhite",
-                }}
-                rounded="lg"
-                onClick={() => setTab(tb.title)}
-              >
-                {tb.title}
-              </Button>
-            ))}
-          </ButtonGroup>
-        </Box>
-        <Divider />
-      </Flex>
+      <Tabs
+        size="sm"
+        onChange={(index) => {
+          trackEvent({
+            category: "engine",
+            action: "navigate-tab",
+            label: tabs[index].title.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+            url: instance.url,
+          });
+        }}
+      >
+        <TabList>
+          {tabs.map((tb) => (
+            <Tab key={tb.title} fontSize="small" py={2}>
+              {tb.title}
+            </Tab>
+          ))}
+        </TabList>
 
-      {tabs.find((t) => t.title === tab)?.children}
+        <TabIndicator
+          mt="-1.5px"
+          height="2px"
+          bg="blue.500"
+          borderRadius="1px"
+        />
+
+        <TabPanels>
+          {tabs.map((tb) => (
+            <TabPanel key={tb.title} py={8}>
+              {tb.children}
+            </TabPanel>
+          ))}
+        </TabPanels>
+      </Tabs>
     </Stack>
   );
 };

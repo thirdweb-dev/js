@@ -1,5 +1,5 @@
 import {
-  Webhook,
+  EngineWebhook,
   useEngineRevokeWebhook,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import {
@@ -35,12 +35,12 @@ export function beautifyString(str: string): string {
 
 interface WebhooksTableProps {
   instanceUrl: string;
-  webhooks: Webhook[];
+  webhooks: EngineWebhook[];
   isLoading: boolean;
   isFetched: boolean;
 }
 
-const columnHelper = createColumnHelper<Webhook>();
+const columnHelper = createColumnHelper<EngineWebhook>();
 
 const columns = [
   columnHelper.accessor("name", {
@@ -112,7 +112,7 @@ export const WebhooksTable: React.FC<WebhooksTableProps> = ({
   isLoading,
   isFetched,
 }) => {
-  const [webhookToRevoke, setWebhookToRevoke] = useState<Webhook>();
+  const [webhookToRevoke, setWebhookToRevoke] = useState<EngineWebhook>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { mutate: revokeWebhook } = useEngineRevokeWebhook(instanceUrl);
   const trackEvent = useTrack();
@@ -121,7 +121,7 @@ export const WebhooksTable: React.FC<WebhooksTableProps> = ({
     "Failed to delete webhook",
   );
 
-  const onDelete = (webhook: Webhook) => {
+  const onDelete = (webhook: EngineWebhook) => {
     setWebhookToRevoke(webhook);
     onOpen();
   };

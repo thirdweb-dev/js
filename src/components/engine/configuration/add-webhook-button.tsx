@@ -1,10 +1,12 @@
 import {
   CreateWebhookInput,
   useEngineCreateWebhook,
-  useEngineWebhooksEventTypes,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import {
   Flex,
+  FormControl,
+  Icon,
+  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -12,29 +14,35 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  useDisclosure,
-  Icon,
-  FormControl,
-  Input,
   Select,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
-import { Button, FormHelperText, FormLabel } from "tw-components";
 import { AiOutlinePlusCircle } from "react-icons/ai";
+import { Button, FormLabel } from "tw-components";
 import { beautifyString } from "./webhooks-table";
 
 interface AddWebhookButtonProps {
   instanceUrl: string;
 }
 
+const WEBHOOK_EVENT_TYPES = [
+  "all_transactions",
+  "sent_transaction",
+  "mined_transaction",
+  "errored_transaction",
+  "cancelled_transaction",
+  "backend_wallet_balance",
+  "auth",
+];
+
 export const AddWebhookButton: React.FC<AddWebhookButtonProps> = ({
   instanceUrl,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { mutate: createWebhook } = useEngineCreateWebhook(instanceUrl);
-  const { data: webhookEventTypes } = useEngineWebhooksEventTypes(instanceUrl);
   const trackEvent = useTrack();
   const form = useForm<CreateWebhookInput>();
 
@@ -92,7 +100,7 @@ export const AddWebhookButton: React.FC<AddWebhookButtonProps> = ({
               <FormControl isRequired>
                 <FormLabel>Event Type</FormLabel>
                 <Select {...form.register("eventType", { required: true })}>
-                  {webhookEventTypes?.map((eventType) => (
+                  {WEBHOOK_EVENT_TYPES.map((eventType) => (
                     <option key={eventType} value={eventType}>
                       {beautifyString(eventType)}
                     </option>
@@ -102,21 +110,18 @@ export const AddWebhookButton: React.FC<AddWebhookButtonProps> = ({
               <FormControl isRequired>
                 <FormLabel>Name</FormLabel>
                 <Input
-                  min={5}
                   type="text"
+                  placeholder="My webhook"
                   {...form.register("name", { required: true })}
                 />
-                <FormHelperText>Minimum 5 characters</FormHelperText>
               </FormControl>
               <FormControl isRequired>
                 <FormLabel>URL</FormLabel>
                 <Input
                   type="url"
+                  placeholder="https://"
                   {...form.register("url", { required: true })}
                 />
-                <FormHelperText>
-                  Only https:// URLs are accepted.
-                </FormHelperText>
               </FormControl>
             </Flex>
           </ModalBody>
