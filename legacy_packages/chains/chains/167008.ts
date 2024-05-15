@@ -28,10 +28,10 @@ export default {
   "redFlags": [],
   "rpc": [
     "https://167008.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.katla.taiko.xyz",
-    "wss://ws.katla.taiko.xyz",
     "https://taiko-katla.drpc.org",
-    "wss://taiko-katla.drpc.org"
+    "wss://taiko-katla.drpc.org",
+    "https://rpc.katla.taiko.xyz",
+    "wss://ws.katla.taiko.xyz"
   ],
   "shortName": "tko-katla",
   "slug": "taiko-katla-l2",

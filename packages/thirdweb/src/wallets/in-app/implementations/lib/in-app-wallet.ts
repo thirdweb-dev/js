@@ -1,5 +1,5 @@
 import type { ThirdwebClient } from "../../../../client/client.js";
-import { getThirdwebDomains } from "../../../../utils/domains.js";
+import { getThirdwebBaseUrl } from "../../../../utils/domains.js";
 import {
   type GetUser,
   type InAppWalletConstructorType,
@@ -40,7 +40,7 @@ export class InAppWalletSdk {
         "You are using a legacy clientId. Please use the clientId found on the thirdweb dashboard settings page",
       );
     }
-    const baseUrl = `https://${getThirdwebDomains().inAppWallet}`;
+    const baseUrl = getThirdwebBaseUrl("inAppWallet");
     this.client = client;
     this.querier = new InAppWalletIframeCommunicator({
       clientId: client.clientId,

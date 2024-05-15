@@ -1,10 +1,11 @@
 "use client";
+import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import { Spacer } from "../../ui/components/Spacer.js";
-import { Button } from "../../ui/components/buttons.js";
-import { Input } from "../../ui/components/formElements.js";
+import { IconButton } from "../../ui/components/buttons.js";
+import { Input, InputContainer } from "../../ui/components/formElements.js";
 import { Text } from "../../ui/components/text.js";
-import { spacing } from "../../ui/design-system/index.js";
+import { iconSize, radius, spacing } from "../../ui/design-system/index.js";
 import { CountrySelector } from "./CountrySelector.js";
 
 export function InputSelectionUI(props: {
@@ -45,13 +46,13 @@ export function InputSelectionUI(props: {
         width: "100%",
       }}
     >
-      <div
+      <InputContainer
         style={{
           position: "relative",
           display: "flex",
           flexDirection: "row",
-          gap: spacing.sm,
         }}
+        data-error={renderingError}
       >
         {props.format === "phone" && (
           <CountrySelector
@@ -64,12 +65,14 @@ export function InputSelectionUI(props: {
           placeholder={props.placeholder}
           style={{
             flexGrow: 1,
+            padding: `${spacing.md} ${
+              props.format === "phone" ? 0 : spacing.md
+            }`,
           }}
-          variant="outline"
+          variant="transparent"
           type={props.type}
           name={props.name}
           value={input}
-          data-error={renderingError}
           onChange={(e) => {
             setInput(e.target.value);
             if (props.errorMessage) {
@@ -84,7 +87,16 @@ export function InputSelectionUI(props: {
             }
           }}
         />
-      </div>
+        <IconButton
+          onClick={handleSelect}
+          style={{
+            padding: spacing.md,
+            borderRadius: `0 ${radius.lg} ${radius.lg} 0`,
+          }}
+        >
+          <ArrowRightIcon width={iconSize.md} height={iconSize.md} />
+        </IconButton>
+      </InputContainer>
 
       {showError && error && (
         <>
@@ -106,11 +118,6 @@ export function InputSelectionUI(props: {
             </Text>
           </>
         )}
-
-      <Spacer y="md" />
-      <Button variant="accent" onClick={handleSelect} fullWidth>
-        {props.submitButtonText}
-      </Button>
     </div>
   );
 }

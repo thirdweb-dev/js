@@ -5,12 +5,17 @@ import { sendTransaction } from "../../../../transaction/actions/send-transactio
 import type { WaitForReceiptOptions } from "../../../../transaction/actions/wait-for-tx-receipt.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
 import { resolvePromisedValue } from "../../../../utils/promise/resolve-promised-value.js";
+import type { Account } from "../../../../wallets/interfaces/wallet.js";
 import {
   type GetWalletBalanceResult,
   getWalletBalance,
 } from "../../../../wallets/utils/getWalletBalance.js";
 import { fetchBuySupportedDestinations } from "../../../web/ui/ConnectWallet/screens/Buy/swap/useSwapSupportedChains.js";
-import { useActiveAccount } from "../wallets/wallet-hooks.js";
+import {
+  useActiveAccount,
+  useActiveWallet,
+  useSwitchActiveWalletChain,
+} from "../wallets/wallet-hooks.js";
 
 type ShowModalData = {
   tx: PreparedTransaction;
@@ -37,10 +42,21 @@ export function useSendTransactionCore(
   showPayModal?: (data: ShowModalData) => void,
   gasless?: GaslessOptions,
 ): UseMutationResult<WaitForReceiptOptions, Error, PreparedTransaction> {
-  const account = useActiveAccount();
+  let _account = useActiveAccount();
+  const wallet = useActiveWallet();
+  const switchChain = useSwitchActiveWalletChain();
 
   return useMutation({
     mutationFn: async (tx) => {
+      // switch chain if needed
+      if (wallet && tx.chain.id !== wallet.getChain()?.id) {
+        await switchChain(tx.chain);
+        // in smart wallet case, account may change after chain switch
+        _account = wallet.getAccount();
+      }
+
+      const account = _account;
+
       if (!account) {
         throw new Error("No active account");
       }
@@ -90,7 +106,7 @@ export function useSendTransactionCore(
                 chain: tx.chain,
                 client: tx.client,
               }),
-              getTotalTxCostForBuy(tx),
+              getTotalTxCostForBuy(tx, account),
             ]);
 
             const walletBalanceWei = walletBalance.value;
@@ -122,9 +138,13 @@ export function useSendTransactionCore(
   });
 }
 
-export async function getTotalTxCostForBuy(tx: PreparedTransaction) {
+export async function getTotalTxCostForBuy(
+  tx: PreparedTransaction,
+  account?: Account,
+) {
   const gasCost = await estimateGasCost({
     transaction: tx,
+    account,
   });
 
   const bufferCost = gasCost.wei / 10n;

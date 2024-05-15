@@ -10,6 +10,7 @@ import { getLastAuthProvider } from "../../wallets/in-app/storage.js";
 import {
   emailIcon,
   genericWalletIcon,
+  passkeyIcon,
   phoneIcon,
 } from "../ConnectWallet/icons/dataUris.js";
 import {
@@ -73,6 +74,9 @@ export function WalletImage(props: {
           case "email":
             mipdImage = emailIcon;
             break;
+          case "passkey":
+            mipdImage = passkeyIcon;
+            break;
         }
       }
 
@@ -85,7 +89,6 @@ export function WalletImage(props: {
     return (
       <Img
         src={image}
-        fallbackImage={genericWalletIcon}
         width={props.size}
         height={props.size}
         loading="eager"

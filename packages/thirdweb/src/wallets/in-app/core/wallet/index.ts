@@ -25,10 +25,14 @@ export async function connectInAppWallet(
       client: options.client,
       authAccount,
       smartAccountOptions: createOptions.smartAccount,
+      chain: options.chain,
     });
   }
 
-  return [authAccount, options.chain || ethereum] as const;
+  return [
+    authAccount,
+    options.chain || createOptions?.smartAccount?.chain || ethereum,
+  ] as const;
 }
 
 /**
@@ -51,16 +55,21 @@ export async function autoConnectInAppWallet(
       client: options.client,
       authAccount,
       smartAccountOptions: createOptions.smartAccount,
+      chain: options.chain,
     });
   }
 
-  return [authAccount, options.chain || ethereum] as const;
+  return [
+    authAccount,
+    options.chain || createOptions?.smartAccount?.chain || ethereum,
+  ] as const;
 }
 
 async function convertToSmartAccount(options: {
   client: ThirdwebClient;
   authAccount: Account;
   smartAccountOptions: CreateWalletArgs<"smart">[1];
+  chain?: Chain;
 }) {
   const [{ smartWallet }, { connectSmartWallet }] = await Promise.all([
     import("../../../create-wallet.js"),
@@ -73,6 +82,7 @@ async function convertToSmartAccount(options: {
     {
       client: options.client,
       personalAccount: options.authAccount,
+      chain: options.chain,
     },
     options.smartAccountOptions,
   );
