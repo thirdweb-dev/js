@@ -19,7 +19,7 @@ import type { PreparedMethod } from "../../../../utils/abi/prepare-method.js";
 import { getFunctionId } from "../../../../utils/function-id.js";
 import { stringify } from "../../../../utils/json.js";
 
-type PickedQueryOptions = Pick<UseQueryOptions, "enabled">;
+type PickedQueryOptions = Pick<UseQueryOptions, "enabled" | "queryKey">;
 
 /**
  * A hook to read from a contract.
