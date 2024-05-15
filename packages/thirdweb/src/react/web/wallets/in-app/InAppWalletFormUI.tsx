@@ -348,7 +348,12 @@ export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
         minHeight: "250px",
       }}
     >
-      {isCompact ? <ModalHeader onBack={onBack} title={locale.title} /> : null}
+      {isCompact ? (
+        <>
+          <ModalHeader onBack={onBack} title={locale.title} />
+          <Spacer y="sm" />
+        </>
+      ) : null}
 
       <Container
         expand

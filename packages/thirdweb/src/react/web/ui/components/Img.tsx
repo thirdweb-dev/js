@@ -76,6 +76,7 @@ export const Img: React.FC<{
         loading={props.loading}
         decoding="async"
         style={{
+          display: isLoaded ? "block" : "none",
           objectFit: "contain",
           height: !isLoaded
             ? 0
