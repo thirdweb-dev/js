@@ -177,7 +177,6 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
           style={{
             maxHeight: "100px",
             maxWidth: "300px",
-            padding: `${spacing.md} 0`,
             margin: "auto",
           }}
           src={config.metadata.image.src}
