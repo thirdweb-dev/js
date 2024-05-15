@@ -6,10 +6,22 @@ export default {
     {
       "name": "Genesys Scan",
       "url": "https://genesysscan.io",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://bafkreihgmpaceze7rxpajv7yrlx3cb6daqubippkpvgryzairtaubsjjoe",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://bafkreihgmpaceze7rxpajv7yrlx3cb6daqubippkpvgryzairtaubsjjoe",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "infoURL": "https://genesyscode.io",
   "name": "Genesys Code Mainnet",
   "nativeCurrency": {
