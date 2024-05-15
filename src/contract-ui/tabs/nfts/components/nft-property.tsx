@@ -19,7 +19,9 @@ export const NftProperty: React.FC<NftPropertyProps> = ({ property }) => {
         </Text>
       )}
       <Text size="label.md" textAlign="center">
-        {property?.value}
+        {typeof property?.value === "object"
+          ? JSON.stringify(property?.value || {})
+          : property?.value}
       </Text>
     </Card>
   );
