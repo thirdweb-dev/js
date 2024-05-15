@@ -212,6 +212,32 @@ export async function coinbaseSDKWalletSendCalls(args: {
 /**
  * @internal
  */
+export async function coinbaseSDKWalletShowCallsStatus(args: {
+  wallet: Wallet<typeof COINBASE>;
+  bundleId: string;
+}) {
+  const { wallet, bundleId } = args;
+
+  const provider = await getCoinbaseProvider(wallet.getConfig());
+
+  try {
+    return await provider.request({
+      method: "wallet_showCallsStatus",
+      params: [bundleId],
+    });
+  } catch (error: unknown) {
+    if (/unsupport|not support/i.test((error as Error).message)) {
+      throw new Error(
+        `${wallet.id} does not support wallet_showCallsStatus, reach out to them directly to request EIP-5792 support.`,
+      );
+    }
+    throw error;
+  }
+}
+
+/**
+ * @internal
+ */
 export async function coinbaseSDKWalletGetCallsStatus(args: {
   wallet: Wallet<typeof COINBASE>;
   bundleId: string;

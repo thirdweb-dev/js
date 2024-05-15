@@ -1,3 +1,4 @@
+import { isCoinbaseSDKWallet } from "../coinbase/coinbaseSDKWallet.js";
 import { isInAppWallet } from "../in-app/core/wallet/index.js";
 import { getInjectedProvider } from "../injected/index.js";
 import type { Wallet } from "../interfaces/wallet.js";
@@ -46,6 +47,15 @@ export async function showCallsStatus({
       "showCallsStatus is currently unsupported for this wallet type",
     );
   }
+
+  if (isCoinbaseSDKWallet(wallet)) {
+    const { coinbaseSDKWalletShowCallsStatus } = await import(
+      "../coinbase/coinbaseSDKWallet.js"
+    );
+    await coinbaseSDKWalletShowCallsStatus({ wallet, bundleId });
+    return;
+  }
+
   // Default to injected wallet
   const provider = getInjectedProvider(wallet.id);
 
