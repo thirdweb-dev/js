@@ -12,6 +12,12 @@ export default {
   "faucets": [
     "https://faucet.alaya.network/faucet/?id=f93426c0887f11eb83b900163e06151c"
   ],
+  "icon": {
+    "url": "ipfs://Qmci6vPcWAwmq19j98yuQxjV6UPzHtThMdCAUDbKeb8oYu",
+    "width": 1140,
+    "height": 1140,
+    "format": "png"
+  },
   "infoURL": "https://www.alaya.network/",
   "name": "Alaya Dev Testnet",
   "nativeCurrency": {

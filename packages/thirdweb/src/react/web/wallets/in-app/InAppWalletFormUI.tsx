@@ -336,7 +336,8 @@ export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
   return (
     <Container
       fullHeight
-      px="lg"
+      flex="column"
+      p="lg"
       animate="fadein"
       style={{
         minHeight: "250px",
@@ -349,7 +350,6 @@ export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
 
         <Container
           expand
-          fullHeight
           flex="column"
           center="y"
           p={isCompact ? undefined : "lg"}

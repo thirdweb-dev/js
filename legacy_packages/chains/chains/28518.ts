@@ -6,10 +6,22 @@ export default {
     {
       "name": "blockscout",
       "url": "https://explorer.vizing.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmPgpWfGsAZ5UHekWFR8rioadVe3Wox8idFyeVxuv9N4Vo",
+        "width": 200,
+        "height": 200,
+        "format": "svg"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmPgpWfGsAZ5UHekWFR8rioadVe3Wox8idFyeVxuv9N4Vo",
+    "width": 200,
+    "height": 200,
+    "format": "svg"
+  },
   "infoURL": "https://vizing.com",
   "name": "Vizing Mainnet",
   "nativeCurrency": {
