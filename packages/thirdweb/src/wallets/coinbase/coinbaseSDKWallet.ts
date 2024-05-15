@@ -194,11 +194,19 @@ export async function coinbaseSDKWalletSendCalls(args: {
   const config = wallet.getConfig();
   const provider = await getCoinbaseProvider(config);
 
-  // Coinbase SDK should support
-  return provider.request({
-    method: "wallet_sendCalls",
-    params,
-  }) as Promise<WalletSendCallsId>;
+  try {
+    return provider.request({
+      method: "wallet_sendCalls",
+      params,
+    }) as Promise<WalletSendCallsId>;
+  } catch (error) {
+    if (/unsupport|not support/i.test((error as Error).message)) {
+      throw new Error(
+        `${wallet.id} does not support wallet_sendCalls, reach out to them directly to request EIP-5792 support.`,
+      );
+    }
+    throw error;
+  }
 }
 
 /**
