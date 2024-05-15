@@ -343,33 +343,29 @@ export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
         minHeight: "250px",
       }}
     >
-      <Container flex="column" py="lg" style={{ minHeight: "100%" }}>
-        {isCompact ? (
-          <ModalHeader onBack={onBack} title={locale.title} />
-        ) : null}
+      {isCompact ? <ModalHeader onBack={onBack} title={locale.title} /> : null}
 
-        <Container
-          expand
-          flex="column"
-          center="y"
-          p={isCompact ? undefined : "lg"}
-        >
-          <InAppWalletFormUI {...props} />
-        </Container>
+      <Container
+        expand
+        flex="column"
+        center="y"
+        p={isCompact ? undefined : "lg"}
+      >
+        <InAppWalletFormUI {...props} />
+      </Container>
 
-        {isCompact &&
-          (connectModal.showThirdwebBranding !== false ||
-            connectModal.termsOfServiceUrl ||
-            connectModal.privacyPolicyUrl) && <Spacer y="xl" />}
+      {isCompact &&
+        (connectModal.showThirdwebBranding !== false ||
+          connectModal.termsOfServiceUrl ||
+          connectModal.privacyPolicyUrl) && <Spacer y="xl" />}
 
-        <Container flex="column" gap="lg">
-          <TOS
-            termsOfServiceUrl={connectModal.termsOfServiceUrl}
-            privacyPolicyUrl={connectModal.privacyPolicyUrl}
-          />
+      <Container flex="column" gap="lg">
+        <TOS
+          termsOfServiceUrl={connectModal.termsOfServiceUrl}
+          privacyPolicyUrl={connectModal.privacyPolicyUrl}
+        />
 
-          {connectModal.showThirdwebBranding !== false && <PoweredByThirdweb />}
-        </Container>
+        {connectModal.showThirdwebBranding !== false && <PoweredByThirdweb />}
       </Container>
     </Container>
   );
