@@ -46,6 +46,7 @@ import {
   extractFunctionParamsFromAbi,
   extractFunctionsFromAbi,
   fetchPreDeployMetadata,
+  fetchRawPredeployMetadata,
   getTrustedForwarders,
 } from "@thirdweb-dev/sdk";
 import {
@@ -82,6 +83,56 @@ interface ContractPublishMetadata {
   licenses?: string[];
   compilerMetadata?: Record<string, any>;
   analytics?: Record<string, any>;
+}
+
+interface RawPredeployMetadata {
+  name: string;
+  metadataUri: string;
+  bytecodeUri: string;
+  analytics?: Record<string, any>;
+  compilers?: Record<string, any>;
+}
+
+// metadata PRE publish, only has the compiler output info (from CLI)
+export async function fetchRawPredeployMetadataFromURI(contractId: ContractId) {
+  const contractIdIpfsHash = toContractIdIpfsHash(contractId);
+
+  invariant(contractId !== "ipfs://undefined", "uri can't be undefined");
+  let resolved;
+  try {
+    resolved = await fetchRawPredeployMetadata(
+      contractIdIpfsHash,
+      StorageSingleton,
+    );
+  } catch (err) {
+    console.error("failed to resolvePreDeployMetadata", err);
+  }
+
+  if (!resolved) {
+    return {
+      name: "",
+      metadataUri: "",
+      bytecodeUri: "",
+    };
+  }
+
+  return {
+    name: resolved.name,
+    metadataUri: resolved.metadataUri,
+    bytecodeUri: resolved.bytecodeUri,
+    analytics: removeUndefinedFromObject(resolved.analytics),
+    compilers: resolved.compilers,
+  };
+}
+
+export function useContractRawPredeployMetadataFromURI(contractId: ContractId) {
+  return useQuery<RawPredeployMetadata>(
+    ["raw-predeploy-metadata", contractId],
+    () => fetchRawPredeployMetadataFromURI(contractId),
+    {
+      enabled: !!contractId,
+    },
+  );
 }
 
 function removeUndefinedFromObject(obj: Record<string, any>) {
@@ -544,6 +595,7 @@ export function useCustomContractDeployMutation(
   const deployContext = useDeployContextModal();
   const { data: transactions } = useTransactionsForDeploy(ipfsHash);
   const fullPublishMetadata = useContractFullPublishMetadata(ipfsHash);
+  const rawPredeployMetadata = useContractRawPredeployMetadataFromURI(ipfsHash);
 
   const walletConfig = useWalletConfig();
 
@@ -645,13 +697,31 @@ export function useCustomContractDeployMutation(
             window.ethereum as unknown as providers.ExternalProvider,
           ).getSigner();
 
-          contractAddress = await zkDeployContractFromUri(
-            ipfsHash.startsWith("ipfs://") ? ipfsHash : `ipfs://${ipfsHash}`,
-            Object.values(data.deployParams),
-            zkSigner,
-            StorageSingleton,
-            chainId as number,
-          );
+          if (
+            fullPublishMetadata?.data?.compilers?.zksolc ||
+            rawPredeployMetadata?.data?.compilers?.zksolc
+          ) {
+            contractAddress = await zkDeployContractFromUri(
+              ipfsHash.startsWith("ipfs://") ? ipfsHash : `ipfs://${ipfsHash}`,
+              Object.values(data.deployParams),
+              zkSigner,
+              StorageSingleton,
+              chainId as number,
+              {
+                compilerOptions: {
+                  compilerType: "zksolc",
+                },
+              },
+            );
+          } else {
+            contractAddress = await zkDeployContractFromUri(
+              ipfsHash.startsWith("ipfs://") ? ipfsHash : `ipfs://${ipfsHash}`,
+              Object.values(data.deployParams),
+              zkSigner,
+              StorageSingleton,
+              chainId as number,
+            );
+          }
         } else {
           if (data.deployDeterministic) {
             const salt = data.signerAsSalt
