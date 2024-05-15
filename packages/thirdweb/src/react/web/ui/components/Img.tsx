@@ -3,6 +3,7 @@ import { useState } from "react";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { resolveScheme } from "../../../../utils/ipfs.js";
 import { Skeleton } from "./Skeleton.js";
+import { Container } from "./basic.js";
 
 // Note: Must not use useConnectUI here
 
@@ -28,7 +29,11 @@ export const Img: React.FC<{
   const heightPx = `${props.height || props.width}px`;
 
   if (propSrc === undefined) {
-    return <Skeleton width={widthPx} height={heightPx} />;
+    return (
+      <Container style={{ margin: "auto" }}>
+        <Skeleton width={widthPx} height={heightPx} />
+      </Container>
+    );
   }
 
   const getSrc = () => {
@@ -51,9 +56,14 @@ export const Img: React.FC<{
         display: "inline-flex",
         flexShrink: 0,
         alignItems: "center",
+        justifyItems: "center",
       }}
     >
-      {!isLoaded && <Skeleton width={widthPx} height={heightPx} />}
+      {!isLoaded && (
+        <Container style={{ margin: "auto" }}>
+          <Skeleton width={widthPx} height={heightPx} />
+        </Container>
+      )}
       <img
         onLoad={() => {
           setIsLoaded(true);
@@ -66,6 +76,7 @@ export const Img: React.FC<{
         loading={props.loading}
         decoding="async"
         style={{
+          display: isLoaded ? "block" : "none",
           objectFit: "contain",
           height: !isLoaded
             ? 0
