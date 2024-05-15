@@ -1,5 +1,29 @@
 # thirdweb
 
+## 5.21.0
+
+### Minor Changes
+
+- [#3034](https://github.com/thirdweb-dev/js/pull/3034) [`99fa2da`](https://github.com/thirdweb-dev/js/commit/99fa2da05abc32646036a2269f90213c5756a5ba) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds the ability to set a custom logo for the social login modal
+
+  ```ts
+  import { inAppWallet } from "thirdweb/wallets";
+  const wallet = inAppWallet({
+    metadata: {
+      image: {
+        src: "https://example.com/logo.png",
+        alt: "My logo",
+        width: 100,
+        height: 100,
+      },
+    },
+  });
+  ```
+
+### Patch Changes
+
+- [#3035](https://github.com/thirdweb-dev/js/pull/3035) [`3c04450`](https://github.com/thirdweb-dev/js/commit/3c044508eee18ca741878da43e199ed4cc0528b7) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Export extensions for Pack contract
+
 ## 5.20.0
 
 ### Minor Changes
