@@ -53,6 +53,7 @@ const usageEventSchema = z.object({
   sdkName: z.string().optional(),
   sdkVersion: z.string().optional(),
   sdkPlatform: z.string().optional(),
+  sdkOS: z.string().optional(),
   productName: z.string().optional(),
   transactionValue: z.string().optional(),
   pathname: z.string().optional(),
