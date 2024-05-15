@@ -122,6 +122,7 @@ const moduleExports = {
   },
   reactStrictMode: true,
   experimental: {
+    instrumentationHook: true,
     scrollRestoration: true,
     esmExternals: "loose",
   },
