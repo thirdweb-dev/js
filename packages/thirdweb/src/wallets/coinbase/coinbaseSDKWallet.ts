@@ -195,10 +195,10 @@ export async function coinbaseSDKWalletSendCalls(args: {
   const provider = await getCoinbaseProvider(config);
 
   try {
-    return provider.request({
+    return (await provider.request({
       method: "wallet_sendCalls",
       params,
-    }) as Promise<WalletSendCallsId>;
+    })) as WalletSendCallsId;
   } catch (error) {
     if (/unsupport|not support/i.test((error as Error).message)) {
       throw new Error(

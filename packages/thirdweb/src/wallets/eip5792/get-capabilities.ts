@@ -83,7 +83,7 @@ export async function getCapabilities<const ID extends WalletId = WalletId>({
       params: [account.address],
     });
   } catch (error: unknown) {
-    if (/unsupport|not support/i.test((error as Error).message)) {
+    if (/unsupport|not support|not available/i.test((error as Error).message)) {
       return {
         message: `${wallet.id} does not support wallet_getCapabilities, reach out to them directly to request EIP-5792 support.`,
       };

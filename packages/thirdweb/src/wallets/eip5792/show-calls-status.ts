@@ -33,6 +33,7 @@ export type ShowCallsStatusOptions = {
  *  await showCallsStatus({ wallet, bundleId });
  * ```
  * @wallets
+ * @internal
  */
 export async function showCallsStatus({
   wallet,
