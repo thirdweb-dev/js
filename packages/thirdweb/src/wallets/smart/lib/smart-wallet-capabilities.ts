@@ -11,7 +11,7 @@ export function smartWalletGetCapabilities(args: {
   const chain = wallet.getChain();
   if (chain === undefined) {
     return {
-      message: "No chain found",
+      message: `Can't get capabilities, no active chain found for wallet: ${wallet.id}`,
     };
   }
 
