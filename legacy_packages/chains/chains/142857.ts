@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmQpKKwpqrx77VA4SJLEWhuv9eLFMcVV9uvxRCLb6gdgCX",
+    "width": 847,
+    "height": 906,
+    "format": "png"
+  },
   "infoURL": "https://docs.ic-plaza.org/",
   "name": "ICPlaza Mainnet",
   "nativeCurrency": {

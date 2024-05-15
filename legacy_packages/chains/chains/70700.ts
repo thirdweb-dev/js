@@ -6,10 +6,22 @@ export default {
     {
       "name": "Proof of Play Apex Explorer",
       "url": "https://explorer.apex.proofofplay.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmW3NPDe6WRqucrWbe8pg3GqSMPi8V6Qa1fAiaQuqjxSJC",
+        "width": 1256,
+        "height": 1256,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmW3NPDe6WRqucrWbe8pg3GqSMPi8V6Qa1fAiaQuqjxSJC",
+    "width": 1256,
+    "height": 1256,
+    "format": "png"
+  },
   "infoURL": "https://proofofplay.com",
   "name": "Proof of Play - Apex",
   "nativeCurrency": {

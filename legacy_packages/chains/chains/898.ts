@@ -20,6 +20,12 @@ export default {
       "name": "EIP1559"
     }
   ],
+  "icon": {
+    "url": "ipfs://QmXMLcCaNPMyWCEYX2MZDJHNvj5cpj2cR5dRQtedBRNypT",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "infoURL": "https://maxi.network",
   "name": "MAXI Chain Testnet",
   "nativeCurrency": {

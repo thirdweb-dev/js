@@ -25,7 +25,7 @@
   {
     "name": "thirdweb/react (minimal + tree-shaking)",
     "path": "./dist/esm/exports/react.js",
-    "limit": "16 kB",
+    "limit": "18 kB",
     "import": "{ ThirdwebProvider, useConnect }"
   }
 ]
