@@ -10,10 +10,13 @@ export async function universalCrypto(): Promise<Crypto> {
     return globalThis.crypto;
   }
 
+  // TODO figure out what to do with node 18
+  throw new Error("Crypto not available in this environment");
+
   // otherwise we are in node 18 so we can use `webcrypto` off of the "node:crypto" package and treat it as native
   // trick bundlers so that they leave this alone :)
-  const pto = "pto";
+  // const pto = "pto";
   // this becomes `node:crypto` at runtime
   // biome-ignore lint/style/useTemplate: explicitly done this way to trick bundlers
-  return (await import("node" + ":cry" + pto)).webcrypto as Crypto;
+  // return (await import("node" + ":cry" + pto)).webcrypto as Crypto;
 }
