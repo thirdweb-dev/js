@@ -29,4 +29,19 @@ describe("defineChain", () => {
     expect(thirdwebViem.nativeCurrency).toEqual(zoraViem.nativeCurrency);
     expect(thirdwebViem.rpc).toEqual(zoraViem.rpcUrls.default.http[0]);
   });
+
+  it("should cache custom chains", () => {
+    const chain = defineChain({ id: 1, name: "Test", rpc: "https://test.com" });
+    expect(defineChain(1).rpc).toEqual(chain.rpc);
+  });
+
+  it("should overwrite custom chains with same id", () => {
+    defineChain({ id: 1, name: "Test", rpc: "https://test.com" });
+    const chain2 = defineChain({
+      id: 1,
+      name: "Test2",
+      rpc: "https://test2.com",
+    });
+    expect(defineChain(1).rpc).toEqual(chain2.rpc);
+  });
 });

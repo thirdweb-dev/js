@@ -10,6 +10,8 @@ import type {
   LegacyChain,
 } from "./types.js";
 
+const CUSTOM_CHAIN_MAP = new Map<number, Chain>();
+
 /**
  * Defines a chain with the given options.
  * @param options The options for the chain.
@@ -31,7 +33,15 @@ export function defineChain(
   options: number | ChainOptions | ViemChain | LegacyChain,
 ): Chain {
   if (typeof options === "number") {
-    return { id: options, rpc: `https://${options}.rpc.thirdweb.com` } as const;
+    // if a custom chain has been used, use that
+    if (CUSTOM_CHAIN_MAP.has(options)) {
+      return CUSTOM_CHAIN_MAP.get(options) as Chain;
+    }
+    const chain = {
+      id: options,
+      rpc: `https://${options}.rpc.thirdweb.com`,
+    } as const;
+    return chain;
   }
   if (isViemChain(options)) {
     return convertViemChain(options);
@@ -44,7 +54,9 @@ export function defineChain(
   if (!rpc) {
     rpc = `https://${options.id}.rpc.thirdweb.com`;
   }
-  return { ...options, rpc } as const;
+  const chain = { ...options, rpc } as const;
+  CUSTOM_CHAIN_MAP.set(options.id, chain);
+  return chain;
 }
 
 function isLegacyChain(
