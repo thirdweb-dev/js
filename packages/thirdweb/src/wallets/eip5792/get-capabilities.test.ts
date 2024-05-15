@@ -224,7 +224,8 @@ describe.sequential("smart wallet", async () => {
     });
 
     expect(capabilities).toEqual({
-      message: "No chain found",
+      message:
+        "Can't get capabilities, no active chain found for wallet: smart",
     });
   });
 
