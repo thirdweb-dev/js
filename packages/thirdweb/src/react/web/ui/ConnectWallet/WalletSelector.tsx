@@ -32,6 +32,7 @@ import { TOS } from "./Modal/TOS.js";
 import { PoweredByThirdweb } from "./PoweredByTW.js";
 import { WalletButton, WalletEntryButton } from "./WalletEntryButton.js";
 import { WalletTypeRowButton } from "./WalletTypeRowButton.js";
+import { compactModalMaxHeight } from "./constants.js";
 import { genericWalletIcon } from "./icons/dataUris.js";
 
 const InAppWalletSelectionUI = /* @__PURE__ */ lazy(
@@ -311,7 +312,13 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
           // social login + More than 1 eoa wallets
           if (eoaWallets.length > 1) {
             bottomSection = (
-              <Container flex="column" gap="sm">
+              <Container
+                flex="column"
+                style={{ position: "relative" }}
+                gap="sm"
+              >
+                <GradientDiv />
+
                 <Container px="lg" flex="column" gap="md">
                   {connectAWallet}
                   {continueAsGuest}
@@ -386,7 +393,8 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
       animate="fadein"
       fullHeight
       style={{
-        maxHeight: connectModal.size === "compact" ? "550px" : undefined,
+        maxHeight:
+          connectModal.size === "compact" ? compactModalMaxHeight : undefined,
       }}
     >
       {/* Header */}
@@ -603,4 +611,18 @@ const WalletList = /* @__PURE__ */ StyledUl({
   margin: "-2px",
   marginBottom: 0,
   paddingBottom: spacing.lg,
+});
+
+const GradientDiv = /* @__PURE__ */ StyledDiv(() => {
+  const theme = useCustomTheme();
+  theme.colors.modalBg;
+  return {
+    height: spacing.lg,
+    position: "absolute",
+    top: `-${spacing.lg}`,
+    left: 0,
+    width: "100%",
+    background: `linear-gradient(to bottom, transparent 0%, ${theme.colors.modalBg} 80%)`,
+    pointerEvents: "none",
+  };
 });
