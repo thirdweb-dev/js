@@ -3,6 +3,7 @@ import {
   useEngineInstances,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import {
+  Center,
   Divider,
   Flex,
   Icon,
@@ -31,38 +32,40 @@ export const EngineInstancesList = ({
   return (
     <Stack spacing={8}>
       {instances.length === 0 ? (
-        <>
-          <ChakraNextImage
-            alt="Engine hero image"
-            src={require("../../../public/assets/engine/empty-state-header.png")}
-            maxW={650}
-          />
-          <Heading size="title.lg" as="h1">
-            Your scalable web3 backend server
-          </Heading>
-
-          <UnorderedList color="gray.600">
-            <ListItem>
-              Read, write, and deploy contracts at production scale
-            </ListItem>
-            <ListItem>
-              Reliably parallelize and retry transactions with gas &amp; nonce
-              management
-            </ListItem>
-            <ListItem>Securely manage backend wallets</ListItem>
-            <ListItem>
-              Built-in support for account abstraction, relayers, and more
-            </ListItem>
-          </UnorderedList>
-
-          <Flex gap={4}>
-            <CreateEngineInstanceButton
-              ctaText="Get Started"
-              refetch={instancesQuery.refetch}
+        <Center>
+          <Stack spacing={8}>
+            <ChakraNextImage
+              alt="Engine hero image"
+              src={require("../../../public/assets/engine/empty-state-header.png")}
+              maxW={650}
             />
-            <ImportEngineInstanceButton refetch={instancesQuery.refetch} />
-          </Flex>
-        </>
+            <Heading size="title.lg" as="h1">
+              Your scalable web3 backend server
+            </Heading>
+
+            <UnorderedList color="gray.600">
+              <ListItem>
+                Read, write, and deploy contracts at production scale
+              </ListItem>
+              <ListItem>
+                Reliably parallelize and retry transactions with gas &amp; nonce
+                management
+              </ListItem>
+              <ListItem>Securely manage backend wallets</ListItem>
+              <ListItem>
+                Built-in support for account abstraction, relayers, and more
+              </ListItem>
+            </UnorderedList>
+
+            <Flex gap={4}>
+              <CreateEngineInstanceButton
+                ctaText="Get Started"
+                refetch={instancesQuery.refetch}
+              />
+              <ImportEngineInstanceButton refetch={instancesQuery.refetch} />
+            </Flex>
+          </Stack>
+        </Center>
       ) : (
         <>
           <Stack>

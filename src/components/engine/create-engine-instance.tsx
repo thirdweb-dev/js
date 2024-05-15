@@ -241,7 +241,7 @@ const CreateCloudHostedEngineModal = ({
   );
 };
 
-const EngineTierCard = ({
+export const EngineTierCard = ({
   iconSrc,
   tier,
   monthlyPrice,
@@ -249,6 +249,8 @@ const EngineTierCard = ({
   features,
   isPrimaryCta = false,
   onClick,
+  ctaText,
+  ctaHint,
 }: {
   iconSrc: StaticImport;
   tier: string;
@@ -257,6 +259,8 @@ const EngineTierCard = ({
   features: string[];
   isPrimaryCta?: boolean;
   onClick: () => void;
+  ctaText?: string;
+  ctaHint?: string;
 }) => {
   return (
     <Card
@@ -307,12 +311,14 @@ const EngineTierCard = ({
         variant={isPrimaryCta ? "solid" : "outline"}
         colorScheme={isPrimaryCta ? "blue" : undefined}
       >
-        {monthlyPrice ? "Add to my plan" : "Contact us"}
+        {ctaText ? ctaText : monthlyPrice ? "Deploy now" : "Contact us"}
       </Button>
       <Text size="body.sm" textAlign="center">
-        {monthlyPrice
-          ? `Your payment method will be charged $${monthlyPrice}.`
-          : "We'll reach out within 1 business day."}
+        {ctaHint
+          ? ctaHint
+          : monthlyPrice
+            ? `Your payment method will be charged $${monthlyPrice}.`
+            : "We'll reach out within 1 business day."}
       </Text>
     </Card>
   );

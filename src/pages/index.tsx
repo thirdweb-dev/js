@@ -8,7 +8,6 @@ import { NewsletterSection } from "components/homepage/sections/NewsletterSectio
 import { PricingSection } from "components/homepage/sections/PricingSection";
 import { SDKSection } from "components/homepage/sections/SDKSection";
 import { SolutionsSection } from "components/homepage/sections/Solutions";
-import { StatsSection } from "components/homepage/sections/StatsSection";
 import { WithoutThirdwebSection } from "components/homepage/sections/WithoutThirdwebSection";
 import { PartnerCarousel } from "components/partners/carousel";
 import { HomepageTopNav } from "components/product-pages/common/Topnav";
@@ -40,7 +39,6 @@ const HomePage: ThirdwebNextPage = () => {
         <Box mt="-80px" pt={{ base: "100px", xl: "40px" }} overflowX="hidden">
           <HeroSection TRACKING_CATEGORY={TRACKING_CATEGORY} />
           <PartnerCarousel />
-          <StatsSection />
           <HomePageCard
             title="Client SDKs to connect users to web3"
             description="Onboard every user, connect to any wallet, and build apps that anyone can use — with in-app wallets, account abstraction, and fiat & crypto payments."

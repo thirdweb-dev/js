@@ -9,7 +9,7 @@ export type LandingDesktopMobileImageProps = ChakraNextImageProps & {
 };
 
 export interface LandingSectionHeadingProps {
-  blackToWhiteTitle: string;
+  blackToWhiteTitle?: string;
   title: string;
   titleWithGradient?: string;
   gradient?: string;

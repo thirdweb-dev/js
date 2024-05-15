@@ -13,6 +13,7 @@ interface LandingHeroProps {
   trackingCategory: string;
   ctaText?: string;
   ctaLink?: string;
+  lottie?: {};
   gradient: string;
   image?: StaticImageData;
   mobileImage?: StaticImageData;
@@ -30,6 +31,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
   ctaText,
   ctaLink,
   gradient,
+  lottie,
   image,
   mobileImage,
   noCta,
@@ -79,6 +81,13 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
             trackingCategory={trackingCategory}
             contactUsTitle={contactUsTitle}
             contactUsLink={contactUsLink}
+          />
+        </Flex>
+        <Flex maxH="500px">
+          <LandingDesktopMobileImage
+            lottie={lottie}
+            image={image}
+            mobileImage={mobileImage}
           />
         </Flex>
       </Container>

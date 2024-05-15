@@ -6,7 +6,7 @@ import { StaticImageData } from "next/image";
 import { Heading, Text, TrackedLinkProps } from "tw-components";
 
 interface LandingHeroWithSideImageProps {
-  title: string;
+  title: string | JSX.Element;
   titleWithGradient: string;
   subtitle: string;
   miniTitle?: string;
@@ -62,7 +62,7 @@ export const LandingHeroWithSideImage: React.FC<
             ) : null}
 
             {miniTitle && (
-              <Heading size="subtitle.sm" as="span">
+              <Heading size="subtitle.sm" as="span" fontWeight={700}>
                 {miniTitle}
               </Heading>
             )}

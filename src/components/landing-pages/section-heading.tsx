@@ -11,13 +11,15 @@ export const LandingSectionHeading: React.FC<LandingSectionHeadingProps> = ({
   lineHeight = "100%",
 }) => (
   <Flex flexDir="column" gap={2} textAlign="center" w="full">
-    <Text
-      bgGradient="linear(to-r, #FFFFFF, #343434)"
-      bgClip="text"
-      size="body.xl"
-    >
-      {blackToWhiteTitle}
-    </Text>
+    {blackToWhiteTitle && (
+      <Text
+        bgGradient="linear(to-r, #FFFFFF, #343434)"
+        bgClip="text"
+        size="body.xl"
+      >
+        {blackToWhiteTitle}
+      </Text>
+    )}
 
     <Heading size={titleSize} lineHeight={lineHeight}>
       {title}{" "}
