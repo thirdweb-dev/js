@@ -3,8 +3,12 @@ import { expect, test } from "vitest";
 import { TEST_CLIENT } from "~test/test-clients.js";
 import { ANVIL_PKEY_A } from "~test/test-wallets.js";
 import { typedData } from "~test/typed-data.js";
+import { ANVIL_CHAIN } from "../../test/src/chains.js";
+import { sendTransaction } from "../exports/thirdweb.js";
+import { prepareTransaction } from "../transaction/prepare-transaction.js";
 import { toUnits } from "../utils/units.js";
 import { privateKeyToAccount } from "./private-key.js";
+import { getWalletBalance } from "./utils/getWalletBalance.js";
 
 test("default", () => {
   expect(
@@ -65,5 +69,50 @@ test("sign typed data", async () => {
     await account.signTypedData({ ...typedData.basic, primaryType: "Mail" }),
   ).toMatchInlineSnapshot(
     '"0x32f3d5975ba38d6c2fba9b95d5cbed1febaa68003d3d588d51f2de522ad54117760cfc249470a75232552e43991f53953a3d74edf6944553c6bef2469bb9e5921b"',
+  );
+});
+
+test("send transaction", async () => {
+  const account = privateKeyToAccount({
+    privateKey: ANVIL_PKEY_A,
+    client: TEST_CLIENT,
+  });
+  const startingBalance = await getWalletBalance({
+    address: account.address,
+    chain: ANVIL_CHAIN,
+    client: TEST_CLIENT,
+  });
+  const startingBalanceRecipient = await getWalletBalance({
+    address: "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+    chain: ANVIL_CHAIN,
+    client: TEST_CLIENT,
+  });
+  const tx = prepareTransaction({
+    client: TEST_CLIENT,
+    chain: ANVIL_CHAIN,
+    to: "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+    value: toUnits("1", 18),
+  });
+
+  expect(
+    await sendTransaction({
+      account,
+      transaction: tx,
+    }),
+  ).toBeDefined();
+
+  const endingBalance = await getWalletBalance({
+    address: account.address,
+    client: TEST_CLIENT,
+    chain: ANVIL_CHAIN,
+  });
+  const endingBalanceRecipient = await getWalletBalance({
+    address: "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+    client: TEST_CLIENT,
+    chain: ANVIL_CHAIN,
+  });
+  expect(endingBalance.value).toBeLessThan(startingBalance.value);
+  expect(endingBalanceRecipient.value).toBeGreaterThan(
+    startingBalanceRecipient.value,
   );
 });

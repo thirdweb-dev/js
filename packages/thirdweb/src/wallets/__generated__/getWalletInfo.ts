@@ -2770,6 +2770,15 @@ export async function getWalletInfo<TImage extends boolean>(
           : import("./wallet/com.lootrush/index.js").then((w) => w.wallet)
       ) as Promise<[TImage] extends [true] ? string : any>;
     }
+    case "app.core.extension": {
+      return (
+        image
+          ? import("./wallet/app.core.extension/image.js").then(
+              (img) => img.default,
+            )
+          : import("./wallet/app.core.extension/index.js").then((w) => w.wallet)
+      ) as Promise<[TImage] extends [true] ? string : any>;
+    }
     default: {
       throw new Error(`Wallet with id ${id} not found`);
     }

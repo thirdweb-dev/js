@@ -1,10 +1,10 @@
 import type { InAppWalletLocale } from "./types.js";
 
 export default {
-  signInWithGoogle: "Sign in with Google",
-  signInWithFacebook: "Sign in with Facebook",
-  signInWithApple: "Sign in with Apple",
-  emailPlaceholder: "Enter your email address",
+  signInWithGoogle: "Google",
+  signInWithFacebook: "Facebook",
+  signInWithApple: "Apple",
+  emailPlaceholder: "Email address",
   submitEmail: "Continue",
   signIn: "Sign in",
   or: "Or",
@@ -50,7 +50,7 @@ export default {
   },
   signInWithEmail: "Sign in with Email",
   invalidPhone: "Invalid phone number",
-  phonePlaceholder: "Enter phone number",
+  phonePlaceholder: "Phone number",
   signInWithPhone: "Sign in with phone number",
   phoneRequired: "phone number is required",
 } satisfies InAppWalletLocale;

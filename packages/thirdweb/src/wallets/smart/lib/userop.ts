@@ -73,7 +73,7 @@ export async function createUnsignedUserOp(args: {
     }
   }
 
-  //const nonce = BigInt(transaction.nonce || randomNonce());
+  // const nonce = BigInt(transaction.nonce || randomNonce());
   const nonce = randomNonce(); // FIXME getNonce should be overrideable by the wallet
 
   const partialOp: UserOperation = {

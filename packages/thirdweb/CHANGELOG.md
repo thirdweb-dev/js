@@ -1,5 +1,60 @@
 # thirdweb
 
+## 5.20.0
+
+### Minor Changes
+
+- [#2912](https://github.com/thirdweb-dev/js/pull/2912) [`9caa9d7`](https://github.com/thirdweb-dev/js/commit/9caa9d7a8df173d06ddaf3a8fab929f65adab092) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Updated Connect Modal UI + Passkey support
+
+  - Passkey is now an auth option for `inAppWallet`
+  - Connect UI component UI refresh
+
+  ```ts
+  const wallet = inAppWallet();
+  const hasPasskey = await hasStoredPasskey(client);
+  await wallet.connect({
+    client,
+    strategy: "passkey",
+    type: hasPasskey ? "sign-in" : "sign-up",
+  });
+  ```
+
+- [#3018](https://github.com/thirdweb-dev/js/pull/3018) [`5083464`](https://github.com/thirdweb-dev/js/commit/50834640af8a8c17483465f308642e266dbac290) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds support for Core wallet extension
+
+### Patch Changes
+
+- [#3024](https://github.com/thirdweb-dev/js/pull/3024) [`eb29adf`](https://github.com/thirdweb-dev/js/commit/eb29adf157103cc277d6787c8427403b2eba8472) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add BSC mainnet and testnet
+
+- [#3004](https://github.com/thirdweb-dev/js/pull/3004) [`145ff48`](https://github.com/thirdweb-dev/js/commit/145ff4890fa763288610b2e1af152e7827ec0d8e) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Updates shortenAddress to accept a string
+
+- [#3027](https://github.com/thirdweb-dev/js/pull/3027) [`c08a5f2`](https://github.com/thirdweb-dev/js/commit/c08a5f298d59f0b54b4b941d719911c294b8bf04) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fixes chain metadata overrides
+
+## 5.19.1
+
+### Patch Changes
+
+- [#3005](https://github.com/thirdweb-dev/js/pull/3005) [`0006e54`](https://github.com/thirdweb-dev/js/commit/0006e547a4425406101ef85c635b83c5c6186d1d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - - useSendTransaction now switches chain if needed
+  - Fix chain switching with in-app smart accounts
+  - Fix tx simulation for pay modal
+
+## 5.19.0
+
+### Minor Changes
+
+- [#2995](https://github.com/thirdweb-dev/js/pull/2995) [`523cd1e`](https://github.com/thirdweb-dev/js/commit/523cd1e16fd1194ffbf8970150ed6f09d4e01fe9) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds shortenAddress util
+
+- [#2997](https://github.com/thirdweb-dev/js/pull/2997) [`cf7b6fc`](https://github.com/thirdweb-dev/js/commit/cf7b6fc7bc1686f3b4c54515d569d799d5e3ceea) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - added `createWalletAdapter` helper for interop with diff libraries
+
+### Patch Changes
+
+- [#3000](https://github.com/thirdweb-dev/js/pull/3000) [`0ab1407`](https://github.com/thirdweb-dev/js/commit/0ab14075d37aec27167c5885155f48ea880c9574) Thanks [@MananTank](https://github.com/MananTank)! - Fix WalletImage fallback icon
+
+## 5.18.1
+
+### Patch Changes
+
+- [#2988](https://github.com/thirdweb-dev/js/pull/2988) [`02c0319`](https://github.com/thirdweb-dev/js/commit/02c03196ad38de888ff86311c68fa010018bda60) Thanks [@jnsdls](https://github.com/jnsdls)! - bump all to fix release
+
 ## 5.18.0
 
 ### Minor Changes

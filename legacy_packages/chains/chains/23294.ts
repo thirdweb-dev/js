@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://bafkreiespupb52akiwrexxg7g72mh7m7h7lum5hmqijmpdh3kmuunzclha",
-    "width": 2000,
-    "height": 2000,
-    "format": "png"
-  },
   "infoURL": "https://docs.oasis.io/dapp/sapphire",
   "name": "Oasis Sapphire",
   "nativeCurrency": {

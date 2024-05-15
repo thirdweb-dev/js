@@ -1,5 +1,47 @@
 # @thirdweb-dev/react-core
 
+## 4.6.21
+
+### Patch Changes
+
+- Updated dependencies [[`cdfca2b`](https://github.com/thirdweb-dev/js/commit/cdfca2b56d6172e06173384ac608df14045bebfd), [`e89f36b`](https://github.com/thirdweb-dev/js/commit/e89f36b2b73f09d49bbffa2f707f8d8f32089237), [`6d36a14`](https://github.com/thirdweb-dev/js/commit/6d36a1498a533c6184c90fff65699465f9786b2f), [`d34e21b`](https://github.com/thirdweb-dev/js/commit/d34e21bd060a2e9c9ee095742ae954a3eadc6a7c)]:
+  - @thirdweb-dev/sdk@4.0.82
+  - @thirdweb-dev/chains@0.1.109
+  - @thirdweb-dev/wallets@2.5.22
+  - @thirdweb-dev/auth@4.1.80
+
+## 4.6.20
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@4.0.81
+  - @thirdweb-dev/wallets@2.5.21
+  - @thirdweb-dev/auth@4.1.79
+
+## 4.6.19
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@4.0.80
+  - @thirdweb-dev/wallets@2.5.20
+  - @thirdweb-dev/auth@4.1.78
+
+## 4.6.18
+
+### Patch Changes
+
+- [#2988](https://github.com/thirdweb-dev/js/pull/2988) [`02c0319`](https://github.com/thirdweb-dev/js/commit/02c03196ad38de888ff86311c68fa010018bda60) Thanks [@jnsdls](https://github.com/jnsdls)! - bump all to fix release
+
+- Updated dependencies [[`02c0319`](https://github.com/thirdweb-dev/js/commit/02c03196ad38de888ff86311c68fa010018bda60)]:
+  - @thirdweb-dev/auth@4.1.77
+  - @thirdweb-dev/chains@0.1.108
+  - @thirdweb-dev/generated-abis@0.0.2
+  - @thirdweb-dev/sdk@4.0.79
+  - @thirdweb-dev/storage@2.0.15
+  - @thirdweb-dev/wallets@2.5.19
+
 ## 4.6.17
 
 ### Patch Changes

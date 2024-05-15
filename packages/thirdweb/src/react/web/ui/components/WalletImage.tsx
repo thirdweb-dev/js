@@ -7,7 +7,12 @@ import type { WalletId } from "../../../../wallets/wallet-types.js";
 import { useActiveWallet } from "../../../core/hooks/wallets/wallet-hooks.js";
 import { getStorage } from "../../../core/storage.js";
 import { getLastAuthProvider } from "../../wallets/in-app/storage.js";
-import { emailIcon, phoneIcon } from "../ConnectWallet/icons/dataUris.js";
+import {
+  emailIcon,
+  genericWalletIcon,
+  passkeyIcon,
+  phoneIcon,
+} from "../ConnectWallet/icons/dataUris.js";
 import {
   appleIconUri,
   facebookIconUri,
@@ -69,6 +74,9 @@ export function WalletImage(props: {
           case "email":
             mipdImage = emailIcon;
             break;
+          case "passkey":
+            mipdImage = passkeyIcon;
+            break;
         }
       }
 
@@ -107,7 +115,8 @@ function WalletImageQuery(props: {
   return (
     <Img
       client={props.client}
-      src={walletImage.data}
+      src={walletImage.isLoading ? undefined : walletImage.data || ""}
+      fallbackImage={genericWalletIcon}
       width={props.size}
       height={props.size}
       loading="eager"

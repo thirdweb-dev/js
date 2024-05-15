@@ -279,7 +279,7 @@ export const ConnectedWalletDetails: React.FC<{
       >
         {chainQuery.data ? (
           <ChainIcon
-            chain={chainQuery.data}
+            chainIcon={chainQuery.data?.icon}
             size={iconSize.md}
             active
             client={client}
