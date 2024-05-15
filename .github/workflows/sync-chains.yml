@@ -10,16 +10,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Install bun
         uses: oven-sh/setup-bun@v1
         with:
-          bun-version: 1.0.21
+          bun-version: 1.0.35
 
       - name: Run chains sync
         run: bun run db:sync
-        working-directory: ./packages/chains
+        working-directory: ./legacy_packages/chains
 
       - name: Check for Changes
         id: git-check
@@ -42,14 +42,14 @@ jobs:
       - name: Commit Changes
         if: env.CHANGES_FOUND == 'true'
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
           git add -A
           git commit -m "chore(chains): sync from db"
 
       - name: Create or Update Pull Request
         if: env.CHANGES_FOUND == 'true'
-        uses: peter-evans/create-pull-request@v3
+        uses: peter-evans/create-pull-request@v6
         with:
           title: "chore(chains): update chains"
           branch: "sync-chains"

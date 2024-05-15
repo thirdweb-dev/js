@@ -1,0 +1,43 @@
+import type { Chain } from "../src/types";
+export default {
+  "chain": "Merlin",
+  "chainId": 4200,
+  "explorers": [
+    {
+      "name": "L2scan",
+      "url": "https://scan.merlinchain.io",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmULpMFUvKSmJT8sWXS3WDnTm4EacgRbsEynDenpxcfrAj",
+        "width": 400,
+        "height": 400,
+        "format": "jpg"
+      }
+    }
+  ],
+  "faucets": [],
+  "icon": {
+    "url": "ipfs://QmULpMFUvKSmJT8sWXS3WDnTm4EacgRbsEynDenpxcfrAj",
+    "width": 400,
+    "height": 400,
+    "format": "jpg"
+  },
+  "infoURL": "https://merlinchain.io",
+  "name": "Merlin Mainnet",
+  "nativeCurrency": {
+    "name": "BTC",
+    "symbol": "BTC",
+    "decimals": 18
+  },
+  "networkId": 4200,
+  "rpc": [
+    "https://4200.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.merlinchain.io",
+    "https://merlin-mainnet-enterprise.unifra.io",
+    "https://rpc-merlin.rockx.com"
+  ],
+  "shortName": "Merlin-Mainnet",
+  "slug": "merlin",
+  "testnet": false,
+  "title": "Merlin Mainnet"
+} as const satisfies Chain;

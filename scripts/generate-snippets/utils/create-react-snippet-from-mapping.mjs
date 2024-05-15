@@ -1,6 +1,6 @@
 // Read in the react snippets
-import reactSnippets from "../../../packages/react/docs/evm/snippets.json" assert { type: "json" };
-import reactCoreSnippets from "../../../packages/react-core/docs/evm/snippets.json" assert { type: "json" };
+import reactSnippets from "../../../legacy_packages/react/docs/evm/snippets.json" assert { type: "json" };
+import reactCoreSnippets from "../../../legacy_packages/react-core/docs/evm/snippets.json" assert { type: "json" };
 
 // Takes in a two keys and returns the react snippet defined here for that value
 // TODO: This logic **Probably** doesn't belong here.

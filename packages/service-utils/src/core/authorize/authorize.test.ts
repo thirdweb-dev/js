@@ -1,5 +1,6 @@
+import { describe, expect, it } from "vitest";
 import { authorize } from ".";
-import { CoreServiceConfig } from "../api";
+import type { CoreServiceConfig } from "../api";
 
 const validServiceConfig: CoreServiceConfig = {
   apiUrl: "https://api.example.com",
@@ -21,6 +22,7 @@ describe("authorizeClient", () => {
         jwt: null,
       },
       validServiceConfig,
+      // biome-ignore lint/suspicious/noExplicitAny: test only
     )) as any;
 
     expect(result.authorized).toBe(true);
@@ -39,6 +41,7 @@ describe("authorizeClient", () => {
         jwt: null,
       },
       { ...validServiceConfig, enforceAuth: true },
+      // biome-ignore lint/suspicious/noExplicitAny: test only
     )) as any;
 
     expect(result.authorized).toBe(false);

@@ -1,0 +1,11 @@
+[
+  "event RewardsClaimed(address indexed staker, uint256 rewardAmount)",
+  "event TokensStaked(address indexed staker, uint256[] indexed tokenIds)",
+  "event TokensWithdrawn(address indexed staker, uint256[] indexed tokenIds)",
+  "event UpdatedRewardsPerUnitTime(uint256 oldRewardsPerUnitTime, uint256 newRewardsPerUnitTime)",
+  "event UpdatedTimeUnit(uint256 oldTimeUnit, uint256 newTimeUnit)",
+  "function claimRewards()",
+  "function getStakeInfo(address staker) view returns (uint256[] _tokensStaked, uint256 _rewards)",
+  "function stake(uint256[] tokenIds)",
+  "function withdraw(uint256[] tokenIds)"
+]

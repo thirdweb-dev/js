@@ -2,28 +2,52 @@
 
 # Platform team owns everything by default
 
-* @thirdweb-dev/platform
+- @jnsdls @joaquim-verges @MananTank @gregfromstl
 
-# Devrel owns all markdown files (README etc.)
+# legacy packages
 
-*.md @thirdweb-dev/devrel
-.changeset/
+legacy_packages/auth/ @jnsdls
+legacy_packages/chains/ @jnsdls
+legacy_packages/cli/ @jnsdls
+legacy_packages/contracts-js/ @jnsdls
+legacy_packages/crypto/ @jnsdls
+legacy_packages/generated-abis/ @jnsdls
+legacy_packages/merkletree/ @jnsdls
+legacy_packages/pay/ @jnsdls
+legacy_packages/payments/ @jnsdls
+legacy_packages/react/ @MananTank @jnsdls
+legacy_packages/react-core/ @MananTank @jnsdls
+legacy_packages/react-native/ @jnsdls
+legacy_packages/react-native-compat/ @jnsdls
+legacy_packages/sdk/ @joaquim-verges @jnsdls
+legacy_packages/storage/ @jnsdls
+legacy_packages/wallets/ @MananTank @jnsdls
 
-# Shared ownership of the react and react-core packages
+# legacy e2e
 
-packages/react/ @thirdweb-dev/product @thirdweb-dev/platform
-packages/react-core/ @thirdweb-dev/product @thirdweb-dev/platform
+legacy_e2e/ @jnsdls
 
-# Shared ownership of the CLI
+# packages
 
-packages/cli/ @thirdweb-dev/product @thirdweb-dev/platform
+## specific thirdweb pieces
 
-# Chains is owned specifically by jonas for now
+packages/thirdweb/src/react/ @MananTank
+packages/thirdweb/src/reactive/ @MananTank
+packages/thirdweb/src/gas/ @joaquim-verges
+packages/thirdweb/src/pay/ @MananTank @IDubuque
 
-packages/chains/ @jnsdls
+packages/typedoc-gen/ @MananTank
 
-# .github folder + .changeset + turbo config is owned by joaquim and jonas for now
+# owned by phil for now
 
-.github/ @jnsdls @joaquim-verges
-.changeset/config.json @jnsdls @joaquim-verges
-turbo.json @joaquim-verges @jnsdls
+packages/service-utils/ @arcoraven
+packages/eslint-config-thirdweb/ @jnsdls
+packages/tw-tsconfig/ @jnsdls
+packages/unity-js-bridge/ @joaquim-verges @0xFirekeeper
+
+# .github folder + .changeset + turbo config is owned by jonas for now
+
+scripts/ @jnsdls
+.github/ @jnsdls
+.changeset/config.json @jnsdls
+turbo.json @jnsdls

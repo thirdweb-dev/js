@@ -1,0 +1,7 @@
+[
+  "event PackOpenRequested(address indexed opener, uint256 indexed packId, uint256 amountToOpen, uint256 requestId)",
+  "event PackRandomnessFulfilled(uint256 indexed packId, uint256 indexed requestId)",
+  "function canClaimRewards(address _opener) view returns (bool)",
+  "function claimRewards() returns ((address assetContract, uint8 tokenType, uint256 tokenId, uint256 totalAmount)[] rewardUnits)",
+  "function openPackAndClaimRewards(uint256 _packId, uint256 _amountToOpen, uint32 _callBackGasLimit) returns (uint256)"
+]

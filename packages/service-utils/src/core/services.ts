@@ -39,7 +39,7 @@ export const SERVICE_DEFINITIONS = {
   },
   embeddedWallets: {
     name: "embeddedWallets",
-    title: "Embedded Wallets",
+    title: "In-App Wallets",
     description: "E-mail and social login wallets for easy web3 onboarding",
     // all actions allowed
     actions: [],
@@ -57,7 +57,7 @@ export const SERVICE_DEFINITIONS = {
     description: "Pay for a blockchain transaction with any currency",
     // all actions allowed
     actions: [],
-  }
+  },
 } as const;
 
 export const SERVICE_NAMES = Object.keys(

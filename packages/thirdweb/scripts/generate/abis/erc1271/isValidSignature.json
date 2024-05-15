@@ -1,0 +1,3 @@
+[
+  "function isValidSignature(bytes32 hash, bytes signature) public view returns (bytes4)"
+]

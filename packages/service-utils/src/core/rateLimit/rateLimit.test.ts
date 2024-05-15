@@ -1,16 +1,17 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { rateLimit } from ".";
 import { validApiKeyMeta, validServiceConfig } from "../../mocks";
 import { updateRateLimitedAt } from "../api";
-import { AuthorizationResult } from "../authorize/types";
+import type { AuthorizationResult } from "../authorize/types";
 
 const mockRedis = {
-  incr: jest.fn(),
-  expire: jest.fn(),
+  incr: vi.fn(),
+  expire: vi.fn(),
 };
 
 // Mocking the updateRateLimitedAt function
-jest.mock("../../../src/core/api", () => ({
-  updateRateLimitedAt: jest.fn(),
+vi.mock("../../../src/core/api", () => ({
+  updateRateLimitedAt: vi.fn(),
 }));
 
 const DEFAULT_AUTHZ_RESULT: AuthorizationResult = {
@@ -25,13 +26,13 @@ const DEFAULT_AUTHZ_RESULT: AuthorizationResult = {
 describe("rateLimit", () => {
   beforeEach(() => {
     // Clear mock function calls and reset any necessary state.
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     mockRedis.incr.mockReset();
     mockRedis.expire.mockReset();
   });
 
   afterEach(() => {
-    jest.spyOn(global.Math, "random").mockRestore();
+    vi.spyOn(global.Math, "random").mockRestore();
   });
 
   it("should not rate limit if service scope is not in rate limits", async () => {
@@ -128,7 +129,7 @@ describe("rateLimit", () => {
 
   it("enforces rate limit if sampled (hit)", async () => {
     mockRedis.incr.mockResolvedValue(10);
-    jest.spyOn(global.Math, "random").mockReturnValue(0.08);
+    vi.spyOn(global.Math, "random").mockReturnValue(0.08);
 
     const result = await rateLimit({
       authzResult: DEFAULT_AUTHZ_RESULT,
@@ -146,7 +147,7 @@ describe("rateLimit", () => {
 
   it("does not enforce rate limit if sampled (miss)", async () => {
     mockRedis.incr.mockResolvedValue(10);
-    jest.spyOn(global.Math, "random").mockReturnValue(0.15);
+    vi.spyOn(global.Math, "random").mockReturnValue(0.15);
 
     const result = await rateLimit({
       authzResult: DEFAULT_AUTHZ_RESULT,

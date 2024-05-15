@@ -1,0 +1,12 @@
+[
+  "event AdminUpdated(address indexed signer, bool isAdmin)",
+  "event SignerPermissionsUpdated(address indexed authorizingSigner, address indexed targetSigner, (address signer, uint8 isAdmin, address[] approvedTargets, uint256 nativeTokenLimitPerTransaction, uint128 permissionStartTimestamp, uint128 permissionEndTimestamp, uint128 reqValidityStartTimestamp, uint128 reqValidityEndTimestamp, bytes32 uid) permissions)",
+  "function getAllActiveSigners() view returns ((address signer, address[] approvedTargets, uint256 nativeTokenLimitPerTransaction, uint128 startTimestamp, uint128 endTimestamp)[] signers)",
+  "function getAllAdmins() view returns (address[] admins)",
+  "function getAllSigners() view returns ((address signer, address[] approvedTargets, uint256 nativeTokenLimitPerTransaction, uint128 startTimestamp, uint128 endTimestamp)[] signers)",
+  "function getPermissionsForSigner(address signer) view returns ((address signer, address[] approvedTargets, uint256 nativeTokenLimitPerTransaction, uint128 startTimestamp, uint128 endTimestamp) permissions)",
+  "function isActiveSigner(address signer) view returns (bool)",
+  "function isAdmin(address signer) view returns (bool)",
+  "function setPermissionsForSigner((address signer, uint8 isAdmin, address[] approvedTargets, uint256 nativeTokenLimitPerTransaction, uint128 permissionStartTimestamp, uint128 permissionEndTimestamp, uint128 reqValidityStartTimestamp, uint128 reqValidityEndTimestamp, bytes32 uid) req, bytes signature)",
+  "function verifySignerPermissionRequest((address signer, uint8 isAdmin, address[] approvedTargets, uint256 nativeTokenLimitPerTransaction, uint128 permissionStartTimestamp, uint128 permissionEndTimestamp, uint128 reqValidityStartTimestamp, uint128 reqValidityEndTimestamp, bytes32 uid) req, bytes signature) view returns (bool success, address signer)"
+]

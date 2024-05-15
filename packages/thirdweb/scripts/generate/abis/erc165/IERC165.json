@@ -1,0 +1,1 @@
+["function supportsInterface(bytes4 interfaceId) view returns (bool)"]

@@ -1,0 +1,67 @@
+[
+  {
+    "id": "com.lootrush",
+    "name": "LootRush",
+    "homepage": "https://www.lootrush.com/lootrush-wallet",
+    "image_id": "lootrush.svg",
+    "order": 9999999,
+    "app": {
+      "browser": null,
+      "ios": null,
+      "android": null,
+      "mac": null,
+      "windows": null,
+      "linux": null,
+      "chrome": "https://chrome.google.com/webstore/detail/lootrush-wallet/lfmmjkfllhmfmkcobchabopkcefjkoip",
+      "firefox": "https://addons.mozilla.org/en-US/firefox/addon/lootrush-wallet/",
+      "safari": null,
+      "edge": null,
+      "opera": null
+    },
+    "injected": [],
+    "rdns": "com.lootrush",
+    "mobile": {
+      "native": null,
+      "universal": null
+    },
+    "desktop": {
+      "native": null,
+      "universal": null
+    }
+  },
+  {
+    "id": "app.core.extension",
+    "name": "Core",
+    "homepage": "https://core.app/?utm_source=referral&utm_medium=website&utm_campaign=walletconnect",
+    "image_id": "core.svg",
+    "order": 9999999,
+    "app": {
+      "browser": null,
+      "ios": "https://apps.apple.com/us/app/core-crypto-wallet-nfts/id6443685999",
+      "android": "https://play.google.com/store/apps/details?id=com.avaxwallet&hl=en_US&gl=US",
+      "mac": null,
+      "windows": null,
+      "linux": null,
+      "chrome": "https://chrome.google.com/webstore/detail/core-crypto-wallet-nft-ex/agoakfejjabomempkjlepdflaleeobhb",
+      "firefox": null,
+      "safari": null,
+      "edge": null,
+      "opera": null
+    },
+    "injected": [
+      {
+        "injected_id": "isAvalanche",
+        "namespace": "eip155"
+      }
+    ],
+    "rdns": "app.core.extension",
+    "mobile": {
+      "native": null,
+      "universal": null
+    },
+    "desktop": {
+      "native": null,
+      "universal": null
+    }
+  }
+]

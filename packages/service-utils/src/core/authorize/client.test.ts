@@ -1,5 +1,6 @@
+import { describe, expect, it } from "vitest";
 import { validApiKeyMeta } from "../../mocks";
-import { ClientAuthorizationPayload, authorizeClient } from "./client";
+import { type ClientAuthorizationPayload, authorizeClient } from "./client";
 
 describe("authorizeClient", () => {
   const validAuthOptions: ClientAuthorizationPayload = {
@@ -9,6 +10,7 @@ describe("authorizeClient", () => {
   };
 
   it("should authorize client with valid secret key", () => {
+    // biome-ignore lint/suspicious/noExplicitAny: test only
     const result = authorizeClient(validAuthOptions, validApiKeyMeta) as any;
     expect(result.authorized).toBe(true);
     expect(result.apiKeyMeta).toEqual(validApiKeyMeta);
@@ -24,6 +26,7 @@ describe("authorizeClient", () => {
     const result = authorizeClient(
       authOptionsWithWildcardDomain,
       validApiKeyMeta,
+      // biome-ignore lint/suspicious/noExplicitAny: test only
     ) as any;
     expect(result.authorized).toBe(true);
     expect(result.apiKeyMeta).toEqual(validApiKeyMeta);
@@ -44,6 +47,7 @@ describe("authorizeClient", () => {
     const result = authorizeClient(
       authOptionsWithAnyDomain,
       validApiKeyMetaAnyDomain,
+      // biome-ignore lint/suspicious/noExplicitAny: test only
     ) as any;
     expect(result.authorized).toBe(true);
     expect(result.apiKeyMeta).toEqual(validApiKeyMetaAnyDomain);
@@ -59,6 +63,7 @@ describe("authorizeClient", () => {
     const result = authorizeClient(
       authOptionsWithBundleId,
       validApiKeyMeta,
+      // biome-ignore lint/suspicious/noExplicitAny: test only
     ) as any;
     expect(result.authorized).toBe(false);
     expect(result.errorMessage).toBe(
@@ -78,6 +83,7 @@ describe("authorizeClient", () => {
     const result = authorizeClient(
       authOptionsWithInvalidSecret,
       validApiKeyMeta,
+      // biome-ignore lint/suspicious/noExplicitAny: test only
     ) as any;
     expect(result.authorized).toBe(false);
     expect(result.errorMessage).toBe(
@@ -97,6 +103,7 @@ describe("authorizeClient", () => {
     const result = authorizeClient(
       authOptionsWithUnauthorizedOrigin,
       validApiKeyMeta,
+      // biome-ignore lint/suspicious/noExplicitAny: test only
     ) as any;
     expect(result.authorized).toBe(false);
     expect(result.errorMessage).toBe(

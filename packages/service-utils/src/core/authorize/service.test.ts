@@ -1,13 +1,15 @@
+import { describe, expect, it } from "vitest";
 import {
   validApiKeyMeta,
   validBundlerServiceConfig,
   validServiceConfig,
 } from "../../mocks";
-import { CoreServiceConfig } from "../api";
-import { ServiceAuthorizationPayload, authorizeService } from "./service";
+import type { CoreServiceConfig } from "../api";
+import { type ServiceAuthorizationPayload, authorizeService } from "./service";
 
 describe("authorizeService", () => {
   it("should authorize service with valid service scope and action", () => {
+    // biome-ignore lint/suspicious/noExplicitAny: test only
     const result = authorizeService(validApiKeyMeta, validServiceConfig) as any;
     expect(result.authorized).toBe(true);
     expect(result.apiKeyMeta).toEqual(validApiKeyMeta);
@@ -22,6 +24,7 @@ describe("authorizeService", () => {
       validApiKeyMeta,
       validServiceConfig,
       validAuthorizationPayload,
+      // biome-ignore lint/suspicious/noExplicitAny: test only
     ) as any;
     expect(result.authorized).toBe(true);
     expect(result.apiKeyMeta).toEqual(validApiKeyMeta);
@@ -39,6 +42,7 @@ describe("authorizeService", () => {
     const result = authorizeService(
       validApiKeyMeta,
       invalidServiceConfig,
+      // biome-ignore lint/suspicious/noExplicitAny: test only
     ) as any;
     expect(result.authorized).toBe(false);
     expect(result.errorMessage).toBe(
@@ -60,6 +64,7 @@ describe("authorizeService", () => {
     const result = authorizeService(
       validApiKeyMeta,
       invalidServiceConfig,
+      // biome-ignore lint/suspicious/noExplicitAny: test only
     ) as any;
     expect(result.authorized).toBe(false);
     expect(result.errorMessage).toBe(
@@ -78,6 +83,7 @@ describe("authorizeService", () => {
       validApiKeyMeta,
       validServiceConfig,
       invalidAuthorizationPayload,
+      // biome-ignore lint/suspicious/noExplicitAny: test only
     ) as any;
     expect(result.authorized).toBe(false);
     expect(result.errorMessage).toBe(
@@ -96,6 +102,7 @@ describe("authorizeService", () => {
       validApiKeyMeta,
       validServiceConfig,
       invalidAuthorizationPayload,
+      // biome-ignore lint/suspicious/noExplicitAny: test only
     ) as any;
     expect(result.authorized).toBe(false);
     expect(result.errorMessage).toBe(
@@ -114,6 +121,7 @@ describe("authorizeService", () => {
       validApiKeyMeta,
       validBundlerServiceConfig,
       authorizationPayload,
+      // biome-ignore lint/suspicious/noExplicitAny: test only
     ) as any;
     expect(result.authorized).toBe(true);
     expect(result.apiKeyMeta).toEqual(validApiKeyMeta);

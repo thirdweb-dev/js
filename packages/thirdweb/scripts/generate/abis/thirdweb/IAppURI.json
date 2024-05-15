@@ -1,0 +1,5 @@
+[
+  "event AppURIUpdated(string prevURI, string newURI)",
+  "function appURI() view returns (string)",
+  "function setAppURI(string _uri)"
+]

@@ -1,0 +1,5 @@
+[
+  "function isValidSigner(address signer, bytes context) view returns (bytes4 magicValue)",
+  "function state() view returns (uint256)",
+  "function token() view returns (uint256 chainId, address tokenContract, uint256 tokenId)"
+]

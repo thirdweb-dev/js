@@ -1,0 +1,4 @@
+[
+  "event AirdropFailed(address indexed tokenAddress, address indexed tokenOwner, address indexed recipient, uint256 tokenId, uint256 amount)",
+  "function airdropERC1155(address tokenAddress, address tokenOwner, (address recipient, uint256 tokenId, uint256 amount)[] contents)"
+]

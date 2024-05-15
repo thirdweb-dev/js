@@ -10,14 +10,16 @@ dist-ssr
 .cache
 server/dist
 public/dist
-./packages/contracts-js/abis
+./legacy_packages/contracts-js/abis
 .idea/
 .yalc/
 yalc.lock
 build/
 playwright-report/
-.vscode/
 .env/
 
 # Artifacts
-packages/cli/artifacts/
+legacy_packages/cli/artifacts/
+
+# codecov binary
+codecov

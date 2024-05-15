@@ -1,0 +1,9 @@
+[
+  "function addr(bytes32 name) view returns (address)",
+  "function addr(bytes32 name, uint coinType) view returns (bytes memory)",
+  "function contenthash(bytes32 name) view returns (bytes memory)",
+  "function text(bytes32 name, string key) view returns (string memory)",
+  "function ABI(bytes32 name, uint256 contentTypes) view returns (uint256, bytes memory)",
+  "function pubkey(bytes32 name) view returns (bytes32 x, bytes32 y)",
+  "function name(bytes32 name) view returns (string memory)"
+]
