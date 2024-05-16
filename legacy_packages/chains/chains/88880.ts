@@ -33,5 +33,6 @@ export default {
   "shortName": "chz",
   "slip44": 1,
   "slug": "chiliz-scoville-testnet",
+  "status": "deprecated",
   "testnet": true
 } as const satisfies Chain;

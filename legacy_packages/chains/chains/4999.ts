@@ -24,12 +24,6 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "icon": {
-    "url": "ipfs://QmPasA8xykRtJDivB2bcKDiRCUNWDPtfUTTKVAcaF2wVxC",
-    "width": 1968,
-    "height": 1968,
-    "format": "png"
-  },
   "infoURL": "https://blackfort.exchange",
   "name": "BlackFort Exchange Network",
   "nativeCurrency": {

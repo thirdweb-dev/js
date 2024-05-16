@@ -12,6 +12,12 @@ export default {
   "faucets": [
     "https://nova-faucet.velo.org"
   ],
+  "icon": {
+    "url": "ipfs://QmYqvnW2jwPEKUv8BdaV4sbL8Audcwosat6SPn4GqYtKxc",
+    "width": 225,
+    "height": 225,
+    "format": "png"
+  },
   "infoURL": "https://velo.org",
   "name": "VELO Labs Mainnet",
   "nativeCurrency": {
