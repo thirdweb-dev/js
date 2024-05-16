@@ -1,6 +1,5 @@
 import type {
   Abi,
-  Address,
 } from "abitype";
 import type { ThirdwebClient } from "../../client/client.js";
 import { getContract } from "../../contract/contract.js";
@@ -8,25 +7,11 @@ import { deployViaAutoFactory } from "../../contract/deployment/deploy-via-autof
 import {
   getOrDeployInfraForPublishedContract,
 } from "../../contract/deployment/utils/bootstrap.js";
-import type { FileOrBufferOrString } from "../../storage/upload/types.js";
 import { fetchPublishedContractMetadata } from "../../contract/deployment/publisher.js";
 import type { Chain } from "../../chains/types.js";
 import type { Account } from "../../wallets/interfaces/wallet.js";
 import { prepareContractCall } from "../../transaction/prepare-contract-call.js";
 import { resolveMethod } from "../../transaction/resolve-method.js";
-
-export type MarketplaceContractParams = {
-  name: string;
-  description?: string;
-  image?: FileOrBufferOrString;
-  external_link?: string;
-  contractURI?: string;
-  social_urls?: Record<string, string>;
-  defaultAdmin?: Address;
-  platformFeeBps?: number;
-  platformFeeRecipient?: string;
-  trustedForwarders?: string[];
-};
 
 export type DeployModularCoreContractOptions = {
   client: ThirdwebClient;
