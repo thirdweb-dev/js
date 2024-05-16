@@ -6,20 +6,14 @@ export default {
     {
       "name": "Cyber Testnet Explorer",
       "url": "https://testnet.cyberscan.co",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
-        "width": 551,
-        "height": 540,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
   "icon": {
-    "url": "ipfs://QmP61yDNPv7fxY9ZzPs4CjQDbZLoKtF8eWWjszVYbwkabd",
-    "width": 1000,
-    "height": 1000,
+    "url": "ipfs://QmR8NuaSqALStb95YsMsJRG2BoYkibjS1XE1pZFtvEkAXY",
+    "width": 213,
+    "height": 212,
     "format": "svg"
   },
   "infoURL": "https://cyber.co/",
@@ -35,7 +29,7 @@ export default {
     "chain": "eip155-11155111",
     "bridges": [
       {
-        "url": "https://cyber-testnet-bridge.alt.technology/deposit"
+        "url": "https://cyber-testnet.testnets.rollbridge.app/"
       }
     ]
   },

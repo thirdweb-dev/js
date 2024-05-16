@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://bafkreifvrly5tgd34xqeo67s4etmiu52bkroml7uy7eosizf57htf5nrzq",
-    "width": 250,
-    "height": 250,
-    "format": "png"
-  },
   "infoURL": "https://zora.energy",
   "name": "Zora Sepolia Testnet",
   "nativeCurrency": {
