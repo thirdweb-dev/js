@@ -4,7 +4,7 @@ import { getRpcClient } from "../../../../rpc/rpc.js";
 import { sendAndConfirmTransaction } from "../../../../transaction/actions/send-and-confirm-transaction.js";
 import { sendBatchTransaction } from "../../../../transaction/actions/send-batch-transaction.js";
 import type { Hex } from "../../../../utils/encoding/hex.js";
-import { randomBytes32 } from "../../../../utils/uuid.js";
+import { randomBytes } from "../../../../utils/uuid.js";
 import type { PreparedSendCall } from "../../../eip5792/send-calls.js";
 import type {
   GetCallsStatusResponse,
@@ -37,7 +37,7 @@ export async function inAppWalletSendCalls(args: {
   const { account, calls } = args;
 
   const hashes: Hex[] = [];
-  const bundleId = await randomBytes32(65);
+  const bundleId = await randomBytes(65);
   bundlesToTransactions.set(bundleId, hashes);
   if (account.sendBatchTransaction) {
     const receipt = await sendBatchTransaction({
