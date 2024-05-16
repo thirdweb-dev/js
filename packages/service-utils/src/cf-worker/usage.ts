@@ -39,7 +39,7 @@ const usageEventSchema = z.object({
   clientId: z.string().optional(),
   walletAddress: z.string().optional(),
   walletType: z.string().optional(),
-  chainId: z.number().int().positive().optional(),
+  chainId: z.number().int().nonnegative().optional(),
   provider: z.string().optional(),
   mimeType: z.string().optional(),
   fileSize: z.number().int().nonnegative().optional(),
