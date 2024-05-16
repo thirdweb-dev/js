@@ -1,5 +1,5 @@
 ---
-"@thirdweb-dev/react-native-adapter": minor
+"@thirdweb-dev/react-native-adapter": major
 ---
 
 initial release
