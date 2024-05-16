@@ -3,7 +3,6 @@ import type {
   InjectedSupportedWalletIds,
   WCSupportedWalletIds,
 } from "./__generated__/wallet-ids.js";
-import { injectedProvider } from "./injected/mipdStore.js";
 import type { Account, Wallet } from "./interfaces/wallet.js";
 import type {
   CreateWalletArgs,
@@ -118,6 +117,7 @@ export function createWallet<const ID extends WalletId>(
             WCSupportedWalletIds | InjectedSupportedWalletIds
           >,
         ) => {
+          const { injectedProvider } = await import("./injected/mipdStore.js");
           // injected wallet priority for autoConnect
           if (id !== "walletConnect" && injectedProvider(id)) {
             const { autoConnectInjectedWallet } = await import(
@@ -220,6 +220,7 @@ export function createWallet<const ID extends WalletId>(
             return wcConnect(options);
           }
 
+          const { injectedProvider } = await import("./injected/mipdStore.js");
           if (injectedProvider(id)) {
             const { connectInjectedWallet } = await import(
               "./injected/index.js"

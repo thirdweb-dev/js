@@ -76,3 +76,6 @@ import { useSendTransactionCore } from "../react/core/hooks/contract/useSendTran
  * @transaction
  */
 export const useSendTransaction = useSendTransactionCore;
+export { useSendBatchTransaction } from "../react/core/hooks/contract/useSendBatchTransaction.js";
+export { useSendAndConfirmTransaction } from "../react/core/hooks/contract/useSendAndConfirmTransaction.js";
+export { useEstimateGasCost } from "../react/core/hooks/contract/useEstimateGasCost.js";
