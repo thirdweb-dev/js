@@ -1,0 +1,71 @@
+[
+  {
+    "type": "function",
+    "name": "getExtensionConfig",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "tuple",
+        "internalType": "struct IExtensionConfig.ExtensionConfig",
+        "components": [
+          {
+            "name": "requiredInterfaceId",
+            "type": "bytes4",
+            "internalType": "bytes4"
+          },
+          {
+            "name": "registerInstallationCallback",
+            "type": "bool",
+            "internalType": "bool"
+          },
+          {
+            "name": "supportedInterfaces",
+            "type": "bytes4[]",
+            "internalType": "bytes4[]"
+          },
+          {
+            "name": "callbackFunctions",
+            "type": "tuple[]",
+            "internalType": "struct IExtensionConfig.CallbackFunction[]",
+            "components": [
+              {
+                "name": "selector",
+                "type": "bytes4",
+                "internalType": "bytes4"
+              },
+              {
+                "name": "callType",
+                "type": "uint8",
+                "internalType": "enum IExtensionConfig.CallType"
+              }
+            ]
+          },
+          {
+            "name": "fallbackFunctions",
+            "type": "tuple[]",
+            "internalType": "struct IExtensionConfig.FallbackFunction[]",
+            "components": [
+              {
+                "name": "selector",
+                "type": "bytes4",
+                "internalType": "bytes4"
+              },
+              {
+                "name": "callType",
+                "type": "uint8",
+                "internalType": "enum IExtensionConfig.CallType"
+              },
+              {
+                "name": "permissionBits",
+                "type": "uint256",
+                "internalType": "uint256"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "stateMutability": "pure"
+  }
+]
