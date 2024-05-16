@@ -77,7 +77,7 @@ describe("generateLoginPayload", () => {
 
     const { nonce, ...restResult } = result;
 
-    expect(nonce).toContain("-");
+    expect(nonce).toContain("0x");
 
     expect(restResult).toMatchInlineSnapshot(`
       {

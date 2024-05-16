@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmezBwVepoegoCqb86idzPgvPxtaSuXzMLBGiiYfyTGTkc",
-    "width": 458,
-    "height": 468,
-    "format": "png"
-  },
   "infoURL": "https://dcpay.io",
   "name": "DCpay Mainnet",
   "nativeCurrency": {

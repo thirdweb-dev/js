@@ -9,7 +9,7 @@ import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { toBigInt } from "../../../utils/bigint.js";
 import { dateToSeconds, tenYearsFromNow } from "../../../utils/date.js";
 import type { NFTInput } from "../../../utils/nft/parseNft.js";
-import { randomBytes } from "../../../utils/uuid.js";
+import { randomBytes } from "../../../utils/random.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
 import {
   type MintWithSignatureParams,

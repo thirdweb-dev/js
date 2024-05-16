@@ -1,8 +1,9 @@
-import type {
-  SignableMessage,
-  TypedData,
-  TypedDataDefinition,
-  TypedDataDomain,
+import {
+  type SignableMessage,
+  type TypedData,
+  type TypedDataDefinition,
+  type TypedDataDomain,
+  hashTypedData,
 } from "viem";
 import type { Chain } from "../../chains/types.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
@@ -241,13 +242,11 @@ async function createSmartAccount(
         { isContractDeployed },
         { readContract },
         { encodeAbiParameters },
-        { hashTypedData },
         { checkContractWalletSignedTypedData },
       ] = await Promise.all([
         import("../../utils/bytecode/is-contract-deployed.js"),
         import("../../transaction/read-contract.js"),
         import("../../utils/abi/encodeAbiParameters.js"),
-        import("viem"),
         import(
           "../../extensions/erc1271/checkContractWalletSignedTypedData.js"
         ),
