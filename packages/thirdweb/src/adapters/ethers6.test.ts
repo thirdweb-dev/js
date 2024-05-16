@@ -1,9 +1,10 @@
+import * as ethers6 from "ethers6";
 import { describe, expect, test } from "vitest";
 import { ANVIL_CHAIN } from "../../test/src/chains.js";
 import { TEST_CLIENT } from "../../test/src/test-clients.js";
 import { ANVIL_PKEY_A, TEST_ACCOUNT_B } from "../../test/src/test-wallets.js";
 import { privateKeyToAccount } from "../wallets/private-key.js";
-import { ethers6Adapter } from "./ethers6.js";
+import { toEthersSigner } from "./ethers6.js";
 
 const account = privateKeyToAccount({
   privateKey: ANVIL_PKEY_A,
@@ -12,32 +13,35 @@ const account = privateKeyToAccount({
 
 describe("toEthersSigner", () => {
   test("should return an ethers 6 signer", async () => {
-    const signer = await ethers6Adapter.signer.toEthers({
-      client: TEST_CLIENT,
+    const signer = await toEthersSigner(
+      ethers6,
+      TEST_CLIENT,
       account,
-      chain: ANVIL_CHAIN,
-    });
+      ANVIL_CHAIN,
+    );
     expect(signer).toBeDefined();
     expect(signer.signMessage).toBeDefined();
   });
 
   test("should sign message", async () => {
-    const signer = await ethers6Adapter.signer.toEthers({
-      client: TEST_CLIENT,
+    const signer = await toEthersSigner(
+      ethers6,
+      TEST_CLIENT,
       account,
-      chain: ANVIL_CHAIN,
-    });
+      ANVIL_CHAIN,
+    );
     const expectedSig = await account.signMessage({ message: "hello world" });
     const sig = await signer.signMessage("hello world");
     expect(sig).toBe(expectedSig);
   });
 
   test("should sign typed data", async () => {
-    const signer = await ethers6Adapter.signer.toEthers({
-      client: TEST_CLIENT,
+    const signer = await toEthersSigner(
+      ethers6,
+      TEST_CLIENT,
       account,
-      chain: ANVIL_CHAIN,
-    });
+      ANVIL_CHAIN,
+    );
     expect(signer.signTypedData).toBeDefined();
 
     // All properties on a domain are optional
@@ -80,11 +84,12 @@ describe("toEthersSigner", () => {
   });
 
   test("should send a tx", async () => {
-    const signer = await ethers6Adapter.signer.toEthers({
-      client: TEST_CLIENT,
+    const signer = await toEthersSigner(
+      ethers6,
+      TEST_CLIENT,
       account,
-      chain: ANVIL_CHAIN,
-    });
+      ANVIL_CHAIN,
+    );
     const txResponse = await signer.sendTransaction({
       to: TEST_ACCOUNT_B.address,
       value: 100,
