@@ -602,7 +602,7 @@ describe("legacy", () => {
     expect({ ...tx, to: tx.to ? checksumAddress(tx.to) : undefined }).toEqual({
       ...BASE_LEGACY_TRANSACTION,
       ...signature,
-      yParity: undefined,
+      yParity: 1,
       type: "legacy",
     });
   });
@@ -653,7 +653,7 @@ describe("legacy", () => {
     expect({ ...tx, to: tx.to ? checksumAddress(tx.to) : undefined }).toEqual({
       ...args,
       ...signature,
-      yParity: undefined,
+      yParity: 0,
       type: "legacy",
       v: 173n,
     });
