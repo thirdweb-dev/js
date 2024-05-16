@@ -1,8 +1,8 @@
 import { ADDRESS_ZERO } from "../../../constants/addresses.js";
 import type { ThirdwebContract } from "../../../contract/contract.js";
 import { dateToSeconds, tenYearsFromNow } from "../../../utils/date.js";
+import { randomBytes } from "../../../utils/random.js";
 import { toWei } from "../../../utils/units.js";
-import { randomBytes } from "../../../utils/uuid.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
 import type { SetPermissionsForSignerParams } from "../__generated__/IAccountPermissions/write/setPermissionsForSigner.js";
 import { type AccountPermissions, SignerPermissionRequest } from "./types.js";

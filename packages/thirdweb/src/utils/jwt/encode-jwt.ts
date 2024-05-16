@@ -1,7 +1,7 @@
 import type { Account } from "../../wallets/interfaces/wallet.js";
 import { stringToBytes } from "../encoding/to-bytes.js";
+import { randomBytes } from "../random.js";
 import { uint8ArrayToBase64 } from "../uint8-array.js";
-import { randomBytes } from "../uuid.js";
 import { PRECOMPILED_B64_ENCODED_JWT_HEADER } from "./jwt-header.js";
 import type { JWTPayload } from "./types.js";
 
