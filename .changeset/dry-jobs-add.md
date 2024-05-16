@@ -2,4 +2,4 @@
 "thirdweb": patch
 ---
 
-Cache custom chain configuration in defineChain
+Fixes caching issue when using `defineChain`
