@@ -1,7 +1,7 @@
 import { AwsClient } from "aws4fetch";
 import { z } from "zod";
 
-// Initialize a singleton for aws usage.
+// Initialize a singleton for AWS usage.
 let _aws: AwsClient | undefined;
 function getAws(options: ConstructorParameters<typeof AwsClient>[0]) {
   if (!_aws) {
@@ -39,7 +39,7 @@ const usageEventSchema = z.object({
   clientId: z.string().optional(),
   walletAddress: z.string().optional(),
   walletType: z.string().optional(),
-  chainId: z.number().int().nonnegative().optional(),
+  chainId: z.number().int().positive().optional(),
   provider: z.string().optional(),
   mimeType: z.string().optional(),
   fileSize: z.number().int().nonnegative().optional(),
