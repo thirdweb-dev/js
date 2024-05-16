@@ -6,22 +6,10 @@ export default {
     {
       "name": "blockscout",
       "url": "https://explorer-sepolia.vizing.com",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmPgpWfGsAZ5UHekWFR8rioadVe3Wox8idFyeVxuv9N4Vo",
-        "width": 200,
-        "height": 200,
-        "format": "svg"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmPgpWfGsAZ5UHekWFR8rioadVe3Wox8idFyeVxuv9N4Vo",
-    "width": 200,
-    "height": 200,
-    "format": "svg"
-  },
   "infoURL": "https://vizing.com",
   "name": "Vizing Testnet",
   "nativeCurrency": {
