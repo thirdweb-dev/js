@@ -2,16 +2,8 @@ import { defineChain as viemChain } from "viem";
 import { describe, expect, it } from "vitest";
 import { ANVIL_CHAIN } from "../../test/src/chains.js";
 import { TEST_CLIENT } from "../../test/src/test-clients.js";
-import {
-  ANVIL_PKEY_A,
-  TEST_ACCOUNT_A,
-  TEST_ACCOUNT_B,
-} from "../../test/src/test-wallets.js";
-import {
-  getRpcClient,
-  prepareTransaction,
-  sendTransaction,
-} from "../exports/thirdweb.js";
+import { ANVIL_PKEY_A, TEST_ACCOUNT_B } from "../../test/src/test-wallets.js";
+import { getRpcClient, prepareTransaction } from "../exports/thirdweb.js";
 import { toSerializableTransaction } from "../transaction/actions/to-serializable-transaction.js";
 import { privateKeyToAccount } from "../wallets/private-key.js";
 import { defineChain } from "./utils.js";
