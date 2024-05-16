@@ -521,7 +521,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
   );
 };
 
-const TWMediaRenderer = chakra(MediaRenderer, {
+export const TWMediaRenderer = chakra(MediaRenderer, {
   shouldForwardProp: (prop) =>
     ["width", "height", "mimeType", "src", "requireInteraction"].includes(prop),
 });

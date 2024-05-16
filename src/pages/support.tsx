@@ -128,7 +128,7 @@ const helpProducts = [
   },
 ];
 
-const SuppportPage: ThirdwebNextPage = () => {
+const SupportPage: ThirdwebNextPage = () => {
   const title = "Support Page";
   const description = "thirdweb support page.";
 
@@ -351,9 +351,9 @@ const SuppportPage: ThirdwebNextPage = () => {
   );
 };
 
-export default SuppportPage;
-SuppportPage.pageId = PageId.Support;
-SuppportPage.getLayout = (page, props) => {
+export default SupportPage;
+SupportPage.pageId = PageId.Support;
+SupportPage.getLayout = (page, props) => {
   return (
     <AppLayout
       layout="custom-contract"

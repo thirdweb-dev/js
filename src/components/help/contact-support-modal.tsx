@@ -1,19 +1,17 @@
 import {
   Box,
   Flex,
-  FormControl,
   Modal,
   ModalBody,
+  ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Select,
-  Textarea,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useForm } from "react-hook-form";
-import { Button, FormLabel, Heading } from "tw-components";
+import { FormProvider, useForm } from "react-hook-form";
+import { Button, Heading } from "tw-components";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import {
   CreateTicketInput,
@@ -21,27 +19,76 @@ import {
 } from "@3rdweb-sdk/react/hooks/useApi";
 import { ConnectWallet } from "@thirdweb-dev/react";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
+import dynamic from "next/dynamic";
+import { ReactElement, useEffect } from "react";
+import { SupportForm_SelectInput } from "./contact-forms/shared/SupportForm_SelectInput";
+import { SubmitTicketButton } from "./SubmitTicketButton";
 
-const productOptions = [
-  "Connect",
-  "Contracts",
-  "Payments",
-  "Infrastructure",
-  "Account",
-  "Billing",
-  "Other",
+const ConnectSupportForm = dynamic(() => import("./contact-forms/connect"), {
+  ssr: false,
+});
+const EngineSupportForm = dynamic(() => import("./contact-forms/engine"), {
+  ssr: false,
+});
+const ContractSupportForm = dynamic(() => import("./contact-forms/contracts"), {
+  ssr: false,
+});
+const AccountSupportForm = dynamic(() => import("./contact-forms/account"), {
+  ssr: false,
+});
+const OtherSupportForm = dynamic(() => import("./contact-forms/other"), {
+  ssr: false,
+});
+
+const productOptions: { label: string; component: ReactElement }[] = [
+  {
+    label: "Connect",
+    component: <ConnectSupportForm />,
+  },
+  {
+    label: "Engine",
+    component: <EngineSupportForm />,
+  },
+  {
+    label: "Contracts",
+    component: <ContractSupportForm />,
+  },
+  {
+    label: "Account",
+    component: <AccountSupportForm />,
+  },
+  {
+    label: "Other",
+    component: <OtherSupportForm />,
+  },
 ];
 
 export const ContactSupportModal = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const form = useForm<CreateTicketInput>();
+  const productLabel = form.watch("product");
   const { onSuccess, onError } = useTxNotifications(
-    "Successfuly sent support ticket. Our team will be in touch using your account email shortly.",
+    "Successfully sent support ticket. Our team will be in touch using your account email shortly.",
     "Failed to send ticket. Please try again.",
   );
   const { isLoggedIn } = useLoggedInUser();
   const { mutate: createTicket } = useCreateTicket();
 
+  // On changing product -> reset all fields (but keep the `product` field)
+  useEffect(() => {
+    if (!productLabel) {
+      return;
+    }
+    const label = productLabel;
+    form.reset();
+    form.reset({ product: label });
+  }, [productLabel, form]);
+
+  const FormComponent = () => {
+    return (
+      productOptions.find((o) => o.label === productLabel)?.component || <></>
+    );
+  };
   return (
     <>
       <Box
@@ -56,64 +103,45 @@ export const ContactSupportModal = () => {
       </Box>
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
-        <ModalContent
-          as="form"
-          onSubmit={form.handleSubmit((data) => {
-            try {
-              createTicket(data);
-              onClose();
-              onSuccess();
-              form.reset();
-            } catch (err) {
-              console.error(err);
-              onError(err);
-            }
-          })}
-        >
-          <ModalHeader>
-            <Heading size="title.md" mt={2}>
-              Get in touch with us
-            </Heading>
-          </ModalHeader>
-          <ModalBody p={6} as={Flex} gap={4} flexDir="column">
-            <FormControl>
-              <FormLabel>What do you need help with?</FormLabel>
-              <Select {...form.register("product", { required: true })}>
-                {productOptions?.map((product) => (
-                  <option key={product} value={product}>
-                    {product}
-                  </option>
-                ))}
-              </Select>
-            </FormControl>
-            <FormControl isRequired>
-              <FormLabel>Description</FormLabel>
-              <Textarea
-                autoComplete="off"
-                {...form.register("markdown", { required: true })}
-                rows={7}
-                maxLength={10000}
-                placeholder="Please describe the issue you're encountering in detail, including steps that led to the error, any error messages, troubleshooting steps you've already taken, and the product(s), dashboard, or SDKs involved."
+        <FormProvider {...form}>
+          <ModalContent
+            as="form"
+            onSubmit={form.handleSubmit((data) => {
+              try {
+                createTicket(data);
+                onClose();
+                onSuccess();
+                form.reset();
+              } catch (err) {
+                console.error(err);
+                onError(err);
+              }
+            })}
+          >
+            <ModalHeader>
+              <Heading size="title.md" mt={2}>
+                Get in touch with us
+              </Heading>
+            </ModalHeader>
+            <ModalCloseButton />
+            <ModalBody p={6} as={Flex} gap={4} flexDir="column">
+              <SupportForm_SelectInput
+                formLabel="What do you need help with?"
+                formValue="product"
+                options={productOptions.map((o) => o.label)}
+                promptText="Select a product"
+                required={true}
               />
-            </FormControl>
-          </ModalBody>
-          <ModalFooter as={Flex} gap={3}>
-            <Button onClick={onClose} variant="ghost">
-              Cancel
-            </Button>
-            {isLoggedIn ? (
-              <Button
-                type="submit"
-                colorScheme="primary"
-                isDisabled={form.watch("markdown")?.length === 0}
-              >
-                Submit
+              <FormComponent />
+            </ModalBody>
+            <ModalFooter as={Flex} gap={3}>
+              <Button onClick={onClose} variant="ghost">
+                Cancel
               </Button>
-            ) : (
-              <ConnectWallet />
-            )}
-          </ModalFooter>
-        </ModalContent>
+              {isLoggedIn ? <SubmitTicketButton /> : <ConnectWallet />}
+            </ModalFooter>
+          </ModalContent>
+        </FormProvider>
       </Modal>
     </>
   );

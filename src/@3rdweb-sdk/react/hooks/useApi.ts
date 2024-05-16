@@ -572,17 +572,42 @@ export function useConfirmEmail() {
   );
 }
 
-export interface CreateTicketInput {
+export type CreateTicketInput = {
   markdown: string;
   product: string;
-}
+  files?: File[];
+} & Record<string, string>;
 
 export function useCreateTicket() {
   const { user } = useLoggedInUser();
+  /**
+   * Unthread only accepts a `markdown` field
+   * so we need to include all the metadata there
+   *
+   * Example of the final content:
+   * -----------
+   * Problem Area: Connect wallet issue
+   * SDK: Unity
+   * SDK Version: 4
+   * Affected Area: Application
+   * -----------
+   */
+  const updateMarkdown = (input: CreateTicketInput) => {
+    const { markdown } = input;
+    const extraData = Object.keys(input)
+      .filter((key) => key.startsWith("extraInfo_"))
+      .map((key) => {
+        const prettifiedKey = `${key.replace("extraInfo_", "").replaceAll("_", " ")}`;
+        return `${prettifiedKey}: ${input[key] ?? "N/A"}\n`;
+      })
+      .join("");
+    const line = "-------------------------\n";
+    return `\n${line}${extraData}${line}${markdown}`;
+  };
 
   return useMutationWithInvalidate(async (input: CreateTicketInput) => {
     invariant(user?.address, "walletAddress is required");
-
+    input.markdown = updateMarkdown(input);
     const res = await fetch(`${THIRDWEB_API_HOST}/v1/account/createTicket`, {
       method: "POST",
       credentials: "include",
@@ -591,6 +616,7 @@ export function useCreateTicket() {
       },
       body: JSON.stringify(input),
     });
+
     const json = await res.json();
 
     if (json.error) {
