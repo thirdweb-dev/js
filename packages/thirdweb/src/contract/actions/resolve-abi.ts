@@ -117,6 +117,11 @@ export async function resolveAbiFromBytecode(
   contract: ThirdwebContract<any>,
 ): Promise<Abi> {
   const bytecode = await getBytecode(contract);
+  if (bytecode === "0x") {
+    throw new Error(
+      `Failed to load contract bytecode. Make sure the contract [${contract.address}] exists on the chain [${contract.chain.name}]`,
+    );
+  }
   const ipfsUri = extractIPFSUri(bytecode);
   if (!ipfsUri) {
     // just early exit if we can't find an IPFS URI
