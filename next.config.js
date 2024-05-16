@@ -125,6 +125,7 @@ const moduleExports = {
     instrumentationHook: true,
     scrollRestoration: true,
     esmExternals: "loose",
+    webpackBuildWorker: true,
   },
   compiler: {
     emotion: true,

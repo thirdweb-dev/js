@@ -20,6 +20,10 @@ import {
   rainbowWallet,
   safeWallet,
   trustWallet,
+  useChain,
+  useDisconnect,
+  useSigner,
+  useSwitchChain,
   walletConnect,
   zerionWallet,
 } from "@thirdweb-dev/react";
@@ -32,11 +36,19 @@ import { useSupportedChains } from "hooks/chains/configureChains";
 import { useNativeColorMode } from "hooks/useNativeColorMode";
 import { getDashboardChainRpc } from "lib/rpc";
 import { StorageSingleton } from "lib/sdk";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { ComponentWithChildren } from "types/component-with-children";
 import { THIRDWEB_API_HOST, THIRDWEB_DOMAIN } from "../../constants/urls";
-import { ThirdwebProvider } from "thirdweb/react";
+import {
+  ThirdwebProvider,
+  useSetActiveWallet,
+  useDisconnect as useDisconnectV5,
+} from "thirdweb/react";
+import { ethers5Adapter } from "thirdweb/adapters/ethers5";
+import { createWalletAdapter } from "thirdweb/wallets";
 import { useRouter } from "next/router";
+import { defineChain } from "thirdweb";
+import { thirdwebClient } from "../../lib/thirdweb-client";
 
 export interface DashboardThirdwebProviderProps {
   contractInfo?: EVMContractInfo;
@@ -140,10 +152,66 @@ export const DashboardThirdwebProvider: ComponentWithChildren<
         }}
       >
         <GlobalAuthTokenProvider />
+        <V4ToV5SignerAdapter />
         {children}
       </ThirdwebProviderOld>
     </ThirdwebProvider>
   );
+};
+
+const V4ToV5SignerAdapter = () => {
+  const signer = useSigner();
+  const chain = useChain();
+  const switchChain = useSwitchChain();
+  const disconnect = useDisconnect();
+  const setActiveWallet = useSetActiveWallet();
+
+  const { disconnect: disconnectv5 } = useDisconnectV5();
+
+  const currentWallet = useRef<any>(null);
+
+  useEffect(() => {
+    let active = true;
+
+    async function run() {
+      if (signer && chain) {
+        const adaptedAccount = await ethers5Adapter.signer.fromEthers({
+          signer,
+        });
+        if (!active) {
+          return;
+        }
+        const thirdwebWallet = createWalletAdapter({
+          adaptedAccount,
+          chain: defineChain(chain),
+          switchChain: async (chain_) => {
+            await switchChain(chain_.id);
+          },
+          onDisconnect: async () => {
+            await disconnect();
+          },
+          client: thirdwebClient,
+        });
+        await setActiveWallet(thirdwebWallet);
+        currentWallet.current = thirdwebWallet;
+      } else if (currentWallet.current) {
+        disconnectv5(currentWallet.current);
+        currentWallet.current = null;
+      }
+    }
+
+    run().catch((error) => {
+      console.error("failed to adapt wallet", error);
+    });
+
+    return () => {
+      active = false;
+    };
+    // purposefully omit switchChain and disconnect from hooks
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [signer, chain]);
+
+  return null;
 };
 
 const GlobalAuthTokenProvider = () => {

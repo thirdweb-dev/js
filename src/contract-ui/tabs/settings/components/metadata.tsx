@@ -10,7 +10,9 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useContractMetadata, useUpdateMetadata } from "@thirdweb-dev/react";
+import { useContractMetadata } from "@thirdweb-dev/react";
+import { useSendAndConfirmTransaction } from "thirdweb/react";
+import { setContractMetadata } from "thirdweb/extensions/common";
 import {
   CommonContractSchema,
   ValidContractInstance,
@@ -33,6 +35,9 @@ import {
   Text,
 } from "tw-components";
 import { z } from "zod";
+import { defineChain, getContract } from "thirdweb";
+import { thirdwebClient } from "../../../../lib/thirdweb-client";
+import { useInvalidatev4Contract } from "../../../../hooks/invalidate-v4-contract";
 
 const DashboardCommonContractSchema = CommonContractSchema.extend({
   dashboard_social_urls: z.array(
@@ -68,7 +73,8 @@ export const SettingsMetadata = <
 }) => {
   const trackEvent = useTrack();
   const metadata = useContractMetadata(contract);
-  const metadataMutation = useUpdateMetadata(contract);
+  const sendTransaction = useSendAndConfirmTransaction();
+  const invalidateContract = useInvalidatev4Contract();
 
   const transformedQueryData = useMemo(() => {
     return {
@@ -136,37 +142,52 @@ export const SettingsMetadata = <
             },
             {},
           );
+          if (!contract) {
+            return;
+          }
 
           trackEvent({
             category: "settings",
             action: "set-metadata",
             label: "attempt",
           });
-          metadataMutation.mutate(
-            {
-              ...data,
-              social_urls: socialUrlsObj,
+
+          const contractV5 = getContract({
+            address: contract.getAddress(),
+            chain: defineChain(contract.chainId),
+            client: thirdwebClient,
+          });
+          const tx = setContractMetadata({
+            contract: contractV5,
+            ...data,
+            social_urls: socialUrlsObj,
+          });
+
+          sendTransaction.mutate(tx, {
+            onSuccess: () => {
+              trackEvent({
+                category: "settings",
+                action: "set-metadata",
+                label: "success",
+              });
+              onSuccess();
             },
-            {
-              onSuccess: () => {
-                trackEvent({
-                  category: "settings",
-                  action: "set-metadata",
-                  label: "success",
-                });
-                onSuccess();
-              },
-              onError: (error) => {
-                trackEvent({
-                  category: "settings",
-                  action: "set-metadata",
-                  label: "error",
-                  error,
-                });
-                onError(error);
-              },
+            onError: (error) => {
+              trackEvent({
+                category: "settings",
+                action: "set-metadata",
+                label: "error",
+                error,
+              });
+              onError(error);
             },
-          );
+            onSettled: () => {
+              return invalidateContract({
+                contractAddress: contract.getAddress(),
+                chainId: contract.chainId,
+              });
+            },
+          });
         })}
         direction="column"
       >
@@ -187,12 +208,12 @@ export const SettingsMetadata = <
               <FormControl
                 display="flex"
                 flexDirection="column"
-                isDisabled={metadata.isLoading || metadataMutation.isLoading}
+                isDisabled={metadata.isLoading || sendTransaction.isPending}
                 isInvalid={!!getFieldState("image", formState).error}
               >
                 <FormLabel>Image</FormLabel>
                 <FileInput
-                  isDisabled={metadata.isLoading || metadataMutation.isLoading}
+                  isDisabled={metadata.isLoading || sendTransaction.isPending}
                   accept={{ "image/*": [] }}
                   value={useImageFileOrUrl(watch("image"))}
                   setValue={(file) =>
@@ -220,7 +241,7 @@ export const SettingsMetadata = <
             >
               <Flex gap={4} direction={{ base: "column", md: "row" }}>
                 <FormControl
-                  isDisabled={metadata.isLoading || metadataMutation.isLoading}
+                  isDisabled={metadata.isLoading || sendTransaction.isPending}
                   isInvalid={!!getFieldState("name", formState).error}
                 >
                   <FormLabel>Name</FormLabel>
@@ -232,7 +253,7 @@ export const SettingsMetadata = <
               </Flex>
 
               <FormControl
-                isDisabled={metadata.isLoading || metadataMutation.isLoading}
+                isDisabled={metadata.isLoading || sendTransaction.isPending}
                 isInvalid={!!getFieldState("description", formState).error}
               >
                 <FormLabel>Description</FormLabel>
@@ -245,14 +266,14 @@ export const SettingsMetadata = <
           </Flex>
           <Flex direction="column" gap={4}>
             <FormControl
-              isDisabled={metadata.isLoading || metadataMutation.isLoading}
+              isDisabled={metadata.isLoading || sendTransaction.isPending}
             >
               <FormLabel>Social URLs</FormLabel>
             </FormControl>
             {fields.map((item, index) => (
               <Flex key={item.id}>
                 <FormControl
-                  isDisabled={metadata.isLoading || metadataMutation.isLoading}
+                  isDisabled={metadata.isLoading || sendTransaction.isPending}
                 >
                   <FormLabel textTransform="capitalize">
                     {/* // TODO: Fix this */}
@@ -265,7 +286,7 @@ export const SettingsMetadata = <
                   <Flex gap={2}>
                     <Input
                       isDisabled={
-                        metadata.isLoading || metadataMutation.isLoading
+                        metadata.isLoading || sendTransaction.isPending
                       }
                       {...register(`dashboard_social_urls.${index}.value`)}
                       type="url"
@@ -273,7 +294,7 @@ export const SettingsMetadata = <
                     />
                     <IconButton
                       isDisabled={
-                        metadata.isLoading || metadataMutation.isLoading
+                        metadata.isLoading || sendTransaction.isPending
                       }
                       icon={<Icon as={FiTrash} boxSize={5} />}
                       aria-label="Remove row"
@@ -285,7 +306,7 @@ export const SettingsMetadata = <
             ))}
             <Box>
               <Button
-                isDisabled={metadata.isLoading || metadataMutation.isLoading}
+                isDisabled={metadata.isLoading || sendTransaction.isPending}
                 type="button"
                 size="sm"
                 colorScheme="primary"
@@ -305,7 +326,7 @@ export const SettingsMetadata = <
             transactionCount={1}
             isDisabled={metadata.isLoading || !formState.isDirty}
             type="submit"
-            isLoading={metadataMutation.isLoading}
+            isLoading={sendTransaction.isPending}
             loadingText="Saving..."
             size="md"
             borderRadius="xl"
