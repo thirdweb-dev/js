@@ -118,8 +118,11 @@ export async function resolveAbiFromBytecode(
 ): Promise<Abi> {
   const bytecode = await getBytecode(contract);
   if (bytecode === "0x") {
+    const { id, name } = contract.chain;
     throw new Error(
-      `Failed to load contract bytecode. Make sure the contract [${contract.address}] exists on the chain [${contract.chain.name || "Unknown Chain"} (chain id: ${chain.id})]`,
+      `Failed to load contract bytecode. Make sure the contract [${
+        contract.address
+      }] exists on the chain [${name || "Unknown Chain"} (chain id: ${id})]`,
     );
   }
   const ipfsUri = extractIPFSUri(bytecode);
