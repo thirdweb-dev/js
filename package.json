@@ -12,7 +12,7 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "test": "turbo run test --filter=./packages/*",
-    "test:legacy": "turbo run test --filter=./legacy_packages/* --filter=!sdk",
+    "test:legacy": "turbo run test --filter=./legacy_packages/*",
     "e2e": "turbo run e2e --filter=./packages/*",
     "e2e:legacy": "turbo run e2e --filter=./legacy_packages/*",
     "build:packages": "turbo run build --filter=./packages/*",
