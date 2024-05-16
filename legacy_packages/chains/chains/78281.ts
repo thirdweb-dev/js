@@ -16,12 +16,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmPXhdPGufjcPzZ9Y6nY6QyW8MgA6793L88iPMRh1Q3gjJ",
-    "width": 512,
-    "height": 366,
-    "format": "png"
-  },
   "infoURL": "https://hexapod.network",
   "name": "Dragonfly Mainnet (Hexapod)",
   "nativeCurrency": {
