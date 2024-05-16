@@ -6,10 +6,22 @@ export default {
     {
       "name": "tpcscan",
       "url": "https://tpcscan.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmQyTyJUnhD1dca35Vyj96pm3v3Xyw8xbG9m8HXHw3k2zR",
+        "width": 578,
+        "height": 701,
+        "format": "svg"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmQyTyJUnhD1dca35Vyj96pm3v3Xyw8xbG9m8HXHw3k2zR",
+    "width": 578,
+    "height": 701,
+    "format": "svg"
+  },
   "infoURL": "https://techpay.io/",
   "name": "TechPay Mainnet",
   "nativeCurrency": {

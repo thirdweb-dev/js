@@ -12,12 +12,6 @@ export default {
   "faucets": [
     "https://faucet.condor.systems"
   ],
-  "icon": {
-    "url": "ipfs://QmPRDuEJSTqp2cDUvWCp71Wns6XV8nvdeAVKWH6srpk4xM",
-    "width": 752,
-    "height": 752,
-    "format": "png"
-  },
   "infoURL": "https://condor.systems",
   "name": "Condor Test Network",
   "nativeCurrency": {
