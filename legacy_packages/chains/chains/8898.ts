@@ -6,24 +6,12 @@ export default {
     {
       "name": "mmtscan",
       "url": "https://mmtscan.io",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmaF5gi2CbDKsJ2UchNkjBqmWjv8JEDP3vePBmxeUHiaK4",
-        "width": 250,
-        "height": 250,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [
     "https://faucet.mmtscan.io/"
   ],
-  "icon": {
-    "url": "ipfs://QmaF5gi2CbDKsJ2UchNkjBqmWjv8JEDP3vePBmxeUHiaK4",
-    "width": 250,
-    "height": 250,
-    "format": "png"
-  },
   "infoURL": "https://mmtchain.io/",
   "name": "Mammoth Mainnet",
   "nativeCurrency": {

@@ -6,16 +6,34 @@ export default {
     {
       "name": "Blastscan",
       "url": "https://blastscan.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://bafybeifc2h3x7jgy4x4nmg2m54ghbvmkfu6oweujambwefzqzew5vujhsi",
+        "width": 400,
+        "height": 400,
+        "format": "jpg"
+      }
     },
     {
       "name": "Blast Explorer",
       "url": "https://blastexplorer.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://bafybeifc2h3x7jgy4x4nmg2m54ghbvmkfu6oweujambwefzqzew5vujhsi",
+        "width": 400,
+        "height": 400,
+        "format": "jpg"
+      }
     }
   ],
   "faucets": [],
   "features": [],
+  "icon": {
+    "url": "ipfs://bafybeifc2h3x7jgy4x4nmg2m54ghbvmkfu6oweujambwefzqzew5vujhsi",
+    "width": 400,
+    "height": 400,
+    "format": "jpg"
+  },
   "infoURL": "https://blast.io/",
   "name": "Blast",
   "nativeCurrency": {

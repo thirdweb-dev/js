@@ -1,5 +1,58 @@
 # thirdweb
 
+## 5.21.0
+
+### Minor Changes
+
+- [#3034](https://github.com/thirdweb-dev/js/pull/3034) [`99fa2da`](https://github.com/thirdweb-dev/js/commit/99fa2da05abc32646036a2269f90213c5756a5ba) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds the ability to set a custom logo for the social login modal
+
+  ```ts
+  import { inAppWallet } from "thirdweb/wallets";
+  const wallet = inAppWallet({
+    metadata: {
+      image: {
+        src: "https://example.com/logo.png",
+        alt: "My logo",
+        width: 100,
+        height: 100,
+      },
+    },
+  });
+  ```
+
+### Patch Changes
+
+- [#3035](https://github.com/thirdweb-dev/js/pull/3035) [`3c04450`](https://github.com/thirdweb-dev/js/commit/3c044508eee18ca741878da43e199ed4cc0528b7) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Export extensions for Pack contract
+
+## 5.20.0
+
+### Minor Changes
+
+- [#2912](https://github.com/thirdweb-dev/js/pull/2912) [`9caa9d7`](https://github.com/thirdweb-dev/js/commit/9caa9d7a8df173d06ddaf3a8fab929f65adab092) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Updated Connect Modal UI + Passkey support
+
+  - Passkey is now an auth option for `inAppWallet`
+  - Connect UI component UI refresh
+
+  ```ts
+  const wallet = inAppWallet();
+  const hasPasskey = await hasStoredPasskey(client);
+  await wallet.connect({
+    client,
+    strategy: "passkey",
+    type: hasPasskey ? "sign-in" : "sign-up",
+  });
+  ```
+
+- [#3018](https://github.com/thirdweb-dev/js/pull/3018) [`5083464`](https://github.com/thirdweb-dev/js/commit/50834640af8a8c17483465f308642e266dbac290) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds support for Core wallet extension
+
+### Patch Changes
+
+- [#3024](https://github.com/thirdweb-dev/js/pull/3024) [`eb29adf`](https://github.com/thirdweb-dev/js/commit/eb29adf157103cc277d6787c8427403b2eba8472) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add BSC mainnet and testnet
+
+- [#3004](https://github.com/thirdweb-dev/js/pull/3004) [`145ff48`](https://github.com/thirdweb-dev/js/commit/145ff4890fa763288610b2e1af152e7827ec0d8e) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Updates shortenAddress to accept a string
+
+- [#3027](https://github.com/thirdweb-dev/js/pull/3027) [`c08a5f2`](https://github.com/thirdweb-dev/js/commit/c08a5f298d59f0b54b4b941d719911c294b8bf04) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fixes chain metadata overrides
+
 ## 5.19.1
 
 ### Patch Changes
