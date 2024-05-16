@@ -2,7 +2,7 @@ import type { AbiParameterToPrimitiveType, Address } from "abitype";
 import type { ThirdwebContract } from "../../../contract/contract.js";
 import { dateToSeconds, tenYearsFromNow } from "../../../utils/date.js";
 import type { Hex } from "../../../utils/encoding/hex.js";
-import { randomBytes32 } from "../../../utils/uuid.js";
+import { randomBytes } from "../../../utils/uuid.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
 import { airdropERC20WithSignature as generatedAirdropERC20WithSignature } from "../__generated__/Airdrop/write/airdropERC20WithSignature.js";
 
@@ -72,7 +72,7 @@ export async function generateAirdropSignatureERC20(
   const { airdropRequest, account, contract } = options;
   const tokenAddress = airdropRequest.tokenAddress;
   const contents = airdropRequest.contents;
-  const uid = airdropRequest.uid || (await randomBytes32());
+  const uid = airdropRequest.uid || (await randomBytes());
 
   const endTime = airdropRequest.expirationTimestamp || tenYearsFromNow();
 

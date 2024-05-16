@@ -7,7 +7,7 @@ import type { ThirdwebContract } from "../../../contract/contract.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { dateToSeconds, tenYearsFromNow } from "../../../utils/date.js";
 import type { Hex } from "../../../utils/encoding/hex.js";
-import { randomBytes32 } from "../../../utils/uuid.js";
+import { randomBytes } from "../../../utils/uuid.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
 import { name } from "../../common/read/name.js";
 import {
@@ -125,7 +125,7 @@ export async function generateMintSignature(
       });
     })(),
     // uid computation
-    mintRequest.uid || (await randomBytes32()),
+    mintRequest.uid || (await randomBytes()),
     // ERC20Permit (EIP-712) spec differs from signature mint 721, 1155.
     // it uses the token name in the domain separator
     name({
