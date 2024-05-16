@@ -33,11 +33,10 @@ export function defineChain(
   options: number | ChainOptions | ViemChain | LegacyChain,
 ): Chain {
   if (typeof options === "number") {
-    const chain = {
+    return {
       id: options,
       rpc: `https://${options}.rpc.thirdweb.com`,
     } as const;
-    return chain;
   }
   if (isViemChain(options)) {
     return convertViemChain(options);
