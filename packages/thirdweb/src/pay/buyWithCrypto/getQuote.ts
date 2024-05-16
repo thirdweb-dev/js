@@ -1,5 +1,5 @@
 import type { Hash } from "viem";
-import { defineChain } from "../../chains/utils.js";
+import { getCachedChain } from "../../chains/utils.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { getContract } from "../../contract/contract.js";
 import {
@@ -277,7 +277,7 @@ export async function getBuyWithCryptoQuote(
 
     const swapRoute: BuyWithCryptoQuote = {
       transactionRequest: {
-        chain: defineChain(data.transactionRequest.chainId),
+        chain: getCachedChain(data.transactionRequest.chainId),
         client: params.client,
         data: data.transactionRequest.data as Hash,
         to: data.transactionRequest.to,
@@ -290,7 +290,7 @@ export async function getBuyWithCryptoQuote(
             contract: getContract({
               client: params.client,
               address: data.approval.tokenAddress,
-              chain: defineChain(data.approval.chainId),
+              chain: getCachedChain(data.approval.chainId),
             }),
             spender: data.approval?.spenderAddress,
             amountWei: BigInt(data.approval.amountWei),

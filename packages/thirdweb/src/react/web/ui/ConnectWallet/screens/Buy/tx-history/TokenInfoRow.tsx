@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { defineChain } from "../../../../../../../chains/utils.js";
+import { getCachedChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
@@ -15,7 +15,10 @@ export function TokenInfoRow(props: {
   label: string;
   client: ThirdwebClient;
 }) {
-  const chainObj = useMemo(() => defineChain(props.chainId), [props.chainId]);
+  const chainObj = useMemo(
+    () => getCachedChain(props.chainId),
+    [props.chainId],
+  );
   const chainQuery = useChainQuery(chainObj);
 
   return (

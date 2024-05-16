@@ -33,10 +33,6 @@ export function defineChain(
   options: number | ChainOptions | ViemChain | LegacyChain,
 ): Chain {
   if (typeof options === "number") {
-    // if a custom chain has been used, use that
-    if (CUSTOM_CHAIN_MAP.has(options)) {
-      return CUSTOM_CHAIN_MAP.get(options) as Chain;
-    }
     const chain = {
       id: options,
       rpc: `https://${options}.rpc.thirdweb.com`,
@@ -56,6 +52,20 @@ export function defineChain(
   }
   const chain = { ...options, rpc } as const;
   CUSTOM_CHAIN_MAP.set(options.id, chain);
+  return chain;
+}
+
+/**
+ * @internal
+ */
+export function getCachedChain(id: number) {
+  if (CUSTOM_CHAIN_MAP.has(id)) {
+    return CUSTOM_CHAIN_MAP.get(id) as Chain;
+  }
+  const chain = {
+    id: id,
+    rpc: `https://${id}.rpc.thirdweb.com`,
+  } as const;
   return chain;
 }
 
