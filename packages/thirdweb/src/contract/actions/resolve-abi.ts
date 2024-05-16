@@ -119,7 +119,7 @@ export async function resolveAbiFromBytecode(
   const bytecode = await getBytecode(contract);
   if (bytecode === "0x") {
     throw new Error(
-      `Failed to load contract bytecode. Make sure the contract [${contract.address}] exists on the chain [${contract.chain.name}]`,
+      `Failed to load contract bytecode. Make sure the contract [${contract.address}] exists on the chain [${contract.chain.name || "Unknown Chain"} (chain id: ${chain.id})]`,
     );
   }
   const ipfsUri = extractIPFSUri(bytecode);
