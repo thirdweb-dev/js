@@ -68,6 +68,7 @@
     "./react": {
       "types": "./dist/types/exports/react.d.ts",
       "import": "./dist/esm/exports/react.js",
+      "react-native": "./dist/esm/exports/react-native.js",
       "default": "./dist/cjs/exports/react.js"
     },
     "./react-native": {
