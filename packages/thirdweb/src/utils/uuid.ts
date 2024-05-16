@@ -11,8 +11,8 @@ export async function uuid() {
 /**
  * @internal
  */
-export async function randomBytes32() {
+export async function randomBytes(length = 32) {
   return uint8ArrayToHex(
-    (await universalCrypto()).getRandomValues(new Uint8Array(32)),
+    (await universalCrypto()).getRandomValues(new Uint8Array(length)),
   );
 }

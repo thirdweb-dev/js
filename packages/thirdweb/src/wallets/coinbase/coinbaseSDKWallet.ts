@@ -9,7 +9,7 @@ import {
   validateTypedData,
 } from "viem";
 import { stringify } from "../../utils/json.js";
-import type { Account } from "../interfaces/wallet.js";
+import type { Account, Wallet } from "../interfaces/wallet.js";
 import type { SendTransactionOption } from "../interfaces/wallet.js";
 import type { AppMetadata, DisconnectFn, SwitchChainFn } from "../types.js";
 import { getValidPublicRPCUrl } from "../utils/chains.js";
@@ -27,7 +27,14 @@ import {
   stringToHex,
   uint8ArrayToHex,
 } from "../../utils/encoding/hex.js";
-import type { COINBASE } from "../constants.js";
+import { COINBASE } from "../constants.js";
+import type {
+  GetCallsStatusResponse,
+  WalletCapabilities,
+  WalletCapabilitiesRecord,
+  WalletSendCallsId,
+  WalletSendCallsParameters,
+} from "../eip5792/types.js";
 import { getDefaultAppMetadata } from "../utils/defaultDappMetadata.js";
 import type { WalletEmitter } from "../wallet-emitter.js";
 import type {
@@ -111,7 +118,7 @@ export type CoinbaseSDKWalletConnectionOptions = {
 // this should be ok since all the creation options are provided at build time
 let _provider: ProviderInterface | undefined;
 
-async function initProvider(
+async function getCoinbaseProvider(
   options?: CreateWalletArgs<typeof COINBASE>[1],
 ): Promise<ProviderInterface> {
   if (!_provider) {
@@ -129,6 +136,121 @@ async function initProvider(
     return provider;
   }
   return _provider;
+}
+
+/**
+ * Checks if the provided wallet is a Coinbase SDK wallet.
+ *
+ * @param wallet - The wallet to check.
+ * @returns True if the wallet is a Coinbase SDK wallet, false otherwise.
+ */
+export function isCoinbaseSDKWallet(
+  wallet: Wallet,
+): wallet is Wallet<typeof COINBASE> {
+  return wallet.id === COINBASE;
+}
+
+/**
+ * @internal
+ */
+export async function coinbaseSDKWalletGetCapabilities(args: {
+  wallet: Wallet<typeof COINBASE>;
+}) {
+  const { wallet } = args;
+
+  const account = wallet.getAccount();
+  if (!account) {
+    return {
+      message: `Can't get capabilities, no account connected for wallet: ${wallet.id}`,
+    };
+  }
+
+  const config = wallet.getConfig();
+  const provider = await getCoinbaseProvider(config);
+  try {
+    return (await provider.request({
+      method: "wallet_getCapabilities",
+      params: [account.address],
+    })) as WalletCapabilitiesRecord<WalletCapabilities, number>;
+  } catch (error: unknown) {
+    if (/unsupport|not support/i.test((error as Error).message)) {
+      return {
+        message: `${wallet.id} does not support wallet_getCapabilities, reach out to them directly to request EIP-5792 support.`,
+      };
+    }
+    throw error;
+  }
+}
+
+/**
+ * @internal
+ */
+export async function coinbaseSDKWalletSendCalls(args: {
+  wallet: Wallet<typeof COINBASE>;
+  params: WalletSendCallsParameters;
+}) {
+  const { wallet, params } = args;
+
+  const config = wallet.getConfig();
+  const provider = await getCoinbaseProvider(config);
+
+  try {
+    return (await provider.request({
+      method: "wallet_sendCalls",
+      params,
+    })) as WalletSendCallsId;
+  } catch (error) {
+    if (/unsupport|not support/i.test((error as Error).message)) {
+      throw new Error(
+        `${wallet.id} does not support wallet_sendCalls, reach out to them directly to request EIP-5792 support.`,
+      );
+    }
+    throw error;
+  }
+}
+
+/**
+ * @internal
+ */
+export async function coinbaseSDKWalletShowCallsStatus(args: {
+  wallet: Wallet<typeof COINBASE>;
+  bundleId: string;
+}) {
+  const { wallet, bundleId } = args;
+
+  const provider = await getCoinbaseProvider(wallet.getConfig());
+
+  try {
+    return await provider.request({
+      method: "wallet_showCallsStatus",
+      params: [bundleId],
+    });
+  } catch (error: unknown) {
+    if (/unsupport|not support/i.test((error as Error).message)) {
+      throw new Error(
+        `${wallet.id} does not support wallet_showCallsStatus, reach out to them directly to request EIP-5792 support.`,
+      );
+    }
+    throw error;
+  }
+}
+
+/**
+ * @internal
+ */
+export async function coinbaseSDKWalletGetCallsStatus(args: {
+  wallet: Wallet<typeof COINBASE>;
+  bundleId: string;
+}) {
+  const { wallet, bundleId } = args;
+
+  const config = wallet.getConfig();
+  const provider = await getCoinbaseProvider(config);
+
+  return provider.request({
+    method: "wallet_getCallsStatus",
+    params: [bundleId],
+  }) as Promise<GetCallsStatusResponse>;
 }
 
 function onConnect(
@@ -257,7 +379,7 @@ export async function connectCoinbaseWalletSDK(
   createOptions: CreateWalletArgs<typeof COINBASE>[1],
   emitter: WalletEmitter<typeof COINBASE>,
 ): Promise<ReturnType<typeof onConnect>> {
-  const provider = await initProvider(createOptions);
+  const provider = await getCoinbaseProvider(createOptions);
   const accounts = (await provider.request({
     method: "eth_requestAccounts",
   })) as string[];
@@ -298,7 +420,7 @@ export async function autoConnectCoinbaseWalletSDK(
   createOptions: CreateWalletArgs<typeof COINBASE>[1],
   emitter: WalletEmitter<typeof COINBASE>,
 ): Promise<ReturnType<typeof onConnect>> {
-  const provider = await initProvider(createOptions);
+  const provider = await getCoinbaseProvider(createOptions);
 
   // connected accounts
   const addresses = (await provider.request({

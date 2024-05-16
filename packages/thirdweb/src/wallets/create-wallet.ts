@@ -410,7 +410,7 @@ export function smartWallet(
  *   strategy: "google",
  * });
  * ```
- * Enable smart accounts and sponsor gas for you users:
+ * Enable smart accounts and sponsor gas for your users:
  * ```ts
  * import { inAppWallet } from "thirdweb/wallets";
  * const wallet = inAppWallet({
