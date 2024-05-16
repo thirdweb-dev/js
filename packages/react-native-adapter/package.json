@@ -37,6 +37,9 @@
   "peerDependenciesMeta": {
     "typescript": {
       "optional": true
+    },
+    "expo-application": {
+      "optional": true
     }
   },
   "scripts": {

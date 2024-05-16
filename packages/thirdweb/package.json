@@ -216,6 +216,7 @@
     "@vitest/ui": "1.5.0",
     "cross-spawn": "7.0.3",
     "happy-dom": "^14.10.1",
+    "ethers": "6.12.1",
     "vitest": "1.5.0"
   }
 }
