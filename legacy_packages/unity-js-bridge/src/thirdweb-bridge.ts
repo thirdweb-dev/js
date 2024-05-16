@@ -347,8 +347,9 @@ class ThirdwebBridge implements TWBridge {
         const embeddedWallet = walletInstance as InAppWallet;
         if (
           (await embeddedWallet.connector?.isConnected()) &&
-          ((await embeddedWallet.getEmail()) === email ||
-            (await embeddedWallet.getPhoneNumber()) === phoneNumber)
+          ((email && (await embeddedWallet.getEmail()) === email) ||
+            (phoneNumber &&
+              (await embeddedWallet.getPhoneNumber()) === phoneNumber))
         ) {
           console.log(
             "Already connected to InAppWallet, skipping auth. If you meant to re-authenticate, disconnect first.",
