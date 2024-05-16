@@ -296,6 +296,14 @@ export const DEVELOPER_RESOURCES: SectionItemProps[] = [
     section: "sdks",
   },
   {
+    name: "React Native",
+    label: "react-native",
+    description: "React Native hooks and components for mobile apps",
+    link: "https://portal.thirdweb.com/react-native/v0",
+    icon: require("../../../../../public/assets/product-icons/react.svg"),
+    section: "sdks",
+  },
+  {
     name: "Unity",
     label: "unity",
     description: "Build games with blockchain and web3 capabilities",
