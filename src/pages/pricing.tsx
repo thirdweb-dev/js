@@ -10,7 +10,14 @@ import {
 } from "@chakra-ui/react";
 import { LandingLayout } from "components/landing-pages/layout";
 import { PageId } from "page-id";
-import { Card, Heading, Link, Text, TrackedIconButton } from "tw-components";
+import {
+  Card,
+  Heading,
+  Link,
+  Text,
+  TrackedIconButton,
+  TrackedLink,
+} from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import { AiOutlineDollarCircle } from "react-icons/ai";
@@ -20,6 +27,9 @@ import { PricingSection } from "components/homepage/sections/PricingSection";
 import { FAQ_GENERAL, FAQ_PRICING, PRICING_SECTIONS } from "utils/pricing";
 import { IoIosInformationCircleOutline } from "react-icons/io";
 import { FiExternalLink } from "react-icons/fi";
+import { EngineTierCard } from "components/engine/create-engine-instance";
+import { useTrack } from "hooks/analytics/useTrack";
+import { useRouter } from "next/router";
 
 const TRACKING_CATEGORY = "pricing-page";
 
@@ -193,6 +203,19 @@ const Pricing: ThirdwebNextPage = () => {
             </Flex>
           ))}
         </Flex>
+
+        <Flex gap={4} flexDir="column" alignItems="center">
+          <Heading as="h2" size="title.xl" color="white">
+            Add-ons
+          </Heading>
+          <Flex flexDir="column" gap={0}>
+            <Heading as="h3" size="subtitle.lg">
+              Engine
+            </Heading>
+            <EnginePricing />
+          </Flex>
+        </Flex>
+
         <Flex gap={4} flexDir="column" alignItems="center">
           <Heading size="title.xl" color="white">
             FAQ
@@ -304,6 +327,97 @@ const Item = ({
         )}
       </Flex>
     </Card>
+  );
+};
+
+const EnginePricing = () => {
+  const track = useTrack();
+  const router = useRouter();
+
+  return (
+    <Flex flexDir="column" gap={4} w="full">
+      <Text>
+        Host Engine on thirdweb with no setup or maintenance required.{" "}
+        <TrackedLink
+          href="https://portal.thirdweb.com/engine"
+          isExternal
+          color="blue.500"
+          fontSize="small"
+          category={TRACKING_CATEGORY}
+          label="clicked-docs"
+        >
+          Learn more about Engine &rarr;
+        </TrackedLink>
+      </Text>
+      <SimpleGrid columns={{ base: 1, lg: 3 }} gap={6}>
+        <EngineTierCard
+          iconSrc={require("../../public/assets/engine/cloud-icon1.png")}
+          tier="Standard Engine"
+          monthlyPrice={99}
+          features={[
+            "Isolated server & database",
+            "APIs for contracts on all EVM chains",
+            "Secure backend wallets",
+            "Automated gas & nonce management",
+            "On-call monitoring from thirdweb",
+          ]}
+          ctaText="Get Started"
+          onClick={() => {
+            track({
+              category: TRACKING_CATEGORY,
+              action: "click",
+              label: "clicked-cloud-hosted",
+              tier: "STANDARD",
+            });
+            router.push("/dashboard/engine");
+          }}
+        />
+
+        <EngineTierCard
+          iconSrc={require("../../public/assets/engine/cloud-icon2.png")}
+          tier="Premium Engine"
+          previousTier="Standard Engine"
+          monthlyPrice={299}
+          features={[
+            "Autoscaling",
+            "Server failover",
+            "Database failover",
+            "30-day database backups",
+          ]}
+          isPrimaryCta
+          ctaText="Get Started"
+          onClick={() => {
+            track({
+              category: TRACKING_CATEGORY,
+              action: "click",
+              label: "clicked-cloud-hosted",
+              tier: "PREMIUM",
+            });
+            router.push("/dashboard/engine");
+          }}
+        />
+
+        <EngineTierCard
+          iconSrc={require("../../public/assets/engine/cloud-icon3.png")}
+          tier="Enterprise Engine"
+          previousTier="Premium Engine"
+          features={[
+            "Custom features",
+            "Custom deployment",
+            "Priority support",
+          ]}
+          onClick={() => {
+            track({
+              category: TRACKING_CATEGORY,
+              action: "click",
+              label: "clicked-cloud-hosted",
+              tier: "ENTERPRISE",
+            });
+            router.push("/contact-us");
+          }}
+        />
+      </SimpleGrid>
+    </Flex>
   );
 };
 

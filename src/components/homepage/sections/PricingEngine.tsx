@@ -43,8 +43,6 @@ export const PricingEngineHomepage: React.FC<PricingSectionProps> = ({
               "On-call monitoring from thirdweb",
             ]}
             ctaText="Get Started"
-            // empty to override the default cta hint
-            ctaHint=" "
             onClick={() => {
               track({
                 category: trackingCategory,
@@ -69,8 +67,6 @@ export const PricingEngineHomepage: React.FC<PricingSectionProps> = ({
             ]}
             isPrimaryCta
             ctaText="Get Started"
-            // empty to override the default cta hint
-            ctaHint=" "
             onClick={() => {
               track({
                 category: trackingCategory,
@@ -91,8 +87,6 @@ export const PricingEngineHomepage: React.FC<PricingSectionProps> = ({
               "Custom deployment",
               "Priority support",
             ]}
-            // empty to override the default cta hint
-            ctaHint=" "
             onClick={() => {
               track({
                 category: trackingCategory,

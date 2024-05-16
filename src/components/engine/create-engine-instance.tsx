@@ -7,6 +7,7 @@ import {
   ModalBody,
   ModalCloseButton,
   ModalContent,
+  ModalFooter,
   ModalHeader,
   ModalOverlay,
   SimpleGrid,
@@ -24,7 +25,7 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import React, { useState } from "react";
 import { FiCheck } from "react-icons/fi";
 import { Badge, Button, Card, Heading, Text } from "tw-components";
 
@@ -160,21 +161,57 @@ const CreateCloudHostedEngineModal = ({
 }) => {
   const trackEvent = useTrack();
   const router = useRouter();
+  const [modalState, setModalState] = useState<
+    "selectTier" | "confirmStarter" | "confirmPremium"
+  >("selectTier");
 
-  const onClick = async (tier: EngineTier) => {
-    if (tier === "ENTERPRISE") {
-      trackEvent({
-        category: "engine",
-        action: "click",
-        label: "clicked-cloud-hosted",
-        tier,
-      });
-      router.push("/contact-us");
-      return;
-    }
-
-    await onClickAddToPlan(tier);
+  const MONTHLY_PRICE_USD: Record<EngineTier, number> = {
+    STARTER: 99,
+    PREMIUM: 299,
+    ENTERPRISE: 0,
   };
+
+  if (modalState === "confirmStarter" || modalState === "confirmPremium") {
+    const tier: EngineTier =
+      modalState === "confirmStarter" ? "STARTER" : "PREMIUM";
+
+    return (
+      <Modal
+        isOpen={disclosure.isOpen}
+        onClose={disclosure.onClose}
+        isCentered
+        size="lg"
+      >
+        <ModalOverlay />
+        <ModalContent p={4} pt={8}>
+          <ModalCloseButton />
+          <ModalBody as={Flex} flexDir="column" gap={6}>
+            <ChakraNextImage
+              alt="Engine hero image"
+              src={require("../../../public/assets/engine/empty-state-header.png")}
+              w="fit-content"
+            />
+            <Heading size="title.sm">
+              Are you sure you want to deploy a{" "}
+              {tier === "STARTER" ? "Starter" : "Premium"} Engine?
+            </Heading>
+            <Text>
+              You will be charged ${MONTHLY_PRICE_USD[tier]} per month for the
+              subscription.
+            </Text>
+          </ModalBody>
+          <ModalFooter as={Flex} alignItems="flex-end" gap={3}>
+            <Button onClick={() => setModalState("selectTier")} variant="ghost">
+              Back
+            </Button>
+            <Button onClick={() => onClickAddToPlan(tier)} colorScheme="blue">
+              Deploy now
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    );
+  }
 
   return (
     <Modal
@@ -184,20 +221,20 @@ const CreateCloudHostedEngineModal = ({
       size="6xl"
     >
       <ModalOverlay />
-      <ModalContent p={4}>
+      <ModalContent p={4} pb={8}>
         <ModalCloseButton />
-        <ModalHeader as={Flex} flexDir="column" gap={2}>
+        <ModalHeader>
           <Heading size="title.sm">Choose an Engine deployment</Heading>
+        </ModalHeader>
+        <ModalBody as={Flex} flexDir="column" gap={4}>
           <Text>
             Host Engine on thirdweb with no setup or maintenance required.
           </Text>
-        </ModalHeader>
-        <ModalBody>
           <SimpleGrid columns={{ base: 1, lg: 3 }} gap={6}>
             <EngineTierCard
               iconSrc={require("../../../public/assets/engine/cloud-icon1.png")}
               tier="Standard Engine"
-              monthlyPrice={99}
+              monthlyPrice={MONTHLY_PRICE_USD["STARTER"]}
               features={[
                 "Isolated server & database",
                 "APIs for contracts on all EVM chains",
@@ -205,14 +242,14 @@ const CreateCloudHostedEngineModal = ({
                 "Automated gas & nonce management",
                 "On-call monitoring from thirdweb",
               ]}
-              onClick={() => onClick("STARTER")}
+              onClick={() => setModalState("confirmStarter")}
             />
 
             <EngineTierCard
               iconSrc={require("../../../public/assets/engine/cloud-icon2.png")}
               tier="Premium Engine"
               previousTier="Standard Engine"
-              monthlyPrice={299}
+              monthlyPrice={MONTHLY_PRICE_USD["PREMIUM"]}
               features={[
                 "Autoscaling",
                 "Server failover",
@@ -220,7 +257,7 @@ const CreateCloudHostedEngineModal = ({
                 "30-day database backups",
               ]}
               isPrimaryCta
-              onClick={() => onClick("PREMIUM")}
+              onClick={() => setModalState("confirmPremium")}
             />
 
             <EngineTierCard
@@ -232,7 +269,15 @@ const CreateCloudHostedEngineModal = ({
                 "Custom deployment",
                 "Priority support",
               ]}
-              onClick={() => onClick("ENTERPRISE")}
+              onClick={() => {
+                trackEvent({
+                  category: "engine",
+                  action: "click",
+                  label: "clicked-cloud-hosted",
+                  tier: "ENTERPRISE",
+                });
+                router.push("/contact-us");
+              }}
             />
           </SimpleGrid>
         </ModalBody>
@@ -250,7 +295,6 @@ export const EngineTierCard = ({
   isPrimaryCta = false,
   onClick,
   ctaText,
-  ctaHint,
 }: {
   iconSrc: StaticImport;
   tier: string;
@@ -260,7 +304,6 @@ export const EngineTierCard = ({
   isPrimaryCta?: boolean;
   onClick: () => void;
   ctaText?: string;
-  ctaHint?: string;
 }) => {
   return (
     <Card
@@ -271,6 +314,7 @@ export const EngineTierCard = ({
           ? "0px 2px 4px 3px rgba(79, 106, 202, 0.30), 1px 1px 3px 4px rgba(202, 51, 255, 0.25)"
           : undefined
       }
+      p={6}
     >
       {/* Heading */}
       <Stack>
@@ -313,13 +357,6 @@ export const EngineTierCard = ({
       >
         {ctaText ? ctaText : monthlyPrice ? "Deploy now" : "Contact us"}
       </Button>
-      <Text size="body.sm" textAlign="center">
-        {ctaHint
-          ? ctaHint
-          : monthlyPrice
-            ? `Your payment method will be charged $${monthlyPrice}.`
-            : "We'll reach out within 1 business day."}
-      </Text>
     </Card>
   );
 };

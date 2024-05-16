@@ -167,18 +167,6 @@ export const PRICING_SECTIONS: PricingSection[] = [
       },
     ],
   },
-  {
-    title: "Add-ons:",
-    items: [
-      {
-        title: "Engine: Cloud-hosted instance",
-        learnMore: "/engine",
-        starter: "$99/month",
-        growth: "$99/month",
-        pro: "Custom",
-      },
-    ],
-  },
 ];
 
 export const FAQ_GENERAL = [
