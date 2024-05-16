@@ -1,7 +1,7 @@
 import { AwsClient } from "aws4fetch";
 import { z } from "zod";
 
-// Initialize a singleton for aws usage.
+// Initialize a singleton for AWS usage.
 let _aws: AwsClient | undefined;
 function getAws(options: ConstructorParameters<typeof AwsClient>[0]) {
   if (!_aws) {

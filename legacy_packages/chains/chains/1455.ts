@@ -12,12 +12,6 @@ export default {
   "faucets": [
     "https://faucet.ctexscan.com"
   ],
-  "icon": {
-    "url": "ipfs://bafkreid5evn4qovxo6msuekizv5zn7va62tea7w2zpdx5sskconebuhqle",
-    "width": 800,
-    "height": 800,
-    "format": "png"
-  },
   "infoURL": "https://ctextoken.io",
   "name": "Ctex Scan Blockchain",
   "nativeCurrency": {

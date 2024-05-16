@@ -6,16 +6,34 @@ export default {
     {
       "name": "explorer",
       "url": "https://meldscan.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmRhB4AbjDrhvwfSAQi2JvKirFiDWxzJvKEvG8S8AdDdED",
+        "width": 4000,
+        "height": 4000,
+        "format": "png"
+      }
     },
     {
       "name": "explorer",
       "url": "https://subnets.avax.network/meld",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmRhB4AbjDrhvwfSAQi2JvKirFiDWxzJvKEvG8S8AdDdED",
+        "width": 4000,
+        "height": 4000,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
   "features": [],
+  "icon": {
+    "url": "ipfs://QmRhB4AbjDrhvwfSAQi2JvKirFiDWxzJvKEvG8S8AdDdED",
+    "width": 4000,
+    "height": 4000,
+    "format": "png"
+  },
   "infoURL": "https://meld.com",
   "name": "Meld",
   "nativeCurrency": {

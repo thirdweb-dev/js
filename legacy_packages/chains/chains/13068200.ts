@@ -2,7 +2,19 @@ import type { Chain } from "../src/types";
 export default {
   "chain": "COTI",
   "chainId": 13068200,
-  "explorers": [],
+  "explorers": [
+    {
+      "name": "coti devnet explorer",
+      "url": "https://explorer-devnet.coti.io",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmVQidJf4ZXt6whYqZk9atCXLrmterkHrL4wYBCetZbsdj",
+        "width": 200,
+        "height": 200,
+        "format": "png"
+      }
+    }
+  ],
   "faucets": [
     "https://faucet.coti.io"
   ],
@@ -22,7 +34,7 @@ export default {
   "networkId": 13068200,
   "rpc": [
     "https://13068200.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://devnet.coti.io"
+    "https://devnet.coti.io/rpc"
   ],
   "shortName": "coti-devnet",
   "slug": "coti-devnet",
