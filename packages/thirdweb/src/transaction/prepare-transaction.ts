@@ -39,7 +39,8 @@ type Additional<
 export type PreparedTransaction<
   abi extends Abi = [],
   abiFn extends AbiFunction = AbiFunction,
-> = Readonly<PrepareTransactionOptions> & {
+  options extends PrepareTransactionOptions = PrepareTransactionOptions,
+> = Readonly<options> & {
   __preparedMethod?: () => Promise<PreparedMethod<abiFn>>;
   __contract?: ThirdwebContract<abi>;
 };
