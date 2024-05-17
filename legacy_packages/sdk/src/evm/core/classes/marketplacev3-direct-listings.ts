@@ -752,9 +752,6 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
       const tx = Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "approveCurrencyForListing",
-        overrides: {
-          extraGas: BigNumber.from(50000),
-        },
         args: [listingId, resolvedCurrencyAddress, pricePerTokenInCurrency],
       });
       tx.setGasLimitMultiple(1.2);
