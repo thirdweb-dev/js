@@ -1,31 +1,9 @@
-import {
-  afterAll,
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from "vitest";
+import { describe, expect, it } from "vitest";
 import { render, screen } from "../../../../../test/src/react-render.js";
 import { TEST_CLIENT } from "../../../../../test/src/test-clients.js";
 import { MediaRenderer } from "./MediaRenderer.js";
 
 describe("MediaRenderer", () => {
-  // beforeAll(() => {
-  //   vi.mock("./locale/getConnectLocale.js", () => ({
-  //     useConnectLocale: vi.fn().mockReturnValue({
-  //       data: {
-  //         defaultButtonTitle: "Connect Wallet",
-  //       },
-  //       isLoading: false,
-  //     }),
-  //   }));
-  // });
-
-  // afterAll(() => {
-  //   vi.clearAllMocks();
-  // });
   it("should render nothing if no src provided", () => {
     render(<MediaRenderer client={TEST_CLIENT} />);
     expect(screen.queryByText("File")).not.toBeInTheDocument(); // would display file if it shows the "not found" div
