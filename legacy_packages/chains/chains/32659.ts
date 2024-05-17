@@ -6,7 +6,13 @@ export default {
     {
       "name": "fsnscan",
       "url": "https://fsnscan.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmSAFx34SKNi7a139agX12f68oBMo2Ktt9c8yD8aFa14gd",
+        "width": 48,
+        "height": 51,
+        "format": "svg"
+      }
     }
   ],
   "faucets": [],
@@ -18,12 +24,6 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "icon": {
-    "url": "ipfs://QmX3tsEoj7SdaBLLV8VyyCUAmymdEGiSGeuTbxMrEMVvth",
-    "width": 31,
-    "height": 31,
-    "format": "svg"
-  },
   "infoURL": "https://fusion.org",
   "name": "Fusion Mainnet",
   "nativeCurrency": {

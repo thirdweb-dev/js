@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://bafkreib2sabb6vgfoskobp2wdr6if7v6s34f2xwjecfceui6qhjudmu4u4",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "infoURL": "https://www.powergold.tech",
   "name": "PowerGold",
   "nativeCurrency": {
