@@ -59,7 +59,7 @@ export const ethers6Adapter = /* @__PURE__ */ (() => {
        * @example
        * ```ts
        * import { ethers6Adapter } from "thirdweb/adapters/ethers6";
-       * const provider = ethers6Adapter.provider.toEthers({ client, chainId });
+       * const provider = ethers6Adapter.provider.toEthers({ client, chain });
        * ```
        */
       toEthers: (options: { client: ThirdwebClient; chain: Chain }) => {
