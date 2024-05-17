@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.22.1
+
+### Patch Changes
+
+- [#3059](https://github.com/thirdweb-dev/js/pull/3059) [`5a40c6a`](https://github.com/thirdweb-dev/js/commit/5a40c6a99b5f4fcafc9c2835f05b41dba8023e4a) Thanks [@jnsdls](https://github.com/jnsdls)! - fix losing state when looking at transactions during pay
+
+- [#3058](https://github.com/thirdweb-dev/js/pull/3058) [`1698c40`](https://github.com/thirdweb-dev/js/commit/1698c40c37a2d9d7e31a8b15d95d87896afab063) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fixes MediaRenderer flashing its failed state while loading
+
 ## 5.22.0
 
 ### Minor Changes
