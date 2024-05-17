@@ -14,15 +14,18 @@ const RAW_UNSUPPORTED_ERROR = {
 };
 
 const SEND_CALLS_OPTIONS: Omit<SendCallsOptions, "wallet"> = {
-  client: TEST_CLIENT,
   calls: [
     {
       to: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
       data: "0xabcdef",
+      chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
     },
     {
       to: "0xa922b54716264130634d6ff183747a8ead91a40b",
       value: 123n,
+      chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
     },
   ],
 };
