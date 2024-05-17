@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://Qmci6vPcWAwmq19j98yuQxjV6UPzHtThMdCAUDbKeb8oYu",
+    "width": 1140,
+    "height": 1140,
+    "format": "png"
+  },
   "infoURL": "https://www.alaya.network/",
   "name": "Alaya Mainnet",
   "nativeCurrency": {

@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://bafkreifgpv7tnai42hsdegnpwzbvq5iymgub357e553cotitirwy2ir7je",
+    "width": 2000,
+    "height": 2243,
+    "format": "png"
+  },
   "infoURL": "https://icb.network",
   "name": "ICB Testnet",
   "nativeCurrency": {
