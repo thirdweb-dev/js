@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmNMuNBwg9opKvsnrDaoYBP743LeddeooQupVYjpBXf7d7",
-    "width": 400,
-    "height": 400,
-    "format": "png"
-  },
   "infoURL": "https://kaspaclassic.com/",
   "name": "KaspaClassic Mainnet",
   "nativeCurrency": {

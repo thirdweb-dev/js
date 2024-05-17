@@ -6,10 +6,22 @@ export default {
     {
       "name": "zkLink Nova Block Explorer",
       "url": "https://sepolia.explorer.zklink.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://bafkreiaj7b6pdekv3rjuta5wsdvmfdcsat2jftjgozape7wvmyj6d3vjcm",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://bafkreiaj7b6pdekv3rjuta5wsdvmfdcsat2jftjgozape7wvmyj6d3vjcm",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "infoURL": "https://zklink.io",
   "name": "zkLink Nova Sepolia Testnet",
   "nativeCurrency": {

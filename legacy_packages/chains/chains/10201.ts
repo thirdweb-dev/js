@@ -12,12 +12,6 @@ export default {
   "faucets": [
     "https://faucet.maxxchain.org"
   ],
-  "icon": {
-    "url": "ipfs://QmRhQG9TZrXDdbQeTzBmjg3pqgwaD5TKVZj8k4kaz8AoZx",
-    "width": 1021,
-    "height": 1021,
-    "format": "png"
-  },
   "infoURL": "https://www.maxxchain.org/",
   "name": "MaxxChain Mainnet",
   "nativeCurrency": {
