@@ -238,7 +238,7 @@ export class MarketplaceAuction {
         listingStartTime = blockTime;
       }
 
-      return Transaction.fromContractWrapper({
+      const tx = Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "createListing",
         args: [
@@ -265,6 +265,8 @@ export class MarketplaceAuction {
           };
         },
       });
+      tx.setGasLimitMultiple(1.2);
+      return tx;
     },
   );
 
@@ -289,7 +291,7 @@ export class MarketplaceAuction {
         )
       ).map((tx) => tx.encode());
 
-      return Transaction.fromContractWrapper({
+      const tx = Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "multicall",
         args: [data],
@@ -306,6 +308,8 @@ export class MarketplaceAuction {
           });
         },
       });
+      tx.setGasLimitMultiple(1.2);
+      return tx;
     },
   );
 
@@ -396,7 +400,7 @@ export class MarketplaceAuction {
         listing.currencyContractAddress,
         overrides,
       );
-      return Transaction.fromContractWrapper({
+      const tx = Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "offer",
         args: [
@@ -408,6 +412,8 @@ export class MarketplaceAuction {
         ],
         overrides,
       });
+      tx.setGasLimitMultiple(1.2);
+      return tx;
     },
   );
 
@@ -436,7 +442,7 @@ export class MarketplaceAuction {
         throw new AuctionAlreadyStartedError(listingId.toString());
       }
 
-      return Transaction.fromContractWrapper({
+      const tx = Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "closeAuction",
         args: [
@@ -444,6 +450,8 @@ export class MarketplaceAuction {
           await this.contractWrapper.getSignerAddress(),
         ],
       });
+      tx.setGasLimitMultiple(1.2);
+      return tx;
     },
   );
 
@@ -469,11 +477,13 @@ export class MarketplaceAuction {
       }
       const listing = await this.validateListing(BigNumber.from(listingId));
       try {
-        return Transaction.fromContractWrapper({
+        const tx = Transaction.fromContractWrapper({
           contractWrapper: this.contractWrapper,
           method: "closeAuction",
           args: [BigNumber.from(listingId), closeFor],
         });
+        tx.setGasLimitMultiple(1.2);
+        return tx;
       } catch (err: any) {
         if (err.message.includes("cannot close auction before it has ended")) {
           throw new AuctionHasNotEndedError(
@@ -515,11 +525,13 @@ export class MarketplaceAuction {
           listingId,
           winningBid.buyerAddress,
         ]);
-        return Transaction.fromContractWrapper({
+        const tx = Transaction.fromContractWrapper({
           contractWrapper: this.contractWrapper,
           method: "multicall",
           args: [closeForSeller, closeForBuyer],
         });
+        tx.setGasLimitMultiple(1.2);
+        return tx;
       } catch (err: any) {
         if (err.message.includes("cannot close auction before it has ended")) {
           throw new AuctionHasNotEndedError(
@@ -539,7 +551,7 @@ export class MarketplaceAuction {
    */
   updateListing = /* @__PURE__ */ buildTransactionFunction(
     async (listing: AuctionListing) => {
-      return Transaction.fromContractWrapper({
+      const tx = Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "updateListing",
         args: [
@@ -552,6 +564,8 @@ export class MarketplaceAuction {
           listing.endTimeInEpochSeconds,
         ],
       });
+      tx.setGasLimitMultiple(1.2);
+      return tx;
     },
   );
 

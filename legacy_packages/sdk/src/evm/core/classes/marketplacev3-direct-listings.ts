@@ -366,7 +366,7 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
         parsedListing.startTimestamp = BigNumber.from(blockTime);
       }
 
-      return Transaction.fromContractWrapper({
+      const tx = Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "createListing",
         args: [
@@ -394,6 +394,8 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
           };
         },
       });
+      tx.setGasLimitMultiple(1.2);
+      return tx;
     },
   );
 
@@ -418,7 +420,7 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
         )
       ).map((tx) => tx.encode());
 
-      return Transaction.fromContractWrapper({
+      const tx = Transaction.fromContractWrapper({
         contractWrapper: this
           .contractWrapper as unknown as ContractWrapper<MarketplaceV3>,
         method: "multicall",
@@ -436,6 +438,8 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
           });
         },
       });
+      tx.setGasLimitMultiple(1.2);
+      return tx;
     },
   );
 
@@ -498,7 +502,7 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
         parsedListing.currencyContractAddress,
       );
 
-      return Transaction.fromContractWrapper({
+      const tx = Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "updateListing",
         args: [
@@ -527,6 +531,8 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
           };
         },
       });
+      tx.setGasLimitMultiple(1.2);
+      return tx;
     },
   );
 
@@ -546,11 +552,13 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
    */
   cancelListing = /* @__PURE__ */ buildTransactionFunction(
     async (listingId: BigNumberish) => {
-      return Transaction.fromContractWrapper({
+      const tx = Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "cancelListing",
         args: [listingId],
       });
+      tx.setGasLimitMultiple(1.2);
+      return tx;
     },
   );
 
@@ -605,7 +613,7 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
         overrides,
       );
 
-      return Transaction.fromContractWrapper({
+      const tx = Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "buyFromListing",
         args: [
@@ -617,6 +625,8 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
         ],
         overrides,
       });
+      tx.setGasLimitMultiple(1.2);
+      return tx;
     },
   );
 
@@ -642,11 +652,13 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
       const isApproved = await this.isBuyerApprovedForListing(listingId, buyer);
 
       if (!isApproved) {
-        return Transaction.fromContractWrapper({
+        const tx = Transaction.fromContractWrapper({
           contractWrapper: this.contractWrapper,
           method: "approveBuyerForListing",
           args: [listingId, buyer, true],
         });
+        tx.setGasLimitMultiple(1.2);
+        return tx;
       } else {
         throw new Error(
           `Buyer ${buyer} already approved for listing ${listingId}.`,
@@ -678,11 +690,13 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
         );
 
         if (isApproved) {
-          return Transaction.fromContractWrapper({
+          const tx = Transaction.fromContractWrapper({
             contractWrapper: this.contractWrapper,
             method: "approveBuyerForListing",
             args: [listingId, buyer, false],
           });
+          tx.setGasLimitMultiple(1.2);
+          return tx;
         } else {
           throw new Error(
             `Buyer ${buyer} not approved for listing ${listingId}.`,
@@ -735,11 +749,16 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
         "Currency already approved with this price.",
       );
 
-      return Transaction.fromContractWrapper({
+      const tx = Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "approveCurrencyForListing",
+        overrides: {
+          extraGas: BigNumber.from(50000),
+        },
         args: [listingId, resolvedCurrencyAddress, pricePerTokenInCurrency],
       });
+      tx.setGasLimitMultiple(1.2);
+      return tx;
     },
   );
 
@@ -776,11 +795,13 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
       );
       invariant(!currencyPrice.isZero(), "Currency not approved.");
 
-      return Transaction.fromContractWrapper({
+      const tx = Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "approveCurrencyForListing",
         args: [listingId, resolvedCurrencyAddress, BigNumber.from(0)],
       });
+      tx.setGasLimitMultiple(1.2);
+      return tx;
     },
   );
 
