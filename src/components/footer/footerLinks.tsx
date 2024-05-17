@@ -16,9 +16,9 @@ export const COMMUNITY: FooterLinkInfo[] = [
     label: "ambassadors",
   },
   {
-    link: "/learn",
-    name: "thirdweb learn",
-    label: "thirdweb-learn",
+    link: "/community/startup-program",
+    name: "Startup Program",
+    label: "startup-program",
   },
   {
     name: "Report Abuse",
