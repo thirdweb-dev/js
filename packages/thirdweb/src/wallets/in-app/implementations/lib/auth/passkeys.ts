@@ -3,7 +3,7 @@ import type { AuthType } from "@passwordless-id/webauthn/dist/esm/types.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { getThirdwebBaseUrl } from "../../../../../utils/domains.js";
 import { getClientFetch } from "../../../../../utils/fetch.js";
-import type { AuthStoredTokenWithCookieReturnType } from "../../interfaces/auth.js";
+import type { AuthStoredTokenWithCookieReturnType } from "../../../core/authentication/type.js";
 import { LocalStorage } from "../../utils/Storage/LocalStorage.js";
 
 function getVerificationPath() {

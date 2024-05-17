@@ -31,7 +31,7 @@ export async function connectInAppWallet(
   const { authenticate } = await import("../authentication/index.js");
 
   const authResult = await authenticate(options);
-  const authAccount = await authResult.user.wallet.getAccount();
+  const authAccount = authResult.user.account;
 
   if (createOptions?.smartAccount) {
     return convertToSmartAccount({
@@ -61,7 +61,7 @@ export async function autoConnectInAppWallet(
     throw new Error("not authenticated");
   }
 
-  const authAccount = await user.wallet.getAccount();
+  const authAccount = user.account;
 
   if (createOptions?.smartAccount) {
     return convertToSmartAccount({

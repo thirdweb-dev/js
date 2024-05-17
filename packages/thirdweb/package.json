@@ -168,7 +168,17 @@
   "peerDependencies": {
     "ethers": "^5 || ^6",
     "react": ">=18",
-    "typescript": ">=5.0.4"
+    "typescript": ">=5.0.4",
+    "aws-amplify": "^5.3.18",
+    "amazon-cognito-identity-js": "^6.3.12",
+    "react-native-inappbrowser-reborn": "^3.7.0",
+    "react-native-mmkv": ">=2.11.0",
+    "secrets.js-34r7h": "^2.0.2",
+    "react-native-aes-gcm-crypto": "^0.2.2",
+    "react-native-quick-base64": "^2.1.0",
+    "react-native-quick-crypto": "^0.6.1",
+    "@aws-sdk/client-lambda": "3.549.0",
+    "@aws-sdk/credential-providers": "3.549.0"
   },
   "peerDependenciesMeta": {
     "react": {
@@ -214,6 +224,7 @@
     "@types/react": "18.2.17",
     "@vitejs/plugin-react": "^4.2.1",
     "@vitest/ui": "1.5.0",
+    "amazon-cognito-identity-js": "^6.3.12",
     "cross-spawn": "7.0.3",
     "happy-dom": "^14.10.1",
     "vitest": "1.5.0"

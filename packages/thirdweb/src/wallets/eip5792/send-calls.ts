@@ -119,7 +119,7 @@ export async function sendCalls<const ID extends WalletId>(
   // These conveniently operate the same
   if (isSmartWallet(wallet) || isInAppWallet(wallet)) {
     const { inAppWalletSendCalls } = await import(
-      "../in-app/core/lib/in-app-wallet-calls.js"
+      "../in-app/core/eip5972/in-app-wallet-calls.js"
     );
     return inAppWalletSendCalls({ account, calls });
   }

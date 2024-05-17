@@ -3,11 +3,9 @@ import type {
   AuthAndWalletRpcReturnType,
   AuthLoginReturnType,
   AuthProvider,
-} from "../../interfaces/auth.js";
-import type {
-  ClientIdWithQuerierType,
   SendEmailOtpReturnType,
-} from "../../interfaces/in-app-wallets/in-app-wallets.js";
+} from "../../../core/authentication/type.js";
+import type { ClientIdWithQuerierType } from "../../types.js";
 import type { InAppWalletIframeCommunicator } from "../../utils/iFrameCommunication/InAppWalletIframeCommunicator.js";
 
 export type LoginQuerierTypes = {
