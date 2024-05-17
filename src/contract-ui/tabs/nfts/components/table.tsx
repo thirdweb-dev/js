@@ -33,7 +33,10 @@ import {
   nextTokenIdToMint as erc721NextTokenIdToMint,
   totalSupply as erc721TotalSupply,
 } from "thirdweb/extensions/erc721";
-import { getNFTs as getErc1155NFTs } from "thirdweb/extensions/erc1155";
+import {
+  getNFTs as getErc1155NFTs,
+  nextTokenIdToMint as erc1155NextTokenIdToMint,
+} from "thirdweb/extensions/erc1155";
 import { useReadContract } from "thirdweb/react";
 import { Heading, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
@@ -132,9 +135,12 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
   );
 
   // TODO: Add support for ERC1155 total circulating supply
-  const nextTokenIdToMintQuery = useReadContract(erc721NextTokenIdToMint, {
-    contract,
-  });
+  const nextTokenIdToMintQuery = useReadContract(
+    isErc1155 ? erc1155NextTokenIdToMint : erc721NextTokenIdToMint,
+    {
+      contract,
+    },
+  );
   const totalSupplyQuery = useReadContract(erc721TotalSupply, {
     contract,
   });
@@ -143,14 +149,14 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
     const computedSupply = (() => {
       const nextTokenIdToMint = nextTokenIdToMintQuery.data;
       const totalSupply = totalSupplyQuery.data;
-      if (nextTokenIdToMint === undefined || totalSupply === undefined) {
+      if (nextTokenIdToMint === undefined && totalSupply === undefined) {
         return 0n;
       }
-      if (nextTokenIdToMint > totalSupply) {
-        return nextTokenIdToMint;
+      if ((nextTokenIdToMint || 0n) > (totalSupply || 0n)) {
+        return nextTokenIdToMint || 0n;
       }
 
-      return totalSupply;
+      return totalSupply || 0n;
     })();
 
     if (computedSupply > 1_000_000n) {
