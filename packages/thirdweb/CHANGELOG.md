@@ -1,5 +1,77 @@
 # thirdweb
 
+## 5.22.0
+
+### Minor Changes
+
+- [#3001](https://github.com/thirdweb-dev/js/pull/3001) [`726618b`](https://github.com/thirdweb-dev/js/commit/726618b97a532844c2fede137d7d857deb5e68ec) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds basic EIP-5792 support for wallets with functions `getCapabilities`, `sendCalls`, `showCallsStatus`, `getCallsStatus`.
+
+  ## Example Usage
+
+  ### `getCapabilities`
+
+  Returns the capabilities of the wallet according to EIP-5792.
+
+  ```ts
+  import { getCapabilities } from "thirdweb/wallets/eip5792";
+
+  const capabilities = await getCapabilities({ wallet });
+  ```
+
+  ### `sendCalls`
+
+  Sends the given calls to the wallet for execution, and attempts to fallback to normal execution if the wallet does not support EIP-5792.
+
+  ```ts
+  import { sendCalls } from "thirdweb/wallets/eip5792";
+
+  const transfer1 = transfer({
+    contract: USDC_CONTRACT,
+    amount: 5000,
+    to: "0x33d9B8BEfE81027E2C859EDc84F5636cbb202Ed6",
+  });
+
+  const transfer2 = transfer({
+    contract: USDT_CONTRACT,
+    amount: 1000,
+    to: "0x33d9B8BEfE81027E2C859EDc84F5636cbb202Ed6",
+  });
+
+  const bundleId = await sendCalls({
+    wallet,
+    client,
+    calls: [transfer1, transfer2],
+  });
+  ```
+
+  ### `showCallsStatus`
+
+  Requests the wallet to show the status of a given bundle ID.
+
+  ```ts
+  import { showCallsStatus } from "thirdweb/wallets/eip5792";
+
+  await showCallsStatus({ wallet, bundleId });
+  ```
+
+  ### `getCallsStatus`
+
+  Returns the status of the given bundle ID and the transaction receipts if completed.
+
+  ```ts
+  import { getCallsStatus } from "thirdweb/wallets/eip5792";
+
+  const status = await getCallsStatus({ wallet, bundleId });
+  ```
+
+### Patch Changes
+
+- [#3048](https://github.com/thirdweb-dev/js/pull/3048) [`cfe60d2`](https://github.com/thirdweb-dev/js/commit/cfe60d22a3eb00241dbc653eba1b7d52c9ce97b1) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Improve error message for `resolveAbiFromBytecode`
+
+- [#3040](https://github.com/thirdweb-dev/js/pull/3040) [`ce45475`](https://github.com/thirdweb-dev/js/commit/ce4547501f9d2c9bd3c6001d39dd6211dbd4e5d6) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fixes caching issue when using `defineChain`
+
+- [#3037](https://github.com/thirdweb-dev/js/pull/3037) [`f006429`](https://github.com/thirdweb-dev/js/commit/f006429d7c2415e9f2206e081f6b867854842f0b) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Updates for react native compatibility
+
 ## 5.21.0
 
 ### Minor Changes
