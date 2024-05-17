@@ -4,7 +4,7 @@ import {
   TriangleDownIcon,
 } from "@radix-ui/react-icons";
 import { useMemo } from "react";
-import { defineChain } from "../../../../../../../chains/utils.js";
+import { getCachedChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../../constants/addresses.js";
 import type { BuyWithFiatQuote } from "../../../../../../../pay/buyWithFiat/getQuote.js";
@@ -104,13 +104,13 @@ export function FiatSteps(props: {
   const isPartialSuccess = statusMeta?.progressStatus === "partialSuccess";
 
   const toChain = useMemo(
-    () => defineChain(toTokenMeta.chainId),
+    () => getCachedChain(toTokenMeta.chainId),
     [toTokenMeta.chainId],
   );
 
   const destinationChain = useMemo(() => {
     if (props.status?.status !== "NOT_FOUND" && props.status?.destination) {
-      return defineChain(props.status?.destination.token.chainId);
+      return getCachedChain(props.status?.destination.token.chainId);
     }
 
     return undefined;
@@ -130,7 +130,7 @@ export function FiatSteps(props: {
   }, [toTokenMeta]);
 
   const onRampChain = useMemo(
-    () => defineChain(onRampTokenMeta.chainId),
+    () => getCachedChain(onRampTokenMeta.chainId),
     [onRampTokenMeta.chainId],
   );
 

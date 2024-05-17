@@ -1,5 +1,5 @@
 import { ExternalLinkIcon } from "@radix-ui/react-icons";
-import { defineChain } from "../../../../../../../chains/utils.js";
+import { getCachedChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
@@ -35,7 +35,7 @@ export function OnRampTxDetailsTable(props: {
     txHash?: string;
   };
 }) {
-  const onRampChainQuery = useChainQuery(defineChain(props.token.chainId));
+  const onRampChainQuery = useChainQuery(getCachedChain(props.token.chainId));
   const onrampTxHash = props.statusMeta?.txHash;
 
   const lineSpacer = (

@@ -17,7 +17,7 @@ import { normalizeChainId } from "../utils/normalizeChainId.js";
 
 import type { Preference } from "@coinbase/wallet-sdk/dist/core/provider/interface.js";
 import type { Chain } from "../../chains/types.js";
-import { defineChain, getChainMetadata } from "../../chains/utils.js";
+import { getCachedChain, getChainMetadata } from "../../chains/utils.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { getAddress } from "../../utils/address.js";
 import {
@@ -354,7 +354,7 @@ function onConnect(
   }
 
   function onChainChanged(newChainId: string) {
-    const newChain = defineChain(normalizeChainId(newChainId));
+    const newChain = getCachedChain(normalizeChainId(newChainId));
     emitter.emit("chainChanged", newChain);
   }
 
@@ -398,7 +398,7 @@ export async function connectCoinbaseWalletSDK(
   let chain =
     options.chain && options.chain.id === chainId
       ? options.chain
-      : defineChain(chainId);
+      : getCachedChain(chainId);
   // Switch to chain if provided
   if (
     connectedChainId &&
@@ -440,7 +440,7 @@ export async function autoConnectCoinbaseWalletSDK(
   const chain =
     options.chain && options.chain.id === chainId
       ? options.chain
-      : defineChain(chainId);
+      : getCachedChain(chainId);
 
   return onConnect(address, chain, provider, emitter);
 }

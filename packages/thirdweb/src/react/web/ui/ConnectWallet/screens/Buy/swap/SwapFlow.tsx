@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { defineChain } from "../../../../../../../chains/utils.js";
+import { getCachedChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../../constants/addresses.js";
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
@@ -28,12 +28,12 @@ export function SwapFlow(props: SwapFlowProps) {
   const quote = props.buyWithCryptoQuote;
 
   const fromChain = useMemo(
-    () => defineChain(quote.swapDetails.fromToken.chainId),
+    () => getCachedChain(quote.swapDetails.fromToken.chainId),
     [quote],
   );
 
   const toChain = useMemo(
-    () => defineChain(quote.swapDetails.toToken.chainId),
+    () => getCachedChain(quote.swapDetails.toToken.chainId),
     [quote],
   );
 
