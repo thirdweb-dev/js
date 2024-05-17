@@ -10,7 +10,7 @@ import {
 } from "viem";
 import type { Chain } from "../../chains/types.js";
 import {
-  defineChain,
+  getCachedChain,
   getChainMetadata,
   getRpcUrlForChain,
 } from "../../chains/utils.js";
@@ -20,7 +20,11 @@ import { isAndroid, isIOS, isMobile } from "../../utils/web/isMobile.js";
 import { openWindow } from "../../utils/web/openWindow.js";
 import { getWalletInfo } from "../__generated__/getWalletInfo.js";
 import type { WCSupportedWalletIds } from "../__generated__/wallet-ids.js";
-import type { Account, SendTransactionOption } from "../interfaces/wallet.js";
+import type {
+  Account,
+  SendTransactionOption,
+  Wallet,
+} from "../interfaces/wallet.js";
 import { asyncLocalStorage as _asyncLocalStorage } from "../storage/asyncLocalStorage.js";
 import type { DisconnectFn, SwitchChainFn } from "../types.js";
 import { getValidPublicRPCUrl } from "../utils/chains.js";
@@ -35,6 +39,7 @@ import {
   getSavedConnectParamsFromStorage,
   saveConnectParamsToStorage,
 } from "../storage/walletStorage.js";
+import type { WalletId } from "../wallet-types.js";
 
 const asyncLocalStorage =
   typeof window !== "undefined" ? _asyncLocalStorage : undefined;
@@ -58,6 +63,18 @@ const storageKeys = {
   requestedChains: "tw.wc.requestedChains",
   lastUsedChainId: "tw.wc.lastUsedChainId",
 };
+
+/**
+ * Checks if the provided wallet is a Wallet Connect wallet.
+ *
+ * @param wallet - The wallet to check.
+ * @returns True if the wallet is a Wallet Connect wallet, false otherwise.
+ */
+export function isWalletConnect(
+  wallet: Wallet<WalletId>,
+): wallet is Wallet<"walletConnect"> {
+  return wallet.id === "walletConnect";
+}
 
 /**
  * @internal
@@ -107,7 +124,7 @@ export async function connectWC(
   const chain =
     options.chain && options.chain.id === providerChainId
       ? options.chain
-      : defineChain(providerChainId);
+      : getCachedChain(providerChainId);
 
   if (options) {
     const savedParams: SavedConnectParams = {
@@ -170,7 +187,7 @@ export async function autoConnectWC(
   const chain =
     options.chain && options.chain.id === providerChainId
       ? options.chain
-      : defineChain(providerChainId);
+      : getCachedChain(providerChainId);
 
   return onConnect(address, chain, provider, emitter);
 }
@@ -353,7 +370,7 @@ function onConnect(
   }
 
   function onChainChanged(newChainId: string) {
-    const newChain = defineChain(normalizeChainId(newChainId));
+    const newChain = getCachedChain(normalizeChainId(newChainId));
     emitter.emit("chainChanged", newChain);
     asyncLocalStorage?.setItem(storageKeys.lastUsedChainId, String(newChainId));
   }

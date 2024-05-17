@@ -3,7 +3,6 @@ import type {
   InjectedSupportedWalletIds,
   WCSupportedWalletIds,
 } from "./__generated__/wallet-ids.js";
-import { injectedProvider } from "./injected/mipdStore.js";
 import type { Account, Wallet } from "./interfaces/wallet.js";
 import type {
   CreateWalletArgs,
@@ -118,6 +117,7 @@ export function createWallet<const ID extends WalletId>(
             WCSupportedWalletIds | InjectedSupportedWalletIds
           >,
         ) => {
+          const { injectedProvider } = await import("./injected/mipdStore.js");
           // injected wallet priority for autoConnect
           if (id !== "walletConnect" && injectedProvider(id)) {
             const { autoConnectInjectedWallet } = await import(
@@ -220,6 +220,7 @@ export function createWallet<const ID extends WalletId>(
             return wcConnect(options);
           }
 
+          const { injectedProvider } = await import("./injected/mipdStore.js");
           if (injectedProvider(id)) {
             const { connectInjectedWallet } = await import(
               "./injected/index.js"
@@ -410,7 +411,7 @@ export function smartWallet(
  *   strategy: "google",
  * });
  * ```
- * Enable smart accounts and sponsor gas for you users:
+ * Enable smart accounts and sponsor gas for your users:
  * ```ts
  * import { inAppWallet } from "thirdweb/wallets";
  * const wallet = inAppWallet({
@@ -418,6 +419,21 @@ export function smartWallet(
  *   chain: sepolia,
  *   sponsorGas: true,
  * },
+ * });
+ * ```
+ *
+ * Specify a logo for your login page
+ * ```ts
+ * import { inAppWallet } from "thirdweb/wallets";
+ * const wallet = inAppWallet({
+ *  metadata: {
+ *   image: {
+ *    src: "https://example.com/logo.png",
+ *    alt: "My logo",
+ *    width: 100,
+ *    height: 100,
+ *   },
+ *  },
  * });
  * ```
  * @wallet

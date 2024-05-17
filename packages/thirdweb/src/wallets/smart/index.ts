@@ -1,8 +1,9 @@
-import type {
-  SignableMessage,
-  TypedData,
-  TypedDataDefinition,
-  TypedDataDomain,
+import {
+  type SignableMessage,
+  type TypedData,
+  type TypedDataDefinition,
+  type TypedDataDomain,
+  hashTypedData,
 } from "viem";
 import type { Chain } from "../../chains/types.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
@@ -18,6 +19,7 @@ import type {
 import type {
   CreateWalletArgs,
   WalletConnectionOption,
+  WalletId,
 } from "../wallet-types.js";
 import { bundleUserOp, getUserOpReceipt } from "./lib/bundler.js";
 import {
@@ -28,6 +30,18 @@ import {
 import { DEFAULT_ACCOUNT_FACTORY } from "./lib/constants.js";
 import { createUnsignedUserOp, signUserOp } from "./lib/userop.js";
 import type { SmartAccountOptions } from "./types.js";
+
+/**
+ * Checks if the provided wallet is a smart wallet.
+ *
+ * @param wallet - The wallet to check.
+ * @returns True if the wallet is a smart wallet, false otherwise.
+ */
+export function isSmartWallet(
+  wallet: Wallet<WalletId>,
+): wallet is Wallet<"smart"> {
+  return wallet.id === "smart";
+}
 
 /**
  * We can get the personal account for given smart account but not the other way around - this map gives us the reverse lookup
@@ -228,13 +242,11 @@ async function createSmartAccount(
         { isContractDeployed },
         { readContract },
         { encodeAbiParameters },
-        { hashTypedData },
         { checkContractWalletSignedTypedData },
       ] = await Promise.all([
         import("../../utils/bytecode/is-contract-deployed.js"),
         import("../../transaction/read-contract.js"),
         import("../../utils/abi/encodeAbiParameters.js"),
-        import("viem"),
         import(
           "../../extensions/erc1271/checkContractWalletSignedTypedData.js"
         ),

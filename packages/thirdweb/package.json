@@ -1,6 +1,6 @@
 {
   "name": "thirdweb",
-  "version": "5.20.0",
+  "version": "5.22.1",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"
@@ -68,6 +68,7 @@
     "./react": {
       "types": "./dist/types/exports/react.d.ts",
       "import": "./dist/esm/exports/react.js",
+      "react-native": "./dist/esm/exports/react-native.js",
       "default": "./dist/cjs/exports/react.js"
     },
     "./react-native": {
@@ -194,7 +195,7 @@
     "mipd": "0.0.7",
     "node-libs-browser": "2.2.1",
     "uqr": "0.1.2",
-    "viem": "2.9.18"
+    "viem": "2.10.9"
   },
   "peerDependencies": {
     "ethers": "^5 || ^6",

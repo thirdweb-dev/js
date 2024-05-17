@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.30
+
+### Patch Changes
+
+- [#3042](https://github.com/thirdweb-dev/js/pull/3042) [`f5e7272`](https://github.com/thirdweb-dev/js/commit/f5e7272b72b75cb66b9dc790693f464583212435) Thanks [@arcoraven](https://github.com/arcoraven)! - Add sdkOS to usage schema.
+
 ## 0.4.29
 
 ### Patch Changes

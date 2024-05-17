@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmRoNxCti6cHrPgZ48YQVSMg9g6ympfXuV8kGQJXrbbmed",
+    "width": 600,
+    "height": 600,
+    "format": "png"
+  },
   "infoURL": "https://qiblockchain.online/",
   "name": "QIE Blockchain",
   "nativeCurrency": {

@@ -34,7 +34,7 @@ export function useResolvedMediaType(
     }
   }, [uri, gatewayUrl, client]);
 
-  const resolvedMimType = useQuery({
+  const resolvedMimeType = useQuery({
     queryKey: ["mime-type", resolvedUrl],
     queryFn: () => resolveMimeType(resolvedUrl),
     enabled: !!resolvedUrl && !mimeType,
@@ -42,7 +42,7 @@ export function useResolvedMediaType(
   });
 
   return {
-    url: resolvedUrl,
-    mimeType: resolvedMimType.data,
+    mediaInfo: { url: resolvedUrl, mimeType: resolvedMimeType.data },
+    isFetched: resolvedMimeType.isFetched,
   };
 }

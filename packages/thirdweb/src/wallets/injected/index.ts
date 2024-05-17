@@ -5,7 +5,7 @@ import {
   validateTypedData,
 } from "viem";
 import type { Chain } from "../../chains/types.js";
-import { defineChain, getChainMetadata } from "../../chains/utils.js";
+import { getCachedChain, getChainMetadata } from "../../chains/utils.js";
 import { getAddress } from "../../utils/address.js";
 import {
   type Hex,
@@ -16,7 +16,11 @@ import {
 } from "../../utils/encoding/hex.js";
 import { stringify } from "../../utils/json.js";
 import type { Ethereum } from "../interfaces/ethereum.js";
-import type { Account, SendTransactionOption } from "../interfaces/wallet.js";
+import type {
+  Account,
+  SendTransactionOption,
+  Wallet,
+} from "../interfaces/wallet.js";
 import { getValidPublicRPCUrl } from "../utils/chains.js";
 import { normalizeChainId } from "../utils/normalizeChainId.js";
 import type { InjectedConnectOptions, WalletId } from "../wallet-types.js";
@@ -26,12 +30,21 @@ import type { InjectedSupportedWalletIds } from "../__generated__/wallet-ids.js"
 import type { DisconnectFn, SwitchChainFn } from "../types.js";
 import type { WalletEmitter } from "../wallet-emitter.js";
 
-// TODO: save the provider in data
+/**
+ * Checks if the provided wallet is an injected wallet.
+ *
+ * @param wallet - The wallet to check.
+ * @returns True if the wallet is an injected wallet, false otherwise.
+ */
+export function isInjectedWallet(wallet: Wallet<WalletId>) {
+  return !!injectedProvider(wallet.id);
+}
 
-function getInjectedProvider(walletId: WalletId) {
+// TODO: save the provider in data
+export function getInjectedProvider(walletId: WalletId) {
   const provider = injectedProvider(walletId);
   if (!provider) {
-    throw new Error(`no injected provider found for wallet: "${walletId}"`);
+    throw new Error(`No injected provider found for wallet: "${walletId}"`);
   }
 
   return provider;
@@ -66,7 +79,7 @@ export async function connectInjectedWallet(
   let connectedChain =
     options.chain && options.chain.id === chainId
       ? options.chain
-      : defineChain(chainId);
+      : getCachedChain(chainId);
 
   // if we want a specific chainId and it is not the same as the provider chainId, trigger switchChain
   if (options.chain && options.chain.id !== chainId) {
@@ -106,7 +119,7 @@ export async function autoConnectInjectedWallet(
     .then(normalizeChainId);
 
   const connectedChain =
-    chain && chain.id === chainId ? chain : defineChain(chainId);
+    chain && chain.id === chainId ? chain : getCachedChain(chainId);
 
   return onConnect(provider, address, connectedChain, emitter);
 }
@@ -216,7 +229,7 @@ async function onConnect(
   }
 
   function onChainChanged(newChainId: string) {
-    const newChain = defineChain(normalizeChainId(newChainId));
+    const newChain = getCachedChain(normalizeChainId(newChainId));
     emitter.emit("chainChanged", newChain);
   }
 

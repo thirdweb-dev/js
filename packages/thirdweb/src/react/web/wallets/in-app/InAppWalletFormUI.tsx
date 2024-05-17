@@ -152,6 +152,16 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
 
   const showOnlyIcons = socialLogins.length > 1;
 
+  if (
+    config?.metadata?.image &&
+    (!config.metadata.image.height || !config.metadata.image.width)
+  ) {
+    console.warn(
+      "Image is not properly configured. Please set height and width.",
+      config.metadata.image,
+    );
+  }
+
   return (
     <Container
       flex="column"
@@ -160,6 +170,25 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
         position: "relative",
       }}
     >
+      {config?.metadata?.image && (
+        <Img
+          loading="eager"
+          client={client}
+          style={{
+            maxHeight: "100px",
+            maxWidth: "300px",
+            margin: "auto",
+          }}
+          src={config.metadata.image.src}
+          alt={config.metadata.image.alt}
+          width={Math.min(config.metadata.image.width ?? 300, 300)?.toString()}
+          height={Math.min(
+            config.metadata.image.height ?? 100,
+            100,
+          )?.toString()}
+        />
+      )}
+
       {/* Social Login */}
       {hasSocialLogins && (
         <Container
@@ -320,7 +349,7 @@ export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
       {isCompact ? (
         <>
           <ModalHeader onBack={onBack} title={locale.title} />
-          <Spacer y="xl" />
+          <Spacer y="sm" />
         </>
       ) : null}
 

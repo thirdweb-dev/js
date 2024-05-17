@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
@@ -165,47 +167,52 @@ export function PayEmbed(props: PayEmbedProps) {
         <Spinner size="xl" color="secondaryText" />
       </div>
     );
-  } else if (screen === "tx-history") {
-    content = (
-      <BuyTxHistory
-        client={props.client}
-        onBack={() => {
-          setScreen("buy");
-        }}
-        onDone={() => {
-          // noop
-        }}
-        isBuyForTx={false}
-        isEmbed={true}
-      />
-    );
   } else {
+    // show and hide screens with CSS to not lose state when switching between them
     content = (
-      <BuyScreen
-        isEmbed={true}
-        supportedTokens={props.supportedTokens}
-        theme={props.theme || "dark"}
-        client={props.client}
-        connectLocale={localeQuery.data}
-        onViewPendingTx={() => {
-          setScreen("tx-history");
-        }}
-        payOptions={props.payOptions || {}}
-        onDone={() => {
-          // noop
-        }}
-        connectButton={
-          <ConnectButton
-            {...props.connectOptions}
+      <>
+        <div style={{ display: screen === "tx-history" ? "none" : "inherit" }}>
+          <BuyScreen
+            isEmbed={true}
+            supportedTokens={props.supportedTokens}
+            theme={props.theme || "dark"}
             client={props.client}
-            connectButton={{
-              style: {
-                width: "100%",
-              },
+            connectLocale={localeQuery.data}
+            onViewPendingTx={() => {
+              setScreen("tx-history");
             }}
+            payOptions={props.payOptions || {}}
+            onDone={() => {
+              // noop
+            }}
+            connectButton={
+              <ConnectButton
+                {...props.connectOptions}
+                client={props.client}
+                connectButton={{
+                  style: {
+                    width: "100%",
+                  },
+                }}
+              />
+            }
           />
-        }
-      />
+        </div>
+        {/* this does not need to persist so we can just show-hide it with JS */}
+        {screen === "tx-history" && (
+          <BuyTxHistory
+            client={props.client}
+            onBack={() => {
+              setScreen("buy");
+            }}
+            onDone={() => {
+              // noop
+            }}
+            isBuyForTx={false}
+            isEmbed={true}
+          />
+        )}
+      </>
     );
   }
 

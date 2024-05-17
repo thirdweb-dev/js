@@ -1,5 +1,30 @@
 # @thirdweb-dev/sdk
 
+## 4.0.85
+
+### Patch Changes
+
+- Updated dependencies [[`5a40c6a`](https://github.com/thirdweb-dev/js/commit/5a40c6a99b5f4fcafc9c2835f05b41dba8023e4a), [`9a9ec97`](https://github.com/thirdweb-dev/js/commit/9a9ec978f44f4f8034dda088aa22df753cae7549), [`1698c40`](https://github.com/thirdweb-dev/js/commit/1698c40c37a2d9d7e31a8b15d95d87896afab063)]:
+  - thirdweb@5.22.1
+  - @thirdweb-dev/chains@0.1.111
+
+## 4.0.84
+
+### Patch Changes
+
+- [#3054](https://github.com/thirdweb-dev/js/pull/3054) [`c417bda`](https://github.com/thirdweb-dev/js/commit/c417bdaae3e73184143f937eb253f5d0d04d3732) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fixes gas estimates on marketplace writes
+
+- Updated dependencies [[`cfe60d2`](https://github.com/thirdweb-dev/js/commit/cfe60d22a3eb00241dbc653eba1b7d52c9ce97b1), [`ce45475`](https://github.com/thirdweb-dev/js/commit/ce4547501f9d2c9bd3c6001d39dd6211dbd4e5d6), [`726618b`](https://github.com/thirdweb-dev/js/commit/726618b97a532844c2fede137d7d857deb5e68ec), [`f006429`](https://github.com/thirdweb-dev/js/commit/f006429d7c2415e9f2206e081f6b867854842f0b), [`46492bb`](https://github.com/thirdweb-dev/js/commit/46492bb66e5225279b9f2de91e0a42f00a3506d3)]:
+  - thirdweb@5.22.0
+  - @thirdweb-dev/chains@0.1.110
+
+## 4.0.83
+
+### Patch Changes
+
+- Updated dependencies [[`3c04450`](https://github.com/thirdweb-dev/js/commit/3c044508eee18ca741878da43e199ed4cc0528b7), [`99fa2da`](https://github.com/thirdweb-dev/js/commit/99fa2da05abc32646036a2269f90213c5756a5ba)]:
+  - thirdweb@5.21.0
+
 ## 4.0.82
 
 ### Patch Changes

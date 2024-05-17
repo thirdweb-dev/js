@@ -1,5 +1,109 @@
 # thirdweb
 
+## 5.22.1
+
+### Patch Changes
+
+- [#3059](https://github.com/thirdweb-dev/js/pull/3059) [`5a40c6a`](https://github.com/thirdweb-dev/js/commit/5a40c6a99b5f4fcafc9c2835f05b41dba8023e4a) Thanks [@jnsdls](https://github.com/jnsdls)! - fix losing state when looking at transactions during pay
+
+- [#3058](https://github.com/thirdweb-dev/js/pull/3058) [`1698c40`](https://github.com/thirdweb-dev/js/commit/1698c40c37a2d9d7e31a8b15d95d87896afab063) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fixes MediaRenderer flashing its failed state while loading
+
+## 5.22.0
+
+### Minor Changes
+
+- [#3001](https://github.com/thirdweb-dev/js/pull/3001) [`726618b`](https://github.com/thirdweb-dev/js/commit/726618b97a532844c2fede137d7d857deb5e68ec) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds basic EIP-5792 support for wallets with functions `getCapabilities`, `sendCalls`, `showCallsStatus`, `getCallsStatus`.
+
+  ## Example Usage
+
+  ### `getCapabilities`
+
+  Returns the capabilities of the wallet according to EIP-5792.
+
+  ```ts
+  import { getCapabilities } from "thirdweb/wallets/eip5792";
+
+  const capabilities = await getCapabilities({ wallet });
+  ```
+
+  ### `sendCalls`
+
+  Sends the given calls to the wallet for execution, and attempts to fallback to normal execution if the wallet does not support EIP-5792.
+
+  ```ts
+  import { sendCalls } from "thirdweb/wallets/eip5792";
+
+  const transfer1 = transfer({
+    contract: USDC_CONTRACT,
+    amount: 5000,
+    to: "0x33d9B8BEfE81027E2C859EDc84F5636cbb202Ed6",
+  });
+
+  const transfer2 = transfer({
+    contract: USDT_CONTRACT,
+    amount: 1000,
+    to: "0x33d9B8BEfE81027E2C859EDc84F5636cbb202Ed6",
+  });
+
+  const bundleId = await sendCalls({
+    wallet,
+    client,
+    calls: [transfer1, transfer2],
+  });
+  ```
+
+  ### `showCallsStatus`
+
+  Requests the wallet to show the status of a given bundle ID.
+
+  ```ts
+  import { showCallsStatus } from "thirdweb/wallets/eip5792";
+
+  await showCallsStatus({ wallet, bundleId });
+  ```
+
+  ### `getCallsStatus`
+
+  Returns the status of the given bundle ID and the transaction receipts if completed.
+
+  ```ts
+  import { getCallsStatus } from "thirdweb/wallets/eip5792";
+
+  const status = await getCallsStatus({ wallet, bundleId });
+  ```
+
+### Patch Changes
+
+- [#3048](https://github.com/thirdweb-dev/js/pull/3048) [`cfe60d2`](https://github.com/thirdweb-dev/js/commit/cfe60d22a3eb00241dbc653eba1b7d52c9ce97b1) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Improve error message for `resolveAbiFromBytecode`
+
+- [#3040](https://github.com/thirdweb-dev/js/pull/3040) [`ce45475`](https://github.com/thirdweb-dev/js/commit/ce4547501f9d2c9bd3c6001d39dd6211dbd4e5d6) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fixes caching issue when using `defineChain`
+
+- [#3037](https://github.com/thirdweb-dev/js/pull/3037) [`f006429`](https://github.com/thirdweb-dev/js/commit/f006429d7c2415e9f2206e081f6b867854842f0b) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Updates for react native compatibility
+
+## 5.21.0
+
+### Minor Changes
+
+- [#3034](https://github.com/thirdweb-dev/js/pull/3034) [`99fa2da`](https://github.com/thirdweb-dev/js/commit/99fa2da05abc32646036a2269f90213c5756a5ba) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds the ability to set a custom logo for the social login modal
+
+  ```ts
+  import { inAppWallet } from "thirdweb/wallets";
+  const wallet = inAppWallet({
+    metadata: {
+      image: {
+        src: "https://example.com/logo.png",
+        alt: "My logo",
+        width: 100,
+        height: 100,
+      },
+    },
+  });
+  ```
+
+### Patch Changes
+
+- [#3035](https://github.com/thirdweb-dev/js/pull/3035) [`3c04450`](https://github.com/thirdweb-dev/js/commit/3c044508eee18ca741878da43e199ed4cc0528b7) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Export extensions for Pack contract
+
 ## 5.20.0
 
 ### Minor Changes

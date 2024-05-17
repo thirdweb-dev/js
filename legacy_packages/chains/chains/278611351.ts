@@ -12,12 +12,6 @@ export default {
   "faucets": [
     "https://faucet.razorscan.io/"
   ],
-  "icon": {
-    "url": "ipfs://QmUdwAZJfyKGZnfPGDsCnNvGu123mdd57kTGj1Y3EWVuWK",
-    "width": 900,
-    "height": 900,
-    "format": "png"
-  },
   "infoURL": "https://razor.network",
   "name": "Razor Skale Chain",
   "nativeCurrency": {
