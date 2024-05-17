@@ -498,20 +498,6 @@ function BuyScreenContent(props: BuyScreenContentProps) {
         )}
 
         <Container px="lg" flex="column" gap="sm">
-          {account && (
-            <Button
-              variant="outline"
-              fullWidth
-              style={{
-                padding: spacing.xs,
-                fontSize: fontSize.sm,
-              }}
-              onClick={props.onViewPendingTx}
-            >
-              View all transactions
-            </Button>
-          )}
-
           {!isExpanded && (
             <>
               {!account && props.connectButton ? (
@@ -527,6 +513,20 @@ function BuyScreenContent(props: BuyScreenContentProps) {
                 </Button>
               )}
             </>
+          )}
+
+          {account && (
+            <Button
+              variant="outline"
+              fullWidth
+              style={{
+                padding: spacing.xs,
+                fontSize: fontSize.sm,
+              }}
+              onClick={props.onViewPendingTx}
+            >
+              View all transactions
+            </Button>
           )}
         </Container>
 
