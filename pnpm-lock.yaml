@@ -1596,9 +1596,9 @@ importers:
       react-native-quick-crypto:
         specifier: ^0.6.1
         version: 0.6.1(react-native@0.74.1)(react@18.2.0)
-      secrets.js-34r7h:
-        specifier: ^2.0.2
-        version: 2.0.2
+      shamir-secret-sharing:
+        specifier: ^0.0.3
+        version: 0.0.3
       typescript:
         specifier: '>=5.0.4'
         version: 5.4.5
@@ -24067,6 +24067,10 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       kind-of: 6.0.3
+
+  /shamir-secret-sharing@0.0.3:
+    resolution: {integrity: sha512-GPIb+QZDyjwwKSlVXEjHoOaBeevmdWz2IM2tz07nQvd0L9eMfLhzEqr7imajjjXCAO/cWgzXCCj0yFNMx6+miQ==}
+    dev: false
 
   /sharp@0.33.3:
     resolution: {integrity: sha512-vHUeXJU1UvlO/BNwTpT0x/r53WkLUVxrmb5JTgW92fdFCFk0ispLMAeu/jPO2vjkXM1fYUi3K7/qcLF47pwM1A==}

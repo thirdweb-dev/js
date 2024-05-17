@@ -1,12 +1,17 @@
-import * as secrets from "secrets.js-34r7h";
+import { combine, split } from "shamir-secret-sharing";
 import type { ThirdwebClient } from "../../../../../client/client.js";
-import { type Hex, hexToString } from "../../../../../utils/encoding/hex.js";
+import {
+  type Hex,
+  hexToString,
+  hexToUint8Array,
+  uint8ArrayToHex,
+} from "../../../../../utils/encoding/hex.js";
 import type { Account } from "../../../../interfaces/wallet.js";
 import { privateKeyToAccount } from "../../../../private-key.js";
 import type { SetUpWalletRpcReturnType } from "../../../core/authentication/type.js";
 import { getUserShares } from "../api/fetchers.js";
 import {
-  DEVICE_SHARE_ID,
+  DEVICE_SHARE_INDEX,
   DEVICE_SHARE_MISSING_MESSAGE,
   ROUTE_GET_USER_SHARES,
 } from "../constants.js";
@@ -32,8 +37,9 @@ export async function getExistingUserAccount(args: { client: ThirdwebClient }) {
   });
 }
 
-function getWalletPrivateKeyFromShares(shares: string[]) {
-  const privateKeyHex = secrets.combine(shares) as Hex;
+async function getWalletPrivateKeyFromShares(shares: string[]) {
+  const sharesData = shares.map((share) => hexToUint8Array(share as Hex));
+  const privateKeyHex = uint8ArrayToHex(await combine(sharesData));
   const prefixPrivateKey = hexToString(privateKeyHex);
   if (!prefixPrivateKey.startsWith("thirdweb_")) {
     throw new Error("Invalid private key reconstructed from shares");
@@ -42,14 +48,14 @@ function getWalletPrivateKeyFromShares(shares: string[]) {
   return privateKey;
 }
 
-function getAccountFromShares(args: {
+async function getAccountFromShares(args: {
   client: ThirdwebClient;
   shares: string[];
-}): Account {
+}): Promise<Account> {
   const { client, shares } = args;
   return privateKeyToAccount({
     client,
-    privateKey: getWalletPrivateKeyFromShares(shares),
+    privateKey: await getWalletPrivateKeyFromShares(shares),
   });
 }
 
@@ -163,18 +169,24 @@ async function getShares<
   };
 }
 
-export function getWalletShareById(
+export async function getWalletShareById(
   shares: string[],
-  id: number = DEVICE_SHARE_ID,
+  index: number = DEVICE_SHARE_INDEX,
 ) {
-  return secrets.newShare(id, shares);
+  const key = await combine(
+    shares.map((share) => hexToUint8Array(share as Hex)),
+  );
+  const newShares = await split(key, 3, 2);
+  const share = newShares[index];
+  if (!share) throw new Error("Invalid share index");
+  return uint8ArrayToHex(share);
 }
 
-export function getAccountAddressFromShares(args: {
+export async function getAccountAddressFromShares(args: {
   client: ThirdwebClient;
   shares: string[];
 }) {
-  const wallet = getAccountFromShares(args);
+  const wallet = await getAccountFromShares(args);
   return wallet.address;
 }
 
@@ -192,8 +204,8 @@ export async function setUpShareForNewDevice({
     deviceShare: { toRetrieve: false },
   });
   const shares = [recoveryShare, authShare];
-  const deviceShare = getWalletShareById(shares, DEVICE_SHARE_ID);
-  const walletAddress = getAccountAddressFromShares({
+  const deviceShare = await getWalletShareById(shares, DEVICE_SHARE_INDEX);
+  const walletAddress = await getAccountAddressFromShares({
     client,
     shares: [recoveryShare, authShare],
   });

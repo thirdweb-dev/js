@@ -1,8 +1,13 @@
 import { secp256k1 } from "@noble/curves/secp256k1";
-import * as secrets from "secrets.js-34r7h";
+import { split } from "shamir-secret-sharing";
 import { publicKeyToAddress } from "viem/utils";
 import type { ThirdwebClient } from "../../../../../client/client.js";
-import { stringToHex, toHex } from "../../../../../utils/encoding/hex.js";
+import {
+  hexToUint8Array,
+  stringToHex,
+  toHex,
+  uint8ArrayToHex,
+} from "../../../../../utils/encoding/hex.js";
 import type { SetUpWalletRpcReturnType } from "../../../core/authentication/type.js";
 import { storeUserShares } from "../api/fetchers.js";
 import { logoutUser } from "../auth/logout.js";
@@ -46,7 +51,7 @@ async function generateWallet({
     recoveryCode: string;
   } & SetUpWalletRpcReturnType
 > {
-  const walletDetails = createWalletShares();
+  const walletDetails = await createWalletShares();
 
   const maybeDeviceShare = await storeShares({
     client,
@@ -73,22 +78,29 @@ async function generateWallet({
   };
 }
 
-function createWalletShares(): {
+async function createWalletShares(): Promise<{
   publicAddress: string;
   shares: [string, string, string];
-} {
+}> {
   const privateKey = toHex(secp256k1.utils.randomPrivateKey());
-  const privateKeyHex = stringToHex(`thirdweb_${privateKey}`);
+  const privateKeyHex = hexToUint8Array(stringToHex(`thirdweb_${privateKey}`));
   const publicKey = toHex(secp256k1.getPublicKey(privateKey.slice(2), false));
   const address = publicKeyToAddress(publicKey); // TODO: Implement publicKeyToAddress natively (will need checksumAddress downstream)
   // Potential source of share corruption through tampering
   // https://hackerone.com/reports/1884071
-  const shares = secrets.share(privateKeyHex, 3, 2);
+  const [share1, share2, share3] = await split(privateKeyHex, 3, 2);
+
+  if (!share1 || !share2 || !share3) {
+    throw new Error("Error splitting private key into shares");
+  }
 
   return {
     publicAddress: address,
-    // biome-ignore lint/style/noNonNullAssertion: we know the shares are there if secrets succeeds
-    shares: [shares[0]!, shares[1]!, shares[2]!],
+    shares: [
+      uint8ArrayToHex(share1),
+      uint8ArrayToHex(share2),
+      uint8ArrayToHex(share3),
+    ],
   };
 }
 
