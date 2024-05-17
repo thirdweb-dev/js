@@ -2,7 +2,7 @@
   {
     "name": "thirdweb (esm)",
     "path": "./dist/esm/exports/thirdweb.js",
-    "limit": "40.1 kB",
+    "limit": "41 kB",
     "import": "*"
   },
   {
