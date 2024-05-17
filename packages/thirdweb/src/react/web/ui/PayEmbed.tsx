@@ -196,7 +196,8 @@ export function PayEmbed(props: PayEmbedProps) {
             }
           />
         </div>
-        <div style={{ display: screen === "buy" ? "none" : "inherit" }}>
+        {/* this does not need to persist so we can just show-hide it with JS */}
+        {screen === "tx-history" && (
           <BuyTxHistory
             client={props.client}
             onBack={() => {
@@ -208,7 +209,7 @@ export function PayEmbed(props: PayEmbedProps) {
             isBuyForTx={false}
             isEmbed={true}
           />
-        </div>
+        )}
       </>
     );
   }
