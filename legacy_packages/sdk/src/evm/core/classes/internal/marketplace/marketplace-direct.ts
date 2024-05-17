@@ -189,7 +189,7 @@ export class MarketplaceDirect {
         listingStartTime = blockTime;
       }
 
-      return Transaction.fromContractWrapper({
+      const tx = Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "createListing",
         args: [
@@ -216,6 +216,8 @@ export class MarketplaceDirect {
           };
         },
       });
+      tx.setGasLimitMultiple(1.2);
+      return tx;
     },
   );
 
@@ -240,7 +242,7 @@ export class MarketplaceDirect {
         )
       ).map((tx) => tx.encode());
 
-      return Transaction.fromContractWrapper({
+      const tx = Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "multicall",
         args: [data],
@@ -257,6 +259,8 @@ export class MarketplaceDirect {
           });
         },
       });
+      tx.setGasLimitMultiple(1.2);
+      return tx;
     },
   );
 
@@ -330,7 +334,7 @@ export class MarketplaceDirect {
         );
       }
 
-      return Transaction.fromContractWrapper({
+      const tx = Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "offer",
         args: [
@@ -342,6 +346,8 @@ export class MarketplaceDirect {
         ],
         overrides,
       });
+      tx.setGasLimitMultiple(1.2);
+      return tx;
     },
   );
 
@@ -373,11 +379,13 @@ export class MarketplaceDirect {
         resolvedAddress,
       ]);
 
-      return Transaction.fromContractWrapper({
+      const tx = Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "acceptOffer",
         args: [listingId, resolvedAddress, offer.currency, offer.pricePerToken],
       });
+      tx.setGasLimitMultiple(1.2);
+      return tx;
     },
   );
 
@@ -427,7 +435,7 @@ export class MarketplaceDirect {
         overrides,
       );
 
-      return Transaction.fromContractWrapper({
+      const tx = Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "buy",
         args: [
@@ -439,6 +447,8 @@ export class MarketplaceDirect {
         ],
         overrides,
       });
+      tx.setGasLimitMultiple(1.2);
+      return tx;
     },
   );
 
@@ -451,7 +461,7 @@ export class MarketplaceDirect {
    */
   updateListing = /* @__PURE__ */ buildTransactionFunction(
     async (listing: DirectListing) => {
-      return Transaction.fromContractWrapper({
+      const tx = Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "updateListing",
         args: [
@@ -464,6 +474,8 @@ export class MarketplaceDirect {
           listing.secondsUntilEnd,
         ],
       });
+      tx.setGasLimitMultiple(1.2);
+      return tx;
     },
   );
 
@@ -482,11 +494,13 @@ export class MarketplaceDirect {
    */
   cancelListing = /* @__PURE__ */ buildTransactionFunction(
     async (listingId: BigNumberish) => {
-      return Transaction.fromContractWrapper({
+      const tx = Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "cancelDirectListing",
         args: [listingId],
       });
+      tx.setGasLimitMultiple(1.2);
+      return tx;
     },
   );
 
