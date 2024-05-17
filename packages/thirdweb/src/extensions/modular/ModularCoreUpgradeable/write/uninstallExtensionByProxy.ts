@@ -1,8 +1,11 @@
-import { getContract, type ThirdwebContract } from "../../../../contract/contract.js";
-import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Chain } from "../../../../chains/types.js";
-import { uninstallExtension } from "../../__generated__/ModularCoreUpgradeable/write/uninstallExtension.js";
+import type { ThirdwebClient } from "../../../../client/client.js";
+import {
+  type ThirdwebContract,
+  getContract,
+} from "../../../../contract/contract.js";
 import { resolveImplementation } from "../../../../utils/bytecode/resolveImplementation.js";
+import { uninstallExtension } from "../../__generated__/ModularCoreUpgradeable/write/uninstallExtension.js";
 
 export type UninstallExtensionByProxyOptions = {
   client: ThirdwebClient;
@@ -15,13 +18,8 @@ export type UninstallExtensionByProxyOptions = {
 export function uninstallExtensionByProxy(
   options: UninstallExtensionByProxyOptions,
 ) {
-  const {
-    client,
-    chain,
-    contract,
-    extensionProxyAddress,
-    extensionData,
-  } = options;
+  const { client, chain, contract, extensionProxyAddress, extensionData } =
+    options;
 
   return uninstallExtension({
     contract,
@@ -36,7 +34,7 @@ export function uninstallExtensionByProxy(
       return {
         extensionImplementation: extensionImplementation.address,
         data: extensionData || "0x",
-      }
-    }
+      };
+    },
   });
 }

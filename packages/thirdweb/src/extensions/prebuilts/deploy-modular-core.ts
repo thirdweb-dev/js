@@ -1,24 +1,20 @@
-import type {
-  Abi,
-} from "abitype";
+import type { Abi } from "abitype";
+import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { getContract } from "../../contract/contract.js";
 import { deployViaAutoFactory } from "../../contract/deployment/deploy-via-autofactory.js";
-import {
-  getOrDeployInfraForPublishedContract,
-} from "../../contract/deployment/utils/bootstrap.js";
 import { fetchPublishedContractMetadata } from "../../contract/deployment/publisher.js";
-import type { Chain } from "../../chains/types.js";
-import type { Account } from "../../wallets/interfaces/wallet.js";
+import { getOrDeployInfraForPublishedContract } from "../../contract/deployment/utils/bootstrap.js";
 import { prepareContractCall } from "../../transaction/prepare-contract-call.js";
 import { resolveMethod } from "../../transaction/resolve-method.js";
+import type { Account } from "../../wallets/interfaces/wallet.js";
 
 export type DeployModularCoreContractOptions = {
   client: ThirdwebClient;
   chain: Chain;
   account: Account;
   contractId: string;
-  contractParams: any[];
+  contractParams: any[]; 
   publisher?: string;
   version?: string;
   implementationConstructorParams?: unknown[];
@@ -99,7 +95,7 @@ export async function deployModularCoreContract(
       account,
       contractId: contractId,
       constructorParams: [],
-      publisher: publisher
+      publisher: publisher,
     });
 
   const initializeTransaction = prepareContractCall({

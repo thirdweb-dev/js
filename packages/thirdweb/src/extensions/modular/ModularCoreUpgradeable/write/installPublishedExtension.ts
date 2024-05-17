@@ -1,8 +1,8 @@
-import type { ThirdwebContract } from "../../../../contract/contract.js";
-import type { Account } from "../../../../wallets/interfaces/wallet.js";
-import { getOrDeployInfraForPublishedContract } from "../../../../contract/deployment/utils/bootstrap.js";
-import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Chain } from "../../../../chains/types.js";
+import type { ThirdwebClient } from "../../../../client/client.js";
+import type { ThirdwebContract } from "../../../../contract/contract.js";
+import { getOrDeployInfraForPublishedContract } from "../../../../contract/deployment/utils/bootstrap.js";
+import type { Account } from "../../../../wallets/interfaces/wallet.js";
 import { installExtension } from "../../__generated__/ModularCoreUpgradeable/write/installExtension.js";
 
 export type InstallPublishedExtensionOptions = {
@@ -13,7 +13,7 @@ export type InstallPublishedExtensionOptions = {
   extensionName: string;
   publisherAddress: string;
   version?: string;
-  constructorParams?: any[];
+  constructorParams?: unknown[];
   extensionData?: `0x${string}`;
 };
 

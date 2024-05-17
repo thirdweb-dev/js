@@ -180,7 +180,7 @@ export type ExtendedMetadata = {
           params: Array<{ name: string; type: string }>;
           customFactoryAddresses: Record<string, string>;
         };
-        modularFactoryInput? : {
+        modularFactoryInput?: {
           hooksParamName: string;
         };
         factoryAddresses?: Record<string, string>;

@@ -2,23 +2,20 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { ANVIL_CHAIN } from "../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import { TEST_ACCOUNT_A } from "../../../test/src/test-wallets.js";
-import { deployModularCoreContract } from "./deploy-modular-core.js";
-import { prepareTransaction } from "../../transaction/prepare-transaction.js";
+import { getContract } from "../../contract/contract.js";
+import { eth_sendRawTransaction } from "../../rpc/actions/eth_sendRawTransaction.js";
+import { getRpcClient } from "../../rpc/rpc.js";
 import { sendTransaction } from "../../transaction/actions/send-transaction.js";
 import { waitForReceipt } from "../../transaction/actions/wait-for-tx-receipt.js";
-import { getRpcClient } from "../../rpc/rpc.js";
-import { eth_sendRawTransaction } from "../../rpc/actions/eth_sendRawTransaction.js";
-import { getInstalledExtensions } from "../modular/__generated__/ModularCoreUpgradeable/read/getInstalledExtensions.js";
-import { getContract } from "../../contract/contract.js";
-import { uninstallExtension } from "../modular/__generated__/ModularCoreUpgradeable/write/uninstallExtension.js";
+import { prepareTransaction } from "../../transaction/prepare-transaction.js";
 import { resolveImplementation } from "../../utils/bytecode/resolveImplementation.js";
-import { prepareDirectDeployTransaction } from "../../contract/deployment/deploy-with-abi.js";
-import { DEMO_EXTENSION_ALT_BYTECODE } from "../../../test/src/abis/modular/demo-extension-alt.js";
-import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
-import { installExtension } from "../modular/__generated__/ModularCoreUpgradeable/write/installExtension.js";
+import { installPublishedExtension } from "../modular/ModularCoreUpgradeable/write/installPublishedExtension.js";
 import { uninstallExtensionByProxy } from "../modular/ModularCoreUpgradeable/write/uninstallExtensionByProxy.js";
 import { uninstallPublishedExtension } from "../modular/ModularCoreUpgradeable/write/uninstallPublishedExtension.js";
-import { installPublishedExtension } from "../modular/ModularCoreUpgradeable/write/installPublishedExtension.js";
+import { getInstalledExtensions } from "../modular/__generated__/ModularCoreUpgradeable/read/getInstalledExtensions.js";
+import { installExtension } from "../modular/__generated__/ModularCoreUpgradeable/write/installExtension.js";
+import { uninstallExtension } from "../modular/__generated__/ModularCoreUpgradeable/write/uninstallExtension.js";
+import { deployModularCoreContract } from "./deploy-modular-core.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)(
   "deployModularCore",
