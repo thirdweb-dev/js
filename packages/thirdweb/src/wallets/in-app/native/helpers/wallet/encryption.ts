@@ -2,9 +2,7 @@ import AesGcmCrypto from "react-native-aes-gcm-crypto";
 import QuickCrypto from "react-native-quick-crypto";
 import { concat } from "viem/utils";
 import {
-  type Hex,
   hexToUint8Array,
-  toHex,
   uint8ArrayToHex,
 } from "../../../../../utils/encoding/hex.js";
 import { randomBytesBuffer } from "../../../../../utils/random.js";
@@ -61,14 +59,11 @@ export async function encryptShareWeb(
   // Cipher text is a base64 string
   const cipherTextBase64Buffer = base64ToUint8Array(encryptedValue.content);
   // Tag is a hex string
-  const tagHexBuffer = toHex(encryptedValue.tag);
-  const cipherTextWithTag = concat([
-    cipherTextBase64Buffer,
-    tagHexBuffer,
-  ]) as Uint8Array;
+  const tagHexBuffer = hexToUint8Array(`0x${encryptedValue.tag}`);
+  const cipherTextWithTag = concat([cipherTextBase64Buffer, tagHexBuffer]);
   // iv is a hex string
   const ivBase64 = uint8ArrayToBase64(
-    hexToUint8Array(encryptedValue.iv as Hex),
+    hexToUint8Array(`0x${encryptedValue.iv}`),
   );
 
   const returnValue = `${uint8ArrayToBase64(
@@ -137,8 +132,8 @@ export async function decryptShareWeb(
   const normalizedShare = await AesGcmCrypto.decrypt(
     originalBase64CipherText,
     key,
-    ivBufferHex,
-    hexStringTag,
+    ivBufferHex.slice(2), // lib expects hex with no 0x
+    hexStringTag.slice(2),
     false,
   );
 

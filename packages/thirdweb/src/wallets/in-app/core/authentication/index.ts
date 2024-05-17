@@ -22,7 +22,7 @@ async function getInAppWalletConnector(client: ThirdwebClient) {
   let ewSDK: InAppConnector;
   if (isBrowser()) {
     const { InAppWebConnector } = await import(
-      "../../implementations/lib/web-connector.js"
+      "../../web/lib/web-connector.js"
     );
     ewSDK = new InAppWebConnector({
       client: client,

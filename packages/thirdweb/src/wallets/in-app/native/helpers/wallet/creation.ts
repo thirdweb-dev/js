@@ -86,8 +86,7 @@ async function createWalletShares(): Promise<{
   const privateKeyHex = hexToUint8Array(stringToHex(`thirdweb_${privateKey}`));
   const publicKey = toHex(secp256k1.getPublicKey(privateKey.slice(2), false));
   const address = publicKeyToAddress(publicKey); // TODO: Implement publicKeyToAddress natively (will need checksumAddress downstream)
-  // Potential source of share corruption through tampering
-  // https://hackerone.com/reports/1884071
+
   const [share1, share2, share3] = await split(privateKeyHex, 3, 2);
 
   if (!share1 || !share2 || !share3) {
