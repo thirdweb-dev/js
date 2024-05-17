@@ -169,13 +169,13 @@ export function TransactionButton(props: TransactionButtonProps) {
           setIsPending(false);
         }
       }}
+      {...buttonProps}
       style={{
         opacity: !account || disabled ? 0.5 : 1,
         minWidth: "150px",
         position: "relative",
         ...buttonProps.style,
       }}
-      {...buttonProps}
     >
       <span style={{ visibility: isPending ? "hidden" : "visible" }}>
         {children}
