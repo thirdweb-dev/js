@@ -39,47 +39,45 @@ export {
 } from "../../extensions/modular/__generated__/ModularCoreUpgradeable/write/completeOwnershipHandover.js";
 export {
   grantRoles,
-  type GrantRolesParams
+  type GrantRolesParams,
 } from "../../extensions/modular/__generated__/ModularCoreUpgradeable/write/grantRoles.js";
 export {
   installExtension,
   isInstallExtensionSupported,
-  type InstallExtensionParams
+  type InstallExtensionParams,
 } from "../../extensions/modular/__generated__/ModularCoreUpgradeable/write/installExtension.js";
-export {
-  renounceOwnership
-} from "../../extensions/modular/__generated__/ModularCoreUpgradeable/write/renounceOwnership.js";
+export { renounceOwnership } from "../../extensions/modular/__generated__/ModularCoreUpgradeable/write/renounceOwnership.js";
 export {
   renounceRoles,
-  type RenounceRolesParams
+  type RenounceRolesParams,
 } from "../../extensions/modular/__generated__/ModularCoreUpgradeable/write/renounceRoles.js";
 export {
   revokeRoles,
-  type RevokeRolesParams
+  type RevokeRolesParams,
 } from "../../extensions/modular/__generated__/ModularCoreUpgradeable/write/revokeRoles.js";
 export {
   transferOwnership,
-  type TransferOwnershipParams
+  type TransferOwnershipParams,
 } from "../../extensions/modular/__generated__/ModularCoreUpgradeable/write/transferOwnership.js";
 export {
   uninstallExtension,
   isUninstallExtensionSupported,
-  type UninstallExtensionParams
+  type UninstallExtensionParams,
 } from "../../extensions/modular/__generated__/ModularCoreUpgradeable/write/uninstallExtension.js";
 export {
   updateExtension,
   isUpdateExtensionSupported,
-  type UpdateExtensionParams
+  type UpdateExtensionParams,
 } from "../../extensions/modular/__generated__/ModularCoreUpgradeable/write/updateExtension.js";
 export {
   installPublishedExtension,
-  type InstallPublishedExtensionOptions
+  type InstallPublishedExtensionOptions,
 } from "../../extensions/modular/ModularCoreUpgradeable/write/installPublishedExtension.js";
 export {
   uninstallPublishedExtension,
-  type UninstallPublishedExtensionOptions
+  type UninstallPublishedExtensionOptions,
 } from "../../extensions/modular/ModularCoreUpgradeable/write/uninstallPublishedExtension.js";
 export {
   uninstallExtensionByProxy,
-  type UninstallExtensionByProxyOptions
+  type UninstallExtensionByProxyOptions,
 } from "../../extensions/modular/ModularCoreUpgradeable/write/uninstallExtensionByProxy.js";
