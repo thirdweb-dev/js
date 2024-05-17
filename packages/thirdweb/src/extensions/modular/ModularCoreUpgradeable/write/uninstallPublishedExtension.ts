@@ -25,7 +25,6 @@ export function uninstallPublishedExtension(
     extensionName,
     publisherAddress,
     constructorParams,
-    version,
     extensionData,
   } = options;
 

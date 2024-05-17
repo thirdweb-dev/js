@@ -28,7 +28,6 @@ export function installPublishedExtension(
     extensionName,
     constructorParams,
     publisherAddress,
-    version,
     extensionData,
   } = options;
 
