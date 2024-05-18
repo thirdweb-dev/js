@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { createThirdwebClient } from "../client/client.js";
-import { resolveScheme } from "./ipfs.js";
+import { findIPFSCidFromUri, resolveScheme } from "./ipfs.js";
 
 describe("resolveScheme", () => {
   it("should resolve ipfs scheme when not passing a gateway override", () => {
@@ -45,5 +45,16 @@ describe("resolveScheme", () => {
     ).toThrowErrorMatchingInlineSnapshot(
       `[Error: Invalid URI scheme, expected "ipfs://" or "http(s)://"]`,
     );
+  });
+
+  it("should return the uri un-altered if it's not a valid ipfs uri", () => {
+    const uri = "https://...";
+    expect(findIPFSCidFromUri(uri)).toMatchSnapshot(uri);
+  });
+
+  it("should return the CID from a valid IPFS uri", () => {
+    const cid = "bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi";
+    const uri = `ipfs://${cid}`;
+    expect(findIPFSCidFromUri(uri)).toMatchSnapshot(cid);
   });
 });

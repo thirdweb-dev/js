@@ -46,7 +46,10 @@ export function resolveScheme(options: ResolveSchemeOptions) {
   throw new Error(`Invalid URI scheme, expected "ipfs://" or "http(s)://"`);
 }
 
-function findIPFSCidFromUri(uri: string) {
+/**
+ * @internal
+ */
+export function findIPFSCidFromUri(uri: string) {
   if (!uri.startsWith("ipfs://")) {
     // do not touch URIs that are not ipfs URIs
     return uri;
