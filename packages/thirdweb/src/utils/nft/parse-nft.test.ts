@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
-  parseNFT,
   type NFT,
   type NFTMetadata,
   type ParseNFTOptions,
+  parseNFT,
 } from "./parseNft.js";
 
 const base: NFTMetadata = {
