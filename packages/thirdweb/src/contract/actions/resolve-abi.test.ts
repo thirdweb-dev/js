@@ -1,14 +1,15 @@
+import { ethereum } from "src/exports/chains.js";
 import { describe, expect, it } from "vitest";
+import { TEST_CLIENT } from "~test/test-clients.js";
 import { DOODLES_CONTRACT } from "~test/test-contracts.js";
+
 import { DOODLES_ABI } from "../../../test/src/abis/doodles.js";
+import { getContract } from "../contract.js";
 import {
   resolveAbiFromBytecode,
   resolveAbiFromContractApi,
   resolveContractAbi,
 } from "./resolve-abi.js";
-import { getContract } from "../contract.js";
-import { TEST_CLIENT } from "~test/test-clients.js";
-import { ethereum } from "src/chains/chain-definitions/ethereum.js";
 
 describe("resolveContractAbi", () => {
   it("should use the abi on the contract if it exists", async () => {
