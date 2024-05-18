@@ -6,6 +6,9 @@ import {
   resolveAbiFromContractApi,
   resolveContractAbi,
 } from "./resolve-abi.js";
+import { getContract } from "../contract.js";
+import { TEST_CLIENT } from "~test/test-clients.js";
+import { ethereum } from "src/chains/chain-definitions/ethereum.js";
 
 describe("resolveContractAbi", () => {
   it("should use the abi on the contract if it exists", async () => {
@@ -48,3 +51,18 @@ it.runIf(process.env.TW_SECRET_KEY)(
     expect(abi).toMatchObject(DOODLES_ABI);
   },
 );
+
+it("should throw error if contract bytecode is 0x", async () => {
+  /**
+   * thirdweb multichain registry is on Polygon mainnet
+   * so the method should throw an error
+   */
+  const thirdwebMultichainRegistry = getContract({
+    client: TEST_CLIENT,
+    chain: ethereum,
+    address: "0xcdAD8FA86e18538aC207872E8ff3536501431B73",
+  });
+  expect(() => resolveAbiFromBytecode(thirdwebMultichainRegistry)).toThrowError(
+    /Failed to load contract bytecode/,
+  );
+});
