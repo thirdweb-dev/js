@@ -1,9 +1,8 @@
-import { ethereum } from "src/exports/chains.js";
 import { describe, expect, it } from "vitest";
 import { TEST_CLIENT } from "~test/test-clients.js";
 import { DOODLES_CONTRACT } from "~test/test-contracts.js";
-
 import { DOODLES_ABI } from "../../../test/src/abis/doodles.js";
+import { FORKED_ETHEREUM_CHAIN } from "../../../test/src/chains.js";
 import { getContract } from "../contract.js";
 import {
   resolveAbiFromBytecode,
@@ -54,16 +53,14 @@ it.runIf(process.env.TW_SECRET_KEY)(
 );
 
 it("should throw error if contract bytecode is 0x", async () => {
-  /**
-   * thirdweb multichain registry is on Polygon mainnet
-   * so the method should throw an error
-   */
-  const thirdwebMultichainRegistry = getContract({
+  const wrongContract = getContract({
+    // This is a wallet address so the bytecode should be "0x"
+    // and will should throw the expected error
+    address: "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045 ",
     client: TEST_CLIENT,
-    chain: ethereum,
-    address: "0xcdAD8FA86e18538aC207872E8ff3536501431B73",
+    chain: FORKED_ETHEREUM_CHAIN,
   });
-  expect(() => resolveAbiFromBytecode(thirdwebMultichainRegistry)).toThrowError(
+  expect(() => resolveAbiFromBytecode(wrongContract)).toThrowError(
     /Failed to load contract bytecode/,
   );
 });

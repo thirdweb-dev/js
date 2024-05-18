@@ -49,12 +49,12 @@ describe("resolveScheme", () => {
 
   it("should return the uri un-altered if it's not a valid ipfs uri", () => {
     const uri = "https://...";
-    expect(findIPFSCidFromUri(uri)).toMatchSnapshot(uri);
+    expect(findIPFSCidFromUri(uri)).toBe(uri);
   });
 
   it("should return the CID from a valid IPFS uri", () => {
     const cid = "bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi";
     const uri = `ipfs://${cid}`;
-    expect(findIPFSCidFromUri(uri)).toMatchSnapshot(cid);
+    expect(findIPFSCidFromUri(uri)).toBe(cid);
   });
 });
