@@ -13,6 +13,7 @@ import { toHex, uint8ArrayToHex } from "../utils/encoding/hex.js";
 import { resolvePromisedValue } from "../utils/promise/resolve-promised-value.js";
 import type { Account } from "../wallets/interfaces/wallet.js";
 import { normalizeChainId } from "../wallets/utils/normalizeChainId.js";
+import type { Interface, InterfaceAbi } from "ethers6";
 
 type Ethers6 = typeof ethers6;
 
@@ -207,7 +208,7 @@ async function toEthersContract<abi extends Abi = []>(
 
     return new ethers.Contract(
       twContract.address,
-      JSON.stringify(abi),
+      abi as Interface | InterfaceAbi,
       account
         ? toEthersSigner(ethers, twContract.client, account, twContract.chain)
         : toEthersProvider(ethers, twContract.client, twContract.chain),
