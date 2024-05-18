@@ -56,11 +56,11 @@ it("should throw error if contract bytecode is 0x", async () => {
   const wrongContract = getContract({
     // This is a wallet address so the bytecode should be "0x"
     // and will should throw the expected error
-    address: "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045 ",
+    address: "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
     client: TEST_CLIENT,
     chain: FORKED_ETHEREUM_CHAIN,
   });
-  expect(() => resolveAbiFromBytecode(wrongContract)).toThrowError(
-    /Failed to load contract bytecode/,
-  );
+  await expect(() =>
+    resolveAbiFromBytecode(wrongContract),
+  ).rejects.toThrowError("Failed to load contract bytecode");
 });
