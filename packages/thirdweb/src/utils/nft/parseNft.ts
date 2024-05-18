@@ -47,6 +47,9 @@ export type NFT =
       supply: bigint;
     };
 
+/**
+ * @internal
+ */
 export type ParseNFTOptions =
   | {
       tokenId: bigint;
