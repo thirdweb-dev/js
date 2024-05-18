@@ -195,25 +195,27 @@ async function toEthersContract<abi extends Abi = []>(
   twContract: ThirdwebContract<abi>,
   account?: Account,
 ): Promise<ethers6.Contract> {
-  if (twContract.abi) {
+  if (
+    !twContract.abi ||
+    (Array.isArray(twContract.abi) && !twContract.abi.length)
+  ) {
+    const { resolveContractAbi } = await import(
+      "../contract/actions/resolve-abi.js"
+    );
+
+    const abi = await resolveContractAbi(twContract);
+
     return new ethers.Contract(
       twContract.address,
-      JSON.stringify(twContract.abi),
+      JSON.stringify(abi),
       account
         ? toEthersSigner(ethers, twContract.client, account, twContract.chain)
         : toEthersProvider(ethers, twContract.client, twContract.chain),
     );
   }
-
-  const { resolveContractAbi } = await import(
-    "../contract/actions/resolve-abi.js"
-  );
-
-  const abi = await resolveContractAbi(twContract);
-
   return new ethers.Contract(
     twContract.address,
-    JSON.stringify(abi),
+    JSON.stringify(twContract.abi),
     account
       ? toEthersSigner(ethers, twContract.client, account, twContract.chain)
       : toEthersProvider(ethers, twContract.client, twContract.chain),
