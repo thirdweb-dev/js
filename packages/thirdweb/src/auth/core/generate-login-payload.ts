@@ -36,8 +36,8 @@ export function generateLoginPayload(options: AuthOptions) {
       nonce: await (
         options.login?.nonce?.generate ||
         (() =>
-          import("../../utils/random.js").then(({ randomBytes }) =>
-            randomBytes(),
+          import("../../utils/random.js").then(({ randomBytesHex }) =>
+            randomBytesHex(),
           ))
       )(),
       statement: options.login?.statement || DEFAULT_LOGIN_STATEMENT,
@@ -47,3 +47,4 @@ export function generateLoginPayload(options: AuthOptions) {
     };
   };
 }
+q;

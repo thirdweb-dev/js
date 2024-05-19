@@ -5,7 +5,7 @@ import {
   hexToUint8Array,
   uint8ArrayToHex,
 } from "../../../../../utils/encoding/hex.js";
-import { randomBytesBuffer } from "../../../../../utils/random.js";
+import { randomBytes } from "../../../../../utils/random.js";
 import {
   base64ToUint8Array,
   uint8ArrayToBase64,
@@ -42,7 +42,7 @@ export async function encryptShareWeb(
   share: string,
   pwd: string,
 ): Promise<string> {
-  const salt = randomBytesBuffer(16);
+  const salt = randomBytes(16);
   const iterationCount = CURRENT_KEY_ITERATION_COUNT;
 
   const keyBase64 = await getEncryptionKey(pwd, salt, iterationCount);

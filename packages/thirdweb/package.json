@@ -166,8 +166,8 @@
     "viem": "2.10.9"
   },
   "peerDependencies": {
-    "@aws-sdk/client-lambda": "3.549.0",
-    "@aws-sdk/credential-providers": "3.549.0",
+    "@aws-sdk/client-lambda": "^3.579.0",
+    "@aws-sdk/credential-providers": "^3.579.0",
     "amazon-cognito-identity-js": "^6.3.12",
     "aws-amplify": "^5.3.18",
     "ethers": "^5 || ^6",
@@ -188,6 +188,36 @@
       "optional": true
     },
     "typescript": {
+      "optional": true
+    },
+    "react-native-aes-gcm-crypto": {
+      "optional": true
+    },
+    "react-native-inappbrowser-reborn": {
+      "optional": true
+    },
+    "react-native-mmkv": {
+      "optional": true
+    },
+    "react-native-quick-base64": {
+      "optional": true
+    },
+    "react-native-quick-crypto": {
+      "optional": true
+    },
+    "shamir-secret-sharing": {
+      "optional": true
+    },
+    "aws-amplify": {
+      "optional": true
+    },
+    "@aws-sdk/client-lambda": {
+      "optional": true
+    },
+    "@aws-sdk/credential-providers": {
+      "optional": true
+    },
+    "amazon-cognito-identity-js": {
       "optional": true
     }
   },
@@ -224,7 +254,6 @@
     "@types/react": "18.2.17",
     "@vitejs/plugin-react": "^4.2.1",
     "@vitest/ui": "1.5.0",
-    "amazon-cognito-identity-js": "^6.3.12",
     "cross-spawn": "7.0.3",
     "happy-dom": "^14.10.1",
     "vitest": "1.5.0"

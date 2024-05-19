@@ -1,5 +1,5 @@
-import { randomBytes } from "../../../../utils/random.js";
+import { randomBytesHex } from "../../../../utils/random.js";
 
 export const ANALYTICS = {
-  nonce: randomBytes(16),
+  nonce: randomBytesHex(16),
 };

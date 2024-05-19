@@ -1,10 +1,10 @@
 import { Amplify, Auth } from "aws-amplify";
+import { randomBytesHex } from "../../../../../utils/random.js";
 import {
   AWS_REGION,
   COGNITO_APP_CLIENT_ID,
   COGNITO_USER_POOL_ID,
 } from "../constants.js";
-import { randomBytes } from "../../../../../utils/random.js";
 
 Amplify.configure({
   Auth: {
@@ -17,7 +17,7 @@ Amplify.configure({
 export async function cognitoEmailSignUp(email: string, clientId: string) {
   await Auth.signUp({
     username: `${email}:email:${clientId}`,
-    password: randomBytes(30),
+    password: randomBytesHex(30),
     attributes: {
       email,
     },

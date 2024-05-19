@@ -2,7 +2,7 @@ import type { AbiParameterToPrimitiveType, Address } from "abitype";
 import type { ThirdwebContract } from "../../../contract/contract.js";
 import { dateToSeconds, tenYearsFromNow } from "../../../utils/date.js";
 import type { Hex } from "../../../utils/encoding/hex.js";
-import { randomBytes } from "../../../utils/random.js";
+import { randomBytesHex } from "../../../utils/random.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
 import { airdropERC1155WithSignature as generatedAirdropERC1155WithSignature } from "../__generated__/Airdrop/write/airdropERC1155WithSignature.js";
 
@@ -72,7 +72,7 @@ export async function generateAirdropSignatureERC1155(
   const { airdropRequest, account, contract } = options;
   const tokenAddress = airdropRequest.tokenAddress;
   const contents = airdropRequest.contents;
-  const uid = airdropRequest.uid || (await randomBytes());
+  const uid = airdropRequest.uid || (await randomBytesHex());
   const endTime = airdropRequest.expirationTimestamp || tenYearsFromNow();
 
   const req: ReqType = {

@@ -1,5 +1,5 @@
 import type { ThirdwebClient } from "../../../../client/client.js";
-import { isBrowser } from "../../../../utils/platform.js";
+import { isBrowser, isReactNative } from "../../../../utils/platform.js";
 import type { InAppConnector } from "../interfaces/connector.js";
 import {
   type AuthArgsType,
@@ -27,13 +27,15 @@ async function getInAppWalletConnector(client: ThirdwebClient) {
     ewSDK = new InAppWebConnector({
       client: client,
     });
-  } else {
+  } else if (isReactNative()) {
     const { InAppNativeConnector } = await import(
       "../../native/native-connector.js"
     );
     ewSDK = new InAppNativeConnector({
       client,
     });
+  } else {
+    throw new Error("Unsupported platform");
   }
 
   ewsSDKCache.set(client, ewSDK);
