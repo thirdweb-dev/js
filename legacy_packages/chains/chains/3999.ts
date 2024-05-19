@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmdbPhiB5W2gbHZGkYsN7i2VTKKP9casmAN2hRnpDaL9W4",
-    "width": 96,
-    "height": 96,
-    "format": "png"
-  },
   "infoURL": "https://www.yuan.org",
   "name": "YuanChain Mainnet",
   "nativeCurrency": {
