@@ -1,7 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
   "chain": "Avalanche",
-  "chainId": 48795,
+  "chainId": 8227,
   "explorers": [],
   "faucets": [],
   "features": [],
@@ -18,13 +18,13 @@ export default {
     "symbol": "FUEL",
     "decimals": 18
   },
-  "networkId": 48795,
+  "networkId": 8227,
   "redFlags": [],
   "rpc": [
-    "https://48795.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://subnets.avax.network/space/testnet/rpc"
+    "https://8227.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://subnets.avax.network/space/mainnet/rpc"
   ],
   "shortName": "Space",
-  "slug": "space-space",
-  "testnet": true
+  "slug": "space",
+  "testnet": false
 } as const satisfies Chain;

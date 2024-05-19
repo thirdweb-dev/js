@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://bafkreifc3vnwf4hj3bo6fg4u5qlqmjgajjgezyeg236qjcihl4ha42siuq",
+    "width": 819,
+    "height": 792,
+    "format": "png"
+  },
   "infoURL": "https://janus-network.gitbook.io/janus",
   "name": "Janus Testnet",
   "nativeCurrency": {

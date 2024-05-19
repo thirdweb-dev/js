@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmWiRBqfzoZ3GC7oCbYFqbwLyF4uDHM4eYdKUUJ7LHf2EA",
-    "width": 59,
-    "height": 55,
-    "format": "svg"
-  },
   "infoURL": "https://www.stratisplatform.com",
   "name": "Stratis Mainnet",
   "nativeCurrency": {
