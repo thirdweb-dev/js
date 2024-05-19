@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmeGb65zSworzoHmwK3jdkPtEsQZMUSJRxf8K8Feg56soU",
-    "width": 597,
-    "height": 597,
-    "format": "png"
-  },
   "infoURL": "https://www.homeverse.games/",
   "name": "HOME Verse Mainnet",
   "nativeCurrency": {

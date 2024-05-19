@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmTREXNgGtUhSoxFsrkhTe5LUnDBTKL5byaX8kpET6UuKp",
-    "width": 2048,
-    "height": 2048,
-    "format": "png"
-  },
   "infoURL": "https://www.zilliqa.com/",
   "name": "Zilliqa EVM",
   "nativeCurrency": {

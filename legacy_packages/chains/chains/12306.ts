@@ -12,12 +12,6 @@ export default {
   "faucets": [
     "https://test.fibochain.org/faucets"
   ],
-  "icon": {
-    "url": "ipfs://bafkreidiedaz3jugxmh2ylzlc4nympbd5iwab33adhwkcnblyop6vvj25y",
-    "width": 1494,
-    "height": 1494,
-    "format": "png"
-  },
   "infoURL": "https://fibochain.org",
   "name": "Fibonacci Mainnet",
   "nativeCurrency": {

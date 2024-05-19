@@ -6,24 +6,12 @@ export default {
     {
       "name": "xdcscan",
       "url": "https://xdcscan.io",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmPzVFs16GwaD8LAcGFLCNXzEK8BHFKNXeM3nmBpnq9xy3",
-        "width": 512,
-        "height": 512,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     },
     {
       "name": "blocksscan",
       "url": "https://xdc.blocksscan.io",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmPzVFs16GwaD8LAcGFLCNXzEK8BHFKNXeM3nmBpnq9xy3",
-        "width": 512,
-        "height": 512,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],

@@ -12,12 +12,6 @@ export default {
   "faucets": [
     "https://sfuel.skale.network/"
   ],
-  "icon": {
-    "url": "ipfs://bafkreiagrt5dhgltg2kmw7hf24kslstr5h42e745luuxwp2wbg24gm6zza",
-    "width": 500,
-    "height": 500,
-    "format": "png"
-  },
   "name": "SKALE Titan Hub",
   "nativeCurrency": {
     "name": "sFUEL",

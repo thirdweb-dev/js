@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmTV45o4jTe6ayscF1XWh1WXk5DPck4QohR5kQocSWjvQP",
-    "width": 300,
-    "height": 300,
-    "format": "png"
-  },
   "infoURL": "https://xlon.org",
   "name": "Excelon Mainnet",
   "nativeCurrency": {
