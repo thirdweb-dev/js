@@ -4,6 +4,12 @@ export default {
   "chainId": 431140,
   "explorers": [],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmVMBTZVPawyLBD2B5VbG68dfWLfZ1CnB8V59xduBe2kwh",
+    "width": 84,
+    "height": 84,
+    "format": "png"
+  },
   "infoURL": "https://www.markr.io/",
   "name": "Markr Go",
   "nativeCurrency": {

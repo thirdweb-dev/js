@@ -12,6 +12,12 @@ export default {
   "faucets": [
     "https://dev-wallet.zilliqa.com/faucet?network=isolated_server"
   ],
+  "icon": {
+    "url": "ipfs://QmTREXNgGtUhSoxFsrkhTe5LUnDBTKL5byaX8kpET6UuKp",
+    "width": 2048,
+    "height": 2048,
+    "format": "png"
+  },
   "infoURL": "https://www.zilliqa.com/",
   "name": "Zilliqa EVM Isolated Server",
   "nativeCurrency": {

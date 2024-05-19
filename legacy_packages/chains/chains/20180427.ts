@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://bafkreid3wd6ouu53r677q2z24a4eq5un5tlwbc4izfapcvvtrlhkmz43au",
+    "width": 133,
+    "height": 144,
+    "format": "png"
+  },
   "infoURL": "https://stabilityprotocol.com",
   "name": "Stability Testnet",
   "nativeCurrency": {

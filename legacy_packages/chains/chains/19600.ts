@@ -6,7 +6,13 @@ export default {
     {
       "name": "LBRY Block Explorer",
       "url": "https://explorer.lbry.com",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmUoSiFWaPTbVY6ZfJswzrM9jKuhfhXWwstRo49cVCWr8x",
+        "width": 400,
+        "height": 400,
+        "format": "jpg"
+      }
     }
   ],
   "faucets": [],
@@ -15,6 +21,12 @@ export default {
       "name": "EIP155"
     }
   ],
+  "icon": {
+    "url": "ipfs://QmUoSiFWaPTbVY6ZfJswzrM9jKuhfhXWwstRo49cVCWr8x",
+    "width": 400,
+    "height": 400,
+    "format": "jpg"
+  },
   "infoURL": "https://lbry.com",
   "name": "LBRY Mainnet",
   "nativeCurrency": {

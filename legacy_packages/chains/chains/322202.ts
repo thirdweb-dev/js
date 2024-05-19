@@ -6,10 +6,22 @@ export default {
     {
       "name": "Parex Mainnet Explorer",
       "url": "https://scan.parex.network",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmSPD3QcjFJL2KpYRnNDxa8Xg5rcSgPugG9kcBBNeavVKi",
+        "width": 128,
+        "height": 128,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmSPD3QcjFJL2KpYRnNDxa8Xg5rcSgPugG9kcBBNeavVKi",
+    "width": 128,
+    "height": 128,
+    "format": "png"
+  },
   "infoURL": "https://parex.network",
   "name": "Parex Mainnet",
   "nativeCurrency": {

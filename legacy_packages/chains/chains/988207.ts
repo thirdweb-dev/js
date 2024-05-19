@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://bafkreibnqdlwgotu4hwx6oeu4ye3huobr3eaiuvv55n5tolyxya2q7edmq",
+    "width": 300,
+    "height": 300,
+    "format": "png"
+  },
   "infoURL": "https://ecroxcoin.io/",
   "name": "Ecrox Chain Mainnet",
   "nativeCurrency": {

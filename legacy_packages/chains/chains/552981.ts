@@ -12,6 +12,12 @@ export default {
   "faucets": [
     "https://faucet.oneworldchain.org"
   ],
+  "icon": {
+    "url": "ipfs://QmPmZ6vgtdMG7jttVZQUobF96Sva1noi5Fsi28V1Eck6eC",
+    "width": 200,
+    "height": 200,
+    "format": "png"
+  },
   "infoURL": "https://oneworldchain.org",
   "name": "One World Chain Testnet",
   "nativeCurrency": {
