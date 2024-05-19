@@ -10,7 +10,7 @@ import {
 } from "viem";
 import type { Chain } from "../../chains/types.js";
 import {
-  defineChain,
+  getCachedChain,
   getChainMetadata,
   getRpcUrlForChain,
 } from "../../chains/utils.js";
@@ -124,7 +124,7 @@ export async function connectWC(
   const chain =
     options.chain && options.chain.id === providerChainId
       ? options.chain
-      : defineChain(providerChainId);
+      : getCachedChain(providerChainId);
 
   if (options) {
     const savedParams: SavedConnectParams = {
@@ -187,7 +187,7 @@ export async function autoConnectWC(
   const chain =
     options.chain && options.chain.id === providerChainId
       ? options.chain
-      : defineChain(providerChainId);
+      : getCachedChain(providerChainId);
 
   return onConnect(address, chain, provider, emitter);
 }
@@ -370,7 +370,7 @@ function onConnect(
   }
 
   function onChainChanged(newChainId: string) {
-    const newChain = defineChain(normalizeChainId(newChainId));
+    const newChain = getCachedChain(normalizeChainId(newChainId));
     emitter.emit("chainChanged", newChain);
     asyncLocalStorage?.setItem(storageKeys.lastUsedChainId, String(newChainId));
   }

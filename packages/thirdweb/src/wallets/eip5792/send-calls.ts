@@ -61,8 +61,7 @@ export type SendCallsResult = WalletSendCallsId;
  * @param {SendCallsOptions} options
  * @param {Wallet} options.wallet - The wallet to send the calls to.
  * @param {PreparedSendCall[]} options.calls - An array of prepared transactions to send.
- * @param {ThirdwebClient} options.client - A {@link ThirdwebClient} instance for RPC access.
- * @param {WalletSendCallsParameters[number]["capabilities"]} options.capabilities - Capabilities objects to use, see the [EIP-5792 spec](https://eips.ethereum.org/EIPS/eip-5792) for details.
+ * @param {WalletSendCallsParameters[number]["capabilities"]} [options.capabilities] - Capabilities objects to use, see the [EIP-5792 spec](https://eips.ethereum.org/EIPS/eip-5792) for details.
  * @param {string} [options.version="1.0"] - The `wallet_sendCalls` version to use, defaults to "1.0".
  * @param {Chain} [options.chain] - A {@link Chain} instance to override the wallet's current chain.
  * @throws an error if the wallet does not support EIP-5792.
@@ -79,15 +78,33 @@ export type SendCallsResult = WalletSendCallsId;
  * const client = createThirdwebClient({ clientId: ... });
  * const wallet = createWallet("com.coinbase.wallet");
  *
- * const preparedTx = approve({
+ * const sendTx1 = approve({
       contract: USDT_CONTRACT,
       amount: 100,
-      spender: TEST_ACCOUNT_B.address,
+      spender: "0x33d9B8BEfE81027E2C859EDc84F5636cbb202Ed6",
+    });
+ * const sendTx2 = approve({
+      contract: USDT_CONTRACT,
+      amount: 100,
+      spender: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
     });
  * const bundleId = await sendCalls({
  *   wallet,
  *   client,
- *   calls: [preparedTx],
+ *   calls: [sendTx1, sendTx2],
+ * });
+ * ```
+ * Sponsor transactions with a paymaster:
+ * ```ts
+ * const bundleId = await sendCalls({
+ *   wallet,
+ *   client,
+ *   calls: [send1, send2],
+ *   capabilities: {
+ *     paymasterService: {
+ *       url: `https://${CHAIN.id}.bundler.thirdweb.com/${client.clientId}`
+ *     }
+ *   }
  * });
  * ```
  * @wallets

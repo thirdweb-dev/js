@@ -6,7 +6,7 @@ import type {
   TypedDataDefinition,
 } from "viem";
 import { publicKeyToAddress } from "viem/utils";
-import { defineChain } from "../chains/utils.js";
+import { getCachedChain } from "../chains/utils.js";
 import type { ThirdwebClient } from "../client/client.js";
 import { eth_sendRawTransaction } from "../rpc/actions/eth_sendRawTransaction.js";
 import { getRpcClient } from "../rpc/rpc.js";
@@ -80,7 +80,7 @@ export function privateKeyToAccount(
     ) => {
       const rpcRequest = getRpcClient({
         client: client,
-        chain: defineChain(tx.chainId),
+        chain: getCachedChain(tx.chainId),
       });
       const signedTx = signTransaction({
         transaction: tx,

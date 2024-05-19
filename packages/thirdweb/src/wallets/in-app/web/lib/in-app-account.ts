@@ -1,6 +1,6 @@
 import type * as ethers5 from "ethers5";
 import type { TypedDataDefinition } from "viem";
-import { defineChain } from "../../../../chains/utils.js";
+import { getCachedChain } from "../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { eth_sendRawTransaction } from "../../../../rpc/actions/eth_sendRawTransaction.js";
 import { getRpcClient } from "../../../../rpc/rpc.js";
@@ -225,7 +225,7 @@ export class IFrameWallet {
       async sendTransaction(tx) {
         const rpcRequest = getRpcClient({
           client,
-          chain: defineChain(tx.chainId),
+          chain: getCachedChain(tx.chainId),
         });
         const signedTx = await _signTransaction(tx);
         const transactionHash = await eth_sendRawTransaction(

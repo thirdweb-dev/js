@@ -5,6 +5,7 @@ import {
   type AuthArgsType,
   type AuthLoginReturnType,
   type GetUser,
+  type LogoutReturnType,
   type OauthOption,
   type PreAuthArgsType,
   type SendEmailOtpReturnType,
@@ -20,6 +21,7 @@ import {
   validateEmailOTP,
 } from "./auth.js";
 import { fetchUserDetails } from "./helpers/api/fetchers.js";
+import { logoutUser } from "./helpers/auth/logout.js";
 import { getWalletUserDetails } from "./helpers/storage/local.js";
 import { getExistingUserAccount } from "./helpers/wallet/retrieval.js";
 
@@ -32,8 +34,6 @@ export class InAppNativeConnector implements InAppConnector {
 
   constructor(options: NativeConnectorOptions) {
     this.options = options;
-    // this.email = getConnectedEmail();
-    // this.connectedAuthStrategy = getConnectedAuthStrategy();
   }
 
   async getUser(): Promise<GetUser> {
@@ -254,6 +254,10 @@ export class InAppNativeConnector implements InAppConnector {
       console.error(`Error while verifying auth_endpoint auth: ${error}`);
       throw error;
     }
+  }
+
+  logout(): Promise<LogoutReturnType> {
+    return logoutUser(this.options.client.clientId);
   }
 }
 

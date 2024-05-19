@@ -1,5 +1,5 @@
 import { ExternalLinkIcon } from "@radix-ui/react-icons";
-import { defineChain } from "../../../../../../../chains/utils.js";
+import { getCachedChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
 import type { ValidBuyWithCryptoStatus } from "../../../../../../../pay/buyWithCrypto/getStatus.js";
@@ -166,8 +166,8 @@ export function SwapTxDetailsTable(
   const fromChainId = fromToken.chainId;
   const toChainId = toToken.chainId;
 
-  const fromChainQuery = useChainQuery(defineChain(fromChainId));
-  const toChainQuery = useChainQuery(defineChain(toChainId));
+  const fromChainQuery = useChainQuery(getCachedChain(fromChainId));
+  const toChainQuery = useChainQuery(getCachedChain(toChainId));
 
   const lineSpacer = (
     <>

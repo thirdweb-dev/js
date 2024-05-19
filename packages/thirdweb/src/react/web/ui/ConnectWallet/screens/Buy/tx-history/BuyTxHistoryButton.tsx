@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { defineChain } from "../../../../../../../chains/utils.js";
+import { getCachedChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { ChainName } from "../../../../components/ChainName.js";
@@ -47,7 +47,7 @@ export function BuyTxHistoryButton(props: {
       >
         <TokenIcon
           client={props.client}
-          chain={defineChain(props.txInfo.status.quote.toToken.chainId)}
+          chain={getCachedChain(props.txInfo.status.quote.toToken.chainId)}
           size="md"
           token={{
             address: props.txInfo.status.quote.toToken.tokenAddress,
@@ -97,7 +97,7 @@ export function BuyTxHistoryButton(props: {
             }}
           >
             <ChainName
-              chain={defineChain(props.txInfo.status.quote.toToken.chainId)}
+              chain={getCachedChain(props.txInfo.status.quote.toToken.chainId)}
               size="xs"
               client={props.client}
             />

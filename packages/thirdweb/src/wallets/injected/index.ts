@@ -5,7 +5,7 @@ import {
   validateTypedData,
 } from "viem";
 import type { Chain } from "../../chains/types.js";
-import { defineChain, getChainMetadata } from "../../chains/utils.js";
+import { getCachedChain, getChainMetadata } from "../../chains/utils.js";
 import { getAddress } from "../../utils/address.js";
 import {
   type Hex,
@@ -79,7 +79,7 @@ export async function connectInjectedWallet(
   let connectedChain =
     options.chain && options.chain.id === chainId
       ? options.chain
-      : defineChain(chainId);
+      : getCachedChain(chainId);
 
   // if we want a specific chainId and it is not the same as the provider chainId, trigger switchChain
   if (options.chain && options.chain.id !== chainId) {
@@ -119,7 +119,7 @@ export async function autoConnectInjectedWallet(
     .then(normalizeChainId);
 
   const connectedChain =
-    chain && chain.id === chainId ? chain : defineChain(chainId);
+    chain && chain.id === chainId ? chain : getCachedChain(chainId);
 
   return onConnect(provider, address, connectedChain, emitter);
 }
@@ -229,7 +229,7 @@ async function onConnect(
   }
 
   function onChainChanged(newChainId: string) {
-    const newChain = defineChain(normalizeChainId(newChainId));
+    const newChain = getCachedChain(normalizeChainId(newChainId));
     emitter.emit("chainChanged", newChain);
   }
 

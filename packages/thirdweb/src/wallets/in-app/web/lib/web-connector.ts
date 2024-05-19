@@ -6,6 +6,7 @@ import {
   type AuthArgsType,
   type AuthLoginReturnType,
   type GetUser,
+  type LogoutReturnType,
   type PreAuthArgsType,
   type SendEmailOtpReturnType,
   UserWalletStatus,
@@ -203,6 +204,10 @@ export class InAppWebConnector implements InAppConnector {
       default:
         assertUnreachable(strategy);
     }
+  }
+
+  async logout(): Promise<LogoutReturnType> {
+    await this.auth.logout();
   }
 }
 
