@@ -80,7 +80,10 @@ function prepareParams<const TParams extends readonly AbiParameter[]>({
   return preparedParams;
 }
 
-function prepareParam<const TParam extends AbiParameter>({
+/**
+ * @internal Export for unit test
+ */
+export function prepareParam<const TParam extends AbiParameter>({
   param,
   value,
 }: {
