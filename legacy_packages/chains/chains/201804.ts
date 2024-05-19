@@ -6,7 +6,13 @@ export default {
     {
       "name": "Mythical Chain Explorer",
       "url": "https://explorer.mythicalgames.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://bafkreihru6cccfblrjz5bv36znq2l3h67u6xj5ivtc4bj5l6gzofbgtnb4",
+        "width": 350,
+        "height": 350,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
@@ -18,6 +24,12 @@ export default {
       "name": "EIP1559"
     }
   ],
+  "icon": {
+    "url": "ipfs://bafkreihru6cccfblrjz5bv36znq2l3h67u6xj5ivtc4bj5l6gzofbgtnb4",
+    "width": 350,
+    "height": 350,
+    "format": "png"
+  },
   "infoURL": "https://mythicalgames.com/",
   "name": "Mythical Chain",
   "nativeCurrency": {

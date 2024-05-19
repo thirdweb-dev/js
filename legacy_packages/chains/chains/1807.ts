@@ -12,6 +12,12 @@ export default {
   "faucets": [
     "https://analogfaucet.com"
   ],
+  "icon": {
+    "url": "ipfs://QmdfbjjF3ZzN2jTkH9REgrA8jDS6A6c21n7rbWSVbSnvQc",
+    "width": 310,
+    "height": 251,
+    "format": "svg"
+  },
   "infoURL": "https://rabbit.analogscan.com",
   "name": "Rabbit Analog Testnet Chain",
   "nativeCurrency": {

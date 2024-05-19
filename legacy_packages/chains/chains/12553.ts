@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmZFWYnufi6G2Z54oJ25sx2yf2Skx5tseJHJJa6Hc1G34t",
+    "width": 200,
+    "height": 200,
+    "format": "svg"
+  },
   "infoURL": "https://rss3.io",
   "name": "RSS3 VSL Mainnet",
   "nativeCurrency": {

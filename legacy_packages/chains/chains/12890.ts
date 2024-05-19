@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://bafkreibwywok67uewqbtqdzgr7nlk3lvvg7hxmbgwtn7kdwxe34useucvm",
+    "width": 1024,
+    "height": 1024,
+    "format": "png"
+  },
   "infoURL": "https://quantumnetwork.gg",
   "name": "Quantum Chain Testnet",
   "nativeCurrency": {

@@ -4,6 +4,12 @@ export default {
   "chainId": 8888888,
   "explorers": [],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmTw8TyeeNhUFWrck2WCiN17MaHRt5qzRBtaAvmz6L7qq7",
+    "width": 669,
+    "height": 587,
+    "format": "png"
+  },
   "name": "Quarix",
   "nativeCurrency": {
     "name": "QARE",
