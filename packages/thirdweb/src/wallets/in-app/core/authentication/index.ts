@@ -11,6 +11,10 @@ import {
 import type { InAppWalletSdk } from "../../implementations/lib/in-app-wallet.js";
 import type { AuthArgsType, PreAuthArgsType } from "./type.js";
 
+export type GetAuthenticatedUserParams = {
+  client: ThirdwebClient;
+};
+
 const ewsSDKCache = new WeakMap<ThirdwebClient, InAppWalletSdk>();
 
 /**
@@ -31,9 +35,15 @@ async function getInAppWalletSDK(client: ThirdwebClient) {
   return ewSDK;
 }
 
-export type GetAuthenticatedUserParams = {
-  client: ThirdwebClient;
-};
+/**
+ * @internal
+ */
+export async function logoutAuthenticatedUser(
+  options: GetAuthenticatedUserParams,
+) {
+  const ewSDK = await getInAppWalletSDK(options.client);
+  return ewSDK.auth.logout();
+}
 
 /**
  * Retrieves the authenticated user for the active in-app wallet.

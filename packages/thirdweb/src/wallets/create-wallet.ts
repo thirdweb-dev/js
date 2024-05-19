@@ -17,6 +17,7 @@ import type { ThirdwebClient } from "../client/client.js";
 import { getContract } from "../contract/contract.js";
 import { isContractDeployed } from "../utils/bytecode/is-contract-deployed.js";
 import { COINBASE } from "./constants.js";
+import { logoutAuthenticatedUser } from "./in-app/core/authentication/index.js";
 import { DEFAULT_ACCOUNT_FACTORY } from "./smart/lib/constants.js";
 import type { WCConnectOptions } from "./wallet-connect/types.js";
 import { createWalletEmitter } from "./wallet-emitter.js";
@@ -495,7 +496,13 @@ export function inAppWallet(
       return account;
     },
     disconnect: async () => {
-      // simply un-set the states
+      // If no client is assigned, we should be fine just unsetting the states
+      if (client) {
+        const result = await logoutAuthenticatedUser({ client });
+        if (!result.success) {
+          throw new Error("Failed to logout");
+        }
+      }
       account = undefined;
       chain = undefined;
       emitter.emit("disconnect", undefined);
