@@ -154,7 +154,10 @@ function encodeParams(preparedParams: PreparedParam[]): Hex {
 
 /////////////////////////////////////////////////////////////////
 
-function encodeAddress(value: Hex): PreparedParam {
+/**
+ * @internal Export for unit test
+ */
+export function encodeAddress(value: Hex): PreparedParam {
   if (!isAddress(value)) {
     throw new Error("Invalid address.");
   }
