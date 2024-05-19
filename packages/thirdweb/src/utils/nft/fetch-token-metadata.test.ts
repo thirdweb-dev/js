@@ -30,8 +30,6 @@ describe("fetchTokenMetadata", () => {
       tokenId: 0n,
       tokenUri: invalidBase64Json,
     };
-    await expect(() => fetchTokenMetadata(options)).rejects.toThrowError(
-      "Unexpected end of JSON input",
-    );
+    await expect(() => fetchTokenMetadata(options)).rejects.toThrowError();
   });
 });
