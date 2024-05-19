@@ -6,12 +6,14 @@ import {
 } from "./fetchTokenMetadata.js";
 
 const validJson = { foo: "bar" };
-const validBase64Json = `data:application/json;base64,${btoa(JSON.stringify(validJson))}`;
+const validBase64Json = `data:application/json;base64,${btoa(
+  JSON.stringify(validJson),
+)}`;
 
 // { "foo": "bar"
-const invalidBase64Json = `data:application/json;base64,eyJmb28iOiAiYmFyIg==`;
+const invalidBase64Json = "data:application/json;base64,eyJmb28iOiAiYmFyIg==";
 
-describe("parseNft", () => {
+describe("fetchTokenMetadata", () => {
   it("should return a json object from a valid base64 encoded json", async () => {
     const options: FetchTokenMetadataOptions = {
       client: TEST_CLIENT,
