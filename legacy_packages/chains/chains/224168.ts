@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://bafkreigpxhu7glccsislhjqpl5fnsfmj2io4cy33blhky642uiuyojossy",
-    "width": 400,
-    "height": 400,
-    "format": "png"
-  },
   "infoURL": "https://www.tafchain.com",
   "name": "Taf ECO Chain Mainnet",
   "nativeCurrency": {

@@ -6,24 +6,12 @@ export default {
     {
       "name": "IMPERIUM Explorer",
       "url": "https://impscan.com",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://QmcNGLzKyc7Gu2dgpBFF6t3KJwFuKC79D56DW8GTc5DWRw",
-        "width": 200,
-        "height": 200,
-        "format": "png"
-      }
+      "standard": "none"
     }
   ],
   "faucets": [
     "https://faucet.imperiumchain.com/"
   ],
-  "icon": {
-    "url": "ipfs://QmcNGLzKyc7Gu2dgpBFF6t3KJwFuKC79D56DW8GTc5DWRw",
-    "width": 200,
-    "height": 200,
-    "format": "png"
-  },
   "infoURL": "https://imperiumchain.com",
   "name": "IMPERIUM MAINNET",
   "nativeCurrency": {

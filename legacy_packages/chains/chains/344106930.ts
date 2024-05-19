@@ -12,12 +12,6 @@ export default {
   "faucets": [
     "https://sfuel.dirtroad.dev/staging"
   ],
-  "icon": {
-    "url": "ipfs://bafybeigyayzxvt7vosat4rtrbmhhnldgx57w2pfbutuniax7h6kswzi42m",
-    "width": 1637,
-    "height": 1636,
-    "format": "png"
-  },
   "infoURL": "https://calypsohub.network/",
   "name": "Deprecated SKALE Calypso Hub Testnet",
   "nativeCurrency": {

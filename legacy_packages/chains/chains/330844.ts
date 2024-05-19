@@ -6,24 +6,12 @@ export default {
     {
       "name": "TTcoin Smart Chain Explorer",
       "url": "https://tscscan.com",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmS7ipvvyZ16weG1DM7AZbi1v9ixYwU2FjP25Jj5jkLiuf",
-        "width": 512,
-        "height": 512,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [
     "https://faucet.tscscan.com"
   ],
-  "icon": {
-    "url": "ipfs://QmS7ipvvyZ16weG1DM7AZbi1v9ixYwU2FjP25Jj5jkLiuf",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
   "infoURL": "https://ttcoin.info/",
   "name": "TTcoin Smart Chain Mainnet",
   "nativeCurrency": {

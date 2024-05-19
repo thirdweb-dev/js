@@ -4,12 +4,6 @@ export default {
   "chainId": 8888881,
   "explorers": [],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmTw8TyeeNhUFWrck2WCiN17MaHRt5qzRBtaAvmz6L7qq7",
-    "width": 669,
-    "height": 587,
-    "format": "png"
-  },
   "name": "Quarix Testnet",
   "nativeCurrency": {
     "name": "QARE",

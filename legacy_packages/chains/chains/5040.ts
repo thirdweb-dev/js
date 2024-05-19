@@ -1,11 +1,11 @@
 import type { Chain } from "../src/types";
 export default {
   "chain": "ONIGIRI",
-  "chainId": 5039,
+  "chainId": 5040,
   "explorers": [
     {
       "name": "ONIGIRI Explorer",
-      "url": "https://subnets-test.avax.network/onigiri",
+      "url": "https://subnets.avax.network/onigiri",
       "standard": "EIP3091"
     }
   ],
@@ -25,18 +25,18 @@ export default {
     "format": "png"
   },
   "infoURL": "https://www.ongr.org/",
-  "name": "ONIGIRI Test Subnet",
+  "name": "ONIGIRI Subnet",
   "nativeCurrency": {
     "name": "ONIGIRI",
     "symbol": "ONGR",
     "decimals": 18
   },
-  "networkId": 5039,
+  "networkId": 5040,
   "rpc": [
-    "https://5039.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://subnets.avax.network/onigiri/testnet/rpc"
+    "https://5040.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://subnets.avax.network/onigiri/mainnet/rpc"
   ],
-  "shortName": "onigiritest",
-  "slug": "onigiri-test-subnet",
-  "testnet": true
+  "shortName": "onigiri",
+  "slug": "onigiri-subnet",
+  "testnet": false
 } as const satisfies Chain;
