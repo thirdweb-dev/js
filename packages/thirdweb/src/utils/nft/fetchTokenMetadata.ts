@@ -3,7 +3,10 @@ import { isBase64JSON, parseBase64String } from "../base64/base64.js";
 import { numberToHex } from "../encoding/hex.js";
 import type { NFTMetadata } from "./parseNft.js";
 
-type FetchTokenMetadataOptions = {
+/**
+ * @internal
+ */
+export type FetchTokenMetadataOptions = {
   client: ThirdwebClient;
   tokenId: bigint;
   tokenUri: string;
