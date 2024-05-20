@@ -199,11 +199,7 @@ function ConnectButtonInner(
         }}
         data-test="connect-wallet-button"
       >
-        {isLoading ? (
-          <Spinner size="sm" color="primaryButtonText" />
-        ) : (
-          connectButtonLabel
-        )}
+        {isLoading ? <Spinner size="sm" color="primaryButtonText" /> : "HELLO"}
       </AnimatedButton>
     );
   }
