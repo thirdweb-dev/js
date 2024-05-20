@@ -162,7 +162,7 @@ export type UseConnectModalOptions = {
    * function Example() {
    *  const { connect } = useConnectModal();
    *  return <button> onClick={async () => {
-   *  const wallet = await connect({ setActive: false });
+   *  const wallet = await connect({ setActive: false, client });
    * }}>
    *  Connect
    * </button>
@@ -213,7 +213,7 @@ export type UseConnectModalOptions = {
    *
    * function Example() {
    *  const { connect } = useConnectModal();
-   *  return <button> onClick={() => connect({ wallets })}> Connect </button>
+   *  return <button> onClick={() => connect({ wallets, client })}> Connect </button>
    * }
    * ```
    *
@@ -327,6 +327,7 @@ export type UseConnectModalOptions = {
    *
    * async function handleConnect() {
    *  await connect({
+   *    client,
    *    accountAbstraction: {
    *      factoryAddress: "0x123...",
    *      chain: sepolia,
