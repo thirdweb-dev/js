@@ -6,10 +6,22 @@ export default {
     {
       "name": "test-ektascan",
       "url": "https://test.ektascan.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmfMd564KUPK8eKZDwGCT71ZC2jMnUZqP6LCtLpup3rHH1",
+        "width": 2100,
+        "height": 2100,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmfMd564KUPK8eKZDwGCT71ZC2jMnUZqP6LCtLpup3rHH1",
+    "width": 2100,
+    "height": 2100,
+    "format": "png"
+  },
   "infoURL": "https://www.ekta.io",
   "name": "T-EKTA",
   "nativeCurrency": {
