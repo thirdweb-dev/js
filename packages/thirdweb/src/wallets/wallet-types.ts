@@ -33,6 +33,17 @@ export type WalletId =
   | WCSupportedWalletIds
   | InjectedSupportedWalletIds;
 
+export type MetamaskCreationOptions =
+  | {
+      /**
+       * Redirect the user to Metamask and open the currency page in MetaMask in-app browser instead of using WalletConnect on mobile devices when using Connect UI (ConnectButton / ConnectEmbed components)
+       *
+       * By default, this is set to `false` and WalletConnect will be used on mobile devices when using Connect UI.
+       */
+      preferDeepLink?: boolean;
+    }
+  | undefined;
+
 export type StandaloneWCConnectOptions = WCConnectOptions["walletConnect"] & {
   client: ThirdwebClient;
   /**
@@ -120,7 +131,9 @@ export type WalletCreationOptions<T extends WalletId> = T extends "smart"
       ? CoinbaseWalletCreationOptions
       : T extends "adapter"
         ? AdapterWalletOptions
-        : undefined;
+        : T extends "io.metamask"
+          ? MetamaskCreationOptions
+          : undefined;
 
 /**
  * Generic type for getting the tuple type of arguments that the `createWallet` function takes.
