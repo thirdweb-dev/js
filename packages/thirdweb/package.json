@@ -110,54 +110,22 @@
   },
   "typesVersions": {
     "*": {
-      "adapters/*": [
-        "./dist/types/exports/adapters/*.d.ts"
-      ],
-      "auth": [
-        "./dist/types/exports/auth.d.ts"
-      ],
-      "chains": [
-        "./dist/types/exports/chains.d.ts"
-      ],
-      "contract": [
-        "./dist/types/exports/contract.d.ts"
-      ],
-      "deploys": [
-        "./dist/types/exports/deploys.d.ts"
-      ],
-      "event": [
-        "./dist/types/exports/event.d.ts"
-      ],
-      "extensions/*": [
-        "./dist/types/exports/extensions/*.d.ts"
-      ],
-      "pay": [
-        "./dist/types/exports/pay.d.ts"
-      ],
-      "react": [
-        "./dist/types/exports/react.d.ts"
-      ],
-      "react-native": [
-        "./dist/types/exports/react-native.d.ts"
-      ],
-      "rpc": [
-        "./dist/types/exports/rpc.d.ts"
-      ],
-      "storage": [
-        "./dist/types/exports/storage.d.ts"
-      ],
-      "transaction": [
-        "./dist/types/exports/transaction.d.ts"
-      ],
-      "utils": [
-        "./dist/types/exports/utils.d.ts"
-      ],
-      "wallets": [
-        "./dist/types/exports/wallets.d.ts"
-      ],
-      "wallets/*": [
-        "./dist/types/exports/wallets/*.d.ts"
-      ]
+      "adapters/*": ["./dist/types/exports/adapters/*.d.ts"],
+      "auth": ["./dist/types/exports/auth.d.ts"],
+      "chains": ["./dist/types/exports/chains.d.ts"],
+      "contract": ["./dist/types/exports/contract.d.ts"],
+      "deploys": ["./dist/types/exports/deploys.d.ts"],
+      "event": ["./dist/types/exports/event.d.ts"],
+      "extensions/*": ["./dist/types/exports/extensions/*.d.ts"],
+      "pay": ["./dist/types/exports/pay.d.ts"],
+      "react": ["./dist/types/exports/react.d.ts"],
+      "react-native": ["./dist/types/exports/react-native.d.ts"],
+      "rpc": ["./dist/types/exports/rpc.d.ts"],
+      "storage": ["./dist/types/exports/storage.d.ts"],
+      "transaction": ["./dist/types/exports/transaction.d.ts"],
+      "utils": ["./dist/types/exports/utils.d.ts"],
+      "wallets": ["./dist/types/exports/wallets.d.ts"],
+      "wallets/*": ["./dist/types/exports/wallets/*.d.ts"]
     }
   },
   "browser": {
@@ -198,17 +166,17 @@
     "viem": "2.10.9"
   },
   "peerDependencies": {
-    "@aws-sdk/client-lambda": "^3.579.0",
-    "@aws-sdk/credential-providers": "^3.579.0",
-    "amazon-cognito-identity-js": "^6.3.12",
-    "aws-amplify": "^5.3.18",
+    "@aws-sdk/client-lambda": "^3",
+    "@aws-sdk/credential-providers": "^3",
+    "@react-native-async-storage/async-storage": "^1",
+    "amazon-cognito-identity-js": "^6",
+    "aws-amplify": "^5",
     "ethers": "^5 || ^6",
     "react": ">=18",
-    "react-native-aes-gcm-crypto": "^0.2.2",
-    "react-native-inappbrowser-reborn": "^3.7.0",
-    "react-native-mmkv": ">=2.11.0",
-    "react-native-quick-base64": "^2.1.0",
-    "react-native-quick-crypto": "^0.6.1",
+    "react-native-aes-gcm-crypto": "^0.2",
+    "react-native-inappbrowser-reborn": "^3",
+    "react-native-mmkv": "^2",
+    "react-native-quick-crypto": ">=0.6.1",
     "shamir-secret-sharing": "^0.0.3",
     "typescript": ">=5.0.4"
   },
@@ -231,9 +199,6 @@
     "react-native-mmkv": {
       "optional": true
     },
-    "react-native-quick-base64": {
-      "optional": true
-    },
     "react-native-quick-crypto": {
       "optional": true
     },
@@ -250,6 +215,9 @@
       "optional": true
     },
     "amazon-cognito-identity-js": {
+      "optional": true
+    },
+    "@react-native-async-storage/async-storage": {
       "optional": true
     }
   },
@@ -280,14 +248,24 @@
     "node": ">=18"
   },
   "devDependencies": {
+    "@aws-sdk/client-lambda": "3.577.0",
+    "@aws-sdk/credential-providers": "3.577.0",
+    "@react-native-async-storage/async-storage": "^1.23.1",
     "@testing-library/jest-dom": "^6.4.5",
     "@testing-library/react": "^15.0.6",
     "@types/cross-spawn": "^6.0.6",
     "@types/react": "18.2.17",
     "@vitejs/plugin-react": "^4.2.1",
     "@vitest/ui": "1.5.0",
+    "amazon-cognito-identity-js": "6.3.12",
+    "aws-amplify": "5.3.18",
     "cross-spawn": "7.0.3",
     "happy-dom": "^14.10.1",
+    "react-native-aes-gcm-crypto": "0.2.2",
+    "react-native-inappbrowser-reborn": "3.7.0",
+    "react-native-mmkv": "2.12.2",
+    "react-native-quick-crypto": "0.7.0-rc.6",
+    "shamir-secret-sharing": "0.0.3",
     "vitest": "1.5.0"
   }
 }

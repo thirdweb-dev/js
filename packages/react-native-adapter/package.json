@@ -23,35 +23,29 @@
     },
     "./package.json": "./package.json"
   },
-  "files": [
-    "dist/*",
-    "src/*"
-  ],
+  "files": ["dist/*", "src/*"],
   "dependencies": {
-    "@aws-sdk/client-lambda": "3.579.0",
-    "@aws-sdk/credential-providers": "3.579.0",
+    "@aws-sdk/client-lambda": "3.577.0",
+    "@aws-sdk/credential-providers": "3.577.0",
     "@walletconnect/react-native-compat": "2.13.0",
     "amazon-cognito-identity-js": "6.3.12",
     "aws-amplify": "5.3.18",
-    "react-native-aes-gcm-crypto": "0.2.2",
-    "react-native-inappbrowser-reborn": "3.7.0",
-    "react-native-mmkv": ">=2.11.0",
-    "react-native-quick-base64": "2.1.2",
-    "react-native-quick-crypto": "7.0.0-rc.6",
     "shamir-secret-sharing": "0.0.3"
   },
   "peerDependencies": {
     "typescript": ">=5.0.4",
-    "@react-native-async-storage/async-storage": "*",
-    "@react-native-community/netinfo": "*",
-    "expo-application": "*",
-    "react-native-get-random-values": "*"
+    "@react-native-async-storage/async-storage": "^1",
+    "@react-native-community/netinfo": "^11",
+    "expo-application": "^5",
+    "react-native-aes-gcm-crypto": "^0.2",
+    "react-native-inappbrowser-reborn": "^3",
+    "react-native-mmkv": "^2",
+    "react-native-quick-crypto": ">=0.6.1",
+    "shamir-secret-sharing": "^0.0.3",
+    "react-native-get-random-values": "^1"
   },
   "peerDependenciesMeta": {
     "typescript": {
-      "optional": true
-    },
-    "expo-application": {
       "optional": true
     }
   },

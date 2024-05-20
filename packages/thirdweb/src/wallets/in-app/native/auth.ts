@@ -10,11 +10,11 @@ import {
   RecoveryShareManagement,
   type SendEmailOtpReturnType,
 } from "../core/authentication/type.js";
-import { ANALYTICS } from "./helpers/analytics.js";
 import {
   deleteAccount,
   fetchUserDetails,
   generateAuthTokenFromCognitoEmailOtp,
+  getSessionHeaders,
   verifyClientId,
 } from "./helpers/api/fetchers.js";
 import {
@@ -31,16 +31,11 @@ import {
   ROUTE_AUTH_ENDPOINT_CALLBACK,
   ROUTE_AUTH_JWT_CALLBACK,
   ROUTE_HEADLESS_OAUTH_LOGIN,
-  THIRDWEB_SESSION_NONCE_HEADER,
 } from "./helpers/constants.js";
 import { createErrorMessage } from "./helpers/errors.js";
 import { isDeviceSharePresentForUser } from "./helpers/storage/local.js";
 import { getCognitoUser, setCognitoUser } from "./helpers/storage/state.js";
 import type { VerifiedTokenResponse } from "./helpers/types.js";
-
-const HEADERS = {
-  [THIRDWEB_SESSION_NONCE_HEADER]: ANALYTICS.nonce,
-};
 
 export async function sendVerificationEmail(options: {
   email: string;
@@ -171,7 +166,7 @@ export async function socialLogin(
 
   const resp = await fetch(headlessLoginLinkWithParams, {
     headers: {
-      ...HEADERS,
+      ...getSessionHeaders(),
     },
   });
 
@@ -257,8 +252,7 @@ export async function customJwt(
   const resp = await fetch(ROUTE_AUTH_JWT_CALLBACK, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
-      ...HEADERS,
+      ...getSessionHeaders(),
     },
     body: JSON.stringify({
       jwt: jwt,
@@ -305,8 +299,7 @@ export async function authEndpoint(
   const resp = await fetch(ROUTE_AUTH_ENDPOINT_CALLBACK, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
-      ...HEADERS,
+      ...getSessionHeaders(),
     },
     body: JSON.stringify({
       payload: payload,

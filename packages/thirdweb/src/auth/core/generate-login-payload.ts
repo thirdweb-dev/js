@@ -47,4 +47,3 @@ export function generateLoginPayload(options: AuthOptions) {
     };
   };
 }
-q;

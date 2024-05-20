@@ -5,7 +5,7 @@ import {
   hexToUint8Array,
   uint8ArrayToHex,
 } from "../../../../../utils/encoding/hex.js";
-import { randomBytes } from "../../../../../utils/random.js";
+import { randomBytesBuffer } from "../../../../../utils/random.js";
 import {
   base64ToUint8Array,
   uint8ArrayToBase64,
@@ -21,19 +21,19 @@ export async function getEncryptionKey(
   salt: Uint8Array,
   iterationCounts: number,
 ): Promise<string> {
-  const key = QuickCrypto.pbkdf2Sync(
+  const key: ArrayBuffer = QuickCrypto.pbkdf2Sync(
     pwd,
     salt.buffer as ArrayBuffer,
     iterationCounts,
     KEY_LENGTH,
-    "sha256",
+    "SHA-256",
   );
 
   // this produces a 256 bits length key
   // but node by default produces a 32 byte length key
   const key32 = key.slice(0, 32);
 
-  const base64key = key32.toString("base64");
+  const base64key = uint8ArrayToBase64(new Uint8Array(key32));
 
   return base64key;
 }
@@ -42,7 +42,7 @@ export async function encryptShareWeb(
   share: string,
   pwd: string,
 ): Promise<string> {
-  const salt = randomBytes(16);
+  const salt = randomBytesBuffer(16);
   const iterationCount = CURRENT_KEY_ITERATION_COUNT;
 
   const keyBase64 = await getEncryptionKey(pwd, salt, iterationCount);
@@ -132,7 +132,7 @@ export async function decryptShareWeb(
   const normalizedShare = await AesGcmCrypto.decrypt(
     originalBase64CipherText,
     key,
-    ivBufferHex.slice(2), // lib expects hex with no 0x
+    ivBufferHex.slice(2), // lib expects hex with no
     hexStringTag.slice(2),
     false,
   );

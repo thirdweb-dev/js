@@ -207,7 +207,7 @@ export class InAppWebConnector implements InAppConnector {
   }
 
   async logout(): Promise<LogoutReturnType> {
-    await this.auth.logout();
+    return await this.auth.logout();
   }
 }
 
