@@ -253,7 +253,7 @@ export function AutoConnect(props: AutoConnectProps) {
     })();
   });
 
-  return <div> </div>;
+  return <></>;
 }
 
 let noAutoConnectDone = false;
