@@ -37,7 +37,7 @@ export type WalletId =
 export type DeepLinkSupportedWalletCreationOptions =
   | {
       /**
-       * Redirect the user to Metamask and open the currency page in MetaMask in-app browser instead of using WalletConnect on mobile devices when using Connect UI (ConnectButton / ConnectEmbed components)
+       * Redirect the user to wallet app and open the current page in the wallet's in-app browser instead of using WalletConnect on mobile devices when using Connect UI (ConnectButton / ConnectEmbed components)
        *
        * By default, this is set to `false` and WalletConnect will be used on mobile devices when using Connect UI.
        */

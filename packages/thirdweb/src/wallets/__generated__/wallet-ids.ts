@@ -401,5 +401,4 @@ export type InjectedSupportedWalletIds =
   | "com.lootrush"
   | "app.core.extension";
 
-// 1 wallets
 export type DeepLinkSupportedWalletIds = "io.metamask";

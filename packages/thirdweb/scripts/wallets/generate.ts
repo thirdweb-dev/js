@@ -19,7 +19,7 @@ const deepLinkSupportedWalletsRecord: Record<
   }
 > = {
   "io.metamask": {
-    mobile: "https://metamask.app.link/dapp",
+    mobile: "https://metamask.app.link/dapp/",
   },
 };
 

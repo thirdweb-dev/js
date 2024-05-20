@@ -30,6 +30,6 @@ export const wallet = {
     universal: null,
   },
   deepLink: {
-    mobile: "https://metamask.app.link/dapp",
+    mobile: "https://metamask.app.link/dapp/",
   },
 } as const;
