@@ -6,13 +6,7 @@ export default {
     {
       "name": "DOID Scan",
       "url": "https://scan.doid.tech",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmXYSMyMnMvBf2F1ih6dTcRVUhmMnpzvmuP7vieLjmNQo5",
-        "width": 41,
-        "height": 52,
-        "format": "svg"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
@@ -24,12 +18,6 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "icon": {
-    "url": "ipfs://QmXYSMyMnMvBf2F1ih6dTcRVUhmMnpzvmuP7vieLjmNQo5",
-    "width": 41,
-    "height": 52,
-    "format": "svg"
-  },
   "infoURL": "https://doid.tech",
   "name": "DOID",
   "nativeCurrency": {

@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { VITALIK_WALLET } from "~test/addresses.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
 import { DOODLES_CONTRACT } from "~test/test-contracts.js";
 import { DOODLES_ABI } from "../../../test/src/abis/doodles.js";
@@ -55,8 +56,8 @@ it.runIf(process.env.TW_SECRET_KEY)(
 it("should throw error if contract bytecode is 0x", async () => {
   const wrongContract = getContract({
     // This is a wallet address so the bytecode should be "0x"
-    // and will should throw the expected error
-    address: "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+    // and it should throw the expected error
+    address: VITALIK_WALLET,
     client: TEST_CLIENT,
     chain: FORKED_ETHEREUM_CHAIN,
   });

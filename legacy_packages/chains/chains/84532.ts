@@ -16,12 +16,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmaxRoHpxZd8PqccAynherrMznMufG6sdmHZLihkECXmZv",
-    "width": 1200,
-    "height": 1200,
-    "format": "png"
-  },
   "infoURL": "https://base.org",
   "name": "Base Sepolia Testnet",
   "nativeCurrency": {
