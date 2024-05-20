@@ -21,7 +21,7 @@ export default function Index() {
         <main className="flex-1 content-center relative">
           <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 z-10">
             <div className="container px-4 md:px-6">
-              <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
+              <div className="grid gap-10 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
                 <div className="flex flex-col justify-center space-y-4 min-h-[100%]">
                   <div className="space-y-2">
                     <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none font-inter mb-4 text-balance">
@@ -55,7 +55,7 @@ export default function Index() {
                   </div>
                 </div>
                 <div className="w-full mx-auto my-auto sm:w-full lg:order-last relative flex flex-col space-y-2">
-                  <div className="shadow-xl">
+                  <div className="shadow-xl md:w-[400px] md:mx-auto">
                     <PayEmbed client={THIRDWEB_CLIENT} theme="light" />
                   </div>
                   <p className="text-gray-500 md:text-xl dark:text-gray-300 font-inter text-center">
