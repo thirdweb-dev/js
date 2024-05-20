@@ -993,25 +993,30 @@ function SwitchMetamaskAccount(props: {
 }) {
   const wallet = useActiveWallet();
   const connectLocale = useConnectUI().connectLocale;
-  const injectedMetamaskProvider = injectedProvider("io.metamask");
 
-  if (wallet?.id === "io.metamask" && injectedMetamaskProvider) {
-    return (
-      <MenuButton
-        type="button"
-        onClick={async () => {
-          await injectedMetamaskProvider.request({
-            method: "wallet_requestPermissions",
-            params: [{ eth_accounts: {} }],
-          });
-          props.closeModal();
-        }}
-      >
-        <ShuffleIcon width={iconSize.md} height={iconSize.md} />
-        <Text color="primaryText">{connectLocale.switchAccount}</Text>
-      </MenuButton>
-    );
+  if (wallet?.id !== "io.metamask") {
+    return null;
   }
 
-  return null;
+  const injectedMetamaskProvider = injectedProvider("io.metamask");
+
+  if (!injectedMetamaskProvider) {
+    return null;
+  }
+
+  return (
+    <MenuButton
+      type="button"
+      onClick={async () => {
+        await injectedMetamaskProvider.request({
+          method: "wallet_requestPermissions",
+          params: [{ eth_accounts: {} }],
+        });
+        props.closeModal();
+      }}
+    >
+      <ShuffleIcon width={iconSize.md} height={iconSize.md} />
+      <Text color="primaryText">{connectLocale.switchAccount}</Text>
+    </MenuButton>
+  );
 }
