@@ -22,26 +22,34 @@ export function useConnectModal() {
 
   const connect = useCallback(
     (props: UseConnectModalOptions) => {
+      function cleanup() {
+        setIsConnecting(false);
+        setRootEl(undefined);
+      }
+
       return new Promise((resolve, reject) => {
         setIsConnecting(true);
-        getConnectLocale(props.locale || "en_US").then((locale) => {
-          setRootEl(
-            <Modal
-              {...props}
-              onConnect={(w) => {
-                resolve(w);
-                setIsConnecting(false);
-                setRootEl(undefined);
-              }}
-              onClose={() => {
-                reject();
-                setIsConnecting(false);
-                setRootEl(undefined);
-              }}
-              connectLocale={locale}
-            />,
-          );
-        });
+        getConnectLocale(props.locale || "en_US")
+          .then((locale) => {
+            setRootEl(
+              <Modal
+                {...props}
+                onConnect={(w) => {
+                  resolve(w);
+                  cleanup();
+                }}
+                onClose={() => {
+                  reject();
+                  cleanup();
+                }}
+                connectLocale={locale}
+              />,
+            );
+          })
+          .catch(() => {
+            reject();
+            cleanup();
+          });
       });
     },
     [setRootEl],
