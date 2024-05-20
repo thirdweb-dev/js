@@ -6,10 +6,22 @@ export default {
     {
       "name": "mosscan",
       "url": "https://www.mosscan.com",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmczQf61mZmg3NmmGnwseDxzH1AqapA252KCTT85GuNG96",
+        "width": 51,
+        "height": 50,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmczQf61mZmg3NmmGnwseDxzH1AqapA252KCTT85GuNG96",
+    "width": 51,
+    "height": 50,
+    "format": "png"
+  },
   "infoURL": "https://www.mosscan.com",
   "name": "ClubMos Mainnet",
   "nativeCurrency": {

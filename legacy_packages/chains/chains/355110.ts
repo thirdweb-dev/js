@@ -1,10 +1,10 @@
 import type { Chain } from "../src/types";
 export default {
   "chain": "BFT",
-  "chainId": 355113,
+  "chainId": 355110,
   "explorers": [
     {
-      "name": "Bitfinity Testnet Block Explorer",
+      "name": "Bitfinity Mainnet Block Explorer",
       "url": "https://explorer.testnet.bitfinity.network",
       "standard": "EIP3091",
       "icon": {
@@ -13,22 +13,9 @@ export default {
         "height": 129,
         "format": "png"
       }
-    },
-    {
-      "name": "Bitfinity Testnet Block Explorer",
-      "url": "https://bitfinity-test.dex.guru",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmRaASKRSjQ5btoUQ2rNTJNxKtx2a2RoewgA7DMQkLVEne",
-        "width": 83,
-        "height": 82,
-        "format": "svg"
-      }
     }
   ],
-  "faucets": [
-    "https://bitfinity.network/faucet"
-  ],
+  "faucets": [],
   "features": [
     {
       "name": "EIP155"
@@ -38,18 +25,18 @@ export default {
     }
   ],
   "infoURL": "https://bitfinity.network",
-  "name": "Bitfinity Network Testnet",
+  "name": "Bitfinity Network Mainnet",
   "nativeCurrency": {
     "name": "Bitfinity Token",
     "symbol": "BFT",
     "decimals": 18
   },
-  "networkId": 355113,
+  "networkId": 355110,
   "rpc": [
-    "https://355113.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet.bitfinity.network"
+    "https://355110.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mainnet.bitfinity.network"
   ],
-  "shortName": "bitfinity-testnet",
-  "slug": "bitfinity-network-testnet",
+  "shortName": "bitfinity-mainnet",
+  "slug": "bitfinity-network",
   "testnet": true
 } as const satisfies Chain;

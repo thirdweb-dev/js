@@ -12,6 +12,12 @@ export default {
   "faucets": [
     "https://faucet.securechain.ai"
   ],
+  "icon": {
+    "url": "ipfs://Qme2Z8VFYjhHGfLQPBnfseNpEdRfmTDy7VXqrdH4AHETJf",
+    "width": 150,
+    "height": 150,
+    "format": "png"
+  },
   "infoURL": "https://securechain.ai",
   "name": "SecureChain Testnet",
   "nativeCurrency": {
