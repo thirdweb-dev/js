@@ -24,6 +24,12 @@ export default {
       "name": "EIP1559"
     }
   ],
+  "icon": {
+    "url": "ipfs://bafkreiawlhc2trzyxgnz24vowdymxme2m446uk4vmrplgxsdd74ecpfloq",
+    "width": 830,
+    "height": 830,
+    "format": "png"
+  },
   "infoURL": "https://www.hypra.network",
   "name": "Hypra Mainnet",
   "nativeCurrency": {

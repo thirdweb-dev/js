@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://Qmd1PGt4cDRjFbh4ihP5QKEd4XQVwN1MkebYKdF56V74pf",
+    "width": 48,
+    "height": 48,
+    "format": "svg"
+  },
   "infoURL": "https://unique.network",
   "name": "Sapphire by Unique",
   "nativeCurrency": {
