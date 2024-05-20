@@ -1,8 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  ANVIL_CHAIN,
-  FORKED_ETHEREUM_CHAIN,
-} from "../../../test/src/chains.js";
+import { ANVIL_CHAIN } from "../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import { TEST_ACCOUNT_A } from "../../../test/src/test-wallets.js";
 import { initialize } from "../../extensions/prebuilts/__generated__/DropERC721/write/initialize.js";
