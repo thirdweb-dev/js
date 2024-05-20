@@ -1,14 +1,17 @@
 import { getRpcClient } from "../../src/rpc/rpc.js";
+import { wait } from "../../src/utils/promise/wait.js";
 import { FORKED_ETHEREUM_CHAIN } from "./chains.js";
 import { TEST_CLIENT } from "./test-clients.js";
 
-export async function mineBlock() {
+export async function mineBlock(chain = FORKED_ETHEREUM_CHAIN) {
   const rpcClient = getRpcClient({
-    chain: FORKED_ETHEREUM_CHAIN,
+    chain,
     client: TEST_CLIENT,
   });
-  return rpcClient({
+  const res = await rpcClient({
     method: "anvil_mine" as any,
     params: ["0x1"],
   });
+  await wait(500); // wait for block to be fully mined
+  return res;
 }
