@@ -26,7 +26,7 @@ export const DeepLinkConnectUI = (props: {
       connectPrompted.current = true;
       setErrorConnecting(false);
       await wait(1000);
-      const fullLink = window.location.toString();
+      const fullLink = window.location.toString().replace("https://", "");
       openWindow(`${props.deepLinkPrefix}${fullLink}`);
     } catch (e) {
       setErrorConnecting(true);
