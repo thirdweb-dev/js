@@ -3,7 +3,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { openWindow } from "../../../../../utils/web/openWindow.js";
 import type { InjectedSupportedWalletIds } from "../../../../../wallets/__generated__/wallet-ids.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
-import { wait } from "../../../../core/utils/wait.js";
 import type { InjectedWalletLocale } from "../../../wallets/injected/locale/types.js";
 import { ConnectingScreen } from "../../../wallets/shared/ConnectingScreen.js";
 
