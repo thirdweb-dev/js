@@ -24,6 +24,12 @@ export default {
       "name": "EIP1559"
     }
   ],
+  "icon": {
+    "url": "ipfs://QmTfecECALDCy51zwVbXBSXb6TokqowCYzVLv65etahLxX",
+    "width": 1024,
+    "height": 1024,
+    "format": "png"
+  },
   "infoURL": "https://creditcoin.org",
   "name": "Creditcoin Testnet",
   "nativeCurrency": {

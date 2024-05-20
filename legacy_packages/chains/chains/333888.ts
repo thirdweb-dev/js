@@ -6,6 +6,12 @@ export default {
   "faucets": [
     "https://faucet.polis.tech"
   ],
+  "icon": {
+    "url": "ipfs://QmagWrtyApex28H2QeXcs3jJ2F7p2K7eESz3cDbHdQ3pjG",
+    "width": 1050,
+    "height": 1050,
+    "format": "png"
+  },
   "infoURL": "https://polis.tech",
   "name": "Polis Testnet",
   "nativeCurrency": {

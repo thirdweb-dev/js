@@ -12,12 +12,6 @@ export default {
   "faucets": [
     "https://sfuel.dirtroad.dev/staging"
   ],
-  "icon": {
-    "url": "ipfs://bafybeic5eexvd34wfy4kuebcyu73qpkv3x57s54ebzjyhyjsmeuni5jwcm",
-    "width": 500,
-    "height": 500,
-    "format": "png"
-  },
   "infoURL": "https://nebulachain.io/",
   "name": "Deprecated SKALE Nebula Hub Testnet",
   "nativeCurrency": {

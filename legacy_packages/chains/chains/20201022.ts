@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmVf1afskRHuZjFSLCZH8397KrVNAoYgyAePX9VMBrPVtx",
-    "width": 246,
-    "height": 247,
-    "format": "png"
-  },
   "infoURL": "https://pego.network",
   "name": "Pego Network",
   "nativeCurrency": {

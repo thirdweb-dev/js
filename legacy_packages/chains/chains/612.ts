@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmfJLG2mXgSqKx2V3A2jzTwt4vkozvQTTXkRy3os27wEVm",
+    "width": 48,
+    "height": 48,
+    "format": "png"
+  },
   "name": "EIOB Mainnet",
   "nativeCurrency": {
     "name": "EIOB",
