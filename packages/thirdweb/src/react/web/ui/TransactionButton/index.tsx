@@ -7,11 +7,8 @@ import {
 } from "../../../../transaction/actions/wait-for-tx-receipt.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
 import type { TransactionReceipt } from "../../../../transaction/types.js";
-import {
-  useActiveAccount,
-  useActiveWallet,
-  useSwitchActiveWalletChain,
-} from "../../../core/hooks/wallets/wallet-hooks.js";
+import { stringify } from "../../../../utils/json.js";
+import { useActiveAccount } from "../../../core/hooks/wallets/wallet-hooks.js";
 import {
   type SendTransactionPayModalConfig,
   useSendTransaction,
@@ -130,9 +127,7 @@ export function TransactionButton(props: TransactionButtonProps) {
     ...buttonProps
   } = props;
   const account = useActiveAccount();
-  const wallet = useActiveWallet();
   const [isPending, setIsPending] = useState(false);
-  const switchChain = useSwitchActiveWalletChain();
 
   const sendTransaction = useSendTransaction({
     gasless,
@@ -152,11 +147,6 @@ export function TransactionButton(props: TransactionButtonProps) {
         try {
           setIsPending(true);
           const resolvedTx = await transaction();
-
-          if (wallet && wallet.getChain()?.id !== resolvedTx.chain.id) {
-            await switchChain(resolvedTx.chain);
-          }
-
           const result = await sendTransaction.mutateAsync(resolvedTx);
 
           if (onTransactionSent) {
@@ -167,7 +157,7 @@ export function TransactionButton(props: TransactionButtonProps) {
             const receipt = await doWaitForReceipt(result);
             if (receipt.status === "reverted")
               throw new Error(
-                `Execution reverted: ${JSON.stringify(receipt, null, 2)}`,
+                `Execution reverted: ${stringify(receipt, null, 2)}`,
               );
             onTransactionConfirmed(receipt);
           }
@@ -179,13 +169,13 @@ export function TransactionButton(props: TransactionButtonProps) {
           setIsPending(false);
         }
       }}
+      {...buttonProps}
       style={{
         opacity: !account || disabled ? 0.5 : 1,
         minWidth: "150px",
         position: "relative",
         ...buttonProps.style,
       }}
-      {...buttonProps}
     >
       <span style={{ visibility: isPending ? "hidden" : "visible" }}>
         {children}

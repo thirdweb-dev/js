@@ -1,5 +1,117 @@
 # thirdweb
 
+## 0.13.91
+
+### Patch Changes
+
+- Updated dependencies [[`9a9ec97`](https://github.com/thirdweb-dev/js/commit/9a9ec978f44f4f8034dda088aa22df753cae7549)]:
+  - @thirdweb-dev/chains@0.1.111
+  - @thirdweb-dev/sdk@4.0.85
+  - @thirdweb-dev/wallets@2.5.25
+  - @thirdweb-dev/auth@4.1.83
+
+## 0.13.90
+
+### Patch Changes
+
+- Updated dependencies [[`c417bda`](https://github.com/thirdweb-dev/js/commit/c417bdaae3e73184143f937eb253f5d0d04d3732), [`46492bb`](https://github.com/thirdweb-dev/js/commit/46492bb66e5225279b9f2de91e0a42f00a3506d3)]:
+  - @thirdweb-dev/sdk@4.0.84
+  - @thirdweb-dev/chains@0.1.110
+  - @thirdweb-dev/wallets@2.5.24
+  - @thirdweb-dev/auth@4.1.82
+
+## 0.13.89
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@4.0.83
+  - @thirdweb-dev/wallets@2.5.23
+  - @thirdweb-dev/auth@4.1.81
+
+## 0.13.88
+
+### Patch Changes
+
+- [#3029](https://github.com/thirdweb-dev/js/pull/3029) [`cdfca2b`](https://github.com/thirdweb-dev/js/commit/cdfca2b56d6172e06173384ac608df14045bebfd) Thanks [@kumaryash90](https://github.com/kumaryash90)! - zksolc publish and deploy fixes
+
+- Updated dependencies [[`cdfca2b`](https://github.com/thirdweb-dev/js/commit/cdfca2b56d6172e06173384ac608df14045bebfd), [`e89f36b`](https://github.com/thirdweb-dev/js/commit/e89f36b2b73f09d49bbffa2f707f8d8f32089237), [`6d36a14`](https://github.com/thirdweb-dev/js/commit/6d36a1498a533c6184c90fff65699465f9786b2f), [`d34e21b`](https://github.com/thirdweb-dev/js/commit/d34e21bd060a2e9c9ee095742ae954a3eadc6a7c)]:
+  - @thirdweb-dev/sdk@4.0.82
+  - @thirdweb-dev/chains@0.1.109
+  - @thirdweb-dev/wallets@2.5.22
+  - @thirdweb-dev/auth@4.1.80
+
+## 0.13.87
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@4.0.81
+  - @thirdweb-dev/wallets@2.5.21
+  - @thirdweb-dev/auth@4.1.79
+
+## 0.13.86
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@4.0.80
+  - @thirdweb-dev/wallets@2.5.20
+  - @thirdweb-dev/auth@4.1.78
+
+## 0.13.85
+
+### Patch Changes
+
+- [#2988](https://github.com/thirdweb-dev/js/pull/2988) [`02c0319`](https://github.com/thirdweb-dev/js/commit/02c03196ad38de888ff86311c68fa010018bda60) Thanks [@jnsdls](https://github.com/jnsdls)! - bump all to fix release
+
+- Updated dependencies [[`02c0319`](https://github.com/thirdweb-dev/js/commit/02c03196ad38de888ff86311c68fa010018bda60)]:
+  - @thirdweb-dev/auth@4.1.77
+  - @thirdweb-dev/chains@0.1.108
+  - @thirdweb-dev/sdk@4.0.79
+  - @thirdweb-dev/storage@2.0.15
+  - @thirdweb-dev/wallets@2.5.19
+
+## 0.13.84
+
+### Patch Changes
+
+- Updated dependencies [[`ef1b7cd`](https://github.com/thirdweb-dev/js/commit/ef1b7cdb90aaa4c33cf0c7f619cab0d4d4acfccf)]:
+  - @thirdweb-dev/chains@0.1.107
+  - @thirdweb-dev/sdk@4.0.78
+  - @thirdweb-dev/wallets@2.5.18
+  - @thirdweb-dev/auth@4.1.76
+
+## 0.13.83
+
+### Patch Changes
+
+- [#2966](https://github.com/thirdweb-dev/js/pull/2966) [`4de8802`](https://github.com/thirdweb-dev/js/commit/4de88024357cf8197ec78fb4fabaf5bddd47c605) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fixes issue with contract compilation in hardhat
+
+- Updated dependencies [[`2bfaafc`](https://github.com/thirdweb-dev/js/commit/2bfaafcc10fcdff000025011a81e885b1a9fdef8), [`0e45f24`](https://github.com/thirdweb-dev/js/commit/0e45f24fd69e556e4364e38fd18e3eabb0498be8)]:
+  - @thirdweb-dev/chains@0.1.106
+  - @thirdweb-dev/sdk@4.0.77
+  - @thirdweb-dev/wallets@2.5.17
+  - @thirdweb-dev/auth@4.1.75
+
+## 0.13.82
+
+### Patch Changes
+
+- [#2934](https://github.com/thirdweb-dev/js/pull/2934) [`bdb919f`](https://github.com/thirdweb-dev/js/commit/bdb919f32ae459608b29dd1e4d511afc226470c6) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Updates the CLI `create` command to use the v5 templates for Next.js and Vite
+
+  Other templates will be updated in the future from within their existing repositories
+
+  Removes React Native starters from the CLI menu
+  Removes JS template support from the CLI
+
+- [#2945](https://github.com/thirdweb-dev/js/pull/2945) [`b64c8e7`](https://github.com/thirdweb-dev/js/commit/b64c8e7b6efaf09be2afc73b92624c5576a4b24e) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Removes deprecated template options from the CLI, specifically PWA Vite, Express, and React
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@4.0.76
+  - @thirdweb-dev/wallets@2.5.16
+  - @thirdweb-dev/auth@4.1.74
+
 ## 0.13.81
 
 ### Patch Changes

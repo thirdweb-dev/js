@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
+import { VITALIK_WALLET } from "~test/addresses.js";
+import { TEST_CLIENT } from "~test/test-clients.js";
 import { DOODLES_CONTRACT } from "~test/test-contracts.js";
 import { DOODLES_ABI } from "../../../test/src/abis/doodles.js";
+import { FORKED_ETHEREUM_CHAIN } from "../../../test/src/chains.js";
+import { getContract } from "../contract.js";
 import {
   resolveAbiFromBytecode,
   resolveAbiFromContractApi,
@@ -48,3 +52,16 @@ it.runIf(process.env.TW_SECRET_KEY)(
     expect(abi).toMatchObject(DOODLES_ABI);
   },
 );
+
+it("should throw error if contract bytecode is 0x", async () => {
+  const wrongContract = getContract({
+    // This is a wallet address so the bytecode should be "0x"
+    // and it should throw the expected error
+    address: VITALIK_WALLET,
+    client: TEST_CLIENT,
+    chain: FORKED_ETHEREUM_CHAIN,
+  });
+  await expect(() =>
+    resolveAbiFromBytecode(wrongContract),
+  ).rejects.toThrowError("Failed to load contract bytecode");
+});

@@ -5,7 +5,7 @@ import {
   formatAbiItem,
   parseAbiItem,
 } from "abitype";
-import { defineChain } from "../../../chains/utils.js";
+import { getCachedChain } from "../../../chains/utils.js";
 import { createThirdwebClient } from "../../../client/client.js";
 import { resolveAbiFromContractApi } from "../../../contract/actions/resolve-abi.js";
 import { getContract } from "../../../contract/contract.js";
@@ -26,7 +26,7 @@ export async function generate(input: ChainIdAndContract) {
   }
   const contract = getContract({
     client,
-    chain: defineChain(Number.parseInt(chainId)),
+    chain: getCachedChain(Number.parseInt(chainId)),
     address: contractAddress,
   });
   const abi = await resolveAbiFromContractApi(contract);

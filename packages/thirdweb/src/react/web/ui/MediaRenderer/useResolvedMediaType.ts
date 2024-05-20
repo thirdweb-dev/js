@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import type { ThirdwebClient } from "../../../../client/client.js";
+import { resolveArweaveScheme } from "../../../../utils/arweave.js";
 import { resolveScheme } from "../../../../utils/ipfs.js";
 import { resolveMimeType } from "../../utils/resolveMimeType.js";
 
@@ -17,6 +18,9 @@ export function useResolvedMediaType(
     if (!uri) {
       return "";
     }
+    if (uri.startsWith("ar://")) {
+      return resolveArweaveScheme({ uri, gatewayUrl });
+    }
     if (gatewayUrl) {
       return uri.replace("ipfs://", gatewayUrl);
     }
@@ -30,7 +34,7 @@ export function useResolvedMediaType(
     }
   }, [uri, gatewayUrl, client]);
 
-  const resolvedMimType = useQuery({
+  const resolvedMimeType = useQuery({
     queryKey: ["mime-type", resolvedUrl],
     queryFn: () => resolveMimeType(resolvedUrl),
     enabled: !!resolvedUrl && !mimeType,
@@ -38,7 +42,7 @@ export function useResolvedMediaType(
   });
 
   return {
-    url: resolvedUrl,
-    mimeType: resolvedMimType.data,
+    mediaInfo: { url: resolvedUrl, mimeType: resolvedMimeType.data },
+    isFetched: resolvedMimeType.isFetched,
   };
 }

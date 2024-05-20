@@ -43,11 +43,6 @@ export { injectedProvider } from "../wallets/injected/mipdStore.js";
 
 export type {
   WalletId,
-  InAppWalletCreationOptions,
-  /**
-   * @deprecated use InAppWalletCreationOptions instead
-   */
-  InAppWalletCreationOptions as EmbeddedWalletCreationOptions,
   WalletAutoConnectionOption,
   WalletCreationOptions,
   WalletConnectionOption,
@@ -90,7 +85,7 @@ export type {
    * @deprecated use InAppWalletSocialAuth instead
    */
   InAppWalletSocialAuth as EmbeddedWalletSocialAuth,
-} from "../wallets/in-app/core/wallet/index.js";
+} from "../wallets/in-app/core/wallet/types.js";
 
 export type { CoinbaseSDKWalletConnectionOptions } from "../wallets/coinbase/coinbaseSDKWallet.js";
 
@@ -101,3 +96,5 @@ export type {
 
 export { getAllWalletsList } from "../wallets/getAllWalletsList.js";
 export { getWalletInfo } from "../wallets/__generated__/getWalletInfo.js";
+
+export { createWalletAdapter } from "../adapters/wallet-adapter.js";

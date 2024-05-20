@@ -57,7 +57,9 @@ export function decodeMaxUnitsResult(result: Hex) {
  * ```ts
  * import { maxUnits } from "thirdweb/extensions/farcaster";
  *
- * const result = await maxUnits();
+ * const result = await maxUnits({
+ *  contract,
+ * });
  *
  * ```
  */

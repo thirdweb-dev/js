@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/storage",
-  "version": "2.0.14",
+  "version": "2.0.15",
   "main": "dist/thirdweb-dev-storage.cjs.js",
   "module": "dist/thirdweb-dev-storage.esm.js",
   "exports": {
@@ -31,7 +31,7 @@
     "exports": true
   },
   "devDependencies": {
-    "@microsoft/api-documenter": "^7.24.1",
+    "@microsoft/api-documenter": "^7.24.5",
     "@microsoft/api-extractor": "^7.43.0",
     "@microsoft/tsdoc": "^0.14.2",
     "@preconstruct/cli": "2.7.0",

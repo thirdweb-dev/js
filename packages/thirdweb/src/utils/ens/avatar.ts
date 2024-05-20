@@ -1,4 +1,4 @@
-import { defineChain } from "../../chains/utils.js";
+import { getCachedChain } from "../../chains/utils.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { getContract } from "../../contract/contract.js";
 import { isAddress } from "../address.js";
@@ -66,7 +66,7 @@ async function parseNftUri(options: AvatarOptions): Promise<string | null> {
   if (!tokenID) {
     throw new Error("Token ID not found");
   }
-  const chain = defineChain(Number(chainID));
+  const chain = getCachedChain(Number(chainID));
   const contract = getContract({
     client: options.client,
     chain,

@@ -88,7 +88,9 @@ export function decodeGetAllRulesResult(result: Hex) {
  * ```ts
  * import { getAllRules } from "thirdweb/extensions/thirdweb";
  *
- * const result = await getAllRules();
+ * const result = await getAllRules({
+ *  contract,
+ * });
  *
  * ```
  */

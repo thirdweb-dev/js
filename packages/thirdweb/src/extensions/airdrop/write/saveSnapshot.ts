@@ -1,6 +1,6 @@
 import { upload } from "../../../storage/upload.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
-import { setContractURI } from "../__generated__/Airdrop/write/setContractURI.js";
+import { setContractURI } from "../../common/__generated__/IContractMetadata/write/setContractURI.js";
 
 export type SaveSnapshotParams = {
   merkleRoot: string;

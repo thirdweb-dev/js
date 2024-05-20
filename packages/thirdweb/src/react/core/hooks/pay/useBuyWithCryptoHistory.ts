@@ -7,20 +7,22 @@ import {
   type BuyWithCryptoHistoryData,
   type BuyWithCryptoHistoryParams,
   getBuyWithCryptoHistory,
-} from "../../../../pay/buyWithCrypto/actions/getHistory.js";
+} from "../../../../pay/buyWithCrypto/getHistory.js";
 
-export type BuyWithCryptoHistoryQueryParams = BuyWithCryptoHistoryParams;
-export type BuyWithCryptoQuoteQueryOptions = Omit<
+/**
+ * @internal
+ */
+export type BuyWithCryptoHistoryQueryOptions = Omit<
   UseQueryOptions<BuyWithCryptoHistoryData>,
   "queryFn" | "queryKey" | "enabled"
 >;
 
 /**
- * Hook to get the history of purchases a given wallet has performed.
+ * Hook to get the "Buy with crypto" transaction history for a given wallet address.
  *
  * This hook is a React Query wrapper of the [`getBuyWithCryptoHistory`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoHistory) function.
  * You can also use that function directly
- * @param buyWithCryptoHistoryParams - object of type [`BuyWithCryptoHistoryParams`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoHistoryParams)
+ * @param params - object of type [`BuyWithCryptoHistoryParams`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoHistoryParams)
  * @param queryParams - options to configure the react query
  * @returns A React Query object which contains the data of type [`BuyWithCryptoHistoryData`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoHistoryData)
  * @example
@@ -29,31 +31,24 @@ export type BuyWithCryptoQuoteQueryOptions = Omit<
  *
  * function Component() {
  *  const buyWithCryptoHistory = useBuyWithCryptoHistory(params);
- *  return <pre>{JSON.stringify(buyWithCryptoHistory.data, null, 2)}</pre>
+ *  return <div> ... </div>
  * }
  * ```
  * @buyCrypto
  */
 export function useBuyWithCryptoHistory(
-  buyWithCryptoHistoryParams?: BuyWithCryptoHistoryQueryParams,
-  queryParams?: BuyWithCryptoQuoteQueryOptions,
+  params?: BuyWithCryptoHistoryParams,
+  queryParams?: BuyWithCryptoHistoryQueryOptions,
 ): UseQueryResult<BuyWithCryptoHistoryData> {
   return useQuery({
     ...queryParams,
-
-    queryKey: ["buyWithCryptoHistory", buyWithCryptoHistoryParams],
+    queryKey: ["getBuyWithCryptoHistory", params],
     queryFn: () => {
-      if (!buyWithCryptoHistoryParams) {
+      if (!params) {
         throw new Error("Swap params are required");
       }
-      if (!buyWithCryptoHistoryParams?.client) {
-        throw new Error("Client is required");
-      }
-      return getBuyWithCryptoHistory({
-        ...buyWithCryptoHistoryParams,
-        client: buyWithCryptoHistoryParams.client,
-      });
+      return getBuyWithCryptoHistory(params);
     },
-    enabled: !!buyWithCryptoHistoryParams,
+    enabled: !!params,
   });
 }

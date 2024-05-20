@@ -275,6 +275,7 @@ export function ${f.name}(
       maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
       maxPriorityFeePerGas: async () => (await asyncOptions()).overrides?.maxPriorityFeePerGas,
       nonce: async () => (await asyncOptions()).overrides?.nonce,
+      extraGas: async () => (await asyncOptions()).overrides?.extraGas,
       `
         : ""
     }
@@ -436,13 +437,14 @@ export function decode${uppercaseFirstLetter(f.name)}Result(result: Hex) {
  * \`\`\`ts
  * import { ${f.name} } from "thirdweb/extensions/${extensionName}";
  * 
- * const result = await ${f.name}(${
+ * const result = await ${f.name}({
+ *  contract, ${
    f.inputs.length > 0
-     ? `{\n * ${f.inputs
+     ? `\n * ${f.inputs
          .map((x) => ` ${removeLeadingUnderscore(x.name)}: ...,`)
-         .join("\n * ")}\n * }`
-     : ""
- });
+         .join("\n * ")}\n`
+     : "\n"
+ } * });
  * 
  * \`\`\`
  */

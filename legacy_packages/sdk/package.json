@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/sdk",
-  "version": "4.0.75",
+  "version": "4.0.85",
   "description": "The main thirdweb SDK.",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/legacy_packages/sdk",
   "license": "Apache-2.0",
@@ -68,7 +68,7 @@
     "generate-docs:evm": "api-extractor run --local --config ./config/api-extractor-evm.json && api-documenter markdown -i ./temp -o ./docs/evm && rm -rf ./temp-evm && mv ./temp ./temp-evm",
     "generate-snippets": "node ./scripts/generate-snippets.mjs && node ./scripts/generate-feature-snippets-evm.mjs",
     "build": "tsc && preconstruct build",
-    "test:all": "SWC_NODE_PROJECT=./tsconfig.test.json nyc --reporter lcovonly --report-dir ./coverage/evm mocha --config './test/evm/.mocharc.json' --timeout 90000 --parallel './test/evm/**/*.test.ts'",
+    "test:all": "SWC_NODE_PROJECT=./tsconfig.test.json nyc --reporter lcovonly --report-dir ./coverage/evm mocha --config './test/evm/.mocharc.json' --timeout 180000 --parallel './test/evm/**/*.test.ts'",
     "test": "make test-evm",
     "test:single": "SWC_NODE_PROJECT=./tsconfig.test.json mocha --config './test/evm/.mocharc.json' --timeout 90000",
     "push": "yalc push",
@@ -77,7 +77,7 @@
   "devDependencies": {
     "@aws-sdk/client-secrets-manager": "^3.549.0",
     "@ethersproject/abstract-provider": "^5.7.0",
-    "@microsoft/api-documenter": "^7.24.1",
+    "@microsoft/api-documenter": "^7.24.5",
     "@microsoft/api-extractor": "^7.43.0",
     "@microsoft/tsdoc": "^0.14.2",
     "@nomiclabs/hardhat-ethers": "^2.2.3",

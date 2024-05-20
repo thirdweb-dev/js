@@ -4,8 +4,16 @@ import {
   AuthProvider,
 } from "../../implementations/interfaces/auth.js";
 import { UserWalletStatus } from "../../implementations/interfaces/in-app-wallets/in-app-wallets.js";
+import {
+  loginWithPasskey,
+  registerPasskey,
+} from "../../implementations/lib/auth/passkeys.js";
 import type { InAppWalletSdk } from "../../implementations/lib/in-app-wallet.js";
 import type { AuthArgsType, PreAuthArgsType } from "./type.js";
+
+export type GetAuthenticatedUserParams = {
+  client: ThirdwebClient;
+};
 
 const ewsSDKCache = new WeakMap<ThirdwebClient, InAppWalletSdk>();
 
@@ -27,9 +35,15 @@ async function getInAppWalletSDK(client: ThirdwebClient) {
   return ewSDK;
 }
 
-export type GetAuthenticatedUserParams = {
-  client: ThirdwebClient;
-};
+/**
+ * @internal
+ */
+export async function logoutAuthenticatedUser(
+  options: GetAuthenticatedUserParams,
+) {
+  const ewSDK = await getInAppWalletSDK(options.client);
+  return ewSDK.auth.logout();
+}
 
 /**
  * Retrieves the authenticated user for the active in-app wallet.
@@ -196,6 +210,21 @@ export async function authenticate(
     }
     case "iframe": {
       return ewSDK.auth.loginWithModal();
+    }
+    case "passkey": {
+      if (args.type === "sign-up") {
+        const authToken = await registerPasskey({
+          client: args.client,
+          authenticatorType: args.authenticatorType,
+          username: args.passkeyName,
+        });
+        return ewSDK.auth.loginWithAuthToken(authToken);
+      }
+      const authToken = await loginWithPasskey({
+        client: args.client,
+        authenticatorType: args.authenticatorType,
+      });
+      return ewSDK.auth.loginWithAuthToken(authToken);
     }
     default:
       assertUnreachable(strategy);

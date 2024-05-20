@@ -73,19 +73,23 @@ export const MediaRenderer = /* @__PURE__ */ (() =>
         ...style,
       };
 
-      const mediaInfo = useResolvedMediaType(
+      const { mediaInfo, isFetched: mediaInfoIsFetched } = useResolvedMediaType(
         client,
         src ?? undefined,
         mimeType,
         gatewayUrl,
       );
 
-      const possiblePosterSrc = useResolvedMediaType(
+      const { mediaInfo: possiblePosterSrc } = useResolvedMediaType(
         client,
         poster ?? undefined,
         undefined,
         gatewayUrl,
       );
+
+      if (!mediaInfoIsFetched || !src) {
+        return <div style={style} />;
+      }
 
       if (mediaInfo.mimeType) {
         // html content

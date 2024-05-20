@@ -3,7 +3,6 @@ import type {
   InjectedSupportedWalletIds,
   WCSupportedWalletIds,
 } from "./__generated__/wallet-ids.js";
-import { injectedProvider } from "./injected/mipdStore.js";
 import type { Account, Wallet } from "./interfaces/wallet.js";
 import type {
   CreateWalletArgs,
@@ -14,9 +13,11 @@ import type {
 } from "./wallet-types.js";
 
 import { trackConnect } from "../analytics/track.js";
+import type { ThirdwebClient } from "../client/client.js";
 import { getContract } from "../contract/contract.js";
-import { isContractDeployed } from "../exports/utils.js";
+import { isContractDeployed } from "../utils/bytecode/is-contract-deployed.js";
 import { COINBASE } from "./constants.js";
+import { logoutAuthenticatedUser } from "./in-app/core/authentication/index.js";
 import { DEFAULT_ACCOUNT_FACTORY } from "./smart/lib/constants.js";
 import type { WCConnectOptions } from "./wallet-connect/types.js";
 import { createWalletEmitter } from "./wallet-emitter.js";
@@ -117,6 +118,7 @@ export function createWallet<const ID extends WalletId>(
             WCSupportedWalletIds | InjectedSupportedWalletIds
           >,
         ) => {
+          const { injectedProvider } = await import("./injected/mipdStore.js");
           // injected wallet priority for autoConnect
           if (id !== "walletConnect" && injectedProvider(id)) {
             const { autoConnectInjectedWallet } = await import(
@@ -219,6 +221,7 @@ export function createWallet<const ID extends WalletId>(
             return wcConnect(options);
           }
 
+          const { injectedProvider } = await import("./injected/mipdStore.js");
           if (injectedProvider(id)) {
             const { connectInjectedWallet } = await import(
               "./injected/index.js"
@@ -409,6 +412,31 @@ export function smartWallet(
  *   strategy: "google",
  * });
  * ```
+ * Enable smart accounts and sponsor gas for your users:
+ * ```ts
+ * import { inAppWallet } from "thirdweb/wallets";
+ * const wallet = inAppWallet({
+ *  smartAccount: {
+ *   chain: sepolia,
+ *   sponsorGas: true,
+ * },
+ * });
+ * ```
+ *
+ * Specify a logo for your login page
+ * ```ts
+ * import { inAppWallet } from "thirdweb/wallets";
+ * const wallet = inAppWallet({
+ *  metadata: {
+ *   image: {
+ *    src: "https://example.com/logo.png",
+ *    alt: "My logo",
+ *    width: 100,
+ *    height: 100,
+ *   },
+ *  },
+ * });
+ * ```
  * @wallet
  */
 export function inAppWallet(
@@ -417,6 +445,8 @@ export function inAppWallet(
   const emitter = createWalletEmitter<"inApp">();
   let account: Account | undefined = undefined;
   let chain: Chain | undefined = undefined;
+  let client: ThirdwebClient | undefined;
+
   return {
     id: "inApp",
     subscribe: emitter.subscribe,
@@ -428,9 +458,12 @@ export function inAppWallet(
         "./in-app/core/wallet/index.js"
       );
 
-      const [connectedAccount, connectedChain] =
-        await autoConnectInAppWallet(options);
+      const [connectedAccount, connectedChain] = await autoConnectInAppWallet(
+        options,
+        createOptions,
+      );
       // set the states
+      client = options.client;
       account = connectedAccount;
       chain = connectedChain;
       trackConnect({
@@ -446,9 +479,12 @@ export function inAppWallet(
         "./in-app/core/wallet/index.js"
       );
 
-      const [connectedAccount, connectedChain] =
-        await connectInAppWallet(options);
+      const [connectedAccount, connectedChain] = await connectInAppWallet(
+        options,
+        createOptions,
+      );
       // set the states
+      client = options.client;
       account = connectedAccount;
       chain = connectedChain;
       trackConnect({
@@ -460,14 +496,36 @@ export function inAppWallet(
       return account;
     },
     disconnect: async () => {
-      // simply un-set the states
+      // If no client is assigned, we should be fine just unsetting the states
+      if (client) {
+        const result = await logoutAuthenticatedUser({ client });
+        if (!result.success) {
+          throw new Error("Failed to logout");
+        }
+      }
       account = undefined;
       chain = undefined;
       emitter.emit("disconnect", undefined);
     },
     switchChain: async (newChain) => {
-      // simply set the new chain
-      chain = newChain;
+      if (createOptions?.smartAccount && client && account) {
+        // if account abstraction is enabled, reconnect to smart account on the new chain
+        const { autoConnectInAppWallet } = await import(
+          "./in-app/core/wallet/index.js"
+        );
+        const [connectedAccount, connectedChain] = await autoConnectInAppWallet(
+          {
+            chain: newChain,
+            client,
+          },
+          createOptions,
+        );
+        account = connectedAccount;
+        chain = connectedChain;
+      } else {
+        // if not, simply set the new chain
+        chain = newChain;
+      }
       emitter.emit("chainChanged", newChain);
     },
   };

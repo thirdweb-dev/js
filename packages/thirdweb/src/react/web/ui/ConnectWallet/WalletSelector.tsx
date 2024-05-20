@@ -13,7 +13,6 @@ import { LoadingScreen } from "../../wallets/shared/LoadingScreen.js";
 import { Img } from "../components/Img.js";
 import { Spacer } from "../components/Spacer.js";
 import { TextDivider } from "../components/TextDivider.js";
-import { WalletImage } from "../components/WalletImage.js";
 import {
   Container,
   Line,
@@ -32,7 +31,9 @@ import { SmartConnectUI } from "./Modal/SmartWalletConnectUI.js";
 import { TOS } from "./Modal/TOS.js";
 import { PoweredByThirdweb } from "./PoweredByTW.js";
 import { WalletButton, WalletEntryButton } from "./WalletEntryButton.js";
-import { TWIcon } from "./icons/twIcon.js";
+import { WalletTypeRowButton } from "./WalletTypeRowButton.js";
+import { compactModalMaxHeight } from "./constants.js";
+import { genericWalletIcon } from "./icons/dataUris.js";
 
 const InAppWalletSelectionUI = /* @__PURE__ */ lazy(
   () => import("../../wallets/in-app/InAppWalletSelectionUI.js"),
@@ -149,25 +150,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
 
   const twTitle = (
     <Container gap="xxs" center="y" flex="row">
-      {connectModal.titleIcon === undefined ? (
-        <Link
-          color="primaryText"
-          hoverColor="accentText"
-          target="_blank"
-          href="https://thirdweb.com/connect?utm_source=cw"
-          style={{
-            display: "flex",
-            alignItems: "center",
-          }}
-          onClick={(e) => {
-            if (!enableTWIconLink.current) {
-              e.preventDefault();
-            }
-          }}
-        >
-          <TWIcon size={iconSize.md} />
-        </Link>
-      ) : connectModal.titleIcon === "" ? null : (
+      {!connectModal.titleIcon ? null : (
         <Img
           src={connectModal.titleIcon}
           width={iconSize.md}
@@ -188,31 +171,14 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
   };
 
   const connectAWallet = (
-    <Button
-      fullWidth
-      variant="outline"
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        gap: spacing.sm,
-        padding: spacing.md,
-      }}
+    <WalletTypeRowButton
+      client={client}
+      icon={genericWalletIcon}
       onClick={() => {
         setIsWalletGroupExpanded(true);
       }}
-    >
-      <Container flex="row" gap="xxs">
-        {eoaWallets.slice(0, 2).map((w) => (
-          <WalletImage
-            key={w.id}
-            id={w.id}
-            size={iconSize.sm}
-            client={client}
-          />
-        ))}
-      </Container>
-      {locale.connectAWallet}
-    </Button>
+      title={locale.connectAWallet}
+    />
   );
 
   const newToWallets = (
@@ -283,7 +249,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
       bottomSection = (
         <>
           <Line />
-          <Container flex="column" p="lg" gap="lg">
+          <Container flex="column" p="md" gap="md">
             {newToWallets}
             {continueAsGuest}
           </Container>
@@ -346,7 +312,13 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
           // social login + More than 1 eoa wallets
           if (eoaWallets.length > 1) {
             bottomSection = (
-              <Container flex="column" gap="sm">
+              <Container
+                flex="column"
+                style={{ position: "relative" }}
+                gap="sm"
+              >
+                <GradientDiv />
+
                 <Container px="lg" flex="column" gap="md">
                   {connectAWallet}
                   {continueAsGuest}
@@ -421,17 +393,13 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
       animate="fadein"
       fullHeight
       style={{
-        maxHeight: connectModal.size === "compact" ? "550px" : undefined,
+        maxHeight:
+          connectModal.size === "compact" ? compactModalMaxHeight : undefined,
       }}
     >
       {/* Header */}
       {!isEmbed && (
-        <Container
-          p="lg"
-          style={{
-            paddingBottom: spacing.md,
-          }}
-        >
+        <Container p="lg">
           {isWalletGroupExpanded ? (
             <ModalHeader
               title={twTitle}
@@ -491,7 +459,11 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
 
       {bottomSection}
       {isCompact && connectModal.showThirdwebBranding !== false && (
-        <Container py="md">
+        <Container
+          style={{
+            paddingBottom: spacing.md,
+          }}
+        >
           <PoweredByThirdweb />
         </Container>
       )}
@@ -639,4 +611,18 @@ const WalletList = /* @__PURE__ */ StyledUl({
   margin: "-2px",
   marginBottom: 0,
   paddingBottom: spacing.lg,
+});
+
+const GradientDiv = /* @__PURE__ */ StyledDiv(() => {
+  const theme = useCustomTheme();
+  theme.colors.modalBg;
+  return {
+    height: spacing.lg,
+    position: "absolute",
+    top: `-${spacing.lg}`,
+    left: 0,
+    width: "100%",
+    background: `linear-gradient(to bottom, transparent 0%, ${theme.colors.modalBg} 80%)`,
+    pointerEvents: "none",
+  };
 });

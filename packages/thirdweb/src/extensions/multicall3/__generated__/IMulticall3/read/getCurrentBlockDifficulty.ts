@@ -61,7 +61,9 @@ export function decodeGetCurrentBlockDifficultyResult(result: Hex) {
  * ```ts
  * import { getCurrentBlockDifficulty } from "thirdweb/extensions/multicall3";
  *
- * const result = await getCurrentBlockDifficulty();
+ * const result = await getCurrentBlockDifficulty({
+ *  contract,
+ * });
  *
  * ```
  */

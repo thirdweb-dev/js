@@ -62,7 +62,9 @@ export function decodeGetPlatformFeeInfoResult(result: Hex) {
  * ```ts
  * import { getPlatformFeeInfo } from "thirdweb/extensions/marketplace";
  *
- * const result = await getPlatformFeeInfo();
+ * const result = await getPlatformFeeInfo({
+ *  contract,
+ * });
  *
  * ```
  */

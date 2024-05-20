@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmTBszPzBeWPhjozf4TxpL2ws1NkG9yJvisx9h6MFii1zb",
-    "width": 460,
-    "height": 460,
-    "format": "png"
-  },
   "infoURL": "https://resincoin.dev",
   "name": "ResinCoin Mainnet",
   "nativeCurrency": {

@@ -56,7 +56,7 @@ export async function computeDeploymentInfoFromMetadata(args: {
       (abi) => abi.type === "constructor",
     ) as AbiConstructor) || [];
   const encodedArgs = encodeAbiParameters(
-    constructorAbi.inputs,
+    constructorAbi.inputs ?? [],
     constructorParams,
   );
   const initBytecodeWithsalt = getInitBytecodeWithSalt({

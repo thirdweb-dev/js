@@ -57,7 +57,9 @@ export function decodeSymbolResult(result: Hex) {
  * ```ts
  * import { symbol } from "thirdweb/extensions/common";
  *
- * const result = await symbol();
+ * const result = await symbol({
+ *  contract,
+ * });
  *
  * ```
  */

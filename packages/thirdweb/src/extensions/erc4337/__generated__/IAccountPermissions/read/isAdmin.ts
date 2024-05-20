@@ -108,6 +108,7 @@ export function decodeIsAdminResult(result: Hex) {
  * import { isAdmin } from "thirdweb/extensions/erc4337";
  *
  * const result = await isAdmin({
+ *  contract,
  *  signer: ...,
  * });
  *

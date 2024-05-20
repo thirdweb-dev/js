@@ -110,6 +110,7 @@ export function decodeGetApprovedResult(result: Hex) {
  * import { getApproved } from "thirdweb/extensions/erc721";
  *
  * const result = await getApproved({
+ *  contract,
  *  tokenId: ...,
  * });
  *

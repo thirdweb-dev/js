@@ -34,7 +34,7 @@ export function resolveScheme(options: ResolveSchemeOptions) {
     const clientId = options.client.clientId;
     const cid = findIPFSCidFromUri(options.uri);
 
-    // purpusefully using SPLIT here and and not replace for CID to avoid cases where users don't know the schema
+    // purposefully using SPLIT here and and not replace for CID to avoid cases where users don't know the schema
     // also only splitting on `/ipfs` to avoid cases where people pass non `/` terminated gateway urls
     return `${
       gateway.replace("{clientId}", clientId).split("/ipfs")[0]
@@ -46,7 +46,10 @@ export function resolveScheme(options: ResolveSchemeOptions) {
   throw new Error(`Invalid URI scheme, expected "ipfs://" or "http(s)://"`);
 }
 
-function findIPFSCidFromUri(uri: string) {
+/**
+ * @internal
+ */
+export function findIPFSCidFromUri(uri: string) {
   if (!uri.startsWith("ipfs://")) {
     // do not touch URIs that are not ipfs URIs
     return uri;

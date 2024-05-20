@@ -59,7 +59,9 @@ export function decodePrimarySaleRecipientResult(result: Hex) {
  * ```ts
  * import { primarySaleRecipient } from "thirdweb/extensions/common";
  *
- * const result = await primarySaleRecipient();
+ * const result = await primarySaleRecipient({
+ *  contract,
+ * });
  *
  * ```
  */

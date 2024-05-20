@@ -1,3 +1,4 @@
+import type { AdapterWalletOptions } from "../adapters/wallet-adapter.js";
 import type { Chain } from "../chains/types.js";
 import type { ThirdwebClient } from "../client/client.js";
 import type {
@@ -10,10 +11,10 @@ import type {
 } from "./coinbase/coinbaseSDKWallet.js";
 import type { COINBASE } from "./constants.js";
 import type {
-  InAppWalletAuth,
   InAppWalletAutoConnectOptions,
   InAppWalletConnectionOptions,
-} from "./in-app/core/wallet/index.js";
+  InAppWalletCreationOptions,
+} from "./in-app/core/wallet/types.js";
 import type {
   SmartWalletConnectionOptions,
   SmartWalletOptions,
@@ -28,6 +29,7 @@ export type WalletId =
   | "inApp"
   | "embedded" // deprecated
   | "smart"
+  | "adapter"
   | WCSupportedWalletIds
   | InjectedSupportedWalletIds;
 
@@ -50,14 +52,6 @@ export type InjectedConnectOptions = {
    */
   chain?: Chain;
 };
-
-export type InAppWalletCreationOptions =
-  | {
-      auth?: {
-        options: InAppWalletAuth[];
-      };
-    }
-  | undefined;
 
 /**
  * Generic type for getting the type of object that the `wallet.connect` method takes as the first argument.
@@ -124,7 +118,9 @@ export type WalletCreationOptions<T extends WalletId> = T extends "smart"
     ? InAppWalletCreationOptions
     : T extends typeof COINBASE
       ? CoinbaseWalletCreationOptions
-      : undefined;
+      : T extends "adapter"
+        ? AdapterWalletOptions
+        : undefined;
 
 /**
  * Generic type for getting the tuple type of arguments that the `createWallet` function takes.

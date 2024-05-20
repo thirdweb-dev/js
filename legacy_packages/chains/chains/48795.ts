@@ -25,6 +25,6 @@ export default {
     "https://subnets.avax.network/space/testnet/rpc"
   ],
   "shortName": "Space",
-  "slug": "space",
+  "slug": "space-space",
   "testnet": true
 } as const satisfies Chain;

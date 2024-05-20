@@ -29,6 +29,8 @@ export default {
   },
   "rpc": [
     "https://2810.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc-quicknode-holesky.morphl2.io",
+    "wss://rpc-quicknode-holesky.morphl2.io",
     "https://rpc-holesky.morphl2.io"
   ],
   "shortName": "hmorph",

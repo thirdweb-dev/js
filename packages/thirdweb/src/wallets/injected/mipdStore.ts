@@ -1,4 +1,5 @@
 import { type EIP6963ProviderDetail, type Store, createStore } from "mipd";
+import { isBrowser } from "../../utils/platform.js";
 import { METAMASK } from "../constants.js";
 import type { Ethereum } from "../interfaces/ethereum.js";
 import type { WalletId } from "../wallet-types.js";
@@ -11,7 +12,7 @@ declare module "mipd" {
 
 // if we're in the browser -> create the store once immediately
 const mipdStore: Store | undefined = /* @__PURE__ */ (() =>
-  typeof window !== "undefined" ? createStore() : undefined)();
+  isBrowser() ? createStore() : undefined)();
 
 /**
  * Get Injected Provider for given wallet by passing a wallet ID (rdns) using [EIP-6963](https://eips.ethereum.org/EIPS/eip-6963) Provider Discovery.

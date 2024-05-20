@@ -59,7 +59,9 @@ export function decodeREMOVE_TYPEHASHResult(result: Hex) {
  * ```ts
  * import { REMOVE_TYPEHASH } from "thirdweb/extensions/farcaster";
  *
- * const result = await REMOVE_TYPEHASH();
+ * const result = await REMOVE_TYPEHASH({
+ *  contract,
+ * });
  *
  * ```
  */

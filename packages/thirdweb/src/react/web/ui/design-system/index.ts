@@ -14,17 +14,17 @@ type ThemeColors = {
 };
 
 const darkColors = {
-  base1: "hsl(230deg 11.63% 8.43%)",
-  base2: "hsl(230deg 11.63% 12%)",
-  base3: "hsl(230deg 11.63% 15%)",
-  base4: "hsl(230deg 11.63% 17%)",
+  base1: "hsl(228deg 12% 8%)",
+  base2: "hsl(228deg 12% 12%)",
+  base3: "hsl(228deg 12% 15%)",
+  base4: "hsl(228deg 12% 18%)",
   primaryText: "#eeeef0",
   secondaryText: "#7c7a85",
   danger: "#e5484D",
   success: "#30A46C",
   overlay: "rgba(0, 0, 0, 0.7)",
   accentText: "#3385FF",
-  accentBg: "hsl(216 100% 50%)",
+  accentBg: "#3385FF",
   textOnAccent: "#eeeef0",
 } as const satisfies ThemeColors;
 
@@ -32,14 +32,14 @@ const lightColors = {
   base1: "#fdfcfd",
   base2: "#f2eff3",
   base3: "#e3dfe6",
-  base4: "#dbd8e0",
+  base4: "#e5e6ed",
   primaryText: "#211f26",
   secondaryText: "#6f6d78",
   accentText: "hsl(216 100% 45%)",
   success: "#30A46C",
   danger: "#e5484D",
   overlay: "rgba(0, 0, 0, 0.7)",
-  accentBg: "hsl(216 100% 50%)",
+  accentBg: "#3385FF",
   textOnAccent: "#fdfcfd",
 } as const satisfies ThemeColors;
 
@@ -126,7 +126,7 @@ function createThemeObj(colors: ThemeColors): Theme {
       tooltipBg: colors.primaryText,
       tooltipText: colors.base1,
 
-      inputAutofillBg: colors.base2,
+      inputAutofillBg: colors.base1,
       scrollbarBg: colors.base2,
       tertiaryBg: colors.base2,
 

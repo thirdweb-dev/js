@@ -20,7 +20,8 @@ import { StyledDiv } from "../../design-system/elements.js";
 import { fontSize, iconSize, spacing } from "../../design-system/index.js";
 import { useSendToken } from "../../hooks/useSendToken.js";
 import { type SupportedTokens, defaultTokens } from "../defaultTokens.js";
-import { TokenSelector, formatTokenBalance } from "./TokenSelector.js";
+import { TokenSelector } from "./TokenSelector.js";
+import { formatTokenBalance } from "./formatTokenBalance.js";
 import { type ERC20OrNativeToken, NATIVE_TOKEN } from "./nativeToken.js";
 
 type TXError = Error & { data?: { message?: string } };
@@ -29,7 +30,7 @@ type TXError = Error & { data?: { message?: string } };
  * @internal
  */
 export function SendFunds(props: {
-  supportedTokens: SupportedTokens;
+  supportedTokens?: SupportedTokens;
   onBack: () => void;
 }) {
   const [screen, setScreen] = useState<"base" | "tokenSelector">("base");
@@ -38,16 +39,17 @@ export function SendFunds(props: {
   const { connectLocale, client } = useConnectUI();
 
   let defaultToken: ERC20OrNativeToken = NATIVE_TOKEN;
+  const supportedTokens = props.supportedTokens || defaultTokens;
   if (
     // if we know chainId
     chainId &&
     // if there is a list of tokens for this chain
-    props.supportedTokens[chainId] &&
+    supportedTokens[chainId] &&
     // if the list of tokens is not the default list
-    props.supportedTokens[chainId] !== defaultTokens[chainId]
+    supportedTokens[chainId] !== defaultTokens[chainId]
   ) {
     // use the first token in the list as default selected
-    const tokensForChain = props.supportedTokens[chainId];
+    const tokensForChain = supportedTokens[chainId];
     const firstToken = tokensForChain?.[0];
     if (firstToken) {
       defaultToken = firstToken;
@@ -61,8 +63,7 @@ export function SendFunds(props: {
 
   const chain = useActiveWalletChain();
 
-  const tokenList =
-    (chain?.id ? props.supportedTokens[chain.id] : undefined) || [];
+  const tokenList = (chain?.id ? supportedTokens[chain.id] : undefined) || [];
 
   if (screen === "tokenSelector" && chain) {
     return (

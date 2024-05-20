@@ -19,7 +19,7 @@ export default {
     "format": "png"
   },
   "infoURL": "https://www.hashkey.com",
-  "name": "HashKey Chain Testnet",
+  "name": "HashKey Chain Testnet(discard)",
   "nativeCurrency": {
     "name": "HashKey Token",
     "symbol": "tHSK",
@@ -32,6 +32,6 @@ export default {
   ],
   "shortName": "hsktest",
   "slip44": 1,
-  "slug": "hashkey-chain-testnet",
+  "slug": "hashkey-chain-testnet-discard",
   "testnet": true
 } as const satisfies Chain;

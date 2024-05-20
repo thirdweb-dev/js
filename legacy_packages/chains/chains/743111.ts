@@ -5,7 +5,7 @@ export default {
   "explorers": [
     {
       "name": "blockscout",
-      "url": "https://testnet.explorer.hemi.network",
+      "url": "https://testnet.explorer.hemi.xyz",
       "standard": "EIP3091",
       "icon": {
         "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
@@ -16,6 +16,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmfP6GDn5eXFcpWuoiyWn5pjn6PYB7HQhRD8nSko1zR8KD",
+    "width": 1200,
+    "height": 1200,
+    "format": "png"
+  },
   "infoURL": "https://hemi.xyz",
   "name": "Hemi Sepolia",
   "nativeCurrency": {

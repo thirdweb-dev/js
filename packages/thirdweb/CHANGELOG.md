@@ -1,5 +1,373 @@
 # thirdweb
 
+## 5.22.1
+
+### Patch Changes
+
+- [#3059](https://github.com/thirdweb-dev/js/pull/3059) [`5a40c6a`](https://github.com/thirdweb-dev/js/commit/5a40c6a99b5f4fcafc9c2835f05b41dba8023e4a) Thanks [@jnsdls](https://github.com/jnsdls)! - fix losing state when looking at transactions during pay
+
+- [#3058](https://github.com/thirdweb-dev/js/pull/3058) [`1698c40`](https://github.com/thirdweb-dev/js/commit/1698c40c37a2d9d7e31a8b15d95d87896afab063) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fixes MediaRenderer flashing its failed state while loading
+
+## 5.22.0
+
+### Minor Changes
+
+- [#3001](https://github.com/thirdweb-dev/js/pull/3001) [`726618b`](https://github.com/thirdweb-dev/js/commit/726618b97a532844c2fede137d7d857deb5e68ec) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds basic EIP-5792 support for wallets with functions `getCapabilities`, `sendCalls`, `showCallsStatus`, `getCallsStatus`.
+
+  ## Example Usage
+
+  ### `getCapabilities`
+
+  Returns the capabilities of the wallet according to EIP-5792.
+
+  ```ts
+  import { getCapabilities } from "thirdweb/wallets/eip5792";
+
+  const capabilities = await getCapabilities({ wallet });
+  ```
+
+  ### `sendCalls`
+
+  Sends the given calls to the wallet for execution, and attempts to fallback to normal execution if the wallet does not support EIP-5792.
+
+  ```ts
+  import { sendCalls } from "thirdweb/wallets/eip5792";
+
+  const transfer1 = transfer({
+    contract: USDC_CONTRACT,
+    amount: 5000,
+    to: "0x33d9B8BEfE81027E2C859EDc84F5636cbb202Ed6",
+  });
+
+  const transfer2 = transfer({
+    contract: USDT_CONTRACT,
+    amount: 1000,
+    to: "0x33d9B8BEfE81027E2C859EDc84F5636cbb202Ed6",
+  });
+
+  const bundleId = await sendCalls({
+    wallet,
+    client,
+    calls: [transfer1, transfer2],
+  });
+  ```
+
+  ### `showCallsStatus`
+
+  Requests the wallet to show the status of a given bundle ID.
+
+  ```ts
+  import { showCallsStatus } from "thirdweb/wallets/eip5792";
+
+  await showCallsStatus({ wallet, bundleId });
+  ```
+
+  ### `getCallsStatus`
+
+  Returns the status of the given bundle ID and the transaction receipts if completed.
+
+  ```ts
+  import { getCallsStatus } from "thirdweb/wallets/eip5792";
+
+  const status = await getCallsStatus({ wallet, bundleId });
+  ```
+
+### Patch Changes
+
+- [#3048](https://github.com/thirdweb-dev/js/pull/3048) [`cfe60d2`](https://github.com/thirdweb-dev/js/commit/cfe60d22a3eb00241dbc653eba1b7d52c9ce97b1) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Improve error message for `resolveAbiFromBytecode`
+
+- [#3040](https://github.com/thirdweb-dev/js/pull/3040) [`ce45475`](https://github.com/thirdweb-dev/js/commit/ce4547501f9d2c9bd3c6001d39dd6211dbd4e5d6) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fixes caching issue when using `defineChain`
+
+- [#3037](https://github.com/thirdweb-dev/js/pull/3037) [`f006429`](https://github.com/thirdweb-dev/js/commit/f006429d7c2415e9f2206e081f6b867854842f0b) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Updates for react native compatibility
+
+## 5.21.0
+
+### Minor Changes
+
+- [#3034](https://github.com/thirdweb-dev/js/pull/3034) [`99fa2da`](https://github.com/thirdweb-dev/js/commit/99fa2da05abc32646036a2269f90213c5756a5ba) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds the ability to set a custom logo for the social login modal
+
+  ```ts
+  import { inAppWallet } from "thirdweb/wallets";
+  const wallet = inAppWallet({
+    metadata: {
+      image: {
+        src: "https://example.com/logo.png",
+        alt: "My logo",
+        width: 100,
+        height: 100,
+      },
+    },
+  });
+  ```
+
+### Patch Changes
+
+- [#3035](https://github.com/thirdweb-dev/js/pull/3035) [`3c04450`](https://github.com/thirdweb-dev/js/commit/3c044508eee18ca741878da43e199ed4cc0528b7) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Export extensions for Pack contract
+
+## 5.20.0
+
+### Minor Changes
+
+- [#2912](https://github.com/thirdweb-dev/js/pull/2912) [`9caa9d7`](https://github.com/thirdweb-dev/js/commit/9caa9d7a8df173d06ddaf3a8fab929f65adab092) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Updated Connect Modal UI + Passkey support
+
+  - Passkey is now an auth option for `inAppWallet`
+  - Connect UI component UI refresh
+
+  ```ts
+  const wallet = inAppWallet();
+  const hasPasskey = await hasStoredPasskey(client);
+  await wallet.connect({
+    client,
+    strategy: "passkey",
+    type: hasPasskey ? "sign-in" : "sign-up",
+  });
+  ```
+
+- [#3018](https://github.com/thirdweb-dev/js/pull/3018) [`5083464`](https://github.com/thirdweb-dev/js/commit/50834640af8a8c17483465f308642e266dbac290) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds support for Core wallet extension
+
+### Patch Changes
+
+- [#3024](https://github.com/thirdweb-dev/js/pull/3024) [`eb29adf`](https://github.com/thirdweb-dev/js/commit/eb29adf157103cc277d6787c8427403b2eba8472) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add BSC mainnet and testnet
+
+- [#3004](https://github.com/thirdweb-dev/js/pull/3004) [`145ff48`](https://github.com/thirdweb-dev/js/commit/145ff4890fa763288610b2e1af152e7827ec0d8e) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Updates shortenAddress to accept a string
+
+- [#3027](https://github.com/thirdweb-dev/js/pull/3027) [`c08a5f2`](https://github.com/thirdweb-dev/js/commit/c08a5f298d59f0b54b4b941d719911c294b8bf04) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fixes chain metadata overrides
+
+## 5.19.1
+
+### Patch Changes
+
+- [#3005](https://github.com/thirdweb-dev/js/pull/3005) [`0006e54`](https://github.com/thirdweb-dev/js/commit/0006e547a4425406101ef85c635b83c5c6186d1d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - - useSendTransaction now switches chain if needed
+  - Fix chain switching with in-app smart accounts
+  - Fix tx simulation for pay modal
+
+## 5.19.0
+
+### Minor Changes
+
+- [#2995](https://github.com/thirdweb-dev/js/pull/2995) [`523cd1e`](https://github.com/thirdweb-dev/js/commit/523cd1e16fd1194ffbf8970150ed6f09d4e01fe9) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds shortenAddress util
+
+- [#2997](https://github.com/thirdweb-dev/js/pull/2997) [`cf7b6fc`](https://github.com/thirdweb-dev/js/commit/cf7b6fc7bc1686f3b4c54515d569d799d5e3ceea) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - added `createWalletAdapter` helper for interop with diff libraries
+
+### Patch Changes
+
+- [#3000](https://github.com/thirdweb-dev/js/pull/3000) [`0ab1407`](https://github.com/thirdweb-dev/js/commit/0ab14075d37aec27167c5885155f48ea880c9574) Thanks [@MananTank](https://github.com/MananTank)! - Fix WalletImage fallback icon
+
+## 5.18.1
+
+### Patch Changes
+
+- [#2988](https://github.com/thirdweb-dev/js/pull/2988) [`02c0319`](https://github.com/thirdweb-dev/js/commit/02c03196ad38de888ff86311c68fa010018bda60) Thanks [@jnsdls](https://github.com/jnsdls)! - bump all to fix release
+
+## 5.18.0
+
+### Minor Changes
+
+- [#2985](https://github.com/thirdweb-dev/js/pull/2985) [`55081d8`](https://github.com/thirdweb-dev/js/commit/55081d833585b8c7c24690abd87cabeee95cde33) Thanks [@jnsdls](https://github.com/jnsdls)! - ### "Credit Card" payment method added in thirdweb Pay for Fiat on-ramp
+
+  ### `PayEmbed` component added to embed thirdweb Pay UI
+
+  ```tsx
+  <PayEmbed
+    client={client}
+    style={{
+      width: "360px",
+    }}
+  />
+  ```
+
+  ### thirdweb Pay UI customization available in `PayEmbed` and `ConnectButton`
+
+  `payOptions` prop in `PayEmbed` and `ConnectButton > detailsModal` allows you custimize :
+
+  - Enable/Disable payment methods
+  - Set default amount for Buy token
+  - Set Buy token/chain to be selected by default
+  - Set Source token/chain to be selected by default for Crypto payment method
+  - Disable editing for Buy token/chain/amount and Source token/chain
+
+  ```tsx
+  <ConnectButton
+    client={client}
+    detailsModal={{
+      payOptions: yourOptions,
+    }}
+  />
+
+  <PayEmbed
+    client={client}
+    detailsModal={{
+      payOptions: yourOptions,
+    }}
+  />
+  ```
+
+  ### Fiat on-ramp functions and hooks added
+
+  - `getBuyWithFiatQuote`, `useBuyWithFiatQuote` to get a quote for buying crypto with fiat currency
+  - `getBuyWithFiatStatus`, `useBuyWithFiatStatus` to get status of "Buy with fiat" transaction
+  - `getBuyWithFiatHistory`, `useBuyWithFiatHistory` to get "Buy with fiat" transaction history
+  - `getPostOnRampQuote`, `usePostOnRampQuote` to get quote for swapping on-ramp token to destination token after doing on-ramp
+  - Add `getBuyHistory` and `useBuyHistory` to get both "Buy with Fiat" and "Buy with Crypto" transaction history in a single list
+
+## 5.17.0
+
+### Minor Changes
+
+- [#2931](https://github.com/thirdweb-dev/js/pull/2931) [`24c1670`](https://github.com/thirdweb-dev/js/commit/24c1670e7044ba55e8d0f0f6e9be6a19cca92b28) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - New `smartAccount` prop for `inAppWallet()`
+
+  You can now convert an inAppWallet to a smart account simply by passing the `smartAccount` prop.
+
+  ```ts
+  const wallet = inAppWallet({
+    smartAccount: {
+      chain: sepolia,
+      sponsorGas: true,
+    },
+  });
+
+  await wallet.connect({
+    client,
+    strategy: "google",
+  });
+  ```
+
+  Note: beware that when toggling this flag on and off, you will get a different address (admin EOA vs smart account).
+
+### Patch Changes
+
+- [#2959](https://github.com/thirdweb-dev/js/pull/2959) [`3377fc9`](https://github.com/thirdweb-dev/js/commit/3377fc98825a29abe58b87907165afe6a7dca946) Thanks [@MananTank](https://github.com/MananTank)! - Fix custom details button not opening the details modal in `ConnectButton`
+
+- [#2955](https://github.com/thirdweb-dev/js/pull/2955) [`fd1bd7e`](https://github.com/thirdweb-dev/js/commit/fd1bd7e7ef11285e103898df1d71f079da8ee06f) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add resolve method for Arweave URIs
+
+- [#2950](https://github.com/thirdweb-dev/js/pull/2950) [`d4808fd`](https://github.com/thirdweb-dev/js/commit/d4808fd7e83e0ca9f0b0f78e4248a854ecfec710) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Export getUserPhoneNumber and getAuthenticatedUser in-app wallet functions
+
+- [#2972](https://github.com/thirdweb-dev/js/pull/2972) [`b1ca05e`](https://github.com/thirdweb-dev/js/commit/b1ca05ec12dfa40784667b95944d64982d17b753) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix issue with nonce set to 0 on toSerializableTransaction
+
+- [#2966](https://github.com/thirdweb-dev/js/pull/2966) [`4de8802`](https://github.com/thirdweb-dev/js/commit/4de88024357cf8197ec78fb4fabaf5bddd47c605) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fixes issue with contract compilation in hardhat
+
+- [#2962](https://github.com/thirdweb-dev/js/pull/2962) [`5b6b241`](https://github.com/thirdweb-dev/js/commit/5b6b24133430db7953d14bbda21393c0f3fbfa74) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Makes multiple bugfixes on the deployPublishedContract code path
+
+  - Contracts with no constructor can now deploy as abi inputs defaults to `[]` when encoding the parameters
+  - Properly finds contract versions when specified
+  - Defaults to standard deployment if no deployType is specified
+
+- [#2965](https://github.com/thirdweb-dev/js/pull/2965) [`ae10776`](https://github.com/thirdweb-dev/js/commit/ae1077656fe2cf7eb9848b7391c8edcdba0fe77a) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add Arweave URI support to <MediaRenderer />
+
+- [#2969](https://github.com/thirdweb-dev/js/pull/2969) [`d660b6c`](https://github.com/thirdweb-dev/js/commit/d660b6ce3249bdcd1ff57719ecee7db5c7d47718) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fixes deterministic deploys of contracts with no constructor
+
+- [#2958](https://github.com/thirdweb-dev/js/pull/2958) [`02a0ca9`](https://github.com/thirdweb-dev/js/commit/02a0ca9727e1fabfaf1593dd8a3728ca9a32842d) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fixes inconsistent block numbers when fetching events.
+
+  `getContractEvents` will now properly handle `blockRange` interaction with `fromBlock` and `toBlock` given they are both inclusive (i.e. it will only return logs for the number of blocks specified in `blockRange`).
+
+## 5.16.1
+
+### Patch Changes
+
+- [#2936](https://github.com/thirdweb-dev/js/pull/2936) [`a692154`](https://github.com/thirdweb-dev/js/commit/a6921549244e3a0a959fa0611f3ab92328c06f4b) Thanks [@MananTank](https://github.com/MananTank)! - Fix OTP input entered by by clicking on “from messages” option in iOS safari
+
+- [#2934](https://github.com/thirdweb-dev/js/pull/2934) [`bdb919f`](https://github.com/thirdweb-dev/js/commit/bdb919f32ae459608b29dd1e4d511afc226470c6) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Updates the CLI `create` command to use the v5 templates for Next.js and Vite
+
+  Other templates will be updated in the future from within their existing repositories
+
+  Removes React Native starters from the CLI menu
+  Removes JS template support from the CLI
+
+- [#2941](https://github.com/thirdweb-dev/js/pull/2941) [`795a59e`](https://github.com/thirdweb-dev/js/commit/795a59e436d791fcfef093971d295622951c832c) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Can now optionally specify `blockRange` on `getContractEvents` in combination with `toBlock` and `fromBlock`.
+
+  ## Usage
+
+  Specify a `blockRange`, defaulting `toBlock` to the current block number.
+
+  ```ts
+  await getContractEvents({
+    contract: myContract,
+    blockRange: 123456n,
+    events: [preparedEvent, preparedEvent2],
+  });
+  ```
+
+  Specify a block range with `toBlock`.
+
+  ```ts
+  await getContractEvents({
+    contract: myContract,
+    toBlock: endBlock,
+    blockRange: 123456n,
+    events: [preparedEvent, preparedEvent2],
+  });
+  ```
+
+  Specify a block range starting from `fromBlock` (great for pagination).
+
+  ```ts
+  await getContractEvents({
+    contract: myContract,
+    fromBlock: lastBlockFetched,
+    blockRange: 123456n,
+    events: [preparedEvent, preparedEvent2],
+  });
+  ```
+
+- [#2945](https://github.com/thirdweb-dev/js/pull/2945) [`b64c8e7`](https://github.com/thirdweb-dev/js/commit/b64c8e7b6efaf09be2afc73b92624c5576a4b24e) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Removes deprecated template options from the CLI, specifically PWA Vite, Express, and React
+
+- [#2951](https://github.com/thirdweb-dev/js/pull/2951) [`49d4494`](https://github.com/thirdweb-dev/js/commit/49d44940084dc43fb48836f9d628b8e36dcb917a) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Increase gas on MarketplaceV3 writes
+
+- [#2948](https://github.com/thirdweb-dev/js/pull/2948) [`44680c6`](https://github.com/thirdweb-dev/js/commit/44680c65c1cb8aeb0643fff5084b3b013460c610) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds extraGas override to transactions. Useful when gas estimates are faulty or to ensure a transaction goes through.
+
+  ## Usage
+
+  ```ts
+  const transaction = prepareTransaction({
+    to: "0x1234567890123456789012345678901234567890",
+    chain: ethereum,
+    client: thirdwebClient,
+    value: toWei("1.0"),
+    gasPrice: 30n,
+    extraGas: 50_000n,
+  });
+  ```
+
+- [#2932](https://github.com/thirdweb-dev/js/pull/2932) [`86105c9`](https://github.com/thirdweb-dev/js/commit/86105c9d918852da86215ec0806aadbcf8eafdea) Thanks [@gregfromstl](https://github.com/gregfromstl)! - TransactionButton throws error on reverted transaction
+
+- [#2946](https://github.com/thirdweb-dev/js/pull/2946) [`ec149f3`](https://github.com/thirdweb-dev/js/commit/ec149f383415722d34e0de68b0807c84ad3dc55a) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Read RPC url from viem chain in viem chain adapter
+
+- [#2928](https://github.com/thirdweb-dev/js/pull/2928) [`cea736c`](https://github.com/thirdweb-dev/js/commit/cea736c7e4031b5eaebcd788488314f24d5cab83) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Filters invalid listings and auctions from marketplace
+
+- [#2949](https://github.com/thirdweb-dev/js/pull/2949) [`0e19911`](https://github.com/thirdweb-dev/js/commit/0e199116682727f72b87b81f027f67b223bccfad) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Docs update: fix typos and add code snippet
+
+- [#2944](https://github.com/thirdweb-dev/js/pull/2944) [`82e8911`](https://github.com/thirdweb-dev/js/commit/82e89116af8ef6e8c3c7faef1829e0e323e146ae) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Show auth provider icon in connect UI when connected to in app wallet
+
+- [#2933](https://github.com/thirdweb-dev/js/pull/2933) [`8e0a3ce`](https://github.com/thirdweb-dev/js/commit/8e0a3cea1e354f45e7aa107851909e7d57604f0d) Thanks [@MananTank](https://github.com/MananTank)! - ### Integrate Pay Modal with TransactionButton
+
+  By default, the Pay Modal is integrated with the `TransactionButton` component. If the user performs a transaction and does not have enough funds to execute it and if [thirdweb pay](https://portal.thirdweb.com/connect/pay/buy-with-crypto) is available for that blockchain, the Pay Modal will be displayed to allow user to buy the required amount of tokens
+
+  A new prop `payModal` is added to the `TransactionButton` component customize the Pay Modal UI or disable it entirely
+
+  Example: Disable Pay Modal
+
+  ```tsx
+  <TransactionButton payModal={false}> Example 1 </TransactionButton>
+  ```
+
+  Example: Customize Pay Modal UI
+
+  ```tsx
+  <TransactionButton
+    payModal={{
+      theme: "light",
+    }}
+  >
+    Example 2
+  </TransactionButton>
+  ```
+
+  ### Disable Pay Modal for certain configurations in `useSendTransaction` hook
+
+  If `useSendTransaction` hook is passed `gasless: true` configuration or if current active wallet is a smart wallet with `sponsorGas: true` configuration - the Pay Modal will be disabled
+
+- [#2929](https://github.com/thirdweb-dev/js/pull/2929) [`9f817cf`](https://github.com/thirdweb-dev/js/commit/9f817cf812e3fff6f64382778df1f99739fc3379) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Tweaked connected modal UI layout
+
 ## 5.16.0
 
 ### Minor Changes

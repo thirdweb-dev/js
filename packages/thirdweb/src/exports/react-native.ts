@@ -32,19 +32,33 @@ export {
 export { createContractQuery } from "../react/core/utils/createQuery.js";
 export { useInvalidateContractQuery } from "../react/core/hooks/others/useInvalidateQueries.js";
 
-// Buy with crypto
+// pay
 export {
   useBuyWithCryptoQuote,
-  type BuyWithCryptoQuoteQueryParams,
+  type BuyWithCryptoQuoteQueryOptions,
 } from "../react/core/hooks/pay/useBuyWithCryptoQuote.js";
-export {
-  useBuyWithCryptoStatus,
-  type BuyWithCryptoStatusQueryParams,
-} from "../react/core/hooks/pay/useBuyWithCryptoStatus.js";
+export { useBuyWithCryptoStatus } from "../react/core/hooks/pay/useBuyWithCryptoStatus.js";
 export {
   useBuyWithCryptoHistory,
-  type BuyWithCryptoHistoryQueryParams,
+  type BuyWithCryptoHistoryQueryOptions,
 } from "../react/core/hooks/pay/useBuyWithCryptoHistory.js";
+export {
+  useBuyWithFiatQuote,
+  type BuyWithFiatQuoteQueryOptions,
+} from "../react/core/hooks/pay/useBuyWithFiatQuote.js";
+export { useBuyWithFiatStatus } from "../react/core/hooks/pay/useBuyWithFiatStatus.js";
+export {
+  useBuyWithFiatHistory,
+  type BuyWithFiatHistoryQueryOptions,
+} from "../react/core/hooks/pay/useBuyWithFiatHistory.js";
+export {
+  useBuyHistory,
+  type BuyHistoryQueryOptions,
+} from "../react/core/hooks/pay/useBuyHistory.js";
+export {
+  usePostOnRampQuote,
+  type PostOnRampQuoteQueryOptions,
+} from "../react/core/hooks/pay/usePostOnrampQuote.js";
 
 import { useSendTransactionCore } from "../react/core/hooks/contract/useSendTransaction.js";
 
@@ -62,3 +76,6 @@ import { useSendTransactionCore } from "../react/core/hooks/contract/useSendTran
  * @transaction
  */
 export const useSendTransaction = useSendTransactionCore;
+export { useSendBatchTransaction } from "../react/core/hooks/contract/useSendBatchTransaction.js";
+export { useSendAndConfirmTransaction } from "../react/core/hooks/contract/useSendAndConfirmTransaction.js";
+export { useEstimateGasCost } from "../react/core/hooks/contract/useEstimateGasCost.js";

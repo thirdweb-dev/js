@@ -108,6 +108,7 @@ export function encodeVerifyClaim(options: VerifyClaimParams) {
  * import { verifyClaim } from "thirdweb/extensions/erc1155";
  *
  * const result = await verifyClaim({
+ *  contract,
  *  claimer: ...,
  *  tokenId: ...,
  *  quantity: ...,

@@ -1,7 +1,23 @@
 "use client";
+import { useEffect, useState } from "react";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getInstalledWalletProviders } from "../../../../wallets/injected/mipdStore.js";
+import { getStoredActiveWalletId } from "../../../../wallets/manager/index.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
+import { useActiveWallet } from "../../../core/hooks/wallets/wallet-hooks.js";
+import { getStorage } from "../../../core/storage.js";
+import { getLastAuthProvider } from "../../wallets/in-app/storage.js";
+import {
+  emailIcon,
+  genericWalletIcon,
+  passkeyIcon,
+  phoneIcon,
+} from "../ConnectWallet/icons/dataUris.js";
+import {
+  appleIconUri,
+  facebookIconUri,
+  googleIconUri,
+} from "../ConnectWallet/icons/socialLogins.js";
 import { radius } from "../design-system/index.js";
 import { useWalletImage } from "../hooks/useWalletInfo.js";
 import { Img } from "./Img.js";
@@ -16,14 +32,63 @@ export function WalletImage(props: {
   size: string;
   client: ThirdwebClient;
 }) {
-  const mipdImage = getInstalledWalletProviders().find(
-    (provider) => provider.info.rdns === props.id,
-  )?.info.icon;
+  const [image, setImage] = useState<string | undefined>(undefined);
+  const activeWallet = useActiveWallet();
+  useEffect(() => {
+    async function fetchImage() {
+      // show EOA icon for external wallets
+      // show auth provider icon for in-app wallets
+      // show the admin EOA icon for smart
+      const storage = getStorage();
+      let activeEOAId = props.id;
+      if (props.id === "smart") {
+        const storedId = await getStoredActiveWalletId(storage);
+        if (storedId) {
+          activeEOAId = storedId;
+        }
+      }
+      let mipdImage = getInstalledWalletProviders().find(
+        (provider) => provider.info.rdns === activeEOAId,
+      )?.info.icon;
 
-  if (mipdImage) {
+      if (
+        activeEOAId === "inApp" &&
+        activeWallet &&
+        (activeWallet.id === "inApp" || activeWallet.id === "smart")
+      ) {
+        // when showing an active wallet icon - check last auth provider and override the IAW icon
+        const lastAuthProvider = await getLastAuthProvider(storage);
+        switch (lastAuthProvider) {
+          case "google":
+            mipdImage = googleIconUri;
+            break;
+          case "apple":
+            mipdImage = appleIconUri;
+            break;
+          case "facebook":
+            mipdImage = facebookIconUri;
+            break;
+          case "phone":
+            mipdImage = phoneIcon;
+            break;
+          case "email":
+            mipdImage = emailIcon;
+            break;
+          case "passkey":
+            mipdImage = passkeyIcon;
+            break;
+        }
+      }
+
+      setImage(mipdImage);
+    }
+    fetchImage();
+  }, [props.id, activeWallet]);
+
+  if (image) {
     return (
       <Img
-        src={mipdImage}
+        src={image}
         width={props.size}
         height={props.size}
         loading="eager"
@@ -50,7 +115,8 @@ function WalletImageQuery(props: {
   return (
     <Img
       client={props.client}
-      src={walletImage.data}
+      src={walletImage.isLoading ? undefined : walletImage.data || ""}
+      fallbackImage={genericWalletIcon}
       width={props.size}
       height={props.size}
       loading="eager"

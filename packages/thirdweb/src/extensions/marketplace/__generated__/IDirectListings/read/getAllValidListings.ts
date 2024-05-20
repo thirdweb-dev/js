@@ -172,6 +172,7 @@ export function decodeGetAllValidListingsResult(result: Hex) {
  * import { getAllValidListings } from "thirdweb/extensions/marketplace";
  *
  * const result = await getAllValidListings({
+ *  contract,
  *  startId: ...,
  *  endId: ...,
  * });

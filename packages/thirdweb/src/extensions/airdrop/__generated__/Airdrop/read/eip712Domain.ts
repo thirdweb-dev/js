@@ -89,7 +89,9 @@ export function decodeEip712DomainResult(result: Hex) {
  * ```ts
  * import { eip712Domain } from "thirdweb/extensions/airdrop";
  *
- * const result = await eip712Domain();
+ * const result = await eip712Domain({
+ *  contract,
+ * });
  *
  * ```
  */

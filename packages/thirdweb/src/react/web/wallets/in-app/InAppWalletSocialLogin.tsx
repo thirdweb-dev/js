@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import type { InAppWalletSocialAuth } from "../../../../wallets/in-app/core/wallet/index.js";
+import type { InAppWalletSocialAuth } from "../../../../wallets/in-app/core/wallet/types.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { Spacer } from "../../ui/components/Spacer.js";
@@ -11,6 +11,7 @@ import { Text } from "../../ui/components/text.js";
 import { useCustomTheme } from "../../ui/design-system/CustomThemeProvider.js";
 import type { InAppWalletLocale } from "./locale/types.js";
 import { openOauthSignInWindow } from "./openOauthSignInWindow.js";
+import { setLastAuthProvider } from "./storage.js";
 import type { InAppWalletSelectUIState } from "./types.js";
 
 /**
@@ -53,6 +54,7 @@ export function InAppWalletSocialLogin(props: {
         },
         client,
       });
+      await setLastAuthProvider(props.socialAuth);
       setStatus("connected");
       done();
     } catch (e) {
@@ -102,7 +104,9 @@ export function InAppWalletSocialLogin(props: {
           paddingBottom: 0,
         }}
       >
-        <ModalHeader title={locale.title} onBack={props.goBack} />
+        {props.goBack && (
+          <ModalHeader title={locale.title} onBack={props.goBack} />
+        )}
 
         {connectModal.size === "compact" ? <Spacer y="xl" /> : null}
 

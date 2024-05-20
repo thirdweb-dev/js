@@ -102,7 +102,7 @@ export function ConnectButton(props: ConnectButtonProps) {
         wallets: wallets,
         locale: props.locale || "en_US",
         connectLocale: localeQuery.data,
-        chain: props.chain,
+        chain: props.chain || props.accountAbstraction?.chain,
         chains: props.chains,
         walletConnect: props.walletConnect,
         accountAbstraction: props.accountAbstraction,
@@ -158,7 +158,7 @@ function ConnectButtonInner(
 
   const supportedTokens = useMemo(() => {
     if (!props.supportedTokens) {
-      return defaultTokens;
+      return undefined;
     }
 
     const tokens = { ...defaultTokens };

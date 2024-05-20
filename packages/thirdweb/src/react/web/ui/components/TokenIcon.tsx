@@ -1,10 +1,10 @@
 "use client";
+import { useMemo } from "react";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { useChainQuery } from "../../../core/hooks/others/useChainQuery.js";
 import { genericTokenIcon } from "../ConnectWallet/icons/dataUris.js";
 import {
-  type ERC20OrNativeToken,
   type NativeToken,
   isNativeToken,
 } from "../ConnectWallet/screens/nativeToken.js";
@@ -17,46 +17,28 @@ import { Img } from "./Img.js";
  * @internal
  */
 export function TokenIcon(props: {
-  token: ERC20OrNativeToken;
+  token:
+    | {
+        address: string;
+        icon?: string;
+      }
+    | NativeToken;
   chain: Chain;
-  size: keyof typeof iconSize;
-  client: ThirdwebClient;
-}) {
-  const token = props.token;
-
-  if (isNativeToken(token)) {
-    return (
-      <NativeTokenIcon
-        chain={props.chain}
-        nativeToken={token}
-        size={props.size}
-        client={props.client}
-      />
-    );
-  }
-
-  return (
-    <Img
-      src={token.icon}
-      width={iconSize[props.size]}
-      height={iconSize[props.size]}
-      fallbackImage={genericTokenIcon}
-      client={props.client}
-    />
-  );
-}
-
-function NativeTokenIcon(props: {
-  chain: Chain;
-  nativeToken: NativeToken;
   size: keyof typeof iconSize;
   client: ThirdwebClient;
 }) {
   const chainQuery = useChainQuery(props.chain);
 
+  const tokenImage = useMemo(() => {
+    if (isNativeToken(props.token)) {
+      return chainQuery.data?.icon?.url;
+    }
+    return props.token.icon;
+  }, [props.token, chainQuery.data]);
+
   return (
     <Img
-      src={chainQuery.data?.icon?.url}
+      src={tokenImage}
       width={iconSize[props.size]}
       height={iconSize[props.size]}
       fallbackImage={genericTokenIcon}

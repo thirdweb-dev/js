@@ -17,6 +17,7 @@ export type StaticPrepareTransactionOptions = {
   maxPriorityFeePerGas?: bigint | undefined;
   maxFeePerBlobGas?: bigint | undefined;
   nonce?: number | undefined;
+  extraGas?: bigint | undefined;
   // tw specific
   chain: Chain;
   client: ThirdwebClient;
@@ -38,7 +39,8 @@ type Additional<
 export type PreparedTransaction<
   abi extends Abi = [],
   abiFn extends AbiFunction = AbiFunction,
-> = Readonly<PrepareTransactionOptions> & {
+  options extends PrepareTransactionOptions = PrepareTransactionOptions,
+> = Readonly<options> & {
   __preparedMethod?: () => Promise<PreparedMethod<abiFn>>;
   __contract?: ThirdwebContract<abi>;
 };

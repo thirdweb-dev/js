@@ -116,6 +116,7 @@ export function decodeGetNonceResult(result: Hex) {
  * import { getNonce } from "thirdweb/extensions/erc4337";
  *
  * const result = await getNonce({
+ *  contract,
  *  sender: ...,
  *  key: ...,
  * });

@@ -21,14 +21,14 @@ export async function toSerializableTransaction(
   const rpcRequest = getRpcClient(options.transaction);
   const chainId = options.transaction.chain.id;
   const from = options.from;
-  const [data, nonce, gas, feeData, to, accessList, value] = await Promise.all([
+  let [data, nonce, gas, feeData, to, accessList, value] = await Promise.all([
     encode(options.transaction),
     (async () => {
       // if the user has specified a nonce, use that
       const resolvedNonce = await resolvePromisedValue(
         options.transaction.nonce,
       );
-      if (resolvedNonce) {
+      if (resolvedNonce !== undefined) {
         return resolvedNonce;
       }
 
@@ -49,6 +49,11 @@ export async function toSerializableTransaction(
     resolvePromisedValue(options.transaction.accessList),
     resolvePromisedValue(options.transaction.value),
   ]);
+
+  const extraGas = await resolvePromisedValue(options.transaction.extraGas);
+  if (extraGas) {
+    gas += extraGas;
+  }
 
   return {
     to,

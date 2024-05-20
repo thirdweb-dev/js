@@ -10,6 +10,8 @@ import type {
   LegacyChain,
 } from "./types.js";
 
+const CUSTOM_CHAIN_MAP = new Map<number, Chain>();
+
 /**
  * Defines a chain with the given options.
  * @param options The options for the chain.
@@ -31,7 +33,10 @@ export function defineChain(
   options: number | ChainOptions | ViemChain | LegacyChain,
 ): Chain {
   if (typeof options === "number") {
-    return { id: options, rpc: `https://${options}.rpc.thirdweb.com` } as const;
+    return {
+      id: options,
+      rpc: `https://${options}.rpc.thirdweb.com`,
+    } as const;
   }
   if (isViemChain(options)) {
     return convertViemChain(options);
@@ -44,7 +49,23 @@ export function defineChain(
   if (!rpc) {
     rpc = `https://${options.id}.rpc.thirdweb.com`;
   }
-  return { ...options, rpc } as const;
+  const chain = { ...options, rpc } as const;
+  CUSTOM_CHAIN_MAP.set(options.id, chain);
+  return chain;
+}
+
+/**
+ * @internal
+ */
+export function getCachedChain(id: number) {
+  if (CUSTOM_CHAIN_MAP.has(id)) {
+    return CUSTOM_CHAIN_MAP.get(id) as Chain;
+  }
+  const chain = {
+    id: id,
+    rpc: `https://${id}.rpc.thirdweb.com`,
+  } as const;
+  return chain;
 }
 
 function isLegacyChain(
@@ -91,6 +112,9 @@ function convertViemChain(viemChain: ViemChain): Chain {
       symbol: viemChain.nativeCurrency.symbol,
       decimals: viemChain.nativeCurrency.decimals,
     },
+    rpc:
+      viemChain.rpcUrls.default.http[0] ??
+      `https://${viemChain.id}.rpc.thirdweb.com`,
     blockExplorers: viemChain?.blockExplorers
       ? Object.values(viemChain?.blockExplorers).map((explorer) => {
           return {
@@ -305,8 +329,15 @@ function createChainMetadata(
       symbol: nativeCurrency?.symbol || "",
       decimals: nativeCurrency?.decimals || 18,
     },
+    icon: chain.icon || data?.icon,
     chain: data?.chain || chain.name || "",
     shortName: data?.shortName || chain.name || "",
     slug: data?.slug || chain.name || "",
+    explorers:
+      chain.blockExplorers?.map((e) => ({
+        name: e.name,
+        url: e.url,
+        standard: "EIP3091",
+      })) || data?.explorers,
   };
 }

@@ -357,7 +357,7 @@ export class MarketplaceV3EnglishAuctions<
         parsedAuction.startTimestamp = BigNumber.from(blockTime);
       }
 
-      return Transaction.fromContractWrapper({
+      const tx = Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "createAuction",
         args: [
@@ -387,6 +387,8 @@ export class MarketplaceV3EnglishAuctions<
           };
         },
       });
+      tx.setGasLimitMultiple(1.2);
+      return tx;
     },
   );
 
@@ -411,7 +413,7 @@ export class MarketplaceV3EnglishAuctions<
         )
       ).map((tx) => tx.encode());
 
-      return Transaction.fromContractWrapper({
+      const tx = Transaction.fromContractWrapper({
         contractWrapper: this
           .contractWrapper as unknown as ContractWrapper<MarketplaceV3>,
         method: "multicall",
@@ -429,6 +431,8 @@ export class MarketplaceV3EnglishAuctions<
           });
         },
       });
+      tx.setGasLimitMultiple(1.2);
+      return tx;
     },
   );
 
@@ -533,12 +537,14 @@ export class MarketplaceV3EnglishAuctions<
         overrides,
       );
 
-      return Transaction.fromContractWrapper({
+      const tx = Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "bidInAuction",
-        args: [auctionId, normalizedBidAmount],
         overrides,
+        args: [auctionId, normalizedBidAmount],
       });
+      tx.setGasLimitMultiple(1.2);
+      return tx;
     },
   );
 
@@ -565,11 +571,13 @@ export class MarketplaceV3EnglishAuctions<
         throw new Error(`Bids already made.`);
       }
 
-      return Transaction.fromContractWrapper({
+      const tx = Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "cancelAuction",
         args: [auctionId],
       });
+      tx.setGasLimitMultiple(1.2);
+      return tx;
     },
   );
 
@@ -597,11 +605,13 @@ export class MarketplaceV3EnglishAuctions<
       }
       const auction = await this.validateAuction(BigNumber.from(auctionId));
       try {
-        return Transaction.fromContractWrapper({
+        const tx = Transaction.fromContractWrapper({
           contractWrapper: this.contractWrapper,
           method: "collectAuctionTokens",
           args: [BigNumber.from(auctionId)],
         });
+        tx.setGasLimitMultiple(1.2);
+        return tx;
       } catch (err: any) {
         if (err.message.includes("Marketplace: auction still active.")) {
           throw new AuctionHasNotEndedError(
@@ -635,11 +645,13 @@ export class MarketplaceV3EnglishAuctions<
     async (auctionId: BigNumberish) => {
       const auction = await this.validateAuction(BigNumber.from(auctionId));
       try {
-        return Transaction.fromContractWrapper({
+        const tx = Transaction.fromContractWrapper({
           contractWrapper: this.contractWrapper,
           method: "collectAuctionPayout",
           args: [BigNumber.from(auctionId)],
         });
+        tx.setGasLimitMultiple(1.2);
+        return tx;
       } catch (err: any) {
         if (err.message.includes("Marketplace: auction still active.")) {
           throw new AuctionHasNotEndedError(
@@ -681,12 +693,14 @@ export class MarketplaceV3EnglishAuctions<
         const closeForBuyer = this.encoder.encode("collectAuctionTokens", [
           auctionId,
         ]);
-        return Transaction.fromContractWrapper({
+        const tx = Transaction.fromContractWrapper({
           contractWrapper: this
             .contractWrapper as unknown as ContractWrapper<IMulticall>,
-          method: "multicall",
+          method: "multicall",     
           args: [[closeForSeller, closeForBuyer]],
         });
+        tx.setGasLimitMultiple(1.2);
+        return tx;
       } catch (err: any) {
         if (err.message.includes("Marketplace: auction still active.")) {
           throw new AuctionHasNotEndedError(

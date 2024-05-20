@@ -115,6 +115,7 @@ export function decodeGetAccountsOfSignerResult(result: Hex) {
  * import { getAccountsOfSigner } from "thirdweb/extensions/erc4337";
  *
  * const result = await getAccountsOfSigner({
+ *  contract,
  *  signer: ...,
  * });
  *

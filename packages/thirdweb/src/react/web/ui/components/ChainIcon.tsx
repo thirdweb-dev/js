@@ -13,16 +13,15 @@ export const fallbackChainIcon =
  * @internal
  */
 export const ChainIcon: React.FC<{
-  chain?: ChainMetadata;
+  chainIcon?: ChainMetadata["icon"];
   size: string;
   active?: boolean;
   className?: string;
   loading?: "lazy" | "eager";
-  fallbackImage?: string;
   client: ThirdwebClient;
 }> = (props) => {
   const getSrc = () => {
-    const url = props.chain?.icon?.url;
+    const url = props.chainIcon?.url;
     if (!url) {
       return fallbackChainIcon;
     }

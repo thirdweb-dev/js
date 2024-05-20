@@ -1,5 +1,41 @@
 # @thirdweb-dev/chains
 
+## 0.1.111
+
+### Patch Changes
+
+- [#3056](https://github.com/thirdweb-dev/js/pull/3056) [`9a9ec97`](https://github.com/thirdweb-dev/js/commit/9a9ec978f44f4f8034dda088aa22df753cae7549) Thanks [@github-actions](https://github.com/apps/github-actions)! - Synced Chains Package
+
+## 0.1.110
+
+### Patch Changes
+
+- [#3033](https://github.com/thirdweb-dev/js/pull/3033) [`46492bb`](https://github.com/thirdweb-dev/js/commit/46492bb66e5225279b9f2de91e0a42f00a3506d3) Thanks [@github-actions](https://github.com/apps/github-actions)! - Synced Chains Package
+
+## 0.1.109
+
+### Patch Changes
+
+- [#3003](https://github.com/thirdweb-dev/js/pull/3003) [`d34e21b`](https://github.com/thirdweb-dev/js/commit/d34e21bd060a2e9c9ee095742ae954a3eadc6a7c) Thanks [@github-actions](https://github.com/apps/github-actions)! - Synced Chains Package
+
+## 0.1.108
+
+### Patch Changes
+
+- [#2988](https://github.com/thirdweb-dev/js/pull/2988) [`02c0319`](https://github.com/thirdweb-dev/js/commit/02c03196ad38de888ff86311c68fa010018bda60) Thanks [@jnsdls](https://github.com/jnsdls)! - bump all to fix release
+
+## 0.1.107
+
+### Patch Changes
+
+- [#2982](https://github.com/thirdweb-dev/js/pull/2982) [`ef1b7cd`](https://github.com/thirdweb-dev/js/commit/ef1b7cdb90aaa4c33cf0c7f619cab0d4d4acfccf) Thanks [@github-actions](https://github.com/apps/github-actions)! - Synced Chains Package
+
+## 0.1.106
+
+### Patch Changes
+
+- [#2925](https://github.com/thirdweb-dev/js/pull/2925) [`2bfaafc`](https://github.com/thirdweb-dev/js/commit/2bfaafcc10fcdff000025011a81e885b1a9fdef8) Thanks [@github-actions](https://github.com/apps/github-actions)! - Synced Chains Package
+
 ## 0.1.105
 
 ### Patch Changes

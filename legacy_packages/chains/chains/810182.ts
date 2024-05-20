@@ -6,22 +6,10 @@ export default {
     {
       "name": "zkLink Nova Block Explorer",
       "url": "https://goerli.explorer.zklink.io",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://bafkreiaj7b6pdekv3rjuta5wsdvmfdcsat2jftjgozape7wvmyj6d3vjcm",
-        "width": 512,
-        "height": 512,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://bafkreiaj7b6pdekv3rjuta5wsdvmfdcsat2jftjgozape7wvmyj6d3vjcm",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
   "infoURL": "https://zklink.io",
   "name": "zkLink Nova Goerli Testnet",
   "nativeCurrency": {

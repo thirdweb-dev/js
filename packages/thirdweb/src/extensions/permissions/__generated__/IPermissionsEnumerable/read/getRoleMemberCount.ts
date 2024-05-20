@@ -114,6 +114,7 @@ export function decodeGetRoleMemberCountResult(result: Hex) {
  * import { getRoleMemberCount } from "thirdweb/extensions/permissions";
  *
  * const result = await getRoleMemberCount({
+ *  contract,
  *  role: ...,
  * });
  *

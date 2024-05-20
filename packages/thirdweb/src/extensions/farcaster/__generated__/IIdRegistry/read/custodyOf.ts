@@ -111,6 +111,7 @@ export function decodeCustodyOfResult(result: Hex) {
  * import { custodyOf } from "thirdweb/extensions/farcaster";
  *
  * const result = await custodyOf({
+ *  contract,
  *  fid: ...,
  * });
  *
