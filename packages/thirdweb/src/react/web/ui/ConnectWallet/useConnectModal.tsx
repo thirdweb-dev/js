@@ -118,7 +118,7 @@ function Modal(
 }
 
 /**
- * Props for the [`ConnectButton`](https://portal.thirdweb.com/references/typescript/v5/ConnectButton) component
+ * Props for the [`useConnectModal`](https://portal.thirdweb.com/references/typescript/v5/useConnectModal) hook
  * @connectWallet
  */
 export type UseConnectModalOptions = {
@@ -163,7 +163,7 @@ export type UseConnectModalOptions = {
   /**
    * By default - Connect Modal UI uses the `en-US` locale for english language users.
    *
-   * You can customize the language used in the ConnectButton UI by setting the `locale` prop.
+   * You can customize the language used in the Connect Modal UI by setting the `locale` prop.
    *
    * Refer to the [`LocaleId`](https://portal.thirdweb.com/references/typescript/v5/LocaleId) type for supported locales.
    */
@@ -229,8 +229,6 @@ export type UseConnectModalOptions = {
    * If a `chain` is specified, Wallet will be prompted to switch to given chain after connection if it is not already connected to it.
    * This ensures that the wallet is connected to the correct blockchain before interacting with your app.
    *
-   * The `ConnectButton` also shows a "Switch Network" button until the wallet is connected to the specified chain. Clicking on the "Switch Network" button triggers the wallet to switch to the specified chain.
-   *
    * You can create a `Chain` object using the [`defineChain`](https://portal.thirdweb.com/references/typescript/v5/defineChain) function.
    * At minimum, you need to pass the `id` of the blockchain to `defineChain` function to create a `Chain` object.
    * ```
@@ -259,7 +257,7 @@ export type UseConnectModalOptions = {
   chains?: Chain[];
 
   /**
-   * Set the theme for the `ConnectButton` component. By default it is set to `"dark"`
+   * Set the theme for the Connect Modal. By default it is set to `"dark"`
    *
    * theme can be set to either `"dark"`, `"light"` or a custom theme object.
    * You can also import [`lightTheme`](https://portal.thirdweb.com/references/typescript/v5/lightTheme)
@@ -326,14 +324,14 @@ export type UseConnectModalOptions = {
   recommendedWallets?: Wallet[];
 
   /**
-   * By default, ConnectButton modal shows a "All Wallets" button that shows a list of 350+ wallets.
+   * By default, Connect modal shows a "All Wallets" button that shows a list of 350+ wallets.
    *
    * You can disable this button by setting `showAllWallets` prop to `false`
    */
   showAllWallets?: boolean;
 
   /**
-   * Title to show in `ConnectButton`'s Modal
+   * Title to show in Connect Modal
    *
    * The default is `"Connect"`
    */
