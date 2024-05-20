@@ -12,12 +12,6 @@ export default {
   "faucets": [
     "http://faucet.latestchain.io"
   ],
-  "icon": {
-    "url": "ipfs://QmUU784i1ZHDNwgXvt9weZmq6YbHHkyXvuDS7r4iDzao72",
-    "width": 1115,
-    "height": 1242,
-    "format": "png"
-  },
   "infoURL": "https://latestcoin.io",
   "name": "Latest Chain Testnet",
   "nativeCurrency": {

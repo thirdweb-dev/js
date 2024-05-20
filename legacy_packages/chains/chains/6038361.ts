@@ -16,6 +16,12 @@ export default {
   ],
   "faucets": [],
   "features": [],
+  "icon": {
+    "url": "ipfs://QmRySLe3su59dE5x5JPm2b1GeZfz6DR9qUzcbp3rt4SD3A",
+    "width": 300,
+    "height": 300,
+    "format": "png"
+  },
   "infoURL": "https://astar.network",
   "name": "Astar zKyoto",
   "nativeCurrency": {

@@ -3,7 +3,7 @@
 import styled from "@emotion/styled";
 import { useEffect, useMemo, useState } from "react";
 import { useSiweAuth } from "../../../core/hooks/auth/useSiweAuth.js";
-import { AutoConnect } from "../../../core/hooks/connection/useAutoConnect.js";
+import { AutoConnect } from "../../../core/hooks/connection/AutoConnect.js";
 import {
   useActiveAccount,
   useActiveWalletConnectionStatus,
