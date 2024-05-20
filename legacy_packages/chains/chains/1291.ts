@@ -20,6 +20,12 @@ export default {
       "name": "EIP1559"
     }
   ],
+  "icon": {
+    "url": "ipfs://bafybeihuintkoipxalwans23vhxajbwjnozpy34ww7ia7ds7nay3rpylzi",
+    "width": 256,
+    "height": 256,
+    "format": "svg"
+  },
   "infoURL": "https://www.swisstronik.com",
   "name": "Swisstronik Testnet",
   "nativeCurrency": {

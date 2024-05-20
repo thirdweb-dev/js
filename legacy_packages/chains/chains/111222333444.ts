@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmfTeudwVJcu7jzySBcpD9H5ZVK66nPJKRnicxend1bxfq",
+    "width": 500,
+    "height": 500,
+    "format": "svg"
+  },
   "infoURL": "https://alphabetnetwork.org",
   "name": "Alphabet Mainnet",
   "nativeCurrency": {

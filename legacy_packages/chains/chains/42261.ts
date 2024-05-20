@@ -12,12 +12,6 @@ export default {
   "faucets": [
     "https://faucet.testnet.oasis.io/"
   ],
-  "icon": {
-    "url": "ipfs://bafkreiespupb52akiwrexxg7g72mh7m7h7lum5hmqijmpdh3kmuunzclha",
-    "width": 2000,
-    "height": 2000,
-    "format": "png"
-  },
   "infoURL": "https://docs.oasis.io/dapp/emerald",
   "name": "Oasis Emerald Testnet",
   "nativeCurrency": {

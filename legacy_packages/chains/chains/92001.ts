@@ -6,24 +6,12 @@ export default {
     {
       "name": "Lambda EVM Explorer",
       "url": "https://explorer.lambda.top",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmWsoME6LCghQTpGYf7EnUojaDdYo7kfkWVjE6VvNtkjwy",
-        "width": 500,
-        "height": 500,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [
     "https://faucet.lambda.top"
   ],
-  "icon": {
-    "url": "ipfs://QmWsoME6LCghQTpGYf7EnUojaDdYo7kfkWVjE6VvNtkjwy",
-    "width": 500,
-    "height": 500,
-    "format": "png"
-  },
   "infoURL": "https://lambda.im",
   "name": "Lambda Testnet",
   "nativeCurrency": {
