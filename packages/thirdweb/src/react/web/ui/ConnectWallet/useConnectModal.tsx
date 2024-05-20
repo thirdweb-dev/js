@@ -16,6 +16,34 @@ import { getConnectLocale } from "./locale/getConnectLocale.js";
 import type { ConnectLocale } from "./locale/types.js";
 import type { WelcomeScreen } from "./screens/types.js";
 
+/**
+ * hook that allows you to open the Connect UI in a Modal to prompt the user to connect wallet.
+ * @example
+ * ```tsx
+ * import { createThirdwebClient } from "thirdweb";
+ * import { useConnectModal } from "thirdweb/react";
+ *
+ * const client = createThirdwebClient({
+ *  clientId: "<your_client_id>",
+ * });
+ *
+ * function Example() {
+ *   const { connect, isConnecting } = useConnectModal();
+ *
+ *   async function handleConnect() {
+ *      const wallet = await connect({ client }); // opens the connect modal
+ *      console.log('connected to', wallet);
+ *   }
+ *
+ *   return <button onClick={handleConnect}> Connect </button>
+ * }
+ * ```
+ *
+ * The returned `connect` method takes an object of type [UseConnectModalOptions](https://portal.thirdweb.com/references/typescript/v5/ConnectButtonProps)
+ * as an argument to customize the Connect Modal UI. Refer to [UseConnectModalOptions](https://portal.thirdweb.com/references/typescript/v5/ConnectButtonProps) to see the available options.
+ *
+ * @connectWallet
+ */
 export function useConnectModal() {
   const setRootEl = useContext(SetRootElementContext);
   const [isConnecting, setIsConnecting] = useState(false);
@@ -118,7 +146,7 @@ function Modal(
 }
 
 /**
- * Props for the [`useConnectModal`](https://portal.thirdweb.com/references/typescript/v5/useConnectModal) hook
+ * Options for configuring Connect Modal for [`useConnectModal`](https://portal.thirdweb.com/references/typescript/v5/useConnectModal) hook
  * @connectWallet
  */
 export type UseConnectModalOptions = {

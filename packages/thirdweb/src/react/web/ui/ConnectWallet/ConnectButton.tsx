@@ -34,7 +34,7 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
 
 /**
  * A component that allows the user to connect their wallet.
- * It renders a button which when clicked opens a modal to allow users to connect to wallets specified in the `ThirdwebProvider`'s `wallets` prop.
+ * It renders a button which when clicked opens a modal to allow users to connect to wallets specified in `wallets` prop.
  * @example
  * ```tsx
  * <ConnectButton
