@@ -1,7 +1,7 @@
 import type { CognitoUser } from "amazon-cognito-identity-js";
 
 import { Auth } from "aws-amplify";
-import { InAppBrowser } from "react-native-inappbrowser-reborn";
+import * as WebBrowser from "expo-web-browser";
 import type { ThirdwebClient } from "../../../client/client.js";
 import {
   AuthProvider,
@@ -185,16 +185,15 @@ export async function socialLogin(
     oauthOptions.redirectUrl,
   )}&authOption=${encodedProvider}`;
 
-  const result = await InAppBrowser.openAuth(
+  // TODO platform specific code should be extracted out
+  const result = await WebBrowser.openAuthSessionAsync(
     completeLoginUrl,
     oauthOptions.redirectUrl,
     {
-      // iOS Properties
-      ephemeralWebSession: false,
-      // Android Properties
+      preferEphemeralSession: false,
       showTitle: false,
-      enableUrlBarHiding: false,
-      enableDefaultShare: false,
+      enableDefaultShareMenuItem: false,
+      enableBarCollapsing: false,
     },
   );
 

@@ -1,4 +1,4 @@
-import { MMKV } from "react-native-mmkv";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import type { AuthArgsType } from "../../../core/authentication/type.js";
 import {
   AUTH_TOKEN_LOCAL_STORAGE_NAME,
@@ -12,48 +12,47 @@ const CONNECTED_EMAIL_LOCAL_STORAGE_NAME = "embedded-wallet-connected-email";
 const CONNECTED_AUTH_STRATEGY_LOCAL_STORAGE_NAME =
   "embedded-wallet-connected-auth-params";
 
-const storage = new MMKV();
-
-const getItemFromAsyncStorage = (key: string) => {
-  return storage.getString(key);
+const getItemFromAsyncStorage = async (key: string) => {
+  return AsyncStorage.getItem(key);
 };
+
 const setItemInAsyncStorage = async (key: string, value: string) => {
-  storage.set(key, value);
+  await AsyncStorage.setItem(key, value);
 };
 
 const removeItemInAsyncStorage = async (key: string) => {
-  storage.delete(key);
+  await AsyncStorage.removeItem(key);
 };
 
-export function getConnectedEmail() {
+export async function getConnectedEmail() {
   return getItemFromAsyncStorage(CONNECTED_EMAIL_LOCAL_STORAGE_NAME);
 }
 
-export function saveConnectedEmail(email: string) {
-  setItemInAsyncStorage(CONNECTED_EMAIL_LOCAL_STORAGE_NAME, email);
+export async function saveConnectedEmail(email: string) {
+  await setItemInAsyncStorage(CONNECTED_EMAIL_LOCAL_STORAGE_NAME, email);
 }
 
-export function clearConnectedEmail() {
-  removeItemInAsyncStorage(CONNECTED_EMAIL_LOCAL_STORAGE_NAME);
+export async function clearConnectedEmail() {
+  await removeItemInAsyncStorage(CONNECTED_EMAIL_LOCAL_STORAGE_NAME);
 }
 
-export function getConnectedAuthStrategy():
-  | AuthArgsType["strategy"]
-  | undefined {
-  return getItemFromAsyncStorage(CONNECTED_AUTH_STRATEGY_LOCAL_STORAGE_NAME) as
-    | AuthArgsType["strategy"]
-    | undefined;
+export async function getConnectedAuthStrategy(): Promise<
+  AuthArgsType["strategy"] | undefined
+> {
+  return (await getItemFromAsyncStorage(
+    CONNECTED_AUTH_STRATEGY_LOCAL_STORAGE_NAME,
+  )) as AuthArgsType["strategy"] | undefined;
 }
 
-export function saveConnectedAuthStrategy(authStrategy: string) {
-  setItemInAsyncStorage(
+export async function saveConnectedAuthStrategy(authStrategy: string) {
+  await setItemInAsyncStorage(
     CONNECTED_AUTH_STRATEGY_LOCAL_STORAGE_NAME,
     authStrategy,
   );
 }
 
-export function clearConnectedAuthStrategy() {
-  removeItemInAsyncStorage(CONNECTED_AUTH_STRATEGY_LOCAL_STORAGE_NAME);
+export async function clearConnectedAuthStrategy() {
+  await removeItemInAsyncStorage(CONNECTED_AUTH_STRATEGY_LOCAL_STORAGE_NAME);
 }
 
 export async function isDeviceSharePresentForUser(
@@ -63,7 +62,7 @@ export async function isDeviceSharePresentForUser(
   if (!walletUserId) {
     return false;
   }
-  const storedDeviceShare = getItemFromAsyncStorage(
+  const storedDeviceShare = await getItemFromAsyncStorage(
     DEVICE_SHARE_LOCAL_STORAGE_NAME(clientId, walletUserId),
   );
   return !!storedDeviceShare;
@@ -78,7 +77,7 @@ export async function setAuthTokenClient(
   clientId: string,
 ): Promise<void> {
   const authToken = AUTH_TOKEN_LOCAL_STORAGE_NAME(clientId);
-  setItemInAsyncStorage(authToken, cookieString);
+  await setItemInAsyncStorage(authToken, cookieString);
 }
 
 export async function removeAuthTokenInClient(
@@ -120,7 +119,7 @@ export async function setWallerUserDetails({
 export async function getWalletUserDetails(
   clientId: string,
 ): Promise<{ userId: string; email?: string } | undefined> {
-  const result = getItemFromAsyncStorage(
+  const result = await getItemFromAsyncStorage(
     WALLET_USER_DETAILS_LOCAL_STORAGE_NAME(clientId),
   );
   if (!result) {
@@ -169,7 +168,7 @@ export async function getDeviceShare(clientId: string) {
     clientId,
     cachedWalletUserId.userId,
   );
-  const deviceShareString = getItemFromAsyncStorage(name);
+  const deviceShareString = await getItemFromAsyncStorage(name);
   if (!deviceShareString) {
     throw new Error(DEVICE_SHARE_MISSING_MESSAGE);
   }
