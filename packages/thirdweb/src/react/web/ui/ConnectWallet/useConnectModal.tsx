@@ -4,7 +4,6 @@ import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
-import type { SiweAuthOptions } from "../../../core/hooks/auth/useSiweAuth.js";
 import { SetRootElementContext } from "../../../core/providers/RootElementContext.js";
 import { ConnectUIContext } from "../../../core/providers/wallet-connection.js";
 import { WalletUIStatesProvider } from "../../providers/wallet-ui-states-provider.js";
@@ -96,7 +95,6 @@ function Modal(
               : props?.size || "wide",
         },
         onConnect: props.onConnect,
-        auth: props.auth,
       }}
     >
       <WalletUIStatesProvider theme={props.theme} isOpen={true}>
@@ -325,14 +323,6 @@ export type UseConnectModalOptions = {
    * You can disable this button by setting `showAllWallets` prop to `false`
    */
   showAllWallets?: boolean;
-
-  /**
-   * Enable SIWE (Sign in with Ethererum) by passing an object of type `SiweAuthOptions` to
-   * enforce the users to sign a message after connecting their wallet to authenticate themselves.
-   *
-   * Refer to the [`SiweAuthOptions`](https://portal.thirdweb.com/references/typescript/v5/SiweAuthOptions) for more details
-   */
-  auth?: SiweAuthOptions;
 
   /**
    * Title to show in `ConnectButton`'s Modal
