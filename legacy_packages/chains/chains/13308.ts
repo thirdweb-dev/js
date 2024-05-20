@@ -6,7 +6,13 @@ export default {
     {
       "name": "Creditscan",
       "url": "https://scan.creditsmartchain.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://bafkreifbso3gd4wu5wxl27xyurxctmuae2jyuy37guqtzx23nga6ba4ag4",
+        "width": 1000,
+        "height": 1628,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
@@ -18,6 +24,12 @@ export default {
       "name": "EIP1559"
     }
   ],
+  "icon": {
+    "url": "ipfs://bafkreifbso3gd4wu5wxl27xyurxctmuae2jyuy37guqtzx23nga6ba4ag4",
+    "width": 1000,
+    "height": 1628,
+    "format": "png"
+  },
   "infoURL": "https://creditsmartchain.com",
   "name": "Credit Smart Chain",
   "nativeCurrency": {

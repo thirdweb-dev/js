@@ -6,13 +6,7 @@ export default {
     {
       "name": "Bitfinity Testnet Block Explorer",
       "url": "https://explorer.testnet.bitfinity.network",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://bafkreiczbhnoc5wpjikskmehexmg3xmqr4fchrny64db4wmk3lrygqik5e",
-        "width": 796,
-        "height": 129,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     },
     {
       "name": "Bitfinity Testnet Block Explorer",
