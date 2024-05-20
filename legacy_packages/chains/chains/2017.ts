@@ -6,24 +6,12 @@ export default {
     {
       "name": "telscan",
       "url": "https://telscan.io",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://bafkreih4obvrymfdqohzhiafhvpcy6zwqbgpfm26aahrv3qx2dtcei7hk4",
-        "width": 79,
-        "height": 80,
-        "format": "svg"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [
     "https://telcoin.network/faucet"
   ],
-  "icon": {
-    "url": "ipfs://bafkreih4obvrymfdqohzhiafhvpcy6zwqbgpfm26aahrv3qx2dtcei7hk4",
-    "width": 79,
-    "height": 80,
-    "format": "svg"
-  },
   "infoURL": "https://telcoin.network",
   "name": "Adiri",
   "nativeCurrency": {

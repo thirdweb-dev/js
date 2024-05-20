@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://bafkreic6tcc6swh5kzljwqnswj6rlemcm7n6ra7xkgttwv5v3fv7ozj5zu",
+    "width": 1500,
+    "height": 1500,
+    "format": "png"
+  },
   "infoURL": "https://miexs.com",
   "name": "Miexs Smartchain",
   "nativeCurrency": {

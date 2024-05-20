@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmZT1Wq3P4YbgKBSUmCtgbs5ijPF5d91BzaMPh7Aub8d8t",
+    "width": 192,
+    "height": 192,
+    "format": "png"
+  },
   "infoURL": "https://www.zakumi.io",
   "name": "Zafirium Mainnet",
   "nativeCurrency": {
