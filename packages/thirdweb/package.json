@@ -160,6 +160,7 @@
     "abitype": "1.0.0",
     "fast-text-encoding": "^1.0.6",
     "fuse.js": "7.0.0",
+    "input-otp": "^1.2.4",
     "mipd": "0.0.7",
     "node-libs-browser": "2.2.1",
     "uqr": "0.1.2",

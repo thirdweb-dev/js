@@ -6,7 +6,13 @@ export default {
     {
       "name": "anduschain explorer",
       "url": "https://explorer.anduschain.io",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://bafkreiapaxokh2p4j7hg43ug2inomixiwrdhni4kpqazvqifssnez7efze",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],

@@ -6,10 +6,22 @@ export default {
     {
       "name": "eCredits MainNet Explorer",
       "url": "https://explorer.ecredits.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmU9H9JE1KtLh2Fxrd8EWTMjKGJBpgRWKUeEx7u6ic4kBY",
+        "width": 32,
+        "height": 32,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmU9H9JE1KtLh2Fxrd8EWTMjKGJBpgRWKUeEx7u6ic4kBY",
+    "width": 32,
+    "height": 32,
+    "format": "png"
+  },
   "infoURL": "https://ecredits.com",
   "name": "eCredits Mainnet",
   "nativeCurrency": {
