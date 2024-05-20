@@ -6,22 +6,10 @@ export default {
     {
       "name": "BLXq Explorer",
       "url": "https://explorer.blxq.org",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmS9kDKr1rgcz5W55yCQVfFs1vRTCneaLHt1t9cBizpqpH",
-        "width": 1000,
-        "height": 1000,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmS9kDKr1rgcz5W55yCQVfFs1vRTCneaLHt1t9cBizpqpH",
-    "width": 1000,
-    "height": 1000,
-    "format": "png"
-  },
   "infoURL": "https://blx.org",
   "name": "BLXq Mainnet",
   "nativeCurrency": {
