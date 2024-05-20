@@ -16,12 +16,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmNUpqkYWYJoDXKUpZ8FVbGyN6HCwxYonKNAieCf2oTzGn",
-    "width": 1062,
-    "height": 1062,
-    "format": "png"
-  },
   "infoURL": "https://www.plumenetwork.xyz/",
   "name": "Plume Testnet",
   "nativeCurrency": {
