@@ -1460,15 +1460,15 @@ importers:
       expo-application:
         specifier: ^5
         version: 5.9.1(expo@51.0.5)
+      expo-web-browser:
+        specifier: ^13
+        version: 13.0.3(expo@51.0.5)
       react-native-aes-gcm-crypto:
         specifier: ^0.2
         version: 0.2.2(react-native@0.74.1)(react@18.2.0)
       react-native-get-random-values:
         specifier: ^1
         version: 1.11.0(react-native@0.74.1)
-      react-native-inappbrowser-reborn:
-        specifier: ^3
-        version: 3.7.0(react-native@0.74.1)
       react-native-quick-crypto:
         specifier: '>=0.6.1'
         version: 0.6.1(react-native@0.74.1)(react@18.2.0)
@@ -1547,7 +1547,7 @@ importers:
         version: 2.12.2(@react-native-async-storage/async-storage@1.23.1)(@types/react@18.2.17)(react@18.2.0)
       abitype:
         specifier: 1.0.0
-        version: 1.0.0(typescript@5.4.4)(zod@3.22.4)
+        version: 1.0.0(typescript@5.4.5)(zod@3.22.4)
       ethers:
         specifier: ^5 || ^6
         version: 5.7.2
@@ -1559,7 +1559,7 @@ importers:
         version: 7.0.0
       mipd:
         specifier: 0.0.7
-        version: 0.0.7
+        version: 0.0.7(typescript@5.4.5)
       node-libs-browser:
         specifier: 2.2.1
         version: 2.2.1
@@ -1574,7 +1574,7 @@ importers:
         version: 0.1.2
       viem:
         specifier: 2.10.9
-        version: 2.10.9(zod@3.22.4)
+        version: 2.10.9(typescript@5.4.5)(zod@3.22.4)
     devDependencies:
       '@aws-sdk/client-lambda':
         specifier: 3.577.0
@@ -1613,7 +1613,7 @@ importers:
         specifier: 7.0.3
         version: 7.0.3
       expo-web-browser:
-        specifier: ^13.0.3
+        specifier: 13.0.3
         version: 13.0.3(expo@51.0.5)
       happy-dom:
         specifier: ^14.10.1
@@ -1621,9 +1621,6 @@ importers:
       react-native-aes-gcm-crypto:
         specifier: 0.2.2
         version: 0.2.2(react-native@0.74.1)(react@18.2.0)
-      react-native-inappbrowser-reborn:
-        specifier: 3.7.0
-        version: 3.7.0(react-native@0.74.1)
       react-native-quick-crypto:
         specifier: 0.7.0-rc.6
         version: 0.7.0-rc.6(react-native@0.74.1)(react@18.2.0)
@@ -12810,6 +12807,21 @@ packages:
       typescript: 5.4.4
       zod: 3.22.4
 
+  /abitype@1.0.0(typescript@5.4.5)(zod@3.22.4):
+    resolution: {integrity: sha512-NMeMah//6bJ56H5XRj8QCV4AwuW6hB6zqz2LnhhLdcWVQOsXki6/Pn3APeqxCma62nXIcmZWdu1DlHWS74umVQ==}
+    peerDependencies:
+      typescript: '>=5.0.4'
+      zod: ^3 >=3.22.0
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+      zod:
+        optional: true
+    dependencies:
+      typescript: 5.4.5
+      zod: 3.22.4
+    dev: false
+
   /abort-controller@3.0.0:
     resolution: {integrity: sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==}
     engines: {node: '>=6.5'}
@@ -16394,7 +16406,6 @@ packages:
       expo: '*'
     dependencies:
       expo: 51.0.5(@babel/core@7.24.5)(@babel/preset-env@7.24.5)
-    dev: true
 
   /expo@51.0.5(@babel/core@7.24.5)(@babel/preset-env@7.24.5):
     resolution: {integrity: sha512-i+AfkfToYPFCobX0NUT9PmDtsB3L19vhCB/XUE1Ph6FVrBF6GipkHzTADuRLMaVg5u/2sm/fdzGzBcMjXSHqmA==}
@@ -19998,13 +20009,15 @@ packages:
       minipass: 3.3.6
       yallist: 4.0.0
 
-  /mipd@0.0.7:
+  /mipd@0.0.7(typescript@5.4.5):
     resolution: {integrity: sha512-aAPZPNDQ3uMTdKbuO2YmAw2TxLHO0moa4YKAyETM/DTj5FloZo+a+8tU+iv4GmW+sOxKLSRwcSFuczk+Cpt6fg==}
     peerDependencies:
       typescript: '>=5.0.4'
     peerDependenciesMeta:
       typescript:
         optional: true
+    dependencies:
+      typescript: 5.4.5
     dev: false
 
   /mitata@0.1.11:
@@ -20778,10 +20791,6 @@ packages:
       define-lazy-prop: 2.0.0
       is-docker: 2.2.1
       is-wsl: 2.2.0
-
-  /opencollective-postinstall@2.0.3:
-    resolution: {integrity: sha512-8AV/sCtuzUeTo8gQK5qDZzARrulB3egtLzFgteqB2tcT4Mw7B8Kt7JcDHmltjz6FOAHsvTevk70gZEbhM4ZS9Q==}
-    hasBin: true
 
   /openid-client@5.6.5:
     resolution: {integrity: sha512-5P4qO9nGJzB5PI0LFlhj4Dzg3m4odt0qsJTfyEtZyOlkgpILwEioOhVVJOrS1iVH494S4Ee5OCjjg6Bf5WOj3w==}
@@ -21852,16 +21861,6 @@ packages:
       react-native: '>=0.56'
     dependencies:
       fast-base64-decode: 1.0.0
-      react-native: 0.74.1(@babel/core@7.24.5)(@babel/preset-env@7.24.5)(@types/react@18.2.17)(react@18.2.0)
-
-  /react-native-inappbrowser-reborn@3.7.0(react-native@0.74.1):
-    resolution: {integrity: sha512-Ia53jYNtFcbNaX5W3QfOmN25I7bcvuDiQmSY5zABXjy4+WI20bPc9ua09li55F8yDCjv3C99jX6vKms68mBV7g==}
-    requiresBuild: true
-    peerDependencies:
-      react-native: '>=0.56'
-    dependencies:
-      invariant: 2.2.4
-      opencollective-postinstall: 2.0.3
       react-native: 0.74.1(@babel/core@7.24.5)(@babel/preset-env@7.24.5)(@types/react@18.2.17)(react@18.2.0)
 
   /react-native-quick-base64@2.1.2(react-native@0.74.1)(react@18.2.0):
@@ -24720,7 +24719,7 @@ packages:
       semver: 7.6.2
     dev: true
 
-  /viem@2.10.9(zod@3.22.4):
+  /viem@2.10.9(typescript@5.4.5)(zod@3.22.4):
     resolution: {integrity: sha512-XsbEXhOcmQOkI80zDLW0EdksimNuYTS61HZ03vQYpHoug7gwVHDQ83nY+nuyT7punuFx0fmRG6+HZg3yVQhptQ==}
     peerDependencies:
       typescript: '>=5.0.4'
@@ -24733,8 +24732,9 @@ packages:
       '@noble/hashes': 1.3.2
       '@scure/bip32': 1.3.2
       '@scure/bip39': 1.2.1
-      abitype: 1.0.0(typescript@5.4.4)(zod@3.22.4)
+      abitype: 1.0.0(typescript@5.4.5)(zod@3.22.4)
       isows: 1.0.4(ws@8.13.0)
+      typescript: 5.4.5
       ws: 8.13.0
     transitivePeerDependencies:
       - bufferutil
