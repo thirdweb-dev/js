@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { CmdKSearch } from "components/cmd-k-search";
 import { ColorModeToggle } from "components/color-mode/color-mode-toggle";
+import { FeedbackForm } from "components/feedback-form/FeedbackForm";
 import { Logo } from "components/logo";
 import { BillingAlerts } from "components/settings/Account/Billing/alerts/Alert";
 import { CreditsButton } from "components/settings/Account/Billing/CreditsButton";
@@ -144,7 +145,7 @@ const AppHeader: React.FC = () => {
           >
             Support
           </Button>
-
+          <FeedbackForm />
           <Flex display={{ base: "flex", md: "none" }}>
             <TrackedIconButton
               bg="transparent"

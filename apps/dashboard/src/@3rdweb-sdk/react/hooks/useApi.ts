@@ -1166,3 +1166,31 @@ export function useApiChains() {
     return fetchChainsFromApi();
   });
 }
+
+export type CreateFeedbackInput = {
+  markdown: string;
+  title: string;
+};
+
+export function useCreateFeedback() {
+  const { user } = useLoggedInUser();
+  const account = useAccount();
+  return useMutationWithInvalidate(async (input: CreateFeedbackInput) => {
+    invariant(user?.address, "walletAddress is required");
+    invariant(account?.data, "Account not found");
+
+    const res = await fetch(
+      `${THIRDWEB_API_HOST}/v1/account/create-feedback-ticket`,
+      {
+        method: "POST",
+        credentials: "include",
+        body: JSON.stringify(input),
+      },
+    );
+    const json = await res.json();
+    if (json.error) {
+      throw new Error(json.error.message);
+    }
+    return json.data;
+  });
+}
