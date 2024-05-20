@@ -26,7 +26,7 @@ export const wallet = {
     universal: null,
   },
   desktop: {
-    native: null,
+    native: "wombat://",
     universal: null,
   },
 } as const;

@@ -2,6 +2,7 @@
 import { Suspense, lazy, useEffect, useState } from "react";
 import { isMobile } from "../../../../../utils/web/isMobile.js";
 import type {
+  DeepLinkSupportedWalletIds,
   InjectedSupportedWalletIds,
   WCSupportedWalletIds,
 } from "../../../../../wallets/__generated__/wallet-ids.js";
@@ -18,8 +19,8 @@ import {
   WalletConnectStandaloneConnection,
 } from "../../../wallets/shared/WalletConnectConnection.js";
 import { useWalletInfo } from "../../hooks/useWalletInfo.js";
+import { DeepLinkConnectUI } from "./DeepLinkConnectUI.js";
 import { InjectedConnectUI } from "./InjectedConnectUI.js";
-import { MMDeepLinkConnectUI } from "./MMDeepLinkConnectUI.js";
 
 const CoinbaseSDKWalletConnectUI = /* @__PURE__ */ lazy(
   () => import("../../../wallets/shared/CoinbaseSDKConnection.js"),
@@ -75,15 +76,17 @@ export function AnyWalletConnectUI(props: {
   }
 
   if (
-    wallet.id === "io.metamask" &&
+    walletInfo.data.deepLink &&
     !isInstalled &&
-    (wallet as Wallet<"io.metamask">).getConfig()?.preferDeepLink &&
+    (wallet as Wallet<DeepLinkSupportedWalletIds>).getConfig()
+      ?.preferDeepLink &&
     isMobile()
   ) {
     return (
-      <MMDeepLinkConnectUI
+      <DeepLinkConnectUI
         wallet={props.wallet as Wallet<InjectedSupportedWalletIds>}
-        walletInfo={walletInfo.data}
+        walletName={walletInfo.data.name}
+        deepLinkPrefix={walletInfo.data.deepLink.mobile}
         locale={locale}
         onGetStarted={() => {
           setScreen("get-started");

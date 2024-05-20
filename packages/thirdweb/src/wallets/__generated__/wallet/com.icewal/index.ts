@@ -2,14 +2,14 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.foxwallet",
-  name: "FoxWallet",
-  homepage: "http://foxwallet.com",
-  image_id: "d673068d-1acf-4372-76ee-8eb931c59e00",
+  id: "com.icewal",
+  name: "icewal",
+  homepage: "https://icewal.com",
+  image_id: "bbfa8e6a-984d-4955-c919-8181e8bc9e00",
   app: {
     browser: null,
-    ios: "https://apps.apple.com/app/foxwallet-crypto-web3/id1590983231",
-    android: "https://play.google.com/store/apps/details?id=com.foxwallet.play",
+    ios: "https://apps.apple.com/uk/app/icewal/id1629607532",
+    android: "https://play.google.com/store/apps/details?id=com.icecorp.wallet",
     mac: null,
     windows: null,
     linux: null,
@@ -21,8 +21,8 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: "foxwallet://",
-    universal: "https://link.foxwallet.com",
+    native: "icewal://",
+    universal: null,
   },
   desktop: {
     native: null,

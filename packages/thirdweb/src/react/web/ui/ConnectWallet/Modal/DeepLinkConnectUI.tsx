@@ -3,7 +3,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { openWindow } from "../../../../../utils/web/openWindow.js";
 import type { InjectedSupportedWalletIds } from "../../../../../wallets/__generated__/wallet-ids.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
-import type { WalletInfo } from "../../../../../wallets/wallet-info.js";
 import { wait } from "../../../../core/utils/wait.js";
 import type { InjectedWalletLocale } from "../../../wallets/injected/locale/types.js";
 import { ConnectingScreen } from "../../../wallets/shared/ConnectingScreen.js";
@@ -11,11 +10,12 @@ import { ConnectingScreen } from "../../../wallets/shared/ConnectingScreen.js";
 /**
  * @internal
  */
-export const MMDeepLinkConnectUI = (props: {
+export const DeepLinkConnectUI = (props: {
   onGetStarted: () => void;
   locale: InjectedWalletLocale;
   wallet: Wallet<InjectedSupportedWalletIds>;
-  walletInfo: WalletInfo;
+  walletName: string;
+  deepLinkPrefix: string;
   onBack?: () => void;
 }) => {
   const [errorConnecting, setErrorConnecting] = useState(false);
@@ -26,14 +26,12 @@ export const MMDeepLinkConnectUI = (props: {
       connectPrompted.current = true;
       setErrorConnecting(false);
       await wait(1000);
-      openWindow(
-        `https://metamask.app.link/dapp/${window.location.toString()}`,
-      );
+      openWindow(`${props.deepLinkPrefix}/${window.location.toString()}`);
     } catch (e) {
       setErrorConnecting(true);
       console.error(e);
     }
-  }, []);
+  }, [props.deepLinkPrefix]);
 
   const connectPrompted = useRef(false);
   useEffect(() => {
@@ -54,7 +52,7 @@ export const MMDeepLinkConnectUI = (props: {
         failed: locale.connectionScreen.failed,
       }}
       onBack={props.onBack}
-      walletName={props.walletInfo.name}
+      walletName={props.walletName}
       onGetStarted={props.onGetStarted}
       walletId={props.wallet.id}
       onRetry={() => {

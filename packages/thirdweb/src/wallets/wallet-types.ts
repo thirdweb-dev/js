@@ -2,6 +2,7 @@ import type { AdapterWalletOptions } from "../adapters/wallet-adapter.js";
 import type { Chain } from "../chains/types.js";
 import type { ThirdwebClient } from "../client/client.js";
 import type {
+  DeepLinkSupportedWalletIds,
   InjectedSupportedWalletIds,
   WCSupportedWalletIds,
 } from "./__generated__/wallet-ids.js";
@@ -33,7 +34,7 @@ export type WalletId =
   | WCSupportedWalletIds
   | InjectedSupportedWalletIds;
 
-export type MetamaskCreationOptions =
+export type DeepLinkSupportedWalletCreationOptions =
   | {
       /**
        * Redirect the user to Metamask and open the currency page in MetaMask in-app browser instead of using WalletConnect on mobile devices when using Connect UI (ConnectButton / ConnectEmbed components)
@@ -131,8 +132,8 @@ export type WalletCreationOptions<T extends WalletId> = T extends "smart"
       ? CoinbaseWalletCreationOptions
       : T extends "adapter"
         ? AdapterWalletOptions
-        : T extends "io.metamask"
-          ? MetamaskCreationOptions
+        : T extends DeepLinkSupportedWalletIds
+          ? DeepLinkSupportedWalletCreationOptions
           : undefined;
 
 /**
