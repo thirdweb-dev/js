@@ -31,7 +31,7 @@
     "exports": true
   },
   "devDependencies": {
-    "@microsoft/api-documenter": "^7.24.5",
+    "@microsoft/api-documenter": "^7.24.8",
     "@microsoft/api-extractor": "^7.43.0",
     "@microsoft/tsdoc": "^0.14.2",
     "@preconstruct/cli": "2.7.0",
