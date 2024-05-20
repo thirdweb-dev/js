@@ -16,17 +16,30 @@ import { getDeployedInfraContract } from "./utils/infra.js";
 // TODO: remove reliance on secret key during unit tests entirely
 describe.runIf(process.env.TW_SECRET_KEY)("deployFromMetadata", () => {
   it.sequential(
-    "should deploy published contract with existing infra",
+    "should deploy published contract with no existing infra",
     async () => {
+      // bootstrap infra and implementation
+      await deployCloneFactory({
+        chain: ANVIL_CHAIN,
+        client: TEST_CLIENT,
+        account: TEST_ACCOUNT_A,
+      });
+      await deployImplementation({
+        chain: ANVIL_CHAIN,
+        client: TEST_CLIENT,
+        account: TEST_ACCOUNT_A,
+        contractId: "DropERC721",
+      });
+
       const cloneFactoryContract = await getDeployedCloneFactoryContract({
-        chain: FORKED_ETHEREUM_CHAIN,
+        chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
       });
       if (!cloneFactoryContract) {
         throw new Error("Clone factory not found");
       }
       const implementationContract = await getDeployedInfraContract({
-        chain: FORKED_ETHEREUM_CHAIN,
+        chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
         contractId: "DropERC721",
         constructorParams: [],
@@ -50,7 +63,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployFromMetadata", () => {
       });
 
       const transaction = prepareAutoFactoryDeployTransaction({
-        chain: FORKED_ETHEREUM_CHAIN,
+        chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
         cloneFactoryContract,
         initializeTransaction,
@@ -64,21 +77,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployFromMetadata", () => {
   );
 
   it.sequential(
-    "should deploy published contract with no existing infra",
+    "should deploy published contract with existing infra",
     async () => {
-      // bootstrap infra and implementation
-      await deployCloneFactory({
-        chain: ANVIL_CHAIN,
-        client: TEST_CLIENT,
-        account: TEST_ACCOUNT_A,
-      });
-      await deployImplementation({
-        chain: ANVIL_CHAIN,
-        client: TEST_CLIENT,
-        account: TEST_ACCOUNT_A,
-        contractId: "DropERC721",
-      });
-
       const cloneFactoryContract = await getDeployedCloneFactoryContract({
         chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
