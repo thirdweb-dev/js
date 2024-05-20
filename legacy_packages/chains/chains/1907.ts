@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmbxmfWw5sVMASz5EbR1DCgLfk8PnqpSJGQKpYuEUpoxqn",
-    "width": 64,
-    "height": 64,
-    "format": "svg"
-  },
   "infoURL": "https://www.bitcichain.com",
   "name": "Bitcichain Mainnet",
   "nativeCurrency": {
