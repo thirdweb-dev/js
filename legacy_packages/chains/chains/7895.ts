@@ -6,24 +6,12 @@ export default {
     {
       "name": "ARDENIUM Athena Explorer",
       "url": "https://testnet.ardscan.com",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://QmdwifhejRfF8QfyzYrNdFVhfhCR6iuzWMmppK4eL7kttG",
-        "width": 120,
-        "height": 120,
-        "format": "png"
-      }
+      "standard": "none"
     }
   ],
   "faucets": [
     "https://faucet-athena.ardescan.com/"
   ],
-  "icon": {
-    "url": "ipfs://QmdwifhejRfF8QfyzYrNdFVhfhCR6iuzWMmppK4eL7kttG",
-    "width": 120,
-    "height": 120,
-    "format": "png"
-  },
   "infoURL": "https://ardenium.org",
   "name": "ARDENIUM Athena",
   "nativeCurrency": {

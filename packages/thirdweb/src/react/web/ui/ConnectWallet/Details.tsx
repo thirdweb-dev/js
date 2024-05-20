@@ -6,6 +6,7 @@ import {
   PaperPlaneIcon,
   PinBottomIcon,
   PlusIcon,
+  ShuffleIcon,
   TextAlignJustifyIcon,
 } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
@@ -16,6 +17,7 @@ import { getContract } from "../../../../contract/contract.js";
 import { resolveAvatar } from "../../../../extensions/ens/resolve-avatar.js";
 import { resolveName } from "../../../../extensions/ens/resolve-name.js";
 import { isContractDeployed } from "../../../../utils/bytecode/is-contract-deployed.js";
+import { injectedProvider } from "../../../../wallets/injected/mipdStore.js";
 import {
   useChainQuery,
   useChainsQuery,
@@ -511,6 +513,8 @@ export const ConnectedWalletDetails: React.FC<{
             <AccountSwitcher name={locale.smartWallet} wallet={smartWallet} />
           )} */}
 
+          <SwitchMetamaskAccount closeModal={() => setIsOpen(false)} />
+
           {/* Request Testnet funds */}
           {(props.detailsModal?.showTestnetFaucet ?? false) &&
             ((chainQuery.data?.faucets && chainQuery.data.faucets.length > 0) ||
@@ -981,5 +985,38 @@ function SwitchNetworkButton(props: {
         switchNetworkBtnTitle
       )}
     </Button>
+  );
+}
+
+function SwitchMetamaskAccount(props: {
+  closeModal: () => void;
+}) {
+  const wallet = useActiveWallet();
+  const connectLocale = useConnectUI().connectLocale;
+
+  if (wallet?.id !== "io.metamask") {
+    return null;
+  }
+
+  const injectedMetamaskProvider = injectedProvider("io.metamask");
+
+  if (!injectedMetamaskProvider) {
+    return null;
+  }
+
+  return (
+    <MenuButton
+      type="button"
+      onClick={async () => {
+        await injectedMetamaskProvider.request({
+          method: "wallet_requestPermissions",
+          params: [{ eth_accounts: {} }],
+        });
+        props.closeModal();
+      }}
+    >
+      <ShuffleIcon width={iconSize.md} height={iconSize.md} />
+      <Text color="primaryText">{connectLocale.switchAccount}</Text>
+    </MenuButton>
   );
 }
