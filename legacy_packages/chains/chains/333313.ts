@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://Qmetu9hMLvczYo7tDPRyjqjBHwwpHU8mEgW3PEPPre56su",
-    "width": 2794,
-    "height": 2711,
-    "format": "png"
-  },
   "infoURL": "https://www.bloomgenesis.com",
   "name": "Bloom Genesis Mainnet",
   "nativeCurrency": {

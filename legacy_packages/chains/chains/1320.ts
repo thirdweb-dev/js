@@ -20,12 +20,6 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "icon": {
-    "url": "ipfs://QmXbBMMhjTTGAGjmqMpJm3ufFrtdkfEXCFyXYgz7nnZzsy",
-    "width": 160,
-    "height": 160,
-    "format": "png"
-  },
   "infoURL": "https://aiachain.org",
   "name": "AIA Testnet",
   "nativeCurrency": {
