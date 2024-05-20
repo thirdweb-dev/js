@@ -17,27 +17,34 @@ export function OTPInput(props: {
   onEnter: () => void;
 }) {
   return (
-    <InputOTP
-      textAlign="center"
-      onComplete={() => {
-        props.onEnter();
-      }}
-      maxLength={6}
-      value={props.value}
-      render={({ slots }) => (
-        <Container flex="row" gap="xs" center="both">
-          {slots.map((slot, idx) => (
-            // biome-ignore lint/suspicious/noArrayIndexKey: index is the only valid key here
-            <Slot key={idx} {...slot} isInvalid={props.isInvalid} />
-          ))}
-        </Container>
-      )}
-      onChange={(newValue) => {
-        props.setValue(newValue);
-      }}
-    />
+    <OTPInputContainer>
+      <InputOTP
+        onComplete={() => {
+          props.onEnter();
+        }}
+        maxLength={6}
+        value={props.value}
+        render={({ slots }) => (
+          <Container flex="row" gap="xs" center="both">
+            {slots.map((slot, idx) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: index is the only valid key here
+              <Slot key={idx} {...slot} isInvalid={props.isInvalid} />
+            ))}
+          </Container>
+        )}
+        onChange={(newValue) => {
+          props.setValue(newValue);
+        }}
+      />
+    </OTPInputContainer>
   );
 }
+
+const OTPInputContainer = /* @__PURE__ */ StyledDiv({
+  "& input": {
+    maxWidth: "100%",
+  },
+});
 
 function Slot(props: SlotProps & { isInvalid?: boolean }) {
   return (
