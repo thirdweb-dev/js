@@ -83,39 +83,9 @@ pnpm lint
 
 If there are errors, try running `pnpm fix` to auto-fix any basic errors. Other linter errors, like missing documentation, will need to be fixed manually. See existing files for examples of inline documentation.
 
-#### Creating a Local Test Project
+#### Testing on the Demo Apps
 
-You can use [yalc](https://github.com/wclr/yalc) to test changes on a local project.
-
-Install the yalc CLI globally:
-
-```bash
-pnpm add yalc -g
-```
-
-First, create a test project where you can experiment with your changes. This can be any node project that uses your changes.
-
-
-Push your local version to your `yalc` store with:
-
-```bash
-pnpm build && pnpm push
-```
-
-Link your local changes in the monorepo to the test project by running the following command from your test repo:
-
-```bash
-yalc add thirdweb
-```
-
-Now, each time you make a change to the monorepo, you can run `pnpm push` from the monorepo then `yalc update thirdweb` from your test project to publish your latest changes to the test project.
-
-If your changes modify dependencies, you may need to reinstall dependencies on your test project with `pnpm install`
-
-To make sure your latest changes are used, in your test project you may need to:
-
-1. Delete the dependencies cache. If you're using Next.js, that's the `.next` directory, and if you're using CRA, that's the `node_modules/.cache` directory.
-2. Restart the development server.
+You can test your changes on any of the demo apps within the `/apps` directory without linking or publishing your changes to npm. When you run `pnpm dev` from the root directory, turbo will start the demo apps and watch the dependent packages for changes. Any time you make a change anywhere in the repo, the apps will hot reload and the changes will be reflected in the browser.
 
 #### Testing from npm
 
@@ -169,4 +139,3 @@ git push origin <YOUR BRANCH NAME>
 ```
 
 4. Create a [pull request](https://www.atlassian.com/git/tutorials/making-a-pull-request) to the `main` branch of the official (not your fork) SDK repo.
-

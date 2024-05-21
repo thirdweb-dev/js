@@ -55,7 +55,7 @@ export type InAppWalletFormUIProps = {
 export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
   const locale = props.locale;
   const { chain, client, connectModal } = useConnectUI();
-  const { done, wallet } = props;
+  const { wallet } = props;
   const setData = useSetSelectionData() as (
     value: InAppWalletSelectUIState,
   ) => void;
@@ -134,10 +134,11 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
           connectionPromise: connectPromise,
         },
       });
-      props.select();
 
-      await connectPromise;
-      done();
+      props.select(); // show Connect UI
+
+      // Note: do not call done() here, it will be called InAppWalletSocialLogin component
+      // we simply trigger the connect and save promise here - its resolution is handled in InAppWalletSocialLogin
     } catch (e) {
       console.error(`Error sign in with ${strategy}`, e);
     }

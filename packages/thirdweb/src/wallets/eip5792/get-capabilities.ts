@@ -55,7 +55,7 @@ export async function getCapabilities<const ID extends WalletId = WalletId>({
 
   if (isInAppWallet(wallet)) {
     const { inAppWalletGetCapabilities } = await import(
-      "../in-app/core/lib/in-app-wallet-capabilities.js"
+      "../in-app/core/eip5972/in-app-wallet-capabilities.js"
     );
     return inAppWalletGetCapabilities({ wallet });
   }

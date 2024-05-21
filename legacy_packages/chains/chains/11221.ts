@@ -6,10 +6,22 @@ export default {
     {
       "name": "shinescan",
       "url": "https://shinescan.io",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmUBkpY3prCTZHpx1fjrYLAJ6dPaGvNVTj97iy6p3NPUi1",
+        "width": 161,
+        "height": 161,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmUBkpY3prCTZHpx1fjrYLAJ6dPaGvNVTj97iy6p3NPUi1",
+    "width": 161,
+    "height": 161,
+    "format": "png"
+  },
   "infoURL": "https://shinechain.tech",
   "name": "Shine Chain",
   "nativeCurrency": {

@@ -1,36 +1,47 @@
 import type { ThirdwebClient } from "../../../../client/client.js";
+import { isBrowser, isReactNative } from "../../../../utils/platform.js";
+import type { InAppConnector } from "../interfaces/connector.js";
 import {
+  type AuthArgsType,
   type AuthLoginReturnType,
   AuthProvider,
-} from "../../implementations/interfaces/auth.js";
-import { UserWalletStatus } from "../../implementations/interfaces/in-app-wallets/in-app-wallets.js";
-import {
-  loginWithPasskey,
-  registerPasskey,
-} from "../../implementations/lib/auth/passkeys.js";
-import type { InAppWalletSdk } from "../../implementations/lib/in-app-wallet.js";
-import type { AuthArgsType, PreAuthArgsType } from "./type.js";
+  type PreAuthArgsType,
+  UserWalletStatus,
+} from "./type.js";
 
 export type GetAuthenticatedUserParams = {
   client: ThirdwebClient;
 };
 
-const ewsSDKCache = new WeakMap<ThirdwebClient, InAppWalletSdk>();
+const ewsSDKCache = new WeakMap<ThirdwebClient, InAppConnector>();
 
 /**
  * @internal
  */
-async function getInAppWalletSDK(client: ThirdwebClient) {
+async function getInAppWalletConnector(client: ThirdwebClient) {
   if (ewsSDKCache.has(client)) {
-    return ewsSDKCache.get(client) as InAppWalletSdk;
+    return ewsSDKCache.get(client) as InAppConnector;
   }
-  const { InAppWalletSdk } = await import(
-    "../../implementations/lib/in-app-wallet.js"
-  );
 
-  const ewSDK = new InAppWalletSdk({
-    client: client,
-  });
+  let ewSDK: InAppConnector;
+  if (isBrowser()) {
+    const { InAppWebConnector } = await import(
+      "../../web/lib/web-connector.js"
+    );
+    ewSDK = new InAppWebConnector({
+      client: client,
+    });
+  } else if (isReactNative()) {
+    const {
+      InAppNativeConnector,
+    } = require("../../native/native-connector.js");
+    ewSDK = new InAppNativeConnector({
+      client,
+    });
+  } else {
+    throw new Error("Unsupported platform");
+  }
+
   ewsSDKCache.set(client, ewSDK);
   return ewSDK;
 }
@@ -41,8 +52,8 @@ async function getInAppWalletSDK(client: ThirdwebClient) {
 export async function logoutAuthenticatedUser(
   options: GetAuthenticatedUserParams,
 ) {
-  const ewSDK = await getInAppWalletSDK(options.client);
-  return ewSDK.auth.logout();
+  const ewSDK = await getInAppWalletConnector(options.client);
+  return ewSDK.logout();
 }
 
 /**
@@ -63,7 +74,7 @@ export async function getAuthenticatedUser(
   options: GetAuthenticatedUserParams,
 ) {
   const { client } = options;
-  const ewSDK = await getInAppWalletSDK(client);
+  const ewSDK = await getInAppWalletConnector(client);
   const user = await ewSDK.getUser();
   switch (user.status) {
     case UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED: {
@@ -130,21 +141,8 @@ export async function getUserPhoneNumber(options: GetAuthenticatedUserParams) {
  * ```
  */
 export async function preAuthenticate(args: PreAuthArgsType) {
-  const ewSDK = await getInAppWalletSDK(args.client);
-  const strategy = args.strategy;
-  switch (strategy) {
-    case "email": {
-      return ewSDK.auth.sendEmailLoginOtp({ email: args.email });
-    }
-    case "phone": {
-      return ewSDK.auth.sendSmsLoginOtp({ phoneNumber: args.phoneNumber });
-    }
-    default:
-      assertUnreachable(
-        strategy,
-        `Provider: ${strategy} doesnt require pre-authentication`,
-      );
-  }
+  const ewSDK = await getInAppWalletConnector(args.client);
+  return ewSDK.preAuthenticate(args);
 }
 
 /**
@@ -166,76 +164,11 @@ export async function preAuthenticate(args: PreAuthArgsType) {
 export async function authenticate(
   args: AuthArgsType,
 ): Promise<AuthLoginReturnType> {
-  const ewSDK = await getInAppWalletSDK(args.client);
-  const strategy = args.strategy;
-  switch (strategy) {
-    case "email": {
-      return await ewSDK.auth.verifyEmailLoginOtp({
-        email: args.email,
-        otp: args.verificationCode,
-      });
-    }
-    case "phone": {
-      return await ewSDK.auth.verifySmsLoginOtp({
-        otp: args.verificationCode,
-        phoneNumber: args.phoneNumber,
-      });
-    }
-    case "apple":
-    case "facebook":
-    case "google": {
-      const oauthProvider = oauthStrategyToAuthProvider[strategy];
-      return ewSDK.auth.loginWithOauth({
-        oauthProvider,
-        closeOpenedWindow: args.closeOpenedWindow,
-        openedWindow: args.openedWindow,
-      });
-    }
-    case "jwt": {
-      return ewSDK.auth.loginWithCustomJwt({
-        jwt: args.jwt,
-        encryptionKey: args.encryptionKey,
-      });
-    }
-    case "auth_endpoint": {
-      return ewSDK.auth.loginWithCustomAuthEndpoint({
-        payload: args.payload,
-        encryptionKey: args.encryptionKey,
-      });
-    }
-    case "iframe_email_verification": {
-      return ewSDK.auth.loginWithEmailOtp({
-        email: args.email,
-      });
-    }
-    case "iframe": {
-      return ewSDK.auth.loginWithModal();
-    }
-    case "passkey": {
-      if (args.type === "sign-up") {
-        const authToken = await registerPasskey({
-          client: args.client,
-          authenticatorType: args.authenticatorType,
-          username: args.passkeyName,
-        });
-        return ewSDK.auth.loginWithAuthToken(authToken);
-      }
-      const authToken = await loginWithPasskey({
-        client: args.client,
-        authenticatorType: args.authenticatorType,
-      });
-      return ewSDK.auth.loginWithAuthToken(authToken);
-    }
-    default:
-      assertUnreachable(strategy);
-  }
+  const ewSDK = await getInAppWalletConnector(args.client);
+  return ewSDK.authenticate(args);
 }
 
-function assertUnreachable(x: never, message?: string): never {
-  throw new Error(message ?? `Invalid param: ${x}`);
-}
-
-const oauthStrategyToAuthProvider: Record<
+export const oauthStrategyToAuthProvider: Record<
   "google" | "facebook" | "apple",
   AuthProvider
 > = {
