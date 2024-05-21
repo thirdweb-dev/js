@@ -23,6 +23,7 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
     context.originModulePath.endsWith("apps/native/.") &&
     // some weird edge cases, there might be a better way to do this
     !moduleName.startsWith("/") &&
+    !moduleName.startsWith("./") &&
     !moduleName.startsWith("../../") &&
     !moduleName.startsWith("./../../")
   ) {
@@ -34,5 +35,13 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
   // use default
   return context.resolveRequest(context, moduleName, platform);
 };
+
+config.resolver.unstable_enablePackageExports = true;
+config.resolver.unstable_conditionNames = [
+  "react-native",
+  "browser",
+  "import",
+  "require",
+];
 
 module.exports = config;

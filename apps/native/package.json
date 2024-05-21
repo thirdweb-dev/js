@@ -1,19 +1,23 @@
 {
   "name": "playground-react-native",
-  "main": "expo-router/entry",
+  "main": "./app/index",
   "version": "1.0.0",
   "scripts": {
     "start": "expo start",
+    "dev": "expo start -c",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
     "lint": "expo lint"
   },
-
   "dependencies": {
     "@expo/vector-icons": "^14.0.0",
+    "@react-native-async-storage/async-storage": "1.23.1",
+    "@react-native-community/netinfo": "11.3.1",
     "@react-navigation/native": "^6.0.2",
+    "@thirdweb-dev/react-native-adapter": "workspace:*",
     "expo": "~51.0.8",
+    "expo-application": "~5.9.1",
     "expo-constants": "~16.0.1",
     "expo-font": "~12.0.5",
     "expo-linking": "~6.3.1",
@@ -25,11 +29,15 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "0.74.1",
+    "react-native-aes-gcm-crypto": "0.2.2",
     "react-native-gesture-handler": "~2.16.1",
+    "react-native-get-random-values": "~1.11.0",
+    "react-native-quick-crypto": "0.7.0-rc.6",
     "react-native-reanimated": "~3.10.1",
     "react-native-safe-area-context": "4.10.1",
     "react-native-screens": "3.31.1",
-    "react-native-web": "~0.19.10"
+    "react-native-web": "~0.19.10",
+    "thirdweb": "workspace:*"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

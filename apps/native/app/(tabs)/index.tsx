@@ -4,6 +4,9 @@ import { HelloWave } from "@/components/HelloWave";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import { totalSupply } from "thirdweb/extensions/erc721";
+import { useReadContract } from "thirdweb/react";
+import { contract } from "../../constants/thirdweb";
 
 export default function HomeScreen() {
   return (
@@ -20,6 +23,7 @@ export default function HomeScreen() {
         <ThemedText type="title">Welcome!</ThemedText>
         <HelloWave />
       </ThemedView>
+      <ReadSection />
       <ThemedView style={styles.stepContainer}>
         <ThemedText type="subtitle">Step 1: Try it</ThemedText>
         <ThemedText>
@@ -51,6 +55,32 @@ export default function HomeScreen() {
         </ThemedText>
       </ThemedView>
     </ParallaxScrollView>
+  );
+}
+
+function ReadSection() {
+  const nameQuery = useReadContract({
+    contract,
+    method: "function name() returns (string)",
+  });
+  const supplyQuery = useReadContract(totalSupply, {
+    contract,
+  });
+
+  return (
+    <ThemedView style={styles.stepContainer}>
+      <ThemedText type="subtitle">Onchain read</ThemedText>
+      <ThemedText>
+        Contract name:{" "}
+        <ThemedText type="defaultSemiBold">{nameQuery.data}</ThemedText>
+      </ThemedText>
+      <ThemedText>
+        Supply:{" "}
+        <ThemedText type="defaultSemiBold">
+          {supplyQuery.data?.toString()}
+        </ThemedText>
+      </ThemedText>
+    </ThemedView>
   );
 }
 

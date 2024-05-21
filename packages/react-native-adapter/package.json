@@ -49,6 +49,7 @@
     }
   },
   "scripts": {
+    "dev": "pnpm build",
     "format": "biome format 'src/**/*' --write",
     "lint": "biome check src/",
     "fix": "biome check src/ --apply",
