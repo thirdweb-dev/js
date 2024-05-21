@@ -32,7 +32,9 @@ export default {
   "networkId": 185,
   "rpc": [
     "https://185.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.mintchain.io"
+    "https://rpc.mintchain.io",
+    "https://global.rpc.mintchain.io",
+    "https://asia.rpc.minchain.io"
   ],
   "shortName": "mint",
   "slug": "mint",
