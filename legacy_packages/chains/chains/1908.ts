@@ -12,6 +12,12 @@ export default {
   "faucets": [
     "https://faucet.bitcichain.com"
   ],
+  "icon": {
+    "url": "ipfs://QmbxmfWw5sVMASz5EbR1DCgLfk8PnqpSJGQKpYuEUpoxqn",
+    "width": 64,
+    "height": 64,
+    "format": "svg"
+  },
   "infoURL": "https://www.bitcichain.com",
   "name": "Bitcichain Testnet",
   "nativeCurrency": {

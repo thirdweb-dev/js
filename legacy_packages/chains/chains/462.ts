@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://bafkreihs2nrnizpcuzjmuu2yi7wrtwd7qlqje46qnil5bnntfbfkb2roea",
+    "width": 1000,
+    "height": 1000,
+    "format": "png"
+  },
   "infoURL": "https://areon.network",
   "name": "Areon Network Testnet",
   "nativeCurrency": {

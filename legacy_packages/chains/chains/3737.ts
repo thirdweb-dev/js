@@ -12,6 +12,12 @@ export default {
   "faucets": [
     "https://faucet.crossbell.io"
   ],
+  "icon": {
+    "url": "ipfs://QmS8zEetTb6pwdNpVjv5bz55BXiSMGP9BjTJmNcjcUT91t",
+    "width": 408,
+    "height": 408,
+    "format": "svg"
+  },
   "infoURL": "https://crossbell.io",
   "name": "Crossbell",
   "nativeCurrency": {
