@@ -107,6 +107,7 @@ export async function connectWC(
         ? { pairingTopic: wcOptions?.pairingTopic }
         : {}),
       optionalChains: chainsToRequest,
+      chains: chainsToRequest.length > 0 ? [chainsToRequest[0]] : [1],
       rpcMap: rpcMap,
     });
   }
@@ -220,6 +221,7 @@ async function initProvider(
     optionalMethods: OPTIONAL_METHODS,
     optionalEvents: OPTIONAL_EVENTS,
     optionalChains: chainsToRequest,
+    chains: chainsToRequest.length > 0 ? [chainsToRequest[0]] : [1],
     metadata: {
       name: wcOptions?.appMetadata?.name || getDefaultAppMetadata().name,
       description:

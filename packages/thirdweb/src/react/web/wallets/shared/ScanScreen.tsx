@@ -1,5 +1,6 @@
 import type { WalletId } from "../../../../wallets/wallet-types.js";
 import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import { AccentFailIcon } from "../../ui/ConnectWallet/icons/AccentFailIcon.js";
 import { QRCode } from "../../ui/components/QRCode.js";
 import { Spacer } from "../../ui/components/Spacer.js";
 import { WalletImage } from "../../ui/components/WalletImage.js";
@@ -23,6 +24,8 @@ export const ScanScreen: React.FC<{
   walletId: WalletId;
   qrScanInstruction: string;
   getStartedLink: string;
+  error: boolean;
+  onRetry: () => void;
 }> = (props) => {
   const { connectModal, client } = useConnectUI();
   return (
@@ -34,35 +37,60 @@ export const ScanScreen: React.FC<{
       <Spacer y="sm" />
 
       <Container expand flex="column" px="lg" center="both">
-        <div
-          style={{
-            textAlign: "center",
-          }}
-        >
-          <QRCode
-            qrCodeUri={props.qrCodeUri}
-            QRIcon={
-              <WalletImage
-                size={iconSize.xxl}
-                id={props.walletId}
-                client={client}
-              />
-            }
-          />
-
-          <Spacer y="lg" />
-
-          <Text
-            center
-            multiline
-            balance
+        {!props.error && (
+          <div
             style={{
-              paddingInline: spacing.lg,
+              textAlign: "center",
             }}
           >
-            {props.qrScanInstruction}
-          </Text>
-        </div>
+            <QRCode
+              qrCodeUri={props.qrCodeUri}
+              QRIcon={
+                <WalletImage
+                  size={iconSize.xxl}
+                  id={props.walletId}
+                  client={client}
+                />
+              }
+            />
+
+            <Spacer y="lg" />
+
+            <Text
+              center
+              multiline
+              balance
+              style={{
+                paddingInline: spacing.lg,
+              }}
+            >
+              {props.qrScanInstruction}
+            </Text>
+          </div>
+        )}
+
+        {props.error && (
+          <Container
+            animate="fadein"
+            style={{
+              width: "100%",
+            }}
+          >
+            <Spacer y="xxl" />
+            <Container flex="row" center="x">
+              <AccentFailIcon size={iconSize["3xl"]} />
+            </Container>
+            <Spacer y="lg" />
+            <Text center size="lg" color="primaryText">
+              Connection Failed
+            </Text>
+            <Spacer y="3xl" />
+
+            <Button fullWidth variant="accent" onClick={props.onRetry}>
+              Try again
+            </Button>
+          </Container>
+        )}
       </Container>
 
       <Spacer y="lg" />
