@@ -292,9 +292,9 @@ const ConnectLanding: ThirdwebNextPage = () => {
             miniImage={require("../../public/assets/product-pages/connect/icon-pay.png")}
             title="Fiat & cross-chain crypto payments,"
             titleWithGradient="made easy"
-            subtitle="The easiest way for users to transact in your app — with automatic bridging & swapping built in."
+            subtitle="The easiest way for users to transact in your app — with credit card & cross-chain crypto payments."
             trackingCategory={TRACKING_CATEGORY}
-            ctaLink="https://portal.thirdweb.com/connect/pay/buy-with-crypto"
+            ctaLink="https://portal.thirdweb.com/connect/pay/overview"
             gradient="linear(to-r, #4490FF, #4490FF)"
             image={require("../../public/assets/product-pages/hero/desktop-pay.png")}
             mobileImage={require("../../public/assets/product-pages/hero/mobile-pay.png")}

@@ -5,7 +5,7 @@ import { Heading, TrackedLink } from "tw-components";
 
 export const AnnouncementBanner = () => {
   const [hasDismissedAnnouncement, setHasDismissedAnnouncement] =
-    useLocalStorage("dismissed-op-superchain", false, true);
+    useLocalStorage("dismissed-thirdweb-pay", false, true);
 
   if (hasDismissedAnnouncement) {
     return null;
@@ -27,9 +27,9 @@ export const AnnouncementBanner = () => {
       >
         <Box display={{ base: "none", md: "block" }} />
         <TrackedLink
-          href="https://grtlfwnv13r.typeform.com/to/FTzFOPM2"
+          href="https://pay-demo.thirdweb.com/"
           category="announcement"
-          label="chain-request"
+          label="thirdweb-pay"
         >
           <Container maxW="container.page" display="flex" px={0}>
             <Flex
@@ -46,8 +46,8 @@ export const AnnouncementBanner = () => {
                 color="white"
                 fontWeight={500}
               >
-                Don&apos;t see your preferred chain on thirdweb? Request to have
-                any chain added to our full stack web3 development kit.
+                Introducing thirdweb Pay: Onramp users to your app with credit
+                card & cross-chain crypto. Integrate for free
               </Heading>
               <Icon display={{ base: "none", md: "block" }} as={FiArrowRight} />
             </Flex>
