@@ -18,6 +18,12 @@ export default {
   "faucets": [
     "https://faucet.omaxray.com/"
   ],
+  "icon": {
+    "url": "ipfs://Qmd7omPxrehSuxHHPMYd5Nr7nfrtjKdRJQEhDLfTb87w8G",
+    "width": 500,
+    "height": 500,
+    "format": "png"
+  },
   "infoURL": "https://www.omaxcoin.com/",
   "name": "Omax Mainnet",
   "nativeCurrency": {
