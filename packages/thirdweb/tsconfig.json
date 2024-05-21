@@ -6,6 +6,7 @@
   // "references": [{ "path": "./scripts/tsconfig.json" }],
   "compilerOptions": {
     "baseUrl": ".",
+    "outDir": "./dist",
     "paths": {
       "~test/*": ["./test/src/*"]
     }

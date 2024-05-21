@@ -29,12 +29,6 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "icon": {
-    "url": "ipfs://QmWCSXYLigYE6qEiese4cso2icgKQyosV3x1adtxJnRyJ9",
-    "width": 88,
-    "height": 76,
-    "format": "svg"
-  },
   "infoURL": "https://edgeware.io",
   "name": "Edgeware EdgeEVM Mainnet",
   "nativeCurrency": {

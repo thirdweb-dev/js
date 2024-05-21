@@ -1,7 +1,7 @@
 import { ADDRESS_ZERO } from "../../../constants/addresses.js";
 import type { ThirdwebContract } from "../../../contract/contract.js";
 import { dateToSeconds, tenYearsFromNow } from "../../../utils/date.js";
-import { randomBytes } from "../../../utils/random.js";
+import { randomBytesHex } from "../../../utils/random.js";
 import { toWei } from "../../../utils/units.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
 import type { SetPermissionsForSignerParams } from "../__generated__/IAccountPermissions/write/setPermissionsForSigner.js";
@@ -54,7 +54,7 @@ export async function toContractPermissions(options: {
     ),
     reqValidityStartTimestamp: 0n,
     reqValidityEndTimestamp: dateToSeconds(tenYearsFromNow()),
-    uid: await randomBytes(),
+    uid: await randomBytesHex(),
     isAdmin: 0, // session key flag
     signer: target,
   };
@@ -75,7 +75,7 @@ export async function defaultPermissionsForAdmin(options: {
     permissionEndTimestamp: 0n,
     reqValidityStartTimestamp: 0n,
     reqValidityEndTimestamp: dateToSeconds(tenYearsFromNow()),
-    uid: await randomBytes(),
+    uid: await randomBytesHex(),
     isAdmin: action === "add-admin" ? 1 : action === "remove-admin" ? 2 : 0,
     signer: target,
   };

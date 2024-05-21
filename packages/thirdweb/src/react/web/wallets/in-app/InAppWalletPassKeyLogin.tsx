@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Wallet } from "../../../../exports/wallets.js";
-import { hasStoredPasskey } from "../../../../wallets/in-app/implementations/lib/auth/passkeys.js";
+import { hasStoredPasskey } from "../../../../wallets/in-app/web/lib/auth/passkeys.js";
 import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { AccentFailIcon } from "../../ui/ConnectWallet/icons/AccentFailIcon.js";
 import { FingerPrintIcon } from "../../ui/ConnectWallet/icons/FingerPrintIcon.js";

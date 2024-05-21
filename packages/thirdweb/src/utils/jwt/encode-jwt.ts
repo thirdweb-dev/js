@@ -1,6 +1,6 @@
 import type { Account } from "../../wallets/interfaces/wallet.js";
 import { stringToBytes } from "../encoding/to-bytes.js";
-import { randomBytes } from "../random.js";
+import { randomBytesHex } from "../random.js";
 import { uint8ArrayToBase64 } from "../uint8-array.js";
 import { PRECOMPILED_B64_ENCODED_JWT_HEADER } from "./jwt-header.js";
 import type { JWTPayload } from "./types.js";
@@ -72,7 +72,7 @@ async function ensureJWTPayload(payload: JWTPayloadInput): Promise<JWTPayload> {
     nbf: Math.floor(payload.nbf.getTime() / 1000),
     iat: Math.floor(payload.iat.getTime() / 1000),
     // default to uuid if jti is not provided
-    jti: payload.jti || (await randomBytes()),
+    jti: payload.jti || (await randomBytesHex()),
     ctx: payload.ctx,
   };
 }
