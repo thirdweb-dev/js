@@ -32,7 +32,7 @@
     "@hookform/resolvers": "^3.3.4",
     "@n8tb1t/use-scroll-position": "^2.0.3",
     "@react-icons/all-files": "^4.1.0",
-    "@sentry/nextjs": "^8.0.0",
+    "@sentry/nextjs": "^8.2.1",
     "@stripe/react-stripe-js": "^2.7.1",
     "@stripe/stripe-js": "^3.4.0",
     "@tanstack/query-async-storage-persister": "^4.36.1",
