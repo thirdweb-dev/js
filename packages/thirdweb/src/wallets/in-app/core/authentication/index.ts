@@ -32,9 +32,9 @@ async function getInAppWalletConnector(client: ThirdwebClient) {
       client: client,
     });
   } else if (isReactNative()) {
-    const { InAppNativeConnector } = await import(
-      "../../native/native-connector.js"
-    );
+    const {
+      InAppNativeConnector,
+    } = require("../../native/native-connector.js");
     ewSDK = new InAppNativeConnector({
       client,
     });
