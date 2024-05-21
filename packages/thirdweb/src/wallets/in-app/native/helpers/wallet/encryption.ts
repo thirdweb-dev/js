@@ -1,5 +1,4 @@
-import AesGcmCrypto from "react-native-aes-gcm-crypto";
-import QuickCrypto from "react-native-quick-crypto";
+import type { EncryptedData } from "react-native-aes-gcm-crypto";
 import { concat } from "viem/utils";
 import {
   hexToUint8Array,
@@ -21,7 +20,7 @@ export async function getEncryptionKey(
   salt: Uint8Array,
   iterationCounts: number,
 ): Promise<string> {
-  const key: ArrayBuffer = QuickCrypto.pbkdf2Sync(
+  const key: ArrayBuffer = require("react-native-quick-crypto").pbkdf2Sync(
     pwd,
     salt.buffer as ArrayBuffer,
     iterationCounts,
@@ -47,10 +46,13 @@ export async function encryptShareWeb(
 
   const keyBase64 = await getEncryptionKey(pwd, salt, iterationCount);
 
-  // biome-ignore lint/suspicious/noExplicitAny: Can't import the types properly
-  let encryptedValue: any;
+  let encryptedValue: EncryptedData;
   try {
-    encryptedValue = await AesGcmCrypto.encrypt(share, false, keyBase64);
+    encryptedValue = await require("react-native-aes-gcm-crypto").encrypt(
+      share,
+      false,
+      keyBase64,
+    );
   } catch (error) {
     throw new Error(`Error encrypting share: ${error}`);
   }
@@ -129,7 +131,7 @@ export async function decryptShareWeb(
   // biome-ignore lint/style/noNonNullAssertion: it's there
   const ivBufferHex = uint8ArrayToHex(base64ToUint8Array(ivBase64!));
 
-  const normalizedShare = await AesGcmCrypto.decrypt(
+  const normalizedShare = await require("react-native-aes-gcm-crypto").decrypt(
     originalBase64CipherText,
     key,
     ivBufferHex.slice(2), // lib expects hex with no

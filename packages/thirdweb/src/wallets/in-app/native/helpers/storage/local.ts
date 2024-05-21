@@ -1,4 +1,3 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import type { AuthArgsType } from "../../../core/authentication/type.js";
 import {
   AUTH_TOKEN_LOCAL_STORAGE_NAME,
@@ -13,15 +12,15 @@ const CONNECTED_AUTH_STRATEGY_LOCAL_STORAGE_NAME =
   "embedded-wallet-connected-auth-params";
 
 const getItemFromAsyncStorage = async (key: string) => {
-  return AsyncStorage.getItem(key);
+  return require("@react-native-async-storage/async-storage").getItem(key);
 };
 
 const setItemInAsyncStorage = async (key: string, value: string) => {
-  await AsyncStorage.setItem(key, value);
+  require("@react-native-async-storage/async-storage").setItem(key, value);
 };
 
 const removeItemInAsyncStorage = async (key: string) => {
-  await AsyncStorage.removeItem(key);
+  require("@react-native-async-storage/async-storage").removeItem(key);
 };
 
 export async function getConnectedEmail() {
