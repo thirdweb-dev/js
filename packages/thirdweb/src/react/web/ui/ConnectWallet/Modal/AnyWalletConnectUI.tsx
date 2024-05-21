@@ -85,7 +85,7 @@ export function AnyWalletConnectUI(props: {
     return (
       <DeepLinkConnectUI
         wallet={props.wallet as Wallet<InjectedSupportedWalletIds>}
-        walletName={walletInfo.data.name}
+        walletInfo={walletInfo.data}
         deepLinkPrefix={walletInfo.data.deepLink.mobile}
         locale={locale}
         onGetStarted={() => {
