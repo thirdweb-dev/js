@@ -56,7 +56,7 @@ export async function getCallsStatus({
   // These conveniently operate the same
   if (isSmartWallet(wallet) || isInAppWallet(wallet)) {
     const { inAppWalletGetCallsStatus } = await import(
-      "../in-app/core/lib/in-app-wallet-calls.js"
+      "../in-app/core/eip5972/in-app-wallet-calls.js"
     );
     return inAppWalletGetCallsStatus({ wallet, client, bundleId });
   }

@@ -3,12 +3,10 @@ import type {
   AuthAndWalletRpcReturnType,
   AuthLoginReturnType,
   AuthStoredTokenWithCookieReturnType,
-} from "../../interfaces/auth.js";
-import type {
-  ClientIdWithQuerierType,
   LogoutReturnType,
   SendEmailOtpReturnType,
-} from "../../interfaces/in-app-wallets/in-app-wallets.js";
+} from "../../../core/authentication/type.js";
+import type { ClientIdWithQuerierType } from "../../types.js";
 import { LocalStorage } from "../../utils/Storage/LocalStorage.js";
 import type { InAppWalletIframeCommunicator } from "../../utils/iFrameCommunication/InAppWalletIframeCommunicator.js";
 import { BaseLogin } from "./base-login.js";

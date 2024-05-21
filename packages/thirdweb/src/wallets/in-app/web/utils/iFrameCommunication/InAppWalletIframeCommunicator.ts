@@ -1,4 +1,4 @@
-import { IN_APP_WALLET_PATH } from "../../constants/settings.js";
+import { IN_APP_WALLET_PATH } from "../../../core/constants/settings.js";
 import { LocalStorage } from "../Storage/LocalStorage.js";
 import { IframeCommunicator } from "./IframeCommunicator.js";
 

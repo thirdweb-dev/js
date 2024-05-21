@@ -12,6 +12,12 @@ export default {
   "faucets": [
     "https://testnet.hashkeychain/faucet"
   ],
+  "icon": {
+    "url": "ipfs://QmNU11AqYB2htrrSyBSP9ct7bPtuZTP7Hrz21PrEcB9nYE",
+    "width": 1440,
+    "height": 448,
+    "format": "png"
+  },
   "infoURL": "https://www.hashkey.com",
   "name": "HashKey Chain Testnet(discard)",
   "nativeCurrency": {

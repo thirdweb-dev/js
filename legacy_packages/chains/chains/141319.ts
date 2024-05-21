@@ -6,7 +6,13 @@ export default {
     {
       "name": "etherscan",
       "url": "http://testnet-api.magape.io:81",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmPsxWMvnxnZ9dZcRJJMaE24o34dQsnsAMCJh3kVDrE1aB",
+        "width": 1000,
+        "height": 1000,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
@@ -15,6 +21,12 @@ export default {
       "name": "EIP155"
     }
   ],
+  "icon": {
+    "url": "ipfs://QmPsxWMvnxnZ9dZcRJJMaE24o34dQsnsAMCJh3kVDrE1aB",
+    "width": 1000,
+    "height": 1000,
+    "format": "png"
+  },
   "infoURL": "https://magape.io",
   "name": "MagApe Testnet",
   "nativeCurrency": {

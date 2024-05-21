@@ -30,6 +30,12 @@ export default {
     "https://faucet.apothem.network"
   ],
   "features": [],
+  "icon": {
+    "url": "ipfs://QmeRq7pabiJE2n1xU3Y5Mb4TZSX9kQ74x7a3P2Z4PqcMRX",
+    "width": 1450,
+    "height": 1450,
+    "format": "png"
+  },
   "infoURL": "https://xinfin.org",
   "name": "XDC Apothem Network",
   "nativeCurrency": {
