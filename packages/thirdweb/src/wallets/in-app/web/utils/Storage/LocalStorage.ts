@@ -3,7 +3,7 @@ import {
   DEVICE_SHARE_LOCAL_STORAGE_NAME,
   PASSKEY_CREDENTIAL_ID_LOCAL_STORAGE_NAME,
   WALLET_USER_ID_LOCAL_STORAGE_NAME,
-} from "../../constants/settings.js";
+} from "../../../core/constants/settings.js";
 
 const data = new Map<string, string>();
 

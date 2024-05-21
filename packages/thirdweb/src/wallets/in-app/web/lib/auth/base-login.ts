@@ -3,7 +3,7 @@ import {
   type AuthLoginReturnType,
   AuthProvider,
   type GetHeadlessLoginLinkReturnType,
-} from "../../interfaces/auth.js";
+} from "../../../core/authentication/type.js";
 import { AbstractLogin, type LoginQuerierTypes } from "./abstract-login.js";
 
 /**

@@ -10,7 +10,7 @@ import { toBigInt } from "../../../utils/bigint.js";
 import { dateToSeconds, tenYearsFromNow } from "../../../utils/date.js";
 import type { Hex } from "../../../utils/encoding/hex.js";
 import type { NFTInput } from "../../../utils/nft/parseNft.js";
-import { randomBytes } from "../../../utils/random.js";
+import { randomBytesHex } from "../../../utils/random.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
 import {
   type MintWithSignatureParams,
@@ -130,7 +130,7 @@ export async function generateMintSignature(
       return "";
     })(),
     // uid computation
-    mintRequest.uid || (await randomBytes()),
+    mintRequest.uid || (await randomBytesHex()),
   ]);
 
   const startTime = mintRequest.validityStartTimestamp || new Date(0);

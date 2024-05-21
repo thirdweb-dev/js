@@ -1,29 +1,30 @@
 import type * as ethers5 from "ethers5";
-import type { Hex, TypedDataDefinition } from "viem";
-import { getCachedChain } from "../../../../../chains/utils.js";
-import type { ThirdwebClient } from "../../../../../client/client.js";
-import { eth_sendRawTransaction } from "../../../../../rpc/actions/eth_sendRawTransaction.js";
-import { getRpcClient } from "../../../../../rpc/rpc.js";
+import type { TypedDataDefinition } from "viem";
+import { getCachedChain } from "../../../../chains/utils.js";
+import type { ThirdwebClient } from "../../../../client/client.js";
+import { eth_sendRawTransaction } from "../../../../rpc/actions/eth_sendRawTransaction.js";
+import { getRpcClient } from "../../../../rpc/rpc.js";
+import type { Hex } from "../../../../utils/encoding/hex.js";
 import type {
   Account,
   SendTransactionOption,
-} from "../../../../interfaces/wallet.js";
+} from "../../../interfaces/wallet.js";
+import {
+  type GetUser,
+  type GetUserWalletStatusRpcReturnType,
+  type SetUpWalletRpcReturnType,
+  UserWalletStatus,
+  type WalletAddressObjectType,
+} from "../../core/authentication/type.js";
 import type {
   ClientIdWithQuerierType,
-  GetUser,
-  GetUserWalletStatusRpcReturnType,
-  SetUpWalletRpcReturnType,
-  WalletAddressObjectType,
-} from "../../interfaces/in-app-wallets/in-app-wallets.js";
-import { UserWalletStatus } from "../../interfaces/in-app-wallets/in-app-wallets.js";
-import type {
   GetAddressReturnType,
   SignMessageReturnType,
   SignTransactionReturnType,
   SignedTypedDataReturnType,
-} from "../../interfaces/in-app-wallets/signer.js";
-import { LocalStorage } from "../../utils/Storage/LocalStorage.js";
-import type { InAppWalletIframeCommunicator } from "../../utils/iFrameCommunication/InAppWalletIframeCommunicator.js";
+} from "../types.js";
+import { LocalStorage } from "../utils/Storage/LocalStorage.js";
+import type { InAppWalletIframeCommunicator } from "../utils/iFrameCommunication/InAppWalletIframeCommunicator.js";
 
 export type WalletManagementTypes = {
   createWallet: undefined;
@@ -66,7 +67,7 @@ type PostWalletSetup = SetUpWalletRpcReturnType & {
 /**
  *
  */
-export class InAppWallet {
+export class IFrameWallet {
   protected client: ThirdwebClient;
   protected walletManagerQuerier: InAppWalletIframeCommunicator<
     WalletManagementTypes & WalletManagementUiTypes
@@ -147,7 +148,7 @@ export class InAppWallet {
       return {
         status: UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED,
         ...userStatus.user,
-        wallet: this,
+        account: await this.getAccount(),
       };
     }
     if (userStatus.status === UserWalletStatus.LOGGED_IN_NEW_DEVICE) {
