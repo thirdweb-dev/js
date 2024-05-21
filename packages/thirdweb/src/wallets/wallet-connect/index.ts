@@ -509,6 +509,13 @@ function getChainsToRequest(options: {
       ? (optionalChainIds as ArrayOneOrMore<number>)
       : [1];
 
+  if (!options.chain && optionalChains.length === 0) {
+    rpcMap[1] = getRpcUrlForChain({
+      chain: 1,
+      client: options.client,
+    });
+  }
+
   return {
     rpcMap,
     chainsToRequest,
