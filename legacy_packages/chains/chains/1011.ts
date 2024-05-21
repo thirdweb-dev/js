@@ -6,15 +6,33 @@ export default {
     {
       "name": "Rebus EVM Explorer (Blockscout)",
       "url": "https://evm.rebuschain.com",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://bafkreifzag46dhp33vb2uldg4htqbqipuqrapjga6ml6pnhn5yibbvb4gq",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      }
     },
     {
       "name": "Rebus Cosmos Explorer (ping.pub)",
       "url": "https://cosmos.rebuschain.com",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://bafkreifzag46dhp33vb2uldg4htqbqipuqrapjga6ml6pnhn5yibbvb4gq",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://bafkreifzag46dhp33vb2uldg4htqbqipuqrapjga6ml6pnhn5yibbvb4gq",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "infoURL": "https://www.rebuschain.com",
   "name": "Rebus Mainnet",
   "nativeCurrency": {
