@@ -462,7 +462,7 @@
   "sideEffects": false,
   "scripts": {
     "clean": "rm -rf dist/",
-    "typechain": "rm -rf ./src && cp ./external_abis/*.json ./node_modules/@thirdweb-dev/contracts/abi && typechain --target ethers-v5 --out-dir src './node_modules/@thirdweb-dev/contracts/abi/*.json'",
+    "typechain": "rm -rf ./src && cp ./external_abis/*.json ../../node_modules/@thirdweb-dev/contracts/abi && typechain --target ethers-v5 --out-dir src '../../node_modules/@thirdweb-dev/contracts/abi/*.json'",
     "extract-abi": "bun ./scripts/extract-abis.ts && bun ./scripts/write-exports.ts",
     "build": "bun ./scripts/revert-exports.ts && pnpm typechain && tsc && pnpm preconstruct build && pnpm extract-abi",
     "push": "yalc push"

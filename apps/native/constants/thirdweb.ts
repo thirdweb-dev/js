@@ -2,7 +2,7 @@ import { createThirdwebClient, getContract } from "thirdweb";
 import { baseSepolia } from "thirdweb/chains";
 
 export const client = createThirdwebClient({
-  clientId: "c0235bde0f26718b6d5ccdf7dd550846",
+  clientId: "1f8cc222ef2e72d2d9cb5470cd5e0594",
 });
 
 export const chain = baseSepolia;

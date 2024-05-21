@@ -1,7 +1,6 @@
 import {
   type UseQueryOptions,
   type UseQueryResult,
-  queryOptions as defineQuery,
   useQuery,
 } from "@tanstack/react-query";
 import type { Abi, AbiFunction, ExtractAbiFunctionNames } from "abitype";
@@ -98,7 +97,7 @@ export function useReadContract<
     }
     const { queryOptions, contract, ...params } = options;
 
-    const query = defineQuery({
+    return useQuery({
       queryKey: [
         "readContract",
         contract.chain.id,
@@ -110,14 +109,11 @@ export function useReadContract<
       queryFn: () => extensionOrOptions({ ...params, contract }),
       ...queryOptions,
     });
-
-    return useQuery(query);
   }
   // raw tx case
   if ("method" in extensionOrOptions) {
     const { queryOptions, ...tx } = extensionOrOptions;
-
-    const query = defineQuery({
+    return useQuery({
       queryKey: [
         "readContract",
         tx.contract.chain.id,
@@ -128,8 +124,6 @@ export function useReadContract<
       queryFn: () => readContract(extensionOrOptions),
       ...queryOptions,
     });
-
-    return useQuery(query);
   }
 
   throw new Error(
