@@ -12,12 +12,6 @@ export default {
   "faucets": [
     "https://faucet.eclatscan.com"
   ],
-  "icon": {
-    "url": "ipfs://bafybeigpyvnir6awzgeazkk5xdkvexw7w6ww3yxawszue6zms4a5ygdfky",
-    "width": 500,
-    "height": 500,
-    "format": "png"
-  },
   "infoURL": "https://testnet-explorer.eclatscan.com",
   "name": "Eclat Testnet",
   "nativeCurrency": {
