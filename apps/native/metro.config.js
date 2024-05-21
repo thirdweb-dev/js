@@ -20,8 +20,7 @@ config.resolver.sourceExts.push("cjs");
 config.resolver.resolveRequest = (context, moduleName, platform) => {
   if (
     platform === "android" &&
-    // replace `packages/app` with the path to your app directory in monorepo
-    context.originModulePath.endsWith("packages/app/.") &&
+    context.originModulePath.endsWith("apps/native/.") &&
     // some weird edge cases, there might be a better way to do this
     !moduleName.startsWith("/") &&
     !moduleName.startsWith("../../") &&
