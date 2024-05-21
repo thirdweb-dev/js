@@ -2,11 +2,19 @@ import { Image, Platform, StyleSheet } from "react-native";
 
 import { HelloWave } from "@/components/HelloWave";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
+import { ThemedButton } from "@/components/ThemedButton";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { totalSupply } from "thirdweb/extensions/erc721";
-import { useReadContract } from "thirdweb/react";
-import { contract } from "../../constants/thirdweb";
+import { chain, client, contract } from "@/constants/thirdweb";
+import { claimTo, totalSupply } from "thirdweb/extensions/erc721";
+import {
+  useActiveAccount,
+  useConnect,
+  useReadContract,
+  useSendTransaction,
+} from "thirdweb/react";
+import { shortenAddress } from "thirdweb/utils";
+import { inAppWallet } from "thirdweb/wallets/in-app";
 
 export default function HomeScreen() {
   return (
@@ -24,36 +32,7 @@ export default function HomeScreen() {
         <HelloWave />
       </ThemedView>
       <ReadSection />
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit{" "}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText>{" "}
-          to see changes. Press{" "}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: "cmd + d", android: "cmd + m" })}
-          </ThemedText>{" "}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this
-          starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{" "}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText>{" "}
-          to get a fresh <ThemedText type="defaultSemiBold">app</ThemedText>{" "}
-          directory. This will move the current{" "}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{" "}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
+      <ConnectSection />
     </ParallaxScrollView>
   );
 }
@@ -81,6 +60,82 @@ function ReadSection() {
         </ThemedText>
       </ThemedText>
     </ThemedView>
+  );
+}
+
+function ConnectSection() {
+  const account = useActiveAccount();
+  const { connect, isConnecting } = useConnect();
+
+  const connectInAppWallet = async () => {
+    await connect(async () => {
+      const wallet = inAppWallet({
+        smartAccount: {
+          chain,
+          sponsorGas: true,
+        },
+      });
+      await wallet.connect({
+        client,
+        strategy: "google",
+        redirectUrl: "com.thirdweb.demo://",
+      });
+      return wallet;
+    });
+  };
+  return (
+    <ThemedView style={styles.stepContainer}>
+      <ThemedText type="subtitle">Onchain write</ThemedText>
+      {account ? (
+        <WriteSection />
+      ) : (
+        <>
+          <ThemedText>Sign in to access your in-app wallet</ThemedText>
+          <ThemedButton
+            onPress={connectInAppWallet}
+            title="Sign in with Google"
+            loading={isConnecting}
+            loadingTitle="Signing in..."
+          />
+        </>
+      )}
+    </ThemedView>
+  );
+}
+
+function WriteSection() {
+  const account = useActiveAccount();
+  const sendMutation = useSendTransaction();
+
+  const mint = async () => {
+    if (!account) return;
+    await sendMutation.mutateAsync(
+      claimTo({
+        contract,
+        quantity: 1n,
+        to: account.address,
+      }),
+    );
+  };
+
+  return (
+    <>
+      {account ? (
+        <>
+          <ThemedText>Wallet: {shortenAddress(account.address)}</ThemedText>
+          <ThemedButton
+            onPress={mint}
+            title="Mint"
+            loading={sendMutation.isPending}
+            loadingTitle="Minting..."
+          />
+        </>
+      ) : (
+        <>
+          <ThemedText>Connect to mint an NFT.</ThemedText>
+        </>
+      )}
+    </>
   );
 }
 
