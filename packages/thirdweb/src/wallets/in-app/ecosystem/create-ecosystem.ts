@@ -15,7 +15,7 @@ export type CreateEcosystemOptions = {
  * @param {ThirdwebClient} options.client - The thirdweb client instance, which must include a valid secret key for authentication.
  * @param {string} options.name - The name of the wallet ecosystem to be created.
  * @param {string} options.logoUrl - The URL pointing to the logo image for the wallet ecosystem.
- * @returns {Promise<string>} A promise that resolves to the integrator ID of the newly created wallet ecosystem.
+ * @returns {Promise<string>} A promise that resolves to the ID of the newly created wallet ecosystem.
  * @throws {Error} Throws an error if the secret key is not set in the client, if the API request fails, or if the response indicates an authorization or other server-side error.
  *
  * @example
