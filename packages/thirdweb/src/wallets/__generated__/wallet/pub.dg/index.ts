@@ -2,14 +2,15 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.foxwallet",
-  name: "FoxWallet",
-  homepage: "http://foxwallet.com",
-  image_id: "d673068d-1acf-4372-76ee-8eb931c59e00",
+  id: "pub.dg",
+  name: "DGPub App",
+  homepage: "https://dg.pub",
+  image_id: "9d9a2700-4ab0-4c1c-4acf-8ed0037cc500",
   app: {
     browser: null,
-    ios: "https://apps.apple.com/app/foxwallet-crypto-web3/id1590983231",
-    android: "https://play.google.com/store/apps/details?id=com.foxwallet.play",
+    ios: "https://apps.apple.com/jo/app/dg-pub-a-gateway-to-web3/id6478573535",
+    android:
+      "https://play.google.com/store/apps/details?id=pub.dg.wallet&pli=1",
     mac: null,
     windows: null,
     linux: null,
@@ -21,8 +22,8 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: "foxwallet://",
-    universal: "https://link.foxwallet.com",
+    native: "dgpub://",
+    universal: "https://dgpub.app.link",
   },
   desktop: {
     native: null,

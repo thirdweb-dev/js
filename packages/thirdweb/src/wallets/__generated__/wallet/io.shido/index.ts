@@ -2,14 +2,15 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.foxwallet",
-  name: "FoxWallet",
-  homepage: "http://foxwallet.com",
-  image_id: "d673068d-1acf-4372-76ee-8eb931c59e00",
+  id: "io.shido",
+  name: "Shido App",
+  homepage: "https://www.shido.io/",
+  image_id: "673b4fdc-8c65-41e0-d0f8-c2eb6c8e5500",
   app: {
     browser: null,
-    ios: "https://apps.apple.com/app/foxwallet-crypto-web3/id1590983231",
-    android: "https://play.google.com/store/apps/details?id=com.foxwallet.play",
+    ios: "https://apps.apple.com/us/app/shido-app/id6473452165",
+    android:
+      "https://play.google.com/store/apps/details?id=com.shido.wallet&hl=en&gl=US&pli=1",
     mac: null,
     windows: null,
     linux: null,
@@ -21,8 +22,8 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: "foxwallet://",
-    universal: "https://link.foxwallet.com",
+    native: "shido://",
+    universal: null,
   },
   desktop: {
     native: null,

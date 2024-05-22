@@ -3,9 +3,9 @@
 
 export const wallet = {
   id: "com.mpcvault.broswerplugin",
-  name: "Solayer",
-  homepage: "https://app.solayer.org",
-  image_id: "a3811374-9294-44b0-b5be-4202e01d6400",
+  name: "MPCVault | Team crypto wallet",
+  homepage: "https://mpcvault.com",
+  image_id: "3cbf71ea-c90b-427c-6b2c-a9a7c7c0d500",
   app: {
     browser: "https://console.mpcvault.com",
     ios: "https://apps.apple.com/us/app/mpcvault/id1622756458",
@@ -14,7 +14,8 @@ export const wallet = {
     mac: null,
     windows: null,
     linux: null,
-    chrome: null,
+    chrome:
+      "https://chromewebstore.google.com/detail/mpcvault/jgfmfplofjigjfokigdiaiibhonfnedj",
     firefox: null,
     safari: null,
     edge: null,
