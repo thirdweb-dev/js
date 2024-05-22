@@ -2,49 +2,52 @@ import type { ThirdwebClient } from "../../../client/client.js";
 import { getThirdwebDomains } from "../../../utils/domains.js";
 import { getClientFetch } from "../../../utils/fetch.js";
 
-export type EcosystemCreationOptions = {
+export type EcosystemUpdateOptions = {
   client: ThirdwebClient;
-  name: string;
-  logoUrl: string;
+  id: string;
+  name?: string;
+  logoUrl?: string;
 };
 
 /**
- * Creates a new wallet ecosystem with the provided details.
+ * Updates an existing wallet ecosystem with the provided details.
  *
- * @param {EcosystemCreationOptions} options - The options required to create the wallet ecosystem.
+ * @param {EcosystemUpdateOptions} options - The options required to update the wallet ecosystem.
  * @param {ThirdwebClient} options.client - The thirdweb client instance, which must include a valid secret key for authentication.
- * @param {string} options.name - The name of the wallet ecosystem to be created.
- * @param {string} options.logoUrl - The URL pointing to the logo image for the wallet ecosystem.
- * @returns {Promise<string>} A promise that resolves to the integrator ID of the newly created wallet ecosystem.
+ * @param {string} options.id - The ID of the wallet ecosystem to be updated.
+ * @param {string} [options.name] - The new name of the wallet ecosystem (if updating the name).
+ * @param {string} [options.logoUrl] - The URL pointing to the new logo image for the wallet ecosystem (if updating the logo).
+ * @returns {Promise<boolean>} A promise that resolves to true if the update was successful.
  * @throws {Error} Throws an error if the secret key is not set in the client, if the API request fails, or if the response indicates an authorization or other server-side error.
  *
  * @example
  * The provided client **must** have a secret key set.
  * ```typescript
  * import { createThirdwebClient } from "thirdweb";
- * import { createWalletEcosystem } from "thirdweb/wallets/ecosystem";
+ * import { updateWalletEcosystem } from "thirdweb/wallets/ecosystem";
  *
  * const client = createThirdwebClient({ secretKey: 'your_secret_key' });
- * const ecosystemId = await createWalletEcosystem({
+ * const updated = await updateWalletEcosystem({
  *   client: client,
+ *   id: 'ecosystem_id',
  *   name: 'My New Ecosystem',
  *   logoUrl: 'https://example.com/logo.png'
  * });
  * ```
  */
-export async function createWalletEcosystem(options: EcosystemCreationOptions) {
+export async function updateWalletEcosystem(options: EcosystemUpdateOptions) {
   if (!options.client.secretKey) {
     throw new Error(
-      "Unauthorized - Secret Key is required to create a wallet ecosystem.",
+      "Unauthorized - Secret Key is required to update a wallet ecosystem.",
     );
   }
 
   const res = await getClientFetch(options.client)(
     `https://${
       getThirdwebDomains().inAppWallet
-    }/api/2024-05-05/ecosystem-wallet/provider`,
+    }/api/2024-05-05/ecosystem-wallet/provider/${options.id}`,
     {
-      method: "POST",
+      method: "PATCH",
       body: JSON.stringify({
         name: options.name,
         logoUrl: options.logoUrl,
@@ -60,11 +63,9 @@ export async function createWalletEcosystem(options: EcosystemCreationOptions) {
       );
     }
     throw new Error(
-      `Failed to create a new wallet ecosystem - ${res.status} - ${res.statusText}`,
+      `Failed to update the wallet ecosystem - ${res.status} - ${res.statusText}`,
     );
   }
 
-  const body = await res.json();
-
-  return body.id;
+  return true;
 }
