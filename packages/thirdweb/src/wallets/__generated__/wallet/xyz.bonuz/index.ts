@@ -2,16 +2,15 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "io.shidowallet",
-  name: "Shido Wallet",
-  homepage: "https://www.shidowallet.io/",
-  image_id: "dd5c7007-4572-41c7-a9b8-b97d071adb00",
+  id: "xyz.bonuz",
+  name: "Bonuz",
+  homepage: "https://bonuz.xyz",
+  image_id: "4f8737be-5aa1-4dff-d956-39c81a998e00",
   app: {
-    browser: "https://www.shidowallet.io/",
-    ios: "https://apps.apple.com/in/app/shido-wallet/id6443624368",
-    android:
-      "https://play.google.com/store/apps/details?id=com.shidowallet&hl=en_IN&gl=US",
-    mac: "",
+    browser: null,
+    ios: "https://bonuz.xyz",
+    android: "https://bonuz.xyz",
+    mac: null,
     windows: null,
     linux: null,
     chrome: null,
@@ -22,7 +21,7 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: "shido://",
+    native: "bonuzapp://",
     universal: null,
   },
   desktop: {

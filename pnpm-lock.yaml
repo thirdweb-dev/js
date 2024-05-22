@@ -1495,7 +1495,7 @@ importers:
         specifier: 2.13.0
         version: 2.13.0(@react-native-async-storage/async-storage@1.23.1)(@react-native-community/netinfo@11.3.2)(expo-application@5.9.1)(react-native-get-random-values@1.11.0)(react-native@0.74.1)
       amazon-cognito-identity-js:
-        specifier: 6.3.12
+        specifier: ^6
         version: 6.3.12
       aws-amplify:
         specifier: 5.3.18

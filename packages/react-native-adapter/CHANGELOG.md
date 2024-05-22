@@ -1,5 +1,15 @@
 # @thirdweb-dev/react-native-adapter
 
+## 1.1.0
+
+### Minor Changes
+
+- [#3064](https://github.com/thirdweb-dev/js/pull/3064) [`f55fa4c`](https://github.com/thirdweb-dev/js/commit/f55fa4ca856924a0a1eb6b8e5fe743d76b6e2760) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - In-app wallet support for react native
+
+### Patch Changes
+
+- [#3110](https://github.com/thirdweb-dev/js/pull/3110) [`49aa6e4`](https://github.com/thirdweb-dev/js/commit/49aa6e41d5df93204821b72f17f1ba5c3cfe41f7) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Phone number sign in for React Native
+
 ## 1.0.0
 
 ### Major Changes

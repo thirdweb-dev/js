@@ -5,13 +5,13 @@ export const wallet = {
   id: "io.myabcwallet",
   name: "ABC Wallet",
   homepage: "https://myabcwallet.io/",
-  image_id: "f9854c79-14ba-4987-42e1-4a82abbf5700",
+  image_id: "e689ea2b-cd49-4a1d-7812-424a0e0d9200",
   app: {
     browser: null,
     ios: "https://apps.apple.com/app/abc-wallet-safe-web3-wallet/id1642837445",
     android:
       "https://play.google.com/store/apps/details?id=io.myabcwallet.mpc&hl=en&gl=US",
-    mac: "",
+    mac: null,
     windows: null,
     linux: null,
     chrome: null,

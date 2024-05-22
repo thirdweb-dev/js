@@ -13,14 +13,17 @@ const CONNECTED_AUTH_STRATEGY_LOCAL_STORAGE_NAME =
   "embedded-wallet-connected-auth-params";
 
 const getItemFromAsyncStorage = async (key: string) => {
+  // @ts-ignore - default import buils but ts doesn't like it
   return AsyncStorage.getItem(key);
 };
 
 const setItemInAsyncStorage = async (key: string, value: string) => {
+  // @ts-ignore - default import buils but ts doesn't like it
   await AsyncStorage.setItem(key, value);
 };
 
 const removeItemInAsyncStorage = async (key: string) => {
+  // @ts-ignore - default import buils but ts doesn't like it
   await AsyncStorage.removeItem(key);
 };
 

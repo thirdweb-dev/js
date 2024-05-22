@@ -1,4 +1,5 @@
-import { zeroAddress } from "viem";
+import { type Account as ViemAccount, zeroAddress } from "viem";
+import { privateKeyToAccount as viemPrivateKeyToAccount } from "viem/accounts";
 import { beforeAll, describe, expect, test } from "vitest";
 import { ANVIL_PKEY_A } from "~test/test-wallets.js";
 import { typedData } from "~test/typed-data.js";
@@ -85,5 +86,20 @@ describe("walletClient.toViem", () => {
     const address = await walletClient.getAddresses();
     expect(address[0]).toBeDefined();
     expect(address[0]).toBe(account.address);
+  });
+
+  test("should match thirdweb account signature", async () => {
+    const message = "testing123";
+
+    const rawViemAccount = viemPrivateKeyToAccount(ANVIL_PKEY_A);
+    const twSignature = await account.signMessage({ message });
+    const viemTwSignature = await walletClient.signMessage({
+      message,
+      account: walletClient.account as ViemAccount,
+    });
+    const viemSignature = await rawViemAccount.signMessage({ message });
+
+    expect(viemSignature).toEqual(twSignature);
+    expect(viemTwSignature).toEqual(twSignature);
   });
 });

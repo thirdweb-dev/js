@@ -17,6 +17,7 @@ import {
   customJwt,
   deleteActiveAccount,
   sendVerificationEmail,
+  sendVerificationSms,
   socialLogin,
   validateEmailOTP,
 } from "./auth.js";
@@ -45,25 +46,25 @@ export class InAppNativeConnector implements InAppConnector {
     if (userStatus.status === UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED) {
       return {
         status: userStatus.status,
-        authDetails: userStatus.user.authDetails,
-        walletAddress: userStatus.user.walletAddress,
+        authDetails: userStatus.storedToken.authDetails,
+        walletAddress: userStatus.walletAddress,
         account: await this.getAccount(),
       };
     }
     if (userStatus.status === UserWalletStatus.LOGGED_IN_NEW_DEVICE) {
       return {
         status: UserWalletStatus.LOGGED_IN_WALLET_UNINITIALIZED,
-        ...userStatus.user,
+        authDetails: userStatus.storedToken.authDetails,
       };
     }
     if (userStatus.status === UserWalletStatus.LOGGED_IN_WALLET_UNINITIALIZED) {
       return {
         status: UserWalletStatus.LOGGED_IN_WALLET_UNINITIALIZED,
-        ...userStatus.user,
+        authDetails: userStatus.storedToken.authDetails,
       };
     }
     // Logged out
-    return { status: userStatus.status };
+    return { status: UserWalletStatus.LOGGED_OUT };
   }
   getAccount(): Promise<Account> {
     return getExistingUserAccount({ client: this.options.client });
@@ -73,10 +74,16 @@ export class InAppNativeConnector implements InAppConnector {
     const strategy = params.strategy;
     switch (strategy) {
       case "email": {
-        return this.sendVerificationEmail({ email: params.email });
+        return sendVerificationEmail({
+          email: params.email,
+          client: this.options.client,
+        });
       }
       case "phone":
-        throw new Error("Phone authentication is not implemented yet");
+        return sendVerificationSms({
+          phoneNumber: params.phoneNumber,
+          client: this.options.client,
+        });
       default:
         assertUnreachable(strategy);
     }
@@ -88,6 +95,13 @@ export class InAppNativeConnector implements InAppConnector {
       case "email": {
         return await this.validateEmailOTP({
           email: params.email,
+          otp: params.verificationCode,
+          recoveryCode: params.verificationCode,
+        });
+      }
+      case "phone": {
+        return await this.validateEmailOTP({
+          email: params.phoneNumber,
           otp: params.verificationCode,
           recoveryCode: params.verificationCode,
         });
@@ -117,9 +131,6 @@ export class InAppNativeConnector implements InAppConnector {
           payload: params.payload,
           encryptionKey: params.encryptionKey,
         });
-      }
-      case "phone": {
-        throw new Error("Phone authentication is not implemented yet");
       }
       case "passkey": {
         throw new Error("Passkey authentication is not implemented yet");
@@ -163,15 +174,6 @@ export class InAppNativeConnector implements InAppConnector {
       }
       throw new Error("An unknown error occurred while validating otp");
     }
-  }
-
-  async sendVerificationEmail(options: {
-    email: string;
-  }): Promise<SendEmailOtpReturnType> {
-    return sendVerificationEmail({
-      email: options.email,
-      client: this.options.client,
-    });
   }
 
   // TODO (rn) expose in the interface
