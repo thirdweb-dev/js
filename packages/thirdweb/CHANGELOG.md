@@ -1,5 +1,60 @@
 # thirdweb
 
+## 5.23.0
+
+### Minor Changes
+
+- [#3103](https://github.com/thirdweb-dev/js/pull/3103) [`a2275c4`](https://github.com/thirdweb-dev/js/commit/a2275c409c4a7f8f595bd1ee7250fee46d54f1e7) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds `unstyled` prop to `TransactionButton` to remove default styles
+
+  ```tsx
+  <TransactionButton
+    transaction={() => {}}
+    onSuccess={handleSuccess}
+    onError={handleError}
+    unstyled
+    className="bg-white text-black rounded-md p-4 flex items-center justify-center"
+  >
+    Confirm Transaction
+  </TransactionButton>
+  ```
+
+- [#3083](https://github.com/thirdweb-dev/js/pull/3083) [`5994685`](https://github.com/thirdweb-dev/js/commit/599468559d2c63b337f770fb492d386cdd90e7ae) Thanks [@MananTank](https://github.com/MananTank)! - Add support for deep-linking to Metamask app instead of using WalletConnect on mobile devices when using Connect UI (`ConnectButton` / `ConnectEmbed`) components.
+
+  ```ts
+  <ConnectButton
+    client={client}
+    wallets={[
+      createWallet("io.metamask", {
+        preferDeepLink: true,
+      }),
+    ]}
+  />
+  ```
+
+- [#3064](https://github.com/thirdweb-dev/js/pull/3064) [`f55fa4c`](https://github.com/thirdweb-dev/js/commit/f55fa4ca856924a0a1eb6b8e5fe743d76b6e2760) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - In-app wallet support for react native
+
+### Patch Changes
+
+- [#3085](https://github.com/thirdweb-dev/js/pull/3085) [`a22eb5c`](https://github.com/thirdweb-dev/js/commit/a22eb5c4bff839aa5137b0a743d75afc929b49f1) Thanks [@MananTank](https://github.com/MananTank)! - Fix `onConnect` prop called twice when connecting inApp wallet using Social login
+
+- [#3071](https://github.com/thirdweb-dev/js/pull/3071) [`da63eab`](https://github.com/thirdweb-dev/js/commit/da63eab29a53ff04cbe1dc175c6a6b6066a1ee9d) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fully clear in-app wallet user data when disconnecting
+
+- [#3063](https://github.com/thirdweb-dev/js/pull/3063) [`f49f8ca`](https://github.com/thirdweb-dev/js/commit/f49f8cacb4f69dc46551b023c22bda71712df04a) Thanks [@jnsdls](https://github.com/jnsdls)! - ethers6 adapter: allow optional account to be passed to `contract.toEthers` that will automatically hook up the contract with a signer instead of provider
+
+- [#3079](https://github.com/thirdweb-dev/js/pull/3079) [`f8e0a50`](https://github.com/thirdweb-dev/js/commit/f8e0a50136a600b93c05802322f208c133a9c81e) Thanks [@MananTank](https://github.com/MananTank)! - Fix PayEmbed not passing theme to ConnectButton
+
+- [#3107](https://github.com/thirdweb-dev/js/pull/3107) [`57f7cd5`](https://github.com/thirdweb-dev/js/commit/57f7cd5a661ac3b0611782f17e96a3e30a3485ae) Thanks [@MananTank](https://github.com/MananTank)! - - Fix spacing issues in UI components
+
+  - Revert color changes in UI components
+
+- [#3067](https://github.com/thirdweb-dev/js/pull/3067) [`b46173f`](https://github.com/thirdweb-dev/js/commit/b46173f982dd3b31795739b9a834046ed3599dba) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix TransactionButton styles when overriding with custom styles
+
+- [#3080](https://github.com/thirdweb-dev/js/pull/3080) [`7abbe03`](https://github.com/thirdweb-dev/js/commit/7abbe03a11fc38a02a64329de201636d8e1c5b44) Thanks [@MananTank](https://github.com/MananTank)! - Improved OTP input using input-otp library
+
+- [#3110](https://github.com/thirdweb-dev/js/pull/3110) [`49aa6e4`](https://github.com/thirdweb-dev/js/commit/49aa6e41d5df93204821b72f17f1ba5c3cfe41f7) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Phone number sign in for React Native
+
+- [#3082](https://github.com/thirdweb-dev/js/pull/3082) [`9c9969e`](https://github.com/thirdweb-dev/js/commit/9c9969e41abb86f819bad55f5bb3dd36447e41e4) Thanks [@MananTank](https://github.com/MananTank)! - Add switch account button in `ConnectButton` details button for MetaMask injected provider
+
 ## 5.22.1
 
 ### Patch Changes

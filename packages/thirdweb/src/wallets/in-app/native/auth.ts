@@ -20,6 +20,8 @@ import {
 import {
   cognitoEmailSignIn,
   cognitoEmailSignUp,
+  cognitoPhoneSignIn,
+  cognitoPhoneSignUp,
 } from "./helpers/auth/cognitoAuth.js";
 import {
   postAuth,
@@ -79,7 +81,55 @@ export async function sendVerificationEmail(options: {
     isNewUser: false, // TODO (rn) check this assumption is ok
     isNewDevice: !(await isDeviceSharePresentForUser(
       options.client.clientId,
-      result.user?.authDetails.userWalletId ?? "",
+      result.walletUserId ?? "",
+    )),
+    recoveryShareManagement: RecoveryShareManagement.CLOUD_MANAGED,
+  };
+}
+
+export async function sendVerificationSms(options: {
+  phoneNumber: string;
+  client: ThirdwebClient;
+}): Promise<SendEmailOtpReturnType> {
+  await verifyClientId(options.client);
+
+  await preAuth({
+    authenticationMethod: AuthProvider.COGNITO,
+    phone: options.phoneNumber,
+  });
+
+  let result: Awaited<ReturnType<typeof fetchUserDetails>>;
+  try {
+    result = await fetchUserDetails({
+      email: options.phoneNumber, // TODO should cleanup the API here
+      client: options.client,
+    });
+  } catch (e) {
+    throw new Error(
+      createErrorMessage("Malformed response from the send email OTP API", e),
+    );
+  }
+
+  let cognitoUser: CognitoUser;
+  try {
+    cognitoUser = await cognitoPhoneSignIn(
+      options.phoneNumber,
+      options.client.clientId,
+    );
+  } catch (e) {
+    await cognitoPhoneSignUp(options.phoneNumber, options.client.clientId);
+    cognitoUser = await cognitoPhoneSignIn(
+      options.phoneNumber,
+      options.client.clientId,
+    );
+  }
+  setCognitoUser(cognitoUser);
+
+  return {
+    isNewUser: false, // TODO (rn) check this assumption is ok
+    isNewDevice: !(await isDeviceSharePresentForUser(
+      options.client.clientId,
+      result.walletUserId ?? "",
     )),
     recoveryShareManagement: RecoveryShareManagement.CLOUD_MANAGED,
   };
