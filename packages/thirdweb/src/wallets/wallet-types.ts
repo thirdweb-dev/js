@@ -2,6 +2,7 @@ import type { AdapterWalletOptions } from "../adapters/wallet-adapter.js";
 import type { Chain } from "../chains/types.js";
 import type { ThirdwebClient } from "../client/client.js";
 import type {
+  DeepLinkSupportedWalletIds,
   InjectedSupportedWalletIds,
   WCSupportedWalletIds,
 } from "./__generated__/wallet-ids.js";
@@ -32,6 +33,17 @@ export type WalletId =
   | "adapter"
   | WCSupportedWalletIds
   | InjectedSupportedWalletIds;
+
+export type DeepLinkSupportedWalletCreationOptions =
+  | {
+      /**
+       * Redirect the user to wallet app and open the current page in the wallet's in-app browser instead of using WalletConnect on mobile devices when using Connect UI (ConnectButton / ConnectEmbed components)
+       *
+       * By default, this is set to `false` and WalletConnect will be used on mobile devices when using Connect UI.
+       */
+      preferDeepLink?: boolean;
+    }
+  | undefined;
 
 export type StandaloneWCConnectOptions = WCConnectOptions["walletConnect"] & {
   client: ThirdwebClient;
@@ -120,7 +132,9 @@ export type WalletCreationOptions<T extends WalletId> = T extends "smart"
       ? CoinbaseWalletCreationOptions
       : T extends "adapter"
         ? AdapterWalletOptions
-        : undefined;
+        : T extends DeepLinkSupportedWalletIds
+          ? DeepLinkSupportedWalletCreationOptions
+          : undefined;
 
 /**
  * Generic type for getting the tuple type of arguments that the `createWallet` function takes.

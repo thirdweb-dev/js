@@ -327,7 +327,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
                 {tos ? (
                   <Container p="md"> {tos} </Container>
                 ) : (
-                  <Spacer y="md" />
+                  <Spacer y="xxs" />
                 )}
               </Container>
             );
@@ -459,11 +459,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
 
       {bottomSection}
       {isCompact && connectModal.showThirdwebBranding !== false && (
-        <Container
-          style={{
-            paddingBottom: spacing.md,
-          }}
-        >
+        <Container py="md">
           <PoweredByThirdweb />
         </Container>
       )}

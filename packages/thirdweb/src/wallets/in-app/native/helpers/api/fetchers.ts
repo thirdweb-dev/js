@@ -3,7 +3,7 @@ import type { ThirdwebClient } from "../../../../../client/client.js";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
 import { getClientFetch } from "../../../../../utils/fetch.js";
 import { randomBytesHex } from "../../../../../utils/random.js";
-import type { GetUserWalletStatusRpcReturnType } from "../../../core/authentication/type.js";
+import type { UserDetailsApiType } from "../../../core/authentication/type.js";
 import {
   ROUTE_EMBEDDED_WALLET_DETAILS,
   ROUTE_IS_VALID_USER_MANAGED_OTP,
@@ -84,7 +84,7 @@ export const authFetchEmbeddedWalletUser = async (
 export async function fetchUserDetails(args: {
   email?: string;
   client: ThirdwebClient;
-}): Promise<GetUserWalletStatusRpcReturnType> {
+}): Promise<UserDetailsApiType> {
   const url = new URL(ROUTE_EMBEDDED_WALLET_DETAILS);
   if (args) {
     if (args.email) {
@@ -101,7 +101,7 @@ export async function fetchUserDetails(args: {
       `Something went wrong determining wallet type. ${error.message}`,
     );
   }
-  const result = (await resp.json()) as GetUserWalletStatusRpcReturnType;
+  const result = (await resp.json()) as UserDetailsApiType;
   return result;
 }
 

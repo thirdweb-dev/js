@@ -2,14 +2,15 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.foxwallet",
-  name: "FoxWallet",
-  homepage: "http://foxwallet.com",
-  image_id: "d673068d-1acf-4372-76ee-8eb931c59e00",
+  id: "one.metapro.wallet",
+  name: "metapro wallet",
+  homepage: "https://wallet.metapro.one",
+  image_id: "20775b9e-c38f-4173-509f-896a84593b00",
   app: {
     browser: null,
-    ios: "https://apps.apple.com/app/foxwallet-crypto-web3/id1590983231",
-    android: "https://play.google.com/store/apps/details?id=com.foxwallet.play",
+    ios: "https://apps.apple.com/us/app/metapro-wallet/id1628087356",
+    android:
+      "https://play.google.com/store/apps/details?id=com.metapro.app&hl=en&gl=US",
     mac: null,
     windows: null,
     linux: null,
@@ -21,8 +22,8 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: "foxwallet://",
-    universal: "https://link.foxwallet.com",
+    native: "metapro://",
+    universal: null,
   },
   desktop: {
     native: null,
