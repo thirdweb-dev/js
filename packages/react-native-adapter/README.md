@@ -20,7 +20,7 @@ npx expo install react-native-get-random-values @react-native-community/netinfo 
 
 Here's an explanation of each peer dependency and why its needed:
 
-```json
+```
 // needed for wallet connect
 react-native-get-random-values
 @react-native-community/netinfo
@@ -94,8 +94,8 @@ import "expo-router/entry";
 
 Now you can replace `expo-router/entry` with `./app/index` as your main entrypoint.
 
-```json
-// package.json
+```
+// file: package.json
 
 "main": "./app/index",
 ```
