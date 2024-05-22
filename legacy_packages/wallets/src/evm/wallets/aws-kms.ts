@@ -3,8 +3,12 @@ import { ethers, TypedDataDomain, type Signer, TypedDataField } from "ethers";
 import { AwsKmsSigner, type AwsKmsSignerCredentials } from "ethers-aws-kms-signer";
 
 export class AwsSigner extends AwsKmsSigner {
-  constructor(options: AwsKmsSignerCredentials) {
+  private _options: AwsKmsSignerCredentials;
+  constructor(options: AwsKmsSignerCredentials, provider?: ethers.providers.Provider) {
     super(options);
+    // @ts-expect-error Allow passing null
+    ethers.utils.defineReadOnly(this, "provider", provider || null);
+    this._options = options;
   }
 
   async _signTypedData(domain: TypedDataDomain, types: Record<string, Array<TypedDataField>>, value: Record<string, any>) {
@@ -14,6 +18,12 @@ export class AwsSigner extends AwsKmsSigner {
       value,
     );
     return this._signDigest(hash);
+  }
+
+  connect(provider: ethers.providers.Provider): AwsSigner {
+    const newSigner = super.connect(provider);
+    (newSigner as AwsSigner)._signTypedData = this._signTypedData;
+    return newSigner as AwsSigner;
   }
 }
 
