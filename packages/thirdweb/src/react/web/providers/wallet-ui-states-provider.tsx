@@ -19,9 +19,10 @@ const SetSelectionUIDataCtx = /* @__PURE__ */ createContext<
 export const WalletUIStatesProvider = (
   props: React.PropsWithChildren<{
     theme?: Theme | "dark" | "light";
+    isOpen: boolean;
   }>,
 ) => {
-  const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
+  const [isWalletModalOpen, setIsWalletModalOpen] = useState(props.isOpen);
   const [selectionUIData, setSelectionUIData] = useState<object>({}); // allow any type of object
 
   return (

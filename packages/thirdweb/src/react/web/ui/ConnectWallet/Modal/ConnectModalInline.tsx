@@ -52,7 +52,7 @@ export const ConnectModalInline = (props: ConnectModalInlineProps) => {
       : props.modalSize;
 
   return (
-    <WalletUIStatesProvider theme={props.theme}>
+    <WalletUIStatesProvider theme={props.theme} isOpen={true}>
       <ConnectModalInlineContent
         className={props.className}
         modalSize={modalSize}
@@ -71,6 +71,7 @@ function ConnectModalInlineContent(props: {
   const content = (
     <>
       <ConnectModalContent
+        shouldSetActive={true}
         screenSetup={screenSetup}
         setModalVisibility={() => {
           // noop
