@@ -2,7 +2,7 @@ import type { ThirdwebClient } from "../../../client/client.js";
 import { getThirdwebDomains } from "../../../utils/domains.js";
 import { getClientFetch } from "../../../utils/fetch.js";
 
-export type EcosystemCreationOptions = {
+export type CreateEcosystemOptions = {
   client: ThirdwebClient;
   name: string;
   logoUrl: string;
@@ -11,7 +11,7 @@ export type EcosystemCreationOptions = {
 /**
  * Creates a new wallet ecosystem with the provided details.
  *
- * @param {EcosystemCreationOptions} options - The options required to create the wallet ecosystem.
+ * @param {CreateEcosystemOptions} options - The options required to create the wallet ecosystem.
  * @param {ThirdwebClient} options.client - The thirdweb client instance, which must include a valid secret key for authentication.
  * @param {string} options.name - The name of the wallet ecosystem to be created.
  * @param {string} options.logoUrl - The URL pointing to the logo image for the wallet ecosystem.
@@ -22,17 +22,19 @@ export type EcosystemCreationOptions = {
  * The provided client **must** have a secret key set.
  * ```typescript
  * import { createThirdwebClient } from "thirdweb";
- * import { createWalletEcosystem } from "thirdweb/wallets/ecosystem";
+ * import { createEcosystem } from "thirdweb/wallets/ecosystem";
  *
  * const client = createThirdwebClient({ secretKey: 'your_secret_key' });
- * const ecosystemId = await createWalletEcosystem({
+ * const ecosystemId = await createEcosystem({
  *   client: client,
  *   name: 'My New Ecosystem',
  *   logoUrl: 'https://example.com/logo.png'
  * });
  * ```
  */
-export async function createWalletEcosystem(options: EcosystemCreationOptions) {
+export async function createEcosystem(
+  options: CreateEcosystemOptions,
+): Promise<string> {
   if (!options.client.secretKey) {
     throw new Error(
       "Unauthorized - Secret Key is required to create a wallet ecosystem.",

@@ -8,10 +8,10 @@ Adds the ability to update ecosystem wallet details
 
 ```ts
 import { createThirdwebClient } from "thirdweb";
-import { updateWalletEcosystem } from "thirdweb/wallets/ecosystem";
+import { updateEcosystem } from "thirdweb/wallets/ecosystem";
 
 const client = createThirdwebClient({ secretKey: "your_secret_key" });
-const ecosystemId = await updateWalletEcosystem({
+const ecosystemId = await updateEcosystem({
   client: client,
   id: "ecosystem_id",
   name: "My Updated Ecosystem",
