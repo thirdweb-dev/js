@@ -81,7 +81,7 @@ export async function sendVerificationEmail(options: {
     isNewUser: false, // TODO (rn) check this assumption is ok
     isNewDevice: !(await isDeviceSharePresentForUser(
       options.client.clientId,
-      result.user?.authDetails.userWalletId ?? "",
+      result.walletUserId ?? "",
     )),
     recoveryShareManagement: RecoveryShareManagement.CLOUD_MANAGED,
   };
@@ -129,7 +129,7 @@ export async function sendVerificationSms(options: {
     isNewUser: false, // TODO (rn) check this assumption is ok
     isNewDevice: !(await isDeviceSharePresentForUser(
       options.client.clientId,
-      result.user?.authDetails.userWalletId ?? "",
+      result.walletUserId ?? "",
     )),
     recoveryShareManagement: RecoveryShareManagement.CLOUD_MANAGED,
   };

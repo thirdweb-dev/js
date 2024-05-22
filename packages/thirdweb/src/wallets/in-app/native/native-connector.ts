@@ -46,25 +46,25 @@ export class InAppNativeConnector implements InAppConnector {
     if (userStatus.status === UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED) {
       return {
         status: userStatus.status,
-        authDetails: userStatus.user.authDetails,
-        walletAddress: userStatus.user.walletAddress,
+        authDetails: userStatus.storedToken.authDetails,
+        walletAddress: userStatus.walletAddress,
         account: await this.getAccount(),
       };
     }
     if (userStatus.status === UserWalletStatus.LOGGED_IN_NEW_DEVICE) {
       return {
         status: UserWalletStatus.LOGGED_IN_WALLET_UNINITIALIZED,
-        ...userStatus.user,
+        authDetails: userStatus.storedToken.authDetails,
       };
     }
     if (userStatus.status === UserWalletStatus.LOGGED_IN_WALLET_UNINITIALIZED) {
       return {
         status: UserWalletStatus.LOGGED_IN_WALLET_UNINITIALIZED,
-        ...userStatus.user,
+        authDetails: userStatus.storedToken.authDetails,
       };
     }
     // Logged out
-    return { status: userStatus.status };
+    return { status: UserWalletStatus.LOGGED_OUT };
   }
   getAccount(): Promise<Account> {
     return getExistingUserAccount({ client: this.options.client });
