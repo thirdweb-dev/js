@@ -16,7 +16,8 @@ import { setUpShareForNewDevice } from "../wallet/retrieval.js";
 
 export async function preAuth(args: {
   authenticationMethod: AuthProvider;
-  email: string;
+  email?: string;
+  phone?: string;
 }) {
   // TODO: Add tracking here
   Promise.resolve(args);
