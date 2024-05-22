@@ -7,9 +7,15 @@ export default {
       "name": "Mantle Explorer",
       "url": "https://explorer.mantle.xyz",
       "standard": "EIP3091"
+    },
+    {
+      "name": "Mantle Explorer",
+      "url": "https://mantlescan.xyz/",
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
+  "features": [],
   "icon": {
     "url": "ipfs://QmYddHh5zdceSsBU7uGfQvEHg6UUtAFbzQBBaePS4whx7o",
     "width": 225,
@@ -33,6 +39,7 @@ export default {
       }
     ]
   },
+  "redFlags": [],
   "rpc": [
     "https://5000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.mantle.xyz",
