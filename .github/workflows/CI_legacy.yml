@@ -61,7 +61,6 @@ jobs:
     timeout-minutes: 15
     name: Unit Tests
     runs-on: ubuntu-latest-16
-    if: false
     steps:
       - name: Check out the code
         uses: actions/checkout@v4
