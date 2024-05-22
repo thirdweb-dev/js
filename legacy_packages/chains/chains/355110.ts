@@ -5,7 +5,7 @@ export default {
   "explorers": [
     {
       "name": "Bitfinity Mainnet Block Explorer",
-      "url": "https://explorer.testnet.bitfinity.network",
+      "url": "https://explorer.mainnet.bitfinity.network",
       "standard": "EIP3091",
       "icon": {
         "url": "ipfs://bafkreiczbhnoc5wpjikskmehexmg3xmqr4fchrny64db4wmk3lrygqik5e",
@@ -38,5 +38,5 @@ export default {
   ],
   "shortName": "bitfinity-mainnet",
   "slug": "bitfinity-network",
-  "testnet": true
+  "testnet": false
 } as const satisfies Chain;
