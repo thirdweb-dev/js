@@ -11,12 +11,16 @@ import {
 export type ButtonProps = {
   variant: "primary" | "secondary" | "link" | "accent" | "outline" | "ghost";
   theme?: Theme;
+  unstyled?: boolean;
   fullWidth?: boolean;
   gap?: keyof typeof spacing;
 };
 
 export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
   const theme = useCustomTheme();
+  if (props.unstyled) {
+    return {};
+  }
   return {
     all: "unset",
     cursor: "pointer",
