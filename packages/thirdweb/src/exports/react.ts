@@ -122,3 +122,8 @@ export {
   type PayEmbedConnectOptions,
 } from "../react/web/ui/PayEmbed.js";
 export type { PayUIOptions } from "../react/web/ui/ConnectWallet/ConnectButtonProps.js";
+
+export {
+  useConnectModal,
+  type UseConnectModalOptions,
+} from "../react/web/ui/ConnectWallet/useConnectModal.js";

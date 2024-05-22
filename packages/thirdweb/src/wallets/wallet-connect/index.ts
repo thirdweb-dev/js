@@ -107,6 +107,11 @@ export async function connectWC(
         ? { pairingTopic: wcOptions?.pairingTopic }
         : {}),
       optionalChains: chainsToRequest,
+      chains: options.chain
+        ? [options.chain.id]
+        : chainsToRequest.length > 0
+          ? [chainsToRequest[0]]
+          : [1],
       rpcMap: rpcMap,
     });
   }
@@ -220,6 +225,11 @@ async function initProvider(
     optionalMethods: OPTIONAL_METHODS,
     optionalEvents: OPTIONAL_EVENTS,
     optionalChains: chainsToRequest,
+    chains: options.chain
+      ? [options.chain.id]
+      : chainsToRequest.length > 0
+        ? [chainsToRequest[0]]
+        : [1],
     metadata: {
       name: wcOptions?.appMetadata?.name || getDefaultAppMetadata().name,
       description:
@@ -498,6 +508,10 @@ function getChainsToRequest(options: {
     : optionalChainIds.length > 0
       ? (optionalChainIds as ArrayOneOrMore<number>)
       : [1];
+
+  if (!options.chain && optionalChains.length === 0) {
+    rpcMap[1] = getCachedChain(1).rpc;
+  }
 
   return {
     rpcMap,
