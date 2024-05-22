@@ -1,6 +1,21 @@
 import { AbstractWallet } from "./abstract";
 import { ethers, TypedDataDomain, type Signer, TypedDataField } from "ethers";
-import type { AwsKmsSignerCredentials } from "ethers-aws-kms-signer";
+import { AwsKmsSigner, type AwsKmsSignerCredentials } from "ethers-aws-kms-signer";
+
+export class AwsSigner extends AwsKmsSigner {
+  constructor(options: AwsKmsSignerCredentials) {
+    super(options);
+  }
+
+  async _signTypedData(domain: TypedDataDomain, types: Record<string, Array<TypedDataField>>, value: Record<string, any>) {
+    const hash = ethers.utils._TypedDataEncoder.hash(
+      domain,
+      types,
+      value,
+    );
+    return this._signDigest(hash);
+  }
+}
 
 /**
  * Connect to a custodial wallet with a signing key in [AWS Key Management Service](https://aws.amazon.com/kms/).
@@ -43,22 +58,7 @@ export class AwsKmsWallet extends AbstractWallet {
     if (!this._signer) {
       this._signer = new Promise(async (resolve, reject) => {
         try {
-          const { AwsKmsSigner } = await import("ethers-aws-kms-signer");
-          const signer = new AwsKmsSigner(this._options);
-
-          // Need to add this because ethers-aws-kms-signer doesn't support
-          (signer as any)._signTypedData = async function (
-            domain: TypedDataDomain,
-            types: Record<string, Array<TypedDataField>>,
-            value: Record<string, any>,
-          ) {
-            const hash = ethers.utils._TypedDataEncoder.hash(
-              domain,
-              types,
-              value,
-            );
-            return signer._signDigest(hash);
-          };
+          const signer = new AwsSigner(this._options);
 
           resolve(signer);
         } catch (err) {
