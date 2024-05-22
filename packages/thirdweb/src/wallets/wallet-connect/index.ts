@@ -510,10 +510,7 @@ function getChainsToRequest(options: {
       : [1];
 
   if (!options.chain && optionalChains.length === 0) {
-    rpcMap[1] = getRpcUrlForChain({
-      chain: 1,
-      client: options.client,
-    });
+    rpcMap[1] = getCachedChain(1).rpc;
   }
 
   return {
