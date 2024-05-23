@@ -2,12 +2,12 @@ import { CodeExample } from "@/components/code/code-example";
 import { StyledConnectButton } from "@/components/styled-connect-button";
 import { StyledConnectEmbed } from "@/components/styled-connect-embed";
 import { Button } from "@/components/ui/button";
-import { getMetadataBaseUrl } from "@/lib/getBaseUrl";
+import { metadataBase } from "@/lib/constants";
 import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  metadataBase: getMetadataBaseUrl(),
+  metadataBase,
   title: "Sign In, Account Abstraction and SIWE Auth | thirdweb Connect",
   description:
     "Let users sign up with their email, phone number, social media accounts or directly with a wallet. Seemlessly integrate account abstraction and SIWE auth.",
