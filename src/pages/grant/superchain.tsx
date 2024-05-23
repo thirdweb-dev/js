@@ -58,11 +58,16 @@ const superchains = [
     src: require("../../../public/assets/grant/superchain/icon-mode.png"),
   },
   {
+    id: "cyber",
+    name: "Cyber",
+    link: "/cyber?switch",
+    src: require("../../../public/assets/grant/superchain/icon-cyber.png"),
+  },
+  {
     id: "redstone",
     name: "Redstone",
-    link: "/redstone-holesky-testnet",
+    link: "/redstone?switch",
     src: require("../../../public/assets/grant/superchain/icon-redstone.png"),
-    isComingSoon: true,
   },
   {
     id: "lisk",
@@ -291,12 +296,11 @@ const GrantSuperChain = () => {
                 </SimpleGrid>
 
                 <SimpleGrid
-                  columns={{ base: 1, sm: 2, md: 3 }}
+                  columns={{ base: 1, sm: 2, md: 4 }}
                   placeItems="start"
                   gap="27px"
                   w="full"
                   margin="0 auto"
-                  maxW="450px"
                 >
                   {superchains
                     .slice(4)
