@@ -3,6 +3,7 @@ import { expect, test } from "vitest";
 import { ANVIL_PKEY_A } from "~test/test-wallets.js";
 import { typedData } from "~test/typed-data.js";
 
+import type { Hex } from "../encoding/hex.js";
 import { signTypedData } from "./sign-typed-data.js";
 
 test("default", async () => {
@@ -81,6 +82,19 @@ test("domain: chainId", async () => {
   ).toMatchInlineSnapshot(
     '"0x6e100a352ec6ad1b70802290e18aeed190704973570f3b8ed42cb9808e2ea6bf4a90a229a244495b41890987806fcbd2d5d23fc0dbe5f5256c2613c039d76db81c"',
   );
+});
+
+test("domain: chainId hex", async () => {
+  expect(() =>
+    signTypedData({
+      ...typedData.complex,
+      domain: {
+        chainId: "0x" as unknown as number, // let's pretend its JS
+      },
+      primaryType: "Mail",
+      privateKey: ANVIL_PKEY_A,
+    }),
+  ).toThrowError("chainId");
 });
 
 test("domain: name", async () => {

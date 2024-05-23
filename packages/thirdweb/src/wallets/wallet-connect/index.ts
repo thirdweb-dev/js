@@ -35,6 +35,7 @@ import type { WCAutoConnectOptions, WCConnectOptions } from "./types.js";
 
 import type { ThirdwebClient } from "../../client/client.js";
 import { getAddress } from "../../utils/address.js";
+import { parseTypedData } from "../../utils/signatures/helpers/parseTypedData.js";
 import {
   getSavedConnectParamsFromStorage,
   saveConnectParamsToStorage,
@@ -327,7 +328,8 @@ function onConnect(
         params: [message, this.address],
       });
     },
-    async signTypedData(data) {
+    async signTypedData(_data) {
+      const data = parseTypedData(_data);
       const { domain, message, primaryType } =
         data as unknown as SignTypedDataParameters;
 
