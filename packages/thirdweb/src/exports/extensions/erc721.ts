@@ -159,3 +159,7 @@ export {
   type RevealParams,
   reveal,
 } from "../../extensions/erc721/lazyMinting/write/reveal.js";
+export {
+  type BatchToReveal,
+  getBatchesToReveal,
+} from "../../extensions/erc721/lazyMinting/read/getBatchesToReveal.js";

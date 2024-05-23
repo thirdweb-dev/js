@@ -50,15 +50,17 @@ export function reveal(options: BaseTransactionOptions<RevealParams>) {
         }),
       });
 
+      let decryptedUri: string;
       try {
-        const decryptedUri = await simulateTransaction({
+        decryptedUri = await simulateTransaction({
           transaction,
         });
-        if (!decryptedUri.includes("://") || decryptedUri.slice(-1) !== "/") {
-          throw new Error("Invalid reveal password");
-        }
       } catch (error) {
         throw new Error("Reveal failed", { cause: error });
+      }
+
+      if (!decryptedUri.includes("://") || decryptedUri.slice(-1) !== "/") {
+        throw new Error("Invalid reveal password");
       }
 
       return {
