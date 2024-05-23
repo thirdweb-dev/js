@@ -1,9 +1,9 @@
 import { Box, Container, Flex, SimpleGrid } from "@chakra-ui/react";
 
-import { EngineTierCard } from "../../engine/create-engine-instance";
 import { useTrack } from "../../../hooks/analytics/useTrack";
 import { useRouter } from "next/router";
 import { Heading } from "../../../tw-components";
+import { EngineTierCard } from "components/engine/tier-card";
 
 interface PricingSectionProps {
   trackingCategory: string;
@@ -32,16 +32,7 @@ export const PricingEngineHomepage: React.FC<PricingSectionProps> = ({
         </Flex>
         <SimpleGrid columns={{ base: 1, lg: 3 }} gap={6}>
           <EngineTierCard
-            iconSrc={require("../../../../public/assets/engine/cloud-icon1.png")}
-            tier="Standard Engine"
-            monthlyPrice={99}
-            features={[
-              "Isolated server & database",
-              "APIs for contracts on all EVM chains",
-              "Secure backend wallets",
-              "Automated gas & nonce management",
-              "On-call monitoring from thirdweb",
-            ]}
+            tier="STANDARD"
             ctaText="Get Started"
             onClick={() => {
               track({
@@ -55,16 +46,7 @@ export const PricingEngineHomepage: React.FC<PricingSectionProps> = ({
           />
 
           <EngineTierCard
-            iconSrc={require("../../../../public/assets/engine/cloud-icon2.png")}
-            tier="Premium Engine"
-            previousTier="Standard Engine"
-            monthlyPrice={299}
-            features={[
-              "Autoscaling",
-              "Server failover",
-              "Database failover",
-              "30-day database backups",
-            ]}
+            tier="PREMIUM"
             isPrimaryCta
             ctaText="Get Started"
             onClick={() => {
@@ -79,14 +61,8 @@ export const PricingEngineHomepage: React.FC<PricingSectionProps> = ({
           />
 
           <EngineTierCard
-            iconSrc={require("../../../../public/assets/engine/cloud-icon3.png")}
-            tier="Enterprise Engine"
+            tier="ENTERPRISE"
             previousTier="Premium Engine"
-            features={[
-              "Custom features",
-              "Custom deployment",
-              "Priority support",
-            ]}
             onClick={() => {
               track({
                 category: trackingCategory,

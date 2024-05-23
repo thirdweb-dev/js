@@ -27,9 +27,9 @@ import { PricingSection } from "components/homepage/sections/PricingSection";
 import { FAQ_GENERAL, FAQ_PRICING, PRICING_SECTIONS } from "utils/pricing";
 import { IoIosInformationCircleOutline } from "react-icons/io";
 import { FiExternalLink } from "react-icons/fi";
-import { EngineTierCard } from "components/engine/create-engine-instance";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useRouter } from "next/router";
+import { EngineTierCard } from "components/engine/tier-card";
 
 const TRACKING_CATEGORY = "pricing-page";
 
@@ -208,11 +208,11 @@ const Pricing: ThirdwebNextPage = () => {
           <Heading as="h2" size="title.xl" color="white">
             Add-ons
           </Heading>
-          <Flex flexDir="column" gap={0}>
+          <Flex flexDir="column" gap={0} w="full">
             <Heading as="h3" size="subtitle.lg">
               Engine
             </Heading>
-            <EnginePricing />
+            <EnginePricing isMobile={isMobile} />
           </Flex>
         </Flex>
 
@@ -330,12 +330,12 @@ const Item = ({
   );
 };
 
-const EnginePricing = () => {
+const EnginePricing = ({ isMobile }: { isMobile: boolean }) => {
   const track = useTrack();
   const router = useRouter();
 
   return (
-    <Flex flexDir="column" gap={4} w="full">
+    <Flex flexDir="column" gap={4}>
       <Text>
         Host Engine on thirdweb with no setup or maintenance required.{" "}
         <TrackedLink
@@ -349,18 +349,9 @@ const EnginePricing = () => {
           Learn more about Engine &rarr;
         </TrackedLink>
       </Text>
-      <SimpleGrid columns={{ base: 1, lg: 3 }} gap={6}>
+      <SimpleGrid columns={isMobile ? 1 : 3} gap={6}>
         <EngineTierCard
-          iconSrc={require("../../public/assets/engine/cloud-icon1.png")}
-          tier="Standard Engine"
-          monthlyPrice={99}
-          features={[
-            "Isolated server & database",
-            "APIs for contracts on all EVM chains",
-            "Secure backend wallets",
-            "Automated gas & nonce management",
-            "On-call monitoring from thirdweb",
-          ]}
+          tier="STANDARD"
           ctaText="Get Started"
           onClick={() => {
             track({
@@ -374,16 +365,7 @@ const EnginePricing = () => {
         />
 
         <EngineTierCard
-          iconSrc={require("../../public/assets/engine/cloud-icon2.png")}
-          tier="Premium Engine"
-          previousTier="Standard Engine"
-          monthlyPrice={299}
-          features={[
-            "Autoscaling",
-            "Server failover",
-            "Database failover",
-            "30-day database backups",
-          ]}
+          tier="PREMIUM"
           isPrimaryCta
           ctaText="Get Started"
           onClick={() => {
@@ -398,14 +380,8 @@ const EnginePricing = () => {
         />
 
         <EngineTierCard
-          iconSrc={require("../../public/assets/engine/cloud-icon3.png")}
-          tier="Enterprise Engine"
+          tier="ENTERPRISE"
           previousTier="Premium Engine"
-          features={[
-            "Custom features",
-            "Custom deployment",
-            "Priority support",
-          ]}
           onClick={() => {
             track({
               category: TRACKING_CATEGORY,

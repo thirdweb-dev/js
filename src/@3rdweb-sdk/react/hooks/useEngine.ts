@@ -14,7 +14,7 @@ export function useEngineConnectedInstance() {
   return { instance, setInstance };
 }
 
-export type EngineTier = "STARTER" | "PREMIUM" | "ENTERPRISE";
+export type EngineTier = "STANDARD" | "PREMIUM" | "ENTERPRISE";
 
 // Engine instances
 export type EngineInstance = {
