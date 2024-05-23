@@ -1,11 +1,15 @@
 import { useGas } from "@3rdweb-sdk/react/hooks/useGas";
 import { Flex, SimpleGrid, Switch } from "@chakra-ui/react";
+import { useQuery } from "@tanstack/react-query";
 import { AppLayout } from "components/app-layouts/app";
-import { GasEstimatorBox } from "components/gas-estimator/GasEstimatorBox";
+import {
+  BenchmarkItem,
+  GasEstimatorBox,
+} from "components/gas-estimator/GasEstimatorBox";
 import { useTrack } from "hooks/analytics/useTrack";
 import { NextSeo } from "next-seo";
 import { PageId } from "page-id";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Badge, Card, Heading, Text } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
 
@@ -13,7 +17,63 @@ const GasPage: ThirdwebNextPage = () => {
   const [ethOrUsd, setEthOrUsd] = useState<"eth" | "usd">("eth");
   const { data } = useGas();
   const trackEvent = useTrack();
+  const gasBenchmark = useQuery(
+    ["gas-benchmark-content"],
+    async () => {
+      const res = await fetch(
+        "https://raw.githubusercontent.com/thirdweb-dev/contracts/main/gasreport.txt",
+      );
+      return res.text() as Promise<string>;
+    },
+    {
+      refetchInterval: 120_000,
+    },
+  );
 
+  const parseGasBenchMark = (content: string): BenchmarkItem[] => {
+    if (!content) {
+      return [];
+    }
+    const _data: BenchmarkItem[] = [];
+    const separator = "test_benchmark_";
+    const lines = content
+      .split("\n")
+      .filter((line) => line.trim() !== "" && line.includes(separator));
+    lines.forEach((line) => {
+      const str = line.split(separator)[1];
+      const str2 = str.split("(gas:");
+      const [contractName, ...functionParts] = str2[0]
+        .replace(/[()\s:]/g, "")
+        .split("_");
+      const functionName = functionParts.join("_");
+      const gasCost = str2[1].replace(/[()\s:]/g, "");
+
+      // There are some lines with "weird" result. we'll be filtering them
+      if (isNaN(Number(gasCost))) {
+        return;
+      }
+      const index = _data.findIndex((o) => o.contractName === contractName);
+      if (index >= 0) {
+        _data[index].benchmarks.push({ functionName, gasCost });
+      } else {
+        _data.push({
+          contractName,
+          benchmarks: [
+            {
+              functionName,
+              gasCost,
+            },
+          ],
+        });
+      }
+    });
+    return _data;
+  };
+
+  const gasItems = useMemo(
+    () => parseGasBenchMark(gasBenchmark.data || ""),
+    [gasBenchmark.data],
+  );
   return (
     <>
       <NextSeo
@@ -54,45 +114,15 @@ const GasPage: ThirdwebNextPage = () => {
           <Heading size="subtitle.sm">USD</Heading>
         </Flex>
       </Flex>
-      <SimpleGrid as={Card} p={0} columns={{ base: 1, md: 4 }}>
-        <GasEstimatorBox
-          contractType="signature-drop"
-          ethOrUsd={ethOrUsd}
-          data={data}
-          borderTopLeftRadius="xl"
-          borderTopRightRadius={{ base: "xl", md: "0" }}
-        />
-        <GasEstimatorBox
-          contractType="nft-drop"
-          ethOrUsd={ethOrUsd}
-          data={data}
-        />
-        <GasEstimatorBox
-          contractType="edition-drop"
-          ethOrUsd={ethOrUsd}
-          data={data}
-        />
-        <GasEstimatorBox
-          contractType="nft-collection"
-          ethOrUsd={ethOrUsd}
-          data={data}
-          borderTopRightRadius={{ base: "0", md: "xl" }}
-        />
-        <GasEstimatorBox
-          contractType="edition"
-          ethOrUsd={ethOrUsd}
-          data={data}
-          borderBottomLeftRadius={{ base: "0", md: "xl" }}
-        />
-        <GasEstimatorBox contractType="token" ethOrUsd={ethOrUsd} data={data} />
-        <GasEstimatorBox contractType="split" ethOrUsd={ethOrUsd} data={data} />
-        <GasEstimatorBox
-          contractType="marketplace"
-          ethOrUsd={ethOrUsd}
-          data={data}
-          borderBottomRightRadius="xl"
-          borderBottomLeftRadius={{ base: "xl", md: "0" }}
-        />
+      <SimpleGrid as={Card} p={0} columns={{ base: 1, md: 3, lg: 3 }}>
+        {gasItems.map((item) => (
+          <GasEstimatorBox
+            key={item.contractName}
+            ethOrUsd={ethOrUsd}
+            gasEstimate={data}
+            data={item}
+          />
+        ))}
       </SimpleGrid>
       <Text mt={4} textAlign="center">
         Estimates calculated at {data?.gasPrice} gwei and the ETH price of $
@@ -102,10 +132,6 @@ const GasPage: ThirdwebNextPage = () => {
     </>
   );
 };
-
-// const AppLayout = dynamic(
-//   async () => (await import("components/app-layouts/app")).AppLayout,
-// );
 
 GasPage.getLayout = function getLayout(page, props) {
   return <AppLayout {...props}>{page}</AppLayout>;
