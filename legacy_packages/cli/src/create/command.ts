@@ -54,6 +54,11 @@ export async function twCreate(
       framework = "vite";
     }
 
+    if (options.reactNative) {
+      projectType = "app";
+      framework = "expo";
+    }
+
     if (options.node) {
       projectType = "app";
       framework = "node";
@@ -66,6 +71,9 @@ export async function twCreate(
     }
     if (options.vite) {
       framework = "vite";
+    }
+    if (options.reactNative) {
+      framework = "expo";
     }
     if (options.node) {
       framework = "node";
@@ -212,6 +220,7 @@ export async function twCreate(
           choices: [
             { title: "Next.js", value: "next" },
             { title: "Vite", value: "vite" },
+            { title: "React Native", value: "expo" },
           ],
         });
 
