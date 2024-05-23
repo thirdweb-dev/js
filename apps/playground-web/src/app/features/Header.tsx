@@ -6,7 +6,7 @@ import { Button } from "../../components/ui/button";
 
 export function Header() {
   return (
-    <header className="flex w-full items-center border-b bg-background sticky top-0">
+    <header className="flex w-full items-center border-b bg-background sticky top-0 z-50">
       <div className="container flex items-center justify-between gap-6 py-3">
         <div className="flex items-center gap">
           <Link
