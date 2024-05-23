@@ -1,9 +1,10 @@
+import { CodeExample } from "@/components/code/code-example";
 import { StyledConnectButton } from "@/components/styled-connect-button";
+import { StyledConnectEmbed } from "@/components/styled-connect-embed";
 import { Button } from "@/components/ui/button";
 import { getBaseUrl } from "@/lib/getBaseUrl";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ConnectButtonExample } from "./examples/connect-button";
 
 export const metadata: Metadata = {
   metadataBase: new URL(getBaseUrl()),
@@ -65,19 +66,66 @@ export default function Page() {
           </div>
         </div>
       </section>
+
       <section className="container px-4 md:px-6 space-y-8">
         <div className="space-y-2">
           <h2 className="text-4xl font-semibold tracking-tight">
             Connect Button
           </h2>
-          <p className="text-muted-foreground max-w-[600px]">
+          <p className="max-w-[600px]">
             When clicked opens a modal and allows users to connect to various
             wallets.
             <br />
             It is extremely customizable and very easy to use.
           </p>
         </div>
-        <ConnectButtonExample />
+
+        <CodeExample
+          preview={<StyledConnectButton />}
+          code={`import { createThirdwebClient } from "thirdweb";
+import { ConnectButton } from "thirdweb/react";
+
+const THIRDWEB_CLIENT = createThirdwebClient({
+  clientId: "<YOUR_CLIENT_ID>"
+});
+
+function App(){
+  return (
+    <ConnectButton client={THIRDWEB_CLIENT} />
+  );
+};`}
+          lang="tsx"
+        />
+      </section>
+
+      <section className="container px-4 md:px-6 space-y-8">
+        <div className="space-y-2">
+          <h2 className="text-4xl font-semibold tracking-tight">
+            Connect Embed
+          </h2>
+          <p className="max-w-[600px]">
+            When clicked opens a modal and allows users to connect to various
+            wallets.
+            <br />
+            It is extremely customizable and very easy to use.
+          </p>
+        </div>
+        <CodeExample
+          preview={<StyledConnectEmbed />}
+          code={`import { createThirdwebClient } from "thirdweb";
+import { ConnectEmbed } from "thirdweb/react";
+
+const THIRDWEB_CLIENT = createThirdwebClient({
+  clientId: "<YOUR_CLIENT_ID>"
+});
+
+function App(){
+  return (
+    <ConnectEmbed client={THIRDWEB_CLIENT} />
+  );
+};`}
+          lang="tsx"
+        />
       </section>
     </main>
   );

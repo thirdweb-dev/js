@@ -21,13 +21,13 @@ export const Code: React.FC<CodeProps> = async ({ code, lang }) => {
     lang: lang,
     themes: {
       light: "github-light",
-      dark: "github-dark-dimmed",
+      dark: "github-dark-default",
     },
   });
 
   return (
     <div
-      className="*:p-4 *:overflow-auto *:rounded-lg text-xs md:text-sm"
+      className="*:p-8 *:overflow-auto *:h-full h-full text-xs md:text-sm"
       // biome-ignore lint/security/noDangerouslySetInnerHtml: we know what we're doing here
       dangerouslySetInnerHTML={{ __html: html }}
     />

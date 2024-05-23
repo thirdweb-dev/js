@@ -52,11 +52,9 @@ export default function RootLayout({
         <Providers>
           <div className="relative flex min-h-screen flex-col">
             <Header />
-
             {children}
-
             <div
-              className="absolute bottom-0 left-0 right-0 h-[50%] z-[-1] bg-cover md:bg-[length:100%_100%] bg-no-repeat"
+              className="fixed bottom-0 left-0 right-0 h-[66%] z-[-1] bg-cover md:bg-[length:100%_100%] bg-no-repeat"
               style={{
                 backgroundImage: "url(../../bottom-gradient.png)",
               }}
