@@ -58,6 +58,10 @@ export type TransactionButtonProps = {
    */
   style?: React.CSSProperties;
   /**
+   * Remove all default styling from the button
+   */
+  unstyled?: boolean;
+  /**
    * The `React.ReactNode` to be rendered inside the button
    */
   children: React.ReactNode;
@@ -111,6 +115,18 @@ export type TransactionButtonProps = {
  *   Confirm Transaction
  * </TransactionButton>
  * ```
+ * Customize the styling by passing the `unstyled` prop and your inline styles and/or classes:
+ * ```tsx
+ * <TransactionButton
+ *   transaction={() => {}}
+ *   onSuccess={handleSuccess}
+ *   onError={handleError}
+ *   unstyled
+ *   className="bg-white text-black rounded-md p-4 flex items-center justify-center"
+ * >
+ *   Confirm Transaction
+ * </TransactionButton>
+ * ```
  * @component
  */
 export function TransactionButton(props: TransactionButtonProps) {
@@ -124,6 +140,7 @@ export function TransactionButton(props: TransactionButtonProps) {
     gasless,
     payModal,
     disabled,
+    unstyled,
     ...buttonProps
   } = props;
   const account = useActiveAccount();
@@ -139,6 +156,7 @@ export function TransactionButton(props: TransactionButtonProps) {
       gap="xs"
       disabled={!account || disabled || isPending}
       variant={"primary"}
+      unstyled={unstyled}
       data-is-loading={isPending}
       onClick={async (e) => {
         if (onClick) {
@@ -170,12 +188,19 @@ export function TransactionButton(props: TransactionButtonProps) {
         }
       }}
       {...buttonProps}
-      style={{
-        opacity: !account || disabled ? 0.5 : 1,
-        minWidth: "150px",
-        position: "relative",
-        ...buttonProps.style,
-      }}
+      style={
+        !unstyled
+          ? {
+              opacity: !account || disabled ? 0.5 : 1,
+              minWidth: "150px",
+              position: "relative",
+              ...buttonProps.style,
+            }
+          : {
+              position: "relative",
+              ...buttonProps.style,
+            }
+      }
     >
       <span style={{ visibility: isPending ? "hidden" : "visible" }}>
         {children}

@@ -21,6 +21,7 @@ export async function getEncryptionKey(
   salt: Uint8Array,
   iterationCounts: number,
 ): Promise<string> {
+  // @ts-ignore - default import buils but ts doesn't like it
   const key: ArrayBuffer = QuickCrypto.pbkdf2Sync(
     pwd,
     salt.buffer as ArrayBuffer,
@@ -50,6 +51,7 @@ export async function encryptShareWeb(
   // biome-ignore lint/suspicious/noExplicitAny: Can't import the types properly
   let encryptedValue: any;
   try {
+    // @ts-ignore - default import buils but ts doesn't like it
     encryptedValue = await AesGcmCrypto.encrypt(share, false, keyBase64);
   } catch (error) {
     throw new Error(`Error encrypting share: ${error}`);
@@ -129,6 +131,7 @@ export async function decryptShareWeb(
   // biome-ignore lint/style/noNonNullAssertion: it's there
   const ivBufferHex = uint8ArrayToHex(base64ToUint8Array(ivBase64!));
 
+  // @ts-ignore - default import buils but ts doesn't like it
   const normalizedShare = await AesGcmCrypto.decrypt(
     originalBase64CipherText,
     key,

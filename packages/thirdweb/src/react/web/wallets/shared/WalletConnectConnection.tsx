@@ -122,6 +122,8 @@ export const WalletConnectConnection: React.FC<{
       walletName={walletInfo.name}
       walletId={wallet.id}
       getStartedLink={locale.getStartedLink}
+      error={errorConnecting}
+      onRetry={connect}
     />
   );
 };
@@ -267,6 +269,8 @@ export const WalletConnectStandaloneConnection: React.FC<{
       walletName={walletInfo.name}
       walletId={wallet.id}
       getStartedLink={locale.getStartedLink}
+      error={errorConnecting}
+      onRetry={connect}
     />
   );
 };
