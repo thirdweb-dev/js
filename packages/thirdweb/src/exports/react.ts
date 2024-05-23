@@ -53,6 +53,7 @@ export {
   useSetActiveWalletConnectionStatus,
   useIsAutoConnecting,
 } from "../react/core/hooks/wallets/wallet-hooks.js";
+export { useWalletBalance } from "../react/core/hooks/others/useWalletBalance.js";
 
 export type { ConnectManagerOptions } from "../wallets/manager/index.js";
 
