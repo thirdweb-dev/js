@@ -149,3 +149,9 @@ export {
   tokenURIRevealedEvent,
   type TokenURIRevealedEventFilters,
 } from "../../extensions/erc721/__generated__/IDelayedReveal/events/TokenURIRevealed.js";
+
+// Lazy Minting
+export {
+  type CreateDelayedRevealBatchParams,
+  createDelayedRevealBatch,
+} from "../../extensions/erc721/lazyMinting/write/createDelayedRevealBatch.js";
