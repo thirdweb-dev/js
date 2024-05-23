@@ -14,7 +14,13 @@ import {
   getChainMetadata,
   getRpcUrlForChain,
 } from "../../chains/utils.js";
-import { type Hex, isHex, numberToHex } from "../../utils/encoding/hex.js";
+import {
+  type Hex,
+  isHex,
+  numberToHex,
+  stringToHex,
+  uint8ArrayToHex,
+} from "../../utils/encoding/hex.js";
 import { stringify } from "../../utils/json.js";
 import { isAndroid, isIOS, isMobile } from "../../utils/web/isMobile.js";
 import { openWindow } from "../../utils/web/openWindow.js";
@@ -360,9 +366,18 @@ function onConnect(
       };
     },
     async signMessage({ message }) {
+      const messageToSign = (() => {
+        if (typeof message === "string") {
+          return stringToHex(message);
+        }
+        if (message.raw instanceof Uint8Array) {
+          return uint8ArrayToHex(message.raw);
+        }
+        return message.raw;
+      })();
       return provider.request({
         method: "personal_sign",
-        params: [message, this.address],
+        params: [messageToSign, this.address],
       });
     },
     async signTypedData(data) {
