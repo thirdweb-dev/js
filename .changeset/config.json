@@ -7,9 +7,7 @@
     }
   ],
   "commit": false,
-  "fixed": [
-    ["@thirdweb-dev/react-core", "@thirdweb-dev/react"]
-  ],
+  "fixed": [["@thirdweb-dev/react-core", "@thirdweb-dev/react"]],
   "linked": [],
   "access": "public",
   "baseBranch": "main",
@@ -20,7 +18,8 @@
     "bundlers-webpack",
     "bundlers-swc",
     "runtimes-node-commonjs",
-    "runtimes-node-module"
+    "runtimes-node-module",
+    "playground-web"
   ],
   "___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH": {
     "updateInternalDependents": "always",
