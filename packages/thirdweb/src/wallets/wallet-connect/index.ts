@@ -266,20 +266,21 @@ async function initProvider(
         return;
       }
 
-      const preferUniversal =
-        walletInfo.mobile.universal || walletInfo.mobile.native;
       const preferNative =
         walletInfo.mobile.native || walletInfo.mobile.universal;
 
       if (isAndroid()) {
-        if (preferUniversal) {
-          openWindow(preferUniversal);
+        if (preferNative) {
+          openWindow(preferNative);
         }
       } else if (isIOS()) {
         if (preferNative) {
           openWindow(preferNative);
         }
       } else {
+        const preferUniversal =
+          walletInfo.mobile.universal || walletInfo.mobile.native;
+
         if (preferUniversal) {
           openWindow(preferUniversal);
         }

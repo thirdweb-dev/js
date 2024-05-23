@@ -40,26 +40,31 @@ export const WalletConnectConnection: React.FC<{
           projectId: walletConnect?.projectId,
           showQrModal: false,
           onDisplayUri(uri) {
-            const platformUris = {
-              ios: walletInfo.mobile.native || "",
-              android: walletInfo.mobile.universal || "",
-              other: walletInfo.mobile.universal || "",
-            };
+            const preferNative =
+              walletInfo.mobile.native || walletInfo.mobile.universal;
 
             setQrCodeUri(uri);
             if (isMobile()) {
               if (isAndroid()) {
-                openWindow(
-                  formatWalletConnectUrl(platformUris.android, uri).redirect,
-                );
+                if (preferNative) {
+                  openWindow(
+                    formatWalletConnectUrl(preferNative, uri).redirect,
+                  );
+                }
               } else if (isIOS()) {
-                openWindow(
-                  formatWalletConnectUrl(platformUris.ios, uri).redirect,
-                );
+                if (preferNative) {
+                  openWindow(
+                    formatWalletConnectUrl(preferNative, uri).redirect,
+                  );
+                }
               } else {
-                openWindow(
-                  formatWalletConnectUrl(platformUris.other, uri).redirect,
-                );
+                const preferUniversal =
+                  walletInfo.mobile.universal || walletInfo.mobile.native;
+                if (preferUniversal) {
+                  openWindow(
+                    formatWalletConnectUrl(preferUniversal, uri).redirect,
+                  );
+                }
               }
             }
           },
