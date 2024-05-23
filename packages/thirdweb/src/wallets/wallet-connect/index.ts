@@ -91,6 +91,12 @@ export async function connectWC(
 
   const { onDisplayUri } = wcOptions || {};
 
+  if (isReactNative() && !onDisplayUri) {
+    throw new Error(
+      "'onDisplayUri' is required when using WalletConnect on React Native. Pass it to the wallet connect options when creating the wallet.",
+    );
+  }
+
   if (onDisplayUri) {
     const walletInfo = await getWalletInfo(walletId);
     provider.events.addListener("display_uri", (uri) => {
@@ -234,8 +240,9 @@ async function initProvider(
   });
 
   const provider = await EthereumProvider.init({
-    showQrModal:
-      wcOptions?.showQrModal === undefined
+    showQrModal: isReactNative()
+      ? false
+      : wcOptions?.showQrModal === undefined
         ? defaultShowQrModal
         : wcOptions.showQrModal,
     projectId: wcOptions?.projectId || defaultWCProjectId,
