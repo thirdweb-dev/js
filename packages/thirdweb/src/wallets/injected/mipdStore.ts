@@ -44,13 +44,13 @@ export function injectedProvider(walletId: WalletId): Ethereum | undefined {
  */
 function getMIPDStore() {
   if (!mipdStore) {
-    throw new Error("MIPD store not initialized");
+    return undefined;
   }
   return mipdStore;
 }
 
 export function getInstalledWalletProviders(): readonly EIP6963ProviderDetail[] {
-  const providers = getMIPDStore().getProviders();
+  const providers = getMIPDStore()?.getProviders() || [];
 
   for (const provider of providers) {
     // Map io.metamask.mobile to io.metamask rdns to fix double entry issue in MetaMask mobile browser

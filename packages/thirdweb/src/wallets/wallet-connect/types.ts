@@ -181,6 +181,8 @@ export type WCAutoConnectOptions = {
   savedConnectParams?: SavedConnectParams;
 
   chain?: Chain;
+
+  onDisplayUri?: (uri: string) => void;
 };
 
 type SavedConnectParams = {

@@ -31,7 +31,6 @@ import type {
   SendTransactionOption,
   Wallet,
 } from "../interfaces/wallet.js";
-import { asyncLocalStorage as _asyncLocalStorage } from "../storage/asyncLocalStorage.js";
 import type { DisconnectFn, SwitchChainFn } from "../types.js";
 import { getValidPublicRPCUrl } from "../utils/chains.js";
 import { getDefaultAppMetadata } from "../utils/defaultDappMetadata.js";
@@ -40,6 +39,7 @@ import type { WalletEmitter } from "../wallet-emitter.js";
 import type { WCAutoConnectOptions, WCConnectOptions } from "./types.js";
 
 import type { ThirdwebClient } from "../../client/client.js";
+import { getStorage } from "../../react/core/storage.js";
 import { getAddress } from "../../utils/address.js";
 import { isBrowser, isReactNative } from "../../utils/platform.js";
 import { formatWalletConnectUrl } from "../../utils/url.js";
@@ -49,8 +49,7 @@ import {
 } from "../storage/walletStorage.js";
 import type { WalletId } from "../wallet-types.js";
 
-const asyncLocalStorage =
-  typeof window !== "undefined" ? _asyncLocalStorage : undefined;
+const asyncLocalStorage = getStorage();
 
 type WCProvider = InstanceType<typeof EthereumProvider>;
 
@@ -191,6 +190,8 @@ export async function autoConnectWC(
     ? await getSavedConnectParamsFromStorage(asyncLocalStorage, walletId)
     : null;
 
+  console.log("savedConnectParams", savedConnectParams);
+
   const provider = await initProvider(
     savedConnectParams
       ? {
@@ -199,11 +200,14 @@ export async function autoConnectWC(
           walletConnect: {
             pairingTopic: savedConnectParams.pairingTopic,
             optionalChains: savedConnectParams.optionalChains,
+            onDisplayUri: options.onDisplayUri,
           },
         }
       : {
           client: options.client,
-          walletConnect: {},
+          walletConnect: {
+            onDisplayUri: options.onDisplayUri,
+          },
         },
     walletId,
     true, // is auto connect

@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import type { AsyncStorage as IStorage } from "./AsyncStorage.js";
 
-export const asyncLocalStorage: IStorage = {
+export const nativeLocalStorage: IStorage = {
   async getItem(key: string) {
     // @ts-ignore - default import buils but ts doesn't like it
     return AsyncStorage.getItem(key);

@@ -8,9 +8,9 @@ import {
   getStoredConnectedWalletIds,
 } from "../../../../wallets/manager/index.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
-import { asyncLocalStorage } from "../../../../wallets/storage/asyncLocalStorage.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
 import { connectionManager } from "../../connectionManager.js";
+import { getStorage } from "../../storage.js";
 import { timeoutPromise } from "../../utils/timeoutPromise.js";
 import {
   useConnect,
@@ -173,6 +173,7 @@ export function AutoConnect(props: AutoConnectProps) {
       return;
     }
 
+    const asyncLocalStorage = getStorage();
     autoConnectAttempted = true;
 
     const startAutoConnect = async () => {
