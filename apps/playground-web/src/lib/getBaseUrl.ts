@@ -1,11 +1,5 @@
-export function getBaseUrl() {
-  const vercelUrl =
-    process.env.VERCEL_URL || process.env.NEXT_PUBLIC_VERCEL_URL;
-
-  // if on vercel, use the vercel url
-  if (vercelUrl) {
-    return `https://${vercelUrl}`;
-  }
-
-  return "http://localhost:3000";
+export function getMetadataBaseUrl() {
+  return process.env.VERCEL_ENV === "production"
+    ? new URL("https://playground.thirdweb.com")
+    : undefined;
 }
