@@ -56,9 +56,7 @@ export default function Page() {
             </div>
             <div className="w-full mx-auto my-auto sm:w-full lg:order-last relative flex flex-col space-y-2">
               <div className="shadow-xl md:w-[400px] md:mx-auto">
-                <StyledPayEmbed
-                // we invert here to make it stand out more
-                />
+                <StyledPayEmbed />
               </div>
               <p className="md:text-xl text-center text-muted-foreground">
                 <small>👆 This is live, try it out! 👆</small>
