@@ -1,9 +1,11 @@
 import { StyledPayEmbed } from "@/components/styled-pay-embed";
 import { Button } from "@/components/ui/button";
+import { metadataBase } from "@/lib/constants";
 import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
+  metadataBase,
   title: "Integrate Fiat & Cross-Chain Crypto Payments | thirdweb Pay",
   description:
     "The easiest way for users to transact in your app. Onramp users in clicks and generate revenue for each user transaction. Integrate for free.",
