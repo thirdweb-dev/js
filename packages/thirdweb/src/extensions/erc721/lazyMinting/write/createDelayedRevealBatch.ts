@@ -3,11 +3,10 @@ import type { ThirdwebContract } from "../../../../contract/contract.js";
 import { upload } from "../../../../storage/upload.js";
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import { encodeAbiParameters } from "../../../../utils/abi/encodeAbiParameters.js";
-import { type Hex, toHex } from "../../../../utils/encoding/hex.js";
+import { toHex } from "../../../../utils/encoding/hex.js";
 import { keccak256 } from "../../../../utils/hashing/keccak256.js";
 import { getBaseUriFromBatch } from "../../../../utils/ipfs.js";
 import type { NFTInput } from "../../../../utils/nft/parseNft.js";
-import { contractVersion } from "../../../thirdweb/__generated__/IThirdwebContract/read/contractVersion.js";
 import { getBaseURICount } from "../../__generated__/IBatchMintMetadata/read/getBaseURICount.js";
 import { encryptDecrypt } from "../../__generated__/IDelayedReveal/read/encryptDecrypt.js";
 import { lazyMint as generatedLazyMint } from "../../__generated__/ILazyMint/write/lazyMint.js";
@@ -96,35 +95,20 @@ export function createDelayedRevealBatch(
         key: hashedPassword,
       });
 
-      // check if this is a legacy contract
-      let version: number;
-      try {
-        version = await contractVersion({
-          contract: options.contract,
-        });
-      } catch (e) {
-        version = -1;
-      }
-
-      let data: Hex;
-      if (version > 0 && version <= 2) {
-        data = encryptedBaseURI;
-      } else {
-        const chainId = BigInt(options.contract.chain.id);
-        const provenanceHash = keccak256(
-          encodePacked(
-            ["bytes", "bytes", "uint256"],
-            [toHex(baseUri), hashedPassword, chainId],
-          ),
-        );
-        data = encodeAbiParameters(
-          [
-            { name: "baseUri", type: "bytes" },
-            { name: "provenanceHash", type: "bytes32" },
-          ],
-          [encryptedBaseURI, provenanceHash],
-        );
-      }
+      const chainId = BigInt(options.contract.chain.id);
+      const provenanceHash = keccak256(
+        encodePacked(
+          ["bytes", "bytes", "uint256"],
+          [toHex(baseUri), hashedPassword, chainId],
+        ),
+      );
+      const data = encodeAbiParameters(
+        [
+          { name: "baseUri", type: "bytes" },
+          { name: "provenanceHash", type: "bytes32" },
+        ],
+        [encryptedBaseURI, provenanceHash],
+      );
 
       return {
         amount: BigInt(options.metadata.length),

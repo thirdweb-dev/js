@@ -3,7 +3,6 @@ import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import type { Hex } from "../../../../utils/encoding/hex.js";
 import { fetchTokenMetadata } from "../../../../utils/nft/fetchTokenMetadata.js";
 import type { NFTMetadata } from "../../../../utils/nft/parseNft.js";
-import { contractVersion } from "../../../thirdweb/__generated__/IThirdwebContract/read/contractVersion.js";
 import { getBaseURICount } from "../../__generated__/IBatchMintMetadata/read/getBaseURICount.js";
 import { getBatchIdAtIndex } from "../../__generated__/IBatchMintMetadata/read/getBatchIdAtIndex.js";
 import { encryptedData } from "../../__generated__/IDelayedReveal/read/encryptedData.js";
@@ -83,20 +82,6 @@ export async function getBatchesToReveal(
       });
     }),
   );
-
-  let version = 0;
-  try {
-    version = await contractVersion({
-      contract: options.contract,
-    });
-  } catch {
-    version = -1;
-  }
-  if (version > 0 && version <= 2) {
-    throw new Error(
-      "Unsupported contract: Contract version must be 3 or higher",
-    );
-  }
 
   const encryptedUriData = await Promise.all(
     Array.from([...uriIndices]).map((i) =>

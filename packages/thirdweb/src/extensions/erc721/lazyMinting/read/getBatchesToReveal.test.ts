@@ -13,7 +13,6 @@ const mocks = vi.hoisted(() => ({
   baseURIIndices: vi.fn(),
   tokenURI: vi.fn(),
   fetchTokenMetadata: vi.fn(),
-  contractVersion: vi.fn(),
   encryptedData: vi.fn(),
   decodeAbiParameters: vi.fn(),
 }));
@@ -44,13 +43,6 @@ vi.mock("../../../../utils/nft/fetchTokenMetadata.js", () => ({
   fetchTokenMetadata: mocks.fetchTokenMetadata,
 }));
 
-vi.mock(
-  "../../../thirdweb/__generated__/IThirdwebContract/read/contractVersion.js",
-  () => ({
-    contractVersion: mocks.contractVersion,
-  }),
-);
-
 vi.mock("../../__generated__/IDelayedReveal/read/encryptedData.js", () => ({
   encryptedData: mocks.encryptedData,
 }));
@@ -78,23 +70,11 @@ describe("getBatchesToReveal", () => {
     expect(mocks.getBaseURICount).toHaveBeenCalledWith({ contract });
   });
 
-  it("should throw an error if contract version is not supported", async () => {
-    mocks.getBaseURICount.mockResolvedValue(1n);
-    mocks.contractVersion.mockResolvedValue(2);
-
-    const promise = getBatchesToReveal({ contract });
-
-    expect(promise).rejects.toThrow(
-      "Unsupported contract: Contract version must be 3 or higher",
-    );
-  });
-
   it("should return batches with metadata and encrypted URIs", async () => {
     mocks.getBaseURICount.mockResolvedValue(1n);
     mocks.getBatchIdAtIndex.mockResolvedValue(0n);
     mocks.tokenURI.mockResolvedValue("ipfs://placeholder_uri/");
     mocks.fetchTokenMetadata.mockResolvedValue({ name: "Test NFT" });
-    mocks.contractVersion.mockResolvedValue(3);
     mocks.encryptedData.mockResolvedValue("0xencrypteddata");
     mocks.decodeAbiParameters.mockReturnValue([
       "ipfs://encrypted_uri/",

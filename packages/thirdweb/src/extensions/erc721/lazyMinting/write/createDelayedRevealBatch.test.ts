@@ -12,7 +12,6 @@ const mocks = vi.hoisted(() => ({
   getBaseUriFromBatch: vi.fn(),
   getBaseURICount: vi.fn(),
   encryptDecrypt: vi.fn(),
-  contractVersion: vi.fn(),
   lazyMint: vi.fn(),
   upload: vi.fn(),
 }));
@@ -31,13 +30,6 @@ vi.mock(
 vi.mock("../../__generated__/IDelayedReveal/read/encryptDecrypt.js", () => ({
   encryptDecrypt: mocks.encryptDecrypt,
 }));
-
-vi.mock(
-  "../../../thirdweb/__generated__/IThirdwebContract/read/contractVersion.js",
-  () => ({
-    contractVersion: mocks.contractVersion,
-  }),
-);
 
 vi.mock("../../../../storage/upload.js", () => ({
   upload: mocks.upload,
@@ -82,7 +74,6 @@ describe("createDelayedRevealedBatch", () => {
     mocks.encryptDecrypt.mockResolvedValue(
       "0x8967ae24bd1c6439791bc1c8ca3b3499537283b71af366693792a707eb99e80bc0058c90c1f92f18ec716e4760fdf9279241d442b5b5",
     );
-    mocks.contractVersion.mockResolvedValue(3);
 
     const tx = createDelayedRevealBatch({
       contract,
