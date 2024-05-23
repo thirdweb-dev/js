@@ -37,7 +37,7 @@ export default function RootLayout({
         <Script
           src="https://thirdweb.com/js/pl.js"
           defer
-          data-domain="portal.thirdweb.com"
+          data-domain="playground.thirdweb.com"
           data-api="https://pl.thirdweb.com/api/event"
         />
       </head>
