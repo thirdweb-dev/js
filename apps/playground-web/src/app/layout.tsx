@@ -1,3 +1,4 @@
+import { metadataBase } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Fira_Code, Inter } from "next/font/google";
@@ -20,6 +21,7 @@ const monoFont = Fira_Code({
 });
 
 export const metadata: Metadata = {
+  metadataBase,
   title: "thirdweb playground",
   description: "thirdweb playground",
 };
