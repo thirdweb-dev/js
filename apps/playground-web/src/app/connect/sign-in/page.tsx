@@ -2,25 +2,13 @@ import { CodeExample } from "@/components/code/code-example";
 import { StyledConnectButton } from "@/components/styled-connect-button";
 import { StyledConnectEmbed } from "@/components/styled-connect-embed";
 import { Button } from "@/components/ui/button";
-import { getBaseUrl } from "@/lib/getBaseUrl";
 import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(getBaseUrl()),
   title: "Sign In, Account Abstraction and SIWE Auth | thirdweb Connect",
   description:
     "Let users sign up with their email, phone number, social media accounts or directly with a wallet. Seemlessly integrate account abstraction and SIWE auth.",
-  openGraph: {
-    images: [
-      {
-        url: "/og-image-pay.png",
-        width: 1200,
-        height: 630,
-        alt: "Sign In, Account Abstraction and SIWE Auth | thirdweb Connect",
-      },
-    ],
-  },
 };
 
 export default function Page() {
