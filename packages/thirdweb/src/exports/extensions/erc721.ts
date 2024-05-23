@@ -155,3 +155,7 @@ export {
   type CreateDelayedRevealBatchParams,
   createDelayedRevealBatch,
 } from "../../extensions/erc721/lazyMinting/write/createDelayedRevealBatch.js";
+export {
+  type RevealParams,
+  reveal,
+} from "../../extensions/erc721/lazyMinting/write/reveal.js";

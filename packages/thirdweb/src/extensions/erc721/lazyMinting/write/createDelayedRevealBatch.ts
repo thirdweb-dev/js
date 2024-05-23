@@ -1,8 +1,8 @@
 import { encodePacked } from "viem/utils";
 import type { ThirdwebContract } from "../../../../contract/contract.js";
-import { encodeAbiParameters } from "../../../../exports/utils.js";
 import { upload } from "../../../../storage/upload.js";
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
+import { encodeAbiParameters } from "../../../../utils/abi/encodeAbiParameters.js";
 import { type Hex, toHex } from "../../../../utils/encoding/hex.js";
 import { keccak256 } from "../../../../utils/hashing/keccak256.js";
 import { getBaseUriFromBatch } from "../../../../utils/ipfs.js";
@@ -11,21 +11,7 @@ import { contractVersion } from "../../../thirdweb/__generated__/IThirdwebContra
 import { getBaseURICount } from "../../__generated__/IBatchMintMetadata/read/getBaseURICount.js";
 import { encryptDecrypt } from "../../__generated__/IDelayedReveal/read/encryptDecrypt.js";
 import { lazyMint as generatedLazyMint } from "../../__generated__/ILazyMint/write/lazyMint.js";
-
-const hashDelayRevealPassword = async (
-  batchTokenIndex: bigint,
-  password: string,
-  contract: ThirdwebContract,
-) => {
-  const chainId = BigInt(contract.chain.id);
-  const contractAddress = contract.address;
-  return keccak256(
-    encodePacked(
-      ["string", "uint256", "uint256", "address"],
-      [password, chainId, batchTokenIndex, contractAddress],
-    ),
-  );
-};
+import { hashDelayedRevealPassword } from "../helpers/hashDelayedRevealBatch.js";
 
 export type CreateDelayedRevealBatchParams = {
   placeholderMetadata: NFTInput;
@@ -37,13 +23,14 @@ export type CreateDelayedRevealBatchParams = {
  * Creates a batch of encrypted NFTs that can be revealed at a later time.
  *
  * @param options {CreateDelayedRevealBatchParams} - The delayed reveal options.
- * @param options.placeholderMetadata - The placeholder metadata for the batch.
- * @param options.metadata - An array of NFT metadata to be revealed at a later time.
- * @param options.password - The password for the reveal.
+ * @param options.placeholderMetadata {@link NFTInput} - The placeholder metadata for the batch.
+ * @param options.metadata {@link NFTInput} - An array of NFT metadata to be revealed at a later time.
+ * @param options.password {string} - The password for the reveal.
+ * @param options.contract {@link ThirdwebContract} - The NFT contract instance.
  *
- * @returns A promise that resolves to the transaction result.
+ * @returns The prepared transaction to send.
  *
- * @extension LazyMint
+ * @extension ERC721
  * @example
  * ```ts
  * import { createDelayedRevealBatch } from "thirdweb/extensions/erc721";
@@ -98,7 +85,7 @@ export function createDelayedRevealBatch(
         contract: options.contract,
       });
 
-      const hashedPassword = await hashDelayRevealPassword(
+      const hashedPassword = await hashDelayedRevealPassword(
         baseUriId,
         options.password,
         options.contract,
