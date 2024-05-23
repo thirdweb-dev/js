@@ -190,8 +190,6 @@ export async function autoConnectWC(
     ? await getSavedConnectParamsFromStorage(asyncLocalStorage, walletId)
     : null;
 
-  console.log("savedConnectParams", savedConnectParams);
-
   const provider = await initProvider(
     savedConnectParams
       ? {
