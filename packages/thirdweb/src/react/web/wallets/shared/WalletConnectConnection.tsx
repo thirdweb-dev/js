@@ -43,7 +43,6 @@ export const WalletConnectConnection: React.FC<{
             const preferNative =
               walletInfo.mobile.native || walletInfo.mobile.universal;
 
-            setQrCodeUri(uri);
             if (isMobile()) {
               if (isAndroid()) {
                 if (preferNative) {
@@ -66,6 +65,8 @@ export const WalletConnectConnection: React.FC<{
                   );
                 }
               }
+            } else {
+              setQrCodeUri(uri);
             }
           },
           optionalChains: chains,

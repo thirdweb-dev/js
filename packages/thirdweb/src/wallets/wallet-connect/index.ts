@@ -14,7 +14,13 @@ import {
   getChainMetadata,
   getRpcUrlForChain,
 } from "../../chains/utils.js";
-import { type Hex, isHex, numberToHex } from "../../utils/encoding/hex.js";
+import {
+  type Hex,
+  isHex,
+  numberToHex,
+  stringToHex,
+  uint8ArrayToHex,
+} from "../../utils/encoding/hex.js";
 import { stringify } from "../../utils/json.js";
 import { isAndroid, isIOS, isMobile } from "../../utils/web/isMobile.js";
 import { openWindow } from "../../utils/web/openWindow.js";
@@ -25,7 +31,6 @@ import type {
   SendTransactionOption,
   Wallet,
 } from "../interfaces/wallet.js";
-import { asyncLocalStorage as _asyncLocalStorage } from "../storage/asyncLocalStorage.js";
 import type { DisconnectFn, SwitchChainFn } from "../types.js";
 import { getValidPublicRPCUrl } from "../utils/chains.js";
 import { getDefaultAppMetadata } from "../utils/defaultDappMetadata.js";
@@ -34,15 +39,17 @@ import type { WalletEmitter } from "../wallet-emitter.js";
 import type { WCAutoConnectOptions, WCConnectOptions } from "./types.js";
 
 import type { ThirdwebClient } from "../../client/client.js";
+import { getStorage } from "../../react/core/storage.js";
 import { getAddress } from "../../utils/address.js";
+import { isReactNative } from "../../utils/platform.js";
+import { formatWalletConnectUrl } from "../../utils/url.js";
 import {
   getSavedConnectParamsFromStorage,
   saveConnectParamsToStorage,
 } from "../storage/walletStorage.js";
 import type { WalletId } from "../wallet-types.js";
 
-const asyncLocalStorage =
-  typeof window !== "undefined" ? _asyncLocalStorage : undefined;
+const asyncLocalStorage = getStorage();
 
 type WCProvider = InstanceType<typeof EthereumProvider>;
 
@@ -87,12 +94,24 @@ export async function connectWC(
   const provider = await initProvider(options, walletId);
   const wcOptions = options.walletConnect;
 
-  const { onDisplayUri } = wcOptions || {};
+  let { onDisplayUri } = wcOptions || {};
+
+  if (isReactNative() && !onDisplayUri) {
+    const walletInfo = await getWalletInfo(walletId);
+    const nativeCallaback = (uri: string) => {
+      const { Linking } = require("react-native");
+      const appUrl = walletInfo.mobile.native || walletInfo.mobile.universal;
+      if (!appUrl) {
+        throw new Error("No app url found for wallet connect to redirect to.");
+      }
+      const fullUrl = formatWalletConnectUrl(appUrl, uri).redirect;
+      Linking.openURL(fullUrl);
+    };
+    onDisplayUri = nativeCallaback;
+  }
 
   if (onDisplayUri) {
-    if (onDisplayUri) {
-      provider.events.addListener("display_uri", onDisplayUri);
-    }
+    provider.events.addListener("display_uri", onDisplayUri);
   }
 
   const { rpcMap, chainsToRequest } = getChainsToRequest({
@@ -217,8 +236,9 @@ async function initProvider(
   });
 
   const provider = await EthereumProvider.init({
-    showQrModal:
-      wcOptions?.showQrModal === undefined
+    showQrModal: isReactNative()
+      ? false
+      : wcOptions?.showQrModal === undefined
         ? defaultShowQrModal
         : wcOptions.showQrModal,
     projectId: wcOptions?.projectId || defaultWCProjectId,
@@ -258,16 +278,24 @@ async function initProvider(
 
   if (walletId !== "walletConnect") {
     function handleSessionRequest() {
-      if (typeof window === "undefined") {
+      const preferNative =
+        walletInfo.mobile.native || walletInfo.mobile.universal;
+
+      if (isReactNative()) {
+        const { Linking } = require("react-native");
+        const appUrl = preferNative;
+        if (!appUrl) {
+          throw new Error(
+            "No app url found for wallet connect to redirect to.",
+          );
+        }
+        Linking.openURL(appUrl);
         return;
       }
 
       if (!isMobile()) {
         return;
       }
-
-      const preferNative =
-        walletInfo.mobile.native || walletInfo.mobile.universal;
 
       if (isAndroid()) {
         if (preferNative) {
@@ -323,9 +351,18 @@ function onConnect(
       };
     },
     async signMessage({ message }) {
+      const messageToSign = (() => {
+        if (typeof message === "string") {
+          return stringToHex(message);
+        }
+        if (message.raw instanceof Uint8Array) {
+          return uint8ArrayToHex(message.raw);
+        }
+        return message.raw;
+      })();
       return provider.request({
         method: "personal_sign",
-        params: [message, this.address],
+        params: [messageToSign, this.address],
       });
     },
     async signTypedData(data) {
@@ -462,7 +499,10 @@ async function switchChainWC(provider: WCProvider, chain: Chain) {
  * @internal
  */
 function setRequestedChainsIds(chains: number[]) {
-  localStorage?.setItem(storageKeys.requestedChains, JSON.stringify(chains));
+  asyncLocalStorage?.setItem(
+    storageKeys.requestedChains,
+    JSON.stringify(chains),
+  );
 }
 
 /**
@@ -470,7 +510,7 @@ function setRequestedChainsIds(chains: number[]) {
  * @internal
  */
 async function getRequestedChainsIds(): Promise<number[]> {
-  const data = localStorage.getItem(storageKeys.requestedChains);
+  const data = await asyncLocalStorage?.getItem(storageKeys.requestedChains);
   return data ? JSON.parse(data) : [];
 }
 

@@ -1551,6 +1551,9 @@ importers:
       expo-web-browser:
         specifier: ^13
         version: 13.0.3(expo@51.0.5)
+      react-native:
+        specifier: '>=0.70'
+        version: 0.74.1(@babel/core@7.24.5)(@babel/preset-env@7.24.5)(@types/react@18.2.17)(react@18.2.0)
       react-native-aes-gcm-crypto:
         specifier: ^0.2
         version: 0.2.2(react-native@0.74.1)(react@18.2.0)
@@ -1709,6 +1712,9 @@ importers:
       happy-dom:
         specifier: ^14.10.1
         version: 14.11.0
+      react-native:
+        specifier: 0.74.1
+        version: 0.74.1(@babel/core@7.24.5)(@babel/preset-env@7.24.5)(@types/react@18.2.17)(react@18.2.0)
       react-native-aes-gcm-crypto:
         specifier: 0.2.2
         version: 0.2.2(react-native@0.74.1)(react@18.2.0)
@@ -17209,7 +17215,6 @@ packages:
     dependencies:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
-    bundledDependencies: false
 
   /event-emitter@0.3.5:
     resolution: {integrity: sha512-D9rRn9y7kLPnJ+hMq7S/nhvoKwwvVJahBi2BPmx3bvbsEdK3W9ii8cBSGjP+72/LnM4n6fo3+dkCX5FeTQruXA==}
