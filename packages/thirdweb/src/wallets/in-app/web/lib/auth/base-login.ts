@@ -1,7 +1,7 @@
 import {
-  AuthProvider,
   type AuthAndWalletRpcReturnType,
   type AuthLoginReturnType,
+  AuthProvider,
   type GetHeadlessLoginLinkReturnType,
 } from "../../../core/authentication/type.js";
 import { AbstractLogin, type LoginQuerierTypes } from "./abstract-login.js";
