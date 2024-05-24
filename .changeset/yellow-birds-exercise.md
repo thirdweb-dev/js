@@ -2,7 +2,9 @@
 "thirdweb": minor
 ---
 
-Adds the useWalletBalance hook. The hook will default to the native token balance if no `tokenAddress` is provided.
+Added `useWalletBalance()` hook
+
+Adds the `useWalletBalance` hook. The hook will default to the native token balance if no `tokenAddress` is provided.
 
 ### Usage
 

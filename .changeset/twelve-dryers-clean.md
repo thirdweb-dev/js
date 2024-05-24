@@ -2,6 +2,8 @@
 "thirdweb": minor
 ---
 
+WalletConnect in React Native + useAutoConnect hook
+
 ## Support WalletConnect compatible wallets in React Native
 
 You can now connect any of the 300+ WalletConnect compatible mobile wallets from react native.
