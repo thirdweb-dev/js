@@ -50,6 +50,7 @@ export function InAppWalletOTPLoginUI(props: {
     setOtpInput("");
     setVerifyStatus("idle");
     setAccountStatus("sending");
+    const walletConfig = wallet.getConfig();
 
     try {
       if ("email" in userInfo) {
@@ -57,6 +58,7 @@ export function InAppWalletOTPLoginUI(props: {
           email: userInfo.email,
           strategy: "email",
           client,
+          integratorId: walletConfig?.integratorId,
         });
         setAccountStatus(status);
       } else if ("phone" in userInfo) {
@@ -64,6 +66,7 @@ export function InAppWalletOTPLoginUI(props: {
           phoneNumber: userInfo.phone,
           strategy: "phone",
           client,
+          integratorId: walletConfig?.integratorId,
         });
         setAccountStatus(status);
       } else {
@@ -74,7 +77,7 @@ export function InAppWalletOTPLoginUI(props: {
       setVerifyStatus("idle");
       setAccountStatus("error");
     }
-  }, [client, userInfo]);
+  }, [client, userInfo, wallet.getConfig]);
 
   async function connect(otp: string) {
     if ("email" in userInfo) {
