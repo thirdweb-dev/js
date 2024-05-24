@@ -11,13 +11,8 @@ export function parseTypedData<
 >(
   typedData: TypedDataDefinition<typedData, primaryType>,
 ): TypedDataDefinition<typedData, primaryType> {
-  // I know, I'm sorry, this type is whack so we're gonna use unknown for now
-  if (
-    isHex(
-      (typedData.domain as unknown as { chainId: unknown } | undefined)
-        ?.chainId,
-    )
-  ) {
+  const domain = typedData.domain as unknown & { chainId?: unknown }; // TODO: create our own typed data types so this is cleaner
+  if (domain?.chainId !== undefined && isHex(domain.chainId)) {
     throw new Error("signTypedData: chainId must be of type number");
   }
   return typedData;
