@@ -30,7 +30,7 @@ export async function connectInAppWallet(
 ): Promise<[Account, Chain]> {
   const { authenticate } = await import("../authentication/index.js");
 
-  const authResult = await authenticate(options);
+  const authResult = await authenticate(options, createOptions?.integratorId);
   const authAccount = authResult.user.account;
 
   if (createOptions?.smartAccount) {
@@ -56,7 +56,10 @@ export async function autoConnectInAppWallet(
   createOptions: CreateWalletArgs<"inApp">[1],
 ): Promise<[Account, Chain]> {
   const { getAuthenticatedUser } = await import("../authentication/index.js");
-  const user = await getAuthenticatedUser({ client: options.client });
+  const user = await getAuthenticatedUser({
+    client: options.client,
+    integratorId: createOptions?.integratorId,
+  });
   if (!user) {
     throw new Error("not authenticated");
   }
