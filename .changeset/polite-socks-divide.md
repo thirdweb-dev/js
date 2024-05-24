@@ -2,4 +2,4 @@
 "thirdweb": patch
 ---
 
-Throws error for incorrectly typed chainId in signTypedData
+Converts chainId hex to number for proper signTypedData type
