@@ -42,6 +42,7 @@ import type { ThirdwebClient } from "../../client/client.js";
 import { getStorage } from "../../react/core/storage.js";
 import { getAddress } from "../../utils/address.js";
 import { isReactNative } from "../../utils/platform.js";
+import { parseTypedData } from "../../utils/signatures/helpers/parseTypedData.js";
 import { formatWalletConnectUrl } from "../../utils/url.js";
 import {
   getSavedConnectParamsFromStorage,
@@ -365,7 +366,8 @@ function onConnect(
         params: [messageToSign, this.address],
       });
     },
-    async signTypedData(data) {
+    async signTypedData(_data) {
+      const data = parseTypedData(_data);
       const { domain, message, primaryType } =
         data as unknown as SignTypedDataParameters;
 
