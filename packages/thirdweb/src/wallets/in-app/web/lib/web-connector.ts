@@ -79,6 +79,7 @@ export class InAppWebConnector implements InAppConnector {
         await this.querier.call({
           procedureName: "initIframe",
           params: {
+            integratorId,
             deviceShareStored: authResult.walletDetails.deviceShareStored,
             clientId: this.client.clientId,
             walletUserId: authResult.storedToken.authDetails.userWalletId,

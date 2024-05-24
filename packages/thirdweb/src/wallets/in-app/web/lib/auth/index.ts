@@ -18,6 +18,7 @@ export type AuthQuerierTypes = {
     authCookie: string;
     walletUserId: string;
     deviceShareStored: string;
+    integratorId?: string;
   };
   loginWithStoredTokenDetails: {
     storedToken: AuthStoredTokenWithCookieReturnType["storedToken"];
