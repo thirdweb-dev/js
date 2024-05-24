@@ -41,7 +41,7 @@ import type { WCAutoConnectOptions, WCConnectOptions } from "./types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { getStorage } from "../../react/core/storage.js";
 import { getAddress } from "../../utils/address.js";
-import { isBrowser, isReactNative } from "../../utils/platform.js";
+import { isReactNative } from "../../utils/platform.js";
 import { formatWalletConnectUrl } from "../../utils/url.js";
 import {
   getSavedConnectParamsFromStorage,
@@ -94,31 +94,23 @@ export async function connectWC(
   const provider = await initProvider(options, walletId);
   const wcOptions = options.walletConnect;
 
-  const { onDisplayUri } = wcOptions || {};
+  let { onDisplayUri } = wcOptions || {};
 
-  if (isReactNative()) {
-    if (walletId === "walletConnect") {
-      throw new Error(
-        "Raw WalletConnect is not supported on React Native. Use a specific wallet id instead like `createWallet('io.metamask')`.",
-      );
-    }
-    if (!onDisplayUri) {
-      throw new Error(
-        "'onDisplayUri' is required when using WalletConnect on React Native. Pass it to the wallet connect options when creating the wallet.",
-      );
-    }
+  if (isReactNative() && !onDisplayUri) {
     const walletInfo = await getWalletInfo(walletId);
-    provider.events.addListener("display_uri", (uri) => {
-      // on native, format the uri and then callback
-      // TODO prefere universal on android?
+    const nativeCallaback = (uri: string) => {
+      const { Linking } = require("react-native");
       const appUrl = walletInfo.mobile.native || walletInfo.mobile.universal;
       if (!appUrl) {
         throw new Error("No app url found for wallet connect to redirect to.");
       }
-      onDisplayUri(formatWalletConnectUrl(appUrl, uri).redirect);
-    });
-  } else if (onDisplayUri) {
-    // on web, just callback with the uri
+      const fullUrl = formatWalletConnectUrl(appUrl, uri).redirect;
+      Linking.openURL(fullUrl);
+    };
+    onDisplayUri = nativeCallaback;
+  }
+
+  if (onDisplayUri) {
     provider.events.addListener("display_uri", onDisplayUri);
   }
 
@@ -295,21 +287,14 @@ async function initProvider(
         walletInfo.mobile.native || walletInfo.mobile.universal;
 
       if (isReactNative()) {
-        // TODO prefere universal on android?
+        const { Linking } = require("react-native");
         const appUrl = walletInfo.mobile.native || walletInfo.mobile.universal;
-        if (appUrl && options.walletConnect?.onDisplayUri) {
-          options.walletConnect?.onDisplayUri(
-            formatWalletConnectUrl(appUrl, "").href,
-          );
-        } else {
+        if (!appUrl) {
           throw new Error(
-            "No 'onDisplayUri' callback or app url found for wallet connect to redirect to.",
+            "No app url found for wallet connect to redirect to.",
           );
         }
-        return;
-      }
-
-      if (!isBrowser()) {
+        Linking.openURL(appUrl);
         return;
       }
 
