@@ -46,10 +46,12 @@ export class Auth {
   constructor({
     client,
     querier,
+    integratorId,
     onAuthSuccess,
     baseUrl,
   }: ClientIdWithQuerierType & {
     baseUrl: string;
+    integratorId?: string;
     onAuthSuccess: (
       authDetails: AuthAndWalletRpcReturnType,
     ) => Promise<AuthLoginReturnType>;
@@ -60,6 +62,7 @@ export class Auth {
     this.localStorage = new LocalStorage({ clientId: client.clientId });
     this.onAuthSuccess = onAuthSuccess;
     this.BaseLogin = new BaseLogin({
+      integratorId,
       postLogin: async (result) => {
         return this.postLogin(result);
       },

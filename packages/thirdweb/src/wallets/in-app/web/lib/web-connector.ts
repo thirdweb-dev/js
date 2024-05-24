@@ -3,13 +3,13 @@ import { getThirdwebBaseUrl } from "../../../../utils/domains.js";
 import type { Account } from "../../../interfaces/wallet.js";
 import { oauthStrategyToAuthProvider } from "../../core/authentication/index.js";
 import {
+  UserWalletStatus,
   type AuthArgsType,
   type AuthLoginReturnType,
   type GetUser,
   type LogoutReturnType,
   type PreAuthArgsType,
   type SendEmailOtpReturnType,
-  UserWalletStatus,
 } from "../../core/authentication/type.js";
 import type { InAppConnector } from "../../core/interfaces/connector.js";
 import type { InAppWalletConstructorType } from "../types.js";
@@ -70,6 +70,7 @@ export class InAppWebConnector implements InAppConnector {
       client,
       querier: this.querier,
       baseUrl,
+      integratorId,
       onAuthSuccess: async (authResult) => {
         onAuthSuccess?.(authResult);
         await this.wallet.postWalletSetUp({

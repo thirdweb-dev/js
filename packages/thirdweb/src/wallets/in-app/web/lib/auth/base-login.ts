@@ -1,7 +1,7 @@
 import {
+  AuthProvider,
   type AuthAndWalletRpcReturnType,
   type AuthLoginReturnType,
-  AuthProvider,
   type GetHeadlessLoginLinkReturnType,
 } from "../../../core/authentication/type.js";
 import { AbstractLogin, type LoginQuerierTypes } from "./abstract-login.js";
@@ -174,6 +174,7 @@ export class BaseLogin extends AbstractLogin<
                   eventType: "injectDeveloperClientIdResult",
                   developerClientId: this.client.clientId,
                   authOption: args.oauthProvider,
+                  integratorId: this.integratorId,
                 },
                 this.baseUrl,
               );
