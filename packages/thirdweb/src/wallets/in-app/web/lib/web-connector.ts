@@ -3,13 +3,13 @@ import { getThirdwebBaseUrl } from "../../../../utils/domains.js";
 import type { Account } from "../../../interfaces/wallet.js";
 import { oauthStrategyToAuthProvider } from "../../core/authentication/index.js";
 import {
-  UserWalletStatus,
   type AuthArgsType,
   type AuthLoginReturnType,
   type GetUser,
   type LogoutReturnType,
   type PreAuthArgsType,
   type SendEmailOtpReturnType,
+  UserWalletStatus,
 } from "../../core/authentication/type.js";
 import type { InAppConnector } from "../../core/interfaces/connector.js";
 import type { InAppWalletConstructorType } from "../types.js";
@@ -198,6 +198,7 @@ export class InAppWebConnector implements InAppConnector {
         if (args.type === "sign-up") {
           const authToken = await registerPasskey({
             client: args.client,
+            integratorId: args.integratorId,
             authenticatorType: args.authenticatorType,
             username: args.passkeyName,
           });
@@ -205,6 +206,7 @@ export class InAppWebConnector implements InAppConnector {
         }
         const authToken = await loginWithPasskey({
           client: args.client,
+          integratorId: args.integratorId,
           authenticatorType: args.authenticatorType,
         });
         return this.auth.loginWithAuthToken(authToken);

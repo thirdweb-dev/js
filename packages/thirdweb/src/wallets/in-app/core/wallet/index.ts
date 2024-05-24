@@ -30,7 +30,10 @@ export async function connectInAppWallet(
 ): Promise<[Account, Chain]> {
   const { authenticate } = await import("../authentication/index.js");
 
-  const authResult = await authenticate(options, createOptions?.integratorId);
+  const authResult = await authenticate({
+    ...options,
+    integratorId: createOptions?.integratorId,
+  });
   const authAccount = authResult.user.account;
 
   if (createOptions?.smartAccount) {

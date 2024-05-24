@@ -21,6 +21,7 @@ function getChallengePath(type: "sign-in" | "sign-up", username?: string) {
 
 export async function registerPasskey(options: {
   client: ThirdwebClient;
+  integratorId?: string;
   authenticatorType?: AuthType;
   username?: string;
 }): Promise<AuthStoredTokenWithCookieReturnType> {
@@ -48,11 +49,17 @@ export async function registerPasskey(options: {
   // 3. store the credentialId in local storage
   await storage.savePasskeyCredentialId(registration.credential.id);
 
+  const customHeaders: Record<string, string> = {};
+  if (options.integratorId) {
+    customHeaders["x-integrator-id"] = options.integratorId;
+  }
+
   // 4. send the registration object to the server
   const verifRes = await fetchWithId(getVerificationPath(), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      ...customHeaders,
     },
     body: JSON.stringify({
       type: "sign-up",
@@ -78,6 +85,7 @@ export async function registerPasskey(options: {
 
 export async function loginWithPasskey(options: {
   client: ThirdwebClient;
+  integratorId?: string;
   authenticatorType?: AuthType;
 }): Promise<AuthStoredTokenWithCookieReturnType> {
   if (!client.isAvailable()) {
@@ -101,11 +109,18 @@ export async function loginWithPasskey(options: {
     authenticatorType: options.authenticatorType ?? "auto",
     userVerification: "required",
   });
+
+  const customHeaders: Record<string, string> = {};
+  if (options.integratorId) {
+    customHeaders["x-integrator-id"] = options.integratorId;
+  }
+
   // 3. send the authentication object to the server/iframe
   const verifRes = await fetchWithId(getVerificationPath(), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      ...customHeaders,
     },
     body: JSON.stringify({
       type: "sign-in",

@@ -169,9 +169,8 @@ export async function preAuthenticate(args: PreAuthArgsType) {
  */
 export async function authenticate(
   args: AuthArgsType,
-  integratorId?: string,
 ): Promise<AuthLoginReturnType> {
-  const ewSDK = await getInAppWalletConnector(args.client, integratorId);
+  const ewSDK = await getInAppWalletConnector(args.client, args.integratorId);
   return ewSDK.authenticate(args);
 }
 
