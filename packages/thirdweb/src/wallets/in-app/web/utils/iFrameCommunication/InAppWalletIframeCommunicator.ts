@@ -10,6 +10,7 @@ export class InAppWalletIframeCommunicator<
   T extends { [key: string]: any },
 > extends IframeCommunicator<T> {
   clientId: string;
+  integratorId?: string;
   /**
    * @internal
    */
@@ -30,6 +31,7 @@ export class InAppWalletIframeCommunicator<
       container: document.body,
     });
     this.clientId = clientId;
+    this.integratorId = integratorId;
   }
 
   /**

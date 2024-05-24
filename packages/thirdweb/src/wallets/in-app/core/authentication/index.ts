@@ -80,7 +80,7 @@ export async function getAuthenticatedUser(
   options: GetAuthenticatedUserParams,
 ) {
   const { client } = options;
-  const ewSDK = await getInAppWalletConnector(client);
+  const ewSDK = await getInAppWalletConnector(client, options.integratorId);
   const user = await ewSDK.getUser();
   switch (user.status) {
     case UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED: {
@@ -147,7 +147,7 @@ export async function getUserPhoneNumber(options: GetAuthenticatedUserParams) {
  * ```
  */
 export async function preAuthenticate(args: PreAuthArgsType) {
-  const ewSDK = await getInAppWalletConnector(args.client);
+  const ewSDK = await getInAppWalletConnector(args.client, args.integratorId);
   return ewSDK.preAuthenticate(args);
 }
 

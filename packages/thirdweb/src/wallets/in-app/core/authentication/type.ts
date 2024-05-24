@@ -13,6 +13,7 @@ export type MultiStepAuthProviderType =
     };
 export type PreAuthArgsType = MultiStepAuthProviderType & {
   client: ThirdwebClient;
+  integratorId?: string;
 };
 
 export type MultiStepAuthArgsType = MultiStepAuthProviderType & {
