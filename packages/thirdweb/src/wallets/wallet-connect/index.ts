@@ -278,14 +278,12 @@ async function initProvider(
 
   if (walletId !== "walletConnect") {
     function handleSessionRequest() {
-      const preferUniversal =
-        walletInfo.mobile.universal || walletInfo.mobile.native;
       const preferNative =
         walletInfo.mobile.native || walletInfo.mobile.universal;
 
       if (isReactNative()) {
         const { Linking } = require("react-native");
-        const appUrl = walletInfo.mobile.native || walletInfo.mobile.universal;
+        const appUrl = preferNative;
         if (!appUrl) {
           throw new Error(
             "No app url found for wallet connect to redirect to.",
@@ -300,14 +298,17 @@ async function initProvider(
       }
 
       if (isAndroid()) {
-        if (preferUniversal) {
-          openWindow(preferUniversal);
+        if (preferNative) {
+          openWindow(preferNative);
         }
       } else if (isIOS()) {
         if (preferNative) {
           openWindow(preferNative);
         }
       } else {
+        const preferUniversal =
+          walletInfo.mobile.universal || walletInfo.mobile.native;
+
         if (preferUniversal) {
           openWindow(preferUniversal);
         }
