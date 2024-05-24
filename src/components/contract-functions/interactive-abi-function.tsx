@@ -177,7 +177,7 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
       (abiFunction?.stateMutability === "view" ||
         abiFunction?.stateMutability === "pure")
     ) {
-      readFn({ args: [], overrides: { from: connectedWalletAddress } });
+      readFn({ args: [] });
     }
   }, [readFn, abiFunction?.stateMutability, form, connectedWalletAddress]);
 
@@ -213,7 +213,6 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
               ) {
                 readFn({
                   args: formatted,
-                  overrides: { from: connectedWalletAddress },
                 });
               } else {
                 mutate({
