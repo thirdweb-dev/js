@@ -47,6 +47,7 @@ export class InAppWalletIframeCommunicator<
       deviceShareStored: await localStorage.getDeviceShare(),
       walletUserId: await localStorage.getWalletUserId(),
       clientId: this.clientId,
+      integratorId: this.integratorId,
     };
   }
 }
