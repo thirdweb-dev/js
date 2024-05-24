@@ -14,7 +14,7 @@ const ENGINE_TIER_CARD_CONFIG: Record<EngineTier, EngineTierCardConfig> = {
     name: "Standard",
     monthlyPriceUsd: 99,
     features: [
-      "Isolated server & database",
+      "Isolated Server & Database",
       "APIs for contracts on 1700+ EVM chains",
       "Secured backend wallets",
       "Gas & nonce management",
@@ -25,8 +25,8 @@ const ENGINE_TIER_CARD_CONFIG: Record<EngineTier, EngineTierCardConfig> = {
     monthlyPriceUsd: 299,
     features: [
       "Autoscaling",
-      "Server failover",
-      "Database failover",
+      "Production-grade Server (High availability and redundancy)",
+      "Production-grade Database (High availability, Multi-AZ)",
       "30-day database backups",
       "On-call monitoring from thirdweb",
     ],
