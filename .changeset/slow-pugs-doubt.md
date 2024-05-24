@@ -2,6 +2,8 @@
 "thirdweb": minor
 ---
 
+Added `useConnectModal` hook.
+
 Add `useConnectModal` hook that allows you to open the Connect UI in a Modal to prompt the user to connect wallet.
 
 ```tsx
