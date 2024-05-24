@@ -14,6 +14,25 @@ import {
 } from "../wallets/wallet-hooks.js";
 import type { AutoConnectProps } from "./AutoConnect.js";
 
+/**
+ * Autoconnect the last previously connected wallet.
+ *
+ * @example
+ * ```tsx
+ * import { useAutoConnect } from "thirdweb/react";
+ *
+ * const { data: autoConnected, isLoading } = useAutoConnect({
+ *  client,
+ *  accountAbstraction,
+ *  wallets,
+ *  onConnect,
+ *  timeout,
+ * });
+ * ```
+ * @walletConnection
+ * @param props - The props for auto connect.
+ * @returns whether the auto connect was successful.
+ */
 export function useAutoConnect(props: AutoConnectProps) {
   const setConnectionStatus = useSetActiveWalletConnectionStatus();
   const { connect } = useConnect({
