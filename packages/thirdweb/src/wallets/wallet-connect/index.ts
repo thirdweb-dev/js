@@ -41,8 +41,8 @@ import type { WCAutoConnectOptions, WCConnectOptions } from "./types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { getStorage } from "../../react/core/storage.js";
 import { getAddress } from "../../utils/address.js";
-import { parseTypedData } from "../../utils/signatures/helpers/parseTypedData.js";
 import { isReactNative } from "../../utils/platform.js";
+import { parseTypedData } from "../../utils/signatures/helpers/parseTypedData.js";
 import { formatWalletConnectUrl } from "../../utils/url.js";
 import {
   getSavedConnectParamsFromStorage,
