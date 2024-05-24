@@ -43,7 +43,11 @@ export class InAppWebConnector implements InAppConnector {
    * `const thirdwebInAppWallet = new InAppWalletSdk({ clientId: "", chain: "Goerli" });`
    * @internal
    */
-  constructor({ client, onAuthSuccess }: InAppWalletConstructorType) {
+  constructor({
+    client,
+    integratorId,
+    onAuthSuccess,
+  }: InAppWalletConstructorType) {
     if (this.isClientIdLegacyPaper(client.clientId)) {
       throw new Error(
         "You are using a legacy clientId. Please use the clientId found on the thirdweb dashboard settings page",
@@ -53,10 +57,12 @@ export class InAppWebConnector implements InAppConnector {
     this.client = client;
     this.querier = new InAppWalletIframeCommunicator({
       clientId: client.clientId,
+      integratorId,
       baseUrl,
     });
     this.wallet = new IFrameWallet({
       client,
+      integratorId,
       querier: this.querier,
     });
 

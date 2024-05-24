@@ -437,6 +437,15 @@ export function smartWallet(
  *  },
  * });
  * ```
+ *
+ * Connect to an ecosystem wallet with your designated integratorId
+ * @note The integrator ID will be provided to you by the ecosystem with which you're integrating.
+ * ```ts
+ * import { inAppWallet } from "thirdweb/wallets";
+ * const wallet = inAppWallet({
+ *  integratorId: "..."
+ * });
+ * ```
  * @wallet
  */
 export function inAppWallet(

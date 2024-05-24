@@ -44,11 +44,13 @@ export type SignerProcedureTypes = {
     message: string | Hex;
     chainId: number;
     rpcEndpoint?: string;
+    integratorId?: string;
   };
   signTransaction: {
     transaction: ethers5.ethers.providers.TransactionRequest;
     chainId: number;
     rpcEndpoint?: string;
+    integratorId?: string;
   };
   signTypedDataV4: {
     domain: TypedDataDefinition["domain"];
@@ -56,6 +58,7 @@ export type SignerProcedureTypes = {
     message: TypedDataDefinition["message"];
     chainId: number;
     rpcEndpoint?: string;
+    integratorId?: string;
   };
   //connect: { provider: Provider };
 };
@@ -69,6 +72,7 @@ type PostWalletSetup = SetUpWalletRpcReturnType & {
  */
 export class IFrameWallet {
   protected client: ThirdwebClient;
+  protected integratorId: string | undefined;
   protected walletManagerQuerier: InAppWalletIframeCommunicator<
     WalletManagementTypes & WalletManagementUiTypes
   >;
@@ -78,8 +82,9 @@ export class IFrameWallet {
    * Not meant to be initialized directly. Call {@link initializeUser} to get an instance
    * @internal
    */
-  constructor({ client, querier }: ClientIdWithQuerierType) {
+  constructor({ client, integratorId, querier }: ClientIdWithQuerierType) {
     this.client = client;
+    this.integratorId = integratorId;
     this.walletManagerQuerier = querier;
 
     this.localStorage = new LocalStorage({ clientId: client.clientId });
@@ -174,6 +179,8 @@ export class IFrameWallet {
   async getAccount(): Promise<Account> {
     const querier = this
       .walletManagerQuerier as unknown as InAppWalletIframeCommunicator<SignerProcedureTypes>;
+    const client = this.client;
+    const integratorId = this.integratorId;
     const { address } = await querier.call<GetAddressReturnType>({
       procedureName: "getAddress",
       params: undefined,
@@ -205,12 +212,13 @@ export class IFrameWallet {
           params: {
             transaction,
             chainId: tx.chainId,
+            integratorId,
             rpcEndpoint: `https://${tx.chainId}.rpc.thirdweb.com`, // TODO (ew) shouldnt be needed
           },
         });
       return signedTransaction as Hex;
     };
-    const client = this.client;
+
     return {
       address,
       async signTransaction(tx) {
@@ -244,6 +252,7 @@ export class IFrameWallet {
           params: {
             // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
             message: messageDecoded as any, // wants Bytes or string
+            integratorId,
             chainId: 1, // TODO check if we need this
           },
         });
@@ -269,6 +278,7 @@ export class IFrameWallet {
               message:
                 _typedData.message as SignerProcedureTypes["signTypedDataV4"]["message"],
               chainId,
+              integratorId,
               rpcEndpoint: `https://${chainId}.rpc.thirdweb.com`, // TODO (ew) shouldnt be needed
             },
           });
