@@ -6,6 +6,7 @@ import type {
   InAppWalletSocialAuth,
 } from "../../../../wallets/in-app/core/wallet/types.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
+import { useEcosystem } from "../../../core/hooks/others/useEcosystem.js";
 import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { useSetSelectionData } from "../../providers/wallet-ui-states-provider.js";
 import { TOS } from "../../ui/ConnectWallet/Modal/TOS.js";
@@ -18,10 +19,12 @@ import {
   phoneIcon,
 } from "../../ui/ConnectWallet/icons/dataUris.js";
 import { Img } from "../../ui/components/Img.js";
+import { Skeleton } from "../../ui/components/Skeleton.js";
 import { Spacer } from "../../ui/components/Spacer.js";
 import { TextDivider } from "../../ui/components/TextDivider.js";
 import { Container, ModalHeader } from "../../ui/components/basic.js";
 import { Button } from "../../ui/components/buttons.js";
+import { ModalTitle } from "../../ui/components/modalElements.js";
 import { useCustomTheme } from "../../ui/design-system/CustomThemeProvider.js";
 import { fontSize, iconSize, spacing } from "../../ui/design-system/index.js";
 import { InputSelectionUI } from "./InputSelectionUI.js";
@@ -56,6 +59,11 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
   const locale = props.locale;
   const { chain, client, connectModal } = useConnectUI();
   const { wallet } = props;
+  const config = wallet.getConfig();
+  const { data: ecosystemData, isFetched: ecosystemFetched } = useEcosystem({
+    integratorId: config?.integratorId,
+  });
+
   const setData = useSetSelectionData() as (
     value: InAppWalletSelectUIState,
   ) => void;
@@ -68,7 +76,6 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
     apple: locale.signInWithApple,
   };
 
-  const config = props.wallet.getConfig();
   const authOptions = config?.auth?.options || defaultAuthOptions;
   const passKeyEnabled = authOptions.includes("passkey");
 
@@ -158,7 +165,7 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
     (!config.metadata.image.height || !config.metadata.image.width)
   ) {
     console.warn(
-      "Image is not properly configured. Please set height and width.",
+      "Image is not properly configured. Please set height and/or width.",
       config.metadata.image,
     );
   }
@@ -191,6 +198,37 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
               100,
             )?.toString()}
           />
+        </Container>
+      )}
+
+      {!config?.metadata?.image && config?.integratorId && (
+        <Container flex="row" center="both" gap="sm">
+          {/* Only show an image if it's loading or one has been successfully fetched */}
+          {(!ecosystemFetched || ecosystemData?.imageUrl) && (
+            <Container
+              style={{
+                borderRadius: "100%",
+                width: "50px",
+                height: "50px",
+                overflow: "hidden",
+              }}
+            >
+              <Img
+                loading="eager"
+                client={client}
+                width="50"
+                height="50"
+                src={ecosystemData?.imageUrl}
+                alt={ecosystemData?.name}
+              />
+            </Container>
+          )}
+          {ecosystemFetched ? (
+            // Don't show the name if there is none
+            ecosystemData?.name && <ModalTitle>{ecosystemData.name}</ModalTitle>
+          ) : (
+            <Skeleton width="100px" height={fontSize.md} />
+          )}
         </Container>
       )}
 

@@ -518,7 +518,7 @@ const WalletSelection: React.FC<{
               </Suspense>
             ) : (
               <WalletEntryButton
-                walletId={wallet.id}
+                wallet={wallet}
                 selectWallet={() => {
                   props.selectWallet(wallet);
                 }}

@@ -19,12 +19,14 @@ export function useWalletInfo(id: WalletId) {
 /**
  * @internal
  */
-export function useWalletImage(id: WalletId) {
+export function useWalletImage(id?: WalletId) {
   return useQuery({
     queryKey: ["wallet-image", id],
     queryFn: () => {
+      if (!id) return undefined;
       return getWalletInfo(id, true);
     },
+    enabled: !!id,
     retry: false,
   });
 }

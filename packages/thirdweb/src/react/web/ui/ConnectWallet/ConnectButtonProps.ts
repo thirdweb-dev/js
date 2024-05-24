@@ -523,13 +523,11 @@ export type ConnectButtonProps = {
    * ```tsx
    * <ConnectButton
    *   connectButton={{
-   *     connectButton: {
    *       label: "Connect",
    *       className: "my-custom-class",
    *       style: {
    *         borderRadius: "10px",
    *       },
-   *     },
    *   }}
    * />;
    * ```

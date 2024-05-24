@@ -55,3 +55,8 @@ export type AuthenticatedUser = {
   email: string | undefined;
   walletAddress: string;
 };
+
+export type InAppWalletEcosystem = {
+  imageUrl?: string;
+  name?: string;
+};

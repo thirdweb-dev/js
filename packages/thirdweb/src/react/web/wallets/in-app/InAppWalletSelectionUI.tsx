@@ -33,7 +33,7 @@ function InAppWalletSelectionUI(props: {
   ) {
     return (
       <WalletEntryButton
-        walletId={props.wallet.id}
+        wallet={props.wallet}
         selectWallet={() => {
           setData({});
           props.select();
