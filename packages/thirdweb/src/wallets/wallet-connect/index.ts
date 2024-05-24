@@ -190,14 +190,11 @@ export async function autoConnectWC(
           walletConnect: {
             pairingTopic: savedConnectParams.pairingTopic,
             optionalChains: savedConnectParams.optionalChains,
-            onDisplayUri: options.onDisplayUri,
           },
         }
       : {
           client: options.client,
-          walletConnect: {
-            onDisplayUri: options.onDisplayUri,
-          },
+          walletConnect: {},
         },
     walletId,
     true, // is auto connect
