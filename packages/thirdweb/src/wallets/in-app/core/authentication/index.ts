@@ -42,6 +42,7 @@ async function getInAppWalletConnector(
     } = require("../../native/native-connector.js");
     ewSDK = new InAppNativeConnector({
       client,
+      integratorId,
     });
   } else {
     throw new Error("Unsupported platform");
