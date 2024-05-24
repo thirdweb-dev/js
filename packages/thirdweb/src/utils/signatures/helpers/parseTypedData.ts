@@ -1,6 +1,6 @@
 import type { TypedData } from "abitype";
 import type { TypedDataDefinition } from "viem";
-import { isHex } from "../../encoding/hex.js";
+import { type Hex, hexToNumber, isHex } from "../../encoding/hex.js";
 
 /**
  * @internal
@@ -13,7 +13,10 @@ export function parseTypedData<
 ): TypedDataDefinition<typedData, primaryType> {
   const domain = typedData.domain as unknown & { chainId?: unknown }; // TODO: create our own typed data types so this is cleaner
   if (domain?.chainId !== undefined && isHex(domain.chainId)) {
-    throw new Error("signTypedData: chainId must be of type number");
+    typedData.domain = {
+      ...typedData.domain,
+      chainId: hexToNumber(typedData.domain?.chainId as unknown as Hex),
+    } as unknown as TypedDataDefinition<typedData, primaryType>["domain"];
   }
   return typedData;
 }
