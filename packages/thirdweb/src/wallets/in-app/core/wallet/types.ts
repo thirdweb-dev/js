@@ -31,11 +31,11 @@ export type InAppWalletCreationOptions =
   | ({ smartAccount?: SmartWalletOptions } & (
       | {
           integratorId: string;
-          auth: never;
-          metadata: never;
+          auth?: never;
+          metadata?: never;
         }
       | {
-          integratorId: never;
+          integratorId?: never;
           auth?: {
             options: InAppWalletAuth[];
           };
