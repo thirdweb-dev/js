@@ -580,49 +580,68 @@ export type CreateTicketInput = {
 
 export function useCreateTicket() {
   const { user } = useLoggedInUser();
-  /**
-   * Unthread only accepts a `markdown` field
-   * so we need to include all the metadata there
-   *
-   * Example of the final content:
-   * -----------
-   * Problem Area: Connect wallet issue
-   * SDK: Unity
-   * SDK Version: 4
-   * Affected Area: Application
-   * -----------
-   */
-  const updateMarkdown = (input: CreateTicketInput) => {
-    const { markdown } = input;
-    const extraData = Object.keys(input)
+  const account = useAccount();
+  return useMutationWithInvalidate(async (input: CreateTicketInput) => {
+    invariant(user?.address, "walletAddress is required");
+    invariant(account?.data, "Account not found");
+    const { name, email, plan } = account.data;
+    const formData = new FormData();
+    const planToCustomerId: Record<string, string> = {
+      free: process.env.NEXT_PUBLIC_UNTHREAD_FREE_TIER_ID as string,
+      growth: process.env.NEXT_PUBLIC_UNTHREAD_GROWTH_TIER_ID as string,
+      pro: process.env.NEXT_PUBLIC_UNTHREAD_PRO_TIER_ID as string,
+    };
+    const customerId = planToCustomerId[plan] || undefined;
+    if (input.files?.length) {
+      input.files.forEach((file) => formData.append("attachments", file));
+    }
+    const title =
+      input.product && input["extraInfo_Problem_Area"]
+        ? `${input.product}: ${input.extraInfo_Problem_Area} (${email})`
+        : `New ticket from ${name} (${email})`;
+
+    // Update `markdown` to include the infos from the form
+    const extraInfo = Object.keys(input)
       .filter((key) => key.startsWith("extraInfo_"))
       .map((key) => {
-        const prettifiedKey = `${key.replace("extraInfo_", "").replaceAll("_", " ")}`;
+        const prettifiedKey = `# ${key.replace("extraInfo_", "").replaceAll("_", " ")}`;
         return `${prettifiedKey}: ${input[key] ?? "N/A"}\n`;
       })
       .join("");
-    const line = "-------------------------\n";
-    return `\n${line}${extraData}${line}${markdown}`;
-  };
-
-  return useMutationWithInvalidate(async (input: CreateTicketInput) => {
-    invariant(user?.address, "walletAddress is required");
-    input.markdown = updateMarkdown(input);
-    const res = await fetch(`${THIRDWEB_API_HOST}/v1/account/createTicket`, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
+    const markdown = `# Email: ${email}
+# Address: ${user.address}
+# Product: ${input.product}
+${extraInfo}
+# Message:
+${input.markdown}
+`;
+    const content = {
+      type: "email",
+      title,
+      markdown,
+      status: "open",
+      onBehalfOf: {
+        email,
+        name,
       },
-      body: JSON.stringify(input),
-    });
+      customerId,
+      emailInboxId: process.env.NEXT_PUBLIC_UNTHREAD_EMAIL_INBOX_ID,
+      triageChannelId: process.env.NEXT_PUBLIC_UNTHREAD_TRIAGE_CHANNEL_ID,
+    };
+    formData.append("json", JSON.stringify(content));
 
+    const res = await fetch(
+      `${THIRDWEB_API_HOST}/v1/account/create-unthread-ticket`,
+      {
+        method: "POST",
+        credentials: "include",
+        body: formData,
+      },
+    );
     const json = await res.json();
-
     if (json.error) {
       throw new Error(json.error.message);
     }
-
     return json.data;
   });
 }
