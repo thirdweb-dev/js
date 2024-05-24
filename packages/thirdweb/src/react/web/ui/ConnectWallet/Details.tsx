@@ -17,6 +17,7 @@ import { getContract } from "../../../../contract/contract.js";
 import { resolveAvatar } from "../../../../extensions/ens/resolve-avatar.js";
 import { resolveName } from "../../../../extensions/ens/resolve-name.js";
 import { isContractDeployed } from "../../../../utils/bytecode/is-contract-deployed.js";
+import { isInAppWallet } from "../../../../wallets/in-app/core/wallet/index.js";
 import { injectedProvider } from "../../../../wallets/injected/mipdStore.js";
 import {
   useChainQuery,
@@ -69,6 +70,7 @@ import { WalletIcon } from "./icons/WalletIcon.js";
 import { genericTokenIcon } from "./icons/dataUris.js";
 import { LazyBuyScreen } from "./screens/Buy/LazyBuyScreen.js";
 import { BuyTxHistory } from "./screens/Buy/tx-history/BuyTxHistory.js";
+import { PrivateKey } from "./screens/PrivateKey.js";
 import { ReceiveFunds } from "./screens/ReceiveFunds.js";
 import { SendFunds } from "./screens/SendFunds.js";
 import { ViewFunds } from "./screens/ViewFunds.js";
@@ -85,7 +87,8 @@ type WalletDetailsModalScreen =
   | "buy"
   | "network-switcher"
   | "pending-tx"
-  | "view-funds";
+  | "view-funds"
+  | "private-key";
 
 /**
  * @internal
@@ -458,7 +461,6 @@ export const ConnectedWalletDetails: React.FC<{
       </Container>
       <Spacer y="md" />
       <Container px="md">
-        {/* Network Switcher */}
         <Container
           flex="column"
           style={{
@@ -498,6 +500,22 @@ export const ConnectedWalletDetails: React.FC<{
             />
             <Text color="primaryText">View Funds</Text>
           </MenuButton>
+
+          {activeWallet &&
+            isInAppWallet(activeWallet) &&
+            activeWallet.getConfig()?.showPrivateKeyExport && (
+              <MenuButton
+                onClick={() => {
+                  setScreen("private-key");
+                }}
+                style={{
+                  fontSize: fontSize.sm,
+                }}
+              >
+                {/* TODO: Add icon here */}
+                <Text color="primaryText">Export Wallet</Text>
+              </MenuButton>
+            )}
 
           {/* Switch to Personal Wallet  */}
           {/* {personalWallet &&
@@ -561,7 +579,6 @@ export const ConnectedWalletDetails: React.FC<{
 
         <Spacer y="md" />
       </Container>
-
       {props.detailsModal?.hideDisconnect !== true && (
         <Container>
           <Line />
@@ -584,7 +601,6 @@ export const ConnectedWalletDetails: React.FC<{
           <Spacer y="sm" />
         </Container>
       )}
-
       {/* {activeWallet?.id === "local" && (
         <>
           <Line />
@@ -648,12 +664,19 @@ export const ConnectedWalletDetails: React.FC<{
   //     />
   //   );
   // }
-
-  // send funds
   else if (screen === "view-funds") {
     content = (
       <ViewFunds
         supportedTokens={props.supportedTokens}
+        onBack={() => {
+          setScreen("main");
+        }}
+        client={client}
+      />
+    );
+  } else if (screen === "private-key") {
+    content = (
+      <PrivateKey
         onBack={() => {
           setScreen("main");
         }}
