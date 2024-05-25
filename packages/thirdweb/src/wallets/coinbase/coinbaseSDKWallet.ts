@@ -27,6 +27,7 @@ import {
   stringToHex,
   uint8ArrayToHex,
 } from "../../utils/encoding/hex.js";
+import { parseTypedData } from "../../utils/signatures/helpers/parseTypedData.js";
 import { COINBASE } from "../constants.js";
 import type {
   GetCallsStatusResponse,
@@ -300,10 +301,11 @@ function onConnect(
         params: [messageToSign, account.address],
       });
     },
-    async signTypedData(typedData) {
+    async signTypedData(_typedData) {
       if (!account.address) {
         throw new Error("Provider not setup");
       }
+      const typedData = parseTypedData(_typedData);
       const { domain, message, primaryType } =
         typedData as unknown as SignTypedDataParameters;
 

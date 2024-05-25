@@ -11,6 +11,7 @@ import type { WaitForReceiptOptions } from "../../transaction/actions/wait-for-t
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
 import type { TransactionReceipt } from "../../transaction/types.js";
 import type { Hex } from "../../utils/encoding/hex.js";
+import { parseTypedData } from "../../utils/signatures/helpers/parseTypedData.js";
 import type {
   Account,
   SendTransactionOption,
@@ -238,6 +239,7 @@ async function createSmartAccount(
       const typedData extends TypedData | Record<string, unknown>,
       primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,
     >(_typedData: TypedDataDefinition<typedData, primaryType>) {
+      const typedData = parseTypedData(_typedData);
       const [
         { isContractDeployed },
         { readContract },
@@ -253,13 +255,13 @@ async function createSmartAccount(
       ]);
       const isSelfVerifyingContract =
         (
-          _typedData.domain as TypedDataDomain
+          typedData.domain as TypedDataDomain
         )?.verifyingContract?.toLowerCase() ===
         accountContract.address?.toLowerCase();
 
       if (isSelfVerifyingContract) {
         // if the contract is self-verifying, we can just sign the message with the EOA (ie. adding a session key)
-        return options.personalAccount.signTypedData(_typedData);
+        return options.personalAccount.signTypedData(typedData);
       }
 
       const isDeployed = await isContractDeployed(accountContract);
@@ -274,7 +276,7 @@ async function createSmartAccount(
         });
       }
 
-      const originalMsgHash = hashTypedData(_typedData);
+      const originalMsgHash = hashTypedData(typedData);
       // check if the account contract supports EIP721 domain separator based signing
       let factorySupports712 = false;
       try {
@@ -308,12 +310,12 @@ async function createSmartAccount(
           message: { message: wrappedMessageHash },
         });
       } else {
-        sig = await options.personalAccount.signTypedData(_typedData);
+        sig = await options.personalAccount.signTypedData(typedData);
       }
 
       const isValid = await checkContractWalletSignedTypedData({
         contract: accountContract,
-        data: _typedData,
+        data: typedData,
         signature: sig,
       });
 

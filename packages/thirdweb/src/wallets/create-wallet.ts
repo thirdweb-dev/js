@@ -216,13 +216,12 @@ export function createWallet<const ID extends WalletId>(
             });
           }
 
-          // prefer walletconnect over injected for connect (more explicit)
-          if (options && "walletConnect" in options) {
-            return wcConnect(options);
-          }
+          // prefer walletconnect over injected if explicitely passing walletConnect options
+          const forceWalletConnectOption =
+            options && "walletConnect" in options;
 
           const { injectedProvider } = await import("./injected/mipdStore.js");
-          if (injectedProvider(id)) {
+          if (injectedProvider(id) && !forceWalletConnectOption) {
             const { connectInjectedWallet } = await import(
               "./injected/index.js"
             );
@@ -249,6 +248,10 @@ export function createWallet<const ID extends WalletId>(
             });
             // return account
             return account;
+          }
+
+          if (options && "client" in options) {
+            return wcConnect(options);
           }
           throw new Error("Failed to connect");
         },

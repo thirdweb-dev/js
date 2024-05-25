@@ -1,5 +1,19 @@
 # thirdweb
 
+## 0.14.0
+
+### Minor Changes
+
+- [#3118](https://github.com/thirdweb-dev/js/pull/3118) [`546d2db`](https://github.com/thirdweb-dev/js/commit/546d2db93ea61f9fbae1e0f3383781d7d766ad25) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds React Native to the thirdweb create CLI
+
+### Patch Changes
+
+- Updated dependencies [[`4abd559`](https://github.com/thirdweb-dev/js/commit/4abd5591068bfa9217ec65e5830fba0cd14d11b9), [`642e7e9`](https://github.com/thirdweb-dev/js/commit/642e7e9f100dce2714e5eecd72cdc48aa9670004), [`32df45f`](https://github.com/thirdweb-dev/js/commit/32df45f9b07fa07e6f3ad218af095d721cacc76a)]:
+  - @thirdweb-dev/wallets@2.5.27
+  - @thirdweb-dev/chains@0.1.113
+  - @thirdweb-dev/sdk@4.0.87
+  - @thirdweb-dev/auth@4.1.85
+
 ## 0.13.92
 
 ### Patch Changes
