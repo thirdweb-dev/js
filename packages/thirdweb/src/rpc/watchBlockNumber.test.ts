@@ -1,5 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { ANVIL_CHAIN } from "../../test/src/chains.js";
 import { TEST_CLIENT } from "../../test/src/test-clients.js";
+import { mineBlock } from "../../test/src/utils.js";
 import { baseSepolia } from "../chains/chain-definitions/base-sepolia.js";
 import { wait } from "../utils/promise/wait.js";
 import { watchBlockNumber } from "./watchBlockNumber.js";
@@ -30,14 +32,13 @@ describe.runIf(process.env.TW_SECRET_KEY)("watch block number", () => {
   it("should call the onNewBlockNumber callback", async () => {
     const unwatch = watchBlockNumber({
       client: TEST_CLIENT,
-      chain: baseSepolia,
+      chain: ANVIL_CHAIN,
       onNewBlockNumber,
     });
 
     expect(onNewBlockNumber).toHaveBeenCalledTimes(0);
 
-    // wait for 10 seconds which should always be sufficient for a new block to be mined
-    await wait(10000);
+    await mineBlock(ANVIL_CHAIN);
 
     expect(onNewBlockNumber).toHaveBeenCalled();
 
@@ -47,25 +48,24 @@ describe.runIf(process.env.TW_SECRET_KEY)("watch block number", () => {
   it("should re-use the same watcher for multiple calls", async () => {
     const unwatch = watchBlockNumber({
       client: TEST_CLIENT,
-      chain: baseSepolia,
+      chain: ANVIL_CHAIN,
       onNewBlockNumber,
     });
     const unwatch2 = watchBlockNumber({
       client: TEST_CLIENT,
-      chain: baseSepolia,
+      chain: ANVIL_CHAIN,
       onNewBlockNumber: onNewBlockNumber2,
     });
 
     expect(onNewBlockNumber).toHaveBeenCalledTimes(0);
     expect(onNewBlockNumber2).toHaveBeenCalledTimes(0);
 
-    // wait for 10 seconds which should always be sufficient for a new block to be mined
-    await wait(10000);
+    await mineBlock(ANVIL_CHAIN);
 
     expect(onNewBlockNumber).toHaveBeenCalled();
     expect(onNewBlockNumber2).toHaveBeenCalled();
 
-    // TODO: ensure that unwatch and unwatch2 are acting ont he same poller
+    // TODO: ensure that unwatch and unwatch2 are acting on the same poller
 
     unwatch();
     unwatch2();
@@ -74,14 +74,13 @@ describe.runIf(process.env.TW_SECRET_KEY)("watch block number", () => {
   it("should stop polling when unsubscribed", async () => {
     const unwatch = watchBlockNumber({
       client: TEST_CLIENT,
-      chain: baseSepolia,
+      chain: ANVIL_CHAIN,
       onNewBlockNumber,
     });
 
     expect(onNewBlockNumber).toHaveBeenCalledTimes(0);
 
-    // wait for 10 seconds which should always be sufficient for a new block to be mined
-    await wait(10000);
+    await mineBlock(ANVIL_CHAIN);
 
     expect(onNewBlockNumber).toHaveBeenCalled();
 
@@ -89,8 +88,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("watch block number", () => {
 
     unwatch();
 
-    // wait for 10 seconds which should always be sufficient for a new block to be mined
-    await wait(10000);
+    await mineBlock(ANVIL_CHAIN);
 
     expect(onNewBlockNumber).toHaveBeenCalledTimes(0);
   });
@@ -98,14 +96,13 @@ describe.runIf(process.env.TW_SECRET_KEY)("watch block number", () => {
   it("should re-start from a fresh block when fully unsubscribed and re-subscribed", async () => {
     const unwatch = watchBlockNumber({
       client: TEST_CLIENT,
-      chain: baseSepolia,
+      chain: ANVIL_CHAIN,
       onNewBlockNumber,
     });
 
     expect(onNewBlockNumber).toHaveBeenCalledTimes(0);
 
-    // wait for 10 seconds which should always be sufficient for a new block to be mined
-    await wait(10000);
+    await mineBlock(ANVIL_CHAIN);
 
     expect(onNewBlockNumber).toHaveBeenCalled();
 
@@ -115,8 +112,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("watch block number", () => {
 
     unwatch();
 
-    // wait for 10 seconds which should always be sufficient for a new block to be mined
-    await wait(10000);
+    await mineBlock(ANVIL_CHAIN);
 
     expect(onNewBlockNumber).toHaveBeenCalledTimes(0);
 
@@ -126,8 +122,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("watch block number", () => {
       onNewBlockNumber,
     });
 
-    // wait for 10 seconds which should always be sufficient for a new block to be mined
-    await wait(10000);
+    await mineBlock(ANVIL_CHAIN);
 
     expect(onNewBlockNumber).toHaveBeenCalled();
 
@@ -142,14 +137,13 @@ describe.runIf(process.env.TW_SECRET_KEY)("watch block number", () => {
   it("should re-start from latestBlockNumber if provided", async () => {
     const unwatch = watchBlockNumber({
       client: TEST_CLIENT,
-      chain: baseSepolia,
+      chain: ANVIL_CHAIN,
       onNewBlockNumber,
     });
 
     expect(onNewBlockNumber).toHaveBeenCalledTimes(0);
 
-    // wait for 10 seconds which should always be sufficient for a new block to be mined
-    await wait(10000);
+    await mineBlock(ANVIL_CHAIN);
 
     expect(onNewBlockNumber).toHaveBeenCalled();
 
@@ -159,8 +153,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("watch block number", () => {
 
     unwatch();
 
-    // wait for 10 seconds which should always be sufficient for a new block to be mined
-    await wait(10000);
+    await mineBlock(ANVIL_CHAIN);
 
     expect(onNewBlockNumber).toHaveBeenCalledTimes(0);
 
@@ -171,8 +164,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("watch block number", () => {
       latestBlockNumber: lastBlockNumber,
     });
 
-    // wait for 10 seconds which should always be sufficient for a new block to be mined
-    await wait(10000);
+    await mineBlock(ANVIL_CHAIN);
 
     expect(onNewBlockNumber).toHaveBeenCalled();
 
@@ -191,7 +183,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("watch block number", () => {
       latestBlockNumber: 9342233n,
     });
 
-    await wait(500); // wait long enough to have called callback
+    await wait(500);
 
     expect(onNewBlockNumber.mock.calls[0]?.[0]).toEqual(9342234n);
 

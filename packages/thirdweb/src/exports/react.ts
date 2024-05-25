@@ -53,6 +53,7 @@ export {
   useSetActiveWalletConnectionStatus,
   useIsAutoConnecting,
 } from "../react/core/hooks/wallets/wallet-hooks.js";
+export { useWalletBalance } from "../react/core/hooks/others/useWalletBalance.js";
 
 export type { ConnectManagerOptions } from "../wallets/manager/index.js";
 
@@ -111,7 +112,8 @@ export {
 export {
   AutoConnect,
   type AutoConnectProps,
-} from "../react/core/hooks/connection/useAutoConnect.js";
+} from "../react/core/hooks/connection/AutoConnect.js";
+export { useAutoConnect } from "../react/core/hooks/connection/useAutoConnect.js";
 
 // auth
 export { type SiweAuthOptions } from "../react/core/hooks/auth/useSiweAuth.js";
@@ -122,3 +124,8 @@ export {
   type PayEmbedConnectOptions,
 } from "../react/web/ui/PayEmbed.js";
 export type { PayUIOptions } from "../react/web/ui/ConnectWallet/ConnectButtonProps.js";
+
+export {
+  useConnectModal,
+  type UseConnectModalOptions,
+} from "../react/web/ui/ConnectWallet/useConnectModal.js";

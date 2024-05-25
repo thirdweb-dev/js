@@ -1,0 +1,5 @@
+[
+  "event BatchMetadataUpdate(uint256 _fromTokenId, uint256 _toTokenId)",
+  "function getBaseURICount() public view returns (uint256)",
+  "function getBatchIdAtIndex(uint256 _index) public view returns (uint256)"
+]

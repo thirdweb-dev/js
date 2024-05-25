@@ -1,5 +1,6 @@
 [
   "event TokenURIRevealed(uint256 indexed index, string revealedURI)",
+  "function encryptedData(uint256 index) view returns (bytes)",
   "function encryptDecrypt(bytes data, bytes key) pure returns (bytes result)",
   "function reveal(uint256 identifier, bytes key) returns (string revealedURI)"
 ]

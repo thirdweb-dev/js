@@ -26,6 +26,7 @@ import { normalizeChainId } from "../utils/normalizeChainId.js";
 import type { InjectedConnectOptions, WalletId } from "../wallet-types.js";
 import { injectedProvider } from "./mipdStore.js";
 
+import { parseTypedData } from "../../utils/signatures/helpers/parseTypedData.js";
 import type { InjectedSupportedWalletIds } from "../__generated__/wallet-ids.js";
 import type { DisconnectFn, SwitchChainFn } from "../types.js";
 import type { WalletEmitter } from "../wallet-emitter.js";
@@ -179,12 +180,14 @@ async function onConnect(
       if (!provider || !account.address) {
         throw new Error("Provider not setup");
       }
+      const parsedTypedData = parseTypedData(typedData);
+
       const { domain, message, primaryType } =
-        typedData as unknown as SignTypedDataParameters;
+        parsedTypedData as unknown as SignTypedDataParameters;
 
       const types = {
         EIP712Domain: getTypesForEIP712Domain({ domain }),
-        ...typedData.types,
+        ...parsedTypedData.types,
       };
 
       // Need to do a runtime validation check on addresses, byte ranges, integer ranges, etc

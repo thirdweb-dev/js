@@ -23,7 +23,7 @@ export const wallet = {
   rdns: null,
   mobile: {
     native: "pockie://",
-    universal: "https://www.poickie.io/open",
+    universal: "https://pockie.app.link",
   },
   desktop: {
     native: null,

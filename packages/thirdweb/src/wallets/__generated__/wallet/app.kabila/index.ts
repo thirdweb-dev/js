@@ -27,7 +27,7 @@ export const wallet = {
     universal: "https://wallet.kabila.app",
   },
   desktop: {
-    native: "chrome-extension://cnoepnljjcacmnjnopbhjelpmfokpijm/index.html",
+    native: "wallet.kabila.app://",
     universal: "https://wallet.kabila.app",
   },
 } as const;

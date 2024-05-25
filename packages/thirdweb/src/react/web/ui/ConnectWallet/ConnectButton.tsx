@@ -3,7 +3,7 @@
 import styled from "@emotion/styled";
 import { useEffect, useMemo, useState } from "react";
 import { useSiweAuth } from "../../../core/hooks/auth/useSiweAuth.js";
-import { AutoConnect } from "../../../core/hooks/connection/useAutoConnect.js";
+import { AutoConnect } from "../../../core/hooks/connection/AutoConnect.js";
 import {
   useActiveAccount,
   useActiveWalletConnectionStatus,
@@ -34,7 +34,7 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
 
 /**
  * A component that allows the user to connect their wallet.
- * It renders a button which when clicked opens a modal to allow users to connect to wallets specified in the `ThirdwebProvider`'s `wallets` prop.
+ * It renders a button which when clicked opens a modal to allow users to connect to wallets specified in `wallets` prop.
  * @example
  * ```tsx
  * <ConnectButton
@@ -120,9 +120,9 @@ export function ConnectButton(props: ConnectButtonProps) {
         auth: props.auth,
       }}
     >
-      <WalletUIStatesProvider theme={props.theme}>
+      <WalletUIStatesProvider theme={props.theme} isOpen={false}>
         <ConnectButtonInner {...props} connectLocale={localeQuery.data} />
-        <ConnectModal />
+        <ConnectModal shouldSetActive={true} />
         {autoConnectComp}
       </WalletUIStatesProvider>
     </ConnectUIContext.Provider>

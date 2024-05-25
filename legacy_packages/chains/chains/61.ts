@@ -58,11 +58,8 @@ export default {
     "https://61.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://etc.rivet.link",
     "https://besu-at.etc-network.info",
-    "https://besu-de.etc-network.info",
     "https://geth-at.etc-network.info",
-    "https://geth-de.etc-network.info",
     "https://etc.etcdesktop.com",
-    "https://rpc.etcinscribe.com",
     "https://etc.mytokenpocket.vip"
   ],
   "shortName": "etc",

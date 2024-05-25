@@ -1,10 +1,11 @@
+import { isBrowser } from "../../utils/platform.js";
 import type { AppMetadata } from "../types.js";
 
 /**
  * @internal
  */
 export function getDefaultAppMetadata(): Required<AppMetadata> {
-  if (typeof window === "undefined") {
+  if (!isBrowser()) {
     return {
       name: "thirdweb powered dApp",
       url: "https://thirdweb.com",

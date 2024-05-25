@@ -3,7 +3,7 @@
 
 export const wallet = {
   id: "com.secuxtech",
-  name: "",
+  name: "SecuX",
   homepage: "https://secuxtech.com/",
   image_id: "98183be0-3125-45ee-a6b6-fbd47ebefd00",
   app: {

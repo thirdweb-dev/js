@@ -16,6 +16,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://bafkreidchntjaxmq52cuqqoalpajk5ssk4p77k7n4jgywqmkpldo5qgobm",
+    "width": 1200,
+    "height": 1200,
+    "format": "png"
+  },
   "infoURL": "https://docs.toruschain.com",
   "name": "Torus Testnet",
   "nativeCurrency": {

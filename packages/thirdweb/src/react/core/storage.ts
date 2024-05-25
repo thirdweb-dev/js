@@ -1,3 +1,4 @@
+import { isReactNative } from "../../utils/platform.js";
 import type { AsyncStorage } from "../../wallets/storage/AsyncStorage.js";
 import { asyncLocalStorage } from "../../wallets/storage/asyncLocalStorage.js";
 
@@ -14,6 +15,12 @@ let storage: AsyncStorage;
 export function getStorage(): AsyncStorage {
   if (storage) {
     return storage;
+  }
+  if (isReactNative()) {
+    const {
+      nativeLocalStorage,
+    } = require("../../wallets/storage/nativeStorage.js");
+    return nativeLocalStorage;
   }
   // default to localStorage
   return asyncLocalStorage;

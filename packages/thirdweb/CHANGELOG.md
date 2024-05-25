@@ -1,5 +1,159 @@
 # thirdweb
 
+## 5.24.0
+
+### Minor Changes
+
+- [#2943](https://github.com/thirdweb-dev/js/pull/2943) [`2774d1f`](https://github.com/thirdweb-dev/js/commit/2774d1fa7383a5a1150991c5c44019e64f276eea) Thanks [@MananTank](https://github.com/MananTank)! - Added `useConnectModal` hook.
+
+  Add `useConnectModal` hook that allows you to open the Connect UI in a Modal to prompt the user to connect wallet.
+
+  ```tsx
+  import { createThirdwebClient } from "thirdweb";
+  import { useConnectModal } from "thirdweb/react";
+
+  const client = createThirdwebClient({
+    clientId: "<your_client_id>",
+  });
+
+  function Example() {
+    const { connect, isConnecting } = useConnectModal();
+
+    async function handleConnect() {
+      const wallet = await connect({ client }); // opens the connect modal
+      console.log("connected to", wallet);
+    }
+
+    return <button onClick={handleConnect}> Connect </button>;
+  }
+  ```
+
+- [#3127](https://github.com/thirdweb-dev/js/pull/3127) [`5031e44`](https://github.com/thirdweb-dev/js/commit/5031e44d92d959bbdd43a90122eaf33fb9598ea0) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds contract extensions for delayed reveal NFTs
+
+- [#3118](https://github.com/thirdweb-dev/js/pull/3118) [`546d2db`](https://github.com/thirdweb-dev/js/commit/546d2db93ea61f9fbae1e0f3383781d7d766ad25) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds React Native to the thirdweb create CLI
+
+- [#3126](https://github.com/thirdweb-dev/js/pull/3126) [`764bce2`](https://github.com/thirdweb-dev/js/commit/764bce2ba93b6e24fc81e9b804b765396b873363) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - WalletConnect in React Native + useAutoConnect hook
+
+  ## Support WalletConnect compatible wallets in React Native
+
+  You can now connect any of the 300+ WalletConnect compatible mobile wallets from react native.
+
+  ```ts
+  import { useConnect } from "thirdweb/react";
+  import { createWallet } from "thirdweb/wallets";
+
+  const { connect, isConnecting } = useConnect();
+
+  const connectMetamask = async () => {
+    await connect(async () => {
+      const wallet = createWallet("io.metamask");
+      await wallet.connect({
+        client,
+        chain,
+      });
+      return wallet;
+    });
+  };
+  ```
+
+  ## Exposed `useAutoConnect` hook
+
+  You can now use a hook to trigger autoconnecting to the last connected wallet
+
+  ```ts
+  import { useAutoConnect } from "thirdweb/react";
+
+  const { data: autoConnected, isLoading } = useAutoConnect({
+    client,
+    accountAbstraction,
+    wallets,
+    onConnect,
+    timeout,
+  });
+  ```
+
+- [#3125](https://github.com/thirdweb-dev/js/pull/3125) [`c3a92bf`](https://github.com/thirdweb-dev/js/commit/c3a92bfe90adf9a9d16707d9be04ad23ad2b0199) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Added `useWalletBalance()` hook
+
+  Adds the `useWalletBalance` hook. The hook will default to the native token balance if no `tokenAddress` is provided.
+
+  ### Usage
+
+  ```ts
+  import { useWalletBalance } from "thirdweb/react";
+
+  const { data, isLoading, isError } = useWalletBalance({
+    chain: walletChain,
+    tokenAddress: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+    address: activeAccount?.address,
+    client,
+  });
+  ```
+
+### Patch Changes
+
+- [#3143](https://github.com/thirdweb-dev/js/pull/3143) [`b72daa4`](https://github.com/thirdweb-dev/js/commit/b72daa4f45eab927a94b8e3ed5ae74a66ba9e32b) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose useWalletBalance in react native
+
+- [#3136](https://github.com/thirdweb-dev/js/pull/3136) [`8b3e1e2`](https://github.com/thirdweb-dev/js/commit/8b3e1e2682954370e37fe316c89c4f28bb32b476) Thanks [@MananTank](https://github.com/MananTank)! - Prefer native wallet app link in android as well for WalletConnect session
+
+- [#3139](https://github.com/thirdweb-dev/js/pull/3139) [`4eda306`](https://github.com/thirdweb-dev/js/commit/4eda306645df107280fed11847a7a333fafaa05e) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Converts chainId hex to number for proper signTypedData type
+
+- [#3104](https://github.com/thirdweb-dev/js/pull/3104) [`d021f4e`](https://github.com/thirdweb-dev/js/commit/d021f4e5efc8432a3e4cee8c681f2622056da9a8) Thanks [@MananTank](https://github.com/MananTank)! - Fix WalletConnect connection and show Retry option on connection failure/rejection
+
+## 5.23.0
+
+### Minor Changes
+
+- [#3103](https://github.com/thirdweb-dev/js/pull/3103) [`a2275c4`](https://github.com/thirdweb-dev/js/commit/a2275c409c4a7f8f595bd1ee7250fee46d54f1e7) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds `unstyled` prop to `TransactionButton` to remove default styles
+
+  ```tsx
+  <TransactionButton
+    transaction={() => {}}
+    onSuccess={handleSuccess}
+    onError={handleError}
+    unstyled
+    className="bg-white text-black rounded-md p-4 flex items-center justify-center"
+  >
+    Confirm Transaction
+  </TransactionButton>
+  ```
+
+- [#3083](https://github.com/thirdweb-dev/js/pull/3083) [`5994685`](https://github.com/thirdweb-dev/js/commit/599468559d2c63b337f770fb492d386cdd90e7ae) Thanks [@MananTank](https://github.com/MananTank)! - Add support for deep-linking to Metamask app instead of using WalletConnect on mobile devices when using Connect UI (`ConnectButton` / `ConnectEmbed`) components.
+
+  ```ts
+  <ConnectButton
+    client={client}
+    wallets={[
+      createWallet("io.metamask", {
+        preferDeepLink: true,
+      }),
+    ]}
+  />
+  ```
+
+- [#3064](https://github.com/thirdweb-dev/js/pull/3064) [`f55fa4c`](https://github.com/thirdweb-dev/js/commit/f55fa4ca856924a0a1eb6b8e5fe743d76b6e2760) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - In-app wallet support for react native
+
+### Patch Changes
+
+- [#3085](https://github.com/thirdweb-dev/js/pull/3085) [`a22eb5c`](https://github.com/thirdweb-dev/js/commit/a22eb5c4bff839aa5137b0a743d75afc929b49f1) Thanks [@MananTank](https://github.com/MananTank)! - Fix `onConnect` prop called twice when connecting inApp wallet using Social login
+
+- [#3071](https://github.com/thirdweb-dev/js/pull/3071) [`da63eab`](https://github.com/thirdweb-dev/js/commit/da63eab29a53ff04cbe1dc175c6a6b6066a1ee9d) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fully clear in-app wallet user data when disconnecting
+
+- [#3063](https://github.com/thirdweb-dev/js/pull/3063) [`f49f8ca`](https://github.com/thirdweb-dev/js/commit/f49f8cacb4f69dc46551b023c22bda71712df04a) Thanks [@jnsdls](https://github.com/jnsdls)! - ethers6 adapter: allow optional account to be passed to `contract.toEthers` that will automatically hook up the contract with a signer instead of provider
+
+- [#3079](https://github.com/thirdweb-dev/js/pull/3079) [`f8e0a50`](https://github.com/thirdweb-dev/js/commit/f8e0a50136a600b93c05802322f208c133a9c81e) Thanks [@MananTank](https://github.com/MananTank)! - Fix PayEmbed not passing theme to ConnectButton
+
+- [#3107](https://github.com/thirdweb-dev/js/pull/3107) [`57f7cd5`](https://github.com/thirdweb-dev/js/commit/57f7cd5a661ac3b0611782f17e96a3e30a3485ae) Thanks [@MananTank](https://github.com/MananTank)! - - Fix spacing issues in UI components
+
+  - Revert color changes in UI components
+
+- [#3067](https://github.com/thirdweb-dev/js/pull/3067) [`b46173f`](https://github.com/thirdweb-dev/js/commit/b46173f982dd3b31795739b9a834046ed3599dba) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix TransactionButton styles when overriding with custom styles
+
+- [#3080](https://github.com/thirdweb-dev/js/pull/3080) [`7abbe03`](https://github.com/thirdweb-dev/js/commit/7abbe03a11fc38a02a64329de201636d8e1c5b44) Thanks [@MananTank](https://github.com/MananTank)! - Improved OTP input using input-otp library
+
+- [#3110](https://github.com/thirdweb-dev/js/pull/3110) [`49aa6e4`](https://github.com/thirdweb-dev/js/commit/49aa6e41d5df93204821b72f17f1ba5c3cfe41f7) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Phone number sign in for React Native
+
+- [#3082](https://github.com/thirdweb-dev/js/pull/3082) [`9c9969e`](https://github.com/thirdweb-dev/js/commit/9c9969e41abb86f819bad55f5bb3dd36447e41e4) Thanks [@MananTank](https://github.com/MananTank)! - Add switch account button in `ConnectButton` details button for MetaMask injected provider
+
 ## 5.22.1
 
 ### Patch Changes
