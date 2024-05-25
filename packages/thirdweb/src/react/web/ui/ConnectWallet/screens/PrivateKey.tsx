@@ -55,7 +55,7 @@ export function PrivateKey(props: {
                 height: "250px",
               }}
               allow="clipboard-read; clipboard-write"
-              src={`${
+              src={`https://${
                 getThirdwebDomains().inAppWallet
               }/sdk/2022-08-12/embedded-wallet/export-private-key?clientId=${
                 props.client.clientId

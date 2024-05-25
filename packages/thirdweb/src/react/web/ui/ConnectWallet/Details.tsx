@@ -65,6 +65,7 @@ import { NetworkSelectorContent } from "./NetworkSelector.js";
 import { onModalUnmount } from "./constants.js";
 import type { SupportedTokens } from "./defaultTokens.js";
 import { FundsIcon } from "./icons/FundsIcon.js";
+import { KeyIcon } from "./icons/KeyIcon.js";
 import { SmartWalletBadgeIcon } from "./icons/SmartAccountBadgeIcon.js";
 import { WalletIcon } from "./icons/WalletIcon.js";
 import { genericTokenIcon } from "./icons/dataUris.js";
@@ -512,8 +513,8 @@ export const ConnectedWalletDetails: React.FC<{
                   fontSize: fontSize.sm,
                 }}
               >
-                {/* TODO: Add icon here */}
-                <Text color="primaryText">Export Wallet</Text>
+                <KeyIcon size={iconSize.md} />
+                <Text color="primaryText">Export Private Key</Text>
               </MenuButton>
             )}
 
