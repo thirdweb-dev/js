@@ -1,17 +1,18 @@
 import { type Account as ViemAccount, zeroAddress } from "viem";
 import { privateKeyToAccount as viemPrivateKeyToAccount } from "viem/accounts";
 import { beforeAll, describe, expect, test } from "vitest";
-import { ANVIL_PKEY_A } from "~test/test-wallets.js";
-import { typedData } from "~test/typed-data.js";
-import { ANVIL_CHAIN, FORKED_ETHEREUM_CHAIN } from "../../test/src/chains.js";
-import { TEST_CLIENT } from "../../test/src/test-clients.js";
-import { privateKeyToAccount } from "../wallets/private-key.js";
-import { toViemContract, viemAdapter } from "./viem.js";
+import { USDT_ABI } from "~test/abis/usdt.js";
 import {
   USDT_CONTRACT_ADDRESS,
   USDT_CONTRACT_WITH_ABI,
 } from "~test/test-contracts.js";
-import { USDT_ABI } from "~test/abis/usdt.js";
+import { ANVIL_PKEY_A } from "~test/test-wallets.js";
+import { typedData } from "~test/typed-data.js";
+
+import { ANVIL_CHAIN, FORKED_ETHEREUM_CHAIN } from "../../test/src/chains.js";
+import { TEST_CLIENT } from "../../test/src/test-clients.js";
+import { privateKeyToAccount } from "../wallets/private-key.js";
+import { toViemContract, viemAdapter } from "./viem.js";
 
 const account = privateKeyToAccount({
   privateKey: ANVIL_PKEY_A,

@@ -12,5 +12,4 @@ describe("ipfs helper functions", () => {
     const url = "http://some-gateway/Qm...";
     expect(replaceGatewayUrlWithScheme(url)).toBe(url);
   });
-
 });

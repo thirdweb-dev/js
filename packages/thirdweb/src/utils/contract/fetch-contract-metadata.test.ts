@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
+import { TEST_CLIENT } from "~test/test-clients.js";
 import {
   type FetchContractMetadata,
   fetchContractMetadata,
 } from "./fetchContractMetadata.js";
-import { TEST_CLIENT } from "~test/test-clients.js";
 
 describe("fetchContractMetadata", () => {
   it("should return a json object from a valid base64 encoded json", async () => {
