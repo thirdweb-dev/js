@@ -36,7 +36,7 @@
 | Type safe contract API                    | ✅       | ✅                 | ✅       |
 | Type safe wallet API                      | ✅       | ✅                 | ✅       |
 | EVM utils                                 | ✅       | ✅                 | ✅       |
-| RPC for any EVM                           | ✅       | ✅                 | ❌       |
+| RPC for any EVM                           | ✅       | ⚠️ public RPC only  | ❌       |
 | Automatic ABI Resolution                  | ✅       | ❌                 | ❌       |
 | IPFS Upload/Download                      | ✅       | ❌                 | ❌       |
 | Embedded wallet (email/ social login)     | ✅       | ⚠️ via 3rd party   | ❌       |
