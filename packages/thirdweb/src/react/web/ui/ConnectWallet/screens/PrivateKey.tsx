@@ -1,18 +1,21 @@
+"use client";
+import { useState } from "react";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { getThirdwebDomains } from "../../../../../utils/domains.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Spinner } from "../../components/Spinner.js";
 import { Container, Line, ModalHeader } from "../../components/basic.js";
-import { useCustomTheme } from "../../design-system/CustomThemeProvider.js";
+import type { Theme } from "../../design-system/index.js";
 
 /**
  * @internal
  */
 export function PrivateKey(props: {
   onBack: () => void;
+  theme: "light" | "dark" | Theme;
   client: ThirdwebClient;
 }) {
-  const theme = useCustomTheme();
+  const [isLoading, setLoading] = useState(true);
   return (
     <Container
       style={{
@@ -32,13 +35,17 @@ export function PrivateKey(props: {
       >
         <Spacer y="md" />
         <Container style={{ position: "relative", height: "250px" }}>
-          <Container
-            center="both"
-            flex="column"
-            style={{ position: "absolute", width: "100%", height: "100%" }}
-          >
-            <Spinner size="lg" color="primaryButtonBg" />
-          </Container>
+          {isLoading ? (
+            <Container
+              center="both"
+              flex="column"
+              style={{ position: "absolute", width: "100%", height: "100%" }}
+            >
+              <Spinner size="lg" color="primaryButtonBg" />
+            </Container>
+          ) : (
+            <></>
+          )}
 
           <Container
             style={{
@@ -53,13 +60,19 @@ export function PrivateKey(props: {
               style={{
                 width: "100%",
                 height: "250px",
+                visibility: isLoading ? "hidden" : "unset",
+              }}
+              onLoad={() => {
+                setLoading(false);
               }}
               allow="clipboard-read; clipboard-write"
               src={`https://${
                 getThirdwebDomains().inAppWallet
               }/sdk/2022-08-12/embedded-wallet/export-private-key?clientId=${
                 props.client.clientId
-              }&theme=${theme.type}`}
+              }&theme=${
+                typeof props.theme === "string" ? props.theme : props.theme.type
+              }`}
             />
           </Container>
         </Container>

@@ -653,22 +653,7 @@ export const ConnectedWalletDetails: React.FC<{
         client={client}
       />
     );
-  }
-
-  // export local wallet
-  // else if (screen === "export") {
-  //   content = (
-  //     <ExportLocalWallet
-  //       onExport={() => {
-  //         setIsOpen(false);
-  //       }}
-  //       onBack={() => {
-  //         setScreen("main");
-  //       }}
-  //     />
-  //   );
-  // }
-  else if (screen === "view-funds") {
+  } else if (screen === "view-funds") {
     content = (
       <ViewFunds
         supportedTokens={props.supportedTokens}
@@ -681,6 +666,7 @@ export const ConnectedWalletDetails: React.FC<{
   } else if (screen === "private-key") {
     content = (
       <PrivateKey
+        theme={props.theme} // do not use the useCustomTheme hook to get this, it's not valid here
         onBack={() => {
           setScreen("main");
         }}
