@@ -468,6 +468,7 @@ export const ConnectedWalletDetails: React.FC<{
             gap: "1px",
           }}
         >
+          {/* Network Switcher */}
           {networkSwitcherButton}
 
           {/* Transactions */}
@@ -485,6 +486,7 @@ export const ConnectedWalletDetails: React.FC<{
             </Container>
           </MenuButton>
 
+          {/* View Funds */}
           <MenuButton
             onClick={() => {
               setScreen("view-funds");
@@ -502,6 +504,7 @@ export const ConnectedWalletDetails: React.FC<{
             <Text color="primaryText">View Funds</Text>
           </MenuButton>
 
+          {/* Private Key Export (if enabled) */}
           {activeWallet &&
             isInAppWallet(activeWallet) &&
             activeWallet.getConfig()?.showPrivateKeyExport && (
