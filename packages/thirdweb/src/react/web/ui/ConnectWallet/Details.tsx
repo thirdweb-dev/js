@@ -507,7 +507,7 @@ export const ConnectedWalletDetails: React.FC<{
           {/* Private Key Export (if enabled) */}
           {activeWallet &&
             isInAppWallet(activeWallet) &&
-            activeWallet.getConfig()?.showPrivateKeyExport && (
+            !activeWallet.getConfig()?.hidePrivateKeyExport && (
               <MenuButton
                 onClick={() => {
                   setScreen("private-key");

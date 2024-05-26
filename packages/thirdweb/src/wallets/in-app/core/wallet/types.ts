@@ -41,7 +41,7 @@ export type InAppWalletCreationOptions =
         };
       };
       smartAccount?: SmartWalletOptions;
-      showPrivateKeyExport?: boolean;
+      hidePrivateKeyExport?: boolean;
     }
   | undefined;
 

@@ -440,11 +440,11 @@ export function smartWallet(
  *  },
  * });
  *
- * Show logged in users an option to export their private key within the Connect Modal
+ * Hide the ability to export the private key within the Connect Modal
  * ```ts
  * import { inAppWallet } from "thirdweb/wallets";
  * const wallet = inAppWallet({
- *  showPrivateKeyExport: true
+ *  hidePrivateKeyExport: true
  * });
  * ```
  * @wallet
