@@ -10,8 +10,14 @@ export type {
   PreparedSendCall,
   PrepareCallOptions,
 } from "../../wallets/eip5792/send-calls.js";
-export { getCallsStatus } from "../../wallets/eip5792/get-calls-status.js";
-export type { GetCallsStatusOptions } from "../../wallets/eip5792/get-calls-status.js";
+export {
+  type GetCallsStatusOptions,
+  getCallsStatus,
+} from "../../wallets/eip5792/get-calls-status.js";
+export {
+  waitForBundle,
+  type WaitForBundleOptions,
+} from "../../wallets/eip5792/wait-for-bundle.js";
 export type {
   WalletCapabilities,
   WalletCapabilitiesRecord,
