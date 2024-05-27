@@ -64,7 +64,7 @@ import { useActiveWallet } from "../wallets/wallet-hooks.js";
  * ```
  * Sponsor transactions with a paymaster:
  * ```ts
- * const { mutate: sendCalls, data: batchId } = useSendCalls();
+ * const { mutate: sendCalls, data: bundleId } = useSendCalls();
  * await sendCalls({
  *   client,
  *   calls: [sendTx1, sendTx2],
