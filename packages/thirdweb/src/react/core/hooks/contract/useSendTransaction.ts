@@ -98,8 +98,7 @@ export function useSendTransactionCore(
               return;
             }
 
-            //  buy supported, check if there is enouch balance - if not show modal to buy tokens
-
+            //  buy supported, check if there is enough balance - if not show modal to buy tokens
             const [walletBalance, totalCostWei] = await Promise.all([
               getWalletBalance({
                 address: account.address,
