@@ -1,3 +1,6 @@
+"use client";
+import { CheckIcon, CopyIcon } from "@radix-ui/react-icons";
+import { useState } from "react";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
 import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { AccentFailIcon } from "../../ui/ConnectWallet/icons/AccentFailIcon.js";
@@ -28,6 +31,8 @@ export const ScanScreen: React.FC<{
   onRetry: () => void;
 }> = (props) => {
   const { connectModal, client } = useConnectUI();
+  const [linkCopied, setLinkCopied] = useState(false);
+
   return (
     <Container fullHeight flex="column" animate="fadein">
       <Container p="lg">
@@ -66,6 +71,31 @@ export const ScanScreen: React.FC<{
             >
               {props.qrScanInstruction}
             </Text>
+
+            <Spacer y="lg" />
+
+            <Button
+              disabled={props.qrCodeUri === undefined}
+              variant="link"
+              style={{
+                opacity: props.qrCodeUri === undefined ? 0.5 : 1,
+                cursor: props.qrCodeUri === undefined ? "default" : "pointer",
+              }}
+              onClick={() => {
+                navigator.clipboard
+                  .writeText(props.qrCodeUri as string) // should always be string since the button is disabled otherwise
+                  .then(() => {
+                    setLinkCopied(true);
+                    setTimeout(() => setLinkCopied(false), 3000); // reset the check icon after 3 seconds
+                  })
+                  .catch((err) => {
+                    console.error("Failed to copy link to clipboard", err);
+                  });
+              }}
+            >
+              {linkCopied ? <CheckIcon /> : <CopyIcon />}
+              <span style={{ padding: "0 4px" }}>Copy Link</span>
+            </Button>
           </div>
         )}
 
