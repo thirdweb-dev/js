@@ -17,6 +17,7 @@ import { getContract } from "../../../../contract/contract.js";
 import { resolveAvatar } from "../../../../extensions/ens/resolve-avatar.js";
 import { resolveName } from "../../../../extensions/ens/resolve-name.js";
 import { isContractDeployed } from "../../../../utils/bytecode/is-contract-deployed.js";
+import { isInAppWallet } from "../../../../wallets/in-app/core/wallet/index.js";
 import { injectedProvider } from "../../../../wallets/injected/mipdStore.js";
 import {
   useChainQuery,
@@ -64,11 +65,13 @@ import { NetworkSelectorContent } from "./NetworkSelector.js";
 import { onModalUnmount } from "./constants.js";
 import type { SupportedTokens } from "./defaultTokens.js";
 import { FundsIcon } from "./icons/FundsIcon.js";
+import { KeyIcon } from "./icons/KeyIcon.js";
 import { SmartWalletBadgeIcon } from "./icons/SmartAccountBadgeIcon.js";
 import { WalletIcon } from "./icons/WalletIcon.js";
 import { genericTokenIcon } from "./icons/dataUris.js";
 import { LazyBuyScreen } from "./screens/Buy/LazyBuyScreen.js";
 import { BuyTxHistory } from "./screens/Buy/tx-history/BuyTxHistory.js";
+import { PrivateKey } from "./screens/PrivateKey.js";
 import { ReceiveFunds } from "./screens/ReceiveFunds.js";
 import { SendFunds } from "./screens/SendFunds.js";
 import { ViewFunds } from "./screens/ViewFunds.js";
@@ -85,7 +88,8 @@ type WalletDetailsModalScreen =
   | "buy"
   | "network-switcher"
   | "pending-tx"
-  | "view-funds";
+  | "view-funds"
+  | "private-key";
 
 /**
  * @internal
@@ -458,13 +462,13 @@ export const ConnectedWalletDetails: React.FC<{
       </Container>
       <Spacer y="md" />
       <Container px="md">
-        {/* Network Switcher */}
         <Container
           flex="column"
           style={{
             gap: "1px",
           }}
         >
+          {/* Network Switcher */}
           {networkSwitcherButton}
 
           {/* Transactions */}
@@ -482,6 +486,7 @@ export const ConnectedWalletDetails: React.FC<{
             </Container>
           </MenuButton>
 
+          {/* View Funds */}
           <MenuButton
             onClick={() => {
               setScreen("view-funds");
@@ -498,6 +503,23 @@ export const ConnectedWalletDetails: React.FC<{
             />
             <Text color="primaryText">View Funds</Text>
           </MenuButton>
+
+          {/* Private Key Export (if enabled) */}
+          {activeWallet &&
+            isInAppWallet(activeWallet) &&
+            !activeWallet.getConfig()?.hidePrivateKeyExport && (
+              <MenuButton
+                onClick={() => {
+                  setScreen("private-key");
+                }}
+                style={{
+                  fontSize: fontSize.sm,
+                }}
+              >
+                <KeyIcon size={iconSize.md} />
+                <Text color="primaryText">Export Private Key</Text>
+              </MenuButton>
+            )}
 
           {/* Switch to Personal Wallet  */}
           {/* {personalWallet &&
@@ -561,7 +583,6 @@ export const ConnectedWalletDetails: React.FC<{
 
         <Spacer y="md" />
       </Container>
-
       {props.detailsModal?.hideDisconnect !== true && (
         <Container>
           <Line />
@@ -584,7 +605,6 @@ export const ConnectedWalletDetails: React.FC<{
           <Spacer y="sm" />
         </Container>
       )}
-
       {/* {activeWallet?.id === "local" && (
         <>
           <Line />
@@ -633,27 +653,20 @@ export const ConnectedWalletDetails: React.FC<{
         client={client}
       />
     );
-  }
-
-  // export local wallet
-  // else if (screen === "export") {
-  //   content = (
-  //     <ExportLocalWallet
-  //       onExport={() => {
-  //         setIsOpen(false);
-  //       }}
-  //       onBack={() => {
-  //         setScreen("main");
-  //       }}
-  //     />
-  //   );
-  // }
-
-  // send funds
-  else if (screen === "view-funds") {
+  } else if (screen === "view-funds") {
     content = (
       <ViewFunds
         supportedTokens={props.supportedTokens}
+        onBack={() => {
+          setScreen("main");
+        }}
+        client={client}
+      />
+    );
+  } else if (screen === "private-key") {
+    content = (
+      <PrivateKey
+        theme={props.theme} // do not use the useCustomTheme hook to get this, it's not valid here
         onBack={() => {
           setScreen("main");
         }}
