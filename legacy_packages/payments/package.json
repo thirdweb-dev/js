@@ -38,7 +38,7 @@
   },
   "sideEffects": false,
   "dependencies": {
-    "ethers": "^5.7.2"
+    "ethers": "^6.12.1"
   },
   "devDependencies": {
     "eslint": "8.57.0",

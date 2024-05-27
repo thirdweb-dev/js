@@ -19,7 +19,7 @@
     "@thirdweb-dev/storage": "workspace:*",
     "@thirdweb-dev/wallets": "workspace:*",
     "detect-browser": "^5.3.0",
-    "ethers": "^5.7.2"
+    "ethers": "^6.12.1"
   },
   "devDependencies": {
     "@thirdweb-dev/tsconfig": "workspace:*",
