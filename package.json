@@ -44,7 +44,7 @@
     "@manypkg/cli": "0.21.3",
     "@manypkg/get-packages": "2.2.1",
     "@playwright/test": "1.31.2",
-    "@types/node": "20.12.7",
+    "@types/node": "20.12.12",
     "turbo": "1.13.3",
     "yalc": "1.0.0-pre.53"
   },
