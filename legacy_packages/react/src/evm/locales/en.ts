@@ -7,16 +7,16 @@ function extensionAndQRScanScreens(walletName: string) {
     connectionScreen: {
       inProgress: "Awaiting Confirmation",
       failed: "Connection failed",
-      instruction: `Accept the connection request in ${walletName} wallet`,
+      instruction: `Accept the connection request in ${walletName}`,
       retry: "Try Again",
     },
     getStartedScreen: {
-      instruction: `Scan the QR code to download ${walletName} app`,
+      instruction: `Scan the QR code to download the ${walletName} app`,
     },
     scanScreen: {
-      instruction: `Scan the QR code with ${walletName} wallet app to connect`,
+      instruction: `Scan the QR code with the ${walletName} wallet app to connect`,
     },
-    getStartedLink: `Don't have ${walletName} wallet?`,
+    getStartedLink: `Don't have a ${walletName} wallet?`,
   };
 }
 
