@@ -34,6 +34,8 @@ import { useActiveWallet } from "../wallets/wallet-hooks.js";
  * @beta
  * @example
  * ```tsx
+ * import { useSendCalls } from "thirdweb/react";
+ * 
  * const sendTx1 = approve({
       contract: USDT_CONTRACT,
       amount: 100,
