@@ -33,7 +33,7 @@
   },
   "sideEffects": false,
   "dependencies": {
-    "@coinbase/cbpay-js": "^1.10.0"
+    "@coinbase/cbpay-js": "^2.1.0"
   },
   "devDependencies": {
     "eslint": "8.57.0",

@@ -797,8 +797,8 @@ importers:
   legacy_packages/pay:
     dependencies:
       '@coinbase/cbpay-js':
-        specifier: ^1.10.0
-        version: 1.10.0
+        specifier: ^2.1.0
+        version: 2.1.0
     devDependencies:
       '@preconstruct/cli':
         specifier: 2.7.0
@@ -5784,8 +5784,8 @@ packages:
       - debug
     dev: true
 
-  /@coinbase/cbpay-js@1.10.0:
-    resolution: {integrity: sha512-jQ4rqJFNbsCMZ74ATucAUv2IpkbPFXsY+6AVBvFVNKmG4rEgc10Fa87pw/idm6Tlrs7EERQRXEs21DvJpMzi8A==}
+  /@coinbase/cbpay-js@2.1.0:
+    resolution: {integrity: sha512-J9kuMY7qiEM9fV6k6sBJ44S2fDjdXfX7SeDCDv7fWoni5QnP7Ca3k6pHE0TSBRCkzzC0x1zK6wgieG4RyDPeNw==}
     engines: {node: '>= 14'}
     peerDependencies:
       regenerator-runtime: ^0.13.9
@@ -18281,6 +18281,7 @@ packages:
 
   /glob@6.0.4:
     resolution: {integrity: sha512-MKZeRNyYZAVVVG1oZeLaWie1uweH40m9AZwIwxyPbTSX4hHrVYSzLg0Ro5Z5R7XKkIX+Cc6oD1rqeDJnwsB8/A==}
+    deprecated: Glob versions prior to v9 are no longer supported
     requiresBuild: true
     dependencies:
       inflight: 1.0.6
@@ -18292,6 +18293,7 @@ packages:
 
   /glob@7.1.6:
     resolution: {integrity: sha512-LwaxwyZ72Lk7vZINtNNrywX0ZuLyStrdDtabefZKAY5ZGJhVtgdznluResxNmPitE0SAO+O26sWTHeKSI2wMBA==}
+    deprecated: Glob versions prior to v9 are no longer supported
     dependencies:
       fs.realpath: 1.0.0
       inflight: 1.0.6
@@ -23614,6 +23616,7 @@ packages:
 
   /rimraf@2.4.5:
     resolution: {integrity: sha512-J5xnxTyqaiw06JjMftq7L9ouA448dw/E7dKghkP9WpKNuwmARNNg+Gk8/u5ryb9N/Yo2+z3MCwuqFK/+qPOPfQ==}
+    deprecated: Rimraf versions prior to v4 are no longer supported
     hasBin: true
     requiresBuild: true
     dependencies:
