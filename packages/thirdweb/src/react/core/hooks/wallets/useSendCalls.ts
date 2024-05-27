@@ -119,9 +119,8 @@ export function useSendCalls({
         return;
       }
 
-      let result: GetCallsStatusResponse | undefined = undefined;
       if (typeof _result === "string") {
-        result = await waitForBundle({
+        await waitForBundle({
           bundleId: _result,
           wallet: connectedWallet,
           client,
