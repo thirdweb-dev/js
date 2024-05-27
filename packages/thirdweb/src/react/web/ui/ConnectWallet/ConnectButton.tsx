@@ -117,6 +117,7 @@ export function ConnectButton(props: ConnectButtonProps) {
               : props.connectModal?.size || "wide",
         },
         onConnect: props.onConnect,
+        onDisconnect: props.onDisconnect,
         auth: props.auth,
       }}
     >
@@ -285,6 +286,9 @@ function ConnectButtonInner(
         // logout on explicit disconnect!
         if (siweAuth.requiresAuth) {
           siweAuth.doLogout();
+        }
+        if (props.onDisconnect) {
+          props.onDisconnect();
         }
       }}
       chains={props?.chains || []}
