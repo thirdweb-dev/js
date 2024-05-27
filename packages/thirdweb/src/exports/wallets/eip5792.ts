@@ -26,3 +26,6 @@ export type {
   GetCallsStatusResponse,
   WalletCallReceipt,
 } from "../../wallets/eip5792/types.js";
+export { useSendCalls } from "../../react/core/hooks/wallets/useSendCalls.js";
+export { useCallsStatus } from "../../react/core/hooks/wallets/useCallsStatus.js";
+export { useCapabilities } from "../../react/core/hooks/wallets/useCapabilities.js";

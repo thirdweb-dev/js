@@ -18,8 +18,8 @@ import { useActiveWallet } from "./wallet-hooks.js";
  * @returns a React Query object.
  * @beta
  * @example
- * ```jsx
- * import { useGetCapabilities } from "thirdweb/react";
+ * ```tsx
+ * import { useCapabilities } from "thirdweb/react";
  * const { data: capabilities, isLoading } = useCapabilities();
  * ```
  * @wallets

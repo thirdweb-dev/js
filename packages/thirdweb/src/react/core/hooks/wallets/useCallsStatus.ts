@@ -16,7 +16,7 @@ import { useActiveWallet } from "./wallet-hooks.js";
  * @returns a React Query object.
  * @beta
  * @example
- * ```jsx
+ * ```tsx
  * import { useCallsStatus } from "thirdweb/react";
  * const { data: status, isLoading } = useCallsStatus({ bundleId, client });
  * ```
