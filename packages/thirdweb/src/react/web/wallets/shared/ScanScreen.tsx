@@ -59,25 +59,13 @@ export const ScanScreen: React.FC<{
               }
             />
 
-            <Spacer y="lg" />
-
-            <Text
-              center
-              multiline
-              balance
-              style={{
-                paddingInline: spacing.lg,
-              }}
-            >
-              {props.qrScanInstruction}
-            </Text>
-
-            <Spacer y="lg" />
+            <Spacer y="xs" />
 
             <Button
               disabled={props.qrCodeUri === undefined}
               variant="link"
               style={{
+                fontSize: "12px",
                 opacity: props.qrCodeUri === undefined ? 0.5 : 1,
                 cursor: props.qrCodeUri === undefined ? "default" : "pointer",
               }}
@@ -93,9 +81,26 @@ export const ScanScreen: React.FC<{
                   });
               }}
             >
-              {linkCopied ? <CheckIcon /> : <CopyIcon />}
+              {linkCopied ? (
+                <CheckIcon width={14} height={14} />
+              ) : (
+                <CopyIcon width={14} height={14} />
+              )}
               <span style={{ padding: "0 4px" }}>Copy Link</span>
             </Button>
+
+            <Spacer y="lg" />
+
+            <Text
+              center
+              multiline
+              balance
+              style={{
+                paddingInline: spacing.lg,
+              }}
+            >
+              {props.qrScanInstruction}
+            </Text>
           </div>
         )}
 
