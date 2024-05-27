@@ -88,7 +88,8 @@ export async function estimateGas(
     // 1. the user specified from address
     // 2. the passed in account address
     // 3. the passed in wallet's account address
-    const from = options.from ?? options.account?.address ?? undefined;
+    // TODO investigate Base RPC reverting when the sender has no gas money
+    const from = undefined; // options.from ?? options.account?.address ?? undefined;
     try {
       let gas = await eth_estimateGas(
         rpcRequest,
