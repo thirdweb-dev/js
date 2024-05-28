@@ -12,12 +12,6 @@ export default {
   "faucets": [
     "https://testnet.scschain.com"
   ],
-  "icon": {
-    "url": "ipfs://QmW4C4QHLMhLeH5MsdVbauMc2Skb4ehzLKU3egLKKoux4D",
-    "width": 130,
-    "height": 130,
-    "format": "png"
-  },
   "infoURL": "https://testnet.scschain.com",
   "name": "Super Smart Chain Testnet",
   "nativeCurrency": {

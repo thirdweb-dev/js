@@ -16,12 +16,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://bafkreieyaqgkgntvxuo5tnhgseladga5q6gutc37dab7kqqfdguhq7vkxq",
-    "width": 5836,
-    "height": 5836,
-    "format": "png"
-  },
   "infoURL": "https://redstone.xyz/docs/network-info",
   "name": "Redstone Holesky Testnet",
   "nativeCurrency": {

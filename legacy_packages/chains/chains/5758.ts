@@ -12,12 +12,6 @@ export default {
   "faucets": [
     "https://faucet.satoshichain.io"
   ],
-  "icon": {
-    "url": "ipfs://QmRegpZQBW4o1imYNsW3d27MQjygBSU23Gf6JKje26nvs7",
-    "width": 1251,
-    "height": 1251,
-    "format": "png"
-  },
   "infoURL": "https://satoshichain.net",
   "name": "SatoshiChain Testnet",
   "nativeCurrency": {

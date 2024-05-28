@@ -4,12 +4,6 @@ export default {
   "chainId": 1440,
   "explorers": [],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmRidubY7BVwC737BQwGEttenP1npAXN7ZNryktE416uUW",
-    "width": 500,
-    "height": 500,
-    "format": "jpg"
-  },
   "infoURL": "https://dev.livingassets.io/",
   "name": "Living Assets Mainnet",
   "nativeCurrency": {

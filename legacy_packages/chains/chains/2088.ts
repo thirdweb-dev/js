@@ -12,12 +12,6 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "icon": {
-    "url": "ipfs://QmSwqWxZ5HRdc25HMhEmVKxZkwSKapuuyGHb8kyrtuzxat",
-    "width": 210,
-    "height": 210,
-    "format": "svg"
-  },
   "infoURL": "https://centrifuge.io",
   "name": "Altair",
   "nativeCurrency": {

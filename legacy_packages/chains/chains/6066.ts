@@ -6,13 +6,7 @@ export default {
     {
       "name": "treslechesexplorer",
       "url": "https://explorer.tresleches.finance",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmS33ypsZ1Hx5LMMACaJaxePy9QNYMwu4D12niobExLK74",
-        "width": 512,
-        "height": 512,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],

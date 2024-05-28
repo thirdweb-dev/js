@@ -6,22 +6,10 @@ export default {
     {
       "name": "aiescan-testnet",
       "url": "https://testnet.aiescan.io",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://bafkreihok46mhn5yf7b5jgmq7tiyw2fw76wklvj4frpc3gbswgfxzerhhm",
-        "width": 3481,
-        "height": 3500,
-        "format": "png"
-      }
+      "standard": "none"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://bafkreihok46mhn5yf7b5jgmq7tiyw2fw76wklvj4frpc3gbswgfxzerhhm",
-    "width": 3481,
-    "height": 3500,
-    "format": "png"
-  },
   "infoURL": "https://testnet.aiescan.io",
   "name": "AIE Testnet",
   "nativeCurrency": {

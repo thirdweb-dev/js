@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmauD5hzc5q1VgEU1nT4AGLCeV79CB8GgfnXXeeLmBZVHf",
-    "width": 36,
-    "height": 36,
-    "format": "png"
-  },
   "infoURL": "https://functionx.io/",
   "name": "F(x)Core Mainnet Network",
   "nativeCurrency": {

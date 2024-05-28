@@ -6,22 +6,10 @@ export default {
     {
       "name": "ORE Mainnet Explorer",
       "url": "https://oreniumscan.org",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://QmXszYAtQxaFCG3s9vGHoLJnqxGJw2wTKNbruTJ8iDXU7K",
-        "width": 200,
-        "height": 200,
-        "format": "png"
-      }
+      "standard": "none"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmXszYAtQxaFCG3s9vGHoLJnqxGJw2wTKNbruTJ8iDXU7K",
-    "width": 200,
-    "height": 200,
-    "format": "png"
-  },
   "infoURL": "https://orenium.org",
   "name": "Orenium Mainnet Protocol",
   "nativeCurrency": {

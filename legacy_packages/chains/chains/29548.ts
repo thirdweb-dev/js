@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmZZnwR1y6cU1sare2TQmwqkNDLXQxD4GdPrmHLmUoPtbU",
-    "width": 4000,
-    "height": 4000,
-    "format": "png"
-  },
   "infoURL": "https://www.mycryptoheroes.net/verse",
   "name": "MCH Verse Mainnet",
   "nativeCurrency": {

@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://bafybeiduib2fygrwziqpy4yuqr6vvnd6elhahpigbcowcipjjhk6c3qiny",
-    "width": 400,
-    "height": 400,
-    "format": "png"
-  },
   "infoURL": "https://www.nanon.network",
   "name": "Nanon Sepolia",
   "nativeCurrency": {

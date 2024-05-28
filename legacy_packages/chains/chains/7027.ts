@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmVkAhSaHhH3wKoLT56Aq8dNyEH4RySPEpqPcLwsptGBDm",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
   "infoURL": "https://ella.network",
   "name": "Ella the heart",
   "nativeCurrency": {

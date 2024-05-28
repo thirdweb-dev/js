@@ -6,13 +6,7 @@ export default {
     {
       "name": "blockscout",
       "url": "https://rootstock.blockscout.com",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
-        "width": 551,
-        "height": 540,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     },
     {
       "name": "Rootstock Explorer",
@@ -21,12 +15,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://bafkreigidzbf22dnpmmlfxv6u7oifq6ln33j4n57ox4ipiproalufrheym",
-    "width": 3000,
-    "height": 3325,
-    "format": "png"
-  },
   "infoURL": "https://rootstock.io",
   "name": "Rootstock Mainnet",
   "nativeCurrency": {

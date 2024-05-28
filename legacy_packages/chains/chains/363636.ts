@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmRiAUu3xV5uiX6Nk1iXD5w6qjki5ugGFETRVavzJ2h5QF",
-    "width": 370,
-    "height": 320,
-    "format": "png"
-  },
   "name": "Digit Soul Smart Chain 2",
   "nativeCurrency": {
     "name": "Digit Coin",

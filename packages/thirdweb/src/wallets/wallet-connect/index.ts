@@ -280,17 +280,18 @@ async function initProvider(
   if (walletId !== "walletConnect") {
     function handleSessionRequest() {
       const preferNative =
-        walletInfo.mobile.native || walletInfo.mobile.universal;
+        provider.session?.peer?.metadata?.redirect?.native ||
+        walletInfo.mobile.native ||
+        walletInfo.mobile.universal;
 
       if (isReactNative()) {
         const { Linking } = require("react-native");
-        const appUrl = preferNative;
-        if (!appUrl) {
+        if (!preferNative) {
           throw new Error(
             "No app url found for wallet connect to redirect to.",
           );
         }
-        Linking.openURL(appUrl);
+        Linking.openURL(preferNative);
         return;
       }
 

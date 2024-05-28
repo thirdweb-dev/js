@@ -6,22 +6,10 @@ export default {
     {
       "name": "Block Explorer",
       "url": "https://explorer.japanopenchain.org",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://bafkreidhsiuqrct42bel76zhi3rx35k4lnk6aqgde27nvvxcz563ttfefy",
-        "width": 2000,
-        "height": 2000,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://bafkreidhsiuqrct42bel76zhi3rx35k4lnk6aqgde27nvvxcz563ttfefy",
-    "width": 2000,
-    "height": 2000,
-    "format": "png"
-  },
   "infoURL": "https://www.japanopenchain.org/",
   "name": "Japan Open Chain Mainnet",
   "nativeCurrency": {

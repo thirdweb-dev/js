@@ -15,12 +15,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://bafkreid732273ib5at7krjdl2t7lteljlepwd3tvifqge7mu7g6naxavhe",
-    "width": 256,
-    "height": 256,
-    "format": "png"
-  },
   "infoURL": "https://www.peaq.network",
   "name": "Krest Network",
   "nativeCurrency": {

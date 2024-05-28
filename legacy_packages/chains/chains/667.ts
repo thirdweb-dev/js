@@ -6,22 +6,10 @@ export default {
     {
       "name": "blockscout",
       "url": "https://arrakis.gorengine.com",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmZ4YYcvhcaeotMPaGXC5Vab7JFaVkka37V8TiTJpT7Mak",
-        "width": 586,
-        "height": 558,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmZ4YYcvhcaeotMPaGXC5Vab7JFaVkka37V8TiTJpT7Mak",
-    "width": 586,
-    "height": 558,
-    "format": "png"
-  },
   "infoURL": "https://www.laosfoundation.io/",
   "name": "LAOS Arrakis",
   "nativeCurrency": {

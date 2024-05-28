@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://bafybeifxqd7zel2m237kq5enavnh2s6cshaavswigogyvae2wevxy5k2ti",
-    "width": 512,
-    "height": 578,
-    "format": "png"
-  },
   "infoURL": "https://www.nexi.technology/",
   "name": "Nexi Mainnet",
   "nativeCurrency": {

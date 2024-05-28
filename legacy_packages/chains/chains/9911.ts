@@ -6,22 +6,10 @@ export default {
     {
       "name": "escscan",
       "url": "https://escscan.com",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmVvQdmAj6GNQjP1dsxQKbA7xgzqsciooGTQtQ2RsJ37Lf",
-        "width": 335,
-        "height": 335,
-        "format": "svg"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmVvQdmAj6GNQjP1dsxQKbA7xgzqsciooGTQtQ2RsJ37Lf",
-    "width": 335,
-    "height": 335,
-    "format": "svg"
-  },
   "infoURL": "https://espento.network",
   "name": "Espento Mainnet",
   "nativeCurrency": {

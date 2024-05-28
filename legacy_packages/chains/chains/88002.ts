@@ -6,24 +6,12 @@ export default {
     {
       "name": "Nautscan",
       "url": "https://proteus.nautscan.com",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmNutSgM7n6aJPPDiofe9Dm1epy1RcYTMvugukLUK2vmPM",
-        "width": 500,
-        "height": 500,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [
     "https://proteusfaucet.nautchain.xyz"
   ],
-  "icon": {
-    "url": "ipfs://QmNutSgM7n6aJPPDiofe9Dm1epy1RcYTMvugukLUK2vmPM",
-    "width": 500,
-    "height": 500,
-    "format": "png"
-  },
   "infoURL": "https://docs.nautchain.xyz",
   "name": "Nautilus Proteus Testnet",
   "nativeCurrency": {

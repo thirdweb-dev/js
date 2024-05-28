@@ -18,12 +18,6 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "icon": {
-    "url": "ipfs://QmU9t9fZaWiqpAZ9dw2ojTpJycnB8BxekLWVSCJikJVgjW",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
   "infoURL": "https://www.hubble.exchange",
   "name": "Hubble Exchange",
   "nativeCurrency": {
