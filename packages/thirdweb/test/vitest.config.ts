@@ -37,7 +37,7 @@ export default defineConfig({
       ["src/**/*.test.ts", "node"],
       ["src/**/*", "node"], // all other files use node
     ],
-    include: ["src/react/web/utils/canFitWideModal.test.tsx"],
+    include: ["src/**/*.test.{ts,tsx}"],
     setupFiles: [join(__dirname, "./reactSetup.ts")],
     globalSetup: [join(__dirname, "./globalSetup.ts")],
     testTimeout: 60_000,
