@@ -13,11 +13,14 @@ export async function initMobileProvider(args: {
     hostPackageName: args.hostPackageName || "org.toshi",
   });
   let CoinbaseWalletMobileSDK = (
-    await import("@coinbase/wallet-mobile-sdk/build/WalletMobileSDKEVMProvider")
+    await import(
+      // @ts-ignore this is only visible from RN
+      "@coinbase/wallet-mobile-sdk/build/WalletMobileSDKEVMProvider"
+    )
   ).WalletMobileSDKEVMProvider;
   if (
     typeof CoinbaseWalletMobileSDK !== "function" &&
-    // @ts-expect-error This import error is not visible to TypeScript
+    // @ts-ignore this is only visible from RN
     typeof CoinbaseWalletMobileSDK.default === "function"
   ) {
     CoinbaseWalletMobileSDK = (
