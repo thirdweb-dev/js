@@ -1,5 +1,9 @@
+"use client";
+import { CheckIcon, CopyIcon } from "@radix-ui/react-icons";
+import { useState } from "react";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
 import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import { AccentFailIcon } from "../../ui/ConnectWallet/icons/AccentFailIcon.js";
 import { QRCode } from "../../ui/components/QRCode.js";
 import { Spacer } from "../../ui/components/Spacer.js";
 import { WalletImage } from "../../ui/components/WalletImage.js";
@@ -23,8 +27,12 @@ export const ScanScreen: React.FC<{
   walletId: WalletId;
   qrScanInstruction: string;
   getStartedLink: string;
+  error: boolean;
+  onRetry: () => void;
 }> = (props) => {
   const { connectModal, client } = useConnectUI();
+  const [linkCopied, setLinkCopied] = useState(false);
+
   return (
     <Container fullHeight flex="column" animate="fadein">
       <Container p="lg">
@@ -34,35 +42,90 @@ export const ScanScreen: React.FC<{
       <Spacer y="sm" />
 
       <Container expand flex="column" px="lg" center="both">
-        <div
-          style={{
-            textAlign: "center",
-          }}
-        >
-          <QRCode
-            qrCodeUri={props.qrCodeUri}
-            QRIcon={
-              <WalletImage
-                size={iconSize.xxl}
-                id={props.walletId}
-                client={client}
-              />
-            }
-          />
-
-          <Spacer y="lg" />
-
-          <Text
-            center
-            multiline
-            balance
+        {!props.error && (
+          <div
             style={{
-              paddingInline: spacing.lg,
+              textAlign: "center",
             }}
           >
-            {props.qrScanInstruction}
-          </Text>
-        </div>
+            <QRCode
+              qrCodeUri={props.qrCodeUri}
+              QRIcon={
+                <WalletImage
+                  size={iconSize.xxl}
+                  id={props.walletId}
+                  client={client}
+                />
+              }
+            />
+
+            <Spacer y="xs" />
+
+            <Button
+              disabled={props.qrCodeUri === undefined}
+              variant="link"
+              style={{
+                fontSize: "12px",
+                opacity: props.qrCodeUri === undefined ? 0.5 : 1,
+                cursor: props.qrCodeUri === undefined ? "default" : "pointer",
+              }}
+              onClick={() => {
+                navigator.clipboard
+                  .writeText(props.qrCodeUri as string) // should always be string since the button is disabled otherwise
+                  .then(() => {
+                    setLinkCopied(true);
+                    setTimeout(() => setLinkCopied(false), 3000); // reset the check icon after 3 seconds
+                  })
+                  .catch((err) => {
+                    console.error("Failed to copy link to clipboard", err);
+                  });
+              }}
+            >
+              {linkCopied ? (
+                <CheckIcon width={14} height={14} />
+              ) : (
+                <CopyIcon width={14} height={14} />
+              )}
+              <span style={{ padding: "0 4px" }}>Copy Link</span>
+            </Button>
+
+            <Spacer y="lg" />
+
+            <Text
+              center
+              multiline
+              balance
+              style={{
+                paddingInline: spacing.lg,
+              }}
+            >
+              {props.qrScanInstruction}
+            </Text>
+          </div>
+        )}
+
+        {props.error && (
+          <Container
+            animate="fadein"
+            style={{
+              width: "100%",
+            }}
+          >
+            <Spacer y="xxl" />
+            <Container flex="row" center="x">
+              <AccentFailIcon size={iconSize["3xl"]} />
+            </Container>
+            <Spacer y="lg" />
+            <Text center size="lg" color="primaryText">
+              Connection Failed
+            </Text>
+            <Spacer y="3xl" />
+
+            <Button fullWidth variant="accent" onClick={props.onRetry}>
+              Try again
+            </Button>
+          </Container>
+        )}
       </Container>
 
       <Spacer y="lg" />

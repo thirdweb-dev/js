@@ -1,11 +1,18 @@
-import { zeroAddress } from "viem";
+import { type Account as ViemAccount, zeroAddress } from "viem";
+import { privateKeyToAccount as viemPrivateKeyToAccount } from "viem/accounts";
 import { beforeAll, describe, expect, test } from "vitest";
+import { USDT_ABI } from "~test/abis/usdt.js";
+import {
+  USDT_CONTRACT_ADDRESS,
+  USDT_CONTRACT_WITH_ABI,
+} from "~test/test-contracts.js";
 import { ANVIL_PKEY_A } from "~test/test-wallets.js";
 import { typedData } from "~test/typed-data.js";
+
 import { ANVIL_CHAIN, FORKED_ETHEREUM_CHAIN } from "../../test/src/chains.js";
 import { TEST_CLIENT } from "../../test/src/test-clients.js";
 import { privateKeyToAccount } from "../wallets/private-key.js";
-import { viemAdapter } from "./viem.js";
+import { toViemContract, viemAdapter } from "./viem.js";
 
 const account = privateKeyToAccount({
   privateKey: ANVIL_PKEY_A,
@@ -85,5 +92,28 @@ describe("walletClient.toViem", () => {
     const address = await walletClient.getAddresses();
     expect(address[0]).toBeDefined();
     expect(address[0]).toBe(account.address);
+  });
+
+  test("should match thirdweb account signature", async () => {
+    const message = "testing123";
+
+    const rawViemAccount = viemPrivateKeyToAccount(ANVIL_PKEY_A);
+    const twSignature = await account.signMessage({ message });
+    const viemTwSignature = await walletClient.signMessage({
+      message,
+      account: walletClient.account as ViemAccount,
+    });
+    const viemSignature = await rawViemAccount.signMessage({ message });
+
+    expect(viemSignature).toEqual(twSignature);
+    expect(viemTwSignature).toEqual(twSignature);
+  });
+
+  test("should convert thirdweb contract to viem contract", async () => {
+    const result = await toViemContract({
+      thirdwebContract: USDT_CONTRACT_WITH_ABI,
+    });
+    expect(result.abi).toEqual(USDT_ABI);
+    expect(result.address).toBe(USDT_CONTRACT_ADDRESS);
   });
 });

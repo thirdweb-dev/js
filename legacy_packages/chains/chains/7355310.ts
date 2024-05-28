@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmeknNzGCZXQK7egwfwyxQan7Lw8bLnqYsyoEgEbDNCzJX",
+    "width": 600,
+    "height": 529,
+    "format": "png"
+  },
   "infoURL": "https://www.openvessel.io",
   "name": "OpenVessel",
   "nativeCurrency": {

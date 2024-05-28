@@ -25,4 +25,7 @@ export type WalletInfo = {
     native: string | null;
     universal: string | null;
   };
+  deepLink?: {
+    mobile: string;
+  };
 };

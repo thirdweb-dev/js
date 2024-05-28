@@ -12,6 +12,17 @@ const extraWalletsJson = JSON.parse(
   await readFile(join(__dirname, "./extra-wallets.json"), "utf-8"),
 );
 
+const deepLinkSupportedWalletsRecord: Record<
+  string,
+  {
+    mobile: string;
+  }
+> = {
+  "io.metamask": {
+    mobile: "https://metamask.app.link/dapp/",
+  },
+};
+
 type Wallet = {
   id: string;
   name: string;
@@ -45,6 +56,9 @@ type Wallet = {
     universal: string | null;
   };
   _type: "wc" | "extra";
+  deepLink?: {
+    mobile: string;
+  };
 };
 
 const allWalletsArray = Object.values(walletConnectWalletsJson.listings)
@@ -76,7 +90,16 @@ const allWalletsWithIds = allWalletsArray.map((wallet) => {
   // biome-ignore lint/performance/noDelete: aware it's bad but it's OK in generate script
   // biome-ignore lint/suspicious/noExplicitAny: aware it's bad but it's OK in generate script
   delete (wallet as any).injected;
-  return { ...wallet, id: rdns(wallet) };
+
+  const id = rdns(wallet);
+
+  if (id && id in deepLinkSupportedWalletsRecord) {
+    wallet.deepLink = {
+      mobile: deepLinkSupportedWalletsRecord[id].mobile,
+    };
+  }
+
+  return { ...wallet, id: id };
 });
 
 // filter duplicate ids, we'll keep the first ones
@@ -90,6 +113,10 @@ const walletConnectSupportedWallets = allWalletsWithIds.filter((w) => {
 
 const injectedSupportedWallets = allWalletsWithIds.filter((w) => {
   return !!(w.rdns || w.injected);
+});
+
+const deepLinkSupportedWallets = allWalletsWithIds.filter((w) => {
+  return !!w.deepLink;
 });
 
 const allSupportedWallets = walletConnectSupportedWallets
@@ -145,6 +172,12 @@ export type WCSupportedWalletIds = ${walletConnectSupportedWallets
 
 // ${injectedSupportedWallets.length} wallets
 export type InjectedSupportedWalletIds = ${injectedSupportedWallets
+      .map((w) => {
+        return `"${w.id}"`;
+      })
+      .join(" | ")};
+
+export type DeepLinkSupportedWalletIds = ${deepLinkSupportedWallets
       .map((w) => {
         return `"${w.id}"`;
       })

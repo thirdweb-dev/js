@@ -233,7 +233,10 @@ export function replaceObjectFilesWithUris(
   return data;
 }
 
-function replaceGatewayUrlWithScheme(url: string): string {
+/**
+ * @internal
+ */
+export function replaceGatewayUrlWithScheme(url: string): string {
   if (url.includes("/ipfs/")) {
     const hash = url.split("/ipfs/")[1];
     return `ipfs://${hash}`;

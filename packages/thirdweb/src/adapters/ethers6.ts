@@ -59,7 +59,7 @@ export const ethers6Adapter = /* @__PURE__ */ (() => {
        * @example
        * ```ts
        * import { ethers6Adapter } from "thirdweb/adapters/ethers6";
-       * const provider = ethers6Adapter.provider.toEthers({ client, chainId });
+       * const provider = ethers6Adapter.provider.toEthers({ client, chain });
        * ```
        */
       toEthers: (options: { client: ThirdwebClient; chain: Chain }) => {
@@ -79,9 +79,16 @@ export const ethers6Adapter = /* @__PURE__ */ (() => {
        * const ethersContract = await ethers6Adapter.contract.toEthers({ thirdwebContract });
        * ```
        */
-      toEthers: (options: { thirdwebContract: ThirdwebContract }) => {
+      toEthers: (options: {
+        thirdwebContract: ThirdwebContract;
+        account?: Account;
+      }) => {
         assertEthers6(ethers);
-        return toEthersContract(ethers, options.thirdwebContract);
+        return toEthersContract(
+          ethers,
+          options.thirdwebContract,
+          options.account,
+        );
       },
       /**
        * Creates a ThirdwebContract instance from an ethers.js contract.
@@ -186,12 +193,15 @@ function toEthersProvider(
 async function toEthersContract<abi extends Abi = []>(
   ethers: Ethers6,
   twContract: ThirdwebContract<abi>,
+  account?: Account,
 ): Promise<ethers6.Contract> {
   if (twContract.abi) {
     return new ethers.Contract(
       twContract.address,
       JSON.stringify(twContract.abi),
-      toEthersProvider(ethers, twContract.client, twContract.chain),
+      account
+        ? toEthersSigner(ethers, twContract.client, account, twContract.chain)
+        : toEthersProvider(ethers, twContract.client, twContract.chain),
     );
   }
 
@@ -204,7 +214,9 @@ async function toEthersContract<abi extends Abi = []>(
   return new ethers.Contract(
     twContract.address,
     JSON.stringify(abi),
-    toEthersProvider(ethers, twContract.client, twContract.chain),
+    account
+      ? toEthersSigner(ethers, twContract.client, account, twContract.chain)
+      : toEthersProvider(ethers, twContract.client, twContract.chain),
   );
 }
 
@@ -278,15 +290,15 @@ async function fromEthersSigner(signer: ethers6.Signer): Promise<Account> {
  * @param client - The Thirdweb client.
  * @param chain - The blockchain chain.
  * @param account - The Thirdweb account.
- * @returns A promise that resolves to an ethers.js signer.
+ * @returns An ethers.js signer.
  * @internal
  */
-export async function toEthersSigner(
+export function toEthersSigner(
   ethers: Ethers6,
   client: ThirdwebClient,
   account: Account,
   chain: Chain,
-): Promise<ethers6.Signer> {
+): ethers6.Signer {
   class ThirdwebAdapterSigner extends ethers.AbstractSigner<ethers6.JsonRpcProvider> {
     private address: string;
     override provider: ethers6.ethers.JsonRpcProvider;

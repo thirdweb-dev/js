@@ -17,6 +17,7 @@ import type { ThirdwebClient } from "../client/client.js";
 import { getContract } from "../contract/contract.js";
 import { isContractDeployed } from "../utils/bytecode/is-contract-deployed.js";
 import { COINBASE } from "./constants.js";
+import { logoutAuthenticatedUser } from "./in-app/core/authentication/index.js";
 import { DEFAULT_ACCOUNT_FACTORY } from "./smart/lib/constants.js";
 import type { WCConnectOptions } from "./wallet-connect/types.js";
 import { createWalletEmitter } from "./wallet-emitter.js";
@@ -215,13 +216,12 @@ export function createWallet<const ID extends WalletId>(
             });
           }
 
-          // prefer walletconnect over injected for connect (more explicit)
-          if (options && "walletConnect" in options) {
-            return wcConnect(options);
-          }
+          // prefer walletconnect over injected if explicitely passing walletConnect options
+          const forceWalletConnectOption =
+            options && "walletConnect" in options;
 
           const { injectedProvider } = await import("./injected/mipdStore.js");
-          if (injectedProvider(id)) {
+          if (injectedProvider(id) && !forceWalletConnectOption) {
             const { connectInjectedWallet } = await import(
               "./injected/index.js"
             );
@@ -248,6 +248,10 @@ export function createWallet<const ID extends WalletId>(
             });
             // return account
             return account;
+          }
+
+          if (options && "client" in options) {
+            return wcConnect(options);
           }
           throw new Error("Failed to connect");
         },
@@ -435,6 +439,13 @@ export function smartWallet(
  *   },
  *  },
  * });
+ *
+ * Hide the ability to export the private key within the Connect Modal
+ * ```ts
+ * import { inAppWallet } from "thirdweb/wallets";
+ * const wallet = inAppWallet({
+ *  hidePrivateKeyExport: true
+ * });
  * ```
  * @wallet
  */
@@ -495,7 +506,13 @@ export function inAppWallet(
       return account;
     },
     disconnect: async () => {
-      // simply un-set the states
+      // If no client is assigned, we should be fine just unsetting the states
+      if (client) {
+        const result = await logoutAuthenticatedUser({ client });
+        if (!result.success) {
+          throw new Error("Failed to logout");
+        }
+      }
       account = undefined;
       chain = undefined;
       emitter.emit("disconnect", undefined);

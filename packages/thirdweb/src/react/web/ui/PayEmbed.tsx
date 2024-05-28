@@ -151,6 +151,7 @@ export type PayEmbedProps = {
 export function PayEmbed(props: PayEmbedProps) {
   const localeQuery = useConnectLocale(props.locale || "en_US");
   const [screen, setScreen] = useState<"buy" | "tx-history">("buy");
+  const theme = props.theme || "dark";
 
   let content = null;
 
@@ -175,7 +176,7 @@ export function PayEmbed(props: PayEmbedProps) {
           <BuyScreen
             isEmbed={true}
             supportedTokens={props.supportedTokens}
-            theme={props.theme || "dark"}
+            theme={theme}
             client={props.client}
             connectLocale={localeQuery.data}
             onViewPendingTx={() => {
@@ -194,6 +195,7 @@ export function PayEmbed(props: PayEmbedProps) {
                     width: "100%",
                   },
                 }}
+                theme={theme}
               />
             }
           />
@@ -217,7 +219,7 @@ export function PayEmbed(props: PayEmbedProps) {
   }
 
   return (
-    <CustomThemeProvider theme={props.theme || "dark"}>
+    <CustomThemeProvider theme={theme}>
       <Container
         bg="modalBg"
         style={{
