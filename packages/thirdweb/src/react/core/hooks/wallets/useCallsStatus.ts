@@ -25,7 +25,7 @@ import { useActiveWallet } from "./wallet-hooks.js";
 export function useCallsStatus(options: {
   bundleId: string;
   client: ThirdwebClient;
-  queryOptions: Pick<UseQueryOptions, "enabled" | "retry">;
+  queryOptions?: Pick<UseQueryOptions, "enabled" | "retry">;
 }): UseQueryResult<GetCallsStatusResponse> {
   const { client, bundleId } = options;
   const wallet = useActiveWallet();

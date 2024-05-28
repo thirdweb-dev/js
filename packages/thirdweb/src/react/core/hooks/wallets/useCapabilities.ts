@@ -24,8 +24,8 @@ import { useActiveWallet } from "./wallet-hooks.js";
  * ```
  * @wallets
  */
-export function useCapabilities(options: {
-  queryOptions: Pick<UseQueryOptions, "enabled" | "retry">;
+export function useCapabilities(options?: {
+  queryOptions?: Pick<UseQueryOptions, "enabled" | "retry">;
 }): UseQueryResult<GetCapabilitiesResult> {
   const wallet = useActiveWallet();
 
@@ -44,6 +44,6 @@ export function useCapabilities(options: {
       return getCapabilities({ wallet });
     },
     retry: false,
-    ...options.queryOptions,
+    ...options?.queryOptions,
   });
 }
