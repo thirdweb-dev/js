@@ -148,29 +148,31 @@ export const coreContractAbi = [
                 internalType: "bool",
               },
               {
-                name: "callbackFunctions",
-                type: "bytes4[]",
-                internalType: "bytes4[]",
-              },
-              {
                 name: "supportedInterfaces",
                 type: "bytes4[]",
                 internalType: "bytes4[]",
               },
               {
-                name: "extensionFunctions",
+                name: "callbackFunctions",
                 type: "tuple[]",
-                internalType: "struct IExtensionConfig.ExtensionFunction[]",
+                internalType: "struct IExtensionConfig.CallbackFunction[]",
                 components: [
                   {
                     name: "selector",
                     type: "bytes4",
                     internalType: "bytes4",
                   },
+                ],
+              },
+              {
+                name: "fallbackFunctions",
+                type: "tuple[]",
+                internalType: "struct IExtensionConfig.FallbackFunction[]",
+                components: [
                   {
-                    name: "callType",
-                    type: "uint8",
-                    internalType: "enum IExtensionConfig.CallType",
+                    name: "selector",
+                    type: "bytes4",
+                    internalType: "bytes4",
                   },
                   {
                     name: "permissionBits",
@@ -212,11 +214,11 @@ export const coreContractAbi = [
     name: "installExtension",
     inputs: [
       {
-        name: "_extensionContract",
+        name: "extensionContract",
         type: "address",
         internalType: "address",
       },
-      { name: "_data", type: "bytes", internalType: "bytes" },
+      { name: "data", type: "bytes", internalType: "bytes" },
     ],
     outputs: [],
     stateMutability: "payable",
@@ -233,11 +235,11 @@ export const coreContractAbi = [
     name: "uninstallExtension",
     inputs: [
       {
-        name: "_extensionContract",
+        name: "extensionContract",
         type: "address",
         internalType: "address",
       },
-      { name: "_data", type: "bytes", internalType: "bytes" },
+      { name: "data", type: "bytes", internalType: "bytes" },
     ],
     outputs: [],
     stateMutability: "payable",

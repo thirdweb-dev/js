@@ -227,6 +227,78 @@ const BASE_ROUTER_ABI = {
   type: "function",
 } as const;
 
+const CORE_CONTRACT_ABI = {
+  type: "function",
+  name: "getInstalledExtensions",
+  inputs: [],
+  outputs: [
+    {
+      name: "",
+      type: "tuple[]",
+      internalType: "struct IModularCore.InstalledExtension[]",
+      components: [
+        {
+          name: "implementation",
+          type: "address",
+          internalType: "address",
+        },
+        {
+          name: "config",
+          type: "tuple",
+          internalType: "struct IExtensionConfig.ExtensionConfig",
+          components: [
+            {
+              name: "requiredInterfaceId",
+              type: "bytes4",
+              internalType: "bytes4",
+            },
+            {
+              name: "registerInstallationCallback",
+              type: "bool",
+              internalType: "bool",
+            },
+            {
+              name: "supportedInterfaces",
+              type: "bytes4[]",
+              internalType: "bytes4[]",
+            },
+            {
+              name: "callbackFunctions",
+              type: "tuple[]",
+              internalType: "struct IExtensionConfig.CallbackFunction[]",
+              components: [
+                {
+                  name: "selector",
+                  type: "bytes4",
+                  internalType: "bytes4",
+                },
+              ],
+            },
+            {
+              name: "fallbackFunctions",
+              type: "tuple[]",
+              internalType: "struct IExtensionConfig.FallbackFunction[]",
+              components: [
+                {
+                  name: "selector",
+                  type: "bytes4",
+                  internalType: "bytes4",
+                },
+                {
+                  name: "permissionBits",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  stateMutability: "view",
+} as const; 
+
 const DIAMOND_ABI = {
   inputs: [],
   name: "facets",
@@ -284,12 +356,14 @@ export async function resolveCompositeAbi(
     rootAbi_,
     pluginPatternAddresses,
     baseRouterAddresses,
+    modularExtensionAddresses,
     diamondFacetAddresses,
   ] = await Promise.all([
     rootAbi ? rootAbi : resolveAbiFromBytecode(contract),
     // check these all at the same time
     resolvePluginPatternAddresses(contract),
     resolveBaseRouterAddresses(contract),
+    resolveModularExtensionAddresses(contract),
     resolveDiamondFacetAddresses(contract),
   ]);
 
@@ -297,6 +371,7 @@ export async function resolveCompositeAbi(
     ...new Set([
       ...pluginPatternAddresses,
       ...baseRouterAddresses,
+      ...modularExtensionAddresses,
       ...diamondFacetAddresses,
     ]),
   ];
@@ -352,6 +427,27 @@ async function resolveBaseRouterAddresses(
     }
     // get all the plugin addresses
     return [...new Set(pluginMap.map((item) => item.metadata.implementation))];
+  } catch {
+    // no-op, expected because not everything supports this
+  }
+  return [];
+}
+
+async function resolveModularExtensionAddresses(
+  contract: ThirdwebContract,
+): Promise<string[]> {
+  try {
+    const { readContract } = await import("../../transaction/read-contract.js");
+    const pluginMap = await readContract({
+      contract,
+      method: CORE_CONTRACT_ABI,
+    });
+    // if there are no plugins, return the root ABI
+    if (!pluginMap.length) {
+      return [];
+    }
+    // get all the plugin addresses
+    return [...new Set(pluginMap.map((item) => item.implementation))];
   } catch {
     // no-op, expected because not everything supports this
   }
