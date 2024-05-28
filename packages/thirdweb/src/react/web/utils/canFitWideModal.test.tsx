@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
-import { canFitWideModal } from "./canFitWideModal.js";
+import { describe, expect, it } from "vitest";
 import { wideModalScreenThreshold } from "../ui/ConnectWallet/constants.js";
+import { canFitWideModal } from "./canFitWideModal.js";
 
 describe("canFitWideModal", () => {
   it("should return true if window width is >= wideModalScreenThreshold", () => {
