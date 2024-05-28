@@ -129,3 +129,9 @@ export {
   useConnectModal,
   type UseConnectModalOptions,
 } from "../react/web/ui/ConnectWallet/useConnectModal.js";
+
+// wallet info
+export {
+  useWalletInfo,
+  useWalletImage,
+} from "../react/web/ui/hooks/useWalletInfo.js";
