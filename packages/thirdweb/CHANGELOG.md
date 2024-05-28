@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.25.1
+
+### Patch Changes
+
+- [#3169](https://github.com/thirdweb-dev/js/pull/3169) [`f8cad77`](https://github.com/thirdweb-dev/js/commit/f8cad774ec979a02d47388bc835386caaed218e8) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Mark coinbase mobile wallet as optional dep
+
 ## 5.25.0
 
 ### Minor Changes

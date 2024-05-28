@@ -1,6 +1,6 @@
 {
   "name": "thirdweb",
-  "version": "5.25.0",
+  "version": "5.25.1",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"
@@ -218,6 +218,9 @@
     "react": {
       "optional": true
     },
+    "react-native": {
+      "optional": true
+    },
     "ethers": {
       "optional": true
     },
@@ -249,6 +252,9 @@
       "optional": true
     },
     "@react-native-async-storage/async-storage": {
+      "optional": true
+    },
+    "@coinbase/wallet-mobile-sdk": {
       "optional": true
     }
   },
