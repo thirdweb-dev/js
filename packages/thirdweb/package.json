@@ -1,6 +1,6 @@
 {
   "name": "thirdweb",
-  "version": "5.24.0",
+  "version": "5.25.1",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"
@@ -110,22 +110,54 @@
   },
   "typesVersions": {
     "*": {
-      "adapters/*": ["./dist/types/exports/adapters/*.d.ts"],
-      "auth": ["./dist/types/exports/auth.d.ts"],
-      "chains": ["./dist/types/exports/chains.d.ts"],
-      "contract": ["./dist/types/exports/contract.d.ts"],
-      "deploys": ["./dist/types/exports/deploys.d.ts"],
-      "event": ["./dist/types/exports/event.d.ts"],
-      "extensions/*": ["./dist/types/exports/extensions/*.d.ts"],
-      "pay": ["./dist/types/exports/pay.d.ts"],
-      "react": ["./dist/types/exports/react.d.ts"],
-      "react-native": ["./dist/types/exports/react-native.d.ts"],
-      "rpc": ["./dist/types/exports/rpc.d.ts"],
-      "storage": ["./dist/types/exports/storage.d.ts"],
-      "transaction": ["./dist/types/exports/transaction.d.ts"],
-      "utils": ["./dist/types/exports/utils.d.ts"],
-      "wallets": ["./dist/types/exports/wallets.d.ts"],
-      "wallets/*": ["./dist/types/exports/wallets/*.d.ts"]
+      "adapters/*": [
+        "./dist/types/exports/adapters/*.d.ts"
+      ],
+      "auth": [
+        "./dist/types/exports/auth.d.ts"
+      ],
+      "chains": [
+        "./dist/types/exports/chains.d.ts"
+      ],
+      "contract": [
+        "./dist/types/exports/contract.d.ts"
+      ],
+      "deploys": [
+        "./dist/types/exports/deploys.d.ts"
+      ],
+      "event": [
+        "./dist/types/exports/event.d.ts"
+      ],
+      "extensions/*": [
+        "./dist/types/exports/extensions/*.d.ts"
+      ],
+      "pay": [
+        "./dist/types/exports/pay.d.ts"
+      ],
+      "react": [
+        "./dist/types/exports/react.d.ts"
+      ],
+      "react-native": [
+        "./dist/types/exports/react-native.d.ts"
+      ],
+      "rpc": [
+        "./dist/types/exports/rpc.d.ts"
+      ],
+      "storage": [
+        "./dist/types/exports/storage.d.ts"
+      ],
+      "transaction": [
+        "./dist/types/exports/transaction.d.ts"
+      ],
+      "utils": [
+        "./dist/types/exports/utils.d.ts"
+      ],
+      "wallets": [
+        "./dist/types/exports/wallets.d.ts"
+      ],
+      "wallets/*": [
+        "./dist/types/exports/wallets/*.d.ts"
+      ]
     }
   },
   "browser": {
@@ -186,6 +218,9 @@
     "react": {
       "optional": true
     },
+    "react-native": {
+      "optional": true
+    },
     "ethers": {
       "optional": true
     },
@@ -217,6 +252,9 @@
       "optional": true
     },
     "@react-native-async-storage/async-storage": {
+      "optional": true
+    },
+    "@coinbase/wallet-mobile-sdk": {
       "optional": true
     }
   },

@@ -6,22 +6,10 @@ export default {
     {
       "name": "NetMind Testnet Explorer",
       "url": "https://testbrower.protago-dev.com",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmQNipd6uen7sm7HZXGbqhcSVkUXxu3Tp6c3BoeFpvmywp",
-        "width": 500,
-        "height": 500,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmQNipd6uen7sm7HZXGbqhcSVkUXxu3Tp6c3BoeFpvmywp",
-    "width": 500,
-    "height": 500,
-    "format": "png"
-  },
   "infoURL": "https://netmind.ai",
   "name": "Netmind Chain Testnet",
   "nativeCurrency": {
