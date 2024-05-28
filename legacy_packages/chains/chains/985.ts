@@ -6,12 +6,24 @@ export default {
     {
       "name": "Memo Mainnet Explorer",
       "url": "https://scan.metamemo.one:8080",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://bafkreig52paynhccs4o5ew6f7mk3xoqu2bqtitmfvlgnwarh2pm33gbdrq",
+        "width": 128,
+        "height": 128,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
     "https://faucet.metamemo.one/"
   ],
+  "icon": {
+    "url": "ipfs://bafkreig52paynhccs4o5ew6f7mk3xoqu2bqtitmfvlgnwarh2pm33gbdrq",
+    "width": 128,
+    "height": 128,
+    "format": "png"
+  },
   "name": "Memo Smart Chain Mainnet",
   "nativeCurrency": {
     "name": "Memo",

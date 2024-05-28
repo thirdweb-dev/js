@@ -6,7 +6,13 @@ export default {
     {
       "name": "Vanguard Explorer",
       "url": "https://explorer-vanguard.vanarchain.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmeERjnmdZ6v1tfCyfKfy2Rzh1vPCsU7x2sLJcLqQ6E3Fd",
+        "width": 1000,
+        "height": 1628,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
@@ -17,6 +23,12 @@ export default {
       "name": "EIP155"
     }
   ],
+  "icon": {
+    "url": "ipfs://QmeERjnmdZ6v1tfCyfKfy2Rzh1vPCsU7x2sLJcLqQ6E3Fd",
+    "width": 1000,
+    "height": 1628,
+    "format": "png"
+  },
   "infoURL": "https://vanarchain.com",
   "name": "Vanguard",
   "nativeCurrency": {

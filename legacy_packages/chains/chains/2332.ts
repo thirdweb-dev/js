@@ -6,12 +6,24 @@ export default {
     {
       "name": "SOMA Explorer Mainnet",
       "url": "https://somascan.io",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmadSU2tcyvuzssDYGJ4rVLag43QLnKwcBerZR2zKLVU2N",
+        "width": 500,
+        "height": 500,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
     "https://airdrop.somanetwork.io"
   ],
+  "icon": {
+    "url": "ipfs://QmadSU2tcyvuzssDYGJ4rVLag43QLnKwcBerZR2zKLVU2N",
+    "width": 500,
+    "height": 500,
+    "format": "png"
+  },
   "infoURL": "https://somanetwork.io",
   "name": "SOMA Network Mainnet",
   "nativeCurrency": {

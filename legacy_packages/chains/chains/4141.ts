@@ -12,6 +12,12 @@ export default {
   "faucets": [
     "https://faucet.tipboxcoin.net"
   ],
+  "icon": {
+    "url": "ipfs://QmbiaHnR3fVVofZ7Xq2GYZxwHkLEy3Fh5qDtqnqXD6ACAh",
+    "width": 192,
+    "height": 192,
+    "format": "png"
+  },
   "infoURL": "https://tipboxcoin.net",
   "name": "Tipboxcoin Testnet",
   "nativeCurrency": {

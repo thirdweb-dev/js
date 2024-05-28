@@ -6,10 +6,22 @@ export default {
     {
       "name": "blockscout",
       "url": "https://explorer.exosama.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmaQxfwpXYTomUd24PMx5tKjosupXcm99z1jL1XLq9LWBS",
+    "width": 468,
+    "height": 468,
+    "format": "png"
+  },
   "infoURL": "https://moonsama.com",
   "name": "Exosama Network",
   "nativeCurrency": {

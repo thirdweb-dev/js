@@ -12,6 +12,12 @@ export default {
   "faucets": [
     "https://faucet.dogcoin.network"
   ],
+  "icon": {
+    "url": "ipfs://QmZCadkExKThak3msvszZjo6UnAbUJKE61dAcg4TixuMC3",
+    "width": 160,
+    "height": 171,
+    "format": "png"
+  },
   "infoURL": "https://dogcoin.network",
   "name": "Dogcoin Mainnet",
   "nativeCurrency": {

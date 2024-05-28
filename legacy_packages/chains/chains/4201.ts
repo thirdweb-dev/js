@@ -20,6 +20,12 @@ export default {
       "name": "EIP1559"
     }
   ],
+  "icon": {
+    "url": "ipfs://Qmeg9sFF5tAGi6MCx7YjtVHW6a23zqvHRK1xwzSdp9iE7z",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "infoURL": "https://lukso.network",
   "name": "LUKSO Testnet",
   "nativeCurrency": {

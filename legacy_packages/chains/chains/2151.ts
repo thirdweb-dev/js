@@ -6,10 +6,22 @@ export default {
     {
       "name": "BOASCAN",
       "url": "https://boascan.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmW3CT4SHmso5dRJdsjR8GL1qmt79HkdAebCn2uNaWXFYh",
+        "width": 256,
+        "height": 257,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmW3CT4SHmso5dRJdsjR8GL1qmt79HkdAebCn2uNaWXFYh",
+    "width": 256,
+    "height": 257,
+    "format": "png"
+  },
   "infoURL": "https://docs.bosagora.org",
   "name": "BOSagora Mainnet",
   "nativeCurrency": {

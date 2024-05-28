@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmckkDRkuCQWbvhpKGsqa8ajuQvf3W5dekzw5qpiPC6shk",
+    "width": 1220,
+    "height": 1220,
+    "format": "png"
+  },
   "infoURL": "https://primalnetwork.org",
   "name": "PRM Mainnet",
   "nativeCurrency": {

@@ -4,6 +4,12 @@ export default {
   "chainId": 510,
   "explorers": [],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmeSvQcD3XvLFAiMLoQSPbGK9JxVfbCWPBUTMLhhhzYPqX",
+    "width": 16000,
+    "height": 16000,
+    "format": "png"
+  },
   "infoURL": "https://syndicate.io",
   "name": "Syndicate Chain",
   "nativeCurrency": {

@@ -6,10 +6,22 @@ export default {
     {
       "name": "blockscout",
       "url": "https://explorer.metall2.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://Qmesm61n8vVVDEeZU7npz39aQYofes9vMfXYwWM4JehLFS",
+    "width": 250,
+    "height": 250,
+    "format": "svg"
+  },
   "infoURL": "https://metall2.com",
   "name": "Metal L2",
   "nativeCurrency": {

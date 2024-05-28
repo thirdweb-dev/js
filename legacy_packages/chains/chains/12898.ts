@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmNvoUp2RWiWQzHUKrZ7SnPzwF3FbCNd3jSdpGJhQdH1y5",
+    "width": 256,
+    "height": 256,
+    "format": "png"
+  },
   "infoURL": "https://letsplayfair.ai",
   "name": "PlayFair Testnet Subnet",
   "nativeCurrency": {

@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmYbskrGpidbMwsJekTeLrr8Z6GA9q4Uxh7piS1F9BdWWv",
+    "width": 256,
+    "height": 256,
+    "format": "png"
+  },
   "infoURL": "https://compverse.io",
   "name": "Compverse Mainnet",
   "nativeCurrency": {

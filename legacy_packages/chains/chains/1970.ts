@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmW4C4QHLMhLeH5MsdVbauMc2Skb4ehzLKU3egLKKoux4D",
+    "width": 130,
+    "height": 130,
+    "format": "png"
+  },
   "infoURL": "https://scschain.com",
   "name": "Super Smart Chain Mainnet",
   "nativeCurrency": {

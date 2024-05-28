@@ -6,10 +6,22 @@ export default {
     {
       "name": "Brise Scan",
       "url": "https://brisescan.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmY3vKe1rG9AyHSGH1ouP3ER3EVUZRtRrFbFZEfEpMSd4V",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmY3vKe1rG9AyHSGH1ouP3ER3EVUZRtRrFbFZEfEpMSd4V",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "infoURL": "https://bitgert.com/",
   "name": "Bitgert Mainnet",
   "nativeCurrency": {

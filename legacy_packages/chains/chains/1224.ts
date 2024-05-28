@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmdGfvH9qfvbMXYKosS1nHbw3q5UtFJky4hdMDmmKDTx8Y",
+    "width": 250,
+    "height": 250,
+    "format": "png"
+  },
   "infoURL": "https://buildonhybrid.com",
   "name": "Hybrid Testnet",
   "nativeCurrency": {

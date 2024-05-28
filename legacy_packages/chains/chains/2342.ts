@@ -12,6 +12,12 @@ export default {
   "faucets": [
     "https://www.omniaverse.io"
   ],
+  "icon": {
+    "url": "ipfs://QmdNQMFxcjB9PAP1LZVqaQmyppV5QGTqXXmbBeQyaTUpMM",
+    "width": 192,
+    "height": 192,
+    "format": "png"
+  },
   "infoURL": "https://www.omniaverse.io",
   "name": "Omnia Chain",
   "nativeCurrency": {

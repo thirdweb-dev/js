@@ -6,10 +6,22 @@ export default {
     {
       "name": "OpTrust Testnet explorer",
       "url": "https://scantest.optrust.io",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmYktPMo4tdQhMA9nRJBVckjzHcFLbpHbTVNSpGUUPEP8J",
+        "width": 500,
+        "height": 500,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmYktPMo4tdQhMA9nRJBVckjzHcFLbpHbTVNSpGUUPEP8J",
+    "width": 500,
+    "height": 500,
+    "format": "png"
+  },
   "infoURL": "https://optrust.io",
   "name": "OpTrust Testnet",
   "nativeCurrency": {

@@ -40,6 +40,12 @@ export default {
       "name": "EIP155"
     }
   ],
+  "icon": {
+    "url": "ipfs://Qme7PT7gidTzRuf3T2JdxQ64JeZPgFH7yNBB8mYoMPbpTe",
+    "width": 200,
+    "height": 200,
+    "format": "png"
+  },
   "infoURL": "https://ethereumclassic.org",
   "name": "Ethereum Classic",
   "nativeCurrency": {

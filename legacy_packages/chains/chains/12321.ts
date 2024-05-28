@@ -6,6 +6,12 @@ export default {
   "faucets": [
     "https://faucet.blgchain.com"
   ],
+  "icon": {
+    "url": "ipfs://QmUN5j2cre8GHKv52JE8ag88aAnRmuHMGFxePPvKMogisC",
+    "width": 512,
+    "height": 512,
+    "format": "svg"
+  },
   "infoURL": "https://blgchain.com",
   "name": "BLG Testnet",
   "nativeCurrency": {

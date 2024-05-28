@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://bafybeiehps5cqdhqottu2efo4jeehwpkz5rbux3cjxd75rm6rjm4sgs2wi",
+    "width": 250,
+    "height": 250,
+    "format": "png"
+  },
   "infoURL": "https://iorachain.com",
   "name": "Iora Chain",
   "nativeCurrency": {

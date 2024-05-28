@@ -6,10 +6,22 @@ export default {
     {
       "name": "Enter Explorer - Expenter",
       "url": "https://explorer.entercoin.net",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://Qmb2UYVc1MjLPi8vhszWRxqBJYoYkWQVxDJRSmtrgk6j2E",
+        "width": 64,
+        "height": 64,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://Qmb2UYVc1MjLPi8vhszWRxqBJYoYkWQVxDJRSmtrgk6j2E",
+    "width": 64,
+    "height": 64,
+    "format": "png"
+  },
   "infoURL": "https://entercoin.net",
   "name": "EnterChain Mainnet",
   "nativeCurrency": {

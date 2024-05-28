@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmS9h3nFiCzaBLnBNw8Wot4U7vvEVK45EQfi8nxH4nvrmz",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "infoURL": "https://bitnet.money",
   "name": "Bitnet",
   "nativeCurrency": {

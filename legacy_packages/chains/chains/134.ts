@@ -6,10 +6,22 @@ export default {
     {
       "name": "blockscout",
       "url": "https://blockscout.bellecour.iex.ec",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmUYKpVmZL4aS3TEZLG5wbrRJ6exxLiwm1rejfGYYNicfb",
+    "width": 155,
+    "height": 155,
+    "format": "png"
+  },
   "infoURL": "https://iex.ec",
   "name": "iExec Sidechain",
   "nativeCurrency": {

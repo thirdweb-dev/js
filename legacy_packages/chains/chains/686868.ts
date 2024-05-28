@@ -12,6 +12,12 @@ export default {
   "faucets": [
     "https://faucet.wondollars.org"
   ],
+  "icon": {
+    "url": "ipfs://QmQ6mjKWJQ5WmFiJzcqJnuHWZK53nQYJB1SnMQZEqgr74h",
+    "width": 250,
+    "height": 250,
+    "format": "png"
+  },
   "infoURL": "https://wonnetwork.org",
   "name": "Won Network",
   "nativeCurrency": {

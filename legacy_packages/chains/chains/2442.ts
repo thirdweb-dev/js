@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmNmJZkQgx9RcFLS3rvxQTVYcPfyAFPr667keHTUxB9PDv",
+    "width": 122,
+    "height": 135,
+    "format": "png"
+  },
   "infoURL": "https://polygon.technology/polygon-zkevm",
   "name": "Polygon zkEVM Cardona Testnet",
   "nativeCurrency": {

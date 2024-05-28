@@ -18,6 +18,12 @@ export default {
       "name": "EIP1559"
     }
   ],
+  "icon": {
+    "url": "ipfs://QmSemioP83RXnDWwTZbet8VpwJxcFRboX4B3pcdhLZGodP",
+    "width": 200,
+    "height": 200,
+    "format": "png"
+  },
   "infoURL": "https://bahamut.io",
   "name": "Bahamut",
   "nativeCurrency": {

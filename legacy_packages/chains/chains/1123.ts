@@ -6,10 +6,22 @@ export default {
     {
       "name": "blockscout",
       "url": "https://testnet-explorer.bsquared.network",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmPV6ASrQDEkEW3g3ni7p2rJMPeciRLpEpvrAc1QfzVkx9",
+        "width": 640,
+        "height": 640,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmPV6ASrQDEkEW3g3ni7p2rJMPeciRLpEpvrAc1QfzVkx9",
+    "width": 640,
+    "height": 640,
+    "format": "png"
+  },
   "infoURL": "https://www.bsquared.network",
   "name": "B2 Testnet",
   "nativeCurrency": {

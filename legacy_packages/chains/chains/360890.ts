@@ -6,10 +6,22 @@ export default {
     {
       "name": "LAVITA Mainnet Explorer",
       "url": "https://tsub360890-explorer.thetatoken.org",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmfHbWCxwSjf8qmg4yw8jySHZijRXTPW8f5xd2T5sjbeCY",
+        "width": 1024,
+        "height": 1024,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmfHbWCxwSjf8qmg4yw8jySHZijRXTPW8f5xd2T5sjbeCY",
+    "width": 1024,
+    "height": 1024,
+    "format": "png"
+  },
   "infoURL": "https://www.lavita.ai",
   "name": "LAVITA Mainnet",
   "nativeCurrency": {

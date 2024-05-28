@@ -6,10 +6,22 @@ export default {
     {
       "name": "Deamchain Block Explorer",
       "url": "https://scan.deamchain.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmXvHWmjfXKdZMSz7x82NR4SjEqigKdJELVHbnzUPkj17F",
+        "width": 512,
+        "height": 512,
+        "format": "svg"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmXvHWmjfXKdZMSz7x82NR4SjEqigKdJELVHbnzUPkj17F",
+    "width": 512,
+    "height": 512,
+    "format": "svg"
+  },
   "infoURL": "https://deamchain.com",
   "name": "Deamchain Mainnet",
   "nativeCurrency": {

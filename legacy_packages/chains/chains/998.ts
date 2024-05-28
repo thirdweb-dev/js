@@ -15,6 +15,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://bafkreidmvcd5i7touug55hj45mf2pgabxamy5fziva7mtx5n664s3yap6m",
+    "width": 205,
+    "height": 28,
+    "format": "png"
+  },
   "infoURL": "https://luckynetwork.org",
   "name": "Lucky Network",
   "nativeCurrency": {

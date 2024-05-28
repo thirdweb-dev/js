@@ -12,6 +12,12 @@ export default {
   "faucets": [
     "https://faucet.egonscan.com"
   ],
+  "icon": {
+    "url": "ipfs://QmNZiMmzMQYjyGtNSghtzLg4UooYhDgMQsa677DAP5KsBg",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "infoURL": "https://egonscan.com",
   "name": "EgonCoin Testnet",
   "nativeCurrency": {
