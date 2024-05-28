@@ -1530,6 +1530,9 @@ importers:
       '@aws-sdk/credential-providers':
         specifier: 3.577.0
         version: 3.577.0(@aws-sdk/client-sso-oidc@3.577.0)
+      '@coinbase/wallet-mobile-sdk':
+        specifier: ^1
+        version: 1.0.13(expo@51.0.5)(react-native@0.74.1)(react@18.2.0)
       '@react-native-async-storage/async-storage':
         specifier: ^1
         version: 1.23.1(react-native@0.74.1)
@@ -1676,6 +1679,9 @@ importers:
       '@aws-sdk/credential-providers':
         specifier: 3.577.0
         version: 3.577.0(@aws-sdk/client-sso-oidc@3.577.0)
+      '@coinbase/wallet-mobile-sdk':
+        specifier: 1.0.13
+        version: 1.0.13(expo@51.0.5)(react-native@0.74.1)(react@18.2.0)
       '@react-native-async-storage/async-storage':
         specifier: ^1.23.1
         version: 1.23.1(react-native@0.74.1)
@@ -5794,6 +5800,23 @@ packages:
         optional: true
     dev: false
 
+  /@coinbase/wallet-mobile-sdk@1.0.13(expo@51.0.5)(react-native@0.74.1)(react@18.2.0):
+    resolution: {integrity: sha512-sK7G31jiT6yS4Dp7XzhCqB6uQJHAH2eDGZLkRtwVURMgBdg8+l5OnPK3l3O4Y8HNnJ3Qdn3PIKAqzCtHfIKXkw==}
+    peerDependencies:
+      expo: '*'
+      react: '*'
+      react-native: '*'
+    dependencies:
+      '@metamask/safe-event-emitter': 2.0.0
+      bn.js: 5.2.1
+      buffer: 6.0.3
+      eth-rpc-errors: 4.0.3
+      events: 3.3.0
+      expo: 51.0.5(@babel/core@7.24.5)(@babel/preset-env@7.24.5)
+      react: 18.2.0
+      react-native: 0.74.1(@babel/core@7.24.5)(@babel/preset-env@7.24.5)(@types/react@18.2.17)(react@18.2.0)
+      react-native-mmkv: 2.11.0(react-native@0.74.1)(react@18.2.0)
+
   /@coinbase/wallet-sdk@3.9.3:
     resolution: {integrity: sha512-N/A2DRIf0Y3PHc1XAMvbBUu4zisna6qAdqABMZwBMNEfWrXpAwx16pZGkYCLGE+Rvv1edbcB2LYDRnACNcmCiw==}
     dependencies:
@@ -7945,7 +7968,6 @@ packages:
 
   /@metamask/safe-event-emitter@2.0.0:
     resolution: {integrity: sha512-/kSXhY692qiV1MXu6EeOZvg5nECLclxNXcKCxJ3cXQgYuRymRHpdx/t7JXfsK+JLjwA1e1c1/SBrlQYpusC29Q==}
-    dev: false
 
   /@metamask/safe-event-emitter@3.1.1:
     resolution: {integrity: sha512-ihb3B0T/wJm1eUuArYP4lCTSEoZsClHhuWyfo/kMX3m/odpqNcPfsz5O2A3NT7dXCAgWPGDQGPqygCpgeniKMw==}
@@ -17055,7 +17077,6 @@ packages:
     resolution: {integrity: sha512-Z3ymjopaoft7JDoxZcEb3pwdGh7yiYMhOwm2doUt6ASXlMavpNlK6Cre0+IMl2VSGyEU9rkiperQhp5iRxn5Pg==}
     dependencies:
       fast-safe-stringify: 2.1.1
-    dev: false
 
   /ethereum-bloom-filters@1.1.0:
     resolution: {integrity: sha512-J1gDRkLpuGNvWYzWslBQR9cDV4nd4kfvVTE/Wy4Kkm4yb3EYRSlyi0eB/inTsSTTVyA0+HyzHgbr95Fn/Z1fSw==}
@@ -18281,6 +18302,7 @@ packages:
 
   /glob@6.0.4:
     resolution: {integrity: sha512-MKZeRNyYZAVVVG1oZeLaWie1uweH40m9AZwIwxyPbTSX4hHrVYSzLg0Ro5Z5R7XKkIX+Cc6oD1rqeDJnwsB8/A==}
+    deprecated: Glob versions prior to v9 are no longer supported
     requiresBuild: true
     dependencies:
       inflight: 1.0.6
@@ -18292,6 +18314,7 @@ packages:
 
   /glob@7.1.6:
     resolution: {integrity: sha512-LwaxwyZ72Lk7vZINtNNrywX0ZuLyStrdDtabefZKAY5ZGJhVtgdznluResxNmPitE0SAO+O26sWTHeKSI2wMBA==}
+    deprecated: Glob versions prior to v9 are no longer supported
     dependencies:
       fs.realpath: 1.0.0
       inflight: 1.0.6
@@ -22994,6 +23017,15 @@ packages:
       fast-base64-decode: 1.0.0
       react-native: 0.74.1(@babel/core@7.24.5)(@babel/preset-env@7.24.5)(@types/react@18.2.17)(react@18.2.0)
 
+  /react-native-mmkv@2.11.0(react-native@0.74.1)(react@18.2.0):
+    resolution: {integrity: sha512-28PdUHjZJmAw3q+8zJDAAdohnZMpDC7WgRUJxACOMkcmJeqS3u5cKS/lSq2bhf1CvaeIiHYHUWiyatUjMRCDQQ==}
+    peerDependencies:
+      react: '*'
+      react-native: '>=0.71.0'
+    dependencies:
+      react: 18.2.0
+      react-native: 0.74.1(@babel/core@7.24.5)(@babel/preset-env@7.24.5)(@types/react@18.2.17)(react@18.2.0)
+
   /react-native-quick-base64@2.1.2(react-native@0.74.1)(react@18.2.0):
     resolution: {integrity: sha512-xghaXpWdB0ji8OwYyo0fWezRroNxiNFCNFpGUIyE7+qc4gA/IGWnysIG5L0MbdoORv8FkTKUvfd6yCUN5R2VFA==}
     peerDependencies:
@@ -23614,6 +23646,7 @@ packages:
 
   /rimraf@2.4.5:
     resolution: {integrity: sha512-J5xnxTyqaiw06JjMftq7L9ouA448dw/E7dKghkP9WpKNuwmARNNg+Gk8/u5ryb9N/Yo2+z3MCwuqFK/+qPOPfQ==}
+    deprecated: Rimraf versions prior to v4 are no longer supported
     hasBin: true
     requiresBuild: true
     dependencies:
