@@ -12,12 +12,6 @@ export default {
   "faucets": [
     "https://xsc.pub/faucet"
   ],
-  "icon": {
-    "url": "ipfs://QmNmAFgQKkjofaBR5mhB5ygE1Gna36YBVsGkgZQxrwW85s",
-    "width": 98,
-    "height": 96,
-    "format": "png"
-  },
   "infoURL": "https://xsc.pub/",
   "name": "XT Smart Chain Mainnet",
   "nativeCurrency": {

@@ -18,12 +18,6 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "icon": {
-    "url": "ipfs://QmWvTUSCcQ17mDiKg3w1X5nW3q4wZGuVsZ9vwzJ8S9oCns",
-    "width": 200,
-    "height": 200,
-    "format": "png"
-  },
   "infoURL": "https://jibchain.net",
   "name": "JIBCHAIN L1",
   "nativeCurrency": {

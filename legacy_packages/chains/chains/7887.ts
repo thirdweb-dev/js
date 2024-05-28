@@ -6,22 +6,10 @@ export default {
     {
       "name": "Kinto Explorer",
       "url": "https://explorer.kinto.xyz",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmZw4zfR4Q8MD6MZRwkQrMeiiiu77AJffHdCMdemt4R2VM",
-        "width": 400,
-        "height": 400,
-        "format": "jpg"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmZw4zfR4Q8MD6MZRwkQrMeiiiu77AJffHdCMdemt4R2VM",
-    "width": 400,
-    "height": 400,
-    "format": "jpg"
-  },
   "infoURL": "https://kinto.xyz",
   "name": "Kinto Mainnet",
   "nativeCurrency": {

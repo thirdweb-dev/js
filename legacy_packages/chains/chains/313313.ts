@@ -2,7 +2,13 @@ import type { Chain } from "../src/types";
 export default {
   "chain": "Sahara",
   "chainId": 313313,
-  "explorers": [],
+  "explorers": [
+    {
+      "name": "Testnet Scan",
+      "url": "https://explorer.saharaa.info",
+      "standard": "EIP3091"
+    }
+  ],
   "faucets": [],
   "features": [
     {

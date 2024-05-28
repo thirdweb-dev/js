@@ -13,12 +13,6 @@ export default {
     "https://faucet.liberty10.shardeum.org"
   ],
   "features": [],
-  "icon": {
-    "url": "ipfs://Qma1bfuubpepKn7DLDy4NPSKDeT3S4VPCNhu6UmdGrb6YD",
-    "width": 609,
-    "height": 533,
-    "format": "png"
-  },
   "infoURL": "https://docs.shardeum.org/",
   "name": "Shardeum Liberty 1.X",
   "nativeCurrency": {

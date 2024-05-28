@@ -12,12 +12,6 @@ export default {
   "faucets": [
     "https://sepoliafaucet.com/"
   ],
-  "icon": {
-    "url": "ipfs://qmxhs7fvjanzwm14vjpbnmklre32gsiy9chsarrnbtfa1n",
-    "width": 1280,
-    "height": 1280,
-    "format": "png"
-  },
   "infoURL": "https://docs.apexlayer.xyz/",
   "name": "APEX Testnet",
   "nativeCurrency": {

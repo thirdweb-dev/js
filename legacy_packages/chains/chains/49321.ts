@@ -18,12 +18,6 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "icon": {
-    "url": "ipfs://Qmd5R5khFePwY9dYBGhjRA1rGtUAKaHg7Z2B7mBrbA6TiB",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
   "infoURL": "https://gunbygunz.com",
   "name": "GUNZ Testnet",
   "nativeCurrency": {

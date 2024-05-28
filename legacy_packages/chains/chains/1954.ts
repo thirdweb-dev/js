@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmUBveetVibvSEWQrjyxySgUphLuoMGSVLGmYnobt5FgEZ",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
   "infoURL": "https://dexilla.com",
   "name": "Dexilla Testnet",
   "nativeCurrency": {

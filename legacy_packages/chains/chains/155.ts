@@ -6,24 +6,12 @@ export default {
     {
       "name": "TenetScan Testnet",
       "url": "https://testnet.tenetscan.io",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://Qmc1gqjWTzNo4pyFSGtQuCu7kRSZZBUVybtTjHn2nNEEPA",
-        "width": 640,
-        "height": 640,
-        "format": "svg"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [
     "https://faucet.testnet.tenet.org"
   ],
-  "icon": {
-    "url": "ipfs://Qmc1gqjWTzNo4pyFSGtQuCu7kRSZZBUVybtTjHn2nNEEPA",
-    "width": 640,
-    "height": 640,
-    "format": "svg"
-  },
   "infoURL": "https://tenet.org/",
   "name": "Tenet Testnet",
   "nativeCurrency": {

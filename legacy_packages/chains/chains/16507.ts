@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://bafkreie6nai3yhykcdlsyshn5lbcbyba5y7zwsqg6owcfek2urhoucr6rm",
-    "width": 800,
-    "height": 800,
-    "format": "png"
-  },
   "infoURL": "https://www.genesys.network/",
   "name": "Genesys Mainnet",
   "nativeCurrency": {

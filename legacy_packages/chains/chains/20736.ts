@@ -18,12 +18,6 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "icon": {
-    "url": "ipfs://bafkreieiro4imoujeewc4r4thf5hxj47l56j2iwuz6d6pdj6ieb6ub3h7e",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
   "infoURL": "https://p12.network",
   "name": "P12 Chain",
   "nativeCurrency": {

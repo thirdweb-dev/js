@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmUQiosuH8ib8aXSpYcJRTje9Lro9VeZyd4cNXrXGY5r8D",
-    "width": 100,
-    "height": 100,
-    "format": "svg"
-  },
   "infoURL": "https://www.entangle.fi",
   "name": "Entangle Mainnet",
   "nativeCurrency": {

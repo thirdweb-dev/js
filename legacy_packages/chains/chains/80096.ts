@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmNWGj94URMQNyGZbGuAareEL4UpHjTwYWFEFBcX9utBZX",
-    "width": 421,
-    "height": 421,
-    "format": "png"
-  },
   "infoURL": "http://hizoco.net",
   "name": "Hizoco mainnet",
   "nativeCurrency": {

@@ -6,13 +6,7 @@ export default {
     {
       "name": "Lyra Explorer",
       "url": "https://explorer.lyra.finance",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://bafkreifrvwcwcgs2luampufdbdgohuxue5rep3u4p4owmwskob7hzpcfdq",
-        "width": 2640,
-        "height": 2640,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
@@ -24,12 +18,6 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "icon": {
-    "url": "ipfs://bafkreifrvwcwcgs2luampufdbdgohuxue5rep3u4p4owmwskob7hzpcfdq",
-    "width": 2640,
-    "height": 2640,
-    "format": "png"
-  },
   "infoURL": "https://lyra.finance",
   "name": "Lyra Chain",
   "nativeCurrency": {

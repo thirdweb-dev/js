@@ -6,22 +6,10 @@ export default {
     {
       "name": "blockscout",
       "url": "https://explorer.re.al",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmNUmWC7jNEBcTs6ZqkrQ5vMAQG8qjq7n3FcZnXvJZLoQ9",
-        "width": 301,
-        "height": 302,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmNUmWC7jNEBcTs6ZqkrQ5vMAQG8qjq7n3FcZnXvJZLoQ9",
-    "width": 301,
-    "height": 302,
-    "format": "png"
-  },
   "infoURL": "https://re.al",
   "name": "re.al",
   "nativeCurrency": {

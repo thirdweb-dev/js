@@ -6,22 +6,10 @@ export default {
     {
       "name": "Dodao Explorer",
       "url": "https://tanssi-evmexplorer.netlify.app/?rpcUrl=https://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmdWsi6mhs6Agb3LF4uycUwx2fgNmwkuAGb7JmsLPkwd3j",
-        "width": 636,
-        "height": 629,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmdWsi6mhs6Agb3LF4uycUwx2fgNmwkuAGb7JmsLPkwd3j",
-    "width": 636,
-    "height": 629,
-    "format": "png"
-  },
   "infoURL": "https://dodao.dev/",
   "name": "Dodao",
   "nativeCurrency": {

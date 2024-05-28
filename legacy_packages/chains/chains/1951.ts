@@ -4,12 +4,6 @@ export default {
   "chainId": 1951,
   "explorers": [],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmV2vhTqS9UyrX9Q6BSCbK4JrKBnS8ErHvstMjfb2oVWaj",
-    "width": 700,
-    "height": 495,
-    "format": "png"
-  },
   "name": "D-Chain Mainnet",
   "nativeCurrency": {
     "name": "DOINX",

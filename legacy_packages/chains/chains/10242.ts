@@ -6,22 +6,10 @@ export default {
     {
       "name": "blockscout",
       "url": "https://explorer.arthera.net",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
-        "width": 551,
-        "height": 540,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmYQp3e52KjkT4bYdAvB6ACEEpXs2D8DozsDitaADRY2Ak",
-    "width": 1024,
-    "height": 998,
-    "format": "png"
-  },
   "infoURL": "https://docs.arthera.net/build/developing-sc/using-hardhat",
   "name": "Arthera Mainnet",
   "nativeCurrency": {

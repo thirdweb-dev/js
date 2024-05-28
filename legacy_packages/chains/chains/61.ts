@@ -40,12 +40,6 @@ export default {
       "name": "EIP155"
     }
   ],
-  "icon": {
-    "url": "ipfs://Qme7PT7gidTzRuf3T2JdxQ64JeZPgFH7yNBB8mYoMPbpTe",
-    "width": 200,
-    "height": 200,
-    "format": "png"
-  },
   "infoURL": "https://ethereumclassic.org",
   "name": "Ethereum Classic",
   "nativeCurrency": {
@@ -53,13 +47,14 @@ export default {
     "symbol": "ETC",
     "decimals": 18
   },
-  "networkId": 1,
+  "networkId": 61,
+  "redFlags": [],
   "rpc": [
     "https://61.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://etc.etcdesktop.com",
     "https://etc.rivet.link",
     "https://besu-at.etc-network.info",
     "https://geth-at.etc-network.info",
-    "https://etc.etcdesktop.com",
     "https://etc.mytokenpocket.vip"
   ],
   "shortName": "etc",

@@ -6,22 +6,10 @@ export default {
     {
       "name": "qbitscan",
       "url": "https://explorer.qbitscan.com",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmZEuR4bJaZkC497qQnsxHv23pZFcXb9dTdaDPCPo2sj9Z",
-        "width": 200,
-        "height": 200,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmZEuR4bJaZkC497qQnsxHv23pZFcXb9dTdaDPCPo2sj9Z",
-    "width": 200,
-    "height": 200,
-    "format": "png"
-  },
   "infoURL": "https://kronobit.org",
   "name": "Kronobit Mainnet",
   "nativeCurrency": {

@@ -6,22 +6,10 @@ export default {
     {
       "name": "blockscout",
       "url": "https://frenscan.io",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmQk41bYX6WpYyUAdRgomZekxP5mbvZXhfxLEEqtatyJv4",
-        "width": 128,
-        "height": 128,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmQk41bYX6WpYyUAdRgomZekxP5mbvZXhfxLEEqtatyJv4",
-    "width": 128,
-    "height": 128,
-    "format": "png"
-  },
   "infoURL": "https://frenchain.app",
   "name": "Frenchain",
   "nativeCurrency": {

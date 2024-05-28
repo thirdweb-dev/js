@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmduEdtFobPpZWSc45MU6RKxZfTEzLux2z8ikHFhT8usqv",
-    "width": 1024,
-    "height": 1024,
-    "format": "png"
-  },
   "infoURL": "https://saakuru.network",
   "name": "Saakuru Mainnet",
   "nativeCurrency": {

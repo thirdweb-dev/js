@@ -18,12 +18,6 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "icon": {
-    "url": "ipfs://Qma7LpnkGjAN1dwL6VTXUYqzySNxjLg4br7J8UE4yZWYec",
-    "width": 310,
-    "height": 310,
-    "format": "png"
-  },
   "infoURL": "https://wikiwoop.com",
   "name": "WoopChain Mainnet",
   "nativeCurrency": {

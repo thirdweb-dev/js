@@ -6,24 +6,12 @@ export default {
     {
       "name": "Vine Explorer",
       "url": "https://vne.network/rose",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://QmTPbbhH4CkQiQWm4JUh3J9o5w79vXjFZaMBW4DKNuSVU3",
-        "width": 512,
-        "height": 512,
-        "format": "png"
-      }
+      "standard": "none"
     }
   ],
   "faucets": [
     "https://vne.network/rose"
   ],
-  "icon": {
-    "url": "ipfs://QmTPbbhH4CkQiQWm4JUh3J9o5w79vXjFZaMBW4DKNuSVU3",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
   "infoURL": "https://www.peer.inc",
   "name": "Vine Testnet",
   "nativeCurrency": {

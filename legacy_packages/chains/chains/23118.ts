@@ -12,12 +12,6 @@ export default {
   "faucets": [
     "https://faucet.opside.network"
   ],
-  "icon": {
-    "url": "ipfs://QmeCyZeibUoHNoYGzy1GkzH2uhxyRHKvH51PdaUMer4VTo",
-    "width": 591,
-    "height": 591,
-    "format": "png"
-  },
   "infoURL": "https://opside.network",
   "name": "Opside Testnet",
   "nativeCurrency": {
