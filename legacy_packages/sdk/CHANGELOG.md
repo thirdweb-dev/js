@@ -1,5 +1,37 @@
 # @thirdweb-dev/sdk
 
+## 4.0.89
+
+### Patch Changes
+
+- Updated dependencies [[`8d0c985`](https://github.com/thirdweb-dev/js/commit/8d0c985c45fc85b220784f841c1de7533ad8ebf8), [`f8cad77`](https://github.com/thirdweb-dev/js/commit/f8cad774ec979a02d47388bc835386caaed218e8)]:
+  - @thirdweb-dev/chains@0.1.115
+  - thirdweb@5.25.1
+
+## 4.0.88
+
+### Patch Changes
+
+- Updated dependencies [[`b9b185b`](https://github.com/thirdweb-dev/js/commit/b9b185b665e9cc2085f0cc07e3a3cc06a755b42a), [`8b606b5`](https://github.com/thirdweb-dev/js/commit/8b606b51e4dceae031dc98380847fdb2ecf61994), [`fc1b658`](https://github.com/thirdweb-dev/js/commit/fc1b65888f71b93e4c76a61a5a2d0146c8129d1e), [`c1d3a5a`](https://github.com/thirdweb-dev/js/commit/c1d3a5a259341e6fdda62e3dcaf0c4dae3bd60ff), [`99d11bb`](https://github.com/thirdweb-dev/js/commit/99d11bb8591180a7837eafc19e85afedcca46100), [`bd8fb7a`](https://github.com/thirdweb-dev/js/commit/bd8fb7a576ada21381625f1a241b10a6e68ef1f7), [`3b03cd0`](https://github.com/thirdweb-dev/js/commit/3b03cd098716070821c6b20ecedacec1df47648f), [`9c417d9`](https://github.com/thirdweb-dev/js/commit/9c417d9be35a4793c8d3d6ff4a143168f8356379)]:
+  - thirdweb@5.25.0
+  - @thirdweb-dev/chains@0.1.114
+
+## 4.0.87
+
+### Patch Changes
+
+- Updated dependencies [[`b72daa4`](https://github.com/thirdweb-dev/js/commit/b72daa4f45eab927a94b8e3ed5ae74a66ba9e32b), [`8b3e1e2`](https://github.com/thirdweb-dev/js/commit/8b3e1e2682954370e37fe316c89c4f28bb32b476), [`4eda306`](https://github.com/thirdweb-dev/js/commit/4eda306645df107280fed11847a7a333fafaa05e), [`2774d1f`](https://github.com/thirdweb-dev/js/commit/2774d1fa7383a5a1150991c5c44019e64f276eea), [`5031e44`](https://github.com/thirdweb-dev/js/commit/5031e44d92d959bbdd43a90122eaf33fb9598ea0), [`32df45f`](https://github.com/thirdweb-dev/js/commit/32df45f9b07fa07e6f3ad218af095d721cacc76a), [`546d2db`](https://github.com/thirdweb-dev/js/commit/546d2db93ea61f9fbae1e0f3383781d7d766ad25), [`764bce2`](https://github.com/thirdweb-dev/js/commit/764bce2ba93b6e24fc81e9b804b765396b873363), [`d021f4e`](https://github.com/thirdweb-dev/js/commit/d021f4e5efc8432a3e4cee8c681f2622056da9a8), [`c3a92bf`](https://github.com/thirdweb-dev/js/commit/c3a92bfe90adf9a9d16707d9be04ad23ad2b0199)]:
+  - thirdweb@5.24.0
+  - @thirdweb-dev/chains@0.1.113
+
+## 4.0.86
+
+### Patch Changes
+
+- Updated dependencies [[`a22eb5c`](https://github.com/thirdweb-dev/js/commit/a22eb5c4bff839aa5137b0a743d75afc929b49f1), [`a2275c4`](https://github.com/thirdweb-dev/js/commit/a2275c409c4a7f8f595bd1ee7250fee46d54f1e7), [`da63eab`](https://github.com/thirdweb-dev/js/commit/da63eab29a53ff04cbe1dc175c6a6b6066a1ee9d), [`f49f8ca`](https://github.com/thirdweb-dev/js/commit/f49f8cacb4f69dc46551b023c22bda71712df04a), [`5994685`](https://github.com/thirdweb-dev/js/commit/599468559d2c63b337f770fb492d386cdd90e7ae), [`f8e0a50`](https://github.com/thirdweb-dev/js/commit/f8e0a50136a600b93c05802322f208c133a9c81e), [`57f7cd5`](https://github.com/thirdweb-dev/js/commit/57f7cd5a661ac3b0611782f17e96a3e30a3485ae), [`b46173f`](https://github.com/thirdweb-dev/js/commit/b46173f982dd3b31795739b9a834046ed3599dba), [`7abbe03`](https://github.com/thirdweb-dev/js/commit/7abbe03a11fc38a02a64329de201636d8e1c5b44), [`2cd8a01`](https://github.com/thirdweb-dev/js/commit/2cd8a01ec07cc9dadf9570f807181be6b8d43047), [`f55fa4c`](https://github.com/thirdweb-dev/js/commit/f55fa4ca856924a0a1eb6b8e5fe743d76b6e2760), [`49aa6e4`](https://github.com/thirdweb-dev/js/commit/49aa6e41d5df93204821b72f17f1ba5c3cfe41f7), [`9c9969e`](https://github.com/thirdweb-dev/js/commit/9c9969e41abb86f819bad55f5bb3dd36447e41e4)]:
+  - thirdweb@5.23.0
+  - @thirdweb-dev/chains@0.1.112
+
 ## 4.0.85
 
 ### Patch Changes

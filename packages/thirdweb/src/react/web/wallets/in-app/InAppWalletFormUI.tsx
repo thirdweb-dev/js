@@ -172,22 +172,26 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
       }}
     >
       {config?.metadata?.image && (
-        <Img
-          loading="eager"
-          client={client}
-          style={{
-            maxHeight: "100px",
-            maxWidth: "300px",
-            margin: "auto",
-          }}
-          src={config.metadata.image.src}
-          alt={config.metadata.image.alt}
-          width={Math.min(config.metadata.image.width ?? 300, 300)?.toString()}
-          height={Math.min(
-            config.metadata.image.height ?? 100,
-            100,
-          )?.toString()}
-        />
+        <Container flex="row" center="both">
+          <Img
+            loading="eager"
+            client={client}
+            style={{
+              maxHeight: "100px",
+              maxWidth: "300px",
+            }}
+            src={config.metadata.image.src}
+            alt={config.metadata.image.alt}
+            width={Math.min(
+              config.metadata.image.width ?? 300,
+              300,
+            )?.toString()}
+            height={Math.min(
+              config.metadata.image.height ?? 100,
+              100,
+            )?.toString()}
+          />
+        </Container>
       )}
 
       {/* Social Login */}

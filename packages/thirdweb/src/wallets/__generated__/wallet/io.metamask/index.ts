@@ -29,4 +29,7 @@ export const wallet = {
     native: null,
     universal: null,
   },
+  deepLink: {
+    mobile: "https://metamask.app.link/dapp/",
+  },
 } as const;

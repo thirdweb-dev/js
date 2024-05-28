@@ -6,24 +6,12 @@ export default {
     {
       "name": "blockscout",
       "url": "https://testnet.hyperonchain.com",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmWxhyxXTEsWH98v7M3ck4ZL1qQoUaHG4HgtgxzD2KJQ5m",
-        "width": 540,
-        "height": 541,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [
     "https://faucet.hyperonchain.com"
   ],
-  "icon": {
-    "url": "ipfs://QmWxhyxXTEsWH98v7M3ck4ZL1qQoUaHG4HgtgxzD2KJQ5m",
-    "width": 540,
-    "height": 541,
-    "format": "png"
-  },
   "infoURL": "https://docs.hyperonchain.com",
   "name": "HyperonChain TestNet",
   "nativeCurrency": {

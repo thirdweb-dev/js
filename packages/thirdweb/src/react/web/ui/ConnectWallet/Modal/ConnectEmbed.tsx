@@ -406,7 +406,7 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
           auth: props.auth,
         }}
       >
-        <WalletUIStatesProvider theme={props.theme}>
+        <WalletUIStatesProvider theme={props.theme} isOpen={true}>
           <ConnectEmbedContent {...props} onConnect={props.onConnect} />
           {autoConnectComp}
         </WalletUIStatesProvider>
@@ -451,6 +451,7 @@ const ConnectEmbedContent = (
   } else {
     content = (
       <ConnectModalContent
+        shouldSetActive={true}
         screenSetup={screenSetup}
         isOpen={true}
         onClose={() => {

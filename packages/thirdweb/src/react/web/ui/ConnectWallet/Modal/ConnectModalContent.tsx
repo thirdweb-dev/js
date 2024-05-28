@@ -28,8 +28,9 @@ export const ConnectModalContent = (props: {
   onClose: () => void;
   isOpen: boolean;
   setModalVisibility: (value: boolean) => void;
+  shouldSetActive: boolean;
 }) => {
-  const { setModalVisibility, onClose } = props;
+  const { setModalVisibility, onClose, shouldSetActive } = props;
   const { screen, setScreen, initialScreen } = props.screenSetup;
   const {
     wallets,
@@ -48,7 +49,9 @@ export const ConnectModalContent = (props: {
 
   const handleConnected = useCallback(
     (wallet: Wallet) => {
-      setActiveWallet(wallet);
+      if (shouldSetActive) {
+        setActiveWallet(wallet);
+      }
 
       if (onConnect) {
         onConnect(wallet);
@@ -74,6 +77,7 @@ export const ConnectModalContent = (props: {
       showSignatureScreen,
       setScreen,
       setSelectionData,
+      shouldSetActive,
     ],
   );
 

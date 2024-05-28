@@ -46,10 +46,6 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "Argent",
   },
   {
-    id: "com.spot-wallet",
-    name: "Spot",
-  },
-  {
     id: "com.bitget.web3",
     name: "Bitget Wallet",
   },
@@ -360,6 +356,10 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
   {
     id: "io.safematrix",
     name: "Safematrix",
+  },
+  {
+    id: "com.neonwallet",
+    name: "Neon Wallet",
   },
   {
     id: "xyz.sequence",
@@ -786,10 +786,6 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "U2U Wallet",
   },
   {
-    id: "io.shidowallet",
-    name: "Shido Wallet",
-  },
-  {
     id: "io.ozonewallet",
     name: "OzoneWallet",
   },
@@ -923,7 +919,7 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
   },
   {
     id: "com.secuxtech",
-    name: "",
+    name: "SecuX",
   },
   {
     id: "io.didwallet",
@@ -1275,7 +1271,7 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
   },
   {
     id: "com.mpcvault.broswerplugin",
-    name: "Solayer",
+    name: "MPCVault | Team crypto wallet",
   },
   {
     id: "io.legacynetwork",
@@ -1368,6 +1364,26 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
   {
     id: "fi.dropmate",
     name: "Dropmate",
+  },
+  {
+    id: "pub.dg",
+    name: "DGPub App",
+  },
+  {
+    id: "xyz.bonuz",
+    name: "Bonuz",
+  },
+  {
+    id: "com.icewal",
+    name: "icewal",
+  },
+  {
+    id: "one.metapro.wallet",
+    name: "metapro wallet",
+  },
+  {
+    id: "io.shido",
+    name: "Shido App",
   },
   {
     id: "io.rabby",

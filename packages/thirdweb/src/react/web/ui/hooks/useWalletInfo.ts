@@ -4,7 +4,7 @@ import type { WalletInfo } from "../../../../wallets/wallet-info.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
 
 /**
- * @internal
+ * Returns the wallet info for the provided wallet id.
  */
 export function useWalletInfo(id: WalletId) {
   return useQuery<WalletInfo>({
@@ -17,7 +17,7 @@ export function useWalletInfo(id: WalletId) {
 }
 
 /**
- * @internal
+ * Returns the wallet image for the provided wallet id.
  */
 export function useWalletImage(id: WalletId) {
   return useQuery({

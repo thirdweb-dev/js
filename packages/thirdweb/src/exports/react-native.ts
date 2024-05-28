@@ -14,6 +14,7 @@ export {
   useSetActiveWalletConnectionStatus,
   useIsAutoConnecting,
 } from "../react/core/hooks/wallets/wallet-hooks.js";
+export { useWalletBalance } from "../react/core/hooks/others/useWalletBalance.js";
 
 // contract related
 export { useReadContract } from "../react/core/hooks/contract/useReadContract.js";
@@ -79,3 +80,16 @@ export const useSendTransaction = useSendTransactionCore;
 export { useSendBatchTransaction } from "../react/core/hooks/contract/useSendBatchTransaction.js";
 export { useSendAndConfirmTransaction } from "../react/core/hooks/contract/useSendAndConfirmTransaction.js";
 export { useEstimateGasCost } from "../react/core/hooks/contract/useEstimateGasCost.js";
+
+// Components
+export {
+  AutoConnect,
+  type AutoConnectProps,
+} from "../react/core/hooks/connection/AutoConnect.js";
+export { useAutoConnect } from "../react/core/hooks/connection/useAutoConnect.js";
+
+// wallet info
+export {
+  useWalletInfo,
+  useWalletImage,
+} from "../react/web/ui/hooks/useWalletInfo.js";

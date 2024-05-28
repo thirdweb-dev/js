@@ -2,25 +2,11 @@ import type { Chain } from "../src/types";
 export default {
   "chain": "B3 Sepolia",
   "chainId": 1993,
-  "explorers": [
-    {
-      "name": "blockscout",
-      "url": "https://sepolia.explorer.b3.fun/",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://Qmc6XdDC7FSn2YyBwFXUNVbk9Nmhvn2Bz7iMqCA1ofwhQC/b3-logo-temp-cropped.png",
-        "width": 512,
-        "height": 512,
-        "format": "png"
-      }
-    }
-  ],
-  "faucets": [
-    "https://faucet.b3.fun/"
-  ],
+  "explorers": [],
+  "faucets": [],
   "features": [],
   "icon": {
-    "url": "ipfs://Qmc6XdDC7FSn2YyBwFXUNVbk9Nmhvn2Bz7iMqCA1ofwhQC/b3-logo-temp-cropped.png",
+    "url": "https://cdn.b3.fun/b3_logo%40.png",
     "width": 512,
     "height": 512,
     "format": "png"
