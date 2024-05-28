@@ -6,13 +6,7 @@ export default {
     {
       "name": "DSC Explorer Mainnet",
       "url": "https://explorer.decimalchain.com",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmSgzwKnJJjys3Uq2aVVdwJ3NffLj3CXMVCph9uByTBegc",
-        "width": 256,
-        "height": 256,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
@@ -24,12 +18,6 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "icon": {
-    "url": "ipfs://QmSgzwKnJJjys3Uq2aVVdwJ3NffLj3CXMVCph9uByTBegc",
-    "width": 256,
-    "height": 256,
-    "format": "png"
-  },
   "infoURL": "https://decimalchain.com",
   "name": "Decimal Smart Chain Mainnet",
   "nativeCurrency": {

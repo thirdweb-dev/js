@@ -12,12 +12,6 @@ export default {
   "faucets": [
     "https://xfaucet.xenonchain.com"
   ],
-  "icon": {
-    "url": "ipfs://QmNSoxDnj6MV8mPJWiuzzLbATcbk5op11NTwMTdzcr272F",
-    "width": 500,
-    "height": 500,
-    "format": "png"
-  },
   "infoURL": "https://xenonchain.com",
   "name": "Xenon Chain Testnet",
   "nativeCurrency": {

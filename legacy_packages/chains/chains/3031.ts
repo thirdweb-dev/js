@@ -6,22 +6,10 @@ export default {
     {
       "name": "Orlando (ORL) Explorer",
       "url": "https://orlscan.com",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmNsuuBBTHErnuFDcdyzaY8CKoVJtobsLJx2WQjaPjcp7g",
-        "width": 512,
-        "height": 528,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmNsuuBBTHErnuFDcdyzaY8CKoVJtobsLJx2WQjaPjcp7g",
-    "width": 512,
-    "height": 528,
-    "format": "png"
-  },
   "infoURL": "https://orlchain.com",
   "name": "Orlando Chain",
   "nativeCurrency": {

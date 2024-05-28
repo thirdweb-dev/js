@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmNZiMmzMQYjyGtNSghtzLg4UooYhDgMQsa677DAP5KsBg",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
   "infoURL": "https://egonscan.com",
   "name": "EgonCoin Mainnet",
   "nativeCurrency": {

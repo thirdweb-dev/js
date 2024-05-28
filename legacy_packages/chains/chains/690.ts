@@ -6,22 +6,10 @@ export default {
     {
       "name": "blockscout",
       "url": "https://explorer.redstone.xyz",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
-        "width": 551,
-        "height": 540,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://bafkreieyaqgkgntvxuo5tnhgseladga5q6gutc37dab7kqqfdguhq7vkxq",
-    "width": 5836,
-    "height": 5836,
-    "format": "png"
-  },
   "infoURL": "https://redstone.xyz",
   "name": "Redstone",
   "nativeCurrency": {

@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmdbFGqrpiLQGtAeUAyeS2NBvACfgrchEF466ni5q36fuZ",
-    "width": 401,
-    "height": 401,
-    "format": "png"
-  },
   "infoURL": "https://yidarkscan.com",
   "name": "Yidark Chain Mainnet",
   "nativeCurrency": {

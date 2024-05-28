@@ -18,12 +18,6 @@ export default {
     "https://sei-faucet.nima.enterprises",
     "https://sei-evm.faucetme.pro"
   ],
-  "icon": {
-    "url": "ipfs://bafkreih3l3iisplmikofkbfyimqlox7nmixzlkzhjoewmpi4jbqitwryoa",
-    "width": 600,
-    "height": 600,
-    "format": "png"
-  },
   "infoURL": "https://www.sei.io",
   "name": "Sei Devnet",
   "nativeCurrency": {

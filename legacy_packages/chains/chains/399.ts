@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmVzJDndPui6qBSeJWe5kMLA56C3KpVhqqqk9xvVKE1DGb",
-    "width": 256,
-    "height": 256,
-    "format": "png"
-  },
   "infoURL": "https://nativ3.network",
   "name": "Nativ3 Mainnet",
   "nativeCurrency": {

@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmQsNtUoaKUHWaxFMBuCQwkX9WmKHz7iNotcZTFkWo7Qgt",
-    "width": 1020,
-    "height": 1022,
-    "format": "png"
-  },
   "infoURL": "https://www.dcnetio.cloud",
   "name": "DC Mainnet",
   "nativeCurrency": {

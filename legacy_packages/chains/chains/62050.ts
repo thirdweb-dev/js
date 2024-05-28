@@ -6,13 +6,7 @@ export default {
     {
       "name": "optopia-scan",
       "url": "https://scan.optopia.ai",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://bafkreid3xv3zkuo2cygwt7vwm5c2aqjbyhy5qxn7xkc66ajhu2mjh2ybki",
-        "width": 1000,
-        "height": 1000,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
@@ -21,12 +15,6 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "icon": {
-    "url": "ipfs://bafkreid3xv3zkuo2cygwt7vwm5c2aqjbyhy5qxn7xkc66ajhu2mjh2ybki",
-    "width": 1000,
-    "height": 1000,
-    "format": "png"
-  },
   "infoURL": "https://optopia.ai",
   "name": "Optopia Mainnet",
   "nativeCurrency": {

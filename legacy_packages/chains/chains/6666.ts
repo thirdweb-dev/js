@@ -26,12 +26,6 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "icon": {
-    "url": "ipfs://bafkreiarso74bytq5ccnl3mlfhd4ejiylwautsr6ovbqgmynzjzmkorn6y",
-    "width": 500,
-    "height": 500,
-    "format": "svg"
-  },
   "infoURL": "https://cybria.io",
   "name": "Cybria Testnet",
   "nativeCurrency": {

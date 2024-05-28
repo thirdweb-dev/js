@@ -6,22 +6,10 @@ export default {
     {
       "name": "zillscout",
       "url": "https://sepolia.zillnet.io",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmfVmjLNiBh8KyCr9mwDZh34aEhhQ2LAjuP87DFxhfd9nn",
-        "width": 264,
-        "height": 264,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmfVmjLNiBh8KyCr9mwDZh34aEhhQ2LAjuP87DFxhfd9nn",
-    "width": 264,
-    "height": 264,
-    "format": "png"
-  },
   "infoURL": "https://zillnet.io",
   "name": "Zillion Sepolia Testnet",
   "nativeCurrency": {

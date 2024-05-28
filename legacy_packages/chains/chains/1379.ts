@@ -16,12 +16,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://bafkreihfoy2kgf2rebaoicso7z5h7ju46z6gtr64mskkths3qbfkrtnkjm",
-    "width": 190,
-    "height": 170,
-    "format": "png"
-  },
   "infoURL": "https://kalarchain.tech",
   "name": "Kalar Chain",
   "nativeCurrency": {

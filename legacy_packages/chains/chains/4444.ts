@@ -6,24 +6,12 @@ export default {
     {
       "name": "htmlcoin",
       "url": "https://explorer.htmlcoin.com",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://QmR1oDRSadPerfyWMhKHNP268vPKvpczt5zPawgFSZisz2",
-        "width": 1000,
-        "height": 1000,
-        "format": "png"
-      }
+      "standard": "none"
     }
   ],
   "faucets": [
     "https://gruvin.me/htmlcoin"
   ],
-  "icon": {
-    "url": "ipfs://QmR1oDRSadPerfyWMhKHNP268vPKvpczt5zPawgFSZisz2",
-    "width": 1000,
-    "height": 1000,
-    "format": "png"
-  },
   "infoURL": "https://htmlcoin.com",
   "name": "Htmlcoin Mainnet",
   "nativeCurrency": {

@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmSxXjvWng3Diz4YwXDV2VqSPgMyzLYBNfkjJcr7rzkxom",
-    "width": 400,
-    "height": 400,
-    "format": "png"
-  },
   "infoURL": "https://testnet.airdao.io",
   "name": "AirDAO Testnet",
   "nativeCurrency": {

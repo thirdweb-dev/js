@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmRR4v6h6z21BpgS9xY3ExLB4Gkmm3i3dJWQx27oTGifq8",
-    "width": 800,
-    "height": 693,
-    "format": "png"
-  },
   "infoURL": "https://combonetwork.io",
   "name": "Combo Mainnet",
   "nativeCurrency": {

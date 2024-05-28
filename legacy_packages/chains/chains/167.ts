@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmfFK6B4MFLrpSS46aLf7hjpt28poHFeTGEKEuH248Tbyj",
-    "width": 200,
-    "height": 200,
-    "format": "png"
-  },
   "infoURL": "https://atoshi.org",
   "name": "Atoshi Testnet",
   "nativeCurrency": {

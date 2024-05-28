@@ -12,12 +12,6 @@ export default {
   "faucets": [
     "https://t.me/unique2faucet_opal_bot"
   ],
-  "icon": {
-    "url": "ipfs://QmYJDpmWyjDa3H6BxweFmQXk4fU8b1GU7M9EqYcaUNvXzc",
-    "width": 48,
-    "height": 48,
-    "format": "svg"
-  },
   "infoURL": "https://unique.network",
   "name": "Opal testnet by Unique",
   "nativeCurrency": {

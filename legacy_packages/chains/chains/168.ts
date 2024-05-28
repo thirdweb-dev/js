@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmRAGPFhvQiXgoJkui7WHajpKctGFrJNhHqzYdwcWt5V3Z",
-    "width": 1024,
-    "height": 1024,
-    "format": "png"
-  },
   "infoURL": "https://aioz.network",
   "name": "AIOZ Network",
   "nativeCurrency": {

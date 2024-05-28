@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmPLMg5mYD8XRknvYbDkD2x7FXxYan7MPTeUWZC2CihwDM",
-    "width": 2048,
-    "height": 2048,
-    "format": "png"
-  },
   "infoURL": "https://sanr.app",
   "name": "Santiment Intelligence Network",
   "nativeCurrency": {

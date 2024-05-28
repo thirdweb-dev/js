@@ -4,12 +4,6 @@ export default {
   "chainId": 1414,
   "explorers": [],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmTEnk2fosqbY6HQW5vySrLGbopJfeni9ThZ6R9sVefbnq",
-    "width": 800,
-    "height": 800,
-    "format": "png"
-  },
   "name": "Silicon zkEVM Sepolia Testnet",
   "nativeCurrency": {
     "name": "Sepolia Ether",

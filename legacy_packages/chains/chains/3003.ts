@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmXHSbtVNCJVfe2CvRH7njdyf2SrX5u5bNTfvhqjLeFN2A",
-    "width": 938,
-    "height": 938,
-    "format": "png"
-  },
   "infoURL": "https://canxium.org",
   "name": "Canxium Mainnet",
   "nativeCurrency": {

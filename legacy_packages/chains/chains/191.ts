@@ -12,12 +12,6 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "icon": {
-    "url": "ipfs://bafkreihsas2rwakc7lllmtb4pcgwutlel2woibmqmhd4aiin342zgtpmwy",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
   "infoURL": "https://filefilego.com",
   "name": "FileFileGo",
   "nativeCurrency": {

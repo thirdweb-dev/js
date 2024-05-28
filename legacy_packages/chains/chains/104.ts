@@ -6,13 +6,7 @@ export default {
     {
       "name": "kaibascan",
       "url": "https://kaibascan.io",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://bafybeihbsw3ky7yf6llpww6fabo4dicotcgwjpefscoxrppstjx25dvtea",
-        "width": 932,
-        "height": 932,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],

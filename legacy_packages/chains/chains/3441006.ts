@@ -18,12 +18,6 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "icon": {
-    "url": "ipfs://QmTckcVTViRZ3NqT36MTt8AvgBSmudrbgU3pi8AaNtthoV",
-    "width": 834,
-    "height": 834,
-    "format": "png"
-  },
   "infoURL": "https://manta-testnet.caldera.dev/",
   "name": "Manta Pacific Sepolia Testnet",
   "nativeCurrency": {

@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmTjV3TTR5aLb7fi7tjx8gcDvYtqBpusqhCSaznVxJ7NJg",
-    "width": 150,
-    "height": 150,
-    "format": "png"
-  },
   "infoURL": "https://curvescan.io",
   "name": "CURVE Mainnet",
   "nativeCurrency": {

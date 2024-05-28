@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://bafkreidg4wpewve5mdxrofneqblydkrjl3oevtgpdf3fk3z3vjqam6ocoe",
-    "width": 350,
-    "height": 350,
-    "format": "png"
-  },
   "infoURL": "https://tcgverse.xyz/",
   "name": "TCG Verse Mainnet",
   "nativeCurrency": {

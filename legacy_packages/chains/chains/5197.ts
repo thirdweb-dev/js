@@ -4,12 +4,6 @@ export default {
   "chainId": 5197,
   "explorers": [],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmV1wZ1RVXeD7216aiVBpLkbBBHWNuoTvcSzpVQsqi2uaH",
-    "width": 200,
-    "height": 200,
-    "format": "png"
-  },
   "infoURL": "https://eraswap.info/",
   "name": "EraSwap Mainnet",
   "nativeCurrency": {

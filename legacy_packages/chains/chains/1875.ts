@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmNeELax6vjkR9WZVmtggk8cam9xHVABZ4WvQyqkGCJ5qf",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
   "infoURL": "https://whitechain.io",
   "name": "Whitechain",
   "nativeCurrency": {

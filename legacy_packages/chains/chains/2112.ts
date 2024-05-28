@@ -18,12 +18,6 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "icon": {
-    "url": "ipfs://QmUz6jimQbYZ43aeQBC6nSy2m7W7U6xR2qG8tCki2Jvj9k",
-    "width": 344,
-    "height": 342,
-    "format": "png"
-  },
   "infoURL": "https://u.cash/",
   "name": "UCHAIN Mainnet",
   "nativeCurrency": {

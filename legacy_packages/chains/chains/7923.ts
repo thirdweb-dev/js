@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmZy2TMY881ghRxXJA7VyRA8Zhj2LJJ86DpHRZs3VQZqoJ",
-    "width": 53,
-    "height": 53,
-    "format": "png"
-  },
   "infoURL": "https://explorer.dotblox.io",
   "name": "Dot Blox",
   "nativeCurrency": {
