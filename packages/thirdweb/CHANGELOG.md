@@ -1,5 +1,46 @@
 # thirdweb
 
+## 5.25.0
+
+### Minor Changes
+
+- [#3140](https://github.com/thirdweb-dev/js/pull/3140) [`fc1b658`](https://github.com/thirdweb-dev/js/commit/fc1b65888f71b93e4c76a61a5a2d0146c8129d1e) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Show in-app wallet users an option to export their private key. Enabled by default.
+
+  ### Usage
+
+  To hide the private key export:
+
+  ```tsx
+  import { inAppWallet } from "thirdweb/wallets";
+  const wallet = inAppWallet({
+    hidePrivateKeyExport: true,
+  });
+  ```
+
+- [#3154](https://github.com/thirdweb-dev/js/pull/3154) [`99d11bb`](https://github.com/thirdweb-dev/js/commit/99d11bb8591180a7837eafc19e85afedcca46100) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds the ability to copy the wallet connect connection link as an alternative to scanning the QR code
+
+- [#3150](https://github.com/thirdweb-dev/js/pull/3150) [`9c417d9`](https://github.com/thirdweb-dev/js/commit/9c417d9be35a4793c8d3d6ff4a143168f8356379) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds onDisconnect callback to connect button
+
+  ### Usage
+
+  ```tsx
+  <ConnectButton
+    client={THIRDWEB_CLIENT}
+    onDisconnect={() => console.log("disconnect")}
+    theme={theme === "light" ? "light" : "dark"}
+  />
+  ```
+
+### Patch Changes
+
+- [#3162](https://github.com/thirdweb-dev/js/pull/3162) [`b9b185b`](https://github.com/thirdweb-dev/js/commit/b9b185b665e9cc2085f0cc07e3a3cc06a755b42a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add support for CB wallet in react native
+
+- [#3151](https://github.com/thirdweb-dev/js/pull/3151) [`8b606b5`](https://github.com/thirdweb-dev/js/commit/8b606b51e4dceae031dc98380847fdb2ecf61994) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Better handling for multiple accounts connected
+
+- [#3144](https://github.com/thirdweb-dev/js/pull/3144) [`c1d3a5a`](https://github.com/thirdweb-dev/js/commit/c1d3a5a259341e6fdda62e3dcaf0c4dae3bd60ff) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix resolveScheme for native apps
+
+- [#3153](https://github.com/thirdweb-dev/js/pull/3153) [`3b03cd0`](https://github.com/thirdweb-dev/js/commit/3b03cd098716070821c6b20ecedacec1df47648f) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Improve the copy on the pending connection QR code screen in the connect modal
+
 ## 5.24.0
 
 ### Minor Changes

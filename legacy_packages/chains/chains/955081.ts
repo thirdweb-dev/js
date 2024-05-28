@@ -15,12 +15,6 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "icon": {
-    "url": "ipfs://bafkreievzx4ke62dtc77o47x7vs7nn67ghzrwku6h5dxo3hwcsqfeblke4",
-    "width": 612,
-    "height": 612,
-    "format": "png"
-  },
   "name": "Jono12 Subnet",
   "nativeCurrency": {
     "name": "Jono12 Token",
