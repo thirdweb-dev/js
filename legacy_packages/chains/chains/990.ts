@@ -12,6 +12,12 @@ export default {
   "faucets": [
     "https://faucet.eliberty.ngo"
   ],
+  "icon": {
+    "url": "ipfs://Qmcr8US1DZcK3ooiMtE8tEQPgep12abXzxPw1jCkgZhji9",
+    "width": 150,
+    "height": 150,
+    "format": "png"
+  },
   "infoURL": "https://eliberty.ngo",
   "name": "eLiberty Mainnet",
   "nativeCurrency": {

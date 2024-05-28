@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://bafkreihq3b3cqbg2ttlp4dfbgmirrwdw6bbpmmbr5wolddd2izbyqay4xq",
+    "width": 480,
+    "height": 480,
+    "format": "png"
+  },
   "infoURL": "https://ethxy.com",
   "name": "EthXY Testnet",
   "nativeCurrency": {

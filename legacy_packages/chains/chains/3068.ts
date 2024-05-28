@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmYxniqbiFD7nXBNjN8boUhoXYEAW23YquArD2Rnkq8WHS",
+    "width": 480,
+    "height": 480,
+    "format": "png"
+  },
   "infoURL": "https://bifrostnetwork.com",
   "name": "Bifrost Mainnet",
   "nativeCurrency": {

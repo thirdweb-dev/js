@@ -12,6 +12,12 @@ export default {
   "faucets": [
     "https://faucet.eclipse.builders"
   ],
+  "icon": {
+    "url": "ipfs://QmNutSgM7n6aJPPDiofe9Dm1epy1RcYTMvugukLUK2vmPM",
+    "width": 500,
+    "height": 500,
+    "format": "png"
+  },
   "infoURL": "https://docs.nautchain.xyz",
   "name": "Nautilus Trition Chain",
   "nativeCurrency": {

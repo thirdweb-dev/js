@@ -6,7 +6,13 @@ export default {
     {
       "name": "explorer.guru",
       "url": "https://humans.explorers.guru",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmU83haX3TNifDDjBx6RP6ByqES1Kg9VqeJC87X9ipKyCS",
+        "width": 386,
+        "height": 397,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],

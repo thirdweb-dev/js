@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmPRHDsVNpRZ72GoQgDbpa3R4wKENmrXCRNuYJkxocFRDb",
+    "width": 306,
+    "height": 293,
+    "format": "png"
+  },
   "infoURL": "https://gcscan.io",
   "name": "Globel Chain",
   "nativeCurrency": {

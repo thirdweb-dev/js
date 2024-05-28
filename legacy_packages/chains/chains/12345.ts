@@ -6,12 +6,24 @@ export default {
     {
       "name": "StepScan",
       "url": "https://testnet.stepscan.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmVp9jyb3UFW71867yVtymmiRw7dPY4BTnsp3hEjr9tn8L",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
     "https://faucet.step.network"
   ],
+  "icon": {
+    "url": "ipfs://QmVp9jyb3UFW71867yVtymmiRw7dPY4BTnsp3hEjr9tn8L",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "infoURL": "https://step.network",
   "name": "Step Testnet",
   "nativeCurrency": {

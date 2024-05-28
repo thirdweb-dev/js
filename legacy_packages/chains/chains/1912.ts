@@ -6,12 +6,24 @@ export default {
     {
       "name": "RUBY Smart Chain Testnet Explorer",
       "url": "https://testnet.rubyscan.net",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmXGJevyPHHKT28hDfsJ9Cq2DQ2bAavdie37MEwFQUVCQz",
+        "width": 500,
+        "height": 500,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
     "https://claim-faucet.rubychain.io/"
   ],
+  "icon": {
+    "url": "ipfs://QmXGJevyPHHKT28hDfsJ9Cq2DQ2bAavdie37MEwFQUVCQz",
+    "width": 500,
+    "height": 500,
+    "format": "png"
+  },
   "infoURL": "https://rubychain.io",
   "name": "Ruby Smart Chain Testnet",
   "nativeCurrency": {

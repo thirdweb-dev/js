@@ -6,12 +6,24 @@ export default {
     {
       "name": "blockscout",
       "url": "https://gnosis-chiado.blockscout.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
     "https://gnosisfaucet.com"
   ],
+  "icon": {
+    "url": "ipfs://bafybeidk4swpgdyqmpz6shd5onvpaujvwiwthrhypufnwr6xh3dausz2dm",
+    "width": 1800,
+    "height": 1800,
+    "format": "png"
+  },
   "infoURL": "https://docs.gnosischain.com",
   "name": "Gnosis Chiado Testnet",
   "nativeCurrency": {

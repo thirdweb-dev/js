@@ -6,10 +6,22 @@ export default {
     {
       "name": "Metad Scan",
       "url": "https://scan.metaplayer.one",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmZyxS9BfRGYWWDtvrV6qtthCYV4TwdjLoH2sF6MkiTYFf",
+        "width": 1280,
+        "height": 1280,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmZyxS9BfRGYWWDtvrV6qtthCYV4TwdjLoH2sF6MkiTYFf",
+    "width": 1280,
+    "height": 1280,
+    "format": "png"
+  },
   "infoURL": "https://docs.metaplayer.one/",
   "name": "Metaplayerone Mainnet",
   "nativeCurrency": {

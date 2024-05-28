@@ -13,6 +13,12 @@ export default {
     "https://faucet.bitindi.org"
   ],
   "features": [],
+  "icon": {
+    "url": "ipfs://QmRAFFPiLiSgjGTs9QaZdnR9fsDgyUdTejwSxcnPXo292s",
+    "width": 60,
+    "height": 72,
+    "format": "png"
+  },
   "infoURL": "https://bitindi.org",
   "name": "Bitindi Testnet",
   "nativeCurrency": {

@@ -6,11 +6,23 @@ export default {
     {
       "name": "Palettescan",
       "url": "https://palettescan.com",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmPCEGZD1p1keTT2YfPp725azx1r9Ci41hejeUuGL2whFA",
+        "width": 800,
+        "height": 800,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
   "features": [],
+  "icon": {
+    "url": "ipfs://QmPCEGZD1p1keTT2YfPp725azx1r9Ci41hejeUuGL2whFA",
+    "width": 800,
+    "height": 800,
+    "format": "png"
+  },
   "infoURL": "https://hashpalette.com/",
   "name": "Palette Chain Mainnet",
   "nativeCurrency": {

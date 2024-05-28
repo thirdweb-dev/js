@@ -6,12 +6,24 @@ export default {
     {
       "name": "Immutable Testnet explorer",
       "url": "https://explorer.testnet.immutable.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmXFUYFW4e6wifbU9LKVq7owM14bnE6ZbbYq3bn1jBP3Mw",
+        "width": 1168,
+        "height": 1168,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
     "https://docs.immutable.com/docs/zkEVM/guides/faucet"
   ],
+  "icon": {
+    "url": "ipfs://QmXFUYFW4e6wifbU9LKVq7owM14bnE6ZbbYq3bn1jBP3Mw",
+    "width": 1168,
+    "height": 1168,
+    "format": "png"
+  },
   "infoURL": "https://www.immutable.com",
   "name": "Immutable zkEVM Testnet",
   "nativeCurrency": {

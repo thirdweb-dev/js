@@ -6,12 +6,24 @@ export default {
     {
       "name": "blockscout",
       "url": "https://explorer.neura-testnet.ankr.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      }
     },
     {
       "name": "ankrscan-neura",
       "url": "https://testnet.explorer.neuraprotocol.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmWdpK5WFKrosaCSpJRCvU7uXeKk2qVeCckTxh6Zw2JrK8",
+        "width": 600,
+        "height": 600,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
@@ -25,6 +37,12 @@ export default {
       "name": "EIP1559"
     }
   ],
+  "icon": {
+    "url": "ipfs://QmWdpK5WFKrosaCSpJRCvU7uXeKk2qVeCckTxh6Zw2JrK8",
+    "width": 600,
+    "height": 600,
+    "format": "png"
+  },
   "infoURL": "https://www.neuraprotocol.io/",
   "name": "Neura Testnet",
   "nativeCurrency": {

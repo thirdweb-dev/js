@@ -6,12 +6,24 @@ export default {
     {
       "name": "Carbonium Network tesnet Explorer",
       "url": "https://testnet.carboniumscan.com",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmUTDMvoY7JgDs9sZuuBhsyJz6B2dNfc5jj6xUj355be2C",
+        "width": 500,
+        "height": 500,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
     "https://getfaucet.carbonium.network"
   ],
+  "icon": {
+    "url": "ipfs://QmUTDMvoY7JgDs9sZuuBhsyJz6B2dNfc5jj6xUj355be2C",
+    "width": 500,
+    "height": 500,
+    "format": "png"
+  },
   "infoURL": "https://carbonium.network",
   "name": "Carbonium Testnet Network",
   "nativeCurrency": {

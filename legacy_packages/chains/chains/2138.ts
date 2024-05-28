@@ -21,6 +21,12 @@ export default {
       "name": "EIP1559"
     }
   ],
+  "icon": {
+    "url": "ipfs://QmYrMRnjQJcNkYq9AvZ2FQ9kzYj9szzP4YDmyNA1ybd8xE",
+    "width": 1000,
+    "height": 1043,
+    "format": "png"
+  },
   "infoURL": "https://defi-oracle.io/",
   "name": "Defi Oracle Meta Testnet",
   "nativeCurrency": {

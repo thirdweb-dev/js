@@ -6,10 +6,22 @@ export default {
     {
       "name": "VinuScan Testnet",
       "url": "https://testnet.vinuscan.com",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://bafkreiayq7a5qncxzlilfnvpgzt4pwfxbof2qrqr2nyd2suztfummpty4i",
+        "width": 2000,
+        "height": 2000,
+        "format": "jpg"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://bafkreidtie4srt52ry67wd3dpxhklmug2ozrawvf3jdlljveinp3frutra",
+    "width": 2000,
+    "height": 392,
+    "format": "png"
+  },
   "infoURL": "https://vitainu.org",
   "name": "VinuChain Testnet",
   "nativeCurrency": {

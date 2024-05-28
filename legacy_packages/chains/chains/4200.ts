@@ -6,10 +6,22 @@ export default {
     {
       "name": "L2scan",
       "url": "https://scan.merlinchain.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmULpMFUvKSmJT8sWXS3WDnTm4EacgRbsEynDenpxcfrAj",
+        "width": 400,
+        "height": 400,
+        "format": "jpg"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmULpMFUvKSmJT8sWXS3WDnTm4EacgRbsEynDenpxcfrAj",
+    "width": 400,
+    "height": 400,
+    "format": "jpg"
+  },
   "infoURL": "https://merlinchain.io",
   "name": "Merlin Mainnet",
   "nativeCurrency": {

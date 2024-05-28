@@ -6,12 +6,24 @@ export default {
     {
       "name": "SOMA Testnet Explorer",
       "url": "https://testnet.somascan.io",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmadSU2tcyvuzssDYGJ4rVLag43QLnKwcBerZR2zKLVU2N",
+        "width": 500,
+        "height": 500,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
     "https://faucet.somanetwork.io"
   ],
+  "icon": {
+    "url": "ipfs://QmadSU2tcyvuzssDYGJ4rVLag43QLnKwcBerZR2zKLVU2N",
+    "width": 500,
+    "height": 500,
+    "format": "png"
+  },
   "infoURL": "https://somanetwork.io",
   "name": "SOMA Network Testnet",
   "nativeCurrency": {

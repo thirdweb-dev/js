@@ -16,6 +16,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmQB48m15TzhUFrmu56QCRQjkrkgUaKfgCmKE8o3RzmuPJ",
+    "width": 500,
+    "height": 500,
+    "format": "png"
+  },
   "infoURL": "https://defikingdoms.com",
   "name": "DFK Chain Test",
   "nativeCurrency": {

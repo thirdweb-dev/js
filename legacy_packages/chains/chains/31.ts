@@ -12,6 +12,12 @@ export default {
   "faucets": [
     "https://faucet.rsk.co/"
   ],
+  "icon": {
+    "url": "ipfs://bafkreigidzbf22dnpmmlfxv6u7oifq6ln33j4n57ox4ipiproalufrheym",
+    "width": 3000,
+    "height": 3325,
+    "format": "png"
+  },
   "infoURL": "https://rootstock.io",
   "name": "Rootstock Testnet",
   "nativeCurrency": {

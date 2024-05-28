@@ -6,6 +6,12 @@ export default {
   "faucets": [
     "https://etherlite.org/faucets"
   ],
+  "icon": {
+    "url": "ipfs://QmbNAai1KnBnw4SPQKgrf6vBddifPCQTg2PePry1bmmZYy",
+    "width": 88,
+    "height": 88,
+    "format": "png"
+  },
   "infoURL": "https://etherlite.org",
   "name": "EtherLite Chain",
   "nativeCurrency": {

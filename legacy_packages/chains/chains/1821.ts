@@ -6,10 +6,22 @@ export default {
     {
       "name": "RUBY Smart Chain MAINNET Explorer",
       "url": "https://rubyscan.net",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmXGJevyPHHKT28hDfsJ9Cq2DQ2bAavdie37MEwFQUVCQz",
+        "width": 500,
+        "height": 500,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmXGJevyPHHKT28hDfsJ9Cq2DQ2bAavdie37MEwFQUVCQz",
+    "width": 500,
+    "height": 500,
+    "format": "png"
+  },
   "infoURL": "https://rubychain.io",
   "name": "Ruby Smart Chain MAINNET",
   "nativeCurrency": {

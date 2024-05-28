@@ -6,10 +6,22 @@ export default {
     {
       "name": "BlocX Mainnet Explorer",
       "url": "https://explorer.blxscan.com",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmXM7XiLdSxhCub8MLSSo2J9V2qAkTcwdAGxcT57kurUzg",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmXM7XiLdSxhCub8MLSSo2J9V2qAkTcwdAGxcT57kurUzg",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "infoURL": "https://www.blocxchain.org/",
   "name": "BlocX Mainnet",
   "nativeCurrency": {

@@ -12,6 +12,12 @@ export default {
   "faucets": [
     "https://faucet.scolcoin.com"
   ],
+  "icon": {
+    "url": "ipfs://QmVES1eqDXhP8SdeCpM85wvjmhrQDXGRquQebDrSdvJqpt",
+    "width": 792,
+    "height": 822,
+    "format": "png"
+  },
   "infoURL": "https://scolcoin.com",
   "name": "Scolcoin WeiChain Testnet",
   "nativeCurrency": {

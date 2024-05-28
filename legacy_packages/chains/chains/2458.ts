@@ -6,12 +6,24 @@ export default {
     {
       "name": "Hybrid Chain Explorer Testnet",
       "url": "https://testnet.hybridscan.ai",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmQDNdhPvCrrijEKC3G9Px5if2CHgdxq7Q2Pg66cy9xwbF",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
     "https://faucet-testnet.hybridchain.ai"
   ],
+  "icon": {
+    "url": "ipfs://QmQDNdhPvCrrijEKC3G9Px5if2CHgdxq7Q2Pg66cy9xwbF",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "infoURL": "https://hybridchain.ai",
   "name": "Hybrid Chain Network Testnet",
   "nativeCurrency": {

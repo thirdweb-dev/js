@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmYiLMeKDXMSNuQmtxNdxm53xR588pcRXMf7zuiZLjQnc6",
+    "width": 1501,
+    "height": 1501,
+    "format": "png"
+  },
   "infoURL": "https://cryptophoenix.org/phoenix",
   "name": "Phoenix Mainnet",
   "nativeCurrency": {

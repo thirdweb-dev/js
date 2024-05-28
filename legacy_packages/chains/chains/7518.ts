@@ -6,10 +6,22 @@ export default {
     {
       "name": "MEVerse Chain Explorer",
       "url": "https://www.meversescan.io",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmPuQ6gaCfUtNdRuaEDbdhot2m2KCy2ZHCJUvZXJAtdeyJ",
+        "width": 800,
+        "height": 800,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmPuQ6gaCfUtNdRuaEDbdhot2m2KCy2ZHCJUvZXJAtdeyJ",
+    "width": 800,
+    "height": 800,
+    "format": "png"
+  },
   "infoURL": "https://www.meverse.sg",
   "name": "MEVerse Chain Mainnet",
   "nativeCurrency": {

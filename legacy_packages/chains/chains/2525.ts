@@ -4,6 +4,12 @@ export default {
   "chainId": 2525,
   "explorers": [],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmU9KU1qgReJR7vyVxN5zwWB3nkhSs658ViArUjT7GCh4r",
+    "width": 2000,
+    "height": 2000,
+    "format": "png"
+  },
   "infoURL": "https://inevm.com",
   "name": "inEVM Mainnet",
   "nativeCurrency": {

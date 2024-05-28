@@ -6,10 +6,22 @@ export default {
     {
       "name": "Quantum Explorer",
       "url": "https://qtm.avescoin.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmeKQVv2QneHaaggw2NfpZ7DGMdjVhPywTdse5RzCs4oGn",
+        "width": 232,
+        "height": 232,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmeKQVv2QneHaaggw2NfpZ7DGMdjVhPywTdse5RzCs4oGn",
+    "width": 232,
+    "height": 232,
+    "format": "png"
+  },
   "infoURL": "https://avescoin.io/",
   "name": "Quantum Network",
   "nativeCurrency": {

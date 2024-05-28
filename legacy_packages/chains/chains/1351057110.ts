@@ -6,13 +6,7 @@ export default {
     {
       "name": "Blockscout",
       "url": "https://staging-fast-active-bellatrix.explorer.staging-v3.skalenodes.com",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmbYYCoU2G4LUfRr9ofGowF3eatfvWv9FiPVhqKndZeqwA",
-        "width": 400,
-        "height": 400,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [
