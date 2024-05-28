@@ -39,11 +39,6 @@ const FN_OUTPUTS = [
             type: "bytes4",
             internalType: "bytes4",
           },
-          {
-            name: "callType",
-            type: "uint8",
-            internalType: "enum IExtensionConfig.CallType",
-          },
         ],
       },
       {
@@ -55,11 +50,6 @@ const FN_OUTPUTS = [
             name: "selector",
             type: "bytes4",
             internalType: "bytes4",
-          },
-          {
-            name: "callType",
-            type: "uint8",
-            internalType: "enum IExtensionConfig.CallType",
           },
           {
             name: "permissionBits",

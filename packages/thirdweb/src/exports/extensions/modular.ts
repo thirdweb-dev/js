@@ -72,12 +72,12 @@ export {
 export {
   installPublishedExtension,
   type InstallPublishedExtensionOptions,
-} from "../../extensions/modular/ModularCoreUpgradeable/write/installPublishedExtension.js";
+} from "../../extensions/modular/ModularCore/write/installPublishedExtension.js";
 export {
   uninstallPublishedExtension,
   type UninstallPublishedExtensionOptions,
-} from "../../extensions/modular/ModularCoreUpgradeable/write/uninstallPublishedExtension.js";
+} from "../../extensions/modular/ModularCore/write/uninstallPublishedExtension.js";
 export {
   uninstallExtensionByProxy,
   type UninstallExtensionByProxyOptions,
-} from "../../extensions/modular/ModularCoreUpgradeable/write/uninstallExtensionByProxy.js";
+} from "../../extensions/modular/ModularCore/write/uninstallExtensionByProxy.js";

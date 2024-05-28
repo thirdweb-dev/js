@@ -9,12 +9,12 @@ import { sendTransaction } from "../../transaction/actions/send-transaction.js";
 import { waitForReceipt } from "../../transaction/actions/wait-for-tx-receipt.js";
 import { prepareTransaction } from "../../transaction/prepare-transaction.js";
 import { resolveImplementation } from "../../utils/bytecode/resolveImplementation.js";
-import { installPublishedExtension } from "../modular/ModularCoreUpgradeable/write/installPublishedExtension.js";
-import { uninstallExtensionByProxy } from "../modular/ModularCoreUpgradeable/write/uninstallExtensionByProxy.js";
-import { uninstallPublishedExtension } from "../modular/ModularCoreUpgradeable/write/uninstallPublishedExtension.js";
-import { getInstalledExtensions } from "../modular/__generated__/ModularCoreUpgradeable/read/getInstalledExtensions.js";
-import { installExtension } from "../modular/__generated__/ModularCoreUpgradeable/write/installExtension.js";
-import { uninstallExtension } from "../modular/__generated__/ModularCoreUpgradeable/write/uninstallExtension.js";
+import { installPublishedExtension } from "../modular/ModularCore/write/installPublishedExtension.js";
+import { uninstallExtensionByProxy } from "../modular/ModularCore/write/uninstallExtensionByProxy.js";
+import { uninstallPublishedExtension } from "../modular/ModularCore/write/uninstallPublishedExtension.js";
+import { getInstalledExtensions } from "../modular/__generated__/ModularCore/read/getInstalledExtensions.js";
+import { installExtension } from "../modular/__generated__/ModularCore/write/installExtension.js";
+import { uninstallExtension } from "../modular/__generated__/ModularCore/write/uninstallExtension.js";
 import { deployModularCoreContract } from "./deploy-modular-core.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)(
@@ -140,7 +140,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       // uninstall extension
       const uninstallTransaction = uninstallExtension({
         contract: core,
-        extensionImplementation: extensionImplementation.address as string,
+        extension: extensionImplementation.address as string,
         data: "0x",
       });
       await sendTransaction({
@@ -157,7 +157,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       // reinstall the extension
       const installTransaction = installExtension({
         contract: core,
-        extensionImplementation: extensionImplementation.address as string,
+        extension: extensionImplementation.address as string,
         data: "0x",
       });
       await sendTransaction({

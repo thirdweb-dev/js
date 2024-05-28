@@ -19,6 +19,7 @@ import { prepareEvent } from "../../../../../event/prepare-event.js";
  */
 export function extensionUninstalledEvent() {
   return prepareEvent({
-    signature: "event ExtensionUninstalled(address sender, address extension)",
+    signature:
+      "event ExtensionUninstalled(address sender, address implementation, address installedExtension)",
   });
 }

@@ -5,7 +5,7 @@ import {
   getContract,
 } from "../../../../contract/contract.js";
 import { resolveImplementation } from "../../../../utils/bytecode/resolveImplementation.js";
-import { uninstallExtension } from "../../__generated__/ModularCoreUpgradeable/write/uninstallExtension.js";
+import { uninstallExtension } from "../../__generated__/ModularCore/write/uninstallExtension.js";
 
 export type UninstallExtensionByProxyOptions = {
   client: ThirdwebClient;
@@ -32,7 +32,7 @@ export function uninstallExtensionByProxy(
         }),
       );
       return {
-        extensionImplementation: extensionImplementation.address,
+        extension: extensionImplementation.address,
         data: extensionData || "0x",
       };
     },

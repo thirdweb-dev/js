@@ -1,14 +1,12 @@
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { ThirdwebContract } from "../../../../contract/contract.js";
-import { getOrDeployInfraForPublishedContract } from "../../../../contract/deployment/utils/bootstrap.js";
-import type { Account } from "../../../../wallets/interfaces/wallet.js";
-import { installExtension } from "../../__generated__/ModularCoreUpgradeable/write/installExtension.js";
+import { getDeployedInfraContract } from "../../../../contract/deployment/utils/infra.js";
+import { uninstallExtension } from "../../__generated__/ModularCore/write/uninstallExtension.js";
 
-export type InstallPublishedExtensionOptions = {
+export type UninstallPublishedExtensionOptions = {
   client: ThirdwebClient;
   chain: Chain;
-  account: Account;
   contract: ThirdwebContract;
   extensionName: string;
   publisherAddress: string;
@@ -17,34 +15,31 @@ export type InstallPublishedExtensionOptions = {
   extensionData?: `0x${string}`;
 };
 
-export function installPublishedExtension(
-  options: InstallPublishedExtensionOptions,
+export function uninstallPublishedExtension(
+  options: UninstallPublishedExtensionOptions,
 ) {
   const {
     client,
     chain,
-    account,
     contract,
     extensionName,
-    constructorParams,
     publisherAddress,
+    constructorParams,
     extensionData,
   } = options;
 
-  return installExtension({
+  return uninstallExtension({
     contract,
     asyncParams: async () => {
-      const deployedExtension = await getOrDeployInfraForPublishedContract({
+      const deployedExtension = await getDeployedInfraContract({
         chain,
         client,
-        account,
         contractId: extensionName,
         constructorParams: constructorParams || [],
         publisher: publisherAddress,
       });
       return {
-        extensionImplementation: deployedExtension.implementationContract
-          .address as string,
+        extension: deployedExtension?.address as string,
         data: extensionData || "0x",
       };
     },

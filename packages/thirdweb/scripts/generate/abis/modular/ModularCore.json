@@ -3,13 +3,6 @@
   { "type": "receive", "stateMutability": "payable" },
   {
     "type": "function",
-    "name": "INSTALLER_ROLE",
-    "inputs": [],
-    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
     "name": "cancelOwnershipHandover",
     "inputs": [],
     "outputs": [],
@@ -68,11 +61,6 @@
                     "name": "selector",
                     "type": "bytes4",
                     "internalType": "bytes4"
-                  },
-                  {
-                    "name": "callType",
-                    "type": "uint8",
-                    "internalType": "enum IExtensionConfig.CallType"
                   }
                 ]
               },
@@ -85,11 +73,6 @@
                     "name": "selector",
                     "type": "bytes4",
                     "internalType": "bytes4"
-                  },
-                  {
-                    "name": "callType",
-                    "type": "uint8",
-                    "internalType": "enum IExtensionConfig.CallType"
                   },
                   {
                     "name": "permissionBits",
@@ -269,7 +252,13 @@
         "internalType": "address"
       },
       {
-        "name": "extension",
+        "name": "implementation",
+        "type": "address",
+        "indexed": false,
+        "internalType": "address"
+      },
+      {
+        "name": "installedExtension",
         "type": "address",
         "indexed": false,
         "internalType": "address"
@@ -288,7 +277,13 @@
         "internalType": "address"
       },
       {
-        "name": "extension",
+        "name": "implementation",
+        "type": "address",
+        "indexed": false,
+        "internalType": "address"
+      },
+      {
+        "name": "installedExtension",
         "type": "address",
         "indexed": false,
         "internalType": "address"
@@ -369,6 +364,11 @@
   },
   { "type": "error", "name": "CallbackFunctionNotSupported", "inputs": [] },
   { "type": "error", "name": "CallbackFunctionRequired", "inputs": [] },
+  {
+    "type": "error",
+    "name": "CallbackFunctionUnauthorizedCall",
+    "inputs": []
+  },
   { "type": "error", "name": "ExtensionAlreadyInstalled", "inputs": [] },
   {
     "type": "error",
