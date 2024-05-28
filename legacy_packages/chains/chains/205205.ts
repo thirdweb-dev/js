@@ -12,12 +12,6 @@ export default {
   "faucets": [
     "https://auroria.faucet.stratisevm.com"
   ],
-  "icon": {
-    "url": "ipfs://QmbkTh6qNYUnae5yNjied3qZqVyZcb4x3hfUpJ33bGg9QY",
-    "width": 800,
-    "height": 800,
-    "format": "jpg"
-  },
   "infoURL": "https://www.stratisplatform.com",
   "name": "Auroria Testnet",
   "nativeCurrency": {

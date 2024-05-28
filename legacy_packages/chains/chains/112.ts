@@ -6,22 +6,10 @@ export default {
     {
       "name": "blockscout",
       "url": "https://coinbit-explorer.chain.sbcrypto.app",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
-        "width": 551,
-        "height": 540,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmdaQRUbAXJGfHeJ8jaB8WVh8CCmHExq8VjvAfXpLWWQEo",
-    "width": 760,
-    "height": 760,
-    "format": "png"
-  },
   "infoURL": "https://crypto.stockbit.com/",
   "name": "Coinbit Mainnet",
   "nativeCurrency": {

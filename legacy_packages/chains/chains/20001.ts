@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmeJerrsURFNt2LL7DE7TxeunjrQXiuezdfHyqmsbwX3MZ",
-    "width": 128,
-    "height": 128,
-    "format": "png"
-  },
   "infoURL": "https://www.camelark.com",
   "name": "Camelark Mainnet",
   "nativeCurrency": {

@@ -6,22 +6,10 @@ export default {
     {
       "name": "explorer",
       "url": "https://explorer.quadrans.io",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmZFiYHnE4TrezPz8wSap9nMxG6m98w4fv7ataj2TfLNck",
-        "width": 1024,
-        "height": 1024,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmZFiYHnE4TrezPz8wSap9nMxG6m98w4fv7ataj2TfLNck",
-    "width": 1024,
-    "height": 1024,
-    "format": "png"
-  },
   "infoURL": "https://quadrans.io",
   "name": "Quadrans Blockchain",
   "nativeCurrency": {

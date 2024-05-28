@@ -6,22 +6,10 @@ export default {
     {
       "name": "King Of Legends Devnet Explorer",
       "url": "https://devnet.kingscan.org",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmTZFXhYJboYE9fbaeje12iTF3QPLn6xgyFgrDVe2isDBH",
-        "width": 400,
-        "height": 400,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmTZFXhYJboYE9fbaeje12iTF3QPLn6xgyFgrDVe2isDBH",
-    "width": 400,
-    "height": 400,
-    "format": "png"
-  },
   "infoURL": "https://kingoflegends.net/",
   "name": "King Of Legends Devnet",
   "nativeCurrency": {

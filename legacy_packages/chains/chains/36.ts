@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmYBup5bWoBfkaHntbcgW8Ji7ncad7f53deJ4Q55z4PNQs",
-    "width": 128,
-    "height": 128,
-    "format": "png"
-  },
   "infoURL": "https://www.dxchain.com/",
   "name": "Dxchain Mainnet",
   "nativeCurrency": {

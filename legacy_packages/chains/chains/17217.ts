@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmSszu2AhLPgcp8SZYiBYCQiRVwb9ueqbnGbcTx9H9CJjZ",
-    "width": 1851,
-    "height": 1851,
-    "format": "png"
-  },
   "infoURL": "https://konetmain.com",
   "name": "KONET Mainnet",
   "nativeCurrency": {

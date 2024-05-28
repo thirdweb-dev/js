@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmWb1gthhbzkiLdgcP8ccZprGbJVjFcW8Rn4uJjrw4jd3B",
-    "width": 200,
-    "height": 200,
-    "format": "png"
-  },
   "infoURL": "https://mtv.ac",
   "name": "MultiVAC Mainnet",
   "nativeCurrency": {

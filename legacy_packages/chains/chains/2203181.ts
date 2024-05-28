@@ -12,12 +12,6 @@ export default {
   "faucets": [
     "https://devnet2faucet.platon.network/faucet"
   ],
-  "icon": {
-    "url": "ipfs://QmT7PSXBiVBma6E15hNkivmstqLu3JSnG1jXN5pTmcCGRC",
-    "width": 180,
-    "height": 180,
-    "format": "png"
-  },
   "infoURL": "https://www.platon.network",
   "name": "PlatON Dev Testnet Deprecated",
   "nativeCurrency": {

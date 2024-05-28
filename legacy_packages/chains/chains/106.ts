@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmNXiCXJxEeBd7ZYGYjPSMTSdbDd2nfodLC677gUfk9ku5",
-    "width": 924,
-    "height": 800,
-    "format": "png"
-  },
   "infoURL": "https://velas.com",
   "name": "Velas EVM Mainnet",
   "nativeCurrency": {

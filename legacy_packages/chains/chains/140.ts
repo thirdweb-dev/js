@@ -4,12 +4,6 @@ export default {
   "chainId": 140,
   "explorers": [],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://bafybeibexfskndvhn5xtrcmpjoifp2ufnzgwiwbfrjcxat55alergskkve",
-    "width": 122,
-    "height": 133,
-    "format": "svg"
-  },
   "infoURL": "https://eternalcoin.io",
   "name": "EternalCoin Mainnet",
   "nativeCurrency": {

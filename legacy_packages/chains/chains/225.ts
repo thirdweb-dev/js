@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmQxGA6rhuCQDXUueVcNvFRhMEWisyTmnF57TqL7h6k6cZ",
-    "width": 1280,
-    "height": 1280,
-    "format": "png"
-  },
   "infoURL": "https://lachain.io",
   "name": "LACHAIN Mainnet",
   "nativeCurrency": {

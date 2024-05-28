@@ -6,22 +6,10 @@ export default {
     {
       "name": "Explorer",
       "url": "https://explorer.bitcoinevm.com",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://bafkreic4aq265oaf6yze7ba5okefqh6vnqudyrz6ovukvbnrlhet36itle",
-        "width": 200,
-        "height": 200,
-        "format": "png"
-      }
+      "standard": "none"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://bafkreic4aq265oaf6yze7ba5okefqh6vnqudyrz6ovukvbnrlhet36itle",
-    "width": 200,
-    "height": 200,
-    "format": "png"
-  },
   "infoURL": "https://bitcoinevm.com",
   "name": "Bitcoin EVM",
   "nativeCurrency": {

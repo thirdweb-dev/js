@@ -18,12 +18,6 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "icon": {
-    "url": "ipfs://QmSgvmLpRsCiu2ySqyceA5xN4nwi7URJRNEZLffwEKXdoR",
-    "width": 1028,
-    "height": 1042,
-    "format": "png"
-  },
   "infoURL": "https://edexa.network/",
   "name": "edeXa Mainnet",
   "nativeCurrency": {

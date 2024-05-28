@@ -12,12 +12,6 @@ export default {
   "faucets": [
     "https://faucet.lovely.network"
   ],
-  "icon": {
-    "url": "ipfs://QmPB7uW7Wj8zWWdeuPnUHPJ5FhaiTL76tv4ZQ4oKWEpb1g",
-    "width": 897,
-    "height": 824,
-    "format": "png"
-  },
   "infoURL": "https://lovely.network",
   "name": "Lovely Network Testnet",
   "nativeCurrency": {

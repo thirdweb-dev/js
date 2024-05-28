@@ -4,12 +4,6 @@ export default {
   "chainId": 5100,
   "explorers": [],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmeSvQcD3XvLFAiMLoQSPbGK9JxVfbCWPBUTMLhhhzYPqX",
-    "width": 16000,
-    "height": 16000,
-    "format": "png"
-  },
   "infoURL": "https://syndicate.io",
   "name": "Syndicate Testnet",
   "nativeCurrency": {
