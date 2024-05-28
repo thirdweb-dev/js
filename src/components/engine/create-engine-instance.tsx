@@ -42,7 +42,7 @@ export const CreateEngineInstanceButton = ({
   const trackEvent = useTrack();
   const toast = useToast();
   const accountQuery = useAccount();
-  const [engineTier, setEngineTier] = useState<EngineTier>("STANDARD");
+  const [engineTier, setEngineTier] = useState<EngineTier>("STARTER");
 
   const addCloudHostedEngine = async (tier?: EngineTier) => {
     trackEvent({
@@ -163,7 +163,7 @@ const CreateCloudHostedEngineModal = ({
 
   if (modalState === "confirmStandard" || modalState === "confirmPremium") {
     const tier: EngineTier =
-      modalState === "confirmStandard" ? "STANDARD" : "PREMIUM";
+      modalState === "confirmStandard" ? "STARTER" : "PREMIUM";
 
     return (
       <Modal
@@ -183,7 +183,7 @@ const CreateCloudHostedEngineModal = ({
             />
             <Heading size="title.sm">
               Are you sure you want to deploy a{" "}
-              {tier === "STANDARD" ? "Standard" : "Premium"} Engine?
+              {tier === "STARTER" ? "Standard" : "Premium"} Engine?
             </Heading>
             <Text>
               You will be charged ${MONTHLY_PRICE_USD[tier]} per month for the
@@ -222,7 +222,7 @@ const CreateCloudHostedEngineModal = ({
           </Text>
           <SimpleGrid columns={{ base: 1, lg: 3 }} gap={6}>
             <EngineTierCard
-              tier="STANDARD"
+              tier="STARTER"
               onClick={() => setModalState("confirmStandard")}
             />
 

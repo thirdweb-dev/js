@@ -351,7 +351,7 @@ const EnginePricing = ({ isMobile }: { isMobile: boolean }) => {
       </Text>
       <SimpleGrid columns={isMobile ? 1 : 3} gap={6}>
         <EngineTierCard
-          tier="STANDARD"
+          tier="STARTER"
           ctaText="Get Started"
           onClick={() => {
             track({

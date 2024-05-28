@@ -32,7 +32,7 @@ export const PricingEngineHomepage: React.FC<PricingSectionProps> = ({
         </Flex>
         <SimpleGrid columns={{ base: 1, lg: 3 }} gap={6}>
           <EngineTierCard
-            tier="STANDARD"
+            tier="STARTER"
             ctaText="Get Started"
             onClick={() => {
               track({

@@ -10,7 +10,7 @@ interface EngineTierCardConfig {
 }
 
 const ENGINE_TIER_CARD_CONFIG: Record<EngineTier, EngineTierCardConfig> = {
-  STANDARD: {
+  STARTER: {
     name: "Standard",
     monthlyPriceUsd: 99,
     features: [
@@ -39,7 +39,7 @@ const ENGINE_TIER_CARD_CONFIG: Record<EngineTier, EngineTierCardConfig> = {
 };
 
 export const MONTHLY_PRICE_USD: Record<EngineTier, number> = {
-  STANDARD: 99,
+  STARTER: 99,
   PREMIUM: 299,
   ENTERPRISE: 0,
 };
@@ -60,7 +60,7 @@ export const EngineTierCard = ({
   const { name, monthlyPriceUsd } = ENGINE_TIER_CARD_CONFIG[tier];
   let features = ENGINE_TIER_CARD_CONFIG[tier].features;
   if (tier === "PREMIUM") {
-    features = [...ENGINE_TIER_CARD_CONFIG.STANDARD.features, ...features];
+    features = [...ENGINE_TIER_CARD_CONFIG.STARTER.features, ...features];
   }
 
   const defaultCtaText =
