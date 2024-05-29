@@ -1353,14 +1353,14 @@ importers:
         specifier: ^0.5.0
         version: 0.5.0
       '@blocto/sdk':
-        specifier: 0.5.5
-        version: 0.5.5
+        specifier: 0.10.2
+        version: 0.10.2
       '@coinbase/wallet-sdk':
-        specifier: ^3.7.2
+        specifier: ^3.9.0
         version: 3.9.3
       '@google-cloud/kms':
-        specifier: 4.2.0
-        version: 4.2.0
+        specifier: ^4.4.0
+        version: 4.4.0
       '@magic-ext/connect':
         specifier: ^6.7.2
         version: 6.7.2
@@ -1383,8 +1383,8 @@ importers:
         specifier: ^3.3.5
         version: 3.3.5(ethers@5.7.2)
       '@safe-global/safe-ethers-adapters':
-        specifier: 0.1.0-alpha.17
-        version: 0.1.0-alpha.17(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(ethers@5.7.2)
+        specifier: 0.1.0-alpha.19
+        version: 0.1.0-alpha.19(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(ethers@5.7.2)
       '@safe-global/safe-ethers-lib':
         specifier: ^1.9.4
         version: 1.9.4
@@ -5539,18 +5539,14 @@ packages:
     dev: true
     optional: true
 
-  /@blocto/sdk@0.5.5:
-    resolution: {integrity: sha512-u7bbAYmYDCf0QWvXleVOTeGFRbo8evT3uacsLJ6dv01HspmLDKZWjFyu7i3ARebJTpenHvwM78XHV7KTvBqTRg==}
+  /@blocto/sdk@0.10.2:
+    resolution: {integrity: sha512-9gCIUKA7/7/hMHaa5n94+OYU/3tHd6vmBgTgv4o2h3z9SFueQXAJMO4aBggH9+EldgHQDI6wHsnvytEt9AWb6g==}
     peerDependencies:
-      '@solana/web3.js': ^1.30.2
       aptos: ^1.3.14
     peerDependenciesMeta:
-      '@solana/web3.js':
-        optional: true
       aptos:
         optional: true
     dependencies:
-      bs58: 5.0.0
       buffer: 6.0.3
       eip1193-provider: 1.0.1
       js-sha3: 0.8.0
@@ -7271,8 +7267,8 @@ packages:
       keycode: 2.2.1
     dev: true
 
-  /@google-cloud/kms@4.2.0:
-    resolution: {integrity: sha512-EIFxBL2XbpRkW6TmmYNU3xmpbaDw49uD57q6/rRQMkWPENvPTrlonQeTBeXV1I18GMToVliQOwKs001Mzo7Dwg==}
+  /@google-cloud/kms@4.4.0:
+    resolution: {integrity: sha512-ZS2IOouhNThDYdHQjH7JO9DfqLlfhxsXs/z1Pwzb9vsw+In0RbsyxtVZc/s7n+Qp09MZ+e4kfrR9YiRn6TyT9w==}
     engines: {node: '>=14.0.0'}
     dependencies:
       google-gax: 4.3.3
@@ -10961,8 +10957,8 @@ packages:
       semver: 7.6.2
     dev: false
 
-  /@safe-global/safe-ethers-adapters@0.1.0-alpha.17(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(ethers@5.7.2):
-    resolution: {integrity: sha512-02+emAnnXZAOwld1Ucen6idnMCAD76TXrhmuteYsdYoPjl5Eyq1ySb9tzIjCWklgfjMHQtrHSHDJqwdlHFM4GQ==}
+  /@safe-global/safe-ethers-adapters@0.1.0-alpha.19(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(ethers@5.7.2):
+    resolution: {integrity: sha512-FKd1XySR/FGfEY/HDGfQPByTnOPWE4m6HuH/Q4PgizsGdgYa6kjUy0/UWTb42bOdkqeVm2XffPxErHK/BaUhaQ==}
     peerDependencies:
       '@ethersproject/abstract-provider': ^5.7.0
       '@ethersproject/abstract-signer': ^5.7.0
