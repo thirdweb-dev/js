@@ -6,8 +6,10 @@ import {
   hashTypedData,
 } from "viem";
 import type { Chain } from "../../chains/types.js";
+import { getCachedChain } from "../../chains/utils.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import type { WaitForReceiptOptions } from "../../transaction/actions/wait-for-tx-receipt.js";
+import { sendEip712Transaction } from "../../transaction/actions/zksync/send-eip712-transaction.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
 import type { TransactionReceipt } from "../../transaction/types.js";
 import type { Hex } from "../../utils/encoding/hex.js";
@@ -138,6 +140,27 @@ async function createSmartAccount(
   const account = {
     address: accountContract.address,
     async sendTransaction(transaction: SendTransactionOption) {
+      // zksync native AA
+      if (transaction.chainId === 300) {
+        // 1. construct the generalPaymaster typed data
+        // 2. send it to bundler via specaial pm_sponsor endpoint
+        // 3. get the paymaster address and signature back
+        // 4. add paymaster data to transaction
+        return sendEip712Transaction({
+          account: account,
+          transaction: {
+            ...transaction,
+            to: transaction.to ?? undefined,
+            chain: getCachedChain(transaction.chainId),
+            client: options.client,
+            eip712: {
+              paymaster: "0x...",
+              paymasterInput: "0x...",
+            },
+          },
+        });
+      }
+
       const executeTx = prepareExecute({
         accountContract,
         options,
