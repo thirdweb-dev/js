@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { TEST_WALLET_B } from "../../../../test/src/addresses.js";
 import { TEST_CLIENT } from "../../../../test/src/test-clients.js";
-import { TEST_ACCOUNT_A } from "../../../../test/src/test-wallets.js";
+import {
+  TEST_ACCOUNT_A,
+  TEST_ACCOUNT_B,
+} from "../../../../test/src/test-wallets.js";
 import { defineChain } from "../../../chains/utils.js";
 import { prepareTransaction } from "../../prepare-transaction.js";
 import { sendEip712Transaction } from "./send-eip712-transaction.js";
@@ -12,8 +14,7 @@ describe("sendEip712Transaction", () => {
       chain: defineChain(300),
       client: TEST_CLIENT,
       value: 0n,
-      to: TEST_WALLET_B,
-      gas: 20000000n,
+      to: TEST_ACCOUNT_B.address,
       eip712: {
         paymaster: "0xbA226d47Cbb2731CBAA67C916c57d68484AA269F",
         paymasterInput:
@@ -25,7 +26,6 @@ describe("sendEip712Transaction", () => {
       transaction,
     });
 
-    console.log(res);
     expect(res.transactionHash.length).toBe(66);
   });
 });

@@ -70,7 +70,7 @@ function transactionToMessage(
     nonce: nonce ? BigInt(nonce) : 0n,
     value: value ?? 0n,
     data: data ? data : "0x0",
-    // TODO factoryDeps: factoryDeps?.map((dep) => toHex(hashBytecode(dep))) ?? [],
+    // TODO suport factoryDeps
     factoryDeps: [],
     paymasterInput: paymasterInput ? paymasterInput : "0x",
   };

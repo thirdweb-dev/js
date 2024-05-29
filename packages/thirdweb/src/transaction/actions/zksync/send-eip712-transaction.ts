@@ -1,10 +1,13 @@
 import { toRlp } from "viem";
 import { eth_sendRawTransaction } from "../../../rpc/actions/eth_sendRawTransaction.js";
 import { getRpcClient } from "../../../rpc/rpc.js";
+import { toBigInt } from "../../../utils/bigint.js";
 import { concatHex } from "../../../utils/encoding/helpers/concat-hex.js";
-import { type Hex, toHex } from "../../../utils/encoding/hex.js";
+import { type Hex, numberToHex, toHex } from "../../../utils/encoding/hex.js";
+import { resolvePromisedValue } from "../../../utils/promise/resolve-promised-value.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
 import type { PreparedTransaction } from "../../prepare-transaction.js";
+import { encode } from "../encode.js";
 import { toSerializableTransaction } from "../to-serializable-transaction.js";
 import type { WaitForReceiptOptions } from "../wait-for-tx-receipt.js";
 import {
@@ -41,44 +44,86 @@ export async function sendEip712Transaction(
 ): Promise<WaitForReceiptOptions> {
   const { account, transaction } = options;
 
+  let [
+    data,
+    to,
+    value,
+    gas,
+    maxFeePerGas,
+    maxPriorityFeePerGas,
+    gasPerPubdata,
+  ] = await Promise.all([
+    encode(transaction),
+    resolvePromisedValue(transaction.to),
+    resolvePromisedValue(transaction.value),
+    resolvePromisedValue(transaction.gas),
+    resolvePromisedValue(transaction.maxFeePerGas),
+    resolvePromisedValue(transaction.maxPriorityFeePerGas),
+    resolvePromisedValue(transaction.eip712).then(
+      (eip712) => eip712?.gasPerPubdata,
+    ),
+  ]);
+  if (!gas || !maxFeePerGas || !maxPriorityFeePerGas) {
+    // fetch fees and gas
+    const rpc = getRpcClient(transaction);
+    const result = (await rpc({
+      // biome-ignore lint/suspicious/noExplicitAny: TODO add to RPC method types
+      method: "zks_estimateFee" as any,
+      params: [
+        {
+          from: account.address,
+          to,
+          data,
+          value: value ? numberToHex(value) : undefined,
+          // biome-ignore lint/suspicious/noExplicitAny: TODO add to RPC method types
+        } as any,
+      ],
+    })) as {
+      gas_limit: string;
+      max_fee_per_gas: string;
+      max_priority_fee_per_gas: string;
+      gas_per_pubdata_limit: string;
+    };
+    gas = toBigInt(result.gas_limit);
+    maxFeePerGas = toBigInt(result.max_fee_per_gas);
+    maxPriorityFeePerGas = toBigInt(result.max_priority_fee_per_gas);
+    gasPerPubdata = toBigInt(result.gas_per_pubdata_limit);
+  }
+
   // serialize the transaction (with fees, gas, nonce)
   const serializableTransaction = await toSerializableTransaction({
     transaction: {
       ...transaction,
-      maxFeePerGas: 27500000n, // todo call zks_estimateFee rpc
-      maxPriorityFeePerGas: 25000000n,
+      gas,
+      maxFeePerGas,
+      maxPriorityFeePerGas,
     },
     from: account.address,
   });
 
-  // EIP712 signing of the serialized tx
-  const eip712Domain = getEip712Domain({
+  const eip712Transaction = {
     ...serializableTransaction,
     ...options.transaction.eip712,
+    gasPerPubdata,
     from: account.address as Hex,
-  });
+  };
+
+  // EIP712 signing of the serialized tx
+  const eip712Domain = getEip712Domain(eip712Transaction);
 
   const customSignature = await account.signTypedData({
     // biome-ignore lint/suspicious/noExplicitAny: TODO type properly
     ...(eip712Domain as any),
   });
 
-  console.log({
-    serializableTransaction,
-    customSignature,
-  });
-
   const hash = serializeTransactionEIP712({
-    ...serializableTransaction,
-    ...options.transaction.eip712,
-    from: account.address as Hex,
+    ...eip712Transaction,
     customSignature,
   });
 
   const rpc = getRpcClient(transaction);
   const result = await eth_sendRawTransaction(rpc, hash);
 
-  // const result = await account.sendTransaction(serializableTransaction);
   return {
     transactionHash: result,
     chain: transaction.chain,
