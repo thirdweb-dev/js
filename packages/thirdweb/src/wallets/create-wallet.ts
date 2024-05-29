@@ -150,7 +150,7 @@ export function createWallet<const ID extends WalletId>(
           }
 
           if (options && "client" in options) {
-            const { autoConnectWC } = await import("./wallet-connect/index.js");
+            const { autoConnectWC } = await import("./wallet-connect/connector.js");
 
             const [
               connectedAccount,
@@ -179,7 +179,7 @@ export function createWallet<const ID extends WalletId>(
         },
         connect: async (options) => {
           async function wcConnect(wcOptions: WCConnectOptions) {
-            const { connectWC } = await import("./wallet-connect/index.js");
+            const { connectWC } = await import("./wallet-connect/connector.js");
 
             const [
               connectedAccount,

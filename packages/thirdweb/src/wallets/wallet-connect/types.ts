@@ -2,6 +2,7 @@ import type { EthereumProvider } from "@walletconnect/ethereum-provider";
 import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import type { AppMetadata } from "../types.js";
+import type { Prettify } from "../../utils/type-utils.js";
 
 type EthereumProviderOptions = Parameters<(typeof EthereumProvider)["init"]>[0];
 
@@ -18,6 +19,34 @@ type WalletConnectQRCodeModalOptions = Pick<
   | "termsOfServiceUrl"
   | "walletImages"
 >;
+
+export type WalletConnectConfig = {
+  /**
+     * Your project’s unique identifier that can be obtained at https://cloud.walletconnect.com/
+     *
+     * If you don't pass a `projectId`, a default `projectId` will be used that is created by thirdweb.
+     *
+     * Refer to [WalletConnect docs](https://docs.walletconnect.com) for more info
+     */
+  projectId?: string;
+  /**
+   * Metadata of the dApp that will be passed to connected wallet.
+   *
+   * Some wallets may display this information to the user.
+   *
+   * Setting this property is highly recommended. If this is not set, Below default metadata will be used:
+   *
+   * ```ts
+   * {
+   *   name: "thirdweb powered dApp",
+   *   url: "https://thirdweb.com",
+   *   description: "thirdweb powered dApp",
+   *   logoUrl: "https://thirdweb.com/favicon.ico",
+   * };
+   * ```
+   */
+  appMetadata?: AppMetadata;
+}
 
 export type WCConnectOptions = {
   /**
@@ -60,7 +89,7 @@ export type WCConnectOptions = {
    */
   client: ThirdwebClient;
 
-  walletConnect?: {
+  walletConnect?: Prettify<WalletConnectConfig & {
     /**
      * Array of chains that your app supports.
      *
@@ -131,33 +160,7 @@ export type WCConnectOptions = {
      * ```
      */
     onDisplayUri?: (uri: string) => void;
-
-    /**
-     * Your project’s unique identifier that can be obtained at https://cloud.walletconnect.com/
-     *
-     * If you don't pass a `projectId`, a default `projectId` will be used that is created by thirdweb.
-     *
-     * Refer to [WalletConnect docs](https://docs.walletconnect.com) for more info
-     */
-    projectId?: string;
-    /**
-     * Metadata of the dApp that will be passed to connected wallet.
-     *
-     * Some wallets may display this information to the user.
-     *
-     * Setting this property is highly recommended. If this is not set, Below default metadata will be used:
-     *
-     * ```ts
-     * {
-     *   name: "thirdweb powered dApp",
-     *   url: "https://thirdweb.com",
-     *   description: "thirdweb powered dApp",
-     *   logoUrl: "https://thirdweb.com/favicon.ico",
-     * };
-     * ```
-     */
-    appMetadata?: AppMetadata;
-  };
+  }>;
 };
 
 export type WCAutoConnectOptions = {
@@ -188,3 +191,76 @@ type SavedConnectParams = {
   chain: Chain;
   pairingTopic?: string;
 };
+
+export type WalletConnectMetadata = {
+  "name": string,
+  "url": string,
+  "description": string,
+  "icons": string[],
+}
+
+export type WalletConnectSession = {
+  topic: string,
+  pairingTopic: string,
+  relay: {
+    protocol: string,
+    data?: string | undefined
+  },
+  self: {
+    publicKey: string,
+    metadata: WalletConnectMetadata
+  },
+  peer: {
+    publicKey: string,
+    metadata: WalletConnectMetadata
+  },
+  expiry: number, // timestamp (seconds)
+  acknowledged: boolean,
+  controller: string,
+  namespaces: Record<string, {
+      chains?: string[],
+      accounts: string[],
+      methods: string[],
+      events: string[]
+    }>,
+  requiredNamespaces: Record<string, {
+    chains?: string[],
+      methods: string[],
+      events: string[]
+    }>,
+  optionalNamespaces: Record<string, {
+    chains?: string[],
+      methods: string[],
+      events: string[]
+    }>,
+}
+
+export type WalletConnectSessionProposalEvent = {
+  id: number
+  params: {
+    id: number
+    expiryTimestamp: number
+    relays: Array<{
+      protocol: string
+      data?: string
+    }>
+    proposer: {
+      publicKey: string
+      metadata: {
+        name: string
+        description: string
+        url: string
+        icons: string[]
+      }
+    }
+    requiredNamespaces: Record<
+      string,
+      {
+        chains?: string[]
+        methods: string[]
+        events: string[]
+      }
+    >
+    pairingTopic?: string
+  }
+}

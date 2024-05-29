@@ -13,7 +13,7 @@ import { isInAppWallet } from "../in-app/core/wallet/index.js";
 import { getInjectedProvider } from "../injected/index.js";
 import type { Wallet } from "../interfaces/wallet.js";
 import { isSmartWallet } from "../smart/index.js";
-import { isWalletConnect } from "../wallet-connect/index.js";
+import { isWalletConnect } from "../wallet-connect/connector.js";
 import type { WalletId } from "../wallet-types.js";
 import type {
   EIP5792Call,
