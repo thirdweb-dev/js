@@ -32,6 +32,7 @@ import type { FetchDeployMetadataResult } from "./deploy-metadata.js";
  * });
  * ```
  * @returns A promise that resolves to the predicted address of the contract.
+ * @extension DEPLOY
  */
 export async function computePublishedContractAddress(args: {
   client: ThirdwebClient;

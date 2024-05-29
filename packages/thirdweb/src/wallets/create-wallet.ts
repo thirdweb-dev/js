@@ -295,7 +295,6 @@ export function walletConnect() {
  * import { smartWallet } from "thirdweb/wallets";
  *
  * const wallet = smartWallet({
- *  factoryAddress: "0x1234...",
  *  chain: sepolia,
  *  gasless: true,
  * });
@@ -415,6 +414,7 @@ export function smartWallet(
  *   strategy: "google",
  * });
  * ```
+ *
  * Enable smart accounts and sponsor gas for your users:
  * ```ts
  * import { inAppWallet } from "thirdweb/wallets";
@@ -439,6 +439,7 @@ export function smartWallet(
  *   },
  *  },
  * });
+ * ```
  *
  * Hide the ability to export the private key within the Connect Modal
  * ```ts

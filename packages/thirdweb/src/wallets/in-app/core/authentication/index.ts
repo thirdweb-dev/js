@@ -69,6 +69,7 @@ export async function logoutAuthenticatedUser(
  *  console.log(user.walletAddress);
  * }
  * ```
+ * @wallet
  */
 export async function getAuthenticatedUser(
   options: GetAuthenticatedUserParams,
@@ -95,6 +96,7 @@ export async function getAuthenticatedUser(
  * const email = await getUserEmail({ client });
  * console.log(email);
  * ```
+ * @wallet
  */
 export async function getUserEmail(options: GetAuthenticatedUserParams) {
   const user = await getAuthenticatedUser(options);
@@ -115,6 +117,7 @@ export async function getUserEmail(options: GetAuthenticatedUserParams) {
  * const phoneNumber = await getUserPhoneNumber({ client });
  * console.log(phoneNumber);
  * ```
+ * @wallet
  */
 export async function getUserPhoneNumber(options: GetAuthenticatedUserParams) {
   const user = await getAuthenticatedUser(options);
@@ -139,6 +142,7 @@ export async function getUserPhoneNumber(options: GetAuthenticatedUserParams) {
  *  email: "example@example.org",
  * });
  * ```
+ * @wallet
  */
 export async function preAuthenticate(args: PreAuthArgsType) {
   const ewSDK = await getInAppWalletConnector(args.client);
@@ -160,6 +164,7 @@ export async function preAuthenticate(args: PreAuthArgsType) {
  *  verificationCode: "123456",
  * });
  * ```
+ * @wallet
  */
 export async function authenticate(
   args: AuthArgsType,

@@ -108,7 +108,7 @@ export type SendCallsResult = WalletSendCallsId;
  * });
  * @note We recommend proxying any paymaster calls via an API route you setup and control.
  * ```
- * @wallets
+ * @extension EIP5792
  */
 export async function sendCalls<const ID extends WalletId>(
   options: SendCallsOptions<ID>,

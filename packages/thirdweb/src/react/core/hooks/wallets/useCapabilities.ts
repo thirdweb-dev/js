@@ -22,7 +22,7 @@ import { useActiveWallet } from "./wallet-hooks.js";
  * import { useCapabilities } from "thirdweb/react";
  * const { data: capabilities, isLoading } = useCapabilities();
  * ```
- * @wallets
+ * @extension EIP5792
  */
 export function useCapabilities(options?: {
   queryOptions?: Pick<UseQueryOptions, "enabled" | "retry">;
