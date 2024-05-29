@@ -2,7 +2,7 @@ import { defineChain } from "../utils.js";
 
 export const hardhat = /* @__PURE__ */ defineChain({
   id: 31337,
-  name: "Anvil",
+  name: "Hardhat",
   rpc: "http://127.0.0.1:8545",
   testnet: true,
   nativeCurrency: {
