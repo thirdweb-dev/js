@@ -121,7 +121,10 @@ function fromViemContract<const TAbi extends Abi>(
   });
 }
 
-async function toViemContract<const TAbi extends Abi>(options: {
+/**
+ * @internal
+ */
+export async function toViemContract<const TAbi extends Abi>(options: {
   thirdwebContract: ThirdwebContract<TAbi>;
 }): Promise<GetContractReturnType<TAbi>> {
   return {

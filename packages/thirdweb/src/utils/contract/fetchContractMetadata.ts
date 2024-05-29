@@ -1,7 +1,10 @@
 import type { ThirdwebClient } from "../../client/client.js";
 import { isBase64JSON, parseBase64String } from "../base64/base64.js";
 
-type FetchContractMetadata = {
+/**
+ * @internal
+ */
+export type FetchContractMetadata = {
   client: ThirdwebClient;
   uri: string;
 };

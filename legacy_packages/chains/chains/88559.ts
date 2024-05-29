@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmdP8zAZEwUbf3pt8t9Ykho866ni5AMgutvkn3cBsV8gKG",
+    "width": 500,
+    "height": 500,
+    "format": "png"
+  },
   "infoURL": "https://inoai.info",
   "name": "Inoai Network",
   "nativeCurrency": {

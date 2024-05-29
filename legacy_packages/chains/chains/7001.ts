@@ -23,12 +23,6 @@ export default {
   "faucets": [
     "https://labs.zetachain.com/get-zeta"
   ],
-  "icon": {
-    "url": "ipfs://QmP4Gnf4Lkp8q5LQVePNjAWxSqrw8vU2JAf7amcFz4vEUy",
-    "width": 712,
-    "height": 712,
-    "format": "png"
-  },
   "infoURL": "https://zetachain.com/docs",
   "name": "ZetaChain Athens 3 Testnet",
   "nativeCurrency": {

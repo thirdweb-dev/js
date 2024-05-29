@@ -27,6 +27,8 @@ import {
   stringToHex,
   uint8ArrayToHex,
 } from "../../utils/encoding/hex.js";
+import { isReactNative } from "../../utils/platform.js";
+import { parseTypedData } from "../../utils/signatures/helpers/parseTypedData.js";
 import { COINBASE } from "../constants.js";
 import type {
   GetCallsStatusResponse,
@@ -86,6 +88,15 @@ export type CoinbaseWalletCreationOptions =
        * }
        */
       chains?: Chain[];
+
+      mobileConfig?: {
+        /**
+         * The univeral callback URL to redirect the user to after they have completed the wallet connection with the cb wallet app.
+         * This needs to be setup as a Universal link for iOS https://docs.cdp.coinbase.com/wallet-sdk/docs/ios-setup/
+         * and App link on Android https://docs.cdp.coinbase.com/wallet-sdk/docs/android-setup/
+         */
+        callbackURL?: string;
+      };
     }
   | undefined;
 
@@ -122,6 +133,16 @@ async function getCoinbaseProvider(
   options?: CreateWalletArgs<typeof COINBASE>[1],
 ): Promise<ProviderInterface> {
   if (!_provider) {
+    if (isReactNative()) {
+      const { initMobileProvider } = require("./coinbaseMobileSDK.js");
+      const mobileProvider = initMobileProvider({
+        chain: options?.chains ? options.chains[0] : undefined,
+        ...options?.mobileConfig,
+      });
+      _provider = mobileProvider;
+      return mobileProvider;
+    }
+
     const client = new CoinbaseWalletSDK({
       appName: options?.appMetadata?.name || getDefaultAppMetadata().name,
       appChainIds: options?.chains
@@ -300,10 +321,11 @@ function onConnect(
         params: [messageToSign, account.address],
       });
     },
-    async signTypedData(typedData) {
+    async signTypedData(_typedData) {
       if (!account.address) {
         throw new Error("Provider not setup");
       }
+      const typedData = parseTypedData(_typedData);
       const { domain, message, primaryType } =
         typedData as unknown as SignTypedDataParameters;
 

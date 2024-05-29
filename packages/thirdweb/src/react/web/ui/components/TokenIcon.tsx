@@ -38,7 +38,7 @@ export function TokenIcon(props: {
 
   return (
     <Img
-      src={tokenImage}
+      src={tokenImage || ""}
       width={iconSize[props.size]}
       height={iconSize[props.size]}
       fallbackImage={genericTokenIcon}

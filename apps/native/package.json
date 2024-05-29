@@ -1,12 +1,11 @@
 {
   "name": "playground-react-native",
-  "main": "./app/index",
+  "main": "./index.js",
   "version": "1.0.0",
   "scripts": {
-    "start": "expo start",
+    "start": "expo start -c",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "web": "expo start --web",
     "lint": "expo lint"
   },
   "dependencies": {

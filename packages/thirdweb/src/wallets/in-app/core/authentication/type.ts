@@ -83,6 +83,13 @@ export type GetHeadlessLoginLinkReturnType = {
   loginLink: string;
 };
 
+export type UserDetailsApiType = {
+  status: string;
+  isNewUser: boolean;
+  walletUserId: string;
+  walletAddress: string;
+} & AuthStoredTokenWithCookieReturnType;
+
 // TODO: Clean up tech debt of random type Objects
 // E.g. StoredTokenType is really not used anywhere but it exists as this object for legacy reason
 export type StoredTokenType = {

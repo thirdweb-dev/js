@@ -4,6 +4,7 @@ export default {
   "chainId": 167000,
   "explorers": [],
   "faucets": [],
+  "features": [],
   "icon": {
     "url": "ipfs://QmcHdmVr5VRUJq13jnM6tgah5Ge7hn3Dm14eY6vwivJ5ui",
     "width": 288,
@@ -18,8 +19,12 @@ export default {
     "decimals": 18
   },
   "networkId": 167000,
+  "redFlags": [],
   "rpc": [
     "https://167000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.mainnet.taiko.xyz/",
+    "https://rpc.ankr.com/taiko/",
+    "https://rpc.taiko.xyz/",
     "https://rpc.taiko.xyz",
     "wss://ws.taiko.xyz"
   ],

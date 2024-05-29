@@ -5,6 +5,7 @@ import type { ThirdwebClient } from "../../../../client/client.js";
 import { eth_sendRawTransaction } from "../../../../rpc/actions/eth_sendRawTransaction.js";
 import { getRpcClient } from "../../../../rpc/rpc.js";
 import type { Hex } from "../../../../utils/encoding/hex.js";
+import { parseTypedData } from "../../../../utils/signatures/helpers/parseTypedData.js";
 import type {
   Account,
   SendTransactionOption,
@@ -250,24 +251,25 @@ export class IFrameWallet {
         return signedMessage as Hex;
       },
       async signTypedData(_typedData) {
+        const parsedTypedData = parseTypedData(_typedData);
         // deleting EIP712 Domain as it results in ambiguous primary type on some cases
         // this happens when going from viem to ethers via the iframe
-        if (_typedData.types?.EIP712Domain) {
-          _typedData.types.EIP712Domain = undefined;
+        if (parsedTypedData.types?.EIP712Domain) {
+          parsedTypedData.types.EIP712Domain = undefined;
         }
         // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
-        const chainId = Number((_typedData.domain as any)?.chainId || 1);
+        const chainId = Number((parsedTypedData.domain as any)?.chainId || 1);
 
         const { signedTypedData } =
           await querier.call<SignedTypedDataReturnType>({
             procedureName: "signTypedDataV4",
             params: {
               // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
-              domain: _typedData.domain as any,
+              domain: parsedTypedData.domain as any,
               types:
-                _typedData.types as SignerProcedureTypes["signTypedDataV4"]["types"],
+                parsedTypedData.types as SignerProcedureTypes["signTypedDataV4"]["types"],
               message:
-                _typedData.message as SignerProcedureTypes["signTypedDataV4"]["message"],
+                parsedTypedData.message as SignerProcedureTypes["signTypedDataV4"]["message"],
               chainId,
               rpcEndpoint: `https://${chainId}.rpc.thirdweb.com`, // TODO (ew) shouldnt be needed
             },
