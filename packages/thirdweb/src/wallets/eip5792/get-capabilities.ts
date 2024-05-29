@@ -34,7 +34,7 @@ export type GetCapabilitiesResult = Prettify<
  * const capabilities = await getCapabilities({ wallet });
  * ```
  *
- * @wallets
+ * @extension EIP5792
  */
 export async function getCapabilities<const ID extends WalletId = WalletId>({
   wallet,

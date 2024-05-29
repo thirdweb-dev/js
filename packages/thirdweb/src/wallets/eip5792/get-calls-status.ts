@@ -39,7 +39,8 @@ export type GetCallsStatusOptions = {
  *    result = await getCallsStatus({ wallet, client, bundleId });
  *  }
  * ```
- * @wallets
+ * @extension EIP5792
+ * @extension EIP5792
  */
 export async function getCallsStatus({
   wallet,

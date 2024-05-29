@@ -28,6 +28,7 @@ export type SignMessageOptions = {
  *   privateKey: "0x...",
  * });
  * ```
+ * @utils
  */
 export function signMessage({ message, privateKey }: SignMessageOptions): Hex {
   const signature = sign({ hash: hashMessage(message), privateKey });

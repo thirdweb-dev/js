@@ -232,7 +232,7 @@ export type BuyWithFiatQuote = {
  *
  * window.open(quote.onRampLink, "_blank");
  * ```
- * @buyFiat
+ * @buyCrypto
  */
 export async function getBuyWithFiatQuote(
   params: GetBuyWithFiatQuoteParams,
