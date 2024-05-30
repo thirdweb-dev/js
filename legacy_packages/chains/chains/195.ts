@@ -13,12 +13,6 @@ export default {
     "https://www.okx.com/xlayer/faucet"
   ],
   "features": [],
-  "icon": {
-    "url": "ipfs://QmSLkiAAr6VtJ6jEqEzz3QdZtVEHzR6Az7E4XD8qXwjuio",
-    "width": 1000,
-    "height": 1000,
-    "format": "png"
-  },
   "infoURL": "https://www.okx.com/xlayer",
   "name": "X Layer Testnet",
   "nativeCurrency": {

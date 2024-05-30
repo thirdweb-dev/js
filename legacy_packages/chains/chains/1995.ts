@@ -12,12 +12,6 @@ export default {
   "faucets": [
     "https://faucet.edexa.com/"
   ],
-  "icon": {
-    "url": "ipfs://QmSgvmLpRsCiu2ySqyceA5xN4nwi7URJRNEZLffwEKXdoR",
-    "width": 1028,
-    "height": 1042,
-    "format": "png"
-  },
   "infoURL": "https://edexa.network/",
   "name": "edeXa Testnet",
   "nativeCurrency": {

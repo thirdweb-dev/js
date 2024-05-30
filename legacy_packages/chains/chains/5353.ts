@@ -6,24 +6,12 @@ export default {
     {
       "name": "TRITANIUM Testnet Explorer",
       "url": "https://testnet.tritanium.network",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://QmRm6gcEPJmU9a86zrmyP7FALTN4Toz9HrnrL2Kwg6FPeh",
-        "width": 512,
-        "height": 512,
-        "format": "png"
-      }
+      "standard": "none"
     }
   ],
   "faucets": [
     "https://faucet.tritanium.network"
   ],
-  "icon": {
-    "url": "ipfs://QmRm6gcEPJmU9a86zrmyP7FALTN4Toz9HrnrL2Kwg6FPeh",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
   "infoURL": "https://tritanium.network",
   "name": "Tritanium Testnet",
   "nativeCurrency": {

@@ -4,12 +4,6 @@ export default {
   "chainId": 279,
   "explorers": [],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://bafkreiatcu42wbjlo24mr35jou4awvsqpaqys6iv4kxgkjhno3haovsiaq",
-    "width": 140,
-    "height": 140,
-    "format": "svg"
-  },
   "infoURL": "https://bpxchain.cc",
   "name": "BPX Blockchain",
   "nativeCurrency": {

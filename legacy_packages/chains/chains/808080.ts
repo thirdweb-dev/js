@@ -18,12 +18,6 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "icon": {
-    "url": "ipfs://QmNnaDZRoMz9aoho35TGHBY5zD16P39cgPpw3z3jnkDHHB",
-    "width": 104,
-    "height": 104,
-    "format": "png"
-  },
   "infoURL": "https://www.biztoken.io/",
   "name": "BIZ Smart Chain Testnet",
   "nativeCurrency": {

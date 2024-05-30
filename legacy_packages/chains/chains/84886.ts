@@ -6,22 +6,10 @@ export default {
     {
       "name": "Aerie Explorer",
       "url": "https://explorer.aerielab.io",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://bafkreig54jss26xllpjbclmfgwvot72m4ku7qxignhlqei6mijvwi2m4pu",
-        "width": 1062,
-        "height": 1069,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://bafkreig54jss26xllpjbclmfgwvot72m4ku7qxignhlqei6mijvwi2m4pu",
-    "width": 1062,
-    "height": 1069,
-    "format": "png"
-  },
   "infoURL": "https://aerielab.io/",
   "name": "Aerie Network",
   "nativeCurrency": {

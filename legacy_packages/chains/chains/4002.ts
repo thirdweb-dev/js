@@ -6,13 +6,7 @@ export default {
     {
       "name": "ftmscan",
       "url": "https://testnet.ftmscan.com",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmRqbK449Fo9sJ3xMpkPbg6uV1weQj4yVV1xNMP9cdPmjf",
-        "width": 73,
-        "height": 73,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [

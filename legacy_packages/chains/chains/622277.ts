@@ -6,13 +6,7 @@ export default {
     {
       "name": "hypra",
       "url": "https://explorer.hypra.network",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
-        "width": 551,
-        "height": 540,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
@@ -24,12 +18,6 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "icon": {
-    "url": "ipfs://bafkreiawlhc2trzyxgnz24vowdymxme2m446uk4vmrplgxsdd74ecpfloq",
-    "width": 830,
-    "height": 830,
-    "format": "png"
-  },
   "infoURL": "https://www.hypra.network",
   "name": "Hypra Mainnet",
   "nativeCurrency": {

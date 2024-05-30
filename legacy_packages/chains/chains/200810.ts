@@ -12,12 +12,6 @@ export default {
   "faucets": [
     "https://www.bitlayer.org/faucet"
   ],
-  "icon": {
-    "url": "ipfs://QmdWZ1frB47fr3tw31xE68C2Vocaw5Ef53LQ5WDNdNnNyG",
-    "width": 4500,
-    "height": 4500,
-    "format": "jpg"
-  },
   "infoURL": "https://docs.bitlayer.org/",
   "name": "Bitlayer Testnet",
   "nativeCurrency": {

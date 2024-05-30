@@ -12,12 +12,6 @@ export default {
   "faucets": [
     "https://faucet.brcchain.io"
   ],
-  "icon": {
-    "url": "ipfs://QmX8qGX7xoZqYUpHxA85uZwQX2fgbTHvmddE1NfseDyBED",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
   "infoURL": "https://bridge.brcchain.io",
   "name": "BRC Chain Mainnet",
   "nativeCurrency": {

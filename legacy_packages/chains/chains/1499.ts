@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmeXuzaYXCDwHgQdpuE9L55JfEChzj11P73Ngrn8vDTE9T",
-    "width": 1024,
-    "height": 1024,
-    "format": "png"
-  },
   "infoURL": "https://idosgames.com/",
   "name": "iDos Games Chain Testnet",
   "nativeCurrency": {

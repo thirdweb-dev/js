@@ -18,12 +18,6 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "icon": {
-    "url": "ipfs://bafkreieenivbkpmaxslvvvaybi53hynnarng4ek37xhtf5euvsyunvhbai",
-    "width": 256,
-    "height": 256,
-    "format": "png"
-  },
   "infoURL": "https://www.ongr.org/",
   "name": "ONIGIRI Subnet",
   "nativeCurrency": {

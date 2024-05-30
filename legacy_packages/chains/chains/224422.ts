@@ -15,12 +15,6 @@ export default {
       "name": "EIP155"
     }
   ],
-  "icon": {
-    "url": "ipfs://bafkreibjxqd5kqcc2shstjjujvxzg6cwegwr6dgjyyd56v6h7yusgks7sy",
-    "width": 1200,
-    "height": 1200,
-    "format": "png"
-  },
   "infoURL": "https://conet.network",
   "name": "CONET Sebolia Testnet",
   "nativeCurrency": {

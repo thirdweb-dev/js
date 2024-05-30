@@ -6,22 +6,10 @@ export default {
     {
       "name": "Dragonfly Blockscout",
       "url": "https://blockscout.dragonfly.hexapod.network",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
-        "width": 551,
-        "height": 540,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmPXhdPGufjcPzZ9Y6nY6QyW8MgA6793L88iPMRh1Q3gjJ",
-    "width": 512,
-    "height": 366,
-    "format": "png"
-  },
   "infoURL": "https://hexapod.network",
   "name": "Dragonfly Mainnet (Hexapod)",
   "nativeCurrency": {

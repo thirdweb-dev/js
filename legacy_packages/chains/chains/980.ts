@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmYikaM849eZrL8pGNeVhEHVTKWpxdGMvCY5oFBfZ2ndhd",
-    "width": 800,
-    "height": 800,
-    "format": "png"
-  },
   "infoURL": "https://www.topnetwork.org/",
   "name": "TOP Mainnet EVM",
   "nativeCurrency": {

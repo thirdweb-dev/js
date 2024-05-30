@@ -6,24 +6,12 @@ export default {
     {
       "name": "bombscan-testnet",
       "url": "https://explorer.bombchain-testnet.ankr.com",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://Qmc44uSjfdNHdcxPTgZAL8eZ8TLe4UmSHibcvKQFyGJxTB",
-        "width": 1024,
-        "height": 1024,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [
     "https://faucet.bombchain-testnet.ankr.com/"
   ],
-  "icon": {
-    "url": "ipfs://Qmc44uSjfdNHdcxPTgZAL8eZ8TLe4UmSHibcvKQFyGJxTB",
-    "width": 1024,
-    "height": 1024,
-    "format": "png"
-  },
   "infoURL": "https://www.bombmoney.com",
   "name": "BOMB Chain Testnet",
   "nativeCurrency": {

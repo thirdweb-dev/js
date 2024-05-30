@@ -6,24 +6,12 @@ export default {
     {
       "name": "FOX Testnet Explorer",
       "url": "https://testnet.foxscan.app",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://Qmbp1rwhtRr6JQRyYqyfLqkbmzXr1T17zbmChsi2ouvg3M",
-        "width": 100,
-        "height": 100,
-        "format": "png"
-      }
+      "standard": "none"
     }
   ],
   "faucets": [
     "https://faucet.foxchain.app"
   ],
-  "icon": {
-    "url": "ipfs://Qmbp1rwhtRr6JQRyYqyfLqkbmzXr1T17zbmChsi2ouvg3M",
-    "width": 100,
-    "height": 100,
-    "format": "png"
-  },
   "infoURL": "https://foxchain.app",
   "name": "Fox Testnet Network",
   "nativeCurrency": {

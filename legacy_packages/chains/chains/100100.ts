@@ -4,12 +4,6 @@ export default {
   "chainId": 100100,
   "explorers": [],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://bafybeidk4swpgdyqmpz6shd5onvpaujvwiwthrhypufnwr6xh3dausz2dm",
-    "width": 1800,
-    "height": 1800,
-    "format": "png"
-  },
   "infoURL": "https://docs.gnosischain.com",
   "name": "Deprecated CHI",
   "nativeCurrency": {

@@ -13,12 +13,6 @@ export default {
     "https://faucet.avax.network/?subnet=num",
     "https://faucet.num.network"
   ],
-  "icon": {
-    "url": "ipfs://bafkreie3ba6ofosjqqiya6empkyw6u5xdrtcfzi2evvyt4u6utzeiezyhi",
-    "width": 1500,
-    "height": 1500,
-    "format": "png"
-  },
   "infoURL": "https://numbersprotocol.io",
   "name": "Numbers Testnet",
   "nativeCurrency": {
