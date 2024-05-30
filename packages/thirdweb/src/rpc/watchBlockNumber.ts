@@ -172,7 +172,10 @@ export type WatchBlockNumberOptions = {
  *  chainId,
  *  onNewBlockNumber: (blockNumber) => {
  *    // do something with the block number
- *    },
+ *  },
+ *  onError: (err) => {
+ *    // do something if getting the block number fails
+ *  },
  * });
  *
  * // later stop watching
