@@ -13,8 +13,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc721.getOwnedNFTs", () => {
     // The following code is based on the state of the forked chain
     // so the data should not change
     expect(nfts.length).toBe(81);
-    nfts.forEach((item) => {
+    for (const item of nfts) {
       expect(item.owner).toBe(owner);
-    });
+    }
   });
 });
