@@ -51,35 +51,44 @@ function createBlockNumberPoller(
     if (!isActive) {
       return;
     }
-    const blockNumber = await eth_blockNumber(rpcRequest);
 
-    if (!lastBlockNumber || blockNumber > lastBlockNumber) {
-      let newBlockNumbers = [];
-      if (lastBlockNumber) {
-        for (let i = lastBlockNumber + 1n; i <= blockNumber; i++) {
-          newBlockNumbers.push(BigInt(i));
-        }
-      } else {
-        newBlockNumbers = [blockNumber];
-      }
-      lastBlockNumber = blockNumber;
-      const currentTime = new Date().getTime();
-      if (lastBlockAt) {
-        // if we skipped a block we need to adjust the block time down to that level
-        const blockTime = (currentTime - lastBlockAt) / newBlockNumbers.length;
+    try {
+      const blockNumber = await eth_blockNumber(rpcRequest);
 
-        blockTimesWindow.push(blockTime);
-        blockTimesWindow = blockTimesWindow.slice(-SLIDING_WINDOW_SIZE);
-      }
-      lastBlockAt = currentTime;
-      // for all new blockNumbers...
-      for (const b of newBlockNumbers) {
-        // ... call all current subscribers
-        for (const subscriberCallback of subscribers) {
-          subscriberCallback(b);
+      if (!lastBlockNumber || blockNumber > lastBlockNumber) {
+        let newBlockNumbers = [];
+        if (lastBlockNumber) {
+          for (let i = lastBlockNumber + 1n; i <= blockNumber; i++) {
+            newBlockNumbers.push(BigInt(i));
+          }
+        } else {
+          newBlockNumbers = [blockNumber];
+        }
+        lastBlockNumber = blockNumber;
+        const currentTime = new Date().getTime();
+        if (lastBlockAt) {
+          // if we skipped a block we need to adjust the block time down to that level
+          const blockTime =
+            (currentTime - lastBlockAt) / newBlockNumbers.length;
+
+          blockTimesWindow.push(blockTime);
+          blockTimesWindow = blockTimesWindow.slice(-SLIDING_WINDOW_SIZE);
+        }
+        lastBlockAt = currentTime;
+        // for all new blockNumbers...
+        for (const b of newBlockNumbers) {
+          // ... call all current subscribers
+          for (const subscriberCallback of subscribers) {
+            subscriberCallback(b);
+          }
         }
       }
+    } catch (err) {
+      console.error(
+        `[watchBlockNumber]: Failed to poll for latest block number: ${err}`,
+      );
     }
+
     const currentApproximateBlockTime = getAverageBlockTime(blockTimesWindow);
 
     // make sure we never poll faster than our minimum poll delay or slower than our maximum poll delay
