@@ -90,6 +90,7 @@ export async function fulfillRequest(options: { wallet: Wallet, walletConnectCli
     let result: unknown;
     switch (request.method) {
         case "personal_sign":
+        case "eth_sign":
             const params = request.params as string[]; // WalletConnect only gives us an any back so we have to assume this
             if (typeof params[0] !== "string") {
                 throw new Error("WalletConnect: Invalid request parameters");

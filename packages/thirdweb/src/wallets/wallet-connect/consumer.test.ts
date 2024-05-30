@@ -209,5 +209,28 @@ describe("session_request", () => {
             await expect(promise).rejects.toThrow(`[WalletConnect] Active account address (${TEST_ACCOUNT_A.address}) differs from requested address (${TEST_ACCOUNT_B.address})`);
         });
     });
+
+    describe("eth_sign", () => {
+        test("should sign message", async () => {
+            const personalSignRequest = { ...REQUEST_EVENT_MOCK, params: { ...REQUEST_EVENT_MOCK.params, request: { ...REQUEST_EVENT_MOCK.params.request, params: ["my message", TEST_ACCOUNT_A.address] } } };
+
+            await fulfillRequest({ walletConnectClient: signClientMock, wallet: walletMock, event: personalSignRequest });
+            expect(signClientMock.respond).toHaveBeenCalledWith({
+                topic: REQUEST_EVENT_MOCK.topic,
+                response: {
+                    id: REQUEST_EVENT_MOCK.id,
+                    jsonrpc: "2.0",
+                    result: "0x66ea9c2ac4a99a5ac26f5fa3e800171036210e135d486f1d0d02d64eaa7dd56275b4323e153e62c1fad57a6be54420248ed54604f4857ec75ce7761eefad10e41c"
+                }
+            });
+        });
+
+        test("should reject if active account address differs from requested address", async () => {
+            const personalSignRequest = { ...REQUEST_EVENT_MOCK, params: { ...REQUEST_EVENT_MOCK.params, request: { ...REQUEST_EVENT_MOCK.params.request, params: ["my message", TEST_ACCOUNT_B.address] } } };
+            const promise = fulfillRequest({ walletConnectClient: signClientMock, wallet: walletMock, event: personalSignRequest });
+
+            await expect(promise).rejects.toThrow(`[WalletConnect] Active account address (${TEST_ACCOUNT_A.address}) differs from requested address (${TEST_ACCOUNT_B.address})`);
+        });
+    });
 })
 
