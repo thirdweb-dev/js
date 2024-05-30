@@ -4,27 +4,28 @@ import {
   TEST_ACCOUNT_A,
   TEST_ACCOUNT_B,
   TEST_IN_APP_WALLET_A,
-} from "../../../test/src/test-wallets.js";
-import { typedData } from "../../../test/src/typed-data.js";
-import { getDefaultAppMetadata } from "../utils/defaultDappMetadata.js";
-import { DEFAULT_PROJECT_ID } from "./constants.js";
-import {
-  type WalletConnectClient,
-  createWalletConnectClient,
-  createWalletConnectSession,
-  fulfillRequest,
-  getActiveWalletConnectSession,
-  onSessionProposal,
-  walletConnectSessions,
-} from "./consumer.js";
+} from "../../../../test/src/test-wallets.js";
+import { typedData } from "../../../../test/src/typed-data.js";
+import { cloneObject } from "../../../../test/src/utils.js";
+import { getDefaultAppMetadata } from "../../utils/defaultDappMetadata.js";
+import { DEFAULT_PROJECT_ID } from "../constants.js";
 import type {
+  WalletConnectRawTransactionRequestParams,
   WalletConnectSession,
   WalletConnectSessionProposalEvent,
   WalletConnectSessionRequestEvent,
   WalletConnectSignRequestPrams,
   WalletConnectSignTypedDataRequestParams,
   WalletConnectTransactionRequestParams,
-} from "./types.js";
+} from "../types.js";
+import {
+  type WalletConnectClient,
+  createWalletConnectClient,
+  createWalletConnectSession,
+  fulfillRequest,
+  getActiveWalletConnectSession,
+  walletConnectSessions,
+} from "./index.js";
 
 const TEST_METADATA = {
   name: "test",
@@ -34,49 +35,7 @@ const TEST_METADATA = {
 };
 const URI_MOCK =
   "wc:a34fc4c6f0db6277f7883c325629a8363eab950933e15caac9e6c7408a82541e@2?expiryTimestamp=1717021490&relay-protocol=irn&symKey=00626dec650109ed09de73bc9364589a3c14a77e57598417fe27f44062904b77";
-const PROPOSAL_EVENT_MOCK: WalletConnectSessionProposalEvent = {
-  id: 1717020142228697,
-  params: {
-    id: 1717020142228697,
-    pairingTopic:
-      "80630f62114d67a2c529f785ba5b7ed4b4b7894cc6be17153a548aa9305e89d7",
-    expiryTimestamp: 1717020442,
-    requiredNamespaces: {
-      eip155: {
-        methods: [
-          "eth_sendTransaction",
-          "eth_signTransaction",
-          "eth_sign",
-          "personal_sign",
-          "eth_signTypedData",
-        ],
-        chains: ["eip155:1"],
-        events: ["chainChanged", "accountsChanged"],
-      },
-    },
-    optionalNamespaces: {
-      eip155: {
-        methods: ["eth_signTypedData_v4"],
-        events: ["disconnect"],
-      },
-    },
-    relays: [
-      {
-        protocol: "irn",
-      },
-    ],
-    proposer: {
-      publicKey:
-        "61ae6e6f8f441822cf72e21060029681aec2f50d9cb8bf0c95df461ecd371703",
-      metadata: {
-        name: "Example Dapp",
-        description: "Example Dapp",
-        url: "#",
-        icons: ["https://walletconnect.com/walletconnect-logo.png"],
-      },
-    },
-  },
-};
+
 const REQUEST_EVENT_MOCK: WalletConnectSessionRequestEvent = {
   id: 1717020142228697,
   topic: "session",
@@ -104,18 +63,14 @@ const walletMock = {
 };
 
 const mocks = vi.hoisted(() => ({
-  session: { topic: "session" },
   sendTransaction: vi.fn(),
+  sendRawTransaction: vi.fn(),
 }));
 
 const signClientMock = {
   on: vi.fn(),
   respond: vi.fn(),
-  core: { pairing: { pair: vi.fn() } },
   disconnect: vi.fn(),
-  approve: vi.fn().mockResolvedValue({
-    acknowledged: vi.fn().mockResolvedValue(mocks.session),
-  }),
 } as unknown as WalletConnectClient;
 
 const signClientInitMock = vi
@@ -130,6 +85,7 @@ beforeEach(() => {
   vi.clearAllMocks();
   walletMock.getAccount.mockReturnValue(TEST_IN_APP_WALLET_A.getAccount()); // reset any mocked accounts
   TEST_ACCOUNT_A.sendTransaction = mocks.sendTransaction;
+  TEST_ACCOUNT_A.sendRawTransaction = mocks.sendRawTransaction;
   walletConnectSessions.delete(walletMock);
 });
 
@@ -184,106 +140,6 @@ describe("createWalletConnectSession", () => {
   });
 });
 
-describe("session_proposal", () => {
-  it("should throw if no account is connected", async () => {
-    walletMock.getAccount.mockReturnValue(null);
-
-    const promise = onSessionProposal({
-      wallet: walletMock,
-      walletConnectClient: signClientMock,
-      event: PROPOSAL_EVENT_MOCK,
-    });
-
-    await expect(promise).rejects.toThrow(
-      "[WalletConnect] No account connected to provided wallet",
-    );
-  });
-
-  it("should connect new session", async () => {
-    await onSessionProposal({
-      walletConnectClient: signClientMock,
-      wallet: walletMock,
-      event: PROPOSAL_EVENT_MOCK,
-    });
-
-    expect(signClientMock.approve).toHaveBeenCalledWith({
-      id: PROPOSAL_EVENT_MOCK.id,
-      namespaces: {
-        eip155: {
-          accounts: [`eip155:1:${TEST_ACCOUNT_A.address}`],
-          methods: [
-            ...(PROPOSAL_EVENT_MOCK.params.requiredNamespaces?.eip155
-              ?.methods ?? []),
-            ...(PROPOSAL_EVENT_MOCK.params.optionalNamespaces?.eip155
-              ?.methods ?? []),
-          ],
-          events: [
-            ...(PROPOSAL_EVENT_MOCK.params.requiredNamespaces?.eip155?.events ??
-              []),
-            ...(PROPOSAL_EVENT_MOCK.params.optionalNamespaces?.eip155?.events ??
-              []),
-          ],
-        },
-      },
-    });
-    expect(getActiveWalletConnectSession(walletMock)?.topic).toEqual(
-      mocks.session.topic,
-    );
-  });
-
-  it("should disconnect existing session", async () => {
-    walletConnectSessions.set(walletMock, {
-      topic: "old-session",
-    } as WalletConnectSession);
-    mocks.session.topic = "new-session";
-    await onSessionProposal({
-      walletConnectClient: signClientMock,
-      wallet: walletMock,
-      event: PROPOSAL_EVENT_MOCK,
-    });
-
-    expect(signClientMock.disconnect).toHaveBeenCalled();
-    expect(getActiveWalletConnectSession(walletMock)?.topic).toEqual(
-      mocks.session.topic,
-    );
-  });
-
-  it("should throw if no eip155 namespace provided", async () => {
-    const proposal = {
-      ...PROPOSAL_EVENT_MOCK,
-      params: { ...PROPOSAL_EVENT_MOCK.params, requiredNamespaces: {} },
-    };
-
-    const promise = onSessionProposal({
-      walletConnectClient: signClientMock,
-      wallet: walletMock,
-      event: proposal,
-    });
-    await expect(promise).rejects.toThrow(
-      "[WalletConnect] No EIP155 namespace found in Wallet Connect session proposal",
-    );
-  });
-
-  it("should throw if no eip155 chains provided", async () => {
-    const proposal = {
-      ...PROPOSAL_EVENT_MOCK,
-      params: {
-        ...PROPOSAL_EVENT_MOCK.params,
-        requiredNamespaces: { eip155: { methods: [], events: [] } },
-      },
-    };
-
-    const promise = onSessionProposal({
-      walletConnectClient: signClientMock,
-      wallet: walletMock,
-      event: proposal,
-    });
-    await expect(promise).rejects.toThrow(
-      "[WalletConnect] No chains found in EIP155 Wallet Connect session proposal namespace",
-    );
-  });
-});
-
 describe("session_request", () => {
   it("should throw if no account is connected", async () => {
     walletMock.getAccount.mockReturnValue(null);
@@ -298,16 +154,9 @@ describe("session_request", () => {
   });
 
   it("should throw if unsupported request method", async () => {
-    const unsupportedRequest = {
-      ...REQUEST_EVENT_MOCK,
-      params: {
-        ...REQUEST_EVENT_MOCK.params,
-        request: {
-          ...REQUEST_EVENT_MOCK.params.request,
-          method: "eth_unsupported",
-        },
-      },
-    };
+    const unsupportedRequest = cloneObject(REQUEST_EVENT_MOCK);
+    unsupportedRequest.params.request.method = "eth_unsupported";
+
     const promise = fulfillRequest({
       walletConnectClient: signClientMock,
       wallet: walletMock,
@@ -321,19 +170,12 @@ describe("session_request", () => {
 
   describe("personal_sign", () => {
     it("should sign message", async () => {
-      const personalSignRequest = {
-        ...REQUEST_EVENT_MOCK,
-        params: {
-          ...REQUEST_EVENT_MOCK.params,
-          request: {
-            ...REQUEST_EVENT_MOCK.params.request,
-            params: [
-              "my message",
-              TEST_ACCOUNT_A.address,
-            ] as WalletConnectSignRequestPrams,
-          },
-        },
-      };
+      const personalSignRequest = cloneObject(REQUEST_EVENT_MOCK);
+      personalSignRequest.params.request.method = "personal_sign";
+      personalSignRequest.params.request.params = [
+        "my message",
+        TEST_ACCOUNT_A.address,
+      ] as WalletConnectSignRequestPrams;
 
       await fulfillRequest({
         walletConnectClient: signClientMock,
@@ -352,19 +194,13 @@ describe("session_request", () => {
     });
 
     it("should reject if active account address differs from requested address", async () => {
-      const personalSignRequest = {
-        ...REQUEST_EVENT_MOCK,
-        params: {
-          ...REQUEST_EVENT_MOCK.params,
-          request: {
-            ...REQUEST_EVENT_MOCK.params.request,
-            params: [
-              "my message",
-              TEST_ACCOUNT_B.address,
-            ] as WalletConnectSignRequestPrams,
-          },
-        },
-      };
+      const personalSignRequest = cloneObject(REQUEST_EVENT_MOCK);
+      personalSignRequest.params.request.method = "personal_sign";
+      personalSignRequest.params.request.params = [
+        "my message",
+        TEST_ACCOUNT_B.address,
+      ] as WalletConnectSignRequestPrams;
+
       const promise = fulfillRequest({
         walletConnectClient: signClientMock,
         wallet: walletMock,
@@ -379,19 +215,12 @@ describe("session_request", () => {
 
   describe("eth_sign", () => {
     it("should sign message", async () => {
-      const personalSignRequest = {
-        ...REQUEST_EVENT_MOCK,
-        params: {
-          ...REQUEST_EVENT_MOCK.params,
-          request: {
-            ...REQUEST_EVENT_MOCK.params.request,
-            params: [
-              "my message",
-              TEST_ACCOUNT_A.address,
-            ] as WalletConnectSignRequestPrams,
-          },
-        },
-      };
+      const personalSignRequest = cloneObject(REQUEST_EVENT_MOCK);
+      personalSignRequest.params.request.method = "eth_sign";
+      personalSignRequest.params.request.params = [
+        "my message",
+        TEST_ACCOUNT_A.address,
+      ] as WalletConnectSignRequestPrams;
 
       await fulfillRequest({
         walletConnectClient: signClientMock,
@@ -410,19 +239,13 @@ describe("session_request", () => {
     });
 
     it("should reject if active account address differs from requested address", async () => {
-      const personalSignRequest = {
-        ...REQUEST_EVENT_MOCK,
-        params: {
-          ...REQUEST_EVENT_MOCK.params,
-          request: {
-            ...REQUEST_EVENT_MOCK.params.request,
-            params: [
-              "my message",
-              TEST_ACCOUNT_B.address,
-            ] as WalletConnectSignRequestPrams,
-          },
-        },
-      };
+      const personalSignRequest = cloneObject(REQUEST_EVENT_MOCK);
+      personalSignRequest.params.request.method = "eth_sign";
+      personalSignRequest.params.request.params = [
+        "my message",
+        TEST_ACCOUNT_B.address,
+      ] as WalletConnectSignRequestPrams;
+
       const promise = fulfillRequest({
         walletConnectClient: signClientMock,
         wallet: walletMock,
@@ -437,19 +260,12 @@ describe("session_request", () => {
 
   describe("eth_signTypedData", () => {
     it("should sign typed data", async () => {
-      const personalSignRequest = {
-        ...REQUEST_EVENT_MOCK,
-        params: {
-          ...REQUEST_EVENT_MOCK.params,
-          request: {
-            method: "eth_signTypedData",
-            params: [
-              TEST_ACCOUNT_A.address,
-              typedData.basic,
-            ] as WalletConnectSignTypedDataRequestParams,
-          },
-        },
-      };
+      const personalSignRequest = cloneObject(REQUEST_EVENT_MOCK);
+      personalSignRequest.params.request.method = "eth_signTypedData";
+      personalSignRequest.params.request.params = [
+        TEST_ACCOUNT_A.address,
+        typedData.basic,
+      ] as WalletConnectSignTypedDataRequestParams;
 
       await fulfillRequest({
         walletConnectClient: signClientMock,
@@ -468,19 +284,12 @@ describe("session_request", () => {
     });
 
     it("should sign stringified typed data", async () => {
-      const personalSignRequest = {
-        ...REQUEST_EVENT_MOCK,
-        params: {
-          ...REQUEST_EVENT_MOCK.params,
-          request: {
-            method: "eth_signTypedData",
-            params: [
-              TEST_ACCOUNT_A.address,
-              JSON.stringify(typedData.basic),
-            ] as WalletConnectSignTypedDataRequestParams,
-          },
-        },
-      };
+      const personalSignRequest = cloneObject(REQUEST_EVENT_MOCK);
+      personalSignRequest.params.request.method = "eth_signTypedData";
+      personalSignRequest.params.request.params = [
+        TEST_ACCOUNT_A.address,
+        typedData.basic,
+      ] as WalletConnectSignTypedDataRequestParams;
 
       await fulfillRequest({
         walletConnectClient: signClientMock,
@@ -499,19 +308,13 @@ describe("session_request", () => {
     });
 
     it("should reject if active account address differs from requested address", async () => {
-      const personalSignRequest = {
-        ...REQUEST_EVENT_MOCK,
-        params: {
-          ...REQUEST_EVENT_MOCK.params,
-          request: {
-            method: "eth_signTypedData",
-            params: [
-              TEST_ACCOUNT_B.address,
-              typedData.basic,
-            ] as WalletConnectSignTypedDataRequestParams,
-          },
-        },
-      };
+      const personalSignRequest = cloneObject(REQUEST_EVENT_MOCK);
+      personalSignRequest.params.request.method = "eth_signTypedData";
+      personalSignRequest.params.request.params = [
+        TEST_ACCOUNT_B.address,
+        typedData.basic,
+      ] as WalletConnectSignTypedDataRequestParams;
+
       const promise = fulfillRequest({
         walletConnectClient: signClientMock,
         wallet: walletMock,
@@ -526,16 +329,11 @@ describe("session_request", () => {
 
   describe("eth_signTransaction", () => {
     it("should sign transaction", async () => {
-      const signTransactionRequest = {
-        ...REQUEST_EVENT_MOCK,
-        params: {
-          ...REQUEST_EVENT_MOCK.params,
-          request: {
-            method: "eth_signTransaction",
-            params: [TRANSACTION_MOCK] as WalletConnectTransactionRequestParams,
-          },
-        },
-      };
+      const signTransactionRequest = cloneObject(REQUEST_EVENT_MOCK);
+      signTransactionRequest.params.request.method = "eth_signTransaction";
+      signTransactionRequest.params.request.params = [
+        TRANSACTION_MOCK,
+      ] as WalletConnectTransactionRequestParams;
 
       await fulfillRequest({
         walletConnectClient: signClientMock,
@@ -558,16 +356,12 @@ describe("session_request", () => {
         ...TEST_IN_APP_WALLET_A,
         signTransaction: undefined,
       });
-      const signTransactionRequest = {
-        ...REQUEST_EVENT_MOCK,
-        params: {
-          ...REQUEST_EVENT_MOCK.params,
-          request: {
-            method: "eth_signTransaction",
-            params: [TRANSACTION_MOCK] as WalletConnectTransactionRequestParams,
-          },
-        },
-      };
+      const signTransactionRequest = cloneObject(REQUEST_EVENT_MOCK);
+      signTransactionRequest.params.request.method = "eth_signTransaction";
+      signTransactionRequest.params.request.params = [
+        TRANSACTION_MOCK,
+      ] as WalletConnectTransactionRequestParams;
+
       const promise = fulfillRequest({
         walletConnectClient: signClientMock,
         wallet: walletMock,
@@ -584,16 +378,11 @@ describe("session_request", () => {
         ...TRANSACTION_MOCK,
         from: TEST_ACCOUNT_B.address,
       };
-      const signTransactionRequest = {
-        ...REQUEST_EVENT_MOCK,
-        params: {
-          ...REQUEST_EVENT_MOCK.params,
-          request: {
-            method: "eth_signTransaction",
-            params: [transaction] as WalletConnectTransactionRequestParams,
-          },
-        },
-      };
+      const signTransactionRequest = cloneObject(REQUEST_EVENT_MOCK);
+      signTransactionRequest.params.request.method = "eth_signTransaction";
+      signTransactionRequest.params.request.params = [
+        transaction,
+      ] as WalletConnectTransactionRequestParams;
 
       const promise = fulfillRequest({
         walletConnectClient: signClientMock,
@@ -610,22 +399,18 @@ describe("session_request", () => {
   describe("eth_sendTransaction", () => {
     it("should send transaction", async () => {
       mocks.sendTransaction.mockResolvedValueOnce("0x1234");
-      const sendTransactionRequest = {
-        ...REQUEST_EVENT_MOCK,
-        params: {
-          ...REQUEST_EVENT_MOCK.params,
-          request: {
-            method: "eth_sendTransaction",
-            params: [TRANSACTION_MOCK] as WalletConnectTransactionRequestParams,
-          },
-        },
-      };
+      const sendTransactionRequest = cloneObject(REQUEST_EVENT_MOCK);
+      sendTransactionRequest.params.request.method = "eth_sendTransaction";
+      sendTransactionRequest.params.request.params = [
+        TRANSACTION_MOCK,
+      ] as WalletConnectTransactionRequestParams;
 
       await fulfillRequest({
         walletConnectClient: signClientMock,
         wallet: walletMock,
         event: sendTransactionRequest,
       });
+
       expect(signClientMock.respond).toHaveBeenCalledWith({
         topic: REQUEST_EVENT_MOCK.topic,
         response: {
@@ -637,17 +422,12 @@ describe("session_request", () => {
     });
 
     it("should throw if no chain is provided", async () => {
-      const sendTransactionRequest = {
-        ...REQUEST_EVENT_MOCK,
-        params: {
-          ...REQUEST_EVENT_MOCK.params,
-          request: {
-            method: "eth_sendTransaction",
-            params: [TRANSACTION_MOCK] as WalletConnectTransactionRequestParams,
-          },
-          chainId: "eip155:?",
-        },
-      };
+      const sendTransactionRequest = cloneObject(REQUEST_EVENT_MOCK);
+      sendTransactionRequest.params.request.method = "eth_sendTransaction";
+      sendTransactionRequest.params.request.params = [
+        TRANSACTION_MOCK,
+      ] as WalletConnectTransactionRequestParams;
+      sendTransactionRequest.params.chainId = "eip155:?";
 
       const promise = fulfillRequest({
         walletConnectClient: signClientMock,
@@ -666,16 +446,11 @@ describe("session_request", () => {
         from: TEST_ACCOUNT_B.address,
       };
 
-      const signTransactionRequest = {
-        ...REQUEST_EVENT_MOCK,
-        params: {
-          ...REQUEST_EVENT_MOCK.params,
-          request: {
-            method: "eth_sendTransaction",
-            params: [transaction] as WalletConnectTransactionRequestParams,
-          },
-        },
-      };
+      const signTransactionRequest = cloneObject(REQUEST_EVENT_MOCK);
+      signTransactionRequest.params.request.method = "eth_sendTransaction";
+      signTransactionRequest.params.request.params = [
+        transaction,
+      ] as WalletConnectTransactionRequestParams;
 
       const promise = fulfillRequest({
         walletConnectClient: signClientMock,
@@ -685,6 +460,73 @@ describe("session_request", () => {
 
       await expect(promise).rejects.toThrow(
         `[WalletConnect] Active account address (${TEST_ACCOUNT_A.address}) differs from transaction \`from\` address (${TEST_ACCOUNT_B.address})`,
+      );
+    });
+  });
+
+  describe("eth_sendRawTransaction", () => {
+    it("should send raw transaction", async () => {
+      mocks.sendRawTransaction.mockResolvedValueOnce("0xabcde");
+      const sendRawTransactionRequest = cloneObject(REQUEST_EVENT_MOCK);
+      sendRawTransactionRequest.params.request.method =
+        "eth_sendRawTransaction";
+      sendRawTransactionRequest.params.request.params = [
+        "0x12345",
+      ] as WalletConnectRawTransactionRequestParams;
+
+      await fulfillRequest({
+        walletConnectClient: signClientMock,
+        wallet: walletMock,
+        event: sendRawTransactionRequest,
+      });
+
+      expect(signClientMock.respond).toHaveBeenCalledWith({
+        topic: REQUEST_EVENT_MOCK.topic,
+        response: {
+          id: REQUEST_EVENT_MOCK.id,
+          jsonrpc: "2.0",
+          result: "0xabcde",
+        },
+      });
+    });
+
+    it("should throw if the account does not support sending raw transactions", async () => {
+      TEST_ACCOUNT_A.sendRawTransaction = undefined;
+      const sendRawTransactionRequest = cloneObject(REQUEST_EVENT_MOCK);
+      sendRawTransactionRequest.params.request.method =
+        "eth_sendRawTransaction";
+      sendRawTransactionRequest.params.request.params = [
+        "0x12345",
+      ] as WalletConnectRawTransactionRequestParams;
+
+      const promise = fulfillRequest({
+        walletConnectClient: signClientMock,
+        wallet: walletMock,
+        event: sendRawTransactionRequest,
+      });
+
+      await expect(promise).rejects.toThrow(
+        "[WalletConnect] The current account does not support sending raw transactions",
+      );
+    });
+
+    it("should throw if no chain is provided", async () => {
+      const sendRawTransactionRequest = cloneObject(REQUEST_EVENT_MOCK);
+      sendRawTransactionRequest.params.request.method =
+        "eth_sendRawTransaction";
+      sendRawTransactionRequest.params.request.params = [
+        "0x12345",
+      ] as WalletConnectRawTransactionRequestParams;
+      sendRawTransactionRequest.params.chainId = "eip155:?";
+
+      const promise = fulfillRequest({
+        walletConnectClient: signClientMock,
+        wallet: walletMock,
+        event: sendRawTransactionRequest,
+      });
+
+      await expect(promise).rejects.toThrow(
+        "[WalletConnect] Invalid chainId eip155:?, request chainId should have the format 'eip155:1'",
       );
     });
   });

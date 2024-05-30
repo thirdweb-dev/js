@@ -308,7 +308,8 @@ export type WalletConnectSessionRequestEvent = {
       params:
         | WalletConnectSignRequestPrams
         | WalletConnectSignTypedDataRequestParams
-        | WalletConnectTransactionRequestParams;
+        | WalletConnectTransactionRequestParams
+        | WalletConnectRawTransactionRequestParams;
     };
     chainId: string;
   };
@@ -331,3 +332,4 @@ export type WalletConnectTransactionRequestParams = [
     nonce?: Hex;
   },
 ];
+export type WalletConnectRawTransactionRequestParams = [Hex];
