@@ -112,6 +112,7 @@ jobs:
         run: |
           mkdir test-project
           cd test-project
+          npm init -y
           ${{ matrix.package_manager }} add react react-dom ../packages/thirdweb
       - name: Create test file
         run: |
