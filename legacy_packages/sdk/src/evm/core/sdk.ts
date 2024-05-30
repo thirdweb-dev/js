@@ -2001,9 +2001,9 @@ export class ContractDeployer extends RPCConnectionHandler {
 
       // add extensions
       const hooksParam: string[] = [];
-      for (const tx of transactionsToSend) {
-        if (tx.type === "hookImpl") {
-          hooksParam.push(tx.transaction.predictedAddress);
+      for (const info of deploymentInfo) {
+        if (info.type === "hookImpl") {
+          hooksParam.push(info.transaction.predictedAddress);
         }
       }
 
