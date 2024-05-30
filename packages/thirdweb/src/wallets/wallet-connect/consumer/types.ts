@@ -1,6 +1,8 @@
 import type { TypedDataDefinition } from "viem";
 import type { Address } from "../../../utils/address.js";
 import type { Hex } from "../../../utils/encoding/hex.js";
+import type { Prettify } from "../../../utils/type-utils.js";
+import type { Account } from "../../interfaces/wallet.js";
 import type { WalletConnectMetadata } from "../types.js";
 
 export type { WalletConnectConfig } from "../types.js"; // re-exporting for use in this module
@@ -99,17 +101,56 @@ export type WalletConnectSessionEvent = {
   };
 };
 
+export type WalletConnectRequestHandlers = Prettify<
+  {
+    personal_sign?: (_: {
+      account: Account;
+      params: WalletConnectSignRequestPrams;
+    }) => Promise<Hex>;
+    eth_sign?: (_: {
+      account: Account;
+      params: WalletConnectSignRequestPrams;
+    }) => Promise<Hex>;
+    eth_signTypedData?: (_: {
+      account: Account;
+      params: WalletConnectSignTypedDataRequestParams;
+    }) => Promise<Hex>;
+    eth_signTransaction?: (_: {
+      account: Account;
+      params: WalletConnectTransactionRequestParams;
+    }) => Promise<Hex>;
+    eth_sendRawTransaction?: (_: {
+      account: Account;
+      chainId: number;
+      params: WalletConnectRawTransactionRequestParams;
+    }) => Promise<Hex>;
+    eth_sendTransaction?: (_: {
+      account: Account;
+      chainId: number;
+      params: WalletConnectTransactionRequestParams;
+    }) => Promise<Hex>;
+  } & {
+    [code: string]: (_: {
+      account: Account;
+      chainId: number;
+      params: unknown[];
+    }) => Promise<Hex>;
+  }
+>;
+
+type WalletConnectRequestParams =
+  | WalletConnectSignRequestPrams
+  | WalletConnectSignTypedDataRequestParams
+  | WalletConnectTransactionRequestParams
+  | WalletConnectRawTransactionRequestParams;
+
 export type WalletConnectSessionRequestEvent = {
   id: number;
   topic: string;
   params: {
     request: {
       method: string;
-      params:
-        | WalletConnectSignRequestPrams
-        | WalletConnectSignTypedDataRequestParams
-        | WalletConnectTransactionRequestParams
-        | WalletConnectRawTransactionRequestParams;
+      params: WalletConnectRequestParams;
     };
     chainId: string;
   };

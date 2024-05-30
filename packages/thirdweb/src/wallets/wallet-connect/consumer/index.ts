@@ -3,10 +3,9 @@ import type { Prettify } from "../../../utils/type-utils.js";
 import type { Wallet } from "../../../wallets/interfaces/wallet.js";
 import { getDefaultAppMetadata } from "../../utils/defaultDappMetadata.js";
 import { DEFAULT_PROJECT_ID } from "../constants.js";
-import { onSessionProposal } from "./session-proposal.js";
-import { fulfillRequest } from "./session-request.js";
 import type {
   WalletConnectConfig,
+  WalletConnectRequestHandlers,
   WalletConnectSession,
   WalletConnectSessionEvent,
   WalletConnectSessionProposalEvent,
@@ -26,6 +25,11 @@ export type CreateWalletConnectSessionOptions = Prettify<
      * The WalletConnect client returned from `createWalletConnectClient`
      */
     walletConnectClient: WalletConnectClient;
+
+    /**
+     * Custom request handlers for wallet RPC requests.
+     */
+    requestHandlers?: WalletConnectRequestHandlers;
 
     /**
      * The WalletConnect session URI retrieved from the dApp to connect with.
@@ -55,11 +59,12 @@ export async function createWalletConnectClient(
 export function createWalletConnectSession(
   options: CreateWalletConnectSessionOptions,
 ) {
-  const { uri, walletConnectClient, wallet } = options;
+  const { uri, walletConnectClient, wallet, requestHandlers } = options;
 
   walletConnectClient.on(
     "session_proposal",
     async (event: WalletConnectSessionProposalEvent) => {
+      const { onSessionProposal } = await import("./session-proposal.js");
       onSessionProposal({ wallet, walletConnectClient, event });
     },
   );
@@ -67,15 +72,21 @@ export function createWalletConnectSession(
   walletConnectClient.on(
     "session_request",
     async (event: WalletConnectSessionRequestEvent) => {
+      const { fulfillRequest } = await import("./session-request.js");
       console.log("Received session request", event);
-      fulfillRequest({ wallet, walletConnectClient, event });
+      fulfillRequest({
+        wallet,
+        walletConnectClient,
+        event,
+        handlers: requestHandlers,
+      });
     },
   );
 
   walletConnectClient.on(
     "session_event",
-    async (event: WalletConnectSessionEvent) => {
-      console.log("Received session event", event);
+    async (_event: WalletConnectSessionEvent) => {
+      // TODO
     },
   );
 
