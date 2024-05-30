@@ -906,6 +906,9 @@ importers:
       fuse.js:
         specifier: ^7.0.0
         version: 7.0.0
+      input-otp:
+        specifier: ^1.2.4
+        version: 1.2.4(react-dom@18.3.1)(react@18.2.0)
       qrcode:
         specifier: ^1.5.3
         version: 1.5.3
@@ -17228,6 +17231,7 @@ packages:
     dependencies:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
+    bundledDependencies: false
 
   /event-emitter@0.3.5:
     resolution: {integrity: sha512-D9rRn9y7kLPnJ+hMq7S/nhvoKwwvVJahBi2BPmx3bvbsEdK3W9ii8cBSGjP+72/LnM4n6fo3+dkCX5FeTQruXA==}
