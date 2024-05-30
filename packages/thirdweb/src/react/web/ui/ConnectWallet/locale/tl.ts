@@ -14,7 +14,6 @@ const connectWalletLocalTl: ConnectLocale = {
   newToWallets: "Bago sa mga wallet?",
   getStarted: "Simulan",
   guest: "Guest",
-  buy: "Buy", // TODO
   transactions: "Transactions", // TODO
   viewAllTransactions: "View All Transactions", // TODO
   send: "Ipadala",
@@ -94,10 +93,48 @@ const connectWalletLocalTl: ConnectLocale = {
       promptForSafe:
         "Pirmahan ang kahilingan ng signature sa iyong wallet at aprubahan ang transaksyon sa Safe",
       approveTransactionInSafe: "Aprubahan ang transaksyon sa Safe",
-      tryAgain: "Subukan muli",
       failedToSignIn: "Hindi nagawa ang pagsisign-in",
       inProgress: "Naghihintay ng Kumpirmasyon",
     },
+  },
+  tryAgain: "Subukan muli",
+  // TODO
+  pay: {
+    buy: "Buy",
+    buyForTx: {
+      amountNeeded: "Amount Needed",
+      purchase: "Purchase",
+    },
+    selectCurrency: "Select Currency",
+    continue: "Continue",
+    buyPending: "Buy Pending",
+    completeInPopup: "Complete the purchase in popup",
+    txFailed: "Transaction Failed",
+    buySuccess: "Buy Success",
+    continueTx: "Continue Transaction",
+    done: "Done",
+    viewOnExplorer: "View on Explorer",
+    pending: "Pending",
+    completed: "Completed",
+    failed: "Failed",
+    incomplete: "Incomplete",
+    failedToGetQuote: "Failed to get price quote",
+    gettingQuote: "Getting price quote",
+    pay: "Pay",
+    receive: "Receive",
+    status: "Status",
+    approve: "Approve",
+    approving: "Approving",
+    confirm: "Confirm",
+    confirming: "Confirming",
+    time: "Time",
+    fees: "Fees",
+    amount: "Amount",
+    networkFee: "Network Fee",
+    processingFee: "Processing Fee",
+    total: "Total",
+    txFailedSubtitle: "Your transaction couldn't be processed",
+    selectToken: "Select Token",
   },
 };
 

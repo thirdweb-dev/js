@@ -18,6 +18,7 @@ import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { iconSize } from "../../../../design-system/index.js";
 import { AccentFailIcon } from "../../../icons/AccentFailIcon.js";
+import type { ConnectLocale } from "../../../locale/types.js";
 import { getBuyWithFiatStatusMeta } from "../tx-history/statusMeta.js";
 import { OnRampTxDetailsTable } from "./FiatTxDetailsTable.js";
 
@@ -41,7 +42,9 @@ export function OnrampStatusScreen(props: {
   onShowSwapFlow: (status: BuyWithFiatStatus) => void;
   isBuyForTx: boolean;
   isEmbed: boolean;
+  connectLocale: ConnectLocale;
 }) {
+  const locale = props.connectLocale.pay;
   const queryClient = useQueryClient();
   const { openedWindow } = props;
   const statusQuery = useBuyWithFiatStatus({
@@ -97,7 +100,7 @@ export function OnrampStatusScreen(props: {
 
   return (
     <Container p="lg">
-      <ModalHeader title="Buy" onBack={props.onBack} />
+      <ModalHeader title={locale.buy} onBack={props.onBack} />
 
       {props.hasTwoSteps && (
         <>
@@ -119,6 +122,7 @@ export function OnrampStatusScreen(props: {
         isBuyForTx={props.isBuyForTx}
         quote={props.quote}
         isEmbed={props.isEmbed}
+        connectLocale={props.connectLocale}
       />
     </Container>
   );
@@ -132,8 +136,10 @@ function OnrampStatusScreenUI(props: {
   isBuyForTx: boolean;
   isEmbed: boolean;
   quote: BuyWithFiatQuote;
+  connectLocale: ConnectLocale;
 }) {
   const { uiStatus } = props;
+  const locale = props.connectLocale.pay;
 
   const statusMeta = props.fiatStatus
     ? getBuyWithFiatStatusMeta(props.fiatStatus)
@@ -177,6 +183,7 @@ function OnrampStatusScreenUI(props: {
             }
           : undefined
       }
+      connectLocale={props.connectLocale}
     />
   );
 
@@ -192,10 +199,10 @@ function OnrampStatusScreenUI(props: {
           </Container>
           <Spacer y="md" />
           <Text color="primaryText" size="lg" center>
-            Buy Pending
+            {locale.buyPending}
           </Text>
           <Spacer y="sm" />
-          {!isMobile() && <Text center>Complete the purchase in popup</Text>}
+          {!isMobile() && <Text center>{locale.completeInPopup}</Text>}
           <Spacer y="xxl" />
           {txDetails}
         </>
@@ -209,7 +216,7 @@ function OnrampStatusScreenUI(props: {
           </Container>
           <Spacer y="lg" />
           <Text color="primaryText" size="lg" center>
-            Transaction Failed
+            {locale.txFailed}
           </Text>
           <Spacer y="xxl" />
           {txDetails}
@@ -227,7 +234,7 @@ function OnrampStatusScreenUI(props: {
           </Container>
           <Spacer y="md" />
           <Text color="primaryText" size="lg" center>
-            Buy Complete
+            {locale.buySuccess}
           </Text>
           {props.fiatStatus && props.fiatStatus.status !== "NOT_FOUND" && (
             <>
@@ -239,7 +246,7 @@ function OnrampStatusScreenUI(props: {
 
           {!props.isEmbed && (
             <Button variant="accent" fullWidth onClick={props.onDone}>
-              {props.isBuyForTx ? "Continue Transaction" : "Done"}
+              {props.isBuyForTx ? locale.continueTx : locale.done}
             </Button>
           )}
         </>

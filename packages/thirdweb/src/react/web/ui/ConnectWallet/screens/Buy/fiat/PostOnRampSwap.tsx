@@ -12,6 +12,7 @@ import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { iconSize } from "../../../../design-system/index.js";
 import { AccentFailIcon } from "../../../icons/AccentFailIcon.js";
+import type { ConnectLocale } from "../../../locale/types.js";
 import { SwapFlow } from "../swap/SwapFlow.js";
 
 export function PostOnRampSwap(props: {
@@ -22,7 +23,9 @@ export function PostOnRampSwap(props: {
   onDone: () => void;
   isBuyForTx: boolean;
   isEmbed: boolean;
+  connectLocale: ConnectLocale;
 }) {
+  const locale = props.connectLocale.pay;
   const account = useActiveAccount();
 
   const [lockedOnRampQuote, setLockedOnRampQuote] = useState<
@@ -60,7 +63,7 @@ export function PostOnRampSwap(props: {
     return (
       <Container fullHeight>
         <Container p="lg">
-          <ModalHeader title="Buy" onBack={props.onBack} />
+          <ModalHeader title={locale.buy} onBack={props.onBack} />
         </Container>
 
         <Container
@@ -73,7 +76,7 @@ export function PostOnRampSwap(props: {
         >
           <AccentFailIcon size={iconSize["3xl"]} />
           <Spacer y="xl" />
-          <Text color="primaryText">Failed to get a price quote</Text>
+          <Text color="primaryText">{locale.failedToGetQuote}</Text>
           <Spacer y="lg" />
 
           <Button
@@ -83,7 +86,7 @@ export function PostOnRampSwap(props: {
               postOnRampQuoteQuery.refetch();
             }}
           >
-            Try Again
+            {props.connectLocale.tryAgain}
           </Button>
         </Container>
 
@@ -108,7 +111,7 @@ export function PostOnRampSwap(props: {
         >
           <Spinner size="xxl" color="accentText" />
           <Spacer y="xl" />
-          <Text color="primaryText">Getting price quote</Text>
+          <Text color="primaryText">{locale.gettingQuote}</Text>
         </Container>
 
         <Spacer y="xxl" />
@@ -131,6 +134,7 @@ export function PostOnRampSwap(props: {
       }}
       isBuyForTx={props.isBuyForTx}
       isEmbed={props.isEmbed}
+      connectLocale={props.connectLocale}
     />
   );
 }

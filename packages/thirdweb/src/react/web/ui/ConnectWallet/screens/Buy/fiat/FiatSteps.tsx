@@ -26,6 +26,7 @@ import {
   spacing,
 } from "../../../../design-system/index.js";
 import type { TokenInfo } from "../../../defaultTokens.js";
+import type { ConnectLocale } from "../../../locale/types.js";
 import { type ERC20OrNativeToken, NATIVE_TOKEN } from "../../nativeToken.js";
 import { StepIcon } from "../Stepper.js";
 import {
@@ -86,7 +87,9 @@ export function FiatSteps(props: {
   client: ThirdwebClient;
   step: number;
   onContinue: () => void;
+  connectLocale: ConnectLocale;
 }) {
+  const locale = props.connectLocale.pay;
   const statusMeta = props.status
     ? getBuyWithFiatStatusMeta(props.status)
     : undefined;
@@ -302,11 +305,12 @@ export function FiatSteps(props: {
 
   return (
     <Container p="lg">
-      <ModalHeader title="Buy" onBack={props.onBack} />
+      <ModalHeader title={locale.buy} onBack={props.onBack} />
       <Spacer y="lg" />
 
       {/* Step 1 */}
       <PaymentStep
+        connectLocale={props.connectLocale}
         title={
           <Text color="primaryText" size="md">
             Get{" "}
@@ -337,7 +341,7 @@ export function FiatSteps(props: {
         explorer={
           onRampChainMetaQuery.data?.explorers?.[0]?.url && onRampTxHash
             ? {
-                label: "View on Explorer",
+                label: locale.viewOnExplorer,
                 url: `${onRampChainMetaQuery.data.explorers[0].url}/tx/${onRampTxHash}`,
               }
             : undefined
@@ -347,6 +351,7 @@ export function FiatSteps(props: {
       <Spacer y="md" />
 
       <PaymentStep
+        connectLocale={props.connectLocale}
         title={
           <Text color="primaryText" size="md">
             Convert{" "}
@@ -374,7 +379,7 @@ export function FiatSteps(props: {
         explorer={
           toChainMetaQuery.data?.explorers?.[0]?.url && toTokenTxHash
             ? {
-                label: "View on Explorer",
+                label: locale.viewOnExplorer,
                 url: `${toChainMetaQuery.data.explorers[0].url}/tx/${toTokenTxHash}`,
               }
             : undefined
@@ -400,7 +405,7 @@ export function FiatSteps(props: {
         <>
           <Spacer y="md" />
           <Button variant="accent" onClick={props.onContinue} fullWidth>
-            Continue
+            {locale.continue}
           </Button>
         </>
       )}
@@ -427,9 +432,10 @@ function PaymentStep(props: {
     label: string;
     url: string;
   };
+  connectLocale: ConnectLocale;
 }) {
   return (
-    <StepContainer state={props.state}>
+    <StepContainer state={props.state} connectLocale={props.connectLocale}>
       <Text size="sm">Step {props.step}</Text>
       <Spacer y="sm" />
       {props.title}
@@ -531,24 +537,26 @@ function PaymentSubStep(props: {
 function StepContainer(props: {
   state?: FiatStatusMeta["progressStatus"];
   children: React.ReactNode;
+  connectLocale: ConnectLocale;
 }) {
+  const locale = props.connectLocale.pay;
   let color: keyof Theme["colors"] = "borderColor";
   let text: string | undefined;
 
   if (props.state === "pending") {
-    text = "Pending";
+    text = locale.pending;
     color = "accentText";
   } else if (props.state === "actionRequired") {
     color = "accentText";
   } else if (props.state === "completed") {
-    text = "Completed";
+    text = locale.completed;
     color = "success";
   } else if (props.state === "failed") {
     color = "danger";
-    text = "Failed";
+    text = locale.failed;
   } else if (props.state === "partialSuccess") {
     color = "danger";
-    text = "Incomplete";
+    text = locale.incomplete;
   }
 
   return (

@@ -202,6 +202,7 @@ function ModalContent(props: ModalProps) {
         }}
         isBuyForTx={true}
         isEmbed={false}
+        connectLocale={localeQuery.data}
       />
     );
   }

@@ -23,6 +23,7 @@ import { Text } from "../../../../components/text.js";
 import { useCustomTheme } from "../../../../design-system/CustomThemeProvider.js";
 import { StyledDiv } from "../../../../design-system/elements.js";
 import { fontSize, iconSize } from "../../../../design-system/index.js";
+import type { ConnectLocale } from "../../../locale/types.js";
 import type { ERC20OrNativeToken } from "../../nativeToken.js";
 import { Step } from "../Stepper.js";
 import { SwapFees } from "./Fees.js";
@@ -47,7 +48,9 @@ export function SwapConfirmationScreen(props: {
   fromToken: ERC20OrNativeToken;
   fromTokenSymbol: string;
   isFiatFlow: boolean;
+  connectLocale: ConnectLocale;
 }) {
+  const locale = props.connectLocale.pay;
   const sendTransactionMutation = useSendTransactionCore();
   const activeChain = useActiveWalletChain();
   const activeWallet = useActiveWallet();
@@ -62,7 +65,7 @@ export function SwapConfirmationScreen(props: {
 
   return (
     <Container p="lg">
-      <ModalHeader title="Buy" onBack={props.onBack} />
+      <ModalHeader title={locale.buy} onBack={props.onBack} />
 
       {props.isFiatFlow ? (
         <>
@@ -80,7 +83,7 @@ export function SwapConfirmationScreen(props: {
       )}
 
       {/* Receive */}
-      <ConfirmItem label="Receive">
+      <ConfirmItem label={locale.receive}>
         <RenderTokenInfo
           chain={props.toChain}
           amount={String(formatNumber(Number(props.toAmount), 4))}
@@ -91,7 +94,7 @@ export function SwapConfirmationScreen(props: {
       </ConfirmItem>
 
       {/* Pay */}
-      <ConfirmItem label="Pay">
+      <ConfirmItem label={locale.pay}>
         <RenderTokenInfo
           chain={props.fromChain}
           amount={String(formatNumber(Number(props.fromAmount), 4))}
@@ -102,12 +105,12 @@ export function SwapConfirmationScreen(props: {
       </ConfirmItem>
 
       {/* Fees  */}
-      <ConfirmItem label="Fees">
+      <ConfirmItem label={locale.fees}>
         <SwapFees quote={props.quote} align="right" />
       </ConfirmItem>
 
       {/* Time  */}
-      <ConfirmItem label="Time">
+      <ConfirmItem label={locale.time}>
         <Text color="primaryText">
           ~
           {formatSeconds(
@@ -161,6 +164,7 @@ export function SwapConfirmationScreen(props: {
           fullWidth
           chain={props.fromChain}
           variant="accent"
+          connectLocale={props.connectLocale}
         />
       ) : (
         <Button
@@ -226,8 +230,9 @@ export function SwapConfirmationScreen(props: {
           gap="xs"
         >
           {step === "approval" &&
-            (status === "pending" ? "Approving" : "Approve")}
-          {step === "swap" && (status === "pending" ? "Confirming" : "Confirm")}
+            (status === "pending" ? locale.approving : locale.approve)}
+          {step === "swap" &&
+            (status === "pending" ? locale.confirming : locale.confirm)}
           {status === "pending" && (
             <Spinner size="sm" color="accentButtonText" />
           )}

@@ -7,6 +7,7 @@ import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { TokenSymbol } from "../../../../components/token/TokenSymbol.js";
 import { iconSize } from "../../../../design-system/index.js";
+import type { ConnectLocale } from "../../../locale/types.js";
 import type { ERC20OrNativeToken } from "../../nativeToken.js";
 
 /**
@@ -18,6 +19,7 @@ export function TokenSelectorButton(props: {
   onClick: () => void;
   style?: React.CSSProperties;
   client: ThirdwebClient;
+  connectLocale: ConnectLocale;
 }) {
   return (
     <Button
@@ -43,7 +45,7 @@ export function TokenSelectorButton(props: {
         </>
       ) : (
         <Container flex="row" center="y" gap="xs" color="secondaryText">
-          <Text size="sm"> Select token </Text>
+          <Text size="sm"> {props.connectLocale.pay.selectToken} </Text>
           <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
         </Container>
       )}

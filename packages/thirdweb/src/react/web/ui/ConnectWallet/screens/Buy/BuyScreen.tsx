@@ -400,7 +400,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
             title={
               props.buyForTx
                 ? `Not enough ${props.buyForTx.tokenSymbol}`
-                : "Buy"
+                : connectLocale.pay.buy
             }
             onBack={props.onBack}
           />
@@ -416,6 +416,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
               )}
               buyForTx={props.buyForTx}
               client={client}
+              connectLocale={connectLocale}
             />
           ) : null}
 
@@ -509,7 +510,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
                   disabled={true}
                   data-disable={true}
                 >
-                  Continue
+                  {connectLocale.pay.continue}
                 </Button>
               )}
             </>
@@ -651,6 +652,7 @@ function SwapScreenContent(
             });
             quoteQuery.refetch();
           }}
+          connectLocale={props.connectLocale}
         />
       ),
     });
@@ -714,7 +716,12 @@ function SwapScreenContent(
       !quoteQuery.isLoading &&
       !isNotEnoughBalance &&
       !quoteQuery.error ? (
-        <SwitchNetworkButton variant="accent" fullWidth chain={fromChain} />
+        <SwitchNetworkButton
+          variant="accent"
+          fullWidth
+          chain={fromChain}
+          connectLocale={props.connectLocale}
+        />
       ) : (
         <Button
           variant={disableContinue ? "outline" : "accent"}
@@ -831,6 +838,7 @@ function FiatScreenContent(
           openedWindow={openedWindow}
           onDone={props.onDone}
           isEmbed={props.isEmbed}
+          connectLocale={props.connectLocale}
         />
       ),
     });
@@ -848,7 +856,10 @@ function FiatScreenContent(
         </Text>
 
         <Spacer y="lg" />
-        <FiatFees quote={fiatQuoteQuery.data} />
+        <FiatFees
+          quote={fiatQuoteQuery.data}
+          connectLocale={props.connectLocale}
+        />
       </div>,
     );
   }
@@ -936,8 +947,10 @@ function BuyForTxUI(props: {
   amountNeeded: string;
   buyForTx: BuyForTx;
   client: ThirdwebClient;
+  connectLocale: ConnectLocale;
 }) {
   const chainQuery = useChainQuery(props.buyForTx.tx.chain);
+  const { buyForTx: locale } = props.connectLocale.pay;
 
   return (
     <Container>
@@ -948,7 +961,7 @@ function BuyForTxUI(props: {
           justifyContent: "space-between",
         }}
       >
-        <Text size="sm">Amount Needed</Text>
+        <Text size="sm">{locale.amountNeeded}</Text>
         <Container
           flex="column"
           style={{
@@ -1005,7 +1018,7 @@ function BuyForTxUI(props: {
       <Spacer y="lg" />
 
       <Text center size="sm">
-        Purchase
+        {locale.purchase}
       </Text>
       <Spacer y="xxs" />
     </Container>

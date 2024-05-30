@@ -19,7 +19,6 @@ export type ConnectLocale = {
   disconnectWallet: string;
   getStarted: string;
   guest: string;
-  buy: string;
   guestWalletWarning: string;
   installed: string;
   networkSelector: {
@@ -76,9 +75,9 @@ export type ConnectLocale = {
       prompt: string;
       promptForSafe: string;
       title: string;
-      tryAgain: string;
     };
   };
+  tryAgain: string;
   smartWallet: string;
   switchAccount: string;
   switchNetwork: string;
@@ -87,4 +86,41 @@ export type ConnectLocale = {
   transactions: string;
   viewAllTransactions: string;
   welcomeScreen: { defaultSubtitle: string; defaultTitle: string };
+  pay: {
+    buy: string;
+    buyForTx: {
+      purchase: string;
+      amountNeeded: string;
+    };
+    continue: string;
+    selectCurrency: string;
+    buyPending: string;
+    completeInPopup: string;
+    txFailed: string;
+    buySuccess: string;
+    continueTx: string;
+    done: string;
+    viewOnExplorer: string;
+    pending: string;
+    completed: string;
+    failed: string;
+    incomplete: string;
+    pay: string;
+    receive: string;
+    status: string;
+    failedToGetQuote: string;
+    gettingQuote: string;
+    approve: string;
+    approving: string;
+    confirm: string;
+    confirming: string;
+    time: string;
+    fees: string;
+    amount: string;
+    networkFee: string;
+    processingFee: string;
+    total: string;
+    txFailedSubtitle: string;
+    selectToken: string;
+  };
 };

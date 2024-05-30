@@ -196,6 +196,7 @@ export function PayEmbed(props: PayEmbedProps) {
                   },
                 }}
                 theme={theme}
+                locale={props.locale}
               />
             }
           />
@@ -212,6 +213,7 @@ export function PayEmbed(props: PayEmbedProps) {
             }}
             isBuyForTx={false}
             isEmbed={true}
+            connectLocale={localeQuery.data}
           />
         )}
       </>

@@ -3,6 +3,7 @@ import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import type { BuyWithFiatQuote } from "../../../../../../../pay/buyWithFiat/getQuote.js";
 import type { BuyWithFiatStatus } from "../../../../../../../pay/buyWithFiat/getStatus.js";
 import { isSwapRequiredPostOnramp } from "../../../../../../../pay/buyWithFiat/isSwapRequiredPostOnramp.js";
+import type { ConnectLocale } from "../../../locale/types.js";
 import { openOnrampPopup } from "../openOnRamppopup.js";
 import { addPendingTx } from "../swap/pendingSwapTx.js";
 import { OnrampStatusScreen } from "./FiatStatusScreen.js";
@@ -46,6 +47,7 @@ export function FiatFlow(props: {
   onDone: () => void;
   isBuyForTx: boolean;
   isEmbed: boolean;
+  connectLocale: ConnectLocale;
 }) {
   const hasTwoSteps = isSwapRequiredPostOnramp(props.quote);
   const [screen, setScreen] = useState<Screen>(
@@ -78,6 +80,7 @@ export function FiatFlow(props: {
           setPopupWindow(popup);
           setScreen({ id: "onramp-status" });
         }}
+        connectLocale={props.connectLocale}
       />
     );
   }
@@ -98,6 +101,7 @@ export function FiatFlow(props: {
         }}
         isBuyForTx={props.isBuyForTx}
         isEmbed={props.isEmbed}
+        connectLocale={props.connectLocale}
       />
     );
   }
@@ -116,6 +120,7 @@ export function FiatFlow(props: {
         }}
         isBuyForTx={props.isBuyForTx}
         isEmbed={props.isEmbed}
+        connectLocale={props.connectLocale}
       />
     );
   }

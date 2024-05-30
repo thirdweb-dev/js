@@ -16,7 +16,6 @@ const connectWalletLocalEs: ConnectLocale = {
   guest: "Invitado",
   send: "Enviar",
   receive: "Recibir",
-  buy: "Buy", // TODO
   transactions: "Transactions", // TODO
   viewAllTransactions: "View All Transactions", // TODO
   currentNetwork: "Red actual",
@@ -94,10 +93,48 @@ const connectWalletLocalEs: ConnectLocale = {
       promptForSafe:
         "Firma la solicitud de firma en tu cartera y aprueba la transacción en Safe",
       approveTransactionInSafe: "Aprobar transacción en Safe",
-      tryAgain: "Intentar de nuevo",
       failedToSignIn: "Error al iniciar sesión",
       inProgress: "Esperando confirmación",
     },
+  },
+  tryAgain: "Intentar de nuevo",
+  // TODO
+  pay: {
+    buy: "Buy",
+    buyForTx: {
+      amountNeeded: "Amount Needed",
+      purchase: "Purchase",
+    },
+    selectCurrency: "Select Currency",
+    continue: "Continue",
+    buyPending: "Buy Pending",
+    completeInPopup: "Complete the purchase in popup",
+    txFailed: "Transaction Failed",
+    buySuccess: "Buy Success",
+    continueTx: "Continue Transaction",
+    done: "Done",
+    viewOnExplorer: "View on Explorer",
+    pending: "Pending",
+    completed: "Completed",
+    failed: "Failed",
+    incomplete: "Incomplete",
+    failedToGetQuote: "Failed to get price quote",
+    gettingQuote: "Getting price quote",
+    pay: "Pay",
+    receive: "Receive",
+    status: "Status",
+    approve: "Approve",
+    approving: "Approving",
+    confirm: "Confirm",
+    confirming: "Confirming",
+    time: "Time",
+    fees: "Fees",
+    amount: "Amount",
+    networkFee: "Network Fee",
+    processingFee: "Processing Fee",
+    total: "Total",
+    txFailedSubtitle: "Your transaction couldn't be processed",
+    selectToken: "Select Token",
   },
 };
 

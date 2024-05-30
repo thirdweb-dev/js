@@ -5,6 +5,7 @@ import { NATIVE_TOKEN_ADDRESS } from "../../../../../../../constants/addresses.j
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
 import type { Account } from "../../../../../../../wallets/interfaces/wallet.js";
 import type { TokenInfo } from "../../../defaultTokens.js";
+import type { ConnectLocale } from "../../../locale/types.js";
 import { type ERC20OrNativeToken, NATIVE_TOKEN } from "../../nativeToken.js";
 import { SwapConfirmationScreen } from "./ConfirmationScreen.js";
 import { SwapStatusScreen } from "./SwapStatusScreen.js";
@@ -20,6 +21,7 @@ type SwapFlowProps = {
   onTryAgain: () => void;
   isBuyForTx: boolean;
   isEmbed: boolean;
+  connectLocale: ConnectLocale;
 };
 
 export function SwapFlow(props: SwapFlowProps) {
@@ -84,6 +86,7 @@ export function SwapFlow(props: SwapFlowProps) {
         isBuyForTx={props.isBuyForTx}
         isEmbed={props.isEmbed}
         quote={quote}
+        connectLocale={props.connectLocale}
       />
     );
   }
@@ -104,6 +107,7 @@ export function SwapFlow(props: SwapFlowProps) {
       onTryAgain={props.onTryAgain}
       quote={quote}
       isFiatFlow={props.isFiatFlow}
+      connectLocale={props.connectLocale}
     />
   );
 }

@@ -1,4 +1,5 @@
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
+import type { ConnectLocale } from "../../../locale/types.js";
 import { FiatDetailsScreen } from "./FiatDetailsScreen.js";
 import { SwapDetailsScreen } from "./SwapDetailsScreen.js";
 import type { TxStatusInfo } from "./useBuyTransactionsToShow.js";
@@ -10,6 +11,7 @@ export function TxDetailsScreen(props: {
   onDone: () => void;
   isBuyForTx: boolean;
   isEmbed: boolean;
+  connectLocale: ConnectLocale;
 }) {
   const { statusInfo } = props;
 
@@ -32,6 +34,7 @@ export function TxDetailsScreen(props: {
         onDone={props.onDone}
         isBuyForTx={props.isBuyForTx}
         isEmbed={props.isEmbed}
+        connectLocale={props.connectLocale}
       />
     );
   }

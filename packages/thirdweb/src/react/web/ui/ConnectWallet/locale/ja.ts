@@ -19,7 +19,6 @@ const connectWalletLocalJa: ConnectLocale = {
   currentNetwork: "現在のネットワーク",
   switchAccount: "アカウントを切り替える",
   requestTestnetFunds: "テストネットの資金をリクエストする",
-  buy: "Buy", // TODO
   transactions: "Transactions", // TODO
   viewAllTransactions: "View All Transactions", // TODO
   backupWallet: "ウォレットのバックアップ",
@@ -94,10 +93,49 @@ const connectWalletLocalJa: ConnectLocale = {
       promptForSafe:
         "ウォレットで署名リクエストにサインし、Safeで取引を承認してください",
       approveTransactionInSafe: "Safeで取引を承認",
-      tryAgain: "再試行",
+
       failedToSignIn: "サインインに失敗しました",
       inProgress: "確認待ち",
     },
+  },
+  tryAgain: "再試行",
+  // TODO
+  pay: {
+    buy: "Buy",
+    buyForTx: {
+      amountNeeded: "Amount Needed",
+      purchase: "Purchase",
+    },
+    selectCurrency: "Select Currency",
+    continue: "Continue",
+    buyPending: "Buy Pending",
+    completeInPopup: "Complete the purchase in popup",
+    txFailed: "Transaction Failed",
+    buySuccess: "Buy Success",
+    continueTx: "Continue Transaction",
+    done: "Done",
+    viewOnExplorer: "View on Explorer",
+    pending: "Pending",
+    completed: "Completed",
+    failed: "Failed",
+    incomplete: "Incomplete",
+    failedToGetQuote: "Failed to get price quote",
+    gettingQuote: "Getting price quote",
+    pay: "Pay",
+    receive: "Receive",
+    status: "Status",
+    approve: "Approve",
+    approving: "Approving",
+    confirm: "Confirm",
+    confirming: "Confirming",
+    time: "Time",
+    fees: "Fees",
+    amount: "Amount",
+    networkFee: "Network Fee",
+    processingFee: "Processing Fee",
+    total: "Total",
+    txFailedSubtitle: "Your transaction couldn't be processed",
+    selectToken: "Select Token",
   },
 };
 

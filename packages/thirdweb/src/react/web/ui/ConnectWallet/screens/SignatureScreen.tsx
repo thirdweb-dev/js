@@ -173,7 +173,7 @@ export const SignatureScreen: React.FC<{
                     }}
                   >
                     <ReloadIcon width={iconSize.sm} height={iconSize.sm} />
-                    {locale.signingScreen.tryAgain}
+                    {connectLocale.tryAgain}
                   </Button>
                   <Spacer y="sm" />
                   <Button
@@ -266,7 +266,7 @@ function HeadlessSignIn({
                 }}
               >
                 <ReloadIcon width={iconSize.sm} height={iconSize.sm} />
-                {locale.signingScreen.tryAgain}
+                {connectLocale.tryAgain}
               </Button>
               <Spacer y="sm" />
               <Button

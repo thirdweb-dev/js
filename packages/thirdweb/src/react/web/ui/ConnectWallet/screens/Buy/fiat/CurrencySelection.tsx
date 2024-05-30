@@ -3,16 +3,21 @@ import { Container, Line, ModalHeader } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { iconSize } from "../../../../design-system/index.js";
+import type { ConnectLocale } from "../../../locale/types.js";
 import { type CurrencyMeta, currencies } from "./currencies.js";
 
 export function CurrencySelection(props: {
   onSelect: (currency: CurrencyMeta) => void;
   onBack: () => void;
+  connectLocale: ConnectLocale;
 }) {
   return (
     <Container>
       <Container p="lg">
-        <ModalHeader title="Select Currency" onBack={props.onBack} />
+        <ModalHeader
+          title={props.connectLocale.pay.selectCurrency}
+          onBack={props.onBack}
+        />
       </Container>
 
       <Line />

@@ -21,6 +21,7 @@ import {
   iconSize,
   spacing,
 } from "../../../../design-system/index.js";
+import type { ConnectLocale } from "../../../locale/types.js";
 import {
   BuyTxHistoryButton,
   BuyTxHistoryButtonHeight,
@@ -40,6 +41,7 @@ export function BuyTxHistory(props: {
   onDone: () => void;
   isBuyForTx: boolean;
   isEmbed: boolean;
+  connectLocale: ConnectLocale;
 }) {
   const [selectedTx, setSelectedTx] = useState<TxStatusInfo | null>(null);
 
@@ -52,6 +54,7 @@ export function BuyTxHistory(props: {
         onDone={props.onDone}
         isBuyForTx={props.isBuyForTx}
         isEmbed={props.isEmbed}
+        connectLocale={props.connectLocale}
       />
     );
   }
@@ -205,7 +208,7 @@ export function BuyTxHistoryList(props: {
       </Container>
 
       <Line />
-      <Container p="lg">
+      <Container p="lg" color="primaryText">
         <ButtonLink
           fullWidth
           variant="outline"

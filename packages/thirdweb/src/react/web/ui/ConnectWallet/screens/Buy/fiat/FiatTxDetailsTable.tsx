@@ -9,6 +9,7 @@ import { ButtonLink } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { fontSize, iconSize } from "../../../../design-system/index.js";
 import { USDIcon } from "../../../icons/currencies/USDIcon.js";
+import type { ConnectLocale } from "../../../locale/types.js";
 import { TokenInfoRow } from "../tx-history/TokenInfoRow.js";
 import type { FiatStatusMeta } from "../tx-history/statusMeta.js";
 
@@ -34,7 +35,9 @@ export function OnRampTxDetailsTable(props: {
     text: FiatStatusMeta["status"];
     txHash?: string;
   };
+  connectLocale: ConnectLocale;
 }) {
+  const locale = props.connectLocale.pay;
   const onRampChainQuery = useChainQuery(getCachedChain(props.token.chainId));
   const onrampTxHash = props.statusMeta?.txHash;
 
@@ -52,7 +55,7 @@ export function OnRampTxDetailsTable(props: {
       <TokenInfoRow
         chainId={props.token.chainId}
         client={props.client}
-        label="Receive"
+        label={locale.receive}
         tokenAmount={props.token.amount}
         tokenSymbol={props.token.symbol}
         tokenAddress={props.token.address}
@@ -67,7 +70,7 @@ export function OnRampTxDetailsTable(props: {
           justifyContent: "space-between",
         }}
       >
-        <Text>Pay</Text>
+        <Text>{locale.pay}</Text>
         <Container
           flex="column"
           gap="xxs"
@@ -98,7 +101,7 @@ export function OnRampTxDetailsTable(props: {
               justifyContent: "space-between",
             }}
           >
-            <Text>Status</Text>
+            <Text>{locale.status}</Text>
             <Container flex="row" gap="xs" center="y">
               <Text color={props.statusMeta.color}>
                 {props.statusMeta.text}
@@ -126,7 +129,7 @@ export function OnRampTxDetailsTable(props: {
               fontSize: fontSize.sm,
             }}
           >
-            View on Explorer
+            {locale.viewOnExplorer}
             <ExternalLinkIcon width={iconSize.sm} height={iconSize.sm} />
           </ButtonLink>
         </>

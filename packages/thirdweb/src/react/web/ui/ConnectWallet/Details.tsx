@@ -456,7 +456,7 @@ export const ConnectedWalletDetails: React.FC<{
             <Container color="secondaryText" flex="row" center="both">
               <PlusIcon width={iconSize.sm} height={iconSize.sm} />
             </Container>
-            {locale.buy}
+            {locale.pay.buy}
           </Button>
         </Container>
       </Container>
@@ -628,6 +628,7 @@ export const ConnectedWalletDetails: React.FC<{
         onDone={() => {
           setIsOpen(false);
         }}
+        connectLocale={locale}
       />
     );
   }

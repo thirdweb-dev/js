@@ -12,6 +12,7 @@ import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { iconSize } from "../../../../design-system/index.js";
 import { AccentFailIcon } from "../../../icons/AccentFailIcon.js";
+import type { ConnectLocale } from "../../../locale/types.js";
 import { SwapTxDetailsTable } from "../tx-history/SwapDetailsScreen.js";
 
 type UIStatus = "pending" | "success" | "failed" | "partialSuccess";
@@ -26,7 +27,9 @@ export function SwapStatusScreen(props: {
   isBuyForTx: boolean;
   isEmbed: boolean;
   quote: BuyWithCryptoQuote;
+  connectLocale: ConnectLocale;
 }) {
+  const locale = props.connectLocale.pay;
   const swapStatus = useBuyWithCryptoStatus({
     client: props.client,
     transactionHash: props.swapTxHash,
@@ -77,7 +80,7 @@ export function SwapStatusScreen(props: {
   return (
     <Container animate="fadein">
       <Container p="lg">
-        <ModalHeader title="Buy" onBack={props.onBack} />
+        <ModalHeader title={locale.buy} onBack={props.onBack} />
         <Spacer y="sm" />
 
         {uiStatus === "success" && (
@@ -90,7 +93,7 @@ export function SwapStatusScreen(props: {
               />
               <Spacer y="sm" />
               <Text color={"primaryText"} size="lg">
-                Buy Success
+                {locale.buySuccess}
               </Text>
             </Container>
 
@@ -99,7 +102,7 @@ export function SwapStatusScreen(props: {
             <Spacer y="sm" />
             {!props.isEmbed && (
               <Button variant="accent" fullWidth onClick={props.onDone}>
-                {props.isBuyForTx ? "Continue Transaction" : "Done"}
+                {props.isBuyForTx ? locale.continueTx : locale.done}
               </Button>
             )}
           </>
@@ -114,7 +117,7 @@ export function SwapStatusScreen(props: {
                 <AccentFailIcon size={iconSize["3xl"]} />
                 <Spacer y="xl" />
                 <Text color={"primaryText"} size="lg">
-                  Incomplete
+                  {locale.incomplete}
                 </Text>
                 <Spacer y="sm" />
                 <Text size="sm" color="danger">
@@ -136,19 +139,17 @@ export function SwapStatusScreen(props: {
                 <AccentFailIcon size={iconSize["3xl"]} />
                 <Spacer y="xl" />
                 <Text color={"primaryText"} size="lg">
-                  Transaction Failed
+                  {locale.txFailed}
                 </Text>
 
                 <Spacer y="sm" />
-                <Text size="sm">
-                  Your transaction {`couldn't`} be processed
-                </Text>
+                <Text size="sm">{locale.txFailedSubtitle}</Text>
               </Container>
 
               <Spacer y="md" />
 
               <Button variant="accent" fullWidth onClick={props.onTryAgain}>
-                Try Again
+                {props.connectLocale.tryAgain}
               </Button>
 
               <Spacer y="xl" />
@@ -174,7 +175,7 @@ export function SwapStatusScreen(props: {
               </div>
               <Spacer y="lg" />
               <Text color={"primaryText"} size="lg">
-                Buy Pending
+                {locale.buyPending}
               </Text>
             </Container>
             <Spacer y="xxl" />

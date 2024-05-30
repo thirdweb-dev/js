@@ -6,6 +6,7 @@ import type {
 } from "../../../../../../../pay/buyWithFiat/getStatus.js";
 import { useBuyWithFiatStatus } from "../../../../../../core/hooks/pay/useBuyWithFiatStatus.js";
 import { Container, Line, ModalHeader } from "../../../../components/basic.js";
+import type { ConnectLocale } from "../../../locale/types.js";
 import { OnRampTxDetailsTable } from "../fiat/FiatTxDetailsTable.js";
 import { PostOnRampSwapFlow } from "../fiat/PostOnRampSwapFlow.js";
 import { getBuyWithFiatStatusMeta } from "./statusMeta.js";
@@ -17,6 +18,7 @@ export function FiatDetailsScreen(props: {
   onDone: () => void;
   isBuyForTx: boolean;
   isEmbed: boolean;
+  connectLocale: ConnectLocale;
 }) {
   const initialStatus = props.status;
   const [stopPolling, setStopPolling] = useState(false);
@@ -41,6 +43,7 @@ export function FiatDetailsScreen(props: {
     const fiatQuote = status.quote;
     return (
       <PostOnRampSwapFlow
+        connectLocale={props.connectLocale}
         client={props.client}
         status={status}
         onBack={props.onBack}
@@ -83,6 +86,7 @@ export function FiatDetailsScreen(props: {
 
       <Container p="lg">
         <OnRampTxDetailsTable
+          connectLocale={props.connectLocale}
           client={props.client}
           token={
             status.source

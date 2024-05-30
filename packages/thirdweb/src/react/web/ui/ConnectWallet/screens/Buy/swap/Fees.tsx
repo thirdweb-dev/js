@@ -4,6 +4,7 @@ import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Container, Line } from "../../../../components/basic.js";
 import { Text } from "../../../../components/text.js";
+import type { ConnectLocale } from "../../../locale/types.js";
 
 /**
  * @internal
@@ -47,7 +48,9 @@ export function SwapFees(props: {
  */
 export function FiatFees(props: {
   quote: BuyWithFiatQuote;
+  connectLocale: ConnectLocale;
 }) {
+  const locale = props.connectLocale.pay;
   return (
     <Container flex="column" gap="xs">
       {/* Amount ( without fees included ) */}
@@ -58,7 +61,7 @@ export function FiatFees(props: {
         }}
       >
         <Text inline color="secondaryText">
-          Amount
+          {locale.amount}
         </Text>
         <Text color="primaryText" inline>
           {formatNumber(Number(props.quote.fromCurrency.amount), 4)}{" "}
@@ -80,7 +83,9 @@ export function FiatFees(props: {
             }}
           >
             <Text inline color="secondaryText">
-              {fee.feeType === "NETWORK" ? "Network Fee" : "Processing Fee"}
+              {fee.feeType === "NETWORK"
+                ? locale.networkFee
+                : locale.processingFee}
             </Text>
 
             <Text color="primaryText" inline>
@@ -103,7 +108,7 @@ export function FiatFees(props: {
         }}
       >
         <Text inline color="secondaryText">
-          Total
+          {locale.total}
         </Text>
         <Text color="primaryText" inline>
           {formatNumber(Number(props.quote.fromCurrencyWithFees.amount), 4)}{" "}
