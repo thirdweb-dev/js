@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { metadataBase } from "@/lib/constants";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { CodeExample } from "../../../components/code/code-example";
+import { StyledPayTransaction } from "../../../components/styled-pay-transaction";
 
 export const metadata: Metadata = {
   metadataBase,
@@ -54,6 +56,46 @@ export default function Page() {
             </div>
           </div>
         </div>
+      </section>
+      <section className="container px-4 md:px-6 space-y-8">
+        <div className="space-y-2">
+          <h2 className="text-4xl font-semibold tracking-tight">
+            Transaction Button
+          </h2>
+          <p className="max-w-[600px]">
+            Transaction Button is a handy component that handles transactions.
+            <br />
+            If your user doesn&apos;t have enough funds for that transaction, a
+            pre-filled pay modal will appear with the exact amount needed.
+          </p>
+        </div>
+
+        <CodeExample
+          preview={<StyledPayTransaction />}
+          code={`import { TransactionButton } from "thirdweb/react";
+
+
+function App() {
+  const account = useActiveAccount();
+
+  return (
+    <TransactionButton
+      transaction={() => {
+        // any transaction works
+        return claimTo({
+          contract,
+          quantity: 1n,
+          tokenId: 0n,
+          to: account?.address,
+        });
+      }}
+    >
+      Buy for 10 MATIC
+    </TransactionButton>
+  );
+};`}
+          lang="tsx"
+        />
       </section>
     </main>
   );

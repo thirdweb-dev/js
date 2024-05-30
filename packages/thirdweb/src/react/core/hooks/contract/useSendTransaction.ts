@@ -5,7 +5,6 @@ import { sendTransaction } from "../../../../transaction/actions/send-transactio
 import type { WaitForReceiptOptions } from "../../../../transaction/actions/wait-for-tx-receipt.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
 import { resolvePromisedValue } from "../../../../utils/promise/resolve-promised-value.js";
-import type { Account } from "../../../../wallets/interfaces/wallet.js";
 import {
   type GetWalletBalanceResult,
   getWalletBalance,
@@ -105,7 +104,7 @@ export function useSendTransactionCore(
                 chain: tx.chain,
                 client: tx.client,
               }),
-              getTotalTxCostForBuy(tx, account),
+              getTotalTxCostForBuy(tx, account?.address),
             ]);
 
             const walletBalanceWei = walletBalance.value;
@@ -139,18 +138,31 @@ export function useSendTransactionCore(
 
 export async function getTotalTxCostForBuy(
   tx: PreparedTransaction,
-  account?: Account,
+  from?: string,
 ) {
-  const gasCost = await estimateGasCost({
-    transaction: tx,
-    account,
-  });
+  try {
+    const gasCost = await estimateGasCost({
+      transaction: tx,
+      from,
+    });
 
-  const bufferCost = gasCost.wei / 10n;
+    const bufferCost = gasCost.wei / 10n;
 
-  // Note: get tx.value AFTER estimateGasCost
-  const txValue = await resolvePromisedValue(tx.value);
+    // Note: get tx.value AFTER estimateGasCost
+    const txValue = await resolvePromisedValue(tx.value);
 
-  // add 10% extra gas cost to the estimate to ensure user buys enough to cover the tx cost
-  return gasCost.wei + bufferCost + (txValue || 0n);
+    // add 10% extra gas cost to the estimate to ensure user buys enough to cover the tx cost
+    return gasCost.wei + bufferCost + (txValue || 0n);
+  } catch (e) {
+    if (from) {
+      // try again without passing from
+      return await getTotalTxCostForBuy(tx);
+    }
+    // fallback if both fail, use the tx value + 1% buffer
+    const value = await resolvePromisedValue(tx.value);
+    if (!value) {
+      return 0n;
+    }
+    return value + value / 100n;
+  }
 }
