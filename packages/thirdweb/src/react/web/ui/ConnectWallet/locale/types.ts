@@ -84,7 +84,12 @@ export type ConnectLocale = {
   switchTo: string;
   switchingNetwork: string;
   transactions: string;
+  noTransactions: string;
+  txDetails: string;
   viewAllTransactions: string;
+  viewOnExplorer: string;
+  prev: string;
+  next: string;
   welcomeScreen: { defaultSubtitle: string; defaultTitle: string };
   pay: {
     buy: string;

@@ -14,8 +14,15 @@ const connectWalletLocalTl: ConnectLocale = {
   newToWallets: "Bago sa mga wallet?",
   getStarted: "Simulan",
   guest: "Guest",
-  transactions: "Transactions", // TODO
-  viewAllTransactions: "View All Transactions", // TODO
+  // TODO ----
+  transactions: "Transactions",
+  noTransactions: "No Transactions",
+  txDetails: "Transaction Details",
+  viewOnExplorer: "View on Explorer",
+  prev: "Prev",
+  next: "Next",
+  viewAllTransactions: "View All Transactions",
+  // ---
   send: "Ipadala",
   receive: "Matanggap",
   currentNetwork: "Kasalukuyang network",

@@ -70,6 +70,7 @@ export function BuyTxHistoryList(props: {
   client: ThirdwebClient;
   onDone: () => void;
   onSelectTx: (tx: TxStatusInfo) => void;
+  connectLocale: ConnectLocale;
 }) {
   const {
     pageIndex,
@@ -80,6 +81,7 @@ export function BuyTxHistoryList(props: {
     pagination,
   } = useBuyTransactionsToShow(props.client);
 
+  const locale = props.connectLocale;
   const activeChain = useActiveWalletChain();
   const chainQuery = useChainQuery(activeChain);
   const activeAccount = useActiveAccount();
@@ -89,7 +91,7 @@ export function BuyTxHistoryList(props: {
   return (
     <Container animate="fadein">
       <Container p="lg">
-        <ModalHeader title="Transactions" onBack={props.onBack} />
+        <ModalHeader title={locale.transactions} onBack={props.onBack} />
       </Container>
 
       <Container
@@ -113,7 +115,7 @@ export function BuyTxHistoryList(props: {
               }}
             >
               <CrossCircledIcon width={iconSize.xl} height={iconSize.xl} />
-              <Text> No Transactions </Text>
+              <Text> {locale.noTransactions} </Text>
             </Container>
           )}
 
@@ -142,6 +144,7 @@ export function BuyTxHistoryList(props: {
                 onClick={() => {
                   props.onSelectTx(txInfo);
                 }}
+                connectLocale={locale}
               />
             );
           })}
@@ -184,7 +187,7 @@ export function BuyTxHistoryList(props: {
                     transform: "rotate(180deg)",
                   }}
                 />
-                Prev
+                {locale.prev}
               </Button>
               <Button
                 variant="outline"
@@ -199,7 +202,7 @@ export function BuyTxHistoryList(props: {
                   setPageIndex((prev) => prev + 1);
                 }}
               >
-                Next
+                {locale.next}
                 <ArrowRightIcon width={iconSize.sm} height={iconSize.sm} />
               </Button>
             </div>
@@ -221,7 +224,7 @@ export function BuyTxHistoryList(props: {
             color: "inherit",
           }}
         >
-          View on Explorer{" "}
+          {locale.viewOnExplorer}{" "}
           <ExternalLinkIcon width={iconSize.sm} height={iconSize.sm} />
         </ButtonLink>
       </Container>

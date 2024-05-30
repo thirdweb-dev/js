@@ -79,7 +79,10 @@ export function FiatDetailsScreen(props: {
   return (
     <Container>
       <Container p="lg">
-        <ModalHeader title="Transaction Details" onBack={props.onBack} />
+        <ModalHeader
+          title={props.connectLocale.txDetails}
+          onBack={props.onBack}
+        />
       </Container>
 
       <Line />

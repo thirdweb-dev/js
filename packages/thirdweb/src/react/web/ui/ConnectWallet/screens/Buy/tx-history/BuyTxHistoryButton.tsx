@@ -10,6 +10,7 @@ import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { useCustomTheme } from "../../../../design-system/CustomThemeProvider.js";
 import { spacing } from "../../../../design-system/index.js";
+import type { ConnectLocale } from "../../../locale/types.js";
 import {
   getBuyWithCryptoStatusMeta,
   getBuyWithFiatStatusMeta,
@@ -22,7 +23,9 @@ export function BuyTxHistoryButton(props: {
   txInfo: TxStatusInfo;
   client: ThirdwebClient;
   onClick?: () => void;
+  connectLocale: ConnectLocale;
 }) {
+  const locale = props.connectLocale.pay;
   const statusMeta =
     props.txInfo.type === "swap"
       ? getBuyWithCryptoStatusMeta(props.txInfo.status)
@@ -72,7 +75,7 @@ export function BuyTxHistoryButton(props: {
             }}
           >
             <Text size="sm" color="primaryText">
-              Buy{" "}
+              {locale.buy}{" "}
               {formatNumber(
                 Number(
                   props.txInfo.type === "swap"

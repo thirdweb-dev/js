@@ -16,8 +16,15 @@ const connectWalletLocalEs: ConnectLocale = {
   guest: "Invitado",
   send: "Enviar",
   receive: "Recibir",
-  transactions: "Transactions", // TODO
-  viewAllTransactions: "View All Transactions", // TODO
+  // TODO ----
+  transactions: "Transactions",
+  noTransactions: "No Transactions",
+  txDetails: "Transaction Details",
+  viewOnExplorer: "View on Explorer",
+  prev: "Prev",
+  next: "Next",
+  viewAllTransactions: "View All Transactions",
+  // ---
   currentNetwork: "Red actual",
   switchAccount: "Cambiar cuenta",
   requestTestnetFunds: "Solicitar fondos de Testnet",

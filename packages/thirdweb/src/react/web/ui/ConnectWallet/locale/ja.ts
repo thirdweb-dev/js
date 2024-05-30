@@ -19,8 +19,15 @@ const connectWalletLocalJa: ConnectLocale = {
   currentNetwork: "現在のネットワーク",
   switchAccount: "アカウントを切り替える",
   requestTestnetFunds: "テストネットの資金をリクエストする",
-  transactions: "Transactions", // TODO
-  viewAllTransactions: "View All Transactions", // TODO
+  // TODO ----
+  transactions: "Transactions",
+  noTransactions: "No Transactions",
+  txDetails: "Transaction Details",
+  viewOnExplorer: "View on Explorer",
+  prev: "Prev",
+  next: "Next",
+  viewAllTransactions: "View All Transactions",
+  // ---
   backupWallet: "ウォレットのバックアップ",
   guestWalletWarning:
     "これは一時的なゲストウォレットです。アクセスできなくなることを防ぐため、バックアップをしてください",
