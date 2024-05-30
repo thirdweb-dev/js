@@ -12,8 +12,8 @@ import type {
   WalletConnectSessionProposalEvent,
   WalletConnectSessionRequestEvent,
   WalletConnectSignRequestPrams,
-  WalletConnectSignTransactionRequestParams,
   WalletConnectSignTypedDataRequestParams,
+  WalletConnectTransactionRequestParams,
 } from "./types.js";
 
 export type WalletConnectClient = Awaited<ReturnType<typeof SignClient.init>>;
@@ -133,9 +133,10 @@ export async function fulfillRequest(options: {
     event: {
       topic,
       id,
-      params: { request },
+      params: { chainId: rawChainId, request },
     },
   } = options;
+
   const account = wallet.getAccount();
   if (!account) {
     throw new Error("[WalletConnect] No account connected to provided wallet");
@@ -178,16 +179,61 @@ export async function fulfillRequest(options: {
         );
       }
       const transaction = (
-        request.params as WalletConnectSignTransactionRequestParams
+        request.params as WalletConnectTransactionRequestParams
       )[0];
+      if (
+        transaction.from !== undefined &&
+        transaction.from !== account.address
+      ) {
+        throw new Error(
+          `[WalletConnect] Active account address (${account.address}) differs from transaction \`from\` address (${transaction.from})`,
+        );
+      }
       result = await account.signTransaction({
-        gas: hexToBigInt(transaction.gas),
-        gasPrice: hexToBigInt(transaction.gasPrice),
-        value: hexToBigInt(transaction.value),
-        nonce: hexToNumber(transaction.nonce),
+        gas: transaction.gas ? hexToBigInt(transaction.gas) : undefined,
+        gasPrice: transaction.gasPrice
+          ? hexToBigInt(transaction.gasPrice)
+          : undefined,
+        value: transaction.value ? hexToBigInt(transaction.value) : undefined,
+        nonce: transaction.nonce ? hexToNumber(transaction.nonce) : undefined,
         to: transaction.to,
         data: transaction.data,
       });
+      break;
+    }
+    case "eth_sendTransaction": {
+      const chainId = Number.parseInt(rawChainId?.split(":")[1] ?? "0"); // chainId is of the form "eip155:1234"
+      console.log("CHAIN ID", chainId);
+      if (!chainId) {
+        throw new Error(
+          `[WalletConnect] Invalid chainId ${rawChainId}, request chainId should have the format 'eip155:1'`,
+        );
+      }
+
+      const transaction = (
+        request.params as WalletConnectTransactionRequestParams
+      )[0];
+
+      if (
+        transaction.from !== undefined &&
+        transaction.from !== account.address
+      ) {
+        throw new Error(
+          `[WalletConnect] Active account address (${account.address}) differs from transaction \`from\` address (${transaction.from})`,
+        );
+      }
+      const txHash = await account.sendTransaction({
+        gas: transaction.gas ? hexToBigInt(transaction.gas) : undefined,
+        gasPrice: transaction.gasPrice
+          ? hexToBigInt(transaction.gasPrice)
+          : undefined,
+        value: transaction.value ? hexToBigInt(transaction.value) : undefined,
+        nonce: transaction.nonce ? hexToNumber(transaction.nonce) : undefined,
+        to: transaction.to,
+        data: transaction.data,
+        chainId,
+      });
+      result = txHash;
       break;
     }
     default:

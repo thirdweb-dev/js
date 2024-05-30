@@ -22,8 +22,8 @@ import type {
   WalletConnectSessionProposalEvent,
   WalletConnectSessionRequestEvent,
   WalletConnectSignRequestPrams,
-  WalletConnectSignTransactionRequestParams,
   WalletConnectSignTypedDataRequestParams,
+  WalletConnectTransactionRequestParams,
 } from "./types.js";
 
 const TEST_METADATA = {
@@ -85,13 +85,27 @@ const REQUEST_EVENT_MOCK: WalletConnectSessionRequestEvent = {
       method: "personal_sign",
       params: ["0x00", "0x00"],
     },
-    chainId: "0x1",
+    chainId: "eip155:1",
   },
 };
 const DEFAULT_METADATA = getDefaultAppMetadata();
+const TRANSACTION_MOCK = {
+  to: "0xd46e8dd67c5d32be8058bb8eb970870f07244567",
+  data: "0xd46e8dd67c5d32be8d46e8dd67c5d32be8058bb8eb970870f072445675058bb8eb970870f072445675",
+  gas: "0x76c0", // 30400
+  gasPrice: "0x9184e72a000", // 10000000000000
+  value: "0x9184e72a", // 2441406250
+  nonce: "0x117", // 279
+};
+
+const walletMock = {
+  ...TEST_IN_APP_WALLET_A,
+  getAccount: vi.fn().mockReturnValue(TEST_IN_APP_WALLET_A.getAccount()),
+};
 
 const mocks = vi.hoisted(() => ({
   session: { topic: "session" },
+  sendTransaction: vi.fn(),
 }));
 
 const signClientMock = {
@@ -103,10 +117,7 @@ const signClientMock = {
     acknowledged: vi.fn().mockResolvedValue(mocks.session),
   }),
 } as unknown as WalletConnectClient;
-const walletMock = {
-  ...TEST_IN_APP_WALLET_A,
-  getAccount: vi.fn().mockReturnValue(TEST_IN_APP_WALLET_A.getAccount()),
-};
+
 const signClientInitMock = vi
   .spyOn(WCSignClientExports.SignClient, "init")
   .mockResolvedValue(signClientMock);
@@ -118,6 +129,7 @@ afterAll(() => {
 beforeEach(() => {
   vi.clearAllMocks();
   walletMock.getAccount.mockReturnValue(TEST_IN_APP_WALLET_A.getAccount()); // reset any mocked accounts
+  TEST_ACCOUNT_A.sendTransaction = mocks.sendTransaction;
   walletConnectSessions.delete(walletMock);
 });
 
@@ -513,16 +525,6 @@ describe("session_request", () => {
   });
 
   describe("eth_signTransaction", () => {
-    const TRANSACTION = {
-      from: "0xb60e8dd61c5d32be8058bb8eb970870f07233155",
-      to: "0xd46e8dd67c5d32be8058bb8eb970870f07244567",
-      data: "0xd46e8dd67c5d32be8d46e8dd67c5d32be8058bb8eb970870f072445675058bb8eb970870f072445675",
-      gas: "0x76c0", // 30400
-      gasPrice: "0x9184e72a000", // 10000000000000
-      value: "0x9184e72a", // 2441406250
-      nonce: "0x117", // 279
-    };
-
     it("should sign transaction", async () => {
       const signTransactionRequest = {
         ...REQUEST_EVENT_MOCK,
@@ -530,7 +532,7 @@ describe("session_request", () => {
           ...REQUEST_EVENT_MOCK.params,
           request: {
             method: "eth_signTransaction",
-            params: [TRANSACTION] as WalletConnectSignTransactionRequestParams,
+            params: [TRANSACTION_MOCK] as WalletConnectTransactionRequestParams,
           },
         },
       };
@@ -562,7 +564,7 @@ describe("session_request", () => {
           ...REQUEST_EVENT_MOCK.params,
           request: {
             method: "eth_signTransaction",
-            params: [TRANSACTION] as WalletConnectSignTransactionRequestParams,
+            params: [TRANSACTION_MOCK] as WalletConnectTransactionRequestParams,
           },
         },
       };
@@ -574,6 +576,115 @@ describe("session_request", () => {
 
       await expect(promise).rejects.toThrow(
         "[WalletConnect] The current account does not support signing transactions",
+      );
+    });
+
+    it("should throw if from field is different from account", async () => {
+      const transaction = {
+        ...TRANSACTION_MOCK,
+        from: TEST_ACCOUNT_B.address,
+      };
+      const signTransactionRequest = {
+        ...REQUEST_EVENT_MOCK,
+        params: {
+          ...REQUEST_EVENT_MOCK.params,
+          request: {
+            method: "eth_signTransaction",
+            params: [transaction] as WalletConnectTransactionRequestParams,
+          },
+        },
+      };
+
+      const promise = fulfillRequest({
+        walletConnectClient: signClientMock,
+        wallet: walletMock,
+        event: signTransactionRequest,
+      });
+
+      await expect(promise).rejects.toThrow(
+        `[WalletConnect] Active account address (${TEST_ACCOUNT_A.address}) differs from transaction \`from\` address (${TEST_ACCOUNT_B.address})`,
+      );
+    });
+  });
+
+  describe("eth_sendTransaction", () => {
+    it("should send transaction", async () => {
+      mocks.sendTransaction.mockResolvedValueOnce("0x1234");
+      const sendTransactionRequest = {
+        ...REQUEST_EVENT_MOCK,
+        params: {
+          ...REQUEST_EVENT_MOCK.params,
+          request: {
+            method: "eth_sendTransaction",
+            params: [TRANSACTION_MOCK] as WalletConnectTransactionRequestParams,
+          },
+        },
+      };
+
+      await fulfillRequest({
+        walletConnectClient: signClientMock,
+        wallet: walletMock,
+        event: sendTransactionRequest,
+      });
+      expect(signClientMock.respond).toHaveBeenCalledWith({
+        topic: REQUEST_EVENT_MOCK.topic,
+        response: {
+          id: REQUEST_EVENT_MOCK.id,
+          jsonrpc: "2.0",
+          result: "0x1234",
+        },
+      });
+    });
+
+    it("should throw if no chain is provided", async () => {
+      const sendTransactionRequest = {
+        ...REQUEST_EVENT_MOCK,
+        params: {
+          ...REQUEST_EVENT_MOCK.params,
+          request: {
+            method: "eth_sendTransaction",
+            params: [TRANSACTION_MOCK] as WalletConnectTransactionRequestParams,
+          },
+          chainId: "eip155:?",
+        },
+      };
+
+      const promise = fulfillRequest({
+        walletConnectClient: signClientMock,
+        wallet: walletMock,
+        event: sendTransactionRequest,
+      });
+
+      await expect(promise).rejects.toThrow(
+        "[WalletConnect] Invalid chainId eip155:?, request chainId should have the format 'eip155:1'",
+      );
+    });
+
+    it("should throw if from address differs from account", async () => {
+      const transaction = {
+        ...TRANSACTION_MOCK,
+        from: TEST_ACCOUNT_B.address,
+      };
+
+      const signTransactionRequest = {
+        ...REQUEST_EVENT_MOCK,
+        params: {
+          ...REQUEST_EVENT_MOCK.params,
+          request: {
+            method: "eth_sendTransaction",
+            params: [transaction] as WalletConnectTransactionRequestParams,
+          },
+        },
+      };
+
+      const promise = fulfillRequest({
+        walletConnectClient: signClientMock,
+        wallet: walletMock,
+        event: signTransactionRequest,
+      });
+
+      await expect(promise).rejects.toThrow(
+        `[WalletConnect] Active account address (${TEST_ACCOUNT_A.address}) differs from transaction \`from\` address (${TEST_ACCOUNT_B.address})`,
       );
     });
   });

@@ -308,7 +308,7 @@ export type WalletConnectSessionRequestEvent = {
       params:
         | WalletConnectSignRequestPrams
         | WalletConnectSignTypedDataRequestParams
-        | WalletConnectSignTransactionRequestParams;
+        | WalletConnectTransactionRequestParams;
     };
     chainId: string;
   };
@@ -320,14 +320,14 @@ export type WalletConnectSignTypedDataRequestParams = [
   Address,
   TypedDataDefinition | string,
 ];
-export type WalletConnectSignTransactionRequestParams = [
+export type WalletConnectTransactionRequestParams = [
   {
-    from: Address;
-    to: Address;
-    data: Hex;
-    gas: Hex;
-    gasPrice: Hex;
-    value: Hex;
-    nonce: Hex;
+    from?: Address;
+    to?: Address;
+    data?: Hex;
+    gas?: Hex;
+    gasPrice?: Hex;
+    value?: Hex;
+    nonce?: Hex;
   },
 ];
