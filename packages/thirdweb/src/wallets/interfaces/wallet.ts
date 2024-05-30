@@ -67,5 +67,7 @@ export type Account = {
   sendBatchTransaction?: (
     txs: SendTransactionOption[],
   ) => Promise<SendTransactionResult>;
-  sendRawTransaction?: (tx: SendRawTransactionOptions) => Promise<Hex>;
+  sendRawTransaction?: (
+    tx: SendRawTransactionOptions,
+  ) => Promise<SendTransactionResult>;
 };
