@@ -4,6 +4,7 @@ import { getDefaultAppMetadata } from "../utils/defaultDappMetadata.js";
 import { DEFAULT_PROJECT_ID } from "./constants.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
 import type { Prettify } from "../../utils/type-utils.js";
+import type { TypedDataDefinition } from "viem";
 
 export type WalletConnectClient = Awaited<ReturnType<typeof SignClient.init>>;
 
@@ -47,6 +48,7 @@ export function createWalletConnectSession(options: CreateWalletConnectSessionOp
     });
 
     walletConnectClient.on("session_request", async (event: WalletConnectSessionRequestEvent) => {
+        console.log("Received session request", event);
         fulfillRequest({ wallet, walletConnectClient, event });
     });
 
@@ -91,15 +93,22 @@ export async function fulfillRequest(options: { wallet: Wallet, walletConnectCli
     switch (request.method) {
         case "personal_sign":
         case "eth_sign":
-            const params = request.params as string[]; // WalletConnect only gives us an any back so we have to assume this
-            if (typeof params[0] !== "string") {
+            const signParams = request.params as [string, string]; // WalletConnect only gives us an any back so we have to assume this
+            if (typeof signParams[0] !== "string") {
                 throw new Error("WalletConnect: Invalid request parameters");
             }
-            if (account.address !== params[1]) {
-                throw new Error(`[WalletConnect] Active account address (${account.address}) differs from requested address (${params[1]})`);
+            if (account.address !== signParams[1]) {
+                throw new Error(`[WalletConnect] Active account address (${account.address}) differs from requested address (${signParams[1]})`);
             }
 
-            result = await account.signMessage({ message: params[0] });
+            result = await account.signMessage({ message: signParams[0] });
+            break;
+        case "eth_signTypedData":
+            const signTypedDataParams = request.params as [string, TypedDataDefinition];
+            if (account.address !== signTypedDataParams[0]) {
+                throw new Error(`[WalletConnect] Active account address (${account.address}) differs from requested address (${signTypedDataParams[0]})`);
+            }
+            result = await account.signTypedData(signTypedDataParams[1]);
             break;
         default:
             throw new Error(`[WalletConnect] Unsupported request method: ${request.method}`);

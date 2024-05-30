@@ -5,6 +5,7 @@ import { DEFAULT_PROJECT_ID } from "./constants.js";
 import * as WCSignClientExports from "@walletconnect/sign-client";
 import { TEST_ACCOUNT_A, TEST_ACCOUNT_B, TEST_IN_APP_WALLET_A } from "../../../test/src/test-wallets.js";
 import type { WalletConnectSession, WalletConnectSessionProposalEvent, WalletConnectSessionRequestEvent } from "./types.js";
+import { typedData } from "../../../test/src/typed-data.js";
 
 const TEST_METADATA = {
     name: "test",
@@ -227,6 +228,29 @@ describe("session_request", () => {
 
         test("should reject if active account address differs from requested address", async () => {
             const personalSignRequest = { ...REQUEST_EVENT_MOCK, params: { ...REQUEST_EVENT_MOCK.params, request: { ...REQUEST_EVENT_MOCK.params.request, params: ["my message", TEST_ACCOUNT_B.address] } } };
+            const promise = fulfillRequest({ walletConnectClient: signClientMock, wallet: walletMock, event: personalSignRequest });
+
+            await expect(promise).rejects.toThrow(`[WalletConnect] Active account address (${TEST_ACCOUNT_A.address}) differs from requested address (${TEST_ACCOUNT_B.address})`);
+        });
+    });
+
+    describe("eth_signTypedData", () => {
+        test("should sign typed data", async () => {
+            const personalSignRequest = { ...REQUEST_EVENT_MOCK, params: { ...REQUEST_EVENT_MOCK.params, request: { method: "eth_signTypedData", params: [TEST_ACCOUNT_A.address, typedData.basic] } } };
+
+            await fulfillRequest({ walletConnectClient: signClientMock, wallet: walletMock, event: personalSignRequest });
+            expect(signClientMock.respond).toHaveBeenCalledWith({
+                topic: REQUEST_EVENT_MOCK.topic,
+                response: {
+                    id: REQUEST_EVENT_MOCK.id,
+                    jsonrpc: "2.0",
+                    result: "0x32f3d5975ba38d6c2fba9b95d5cbed1febaa68003d3d588d51f2de522ad54117760cfc249470a75232552e43991f53953a3d74edf6944553c6bef2469bb9e5921b"
+                }
+            });
+        });
+
+        test("should reject if active account address differs from requested address", async () => {
+            const personalSignRequest = { ...REQUEST_EVENT_MOCK, params: { ...REQUEST_EVENT_MOCK.params, request: { method: "eth_signTypedData", params: [TEST_ACCOUNT_B.address, typedData.basic] } } };
             const promise = fulfillRequest({ walletConnectClient: signClientMock, wallet: walletMock, event: personalSignRequest });
 
             await expect(promise).rejects.toThrow(`[WalletConnect] Active account address (${TEST_ACCOUNT_A.address}) differs from requested address (${TEST_ACCOUNT_B.address})`);
