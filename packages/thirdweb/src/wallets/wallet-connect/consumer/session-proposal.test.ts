@@ -4,16 +4,16 @@ import {
   TEST_ACCOUNT_A,
   TEST_IN_APP_WALLET_A,
 } from "../../../../test/src/test-wallets.js";
-import type {
-  WalletConnectSession,
-  WalletConnectSessionProposalEvent,
-} from "../types.js";
 import {
   type WalletConnectClient,
   getActiveWalletConnectSession,
   walletConnectSessions,
 } from "./index.js";
 import { onSessionProposal } from "./session-proposal.js";
+import type {
+  WalletConnectSession,
+  WalletConnectSessionProposalEvent,
+} from "./types.js";
 
 const PROPOSAL_EVENT_MOCK: WalletConnectSessionProposalEvent = {
   id: 1717020142228697,

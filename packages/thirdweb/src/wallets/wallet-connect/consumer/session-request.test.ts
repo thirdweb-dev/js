@@ -6,15 +6,15 @@ import {
 } from "../../../../test/src/test-wallets.js";
 import { typedData } from "../../../../test/src/typed-data.js";
 import { cloneObject } from "../../../../test/src/utils.js";
+import { type WalletConnectClient, walletConnectSessions } from "./index.js";
+import { fulfillRequest } from "./session-request.js";
 import type {
   WalletConnectRawTransactionRequestParams,
   WalletConnectSessionRequestEvent,
   WalletConnectSignRequestPrams,
   WalletConnectSignTypedDataRequestParams,
   WalletConnectTransactionRequestParams,
-} from "../types.js";
-import { type WalletConnectClient, walletConnectSessions } from "./index.js";
-import { fulfillRequest } from "./session-request.js";
+} from "./types.js";
 
 const TRANSACTION_MOCK = {
   to: "0xd46e8dd67c5d32be8058bb8eb970870f07244567",

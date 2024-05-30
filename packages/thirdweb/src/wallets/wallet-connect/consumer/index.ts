@@ -3,15 +3,15 @@ import type { Prettify } from "../../../utils/type-utils.js";
 import type { Wallet } from "../../../wallets/interfaces/wallet.js";
 import { getDefaultAppMetadata } from "../../utils/defaultDappMetadata.js";
 import { DEFAULT_PROJECT_ID } from "../constants.js";
+import { onSessionProposal } from "./session-proposal.js";
+import { fulfillRequest } from "./session-request.js";
 import type {
   WalletConnectConfig,
   WalletConnectSession,
   WalletConnectSessionEvent,
   WalletConnectSessionProposalEvent,
   WalletConnectSessionRequestEvent,
-} from "../types.js";
-import { onSessionProposal } from "./session-proposal.js";
-import { fulfillRequest } from "./session-request.js";
+} from "./types.js";
 
 export type WalletConnectClient = Awaited<ReturnType<typeof SignClient.init>>;
 

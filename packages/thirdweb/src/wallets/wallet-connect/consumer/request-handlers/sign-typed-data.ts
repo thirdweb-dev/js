@@ -1,6 +1,6 @@
 import type { Hex } from "../../../../utils/encoding/hex.js";
 import type { Account } from "../../../interfaces/wallet.js";
-import type { WalletConnectSignTypedDataRequestParams } from "../../types.js";
+import type { WalletConnectSignTypedDataRequestParams } from "../types.js";
 import { validateAccountAddress } from "../utils.js";
 
 /**

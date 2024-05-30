@@ -1,12 +1,12 @@
 import type { Wallet } from "../../interfaces/wallet.js";
+import type { WalletConnectClient } from "./index.js";
 import type {
   WalletConnectRawTransactionRequestParams,
   WalletConnectSessionRequestEvent,
   WalletConnectSignRequestPrams,
   WalletConnectSignTypedDataRequestParams,
   WalletConnectTransactionRequestParams,
-} from "../types.js";
-import type { WalletConnectClient } from "./index.js";
+} from "./types.js";
 
 /**
  * @internal

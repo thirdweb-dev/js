@@ -1,14 +1,14 @@
 import type { Account, Wallet } from "../../interfaces/wallet.js";
-import type {
-  WalletConnectSession,
-  WalletConnectSessionProposalEvent,
-} from "../types.js";
 import {
   type WalletConnectClient,
   getActiveWalletConnectSession,
   hasActiveWalletConnectSession,
   walletConnectSessions,
 } from "./index.js";
+import type {
+  WalletConnectSession,
+  WalletConnectSessionProposalEvent,
+} from "./types.js";
 
 /**
  * @internal

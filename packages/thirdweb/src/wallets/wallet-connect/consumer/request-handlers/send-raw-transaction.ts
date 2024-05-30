@@ -1,6 +1,6 @@
 import type { Hex } from "../../../../utils/encoding/hex.js";
 import type { Account } from "../../../interfaces/wallet.js";
-import type { WalletConnectRawTransactionRequestParams } from "../../types.js";
+import type { WalletConnectRawTransactionRequestParams } from "../types.js";
 
 /**
  * @internal

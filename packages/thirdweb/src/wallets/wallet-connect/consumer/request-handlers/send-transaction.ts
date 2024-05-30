@@ -4,7 +4,7 @@ import {
   hexToNumber,
 } from "../../../../utils/encoding/hex.js";
 import type { Account } from "../../../interfaces/wallet.js";
-import type { WalletConnectTransactionRequestParams } from "../../types.js";
+import type { WalletConnectTransactionRequestParams } from "../types.js";
 import { validateAccountAddress } from "../utils.js";
 
 /**
