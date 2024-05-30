@@ -150,7 +150,9 @@ export function createWallet<const ID extends WalletId>(
           }
 
           if (options && "client" in options) {
-            const { autoConnectWC } = await import("./wallet-connect/connector.js");
+            const { autoConnectWC } = await import(
+              "./wallet-connect/connector.js"
+            );
 
             const [
               connectedAccount,
