@@ -193,7 +193,7 @@ export function watchBlockNumber(opts: WatchBlockNumberOptions) {
     onError,
   } = opts;
   const chainId = chain.id;
-  // if we already have a poller for this chainId -> use it
+  // if we already have a poller for this chainId -> use it.
   let poller = existingPollers.get(chainId);
   // otherwise create a new poller
   if (!poller) {
