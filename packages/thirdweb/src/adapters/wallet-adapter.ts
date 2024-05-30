@@ -11,6 +11,29 @@ export type AdapterWalletOptions = {
   switchChain: (chain: Chain) => Promise<void> | void;
 };
 
+/**
+ * Creates a wallet from the given adapted account. Use this to convert a third party library wallet into a thirdweb wallet.
+ * @param options - The options for the adapter wallet.
+ * @returns a wallet instance.
+ *
+ * @example
+ * ```ts
+ * import { createWalletAdapter } from "thirdweb";
+ *
+ * const wallet = createWalletAdapter({
+ *  client,
+ *  adaptedAccount,
+ *  chain,
+ *  onDisconnect: () => {
+ *    // disconnect logic
+ *  },
+ *  switchChain: async (chain) => {
+ *    // switch chain logic
+ *  },
+ * });
+ * ```
+ * @wallet
+ */
 export function createWalletAdapter(
   options: AdapterWalletOptions,
 ): Wallet<"adapter"> {

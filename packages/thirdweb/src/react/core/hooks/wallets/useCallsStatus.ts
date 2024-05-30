@@ -20,7 +20,7 @@ import { useActiveWallet } from "./wallet-hooks.js";
  * import { useCallsStatus } from "thirdweb/react";
  * const { data: status, isLoading } = useCallsStatus({ bundleId, client });
  * ```
- * @wallets
+ * @extension EIP5792
  */
 export function useCallsStatus(options: {
   bundleId: string;

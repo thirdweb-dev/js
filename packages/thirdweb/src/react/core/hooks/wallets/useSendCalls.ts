@@ -76,7 +76,7 @@ import { useActiveWallet } from "../wallets/wallet-hooks.js";
  * });
  * @note We recommend proxying any paymaster calls via an API route you setup and control.
  * ```
- * @wallets
+ * @extension EIP5792
  */
 export function useSendCalls({
   client,

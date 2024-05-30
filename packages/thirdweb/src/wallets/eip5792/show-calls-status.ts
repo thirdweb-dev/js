@@ -32,7 +32,7 @@ export type ShowCallsStatusOptions = {
  *  const bundleId = await sendCalls({ wallet, client, calls });
  *  await showCallsStatus({ wallet, bundleId });
  * ```
- * @wallets
+ * @extension EIP5792
  * @internal
  */
 export async function showCallsStatus({

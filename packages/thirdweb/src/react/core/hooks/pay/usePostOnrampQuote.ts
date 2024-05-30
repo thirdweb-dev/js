@@ -32,7 +32,7 @@ export type PostOnRampQuoteQueryOptions = Omit<
  *
  * @param params - object of type [`GetPostOnRampQuoteParams`](https://portal.thirdweb.com/references/typescript/v5/GetPostOnRampQuoteParams)
  * @returns Object of type [`BuyWithCryptoQuote`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoQuote) which contains the information about the quote such as processing fees, estimated time, converted token amounts, etc.
- * @buyFiat
+ * @buyCrypto
  */
 export function usePostOnRampQuote(
   params?: GetPostOnRampQuoteParams,

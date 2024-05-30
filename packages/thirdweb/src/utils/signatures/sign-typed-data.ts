@@ -25,6 +25,7 @@ export type SignTypedDataOptions<
  *   ...typedData
  * });
  * ```
+ * @utils
  */
 export function signTypedData<
   const typedData extends TypedData | Record<string, unknown>,
