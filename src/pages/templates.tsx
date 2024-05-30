@@ -164,32 +164,6 @@ export const templates: TemplateCardProps[] = [
     authorIcon: "/assets/templates/thirdweb-eth.png",
   },
   {
-    id: "engine-nft-checkout",
-    title: "Fiat NFT checkout",
-    homepage: "https://engine-nft-checkout.thirdweb-example.com/",
-    repo: "https://github.com/thirdweb-example/engine-nft-checkout",
-    description:
-      "Allow users to buy an NFT via a fiat checkout flow using thirdweb engine.",
-    img: "/assets/templates/engine-nft-checkout.png",
-    hoverBorderColor: "hsl(248deg 89% 79% / 15%)",
-    tags: ["Engine", "ERC721"],
-    authorENS: "thirdweb.eth",
-    authorIcon: "/assets/templates/thirdweb-eth.png",
-  },
-  {
-    id: "loyalty-card",
-    title: "Loyalty Card",
-    homepage: "https://loyalty-card.thirdweb-example.com",
-    repo: "https://github.com/thirdweb-example/loyalty-card/",
-    description:
-      "Allow users to generate a loyalty card and admins to manage the loyalty cards.",
-    img: "/assets/templates/loyalty-card.png",
-    hoverBorderColor: "hsl(248deg 89% 79% / 15%)",
-    tags: ["Signature minting", "Loyalty Card"],
-    authorENS: "thirdweb.eth",
-    authorIcon: "/assets/templates/thirdweb-eth.png",
-  },
-  {
     id: "erc721",
     title: "NFT Drop",
     homepage: "https://nft-drop.thirdweb-example.com/",
