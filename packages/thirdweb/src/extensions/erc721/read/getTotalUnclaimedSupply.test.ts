@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { ANVIL_CHAIN } from "~test/chains.js";
+import { TEST_CONTRACT_URI } from "~test/ipfs-uris.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
 import { TEST_ACCOUNT_A } from "~test/test-wallets.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/addresses.js";
@@ -27,7 +28,8 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         type: "DropERC721",
         chain: ANVIL_CHAIN,
         params: {
-          name: "nftDrop",
+          name: "",
+          contractURI: TEST_CONTRACT_URI,
         },
       });
 

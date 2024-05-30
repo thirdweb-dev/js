@@ -1,6 +1,7 @@
 import { renderHook } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { ANVIL_CHAIN } from "~test/chains.js";
+import { TEST_CONTRACT_URI } from "~test/ipfs-uris.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
 import { TEST_ACCOUNT_A } from "~test/test-wallets.js";
 import { getContract } from "../../../../contract/contract.js";
@@ -17,7 +18,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("useWalletBalance", () => {
       account: TEST_ACCOUNT_A,
       type: "TokenERC20",
       params: {
-        name: "Token",
+        name: "",
+        contractURI: TEST_CONTRACT_URI,
       },
     });
     const erc20Contract = getContract({
