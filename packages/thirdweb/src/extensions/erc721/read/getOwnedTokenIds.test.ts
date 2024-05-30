@@ -3,7 +3,7 @@ import { DOODLES_CONTRACT } from "~test/test-contracts.js";
 import { getOwnedTokenIds } from "./getOwnedTokenIds.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("erc721.getAllOwners", () => {
-  it("works for a contract with 0 indexed NFTs", async () => {
+  it("should return the correct result", async () => {
     const owner = "0x3010775D16E7B79AF280035c64a1Df5F705CfdDb";
     const tokenIds = await getOwnedTokenIds({
       contract: DOODLES_CONTRACT,
