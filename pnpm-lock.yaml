@@ -1564,8 +1564,8 @@ importers:
         specifier: ^1
         version: 1.11.0(react-native@0.74.1)
       react-native-quick-crypto:
-        specifier: '>=0.6.1'
-        version: 0.6.1(react-native@0.74.1)(react@18.2.0)
+        specifier: '>=0.7.0-rc.6 || >=0.7'
+        version: 0.7.0-rc.6(react-native@0.74.1)(react@18.2.0)
       shamir-secret-sharing:
         specifier: 0.0.3
         version: 0.0.3
@@ -12391,10 +12391,6 @@ packages:
     resolution: {integrity: sha512-J8xLz7q2OFulZ2cyGTLE1TbbZcjpno7FaN6zdJNrgAdrJ+DZzh/uFR6YrTb4C+nXakvud8Q4+rbhoIWlYQbUFQ==}
     dev: false
 
-  /@types/node@17.0.45:
-    resolution: {integrity: sha512-w+tIMs3rq2afQdsPJlODhoUEKzFP1ayaoyl1CcnwtIlsVe7K7bA1NGm4s3PraqTLlXnbIN84zuBlxBWo1u9BLw==}
-    dev: false
-
   /@types/node@18.15.13:
     resolution: {integrity: sha512-N+0kuo9KgrUQ1Sn/ifDXsvg0TTleP7rIy4zOBGECxAljqvqfqpTfzx0Q1NUedOixRMBfe2Whhb056a42cWs26Q==}
     dev: true
@@ -23036,23 +23032,6 @@ packages:
       react: 18.2.0
       react-native: 0.74.1(@babel/core@7.24.5)(@babel/preset-env@7.24.5)(@types/react@18.2.17)(react@18.2.0)
 
-  /react-native-quick-crypto@0.6.1(react-native@0.74.1)(react@18.2.0):
-    resolution: {integrity: sha512-s6uFo7tcI3syo8/y5j+t6Rf+KVSuRKDp6tH04A0vjaHptJC6Iu7DVgkNYO7aqtfrYn8ZUgQ/Kqaq+m4i9TxgIQ==}
-    peerDependencies:
-      react: '*'
-      react-native: '>=0.71.0'
-    dependencies:
-      '@craftzdog/react-native-buffer': 6.0.5(react-native@0.74.1)(react@18.2.0)
-      '@types/node': 17.0.45
-      crypto-browserify: 3.12.0
-      events: 3.3.0
-      react: 18.2.0
-      react-native: 0.74.1(@babel/core@7.24.5)(@babel/preset-env@7.24.5)(@types/react@18.2.17)(react@18.2.0)
-      react-native-quick-base64: 2.1.2(react-native@0.74.1)(react@18.2.0)
-      stream-browserify: 3.0.0
-      string_decoder: 1.3.0
-    dev: false
-
   /react-native-quick-crypto@0.7.0-rc.6(react-native@0.74.1)(react@18.2.0):
     resolution: {integrity: sha512-l3L96k7Bpdu6Mh3uuZfdAuyfPz5mlpnXpBQIxGuwpY64V+K8U62lN+8jukfJiCu/huCXog5iikUQjtcPmlGkOw==}
     dependencies:
@@ -23064,7 +23043,6 @@ packages:
     transitivePeerDependencies:
       - react
       - react-native
-    dev: true
 
   /react-native-url-polyfill@1.3.0(react-native@0.74.1):
     resolution: {integrity: sha512-w9JfSkvpqqlix9UjDvJjm1EjSt652zVQ6iwCIj1cVVkwXf4jQhQgTNXY6EVTwuAmUjg6BC6k9RHCBynoLFo3IQ==}
@@ -24449,6 +24427,7 @@ packages:
     dependencies:
       inherits: 2.0.4
       readable-stream: 3.6.2
+    dev: true
 
   /stream-buffers@2.2.0:
     resolution: {integrity: sha512-uyQK/mx5QjHun80FLJTfaWE7JtwfRMKBLkMne6udYOmvH0CawotVa7TfgYHzAnpphn4+TweIx1QKMnRIbipmUg==}
