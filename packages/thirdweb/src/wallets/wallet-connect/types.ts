@@ -263,8 +263,28 @@ export type WalletConnectSessionProposalEvent = {
         methods: string[]
         events: string[]
       }
-    >
+    >,
+    optionalNamespaces?: Record<
+      string,
+      {
+        chains?: string[]
+        methods: string[]
+        events: string[]
+      }
+    >,
     pairingTopic?: string
+  }
+}
+
+export type WalletConnectSessionEvent = {
+  id: number
+  topic: string
+  params: {
+    event: {
+      name: string
+      data: unknown
+    }
+    chainId: string
   }
 }
 
@@ -274,7 +294,7 @@ export type WalletConnectSessionRequestEvent = {
   params: {
     request: {
       method: string
-      params: unknown
+      params: WalletConnectSignRequestPrams | WalletConnectSignTypedDataRequestParams | WalletConnectSignTransactionRequestParams
     }
     chainId: string
   }
@@ -282,8 +302,8 @@ export type WalletConnectSessionRequestEvent = {
 
 // Request param types
 export type WalletConnectSignRequestPrams = [string, Address];
-export type WalletConnectSignTypedDataRequestParams = [Address, TypedDataDefinition];
-export type WalletConnectSignTransactionRequestParams = {
+export type WalletConnectSignTypedDataRequestParams = [Address, TypedDataDefinition | string];
+export type WalletConnectSignTransactionRequestParams = [{
   from: Address,
   to: Address,
   data: Hex,
@@ -291,4 +311,4 @@ export type WalletConnectSignTransactionRequestParams = {
   gasPrice: Hex,
   value: Hex,
   nonce: Hex,
-};
+}];

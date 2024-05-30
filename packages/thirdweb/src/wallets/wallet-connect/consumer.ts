@@ -1,5 +1,5 @@
 import { SignClient } from "@walletconnect/sign-client";
-import type { WalletConnectConfig, WalletConnectSession, WalletConnectSessionProposalEvent, WalletConnectSessionRequestEvent, WalletConnectSignRequestPrams, WalletConnectSignTransactionRequestParams, WalletConnectSignTypedDataRequestParams } from "./types.js";
+import type { WalletConnectConfig, WalletConnectSession, WalletConnectSessionEvent, WalletConnectSessionProposalEvent, WalletConnectSessionRequestEvent, WalletConnectSignRequestPrams, WalletConnectSignTransactionRequestParams, WalletConnectSignTypedDataRequestParams } from "./types.js";
 import { getDefaultAppMetadata } from "../utils/defaultDappMetadata.js";
 import { DEFAULT_PROJECT_ID } from "./constants.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
@@ -53,6 +53,10 @@ export function createWalletConnectSession(options: CreateWalletConnectSessionOp
         fulfillRequest({ wallet, walletConnectClient, event });
     });
 
+    walletConnectClient.on("session_event", async (event: WalletConnectSessionEvent) => {
+        console.log("Received session event", event);
+    });
+
     walletConnectClient.core.pairing.pair({ uri });
 }
 
@@ -102,18 +106,20 @@ export async function fulfillRequest(options: { wallet: Wallet, walletConnectCli
             break;
 
         case "eth_signTypedData":
+        case "eth_signTypedData_v4":
             const signTypedDataParams = request.params as WalletConnectSignTypedDataRequestParams;
             if (account.address !== signTypedDataParams[0]) {
                 throw new Error(`[WalletConnect] Active account address (${account.address}) differs from requested address (${signTypedDataParams[0]})`);
             }
-            result = await account.signTypedData(signTypedDataParams[1]);
+            
+            result = await account.signTypedData(typeof signTypedDataParams[1] === "string" ? JSON.parse(signTypedDataParams[1]) : signTypedDataParams[1]);
             break;
 
         case "eth_signTransaction":
             if (!account.signTransaction) {
                 throw new Error("[WalletConnect] The current account does not support signing transactions");
             }
-            const transaction = (request.params as [WalletConnectSignTransactionRequestParams])[0];
+            const transaction = (request.params as WalletConnectSignTransactionRequestParams)[0];
             result = await account.signTransaction({
                 gas: hexToBigInt(transaction.gas),
                 gasPrice: hexToBigInt(transaction.gasPrice),
@@ -161,16 +167,31 @@ async function acceptSessionProposal({ account, walletConnectClient, sessionProp
         throw new Error("[WalletConnect] No chains found in EIP155 Wallet Connect session proposal namespace");
     }
 
+    const namespaces = {
+        chains: [
+            ...sessionProposal.requiredNamespaces.eip155.chains.map((chain: string) => `${chain}:${account.address}`),
+            ...(sessionProposal.optionalNamespaces?.eip155?.chains?.map((chain: string) => `${chain}:${account.address}`) ?? [])
+        ],
+        methods: [
+            ...sessionProposal.requiredNamespaces.eip155.methods,
+            ...(sessionProposal.optionalNamespaces?.eip155?.methods ?? [])
+        ],
+        events: [
+            ...sessionProposal.requiredNamespaces.eip155.events,
+            ...(sessionProposal.optionalNamespaces?.eip155?.events ?? [])
+        ]
+    }
     const approval = await walletConnectClient.approve({
         id: sessionProposal.id,
         namespaces: {
             eip155: {
-                accounts: sessionProposal.requiredNamespaces.eip155.chains.map((chain: string) => `${chain}:${account}`),
-                methods: sessionProposal.requiredNamespaces.eip155.methods,
-                events: sessionProposal.requiredNamespaces.eip155.events
+                accounts: namespaces.chains,
+                methods: namespaces.methods,
+                events: namespaces.events
             }
         }
-    })
+    });
+
     const session = await approval.acknowledged();
     return session;
 }
