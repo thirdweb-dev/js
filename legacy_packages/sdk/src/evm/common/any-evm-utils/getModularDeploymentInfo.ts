@@ -42,20 +42,20 @@ export async function getModularDeploymentInfo(
   const customParams: ConstructorParamMap = {};
   const finalDeploymentInfo: DeploymentPreset[] = [];
 
-  // get modular factory
+  // get clone factory
   const factoryInfo = await computeDeploymentInfo(
     "infra",
     provider,
     storage,
     create2FactoryAddress,
-    { contractName: "CloneFactory" },
+    { contractName: "TWCloneFactory" },
     clientId,
     secretKey,
   );
   finalDeploymentInfo.push(factoryInfo);
 
   if (hooks) {
-    const hookAddresses = hooks.filter((h) => isAddress(h.extensionName));
+    // const hookAddresses = hooks.filter((h) => isAddress(h.extensionName));
     const publishedHooks = hooks.filter((h) => !isAddress(h.extensionName));
     const publishedHooksFetched = await Promise.all(
       publishedHooks.map((h) => {

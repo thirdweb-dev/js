@@ -118,11 +118,6 @@ import {
 } from "../types/deploy/deploy-metadata";
 import { DeployMetadata, DeployOptions } from "../types/deploy/deploy-options";
 import { getModularDeploymentInfo } from "../common/any-evm-utils/getModularDeploymentInfo";
-import { computeModularFactoryAddress } from "../common/any-evm-utils/computeModularFactoryAddress";
-import {
-  hookInitializerAbi,
-  modularFactoryAbi,
-} from "../common/any-evm-utils/computeHookProxyAddress";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -1995,8 +1990,8 @@ export class ContractDeployer extends RPCConnectionHandler {
         implementationAddress,
       );
 
-      // 4. deploy proxy with ModularFactory and return address
-      const modularFactory = await computeModularFactoryAddress(
+      // 4. deploy proxy with Clone Factory and return address
+      const cloneFactory = await computeCloneFactoryAddress(
         this.getProvider(),
         this.storage,
         create2Factory,
@@ -2004,7 +1999,7 @@ export class ContractDeployer extends RPCConnectionHandler {
         this.options.secretKey,
       );
 
-      // deploy hook proxies
+      // add extensions
       const hooksParam: string[] = [];
       for (const tx of transactionsToSend) {
         if (tx.type === "hookImpl") {
@@ -2056,7 +2051,7 @@ export class ContractDeployer extends RPCConnectionHandler {
 
       options?.notifier?.("deploying", "proxy");
       const proxyDeployTransaction = (await this.deployViaFactory.prepare(
-        modularFactory,
+        cloneFactory,
         resolvedImplementationAddress,
         deployMetadata.compilerMetadata.abi,
         initializerFunction,
