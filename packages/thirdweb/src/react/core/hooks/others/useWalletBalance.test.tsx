@@ -1,4 +1,6 @@
-import { renderHook } from "@testing-library/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { renderHook, waitFor } from "@testing-library/react";
+import type { ReactNode } from "react";
 import { describe, expect, it } from "vitest";
 import { ANVIL_CHAIN } from "~test/chains.js";
 import { TEST_CONTRACT_URI } from "~test/ipfs-uris.js";
@@ -9,6 +11,13 @@ import { mintTo } from "../../../../extensions/erc20/write/mintTo.js";
 import { deployERC20Contract } from "../../../../extensions/prebuilts/deploy-erc20.js";
 import { sendAndConfirmTransaction } from "../../../../transaction/actions/send-and-confirm-transaction.js";
 import { useWalletBalance } from "./useWalletBalance.js";
+
+const createWrapper = () => {
+  const queryClient = new QueryClient();
+  return ({ children }: { children: ReactNode }) => (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  );
+};
 
 describe.runIf(process.env.TW_SECRET_KEY)("useWalletBalance", () => {
   it("should return the correct balance", async () => {
@@ -28,11 +37,13 @@ describe.runIf(process.env.TW_SECRET_KEY)("useWalletBalance", () => {
       address: erc20Address,
     });
 
+    const amount = 1000;
+
     // Mint some tokens
     const tx = mintTo({
       contract: erc20Contract,
       to: TEST_ACCOUNT_A.address,
-      amount: 1000,
+      amount,
     });
 
     await sendAndConfirmTransaction({
@@ -40,14 +51,24 @@ describe.runIf(process.env.TW_SECRET_KEY)("useWalletBalance", () => {
       account: TEST_ACCOUNT_A,
     });
 
-    const { result } = renderHook(() =>
-      useWalletBalance({
-        chain: ANVIL_CHAIN,
-        address: TEST_ACCOUNT_A.address,
-        client: TEST_CLIENT,
-      }),
+    const { result } = renderHook(
+      () =>
+        useWalletBalance({
+          chain: ANVIL_CHAIN,
+          address: TEST_ACCOUNT_A.address,
+          client: TEST_CLIENT,
+          tokenAddress: erc20Address,
+        }),
+      {
+        wrapper: createWrapper(),
+      },
     );
-
-    expect(result.current.data).toBe(1000n);
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(result.current.data).toBeDefined();
+    expect(result.current.data?.decimals).toBe(18);
+    expect(result.current.data?.symbol).toBeDefined();
+    expect(result.current.data?.name).toBeDefined();
+    expect(result.current.data?.value).toBe(BigInt(amount) * 10n ** 18n);
+    expect(result.current.data?.displayValue).toBe(amount.toString());
   });
 });
