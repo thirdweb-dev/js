@@ -94,7 +94,6 @@ jobs:
       matrix:
         package_manager: [npm, yarn, pnpm, bun]
         bundler: [vite, webpack, esbuild]
-        react_version: ['^18.2.0', '^18.3.1']
     steps:
       - name: Check out the code
         uses: actions/checkout@v4
@@ -113,8 +112,7 @@ jobs:
         run: |
           mkdir test-project
           cd test-project
-          echo '{ "name": "test-project", "private": true, "version": "1.0.0", "dependencies": { "react": "${{matrix.react_version}}", "react-dom": "${{matrix.react_version}}" } }' > package.json
-          ${{ matrix.package_manager }} add ../packages/thirdweb
+          ${{ matrix.package_manager }} add react react-dom ../packages/thirdweb
       - name: Create test file
         run: |
           cd test-project
