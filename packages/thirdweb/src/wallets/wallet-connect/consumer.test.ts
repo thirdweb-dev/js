@@ -1,10 +1,10 @@
 import { describe, test, expect, vi, afterAll, beforeEach } from "vitest";
-import { createWalletConnectClient, createWalletConnectSession, getActiveWalletConnectSession, onSessionProposal, walletConnectSessions, type WalletConnectClient } from "./consumer.js";
+import { createWalletConnectClient, createWalletConnectSession, getActiveWalletConnectSession, onSessionProposal, walletConnectSessions, type WalletConnectClient, fulfillRequest } from "./consumer.js";
 import { getDefaultAppMetadata } from "../utils/defaultDappMetadata.js";
 import { DEFAULT_PROJECT_ID } from "./constants.js";
 import * as WCSignClientExports from "@walletconnect/sign-client";
 import { TEST_IN_APP_WALLET_A } from "../../../test/src/test-wallets.js";
-import type { WalletConnectSession, WalletConnectSessionProposalEvent } from "./types.js";
+import type { WalletConnectSession, WalletConnectSessionProposalEvent, WalletConnectSessionRequestEvent } from "./types.js";
 
 const TEST_METADATA = {
     name: "test",
@@ -55,13 +55,24 @@ const PROPOSAL_EVENT_MOCK: WalletConnectSessionProposalEvent = {
         }
     }
 }
+const REQUEST_EVENT_MOCK: WalletConnectSessionRequestEvent = {
+    "id": 1717020142228697,
+    "topic": "session",
+    "params": {
+        "request": {
+            "method": "personal_sign",
+            "params": ["0x00", "0x00"],
+        },
+        "chainId": "0x1"
+    }
+}
 const DEFAULT_METADATA = getDefaultAppMetadata();
 
 const mocks = vi.hoisted(() => ({
     session: { topic: "session" }
 }));
 
-const signClientMock = { on: vi.fn(), core: { pairing: { pair: vi.fn() } }, disconnect: vi.fn(), approve: vi.fn().mockResolvedValue({ acknowledged: vi.fn().mockResolvedValue(mocks.session) }) } as unknown as WalletConnectClient;
+const signClientMock = { on: vi.fn(), respond: vi.fn(), core: { pairing: { pair: vi.fn() } }, disconnect: vi.fn(), approve: vi.fn().mockResolvedValue({ acknowledged: vi.fn().mockResolvedValue(mocks.session) }) } as unknown as WalletConnectClient;
 const walletMock = {
     ...TEST_IN_APP_WALLET_A,
     getAccount: vi.fn().mockReturnValue(TEST_IN_APP_WALLET_A.getAccount())
@@ -126,7 +137,7 @@ describe("session_proposal", () => {
         
         const promise = onSessionProposal({ wallet: walletMock, walletConnectClient: signClientMock, event: PROPOSAL_EVENT_MOCK });
       
-        await expect(promise).rejects.toThrow("onSessionProposal: No account connected to provided wallet");
+        await expect(promise).rejects.toThrow("[WalletConnect] No account connected to provided wallet");
     })
 
     test("should connect new session", async () => {
@@ -146,32 +157,50 @@ describe("session_proposal", () => {
     });
 
     test("should throw if no eip155 namespace provided", async () => {
-        const proposal: WalletConnectSessionProposalEvent = {
-            ...PROPOSAL_EVENT_MOCK,
-            params: {
-                ...PROPOSAL_EVENT_MOCK.params,
-                requiredNamespaces: {}
-            }
-        }
+        const proposal = { ...PROPOSAL_EVENT_MOCK, params: { ...PROPOSAL_EVENT_MOCK.params, requiredNamespaces: {} } };
+
         const promise = onSessionProposal({ walletConnectClient: signClientMock, wallet: walletMock, event: proposal });
-        await expect(promise).rejects.toThrow("No EIP155 namespace found in Wallet Connect session proposal");
+        await expect(promise).rejects.toThrow("[WalletConnect] No EIP155 namespace found in Wallet Connect session proposal");
     });
 
     test("should throw if no eip155 chains provided", async () => {
-        const proposal: WalletConnectSessionProposalEvent = {
-            ...PROPOSAL_EVENT_MOCK,
-            params: {
-                ...PROPOSAL_EVENT_MOCK.params,
-                requiredNamespaces: {
-                    eip155: {
-                        methods: [],
-                        events: []
-                    }
-                }
-            }
-        }
+        const proposal = { ...PROPOSAL_EVENT_MOCK, params: { ...PROPOSAL_EVENT_MOCK.params, requiredNamespaces: { eip155: { methods: [], events: [] } } } };
+         
         const promise = onSessionProposal({ walletConnectClient: signClientMock, wallet: walletMock, event: proposal });
-        await expect(promise).rejects.toThrow("No chains found in EIP155 Wallet Connect session proposal namespace");
+        await expect(promise).rejects.toThrow("[WalletConnect] No chains found in EIP155 Wallet Connect session proposal namespace");
     });
 });
+
+describe("session_request", () => {
+    test("should throw if no account is connected", async () => {
+        walletMock.getAccount.mockReturnValue(null);
+        const promise = fulfillRequest({ walletConnectClient: signClientMock, wallet: walletMock, event: REQUEST_EVENT_MOCK });
+        await expect(promise).rejects.toThrow("[WalletConnect] No account connected to provided wallet");
+    });
+
+    
+    test("should throw if unsupported request method", async () => {
+        const unsupportedRequest = { ...REQUEST_EVENT_MOCK, params: { ...REQUEST_EVENT_MOCK.params, request: { ...REQUEST_EVENT_MOCK.params.request, method: "eth_unsupported" } } };
+        const promise = fulfillRequest({ walletConnectClient: signClientMock, wallet: walletMock, event: unsupportedRequest });
+
+        await expect(promise).rejects.toThrow("[WalletConnect] Unsupported request method: eth_unsupported");
+    });
+    
+
+    describe("personal_sign", () => {
+        test("should sign message", async () => {
+            const personalSignRequest = { ...REQUEST_EVENT_MOCK, params: { ...REQUEST_EVENT_MOCK.params, request: { ...REQUEST_EVENT_MOCK.params.request, params: ["my message"] } } };
+
+            await fulfillRequest({ walletConnectClient: signClientMock, wallet: walletMock, event: personalSignRequest });
+            expect(signClientMock.respond).toHaveBeenCalledWith({
+                topic: REQUEST_EVENT_MOCK.topic,
+                response: {
+                    id: REQUEST_EVENT_MOCK.id,
+                    jsonrpc: "2.0",
+                    result: "0x66ea9c2ac4a99a5ac26f5fa3e800171036210e135d486f1d0d02d64eaa7dd56275b4323e153e62c1fad57a6be54420248ed54604f4857ec75ce7761eefad10e41c"
+                }
+            });
+        });
+    });
+})
 

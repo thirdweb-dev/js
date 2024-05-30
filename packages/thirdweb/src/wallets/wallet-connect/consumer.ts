@@ -1,5 +1,5 @@
 import { SignClient } from "@walletconnect/sign-client";
-import type { WalletConnectConfig, WalletConnectSession, WalletConnectSessionProposalEvent } from "./types.js";
+import type { WalletConnectConfig, WalletConnectSession, WalletConnectSessionProposalEvent, WalletConnectSessionRequestEvent } from "./types.js";
 import { getDefaultAppMetadata } from "../utils/defaultDappMetadata.js";
 import { DEFAULT_PROJECT_ID } from "./constants.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
@@ -46,6 +46,10 @@ export function createWalletConnectSession(options: CreateWalletConnectSessionOp
         onSessionProposal({ wallet, walletConnectClient, event });
     });
 
+    walletConnectClient.on("session_request", async (event: WalletConnectSessionRequestEvent) => {
+        fulfillRequest({ wallet, walletConnectClient, event });
+    });
+
     walletConnectClient.core.pairing.pair({ uri });
 }
 
@@ -64,18 +68,49 @@ export async function onSessionProposal(options: {wallet: Wallet, walletConnectC
     const { wallet, walletConnectClient, event } = options;
     const account = wallet.getAccount();
     if (!account) {
-        throw new Error("onSessionProposal: No account connected to provided wallet");
+        throw new Error("[WalletConnect] No account connected to provided wallet");
     }
 
     await disconnectExistingSession({ wallet, walletConnectClient });
     const session = await acceptSessionProposal({ account, walletConnectClient, sessionProposal: event.params });
-
+    console.log("Session", session);
     walletConnectSessions.set(wallet, session);
 }
 
 /**
  * @internal
  */
+export async function fulfillRequest(options: { wallet: Wallet, walletConnectClient: WalletConnectClient, event: WalletConnectSessionRequestEvent }) {
+    const { wallet, walletConnectClient, event: { topic, id, params: { request } } } = options;
+    const account = wallet.getAccount();
+    if (!account) {
+        throw new Error("[WalletConnect] No account connected to provided wallet");
+    }
+
+    let result: unknown;
+    switch (request.method) {
+        case "personal_sign":
+            const params = request.params as string[]; // WalletConnect only gives us an any back so we have to assume this
+            if (typeof params[0] !== "string") {
+                throw new Error("WalletConnect: Invalid request parameters");
+            }
+            result = await account.signMessage({ message: params[0] });
+            break;
+        default:
+            throw new Error(`[WalletConnect] Unsupported request method: ${request.method}`);
+    }
+
+    walletConnectClient.respond({
+        topic,
+        response: {
+            id,
+            jsonrpc: "2.0",
+            result
+        }
+    });
+}
+
+
 async function disconnectExistingSession({ wallet, walletConnectClient }: { wallet: Wallet, walletConnectClient: WalletConnectClient }) {
     if (hasActiveWalletConnectSession(wallet)) {
         const existingSession = getActiveWalletConnectSession(wallet) as WalletConnectSession;
@@ -89,16 +124,13 @@ async function disconnectExistingSession({ wallet, walletConnectClient }: { wall
     }
 }
 
-/**
- * @internal
- */
 async function acceptSessionProposal({ account, walletConnectClient, sessionProposal }: { account: Account, walletConnectClient: WalletConnectClient, sessionProposal: WalletConnectSessionProposalEvent["params"] }): Promise<WalletConnectSession> {
     if (!sessionProposal.requiredNamespaces.eip155) {
-        throw new Error("No EIP155 namespace found in Wallet Connect session proposal");
+        throw new Error("[WalletConnect] No EIP155 namespace found in Wallet Connect session proposal");
     }
 
     if (!sessionProposal.requiredNamespaces.eip155.chains) {
-        throw new Error("No chains found in EIP155 Wallet Connect session proposal namespace");
+        throw new Error("[WalletConnect] No chains found in EIP155 Wallet Connect session proposal namespace");
     }
 
     const approval = await walletConnectClient.approve({

@@ -264,3 +264,15 @@ export type WalletConnectSessionProposalEvent = {
     pairingTopic?: string
   }
 }
+
+export type WalletConnectSessionRequestEvent = {
+  id: number
+  topic: string
+  params: {
+    request: {
+      method: string
+      params: unknown
+    }
+    chainId: string
+  }
+}
