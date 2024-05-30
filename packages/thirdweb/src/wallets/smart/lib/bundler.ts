@@ -1,13 +1,15 @@
-import { decodeErrorResult } from "viem";
+import { type TransactionSerializable, decodeErrorResult } from "viem";
 import { parseEventLogs } from "../../../event/actions/parse-logs.js";
 import { userOperationRevertReasonEvent } from "../../../extensions/erc4337/__generated__/IEntryPoint/events/UserOperationRevertReason.js";
 import type { TransactionReceipt } from "../../../transaction/types.js";
 import { type Hex, hexToBigInt } from "../../../utils/encoding/hex.js";
 import { getClientFetch } from "../../../utils/fetch.js";
+import { stringify } from "../../../utils/json.js";
 import type {
+  BundlerOptions,
   EstimationResult,
   GasPriceResult,
-  SmartAccountOptions,
+  PmTransactionData,
   UserOperation,
 } from "../types.js";
 import {
@@ -23,7 +25,7 @@ import { hexlifyUserOp } from "./utils.js";
  */
 export async function bundleUserOp(args: {
   userOp: UserOperation;
-  options: SmartAccountOptions;
+  options: BundlerOptions;
 }): Promise<Hex> {
   return sendBundlerRequest({
     ...args,
@@ -40,7 +42,7 @@ export async function bundleUserOp(args: {
  */
 export async function estimateUserOpGas(args: {
   userOp: UserOperation;
-  options: SmartAccountOptions;
+  options: BundlerOptions;
 }): Promise<EstimationResult> {
   const res = await sendBundlerRequest({
     ...args,
@@ -64,7 +66,7 @@ export async function estimateUserOpGas(args: {
  * @internal
  */
 export async function getUserOpGasPrice(args: {
-  options: SmartAccountOptions;
+  options: BundlerOptions;
 }): Promise<GasPriceResult> {
   const res = await sendBundlerRequest({
     ...args,
@@ -83,7 +85,7 @@ export async function getUserOpGasPrice(args: {
  */
 export async function getUserOpReceipt(args: {
   userOpHash: Hex;
-  options: SmartAccountOptions;
+  options: BundlerOptions;
 }): Promise<TransactionReceipt | undefined> {
   const res = await sendBundlerRequest({
     ...args,
@@ -115,13 +117,34 @@ export async function getUserOpReceipt(args: {
   return res.receipt;
 }
 
+/**
+ * @internal
+ */
+export async function getPmTransactionData(args: {
+  options: BundlerOptions;
+  transaction: TransactionSerializable;
+  sender: string;
+}): Promise<PmTransactionData> {
+  const res = await sendBundlerRequest({
+    options: args.options,
+    operation: "pm_sponsorTransaction",
+    params: [stringify({ ...args.transaction, from: args.sender })],
+  });
+
+  return {
+    paymaster: res.paymaster,
+    paymasterInput: res.paymasterInput,
+  };
+}
+
 async function sendBundlerRequest(args: {
-  options: SmartAccountOptions;
+  options: BundlerOptions;
   operation:
     | "eth_estimateUserOperationGas"
     | "eth_sendUserOperation"
     | "eth_getUserOperationReceipt"
-    | "thirdweb_getUserOperationGasPrice";
+    | "thirdweb_getUserOperationGasPrice"
+    | "pm_sponsorTransaction";
   // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
   params: any[];
 }) {

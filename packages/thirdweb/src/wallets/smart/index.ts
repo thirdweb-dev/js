@@ -24,7 +24,11 @@ import type {
   WalletConnectionOption,
   WalletId,
 } from "../wallet-types.js";
-import { bundleUserOp, getUserOpReceipt } from "./lib/bundler.js";
+import {
+  bundleUserOp,
+  getPmTransactionData,
+  getUserOpReceipt,
+} from "./lib/bundler.js";
 import {
   predictAddress,
   prepareBatchExecute,
@@ -32,7 +36,12 @@ import {
 } from "./lib/calls.js";
 import { DEFAULT_ACCOUNT_FACTORY } from "./lib/constants.js";
 import { createUnsignedUserOp, signUserOp } from "./lib/userop.js";
-import type { SmartAccountOptions } from "./types.js";
+import type {
+  PmTransactionData,
+  SmartAccountOptions,
+  SmartWalletConnectionOptions,
+  SmartWalletOptions,
+} from "./types.js";
 
 /**
  * Checks if the provided wallet is a smart wallet.
@@ -74,6 +83,20 @@ export async function connectSmartWallet(
   const options = creationOptions;
   const factoryAddress = options.factoryAddress ?? DEFAULT_ACCOUNT_FACTORY;
   const chain = connectChain ?? options.chain;
+  const sponsorGas =
+    "gasless" in options ? options.gasless : options.sponsorGas;
+
+  if (chain.id === 300) {
+    return [
+      createZkSyncAccount({
+        creationOptions,
+        connectionOptions,
+        chain,
+        sponsorGas,
+      }),
+      chain,
+    ];
+  }
 
   const factoryContract = getContract({
     client: client,
@@ -98,9 +121,6 @@ export async function connectSmartWallet(
     address: accountAddress,
     chain,
   });
-
-  const sponsorGas =
-    "gasless" in options ? options.gasless : options.sponsorGas;
 
   const account = await createSmartAccount({
     ...options,
@@ -140,27 +160,6 @@ async function createSmartAccount(
   const account = {
     address: accountContract.address,
     async sendTransaction(transaction: SendTransactionOption) {
-      // zksync native AA
-      if (transaction.chainId === 300) {
-        // 1. construct the generalPaymaster typed data
-        // 2. send it to bundler via specaial pm_sponsor endpoint
-        // 3. get the paymaster address and signature back
-        // 4. add paymaster data to transaction
-        return sendEip712Transaction({
-          account: account,
-          transaction: {
-            ...transaction,
-            to: transaction.to ?? undefined,
-            chain: getCachedChain(transaction.chainId),
-            client: options.client,
-            eip712: {
-              paymaster: "0x...",
-              paymasterInput: "0x...",
-            },
-          },
-        });
-      }
-
       const executeTx = prepareExecute({
         accountContract,
         options,
@@ -348,6 +347,55 @@ async function createSmartAccount(
       throw new Error(
         "Unable to verify signature on smart account, please make sure the smart account is deployed and the signature is valid.",
       );
+    },
+  };
+  return account;
+}
+
+function createZkSyncAccount(args: {
+  creationOptions: SmartWalletOptions;
+  connectionOptions: SmartWalletConnectionOptions;
+  chain: Chain;
+  sponsorGas: boolean;
+}): Account {
+  const { creationOptions, connectionOptions, chain } = args;
+  const account = {
+    address: connectionOptions.personalAccount.address,
+    async sendTransaction(transaction: SendTransactionOption) {
+      let eip712: PmTransactionData | undefined;
+
+      if (args.sponsorGas) {
+        eip712 = await getPmTransactionData({
+          options: {
+            client: connectionOptions.client,
+            overrides: creationOptions.overrides,
+            chain,
+          },
+          transaction,
+          sender: account.address,
+        });
+      }
+
+      return sendEip712Transaction({
+        account: account,
+        transaction: {
+          ...transaction,
+          to: transaction.to ?? undefined,
+          chain: getCachedChain(transaction.chainId),
+          client: connectionOptions.client,
+          eip712,
+        },
+      });
+    },
+    async signMessage({ message }: { message: SignableMessage }) {
+      return connectionOptions.personalAccount.signMessage({ message });
+    },
+    async signTypedData<
+      const typedData extends TypedData | Record<string, unknown>,
+      primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,
+    >(_typedData: TypedDataDefinition<typedData, primaryType>) {
+      const typedData = parseTypedData(_typedData);
+      return connectionOptions.personalAccount.signTypedData(typedData);
     },
   };
   return account;
