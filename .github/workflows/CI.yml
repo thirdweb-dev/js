@@ -114,7 +114,8 @@ jobs:
           mkdir test-project
           cd test-project
           npm init -y
-          ${{ matrix.package_manager }} add react@${{matrix.react_version}} react-dom@${{matrix.react_version}} ../packages/thirdweb
+          ${{ matrix.package_manager }} add react@${{matrix.react_version}} react-dom@${{matrix.react_version}}
+          ${{ matrix.package_manager }} add ../packages/thirdweb
       - name: Create test file
         run: |
           cd test-project
