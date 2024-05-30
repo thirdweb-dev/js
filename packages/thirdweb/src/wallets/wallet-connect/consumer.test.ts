@@ -3,7 +3,7 @@ import { createWalletConnectClient, createWalletConnectSession, getActiveWalletC
 import { getDefaultAppMetadata } from "../utils/defaultDappMetadata.js";
 import { DEFAULT_PROJECT_ID } from "./constants.js";
 import * as WCSignClientExports from "@walletconnect/sign-client";
-import { TEST_IN_APP_WALLET_A } from "../../../test/src/test-wallets.js";
+import { TEST_ACCOUNT_A, TEST_ACCOUNT_B, TEST_IN_APP_WALLET_A } from "../../../test/src/test-wallets.js";
 import type { WalletConnectSession, WalletConnectSessionProposalEvent, WalletConnectSessionRequestEvent } from "./types.js";
 
 const TEST_METADATA = {
@@ -189,7 +189,7 @@ describe("session_request", () => {
 
     describe("personal_sign", () => {
         test("should sign message", async () => {
-            const personalSignRequest = { ...REQUEST_EVENT_MOCK, params: { ...REQUEST_EVENT_MOCK.params, request: { ...REQUEST_EVENT_MOCK.params.request, params: ["my message"] } } };
+            const personalSignRequest = { ...REQUEST_EVENT_MOCK, params: { ...REQUEST_EVENT_MOCK.params, request: { ...REQUEST_EVENT_MOCK.params.request, params: ["my message", TEST_ACCOUNT_A.address] } } };
 
             await fulfillRequest({ walletConnectClient: signClientMock, wallet: walletMock, event: personalSignRequest });
             expect(signClientMock.respond).toHaveBeenCalledWith({
@@ -200,6 +200,13 @@ describe("session_request", () => {
                     result: "0x66ea9c2ac4a99a5ac26f5fa3e800171036210e135d486f1d0d02d64eaa7dd56275b4323e153e62c1fad57a6be54420248ed54604f4857ec75ce7761eefad10e41c"
                 }
             });
+        });
+
+        test("should reject if active account address differs from requested address", async () => {
+            const personalSignRequest = { ...REQUEST_EVENT_MOCK, params: { ...REQUEST_EVENT_MOCK.params, request: { ...REQUEST_EVENT_MOCK.params.request, params: ["my message", TEST_ACCOUNT_B.address] } } };
+            const promise = fulfillRequest({ walletConnectClient: signClientMock, wallet: walletMock, event: personalSignRequest });
+
+            await expect(promise).rejects.toThrow(`[WalletConnect] Active account address (${TEST_ACCOUNT_A.address}) differs from requested address (${TEST_ACCOUNT_B.address})`);
         });
     });
 })

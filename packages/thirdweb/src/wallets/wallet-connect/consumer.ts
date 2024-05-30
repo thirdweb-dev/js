@@ -94,6 +94,10 @@ export async function fulfillRequest(options: { wallet: Wallet, walletConnectCli
             if (typeof params[0] !== "string") {
                 throw new Error("WalletConnect: Invalid request parameters");
             }
+            if (account.address !== params[1]) {
+                throw new Error(`[WalletConnect] Active account address (${account.address}) differs from requested address (${params[1]})`);
+            }
+
             result = await account.signMessage({ message: params[0] });
             break;
         default:
