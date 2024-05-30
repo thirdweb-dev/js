@@ -3,6 +3,9 @@ import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import type { AppMetadata } from "../types.js";
 import type { Prettify } from "../../utils/type-utils.js";
+import type { TypedDataDefinition } from "viem";
+import type { Address } from "../../utils/address.js";
+import type { Hex } from "../../utils/encoding/hex.js";
 
 type EthereumProviderOptions = Parameters<(typeof EthereumProvider)["init"]>[0];
 
@@ -276,3 +279,16 @@ export type WalletConnectSessionRequestEvent = {
     chainId: string
   }
 }
+
+// Request param types
+export type WalletConnectSignRequestPrams = [string, Address];
+export type WalletConnectSignTypedDataRequestParams = [Address, TypedDataDefinition];
+export type WalletConnectSignTransactionRequestParams = {
+  from: Address,
+  to: Address,
+  data: Hex,
+  gas: Hex,
+  gasPrice: Hex,
+  value: Hex,
+  nonce: Hex,
+};
