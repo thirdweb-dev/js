@@ -32,6 +32,7 @@ function createBlockNumberPoller(
   client: ThirdwebClient,
   chain: Chain,
   overPollRatio?: number,
+  onError?: (error: Error) => void,
 ) {
   let subscribers: Array<(blockNumber: bigint) => void> = [];
   let blockTimesWindow: number[] = [];
@@ -83,10 +84,14 @@ function createBlockNumberPoller(
           }
         }
       }
-    } catch (err) {
-      console.error(
-        `[watchBlockNumber]: Failed to poll for latest block number: ${err}`,
-      );
+    } catch (err: unknown) {
+      if (onError) {
+        onError(err as Error);
+      } else {
+        console.error(
+          `[watchBlockNumber]: Failed to poll for latest block number: ${err}`,
+        );
+      }
     }
 
     const currentApproximateBlockTime = getAverageBlockTime(blockTimesWindow);
@@ -150,6 +155,7 @@ export type WatchBlockNumberOptions = {
   client: ThirdwebClient;
   chain: Chain;
   onNewBlockNumber: (blockNumber: bigint) => void;
+  onError?: (error: Error) => void;
   overPollRatio?: number;
   latestBlockNumber?: bigint;
 };
@@ -175,14 +181,20 @@ export type WatchBlockNumberOptions = {
  * @rpc
  */
 export function watchBlockNumber(opts: WatchBlockNumberOptions) {
-  const { client, chain, onNewBlockNumber, overPollRatio, latestBlockNumber } =
-    opts;
+  const {
+    client,
+    chain,
+    onNewBlockNumber,
+    overPollRatio,
+    latestBlockNumber,
+    onError,
+  } = opts;
   const chainId = chain.id;
   // if we already have a poller for this chainId -> use it
   let poller = existingPollers.get(chainId);
   // otherwise create a new poller
   if (!poller) {
-    poller = createBlockNumberPoller(client, chain, overPollRatio);
+    poller = createBlockNumberPoller(client, chain, overPollRatio, onError);
     // and store it for later use
     existingPollers.set(chainId, poller);
   }
