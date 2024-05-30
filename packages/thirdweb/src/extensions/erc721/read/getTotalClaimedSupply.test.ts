@@ -1,17 +1,17 @@
-import {
-  getContract,
-  type ThirdwebContract,
-} from "../../../contract/contract.js";
-import { deployERC721Contract } from "../../prebuilts/deploy-erc721.js";
 import { beforeEach, describe, expect, it } from "vitest";
 import { ANVIL_CHAIN } from "~test/chains.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
 import { TEST_ACCOUNT_A } from "~test/test-wallets.js";
-import { setClaimConditions } from "../drops/write/setClaimConditions.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/addresses.js";
+import {
+  type ThirdwebContract,
+  getContract,
+} from "../../../contract/contract.js";
 import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and-confirm-transaction.js";
-import { lazyMint } from "../write/lazyMint.js";
+import { deployERC721Contract } from "../../prebuilts/deploy-erc721.js";
 import { claimTo } from "../drops/write/claimTo.js";
+import { setClaimConditions } from "../drops/write/setClaimConditions.js";
+import { lazyMint } from "../write/lazyMint.js";
 import { getTotalClaimedSupply } from "./getTotalClaimedSupply.js";
 
 const account = TEST_ACCOUNT_A;
