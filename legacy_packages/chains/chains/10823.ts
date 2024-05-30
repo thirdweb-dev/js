@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmPw1ixYYeXvTiRWoCt2jWe4YMd3B5o7TzL18SBEHXvhXX",
+    "width": 200,
+    "height": 200,
+    "format": "png"
+  },
   "infoURL": "https://www.cryptocoinpay.co",
   "name": "CryptoCoinPay",
   "nativeCurrency": {

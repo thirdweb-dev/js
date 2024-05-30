@@ -6,7 +6,13 @@ export default {
     {
       "name": "blockscout",
       "url": "https://gnosis.blockscout.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      }
     },
     {
       "name": "gnosisscan",
@@ -30,6 +36,12 @@ export default {
     "https://stakely.io/faucet/gnosis-chain-xdai",
     "https://faucet.prussia.dev/xdai"
   ],
+  "icon": {
+    "url": "ipfs://bafybeidk4swpgdyqmpz6shd5onvpaujvwiwthrhypufnwr6xh3dausz2dm",
+    "width": 1800,
+    "height": 1800,
+    "format": "png"
+  },
   "infoURL": "https://docs.gnosischain.com",
   "name": "Gnosis",
   "nativeCurrency": {

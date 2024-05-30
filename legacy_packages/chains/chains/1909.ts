@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmZocJpCSLoQqoYFkF1kn7uKDuAiFRNTK8P5PoVeiigDBU",
+    "width": 114,
+    "height": 132,
+    "format": "png"
+  },
   "infoURL": "https://merklescan.com",
   "name": "Merkle Scan",
   "nativeCurrency": {

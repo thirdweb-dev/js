@@ -6,10 +6,22 @@ export default {
     {
       "name": "explorer",
       "url": "https://explorer.evm.shimmer.network",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://bafkreibky2sy6qhi6arktayvologkrgu5kudpgdxfkx4uosbvmstz7v4di",
+        "width": 720,
+        "height": 720,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://bafkreibky2sy6qhi6arktayvologkrgu5kudpgdxfkx4uosbvmstz7v4di",
+    "width": 720,
+    "height": 720,
+    "format": "png"
+  },
   "infoURL": "https://shimmer.network",
   "name": "ShimmerEVM",
   "nativeCurrency": {

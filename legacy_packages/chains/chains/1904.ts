@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmdW7XfRgeyoaHXEvXp8MaVteonankR32CxhL3K5Yc2uQM",
+    "width": 345,
+    "height": 321,
+    "format": "png"
+  },
   "infoURL": "https://sportschainnetwork.xyz",
   "name": "Sports Chain Network",
   "nativeCurrency": {

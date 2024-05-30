@@ -6,10 +6,22 @@ export default {
     {
       "name": "bombscan",
       "url": "https://bombscan.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://Qmc44uSjfdNHdcxPTgZAL8eZ8TLe4UmSHibcvKQFyGJxTB",
+        "width": 1024,
+        "height": 1024,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://Qmc44uSjfdNHdcxPTgZAL8eZ8TLe4UmSHibcvKQFyGJxTB",
+    "width": 1024,
+    "height": 1024,
+    "format": "png"
+  },
   "infoURL": "https://www.bombchain.com",
   "name": "BOMB Chain",
   "nativeCurrency": {

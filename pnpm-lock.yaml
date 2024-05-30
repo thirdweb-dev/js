@@ -906,6 +906,9 @@ importers:
       fuse.js:
         specifier: ^7.0.0
         version: 7.0.0
+      input-otp:
+        specifier: ^1.2.4
+        version: 1.2.4(react-dom@18.3.1)(react@18.2.0)
       qrcode:
         specifier: ^1.5.3
         version: 1.5.3
@@ -1353,14 +1356,14 @@ importers:
         specifier: ^0.5.0
         version: 0.5.0
       '@blocto/sdk':
-        specifier: 0.5.5
-        version: 0.5.5
+        specifier: 0.10.2
+        version: 0.10.2
       '@coinbase/wallet-sdk':
-        specifier: ^3.7.2
+        specifier: ^3.9.0
         version: 3.9.3
       '@google-cloud/kms':
-        specifier: 4.2.0
-        version: 4.2.0
+        specifier: ^4.4.0
+        version: 4.4.0
       '@magic-ext/connect':
         specifier: ^6.7.2
         version: 6.7.2
@@ -1383,8 +1386,8 @@ importers:
         specifier: ^3.3.5
         version: 3.3.5(ethers@5.7.2)
       '@safe-global/safe-ethers-adapters':
-        specifier: 0.1.0-alpha.17
-        version: 0.1.0-alpha.17(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(ethers@5.7.2)
+        specifier: 0.1.0-alpha.19
+        version: 0.1.0-alpha.19(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(ethers@5.7.2)
       '@safe-global/safe-ethers-lib':
         specifier: ^1.9.4
         version: 1.9.4
@@ -1564,8 +1567,8 @@ importers:
         specifier: ^1
         version: 1.11.0(react-native@0.74.1)
       react-native-quick-crypto:
-        specifier: '>=0.6.1'
-        version: 0.6.1(react-native@0.74.1)(react@18.2.0)
+        specifier: '>=0.7.0-rc.6 || >=0.7'
+        version: 0.7.0-rc.6(react-native@0.74.1)(react@18.2.0)
       shamir-secret-sharing:
         specifier: 0.0.3
         version: 0.0.3
@@ -5539,18 +5542,14 @@ packages:
     dev: true
     optional: true
 
-  /@blocto/sdk@0.5.5:
-    resolution: {integrity: sha512-u7bbAYmYDCf0QWvXleVOTeGFRbo8evT3uacsLJ6dv01HspmLDKZWjFyu7i3ARebJTpenHvwM78XHV7KTvBqTRg==}
+  /@blocto/sdk@0.10.2:
+    resolution: {integrity: sha512-9gCIUKA7/7/hMHaa5n94+OYU/3tHd6vmBgTgv4o2h3z9SFueQXAJMO4aBggH9+EldgHQDI6wHsnvytEt9AWb6g==}
     peerDependencies:
-      '@solana/web3.js': ^1.30.2
       aptos: ^1.3.14
     peerDependenciesMeta:
-      '@solana/web3.js':
-        optional: true
       aptos:
         optional: true
     dependencies:
-      bs58: 5.0.0
       buffer: 6.0.3
       eip1193-provider: 1.0.1
       js-sha3: 0.8.0
@@ -7271,8 +7270,8 @@ packages:
       keycode: 2.2.1
     dev: true
 
-  /@google-cloud/kms@4.2.0:
-    resolution: {integrity: sha512-EIFxBL2XbpRkW6TmmYNU3xmpbaDw49uD57q6/rRQMkWPENvPTrlonQeTBeXV1I18GMToVliQOwKs001Mzo7Dwg==}
+  /@google-cloud/kms@4.4.0:
+    resolution: {integrity: sha512-ZS2IOouhNThDYdHQjH7JO9DfqLlfhxsXs/z1Pwzb9vsw+In0RbsyxtVZc/s7n+Qp09MZ+e4kfrR9YiRn6TyT9w==}
     engines: {node: '>=14.0.0'}
     dependencies:
       google-gax: 4.3.3
@@ -10961,8 +10960,8 @@ packages:
       semver: 7.6.2
     dev: false
 
-  /@safe-global/safe-ethers-adapters@0.1.0-alpha.17(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(ethers@5.7.2):
-    resolution: {integrity: sha512-02+emAnnXZAOwld1Ucen6idnMCAD76TXrhmuteYsdYoPjl5Eyq1ySb9tzIjCWklgfjMHQtrHSHDJqwdlHFM4GQ==}
+  /@safe-global/safe-ethers-adapters@0.1.0-alpha.19(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(ethers@5.7.2):
+    resolution: {integrity: sha512-FKd1XySR/FGfEY/HDGfQPByTnOPWE4m6HuH/Q4PgizsGdgYa6kjUy0/UWTb42bOdkqeVm2XffPxErHK/BaUhaQ==}
     peerDependencies:
       '@ethersproject/abstract-provider': ^5.7.0
       '@ethersproject/abstract-signer': ^5.7.0
@@ -12389,10 +12388,6 @@ packages:
 
   /@types/node@12.20.55:
     resolution: {integrity: sha512-J8xLz7q2OFulZ2cyGTLE1TbbZcjpno7FaN6zdJNrgAdrJ+DZzh/uFR6YrTb4C+nXakvud8Q4+rbhoIWlYQbUFQ==}
-    dev: false
-
-  /@types/node@17.0.45:
-    resolution: {integrity: sha512-w+tIMs3rq2afQdsPJlODhoUEKzFP1ayaoyl1CcnwtIlsVe7K7bA1NGm4s3PraqTLlXnbIN84zuBlxBWo1u9BLw==}
     dev: false
 
   /@types/node@18.15.13:
@@ -17236,6 +17231,7 @@ packages:
     dependencies:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
+    bundledDependencies: false
 
   /event-emitter@0.3.5:
     resolution: {integrity: sha512-D9rRn9y7kLPnJ+hMq7S/nhvoKwwvVJahBi2BPmx3bvbsEdK3W9ii8cBSGjP+72/LnM4n6fo3+dkCX5FeTQruXA==}
@@ -23036,23 +23032,6 @@ packages:
       react: 18.2.0
       react-native: 0.74.1(@babel/core@7.24.5)(@babel/preset-env@7.24.5)(@types/react@18.2.17)(react@18.2.0)
 
-  /react-native-quick-crypto@0.6.1(react-native@0.74.1)(react@18.2.0):
-    resolution: {integrity: sha512-s6uFo7tcI3syo8/y5j+t6Rf+KVSuRKDp6tH04A0vjaHptJC6Iu7DVgkNYO7aqtfrYn8ZUgQ/Kqaq+m4i9TxgIQ==}
-    peerDependencies:
-      react: '*'
-      react-native: '>=0.71.0'
-    dependencies:
-      '@craftzdog/react-native-buffer': 6.0.5(react-native@0.74.1)(react@18.2.0)
-      '@types/node': 17.0.45
-      crypto-browserify: 3.12.0
-      events: 3.3.0
-      react: 18.2.0
-      react-native: 0.74.1(@babel/core@7.24.5)(@babel/preset-env@7.24.5)(@types/react@18.2.17)(react@18.2.0)
-      react-native-quick-base64: 2.1.2(react-native@0.74.1)(react@18.2.0)
-      stream-browserify: 3.0.0
-      string_decoder: 1.3.0
-    dev: false
-
   /react-native-quick-crypto@0.7.0-rc.6(react-native@0.74.1)(react@18.2.0):
     resolution: {integrity: sha512-l3L96k7Bpdu6Mh3uuZfdAuyfPz5mlpnXpBQIxGuwpY64V+K8U62lN+8jukfJiCu/huCXog5iikUQjtcPmlGkOw==}
     dependencies:
@@ -23064,7 +23043,6 @@ packages:
     transitivePeerDependencies:
       - react
       - react-native
-    dev: true
 
   /react-native-url-polyfill@1.3.0(react-native@0.74.1):
     resolution: {integrity: sha512-w9JfSkvpqqlix9UjDvJjm1EjSt652zVQ6iwCIj1cVVkwXf4jQhQgTNXY6EVTwuAmUjg6BC6k9RHCBynoLFo3IQ==}
@@ -24449,6 +24427,7 @@ packages:
     dependencies:
       inherits: 2.0.4
       readable-stream: 3.6.2
+    dev: true
 
   /stream-buffers@2.2.0:
     resolution: {integrity: sha512-uyQK/mx5QjHun80FLJTfaWE7JtwfRMKBLkMne6udYOmvH0CawotVa7TfgYHzAnpphn4+TweIx1QKMnRIbipmUg==}

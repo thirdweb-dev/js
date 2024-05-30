@@ -12,6 +12,12 @@ export default {
   "faucets": [
     "https://faucet.senjepowersscan.com"
   ],
+  "icon": {
+    "url": "ipfs://QmcpyTj4hUyHJZ2VmSdkXFpPpRcNKRP1VxMs7Cp1anymNy",
+    "width": 504,
+    "height": 495,
+    "format": "png"
+  },
   "infoURL": "https://senjepowersscan.com",
   "name": "SenjePowers Testnet",
   "nativeCurrency": {

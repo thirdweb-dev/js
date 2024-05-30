@@ -6,10 +6,22 @@ export default {
     {
       "name": "eurusexplorer",
       "url": "https://explorer.eurus.network",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmaGd5L9jGPbfyGXBFhu9gjinWJ66YtNrXq8x6Q98Eep9e",
+        "width": 471,
+        "height": 471,
+        "format": "svg"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmaGd5L9jGPbfyGXBFhu9gjinWJ66YtNrXq8x6Q98Eep9e",
+    "width": 471,
+    "height": 471,
+    "format": "svg"
+  },
   "infoURL": "https://eurus.network",
   "name": "Eurus Mainnet",
   "nativeCurrency": {

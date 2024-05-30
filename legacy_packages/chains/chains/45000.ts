@@ -6,10 +6,22 @@ export default {
     {
       "name": "autobahn explorer",
       "url": "https://explorer.autobahn.network",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmZP19pbqTco4vaP9siduLWP8pdYArFK3onfR55tvjr12s",
+        "width": 489,
+        "height": 489,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmZP19pbqTco4vaP9siduLWP8pdYArFK3onfR55tvjr12s",
+    "width": 489,
+    "height": 489,
+    "format": "png"
+  },
   "infoURL": "https://autobahn.network",
   "name": "Autobahn Network",
   "nativeCurrency": {

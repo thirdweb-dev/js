@@ -6,7 +6,13 @@ export default {
     {
       "name": "Haven1 Explorer",
       "url": "https://testnet-explorer.haven1.org",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://bafkreih4jq33lz2mjwvu62hmo2ptt277et5l6oqi5ejuyxv2dir2iohsai",
+        "width": 128,
+        "height": 128,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
@@ -20,6 +26,12 @@ export default {
       "name": "EIP1559"
     }
   ],
+  "icon": {
+    "url": "ipfs://bafkreih4jq33lz2mjwvu62hmo2ptt277et5l6oqi5ejuyxv2dir2iohsai",
+    "width": 128,
+    "height": 128,
+    "format": "png"
+  },
   "infoURL": "https://www.haven1.org",
   "name": "Haven1 Testnet",
   "nativeCurrency": {

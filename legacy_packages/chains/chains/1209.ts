@@ -6,10 +6,22 @@ export default {
     {
       "name": "Saitascan explorer",
       "url": "https://saitascan.io",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmVFWTqfqnMXbiPKpDFucE9QSQ1SVsUWs4HxBqRGjgQCbu",
+        "width": 974,
+        "height": 263,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmVFWTqfqnMXbiPKpDFucE9QSQ1SVsUWs4HxBqRGjgQCbu",
+    "width": 974,
+    "height": 263,
+    "format": "png"
+  },
   "infoURL": "https://saitachain.com",
   "name": "SaitaBlockChain(SBC)",
   "nativeCurrency": {

@@ -4,6 +4,12 @@ export default {
   "chainId": 2355,
   "explorers": [],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmTEnk2fosqbY6HQW5vySrLGbopJfeni9ThZ6R9sVefbnq",
+    "width": 800,
+    "height": 800,
+    "format": "png"
+  },
   "name": "Silicon zkEVM",
   "nativeCurrency": {
     "name": "Ether",

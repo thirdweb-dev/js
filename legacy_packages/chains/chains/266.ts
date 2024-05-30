@@ -12,6 +12,12 @@ export default {
       "name": "EIP1559"
     }
   ],
+  "icon": {
+    "url": "ipfs://QmWdpK5WFKrosaCSpJRCvU7uXeKk2qVeCckTxh6Zw2JrK8",
+    "width": 600,
+    "height": 600,
+    "format": "png"
+  },
   "infoURL": "https://www.neuraprotocol.io/",
   "name": "Neura",
   "nativeCurrency": {

@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmaR5TsgnWSjLys6wGaciKUbc5qYL3Es4jtgQcosVqDWR3",
+    "width": 2048,
+    "height": 2048,
+    "format": "png"
+  },
   "infoURL": "https://tlchain.network/",
   "name": "TLChain Network Mainnet",
   "nativeCurrency": {

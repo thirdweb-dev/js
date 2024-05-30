@@ -6,12 +6,24 @@ export default {
     {
       "name": "Anytype Explorer",
       "url": "https://explorer.anytype.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmaARJiAQUn4Z6wG8GLEry3kTeBB3k6RfHzSZU9SPhBgcG",
+        "width": 200,
+        "height": 200,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
     "https://evm.anytype.io/faucet"
   ],
+  "icon": {
+    "url": "ipfs://QmaARJiAQUn4Z6wG8GLEry3kTeBB3k6RfHzSZU9SPhBgcG",
+    "width": 200,
+    "height": 200,
+    "format": "png"
+  },
   "infoURL": "https://evm.anytype.io",
   "name": "Anytype EVM Chain",
   "nativeCurrency": {

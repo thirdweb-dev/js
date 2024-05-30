@@ -6,10 +6,22 @@ export default {
     {
       "name": "mainnetexplorer",
       "url": "http://explore.satosh.ie",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmRHT4o9ihiY6nVkkRdwZjdugbEAQiXrrov3GS9a3GTuL7",
+        "width": 1024,
+        "height": 1024,
+        "format": "jpg"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmRHT4o9ihiY6nVkkRdwZjdugbEAQiXrrov3GS9a3GTuL7",
+    "width": 1024,
+    "height": 1024,
+    "format": "jpg"
+  },
   "infoURL": "https://satosh.ie",
   "name": "SatoshIE",
   "nativeCurrency": {

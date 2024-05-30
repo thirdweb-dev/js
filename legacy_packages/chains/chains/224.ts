@@ -12,6 +12,12 @@ export default {
   "faucets": [
     "https://faucet.vrd.network"
   ],
+  "icon": {
+    "url": "ipfs://QmPdxcJwPogfZdec7UAqxeatRxrivEktpP1ftJBTeJQTdR",
+    "width": 3000,
+    "height": 2000,
+    "format": "png"
+  },
   "infoURL": "https://viridis.network",
   "name": "Viridis Testnet",
   "nativeCurrency": {

@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmYZNTfK3byhgLsTjXP8vPubVHRz2CWsBrTJxZrQmKq6JZ",
+    "width": 3509,
+    "height": 2482,
+    "format": "png"
+  },
   "infoURL": "https://worldland.foundation",
   "name": "WorldLand Testnet",
   "nativeCurrency": {

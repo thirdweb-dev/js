@@ -12,6 +12,12 @@ export default {
   "faucets": [
     "https://faucet.dogechain.dog"
   ],
+  "icon": {
+    "url": "ipfs://QmNS6B6L8FfgGSMTEi2SxD3bK5cdmKPNtQKcYaJeRWrkHs",
+    "width": 732,
+    "height": 732,
+    "format": "png"
+  },
   "infoURL": "https://dogechain.dog",
   "name": "Dogechain Testnet",
   "nativeCurrency": {

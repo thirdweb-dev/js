@@ -6,10 +6,22 @@ export default {
     {
       "name": "enulsscan",
       "url": "https://evmscan.nuls.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmYz8LK5WkUN8UwqKfWUjnyLuYqQZWihT7J766YXft4TSy",
+        "width": 26,
+        "height": 41,
+        "format": "svg"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmYz8LK5WkUN8UwqKfWUjnyLuYqQZWihT7J766YXft4TSy",
+    "width": 26,
+    "height": 41,
+    "format": "svg"
+  },
   "infoURL": "https://nuls.io",
   "name": "ENULS Mainnet",
   "nativeCurrency": {

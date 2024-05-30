@@ -6,10 +6,22 @@ export default {
     {
       "name": "bobscout",
       "url": "https://explorer.gobob.xyz",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmaX5iqQTrJD8TBuvoT97xPMG6LYamjPCPnZUUMh12jc99",
+    "width": 297,
+    "height": 378,
+    "format": "png"
+  },
   "infoURL": "https://gobob.xyz",
   "name": "BOB",
   "nativeCurrency": {

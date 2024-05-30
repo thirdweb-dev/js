@@ -6,6 +6,7 @@
  * const obj = { tokenId: 0n };
  * const str = stringify(obj); // "{"tokenId":"0"}"
  * ```
+ * @utils
  */
 export const stringify: typeof JSON.stringify = (value, replacer, space) => {
   const res = JSON.stringify(

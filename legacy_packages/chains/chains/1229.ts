@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmeYpc2JfEsHa2Bh11SKRx3sgDtMeg6T8KpXNLepBEKnbJ",
+    "width": 128,
+    "height": 128,
+    "format": "png"
+  },
   "infoURL": "https://exzo.network",
   "name": "Exzo Network Mainnet",
   "nativeCurrency": {

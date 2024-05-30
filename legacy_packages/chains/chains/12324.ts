@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://Qmf1cim2ZvkgszKiFtmZj3K1z2YgVY7A4VtLkWw8kQxijq",
+    "width": 100,
+    "height": 100,
+    "format": "png"
+  },
   "infoURL": "https://l3x.com",
   "name": "L3X Protocol",
   "nativeCurrency": {

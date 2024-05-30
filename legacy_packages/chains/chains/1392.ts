@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmQjwcNRCLXU8JBtSkPLUnbWVrpoqbnZVffpJ9Bu8rG34e",
+    "width": 148,
+    "height": 148,
+    "format": "svg"
+  },
   "infoURL": "https://www.joseon.com/",
   "name": "Joseon Mainnet",
   "nativeCurrency": {

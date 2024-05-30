@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmZVwsY6HPXScKqZCA9SWNrr4jrQAHkPhVhMWi6Fj1DsrJ",
+    "width": 162,
+    "height": 129,
+    "format": "png"
+  },
   "infoURL": "https://idchain.one/begin/",
   "name": "IDChain Mainnet",
   "nativeCurrency": {

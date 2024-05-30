@@ -6,10 +6,22 @@ export default {
     {
       "name": "Time Network Explorer",
       "url": "https://testnet-scanner.timenetwork.io",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://bafkreidoudwo453gr3hoxpreleguga73rm55yl6vuedxrfmhknljppqbiu",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://bafkreidoudwo453gr3hoxpreleguga73rm55yl6vuedxrfmhknljppqbiu",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "infoURL": "https://whitepaper.anttime.net/overview/anttime",
   "name": "Elizabeth Testnet",
   "nativeCurrency": {

@@ -13,6 +13,12 @@ export default {
     "https://evm-toolkit.evm.testnet.shimmer.network",
     "https://evm-faucet.testnet.shimmer.network"
   ],
+  "icon": {
+    "url": "ipfs://bafkreibky2sy6qhi6arktayvologkrgu5kudpgdxfkx4uosbvmstz7v4di",
+    "width": 720,
+    "height": 720,
+    "format": "png"
+  },
   "infoURL": "https://shimmer.network",
   "name": "ShimmerEVM Testnet Deprecated 1072",
   "nativeCurrency": {

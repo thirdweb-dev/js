@@ -6,10 +6,22 @@ export default {
     {
       "name": "Q explorer",
       "url": "https://explorer.q.org",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmQUQKe8VEtSthhgXnJ3EmEz94YhpVCpUDZAiU9KYyNLya",
+        "width": 585,
+        "height": 603,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmQUQKe8VEtSthhgXnJ3EmEz94YhpVCpUDZAiU9KYyNLya",
+    "width": 585,
+    "height": 603,
+    "format": "png"
+  },
   "infoURL": "https://q.org",
   "name": "Q Mainnet",
   "nativeCurrency": {

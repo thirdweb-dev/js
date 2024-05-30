@@ -6,10 +6,22 @@ export default {
     {
       "name": "blockscout",
       "url": "https://zkevm.polygonscan.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmNmJZkQgx9RcFLS3rvxQTVYcPfyAFPr667keHTUxB9PDv",
+        "width": 122,
+        "height": 135,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmNmJZkQgx9RcFLS3rvxQTVYcPfyAFPr667keHTUxB9PDv",
+    "width": 122,
+    "height": 135,
+    "format": "png"
+  },
   "infoURL": "https://polygon.technology/polygon-zkevm",
   "name": "Polygon zkEVM",
   "nativeCurrency": {

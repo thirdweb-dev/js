@@ -6,10 +6,22 @@ export default {
     {
       "name": "algl2scan",
       "url": "https://scan.alg2-test.algen.network",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmbLWspX1WryyfhiiuPpG5A7AGBJUvwdZtVPuzZoJyxS23",
+        "width": 323,
+        "height": 323,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmbLWspX1WryyfhiiuPpG5A7AGBJUvwdZtVPuzZoJyxS23",
+    "width": 323,
+    "height": 323,
+    "format": "png"
+  },
   "infoURL": "https://www.algen.network",
   "name": "Algen Layer2 Testnet",
   "nativeCurrency": {

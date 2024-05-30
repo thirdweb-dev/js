@@ -6,15 +6,33 @@ export default {
     {
       "name": "Teleport EVM Explorer (Blockscout)",
       "url": "https://evm-explorer.teleport.network",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmdP1sLnsmW9dwnfb1GxAXU1nHDzCvWBQNumvMXpdbCSuz",
+        "width": 390,
+        "height": 390,
+        "format": "svg"
+      }
     },
     {
       "name": "Teleport Cosmos Explorer (Big Dipper)",
       "url": "https://explorer.teleport.network",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmdP1sLnsmW9dwnfb1GxAXU1nHDzCvWBQNumvMXpdbCSuz",
+        "width": 390,
+        "height": 390,
+        "format": "svg"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmdP1sLnsmW9dwnfb1GxAXU1nHDzCvWBQNumvMXpdbCSuz",
+    "width": 390,
+    "height": 390,
+    "format": "svg"
+  },
   "infoURL": "https://teleport.network",
   "name": "Teleport",
   "nativeCurrency": {

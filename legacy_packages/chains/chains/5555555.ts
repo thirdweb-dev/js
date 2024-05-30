@@ -6,33 +6,15 @@ export default {
     {
       "name": "Imversed EVM explorer (Blockscout)",
       "url": "https://txe.imversed.network",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmYwvmJZ1bgTdiZUKXk4SifTpTj286CkZjMCshUyJuBFH1",
-        "width": 400,
-        "height": 400,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     },
     {
       "name": "Imversed Cosmos Explorer (Big Dipper)",
       "url": "https://tex-c.imversed.com",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://QmYwvmJZ1bgTdiZUKXk4SifTpTj286CkZjMCshUyJuBFH1",
-        "width": 400,
-        "height": 400,
-        "format": "png"
-      }
+      "standard": "none"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmYwvmJZ1bgTdiZUKXk4SifTpTj286CkZjMCshUyJuBFH1",
-    "width": 400,
-    "height": 400,
-    "format": "png"
-  },
   "infoURL": "https://imversed.com",
   "name": "Imversed Mainnet",
   "nativeCurrency": {

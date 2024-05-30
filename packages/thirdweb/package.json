@@ -1,6 +1,6 @@
 {
   "name": "thirdweb",
-  "version": "5.24.0",
+  "version": "5.25.1",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"
@@ -178,12 +178,15 @@
     "react": ">=18",
     "react-native": ">=0.70",
     "react-native-aes-gcm-crypto": "^0.2",
-    "react-native-quick-crypto": ">=0.6.1",
+    "react-native-quick-crypto": ">=0.7.0-rc.6 || >=0.7",
     "shamir-secret-sharing": "^0.0.3",
     "typescript": ">=5.0.4"
   },
   "peerDependenciesMeta": {
     "react": {
+      "optional": true
+    },
+    "react-native": {
       "optional": true
     },
     "ethers": {
@@ -217,6 +220,9 @@
       "optional": true
     },
     "@react-native-async-storage/async-storage": {
+      "optional": true
+    },
+    "@coinbase/wallet-mobile-sdk": {
       "optional": true
     }
   },

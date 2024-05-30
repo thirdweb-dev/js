@@ -6,7 +6,13 @@ export default {
     {
       "name": "Vanar Explorer",
       "url": "https://explorer.vanarchain.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://Qmbx25iq4Vn4zLooPit9bbguXJzdiogwtVQWtSseyQPuSC",
+        "width": 1000,
+        "height": 1628,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
@@ -15,6 +21,12 @@ export default {
       "name": "EIP155"
     }
   ],
+  "icon": {
+    "url": "ipfs://Qmbx25iq4Vn4zLooPit9bbguXJzdiogwtVQWtSseyQPuSC",
+    "width": 1000,
+    "height": 1628,
+    "format": "png"
+  },
   "infoURL": "https://vanarchain.com",
   "name": "Vanar Mainnet",
   "nativeCurrency": {

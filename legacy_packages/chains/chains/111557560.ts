@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmR8NuaSqALStb95YsMsJRG2BoYkibjS1XE1pZFtvEkAXY",
+    "width": 213,
+    "height": 212,
+    "format": "svg"
+  },
   "infoURL": "https://cyber.co/",
   "name": "Cyber Testnet",
   "nativeCurrency": {

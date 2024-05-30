@@ -6,10 +6,22 @@ export default {
     {
       "name": "PartyExplorer",
       "url": "https://partyexplorer.co",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmerDBFoXvgev2xx9U71gAaAK4CtxaaQVaAPf9Qi6UF9MS",
+        "width": 400,
+        "height": 400,
+        "format": "jpg"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmerDBFoXvgev2xx9U71gAaAK4CtxaaQVaAPf9Qi6UF9MS",
+    "width": 400,
+    "height": 400,
+    "format": "jpg"
+  },
   "name": "PartyChain",
   "nativeCurrency": {
     "name": "Grams",
