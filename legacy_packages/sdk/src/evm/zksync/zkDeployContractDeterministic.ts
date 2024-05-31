@@ -80,10 +80,12 @@ export async function zkDeployContractDeterministic(
       signer,
     );
 
+    const salt = options?.saltForProxyDeploy ? utils.id(options.saltForProxyDeploy) : utils.id("thirdweb");
+
     options?.notifier?.("deploying", "preset");
     try {
       const deployTx = await singleton.deploy(
-        utils.id("thirdweb"),
+        salt,
         transaction.bytecodeHash,
         transaction.constructorCalldata,
       );
@@ -92,7 +94,7 @@ export async function zkDeployContractDeterministic(
     } catch (e: any) {
       if (e.toString().includes(`method="estimateGas"`)) {
         const deployTx = await singleton.deploy(
-          utils.id("thirdweb"),
+          salt,
           transaction.bytecodeHash,
           transaction.constructorCalldata,
           {
