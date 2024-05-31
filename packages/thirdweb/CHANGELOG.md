@@ -1,5 +1,101 @@
 # thirdweb
 
+## 5.26.0
+
+### Minor Changes
+
+- [#3161](https://github.com/thirdweb-dev/js/pull/3161) [`b569eb4`](https://github.com/thirdweb-dev/js/commit/b569eb48ad018619e4589b9efb5aa774c7b77642) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds waitForBundle function to await a sendCalls bundle's complete confirmation.
+
+  ### Usage
+
+  ```ts
+  import { waitForBundle } from "thirdweb/wallets/eip5792";
+  const result = await waitForBundle({
+    client,
+    chain,
+    wallet,
+    bundleId: "0x123...",
+  });
+  ```
+
+- [#3161](https://github.com/thirdweb-dev/js/pull/3161) [`b569eb4`](https://github.com/thirdweb-dev/js/commit/b569eb48ad018619e4589b9efb5aa774c7b77642) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds EIP-5792 react hooks
+
+  ## `useSendCalls`
+
+  `useSendCalls` will automatically revalidate all reads from contracts that are interacted with.
+
+  ```tsx
+  import { useSendCalls } from "thirdweb/react";
+
+  const sendTx1 = approve({
+    contract: USDT_CONTRACT,
+    amount: 100,
+    spender: "0x33d9B8BEfE81027E2C859EDc84F5636cbb202Ed6",
+  });
+  const sendTx2 = approve({
+    contract: USDT_CONTRACT,
+    amount: 100,
+    spender: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
+  });
+  const { mutate: sendCalls, data: bundleId } = useSendCalls({ client });
+  await sendCalls({
+    wallet,
+    client,
+    calls: [sendTx1, sendTx2],
+  });
+  ```
+
+  Await the bundle's full confirmation:
+
+  ```tsx
+  const { mutate: sendCalls, data: bundleId } = useSendCalls({
+    client,
+    waitForResult: true,
+  });
+  await sendCalls({
+    wallet,
+    client,
+    calls: [sendTx1, sendTx2],
+  });
+  ```
+
+  Sponsor transactions with a paymaster:
+
+  ```ts
+  const { mutate: sendCalls, data: bundleId } = useSendCalls();
+  await sendCalls({
+    client,
+    calls: [sendTx1, sendTx2],
+    capabilities: {
+      paymasterService: {
+        url: `https://${CHAIN.id}.bundler.thirdweb.com/${client.clientId}`,
+      },
+    },
+  });
+  ```
+
+  ## `useCapabilities`
+
+  ```tsx
+  import { useCapabilities } from "thirdweb/react";
+  const { data: capabilities, isLoading } = useCapabilities();
+  ```
+
+  ## `useCallsStatus`
+
+  ```tsx
+  import { useCallsStatus } from "thirdweb/react";
+  const { data: status, isLoading } = useCallsStatus({ bundleId, client });
+  ```
+
+### Patch Changes
+
+- [#3178](https://github.com/thirdweb-dev/js/pull/3178) [`3dca028`](https://github.com/thirdweb-dev/js/commit/3dca028a7eff926ae406eb29cc82016ae6c994b3) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix gas estimation in transaction button
+
+- [#3187](https://github.com/thirdweb-dev/js/pull/3187) [`874747b`](https://github.com/thirdweb-dev/js/commit/874747b3e00714e9a7336dcfda34e7b92b82e7e1) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Upgrade to latest coinbase wallet sdk
+
+- [#3186](https://github.com/thirdweb-dev/js/pull/3186) [`123275b`](https://github.com/thirdweb-dev/js/commit/123275bbe275457b0be5205812ba0ef75b1f0e5b) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Catch any errors thrown while polling block numbers
+
 ## 5.25.1
 
 ### Patch Changes

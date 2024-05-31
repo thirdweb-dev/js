@@ -1604,8 +1604,8 @@ importers:
   packages/thirdweb:
     dependencies:
       '@coinbase/wallet-sdk':
-        specifier: 4.0.0-rc.2
-        version: 4.0.0-rc.2
+        specifier: 4.0.3
+        version: 4.0.3
       '@emotion/react':
         specifier: 11.11.4
         version: 11.11.4(@types/react@18.2.17)(react@18.2.0)
@@ -1647,7 +1647,7 @@ importers:
         version: 2.13.1(@react-native-async-storage/async-storage@1.23.1)
       abitype:
         specifier: 1.0.0
-        version: 1.0.0(typescript@5.4.4)(zod@3.22.4)
+        version: 1.0.0(typescript@5.4.5)(zod@3.22.4)
       ethers:
         specifier: ^5 || ^6
         version: 5.7.2
@@ -1662,7 +1662,7 @@ importers:
         version: 1.2.4(react-dom@18.3.1)(react@18.2.0)
       mipd:
         specifier: 0.0.7
-        version: 0.0.7
+        version: 0.0.7(typescript@5.4.5)
       node-libs-browser:
         specifier: 2.2.1
         version: 2.2.1
@@ -1677,7 +1677,7 @@ importers:
         version: 0.1.2
       viem:
         specifier: 2.10.9
-        version: 2.10.9(zod@3.22.4)
+        version: 2.10.9(typescript@5.4.5)(zod@3.22.4)
     devDependencies:
       '@aws-sdk/client-lambda':
         specifier: 3.577.0
@@ -1697,6 +1697,9 @@ importers:
       '@testing-library/react':
         specifier: ^15.0.6
         version: 15.0.7(@types/react@18.2.17)(react-dom@18.3.1)(react@18.2.0)
+      '@testing-library/react-hooks':
+        specifier: ^8.0.1
+        version: 8.0.1(@types/react@18.2.17)(react-dom@18.3.1)(react@18.2.0)
       '@types/cross-spawn':
         specifier: ^6.0.6
         version: 6.0.6
@@ -5835,8 +5838,8 @@ packages:
       - supports-color
     dev: false
 
-  /@coinbase/wallet-sdk@4.0.0-rc.2:
-    resolution: {integrity: sha512-1wrzKtgEhB5cr5z2xPUWw8BUs2+w6ddzWEkafYUh0+fKvXPWl8y5bgBvMiWpjnDa/n9rIliGW7Bs2QlLaRvmtA==}
+  /@coinbase/wallet-sdk@4.0.3:
+    resolution: {integrity: sha512-y/OGEjlvosikjfB+wk+4CVb9OxD1ob9cidEBLI5h8Hxaf/Qoob2XoVT1uvhtAzBx34KpGYSd+alKvh/GCRre4Q==}
     dependencies:
       buffer: 6.0.3
       clsx: 1.2.1
@@ -12046,6 +12049,29 @@ packages:
       vitest: 1.5.0(@types/node@20.12.7)(@vitest/ui@1.5.0)(happy-dom@14.11.0)
     dev: true
 
+  /@testing-library/react-hooks@8.0.1(@types/react@18.2.17)(react-dom@18.3.1)(react@18.2.0):
+    resolution: {integrity: sha512-Aqhl2IVmLt8IovEVarNDFuJDVWVvhnr9/GCU6UUnrYXwgDFF9h2L2o2P9KBni1AST5sT6riAyoukFLyjQUgD/g==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      '@types/react': ^16.9.0 || ^17.0.0
+      react: ^16.9.0 || ^17.0.0
+      react-dom: ^16.9.0 || ^17.0.0
+      react-test-renderer: ^16.9.0 || ^17.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      react-dom:
+        optional: true
+      react-test-renderer:
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.24.5
+      '@types/react': 18.2.17
+      react: 18.2.0
+      react-dom: 18.3.1(react@18.2.0)
+      react-error-boundary: 3.1.4(react@18.2.0)
+    dev: true
+
   /@testing-library/react@15.0.7(@types/react@18.2.17)(react-dom@18.3.1)(react@18.2.0):
     resolution: {integrity: sha512-cg0RvEdD1TIhhkm1IeYMQxrzy0MtUNfa3minv4MjbgcYzJAZ7yD0i0lwoPOTPr+INtiXFezt2o8xMSnyHhEn2Q==}
     engines: {node: '>=18'}
@@ -13903,6 +13929,21 @@ packages:
     dependencies:
       typescript: 5.4.4
       zod: 3.22.4
+
+  /abitype@1.0.0(typescript@5.4.5)(zod@3.22.4):
+    resolution: {integrity: sha512-NMeMah//6bJ56H5XRj8QCV4AwuW6hB6zqz2LnhhLdcWVQOsXki6/Pn3APeqxCma62nXIcmZWdu1DlHWS74umVQ==}
+    peerDependencies:
+      typescript: '>=5.0.4'
+      zod: ^3 >=3.22.0
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+      zod:
+        optional: true
+    dependencies:
+      typescript: 5.4.5
+      zod: 3.22.4
+    dev: false
 
   /abort-controller@3.0.0:
     resolution: {integrity: sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==}
@@ -17351,7 +17392,6 @@ packages:
     dependencies:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
-    bundledDependencies: false
 
   /event-emitter@0.3.5:
     resolution: {integrity: sha512-D9rRn9y7kLPnJ+hMq7S/nhvoKwwvVJahBi2BPmx3bvbsEdK3W9ii8cBSGjP+72/LnM4n6fo3+dkCX5FeTQruXA==}
@@ -21162,13 +21202,15 @@ packages:
       minipass: 3.3.6
       yallist: 4.0.0
 
-  /mipd@0.0.7:
+  /mipd@0.0.7(typescript@5.4.5):
     resolution: {integrity: sha512-aAPZPNDQ3uMTdKbuO2YmAw2TxLHO0moa4YKAyETM/DTj5FloZo+a+8tU+iv4GmW+sOxKLSRwcSFuczk+Cpt6fg==}
     peerDependencies:
       typescript: '>=5.0.4'
     peerDependenciesMeta:
       typescript:
         optional: true
+    dependencies:
+      typescript: 5.4.5
     dev: false
 
   /mitata@0.1.11:
@@ -23104,6 +23146,16 @@ packages:
       react: 19.0.0-rc-4c2e457c7c-20240522
       scheduler: 0.25.0-rc-4c2e457c7c-20240522
     dev: false
+
+  /react-error-boundary@3.1.4(react@18.2.0):
+    resolution: {integrity: sha512-uM9uPzZJTF6wRQORmSrvOIgt4lJ9MC1sNgEOj2XGsDTRE4kmpWxg7ENK9EWNKJRMAOY9z0MuF4yIfl6gp4sotA==}
+    engines: {node: '>=10', npm: '>=6'}
+    peerDependencies:
+      react: '>=16.13.1'
+    dependencies:
+      '@babel/runtime': 7.24.5
+      react: 18.2.0
+    dev: true
 
   /react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
@@ -26197,7 +26249,7 @@ packages:
       semver: 7.6.2
     dev: true
 
-  /viem@2.10.9(zod@3.22.4):
+  /viem@2.10.9(typescript@5.4.5)(zod@3.22.4):
     resolution: {integrity: sha512-XsbEXhOcmQOkI80zDLW0EdksimNuYTS61HZ03vQYpHoug7gwVHDQ83nY+nuyT7punuFx0fmRG6+HZg3yVQhptQ==}
     peerDependencies:
       typescript: '>=5.0.4'
@@ -26210,8 +26262,9 @@ packages:
       '@noble/hashes': 1.3.2
       '@scure/bip32': 1.3.2
       '@scure/bip39': 1.2.1
-      abitype: 1.0.0(typescript@5.4.4)(zod@3.22.4)
+      abitype: 1.0.0(typescript@5.4.5)(zod@3.22.4)
       isows: 1.0.4(ws@8.13.0)
+      typescript: 5.4.5
       ws: 8.13.0
     transitivePeerDependencies:
       - bufferutil
