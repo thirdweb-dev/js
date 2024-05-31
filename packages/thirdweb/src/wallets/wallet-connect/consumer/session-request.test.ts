@@ -6,7 +6,7 @@ import {
 } from "../../../../test/src/test-wallets.js";
 import { typedData } from "../../../../test/src/typed-data.js";
 import { cloneObject } from "../../../../test/src/utils.js";
-import { type WalletConnectClient, walletConnectSessions } from "./index.js";
+import type { WalletConnectClient } from "./index.js";
 import { fulfillRequest } from "./session-request.js";
 import type {
   WalletConnectRawTransactionRequestParams,
@@ -67,7 +67,6 @@ describe("session_request", () => {
     walletMock.getAccount.mockReturnValue(TEST_IN_APP_WALLET_A.getAccount()); // reset any mocked accounts
     TEST_ACCOUNT_A.sendTransaction = mocks.sendTransaction;
     TEST_ACCOUNT_A.sendRawTransaction = mocks.sendRawTransaction;
-    walletConnectSessions.delete(walletMock);
   });
 
   it("should throw if no account is connected", async () => {

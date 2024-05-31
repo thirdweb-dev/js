@@ -1,10 +1,9 @@
 import type { Account, Wallet } from "../../interfaces/wallet.js";
 import {
   type WalletConnectClient,
-  getActiveWalletConnectSession,
-  hasActiveWalletConnectSession,
-  walletConnectSessions,
+  disconnectWalletConnectSession,
 } from "./index.js";
+import { getSessions, saveSession } from "./session-store.js";
 import type {
   WalletConnectSession,
   WalletConnectSessionProposalEvent,
@@ -19,39 +18,37 @@ export async function onSessionProposal(options: {
   event: WalletConnectSessionProposalEvent;
 }) {
   const { wallet, walletConnectClient, event } = options;
+
   const account = wallet.getAccount();
   if (!account) {
     throw new Error("[WalletConnect] No account connected to provided wallet");
   }
 
-  await disconnectExistingSession({ wallet, walletConnectClient });
+  const origin = event.verifyContext?.verified?.origin;
+  if (origin) {
+    await disconnectExistingSessions({ origin, walletConnectClient });
+  }
   const session = await acceptSessionProposal({
     account,
     walletConnectClient,
-    sessionProposal: event.params,
+    sessionProposal: event,
   });
 
-  walletConnectSessions.set(wallet, session);
+  await saveSession(session);
 }
 
 /**
  * @internal
  */
-export async function disconnectExistingSession({
-  wallet,
+export async function disconnectExistingSessions({
   walletConnectClient,
-}: { wallet: Wallet; walletConnectClient: WalletConnectClient }) {
-  if (hasActiveWalletConnectSession(wallet)) {
-    const existingSession = getActiveWalletConnectSession(
-      wallet,
-    ) as WalletConnectSession;
-
-    await walletConnectClient.disconnect({
-      topic: existingSession.topic,
-      reason: { code: 6000, message: "New session" }, // Code 6000 is user disconnected
-    });
-
-    walletConnectSessions.delete(wallet);
+  origin,
+}: { walletConnectClient: WalletConnectClient; origin: string }) {
+  const sessions = await getSessions();
+  for (const session of sessions) {
+    if (session.origin === origin) {
+      await disconnectWalletConnectSession({ session, walletConnectClient });
+    }
   }
 }
 
@@ -65,15 +62,15 @@ export async function acceptSessionProposal({
 }: {
   account: Account;
   walletConnectClient: WalletConnectClient;
-  sessionProposal: WalletConnectSessionProposalEvent["params"];
+  sessionProposal: WalletConnectSessionProposalEvent;
 }): Promise<WalletConnectSession> {
-  if (!sessionProposal.requiredNamespaces.eip155) {
+  if (!sessionProposal.params.requiredNamespaces.eip155) {
     throw new Error(
       "[WalletConnect] No EIP155 namespace found in Wallet Connect session proposal",
     );
   }
 
-  if (!sessionProposal.requiredNamespaces.eip155.chains) {
+  if (!sessionProposal.params.requiredNamespaces.eip155.chains) {
     throw new Error(
       "[WalletConnect] No chains found in EIP155 Wallet Connect session proposal namespace",
     );
@@ -81,20 +78,20 @@ export async function acceptSessionProposal({
 
   const namespaces = {
     chains: [
-      ...sessionProposal.requiredNamespaces.eip155.chains.map(
+      ...sessionProposal.params.requiredNamespaces.eip155.chains.map(
         (chain: string) => `${chain}:${account.address}`,
       ),
-      ...(sessionProposal.optionalNamespaces?.eip155?.chains?.map(
+      ...(sessionProposal.params.optionalNamespaces?.eip155?.chains?.map(
         (chain: string) => `${chain}:${account.address}`,
       ) ?? []),
     ],
     methods: [
-      ...sessionProposal.requiredNamespaces.eip155.methods,
-      ...(sessionProposal.optionalNamespaces?.eip155?.methods ?? []),
+      ...sessionProposal.params.requiredNamespaces.eip155.methods,
+      ...(sessionProposal.params.optionalNamespaces?.eip155?.methods ?? []),
     ],
     events: [
-      ...sessionProposal.requiredNamespaces.eip155.events,
-      ...(sessionProposal.optionalNamespaces?.eip155?.events ?? []),
+      ...sessionProposal.params.requiredNamespaces.eip155.events,
+      ...(sessionProposal.params.optionalNamespaces?.eip155?.events ?? []),
     ],
   };
   const approval = await walletConnectClient.approve({
@@ -109,5 +106,8 @@ export async function acceptSessionProposal({
   });
 
   const session = await approval.acknowledged();
-  return session;
+  return {
+    topic: session.topic,
+    origin: sessionProposal.verifyContext?.verified?.origin || "Unknown origin",
+  };
 }

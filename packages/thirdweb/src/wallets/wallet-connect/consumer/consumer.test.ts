@@ -1,5 +1,6 @@
 import * as WCSignClientExports from "@walletconnect/sign-client";
 import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { TEST_CLIENT } from "../../../../test/src/test-clients.js";
 import { TEST_IN_APP_WALLET_A } from "../../../../test/src/test-wallets.js";
 import { getDefaultAppMetadata } from "../../utils/defaultDappMetadata.js";
 import { DEFAULT_PROJECT_ID } from "../constants.js";
@@ -48,6 +49,8 @@ describe("createWalletConnectClient", () => {
     const client = await createWalletConnectClient({
       projectId: "test",
       appMetadata: TEST_METADATA,
+      client: TEST_CLIENT,
+      wallet: TEST_IN_APP_WALLET_A,
     });
     expect(signClientInitMock).toHaveBeenCalledWith({
       projectId: "test",
@@ -59,10 +62,29 @@ describe("createWalletConnectClient", () => {
       },
     });
     expect(client).toEqual(signClientMock);
+    expect(signClientMock.on).toHaveBeenCalledWith(
+      "session_proposal",
+      expect.anything(),
+    );
+    expect(signClientMock.on).toHaveBeenCalledWith(
+      "session_event",
+      expect.anything(),
+    );
+    expect(signClientMock.on).toHaveBeenCalledWith(
+      "session_ping",
+      expect.anything(),
+    );
+    expect(signClientMock.on).toHaveBeenCalledWith(
+      "session_delete",
+      expect.anything(),
+    );
   });
 
   it("creates a client with defaults", async () => {
-    const client = await createWalletConnectClient();
+    const client = await createWalletConnectClient({
+      client: TEST_CLIENT,
+      wallet: TEST_IN_APP_WALLET_A,
+    });
     expect(signClientInitMock).toHaveBeenCalledWith({
       projectId: DEFAULT_PROJECT_ID,
       metadata: {
@@ -80,16 +102,11 @@ describe("createWalletConnectSession", () => {
   it("sends a session_proposal event", async () => {
     createWalletConnectSession({
       walletConnectClient: signClientMock,
-      wallet: TEST_IN_APP_WALLET_A,
       uri: URI_MOCK,
     });
 
     expect(signClientMock.core.pairing.pair).toHaveBeenCalledWith({
       uri: URI_MOCK,
     });
-    expect(signClientMock.on).toHaveBeenCalledWith(
-      "session_proposal",
-      expect.anything(),
-    );
   });
 });

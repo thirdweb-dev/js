@@ -1,6 +1,6 @@
 export {
   createWalletConnectClient,
   createWalletConnectSession,
-  hasActiveWalletConnectSession,
-  getActiveWalletConnectSession,
+  disconnectWalletConnectSession,
 } from "../../wallets/wallet-connect/consumer/index.js";
+export { getSessions as getActiveWalletConnectSessions } from "../../wallets/wallet-connect/consumer/session-store.js";

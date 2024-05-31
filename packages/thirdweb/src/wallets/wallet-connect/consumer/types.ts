@@ -3,52 +3,11 @@ import type { Address } from "../../../utils/address.js";
 import type { Hex } from "../../../utils/encoding/hex.js";
 import type { Prettify } from "../../../utils/type-utils.js";
 import type { Account } from "../../interfaces/wallet.js";
-import type { WalletConnectMetadata } from "../types.js";
 
 export type { WalletConnectConfig } from "../types.js"; // re-exporting for use in this module
 export type WalletConnectSession = {
   topic: string;
-  pairingTopic: string;
-  relay: {
-    protocol: string;
-    data?: string | undefined;
-  };
-  self: {
-    publicKey: string;
-    metadata: WalletConnectMetadata;
-  };
-  peer: {
-    publicKey: string;
-    metadata: WalletConnectMetadata;
-  };
-  expiry: number; // timestamp (seconds)
-  acknowledged: boolean;
-  controller: string;
-  namespaces: Record<
-    string,
-    {
-      chains?: string[];
-      accounts: string[];
-      methods: string[];
-      events: string[];
-    }
-  >;
-  requiredNamespaces: Record<
-    string,
-    {
-      chains?: string[];
-      methods: string[];
-      events: string[];
-    }
-  >;
-  optionalNamespaces: Record<
-    string,
-    {
-      chains?: string[];
-      methods: string[];
-      events: string[];
-    }
-  >;
+  origin?: string;
 };
 
 export type WalletConnectSessionProposalEvent = {
@@ -86,6 +45,11 @@ export type WalletConnectSessionProposalEvent = {
       }
     >;
     pairingTopic?: string;
+  };
+  verifyContext?: {
+    verified?: {
+      origin: string;
+    };
   };
 };
 
