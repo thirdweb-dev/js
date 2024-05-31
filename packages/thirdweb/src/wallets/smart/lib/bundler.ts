@@ -18,7 +18,6 @@ import {
   MANAGED_ACCOUNT_GAS_BUFFER,
   getDefaultBundlerUrl,
 } from "./constants.js";
-import { hexlifyUserOp } from "./utils.js";
 
 /**
  * @internal
@@ -120,20 +119,40 @@ export async function getUserOpReceipt(args: {
 /**
  * @internal
  */
-export async function getPmTransactionData(args: {
+export async function getZkPaymasterData(args: {
   options: BundlerOptions;
   transaction: TransactionSerializable;
-  sender: string;
 }): Promise<PmTransactionData> {
   const res = await sendBundlerRequest({
     options: args.options,
-    operation: "pm_sponsorTransaction",
-    params: [{ ...args.transaction, from: args.sender }],
+    operation: "zk_paymasterData",
+    params: [args.transaction],
   });
 
   return {
     paymaster: res.paymaster,
     paymasterInput: res.paymasterInput,
+  };
+}
+
+export async function broadcastZkTransaction(args: {
+  options: BundlerOptions;
+  transaction: TransactionSerializable;
+  signedTransaction: Hex;
+}): Promise<{ transactionHash: Hex }> {
+  const res = await sendBundlerRequest({
+    options: args.options,
+    operation: "zk_broadcastTransaction",
+    params: [
+      {
+        ...args.transaction,
+        signedTransaction: args.signedTransaction,
+      },
+    ],
+  });
+
+  return {
+    transactionHash: res.transactionHash,
   };
 }
 
@@ -144,7 +163,8 @@ async function sendBundlerRequest(args: {
     | "eth_sendUserOperation"
     | "eth_getUserOperationReceipt"
     | "thirdweb_getUserOperationGasPrice"
-    | "pm_sponsorTransaction";
+    | "zk_paymasterData"
+    | "zk_broadcastTransaction";
   // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
   params: any[];
 }) {

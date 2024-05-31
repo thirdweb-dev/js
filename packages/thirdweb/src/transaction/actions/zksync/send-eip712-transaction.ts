@@ -44,26 +44,12 @@ export async function sendEip712Transaction(
 ): Promise<WaitForReceiptOptions> {
   const { account, transaction } = options;
 
-  const { serializableTransaction, eip712 } =
-    await populateEip712Transaction(options);
+  const eip712Transaction = await populateEip712Transaction(options);
 
-  const eip712Transaction = {
-    ...serializableTransaction,
-    ...eip712,
-    from: account.address as Hex,
-  };
-
-  // EIP712 signing of the serialized tx
-  const eip712Domain = getEip712Domain(eip712Transaction);
-
-  const customSignature = await account.signTypedData({
-    // biome-ignore lint/suspicious/noExplicitAny: TODO type properly
-    ...(eip712Domain as any),
-  });
-
-  const hash = serializeTransactionEIP712({
-    ...eip712Transaction,
-    customSignature,
+  const hash = await signEip712Transaction({
+    account,
+    eip712Transaction,
+    chainId: transaction.chain.id,
   });
 
   const rpc = getRpcClient(transaction);
@@ -76,9 +62,30 @@ export async function sendEip712Transaction(
   };
 }
 
+export async function signEip712Transaction(options: {
+  account: Account;
+  eip712Transaction: EIP721TransactionSerializable;
+  chainId: number;
+}): Promise<Hex> {
+  const { account, eip712Transaction, chainId } = options;
+  // EIP712 signing of the serialized tx
+  const eip712Domain = getEip712Domain(eip712Transaction);
+
+  const customSignature = await account.signTypedData({
+    // biome-ignore lint/suspicious/noExplicitAny: TODO type properly
+    ...(eip712Domain as any),
+  });
+
+  return serializeTransactionEIP712({
+    ...eip712Transaction,
+    chainId,
+    customSignature,
+  });
+}
+
 export async function populateEip712Transaction(
   options: SendEip712TransactionOptions,
-) {
+): Promise<EIP721TransactionSerializable> {
   const { account, transaction } = options;
   let [
     data,
@@ -138,11 +145,10 @@ export async function populateEip712Transaction(
   });
 
   return {
-    serializableTransaction,
-    eip712: {
-      ...transaction.eip712,
-      gasPerPubdata,
-    },
+    ...serializableTransaction,
+    ...transaction.eip712,
+    gasPerPubdata,
+    from: account.address as Hex,
   };
 }
 

@@ -11,7 +11,7 @@ import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import type { WaitForReceiptOptions } from "../../transaction/actions/wait-for-tx-receipt.js";
 import {
   populateEip712Transaction,
-  sendEip712Transaction,
+  signEip712Transaction,
 } from "../../transaction/actions/zksync/send-eip712-transaction.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
 import type { TransactionReceipt } from "../../transaction/types.js";
@@ -28,9 +28,10 @@ import type {
   WalletId,
 } from "../wallet-types.js";
 import {
+  broadcastZkTransaction,
   bundleUserOp,
-  getPmTransactionData,
   getUserOpReceipt,
+  getZkPaymasterData,
 } from "./lib/bundler.js";
 import {
   predictAddress,
@@ -365,8 +366,7 @@ function createZkSyncAccount(args: {
   const account = {
     address: connectionOptions.personalAccount.address,
     async sendTransaction(transaction: SendTransactionOption) {
-      let eip712: PmTransactionData | undefined;
-
+      // override passed tx, we have to refetch gas and fees always
       const prepTx = {
         data: transaction.data,
         to: transaction.to ?? undefined,
@@ -375,34 +375,49 @@ function createZkSyncAccount(args: {
         client: connectionOptions.client,
       };
 
+      let serializableTransaction = await populateEip712Transaction({
+        account,
+        transaction: prepTx,
+      });
+
       if (args.sponsorGas) {
-        const { serializableTransaction, eip712: eip712Data } =
-          await populateEip712Transaction({
-            account,
-            transaction: prepTx,
-          });
-        const pmData = await getPmTransactionData({
+        // get paymaster input
+        const pmData = await getZkPaymasterData({
           options: {
             client: connectionOptions.client,
             overrides: creationOptions.overrides,
             chain,
           },
           transaction: serializableTransaction,
-          sender: account.address,
         });
-        eip712 = {
-          ...eip712Data,
+        serializableTransaction = {
+          ...serializableTransaction,
           ...pmData,
         };
       }
 
-      return sendEip712Transaction({
-        account: account,
-        transaction: {
-          ...prepTx,
-          eip712,
-        },
+      // sign
+      const signedTransaction = await signEip712Transaction({
+        account,
+        chainId: chain.id,
+        eip712Transaction: serializableTransaction,
       });
+
+      // broadcast via bundler
+      const txHash = await broadcastZkTransaction({
+        options: {
+          client: connectionOptions.client,
+          overrides: creationOptions.overrides,
+          chain,
+        },
+        transaction: serializableTransaction,
+        signedTransaction,
+      });
+      return {
+        transactionHash: txHash.transactionHash,
+        client: connectionOptions.client,
+        chain: chain,
+      };
     },
     async signMessage({ message }: { message: SignableMessage }) {
       return connectionOptions.personalAccount.signMessage({ message });
