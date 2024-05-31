@@ -44,6 +44,42 @@ export async function sendEip712Transaction(
 ): Promise<WaitForReceiptOptions> {
   const { account, transaction } = options;
 
+  const { serializableTransaction, eip712 } =
+    await populateEip712Transaction(options);
+
+  const eip712Transaction = {
+    ...serializableTransaction,
+    ...eip712,
+    from: account.address as Hex,
+  };
+
+  // EIP712 signing of the serialized tx
+  const eip712Domain = getEip712Domain(eip712Transaction);
+
+  const customSignature = await account.signTypedData({
+    // biome-ignore lint/suspicious/noExplicitAny: TODO type properly
+    ...(eip712Domain as any),
+  });
+
+  const hash = serializeTransactionEIP712({
+    ...eip712Transaction,
+    customSignature,
+  });
+
+  const rpc = getRpcClient(transaction);
+  const result = await eth_sendRawTransaction(rpc, hash);
+
+  return {
+    transactionHash: result,
+    chain: transaction.chain,
+    client: transaction.client,
+  };
+}
+
+export async function populateEip712Transaction(
+  options: SendEip712TransactionOptions,
+) {
+  const { account, transaction } = options;
   let [
     data,
     to,
@@ -101,33 +137,12 @@ export async function sendEip712Transaction(
     from: account.address,
   });
 
-  const eip712Transaction = {
-    ...serializableTransaction,
-    ...options.transaction.eip712,
-    gasPerPubdata,
-    from: account.address as Hex,
-  };
-
-  // EIP712 signing of the serialized tx
-  const eip712Domain = getEip712Domain(eip712Transaction);
-
-  const customSignature = await account.signTypedData({
-    // biome-ignore lint/suspicious/noExplicitAny: TODO type properly
-    ...(eip712Domain as any),
-  });
-
-  const hash = serializeTransactionEIP712({
-    ...eip712Transaction,
-    customSignature,
-  });
-
-  const rpc = getRpcClient(transaction);
-  const result = await eth_sendRawTransaction(rpc, hash);
-
   return {
-    transactionHash: result,
-    chain: transaction.chain,
-    client: transaction.client,
+    serializableTransaction,
+    eip712: {
+      ...transaction.eip712,
+      gasPerPubdata,
+    },
   };
 }
 

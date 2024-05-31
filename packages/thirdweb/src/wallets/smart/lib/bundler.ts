@@ -128,7 +128,7 @@ export async function getPmTransactionData(args: {
   const res = await sendBundlerRequest({
     options: args.options,
     operation: "pm_sponsorTransaction",
-    params: [stringify({ ...args.transaction, from: args.sender })],
+    params: [{ ...args.transaction, from: args.sender }],
   });
 
   return {
@@ -162,7 +162,7 @@ async function sendBundlerRequest(args: {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
+    body: stringify({
       jsonrpc: "2.0",
       id: 1,
       method: operation,

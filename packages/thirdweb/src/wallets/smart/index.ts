@@ -9,7 +9,10 @@ import type { Chain } from "../../chains/types.js";
 import { getCachedChain } from "../../chains/utils.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import type { WaitForReceiptOptions } from "../../transaction/actions/wait-for-tx-receipt.js";
-import { sendEip712Transaction } from "../../transaction/actions/zksync/send-eip712-transaction.js";
+import {
+  populateEip712Transaction,
+  sendEip712Transaction,
+} from "../../transaction/actions/zksync/send-eip712-transaction.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
 import type { TransactionReceipt } from "../../transaction/types.js";
 import type { Hex } from "../../utils/encoding/hex.js";
@@ -364,25 +367,39 @@ function createZkSyncAccount(args: {
     async sendTransaction(transaction: SendTransactionOption) {
       let eip712: PmTransactionData | undefined;
 
+      const prepTx = {
+        data: transaction.data,
+        to: transaction.to ?? undefined,
+        value: transaction.value ?? 0n,
+        chain: getCachedChain(transaction.chainId),
+        client: connectionOptions.client,
+      };
+
       if (args.sponsorGas) {
-        eip712 = await getPmTransactionData({
+        const { serializableTransaction, eip712: eip712Data } =
+          await populateEip712Transaction({
+            account,
+            transaction: prepTx,
+          });
+        const pmData = await getPmTransactionData({
           options: {
             client: connectionOptions.client,
             overrides: creationOptions.overrides,
             chain,
           },
-          transaction,
+          transaction: serializableTransaction,
           sender: account.address,
         });
+        eip712 = {
+          ...eip712Data,
+          ...pmData,
+        };
       }
 
       return sendEip712Transaction({
         account: account,
         transaction: {
-          ...transaction,
-          to: transaction.to ?? undefined,
-          chain: getCachedChain(transaction.chainId),
-          client: connectionOptions.client,
+          ...prepTx,
           eip712,
         },
       });
