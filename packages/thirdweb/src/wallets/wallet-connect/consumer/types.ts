@@ -1,3 +1,4 @@
+import type { SignClient } from "@walletconnect/sign-client";
 import type { TypedDataDefinition } from "viem";
 import type { Address } from "../../../utils/address.js";
 import type { Hex } from "../../../utils/encoding/hex.js";
@@ -9,6 +10,8 @@ export type WalletConnectSession = {
   topic: string;
   origin?: string;
 };
+
+export type WalletConnectClient = Awaited<ReturnType<typeof SignClient.init>>;
 
 export type WalletConnectSessionProposalEvent = {
   id: number;
