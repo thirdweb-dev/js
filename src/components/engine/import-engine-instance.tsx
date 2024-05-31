@@ -1,4 +1,7 @@
 import {
+  Alert,
+  AlertIcon,
+  AlertDescription,
   Flex,
   FormControl,
   Input,
@@ -159,6 +162,12 @@ const ModalImportEngine = ({
                   {...form.register("url")}
                 />
               </FormControl>
+              <Alert status="warning" borderRadius="m">
+                <AlertIcon />
+                <AlertDescription>
+                  Do not import a URL you do not recognize.
+                </AlertDescription>
+              </Alert>
             </Stack>
           </ModalBody>
 
