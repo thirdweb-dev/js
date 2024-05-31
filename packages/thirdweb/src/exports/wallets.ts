@@ -2,6 +2,7 @@ export {
   createWallet,
   smartWallet,
   inAppWallet,
+  ecosystemWallet,
   /**
    * @deprecated use inAppWallet instead
    */

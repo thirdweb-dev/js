@@ -28,27 +28,20 @@ export type InAppWalletAuth =
   | InAppWalletSocialAuth;
 
 export type InAppWalletCreationOptions =
-  | ({ smartAccount?: SmartWalletOptions } & (
-      | {
-          integratorId: string;
-          auth?: never;
-          metadata?: never;
-        }
-      | {
-          integratorId?: never;
-          auth?: {
-            options: InAppWalletAuth[];
-          };
-          metadata?: {
-            image?: {
-              src: string;
-              width?: number;
-              height?: number;
-              alt?: string;
-            };
-          };
-        }
-    ))
+  | {
+      smartAccount?: SmartWalletOptions;
+      auth?: {
+        options: InAppWalletAuth[];
+      };
+      metadata?: {
+        image?: {
+          src: string;
+          width?: number;
+          height?: number;
+          alt?: string;
+        };
+      };
+    }
   | undefined;
 
 export type AuthenticatedUser = {
